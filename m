@@ -1,24 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0ADhYr11489
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 08:43:34 -0500
-Received: from alpha.geneseo.edu (alpha.geneseo.edu [137.238.1.190])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0ADhSkp008360
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 08:43:28 -0500
-Received: from [137.238.1.104] (helo=mars.geneseo.edu)
-	by alpha.geneseo.edu with esmtp (Exim 4.34) id 1CnzpQ-00066S-3t
-	for linux-lvm@redhat.com; Mon, 10 Jan 2005 08:43:28 -0500
-Received: from mars.geneseo.edu (localhost.localdomain [127.0.0.1])
-	by mars.geneseo.edu (8.12.9/8.12.5) with ESMTP id j0ADhORh031014
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 08:43:24 -0500
-Received: from localhost (valites@localhost)
-	by mars.geneseo.edu (8.12.9/8.12.9/Submit) with ESMTP id j0ADhOYR031011
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 08:43:24 -0500
-Date: Mon, 10 Jan 2005 08:43:24 -0500 (EST)
-From: "Mark T. Valites" <valites@geneseo.edu>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j0AE4q0a011848
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 14:04:52 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1Co0A8-0005nT-SN
+	for linux-lvm@redhat.com; Mon, 10 Jan 2005 14:04:52 +0000
+Date: Mon, 10 Jan 2005 14:04:52 +0000
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] Problem Upgrading from LVM1 to LVM2
-In-Reply-To: <20050109210423.GB24979@percy.comedia.it>
-Message-ID: <Pine.LNX.4.44.0501100838210.30140-100000@mars.geneseo.edu>
-MIME-Version: 1.0
+Message-ID: <20050110140452.GS26670@agk.surrey.redhat.com>
+References: <20050109210423.GB24979@percy.comedia.it>
+	<Pine.LNX.4.44.0501100838210.30140-100000@mars.geneseo.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44.0501100838210.30140-100000@mars.geneseo.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,43 +23,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, 9 Jan 2005, Luca Berra wrote:
+On Mon, Jan 10, 2005 at 08:43:24AM -0500, Mark T. Valites wrote:
+>   logical extent (56202) already mapped.
+>   Couldn't fill logical volume maps.
 
-> On Sun, Jan 09, 2005 at 01:51:17PM -0500, Mark T. Valites wrote:
-> >I'd like to upgrade my LVM1 based machine to LVM2. I recently compiled a
-> >new 2.4.28 kernel and patched in the
-> >linux-2.4.26-rc1-devmapper-ioctl.patch patch from;
-> >
-> >ftp://sources.redhat.com/pub/dm/patches/2.4-stable/2.4.26/linux-2.4.26-rc1-devmapper-ioctl.patch
-> >
-> >A copy of my kernel config is available here:
-> >
-> >http://www.geneseo.edu/~valites/config-2.4.28-x86_mythtv-dev_mapper
-> >
-> use only one of lvm1 or device-mapper.
+Metadata corruption: eg 2 LV sharing a PE.
+If you forcibly ran LVM1 and LVM2 on the same VG at the same time 
+that could lead to this.
 
-Hmm. Taking LVM1 one support out of my kernel (# CONFIG_BLK_DEV_LVM is not
-set) didn't seem to help. I still get:
+Make sure you're using a recent version of LVM2.
 
-myth:~# pvscan
-  logical extent (56202) already mapped.
-  Couldn't fill logical volume maps.
-  No matching physical volumes found
-myth:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  logical extent (56202) already mapped.
-  Couldn't fill logical volume maps.
-  Volume group "music_vg" not found
+You'll need to restore your metadata from a backup
+using vgcfgrestore - but first you need to work out which
+is the correct backup to restore from, then use either lvm1
+or lvm2 vgcfgrestore depending which format that
+backup is in.
 
-And of course the LVM1 tools don't work now. Any ideas?
-
+Alasdair
 -- 
-Mark T. Valites
-Unix Systems Analyst
-Computing & Information Technology
-SUNY Geneseo
->--))> >--))>
+agk@redhat.com
