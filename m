@@ -1,52 +1,33 @@
-Date: Mon, 13 Nov 2000 16:07:25 -0600
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200011132226.eADMQ5929070@webber.adilger.net>
 Subject: Re: [linux-lvm] Removing a PV
-Message-ID: <20001113160725.A13890@omnifarious.mn.org>
-References: <20001113195854.D23680@colombina.comedia.it> <Pine.BSO.4.21.0011131545220.14526-100000@loonybin.loonybin.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
-Content-Disposition: inline
-In-Reply-To: <Pine.BSO.4.21.0011131545220.14526-100000@loonybin.loonybin.net>; from rob@loonybin.net on Mon, Nov 13, 2000 at 03:58:37PM -0500
+In-Reply-To: <3A0F7DFA.90DE9FF0@gnu.org> "from Andrew Clausen at Nov 13, 2000
+ 04:36:58 pm"
+Date: Mon, 13 Nov 2000 15:26:05 -0700 (MST)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Andrew Clausen <clausen@gnu.org>
+Cc: bluca@comedia.it, linux-lvm@msede.com
 
+Andrew Clausen writes:
+> ext2resize is basically unmaintained, separately from Parted.
+> (ext2resize and fsresize merged to make Parted, about 1.5 years ago)
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is totally untrue.  I released a new version of ext2resize about
+a month ago.  I don't think parted has any sort of facility for doing
+online filesystem resizing, so I don't think that ext2resize will be
+gone any time soon.
 
-On Mon, Nov 13, 2000 at 03:58:37PM -0500, Rob Foehl wrote:
-> I'd assumed that was the correct command sequence, but does lvreduce
-> ensure that the filesystem won't be damaged? Ie. does it only remove LE's
-> from the end of the LV, or what?
+> So, most people will want to use Parted instead of ext2resize.
 
-	Yes, you guessed it.  :-)
+Cough..
 
-	I'm not sure what happens with pvmove if the logical volume is
-striped though.  I'd really like to know.  :-)
-
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
-
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6EGYdG4QeWBeRdS8RAqaSAKCKdlMKOgz8EKzAiZBqTyK7DHNbmQCgpiOX
-r6W0LYX1RY95kRVOMx9wWw0=
-=oSfr
------END PGP SIGNATURE-----
-
---gBBFr7Ir9EOA20Yy--
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
