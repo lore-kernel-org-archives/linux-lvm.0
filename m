@@ -1,62 +1,39 @@
-Message-ID: <20000418160645.6431.qmail@servnix.lan.wronline.de>
-Date: Tue, 18 Apr 2000 18:06:45 +0200
-From: "Stefan Paletta" <paletta@WRonline.de>
-Subject: Re: [linux-lvm] Devfs and lvm problems
-References: <20000418162852.A22888@pharos.hsp.de>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="mP3DRpeJDSE+ciuQ"
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20000418162852.A22888@pharos.hsp.de>
+Message-ID: <38FCAF36.3F7583F@swipnet.se>
+Date: Tue, 18 Apr 2000 20:53:42 +0200
+From: Jarek Luberek <jarek@swipnet.se>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Mirroring with LVM
+References: <Pine.LNX.4.20.0004181411030.6305-100000@vortex1.vrtx.net>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
+A James Lewis wrote:
+> 
+> My understanding is that you use MD to do the mirroring and LVM is layered
+> on top to produce volumes... so yes you can mirror but LVM doesn't do it.
+> 
+So, am I right to conclude that if I have a (trivial) volume with one
+partition
+of 2 discs at raid1 or 3 at raid5 and want to extend that I have to add
+another
+3 discs for my volume-on-to-of-raid5 or 2 for the mirrored set (mix
+maybe)?
+It seems possible to add one physical partition but if that disc crashes
+I would
+loose all data since the filesystem would depend on information on both
+partitions
+(the physical and the raid abstracted d.o.), right?
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Another question. I'm trying to compile the utilities on a glibc 2.1
+system,
+with no success. The LVM-home page mentions that a small patch is needed
+but
+I can't seem to find that anywhere ..... suggestions anybody?
 
-matthaes@pharos.hsp.de wrote/schrieb/scribsit:
-> 1.) devfsd doesn=EF=BF=BDt create /dev/vg00/group etc files, so vgchange =
--ay
->     fails
->=20
-> 2.) vgscan fails with=20
->=20
-> vgscan -- found inactive volume group "vg00"
-> vgscan -- ERROR "lvm_remouverecursive(): opendir" removing volume group d=
-irectory and special files
-> vgscan -- ERROR "lvm_remouverecursive(): opendir" creating "/etc/lvmtab" =
-and "/etc/lvmtab.d"
+Cheers,
 
-The problem is that vgscan wants to recursively remove /dev/vg00 and
-its contents but mishandles the case that /dev/vg00 does not even
-exist anymore (since after a reboot a devfs is 'clean').
-
-This is easy to fix, I'm attaching a patch.
-Would the lvmtools maintainer consider this patch for inclusion into
-the tree?
-
-Stefan
-
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="lvm_devfs.patch"
-
---- 0.8final/tools/lib/lvm_remove_recursive.c.orig	Tue Feb 22 03:09:32 2000
-+++ 0.8final/tools/lib/lvm_remove_recursive.c	Tue Apr 18 10:27:44 2000
-@@ -33,9 +33,9 @@
- #ifdef DEBUG
-    debug_enter ( "lvm_remove_recursive -- CALLED with dir: %s\n", dir);
- #endif
--   if ( dir != NULL) {
-+   if ( (dir != NULL) && (lstat ( dir, &sb) == 0) ) {
-       /* check beeing called with a file name */
--      if ( lstat ( dir, &sb) == 0 && !S_ISDIR ( sb.st_mode)) unlink ( dir);
-+      if (  !S_ISDIR ( sb.st_mode)) unlink ( dir);
-       else {
-          /* open and read the directory */
-          if ( ( this_dir = opendir ( dir)) != NULL) {
-
---mP3DRpeJDSE+ciuQ--
+Jarek
