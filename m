@@ -1,10 +1,10 @@
-Message-Id: <3C6B14D0.576C9A56@bellsouth.net>
-From: Jeff Layton <laytonjb@bellsouth.net>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Building LVM ona RH7.2 - errors
+Message-Id: <20020214072047.GA13317@colombina.comedia.it>
+References: <3C69A99A.398C19D4@bellsouth.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: Building LVM ona RH7.2 - errors
-References: <E16awby-00059c-00@hermes.sistina.com>
-    <1013616001.3175.26.camel@dirac.cids.ca> <3C6A9541.34A54984@lmco.com>
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <3C69A99A.398C19D4@bellsouth.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,88 +15,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 13 19:36:01 2002
+Date: Thu Feb 14 01:21:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jeff Layton wrote:
+On Tue, Feb 12, 2002 at 06:47:38PM -0500, Jeff Layton wrote:
+>    I tried building lvm-1.0.2 against a clean 2.4.17
+> kernel. I untarred the lvm tar.gz file as well as
+> the 2.4.17 kernel (into /usr/src/linux-2.4.17.clean).
+> Then I did a,
+guess redhat changed something with sed
 
-> Daniel Savard wrote:
->
-> > le mer 13-02-2002 � 05:26, linux-lvm-request@sistina.com a �crit :
-> >
-> > >
-> > > (sorry about the length). sed is not my string point at all.
-> > > Any ideas what I'm doing wrong?
-> > >
-> > > TIA,
-> > >
-> > > Jeff
-> > >
-> >
-> > Jeff,
-> >
-> > 1st) Untar the kernel somewhere like: /usr/src/linux-2.4.17
-> > 2nd) Untar the LVM 1.0.2, it will create the sub-directory 1.0.2 in the
-> > current dir, for example: /usr/src/LVM/1.0.2
-> > 3rd) Create the directory /usr/src/LVM/build
-> > 4th) cd /usr/src/LVM/build
-> > 5th) ../1.0.2/configure --with-kernel-dir=/usr/src/linux-2.4.17
-> > 6th) Read instructions in /usr/src/LVM/1.0.2/PATCHES/README
->
-> Did all that.
->
-> I tested on a RH 7.1 box this morning and it worked fine. The
-> box I'm having trouble with is my home box which I'll try this
-> evening.
+> checking whether time.h and sys/time.h may both be included... yes
+> ./configure: [: too many arguments
+> checking whether gcc needs -traditional... no
+try running
+sh -x ./scripts/linuxver -d /usr/src/linux-2.4.17.clean
+and see if we can guess what's wrong (probably the sed)
+> creating Makefile
+> sed: file conftest.s1 line 40: Unterminated `s' command
+try salvaging those conftest.s1 files before configure kills them
+and see what's in there.
 
-OK. I tried it again on my RH 7.2 box at home. I still get the
-same errors. I even followed Daniel's step-by-step suggestion
-above and got the same errors. However, when I did it on my
-RH 7.1 box at work, it works correctly. So, something is amiss
-with my home box. Any suggestions where to start? I'm totally
-lost on this one.
+also which version of sed are you runnging (rpm -q sed)
+and which version of autoconf, if you have it installed
 
-TIA,
+last thing, try running autoconf in the base lvm source dir and
+see if configure works afterwards
 
-Jeff
+Regards,
+L.
 
-
->
->
-> Thanks,
->
-> Jeff
->
-> >
-> >
-> > >From your description, it is not clear, but I guess you mixed LVM stuff
-> > with Kernel stuff while building the patches and Makefile modifications
-> > may encountered problems with the Linux kernel Makefile.
-> >
-> > --
-> >
-> > =======================================
-> > Daniel Savard
-> > Consultation Informatique Daniel Savard
-> > 551, boul. Sir-Wilfrid-Laurier
-> > suite 105
-> > Beloeil, (Qu�bec)
-> > Canada J3G 4J1
-> >
-> > T�l: (450) 467-8014
-> > Internet: dsavard@cids.ca
-> > =======================================
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
