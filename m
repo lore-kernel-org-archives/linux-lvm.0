@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105222325.f4MNPJVw012336@webber.adilger.int>
-Subject: Re: [linux-lvm] Converting my Root file system to LVM
-In-Reply-To: <990547328.1133.1.camel@localhost> "from Rupert Heesom at May 22,
- 2001 12:02:03 pm"
-Date: Tue, 22 May 2001 17:25:19 -0600 (MDT)
-MIME-Version: 1.0
+Return-Path: <raheesom@navpoint.com>
+Subject: RE: [linux-lvm] Converting my Root file system to LVM
+From: Rupert Heesom <raheesom@navpoint.com>
+In-Reply-To: <NBBBKLKHMJHIJLHOGAOJIEMHIOAA.steve.wray@the.net.nz>
+References: <NBBBKLKHMJHIJLHOGAOJIEMHIOAA.steve.wray@the.net.nz>
+Date: 22 May 2001 19:53:57 -0400
+Message-Id: <990575643.1151.0.camel@localhost>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,29 +21,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Rupert Heesom writes:
-> Now, when I boot up into the LVM partition, I get the following error
-> msgs -
-> 
-> lvm - Module successfully initialised.
-> /sbin/vgscan: sed: command not found.
-> /sbin/vgscan: /lib/lvm-iop10/: is a directory
-> /sbin/vgscan: exec: /lib/lvm-iop10/: cannot execute:  permission denied.
-> 
-> /sbin/vgchange:  <same msgs>
-> 
-> Obviously the kernel can't find the LVM tools.  Would these not be
-> included in the lvm initrd?  If they are, and the kernel still can't
-> find them, what do I change so that the kernel CAN find the LVM tools?
+Many thanks for the 2 replies!
 
-No, the problem is in the wrapper script for the LVM tools.  It is using
-"sed" in the script, but that is not on the initrd.  I don't see sed in
-my LVM wrapper script, so you must have a different one.  Either fix the
-wrapper script (edit /sbin/vgscan should be enough), or add "sed" to the
-list of required files, INITRDFILES, in lvmcreate_initrd.
+Well, since I had the same problem as Steve, I implemented his solution.
 
-Cheers, Andreas
+Tnx, Steve for the easy howto of your's below.
+BTW, what on earth is that "mount -o loop" command?
+
+As I tap on my keyboard, I am working inside of my new LVol, so it
+worked, guys!
+
+Since my LVol is on my 2nd disk, next, I think I'll try extending my
+Lvol back to cover my 1st disk as well.
+
+One more bit of help, if you can? -
+
+I want to pvmove the file contents of my 2nd disk (/dev/sdb) to my 1st
+disk (/dev/sda).  My 1st disk is nice & quiet!  Now the lvm-howto
+specifies my next step (adding the "old partition" into the Lvol) as --
+
+pvcreate /dev/sda   <using my device names>
+vgextend vg /dev/sda
+
+---  Seeing as I want to do a pvmove of data from /dev/sdb to /dev/sda,
+when would I do the pvmove?   As I understand LVM, I need to have the PV
+created and integrated into the VG before I can use pvmove - is this
+correct?   Then, once pvmove is used, I can then extend the LV & file
+system to cover both PVs using e2fsadm, right?
+
+
+On 23 May 2001 10:56:39 +1200, Steve Wray wrote:
+> AHA!
+> you too, huh?
+> You'll have to add sed to the initial ramdisk.
+> 
+> Its in /boot/initrd<something>.gz
+> unzip it and mount it with
+> mount -o loop /boot/initrd<something> /mnt/<somewhere>
+> 
+> then simply 
+> cp /bin/sed /mnt/<somewhere>/bin/
+> 
+> then unmount it, re-gzip it and away you go!
+> 
+> And what *I'd* like to know is why isn't sed on the 
+> initrd in the first plade if the scripts need it??
+
+Well, it seems not all had the same problem, so I don't know!!??
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+regs
+rupert
