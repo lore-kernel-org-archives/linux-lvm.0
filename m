@@ -1,9 +1,11 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Date: Mon, 10 Sep 2001 04:37:07 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPEEDBDNAA.stuart@bh90210.net>
+From: FEJF <fejf@gmx.de>
+Subject: Re: [linux-lvm] pv_move_pe() error again :/
+Date: Mon, 10 Sep 2001 13:45:02 +0200
+References: <E15f13v-0003bs-00@hermes.sistina.com> <20010910103952.B31660@vestdata.no> <20010910132709.G31313@sistina.com>
+In-Reply-To: <20010910132709.G31313@sistina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Subject: [linux-lvm] LVM
+Content-Transfer-Encoding: 8bit
+Message-Id: <E15gPU0-0000f3-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,34 +20,31 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-TGlzdCBtZW1iZXJzOg0KDQoJSGVsbG8gdG8gYWxsLCBhcyBJIGFtIHNvbWV3aGF0IG5ldyB0byB0
-aGUgbGlzdC4gUGVyaGFwcyBvbmUgb2YgeW91IHdpbGwgcmVjb21tZW5kIHNvbWUgYmFzaWMgcmVh
-ZGluZyB0byBnZXQgbWUgc3RhcnRlZCwgYnV0IEkgZG8gaGF2ZSBhIGZldyBxdWVzdGlvbnMgcmVn
-YXJkaW5nIExWTSBhbmQgbXkgcHJvcG9zZWQgZGVwbG95bWVudCBvZiBpdCBvbiBteSBsYXB0b3Au
-DQoNCglJIGhhdmUgYSBEZWxsIExhcHRvcCB3aXRoIHR3byAzMkdCIEhEcywgYW5kIGEgMTM5NCA0
-MEdCIEhELiBJIGFtIHRoaW5raW5nIHRvIHVzZSBMVk0uDQoNCihhKSBJIGFtIHJ1bm5pbmcgKDIu
-NC44IG9yIDIuNC45LCBJIGZvcmdldCBvZmZoYW5kKSBpcyBMVk0gaW5jbHVzaXZlIHRvIHRoZSBr
-ZXJuZWwgaW4gZWl0aGVyIG9mIHRob3NlIHJlbGVhc2VzPw0KKGIpIEhvdyBkb2VzIExWTSBqdXh0
-YXBvc2UgYWdhaW5zdCBhIGJhY2tkcm9wIG9mIGEgZHVhbCBib290IHN5c3RlbSwgd2hlbiBXMksv
-UFJPIGlzIG9uZSBvZiB0aGUgT1NlcyBpbnN0YWxsZWQuDQooYykgU2FtZSBxdWVzdGlvbiwgYWRk
-IEZyZWVCU0QgKHdoaWNoIEkgaGF2ZSBub3QgeWV0IGluc3RhbGxlZCBhcyBvZiB5ZXQsIGJ1dCBk
-byBwbGFuIHRvKT8NCihkKSBXaGF0IGFib3V0IFNvbGFyaXM/DQooZSkgUnVubmluZyBXMksvUFJP
-IG9uIGEgbGFwdG9wIGRvZXMgbm90IGFsbG93IGZvciBkaXNrIG1pcnJvcmluZyB1bmRlciB3aW5k
-b3dzLCBjYW4gTFZNIG1pcnJvciBteSBOVEZTIHBhcnRpdGlvbj8NCg0KQ2FuIEkgcnVuIGFueSBm
-aWxlc3lzdGVtIHdpdGggaXQ/IFdpbGwgdGhlIG5ldyBqb3VybmFsaW5nIGZpbGVzeXN0ZW1zIHdv
-cmsgd2l0aCBpdCAoSSB1c2UgUmVpc2VyRlMgYXQgdGhlIG1vbWVudCwgYnV0IEkgYW0gbm90IHN1
-cmUgaWYgaXQgaXMgdGhlIGJlc3QgZm9yIHRoZSBtb25leSAuLi4gc28gdG8gc3BlYWspPw0KDQoJ
-SXMgTFZNIHN0aWxsIGluIGEgYmV0YSBzdGF0ZSwgb3IgaXMgaXQgdHJ1c3RhYmxlIHdpdGggbXkg
-ZGF0YSB0byB0aGUgZXh0ZW50IHlvdSBjYW4gbm90ZT8gSSBhbSBub3QgbG9va2luZyBmb3IgYW4g
-aXJvbmNsYWQgZ3VhcmFudGVlLCBidXQgSSBhbSBjdXJpb3VzIGlmIG1vc3Qgb2YgdGhlIGtub3du
-IGJ1Z3MgYXJlIGdvbmUuDQoNCglBbnkgcmVjb21tZW5kZWQgcmVhZGluZyAoUERGIGZvcm1hdCBs
-aW5rcyBpZiBwb3NzaWJsZSk/DQoNCg0KVmVyeSBSZXNwZWN0ZnVsbHksIA0KDQpTdHVhcnQgQmxh
-a2UgVGVuZXIsIElUMywgVVNOUi1SLCBOM0dXRyANCkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWEN
-ClZUVSAxOTA0RyAoVm9sdW50ZWVyIFRyYWluaW5nIFVuaXQpIA0Kc3R1YXJ0QGJoOTAyMTAubmV0
-IA0Kd2VzdCBjb2FzdDogKDMxMCktMzU4LTAyMDIgUC5PLiBCb3ggMTYwNDMsIEJldmVybHkgSGls
-bHMsIENBIDkwMjA5LTIwNDMgDQplYXN0IGNvYXN0OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0
-NTg1OSwgUGhpbGFkZWxwaGlhLCBQQSAxOTE0OS01ODU5IA0KDQpUZWxlY29waWVyOiAoNDE5KS03
-MTUtNjA3MyBmYXggdG8gZW1haWwgZ2F0ZXdheSB2aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUh
-KSANCg0KSk9JTiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBC
-RU5FRklUIEZST00gSVQgQUxMLiANCg0KTW9uZGF5LCBTZXB0ZW1iZXIgMTAsIDIwMDEgNDoyOSBB
-TQ0KDQo=
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Heinz J . Mauelshagen, on Montag, 10. September 2001 13:27 wrote:
+> Ragnar,
+>
+> typically a dying source device will cause read to fail (~line 520
+> in pv_move_pe.c). This could be easily addressed by an 'ignore read errors'
+> option and a fallback to BLOCK_SIZEed I/O in order to avoid as much data
+> losses as possible.
+>
+> But I wonder, why in your case the locking of the PE failed. Are you able
+> to reporduce your case and provide the error code?
+
+as the harddisc makes scary noise and i "loose" it after some hours without 
+and reboot. and have to wait a day or so to get it back. i think it's a 
+serious harddisc problem combined with some heat problem or so...
+reproduce... hmm... prehaps try to throw your harddisc several times on the 
+ground ? ;)
+fejf
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7nKfB7Xtp66ctWuIRAmAuAKCdtKp3c3cADDSV+wZkzvYsrfHdxQCfdEyJ
+54i0hhl+SAQb5tXKLJhxH+s=
+=H8ud
+-----END PGP SIGNATURE-----
