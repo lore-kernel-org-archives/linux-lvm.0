@@ -1,9 +1,12 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] file system larger than lv
-Message-ID: <20021115115831.B11618@sistina.com>
-References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM>
+Message-ID: <20021115122708.GK8377@pc.ilinx>
+References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM>; from JPolache@texasmutual.com on Thu, Nov 14, 2002 at 09:35:06AM -0600
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="J/pvEKOcHgREgBce"
+Content-Disposition: inline
+In-Reply-To: <20021115115831.B11618@sistina.com>
+From: lvm@interlinx.bc.ca
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,98 +17,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 05:04:01 2002
+Date: Fri Nov 15 06:28:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Nov 14, 2002 at 09:35:06AM -0600, Jonathan S. Polacheck wrote:
-> I posted the following to the ext2 help forum and got the included
-> response;
-> 
-> By: jpolache ( Jon Polacheck )
->  reasize2fs fails
-> 2002-11-13 13:23
-> I have an lvm volume for my /usr filesystem on a Mandrake 8.1 server. I did
-> a
-> lvextend, and am now trying to resize the filesystem into the logical
-> volume.
-> 
-> I went to runlevel 1, unmounted all my filesystems (umount -a) and ran
-> e2fsck on /dev/sys/usr. I got output indicating that the superblock size
-> was 793600 blocks and the "physical" size was 665600 blocks.
-> 
-> e2fsck ended with the following;
-> 
-> Error scanning inodes (336000): can't read next inode
-> 
-> /dev/sys/usr: 13494/400000 files (1.2% non-contiguous), 578502/793600
-> blocks
+--J/pvEKOcHgREgBce
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This was the point in time were you better had stopped and asked for advice :(
+On Fri, Nov 15, 2002 at 11:58:31AM +0100, Heinz J . Mauelshagen wrote:
+>=20
 
-> 
-> When I then run resize2fs, I get the following output;
-> 
-> resize2fs: Can't read a block bitmap while trying to resize /dev/sys/usr.
-> The file system on /dev/sys/usr is now 665600 blocks long.
+Heinz,
 
-Boom. As Ted said: your fs is now smaller and you lost data.
+> LVM1 contains the e2fsadm tool which prevents
+> you form doing things like that.
 
-You probably didn't run lvextend but lvreduce instead, which made the logical
-volume smaller that the actual filesystem (similar to configuring a partition
-conatinig an ext2 fs smaller). LVM1 contains the e2fsadm tool which prevents
-you form doing things like that.
-The lvreduce alone wouldn't have been the end of the day, because you still had
-the old configuration with the prevoius LV size and mapping in the LVM metadata
-archive. Deactivating the VG and restoring that state of the metadata would
-have cut it.
+I know we are never going to be able to stop everybody who _really_
+wants to shoot themselves in the foot from doing so, but I wonder,
+perhaps if there should be "something extra" that needs to be done to
+manipulate the size of volumes with filesystems on them (i.e. probe
+the lv to see what's on it) directly (i.e.  lvreduce, lvexpand).  This
+would of course be used to encourage the use of the convenience tools
+like e2fsadm.
 
-Now that you run resize2fs and Ted (the ext2/resize2fs guru) can't help
-you, it is tape archive time :(
+Perhaps an environment variable or an "expert switch" on the command
+line or something.  Not using the switch or setting the env. variable
+would cause a probe of the lv and if there was found to be a
+filesystem on it, it would prompt the user to use a convenience tool
+(for that filesystem type) to perform his task, or set the
+switch/variable, if he really wanted to go ahead.
 
+Or maybe this is all just too much handholding.
 
-> 
-> Any suggestions?
-> 
-> By: tytso ( Theodore Ts'o )
->  RE: reasize2fs fails
-> 2002-11-14 07:28
-> That's an LVM problem. e2fsck was very clear when it told you that device
-> was smaller than the size specified in the superblock.
-> 
-> ...there was probably severe damage to the filesystem which was done,
-> because resize2fs attempted to shrink the filesystem down to 665600 from
-> the superblock size of 793600. But since LVM had apparently already gotten
-> the idea that the device was now smaller, any data that was stored in the
-> blocks between 665600 and 793600 has been lost.
-> 
-> ......................................................................................
-> 
-> Any suggestions as to how I can proceed from here?
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+b.
 
--- 
+--=20
+Brian J. Murrell
 
-Regards,
-Heinz    -- The LVM Guy --
+--J/pvEKOcHgREgBce
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+iD8DBQE91Ogcl3EQlGLyuXARAl6zAKC0cWXUkah13j8n4bwsO+3BjgPMDgCfQOj8
+U48Ewu6GGQW31bnvN0sgE+g=
+=5lF1
+-----END PGP SIGNATURE-----
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--J/pvEKOcHgREgBce--
