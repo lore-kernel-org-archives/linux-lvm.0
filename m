@@ -1,13 +1,10 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to
-    coexist happily
-References: <200201020451.g024pPg00867@oss.sgi.com>
-    <E16Md6L-0007pY-00@hermes.sistina.com> <20020104163939.C12868@lynx.no>
-In-Reply-To: <20020104163939.C12868@lynx.no>
+Message-Id: <5.1.0.14.0.20020105233609.00b13e08@pop.ihug.com.au>
+From: Timshel Knoll <timshel@pobox.com>
+Subject: Re: [linux-lvm] Fixing corrupted LVM PV headers?
+In-Reply-To: <20020103142740.A12868@lynx.no>
+References: <3C352FFF.1946.1910201@localhost>
+    <3C352FFF.1946.1910201@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16MhbU-00042E-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,50 +15,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  4 21:35:01 2002
+Date: Sat Jan  5 10:43:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: Andreas Dilger <adilger@turbolabs.com>
-Cc: Eric Sandeen <sandeen@sgi.com>, Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
+Cc: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+At 02:27 PM 3/01/2002 -0700, Andreas Dilger wrote:
+>Well, this seems to become my specialty:
+>
+><snipped>
+>
+>- If the PV sizes do not match, you also need to fix pe_on_disk.size, pv_size,
+>   pe_total, and pe_start (maybe).  I can tell you how to do this also, but
+>   it is complicated so I'd rather not unless needed.
+>- At this point, vgscan should be able to detect the whole VG.  If the
+>   pe_on_disk.size value (and/or pe_start) is wrong, then you will get
+>   misaligned data for your filesystems that have data on that PV, and you
+>   have to work out the correct value.
 
-Andreas or any other LVM gurus,
+OK, I've done all this. pvdata now displays correct information, and vgscan 
+picks
+up the volume groups with no problems. My /var, /var/share and /var/chroot 
+all seem
+to mount fine, but my /usr has inconsistencies, and my /home won't mount due to
+a bad XFS magic number. I assume that this is because the pe_on_disk.size is
+wrong or something.
 
-This is related to but not imeadiately concerned with the problem we have 
-been discussing.
+The only structure that I had to resurrect was the pv_disk_t, and for most of
+this I have simply copied values from the other pv structs, with the exception
+of pv_uuid, pv_major, pv_number, pe_allocated and also pv_size (hda6 is 
+actually
+32KB larger than hda[78] - hda6 is 8,388,576K, hda[78] are both 8,388,544K).
+I haven't changed pe_on_disk.size or pe_total. These PV's were created with
+the 0.9.1beta6 lvm tools, so from what I can see from the 0.9.1beta6 lvm.h,
+pe_start didn't exist at that time ... for all the other PV's on my system 
+pv_start
+is set to 0, so I assume it should be the same for hda6.
 
-When lvcreate dies when creating an XFS snapshot it doesn't finish the 
-snapshot creation and although lvdisplay shows that the XFS lv has an active 
-snapshot (shows even its name) lvdisplay tells me that the snapshot doesn't 
-exist and therefore, cannot be removed.  
+I couldn't work out how to find out the value for lv_cur, as this must be 
+the number
+of LVs that use the PV, and I couldn't find a way to work this out. I've 
+set it to 1 at
+the moment, but that might need to be 2 as both my /usr and /home volumes seem
+like they are using the hda6 PV. Any further comments appreciated.
 
-During the reboot the machine fails to run through the startup scripts and 
-dies somewhere within mount.  
+Thanks,
 
-I have found that kernels without the lvm-1.0.1 upgrade patch are able to 
-carry on and even fix the half created snapshot whereas kernels with the 
-lvm-1.0.1 upgrade patch are unable to deal with the problem snapshot and just 
-die.
+Timshel
 
-Are you aware of what this might be?
-
-And if this is going to be the default behaviour in future versions of LVM 
-how would I recover using a lvm-1.0.1 patched kernel?
-
-Just interested
-
-Thanks
-
-- -- 
-Adrian Head
-
-(Public Key available on request.)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE8NnUR8ZJI8OvSkAcRAnegAJ9rayag2AQ7AMKufbL0d7PlxB3jxwCdGaQz
-UKinrM4ZVskDCt13J+3HAs0=
-=UDmt
------END PGP SIGNATURE-----
+--
+Timshel Knoll <timshel@pobox.com>
+Debian GNU/Linux developer, email <timshel@debian.org>
