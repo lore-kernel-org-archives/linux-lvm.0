@@ -1,9 +1,6 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Oops when running snapshots
-Message-ID: <20030710113223.D23240@sistina.com>
-References: <1057789596.1368.28.camel@lvadplx>
-Mime-Version: 1.0
-In-Reply-To: <1057789596.1368.28.camel@lvadplx>; from andrew@fc.hp.com on Wed, Jul 09, 2003 at 04:26:36PM -0600
+From: =?GB2312?B?z+O427mry77XorLhzfg=?= <info@register828.com>
+Message-Id: <E19ad4I-0007mC-00@hermes.sistina.com>
+Subject: [linux-lvm] =?GB2312?B?16Ky4bPJwaLP47jbuavLvqGizdjVubqjzeLStc7x?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,68 +11,66 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jul 10 04:34:01 2003
+Date: Thu Jul 10 10:12:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 To: linux-lvm@sistina.com
 
-On Wed, Jul 09, 2003 at 04:26:36PM -0600, Andrew Patterson wrote:
-> Ran a load test last night where we created snapshots two snapshots
-> every 2 hours under heavy file system load.  We got the following oops:
-> 
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address
-> 00000000
-> 802895f5
-<SNIP>
->   11:   89 48 04                  mov    %ecx,0x4(%eax)
-> 
-> 
-> 10 warnings issued.  Results may not be reliable.
-> 
-> This was run on a 2.4.21 system using LVM 1.0.7.  The system has 2GB of
-> memory and is configured with HIGHME64G.  We are running the latest
-> 2.4.21 XFS and are using xfs_freeze to quiesce the file system.  We are
-> not using the VFS_LOCK patch.
-> 
-> Anyone have any ideas what may be causing this?
+ע�������۹�˾����չ����ҵ��
 
-VM problems ? (we had some reports ITR)
-Do you have a chance to retest without HIGHMEM to see if it still fails ?
 
-> 
-> Thanks,
-> 
-> Andrew
-> 
-> -- 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
->    Andrew Patterson                          Voice:  (970) 898-3261
->    Hewlett-Packard Company                   Email:  andrew@fc.hp.com
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+����!
 
--- 
+��۹�˾ע����
+רҵ�������ؿͻ������ע��Ǽ����޹�˾��
+�����ṩ�������׷���ʹ���ؿͻ���������
+��������ң�ط�ʽ���Ƽ�����һ�������ע
+��Ǽǵ����޹�˾��������չ����ҵ��
 
-Regards,
-Heinz    -- The LVM Guy --
+��������ֻ��۱�5200Ԫ / �����5600Ԫ
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+ע�������۹�˾�ĺô���
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+��Ӫ��Χ��������
+ע���ʽ���������
+��˾��������ѡ��
+�������л��ڡ������Ϸ���������
+ͨ���绰���С��������з���ң����������ʻ�
+˰�ʵͣ�ֻ��һ�걨˰һ�Σ��������Ӫҵ˰����ֵ˰��
+��������ɽ����ڡ���֣�������������֤
+����۹�˾����ע���̱ꡢר���������������硢������š������ڿ��ţ���������
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+��רҵ��ʦ����
+�����򵥡����
+����ʱ��ֻ��12�������죨�������ʵ�ʱ�䣩
+
+���׷���ɰ�����   
+�ṩ��˾����
+�ṩ��˾ע���ַ
+�ṩ����������
+�ṩ�����绰��
+�������п���
+��������
+�����ʰ����ļ�
+��������ѯ
+
+������ֻ���ṩ�ⶨ��˾���ơ��ɶ�/��������������/����֤����
+
+��������ʣ�www.register828.com����۹�˾ע����
+
+��ϵ���� :
+��۹�˾ע����
+��ַ:  �����и�����������·2�����Ŵ���3604��
+�绰:  (0755) 82092416 ��������:  (0755) 82092412				
+�ֻ�:��135 10362845	
+��ϵ��: ������
+����:  office@register828.com  mailto:office@register828.com 
+��ַ:��www.register828.com
+
+������������������
+��!
+  ������������������������
+��۹�˾ע����
+www.register828.com
