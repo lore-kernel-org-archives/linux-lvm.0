@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 28 May 2001 11:40:46 +0000
+Date: Mon, 28 May 2001 11:43:55 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm-problems?
-Message-ID: <20010528114046.K26710@sistina.com>
-References: <20010527234117.A759@mind.bartosch.net>
+Subject: Re: [linux-lvm] ORACLE OPS and Fibre channel
+Message-ID: <20010528114355.L26710@sistina.com>
+References: <85256A55.0061ED1B.00@IBJS06DS.ibjs.com> <200105232355.f4NNtQ7q030802@webber.adilger.int>
 Mime-Version: 1.0
-In-Reply-To: <20010527234117.A759@mind.bartosch.net>; from peter@bartosch.net on Sun, May 27, 2001 at 11:41:17PM +0200
+In-Reply-To: <200105232355.f4NNtQ7q030802@webber.adilger.int>; from adilger@turbolinux.com on Wed, May 23, 2001 at 05:55:26PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,78 +21,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Did you report that to the reiserfs list too?
+On Wed, May 23, 2001 at 05:55:26PM -0600, Andreas Dilger wrote:
+> Slava Tulchinsky writes:
+> > After successfully installing Oracle 8.1.7.0.1 OPS on Redhat 6.2 with
+> > 2.2.19-6.2.1 using Compaq fibre channel card RA4000 to connect to Compaq
+> > external drive enclosure RA4100 (kernel driver cpqfc), We decided see if OPS
+> > will work with lvm 0.9.1-Beta7.
+> 
+> > LVM part seems to work fine, but when booting with the newly
+> > compiled kernel no longer able to use raw partitions with OPS
+> > with or without LVM.
+> 
+> Two things.  You need the raw-io patch for 2.2 kernels, and you also need
+> to change the SECTOR_SIZE in the lvm.h header to be 512 bytes (the latter
+> may have been fixed in recent LVM code releases).
 
-On Sun, May 27, 2001 at 11:41:17PM +0200, Peter Bartosch wrote:
-> hello,
+Yes it has been fixed.
+
 > 
-> i recently made my three LV new (caused by an accident as i tried to
-> extend an existing (0.8i) LV)
-> 
-> so i created a new kernel (2.4.2) with lvm 0.9.1_beta7
-> 
-> the first problems came when i tried to create more than one VG - the
-> second VG couldn't be activated (always inactive after reboot and unable
-> to activate)
-> 
-> so i'm using only one VG
-> 
-> the first two LV's of this VG could i create without problems, but the
-> third makes problems:
-> 
-> i created the reiserfs on it, but when i tried to mount it, the mount
-> failed
-> an reiserfsck --rebuild-sb and after that reiserfsck --rebuild-tree
-> clears it and i could mount my LV -- UNTIL the next reboot
-> 
-> i had to reboot because something oopsed:
-> 
-> ----
-> 
-> is_leaf: item location seems wrong (second one): *NEW* [9 10 0x0 SD],
-> item_len 44, item_location 2308, free_space(entry_count) 65535
-> vs-5150: search_by_key: invalid format found in block 8271. Fsck?
-> kernel BUG at namei.c:343!
-> invalid operand: 0000
-> CPU:    0
-> EIP:    0010:[<c018ff08>]
-> EFLAGS: 00010286
-> eax: 0000001b   ebx: c6655e58   ecx: 00000001   edx: 00000001
-> esi: c02d4fb4   edi: c6655edc   ebp: c6655e70   esp: c6655e40
-> ds: 0018   es: 0018   ss: 0018
-> Process cp (pid: 1799, stackpage=c6655000)
-> Stack: c02d4c7e c02d4d7e 00000157 00000000 c02d4fb4 c6655e9c 00000002 0000000e 
-> 	4a0507ff 000001f4 00000000 00000003 c3e55a20 c0190030 c7742c20 c7dd3b20 
->         0000001b c6655e9c c6655edc fffffff4 c6654000 c7742c20
-> 	c3e55a20 00000001 
-> Call Trace: [<c0190030>] [<c01468e9>] [<c013de9a>]
->         [<c013e6e9>] [<c013db5a>] [<c013ee4c>] [<c013b8c6>] 
->         [<c0133047>] [<c0108f5b>] 
-> Code: 0f 0b 83 c4 0c 8d 76 00 8b 4d 10 51 8b 45 0c 50 57 8d 55 e8 
-> 
-> -----
-> 
-> this oops let the process which works on the third LV freeze - so i
-> couldn't kill it
-> 
-> the first and the second LV seem to work well
-> 
-> when i reboot the third LV won't be mountet automagically and the
-> filesystem seems to be corrupt
-> 
-> 
-> any help will be appreciated
-> 
-> 
-> :wq - until next mail B-), l8r
-> 
-> Peter
+> Cheers, Andreas
 > -- 
->    :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
->    :          student of technical computer science           :
->    :     university of applied sciences krefeld (germany)     :
->     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
