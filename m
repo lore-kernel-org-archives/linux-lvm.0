@@ -1,14 +1,20 @@
-Received: from redhat.com (astrea.boston.redhat.com [172.16.80.45])
-	by mail.boston.redhat.com (8.12.8/8.12.8) with ESMTP id j17NVVZq024966
-	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 18:31:31 -0500
-Message-ID: <4207FA53.9080107@redhat.com>
-Date: Mon, 07 Feb 2005 18:31:31 -0500
-From: James Parsons <jparsons@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j19DodO17402
+	for <linux-lvm@redhat.com>; Wed, 9 Feb 2005 08:50:39 -0500
+Received: from mail.nyirinku.hu (rev.193.226.225.184.euroweb.hu
+	[193.226.225.184])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j19DobP3015787
+	for <linux-lvm@redhat.com>; Wed, 9 Feb 2005 08:50:38 -0500
+Received: from [192.168.27.145] (rev.193.226.225.167.euroweb.hu
+	[193.226.225.167])
+	by mail.nyirinku.hu (8.12.9/8.12.9) with ESMTP id j19DoUQq003010
+	for <linux-lvm@redhat.com>; Wed, 9 Feb 2005 14:50:31 +0100
+Message-ID: <000701c50eae$503fbd20$911ba8c0@godzilla>
+From: "Sutto Zoltan" <sutto.zoltan@rutinsoft.hu>
+Date: Wed, 9 Feb 2005 14:50:28 +0100
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Mapping between PEs and Logical Volumes.
-References: <1107704665.20387.214438621@webmail.messagingengine.com>
-In-Reply-To: <1107704665.20387.214438621@webmail.messagingengine.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] moving LVM to a new box
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,38 +25,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
+To: linux-lvm@redhat.com
 
-fromkth+lvm@fastmail.fm wrote:
+I have a newly installed/configured/updated FC3 with LVM2 on a P3 box.
+How can I move this working system to a new P4 box with a larger SATA disk 
+without reinstalling/upgrading/configuring the whole OS.
 
->Hi,
->
->I have one Volume Group and it contains two Logical Volumes.
->There are many free PEs in Volume Group.
->I want to know which PEs inside a Physical Volume(Volume Group) are
->assigned to which Logical Volume.
->
->So which command shows this.
->  
->
-There is a GUI for LVM2 that is included in the latest Fedora release 
-called system-config-lvm that visually displays the mapping between PVs 
-and LVs. Here is the rpmfind URL:
+Any help would be appreciated
 
-http://fr.rpmfind.net/linux/RPM/fedora/devel/x86_64/system-config-lvm-0.9.18-1.1.noarch.html
 
-system-config-lvm has undergone a couple of rounds of QA. It will NOT 
-work with the very latest (lvm2-2.01.03-1.0)  LVM2 package, due to a 
-path issue discovered today and being addressed now, but will work just 
-fine between lvm2-2.00.25-1.01 and the version listed above.
-
-This version of system-config-lvm is the first GA version. It is under 
-active development, and near term planned features include support for 
-snapshotting and resizing, as well as fixes for some UI nits. Try it 
-out, and please report any bugs you find or features/changes you would 
-like to see.
-
-Regards,
-
--Jim Parsons
+Zoltan Sutto
