@@ -1,8 +1,9 @@
-Message-ID: <3D77B43B.7000506@domdv.de>
-From: Andreas Steinmetz <ast@domdv.de>
+Message-ID: <XFMail.20020906135021.f.hinzmann@hamburg.de>
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] 2.4.20pre5 CONFIG_BLK_STATS breaks LVM tools
+In-Reply-To: <20020904145914.A27187@sistina.com>
+From: Florian Hinzmann <f.hinzmann@hamburg.de>
+Subject: Re: [linux-lvm] Error after moving volume group to another machi
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +14,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep  5 16:55:01 2002
+Date: Fri Sep  6 06:51:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-kernel <linux-kernel@vger.kernel.org>, Linux-LVM@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-If CONFIG_BLK_STATS is enabled in 2.4.20pre5 this breaks at least the
-LVM tools. The symptom on a system running initrd to do vgscan/vgchange
-to be able to boot is that after
+Hello Heinz!
 
-RAMDISK: Compressed image found at block 0
-Freeing initrd memory: 734k freed
-VFS: Mounted root (ext2 filesystem).
 
-the system hangs with the CPU under load. It is difficult for me to
-investigate this further as both systems I do have available run a
-LVM/reiserfs only setup and thus I can't have a look at the layout of
-/proc/partitions in the CONFIG_BLK_STATS enabled page.
+On 04-Sep-2002 Heinz J . Mauelshagen wrote:
 
-It would, however, be worth a word of warning in Configure.help that
-this option can break userspace tools that may be important for system
-boot and other system functions.
--- 
-Andreas Steinmetz
-D.O.M. Datenverarbeitung GmbH
+> is it really 3 HDDs you want to move, not 4?
+> It says "Cur PV               4" in the pvdata output below.
+> Maybe that still makes sense, because you have 2 PVs in 2 partitions on
+> the very same physical disk.
+
+No, I was really moving 4 out of that box. I just got confused writing
+my mail as there were 3 other disks involved and I was shuffling
+them around and using some of them temporarily to reach the setup
+I wanted. But I am off topic here .. ;)
+
+It has not been a LVM nor a software problem. One of the power 
+connectors was broken, so one disk did not have power. Maybe it 
+is possible to have a more expressive error message?
+
+Something like "VG <name> consists of 4 PVs, only finding 3".
+
+
+Anyway, it was my fault, thanks for your thoughts about it!
+
+
+  Regards
+       Florian
+
+
+--
+  Florian Hinzmann                         private: f.hinzmann@hamburg.de
+                                            Debian: fh@debian.org
+PGP Key / ID: 1024D/B4071A65
+Fingerprint : F9AB 00C1 3E3A 8125 DD3F  DF1C DF79 A374 B407 1A65
