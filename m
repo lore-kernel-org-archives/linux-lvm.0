@@ -1,38 +1,33 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200008062055.e76KtEx28533@webber.adilger.net>
-Subject: Re: [linux-lvm] Additions to LVM-BUGS-0.8final
-In-Reply-To: <398D76E1.CDC2018@yahoo.com> "from Falcon at Aug 6, 2000 04:32:01
- pm"
-Date: Sun, 6 Aug 2000 14:55:13 -0600 (MDT)
+From: Michael Lausch <mla@1012surf.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <14734.36981.572856.926128@loki.1012internet.at>
+Date: Mon, 7 Aug 2000 12:33:25 +0200 (CEST)
+Subject: [linux-lvm] dual adapter machine
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Falcon <falcon_lvm@yahoo.com>
-Cc: Andreas Dilger <adilger@turbolinux.com>, Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Falcon writes:
-> Andreas Dilger escribi?:
-> > Try to replace the sprintf() with:
-> >
-> > sprintf ( file_name, "%s/%s", dir, dir_ent->d_name);
->
->                sprintf ( file_name, "%s/%s", dir, dir_ent->d_name, 0);
-                                                                    ^^^
-> 
-> And when compile it , it say that :
-> 
-> cc -c -pipe -Wall -O2 -D_GNU_SOURCE -DDEBUG -I/root/LVM/0.8final/tools/lib
-> -I/root/LVM/0.8final/tools -o lvm_remove_recursive.o lvm_remove_recursive.c
-> lvm_remove_recursive.c: In function `lvm_remove_recursive':
-> lvm_remove_recursive.c:51: warning: too many arguments for format
 
-That's because you have an extra "0" at the end, which I don't have.
+We are going to use linux LVM on some servers using 2 FCAL adapters
+per machine, since our RAID System (HP XP256) has two FCAL
+channels. So in order to have no single point of failure, we want to
+use 2 FCAL adapters in each machine, connected to the same (virttual)
+disks. This means i see the same partition on two controlers.
 
-Cheers, Andreas
+For example: controller 1, SCSIID 3, LUN 1, Partition 1
+and          controller 2, SCSIID 3, LUN 1, Partition 1
+
+refer to the same blocks.
+
+So when everything is okay i'll talk to the disk through c1d3l1s1 (in
+solaris notation). When this FCAL has an error, i want to talk to the
+same disk via c2d3l1s1. How can this be done with linux LVM?
+
+Anybody got any ideas? 
+
+thanks in advance.
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+michael lausch
