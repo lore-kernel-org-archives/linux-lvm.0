@@ -1,42 +1,28 @@
-Message-ID: <38B64525.AC7CAE9D@msede.com>
-Date: Fri, 25 Feb 2000 10:02:29 +0100
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: kernel@mail.intercomp-sys.com
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 0.8final driver included in 2.3.47 (fwd)
-Content-Transfer-Encoding: 7bit
+Message-Id: <200002250934.KAA31193@seger.axis.se>
+Subject: [linux-lvm] initrd support
+Mime-Version: 1.0
+Date: Fri, 25 Feb 2000 10:34:39 +0100
+From: Lars Segerlund <lars.segerlund@axis.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Forwarded message ...
 
--------- Original Message --------
-Date: Thu, 24 Feb 2000 13:20:16 -0500 (EST)
-From: kernel@mail.intercomp-sys.com
-Subject: Re: *** ANNOUNCEMENT *** LVM 0.8final driver included in
-2.3.47
+ Hi,
 
-Hi,
+ I didn't get on thing with the 0.7 release, it was the initrd support, I 
+thought
+ this was a issue for the boot loader, and not the device driver ?
 
-I'm glad that LVM finally made it into the main standard Linux
-kernel..
+ Is it not so that one sets up an initrd, which in it's turn can contain any
+ binaries to start lvm which is then mounted, or is the root changeover the
+ problem ?
 
-However, the docs have a big problem - they look like they're for
-someone
-who have long experience with LVM.
+ Sorry if this is a waste of bandwith, but I have had a little look at initrd
+ ( I'm using it on a couple of machines ), and thougt that I knew how it 
+worked.
 
-I would suggest to you to re-write the howto so that less familiar
-people
-with LVM knowledge know what to do, how to do, what is LVM (maybe some
-links to other sites who can explain in details the LVM idea?)
-
-With the current status - a pretty new Linux Sys. admin with those
-docs
-won't find his arms and legs :)
-
-Nevertheless - excellent work! keep up the good work pal :)
-
-Hetz
+ / Lars Segerlund.
