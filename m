@@ -1,10 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102272025.f1RKPg727605@webber.adilger.net>
-Subject: Re: [linux-lvm] q: BLOCK_SIZE
-In-Reply-To: <3A9BF392.2E4C3DA5@tls.msk.ru> from Michael Tokarev at "Feb 27,
- 2001 09:36:02 pm"
-Date: Tue, 27 Feb 2001 13:25:42 -0700 (MST)
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Tue, 27 Feb 2001 21:35:17 +0100
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] Possible to raise Max LV?
+Message-ID: <20010227213517.G29642@vestdata.no>
+References: <20010227132358.A24164@math.ohio-state.edu> <200102272022.f1RKMIk27598@webber.adilger.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <200102272022.f1RKMIk27598@webber.adilger.net>; from Andreas Dilger on Tue, Feb 27, 2001 at 01:22:18PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +18,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Michael writes:
-> Little question that I already posted here a long time ago.
-> What drawbacks can suffer if one changes BLOCK_SIZE in
-> include/linux/lvm.h from 1024 (or 4096 on S/390) to 512?
+On Tue, Feb 27, 2001 at 01:22:18PM -0700, Andreas Dilger wrote:
+> Basically, the PE size is the minimum allocation unit of LVM.  If you
+> make PE size very large, then you are generally wasting PE/2 disk space
+> for each PV.  If (as in your case) the HW raid appears as a single large
+> disk, then a large PE size may be appropriate, since you will only waste
+> PE/2 once and it will still let you grow the LV to the current 2TB block
+> device limit (kernel limit).
 
-On S/390 it would appear that the DASD block devices have a 4096
-byte sector size.  However, on most other systems there is only
-a 512 byte sector size, so I don't see any reason there would
-be problems with BLOCK_SIZE = 512.
+What about increesing the default, to say 32 MB?
+32 MB should be enough for everyone (because of the 2TB limit), and 16
+MB waste on every PV isn't that bad.
 
-I think Andrea Arcangeli was complaining about this as well.
 
-> This is about using lvm with rawio -- on 2.2, rawio wan't
-> work with i/o size be not a multiple of blocksize, while
-> on 2.4 it works.  Or at least this was on Dec-2000.
-> Oh yes, this is about 2.2 kernel and lvm-0.9.
 
-If it works for you at 512 bytes, leave it then.  Maybe Heinz
-will let us know why it is set to 1024 bytes.
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+--=20
+Ragnar Kj=EF=BF=BDrstad
+Big Storage
