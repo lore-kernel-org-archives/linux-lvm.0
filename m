@@ -1,10 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] what happes to VG when disks are added/removed?
-Message-Id: <20020311162737.A13418@sistina.com>
-References: <200203110826.g2B8Q6v17961@mailgate5.cinetic.de>
+Subject: Re: [linux-lvm] vgcreate not working
+Message-Id: <20020311162848.B13418@sistina.com>
+References: <20020310150455.E7514@majestic.ukshells.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <200203110826.g2B8Q6v17961@mailgate5.cinetic.de>;
-    from gunther.kuhlmann@web.de on Mon, Mar 11, 2002 at 09:26:06AM +0100
+In-Reply-To: <20020310150455.E7514@majestic.ukshells.co.uk>;
+    from linux.lvm@codex.net on Sun, Mar 10, 2002 at 03:04:55PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,50 +15,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar 11 09:30:02 2002
+Date: Mon Mar 11 09:31:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Mar 11, 2002 at 09:26:06AM +0100, gunther.kuhlmann@web.de wrote:
-> Hello!
-> 
-> I had two hard disks, the first with three VG's, the second
-> with one VG (vg2). When the second hard disk started to fail, I
-> installed a third with VG vg4 and copied the data over. Then,
-> without deleting vg2, I unplugged hd 2. After reboot, the volume
-> on vg2 mounted cleanly, although the disk was not available. It
-> correctly accessed the LV on vg4 on the new disk. Is that correct?
-> Can I now use either of the two vg2/vg4 to access the LV on the
-> new disk? How do I get rid of one (and which) without risking my
-> data? Can I just vgremove vg2 away?
+Vincent,
 
-Gunther,
+in case you've got devfs, please retry with the long devfs path names.
 
-the result depends on *how* you copied vg2 over to your new hard drive.
+Regards,
+Heinz    -- The LVM Guy --
 
-If you used for eg. dd to do an image copy of the partitions, which contained
-vg2 on the flaky drive or a whole disk copy keeping sizes, you've got duplicated
-content and can unplug the flaky device.
-If you ran vgscan, you saw your 'old' vg2 in the new drive, which is
-perfectly fine.
 
-BTW: your configuration is a little bit extraordinary in terms of how to use
-drives as PVs. Typically you shouldn't have multiple VG's on a single drive
-as you seem to have it.
-Much rather you should have multiple drives in one VG.
-
+On Sun, Mar 10, 2002 at 03:04:55PM +0000, Vincent AE Scott wrote:
 > 
-> Thanks for your help!
+> Hi there,
 > 
-> Gunther
+> i have a problem with some newly partioned up disks, i've created two
+> LVM partions on two different disks.  upon executing the following
+> commands, vgcreate fails:
+> 
+> [root@box guest]# pvcreate /dev/hde2
+> pvcreate -- physical volume "/dev/hde2" successfully created
+> 
+> [root@box guest]# pvcreate /dev/hdg2
+> pvcreate -- physical volume "/dev/hdg2" successfully created
+> 
+> [root@box guest]# vgcreate vg /dev/hde2 /dev/hdg2
+> vgcreate -- no valid physical volumes in command line
 > 
 > 
-> ________________________________________________________________
-> Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr! 
-> Beim WEB.DE Lottoservice: http://tippen2.web.de/?x=13
+> here's a snipit from the tail end of vgcreate -d:
 > 
+> <1> pv_read_all_pv -- calling stat with "/dev/loop/7"
+> <22> pv_read -- CALLED with /dev/loop/7
+> <333> pv_check_name -- CALLED with "/dev/loop/7"
+> <4444> lvm_check_chars -- CALLED with name: "/dev/loop/7"
+> <4444> lvm_check_chars -- LEAVING with ret: 0
+> <333> pv_check_name -- LEAVING with ret: 0
+> <22> pv_read -- going to read /dev/loop/7
+> <22> pv_read -- LEAVING with ret: -282
+> <1> pv_read_all_pv -- pv_read returned: -282
+> <1> pv_read_all_pv -- avoiding multiple entries in case of MD; np: 2
+> <1> pv_read_all_pv -- LEAVING with ret: 0
+> <1> pv_check_name -- CALLED with "/dev/hde2"
+> <22> lvm_check_chars -- CALLED with name: "/dev/hde2"
+> <22> lvm_check_chars -- LEAVING with ret: 0
+> <1> pv_check_name -- LEAVING with ret: 0
+> <1> pv_check_name -- CALLED with "/dev/hdg2"
+> <22> lvm_check_chars -- CALLED with name: "/dev/hdg2"
+> <22> lvm_check_chars -- LEAVING with ret: 0
+> <1> pv_check_name -- LEAVING with ret: 0
+> vgcreate -- no valid physical volumes in command line
+> 
+> 
+> 
+> Now, the only thing i can think of, is this disk *used* to have an LVM
+> on it, (vg+lv) but i have since removed it from the disk, in favour of
+> this new attempt.  i cant see how it could possibly be a problem, but
+> maybe there's something lurking in the FS.
+> 
+> 
+> Does anyone have any dieas whats wrong?
+> im running lvm 1.0.3 on 2.4.18
+> 
+> 
+> 
+> -- 
+> PGP key:  http://codex.net/pgp/pgp.asc
+> 
+>  C:\> File not found. Should I fake it? (Y/N) 
 > 
 > 
 > _______________________________________________
@@ -66,11 +94,6 @@ Much rather you should have multiple drives in one VG.
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
