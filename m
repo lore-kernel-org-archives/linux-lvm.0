@@ -1,12 +1,10 @@
-Return-Path: <raheesom@navpoint.com>
-Subject: Re: [linux-lvm] LVM questions & problems.
-From: Rupert Heesom <raheesom@navpoint.com>
-In-Reply-To: <20010507102844.B25752@sistina.com>
-References: <989197513.8109.6.camel@localhost> 
-	<20010507102844.B25752@sistina.com>
-Date: 07 May 2001 11:57:03 -0400
-Message-Id: <989251023.1153.5.camel@localhost>
-Mime-Version: 1.0
+Return-Path: <jdiehl@sandia.gov>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BEE1@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Subject: RE: [linux-lvm] Can't pvcreate second partition...
+Date: Mon, 7 May 2001 16:12:35 -0600
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,52 +17,106 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On 07 May 2001 10:28:44 +0000, Heinz J. Mauelshagen wrote:
-> On Sun, May 06, 2001 at 09:05:13PM -0400, Rupert Heesom wrote:
-> > I'm practicing doing some LVM commands, and am coming up with some
-> > problems -
-> > 
-> > Most disconcerting is that when I try to create a directory in the LV, I
-> > get the following error - (this does not happen all the time, but almost
-> > all the time 99%) -
-> > 
-> > [root@localhost Tmp]# mkdir test1
-> > mkdir: cannot create directory `test1': Input/output error
+Yup, rebooting the server fixed it.  On the way home, it occured to me to
+try that, but I've never had to boot a linux box after fdisking it.  Go
+figure.  
+
+Thanx,
+Mike Diehl,
+Network Monitoring Tool Devl.
+284-3137
+jdiehl@sandia.gov
+
+
+> -----Original Message-----
+> From: Glenn Shannon [mailto:glenn@gecpalau.com]
+> Sent: May 04, 2001 5:14 PM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Can't pvcreate second partition...
 > 
-> You didn't metion, if the filesystem is still in a sane state.
 > 
-> Did you check your syslog for "accessess beyond the end of the device"
-> which indicate fs related problems?
-
-Well, looking at my syslog after mounting my lvol, I saw the following
-msg -
-
-"May  7 11:51:26 localhost kernel: EXT2-fs warning: mounting fs with
-errors, running e2fsck is recommended"
-
-I also saw previous errors which you asked about (lots of them) -
-
-"itmap: Cannot read inode bitmap - block_group = 3, inode_bitmap = 98307
-May  6 14:44:13 localhost kernel: attempt to access beyond end of
-device...."
-
-I have realised what my base problem is.... I have reduced the LV size,
-but not reduced the Ext2 filesystem.  For some reason I thought that
-resizing the LV was sufficient.  Looking further at the HOWTO, and other
-web docs has enlightened me further.
-
-It seems I will try to learn how to use teh e2fsadm util.  BTW one of
-the utils seems to be commercial from Powerquest.  I have the v4 of
-Partition Magic already.  I know it resizes ext2 filesystems, but as far
-as I know needs to be run from within windows (it's been a long time
-since I've used it last).  Are the utils such as e2fsadm sufficient /
-good enough without the commercial PM util?
-
-
-
--- 
-regs
-rupert
+> "Diehl, Jeffrey" wrote:
+> 
+> > Hi all.
+> >
+> > I'm new to LVM, but think I understad it, at least... <grin>
+> >
+> > Anyway, I'm trying to setup the first VG but can't seem to 
+> build my PV's.
+> > The transcript of what I did is at the bottom of this message.
+> >
+> > As you can see, I was able to do pvcreate on /dev/sdc2, but not on
+> > /dev/sdc3.  These partitions are on a hardware raid5.
+> >
+> > Am I missing something?
+> >
+> > Thanx,
+> > Mike Diehl,
+> > Network Monitoring Tool Devl.
+> > 284-3137
+> > jdiehl@sandia.gov
+> >
+> > Script started on Fri May  4 07:33:56 2001
+> > [root@filmore /mnt]# fdisk /dev/sdc
+> >
+> > The number of cylinders for this disk is set to 30945.
+> > There is nothing wrong with that, but this is larger than 1024,
+> > and could in certain setups cause problems with:
+> > 1) software that runs at boot time (e.g., LILO)
+> > 2) booting and partitioning software from other OSs
+> >    (e.g., DOS FDISK, OS/2 FDISK)
+> >
+> > Command (m for help): p
+> >
+> > Disk /dev/sdc: 255 heads, 63 sectors, 30945 cylinders
+> > Units = cylinders of 16065 * 512 bytes
+> >
+> >    Device Boot    Start       End    Blocks   Id  System
+> > /dev/sdc1             1     15472 124278808+  8e  Unknown
+> > /dev/sdc2         15473     15476     32130   8e  Unknown
+> > /dev/sdc3         15477     15480     32130   8e  Unknown
+> > /dev/sdc4         15481     15484     32130   8e  Unknown
+> >
+> > Command (m for help): w
+> > The partition table has been altered!
+> >
+> > Calling ioctl() to re-read partition table.
+> > Re-read table failed with error 16: Device or resource busy.
+> > Reboot your system to ensure the partition table is updated.
+> >
+> > WARNING: If you have created or modified any DOS 6.x
+> > partitions, please see the fdisk manual page for additional
+> > information.
+> > Syncing disks.
+> >
+> > [root@filmore /mnt]# pvcreate /dev/sdc2
+> > pvcreate -- physical volume "/dev/sdc2" successfully created
+> >
+> > [root@filmore /mnt]# pvcreate /dev/sdc3
+> > pvcreate -- can't open physical volume "/dev/sdc3" to get its size
+> >
+> > pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help] 
+> [-y|--yes]
+> >         [-v|--verbose] [-V|--version] PhysicalVolume 
+> [PhysicalVolume...]
+> >
+> > Script done on Fri May  4 07:34:33 2001
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 
+> Can you try rebooting and trying the pvcreate again? I 
+> suspect that it was
+> because the partition table was unable to be updated.
+> 
+> Glenn
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 
