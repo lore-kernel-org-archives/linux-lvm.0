@@ -1,70 +1,102 @@
-Message-Id: <199904151425.AA22497@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Swap/DB devices
-Date: Thu, 15 Apr 1999 16:24:10 METDST
-In-Reply-To: <199904150815.AA02380@future-is.orange.co.uk>; from "Martyn.AYSHFORD@orange.co.uk" at Apr 15, 99 9:18 am
+Date: Fri, 16 Apr 1999 16:20:11 +0100 (BST)
+From: Tony Rogers <tony@racsys.demon.co.uk>
+Subject: [linux-lvm] System locks solid under LVM
+Message-ID: <Pine.LNX.3.96.990416151027.26530A-100000@websrv.afsuk.gecfs>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Martyn.AYSHFORD@orange.co.uk
-Cc: linux-lvm@msede.com, mge@u9ete.ez-darmstadt.telekom.de
+To: linux-lvm@msede.com
 
-> 
-> I'm in the process of re-jigging all the file systems to sit in volume
-> groups.
-> 
-> Two questions :-
-> 
-> a) Can I setup swap to run from a volume group is it a good idea?
+Hello everyone,
 
-Yes.
-It's as good as partition based swap (very low LVM driver overhead).
+My difficulties with LVM
+========================
+Overview
+--------
+I have been playing with LVM for some time now, with mixed results. I
+have a machine at work which has LVM 0.6 installed. Although this is
+not utilised heavily, it works fine.
 
-Please take i/o amounts into consideration and avoid to allocate swap LVs
-and other i/o intensive LVs on the same PVs.
+On the other hand, I have a machine at home, also using LVM 0.6, which
+has SERIOUS problems. In simple terms, the computer locks solid when
+it comes under moderate load. I can trigger this VERY easily, but
+don`t know how best to debug the situation.
 
-> 
-> b) I have  database devices running in cooked file systems for Oracle,
-> Sybase and Informix.
-> 
-> Vendor recommendations for sybase and Informix are normally raw, here we
-> carve our database devices from HP volume groups is this a good idea for
-> linux?
+I have just joined the mailing list, and noticed some mention of lock
+ups, but the feeling seemed to be that if the underlying system was
+OK, the LVM should be fine. I`m not convinced that this is true in my
+case.
 
-There is a raw device patch available by Stephen Tweedie.
-IIRC it will make it into the 2.3 kernel (what do you say Stephen?).
+As is usual with hobby configurations, I have lots of I/O cards installed,
+and have done my best to eliminate hardware / other system causes  as a
+source of the problem.
 
-LVM has to be enhanced a little bit to support that patch.
+My configuration
+----------------
+I am using Redhat 5.2, initially with Kernel 2.0.36, but have now
+upgraded to 2.2.2 in an attempt to get the latest drivers for my hardware.
 
-> 
-> Anybody done this?
-> 
+I have two Ethernet cards (ISA & PCI), two SCSI cards (ISA & PCI), a
+sound card (ISA) and a video card (PCI).
 
-Yes, i did successfull tests with a lot of swap LVs.
-Anybody out there with (big) database installations on LVM?
+The SCSI controller is a Diamond Fireport 40, and it is this
+controller which hosts two partitioned Fireball 6.4G drives. It is
+parts of these drives which have LVM configured for them.
 
-BTW: you can have performance boosts by setting up striped LVs
-     if your hardware setup is o.k. (enough i/o bandwith on scsi busses,
-     several busses ...)
-     
+Detailed description
+--------------------
+Because it is so easy to push the system over, I decided that I needed
+to find out how to make the system stable again!
 
+I now have two Kernels to play with. Both are 2.2.2, one with LVM
+built in, and the other without the LVM patches.
 
-Regards,
-Heinz
+This allows the following three scenarios:
+1) Clean kernel - No LVM of any kind.
+2) LVM Kernel - Not using LVM.
+3) LVM Kernel - Using LVM.
 
---
+In order to load the system, all I do is copy the contents of one
+filesystem to that on another partition, either native ext2 or ext2 on
+a Logical Volume (depending on the test).
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+My LVM configuration is as follows:
 
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+One Volume Group comprising 4 PVs on 2 SCSI drives. There are 7
+Logical volumes in this group, but I do my testing on one of ~1.5G capacity.
+
+I experimented with striping the LVs, but decided to settle on a
+`straight` linear LV for the purposes of the tests.
+
+The results of my testing (over a couple of weeks) seem to show the
+following:
+
+Case 1 - Clean Kernel. Solid, even with two simultaneous bulk copies
+AND an archive to tape, at the same time.
+
+Case 2 - LVM Kernel - Not using LVM. Pretty solid. A couple of  lock ups.
+
+Case 3 - LVM Kernel - Using LVM. Falls over almost every time within
+seconds or minutes. It lasted over an hour once only.
+
+Plea for help
+-------------
+I really want to keep using LVM (it is the way forward!), and am
+prepared to make quite some effort to make it work for me.
+
+The problem I have, is that the machine seems to lock SOLID with no
+warning, and there are no errors (that I can see) available to look
+at.
+
+I really am stuck. Is there any debugging that I can enable?
+
+Any help will be appreciated, and I am willing to post any fix, for
+the benefit of the list.
+
+Thanks in advance, and sorry for the long mail!
+
+Tony Rogers
+===========
