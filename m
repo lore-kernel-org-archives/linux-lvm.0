@@ -1,7 +1,9 @@
-Message-ID: <F888C30C3021D411B9DA00B0D0209BE8038F9522@cvo-exchange.cvo.roguewave.com>
-From: Poul Petersen <petersp@roguewave.com>
-Subject: RE: [linux-lvm] One VG or many?
+From: "Steve Wray" <steve.wray@paradise.net.nz>
+Subject: RE: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
+Message-ID: <000c01c20ccf$fcac9e90$0201a8c0@fosi>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <003401c20c0f$23a7afb0$0300000a@STATION>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,41 +14,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun  5 14:37:01 2002
+Date: Wed Jun  5 15:32:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-> First, I would separate system (= containing the OS) and data area.
-> Second, if you do not intend to stripe data across LVs I would create
-> one VG for every logical business/application unit and assign disk
-> space on demand. That means that you leave most disks in a pool and
-> if you need more space in one VG you'll add the disk online with
-> vgextend. Why not start with one disks per VG?
+Yup exactly.
+For example I have;
+/dev/system/home /home ext3 data=journal 1 2
+
+Its the bomb. I have a hell of a lot of dynamic data
+in that /home so in event of a crash there was a big
+chance of corruption. Not Any More!!!!!
+8-)
+
+
+> [mailto:linux-lvm-admin@sistina.com] On Behalf Of Aslak 
+> Sommerfelt Skretting
 > 
-
-	I see how adding disks from a pool would work very well. The problem
-with our arrangement is that we would like to combine disks into RAID 5 sets
-and then use these RAID sets as the PVs. The optimal size of each RAID set
-(optimal in terms of disk usage, controller redundancy, channel redundancy,
-and enclosure fault-tolerance) is about 215GB; so we would have 8 PVs
-available to use in VGs. This size seems insufficiently granular to use as a
-"expansion unit" to each VG. In fact, even if we used the individual disks
-in the array, they seem too large at 73GB. This is why we were thinking
-about partitioning the RAID sets so they would appear to the host as smaller
-disks which could be added to VGs (The disks, RAID sets and even partitions
-are all externally managed on a Zzyzx RocketStor 2000).
-
-	Let me ask a slightly different question - what is the advantage to
-creating a VG for every logical business/application unit? Or perhaps, why
-would I not want to use a single VG? Is it a good idea just in terms of
-failure in one VG not wiping out everything? It would seem that a reasonable
-analogy would be that one VG is like one disk with partitions (LVs) for each
-business unit, whereas multiple VGs would be more like multiple disks. Both
-seem to have sufficient ideological separation?
-
-Thanks for you help,
-
-
--poul
+> This journal=data you talk about, is this an option to be 
+> used with the 'mount' command?
+> 
+> ----- Original Message -----
+> From: "Steve Wray" <steve.wray@paradise.net.nz>
+> To: <linux-lvm@sistina.com>
+> Sent: Tuesday, June 04, 2002 11:15 PM
+> Subject: RE: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
+> 
+> 
+> > > From: linux-lvm-admin@sistina.com 
+> > > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Aslak
+> > >
+> > > Hi again, and thanks for your quick reply!
+> > >
+> > > >----- Original Message -----
+> > > >From: "Ben Lutgens" <blutgens@sistina.com>
+> > [big snip]
+> > > >Don't presume that because it's EXT3 that fscks are no longer 
+> > > >necessary. Only thing the journal guarantees is that 
+> your metadata 
+> > > >won't become corrupt (i think journal=data mount option 
+> fixes this
+> > but
+> > > >will affect performance and not neccessarily badly). If your
+> > filesystem
+> > > >has been shutdown cleanly many many times you could 
+> still has some 
+> > > >loss. A fsck should take care of that.
+> >
+> > Yup journal=data is fantastic; I wouldn't be without it
+> > on the volume that holds the home directories!
+> > I tend to allocate filesystems based on functionality;
+> > tmp gets ext2 cos its fast,
+> > places like /var/spool get XFS cos it can be grown
+> > in a pinch.
