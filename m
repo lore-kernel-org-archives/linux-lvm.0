@@ -1,14 +1,9 @@
-Return-Path: <lewis@sistina.com>
-Date: Tue, 8 May 2001 14:15:33 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] (no subject)
-Message-ID: <20010508141533.D11881@sistina.com>
-References: <B51F0C636E578A4E832D3958690CD73E0130BEEF@es04snlnt>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="48TaNjbzBVislYPb"
-Content-Disposition: inline
-In-Reply-To: <B51F0C636E578A4E832D3958690CD73E0130BEEF@es04snlnt>; from jdiehl@sandia.gov on Tue, May 08, 2001 at 11:57:48AM -0600
+Return-Path: <Evan.Day@SUMMITSITE.COM>
+Message-ID: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit>
+From: "Day, Evan" <Evan.Day@SUMMITSITE.COM>
+Subject: RE: [linux-lvm] SCSI/LVM problems after power outage
+Date: Tue, 8 May 2001 14:05:16 -0700 
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,58 +15,293 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+It looks like device 2 is having issues:
+
+SCSI disk error : host 2 channel 0 id 2 lun 0 return code = 18000002
+
+However, it has been several years since I worked with Sun machines, so I
+could be wrong.  Regardless, it doesn't sound like an LVM issue, but a
+hardware issue.  Unfortunately, I can't offer much recovery advice - most of
+my LVM experience is with HP-UX, and we use mirroring (RAID-1) at work -
+just unplug the bad drive, plug in a new one, and do a vgsync.  I think you
+can add a replacement drive to the VG and use pvmove to try and move the PEs
+from the bad drive to the new drive, but I wouldn't take my word for it...
+
+-----Original Message-----
+From: Dave Wapstra [mailto:dave@xs4all.nl]
+Sent: Tuesday, May 08, 2001 9:33 AM
 To: linux-lvm@sistina.com
-Cc: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Subject: [linux-lvm] SCSI/LVM problems after power outage
 
---48TaNjbzBVislYPb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 08, 2001 at 11:57:48AM -0600, Diehl, Jeffrey wrote:
-> I'm just about finished setting up an LVM/ReiserFS system but I have a few
-> (more) questions...
->=20
-> 1.  In reading the documentation, I see mention of something called a
-> snapshot.  Could someone explain briefly what that means?
->=20
-> 2.  I also see mention of a quantity called stripesize.  Does this allow =
-me
-> to create a LV  which stripes across all of the PV's?  If so, what happens
-> if I later add more PV's to to the VG?
+Hi all,
 
-Check out http://sistina.com/lvm/Pages/howto.html
+After a power outage, our ftp server with LVM has not survived very well.
 
-This should answer your questions and more.
+System: UltraSparc II, Linux 2.4(2) + io.path + LVM 0.9.1beta6
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+All normal ext2 paritions were fsck'd fine, however, the volume is having
+problems.
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+The syslog has a lot of SCSI errors:
 
------Begin Obligatory Humorous Quote----------------------------------------
-geep!
------End Obligatory Humorous Quote------------------------------------------
+May  7 19:15:52 ftp kernel: sym53c8xx_reset: pid=0 reset_flags=1
+serial_number=0 serial_number_at_timeout=0
+May  7 19:15:52 ftp kernel: scsi2: device driver called scsi_done() for a
+synchronous reset.
+May  7 19:15:53 ftp kernel: sym53c875-2-<0,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 15)
+May  7 19:15:53 ftp kernel: sym53c875-2-<1,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 15)
+May  7 19:15:53 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:15:53 ftp kernel: sym53c875-2-<3,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 15)
+May  7 19:15:53 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:15:53 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:15:53 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:15:53 ftp kernel: SCSI disk error : host 2 channel 0 id 2 lun 0
+return code = 18000002
+May  7 19:15:53 ftp kernel: [valid=0] Info fld=0x0, Current sd08:20: sense
+key Aborted Command
+May  7 19:15:53 ftp kernel: Additional sense indicates Initiator detected
+error message received
+May  7 19:15:53 ftp kernel:  I/O error: dev 08:20, sector 2239227
+May  7 19:15:53 ftp kernel: EXT2-fs error (device lvm(58,0)):
+ext2_read_inode: unable to read inode block - inode=1245185, block
+=2490377
+May  7 19:15:53 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:15:53 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:15:53 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:15:56 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:15:56 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:15:56 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:15:57 ftp kernel: scsi2 channel 0 : resetting for second half of
+retries.
+May  7 19:15:57 ftp kernel: SCSI bus is being reset for host 2 channel 0.
+May  7 19:15:57 ftp kernel: sym53c8xx_reset: pid=0 reset_flags=1
+serial_number=0 serial_number_at_timeout=0
+May  7 19:15:57 ftp kernel: scsi2: device driver called scsi_done() for a
+synchronous reset.
+May  7 19:15:58 ftp kernel: sym53c875-2-<0,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 15)
+May  7 19:15:58 ftp kernel: sym53c875-2-<3,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 15)
+May  7 19:15:58 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:15:58 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:15:58 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:15:58 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:15:58 ftp kernel: SCSI disk error : host 2 channel 0 id 2 lun 0
+return code = 18000002
+May  7 19:15:58 ftp kernel: [valid=0] Info fld=0x0, Current sd08:20: sense
+key Aborted Command
+May  7 19:15:58 ftp kernel: Additional sense indicates Initiator detected
+error message received
+May  7 19:15:58 ftp kernel:  I/O error: dev 08:20, sector 17443579
+May  7 19:15:58 ftp kernel: EXT2-fs error (device lvm(58,0)):
+ext2_read_inode: unable to read inode block - inode=2195457, block
+=4390921
+May  7 19:15:58 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:00 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:00 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:01 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:01 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:01 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:02 ftp kernel: scsi2 channel 0 : resetting for second half of
+retries.
+May  7 19:16:02 ftp kernel: SCSI bus is being reset for host 2 channel 0.
+May  7 19:16:02 ftp kernel: sym53c8xx_reset: pid=0 reset_flags=1
+serial_number=0 serial_number_at_timeout=0
+May  7 19:16:02 ftp kernel: scsi2: device driver called scsi_done() for a
+synchronous reset.
+May  7 19:16:02 ftp kernel: sym53c875-2-<0,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 15)
+May  7 19:16:03 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:03 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:03 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:03 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:03 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:03 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:04 ftp kernel: scsi2 channel 0 : resetting for second half of
+retries.
+May  7 19:16:04 ftp kernel: SCSI bus is being reset for host 2 channel 0.
+May  7 19:16:04 ftp kernel: sym53c8xx_reset: pid=0 reset_flags=1
+serial_number=0 serial_number_at_timeout=0
+May  7 19:16:04 ftp kernel: scsi2: device driver called scsi_done() for a
+synchronous reset.
+May  7 19:16:04 ftp kernel: sym53c875-2-<0,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 15)
+May  7 19:16:05 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:05 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:05 ftp kernel: sym53c875-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50.0 ns, offset 16)
+May  7 19:16:05 ftp kernel: sym53c875-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae
+May  7 19:16:05 ftp kernel: SCSI disk error : host 2 channel 0 id 2 lun 0
+return code = 18000002
+May  7 19:16:05 ftp kernel: [valid=0] Info fld=0x0, Current sd08:20: sense
+key Aborted Command
 
---48TaNjbzBVislYPb
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+May  8 10:20:50 ftp kernel: scsi2 channel 0 : resetting for second half of
+retries. 
+May  8 10:20:50 ftp kernel: SCSI bus is being reset for host 2 channel 0.  
+May  8 10:20:50 ftp kernel: sym53c8xx_reset: pid=0 reset_flags=1
+serial_number=0 serial_number_at_timeout=0 
+May  8 10:20:50 ftp kernel: scsi2: device driver called scsi_done() for a
+synchronous reset. 
+May  8 10:20:50 ftp kernel: sym53c876-2: restart (scsi reset). 
+May  8 10:20:50 ftp kernel: sym53c876-2: Downloading SCSI SCRIPTS. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: wide msgout: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgout: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: wide msgin: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: wide: wide=1 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: wide msgout: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgin: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide: wide=1 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: wide msgin: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: wide: wide=1 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: sync msgout: 1-3-1-c-10. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgout: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: sync msg in: 1-3-1-c-f. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,0>: sync: per=12 scntl3=0x90
+scntl4=0x0 ofs=15 fak=0 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<0,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50 ns, offset 15) 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgin: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide: wide=1 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: sync msgout: 1-3-1-c-10. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: sync msg in: 1-3-1-c-10. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: sync: per=12 scntl3=0x90
+scntl4=0x0 ofs=16 fak=0 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50 ns, offset 16) 
+May  8 10:20:50 ftp kernel: sym53c876-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgout: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgin: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide: wide=1 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: sync msgout: 1-3-1-c-10. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: sync msg in: 1-3-1-c-10. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: sync: per=12 scntl3=0x90
+scntl4=0x0 ofs=16 fak=0 chg=0. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50 ns, offset 16) 
+May  8 10:20:50 ftp kernel: sym53c876-2: SCSI parity error detected: SCR1=3
+DBC=11000c00 SBCL=ae 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgout: 1-2-3-1. 
+May  8 10:20:50 ftp kernel: sym53c876-2-<2,0>: wide msgin: 1-2-3-1. 
+May  8 10:20:51 ftp kernel: sym53c876-2-<2,0>: wide: wide=1 chg=0. 
+May  8 10:20:51 ftp kernel: SCSI disk error : host 2 channel 0 id 2 lun 0
+return code = 18000002 
+May  8 10:20:51 ftp kernel: [valid=0] Info fld=0x0, Current sd08:20: sense
+key Aborted Command 
+May  8 10:20:51 ftp kernel: Additional sense indicates Initiator detected
+error message received 
+May  8 10:20:51 ftp kernel:  I/O error: dev 08:20, sector 6695675 
+May  8 10:20:51 ftp kernel: sym53c876-2-<2,0>: sync msgout: 1-3-1-c-10. 
+May  8 10:20:51 ftp kernel: sym53c876-2-<2,0>: sync msg in: 1-3-1-c-10. 
+May  8 10:20:51 ftp kernel: sym53c876-2-<2,0>: sync: per=12 scntl3=0x90
+scntl4=0x0 ofs=16 fak=0 chg=0. 
+May  8 10:20:51 ftp kernel: sym53c876-2-<2,*>: FAST-20 WIDE SCSI 40.0 MB/s
+(50 ns, offset 16) 
+May  8 10:20:52 ftp kernel: sym53c876-2: SCSI parity error detected: SCR1=3
+DBC=11007c00 SBCL=ae 
+May  8 10:20:52 ftp kernel: sym53c876-2-<2,0>: wide msgout: 1-2-3-1. 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
 
-iD8DBQE6+EXVpE6/iGtdjLERAkHlAJ9NmVFOIvImbxlre+H/hSwuiOkKLwCfeBBg
-xY2shShuYn35WNHeu7A4Hmo=
-=cXEm
------END PGP SIGNATURE-----
+How can I find out which disks are having problems, and what are
+possibilities to fix this?
 
---48TaNjbzBVislYPb--
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sdb" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdc" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdd" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sde" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdf" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdg" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdh" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdi" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdj" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdk" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdl" of VG "ftp" [8.43 GB / 0 free]
+pvscan -- total: 11 [92.78 GB] / in use: 11 [92.78 GB] / in no VG: 0 [0]
+
+
+# vgdisplay ftp
+--- Volume group ---
+VG Name               ftp
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                11
+Act PV                11
+VG Size               92.77 GB
+PE Size               4 MB
+Total PE              23749
+Alloc PE / Size       23749 / 92.77 GB
+Free  PE / Size       0 / 0
+VG UUID               eFMVIQ-SMBr-ecsj-TDkc-bGvw-0fyE-jibMIU
+
+
+# lvdisplay /dev/ftp/pub
+--- Logical volume ---
+LV Name                /dev/ftp/pub
+VG Name                ftp
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                92.77 GB
+Current LE             23749
+Allocated LE           23749
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
+
+
+-Dave
+
+-- 
+Dave Wapstra
+dave@xs4all.nl
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
