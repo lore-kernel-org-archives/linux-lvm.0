@@ -1,46 +1,34 @@
-Message-ID: <38ECCFB3.360246A3@msede.com>
-Date: Thu, 06 Apr 2000 19:56:03 +0200
-From: Michael Marxmeier <mike@msede.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Cluster on Linux
-Content-Transfer-Encoding: 7bit
+Date: Thu, 6 Apr 2000 22:10:18 +0200
+From: bert hubert <ahu@ds9a.nl>
+Subject: [linux-lvm] lvm-viewer release announcement
+Message-ID: <20000406221017.B31839@home.ds9a.nl>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Forwarded message from Harald Milz ...
+Hi everybody,
 
--------- Original Message --------
-From: Harald Milz <hmilz@linux-magazin.de>
-Subject: Re: [linux-lvm] Cluster on Linux
-References: <38EBFCFC.F6@erols.com>
-Message-Id: <20000406145209.3B729AC8@merlin.linux-magazin.de>
-Date: Thu,  6 Apr 2000 16:52:09 +0200 (CEST)
+I ported the lvm-viewer from Perl to C and hacked on it enough that I think
+it is ready for a 0.1 release. The program, including an updated screenshot,
+is available on
 
-In article <38EBFCFC.F6@erols.com>, guruju@erols.com wrote:
+                          http://ds9a.nl/lvm-viewer
 
-> 	Any one know about Clusters on Linux for Oracle Parallel server. 
+I explicitly grant the lvm developers permission to distribute this program
+in the contrib directory of the userspace tools. 
 
-OPS hasn't been officially released yet. Maybe Stephen can tell us
-what's
-up. 
+I am very interested in any comments you may have.
 
-> I heard that by this summer some of the Linux venders releasing Cluster 
-> software.. 
+Regards,
 
-This is unrelated to OPS. If you talk about clusters you have to say
-which
-clusters - load balancing stuff, or high availability stuff. The
-latter has
-been announced, and is available right now. 
+bert hubert
 
 -- 
-Harald Milz           |     hm@linux-magazin.de     | If you explain
-so
-Linux Magazin         | phone  +49 (0) 89 993411-20 | clearly that
-nobody
-Stefan-George-Ring 24 | fax    +49 (0) 89 993411-99 | can
-misunderstand,
-D-81929 Muenchen      | http://www.linux-magazin.de | somebody will.
+                       |              http://www.rent-a-nerd.nl
+                       |                  
+                       |                     - U N I X -
+                       |          Inspice et cautus eris - D11T'95
