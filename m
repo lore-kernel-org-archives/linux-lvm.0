@@ -1,6 +1,7 @@
-Message-ID: <615A249B783CD41192F400D0B747AC8608982668@hesse.bbn.hp.com>
-From: "ZECHA,HOLGER (HP-Germany,ex1)" <holger_zecha@hp.com>
+From: James Hawtin <oolon@ankh.org>
 Subject: RE: [linux-lvm] lvcreate distributed extent option
+In-Reply-To: <615A249B783CD41192F400D0B747AC8608982668@hesse.bbn.hp.com>
+Message-ID: <Pine.LNX.4.44.0211301932220.5528-100000@pzat.meep.org>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -12,95 +13,148 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov 30 12:02:01 2002
+Date: Sat Nov 30 14:09:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 Cc: lvm-devel@sistina.com
 
-Hello,
 
-there still seems to be a missunderstanding
-I want to have the following:
+On Sat, 30 Nov 2002, ZECHA,HOLGER (HP-Germany,ex1) wrote:
+
+> Hello,
+>
+> there still seems to be a missunderstanding
+> I want to have the following:
+>
+
+Hmm your worring to much about how your physical data is being layout! The
+reason you see that difference between HP lvm and linux lvm is because
+they implement striping differently.
+
+On, HP, they take the modulo of the number of stripes and allocate the
+disk in that fasion ie.
+
+a      0   0%2 =0
+b      1   1%2 =1
+a      2   2%2 =0
+b      1   3%2 =1
+
+On linux its
+
+LE Stripe Size (LSS) = Number of LE / Number of strips
+
+a = 0 - (LSS-1)
+b = LSS - (LSS*2-1)
+
+But thats just how the Logical extends are mapped LE Stripe Size != real
+stripe size on HP or Linux its just how the strip pools are layed out.
+The LVM system still has to re cut things LEs up to make real stripes.
+
+Advantage of the way HP does it...
+No problems extending things....
+
+Disadvantage
+Harder on the maths?
+Difficult to specify which LEs to pick when moving them from one PV to
+another.
+
+
+Advantage of Linux way
+Easy to specify and check when moving LEs from one PV to another.
+Maths easier?
+
+Disadvantage.
+LEs have to be renumbered if the LV is extended or reduced, hence not
+possible on linux.
+
+Still don't believe me?
+
+Try this....
+
+--- Logical volume ---
+LV Name                /dev/sunset_vg/oolon4_lv
+VG Name                sunset_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   5
+# open                 0
+LV Size                18.38 GB
+Current LE             588
+Allocated LE           588
+Stripes                2
+Stripe size (KByte)    16
+Allocation             next free
+Read ahead sectors     120
+Block device           58:4
+
+   --- Distribution of logical volume on 2 physical volumes  ---
+   PV Name                  PE on PV     reads      writes
+   /dev/ide/host2/bus0/target0/lun0/part5 294          0          0
+   /dev/ide/host2/bus0/target1/lun0/part2 294          0          0
+
+   --- logical volume i/o statistic ---
+   0 reads  0 writes
 
    --- Logical extents ---
    LE    PV                        PE     reads      writes
-   00000 /dev/sdd1                 00001  0          1        
-   00001 /dev/sde1                 00001  0          0        
-   00002 /dev/sdf1                 00001  0          0        
-   00003 /dev/sdg1                 00001  0          0        
-   00004 /dev/sdh1                 00001  0          0        
-   00005 /dev/sdi1                 00001  0          0        
-   00006 /dev/sdd1                 00002  0          0        
-   00007 /dev/sde1                 00002  0          0        
-   00008 /dev/sdf1                 00002  0          0        
-   00009 /dev/sdg1                 00002  0          0        
-   00010 /dev/sdh1                 00002  0          0        
-   00011 /dev/sdi1                 00002  0          0        
-   00012 /dev/sdd1                 00003  0          0        
-   00013 /dev/sde1                 00003  0          0        
-   00014 /dev/sdf1                 00003  0          0        
-.....
-
-but with  lvcreate -I 8 -L 40000M -n lvdata /dev/vgtest /dev/sdd1 /dev/sde1
-.... I get
-
-   --- Logical extents ---
-   LE    PV                        PE     reads      writes
-   00000 /dev/sdd1                 00063  0          1        
-   00001 /dev/sdd1                 00064  0          0        
-   00002 /dev/sdd1                 00065  0          0        
-   00003 /dev/sdd1                 00066  0          0        
-   00004 /dev/sdd1                 00067  0          0        
-   00005 /dev/sdd1                 00068  0          0        
-   00006 /dev/sdd1                 00069  0          0        
-   00007 /dev/sdd1                 00070  0          0        
-   00008 /dev/sdd1                 00071  0          0        
-   00009 /dev/sdd1                 00072  0          0        
-   00010 /dev/sdd1                 00073  0          0        
-   00011 /dev/sdd1                 00074  0          0        
-   00012 /dev/sdd1                 00075  0          0        
-   00013 /dev/sdd1                 00076  0          0        
-   00014 /dev/sdd1                 00077  0          0  
+   00000 /dev/ide/host2/bus0/target0/lun0/part5 00060  0          0
+   00001 /dev/ide/host2/bus0/target0/lun0/part5 00061  0          0
+   00002 /dev/ide/host2/bus0/target0/lun0/part5 00062  0          0
 ...
-   02105 /dev/sde1                 00063  0          0        
-   02106 /dev/sde1                 00064  0          0        
-   02107 /dev/sde1                 00065  0          0        
-   02108 /dev/sde1                 00066  0          0        
-   02109 /dev/sde1                 00067  0          0        
-   02110 /dev/sde1                 00068  0          0        
-   02111 /dev/sde1                 00069  0          0        
-   02112 /dev/sde1                 00070  0          0        
+   00294 /dev/ide/host2/bus0/target1/lun0/part2 00060  0          0
+   00295 /dev/ide/host2/bus0/target1/lun0/part2 00061  0          0
+   00296 /dev/ide/host2/bus0/target1/lun0/part2 00062  0          0
+...
 
-A distribution like described above looks like this on HP-UX LVM:    
+bash# dd if=/dev/sunset_vg/oolon4_lv of=/dev/null bs=16k count=2
+2+0 records in
+2+0 records out
+bash# dd if=/dev/sunset_vg/oolon4_lv of=/dev/null bs=16k count=2
+2+0 records in
+2+0 records out
+bash# dd if=/dev/sunset_vg/oolon4_lv of=/dev/null bs=16k count=2
+2+0 records in
+2+0 records out
 
-   00000 /dev/dsk/c16t0d0   00012 current
-   00001 /dev/dsk/c16t0d1   00012 current
-   00002 /dev/dsk/c17t0d2   00000 current
-   00003 /dev/dsk/c17t0d3   00000 current
-   00004 /dev/dsk/c16t0d4   00000 current
-   00005 /dev/dsk/c16t0d5   00000 current
-   00006 /dev/dsk/c17t0d6   00000 current
-   00007 /dev/dsk/c17t0d7   00000 current
-   00008 /dev/dsk/c16t1d0   00000 current
-   00009 /dev/dsk/c16t1d1   00000 current
-   00010 /dev/dsk/c17t1d2   00000 current
-   00011 /dev/dsk/c17t1d3   00000 current
-   00012 /dev/dsk/c16t1d4   00000 current  
+lvdisplay -vv /dev/sunset_vg/oolon4_lv
 
-Holger 
+....
 
+   --- Distribution of logical volume on 2 physical volumes  ---
+   PV Name                  PE on PV     reads      writes
+   /dev/ide/host2/bus0/target0/lun0/part5 294          240        0
+   /dev/ide/host2/bus0/target1/lun0/part2 294          216        0
 
------Original Message-----
-From: James Hawtin [mailto:oolon@ankh.org]
-Sent: Samstag, 30. November 2002 18:24
-To: linux-lvm@sistina.com
-Cc: lvm-devel@sistina.com
-Subject: Re: [linux-lvm] lvcreate distributed extent option
+   --- logical volume i/o statistic ---
+   456 reads  0 writes
 
+   --- Logical extents ---
+   LE    PV                        PE     reads      writes
+   00000 /dev/ide/host2/bus0/target0/lun0/part5 00060  240        0
+   00001 /dev/ide/host2/bus0/target0/lun0/part5 00061  0          0
+   00002 /dev/ide/host2/bus0/target0/lun0/part5 00062  0          0
+....
+   00294 /dev/ide/host2/bus0/target1/lun0/part2 00060  216        0
+   00295 /dev/ide/host2/bus0/target1/lun0/part2 00061  0          0
+   00296 /dev/ide/host2/bus0/target1/lun0/part2 00062  0          0
+....
 
-This message uses a character set that is not supported by the Internet
-Service.  To view the original message content,  open the attached message.
-If the text doesn't display correctly, save the attachment to disk, and then
-open it using a viewer that can display the original character set. 
+As you see my stripe size was 16k and I grabbed the first 32k of the
+device 3 times.
+
+You will notice the read figures are relatively even... not quite sure why
+they are not the same I assume LVM might have some kind of header on the
+LV. Which would account for the difference...
+
+(I did this after rebooting the system to get clean figures).
+
+You will however notice the stripping did work, it did use both disks not
+as you suggest just 1 (if that had been the case the second disk would
+have shown 0 reads), test it yourself, as I explained above the
+"difference" you are seeing is just down to how the implementation of the
+strip parts has been made. Though personally I agree with you the HP
+system (due to the fact it can be resized) is supperior!
+
+James
