@@ -1,9 +1,11 @@
-Message-ID: <3BB14C7D.CDCD9F14@bellatlantic.net>
-Date: Tue, 25 Sep 2001 23:33:17 -0400
-From: Uday Bhaskar Sarma Seetamraju <sarma@bellatlantic.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM help re:
+Date: Wed, 26 Sep 2001 08:44:43 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] RAID1 on TOP of LVM
+Message-ID: <20010926084443.A15158@colombina.comedia.it>
+References: <3BB14C43.B62B32AB@bellatlantic.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3BB14C43.B62B32AB@bellatlantic.net>; from sarma@bellatlantic.net on Tue, Sep 25, 2001 at 11:32:19PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +18,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Tue, Sep 25, 2001 at 11:32:19PM -0400, Uday Bhaskar Sarma Seetamraju wrote:
+> I have had LVM for a little while now.
+> I have even successfully extended an LV.  Moved PVs.
+> And better yet.  Destroyed and recreated an LV containing Data :-)
+> The final step, RAID1.  But I stumbled.
+> Can someone help?
+honestly i'd use lvm over raid1, it is most flexible since raid1 is not resizable.
 
-pvscan tells me which PV belongs to which VG.
-But I am wondering if the information as to
-"which PVwas added to the VG in which order"
-can also be determined.
-In case of a disaster, the first added PV would most likely contain
-all the information that's has been around longer (and so more
-important!)
-
-Sarma
-
-P.S: An 'ls' will not tell you in which order files/subfolders were
-    created, but du or tar does.
-
-P.S: Getting used to LVM reminds me of the days of early
-        minivax/ultrix days (my first unix impressions), where each
-        'rm' and 'mv' and 'cp' command was "entered" after 10
-        deep breaths and 2 minutes of deep thought about what
-        "that" command WILL do (when "entered" ofcourse!!).
-        Not a criticism of LVM, just that the flexibility and new-ness
-        of this concept lets one kill oneself so easily.
-        Can't speak for the world, but I can't handle this
-        kind of flexibilty and power.
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
