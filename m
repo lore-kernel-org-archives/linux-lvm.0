@@ -1,59 +1,26 @@
-Message-ID: <3905A81F.2C06D8D9@netconnect.com.au>
-Date: Wed, 26 Apr 2000 00:13:52 +1000
-From: bug1 <bug1@netconnect.com.au>
+Message-ID: <3905BA3C.DFBD0791@msede.com>
+Date: Tue, 25 Apr 2000 17:31:08 +0200
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: 2b@cheerful.com
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] mounting lv's from fstab
-References: <200004250841.KAA09151@u9etz.ez-darmstadt.telekom.de>
+Subject: [linux-lvm] pvcreate error 241 for loopback devices
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Ok, thanks, i have it worked out now, i think im going to really like
-lvm
+Forwarded message from 2b@cheerful.com ...
 
-Thanks everyone.
+-------- Original Message --------
+From: Scott Sexton & David Lewis <2b@cheerful.com>
+Subject: pvcreate error 241 for loopback devices
 
-Glenn
+I'm very sorry for this question as the answer must be obvious.
 
-Heinz Mauelshagen wrote:
-> 
-> Please put a "vgscan ; vgchange -a y" in a system startup file
-> like /sbin/init.d/boot on SuSE or an equivalent one on another distribution.
-> 
-> Please see the file INSTALL which comes with the LVM sources also.
-> 
-> Regards,
-> Heinz
-> 
-> > I put all my logical volumes in /etc/fstab but it doesnt work
-> > automatically.
-> >
-> > Everytime i restart my machine i have to manually activate my volume
-> > group by typing vgchange -a y archive.
-> >
-> > Is there a way of automatically doing this with lvm or would i have to
-> > write an init script ?
-> >
-> >
-> > Thanks
-> >
-> > Glenn McGrath
-> >
-> 
-> --
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Systemmanagement TS                              T-Nova
->                                                  Entwicklungszentrum Darmstadt
-> Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-> Senior Systems Engineer                          Postfach 10 05 41
->                                                  64205 Darmstadt
-> mge@EZ-Darmstadt.Telekom.de                      Germany
->                                                  +49 6151 886-425
->                                                           FAX-386
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+While trying to use the loopback device with files for testing lvm,
+pvcreate is giving me this
+error -241 getting size of physical volume "/dev/loop0".
+
+Do I need something besides lvm to use loopback devices with it?
