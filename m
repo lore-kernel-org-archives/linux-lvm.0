@@ -1,11 +1,9 @@
-From: Dieter Franzke <lists@franzke-online.de>
-Subject: Re: [linux-lvm] vgimport
-References: <200301191715.33238.lists@franzke-online.de> <12270000.1043010311@[192.168.200.4]>
-In-Reply-To: <12270000.1043010311@[192.168.200.4]>
+From: "Bjorn" <programmer@spk.cc>
+Subject: SV: SV: [linux-lvm] Getting 200GB ATA133 and Promise Ultra133 to work
+Message-ID: <000f01c2c00b$bb546a00$4201a8c0@eagle>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200301192241.51626.lists@franzke-online.de>
+In-Reply-To: <17119627843.20030119220632@tnonline.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,24 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 19 16:00:01 2003
+Date: Sun Jan 19 16:39:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: 'Anders Widman' <andewid@tnonline.net>
+Cc: linux-lvm@sistina.com
 
-Hi,
+> 
+> No, LVM 1 support big drives. I am using 160GB Maxtor without problems
+> with LVM 1 and Promis U133 cards and kernels 2.4.19+.
+> 
+Did you do any patches (I did those for device mapper found at
+www.sistina.com)?
+Do I need to flash Promise Ultra ATA/133? There is an update at
+www.promise.com, but I wonder if it is necessary for this.
 
-Am Sonntag, 19. Januar 2003 22:05 schrieb Steven Lembark:
-> > lvm 1.0.5
->
-> One thing is to try 1.0.6
+Could it be that the only necessary update is to get LBA48 support in
+kernel?
 
-already done.
-Result: import is ok, but when I was activating the VG I get an error:
-vgchange -- ERROR "Bad address" activating volume group "data"
+I'll redo my discs tomorrow and depending what is necessary I plan
+accordingly.
 
-thanks  dieter
-
--- 
-registered linuxuser 199810
-it's time to close windows....
+Thanks for info,
+//Bjorn
