@@ -1,14 +1,11 @@
-Return-Path: <mkp@mkp.net>
+Return-Path: <jeffrey.hundstad@mnsu.edu>
+Message-ID: <3AE05698.26B862D8@mnsu.edu>
+Date: Fri, 20 Apr 2001 10:32:40 -0500
+From: Jeffrey Hundstad <jeffrey.hundstad@mnsu.edu>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVM and DRDB
 References: <20010420111022.C6133@cistron.nl>
-	<200104201031.f3KAVT05030575@webber.adilger.int>
-	<20010420123624.F13067@cistron.nl> <d3y9svheu9.fsf@lxplus015.cern.ch>
-	<20010420154246.R13067@cistron.nl>
-From: "Martin K. Petersen" <mkp@linuxcare.com>
-Date: 20 Apr 2001 11:18:03 -0400
-In-Reply-To: <20010420154246.R13067@cistron.nl>
-Message-ID: <yq1u23jvbv8.fsf@jaguar.mkp.net>
-MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,24 +18,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Wichert Akkerman <wichert@cistron.nl>
-Cc: linux-lvm@sistina.com, linux-openlvm@nl.linux.org
+To: linux-lvm@sistina.com
 
->>>>> "Wichert" == Wichert Akkerman <wichert@cistron.nl> writes:
+What will you be using as a filesystem for your 5TB server.  EXT2 isn't
+much fun on our 1TB server ;-)
 
-Wichert> Previously Jes Sorensen wrote:
->> For a file system that size you might want to look at XFS instead.
+--
+jeffrey hundstad
 
-Wichert> How stable is XFS compared to ext3 and reiserfs? For this
-Wichert> system minimum downtime is very important..
+Wichert Akkerman wrote:
 
-I mkfs.xfs'ed the / and /home filesystems on my primary workstation on
-September 7th last year.
-
-'nuff said... :)
-
--- 
-Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
-mkp@linuxcare.com, http://www.linuxcare.com/
-SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
+> Does anyone know if LVM will work correctly on top of DRDB? I
+> need to keep an off-site copy of a 5TB fileserver synchronized
+> and that might be an usefull approach.
+>
+> Wichert.
+>
+> --
+>    ________________________________________________________________
+>  / Generally uninteresting signature - ignore at your convenience  \
+> | wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
+> | 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
