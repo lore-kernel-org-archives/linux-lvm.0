@@ -1,16 +1,19 @@
-Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iA98ZKbM009816
-	for <linux-lvm@redhat.com>; Tue, 9 Nov 2004 08:35:20 GMT
-Date: Tue, 9 Nov 2004 08:35:18 +0000
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] Possible version problem
-Message-ID: <20041109083518.GB18685@tykepenguin.com>
-References: <418DAC9C.70205@dakotacom.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iADAHEr20359
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 05:17:14 -0500
+Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.201])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iADAHDIs021144
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 05:17:13 -0500
+Received: by rproxy.gmail.com with SMTP id f1so362695rne
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 02:17:13 -0800 (PST)
+Message-ID: <89af10f90411130217467c439@mail.gmail.com>
+Date: Sat, 13 Nov 2004 15:47:13 +0530
+From: ashwin chaugule <ashwin.chaugule@gmail.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <418DAC9C.70205@dakotacom.net>
-Sender: Patrick <patrick@tykepenguin.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] raid 1 on a single disk
+Reply-To: ashwin chaugule <ashwin.chaugule@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,36 +24,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: erich1@dakotacom.net, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Sat, Nov 06, 2004 at 10:03:24PM -0700, ewf wrote:
-> Well
->      I have a 2.2.20 kernel, (Debian stable), and I have a Debian 
-> package for lvm10 and lvm-common:
-> 
->            lvm10,  install version, 1.0.4-4
-> 
->            lvm-common, install version, 1.5.5
-> 
->     I read that, for this early a version, a kernel module must be 
-> installed. However, I see no evidence that
-> one has been installed. I suspect that the new, (lvm), package may not 
-> contain  the kernel module
-> necessary to run with the old kernel version. Please confirm.
+Hi,
+         Im trying to get RAID 1 working on a single disk. Can anyone
+tell me if thats possible ?
+Do I have to use LVM for that ?
 
-Linux 2.2 does not have LVM as standard. If you want to use a 2.2 kernel with
-LVM you will have to patch and build your own kernel from sources. In which
-case it would be far easier just to get a Debian packaged 2.4 kernel....
- 
->     I assume that the process of installing a package under Debian 
-> automatically installs a kernel
-> module if a given package requires it and contains it.
+So, far this is what i've understood ...
+Now.. I have a separate disk on which I want RAID 1.
+so I create one PV on that disk (/dev/hdd)
+create a logical vol grp.
+add 4 LV's , for four filesystems of the same type ...
+then in /etc/raidtab or whatever ..
+say that i have 4 disks and for each disk specify each LV partition ..
+then mkraid /dev/md0 ...
 
-No. Debian packages don't automatically install kernel modules because they
-don't know which kernel you are running.
- 
+Is this correct if I want data to be mirrored across all 4 partitions
+, using RAID 1 on a single disk ?
+
+
 
 -- 
-
-patrick
+Ashwin Chaugule
+Embedded Systems Engineer
+Aftek Infosys ltd.
+[Embedded Division]
