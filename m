@@ -1,9 +1,10 @@
-From: Max Kalika <max+lists.lvm-dev@lsit.ucsb.edu>
-Message-ID: <17160000.1054244981@valkyrie.lsit.ucsb.edu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: jon+lvm@silicide.dk
+Subject: Re: [linux-lvm] where do i find the device mapper/LVM2 documentation?
+Message-ID: <20030529220239.GA1190@gw.silicide.dk>
+References: <3ED32F3E.9000009@silicide.dk> <3ED478E1.1020509@silicide.dk> <200305281643.04803.jhs@oes.co.th> <200305291427.15518.dphillips@sistina.com> <20030529212127.GA4011@fib011235813.fsnet.co.uk>
+Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] LVM2 strangeness.
+In-Reply-To: <20030529212127.GA4011@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 29 16:49:02 2003
+Date: Thu May 29 17:02:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello LVM devs and others,
+On Thu, May 29, 2003 at 10:21:27PM +0100, Joe Thornber wrote:
+> On Thu, May 29, 2003 at 02:27:15PM +0200, Daniel Phillips wrote:
+> > On Wednesday 28 May 2003 11:42, Jason H. Smith wrote:
+> > > > >>How it is built up. Detailed information explaining to me how i can
+> > > > >> expand it, stuff like that.
+> 
+> If you're interested in writing your own targets I suggest you look at
+> a couple of the trivial targets that already exist.  Such as
+> dm-linear.c, dm-stripe.c.
 
-I've been trying to use LVM2 on a backup server for the past few days and
-I'm seeing some very strange things.
+i am planning to write my own targets as a graduate project.
+My idea was encryption and possibly compression as well.
+(is anyone else doing any of these targets?)
 
-My configuration:
-  Dell PowerEdge 1300 (800Mhz)
-  512 MB RAM (2GB swap)
-  4 120GB IDE (8mb cache) disks in a RAID-5 configuration (on a 3ware card)
-  Custom built vanilla kernel (2.4.20) with DM patches (0.96.08) applied
-  LVM2 utilities version 1.95.15
 
-I have a 300GB VG with a 150GB LV on it.  I also have a 50GB snapshot and a
-10GB snapshot.  I first rsync all remote server data (8 other machines) to
-this "holding area" -- where I also hope to have 7 days of snapshot
-information available on disk.  From here, the latest "current" data gets
-pushed to tape.
-
-Right now during an rsync of a huge mailstore (lots of small files) from
-the mail server, the performance on the backup server degrades severly (up
-to 12 1min load ave. and higher) and I'm seeing lots of the following in
-the kernel log:
-
-  May 29 14:14:15 butters invalidate: busy buffer
-  May 29 14:14:15 butters invalidate: busy buffer
-  May 29 14:14:15 butters invalidate: busy buffer
-  May 29 14:14:15 butters invalidate: busy buffer
-  ... on and on and on ...
-
-I'm guessing that most of the cpu is busy copying stuff from the original
-LV to the snapshots.  Is this a valid assumption?  What can one do to help
-the situation?  Or do I have a different misconfiguration?  Any light you
-can shed on this is greatly appreciated.  TIA.
-
---
----max kalika
---max@lsit.ucsb.edu
--lsit systems administrator
+JonB
