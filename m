@@ -1,22 +1,27 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3CBZ6M20416
-	for <linux-lvm@redhat.com>; Mon, 12 Apr 2004 07:35:06 -0400
-Received: from Trademart-1.ednet.ns.ca
-	(IDENT:TN74C6/X+NxC2kPaideFyzh5PyyG5jUo@Trademart-1.EDnet.NS.CA
-	[142.227.51.1])
-	by mx2.redhat.com (8.12.10/8.12.10) with SMTP id i3CBYvTM022726
-	for <linux-lvm@redhat.com>; Mon, 12 Apr 2004 07:34:58 -0400
-Received: from u134n127.hfx.eastlink.ca ([24.222.134.127] helo=ednet.ns.ca)
-	by Trademart-1.ednet.ns.ca with esmtp (Exim 4.30) id 1BCziP-0002Xw-Ut
-	for linux-lvm@redhat.com; Mon, 12 Apr 2004 08:35:01 -0300
-Message-ID: <407A7EE5.3040301@ednet.ns.ca>
-Date: Mon, 12 Apr 2004 08:35:01 -0300
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3CC3qj24798
+	for <linux-lvm@redhat.com>; Mon, 12 Apr 2004 08:03:52 -0400
+Received: from sutr101.sanderscorner.com (sanderscorner.demon.nl
+	[212.238.245.37])
+	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i3CC3eS0017793
+	for <linux-lvm@redhat.com>; Mon, 12 Apr 2004 08:03:40 -0400
+Received: from wutr101.sanderscorner.com (wutr101.sanderscorner.com
+	[192.168.13.50])
+	by sutr101.sanderscorner.com (Postfix) with ESMTP id 247B02CD8
+	for <linux-lvm@redhat.com>; Mon, 12 Apr 2004 11:31:00 +0200 (CEST)
+Received: from wutr101.sanderscorner.com (wutr101.sanderscorner.com
+	[192.168.13.50])
+	by wutr101.sanderscorner.com (Postfix) with ESMTP id EFDE327D
+	for <linux-lvm@redhat.com>; Mon, 12 Apr 2004 11:30:59 +0200 (CEST)
+From: mlist@sanderscorner.com
 Subject: Re: [linux-lvm] vgscan error after resizing lv; can't boot now
+Date: Mon, 12 Apr 2004 11:30:59 +0200
 References: <OF16C58B11.B593D6A5-ON48256E74.001B7422@iss.nus.edu.sg>
 In-Reply-To: <OF16C58B11.B593D6A5-ON48256E74.001B7422@iss.nus.edu.sg>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200404121130.59800.mlist@sanderscorner.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,18 +32,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On a new disk(-partition) don't you first need to pvcreate and then vgextend?
 
+Sander
 
-zhimin@iss.nus.edu.sg wrote:
+\On Monday 12 April 2004 08:37, zhimin@iss.nus.edu.sg wrote:
 > Hello,
-> 
+>
 > I have a 72GB SCSI in RAID mirror. Using LVM version 1.0.3, Redhat 9.
-> 
+>
 > Before resizing, the partitions are (snip from lvmdiskscan):
-> 
+>
 > /dev/sda1  [      31.35 MB] Primary   [0xDE]  (Dell Utility)
 > /dev/sda2  [      19.53 GB] NTFS
 > /dev/sda3  [     298.08 MB] Primary  LINUX native partition [0x83]  (/boot)
@@ -46,7 +53,7 @@ zhimin@iss.nus.edu.sg wrote:
 > /dev/sda5  [       1.95 GB] Extended LINUX swap partition [0x82]
 > /dev/sda6  [       5.86 GB] Extended LVM partition [0x8E] (VG "Volume00")
 > /dev/sda7  [      40.69 GB] Extended LVM partition [0x8E] (VG "Volume00")
-> 
+>
 > The vg "Volume00" contains PV /dev/sda6 and /dev/sda7, and the LVs (all
 > ext3) are:
 > /dev/Volume00/root        (/)
@@ -56,24 +63,17 @@ zhimin@iss.nus.edu.sg wrote:
 > /dev/Volume00/usr         (/usr)
 > /dev/Volume00/usrlocal   (/usr/local)
 > /dev/Volume00/var         (/var)
-> 
-> 
+>
+>
 > I wanted to remove the NTFS partition, make /dev/sda2 as LVM partition, and
 > add it to "/dev/Volume00/opt". Here's what I did:
-> 
+>
 >    boot to linux rescue mode
 >    # vgscan
 >    # vgchange -a y
 >    use fdisk to remove /dev/sda2, recreate /dev/sda2
 >    # mke2fs -j /dev/sda2
-
-Why did you mke2fs on /dev/sda2 ? Should have been pvcreate I would imagine.
-
 >    use parted to set the partition type to LVM partition (0x8e)
-
-You could have used fdisk to toggle the partition type when you created 
-the partion on /dev/sda2 .
-
 >    # vgextend Volume00 /dev/sda2
 >    Get the partition size (19.53GB) from # pvdisplay /dev/sda2
 >    # e2fsadm -L+19.53G /dev/Volume00/opt
@@ -84,11 +84,6 @@ the partion on /dev/sda2 .
 >    terminate.
 >    # e2fsck -y /dev/sda2  (to answer 'y' to all questions regarding fixing
 >    inode)
-
-Once again I don't know why you are making/fixing an ext2 file system on 
-/dev/sda2 . Try running pvcreate on /dev/sda2 .
-
-
 >    reboot and got a kernel panic with the following msg:
 >    vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
 >    vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
@@ -99,28 +94,23 @@ Once again I don't know why you are making/fixing an ext2 file system on
 >    vgscan -- only found 6816 of 7424 LEs for LV /dev/Volume00/opt (2)
 >    vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
 >    data of volume group "Volume00" from physical volume(s)
-
-
-Try running pvcreate on /dev/sda2 . That might take care of the above 
-problem (only found 6816 of 7424 LEs for LV /dev/Volume00/opt)
-
 >    vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
 >    vgscan -- WARNING: This program does not do a VGDA backup of your volume
 >    group
-> 
+>
 > I rebooted into rescue mode, and vgscan also gave the same error as above.
 > And "/etc/lvmtab" and "/etc/lvmtab.d" are blank.
-> 
+>
 > How can I recover the VG? Is /dev/sda2 oversized by e2fsadm and therefore
 > mess up the vg?
-> 
+>
 > Below is the selected output from pvdata for /dev/sda[2|6|7].
-> 
+>
 > Thanks and regards,
 > zhimin
-> 
-> 
-> 
+>
+>
+>
 > --- Physical volume ---
 > PV Name               /dev/sda2
 > VG Name               Volume00
@@ -147,8 +137,8 @@ problem (only found 6816 of 7424 LEs for LV /dev/Volume00/opt)
 > lv_on_disk.size          84296
 > pe_on_disk.base          131072
 > pe_on_disk.size          4259840
-> 
-> 
+>
+>
 > --- Physical volume ---
 > PV Name               /dev/sda6
 > VG Name               Volume00
@@ -175,8 +165,8 @@ problem (only found 6816 of 7424 LEs for LV /dev/Volume00/opt)
 > lv_on_disk.size          84296
 > pe_on_disk.base          131072
 > pe_on_disk.size          4259840
-> 
-> 
+>
+>
 > --- Physical volume ---
 > PV Name               /dev/sda7
 > VG Name               Volume00
@@ -203,7 +193,7 @@ problem (only found 6816 of 7424 LEs for LV /dev/Volume00/opt)
 > lv_on_disk.size          84296
 > pe_on_disk.base          131072
 > pe_on_disk.size          4259840
-> 
+>
 > --- Volume group ---
 > VG Name
 > VG Access             read/write
@@ -222,10 +212,10 @@ problem (only found 6816 of 7424 LEs for LV /dev/Volume00/opt)
 > Alloc PE / Size       16779 / 65.54 GB
 > Free  PE / Size       133 / 532 MB
 > VG UUID               js4UPn-4GPE-I68L-Qjgb-88zN-4e7h-2PmoMC
-> 
-> 
+>
+>
 > --- List of logical volumes ---
-> 
+>
 > pvdata -- logical volume "/dev/Volume00/root" at offset   0
 > pvdata -- logical volume "/dev/Volume00/home" at offset   1
 > pvdata -- logical volume "/dev/Volume00/opt" at offset   2
@@ -239,10 +229,10 @@ problem (only found 6816 of 7424 LEs for LV /dev/Volume00/opt)
 > ...
 > pvdata -- logical volume struct at offset 254 is empty
 > pvdata -- logical volume struct at offset 255 is empty
-> 
-> 
+>
+>
 > --- List of physical extents --- (for /dev/sda2)
-> 
+>
 > PE: 00000  LV: 003  LE: 02560
 > PE: 00001  LV: ---  LE: -----
 > PE: 00002  LV: 003  LE: 02562
@@ -460,7 +450,7 @@ problem (only found 6816 of 7424 LEs for LV /dev/Volume00/opt)
 > PE: 04994  LV: ---  LE: -----
 > PE: 04995  LV: ---  LE: -----
 > PE: 04996  LV: ---  LE: -----
-> 
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
