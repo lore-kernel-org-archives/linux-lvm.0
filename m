@@ -1,10 +1,9 @@
-From: Andreas Dilger <adilger@clusterfs.com>
-Subject: Re: [linux-lvm] EXT3 vs Reiserfs
-Message-ID: <20031209204750.H27396@schatzie.adilger.int>
-References: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com> <E1ATOFw-0003wR-7w@server6.hostpoint.ch>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E1ATOFw-0003wR-7w@server6.hostpoint.ch>; from markus@markus.org on Mon, Dec 08, 2003 at 05:29:01PM +0100
+Message-ID: <1B3885BC15C7024C845AAC78314766C55E4FDD@exch-01.noida.hcltech.com>
+From: "Salil Taneja, Noida" <salilt@noida.hcltech.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C3BEED.03605F80"
+Subject: [linux-lvm] lvm2 device mapper
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +14,145 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 10 07:58:01 2003
+Date: Wed Dec 10 07:58:04 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Cc: "Salil Taneja, Noida" <salilt@noida.hcltech.com>
 
-On Dec 08, 2003  17:29 +0100, Markus Baertschi wrote:
-> If you are looking for a stable filesystem and are not really worried
-> about performance I'd stick with ext3. If necessary you can get a kernel
-> patch to allow for online resizing.
-> 
-> On Mon, 8 Dec 2003 09:39:38 -0500, Yanick Quirion wrote:
-> > I know that ext3 can handle ACLs and not online fs extend, and reiserfs
-> > do not seems to support ACLs (I found some patches for kernel 2.4.21,
-> > but there are errors when I apply them to the kernel 
-> > sources), but can be extend while it's online.
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-FYI - I read that the ext3 online extend code is in the latest RH rawhide
-kernel.  I've been rather bad at maintaining that code, but Arjan (RH
-kernel guy) updated the patch for the latest RH kernel.
+------_=_NextPart_001_01C3BEED.03605F80
+Content-Type: text/plain;
+	charset="iso-8859-1"
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+hi,
+ 
+I am using LVM2 , version -2.00.07 with device mapper library -1.00.07 on
+2.6.0 test-9 kernel
+ 
+i am facing these problems while doing so : -
+ 
+1.) i get a warning message
+    " /dev/mapper/control : open failed : No such file or directory .
+       Is device mapper mapped to kernel ? "
+ 
+To overcome this problem I started using LVM2 commands   with --driverloaded
+n option .
+ 
+now the commands execute but i face another problem :-
+2.) when using lvcreate or vgcreate, the command executes but no node entry
+is created  in the /dev/ directory
+For eg :
+ 
+I used the following command :
+    lvcreate < options > -n lvm1 vg1 --driverloaded n
+ 
+to verify this i used lvdisplay that gives the path of lvm1 as /dev/vg1/lvm1
+; but when i check in /dev/ directory there is no entry corresponding to vg1
+or lvm1 .
+ 
+Why isnt there any node corresoponding to vg1 or lvm1 in /dev/ ?  any
+clues...?????
+ 
+ 
+Please suggest some nice solutions .
+ 
+Thanks and Regards, 
+Salil Taneja 
+HCLT NetCentric Division, 
+A11, Sector 16, 
+Noida, India. 
+* office: +91-120-2510701 Ext 3155 
+* cell: +91-9810250247 
+
+ 
+
+------_=_NextPart_001_01C3BEED.03605F80
+Content-Type: text/html;
+	charset="iso-8859-1"
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+
+
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003>hi,</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>I am 
+using LVM2 , version -2.00.07 with device mapper library -1.00.07 on 2.6.0 
+test-9 kernel</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>i am 
+facing these problems while doing so : -</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>1.) i 
+get a warning message</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003>&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;/dev/mapper/control : 
+open failed : No such file or directory .</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Is device 
+mapper mapped to kernel ? "</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>To 
+overcome this&nbsp;problem I started using LVM2 commands &nbsp; with 
+--driverloaded n option .</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>now 
+the commands execute but i face another problem :-</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>2.) 
+when using lvcreate or vgcreate, the command executes but no node entry is 
+created &nbsp;in the /dev/ directory</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT><FONT face=Arial color=#000080 
+size=2><SPAN class=676585806-10122003>For eg :</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>I used 
+the following command :</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003>&nbsp;&nbsp;&nbsp; lvcreate &lt; options &gt; -n lvm1 
+vg1 --driverloaded n</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>to 
+verify this i used lvdisplay that gives the path of lvm1 as /dev/vg1/lvm1 ; but 
+when i check in /dev/ directory there is no entry corresponding to vg1 or lvm1 
+.</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>Why 
+isnt there any node corresoponding to vg1 or lvm1 in /dev/ ?&nbsp; any 
+clues...?????</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT><FONT face=Arial color=#000080 
+size=2><SPAN class=676585806-10122003></SPAN></FONT><FONT face=Arial 
+color=#000080 size=2><SPAN class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>Please 
+suggest some nice solutions .</SPAN></FONT></DIV>
+<DIV><FONT face=Arial color=#000080 size=2><SPAN 
+class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial><FONT size=2><SPAN class=676585806-10122003>Thanks and 
+</SPAN>Regards,</FONT></FONT> <BR><FONT face=Arial size=2>Salil Taneja</FONT> 
+<BR><FONT face=Arial size=2>HCLT NetCentric Division,</FONT> <BR><FONT 
+face=Arial size=2>A11, Sector 16,</FONT> <BR><FONT face=Arial size=2>Noida, 
+India.</FONT> <BR><FONT face=Wingdings color=#800080 size=2>(</FONT><FONT 
+face="Trebuchet MS" color=#993300 size=2> office</FONT><FONT face="Trebuchet MS" 
+color=#000000 size=2>: +91-120-2510701 Ext 3155</FONT> <BR><FONT face=Wingdings 
+color=#800080 size=2>(</FONT><FONT face="Trebuchet MS" color=#993300 
+size=2></FONT> <FONT face="Trebuchet MS" color=#000000 size=2>cell: 
++91-9810250247</FONT> </DIV><BR>
+<DIV>&nbsp;</DIV></BODY></HTML>
+
+------_=_NextPart_001_01C3BEED.03605F80--
