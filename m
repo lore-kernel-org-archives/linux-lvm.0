@@ -1,11 +1,10 @@
-Subject: Re: [linux-lvm] Cluster LVM
-Message-Id: <20020228180021.GA563@fib011235813.fsnet.co.uk>
-References: <20020228143217.GA4198@fib011235813.fsnet.co.uk>
-    <20020228150658.78595.qmail@web13004.mail.yahoo.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LVM1.0.3 tools on a kernel with LVM1.0.1-rc4?
+Message-Id: <20020301104924.A30022@sistina.com>
+References: <87k7sx26lw.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020228150658.78595.qmail@web13004.mail.yahoo.com>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+In-Reply-To: <87k7sx26lw.fsf@papadoc.bayour.com>; from turbo@bayour.com on
+    Thu, Feb 28, 2002 at 12:22:51PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,27 +15,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 28 12:01:02 2002
+Date: Fri Mar  1 03:49:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Feb 28, 2002 at 07:06:58AM -0800, Prashant Kharche wrote:
-> when node1 issues a command pvmove, LOCK MANAGER will
-> block all the nodes from accessing the METADATA for
-> that VG and as soon as it finishes updating the
-> METADATA, pvmove itself writes the updated kernel VGDA
-> on the DISK.. so for this period, METADATA consistency
-> is maintained. 
+On Thu, Feb 28, 2002 at 12:22:51PM +0100, Turbo Fredriksson wrote:
+> Is this possible?
 
-This is not enough, you will end up with a trashed system since node2
-will still be writing data to the wrong place.  I think you should
-consider only doing offline operations.  ie, acquiring the lock should
-fail if any other nodes have activated the vg.
+Yes.
 
-If you really insist on doing live operations I suggest you look at
-the device-mapper driver (LVM2), which contains the suspend
-functionality that you will need.
+> 
+> cracking $400 million in gold bullion Noriega president supercomputer
+> Cocaine PLO fissionable ammonium ammunition spy class struggle Rule
+> Psix South Africa Panama
 
-- Joe
+Was that English?
+
+> [See http://www.aclu.org/echelonwatch/index.html for more about this]
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
