@@ -1,10 +1,10 @@
-Message-ID: <3BA0B638.3030508@st-peter.stw.uni-erlangen.de>
-Date: Thu, 13 Sep 2001 15:35:52 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM
+Date: Thu, 13 Sep 2001 09:34:50 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPIEEKDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM
-References: <NBBBJHKIOKPKOGOEPEDPAEEJDNAA.stuart@bh90210.net>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+In-reply-to: <3BA0B638.3030508@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,115 +16,99 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-
-IT3 Stuart B. Tener, USNR-R wrote:
-
->Svetljo:
->
->	So for LVM, you do need to use the lvmcreate_initrd program or not? I am still not clear on that.
->
->	If I need to make an lvmcreate_initrd, does not that mean it cannot be in the kernel?
->
-there is no trouble if you compile in FS and LVM and so on
-but you need lvmcreate_initrd vor creating the ramdisk which contain the 
-binaries needed to activate the VG's
-you can use lvmcreate_initrd --nomod [ your kernel ] to create the 
-initrd without modules
-
->
->Very Respectfully, 
->
->Stuart Blake Tener, IT3, USNR-R, N3GWG 
->Beverly Hills, California
->VTU 1904G (Volunteer Training Unit) 
->stuart@bh90210.net 
->west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
->east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
->
->Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
->
->JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
->
->Thursday, September 13, 2001 3:20 AM
->
->-----Original Message-----
->From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of svetljo
->Sent: Thursday, September 13, 2001 12:49 AM
->To: linux-lvm@sistina.com
->Subject: Re: [linux-lvm] LVM
->
->>
->>LVM Listmembers:
->>
->>      The how-to is not clear on certain issues:
->>
->>(a) should ReiserFS support be compiled into the kernel or be a module?
->>(b) Should LVM support be compiled into the kernel or be a module?
->>(c) If you use LVM support as a module or in the kernel how does this effect the need or configuration of the initrd?
->>
->it's better to have them compiled in ,
->
->>Someone told me I don't need initrd, if its built in the kernel, no?
->>
->it's not needed for software RAID, IBM's EVMS (still alpha status) and
->is on the to-do list of lvm
->( i have read this in the previous messages)
->but as of today you need initrd for the binaries for activating the VG's
->and LV's
->
->>
->>Very Respectfully,
->>
->>Stuart Blake Tener, IT3, USNR-R, N3GWG
->>Beverly Hills, California
->>VTU 1904G (Volunteer Training Unit)
->>stuart@bh90210.net
->>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
->>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
->>
->>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!)
->>
->>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
->>
->>Wednesday, September 12, 2001 4:26 PM
->>
->>-----Original Message-----
->>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Andreas Dilger
->>Sent: Wednesday, September 12, 2001 4:21 PM
->>To: linux-lvm@sistina.com
->>Subject: Re: [linux-lvm] LVM
->>
->>On Sep 12, 2001  15:41 -0700, IT3 Stuart B. Tener, USNR-R wrote:
->>
->>>     I am curious what version of lilo in fact supports ReiserFS tails. I am running Mandrake 8.0, and using the lilo supplied therewith, and have been booting a / partition as ReiserFS (with tails I believe, how do I check?).
->>>
->>At least version 21.6+ support reiserfs tails (maybe earlier, I don't know).
->>You should be able to verify with "strings /sbin/lilo | grep -i reiserfs".
->>What it does is unpack the tail on any kernel/initrd files so that LILO
->>can map the blocks directly.  In a way, it is strange that this is needed,
->>since I thought tails only applied to files < 64kB or similar...
->>
->>Cheers, Andreas
->>--
->>Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->>                \  would they cancel out, leaving him still hungry?"
->>http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
->>
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->
+U3ZldGxqbzoNCg0KCUx2bWNyZWF0ZV9pbml0cmQgLW5vbW9kIEkgdW5kZXJzdGFuZCwgd2hhdCBp
+cyB0aGUgc2lnbmlmaWdhbmNlIG9mICJbIHlvdXIga2VybmVsIF0iPyBkbyBJIHB1dCB0aGUgcGF0
+aCB0byB0aGUga2VybmVsIHRoZXJlPyBDYW4geW91IGdpdmUgYW4gZXhhbXBsZSBvZiB3aGF0IGNv
+bW1hbmQgbGlrZSBhcmd1bWVudHMgSSB3b3VsZCB0eXBlPyBNeSBrZXJuZWwgdmVyc2lvbiBpcyAy
+LjQuOC0xMm1kay4NCg0KDQpWZXJ5IFJlc3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBUZW5l
+ciwgSVQzLCBVU05SLVIsIE4zR1dHIA0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRVIDE5
+MDRHIChWb2x1bnRlZXIgVHJhaW5pbmcgVW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3ZXN0
+IGNvYXN0OiAoMzEwKS0zNTgtMDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0Eg
+OTAyMDktMjA0MyANCmVhc3QgY29hc3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQ
+aGlsYWRlbHBoaWEsIFBBIDE5MTQ5LTU4NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDcz
+IGZheCB0byBlbWFpbCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0KDQpK
+T0lOIFRIRSBVUyBOQVZZIFJFU0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQg
+RlJPTSBJVCBBTEwuIA0KDQpUaHVyc2RheSwgU2VwdGVtYmVyIDEzLCAyMDAxIDk6MzIgQU0NCg0K
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5h
+LmNvbSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1PbiBCZWhhbGYgT2Ygc3Zl
+dGxqbw0KU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMywgMjAwMSA2OjM2IEFNDQpUbzogbGlu
+dXgtbHZtQHNpc3RpbmEuY29tDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTFZNDQoNCg0KSVQz
+IFN0dWFydCBCLiBUZW5lciwgVVNOUi1SIHdyb3RlOg0KDQo+U3ZldGxqbzoNCj4NCj4gICAgICAg
+U28gZm9yIExWTSwgeW91IGRvIG5lZWQgdG8gdXNlIHRoZSBsdm1jcmVhdGVfaW5pdHJkIHByb2dy
+YW0gb3Igbm90PyBJIGFtIHN0aWxsIG5vdCBjbGVhciBvbiB0aGF0Lg0KPg0KPiAgICAgICBJZiBJ
+IG5lZWQgdG8gbWFrZSBhbiBsdm1jcmVhdGVfaW5pdHJkLCBkb2VzIG5vdCB0aGF0IG1lYW4gaXQg
+Y2Fubm90IGJlIGluIHRoZSBrZXJuZWw/DQo+DQp0aGVyZSBpcyBubyB0cm91YmxlIGlmIHlvdSBj
+b21waWxlIGluIEZTIGFuZCBMVk0gYW5kIHNvIG9uDQpidXQgeW91IG5lZWQgbHZtY3JlYXRlX2lu
+aXRyZCB2b3IgY3JlYXRpbmcgdGhlIHJhbWRpc2sgd2hpY2ggY29udGFpbiB0aGUNCmJpbmFyaWVz
+IG5lZWRlZCB0byBhY3RpdmF0ZSB0aGUgVkcncw0KeW91IGNhbiB1c2UgbHZtY3JlYXRlX2luaXRy
+ZCAtLW5vbW9kIFsgeW91ciBrZXJuZWwgXSB0byBjcmVhdGUgdGhlDQppbml0cmQgd2l0aG91dCBt
+b2R1bGVzDQoNCj4NCj5WZXJ5IFJlc3BlY3RmdWxseSwNCj4NCj5TdHVhcnQgQmxha2UgVGVuZXIs
+IElUMywgVVNOUi1SLCBOM0dXRw0KPkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENCj5WVFUgMTkw
+NEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KQ0KPnN0dWFydEBiaDkwMjEwLm5ldA0KPndlc3Qg
+Y29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5
+MDIwOS0yMDQzDQo+ZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBo
+aWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OQ0KPg0KPlRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDcz
+IGZheCB0byBlbWFpbCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpDQo+DQo+
+Sk9JTiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklU
+IEZST00gSVQgQUxMLg0KPg0KPlRodXJzZGF5LCBTZXB0ZW1iZXIgMTMsIDIwMDEgMzoyMCBBTQ0K
+Pg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogbGludXgtbHZtLWFkbWluQHNp
+c3RpbmEuY29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBP
+ZiBzdmV0bGpvDQo+U2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMywgMjAwMSAxMjo0OSBBTQ0K
+PlRvOiBsaW51eC1sdm1Ac2lzdGluYS5jb20NCj5TdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTFZN
+DQo+DQo+Pg0KPj5MVk0gTGlzdG1lbWJlcnM6DQo+Pg0KPj4gICAgICBUaGUgaG93LXRvIGlzIG5v
+dCBjbGVhciBvbiBjZXJ0YWluIGlzc3VlczoNCj4+DQo+PihhKSBzaG91bGQgUmVpc2VyRlMgc3Vw
+cG9ydCBiZSBjb21waWxlZCBpbnRvIHRoZSBrZXJuZWwgb3IgYmUgYSBtb2R1bGU/DQo+PihiKSBT
+aG91bGQgTFZNIHN1cHBvcnQgYmUgY29tcGlsZWQgaW50byB0aGUga2VybmVsIG9yIGJlIGEgbW9k
+dWxlPw0KPj4oYykgSWYgeW91IHVzZSBMVk0gc3VwcG9ydCBhcyBhIG1vZHVsZSBvciBpbiB0aGUg
+a2VybmVsIGhvdyBkb2VzIHRoaXMgZWZmZWN0IHRoZSBuZWVkIG9yIGNvbmZpZ3VyYXRpb24gb2Yg
+dGhlIGluaXRyZD8NCj4+DQo+aXQncyBiZXR0ZXIgdG8gaGF2ZSB0aGVtIGNvbXBpbGVkIGluICwN
+Cj4NCj4+U29tZW9uZSB0b2xkIG1lIEkgZG9uJ3QgbmVlZCBpbml0cmQsIGlmIGl0cyBidWlsdCBp
+biB0aGUga2VybmVsLCBubz8NCj4+DQo+aXQncyBub3QgbmVlZGVkIGZvciBzb2Z0d2FyZSBSQUlE
+LCBJQk0ncyBFVk1TIChzdGlsbCBhbHBoYSBzdGF0dXMpIGFuZA0KPmlzIG9uIHRoZSB0by1kbyBs
+aXN0IG9mIGx2bQ0KPiggaSBoYXZlIHJlYWQgdGhpcyBpbiB0aGUgcHJldmlvdXMgbWVzc2FnZXMp
+DQo+YnV0IGFzIG9mIHRvZGF5IHlvdSBuZWVkIGluaXRyZCBmb3IgdGhlIGJpbmFyaWVzIGZvciBh
+Y3RpdmF0aW5nIHRoZSBWRydzDQo+YW5kIExWJ3MNCj4NCj4+DQo+PlZlcnkgUmVzcGVjdGZ1bGx5
+LA0KPj4NCj4+U3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNHV0cNCj4+QmV2ZXJs
+eSBIaWxscywgQ2FsaWZvcm5pYQ0KPj5WVFUgMTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0
+KQ0KPj5zdHVhcnRAYmg5MDIxMC5uZXQNCj4+d2VzdCBjb2FzdDogKDMxMCktMzU4LTAyMDIgUC5P
+LiBCb3ggMTYwNDMsIEJldmVybHkgSGlsbHMsIENBIDkwMjA5LTIwNDMNCj4+ZWFzdCBjb2FzdDog
+KDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1
+OQ0KPj4NCj4+VGVsZWNvcGllcjogKDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdhdGV3YXkg
+dmlhIHd3dy5lZmF4LmNvbSAoaXQncyBmcmVlISkNCj4+DQo+PkpPSU4gVEhFIFVTIE5BVlkgUkVT
+RVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4NCj4+DQo+
+PldlZG5lc2RheSwgU2VwdGVtYmVyIDEyLCAyMDAxIDQ6MjYgUE0NCj4+DQo+Pi0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+PkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFp
+bHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1PbiBCZWhhbGYgT2YgQW5kcmVhcyBEaWxn
+ZXINCj4+U2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTIsIDIwMDEgNDoyMSBQTQ0KPj5Ubzog
+bGludXgtbHZtQHNpc3RpbmEuY29tDQo+PlN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBMVk0NCj4+
+DQo+Pk9uIFNlcCAxMiwgMjAwMSAgMTU6NDEgLTA3MDAsIElUMyBTdHVhcnQgQi4gVGVuZXIsIFVT
+TlItUiB3cm90ZToNCj4+DQo+Pj4gICAgIEkgYW0gY3VyaW91cyB3aGF0IHZlcnNpb24gb2YgbGls
+byBpbiBmYWN0IHN1cHBvcnRzIFJlaXNlckZTIHRhaWxzLiBJIGFtIHJ1bm5pbmcgTWFuZHJha2Ug
+OC4wLCBhbmQgdXNpbmcgdGhlIGxpbG8gc3VwcGxpZWQgdGhlcmV3aXRoLCBhbmQgaGF2ZSBiZWVu
+IGJvb3RpbmcgYSAvIHBhcnRpdGlvbiBhcyBSZWlzZXJGUyAod2l0aCB0YWlscyBJIGJlbGlldmUs
+IGhvdyBkbyBJIGNoZWNrPykuDQo+Pj4NCj4+QXQgbGVhc3QgdmVyc2lvbiAyMS42KyBzdXBwb3J0
+IHJlaXNlcmZzIHRhaWxzIChtYXliZSBlYXJsaWVyLCBJIGRvbid0IGtub3cpLg0KPj5Zb3Ugc2hv
+dWxkIGJlIGFibGUgdG8gdmVyaWZ5IHdpdGggInN0cmluZ3MgL3NiaW4vbGlsbyB8IGdyZXAgLWkg
+cmVpc2VyZnMiLg0KPj5XaGF0IGl0IGRvZXMgaXMgdW5wYWNrIHRoZSB0YWlsIG9uIGFueSBrZXJu
+ZWwvaW5pdHJkIGZpbGVzIHNvIHRoYXQgTElMTw0KPj5jYW4gbWFwIHRoZSBibG9ja3MgZGlyZWN0
+bHkuICBJbiBhIHdheSwgaXQgaXMgc3RyYW5nZSB0aGF0IHRoaXMgaXMgbmVlZGVkLA0KPj5zaW5j
+ZSBJIHRob3VnaHQgdGFpbHMgb25seSBhcHBsaWVkIHRvIGZpbGVzIDwgNjRrQiBvciBzaW1pbGFy
+Li4uDQo+Pg0KPj5DaGVlcnMsIEFuZHJlYXMNCj4+LS0NCj4+QW5kcmVhcyBEaWxnZXIgIFwgIklm
+IGEgbWFuIGF0ZSBhIHBvdW5kIG9mIHBhc3RhIGFuZCBhIHBvdW5kIG9mIGFudGlwYXN0bywNCj4+
+ICAgICAgICAgICAgICAgIFwgIHdvdWxkIHRoZXkgY2FuY2VsIG91dCwgbGVhdmluZyBoaW0gc3Rp
+bGwgaHVuZ3J5PyINCj4+aHR0cDovL3d3dy1tZGRzcC5lbmVsLnVjYWxnYXJ5LmNhL1Blb3BsZS9h
+ZGlsZ2VyLyAgICAgICAgICAgICAgIC0tIERvZ2JlcnQNCj4+DQo+Pg0KPj5fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPj5saW51eC1sdm0gbWFpbGluZyBs
+aXN0DQo+PmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KPj5odHRwOi8vbGlzdHMuc2lzdGluYS5jb20v
+bWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0NCj4+cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRw
+Oi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5odG1sDQo+Pg0KPg0KPg0KPg0KPl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+bGludXgtbHZt
+IG1haWxpbmcgbGlzdA0KPmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KPmh0dHA6Ly9saXN0cy5zaXN0
+aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KPg0KDQoNCg0KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxp
+c3QNCmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KaHR0cDovL2xpc3RzLnNpc3RpbmEuY29tL21haWxt
+YW4vbGlzdGluZm8vbGludXgtbHZtDQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cu
+c2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3RvLmh0bWwNCg==
