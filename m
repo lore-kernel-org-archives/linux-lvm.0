@@ -1,35 +1,47 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009010801.CAA05065@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] Dazed & Confused
-Date: Fri, 1 Sep 2000 02:01:41 -0600 (MDT)
-In-Reply-To: <Pine.LNX.4.21.0008311508270.898-100000@freak.distro.conectiva> from "Marcelo Tosatti" at Aug 31, 2000 03:15:16 PM
+Message-Id: <200009010816.CAA05108@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] ERROR -241 getting size of physical volume "/dev/hdd2"
+Date: Fri, 1 Sep 2000 02:16:46 -0600 (MDT)
+In-Reply-To: <Pine.A41.4.21.0008302002520.33560-100000@gigue.dlib.indiana.edu> from "John Marquart" at Aug 30, 2000 08:19:38 PM
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Marcelo Tosatti <marcelo@conectiva.com.br>
+To: John Marquart <jomarqua@indiana.edu>
 Cc: linux-lvm@msede.com
 
-Marcelo Tosatti, writes:
-> While looking at your patch I found something which seems to be wrong. 
+John Marquart, you write:
+> However, I was attempting to add an extra physical device to my machine,
+> and add it to an existing VG.  When I ran "pvcreate /dev/hdd2" it gave me
+> the following error:
 > 
-> The function lvm_snapshot_COW returns 1 on success. lvm_map() returns  
-> lvm_snapshot_COW() return code. ll_rw_block calls lvm_map_ptr() (which is
-> lvm_map()) and expects 0 on success: 
+> pvcreate -- ERROR -241 getting size of physical volume "/dev/hdd2"  
 > 
-> +                       if ((lvm_map_ptr) (bh[i], rw) != 0) {
-> +                               printk(KERN_ERR
-> +                                      "Bad lvm_map in ll_rw_block\n");
-> +                               goto sorry;
-> +                       }
+> and when I run lvmscandisk it does only pics up 1 disk (not /dev/hdd).
 
-You are correct.  I think that I had changed lvm-snap.c at one time so
-that lvm_snapshot_COW() returned 0 on success like normal kernel
-functions, but those changes were lost.  Just change the "return 1" to
-"return 0" on line 290 of lvm-snap.c.
+It looks like you have the (well known) bug which happens if you add a
+kernel patch which adds fields to /proc/partitions, and then the LVM
+code screws up.  There is a fix in the "BUGS" file at lvm.msede.com,
+which looks something like this (for lvm_dir_cache.c):
 
-Note however, that this is exactly opposite of what is done in 2.4 code.
+   char procline[127];
+
+ [snip]
+
+   if ( ( proc = fopen ( "/proc/partitions", "r")) != NULL) {
+       while ( !feof ( proc)) {
+           fgets (procline, 127, proc) ;
+           sscanf (procline, " %s %s %s %s\n", major, minor, blocks, devname);
+           if ( atoi ( major) > 0 && atoi ( major) != LVM_BLK_MAJOR) {
+               lvm_add_dir_cache ( "/dev", devname);
+           }
+       }
+       fclose ( proc);
+   }
+
+Why there is not a new release of the LVM tools that fixes these bugs,
+nobody knows...
 
 Cheers, Andreas
