@@ -1,6 +1,10 @@
-From: moneyhome@amikkiworld.com
-Message-Id: <E17wEjj-00048D-00@hermes.sistina.com>
-Subject: [linux-lvm] FREE traffic to YOUR website !
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] adding a bootsector to a PV destroys it ?!?
+Message-ID: <20020901090001.GA1739@localhost>
+References: <20020901022635.E6906@zealot.blacknet.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020901022635.E6906@zealot.blacknet.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,27 +15,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 30 23:35:05 2002
+Date: Sun Sep  1 04:05:52 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, 
+On Sunday, 01 September 2002, at 02:26:35 +0200,
+Goetz Bock wrote:
 
-My name is Mike and I have visited your web site.
+> Still, just to make sure:
+> overwriting the first 512byte of a PV destroy it?
+> 
+If I recall correctly, metadata is placed at the beginning of each PV,
+so overwriting the first 512-byte sector of it will probably render
+metadata unusable for LVM.
 
-I love it. 
-
-So I have decided to write to you. 
-
-I thought that because generating traffic is so critical for 
-any website, you could be interested in some information 
-I have about FREE web traffic. If you want to read it, simply 
-reply to this email with a blank message and I will email it 
-to you. 
-
-Have a great day, 
-
-Mike. 
+-- 
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Woody (Linux 2.4.19-pre6aa1)
