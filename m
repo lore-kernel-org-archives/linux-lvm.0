@@ -1,9 +1,9 @@
 From: Sebastian Kollmann <Sebastian.Kollmann@T-Online.de>
-Date: Thu, 4 Oct 2001 11:34:50 +0200
+Date: Thu, 4 Oct 2001 12:07:07 +0200
 MIME-Version: 1.0
-Message-Id: <01100411345002.01245@seven.home.sekosystems.com>
+Message-Id: <01100412070703.01245@seven.home.sekosystems.com>
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] XFS-1.0.1 patch
+Subject: [linux-lvm] LVM kernel patch request
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,11 +19,8 @@ Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
 Hi,
-I was trying to patch a 2.4.5 kernel from kernel.org on a RedHat 7.1 Box with 
-XFS-1.0.1 and LVM-1.0.1-rc[34] but it failed.
-It seams that the patches I was trying to apply ar conflicting with each 
-other, because they ar patching the same files. Is somebody outthere who can 
-explain how to do that or has somebody had the same problems? I would be very 
-thankful for any possible help. 
+I need a LVM patch, witch is working with a 2.4.5-xfs-1.0.1 kernel on RedHat 
+7.1.
+I got the xfs patches from http://oss.sgi.com/projects/xfs/patchlist.html.
 
-Greetings, Sebastian.
+Greetings, Sebastian. 
