@@ -1,8 +1,9 @@
-Subject: Re: [linux-lvm] configure:sed: file conftest.s1 line 40: Unterminated `s' command
-References: <FDEJIMPDHJAAPNLFKBMGAEILCOAA.tgs@iafrica.com>
+Subject: Re: [linux-lvm] lvm-1.0.1 not working with DAC960/2.2.20
+References: <wvbshoy54w.fsf@freeze.oslo.dnmi.no>
+	<20011127111424.A8179@sistina.com> <20011127102808.A730@lynx.no>
 From: Adrian Phillips <a.phillips@dnmi.no>
-In-Reply-To: <FDEJIMPDHJAAPNLFKBMGAEILCOAA.tgs@iafrica.com>
-Message-ID: <wv7ksb769w.fsf@freeze.oslo.dnmi.no>
+In-Reply-To: <20011127102808.A730@lynx.no>
+Message-ID: <wv1yij762a.fsf@freeze.oslo.dnmi.no>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,42 +15,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 28 00:33:02 2001
+Date: Wed Nov 28 00:37:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Theo" == Theo  <tgs@iafrica.com> writes:
+>>>>> "Andreas" == Andreas Dilger <adilger@turbolabs.com> writes:
+<snip>
 
-    Theo> Hi there, I downloaded version 1.0.1 and when I run
-    Theo> configure I get the following problem. My guess would be I
-    Theo> have an outdated version of sed. I'm running GNU sed version
-    Theo> 3.02. What version do I need or am I totally of track ?
+    Andreas> Note that this will break other things, because you also
+    Andreas> need to update the LVM_DEVICE_TYPE_<foo> defines when you
+    Andreas> change this array (it was Joe or Alistair that wrote it
+    Andreas> this way, not me).  It would also break to add a new enum
+    Andreas> value for DAC960, because it means we need to look for
+    Andreas> two values elsewhere in the code
+    Andreas> (e.g. lvm_partition_count).
 
-    Theo> Regards.
+Thanks for noticing this. My patch "seemed" to work but I have almost
+no experience with LVM code so missed the further reaching
+consequences of my change.
 
-    Theo> PS: I'm currently running LVM 1.0 fine.
+    Andreas> I just checked in a fix, which cleans up this code a bit
+    Andreas> and makes it impossible to get wrong in the future.
 
-    Theo> checking for uname... (cached) yes creating ./config.status
-    Theo> creating Makefile sed: file conftest.s1 line 40:
-    Theo> Unterminated `s' command creating make.tmpl sed: file
-    Theo> conftest.s1 line 40: Unterminated `s' command creating
-    Theo> PATCHES/Makefile sed: file conftest.s1 line 40: Unterminated
-    Theo> `s' command creating tools/Makefile sed: file conftest.s1
-    Theo> line 40: Unterminated `s' command creating
-    Theo> tools/tools_and_lib.make.tmpl sed: file conftest.s1 line 40:
-    Theo> Unterminated `s' command creating tools/lib/Makefile sed:
-    Theo> file conftest.s1 line 40: Unterminated `s' command creating
-    Theo> tools/man8/Makefile sed: file conftest.s1 line 40:
-    Theo> Unterminated `s' command
-
-Well, I'm running 3.02 (3.02-8 Debian package) and have configured
-1.0.1 without problems.
-
-If you don't get a definite anwser, try adding set -x at the beginning
-of configure and see what sed commands are being generated while the
-Makefile is being created.
+It would be useful if people could post patches to this list so that
+individual changes could be tested by individuals on this list without
+checking out the whole CVS which may include other patches which may
+possibly break things.
 
 Sincerely,
 
