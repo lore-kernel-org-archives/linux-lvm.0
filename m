@@ -1,33 +1,38 @@
-Message-Id: <m11cEEB-0000YPC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: Re: [linux-lvm] lvmcreate_initrd
-In-Reply-To: <Pine.HPP.3.96.991015141634.18374A-100000@falstaff.ucs.indiana.edu> from theodore russell wickell at "Oct 15, 1999  2:24: 2 pm"
-Date: Fri, 15 Oct 1999 22:45:26 +0200 (MEST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Tue, 12 Oct 1999 15:59:12 +0200
+From: Jens Benecke <jens@pinguin.conetix.de>
+Subject: Re: [linux-lvm] Existing Linux System
+Message-ID: <19991012155912.D979@earth.zuhause.de>
+References: <H00004e903071d53@MHS> <199910141952.AA07775@mailgate1b.telekom.de>
+Mime-Version: 1.0
+In-Reply-To: <199910141952.AA07775@mailgate1b.telekom.de>; from Heinz Mauelshagen on Thu, Oct 14, 1999 at 09:52:29PM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, linux-lvm@msede.com
 
-Hi,
+On Thu, Oct 14, 1999 at 09:52:29PM +0000, Heinz Mauelshagen wrote:
 
-> I finally got my system to boot except for one problem. My ramdisk is too
-> big! The lvmcreate_initrd tries to crete an initrd image of size 8192K but
-> my ramdisks such as /dev/ram1 is only 4096K I believe. The library file
-> libc.so.6 alone is 4017K. Am I doing something wrong? I have been trying
+> > I have an exisiting linux system. Running Mandrake 6.0. I have
+> > installed sucessfully the kernel patch and the LVM software. Can I
+> > convert the existing layout to use LVM?
+> No conversion in means of nondestructive change of your existing
+> partition based filesystems into logical volume based ones.
 
-If you want to stay below the 4096 you may copy a stripped version of the
-libc and the other needed libraries. This means you cannot read debug
-information from the libc, but you don't need that in your initrd.
+> > And if so how would that be accomplished.
+> You have to have free disk space available (at least about 10-20% more
+> than the already used space for your partition based filesystems) to set
+> up a volume group containing logical volumes for /, /usr, /tmp, /var and
+> so on.
+> Create filesystems in these logical volumes and mount them.
 
-I created an initial ramdisk (just copied a script that created boot/root
-disks) and mine is 1781KB including lvm tools, ash and some modules.
+Is there a kind of Migration-HOWTO included in the LVM package that tells
+you how to migrate an existing system in detail?
+ 
 
-But you can also increase the ram disk size.
-
-Rolf
 -- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+_ciao, Jens_______________________________ http://www.pinguin.conetix.de
+
+Windows NT indeed has very low Total Cost of Ownership. Trouble is,
+Microsoft _owns_ Windows NT. You just licensed it.
