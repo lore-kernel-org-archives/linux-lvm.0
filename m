@@ -1,7 +1,10 @@
-From: "Alois Schneider" <alois@pustertal-info.net>
-MIME-Version: 1.0
-Message-Id: <E18cyWD-0002f8-00@adroit.an-dns.com>
-Subject: [linux-lvm] vgscan -- ERROR
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Howto create a Compressed ROM File initrd with lvmcreate_initrd
+Message-ID: <20030127082655.GB1698@tykepenguin.com>
+References: <001001c2c581$d7d579a0$240b892c@pe1mhp.ampr.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <001001c2c581$d7d579a0$240b892c@pe1mhp.ampr.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,81 +15,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 26 19:57:02 2003
+Date: Mon Jan 27 02:27:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Using vgscan I get the following error:
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data 
-of volume group "scsi_vg" from physical volume(s)
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your 
-volume group
+On Sun, Jan 26, 2003 at 10:28:17PM +0100, Jan H. van Gils wrote:
+> 
+> 	Hi,
+> 
+> Thanks for reading,
+> 
+> I am using Debian as a distro and it usses a cramfs initrd file when it
+> boots.
+> Here is the output from the original initrd file and the one created by
+> lvmcreate_initrd.
+> 
+> 1. Orginal
+> initrd.img-2.4.20-686:      Linux Compressed ROM File System data,
+> little endian size 2920448 version #2 sorted_dirs CRC 0x2e79d9f7,
+> edition 0, 1565 blocks, 200 files
+> 
+> 2. lvmcreate_initrd
+> initrd-lvm-2.4.20-686.gz:   gzip compressed data, from Unix, max
+> compression
+> 
+> 
+> Has some of you myth have seen in earlier posting my system wil not boot
+> When I use the initrd I have created with lvmcreate_initrd.
+> 
+> Here is the message:
+> Kernel panic: VFS: Unable to mount root fs on 3a:00
+> 
+> So I think the problem has to do with the fact that my kernel expects a
+> cramfs initrd
+> File and not a gzip compressed.
 
-I am using LVM 1.0.6 on a Debian-testing-system and had one VG scsi_vg 
-consisting of the following PV's: sda1,sdb1,hdb1,hdc1,hdd1
-I wanted to remove sdb1 and hdd1 from the VG and issued
-pvmove /dev/sdb1 and got an error (don't know the errormessage). I 
-then did a pvmove /dev/hdd1 and got no errormessage this time. I then 
-did a vgreducce scsi_vg /dev/hdd1 and shut-down the PC.
-I removed hdd1 and restarted. I got a SCSI disk error and "unable to 
-read partition table" for sdb and LVM did not come up as usual and I 
-issued a vgscan. vgchange does not find a volume group.
-pvdata gives the following results:
---- Physical volume ---
-PV Name               /dev/sda1
-VG Name               scsi_vg
-PV Size               4.04 GB [8466192 secs] / NOT usable 1.88 MB 
-[LVM: 125 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              1033
-Free PE               0
-Allocated PE          1033
-PV UUID               pJsMFv-ci9Q-orNK-3cRr-2aTl-w1N9-TEHDI1
+Yes, the Debian kernels don't have ext2 compiled in TTBOMK, only cramfs.
+Unfortunately, LVM likes to write to the root filesystem during vgscan and so
+you can't use a RO filesystem like cramfs - which is why lvmcreate_initrd
+creates an ext2 filesystem. Someone (I forget who) did some work on getting LVM
+to work with the Debian mkinitrd stuff but it was quite complicated and wasn't
+integrated by the mkinitrd maintainer.
 
---- Volume group ---
-VG Name               
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                3
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                4
-Act PV                4
-VG Size               103.97 GB
-PE Size               4 MB
-Total PE              26616
-Alloc PE / Size       24576 / 96 GB
-Free  PE / Size       2040 / 7.97 GB
-VG UUID               Vkdrqk-vX36-iO98-BQ0v-s0sJ-CQOk-CKw5H5
+The simplest wasy to acheive this is to build your own kernel with ext2 built in
+and use that for the initrd.
 
---- List of logical volumes ---
+Root on LVM is complicated anyway so if youre not prepared to do this then you
+really shouldn't be trying root on LVM either....
+ 
 
-pvdata -- logical volume "/dev/scsi_vg/lvol1" at offset   0
-pvdata -- logical volume "/dev/scsi_vg/mp3" at offset   1
-pvdata -- logical volume "/dev/scsi_vg/home" at offset   2
-pvdata -- logical volume struct at offset   3 is empty  
-... 
---- List of physical volume UUIDs ---
+-- 
 
-001: pJsMFv-ci9Q-orNK-3cRr-2aTl-w1N9-TEHDI1
-002: wT7xuc-iV9K-sNRl-kVdV-zzYw-OcPm-TW96TY
-003: u5I40y-Op34-nnVV-aInj-Jekc-VJT7-s2q8OK
-004: 3PCGsY-hUr6-QEUt-MkoJ-fKlX-24vG-pS0HJY
-
-and similar results for hdb1 and hdc1.
-
-Is there a chance to restore the data?
-
-Regards
-Alois 
+patrick
