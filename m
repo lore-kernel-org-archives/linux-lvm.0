@@ -1,10 +1,11 @@
-Return-Path: <tjaalton@cc.hut.fi>
-Date: Fri, 2 Feb 2001 15:53:02 +0200 (EET)
-From: Timo Aaltonen <tjaalton@cc.hut.fi>
-Subject: Re: [linux-lvm] startup stuff
-In-Reply-To: <Pine.LNX.4.21.0102020959490.426-100000@munster.noc.fr.clara.net>
-Message-ID: <Pine.OSF.4.10.10102021545200.18981-100000@vuorikide.hut.fi>
+Return-Path: <riel@conectiva.com.br>
+Date: Fri, 2 Feb 2001 11:53:13 -0200 (BRDT)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [linux-lvm] with 2.4.1, should I use beta2 or beta3 lvm-tools?
+In-Reply-To: <20010202103049.B872@66bassett.freeserve.co.uk>
+Message-ID: <Pine.LNX.4.21.0102021151370.1321-100000@duckman.distro.conectiva>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +17,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Fri, 2 Feb 2001, JAmes wrote:
+On Fri, 2 Feb 2001, Joe Thornber wrote:
+> On Fri, Feb 02, 2001 at 11:15:25AM +0100, H=EF=BF=BDkan Jettingstad wrote:
+> >=20
+> > Just a quick question, kernel 2.4.1 contains lvm 0.9.1beta2, so I'm
+> > wondering do I have to use the beta2 lvm-tools or can I use the beta3
+> > lvm-tools with that kernel, or do I have to wait for a beta3 patch for =
+the
+> > 2.4.1 kernel?
+>=20
+> Please use the latest code if you can.  The LVM tar balls will
+> build a patch for your kernel.  If you don't want to patch your
+> kernel yourself then use the latest tools with 2.4.1, but you
+> should probably refrain from using snapshots.  We hope to make
+> another release at the beginning of next week (probably beta4).
 
-> 
-> Hello
-> 
-> I am using debian Linux, and have farely successfully installed LVM. I
-> have just to do the lvcreate -ay at startup. I assume that thi smust go in
-> 
-> /etc/rc2.d 
-> 
-> but using what S??
-> 
-> Any help extremely apreciated...
+Who cares ?
 
-You could use the deb's made by Tom Lees. You can find them here:
+As far as the majority of the LVM users are concerned,
+new releases are shipped by Alan and Linus.
 
-http://www.lpsg.demon.co.uk/files/debian
+I guess having a separate LVM tree for development is
+good, but it might be better to just do maintenance on
+the tree which is actually being used - ie. Linus'.
 
-Depending which version you are using you have to install either lvm10
-(0.9, maybe 0.9.1betas?), lvm6 (0.8final) or lvm5 (0.8i) _and_ lvm-common.
-I've been using them for more than a month now without any problems.
+regards,
 
-They contain the init-script, so you don't need to make your own.
+Rik
+--
+Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
 
-_______________/Timo Aaltonen <http://www.hut.fi/~tjaalton>
-Work: Oy MyPortal International Ltd  GSM +358-40-5549 618
+Virtual memory is like a game you can't win;
+However, without VM there's truly nothing to lose...
+
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com/
