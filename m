@@ -1,10 +1,10 @@
 From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] 2.6.0, devmapper, LVM2 snapshots
-Message-ID: <20031221232730.L21022@uk.sistina.com>
-References: <20031220215901.321bd6eb.dbharris@eelf.ddts.net>
+Subject: Re: [linux-lvm] Endless loop running vgscan
+Message-ID: <20031221233848.M21022@uk.sistina.com>
+References: <3FE4DE2E.2030705@hasw.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20031220215901.321bd6eb.dbharris@eelf.ddts.net>; from dbharris@eelf.ddts.net on Sat, Dec 20, 2003 at 09:59:01PM -0500
+In-Reply-To: <3FE4DE2E.2030705@hasw.net>; from se.witt@gmx.net on Sun, Dec 21, 2003 at 12:41:34AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Dec 21 17:29:01 2003
+Date: Sun Dec 21 17:40:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: David B Harris <dbharris@eelf.ddts.net>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Sat, Dec 20, 2003 at 09:59:01PM -0500, David B Harris wrote:
-> I'm playing around with stock 2.6.0, checking things out, giving it a
-> good prod, and I found that creating a snapshot isn't possible. 
-Snapshots are not yet supported in stock 2.6.
-There are snapshot patches you can test on Joe's web page (see README).
+On Sun, Dec 21, 2003 at 12:41:34AM +0100, Sebastian Witt wrote:
+> Ignoring duplicate PV  on /dev/hdg1
+> Found /dev/hdf1 in VG raid_vg
+> Ignoring duplicate PV  on /dev/hdf1
+> Found /dev/hdh1 in VG raid_vg
+
+Set up a filter in lvm.conf so that LVM2 only sees the RAID devices
+and ignores the constituent devices that make up the RAID devices.
+
+The LVM2 logic isn't clever enough yet always to work out the correct
+device to use.  This will get fixed.
 
 Alasdair
 -- 
