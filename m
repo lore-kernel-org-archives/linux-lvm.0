@@ -1,9 +1,8 @@
-From: James Hawtin <oolon@ankh.org>
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.1-rc1    available at
-    www.sistina.com
-In-Reply-To: <Pine.LNX.4.02.10203201650360.28349-100000@murnau.science-computing.de>
-Message-Id: <Pine.LNX.4.44.0203202348090.27835-100000@pzat.meep.org>
+Message-Id: <XFMail.20020321124927.f.hinzmann@hamburg.de>
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
+From: Florian Hinzmann <f.hinzmann@hamburg.de>
+Subject: [linux-lvm] vgscan errors, segmentation faults
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,184 +13,86 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 20 18:01:02 2002
+Date: Thu Mar 21 06:07:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-pvmove has fixed the 2GB file offset problem. YAY! it works great however
-I did get it to segv ;-)
+Hello!
 
-Summary, I have a 22 gig lv, on one disk which I want to move on off it,
-There is enough disk space on two other pvs.
+I am desperate. I can't access my LVs at all currently.
+vgscan and vgcfgrestore say something about
+"only found 0 of x LEs for LV foo" and then they die
+with a segmentation fault.
 
-So pvmove -v -n oolon3_lv /dev/ide/host2/bus0/target0/lun0/part4
-
-Should work.... in theory
-
-However it didn't a segv was produced, I solved the problem by specifying
-the LE extent ranges and PEs to move them two, a two stage op, but still,
-it should not have segved.
-
-James
-
-More detailed info from this point...
-
-Here is the setup
-
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/ide/host2/bus1/target0/lun0/part2" of VG
-"sunset_vg" [30.84 GB / 19.66 GB free]
-pvscan -- ACTIVE   PV "/dev/ide/host2/bus1/target1/lun0/part1" of VG
-"sunset_vg" [19.03 GB / 8.09 GB free]
-pvscan -- ACTIVE   PV "/dev/ide/host2/bus0/target0/lun0/part4" of VG
-"sunset_vg" [35.06 GB / 13.06 GB free]
-pvscan -- total: 3 [85.07 GB] / in use: 3 [85.07 GB] / in no VG: 0 [0]
-
---- Volume group ---
-VG Name               sunset_vg
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                255
-Cur LV                6
-Open LV               0
-MAX LV Size           2 TB
-Max PV                255
-Cur PV                3
-Act PV                3
-VG Size               84.94 GB
-PE Size               32 MB
-Total PE              2718
-Alloc PE / Size       1412 / 44.12 GB
-Free  PE / Size       1306 / 40.81 GB
-VG UUID               HMrqdp-Hf5n-FfCP-5W2D-fyw6-UHcn-MMB7Wr
-
---- Logical volume ---
-LV Name                /dev/sunset_vg/var_lv
-VG Name                sunset_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 0
-LV Size                256 MB
-Current LE             8
-Allocated LE           8
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
-
---- Logical volume ---
-LV Name                /dev/sunset_vg/usr_lv
-VG Name                sunset_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   2
-# open                 0
-LV Size                3 GB
-Current LE             96
-Allocated LE           96
-Stripes                2
-Stripe size (KByte)    16
-Allocation             next free
-Read ahead sectors     120
-Block device           58:1
-
---- Logical volume ---
-LV Name                /dev/sunset_vg/swap1_lv
-VG Name                sunset_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   3
-# open                 0
-LV Size                256 MB
-Current LE             8
-Allocated LE           8
-Allocation             next free
-Read ahead sectors     120
-Block device           58:2
-
---- Logical volume ---
-LV Name                /dev/sunset_vg/swap2_lv
-VG Name                sunset_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   4
-# open                 0
-LV Size                256 MB
-Current LE             8
-Allocated LE           8
-Allocation             next free
-Read ahead sectors     120
-Block device           58:3
-
---- Logical volume ---
-LV Name                /dev/sunset_vg/oolon4_lv
-VG Name                sunset_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   5
-# open                 0
-LV Size                18.38 GB
-Current LE             588
-Allocated LE           588
-Stripes                2
-Stripe size (KByte)    16
-Allocation             next free
-Read ahead sectors     120
-Block device           58:4
-
---- Logical volume ---
-LV Name                /dev/sunset_vg/oolon3_lv
-VG Name                sunset_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   6
-# open                 0
-LV Size                22 GB
-Current LE             704
-Allocated LE           704
-Allocation             next free
-Read ahead sectors     120
-Block device           58:5
+"vgchange -ay" does the same of course ..
 
 
---- Physical volumes ---
-PV Name (#)           /dev/ide/host2/bus1/target0/lun0/part2 (3)
-PV Status             available / allocatable
-Total PE / Free PE    987 / 629
+The box with that problem is an ordinary PC running
+Debian Linux (unstable/sid).
 
-PV Name (#)           /dev/ide/host2/bus1/target1/lun0/part1 (2)
-PV Status             available / allocatable
-Total PE / Free PE    609 / 259
+I am trying to solve this right now. I will check for replies
+to this mail (list and private) regularily. I am eager to 
+help debugging this; giving more information or doing
+things someone wants me to try. 
+Short: Please help me, I will do whatever I can to help.  ;)
 
-PV Name (#)           /dev/ide/host2/bus0/target0/lun0/part4 (1)
-PV Status             available / NOT allocatable
-Total PE / Free PE    1122 / 418
 
-Now the problem.
+I will now try to remember as much as possible of
+what happened and what I did:
 
-bash# pvmove -v -n oolon3_lv /dev/ide/host2/bus0/target0/lun0/part4
-pvmove -- checking name of source physical volume
-"/dev/ide/host2/bus0/target0/lun0/part4"
-pvmove -- locking logical volume manager
-pvmove -- reading data of source physical volume from
-"/dev/ide/host2/bus0/target0/lun0/part4"
-pvmove -- checking volume group existence
-pvmove -- checking volume group consistency of "sunset_vg"
-pvmove -- searching for source physical volume
-"/dev/ide/host2/bus0/target0/lun0/part4" in volume group "sunset_
-vg"
-pvmove -- checking logical volume "oolon3_lv"
-pvmove -- building list of possible destination physical volumes
-pvmove -- checking volume group activity
-pvmove -- moving physical extents in active volume group "sunset_vg"
-pvmove -- WARNING: if you lose power during the move you may need
-        to restore your LVM metadata from backup!
-pvmove -- do you want to continue? [y/n] y
-pvmove -- starting to move linear logical volume
-"/dev/sunset_vg/oolon3_lv"
-pvmove -- checking for enough free physical extents in "sunset_vg"
-Segmentation fault
-bash#
+- I started to play around with LVM (v1.0.1, Debian package) with 
+  a stock 2.4.17 kernel (compiled by myself).
+- I had a volume group spread across several partitions 
+  (one per physical harddisk).
+- I added and removed PVs to my VG and resized some LVs.
+- Later I had two VGs and I was shifting them around quite
+  heavily.
+- Later I merged that two groups.
+
+A short time after that action the problems began. I don't remember
+my actions exactly. I think I had LVs with equal names inside both
+VGs. I did some moving of PEs, I renamed at least one LV and at some
+point I tried to merge both VGs.
+
+If I remember that correctly vgmerge worked fine, but I had some
+problems afterwards. I am not able to recollect all the steps I perfomed.
+
+I am sure activating did not work at some point and vgscan did not 
+display my new VG correctly. The only way I found to mount my LVs 
+was calling 
+"vgcfgrestore -f foo/vg01.conf /dev/hda2" and
+"vgcfgrestore -f foo/vg01.conf /dev/hdb1" and 
+_not_ calling any scan programs afterwards. 
+
+Especially vgscan messed up my setup. I remember getting contradictory 
+messages about to which VG /dev/hdb1 belongs while trying to 
+solve that. 
+
+Whatever, I was able to use my LVs if I wrote the metadata using
+vgcfgrestore. And calling vgscan was a sure way to make my LVs not
+working.
+
+
+I thought the new version might solve this for me and that box
+is running with lvm-1.1rc1 (again Debian package) + kernel 2.4.18 + 
+linux-2.4.18-VFS-lock.patch + lvm-1.1-rc1-2.4.18.patch.
+
+But now vgscan and vgcfgrestore segfault like I did
+write above.
+
+
+What can I try? What information may I provide?
+
+Please help!
+
+
+  TIA
+   Florian Hinzmann
+
+
+--
+  Florian Hinzmann                         private: f.hinzmann@hamburg.de
+                                            Debian: fh@debian.org
+PGP Key / ID: 1024D/B4071A65
+Fingerprint : F9AB 00C1 3E3A 8125 DD3F  DF1C DF79 A374 B407 1A65
