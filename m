@@ -1,13 +1,8 @@
-Message-Id: <3.0.6.32.20011102104459.008053f0@mail.doorpi.net>
-From: Brent Harding <bharding@doorpi.net>
-Subject: Re: [linux-lvm] pvmove root filesystem?
-In-Reply-To: <20011101235041.B746@lynx.no>
-References: <20011102003346.Q21136@pc.ilinx>
- <20011101233119.P21136@pc.ilinx>
- <20011101221529.W16554@lynx.no>
- <20011102003346.Q21136@pc.ilinx>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Kyle Hayes <khayes@quicknet.net>
+MIME-Version: 1.0
+Message-Id: <01110208435117.08803@khayes-lin>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] snapshot questions
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,82 +13,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  2 10:41:02 2001
+Date: Fri Nov  2 10:42:03 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Is redhat 7.1 using ext3 already automatically? How does one upgrade from
-ext2 to ext3?
-At 11:50 PM 11/1/01 -0700, you wrote:
->On Nov 02, 2001  00:33 -0500, Brian J. Murrell wrote:
->> > Brian, the "pvmove" mechanism is not yet 100% safe for mounted
-filesystems.
->> 
->> Ugh.  I was hoping to not hear something like this.  Has it gotten any
->> better recently?  What I mean is my LVM identifies itself as:
->> 
->> LVM version LVM 0.9.1_beta7(ish)  by Heinz Mauelshagen  (20 June 2001)
->> lvm -- Module successfully initialized
->
->Well, there have been a lot of changes to the pvmove locking code and
->such since then.  Whether it actually makes a difference is hard to
->tell.
->
->> Am I going to run into even more problems with this verion of LVM vs.
->> the latest or has the "live" pvmove stuff not changed much between the
->> version I am running and current.
->
->Nobody has really done any good testing on it.
->
->> > There may be a problem with the ext3 journal, it is
->> > hard to say (there was a report on the ext3 mailing list, but I never got
->> > enough details to sort it out.
->> 
->> Hrm.  I am running ext3 on my filesystems as well.
->
->That's why I mentioned it.  You could read the thread in the ext3-users
->archive at RedHat.
->
->> I just don't want this to turn into a "restore my system from tape"
->> type of operation, especially if the system is operating (i.e.
->> processing mail, etc.) while it all goes down the sh*tter.  Maybe I
->> will contemplate it based on your thoughts of how much worse the
->> operation could be based on my version of LVM installed.
->
->Well, if you are worried about mail, turn it off, back up your mail
->spool, and then do the move.
->
->Alternately, if you have some time to kill, do a "safe" test first.
->Create a PV/VG/LV on your new disk, get some process writing into it
->while it is mounted, and try a pvmove to another disk.  Bonus marks if
->you use something that can be verified afterwards (e.g. a tar file).
->
->"Obviously", there is only a danger at the "crossover" point of the
->tar extraction and the pvmove (i.e. only while writing to the PE that
->is being moved).  In theory, the buffers being written by tar will be
->locked when they are being written into the PE that is being moved.
->Once the pvmove is done, if e2fsck and "diff -ru" tell you that all
->is well, I think you are safe.
->
->If you are paranoid, run something really heavy like bonnie++ during the
->pvmove (only the file creation/read/deletion part) and it will complain
->if any of the files suddenly go missing or unreadable, but it doesn't
->(currently) check the file contents.  That would probably be a good
->hack - write synthetic data into each file that can easily be verified
->as correct later.
->
->Cheers, Andreas
->--
->Andreas Dilger
->http://sourceforge.net/projects/ext2resize/
->http://www-mddsp.enel.ucalgary.ca/People/adilger/
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
+We are considering using LVM to do database snapshots for backups.
+
+I have some questions that the HOWTO's etc. do not seem to answer.
+My largest concerns are that we will end up with a read-only corrupt
+filesystem.  This seems to be a problem reported in the mailing lists.
+
+1) how does the snapshot actually work?  My understanding is that the
+creation of a snapshot partition sets up a new LV on the same VG as
+the "source" partition.  This new partition is then used for writes to
+the "source" partition.  When the snapshot LV is removed, do I get
+a disk IO hit as these changes are copied back to the "source" partition?
+Or, does it work more like Veritas where the changed data go to the
+"source" and the original values are copied to the snapshot partition?
+The Veritas method is nice because dropping the snapshot partition
+does not require any data copying.
+
+2) are there any people using LVM for database snapshots?  The
+Whitepaper from SuSE has examples for Oracle and the HOWTO's
+talk about it, but is it used in production?  If so, what issues have you
+found?
+
+3) what is the overall stability of snapshot functions?  I have been following
+the pvmove thread with some alarm as I thought that LVM functionality was
+stable at this point.  Is there a place that I can see what functionality is
+considered stable and what isn't?  The mailing list archives do not paint a rosy
+picture of snapshot functionality.
+
+4) It seems that most of the LVM work is going into 2.4.  We have not been
+particularly pleased with the stability of 2.4 in general and would like to stay
+with 2.2 for a while.  How does the stability of LVM on 2.2 compare to 2.4?
+
+5) I have seen references to the VFS lock patch in the mailing list.  Is this
+actually supported by any filesystems yet?  Is it in the kernel proper? 
+
+Thanks.
+
+Best,
+Kyle
+
+
+-- 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MicroTelco Services saves money on every Fax:
+- Fax to email (FREE)
+- Fax to PSTN based Fax (Up to 95% Savings)
+- Fax Broadcasting: Send 100s of faxes to fax machines
+and email addresses in the time it takes to send just one!
+===========================================================
+    So send a fax today and let us know what you think! 
+       For more info. visit: www.internetfaxjack.com
+===========================================================
