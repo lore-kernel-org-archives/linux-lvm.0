@@ -1,10 +1,8 @@
-Return-Path: <jay@lazy.accessus.net>
-Date: Mon, 18 Dec 2000 12:29:17 -0600 (CST)
-From: Jay Weber <jay@lazy.accessus.net>
-In-Reply-To: <20001218115831.A31529@sistina.com>
-Message-ID: <Pine.OSF.4.21.0012181229090.5448-100000@lazy.accessus.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: LVM
+Return-Path: <bcorsello@usa.net>
+Message-ID: <20001219024304.18466.qmail@nwcst312.netaddress.usa.net>
+Date: 18 Dec 00 21:43:04 EST
+From: Brad Corsello <bcorsello@usa.net>
+Subject: [linux-lvm] (no subject)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,37 +14,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: lewis@sistina.com
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Great.  Thanks.. Signing up now. :)
+vgextend segfaults (lvm 0.9, kernel test10) 
+X-Mailer: USANET web-mailer (34FM.0700.4B.01)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 18 Dec 2000 lewis@sistina.com wrote:
 
-> On Mon, Dec 18, 2000 at 11:36:56AM -0600, Jay Weber wrote:
-> > Hi AJ,
-> > 
-> > I take it if we're actively banging on LVM with intentions of profiling
-> > and fixing up the code we should following the LVM_0.9-patches cvs tree
-> > and hang out on the commit list?
-> > 
-> > Just want to make sure I'm in the right spot.
-> 
-> Yeah, that's right.  I'd continue to watch the linux-lvm list and get on the
-> lvm-devel list as well.  That list is just getting started and we're
-> planning on having the lvm development discussions on there.  Please send
-> all development related mail to the lvm-devel list.
-> 
-> Regards,
-> -- 
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-379-3951
-> 1313 5th St SE, Suite 111              Fax:    612-379-3952
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
-> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2648
-> 
-> Chaos, panic, pandemonium - my work here is done
-> 
+
+>> I take it from your comment that the current CVS code is not the 0.9 c=
+ode. =
+
+Is
+>> that correct?
+
+>Correct.  The main branch will be the cluster LVM development, you
+>really don't want this at the moment.
+
+OK, lemme get this straight.  (Sorry if I'm being dense here.)  I started=
+ with
+the lvm kernel module code that comes with the 2.4.0-test10 sources.  I
+patched it with the two 0_9 patches per the INSTALL instructions, and com=
+piled
+it into my kernel.  Then I installed the 0.9 tools RPM from sistina.com. =
+ That
+is what is segfaulting when I try to do a vgextend.  Not a fatal problem,=
+
+since I don't absolutely need the extra space in my volume group.  But do=
+es
+anyone know of a patch to fix this?  Is this likely to be fixed in the fi=
+nal
+2.4?  =
+
+
+____________________________________________________________________
+Get free email and a permanent address at http://www.netaddress.com/?N=3D=
+1
