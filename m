@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] PVscan Question.
-Message-ID: <20021107181110.C8382@sistina.com>
-References: <Pine.LNX.4.30.0211062334420.1036-100000@localhost.localdomain>
+Subject: Re: [linux-lvm] cant mount LV via partition/filesystem labels
+Message-ID: <20021107181852.D8382@sistina.com>
+References: <3DCA84BB.9050404@jumpline.com>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.30.0211062334420.1036-100000@localhost.localdomain>; from dj@online.bg on Wed, Nov 06, 2002 at 11:44:38PM +0200
+In-Reply-To: <3DCA84BB.9050404@jumpline.com>; from ben@jumpline.com on Thu, Nov 07, 2002 at 10:20:27AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,74 +14,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  7 11:16:01 2002
+Date: Thu Nov  7 11:24:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ivan,
+On Thu, Nov 07, 2002 at 10:20:27AM -0500, Ben Snyder wrote:
+> Here's what I've got:
+> 
+> RH7.2, kernel  2.4.9-34enterprise
+> 
+> 1 physical volume each on /dev/sda9 and /dev/sdb1
+> one logical volume over these two PV's
+> 
+> I've labeled the filesystem via 'tune2fs' and want to use the label for 
+> mounting purposes, as is the default with the other (non-LVM) filesystems
+> 
+> 'vgscan' and 'vgchange -a y' have been performed
+> 'vgdisplay' and 'lvdisplay' tell me all is well - everthing is 
+> read/write and available
+> 'fsck' on the physical path reports clean...
+> 
+> If I attempt to mount via the physical path to the LV, providing the 
+> mount point, everything works fine
+> 
+> However, mount refuses to mount via filesystem/partition label, 
+> regardless if I use '-L' and provide the label or use the mountpoint and 
+> let mount figure it out on its own from /etc/fstab.  I get 'mount: no 
+> such partition found' (it is in /etc/fstab correctly, already checked that).
+> 
+> Am I missing something about labels?  Maybe some other remedial 
+> filesystem characteristics/operations that I've missed because of 
+> cranius-up-rectus (head up a$$).
+> 
+> Thanks in advance for feedback/suggestions.
 
-the output of pvscan is strange already, because it shows /dev/hdg _and_
-/dev/hdg1 as PVs both at the same time which is impossible (same for hdc).
+Ben,
+say your logical volume path is /dev/vg00/lv01 and that LV
+holds your ext2 filesystem.
 
-Partition tables seem to be messy on those devices.
+tune2fs -L Whatever /dev/vg00/lv01 # labels it with volume name "Whatever"
 
-What does "fdisk -l /dev/hd[cg]" show?
+If you have an entry in /etc/fstab like:
+/dev/vg00/lv01	/mnt	ext2	defaults	1 1
 
-Regards,
-Heinz    -- The LVM Guy --
+running "mount -L Whatever" should do the trick.
+Presumably /mnt exists and the volume group is active.
 
-
-
-On Wed, Nov 06, 2002 at 11:44:38PM +0200, Ivan Uzunov wrote:
-> 
-> 	Hi :)
-> 
-> 	I have small and may be stupid questions, I run LVM 1.0.6 with
-> kernel 2.4.19 onto redhat system. The LVM is running but when i run
-> pvdisplay command onto one of the HDD into LVM output is :
-> 
-> PV Name               /dev/hdc1
-> VG Name               home
-> PV Size               76.69 GB [160836417 secs] / NOT usable 16.18 MB
-> [LVM: 143
-> KB]
-> PV#                   3
-> PV Status             NOT available
-> 			^^^^^^^^^^^
-> 
-> What's this mean ?
-> 
-> I have 6 HDD in this LVM and
-> HDD : /dev/hda7 /dev/hdc1 /dev/hde1 /dev/hdh1 has this status ; other for
-> example /dev/hdb1 is :
-> PV Status             available
-> 		       ^^^^^^^^^
-> 
-> 
-> 	And second when i run pvscan program i see this :
-> 
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdg"  is in no VG  [8.01 GB]
-> pvscan -- ACTIVE   PV "/dev/hdg1" of VG "home" [76.67 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hdh1" of VG "home" [114.47 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hde1" of VG "home" [76.67 GB / 0 free]
-> pvscan -- inactive PV "/dev/hdc"  is in no VG  [8.01 GB]
-> pvscan -- ACTIVE   PV "/dev/hdc1" of VG "home" [76.67 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hda7" of VG "home" [60 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hdb1" of VG "home" [114.47 GB / 0 free]
-> pvscan -- total: 8 [535.10 GB] / in use: 6 [519.09 GB] / in no VG: 2
-> [16.01 GB]
-> 
-> 	Where this 16Gigs goes ? 8 onto /dev/hdg and 8 onto /dev/hdc
-> Can i extend LVM volume and use this Gigs without destroying data onto LVM
-> ?
-> 
-> Thank You.
-> 
-> 
-> 						WWell : Ivan Uzunov
 > 
 > 
 > _______________________________________________
@@ -89,6 +69,11 @@ On Wed, Nov 06, 2002 at 11:44:38PM +0200, Ivan Uzunov wrote:
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
