@@ -1,27 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2HK3Gj18563
-	for <linux-lvm@redhat.com>; Wed, 17 Mar 2004 15:03:16 -0500
-Received: from p15124399.pureserver.info (p15124399.pureserver.info
-	[217.160.182.169])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2HK3D4b030484
-	for <linux-lvm@redhat.com>; Wed, 17 Mar 2004 15:03:14 -0500
-Received: from rockley.barbados (81-5-142-175.dsl.eclipse.net.uk
-	[81.5.142.175]) (authenticated (0 bits))
-	by p15124399.pureserver.info (8.11.6/8.11.6) with ESMTP id i2HK38V30309
-	for <linux-lvm@redhat.com>; Wed, 17 Mar 2004 20:03:08 GMT
-Subject: Re: [linux-lvm] LVM Problems when moving data off a PV
-From: Nick Gushlow <nick@gushlow.com>
-In-Reply-To: <20040317143106.GA14348@redhat.com>
-References: <1079271129.2414.7.camel@rockley.barbados>
-	<20040315123445.GA17078@redhat.com>
-	<1079478248.28877.6.camel@rockley.barbados>
-	<20040317143106.GA14348@redhat.com>
-Content-Type: multipart/alternative; boundary="=-lX6HBUglGH4dPSlSEHjV"
-Message-Id: <1079553784.28897.49.camel@rockley.barbados>
+Received: from reti (vpn50-40.rdu.redhat.com [172.16.50.40])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2HM4AJh026081
+	for <linux-lvm@redhat.com>; Wed, 17 Mar 2004 22:04:11 GMT
+Received: from joe by reti with local (Exim 4.30) id 1B3jAw-00014N-PM
+	for linux-lvm@redhat.com; Wed, 17 Mar 2004 22:06:10 +0000
+Date: Wed, 17 Mar 2004 22:06:10 +0000
+From: Joe Thornber <thornber@redhat.com>
+Subject: Re: [linux-lvm] EXT3 snapshot not quiesced by LVM2?
+Message-ID: <20040317220610.GB2624@reti>
+References: <20040315182356.35f5ca40.donald.murray@pason.com>
+	<20040317105725.15a71d21.donald.murray@pason.com>
+	<20040317181230.GA2624@reti>
+	<20040317120056.430fbe2b.donald.murray@pason.com>
 Mime-Version: 1.0
-Date: Wed, 17 Mar 2004 20:03:04 +0000
-Reply-To: nick@gushlow.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20040317120056.430fbe2b.donald.murray@pason.com>
+Sender: Joe Thornber <thornber@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,57 +25,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-
-
---=-lX6HBUglGH4dPSlSEHjV
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 2004-03-17 at 14:31, Heinz Mauelshagen wrote:
+On Wed, Mar 17, 2004 at 12:00:56PM -0700, Donald Murray P.Eng. wrote:
+> Because we're using device-mapper 1.00.08, I'm assuming we need only
+> apply patches 9 through 16 to our already-patched kernel, correct?
 
-> 
-> Deactivate the VG and rerun pvcreate/vgcfgrestore on the pvremoved disk,
-> vgscan and "vgchange -ay vg2" afterwards.
-> 
+No, apply them all, the patch numbers just signify application order.
 
-Excellent that did the trick. :-) 
-
-The only way I found to get rid of the "VGDA in kernel and lvmtab are
-NOT consistent: please run vgscan" error when running 'vgchange -an vg2"
-was to reboot.
-
-For future reference, is there a better/proper method to get rid of that
-error?
-
-Nick.
-
---=-lX6HBUglGH4dPSlSEHjV
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
-<HTML>
-<HEAD>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
-  <META NAME="GENERATOR" CONTENT="GtkHTML/3.0.9">
-</HEAD>
-<BODY>
-On Wed, 2004-03-17 at 14:31, Heinz Mauelshagen wrote:
-<BLOCKQUOTE TYPE=CITE>
-<PRE><FONT COLOR="#737373"><I>
-Deactivate the VG and rerun pvcreate/vgcfgrestore on the pvremoved disk,
-vgscan and &quot;vgchange -ay vg2&quot; afterwards.
-</I></FONT></PRE>
-</BLOCKQUOTE>
-Excellent that did the trick. :-) <BR>
-<BR>
-The only way I found to get rid of the &quot;VGDA in kernel and lvmtab are NOT consistent: please run vgscan&quot; error when running 'vgchange -an vg2&quot; was to reboot.<BR>
-<BR>
-For future reference, is there a better/proper method to get rid of that error?<BR>
-<BR>
-Nick.
-</BODY>
-</HTML>
-
---=-lX6HBUglGH4dPSlSEHjV--
+- Joe
