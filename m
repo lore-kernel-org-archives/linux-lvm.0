@@ -1,11 +1,7 @@
-Message-Id: <018601c1c7ca$17f38100$3200a8c0@warl0k>
-From: "Glenn Shannon" <warl0k@lvcm.com>
-References: <014a01c1c7c7$0a1e9400$3200a8c0@warl0k>
-    <017101c1c7c9$3a6efa30$3200a8c0@warl0k>
-Subject: Re: [linux-lvm] pvmove error......and now I have no VG :(
+From: Vincent AE Scott <linux.lvm@codex.net>
+Message-Id: <20020310150455.E7514@majestic.ukshells.co.uk>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-    boundary="----=_NextPart_000_0181_01C1C78F.538991E0"
+Subject: [linux-lvm] vgcreate not working
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,163 +12,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Mar  9 18:25:02 2002
+Date: Sun Mar 10 09:04:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux LVM <linux-lvm@sistina.com>
 
-This is a multi-part message in MIME format.
+Hi there,
 
-------=_NextPart_000_0181_01C1C78F.538991E0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+i have a problem with some newly partioned up disks, i've created two
+LVM partions on two different disks.  upon executing the following
+commands, vgcreate fails:
 
-Actually....I just tried running through the last step of section 16 of =
-the HOWTO and it did it again......any ideas why?
+[root@box guest]# pvcreate /dev/hde2
+pvcreate -- physical volume "/dev/hde2" successfully created
 
-Glenn
-  ----- Original Message -----=20
-  From: Glenn Shannon=20
-  To: linux-lvm@sistina.com=20
-  Sent: Saturday, March 09, 2002 5:18 PM
-  Subject: Re: [linux-lvm] pvmove error......and now I have no VG :(
+[root@box guest]# pvcreate /dev/hdg2
+pvcreate -- physical volume "/dev/hdg2" successfully created
 
-
-  Ah ha!
-
-  Nevermind....figured it out I think.
-
-  All I did was upgrade from 1.0.1-rc4 to 1.0.3 (figured the newer tools =
-might have some better error handling) and then did a vgcfgrestore to =
-all the partitions/new disk and then ran vgscan and *bam* it's back in =
-business!
-
-  Thanks all!
-
-  Glenn
-    ----- Original Message -----=20
-    From: Glenn Shannon=20
-    To: linux-lvm@sistina.com=20
-    Sent: Saturday, March 09, 2002 5:03 PM
-    Subject: [linux-lvm] pvmove error......and now I have no VG :(
+[root@box guest]# vgcreate vg /dev/hde2 /dev/hdg2
+vgcreate -- no valid physical volumes in command line
 
 
-    Hi Everyone!
+here's a snipit from the tail end of vgcreate -d:
 
-    I just installed a new 60G hard drive that I bought, tried to follow =
-section 16 of the HOWTO on the sistina website to move the data from a =
-13G hard drive to the new 60G hard drive.
+<1> pv_read_all_pv -- calling stat with "/dev/loop/7"
+<22> pv_read -- CALLED with /dev/loop/7
+<333> pv_check_name -- CALLED with "/dev/loop/7"
+<4444> lvm_check_chars -- CALLED with name: "/dev/loop/7"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<333> pv_check_name -- LEAVING with ret: 0
+<22> pv_read -- going to read /dev/loop/7
+<22> pv_read -- LEAVING with ret: -282
+<1> pv_read_all_pv -- pv_read returned: -282
+<1> pv_read_all_pv -- avoiding multiple entries in case of MD; np: 2
+<1> pv_read_all_pv -- LEAVING with ret: 0
+<1> pv_check_name -- CALLED with "/dev/hde2"
+<22> lvm_check_chars -- CALLED with name: "/dev/hde2"
+<22> lvm_check_chars -- LEAVING with ret: 0
+<1> pv_check_name -- LEAVING with ret: 0
+<1> pv_check_name -- CALLED with "/dev/hdg2"
+<22> lvm_check_chars -- CALLED with name: "/dev/hdg2"
+<22> lvm_check_chars -- LEAVING with ret: 0
+<1> pv_check_name -- LEAVING with ret: 0
+vgcreate -- no valid physical volumes in command line
 
-    During the vgreduce it segfaulted, and now my entire VG has =
-disappeared *gasp*.
 
-    What do I do now? I tried to look up how to recover from such a =
-situation but alas, no dice.
 
-    Any and all help is appreciated!
+Now, the only thing i can think of, is this disk *used* to have an LVM
+on it, (vg+lv) but i have since removed it from the disk, in favour of
+this new attempt.  i cant see how it could possibly be a problem, but
+maybe there's something lurking in the FS.
 
-    long live LVM!
 
-    Glenn
+Does anyone have any dieas whats wrong?
+im running lvm 1.0.3 on 2.4.18
 
-------=_NextPart_000_0181_01C1C78F.538991E0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2713.1100" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Actually....I just tried running =
-through the last=20
-step of section 16 of the HOWTO and it did it again......any ideas=20
-why?</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Glenn</FONT></DIV>
-<BLOCKQUOTE dir=3Dltr=20
-style=3D"PADDING-RIGHT: 0px; PADDING-LEFT: 5px; MARGIN-LEFT: 5px; =
-BORDER-LEFT: #000000 2px solid; MARGIN-RIGHT: 0px">
-  <DIV style=3D"FONT: 10pt arial">----- Original Message ----- </DIV>
-  <DIV=20
-  style=3D"BACKGROUND: #e4e4e4; FONT: 10pt arial; font-color: =
-black"><B>From:</B>=20
-  <A title=3Dwarl0k@lvcm.com href=3D"mailto:warl0k@lvcm.com">Glenn =
-Shannon</A>=20
-</DIV>
-  <DIV style=3D"FONT: 10pt arial"><B>To:</B> <A =
-title=3Dlinux-lvm@sistina.com=20
-  href=3D"mailto:linux-lvm@sistina.com">linux-lvm@sistina.com</A> </DIV>
-  <DIV style=3D"FONT: 10pt arial"><B>Sent:</B> Saturday, March 09, 2002 =
-5:18=20
-  PM</DIV>
-  <DIV style=3D"FONT: 10pt arial"><B>Subject:</B> Re: [linux-lvm] pvmove =
 
-  error......and now I have no VG :(</DIV>
-  <DIV><BR></DIV>
-  <DIV><FONT face=3DArial size=3D2>Ah ha!</FONT></DIV>
-  <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-  <DIV><FONT face=3DArial size=3D2>Nevermind....figured it out I =
-think.</FONT></DIV>
-  <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-  <DIV><FONT face=3DArial size=3D2>All I did was upgrade from 1.0.1-rc4 =
-to 1.0.3=20
-  (figured the newer tools might have some better error handling) and =
-then did a=20
-  vgcfgrestore to all the partitions/new disk and then ran vgscan and =
-*bam* it's=20
-  back in business!</FONT></DIV>
-  <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-  <DIV><FONT face=3DArial size=3D2>Thanks all!</FONT></DIV>
-  <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-  <DIV><FONT face=3DArial size=3D2>Glenn</FONT></DIV>
-  <BLOCKQUOTE dir=3Dltr=20
-  style=3D"PADDING-RIGHT: 0px; PADDING-LEFT: 5px; MARGIN-LEFT: 5px; =
-BORDER-LEFT: #000000 2px solid; MARGIN-RIGHT: 0px">
-    <DIV style=3D"FONT: 10pt arial">----- Original Message ----- </DIV>
-    <DIV=20
-    style=3D"BACKGROUND: #e4e4e4; FONT: 10pt arial; font-color: =
-black"><B>From:</B>=20
-    <A title=3Dwarl0k@lvcm.com href=3D"mailto:warl0k@lvcm.com">Glenn =
-Shannon</A>=20
-    </DIV>
-    <DIV style=3D"FONT: 10pt arial"><B>To:</B> <A =
-title=3Dlinux-lvm@sistina.com=20
-    href=3D"mailto:linux-lvm@sistina.com">linux-lvm@sistina.com</A> =
-</DIV>
-    <DIV style=3D"FONT: 10pt arial"><B>Sent:</B> Saturday, March 09, =
-2002 5:03=20
-    PM</DIV>
-    <DIV style=3D"FONT: 10pt arial"><B>Subject:</B> [linux-lvm] pvmove=20
-    error......and now I have no VG :(</DIV>
-    <DIV><BR></DIV>
-    <DIV><FONT face=3DArial size=3D2>Hi Everyone!</FONT></DIV>
-    <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-    <DIV><FONT face=3DArial size=3D2>I just installed a new 60G hard =
-drive that I=20
-    bought, tried to follow section 16 of the HOWTO on the sistina =
-website to=20
-    move the data from a 13G hard drive to the new 60G hard =
-drive.</FONT></DIV>
-    <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-    <DIV><FONT face=3DArial size=3D2>During the vgreduce it segfaulted, =
-and now my=20
-    entire VG has disappeared *gasp*.</FONT></DIV>
-    <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-    <DIV><FONT face=3DArial size=3D2>What do I do now? I tried to look =
-up how to=20
-    recover from such a situation but alas, no dice.</FONT></DIV>
-    <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-    <DIV><FONT face=3DArial size=3D2>Any and all help is =
-appreciated!</FONT></DIV>
-    <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-    <DIV><FONT face=3DArial size=3D2>long live LVM!</FONT></DIV>
-    <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-    <DIV><FONT face=3DArial=20
-size=3D2>Glenn</FONT></DIV></BLOCKQUOTE></BLOCKQUOTE></BODY></HTML>
+-- 
+PGP key:  http://codex.net/pgp/pgp.asc
 
-------=_NextPart_000_0181_01C1C78F.538991E0--
+ C:\> File not found. Should I fake it? (Y/N) 
