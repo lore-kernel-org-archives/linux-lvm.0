@@ -1,46 +1,39 @@
-Message-ID: <38F4AF07.7136C51@ednet.ns.ca>
-Date: Wed, 12 Apr 2000 14:14:48 -0300
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
-MIME-Version: 1.0
-Subject: [linux-lvm] vgcfgrestore
-Content-Transfer-Encoding: 7bit
+Date: Wed, 12 Apr 2000 20:37:11 +0200
+From: bert hubert <ahu@ds9a.nl>
+Subject: [linux-lvm] [ahu@ds9a.nl: [PATCH] combined LVM patch updated for 2.3.99pre5]
+Message-ID: <20000412203711.A2276@home.ds9a.nl>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM Mailing List <linux-lvm@msede.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-Hello,
+Hi everybody,
 
-Looks like I am going to have to resort to using vgcfgrestore as I get
-the following error running vgscan:
+This is to announce a link to a combination of two patches for 2.3.99pre3,
+merged and upgraded for 2.3.99pre5. The end result is that Linux 2.3.99pre5
+then has the latest & greatest in Logical Volume Management.
 
-vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- scanning for all active volume group(s) first
-vgscan -- found active volume group "data_vg"
-vgscan -- reading data of volume group "data_vg" from physical volume(s)
+The original patches are
 
-vgscan -- ERROR -364: can't get data of volume group "data_vg" from
-physical volume(s)
-vgscan -- ERROR -364 creating "/etc/lvmtab" and "/etc/lvmtab.d"
+* By Heinz, the LVM gut:	http://ds9a.nl/lvm-howto/2.3.99pre3
+* By Andrea Arcangeli:		http://ds9a.nl/lvm-howto/andrea.patch
 
+I haven't done wide testing, but everything seems to work here about as well
+as it did in 2.3.99pre3. Please do sane things before applying (full backup
+would be nice).
 
+As a side note, it also includes the tiny MD_MAX_DEV fix.
 
-I assume with an error like that there is no way I am going to be able
-to activate my logical volumes on the next reboot?
+The combined patch is on http://ds9a.nl/lvm-howto/2.3.99-pre5.lvm.patch
 
+Regards,
 
-Also I haven't seen anywhere where it says that the logical volumes and
-volume group must be offline when running vgcfgrestore other than this
-piece at the end of the vgcfgrestore man page:
+bert hubert.
 
-vgcfgrestore returns an exit state of 0 for success and > 0 for error:
-
-       1  no physical volume on command line
-       2  invalid physical volume name
-       3  volume grou is active
-        ......
-
-So I will ask the question. Can vgcfgrestore be run on active logical
-volumes and volume groups?
+-- 
+                       |              http://www.rent-a-nerd.nl
+                       |                     - U N I X -
+                       |          Inspice et cautus eris - D11T'95
