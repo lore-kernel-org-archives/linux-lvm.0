@@ -1,33 +1,69 @@
-Message-ID: <01C02715.75D406C0.smdenton@bellsouth.net>
-From: "S. Michael Denton" <smdenton@bellsouth.net>
-Reply-To: "smdenton@bellsouth.net" <smdenton@bellsouth.net>
-Subject: [linux-lvm] 2.2.13+LVM+online ext2
-Date: Mon, 25 Sep 2000 17:24:27 -0400
+Date: Mon, 25 Sep 2000 16:52:40 -0700 (PDT)
+From: Tim Pepper <tpepper@opensales.com>
+Subject: [linux-lvm] lv not persistent across reboot?
+Message-ID: <Pine.LNX.4.21.0009251623060.25906-100000@tp.sf.opensales.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+I've set up a little test machine to play with lvm.  It's running RedHat 6.2
+with a 2.4-test8 kernel and lvm 0.8.
 
-Well, the kernel built and executed properly but attempting to resize
-gave an error which inclines me to think that 2.2.13 is too old,
-perhaps I need to go to a more recent 2.2 strain?
+I've successfully created and used an lv (with a reiserfs filesystem on top
+of it).  My problem is that when I reboot the lv is gone.  vgscan finds
+nothing.  pvdisplay, lvdisplay and vgdisplay likewise show nothing.  If I go
+through the steps though to recreate the lvm, pvcreate seems to think
+something's there and wants me to do a '-ff'.  I can then continue on.
 
-Scott Denton
-smdenton@bellsouth.net
-EFnet Handle: SteelWyng
-ICQ UIN: 24149258
-AIM Screen Name: SteelWyng
+Playing around I see:
 
------BEGIN PGP SIGNATURE-----
-Version: PGPfreeware 6.5.3 for non-commercial use <http://www.pgp.com>
+	[root@qalab5 /root]# umount /mnt/nz
+	
+	[root@qalab5 /root]# lvdisplay /dev/netzero/big 
+	--- Logical volume ---
+	LV Name               /dev/netzero/big
+	VG Name               netzero
+	LV Write Access       read/write
+	LV Status             available
+	LV #                  1
+	# open                0
+	LV Size               34.18 GB
+	Current LE            8750
+	Allocated LE          8750
+	Allocation            next free
+	Read ahead sectors    120
+	Block device          58:0
+	
+	[root@qalab5 /root]# vgscan
+	vgscan -- reading all physical volumes (this may take a while...)
+	vgscan -- no volume groups found
 
-iQA/AwUBOc/Ci3C+DNfF0nVpEQKh5wCcC48pkjsOkQ1/CARNW+EVIX1TwdgAn1cY
-O98T/UgYeDGqDZZziRsMo924
-=yC+E
------END PGP SIGNATURE-----
+	[root@qalab5 /root]# lvdisplay /dev/netzero/big 
+	lvdisplay -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run
+	vgscan
+
+	[root@qalab5 /root]# vgscan
+	vgscan -- reading all physical volumes (this may take a while...)
+	vgscan -- no volume groups found
+	
+	[root@qalab5 /root]# mount /mnt/nz
+
+I can't seem to display it, but it does remount here.
+
+I was thinking that maybe the 'vgchange -a n' shouldn't be done or perhaps I
+was doing it at the wrong time (at shutdown after the filesystem on the lv was
+umounted), but the above seems flakey even without vgchange in the picture.
+
+Any ideas what could be going on?  Thanks in advance for any help.
+
+Tim
+
+--
+*********************************************************
+*  tim.pepper@opensales dot com     * Venimus, Vidimus, *
+*  http://www.opensales.com         * Dolavimus         *
+*********************************************************
