@@ -1,10 +1,12 @@
-Return-Path: <markpeloquin@usa.net>
-Message-ID: <20010519195440.14387.qmail@wwcst270.netaddress.usa.net>
-Date: 19 May 2001 14:54:40 CDT
-From: Mark Peloquin <markpeloquin@usa.net>
+Return-Path: <treed@ultraviolet.org>
+Date: Sat, 19 May 2001 22:44:06 -0700
+From: Tracy R Reed <treed@ultraviolet.org>
+Subject: Re: [linux-lvm] Working together
+Message-ID: <20010519224406.A18152@ultraviolet.org>
+References: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com> <20010518162704.A26391@sistina.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Working together
+Content-Disposition: inline
+In-Reply-To: <20010518162704.A26391@sistina.com>; from Mauelshagen@sistina.com on Fri, May 18, 2001 at 04:27:04PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,59 +19,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, 19 May 2001 11:37:54 -0500, Matt O'Keefe wrote:
-> On Fri, May 18, 2001 at 09:01:49AM -0500, Mark Peloquin wrote:
-> > Hello everyone,
-> > =
+On Fri, May 18, 2001 at 04:27:04PM +0000, Heinz J. Mauelshagen wrote:
+> We are discussing your points internally and will answer in detail ASAP.
 
-> > =
+Why not discuss it publically?
 
-> > > Why should Linux LVM join the EVMS project ?
-> > =
+I must say that I am quite impressed with IBM actually putting their code
+where their mouth is. I would really hate to see two more competing
+factions in the Linux community.
 
-> > The EVMS project can offer some immediate solutions to current Linux =
-> >
-LVM issues.
-> > =
-
-> > - EVMS supports in-kernel reading/writing of metadata
-> > =
-
-> > - EVMS supports in-kernel discovery of volume groups and volumes
-> > =
-
-
-> Hi,
-> does the EVMS code work in production today?  =
-
-
-Can you rephrase the phrase "work in production" pls? I could draw =
-
-more than one possible interpretations from this and want to reply =
-
-to the your real question.
-
-Are you asking if EVMS is in use by any company/business on
-system used in a production environment (i.e. 24x7)?
-
-Or are you asking if the EVMS code available on our website =
-
-today works?
-
-> If not, then saying
-> it "can offer some immediate solutions to current Linux LVM issues"
-> is inaccurate. That said, its great to see another alternative
-> LVM appearing on the horizon for Linux.
-
-Mark Peloquin
-
-
-
-
-
-
-____________________________________________________________________
-Get free email and a permanent address at http://www.netaddress.com/?N=3D=
-1
+-- 
+Tracy Reed      http://www.ultraviolet.org
+Hacker's reply to Shared Source: "Well, that sounds like a pretty good deal.
+But I think I may have a better one. How about, I give you the finger... and
+you give me my GPL?"
