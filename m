@@ -1,10 +1,7 @@
-From: Duane Evenson <devenson@shaw.ca>
-Subject: Re: [linux-lvm] help on PV
-Message-id: <3EE9DD31.9080605@shaw.ca>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-References: 
- <23233866A70C32479532C8D0B8AE7B96025D72F7@i2km07-ukbr.domain1.systemhost.net>
+Message-ID: <23233866A70C32479532C8D0B8AE7B96045D6413@i2km07-ukbr.domain1.systemhost.net>
+From: narsimha.kulkarni@bt.com
+Subject: RE: [linux-lvm] help on PV
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,10 +12,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 13 09:14:02 2003
+Date: Fri Jun 13 09:19:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+
+thanks a lot....
+
+-----Original Message-----
+From: Duane Evenson [mailto:devenson@shaw.ca]
+Sent: Friday, June 13, 2003 15:18
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] help on PV
+
 
 You will lose all the data on your 80G hard drive. This is because an 
 LVM drive pushes the filesystem back further on the drive to make space 
@@ -60,3 +67,12 @@ narsimha.kulkarni@bt.com wrote:
 >
 >  
 >
+
+
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
