@@ -1,9 +1,9 @@
-Return-Path: <hmilz@linux-magazin.de>
-From: Harald Milz <hmilz@linux-magazin.de>
-Subject: Re: [linux-lvm] LVM 1.0 release decision
-References: <20010511155311.A17689@sistina.com> <wxxoft055j0.fsf@fjorir.ifi.uio.no>
-Date: Thu, 17 May 2001 10:08:58 +0200 (CEST)
-Message-Id: <20010517080900.5240B15CB6@mail.linux-new-media.de>
+Return-Path: <thomas@n-ary.com>
+Message-ID: <31470A1D25F5D311940A0020182B88D319F972@mail.n-ary.com>
+From: Thomas Inglis <thomas@n-ary.com>
+Date: Thu, 17 May 2001 13:48:20 +0100
+MIME-Version: 1.0
+Subject: [linux-lvm] main drive fail
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,25 +15,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-In article <wxxoft055j0.fsf@fjorir.ifi.uio.no>, Terje Kvernes <terjekv@math.uio.no> wrote:
->   this reminds me of XFS to be honest -- and that annoys me a great
->   deal. I want to test XFS, but currently I can't. because after LVM
->   and ReiserFS are patched (they pull rank :), the XFS-patches botch
->   badly. and they're far from in sync with current kernels.
+I am running lvm-0.9.1.beta1 on redhat 7.0 with a 2.4.4 kernel.
 
-That seems to depend. I recently patched 2.4.2-SuSE (not famous for being a
-vanilla kernel, and containing LVM and Reiserfs) with the 2.4.2 XFS patch,
-and just got 1 reject in a Makefile which I could safely ignore because the
-SuSE kernel already contained that patch. And guess what: XFS and Reiserfs
-work nicely together with LVM on the same machine!
+I have four drives, one main 'boot' drive and three drives which were used
+with LVM. All was fine and dandy until the main boot drive failed. Ouch.
 
--- 
-Harald Milz           |     hm@linux-magazin.de     | All generalizations
-Linux Magazin         | phone  +49 (0) 89 993411-20 | are shit!
-Stefan-George-Ring 24 | fax    +49 (0) 89 993411-99 | 
-D-81929 Muenchen      | http://www.linux-magazin.de | 
+I have reinstalled Redhat, and lvm-0.9.1.beta1 (thought id go with what it
+had before) and built the kernel again, then rebooted.
+
+Now the problem.
+lvscan, vgdiaplay & vgscan tells me there are no voulume groups defined.
+
+vgcreate lvmGroup /dev/hdb1 /dev/hdc1 /dev/hdd1
+informs me the drive(s) are already part of the lvmGroup
+
+pvcreate lvmGroup /dev/hdb1 /dev/hdc1 /dev/hdd1
+with the -ff switch want to initialise the drive, so I thought it prudent to
+tell it no.
+
+How can I renistate my volumes? It appears they are still valid on the
+drive, but I cant seem to create or reinstate the group.
+
+Thomas
+
+
+
+
+__________________________________________________
+n-ary .. .. .. functionality through creativity
+http://www.n-ary.com/ +44 (1387) 242800
+
+tagServlet ... a java alternative to ColdFusion!
+http://www.tagServlet.com/
