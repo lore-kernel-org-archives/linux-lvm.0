@@ -1,7 +1,10 @@
-Message-ID: <F888C30C3021D411B9DA00B0D0209BE8038F94E2@cvo-exchange.cvo.roguewave.com>
-From: Poul Petersen <petersp@roguewave.com>
-Subject: RE: [linux-lvm] LVM 1.0.4 pvmove is broken
-MIME-Version: 1.0
+From: Andres Salomon <dilinger@mp3revolution.net>
+Subject: Re: [linux-lvm] lvm2 debian packages
+Message-ID: <20020514024053.GA26951@chunk.voxel.net>
+References: <20020508011851.GA2587@chunk.voxel.net> <20020513161418.GA12207@ntlworld.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020513161418.GA12207@ntlworld.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,99 +15,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 13 21:29:02 2002
+Date: Mon May 13 21:42:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-> Poul,
+Try the newer packages (-3), they fix these issues.
+
+
+On Mon, May 13, 2002 at 05:14:18PM +0100, Andy Baillie wrote:
 > 
-> couldn't reproduce this directly here.
-> Need to investigate more...
+> On Tue, May 07, 2002 at 09:18:51PM -0400, Andres Salomon wrote:
+> > For debian users who are interested in testing out LVM2, debian packages
+> > are now in unstable (apt-get install lvm2).  They've been successfully
+> > built for all 10 architectures; I'm especially interested in reports from
+> > people trying out lvm2 on non-x86 archs.
+> > 
+> > 
+> I have tried building a new system with LVM2 and was not able to get it
+> to boot from an ext2 ram disk, after ensuring the additional dm-mod
+> module was included and demanded in. Is there a standard boot procedure
+> builder yet? Is libdevmapper needed at boot time as its normal home is
+> in /usr/lib rather than /lib?
+> 
+> I then left root as a standard ext2 partition and made some of the basic
+> directories - tmp, usr and var into lvm'd partitions. The system wouldnt
+> recognise vgs at first as /var was only a mount point, I had to create
+> the /var/lock dir for vgscan and vgchange to work. Then the boot script
+> /etc/init.d/lvm2 failed as it uses things like awk which are in /usr/lib
+> I was able to manually go back and mount the missing partitions in
+> maintainance mode so its almost there...
+> 
+> Hope this is of use
+> Regards
+> Andy
+> 
+> -- 
+>             ---  ===  ~~~  Lands of Stone ~~~ === ---
+> UK Mudders, too lagged to the States? then have you considered 
+>  http://www.landsofstone.org/   telnet://mud.landsofstone.org:4801
+>             ---  ===  ~~~  Lands of Stone ~~~ === ---
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-	Thanks for looking into this - I verified my results on a third
-machine, this one a single CPU P-III, 1Ghz running RedHat 7.2. In case I am
-doing something really silly, these are the exact steps I did to reproduce
-the problem - notice that /dev/hdc is a 10Gig disk which I partitioned into
-two equal 5-gig partitions and tagged as type 8e:
-
-unpack 2.4.18 kernel into /usr/src/linux-2.4.18_lvm-1.0.4
-cd into LVM-1.0.4 source
-./configure --with-kernel_dir=/usr/src/linux-2.4.18_lvm-1.0.4
-cd PATCHES
-make
-cd into kernel source
-patch -p1 < /usr/local/src/LVM/1.0.4/PATCHES/lvm-1.0.4-2.4.18.patch
-make menuconfig
-enable LVM as a module in Multiple devices driver support
-disable sound card support
-disable usb support
-edit kernel Makefile and set EXTRAVERSION = _lvm-1.0.4
-make dep && make && make modules && make modules_install
-mkinitrd /boot/initrd-2.4.18_lvm-1.0.4.img 2.4.18_lvm-1.0.4
-edit lilo.conf and add entry for new kernel
-make install
-cd into LVM-1.0.4 source
-make
-make install
-reboot into new kernel, single-user mode
-vgscan
-pvcreate /dev/hdc1 /dev/hdc2
-vgcreate vg0 /dev/hdc1 /dev/hdc2
-lvcreate -L 100M -n lv0 vg0
-vgdisplay -v (see below for output)
-pvmove -v /dev/hdc1
-
-	The pvmove asks if I am sure, moves one PE and then hangs. OK, I'm
-ready to feel silly :)
-
-Thanks again - everything else in LVM 1.0.4 is working great for me, but I
-just can't get pvmove to work.
-
--poul
-
-Output of vgdisplay -v:
-
---- Volume group ---
-VG Name               vg0
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                2
-Act PV                2
-VG Size               9.52 GB
-PE Size               4 MB
-Total PE              2436
-Alloc PE / Size       25 / 100 MB
-Free  PE / Size       2411 / 9.42 GB
-VG UUID               Qa6d0F-ATIc-5nIU-iL3X-e1Hj-2jpx-H8cPJN
-
---- Logical volume ---
-LV Name                /dev/vg0/lv0
-VG Name                vg0
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 0
-LV Size                100 MB
-Current LE             25
-Allocated LE           25
-Allocation             next free
-Read ahead sectors     1024
-Block device           58:0
-
-
---- Physical volumes ---
-PV Name (#)           /dev/hdc1 (1)
-PV Status             available / allocatable
-Total PE / Free PE    1218 / 1193
-
-PV Name (#)           /dev/hdc2 (2)
-PV Status             available / allocatable
-Total PE / Free PE    1218 / 1218
+-- 
+<dilinger> people fear what they don't understand
+<zinx> that is not true
+<zinx> most people fear what they don't understand, and the rest get killed
+	by those people
