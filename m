@@ -1,13 +1,9 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Help: LVM on top of SW RAID0+1
-Message-ID: <11240000.1048000846@[192.168.200.4]>
-In-Reply-To: <20030315223816.GB16976@gw.silicide.dk>
-References: <Pine.LNX.4.53.0303121824410.2531@light.webcon.net>
- <3E70411C.AC385DAD@silicide.dk> <140150000.1047758272@[192.168.200.4]>
- <20030315223816.GB16976@gw.silicide.dk>
+Message-ID: <00d201c2eabc$ade459d0$0100a8c0@voyager>
+From: "Emiliano Lesende" <emiliano.lesende@constack.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_00C6_01C2EAA3.839082D0"
+Subject: [linux-lvm] HELP! pvcreate on wrong disk
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,18 +14,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar 18 09:10:01 2003
+Date: Wed Mar 19 08:25:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
+This is a multi-part message in MIME format.
 
-> You cant resize striped LV's. (AFAIR).
+------=_NextPart_000_00C6_01C2EAA3.839082D0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-You can.
+I have four PVs on one LV. I was adding the five disk when by accident I =
+pvcreate'ed a disk device that was already in the LV. I dont know how =
+LVM let go through with this, but it did. Consequently the pvscan showed =
+four PVs, one inactive and with no VG associated with it. Immediatly I =
+run a vgcfgrestore on the device and everything return to normal, or so =
+I think? My question is, did the pvcreate erased the data on the disk? =
+or just the PV header? Can I sleep safely thinking that everything is =
+ok?
 
+Thanks in advance
+Emiliano
+------=_NextPart_000_00C6_01C2EAA3.839082D0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 888 359 3508
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2800.1126" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>I have four PVs on one LV. I was adding =
+the five=20
+disk when by accident I pvcreate'ed a disk device that was already in =
+the LV. I=20
+dont know how LVM let go through with this, but it did. Consequently the =
+pvscan=20
+showed four PVs, one inactive and with no VG associated with it. =
+Immediatly I=20
+run a vgcfgrestore on the device and everything return to normal, or so =
+I think?=20
+My question is, did the pvcreate erased the data on the disk? or just =
+the PV=20
+header? Can I sleep safely thinking that everything is ok?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Thanks in advance</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Emiliano</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_00C6_01C2EAA3.839082D0--
