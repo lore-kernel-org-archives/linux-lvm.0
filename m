@@ -1,7 +1,7 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009081939.NAA16909@lynx.turbolabs.com>
+Message-Id: <200009081950.NAA16934@lynx.turbolabs.com>
 Subject: Re: [linux-lvm] LVM support for LILO
-Date: Fri, 8 Sep 2000 13:39:05 -0600 (MDT)
+Date: Fri, 8 Sep 2000 13:50:20 -0600 (MDT)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
@@ -10,36 +10,31 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: Linux LVM mailing list <linux-lvm@msede.com>
 
-Heinz writes:
-> We would need at least an additional "allocation on a single device"
+Michael Kellen writes:
+> I actually already have code for a check (in lilo.c) to insure that the
+> files are contiguous and on the first physical disk.  With the lv to pv
+> ioctl, that would be easy to extend to any bootable device.
 
-The "contiguous" option to lvcreate should be enough, since the /boot LV
-will be relatively small (1 or 2 PEs).  If it ever does cross two PVs,
-LILO will detect this with Andi's patch, so no need to make LVM more
-complicated.
+Actually, there is no need for an image to be contiguous, because even
+the filesystem does not guarantee a file is contiguous.  The only
+requirement is the image be on a single device that the BIOS can see
+when it is first booting.
 
-Luca writes:
-> beware that bios addressable might mean below cylinder 1024 if your bios
-> doesn't handle lba32
+> In implementing this, we need to remember that not just the kernel needs
+> to be mapped.  The boot loader any ramdisks need to be known as well.
 
-LILO already checks this, since we will be passing the raw disk block numbers
-to LILO, so it will be no different than a regular /boot.  The one benefit
-of a full LVM system is that if you need to grow /boot, but you have a 1024
-cylinder BIOS limit, you can still do this by migrating a PE of another LV
-away from the end of the boot LV, and then extending the boot LV.
+Yes, once the LVM block mapping works, it will work for all of these.
 
-Heinz writes:
-> ... need a "don't pvmove" status flag for the LV to ensure that no wrong
-> pvmove(8) can happen.
+> What I'd *really* like to see is kernel code for autostarting of LVM
+> similar to the autostart of md (side note: 2.4.0-test7 seems to break
+> that, though). One step at a time, though.
 
-Luca writes:
-> i'd like to be able to pvmove even the boot lv (i.e. i am migrating
-> to a larger disk)
-
-As for the "don't move" status flag, this _may_ be useful, but people already
-can't move their kernels out of /boot, so this is probably not that big of
-an issue.  I would rather keep things simple.  It will not happen very often
-that people move /boot, and with newer systems, there are fewer BIOS limits
-so it may even be _more_ confusing if people can't move /boot when they want.
+Yes, it would be nice to eliminate the requirement for an initrd to use
+LVM.  It may be that you could put some limits in place to make the root
+VG simple enough for the kernel to load.  You could even hard-code it to
+have only 1 LV in this VG, which is the root filesystem.  If it was all
+__init code for the LVM module, it would not bloat the kernel...  The
+tricky part would be to find the right PV for the rootvg before LVM is
+loaded...
 
 Cheers, Andreas
