@@ -1,8 +1,10 @@
-Message-ID: <40064F10.8080509@cineca.it>
-From: Tommaso Cecchi <t.cecchi@cineca.it>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm and scsidev
+From: Patrick Caulfield <pcaulfie@redhat.com>
+Subject: Re: [linux-lvm] mac-fdisk and 0x8e partitions for LVM
+Message-ID: <20040115092056.GA2170@tykepenguin.com>
+References: <1074115853.3983.24.camel@telecentro2>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1074115853.3983.24.camel@telecentro2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,71 +15,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 15 03:29:02 2004
+Date: Thu Jan 15 04:21:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm trying to use lvm-1.0.5-51 on a linux box (SuSE SLES 8)
-with the scsidev utility (scsi-1.7_2.31_1.05_0.10-63).
-
-I have a LUN that is seen either as /dev/sdc and as /dev/scsi/sdc2b0t0u3
-thanks to the scsidev utility  (I created it running scsidev -fde) and
-I would use this second name to be sure it does not change
-as I assign or unassign other LUNs
-
-The problem I'm facing is that pvcreate doesn't seem to
-get the partition information from the device when I use the "scsidev" name.
-Infact, once I created a partition on the device, here is what I get :
+On Wed, Jan 14, 2004 at 07:30:53PM -0200, Leandro Guimar?es Faria Corcete Dutra wrote:
+> 	mac-fdisk won't allow me to create a 0x8e partition, thus precluding
+> LVM usage... any solutions in view?  Would pmac-fdisk or parted do the
+> job?
 
 
-tom:~ # pvcreate -v /dev/scsi/sdc2b0t0u3p1
-pvcreate -- locking logical volume manager
-pvcreate -- checking physical volume name "/dev/scsi/sdc2b0t0u3p1"
-pvcreate -- getting physical volume size
-pvcreate -- can't open physical volume "/dev/scsi/sdc2b0t0u3p1" to get 
-its size
+If it's not using a PC partition table; and I suspect it isn't, being a mac,
+then it doesn't matter what partition type you use.
 
-On the other hand if I use the corresponding device I get the
-usual message:
-
-node255:~ # pvcreate -v /dev/sdc1
-
-Moreover this problem shows an unpredictable behaviour cause
-if I rerun the command after a while:
-
-node255:~ # pvcreate -v /dev/scsi/sdc2b0t0u3p1
-
-it seems to complete correctly.
-
-Nevertheless, even if I succeed in creating a PV over "scsidev devices",
-this kind of devices are not very well recognized by lvm, infact running
-pvscan or lvmdiskscan they don't appear in the list.
-But they are recognized as PV if I run a pvdisplay:
-
-node255:~ # pvdisplay /dev/scsi/sdc2b0t0u3p1
-pvdisplay -- "/dev/scsi/sdc2b0t0u3p1" is a new physical volume of 136.49 GB
-
-Finally these PV seems not to be suitable to build a VG, infact:
-
-node255:~ # vgcreate homevg /dev/scsi/sdc2b0t0u3p1 /dev/scsi/sdc2b0t1u2p1
-vgcreate -- no valid physical volumes in command line
-
-
-What I guess is that devices created by scsidev are not visible under 
-/proc/partitions
-but I'm not sure about that.
-Does anybody else can suggest me something?
-Thanks
-
-Tommaso
-
-
+LVM2 doesn't even check the partition type - it's only for information.
 -- 
-================================================================
-|     Tommaso Cecchi                          CINECA
-| System Management Group              Via Magnanelli 6/3 40033 
-| e-mail: t.cecchi@cineca.it             Casalecchio di Reno 
-| Tel: 051/6171411                         Bologna - ITALY
-| Fax 051/6132198                       http://www.cineca.it
-================================================================
+
+patrick
