@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] kernel BUG at dm-snapshot.c:986!
-Message-ID: <20030520093717.D9086@sistina.com>
-References: <91120000.1052757190@valkyrie.lsit.ucsb.edu> <20030516130800.E24422@sistina.com> <1481523360.1053068601@[192.168.23.5]>
-Mime-Version: 1.0
-In-Reply-To: <1481523360.1053068601@[192.168.23.5]>; from max@lsit.ucsb.edu on Fri, May 16, 2003 at 07:03:21AM -0700
+Message-ID: <OFD5B2E37D.868A777F-ONC1256D2C.003E9C8D@phoenixcontact.com>
+From: "Dietmar Stein" <DStein@phoenixcontact.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Snapshot of ReiserFS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,65 +12,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 20 02:46:02 2003
+Date: Tue May 20 06:31:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 16, 2003 at 07:03:21AM -0700, Max Kalika wrote:
-> Quoting "Heinz J . Mauelshagen" <mauelshagen@sistina.com>:
-> > 
-> > that code has changed recently. Have you tried if public device-mapper
-> > cvs  fixes it?
-> > 
-> > Keep in mind, that code is under construction there!
-> 
-> Heinz,
-> 
-> Thank you for your reply.  Could you provide a pointer or to as to how to
-> try the CVS device-mapper?  I just checked out the tree and the patches
-> look the same as those that are in the release tarball (0.96.08).
+Hi
 
-Sorry, I assumed you had an older content.
+I am new to the list, but I went through the archives and find some ideas
+but not an approbiate answer ... I want to make a snapshot of a mounted
+logical volume, which is formated with ReiserFS v3.6.
 
-> I'm
-> assuming I have to do something with the dm-ioctl.[ch] files found under
-> the kernel directory in the device-mapper CVS tree as that is where I
-> noticed a lot of activity last month.  Do I just copy these manually into
-> my kernel tree or is there something else that needs to be done as well?
-> (Or do you know if there will be a new set of kernel patches cut soon?)
+My configuration:
+Compaq DL580 with SmartArray 5300 controller with Storage Enclosure 4312R
+attached, 12 disks + 2 disks for system
+SuSE Enterprise Server 8 (United Linux 1.0) with kernel 2.4.19-4GB, lvm
+1.0.7
 
-They'll be released with LVM 2.0 ASAP (delayed by a bug fix).
+I have created six volume groups, consisting of two physical disks each;
+each volume group (36 GB large) contains two logical volumes, each 10 GB.
+The groups and volumes are labeled as
 
+volgrp01, lv01vg01, lv02vg01 (volume group 01, logical volume 01 on volume
+group 01 ...)
+volgrp02, lv01vg02, lv02vg02
+volgrp03, lv01vg03, lv02vg03
 
-> Thank you for your time and patience.
-> 
-> --
-> ---max kalika
-> --max@lsit.ucsb.edu
-> -lsit systems administrator
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I have mounted lv01vg01 to /data_1 and I have created an empty file with dd
+if=/dev/zero of=/data_1/testfile.raw bs=1M count=4000, then I followed
+documentation and did a lvcreate -L 11000M -s -n snaplv01vg01
+/dev/volgrp01/lv01vg01.
 
--- 
+All I can see is harddisk activity, but the command prompt did not return
+(I have been waiting for 2 hours), so I turned on verbose mode and last
+message is "locking lvm" (something like that) and then I have been waiting
+again.
 
-Regards,
-Heinz    -- The LVM Guy --
+What's the problem, mistake?
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks, Dietmar
