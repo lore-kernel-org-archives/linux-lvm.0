@@ -1,9 +1,14 @@
-Return-Path: <mark@bobak.net>
-Date: Sun, 24 Jun 2001 17:30:27 -0400 (EDT)
-From: "Mark J. Bobak" <mark@bobak.net>
-Message-ID: <Pine.LNX.4.33.0106241729370.4554-100000@bobak.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] LVM configuration question....
+Return-Path: <bg@blacknet.de>
+Date: Sun, 24 Jun 2001 23:48:00 +0200
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] LVM configuration question....
+Message-ID: <20010624234800.B7709@dragon.blacknet.de>
+References: <Pine.LNX.4.33.0106241729370.4554-100000@bobak.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0106241729370.4554-100000@bobak.net>; from mark@bobak.net on Sun, Jun 24, 2001 at 05:30:27PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +20,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
-
-I just installed SuSE 7.2, I have the LVM configured, all storage is on
-LVM except for '/'.  It's working great.  All storage is SCSI.  I have one
-9GB drive that I did not configure, that I left data I wanted to save.
-So, I've copied everything I want from there back on to the new running
-system.  Now I want to add this disk to the Volume Group.  So, I deleted
-the partitions on it w/ fdisk.  As I could read in the LVM whitepaper,
-that's not good enough.  So, I did:
-
-dd if=/dev/zero of=/dev/sdc bs=1k count=1
-
-And that didn't work.  I noticed an (apparent) typo in the the whitepaper,
-in that the comment made after the above command is "This command
-overwrites the first 10k Bytes of a disk with zeros, deleting any
-partition table."  Well, since the command specifies bs=1k and count=1, I
-suspect it only overwrites 1k.  So, I tried w/ 'bs=10k count=1', 'bs=1k
-count=10', and even 'bs=100k count=1'.  All with the same results.  When I
-try to run 'pvcreate', I get:
-
-# pvcreate /dev/sdc
-pvcreate -- device "/dev/sdc" has a partition table
-
-pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help] [-y|--yes]
-        [-v|--verbose] [-V|--version] PhysicalVolume [PhysicalVolume...]
+--RASg3xLB4tUQ4RcS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-So, can anyone offer me a clue as to the problem?
+On Sun, Jun 24 '01 at 17:30, Mark J. Bobak wrote:
+> # pvcreate /dev/sdc
+> pvcreate -- device "/dev/sdc" has a partition table
+>=20
+> So, can anyone offer me a clue as to the problem?
+Well, you can force pvcreate to use /dev/sdc, but you should not.
+use fdisk to make one partition (/dev/sdc1) with the full capacity of
+/dev/sdc and make it as LVM (type: 8e). Than use pvcreate /dev/sdc1
+(this marks sdc1 as a PV) and add it to the VG as described in the
+whitepaper/faq.
 
-Thanks,
+    Goetz.
 
--Mark
+--RASg3xLB4tUQ4RcS
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7NmAQf5srOMkjkQoRAnj0AJsEYWO0GWxd2ySbw40AbvFjYaOyqgCg2s6e
+fEWi1hKVZrNEnZgPuBwxATs=
+=Mreg
+-----END PGP SIGNATURE-----
+
+--RASg3xLB4tUQ4RcS--
