@@ -1,9 +1,8 @@
-Subject: Re: [linux-lvm] question on lvextend
-References: <20011219154622.31527.qmail@web14403.mail.yahoo.com>
-From: Urs Thuermann <urs@isnogud.escape.de>
-In-Reply-To: <20011219154622.31527.qmail@web14403.mail.yahoo.com>;
-    from Aman Shahi on Wed, 19 Dec 2001 07:46:22 -0800 (PST)
-Message-Id: <m2heqjabri.fsf@isnogud.escape.de>
+From: "Ben Holness" <ben@bens-house.org.uk>
+Message-Id: <000201c18c33$1ee48cc0$0b00a8c0@homelan.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvcreate problems - can't find partition
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,36 +13,73 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec 22 02:43:01 2001
+Date: Sun Dec 23 22:23:02 2001
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Aman Shahi <shahi_aman@yahoo.com> writes:
+Hi all,
 
-> Can I extend a striped LV ?
+I am in the process of trying to set up LVM on my machine and I am having
+some difficulty. I have had a look in the mailing list archives and in
+Google groups, but haven't had any luck (although there is one foreign
+language post in Google that looks to be the right question and an answer,
+but I can't read that language!!!)
 
-Yes.  I've done so several times.
+I have a 60Gb Hard disk, partitioned as follows:
 
-> If so, does the data gets redistributed or what ?
+Note: I am a little worried about the fact that fdisk shows 240/63/7753,
+when on my hard disk label it says 16/63/16383, but the sizes look right.
+The machine is a Compaq Deskpro.
 
-No.  There no need to move data from the LV around.  The LV just gets
-a couple of new PEs assigned just as with non-striped LVs.  Only the
-mapping of already allocated LEs to PEs is modified, e.g.
+[root@firewall root]# fdisk -l
 
-	before				after
+Disk /dev/ide/host0/bus0/target0/lun0/disc: 240 heads, 63 sectors, 7753
+cylinders
+Units = cylinders of 15120 * 512 bytes
 
-	LE	PV	   PE		LE	PV	   PE
-	00	/dev/sda1  00		00      /dev/sda1  00
-	01	/dev/sda1  01		01      /dev/sda1  01
-	02	/dev/sdb1  00		02      /dev/sda1  02
-	03	/dev/sdb1  01		03      /dev/sdb1  00
-					04      /dev/sdb1  01
-					05      /dev/sdb1  02
+                                Device Boot    Start       End    Blocks
+Id  System
+				/dev/ide/host0/bus0/target0/lun0/part1   *         1         2
+15088+  83  Linux
+				/dev/ide/host0/bus0/target0/lun0/part2             3       371   2789640
+5  Extended
+				/dev/ide/host0/bus0/target0/lun0/part4           372      7753  55807920
+8e  Linux LVM
+				/dev/ide/host0/bus0/target0/lun0/part5             3        35
+249448+  82  Linux swap
+				/dev/ide/host0/bus0/target0/lun0/part6            36       371
+2540128+  83  Linux
 
-Look at lvdisplay -v before and after running lvextend.
+hda1 (part1) mounts to /boot and hda6 (part 6) mounts to /
+I have created hda4 (part4) to be the partition that is managed as a logical
+volume, but when I try to pvcreate, I get:
 
+[root@firewall root]# pvcreate -v /dev/hda4
+pvcreate -- locking logical volume manager
+pvcreate -- checking physical volume name "/dev/hda4"
+pvcreate -- getting physical volume size
+pvcreate -- device "/dev/hda4" doesn't exist
 
-urs
+I have tried this when the partition is unformatted and after a mke2fs and I
+get the same results.
+
+Running Mandrake 8.1 and lvm-0.9-2mdk (rpm from the Mandrake disc)
+
+Please can anyone tell me what I am missing? I have followed the mini-howto
+from linuxdocs and then I had a look at the howto on the sistina site, but
+have had no luck...
+
+Cheers,
+
+Ben
+
+Other things of relevance (?):
+
+[root@firewall root]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
+
+[root@firewall root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ERROR "pv_read(): PV identifier invalid" reading physical volumes
