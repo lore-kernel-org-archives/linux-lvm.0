@@ -1,10 +1,13 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm]  lvextend for striped volume extension
-Message-ID: <20021122144036.A26900@uk.sistina.com>
-References: <050901c27f79$36778c90$a6a5f88f@oboe> <20021122132137.A13642@sistina.com>
-Mime-Version: 1.0
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] LE/PE Question
+Message-ID: <658450000.1037989977@[192.168.200.4]>
+In-Reply-To: <20021122103810.A12967@sistina.com>
+References: <E18EFOt-0001Qf-00@hermes.sistina.com>
+ <20021121115752.B8329@sistina.com> <448380000.1037896711@[192.168.200.4]>
+ <20021122103810.A12967@sistina.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20021122132137.A13642@sistina.com>; from mauelshagen@sistina.com on Fri, Nov 22, 2002 at 01:21:37PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,59 +18,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 22 08:41:02 2002
+Date: Fri Nov 22 12:27:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Fri, Nov 22, 2002 at 01:21:37PM +0100, Heinz J . Mauelshagen wrote:
-> On Wed, Oct 30, 2002 at 03:30:09AM +0900, shlim wrote:
-> > Current LVM version support the lv extension for STRIPED VOLUME ??
-> LVM1 is limited: you can't extend a stripe beyond a physical volume.
-> Give LVM2 a try which doesn't suffer from this constraint unless
-> you stay with the LVM1 ondisk format.
 
-And when using the new metadata format in LVM2, 'lvextend' accepts the 
-same stripe parameters as 'lvcreate'.  If the number of stripes and/or
-stripesize aren't given, it uses the values used by the last segment
-of the existing LV.
+-- "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 
-A simple example:
+>> The unit of failure, for all pratical purposes, is the LV
+>> (unless you are into using dd on raw disk devices to make
+>> your backups). If one drive is likely to fail then any LV
+>> crossing that LV is going to get fried (short of RAID) and
+>> will have to be restored.
+>
+> With LVM2 (and deprecated LVM1.1) you are able to activate a VG even
+> though some of its PVs are inaccessable.
+> If any filesystem is mountable still depends on the availability
+> of alternate superblocks and (at least) the root directory.
 
-lvm> lvcreate --stripes 3 --extents 12 vg1
-lvm> lvextend --stripes 2 --extents +12 vg1/lvol0
-lvm> lvdisplay --maps
+Which seems to mean that the unit of failure still is
+the LV: if an LV spans PV's and the PV looses data then
+the LV is unusable. The VG being able to survive an offline
+PV is a Very Good Thing but doesn't do anything to help
+someone with a filesystem on an LV with half its extents
+missing.
 
-  --- Segments ---
-  Logical extent 0 to 11:
-    Type		striped
-    Stripes		3
-    Stripe size		32
-    Stripe 0:
-      Physical volume	/dev/sdb1
-      Physical extents	0 to 3
-    Stripe 1:
-      Physical volume	/dev/sdb6
-      Physical extents	0 to 3
-    Stripe 2:
-      Physical volume	/dev/sdb7
-      Physical extents	0 to 3
-   
-  Logical extent 12 to 23:
-    Type		striped
-    Stripes		2
-    Stripe size		32
-    Stripe 0:
-      Physical volume	/dev/sdb1
-      Physical extents	4 to 9
-    Stripe 1:
-      Physical volume	/dev/sdb6
-      Physical extents	4 to 9
 
-And you can still specify a restricted list of PVs in the VG to use:
-lvm> lvextend --stripes 2 --extents +12 vg1/lvol0 /dev/sdb6 /dev/sdb7
-
-Alasdair
--- 
-agk@uk.sistina.com
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
