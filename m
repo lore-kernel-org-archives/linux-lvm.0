@@ -1,12 +1,8 @@
-Subject: Re: [linux-lvm] [OT] FAKE, HA Tools, LVM, and Oracle.
-From: Austin Gonyou <austin@coremetrics.com>
-In-Reply-To: <20020111082401.B62755@brule.borg.umn.edu>
-References: <20020111082401.B62755@brule.borg.umn.edu>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="=-gfAnjiaA36GUETmgHGHW"
-Message-Id: <1010775511.16376.13.camel@UberGeek>
+Message-Id: <001f01c19ad4$392d5120$803cfad5@vector>
+From: "Uros Watzak" <uros@thz.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] fsck write test
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,74 +13,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 11 12:59:02 2002
+Date: Fri Jan 11 13:15:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: okeefe@sistina.com
 
---=-gfAnjiaA36GUETmgHGHW
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hello Wolfgang.
 
-One reason I was writing is I'm not in a position to do this just yet.
-That's why I'm asking around about this info. I'm going to look at it at
-a later point hopefullly.
+I have found your e-mail address in an older post on WWW
+in some Linux web board/forum. You mentioned there is a
+way to perform a write test on a partirion using fsck or
+mke2fs. Can you tell me how to do it ? I used fsck but it
+only does a read-only test. Is there any way I can do a
+write test on my drive ?
 
-On Fri, 2002-01-11 at 08:24, Matthew O'Keefe wrote:
-> On Thu, Jan 10, 2002 at 06:12:48PM -0600, Austin Gonyou wrote:
-> > I'm looking for a way to do active/passive failover with Oracle on XFS
-> +
-> > LVM. I think FAKE and HA tools would be the best bet, does anyone have
-> > any other suggestions? I'd sure appreciate them. BTW, connecting by
-> > fibre to EMC 3630.=20
-> > Thanks.
->=20
-> Austin,
-> use Oracle Real Application Clusters + GFS + LVM.  You can buy
-> integrated hardware/software packages that support Oracle
-> fail-over and clustering: the stuff just works, and works well.
->=20
-> Matt O'Keefe
->=20
-> > --=20
-> > Austin Gonyou
-> > Systems Architect, CCNA
-> > Coremetrics, Inc.
-> > Phone: 512-698-7250
-> > email: austin@coremetrics.com
-> >=20
-> > "It is the part of a good shepherd to shear his flock, not to skin
-> it."
-> > Latin Proverb
->=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
---=20
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-698-7250
-email: austin@coremetrics.com
+Thank you in advance for your answer.
 
-"It is the part of a good shepherd to shear his flock, not to skin it."
-Latin Proverb
-
---=-gfAnjiaA36GUETmgHGHW
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQA8PzXX94g6ZVmFMoIRAnqAAJ40zFPCjqmcXDKG5pjl01FIP2/xrgCfY0Xt
-kcLFMgZI5HD6GcxZM/dDoTY=
-=INTt
------END PGP SIGNATURE-----
-
---=-gfAnjiaA36GUETmgHGHW--
+Uros W.
