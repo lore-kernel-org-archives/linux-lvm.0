@@ -1,10 +1,8 @@
-Message-ID: <3F6B1BE6.9050402@webhackande.se>
-From: Rickard Olsson <richie@webhackande.se>
+From: Gianmichele Murano <gingiabios@email.it>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Migrate from LVM1 to LVM2...
-References: <1063917231.1786.13.camel@super.gamux.chezmoi> <3F6B0E0F.5080807@webhackande.se> <1063980916.3f6b0f740b738@secure.st-peter.stw.uni-erlangen.de> <3F6B1281.8080300@webhackande.se> <1063982920.3f6b1748a8029@secure.st-peter.stw.uni-erlangen.de> <3F6B186C.9020107@webhackande.se> <1063983675.3f6b1a3bafc23@secure.st-peter.stw.uni-erlangen.de>
-In-Reply-To: <1063983675.3f6b1a3bafc23@secure.st-peter.stw.uni-erlangen.de>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200309201114.40369.g.murano@vinsoft.it>
+Subject: [linux-lvm] i2o devices and lvm Error on LE versus PE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,25 +13,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 19 10:09:02 2003
+Date: Sat Sep 20 07:02:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Svetoslav Slavtchev wrote:
+HI  ALL
 
-> hm, doesn't devfsd create the links ?
+as first thing, i say hallo to you.
 
-It didn't use to before... I remember using something LVM 1.0.4 and 
-Gentoo 1.2 and was forced to type the long format. I have just kept 
-doing it.
+now i tell you my problem:
+on a controler raid  (i2o devices) i have a debian distro.
+Recently i have enlarged the logical volumes  on this controler.
+All seemed ok,  i was able to remount the file systems and to copy and in=
+stall=20
+programs and data on resized volumes.
 
-*you wait, time passes*
+So, i was out of office and the development server was tuned off by perso=
+n who=20
+wasn't me (so i don't know what is the matter, if happened any thing ).
 
-It does create links now. :-) OK, I kinda like devfs a little more now, 
-except all the LVM1 tools display the long format so I'll either have to 
-translate or still type the long ones...
+later, when in was in office i have turn on the server and the vgscan fai=
+led,=20
+it said " ..omissis... only  found 499 of 500  LE for LV=20
+/dev/volume1/lgv1(0)" .
+I don't undestand what was happened.
+It is possible that a bad tuned off make a problem as this?
+Any body know the answer?
 
-    / Rickard Olsson,IT-Konsult/
-   / Telefon: +46 70 635 01 42/
-  / http://www.webhackande.se/
+To solve the trouble i thinked to do in this way:
+to reduce the LV lgv1 of some LE , in this way the info about the number =
+of LE =20
+will rewrite and (i hope) the problem vanish.The idea seems good, isn't?
+But i can't do this because the volume group is inactive.
+Anybody know a method to active a volume group also if vgscan fail?
+
+Please, i MUST to recove the data on the lv, we don't have a backup polic=
+y=20
+>:^>=20
