@@ -1,10 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] How to activate a vg or lv with same name as active one
-Message-ID: <20020812145230.C25041@sistina.com>
-References: <20020812090255.GC30185@microdata-pos.de>
+Subject: Re: [linux-lvm] Trouble recovering physical volumes
+Message-ID: <20020812151359.A25507@sistina.com>
+References: <20020808044250.DBLK14593.fed1mtao02.cox.net@smtp.west.cox.net>
 Mime-Version: 1.0
-In-Reply-To: <20020812090255.GC30185@microdata-pos.de>; from Frank.Matthiess_NOSpam@Microdata-POS.de on Mon, Aug 12, 2002 at 11:02:55AM +0200
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20020808044250.DBLK14593.fed1mtao02.cox.net@smtp.west.cox.net>; from mikeywoll@cox.net on Thu, Aug 08, 2002 at 12:42:50AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,55 +14,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 12 08:06:01 2002
+Date: Mon Aug 12 08:28:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Frank,
+Mike,
 
-you needed to export the volume group *before* you moved the physical dev=
-ices
-over to the other system :(
-After the move you needed to import the volume group giving it a new name.
-See vgexport(8) and vgimport(8) for this.
+in case the io path changed, you need to provide the "-o" option with
+the former path to vgcfgrestore.
+That should do the trick.
+"vgcfgrestore -ll -n VGName -f BackupPath" tells you, which one that was.
 
-In case you can't move the disks back to achieve this, the only option is
-to patch your metadata at the beginning of each of the physical volumes
-and change all occurences of vg_sys to vg_WhatEver (hacky!).
-
-
-On Mon, Aug 12, 2002 at 11:02:55AM +0200, Frank Matthie=DF wrote:
-> Hello there,
->=20
-> i want to backup a disk which make some strange noise. The problem is
-> that the volumegroupname (vg_sys) and the logical volumes (lv_home,
-> lv_usr, lv_var) are already active and in use by the running system.
-> The weak disk was remove from my home system and attach to a company
-> system with a backup solution.
->=20
-> My first idea ist to rename the the inactive volume group vg_sys to
-> vg_backup. But the man page told me that the vg must be active.
->=20
-> Seconf idea is to rename the lv's, but this is the same problem, isn't
-> it?
->=20
-> How to solve this problem and to get the inactive vg active to mount th=
-e
-> lv's on it?
->=20
-> --=20
-> Frank Matthie=DF                                          fm@Microdata-=
-pos.de
->=20
->=20
+On Thu, Aug 08, 2002 at 12:42:50AM -0400, mikeywoll@cox.net wrote:
+> I improperly shutdown my pc which resulted in a system  
+> that would not boot.  The root partition is on a logical  
+> volume called root (/dev/hda2) of the volume group vg1,   
+> vg1 also contains a logical volume called home  
+> (/dev/hda6).  Booting would freeze with a vg_read... 
+> error.  I have another computer with lvm installed, and 
+> the drive worked fine on there (I did not try it as the 
+> booting drive).  Because I installed the drive in a 
+> working computer, I have a working backup of the 
+> lvmtab/lvmconf stuff. I followed instructions on this list 
+> for restoring a lost volume.  (pvcreate -ff /dev/hda2..., 
+> vgcfgrestore -n vg1 /dev/hda6, vgchange -ay) The restore 
+> fails at vgcfrestore with the error "physical volume 
+> /dev/hda6 doesn't belong to volume group vg1."  The 
+> logical volume is no longer working in either system.  I 
+> installed the broken drive in my working pc as the primary 
+> master, and have a working system as the secondary master.  
+> I can boot off the second drive, and work on the broken 
+> lvm with the physical drive paths maintained.  I restored 
+> my lvmtab, lvmtab.d, and lvmconf files by hand. 
+>  
+> vgchange -ay gives the following error: 
+>  
+> physical volume /.......lun0/part6 of volume group vg1 is 
+> offline 
+> physical volume /...../lun0/part6 of volume group vg1 is 
+> inconsistent 
+> vgchange -- run vgscan 
+>  
+> Running vgscan runs as if there are no volume groups 
+> defined, and overwrites the lvmtab/lvmconf stuff with 
+> blank files. 
+>  
+> running pvdata on the partitions shows the correct data 
+> for my original setup, however it segfaults. 
+>  
+> Is there any way to reset the physical volumes so that 
+> vgcfgrestore can do its magic?? 
+>  
+> thanks in advance for any help. 
+>  
+>  
+> mike 
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
---=20
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
@@ -71,9 +87,7 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -81,6 +95,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
