@@ -1,10 +1,10 @@
-Message-ID: <3BB30A46.9010500@st-peter.stw.uni-erlangen.de>
-Date: Thu, 27 Sep 2001 13:15:18 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvcreate core dump on large disks, vg name corrupted.
-References: <3BB2FBF9.D68BC6D@adelaide.edu.au> <3BB300E1.90809@st-peter.stw.uni-erlangen.de> <3BB306C3.29ECD29F@adelaide.edu.au>
-Content-Transfer-Encoding: 8bit
+Date: Thu, 27 Sep 2001 07:39:05 -0400
+From: Jeff Layton <jeffrey.b.layton@lmco.com>
+Subject: Re: [linux-lvm] Disk Died - Ideas?
+Message-id: <3BB30FD9.853E39DA@lmco.com>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+References: <3BB09C88.8234FDE4@lmco.com> <20010925110909.D392@turbolinux.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,167 +16,84 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+Andreas Dilger wrote:
+
+> On Sep 25, 2001  11:02 -0400, Jeff Layton wrote:
+> >    Well, of course, the last disk gave up the ghost (lots of SCSI
+> > errors, machine will not boot without unplugging drives from
+> > machine). I'm pretty sure you can guess what I'm going to ask :)
+> > Can I just unplug the last drive, bring the system up, don't run
+> > fsck on lvol1, mount lvol1, and try to pull as much data as I can
+> > off what's left of the filesystem? If this works, then I can just
+> > redo the PVs, the VGs, and the LVOLs and recreate the filesystem
+> > and move over what data I can recover.
 >
->tar xIf /usr/local/src/linux-2.4.9.tar.bz2
->cat /usr/local/src/bonding-2.4.9-20010920 | patch -p1  (used for
->etherchannel bonding, nothing to do with filesystems)
+> Two ways to do it.  I _think_ the latest release of EVMS will allow you
+> to have partial LVs like this.  Are you sure that the LV was using space
+> on the last PV?  If so it is less likely to work.
 >
-you shouldn't do this
+> The other alternative is to take the output from "pvdata -avP <dev>" on
+> each remaining disk, and manually "dd" out the data from each disk.  If
+> the LV was mostly consecutive PEs, then it will be easy, otherwise a lot
+> of work (you may want to write a tool if so).
+>
+> PE 0 data starts at (pe_on_disk.start + pe_on_disk.size), and is in chunks
+> of PE size.  The pvdata output will tell you which PE numbers belonged to
+> your LV, so let's say on the first PV this LV starts at PE 10, you want:
+>
+> (pe_on_disk.start + pe_on_disk.size) + 10 * pe_size = byte offset of LV
+>
+> This will probably be at least a multiple of 1024, but maybe 4096 (larger
+> will make for faster dd).  Then, for the number of consecutive PEs on disk:
+>
+> count=<number of consecutive IN ORDER PEs> * pe_size / 1024 = consecutive kB
+>
+> dd if=/dev/pv1 of=<backup> bs=1024 skip=<offset #1 in kB> count=<count #1>
+>
+> Do the same thing for the next set of consecutive PEs, with:
+>
+> dd if=/dev/pv1 of=<backup> bs=1024 skip=<offset #2 in kB> \
+>         seek=<count #1> count=<count #2>
+>
+> dd if=/dev/pv1 of=<backup> bs=1024 skip=<offset #3 in kB> \
+>         seek=<count #1 + count #2> count=<count #3>
+
+Andreas,
+
+   Sorry the late follow-up. I follow you so far (I think). The next step
+after copy these "blocks" using dd to some backup device is to
+rebuild the filesystem on the disks and then copy back the data
+from the backup device using dd (just reverse the procedure).
+Is this correct? (Sorry the novice question but I want to be sure I
+have the correct steps before trying this).
+   Thanks very much for your help!
+
+Jeff
+
 
 >
->patch -p1 <
->/usr/local/src/LVM/1.0.1-rc2/PATCHES/lvm-1.0.1-rc2-2.4.9.patch
->patch -p1 <
->/usr/local/src/LVM/1.0.1-rc2/PATCHES/linux-2.4.9-VFS-lock.patch
 >
-you should apply only the lvm-1.0.1-rc2-2.4.9.patch , but you should run
-in /usr/local/src/LVM/1.0.1-rc2/  ./configure and than in PATCHES make first
-every time you apply some serious patch
-make combines the parts needed by your kernel from all patches in PATCHES
-
+> >    Oh, by the way, this filesystem had no backups. The powers
+> > to be claimed they were working on a backup solution for us,
+> > but they didn't get one in place by the time this drive died. I know,
+> > I know. I screamed very loudly, made lots of enemies internally,
+> > but still no backups were ever done.
 >
+> Never trust anyone w.r.t backups.  I got burned this way as well.  Also
+> make sure they have a RESTORE system, and not just a BACKUP system (i.e.
+> make sure they can get your data back from tape).
 >
->And have recreated the partitions as 2*20G, and still get segfaults with
->the same symptoms (lv_create() passed junk in lv_name), so disk size
->does not appear to be the key.
+> Cheers, Andreas
+> --
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 >
->I might try it against a couple of loopback filesystems without lpfcdd
->and bonding loaded, to see if it is a problem interacting with the
->lpfcdd module.  I'll try creating filesystems on the SAN LUN's/disks
->first.
->
->svetljo wrote:
->
->>you can not use lvm-1.0.1rc2 tools with 0.9.1beta2 code in the kernel
->>
->>try to patch the kernel with the lvm code from cvs
->>
->>or befor configuring the lvm code change the kernel version in the top
->>Makefile
->>/usr/src/linux/Makefile  to 2.4.8-ac14 and after applying the patch back
->>to 2.4.9-ac14
->>this should be working with lvm-1.0.1rc2
->>
->>or use lvm-1.0, the patch applies clean to -ac kernel
->>
->>Sean Burford wrote:
->>
->>>Hi,
->>>
->>>I am attempting to use the LVM tools under Linux 2.4.9-ac14 to set up
->>>access to a SAN.  lvcreate is seg faulting because main() is passing a
->>>corrupted vg name to lv_create().  I suspect this is due to the large
->>>partitions that are being dealt with (4*100G).
->>>
->>>Using:
->>> LVM 1.0.1-rc2 userland tools
->>> The LVM kernel modules that came with the kernel.  I could not apply
->>>the 1.0.x patches as they do not compile with the Alan Cox patches.  I
->>>will see if the straight 2.4.9 kernel works with the AMI MegaRAID card
->>>in the box soon, because if it does I will be able to patch the kernel
->>>for LVM 1.0.1-rc2.
->>>
->>>Some related output from dmesg is:
->>>SCSI device sdh: 209715200 512-byte hdwr sectors (107374 MB)
->>>sdh: sdh1
->>>SCSI device sdi: 209715200 512-byte hdwr sectors (107374 MB)
->>>sdi: sdi1
->>>SCSI device sdj: 209715200 512-byte hdwr sectors (107374 MB)
->>>sdj: sdj1
->>>SCSI device sdk: 209715200 512-byte hdwr sectors (107374 MB)
->>>sdk: sdk1
->>>LVM version LVM 0.9.1_beta7(ish)(20 June 2001) module loaded
->>>
->>>Following the LVM-Howto, I have configured the LVM as follows:
->>>vgscan
->>>pvcreate /dev/sdh1
->>>pvcreate /dev/sdi1
->>>pvcreate /dev/sdj1
->>>pvcreate /dev/sdk1
->>>vgcreate san_vg /dev/sd[hijk]1
->>>lvcreate -v -L255000 -ndata_lv san_vg
->>>
->>>lvcreate segfaults:
->>># lvcreate -v -L255000 -ndata_lv san_vg
->>>lvcreate -- checking volume group name "san_vg"
->>>lvcreate -- checking volume group existence
->>>lvcreate -- checking volume group activity
->>>lvcreate -- checking logical volume path "/dev/san_vg/data_lv"
->>>lvcreate -- checking stripe count
->>>lvcreate -- checking stripe size
->>>lvcreate -- locking logical volume manager
->>>lvcreate -- getting volume group status from VGDA in kernel
->>>lvcreate -- checking stripe size against volume group physical extent
->>>size
->>>lvcreate -- reading volume group data of "san_vg"
->>>lvcreate -- checking logical volume maximum size
->>>lvcreate -- checking volume group free space
->>>lvcreate -- checking stripe count against physical volume count
->>>lvcreate -- checking for maximum logical volume count
->>>lvcreate -- setting up logical volume
->>>lvcreate -- setting read ahead sectors
->>>lvcreate -- creating logical volume VGDA in kernel
->>>Segmentation fault (core dumped)
->>>
->>>I recompiled it with debugging, and got the following output:
->>>
->>>[root@backgammon tools]# gdb ./lvcreate
->>>GNU gdb 5.0rh-5 Red Hat Linux 7.1
->>>Copyright 2001 Free Software Foundation, Inc.
->>>GDB is free software, covered by the GNU General Public License, and you
->>>are
->>>welcome to change it and/or distribute copies of it under certain
->>>conditions.
->>>Type "show copying" to see the conditions.
->>>There is absolutely no warranty for GDB.  Type "show warranty" for
->>>details.
->>>This GDB was configured as "i386-redhat-linux"...
->>>(gdb) run -v -L255000 -ndata_lv san_vg
->>>Starting program: /usr/local/src/LVM/1.0.1-rc2/tools/./lvcreate -v
->>>-L255000 -ndata_lv san_vg
->>>lvcreate -- checking volume group name "san_vg"
->>>lvcreate -- checking volume group existence
->>>lvcreate -- checking volume group activity
->>>lvcreate -- checking logical volume path "/dev/san_vg/data_lv"
->>>lvcreate -- checking stripe count
->>>lvcreate -- checking stripe size
->>>lvcreate -- locking logical volume manager
->>>lvcreate -- getting volume group status from VGDA in kernel
->>>lvcreate -- checking stripe size against volume group physical extent
->>>size
->>>lvcreate -- reading volume group data of "san_vg"
->>>lvcreate -- checking logical volume maximum size
->>>lvcreate -- checking volume group free space
->>>lvcreate -- checking stripe count against physical volume count
->>>lvcreate -- checking for maximum logical volume count
->>>lvcreate -- setting up logical volume
->>>lvcreate -- setting read ahead sectors
->>>lvcreate -- creating logical volume VGDA in kernel
->>>
->>>Program received signal SIGSEGV, Segmentation fault.
->>>lv_create (vg=0x5, lv=0xbffffa14,
->>>   lv_name=0xbffffa2c
->>>"d���\213���������������\032���&���0�������\022���,���A���X���c���\227�������������������������������\002���\r���@�������")
->>>   at lv_create_remove.c:42
->>>42      inline int lv_create ( vg_t *vg, lv_t *lv, char *lv_name) {
->>>(gdb) bt
->>>#0  lv_create (vg=0x5, lv=0xbffffa14,
->>>   lv_name=0xbffffa2c
->>>"d���\213���������������\032���&���0�������\022���,���A���X���c���\227�������������������������������\002���\r���@�������")
->>>   at lv_create_remove.c:42
->>>#1  0x0804b03d in main (argc=5, argv=0xbffffa14) at lvcreate.c:791
->>>#2  0x4006e177 in __libc_start_main (main=0x8049390 <main>, argc=5,
->>>   ubp_av=0xbffffa14, init=0x8048e88 <_init>, fini=0x804b4d0 <_fini>,
->>>   rtld_fini=0x4000e184 <_dl_fini>, stack_end=0xbffffa0c)
->>>   at ../sysdeps/generic/libc-start.c:129
->>>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>
->
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
