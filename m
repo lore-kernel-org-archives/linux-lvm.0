@@ -1,14 +1,9 @@
-Message-ID: <3D946CBC.AE3080A0@cti-paysloire.cnamts.fr>
-From: LEBRETON Philippe <philippe.lebreton@cti-paysloire.cnamts.fr>
+Message-ID: <0827278F0593D511803600E018C23A3301A593@POSTMAN>
+From: Luke Reeves <luke@oceanlake.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Debian 3.0, kernel 2.4.18 booting with a LVM root fs 
- LVM  doesn't work
-References: <3D92DF4A.1625D3C4@cti-paysloire.cnamts.fr>
-	        <20020926125048.A2836@sistina.com>
-	        <3D92EFE8.CE5CEBE8@cti-paysloire.cnamts.fr>
-	        <20020926134718.A3083@sistina.com>
-	        <3D9301EF.8421C344@cti-paysloire.cnamts.fr> <32978.192.168.240.41.1033049145.squirrel@creative-realms.net>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C26657.6BE6F040"
+Subject: [linux-lvm] Limits
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,108 +14,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 27 09:35:53 2002
+Date: Fri Sep 27 13:42:47 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Andy Baillie wrote:
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-> > "Heinz J . Mauelshagen" wrote:
-> >
-> >> On Thu, Sep 26, 2002 at 01:30:48PM +0200, LEBRETON Philippe wrote:
-> >> > "Heinz J . Mauelshagen" wrote:
-> >> >
-> >> > > On Thu, Sep 26, 2002 at 12:19:54PM +0200, LEBRETON Philippe wrote:
-> >> > > > hello,
-> >> > > >
-> >> > > > My configuration is :
-> >> > > >
-> >> <SNIP>
-> >> >
-> >> > yes my initrd is read-only but hox i can made initrd read-write?
-> >>
-> >> boot parameter "rw" or "read-write" in lilo.conf.
-> >>
-> >> >
-> >> >
-> >> > _______________________________________________
-> >> > linux-lvm mailing list
-> >> > linux-lvm@sistina.com
-> >> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >>
-> >> --
-> >>
-> >> Regards,
-> >> Heinz    -- The LVM Guy --
-> >>
-> >> *** Software bugs are stupid.
-> >>     Nevertheless it needs not so stupid people to solve them ***
-> >>
-> >> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>
-> >> Heinz Mauelshagen                                 Sistina Software
-> >> Inc. Senior Consultant/Developer                       Am Sonnenhang
-> >> 11
-> >>                                                   56242 Marienrachdorf
-> >>                                                   Germany
-> >> Mauelshagen@Sistina.com                           +49 2626 141200
-> >>                                                        FAX 924446
-> >> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>
-> >> _______________________________________________
-> >> linux-lvm mailing list
-> >> linux-lvm@sistina.com
-> >> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> > i change my lilo.conf :
-> > image=/boot/vmlinuz-2.2.18-smp
-> >        label=LinuxLVM
-> >        initrd=/boot/initrd-lvm.img
-> >        root=/dev/rootvg/root
-> >        read-write
-> >        ramdisk=8192
-> >
-> > The problem is the same.
-> > The read-write parameter is for /dev/rootvg/root not for the RAM Disk?
-> > And mount, vgscan can't to the RAM Disk.
-> > I can't mount my root filesystem because LVM is not initialize (vgscan,
-> > vgchange not working in RAM Disk)
-> >
-> the problem is not the root filesystem but probably the initrd filesystem.
-> Are you a debian user, if so the default kernel make procedures give you a
-> cram filesystem which is only ever read-only. The default kernel build if
-> Iremember rightly doesn't even have ext2 built into the kernel but loads it
-> as a module when running through the initrd boot process.
-> To get round this you will have to ensure a writable fs is built into the
-> kernel (not a module) and then mount the initrd image on a loopback device
-> then repeat with an ext2 filesystem created using mke2fs, copy from the
-> first loopback to the second, unmount both and compress the ext2 fs
-> version and copy this back to your /boot partition.
-> I did it a couple of times then accepted that until various changes are
-> made to the debian kernel build process you won't have default debian
-> systems able to boot into root on lvm setups. and went back to a normal
-> root device.
-> Regards
-> Andy
->
-> --
->                    ---~~~===~~~---
-> http://www.landsofstone.org    http://194.159.1.90
-> telnet:mud.landsofstone.org:4801  212.46.65.2:4801
->                    ---~~~===~~~---
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+------_=_NextPart_001_01C26657.6BE6F040
+Content-Type: text/plain;
+	charset="iso-8859-1"
 
-Thanks,
-it's OK.
-I compile my kernel with ext2.
-I can mount ext2 ram fs and vgscan and vgchange work.
+What are the current limits (specifically on LVM 1.0.5) of each volume/disk?
+I read 255GB in one of the docs.  Can anyone fill me in?  Thanks.
 
-Thanks
+	Luke Reeves
+	luke@oceanlake.com
 
-Philippe LEBRETON
+------_=_NextPart_001_01C26657.6BE6F040
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+5.5.2653.12">
+<TITLE>Limits</TITLE>
+</HEAD>
+<BODY>
+
+<P><FONT SIZE=3D2>What are the current limits (specifically on LVM =
+1.0.5) of each volume/disk?&nbsp; I read 255GB in one of the =
+docs.&nbsp; Can anyone fill me in?&nbsp; Thanks.</FONT></P>
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=3D2>Luke =
+Reeves</FONT>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT =
+SIZE=3D2>luke@oceanlake.com</FONT>
+</P>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C26657.6BE6F040--
