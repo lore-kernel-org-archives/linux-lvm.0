@@ -1,11 +1,11 @@
-Date: Thu, 4 Oct 2001 18:30:37 +0100
-Subject: Re: [linux-lvm] lvm 1.0 and kernel 2.2.19.Is rawio patch necessary ??
-Message-ID: <20011004183037.A3711@btconnect.com>
-References: <3BBC550E.442F190C@ti.com> <3BBC7C22.1119BF0@promofinarsa.es>
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Thu, 4 Oct 2001 11:33:09 -0600
+Subject: Re: [linux-lvm] What have I done!?
+Message-ID: <20011004113309.E31061@turbolinux.com>
+References: <009401c14cc3$c63106c0$836788cf@industry> <009501c14cc7$2f5cd360$836788cf@industry>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3BBC7C22.1119BF0@promofinarsa.es>; from jesus_navarro@promofinarsa.es on Thu, Oct 04, 2001 at 05:11:30PM +0200
-From: Joe Thornber <thornber@btconnect.com>
+In-Reply-To: <009501c14cc7$2f5cd360$836788cf@industry>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,32 +21,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Oct 04, 2001 at 05:11:30PM +0200, Jesus Manuel NAVARRO LOPEZ wrote:
-> Hi, Christian:
-> 
-> christian e wrote:
-> > 
-> > Hi,all
-> > 
-> > I downloaded lvm 1.0 and kernel 2.2.19.Couldn't find a rawio for 2.2.19
-> > so I thought it wasn't necessary.Is it ? The rawio patch for 2.2.19 is
-> > not here:
-> > 
-> > ftp://ftp.kernel.org/pub/linux/kernel/people/sct/raw-io/
-> > or in the PATHCES dir..
-> > 
-> 
-> Well, I'm in same position than you, but having problems.
-> I also asked about the necesity of raw-io patches (specifically for
-> 2.2.19) but till the moment no answer.
-> 
-> > I did a ./configure and then a make in the patches dir.Applied that
-> > patch without problems.After compiling the kernel and booting up again I
-> 
-> Well, I patched kernel with raw-io for 2.2.18, and then with the lvm
-> patch provided by ./configure then make at PATCHES, but my kernel didn't
-> compile (well, the kernel did, but the make modules failed).
+On Oct 04, 2001  07:24 -0400, Jason A. Lixfeld wrote:
+> Is there a way that I can blow the whole thing away and start over?  I
+> think I've screwed things up too badly to try to resurrect them.  I'd
+> really like to blow it all away and start over and see if this stuff
+> happens again, but again I can't use the lv* tools to remove the
+> configurations because of the errors I mention in my initial post so I
+> need a manual way to blow away the entire LVM configuration and start
+> from scratch again.
 
-The rawio patch is needed for snapshots.
+"pvcreate -ff" I think
 
-- Joe
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
