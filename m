@@ -1,7 +1,12 @@
-Message-ID: <20030619013.23748.qmail@bigresources.com>
-From: "Jason M. DesRoches" <jason@bigresources.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Daily news from www.boxedart.com
+From: Daniel Bayer <daniel.bayer@stud.uni-rostock.de>
+Subject: Re: [linux-lvm] Problems with snapshots on sparc64
+In-reply-to: <20030602170507.B6678@sistina.com>
+Message-id: <20030603193935.GA16294@wh9155.stw.uni-rostock.de>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Content-disposition: inline
+References: <20030602131232.GB9679@wh9155.stw.uni-rostock.de>
+ <20030602170507.B6678@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,68 +17,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun  3 14:12:02 2003
+Date: Tue Jun  3 14:38:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Dear Sirs,=20
+On Mon, Jun 02, 2003 at 05:05:07PM +0200, Heinz J . Mauelshagen wrote:
+> On Mon, Jun 02, 2003 at 03:12:32PM +0200, Daniel Bayer wrote:
+> > But this problem:
+> > > > Another related problem is, that "cat /proc/lvm/global" in the most
+> > > > cases doesn't output the usual data but some random memory. Its really
+> > > > odd. But if I try often enough I sometimes also get the right output
+> > > > (and no, I didn't calculated the probability). The other files in
+> > > > /proc/lvm work fine.
+> > 
+> > appears also if there are no snapshots at all. (This time I only had
+> > to try 2 times to get the version-string.)
 
-We are continuing to provide you with the highest-quality graphics for the =
-lowest price anywhere on the web, our business model of offering thousands =
-of graphics without charging "per item fees=EF=BF=BD on www.boxedart.com.
+I just did the update of the kernel (1.0.7(28/03/2003)) and tools
+(1.0.7-3).
 
-If you are interested in helping us, there are several things that you can =
-do, which will help us keep our prices down and our inventory up:=20
+The problem with /proc/lvm/global still appears:
+| tau:~ # hexdump -C < /proc/lvm/global
+| 00000000  00 06 d9 84 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| 00000010  00 06 d9 40 00 00 00 00  00 04 f4 08 00 00 00 00  |...@............|
+| 00000020  00 06 e6 fc 00 00 00 00  00 06 da bc 00 00 00 00  |................|
+| 00000030  00 06 f1 70 00 00 00 00  00 06 f0 94 00 00 00 00  |...p............|
+| 00000040  00 06 db f0 00 00 00 00  00 06 f5 88 00 00 00 00  |................|
+| 00000050  00 06 d8 a0 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| 00000060  00 06 e6 a0 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| 00000070  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| 00000080  00 00 00 00 00 00 00 00  00 06 d9 08 00 00 00 00  |................|
+| 00000090  00 00 00 00 00 00 00 00  00 06 ea dc 00 00 00 00  |................|
+| 000000a0  00 00 00 00 00 00 00 00  00 06 fb cc 00 00 00 00  |................|
+| 000000b0  00 06 f9 88 00 00 00 00  00 06 f5 88 00 00 00 00  |................|
+| 000000c0  00 07 b0 9c 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| 000000d0  00 06 db 50 00 00 00 00  00 06 c7 d8 00 00 00 00  |...P............|
+| 000000e0  00 06 f3 bc 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| 000000f0  00 00 00 00 00 00 00 00  00 06 d9 84 00 00 00 00  |................|
+| 00000100  00 00 00 00 00 00 00 00  00 06 f5 70 00 00 00 00  |...........p....|
+| 00000110  00 06 d8 68 00 00 00 00  00 06 fc e8 00 00 00 00  |...h............|
+| 00000120  00 06 e6 c4 00 00 00 00  00 06 da bc 00 00 00 00  |................|
+| 00000130  00 06 f1 70 00 00 00 00  00 06 f0 94 00 00 00 00  |...p............|
+| 00000140  00 06 db f0 00 00 00 00  00 06 f5 88 00 00 00 00  |................|
+| 00000150  00 00 00 00 00 00 00 00  00 06 c1 e0 00 00 00 00  |................|
+| 00000160  00 06 e7 38 00 00 00 00  00 06 d2 a4 00 00 00 00  |...8............|
+| 00000170  00 06 d4 1c 00 00 00 00  00 06 c1 5c 00 00 00 00  |...........\....|
+| 00000180  00 06 fc 88 00 00 00 00  00 06 d9 08 00 00 00 00  |................|
+| 00000190  00 00 00 00 00 00 00 00  00 06 ea dc 00 00 00 00  |................|
+| 000001a0  00 00 00 00 00 00 00 00  00 06 f8 94 00 00 00 00  |................|
+| 000001b0  00 06 f9 88 00 00 00 00  00 06 f5 88 00 00 00 00  |................|
+| 000001c0  00 06 d8 50 00 00 00 00  00 04 f3 00 00 00 00 00  |...P............|
+| 000001d0  00 06 db 50 00 00 00 00  00 06 f4 94 00 00 00 00  |...P............|
+| 000001e0  00 06 f3 bc 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| 000001f0  00 00 00 00 00 00 00 00  00 06 eb 88 00 00 00 00  |................|
+| 00000200  00 00 00 00 00 00 00 00  00 06 e9 60 00 00 00 00  |...........`....|
+| 00000210  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+| *
+| 000003b0  00 00 00 00 00 00 00                              |.......|
+| 000003b7
+| tau:~ # 
 
-1. Refer us to your friends and colleagues who might also be interested in =
-joining our program. If you know anyone with a need for web design, you can=
- help them and us by sending them over to the least expensive professional =
-web design resource on the web.=20
+At the moment there are four or five outputs that appears often.
+Others are more seldom. Sometimes there are strings in the output,
+that (at least I believe so) belong to some userspace programm.
 
-2. Don't share your account with others! If you're letting your friends get=
- free access to your account, or sharing our graphics with others, it can h=
-ave a big impact on our tier-1 bandwidth bill, as well as cost us revenue f=
-rom sales, and is, of course, something we absolutely prohibit.=20
+If I do a "lvdisplay" on a snapshot I still get the vfree-error:
+| Jun  3 20:58:16 tau kernel: Trying to vfree() nonexistent vm area (00000001401a8000)
+| Jun  3 20:58:45 tau last message repeated 5 times
 
-3. Follow our licensing terms. If you are a web developer, please purchase =
-the required additional licenses for your clients if you do not plan on mak=
-ing significant modifications to our templates that you are delivering to t=
-hem, as stipulated is required in our online FAQ.=20
+As I'm only logged in remotely I wont try to crash the system now.
 
-4. Consider one of our limited edition items if you are looking for low dis=
-tribution graphics for yourself or for your clients. Also keep an eye peele=
-d for our upcoming and enhanced custom work area which will make purchasing=
- customized work a snap!=20
 
-5. Spread the word around everywhere, if you belong to a forum community, a=
-nd you see a related topic to our services, post about us. If you have a we=
-bsite, add a link, however please avoid just spamming our site across other=
- communities, as it is usually against their policies.=20
-
-6. Tell us your needs. If you are looking for specific design genres or sty=
-les, for the limited or members area, let us know about it through the feed=
-back link on our site, so that we may be the ones to fill your needs.=20
-
-Any assistance you could provide would be greatly appreciated by our entire=
- staff.=20
-
-We hope you understand how committed we are to continuing to deliver this s=
-ervice to you, and will continue to expand and grow to meets your requests =
-and needs with not only our efforts, but your help as well. We trust you wi=
-ll continue to enjoy your BoxedArt membership, and we hope this information=
- has help shed some light on the recent occurrences that have taken place o=
-n BoxedArt. We thank all of our loyal customers for their continued support=
-, and encourage you to contact us if we can be of any assistance.=20
-
-Sincerely,=20
-
-Jason M. DesRoches
-BigResources Inc. President/CEO
-jason@bigresources.com
-
-ICQ: 17947522
-
-If you want to unsubscribe - please click here=20
-www.boxedart.com/services/unsubscribe.php
+Daniel
