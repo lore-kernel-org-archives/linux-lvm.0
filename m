@@ -1,37 +1,67 @@
-Date: Fri, 27 Aug 1999 11:18:55 +0200
-From: Luca Berra <bluca@comedia.it>
+Message-Id: <199908271023.AA30684@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] Revised petition WAS: LVM in stock kernel!?
-Message-ID: <19990827111855.E25840@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <Pine.LNX.3.96.990826175120.22041A-100000@zeke.sympatico.ca>
-Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.3.96.990826175120.22041A-100000@zeke.sympatico.ca>; from Shane Shrybman on Thu, Aug 26, 1999 at 06:28:59PM -0400
+Date: Fri, 27 Aug 1999 12:20:08 METDST
+In-Reply-To: <19990827111358.D25840@colombina.comedia.it>; from "Luca Berra" at Aug 27, 99 11:13 am
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm mailing list <linux-lvm@msede.com>
+To: bluca@comedia.it
+Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-On Thu, Aug 26, 1999 at 06:28:59PM -0400, Shane Shrybman wrote:
 > 
-> I have added a few more points that I gleaned from this list. I have also
-> taken the liberty of adding a SUPPORTERS section with people's names and
-> email addresses. Please let me know if you have names to add or delete.
-> 
-> We need more SUPPORTERS! 
+> I completely agree with Andreas, snapshots and volume logs
+> are a feature of veritas vxfs (journaled filesystem)
+> not veritas LVM. 
+> On Thu, Aug 26, 1999 at 09:38:37PM -0600, Andreas Dilger wrote:
+> > Shane writes:
+> > > - Integration with IBM's ADSM backup allows Linux machines to be backed up
+> > >   "snapshot" style by simply syncing volumes and grabbing volume data.
+> > 
+> > I would like to learn specifically what this is before we post this list
+> > anywhere.  I don't know of any "integration" with ADSM and Linux LVM.  I
+> > don't think the current LVM supports mirrored LVs, so there is no possibility
+> > of a snapshot of a filesystem...
+> > 
+> > > - The ability to add a sort of volume log allows almost instant volume
+> > >   resyncing while maintaining an active data volume.
 
-i think that when wee agrre on the petition contents, we can
-put it on the web and mebbe have slashdot/lwn/freshmeat link
-the page.
+Yep.
 
-...
-> - The "out of storage space" is a very common problem for users especially
->   new users. LVM makes resizing allocated space easier. This is perhaps
->   the most common problem I here about from new users.
-it is also an enormous problem for big higly available systems
+> > 
+> > I don't think this is currently possible either with Linux LVM...
 
-L.
--- 
-Luca Berra -- bluca@comedia.it
-    Communications Media & Services S.r.l.
+Yes, you are right as far as LVM 0.7 is concerned.
+
+> > Let's
+> > stick with what works before we go talking about features that don't
+> > exist yet.
+
+I'm working on LV snapshot support right now.
+
+I'ld like to have it in 0.8 because it would be a block device level
+feature, which can be used by each and every block device
+user (FSes/DBMSes/...).
+
+IMO this conforms to the 'better do things generic' approach.
+
+<SNIP>
+
+Regards,
+Heinz
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
