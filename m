@@ -1,7 +1,6 @@
-Message-ID: <2D0AFEFEE711D611923E009027D39F2B01066160@nasexs1.meridian-data.com>
-From: System Attendant <NASEXS1-SA@meridian-data.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] ScanMail Message: To Recipient virus found and action taken.
+From: Antigen@sistina.com
+Message-ID: <WEBOWA-2K-01dDW6lCP000002e2@mail.aspcenter.hu>
+Subject: [linux-lvm] Figyelmeztetes: Az On cimere "FILE FILTER= *.scr" szurofeltetelnek megfelelo fajlt akartak tovabbitani.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,21 +11,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 19 02:05:20 2002
+Date: Thu Sep 19 02:07:51 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+To: linux-lvm@sistina.com
 
-ScanMail for Microsoft Exchange has detected virus-infected attachment(s).
+T�j�koztatjuk, hogy a PSINet Menedzselt V�llalati levelez�rendszere "FILE FILTER= *.scr" sz�r�felt�telnek megfelel� OnetoOne.mpg.scr nev� f�jlt tal�lt a "[linux-lvm] OnetoOne" t�rgy� lev�lhez csatolva, amelyet a abread-cq@abread.com.br c�mr�l k�ldtek �nnek.
+A jelenleg �rv�nyben l�v� biztons�gi sz�r�felt�telek szerint a f�jl tov�bb�t�s�t rendszer�nk megakad�lyozta.
 
-Sender = abread-cq
-Recipient(s) = linux-lvm@sistina.com
-Subject = [linux-lvm] OnetoOne
-Scanning Time = 09/19/2002 00:01:39
+Amennyiben a lev�lhez csatolt f�jlra mindenk�ppen sz�ks�ge van, k�rj�k vegye fel a kapcsolatot a lev�l k�ld�j�vel, vagy k�rjen seg�ts�get helyi rendszergazd�j�t�l.
 
-Action on virus found:
-The attachment OnetoOne.mpg.scr matched file blocking settings. ScanMail has
-Deleted it. 
 
-Warning to recipient. ScanMail has detected a virus.
+
+PSINet Managed Enterprise mail service found the file attached to the message with subject "[linux-lvm] OnetoOne" matching our FILE FILTER= *.scr filter. The message was sent from abread-cq@abread.com.br address.
+Based on current security rules, the delivery of the file has been blocked.
+
+If you need the file please consult with the original sender of the message or your local system administrator.
