@@ -1,73 +1,34 @@
-Message-ID: <38A28EF0.6D1C8570@bigpond.com>
-Date: Thu, 10 Feb 2000 21:12:00 +1100
-From: Simon Green <s_green@bigpond.com>
+Date: Thu, 10 Feb 2000 15:13:16 +0000 (GMT)
+From: James Pattinson <jamesp@subdimension.com>
+Subject: [linux-lvm] Recovering a PV VGDA
+Message-ID: <Pine.LNX.4.10.10002101440220.748-100000@fuse.jj.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] Fixes for vgcreate bugs.
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Hi,
+Hi -
 
-I just joined this list, so forgive me if I say something which has
-already been said. The latest 0.8i vgcreate has a bug in it where the
-first volume group created will cause a seg. fault if the /etc/lvmtab
-file is 1 byte long, as it is after a vgscan has been run. I note
-several comments in the changelog about this being fixed, but it still
-happened to me every time I tried it. Once at least one volume group has
-been created, vgcreate is fine.
+I had problems last night with one of my 4 disks in my VG. I was trying
+different things and somehow I managed to corrupt the VGDA on on the
+disks. This caused vgscan to fail with an error -154. I'm sorry but I
+forgot the actual text :)
 
-The work-around is to create a 0-byte /etc/lvmtab. Vgcreate will then
-give an error, but a vgscan will recover the volume group. The fix (as
-far as I can see) is as follows.
+I booted into a resuce disk I had with all the LVM tools on it, and I was
+able to run lvmdiscscan etc to see what was going on. I found i was caught
+in a catch 22 situation as I couldn't run vgcfgrestore because it wanted
+me to run vgscan first. I eventually had to restore /etc/lvm* from DAT and
+then I could make vgcfgrestore restore my VGDA to all the disks (as I
+didn't really know which disk was failling!)
 
-In the files:
+So, what is the best way of doing this kind of work? and also, how would I
+tell what disk is preventing vgscan from working? I tried 'strace'ing it
+but that wasn't very helpful. And of course most of the other vg/pv/lv
+commands were useless as they all wanted me to run vgscan... :)
 
-****************** lvm_tab_vg_insert.c
+Cheers!
 
-lvm_tab_vg_insert_end:
-
-   if ( vg_name_ptr     != NULL) free ( vg_name_ptr);
-   if ( vg_name_ptr_sav != NULL) free ( vg_name_ptr_sav);
-   if ( data            != NULL) free ( data);
-
-                        BECOMES
-
-lvm_tab_vg_insert_end:
-
-   if ( vg_name_ptr     != NULL) free ( vg_name_ptr);
-   if ( vg_name_ptr_sav != NULL) free ( vg_name_ptr_sav);
-   if ( data            != NULL) {
-    free ( data);
-    data = NULL;
-   }
-
-
-
-*******************lvm_tab_vg_check_exist.c
-   if ( i >= size || size < 2) ret = FALSE;
-
-   free ( data);
-
-                        BECOMES
-
-   if ( i >= size || size < 2) ret = FALSE;
-
-   free ( data);
-   data = NULL;
-
-
-
-Basically, in lvm_tab_vg_check_exist_all_vg.c, there is a if (data !=
-NULL) {free(data); data = NULL;} statement. When "data" is freed in one
-of the other two functions above, it is not reset to NULL, leading to an
-attempt to free it a second time, which causes the seg. fault. I can
-send in the diffs tomorrow if anyone's interested.
-
-Please cc any replies to greencs@logica.com.
-
-Cheers
-Simon
+James
