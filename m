@@ -1,8 +1,9 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-ID: <688972703.20020525015858@tnonline.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] GCC-3.1
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Error on vgscan & lvremove
+Message-ID: <20020525124928.A19221@sistina.com>
+References: <004d01c20110$f2b8ff70$6501a8c0@bomoon> <20020522144651.F9107@sistina.com> <009601c20204$81710e30$6501a8c0@bomoon> <20020523190023.A13788@sistina.com> <017301c202d0$c77c2410$6501a8c0@bomoon> <20020524105744.B15896@sistina.com> <002701c2036a$7ba96170$6501a8c0@bomoon>
+Mime-Version: 1.0
+In-Reply-To: <002701c2036a$7ba96170$6501a8c0@bomoon>; from bo@sosnetwork.net on Fri, May 24, 2002 at 02:32:19PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,51 +14,190 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 24 18:59:01 2002
+Date: Sat May 25 05:53:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-   It  does  not seem to work to compile LVM 1.0.4 or 1.1-rc2 with GCC
-   3.1.  I  get  errors  similar  to  what  is  below.  With GCC 3.0.4
-   everything compiles and works good.
+On Fri, May 24, 2002 at 02:32:19PM -0700, bo wrote:
+> Heinz,
+> 
+> I verified these two issues as commented below;
+> 
+> > >
+> > > > A 'workaround' for non-devfs configurations is
+> > > >
+> > > > ls /dev/*/group | sed 's!/group!!' | xargs rm -r ; vgmknodes
+> > > >
+> > >
+> > > ??Something wrong on "sed 's!/group!!' ", it did not work.
+> >
+> > Works fine here. Maybe your sed doesn't like the delimiter?
+> >
+> > Try '/' rather than '!' with sed like "sed 's/\/group//'".
+> >
+> 
+> worked w/o delimiters like
+> 
+>         ls /dev/*/group | sed 's/group//' | xargs rm -r ; vgmknodes
 
-   //Anders
+Yes, trailing / doesn't matter in the rm args :)
 
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[root@server 1.1-rc2]# make
-make[1]: Entering directory `/usr/src/LVM/1.1-rc2/tools'
-make[2]: Entering directory `/usr/src/LVM/1.1-rc2/tools/lib'
-make[3]: Entering directory `/usr/src/LVM/1.1-rc2/tools/lib'
-gcc -c -pipe -g -Wall -DDEBUG -I../../tools/lib -I../../tools -I/usr/src/LVM/1.1-rc2/tools/lib -o basename.o basename.c
-In file included from ../../tools/lib/liblvm.h:61,
-                 from basename.c:36:
-/usr/include/linux/autoconf.h:1:2: #error Invalid kernel header included in userspace
-make[3]: *** [basename.o] Error 1
-make[3]: Leaving directory `/usr/src/LVM/1.1-rc2/tools/lib'
-make[2]: *** [all] Error 2
-make[2]: Leaving directory `/usr/src/LVM/1.1-rc2/tools/lib'
-make[2]: Entering directory `/usr/src/LVM/1.1-rc2/tools/man8'
-make[3]: Entering directory `/usr/src/LVM/1.1-rc2/tools/man8'
-make[3]: Leaving directory `/usr/src/LVM/1.1-rc2/tools/man8'
-make[2]: Leaving directory `/usr/src/LVM/1.1-rc2/tools/man8'
-make[2]: Entering directory `/usr/src/LVM/1.1-rc2/tools'
-gcc -c -pipe -DREADLINE -DSINGLE_EXECUTABLE -g -Wall -DDEBUG -I../tools/lib -I../tools -I/usr/src/LVM/1.1-rc2/tools/lib -o e2fsadm.o e2fsadm.c
-In file included from ../tools/lib/liblvm.h:61,
-                 from ../tools/lvm_user.h:47,
-                 from e2fsadm.c:60:
-/usr/include/linux/autoconf.h:1:2: #error Invalid kernel header included in userspace
-make[2]: *** [e2fsadm.o] Error 1
-make[2]: Leaving directory `/usr/src/LVM/1.1-rc2/tools'
-make[1]: *** [all] Error 2
-make[1]: Leaving directory `/usr/src/LVM/1.1-rc2/tools'
-make[1]: Entering directory `/usr/src/LVM/1.1-rc2'
+> 
+> > >
+> > > >
+> > > > link the single executable statically by running
+> > > > "./configure --enable-static_link" (which doesn't use the shared
+> libs).
+> > > >
+> > >
+> > > It did not work. I rebuilt LINUX kernel & LVM after
+> > > "./configure --enable-static_link".
+> > > I got the same result.
+> >
+> > Did you start with a fresh source tree or run "make distclean"
+> > before "./configure --enable-static_link"?
+> >
+> > >
+> 
+> Yes, worked with "make distclean".
 
-**********************************
-There were errors in your compile.
-**********************************
+Good.
 
-make[1]: *** [.touchbuilt] Error 1
-make[1]: Leaving directory `/usr/src/LVM/1.1-rc2'
-make: *** [all] Error 2
-[root@server 1.1-rc2]# 
+> 
+> For the backward compatibilty I will try later.
+
+OK.
+
+> 
+> One more question related with activating PV,
+> 
+> Of course I could make them active after removing the volume and recreating
+> it.
+> As you can notice on the attached log VG is ok,  How could I make these PVs
+> active
+> w/o removing the volume?
+> 
+> Did it corrupt the VGDA? any way to recover it?
+
+See below.
+
+> (PS: you can notice TWO "volDisk" group in the following "vgdisplay", should
+> be
+>         volDisk  & volDisk2 ???)
+
+You still seem to have wrong /dev/ entries :-(
+Maybe because of earlier problems, 2 VGs (volDisk and volDisk2) now
+have the same internal number?
+Please send the output of
+"pvdata -a /dev/hd[cd]9 /dev/hda15 /dev/hd[cd]10 /dev/hda16 ; ls -lR /dev"
+directly to me (mge@sistina.com).
+
+If volDisk and VolDisk2 have the same internal numbers, we can try "vgscan -f"
+which comes with LVM >= 1.0.3.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+> 
+> Thanks again,
+> 
+> Bo
+> ----------------------------------------------------------------------------
+> -----------------
+> [root@localhost /root]# pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- ACTIVE   PV "/dev/md0"   of VG "volRaid0" [1.95 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/md1"   of VG "volRaid0" [1.95 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/md2"   of VG "volRaid0" [1.95 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/md3"   of VG "volRaid1" [992 MB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/md4"   of VG "volRaid1" [992 MB / 484 MB free]
+> pvscan -- ACTIVE   PV "/dev/md5"   of VG "volRaid5" [1.95 GB / 992 MB free]
+> pvscan -- ACTIVE   PV "/dev/md6"   of VG "volRaid5" [1.95 GB / 1.95 GB free]
+> pvscan -- ACTIVE   PV "/dev/hdc9"  of VG "volDisk"  [992 MB / 992 MB free]
+> pvscan -- inactive PV "/dev/hdc10" of VG "volDisk2" [992 MB / 788 MB free]
+> pvscan -- ACTIVE   PV "/dev/hdd9"  of VG "volDisk"  [992 MB / 992 MB free]
+> pvscan -- inactive PV "/dev/hdd10" of VG "volDisk2" [992 MB / 792 MB free]
+> pvscan -- ACTIVE   PV "/dev/hda15" of VG "volDisk"  [996 MB / 996 MB free]
+> pvscan -- inactive PV "/dev/hda16" of VG "volDisk2" [996 MB / 0 free]
+> pvscan -- total: 13 [17.59 GB] / in use: 13 [17.59 GB] / in no VG: 0 [0]
+> 
+> [root@localhost /root]# pvdisplay /dev/hdc10
+> --- Physical volume ---
+> PV Name               /dev/hdc10
+> VG Name               volDisk2
+> PV Size               1000.09 MB [2048193 secs] / NOT usable 4.19 MB [LVM:
+> 128 KB]
+> PV#                   2
+> PV Status             available
+> Allocatable           yes
+> Cur LV                2
+> PE Size (KByte)       4096
+> Total PE              248
+> Free PE               197
+> Allocated PE          51
+> PV UUID               b5ybET-1zOq-HPnP-QQda-zjgQ-5avz-aGFMav
+> 
+> [root@localhost /root]# vgdisplay
+> --- Volume group ---
+> VG Name               volDisk
+> VG Access             read/write
+> VG Status             available/resizable
+> VG #                  1
+> MAX LV                256
+> Cur LV                0
+> Open LV               0
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                3
+> Act PV                3
+> VG Size               2.91 GB
+> PE Size               4 MB
+> Total PE              745
+> Alloc PE / Size       0 / 0
+> Free  PE / Size       745 / 2.91 GB
+> VG UUID               7RhXUS-Pw5B-EBYN-GKIM-PO1d-4uD7-4apSvp
+> 
+> --- Volume group ---
+> VG Name               volDisk
+> VG Access             read/write
+> VG Status             available/resizable
+> VG #                  1
+> MAX LV                256
+> Cur LV                0
+> Open LV               0
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                3
+> Act PV                3
+> VG Size               2.91 GB
+> PE Size               4 MB
+> Total PE              745
+> Alloc PE / Size       0 / 0
+> Free  PE / Size       745 / 2.91 GB
+> VG UUID               7RhXUS-Pw5B-EBYN-GKIM-PO1d-4uD7-4apSvp
+> 
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
