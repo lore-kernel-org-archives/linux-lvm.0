@@ -1,38 +1,29 @@
-Date: Fri, 1 Oct 1999 10:55:48 -0500 (EST)
-From: theodore russell wickell <twickell@indiana.edu>
-Subject: [linux-lvm] couple of questions.
-Message-ID: <Pine.HPP.3.96.991001104949.20591C-100000@falstaff.ucs.indiana.edu>
+From: "Stephen C. Tweedie" <sct@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <14324.58266.920834.895229@dukat.scot.redhat.com>
+Date: Fri, 1 Oct 1999 17:38:50 +0100 (BST)
+Subject: Re: [linux-lvm] LVM, raw-io, devfs
+In-Reply-To: <006201bf0bb7$6eae4a60$030116ac@fd1>
+References: <006201bf0bb7$6eae4a60$030116ac@fd1>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: Fernando Dammous <ferdam@internetcom.com.br>
+Cc: Linux LVM msede <linux-lvm@msede.com>, Stephen Tweedie <sct@redhat.com>
 
-Hello,
+Hi,
 
-I have my kernel configured and and the lvm tools installed for 0.7.
+On Thu, 30 Sep 1999 23:48:23 -0300, "Fernando Dammous"
+<ferdam@internetcom.com.br> said:
 
-Questions:
-1. do I set the partition id using fdisk? If so, will this damage anything
-ie. make it hard to boot in the normal fashion? 
-2. What goes in the /etc/lvmtab file ?
-3. Will the creation/allocation of logical volumes be non-destructive to
-the data during conversion?
-4. If I boot a kernel without lvm will I still have the same access to
-data as I had before?
+> Now, I would like to install the devfs and mainly the raw-io.   
+  
+> Can I install them in a kernel 2.0.36, which is already patched with
+> LVM?
 
-Thanks. I have used LVM in AIX for awhile but I wanted to clear up a few
-things in my understanding.
+I've never tried the raw IO code on 2.0: let me know how it goes!  In
+principle, there is no reason why raw IO on LVM should not work.
 
-Rusty
-
-
-
-----------------------------------------------------------------------------
-Rusty Wickell					200 S. Jordan Ave.
-Digital Library Sytem Administrator		Simon 060
-Indiana University				Bloomington IN 
-812-856-5174					47405
-----------------------------------------------------------------------------
+--Stephen
