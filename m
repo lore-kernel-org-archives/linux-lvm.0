@@ -1,27 +1,8 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2AGcR806087
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:38:27 -0500
-Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2AGcQ07004583
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:38:26 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by salusa.poochiereds.net (Postfix) with ESMTP id B10864F21
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:38:25 -0500 (EST)
-Received: from salusa.poochiereds.net ([127.0.0.1])
-	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 19605-10 for <linux-lvm@redhat.com>;
-	Wed, 10 Mar 2004 11:38:25 -0500 (EST)
-Received: from localhost (salusa.ix.dyndns.org [192.168.1.2])
-	by salusa.poochiereds.net (Postfix) with ESMTP id EE5982785
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:38:24 -0500 (EST)
-Subject: Re: [linux-lvm] Patch for Miguel Cabe?a's lvm2create_initrd script
-From: Jeffrey Layton <jtlayton@poochiereds.net>
-In-Reply-To: <20040310132858.GD643@reti>
-References: <403E8A0E.9070308@ist.utl.pt>
-	 <1078884314.2919.16.camel@localhost>  <20040310132858.GD643@reti>
-Message-Id: <1078936704.18469.33.camel@tesla.mmt.bellhowell.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: darren.miller@philips.com
+Subject: Re: [linux-lvm] LVM2-Snapshot
+MIME-Version: 1.0
+Message-ID: <OF8F98AF3D.A81E7162-ON80256E53.005BA186-80256E53.005BD70D@philips.com>
+Content-Type: multipart/alternative; boundary="=_alternative 005BD6EE80256E53_="
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -33,34 +14,136 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Mar 10 11:36:28 2004
+Date: Wed Mar 10 11:41:07 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
+Cc: linux-lvm-admin@redhat.com
 
-On Wed, 2004-03-10 at 08:28, Joe Thornber wrote:
-> On Tue, Mar 09, 2004 at 09:05:14PM -0500, Jeff Layton wrote:
-> >  The second one is an ugly hack, and I'm definitely open to better ways
-> > of handling it. After my kernel upgrade (from 2.6.1 to 2.6.4-rc2), the
-> > major number of the device mapper devices on my system changed. So, I
-> > added a hack to copy the contents of the ramdisk /dev/mapper directory
-> > to the /dev/mapper directory on the lvm2 root filesystem, prior to the
-> > pivot_root. It works for me, but I'd love to hear about better ways of
-> > handling this.
-> 
-> Mount tmpfs on /dev/mapper, and then run 'dmsetup mknods' ?
-> 
-> - Joe
+This is a multipart message in MIME format.
+--=_alternative 005BD6EE80256E53_=
+Content-Type: text/plain; charset="us-ascii"
 
-Hmm that might work, but what will happen to the devices after you
-remount the filesystem. Will /dev/mapper always be a tmpfs filesystem
-after this?
+I have exactly the same problem m8
+==============================================================================
+Darren Miller 
+Senior Systems Support Engineer
+Microsoft Certified Professional
+SCO Advanced Certified Engineer 
+Infomation Systems Department (Core Server Support)
+Philips Semiconductors,Milbrook Industrial Estate,Southampton,SO15 
+0DJ,England
+Direct Dial In: +44 (0) 2380 312681
 
-Actually, I'm thinking another way to handle this might be to do a
-'chroot /rootvol /sbin/vgmknodes' prior to the pivot_root instead of the
-tar copy. There might be some way to handle it without the chroot, but I
-think this will work.
 
-I'll try this method out soon.
 
--- Jeff
+
+
+
+
+
+
+Christoph Pleger <Christoph.Pleger@uni-dortmund.de>
+Sent by: 
+linux-lvm-admin@redhat.com
+10/03/2004 16:30
+Please respond to linux-lvm
+
+ 
+        To:     linux-lvm@redhat.com
+        cc:     (bcc: Darren Miller/SOU/SC/PHILIPS)
+        Subject:        [linux-lvm] LVM2-Snapshot
+        Classification: 
+
+
+
+Hello,
+
+I have problems when I try to create a snapshot of a logical volume
+under LVM2 (Kernel 2.6.3). I get the following messages after using
+"lvcreate -s -l 227 -n snap /dev/vg1/lv1":
+
+device_mapper ioctl cmd 9 failed: Invalid argument
+Couldn't load device 'vg1-snap'.
+Problem reactivating origin lv1
+
+
+How can I solve that?
+
+Using google, I found that snapshots under LVM2 and Kernel 2.6 generally
+do not work. I hope that that is no longer true, is it? 
+
+Christoph
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+
+--=_alternative 005BD6EE80256E53_=
+Content-Type: text/html; charset="us-ascii"
+
+
+<br><font size=2 face="sans-serif">I have exactly the same problem m8<br>
+==============================================================================<br>
+Darren Miller &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br>
+Senior Systems Support Engineer<br>
+Microsoft Certified Professional<br>
+SCO Advanced Certified Engineer &nbsp; &nbsp; &nbsp; &nbsp;<br>
+Infomation Systems Department (Core Server Support)<br>
+Philips Semiconductors,Milbrook Industrial Estate,Southampton,SO15 0DJ,England<br>
+Direct Dial In: +44 (0) 2380 312681</font>
+<br>
+<br>
+<br>
+<table width=100%>
+<tr valign=top>
+<td>
+<td>
+<br>
+<br>
+<br>
+<br>
+<br><font size=1 face="sans-serif"><b>Christoph Pleger &lt;Christoph.Pleger@uni-dortmund.de&gt;</b></font>
+<p><font size=1 face="sans-serif">Sent by: </font>
+<br><font size=1 face="sans-serif">linux-lvm-admin@redhat.com</font>
+<p><font size=1 face="sans-serif">10/03/2004 16:30</font>
+<br><font size=1 face="sans-serif">Please respond to linux-lvm</font>
+<br>
+<td><font size=1 face="Arial">&nbsp; &nbsp; &nbsp; &nbsp; </font>
+<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; To: &nbsp; &nbsp; &nbsp; &nbsp;linux-lvm@redhat.com</font>
+<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; cc: &nbsp; &nbsp; &nbsp; &nbsp;(bcc: Darren Miller/SOU/SC/PHILIPS)</font>
+<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; Subject: &nbsp; &nbsp; &nbsp; &nbsp;[linux-lvm] LVM2-Snapshot</font>
+<p><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; Classification: &nbsp; &nbsp; &nbsp; &nbsp;</font>
+<br></table>
+<br>
+<br>
+<br><font size=2 face="Courier New">Hello,<br>
+<br>
+I have problems when I try to create a snapshot of a logical volume<br>
+under LVM2 (Kernel 2.6.3). I get the following messages after using<br>
+&quot;lvcreate -s -l 227 -n snap /dev/vg1/lv1&quot;:<br>
+<br>
+device_mapper ioctl cmd 9 failed: Invalid argument<br>
+Couldn't load device 'vg1-snap'.<br>
+Problem reactivating origin lv1<br>
+<br>
+<br>
+How can I solve that?<br>
+<br>
+Using google, I found that snapshots under LVM2 and Kernel 2.6 generally<br>
+do not work. I hope that that is no longer true, is it? <br>
+<br>
+Christoph<br>
+<br>
+_______________________________________________<br>
+linux-lvm mailing list<br>
+linux-lvm@redhat.com<br>
+https://www.redhat.com/mailman/listinfo/linux-lvm<br>
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/<br>
+</font>
+<br>
+<br>
+--=_alternative 005BD6EE80256E53_=--
