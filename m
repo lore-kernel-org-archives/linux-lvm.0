@@ -1,9 +1,7 @@
-From: "William Blunn" <bill@tao-group.com>
-Subject: Re: [linux-lvm] To compile
-Message-Id: <003901c1bad9$dd43eb50$216410ac@tao.co.uk>
+From: Vincent AE Scott <linux.lvm@codex.net>
+Message-Id: <20020221143602.F328@majestic.ukshells.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20020221124537.GA7834@balu.kawo2.rwth-aachen.de>
+Subject: [linux-lvm] is devfs required?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,35 +12,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 21 07:15:02 2002
+Date: Thu Feb 21 08:36:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Linux LVM <linux-lvm@sistina.com>
 
-> On Thu, Feb 21, 2002 at 01:01:48PM +0100, Pierrick PONS wrote:
-> >=20
-> > When I want to start with lvm, here is my problem :
-> > pvcreate /dev/sdb
-> > pvcreate: error in loading shared libraries: liblvm-10.so.1:=20
-> cannot open=20
-> > shared object file: No such file or directory
-> >=20
-> > I don't really understand, liblvm is in /usr/local/lib as a=20
-> link pointing to=20
-> > /usr/local/stow/lvm/lib .
->=20
-> Is /usr/local/lib in your Library Path? Add this path to
-> /etc/ld.so.conf, run ldconfig and retry it.
+Hi there,
+i've been tinkering with LVM, but i'm having some issues with it, and i
+was wondering if anyone here could help shed some light for me?
 
-Er, you might find that it is a good idea to put your LVM shared library =
-in /lib.
+i'm using LVM on a 2.4.17-19mdk kernel patched up to 1.0.3
+it *appears* that when i boot up without devfs support, i frequently
+cant create/extened/mount filesystems.  but when i boot up with devfs
+support it seems to work.
 
-Otherwise you might have difficulting starting up the system if /usr or =
-/usr/local is on an LVM volume.
+is devfs required to use LVM?
 
-Bill
---=20
-William H. Blunn - bill@tao-group.com - Developer Support
-Tao
-62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
-Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
+without it, ive seen lvcreate SEGV when attempting to create a new
+volume.  
+
+or are there any known problems with using LVM on an SMP host?  i cant
+think of anything else that might be causing these strange problems.
+
+oh, and FYI, it was setup up using 1.0.1-rc4ish
+
+TIA,
+-vince
+
+-- 
+PGP key:  http://codex.net/pgp/pgp.asc
+
+ Smash forehead on keyboard to continue... 
