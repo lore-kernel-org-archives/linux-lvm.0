@@ -1,27 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2NLonO10330
-	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 16:50:49 -0500
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2NLohe4018730
-	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 16:50:44 -0500
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1DEDhx-0007Zc-RD
-	for linux-lvm@redhat.com; Wed, 23 Mar 2005 22:48:10 +0100
-Received: from adsl-34-234-30.asm.bellsouth.net ([67.34.234.30])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 22:48:09 +0100
-Received: from ecashin by adsl-34-234-30.asm.bellsouth.net with local (Gmexim
-	0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 22:48:09 +0100
-From: Ed L Cashin <ecashin@coraid.com>
-Date: Wed, 23 Mar 2005 16:49:04 -0500
-Message-ID: <87br9adodr.fsf@coraid.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j2NLrfBW016988
+	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 21:53:41 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1DEDnI-00088j-QC
+	for linux-lvm@redhat.com; Wed, 23 Mar 2005 21:53:40 +0000
+Date: Wed, 23 Mar 2005 21:53:40 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Re: Raid1 only with LVM
+Message-ID: <20050323215340.GV19749@agk.surrey.redhat.com>
 References: <200502281138.00112.stuebiger-lvm@cip.ifi.lmu.de>
-	<20050301191923.GA13742@redhat.com>
+	<20050301191923.GA13742@redhat.com> <87br9adodr.fsf@coraid.com>
 Mime-Version: 1.0
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: Raid1 only with LVM
+Content-Disposition: inline
+In-Reply-To: <87br9adodr.fsf@coraid.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,18 +25,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Heinz Mauelshagen <mauelshagen@redhat.com> writes:
+On Wed, Mar 23, 2005 at 04:49:04PM -0500, Ed L Cashin wrote:
+> Do you expect that when mirroring is working in LVM2 it will be
+> working in CLVM?  That is, will a cluster be able to share block
+> storage with using distributed RAID 1 later this year because of CLVM?
+ 
+Two different sorts of mirroring, single-node and clustered.
+Work is underway for clustered LVM2 to support both.
 
-> Michael,
->
-> you can't do mirroring with LVM2 today but we'll suport it later
-> this year.
-
-Do you expect that when mirroring is working in LVM2 it will be
-working in CLVM?  That is, will a cluster be able to share block
-storage with using distributed RAID 1 later this year because of CLVM?
-
+Alasdair
 -- 
-  Ed L Cashin <ecashin@coraid.com>
+agk@redhat.com
