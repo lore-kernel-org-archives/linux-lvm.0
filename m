@@ -1,11 +1,11 @@
-Return-Path: <vidalrod@informatik.tu-muenchen.de>
-Message-ID: <3AB7BF33.CBCFAEA7@in.tum.de>
-Date: Tue, 20 Mar 2001 21:36:03 +0100
-From: David Vidal Rodriguez <vidalrod@informatik.tu-muenchen.de>
+Return-Path: <andewid@tnonline.net>
+Message-ID: <3AB7C41F.F1F35EDE@tnonline.net>
+Date: Tue, 20 Mar 2001 21:57:04 +0100
+From: Anders Widman <andewid@tnonline.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgscan won't recognize my VG
 References: <200103202021.f2KKLR902727@webber.adilger.int>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM and fault tolerance
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,19 +20,8 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Andreas Dilger wrote:
+Is there any possibility to add fault tolerance to LVM. I would like to span
+several disks (of different sizes) and  have fault tolerance to it. Also, most
+important, is to be able to extend it with additional disks without loosing data.
 
->
->
-> ????  If you are not root, then how do you expect to install a new kernel
-> or run the LVM user tools????
->
-
-This isn't the computer that's "ill"... and it belongs to the University... I
-bring everything home (where my broken LVM is) and test there. Now I have to go,
-but I want to discuss it tomorrow...
-Danke und bis morgen!
-
---
-  ------------------------------------------------------------------------
- David Vidal R. (vidalrod@in.tum.de)
+//Anders
