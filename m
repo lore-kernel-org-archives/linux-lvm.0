@@ -1,20 +1,14 @@
-Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4CLWj306413
-	for <linux-lvm@redhat.com>; Wed, 12 May 2004 17:32:45 -0400
-Received: (from agk@localhost)
-	by homer.msp.redhat.com (8.11.6/8.11.6) id i4CLWiu08012
-	for linux-lvm@redhat.com; Wed, 12 May 2004 16:32:44 -0500
-Date: Wed, 12 May 2004 16:32:44 -0500
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] 2 TB limit
-Message-ID: <20040512163244.C23665@homer.msp.redhat.com>
-References: <005601c412af$748d71a0$1fa0a8c0@blec>
-	<200403261813.50041.krustev@krustev.net>
-	<20040326161644.GF12948@null.msp.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040326161644.GF12948@null.msp.redhat.com>;
-	from alewis@redhat.com on Fri, Mar 26, 2004 at 10:16:44AM -0600
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4D9Vh328231
+	for <linux-lvm@redhat.com>; Thu, 13 May 2004 05:31:43 -0400
+Received: from vega.voltaire.com ([212.143.27.73])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i4D9VfAX010727
+	for <linux-lvm@redhat.com>; Thu, 13 May 2004 05:31:42 -0400
+Message-ID: <2F75AEE4E86FDE44BF97709D289BAA7C7197B7@vega.voltaire.com>
+From: Dan Bar Dov <danb@voltaire.com>
+Date: Thu, 13 May 2004 12:31:35 +0300
+MIME-Version: 1.0
+Subject: [linux-lvm] problem with disks on different major device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,28 +21,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
-On Fri, Mar 26, 2004 at 10:16:44AM -0600, AJ Lewis wrote:
-> The PE size limitation isn't present in lvm2 (The version of lvm that works
-> in 2.6) if you use the native lvm2 format.  So you should be able to create
-> larger than 2TB LVs with LVM2.  Just FYI.
+I have a problem with LVM 1.03. 
+It fails to pv_create_name_from_kdev_t with devices that use a major number
+different from the first one.
+My disks are mapped to major 8, then to major 65 66 etc as can be seen in
+/proc/devices:
 
-As those of you monitoring the lvm-cvs mailing list may have noticed, 
-I've added code to the LVM2 CVS tree to help people simulate large devices
-for testing purposes on 2.6 kernels with the latest -udm patches.
+Block devices:
+  1 ramdisk
+  7 loop
+  8 sd
+ 31 mtdblock
+ 58 lvm
+ 65 sd
+ 66 sd
+ 67 sd
 
-  lvcreate --type zero -L16T vg  # Create 16TB 'zero' device
-  lvcreate -s vg/lvol0 -L1G      # Create snapshot of it
+LVM won't work with the disks on the majors 65 and on.
 
-Then use the snapshot as a 'sparse' device, in the example, supporting
-upto 1GB of actual data.
+I'm using devfs, I have no idea if that matters.
+Maybe someone knows if this issue is fixable, if it was fixed, or how to
+work around it.
 
-[At some point I'll merge it into a one-line command with --type sparse]
-
-NB There's been a lot of change in CVS recently (and more to come)
-so I expect some new bugs to show up along with the new features:-(
- 
-Alasdair
--- 
-agk@redhat.com
+Thanks,
+Dan
