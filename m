@@ -1,10 +1,18 @@
-Sender: alewis@redhat.com
-Subject: Re: [linux-lvm] kernel 2.6 + LVM 1.0.8
-References: <mailman.15273.1098718671.3231.linux-lvm@redhat.com>
-From: AJ Lewis <alewis@redhat.com>
-Date: 25 Oct 2004 14:05:29 -0500
-Message-ID: <x05breq7h52.fsf@null.msp.redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9QFNFr00379
+	for <linux-lvm@redhat.com>; Tue, 26 Oct 2004 11:23:15 -0400
+Received: from fedex.ist.ucf.edu (fedex.ist.ucf.edu [132.170.193.23])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id i9QFNEau018627
+	for <linux-lvm@redhat.com>; Tue, 26 Oct 2004 11:23:14 -0400
+Received: from [132.170.193.89] (wks89.ist.ucf.edu [132.170.193.89])
+	by fedex.ist.ucf.edu (8.12.11/8.12.8) with ESMTP id i9QFN5AU016200
+	for <linux-lvm@redhat.com>; Tue, 26 Oct 2004 11:23:05 -0400
+Message-ID: <417E6BD9.1050102@ist.ucf.edu>
+Date: Tue, 26 Oct 2004 11:23:05 -0400
+From: Judd Tracy <jtracy@ist.ucf.edu>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Large Partition Problems.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,37 +23,16 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Mariano Cunietti <mcunietti@enter.it>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-"Mariano Cunietti" <mcunietti@enter.it> writes:
+I have a system with a 3ware 9000-12 card with 12 250GB harddrives 
+running fedora core2.  I am wanting to use this setup with lvm2 but am 
+having some problems with it.  When I use the entire device /dev/sdb I 
+can setup up the entire array ~2.3TB but when I try to partition the 
+array ( I really need to) I can only get a maximum of ~230GB partition 
+and the rest of the space is unusable.  Is there anyone out there that 
+has seen this problem or know how to fix it.  Thanks
 
-> can you please address me to some *useful* informatioin about
-> patching linux 2.6.9 kernel source for compiling LVM 1.0.8 support?
-> I read the /PATCHES readme but i always get a "You haven't applied
-> the rawio patch, please see the README" My system is a RH Enterprise
-> 3ES (unlicensed), I'm trying to compile a Vanilla 2.6.9 kernel on it
-> I've been googling around since yesterday, but I can't find out any
-> solution (neither on RedHat website)
-
-That's because you can't use LVM 1.0.8 with a 2.6 kernel.  You need to
-use the device-mapper kernel module and LVM2.  Please read the LVM
-Howto at http://www.tldp.org/HOWTO/LVM-HOWTO/ - especially the LVM2
-FAQ entries for information about LVM2.  Also
-http://sources.redhat.com/lvm2/ and http://sources.redhat.com/dm/ will
-be useful.
-
-LVM2 will work with your LVM1 volumes.
-
-Regards,
--- 
-AJ Lewis                                   Voice:  612-638-0500
-Red Hat Inc.                               E-Mail: alewis@redhat.com
-720 Washington Ave. SE, Suite 200
-Minneapolis, MN 55414
-   
-Current GPG fingerprint = D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8715
-Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
-many keyservers out there...
+Judd Tracy
+jtracy@ist.ucf.edu
