@@ -1,9 +1,9 @@
-Return-Path: <grothe@fb0442.mathematik.tu-darmstadt.de>
-From: Holger Grothe <grothe@fb0442.mathematik.tu-darmstadt.de>
-Message-Id: <200104121918.AA237823112@fb0442.mathematik.tu-darmstadt.de>
-Subject: Re: [linux-lvm] Lost harddrive space
-Date: Thu, 12 Apr 2001 21:18:32 MESZ
-In-Reply-To: <200104121823.UAA21356@mailserver2.hrz.tu-darmstadt.de>; from "Erik Rigtorp" at Apr 12, 101 8:23 pm
+Return-Path: <terjekv@ifi.uio.no>
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 13 Apr 2001 14:52:47 +0200
+Message-ID: <wxxwv8pklls.fsf@einn.ifi.uio.no>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM and devfs with /proc/lvm/global
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,59 +15,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
-> 
-> My harddrive is 61.4GB i think. I think LVM is great software, it should 
+  hm. I'm having a slight issue combining devfs and LVM at the moment.
+  the issue is quite simple and regards naming.
 
-Your harddisk is 60 marketing GB (see below).
+  the issue is that /proc/lvm/global just gives the name as "part*"
+  when you happen to use devfs. resolving this to a full path is, as
+  far as I can tell, impossible.
 
-> #fdisk -l
-> 
-> Disk /dev/hda: 255 heads, 63 sectors, 7476 cylinders
-> Units = cylinders of 16065 * 512 bytes
+  I _can_ do a `vgdisplay -v' and get a listing of all the PV's in the
+  VG and compare the last name (and size and such) of each PV with
+  what I have from /proc/lvm/global. that'll work -- most of the time.
 
-7476*16065*512/1024 = 60050970 KB = 58643.525 MB = 57.269 GB (factor 1024)
+  what happens if I have two identical-sized PV's on two disks,
+  that'll show up as:
 
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/hda1   *         1        61    489951   83  Linux
-> /dev/hda2            62      7476  59560987+  8e  Unknown
+  [AA] part1  3076096 /751   0 /0  3076096 /751   
+  [AA] part1  3076096 /751   0 /0  3076096 /751   
 
-489951 KB + 59560987 KB = 60050938 KB (see above, the + indicates a small
-loss).
+  in /proc/lvm/global. how do I _know_ which of these are:
 
-59560987 KB = 58165.026 MB = 56.802 GB (factor 1024)
-> 
-> 
-> #pvdisplay /dev/hda2
-> 
-> --- Physical volume ---
-> PV Name               /dev/hda2
-> VG Name               erkki
-> PV Size               56.8 GB / NOT usable 1.03 MB [LVM: 177 KB]
-> PV#                   1
-> PV Status             available
-> Allocatable           yes
-> Cur LV                3
-> PE Size (KByte)       4096
+  /dev/ide/host0/bus0/target0/lun0/part1
+  /dev/ide/host0/bus0/target1/lun0/part1
 
-PE Size = 4 MB
+  yes, there is a PV# that _could_ be used if it was given in
+  /proc/lvm/global to check against, but if the information in /proc/
+  requires you to actually check it against something, it is lacking
+  something, isn't it?
 
-> Total PE              14541
+  of course, one could say "then don't use what's in /proc/lvm/global"
+  but I honestly _like_ to interface with kernel-related stuff through
+  /proc in a file-like manner -- although I'll have to admit I've
+  yelled for another naming than /proc. :)
 
-14541*4 MB = 58164 MB = 56.800 GB = 59559936 KB (factor 1024)
+  besides, one _has_ to run vgdisplay as root... which isn't all that
+  grand either.
 
-59560987 KB - 59559936 KB = 1051 KB = 1.026 MB ( < 4MB, so no additional PE
-is possible).
+  in my honest opinion the format of /proc/lvm/global should be
+  altered to contain the full path of the PV -- otherwise it is
+  unusable for anything but a quick peek at current LVM status. and if
+  the format is going to be change, it should be done before a
+  1.*-release.
 
-Don't believe in the disksizes of marketing guys. These guys only know
-calculations with 1000 :-)
+  (just my two cents :)
 
-Holger 
---
-Holger Grothe  (Email: grothe@mathematik.tu-darmstadt.de)
-Fachbereich Mathematik, TU Darmstadt
+-- 
+Terje
