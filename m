@@ -1,10 +1,10 @@
 Return-Path: <lembark@wrkhors.com>
-Message-ID: <3AFC4056.D013D2B6@wrkhors.com>
-Date: Fri, 11 May 2001 14:41:10 -0500
+Message-ID: <3AFC42EB.2910DAAE@wrkhors.com>
+Date: Fri, 11 May 2001 14:52:11 -0500
 From: Steven Lembark <lembark@wrkhors.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] What happens when a disk dies?
-References: <85256A49.0053DE83.00@janus.eci.esys.com>
+Subject: Re: [linux-lvm] LVM 1.0 release decision
+References: <20010511155311.A17689@sistina.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,46 +20,28 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> I am very interested in starting to use LVM.  We have large amounts of data
-> that is fairly dynamic.  Since it is dynamic, we don't need to incur the
-> cost expensive SCSI RAID solutions for data integrity.  We currently use
-> four 80 Gig Maxtor Hard Drives to store our data at test events. Of course
-> this means with a /drive1 /drive2 /drive3 and a /drive4 directory.  So the
-> user has to search the drives to find the file of interest.  We kind of
-> hide this by creating links but the links need to be periodically updated
-> as files are added or deleted.  LVM solves this problem.  But before I move
-> to LVM, I curious on what happens if a drive dies.
+> In regard to this situation we'ld like to know about your oppinion on
+> the following request:
+> is it acceptable to release 1.0 soon *before* all patches to reach the 1.0 code
+> status are in vanilla (presumed that we provide them with our release as we
+> always did before)?
 > 
->  If drive2 goes down and I replace it with another drive, do I just lose
-> the data on drive2 or do I lose all of the data in the Logical Volume?
-> 
-> If I don't lose the data on the other drives, can LVM also be reconfigured
-> to remove the dead drive and then continue working with just the other
-> three drives (only losing the data on the dead drive)?
-> 
-> I read the FAQs and one of them shows how to recover from a dead drive.  It
-> is says you lose the data in the Logical Volume but I'm hoping just the
-> data on the physical disk that died and not the entire volume.
+> We'll gather your answers for some days and will send the conclusion
+> to the lists.
 
+probably boils down to a marketing issue...
 
-LVM will not replace mirroring or RAID solutions.  for lots of
-dynamic data the best solution will probably be hardware RAID
-for the physical layer with LVM using RAID volumes as PV's.
+people who already use LVM won't care, we already know how to deal
+with this.  new users, however, will feel the pain.  the last thing
+we probably want is for first-time users of 1.0 to walk away with a
+bad taste from patch/kernel problems.  these people are more likley
+to get bit by any patch issues and more likely to either walk away
+from LVM or tell other people how much of a hassle it was.  
 
-e.g., if you can 4 disks into a RAID5 set then take the whole
-RAID volume and use the entire space as a single PV.  you can
-then group multiple PV's together into a single VG.  this VG
-then gets divied up for the users into various LV's which get
-mounted wherever the folks are supposed to use them.  you can
-expand an LV within the VG (example:  you just bought 4 more
-disks and need to expand existing space into them).  
-
-nice thing about this arrangement is that you can have huge amounts
-of total space without needing to expose all of it at once or
-drop and rebiuld the filesystems to grow them.  when someone
-really does run out of space (or someone new needs it) just expand
-or create a LV and go along with life.
-
+for my part running the system i'd rather have the "production"
+LVM and kernel releases in sync and not have to worry about it.
+if i need a beta/inter-version release then i'll deal with the
+extra issues.
 
 -- 
  Steven Lembark                                   2930 W. Palmer St.
