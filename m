@@ -1,10 +1,10 @@
-Date: Tue, 16 Oct 2001 10:57:39 +0200
+Date: Tue, 16 Oct 2001 11:01:07 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvcreate: no such device or address
-Message-ID: <20011016105739.B4318@sistina.com>
-References: <3BCB0216.66DC0628@storix.com>
+Subject: Re: [linux-lvm] Problems after restarting my debian
+Message-ID: <20011016110107.D4318@sistina.com>
+References: <20011011011444.A2302@sky.net> <20011011163029.B8752@sistina.com> <20011012221759.B416@sky.net> <20011014012746.A2072@sky.net> <20011015115509.A30655@sistina.com> <20011015224551.E1269@sky.net>
 Mime-Version: 1.0
-In-Reply-To: <3BCB0216.66DC0628@storix.com>; from anthony@storix.com on Mon, Oct 15, 2001 at 08:34:46AM -0700
+In-Reply-To: <20011015224551.E1269@sky.net>; from U.Wiederhold@gmx.net on Mon, Oct 15, 2001 at 10:45:51PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,28 +20,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Anthony,
-
-with which Linux+LVM version does this happen (recent one from www.sistina.com
-is recommended)?
-Did you patch your kernel with LVM as discribed in INSTALL and PATCHES/README
-in the LVM source distribution?
-Does it happen with or without devfs?
-
-On Mon, Oct 15, 2001 at 08:34:46AM -0700, Anthony Johnson wrote:
-> Sorry to repeat, but I've had no response and am dead in the water. Anyone 
-> had a similar problem or have advice on how to reolve this?
+On Mon, Oct 15, 2001 at 10:45:51PM +0200, Ulrich Wiederhold wrote:
+> * Heinz J . Mauelshagen <mauelshagen@sistina.com> [011015 11:55]:
+> > On Sun, Oct 14, 2001 at 01:27:46AM +0200, Ulrich Wiederhold wrote:
+> > > Hi again,
+> > > all works fine now. Thanks.
+> > 
+> > What made the difference?
 > 
-> # lvcreate -d -l1 -n testlv1 uservg
-> ...
-> <1> lv_create_node -- LEAVING with ret: 0
-> <1> lvm_error -- CALLED with: 6
-> <1> lvm_error -- LEAVING with: "No such device or address"
-> lvcreate -- ERROR "No such device or address" opening "/dev/uservg/testlv1"
+> I used the uuid_fixer. I tryed it before the upgrade without success.
+> After the upgrade to 1.0.1-rc4 it worked.
+
+Alright, that explains it. Interesting enough that it now works?!
+
 > 
-> After running this command, the node /dev/uservg/testlv1 was created in the 
-> directory but vgdisplay -v still shows there are no LVs in uservg. Tried 
-> this on different VGs, using different PE sizes, lvnames, etc with same results.
+> Uli
+> 
+> -- 
+> 'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
 > 
 > _______________________________________________
 > linux-lvm mailing list
