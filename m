@@ -1,9 +1,8 @@
-From: Duane Evenson <devenson@shaw.ca>
-Message-id: <3EAF28A8.5010107@shaw.ca>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-References: <3EAC2003.5030106@shaw.ca> <20030428105618.A28159@sistina.com>
-Subject: [linux-lvm] vgscan problem (was vgscan segmentation faults, VG name problems)
+Message-ID: <3EAF786A.1060504@free.fr>
+From: Emmanuel Varagnat <emmanuel.varagnat@free.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Extending stripped volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,215 +13,14 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 29 20:34:02 2003
+Date: Wed Apr 30 02:17:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I've upgraded to 1.0.7 but now get the following output - indicating the 
-real problem.
-If I recreate the volume group and logical volume, will the data 
-contained therein still be available or is there another way to recover 
-the volume?
-vgscan -v
-vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- scanning for all active volume group(s) first
-vgscan -- reading data of volume group "data_group" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
-volume
-group "data_group" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-group
+I would like to know if it is possible to extend stripped volumes with 
+newer versions of LVM1 or even with LVM2.
+It looks like it was possible only with linear volumes and specific 
+allocation policy.
 
-Some other information of the system:
-
-# pvdisplay /dev/hde
---- Physical volume ---
-PV Name               /dev/hde
-VG Name               data_group
-PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
-[LVM: 239
-KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              28617
-Free PE               3017
-Allocated PE          25600
-PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
-
-
-# vgcfgrestore   -n data_group -ll
-vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data_group.conf"
---- Volume group ---
-VG Name               data_group
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               111.79 GB
-PE Size               4 MB
-Total PE              28617
-Alloc PE / Size       25600 / 100 GB
-Free  PE / Size       3017 / 11.79 GB
-VG UUID               rVEO6Y-kq5c-5SR0-uw0I-VPF1-v1ka-HK1WQS
-
---- Logical volume ---
-LV Name                /dev/data_group/logical_volume1
-VG Name                data_group
-LV Write Access        read/write
-LV Status              NOT available
-LV #                   1
-# open                 0
-LV Size                100 GB
-Current LE             25600
-Allocated LE           25600
-Allocation             next free
-Read ahead sectors     10000
-Block device           58:0
-
-
---- Physical volume ---
-PV Name               /dev/hde
-VG Name               data_group
-PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
-[LVM: 239
-KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              28617
-Free PE               3017
-Allocated PE          25600
-PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
-
-
-Heinz J . Mauelshagen wrote:
-
->Duane,
->
->since you're running 1.0.3 I assume you might be hitting an array derefenerence
->bug in the LVM1 library we fixed in 1.0.6.
->
->Please upgrade to 1.0.7 and try again.
->
->Regards,
->Heinz    -- The LVM Guy --
->
->On Sun, Apr 27, 2003 at 12:22:59PM -0600, Duane Evenson wrote:
->  
->
->>I'm having troubles and can't find the solution in the HOWTO, or the 
->>archived mailing lists articles.
->>I installed lvm on an entire hard drive (hde), made one logical group 
->>with a logical volume of 100G.
->>I mounted to volume, copied files over OK, but vgscan caused 
->>segmentation faults.
->>I rebooted, hoping that it was a conflict between the kernel info and 
->>physical info. Obviously, it wasn't.
->>Here are the results of running pvdisplay, pvscan, vgscan, and vgdisplay.
->>
->># pvdisplay /dev/hde -v
->>--- Physical volume ---
->>PV Name               /dev/hde
->>VG Name               data_group
->>PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
->>[LVM: 239
->>KB]
->>PV#                   1
->>PV Status             available
->>Allocatable           yes
->>Cur LV                1
->>PE Size (KByte)       4096
->>Total PE              28617
->>Free PE               3017
->>Allocated PE          25600
->>PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
->>
->>pvdisplay -- "/etc/lvmtab.d/data_group" doesn't exist
->>
->># pvscan -v
->>pvscan -- reading all physical volumes (this may take a while...)
->>pvscan -- walking through all physical volumes found
->>pvscan -- inactive PV "/dev/hde"  is associated to unknown VG 
->>"data_group" (run
->>vgscan)
->>pvscan -- total: 1 [111.79 GB] / in use: 1 [111.79 GB] / in no VG: 0 [0]
->>
->># vgscan -v
->>vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
->>vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
->>vgscan -- reading all physical volumes (this may take a while...)
->>vgscan -- scanning for all active volume group(s) first
->>vgscan -- reading data of volume group "data_group" from physical volume(s)
->>Segmentation fault
->>
->># vgscan -d
->>...
->><55555> pv_create_name_from_kdev_t -- LEAVING with dev_name: /dev/hde
->><55555> system_id_check_exported -- CALLED
->><55555> system_id_check_exported -- LEAVING with ret: 0
->><4444> pv_read -- LEAVING with ret: 0
->><4444> vg_copy_from_disk -- CALLED
->><55555> vg_check_vg_disk_t_consistency -- CALLED
->><666666> vg_check_name -- CALLED with VG:
->><7777777> lvm_check_chars -- CALLED with name: ""
->><7777777> lvm_check_chars -- LEAVING with ret: 0
->><666666> vg_check_name -- LEAVING with ret: 0
->><55555> vg_check_vg_disk_t_consistency -- LEAVING with ret: -344
->><4444> vg_copy_from_disk -- LEAVING
->>Segmentation fault
->>
->># vgdisplay data_group -h
->>Logical Volume Manager 1.0.3
->>Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
->>
->>vgdisplay -- display volume group information
->>
->>
->>
->>
->>
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>    
->>
->
->*** Software bugs are stupid.
->    Nevertheless it needs not so stupid people to solve them ***
->
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->
->Heinz Mauelshagen                                 Sistina Software Inc.
->Senior Consultant/Developer                       Am Sonnenhang 11
->                                                  56242 Marienrachdorf
->                                                  Germany
->Mauelshagen@Sistina.com                           +49 2626 141200
->                                                       FAX 924446
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->  
->
+Thanks.
