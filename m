@@ -1,11 +1,11 @@
 Return-Path: <thornber@btconnect.com>
-Date: Wed, 15 Aug 2001 21:06:22 +0100
+Date: Wed, 15 Aug 2001 21:13:03 +0100
 Subject: Re: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 1.0 available at www.sistina.com
-Message-ID: <20010815210622.A1221@btconnect.com>
-References: <20010815175659.A29749@sistina.com> <20010815182548.U3941@gum01m.etpnet.phys.tue.nl> <20010815185005.A32239@sistina.com> <20010815190428.A11146@athlon.random>
+Message-ID: <20010815211303.B1221@btconnect.com>
+References: <20010815185005.A32239@sistina.com> <200108151755.f7FHtmTH013535@webber.adilger.int>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010815190428.A11146@athlon.random>; from andrea@suse.de on Wed, Aug 15, 2001 at 07:04:28PM +0200
+In-Reply-To: <200108151755.f7FHtmTH013535@webber.adilger.int>; from adilger@turbolinux.com on Wed, Aug 15, 2001 at 11:55:48AM -0600
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,53 +20,35 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andrea Arcangeli <andrea@suse.de>
-Cc: Kurt Garloff <garloff@suse.de>, linux-lvm@sistina.com, lvm-devel@sistina.com, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
+Cc: linux-kernel@vger.kernel.org
 
-On Wed, Aug 15, 2001 at 07:04:28PM +0200, Andrea Arcangeli wrote:
-> On Wed, Aug 15, 2001 at 06:50:05PM +0200, Heinz Mauelshagen wrote:
-> > offset. No known way around this.
-> 
-> As said in the attached email (never got a reply about it yet btw)
-> there's definitely a way around it, there's no magic in the beta7
-> lvmtools, anything they can do can be done as well in the new lvmtools
-> if we want to (and I believe we want to). I understand you don't want to
-> clobber the core code with backwards compatibility cruft, but a new
-> backwards compatibility utility, even in a new directory to make obvious
-> nothing gets clobbered, could be developed and it would solve the
-> problem.
+Andreas,
 
-I'm sorry I didn't reply to you Andrea, I didn't mean to be
-disrespectful, but I didn't seem to be able to make my position
-clear.  Let me try again:
+On Wed, Aug 15, 2001 at 11:55:48AM -0600, Andreas Dilger wrote:
+> Sorry, I don't get the list email anymore, despite it telling me I'm
+> subscribed (may be my fault, I don't know), please reply to l-k where
+> I know I will see it.
 
-In previous beta releases of LVM the PE position was always being
-calculated, rather than calculated upon PV creation and put in the
-metadata.  I was not aware of this.
+Your mail is broken, I have tried to mail you many times over the last
+few weeks from different email addresses and different ISP's.  Other
+people have been trying too.  Did you notice a time when it suddenly
+went quiet ?
 
-This calculation varied through the beta series, it was based on some
-constants that I changed (eg, SECTOR_SIZE which I changed to support
-rawio), and constants that other people changed.  This means that
-different betas have PE's at different places.
+> Saying you "need" the old versions of the installed tools to read the
+> on disk data is bogus, IMNSHO.  You could easily have a flag which says
+> "calculate the PE offsets using the old algorithm or the new algorithm".
+> This could easily be keyed off of the presence/absence of the new
+> pe_offset field in the pv_data struct on disk, and whether or not you
+> actually have the misaligned PEs in the first place.
 
-The correct solution to this (IMO) is to add the missing pe_start
-field to the metadata.
+That assumes you have just two alternatives, this is not the case.
 
-From looking at the metadata I have no way of knowing which version of
-software the PV was created with.  This is a sorry state of affairs,
-but sadly true.  So the upgrade script does the following:
+> When I talked to them last, the IBM EVMS folks didn't have any such
+> problems correctly reading either the old (possibly offset) or new
+> layouts with the same driver.
 
-o interrogate the existing tools that created the PV to find where they put
-  the PE's
-
-o write this value into the new field.
-
-At this point the new driver, and tools should be installed.
-
-Should beta8 code go into the kernel ? possibly not.  I think this could cause
-people a lot of trouble if they are not familiar with the issues.
-
-Should we have made the change ? yes.  If you *do* care you can choose
-to upgrade.
+Then they don't understand the problem, though hopefully by the time they
+release people will have migrated to the new format.
 
 - Joe
