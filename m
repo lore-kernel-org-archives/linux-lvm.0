@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM2 and Kernel 2.5.xx
-Message-ID: <20021007104553.B17176@sistina.com>
-References: <200210070638.PPL01042@vmms4.verisignmail.com>
+Subject: Re: [linux-lvm] How to fix inconsistent LV structs?
+Message-ID: <20021007104201.A17176@sistina.com>
+References: <3D9F6C62.1040004@raffael.ch>
 Mime-Version: 1.0
-In-Reply-To: <200210070638.PPL01042@vmms4.verisignmail.com>; from david@lownoisefloor.com on Sun, Oct 06, 2002 at 11:38:26PM -0700
+In-Reply-To: <3D9F6C62.1040004@raffael.ch>; from herzog@raffael.ch on Sun, Oct 06, 2002 at 12:49:06AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,34 +14,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct  7 03:51:24 2002
+Date: Mon Oct  7 03:53:52 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-As mentioned a couple of days ago on this list, we are working on submitting
-the device-mapper code to Linus ASAP. This is supposed to be the replacement for
-the LVM1 driver in 2.5 together with the LVM2 tools (which are LVM1 compatible).
+On Sun, Oct 06, 2002 at 12:49:06AM +0200, Raffael Herzog wrote:
+> Hi,
+> 
+> After a normal reboot I lost my volumes. I don't know, what
+> exatly happended, but it looks like there was some problem
+> with AVFS that caused umount not to work properly. I turned
+> AVFS off now, but this doesn't get me my LVs back.
+> 
+> pvdata shows me, that the logical volume structs 125 through
+> 139 are inconsistent (there are no LVs there), at some later
+> point, it segfaults. Debug output showed me, that there's
+> some garbage in these logical volume structs.
 
-We'll continuer to support LVM1 on 2.4.
+Hmmm...
+Sounds like a nasty overwrite but it is hard to tell because you
+can't remmeber the exact details :(
 
-On Sun, Oct 06, 2002 at 11:38:26PM -0700, david@lownoisefloor.com wrote:
-> To anyone who might listen...
 > 
-> I get this error:
+> My basic idea is to just clear these structs and then use
+> vgcfgrestore and/or the other recovery tools (which current-
+> ly all fail with "pv_read(): read") to restore my LVs.
 > 
-> lvm.c:1: #error Broken until maintainers will sanitize kdev_t 
-> handling.
-> ---end error---
-> Based on a note from Linus about new kdev_t... it looks like 
-> this is still under construction...
+> But how do I clear these structs?
+
+Presuming that the metadata backups are intact, you need to "pvcreate -ff"
+the physical volumes and run vgcfgrestore on each of them.
+"vgscan ; vgchange -ay" should get you back to business afterwards.
+
 > 
-> Can someone tell me which 2.5.xx kernel is currently working 
-> with LVM... so I dont have to download everyone and try each 
-> one... 
 > 
-> Thanks
+> TIA,
+> 
+>    Raffi
+> 
+> 
 > 
 > 
 > _______________________________________________
