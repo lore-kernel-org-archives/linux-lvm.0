@@ -1,8 +1,10 @@
-Message-ID: <3C115049.90403@kenamea.com>
-From: Kenny Gorman <kenny@kenamea.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] You must specify a filesystem type error
+From: Wolfgang Weisselberg <weissel@netcologne.de>
+Subject: Re: [linux-lvm] You must specify a filesystem type error
+Message-ID: <20011208154443.E4792@tiger.bigcats.invalid>
+References: <3C115049.90403@kenamea.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3C115049.90403@kenamea.com>; from kenny@kenamea.com on Fri, Dec 07, 2001 at 03:27:05PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,33 +15,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec  7 17:42:01 2001
+Date: Sat Dec  8 09:03:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am utilizing LVM snapshots, and every once in a while I get this 'you 
-must specify the filesystem type' error when trying to mount the volume:
+Hi, Kenny!
 
-$> ./snapshot.sh -s
-lvremove -- doing automatic backup of volume group "datagrp"
-lvremove -- logical volume "/dev/datagrp/datasnap" successfully removed
+Kenny Gorman (kenny@kenamea.com) wrote 33 lines:
 
-lvcreate -- WARNING: the snapshot will be automatically disabled once it 
-gets full
-lvcreate -- INFO: using default snapshot chunk size of 64 KB for 
-"/dev/datagrp/datasnap"
-lvcreate -- doing automatic backup of "datagrp"
-lvcreate -- logical volume "/dev/datagrp/datasnap" successfully created
+> I am utilizing LVM snapshots, and every once in a while I get this 'you 
+> must specify the filesystem type' error when trying to mount the volume:
 
-mount: block device /dev/datagrp/datasnap is write-protected, mounting 
-read-only
-mount: you must specify the filesystem type
+> mount: you must specify the filesystem type
 
+Mount could not mount the FS.  
 
-But it only happens once in a while.   How can I rid myself of this 
-issue?  I am on SuSE Linux 7.2 (2.4.7-64GB-smp) with lvm 0.9.1 beta7.
+> But it only happens once in a while.
 
-Thanks,
-Kenny Gorman
-DBA
+So it's probably not an journalled FS (which needs a
+kernel-patch for online snapshots).  What does the system
+log say?  (dmesg, /var/log/messages or whereever)
+
+> How can I rid myself of this 
+> issue?  I am on SuSE Linux 7.2 (2.4.7-64GB-smp) with lvm 0.9.1 beta7.
+
+You may want to upgrade your Kernel and LVM-Tools to 1.0.1...
+No guarantee that the snapshots will be any better, though.
+
+-Wolfgang
