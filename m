@@ -1,46 +1,42 @@
-Date: Fri, 14 Apr 2000 16:32:43 +0200
+Date: Sat, 15 Apr 2000 20:35:15 +0200
 From: bert hubert <ahu@ds9a.nl>
-Subject: [linux-lvm] patch for Makefile of LVM 0.8final
-Message-ID: <20000414163242.A21335@home.ds9a.nl>
+Subject: [linux-lvm] [Patch] lvchange better error reporting
+Message-ID: <20000415203514.A21662@home.ds9a.nl>
 Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: mauelsha@ez-darmstadt.telekom.de
-Cc: linux-lvm@msede.com
+To: mauelsha@ez-darmstadt.telekom.de, linux-lvm@msede.com
 
 Heinz, people,
 
-With this patch I am able to run 'Make install' on both my Debian and RedHat
-6.1 boxes without an error when stripping the initrd script. Please apply.
+It annoyed me that lvchange sometimes reported that volume group "(null)"
+was invalid. This patch fixes this behaviour. Please apply.
 
-
-diff -u -r 0.8final.orig/tools/Makefile 0.8final/tools/Makefile
---- 0.8final.orig/tools/Makefile	Tue Feb 22 03:09:32 2000
-+++ 0.8final/tools/Makefile	Fri Apr 14 16:22:21 2000
-@@ -63,11 +63,18 @@
- l:	list
+diff -u -r 0.8final.orig/tools/lvchange.c 0.8final/tools/lvchange.c
+--- 0.8final.orig/tools/lvchange.c	Tue Feb 22 03:09:33 2000
++++ 0.8final/tools/lvchange.c	Sat Apr 15 20:32:34 2000
+@@ -255,9 +255,15 @@
+       /* does VG exist? */
+       if ( opt_v > 0) printf ( "%s -- checking volume group existence\n", cmd);
+       if ( lvm_tab_vg_check_exist ( vg_name, NULL) != TRUE) {
+-         fprintf ( stderr, "%s -- can't change logical volume: volume group "
+-                           "\"%s\" doesn't exist\n\n", cmd, vg_name);
+-         return LVM_ELVCHANGE_VG_CHECK_EXIST;
++        
++         if(vg_name)
++            fprintf ( stderr, "%s -- can't change logical volume: volume group "
++                 "\"%s\" doesn't exist\n\n", cmd, vg_name);
++         else
++            fprintf ( stderr, "%s -- can't change logical volume: need to specify "
++                              "volume group\n\n", cmd);
++                              
++         return LVM_ELVCHANGE_VG_CHECK_EXIST;
+       }
  
- install-bin:	$(ALL_TARGETS) $(ALL_SCRIPTS)
--	@echo "*** Installing $(ALL_TARGETS) $(ALL_SCRIPTS) in $(BINDIR) ***"
--	@for f in $(ALL_TARGETS) $(ALL_SCRIPTS); \
-+	@echo "*** Installing $(ALL_TARGETS) in $(BINDIR) ***"
-+	@for f in $(ALL_TARGETS) ; \
- 	do \
--  	   rm -f $(BINDIR)/$$f; \
-+  	   rm -f "$(BINDIR)/$$f"; \
- 	   install -o root -g root -m 555 -s $$f $(BINDIR)/$$f; \
-+	done
-+
-+	@echo "*** Installing $(ALL_SCRIPTS) in $(BINDIR) ***"
-+	@for f in $(ALL_SCRIPTS); \
-+	do \
-+  	   rm -f "$(BINDIR)/$$f"; \
-+	   install -o root -g root -m 555 $$f $(BINDIR)/$$f; \
- 	done
- 
+       if ( opt_v > 0) printf ( "%s -- checking for active volume "
 
 -- 
                        |              http://www.rent-a-nerd.nl
