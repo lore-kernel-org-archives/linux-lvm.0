@@ -1,13 +1,12 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] summary of what I need to do to mount snapshot on XFS
-Message-Id: <20020115151621.E11005@sistina.com>
-References: <1010503449.28039.5.camel@cali.nesnahhouse.com>
-    <20020109130259.GC744@tykepenguin.com>
-    <1010606990.15375.22.camel@jeremy-linux.intranet.qualys.com>
-    <E16OSId-0005Vf-00@hermes.sistina.com>
+Subject: Re: [linux-lvm] Re: GRUB + LVM + XFS?
+Message-Id: <20020115151829.F11005@sistina.com>
+References: <1010427293.29260.3.camel@UberGeek>
+    <m3666ej5t2.fsf@shakti.rupa.com>
+    <200201080927.g089QVJ00669@hammer.brocade.com>
 MIME-Version: 1.0
-In-Reply-To: <E16OSId-0005Vf-00@hermes.sistina.com>; from
-    ahead@bigpond.net.au on Thu, Jan 10, 2002 at 09:38:08AM +1000
+In-Reply-To: <200201080927.g089QVJ00669@hammer.brocade.com>;
+    from ahead@bigpond.net.au on Tue, Jan 08, 2002 at 10:48:11AM +1000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,68 +17,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 15 08:19:01 2002
+Date: Tue Jan 15 08:21:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 10, 2002 at 09:38:08AM +1000, Adrian Head wrote:
-> If this works for you - good.  I have had heaps of issues that I have been 
-> working with various developers and trying to get fixed.
+On Tue, Jan 08, 2002 at 10:48:11AM +1000, Adrian Head wrote:
+> On Tue, 8 Jan 2002 05:54, Rupa Schomaker wrote:
+> > I'm having toubles with the current CVS version of the XFS kernel.  I
+> > haven't had time to look at it completely, but... it could be:
+> >
+> > 1) mismatch between userspace and kernel (what LVM is in the XFS
+> >    kernel?  I'm using the debian lvm10 userspace).
+> >
+> > 2) bad config
+> >
+> > 3) ???
+> >
+> > A quick "bt" at boot in kdb shows that devfs is in the call path.  No,
+> > I haven't had time to write everything down. :(  Man, I wish there was
+> > an easy to dump the kdb info or an OOPs to disk...
 > 
-> Basically if I used the SGI 2.4.17-xfs kernel with lvm-1.0.1rc4(ish) some 
-> file systems would work but others would fail.  Some would fail on snapshot 
-> creation, others would fail on snapshot mount and others would fail when the 
-> snapshot overflowed.  When I upgraded LVM to lvm-1.0.1 other filesystems 
-> issues were fixed but others broke again.  Check out the "Unable to get XFS, 
-> ext3, reiserfs & LVM to coexist happily"
+> Well all I do is for getting kdb output is to use a serial console and 
+> another computer - then cut and past then send  ;-).
+> 
+> It is very interesting that devfs is referenced - there was a LVM memory 
+> corruption problem and a patch for LVM/devfs - it can be found here:
+> http://marc.theaimsgroup.com/?l=linux-xfs&m=101031443221058&w=2
+> 
+> From my experience it seems that LVM 1.0.1rc4(ish) is way more robust than 
+> the updated LVM 1.0.1 or even CVS LVM 1.0.1 yesterday.
+
+Do you have some input which particular changes cause it?
+Thanks.
+
+> However, not 
+> everything works as expected with either. You can find a results table for a 
+> few tests I have conducted here: (of course YMMV)
 > http://marc.theaimsgroup.com/?l=linux-lvm&m=100994364215110&w=2
->  thread on linux-lvm / linux-xfs mail archives and see if any of this relates 
-> to your problem.  With 2.4.17-xfs + lvm-1.0.1 upgrade patch + VFS-lock patch 
-> ext2/3 & resierfs will operate correctly but XFS will fail at snapshot 
-> creation.  You can do a little source code change and get a XFS snapshot 
-> created and mounted; but then it will fail on an overfull snapshot.  These 
-> problems are being worked on by myself and the great SGI XFS developers.
 > 
-> The lvm.c change you talk about I assume is the LVM_VFS_ENHANCEMENT change?  
-> For some reason when adding the lvm-1.0.1 upgrade patch this disappears from 
-> lvm.c   I have been able to get this to compile with the change but I have 
-> forgoten what I did.  
-> 
-> This is one question I would like answered by the LVM gurus:  should #define 
-> LVM_VFS_ENHANCEMENT still be there after upgrading to lvm-1.0.1?
-
-Yes.
-
-> What does 
-> LVM_VFS_ENHANCEMENT actually do w.r.t lvm-1.0.1rc4(ish) and lvm-1.0.1?
-
-What it did before: compile the VFS lock/unlock calls in.
-
-> I 
-> know that LVM_VFS_ENHANCEMENT in older LVM versions was the locking of the 
-> VFS so that snapshots would be consistant - is this still correct and is it 
-> still needed?
-
-Yes.
-
-> 
-> For the "large discussion" you are talking about the "Unable to get XFS, 
-> ext3, reiserfs & LVM to coexist happily" thread - hit me off list and I will 
-> attempt to summarise it for you.
-> 
-> On Thu, 10 Jan 2002 06:09, Jeremy Hansen wrote:
-> > My issue wasn't so much with how to create the snapshot but how to
-> > simultaneously mount the snapshot with the live filesystem.  I saw a big
-> > thread about having to uncomment from lvm.c, did that but then got
-> > unresolved symbols...
-> >
-> > It seemed as if there were some issues and a large discussion related to
-> > doing this with XFS.
-> >
-> > Thanks
-> > -jeremy
+> I think you would be very interested in the discussions and activity that has 
+> been occuring on the linux-xfs & linux-lvm lists at the moment regarding XFS 
+> and LVM.  If you are seeing problems I would be very interested in finding 
+> out how your problems differ from mine.
 > 
 > -- 
 > Adrian Head
