@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Interesting LVM Error...
-Message-ID: <20030321122434.A15467@sistina.com>
-References: <200303202212.h2KMCVIm023600@disgustapated.emc.usi.net>
+Subject: Re: [linux-lvm] error message - "lvm -- lvm_blk_ioctl: unknown cmd 0x540f"
+Message-ID: <20030321123041.B15467@sistina.com>
+References: <Pine.LNX.4.50.0303201333170.24359-100000@hal.rescomp.berkeley.edu>
 Mime-Version: 1.0
-In-Reply-To: <200303202212.h2KMCVIm023600@disgustapated.emc.usi.net>; from travis@usi.net on Thu, Mar 20, 2003 at 05:12:31PM -0500
+In-Reply-To: <Pine.LNX.4.50.0303201333170.24359-100000@hal.rescomp.berkeley.edu>; from michael@rescomp.berkeley.edu on Thu, Mar 20, 2003 at 01:38:59PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,45 +14,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 21 05:27:02 2003
+Date: Fri Mar 21 05:33:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Travis,
+This message just tells you that some program does an ioctl with
+an unsoported command on LVM.
+_Very_ unlikely the reason of your crashes.
 
-looks like you've got corrupted metadata.
+You don't give details about your HW configuration so I guess that
+the likely reason of your crash is heavy load on 9 disks exposing
+an IDE/SCSI problem (i.e. SCSI termination).
 
-Did you run "vgck" to make sure sure that the metadata of "bcvorabackupdg"
-really is intact ?
-
-
-On Thu, Mar 20, 2003 at 05:12:31PM -0500, travis@usi.net wrote:
-> Hello,
+On Thu, Mar 20, 2003 at 01:38:59PM -0800, michael tauras wrote:
+> Hi,
 > 
-> 	I am working with EMC drives (Both M1/M2s and BCVs) and encountered
-> the following problem with vgexport.  When I try to export a volume group
-> which consists of BCVs, I receive the following error:
+> Recently I've been having this message show up in my kernel logs. The
+> system has 9 disks stripped to one volume. It has crashed several times,
+> but upon reboot the volume fscks and mounts fine. Yesterday it crashed
+> while trying to back up a few gigs from the logical volume to a different
+> drive. I've done some web searches for the specific error message but to
+> no avail. Tried upgrading to the latest 1.x release of lvm, which didn't
+> help. The box is in a colo center waiting to be rebooted. Any ideas would
+> be helpful, thanks!
 > 
-> [root@sanbox06 root]# vgexport -v bcvorabackupdg
-> vgexport -- locking logical volume manager
-> vgexport -- checking volume group name
-> vgexport -- checking volume group activity
-> vgexport -- reading data of volume group "bcvorabackupdg" from disk(s)
-> vgexport -- ERROR "lv_read_all_lv(): number of LV" reading data of volume group "bcvorabackupdg"
-> 
-> vgexport -- unlocking logical volume manager
-> 
-> 
-> Now, the creation of both the BCV volume group and the mirrored EMC volume group
-> was identical.  When exporting the BCV volume group I have no issues at all and
-> everything runs as exptected.  I have run vgexport on three mirrored groups with
-> no issues, but each time I use a BCV group, the same error appears.  Thanks in 
-> advance for any feedback!
-> 
-> Cheers,
-> Travis B.
+> Mike
 > 
 > _______________________________________________
 > linux-lvm mailing list
