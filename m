@@ -1,9 +1,10 @@
-From: pll+lvm@lanminds.com
-Subject: Re: [linux-lvm] How to best use LVM? 
-References: <20020814165938.152D1F90D@tater> <20020814174547.GB898@fib011235813.fsnet.co.uk>
-In-reply-to: Your message of "Wed, 14 Aug 2002 18:45:47 BST."
-             <20020814174547.GB898@fib011235813.fsnet.co.uk> 
-Message-Id: <20020814184728.61BCEF90D@tater>
+From: Andres Salomon <dilinger@mp3revolution.net>
+Subject: Re: [linux-lvm] How to best use LVM?
+Message-ID: <20020814193754.GA16344@chunk.voxel.net>
+References: <20020814165938.152D1F90D@tater> <20020814174547.GB898@fib011235813.fsnet.co.uk> <20020814184728.61BCEF90D@tater>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020814184728.61BCEF90D@tater>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,36 +15,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug 14 13:48:01 2002
+Date: Wed Aug 14 14:39:02 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: pll+lvm@lanminds.com
 
-In a message dated: Wed, 14 Aug 2002 18:45:47 BST
-Joe Thornber said:
+The debian packages are pretty out of date (since 2.4.19 took _forever_),
+I'll be uploading new ones tonight.
 
->device-mapper is the kernel driver used by LVM2, there should be a
->debian package for this too.
+/proc/misc should definitely not be empty; is the device mapper driver
+loaded in the kernel?  (lsmod |grep dm, if it's compiled as a module).
 
-I've tried that, and even installing the device-mapper from sources.
+On Wed, Aug 14, 2002 at 02:47:28PM -0400, pll+lvm@lanminds.com wrote:
+> 
+> 
+> In a message dated: Wed, 14 Aug 2002 18:45:47 BST
+> Joe Thornber said:
+> 
+> >device-mapper is the kernel driver used by LVM2, there should be a
+> >debian package for this too.
+> 
+> I've tried that, and even installing the device-mapper from sources.
+> 
+> For some reason the devmap_mknod.sh script is unable to create the
+> /dev/device_mapper/control file.  It appears that the problem is an 
+> inability to find the minor number from /proc/misc, which happens to 
+> be empty.
+> 
+> Did I forget to configure something in my kernel which should be 
+> appearing in my /proc/misc file?
+> 
+> Thanks,
+> -- 
+> 
+> Seeya,
+> Paul
+> --
+> 	It may look like I'm just sitting here doing nothing,
+>    but I'm really actively waiting for all my problems to go away.
+> 
+> 	 If you're not having fun, you're not doing it right!
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-For some reason the devmap_mknod.sh script is unable to create the
-/dev/device_mapper/control file.  It appears that the problem is an 
-inability to find the minor number from /proc/misc, which happens to 
-be empty.
-
-Did I forget to configure something in my kernel which should be 
-appearing in my /proc/misc file?
-
-Thanks,
 -- 
-
-Seeya,
-Paul
---
-	It may look like I'm just sitting here doing nothing,
-   but I'm really actively waiting for all my problems to go away.
-
-	 If you're not having fun, you're not doing it right!
+Broad surveillance is a mark of bad security.
+	-- Bruce Schneier
