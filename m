@@ -1,11 +1,10 @@
-Date: Wed, 5 Sep 2001 08:29:22 +0100
-Subject: Re: [linux-lvm] physically swapping hdd with hda
-Message-ID: <20010905082922.A398@btconnect.com>
-References: <3B956D56.67E5F650@carolina.rr.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3B956D56.67E5F650@carolina.rr.com>; from jedgecombe@carolina.rr.com on Tue, Sep 04, 2001 at 08:09:58PM -0400
-From: Joe Thornber <thornber@btconnect.com>
+Content-Class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: what i need is a little attention-RE [linux-lvm] SoftRaid and LVM   Jean-Eric Cuendet
+Date: Wed, 5 Sep 2001 09:57:47 +0200
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,22 +17,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Sep 04, 2001 at 08:09:58PM -0400, Jason Edgecombe wrote:
-> hi all,
-> 
->   I have RH 7.1 and I snagged kernel 2.4.9 from kernel.org with LVM-1.0
-> and the reiserfs patches.
-> 
-> I have my system running which hdd as the root drive with /boot as ext2
-> and an LVM / & /home reiserfs filesystems.
-> 
-> what do I need to do before/during/after I physically swap hda with hdd
-> in the same PC?
+> and one more question about the min-max
+> i don't speak "C" can you tell me how to do it with pre
+> linux-2.4.9patches wich i wont to aply to linux-2.4.10pre2=20
+> and they are giving me problems=20
+> with min-max definition
 
-Just run vgscan after the swap.  vgscan looks at all the devices
-hunting for LVM labels, these labels contain unique id's for PV's.
+The min/max functions are simple functions that return the min/max of
+two numbers.
+Ex: min(3,4) return 3
+Now, Linus has added a type to those functions in 2.4.8 (I think):
+Ex: min(int, 3, 4) =3D 3
+Or: min(float, -6.45, 4.5) =3D -6.45
 
-- Joe
+So, either you change the call from:
+min(a, b) to min(int,a,b)
+Or you add the provided replacement functions:
+#define min(a,b) (((a)<(b))?(a):(b))=20
+#define max(a,b) (((a)>(b))?(a):(b))=20
+At the *beginning* of the file (before anything else).
+
+Note that these are not real functions but just macros. That's why it's
+so simple (just add them and forget).
+
+Bye
+-jec
