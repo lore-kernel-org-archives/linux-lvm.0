@@ -1,8 +1,8 @@
-From: Alexander Lazarevich <alazarev@hera.itg.uiuc.edu>
-Subject: Re: [linux-lvm] raid 1 destroyed!
-In-Reply-To: <3D6E7E80.6040609@mvista.com>
-Message-ID: <Pine.A41.4.43.0208301001510.66960-100000@hera.itg.uiuc.edu>
+Message-ID: <000b01c2504a$f5db57f0$5701a8c0@bomoon>
+From: "bo" <bo@sosnetwork.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Any way to remove a PV from LV for backup?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,72 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 30 10:03:02 2002
+Date: Fri Aug 30 12:34:12 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-ah, yes, that is probably what i did wrong. so software raid mirrors
-partitions, not drives? this is fine and all, but what about some
-documentation for radihotadd? any ideas?
+ Hello,
 
-thanks,
-
-alex
----                                                        ---
-   Alex Lazarevich | Systems | Imaging Technology Group
-   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
----                                                        ---
-
-
-On Thu, 29 Aug 2002, Steven Dake wrote:
-
-> One place you may have gone wrong is hotadding /dev/sdb.  You would want
-> to add a partition such as /dev/sdb1 not /dev/sdb
->
-> Thanks
-> -steve
->
-> Alexander Lazarevich wrote:
->
-> >i was testing out software raid on linux 7.3 with sistina LVM installed. i
-> >had a raid 1 mirror with two drives, and one of the drives failed (i
-> >pulled the power on it), then i pluged it back in, rebooted, ran fdisk -l
-> >to make sure linux could see the drive (it did), then tried running fdisk
-> >again to create the partitions on the drive, then rebooted, then ran
-> >'raidhotadd /dev/md0 /dev/sdb', rebooted, then my entire system was gone,
-> >both drives had corrupted filesystem.
-> >
-> >my question is this: since there is no man pages for raidhotadd (stupid),
-> >how the heck do i read about how this software raid works so i dont blow
-> >away a "real" system!
-> >
-> >also, if i add my system drives to the LVM, can it still be in a raid 1?
-> >
-> >thanks in adavance,
-> >
-> >alex
-> >---                                                        ---
-> >   Alex Lazarevich | Systems | Imaging Technology Group
-> >   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
-> >---                                                        ---
-> >
-> >
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
-> >
-> >
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+ The system has 4 PVs, which belongs to one VG and one LV.
+ I want to remove a disk and replace it with new when the system
+ consumes all of its space then start to use next PV.
+ 
+ Q1: Is it really possible by LVM concept?
+Q2: If I have one extra PV I could use "pvmove", but I do not have.
+        Any way to resolve it?
+Q3: Are there any way to replay each PV(backup PV) independently on 
+       the seperate system?
+ 
+ Any other idea or hint?
+ 
+ Thanks,
+ 
+ Bo
