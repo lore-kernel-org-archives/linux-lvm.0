@@ -1,14 +1,9 @@
-Return-Path: <blutgens@sistina.com>
-Date: Tue, 22 May 2001 11:35:57 -0500
-From: Ben Lutgens <blutgens@sistina.com>
-Subject: Re: [linux-lvm] Mawanella
-Message-ID: <20010522113557.B827@minime.sistina.com>
-References: <71AD71402EB8B04AB30F351C1EE5707C01FFF5@MAIL.confluencenetworks.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
-Content-Disposition: inline
-In-Reply-To: <71AD71402EB8B04AB30F351C1EE5707C01FFF5@MAIL.confluencenetworks.com>; from mvasa@confluencenetworks.com on Tue, May 22, 2001 at 09:29:17AM -0700
+Return-Path: <jweber@valinux.com>
+Date: Tue, 22 May 2001 12:10:06 -0700 (PDT)
+From: Jay Weber <jweber@valinux.com>
+Message-ID: <Pine.LNX.4.30.0105221204020.5395-100000@shells.valinux.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Snapshotting concatenated devices.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,40 +15,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---/WwmFnJnmDyWGHa4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi folks,
 
-On Tue, May 22, 2001 at 09:29:17AM -0700, Mayank Vasa wrote:
->
->Mawanella is one of the Sri Lanka's Muslim Village
->
+Here's an odd one for you.  When using concatenated logical volumes (an
+LV that consists of multiple PVs in the VG) snapshots don't appears to be
+proper after they are taken.  It doesn't generate any errors when the
+snapshot is performed.  But, if you dumpe2fs or attempt to mount the
+snapshot it doesn't see the filesystem superblock, etc.
 
-grrrrr......
-</me heads off to the amavis site>
+To expand on this a bit further, the above isn't always true.  It only
+seems to occur when I use a larger volume which uses larger extent sizes.
+The larger volume in total consists of about 400G in the VG.  So, for
+example, I create an LV of 350G and leave myself 50G for snapshot
+purposes.
 
---=20
-Ben Lutgens	=09
-Sistina Software Inc.=09
-MIS Geek
-http://www.sistina.com/	<--- great software=20
-http://www.gentoo.org/  <--- great distro
-Kernel panic: I have no root and I want to scream <--- perfect error message
+It does work properly for me using my memorystick, which is a total of 16M
+and I use an extent size of 1M.
 
---/WwmFnJnmDyWGHa4
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+In both cases I just make two partitions on the underlying device and
+concat them into the one VG.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Lastly, in the case where snapshots aren't readable after being created,
+there is one step of events I can perform to make the snapshot usable
+again.  It consists of:
 
-iD8DBQE7CpVtLxkxGgLdGQgRAt6dAKCO4StH3L0mnPf0a4frH7TzBPC6NQCg0Ze+
-Xb0dYh1yi6369zSgeoMztWs=
-=/KD1
------END PGP SIGNATURE-----
+	umount the LV
+	vgchange -an VG
+	vghcnage -ay VG
+	mount the snapshot of the LV first
+	then mount the LV
 
---/WwmFnJnmDyWGHa4--
+If I mount the LV first though, I end up with the unusable snapshot again.
+In the above example after the snapshot is mounted, it appears to look
+okay and appears to be functioning (COW, etc) properly.
+
+Any ideas?
+
+I haven't seen this occur on non concattenated devices.  We also seem to
+have this issue when using striped devices.
