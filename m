@@ -1,9 +1,9 @@
-Message-ID: <000c01c339a9$e13d40d0$3470f6ce@silver>
-From: "Andrew Fabian" <anddee2k@anjero.com>
-References: <008501c338da$d3d232e0$6501a8c0@ajf> <3EF731DC.6060706@free.fr>
-Subject: Re: [linux-lvm] LVM2 Rescue Disk
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] read-only media in a LVM? 
+Message-ID: <C42D120999B1CC4C886B6BB2832F356019BF8D@hermes.genomatica.com>
+From: "Sean P. Kane" <spkane@genomatica.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,39 +14,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 23 12:07:01 2003
+Date: Mon Jun 23 12:51:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Excellent, thanks in advance.
+Does a snapshot create a copy of all the files in memory? Just the files
+that changed? Or just the file blocks or contents (i.e. diffs) that have
+changed? So, would the snapshot have to be the same size as the cdrom or
+could it be smaller?
 
-Andrew
-
------ Original Message ----- 
-From: "Emmanuel Varagnat" <emmanuel.varagnat@free.fr>
-To: <linux-lvm@sistina.com>
-Sent: Monday, June 23, 2003 12:59 PM
-Subject: Re: [linux-lvm] LVM2 Rescue Disk
+Thanks,
+Sean
 
 
-> Andrew Fabian wrote:
-> > Does anyone know of a rescue disk image that supports LVM2?  I've looked
-> > around a bit, and the closest I can find is Knoppix with LVM (1)
-support.
->
-> I got one with linux 2.4.19, LVM2 utilities, fdisk, mke2fs and busybox
-> on it.
-> I can try to put it on my site this evening.
->
-> -=( manu )=-
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
+------------------------------------------------------------------------
+Sean P. Kane
+spkane@genomatica.com
+Lead Infrastructure Architect
+Genomatica, Inc.
+------------------------------------------------------------------------
+"When we destroy something man has created we call it vandalism......
+ When we destroy something that Gaia has created we call it progress."
+
+
+-----Original Message-----
+On Fri, Jun 13, 2003 at 04:55:40PM -0700, Sean P. Kane wrote:
+> I saw this email below and was wondering if this is supported in both
+dm
+> and the LVM2 tools now.
+
+The tools still don't support this, so you'll have to use dmsetup to
+create a writeable snapshot of the CD.  Also be aware that you'll need
+to have a suitable fs on the CD, most CD filesystems are read only.
+
+- Joe
