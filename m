@@ -1,15 +1,28 @@
-Received: from null.msp.redhat.com (null.msp.redhat.com [172.16.31.120])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id i8NIjrck019297
-	for <linux-lvm@redhat.com>; Thu, 23 Sep 2004 14:45:53 -0400
-Sender: alewis@redhat.com
-Subject: Re: [linux-lvm] Extending a LVM2 strip set
-References: <mailman.2865.1095960324.3231.linux-lvm@redhat.com>
-From: AJ Lewis <alewis@redhat.com>
-Date: 23 Sep 2004 13:45:52 -0500
-In-Reply-To: <mailman.2865.1095960324.3231.linux-lvm@redhat.com>
-Message-ID: <x05k6ukomcf.fsf@null.msp.redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8O2U8r08703
+	for <linux-lvm@redhat.com>; Thu, 23 Sep 2004 22:30:08 -0400
+Received: from mail.myself.gen.nz (203-79-83-162.cable.paradise.net.nz
+	[203.79.83.162])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8O2U11r001170
+	for <linux-lvm@redhat.com>; Thu, 23 Sep 2004 22:30:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.myself.gen.nz (Postfix) with ESMTP id 7161E18009B
+	for <linux-lvm@redhat.com>; Fri, 24 Sep 2004 14:33:15 +1200 (NZST)
+Received: from mail.myself.gen.nz ([127.0.0.1])
+	by localhost (guardian.cyber.god [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id 01950-04 for <linux-lvm@redhat.com>;
+	Fri, 24 Sep 2004 14:33:11 +1200 (NZST)
+Received: from [127.0.0.1] (fosi.cyber.god [192.168.1.2])
+	by mail.myself.gen.nz (Postfix) with ESMTP id C602D180098
+	for <linux-lvm@redhat.com>; Fri, 24 Sep 2004 14:33:11 +1200 (NZST)
+Message-ID: <41538691.2040807@myself.gen.nz>
+Date: Fri, 24 Sep 2004 14:29:37 +1200
+From: Steve Wray <steve@myself.gen.nz>
 MIME-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] which files, which physical volumes?
+Reply-To: Steve Wray <steve.wray@paradise.net.nz>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,57 +32,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-lemons_terry@emc.com writes:
+Hi there,
 
-> http://www.tldp.org/HOWTO/LVM-HOWTO/mapmode.html
-> <http://www.tldp.org/HOWTO/LVM-HOWTO/mapmode.html>  states:
-> 
-> "In LVM 2, striped LVs can be extended by concatenating another set of
-> devices onto the end of the first set. So you can get into a situation where
-> your LV is a 2 stripe set concatenated with a linear set concatenated with a
-> 4 stripe set. Are you confused yet?"
-> 
-> As a matter of fact, I am!
-> 
-> I need to start with a 2 disk (therefore, 2 stripe) logical volume, that I
-> later extend with 2 more disks.  How is this done?
+Is there any way to find which files in a given logical volume occupy 
+extents on a given physical volume?
 
-In lvm2 you simply create the lv with a stripe size of 2, then later
-when you want to extend it, you lvextend it with a stripe size of 2.
-The reason this is explained in so much detail is that in LVM1, you
-could not extend a striped set past its original PVs.  In LVM2, the
-original striped set can be extended to the end of the original PVs,
-and any additional PVs become a striped set that is tacked on to the
-end (concatenated).
+I am trying to decommission a drive and pvmove still isn't working 
+properly. Either that or;
 
-Maybe an ACSII picture can help ;)
+1. pvmove -tv claims to fail when in fact without the -t it would 
+actually work. Thie would seem like a joke in very bad taste (on the 
+part of the developers.
 
-Original striped volumes:
- ___   ___
-| 1 | | 2 | 
-| 3 | | 4 |
-|_5_| |_6_|
+or
 
-After adding two more disks and lvextending:
- ___   ___   ___   ___
-| 1 | | 2 | | 7 | | 8 | 
-| 3 | | 4 | | 9 | | 10|
-|_5_| |_6_| |_11| |_12|
+2. pvmove -v which is supposed to give verbose progress output, in fact 
+will sit there for a *very* long time (half an hour or more) with no 
+progress output and push load up extremely high.
 
+Or maybe pvmove is *still* broken, in which case I need to find the 
+files which occupy that physical volume, move them to a different 
+logical volume altogether and then forcibly remove that physical volume 
+without regard to the files that are no longer on it... and hopefuly 
+this won't cause corruption on the filesystem on that logical volume.
 
-So you have 2 sets of striped segments (with 2 stripes each),
-concatenated together.  It does *not* remap all the striping so you
-have 1 set of striped segments (with 4 stripes each).
+help?
 
-Is that any clearer?
--- 
-AJ Lewis Voice: 612-638-0500 Red Hat Inc.  E-Mail: alewis@redhat.com
-720 Washington Ave. SE, Suite 200 Minneapolis, MN 55414
-   
-Current GPG fingerprint = D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8715
-Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
-many keyservers out there...
+Thanks!
