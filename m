@@ -1,8 +1,10 @@
-Message-Id: <20020306062354.D9090@progsoc.uts.edu.au>
+Message-Id: <3C85289C.8060606@theiqgroup.com>
+From: Kelly Corbin <kcorbin@theiqgroup.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-From: Anand Kumria <wildfire@progsoc.uts.edu.au>
-Subject: [linux-lvm] vgscan errors with 1.0.3
+Subject: Re: [linux-lvm] vgscan errors
+References: <3C83AD42.20301@theiqgroup.com>
+    <20020305002428.B13751@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,114 +15,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar  5 13:25:02 2002
+Date: Tue Mar  5 14:20:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi there,
+Well, after rooting around, it looks like my partition table was screwed 
+up.  However, when try to create the vg and lv again (after re-fdisking 
+the disk) it fails at the lv creation.  Vgcreate works with no problem; 
+I can reboot and re-activate the vg I just created.  When I run 
+lvcreate, I get the following error:
 
-I recently add a metadevice to my existing LVM setup. Basically I
-copied the data (use tar) from one LV to another and removed the
-original LV (and associated PV).
+#lvcreate -l23722 -nfirst_lv first_vg
+lvcreate -- ERROR 0 writing volume group backup file 
+/etc/lvmtab.d/first_vg.tmp in vg_cfgbackup.c [line 268]
+lvcreate --  WARNING: you don't have an automatic backup of "first_vg"
+lvcreate -- logical volume "/dev/first_vg/first_lv successfully created.
 
-A few reboots later (where things were working) and I decided to
-do an lvrename. Upon rebooting vgscan complains that it "can't
-get data of volume group 'caliban' from physical volumes".
+vgdisplay then shows the correct number of free/used extents (1 free, 
+the rest used), but a vgscan now will fail miserably (before or after 
+reboot) with the same error (ERROR 2)
 
-This is somewhat disturbing.
+This is a new disk that I'm trying to setup for the first time.
 
-I have checked the archives and have also attached an lvmdiskscan
-and confirmed I have some free space in / (only 2.4M, but still).
+Ideas?
 
-I would have attached the output from 'pvdata -a /dev/md0' and
-'vgscan -d -d' however they are large files, instead I've made it 
-available at <URL: http://www.progsoc.org/~wildfire/lvm/> along 
-with my other files.
+Thanks.
 
-I am using Linux 2.4.16 and LVM tools 1.0.3 (all the work was done
-using this version of the tools). Here is some of the output:
 
-Script started on Wed Mar  6 05:31:49 2002
-(none):~# cat /proc/sys/kernel/tainted
-0
-(none):~# uname -a
-Linux (none) 2.4.16 #4 SMP Tue Feb 26 00:15:49 EST 2002 i686 unknown
-(none):~# pvscan --version
-pvscan: Logical Volume Manager 1.0.3
-Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
-(none):~# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/md0"  is associated to unknown VG "caliban" (run vgscan)
-pvscan -- WARNING: physical volume "/dev/hdg" belongs to a meta device
-pvscan -- WARNING: physical volume "/dev/hde" belongs to a meta device
-pvscan -- total: 3 [111.80 GB] / in use: 3 [111.80 GB] / in no VG: 0 [0]
+Heinz J . Mauelshagen wrote:
 
-(none):~# vgscan --version
-vgscan: unrecognized option `--version'
-Logical Volume Manager 1.0.3
-Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+> Error 2 is ENOENT (no entry).
+> Could be a space problem in case / run full.
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
 
-vgscan -- scan for available volume groups for use by LVM
 
-vgscan [-d|--debug] 
-	[-f/--force_numbers]
-	[-h/--help]
-	[-r/--remove_snapshots [VgNameToRemoveSnapshotsFrom]]
-	[-v/--verbose]
-
-(none):~# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "caliban" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
-
-(none):~# pvdisplay /dev/md0
---- Physical volume ---
-PV Name               /dev/md0
-VG Name               caliban
-PV Size               111.80 GB [234462464 secs] / NOT usable 3.62 MB [LVM: 232 KB]
-PV#                   4
-PV Status             available
-Allocatable           yes
-Cur LV                2
-PE Size (KByte)       4096
-Total PE              28620
-Free PE               9576
-Allocated PE          19044
-PV UUID               Wmmzbe-bxjy-auNC-ViiX-mQfW-4srb-Y3kMFy
-
-(none):~# lvmdiskscan
-lvmdiskscan -- reading all disks / partitions (this may take a while...)
-lvmdiskscan -- /dev/md0   [     111.80 GB] free meta device
-lvmdiskscan -- /dev/hdg   [      55.90 GB] free whole disk
-lvmdiskscan -- /dev/hde   [      55.90 GB] free whole disk
-lvmdiskscan -- /dev/hdf   [      55.90 GB] free whole disk
-lvmdiskscan -- /dev/hda1  [       1.91 GB] Primary  LINUX native partition [0x83]
-lvmdiskscan -- /dev/hda2  [     122.06 MB] Primary   [0x82]
-lvmdiskscan -- /dev/hda3  [       5.72 GB] Primary  LINUX native partition [0x83]
-lvmdiskscan -- /dev/hda4  [       4.38 GB] Primary  LINUX native partition [0x83]
-lvmdiskscan -- 4 disks
-lvmdiskscan -- 3 whole disks
-lvmdiskscan -- 0 loop devices
-lvmdiskscan -- 1 multiple device
-lvmdiskscan -- 0 network block devices
-lvmdiskscan -- 4 partitions
-lvmdiskscan -- 0 LVM physical volume partitions
-
-(none):~# exit
-
-Script done on Wed Mar  6 05:32:39 2002
-
-What concerns me about this output is that it thinks that /dev/md0 is *free*
-whereas pvdisplay knows it is not. If you have any suggestions, please let
-me know.
-
-Thanks,
-Anand
 
 -- 
- `` We are shaped by our thoughts, we become what we think.
- When the mind is pure, joy follows like a shadow that never
- leaves. '' -- Buddha, The Dhammapada
+--------------------------------------------
+-- Kelly Corbin
+-- Systems Administrator
+--
+-- http://www.theiqgroup.com
+-- The Future of eServices...
+--
+-- The IQ Group, Inc.
+-- 6740 Antioch Suite 110
+-- Merriam, KS 66204
+-- (913)-722-6700 x105
+-- Fax (913)722-7264
+--------------------------------------------
