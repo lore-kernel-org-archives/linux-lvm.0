@@ -1,9 +1,8 @@
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
-Message-ID: <yw1xektm3edc.fsf@ford.guide>
-References: <web-216233373@mail01.infosat.net>
+From: R Dicaire <rdicaire@kritek.net>
+Message-Id: <1075147677.15213.44.camel@ws.rdb.linux-help.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Re: LVM2 + Linux 2.6.1 questions
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] problems mounting snapshots
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,51 +13,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 26 10:44:02 2004
+Date: Mon Jan 26 15:09:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-"Dale Gallagher" <foobar@mighty.co.za> writes:
+First the specs:
 
-> Hi there
->
-> I've successfully setup LVM2.2.00.08 and
-> device-mapper.1.00.07 on a Slackware 9.1 host with Linux
-> 2.6.1.  I have a question or two:
->
-> 1) Would a shutdown error something like the following, be
-> attributed to LVM and/or device-mapper?
->
-> /proc/devices: fopen failed - no such file or directory
+Linux kernel 2.4.23-xfs patched with LVM 1.0.8
+lvm tools 1.0.8
+Slackware 9.1
+gcc -v
+Reading specs from /usr/lib/gcc-lib/i486-slackware-linux/3.2.3/specs
+Configured with: ../gcc-3.2.3/configure --prefix=/usr --enable-shared
+--enable-threads=posix --enable-__cxa_atexit --disable-checking
+--with-gnu-ld --verbose --target=i486-slackware-linux
+--host=i486-slackware-linux
+Thread model: posix
+gcc version 3.2.3
 
-It's probably caused by LVM.  I see them too.  Everything works
-anyway, so I don't care that much.
+The problem:
 
-> 2) Why do I see, for example, a /dev/mapper/v01-home entry,
-> instead of /dev/v01/home, when running 'df' and 'mount'?  I
-> see that /dev/mapper/v01/home symlinks to
-> /dev/mapper/v01-home, which must account for this, though I
-> thought that because I'd specified /dev/v01/home, that it'd
-> appear as such?  Not that this really matters I suppose ;-)
+Various errors trying to mount snapshots using ext3/xfs/reiserfs
 
-I see the /dev/vg/link name.
+xfs: 
+mount -t xfs /dev/vg0/snap_home /mnt/hd -o ro
+mount: wrong fs type, bad option, bad superblock on /dev/vg0/snap_home,
+       or too many mounted file systems
 
-> $ df -h | grep v01
-> /dev/mapper/v01-home  2.9G  444M  2.4G  16% /home
-> /dev/mapper/v01-usr   2.0G  1.1G  760M  60% /usr
-> /dev/mapper/v01-var   985M   30M  906M   4% /var
->
-> $ mount | grep v01
-> /dev/mapper/v01-home on /home type ext3 (rw)
-> /dev/mapper/v01-usr on /usr type ext3 (rw)
-> /dev/mapper/v01-var on /var type ext3 (rw)
->
-> 3) Does anyone know when LVM2 specific docs, such as a
-> HOWTO and FAQ will be available?
+Jan 26 14:50:26 rdb kernel: XFS: Filesystem lvm(58,8) has duplicate UUID
+- can't mount
 
-It doesn't seem like you need one, if you've gotten this far.
+ext3: 
+mount -t ext3 /dev/vg0/snap_tmp /mnt/hd -o ro
+mount: wrong fs type, bad option, bad superblock on /dev/vg0/snap_tmp,
+       or too many mounted file systems
 
---=20
-M=E5ns Rullg=E5rd
-mru@kth.se
+Jan 26 15:00:59 rdb kernel: EXT3-fs: INFO: recovery required on readonly
+filesystem.
+Jan 26 15:00:59 rdb kernel: EXT3-fs: write access unavailable, cannot
+proceed.
+
+reiserfs:
+It'll mount but complains:
+Jan 26 15:03:09 rdb kernel: reiserfs: found format "3.6" with standard
+journal
+Jan 26 15:03:09 rdb kernel: reiserfs: checking transaction log (device
+lvm(58,8)) ...
+Jan 26 15:03:09 rdb kernel: for (lvm(58,8))
+Jan 26 15:03:09 rdb kernel: Can't write to read-only device 3a:08
+Jan 26 15:03:09 rdb last message repeated 6 times
+Jan 26 15:03:09 rdb kernel: reiserfs: replayed 3 transactions in 0
+seconds
+Jan 26 15:03:09 rdb kernel: lvm(58,8):Using tea hash to sort names
+------------------------------------------------------------------
+I uograded to 1.0.8 to try and fix this mount issue, to no avail.
+
+Have I missed something? Any help would be greatly appreciated, thanks.
+
+-- 
+      aRDy Music
+http://www.ardynet.com
