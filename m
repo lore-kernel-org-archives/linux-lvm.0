@@ -1,15 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8KAplr18002
-	for <linux-lvm@redhat.com>; Mon, 20 Sep 2004 06:51:47 -0400
-Received: from kidushin.jct.ac.il (kidushin.jct.ac.il [147.161.1.19])
-	by mx1.redhat.com (8.12.11/8.12.10) with SMTP id i8KApd5s029923
-	for <linux-lvm@redhat.com>; Mon, 20 Sep 2004 06:51:45 -0400
-Message-ID: <414EB631.8070600@jct.ac.il>
-Date: Mon, 20 Sep 2004 13:51:29 +0300
-From: Yedidia Klein <yedidia@jct.ac.il>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM file system freezed for about a minute
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8LCWKr21467
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 08:32:20 -0400
+Received: from perkamentus (perkamentus.chem.tue.nl [131.155.82.136])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8LCWBLb000860
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 08:32:12 -0400
+Received: from esmeets by perkamentus with local (Exim 3.36 #1 (Debian))
+	id 1C9joU-0000RR-00
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 14:32:06 +0200
+Date: Tue, 21 Sep 2004 14:32:06 +0200
+From: lvm@perkamentus.com
+Message-ID: <20040921123206.GA1467@perkamentus>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Disk partition required for LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,306 +23,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hello list,
+We have been experiencing strange LVM behaviour on multiple
+machines. The situation:
 
-I've a LVM partition that is in use in size of 500GB.
-Kernel: 2.4.26
-  LVM version:     2.00.15 (2004-04-19)
-  Library version: 1.00.14-ioctl (2004-04-06)
-  Driver version:  4.1.1
+ - Debian 3.1 (Sarge)
+ - 2.6.8.1 Kernel
+ - LVM2
+ - 3 IDE disks (2x80GB, 1x120GB) (All Maxtors)
 
-suddenly this file system freezed and gave these errors in dmesg:
-what could it be ??
+Creating physical volumes is no problem for two disks, but with the
+third disk (it is actually on hdb and already a different disk then
+the one originally used) problems begin. pvcreate does not give any
+errors, but with pvdisplay the disk is not shown while pvscan gives
+"Couldn't find device with uuid
+'xAMOJ3-xIGd-AJQK-HN5Q-Q9Yg-Mu2D-UYxn0Y'"
 
-# dmesg
-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-__alloc_pages: 0-order allocation failed (gfp=0x20/0)
-VFS: find_free_dqentry(): Data block full but it shouldn't.
-VFS: Error -5 occured while creating quota.
+It is possible to create volume groups and logical volumes, but
+pvscan, vgscan and lvscan keeping failing with the above error.
+
+Neither of the 3 disks has a partition when starting. When on hdb a
+partition is created and then hdb1 is used as physical volume
+everything works fine.
+
+Why does the partition need to be created on that disk for LVM to work
+(and not on the other two)? Is this a problem with LVM2, the 2.6
+kernel? Or could it be hardware not functioning as it should,
+e.g. disk or controller?
+
+I would like to know why the creation of a partition is necessary. Has
+anyone experienced the same problem/behaviour with LVM? If so, is
+there a solution so no partition is needed?
+
+Thanks in advance for the help.
