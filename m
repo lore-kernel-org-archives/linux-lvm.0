@@ -1,18 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1E2XNO20557
-	for <linux-lvm@redhat.com>; Sun, 13 Feb 2005 21:33:23 -0500
-Received: from priv-edtnes33.telusplanet.net (defout.telus.net
-	[199.185.220.240])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j1E2XLQ4021965
-	for <linux-lvm@redhat.com>; Sun, 13 Feb 2005 21:33:22 -0500
-Mime-Version: 1.0 (Apple Message framework v619)
-In-Reply-To: <420A24AA.5030109@heyjay.com>
-References: <420A24AA.5030109@heyjay.com>
-Message-Id: <BC42B192-7E30-11D9-BD46-0003931DA24A@freezone.co.uk>
-Content-Transfer-Encoding: 7bit
-From: ms419@freezone.co.uk
-Date: Sun, 13 Feb 2005 18:32:56 -0800
-Subject: [linux-lvm] Re: initrd for LVM2 root partition
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1BM7fO17229
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 17:07:41 -0500
+Received: from zrtps0kp.nortelnetworks.com (zrtps0kp.nortelnetworks.com
+	[47.140.192.56])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j1BM7eEK030512
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 17:07:41 -0500
+Received: from zrtpd0j7.us.nortel.com (zrtpd0j7.us.nortel.com [47.140.203.25])
+	by zrtps0kp.nortelnetworks.com (Switch-2.2.6/Switch-2.2.0) with
+	ESMTP id j1BM7YO02279
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 17:07:34 -0500 (EST)
+Message-ID: <420D2B34.1040207@nortel.com>
+From: Joe Harvell <harvell@nortel.com>
+Date: Fri, 11 Feb 2005 17:01:24 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C51086.147AB2F7"
+Subject: [linux-lvm] Feature Request (revert a logical volume to its
+	snapshot)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,24 +27,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Jay Strauss <me@heyjay.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Feb 9, 2005, at 6:56 AM, Jay Strauss wrote:
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-> Hi Jack,
->
-> Did you ever get things working trying to run your root partition on 
-> an LVM?
->
-> I'm struggling.  Maybe you have some notes or a recipe?
+------_=_NextPart_001_01C51086.147AB2F7
+Content-Type: text/plain;
+	charset="iso-8859-1"
 
-Yup - I got it in the end - it's been working well for a couple months 
-- but it was a real struggle initially.
+I really love the snapshot logical volume feature, and I use it for 
+making consistent backups of my system while it is running.
 
-Here's some information how - 
-http://cgi.sfu.ca/~jdbates/moin/moin.cgi/LVMInitRD
+Recently, though I found myself wanting to use a snapshot logical volume 
+to preserve the state of a filesystem while I experimented with 
+changes.  When I needed to revert, I had to copy the contents from the 
+snashot logical volume, destroy the snapshot and snapshot source, and 
+then replace the snapshot source with the copy I made of the snapshot.
 
-Best wishes,
+It seems like it would make sense for LVM to support a feature to revert 
+the source logical volume to the state it was in when the snapshot was 
+taken.  I read through all the man pages but I didn't see anything like 
+this.  I realize it might not be possible to do this atomically while 
+the source logical volume is active, but that's fine.  I would still 
+like to be able to do it when the source is inactive.
 
-Jack
+------_=_NextPart_001_01C51086.147AB2F7
+Content-Type: text/html;
+	charset="iso-8859-1"
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="MS Exchange Server version 5.5.2658.2">
+<TITLE>Feature Request (revert a logical volume to its snapshot)</TITLE>
+</HEAD>
+<BODY>
+
+<P><FONT SIZE=2>I really love the snapshot logical volume feature, and I use it for </FONT>
+<BR><FONT SIZE=2>making consistent backups of my system while it is running.</FONT>
+</P>
+
+<P><FONT SIZE=2>Recently, though I found myself wanting to use a snapshot logical volume </FONT>
+<BR><FONT SIZE=2>to preserve the state of a filesystem while I experimented with </FONT>
+<BR><FONT SIZE=2>changes.&nbsp; When I needed to revert, I had to copy the contents from the </FONT>
+<BR><FONT SIZE=2>snashot logical volume, destroy the snapshot and snapshot source, and </FONT>
+<BR><FONT SIZE=2>then replace the snapshot source with the copy I made of the snapshot.</FONT>
+</P>
+
+<P><FONT SIZE=2>It seems like it would make sense for LVM to support a feature to revert </FONT>
+<BR><FONT SIZE=2>the source logical volume to the state it was in when the snapshot was </FONT>
+<BR><FONT SIZE=2>taken.&nbsp; I read through all the man pages but I didn't see anything like </FONT>
+<BR><FONT SIZE=2>this.&nbsp; I realize it might not be possible to do this atomically while </FONT>
+<BR><FONT SIZE=2>the source logical volume is active, but that's fine.&nbsp; I would still </FONT>
+<BR><FONT SIZE=2>like to be able to do it when the source is inactive.</FONT>
+</P>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C51086.147AB2F7--
