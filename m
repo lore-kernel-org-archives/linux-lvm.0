@@ -1,9 +1,9 @@
 content-class: urn:content-classes:message
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-ID: <8075D5C3061B9441944E1373776451180F06EA@cinshrexc03.shermfin.com>
+Subject: RE: [linux-lvm] Recovering from a hard crash
+Message-ID: <8075D5C3061B9441944E1373776451180F06EB@cinshrexc03.shermfin.com>
 From: "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>
-Subject: [linux-lvm] Recovering from a hard crash
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,10 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 24 08:50:02 2003
+Date: Mon Feb 24 08:56:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+
+As a followup, pvscan shows the following:
+
+[root@cinshrinft1 ~]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/md0"   is associated to unknown VG "cubsvg1"
+(run vgscan)
+pvscan -- inactive PV "/dev/md10"  is associated to unknown VG "cubsvg1"
+(run vgscan)
+pvscan -- total: 2 [678.32 GB] / in use: 2 [678.32 GB] / in no VG: 0 [0]
+
+I never ran pvcreate on /dev/md0 so how is it associated with my volume
+group?
+
+-----Original Message-----
+From: Rechenberg, Andrew=20
+Sent: Monday, February 24, 2003 9:49 AM
+To: linux-lvm@sistina.com
+Subject: [linux-lvm] Recovering from a hard crash
+
 
 Good day,
 
@@ -117,3 +137,10 @@ Andy.
 
 Andrew Rechenberg
 Infrastructure Team, Sherman Financial Group
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
