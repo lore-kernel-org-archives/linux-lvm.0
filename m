@@ -1,8 +1,9 @@
-Message-ID: <20031214113328.74647.qmail@web13505.mail.yahoo.com>
-From: Stuart Felenstein <stuart4m@yahoo.com>
+From: <brad.p@frisurf.no>
+Message-ID: <001201c3c24c$cc77c450$0200000a@ray1>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-1084229190-1071401608=:74612"
-Subject: [linux-lvm] LVM and devfs
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0013_01C3C255.2E3C2C50"
+Subject: [linux-lvm] exporting/importing a LVM volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,46 +14,143 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 15 07:56:02 2003
+Date: Mon Dec 15 07:57:04 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---0-1084229190-1071401608=:74612
-Content-Type: text/plain; charset=us-ascii
+This is a multi-part message in MIME format.
 
-I didn't see a search option in the archives and I apologize if this is more appropriate to the devfs list.  I installed RedHat9 , and partitioned with DiskDruid using LVM.  The only partition that is not LVM is /boot.
-However I have now compiled kernel 2.4.23 with LVM and devfs and running into a problem with kernel panics.  I'm not sure if having LVM is causing the issue.  Even though I've tried many different append roots, looking at the working kernel in lilo.conf I see root = /dev/Volume00/LogVol01.  So I'm' wondering how I translate that to /dev/ide/host0..... .
+------=_NextPart_000_0013_01C3C255.2E3C2C50
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hi all, 
  
-Here is my current /etc/fstab: 
-/dev/Volume00/LogVol01           /                       ext3
-LABEL =/boot                          /boot                 ext3
-/dev/Volume00/LogVol02           /cache              ext3
-/dev/Volume00/LogVol03           /myth                ext3
-none                                       /proc                  proc
-none                                       /dev/shm            tmpfs
-/dev/Volume00/LogVol00          /swap                 swap
-/dev/cdrom
+ 
+I need to move a lvm volme over to a new os install. And this is what i
+did.
+ 
+Before installing the new os, i did a vgexport name
+and acording to the howto, all i need to do on my new os is pvscan and
+then vgimport name /dev/dev1 + + + + 
+ 
+(http://tldp.org/HOWTO/LVM-HOWTO/x978.html)
+ 
+However when trying to import it i get these messages:
+ 
+pvscan -- reading all physical volumes (this may take a while....)
+pvscan -- inactive PV "/dev/sdc1" is in no VG [111.76GB]
+pvscan -- total: 1 [111.76GB] / in use: 0 [0] / in no VG: 1 [111.76GB]
+ 
+Its supposed to say something like this: (paste from the howto)
+ 
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sdb1"  is in EXPORTED VG "design" [996 MB /
+996 MB free]
+pvscan -- inactive PV "/dev/sdb2"  is in EXPORTED VG "design" [996 MB /
+244 MB free]
+pvscan -- total: 2 [1.95 GB] / in use: 2 [1.95 GB] / in no VG: 0 [0]
 
-Greatly appreciate some help, pointers and / or links.
-Thank you,
-Stuart
+If i try the vgimport i get this message:
+ 
+vgimport -- ERROR "pv_read(): PV identifier invalid" reading physical
+volume "/dev/sda1"
+ 
+Anyone got a hint what i need to do to get this LVM up and running again
+?
+ 
+Ray
 
---0-1084229190-1071401608=:74612
-Content-Type: text/html; charset=us-ascii
+------=_NextPart_000_0013_01C3C255.2E3C2C50
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-<DIV>I didn't see a search option in the archives and I apologize if this is more appropriate to the devfs list.&nbsp; I installed RedHat9 , and partitioned with DiskDruid using LVM.&nbsp; The only partition that is not LVM is /boot.</DIV>
-<DIV>However I have now compiled kernel 2.4.23 with LVM and devfs and running into a problem with kernel panics.&nbsp; I'm not sure if having LVM is causing the issue.&nbsp; Even though I've tried many different append roots, looking at the working kernel in lilo.conf I see root = /dev/Volume00/LogVol01.&nbsp; So I'm' wondering how I translate that to /dev/ide/host0..... .</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>Here is my current /etc/fstab: </DIV>
-<DIV>/dev/Volume00/LogVol01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ext3</DIV>
-<DIV>LABEL =/boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ext3</DIV>
-<DIV>/dev/Volume00/LogVol02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /cache&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ext3</DIV>
-<DIV>/dev/Volume00/LogVol03&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /myth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ext3</DIV>
-<DIV>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /proc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proc</DIV>
-<DIV>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/shm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tmpfs</DIV>
-<DIV>/dev/Volume00/LogVol00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/swap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; swap</DIV>
-<DIV>/dev/cdrom<BR></DIV>
-<DIV>Greatly appreciate some help, pointers and / or links.</DIV>
-<DIV>Thank you,</DIV>
-<DIV>Stuart</DIV>
---0-1084229190-1071401608=:74612--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<TITLE>Melding</TITLE>
+
+<META content=3D"MSHTML 6.00.2800.1276" name=3DGENERATOR></HEAD>
+<BODY>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Hi =
+all,=20
+</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>I need =
+to move a lvm=20
+volme over to a new os install. And this is what i =
+did.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Before =
+installing=20
+the new os, i did a vgexport name</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>and =
+acording to the=20
+howto, all i need to do on my new os is pvscan and then vgimport name =
+/dev/dev1=20
++ + + + </FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>(<A=20
+href=3D"http://tldp.org/HOWTO/LVM-HOWTO/x978.html">http://tldp.org/HOWTO/=
+LVM-HOWTO/x978.html</A>)</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial =
+size=3D2>However when trying=20
+to import it i get these messages:</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>pvscan =
+-- reading=20
+all physical volumes (this may take a while....)</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>pvscan =
+-- inactive=20
+PV "/dev/sdc1" is in no VG [111.76GB]</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>pvscan =
+-- total: 1=20
+[111.76GB] / in use: 0 [0] / in no VG: 1 [111.76GB]</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Its =
+supposed to say=20
+something like this: (paste from the howto)</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003>pvscan -- reading all physical =
+volumes (this=20
+may take a while...)<BR>pvscan -- inactive PV "/dev/sdb1"&nbsp; is in =
+EXPORTED=20
+VG "design" [996 MB / 996 MB free]<BR>pvscan -- inactive PV =
+"/dev/sdb2"&nbsp; is=20
+in EXPORTED VG "design" [996 MB / 244 MB free]<BR>pvscan -- total: 2 =
+[1.95 GB] /=20
+in use: 2 [1.95 GB] / in no VG: 0 [0]<BR></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>If i =
+try the=20
+vgimport i get this message:</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial =
+size=3D2>vgimport -- ERROR=20
+"pv_read(): PV identifier invalid" reading physical volume=20
+"/dev/sda1"</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Anyone =
+got a hint=20
+what i need to do to get this LVM up and running again =
+?</FONT></SPAN></DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
+size=3D2>Ray</FONT></DIV></SPAN></BODY></HTML>
+
+------=_NextPart_000_0013_01C3C255.2E3C2C50--
