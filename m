@@ -1,8 +1,10 @@
-From: Kai Weber <lists@glorybox.de>
-Message-ID: <20031130185807.GF7634@glorybox.de>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] vgscan messages regarding read-only cdrom
+Message-ID: <20031130212501.GO19217@percy.comedia.it>
+References: <20031130185807.GF7634@glorybox.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] vgscan messages regarding read-only cdrom
+In-Reply-To: <20031130185807.GF7634@glorybox.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,34 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 30 12:59:01 2003
+Date: Sun Nov 30 15:26:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Sun, Nov 30, 2003 at 07:58:07PM +0100, Kai Weber wrote:
+>* why is vgscan reading /dev/cdrom (a link to my first IDE
+>CD-ROM /dev/hdc)?
+>
+>* how can I disable this message?
 
-when starting lvm2 I get the following annoying messages from vgscan:
+man lvm.conf
 
-$ vgscan
-  Reading all physical volumes.  This may take a while...
-  /dev/cdrom: open failed: Read-only file system
-cdrom: open failed.
-cdrom: open failed.
-[...]
-  Found volume group "datavg" using metadata type lvm1
-  Found volume group "systemvg" using metadata type lvm1
-
-The line "cdrom: open failed." is repeated about 50 times. I believe I can
-ingore this message. But
-
-* why is vgscan reading /dev/cdrom (a link to my first IDE
-CD-ROM /dev/hdc)?
-
-* how can I disable this message?
-
-Kai
 -- 
-* mail kai.weber@glorybox.de . icq 102024972
-  web http://www.glorybox.de . pgp 0x594D4132
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
