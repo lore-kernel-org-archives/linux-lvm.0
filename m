@@ -1,17 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1GKPbi17899
-	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 15:25:37 -0500
-Received: from ip66-106-138-51.z138-106-66.customer.algx.net (ip66-106-138-51.z138-106-66.customer.algx.net [66.106.138.51])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1GKPbb16265
-	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 15:25:37 -0500
-Received: from [192.168.1.126] (rich [192.168.1.126])
-	by ip66-106-138-51.z138-106-66.customer.algx.net (Postfix) with ESMTP id AB05B11804
-	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 12:25:30 -0800 (PST)
-From: Rich Turner <rich@storix.com>
-Message-Id: <1076963130.2404.54.camel@rich>
+Received: from antimony.msp.redhat.com (antimony.msp.redhat.com [172.16.30.61])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id i1GMMGPr012601
+	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 17:22:17 -0500
+Received: from antimony.msp.redhat.com (localhost.localdomain [127.0.0.1])
+	by antimony.msp.redhat.com (8.12.8/8.12.8) with ESMTP id i1GMI29h005443
+	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 16:18:23 -0600
+Received: (from alewis@localhost)
+	by antimony.msp.redhat.com (8.12.8/8.12.8/Submit) id i1GMI2G3005440
+	for linux-lvm@redhat.com; Mon, 16 Feb 2004 16:18:02 -0600
+From: AJ Lewis <alewis@redhat.com>
+Message-ID: <20040216221801.GA4988@antimony.msp.redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] snapshot status
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+Subject: [linux-lvm] LVM HOWTO updated for LVM2
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -23,18 +25,48 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Mon Feb 16 15:24:09 2004
+Date: Mon Feb 16 17:21:04 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-i need to watch the status of my snapshot to prevent it from filling up.
-with Logical Volume Manager 1.0.3 i was able to display this information
-with the "lvdisplay" command by looking at the "allocated to snapshot"
-line and then extending the snapshot if it needed to be larger.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-now with lvm2 1.95.10 (2002-05-31), the "lvdisplay" command does not
-have that information.
+The LVM HOWTO at http://www.tldp.org/HOWTO/LVM-HOWTO/ has been updated to
+include information about LVM2 as well as LVM1.  It also has the beginnings
+of a FAQ section which will hopefully be greatly expanded on as we go
+forward.
 
-is there another lvm command i can use to watch the status of my
-snapshot?
+Please send me feedback if you think something should be added or changed.
+
+Regards,
+--=20
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat Inc.                               E-Mail: alewis@redhat.com
+720 Washington Ave. SE, Suite 200
+Minneapolis, MN 55414
+
+Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
+A5A
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
+-----Begin Obligatory Humorous Quote----------------------------------------
+"Facts are useless!  You can use facts to prove almost anything that's even
+remotely true.  Facts schmacts."  --Homer Simpson
+-----End Obligatory Humorous Quote------------------------------------------
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQFAMUGZhn5UyEmEOBMRAhH4AJwPqkfZq5IjSwHxnRYAoIjrz238WACfUk1v
+mpJZD3n4pMZOTVR4N2axeBg=
+=xXz4
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
