@@ -1,10 +1,10 @@
-Return-Path: <todd@staff.nm.org>
-Date: 15 May 2001 21:21:29 -0600
-Date: Tue, 15 May 2001 21:21:29 -0600 (MDT)
-From: Todd Underwood <todd@osogrande.com>
-Message-ID: <Pine.LNX.4.10.10105141942530.5506-100000@staff>
+Return-Path: <jweber@valinux.com>
+Date: Tue, 15 May 2001 20:35:21 -0700 (PDT)
+From: Jay Weber <jweber@valinux.com>
+Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
+In-Reply-To: <Pine.LNX.4.30.0105151835220.25662-100000@shells.valinux.com>
+Message-ID: <Pine.LNX.4.30.0105152031360.28727-100000@shells.valinux.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] successes & resizing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,58 +18,145 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: ext3-users@redhat.com
+Cc: linux-lvm@sistina.com, Joe Thornber <thornber@btconnect.com>, sct@redhat.com
 
-folx, 
+Nope, soon after I posted the email box died.  I'm still hitting Attempt
+to refile buffer which is caused by cleanup_transaction().  I reverted to
+use bh->b_jlist == BJ_None in my tests also.
 
-i resolved the problem i posted about last week:  unable to mount root
-device in trying to set up lvmroot using a bootable real ext2 partition
-and initrd. they key (and this maybe a FAQ but i didn't see it) was
-getting my scsi driver loaded into the initrd.  this was as simple as
-unzipping the initrd-lvm-2.4.3.gz file, mouting on the loopback.  copying
-the scsi module into place in /lib/modules and adding a modprobe to
-linuxrc.  after that, all was good.  this may be worth documenting
-somewhere (i was considering taking the existing info about lvm root and
-doing a HOWTO given that i've set it up 5 or 8 times in the last two
-weeks).
+Rereading Andrea's prior thread on this makes me think I'm heading down
+the same path he did prior also.  Bummer. :)
 
-i have a separate question about ext2 resizing on a separate system:  when
-i try to resize the root (using the ext2online resize patch to 2.4.3) i
-get:
+On Tue, 15 May 2001, Jay Weber wrote:
 
-Filesystem           1k-blocks      Used Available Use% Mounted on
-/dev/rootvg/root        495844    250577    219667  54% /
-/dev/rootvg/usr        2590504   1444748   1014072  59% /usr
-/dev/rootvg/home       1032088        20    979640   1% /home
-/dev/rootvg/var         495844    105794    364450  23% /var
-/dev/hda1               101089      6029     89841   7% /boot
-bash-2.04# e2fsadm -L +200M / 
-e2fsadm -- invalid logical volume name "/dev/root"
-
-
-e2fsadm [-d|--debug] [-h|--help] [-n|--nofsck]
-	{[-l|--extents] [+|-]LogicalExtentsNumber |
-	 [-L|--size] [+|-]LogicalVolumeSize[kKmMgGtT]}
-	[-t|--test] [-v|--verbose] [--version] LogicalVolumePath
-
-bash-2.04# e2fsadm -L +200M /dev/rootvg/root 
-lvextend -- extending logical volume "/dev/rootvg/root" to 700 MB
-lvextend -- doing automatic backup of volume group "rootvg"
-lvextend -- logical volume "/dev/rootvg/root" successfully extended
-
-ext2online v1.1.17 - 2001/03/18 for EXT2FS 0.5b
-new filesystem size 716800
-ext2online: group 0, block 4 not reserved
-
-ext2online: unable to resize /dev/rootvg/root past 524288 blocks
-
-
-------------------------
-
-any suggestions?
-
-todd underwood
-vice president & 
-   chief technology officer
-oso grande technologies, inc.
-todd@osogrande.com
+> Date: Tue, 15 May 2001 18:50:44 -0700 (PDT)
+> From: Jay Weber <jweber@valinux.com>
+> Reply-To: ext3-users@redhat.com
+> To: linux-lvm@sistina.com
+> Cc: ext3-users@redhat.com, Joe Thornber <thornber@btconnect.com>,
+>      sct@redhat.com
+> Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
+>
+> I think I have this one solved, I hope.
+>
+> I think what Andreas and I are running into are a few different
+> assertions.  One being the LVM lvm_do_pv_flush caused assertion which is
+> related directly to invalidate_buffers() being called which then triggers
+> refile_buffer() on a journaled buffer, which appears clean in all other
+> ways according to the checks in refile_buffer().
+>
+> The following is what I've got in __invalidate_buffers() right now.
+>
+>                         if (!bh->b_count && !buffer_journaled(bh) &&
+>                             (destroy_dirty_buffers || !buffer_dirty(bh)))
+>                                 put_last_free(bh);
+>                         if (slept)
+>                                 goto again;
+>
+> Stephen suggested something along the above a bit ago, except he uses
+> bh->b_jlist == BJ_None.  buffer_journaled() seems to be a function in fs.h
+> which seems a bit more appropriate.
+>
+> Next, with the above we'd still see problems.  My next patch included a
+> suggestion from Heinz to add lock_kernel() and unlock_kernel() around the
+> fsync_dev() and invalidate_buffers() in lvm.c/lvm_do_pv_flush().
+> Currently I have this in my working kernel, I'm gonna try again without it
+> though, it seems that it shouldn't be necessary, the other block devices
+> I've looked at don't seem to lock the kernel.
+>
+> Lastly, I was still getting an assertion generating the "Attempt to refile
+> free buffer", but this one was actually caused by an ext3 journaling
+> function calling refile_buffer(), not derived from invalidate_buffers().
+>
+> In fs/jfs/checkpoint.c/cleanup_transaction(), you'll note it does some
+> buffer_head bit checks and then calls refile_buffer().  Mine currently
+> looks like the following:
+>
+>                 if (!buffer_dirty(bh) && !buffer_jdirty(bh) &&
+>                     !buffer_journaled(bh) &&
+>                     bh->b_list != BUF_CLEAN) {
+>                         unlock_journal(journal);
+>                         refile_buffer(bh);
+>                         lock_journal(journal);
+>                         return 1;
+>                 }
+>
+> Note the addition of the !buffer_journaled(bh) check.
+>
+> Okay, so using all of the above, I have now been running multiple vgscan
+> loops and a pvscan loop while untarr'ing kernel, removing the kernel dir,
+> and then untarring again, and building the kernel with make -j4 (eating up
+> my memory and cpu) for nearly an hour with no assertions.
+>
+> To me it appears that Stephen had it right all along (in prior thread on
+> this), he stated that the b_jlist == BJ_None may be necessary elsewhere
+> also, to insure that there are no journaled buffers out there before
+> handing back to refile_buffer().  I think that's what we were up against
+> and as far as I can tell (grepping for refile_buffer() in jfs/* code) I've
+> added the checks to all the appropriate cases.
+>
+> Andreas can you give the above a try and see if it solves the problem on
+> your end also.  Stephen, does this look good as far as what I've changed?
+>
+> Sorry, no diffs just yet, the changes are rather smallish though.
+>
+> Thanks.
+>
+> On Tue, 15 May 2001, Chris Mason wrote:
+>
+> > Date: Tue, 15 May 2001 21:17:06 -0400
+> > From: Chris Mason <mason@suse.com>
+> > Reply-To: linux-lvm@sistina.com
+> > To: linux-lvm@sistina.com
+> > Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
+> >
+> >
+> >
+> > On Tuesday, May 15, 2001 06:32:24 PM -0600 Andreas Dilger
+> > <adilger@turbolinux.com> wrote:
+> >
+> > >> reiserfs should catch blocks that don't have the proper bits set when it
+> > >> starts i/o, and then it makes sure the block hasn't been relogged while
+> > >> the i/o was in progress.  It sends warnings not an oops though, check
+> > >> your log files.  If we were losing journal bits, and the log code didn't
+> > >> catch it, the result should be silent corruption.
+> > >>
+> > >> Since he is seeing deadlock, it seems more likely reiserfs is trying to
+> > >> lock a buffer for i/o, and that is hanging for some reason....
+> > >
+> > > But what does PV_FLUSH do?  Calls fsync_dev() to flush dirty buffers to
+> > > disk, and sync_supers() and waits for buffer I/O completion.  This is
+> > > unlikely to be the cause of a problem, because that happens on each
+> > > sync call.
+> > >
+> > > It then calls __invalidate_buffers(dev, 0), which destroys everything
+> > > but dirty buffers (on ALL buffer lru lists).
+> >
+> > Unless I'm reading it wrong (2.4.4), __invalidate_buffers destroys all
+> > buffers that are clean and have b_count == 0.  Reiserfs keeps b_count > 0
+> > for all metadata buffers that have been logged, while ext3 allows the count
+> > to be zero (but keeps them in the dirty list).
+> >
+> > __invalidate_buffers also waits on any locked buffers.  Any chance one of
+> > the other LVM ioctls grabs some lvm lock before calling PV_FLUSH?
+> >
+> > You're right though, pv_flush certainly doesn't look like it could cause
+> > any deadlocks.
+> >
+> > -chris
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >
+>
+>
+>
+>
+> _______________________________________________
+> Ext3-users mailing list
+> Ext3-users@redhat.com
+> https://listman.redhat.com/mailman/listinfo/ext3-users
+>
