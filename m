@@ -1,20 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2MIwoj24460
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 13:58:50 -0500
-Received: from zero.voxel.net (postfix@zero.voxel.net [209.123.232.253])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2MIwmWA031315
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 13:58:48 -0500
-Received: from wax.hq.voxel.net (hq.voxel.net [66.109.37.2])
-	by zero.voxel.net (Postfix) with ESMTP id 10F1024B02A
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 13:58:40 -0500 (EST)
-From: Andres Salomon <dilinger@voxel.net>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-ZiMwmZgr5L95pDFSQc84"
-Message-Id: <1079981919.25676.3.camel@wax.hq.voxel.net>
-Mime-Version: 1.0
-Date: Mon, 22 Mar 2004 13:58:39 -0500
-Subject: [linux-lvm] lvm2 bugs with s390
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2MKvLj25470
+	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 15:57:21 -0500
+Received: from ms-smtp-01.rdc-kc.rr.com (ms-smtp-01.rdc-kc.rr.com
+	[24.94.166.115])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2MKvKWA004475
+	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 15:57:20 -0500
+Date: Mon, 22 Mar 2004 14:57:17 -0600
+Message-Id: <200403222057.i2MKvHc05444@ecstasy1.winternet.com>
+From: Ken Fuchs <kfuchs@winternet.com>
+In-reply-to: <1079984217.4449.6.camel@albert.localnet> (message from Craig
+	Ringer on Tue, 23 Mar 2004 03:36:57 +0800)
+Subject: Re: [linux-lvm] lvm or lvm2?
+References: <20040322192910.GA10671@oddprocess.org>
+	<1079984217.4449.6.camel@albert.localnet>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,36 +23,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+>On Tue, 2004-03-23 at 03:29, Matthew Daubenspeck wrote:
 
---=-ZiMwmZgr5L95pDFSQc84
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+>> Do you think using LVM is a reliable method of sharing home directories?
+>> I have been reading the lists, and I notice that in a lot of cases, if
+>> one drive dies, you usually lose a lot of information.
 
-(Resending this, as it appears gmane ate the message; presumably
-something related to the list switchover broke gmane's setup)
+Craig Ringer wrote:
 
-I've had a Debian user complain about broken lvm2 behavior on s390.  The
-relevant bugs reports are here:
-http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D237408
-http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D237409
+>That's why you should really only use it on top of redundant storage
+>like RAID 1 or RAID 5, or in situations where you can afford the risk of
+>data loss (scratch volumes, hot archives, etc). 
 
-I had hoped to deal with this, but it's been almost two weeks, and I
-haven't had the time, so I'm punting it to the list.  Hopefully someone
-will be able to figure out what's happening.
+I agree that RAID 5 is a great idea for important data and is the
+appropriate layer under LVM for the redundancy that large numbers of
+home directories demand.
 
+>I guess that by its self, LVM could be seen as having many of the same
+>issues as RAID-0 in terms of data safety - but you're more likely to be
+>able to do partial recovery with LVM.
 
---=-ZiMwmZgr5L95pDFSQc84
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+This probably assumes multiple disks in a single volume group.  
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
+The following would be appropriate to a single person workstation:
 
-iD8DBQBAXzde78o9R9NraMQRAjj4AKCrqnK1asrJBcVwdQxm33qaB5cJpwCgixrI
-U8Z2G4UXBBjLjRIcvXiz00c=
-=LtqU
------END PGP SIGNATURE-----
+Although it reduces the flexibility of LVM, creating a volume group per
+disk has the advantage that a disk becoming bad loses only the logical
+volumes that were on that disk.
 
---=-ZiMwmZgr5L95pDFSQc84--
+I find that this works great for Sun workstations which have two
+internal SCA drives.  A single SCA drive can be swapped between
+machines easily since each drive "is" its own volume group.
+Of course I allocate only a single large partition to a volume group.
+
+Sincerely,
+
+Ken Fuchs <kfuchs@winternet.com>
