@@ -1,14 +1,11 @@
-Return-Path: <lewis@sistina.com>
-Date: Fri, 15 Jun 2001 09:18:05 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] $(DESTDIR) inclusion into Makefile.in files
-Message-ID: <20010615091805.A8645@sistina.com>
-References: <Pine.LNX.4.33.0106151209260.29617-100000@falka.mfa.kfki.hu>
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 15 Jun 2001 16:51:35 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] expanding physical disks
+Message-ID: <20010615165135.A4266@sistina.com>
+References: <20010612212804.P1658@pc.ilinx> <200106130710.f5D7AhaX005430@webber.adilger.int> <20010613152032.A18554@colombina.comedia.it> <20010615161151.B9980@hal.mailgate.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0106151209260.29617-100000@falka.mfa.kfki.hu>; from dice@mfa.kfki.hu on Fri, Jun 15, 2001 at 12:12:09PM +0200
+In-Reply-To: <20010615161151.B9980@hal.mailgate.net>; from hal@mailgate.net on Fri, Jun 15, 2001 at 04:11:51PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,50 +17,84 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 15, 2001 at 04:11:51PM +0200, Hugo Lombard wrote:
+> On Wed, Jun 13, 2001 at 03:20:32PM +0200, Luca Berra wrote:
+> > On Wed, Jun 13, 2001 at 01:10:42AM -0600, Andreas Dilger wrote:
+> > > Brian Murrell writes:
+> > > > How does LVM deal with physical disks that can get bigger or smaller,
+> > > > such as a hardware RAID device?  What happens to a PV on a hardware
+> > > > RAID-5 device that is presented to the system as a single (say scsci)
+> > > > target when you put a few more disks in it and tell the hardware raid
+> > > > device to add them to the given (scsi) target that a PV was created
+> > > > on?  (what a mouthful).
+> > > 
+> > > Doesn't work at this time.  LVM will only see what was originally there
+> > > at the time pvcreate was run (or possibly vgcreate/vgextend).
+> > At the moment your only chance is to create partitions on it and use those
+> > partitions as PVs
+> > 
+> 
+> Just a thought, a bit off topic perhaps.
 
-On Fri, Jun 15, 2001 at 12:12:09PM +0200, Gergely Tamas wrote:
-> It would be probably a good idea to insert a $(DESTDIR) in front of all
-> installation targets. This would make packagers life easyer.
+;-)
 
-Thanks Gergely,
-I've been intending to do that but hadn't yet.  Instead of putting it in the
-Makefiles themselves though, I put it where the install directories are
-defined, make.tmpl.in.  The head of the current CVS has these changes.
+> 
+> If you're using LVM primarily as a way to make it possible for you to
+> expand your storage space on-line (and on-mount-point) wouldn't it be
+> "easier" to _just_ use the RAID? i.e. expand the RAID volume on the
+> controller, so basically the "disk" is bigger now, and the just "grow"
+> your partition, extend your filesystem, and that's it?
+
+I think you're right in case you can live with the restrictions involved.
+
+If the amount of resizable volumes a single smart controller can support is
+enough, you can surely go with that solution. When it comes to more storage
+you need a logical volume manager to group multiple disk subsystems together
+in order to support large storage configurations.
+
+> 
+> It's a thought I've been toying with since seeing the IBM ServeRAID's
+> capability to grow volumes.  I've not attempted any testing though, so
+> this is pure speculation...
+> 
+> (PS: All this means nothing if you're using LVM for it's other
+> features, like striping, but then the RAID can do that too...)
+
+Plus LVM's features to move data around online in order to relocate it to
+faster/bigger/newer disk subsystems, to have more that just a couple of 
+resizable devices, support for hardware block device reconfiguration without
+any changes in the namespace of the logical volumes, snapshot support etc.
 
 Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Heinz    -- The LVM Guy --
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+> 
+> 
+> 
+> 
+> -- 
+> "You show me an American who can keep his mouth shut and I'll eat him."
+> -- Newspaperman from Frank Capra's _Meet_John_Doe_
+> ---------------------------------------------------------------------------
+>  Hugo Lombard                    Infoline (Pty) Ltd
+>  System Administrator
+> ---------------------------------------------------------------------------
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
------Begin Obligatory Humorous Quote----------------------------------------
-665.9238429876 - Number of the Pentium Beast
------End Obligatory Humorous Quote------------------------------------------
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7KhkdpE6/iGtdjLERAnxlAKCKZMU3/B3jXz60UGLeqf3qqaJfOACfRW+q
-Q7sCwIk48h96KF8dSzUSXD8=
-=BNvD
------END PGP SIGNATURE-----
-
---dDRMvlgZJXvWKvBx--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
