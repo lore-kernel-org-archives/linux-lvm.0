@@ -1,43 +1,68 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2CHU3817382
-	for <linux-lvm@redhat.com>; Fri, 12 Mar 2004 12:30:03 -0500
-From: Dan Merillat <dmerillat@sequiam.com>
-Subject: Re: [linux-lvm] setting VG UUID
-Message-ID: <20040312172959.GA3950@chaos.ao.net>
-References: <20040107065801.A27995@cs.mcgill.ca> <20040107092415.A28215@cs.mcgill.ca> <20040108212542.GF23918@homer.msp.redhat.com> <20040108163409.A3963@cs.mcgill.ca>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2EDWJS28075
+	for <linux-lvm@redhat.com>; Sun, 14 Mar 2004 08:32:19 -0500
+Received: from p15124399.pureserver.info (p15124399.pureserver.info
+	[217.160.182.169])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2EDWH07010786
+	for <linux-lvm@redhat.com>; Sun, 14 Mar 2004 08:32:17 -0500
+Received: from rockley.barbados (81-5-142-175.dsl.eclipse.net.uk
+	[81.5.142.175]) (authenticated (0 bits))
+	by p15124399.pureserver.info (8.11.6/8.11.6) with ESMTP id i2EDWBV19069
+	for <linux-lvm@redhat.com>; Sun, 14 Mar 2004 13:32:11 GMT
+From: Nick Gushlow <nick@gushlow.com>
+Message-Id: <1079271129.2414.7.camel@rockley.barbados>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040108163409.A3963@cs.mcgill.ca>
-Sender: linux-lvm-admin@redhat.com
-Errors-To: linux-lvm-admin@redhat.com
-Reply-To: linux-lvm@redhat.com
-List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
-List-Post: <mailto:linux-lvm@redhat.com>
-List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
+Date: Sun, 14 Mar 2004 13:32:09 +0000
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM Problems when moving data off a PV
+Reply-To: nick@gushlow.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
-List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Mar 12 17:17:01 2004
+List-Archive: </archives/linux-lvm>
+List-Post: <mailto:linux-lvm@redhat.com>
+List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
+List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@redhat.com
 
-On Thu, 08 Jan 2004, Navindra Umanee wrote:
+I've got a volume group (vg2) that spans 3 partitions on two disks;
+hdb1, hdb5, hdc.  hdb1 and hdb5 are the only partitions on disk hdb.
 
-> Alasdair G Kergon <agk@redhat.com> wrote:
-> > > Should "vgchange -a n" maybe clean up these symlinks?
-> > It's supposed to do.
-> 
-> Hmmm.  I've hacked my init scripts to do it in the meanwhile, but I
-> will pay closer attention to what happens next time I boot and report
-> back.
+Disk hdb is failing and I've got an identical replacement from Maxtor,
+so I stuck the new disk in and tried to follow the instructions on the
+LVM howto for removing a disk. 
 
-It's probably trying to do it AFTER the kernel unmounts / (remounts RO)
-Watch your shutdown, that's where I see "unable to BLA, read-only
-filesystem" messages.   Since /dev gets cleaned up on boot I'm not too
-worried about it.
+I've successfully transfered hdb5 to the new disk (hdd) but I got an
+error when trying to move hdb1; I can't remember that error now but I am
+assuming that there may be damage to that part of the disk as the disk
+is failing.
 
---Dan
+After trying a few things I found on the lvm lists and other places and
+I'm now at a stage where a vgscan reports
+
+------------------------------------------------------------------------
+vgscan -- only found 4253 of 4267 LEs for LV /dev/vg2/storage (0) 
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg2" from physical volume(s)
+------------------------------------------------------------------------
+
+I tried a couple of things from very old posts I found on the lvm
+mailing list including compiling LVM2 from cvs so I could do a vgreduce
+--removemissing but that didn't work (I assume because they are lvm1) 
+
+Can anyone tell me what might be wrong, and more importantly how I can
+get the volume group back up. 
+
+I am assuming that as the data is spread across 3 disks if I can't
+recover from this error then I will have lost everything on them. 
+
+Unfortunately I don't have a backup because I have nothing large enough
+to backup the data in the volume group. 
+
+TIA,
+
+Nick Gushlow.
