@@ -1,10 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgscan errors
-Message-Id: <20020305002428.B13751@sistina.com>
-References: <3C83AD42.20301@theiqgroup.com>
+Message-Id: <032101c1c3d5$36ab4950$02001aac@q3x.net>
+From: "NoAntz" <noantz@yahoo.com>
+References: <E16hphK-00042P-00@hermes.sistina.com>
 MIME-Version: 1.0
-In-Reply-To: <3C83AD42.20301@theiqgroup.com>; from kcorbin@theiqgroup.com
-    on Mon, Mar 04, 2002 at 11:22:10AM -0600
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Migrating root problems... (svetljo)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,89 +14,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  4 17:26:02 2002
+Date: Mon Mar  4 17:36:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Error 2 is ENOENT (no entry).
-Could be a space problem in case / run full.
+Thanks Svetljo!
 
-Regards,
-Heinz    -- The LVM Guy --
+>> title Net Hat Linux (2.4.7-10) VLM Support
+>>         root (hd0,0)
+>>         kernel / boot/vmlinuz-2.4.7-10feb2002 mem=250M ramdisk=5038 ro
+>> root=/dev/q3xvol/ro
+>>         initrd / boot/initrd-lvm-2.4.7-10feb2002.gz
+>>
+>isn't it mentioned in the how-to smth about ramdisk ~8000
+>you can try to append at boot ramdisk_size=10000 or smth bigger
+>and option ramdisk seems to be depricated
 
-On Mon, Mar 04, 2002 at 11:22:10AM -0600, Kelly Corbin wrote:
-> I'm getting the following errors when running vgscan from my custom 
-> rescue CD:
-> 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "first_vg"
-> vgscan -- ERROR 2 writing volume group backup file 
-> /etc/lvmtab.d/first_vg.tmp in vg_cfgbackup.c (line 270)
-> vgscan -- ERROR: unable to do a backup of volume group "first_vg"
-> 
-> Unfortunately, I can't figure out why it couldn't write the backup file. 
->   The directory is successfully created, but apparently it can't write 
-> the files there for some reason.
-> 
-> If I do a -v I get a little more info:
-> 
-> vgscan -- storing volume group data of "first_vg" in 
-> "/etc/lvmtab.d/first_vg.tmp"
-> vgscan -- storing physical volume data of "first_vg" in 
-> "/etc/lvmtab.d/first_vg.tmp"
-> vgscan -- storing logical volume data
-> 
-> of "first_vg" in "/etc/lvmtab.d/first_vg.tmp"
-> 
-> vgscan -- ERROR 2 writing volume group backup file 
-> /etc/lvmtab.d/first_vg.tmp in vg_cfgbackup.c (line 270)
-> vgscan -- ERROR: unable to do a backup of volume group "first_vg"
-> 
-> This is a new machine and all I have done is create the volume group, 
-> mount it and copy data down to it.  I then rebooted and tried to run 
-> vgscan again to confirm the consistency of what I had done and got the 
-> above errors.  I've done this exact procedure several times before with 
-> no problems.  I'm using LVM 1.0.1 with kernel 2.4.16 patched for XFS.
-> 
-> Is there anything else I can try?  Ideas?
-> 
-> Thanks!
-> 
-> Kelly
-> 
-> -- 
-> --------------------------------------------
-> -- Kelly Corbin
-> -- Systems Administrator
-> --
-> -- http://www.theiqgroup.com
-> -- The Future of eServices...
-> --
-> -- The IQ Group, Inc.
-> -- 6740 Antioch Suite 110
-> -- Merriam, KS 66204
-> -- (913)-722-6700 x105
-> -- Fax (913)722-7264
-> --------------------------------------------
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Sorry, but I doesn't understand you....
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>> hdb:<7> LDM:  DEBUG (ldm.c, 876): validate_partition_table: Found
+>> basic MS-DOS partition, not to dynamic disk.
+>> hdb1
+>> hdc:<7> LDM:  DEBUG (ldm.c, 876): validate_partition_table: Found
+>> basic MS-DOS partition, not to dynamic disk.
+>> hdc1
+>> Floppy drive(s): fd0 is 1.44M
+>> .
+>>
+>thats not important, it simply says that you don't have  win2k/ winXP
+>dynamic disks
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Ok!
+
+>> Kernel panic: I have not root and I want to scream.
+>>
+>is there nothing about "trying to read beyond end of device "
+
+No!
+
+> could you post your fstabs
+
+My fstab file:
+
+/dev/q3xvol/root         /                       ext2    defaults        1 1
+/dev/hda1               /boot                   ext2    defaults        0 2
+none                    /dev/pts                devpts  gid=5,mode=620  0 0
+none                    /proc                   proc    defaults        0 0
+none                    /dev/shm                tmpfs   defaults        0 0
+/dev/cdrom              /mnt/cdrom              iso9660
+noauto,owner,kudzu,ro 0 0
+/dev/fd0                /mnt/floppy             auto    noauto,owner,kudzu 0
+0
+/dev/hdb1               swap                    swap    defaults        0 0
+
+Thnaks, in advance!
+
+
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com
