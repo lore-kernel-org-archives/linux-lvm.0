@@ -1,10 +1,10 @@
-Subject: Re: [linux-lvm] read-only media in a LVM?
-Message-ID: <20020528085033.GB1266@fib011235813.fsnet.co.uk>
-References: <81y9e5novm.fsf@zion.bpnetworks.com>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] errors compiling on redhat 7.3
+Message-ID: <20020528133742.A26572@uk.sistina.com>
+References: <200205280843.AA111477202@mail.one.it>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <81y9e5novm.fsf@zion.bpnetworks.com>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+In-Reply-To: <200205280843.AA111477202@mail.one.it>; from pierluigi.godi@mail.one.it on Tue, May 28, 2002 at 08:43:55AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,26 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 28 03:44:01 2002
+Date: Tue May 28 10:26:43 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, May 27, 2002 at 04:37:49PM -0700, Ami Fischman wrote:
-> Hi there,
-> I am wondering whether it is possible to have a read-only fs (CDROM, image,
-> etc) as part of an LVM-managed volume.  I see references to COW
-> (copy-on-write, I'm hoping :)) in the kernel drivers/md/ files, but it's not
-> at all clear to me whether or not the current drivers can be used to
-> implement a "translucent" or "inheriting" file system (one where a base fs
-> is given, on r-o media, and changes to it get recorded on another device,
-> presumabely a r-w fs).  Please let me know whether this is currently
-> possible, being planned for the future, or if I'm making no sense above &
-> you want me to clarify :).  For a not-quite-mature example of what I'm
-> talking about, see translucency.sf.net.
+On Tue, May 28, 2002 at 08:43:55AM +0200, Pierluigi Godi wrote:
+> /usr/include/linux/autoconf.h:1:2: #error Invalid kernel header
+> included in userspace
 
-In fact you can do this now if you use just device-mapper/dmsetup :)
-It's just the LVM2 tools that don't support it yet.
+Try removing the line in tools/lib/liblvm.h that includes
+<linux/autoconf.h>.
 
-- Joe
+Alasdair
+-- 
+agk@uk.sistina.com
+
+
+--- LVM-borken/tools/lib/liblvm.h	Wed May 22 23:00:43 2002
++++ LVM/tools/lib/liblvm.h	Tue May 28 13:28:19 2002
+@@ -60,5 +60,4 @@
+ 
+ #include <features.h>
+-#include <linux/autoconf.h>
+ 
+ #ifndef LINUX_VERSION_CODE
