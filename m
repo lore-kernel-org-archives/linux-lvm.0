@@ -1,47 +1,108 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200011142240.eAEMehq12172@webber.adilger.net>
+Date: Wed, 15 Nov 2000 08:04:14 +0100
+From: Jos Visser <josv@osp.nl>
 Subject: Re: [linux-lvm] LVM in shared parallel SCSI environment
-In-Reply-To: <20001114170305.A27524@kevorkian.evcom.net> "from Jesse Sipprell
- at Nov 14, 2000 05:03:05 pm"
-Date: Tue, 14 Nov 2000 15:40:43 -0700 (MST)
-MIME-Version: 1.0
+Message-ID: <20001115080414.G370@jadzia.josv.com>
+References: <20001114093855.A21984@kevorkian.evcom.net> <Pine.LNX.4.30.0011141608080.21566-100000@rossi.itg.ie> <20001114142902.A25706@kevorkian.evcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20001114142902.A25706@kevorkian.evcom.net>; from jss@evcom.net on Tue, Nov 14, 2000 at 02:29:02PM -0500
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Jesse Sipprell <jss@evcom.net>
-Cc: Andreas Dilger <adilger@turbolinux.com>, Paul Jakma <paulj@itg.ie>, Jos Visser <josv@osp.nl>, linux-lvm@marxmeier.com
+Cc: Paul Jakma <paulj@itg.ie>, linux-lvm@msede.com
 
-Jesse Sipprell writes:
-> > Far safer to simply have a separate VG for each node, and import it on the
-> > backup node when you do a failover.  Since you have to have some sort of
-> > external control for the filesystems, doing the import at the same time is
-> > not any more overhead.
+Hi,
+
+Though most has already been said in this thread, just a small followup
+with some notes and thoughts.
+
+The traditional volume managers on HP-UX, Solaris (VxVM) and AIX do not
+usually support shared access to a volume group from two or more nodes,
+even if the nodes access different logical volumes. This is done
+explicitly to prevent the kind of problems that have been pointed out in
+this thread (the chance that two nodes have different in-core metadata
+about the VG). HP's LVM supports a read-only vgchange that allows only
+read-only access to the VG and its LV's, but I've never used it.
+
+In these traditional environment, the clustering software exports and
+imports the VG's as necessary, and run some clusterwide resource manager
+that takes care of who currently "owns" the VG. Veritas has a special
+Cluster Volume Manager (CVM) that allows shared access to volume groups,
+but AFAIK it is only used with parallel databases such as Oracle
+Parallel Server.
+
+For myself, I would not choose a solution like Jesse's. However, the fun
+and power of Unix is that everyone can handcraft his/her own optimal
+environment. As long as you're aware of the consequences what you're
+doing: please be my guest :-)
+
+I must admit that I have not looked at what LVM 0.9 will bring to the
+table, but some added features in the clustering arena would be very
+welcome.
+
+++Jos
+
+And thus it came to pass that Jesse Sipprell wrote:
+(on Tue, Nov 14, 2000 at 02:29:02PM -0500 to be exact)
+
+> On Tue, Nov 14, 2000 at 04:09:47PM +0000, Paul Jakma wrote:
+> > On Tue, 14 Nov 2000, Jesse Sipprell wrote:
+> > 
+> > > In the mean time, I'll just have to do things the old fashioned
+> > > way.  I'll put a procedure in place that any LVM changes done from
+> > > a particular node require the bouncing of VGs on all other
+> > > attached nodes.  Fortunately, after initial cluster setup,
+> > > manipulation of LVs won't really be performed on a routine basis.
+> > 
+> > and so what do you do with these LV's? The filesystem/application you
+> > run on them has to be aware of the shared-access nature of the
+> > device.. so that rules out all but GFS - which IIRC already has some
+> > LVM like features.
 > 
-> Safer, certainly, but won't this make extending/reducing an LV problematic?
-> For example, say that in 6 months from now it becomes necessary to move 100MB
-> of capacity from LV0 to LV1; now per your assumption that LV0 and LV1 on are
-> on separate VGs, one can only extend and/or reduce the involved VGs by this
-> amount if the increment/decrement size is a multiple of the PV sizes.
+> Actually, it's entirely possible to run a non-shared-media-aware filesystem as
+> long as no more than one cluster node has a given file system mounted at a
+> time.
+> 
+> To illustrate:
+> 
+> |-------- VG --------|
+> ||====== LV0 =======||
+> || (ext2)           || --> Mounted on Cluster Node 1
+> ||==================||
+> ||====== LV1 =======||
+> || (ext2)           || --> Mounted on Cluster Node 2
+> ||==================||
+> ||====== LV2 =======||
+> || (ext2)           || --> Mounted on Cluster Node 3
+> ||==================||
+> ||====== LV3 =======||
+> || (ext2)           || --> Mounted on Cluster Node 4
+> ||==================||
+> |                    |
+> |  Free Space in VG  |
+> |                    |
+> |====================|
+> 
+> Because none of the cluster nodes are attempting to share access to the actual
+> blocks where each filesystem is stored, there are no concurrency issues.
+> 
+> One can use the benefits of LVM to unmount LV0's fs on Cluster Node 1, resize
+> the LV, resize the fs and remount.  Now, Cluster Node's 2, 3 and 4 need to
+> have their in-core LVM metadata updated in order to see the new size of LV0.
+> Once this is done via the vgchange bounce, everything is consistant.
+> 
+> -- 
+> Jesse Sipprell
+> Technical Operations Director
+> Evolution Communications, Inc.
+> 800.496.4736
+> 
+> * Finger jss@evcom.net for my PGP Public Key *
 
-I guess it depends on how your cluster is set up.  If you really need to
-move that much storage from one node to another, you could simply vgreduce
-the one VG by a few disks, and vgextend the other - only affecting the
-two nodes you are working on, and also able to do it without taking
-either VG offline and with much less risk.
-
-This may be problematic if you have only a single giant RAID device or
-similar, unless you carved the RAID into multiple logical disks of a
-convenient size (e.g. 10GB or so).
-
-For lesser amounts of storage, I assume that there is at least some
-extra space within a VG on any given node.
-
-Of course it's not quite as good as cluster LVM, but much much safer.
-
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Success and happiness can not be pursued; it must ensue as the 
+unintended side-effect of one's personal dedication to a course greater 
+than oneself.
