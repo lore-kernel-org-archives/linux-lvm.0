@@ -1,7 +1,7 @@
-Message-Id: <199902180900.AA26287@mailgate1b.telekom.de>
+Message-Id: <199902180911.AA29444@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Problems on compile
-Date: Thu, 18 Feb 1999 10:00:51 MET
+Subject: Re: [linux-lvm] Re: your mail
+Date: Thu, 18 Feb 1999 10:12:12 MET
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
@@ -12,62 +12,55 @@ To: linux-lvm@msede.com
 
 
 > 
-> Ok, it seems it is fixed by re-arranging liblvm.h a little. Heinz sent me
-> this a while back.
-> 
-> I suspect this was your problem as well.
-> 
-> --- 0.5alpha/tools/lib/liblvm.h Sat Jan 30 13:46:35 1999
-> +++ 0.6alpha/tools/lib/liblvm.h Mon Feb  1 00:54:29 1999
-> @@ -46,10 +46,6 @@
->  #  endif
->  #endif
-> 
-> -#include <sys/ioctl.h>
-> -#include <linux/genhd.h>
-> -#include <linux/major.h>
-> -
->  #if __GLIBC__ > 1
->  #  ifndef uint8_t
->  #    define uint8_t    u_int8_t
-> @@ -97,6 +93,10 @@
->  #  include <malloc.h>
->  #  include <stdio.h>
->  #endif /* __GLIBC__ > 1 */
-> +
-> +#include <sys/ioctl.h>
-> +#include <linux/genhd.h>
-> +#include <linux/major.h>
-> 
->  #include <lvm.h>
+> Heinz:
+> >LILO is able to deal with sectors scattered over a boot disk limited
+> >by the 1024 cylinder BIOS rsstriction.
+> >This implies no need for a special boot area _if_ we lay all
+> >sectors LILO needs into the LV parts on that one disk.
+> >Or did you mean that with voot area?
+> >
+> >If LILO would be able to deal with sectors scattered over many disks,
+> >why to have a special boot area anyway?
 > 
 
-Thank you Shawn.
+Daniel:
+> Okay.  Let me make sure I understand this.  I think that what you're saying
+> is that at this point, LILO should be able handle an LV like any other
+> partition as far as booting is concerned?
 
-It's concerned with BSD disk label support.
-I never choosed that config option ;*)
+No, only if the logical extents belonging to the boot logical volume
+all are on _one_ bootable physical disk _and_ don't suffer from a 1024 cylinder
+limit or anything similar.
 
-It will be in 0.6alpha anyway.
+LVM had to care about keeping up those restrictions.
 
-BTW: hope to bring out 0.6alpha including some features and
-     bug fixes before march.
+> If so, then the real problem
+> lies in getting the LVM turned on early enough that we can finish the boot
+> process, correct?
 
+Yes.
+It would imply an extension to the LVM driver init stuff to
+deal with such a kind of early activation of the boot volume group if
+the driver is static bound into the kernel.
+
+
+> And if that were the case, we should be able to treat
+> the LVM like any other necessary kernel driver and install it with an
+> initrd.
+
+If we had a boot logical volume we could have a static LVM bound kernel
+or an initrd solution.
+
+> Sorry to repeat things, but I want to make sure that I have a firm
+> understanding of what you're saying.
+
+You are welcome!
+
+It helps me to be more precise and others to join in 8*)
+
+
+Regards,
 Heinz
---
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-
 --
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
