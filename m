@@ -1,8 +1,10 @@
-Message-ID: <20011119171020.27907.qmail@web12306.mail.yahoo.com>
-From: Lars Kellogg-Stedman <thelars@yahoo.com>
-Subject: Re: [linux-lvm] Recovering a volume after OS upgrade (lost /etc/lvm*)
-In-Reply-To: <20011119095105.G1308@lynx.no>
-MIME-Version: 1.0
+From: Bradley M Alexander <storm@tux.org>
+Subject: Re: [linux-lvm] More research on lvm problems
+Message-ID: <20011119135126.A1789@sonsofthunder.yi.org>
+References: <20011119010011.A891@sonsofthunder.yi.org> <20011119093701.A21796@balu.kawo2.rwth-aachen.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011119093701.A21796@balu.kawo2.rwth-aachen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +15,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 11:08:01 2001
+Date: Mon Nov 19 12:50:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> You saw the other posting about the MD devices fix?  This is fixed in
-> CVS, but not 1.0.1rc4.  Maybe it is time for a new LVM release.
+On Mon, Nov 19, 2001 at 09:37:01AM +0100, Markus Dobel wrote:
+> On Mon, Nov 19, 2001 at 01:00:11AM -0500, Bradley M Alexander wrote:
+> > 
+> > [defiant /home/storm]# mount -a
+> > mount: special device /dev/vg01/lvm_tmp does not exist
+>                                     ^here
+> [...]
+> 
+> > But looking in /dev:
+> > 
+> > [defiant /home/storm]# ls -l /dev/vg01
+> > total 0
+> > crw-r-----    1 root     root     109,   0 Dec 31  1969 group
+> > brw-r-----    1 root     root      58,   0 Dec 31  1969 lv_archive
+>                                                             ^here
+> Maybe just take a look at the letter "m". :)
 
-Hmm, I missed the other post, but I'll try the latest from cvs and see
-if that helps.
+Thanks Markus. Looking at this stuff at 1am can apparently cause one to
+miss the obvious. :)
 
--- Lars
-
-
-=====
-lars@larsshack.org
-
-__________________________________________________
-Do You Yahoo!?
-Find the one for you at Yahoo! Personals
-http://personals.yahoo.com
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm@debian.org
+                                         |   storm@tux.org
+============================================================================
+Do vegetarians eat animal crackers?
