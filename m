@@ -1,11 +1,10 @@
-Return-Path: <Fionn.Behrens@unix-ag.org>
-Message-ID: <XFMail.20001219212422.fionn@unix-ag.org>
-Content-Transfer-Encoding: 8bit
+Return-Path: <harri@smilehouse.com>
+Date: Sun, 17 Dec 2000 16:56:39 +0200 (EET)
+From: Harri Haataja <harri@smilehouse.com>
+Subject: Re: [linux-lvm] serializing fsck
+In-Reply-To: <20001216161810.A1006@bar.nowhere>
+Message-ID: <Pine.LNX.4.21.0012171655470.32257-100000@tolppa.kotisivupalvelu.fi>
 MIME-Version: 1.0
-In-Reply-To: <200012171800.eBHI0J129132@webber.adilger.net>
-Date: Tue, 19 Dec 2000 21:24:22 +0100 (CET)
-From: Fionn Behrens <Fionn.Behrens@unix-ag.org>
-Subject: Re: [linux-lvm] Debian packaging
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,27 +16,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Andreas Dilger,
+On Sat, 16 Dec 2000 zoo1@corecomm.net wrote:
 
-on 17-Dec-2000 you wrote:
- 
->> I was thinking that perhaps what I should do is have /sbin/lvm-ver and 
->> /lib/lvm-ver directories where "ver" is the version of LVM in question.
->> Then at boot time there is a script that determines the version of LVM in
->> the 
->> kernel and creates sym-links from /sbin and /lib to the correct
->> directories.  
-> 
-> Think PATH - this is really easy, and shells already support it.  No more
-> work to be done, and it's not ugly.  The IOP version will probably never
-> change within a boot (unless LVM is a module and it gets upgraded without
-> upgrading the kernel - unlikely).
+> it seems my fsck on bootup is having trouble figuring out on which
+> physical devices various lvols reside, and so is starting up all the
+> fsck's simultaneously. i'm working around this by fiddling with the fsck
+> parameters in /etc/fstab, and i suspect that's probably the only really
+> general solution (since striping would throw wrenches into the works
+> anyway), but i'd like to know if i've overlooked some other possibility?
 
-Shouldnt the debian alternatives mechanism (see "man 8 update-alternatives")
-be most appropriate for this task?
-
-Regards,
-        Fionn
+E2fsck seems to do that on any disk on me. I've ended up adjusting the
+order in fstab by hand.
