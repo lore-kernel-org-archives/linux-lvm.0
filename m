@@ -1,13 +1,14 @@
-From: Markus Schaub <markus.schaub@gmx.net>
-Subject: Re: [linux-lvm] "invalid i/o-protocol version" with e2fsadm
-    (1.0.3) and 2.4.18
-Message-Id: <20020227185436.B539@sparcie.schaub.loc>
-References: <20020227131803.A188@sparcie.schaub.loc>
-    <20020227102215.N12832@lynx.adilger.int>
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] Cluster LVM
+Message-Id: <20020227191419.J27155@vestdata.no>
+References: <3C7CC4F3.9DA76FC9@lmco.com>
+    <200202271145.MAA11838@mailgate.sara.nl>
+    <20020227101949.M12832@lynx.adilger.int>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020227102215.N12832@lynx.adilger.int>; from
-    adilger@turbolabs.com on Wed, Feb 27, 2002 at 10:22:15AM -0700
+In-Reply-To: <20020227101949.M12832@lynx.adilger.int>; from
+    adilger@turbolabs.com on Wed, Feb 27, 2002 at 10:19:49AM -0700
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,23 +19,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 11:55:02 2002
+Date: Wed Feb 27 12:14:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolabs.com>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-Am 27 Feb 2002 schrieb Andreas Dilger:
-> > I always get an "i/o protocol version" error when trying to resize a
-> > lv witch e2fsadm (statically linked, from lvm-1.0.3 with kernel
-> > 2.4.18).
-> You probably have two copies of e2fsadm in your path.  Try something
-> like 'which e2fsadm' or 'whereis e2fsadm'.  The other possibility is
-> that your static liblvm.a is the wrong one.
+On Wed, Feb 27, 2002 at 10:19:49AM -0700, Andreas Dilger wrote:
+> On Feb 27, 2002  12:45 +0100, Remco Post wrote:
+> > clusters all have one major problem to solve: split brain. Make sure =
+that the=20
+> > node manipulating the LV/VG does indeed have the right to do so, and =
+doesn't=20
+> > screw up everything for everybody. Maybe introduce a (LV/VG) master c=
+oncept=20
+> > into the VG, so as long as that is set, no other node in the cluster =
+will=20
+> > manipulate anything in the vg. (just some random rant, ignore if I'm =
+talking=20
+> > nonsense ;)
+>=20
+> Having a single master is a _terrible_ idea, since this would mean that
+> if that node is down you are unable to change the VG until/if it is bac=
+k
+> working again.
 
-That's it. e2fsadm called the old lvextend/lvreduce sitting in /sbin
-and not my new one in /usr/local/sbin.
+The VG being locked is not _that_ terrible - after all - you only need
+this to change your storage configuration (I don't expet the LVM to
+actually lock access to the device).
 
-Thanks,
- Markus
+> Rather use a DLM (as the other poster suggested) and a client needs to
+> get a lock on the VG in order to change anything.  You can start with
+> a lock per VG and one per shared PV not in a VG, and then go more fine
+> grained if you want (e.g. write lock on VG and specific LV being change=
+d,
+> which does not block users of other LVs).  In the end, because you are
+> not changing a VG configuration very often, and it doesn't take very lo=
+ng
+> when you do (excluding pvmove), the big lock is probably enough.
+
+Alternatively one could implement the cluster LVM as a simple
+"resource", and leave it to the resource manager to do locking and
+STONITH. The ocf (Open Cluster Framework) or "linux-ha" lists would be
+good places to query for more information.
+
+
+
+--=20
+Ragnar Kj=F8rstad
+Big Storage
