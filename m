@@ -1,10 +1,10 @@
-Return-Path: <jss@kevorkian.evcom.net>
-From: Jesse Sipprell <jss@evcom.net>
-Date: Wed, 27 Dec 2000 16:59:05 -0500
-Message-ID: <20001227165905.A24456@kevorkian.evcom.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] 0.8 to 0.9 problems, odd vg corruption
+Return-Path: <mits@xenotrope.com>
+Message-ID: <3A4D0C25.A4BB534B@xenotrope.com>
+Date: Fri, 29 Dec 2000 17:11:49 -0500
+From: Mits Yanagihashi <mits@xenotrope.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] OK to backup physical volume to tape?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +17,47 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've been in the process of upgrading four LVM 0.8final boxes to 0.9.  The
-first three went off without a hitch: compile kernel with 0.9 patches, install
-user tools and reboot.
+Hello,
 
-The fourth one didn't go as smoothly:
+I'm a LVM newbie with a question.  I haven't managed to find an answer
+yet, so I'm posting my question here.
 
-After installing the new kernel, user-land tools and rebooting, vgscan is no
-longer able to see the volume group (only one used on the box).
+I have a hardware RAID 5 volume on my server; Linux sees this as one 130
+GB disk (/dev/sda).
 
-Rebooted back into 0.8, vgscan still doesn't work but I AM able to
-vgcfgrestore the previous volume group config onto the physical volumes.
+I have one tape drive that can store 33 GB (uncompressed).  I want to
+backup 130 GB over a 5 day week.  I want my users to see two directories
+"/dir1" and "/dir2", but my tape cannot fit a full dump of either one
+directory.
 
-Reboot into 0.9.  vgscan sees the volume group and vgdisplay seems fine, but
-when I try to run vgcfgbackup, it reports 'ERROR: volume group "vg04" has an
-invalid number of physical volumes'  There are four physical volumes in the
-group and vgdisplay -D vg04 looks perfectly normal.  I am also able to mount
-the lvs and all filesystems appear good.  Next, I vgchange bounce the vg down
-and then up and suddenly I am back to square one; vgscan no longer sees vg04
-and my only recourse is to reboot to a 0.8 kernel and vgcfgrestore an old
-backup.
+This is what I want to do:
 
-Now I am stuck. ;)  I can vgcfgrestore from 0.8 and see it ONCE under 0.9, but
-as soon as I vgchange -a it up and then down, the same "corruption" seems to
-occur.  At no point can I seem to vgcfgbackup under 0.9, although 0.8 works
-normally.
+1. Divide /dev/sda into 5 partitions of 26 GB each.  Make each partition
+a physical volume.  
 
-Anyone have any suggestions?
+2. Make one volume group.  Add two logical volumes (that together use
+the 5 physical volumes) to the volume group.
 
-Best Regards,
+3. My users can use the two logical volumes (dir1 and /dir2, which may
+be 52 and 78 GB respectively).  Each night a full backup of one physical
+volume, and incrementals of the other four physical volumes are written
+to tape.  One tape can store 26 GB, and still have space for incremental
+backups of the other physical volumes.
+
+My question is, is it safe to backup the physical volume (i.e. dump
+/dev/sda1 to tape)?  Or are there complications with file system
+state/meta information?
+
+Thank you,
+Mits
+
 
 -- 
-Jesse Sipprell
-Technical Operations Director
-Evolution Communications, Inc.
-800.496.4736
-
-* Finger jss@evcom.net for my PGP Public Key *
+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
+ Mits Yanagihashi, Consultant, Xenotrope, Inc.
+ 55 John Street, New York, NY 10038
+ Phone:(212)964-4242  Fax:(212)964-5522
+ mits@xenotrope.com   http://www.xenotrope.com
+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
