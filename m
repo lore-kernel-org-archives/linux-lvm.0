@@ -1,8 +1,10 @@
-From: Alexander Lazarevich <alazarev@itg.uiuc.edu>
-Subject: Re: [linux-lvm] resize LV
-In-Reply-To: <00bd01c2c710$52576aa0$0a42a8c0@darkstar>
-Message-ID: <Pine.LNX.4.44.0301281505150.5767-100000@zeus.itg.uiuc.edu>
-MIME-Version: 1.0
+Subject: Re: [linux-lvm] raid and lvm
+From: Christophe Saout <christophe@saout.de>
+In-Reply-To: <20030128.rVq.68055000@dl380.home.network>
+References: <20030128.rVq.68055000@dl380.home.network>
+Message-Id: <1043789186.2100.4.camel@chtephan.cs.pocnet.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,48 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 28 15:09:01 2003
+Date: Tue Jan 28 15:27:04 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-JFS can totally do it. I've been using AIX before we moved to Linux, and I 
-did it all the time.
+Am Die, 2003-01-28 um 20.00 schrieb SI Reasoning:
 
-There must be a way to do it on linux systems using ext3. Anyone?
+> maybe I am misunderstanding. I was looking to do software raid (off of a non-raid
+> SCSI controller.)
+> The main reason I wanted raid5 was as a failsafe measure since it would appear
+> that things can get tricky if a harddrive fails in lvm. Is there another way to
+> create a failsafe through lvm without needing to implement software raid?
 
-Alex
----                                                        ---
-   Alex Lazarevich | Systems | Imaging Technology Group
-   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
----                                                        ---
+Sorry, this post wasn't an answer to your problem, it was a comment on
+the discussion whether raid should be implemented in LVM or not.
 
+At the moment neither LVM1 nor DM (LVM2) can provide redundancy. But you
+can use LVM on top of the software raid5 driver in linux. I don't think
+there is another way at the moment.
 
-On Tue, 28 Jan 2003, Thomas Kleffel wrote:
-
-> Hi!
-> 
-> > I know how to expand the LV while the LV is mounted, piece of cake
-> > (lvextend -L+50GB /dev/homevg/userslv - expands userslv by 50GB). But how
-> > do I expand the filesystem while it is mounted? I don't want to
-> > umount the filesystem down to do this.
-> >
-> > The filesystem is an ext3 filesystem. Can I use resize2fs?
-> 
-> No, afaik neither ext2 nor ext3 support resizing while being mounted.
-> And if I'm not wrong JFS and ReiserFS can't do this either but XFS can.
-> 
-> I'm using XFS for this reason and it works fine for me.
-> 
-> Bye,
-> 
-> Tommy
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+-- 
+Christophe Saout <christophe@saout.de>
