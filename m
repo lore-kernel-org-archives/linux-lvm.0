@@ -1,18 +1,21 @@
-Received: from fentible.pjc.net (vpnuser2.surrey.redhat.com [172.16.9.2])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i8LD9Qin008638
-	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 14:09:26 +0100
-Received: from patrick by fentible.pjc.net with local (Exim 4.34)
-	id 1C9kOc-0003WC-2t
-	for linux-lvm@redhat.com; Tue, 21 Sep 2004 14:09:26 +0100
-Date: Tue, 21 Sep 2004 14:09:26 +0100
-From: Patrick Caulfield <pcaulfie@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8LDUjr12158
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 09:30:45 -0400
+Received: from perkamentus (perkamentus.chem.tue.nl [131.155.82.136])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8LDUdgm020755
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 09:30:44 -0400
+Received: from esmeets by perkamentus with local (Exim 3.36 #1 (Debian))
+	id 1C9kiv-0000ws-00
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 15:30:25 +0200
+Date: Tue, 21 Sep 2004 15:30:25 +0200
+From: lvm@perkamentus.com
 Subject: Re: [linux-lvm] Disk partition required for LVM?
-Message-ID: <20040921130925.GB2625@tykepenguin.com>
+Message-ID: <20040921133025.GA3505@perkamentus>
 References: <20040921123206.GA1467@perkamentus>
+	<20040921130925.GB2625@tykepenguin.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040921123206.GA1467@perkamentus>
-Sender: Patrick <patrick@tykepenguin.com>
+In-Reply-To: <20040921130925.GB2625@tykepenguin.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,21 +30,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Sep 21, 2004 at 02:32:06PM +0200, lvm@perkamentus.com wrote:
-> 
-> Why does the partition need to be created on that disk for LVM to work
-> (and not on the other two)? Is this a problem with LVM2, the 2.6
-> kernel? Or could it be hardware not functioning as it should,
-> e.g. disk or controller?
-> 
-> I would like to know why the creation of a partition is necessary. Has
-> anyone experienced the same problem/behaviour with LVM? If so, is
-> there a solution so no partition is needed?
-> 
+On Tue, Sep 21, 2004 at 02:09:26PM +0100, Patrick Caulfield wrote:
+> Check that you don't have a symlink from /dev/hdb to /dev/cdrom. The debian
+> lvm.conf file excludes /dev/cdrom from LVM searches.
 
-Check that you don't have a symlink from /dev/hdb to /dev/cdrom. The debian
-lvm.conf file excludes /dev/cdrom from LVM searches.
+It was indeed the symlink, although not from hdb to cdrom, but from
+cdrom to hdb. Removing this symlink (or commenting out the filter
+option in lvm.conf) solved the problem.
 
--- 
+CDRom has only been present for installation, and afterwards swapped
+for extra disk. Symlink however isn't updated.
 
-patrick
+Another remark: although cdrom are filtered (and thus not allowed for
+LVM), no warning/error messages appear. Wouldn't it be useful if LVM
+checks this and shows warning/error messages or even exits during
+creation?
