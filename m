@@ -1,43 +1,74 @@
-Date: Sun, 30 Jan 2000 21:28:56 -0500
-From: Scott Walker <scott@zeroknowledge.com>
-Subject: [linux-lvm] Couple of question/confusion
-Message-ID: <20000130212856.A10006@paranoid.zks.net>
+Date: Mon, 31 Jan 2000 03:36:52 +0100
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Subject: Re: [linux-lvm] Patch 0.8i to 2.3.40: error during make
+Message-ID: <20000131033652.A19554@ev-stift-gymn.guetersloh.de>
+Reply-To: jbglaw@lug-owl.de
+References: <Pine.LNX.4.20.0001301910280.5714-100000@claudius.mgmt-inc.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+In-Reply-To: <Pine.LNX.4.20.0001301910280.5714-100000@claudius.mgmt-inc.com>; from jec+list.lvm@mgmt-inc.com on Sun, Jan 30, 2000 at 07:11:04PM -0500
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-I started playing with LVM tonight and I am impressed... LVM + resierfs
-is nice! But I have a couple problems.
 
-Let me explain (Please offer advice if you want) I have the following
-setup..
-/dev/hdc1 = 1.2G
-/dev/hdd2 = 7.9G
-/dev/hda3 = 1.2G
-/dev/sda1 = 9.11
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I wanted to combine all of the above into 1 *partition* for /home. now
-is LVM something I should be looking into or should I just go to linear
-raid? or raid 0?
+On Sun, Jan 30, 2000 at 07:11:04PM -0500, Jim Cain wrote:
+> All,
+>=20
+> After applying the patch and running make config and make dep, make shows
+> the following:
+>=20
+> make[2]: Entering directory `/usr/src/linux-2.3.40-lvm/kernel'
+> gcc -D__KERNEL__ -I/usr/src/linux-2.3.40-lvm/include -D__SMP__ -Wall -Wst=
+rict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-st=
+rength-reduce  -DCPU=3D686 -march=3Di686   -DEXPORT_SYMTAB -c ksyms.c
+> ksyms.c:258: `block_fsync' undeclared here (not in a function)
+> ksyms.c:258: initializer element for `__ksymtab_block_fsync.value' is not=
+ constant
+> ksyms.c:269: `blkdev_close' undeclared here (not in a function)
+> ksyms.c:269: initializer element for `__ksymtab_blkdev_close.value' is no=
+t constant
+> make[2]: *** [ksyms.o] Error 1
+>=20
+> Has anyone else had a similar problem with this patch?
 
-Now I create my physical volume, but when I want to create my logical I
-keep recieving this error:
+Yes, /me... I've got no unmodified file handy and I'm working on a very slow
+machine so try this:
 
-freedom /# lvcreate -L100G freedom
-lvcreate -- only 499 free physical extents in volume group "freedom"
+- edit ./include/linux/fs.h
+- locate line 775
+- add the following two lines:
 
-What am I doing wrong?
-
-Please offer some advice, wether LVM is just overkill for me and I
-should just use raid0 or linear.
+extern int blkdev_close(struct inode *, struct file *);
+extern int block_fsync(struct file *, struct dentry *);
 
 
--- 
-Scott Walker			                Zero Knowledge Systems Inc.
-scott@zeroknowledge.com			       http://www.zeroknowledge.com
+--> That's all. It's simply a problem of two missing declarations;(
 
-There are three kinds of people: Those who can count & those who can't.
+MfG, JBG
+
+--=20
+Fehler eingestehen, Gr=F6=DFe zeigen: Nehmt die Rechtschreibreform zur=FCck=
+!!!
+keyID=3D0x8399E1BB fingerprint=3D250D 3BCF 7127 0D8C A444 A961 1DBD 5E75 83=
+99 E1BB
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iEYEAREBAAYFAjiU9UQACgkQHb1edYOZ4bsPSwCeOArk6mQx2Qb0ytSMPKNNbpBf
+XJ0An2n7q0qX7v+wuoxJ9Gv+dfnAzoAM
+=nUhQ
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
