@@ -1,8 +1,8 @@
-Date: Tue, 19 Sep 2000 17:05:07 -0400 (EDT)
+Date: Tue, 19 Sep 2000 17:15:43 -0400 (EDT)
 From: Jeremy Hansen <jeremy@xxedgexx.com>
 Subject: Re: [linux-lvm] what lvm shoudl I be using for 2.2.x?
 In-Reply-To: <200009192022.e8JKMch15948@webber.adilger.net>
-Message-ID: <Pine.LNX.4.21.0009191703020.27031-100000@srv2.ecropolis.com>
+Message-ID: <Pine.LNX.4.21.0009191713060.27705-100000@srv2.ecropolis.com>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -13,10 +13,12 @@ To: Andreas Dilger <adilger@turbolinux.com>
 Cc: linux-lvm@msede.com
 
 
-I'm actually using some of H.J. Lu's kernel builds which include all these
-patches, so hopefully it will work well.
+Ahh, only one thing I noticed is that lvm doesn't merge with Steven
+Tweedie's sard patches which are available from:
 
-I plan on experimenting with ext3 and lvm.  Any experience with this?
+ftp://ftp.uk.linux.org/pub/linux/sct/fs/profiling/
+
+Has anyone gotten these patches to merge?
 
 Thanks
 -jeremy
