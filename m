@@ -1,12 +1,10 @@
-Return-Path: <pwk.linuxfan@gmx.de>
-From: Peter Kirk <pwk.linuxfan@gmx.de>
-Subject: Re: [linux-lvm] Problems: reiserfs lvm as /
-Date: Sat, 19 May 2001 19:15:31 +0200
-References: <01051916333601.00791@mama> <3B069CF2.7AAC10DD@ednet.ns.ca>
-In-Reply-To: <3B069CF2.7AAC10DD@ednet.ns.ca>
-MIME-Version: 1.0
-Message-Id: <01051919153100.01524@mama>
-Content-Transfer-Encoding: 8bit
+Return-Path: <markpeloquin@usa.net>
+Message-ID: <20010519195440.14387.qmail@wwcst270.netaddress.usa.net>
+Date: 19 May 2001 14:54:40 CDT
+From: Mark Peloquin <markpeloquin@usa.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Working together
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,105 +19,57 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Sorry, 
-it was a typo, I ment "root=", the lilo.conf should not be my problem, since 
-it works with the 2.4.0 Kernel from SuSE, and I have just about the same 
-settings. But anyhow I'll put the lilo.conf on the end.
+On Sat, 19 May 2001 11:37:54 -0500, Matt O'Keefe wrote:
+> On Fri, May 18, 2001 at 09:01:49AM -0500, Mark Peloquin wrote:
+> > Hello everyone,
+> > =
 
-Am Samstag, 19. Mai 2001 18:18 schrieben Sie:
-> Peter,
->
-> "boot=" in lilo.conf indicates on which device's MBR lilo is going to be
-> installed (I think).
->
-> There should be a "root=" entry in lilo.conf as well that indicates where
-> your root filesystem is located. Can you send your complete lilo.conf file?
->
-> Peter Kirk wrote:
-> > Hi,
+> > =
+
+> > > Why should Linux LVM join the EVMS project ?
+> > =
+
+> > The EVMS project can offer some immediate solutions to current Linux =
 > >
-> > I am new to LVM, and I ran into some problems.
-> > First thing I did, was to setup LVM within the SuSE7.1 setup tools, which
-> > worked out fine.
-> > /boot is not on LVM, ext2fs
-> > swap is not on LVM
-> > LVM:
-> >         /       [reiserfs]
-> >         /usr    [reiserfs]
-> >         /home   [reiserfs]
-> >
-> > I have too disks, so I set the strip option to two, to get better
-> > performance. Now I want to compile a new kernel (2.4.4), and I cannot get
-> > lvm working with it. Since root is on LVM I need to do this
-> > lvmcreate_initrd stuff, but it does not work ! I get:
-> >
-> > VFS: Mounted root (ext2 file system).
-> > attempt to access beyond end of device
-> > 01:00: rw=0, want=4612, limit=4096
-> > attempt to access beyond end of device
-> > 01:00: rw=0, want=4613, limit=4096
-> > attempt to access beyond end of device
-> > 01:00: rw=0, want=4614, limit=4096
-> > attempt to access beyond end of device
-> > 01:00: rw=0, want=4615, limit=4096
-> > VFS: Cannot open root device "3a02" or 3a:02
-> > Please append the correct "root=" boot option
-> > kernel panic: VFS: Unable to mount root fs on 3a:02
-> >
-> > in lilo.conf it says:
-> > boot=/dev/raid/root
-> > This should be the correct root. It works with the old 2.4.0 Kernel made
-> > from SuSE, propably something is with the initrd or with the Kernel-Setup
-> >
-> > Please help !!
-> > Thanks
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+LVM issues.
+> > =
+
+> > - EVMS supports in-kernel reading/writing of metadata
+> > =
+
+> > - EVMS supports in-kernel discovery of volume groups and volumes
+> > =
+
+
+> Hi,
+> does the EVMS code work in production today?  =
+
+
+Can you rephrase the phrase "work in production" pls? I could draw =
+
+more than one possible interpretations from this and want to reply =
+
+to the your real question.
+
+Are you asking if EVMS is in use by any company/business on
+system used in a production environment (i.e. 24x7)?
+
+Or are you asking if the EVMS code available on our website =
+
+today works?
+
+> If not, then saying
+> it "can offer some immediate solutions to current Linux LVM issues"
+> is inaccurate. That said, its great to see another alternative
+> LVM appearing on the horizon for Linux.
+
+Mark Peloquin
 
 
 
 
 
---------------------lilo.conf
-# LILO configuration file
-# Start LILO global Section
-# If you want to prevent console users to boot with init=/bin/bash,
-#  restrict usage of boot params by setting a passwd and using the option
-#  restricted.
-#password=bootpwd
-#restricted
-append="vga=0x0301"
-boot=/dev/hda
-#compact       # faster, but won't work on all systems.
-vga = normal    # force sane state
-menu-scheme=Wg:kw:Wg:Wg
-read-only
-prompt
-timeout=00
-# End LILO global Section
-#
-#image = /boot/vmlinuz244
-#  initrd = /boot/initrd.gz
-#  root = /dev/raid/root
-#  label = linux244
-#  optional
- 
- 
-#
-image = /boot/vmlinuz_24
-  root = /dev/raid/root
-  label = linux_24
-  initrd = /boot/initrd_24
-  optional
- 
-#
-image = /boot/memtest.bin
-  label = memtest86
-  optional
+
+____________________________________________________________________
+Get free email and a permanent address at http://www.netaddress.com/?N=3D=
+1
