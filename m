@@ -1,7 +1,7 @@
-Message-ID: <EA753F4887A6ED449866D7F307ABBFDB4DB68E@mailserver.e-r-solutions.com>
-From: ERG@e-r-solutions.com
+Message-ID: <2D0AFEFEE711D611923E009027D39F2B02F1DB@nasexs1.meridian-data.com>
+From: Dale Stephenson <dale.stephenson@quantum.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Error - "device-mapper: request is larger than block size b_size"
+Subject: [linux-lvm] RE: Newbie VFS-lock question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,50 +12,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 20 11:38:01 2002
+Date: Tue Aug 20 12:51:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: 'LVM Mailing list ' <linux-lvm@sistina.com>
+Cc: "'linux-xfs@oss.sgi.com '" <linux-xfs@oss.sgi.com>
 
-Greetings,
+Greg Freemeyer writes: 
 
-I'm running two XFS 1.1 filesystems on top of a pair of LVM 2 volumes.  My
-version info is:
+-----Original Message-----
+[snip]
+I don't not know if my problem is with xfs or lvm, or some form of
+interaction.
+ 
+I am still having lvcreate lockups, even though I am no longer calling
+xfs_freeze.  Even stranger, calling xfs_freeze -u causes lvcreate to
+continue, even though I had not called xfs_freeze -f.
 
-tapemaster:/# uname -r && lvm version
-2.4.19-xfs
-  LVM version:     1.95.10 (2002-05-31)
-  Library version: 0.96.03-ioctl (2002-06-27)
-  Driver version:  1.0.3
+I have rebooted the server, and this is repeatable, but it does not
+occur until the 6th or 7th repeat of my snapshot test script.
 
-What I'm seeing is thousands of lines of this:
+It was my understanding that the VFS-lock patch (or lack thereof) would
+allow the mount step to be reliable, not that it would have any impact
+on lvcreate being able to run to completion.
+[snip]
+---end original message
 
-device-mapper: request is larger than block size b_size (2048), block size
-(512)
-device-mapper: request is larger than block size b_size (2048), block size
-(512)
-device-mapper: request is larger than block size b_size (1024), block size
-(512)
-device-mapper: request is larger than block size b_size (4096), block size
-(512)
-device-mapper: request is larger than block size b_size (4096), block size
-(512)
+With the VFS lock patch, the calls made inside the lvm layer to freeze and
+unfreeze are functionally identical to the ioctls made by xfs_freeze -f and
+xfs_freeze -u.  So you are susceptible to the same sort of lockups.  That's
+also why xfs_freeze -u jogged the lvcreate loose.
 
-I'm thinking that this is not a critical error, as I've been seeing it
-whenever there's disk activity on the LVs ever since I got LVM2 up & running
-(a few days).  I found the error in the code on line 4586 of
-../patches/linux-2.4.19-devmapper-ioctl.patch (and also on line 570 of my
-patched ../linux-2.4.19/drivers/md/dm.c), but my knowledge of C is terrible.
+If you look through the XFS list archives, you'll find some patches I posted
+to help alleviate some of the lockups I had seen, but I've still seen a
+few--generally with multiple snapshots of the same source volume with heavy
+write I/O directed to the source volume.
 
-Another point to note is that I created the filesystems (1 on each LV) with
-the defaults (i.e., 'mkfs -t xfs /dev/vg1/lv1'), which seems to default to a
-4096 byte block size.  However, I'm confused, because I would expect that
-all the requests would be for 4096 bytes if that were the cause.
+One way that should not experience lockups is to use neither xfs_freeze nor
+the VFS lock patch, but use writable snapshots.  The snapshot won't be a
+consistent filesystem, but mount it with
+the nouuid option and let it do recovery.  This way may not give you what
+you wanted, but at  least it won't lock up.
 
-Does anyone have any information on the severity of this message?  Even
-better, does anyone have any clues as to how I might resolve or suppress
-this warning?
-
-Thanks,
-Manuel Gomez
+Dale J. Stephenson
+steph@snapserver.com
