@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [E.Kowallik@tu-bs.de: [linux-lvm] lvm and raw devices (with Oracle 9 RAC)]
-Message-ID: <20020704113000.C9129@sistina.com>
-References: <20020703195115.E999@portatile.milano.dt>
-Mime-Version: 1.0
-In-Reply-To: <20020703195115.E999@portatile.milano.dt>; from E.Kowallik@tu-bs.de on Wed, Jul 03, 2002 at 07:51:15PM +0200
+Message-ID: <3D2418FE.FEA0B9E9@zip.com.au>
+From: Andrew Morton <akpm@zip.com.au>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM2 modifies the buffer_head struct?
+References: <F19741gcljD2E2044cY00004523@hotmail.com> <20020702141702.GA9769@fib011235813.fsnet.co.uk> <20020703100838.GH14097@suse.de> <20020703120124.GB615@fib011235813.fsnet.co.uk> <20020703121024.GC21568@suse.de> <15651.54044.557070.109158@notabene.cse.unsw.edu.au> <20020704075830.GQ21568@suse.de> <3D2409FA.44E88C1D@zip.com.au> <20020704083941.GA6204@suse.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,162 +14,212 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jul  4 04:38:01 2002
+Date: Thu Jul  4 04:38:04 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Jens Axboe <axboe@kernel.org>
+Cc: Neil Brown <neilb@cse.unsw.edu.au>, Joe Thornber <joe@fib011235813.fsnet.co.uk>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2002 at 07:51:15PM +0200, Eike Kowallik wrote:
-> Hello!
+Jens Axboe wrote:
 > 
-> Hmm...  nobody can give me a hint? Are my problems and my questions
-> so strange??
+> ...
+> Thank you, this is what I was looking for (if you look further up, I was
+> advocating this very thing). Slimming down buffer_head and just add the
+> ext3 hack is perfectly acceptable to me.
+> 
+> Which just means that device mapper needs to do the stacking properly,
+> EOD.
+> 
 
-No, it is because we are all at the beach ;-)
+Here it is.  We can slot this into 2.4.20-pre, or Joe can own
+it.  Any preferences?
 
-You are using a rather old LVM version. In case you can afford an upgrade
-to LVM 1, your problem will be gone.
+ fs/buffer.c         |   21 ++++++++++++---------
+ fs/jbd/journal.c    |   14 +++++++-------
+ include/linux/fs.h  |   19 +++++++++++++++++--
+ include/linux/jbd.h |    2 +-
+ 4 files changed, 37 insertions(+), 19 deletions(-)
 
-# raw -qa
-/dev/raw/raw1:  bound to major 58, minor 0
-dd if=/dev/raw/raw1 of=/dev/null bs=512 count=10
-10+0 records in
-10+0 records out
+--- 2.4.19-rc1/fs/buffer.c~ext3-journal-head	Thu Jul  4 02:25:17 2002
++++ 2.4.19-rc1-akpm/fs/buffer.c	Thu Jul  4 02:36:06 2002
+@@ -587,9 +587,10 @@ struct buffer_head * get_hash_table(kdev
+ void buffer_insert_inode_queue(struct buffer_head *bh, struct inode *inode)
+ {
+ 	spin_lock(&lru_list_lock);
+-	if (bh->b_inode)
++	if (buffer_inode(bh))
+ 		list_del(&bh->b_inode_buffers);
+-	bh->b_inode = inode;
++	else
++		set_buffer_inode(bh);
+ 	list_add(&bh->b_inode_buffers, &inode->i_dirty_buffers);
+ 	spin_unlock(&lru_list_lock);
+ }
+@@ -597,9 +598,10 @@ void buffer_insert_inode_queue(struct bu
+ void buffer_insert_inode_data_queue(struct buffer_head *bh, struct inode *inode)
+ {
+ 	spin_lock(&lru_list_lock);
+-	if (bh->b_inode)
++	if (buffer_inode(bh))
+ 		list_del(&bh->b_inode_buffers);
+-	bh->b_inode = inode;
++	else
++		set_buffer_inode(bh);
+ 	list_add(&bh->b_inode_buffers, &inode->i_dirty_data_buffers);
+ 	spin_unlock(&lru_list_lock);
+ }
+@@ -608,13 +610,13 @@ void buffer_insert_inode_data_queue(stru
+    remove_inode_queue functions.  */
+ static void __remove_inode_queue(struct buffer_head *bh)
+ {
+-	bh->b_inode = NULL;
++	clear_buffer_inode(bh);
+ 	list_del(&bh->b_inode_buffers);
+ }
+ 
+ static inline void remove_inode_queue(struct buffer_head *bh)
+ {
+-	if (bh->b_inode)
++	if (buffer_inode(bh))
+ 		__remove_inode_queue(bh);
+ }
+ 
+@@ -746,6 +748,7 @@ void init_buffer(struct buffer_head *bh,
+ 	bh->b_list = BUF_CLEAN;
+ 	bh->b_end_io = handler;
+ 	bh->b_private = private;
++	bh->b_journal_head = NULL;
+ }
+ 
+ static void end_buffer_io_async(struct buffer_head * bh, int uptodate)
+@@ -843,9 +846,9 @@ int fsync_buffers_list(struct list_head 
+ 		bh = BH_ENTRY(list->next);
+ 		list_del(&bh->b_inode_buffers);
+ 		if (!buffer_dirty(bh) && !buffer_locked(bh))
+-			bh->b_inode = NULL;
++			clear_buffer_inode(bh);
+ 		else {
+-			bh->b_inode = &tmp;
++			set_buffer_inode(bh);
+ 			list_add(&bh->b_inode_buffers, &tmp.i_dirty_buffers);
+ 			if (buffer_dirty(bh)) {
+ 				get_bh(bh);
+@@ -1129,7 +1132,7 @@ struct buffer_head * bread(kdev_t dev, i
+  */
+ static void __put_unused_buffer_head(struct buffer_head * bh)
+ {
+-	if (bh->b_inode)
++	if (buffer_inode(bh))
+ 		BUG();
+ 	if (nr_unused_buffer_heads >= MAX_UNUSED_BUFFERS) {
+ 		kmem_cache_free(bh_cachep, bh);
+--- 2.4.19-rc1/include/linux/fs.h~ext3-journal-head	Thu Jul  4 02:25:17 2002
++++ 2.4.19-rc1-akpm/include/linux/fs.h	Thu Jul  4 02:25:17 2002
+@@ -219,6 +219,7 @@ enum bh_state_bits {
+ 	BH_Wait_IO,	/* 1 if we should write out this buffer */
+ 	BH_Launder,	/* 1 if we can throttle on this buffer */
+ 	BH_JBD,		/* 1 if it has an attached journal_head */
++	BH_Inode,	/* 1 if it is attached to i_dirty[_data]_buffers */
+ 
+ 	BH_PrivateStart,/* not a state bit, but the first bit available
+ 			 * for private allocation by other entities
+@@ -261,11 +262,10 @@ struct buffer_head {
+ 	struct page *b_page;		/* the page this bh is mapped to */
+ 	void (*b_end_io)(struct buffer_head *bh, int uptodate); /* I/O completion */
+  	void *b_private;		/* reserved for b_end_io */
+-
++	void *b_journal_head;		/* ext3 journal_heads */
+ 	unsigned long b_rsector;	/* Real buffer location on disk */
+ 	wait_queue_head_t b_wait;
+ 
+-	struct inode *	     b_inode;
+ 	struct list_head     b_inode_buffers;	/* doubly linked list of inode dirty buffers */
+ };
+ 
+@@ -1181,6 +1181,21 @@ static inline void mark_buffer_async(str
+ 		clear_bit(BH_Async, &bh->b_state);
+ }
+ 
++static inline void set_buffer_inode(struct buffer_head *bh)
++{
++	set_bit(BH_Inode, &bh->b_state);
++}
++
++static inline void clear_buffer_inode(struct buffer_head *bh)
++{
++	clear_bit(BH_Inode, &bh->b_state);
++}
++
++static inline int buffer_inode(struct buffer_head *bh)
++{
++	return test_bit(BH_Inode, &bh->b_state);
++}
++
+ /*
+  * If an error happens during the make_request, this function
+  * has to be recalled. It marks the buffer as clean and not
+--- 2.4.19-rc1/fs/jbd/journal.c~ext3-journal-head	Thu Jul  4 02:25:17 2002
++++ 2.4.19-rc1-akpm/fs/jbd/journal.c	Thu Jul  4 02:25:17 2002
+@@ -1625,8 +1625,8 @@ static void journal_free_journal_head(st
+  *
+  * Whenever a buffer has an attached journal_head, its ->b_state:BH_JBD bit
+  * is set.  This bit is tested in core kernel code where we need to take
+- * JBD-specific actions.  Testing the zeroness of ->b_private is not reliable
+- * there.
++ * JBD-specific actions.  Testing the zeroness of ->b_journal_head is not
++ * reliable there.
+  *
+  * When a buffer has its BH_JBD bit set, its ->b_count is elevated by one.
+  *
+@@ -1681,9 +1681,9 @@ struct journal_head *journal_add_journal
+ 
+ 		if (buffer_jbd(bh)) {
+ 			/* Someone did it for us! */
+-			J_ASSERT_BH(bh, bh->b_private != NULL);
++			J_ASSERT_BH(bh, bh->b_journal_head != NULL);
+ 			journal_free_journal_head(jh);
+-			jh = bh->b_private;
++			jh = bh->b_journal_head;
+ 		} else {
+ 			/*
+ 			 * We actually don't need jh_splice_lock when
+@@ -1691,7 +1691,7 @@ struct journal_head *journal_add_journal
+ 			 */
+ 			spin_lock(&jh_splice_lock);
+ 			set_bit(BH_JBD, &bh->b_state);
+-			bh->b_private = jh;
++			bh->b_journal_head = jh;
+ 			jh->b_bh = bh;
+ 			atomic_inc(&bh->b_count);
+ 			spin_unlock(&jh_splice_lock);
+@@ -1700,7 +1700,7 @@ struct journal_head *journal_add_journal
+ 	}
+ 	jh->b_jcount++;
+ 	spin_unlock(&journal_datalist_lock);
+-	return bh->b_private;
++	return bh->b_journal_head;
+ }
+ 
+ /*
+@@ -1733,7 +1733,7 @@ void __journal_remove_journal_head(struc
+ 			J_ASSERT_BH(bh, jh2bh(jh) == bh);
+ 			BUFFER_TRACE(bh, "remove journal_head");
+ 			spin_lock(&jh_splice_lock);
+-			bh->b_private = NULL;
++			bh->b_journal_head = NULL;
+ 			jh->b_bh = NULL;	/* debug, really */
+ 			clear_bit(BH_JBD, &bh->b_state);
+ 			__brelse(bh);
+--- 2.4.19-rc1/include/linux/jbd.h~ext3-journal-head	Thu Jul  4 02:25:17 2002
++++ 2.4.19-rc1-akpm/include/linux/jbd.h	Thu Jul  4 02:26:29 2002
+@@ -246,7 +246,7 @@ static inline struct buffer_head *jh2bh(
+ 
+ static inline struct journal_head *bh2jh(struct buffer_head *bh)
+ {
+-	return bh->b_private;
++	return bh->b_journal_head;
+ }
+ 
+ struct jbd_revoke_table_s;
 
-Regards,
-Heinz    -- The LVM Guy --
-
-
-> 
-> As I wrote everything works fine with real hard disk partitions
-> for the binding of the raw devices - but with logical volumes it
-> doesn't work anymore... :-(
-> 
-> Bye, Eike
-> 
-> 
-> ----- Forwarded message from Eike Kowallik <E.Kowallik@tu-bs.de> -----
-> 
-> From: Eike Kowallik <E.Kowallik@tu-bs.de>
-> To: Linux LVM Mailinglist <linux-lvm@sistina.com>
-> 
-> Date: Mon, 24 Jun 2002 04:29:08 +0200
-> 
-> 
-> Hello!
-> 
-> During the installation of a 2-node Oracle 9.0.1 cluster using both
-> lvm and raw devices I meet a problem that is independent of Oracle -
-> at least it seems to me like that...
-> 
-> When I'm binding my raw devices used for Oracle to real hard disk
-> partitions everythings works fine. But with the binding to my created
-> logical volumes I'm receiving errors from Oracle. And I need more raw
-> partitions on the shared disk than Linux can support (due to the one
-> byte minor device number limit). In general I would like to have the
-> great flexibility of the lvm. ;-)
-> 
-> So I tried to find out what the reason for the problem is and found
-> amongst other things the following threads:
-> 
->    [linux-lvm] Using Oracle with lvm AND rawio: read(512) from /dev/raw/... 
->    http://lists.sistina.com/pipermail/linux-lvm/2000-December/003730.html
-> 
->    confused about raw-io blocksizes
->    Date: Fri Nov 09 2001 - 19:13:11 EST
->    http://www.uwsg.iu.edu/hypermail/linux/kernel/0111.1/0472.html
-> 
->    [suse-oracle] ORA-27044 to create tablespace (Re: [suse-oracle] Raw device)
->    http://lists.suse.com/archive/suse-oracle/2002-Feb/0054.html
-> 
-> 
-> I tested to read 1k, 2k, 4k and 8k blocks from my raw devices, bound
-> to logical volumes - everything ok, here for the first raw device:
-> 
-> $ dd if=/dev/raw/raw1 of=/dev/null bs=1k count=1000
-> 1000+0 records in
-> 1000+0 records out
-> $ dd if=/dev/raw/raw1 of=/dev/null bs=2k count=1000
-> 1000+0 records in
-> 1000+0 records out
-> $ dd if=/dev/raw/raw1 of=/dev/null bs=4k count=1000
-> 1000+0 records in
-> 1000+0 records out
-> $ dd if=/dev/raw/raw1 of=/dev/null bs=8k count=1000
-> 1000+0 records in
-> 1000+0 records out
-> 
-> BUT with a block size of 512:
-> 
-> $ dd if=/dev/raw/raw1 of=/dev/null bs=512 count=1000
-> dd: reading `/dev/raw/raw1': Invalid argument
-> 0+0 records in
-> 0+0 records out
-> $
-> 
-> You will find the same error message in the threads above. And _all_
-> the tests, even the one with a block size of 512 bytes, are running
-> instead _without_ any errors when the used raw devices are bound to
-> real disk partitions!
-> 
-> I'm using stock Red Hat 7.1 with some changes made for the Oracle RAC.
-> My concrete problem is that I'm not able to find any concrete hint
-> about what to do. Do I need a newer lvm version? If so, which one?
-> Red Hat 7.1 comes with
-> 
->    # grep -i lvm /var/log/messages.1 | tail -2
->    Jun 14 22:26:08 linmi04 kernel: LVM version 0.9.1_beta2  by Heinz Mauelshagen  (18/01/2001)
->    Jun 14 22:26:08 linmi04 kernel: lvm -- Module successfully initialized
-> 
-> but without the lvm userland tools, so I installed the appropriate
-> version of them.
-> 
-> Or is it (also) a kernel problem? I have to use a recent 2.4 kernel?
-> I needed (for the Oracle RAC) to compile the Red Hat kernel:
-> 
->    $ rpm -q kernel-source
->    kernel-source-2.4.2-2
-> 
-> What's about lvm patches? According to PATCHES/README it shouldn't be
-> necessary for 2.4 kernels ("little more than update the lvm source files").
-> And BLOCK_SIZE in lvm.h? In the thread of this mailing list from
-> December of 2000 (please have a look above) I couldn't find an answer.
-> 
-> It's perhaps a little bit off topic here, but due to the certification
-> of Oracle 9.0.1 RAC for Red Hat 7.1 I'm interested in statements about
-> using lvm and raw devices (for Oracle RAC) with Red Hat kernels, too.
-> Perhaps I need just to upgrade to the Red Hat 2.4.9-34 kernel rpm's
-> (there is no newer one for Red Hat 7.1)...  but I don't want to try
-> just something out, instead I would like to understand the problem -
-> and to apply a good solution then. ;-)
-> 
-> Thanks in advance && bye, Eike
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> ----- End forwarded message -----
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-
