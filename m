@@ -1,11 +1,11 @@
-From: Lewis Bergman <lbergman@abi.tconline.net>
+Date: Tue, 4 Sep 2001 20:53:50 +0100
 Subject: Re: [linux-lvm] rh kernel patches
-Date: Tue, 4 Sep 2001 14:43:30 -0500
-References: <20010904192513.41746.qmail@web13406.mail.yahoo.com>
-In-Reply-To: <20010904192513.41746.qmail@web13406.mail.yahoo.com>
-MIME-Version: 1.0
-Message-Id: <01090414433001.15441@lewis.abi.tconline.net>
-Content-Transfer-Encoding: 8bit
+Message-ID: <20010904205350.A1097@btconnect.com>
+References: <3B95195F.9040108@st-peter.stw.uni-erlangen.de> <20010904192513.41746.qmail@web13406.mail.yahoo.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010904192513.41746.qmail@web13406.mail.yahoo.com>; from plamb_98@yahoo.com on Tue, Sep 04, 2001 at 12:25:13PM -0700
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,22 +18,17 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tuesday 04 September 2001 02:25 pm, you wrote:
+On Tue, Sep 04, 2001 at 12:25:13PM -0700, Pierre Lamb wrote:
 > I quess I don't understand the whole picture. From the
 > /PATCHES/readme file I was lead to believe all I need
 > to to id use the patch file labeled
 > "lvm-0.8final-2.4.0.patch" and apply it to the rh
 > kernel 2.4.7.  Am I mistaken???? PLease provide
 > guidance..
-RedHat kernel? I didn't think there was such a thing. Especially not 2.4.7.
-Read the README again and you'll see you must  run make to generate a kernel 
-specific patch.
 
--- 
-Lewis Bergman
-Texas Communications
-4309 Maple St.
-Abilene, TX 79602-8044
-915-695-6962
+Which release of the tools are you looking at ?  1.0.1-rc2 I hope ?
+
+- Joe
