@@ -1,7 +1,8 @@
-From: Alexander Lazarevich <alazarev@itg.uiuc.edu>
-Message-ID: <Pine.LNX.4.44.0301290900350.22463-100000@zeus.itg.uiuc.edu>
+From: ANTHONY  THABO <an100th@lycos.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] resize an ext3 on an LV
+Content-Type: multipart/mixed; boundary="48d8cf65-af48-4620-8c31-1c52223c46a3"
+Message-Id: <E18dtxa-0000xm-00@hermes.sistina.com>
+Subject: [linux-lvm] ANTHONY THABO   ( Urgent and Confidential )
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,34 +13,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 09:17:02 2003
+Date: Wed Jan 29 09:18:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux LVM Sistina <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-A rehash of some questions I asked earlier, but I want to clarify:
+This is a multi-part message in MIME format
+--48d8cf65-af48-4620-8c31-1c52223c46a3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Redhat 7.3, 2.4.18-19.7.xsmp kernel, using LVM 1.03.
+Dear Sir / Madam,
 
-I've got a 180GB LV (/dev/homevg/userslv) which contains an ext3 
-filesystem (mount point /home/users).
+                                                STRICTLY CONFIDENTIAL.
 
-Once I umount the /dev/homevg/userslv, can I use resize2fs to extend the 
-ext3 filesystem? Or must I first remove the journal from ext3, then 
-resize, then add the journal back to it, then remount?
+I am pleased to introduce myself  to you.My name is Mr. Anthony  Thabo  a =
+native of South Africa and a senior employee of mines and natura resources =
+department currently on a trainning course in Holland for few months. 
 
-Anyone know the exact commands to remove the journal? Would these work:
-tune2fs -0 ^has_journal /dev/homevg/userslv
-e2fsck -f /dev/homevg/userslv
+I  am writing this letter to request your assistance in order to
+redeem an
+investment with the South African mining Corporation.The said
+investment,
+now valued at  ( US$15.750 million dollars) Fifteen million,seven
+hundred
+and fifty thousand dollars only was purchased by ( Lucio
+Harper ) and contracted out to the South  African Mining Corporation
+in 1977
+now recognised as mines and natural resources department.This
+redeemable
+investment interest,has now matured since March last year.
 
-Is this safe? Data is backed up on tape, but I'd rather not destroy the 
-filesystem in the first place.
+Since March last year, several attempts have been made to contact
+Lucio Harper without success and there is no way to contact any
+of his close relatives in whose favour the investment cash value
+can be paid.
 
-Thanks in advance!
+Since we have access to all Lucio Harper's information,we can claim this =
+money with the help of my partners with the South African Mines and natural =
+resources department.All we have to do is to file claim using you as Lucio =
+Harper's relative. I will like to assure you that there is absolutely nothing =
+to worry about,because it is perfectly safe with no risk involved.Please
+ensure to keep this matter strictly confidential.My partner will file a claim =
+for this money on your behalf from the South African mining Corporation.When =
+the claim is approved,you as the beneficiary will be paid (35%) of the total =
+amouth.
 
-Alex
----                                                        ---
-   Alex Lazarevich | Systems | Imaging Technology Group
-   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
----                                                        ---
+Since this money can be paid directly into any bank account of your =
+choice,you have responsibility to ensure that my partner and I receive(60%)of =
+the total amouth.While the balance (5%) will be set aside for any unforseen =
+expenses in the cause of transfering this money. I will appreciate if you can =
+give your assurance and guarantee that our share will
+be well secured.Please for the sake of confidentiality,reach me on my e-mail =
+address:  anthonythabo@netscape.net      Let me know if this proposal is =
+acceptable to you.And kindly reach me immediately with any of the stated =
+contact addresses so that better clearifications
+relating to the transaction will be explained to you.Thank you and God bless.
+=
+
+
+Truly yours,
+Anthony  Thabo.  
+  
+--48d8cf65-af48-4620-8c31-1c52223c46a3--
