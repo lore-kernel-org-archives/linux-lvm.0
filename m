@@ -1,11 +1,10 @@
-Return-Path: <axboe@brick.kernel.dk>
-Date: Thu, 19 Apr 2001 20:48:19 +0200
-From: Jens Axboe <axboe@suse.de>
-Message-ID: <20010419204819.D30135@suse.de>
-References: <d37l0gvkuf.fsf@lxplus015.cern.ch> <20010419132927.D10345@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010419132927.D10345@sistina.com>; from lewis@sistina.com on Thu, Apr 19, 2001 at 01:29:27PM -0500
+Return-Path: <alan@lxorguk.ukuu.org.uk>
+Date: Thu, 19 Apr 2001 20:02:50 +0100 (BST)
+In-Reply-To: <20010419132927.D10345@sistina.com> from "AJ Lewis" at Apr 19, 2001 01:29:27 PM
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <E14qJhd-0007oR-00@the-village.bc.nu>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
 Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,24 +18,17 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: AJ Lewis <lewis@sistina.com>
-Cc: Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+Cc: Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
 
-On Thu, Apr 19 2001, AJ Lewis wrote:
 > It is unfortunate that this could not have been resolved in a more mature
 > manner.  Saying "I don't like the way somebody is doing something.  I won't
 > bother to talk to them about it, I'll just flame them and try to undermine
 > their work." is not acceptable.  It would have been nice if you'd actually
 > tried to work this out instead of handling it this way.
 
-LVM concerns us all now that it is not just an addon, but actually a
-part of the kernel. Rejecting mails and reports from users and
-developers who just might be able to lend you a hand fixing bugs, is not
-just counter productive it's downright rude!
+Well their approach to patches that fix bugs is to reject emails. They've done
+that to stuff I've reported any many others. So there is a problem. And its
+kind of hard to discuss a problem when you are being moderated out of existance.
 
-Besides, I didn't think the posting was flame material at all. If
-nothing else, it's a wake up call.
-
--- 
-Jens Axboe
+The openlvm list is open to existing LVM hackers too..
