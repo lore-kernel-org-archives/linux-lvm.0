@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] System hang during boot
-Message-ID: <20021105134037.A27825@sistina.com>
-References: <20021103012651.42052.qmail@web9607.mail.yahoo.com>
+Subject: Re: [linux-lvm] Can't rebuild LVM
+Message-ID: <20021105150050.B27825@sistina.com>
+References: <20021102184903.GA12075@sonsofthunder.yi.org>
 Mime-Version: 1.0
-In-Reply-To: <20021103012651.42052.qmail@web9607.mail.yahoo.com>; from bill_oconnor@yahoo.com on Sat, Nov 02, 2002 at 05:26:51PM -0800
+In-Reply-To: <20021102184903.GA12075@sonsofthunder.yi.org>; from storm@tux.org on Sat, Nov 02, 2002 at 01:49:04PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,55 +14,88 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov  5 06:45:02 2002
+Date: Tue Nov  5 08:05:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Nov 02, 2002 at 05:26:51PM -0800, Bill OConnor wrote:
-> Hello,
+On Sat, Nov 02, 2002 at 01:49:04PM -0500, Bradley M Alexander wrote:
+> Background: Norton utilities screwed up the partition table on one of my
+> lvm drives. I tried a pvcreate -ff to recover but ended up losing the lvm
+> partitions. I lost all of my partitions with the exception of /, /lib and
+> /usr, so the system is still bootable and most of the system apps are still
+> available. (I did lose /var, though the system has automagically recreated
+> some of the directories). This is on a Debian/sid box running kernel 2.4.19
+> and devfs.
 > 
-> I'm running SuSE 8.0 on a PC.
+> The hardware allocated to pvs are /dev/hda3 (27GB), /dev/hdc (30GB) and
+> /dev/hde (30GB).
 > 
-> I tried to build and install Xine which hung my
-> machine when I ran it.  Unpon reboot my machine does a
+> I tried to create the pvs and got the following:
 > 
-> check root for LVM activation
-> rmount for vgscan
-> Scanning for LVM volume groups
+> # pvcreate /dev/hda3
+> modprobe: Can't locate module /dev/lvm
+> modprobe: Can't locate module /dev/lvm
+> modprobe: Can't locate module /dev/lvm
+> modprobe: Can't locate module /dev/lvm
+> modprobe: Can't locate module /dev/group
+> pvcreate -- physical volume "/dev/hda3" successfully created
 > 
-> and then hangs never to return.  I assume Xine
-> corrupted something but what.  I can get to the files
-> with a rescue disk but what do I rescue and how?
+> for subsequent creates (pvcreate /dev/hdc; pvcreate /dev/hde), I get a
+> response of "modprobe: Can't locate module /dev/group"; both claim to be
+> successfully created.
 
-Before you change anything, you want to save copies of your LVM on-disk 
-metadata (i.e. "dd if=/dev/PV of=PV.vgda bs=1k count=4k"; do that in
-sequence replacing "PV" by your actual devices used as physical volumes).
-
-For the next steps, I assume that you _don't_ have root on a logical volume
-and do have the (same) LVM software accessable on your rescue device as on
-the broken system.
-
-Mount the regular root filesystem somewhere read-only and save the output
-files from the dd-runs above _and_ all automatically taken metadata copies
-in */etc/lvmconf/* on some seperate (external) media.
-
-fsck the root filesystem and remount it read-write.
-
-chroot to that mounted regular root, "strace vgscan" and report, where it
-hangs (if it does again).
-
-With that let's decide how to procede further (crossing fingers
-that no data got destroyed). Next step will likely be vgcfgrestore(8).
+What does pvscan tell you after the successful pvcreate runs?
 
 > 
-> thanks
+> I then try to create the volume group:
 > 
-> __________________________________________________
-> Do you Yahoo!?
-> HotJobs - Search new jobs daily now
-> http://hotjobs.yahoo.com/
+> # vgcreate vg00 /dev/ide/host0/bus0/target0/lun0/part3
+> /dev/ide/host0/bus1/target0/lun0/disc /dev/ide/host2/bus0/target0/lun0/disc
+> modprobe: Can't locate module /dev/vg00
+> invalidate: Busy buffer
+> vgcreate -- no valid physical volumes in command line
+> 
+> The other night, I attempted to rebuild and restore the system. It came up
+> in single user, and after three hours of recreating volumes, partitions and
+> restoring from backups, I tried to go to multiuser. It rebooted and the LVs
+> disappeared.
+> 
+> LVM is compiled monilithically into the kernel rather than as modules.
+> Since I have been running it for about a year, it is 1.0.1-rc4. I have the
+> following questions:
+> 
+> 1. Why is modprobe getting these devices (/dev/vg00, /dev/lvm, etc) which
+> it then cannot find?
+
+/dev/lvm could be wrong.
+
+Is it 
+crw-r-----    1 root     root     109,   0 Nov  5 13:50 lvm
+?
+
+Are all filesystems you still have checked cleanly?
+
+> 
+> 2. Why is, after I rebuild the volume, it not persisting between reboots?
+> 
+> 3. What should I do to get these back permanently?
+
+Could be caused by the above mentioned reasons.
+
+> 
+> 4. Would upgrading to 1.0.6 or even lvm2 help my situation?
+
+Probably not, but you get other recent fixes with 1.0.6.
+LVM2 supports LVM1 volume groups but misses pvmove so far.
+You should definitely give it a try.
+
+> 
+> Can someone please help me get my system back to being operational?
+> 
+> Thanks,
+> --Brad
 > 
 > _______________________________________________
 > linux-lvm mailing list
