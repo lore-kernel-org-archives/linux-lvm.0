@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 16 Jul 2001 13:27:55 +0200
+Date: Mon, 16 Jul 2001 13:29:59 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] q: lvm with kernel 2.4.4-suse and 2.4.6
-Message-ID: <20010716132755.B11625@sistina.com>
-References: <16210000.995201807@czerny>
+Subject: Re: [linux-lvm] Upgrade path
+Message-ID: <20010716132959.C11625@sistina.com>
+References: <3B4EE8F2.5050506@ednet.ns.ca>
 Mime-Version: 1.0
-In-Reply-To: <16210000.995201807@czerny>; from cognac@toppoint.de on Sun, Jul 15, 2001 at 02:56:47PM +0200
+In-Reply-To: <3B4EE8F2.5050506@ednet.ns.ca>; from boutilpj@ednet.ns.ca on Fri, Jul 13, 2001 at 09:26:26AM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,32 +21,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Jul 15, 2001 at 02:56:47PM +0200, Andreas Czerniak wrote:
-> Dear,
+On Fri, Jul 13, 2001 at 09:26:26AM -0300, Patrick Boutilier wrote:
+> Hello,
 > 
-> i use a suse 2.4.4-suse (4GB) kernel with lvm-0.9.1_beta7 on a i386.
-> 
-> I update the kernel to 2.4.6 with included lvm-0.9.1_beta2. I download the 
-> latest version beta7 and patch the kernel (beta7 and get_hardsect_size 
-> patch). The lvm is compiled in the kernel and now, when i boot the new 
-> kernel, lvm can't find any of lvm-partitions.
+> I am currently using LVM driver version 0.9.1_beta6 with a 2.2.19 
+> kernel. I am planning to upgrade to kernel version 2.4.6 or maybe 
+> 2.4.7-pre6. What LVM version should I compile into the kernel? Should I 
+> stay with 0.9.1_beta6 or jump up to 0.9.1_beta7?
 
-In order to run Beta 7 tools you need to update your kernel as well.
+If you can wait for LVM 0.9.1 Beta 8, you should.
+We are just some days away from that release (hopefully ;-)
 
-Please follow INSTALL and PATCHES/README instructions.
+FYI: LVM 0.9.1 Beta6/7 have a misalignment bug which causes errors when using
+     snapshots on such misaligned PVs.
+
+> I did extend a logical 
+> volume using 0.9.1_beta6 if that makes any difference.
+
+No, it doesn't.
 
 > 
-> under 2.4.4-suse i have:
-> lvscan -- 6 active logical volumes
 > 
-> Is there a way to verbose/debug the lvm disk scan during the boottime ?
-> 
-> Regards,
-> 			Andreas.
-> ---------------------------------------------------------------------------
-> Andreas Czerniak                                         cognac@toppoint.de
-> Kiel - FRG            May the source be with you.       Fax: +49-431-678454
-> PGPkey: http://wwwkeys.nl.pgp.net:11371/pks/lookup?op=get&search=0xEDB224EC
 > 
 > _______________________________________________
 > linux-lvm mailing list
