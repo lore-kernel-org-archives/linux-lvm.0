@@ -1,9 +1,8 @@
-From: "Tren Blackburn" <tren@eotnetworks.com>
-Subject: RE: [linux-lvm] resize LV
-Message-ID: <PLEIKKCJENNELKBAKJPMGEACCAAA.tren@eotnetworks.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <00bd01c2c710$52576aa0$0a42a8c0@darkstar>
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re[3]: [linux-lvm] resize LV
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20030128222843.LOPH21173.imf23bis.bellsouth.net@marsha>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +13,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 28 16:14:01 2003
+Date: Tue Jan 28 16:27:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>LVM Mailing list <linux-lvm@sistina.com>
 
-Yes, you can resize a reiserfs filesystem while mounted.
+ >>  awesome links, thanks.
 
-Regards,
+ >>  any word on if the 2.6 kernel will also add support for resizing ext3=20
+ >>  mounted filesystems? all it talks about on the site is ext2. but ext3 is=20
+ >>  just ext2 with a journal, right? so it should work for ext3 as well,=20
+ >>  right?
 
-Tren
+ >>  alex
 
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Thomas Kleffel
-Sent: Tuesday, January 28, 2003 2:01 PM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] resize LV
+I'm not 100% sure, but I believe the 2.4.x patches support both and the 2.5.x =
+kernel status page says "ext2/ext3 online resize support".
 
-
-Hi!
-
-> I know how to expand the LV while the LV is mounted, piece of cake
-> (lvextend -L+50GB /dev/homevg/userslv - expands userslv by 50GB). But how
-> do I expand the filesystem while it is mounted? I don't want to
-> umount the filesystem down to do this.
->
-> The filesystem is an ext3 filesystem. Can I use resize2fs?
-
-No, afaik neither ext2 nor ext3 support resizing while being mounted.
-And if I'm not wrong JFS and ReiserFS can't do this either but XFS can.
-
-I'm using XFS for this reason and it works fine for me.
-
-Bye,
-
-Tommy
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Greg Freemyer
