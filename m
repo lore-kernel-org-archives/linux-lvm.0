@@ -1,10 +1,8 @@
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Message-ID: <20021128075428.GX951@lug-owl.de>
+Message-ID: <20021128120436.GA11436@reti>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Vo2ArcSjcOqS/fzO"
 Content-Disposition: inline
-Subject: [linux-lvm] LVM2: Bad LV-UUID?
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] dm patches for 2.5.50
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,50 +13,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 28 01:54:02 2002
+Date: Thu Nov 28 06:05:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
+Cc: Alan Cox <alan@redhat.com>
 
---Vo2ArcSjcOqS/fzO
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Latest dm patches for 2.5.50 are available here:
 
-Hi!
+http://people.sistina.com/~thornber/patches/2.5-stable/2.5.50/
 
-I've gone to LVM2 yesterday, which included creating LVM2-style PVs, VGs
-and one LV. The strange thing for me is that the LV's UUID is
-"000000-0000-0000-0000-0000-0000-000000", which doesn't really look like
-it was intended... Just a hint for a possible bug somewhere:-)
+- Joe
 
-Btw., userland is what you get with 'apt-get install lvm2', this tells
-for version:
 
-	LVM Version:		1.95.10 (2002-05-31)
-	Library Version:	0.96.04-ioctl-cvs (2002-08-14)
-	Driver Version:		1.0.8
 
-I know, ports of it aren't that up-to-date, but I don't know (yet) if
-this is a bug and if it's a _known_ bug...
+Revision 1:
+  Four constants:
+     DM_DIR,
+     DM_MAX_TYPE_NAME,
+     DM_NAME_LEN,
+     DM_UUID_LEN
+  
+  Were being declared in device-mapper.h, these are all specific to 
+  the ioctl interface, so they've been moved to dm-ioctl.h.  Nobody
+  in userland should ever include <linux/device-mapper.h> so remove 
+  ifdef __KERNEL guards.
 
-MfG, JBG
+Revision 2:
+  Joe,
+  
+  I believe Steve and I found a bug in dm-table.c. The function open_dev()
+  has the wrong check after the call to blkdev_get(). Thus, if the
+  blkdev_get() call succeeds, bd_claim() is never called. Futhermore, if
+  blkdev_get() fails (for instance, if you try to create a target to a
+  non-existent device), bd_claim() will fail, and blkdev_put() may segfault.
+  
+  -- 
+  Kevin Corry
+  corryk@us.ibm.com
+  http://evms.sourceforge.net/
+  
+  ==============================
 
---=20
-   Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481
-   "Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur
-    fuer einen Freien Staat voll Freier B=FCrger" | im Internet!
-   Shell Script APT-Proxy: http://lug-owl.de/~jbglaw/software/ap2/
+Revision 3:
+  Return -ENOTBLK if lookup_device() finds the inode, but it
+  is not a block device. [Cristoph Hellwig]
 
---Vo2ArcSjcOqS/fzO
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Revision 4:
+  No need to validate the parameters if we are doing a
+  REMOVE_ALL command.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.0 (GNU/Linux)
-
-iD8DBQE95cu0Hb1edYOZ4bsRAsqbAJ9t5Ac5cTn6dnURFMZYXNZ1LI1YHgCfRJoc
-splkAM84+wNlWTluprC6+ww=
-=Sgtm
------END PGP SIGNATURE-----
-
---Vo2ArcSjcOqS/fzO--
+Revision 5:
+  check_device_area was comparing the bytes with sectors.
+  [Stefan Lauterbach]
