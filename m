@@ -1,10 +1,8 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Sun, 7 Jan 2001 15:26:24 -0200 (BRDT)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] New subject on LVM mailing list ??
-In-Reply-To: <3A56DE41.9996D856@libertysurf.fr>
-Message-ID: <Pine.LNX.4.21.0101071523410.21675-100000@duckman.distro.conectiva>
-MIME-Version: 1.0
+Return-Path: <declerck@sistina.com>
+Date: Sun, 07 Jan 2001 11:35:37 -0800
+From: "Michael J. Declerck" <declerck@sistina.com>
+Message-Id: <20010107193537.B3080E0B7@wraith>
+Subject: [linux-lvm] Clarification concerning the status of LVM and 2.4
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +14,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Cook@cybersonic.com.hk
 
-On Sat, 6 Jan 2001, Philippe Lefevre wrote:
+There has been a fair amount of traffic on the list concerning how LVM
+0.9 was introduced in the 2.4 kernel from a number of individuals.
+Unfortunately, I don't believe that a single message contains all the
+facts concerning that introduction nor what the current path forward for
+LVM 0.9 is.  This message is an attempt at doing that.
 
-	[snip accedental spam]
+  The LVM 0.9 patch that was integrated into the 2.4 kernel was not
+  provided by, reviewed by, or recommened by the LVM development team.
+  The patch in its current incarnation has its birth in the 0.9 patch for
+  2.4.0-test?? from the LVM CVS repository with modifications by individuals
+  outside of the LVM development team.  This patch was submitted to Linus
+  without review from the LVM maintainer or the LVM community at large.
 
-> Hey guys, what happen ?
-> Is this a new subject on LVM mailing list ???
-> I did'nt suscribe this mailing list to get that kind of E-mail !
+  Due to the fact that this patch was not reviewed or vetted there have been
+  a number of issues that have arisen concerning the operability of LVM 0.9
+  on the 2.4.X series of kernels.
 
-Sistina is running these LVM mailing lists as a free service
-to us, not as a product.
+  The LVM development team is currently collecting patches and fixes for
+  identified bugs and preparing a patch that can applied to 2.4.0.  This
+  patch should correct the deficiencies that have been reported to date.
 
-As far as I know nobody is paying them to run these mailing
-lists so you shouldn't be finger pointing or "demanding better
-service" when an accidental spam comes through.
+  The submitted patch will most likely be called LVM 0.91 and will have only
+  minimal testing with regards to large and/or complex environments.  As
+  such, individuals should take appropriate precautions to insure the
+  integrity of their data before integration and testing of this patch.
 
-Instead, you should be thankful they host all these nice LVM
-mailing lists for us (and thankful that this is the FIRST spam
-to make it to this list)...
-
-> I'm going to unsuscribe if this your volunty to broadcast such a mess,
-
-If you're going to have reactions like this to every spam,
-better stop using the internet  ;)
-
-regards,
-
-Rik
---
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to loose...
-
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com.br/
+---
+Michael Declerck,  declerck@sistina.com  +1.510.823.7991
