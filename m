@@ -1,9 +1,9 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Tue, 6 Feb 2001 19:04:37 -0200 (BRDT)
-From: Rik van Riel <riel@conectiva.com.br>
+Return-Path: <michael_e_brown@dell.com>
+Date: Tue, 6 Feb 2001 15:13:05 -0600 (CST)
+From: Michael E Brown <michael_e_brown@dell.com>
 Subject: Re: [linux-lvm] Help! Problems finding VG after reboot.
-In-Reply-To: <20010206143902.C5041@sistina.com>
-Message-ID: <Pine.LNX.4.21.0102061856030.1535-100000@duckman.distro.conectiva>
+In-Reply-To: <20010206132240.E3376@sistina.com>
+Message-ID: <Pine.LNX.4.30.0102061508550.26194-100000@blap.linuxdev.us.dell.com>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -22,72 +22,22 @@ To: linux-lvm@sistina.com
 
 On Tue, 6 Feb 2001, AJ Lewis wrote:
 
-> > It's still vg_read_with_pv_and_le() that's spitting out
-> > errors and causing vgscan to segfault. The error I am
-> > seeing here hasn't changed in the last month...
-> 
-> Hmm...This appears to be different from the bug posted with the
-> subject "0.9.1 vgscan doesn't detect upgraded vg's" today.  Can
-> you confirm this?
+> BTW, just because you haven't gotten an immediate reply does not mean the
+> problem is not being worked on.  We are a distributed development team,
+> with varying schedules.  Please give us a little credit that we are actually
+> reading the MLs and working on these problems instead of impatiently
+> complaining that nobody on the LVM team is doing anything all the time.  It
+> is rather tiring to see yet another post from you complaining that we don't do
+> anything.
 
-I'm not sure if it's related or not ...
+I'll second this... The ratio of '@sistina.com' addresses to other
+addresses is very high, compared to other vendor mailing lists I've seen.
+Also, I've not seen many bugs not get looked at, except for the obvious
+cases where the user didn't provide enough info to properly diagnose them.
+I, for one, think these guys are doing a great job for what they are
+doing.
 
-> Have you been able to get to your data since you first posted
-> the bug report?  What steps did you take to get to this point?
-
-I am able to use my data with 0.8final on Conectiva's kernel RPM.
-
-Basically, I have 3 PVs in my VG:
-
-PV1: /dev/hdd1   (full)
-PV2: /dev/hdb1   (almost full)
-PV3: /dev/hda5   (still empty)
-
-Whenever I run vgscan, it will encounter the (empty) hda5
-first and somehow gets confused.
-
-Removing /dev/hda5 from my VG meant I could use 2.4.0 and
-normally access my data. Doing a pvextend /dev/hda5 gave
-a kernel oops. This removing had to be done with 0.8final
-since 0.9+tools were confused.
-
-In 2.4.1, I did a pvextend vg0 /dev/hda5 and everything
-seemed to work fine. Didn't get around to grow a filesystem
-into the last PV.
-
-When I came back after a power failure, I found my system
-in a rather bad state. Now I am unable to remove /dev/hda5
-from me VG or grow a LV into that VG ... all tools seem
-confused. Luckily I can still access the data using 0.8.
-
-The fact that 0.8 and 0.9 fail in different ways, however,
-seems to suggest that there's nothing but simple implementation
-bugs keeping me from using my system with 2.4 again and testing
-if my latest VM changes really help ;)
-
-> What I'm wondering is this:  did your attempt to use the LVM
-> tools with the broken kernel patch in 2.4.0 mess up the on-disk
-> format,
-
-I don't think this is the case since the 0.8final tools
-(and kernel driver) didn't complain after my 2.4.0 tests.
-However, after my 2.4.1 tests I'm no longer completely sure.
-
-> or is this a continued problem that can be reproduced
-> with new VGs created with 0.9.1_beta3 or converted with the
-> latest tools from 0.8final or 0.8.1?
-
-I haven't created any VGs with the new tools, this thing
-comes straight from 0.8final (+fixed tools, close to 0.8.1).
-
-regards,
-
-Rik
 --
-Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
-
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
-
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com/
+Michael Brown
+Linux Systems Group
+Dell Computer Corp
