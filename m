@@ -1,11 +1,9 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 17 May 2001 15:44:23 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] main drive fail
-Message-ID: <20010517154423.A19998@sistina.com>
-References: <31470A1D25F5D311940A0020182B88D319F973@mail.n-ary.com> <3B03D3B6.71BF4AD8@loria.fr>
-Mime-Version: 1.0
-In-Reply-To: <3B03D3B6.71BF4AD8@loria.fr>; from Dominique.Larchey-Wendling@loria.fr on Thu, May 17, 2001 at 03:35:50PM +0200
+Return-Path: <thomas@n-ary.com>
+Message-ID: <31470A1D25F5D311940A0020182B88D319F974@mail.n-ary.com>
+From: Thomas Inglis <thomas@n-ary.com>
+Date: Thu, 17 May 2001 15:05:46 +0100
+MIME-Version: 1.0
+Subject: [linux-lvm] main drive fail
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,73 +17,60 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Thu, May 17, 2001 at 03:35:50PM +0200, Dominique LARCHEY-WENDLING wrote:
-> Thomas Inglis wrote:
-> > 
-> > Thomas, Did you restore the lvm related entries in /etc ?
-> > Well, using
-> >    vgcfgrestore -nlvmGroup /dev/hdb1         (thx Dominque)
-> > says that /etc/lvmconf/lvmGroup.conf doesnt exists, backup not available.
-> 
-> You are not supposed to loose these files .... aie ;-(
+Dominique,
 
-Correct :-(
+Maybe I didn't explain it well enough. Main drive is gone, poof, no longer
+exists. Its the other three drives I want to restore now that ive done the
+kernel/LVM stuff on the new drive. No existing LVM files remain on the main
+drive. The only thing the main drive did was boot and start LVM. Obviously
+that's now not the case. Upshot is I do not have /etc/lvmconf anymore.
 
-Do you have a backup on tape or somewhere?
+Im not particularly bothered about restoring all as it was, but I DO need to
+get the data contained on the drive, however painful or time consuming so I
+hope there's a way.
+What's this about each physical volume containing this data? Can I restore
+/etc/lvmconf/ from that in any way?
 
+Anyway :-)
 
-> As I understand, there is a copy of this info. on every phys. volume.
+pvscan gives
 
-A lot of parts are redundantly stored on every physical volume.
-*But* you need the PV structure *and* the PE mapping table (that's the one
-which translates between LV and PV addresses) which is in
-/etc/lvmconf/VGName.conf or deaper in the history (default depth 10) kept there.
+  pvscan -- reading all physical volumes (this may take a while)
+  pvscan -- inactive PV "/dev/hdb1" is associated to an unkown VG (run
+vgscan)
+  pvscan -- inactive PV "/dev/hdc1" is associated to an unkown VG (run
+vgscan)
+  pvscan -- inactive PV "/dev/hdd1" is associated to an unkown VG (run
+vgscan)
+  pvscan -- total: 3 [21.75 GB] / in use: 3 [21.75 GB] / in np VG: 0 [0]
 
-> But it seems no utility exist for restoring this info. into
-> /etc/lvmconf/...
+pvdisplay /dev/hdb1 gives
 
-It wouldn't help because the above unique information isn't on any of
-the other physical volumes.
+  -- Physical Volume -- 
+  PV Name		/dev/hdc1
+  VG Name		lvmGroup
+  PV Size		7.87 GB / NOT usable 3.48 MB [LVM: 128 KB]
+  PV#			3
+  PV Status		Not available
+  Allocatable		yes (but full)
+  Cur LV		1
+  PE Size (KByte)	4096
+  Total PE		2015
+  Free PE		0
+  Allocated PE		2015
+  PV UUID		yspotL-fxXr-dfOH-BNN8-uYkB-6VGq-hku
 
-> 
-> What does pvscan give you ?
+Also, this may seem a silly Question, how do I reply to the thread I
+created, lol, it seems silly to post it as an apparent new one?
 
-Likely all but the crahed one PV.
+Im no daft, just a programmer, ROFL.
 
-In case you have a recent backup of /etc/lvmconf/*, you can make use of
-that to vgcfgrestore your PV and run vgscan.
+Thomas
+__________________________________________________
+n-ary .. .. .. functionality through creativity
+http://www.n-ary.com/ +44 (1387) 242800
 
-> 
-> And I did not understand if you also want to recover the
-> data in the volume group lvmGroup ? (it would be simpler if not ...)
-> 
-> DL
-> 
-> -- 
-> Dominique Larchey
-> LORIA, Nancy, France
-> Tel. (Work) +33 (0) 3 83 59 20 13
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+tagServlet ... a java alternative to ColdFusion!
+http://www.tagServlet.com/
