@@ -1,13 +1,12 @@
-Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	j21JBSfK008100
-	for <linux-lvm@redhat.com>; Tue, 1 Mar 2005 20:11:29 +0100
-Date: Tue, 1 Mar 2005 20:11:27 +0100
+Date: Tue, 1 Mar 2005 20:19:23 +0100
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Message-ID: <20050301191127.GA13482@redhat.com>
+Subject: Re: [linux-lvm] Raid1 only with LVM
+Message-ID: <20050301191923.GA13742@redhat.com>
+References: <200502281138.00112.stuebiger-lvm@cip.ifi.lmu.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] *** Announcement: dmraid 1.0.0.rc6 ***
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <200502281138.00112.stuebiger-lvm@cip.ifi.lmu.de>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,132 +18,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: hjm@redhat.com
 
 
-               *** Announcement: dmraid 1.0.0.rc6 ***
+Michael,
 
-dmraid 1.0.0.rc6 is available at
-http://people.redhat.com:/heinzm/sw/dmraid/ in source tarball,
-source rpm and i386 rpms (shared, static and dietlibc).
+you can't do mirroring with LVM2 today but we'll suport it later this year.
 
-This release introduces support for VIA Software RAID.
-
-dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
-properties of software RAID sets (i.e. ATARAID) and contained DOS
-partitions using the device-mapper runtime of the 2.6 kernel.
-
-The following ATARAID types are supported on Linux 2.6:
-
-Highpoint HPT37X
-Highpoint HPT45X
-Intel Software RAID
-LSI Logic MegaRAID
-NVidia NForce
-Promise FastTrack
-Silicon Image Medley
-VIA Software RAID	*** NEW ***
-
-Please provide insight to support those metadata formats completely.
-
-Thanks.
-
-
-See files README and CHANGELOG, which come with the source tarball for
-prerequisites to run this software, further instructions on installing
-and using dmraid!
-
-CHANGELOG is contained below for your convenience as well.
-
-
-Call for testers:
------------------
-
-I need testers with the above ATARAID types, to check that the mapping
-created by this tool is correct (see options "-t -ay") and access to the
-ATARAID data is proper.
-
-In case you have a different ATARAID solution from those listed above,
-please feel free to contact me about supporting it in dmraid.
-
-You can activate your ATARAID sets without danger of overwriting
-your metadata, because dmraid accesses it read-only unless you use
-option -E together with -r in order to erase ATARAID metadata
-(see 'man dmraid')!
-
-This is a release candidate version so you want to have backups of your valuable
-data *and* you want to test accessing your data read-only first in order to
-make sure that the mapping is correct before you go for read-write access.
-
-
-Contacts:
----------
-
-The author is reachable at <Mauelshagen@RedHat.com>.
-
-For test results, mapping information, discussions, questions, patches,
-enhancement requests and the like, please subscribe and mail to
-<ataraid-list@redhat.com>.
-
---
+On Mon, Feb 28, 2005 at 11:38:00AM +0100, Michael St�biger wrote:
+> Hello.
+> 
+> I'm rather new to LVM2 and DM.
+> After having read what I could find about it I got the impression that
+> one should be able to get LVM to Mirror a Volume Group to 2 Physical Volumes with
+> the mirror target just like it can do striping.
+> 
+> Alas I was unable to find any documentation on how to accomplish this.
+> 
+> Can anybody please help me with this?
+> 
+> Regards
+> Michael St�biger
+> 
+> -- 
+> | Dipl. Inf. Michael St�biger                   Michael.Stuebiger at rz.ifi.lmu.de |
+> | Ludwig-Maximilians-Universitaet Muenchen                                         	|
+> | Institut fuer Informatik                Zimmer Z 9      Tel: 2180-9137           	|
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 Regards,
 Heinz    -- The LVM Guy --
-
-
-CHANGELOG:
----------
-
-Changelog from dmraid 1.0.0-rc5f to 1.0.0.rc6		2005.02.28
-
-FIXES:
-------
-o sil status()
-o _sil_read() used LOG_NOTICE rather than LOG_INFO in order to
-  avoid messages about valid metadata areas being displayed
-  during "dmraid -vay".
-o isw, sil filed metadata offset on "-r -D" in sectors rather than in bytes.
-o isw needed dev_sort() to sort RAID devices in sets correctly.
-o pdc metadata format handler name creation. Lead to
-  wrong RAID set grouping logic in some configurations. 
-o dos.c: partition table code fixes by Paul Moore
-o _free_dev_pointers(): fixed potential OOB error
-o hpt37x_check: deal with raid_disks = 1 in mirror sets
-o pdc_check: status & 0x80 doesn't always show a failed device;
-  removed that check for now. Status definitions needed.
-o sil addition of RAID sets to global list of sets
-o sil spare device memory leak
-o group_set(): removal of RAID set in case of error
-o hpt37x: handle total_secs > device size
-o allow -p with -f
-o enhanced error message by checking target type against list of
-  registered target types
-
-
-FEATURES:
----------
-o VIA metadata format handler
-o added RAID10 to lsi metadata format handler
-o "dmraid -rD": file device size into {devicename}_{formatname}.size
-o "dmraid -tay": pretty print multi-line tables ala "dmsetup table"
-o "dmraid -l": display supported RAID levels + manual update
-
-
-MISCELANIOUS:
-------------
-
-o more inline comments
-o libdmraid_init() now returns lib context
-o check_set() enhanced to do RAID set stack unrolling and
-  to check correct number of devices in sets; saves code in
-  metadata format handlers
-o introduced read_raid_dev() to further reduce metadata format handler code
-o optimized parse_table()
-o updated dmraid manual
-o devmapper.c: check target type registered before trying to load table record
-o misc.c: avoid find_percent().
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
