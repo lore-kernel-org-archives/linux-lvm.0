@@ -1,11 +1,10 @@
-Date: Tue, 16 Oct 2001 02:37:55 +0200
-From: Jos Visser <josv@osp.nl>
-Subject: Re: [linux-lvm] added a physical volume but df reports no joy
-Message-ID: <20011016023755.E28004@jadzia.josv.com>
-References: <20011015173154.E24088@transvirtual.com>
+Date: Tue, 16 Oct 2001 10:55:33 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] replace bad hard disc
+Message-ID: <20011016105533.A4318@sistina.com>
+References: <110278234233.20011015163039@difi.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011015173154.E24088@transvirtual.com>; from mark@transvirtual.com on Mon, Oct 15, 2001 at 05:31:54PM -0700
+In-Reply-To: <110278234233.20011015163039@difi.de>; from Stefan.Onken@difi.de on Mon, Oct 15, 2001 at 04:30:39PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,89 +20,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Mark,
+Stefan,
 
-After doing an lvxtend, you must also resize the filesystem that resides
-in the LV. With an ext2fs, this can be achieved using the resize2fs tool
-that is part of the latest ext2fs tools. Be sure to read the manual page
-carefully, and maybe even backup your valuable data first!
+add a new hard drive to your system and create (at least) an LVM partition
+(Type 0x8E) on it. Let's call the new one /dev/sde1 and your flaky one
+/dev/sdd1 just for the purpose of this example.
 
-++Jos
+Then:
 
-And thus it came to pass that Mark wrote:
-(on Mon, Oct 15, 2001 at 05:31:54PM -0700 to be exact)
+pvcreate /dev/sde1
+vgextend Stonki2 /dev/sde1
+pvmove /dev/sdd1 /dev/sde1
+vgreduce Stonki2 /dev/sdd1
 
-> hi all.
+After this went ok you can uninstall the flaky drive from your system
+and start to disassemble it in order to create some nice wallclocks ;-)
+
+In case pvmove complains about read errors and stops before moving all
+data over, please come back to me for further help.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+On Mon, Oct 15, 2001 at 04:30:39PM +0200, Stefan Onken wrote:
+> Hello,
 > 
-> so when my first logical volume filled up i added a third
-> physical volume with 'pvcreate /dev/hdx' then 
-> 'vgextend vol_group_name /dev/hdx' then 'lvextend -L 53000 /dev/vol_group/log_vol /dev/hdx'.
-> i had 35GB and added another 20GB disk for a possible 55GB but after the lvextend
-> the kernel isn't seeing the new volume size - that is i still only have 35GB of usable
-> storage ( including some PEs that when allocated will have a neglible impact on the 
-> total volume size needed ).
+>  I already looked in the How-to and FAQ, but I do not find any
+>  step by step tutorial to change a bad hard disc in a LVM System.
 > 
-> is this because set the logical volume size as opposed to extending it? 
+>  I have two hard discs, 100 Gig + 60 Gig with reiserfs. The 60gig
+>  hard drive has some bad blocks, so I would like to replace it
+>  with a new hard disc. May anyone please be so kind and give me a
+>  helping hand for this problem....
+>  
+> linux:~ # lvscan
+> lvscan -- ACTIVE            "/dev/Stonki2/LV_Stonki2" [150.59 GB]
+> lvscan -- 1 logical volumes with 150.59 GB total in 1 volume group
+> lvscan -- 1 active logical volumes
 > 
-> the logical volume is now at almost %100 and won't take any more data ( sans those extra PEs )
 > 
-> here's a verbose vgdisplay:
 > 
-> glimmung:~# vgdisplay foo -v
-> --- Volume group ---
-> VG Name               foo
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                1
-> Open LV               1
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                3
-> Act PV                3
-> VG Size               54.16 GB
-> PE Size               4 MB
-> Total PE              13866
-> Alloc PE / Size       13250 / 51.76 GB
-> Free  PE / Size       616 / 2.41 GB
-> VG UUID               oBe1zH-ifW2-1Lhx-nAGe-UP5t-0Maw-WryAw7
-> 
+> linux:~ # lvdisplay /dev/Stonki2/LV_Stonki2
 > --- Logical volume ---
-> LV Name                /dev/foo/lvol1
-> VG Name                foo
+> LV Name                /dev/Stonki2/LV_Stonki2
+> VG Name                Stonki2
 > LV Write Access        read/write
 > LV Status              available
 > LV #                   1
 > # open                 1
-> LV Size                51.76 GB
-> Current LE             13250
-> Allocated LE           13250
+> LV Size                150.59 GB
+> Current LE             38550
+> Allocated LE           38550
 > Allocation             next free
 > Read ahead sectors     120
 > Block device           58:0
 > 
 > 
-> --- Physical volumes ---
-> PV Name (#)           /dev/hda7 (1)
-> PV Status             available / allocatable
-> Total PE / Free PE    4076 / 0
+> thanks anyway...
 > 
-> PV Name (#)           /dev/hdb1 (2)
-> PV Status             available / allocatable
-> Total PE / Free PE    4885 / 179
+> cu
 > 
-> PV Name (#)           /dev/hdc1 (3)
-> PV Status             available / allocatable
-> Total PE / Free PE    4905 / 437
+> stonki
 > 
-> 
-> thanks!
 > 
 > -- 
->   Mark Garey                            Tel:     (415) 243-4055 x1023
->   Transvirtual Technologies, Inc.,      Fax:     (415) 243-4056
->   San Francisco, CA. USA                Email:   mark@transvirtual.com
+> The More I See, The More I Know. The More I Know, The Less I Understand
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
@@ -111,6 +93,15 @@ And thus it came to pass that Mark wrote:
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
--- 
-Nothing can be reasonable or beautiful unless it's been made by one 
-central idea.
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
