@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] need to restore corrupted VG, help needed!
-Message-ID: <20021112132009.A29161@sistina.com>
-References: <20021111225402.29940.1223.Mailman@hermes.sistina.com> <52541.195.212.29.226.1037092283.squirrel@webmail.nnm.ee>
+Subject: Re: [linux-lvm] vg fun!
+Message-ID: <20021112132847.B29161@sistina.com>
+References: <Pine.LNX.4.44.0211111117300.9203-100000@pircsds0.agron.iastate.edu>
 Mime-Version: 1.0
-In-Reply-To: <52541.195.212.29.226.1037092283.squirrel@webmail.nnm.ee>; from liivo@nnm.ee on Tue, Nov 12, 2002 at 11:11:23AM +0200
+In-Reply-To: <Pine.LNX.4.44.0211111117300.9203-100000@pircsds0.agron.iastate.edu>; from akrherz@iastate.edu on Mon, Nov 11, 2002 at 11:30:28AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,128 +14,92 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 12 06:26:02 2002
+Date: Tue Nov 12 06:34:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Liivo,
-pvdata shows that you had _two_ physical volumes in your volume group before
-and that "vg" is exported?
+Daryl,
 
-Why is it exported when your other drive crashed and where's the other
-physical volume belonging to "vg"? Was it eventually on the dead drive?
-In that case it is pretty unlikely that you can retrieve a lot of your logical
-volume date anyways. Even if you replace that drive, you won't get that data
-back which went down the drain woth it.
-
-If you don't find the other physical volume with "pvscan -u" (look for
-UUID Zy48rM-UOIi-0gP7-TvjK-apfK-4oJ1-0rvV2b) and 
-if my assumptions are correct you want to go for a restore.
-Hopefully you've got a recent backup.
+could well be an array dereference bug fixed in the recent version.
+Please try the attached statically linked vgscan version 1.0.6 (presuming i386;
+not send to the list).
+If that works, you want to upgrade to 1.0.6.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Tue, Nov 12, 2002 at 11:11:23AM +0200, Liivo Liivrand wrote:
-> Hello All!
+On Mon, Nov 11, 2002 at 11:30:28AM -0600, Daryl Herzmann wrote:
+> Greetings,
 > 
-> I had a disk crash on my system and now I need to have my VG back, but
-> how? I had two HDDs, one containing root partition and one with LVM. HDD
-> with root partition crashed and backup was too old to restore :-( Now I
-> installed new system (RedHat 8.0) and need urgently to have my files from
-> old LVs, but I can't. Please help me! Look down, I think that problem is
-> in PV#, but how can I change it?
+> (warning:  I am a newbie to LVM!  I am probably doing something stupid.)
 > 
-> Output follows:
-> --- Cut ---
-> # fdisk -l /dev/hde
+> Environment:
+>   RedHat 8.0  (RH stock  2.4.18-14)
+>   lvm-1.0.3-9
 > 
-> Disk /dev/hde: 16 heads, 63 sectors, 79780 cylinders
-> Units = cylinders of 1008 * 512 bytes
+> Before this machine became quasi-production, I was messing around with LVM 
+> and Raid.  I probably screwed somethinng up royally and I am hoping that 
+> someone could help me reverse it...
 > 
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/hde1   *         1       203    102280+  fd  Linux raid autodetect
-> /dev/hde2           204      1243    524160   8e  Linux LVM
-> /dev/hde3          1244      1446    102312   fd  Linux raid autodetect
-> /dev/hde4          1447     79780  39480336   85  Linux extended
-> /dev/hde5          1447     79780  39480304+  8e  Linux LVM
+> I have a RAID 5 array of 3 physical hard drives 120G and a hopefull LVM 
+> combination of a 40 and 80 to make 120.  (I had this working for a few 
+> days until a reboot)  After my reboot,  the lvm component of my raid array 
+> failed and I have been degradded mode ever since...
+> 
+> So lets try my LVM commands...
+> 
+> # pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/md0"   is associated to unknown VG "test_vg" 
+> (run vgscan)
+> pvscan -- inactive PV "/dev/hdj1"  is associated to unknown VG "vg1" (run 
+> vgscan)
+> pvscan -- inactive PV "/dev/hdc1"  is associated to unknown VG "vg1" (run 
+> vgscan)
+> pvscan -- total: 3 [229.29 GB] / in use: 3 [229.29 GB] / in no VG: 0 [0]
+> 
+> (I wanted to combine /dev/hdj1 and /dev/hdc1 to built vg1, the problem 
+> appears to be why /dev/md0 still thinks it is a part of test_vg?)
 > 
 > # vgscan
 > vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "sys"
-> vgscan -- found exported volume group "vgPV_EXP"
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
-> volume group "vg" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> groups
+> Segmentation fault
 > 
-> # vgimport -f vg /dev/hde5
-> vgimport -- ERROR: wrong number of physical volumes to import volume group
-> "vg"
+> # ls /etc/lvmconf/
+> vg0.conf        vg0.conf.2.old  vg0.conf.4.old  vg1.conf.1.old
+> vg0.conf.1.old  vg0.conf.3.old  vg1.conf
 > 
-> # pvdisplay /dev/hde5
-> --- Physical volume ---
-> PV Name               /dev/hde5
-> VG Name               vg
-> PV Size               37.65 GB [78960609 secs] / NOT usable 4.18 MB [LVM:
-> 161 KB]
-> PV#                   2
-> PV Status             NOT available
-> Allocatable           yes
-> Cur LV                0
-> PE Size (KByte)       4096
-> Total PE              9637
-> Free PE               9637
-> Allocated PE          0
-> PV UUID               7OuTtg-ci2d-4jcK-zhlO-0W5F-YvlT-lzkXMp
+> # ls -l /dev/test_vg
+> ls: /dev/test_vg: No such file or directory
 > 
-> # pvdata -v /dev/hde5
-> --- Physical volume ---
-> PV Name               /dev/hde5
-> VG Name               vg
-> PV Size               37.65 GB [78960609 secs] / NOT usable 4.18 MB [LVM:
-> 161 KB]
-> PV#                   2
-> PV Status             NOT available
-> Allocatable           yes
-> Cur LV                0
-> PE Size (KByte)       4096
-> Total PE              9637
-> Free PE               9637
-> Allocated PE          0
-> PV UUID               7OuTtg-ci2d-4jcK-zhlO-0W5F-YvlT-lzkXMp
+> So I guess the question is how to I get rid of test_vg??  I think once I 
+> eliminate test_vg, then my vg1 will behave correctly.  Oh, here is my 
+> raidtab in case you are interested..
 > 
-> --- Volume group ---
-> VG Name
-> VG Access             read/write
-> VG Status             NOT available/resizable
-> VG #                  0
-> MAX LV                255
-> Cur LV                11
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                255
-> Cur PV                2
-> Act PV                2
-> VG Size               75.29 GB
-> PE Size               4 MB
-> Total PE              19274
-> Alloc PE / Size       9583 / 37.43 GB
-> Free  PE / Size       9691 / 37.86 GB
-
-<SNIP>
-
-> pvdata -- logical volume struct at offset 254 is empty
-> --- List of physical volume UUIDs ---
+> # cat /etc/raidtab 
+> raiddev /dev/md0
+>   raid-level             5
+>   nr-raid-disks          4
+>   nr-spare-disks         0
+>   persistent-superblock  1
+>   parity-algorithm       left-symmetric
+>   chunk-size             128
+>   device     /dev/hdf1
+>   raid-disk  0
+>   device     /dev/hdh1
+>   raid-disk  1
+>   device     /dev/hdl1
+>   raid-disk  2
+>   device     /dev/vg1/lvol1
+>   raid-disk  3
 > 
-> 001: Zy48rM-UOIi-0gP7-TvjK-apfK-4oJ1-0rvV2b
-> 002: 7OuTtg-ci2d-4jcK-zhlO-0W5F-YvlT-lzkXMp
 > 
-> --- Cut ---
+> 
+> TIA,
+>   Daryl
 > 
 > 
 > 
