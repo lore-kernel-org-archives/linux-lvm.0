@@ -1,10 +1,10 @@
-From: "Erick Calder" <e@arix.com>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
 Subject: RE: [linux-lvm] missing vg after reboot
-Date: Mon, 10 Sep 2001 20:46:52 -0700
-Message-ID: <000b01c13a74$653a4720$0300000a@pacbell.net>
+Date: Mon, 10 Sep 2001 21:10:18 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPIEDIDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-In-Reply-To: <NBBBJHKIOKPKOGOEPEDPGEDFDNAA.stuart@bh90210.net>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
+In-reply-to: <000b01c13a74$653a4720$0300000a@pacbell.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,136 +19,94 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-actually that's also true of RedHat 7.0 and 7.1
-
-- e r i c k
-
------Original Message-----
-From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-Behalf Of IT3 Stuart B. Tener, USNR-R
-Sent:	Monday, September 10, 2001 7:38 PM
-To:	linux-lvm@sistina.com
-Subject:	RE: [linux-lvm] missing vg after reboot
-
-List members:
-
-	It might be worth adding to the How-To that no initscript modifications =
-are
-necessary for Linux Mandrake, as their default rc.sysinit script contains
-code in it to do the vg initialization on boot up.
-
-
-Very Respectfully,
-
-Stuart Blake Tener, IT3, USNR-R, N3GWG
-Beverly Hills, California
-VTU 1904G (Volunteer Training Unit)
-stuart@bh90210.net
-west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
-east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
-
-Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's
-free!)
-
-JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
-
-Monday, September 10, 2001 7:34 PM
-
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Michael Holschbach
-Sent: Monday, September 10, 2001 8:49 AM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] missing vg after reboot
-
-
---- "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
->
-> Michael,
->
-> the pvdata output below exposes a completely messy PV structure,
-> which makes me think of 2 possible reasons:
->
-> a. /dev/hda2 is not the device you used to create a physical volume
->
-> b. something accidentially overwrote /dev/hda2 after the PV creation
->
->
-> If b is true you might still have an actual VGDA backup in
-> /etc/lvmconf/ which
-> you can use to vgcfgrestore(8) it to /dev/hda2 presumed that
-> /dev/hda2 is
-> the right device.
->
-I already tried vgcfgrestore. All available backup files lead to the
-same result:
-
-> > server1:~ # vgcfgrestore -v -n data /dev/hda2
-> > vgcfgrestore -- locking logical volume manager
-> > vgcfgrestore -- restoring volume group "data" from
-> > "/etc/lvmconf/data.conf"
-> > vgcfgrestore -- checking existence of
-> > "/etc/lvmconf/data.conf"
-> > vgcfgrestore -- reading volume group data for "data"
-> > from "/etc/lvmconf/data.con
-> > f"
-> > vgcfgrestore -- reading physical volume data for
-> > "data" from "/etc/lvmconf/data.
-> > conf"
-> > vgcfgrestore -- reading logical volume data for "data"
-> > from "/etc/lvmconf/data.c
-> > onf"
-> > vgcfgrestore -- checking volume group consistency of
-> > "data"
-> > vgcfgrestore -- checking volume group consistency of
-> > "data"
-> > vgcfgrestore -- reading physical volume "/dev/hda2"
-> > vgcfgrestore -- ERROR "pv_read(): PV identifier
-> > invalid" reading physical volume
-> >  "/dev/hda2"
-> >
-My idea was to reset the values of /dev/hda2 according to the following
-settings:
-
-> > server1:~ # vgcfgrestore -v -ll -n data /dev/hda2
-...
-> > --- Physical volume ---
-> > PV Name               /dev/hda2
-> > VG Name               data
-> > PV Size               27.62 GB / NOT usable 2.48 MB
-> > [LVM: 148 KB]
-> > PV#                   2
-> > PV Status             available
-> > Allocatable           yes
-> > Cur LV                6
-> > PE Size (KByte)       4096
-> > Total PE              7069
-> > Free PE               669
-> > Allocated PE          6400
-> > PV UUID
-> > e7sX5R-XnTm-keX6-jShf-tTlw-DUP3-mzp4zW
-> >
-
-These values seem plausible for me. Can i use them to manually edit the
-PV /dev/hda2 to rescue some data?
-
-
-MfG Michael
-
-__________________________________________________
-Do You Yahoo!?
-Get email alerts & NEW webcam video instant messaging with Yahoo! Messeng=
-er
-http://im.yahoo.com
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=
-=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=E5=8A{=B1=FE[=E6(tm)=A8=A5=8Ax%=8A=CBe=8A{=
-=B1=FE[=E6=FE=C8=AC=B6)=DA=FD=CA&=86=DBi=FF=FF=E5=8A
-=CBl=FE=C8=AC=B6)=DA=FD=CA&=FEf=A2-f=A7=FEX=AC=B6)=DF=A3=F9b=9E=EC=FF-=F9=
-=ABy=A7m...=E2=D50s-=FD3=9A=B6=1Bm=A7=FF=FF=C3
-=FF=B2+-=8Av=FFr=89=BF-=F9=BF=3D=A8-=B3=F8h=C2=DA=FF=86=D9=A5
+RXJpY2s6DQoNCglUaGF0IGFsc28gb3VnaHQgYmUgbm90ZWQgaW4gdGhlIGhvdy10by4NCg0KDQpW
+ZXJ5IFJlc3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBUZW5lciwgSVQzLCBVU05SLVIsIE4z
+R1dHIA0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRVIDE5MDRHIChWb2x1bnRlZXIgVHJh
+aW5pbmcgVW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3ZXN0IGNvYXN0OiAoMzEwKS0zNTgt
+MDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDktMjA0MyANCmVhc3Qg
+Y29hc3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQaGlsYWRlbHBoaWEsIFBBIDE5
+MTQ5LTU4NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFpbCBnYXRl
+d2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0KDQpKT0lOIFRIRSBVUyBOQVZZIFJF
+U0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwuIA0KDQpN
+b25kYXksIFNlcHRlbWJlciAxMCwgMjAwMSA5OjA4IFBNDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQpGcm9tOiBsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb20gW21haWx0bzpsaW51eC1s
+dm0tYWRtaW5Ac2lzdGluYS5jb21dT24gQmVoYWxmIE9mIEVyaWNrIENhbGRlcg0KU2VudDogTW9u
+ZGF5LCBTZXB0ZW1iZXIgMTAsIDIwMDEgODo0NyBQTQ0KVG86IGxpbnV4LWx2bUBzaXN0aW5hLmNv
+bQ0KU3ViamVjdDogUkU6IFtsaW51eC1sdm1dIG1pc3NpbmcgdmcgYWZ0ZXIgcmVib290DQoNCmFj
+dHVhbGx5IHRoYXQncyBhbHNvIHRydWUgb2YgUmVkSGF0IDcuMCBhbmQgNy4xDQoNCi0gZSByIGkg
+YyBrDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiAgIGxpbnV4LWx2bS1hZG1p
+bkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV0gT24NCkJl
+aGFsZiBPZiBJVDMgU3R1YXJ0IEIuIFRlbmVyLCBVU05SLVINClNlbnQ6ICAgTW9uZGF5LCBTZXB0
+ZW1iZXIgMTAsIDIwMDEgNzozOCBQTQ0KVG86ICAgICBsaW51eC1sdm1Ac2lzdGluYS5jb20NClN1
+YmplY3Q6ICAgICAgICBSRTogW2xpbnV4LWx2bV0gbWlzc2luZyB2ZyBhZnRlciByZWJvb3QNCg0K
+TGlzdCBtZW1iZXJzOg0KDQogICAgICAgIEl0IG1pZ2h0IGJlIHdvcnRoIGFkZGluZyB0byB0aGUg
+SG93LVRvIHRoYXQgbm8gaW5pdHNjcmlwdCBtb2RpZmljYXRpb25zIGFyZQ0KbmVjZXNzYXJ5IGZv
+ciBMaW51eCBNYW5kcmFrZSwgYXMgdGhlaXIgZGVmYXVsdCByYy5zeXNpbml0IHNjcmlwdCBjb250
+YWlucw0KY29kZSBpbiBpdCB0byBkbyB0aGUgdmcgaW5pdGlhbGl6YXRpb24gb24gYm9vdCB1cC4N
+Cg0KDQpWZXJ5IFJlc3BlY3RmdWxseSwNCg0KU3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlIt
+UiwgTjNHV0cNCkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENClZUVSAxOTA0RyAoVm9sdW50ZWVy
+IFRyYWluaW5nIFVuaXQpDQpzdHVhcnRAYmg5MDIxMC5uZXQNCndlc3QgY29hc3Q6ICgzMTApLTM1
+OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzDQplYXN0
+IGNvYXN0OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0NTg1OSwgUGhpbGFkZWxwaGlhLCBQQSAx
+OTE0OS01ODU5DQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFpbCBnYXRl
+d2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MNCmZyZWUhKQ0KDQpKT0lOIFRIRSBVUyBOQVZZIFJF
+U0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwuDQoNCk1v
+bmRheSwgU2VwdGVtYmVyIDEwLCAyMDAxIDc6MzQgUE0NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxpbnV4LWx2
+bS1hZG1pbkBzaXN0aW5hLmNvbV1Pbg0KQmVoYWxmIE9mIE1pY2hhZWwgSG9sc2NoYmFjaA0KU2Vu
+dDogTW9uZGF5LCBTZXB0ZW1iZXIgMTAsIDIwMDEgODo0OSBBTQ0KVG86IGxpbnV4LWx2bUBzaXN0
+aW5hLmNvbQ0KU3ViamVjdDogUmU6IFtsaW51eC1sdm1dIG1pc3NpbmcgdmcgYWZ0ZXIgcmVib290
+DQoNCg0KLS0tICJIZWlueiBKIC4gTWF1ZWxzaGFnZW4iIDxtYXVlbHNoYWdlbkBzaXN0aW5hLmNv
+bT4gd3JvdGU6DQo+DQo+IE1pY2hhZWwsDQo+DQo+IHRoZSBwdmRhdGEgb3V0cHV0IGJlbG93IGV4
+cG9zZXMgYSBjb21wbGV0ZWx5IG1lc3N5IFBWIHN0cnVjdHVyZSwNCj4gd2hpY2ggbWFrZXMgbWUg
+dGhpbmsgb2YgMiBwb3NzaWJsZSByZWFzb25zOg0KPg0KPiBhLiAvZGV2L2hkYTIgaXMgbm90IHRo
+ZSBkZXZpY2UgeW91IHVzZWQgdG8gY3JlYXRlIGEgcGh5c2ljYWwgdm9sdW1lDQo+DQo+IGIuIHNv
+bWV0aGluZyBhY2NpZGVudGlhbGx5IG92ZXJ3cm90ZSAvZGV2L2hkYTIgYWZ0ZXIgdGhlIFBWIGNy
+ZWF0aW9uDQo+DQo+DQo+IElmIGIgaXMgdHJ1ZSB5b3UgbWlnaHQgc3RpbGwgaGF2ZSBhbiBhY3R1
+YWwgVkdEQSBiYWNrdXAgaW4NCj4gL2V0Yy9sdm1jb25mLyB3aGljaA0KPiB5b3UgY2FuIHVzZSB0
+byB2Z2NmZ3Jlc3RvcmUoOCkgaXQgdG8gL2Rldi9oZGEyIHByZXN1bWVkIHRoYXQNCj4gL2Rldi9o
+ZGEyIGlzDQo+IHRoZSByaWdodCBkZXZpY2UuDQo+DQpJIGFscmVhZHkgdHJpZWQgdmdjZmdyZXN0
+b3JlLiBBbGwgYXZhaWxhYmxlIGJhY2t1cCBmaWxlcyBsZWFkIHRvIHRoZQ0Kc2FtZSByZXN1bHQ6
+DQoNCj4gPiBzZXJ2ZXIxOn4gIyB2Z2NmZ3Jlc3RvcmUgLXYgLW4gZGF0YSAvZGV2L2hkYTINCj4g
+PiB2Z2NmZ3Jlc3RvcmUgLS0gbG9ja2luZyBsb2dpY2FsIHZvbHVtZSBtYW5hZ2VyDQo+ID4gdmdj
+ZmdyZXN0b3JlIC0tIHJlc3RvcmluZyB2b2x1bWUgZ3JvdXAgImRhdGEiIGZyb20NCj4gPiAiL2V0
+Yy9sdm1jb25mL2RhdGEuY29uZiINCj4gPiB2Z2NmZ3Jlc3RvcmUgLS0gY2hlY2tpbmcgZXhpc3Rl
+bmNlIG9mDQo+ID4gIi9ldGMvbHZtY29uZi9kYXRhLmNvbmYiDQo+ID4gdmdjZmdyZXN0b3JlIC0t
+IHJlYWRpbmcgdm9sdW1lIGdyb3VwIGRhdGEgZm9yICJkYXRhIg0KPiA+IGZyb20gIi9ldGMvbHZt
+Y29uZi9kYXRhLmNvbg0KPiA+IGYiDQo+ID4gdmdjZmdyZXN0b3JlIC0tIHJlYWRpbmcgcGh5c2lj
+YWwgdm9sdW1lIGRhdGEgZm9yDQo+ID4gImRhdGEiIGZyb20gIi9ldGMvbHZtY29uZi9kYXRhLg0K
+PiA+IGNvbmYiDQo+ID4gdmdjZmdyZXN0b3JlIC0tIHJlYWRpbmcgbG9naWNhbCB2b2x1bWUgZGF0
+YSBmb3IgImRhdGEiDQo+ID4gZnJvbSAiL2V0Yy9sdm1jb25mL2RhdGEuYw0KPiA+IG9uZiINCj4g
+PiB2Z2NmZ3Jlc3RvcmUgLS0gY2hlY2tpbmcgdm9sdW1lIGdyb3VwIGNvbnNpc3RlbmN5IG9mDQo+
+ID4gImRhdGEiDQo+ID4gdmdjZmdyZXN0b3JlIC0tIGNoZWNraW5nIHZvbHVtZSBncm91cCBjb25z
+aXN0ZW5jeSBvZg0KPiA+ICJkYXRhIg0KPiA+IHZnY2ZncmVzdG9yZSAtLSByZWFkaW5nIHBoeXNp
+Y2FsIHZvbHVtZSAiL2Rldi9oZGEyIg0KPiA+IHZnY2ZncmVzdG9yZSAtLSBFUlJPUiAicHZfcmVh
+ZCgpOiBQViBpZGVudGlmaWVyDQo+ID4gaW52YWxpZCIgcmVhZGluZyBwaHlzaWNhbCB2b2x1bWUN
+Cj4gPiAgIi9kZXYvaGRhMiINCj4gPg0KTXkgaWRlYSB3YXMgdG8gcmVzZXQgdGhlIHZhbHVlcyBv
+ZiAvZGV2L2hkYTIgYWNjb3JkaW5nIHRvIHRoZSBmb2xsb3dpbmcNCnNldHRpbmdzOg0KDQo+ID4g
+c2VydmVyMTp+ICMgdmdjZmdyZXN0b3JlIC12IC1sbCAtbiBkYXRhIC9kZXYvaGRhMg0KLi4uDQo+
+ID4gLS0tIFBoeXNpY2FsIHZvbHVtZSAtLS0NCj4gPiBQViBOYW1lICAgICAgICAgICAgICAgL2Rl
+di9oZGEyDQo+ID4gVkcgTmFtZSAgICAgICAgICAgICAgIGRhdGENCj4gPiBQViBTaXplICAgICAg
+ICAgICAgICAgMjcuNjIgR0IgLyBOT1QgdXNhYmxlIDIuNDggTUINCj4gPiBbTFZNOiAxNDggS0Jd
+DQo+ID4gUFYjICAgICAgICAgICAgICAgICAgIDINCj4gPiBQViBTdGF0dXMgICAgICAgICAgICAg
+YXZhaWxhYmxlDQo+ID4gQWxsb2NhdGFibGUgICAgICAgICAgIHllcw0KPiA+IEN1ciBMViAgICAg
+ICAgICAgICAgICA2DQo+ID4gUEUgU2l6ZSAoS0J5dGUpICAgICAgIDQwOTYNCj4gPiBUb3RhbCBQ
+RSAgICAgICAgICAgICAgNzA2OQ0KPiA+IEZyZWUgUEUgICAgICAgICAgICAgICA2NjkNCj4gPiBB
+bGxvY2F0ZWQgUEUgICAgICAgICAgNjQwMA0KPiA+IFBWIFVVSUQNCj4gPiBlN3NYNVItWG5UbS1r
+ZVg2LWpTaGYtdFRsdy1EVVAzLW16cDR6Vw0KPiA+DQoNClRoZXNlIHZhbHVlcyBzZWVtIHBsYXVz
+aWJsZSBmb3IgbWUuIENhbiBpIHVzZSB0aGVtIHRvIG1hbnVhbGx5IGVkaXQgdGhlDQpQViAvZGV2
+L2hkYTIgdG8gcmVzY3VlIHNvbWUgZGF0YT8NCg0KDQpNZkcgTWljaGFlbA0KDQpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KRG8gWW91IFlhaG9vIT8N
+CkdldCBlbWFpbCBhbGVydHMgJiBORVcgd2ViY2FtIHZpZGVvIGluc3RhbnQgbWVzc2FnaW5nIHdp
+dGggWWFob28hIE1lc3Nlbmdlcg0KaHR0cDovL2ltLnlhaG9vLmNvbQ0KDQpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KbGludXgtbHZtIG1haWxpbmcgbGlz
+dA0KbGludXgtbHZtQHNpc3RpbmEuY29tDQpodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1h
+bi9saXN0aW5mby9saW51eC1sdm0NCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5z
+aXN0aW5hLmNvbS9sdm0vUGFnZXMvaG93dG8uaHRtbA0K////////////////////////////////
+///////////////linux/lvmKHRtKailinglistlinux/lvm/sistina/comhttp///lig0Ky2z+
+yKy2Kdr9yib+ZqItZqf+WKy2Kd+j+WKe7P8t+SJ5p20uLi7i1TBzLf0zmrYbbaf//8MNCv+yKy2K
+dv9yib8t+b89qC2z+GjC2v+G2aUNCg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXw0KbGludXgtbHZtIG1haWxpbmcgbGlzdA0KbGludXgtbHZtQHNpc3Rp
+bmEuY29tDQpodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1s
+dm0NCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5hLmNvbS9sdm0vUGFn
+ZXMvaG93dG8uaHRtbA0K
