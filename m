@@ -1,8 +1,9 @@
-Message-ID: <3E2A7AE4.8080801@informatik.uni-erlangen.de>
-From: Rainer.Lay@informatik.uni-erlangen.de
+From: "Bjorn" <programmer@spk.cc>
+Message-ID: <001101c2bfd0$ac08b5f0$4201a8c0@eagle>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] cannot extend lv
 Content-Transfer-Encoding: 7bit
+In-Reply-To: <20030113134402.5457.10290.Mailman@hermes.sistina.com>
+Subject: [linux-lvm] Getting 200GB ATA133 and Promise Ultra133 to work
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,42 +14,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 19 03:15:01 2003
+Date: Sun Jan 19 09:36:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: idsfa@visi.com
 
-My idea was not to make a 4 stripe set with 4 PV, but a 2 stripe set:
+Hello!
 
-stripe1: aaaaaaaaabbbbbb
-stripe2: cccccccccdddddd
+I have Slackware 8.1 and activated lvm on 4 200GB Maxtor ATA133 drives.
+Only 130 GB became useable on each drive. Upgrading Linux kernel to 2.4.20
+and downloading LVM2 and device mapper from sestina. Doing 2.4.19 patch on
+2.4.20. Still lvm thinks it is 130 GB drives.
+What is the trick to use 200GB drives?
 
-so if PV a and c are full, PV b and d are used.
+Regards,
 
-I would create a new lv as you suggested, but drives a and c are two 
-times bigger than b and d, so I thought about the above solution.
-
-Rainer
-
->> I have a vg (data) with four drives /dev/sd[b-e]1
->> I created a 2 stripes lv (data1) with sd[bc]1
->                 ^^^^^^^
-> 
-> You cannot extend striped lvs onto new pvs. Even on the
-> same physical hardware.  Once you have striped it, you are
-> tied to the pvs used.
-> 
-> If you think about it, this makes sense, as otherwise you
-> have some stripes containing more data than others.  In fact,
-> as soon as the smallest pv is full, you will not be able to
-> extend the lv, even if there is room in the other pvs.
-> 
-> If you want to have the filesystem striped over all the disks, you
-> will need to create a new lv which is striped across them all,
-> transfer the data to it, delete the old lv and then extend the
-> new one.
-> 
-> Backups highly recommended.
-> 
-> Michael
+//Bjorn
