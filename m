@@ -1,30 +1,73 @@
-Message-Id: <m10wasN-0000YeC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9
-In-Reply-To: <199906211751.LAA11908@munet-d.enel.ucalgary.ca> from Andreas Dilger at "Jun 21, 1999 11:51:57 am"
-Date: Wed, 23 Jun 1999 02:26:51 +0200 (MET DST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-Id: <199906231110.AA22585@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] Compiling LVM 0.6 on Redhat 6.0
+Date: Wed, 23 Jun 1999 13:09:00 METDST
+In-Reply-To: <ENJGHHKIMLNCBAAA@my-deja.com>; from "George Nicolaou" at Jun 22, 99 5:22 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: gnicolao@my-deja.com
+Cc: linux-lvm@msede.com, mge@u9ete.ez-darmstadt.telekom.de
 
-Hi,
 
-thanks for the link. Maybe we should bring the code to the author of
-ext2resize. A combination of both approaches may be what we are (or at least
-I am) looking for.
+Hi there!
 
-> filesystem - this may require modifications to mke2fs.  Another good thing
-> is that this definitely claims to work with a mounted filesystem, although
-> it requires a remount a-la "mount -o remount,rw...", but I think this will
-> work on an FS that has open files on it.
+Looks like you had a compile problem in the LVM lib which caused
+the library _not_ to be build.
 
-Ah, that's it. I feel a resizable file system approaching ... ;-)
+Could you please have a look at the library build output an tell me?
 
-Rolf
--- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+Regards,
+Heinz
+
+>
+> Hi all,
+>   I have just found LVM and attempting to install it on a newly installed headhat 6 box. When compiling I get the following error:
+> 
+> Using the static LVM Library
+> make[2]: *** No rule to make target `/usr/local/src/LVM/0.6/tools/lib/liblvm.a', needed by `e2fsadm'.  Stop.
+> make[2]: Leaving directory /usr/local/src/LVM/0.6/tools'
+> make[1]: *** [all] Error 2
+> make[1]: Leaving directory '/usr/local/src/LVM/0.6/tools'
+> make: *** [all] Error 2
+>
+> Using XLINKER
+> make[1]: Entering directory `/usr/local/src/LVM/0.6/tools'
+> cc  -L/usr/local/src/LVM/0.6/tools/lib -Xlinker -rpath /usr/local/src/LVM/0.6/to
+> ols/lib -Xlinker -rpath /lib -Xlinker -rpath /usr/lib -llvm -o e2fsadm e2fsadm.o
+> 
+> /usr/bin/ld: cannot open -llvm: No such file or directory
+> collect2: ld returned 1 exit status
+> make[1]: *** [e2fsadm] Error 1
+> make[1]: Leaving directory `/usr/local/src/LVM/0.6/tools'
+> make: *** [all] Error 2
+> 
+> 
+> Can someone please shead some light on this error.
+> 
+> Cheers
+> George
+> 
+> 
+> 
+> --== Sent via Deja.com http://www.deja.com/ ==--
+> Share what you know. Learn what you don't.
+> 
+
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
