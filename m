@@ -1,9 +1,9 @@
-Message-ID: <XFMail.20020904130102.f.hinzmann@hamburg.de>
-Content-Transfer-Encoding: 8bit
+From: "Mikael Lirbank" <mikael@lirbank.com>
+Message-ID: <007d01c25413$c70c7770$0a2fa00a@home.lirbank.com>
 MIME-Version: 1.0
-In-Reply-To: <XFMail.20020903224718.f.hinzmann@hamburg.de>
-From: Florian Hinzmann <f.hinzmann@hamburg.de>
-Subject: RE: [linux-lvm] Error after moving volume group to another machi
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_007E_01C25424.8A954770"
+Subject: [linux-lvm] LV maximum size
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,81 +14,184 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep  4 06:01:01 2002
+Date: Wed Sep  4 08:14:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Uh, oh, replying to myself:
+This is a multi-part message in MIME format.
 
-On 03-Sep-2002 Florian Hinzmann wrote:
+------=_NextPart_000_007E_01C25424.8A954770
+Content-Type: text/plain;
+	charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 
-> But the moved VG isn't detected properly. This is what I get:
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "vg01" from physical volume(s)
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "vgpum01"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume groups
+Hi,
+I saw someone on this mailing list talking about LV maximum size of 1TB.
+I can only make LVs 255 GB.
+ 
+Why?
+ 
+Thanks in advance!
+/Mikael
 
-The disks are back in their original machine currently. 
+------=_NextPart_000_007E_01C25424.8A954770
+Content-Type: text/html;
+	charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
 
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:st1=3D"urn:schemas-microsoft-com:office:smarttags" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
 
-pvdata gives me:
-
---- Physical volume ---
-PV Name               /dev/hdb1
-VG Name               vg01
-PV Size               76.34 GB [160086526 secs] / NOT usable 8.19 MB [LVM: 166 KB]
-PV#                   4
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                5
-PE Size (KByte)       8192
-Total PE              9769
-Free PE               0
-Allocated PE          9769
-PV UUID               jRyOAJ-1KHk-564T-jrQS-BHWC-OKhu-JiL9d4
-
---- Volume group ---
-VG Name               
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                9
-Open LV               0
-MAX LV Size           511.98 GB
-Max PV                256
-Cur PV                4
-Act PV                4
-VG Size               212.07 GB
-PE Size               8 MB
-Total PE              27145
-Alloc PE / Size       27145 / 212.07 GB
-Free  PE / Size       0 / 0
-VG UUID               BVZr37-mltv-69XE-pnBS-5ryg-NcKL-k6Fcfy
-
---- List of logical volumes ---
-
-pvdata -- logical volume "/dev/vg01/home" at offset   0
-pvdata -- logical volume "/dev/vg01/usr" at offset   1
-[...]
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
 
 
-"VG Name" in "--- Volume group ---" is empty. Is this normal? In case
-this or some other errors within the data structures within one or
-more partitions is the cause of my problems: 
-My setup is currently working obviosly. Is there a way to write this
-working configuration into every LVM partition's metadata overwriting 
-some possible errors there?
+<meta name=3DProgId content=3DWord.Document>
+<meta name=3DGenerator content=3D"Microsoft Word 10">
+<meta name=3DOriginator content=3D"Microsoft Word 10">
+<link rel=3DFile-List href=3D"cid:filelist.xml@01C25424.89F054E0">
+<o:SmartTagType =
+namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
+ name=3D"City"/>
+<o:SmartTagType =
+namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
+ name=3D"place"/>
+<!--[if gte mso 9]><xml>
+ <o:OfficeDocumentSettings>
+  <o:DoNotRelyOnCSS/>
+ </o:OfficeDocumentSettings>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:DocumentKind>DocumentEmail</w:DocumentKind>
+  <w:EnvelopeVis/>
+  <w:Compatibility>
+   <w:BreakWrappedTables/>
+   <w:SnapToGridInCell/>
+   <w:WrapTextWithPunct/>
+   <w:UseAsianBreakRules/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if !mso]>
+<style>
+st1\:*{behavior:url(#default#ieooui) }
+</style>
+<![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	mso-style-noshow:yes;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:Arial;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:windowtext;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */=20
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+</head>
 
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple =
+style=3D'tab-interval:36.0pt'>
 
- Regards
-    Florian
+<div class=3DSection1>
 
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Hi,<o:p></o:p></span></font></p>
 
---
-  Florian Hinzmann                         private: f.hinzmann@hamburg.de
-                                            Debian: fh@debian.org
-PGP Key / ID: 1024D/B4071A65
-Fingerprint : F9AB 00C1 3E3A 8125 DD3F  DF1C DF79 A374 B407 1A65
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>I saw someone on this mailing list talking about =
+</span></font><st1:City><st1:place><font
+  size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;font-family:Arial'>LV</span></font></st1:place>=
+</st1:City><font
+size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;font-family:Arial'> maximum
+size of 1TB.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>I can only make <span class=3DSpellE>LVs</span> 255 =
+GB.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Why?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Thanks in advance!<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>/Mikael<o:p></o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_007E_01C25424.8A954770--
