@@ -1,31 +1,40 @@
-Message-Id: <37C178B6.D1461600@mainland.ab.ca>
-Date: Mon, 23 Aug 1999 10:37:10 -0600
-From: Drew Smith <drew@winterland.mainland.ab.ca>
+Date: Mon, 23 Aug 1999 19:41:04 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] LVM in stock kernel!?
+Message-ID: <19990823194104.D19842@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+References: <199908212041.AA13662@mailgate1b.telekom.de>
 Mime-Version: 1.0
-Subject: [linux-lvm] LVM in stock kernel!
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <199908212041.AA13662@mailgate1b.telekom.de>; from Heinz Mauelshagen on Sat, Aug 21, 1999 at 10:39:30PM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: torvalds@transmeta.com, linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
+
+On Sat, Aug 21, 1999 at 10:39:30PM +0000, Heinz Mauelshagen wrote:
+> 
+> Hi everybody!
+> 
+> Dirk Hohndel told me last week, that Linus wants to wait before putting LVM
+> into the stock kernel to see if enough people are interested to have this.
+> 
+> Because a feature freeze for 2.4 is already comming up, i hereby kindly ask 
+> everybody to convince Linus to put the LVM into the stock kernel.
+> 
+> Send him mails please 8*)
+> 
+Heinz,
+
+I agree with you that LVM should go into the mainstream kernel,
+but i'd prefer a better method than flooding linus with emails
+tho have this accomplished.
+
+Regards,
+Luca
 
 
-	Hi Linus,
-
-	(OBGush) Thanks for Linux, man - been using it for just under five
-years, and it's made my life a helluva lot better; got me my job as a
-unix consultant, and given order to the piles of PCs in my bedroom.
-
-	This note is just to let you know that I'm finding LVM to be extrememly
-useful, and that many of the server admins I talk to daily are very
-interested in seeing this come as part of the stock distribution - many
-AIX and HP/UX people that are pretty tired of paying five-figure prices
-for software and support, and won't use Linux because it doesn't offer
-enough familiar support for large amounts of storage.
-
-	Just my vote; I really beleive this will help the coming of Linux into
-the REALLY big server rooms of the world. :)
-
-	Cheers,
-	- Drew.
+-- 
+Luca Berra -- bluca@comedia.it
+    Communications Media & Services S.r.l.
