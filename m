@@ -1,12 +1,13 @@
-Return-Path: <jdomingo@crosswinds.net>
-Date: Wed, 25 Jul 2001 16:51:17 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Return-Path: <wichert@cistron.nl>
+Date: Wed, 25 Jul 2001 16:55:27 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
 Subject: Re: [linux-lvm] Logical Volume file system
-Message-ID: <20010725165117.B598@dardhal.mired.net>
+Message-ID: <20010725165527.I32341@cistron.nl>
+References: <20010725162635.F32341@cistron.nl> <20010725165117.B598@dardhal.mired.net>
 Mime-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010725162635.F32341@cistron.nl>
+In-Reply-To: <20010725165117.B598@dardhal.mired.net>; from jdomingo@internautas.org on Wed, Jul 25, 2001 at 04:51:17PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,26 +22,20 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Wednesday, 25 July 2001, at 16:26:35 +0200,
-Wichert Akkerman wrote:
+Previously Jos� Luis Domingo L�pez wrote:
+> Does it mean that applications can use a LV as a "raw device" ?.
 
-> Previously Julien Baboud wrote:
-> >  This information isn't displayed in the output of the 'lvdisplay'
-> > command :(
-> 
-> The LV itself really doesn't care what you put on it, it does not even
-> need to be a filesystem.
-> 
-Does it mean that applications can use a LV as a "raw device" ?.
+There is no such as a `raw device'. A LV can be seen as a normal blockdevice
+from userland, just like a normal harddisk or disk slice.
 
-I've been searching through many places about Linux kernel 2.4.x support
-for raw devices, and found nothing specific.
+I think what you are referring to is `raw io', which is something you
+can do with any block device. Currently you still need a special rawio
+patch for Linux kernels, but it's a well tested and stable patch.
 
-Is raw devices support 2.5.x material, or is it possible with 2.4.x ?
+Wichert.
 
---
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+-- 
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
