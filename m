@@ -1,10 +1,11 @@
-Message-ID: <1042625459.3e2533b3d80f0@ogd.nl>
-From: Patrick van den Berg <P.van.den.Berg@ogd.nl>
-Subject: Re: [linux-lvm] Problems mounting LVM root volume
-References: <1041074125.3e0d87cdaaece@ogd.nl> <3E0D9F03.8010704@wanadoo.fr>
-In-Reply-To: <3E0D9F03.8010704@wanadoo.fr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] LVM bug
+From: rich turner <rich@storix.com>
+In-Reply-To: <45120000.1042594735@[192.168.200.4]>
+References: <1042575714.1983.27.camel@rich.storix.com> 
+	<45120000.1042594735@[192.168.200.4]>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1042654984.1085.91.camel@rich-laptop>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,111 +16,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 15 04:10:01 2003
+Date: Wed Jan 15 12:20:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I'm sorry for this *very* late reply to my original post almost 3 weeks ago 
-(original post is pasted below). I put the problem down for a while because I 
-had some other things to do. I now have found the problem, and it wasn't LVM 
-related at all. My kernel incorrectly detected my onboard Promise RAID 
-controller (PCI cards should work fine though), and thus couldn't find the vg. 
-I've now configured my onboard RAID controller to behave like an extra ATA-100 
-controller, and have installed software raid. I now run LVM on top of software 
-RAID; I have excluded / from LVM though, just to be sure.
+On Tue, 2003-01-14 at 17:38, Steven Lembark wrote:
+> 
+> 
+> -- Rich Turner <rich@storix.com>
+> 
+> > The following is a situation where LVM fails.
+> >
+> > Previously, I installed a system and created a physical volume on an
+> > entire disk. I am now re-installing the system and have created a
+> > physical volume on a partition on the same disk. The partition was
+> > created with sfdisk. I am able to create volume groups and logical
+> > volumes with no problem.
+> >
+> > The problem arises after a reboot of the system. vgscan fails to find
+> > any volume groups. pvscan finds physical volumes on both the disk and
+> > the partition. It appears LVM fails when creating a physical volume on a
+> > partition of a disk when there was previously a physical volume on the
+> > same entire disk.
+> >
+> > Using LVM 1.0.1
+> 
+> (1) 1.0.1 is pretty badly out of date; suggest updating to
+>     1.0.6 or 2.X.
 
-Thanks to Francis SOUYRI, Pierre Lamb and Steven Lembark for their suggestions.
+I will upgrade to 1.0.6 and see if there are any changes
 
-Regards,
-Patrick van den Berg
+> 
+> (2) Running pvcreate on a full device (e.g., /dev/hda) then
+>     again on /dev/hdaX will end up overwriting a portion of
+>     the contents in your first PV with the second one. LVM
+>     did exactly what you wanted it to. How is the a bug.
 
-
-
->Hello everybody, 
-> 
->I'm new at using LVM and I ran into trouble using it. I've got problems 
->mounting an LVM volume as root on my system running Gentoo Linux 1.4. My 
->configuration is as follows (skip to the bottom of the text for the actual 
->error message): 
-> 
->Gigabyte mainboard with onboard Promise RAID. I've got 2 80GB discs attached 
->(same model) and configured as RAID1. I installed via the Gentoo RC1 Stage 1 
->CDROM. During boot of the CD I had to abort and add the "IDE0=0x9400,0x9802 
->IDE2=0x9c00,0xa002" parameters to be able to load the pdcraid module. 
-> 
->My fstab looks as follows: 
-> 
->/dev/ataraid/disc0/part1  /boot       ext3      noauto,noatime  1  1 
->/dev/vg3/rootlv           /           reiserfs  noatime         0  0 
->/dev/ataraid/disc0/part2  none        swap      sw              0  0 
->/dev/cdroms/cdrom0        /mnt/cdrom  iso9660   noauto,ro       0  0 
->proc                      /proc       proc      defaults        0  0 
->tmpfs                     /dev/shm    tmpfs     defaults        0  0 
-> 
->I also compiled my kernel using the gentoo-sources, and with the following 
->options enabled: 
-> 
->- LVM support 
->- Built-in RAM disk support with initrd 
->- DEV fs support 
->- mount DEV filesystem at boot 
->- ReiserFS support 
-> 
->I also ran lvmcreate_initrd with the -M option, because everything is compiled 
->in the kernel. Also, when I run lvmceate_initrd without the -M options, it 
->returns errors and the lvm image is not created. 
-> 
->My grub,conf (linked to menu.lst) looks as follows: 
-> 
->default 0 
->timeout 30 
->splashimage=(hd0,0)/boot/grub/splash.xpm.gz 
-> 
->title=Gentoo 1.4 GNU/Linux on Antigone 
->root (hd0,0) 
->kernel /boot/bzImage root=/dev/vg3/rootlv ide0=0x9400,0x9802 
-ide2=0x9c00,0xa002 
->initrd /boot/initrd-lvm.gz 
+LVM did not do what I wanted, it failed. On a new install it still see's
+a full device physical volume from a previous install. My new install
+has only one physical volume on a partition. It fails because vgscan can
+not find any volume groups because pvscan is looking for the now
+non-existent physical volume on the entire disk.
 > 
 > 
->When I boot the system grub starts correctly, but when grub wants to boot my 
->system the following messages appear: 
-> 
->Code: 
->RAMDISK: Compressed image found at block 0 
->Freeing initrd memory: 994k freed. 
->VFS: Mounted root (ext2 filesystem). 
->Mounted devfs on /dev 
->vgscan -- found inactive volume group "vg3" 
->vgscan -- ERROR 28 writing volumegroup backup file /etc/lvmtab.d/vg3.tmp in 
->vg_cfgbackup.c [line273] 
->vgscan -- ERROR: "lvm_tab_vg_remove(): unlink" removing volume group "vg3" 
->from "/etc/lvmtab.d" 
->vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" succesfully created 
->vgscan -- WARNING: This program does not do a VGDA backup of your volume group 
-> 
->vgchange -- no volume groups found 
-> 
->VFS: Cannot open root device "vg3/rootlv" or 00:00 
->Please append a correct "root=" boot option 
->Kernel panic: VFS: Unable to mount rootfs on 00:00 
 > 
 > 
->Now, the strange thing is, when I boot via the CD and do vgscan and 
->vgchange -ay by hand, I can mount /dev/vg3/rootlv normally! 
 > 
->Does anybody got any ideas? I've run out of them   
+> --
+> Steven Lembark                               2930 W. Palmer
+> Workhorse Computing                       Chicago, IL 60647
+>                                             +1 773 252 1080
 > 
->Thanks for any help in advance. When you need any more info, just say so. 
-> 
->Regards, 
->Patrick 
-> 
-> 
->_______________________________________________ 
->linux-lvm mailing list 
->linux-lvm@sistina.com 
->http://lists.sistina.com/mailman/listinfo/linux-lvm 
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/ 
-> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
