@@ -1,6 +1,6 @@
 From: <felix@crowfix.com>
-Message-Id: <15490.57352.298267.742746@crowfix.com>
-Subject: [linux-lvm] Minor mixup in LVM 1.0.3 man pages
+Message-Id: <15490.58056.469698.91549@crowfix.com>
+Subject: [linux-lvm] Minor mixup in LVM 1.0.3 man pages -- found the boot code!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,27 +11,16 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Mar  3 20:46:02 2002
+Date: Sun Mar  3 20:58:01 2002
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
 
-pvscan.8 is actually a slightly different version of pvcreate.8.
-
-I haven't seen any other mixups.
-
-I have been looking at all the man pages because I saw something
-before and now can't find it again.  I set up a resierfs on a vg and
-now, after a reboot, I can't remount it.  pvscan and several other
-utilities know it's there -- they show it as inactive -- but I can't
-find how to reactivate it.  This is a 2.4.18 kernel with devfs, and I
-remember seeing some documentation which said what to do after every
-boot, but I can't find it now!  I'll keep plugging away, I'll find it
-sooner or later.  Maybe this should be in the FAQ?
-
-Thanks for all the code, too :-)
+Sent you a message about mixed up man pages about 5 minutes ago.  Just
+found the boot code, in (of course) INSTALL.  Duh.  Had to use grep on
+the source tarball.  Thank you for not being Microsoft! :-) :-) :-) :-)
 
 -- 
             ... _._. ._ ._. . _._. ._. ___ .__ ._. . .__. ._ .. ._.
