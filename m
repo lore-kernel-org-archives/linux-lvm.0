@@ -1,13 +1,26 @@
-Date: Tue, 23 Mar 2004 15:58:28 +0100
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] It never rains...
-Message-ID: <20040323145828.GB29071@redhat.com>
-References: <20040322100443.GA11567@redhat.com>
-	<OF6A31DE83.6DD8A933-ON80256E5F.0056D8B4-80256E5F.0059CA24@uk.ibm.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF6A31DE83.6DD8A933-ON80256E5F.0056D8B4-80256E5F.0059CA24@uk.ibm.com>
-Reply-To: mauelshagen@redhat.com,
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2NFA9j04748
+	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 10:10:09 -0500
+Received: from sbbmail1.sbb.ch (sbbmail1.sbb.ch [193.192.251.19])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2NFA7WA018017
+	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 10:10:08 -0500
+Received: from intmail1.sbb.ch (intmail1.sbb.ch [10.104.27.189])
+	by sbbmail1.sbb.ch (Switch-3.1.4/Switch-3.1.0) with ESMTP id
+	i2NF9tS3016347
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 16:09:55 +0100
+Received: from gmx.net (i34390.sbb.ch [147.78.17.245])
+	by intmail1.sbb.ch (Switch-3.1.4/Switch-3.1.0) with ESMTP id
+	i2NF9shO015869
+	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 16:09:55 +0100
+Message-ID: <40605340.625224A7@gmx.net>
+Date: Tue, 23 Mar 2004 16:09:52 +0100
+From: Thomas Meller <thomas.meller@gmx.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] How to associate two paths for each EMC device?
+References: <OF2EB2F204.F8A111CC-ON85256E5C.00683842@db.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: thomas.meller@gmx.net,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,179 +32,59 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Chris Laycock <LAYCOCKC@uk.ibm.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>, mauelshagen@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Mar 22, 2004 at 04:20:42PM +0000, Chris Laycock wrote:
-> Heinz, et al
-> 
-> Sorry I failed to explain clearly what has happened. I have in fact lost 2 
-> disks. 1 disk contained to /boot, / and the swap space, the other disk I 
-> lost was from a 3 disk LVM called datavg.
-> 
-> I have rebuilt the system on a new disk but I have lost /etc/lvmconf, 
-> therefore (I assume) I have no metadata to restore the VG from. 
+I had to solve a similar problem lastly.
 
-Unless you have actual backups of /etc/lvmconf somewhere, I'm afraid so.
+For me, there is some more complicated stuff to get rid of. We are using SRDF mirroring.
+This leads to seeing the same disk_content_ on a different physical disk. This disk is
+readonly. LVM1 searches all disks in descending order and uses the readonly instead of the
+writeable copy.
 
-> 
-> Unfortunately I don't have access to the system until later tonight to 
-> test if you did in fact understand my poor explanation! 
+To find out which disk is which LUN, you can use scsi_info from the
+kernel-pcmcia-cs-3.1.31-9 RPM.
+Of course this is only valid for RH.
 
-If you really don't have actual LVM metadata backups:
+I solved the problem by vgscanning the SAN from initrd. On the ramdisk image, I included the
+device files for the devices to scan only.
+The Emulex SAN driver I use creates scsi devices sorted by Symmetrix, then LUN. So, the
+first 4 devices are on Symmetrix-A, starting from 0-0-0, followed by the devices on
+Symmetrix-B, starting form 0-0-0.
+I recommend to use static bindings, not only to change the device's order.
 
-in order to get to the other 2 PVs out of 3 in your VG, you want to use LVM2
-and device-mapper and run "vgscan --partial".
+The RedHat functions create all devicenodes on the initrd. So, scanning has to take place
+before it starts doing so. Afterwards I copy the lvmtab to the mounted real-root-device,
+overwriting the last active fileset.
+I have set up a HA cluster. Scanning the LVMs at bootup is vital for me. If you are not in
+need for updating the lvmtab frequently, you can do vgscans manually. You will have to
+remove the unneeded devicenodes before doing so.
+With LVM2, you can specify limits for vgscan. If the QLogic driver works in a similar way,
+this may be handy.
 
-Regards,
-Heinz    -- The LVM Guy --
+BTW: you do failover within the driver?
+I tried to do so, but up to now I failed.
+Can you tell me more about how the QLogic driver can be configured to failover?
+This is a bit off topic. Could you reply to this question by using my real address?
+
+Good luck
+
+Thomas
 
 
+Shan Jing wrote:
 > 
-> Many thanks,
+> The very basic way to identify the pair is to lvm each of the first 22 luns in a sequence and see which lun in the other 22 set is also lvm'ed.
 > 
-> Chris.
-> 
-> -------------------
-> Chris Laycock
-> IT Specialist 
-> IBM Global Services (IDO)
-> 
-> LITS, Stevenage
-> Mail point: K3 STEV UK
-> Email: LaycockC@uk.ibm.com
-> Tel : (01438) 76-9460  (internal: 44-9460)
-> 
-> 
-> Please respond to mauelshagen@redhat.com; Please respond to LVM general 
-> discussion and development <linux-lvm@redhat.com> 
-> Sent by:        linux-lvm-bounces@redhat.com
-> To:     LVM general discussion and development <linux-lvm@redhat.com>
-> cc:     hjm@redhat.com 
-> Subject:        Re: [linux-lvm] It never rains...
-> 
-> 
-> 
-> On Sat, Mar 20, 2004 at 08:02:03AM +0000, Chris Laycock wrote:
-> > Hi All, 
-> > 
-> > Had a bit a disaster, lost 1 disk from a 3 disk VG and the root 
-> partition! 
-> > All  on fully patched RH 9 system.
-> > I realise that I need to attach the 2 remaining PV to a LV and VG but if 
-> I 
-> > do the usual vgcreate, lvcreate & pvcreate I'll end up with two dataless 
-> 
-> > disks.
-> 
-> No, you need to replace the failed drive, pvcreate the new one (same size
-> as the dead one!) and vgcfgrestore the LVM metadata (see /etc/lvmconf/ and
-> the vgcfgrestore manual page) to it in order to be able to vgscan+vgchange
-> successfully.
-> 
-> Presumably your 2 surviving drives have most of the data allocated you 
-> should
-> be able to gain access to (most of) your data.
-> lvdisplay -v ... and pvdisplay -v ... are your friends to display the
-> actual mappings of LVs to PVs and vice/versa once you recovered
-> with vgcfgrestore.
-> 
-> 
-> > I luckly do have backups of some of the more important data but there 
-> not 
-> > a recenct as I'd like and don't contain all of the data or the root 
-> > partition.
-> 
-> If critical data is allocated to the dead drive (eg, start of LV and
-> a contained filesystem), you're in trouble and your (out-of-date) backup
-> is your best bet.
-> 
-> FYI: LVM2 has a --partial option for vgchange which will activate your VG
->      ignoring any missing PVs.
+> However, there must be a more technical way to resolve this and eventually make the disk represent only once.  Any guru out there can help?
 > 
 > Regards,
-> Heinz    -- The LVM Guy --
+> Shan Jing
 > 
+> Unix Group - Americas
+> Deutsche Bank
+> 2 Gatehall Drive, 3rd Floor
+> Parsippany, New Jersey, USA
+> shan.jing@db.com
+> 973.682.3463
 > 
-> > 
-> > Outputs from:
-> > 
-> > vgscan
-> > vgscan -- reading all physical volumes (this may take a while...)
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
-> 
-> > volume group "datavg" from physical volume(s)
-> > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> > vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-> 
-> > group
-> > 
-> > pvscan
-> > pvscan -- reading all physical volumes (this may take a while...)
-> > pvscan -- inactive PV "/dev/sda1"  is associated to unknown VG "datavg" 
-> > (run vgscan)
-> > pvscan -- inactive PV "/dev/hdc1"  is associated to unknown VG "datavg" 
-> > (run vgscan)
-> > pvscan -- total: 2 [45.75 GB] / in use: 2 [45.75 GB] / in no VG: 0 [0]
-> > 
-> > pvdisplay /dev/hdc1
-> > 
-> > --- Physical volume ---
-> > PV Name               /dev/hdc1
-> > VG Name               datavg
-> > PV Size               37.28 GB [78172227 secs] / NOT usable 4.19 MB 
-> [LVM: 
-> > 165 KB]
-> > PV#                   2
-> > PV Status             available
-> > Allocatable           yes (but full)
-> > Cur LV                1
-> > PE Size (KByte)       4096
-> > Total PE              9541
-> > Free PE               0
-> > Allocated PE          9541
-> > PV UUID               vozLHH-585D-SSjH-XM9b-A8g2-888k-5tZWI0
-> > 
-> > The two remaining disks are /dev/hdc1 & /dev/sda1
-> > 
-> > Thanks in advance
-> > 
-> > Regards,
-> > Chris.
-> > 
-> > -------------------
-> > Chris Laycock
-> > IT Specialist 
-> > IBM Global Services (IDO)
-> > 
-> > LITS, Stevenage
-> > Mail point: K3 STEV UK
-> > Email: LaycockC@uk.ibm.com
-> > Tel : (01438) 76-9460  (internal: 44-9460)
-> > 
-> 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
