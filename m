@@ -1,59 +1,38 @@
-From: jasonf@Cronosys.COM
-Message-ID: <20000322104034.B23747@nccr-cle-c.nccrs.com>
-Date: Wed, 22 Mar 2000 10:40:34 -0500
-Subject: [linux-lvm] RaidZone RAID hardware.
-Mime-Version: 1.0
+From: Andreas Dilger <adilger@home.com>
+Message-Id: <200003221722.e2MHMlT01821@webber.adilger.net>
+Subject: Re: [linux-lvm] RaidZone RAID hardware.
+In-Reply-To: <20000322104034.B23747@nccr-cle-c.nccrs.com> from "jasonf@cronosys.com"
+ at "Mar 22, 2000 10:40:34 am"
+Date: Wed, 22 Mar 2000 10:22:47 -0700 (MST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: jasonf@Cronosys.COM
+Cc: Linux LVM mailing list <linux-lvm@msede.com>
 
+Jason writes:
+> P.S. [offtopic] Anyone know where the ext3 patches are, and whether any of
+> the various ext2 resizers (including the one that works when mounted) will
+> work with the ext3 journal in place?  And that ext3 works with LVM, of
+> course.
 
-Hello,
+While I've looked at ext3, I haven't looked at ext3+online resize.  However,
+I don't think that there would be a problem with using ext2resize on an
+unmounted ext3 filesystem, since the ext3 filesystem is on-disk identical
+to ext2 format filesystems.  When ext3 is unmounted, the only difference
+between it and ext2 is the journal file (just a regular file), and a bit
+in the superblock that says there is a journal.  It may be that ext2resize
+will complain about the unknown journal flag, but it may just work anyways.
 
-I've recently purchased Consensus' RaidZone IDE RAID Can and stuff, and
-would like to use LVM with it.
+I think when there is 2.3 ext3 journal code, I will look at making ext2online
+work with it.  Right now, I'm trying to fix a few bugs and get it into the
+2.3.99 kernel if possible.
 
-The drivers for the RAID can are in patch + binary library form.  The
-binary library seems to be a generic library, and the source for the whole
-of the Linux kernel interface is available in patch form.  I've been able to
-resolve conflicts between the two patches, and modify the user-mode tools
-to accept devices with RaidZone's major numbers (116 and 117), as well as
-the new IDE major numbers that the RaidZone patch adds (IDE7_MAJOR through
-IDE13_MAJOR); at this point I can create volume groups and logical volumes,
-but running mke2fs on various logical volumes fails with different read or
-write failures.  A small LV failed with short write to block 0, all the 
-others failed with 'short read in ext2_mkdir()'.  For some reason, vgcreate
-selected 4Mb PE/LE size.
-
-Has this been seen before, and might anyone have any clues?  My config is
-using the 0.8i patch on 2.2.14 with the RaidZone patch.  The RaidZone patch
-basically just implements the RaidZone devices (/dev/rz*), but also adds
-support for more IDE major numbers (all of the drives in the
-RAID can are also individually accessible, although I haven't tested that).
-
-This was attempted both with making the 150Gb volume group from /dev/rza1
-and making the volume group from /dev/rza - I can partition /dev/rza just
-fine and have made a large (150Gig) ext2 partition on /dev/rza1 and these
-work fine - that seems to indicate to me that it's not the RaidZone driver,
-not that I would be terribly surprised if the RaidZone drivers were the 
-issue anyway.
-
-The RaidZone patch is only available for 2.2.12, 2.2.13, and 2.2.14, which
-is why I chose 2.2.14; are there any issues with 0.8i on 2.2.14 this might
-be exposing?  When will 0.8final be available for 2.2.14, and what needs to
-be done there?
-
-Unfortunately, I can't devote much more time on this; so, if there are no
-easy things to try or obvious solutions, I will probably mail my patches to
-Consensus and tell them to fix it.  (I feel justified in doing that when I
-paid close to $4K for the box ;-)
-
--Jason
-
-P.S. [offtopic] Anyone know where the ext3 patches are, and whether any of
-the various ext2 resizers (including the one that works when mounted) will
-work with the ext3 journal in place?  And that ext3 works with LVM, of
-course.
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
