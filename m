@@ -1,34 +1,46 @@
-Message-ID: <38F371A9.E4639CC5@msede.com>
-Date: Tue, 11 Apr 2000 20:40:41 +0200
-From: Michael Marxmeier <mike@msede.com>
+Message-ID: <38F4AF07.7136C51@ednet.ns.ca>
+Date: Wed, 12 Apr 2000 14:14:48 -0300
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM, hardware raid and stride...
+Subject: [linux-lvm] vgcfgrestore
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: LVM Mailing List <linux-lvm@msede.com>
 
-Forwarded message from Wesley Darlington (wesley@blackstar.co.uk) ...
+Hello,
 
--------- Original Message --------
-Date: Tue, 11 Apr 2000 15:50:00 +0100
-From: Wesley Darlington <wesley@blackstar.co.uk>
-Subject: LVM, hardware raid and stride...
-Message-ID: <20000411155000.A3774@tux.blackstar.co.uk>
+Looks like I am going to have to resort to using vgcfgrestore as I get
+the following error running vgscan:
 
-Hi folks,
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- found active volume group "data_vg"
+vgscan -- reading data of volume group "data_vg" from physical volume(s)
 
-When creating ext2 filesystems upon hardware raid arrays, it is
-traditional
-to pass the "stride" parameter to mke2fs so that it can magically
-optimise 
-the filesystem layout for the array's chunksize/stridesize.
+vgscan -- ERROR -364: can't get data of volume group "data_vg" from
+physical volume(s)
+vgscan -- ERROR -364 creating "/etc/lvmtab" and "/etc/lvmtab.d"
 
-How, if at all, does lvm interfere with this magic? Can any lvm
-parameters
-be tuned to take advantage of arrays?
 
-Thanks,
-Wesley.
+
+I assume with an error like that there is no way I am going to be able
+to activate my logical volumes on the next reboot?
+
+
+Also I haven't seen anywhere where it says that the logical volumes and
+volume group must be offline when running vgcfgrestore other than this
+piece at the end of the vgcfgrestore man page:
+
+vgcfgrestore returns an exit state of 0 for success and > 0 for error:
+
+       1  no physical volume on command line
+       2  invalid physical volume name
+       3  volume grou is active
+        ......
+
+So I will ask the question. Can vgcfgrestore be run on active logical
+volumes and volume groups?
