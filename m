@@ -1,12 +1,11 @@
-Date: Fri, 7 Sep 2001 11:43:03 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Message-ID: <20010907114303.C19457@vestdata.no>
-References: <E15f13v-0003bs-00@hermes.sistina.com> <20010906220514.A1537@vestdata.no> <E15f8l7-0008Di-00@hermes.sistina.com>
+Date: Fri, 7 Sep 2001 10:35:15 +0000
+From: Tomas Edwardsson <tommi@tommi.org>
+Message-ID: <20010907103515.B32257@hp.is>
+References: <20010906123245.B28532@hp.is>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E15f8l7-0008Di-00@hermes.sistina.com>; from fejf@gmx.de on Fri, Sep 07, 2001 at 01:41:22AM +0200
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20010906123245.B28532@hp.is>; from tommi@tommi.org on Thu, Sep 06, 2001 at 12:32:45PM +0000
+Subject: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,31 +17,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Sep 07, 2001 at 01:41:22AM +0200, FEJF wrote:
-> there are no io-errors... but as the hd makes really scary noise when p=
-vmove=20
-> tries to move the remaining bytes. so i think the hd is damaged.
-> but all i want is to remove the damaged hd.
-> but pvreduce says i have to use pvmove to get rid of the remaining data=
- and=20
-> pvmove gives the errors...
-> so i can't remove it :/ - is there a way to get rid of the hd without=20
-> destroying the rest of the data ? sth. like pvreduce --force ?
+Hmm, anyone able to help with this? All my data is currently offline and
+I really need it back so if anyone could help please!
 
-No, don't think so.
+- Tommi
 
-I have a patch, but I'm not so sure I can recommend that you use it.
-
-I only wrote it to copy off a single block of a bad disk - I'm not sure
-exactly how it will behave when moving multiple blocks (if the
-non-corrupted blocks will end up in the right spot, or if it writes too
-little data, so it will be some bytes off).
-
-
-
---=20
-Ragnar Kj=F8rstad
-Big Storage
+On Thu, Sep 06, 2001 at 12:32:45PM +0000, Tomas Edwardsson wrote:
+> Here is what vgscan shows:
+> 
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found inactive volume group "vg00"
+> vgscan -- only found 626 of 625 LEs for LV /dev/vg00/lvol1 (0)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "vg00" from physical volume(s)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
+> 
+> I also tried pvscna, but I don't know if that's relevant:
+> 
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdb2"  is associated to an unknown VG (run vgscan)
+> pvscan -- inactive PV "/dev/hdc2"  is associated to an unknown VG (run vgscan)
+> pvscan -- inactive PV "/dev/hdd1"  is associated to an unknown VG (run vgscan)
+> pvscan -- total: 3 [16.00 GB] / in use: 3 [16.00 GB] / in no VG: 0 [0]
+> 
+> - Tomas Edwardsson
