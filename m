@@ -1,11 +1,11 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
-Message-Id: <20020207225807.GA24019@tiger.bigcats.invalid>
-References: <3C625CCE.1A213D80@lmco.com>
-    <Pine.LNX.4.10.10202071056180.8754-100000@pzat.meep.org>
+Message-Id: <3C630837.5040508@birddog.com>
+From: "Kirby C. Bohling" <kbohling@birddog.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.10.10202071056180.8754-100000@pzat.meep.org>
+Subject: Re: [linux-lvm] using 160GB IDE drives under linux with LVM.
+References: <20020207151811.X15496@lynx.turbolabs.com>
+    <CBEHLLOPCKAOIAOINGKAAEHFCAAA.jmoser@erc.wisc.edu>
+    <20020207225006.GA16526@auctionwatch.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,23 +16,92 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  7 17:05:02 2002
+Date: Thu Feb  7 17:07:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi, James!
+Why is he brave, it is just a converted 2.4.15-pre5 with a change to the 
+version number if I remember correctly that has a filesystem bug when 
+you umount during a reboot.  As long as he doesn't reboot and/or umount 
+his data is save. :-)
 
-James Hawtin (oolon@ankh.org) wrote 45 lines:
+		Kirby
 
-> The reasons resize scares me, is all in needs is someone to define MB or
-> GB differently and your up S..T creek, is the block could 1k or 512
-> bytes... Was that M option MiB or MB most people say MB whent hey mean
-> MiB. Was there and "overhead" of a few blocks magically required when i
-> asked for a 1GiB filesystem... etc.
+bzcat patch-2.4.15-to-2.5.0.bz2
 
-If you are using ext2 or ext3, you might want to look at
-e2fsadm...
+diff -urN linux-2.4.15/Makefile linux-2.5.0/Makefile
+--- linux-2.4.15/Makefile       Thu Nov 22 11:22:58 2001
++++ linux-2.5.0/Makefile        Thu Nov 22 22:23:44 2001
+@@ -1,7 +1,7 @@
+  VERSION = 2
+-PATCHLEVEL = 4
+-SUBLEVEL = 15
+-EXTRAVERSION =-greased-turkey
++PATCHLEVEL = 5
++SUBLEVEL = 0
++EXTRAVERSION =
 
--Wolfgang
+  KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
+
+
+Petro wrote:
+> On Thu, Feb 07, 2002 at 04:45:03PM -0600, John Moser wrote:
+> 
+>>Is this specific to 2.4.X kernels?  I'm running 2.5.0, and I just noticed
+>>that the 160 gig drives I was using are also partitioned at only 128Gigs.
+>>
+>  
+>     No, it's at the IDE driver level. There are patches to get around
+>     this that are being considered for the mainstream kernel (Andrei H.
+>     I believe). 
+> 
+>     Brave man running 2.5.0, the dot-zero release of a development
+>     kernel. 
+>  
+> 
+>>-----Original Message-----
+>>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+>>Behalf Of Andreas Dilger
+>>Sent: Thursday, February 07, 2002 4:18 PM
+>>To: linux-lvm@sistina.com
+>>Subject: Re: [linux-lvm] using 160GB IDE drives under linux with LVM.
+>>
+>>
+>>On Feb 07, 2002  22:33 +0100, Terje Kvernes wrote:
+>>
+>>>  [ Re: IDE 128GB disk limits ]
+>>>
+>>>  now, I've added SCSI-devices that where > 500GiB with ease into LVM,
+>>>  but here I stumble.  is there some easy solution out there that I've
+>>>  missed?
+>>>
+>>>  the box currently runs vanilla 2.4.16, only patched with LVM-1.0.1
+>>>  from 26/11.  patches or anything people want to toss at this will be
+>>>  highly appreciated.  we have two of these beasts from Maxtor, and
+>>>  stand to loose about 60GiB of space, which isn't all that neat.
+>>>
+>>This is a kernel IDE driver limit.  You need to patch with Andre Hedrik's
+>>IDE patches to support IDE devices over this size.
+>>
+>>Cheers, Andreas
+>>--
+>>Andreas Dilger
+>>http://sourceforge.net/projects/ext2resize/
+>>http://www-mddsp.enel.ucalgary.ca/People/adilger/
+>>
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>
+> 
