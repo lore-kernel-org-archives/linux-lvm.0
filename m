@@ -1,12 +1,11 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <bofh@coker.com.au>
-Subject: Re: [linux-lvm] hard drive shock tolerance
-Date: Sat, 13 Jan 2001 05:51:57 +1100
-References: <3A57B052.FA0DFBB2@wrkhors.com> <01011001391323.05036@lyta> <20010110195439.A11865@bar.nowhere>
-In-Reply-To: <20010110195439.A11865@bar.nowhere>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200101121859.f0CIxwf23470@webber.adilger.net>
+Subject: Re: [linux-lvm] how can I init LVM on software RAID  ?
+In-Reply-To: <3A5EE491.5E4FB886@lxco.com> "from J|rgen Frank at Jan 12, 2001
+ 12:03:45 pm"
+Date: Fri, 12 Jan 2001 11:59:58 -0700 (MST)
 MIME-Version: 1.0
-Message-Id: <0101130551570E.27982@lyta>
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,65 +18,55 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, zoo1@corecomm.net
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Thursday 11 January 2001 11:54, zoo1@corecomm.net wrote:
-> On Wed, Jan 10, 2001 at 01:39:13AM +1100, Russell Coker wrote:
-> >My "gut feeling" is that drives are more susceptible to damage now.  I
-> > know of cases of older 3600rpm drives being dropped, being hit by a c=
-ar
-> > while operating (car entered building through the wall of the compute=
-r
-> > room), and suffering numerous other mechanically damaging events with=
-out
-> > data loss.  I belive that modern 10K rpm drives are not as solid.
->
-> hit by a car? you're serious? i can't even imagine a modern disk
+Juergen writes:
+> I want to create the following system :
+> 
+> I use the new kernel (2.4) and I want to use the software raid and the
+> lvm, but my problem is... how ?
 
-An idiot in the drive of the next house mistook the accelerator pedal in =
-an=20
-automatic car for the brake, she kept pressing it harder when the car did=
-n't=20
-stop.
-The car entered through a solid brick wall that the computer had been in=20
-front of.  The computer ended up on the floor at the far side of the room=
- (~4=20
-meters away).
-The car was stopped from going further through the house by rubble which=20
-supported much of the weight of the car and prevented the rear wheels fro=
-m=20
-gaining traction.  For some time the car was burning rubber on the spot..=
-=2E
+You need to patch the user tools to allow this, (patch is cut-n-paste so
+you will have to apply by hand).
 
-> >Also drives are more susceptible to heat problems.  3600rpm drives
-> >could operate with all their air-holes blocked and while surrounded by
-> >other hard drives without problems.  You can't stack two new 10K rpm
-> >drives without good fans.
->
-> i'll take your word for it. myself, i never see drives like that in
-> PCs, just in workstations and RAID arrays with more than adequate
-> cooling; but then again, i don't see PCs much these days anymore.
+--- ./tools/lib/pv_get_size.c.bluca.orig        Sat Dec 23 11:23:30 2000
++++ ./tools/lib/pv_get_size.c   Sat Dec 23 14:27:47 2000
+@@ -97,6 +97,7 @@
+             if ( dir_cache[i].st_rdev == st_rdev)
+                break;
+          }
++         strncpy ( disk_dev_name, dir_cache[i].dev_name, sizeof (
+disk_dev_name
+) - 1);
+       } else {
+          strncpy ( disk_dev_name, dev_name, sizeof ( disk_dev_name) - 1);
+       }
+@@ -104,8 +105,6 @@
+       ret = -LVM_EPV_GET_SIZE_LVM_DIR_CACHE;
+       goto pv_get_size_end;
+    }
+-
+-   strncpy ( disk_dev_name, dir_cache[i].dev_name, sizeof ( disk_dev_name) -
+    1)
+;
+ 
+    first = 1;
+    if ( ( pv_handle = open ( disk_dev_name, O_RDONLY)) == -1) {
 
-Most hardware work I do is with PCs.  When dealing with rack mounted serv=
-er=20
-equipment I generally do the software and someone else deals with the=20
-hardware.
-Given a choice I prefer hard drives with lower rotational speeds because =
-of=20
-the lesser heat production.  Read the spec sheets and you'll see that as =
-a=20
-general rule 10K rpm drives use twice as much power as 7200 rpm drives, t=
-wice=20
-the power =3D=3D twice the heat!
 
-The really worrying thing about heat death is that it's one of the few wa=
-ys=20
-that I could imagine two hard drives in a mirrored set dieing before I ge=
-t a=20
-chance to replace one!
 
---=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+
+> * normally now I need to create a partition on the drive , but I read in
+> the raid docu that the md-drives don't support partitions !!!
+> 
+> But, without a partiton of the type 0x8e I can't run vgscan and
+> pvcreate...
+
+You can run pvcreate on a whole drive, but only with the above patch.
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
