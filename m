@@ -1,55 +1,54 @@
-Date: Tue, 7 Nov 2000 20:51:37 +0100
-From: Andrea Arcangeli <andrea@suse.de>
-Subject: [linux-lvm] Re: LVM 2.2 snapshot bug
-Message-ID: <20001107205137.A7093@inspiron.suse.de>
-References: <20001107142152.G1276@inspiron.random> <Pine.LNX.4.05.10011071550270.28283-100000@humbolt.nl.linux.org> <20001107174504.A5834@inspiron.suse.de> <20001107170420.D12477@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20001107170420.D12477@redhat.com>; from sct@redhat.com on Tue, Nov 07, 2000 at 05:04:20PM +0000
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200011072036.eA7Ka6s03317@webber.adilger.net>
+Subject: Re: [linux-lvm] Re: LVM 2.2 snapshot bug
+In-Reply-To: <20001107205137.A7093@inspiron.suse.de> "from Andrea Arcangeli at
+ Nov 7, 2000 08:51:37 pm"
+Date: Tue, 7 Nov 2000 13:36:06 -0700 (MST)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Stephen C. Tweedie" <sct@redhat.com>
-Cc: Rik van Riel <riel@conectiva.com.br>, linux-lvm@msede.com, marcelo@conectiva.com.br
+To: Andrea Arcangeli <andrea@suse.de>
+Cc: "Stephen C. Tweedie" <sct@redhat.com>, Rik van Riel <riel@conectiva.com.br>, linux-lvm@msede.com, marcelo@conectiva.com.br
 
-On Tue, Nov 07, 2000 at 05:04:20PM +0000, Stephen C. Tweedie wrote:
-> The current ext3 includes debugging code to trap invariants which the
-> filesystem expects to be guaranteed, and it's entirely possible that
-> their over-cautious checking is trapping on such failed writes.  Send
-> me an oops and I can deal with it.
+Andreas writes:
+> The bug that hurted Rik is ext3 that is not able to deal with I/O error
+> properly during recovery and if you fix that, then LVM snapshot not setting
+> ro_bits will be a minor problem IMHO.
 
-I don't have the Oops (I asked for it too) but Rik should have it.
+The problem is that I/O errors during journal recovery would mean a
+corrupt filesystem.  The ext3 recovery code (now) does the correct thing
+and aborts the journal recovery and refuses to mount the filesystem in
+this case.  It is up to e2fsck to fix problems inside the journal.
 
-> > > Indeed this is the case. When the block device is read-write
-> > > (the is_read_only(blk_dev) is non-true) it tries to replay
-> > > the log, even for a read-only mounted FS.
-> > 
-> > Ok, I agree it's a minor LVM bug, but again I can't see how that minor bug can
-> > cause oopses and I think setting ro_bits won't fix the real bug but it will
-> > only hide it.
-> 
-> It's a major bug as far as ext3 is concerned, because filesystem
-> recovery is a critical prerequisite for mounting a filesystem, and
-> that requires write access.  ext3 has to be able to trust the ro bits
-> in order to know whether it is safe to perform recovery writes for a
-> mount, or whether the mount must be rejected because recovery cannot
-> take place.
+It should be possible to use an ext3 LVM snapshot for backup purposes
+by using the ext2 dump program (which does raw partition access), but
+currently not for simply mounting the filesystem.
 
-Stephen, the floppy device is doing exactly the same thing of LVM.
-I don't think it's a major bug. The _only_ downside of the bug is that
-it will generate I/O errors when you try to write to the device via
-ll_rw_block (no oopses, no corruption), and those I/O errors will happen
-anyways in real world too with real harddisk so we must able to cope with them
-regardless.
+It may be possible to change the ext3 code to continue to mount a
+filesystem without journal recovery if it is really on a R/O device.
+The real problem with this is that you aren't sure that what is on the
+filesystem is consistent, because it may be half in the journal - the
+fsync_dev() call should mostly handle this.
 
-The bug that hurted Rik is ext3 that is not able to deal with I/O error
-properly during recovery and if you fix that, then LVM snapshot not setting
-ro_bits will be a minor problem IMHO.
+It would probably be a lot better to simply change ext3 to handle the
+"proper snapshot" stuff that is in ReiserFS, so that at the time of the
+snapshot, the journal is flushed and the RECOVER flag is removed from
+the superblock (and returned afterwards).  However, this is also a LVM
+0.9 fix.
 
-Infact I'm not even sure if it worth to have LVM snapshot to set ro_bits
-given it will soon become a writeable snapshot (so that we can do recovery
-on it too :).
+> Infact I'm not even sure if it worth to have LVM snapshot to set ro_bits
+> given it will soon become a writeable snapshot (so that we can do recovery
+> on it too :).
 
-Andrea
+It would still be good to have a workable solution for the 0.8final code,
+because it may be that LVM 0.9 will not make it into the 2.4 kernel,
+and even if it does, people may still want to use existing 0.8 LVM.
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
