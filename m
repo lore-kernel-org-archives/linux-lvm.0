@@ -1,11 +1,8 @@
-Message-ID: <3BA5C08D.3090103@st-peter.stw.uni-erlangen.de>
-Date: Mon, 17 Sep 2001 11:21:17 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+Subject: Re: [linux-lvm] Root on LV
+Message-ID: <OFE0B97CD3.C5A33405-ON85256ACA.004E9D80@raleigh.ibm.com>
+From: "Steve Pratt" <slpratt@us.ibm.com>
+Date: Mon, 17 Sep 2001 09:26:12 -0500
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: [linux-lvm] Re: [linux-lvm] 
-	=?ISO-8859-1?Q?Verst=E4ndnis?= von Stripes bei LVM
-References: <4C45858D148AD411A8B800A024B36E5009F4C994@granada.fhm.de> <20010914121333.A11814@dragon.blacknet.de> <20010914095230.S1541@turbolinux.com> <20010917105426.A16318@dragon.blacknet.de>
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,27 +14,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-well you could do it with soft RAID-5 too i think
-you save some money from the hardware RAID ,
-you lose a bit performance -- soft RAID overhead
-the hard RAID has RAM and CPU( or smth of the kind ) -- no CPU or mem 
-overhead
-but if you have a mothern CPU and a bit more RAM there is no problem
-redundancy - the same
- 
-
-Goetz Bock wrote:
-
->>[ ... ] There are several problems with stipes:
+>> > dobos_s@IBCnet.hu wrote:
+>> > >My kernel has no modules.
+>> > >Why should I create an ext2 partition for holding an initrd which is
+not
+>> > >doing any essential things except vgscan and vgchange -ay ?
 >>
->>- if you have problems with ANY disk, you have lost ALL of your data
->>
->If any disk of my VG dies I'm in trouble. With the help of the LVM guis
->I might be able to "fake" the broken disk BUT for most people a broken
->disk means loos of all data in the WHOLE VG.
->
->... that's why I use LVM over RAID5 (hardware).
->
+>> You don't need vgscan at boot time unless the disks have moved around.
+>> You DO need "vgchange -a y" in order to load the LVM data into the
+kernel.
+
+> If you are running EVMS you don't need that.
+
+>But you need EVMS tools which are not available fo far :-(
+
+Actually that is not entirely true.  All of the volume group and physical
+volumes tools are done.  We have started on all of the logical volume
+commands.  We have stand alone utilities which minic the LVM ones, as well
+as a GUI which integrates LVM function with other volume management
+functions such as partitioning.
+
+
+EVMS Development - http://www.sf.net/projects/evms
+Linux Technology Center - IBM Corporation
+(512) 838-9763  EMAIL: SLPratt@US.IBM.COM
