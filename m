@@ -1,13 +1,10 @@
-Return-Path: <hopper@omnifarious.mn.org>
-Date: Mon, 12 Mar 2001 16:27:13 -0600
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
-Subject: Re: [linux-lvm] RE: emails
-Message-ID: <20010312162713.A10492@omnifarious.mn.org>
-References: <A76258F91728D211882A0008C7280E0C037CB4F1@nzwnm202.nz.eds.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <A76258F91728D211882A0008C7280E0C037CB4F1@nzwnm202.nz.eds.com>; from sjones08@eds.com on Tue, Mar 13, 2001 at 10:53:03AM +1300
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200103122229.f2CMTIX00580@webber.adilger.int>
+Subject: Re: [linux-lvm] e2fsck error
+In-Reply-To: <F797oDaSeXnbnCndg5o000050a8@hotmail.com> from hail narcissus at
+ "Mar 12, 2001 01:02:52 pm"
+Date: Mon, 12 Mar 2001 15:29:18 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,29 +16,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Tue, Mar 13, 2001 at 10:53:03AM +1300, Jones, Steven wrote:
-> note someone just sent me a "secure" email via this group such that i
-> had to click on it to open it, I binned it immediately.
->=20
-> I would appreciate it if all posts are plain text, I cannot fathom why
-> any more is needed.
+You write:
+> I am trying to resize my ext2 fs but I get an error from ext2resize:
+> 
+> ext2resize: ext2_open: filesystem has errors! e2fsck first!
+> ext2resize: can't open /dev/junior/site
+> 
+> At this point I do did a 'umount /dev/junior/site'
+> Then I do a 'e2fsck -fyv /dev/junior/site &'
 
-	If you mailer can't properly represent the SMIME standard,
-that's your problem.  I would suggest you find another one.  It's a well
-published spec, and email really does need to be more secure.
-Cryptographically signing every message is an excellent way to help
-accomplish this.
+You should probably run "e2fsck -fpv /dev/junior/site", because there
+are a few anwers which should be "n" and not "y".  The "-p" option
+will pick the right one (-y always answers "y").  It may not make a
+difference in this case.  Also, don't run it in the background, in
+case it wants to ask some questions.
 
-	If you throw away every signed message, you'll be missing about
-10% of the content of this list, and some of the better and more
-informative posts.  Most notably, all of AJ Lewis's messages are signed.
+> It returns this:
+> 
+> Pass 1: Checking inodes, blocks, and sizes
+> Group 3125's block bitmap at 102400000 conflicts with some other fs block.
+> Relocate? yes
+> 
+> Group 3125's inode bitmap at 102400001 conflicts with some other fs block.
+> Relocate? yes
 
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
+Strangely, the bitmaps are in the same location as a superblock and group
+descriptor backup (group 3125 = 5^5 is a "sparse" group).
+
+> It finds other errors which I believe it fixes but not the above error.  If 
+> I re-run e2fsck then it comes up with the above error again.
+
+Strange.  e2fsck _should_ be able to fix this, but maybe it has never
+been tested before.  How did you get into this situation in the first place?
+Your previous posting indicated that you weren't running e2fsck on your
+filesystem with errors?  What version of ext2resize are you using?  Did
+you ever "force" a resize?  In any case, probably a good time to make a
+backup.
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
