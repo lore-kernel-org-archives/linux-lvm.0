@@ -1,11 +1,8 @@
-From: Duane Evenson <devenson@shaw.ca>
-Subject: Re: [linux-lvm] vgscan problem (was vgscan segmentation faults,
- VG name problems)
-Message-id: <3EB07FB0.4020704@shaw.ca>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-References: <3EAC2003.5030106@shaw.ca> <20030428105618.A28159@sistina.com>
- <3EAF28A8.5010107@shaw.ca> <20030430130450.A5346@sistina.com>
+Message-ID: <358921feb972$3863d657$90678308@pkspofenqc.aglh>
+From: <adas1979@anet.ne.jp>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Real H-G-H can NOT go through the digestion system: Learn why
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,346 +13,114 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 30 21:12:02 2003
+Date: Wed Apr 30 22:38:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-pvscan only finds hde -- good, as that's all it should.
-...so I did as you suggested: pvcreate -ff /dev/hde; vgcfgrestore -n 
-data_group /dev/hde; vgscan returned:
-#vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
-volume
-group "data_group" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-group
+PSK14wD0RT373HqtaxP7Bn44r54tfnjic6
+Ctowbvcwifqibrixslxlbhk
 
-I think this is the same problem as before.
-There exists /etc/lvmconf/data_group.conf  and 
-/etc/lvmconf/data_group.conf.1.old. Testing this volume group descriptor 
-data:
-# vgcfgrestore -t -l -n data_group /dev/hde
-vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data_group.conf"
-vgcfgrestore -- backup of volume group "data_group"  is consistent
---- Volume group ---
-VG Name               data_group
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               111.79 GB
-PE Size               4 MB
-Total PE              28617
-Alloc PE / Size       25600 / 100 GB
-Free  PE / Size       3017 / 11.79 GB
-VG UUID               rVEO6Y-kq5c-5SR0-uw0I-VPF1-v1ka-HK1WQS
+Have you heard of "Age Reversal" with HGH?
+HGH stands for Human Growth Hormone-
 
-# vgcfgrestore -t -b 1 -l -n data_group /dev/hde
-vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data_group.conf.1.old"
-vgcfgrestore -- backup of volume group "data_group"  is consistent
---- Volume group ---
-VG Name               data_group
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                0
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               111.79 GB
-PE Size               4 MB
-Total PE              28617
-Alloc PE / Size       0 / 0
-Free  PE / Size       28617 / 111.79 GB
-VG UUID               rVEO6Y-kq5c-5SR0-uw0I-VPF1-v1ka-HK1WQS
+Did you know that all HGH products are not the same?
+There are three different types of HGH products. 
+Yet, all three are advertised as if they where the same!
 
-The first old backup has 0 allocatings, so I don't want this. The most 
-recent backup file seems to have an error. If the error is in 
-/etc/lvmconf/data_group.conf, how can I recreate the volume group 
-descriptor area without touching the data?
-Thanks
+The three types are:
+*Homeopathic HGH
+*Pre-cursor HGH
+*Real HGH 
+(delivered by injection or, by an oral spray method)
 
-PS
-I think I may want to move from a LVM newbee to a LVM tyro (ie. 
-understand the descriptor area and metadata data structures -- you know 
-at the "a little knowledge is a dangerous thing" level -- about 2 or 3 
-levels down from expert :) ). Where's the best place to start to learn?
+Do you know the differences?
+Call us and we'll explain them to you!
+Our Toll Free number is 1(888)895-4555
+LET YESTERDAY'S BODY RE-APPEAR! 
 
-Heinz J . Mauelshagen wrote:
+For more information on HGH read on............
+HAVE YOU EVER HEARD OF HUMAN GROWTH HORMONE (HGH)???
 
->Duane,
->
->does pvscan evetually find more than hde (which I assume should be your
->_only_ PV in the system) ?
->If so, you need to decide, if those can be removed (pvcreate -ff ...).
->
->If not, you might want to restore the metadata to hde and rescan+activate.
->(pvcreate -ff /dev/hde;vgcfgrestore -n data_group /dev/hde;vgscan;vgchange -ay).
->
->pvcreate doesn't destroy any data, it just initializes the LVM metadata area
->for vgcfgrestore to work.
->
->Regards,
->Heinz    -- The LVM Guy --
->
->
->On Tue, Apr 29, 2003 at 07:36:40PM -0600, Duane Evenson wrote:
->  
->
->>I've upgraded to 1.0.7 but now get the following output - indicating the 
->>real problem.
->>If I recreate the volume group and logical volume, will the data 
->>contained therein still be available or is there another way to recover 
->>the volume?
->>vgscan -v
->>vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
->>vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
->>vgscan -- reading all physical volumes (this may take a while...)
->>vgscan -- scanning for all active volume group(s) first
->>vgscan -- reading data of volume group "data_group" from physical volume(s)
->>vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
->>volume
->>group "data_group" from physical volume(s)
->>vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
->>vgscan -- WARNING: This program does not do a VGDA backup of your volume 
->>group
->>
->>Some other information of the system:
->>
->># pvdisplay /dev/hde
->>--- Physical volume ---
->>PV Name               /dev/hde
->>VG Name               data_group
->>PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
->>[LVM: 239
->>KB]
->>PV#                   1
->>PV Status             available
->>Allocatable           yes
->>Cur LV                1
->>PE Size (KByte)       4096
->>Total PE              28617
->>Free PE               3017
->>Allocated PE          25600
->>PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
->>
->>
->># vgcfgrestore   -n data_group -ll
->>vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data_group.conf"
->>--- Volume group ---
->>VG Name               data_group
->>VG Access             read/write
->>VG Status             NOT available/resizable
->>VG #                  0
->>MAX LV                256
->>Cur LV                1
->>Open LV               0
->>MAX LV Size           255.99 GB
->>Max PV                256
->>Cur PV                1
->>Act PV                1
->>VG Size               111.79 GB
->>PE Size               4 MB
->>Total PE              28617
->>Alloc PE / Size       25600 / 100 GB
->>Free  PE / Size       3017 / 11.79 GB
->>VG UUID               rVEO6Y-kq5c-5SR0-uw0I-VPF1-v1ka-HK1WQS
->>
->>--- Logical volume ---
->>LV Name                /dev/data_group/logical_volume1
->>VG Name                data_group
->>LV Write Access        read/write
->>LV Status              NOT available
->>LV #                   1
->># open                 0
->>LV Size                100 GB
->>Current LE             25600
->>Allocated LE           25600
->>Allocation             next free
->>Read ahead sectors     10000
->>Block device           58:0
->>
->>
->>--- Physical volume ---
->>PV Name               /dev/hde
->>VG Name               data_group
->>PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
->>[LVM: 239
->>KB]
->>PV#                   1
->>PV Status             available
->>Allocatable           yes
->>Cur LV                1
->>PE Size (KByte)       4096
->>Total PE              28617
->>Free PE               3017
->>Allocated PE          25600
->>PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
->>
->>
->>Heinz J . Mauelshagen wrote:
->>
->>    
->>
->>>Duane,
->>>
->>>since you're running 1.0.3 I assume you might be hitting an array derefenerence
->>>bug in the LVM1 library we fixed in 1.0.6.
->>>
->>>Please upgrade to 1.0.7 and try again.
->>>
->>>Regards,
->>>Heinz    -- The LVM Guy --
->>>
->>>On Sun, Apr 27, 2003 at 12:22:59PM -0600, Duane Evenson wrote:
->>> 
->>>
->>>      
->>>
->>>>I'm having troubles and can't find the solution in the HOWTO, or the 
->>>>archived mailing lists articles.
->>>>I installed lvm on an entire hard drive (hde), made one logical group 
->>>>with a logical volume of 100G.
->>>>I mounted to volume, copied files over OK, but vgscan caused 
->>>>segmentation faults.
->>>>I rebooted, hoping that it was a conflict between the kernel info and 
->>>>physical info. Obviously, it wasn't.
->>>>Here are the results of running pvdisplay, pvscan, vgscan, and vgdisplay.
->>>>
->>>># pvdisplay /dev/hde -v
->>>>--- Physical volume ---
->>>>PV Name               /dev/hde
->>>>VG Name               data_group
->>>>PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
->>>>[LVM: 239
->>>>KB]
->>>>PV#                   1
->>>>PV Status             available
->>>>Allocatable           yes
->>>>Cur LV                1
->>>>PE Size (KByte)       4096
->>>>Total PE              28617
->>>>Free PE               3017
->>>>Allocated PE          25600
->>>>PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
->>>>
->>>>pvdisplay -- "/etc/lvmtab.d/data_group" doesn't exist
->>>>
->>>># pvscan -v
->>>>pvscan -- reading all physical volumes (this may take a while...)
->>>>pvscan -- walking through all physical volumes found
->>>>pvscan -- inactive PV "/dev/hde"  is associated to unknown VG 
->>>>"data_group" (run
->>>>vgscan)
->>>>pvscan -- total: 1 [111.79 GB] / in use: 1 [111.79 GB] / in no VG: 0 [0]
->>>>
->>>># vgscan -v
->>>>vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
->>>>vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
->>>>vgscan -- reading all physical volumes (this may take a while...)
->>>>vgscan -- scanning for all active volume group(s) first
->>>>vgscan -- reading data of volume group "data_group" from physical volume(s)
->>>>Segmentation fault
->>>>
->>>># vgscan -d
->>>>...
->>>><55555> pv_create_name_from_kdev_t -- LEAVING with dev_name: /dev/hde
->>>><55555> system_id_check_exported -- CALLED
->>>><55555> system_id_check_exported -- LEAVING with ret: 0
->>>><4444> pv_read -- LEAVING with ret: 0
->>>><4444> vg_copy_from_disk -- CALLED
->>>><55555> vg_check_vg_disk_t_consistency -- CALLED
->>>><666666> vg_check_name -- CALLED with VG:
->>>><7777777> lvm_check_chars -- CALLED with name: ""
->>>><7777777> lvm_check_chars -- LEAVING with ret: 0
->>>><666666> vg_check_name -- LEAVING with ret: 0
->>>><55555> vg_check_vg_disk_t_consistency -- LEAVING with ret: -344
->>>><4444> vg_copy_from_disk -- LEAVING
->>>>Segmentation fault
->>>>
->>>># vgdisplay data_group -h
->>>>Logical Volume Manager 1.0.3
->>>>Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
->>>>
->>>>vgdisplay -- display volume group information
->>>>
->>>>
->>>>
->>>>
->>>>
->>>>
->>>>_______________________________________________
->>>>linux-lvm mailing list
->>>>linux-lvm@sistina.com
->>>>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>>>   
->>>>
->>>>        
->>>>
->>>*** Software bugs are stupid.
->>>   Nevertheless it needs not so stupid people to solve them ***
->>>
->>>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->>>
->>>Heinz Mauelshagen                                 Sistina Software Inc.
->>>Senior Consultant/Developer                       Am Sonnenhang 11
->>>                                                 56242 Marienrachdorf
->>>                                                 Germany
->>>Mauelshagen@Sistina.com                           +49 2626 141200
->>>                                                      FAX 924446
->>>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->>>
->>>_______________________________________________
->>>linux-lvm mailing list
->>>linux-lvm@sistina.com
->>>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>>
->>> 
->>>
->>>      
->>>
->>
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>    
->>
->
->*** Software bugs are stupid.
->    Nevertheless it needs not so stupid people to solve them ***
->
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->
->Heinz Mauelshagen                                 Sistina Software Inc.
->Senior Consultant/Developer                       Am Sonnenhang 11
->                                                  56242 Marienrachdorf
->                                                  Germany
->Mauelshagen@Sistina.com                           +49 2626 141200
->                                                       FAX 924446
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->  
->
+Released by your own pituitary gland, 
+HGH starts declining in your 20s, even more in
+your 30s and 40s, eventually resulting in the
+shrinkage of major organs -- plus, all other
+symptoms related to old age.
+
+In hundreds of clinical studies
+HGH has been shown to accomplish the following"
+
+* Reduce Body Fat and Build Lean Muscle WITHOUT EXERCISE!
+* Enhance Sexual Performance
+* Remove Wrinkles and Cellulite
+* Lower Blood Pressure and Improve Cholesterol Profile
+* Improve Sleep, Vision and Memory
+* Restore Hair Color and Growth
+* Strengthen the Immune System
+* Increase Energy and Cardiac Output
+* Turn back your body's Biological Time Clock 10 - 20 years
+* Live Longer AND Stronger
+
+We are the manufacturer and we sell directly to Doctors,
+Chiropractors, and consumers world wide the highest grade
+HGH Oral Spray available, and is all natural and organic plant based!
+
+With internet marketing, we are able to save advertising
+cost and pass those savings along to you. 
+
+But you must act now.
+We must speak to you in person to qualify your usage.
+All of your questions will be addressed and answered
+in a friendly, no pressure manner.
+
+Our main purpose is to provide you with information,
+so you can make an educated decision for yourself.
+
+To receive more information call us now.
+TOLL FREE 1(888)895-4555
+Soon, you and your loved ones will be very glad you did.
+
+If you are on-line, write down our phone number
+and call us when you can.
+
+If you are international, call your long distance
+operator and ask to be connected to our phone number.
+We will call you back and pay for the long distance charges.
+
+**********TESTIMONIALS***************
+Read what people are saying about our product:
+
+"The effects of 6 months of GH on lean body mass
+and fat were equivalent in magnitude to the changes
+incurred during 10-20 years of aging." 
+-Dr. Daniel Rudman, MD, New England Journal of Medicine.
+
+"Within four months, my body fat decreased from 30% down to 21%!
+I noticed my skin is more supple and my overall mental
+outlook improved significantly."
+-D.W., New Jersey
+
+"We have been on the spray for just 3 weeks now,
+and besides the tremendous energy we both feel, my
+husband's allergies and spells of depression have lifted!
+I am healing extremely fast after an accident and
+have lost 7 lbs. without trying!"
+-C.B., Flagstaff. AZ
+
+Thanks for reading our letter,
+The HGH Staff - USA Division
+
+PS: The HGH Staff guarantees the highest quality and lowest price.
+We manufacture and ship directly to your door.
+
+Call us now TOLL FREE at 1(888)895-4555
+To Qualify for a Free HGH Consultation call the HGH Staff...Today!
+
+
+-----------------------
+If you do not wish to hear from us again...
+please send an email to:
+Mailto:jckjons@softhome.net?subject=3DNoHGH4MeToday44
+
+N5Ejf0s12D0LaCeHaQOH37
