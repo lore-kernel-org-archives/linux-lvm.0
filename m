@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] kernel: lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
-Message-ID: <20020621111048.A506@sistina.com>
-References: <875362812.20020619224421@tnonline.net>
-Mime-Version: 1.0
-In-Reply-To: <875362812.20020619224421@tnonline.net>; from andewid@tnonline.net on Wed, Jun 19, 2002 at 10:44:21PM +0200
+From: "Catherine Shen" <catherineShen@iei.com.tw>
+Message-ID: <HDECLOCKOCGGLBCFEEHCIEJPCAAA.catherineShen@iei.com.tw>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Subject: [linux-lvm] LVM 1.0.3 VGDA corrupted often ??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +13,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 21 04:17:01 2002
+Date: Fri Jun 21 04:53:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Some program does an unsoported ioctl call to the LVM driver.
-Ignore those.
-
-On Wed, Jun 19, 2002 at 10:44:21PM +0200, Anders Widman wrote:
-> 
->    Hello everyone!
-> 
->    I get these types of messages in the kernel log. What does it mean?
->    Jun 19 22:32:49 server kernel: lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
->    Jun 19 22:32:50 server modprobe: modprobe: Can't locate module block-major-43
-> 
->    //Anders
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+SGksDQoNCkhhcyBhbnlvbmUgZm91bmQgdGhlIFZHREEgY29ycnVwdGVkIHZlcnkgb2Z0ZW4/DQpt
+ZXNzYWdlIC0tDQoJIkVSUk9SOiBWR0RBIGluIGtlcm5lbCBhbmQgbHZtdGFiIGFyZSBOT1QgY29u
+c2lzdGVudDsgcGxlYXNlIHJ1biB2Z3NjYW4iDQoNCkkgY3JlYXRlIGEgdm9sdW1lIGdyb3VwICJN
+YWluVkciIGFuZCBzZXZlcmFsIExWcyAoYW5kIHNvbWUgc25hcHNob3RzKSBpbiBpdC4NCkFmdGVy
+IGNyZWF0aW5nIGFuZCByZW1vdmluZyB0aGUgbG9naWNhbCB2b2x1bWVzIG9yIHNuYXBzaG90cyBm
+b3Igc2V2ZXJhbCB0aW1lcywNCnRoZSBWR0RBIGVycm9yIG1lc3NhZ2UgY29tZXMgdXAgZWFzaWx5
+Lg0KQW5kIGFmdGVyICJ2Z3NjYW4iLCBteSAiTWFpblZHIiBpcyBnb25lLg0KKEJ1dCB0aGUgbW91
+bnRlZCBMVnMgd29yayBmaW5lIHVudGlsIG5leHQgYm9vdD8/KQ0KDQpTaG91bGQgSSBleGVjdXRl
+ICJzeW5jIiBldmVyeSB0aW1lIEkgbWFrZSBjaGFuZ2VzIHRvIG15IExWcz8NCk9yIHNob3VsZCBJ
+IGV4ZWN1dGUgInZnY2ZnYmFja3VwIiBhbmQgcmVzdG9yZSB0aGVtIGlmIHRoZSBlcnJvciBvY2N1
+cnM/DQoNCkJUVywgSSByZXNpemVkIGEgTFYgdG9kYXkgYW5kIGV4ZWN1dGUgInJlc2l6ZTJmcyI7
+IGJ1dCBhZnRlciBtb3VudGluZyB0aGUgTFYgYWdhaW4sDQp0aGUgc2l6ZSB3YXMgbm90IHdoYXQg
+SSBleHBlY3RlZD8/DQpNeSBjb21tYW5kIDogInJlc2l6ZTJmcyAtZiAvZGV2L01haW5WRy9MVjEi
+DQpubyBlcnJvciBtZXNzYWdlIGF0IGFsbD8/DQoNClRoYW5rcyBpbiBhZHZhbmNlISENCg0KQ2F0
+aGVyaW5l
