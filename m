@@ -1,10 +1,12 @@
-Return-Path: <sar@viastore.de>
-Date: Wed, 20 Dec 2000 19:10:14 +0100 (MEZ)
-From: Thorsten Sauter <sar@viastore.de>
-Subject: Re: [linux-lvm] Can I use LVM with ReiserFS?
-In-Reply-To: <a05001923b66697749fe8@[129.98.91.150]>
-Message-Id: <6f82d452d8fd8870aa5e3beee04560773a40f615@viastore.de>
-Mime-Version: 1.0
+Return-Path: <russell@coker.com.au>
+From: Russell Coker <bofh@coker.com.au>
+Subject: Re: [linux-lvm] Debian packaging
+Date: Thu, 21 Dec 2000 08:53:29 +1100
+References: <XFMail.20001219212422.fionn@unix-ag.org>
+In-Reply-To: <XFMail.20001219212422.fionn@unix-ag.org>
+MIME-Version: 1.0
+Message-Id: <0012210853290U.08762@lyta>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,40 +18,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Maurice Volaski <mvolaski@aecom.yu.edu>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com, Fionn Behrens <Fionn.Behrens@unix-ag.org>
 
-Hello,
+> > Think PATH - this is really easy, and shells already support it.  No =
+more
+> > work to be done, and it's not ugly.  The IOP version will probably ne=
+ver
+> > change within a boot (unless LVM is a module and it gets upgraded wit=
+hout
+> > upgrading the kernel - unlikely).
+>
+> Shouldnt the debian alternatives mechanism (see "man 8
+> update-alternatives") be most appropriate for this task?
 
-im using lvm-0.9 with kernel 2.2.17 and reiserfs on two volume groups. One
-for the operation system (incl. boot) and one for the home directories.
+Update-alternatives doesn't work when the file-system in question is moun=
+ted=20
+read-only.  Also it's not really designed to be run at every boot.
 
-On all physical volumes is the reiserfs the filesystem that i'm using.
-This installation works now for over 2 month and it works fine.
+PATH is a bad idea IMHO.  It is set in too many places and has too many=20
+possibilities to be stuffed up.
 
-So, reiserfs and lvm is wounderful... use it!
-
-Bye
-Thorsten
-
-On Wed, 20 Dec 2000, Maurice Volaski wrote:
-
-> I'm getting ready to install a server that will use hardware RAID 5 
-> and I want to make a hardware RAID volume, put ReiserFS on it and 
-> initially make it appear as /home to my users. Then at some point 
-> later, I want to take another hardware RAID volume, put ReiserFS on 
-> it and add it to the existing /home so that users all of a sudden see 
-> a huge increase in the size of /home. Can this be done or will my use 
-> of ReiserFS make it a problem?
-> -- 
-> 
-> Maurice Volaski, mvolaski@aecom.yu.edu
-> Computing Support, Rose F. Kennedy Center
-> Albert Einstein College of Medicine of Yeshiva University
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
+--=20
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
