@@ -1,31 +1,32 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAE11Jr14911
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 20:01:19 -0500
-Received: from main.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAE117gI015512
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 20:01:13 -0500
-Received: from root by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1CT8lO-0001MO-00
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 02:01:06 +0100
-Received: from 76.80-203-227.nextgentel.com ([80.203.227.76])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 02:01:06 +0100
-Received: from mru by 76.80-203-227.nextgentel.com with local (Gmexim 0.1
-	(Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 02:01:06 +0100
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@inprovide.com>
-Date: Sun, 14 Nov 2004 01:41:40 +0100
-Message-ID: <yw1x1xexjm7v.fsf@ford.inprovide.com>
-References: <89af10f90411130217467c439@mail.gmail.com>
-	<lg4h62-8vg.ln1@news.it.uc3m.es>
-	<89af10f90411130241e20e2c2@mail.gmail.com>
-	<20041113211324.GA13108@dragonhold.org>
-	<87f94c37041113140053f493b0@mail.gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: raid 1 on a single disk
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAEFIpr08861
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 10:18:51 -0500
+Received: from ivar.at12.de ([213.133.114.22])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iAEFIlGD008619
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 10:18:47 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by ivar.at12.de (Postfix) with ESMTP id 286684BDAE
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 15:18:38 +0100 (CET)
+Received: from ivar.at12.de ([127.0.0.1])
+	by localhost (ivar.at12.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 14023-07 for <linux-lvm@redhat.com>;
+	Sun, 14 Nov 2004 15:18:37 +0100 (CET)
+Received: from anton.in.meissner.it (p5084B8DE.dip.t-dialin.net
+	[80.132.184.222])
+	(using TLSv1 with cipher EDH-RSA-DES-CBC3-SHA (168/168 bits))
+	(No client certificate requested)
+	by ivar.at12.de (Postfix) with ESMTP id 097404BDAA
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 15:18:37 +0100 (CET)
+Received: from emc2.in.meissner.it (emc2.in.meissner.it [192.168.12.20])
+	by anton.in.meissner.it (Postfix) with ESMTP id 844E5CCFE
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 15:18:35 +0100 (CET)
+From: Markus Meissner <mlist@meissner.it>
+MIME-Version: 1.0
+Content-Disposition: inline
+Date: Sun, 14 Nov 2004 15:18:34 +0100
+Content-Transfer-Encoding: 7bit
+Message-Id: <200411141518.34636.mlist@meissner.it>
+Subject: [linux-lvm] lvm on raid, vgcreate doesn't create vg
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,39 +37,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Greg Freemyer <greg.freemyer@gmail.com> writes:
+Hi,
 
->> 
->> P.S. I'd be really tempted to talk to the person asking you to do
->> this, and ask them what they hope to achieve...
->> 
-> I can almost envision times it would be useful.  i.e. disk speed is
-> unimportand, disk data rarely changes, but when it does it is very
-> important, and traditional backups are not feasible for some unknown
-> reason?
->
-> By having the data written to 2 different places on the disk, the
-> likelyhood of a failure making it  truly unrecoverable is extremely
-> small.
+I have successfully setup lvm on top of my software raid 1 (two ide-disks, 
+hda, hdb, two raid1 on top, md0 and md1, one as root and one for the first 
+volume group, vg0). Everything works as expected, no problems at all. 
 
-Shall I tell you about the 80GB disk I had that suddenly dropped dead,
-refusing all form of communication?
+Now I want to put two more disks (hdc/hdd) in the machine. For simplicity 
+reasons (the data is on the second disk) I describe the problem with one 
+harddisk:
 
-> ie. If you have disk media problems, likely only one location of the
-> other will be affected.
->
-> If you have a drive electronics failure, you can ship the drive off to
-> have recovery performed.  (Over $1000 I know, but if the data is
-> important.)
+/etc/raidtab
+[...]
+raiddev /dev/md3
+ raid-level 1
+ nr-raid-disks 2
+ nr-spare-disks 0
+ persistent-superblock 1
+ device  /dev/hdc1
+ raid-disk 0
+ device  /dev/hdd1
+ failed-disk 1
 
-I'd rather pay the $100 for a mirror disk, which is also what I do in
-my systems, after the lesson learned from the aforementioned failure.
-I got four new disks, and configured them as RAID5.  Within a month,
-one of them failed.
+root@fs:~# mkraid /dev/md3
+handling MD device /dev/md3
+analyzing super-block
+disk 0: /dev/hdc1, 100522768kB, raid superblock at 100522688kB
+disk 1: /dev/hdd1, failed
+root@fs:~# pvcreate /dev/md3
+  Physical volume "/dev/md3" successfully created
+root@fs:~# vgcreate -v vgnew /dev/md3
+    Adding physical volume '/dev/md3' to volume group 'vgnew'
+    Archiving volume group "vgnew" metadata.
+    Creating volume group backup "/etc/lvm/backup/vgnew"
+  Volume group "vgnew" successfully created
+root@fs:~# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "vg0" using metadata type lvm2
+root@fs:~# lvcreate -L 83G -n smb2 vgnew
+  Volume group "vgnew" doesn't exist
+
+Uah. Whats that? Creating a filesystem on md3 is no problem, data can be 
+written and read, mounted, unmounted. So, I decided to test without md:
+
+root@fs:~# pvremove /dev/md3
+  Labels on physical volume "/dev/md3" successfully wiped
+root@fs:~# raidstop /dev/md3
+root@fs:~# pvcreate /dev/hdc1
+  Physical volume "/dev/hdc1" successfully created
+root@fs:~# vgcreate -v vgnew /dev/hdc1
+    Adding physical volume '/dev/hdc1' to volume group 'vgnew'
+    Archiving volume group "vgnew" metadata.
+    Creating volume group backup "/etc/lvm/backup/vgnew"
+  Volume group "vgnew" successfully created
+root@fs:~# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "vgnew" using metadata type lvm2
+  Found volume group "vg0" using metadata type lvm2
+root@fs:~# lvcreate -L 83G -n smb2 vgnew
+  Logical volume "smb2" created
+root@fs:~# ls -al /dev/vgnew/
+total 32
+drwx------   2 root root  4096 Nov  8 12:59 .
+drwxr-xr-x  16 root root 28672 Nov  8 12:59 ..
+lrwxrwxrwx   1 root root    22 Nov  8 12:59 smb2 -> /dev/mapper/vgnew-smb2
+
+Hmm, this works. Whats up with creating lvm on top of raid? On the same 
+machine this works (vg0) without problems. There a no strange messages in 
+syslog, no dmessages etc. I have put the lvm2.log (with the requested 
+config-parameters from http://www.tldp.org/HOWTO/LVM-HOWTO/reportbug.html) 
+here: http://www.meissner.it/lvm2.log.gz
+
+Some machine-data:
+
+Debian testing/sarge
+AMD Athlon(TM) XP 1900+
+Linux fs 2.6.8-1-k7 #1 Thu Oct 7 02:47:47 EDT 2004 i686 GNU/Linux
+ii  lvm-common  1.5.17
+ii  lvm2        2.00.24-1 
+ii  raidtools2  1.00.3-15
+
+How can I trace the problem? Any hints?
 
 -- 
-M�ns Rullg�rd
-mru@inprovide.com
+Beste Gruesse / Best regards Markus Meissner
