@@ -1,7 +1,10 @@
-Message-ID: <9BBB7C9EFEF1874BAC4DC204E867EFAF02560CD8@s99mail06>
-From: "Little, Chris" <Chris.Little@okdhs.org>
-MIME-Version: 1.0
-Subject: [linux-lvm] lvm issues
+From: Kai Weber <lists@glorybox.de>
+Subject: Re: [linux-lvm] vgscan messages regarding read-only cdrom
+Message-ID: <20031202010341.GB884@glorybox.de>
+References: <20031130185807.GF7634@glorybox.de> <20031130212501.GO19217@percy.comedia.it> <20031201100842.GA3038@glorybox.de> <20031201195526.GB4846@localhost>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20031201195526.GB4846@localhost>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,49 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 17:59:01 2003
+Date: Mon Dec  1 19:04:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I am having an issue with LVM.  Particularly with the "-s" option of
-lvcreate.  I have an oracle database contained within 10 lv's of a 15 volume
-vg.
+* Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>:
 
-When executing the snapshot, the database always returns corrupted.  The
-error is :
-DBVERIFY: Release 9.2.0.3.0 - Production on Mon Dec 1 17:02:28 2003
+> It seems you can have just one instance of the "filter" directive, where
+> you must put every filter you want to apply for devices. For example,
+> this is what I have in my configuration file:
+> filter = [ "r|hdd|", "r|cdrom|", "r|md|", "a|.*|" ]
 
-Copyright (c) 1982, 2002, Oracle Corporation.  All rights reserved.
+Thank you for your help. This filter rule works as expected. As you
+correctly noticed, the manpage is not clear about it.
 
-DBVERIFY - Verification starting : FILE = /u03/oradata/KIDS/SINVG101.dbf
-Page 89582 is influx - most likely media corrupt
-***
-Corrupt block relative dba: 0x03015dee (file 12, block 89582)
-Fractured block found during dbv:
-Data in bad block -
- type: 0 format: 2 rdba: 0x03015dee
- last change scn: 0x0000.00000000 seq: 0x1 flg: 0x05
- consistency value in tail: 0x00000000
- check value in block header: 0x5fe9, computed block checksum: 0x26af
- spare1: 0x0, spare2: 0x0, spare3: 0x0
-***
-
-We are running SuSE Linux Enterprise Server 8, Service Pack 3 on an IBM
-z/900 under z/VM 4.3.  We have tried different filesystems, but currently we
-are running ext3.  fsck -f reports clean.  Please let me know what kind of
-information you need.
-
-
-Linux s99lxd02 2.4.21-83-default #1 SMP Fri Oct 31 00:38:02 UTC 2003 s390
-unknown
-Logical Volume Manager 1.0.5(mp-v6)
-
-
-+---------------------------------------------------------------------------
-+
- | Chris Little                chris.little@okdhs.org                      |
- | Ok Dept of Human Services   Data Services Division  (405)522-1306       |
-+---------------------------------------------------------------------------
-+
+Kai
+-- 
+* mail kai.weber@glorybox.de . icq 102024972
+  web http://www.glorybox.de . pgp 0x594D4132
