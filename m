@@ -1,14 +1,10 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to
-    coexist happily
-References: <200201020451.g024pPg00867@oss.sgi.com>
-    <E16Oh1M-0003UB-00@hermes.sistina.com>
-    <20020110152713.GC1018@tykepenguin.com>
-In-Reply-To: <20020110152713.GC1018@tykepenguin.com>
+From: Austin Gonyou <austin@coremetrics.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-yO7oXUDjvT5EenA0T/k5"
+Message-Id: <1010707968.14015.1.camel@UberGeek>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16Omcq-0004AU-00@hermes.sistina.com>
+Subject: [linux-lvm] [OT] FAKE, HA Tools, LVM, and Oracle.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,25 +15,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 10 15:21:02 2002
+Date: Thu Jan 10 18:21:11 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, Patrick Caulfield <caulfield@sistina.com>
+To: linux-lvm@sistina.com
 
-On Fri, 11 Jan 2002 01:27, Patrick Caulfield wrote:
->
-> When a snapshot gets full it can no longer be valid so LVM makes it
-> inactive and fails any further I/O to it.
->
-> Because there's no more space for copy-on-write operations into the
-> snapshot there's no way the filesystem can be consistent. OK this isn't
-> that nice but it's arguably better than returning corrupted data.
+--=-yO7oXUDjvT5EenA0T/k5
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Patrick for you response.  If this is the correct behaviour then 
-everything is fine.  I just asked so I could find out.  :-)
+I'm looking for a way to do active/passive failover with Oracle on XFS +
+LVM. I think FAKE and HA tools would be the best bet, does anyone have
+any other suggestions? I'd sure appreciate them. BTW, connecting by
+fibre to EMC 3630.=20
+Thanks.
+--=20
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-698-7250
+email: austin@coremetrics.com
 
-Everything looks mighty fine.  Thanks everyone for your time and effort.
+"It is the part of a good shepherd to shear his flock, not to skin it."
+Latin Proverb
 
--- 
-Adrian Head
+--=-yO7oXUDjvT5EenA0T/k5
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-(Public Key available on request.)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA8Pi4A94g6ZVmFMoIRAi9LAKDm3i7SmpILU/SGQdjGCQ5fUsoyvACgnndK
+rSDl3bo5W/ieDglNH70IAFM=
+=2/is
+-----END PGP SIGNATURE-----
+
+--=-yO7oXUDjvT5EenA0T/k5--
