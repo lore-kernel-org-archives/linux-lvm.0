@@ -1,23 +1,17 @@
-Message-Id: <s73c32dd.084@mossergrp.com>
-Date: Fri, 14 May 1999 14:27:32 -0400
-From: "SHAD GUNDERSON" <sgunderson@mossergrp.com>
-Subject: [linux-lvm] Volume Group Creation
+Message-Id: <4.2.0.37.19990514204912.0098ee60@mail.msy.bellsouth.net>
+Date: Fri, 14 May 1999 20:51:16 -0500
+From: Daniel Whicker <heimdall@mail.org>
+Subject: [linux-lvm] LVM and 2.3.x kernels..
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-I have successfully patched and compiled the lvm code and kernel.... and I =
-am able to create the physical volumes using "pvcreate /dev/sdb[12]". =
-However, the next step in the documention is where I run into problems... =
-upon execution of the "vgcreate test_vg /dev/sdb[12]" I receive an error =
-that no physical volumes exist.  Am I missing something. I have changed =
-the system ids on the partitions. I am running kernel 2.2.8 with lvm 0.6 =
-and the devfs patch for May 3rd.=20
-
-Thanks,
-shad
+Heinz,
+	Any idea what the proceedure is to get LVM included in the 2.3.x kernel tree?
+									-Daniel
+		------------------------------------------
+		Daniel Whicker  (heimdall@mail.org)
