@@ -1,10 +1,10 @@
 From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] catch-22
-Message-ID: <20011216203341.E26924@tiger.bigcats.invalid>
-References: <NBBBKLKHMJHIJLHOGAOJKELJJCAA.steve.wray@the.net.nz> <00a401c18504$33a10ac0$0300000a@pacbell.net>
+Subject: Re: [linux-lvm] Keep snapshots active for 24 hours?
+Message-ID: <20011216202511.D26924@tiger.bigcats.invalid>
+References: <20011214113804.I940@lynx.no> <NBBBKLKHMJHIJLHOGAOJKELIJCAA.steve.wray@the.net.nz>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <00a401c18504$33a10ac0$0300000a@pacbell.net>; from e@arix.com on Fri, Dec 14, 2001 at 05:02:43PM -0800
+In-Reply-To: <NBBBKLKHMJHIJLHOGAOJKELIJCAA.steve.wray@the.net.nz>; from steve.wray@the.net.nz on Sat, Dec 15, 2001 at 10:52:17AM +1300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,36 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Dec 16 13:36:01 2001
+Date: Sun Dec 16 13:36:05 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Erick!
+Hi, Steve!
 
-Erick Calder (e@arix.com) wrote 43 lines:
+Steve Wray (steve.wray@the.net.nz) wrote 70 lines:
 
-> a drive part of a volume crashed on me... I've looked through the man pages
-> and HOWTO but find no happiness... help!
+> - take a snapshot, install something or try something out
+> that might break something, then restore *directly* from
+> the snapshot if anything goes wrong; without having to actually
+> back it up to media and restore it.
 
-> # vgextend LVM /dev/hdc
-> vgextend -- volume group "LVM" doesn't exist
+Even better would be writable snapshots for that: 
+- make a snapshot of (everything where the install writes to
+- install the program
+- test it on the snapshot
+- junk the snapshot if the install is bad
 
-> # vgcreate LVM /dev/hdc
-> vgcreate -- volume group directory or file already exists
-> vgcreate -- please choose a different name
-
-> what is the correct procedure to follow? shall I just blow away the /dev/LVM
-> directory and do a "pvcreate -ff /dev/hda3"?
-
-I am no expert.  I don't even try to guarantee that you'll
-not blow up your data (and the whole planet, too).  But AFAICT
-/dev/LVM is created as needed with vgscan.  You did run vgscan
-after the HW-change?
-
-You did a vgcfgrestore on the new/replaced /dev/hdc PV?
+and, of course, you might want to migrate changes from the
+snapshot to the original FS (or vice versa).  That however
+is a second feature.  Until then you'd have to do the install
+all over again -- once we actually get writable shnapshots.
 
 -Wolfgang
-
-PS: I'd still advise a current, working backup. :-)
