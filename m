@@ -1,10 +1,10 @@
-Message-Id: <se193c5d.063@bne17srv215.workcover.qld.gov.au>
+Message-Id: <se193d29.070@bne17srv215.workcover.qld.gov.au>
 From: "Damian Hickey" <hickeyd@workcoverqld.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Subject: [linux-lvm] Re: linux-lvm digest, Vol 1 #750 - 12 msgs (On Leave until Jan 28th
+Subject: [linux-lvm] Re: linux-lvm digest, Vol 1 #751 - 14 msgs (On Leave until Jan 28th
  2003)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,7 +16,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan  5 16:20:02 2003
+Date: Sun Jan  5 16:24:02 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
