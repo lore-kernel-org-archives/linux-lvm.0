@@ -1,11 +1,12 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Thu, 18 Oct 2001 12:20:22 -0600
-Subject: Re: [linux-lvm] SnapRestore software on NetApp
-Message-ID: <20011018122021.G1144@turbolinux.com>
-References: <0110181646580Y.24876@in-cadcae4> <20011018174818.C849@btconnect.com>
+Date: Thu, 18 Oct 2001 22:23:17 +0200
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Subject: Re: [linux-lvm] replace bad hard disc
+Message-ID: <20011018222317.C13359@sky.net>
+References: <110278234233.20011015163039@difi.de> <20011016105533.A4318@sistina.com> <55520025253.20011018113954@difi.de> <20011018115318.A2771@balu.kawo2.rwth-aachen.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011018174818.C849@btconnect.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20011018115318.A2771@balu.kawo2.rwth-aachen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,42 +18,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Oct 18, 2001  17:48 +0100, Joe Thornber wrote:
-> On Thu, Oct 18, 2001 at 04:46:58PM +0200, Emanuel Quass wrote:
-> > But to come to business, I have to write a comparison between Linux  and 
-> > NetApp Filers. (Is there anything already somewhere available?)
-> > 
-> > I saw something about a "SnapRestore software" which means that it is 
-> > possible to revert a snapshot back to the filesystem in some minutes!
-> > My question: Is this possible with LVM and reiserfs too?
-> 
-> I'm not sure what you mean by 'reverting a snapshot back to the
-> filesystem', but dropping a snapshot takes very little time (seconds).
+* Markus Dobel <mdobel@kawo2.rwth-aachen.de> [011018 11:53]:
+> On Thu, Oct 18, 2001 at 11:39:54AM +0200, Stefan Onken wrote:
+> >=20
+> > > pvcreate /dev/sde1
+> > > vgextend Stonki2 /dev/sde1
+> > > pvmove /dev/sdd1 /dev/sde1
+> > > vgreduce Stonki2 /dev/sdd1
+> >=20
+> > stupid question: what about resizing the reiserfs file system ?
+> > Is it not necessary ?
 
-What this means is to make the "snapshot" become the primary copy again,
-and not "dropping" it.  In other words, lets say you just deleted a whole
-bunch of files on your filesystem, or your database chewed up the data.
-Instead of restoring from a backup, or copying from the snapshot into a
-new volume, you "revert" the snapshot data back into the original volume.
-The latter only involves copying as much data as is in the snapshot,
-instead of the entire volume.
+Oh, but this means in my example I will have to lower the filesystem
+(xfs), because I will remove a hd and added all my scace to the vg and
+lv=B4s, right?
+Is it possible to lower an xfs.filesystem to remove a HD or is it
+possible to remove a HD without resizing (no mount now), add a new
+bigger HD, grow the filesystem, mount it?
 
-If you had "symmetrical" snapshot volumes (i.e. the snapshot is exactly
-a regular volume and both the snapshot and the original have "links"
-to the blocks that they use) it would be possible to "drop" the original
-and move the snapshot to become the original volume.
-
-This may be possible to do in the short term with writable snapshots,
-but then you start getting into a very ugly situation where the "good"
-volume (i.e. the writable snapshot) depends on the snapshot, which
-depends on the original "bad" volume and you can't get rid of any of them.
-
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Uli
+--=20
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
