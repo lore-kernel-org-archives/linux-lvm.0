@@ -1,35 +1,73 @@
-Message-ID: <38A1E06D.732A9B0@tkg.com>
-Date: Wed, 09 Feb 2000 16:47:25 -0500
-From: Christopher Shaulis <shaulis@tkg.com>
+Message-ID: <38A28EF0.6D1C8570@bigpond.com>
+Date: Thu, 10 Feb 2000 21:12:00 +1100
+From: Simon Green <s_green@bigpond.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Configuring boot partition with LVM (fwd)
+Subject: [linux-lvm] Fixes for vgcreate bugs.
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@msede.com" <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-As of AIX 4.3.3, you can't boot off of a striped logical volume, 
-although you can have your boot partition mirrored on multiple physical
-volumes. All of the physical volumes with a copy of the boot lv must be
-in the boot list. Thats new as of AIX 4.2.0, although you need a couple
-APARs to have it work right at that version.
+Hi,
 
-I can't remember exactly how they explained it, but IBM has a good
-reason for not allowing mirrored dump devices. I think the idea is that
-in order to catch the system dumping in the LVM code itself, you have to
-write the dump without the aid of the LVM. I think the way that works is
-that it precomputes a list of offset:extent lists for the device when it
-is brought online. If anyone really wants to know what goes on behind
-the scenes let me know -- I've got a couple colleagues that do AIX
-kernel development at IBM. You are allowed to have a secondary dump
-device but that only gets used if writing to the first device fails.
+I just joined this list, so forgive me if I say something which has
+already been said. The latest 0.8i vgcreate has a bug in it where the
+first volume group created will cause a seg. fault if the /etc/lvmtab
+file is 1 byte long, as it is after a vgscan has been run. I note
+several comments in the changelog about this being fixed, but it still
+happened to me every time I tried it. Once at least one volume group has
+been created, vgcreate is fine.
 
-Christopher
+The work-around is to create a 0-byte /etc/lvmtab. Vgcreate will then
+give an error, but a vgscan will recover the volume group. The fix (as
+far as I can see) is as follows.
 
-From: Jens-Uwe Mager <jum@anubis.han.de>
-> At least the IBM people with the AIX LVM are able to make that 
-> work. The only thing that they were not able for a long time is to
-> make system dumps work in such a configuration. But I believe that 
-> even that works under AIX 4.3.x now.
+In the files:
+
+****************** lvm_tab_vg_insert.c
+
+lvm_tab_vg_insert_end:
+
+   if ( vg_name_ptr     != NULL) free ( vg_name_ptr);
+   if ( vg_name_ptr_sav != NULL) free ( vg_name_ptr_sav);
+   if ( data            != NULL) free ( data);
+
+                        BECOMES
+
+lvm_tab_vg_insert_end:
+
+   if ( vg_name_ptr     != NULL) free ( vg_name_ptr);
+   if ( vg_name_ptr_sav != NULL) free ( vg_name_ptr_sav);
+   if ( data            != NULL) {
+    free ( data);
+    data = NULL;
+   }
+
+
+
+*******************lvm_tab_vg_check_exist.c
+   if ( i >= size || size < 2) ret = FALSE;
+
+   free ( data);
+
+                        BECOMES
+
+   if ( i >= size || size < 2) ret = FALSE;
+
+   free ( data);
+   data = NULL;
+
+
+
+Basically, in lvm_tab_vg_check_exist_all_vg.c, there is a if (data !=
+NULL) {free(data); data = NULL;} statement. When "data" is freed in one
+of the other two functions above, it is not reset to NULL, leading to an
+attempt to free it a second time, which causes the seg. fault. I can
+send in the diffs tomorrow if anyone's interested.
+
+Please cc any replies to greencs@logica.com.
+
+Cheers
+Simon
