@@ -1,12 +1,9 @@
-Date: Thu, 23 Aug 2001 20:50:47 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
-Subject: Re: [linux-lvm] Snapshot on xfs filesystem
-Message-ID: <20010823205047.C920@dardhal.mired.net>
-References: <3B84D252.692DA667@tronicplanet.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3B84D252.692DA667@tronicplanet.de>
+Message-ID: <20010823192235.21160.qmail@web20301.mail.yahoo.com>
+Date: Thu, 23 Aug 2001 12:22:35 -0700 (PDT)
+From: Brad Langhorst <bwlang@yahoo.com>
+Subject: Re: [linux-lvm] segfault running vgscan
+In-Reply-To: <Pine.LNX.4.33.0108231329090.4179-100000@bobak.net>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,26 +15,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thursday, 23 August 2001, at 11:52:18 +0200,
-Knollmueller Stefan wrote:
-
-> hi,
+--- "Mark J. Bobak" <mark@bobak.net> wrote:
+> Use the ldd command.  This 'list dynamic
+> dependencies'.  If a program
+> has no dynamic dependencies, it's statically linked,
+> by definition.
 > 
-> when trying the same on an ext2 fs the machine keeps on running and
-> nothing special happens even if there is traffic via nfs.
-> seems to be a problem with xfs...
-> 
-If I recall correctly from the Changelog, XFS snapshots appeared with
-version 1.0.1 of the filesystem.
+okay - ldd says that vgscan is linked to
 
-Greetings,
+#ldd vgscan
+liblvm-10.so.1 => /lib/liblvm-10.so.1 (0x40021000)
+libc.so.6 => /lib/i686/libc.so.6 (0x40051000)
+/lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
 
--- 
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+so yes dynamically linked...
+the problem was with static linking right?
+
+now what? 
+should I try a less optimized libc?
+
+thanks 
+
+brad
+
+__________________________________________________
+Do You Yahoo!?
+Make international calls for as low as $.04/minute with Yahoo! Messenger
+http://phonecard.yahoo.com/
