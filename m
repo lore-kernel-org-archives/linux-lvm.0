@@ -1,11 +1,14 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200106191727.f5JHRB87013198@webber.adilger.int>
+Return-Path: <lewis@sistina.com>
+Date: Tue, 19 Jun 2001 14:24:01 -0500
+From: AJ Lewis <lewis@sistina.com>
 Subject: Re: [linux-lvm] LVM problems
-In-Reply-To: <200106191212.f5JCC3j06725@mailgate4.cinetic.de>
- "from Tobias Hahn at Jun 19, 2001 02:12:03 pm"
-Date: Tue, 19 Jun 2001 11:27:11 -0600 (MDT)
-MIME-Version: 1.0
+Message-ID: <20010619142401.A517@sistina.com>
+References: <200106191212.f5JCC3j06725@mailgate4.cinetic.de> <200106191727.f5JHRB87013198@webber.adilger.int>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Content-Disposition: inline
+In-Reply-To: <200106191727.f5JHRB87013198@webber.adilger.int>; from adilger@turbolinux.com on Tue, Jun 19, 2001 at 11:27:11AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +20,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: linux-LVM-Bug@sistina.com, linux-LVM@sistina.com
 
-Tobias Hahn writes:
-> I have serious trouble trying to get LVM to work again since I upgraded
-> my lvm-tools to 0.9beta6. I cannot access my vg (and needless to say,
-> almost all of my system is on that vg :-( ). The problem is that the
-> kernel complains about an unsupported ioctl. I looked up this problem in
-> lvm-related mailinglists and figured out that this is a version mismatch
-> between kernel lvm and user lvm.
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But this message is only a warning, and not a real source of problems.
-If you are having problems, it is from something else.  If you were using
-the beta2 tools or earlier, there is a chance your VGDA is slightly broken
-(UUID problems).  Please search the mailing list about this for instructions
-on how to fix.
+On Tue, Jun 19, 2001 at 11:27:11AM -0600, Andreas Dilger wrote:
+> I could have sworn this problem was fixed already, but maybe only in CVS?
+> Time for a new patch release I guess.  As someone else already mentioned,
+> simply change get_hardblocksize to get_hardsect_size() in lvm.c.
 
-> At that point I was using kernel
-> 2.4.3. According to the mailing list, the problem should be fixed in
-> kernel 2.4.4. However, kernel 2.4.5 (downloaded from ftp.kernel.org) still
-> contains 0.9beta2.
+I dropped a patch on the FTP site:
+ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/lvm_0.9.1_beta7-get_hardblocksize.=
+patch
 
-There are some LVM fixes in the -ac kernel patch, but none in the Linus
-tree yet (sigh).
+apply this to your LVM source tree and regenerate the kernel patch.
 
-> So I downloaded the lvm-source from ftp.sistina.com
-> (both beta6 and beta7) and tried to patch kernel 2.4.5 following the
-> instructions in PATCHES/README. The patched kernel, however, does not
-> link any longer.
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-> drivers/md/mddev.o(.text+0x7e01): undefined reference to `get_hardblocksize'
-> drivers/md/mddev.o(.text+0x7e3d): undefined reference to `get_hardblocksize'
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-I could have sworn this problem was fixed already, but maybe only in CVS?
-Time for a new patch release I guess.  As someone else already mentioned,
-simply change get_hardblocksize to get_hardsect_size() in lvm.c.
+-----Begin Obligatory Humorous Quote----------------------------------------
+A)bort, R)etry, I)nfluence with large hammer.
+-----End Obligatory Humorous Quote------------------------------------------
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7L6bRpE6/iGtdjLERAvQ4AJ9/mM++D9TBbmrXwVlBaY+ykBRuhwCfcr30
+zj3c6OEo1VgOBVgz3YRNKnQ=
+=1WEH
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
