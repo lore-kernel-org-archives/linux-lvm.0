@@ -1,10 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103170430.f2H4Udr19402@webber.adilger.int>
-Subject: Re: [linux-lvm] LVM vs. /proc/partitions
-In-Reply-To: <Pine.LNX.4.30.0103161936340.4654-100000@flowers.house.larsshack.org>
- from Lars Kellogg-Stedman at "Mar 16, 2001 07:43:15 pm"
-Date: Fri, 16 Mar 2001 21:30:39 -0700 (MST)
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3AB2FDB7.6A285C47@wrkhors.com>
+Date: Sat, 17 Mar 2001 00:01:27 -0600
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 Beta 6 available at 
+ www.sistina.com
+References: <E14duXV-0006Vi-00@whittlesey.cl.cam.ac.uk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,43 +18,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Lars Kellogg-Stedman writes:
-> I have a single logical volume configured on my system.  I'm running 2.4.2
-> w/ lvm 0.9.1beta6, devfs, and SGI's xfs patches.  /proc/partition looks
-> like this (I've only included the first four columns for brevity):
+> [ Is there a version for easy parsing by perl scripts ? ]
+
+use m{blah}sg  to grab the thing as a single string and 
+grab the portions you want, e.g.,
+
+	my @whatever = $foo = /whatever/gs;
+
+allows whatever to contain '.' that will match newlines.
+
 > 
->   9 0 8887040 md0
->   58 0 8884224 lvma
->   8 0 4444462 scsi/host0/bus0/target1/lun0/disc
->   8 16 4444462 scsi/host0/bus0/target2/lun0/disc
->   [...]
+> worsdell:~: cat /proc/lvm/global
+> LVM driver version 0.9.1_beta6 (12/03/2001)
 > 
-> The problem here is obvious -- there isn't a device file, anywhere, called
-> 'lvma'.  There is, on the other hand, /dev/vg0/vol0.  Would making the
-> value displayed in /proc/partitions match the (devfs) device node require
-> significant work?
+> Total:  1 VG  2 PVs  3 LVs (3 LVs open 3 times)
+> 
+> Global: 7275 bytes malloced   IOP version: 10   0:03:02 active
+> 
+> VG:  vg01  [2 PV, 3 LV/3 open]  PE Size: 4096 KB
+>   Usage [KB/PE]: 1593344 /389 total  516096 /126 used  1077248 /263 free
+>   PVs: [AA] part1                  1044480 /255       516096 /126       528384
+> /129
+>        [AA] part6                   548864 /134            0 /0         548864
+> /134
+>     LVs: [AWDL  ] tmp                         106496 /26       1x open
+>          [AWDL  ] repl                        307200 /75       1x open
+>          [AWDL  ] scratch                     102400 /25       1x open
+> worsdell:~:
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-The problem is not directly with LVM, but with the fact that Linus doesn't
-like the way that LVM set the device name (I don't know why, really).  In
-any case, there is code in the 2.2 LVM patch which lets you enable LVM_NAME
-and sets the name, but it needs some code in genhd.c or similar to work.
-It is totally a "clean code" issue and not a technical one.  Maybe one
-of the Sistina folk will add the LVM_NAME part back as a patch fragment
-for 2.4?
-
-There was another patch floating around to re-work the device naming, but
-I can't find it right now.  I'm not sure if anyone has made an effort to
-get that patch in to Linus at all.  It was somewhat nicer than the LVM_NAME
-code, as it allowed each block device to generate its own names (a good
-idea, IMHO).
-
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
