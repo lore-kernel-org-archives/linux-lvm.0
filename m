@@ -1,12 +1,11 @@
-Return-Path: <jdomingo@crosswinds.net>
-Date: Fri, 29 Jun 2001 00:56:56 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
-Subject: Re: [linux-lvm] HowTo: EIDE/ATA-100 + RAID 1 + LVM
-Message-ID: <20010629005655.B4030@dardhal.mired.net>
+Return-Path: <markv@wave.co.nz>
+Date: Fri, 29 Jun 2001 14:09:23 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] Re: another nice feature for packagers ...
+Message-ID: <20010629140922.B32501@mail.wave.co.nz>
+References: <Pine.LNX.4.33.0106171519240.14970-200000@moon.dice.hu> <20010618095533.A32072@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8F120FA493CAD743B30EEB8F356985B5BB57D5@AUSXMBT102VS1.amer.dell.com>
+In-Reply-To: <20010618095533.A32072@sistina.com>; from AJ Lewis on Mon, Jun 18, 2001 at 09:55:33AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,28 +17,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: AJ Lewis <lewis@sistina.com>
 
-On Thursday, 28 June 2001, at 16:46:10 -0500,
-Robert_Macaulay@Dell.com wrote:
+On Mon, Jun 18, 2001 at 09:55:33AM -0500, AJ Lewis wrote:
+> Just FYI, the entire build system is going to get an overhaul after the 1.0   
+> release, so I will definitely be making sure these detail are kept in mind    
+> for that.
 
-> About the Raid 1.
-> [...]
-> I know I changed 2 variables(RAM and RAID). I'm going to go back to HW raid
-> 1 for now, and see if it makes a difference.
-> 
-I would choose hardware RAID instead os software RAID: this reduces CPU
-overhead on the server, and avoids performance problems due to excesive
-layering of "block devices".
+Would it be possible to automatically build a liblvm_pic.a?  That would
+allow building a "reduced" liblvm.so (containing only those functions
+required for vgscan and vgchange), suitable for a tight initrd.
 
-2.4.x isn't "productoin quality" yet on some kinds of hardware, specially
-those SMP machines with lots of RAM (requiring BIGMEM). That seems to be
-your case, and is a known and (hopefully) soon-to-be-solved problem.
+Thanks,
 
---
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+Mark.
