@@ -1,10 +1,11 @@
-Subject: RE: [linux-lvm] lvmcreate_initrd: depmod without -F?
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <015f01c38f50$1acd6590$0801a8c0@anadromada.net>
-References: <015f01c38f50$1acd6590$0801a8c0@anadromada.net>
-Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-1UER1rwPTVxwO1fh2Hcb"
-Message-Id: <1066128314.12638.14.camel@pc>
-Mime-Version: 1.0
+From: Mike Williams <mike@gaima.co.uk>
+Subject: Re: [linux-lvm] inconsistent metadata
+References: <200310092100.11002.mike@gaima.co.uk>
+In-Reply-To: <200310092100.11002.mike@gaima.co.uk>
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200310141906.39855.mike@gaima.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,54 +16,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 14 06:40:04 2003
+Date: Tue Oct 14 13:14:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---=-1UER1rwPTVxwO1fh2Hcb
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-On Fri, 2003-10-10 at 13:01, Renee Lee wrote:
-> I have been watching this group as I use Linux with LVM.
-> For the last several months I have been deleting any
-> and all messages that have an attachment as this is the
-> primary way your system can be infected by virus.
+On Thursday 09 October 2003 21:00, Mike Williams wrote:
+> Can someone suggest a course of action to get at my data, please?
+> I just need to iron out this kink in the road and my life long devotion to
+> LVM will be complete! :)
 
-Do you also shoot anyone who approaches the front door of your house?=20
-Because you know, that is the primary way a burglar can get into your
-house.
+I took a leap of faith and vgcfgbackup'd, and vgcfgrestore'd, and now I hav=
+e=20
+my data back! w00t
 
-> I suggest all members do not send attachments as this will make it
-> easer to tell if another on the list is infected.
-
-_I_ suggest people stop using operating systems and/or e-mail programs
-that can so easily be infected with viruses, and furthermore, if they
-insist on using such items, they protect themselves from viruses with
-properly discriminating anit-virus software and not just throwing out
-anything that could _possibly_ carry a virus.
-
-Now seeing as this is already way OT, please be sure to direct any
-followups to me personally and not the list.  I am sure my kill-filters
-will treat it accordingly.  Thanx.
-
-b.
-
---=20
-My other computer is your Microsoft Windows server.
-
-Brian J. Murrell
-
---=-1UER1rwPTVxwO1fh2Hcb
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
+=2D --=20
+Mike Williams
+=2D----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.3 (GNU/Linux)
 
-iD8DBQA/i9O6l3EQlGLyuXARAqQjAKDQwEvllCU/mhMB5JxJg2akjo+6dwCgk19f
-+L/gok3yFzlkRgAb44uRyVU=
-=Vjo1
------END PGP SIGNATURE-----
-
---=-1UER1rwPTVxwO1fh2Hcb--
+iD8DBQE/jDsvInuLMrk7bIwRAuy8AJ43UCJxWsAVKlhPrUy7EWic3aWxNwCdHgE7
+H6tb/+MGGYiBa7nIvXESOjo=3D
+=3DdsOr
+=2D----END PGP SIGNATURE-----
