@@ -1,4 +1,4 @@
-Message-ID: <4011D696.1020408@digitalgenus.com>
+Message-ID: <4011D740.3010200@digitalgenus.com>
 From: dGenus Mailing List <ml@digitalgenus.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -13,25 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 23 21:19:02 2004
+Date: Fri Jan 23 21:22:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Well... I've got myself in a bit of a bind, and spending close to 24 
-hours trying to fix a problem I have with LVM, and browsing the 
+Well... I've got myself in a bit of a bind, and spending close to 24
+hours trying to fix a problem I have with LVM, and browsing the
 internet, I've come to the conclusion that I need some expert help!!
 
-Problem: Disk died in LVM... I madly tried to move the PE's off the 
-drive, and managed to get all but teh offending PE's off to new drives i 
-added to the system. (no 42 wouldn't you know it... thought it was the 
-answer not the question...) .  Thought I was ok, until the drive locked 
-again, and I had to reboot. 
+Problem: Disk died in LVM... I madly tried to move the PE's off the
+drive, and managed to get all but teh offending PE's off to new drives i
+added to the system. (no 42 wouldn't you know it... thought it was the
+answer not the question...) .  Thought I was ok, until the drive locked
+again, and I had to reboot.
 
-When it came back, I had a vg which wouldn't be recognised after 
-vgchange and vgscan, with lots of various errors, most of which I've 
-seen similar examples for here.   I upgraded the lvm to lvm2 and kernel 
-to 2.6 to see whether I could get it all going using the partial mount.  
+When it came back, I had a vg which wouldn't be recognised after
+vgchange and vgscan, with lots of various errors, most of which I've
+seen similar examples for here.   I upgraded the lvm to lvm2 and kernel
+to 2.6 to see whether I could get it all going using the partial mount.
 Anyways, here is what I get from the various outputs.
 
 [root@wren pictures]# lvm pvscan
@@ -49,10 +49,10 @@ Anyways, here is what I get from the various outputs.
   PV /dev/hdf1   VG pictures   lvm1 [2.75 GB / 0    free]
   Total: 6 [0   ] / in use: 6 [0   ] / in no VG: 0 [0   ]
 
-Now I can quite happily see the volumes in the missing vg (in this case 
+Now I can quite happily see the volumes in the missing vg (in this case
 pictures).
 
-# lvm pvdisplay /dev/hde1  
+# lvm pvdisplay /dev/hde1
   --- Physical volume ---
   PV Name               /dev/hde1
   VG Name               pictures
@@ -63,7 +63,7 @@ pictures).
   Free PE               0
   Allocated PE          88
   PV UUID               uJqHOZ-puzh-6m8D-04dP-v3np-0Fj5-dh1CDY
-  
+
 # lvm pvdisplay /dev/hdf1
   --- Physical volume ---
   PV Name               /dev/hdf1
@@ -75,7 +75,7 @@ pictures).
   Free PE               0
   Allocated PE          88
   PV UUID               FJh4Dl-2KPf-LyHK-8I3F-LAsk-hJ0x-0svzu4
-  
+
 # lvm pvdisplay /dev/hdh1
   --- Physical volume ---
   PV Name               /dev/hdh1
@@ -87,7 +87,7 @@ pictures).
   Free PE               0
   Allocated PE          148
   PV UUID               63LnM2-4MsC-Lg7I-st7o-xKcX-LHNy-BFYPtz
-  
+
 # lvm pvdisplay /dev/hdg2
 
   --- Physical volume ---
@@ -130,16 +130,16 @@ crw-------    1 root     root      10,  63 Jan 24 13:49 control
 brw-------    1 root     root     254,   0 Jan 24 14:11 data-lv_data
 brw-------    1 root     root     254,   1 Jan 24 14:11 pictures-lv_pictures
 
-The logical link is connected to /dev/data/lv_data, but none for 
+The logical link is connected to /dev/data/lv_data, but none for
 /dev/pictures/lv_pictures
 
-Now my main question is, and I'm hoping this is possible.  Can I list 
-the PE's on the drives in question and then rebuild the VG in some way 
-by manually specifying these LE/PE's?  When I did a vgcfgbackup I got a 
-file with a lot of missing segments.  I'd like to manually specify the 
+Now my main question is, and I'm hoping this is possible.  Can I list
+the PE's on the drives in question and then rebuild the VG in some way
+by manually specifying these LE/PE's?  When I did a vgcfgbackup I got a
+file with a lot of missing segments.  I'd like to manually specify the
 extents and rebuild the vg.
 
-The reason for persisting??  My wife is a photographer and you can 
+The reason for persisting??  My wife is a photographer and you can
 imagine what's on this lvm.....
 
 Hoping someone can help I can provide further information if need be.
