@@ -1,53 +1,112 @@
-Message-ID: <36DFB4AF.3BE72568@ep-ag.com>
-Date: Fri, 05 Mar 1999 11:40:47 +0100
-From: Klaus Strebel <stb@ep-ag.com>
-MIME-Version: 1.0
+From: Steve_J_Brueggeman@notes.seagate.com
+Message-ID: <8825672B.0073427A.00@sv-gw1.stsv.seagate.com>
+Date: Fri, 5 Mar 1999 14:59:55 -0600
 Subject: Re: [linux-lvm] Problems with LVM 0.6
-References: <36DEC203.C9CCD889@notes.seagate.com>
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Steve Brueggeman <steve_brueggeman@notes.seagate.com>
-Cc: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: marka@a-wicked.demon.co.uk
+Cc: stevebr@primenet.com, linux-lvm@msede.com
 
-Hi Steve,
 
-Steve Brueggeman wrote:
-> 
-> First off, I had trouble compiling the tools.  I got a warning that
-> "LVM_BLK_MAJOR" was undeclared, when compiling
-> tools/lib/lvm_tab_get_free_blk_dev.c
-Seems to me, that your patch was not successfull. LVM_BLK_MAJOR is to be defined
-in $LINUX_SRC/include/linux/major.h. Look for a .rej file in that directory
-(btw. this should be done after every patch ;-)). The sequence in the INSTALL
-file should be changed: first patch the kernel sources, then build the tools.
-The other things is, that, if you apply the patch to a already patched source
-(ex. to update LVM0-5alpha to 0.6_also_alpha), the new module source is inserted
-to the beginning of the source file, both versions are in it and the compiler is
-the talking to you, telling you funny things ;-). Perhaps there should be
-upgrade-patches-from-xx-to-yy ?
+I've found the problem. It lies in tools/lib/lvm_tab_get_free_blk_dev.c
+I've changed from
+--------------------------top------------------------
+#define   GET_LV_DEV \
+   { \
+      int i, l; \
+      for ( i = 0; i < lv_dev_count - 1; i++) { \
+         for ( l = 0; l < lv_dev_count; l++) { \
+            if ( lv_dev == lv_dev_this[l]) lv_dev++; \
+         } \
+      } \
+   }
 
-One very very heavy problem i ran in yesterday was, that the dynamic creation of
-the /dev/lvm device-file with devfs does not work in lvm-0.6 anymore (sorry, i
-didn't search why). So i have to create the /dev/lvm after loading the
-lvm-module before i can vgscan. 
+--------------------------bot------------------------
 
-Btw. what are the files vgscan creates in /etc are used for. Is it possible to
-suppress creation (or even rw-access) to these files if they already exist?
-Background is, that i have to fsck and remount,rw my root-fs before i can use
-lvm. Is that really neccessary?
+to
+--------------------------top------------------------
+#define GET_LV_DEV \
+   { \
+      int i, l, foundfree=0; \
+      for ( i = 0; (i < lv_dev_count) && !foundfree; i++) { \
+         foundfree = 1; \
+         for ( l = 0; l < lv_dev_count; l++) { \
+            if ( lv_dev == lv_dev_this[l]) { \
+              lv_dev++; \
+              foundfree = 0; \
+            } \
+         } \
+      } \
+   }
+--------------------------bot------------------------
+This changes the outer loop to test the whole list again.  The problem was
+when the number of existing Logical Devices was 1, the outer loops test
+would fail, and no matches would be found, so minor #0 would get reused
+again.
 
-But, after all that criticism, cheers for this software! It is what i waited
-for! Let`s get it stable quickly!
+I also added a test to drop out early, if the inner loop has made a whole
+round without finding any matches.  I'm sure there's a better way, but I
+was in a hurry.
 
-Ciao
-Klaus
--- 
-Klaus Strebel
-stb@ep-ag.com
-EIGNER + PARTNER AG   - The Engineering Warehouse Company -
-<http://www.ep-ag.com>
------------------------------------------------------------------------
-In Heaven there will be no DOS, no Intel, and above all, no Bill Gates.
+
+#define VG_BLK(a)       ( vg_lv_map[minor].vg_number)
+#define LV_BLK(a)       ( vg_lv_map[minor].lv_number)
+
+Also, while I was perusing the source, I noticed the following oddity, in
+include/linux/lvm.h, the following are defined...
+--------------------------top------------------------
+/* block minor indexes into a volume group/logical volume indirection table
+ */
+#define VG_BLK(a)       ( vg_lv_map[minor].vg_number)
+#define LV_BLK(a)       ( vg_lv_map[minor].lv_number)
+--------------------------bot------------------------
+
+Note that the macro parameter (a) is not used in the macro defination.  I
+believe in the above that [minor] should be changed to [(a)], as follows
+#define VG_BLK(a)       ( vg_lv_map[(a)].vg_number)
+#define LV_BLK(a)       ( vg_lv_map[(a)].lv_number)
+
+
+The above changes have resolved the problem I was having, but I have not
+tested them out thoroughly, and I may have made some bad assumptions.  Let
+me know.
+
+Steve Brueggeman
+
+
+
+
+
+
+marka@a-wicked.demon.co.uk on 03/05/99 11:59:46 AM
+
+To:   Steve J Brueggeman, stevebr@primenet.com
+cc:
+Subject:  [linux-lvm] Problems with LVM 0.6
+
+
+
+
+Hello Steve,
+
+My mistake, thinking about it the minor number should increment
+what I did also was roll back to 0.5 version of lvm
+then created two logical volumes
+
+here is the output
+
+crw-r-----   1 root     root     109,   0 Mar  4 19:11 group
+brw-r-----   1 root     root      58,   1 Mar  4 19:12 lvol1
+brw-r-----   1 root     root      58,   2 Mar  4 19:12 lvol2
+
+as you can see from yours the minor number for the lvols is the same as
+the minor number for the group file
+
+Regards
+
+Mark
