@@ -1,10 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103172023.f2HKNYP03975@webber.adilger.int>
-Subject: Re: [linux-lvm] Problem win Suse 7.0
-In-Reply-To: <20010317123633.8B53E3588E@mad.isoco.com> from Javier Ferruz Rodriguez
- at "Mar 17, 2001 01:36:33 pm"
-Date: Sat, 17 Mar 2001 13:23:34 -0700 (MST)
+Return-Path: <alec@shadowstar.net>
+Date: Sat, 17 Mar 2001 18:19:22 -0500 (EST)
+From: Alec Smith <alec@shadowstar.net>
+Message-ID: <Pine.LNX.4.33.0103171814270.19966-100000@bugs.home.shadowstar.net>
+MIME-Version: 1.0
+Subject: [linux-lvm] Getting LVM to startup on RedHat
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,58 +15,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-You write:
-> 	This is my partition table disk:
-> 
-> 	hda1	Boot	Primary	Linux ext2	16M
-> 	hda2		Primary	Linux ReiserFS	1G	(/)
-> 	hda5		Logical	Linux ReiserFS	2GB	(/usr)
-> 	hda6		Logical	Linux ReiserFS	1GB	(/usr/local)
-> 	hda7		Logical	Linux ReiserFS	1GB	(/var)
-> 	hda8		Logical	Linux swap	128M
-> 	hda9		Logical	Linux ReiserFS	450M	(/home)
-> 
-> 	I set 'Linux LVM' in hda2, hda5, hda6, hda7 and hda9. When I write
-> 	the new table, the display show me next message:
-> 
-> 	Wrote partition table, but re-read table failed. Reboot to update table
-> 
-> 	so I reboot my computer.
-> 
-> 	My kernel version is 2.2.16.
-> 
-> 	myhost#cat /proc/lvm
-> 
-> 	LVM driver version 0.8e (4/1/2000)
-> 	Total: 0VGs	0 PVs	0 LVs	(0 LVs open)
-> 	Global: 138 bytes vmalloced	IOP Version: 6	1:12:19 active
-> 
-> 	When the machine is up again, I execute
-> 
-> 		vgscan
-> 		pvcreate /dev/hda2
-> 		pvcreate /dev/hda5
-> 		pvcreate /dev/hda6
-> 		pvcreate /dev/hda7
-> 		pvcreate /dev/hda9
-> 
-> 	I execute again 'cat /proc/lvm' and I get the same information.
-> 	Is this correct?
-> 
-> 	The last command I execute is ...
-> 
-> 		vgcreate grp1Beta /dev/hda2 /dev/hda5 /dev/hda6 /dev/hda7 /dev/hda9
+I've compiled kernel 2.2.17+LVM-0.9 patches on a RedHat 6.2 machine. If I
+run
 
-You are lucky this doesn't work - you would DESTROY all of your data.  Please
-read the instructions first!!!
+vgscan
+vgchange -ay
+mount /dev/malepages/data /data
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+at a command prompt, all works well. However, if I include
+
+/usr/sbin/vgscan
+/usr/sbin/vgchange -ay
+
+(exactly as above) in my /etc/rc.d/rc.sysinit the commands don't seem to
+be run at reboot. After the reboot, I can run the vgchange and mount
+commands without first doing a vgscan without incident.
+
+Any ideas what could be going on?
+
+Thanks,
+Alec
