@@ -1,10 +1,26 @@
-From: Gunnar Hilling <fedora.gunnar@hilling.de>
-Date: Thu, 16 Sep 2004 02:56:27 +0200
-Message-Id: <1095296187.4750.12.camel@nelson.hilling.de>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8G7NPr11975
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2004 03:23:25 -0400
+Received: from server.klaube.net (root@www.klaube.net [195.190.148.2])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8G7NJCI019741
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2004 03:23:19 -0400
+Received: from server.klaube.net (localhost [127.0.0.1])
+	by server.klaube.net (8.12.3/8.12.2/SuSE Linux 0.6) with ESMTP id
+	i8G7NIJO029175
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2004 09:23:18 +0200
+Received: (from t1@localhost)
+	by server.klaube.net (8.12.3/8.12.3/Submit) id i8G7NH9i029174
+	for linux-lvm@redhat.com; Thu, 16 Sep 2004 09:23:18 +0200
+Date: Thu, 16 Sep 2004 09:23:17 +0200
+From: Thomas Klaube <t.klaube@efm.de>
+Subject: Re: [linux-lvm] snapshot on 6.8.5/FC development
+Message-ID: <20040916072317.GA29048@server.klaube.net>
+References: <1095296187.4750.12.camel@nelson.hilling.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] snapshot on 6.8.5/FC development
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1095296187.4750.12.camel@nelson.hilling.de>
+Reply-To: Thomas Klaube <t.klaube@efm.de>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -15,39 +31,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: dm-devel@redhat.com, linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+On Thu, Sep 16, 2004 at 02:56:27AM +0200, Gunnar Hilling wrote:
+> Hello,
 
-I just tried the lvm2/dm-snapshot feature and failed miserably...
-After reading some older postings in this and the dm-devel mailing lists
-I'm not sure what to do:
+Hi,
 
-setup:
-lvm2-2.0.21
-kernel-2.6.8
-xfs
+> 
+> I just tried the lvm2/dm-snapshot feature and failed miserably...
+> After reading some older postings in this and the dm-devel mailing lists
+> I'm not sure what to do:
+> 
 
-VG-Size: 4G on Raid-Mirror (/dev/md1)
-LV-Size: 1G
+[...]
 
-Calling:
+> 
+> lvcreate --snapshot --size 100m --name snap /dev/TestMirrorGroup/OnlineVol
+> 
+> will block forever. I have to reboot the computer. After
+> that /dev/TestMirrorGroup/snap is there...
 
-lvcreate --snapshot --size 100m --name snap /dev/TestMirrorGroup/OnlineVol
+/dev/TestMirrorGroup/OnlineVol is your root filesystem? I have the same
+problem. Snapshots on other (non root fs) work for me. 
 
-will block forever. I have to reboot the computer. After
-that /dev/TestMirrorGroup/snap is there...
+AFAIK snapshots and pvmove do not work on the filesystem where the lvm-tools
+reside. I hope this will change in the (not so distant) future as I 
+need snapshots on root-fs. 
 
-I froze xfs before (xfs_freeze -f)
-
-Any Clue? Is this related to xfs-FS only or do there exist general
-problems (I read somewhere about problems snapshotting raids...)
-
-BTW: Why isn't it possible to create the snapshot on another VG than the
-original. This would be quite nice becauce in a typical setup it could
-be an advantate to have the snapshot on a small extra disk, keeping the
-original data separated from the writes to the snapshot.
-
-Any help appreciated,
-
--Gunnar
+regards
+Thomas 
