@@ -1,12 +1,10 @@
-Return-Path: <thornber@btconnect.com>
-Date: Thu, 16 Aug 2001 11:08:02 +0100
-Subject: Re: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 1.0 available at www.sistina.com
-Message-ID: <20010816110802.B452@btconnect.com>
-References: <20010815185005.A32239@sistina.com> <200108151755.f7FHtmTH013535@webber.adilger.int> <20010815231330.B27003@athlon.random>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010815231330.B27003@athlon.random>; from andrea@suse.de on Wed, Aug 15, 2001 at 11:13:30PM +0200
-From: Joe Thornber <thornber@btconnect.com>
+Return-Path: <Stefan.Giessler@netshare.de>
+Message-ID: <20010815211548.A2456@nshhvrnbk013.netshare.ag>
+From: "STEFANG(GMX)" <sgiessler@gmx.net>
+Subject: Re: [linux-lvm] Why can't I get more bandwidth by adding more dis
+	ks?
+Date: Wed, 15 Aug 2001 21:15:48 +0200
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,16 +20,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Aug 15, 2001 at 11:13:30PM +0200, Andrea Arcangeli wrote:
-> On Wed, Aug 15, 2001 at 11:55:48AM -0600, Andreas Dilger wrote:
-> > Saying you "need" the old versions of the installed tools to read the
-> > on disk data is bogus, IMNSHO.  You could easily have a flag which says
-> > "calculate the PE offsets using the old algorithm or the new algorithm".
-> 
-> Definitely. This is what I was asking for. That would be optimal.
+Hallo list,
 
-I'm going to go through all the beta releases and confirm this, but as
-I understand it there are not just two ways of calculating it.
-Otherwise yes it would be easy.
+on Fri, 10 Aug 2001, James Mello (kingjamm@colltech.com) wrote:
 
-- Joe
+> In this case instead of writing seqentially, you can use an a random call
+> followed by an fseek to write a block or block(s) to a relatively random
+> location. If I can get some time, I'll try to write something up. But I'd
+> venture to say that someone out there has written a tool that already does
+> this. Perhaps a google search may be in order.
+
+If you don't mind, to do the test's on a filesystem (instead of raw
+IO) you can use bonnie.  Raw IO benchmarks usually only matter for
+Databases installed on raw devices...   For practical considerations
+a filesystem and bonnie seem more appropriate.
+
+CU,
+   Stefan
+-- 
+Stefan Giessler                                       e-mail:
+sgiessler@gmx.net
+
+I'd never join any club that would have the likes of me as a member.
+                                                                -- Groucho
+Marx
