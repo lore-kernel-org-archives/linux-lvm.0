@@ -1,10 +1,8 @@
-From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] vgscan messages regarding read-only cdrom
-Message-ID: <20031201195526.GB4846@localhost>
-References: <20031130185807.GF7634@glorybox.de> <20031130212501.GO19217@percy.comedia.it> <20031201100842.GA3038@glorybox.de>
+From: Jord Tanner <jord@indygecko.com>
+Message-Id: <1070314787.10000.4.camel@gecko.indygecko.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031201100842.GA3038@glorybox.de>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Dual Boot with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,40 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 13:56:02 2003
+Date: Mon Dec  1 15:41:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Monday, 01 December 2003, at 11:08:42 +0100,
-Kai Weber wrote:
+I posted a message on this, but no-one has an answer. I try again.
 
-> devices {
->     dir = "/dev"
->     scan = [ "/dev" ]
->     filter = [ "r|cdrom|" ]
->     cache = "/etc/lvm/.cache"
->     write_cache_state = 1
-> }
->                                                                                 
-It seems you can have just one instance of the "filter" directive, where
-you must put every filter you want to apply for devices. For example,
-this is what I have in my configuration file:
-filter = [ "r|hdd|", "r|cdrom|", "r|md|", "a|.*|" ]
+I dual boot my machine between RedHat 9 and Gentoo 1.4. Both use the
+same PV, and share several LVs. In RedHat all operates as expected. In
+Gentoo, the LVs are usable, but lvscan, lvcreate, etc give the following
+error:
 
-I accept every block device under /dev, but previously exclude /dev/hdd
-(my CD-ROM device), /dev/cdrom al MD metadevices from the list. It works.
+root@gecko root # lvscan
+lvscan -- ERROR "pv_status_all_pv_of_vg(): no PV" getting status of
+volume  group "Volume00"
 
-Greetings.
 
-PS: the man page for lvm.conf doesn't explicitily says you can have just
-one "filter" directive, neither the opposite, although the sample
-"lvm.conf" bundled with sources and packages seemd to give a hint about
-the correct syntax. Would it be necessary to be more specific about that ?
+Running pvscan in Gentoo shows the PV to be inactive:
 
-Greetings.
+root@gecko root # pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part2" of VG
+"Volume00" [53.71 GB / 33.32 GB free]
+pvscan -- total: 1 [53.71 GB] / in use: 1 [53.71 GB] / in no VG: 0 [0]
+
+Yet, the LVs can be mounted without trouble.
+
+
+What can I do to correct this?
 
 -- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Sid (Linux 2.6.0-test10-mm1)
+Jord Tanner <jord@indygecko.com>
