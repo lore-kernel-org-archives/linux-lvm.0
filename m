@@ -1,10 +1,10 @@
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Message-ID: <20030611213456.GC29685@lug-owl.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
-Content-Disposition: inline
-Subject: [linux-lvm] Problem with 2.5.x DM + LVM1 metadata
+From: Tim Randles <tcr@pacific.mps.ohio-state.edu>
+Subject: Re: [linux-lvm] pvmove problem
+References: <200306041157.45859.tcr@pacific.mps.ohio-state.edu> <20030605123501.A21457@sistina.com>
+In-Reply-To: <20030605123501.A21457@sistina.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200306120902.04054.tcr@pacific.mps.ohio-state.edu>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,216 +15,199 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 12 07:56:01 2003
+Date: Thu Jun 12 08:03:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Hi!
+Heinz,
 
-I'm running a machine since quite some time with DM-patches 2.4.x and
-LVM1 metadata PVs/VGs/LVs. It's a Debian box with lvm2-1.95.15 intalled.
+The disk failure was on a production webserver.  I had hoped to leave thi=
+ngs=20
+offline until I heard back from someone on the list, but was pressured in=
+to=20
+recovering things sooner.  I removed the failing disk from service and=20
+restored from backup...didn't get a chance to try "pvmove -i" again.  The=
+ one=20
+time I tried it the command failed but I may have screwed up something el=
+se. =20
+Thanks for the response though.
 
-Today, I tried to boot this machine with 2.5.70-bk16. Everything went
-well (most of my machines run 2.5.x since some time, so I'm used to the
-gotchas like modutils<-> module-init-tools etc.), but the 2.5.x DM seems
-so cause problems. During "vgchange -a y" (called by init scripts), one
-of my LVs cannot be activated. Here's the transcript of "/etc/init.d/lvm2
-start" (which basically only consists of the vgchange call):
----------------------------------------------------------------------
-Initializing LVM:   /dev/hdc2: open failed: No such device or address
-  /dev/hdc3: open failed: No such device or address
-  /dev/hda4: open failed: No such device or address
-  /dev/hdc4: open failed: No such device or address
-  /dev/hda5: open failed: No such device or address
-  /dev/hda6: open failed: No such device or address
-  /dev/hda7: open failed: No such device or address
-  /dev/hda8: open failed: No such device or address
-  /dev/hda9: open failed: No such device or address
-  /dev/hda10: open failed: No such device or address
-  /dev/hda11: open failed: No such device or address
-  /dev/hda12: open failed: No such device or address
-  /dev/hda13: open failed: No such device or address
-  /dev/hda14: open failed: No such device or address
-  /dev/hda15: open failed: No such device or address
-  /dev/hda16: open failed: No such device or address
-  /dev/hda17: open failed: No such device or address
-  /dev/hda18: open failed: No such device or address
-  /dev/hdc18: open failed: No such device or address
-  /dev/hda19: open failed: No such device or address
-  /dev/hdc19: open failed: No such device or address
-  /dev/hda20: open failed: No such device or address
-  /dev/hdc20: open failed: No such device or address
-  /dev/hdd2: open failed: No such device or address
-  /dev/hdd3: open failed: No such device or address
-  /dev/hdd4: open failed: No such device or address
-  /dev/hdd15: open failed: No such device or address
-  /dev/hdd16: open failed: No such device or address
-  /dev/hdd17: open failed: No such device or address
-  /dev/hdd18: open failed: No such device or address
-  /dev/hdd19: open failed: No such device or address
-  /dev/hdd20: open failed: No such device or address
-  /dev/hdc2: open failed: No such device or address
-  /dev/hdc3: open failed: No such device or address
-  /dev/hda4: open failed: No such device or address
-  /dev/hdc4: open failed: No such device or address
-  /dev/hda5: open failed: No such device or address
-  /dev/hda6: open failed: No such device or address
-  /dev/hda7: open failed: No such device or address
-  /dev/hda8: open failed: No such device or address
-  /dev/hda9: open failed: No such device or address
-  /dev/hda10: open failed: No such device or address
-  /dev/hda11: open failed: No such device or address
-  /dev/hda12: open failed: No such device or address
-  /dev/hda13: open failed: No such device or address
-  /dev/hda14: open failed: No such device or address
-  /dev/hda15: open failed: No such device or address
-  /dev/hda16: open failed: No such device or address
-  /dev/hda17: open failed: No such device or address
-  /dev/hda18: open failed: No such device or address
-  /dev/hdc18: open failed: No such device or address
-  /dev/hda19: open failed: No such device or address
-  /dev/hdc19: open failed: No such device or address
-  /dev/hda20: open failed: No such device or address
-  /dev/hdc20: open failed: No such device or address
-  /dev/hdd2: open failed: No such device or address
-  /dev/hdd3: open failed: No such device or address
-  /dev/hdd4: open failed: No such device or address
-  /dev/hdd15: open failed: No such device or address
-  /dev/hdd16: open failed: No such device or address
-  /dev/hdd17: open failed: No such device or address
-  /dev/hdd18: open failed: No such device or address
-  /dev/hdd19: open failed: No such device or address
-  /dev/hdd20: open failed: No such device or address
-  /dev/hdc2: open failed: No such device or address
-  /dev/hdc3: open failed: No such device or address
-  /dev/hda4: open failed: No such device or address
-  /dev/hdc4: open failed: No such device or address
-  /dev/hda5: open failed: No such device or address
-  /dev/hda6: open failed: No such device or address
-  /dev/hda7: open failed: No such device or address
-  /dev/hda8: open failed: No such device or address
-  /dev/hda9: open failed: No such device or address
-  /dev/hda10: open failed: No such device or address
-  /dev/hda11: open failed: No such device or address
-  /dev/hda12: open failed: No such device or address
-  /dev/hda13: open failed: No such device or address
-  /dev/hda14: open failed: No such device or address
-  /dev/hda15: open failed: No such device or address
-  /dev/hda16: open failed: No such device or address
-  /dev/hda17: open failed: No such device or address
-  /dev/hda18: open failed: No such device or address
-  /dev/hdc18: open failed: No such device or address
-  /dev/hda19: open failed: No such device or address
-  /dev/hdc19: open failed: No such device or address
-  /dev/hda20: open failed: No such device or address
-  /dev/hdc20: open failed: No such device or address
-  /dev/hdd2: open failed: No such device or address
-  /dev/hdd3: open failed: No such device or address
-  /dev/hdd4: open failed: No such device or address
-  /dev/hdd15: open failed: No such device or address
-  /dev/hdd16: open failed: No such device or address
-  /dev/hdd17: open failed: No such device or address
-  /dev/hdd18: open failed: No such device or address
-  /dev/hdd19: open failed: No such device or address
-  /dev/hdd20: open failed: No such device or address
-  /dev/hdc2: open failed: No such device or address
-  /dev/hdc3: open failed: No such device or address
-  /dev/hda4: open failed: No such device or address
-  /dev/hdc4: open failed: No such device or address
-  /dev/hda5: open failed: No such device or address
-  /dev/hda6: open failed: No such device or address
-  /dev/hda7: open failed: No such device or address
-  /dev/hda8: open failed: No such device or address
-  /dev/hda9: open failed: No such device or address
-  /dev/hda10: open failed: No such device or address
-  /dev/hda11: open failed: No such device or address
-  /dev/hda12: open failed: No such device or address
-  /dev/hda13: open failed: No such device or address
-  /dev/hda14: open failed: No such device or address
-  /dev/hda15: open failed: No such device or address
-  /dev/hda16: open failed: No such device or address
-  /dev/hda17: open failed: No such device or address
-  /dev/hda18: open failed: No such device or address
-  /dev/hdc18: open failed: No such device or address
-  /dev/hda19: open failed: No such device or address
-  /dev/hdc19: open failed: No such device or address
-  /dev/hda20: open failed: No such device or address
-  /dev/hdc20: open failed: No such device or address
-  /dev/hdd2: open failed: No such device or address
-  /dev/hdd3: open failed: No such device or address
-  /dev/hdd4: open failed: No such device or address
-  /dev/hdd15: open failed: No such device or address
-  /dev/hdd16: open failed: No such device or address
-  /dev/hdd17: open failed: No such device or address
-  /dev/hdd18: open failed: No such device or address
-  /dev/hdd19: open failed: No such device or address
-  /dev/hdd20: open failed: No such device or address
-  device-mapper ioctl cmd 2 failed: No such device or address
-  Couldn't load device 'storage_vg-public_storage_lv'.
-  /dev/hdc2: open failed: No such device or address
-  /dev/hdc3: open failed: No such device or address
-  /dev/hda4: open failed: No such device or address
-  /dev/hdc4: open failed: No such device or address
-  /dev/hda5: open failed: No such device or address
-  /dev/hda6: open failed: No such device or address
-  /dev/hda7: open failed: No such device or address
-  /dev/hda8: open failed: No such device or address
-  /dev/hda9: open failed: No such device or address
-  /dev/hda10: open failed: No such device or address
-  /dev/hda11: open failed: No such device or address
-  /dev/hda12: open failed: No such device or address
-  /dev/hda13: open failed: No such device or address
-  /dev/hda14: open failed: No such device or address
-  /dev/hda15: open failed: No such device or address
-  /dev/hda16: open failed: No such device or address
-  /dev/hda17: open failed: No such device or address
-  /dev/hda18: open failed: No such device or address
-  /dev/hdc18: open failed: No such device or address
-  /dev/hda19: open failed: No such device or address
-  /dev/hdc19: open failed: No such device or address
-  /dev/hda20: open failed: No such device or address
-  /dev/hdc20: open failed: No such device or address
-  /dev/hdd2: open failed: No such device or address
-  /dev/hdd3: open failed: No such device or address
-  /dev/hdd4: open failed: No such device or address
-  /dev/hdd15: open failed: No such device or address
-  /dev/hdd16: open failed: No such device or address
-  /dev/hdd17: open failed: No such device or address
-  /dev/hdd18: open failed: No such device or address
-  /dev/hdd19: open failed: No such device or address
-  /dev/hdd20: open failed: No such device or address
-  0 logical volume(s) in volume group "nfsroot_vg" now active
-  1 logical volume(s) in volume group "storage_vg" now active
-lvm2.
----------------------------------------------------------------------
+Tim
 
-storage_vg should contain 2 LVs, nfsroot_vg currently doesn't hold any
-LVs. Any hints on this? Or more infos?
+On Thursday 05 June 2003 06:35 am, Heinz J . Mauelshagen wrote:
+> Tim,
+>
+> have you tried 'pvmove -i ...' yet ?
+> That tries to work arround read errors on flaky devices and read as muc=
+h
+> data as possible.
+>
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+> On Wed, Jun 04, 2003 at 11:57:45AM -0400, Tim Randles wrote:
+> > Hello,
+> >
+> > I'm trying to pvmove from a dying disk to a new disk.  I'm using vers=
+ion
+> > 1.0.7 of the LVM tools.  I know that the source disk has bad sectors =
+on
+> > it.  I figured one of two things would happen with the pvmove:
+> > 1)  pvmove would work fine up to the bad sectors, where it would erro=
+r
+> > with I/O read errors.  I would then restart the pvmove with PEs that =
+are
+> > past the bad sectors on the source disk and things would finish.
+> > 2)  pvmove would work fine up to the bad sectors, where it would
+> > encounter I/O read errors.  pvmove would report the errors and say th=
+e
+> > data is lost/corrupt, but continue reading valid/skipping bad sectors
+> > until it finished.
+> > I fear that I'm being naive about how pvmove will handle bad sectors.=
+=2E.=20
+> > At any rate, the error I'm getting is:
+> >
+> > [root@mills tools]# ./pvmove -vv /dev/sdb1
+> > pvmove -- checking name of source physical volume "/dev/sdb1"
+> > pvmove -- locking logical volume manager
+> > pvmove -- reading data of source physical volume from "/dev/sdb1"
+> > pvmove -- checking volume group existence
+> > pvmove -- reading data of volume group "vg1" from lvmtab
+> > pvmove -- checking volume group consistency of "vg1"
+> > pvmove -- searching for source physical volume "/dev/sdb1" in volume
+> > group "vg1"
+> > pvmove -- building list of possible destination physical volumes
+> > pvmove -- checking volume group activity
+> > pvmove -- moving physical extents in active volume group "vg1"
+> > pvmove -- WARNING: if you lose power during the move you may need
+> >         to restore your LVM metadata from backup!
+> > pvmove -- do you want to continue? [y/n] y
+> > pvmove -- starting to move extents away from physical volume "/dev/sd=
+b1"
+> > pvmove -- checking for enough free physical extents in "vg1"
+> > lv: /dev/vg1/lv7[7]  old_dev: 08:17  new_dev: 08:33  old_pe_sector:
+> > 4186488 new_pe_sector: 4186488
+> > pvmove -- opening output physical volume "/dev/sdc1"
+> > pvmove -- llseeking input physical volume "/dev/sdb1"
+> > pvmove -- llseeking output physical volume "/dev/sdc1"
+> > pvmove -- /dev/sdb1 [PE 510 [lv7 [LE 5650]] -> /dev/sdc1 [PE 510]
+> > [1/4590] pvmove -- locking physical extent 510 of "/dev/sdb1" in kern=
+el
+> > pvmove -- about to read input physical volume "/dev/sdb1" and to writ=
+e
+> > output physical volume "/dev/sdc1"
+> > pvmove -- ERROR reading input physical volume "/dev/sdb1" (still 1310=
+72
+> > bytes to read)
+> > pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
+> >
+> >
+> > When I try to specify any random PE > 510 I get:
+> >
+> >
+> > [root@mills tools]# ./pvmove -vv /dev/sdb1:530 /dev/sdc1
+> > pvmove -- checking name of source physical volume "/dev/sdb1"
+> > pvmove -- locking logical volume manager
+> > pvmove -- reading data of source physical volume from "/dev/sdb1"
+> > pvmove -- checking volume group existence
+> > pvmove -- reading data of volume group "vg1" from lvmtab
+> > pvmove -- checking volume group consistency of "vg1"
+> > pvmove -- searching for source physical volume "/dev/sdb1" in volume
+> > group "vg1"
+> > pvmove -- building list of possible destination physical volumes
+> > pvmove -- checking destination physical volume names in command line
+> > pvmove -- checking volume group activity
+> > pvmove -- moving physical extents in active volume group "vg1"
+> > pvmove -- WARNING: if you lose power during the move you may need
+> >         to restore your LVM metadata from backup!
+> > pvmove -- do you want to continue? [y/n] y
+> > pvmove -- starting to move extents away from physical volume "/dev/sd=
+b1"
+> > pvmove -- checking for enough free physical extents in "vg1"
+> > lv: /dev/vg1/lv7[7]  old_dev: 08:17  new_dev: 08:33  old_pe_sector:
+> > 4350328 new_pe_sector: 4186488
+> > pvmove -- opening output physical volume "/dev/sdc1"
+> > pvmove -- llseeking input physical volume "/dev/sdb1"
+> > pvmove -- llseeking output physical volume "/dev/sdc1"
+> > pvmove -- /dev/sdb1 [PE 530 [lv7 [LE 5670]] -> /dev/sdc1 [PE 510] [1/=
+1]
+> > pvmove -- locking physical extent 530 of "/dev/sdb1" in kernel
+> > pvmove -- about to read input physical volume "/dev/sdb1" and to writ=
+e
+> > output physical volume "/dev/sdc1"
+> > pvmove -- ERROR reading input physical volume "/dev/sdb1" (still 4194=
+304
+> > bytes to read)
+> > pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
+> >
+> >
+> > Is there anything I can do to get the pvmove to finish?
+> >
+> > Thanks,
+> > Tim
+> >
+> > --
+> > Tim Randles
+> > Unix Administrator and Webmaster
+> > The Ohio State University
+> > Department of Physics Computing Facility
+> > Phone: 292-2630
+> > Email: tcr@pacific.mps.ohio-state.edu
+> > PGP key: http://www.physics.ohio-state.edu/~tcr/pgp.txt
+> >
+> >
+> >
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D
+>-=3D-
+>
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D
+>-=3D-
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-MfG, JBG
+- --=20
+Tim Randles
+Unix Administrator and Webmaster
+The Ohio State University
+Department of Physics Computing Facility
+Phone: 292-2630
+Email: tcr@pacific.mps.ohio-state.edu
+PGP key: http://www.physics.ohio-state.edu/~tcr/pgp.txt
 
---=20
-   Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481
-   "Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur | Gegen Krieg
-    fuer einen Freien Staat voll Freier B=FCrger" | im Internet! |   im Ira=
-k!
-      ret =3D do_actions((curr | FREE_SPEECH) & ~(IRAQ_WAR_2 | DRM | TCPA));
-
---5G06lTa6Jq83wMTw
-Content-Type: application/pgp-signature
-Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.2 (GNU/Linux)
+Version: GnuPG v1.0.7 (GNU/Linux)
 
-iD8DBQE+56CAHb1edYOZ4bsRAjdMAJ9bGOgGAr3SCrpXRWhjJHVuQ5zyWgCePTnG
-rWG4fhVkbdx31II05pq8zAU=
-=Sr4g
+iD8DBQE+6HnLNMldGYWjmgoRAnuRAKCM//b5DVBq+1jUlal0M7Oh+lUgpgCfWX30
+2uXcO6Cn2FJ45ETbvqFoHHM=3D
+=3DIU4w
 -----END PGP SIGNATURE-----
-
---5G06lTa6Jq83wMTw--
