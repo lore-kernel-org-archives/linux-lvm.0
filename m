@@ -1,10 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Fri, 2 Feb 2001 11:46:35 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Fri, 2 Feb 2001 10:20:00 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
 Subject: Re: [linux-lvm] startup stuff
-Message-ID: <20010202114635.A1039@srv.sistina.com>
+Message-ID: <20010202102000.C479@tykepenguin.com>
 References: <Pine.LNX.4.21.0102020959490.426-100000@munster.noc.fr.clara.net>
 Mime-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <Pine.LNX.4.21.0102020959490.426-100000@munster.noc.fr.clara.net>; from james@fr.clara.net on Fri, Feb 02, 2001 at 10:02:17AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -27,46 +28,14 @@ On Fri, Feb 02, 2001 at 10:02:17AM +0100, JAmes wrote:
 > 
 > I am using debian Linux, and have farely successfully installed LVM. I
 > have just to do the lvcreate -ay at startup. I assume that thi smust go in
-
-You surely mean "vgchange -ay".
-
 > 
 > /etc/rc2.d 
 > 
 > but using what S??
-
-It must run after boot in order to activate VGs before any accesses to
-LVs (for eg. containing filesystems) take place and after modules were loaded.
-
-Use one of the /etc/init.d/ scripts as a template to create
-/etc/init.d/lvm containing "vgscan;vgchange -ay".
-
-Create a symlink /etc/rcS.d/S25lvm pointing to this file please.
-
 > 
-> Any help extremely apreciated...
-> 
-> James
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
--- 
+So long as it's before anything that uses the volumes you have on LVM you should
+be OK. I would be tempted to put it in at 15, ie after kerneld and before NFS
+and anacron.
 
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+patrick
