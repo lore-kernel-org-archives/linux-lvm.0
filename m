@@ -1,13 +1,11 @@
 Content-Type: text/plain; charset="us-ascii"
 From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Unable to get XFS, ext3, reiserfs & LVM to
-    coexist happily
-References: <E16LcO0-0006VI-00@hermes.sistina.com>
-    <20020102110538.K12868@lynx.no>
-In-Reply-To: <20020102110538.K12868@lynx.no>
+Subject: Re: [linux-lvm] LE discussion
+References: <20020103040855.55629.qmail@web14605.mail.yahoo.com>
+In-Reply-To: <20020103040855.55629.qmail@web14605.mail.yahoo.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-Id: <E16LzK3-0003Ng-00@hermes.sistina.com>
+Message-Id: <E16LzRS-0003eG-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,33 +16,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  2 22:18:02 2002
+Date: Wed Jan  2 22:26:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: Andreas Dilger <adilger@turbolabs.com>
-Cc: Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com, Adrian Noland <anoland@yahoo.com>
 
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-On Thu, 3 Jan 2002 04:05, Andreas Dilger wrote:
->
-> You should try ext3 from 2.4.18, or get it from the ext3 CVS (at
-> cvs.gkernel.sourceforge.net:/cvsroot/gkernel ext3).  It has fixes
-> for a number of problems caused by error conditions while running.
-> If there is still a problem with ext3 oopsing with a full snapshot
-> (which is essentially an oops because of an I/O error on the disk)
-> then please file a separate bug report to the ext3 developers
-> (ext2-devel@lists.sourceforge.net).
->
-> Cheers, Andreas
+The only mention I have seen about this topic is in the mail archives:
+http://marc.theaimsgroup.com/?l=linux-lvm&m=99965651611876&w=2
 
-I have been looking at the changlog for 2.4.18-pre1 which seems to be the 
-latest at the moment and I cannot see any changes relating to ext3?
-http://www.kernel.org/pub/linux/kernel/v2.4/testing/patch-2.4.18.log
-The 2.4.17 has a few changes relating to ext3:
-http://www.kernel.org/pub/linux/kernel/v2.4/testing/patch-2.4.17.log
-
-Do you think it is worth my while to update ext3 from the ext3 CVS?
+On Thu, 3 Jan 2002 14:08, Adrian Noland wrote:
+> Thought I would qualify a little bit more.... I'm planning on using
+> this box as an all-purpose server HTTP/PHP/DNS/SMTP/SQL etc... So, my
+> question is in this context. Thanks again.
+>
+> --- Adrian Noland <anoland@yahoo.com> wrote:
+> > Hello,
+> > I'm starting to use LVM, and I would like to know the pros & cons of
+> > using a different LE size other than the 4mb default. What kind of
+> > performance issues are there with different size LE's? I saw a *very*
+> > brief discussion in one of the docs (not the HOWTO), but cant find
+> > the
+> > reference now.
+> > Thanks,
+> > Adrian
+> >
 
 - -- 
 Adrian Head
@@ -54,7 +51,7 @@ Adrian Head
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE8M9wV8ZJI8OvSkAcRAibbAJ9K8ldAR5jGoamKu542vg6UVh4MswCeKDSw
-NryXQBft4SdUc5PQ9Kroqcw=
-=qO7n
+iD8DBQE8M93p8ZJI8OvSkAcRAnDeAKChLqh0aLveEbnR99c9a04YoK5rAQCfc3r4
+XQa4dUatd7GbDLubk0mC/ps=
+=39IF
 -----END PGP SIGNATURE-----
