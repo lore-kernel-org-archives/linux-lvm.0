@@ -1,14 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9FB2Ir01022
-	for <linux-lvm@redhat.com>; Fri, 15 Oct 2004 07:02:18 -0400
-Received: from hotmail.com (bay17-f13.bay17.hotmail.com [64.4.43.63])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i9FB2BIv016805
-	for <linux-lvm@redhat.com>; Fri, 15 Oct 2004 07:02:12 -0400
-From: "Kai Leibrandt" <k_leibrandt@hotmail.com>
-Subject: Re: [linux-lvm] LVM2 features
-Date: Fri, 15 Oct 2004 13:01:10 +0200
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i9FCctuA022879
+	for <linux-lvm@redhat.com>; Fri, 15 Oct 2004 13:38:55 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CIRME-0007q3-R6
+	for linux-lvm@redhat.com; Fri, 15 Oct 2004 13:38:54 +0100
+Date: Fri, 15 Oct 2004 13:38:54 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] OS X
+Message-ID: <20041015123854.GE24242@agk.surrey.redhat.com>
+References: <33017.207.218.237.77.1097817474.squirrel@207.218.237.77>
 Mime-Version: 1.0
-Message-ID: <BAY17-F13L947FR7mOu0000dd7c@hotmail.com>
+Content-Disposition: inline
+In-Reply-To: <33017.207.218.237.77.1097817474.squirrel@207.218.237.77>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,75 +22,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi John,
+On Fri, Oct 15, 2004 at 12:17:54AM -0500, robert@westbaker.net wrote:
+> Is there any plans, projects, ideas for porting LVM to Mac OSX.  If there
+> are technical issues preventing LVM from working on OSX, could you give me
+> some pointers as to why?
+ 
+No plans that I'm aware of.
 
-well, most things seem to be working, but snapshots, for me at least, work 
-only on non-root partitions. If anyone has any hints if this is fixable, and 
-how, please let us know!
+It's device-mapper that needs porting: LVM2 userspace code already works.
 
-Kai.
-
->From: John Seifarth <lists@waw.be>
->Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
->To: LVM general discussion and development <linux-lvm@redhat.com>
->Subject: Re: [linux-lvm] LVM2 features
->Date: Fri, 15 Oct 2004 10:15:07 +0200
->
->Eric Hopper posted the query below last weekend, but I've seen no replies 
->on the list.
->
->I'm a happy Linux 2.4.x kernel user with LVM 1 for a couple of years now, 
->with no problems and great reliability, on around 30 machines running 
->various Slackware versions.
->
->Eric's question is exactly what I'd like to know, before migrating these 
->production machines to the 2.6.x kernel.
->
->Should I wait? Should I worry? Do I have to buy a Redhat Enterprise to be 
->sure I have magic patches from Redhat in the kernel for reliable LVM2 
->operation?
->
->I'd really like to hear from the users and developers on this list before 
->changing  systems that have been working fine.
->
->Thanks to all,
->
->John
->
->
->At 20:26 -0700 9/10/04, Eric Hopper wrote:
->>
->>So, what features of LVM actually work in LVM2 if you have version
->>2.00.15 of the tools, and version 2.6.8 of the kernel?
->>
->>Do snapshots work?
->>Does pvmove work?
->>
->>Are there interesting and weird limitations people should be aware of?
->>Are there things that are distinctly better about those features than
->>their LVM1 equivalents?
->>
->>Thanks,
->>-- Eric Hopper (hopper@omnifarious.org  
->>http://www.omnifarious.org/~hopper) --
->
->--
->__________________________________________________________________
->John Seifarth                               http://www.waw.be/waw/
->Words & Wires SPRL                                    lists@waw.be         
->Computer Consulting & Language Services   Voice: (+) 32-2-660-3943
->1160 Brussels, Belgium                      Fax: (+) 32-2-675-3922
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-_________________________________________________________________
-The new MSN 8: advanced junk mail protection and 2 months FREE* 
-http://join.msn.com/?page=features/junkmail
+Alasdair
+-- 
+agk@redhat.com
