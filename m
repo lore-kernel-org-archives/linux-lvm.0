@@ -1,11 +1,11 @@
-Return-Path: <tandem@dnmi.no>
-Subject: Re: [linux-lvm] RedHat 7.0?
-References: <003601c104e9$fb47c3c0$0300000a@pacbell.net>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 05 Jul 2001 08:15:57 +0200
-In-Reply-To: "Erick Calder"'s message of "Wed, 4 Jul 2001 17:32:32 -0700"
-Message-ID: <wv4rsr295u.fsf@freeze.oslo.dnmi.no>
-MIME-Version: 1.0
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Thu, 5 Jul 2001 08:34:02 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <kernel@ragnark.vestdata.no>
+Message-ID: <20010705083402.D11805@vestdata.no>
+References: <20010703065312.J4841@vestdata.no> <Pine.LNX.4.33.0107032211120.30968-100000@toomuch.toronto.redhat.com>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.33.0107032211120.30968-100000@toomuch.toronto.redhat.com>; from Ben LaHaise on Tue, Jul 03, 2001 at 10:19:36PM -0400
+Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,29 +19,20 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Ben LaHaise <bcrl@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
 
->>>>> "Erick" == Erick Calder <e@arix.com> writes:
+On Tue, Jul 03, 2001 at 10:19:36PM -0400, Ben LaHaise wrote:
+> > > [ patch to make md and nbd work for >2TB devices ]
+> > What about LVM?
+> 
+> Errr, I'll refrain from talking about LVM.
 
-    Erick> I recently read that applying the LVM patches to the RH
-    Erick> kernel doesn't work... so I downloaded Linus' kernel
-    Erick> (2.2.19) and seem unable to patch it on account of not
-    Erick> having a rawid patch available... I've looked in the
-    Erick> directory specified in the HOWTO but there is no patch for
-    Erick> 2.2.19... when I type "make" in the PATCHES directory I
-    Erick> get:
+What do you mean?
+Is it not feasible to fix this in LVM as well, or do you just not know
+what needs to be done to LVM?
 
-    Erick> You haven't applied the rawio patch, please see the README
-    Erick> make: *** [check_rawio] Error 1
-
-Just use the 2.2.18 patch, I've used it for 2.2.19 and 2.2.20pre
-without problems
-
-Sincerely,
-
-Adrian Phillips
 
 -- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Ragnar Kjorstad
+Big Storage
