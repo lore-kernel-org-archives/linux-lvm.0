@@ -1,5 +1,5 @@
 Subject: Re: [linux-lvm] read-only media in a LVM?
-Message-ID: <20020528084610.GA1266@fib011235813.fsnet.co.uk>
+Message-ID: <20020528085033.GB1266@fib011235813.fsnet.co.uk>
 References: <81y9e5novm.fsf@zion.bpnetworks.com>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -15,7 +15,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 28 03:40:02 2002
+Date: Tue May 28 03:44:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -34,9 +34,7 @@ On Mon, May 27, 2002 at 04:37:49PM -0700, Ami Fischman wrote:
 > you want me to clarify :).  For a not-quite-mature example of what I'm
 > talking about, see translucency.sf.net.
 
-LVM2 already contains writeable snapshots, and we are currently
-working on the other thing that you will need which is the ability to
-use disks as PVs without having any LVM metadata written to them.
-Check back at the end of June, we may have done it by then.
+In fact you can do this now if you use just device-mapper/dmsetup :)
+It's just the LVM2 tools that don't support it yet.
 
 - Joe
