@@ -1,8 +1,8 @@
-Message-ID: <20011119155741.7961.qmail@web12306.mail.yahoo.com>
-From: Lars Kellogg-Stedman <thelars@yahoo.com>
-Subject: Re: [linux-lvm] Recovering a volume after OS upgrade (lost /etc/lvm*)
-In-Reply-To: <20011119014754.A1308@lynx.no>
+From: Daniel Savard <dsavard@videotron.ca>
 MIME-Version: 1.0
+Message-Id: <01111911040602.01226@dirac.cids.ca>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] root fs on a LVM cause kernel panic
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +13,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 09:56:02 2001
+Date: Mon Nov 19 10:10:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: joost@e-cube.nl
 
-> You may need to re-create your MD RAID device /dev/md0.
+No, the /boot is on a ext2 filesystem and JFS is built-in the kernel. I
+followed the instructions from the IBM web site for JFS. However, I am not
+finished with my setup and I cannot confirm you if it is working as expected.
+But, the procedure makes sense.
 
-The RAID device appears to be working just fine.  With the MD driver,
-simply recreating /etc/raidtab and running raidstart worked without a
-problem.
+> Does Lilo support JFS? I use XFS instead of EXT2 but for that I needed to
+> patch lilo with XFS support.
+>
+>
+> Joost van der Locht
+> Technisch Directeur
 
--- Lars
+-- 
 
-
-=====
-lars@larsshack.org
-
-__________________________________________________
-Do You Yahoo!?
-Find the one for you at Yahoo! Personals
-http://personals.yahoo.com
+================================
+Daniel Savard
+Internet: dsavard@videotron.ca
+================================
