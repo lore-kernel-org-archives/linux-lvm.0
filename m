@@ -1,53 +1,135 @@
-Date: Fri, 11 Feb 2000 00:09:24 +0000 (GMT)
+Date: Fri, 11 Feb 2000 01:11:39 +0000 (GMT)
 From: James Pattinson <jamesp@subdimension.com>
-Subject: Re: [linux-lvm] Patch to 2.3.40
-In-Reply-To: <38A338A3.13861967@moose.net>
-Message-ID: <Pine.LNX.4.10.10002110008250.12931-100000@greebo.jj.net>
+Subject: [linux-lvm] Patch request 2.3.43
+Message-ID: <Pine.LNX.4.10.10002110106250.16702-200000@greebo.jj.net>
 MIME-Version: 1.0
+Content-Type: MULTIPART/MIXED; BOUNDARY="-1463811839-1993480799-950231499=:16702"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Brian Kress <kressb@moose.net>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Good question - I ran into the same thing when I was appling devfs and lvm
-to 2.2.14. that part didn't work :)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+  Send mail to mime@docserver.cac.washington.edu for more info.
+
+---1463811839-1993480799-950231499=:16702
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+
+Hi -
+
+Just tried applying patch-2.3.40-LVM-0.8i to 2.3.43 and it don't work:
+
+[root@greebo][linux]# patch -p1 -s --dry-run < /root/patch-2.3.40-LVM-0.8i 
+2 out of 3 hunks FAILED -- saving rejects to
+Documentation/Configure.help.rej
+4 out of 10 hunks FAILED -- saving rejects to
+drivers/block/ll_rw_blk.c.rej
+[root@greebo][linux]#
+
+Ok so I don't care /too/ much about Configure.help but I guess ll_rw_blk.c
+is kind of important! *g*
+
+I had a look@the reject file (attached, if anyone cares) and it looks
+like some of it could be redundant stuff anyway. However given the amount
+of changes between 2.3.40 and 2.3.43 perhaps a new merge needs to be done!
+
+Cheers!
 
 James
 
-On Thu, 10 Feb 2000, Brian Kress wrote:
+---1463811839-1993480799-950231499=:16702
+Content-Type: TEXT/PLAIN; charset=US-ASCII; name="ll_rw_blk.c.rej"
+Content-Transfer-Encoding: BASE64
+Content-ID: <Pine.LNX.4.10.10002110111390.16702@greebo.jj.net>
+Content-Description: 
+Content-Disposition: attachment; filename="ll_rw_blk.c.rej"
 
-> Hi all,
-> 	
-> 	I'm curious.  Why does the 2.3.40 patch to 
-> Configure.help for LVM mess with sound drivers?
-> 
-> -Generic OPL2/OPL3 FM synthesizer support
-> -CONFIG_SOUND_ADLIB
-> -  Answer Y if your card has a FM chip made by Yamaha (OPL2/OPL3/OPL4).
-> -  Answering Y is usually a safe and recommended choice, however some
-> -  cards may have software (TSR) FM emulation. Enabling FM support with
-> -  these cards may cause trouble (I don't currently know of any such
-> -  cards, however).
-> -
-> -  Please read the file Documentation/sound/OPL3 if your card has an
-> -  OPL3 chip.
-> -
-> -  If unsure, say Y.
-> -
-> -
-> 
-> -  Answer Y here, unless you know you will not need the option.
-> +  Answer Y if your card has a FM chip made by Yamaha (OPL2/OPL3/OPL4).
-> +  Answering Y is usually a safe and recommended choice, however some
-> +  cards may have software (TSR) FM emulation. Enabling FM support with
-> +  these cards may cause trouble (I don't currently know of any such
-> +  cards, however).
-> +  Please read the file Documentation/sound/OPL3 if your card has an
-> +  OPL3 chip.
-> 
-> +  If unsure, say Y.
-> +
-> 
+KioqKioqKioqKioqKioqDQoqKiogNTgyLDU4NyAqKioqDQogIAkJLyogTUQg
+YW5kIGxvb3AgY2FuJ3QgaGFuZGxlIHBsdWdnaW5nIHdpdGhvdXQgZGVhZGxv
+Y2tpbmcgKi8NCiAgCQlpZiAobWFqb3IgIT0gTURfTUFKT1IgJiYgbWFqb3Ig
+IT0gTE9PUF9NQUpPUiAmJiANCiAgCQkgICAgbWFqb3IgIT0gRERWX01BSk9S
+ICYmIG1ham9yICE9IE5CRF9NQUpPUg0KICAJCSAgICAmJiBxLT51c2VfcGx1
+ZykNCiAgCQkJcGx1Z19kZXZpY2UocSk7IC8qIGlzIGF0b21pYyAqLw0KICAJ
+fSBlbHNlIHN3aXRjaCAobWFqb3IpIHsNCi0tLSA1OTYsNjAyIC0tLS0NCiAg
+CQkvKiBNRCBhbmQgbG9vcCBjYW4ndCBoYW5kbGUgcGx1Z2dpbmcgd2l0aG91
+dCBkZWFkbG9ja2luZyAqLw0KICAJCWlmIChtYWpvciAhPSBNRF9NQUpPUiAm
+JiBtYWpvciAhPSBMT09QX01BSk9SICYmIA0KICAJCSAgICBtYWpvciAhPSBE
+RFZfTUFKT1IgJiYgbWFqb3IgIT0gTkJEX01BSk9SDQorICAgICAgICAgICAg
+ICAgICAgICAgJiYgbWFqb3IgIT0gTFZNX0JMS19NQUpPUg0KICAJCSAgICAm
+JiBxLT51c2VfcGx1ZykNCiAgCQkJcGx1Z19kZXZpY2UocSk7IC8qIGlzIGF0
+b21pYyAqLw0KICAJfSBlbHNlIHN3aXRjaCAobWFqb3IpIHsNCioqKioqKioq
+KioqKioqKg0KKioqIDc3MCw3ODEgKioqKg0KICAJCQlnb3RvIHNvcnJ5Ow0K
+ICAJCX0NCiAgDQotIAkJLyogTWQgcmVtYXBzIGJsb2NrcyBub3cgKi8NCiAg
+CQliaFtpXS0+Yl9yZGV2ID0gYmhbaV0tPmJfZGV2Ow0KICAJCWJoW2ldLT5i
+X3JzZWN0b3I9YmhbaV0tPmJfYmxvY2tuciooYmhbaV0tPmJfc2l6ZSA+PiA5
+KTsNCiAgI2lmZGVmIENPTkZJR19CTEtfREVWX01EDQogIAkJaWYgKG1ham9y
+PT1NRF9NQUpPUiAmJg0KLSAJCSAgICBtZF9tYXAgKE1JTk9SKGJoW2ldLT5i
+X2RldiksICZiaFtpXS0+Yl9yZGV2LA0KICAJCQkgICAgJmJoW2ldLT5iX3Jz
+ZWN0b3IsIGJoW2ldLT5iX3NpemUgPj4gOSkpIHsNCiAgCQkgICAgICAgIHBy
+aW50ayAoS0VSTl9FUlINCiAgCQkJCSJCYWQgbWRfbWFwIGluIGxsX3J3X2Js
+b2NrXG4iKTsNCi0tLSA3ODYsODE5IC0tLS0NCiAgCQkJZ290byBzb3JyeTsN
+CiAgCQl9DQogIA0KKyAJCS8qIExWTSBhbmQgTUQgcmVtYXAgYmxvY2tzIG5v
+dyAqLw0KICAJCWJoW2ldLT5iX3JkZXYgPSBiaFtpXS0+Yl9kZXY7DQogIAkJ
+YmhbaV0tPmJfcnNlY3Rvcj1iaFtpXS0+Yl9ibG9ja25yKihiaFtpXS0+Yl9z
+aXplID4+IDkpOw0KKyAjaWYgZGVmaW5lZCBDT05GSUdfQkxLX0RFVl9MVk0g
+fHwgZGVmaW5lZCBDT05GSUdfQkxLX0RFVl9MVk1fTU9EVUxFDQorICAgICAg
+ICAgICAgICAgICBtYWpvciA9IE1BSk9SKGJoW2ldLT5iX2Rldik7DQorICAg
+ICAgICAgICAgICAgICBpZiAoIG1ham9yID09IExWTV9CTEtfTUFKT1IpIHsN
+CisgICAgICAgICAgICAgICAgICAgIGlmICggbHZtX21hcF9wdHIgPT0gTlVM
+TCkgew0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcmludGsg
+KCBLRVJOX0VSUg0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IkJhZCBsdm1fbWFwX3B0ciBpbiBsbF9yd19ibG9ja1xuIik7DQorICAgICAg
+ICAgICAgICAgICAgICAgICBnb3RvIHNvcnJ5Ow0KKyAgICAgICAgICAgICAg
+ICAgICAgfQ0KKyAgICAgICAgICAgICAgICAgICAgaWYgKCAoIGx2bV9tYXBf
+cHRyKSAoIE1JTk9SICggYmhbaV0tPmJfZGV2KSwNCisgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmYmhbaV0tPmJfcmRldiwN
+CisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAm
+YmhbaV0tPmJfcnNlY3RvciwNCisgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBiaFtpXS0+Yl9zaXplID4+IDksDQorICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcncpICE9IDAp
+IHsNCisgCQkgICAgICBwcmludGsgKCBLRVJOX0VSUg0KKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIkJhZCBsdm1fbWFwIGluIGxsX3J3X2Js
+b2NrXG4iKTsNCisgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gc29ycnk7
+DQorICAgICAgICAgICAgICAgICAgICB9DQorICAgICAgICAgICAgICAgICAg
+ICAvKiByZW1hcCBtYWpvciB0b28gLi4uICovDQorICAgICAgICAgICAgICAg
+ICAgICBtYWpvciA9IE1BSk9SKGJoW2ldLT5iX3JkZXYpOw0KKyAgICAgICAg
+ICAgICAgICB9DQorICNlbmRpZg0KICAjaWZkZWYgQ09ORklHX0JMS19ERVZf
+TUQNCiAgCQlpZiAobWFqb3I9PU1EX01BSk9SICYmDQorICAgICAgICAgICAg
+ICAgICAgICAgLyogY2hhbmdlZCAgICAgICAgICAgICB2ICAgdG8gYWxsb3cg
+TFZNIHRvIHJlbWFwICovDQorICAgICAgICAgICAgICAgICAgICAgbWRfbWFw
+IChNSU5PUihiaFtpXS0+Yl9yZGV2KSwgJmJoW2ldLT5iX3JkZXYsDQogIAkJ
+CSAgICAmYmhbaV0tPmJfcnNlY3RvciwgYmhbaV0tPmJfc2l6ZSA+PiA5KSkg
+ew0KICAJCSAgICAgICAgcHJpbnRrIChLRVJOX0VSUg0KICAJCQkJIkJhZCBt
+ZF9tYXAgaW4gbGxfcndfYmxvY2tcbiIpOw0KKioqKioqKioqKioqKioqDQoq
+KiogNzkzLDgwMyAqKioqDQogIAlmb3IgKGkgPSAwOyBpIDwgbnI7IGkrKykg
+ew0KICAJCXNldF9iaXQoQkhfUmVxLCAmYmhbaV0tPmJfc3RhdGUpOw0KICAj
+aWZkZWYgQ09ORklHX0JMS19ERVZfTUQNCi0gCQlpZiAoTUFKT1IoYmhbaV0t
+PmJfZGV2KSA9PSBNRF9NQUpPUikgew0KLSAJCQltZF9tYWtlX3JlcXVlc3Qo
+TUlOT1IgKGJoW2ldLT5iX2RldiksIHJ3LCBiaFtpXSk7DQogIAkJCWNvbnRp
+bnVlOw0KICAJCX0NCiAgI2VuZGlmDQogIAkJX19tYWtlX3JlcXVlc3QocSwg
+TUFKT1IoYmhbaV0tPmJfcmRldiksIHJ3LCBiaFtpXSk7DQogIAl9DQogIA0K
+LS0tIDgzMSw4NTEgLS0tLQ0KICAJZm9yIChpID0gMDsgaSA8IG5yOyBpKysp
+IHsNCiAgCQlzZXRfYml0KEJIX1JlcSwgJmJoW2ldLT5iX3N0YXRlKTsNCiAg
+I2lmZGVmIENPTkZJR19CTEtfREVWX01EDQorIAkJaWYgKE1BSk9SKGJoW2ld
+LT5iX3JkZXYpID09IE1EX01BSk9SKSB7DQorICAgICAgICAgICAgICAgICAg
+ICAgICAgIC8qIHJlbWFwIGRldmljZSBmb3IgTUQgdG9vICAgICAgdiAqLw0K
+KyAJCQltZF9tYWtlX3JlcXVlc3QoTUlOT1IgKGJoW2ldLT5iX3JkZXYpLCBy
+dywgYmhbaV0pOw0KICAJCQljb250aW51ZTsNCiAgCQl9DQogICNlbmRpZg0K
+KyAgICAgICAgIAkvKiBnZXQgY29ycmVjdCBkZXZpY2UgcmVxdWVzdCBxdWV1
+ZSBhZnRlcg0KKyAgICAgICAgICAgICAgICAgICAgTFZNIGFuZC9vciBNRCBo
+YXZlIHJlbWFwcGVkIHRoaXMgYnVmZmVyICovDQorIAkJaWYgKCEocSA9IGdl
+dF9xdWV1ZShiaFtpXS0+Yl9yZGV2KSkpIHsNCisgCQkJcHJpbnRrKEtFUk5f
+RVJSDQorIAkJCSJsbF9yd19ibG9jazogVHJ5aW5nIHRvIGFjY2VzcyBub25l
+eGlzdGVudCAiDQorIAkgICAgICAgCQkiYmxvY2stZGV2aWNlICVzICglbGQp
+XG4iLA0KKyAJCQlrZGV2bmFtZShiaFswXS0+Yl9yZGV2KSwgYmhbMF0tPmJf
+cnNlY3Rvcj4+MSk7DQorIAkJCWdvdG8gc29ycnk7DQorIAkJfQ0KICAJCV9f
+bWFrZV9yZXF1ZXN0KHEsIE1BSk9SKGJoW2ldLT5iX3JkZXYpLCBydywgYmhb
+aV0pOw0KICAJfQ0KICANCioqKioqKioqKioqKioqKg0KKioqIDgxOCw4MjYg
+KioqKg0KICAJcmV0dXJuOw0KICB9DQogIA0KLSAjaWZkZWYgQ09ORklHX1NU
+UkFNX1NXQVANCi0gZXh0ZXJuIGludCBzdHJhbV9kZXZpY2VfaW5pdCggdm9p
+ZCApOw0KLSAjZW5kaWYNCiAgDQogIC8qDQogICAqIEZpcnN0IHN0ZXAgb2Yg
+d2hhdCB1c2VkIHRvIGJlIGVuZF9yZXF1ZXN0DQotLS0gODY2LDg3MSAtLS0t
+DQogIAlyZXR1cm47DQogIH0NCiAgDQogIA0KICAvKg0KICAgKiBGaXJzdCBz
+dGVwIG9mIHdoYXQgdXNlZCB0byBiZSBlbmRfcmVxdWVzdA0K
+---1463811839-1993480799-950231499=:16702--
