@@ -1,9 +1,9 @@
-Message-ID: <3EE85615.1090007@maintech.de>
+Message-ID: <3EE857C8.2050300@maintech.de>
 From: Thomas Kleffel <thomas.kleffel@maintech.de>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] How to grow a PV?
-References: <3EE83C19.10805@maintech.de>
-In-Reply-To: <3EE83C19.10805@maintech.de>
+References: <3EE83C19.10805@maintech.de> <20030612121012.C26918@sistina.com>
+In-Reply-To: <20030612121012.C26918@sistina.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,37 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 12 05:31:01 2003
+Date: Thu Jun 12 05:38:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi again,
+Hi!
 
-after a bit of research I found out, that I resized my PV some time ago 
-using the pvresize command, that was available in lvm_1.1-rc2.
-At the moment I am using 1.0.7 (gentoo). My problem is now that 
-lvm_1.1-rc2 seems to have disappeared. I read that it was buggy, but 
-worked for me at least 4 times.
-Could someone please tell me, where I could get lvm_1.1?  This would 
-save me a lot of work.
+Heinz J . Mauelshagen wrote:
 
-Thanks in advance,
-
-Thomas Kleffel
-
-
-I wrote:
-
-> Hi!
+>Sounds like you added a new disk to the end of a linear MD ?
 >
-> I am running LVM1 ontop of  software-RAID (md). I just added a disk to 
-> my raid, so my /dev/md0 is about 120G bigger now.
+>You could have pvcreate'd it directly to add it to a Volume Group
+>(not adding it to the MD at all).
+>  
 >
-> Now my question is: How can I tell LVM to include these additional 
-> space into the PV that's already there (on /dev/md0)?
+Not exactly - I added a new disk to a raid-5 MD. I wanted it to be in 
+the raid-array for beeing protected from a single-disk-failure.
+
+>LVM2 supports PV resizing.
 >
-> I  know it has to be possible because I did it several times (my raid 
-> has 9 disks now - it hat 4 disks, some time ago) - I just can't 
-> rememer :(((
-> Could someone please give me a hint?
+Ok, thanks - I'm going to try this now...
+
+Bye,
+
+Thomas
