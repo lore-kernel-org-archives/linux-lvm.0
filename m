@@ -1,8 +1,9 @@
-From: bscott@ntisys.com
-Subject: Re: [linux-lvm] LVM Question
-In-Reply-To: <077f01c336a7$2df27a90$6501a8c0@portege>
-Message-ID: <Pine.LNX.4.44.0306191734080.2473-100000@dragon.inside.ntisys.com>
+content-class: urn:content-classes:message
 MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Message-ID: <2E7F9C924F6A6546AF777BD072071EC6091243@mars.lbmc.net>
+From: "David Sornig" <dsornig@lbmc.com>
+Subject: [linux-lvm] Snapshot Problem JFS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +14,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 19 16:36:01 2003
+Date: Thu Jun 19 21:08:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Thu, 19 Jun 2003, at 5:10pm, jaylee@golden.net wrote:
-> I'm planning to use LVM on my new linux system, I'm just wondering can I
-> use internal and external drives together as one?
-
-  You sure can.
-
-> If the external drive fails, what will happen?
-
-  All LVs (Logical Volumes) with extents on the failed drive will be
-unavailable.
-
-  For most cases, that means that all data on both disks will be lost.
-
--- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do  |
-| not represent the views or policy of any other person or organization. |
-| All information is provided without warranty of any kind.              |
+SSBhbSBydW5uaW5nIFJlZEhhdCA5LjANCktlcm5lbCAyLjQuMjAtOA0KTFZNIFZlcnNpb24gMS4w
+LjUrKDIyLzA3LzIwMDIpDQogDQpJIGhhdmUgYSAxLjRUIExvZ1ZvbCB3aXRoIDQwMEcgb2Ygc3Bh
+Y2UgYmVpbmcgdXNlZCBvbiBhIEpGUyBmaWxlIHN5c3RlbS4NCiANClRoZSBMVk0gaXMgd29ya2lu
+ZyBleGNlbGxlbnQuICBIb3dldmVyLCAgSSBjYW5ub3QgY3JlYXRlIGEgc25hcHNob3QuICBJIHJ1
+biB0aGUgZm9sbG93aW5nIGx2Y3JlYXRlIGNvbW1hbmQgYXMgcGVyIHRoZSBtYW4gcGFnZSBhbmQg
+Z2V0IHRoZSBmb2xsb3dpbmcgZXJyb3I6DQogDQpsdmNyZWF0ZSAtLWVycm9yICJDYW5ub3QgYWxs
+b2NhdGUgbWVtb3J5IiAgY3JlYXRpbmcgVkdEQSBmb3IgIi9kZXYvVm9sdW1lMDAvc25hcDAxIiBp
+biBrZXJuZWwNCiANCk5vdCBzdXJlIHdoeSB0aGlzIGlzIGhhcHBlbmluZy4gIEkgaGF2ZSByZWFk
+IHRoZSBsaXN0IGFuZCBtYXliZSBJIGp1c3QgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgcHJvYmxlbS4g
+IFRoZXNlIHNlcnZlcnMgaGF2ZSA0IEdpZ3Mgb2YgUkFNLg0KIA0KUmVnYXJkcywNCiANCkRhdmlk
+DQo=
