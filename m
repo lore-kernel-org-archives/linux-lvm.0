@@ -1,47 +1,48 @@
-Message-Id: <199910051955.VAA28109@e35.msede.com>
-Subject: Re: [linux-lvm] Some trouble.
-Date: Tue, 5 Oct 99 21:55:36 MESZ
-In-Reply-To: <199910051207.OAA16147@seger.axis.se>; from "Lars Segerlund" at Oct 05, 99 2:07 pm
-From: Michael Marxmeier <mike@msede.com>
+Message-Id: <m11ZHs9-000D4UC@londo.rhein-main.de>
+From: Torsten Neumann <torsten@londo.rhein-main.de>
+Subject: [linux-lvm] Problems with e2fsadm
+Date: Thu, 7 Oct 1999 20:02:33 +0200 (MET DST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: lars.segerlund@axis.com
-Cc: linux-lvm@msede.com
+To: LVM for Linux <linux-lvm@msede.com>
 
-Lars Segerlund wrote:
->  I'm getting some kernel panics running vgcreate, pvscan, vgscan on a 
->  raid5 partition on a Compaq-DS10 , it sais free list corrupted ??
-[snip] 
->  I could do a pvcreate -v /dev/md0 ( after dd </dev/zero >/dev/md0 bs=512
->  count= 1024 ), but a vgscan failed ( kernel panic, free list corrupted. )
->  and so did a vgcreate.
+Hi,
 
-This looks like a known problem with the old md code once reported
-by Steve Brueggeman:
+I'm having some problems with e2fsadm when using 4096 as blocksize for my
+ext2 filesystem. e.g
+	lvcreate -L 100 -n /dev/vg00/lvoltest vg00
+	mke2fs -b 4096 /dev/vg00/lvoltest
+	e2fsadm -L 200 /dev/vg00/lvoltest
+gives something like
+	...
+	lvextend -- logical volume "/dev/vg00/lvoltest" successfully extended
 
-> I've also had a problem when vgscan ran, because of a bug in the md driver.
-> I run RedHat 5.2, and the default installation created /dev/md0 through
-> /dev/md15, but the default md driver is compiled to handle only 4 md
-> devices (#define MAX_MD_DEV  4), and because of a bug in the md_open()
-> (uses [minor] without checking minor is less than MAX_MD_DEV), my kernel
-> would crash when vgscan tried to check /dev/md6 or so.  I just rm'd
-> /dev/md[4-9] /dev/md1[0-5] to not cause the problem.
+	ext2_resize_fs: your container (i.e. the file or partition the
+					filesystem) is in is not big enough for a filesystem of
+					204800 blocks (it's only 51200 blocks)
 
-Please refer to: http://linux.msede.com/lvm/mlist/archive/0059.html
+If using resize2fs instead of ext2resize I got the similiar message
 
-As suggested, please try to remove /dev/md[4-9] and /dev/md1[0-5]
-and try if vgscan still results in a panic.
+	The containing partition (or device) is only 51200 blocks.
+	You requested a new size of 204800 blocks.
 
+Extending ext2 Filesystems on non logical volumes (/dev/sd...) works fine
+even if using 4096 as blocksize.
+Looking at the ext2resize code it seems to me that ext2resize is doing the
+right thing, therefor my guess is that there is some bug in the lvm code.
+Looking at LVM I find in tools/lib/liblvm.h
+	#define BLOCK_SIZE 1024
+but I don't understand if this has something to do with the above problem.
+BLOCK_SIZE seems to be used in vg_setup_for_extend to check if there is room
+for extending. But I don't see what it has to do with the wrong result of
+the llseek call in ext2resize.
 
-Hope this helps
-Michael
+Maybe here is someone smarter then me and could tell me what's going wrong.
+Would be nice if resizing works for all blocksizes.
 
---
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+Regards,
+	Torsten
