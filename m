@@ -1,17 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i71Dpoa27032
-	for <linux-lvm@redhat.com>; Sun, 1 Aug 2004 09:51:50 -0400
-Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.206])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i71DpiXn031575
-	for <linux-lvm@redhat.com>; Sun, 1 Aug 2004 09:51:44 -0400
-Received: by mproxy.gmail.com with SMTP id 77so31235rnl
-	for <linux-lvm@redhat.com>; Sun, 01 Aug 2004 06:51:44 -0700 (PDT)
-Message-ID: <902f774f040801065174fb8c7d@mail.gmail.com>
-Date: Sun, 1 Aug 2004 15:51:44 +0200
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i71IMLa16117
+	for <linux-lvm@redhat.com>; Sun, 1 Aug 2004 14:22:21 -0400
+Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.207])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i71IMKe1008504
+	for <linux-lvm@redhat.com>; Sun, 1 Aug 2004 14:22:20 -0400
+Received: by mproxy.gmail.com with SMTP id 76so108904rnl
+	for <linux-lvm@redhat.com>; Sun, 01 Aug 2004 11:22:20 -0700 (PDT)
+Message-ID: <902f774f0408011122195d73cc@mail.gmail.com>
+Date: Sun, 1 Aug 2004 20:22:20 +0200
 From: Marius Gravdal <mariusg@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Inconsistent metadata
+Subject: [linux-lvm] hdd failure
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,26 +25,20 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi!
-Just thought I'd share something with all of you. 
-I had a problem with my LVM recently and I was quite frustrated when I
-couldn't fix it. I've been searching around the net for quite some
-time now before I managed to fix it thanks to a post to this list.
+One of the disks that made my LVM go bye-bye in the first place seems
+to be dying aswell. Is there any way to make sure there's no data on
+it before I remove it from the lv/vg? I've restored the lv, but I'm
+reluctant to use it since one of the hdd's is spitting out a lot of
+errors.
 
-Here's the problem I had, exactly the same problem actually. Just a
-little bit different hardware setup.
-http://www.redhat.com/archives/linux-lvm/2003-October/msg00041.html
+If I remember correctly it's one of the drives that I last put in, so
+I don't think there's any data on it at all, but I'm not entirely
+sure.
 
-And here's the solution in the same thread:
-http://www.redhat.com/archives/linux-lvm/2003-October/msg00055.html
+And if I do an lvreduce/vgreduce, how am I sure that it removes the
+hdd I want to get out?
 
-I was just wondering if it would be possible to add this to the
-official LVM FAQ, cause I was about to wipe my entire LVM and start
-over from (the-not-so-complete) backups. If this info would be easier
-to access we might save someone else out there from a lot of downtime
-and from maybe even doing what I planned to do.
-
-All that said, thanks for saving my LVM. It made my day :) (or
-something more like a month probably)
+Sorry if I'm asking very obious questions here, but I'm not quite in
+to the LVM logic yet :)
 
 -- marius
