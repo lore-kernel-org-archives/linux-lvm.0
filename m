@@ -1,10 +1,9 @@
-Return-Path: <james@fr.clara.net>
-Date: Thu, 22 Feb 2001 14:23:12 +0100 (CET)
-From: James <james@fr.clara.net>
-Subject: Re: [linux-lvm] online resize of ext2
-In-Reply-To: <3A950C2C.9D6E8737@infologic.fr>
-Message-ID: <Pine.LNX.4.21.0102221422190.3832-100000@munster.noc.fr.clara.net>
+Return-Path: <dice@mfa.kfki.hu>
+Date: Thu, 22 Feb 2001 15:37:02 +0100 (CET)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Message-ID: <Pine.LNX.4.32.0102221534290.26282-100000@falka.mfa.kfki.hu>
 MIME-Version: 1.0
+Subject: [linux-lvm] debianized 0.9.1b5
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,43 +19,11 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello
+Hi!
 
-What are the version necessary for this?
+For those of use, who liked my debian packages... :)))
+(modified version of AJ's original work /init.d, file locations/)
 
-kernel = ??
-package version = ??
+http://dice.mfa.kfki.hu/download/lvm
 
-command used = ??
-
-Thanks
-
-James Tapping clara.net
-
-
-On Thu, 22 Feb 2001, Benoit SERRA wrote:
-
-> 
-> 
-> Andreas Dilger wrote:
-> 
-> > Because the code is only used at resize time it does not affect normal
-> > operations, so it is OK to put into a production kernel, IMHO (although
-> > being the author makes me a bit biased ;-).  Any other ext2online users
-> > out there?
-> 
-> I use it on a test system, and I made a big amount of resize without any
-> loss of data.
-> Really good.
-> Since I didn't have any production system runnig with Linux, I can't say
-> if it is stable enough sorry.
-> 
-> Just after the release of 2.4.0 kernel, I patched it with the patch for
-> 2.3.99 kernels and everything worked perfectly.
-> 
-> I only get a few rejects on Config.in, but I inserted it by hand.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
+Gergely
