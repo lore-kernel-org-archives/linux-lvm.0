@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] Re: LVM writes on raw disk of ATA RAID Mirror
-From: Andrew Rechenberg <arechenberg@shermfin.com>
-In-Reply-To: <20030430193030.AF83AAE4F5@basilica.la.naos.co.nz>
-References: <20030430193030.AF83AAE4F5@basilica.la.naos.co.nz>
+Message-ID: <3EB2D2D8.B5114496@pittstate.edu>
+From: Scott Parish <ssparish@pittstate.edu>
+MIME-Version: 1.0
+References: <20030430193030.AF83AAE4F5@basilica.la.naos.co.nz> <1051902402.4660.430.camel@cinshrlnxws01.shermfin.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1051902402.4660.430.camel@cinshrlnxws01.shermfin.com>
-Mime-Version: 1.0
+Subject: [linux-lvm] LVM, GFS, and clustered mail servers
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,70 +14,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May  2 14:07:02 2003
+Date: Fri May  2 15:19:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I forgot to mention that I move the md0 entry back into place after I
-run vgscan.  It's worked quite well and across numerous reboots. 
+This is a little off the typical discussion found on the list, and I apologize
+in advance for the slight interruption.
 
-It is VERY ugly, but it "Works For Me(TM)" :)
+I'm looking for anyone who has used LVM and Sistina's GFS to implement a
+clustered mail server environment using commodity PCs.   I use the term cluster
+here, somewhat loosely, to describe multiple machines providing the same or
+similar service(s), in this case mail services (pop, imap, webmail, smtp).  I'm
+particularly interested in your use of LVM/GFS in implementing a shared mail
+store/filesystem. 
 
-On Wed, 2003-04-30 at 15:30, Ewen McNeill wrote:
-> In message <1051724087.19901.287.camel@cinshrlnxws01.shermfin.com>, Andrew Reche
-> nberg writes:
-> >>[LVM 1.0.x; vgscan finds parts of RAID arrays and uses those instead]
-> >vgscan has similar problems with MD devices in a software RAID10 (but
-> >not RAID1) configuration. [...]
-> 
-> Interesting.  I've been told, and found in the source, that there were
-> some hacks in LVM to make LVM and md work in some common situations
-> (basically there's a loop after the first device scan which tries to
-> eliminate some of the duplicates; and there's a /* FIXME */ comment
-> immediately before that loop).  It seems that you've found one of
-> the situations where these hacks are too limited.
-> 
-> >I was trying to hack vgscan to get my setup working but I needed the box
-> >working ASAP so time dictated that I use the KludgeMethod(tm).  Someone
-> >on the list recommended that I move /dev/md0 before I run my vgscan. 
-> >[....]
-> 
-> That is really quite ugly :-)  I suspect something like that might work
-> for the ataraid case too, right up to the point that someone runs vgscan
-> for some reason without going through the "hide things from vgscan so it
-> doesn't get it wrong" ritual -- at which point (with a little prompting)
-> it silently swaps over to using part of the RAID array, and the RAID
-> array gets out of sync, and then on next reboot it swaps back to using
-> the RAID array, and the partitions are corrupt.
-> 
-> I'm afraid that's a little too much potential excitement for my liking!
-> 
-> I've been told that LVM 2 has some support where you can say what
-> devices to scan (and what devices not to scan).  I've not looked at LVM
-> 2 yet, so I don't know how fine grained it is, but it might suit your
-> situation.
-> 
-> However after all this investigation I can't help thinking that the LVM
-> vgscan approach is broken by design, particularly to be run automatically
-> on startup.  The idea that one can somehow look through all the connected
-> devices and guess which one to use, and then automatically use those
-> guesses on the assumption they'll always be right, just seems to be asking
-> for trouble.  Static configuration files, and having these things under
-> manual control, seems a far more reliable way to approach the situation.
-> 
-> For now this ataraid system will be built without LVM, as it seems the
-> only way to be sure that the RAID array will actually always be used.
-> 
-> Thanks for your comments,
-> 
-> Ewen
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
--- 
-Andrew Rechenberg <arechenberg@shermfin.com>
-Infrastrucutre Team, Sherman Financial Group
+If you have such a setup, and could spare a few moments, I'd like to pick your
+brain on your cluster configuration and experiences.  Feel free to reply to the
+list or directly.
+
+Some of the things I'd like to know are:
+
+Describe your config, number of machines, adapters, disk subsystems
+(manufacturer would be helpful for adapters and disk subsystem).
+
+Software you're using to provide mail services?  (sendmail, qmail, cyrus,
+courier, squirrelmail, etc.)
+
+How many users do you serve?
+
+How did you decide to distribute workload?  RR DNS?  Split services among
+machines?  Linux Virtual Server?  Something else?
+
+Do you share more than the mail filesystem among machines?  If so, what?
+
+Do you have any performance numbers?
+
+What snags did you hit?
+
+If you had to implement again, which would you choose:  "big box" or the
+cluster?
+
+Anything else you'd like to volunteer.
+
+Thanks in advance,
+Scott
+
+--
+Scott Parish, Systems Administrator, Pittsburg State University
+Thinking is the hardest work there is, which is probably the 
+reason why so few engage in it.  -  Henry Ford
