@@ -1,12 +1,10 @@
-Return-Path: <gang123@hu.com.cn>
-Date: Thu, 22 Feb 2001 13:55:30 -0800
-From: hugang <gang123@hu.com.cn>
-Subject: Re: [linux-lvm] lvm on a brand-new server
-Message-Id: <20010222135530.09168730.gang123@hu.com.cn>
-In-Reply-To: <Pine.GSO.4.21.0102211227040.17882-100000@isis.visi.com>
-References: <Pine.GSO.4.21.0102211227040.17882-100000@isis.visi.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Return-Path: <rajak@purdue.edu>
+Return-Path: <rajak@purdue.edu>
+Date: Thu, 22 Feb 2001 12:23:53 -0500 (EST)
+From: Brian Poole <rajak@purdue.edu>
+Message-Id: <Pine.SOL.4.31.0102221208260.25773-100000@herald.cc.purdue.edu>
+MIME-Version: 1.0
+Subject: [linux-lvm] Patch needed for kernel 2.4.2 ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,65 +16,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, 21 Feb 2001 12:34:19 -0600 (CST)
-Timothy Wilson <wilson@visi.com> wrote:
-	I thinks your can do it in folowing :
+Hello all,
 
-	1: Use the hardware RAID controller to make mirror .
+First of all, thanks for all the hard work ;) I've been running LVM on a
+production server for over 6 months now and never have had it fail on me.
 
-	2: <Install Linux .	>
-		( Your will Can see ONE DISK , Create a partion in it ( < 800MB ),And install a linux in it )
+*knocks on wood*
 
-	3: Install LVM and reiserfs patch and software.
+Getting to the point, I'm upgrading hardware on my server & I intend to
+upgrade the kernel from 2.4.0-test7 to 2.4.2 as well, as I have to add
+some drivers anyways I might as well get the bug fixes in. My question is
+do I have to patch anything in the kernel for LVM? I notice that the
+README in beta 5, which I assume I should be upgrading to, has a bit of
+info about patches, but looking in PATCHES/ there are only patches for
+2.4.1, as 2.4.2 hadn't been released at the time. Have these patches
+already been incorporated into 2.4.2, or if not, will they still apply
+cleanly to 2.4.2 and are they needed?
 
-	4: <MOVE system to LVM>
-		Create  the other partition with LVM ,mkreiserfs ,copy all system to it .
-	
+Any other tips, hints and tricks would be appreciated for this upgrade.
+Moving to 0.8 final -> 0.9 beta 5a, adding new drives to the VG,
+expanding the LV and the FS and I must say, I'm a bit nervous ;) Restoring
+100G from tapes is never fun. I have already read the relevant sections in
+the HOWTO, but as always, I'm willing to take any other advice people wish
+to throw at me, whether on the list or off.
 
+Thanks for the time,
 
->Hi everyone,
->
->I'm just starting out learning about lvm and I have a couple questions.
->
->First, a description of the machine:
->
->Compaq DL380 933 MHz PIII (rack-mount) w/ 640 MB RAM and (2) 18 GB SCSI
->disks. The machine has Compaq's built-in hardware RAID controller. My plan
->is to mirror the two disks using RAID.
->
->I'd like to use LVM (and likely ReiserFS) on this box, but I'm not sure how
->to get it installed on a bare system. I'll likely be using Debian on this
->system.
->
->Can anyone suggest a basic outline of the process? I'm certain there's a lot
->more reading to do, but I'm not sure where to start. (I have looked over the
->LVM How-to and the FAQ.)
->
->-Tim
->
->--
->Tim Wilson      | Visit Sibley online:         | Check out:
->Henry Sibley HS | http://www.isd197.k12.mn.us/ | http://www.zope.org/
->W. St. Paul, MN |                              | http://slashdot.org/
->wilson@visi.com |   <dtml-var pithy_quote>     | http://linux.com/
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
-
-
--- 
---------------------------------------------------------------------
-                       Hu  Gang 
---------------------------------------------------------------------
-Email	: linuxbest@sina.com,linuxhappy@tang.com,gang_hu@soul.com.cn 
-Comany  : China Beijing Soul
-Phone   : +860168425741~~44
-MP	: 13601394711
---------------------------------------------------------------------
-Linux Reigstered User ID 	#204016
---------------------------------------------------------------------
+-b
