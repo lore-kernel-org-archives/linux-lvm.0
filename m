@@ -1,9 +1,10 @@
-Message-ID: <008501c338da$d3d232e0$6501a8c0@ajf>
-From: "Andrew Fabian" <afabian@anjero.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0082_01C338B9.4C699940"
-Subject: [linux-lvm] LVM2 Rescue Disk
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Red Hat Advanced Server + LVM
+Message-ID: <20030623142222.A5533@uk.sistina.com>
+References: <689F43A6CF84E541A721C5C3FD5ADECC02F5B6@blr-m3-msg.wipro.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <689F43A6CF84E541A721C5C3FD5ADECC02F5B6@blr-m3-msg.wipro.com>; from sharad.tiwari@wipro.com on Sun, Jun 22, 2003 at 01:10:20PM +0530
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,41 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 23 08:10:13 2003
+Date: Mon Jun 23 08:23:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+On Sun, Jun 22, 2003 at 01:10:20PM +0530, Sharad Tiwari wrote:
+> If I have created a volume group(say 'testvg') containg two physical
+> volumes say /dev/sda5 and /dev/sda6, and then remove one of the
+> physical volume say /dev/sda6 and then do a pvdisplay it shows
+> /dev/sda6 as an unknown device ... 
+ 
+> Now doing a vgreduce gives the proper result. So I did not understand
+> why we are prividing this feature (using pvremove) of removing a
+> physical volume from  an existing VG.
+ 
+pvremove is the opposite of pvcreate - it removes the LVM label from the
+device that you want to remove from the LVM system and use for something
+else.
 
-------=_NextPart_000_0082_01C338B9.4C699940
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+It is *not* a replacement for vgreduce.
 
-Does anyone know of a rescue disk image that supports LVM2?  I've looked =
-around a bit, and the closest I can find is Knoppix with LVM (1) =
-support.
+Obviously the warning needs to be made clearer - you need to think
+carefully about what you're doing before using -ff.
 
-Andrew
-------=_NextPart_000_0082_01C338B9.4C699940
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+> Really WIPE LABELS from physical volume "/dev/sda7" of volume group "testvg" [y/n]? y
+>   WARNING: Wiping physical volume label from /dev/sda7 of volume group "testvg"
+>   Labels on physical volume "/dev/sda7" successfully wiped
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2800.1170" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Does anyone know of a rescue disk image =
-that=20
-supports LVM2?&nbsp; I've looked around a bit, and the closest I can =
-find is=20
-Knoppix with LVM (1) support.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Andrew</FONT></DIV></BODY></HTML>
-
-------=_NextPart_000_0082_01C338B9.4C699940--
+Alasdair
+-- 
+agk@uk.sistina.com
