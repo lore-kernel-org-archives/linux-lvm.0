@@ -1,12 +1,14 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 1 Aug 2001 17:08:28 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
+Return-Path: <lewis@sistina.com>
+Date: Wed, 1 Aug 2001 12:38:00 -0500
+From: AJ Lewis <lewis@sistina.com>
 Subject: Re: [linux-lvm] using LVM from two machines
-Message-ID: <20010801170828.G2603@tykepenguin.com>
-References: <20010801152451.41897.qmail@web14403.mail.yahoo.com>
+Message-ID: <20010801123800.A6008@sistina.com>
+References: <20010801152451.41897.qmail@web14403.mail.yahoo.com> <20010801170828.G2603@tykepenguin.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
 Content-Disposition: inline
-In-Reply-To: <20010801152451.41897.qmail@web14403.mail.yahoo.com>; from shahi_aman@yahoo.com on Wed, Aug 01, 2001 at 08:24:51AM -0700
+In-Reply-To: <20010801170828.G2603@tykepenguin.com>; from caulfield@sistina.com on Wed, Aug 01, 2001 at 05:08:28PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,55 +20,53 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Aug 01, 2001 at 08:24:51AM -0700, Aman Shahi wrote:
-> Hi,
-> I have LVM installed on two machines, both of which
-> are connected to the same storage(RAID BOX). Now I
-> need to do LVM operations from different machines at
-> different times. I will try to put a scenario and my
-> problem.
-> 
-> Lets say I have 2 disks( disk1, disk2). I have two
-> machines M1 and M2. Both machine see all the disks. If
-> I create a VG called VG1 on disk1 from M1, and do a
-> vgscan on M2, the VG VG1 can be seen from both the
-> machines. I then create VG called VG2 from M2 on
-> disk2.
-> 
-> So basically I created 2 VG's from two different
-> machines, but both is visible on both machines. 
-> 
-> Now if I delete a VG from a machine from one machine,
-> any LVM operations from the other machine fails with
-> the message "VGDA in kernel and LVMTAB are not
-> consistent". I manually removed /dev/VG1 and /etc/lvm*
-> from the other machine and did a vgscan , but still I
-> get the message "VGDA in kernel and lvmtab are
-> inconsistent, please run vgscan". Running vgscan does
-> not help.
-> 
-> How can I modify this VGDA in kernel in the other
-> machine so that any LVM operation on one machine can
-> be reflected in the other machine. Or can I do
-> something like  "deactivating" the data that is kept
-> in the kernel, so that the LVM just relies on the
-> information in the disks, or something like that. I
-> mean I need to be able to use LVM from two different
-> machine as if they were one.
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The short answer is "don't do that!". We are currently working
-of a cluster-enabled version of LVM (I don't have any release dates I'm afraid)
-that will enable you to do what you want and more.
+On Wed, Aug 01, 2001 at 05:08:28PM +0100, Patrick Caulfield wrote:
+> The only way to achieve what you want to do at the moment is to unload th=
+e VGs
+> on one machine (vgchange -ay after closing all the volumes), make the cha=
+nges
+                  ^^^^^^^^^^^^
+i believe patrick meant 'vgchange -an' here.
 
-The only way to achieve what you want to do at the moment is to unload the VGs
-on one machine (vgchange -ay after closing all the volumes), make the changes
-on the other machine and then re-run vgscan on the first machine and remount the
-volumes. This applies to *any* changes you make to the LVM configuration.
+> on the other machine and then re-run vgscan on the first machine and remo=
+unt the
+> volumes. This applies to *any* changes you make to the LVM configuration.
 
-Be careful !
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-patrick
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+The three most dangerous things are a programmer with a soldering iron, a
+manager who codes, and a user who gets ideas.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD4DBQE7aD54pE6/iGtdjLERAiLTAJ9i10LFMncTpX/CSpee52mZmL5WdgCYjR7C
+6jcE5CaS6yQLyXj9Wc8fIw==
+=JkIY
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
