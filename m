@@ -1,9 +1,10 @@
-Date: Thu, 4 Oct 2001 15:51:39 +0100 (IST)
-From: Paul Jakma <paulj@alphyra.ie>
-Subject: Re: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
-In-Reply-To: <20011004120503.A3373@btconnect.com>
-Message-ID: <Pine.LNX.4.33.0110041547550.14465-100000@dunlop.dub.ie.alphyra.com>
+Message-ID: <3BBC7C22.1119BF0@promofinarsa.es>
+Date: Thu, 04 Oct 2001 17:11:30 +0200
+From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvm 1.0 and kernel 2.2.19.Is rawio patch necessary ??
+References: <3BBC550E.442F190C@ti.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +16,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, 4 Oct 2001, Joe Thornber wrote:
+Hi, Christian:
 
-> >    for ( l = 0; l < vg->lv_max; l++) {
-> >       lv_t *lv_chain_ptr = vg->lv[l];
-> >       if ( lv_chain_ptr == NULL) continue;
+christian e wrote:
+>=20
+> Hi,all
+>=20
+> I downloaded lvm 1.0 and kernel 2.2.19.Couldn't find a rawio for 2.2.19
+> so I thought it wasn't necessary.Is it ? The rawio patch for 2.2.19 is
+> not here:
+>=20
+> ftp://ftp.kernel.org/pub/linux/kernel/people/sct/raw-io/
+> or in the PATHCES dir..
+>=20
 
-> No, this snippet looks right to me.  How can we test before the assignment ?
+Well, I'm in same position than you, but having problems.
+I also asked about the necesity of raw-io patches (specifically for
+2.2.19) but till the moment no answer.
 
-well, it's not a biggy, but you could test vg->lv[l] for NULL and 
-conditionally assign and save a copy if NULL.
+> I did a ./configure and then a make in the patches dir.Applied that
+> patch without problems.After compiling the kernel and booting up again I
 
-in light of your next sentence though, doesn't matter.
+Well, I patched kernel with raw-io for 2.2.18, and then with the lvm
+patch provided by ./configure then make at PATCHES, but my kernel didn't
+compile (well, the kernel did, but the make modules failed).
 
-> If lv_chain_ptr is NULL the code then jumps back to the top of the
-> 'for' loop.
+So, from your experience I'm going to try to compile *without* the
+raw-io patch and see what happens.  Anyway, since I know that at least
+your compilation was ended with success, would you be kind enough to
+e-mail me your configuration file (/usr/src/linux/.config) to look for
+differencies?
 
-ah... Doh! of course.
-
-> - Joe
-
-anyway, any idea how to get a deeper back trace? or does info stack/bt 
-print out the complete stack trace?
-
---paulj
+And, if you know about the reason or necesity (or lack of) the raw-io
+patch stuff, please post it to the list, so others like will know.
+TIA
+--=20
+SALUD,
+Jes=EF=BF=BDs
+***
+jesus_navarro@promofinarsa.es
+***
