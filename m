@@ -1,8 +1,8 @@
-Message-Id: <3C2C88AF.9010206@ti.com>
-From: christian e <cej@ti.com>
+Message-Id: <3C2CBAFB.90103@cdimed.com>
+From: "Michael O'Rourke" <morourke@cdimed.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] kernel: invalidate: busy buffer
+Subject: [linux-lvm] RAID support...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,21 +13,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 28 08:56:02 2001
+Date: Fri Dec 28 12:23:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux lvm <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hi,all
+To whom it may concern,
 
-Just tried 2.4.17 and this was the first non-ac kernel that was able to 
-boot on this machine :-)  anyways things seem to be running ok,but 
-there's lots of these errors:  kernel: invalidate: busy buffer
+Not that this is a show stopper, but it seems that the LVM is missing 
+important capabilities such as RAID 1 & 5.  I see that you already 
+support RAID 0, but that's it.  In my opinion, it makes sense to merge 
+the RAID support (seperate product) with the LVM product.  Because the 
+two really complement each other.  
 
-I searched archives and the net,but didn't find any solution to what's 
-causing it..Might be LVM ?? Something else ?? Anyone have the same 
-problems ??
-
-best regards
-
-Christian
+Sincerely,
+Michael O'Rourke
+Unix System Admin
+Per-Se' Technologies
