@@ -1,12 +1,12 @@
-Return-Path: <mason@suse.com>
-Date: Thu, 07 Dec 2000 15:05:08 -0500
-From: Chris Mason <mason@suse.com>
+Return-Path: <treed@ultraviolet.org>
+Date: Thu, 7 Dec 2000 12:37:43 -0800
+From: Tracy R Reed <treed@ultraviolet.org>
 Subject: Re: [linux-lvm] How do you mount a snapshot?
-Message-ID: <700130000.976219508@coffee>
-In-Reply-To: <20001207115538.B24318@archimedes.oak.suse.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20001207123743.B24307@ultraviolet.org>
+References: <20001207115538.B24318@archimedes.oak.suse.com> <700130000.976219508@coffee>
+Mime-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <700130000.976219508@coffee>; from mason@suse.com on Thu, Dec 07, 2000 at 03:05:08PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,28 +19,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Thu, Dec 07, 2000 at 03:05:08PM -0500, Chris Mason wrote:
+> > Unless they have changed it (possible), reiserfs does not support ro
+> > hardware for mounting unless the filesystem was unmounted cleanly. The
+> > reason is that to make the FS consistant the journal has to be replayed
+> > which necessarily _writes_ to the device. This cannot work on an ro
+> > device.
 
-On Thursday, December 07, 2000 11:55:38 -0800 David Gould <dg@suse.com>
-wrote:
+Hmm....
 
-> On Thu, Dec 07, 2000 at 03:39:11AM -0800, Tracy R Reed wrote:
->> 
->> [root@computer /usr2]# mount -t reiserfs /dev/vg-sdb1/snapshot /snap/
->> mount: block device /dev/vg-sdb1/snapshot is write-protected, mounting
->> read-only mount: wrong fs type, bad option, bad superblock on
->> /dev/vg-sdb1/snapshot, or too many mounted file systems
-> 
-> Unless they have changed it (possible), reiserfs does not support ro
-> hardware for mounting unless the filesystem was unmounted cleanly. The
-> reason is that to make the FS consistant the journal has to be replayed
-> which necessarily _writes_ to the device. This cannot work on an ro
-> device.
-> 
+> We didn't change that ;-)  But, the message would look different.  In this
+> case, it did not find a reiserfs filesystem at all, or perhaps the reiserfs
+> module wasn't loaded...
 
-We didn't change that ;-)  But, the message would look different.  In this
-case, it did not find a reiserfs filesystem at all, or perhaps the reiserfs
-module wasn't loaded...
+So...can I or can I not use snapshots with reiserfs? The snapshot was
+taken of a currently mounted and functioning (reiserfs module
+loaded...compiled into the kernel, actually) so if I did the snapshot
+correctly there should be a filesystem there. I'm going to wipe it out
+(nothing on it but some test files) and try again with ext2 and see what
+happens. 
 
--chris
+This should work, shouldn't it?
+
+-- 
+Tracy Reed      http://www.ultraviolet.org
