@@ -1,11 +1,10 @@
+Message-ID: <3F98B691.7090902@webhackande.se>
+From: Rickard Olsson <richie@webhackande.se>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <16280.27367.874758.610758@gargle.gargle.HOWL>
-From: "John Stoffel" <stoffel@lucent.com>
 Subject: Re: [linux-lvm] Drive gone bad, now what?
-In-Reply-To: <3F985B2D.5060008@xs4all.nl>
-References: <20031021171817.GA28462@mail.parplies.de>
-	<3F985B2D.5060008@xs4all.nl>
+References: <20031021171817.GA28462@mail.parplies.de>	<3F985B2D.5060008@xs4all.nl> <16280.27367.874758.610758@gargle.gargle.HOWL>
+In-Reply-To: <16280.27367.874758.610758@gargle.gargle.HOWL>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,71 +15,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 23 18:59:02 2003
+Date: Fri Oct 24 00:22:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
+John Stoffel wrote:
+
 Gert> We've setup a simple server machine with a bunch of harddisks of
-Gert> 60 and 80 Gb.  With 6 drives and lvm(1) setup it provided us
-Gert> with a nice amount of storage space, of course there was always
-Gert> the risk of a drive going bad but I had thought that lvm would
-Gert> be robust enough to cope with that sort of thing (no I didn't
-Gert> expect redundancy or soemthing like that, just I would be able
-Gert> to access data on the surviving disks)
+Gert> 60 and 80 Gb.
 
-Wait a second, let me try to understand this.  Did you just
-concatentate or stripe the data across all the drives?  Did you use
-RAID5 in this setup, or RAID1?  Or was it just a 6 x 60gb = 320gb
-volume without any redundancy?  You need to be precise in specifying
-what you had here. 
+John> Did you just concatentate or stripe the data across all the drives?
 
-Gert> Alas a drive went bad (reallly bad, beyond repair so no chance
-Gert> of getting any data from it).  Ok time for plan B how do I
-Gert> access the data on this 'limp' lvm system.  Googling and reading
-Gert> the FAQ's there were 3 options:
+Butting in, I would assume (dangerous, I know) concatenation and 
+non-striped since that is the default LVM mode when creating LVs. This 
+is the exact same setup I have, BTW.
 
-If you had just a simple concatenation of all the disks, then you are
-toast.  How do you expect LVM to restore the missing 60gb if there's
-no parity information or mirrored blocks?  It's impossible!
+John> If you had just a simple concatenation of all the disks, then you are
+John> toast.  How do you expect LVM to restore the missing 60gb if there's
+John> no parity information or mirrored blocks?  It's impossible!
+
+Yes, but he can restore the LV (sans the missing 60 gigs, of course) and 
+access the rest of the archive. I believe that's what he's after.
 
 Gert> For now we let the system rest until lvm2 matures and maybe the
-Gert> tools will be there to rescue this set of disks, the data on the
-Gert> drives is about 300 Gb worth of music and part of the data is
-Gert> still on cdrom backup but much of the music was added later and
-Gert> must be restored/re-ripped from the original audio CD's..
+Gert> tools will be there to rescue this set of disks
 
-This leads me to believe that you just concatenated the disks into one
-big volume, without using RAID5 or RAID 1, correct?
+The tools are already here. I did the same thing a while back. But it 
+ain't always easy. :-)
 
-Gert> What is the best way to make a 'reliable' lvm system ?  Is
-Gert> mirroring the most viable option or is raid 5 also usable,
-Gert> keeping in mind the number of drives you can normally connect to
-Gert> a PC motherboard (some boards, ours too, have an on board
-Gert> ide-raid controller which we used as a simple ide extension
-Gert> since the bios onboard was only the 'lite' version and handled 2
-Gert> drives in raid config only) On our system the OS was installed
-Gert> on a small 2Gb SCSI drive and 6 IDE drives were used for
-Gert> 'massive amounts of storage' with still two IDE places
-Gert> available.  LVM seemed an easy way to expand when needed..
+Go back to LVM1. Then, find another disk with the _exact same size_ as 
+the deceased disk. Plug it in and pvcreate it (unless the old one had a 
+LVM partition, in which case you fdisk and create a LVM partition on the 
+new one):
+# pvcreate -ff /dev/ide/host0/bus1/target0/lun0/disc
 
-Gert> If we used mirroring the total number of effective drives will
-Gert> be 8/2 and the drives would have to be the same in pairs.
-Gert> Upgrading the lvm would mean that 1 IDE port must be free to
-Gert> hook up a new (larger) set of drives, pvmove the data from the
-Gert> old (smaller) pair of drives we wish to replace to the new set
-Gert> and removing the smaller set out of the lvm.  But how about raid
-Gert> 5 ?
+Restore your metadata to the new, empty disk, so LVM can restore the LV:
+# vgcfgrestore -n YourVGName /dev/ide/host0/bus1/target0/lun0/disc
+# vgscan
+# vgchange -ay
+# reiserfsck --rebuild-tree /dev/YourVGName
+# mount /dev/YourVGName
 
-Gert> With raid 5 it is possible to hook up say 7 drives with 1 spare
-Gert> But then the upgrade path is almost impossible since all the
-Gert> drives have to be the same size for raid 5 to work...
+There are a number of pitfalls along the way (not finding a disk of the 
+same size is probably #1, but there is a way. If you can't find one, 
+pvcreate a larger disk with -s. Use vgcfgrestore -ll to list the VG 
+metadata stored in the backup, including the exact size of the dead PV.) 
+but this is the basic layout. Heinz was kind enough to walk me through 
+this when I had problems so now I feel like an expert. ;-)
 
-You've basically hit upon the basic tradeoffs here, though you're
-missing a performance issue, in that you should really try to keep
-just one drive per IDE channel if at all possible from a performance
-point of view.  
+Gert> LVM seemed an easy way to expand when needed..
 
-John
-   John Stoffel - Senior Unix Systems Administrator - Lucent Technologies
-	 stoffel@lucent.com - http://www.lucent.com - 978-952-7548
+It is. It's also the primary reason I use it instead of RAID. However, 
+if there's money behind the archive (in my case, there isn't) you can go 
+for a hardware RAID solution that offers the ability to grow the RAID. 
+You will still need a bunch of same-size disks, but I could live with 
+that, maybe you could too.
+
+You can also combine RAID and LVM in various ways in an attempt to 
+minimize the need for spare disks and maximize the size of useable 
+space. Perhaps one RAID-5 array of one size disks and use LVM to 
+concatenate it with another RAID-5 set of differently-sized disks. You 
+can use NFS or Coda to glue two or more file servers together over the 
+network if you run out of physical space in one of the machines.
+
+John> You've basically hit upon the basic tradeoffs here, though you're
+John> missing a performance issue, in that you should really try to keep
+John> just one drive per IDE channel if at all possible from a performance
+John> point of view.
+
+If he's doing the same trade-offs I am, he values size over performance 
+(which is 'good enough' for many uses even with shared IDE channels).
+
+    / Rickard Olsson,IT-Konsult/
+   / Telefon: +46 70 635 01 42/
+  / http://www.webhackande.se/
