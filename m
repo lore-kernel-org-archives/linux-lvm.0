@@ -1,10 +1,10 @@
-From: Lars Grobe <grobe@gmx.net>
-MIME-Version: 1.0
-References: <3F133985.C98897C@eti.net.gn>
-Subject: Re: [linux-lvm] Very newbie question (LVM+NFS)
-Message-ID: <3831.1058225901@www2.gmx.net>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Testing LVM2
+Message-ID: <20030715012858.Q19265@uk.sistina.com>
+References: <20030714002149.GA1041@trip.muon.local>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20030714002149.GA1041@trip.muon.local>; from nils@muon.de on Mon, Jul 14, 2003 at 12:21:49AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +15,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jul 14 18:39:01 2003
+Date: Mon Jul 14 19:30:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Nils Juergens <nils@muon.de>
+Cc: Linux LVM Mailing List <linux-lvm@sistina.com>
 
-Hi Kader!=20
-=20
-> I would like to know if it is possible, then, to use LVM in order to=20
-> aggregate all these nfs partitions onto one single volume.=20
-=20
-No, it is impossible that way. NFS mounts are not partitions, but=20
-exported filesystems. They don't have e.g. a device entry on the client.=20
-=20
-If you want to use lvm, you need a block DEVICE, e.g. a harddisk. Usually=20
-this appears as /dev/sda, /dev/hda, /dev/rd/c0d0 etc. There are ways=20
-to export block devices over a network, e.g. "iscsi" - you export a=20
-device and get a new "scsi"-device on the client. This is a possible lvm=20
-target (am I wrong here?).=20
-=20
-Good luck, CU Lars.=20
+On Mon, Jul 14, 2003 at 12:21:49AM +0000, Nils Juergens wrote:
+> configure --with-kernel-dir=/usr/src/linux-2.5.75
 
---=20
-+++ GMX - Mail, Messaging & more  http://www.gmx.net +++
+Does ./configure *without* the --with-kernel-dir bit work any better?
 
-Jetzt ein- oder umsteigen und USB-Speicheruhr als Pr=EF=BF=BDmie sichern!
+Alasdair
+-- 
+agk@uk.sistina.com
