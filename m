@@ -1,7 +1,9 @@
-Message-ID: <A11077E28200D51182EA00D0B775525307142799@xin02.india.hp.com>
-From: "HERUR,CHANNABASAPPA (HP-India,ex2)" <channabasappa.herur@hp.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Problems while trying to crash Oracle database
+From: Duane Evenson <devenson@shaw.ca>
+Message-id: <3EAF28A8.5010107@shaw.ca>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+References: <3EAC2003.5030106@shaw.ca> <20030428105618.A28159@sistina.com>
+Subject: [linux-lvm] vgscan problem (was vgscan segmentation faults, VG name problems)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,190 +14,215 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 29 19:58:02 2003
+Date: Tue Apr 29 20:34:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi ,
-	I am basically trying to crash the oracle database which has been
-created using raw logical volumes . When I use 'dd' command to crash the
-oracle database I find that the database is actually not crashing . 
+I've upgraded to 1.0.7 but now get the following output - indicating the 
+real problem.
+If I recreate the volume group and logical volume, will the data 
+contained therein still be available or is there another way to recover 
+the volume?
+vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- reading data of volume group "data_group" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
+volume
+group "data_group" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+group
 
-	I used the following steps to create Oracle database on raw logical
-volumes .
+Some other information of the system:
 
-
-1. Created Physical Volumes's using pvcreate command 
-# pvcreate /dev/sdp
-pvcreate -- physical volume "/dev/sdp" successfully created
-
-# pvcreate /dev/sdq
-pvcreate -- physical volume "/dev/sdq" successfully created
-
-2. Created Volume Groups's
-# vgcreate vg06 /dev/sdp
-vgcreate -- INFO: using default physical extent size 4.00 MB
-vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-vgcreate -- doing automatic backup of volume group "vg06"
-vgcreate -- volume group "vg06" successfully created and activated
-
-# vgcreate vg07 /dev/sdq
-vgcreate -- INFO: using default physical extent size 4.00 MB
-vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-vgcreate -- doing automatic backup of volume group "vg07"
-vgcreate -- volume group "vg07" successfully created and activated
-
-3. Created Logical Volume's
-
-# lvcreate -l 25 -n control01.ctl /dev/vg06
-lvcreate -- doing automatic backup of "vg06"
-lvcreate -- logical volume "/dev/vg06/control01.ctl" successfully created
-
-# lvcreate -l 25 -n control02.ctl /dev/vg06
-lvcreate -- doing automatic backup of "vg06"
-lvcreate -- logical volume "/dev/vg06/control02.ctl" successfully created
-
-# lvcreate -l 100 -n system01.dbf /dev/vg06
-lvcreate -- doing automatic backup of "vg06"
-lvcreate -- logical volume "/dev/vg06/system01.dbf" successfully created
-
-# lvcreate -l 100 -n log01.log /dev/vg07
-lvcreate -- doing automatic backup of "vg07"
-lvcreate -- logical volume "/dev/vg07/log01.log" successfully created
-
-# lvcreate -l 100 -n log02.log /dev/vg07
-lvcreate -- doing automatic backup of "vg07"
-lvcreate -- logical volume "/dev/vg07/log02.log" successfully created
-
-4. Removed the existing raw devices
-
-[root@LNXSRVZ /dev]# rm /dev/raw/raw41
-rm: remove `/dev/raw/raw41'? y
-[root@LNXSRVZ /dev]# rm /dev/raw/raw42
-rm: remove `/dev/raw/raw42'? y
-[root@LNXSRVZ /dev]# rm /dev/raw/raw43
-rm: remove `/dev/raw/raw43'? y
-[root@LNXSRVZ /dev]# rm /dev/raw/raw44
-rm: remove `/dev/raw/raw44'? y
-[root@LNXSRVZ /dev]# rm /dev/raw/raw45
-rm: remove `/dev/raw/raw45'? y
-
-5.Recreate raw devices using 'mknod' command
-
-# mknod /dev/vg06/rsystem01.dbf c 162 41
-# mknod /dev/vg06/rcontrol01.ctl c 162 42
-# mknod /dev/vg06/rcontrol02.ctl c 162 43
-# mknod /dev/vg07/rlog01.log c 162 44
-# mknod /dev/vg07/rlog02.log c 162 45
+# pvdisplay /dev/hde
+--- Physical volume ---
+PV Name               /dev/hde
+VG Name               data_group
+PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
+[LVM: 239
+KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              28617
+Free PE               3017
+Allocated PE          25600
+PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
 
 
-6. Used 'raw' command to bind raw device to block device
+# vgcfgrestore   -n data_group -ll
+vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data_group.conf"
+--- Volume group ---
+VG Name               data_group
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               111.79 GB
+PE Size               4 MB
+Total PE              28617
+Alloc PE / Size       25600 / 100 GB
+Free  PE / Size       3017 / 11.79 GB
+VG UUID               rVEO6Y-kq5c-5SR0-uw0I-VPF1-v1ka-HK1WQS
 
-# raw /dev/vg06/rsystem01.dbf /dev/vg06/system01.dbf
-/dev/raw/raw41: bound to major 58, minor 19
-# raw /dev/vg06/rcontrol01.ctl /dev/vg06/control01.ctl
-/dev/raw/raw42: bound to major 58, minor 17
-# raw /dev/vg06/rcontrol02.ctl /dev/vg06/control02.ctl
-/dev/raw/raw43: bound to major 58, minor 18
-# raw /dev/vg07/rlog01.log /dev/vg07/log01.log
-/dev/raw/raw44: bound to major 58, minor 20
-# raw /dev/vg07/rlog02.log /dev/vg07/log02.log
-/dev/raw/raw45: bound to major 58, minor 21
+--- Logical volume ---
+LV Name                /dev/data_group/logical_volume1
+VG Name                data_group
+LV Write Access        read/write
+LV Status              NOT available
+LV #                   1
+# open                 0
+LV Size                100 GB
+Current LE             25600
+Allocated LE           25600
+Allocation             next free
+Read ahead sectors     10000
+Block device           58:0
 
 
-7. CHANGED THE FILE PERMISSIONS
-# chmod 766 /dev/vg06
-# chmod 766 /dev/vg06/*
-# chmod 766 -R /dev/vg07         
-# chmod 766 -R /dev/vg07/*            
-# chown oracle:oinstall -R /dev/vg07  
+--- Physical volume ---
+PV Name               /dev/hde
+VG Name               data_group
+PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
+[LVM: 239
+KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              28617
+Free PE               3017
+Allocated PE          25600
+PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
 
-# ll /dev/vg06/*
-brwxrw-rw-    1 oracle   oinstall  58,  17 Apr 29 14:06
-/dev/vg06/control01.ctl
-brwxrw-rw-    1 oracle   oinstall  58,  18 Apr 29 14:06
-/dev/vg06/control02.ctl
-crwxrw-rw-    1 oracle   oinstall 109,   6 Apr 29 14:05 /dev/vg06/group
-crwxrw-rw-    1 oracle   oinstall 162,  42 Apr 29 14:10
-/dev/vg06/rcontrol01.ctl
-crwxrw-rw-    1 oracle   oinstall 162,  43 Apr 29 14:10
-/dev/vg06/rcontrol02.ctl
-crwxrw-rw-    1 oracle   oinstall 162,  41 Apr 29 14:10
-/dev/vg06/rsystem01.dbf
-brwxrw-rw-    1 oracle   oinstall  58,  19 Apr 29 14:06
-/dev/vg06/system01.dbf
 
-# ll /dev/vg07/*
-crwxrw-rw-    1 oracle   oinstall 109,   7 Apr 29 14:05 /dev/vg07/group
-brwxrw-rw-    1 oracle   oinstall  58,  20 Apr 29 14:06 /dev/vg07/log01.log
-brwxrw-rw-    1 oracle   oinstall  58,  21 Apr 29 14:07 /dev/vg07/log02.log
-crwxrw-rw-    1 oracle   oinstall 162,  44 Apr 29 14:10 /dev/vg07/rlog01.log
-crwxrw-rw-    1 oracle   oinstall 162,  45 Apr 29 14:10 /dev/vg07/rlog02.log
+Heinz J . Mauelshagen wrote:
 
-9. init$ORACLE_SID.ora file had the following contents
-
-db_name                         = rawlvm1
-
-db_files                        = 400
-
-db_file_multiblock_read_count   = 16
-
-db_block_buffers                = 550
-
-shared_pool_size                = 5000000
-
-log_checkpoint_interval         = 10000
-
-processes                       = 100
-
-parallel_max_servers            = 8
-
-log_buffer                      = 32768
-
-global_names                    = TRUE
-
-control_files                   = (/dev/raw/raw42, /dev/raw/raw43)
-
-db_block_checksum               = true
-
-db_block_size                   = 4096
-
-background_dump_dest            = /u00/app/oracle/admin/hard/rawlvm/bdump
-
-core_dump_dest                  = /u00/app/oracle/admin/hard/rawlvm/cdump
-
-user_dump_dest                  = /u00/app/oracle/admin/hard/rawlvm/udump
-
-10. Created oracle database
-
-SQL> startup nomount;
-ORACLE instance started.
-
-Total System Global Area   53178448 bytes
-Fixed Size                   450640 bytes
-Variable Size              50331648 bytes
-Database Buffers            2252800 bytes
-Redo Buffers                 143360 bytes
-SQL>
-SQL> create database "rawlvm1"
-  2    controlfile reuse
-  3    maxinstances 8
-  4    maxlogfiles 32
-  5    datafile
-  6         '/dev/raw/raw41' size 40M reuse
-  7      logfile
-  8         '/dev/raw/raw44'  size 20M ,
-  9         '/dev/raw/raw45'  size 20M ;
-
-Database created.
-
-	Please let me know if there is something fundamentally wrong in the
-above steps used for creating Oracle database . After creating the database
-I used the following 'dd' command to crash the database 
-
-	dd if=/boot/vmlinux-2.4.2-2 of=/dev/sdp
-
-	Strangely this command does'nt seem to crash the database . Can
-anybody help me out to crash the Oracle database ?
+>Duane,
+>
+>since you're running 1.0.3 I assume you might be hitting an array derefenerence
+>bug in the LVM1 library we fixed in 1.0.6.
+>
+>Please upgrade to 1.0.7 and try again.
+>
+>Regards,
+>Heinz    -- The LVM Guy --
+>
+>On Sun, Apr 27, 2003 at 12:22:59PM -0600, Duane Evenson wrote:
+>  
+>
+>>I'm having troubles and can't find the solution in the HOWTO, or the 
+>>archived mailing lists articles.
+>>I installed lvm on an entire hard drive (hde), made one logical group 
+>>with a logical volume of 100G.
+>>I mounted to volume, copied files over OK, but vgscan caused 
+>>segmentation faults.
+>>I rebooted, hoping that it was a conflict between the kernel info and 
+>>physical info. Obviously, it wasn't.
+>>Here are the results of running pvdisplay, pvscan, vgscan, and vgdisplay.
+>>
+>># pvdisplay /dev/hde -v
+>>--- Physical volume ---
+>>PV Name               /dev/hde
+>>VG Name               data_group
+>>PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
+>>[LVM: 239
+>>KB]
+>>PV#                   1
+>>PV Status             available
+>>Allocatable           yes
+>>Cur LV                1
+>>PE Size (KByte)       4096
+>>Total PE              28617
+>>Free PE               3017
+>>Allocated PE          25600
+>>PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
+>>
+>>pvdisplay -- "/etc/lvmtab.d/data_group" doesn't exist
+>>
+>># pvscan -v
+>>pvscan -- reading all physical volumes (this may take a while...)
+>>pvscan -- walking through all physical volumes found
+>>pvscan -- inactive PV "/dev/hde"  is associated to unknown VG 
+>>"data_group" (run
+>>vgscan)
+>>pvscan -- total: 1 [111.79 GB] / in use: 1 [111.79 GB] / in no VG: 0 [0]
+>>
+>># vgscan -v
+>>vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+>>vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+>>vgscan -- reading all physical volumes (this may take a while...)
+>>vgscan -- scanning for all active volume group(s) first
+>>vgscan -- reading data of volume group "data_group" from physical volume(s)
+>>Segmentation fault
+>>
+>># vgscan -d
+>>...
+>><55555> pv_create_name_from_kdev_t -- LEAVING with dev_name: /dev/hde
+>><55555> system_id_check_exported -- CALLED
+>><55555> system_id_check_exported -- LEAVING with ret: 0
+>><4444> pv_read -- LEAVING with ret: 0
+>><4444> vg_copy_from_disk -- CALLED
+>><55555> vg_check_vg_disk_t_consistency -- CALLED
+>><666666> vg_check_name -- CALLED with VG:
+>><7777777> lvm_check_chars -- CALLED with name: ""
+>><7777777> lvm_check_chars -- LEAVING with ret: 0
+>><666666> vg_check_name -- LEAVING with ret: 0
+>><55555> vg_check_vg_disk_t_consistency -- LEAVING with ret: -344
+>><4444> vg_copy_from_disk -- LEAVING
+>>Segmentation fault
+>>
+>># vgdisplay data_group -h
+>>Logical Volume Manager 1.0.3
+>>Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+>>
+>>vgdisplay -- display volume group information
+>>
+>>
+>>
+>>
+>>
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>    
+>>
+>
+>*** Software bugs are stupid.
+>    Nevertheless it needs not so stupid people to solve them ***
+>
+>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+>Heinz Mauelshagen                                 Sistina Software Inc.
+>Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                  56242 Marienrachdorf
+>                                                  Germany
+>Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                       FAX 924446
+>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>  
+>
