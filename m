@@ -1,11 +1,9 @@
-Return-Path: <boutilpj@ednet.ns.ca>
-Message-ID: <3A682F36.A2A2E5DA@ednet.ns.ca>
-Date: Fri, 19 Jan 2001 08:12:38 -0400
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+Return-Path: <penguin_master_2000@yahoo.com>
+Message-ID: <20010119124633.13769.qmail@web1703.mail.yahoo.com>
+Date: Fri, 19 Jan 2001 04:46:33 -0800 (PST)
+From: "Mr. Penguin" <penguin_master_2000@yahoo.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] fdisk and the LVM partition.
-References: <200101190934.JAA05616@lindbergh.avbrief.com> <20010119115201.B11381@srv.sistina.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] 2.4.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,16 +16,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-fdisk v2.10m has partiton type 0x8e but fdisk v2.10f doesn't so I am not sure when it
-was implemented.
+Hi
 
+I'm currently running LVM 0.8i on 2.2.17 with devfs
+and reiserfs. I'm trying to upgrade to 2.4.0.
 
+I'm a little confused as to what patches I need to
+apply to the base 2.4.0 tree for LVM 0.9.1-beta2. The
+README specifies lvm-0.9.1_beta1-2.4.0.patch but I
+can't find this file. The only file I can see that
+looks relevant is lvm-0.8final-2.4.0.patch but I dont
+want 0.8!
 
-"Heinz J. Mauelshagen" wrote:
+I tried applying this file anyway but sure enough I
+got an invalid IOP error on vgscan.
 
-> I registered 0x8E a long time ago.
-> Obviously nobody (including me ;-) took care of extending fdisk.
-> Could you go for it, please?
->
+I also tried applying no patches to the base 2.4.0
+kernel and vgscan found no volume groups.
+
+Do I have to re-init my VG's to upgrade?
+
+Please help!
+
+James
+
+__________________________________________________
+Do You Yahoo!?
+Get email at your own domain with Yahoo! Mail. 
+http://personal.mail.yahoo.com/
