@@ -1,10 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102141919.f1EJJhQ10900@webber.adilger.net>
-Subject: Re: [linux-lvm] LVM with devfs questions and patches
-In-Reply-To: <20010214191831.A12417@trez42.net> from Benoit Gaussen at "Feb 14,
- 2001 07:18:31 pm"
-Date: Wed, 14 Feb 2001 12:19:42 -0700 (MST)
+Return-Path: <Jean-Eric.Cuendet@linkvest.com>
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683960@mailsrv.linkvest.ch>
+From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+Subject: RE: [linux-lvm] LVM don't work anymore (wrong version?)
+Date: Thu, 15 Feb 2001 11:21:24 +0100
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,30 +15,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Benoit Gaussen writes:
-> I saw the changes in the CVS tree except for one thing that I forgot to tell
-> about in my previous mail. 
-> 
-> There is a mistake in the devfs registration of /dev/lvm, the major and
-> minor numbers are swapped :
-> 
-> Just an extract of the patch :
-> 
->  lvm_devfs_handle = devfs_register(
-> -		0 , "lvm", 0, 0, LVM_CHAR_MAJOR,
-> +		0 , "lvm", 0, LVM_CHAR_MAJOR, 0,
->  		S_IFCHR | S_IRUSR | S_IWUSR | S_IRGRP,
->  		&lvm_chr_fops, NULL);
+Hi,
+I have this same problem on two of our servers! The 2 runs the same kernel:
+2.4.1 with ACL patch and LVM 0.9.1beta4
 
-I noticed your change, and it is also in the devfs patch that I submitted.
+With the second one, I can do much more tests than the other. It's a
+semi-prod machine.
+Here is what I did:
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+[root@zorro /root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/md6"  is associated to an unknown VG (run
+vgscan)
+pvscan -- ACTIVE   PV "/dev/md7"  is associated to an unknown VG (run
+vgscan)
+pvscan -- ACTIVE   PV "/dev/md8"  is associated to an unknown VG (run
+vgscan)
+pvscan -- total: 3 [8.8 GB] / in use: 3 [8.8 GB] / in no VG: 0 [0]
+ 
+[root@zorro /root]# pvscan -u
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/md6" with UUID
+"v7Y8gz-KMXB-d6Iq-Y0U1-iiSo-javD-wOL89P"  is associated to an
+unknown VG (run vgscan)
+pvscan -- ACTIVE   PV "/dev/md7" with UUID
+"xTl7Nc-6DhQ-KV3c-HHd0-LI50-nQwq-wFBYCG"  is associated to an
+unknown VG (run vgscan)
+pvscan -- ACTIVE   PV "/dev/md8" with UUID
+"oDXPq6-s9Zn-dOHF-ss8J-Rdxt-jTKT-wFoIGQ"  is associated to an
+unknown VG (run vgscan)
+pvscan -- total: 3 [8.8 GB] / in use: 3 [8.8 GB] / in no VG: 0 [0]
+ 
+[root@zorro /root]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
+ 
+[root@zorro /root]# vgcreate
+vgcreate -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run
+vgscan
+ 
+[root@zorro /root]#
+
+
+What to do now?  I wait for your help!
+Thanks
+-jec
