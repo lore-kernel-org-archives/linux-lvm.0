@@ -1,10 +1,7 @@
-From: "James B. Byrne " <Support@Harte-Lyne.ca>
+Message-ID: <615A249B783CD41192F400D0B747AC8606045009@hesse.bbn.hp.com>
+From: "ZECHA,HOLGER (HP-Germany,ex1)" <holger_zecha@hp.com>
 MIME-Version: 1.0
-Message-ID: <3CF62BF4.16148.100D4B1C@localhost>
-In-reply-to: <E17DJKw-0006ou-00@hermes.sistina.com>
-Content-transfer-encoding: 7BIT
-Content-description: Mail message body
-Subject: [linux-lvm] Re: LVM 1.03 root file system on Redhat 7.3
+Subject: [linux-lvm] SuSE Linux and EMC/XP/VA7100/VA7100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +12,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 12:42:01 2002
+Date: Thu May 30 12:44:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On 30 May 2002 at 1:22, linux-lvm-request@sistina.com wrote:
+Hello,
 
-> What I am seeing is this:
-> 
-> kmod: failed to exec /sbin/modprobe -s -k block-major-7 errno = 2 
-> 
-> repeated 16 times, followed by
-> 
-> vgvchange -- volume group "vg00" successfully activated
-> 
-> VFS: Cannot open root device "vg00"/lv01: or 00:00
-> Please append correct "root=" boot option
-> Kernel panic: VFS: Unable to mount root fs on 00:00
+has anyone detailed experience connecting a SuSE Linux to a
+EMC,XP,VA7100,VA7400 using Emulex FC cards and configuring LVM ?
 
+Thanks for your help
 
-The kmod error is reputedly caused by the ramdisk image file 
-(created by lvmcreate_initrd) not containing a /sbin/modprobe 
-command.  How can I verify if this is so?  I note that redhat has 
-/sbin/modprobe as a logical link to insmod.  Could this be confusing 
-lvmcreate_initrd?
+Holger Zecha                          H
 
-Regards,
-Jim
-
----     e-mail is NOT a secure channel 
-James B. Byrne                mailto:ByrneJB@Harte-Lyne.ca
-Harte & Lyne Limited          http://www.harte-lyne.ca
-9 Brockley Drive              vox: +1 905 561 1241
-Hamilton, Ontario             fax: +1 905 561 0757
-Canada  L8E 3C3
+SAP R/3 Project Services      
+Operations Services Center 
+Hewlett Packard GmbH                Telefon:    +49 7031/468 3423
+Schickardstrasse 25                       Fax:         +49 7031/468 1349
+D - 71034 Boeblingen                   e-mail:      Holger_Zecha@hp.com
