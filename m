@@ -1,11 +1,7 @@
-Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
-From: Bradley Alexander <storm@tux.org>
-In-Reply-To: <1008610700.829.15.camel@defiant>
-References: <Pine.LNX.4.33.0112171315110.18781-100000@www.scotty.co.at> 
-	<1008610700.829.15.camel@defiant>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1008647921.851.1.camel@defiant>
-Mime-Version: 1.0
+Message-Id: <25E4CA13D679FF48BC30769420220971467A2C@nd1-clusa.local.bunnings.com.au>
+From: Colin Coe <CCoe@bunnings.com.au>
+MIME-Version: 1.0
+Subject: [linux-lvm] Implementation questions
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,65 +12,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 21:56:01 2001
+Date: Mon Dec 17 22:00:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Mon, 2001-12-17 at 12:38, Bradley Alexander wrote:
-> On Mon, 2001-12-17 at 07:20, Friedrich Lobenstock wrote:
-> > On 16 Dec 2001 22:43, Bradley Alexander wrote:
-> > 
-> > > Its a standard IDE cable. I have a 40-pin/40-wire cable and a
-> > > 40-pin/80-wire (I'm assuming this is an ATA66/100 cable). Originally, i
-> > > had both drives on the ATA cable, but since I split them to different
-> > > channels, I had to use a standard IDE cable on the second channel.
-> > > However, I was getting the same errors when both were on the ATA cable
-> > > as well.
-> > >
-> > 
-> > So please do yourself a favour and only use 80-wire cables nowadays.
-> > That's why you are getting the
-> >   hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-> >   hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280, sector=0
-> > messages.
-> 
-> I was getting the same type of errors even when both drives were on an
-> ATA cable. However, I will try to run out and get an ATA cable this
-> afternoon.
+Hi all
 
-I got a new cable, recreated the LV and copied everything over.
-Rebooted, and was still getting the drive errors on boot, still getting
-the drive light on solid, all of the problems I was having. To
-summarize,
+I need to set up a bunch of Linux machines of approximately the following
+specs:
+- PII 400
+- 2 x 20GB HDD
+- 256 MB  RAM
+- RedHat 7.2
 
-Swapped drives (after the first drive failed).
-Swapped cables
-Swapped controllers (was originally on the first controller with the   
-   other drive, now on the second.)
+What I want is to use software raid (mirroring) and LVM.  How do I do this
+from scratch?  I have looked but can't find a howto on this.  I have
+attempted to do this but have run into several problems:
+- During RH7.2 install you can choose to install to /dev/md but not LVM
+- Once you have installed the OS there is no (easy/intuitive) way to get the
+LVM in place
 
-The original drive (Quantum) was known good prior to starting to use
-LVM, it has since failed. (It had, among other things, a Debian mirror
-on it.) The replacememt drive is known good as well, no errors on the
-drive itself.
+As I have about 130 of these to do, I am toying with the idea of installing
+a cut-down Linux system with XFS, LAM, md and ramdisk support and making a
+bootable CD-ROM which I can then use to configure the system how I want it.
 
-vg00 on /dev/hda works fine, no problems encountered. vg01 (/dev/hdb)
-has problems. It is allowing me to turn off the vg (vgchange -a n),
-however, any operations done on that vg afterwards (including attempting
-to try to turn it back on results in a segmentation fault. (see earlier
-message in this thread for the exact trap information).
 
-Can someone give me any advice on what to do to fix this problem?
+Thats the plan at the moment, has anyone got a better idea? 
 
--- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm [at] debian.org
-                                         |   storm [at] tux.org
-============================================================================
-If you push the stick forward, the houses get bigger. If you pull
-the stick back, they get smaller. That is, unless you keep pulling
-the stick all the way back, then they get bigger again.
-					--Rules of the Air, #2
+
+TIA
+
+
+Colin Coe
+AIX/Linux Systems Administrator
+Bunnings Building Supplies Pty Ltd
+
+
+
+**************************************************************************
+Bunnings Legal Disclaimer: 
+
+1) 	This document is confidential and may contain legally privileged 
+	information. If you are not the intended recipient you must not 
+	read, copy, distribute or act in reliance on it.
+	If you have received this document in error, please telephone
+	us immediately on (08) 9365-1555. 
+
+2)	All e-mails sent to and sent from Bunnings Building Supplies are
+	scanned for content. Any material deemed to contain inappropriate
+	subject matter will be reported to the e-mail administrator of
+	all parties concerned.
+
+**************************************************************************
