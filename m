@@ -1,10 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1KFDDi22146
-	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 10:13:13 -0500
-Message-ID: <20040220151231.92039.qmail@web80002.mail.yahoo.com>
-From: <cmc2slack-lvm@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] finding the right size for rootvg
+Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id i1KFDHa5017564
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 16:13:17 +0100
+From: Heinz Mauelshagen <Mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] vgcreate -- ERROR 2 writing volume group backup file /etc/lvmtab.d/new.tmp in vg_cfgbackup.c [line 257]
+Message-ID: <20040220151318.GA25086@redhat.com>
+References: <006e01c3f748$dfd91e00$9700a8c0@iris>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <006e01c3f748$dfd91e00$9700a8c0@iris>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -16,29 +20,63 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 20 10:12:13 2004
+Date: Fri Feb 20 10:12:19 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-I'm re-installing slackware 9.1 on my linux box,
-trying to set up LVM and ReiserFs. I'm pretty new
-at this, learning as I go along.
+On Fri, Feb 20, 2004 at 09:31:16AM +0900, ���̶� wrote:
+> I'm lvm beginner ^^
+> Now I made a physical volume.(#pvcreate -ff /dev/sdc1)
+> but following problem occured..
+> 
+> I don't know why
+> Help me, please..
+> 
+> 
+> #vgcreate new /dev/sdc1 
+> vgcreate -- INFO: using default physical extent size 4 MB
+> vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+> vgcreate -- ERROR 2 writing volume group backup file /etc/lvmtab.d/new.tmp in vg_cfgbackup.c [line 257]
+> vgcreate -- ERROR "vg_cfgbackup(): write" writing "/etc/lvmtab"
 
-I originally installed to another partition, now
-I've creating a fresh partition and following the
-LVM how-to about how to set up a root volume group. 
-My questions are about partition and volume group size.
+Filesystem holding /etc is either readonly or full.
 
-The first time I created a partition and PV I made
-it 5GB and found that I had created the rootvg too
-small by default to allocate enough space. So reading the
-man pages I figured out that I need to specify a
-certain extent size when I create the rootvg in order
-to use the space properly. Right now the partition is
-a little over 4GB and the rootvg is 3.97GB with an
-extent size of 8MB. Is this small extent size a good
-idea or will it cause problems later?
+> 
+> #vgchange -a n new
+> vgchange -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
+> 
+> #vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "new"
+> vgscan -- ERROR 2 writing volume group backup file /etc/lvmtab.d/new.tmp in vg_cfgbackup.c [line 257]
+> vgscan -- ERROR: unable to do a backup of volume group "new"
+> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group "new" from "/etc/lvmtab"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+> 
+> 
+> fdisk -l
+> 
+> Disk /dev/sdc: 64 heads, 32 sectors, 1436208 cylinders
+> Units = cylinders of 2048 * 512 bytes
+> 
+>    Device Boot    Start       End    Blocks   Id  System
+> /dev/sdc1             1   1436208 1470676976   8e  Linux LVM
+-- 
 
-Thanks for any advice,
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
