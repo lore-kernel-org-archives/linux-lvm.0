@@ -1,10 +1,10 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1860sa20723
-	for <linux-lvm@redhat.com>; Sun, 8 Feb 2004 01:00:54 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1861fa20917
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2004 01:01:41 -0500
 Received: from yakka.services.adelaide.edu.au (yakka.services.adelaide.edu.au [129.127.41.32])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1860qb03848
-	for <linux-lvm@redhat.com>; Sun, 8 Feb 2004 01:00:53 -0500
-Message-ID: <1076220042.4025d08a18acb@pandani.services.adelaide.edu.au>
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1861eb04072
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2004 01:01:41 -0500
+Message-ID: <1076220088.4025d0b8d06d7@pandani.services.adelaide.edu.au>
 From: Chris Doherty <chris.doherty@adelaide.edu.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -20,7 +20,7 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Sun Feb  8 01:00:01 2004
+Date: Sun Feb  8 01:01:02 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
