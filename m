@@ -1,10 +1,9 @@
-Return-Path: <bertrand.sirodot@bnpparibas.com>
-From: bertrand.sirodot@bnpparibas.com
-Message-ID: <80256A01.0065EE53.00@lonn000101.uk.paribas.com>
-Date: Wed, 28 Feb 2001 18:36:43 +0000
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 28 Feb 2001 21:46:05 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010228214605.C9035@srv.sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] (no subject)
+Subject: [linux-lvm] Final request for bug fixes!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,36 +19,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+Hi all,
 
-unsuscribe linux-lvm
+because we are about to release LVM 0.9.1 Beta 6 on friday,
+please send us your LVM bug fixes to be included in that release *now*.
 
+Thanks a lot for your support of LVM! :-)
+-- 
 
+Regards,
+Heinz    -- The LVM Guy --
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-___________________________________________________________
-
-This message and any attachments (the "message") are intended solely for
-the addressees and are confidential.  If you receive this message in error,
-please delete it and immediately notify the sender.
-
-Any use not in accord with its purpose, any dissemination or disclosure,
-either whole or partial, is prohibited except formal approval.
-
-The internet can not guarantee the integrity of this message.  BNP PARIBAS
-(and its subsidiaries) shall (will) not therefore be liable for the message
-if modified.
-                      ---------------------------------------------
-
-Ce message et toutes les pieces jointes (ci-apres le "message") sont
-etablis a l'intention exclusive de ses destinataires et sont confidentiels.
-Si vous recevez ce message par erreur, merci de le detruire et d'en avertir
-immediatement l'expediteur.
-
-Toute utilisation de ce message non conforme a sa destination, toute
-diffusion ou toute publication, totale ou partielle, est interdite, sauf
-autorisation expresse.
-
-L'internet ne permettant pas d'assurer l'integrite de ce message, BNP
-PARIBAS (et ses filiales) decline(nt) toute responsabilite au titre de ce
-message, dans l'hypothese ou il aurait ete modifie.
-___________________________________________________________
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
