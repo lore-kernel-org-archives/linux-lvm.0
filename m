@@ -1,12 +1,6 @@
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] cvs anonymous update problem
-Message-ID: <20030204143328.GA10982@antimony.sistina.com>
-References: <3E35C33F00001C21@ocpmta3.freegates.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
-Content-Disposition: inline
-In-Reply-To: <3E35C33F00001C21@ocpmta3.freegates.net>
+From: yckim@linuxsecurity.co.kr
+Message-Id: <200302050947.h159lPL04991@yclinux.linuxsecurity.co.kr>
+Subject: Re: [linux-lvm] resize an ext3 on an LV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,52 +11,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  5 12:05:03 2003
+Date: Wed Feb  5 12:05:05 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You can do ext3 expand with "e2fsadm -L +xxxG -n /dev/homevg/userslv".
+But before using this command, must reduce LV volume to original size.
+e2fsadm  may resize filesystem and logical volume BOTH.
+-n  is nofsck.
+You must check filesystem  before "e2fsadm"  by e2fsck.
 
-Sorry 'bout that.  It should be all good again now.
+wish your good Luck !!!
+Yongchul Kim.
 
-On Tue, Feb 04, 2003 at 11:54:41AM +0100, Joel Soete wrote:
-> Doing weekly a cvs update of your project, since this weekend I encounter
-> the following problem:
->=20
-> cvs -d ":pserver:cvs@tech.sistina.com:/data/cvs" login
-> Fatal error, aborting.
-> cvs: no such user
->=20
-> Is there some change in cvs config not yet reported to web page?
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              E-Mail: lewis@sistina.com
-Minneapolis, MN 55414
-http://www.sistina.com
-
-Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
-A5A
-Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
-many keyservers out there...
------Begin Obligatory Humorous Quote----------------------------------------
-A program is a device used to convert data into error messages.
------End Obligatory Humorous Quote------------------------------------------
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.7 (GNU/Linux)
-
-iD8DBQE+P884K/V1dClKqloRAllgAJ4kJLht3+q6oxhQWh3PdxJJtp1ENgCfRk0a
-jVN9/9yU5bBRPavT2HW9OEc=
-=52ol
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+ ----- Original Message ----- 
+ From: "Alexander Lazarevich" <alazarev@itg.uiuc.edu>
+ To: "Linux LVM Sistina" <linux-lvm@sistina.com>
+ Sent: Thursday, January 30, 2003 12:32 AM
+ Subject: Re: [linux-lvm] resize an ext3 on an LV
+ 
+ 
+ > The LV is already expanded. All I want to do is resize the ext3 filesystem 
+ > to the new size of the LV, which is now 275GB.
+ > 
+ > But I need to know the commands. Or some hint of what the command is. Is 
+ > it just "resize2fs /dev/homevg/userslv"? I've seen some posts saying that 
+ > using resize2fs will destroy an ext3 filesystem, is that not true? Will 
+ > the journal stay intact? What's the command that you use?
+ > 
+ > Thanks for the help!
+ > 
+ > Alex
+ > 
+ > On Wed, 29 Jan 2003, Jan-Benedict Glaw wrote:
+ > 
+ > > On Wed, 2003-01-29 09:16:15 -0600, Alexander Lazarevich <alazarev@itg.uiuc.edu>
+ > > wrote in message <Pine.LNX.4.44.0301290900350.22463-100000@zeus.itg.uiuc.edu>:
+ > > > A rehash of some questions I asked earlier, but I want to clarify:
+ > > > 
+ > > > Redhat 7.3, 2.4.18-19.7.xsmp kernel, using LVM 1.03.
+ > > > 
+ > > > I've got a 180GB LV (/dev/homevg/userslv) which contains an ext3 
+ > > > filesystem (mount point /home/users).
+ > > > 
+ > > > Once I umount the /dev/homevg/userslv, can I use resize2fs to extend the 
+ > > > ext3 filesystem? Or must I first remove the journal from ext3, then 
+ > > > resize, then add the journal back to it, then remount?
+ > > 
+ > > You can directly enlarge the filesystem, but, of course, you've got to
+ > > extend the logical volume before that... You don't need to remove the
+ > > journal, at least, this worked numerous times for me:-)
+ > > 
+ > > However, backup is always a good idea, though.
+ > > 
+ > > MfG, JBG
