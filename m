@@ -1,12 +1,12 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 25 Apr 2001 08:39:16 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] disk add means trouble: vgscan -- invalid i/o protocol version 5
-Message-ID: <20010425083916.C806@tykepenguin.com>
-References: <3ADB3B2A.B28AC133@mpi-hd.mpg.de> <20010416142849.B16508@sistina.com> <3ADF74AA.CEED3E97@mpi-hd.mpg.de> <20010420114908.C569@tykepenguin.com> <3AE5CB8F.C3449990@mpi-hd.mpg.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3AE5CB8F.C3449990@mpi-hd.mpg.de>; from Stefan.Helfert@mpi-hd.mpg.de on Tue, Apr 24, 2001 at 08:53:03PM +0200
+Return-Path: <fabian.herschel@suse.de>
+From: fabian herschel <fabian.herschel@suse.de>
+Subject: Re: [linux-lvm] vgscan does not found my VG, but pvscan does...
+Date: Wed, 25 Apr 2001 10:06:58 +0200
+References: <000901c0cd36$a80064a0$7d80a8c0@dyndns.org>
+In-Reply-To: <000901c0cd36$a80064a0$7d80a8c0@dyndns.org>
+MIME-Version: 1.0
+Message-Id: <01042510065800.15131@workstation>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,34 +19,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Apr 24, 2001 at 08:53:03PM +0200, Stefan Helfert wrote:
-> Patrick Caulfield wrote:
-> 
-> My kernel and user tools are in sync (lvm_0.8) and my initial problem
-> here is that I get the IOP message -- and I get this message out of the
-> blue. No software changes, no kernel changes, nothing else except adding
-> another disk drive, the configuration had been running stable since
-> ages. I do not see anything here except the vgscan error, and the output
-> of "vgscan -d" is here:
-> 
-> bash-2.04# vgscan -d                                                   
-> <1> lvm_get_iop_version -- CALLED
-> <22> lvm_check_special -- CALLED
-> <22> lvm_check_special -- LEAVING
-> <1> lvm_get_iop_version -- AFTER ioctl ret: 0 
-> <1> lvm_get_iop_version -- LEAVING with ret: 5   
-> vgscan -- invalid i/o protocol version 5
+On Wednesday 25 April 2001 05:20, you wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+>
+> Have you tried a vgimport?
 
-Sorry, but if you're getting an invalid IOP message then the kernel and tools
-can't possibly be in sync, that's what "in sync" means in this context.
+Yes I did. vgimport does not want to import the VG, because it is not an 
+exported one :((.
 
-There's nothing that can happen just by adding a disk drive (unless it has some
-other tools on it that appear in the PATH) that can cause this.
+On an other machine I had the same problem and I tried to make a vgexport.
+The _export_ went well (the VG was exported but I could not re-import it ).
 
-All I can suggest is that you download the user tools that match your kernel and
-rebuild them.
+I tried some things last night... 
+  - First I have saved the heder blocks (VGDA) with dd (dd if=/dev/sda1   \
+     of=/root/HEAD_sda1 count=4596 bs=512) 
+  - Then I called a vgcfgrestore -n sysvg /dev/sda1.
+  - Now pvscan tells me both PVs are in the VG sysvg. 
+  - "vgchange -ay sysvg" activated the VG and the LVs could me mounted 
 
-patrick
+BUT
+  - vgscan does NOT find the sysvg!!!
+  - After a reboot the sysvg is not available.
+  - Every time I have to call a vgcfgrestore :((
+
+I have written a C-program which could retrieve all data from a LV, if pvdata 
+-E reports correctly, but the LV could not be activated. But this is only a 
+very bad work arround to retrieve my data. But I need a way to reactivate my 
+VG, so it could be found by vgscan.
+
+I'm hopeful we will find a solution.
+Fabian Herschel
