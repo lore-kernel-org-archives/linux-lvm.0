@@ -1,13 +1,9 @@
-Return-Path: <allanwind@mediaone.net>
-Date: Mon, 23 Jul 2001 10:31:08 -0400
-Subject: Re: [linux-lvm] I/O error: dev 08:11, sector 0
-Message-ID: <20010723103108.A19532@digit-safe.dyndns.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
-Content-Disposition: inline
-In-Reply-To: <20010723100203.C10807@sistina.com>
-From: Allan M. Wind <allanwind@mediaone.net>
+Return-Path: <plamb_98@yahoo.com>
+Message-ID: <20010724014053.45142.qmail@web13402.mail.yahoo.com>
+Date: Mon, 23 Jul 2001 18:40:53 -0700 (PDT)
+From: Pierre Lamb <plamb_98@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,45 +15,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---8t9RHnE3ZwKMSgU+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I recomplied my kernel (2.4.3-12) to include lvm as a
+module, added the entries to "modules.conf" made the
+pe/vg/lvol finally added vgscan and vgchange -ay to
+rc.sysinit before hte line mounting the other fs.  The
+problem is it does not do the vgscan/vgchane during
+the boot ptocess thus forcing me to do these 2 steps
+after logging in. What am I missing
 
-On 2001-07-23 10:02:03, Heinz J. Mauelshagen wrote:
+Pierre
 
-> > Used `pvcreate /dev/sdb1` (instead of /dev/sdb) and everything works
-> > as expected.  I suspect there is a bug with the combination of linux
-> > 2.4.6 (devfsd) and lvm 0.9.1beta7 causing a non-functional partition
-> > to be created when you use the raw disk partition.
->=20
-> Are you able to reporduce this?
-
-Yes, in the sense that I managed to get into this condition twice using the
-steps outlined earlier in the thread.  It will be a bit painful for me
-to provide more data at this point, but I will backup/restore if needed.
-
-
-/Allan
---=20
-Allan M. Wind			email: allanwind@mediaone.net
-P.O. Box 2022			finger: awind@digit-safe.dyndns.org (GPG/PGP)
-Woburn, MA 01888-0022
-USA
-
---8t9RHnE3ZwKMSgU+
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD4DBQE7XDUserJrYp1ydncRAkBCAJ0TBlOBrk7tU7RUduF5R5VTO4e9AwCXdEQh
-LCh4hPiPg0awuuGsbVmx3A==
-=rhZZ
------END PGP SIGNATURE-----
-
---8t9RHnE3ZwKMSgU+--
+__________________________________________________
+Do You Yahoo!?
+Make international calls for as low as $.04/minute with Yahoo! Messenger
+http://phonecard.yahoo.com/
