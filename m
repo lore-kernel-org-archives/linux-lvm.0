@@ -1,8 +1,11 @@
-From: James Hawtin <oolon@ankh.org>
-In-Reply-To: <26540000.1011646741@duke.wrkhors.com>
-Message-Id: <Pine.LNX.4.10.10201220040080.20722-100000@pzat.meep.org>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] extending a logical volume
+Message-Id: <20020121192859.H4014@lynx.turbolabs.com>
+References: <E16Sist-000136-00@arwen.dev33.cvf>
 MIME-Version: 1.0
-Subject: [linux-lvm] Whats wrong with this picture?
+Content-Disposition: inline
+In-Reply-To: <E16Sist-000136-00@arwen.dev33.cvf>; from ppons@cvf.fr on Mon,
+    Jan 21, 2002 at 07:09:31PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,33 +16,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 21 18:47:01 2002
+Date: Mon Jan 21 20:29:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Pierrick PONS <ppons@cvf.fr>
+Cc: linux-lvm@sistina.com
 
---- Physical volume ---
-PV Name               /dev/ide/host2/bus1/target0/lun0/part4
-VG Name               sunset_vg
-PV Size               11.24 GB / NOT usable 51.50 MB [LVM: 125.00 KB]
-PV#                   2
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                4
-PE Size (KByte)       32768
-Total PE              358
-Free PE               0
-Allocated PE          358
-PV UUID               0jqg8y-LkA2-vZ1w-jHpv-cSY6-t7sh-BcmDS6
+On Jan 21, 2002  19:09 +0100, Pierrick PONS wrote:
+> I've read the extending logical volume section and I can't believe this.
+> According to the doc, it would be impossible to extend a logical volume 
+> without unmounting it first.
 
-My PE size 32M yet my unusable space is > 32M 
+LV resize != fs resize.
 
-I tested this with different PE sizes and found that the unusable space
-reported is aways in the range >= 1PE and < 2PE
+> I'm using a ext3 (with a 2.4.17 kernel) filesystem and I'd like to extend my 
+> logical volume without unmounting it first. This would be used on a
+> production server, so I can't unmount any logical volume.
 
-I would have expected it in the range >=0PE and <1PE
+Currently, you cannot online resize ext3, but that is only because the code
+which I wrote to do this for 2.2 was never released, and it has not been
+ported to 2.4/2.5 yet.
 
-Why is this not so?
+> I've seen that a ext2online patch does exist, maybe this fonctionnality is 
+> still implemented in a newer kernel ?
 
-James
+No, still only available as a patch.  The ext2 online resizing patch is
+very solid.  The ext3 code is, by necessity, a total rewrite of the code
+to work with ext3 journaling, but the fundamental concepts are the same.
+
+> Could you give me, if it exists, a method to extend the size without unmount 
+> the logical volume ?
+
+Use ext2 + ext2online patch (not great, because you probably crash more
+often than you need to resize), use ext3 but no online resizing (offline
+resizing works just fine with ext2resize), or work on porting the ext3
+resizing code to 2.4.
+
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
