@@ -1,16 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7NKpQa08272
-	for <linux-lvm@redhat.com>; Mon, 23 Aug 2004 16:51:26 -0400
-Received: from bureau8.utcc.utoronto.ca (bureau8.utcc.utoronto.ca
-	[128.100.132.18])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i7NKpEe1006985
-	for <linux-lvm@redhat.com>; Mon, 23 Aug 2004 16:51:19 -0400
-Message-ID: <1093294244.412a58a4dbdc9@webmail.utoronto.ca>
-Date: Mon, 23 Aug 2004 16:50:44 -0400
-From: mike.czajka@utoronto.ca
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7PJP7305733
+	for <linux-lvm@redhat.com>; Wed, 25 Aug 2004 15:25:07 -0400
+Received: from mail2.m-cam.com ([63.124.102.77])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i7PJP27w019759
+	for <linux-lvm@redhat.com>; Wed, 25 Aug 2004 15:25:02 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail2.m-cam.com (Postfix) with ESMTP id AB8A33E8EE
+	for <linux-lvm@redhat.com>; Wed, 25 Aug 2004 15:19:37 -0400 (EDT)
+Received: from mail2.m-cam.com ([127.0.0.1])
+	by localhost (mail2.m-cam.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 04614-07 for <linux-lvm@redhat.com>;
+	Wed, 25 Aug 2004 15:19:36 -0400 (EDT)
+Received: from [192.168.1.21] (unknown [192.168.1.21])
+	by mail2.m-cam.com (Postfix) with ESMTP id E89E83E8B9
+	for <linux-lvm@redhat.com>; Wed, 25 Aug 2004 15:19:35 -0400 (EDT)
+Message-ID: <412CE781.9000409@m-cam.com>
+Date: Wed, 25 Aug 2004 15:24:49 -0400
+From: Arshavir Grigorian <ag@m-cam.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Subject: [linux-lvm] FS recovery from lost vg, pv data
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] partition strategy
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,25 +30,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hello;
+Hi,
 
-I have a (probably common and detested) LVM1 recovery question: how can i get
-the data off my /dev/hda3 (LVM partition) which previously housed a VG and a few
-LVs whose metadata is now lost, having done a 'pvcreate -ff /dev/hda3' and a
-'vgcreate vg /dev/hda3'? The actual data is in a few reiserfs3 partitions of
-unknown sizes (unknown number of LVs, approximately 4). 
+This is my first post, so please bear with me.
 
-I removed my /dev/hdb PV using vgreduce, after attempting a pvmove (but it
-seemed that it wasn't used). After a reboot I couldn't mount my root LV (it was
-a very bad idea to make a root lv), and after booting using a bootCD vgscan
-exited with 'error pv_read_pe can't get data of volume group from physical
-volume' (roughly). So this is when I tried 'pvcreate -ff' and created a new vg.
-However, I cannot guess at the LV information. 
+I have 2 free disk areas 230G and 231G. I hoping to take advantage of 
+RAID-0.
 
-Any help would be greatly appreciated.
+Is it better to create 3 partitions 2 x230G + 1G - create a striped LV 
+over the first 2, then add the third to the volume group, then extend 
+the LV over to the new 1G extension (since LVM2 allows extending striped 
+lv-s). And if so, does the non-striped area get used as a last resort 
+(after the striped area is completely full)?
 
-Thanks,
--Mike
+OR
+
+Is it better to create 2 paritions 230G and 231G, put both in a vg, 
+create a striped lv and lvm will take care of striping to the 230G mark, 
+then writing linearly afterwards.
+
+TIA for any advice.
+
+
+
+Best,
+
+Arshavir
