@@ -1,10 +1,10 @@
-Date: Thu, 11 Oct 2001 13:49:36 -0400
+Date: Thu, 11 Oct 2001 14:16:36 -0400
 From: Chris Mason <mason@suse.com>
-Message-ID: <1373740000.1002822576@tiny>
+Message-ID: <1383150000.1002824196@tiny>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Subject: [linux-lvm] [PATCH] fix oops when snapshots get full
+Subject: [linux-lvm] [PATCH] snapshots on unaligned lvs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,51 +19,79 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi guys,
+Hello everyone,
 
-Here's a repost of the patch that fixes oopsen when snapshots
-get full.  Please comment and/or include ;-)
+This patch fixes 1.0.1-rc4 to be able to take snapshots of unaligned
+logical volumes (created by some of the betas).  It also fixes
+a counting error in the loop in lvm_snapshot_COW.
 
-Against 1.0.1rc4, the bug should affect all kernel versions.
+Nothing fancy here, I just changed it to use the hard sector size
+as the blocksize sent to brw_kiovec.  I've tested with beta7 and
+rc4 logical volumes, additional testing is more than welcome.
 
 -chris
 
---- 0.21/drivers/md/lvm.c Sun, 07 Oct 2001 22:15:54 -0400 
-+++ 0.21(w)/drivers/md/lvm.c Mon, 08 Oct 2001 15:54:42 -0400 
-@@ -1142,7 +1142,8 @@
+--- 0.36/drivers/md/lvm-snap.c Thu, 11 Oct 2001 10:17:22 -0400 
++++ 0.36(w)/drivers/md/lvm-snap.c Thu, 11 Oct 2001 14:11:50 -0400 
+@@ -326,6 +326,7 @@
+ {
+ 	const char * reason;
+ 	unsigned long org_start, snap_start, snap_phys_dev, virt_start, pe_off;
++	unsigned long phys_start ;
+ 	int idx = lv_snap->lv_remap_ptr, chunk_size = lv_snap->lv_chunk_size;
+ 	struct kiobuf * iobuf;
+ 	unsigned long blocks[KIO_MAX_SECTORS];
+@@ -360,8 +361,14 @@
  
- 	/* we must redo lvm_snapshot_remap_block in order to avoid a
- 	   race condition in the gap where no lock was held */
--	if (!lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv) &&
-+	if (lv->lv_block_exception && 
-+	    !lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv) &&
- 	    !lvm_snapshot_COW(rdev, rsector, pe_start, rsector, vg, lv))
- 		lvm_write_COW_table_block(vg, lv);
+ 	iobuf = lv_snap->lv_iobuf;
  
-@@ -1151,11 +1152,12 @@
+-	blksize_org = lvm_get_blksize(org_phys_dev);
+-	blksize_snap = lvm_get_blksize(snap_phys_dev);
++	blksize_org = get_hardsect_size(org_phys_dev);
++	blksize_snap = get_hardsect_size(snap_phys_dev);
++
++	/* org_start must not change, we use it later on to fill in the
++	** exception table
++	*/
++	phys_start = org_start ;
++
+ 	max_blksize = max(blksize_org, blksize_snap);
+ 	min_blksize = min(blksize_org, blksize_snap);
+ 	max_sectors = KIO_MAX_SECTORS * (min_blksize>>9);
+@@ -376,7 +383,7 @@
  
- static inline void _remap_snapshot(kdev_t rdev, ulong rsector,
- 				   ulong pe_start, lv_t *lv, vg_t *vg) {
--	int r;
-+	int r = 0;
+ 		iobuf->length = nr_sectors << 9;
  
- 	/* check to see if this chunk is already in the snapshot */
- 	down_read(&lv->lv_lock);
--	r = lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv);
-+	if (lv->lv_block_exception)
-+		r = lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv);
- 	up_read(&lv->lv_lock);
+-		if(!lvm_snapshot_prepare_blocks(blocks, org_start,
++		if(!lvm_snapshot_prepare_blocks(blocks, phys_start,
+ 						nr_sectors, blksize_org))
+ 			goto fail_prepare;
  
- 	if (!r)
-Index: 0.21/drivers/md/lvm-snap.c
---- 0.21/drivers/md/lvm-snap.c Sat, 06 Oct 2001 00:07:22 -0400 root (linux/i/c/38_lvm-snap.c 1.1.2.1.2.1 644)
-+++ 0.21(w)/drivers/md/lvm-snap.c Mon, 08 Oct 2001 15:13:10 -0400 root (linux/i/c/38_lvm-snap.c 1.1.2.1.2.1 644)
-@@ -140,6 +140,8 @@
- 	unsigned long mask = lv->lv_snapshot_hash_mask;
- 	int chunk_size = lv->lv_chunk_size;
+@@ -391,6 +398,9 @@
+ 		if (__brw_kiovec(WRITE, 1, &iobuf, snap_phys_dev, blocks,
+ 				 blksize_snap, lv_snap) != (nr_sectors<<9))
+ 			goto fail_raw_write;
++
++		phys_start += nr_sectors ;
++		snap_start += nr_sectors ;
+ 	}
  
-+	if (!hash_table)
-+		BUG() ;
- 	hash_table = &hash_table[hashfn(org_dev, org_start, mask, chunk_size)];
- 	list_add(&exception->hash, hash_table);
- }
+ #ifdef DEBUG_SNAPSHOT
+@@ -605,7 +615,7 @@
+ 	snap_phys_dev = lv_snap->lv_block_exception[idx].rdev_new;
+ 	snap_pe_start = lv_snap->lv_block_exception[idx - (idx % COW_entries_per_pe)].rsector_new - lv_snap->lv_chunk_size;
+ 
+-	blksize_snap = lvm_get_blksize(snap_phys_dev);
++	blksize_snap = get_hardsect_size(snap_phys_dev);
+ 
+         COW_entries_per_block = blksize_snap / sizeof(lv_COW_table_disk_t);
+         idx_COW_table = idx % COW_entries_per_pe % COW_entries_per_block;
+@@ -654,7 +664,7 @@
+ 			idx++;
+ 			snap_phys_dev = lv_snap->lv_block_exception[idx].rdev_new;
+ 			snap_pe_start = lv_snap->lv_block_exception[idx - (idx % COW_entries_per_pe)].rsector_new - lv_snap->lv_chunk_size;
+-			blksize_snap = lvm_get_blksize(snap_phys_dev);
++			blksize_snap = get_hardsect_size(snap_phys_dev);
+ 			blocks[0] = snap_pe_start >> (blksize_snap >> 10);
+ 		} else blocks[0]++;
+ 
