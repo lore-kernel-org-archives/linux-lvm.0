@@ -1,10 +1,10 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Swap on LVM - swapoff problem - more info
-Message-ID: <20030409123754.A476@uk.sistina.com>
-References: <1049881311.8416.142.camel@ariel>
+From: Joe Thornber <thornber@sistina.com>
+Subject: Re: [linux-lvm] Are there problems with same VG on same hard disk?
+Message-ID: <20030409113519.GE1943@fib011235813.fsnet.co.uk>
+References: <20030409112739.GA1244@glorybox>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1049881311.8416.142.camel@ariel>; from george.karaolides@planitis.net on Wed, Apr 09, 2003 at 12:41:51PM +0300
+In-Reply-To: <20030409112739.GA1244@glorybox>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  9 06:38:01 2003
+Date: Wed Apr  9 06:39:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: debian-user@lists.debian.org
 
-On Wed, Apr 09, 2003 at 12:41:51PM +0300, George Karaolides wrote:
-> The problem is caused by running vgscan while swap is active on the LVM
-> device (not necessarily actually using swap space; just active).  
+On Wed, Apr 09, 2003 at 01:27:39PM +0200, Kai Weber wrote:
+> Hi,
+> 
+> Question: Is it good to have /dev/hdb1 /dev/hdb2 into the same Volume
+> Group? I think I have read that VGs of the same group should not be on
+> the same hard disk. Is this correct or a legend?
 
-> I modified the "start" case of the lvm init script to run swapoff before
-> running vgscan, and swapon after.
+This is fine.  There are a couple of situations that you will have to
+look out for when setting up LVs though:
 
-If you really want to experiment with swap on an LVM volume (why?) you 
-should resequence your startup so that vgscan gets run *after* /etc
-is mounted but *before* setting up swap.
+1) Don't create a striped LV with the stripes on the same physical device.
+2) Try not to create a snapshot on the same physical device as the origin.
 
-It's rather late running vgscan after you've *already* started up LVM.
-vgscan should be run to detect LVM-related disk configuration changes
-*before* using LVM proper.
+Point 2 you can get away with, snapshot performance will just be poor.
 
-Alasdair
--- 
-agk@uk.sistina.com
+- Joe
