@@ -1,10 +1,10 @@
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] cannot mount snapshot volumes
-Message-ID: <20020925071719.GH1291@tykepenguin.com>
-References: <001201c263e0$584c1340$db64a8c0@marien>
+Subject: Re: [linux-lvm] Disk crash , LVM and ext2... (bis)
+Message-ID: <20020925075113.GK1291@tykepenguin.com>
+References: <3D90EBDA.5070605@free.fr> <20020925071843.GI1291@tykepenguin.com> <3D91674F.3040601@free.fr>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <001201c263e0$584c1340$db64a8c0@marien>
+In-Reply-To: <3D91674F.3040601@free.fr>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,34 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 25 02:44:44 2002
+Date: Wed Sep 25 02:57:44 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Sep 24, 2002 at 05:37:50PM +0200, Marien Tielemans - Van Boxtel Software BV wrote:
->    Hello ,
->     
->    I am using a stock RedHat 7.3 server (ext 3 fs) with lvm 1.0.3 installed ,
->    i upgraded lvm to 1.0.5 ( kernel patch etc.).
->    LVM works fine however i cannot mount the created snapshot volume.
->     
->    When doing a mount the server tells me : Wrong fs type , bad option, bas
->    superblock on /dev/lvmgroup1/snapshot , or too many mounted file systems.
->     
->    In the mailing list i read that the solution for this problem : patch the
->    kernel with  linux-2.4.18-VFS-lock.patch.( applied in the 1.0.5 tar file)
->     
->    However when i apply the patch i get messages about Reverse patches and
->    several chunks and files not being patched .So compiling the kernel again
->    also gives problems.
->     
->    I like to know, is there another patch file i have to use , or a better
->    solution for this problem ?
+On Wed, Sep 25, 2002 at 09:35:43AM +0200, Emmanuel Varagnat wrote:
+> Patrick Caulfield wrote:
+> >
+> >LVM1 can't retrieve data from a VG with a crashed PV (That's what your 
+> >backups
+> >are for).
+> >
+> >LVM2 can if you active the VG with the -P (--partial) flag. LVM2 can read 
+> >LVM2
+> >metadata.
 
-Which kernel version are you using? The VFS lock patch will probably only apply
-to the named kernel.org kernel.
+I meant, of course, that LVM2 can read LVM1 metadata :-)
+ 
+> This system was on a Slackware 8.0, with a 2.4.18 kernel and LVM 
+> compiled by myself (can't remember the version).
+> 
+> I'm gonna take a look a this.
+
+Don't forget, you'll need the "device-mapper" kernel patches too. They work best
+with 2.4.19 kernels, there were VM problems with 2.4.18 ones.
 
 -- 
 
