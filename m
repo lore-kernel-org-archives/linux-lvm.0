@@ -1,136 +1,76 @@
-From: "Justin Hamilton" <JHamilton@Earthling.Net>
-Subject: RE: [linux-lvm] Cannot access VG due to "hd error"
-Date: Wed, 2 Aug 2000 05:47:53 -0400
-Message-ID: <NDBBKIEANAMHBNPAILKPAEDICLAA.JHamilton@Earthling.Net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <34BE27FD7F4BD111B9C600805F15B7DC016E7D99@info-akh.linz.at>
+Date: Wed, 2 Aug 2000 12:04:57 +0200
+From: Jens Benecke <jens@pinguin.conetix.de>
+Subject: Re: [linux-lvm] Generic resize tool
+Message-ID: <20000802120457.E28254@pinguin.conetix.de>
+References: <200008011842.e71IgcS27484@webber.adilger.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+In-Reply-To: <200008011842.e71IgcS27484@webber.adilger.net>; from adilger@turbolinux.com on Tue, Aug 01, 2000 at 12:42:38PM -0600
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Michelic Adalbert <adalbert.michelic@akh.linz.at>, linux-lvm@msede.com
-
-Hi there Michelic,
-
-I believe this is a Kernel issue.  Take a look at the following, I think it
-fits you needs:
-
-ATA/IDE/MFM/RLL support
-->IDE, ATA and ATAPI Block devices
---->Use multi-mode by default
-
-CONFIG_IDEDISK_MULTI_MODE:
-
-If you get this error, try to say Y here:
-hda: set_multmode: status=0x51 { DriveReady SeekComplete Error }
-hda: set_multmode: error=0x04 { DriveStatusError }
-If in doubt, say N.
-
-Hope that helps.
-
-Justin
+To: Linux LVM mailing list <linux-lvm@msede.com>
 
 
-> -----Original Message-----
-> From: owner-linux-lvm@msede.com [mailto:owner-linux-lvm@msede.com]On
-> Behalf Of Michelic Adalbert
-> Sent: Wednesday, August 02, 2000 5:31 AM
-> To: 'linux-lvm@msede.com'
-> Subject: [linux-lvm] Cannot access VG due to "hd error"
->
->
-> Hello,
->
-> I have the following problem:
->
-> I had the following disks in my machine:
->   hda: several partionions; hda6 is a PV
->   hdc: hdc is a PV
->   hde: temporary disk; hde1 was ReiserFS
->
-> On my hdc-disk I had a ext2-filesystem and i wanted to move this
-> to a ReiserFS on a LVM-volume, so i put in the hde-disk; copied
-> everything to hde, then i did the following:
->   pvcreate /dev/hdc
->   vgextend vg01 /dev/hdc
-> a cat /proc/lvm told me, that there are 1007 LE on /dev/hdc
->   lvcreate -l 1007 -n mp3z vg01 /dev/hdc
-> (I wanted the mp3z-volume to completly reside on the hdc-disk, so
-> i could turn it off, since it is very rarely used).
->
-> everything okay; then i created the filesystem on /dev/vg01/mp3z
-> and copied all files from /dev/hde1 to /dev/vg01/mp3z, changed
-> the mountpoint in /etc/fstab and mounted it. /dev/hde was now
-> not in use anymore.
->
-> Now i have shutdown my machine, removed /dev/hde and rebooted.
->
-> Now vgscan gave me errors like the following:
-> hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->   Error }    <-- one line
-> hdc: read_intr: error=0x04 { DriveStatusError }
->
-> I thought the disk is defect and have re-inserted /dev/hde and
-> moved the whole /dev/hdc to /dev/hde (dd id=/dev/hdc of=/dev/hde
-> bs=1k), then I inserted the new hde-disk as secondary master (hdc).
->
-> Copying was okay; the new hde disk is (tested!) 100% okay; it is not
-> physically defect.
->
-> After rebooting I got still the same errors, so I thought the
-> controller might be defect and tried inserting it is /dev/hde.
->
-> But the errors are still the same - with the disk inserted as
-> /dev/hde I get the following output from vgscan:
->
-> <vgscan>
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   ide2: reset success
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   ide2: reset success
->   hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
->      Error }
->   hde: read_intr: error=0x04 { DriveStatusError }
->   end_request: I/O error, dev 21:01 (hde), sector 0
->   vgscan -- found inactive voulme group "vg01"
->   vgscan -- error -154: can't get data of volume group "vg01" from \
->      physical volume(s)
->   vgscan -- error -154: creating /etc/lvmtab and /etc/lvmtab.d
-> </>
->
-> I'm using lvm version 0.8e with Kernel 2.2.14 (this is the Kernel that
-> is shipped with SuSE 6.4).
->
-> This messages sound like a hardware problem, but I think this is a
-> problem with the LVM, because the occur always - I have tried to use
-> another disk (which is completely new), I have to user another IDE-
-> cable (a new U-DMA/66 cable), i tried another controller.
->
-> Has anyone an idea, what this could be?
->
->
-> Please excuse my bad english,
->
-> Rgds, Adalbert
->
->
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Aug 01, 2000 at 12:42:38PM -0600, Andreas Dilger wrote:
+
+> Hello, I'm wondering if people are interested in having a more generic
+> resize tool than the current e2fsadm.  I've updated e2fsadm to have
+> support for the GNU ext2resize tools (ext2resize and ext2online) in
+> addition to resize2fs, but I was wondering about adding support for
+> reiserfs resizing as well.  At this point e2fsadm isn't a very good name
+> for it anymore.
+=20
+One suggestion, also for Heinz: PLEASE put a notice into "lvresize" that
+you might actually be better off with e2fsadm, if the lv is formatted ext2.
+So that you use
+
+	pvcreate
+	vgextend
+	e2fsadm
+
+instead of
+
+	pvcreate
+	vgextend
+	lvextend
+
+and then being stuck with not knowing how (and how much) to resize the FS
+within.
+
+
+Another question: If I shrink a LV, how do I know what PVs in the VG get
+freed? i.e. I have  one big LV in VG00 =3D (hda1 hdb2 hdc1)  and I want to
+remove hdb2 out of the VG.=20
+
+
+--=20
+ciao, Jens (mailaddr im Header)                 http://www.pinguin.conetix.=
+de
+"Schiebe nie etwas auf Boshaftigkeit, was           http://www.hitch-hiker.=
+de
+ausreichend durch Dummheit erkl=E4rt werden kann."       http://www.linuxfa=
+q.de
+
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iQEXAwUBOYfySbhrARHySzvPFAEoTwQAjnY9w5MyPLtjM3CsvJdhZIkssG7N9+BS
+uBxPVyfkHFBvvks7eC+7cMw8BHsJ8nWiIqhf+zZgVbYQdhoWBL/JGjd98dT6YklU
+nTmzqOBMy37O3K+2c/MQJCaYtH9+l9GUTMPQtB92bQjnlDrZtJSdoOAnfE7qvj4w
+2UFQMZVzClUEAKnOo1cVbzmCLclmoCJg6xbMasR/PrtQ7yhkls+0/6tsv62TyuCs
+nWdT0TYe1G6cexbQ3Rkdft0UczSA5inYCBoFsPCqG70ZmV9w5ED9FfjsguwujCEe
+RV49UFAOqdLajWoRg3nQf58K9urOVb68V2NqFE/GCTDTpWk/y5wXEB9u
+=sLId
+-----END PGP SIGNATURE-----
+
+--qlTNgmc+xy1dBmNv--
