@@ -1,11 +1,11 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Mon, 15 Jan 2001 17:22:00 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200101151709.f0FH9vn23739@webber.adilger.net>
 Subject: Re: [linux-lvm] hard-lock seems to have caused serious LVM problems
-Message-ID: <20010115172200.A31217@srv.t-online.de>
-References: <20010115110358.A3757@jhereg.dmeyer.net>
-Mime-Version: 1.0
-In-Reply-To: <20010115110358.A3757@jhereg.dmeyer.net>; from dmeyer@dmeyer.net on Mon, Jan 15, 2001 at 11:03:58AM -0500
+In-Reply-To: <20010115100048.B23471@yendi.dmeyer.net> "from dmeyer@dmeyer.net
+ at Jan 15, 2001 10:00:48 am"
+Date: Mon, 15 Jan 2001 10:09:57 -0700 (MST)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,71 +21,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jan 15, 2001 at 11:03:58AM -0500, dmeyer@dmeyer.net wrote:
-> In article <20010115162523.A31019@srv.t-online.de> you write:
-> > Every PV is assumed to hold all the PV UUIDs of all PVs in the volume group
-> > the PV belongs to.
+Dave writes:
+> Does the following seem right?
+
+> # pvdata -U /dev/hdb1 /dev/hdb5 /dev/hdb6 /dev/sda1 /dev/sda2
+> --- List of physical volume UUIDs ---
 > 
-> The PVs and VGs were created with 0.8final - I migrated to 0.9 tools
-> when I upgraded to linux-2.4.0.  Could it be related to that somehow?
-
-No, it shouldn't.
-0.9 created PV UUIDs automagically in case there were none before.
-
+> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+> 001: --- EMPTY ---
+> 002: --- EMPTY ---
+> 003: --- EMPTY ---
+> 004: --- EMPTY ---
+> --- List of physical volume UUIDs ---
 > 
-> Interestingly enough, something seems to have fixed my PVs in the
-> meantime - now they all have every UUID.  Either activating the VG or
-> running vgck must have done it.
-
-No, it doesn't happen while activating VGs or checking them.
-
-The following tools call vg_write_with_pv_and_lv() in the library
-which in turn calls pv_write_uuidlist() to do the UUID list update:
-
-lvcreate
-lvextend
-lvreduce
-lvremove
-lvrename
-vgcfgrestore
-vgchange (in case you change the max LV property)
-vgcreate
-vgexport
-vgextend
-vgimport
-vgmerge
-vgreduce
-vgrename
-vgscan
-vgsplit
-
-You must have run one of those tools in order to update the UUID list.
-It is still rather interesting what caused the mess you reported in the first
-place.
-
+> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+> 002: --- EMPTY ---
+> 003: --- EMPTY ---
+> 004: --- EMPTY ---
+> --- List of physical volume UUIDs ---
 > 
-> -- 
-> David M. Meyer
-> dmeyer@dmeyer.net
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+> 002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
+> 003: --- EMPTY ---
+> 004: --- EMPTY ---
+> --- List of physical volume UUIDs ---
+> 
+> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+> 002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
+> 003: m2wuLpJ9AQmzXnbk4sCuQu8hjAev7pax
+> 004: --- EMPTY ---
+> --- List of physical volume UUIDs ---
+> 
+> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+> 002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
+> 003: m2wuLpJ9AQmzXnbk4sCuQu8hjAev7pax
+> 004: fdNejQ2DAp9A8KN0UrePxscwoY8vqVSu
+> 
+> Each PV only has the uuids from the PVs before it.  Should each PV
+> have the complete list of uuids in its VG (in which case there's
+> something screwy with my PVs)?  Or did pv_read_all_pv_of_vg somehow
+> pick the wrong PV to read the uuid list from?  Or something else?
 
+No, this looks wrong.  Each PV should have the UUID from all PVs in the VG.
+What you can do in the meantime (if you are confident with such things) is
+to copy the UUIDs from /dev/sda2 (or whichever has all 5 UUIDs) to all of
+the other disks.  You can do this with "od -Ad -a /dev/sda2" to find where
+the UUIDs are stored in the VG (note that each UUID has 32 ASCII characters
+and 96 NULs), and "dd" to copy but you obviously need to be careful.
+
+It may also work to change pv_read_all_pv_of_vg() to call pv_read_uuidlist()
+for each PV and find the one with the longest list of UUIDs (appropriately
+saving uuids_max and pv_uuid_list_max).  However, I'm not sure if that is a
+permanent solution - it should really be the same list on all PVs.
+
+Cheers, Andreas
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
