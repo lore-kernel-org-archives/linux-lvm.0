@@ -1,57 +1,60 @@
-Return-Path: <markj@reading.sgi.com>
-Message-ID: <3A1BC911.4B9669AA@reading.sgi.com>
-Date: Wed, 22 Nov 2000 13:24:33 +0000
-From: Mark Jeffery <markj@reading.sgi.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvcreate fails with invalid partition type.
+Return-Path: <blutgens@sistina.com>
+Date: Wed, 22 Nov 2000 18:52:16 -0600
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20001122185216.C773@titanium.sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="S1BNGpv0yoYahz37"
+Content-Disposition: inline
+Subject: [linux-lvm] list changes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@hermes.sistina.com
-Cc: Mark Jeffery <markj@reading.sgi.com>, Graham Russell <graham@reading.sgi.com>
+To: linux-lvm@mlists.sistina.com
 
-Hi,
+--S1BNGpv0yoYahz37
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am trying to use LVM on an array of 8 SCSI disks with a 2.4 kernel and
-devfs.
+Greetings all, the linux-lvm list now being hosted by Sistina Software as w=
+ell
+as the website. All list user-admin stuff can be handled online as we use=
+=20
+mailman. The URL's of interest are:
+http://lists.sistina.com/mailman/listinfo/lvm
 
-I run fdisk on each disk, and create a new primary partition (1) for the
-whole disk.
+You will also notice that linux.msede.com/lvm redirects you to
+http://www.sistina.com/lvm/ however the DNS records have not been updated y=
+et,
+you will be able to get to it from our site at http://www.sistina.com/
 
-I then set the type to 0x8e
+Please make all your postings to this list to=20
+linux-lvm@sistina.com
 
-When I run pvcreate, it fails. Here is the text:
+And a HUGE thanks to Michael Marxmeier for his tremendous help to Sistina
+Software and All the LVM crew on his hosting of the LVM stuff as well as his
+help making the assimilation of LVM into Sistina.
 
-[root@kryten 0.8final]# pvcreate /dev/scsi/host1/bus0/target*/lun0/part1
+Please refer all administrative questions to me. And thank you for your
+patience during our changes.
 
-pvcreate -- invalid partition type 0x42 for
-"/dev/scsi/host1/bus0/target10/lun0/part1" (must be 0x8e)
+--=20
+Ben Lutgens		cell: 612.670.4789
+Sistina Software Inc.	worl: 612.379.3951
+Code Monkey Support (A.K.A. System Administrator)
 
-I'm also showing the output from fdisk to "prove" that the disk id
-really is 0x8e.
+--S1BNGpv0yoYahz37
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-[root@kryten 0.8final]# fdisk -l
-/dev/scsi/host1/bus0/target10/lun0/part1
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Disk /dev/scsi/host1/bus0/target10/lun0/part1: 255 heads, 63 sectors,
-2212 cylinders
-Units = cylinders of 16065 * 512 bytes
+iD8DBQE6HGpALxkxGgLdGQgRAqQGAJ9+GBAlh0UJqERO5j4zTb1ZWZ0ytQCfRekt
+DLtQQC5n9nhV7nrWE0JcZJU=
+=C51r
+-----END PGP SIGNATURE-----
 
-                                    Device Boot    Start       End
-Blocks   Id  System
-/dev/scsi/host1/bus0/target10/lun0/part1p1             1      2212
-17767858+  8e  Unknown
-
-Is this a problem with devfs and lvm?
-
-Is there a workaround?
-
-Mark.
-
---
-Mark Jeffery                Tel: +44 118 925 7666
-Presales Analyst            Mob: +44 410 579828
-SGI                         Fax: +44 118 925 7699
-Email: markj@sgi.com        http://www.sgi.com
+--S1BNGpv0yoYahz37--
