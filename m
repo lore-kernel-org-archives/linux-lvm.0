@@ -1,12 +1,10 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 21 Feb 2001 16:12:17 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102211644.f1LGiee31545@webber.adilger.net>
 Subject: Re: [linux-lvm] snapshot of Reiserfs
-Message-ID: <20010221161217.A911@tykepenguin.com>
-References: <20010221141119.I568@tykepenguin.com> <2090960000.982769673@tiny>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2090960000.982769673@tiny>; from mason@suse.com on Wed, Feb 21, 2001 at 10:34:33AM -0500
+In-Reply-To: <20010221085959.C568@tykepenguin.com> from Patrick Caulfield at
+ "Feb 21, 2001 08:59:59 am"
+Date: Wed, 21 Feb 2001 09:44:39 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,41 +16,66 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Feb 21, 2001 at 10:34:33AM -0500, Chris Mason wrote:
-> 
-> 
-> On Wednesday, February 21, 2001 02:11:20 PM +0000 Patrick Caulfield
-> <caulfield@sistina.com> wrote:
-> 
-> [ non-intuitive snapshot patches for reiserfs ]
-> >  
-> >> In fact, why are these separate patches?  Shouldn't they
-> >> eventually be "the standard" and find their way into the
-> >> stock kernel?  It's arguably the correct behavior.
+Patrick writes:
+> On Tue, Feb 20, 2001 at 11:19:51PM -0500, lvm@winux.com wrote:
+> > I am using LVM 0.9.1 beta 5 on Linux 2.4.1 with Reiserfs.
+> > I have applied both of the following patches:
 > > 
-> > That is the intension. The patch is Chris Mason's and I beleive
-> > he is trying to get it into the kernel. Heinz emailed him about
-> > it recently, I don't know if he has had any reply yet.
+> > 0.9.1_beta5/PATCHES/lvm-0.9.1_beta5-2.4.1.patch
+> > 0.9.1_beta5/PATCHES/linux-2.4.1-VFS-lock.patch
 > > 
+> > Snapshots created when the filesystem is active cannot be mounted.
+> > If I `umount' the filesystem before creating the snapshot, all is well.
 > 
-> We can probably talk Alan into putting it in the ac series, but I'm not
-> expecting Linus to take it yet.  I'll send it along for 2.4.3preX though
-> (once 2.4.2 comes out), maybe we'll get lucky ;-)
+> Did you remember to uncomment LVM_VFS_ENHANCEMENT in lvm.c ?
 
-That sounds reasonable. With reiserfs and LVM in the kerel I thing there's a
-good argument for making them work well together. :-)
+Given that the VFS support for the *unlockfs methods is included in 2.4.1,
+this should probably become something like:
 
- 
-> Do you want the patch I send to turn on the VFS_ENHANCEMENT #define in
-> lvm.c?
+/* lvm_do_lv_create calls fsync_dev_lockfs()/unlockfs() */
+#if LINUX_KERNEL_VERSION >= KERNEL_VERSION(2,4,1)
+#define	LVM_VFS_ENHANCEMENT
+#else
+/* Need to apply a kernel patch to add lockfs/unlockfs VFS methods */
+/* #define	LVM_VFS_ENHANCEMENT */
+#endif
 
-I suppose it would be the easiest thing for users. Now LVM 0.9 is part of the
-standard kernel it means the patches can be applied in any order, which was my
-initial concern.
+Also, if the sync_supers_lockfs() method is changed to call write_super()
+if write_super_lockfs() doesn't exist, like:
 
 
-patrick
+ 		lock_super(sb);
+ 		if (sb->s_dev && (!dev || dev == sb->s_dev))
+-			if (sb->s_op && sb->s_op->write_super_lockfs)
+-				sb->s_op->write_super_lockfs(sb);
++			if (sb->s_op) {
++				if (sb->s_op->write_super_lockfs)
++					sb->s_op->write_super_lockfs(sb);
++				else if (sb->s_op->write_super)
++					sb->s_op->write_super(sb);
++			}
+ 		unlock_super(sb);
+	}
+
+
+then in lvm_do_lv_create we only need to call either fsync_dev() OR
+fsync_dev_lockfs(), instead of calling both like is currently done.
+
+#ifdef	LVM_VFS_ENHANCEMENT
+		/* VFS call to sync and lock the filesystem (if possible) */
+		fsync_dev_lockfs(org->lv_dev);
+#else
+		/* sync the original logical volume */
+		fsync_dev(org->lv_dev);
+#endif
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
