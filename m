@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200106041756.f54Hu4BT020372@webber.adilger.int>
-Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-In-Reply-To: <20010604010750.A2560@pc.ilinx> "from Brian J. Murrell at Jun 4,
- 2001 01:07:50 am"
-Date: Mon, 4 Jun 2001 11:56:04 -0600 (MDT)
+Return-Path: <mjt@tls.msk.ru>
+Message-ID: <3B1BDAA0.A02C0304@tls.msk.ru>
+Date: Mon, 04 Jun 2001 22:59:44 +0400
+From: Michael Tokarev <mjt@tls.msk.ru>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Migrating to an LVM system (boot/root) disk
+References: <200106041734.f54HYLbh020302@webber.adilger.int>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,72 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Brian writes:
-> When I try to boot with the LVM disk I get "LI" and that is it.  The
-> LILO docs say this about "LI":
+Andreas Dilger wrote:
 > 
-> This means the first-stage loader gained control; it thought it success-
-> fully loaded the second-stage loader; but it never got there.  This most
-> often occurs when the second-stage loader, '/boot/boot.b', is not load-
-> able using the BIOS.
+[]
+> Yes, you are correct that you know in advance which IOP version you need.
+> However, it is much easier for lvmcreate_initrd to just copy all of the
+> programs (including the wrapper) to the initrd, instead of trying to find
+> which ones are needed and which are not needed.  In the end, the wrapper
+> is one disk block + a few directory entries (no more space needed).
 
-Are you sure that you can boot directly from /dev/hdg and/or the partition
-that /dev/system/root lives on?  It may well be that the BIOS doesn't
-understand this disk (I have never tried it myself).  Have you ever tried
-booting from this setup without LVM?
+The wrapper is small enouth, but not all the tools.  If using only one
+version of lvmtools in initrd, then wrapper is just unnecessary complicates
+things (may be not an issue as you demonstrated).  If not, then size
+is in trouble.  BTW, I see no reasons on not using small wrapper's piece
+directly in mkinitrd, the only thing it should support is to determine
+lvm version from on-disk kernel file (is it possible?), not from a
+running kernel (or else all the tool versions should be in initrd).
 
-On my LVM/LILO test system, I first made a regular partition for /boot,
-and ensured that the BIOS could boot from there, and that I had all of
-the right files, etc.  Then I backed the whole thing up, turned the
-partition into a PV->VG->LV, restored the data and fixed up lilo.conf
-to have the LV name instead of the partition name, and re-ran lilo.
+> The problem is that "sed" is used in the wrapper script.  AFAIK, I do not
+> have "sed" in my wrapper script, so I don't know where it came from.  Can
+> you tell me where the wrapper script comes from that you are using and/or
+> post a copy to this list so it can be fixed?
 
-> Which would suggest to me that the mapping is not making it through
-> LVM correct me.  But I don't really know that much about how LILO
-> really works with the underlying device.
+I leave that to Steve Wray -- I personally not use any wrappers at all,
+and ever never saw mkinitrd script(s)... ;)
 
-I take it that this is not the other system we are talking about in which
-you are moving disks around, is it?  That would complicate matters a bit
-for trying to find the cause of this problem.
+> Cheers, Andreas
 
-> My current lilo.conf is:
-> 
-> boot=/dev/hdg
-> map=/boot/map
-> install=/boot/boot.b
-> vga=780
-> default=linux
-> keytable=/boot/us.klt
-> lba32
-> prompt
-> timeout=50
-> message=/boot/message
-> 
-> image=/boot/vmlinuz
->     label=linux
->     root=/dev/system/root
->     initrd=/boot/initrd-lvm-2.4.5-1.1mdk.gz
->     append=" hda=ide-scsi devfs=mount video=matrox:vesa:263"
->     read-only
-
-Could you check that the output of "lilo -v5" produces reasonable block
-numbers for your kernel image?  You can find out what "reasonable" is
-by checking "lvdisplay -v /dev/system/root" output for PV location of
-this LV, and then checking partition start offset via /proc/partitions.
-Finally, you can use debugfs to list the filesystem blocks used by the
-kernel image in that filesystem (via "stat file").
-
-If you go the route of making a regular /boot partition first, you can
-save the output of "lilo -v5" from before and after and compare.  There
-should be a fixed offset between the partition and LV case, which should
-match where your PE data starts (see "pvdata -PP /dev/hdX" and add pe_on_disk
-base and size to get start of PE 0 on disk).
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Regards,
+ Michael.
