@@ -1,37 +1,55 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
+Date: Mon, 19 Apr 1999 14:01:55 +0100 (BST)
+From: Tony Rogers <tony@racsys.demon.co.uk>
+Reply-To: Tony Rogers <tony@racsys.demon.co.uk>
+Subject: Re: [linux-lvm] System locks solid under LVM
+Message-ID: <Pine.LNX.3.96.990419134407.8939A-100000@websrv.afsuk.gecfs>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <14104.59686.582801.380743@dukat.scot.redhat.com>
-Date: Sat, 17 Apr 1999 21:03:50 +0100 (BST)
-Subject: Re: [linux-lvm] Swap/DB devices
-In-Reply-To: <199904171124.AA07700@mailgate1b.telekom.de>
-References: <199904171124.AA07700@mailgate1b.telekom.de>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: linux-lvm@msede.com, Stephen Tweedie <sct@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: stb@ep-ag.com
+Cc: linux-lvm@msede.com
 
-Hi,
+Hi there Klaus,
 
-On Sat, 17 Apr 1999 13:22:29 METDST, Heinz Mauelshagen
-<mauelsha@ez-darmstadt.telekom.de> said:
+Many thanks for your comments.
 
-> The LVM lib creates the device special nodes dynamically if a logical volume
-> is created by lvcreate(8) or found by vgscan(8)/vgimport(8).
+I am a little confused. If I do 'gcc -v' on my work box (I am at work
+now) it gives me:
+[rogers@websrv rogers]$ gcc -v                                                  
+Reading specs from /usr/lib/gcc-lib/i386-redhat-linux/2.7.2.3/specs             
+gcc version 2.7.2.3 
 
-> LVM function lv_create_node() has to be extended to create the raw
-> device too.  The LVM driver can then be accessed by that raw device
-> node _without_ modification.
+which is the version which you say gave you problems. If I do a 'man' on
+egcs, it takes me to the gcc page.
 
-No, it doesn't work that way.  The major/minor numbers for the raw
-devices are 100% meaningless.  Creating a raw device inode is all very
-well, but it won't do anything AT ALL until you have done a raw ioctl to
-bind it to a block device.
+Is there a difference between egcs and gcc these days?
 
-As long as you can create the LVM block devices either in some known
-location or with some known block device number, you can then bind a raw
-device on top without any changes to the driver underneath.
+I am reluctant to believe that the compiler is totally at fault, as the
+rest of the system seems to be fine, and my 'work' box was left on soak
+test over the weekend, and it was still rattling away this morning - very
+satisfying.
 
---Stephen
+Following a question from the list, I reconfigured my system so that I had
+two VGs, each containing 1 PV. The interesting thing is that they are now 
+on different disks. One is quite reliable, the other is very unreliable.
+
+Ordinarily I would say that this is hardware, but Win95 and non-LVM Linux
+has no problem with this disk, which is heavily used.
+
+It is looking more and more like LVM stresses the system just a little too
+far, and that the base system is not quite right.
+
+It might be interrupts - I don't know. It might be time to strip out all
+the other cards (again!).
+
+Unfortunately this does not help me much, as when LVM pushes it over the
+edge, it locks totally, and I can't poke around to figure out what went
+wrong.
+
+Anyway, thanks again. I'm still plugging away.
+
+Tony Rogers
+===========
