@@ -1,9 +1,10 @@
-From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] RPM for 1.0.8?
-Message-ID: <014c01c3b837$e7a491a0$c900a8c0@mithrandir>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20031129084035.GG22999@percy.comedia.it>
+From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] Insufficient allocatable extents suitable for striping for logical volume
+Message-ID: <20031201194911.GA4846@localhost>
+References: <34504.192.168.0.2.1069892769.squirrel@meuh.dyndns.org> <20031128095658.GA2263@tykepenguin.com> <35752.192.168.0.2.1070237300.squirrel@meuh.dyndns.org> <20031201010902.L16901@uk.sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20031201010902.L16901@uk.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,43 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 12:33:02 2003
+Date: Mon Dec  1 13:50:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-what you're saying then is that I can't run 1.0.8 at all
+On Monday, 01 December 2003, at 01:09:02 +0000,
+Alasdair G Kergon wrote:
 
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Luca Berra
-Sent: Saturday, November 29, 2003 12:41 AM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] RPM for 1.0.8?
+> Otherwise forget the striping, and create or extend LVs on the other
+> disk - LVM2 will let you specify a different number of stripes
+> when you extend an LV (e.g. lvextend -i1).
+>  
+Any idea about when "pvmove" for linux kernels 2.6.x could be ready for
+wider testing ?
 
-
-On Fri, Nov 28, 2003 at 03:16:22PM -0800, Erick Calder wrote:
->I can't find an RPM for the 1.0.8 version... surely someone's out there on
->RH??
->
->I've been trying to make one with the spec file for 1.0.3 (which comes
->included in Shriek) but am not having much success...
->
-uhm,
-afaik redhat's lvm 1.0.3 was modified by sct (toghether with the kernel
-part) to change pvmove behaviour, so if you are staying with rh's kernel
-i'd leave that package alone
+Greetings.
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Sid (Linux 2.6.0-test10-mm1)
