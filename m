@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Re: vgcreate problem
-From: qv6 <sundiatah1@comcast.net>
-In-Reply-To: <3F70473A.5090006@webhackande.se>
-References: <1064318752.23712.5.camel@localhost>
-	 <3F70473A.5090006@webhackande.se>
-Message-Id: <1064320516.23712.15.camel@localhost>
-Mime-Version: 1.0
+Subject: Re: [linux-lvm] device-mapper ioctl cmd 2 failed: Invalid argument
+Mime-Version: 1.0 (Apple Message framework v552)
+From: Joe Thornber <ethornber@yahoo.co.uk>
+In-Reply-To: <200309230924.44185.kevcorry@us.ibm.com>
+Message-Id: <E791AEC2-EDDA-11D7-BE69-000393CA5730@yahoo.co.uk>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,27 +14,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 23 08:38:01 2003
+Date: Tue Sep 23 10:30:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Kevin Corry <kevcorry@us.ibm.com>
+Cc: linux-lvm@sistina.com, Alasdair G Kergon <agk@uk.sistina.com>, Joe Thornber <thornber@sistina.com>
 
- 
-On Tue, 2003-09-23 at 09:14, Rickard Olsson wrote:
-> What does pvscan have to say?
-> 
-> And what does
-> 
->   vgcreate -v  /dev/genis /dev/ide/host0/bus0/target1/lun0/disc
-> 
-> give as output?
+On Tuesday, September 23, 2003, at 03:24 PM, Kevin Corry wrote:
+>
+> Do we think the v4 interface has now gotten enough testing to remove 
+> the v1
+> stuff from 2.6? :)
+>
 
+The next step is submit a patch that makes v4 the default.
 
-This is weird, but I tried this command a zillion times yesterday and it
-did not work. Just tried it now and it worked.
-
-vgcreate -v genis /dev/ide/host0/bus0/target0/lun0/disc
-
-Thanks to all for the tip.
-
-Qv6
+- Joe
