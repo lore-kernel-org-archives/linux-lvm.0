@@ -1,25 +1,24 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i68AR1001881
-	for <linux-lvm@redhat.com>; Thu, 8 Jul 2004 06:27:01 -0400
-Received: from e6.ny.us.ibm.com (e6.ny.us.ibm.com [32.97.182.106])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i68AR0e1016707
-	for <linux-lvm@redhat.com>; Thu, 8 Jul 2004 06:27:00 -0400
-Received: from northrelay04.pok.ibm.com (northrelay04.pok.ibm.com
-	[9.56.224.206])
-	by e6.ny.us.ibm.com (8.12.10/8.12.2) with ESMTP id i68AQsdu535482
-	for <linux-lvm@redhat.com>; Thu, 8 Jul 2004 06:26:54 -0400
-Received: from in.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by northrelay04.pok.ibm.com (8.12.10/NCO/VER6.6) with ESMTP id
-	i68ARiWm098306
-	for <linux-lvm@redhat.com>; Thu, 8 Jul 2004 06:27:46 -0400
-Message-ID: <40ED2239.D6F23803@in.ibm.com>
-Date: Thu, 08 Jul 2004 16:00:17 +0530
-From: Sachin Sant <sachinp@in.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm problem..
-References: <40EA7997.73FF330@in.ibm.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i68Eh6005528
+	for <linux-lvm@redhat.com>; Thu, 8 Jul 2004 10:43:06 -0400
+Received: from delos.mps.ohio-state.edu (delos.mps.ohio-state.edu
+	[128.146.37.15])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i68Eh5e1022707
+	for <linux-lvm@redhat.com>; Thu, 8 Jul 2004 10:43:05 -0400
+Received: from [128.146.37.193] (case.mps.ohio-state.edu [128.146.37.193])
+	(authenticated bits=0)
+	by delos.mps.ohio-state.edu (8.12.11/8.12.11) with ESMTP id
+	i68EgxsN029649
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 8 Jul 2004 10:42:59 -0400
+From: Tim Randles <tcr@pacific.mps.ohio-state.edu>
+Message-Id: <1089297779.9242.19.camel@case.mps.ohio-state.edu>
+Mime-Version: 1.0
+Date: Thu, 08 Jul 2004 10:42:59 -0400
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] lvm and renaming of drives
+Reply-To: tcr@pacific.mps.ohio-state.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -32,64 +31,29 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
+very brief characteristics:
+  large fileserver
+  RHEL v3 AS (2.4.21-based kernel)
 
-Never mind .. i got it...
+I have a large RAID device on an external SCSI chain.  Currently the 2
+drives I've carved out of this device are /dev/sdj and /dev/sdk. 
+Whenever I add a new drive to the internal SCSI chain on the machine the
+external devices drive letters increment (1 new internal -> /dev/sdk and
+/dev/sdl).  My question is, if I make /dev/sdk a physical volume what
+happens when I add a new internal drive?  Will LVM recognize that
+/dev/sdk is now /dev/sdl and activate the volume group/logical volumes
+without any problem?  I assume this isn't a problem with DM and 2.6, but
+I'm not there yet.
 
-Sachin Sant wrote:
-> 
-> Steps to Reproduce:
->    configure logical volume
-> vgscan
-> pvcreate /dev/hdc1
-> vgcreate vg1 /dev/hdc1
-> lvcreate -n lv001 -L 1000G vg1
-> 
-> After a reboot  when the machine comes up i see these messages
-> 
-> Remounting root filesystem in read-write mode:  [  OK  ]
-> Setting up Logical Volume Management: modprobe: modprobe: Can't locate
-> module
-> block-major-43
-> modprobe: modprobe: Can't locate module block-major-43
-> modprobe: modprobe: Can't locate module block-major-43
-> modprobe: modprobe: Can't locate module block-major-43
-> 
-> After adding the line " alias block-major-43 off" i can turn off these
-> messages.
-> 
-> Question :
->    Why is lvm looking for this block major 43 device [ nbd ]. Does it
-> scan all the block major devices to locate pv's.
-> 
-> I am using LVM 1.0.8 on RHEL 3.
-> 
-> --
-> Thanks
-> -Sachin
-> -----------------------------------
-> Sachin Sant
-> Linux Technology Center
-> IBM Software Lab
-> Bangalore, INDIA.
-> 
-> sachinp@in.ibm.com
-> Ph: 91-80-5044647
-> -----------------------------------
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks,
+Tim
+
 
 -- 
-Thanks
--Sachin
------------------------------------
-Sachin Sant
-Linux Technology Center
-IBM Software Lab
-Bangalore, INDIA.
-
-sachinp@in.ibm.com
-Ph: 91-80-5044647
------------------------------------
+Tim Randles
+Unix Administrator and Webmaster
+The Ohio State University
+Department of Physics Computing Facility
+Phone: 292-2630
+Email: tcr@pacific.mps.ohio-state.edu
+PGP key: http://www.physics.ohio-state.edu/~tcr/pgp.txt
