@@ -1,9 +1,10 @@
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130C024@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Date: Thu, 13 Sep 2001 14:11:59 -0600
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM
+Date: Thu, 13 Sep 2001 13:31:02 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPKEELDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] 33% of my space is missing?
+Content-Transfer-Encoding: base64
+In-Reply-To: <3BA0E6E9.6070108@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,44 +17,59 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hi all.
-
-I seem to be missing 100Gb out of a possible 300Gb!  Check it out:
-
-[root@filmore jdiehl]# fdisk -l | grep LVM
-/dev/sdb5           226      4402  33551721   8e  Linux LVM
-/dev/sdb6          4403      8579  33551721   8e  Linux LVM
-/dev/sdb7          8580     12756  33551721   8e  Linux LVM
-/dev/sdb8         12757     15030  18265873+  8e  Linux LVM
-/dev/sdc6          7015     14028  56339923+  8e  Linux LVM
-/dev/sdc7         14029     21042  56339923+  8e  Linux LVM
-/dev/sdc8         21043     28056  56339923+  8e  Linux LVM
-/dev/sdc9         28057     30945  23205861   8e  Linux LVM
-[root@filmore jdiehl]#
-
-Adding this space up, I get 311Gb.
-
-But:
-
-[root@filmore jdiehl]# lvdisplay /dev/Database2/data
---- Logical volume ---
-LV Name                /dev/Database2/data
-VG Name                Database2
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 1
-LV Size                215.3 GB
-Current LE             27558
-Allocated LE           27558
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
-
-Here we see that I only have access to 215Gb. 
-
-Where is the rest of my space?
-
-Mike Diehl.
+U3ZldGxqbzoNCg0KCUl0IGRvZXMgbm90IHdvcmsuIEl0IGdpdmVzIG1lIHNvbWUgZnVua3kgbWVz
+c2FnZXMgd2hlbiBJIHRyeSBpdC4gSG93ZXZlciwgSSBtdXN0IHBvaW50IG91dCBJIGFtIHVzaW5n
+IExWTSBWIDAuOS4yLXdoYXRldmVyLiBBcmUgeW91IHVzaW5nIGEgbmV3IHZlcnNpb24/IEkgaGF2
+ZSBiZWVuIHRvbGQgdGhhdCB0aGUgbmV3ZXIgMS4wLjEgdmVyc2lvbiBkb2VzIG5vdCBvciB3aWxs
+IG5vdCB3b3JrIHByb3Blcmx5IHdpdGggTWFuZHJha2UgZm9yIHNvbWUgcmVhc29uIG9mIHRoZWly
+IHBvbGljeSBhYm91dCB2ZXJzaW9ucyBvciBzb21ldGhpbmcsIGdvdCBtZS4NCg0KDQpWZXJ5IFJl
+c3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBUZW5lciwgSVQzLCBVU05SLVIsIE4zR1dHIA0K
+QmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRVIDE5MDRHIChWb2x1bnRlZXIgVHJhaW5pbmcg
+VW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3ZXN0IGNvYXN0OiAoMzEwKS0zNTgtMDIwMiBQ
+Lk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDktMjA0MyANCmVhc3QgY29hc3Q6
+ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQaGlsYWRlbHBoaWEsIFBBIDE5MTQ5LTU4
+NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFpbCBnYXRld2F5IHZp
+YSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0KDQpKT0lOIFRIRSBVUyBOQVZZIFJFU0VSVkUs
+IFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwuIA0KDQpUaHVyc2Rh
+eSwgU2VwdGVtYmVyIDEzLCAyMDAxIDE6MjkgUE0NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxpbnV4LWx2bS1h
+ZG1pbkBzaXN0aW5hLmNvbV1PbiBCZWhhbGYgT2Ygc3ZldGxqbw0KU2VudDogVGh1cnNkYXksIFNl
+cHRlbWJlciAxMywgMjAwMSAxMDowNCBBTQ0KVG86IGxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KU3Vi
+amVjdDogUmU6IFtsaW51eC1sdm1dIExWTQ0KDQpIaQ0KaXQgc2hvdWxkIGJlDQoNCmx2bWNyZWF0
+ZV9pbml0cmQgLS1ub21vZCAyLjQuOC0xMm1kaw0KYW5kIGl0IHNob3VsZCBjcmVhdGUgL2Jvb3Qv
+aW5pdHJkLWx2bS0yLjQuOC0xMm1kay5neiAtLSB0aGUgbHZtLWluaXRyZA0KDQpJVDMgU3R1YXJ0
+IEIuIFRlbmVyLCBVU05SLVIgd3JvdGU6DQoNCj5Nci4gRWRnZWNvbWJlOg0KPg0KPiAgICAgICBB
+aCwgSSB1bmRlcnN0YW5kLiBZZXMsIEkgYW0gdHJ5aW5nIHRvIExWTWl6ZSBteSByb290IHBhcnRp
+dGlvbi4NCj4NCj4NCj5WZXJ5IFJlc3BlY3RmdWxseSwNCj4NCj5TdHVhcnQgQmxha2UgVGVuZXIs
+IElUMywgVVNOUi1SLCBOM0dXRw0KPkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENCj5WVFUgMTkw
+NEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KQ0KPnN0dWFydEBiaDkwMjEwLm5ldA0KPndlc3Qg
+Y29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5
+MDIwOS0yMDQzDQo+ZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBo
+aWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OQ0KPg0KPlRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDcz
+IGZheCB0byBlbWFpbCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpDQo+DQo+
+Sk9JTiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklU
+IEZST00gSVQgQUxMLg0KPg0KPlRodXJzZGF5LCBTZXB0ZW1iZXIgMTMsIDIwMDEgOTo0OSBBTQ0K
+Pg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogbGludXgtbHZtLWFkbWluQHNp
+c3RpbmEuY29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBP
+ZiBKYXNvbiBFZGdlY29tYmUNCj5TZW50OiBUaHVyc2RheSwgU2VwdGVtYmVyIDEzLCAyMDAxIDY6
+MDEgQU0NCj5UbzogbGludXgtbHZtQHNpc3RpbmEuY29tDQo+U3ViamVjdDogUmU6IFtsaW51eC1s
+dm1dIExWTQ0KPg0KPnlvdSBNVVNUIHJ1biBsdm1jcmVhdGVfaW5pdHJkIGFuZCB1c2UgdGhlIGlu
+aXRyZCBpdCBjcmVhdGVzIGlmIHlvdSBydW4NCj5hbiBMVk0gcm9vdCBmcy4NCj4NCj5JdCBkb2Vz
+bid0IG1hdHRlciBpZiBMVk0gaXMgaW4gdGhlIGtlcm5lbCBvciBhcyBhIG1vZHVsZS4gSWYgeW91
+ciByb290DQo+aXMgbm90IGluIExWTSwgdGhlbiBJIGRvbid0IHRoaW5rIHRoYXQgeW91IGhhdmUg
+dG8gdXNlIGluaXRyZC4NCj4NCj5TaW5jZXJlbHksDQo+SmFzb24gRWRnZWNvbWJlDQo+DQo+DQo+
+IklUMyBTdHVhcnQgQi4gVGVuZXIsIFVTTlItUiIgd3JvdGU6DQo+DQo+PiAgICAgICAgU28gZm9y
+IExWTSwgeW91IGRvIG5lZWQgdG8gdXNlIHRoZSBsdm1jcmVhdGVfaW5pdHJkIHByb2dyYW0gb3Ig
+bm90PyBJIGFtIHN0aWxsIG5vdCBjbGVhciBvbiB0aGF0Lg0KPj4NCj4+ICAgICAgICBJZiBJIG5l
+ZWQgdG8gbWFrZSBhbiBsdm1jcmVhdGVfaW5pdHJkLCBkb2VzIG5vdCB0aGF0IG1lYW4gaXQgY2Fu
+bm90IGJlIGluIHRoZSBrZXJuZWw/DQo+Pg0KPg0KPl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fDQo+bGludXgtbHZtIG1haWxpbmcgbGlzdA0KPmxpbnV4LWx2
+bUBzaXN0aW5hLmNvbQ0KPmh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWx2bQ0KPnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5hLmNv
+bS9sdm0vUGFnZXMvaG93dG8uaHRtbA0KPg0KDQoNCg0KDQpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXw0KbGludXgtbHZtIG1haWxpbmcgbGlzdA0KbGludXgt
+bHZtQHNpc3RpbmEuY29tDQpodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1hbi9saXN0aW5m
+by9saW51eC1sdm0NCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5hLmNv
+bS9sdm0vUGFnZXMvaG93dG8uaHRtbA0K
