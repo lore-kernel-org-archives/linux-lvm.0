@@ -1,11 +1,11 @@
-Return-Path: <ABehler@t-online.de>
-Message-ID: <000d01c05b69$6b5ca020$3f06fea9@licht1>
-From: andreas <ABehler@t-online.de>
-Date: Fri, 1 Dec 2000 08:36:28 +0100
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200012020529.WAA00876@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] Using Oracle with lvm AND rawio: read(512) from
+Date: Fri, 1 Dec 2000 22:29:56 -0700 (MST)
+In-Reply-To: <3A2843C6.D277A3F7@tls.msk.ru> from "Michael Ju. Tokarev" at Dec 02, 2000 03:35:18 AM
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_000A_01C05B71.CC919960"
-Subject: [linux-lvm] lvm
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,57 +17,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@mlists.sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Michael Tokarev writes:
+> What's *still* unknown to me is a difference between character and
+> block specials.  In principle, block device should only allow
+> block access (i.e. multiple of 512 or 1024 or whatether size),
+> while character devs should allow read of 1 byte.
 
-------=_NextPart_000_000A_01C05B71.CC919960
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Actually, it is just the opposite for devices like hard drives:
+the block interface will read a whole block no matter what size of
+I/O you do, and it will cache the block for any smaller read/write
+actions (i.e. read whole block-modify part of block-write whole block).
+The character interface do NOT buffer the data, so the application
+is forced to do correct block-sized and aligned reads/writes themselves.
+The benefit of the character device is that it doesn't do cacheing.
 
-hi guys,
+> but for shure this isn't a solution, since we'll not be able
+> to extend that datafile from oracle (like extending filesystem
+> on top of lv), since this again will require writing/reading
+> like at initial creation time, -- so almost all lvm work will
+> go away.
 
-after a hdisc crash i got only data (various logical volumes) on one of =
-three physical volumes.
-could someone tell me, if there is a way to use this physical volume and =
-it's logical volumes in my new created volume group without having
-any backup of my old one.
+You don't have to extend the datafiles for Oracle, just add a new
+datafile to the tablespace.
 
-
-thank you guys for your support,
-
-    andreas behler
-
-------=_NextPart_000_000A_01C05B71.CC919960
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD W3 HTML//EN">
-<HTML>
-<HEAD>
-
-<META content=3Dtext/html;charset=3Diso-8859-1 =
-http-equiv=3DContent-Type>
-<META content=3D'"MSHTML 4.72.3612.1706"' name=3DGENERATOR>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT color=3D#000000 size=3D2>hi guys,</FONT></DIV>
-<DIV><FONT color=3D#000000 size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>after a hdisc crash i got only data (various logical =
-volumes)=20
-on one of three physical volumes.</FONT></DIV>
-<DIV><FONT size=3D2>could someone tell me, if there is a way to use this =
-physical=20
-volume and it's logical volumes in my new created volume group without=20
-having</FONT></DIV>
-<DIV><FONT size=3D2>any backup of my old one.</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>thank you guys for your support,</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>&nbsp;&nbsp;&nbsp; andreas =
-behler</FONT></DIV></BODY></HTML>
-
-------=_NextPart_000_000A_01C05B71.CC919960--
+Cheers, Andreas
+-- 
+Andreas Dilger                               TurboLabs filesystem development
