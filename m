@@ -1,10 +1,10 @@
-From: Jesse Keating <jkeating@pogolinux.com>
-Subject: Re: [linux-lvm] Sharing LVM's via NFS on Redhat 8.0
-References: <F66Jmn8eeGbdBmM9SJL000066dc@hotmail.com> <20030221082208.GA1810@tykepenguin.com>
-In-Reply-To: <20030221082208.GA1810@tykepenguin.com>
+From: grobe@gmx.net
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <200302210807.52133.jkeating@pogolinux.com>
+References: <F66Jmn8eeGbdBmM9SJL000066dc@hotmail.com>
+Subject: Re: [linux-lvm] Sharing LVM's via NFS on Redhat 8.0
+Message-ID: <27438.1045848354@www69.gmx.net>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +15,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb 21 10:06:01 2003
+Date: Fri Feb 21 11:26:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Friday 21 February 2003 00:22, Patrick Caulfield uttered:
-> Sharing over NFS is fine. What you are doing with NFS is sharing the
-> filesystem. The dangerous behaviour mentioned is when you are sharing the
-> actual block device that is the LV. A subtle but very important
-> distinction.
+Hi!
 
-If you want to share the actual block devices, look into HyperSCSI.  It allows 
-you to "share" out your block devices, and clients can access them as local 
-SCSI interfaces.  2 clients can access the same LVM group concurrently, just 
-as if they were both on the same system.
+> Regarding Sharing LVM LV's via NFS on Redhat 8.0...ie. mounting an LV from
+> another machine while already having a LV on the same machine. Is it ok or
+> not ok? I was talking to a buddy and he doesn't think it's a problem or an
+> issue but...
+> the current documentation on Sistina's site states that sharing LV's is=20
+> dangerous unless it's a SCSI or Fibre Storage Device?...and not only that=
+=20
+> ...adminisitration can only be done on one node? (is it really possible to
+> create/resize lv's from one node/machine to another (that has an LV or was
+> it meant to mean that it's only possible on cluster aware network storage=
+=20
+> devices)??? ....
 
-http://nst.dsi.a-star.edu.sg/mcsa/hyperscsi/index.html <-- hyperscsi's home
+One question: did you read the various messages following your first
+question?
 
-http://geek.j2solutions.net/stuff/HyperSCSI <-- A test case I ran through 
-yesterday.
+Please understand the differende between a LVM volume and a (exported or
+local) filesystem.
 
--- 
-Jesse Keating RHCE MCSE
-Pogo Linux -- Support Tech
-tel: 888.828.7646
+How do you want to share a LV which is not on a scsi or fc device? Never
+heard about shared ide...;-))) Do you want to share a device or the data on=
+ the
+device???
+
+CU Lars.
+
+--=20
++++ GMX - Mail, Messaging & more  http://www.gmx.net +++
+Bitte l=EF=BF=BDcheln! Fotogalerie online mit GMX ohne eigene Homepage!
