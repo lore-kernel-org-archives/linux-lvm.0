@@ -1,39 +1,37 @@
-Message-ID: <39F87B4F.E04E0131@attglobal.net>
-Date: Thu, 26 Oct 2000 14:43:27 -0400
-From: Les Hazelton <seawolf@attglobal.net>
+From: Patrick Swartz <pswartz@digitalrom.com>
+Subject: [linux-lvm] Size limits and kernel versions
+Date: Thu, 26 Oct 2000 14:04:39 -0500
+Message-ID: <OLEAJMNOEMOMMNEIMMINEEEBCBAA.pswartz@digitalrom.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Error in lvmcreate_initrd ?
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@msede.com" <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-I think there is bug in the lvmcreate_initrd script. Notice in the clip
-below the line after cmd-... where the variable VERRSION is set but then
-in the next line VERSION is tested and set if null.  The net result is
-that you are unable to pass in a module version to override the value
-provided by VERSION=`uname -r`.
+I am just getting start with LVM and have a few questions.  First let me
+describe my situation. I have 2 RH7.0 servers each with an ICP-Vortex RAID
+controller that is attached to a chassis with 11 50GB drives in a raid5 +
+hot spare.  This gives me about 450GB of usable data space.  I would like to
+combine these controllers in a single server and use LVM to create one large
+logical volume.
 
-#
-# Changelog
-#
-#   16/11/1999 - corrected -N type with mke2fs
-#   19/12/1999 - use correct ramdisk size
-#                strip shared library to save space
-#   04/01/2000 - support /proc mount, because lvm_dir_cache now uses it
-#
+Is this possible?
 
-cmd=`basename $0`
-VERRSION=$1
-[ -z "$VERSION" ] && VERSION=`uname -r`
-DEVRAM=/dev/ram1
+Will I loose the data that is on both? just one?
 
+If so, what kernel patch do I use for RedHat 7.0?
 
+Or, should I install the latest kernel (2.4.0-test9)?
 
--- 
+If that is the case what do I need to do to get the user tools to compile?
 
-Good Journey, longevity and prosperity to all
+I have spent most of the day reading the archives and how-to's, but have not
+been able to answer these questions.  If I have missed something I
+apologize.
 
-Les Hazelton
+Thank you for your help,
+
+Patrick Swartz
+pswartz@digitalrom.com
