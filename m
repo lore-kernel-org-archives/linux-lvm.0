@@ -1,10 +1,7 @@
-From: Gerwin Lienert <gerwin.lienert@gmx.de>
+From: galt <galt@fiberpimp.net>
+Message-ID: <20020924050649.W76212-100000@true.fiberpimp.net>
 MIME-Version: 1.0
-References: <20020923152349.GA22130@kluge.net>
-Subject: Re: [linux-lvm] raid1+lvm
-Message-ID: <30810.1032845190@www7.gmx.net>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] raid1+lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +12,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 24 00:28:51 2002
+Date: Tue Sep 24 04:25:33 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-If you act generous you may be right with
+I got it working, thanks to all, especially to Luca. After verifying
+that my lilo configuration was sane, I tried making the initrd on another
+host. I was able to boot just fine.  I was trying to do everything from
+the slackware 8.1 install cd, but the lvmcreate_initrd script doesnt want
+to work properly in that environment.
 
-> I've since taken to keeping /boot, /, and ..
+Heres the setup:
 
- not need to resize.
+# lilo -V
+LILO version 22.2
 
-> ..swap out of LVM since they
-> normally don't need to be resized, and makes the system easier to recover
-> in case of problems. :)
+# cat /etc/lilo.conf
+lba32
+boot = /dev/sda
+delay = 50
+vga = ext
 
-But what do you do, when your swap becomes to small. Shure, you can start,
-having one swap device outside of your lvm, but in case of increased memory
-leak, you will be happy, if you can easily define another swap device on yo=
-ur
-lvm. I did so, and for me it worked fine.
+image = /boot/vmlinuz
+root = /dev/rootvg/root
+initrd = /boot/initrd-lvm-2.4.18-heh3.gz
+label = linux1
+read-only
 
+# df
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/rootvg/root       2097084    719204   1377880  35% /
+/dev/rootvg/var        6254396     40824   6213572   1% /var
 
---=20
-Bis dann
+# swapon -s
+Filename                        Type            Size    Used    Priority
+/dev/rootvg/swap                partition       524280  0       -1
 
-Gerwin
+# cat /proc/lvm/global
+LVM driver LVM version 1.0.1-rc4(ish)(03/10/2001)
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# fdisk -l
 
-Werden Sie mit uns zum "OnlineStar 2002"! Jetzt GMX w=EF=BF=BDhlen -
-und tolle Preise absahnen! http://www.onlinestar.de
+Disk /dev/sda: 255 heads, 63 sectors, 1106 cylinders
+Units = cylinders of 16065 * 512 bytes
+
+   Device Boot    Start       End    Blocks   Id  System
+/dev/sda1             1      1106   8883913+  fd  Linux raid autodetect
+
+Disk /dev/sdb: 255 heads, 63 sectors, 1106 cylinders
+Units = cylinders of 16065 * 512 bytes
+
+   Device Boot    Start       End    Blocks   Id  System
+/dev/sdb1             1      1106   8883913+  fd  Linux raid autodetect
+
+# cat /etc/raidtab
+raiddev /dev/md0
+        raid-level 1
+        nr-raid-disks 2
+        nr-spare-disks 0
+        device /dev/sda1
+        raid-disk 0
+        device /dev/sdb1
+        raid-disk 1
+#
+
+LVM rules.
+
+galt
