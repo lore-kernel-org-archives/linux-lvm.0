@@ -1,14 +1,9 @@
-Return-Path: <blutgens@sistina.com>
-Date: Tue, 8 May 2001 10:39:48 -0500
-From: Ben Lutgens <blutgens@sistina.com>
-Subject: Re: [linux-lvm] External CVS write access
-Message-ID: <20010508103948.A6242@minime.sistina.com>
-References: <20010508151802.A675@sistina.com>
+Return-Path: <raheesom@navpoint.com>
+From: Rupert Heesom <raheesom@navpoint.com>
+Date: 08 May 2001 08:25:01 -0400
+Message-Id: <989324702.3147.1.camel@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Content-Disposition: inline
-In-Reply-To: <20010508151802.A675@sistina.com>; from Mauelshagen@sistina.com on Tue, May 08, 2001 at 03:18:02PM +0000
+Subject: [linux-lvm] Am I patching the kernel incorrectly??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,52 +15,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I had previously patched the kernel (stock 2.4.3) with the beta 6 patch.
 
-On Tue, May 08, 2001 at 03:18:02PM +0000, Heinz J. Mauelshagen wrote:
->Our systems management is solving problems related to set this up
->in a *secure* environment.
+Now I'm trying to update to beta 7.  I tried patching the kernel is
+exactly the same way as before (maybe a mistake).  Most of the output is
+pasted in here (at the end).  I'm concerned about the prompts I got -
 
-I am installing an OS on the new box right now. It'll probably be up before
-COB today.
->
->Sorry for any delay in this area.
+"Reversed (or previously applied) patch detected!  Assume -R? [n]"
 
-Decided to stop trying to over think the matter and buy a separate box and =
-put
-it out side the firewall.=20
+As you can see, I decided to reply "Y".  Was that a correct assumption?
 
->
->We hope to be done soon.
+Afterwards I read the man page on "patch" and am now even less sure that
+I did the right thing.
 
-I am sorry it's taken this long all. I accept full responsibility for the
-delays (send all flames to me, Not Heinze and the rest of the coders)
+I don't want to compile the kernel modules (I have lvm as a module)
+until I know that the source is in good condition.
 
+patching file drivers/md/Makefile
+Reversed (or previously applied) patch detected!  Assume -R? [n] y
+The next patch would delete the file drivers/md/lvm-snap.h,
+which does not exist!  Assume -R? [n] y
+patching file drivers/md/lvm-snap.h
+patching file Documentation/ioctl-number.txt
+Reversed (or previously applied) patch detected!  Assume -R? [n] y
+Hunk #1 succeeded at 187 (offset 1 line).
 
---=20
-Ben Lutgens		cell: XXX.XXX.XXXX
-Sistina Software Inc.	work: XXX.XXX.XXXX
-Mailing list admin / Punching Bag (and sorta sysadmin guy)
-http://www.sistina.com/	<--- great software=20
-http://www.gentoo.org/  <--- great distro
-Kernel panic: I have no root and I want to scream <--- perfect error message
-
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6+BNELxkxGgLdGQgRAqjPAJ9IUYYvxwE2kYikeLktap6w5d7gFQCffhD6
-I4EcHvzlbYS2c3uUeoWx7CE=
-=gxXt
------END PGP SIGNATURE-----
-
---7JfCtLOvnd9MIVvH--
+-- 
+regs
+rupert
