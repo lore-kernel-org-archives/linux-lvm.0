@@ -1,10 +1,10 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
 Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-Message-ID: <20011201160437.C16319@tiger.bigcats.invalid>
-References: <Pine.LNX.4.21.0111291649440.435-100000@sol.rune.org> <Pine.LNX.4.33.0111291608480.4437-100000@lx1.daboard.com> <20011129190920.B23998@kluge.net>
+Message-ID: <20011201150916.GX26712@pc.ilinx>
+References: <20011129181708.B16013@colombina.comedia.it> <NBBBKLKHMJHIJLHOGAOJOEDFJCAA.steve.wray@the.net.nz> <20011130093008.B18867@colombina.comedia.it>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011129190920.B23998@kluge.net>; from felicity@kluge.net on Thu, Nov 29, 2001 at 07:09:20PM -0500
+In-Reply-To: <20011130093008.B18867@colombina.comedia.it>
+From: "Brian J. Murrell" <lvm@interlinx.bc.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,53 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec  1 10:30:02 2001
+Date: Sat Dec  1 10:58:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Theo!
+On Fri, Nov 30, 2001 at 09:30:08AM +0100, Luca Berra wrote:
+> 
+> what i'll do next is fixing mkinitrd to understand lvm root.
 
-Theo Van Dinter (felicity@kluge.net) wrote 60 lines:
+I have the current Mandrake Cooker mkinitrd RPM patched to know how to
+do lvm root.  I actually have also made (almost) all of the changes to
+the Mandrake installer to install on an lvm root.  I got stumped by
+one bit of perl (my perl5 sucks) that was causing the device to be
+determined as /dev/dev/volgroup/root when it came time to doing the
+LILO/Grub configuration.
 
-> My rule of thumb for disk layout on a server is:
-> 	/boot	- Small, usually 32-128MB, don't run out of space here.
+I have not gotten back to it yet because my perl5 is no better than it
+was when I got stumped.  I do have a big fat per5 book now though.
+:-)
 
-You can also do a combined / and /boot.  Give it enough space
-and move everything where non-related changes happen away
-from it.  (128 to 256 MB should outlast your HD.)  Non-LVM.
+b.
 
-> 	/	- I put /usr in here since there's no reason not to any
-
-Personally I feel /usr really wants a separate partition.
-You also may want partitions for /usr/src (if you have lots of
-compiling/source code for the whole machine), and /usr/local
-(if you use more than a few programs which are not on your
-distribution).  Sub-partitions are possible, depending on usage.
-Long live LVM.
-
-> 	/var	- As someone's already stated, filling up /var can be a DoS.
-
-If you have a news spool, put it on a separate partition --
-it's just too different from size and lifetime compared to
-/var.  Unless you have a non-file/hardlink-based news system.
-And then still move it out of the way.
-
-If you have a WWW cache, that one might want a separate
-partition as well -- and usually there's no need to backup
-that cache.
-
-
-> 	/tmp	- Yet another possible DoS, don't allow user-writable areas
-> 		  to live on /.  128-512M should be sufficient, it's
-> 		  temporary space after all.
-
-More -- especially with quotas.  Sometimes people have to
-download CD-Rom Images (e.g. .iso) and might be unable to put
-them into /home.
-
-Speaking of it -- /home probably wants a partition, too; and
-regular backups.
-
--Wolfgang
+-- 
+Brian J. Murrell
