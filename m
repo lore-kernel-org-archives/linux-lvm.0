@@ -1,15 +1,11 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2FHStS26055
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 12:28:55 -0500
-Received: from web80605.mail.yahoo.com (web80605.mail.yahoo.com [66.218.79.94])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2FHSr07017164
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 12:28:53 -0500
-Message-ID: <20040315172847.42823.qmail@web80605.mail.yahoo.com>
-Date: Mon, 15 Mar 2004 09:28:47 -0800 (PST)
-From: David Minor <sus4@sbcglobal.net>
-Subject: Re: [linux-lvm] VGs gone!
-In-Reply-To: <1079369631.3143.10.camel@localhost.localdomain>
+Message-ID: <40561772.5070302@howest.be>
+Date: Mon, 15 Mar 2004 21:52:02 +0100
+From: Thomas Berton <thomas.berton@howest.be>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Hard disk failure, restore problem
+References: <40520E04.5090505@howest.be> <20040315124721.GB17078@redhat.com>
+In-Reply-To: <20040315124721.GB17078@redhat.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,35 +16,82 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: hjm@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+
+Hello,
+
+I've done
+
+ > o identify your actual metadata backup (say, bigspace.conf)
+ >
+ > o mkdir /etc/lvmtab.d
+ >
+ > o cp bigspace.conf /etc/lvmtab.d/bigspace
+ >
+ > o echo -ne "bigspace\0" > /etc/lvmtab
+ >
+ > o vgchange -ay
 
 
---- Austin Gonyou <austin@coremetrics.com> wrote:
-> You should not have recreated the lvmtab without
-> backing up the total
-> config, and restoring it after dding the partitions
-> back. 
-> 
+after being sure to restore the metadata I have
 
-The problem seems to have been that the mirrored
-standard root partition didn't have a /proc mount
-point.  Once I created the /proc directory and
-manually mounted it I was able to run vgscan without
-any problems.  Basically, I did:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdg1" of VG "bigspace" [74.47 GB / 768 MB free]
+pvscan -- inactive PV "/dev/hde1" of VG "bigspace" [149 GB / 0 free]
+pvscan -- inactive PV "/dev/hdf1" of VG "bigspace" [149 GB / 139.16 GB free]
+pvscan -- inactive PV "/dev/hdc1" of VG "bigspace" [111.75 GB / 0 free]
+pvscan -- inactive PV "/dev/hdd1" of VG "bigspace" [74.47 GB / 0 free]
+pvscan -- inactive PV "/dev/hda1" of VG "bigspace" [74.47 GB / 8.22 GB free]
+pvscan -- inactive PV "/dev/hdb1" of VG "bigspace" [74.47 GB / 0 free]
+pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
 
-# mkdir /proc
-# mount -t proc proc /proc
-# vgscan
-# vgdisplay
-# mount -a
 
-and everything worked.
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- only found 17904 of 17876 LEs for LV /dev/bigspace/bigspace1 (0)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "bigspace" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
 
-I hear you saying that there's a better way for me to
-backup my system.  Right now I'm just rsync-ing from
-each of the partitions on the primary drive to the
-secondary drive.  Is there something I should do at
-"mirror" time to facilitate the lvm setup coming up
-better next time?
+=> after the vgscan the echo -ne "bigspace\0" > /etc/lvmtab is gone gone
+again....
+
+[root@ment root]# lvscan
+lvscan -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please
+run vgscan
+
+after doing the vgscan, I get
+
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG
+"bigspace" (run vgscan)
+pvscan -- inactive PV "/dev/hde1"  is associated to unknown VG
+"bigspace" (run vgscan)
+pvscan -- inactive PV "/dev/hdf1"  is associated to unknown VG
+"bigspace" (run vgscan)
+pvscan -- inactive PV "/dev/hdc1"  is associated to unknown VG
+"bigspace" (run vgscan)
+pvscan -- inactive PV "/dev/hdd1"  is associated to unknown VG
+"bigspace" (run vgscan)
+pvscan -- inactive PV "/dev/hda1"  is associated to unknown VG
+"bigspace" (run vgscan)
+pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG
+"bigspace" (run vgscan)
+pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
+
+again.
+
+
+the /dev/bigspace/bigspace1 doesn't exists, so I can't mount.
+
+should I recreate bigspace and force an import ?
+
+I 've alse rebooted once after the vgchange -ay, but he also didn't find
+the bigspace.
+
+thanx again for your help!!
+
+kind regards,
+Thomas.
