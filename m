@@ -1,13 +1,8 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] LVM System
-Message-Id: <20020305015202.C5231@golem.blacknet.de>
-References: <auto-000021223409@front2.mail.megapathdsl.net>
-    <20020305013930.A5231@golem.blacknet.de>
-    <auto-000021247038@front2.mail.megapathdsl.net>
+From: Denie Andriessen <D.Andriessen@pink.nl>
+Message-Id: <033801c1c3e5$df231530$f707a182@gimmie.tudelft.nl>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <auto-000021247038@front2.mail.megapathdsl.net>;
-    from anthony@AWMObjects.com on Mon, Mar 04, 2002 at 07:47:13PM -0500
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] PV-Move fails, not able to clear the last PE from a disk..
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +13,133 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  4 18:51:02 2002
+Date: Mon Mar  4 19:29:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Mar 04 '02 at 19:47, Anthony W. Marino wrote:
-> Why don't you think that SuSE isn't a real server OS???
-It was just MHO, use what ever you're comfortable with, but see my
-private email
+Hi,
 
-> I have 4x40GB Maxtor drives and haven't determined what my final 
-> configuration will be.
-As others have said, do some test runs.
+I've got a problem with the behaviour of pvmove I've tested it quite a few
+times, but everytime it seems to fail at the same point:
 
-> Where do I find this 3ware tool?
-It's in the tools package you can download from the 3ware side (last I
-checked the side required javascipt, so I can/will not look it up for you)
+In this example I've made 2 partitions on 1 disk, put them into a single
+volume, and I want to remove 1, and not the last one..
+I keep getting the errors:
+pvmove -- ERROR writing output physical volume "/dev/hdf2" (still 65536
+bytes to write)
+pvmove -- ERROR "pv_move_pe(): writing output PE" pv_move_pe
+pvmove -- ERROR "pv_move_pe(): writing output PE" moving physical extents
 
-Cu,
-    Goetz.
+Below is an examplesof the output I get.., and my actions..
+
+Kernel 2.4.5, LVM driver version 0.9.1_beta2 (18/01/2001)
+
+########
+[root@localhost /root]# vgdisplay -v test12
+vgdisplay
+--- Volume group ---
+VG Name               test12
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               200 MB
+PE Size               4 MB
+Total PE              50
+Alloc PE / Size       25 / 100 MB
+Free  PE / Size       25 / 100 MB
+VG UUID               uTF83w-IRzJ-Gjl7-HlXB-lA4r-6jsU-LMpt6N
+
+--- Logical volume ---
+LV Name                /dev/test12/vol1
+VG Name                test12
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                100 MB
+Current LE             25
+Allocated LE           25
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+
+--- Physical volumes ---
+PV Name (#)           /dev/hdf1 (1)
+PV Status             available / allocatable
+Total PE / Free PE    25 / 0
+
+PV Name (#)           /dev/hdf2 (2)
+PV Status             available / allocatable
+Total PE / Free PE    25 / 25
+
+########
+So this looks good, now I want to remove /dev/hdf1
+########
+
+[root@localhost /root]# pvmove /dev/hdf1
+pvmove
+pvmove -- moving physical extents in active volume group "test12"
+pvmove -- WARNING: if you lose power during the move you may need to restore
+your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- ERROR writing output physical volume "/dev/hdf2" (still 65536
+bytes to write)
+pvmove -- ERROR "pv_move_pe(): writing output PE" pv_move_pe
+pvmove -- ERROR "pv_move_pe(): writing output PE" moving physical extents
+
+[root@localhost /root]# vgdisplay -v test12
+vgdisplay
+--- Volume group ---
+VG Name               test12
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               200 MB
+PE Size               4 MB
+Total PE              50
+Alloc PE / Size       25 / 100 MB
+Free  PE / Size       25 / 100 MB
+VG UUID               uTF83w-IRzJ-Gjl7-HlXB-lA4r-6jsU-LMpt6N
+
+--- Logical volume ---
+LV Name                /dev/test12/vol1
+VG Name                test12
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                100 MB
+Current LE             25
+Allocated LE           25
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+
+--- Physical volumes ---
+PV Name (#)           /dev/hdf1 (1)
+PV Status             available / allocatable
+Total PE / Free PE    25 / 24
+
+PV Name (#)           /dev/hdf2 (2)
+PV Status             available / allocatable
+Total PE / Free PE    25 / 1
+
+########
+Whatever I do, I can't seem to get rid of that last block on /dev/hdf1 !!
