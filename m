@@ -1,10 +1,11 @@
-Return-Path: <josv@osp.nl>
-Date: Mon, 12 Feb 2001 13:43:00 -0800
-From: Jos Visser <josv@osp.nl>
-Message-ID: <20010212134300.E28557@jadzia.josv.com>
+Return-Path: <heinrichs@qis-systemhaus.de>
+Message-Id: <3A88DCA6.C7672745@qis-systemhaus.de>
+Date: Tue, 13 Feb 2001 08:05:10 +0100
+From: Dirk Heinrichs <heinrichs@qis-systemhaus.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Using symlink as PV name fails
+Subject: Re: [linux-lvm] LVM with devfs questions and patches
+References: <20010212205229.A3375@trez42.net>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,27 +17,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hi there,
+Benoit Gaussen wrote:
+>=20
+> I have another little question, I read the recent thread concerning the
+> startup scripts, and the fact to put vgscan in them. But when the startup
+> script is launched, the file system is mounted read only and since vgscan
+> updates the /etc/lvmtab files, it fails...  or maybe I missed something ?
 
-If I pvcreate a symlink, the pvcreate fails:
+I solved this on my RH system by putting vgscan and vgcreate in
+/etc/rc.sysconfig _after_ root filesystem is remounted rw and before the
+filesystem checks. I also had to move the swapon command, because I swap
+to an lv.
 
-  # pvcreate /dev/sdb1
-  pvcreate -- device "/dev/sdb1" doesn't exist
+Bye...
 
-  # ls -l /dev/sdb1
-  lr-xr-xr-x   1 root     root           34 Feb 12 13:24 /dev/sdb1 -> scsi/host0/bus0/target4/lun0/part1
-
-This actually happens a lot in devfs systems. I think it might have to
-do something with the fact that the code that checks the PV name in
-/proc/partitions, does not take the fact that the PV name is a symlink
-into account...
-
-++Jos
-
-
--- 
-I have no need for a spirituality which can not encompass my humanness.
+	Dirk
+--=20
+Dirk Heinrichs		| Tel:	+49 (0)241 413 260
+QIS Systemhaus GmbH	| Fax:	+49 (0)241 413 2640
+J=EF=BF=BDlicher Str. 338b	| Mail:	heinrichs@qis-systemhaus.de
+D-52070 Aachen		| Web:	http://www.qis-systemhaus.de
