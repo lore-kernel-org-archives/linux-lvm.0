@@ -1,12 +1,10 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] Request for misalignment tests
-Date: Wed, 27 Jun 2001 06:56:52 -0400
-References: <20010626161947.A11918@sistina.com>
-In-Reply-To: <20010626161947.A11918@sistina.com>
+Return-Path: <austin@coremetrics.com>
+Message-ID: <85063BBE668FD411944400D0B744267A481B2B@AUSMAIL>
+From: "Gonyou, Austin" <austin@coremetrics.com>
+Subject: RE: [linux-lvm] Installed the lvm on the Red Hat 7.1 then what to
+	 do now
+Date: Wed, 27 Jun 2001 10:12:00 -0500
 MIME-Version: 1.0
-Message-Id: <01062706565200.00314@oscar>
-Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,65 +17,60 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Heinz Mauelshagen <mauelshagen@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On June 26, 2001 05:19 pm, Heinz Mauelshagen wrote:
+fdisk /dev/[hs]d[a-z][1-9]
+t 1
+8e
+(repeat for all partitions you've created on a disk which doesn't have data
+on it)
+w
+pvcreate /dev/[hs]d[a-z][1-9]
+vgcreate /dev/xxx1 /dev/xxx2 /dev/xxx3 volgroup
+lvcreate -L6000M -ix -I16 -n volname volgroup
+mkfs.xfs /dev/volgroup/volname
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com 
 
-oscar# pvdisplay -v /dev/hda3 | grep "^ *00000"
-   00000 /dev/lv/swap              00086   4572
-oscar# pvdisplay -v /dev/hde1 | grep "^ *00000"
-   00000 /dev/lv/swap              00000   1136
-oscar# pvdisplay -v /dev/hdg1 | grep "^ *00000"
-   00000 /dev/lv/swap              00172   1137
-
-oscar# pvdisplay /dev/hdg1
---- Physical volume ---
-PV Name               /dev/hdg1
-VG Name               lv
-PV Size               37.28 GB / NOT usable 568 KB [LVM: 158 KB]
-PV#                   3
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                2
-PE Size (KByte)       4096
-Total PE              9543
-Free PE               0
-Allocated PE          9543
-PV UUID               v4eKca-DZfn-fYKP-q0pF-zWev-2HMM-TeKzbA
-
-> All,
->
-> we need your help in regard to the misalignment problems we are trying
-> to fix right now in order to get facts concerning how many people are
-> actually suffering from it.
->
->
-> In case you created VGs or extended them with LVM 0.9.1 Beta 6 or 7,
-> we'd appreciate if you could send us the output (if any) of
->
->    pvdisplay -v /dev/YourPVname | grep "^ *00000"
->
-> if the sector offset in the last column is odd.
->
-> If so, please add a "pvdisplay /dev/YourPVname" as well.
->
-> We appreciate your help!
->
-> Regards,
-> Heinz      -- The LVM guy --
->
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
->-=-
->
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Bartningstr. 12
->                                                   64289 Darmstadt
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 6151 7103 86
->                                                        FAX 7103 96
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
->-=- _______________________________________________
+> -----Original Message-----
+> From: RAGHVENDRA SHUKLA [mailto:rshukla@prl.ernet.in]
+> Sent: Wednesday, June 27, 2001 5:43 AM
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] Installed the lvm on the Red Hat 7.1 then what to
+> do now
+> 
+> 
+> 
+> Hello ,
+>         I have installed the lvm in the Red hat 7.1 ( kernel 
+> 2.4 , with
+>         kernel enabled as lvm ( in kernel ) , installed the lvm , also
+>         created one physical volume , But i am confused as my 
+> df gives 
+>       
+>     Filesystem 1k-blocks Used Available Use% Mounted on 
+>         /dev/hda5 4870252 3272660 1350196 71% / 
+>         /dev/hda2 23333 2468 19661 11% /boot
+> 	/dev/hda6 2624792   2124756    366700  85% /var 
+> 
+> 
+> is i will be able to change the size of / or /var or /boot partition,
+> are they hardcore partition . What i want is  i want to make
+> /home , /var , /boot ,/ all resizeable , please clearify. I 
+> am confused
+> 
+> 
+> Regards
+> Raghav
+> 
+> _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
