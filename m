@@ -1,10 +1,8 @@
-From: Austin Gonyou <austin@coremetrics.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="=-RwpQOMSzd0ns8xCNl3To"
-Message-Id: <1011897663.27530.20.camel@UberGeek>
+From: Sebastian Kienzl <seb@riot.org>
+Message-Id: <936428170.20020124204132@riot.org>
 MIME-Version: 1.0
-Subject: [linux-lvm] Extending an LV made of raw disks?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] hd/lvm crash
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 24 12:42:02 2002
+Date: Thu Jan 24 13:42:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---=-RwpQOMSzd0ns8xCNl3To
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+hi,
 
-Is that possible? Is it best to just create several md stripes, and keep
-extending those?
---=20
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-698-7250
-email: austin@coremetrics.com
+i hope this isn't completely off-topic.
+my friends who've had similiar problems told me you might be able to
+help me:
+i've been using a big reiserfs on an lvm for quite some time now,
+thanks to big blue i now don't anymore.
+one of my hd's in the lvm is dead and i wanna ask you if there's
+something i can do to restore at least some of the data that's on the
+other disks.
+the dead hd is /dev/hdb1 and the metadata (vg00.conf) can be found at
 
-"It is the part of a good shepherd to shear his flock, not to skin it."
-Latin Proverb
+http://mind.riot.org/vg00.conf.gz
 
---=-RwpQOMSzd0ns8xCNl3To
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+please reply to me directly, since i'm not subscribed to this group.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQA8UFU/94g6ZVmFMoIRAtW0AKDpxN4MUBT7tvFLe6NNV0BtHH6MJQCfXDrE
-IS9ZSA4AzU+W5B5qqBD9BP0=
-=vZ4l
------END PGP SIGNATURE-----
-
---=-RwpQOMSzd0ns8xCNl3To--
+thanks in advance,
+sebastian kienzl
