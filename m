@@ -1,13 +1,12 @@
-From: Patrick Caulfield <caulfield@sistina.com>
 Subject: Re: [linux-lvm] Paralell IO performance with LVM and XFS
-Message-Id: <20020117175832.GL1066@tykepenguin.com>
-References: <200201171229.g0HCTVe10111@localhost.localdomain>
-    <20020117125640.35CF032FDE6@lyta.coker.com.au>
-    <20020117152130.GG1066@tykepenguin.com>
-    <20020117173959.5BF1F35FA9E@lyta.coker.com.au>
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <20020117175832.GL1066@tykepenguin.com>
+References: <20020117175832.GL1066@tykepenguin.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-QPEr5ApZ5+DROd+33FVc"
+Message-Id: <1011294681.26798.0.camel@UberGeek>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020117173959.5BF1F35FA9E@lyta.coker.com.au>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,45 +17,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 17 11:59:02 2002
+Date: Thu Jan 17 13:12:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 17, 2002 at 06:39:58PM +0100, Russell Coker wrote:
-> On Thu, 17 Jan 2002 16:21, Patrick Caulfield wrote:
-> > On Thu, Jan 17, 2002 at 01:56:39PM +0100, Russell Coker wrote:
-> > > Striping across 4 disks will never give you 4* the throughput of 1 disk,
-> > > but you would hope for double the throughput.
-> >
-> > A graph of some tests I did using bonnie++ and striping on fibre-channel
-> > disks is online at http://www.cix.co.uk/~tykepenguin/stripetest.png
-> 
-> Firstly, I suggest that you skip the per-char tests when graphing such 
-> things, it's generally not very interesting and just clutters the graph.
-> 
-> Next the seeks, block-io, and create/delete test results belong on different 
-> graphs because the Y axis measures different things, and because it needs 
-> different scales.
+--=-QPEr5ApZ5+DROd+33FVc
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, I just graphed the whole output - I only did it for my own interest
-really, it's not meant to be an official test or especially meaningful. I just
-thought it might be interesting. The only reason it's still on my web site is
-that I forgot to remove it.
+What card were you using?=20
 
-> Finally what graphing program did you use?
+On Thu, 2002-01-17 at 11:58, Patrick Caulfield wrote:
+> > Why are you so certain that it's the FC interface at fault?  The FC
+> interface=20
+> > should be able to do more than 60MB/s.
+>=20
+> I don't suppose I am that certain to be honest but I had so much trouble
+> with
+> the Linux drivers for this card that at the time I was prepared to blame
+> everything from Global Warming downwards on it.=20
+>=20
+> patrick
+>=20
+--=20
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-698-7250
+email: austin@coremetrics.com
 
-Err...I'd rather not say...
- 
-> > The most obvious bottleneck there was the actually FC interface which ran
-> > out of capacity at 3 stripes.
-> 
-> Why are you so certain that it's the FC interface at fault?  The FC interface 
-> should be able to do more than 60MB/s.
+"It is the part of a good shepherd to shear his flock, not to skin it."
+Latin Proverb
 
-I don't suppose I am that certain to be honest but I had so much trouble with
-the Linux drivers for this card that at the time I was prepared to blame
-everything from Global Warming downwards on it. 
+--=-QPEr5ApZ5+DROd+33FVc
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-patrick
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA8RyHZ94g6ZVmFMoIRArSrAJ9UfdK5QCBbmcxpv7ybkRk4g/sbXQCfQzmO
+xc7hOqvfW6PqZchCBIxl/5k=
+=GvbU
+-----END PGP SIGNATURE-----
+
+--=-QPEr5ApZ5+DROd+33FVc--
