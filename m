@@ -1,16 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i46994v25961
-	for <linux-lvm@redhat.com>; Thu, 6 May 2004 05:09:04 -0400
-Received: from seasonfive.com ([212.43.248.242])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i46992iT017139
-	for <linux-lvm@redhat.com>; Thu, 6 May 2004 05:09:02 -0400
-From: Yannick Lecaillez <yl@seasonfive.com>
-Message-Id: <1083834092.1999.15.camel@yannick.vivaxe.lan>
+Date: Thu, 6 May 2004 13:01:38 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] LVM limits on 64 bits
+Message-ID: <20040506110138.GA1719@redhat.com>
+References: <1083834092.1999.15.camel@yannick.vivaxe.lan>
 Mime-Version: 1.0
-Date: 06 May 2004 11:01:32 +0200
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM limits on 64 bits
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1083834092.1999.15.camel@yannick.vivaxe.lan>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,17 +18,62 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: hjm@redhat.com
 
-Hi !
+On Thu, May 06, 2004 at 11:01:32AM +0200, Yannick Lecaillez wrote:
+> Hi !
+> 
+> 	I'm new to the list and LVM.
+> 
+> 	I whish to know the true maximum size for a logical volume, 
+> volume group and how many physical volumes LVM can manage on a IA64
+> system running RHEL 3.
 
-	I'm new to the list and LVM.
+Up to 256 PVs per VG and up to 256 LVs system total.
+Up to 2TB per PV/LV because of the Linux 2.4 block device layer constraint.
 
-	I whish to know the true maximum size for a logical volume, 
-volume group and how many physical volumes LVM can manage on a IA64
-system running RHEL 3.
+Eg. create a VG with up to 256PVs, each 2TB in size -> 512TB VG size.
+That VG can have as many as 256 LV, each max. 2TB in size.
 
-	Numbers i found on the net found are old (2001/2002) and i
-need to deploy solution with several tera byte.
+You typically have more than 1 VG *and* the max. 256 LVs/system
+still applies (eg, 2 VGs could have 156 LVs in the first one and up to 100 LVs
+in the 2nd one).
 
-	Thanks !
+> 
+> 	Numbers i found on the net found are old (2001/2002) and i
+> need to deploy solution with several tera byte.
+
+If you need more than 2TB/LV, the LVM1 compatible device-mapper/LVM2
+in Linux 2.6 is your friend, because 2.6 supports large block devices
+beyond 2TB.
+
+> 
+> 	Thanks !
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
