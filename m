@@ -1,7 +1,8 @@
-Message-ID: <EB067DCCA14DD411AF44009027DEA25101096E81@BWCSFFS1>
-From: CMorton@borgwarner.com
+Message-ID: <401A8C6C.3040108@grayskies.net>
+From: David Powers <david@grayskies.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM 1.0.8
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] duplicate PV error with 2.6.1 and lvm2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,30 +13,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 30 09:43:01 2004
+Date: Fri Jan 30 11:56:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I am trying to install LVM 1.0.8 on Redhat ES 2.1.  I have run into
-difficulty with step 2 of the INSTALL document.  I RPM'd the kernel source
-(2.4.9-e.12) and thereis no Makefile included.  Any idea on how to get this
-Makefile?
+I am attempting to create a simple volume on a soft raid 1 device 
+(/dev/md1) on a gentoo linux box running 2.6.1.  The pvcreate seems to 
+go fine but when I then attempt to create the volume group I get an odd 
+error about duplicate PV's.  It seems as if the code is sometimes 
+treating the device as a single device and sometimes seeing the 
+underlying disks.  Any help would be appreciated.
 
-Chris Morton
-Database Administrator
-BorgWarner Emissions/Thermal Systems
-(828) 684-3501x294 (Work)
-(828) 687-5323 (Fax)
-(828) 280-2903 (Mobile)
-cmorton@borgwarner.com
+disk1 root # cat /proc/mdstat
+Personalities : [raid1]
+md1 : active raid1 sdb1[1] sda1[0]
+      244179840 blocks [2/2] [UU]
 
-"The information contained in this message may be privileged and
-confidential and protected from disclosure. If the reader of this message is
-not the intended recipient, or an employee or agent responsible for
-delivering this message to the intended recipient, you are hereby notified
-that any dissemination, distribution, or copying of this communication or
-use of the information contained herein is strictly prohibited. If you have
-received this communication in error, please notify the sender immediately
-by replying to the message and delete the message from your computer." 
+md0 : active raid1 hdg3[1] hde3[0]
+      76035520 blocks [2/2] [UU]
+
+unused devices: <none>
+disk1 root # pvcreate /dev/md1
+  Physical volume "/dev/md1" successfully created
+disk1 root # vgcreate filestore /dev/md1
+  Found duplicate PV 5c5olnVSu9cpsAmJ6trmPopx1Hv4ZGv4: using /dev/sdb1 
+not /dev/sda1
+  Found duplicate PV 5c5olnVSu9cpsAmJ6trmPopx1Hv4ZGv4: using /dev/sdb1 
+not /dev/sda1
+  Found duplicate PV 5c5olnVSu9cpsAmJ6trmPopx1Hv4ZGv4: using /dev/sdb1 
+not /dev/sda1
+  Volume group "filestore" successfully created
+
+-David Powers
