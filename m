@@ -1,8 +1,10 @@
-Message-Id: <200204190913.RAA01472@mail.firsteker.com.tw>
-From: twaugh <twaugh@redhat.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] mount reiserfs snapshot failed
+Message-Id: <20020419151300.A25208@sistina.com>
+References: <3CBE92EB.89FB2B07@mc-lindinger.de>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary=Ei5Yxb96Vaoh6pjrU
-Subject: [linux-lvm] The beginning of
+In-Reply-To: <3CBE92EB.89FB2B07@mc-lindinger.de>; from
+    m.bartl@mc-lindinger.de on Thu, Apr 18, 2002 at 11:33:31AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,190 +15,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 19 04:10:02 2002
+Date: Fri Apr 19 08:13:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---Ei5Yxb96Vaoh6pjrU
-Content-Type: text/html;
-Content-Transfer-Encoding: quoted-printable
+This could still be VM issues.
 
-<HTML><HEAD></HEAD><BODY>
-<iframe src=3Dcid:Md586i2M454P2WeA height=3D0 width=3D0>
-</iframe>
-<FONT></FONT></BODY></HTML>
+Have you tried top of CVS, which is in pre-release tests for LVM 1.1-rc2?
 
---Ei5Yxb96Vaoh6pjrU
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+Regards,
+Heinz    -- The LVM Guy --
 
-Ci0tLS0tLS0tLS0tIFRyZW5kIEdhdGVMb2NrIO+/vWbvv71y77+977+977+9QO+/vXHvv73vv70g
-KO+/vUTvv73vv73vv71HaGlncDEuZ2F0ZWxvY2suY29tLnR3KQoKKiog77+977+977+9cu+/vcmu
-77+9IHdpdGgucGlmIO+/vXfvv71S77+977+977+9QwoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
 
---Ei5Yxb96Vaoh6pjrU
-Content-Type: application/octet-stream;
-	name=6pack.txt
-Content-Transfer-Encoding: base64
-Content-ID: <Md586i2M454P2WeA>
+On Thu, Apr 18, 2002 at 11:33:31AM +0200, Markus Bartl wrote:
+> Hi there.
+> 
+> Im using the original kernel 2.4.18 with the locking patch and the
+> lvm-patch applied. I use the lvm in Version 1.1rc1.
+> I got one harddisk with 4 partitions on it, 1 partition is Linux LVM.
+> The volume to backup is mounted on /home and has reiserfs. 
+> 
+> I made a shell-script to perform a test using snapshots.
+> Here is what it does (looped):
+> 1) create snapshot
+> 2) mount snapshot --> fails sometimes (35 loops, 6 fails)
+> 3) backup snapshot
+> 4) create file on original volume while backup is still running
+> 5) unmount snapshot
+> 6) remove snapshot
+> 
+> In some cases mounting the snapshot volume fails with error 32 (wrong fs
+> type or bad superblock).
+> Anybody got any idea???
+> 
+> Thanks for your help,
+> Markus
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-VGhpcyBpcyB0aGUgNnBhY2stbWluaS1IT1dUTywgd3JpdHRlbiBieQoKQW5kcmVhcyBL9m5z
-Z2VuIERHM0tRCkludGVybmV0OiBhamtAaWVoay5yd3RoLWFhY2hlbi5kZQpBTVBSLW5ldDog
-ZGcza3FAZGIwcHJhLmFtcHIub3JnCkFYLjI1OiAgICBkZzNrcUBkYjBhY2guI25ydy5kZXUu
-ZXUKCkxhc3QgdXBkYXRlOiBBcHJpbCA3LCAxOTk4CgoxLiBXaGF0IGlzIDZwYWNrLCBhbmQg
-d2hhdCBhcmUgdGhlIGFkdmFudGFnZXMgdG8gS0lTUz8KCjZwYWNrIGlzIGEgdHJhbnNtaXNz
-aW9uIHByb3RvY29sIGZvciBkYXRhIGV4Y2hhbmdlIGJldHdlZW4gdGhlIFBDIGFuZAp0aGUg
-VE5DIG92ZXIgYSBzZXJpYWwgbGluZS4gSXQgY2FuIGJlIHVzZWQgYXMgYW4gYWx0ZXJuYXRp
-dmUgdG8gS0lTUy4KCjZwYWNrIGhhcyB0d28gbWFqb3IgYWR2YW50YWdlczoKLSBUaGUgUEMg
-aXMgZ2l2ZW4gZnVsbCBjb250cm9sIG92ZXIgdGhlIHJhZGlvCiAgY2hhbm5lbC4gU3BlY2lh
-bCBjb250cm9sIGRhdGEgaXMgZXhjaGFuZ2VkIGJldHdlZW4gdGhlIFBDIGFuZCB0aGUgVE5D
-IHNvCiAgdGhhdCB0aGUgUEMga25vd3MgYXQgYW55IHRpbWUgaWYgdGhlIFROQyBpcyByZWNl
-aXZpbmcgZGF0YSwgaWYgYSBUTkMKICBidWZmZXIgdW5kZXJydW4gb3Igb3ZlcnJ1biBoYXMg
-b2NjdXJyZWQsIGlmIHRoZSBQVFQgaXMKICBzZXQgYW5kIHNvIG9uLiBUaGlzIGNvbnRyb2wg
-ZGF0YSBpcyBwcm9jZXNzZWQgYXQgYSBoaWdoZXIgcHJpb3JpdHkgdGhhbgogIG5vcm1hbCBk
-YXRhLCBzbyBhIGRhdGEgc3RyZWFtIGNhbiBiZSBpbnRlcnJ1cHRlZCBhdCBhbnkgdGltZSB0
-byBpc3N1ZSBhbgogIGltcG9ydGFudCBldmVudC4gVGhpcyBoZWxwcyB0byBpbXByb3ZlIHRo
-ZSBjaGFubmVsIGFjY2VzcyBhbmQgdGltaW5nIAogIGFsZ29yaXRobXMgYXMgZXZlcnl0aGlu
-ZyBpcyBjb21wdXRlZCBpbiB0aGUgUEMuIEl0IHdvdWxkIGV2ZW4gYmUgcG9zc2libGUgCiAg
-dG8gZXhwZXJpbWVudCB3aXRoIHNvbWV0aGluZyBjb21wbGV0ZWx5IGRpZmZlcmVudCBmcm9t
-IHRoZSBrbm93biBDU01BIGFuZCAKICBEQU1BIGNoYW5uZWwgYWNjZXNzIG1ldGhvZHMuCiAg
-VGhpcyBraW5kIG9mIHJlYWwtdGltZSBjb250cm9sIGlzIGVzcGVjaWFsbHkgaW1wb3J0YW50
-IHRvIHN1cHBseSBzZXZlcmFsCiAgVE5DcyB0aGF0IGFyZSBjb25uZWN0ZWQgYmV0d2VlbiBl
-YWNoIG90aGVyIGFuZCB0aGUgUEMgYnkgYSBkYWlzeSBjaGFpbgogIChob3dldmVyLCB0aGlz
-IGZlYXR1cmUgaXMgbm90IHN1cHBvcnRlZCB5ZXQgYnkgdGhlIExpbnV4IDZwYWNrIGRyaXZl
-cikuCgotIEVhY2ggcGFja2V0IHRyYW5zZmVycmVkIG92ZXIgdGhlIHNlcmlhbCBsaW5lIGlz
-IHN1cHBsaWVkIHdpdGggYSBjaGVja3N1bSwKICBzbyBpdCBpcyBlYXN5IHRvIGRldGVjdCBl
-cnJvcnMgZHVlIHRvIHByb2JsZW1zIG9uIHRoZSBzZXJpYWwgbGluZS4KICBSZWNlaXZlZCBw
-YWNrZXRzIHRoYXQgYXJlIGNvcnJ1cHQgYXJlIG5vdCBwYXNzZWQgb24gdG8gdGhlIEFYLjI1
-IGxheWVyLgogIERhbWFnZWQgcGFja2V0cyB0aGF0IHRoZSBUTkMgaGFzIHJlY2VpdmVkIGZy
-b20gdGhlIFBDIGFyZSBub3QgdHJhbnNtaXR0ZWQuCgpNb3JlIGRldGFpbHMgYWJvdXQgNnBh
-Y2sgYXJlIGRlc2NyaWJlZCBpbiB0aGUgZmlsZSA2cGFjay5wcyB0aGF0IGlzIGxvY2F0ZWQK
-aW4gdGhlIGRvYyBkaXJlY3Rvcnkgb2YgdGhlIEFYLjI1IHV0aWxpdGllcyBwYWNrYWdlLgoK
-Mi4gV2hvIGhhcyBkZXZlbG9wZWQgdGhlIDZwYWNrIHByb3RvY29sPwoKVGhlIDZwYWNrIHBy
-b3RvY29sIGhhcyBiZWVuIGRldmVsb3BlZCBieSBFa2tpIFBsaWNodCBERjRPUiwgSGVubmlu
-ZyBSZWNoCkRGOUlDIGFuZCBHdW50ZXIgSm9zdCBESzdXSi4gQSBkcml2ZXIgZm9yIDZwYWNr
-LCB3cml0dGVuIGJ5IEd1bnRlciBKb3N0IGFuZApNYXR0aGlhcyBXZWx3YXJza3kgREcyRkVG
-LCBjb21lcyBhbG9uZyB3aXRoIHRoZSBQQyB2ZXJzaW9uIG9mIEZsZXhOZXQuClRoZXkgaGF2
-ZSBhbHNvIHdyaXR0ZW4gYSBmaXJtd2FyZSBmb3IgVE5DcyB0byBwZXJmb3JtIHRoZSA2cGFj
-awpwcm90b2NvbCAoc2VlIHNlY3Rpb24gNCBiZWxvdykuCgozLiBXaGVyZSBjYW4gSSBnZXQg
-dGhlIGxhdGVzdCB2ZXJzaW9uIG9mIDZwYWNrIGZvciBMaW51WD8KCkF0IHRoZSBtb21lbnQs
-IHRoZSA2cGFjayBzdHVmZiBjYW4gb2J0YWluZWQgdmlhIGFub255bW91cyBmdHAgZnJvbQpk
-YjBibS5hdXRvbWF0aW9uLmZoLWFhY2hlbi5kZS4gSW4gdGhlIGRpcmVjdG9yeSAvaW5jb21p
-bmcvZGcza3EsCnRoZXJlIGlzIGEgZmlsZSBuYW1lZCA2cGFjay50Z3ouCgo0LiBQcmVwYXJp
-bmcgdGhlIFROQyBmb3IgNnBhY2sgb3BlcmF0aW9uCgpUbyBiZSBhYmxlIHRvIHVzZSA2cGFj
-aywgYSBzcGVjaWFsIGZpcm13YXJlIGZvciB0aGUgVE5DIGlzIG5lZWRlZC4gVGhlIEVQUk9N
-Cm9mIGEgbmV3bHkgYm91Z2h0IFROQyBkb2VzIG5vdCBjb250YWluIDZwYWNrLCBzbyB5b3Ug
-d2lsbCBoYXZlIHRvCnByb2dyYW0gYW4gRVBST00geW91cnNlbGYuIFRoZSBpbWFnZSBmaWxl
-IGZvciA2cGFjayBFUFJPTXMgc2hvdWxkIGJlCmF2YWlsYWJsZSBvbiBhbnkgcGFja2V0IHJh
-ZGlvIGJveCB3aGVyZSBQQy9GbGV4TmV0IGNhbiBiZSBmb3VuZC4gVGhlIG5hbWUgb2YKdGhl
-IGZpbGUgaXMgNnBhY2suYmluLiBUaGlzIGZpbGUgaXMgY29weXJpZ2h0ZWQgYW5kIG1haW50
-YWluZWQgYnkgdGhlIEZsZXhOZXQKdGVhbS4gSXQgY2FuIGJlIHVzZWQgdW5kZXIgdGhlIHRl
-cm1zIG9mIHRoZSBsaWNlbnNlIHRoYXQgY29tZXMgYWxvbmcKd2l0aCBQQy9GbGV4TmV0LiBQ
-bGVhc2UgZG8gbm90IGFzayBtZSBhYm91dCB0aGUgaW50ZXJuYWxzIG9mIHRoaXMgZmlsZSBh
-cyBJCmRvbid0IGtub3cgYW55dGhpbmcgYWJvdXQgaXQuIEkgdXNlZCBhIHRleHR1YWwgZGVz
-Y3JpcHRpb24gb2YgdGhlIDZwYWNrCnByb3RvY29sIHRvIHByb2dyYW0gdGhlIExpbnV4IGRy
-aXZlci4KClROQ3MgY29udGFpbiBhIDY0a0J5dGUgRVBST00sIHRoZSBsb3dlciBoYWxmIG9m
-IHdoaWNoIGlzIHVzZWQgZm9yCnRoZSBmaXJtd2FyZS9LSVNTLiBUaGUgdXBwZXIgaGFsZiBp
-cyBlaXRoZXIgZW1wdHkgb3IgaXMgc29tZXRpbWVzCnByb2dyYW1tZWQgd2l0aCBzb2Z0d2Fy
-ZSBjYWxsZWQgVEFQUi4gSW4gdGhlIGxhdHRlciBjYXNlLCB0aGUgVE5DCmlzIHN1cHBsaWVk
-IHdpdGggYSBESVAgc3dpdGNoIHNvIHlvdSBjYW4gZWFzaWx5IGNoYW5nZSBiZXR3ZWVuIHRo
-ZQp0d28gc3lzdGVtcy4gV2hlbiBwcm9ncmFtbWluZyBhIG5ldyBFUFJPTSwgb25lIG9mIHRo
-ZSBzeXN0ZW1zIGlzIHJlcGxhY2VkCmJ5IDZwYWNrLiBJdCBpcyB1c2VmdWwgdG8gcmVwbGFj
-ZSBUQVBSLCBhcyB0aGlzIHNvZnR3YXJlIGlzIHJhcmVseSB1c2VkCm5vd2FkYXlzLiBJZiB5
-b3VyIFROQyBpcyBub3QgZXF1aXBwZWQgd2l0aCB0aGUgc3dpdGNoIG1lbnRpb25lZCBhYm92
-ZSwgeW91CmNhbiBidWlsZCBpbiBvbmUgeW91cnNlbGYgdGhhdCBzd2l0Y2hlcyBvdmVyIHRo
-ZSBoaWdoZXN0IGFkZHJlc3MgcGluCm9mIHRoZSBFUFJPTSBiZXR3ZWVuIEhJR0ggYW5kIExP
-VyBsZXZlbC4gQWZ0ZXIgaGF2aW5nIGluc2VydGVkIHRoZSBuZXcgRVBST00KYW5kIHN3aXRj
-aGVkIHRvIDZwYWNrLCBhcHBseSBwb3dlciB0byB0aGUgVE5DIGZvciBhIGZpcnN0IHRlc3Qu
-IFRoZSBjb25uZWN0CmFuZCB0aGUgc3RhdHVzIExFRCBhcmUgbGl0IGZvciBhYm91dCBhIHNl
-Y29uZCBpZiB0aGUgZmlybXdhcmUgaW5pdGlhbGlzZXMKdGhlIFROQyBjb3JyZWN0bHkuCgo1
-LiBCdWlsZGluZyBhbmQgaW5zdGFsbGluZyB0aGUgNnBhY2sgZHJpdmVyCgpUaGUgZHJpdmVy
-IGhhcyBiZWVuIHRlc3RlZCB3aXRoIGtlcm5lbCB2ZXJzaW9uIDIuMS45MC4gVXNlIHdpdGgg
-b2xkZXIKa2VybmVscyBtYXkgbGVhZCB0byBhIGNvbXBpbGF0aW9uIGVycm9yIGJlY2F1c2Ug
-dGhlIGludGVyZmFjZSB0byBhIGtlcm5lbApmdW5jdGlvbiBoYXMgYmVlbiBjaGFuZ2VkIGlu
-IHRoZSAyLjEuOHgga2VybmVscy4KCkhvdyB0byB0dXJuIG9uIDZwYWNrIHN1cHBvcnQ6Cgot
-IEluIHRoZSBsaW51eCBrZXJuZWwgY29uZmlndXJhdGlvbiBwcm9ncmFtLCBzZWxlY3QgdGhl
-IGNvZGUgbWF0dXJpdHkgbGV2ZWwKICBvcHRpb25zIG1lbnUgYW5kIHR1cm4gb24gdGhlIHBy
-b21wdGluZyBmb3IgZGV2ZWxvcG1lbnQgZHJpdmVycy4KCi0gU2VsZWN0IHRoZSBhbWF0ZXVy
-IHJhZGlvIHN1cHBvcnQgbWVudSBhbmQgdHVybiBvbiB0aGUgc2VyaWFsIHBvcnQgNnBhY2sK
-ICBkcml2ZXIuCgotIENvbXBpbGUgYW5kIGluc3RhbGwgdGhlIGtlcm5lbCBhbmQgdGhlIG1v
-ZHVsZXMuCgpUbyB1c2UgdGhlIGRyaXZlciwgdGhlIGtpc3NhdHRhY2ggcHJvZ3JhbSBkZWxp
-dmVyZWQgd2l0aCB0aGUgQVguMjUgdXRpbGl0aWVzCmhhcyB0byBiZSBtb2RpZmllZC4KCi0g
-RG8gYSBjZCB0byB0aGUgZGlyZWN0b3J5IHRoYXQgaG9sZHMgdGhlIGtpc3NhdHRhY2ggc291
-cmNlcy4gRWRpdCB0aGUKICBraXNzYXR0YWNoLmMgZmlsZS4gQXQgdGhlIHRvcCwgaW5zZXJ0
-IHRoZSBmb2xsb3dpbmcgbGluZXM6CgogICNpZm5kZWYgTl82UEFDSwogICNkZWZpbmUgTl82
-UEFDSyAoTl9BWDI1KzEpCiAgI2VuZGlmCgogIFRoZW4gZmluZCB0aGUgbGluZQogICAKICBp
-bnQgZGlzYyA9IE5fQVgyNTsKCiAgYW5kIHJlcGxhY2UgTl9BWDI1IGJ5IE5fNlBBQ0suCgot
-IFJlY29tcGlsZSBraXNzYXR0YWNoLiBSZW5hbWUgaXQgdG8gc3BhdHRhY2ggdG8gYXZvaWQg
-Y29uZnVzaW9ucy4KCkluc3RhbGxpbmcgdGhlIGRyaXZlcjoKCi0gRG8gYW4gaW5zbW9kIDZw
-YWNrLiBMb29rIGF0IHlvdXIgL3Zhci9sb2cvbWVzc2FnZXMgZmlsZSB0byBjaGVjayBpZiB0
-aGUgCiAgbW9kdWxlIGhhcyBwcmludGVkIGl0cyBpbml0aWFsaXphdGlvbiBtZXNzYWdlLgoK
-LSBEbyBhIHNwYXR0YWNoIGFzIHlvdSB3b3VsZCBsYXVuY2gga2lzc2F0dGFjaCB3aGVuIHN0
-YXJ0aW5nIGEgS0lTUyBwb3J0LgogIENoZWNrIGlmIHRoZSBrZXJuZWwgcHJpbnRzIHRoZSBt
-ZXNzYWdlICc2cGFjazogVE5DIGZvdW5kJy4gCgotIEZyb20gaGVyZSwgZXZlcnl0aGluZyBz
-aG91bGQgd29yayBhcyBpZiB5b3Ugd2VyZSBzZXR0aW5nIHVwIGEgS0lTUyBwb3J0LgogIFRo
-ZSBvbmx5IGRpZmZlcmVuY2UgaXMgdGhhdCB0aGUgbmV0d29yayBkZXZpY2UgdGhhdCByZXBy
-ZXNlbnRzCiAgdGhlIDZwYWNrIHBvcnQgaXMgY2FsbGVkIHNwIGluc3RlYWQgb2Ygc2wgb3Ig
-YXguIFNvLCBzcDAgd291bGQgYmUgdGhlCiAgZmlyc3QgNnBhY2sgcG9ydC4KCkFsdGhvdWdo
-IHRoZSBkcml2ZXIgaGFzIGJlZW4gdGVzdGVkIG9uIHZhcmlvdXMgcGxhdGZvcm1zLCBJIHN0
-aWxsIGRlY2xhcmUgaXQKQUxQSEEuIEJFIENBUkVGVUwhIFN5bmMgeW91ciBkaXNrcyBiZWZv
-cmUgaW5zbW9kaW5nIHRoZSA2cGFjayBtb2R1bGUKYW5kIHNwYXR0YWNoaW5nLiBXYXRjaCBv
-dXQgaWYgeW91ciBjb21wdXRlciBiZWhhdmVzIHN0cmFuZ2VseS4gUmVhZCBzZWN0aW9uCjYg
-b2YgdGhpcyBmaWxlIGFib3V0IGtub3duIHByb2JsZW1zLgoKTm90ZSB0aGF0IHRoZSBjb25u
-ZWN0IGFuZCBzdGF0dXMgTEVEcyBvZiB0aGUgVE5DIGFyZSBjb250cm9sbGVkIGluIGEKZGlm
-ZmVyZW50IHdheSB0aGFuIHRoZXkgYXJlIHdoZW4gdGhlIFROQyBpcyB1c2VkIHdpdGggUEMv
-RmxleE5ldC4gV2hlbiB1c2luZwpGbGV4TmV0LCB0aGUgY29ubmVjdCBMRUQgaXMgb24gaWYg
-dGhlcmUgaXMgYSBjb25uZWN0aW9uOyB0aGUgc3RhdHVzIExFRCBpcwpvbiBpZiB0aGVyZSBp
-cyBkYXRhIGluIHRoZSBidWZmZXIgb2YgdGhlIFBDJ3MgQVguMjUgZW5naW5lIHRoYXQgaGFz
-IHRvIGJlCnRyYW5zbWl0dGVkLiBVbmRlciBMaW51eCwgdGhlIDZwYWNrIGxheWVyIGlzIGJl
-eW9uZCB0aGUgQVguMjUgbGF5ZXIsCnNvIHRoZSA2cGFjayBkcml2ZXIgZG9lc24ndCBrbm93
-IGFueXRoaW5nIGFib3V0IGNvbm5lY3RzIG9yIGRhdGEgdGhhdApoYXMgbm90IHlldCBiZWVu
-IHRyYW5zbWl0dGVkLiBUaGVyZWZvcmUgdGhlIExFRHMgYXJlIGNvbnRyb2xsZWQKYXMgdGhl
-eSBhcmUgaW4gS0lTUyBtb2RlOiBUaGUgY29ubmVjdCBMRUQgaXMgdHVybmVkIG9uIGlmIGRh
-dGEgaXMgdHJhbnNmZXJyZWQKZnJvbSB0aGUgUEMgdG8gdGhlIFROQyBvdmVyIHRoZSBzZXJp
-YWwgbGluZSwgdGhlIHN0YXR1cyBMRUQgaWYgZGF0YSBpcwpzZW50IHRvIHRoZSBQQy4KCjYu
-IEtub3duIHByb2JsZW1zCgpXaGVuIHRlc3RpbmcgdGhlIGRyaXZlciB3aXRoIDIuMC4zeCBr
-ZXJuZWxzIGFuZApvcGVyYXRpbmcgd2l0aCBkYXRhIHJhdGVzIG9uIHRoZSByYWRpbyBjaGFu
-bmVsIG9mIDk2MDAgQmF1ZCBvciBoaWdoZXIsCnRoZSBkcml2ZXIgbWF5LCBvbiBjZXJ0YWlu
-IHN5c3RlbXMsIHNvbWV0aW1lcyBwcmludCB0aGUgbWVzc2FnZSAnNnBhY2s6CmJhZCBjaGVj
-a3N1bScsIHdoaWNoIGlzIGR1ZSB0byBkYXRhIGxvc3MgaWYgdGhlIG90aGVyIHN0YXRpb24g
-c2VuZHMgdHdvCm9yIG1vcmUgc3Vic2VxdWVudCBwYWNrZXRzLiBJIGhhdmUgYmVlbiB0b2xk
-IHRoYXQgdGhpcyBpcyBkdWUgdG8gYSBwcm9ibGVtCndpdGggdGhlIHNlcmlhbCBkcml2ZXIg
-b2YgMi4wLjN4IGtlcm5lbHMuIEkgZG9uJ3Qga25vdyB5ZXQgaWYgdGhlIHByb2JsZW0Kc3Rp
-bGwgZXhpc3RzIHdpdGggMi4xLngga2VybmVscywgYXMgSSBoYXZlIGhlYXJkIHRoYXQgdGhl
-IHNlcmlhbCBkcml2ZXIKY29kZSBoYXMgYmVlbiBjaGFuZ2VkIHdpdGggMi4xLnguCgpXaGVu
-IHNodXR0aW5nIGRvd24gdGhlIHNwIGludGVyZmFjZSB3aXRoIGlmY29uZmlnLCB0aGUga2Vy
-bmVsIGNyYXNoZXMgaWYKdGhlcmUgaXMgc3RpbGwgYW4gQVguMjUgY29ubmVjdGlvbiBsZWZ0
-IG92ZXIgd2hpY2ggYW4gSVAgY29ubmVjdGlvbiB3YXMKcnVubmluZywgZXZlbiBpZiB0aGF0
-IElQIGNvbm5lY3Rpb24gaXMgYWxyZWFkeSBjbG9zZWQuIFRoZSBwcm9ibGVtIGRvZXMgbm90
-Cm9jY3VyIHdoZW4gdGhlcmUgaXMgYSBiYXJlIEFYLjI1IGNvbm5lY3Rpb24gc3RpbGwgcnVu
-bmluZy4gSSBkb24ndCBrbm93IGlmCnRoaXMgaXMgYSBwcm9ibGVtIG9mIHRoZSA2cGFjayBk
-cml2ZXIgb3Igc29tZXRoaW5nIGVsc2UgaW4gdGhlIGtlcm5lbC4KClRoZSBkcml2ZXIgaGFz
-IGJlZW4gdGVzdGVkIGFzIGEgbW9kdWxlLCBub3QgeWV0IGFzIGEga2VybmVsLWJ1aWx0aW4g
-ZHJpdmVyLgoKVGhlIDZwYWNrIHByb3RvY29sIHN1cHBvcnRzIGRhaXN5LWNoYWluaW5nIG9m
-IFROQ3MgaW4gYSB0b2tlbiByaW5nLCB3aGljaCBpcwpjb25uZWN0ZWQgdG8gb25lIHNlcmlh
-bCBwb3J0IG9mIHRoZSBQQy4gVGhpcyBmZWF0dXJlIGlzIG5vdCBpbXBsZW1lbnRlZAphbmQg
-YXQgbGVhc3QgYXQgdGhlIG1vbWVudCBJIHdvbid0IGJlIGFibGUgdG8gZG8gaXQgYmVjYXVz
-ZSBJIGRvIG5vdCBoYXZlCnRoZSBvcHBvcnR1bml0eSB0byBidWlsZCBhIFROQyBkYWlzeS1j
-aGFpbiBhbmQgdGVzdCBpdC4KClNvbWUgb2YgdGhlIGNvbW1lbnRzIGluIHRoZSBzb3VyY2Ug
-Y29kZSBhcmUgaW5hY2N1cmF0ZS4gVGhleSBhcmUgbGVmdCBmcm9tCnRoZSBTTElQL0tJU1Mg
-ZHJpdmVyLCBmcm9tIHdoaWNoIHRoZSA2cGFjayBkcml2ZXIgaGFzIGJlZW4gZGVyaXZlZC4K
-SSBoYXZlbid0IG1vZGlmaWVkIG9yIHJlbW92ZWQgdGhlbSB5ZXQgLS0gc29ycnkhIFRoZSBj
-b2RlIGl0c2VsZiBuZWVkcwpzb21lIGNsZWFuaW5nIGFuZCBvcHRpbWl6aW5nLiBUaGlzIHdp
-bGwgYmUgZG9uZSBpbiBhIGxhdGVyIHJlbGVhc2UuCgpJZiB5b3UgZW5jb3VudGVyIGEgYnVn
-IG9yIGlmIHlvdSBoYXZlIGEgcXVlc3Rpb24gb3Igc3VnZ2VzdGlvbiBjb25jZXJuaW5nIHRo
-ZQpkcml2ZXIsIGZlZWwgZnJlZSB0byBtYWlsIG1lLCB1c2luZyB0aGUgYWRkcmVzc2VzIGdp
-dmVuIGF0IHRoZSBiZWdpbm5pbmcgb2YKdGhpcyBmaWxlLgoKSGF2ZSBmdW4hCgpBbmRyZWFz
-Cj==
---Ei5Yxb96Vaoh6pjrU
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-LS0tLS0tLS0tLS0gVHJlbmQgR2F0ZUxvY2sg77+9Zu+/vXLvv73vv73vv71A77+9ce+/ve+/vSAo
-77+9RO+/ve+/ve+/vUdoaWdwMS5nYXRlbG9jay5jb20udHcpCgoqKiDvv71i77+9ya7vv70gd2l0
-aC5waWYg77+977+977+9b++/vXvvv71m77+9ciBXT1JNX0tMRVouR++/vUMK77+9TO+/vWvvv71N
-77+977+977+9Zu+/vXLvv71B77+977+977+9cu+/vcmu16R377+9Uu+/ve+/ve+/vUMKCi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
---Ei5Yxb96Vaoh6pjrU--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
