@@ -1,11 +1,10 @@
-Return-Path: <mauelshagen@sistina.com>
-Date: Wed, 25 Jul 2001 00:16:55 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pb with pvcreate and partition tables
-Message-ID: <20010725001655.A22111@sistina.com>
-References: <85063BBE668FD411944400D0B744267A6434E5@AUSMAIL>
-Mime-Version: 1.0
-In-Reply-To: <85063BBE668FD411944400D0B744267A6434E5@AUSMAIL>; from austin@coremetrics.com on Tue, Jul 24, 2001 at 11:49:56AM -0500
+Return-Path: <heartboy@nycap.rr.com>
+From: Joe Morris <heartboy@nycap.rr.com>
+Subject: Fwd: Re: [linux-lvm] unresolved SYMBOL get_hardblocksize during modules generation
+Date: Tue, 24 Jul 2001 12:00:43 -0400
+MIME-Version: 1.0
+Message-Id: <01072412004301.04697@alb-66-66-255-20>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,46 +17,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jul 24, 2001 at 11:49:56AM -0500, Gonyou, Austin wrote:
-> Is the pre not available anywhere? I'd like to see if it solves my problem
-> of growing XFS fileysstems with LVM. 
+On Tuesday 24 July 2001 11:09 am, you wrote:
+> Good afternoon,
+>
+> I am trying to build 2.4.7 kernel with lvm-0.9.1_beta7-2.4.7.patch and I
+> have this error during modules build :
+>
+> gcc -D__KERNEL__ -I/usr/src/linux-2.4.7/include -Wall -Wstrict-prototypes
+> -Wno-trigraphs -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common
+> -pipe -mpreferred-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS
+> -include /usr/src/linux-2.4.7/include/linux/modversions.h   -c -o lvm.o
+> lvm.c
+> lvm.c: In function `__update_hardblocksize':
+> lvm.c:1794: warning: implicit declaration of function `get_hardblocksize'
+>
+> I don't find in the kernel tree directory this function, is it a problem
+> with the LVM patch or the level of the kernel.
+>
+> Thanks by advance to help to achieve the build of this kernel.
+>
+> Regards.
+>
+> T. DANJEAN
 
-Well, pre was the actual top of the repository.
-Now it is tagged LVM_0-9-1_Beta8 and you can get the tarball
-from ftp.sistina.com as well :-)
-
-> 
-> > Please watch out for the announcement of Beta 8 later tonight.
-> 
-> -- 
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-796-9023
-> email: austin@coremetrics.com 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Did you try replacing all the get_hardblocksize with get_hardsect_size?
+Joe
