@@ -1,11 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012240512.eBO5CNG28903@webber.adilger.net>
-Subject: Re: [linux-lvm] '/etc/init.d/lvm' script in debian package
-In-Reply-To: <00122305232204.02330@lyta> "from Russell Coker at Dec 23, 2000
- 05:23:22 am"
-Date: Sat, 23 Dec 2000 22:12:23 -0700 (MST)
+Return-Path: <mike@marxmeier.com>
+Message-ID: <3A466E80.1D3DF239@wrkhors.com>
+Date: Sun, 24 Dec 2000 15:45:36 -0600
+From: Steven Lembark <lembark@wrkhors.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] general question before i fry myself...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,37 +17,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: LVM <linux-lvm@msede.com>
 
-Russel Coker writes:
-> #!/bin/sh
-> #
-> # lvm		This script handles the LVM startup/shutdown
-> #		so that LVMs are properly configured and available.
-> #
-> 
-> if [ "0" = `grep -c lvm /proc/devices` ]; then
->   exit 0
-> fi
-> [ -f /etc/lvmtab ] || exit 0
-> [ -x /sbin/vgscan ] || exit 0
-This         ^^^^^^ should probably be "vgchange" looking at your script.
+have worked w/ HP-UX LVM for 10 years.  looking at the linux LVM
+[pvl][gv]blah commands they seem nearly identical to HP-UX's (which
+is a Good Thing compared to most of the others).  e.g., the HOWTO
+describes the exact commands for creating a pv, binding it into a
+vg and creating/extending lv's.
 
-> case "$1" in
-> 	start)
-> 		echo "Setting up LVM Volume Groups..."
-> 		#/sbin/vgscan
-> 		/sbin/vgchange -a y
-> 		;;
-> 	
-> 	stop)
-> 		echo "Shutting down LVM Volume Groups... "
-> 		/sbin/vgchange -a n
-> 		;;
+q:  are there any noticable gotcha's from following HP's 
+    pv/vg/lv semantics?
 
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
