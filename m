@@ -1,8 +1,9 @@
-Message-Id: <200204220416.MAA07742@mail.firsteker.com.tw>
-From: tim <tim@cyberelk.net>
+Message-Id: <002401c1ea10$873d91a0$6b01a8c0@PC07>
+From: "Ralf Zerres" <rzerres@networkx.de>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary=XLIqVP7c4PX
-Subject: [linux-lvm] Copyright end
+Content-Type: multipart/mixed;
+    boundary="----=_NextPart_000_0020_01C1EA21.4ABA2CA0"
+Subject: [linux-lvm] Desater Recovery <urgent>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,203 +14,670 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Apr 21 23:14:02 2002
+Date: Mon Apr 22 10:14:02 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---XLIqVP7c4PX
-Content-Type: text/html;
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0020_01C1EA21.4ABA2CA0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_001_0021_01C1EA21.4ABBB340"
+
+
+------=_NextPart_001_0021_01C1EA21.4ABBB340
+Content-Type: text/plain;
+	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-<HTML><HEAD></HEAD><BODY>
-<iframe src=3Dcid:G6HEm86t6J0 height=3D0 width=3D0>
-</iframe>
-<FONT></FONT></BODY></HTML>
+hello everybody,
 
---XLIqVP7c4PX
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+on a production system we do have a serious data destruction problem.=20
+Any help leading us to restore the filesystem will be honored. We can =
+dicuss financial details later.
+First I'd like to describe the situation giving you a picture wether it =
+is possible to restore the data.
 
-Ci0tLS0tLS0tLS0tIFRyZW5kIEdhdGVMb2NrIO+/vWbvv71y77+977+977+9QO+/vXHvv73vv70g
-KO+/vUTvv73vv73vv71HaGlncDUuZ2F0ZWxvY2suY29tLnR3KQoKKiog77+977+977+9cu+/vcmu
-77+9IGVuZCDvv71377+9Uu+/ve+/ve+/vUMKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ==
+Please answer as soon as possible to give me a hint wether I should wait =
+for a detailed analysis,
+if it make sense to dig deeper or if it is more likely that people have =
+to reinsert the data from printed=20
+information.
 
---XLIqVP7c4PX
-Content-Type: application/octet-stream;
-	name=2226661[1].htm
-Content-Transfer-Encoding: base64
-Content-ID: <G6HEm86t6J0>
+0. PROBLEM:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Destructed Filesystem after resizing LVG running a Postgres Database.=20
 
-PCEtLWNoZWNrOmVmZmZjODE0LC0tPgo8aHRtbD4KPGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9
-IkNvbnRlbnQtVHlwZSIgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PWJpZzUiPgo8dGl0
-bGU+qV+8r7dzu0QtwXCmWLdzu0S69C2ms6/dprO4eSCopanTprDFU8JJrLDD0jwvdGl0bGU+
-CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+CjwhLS0KLmMyIHsgIGZvbnQtZmFtaWx5OiAit3Oy
-06n6xekiO2ZvbnQtc2l6ZTogMTBwdDsgbGluZS1oZWlnaHQ6IDE0cHR9Ci5jMSB7ICBmb250
-LWZhbWlseTogIrdzstOp+sXpIjtmb250LXNpemU6IDEycHQ7IGxpbmUtaGVpZ2h0OiAyMHB0
-fQoudDEgeyAgZm9udC1mYW1pbHk6ICK80LeixekiO2ZvbnQtc2l6ZTogMTZwdDsgbGluZS1o
-ZWlnaHQ6IDE2cHR9CmE6aG92ZXIgeyAgZm9udC1mYW1pbHk6ICIiOyBjb2xvcjogYmx1ZX0K
-YTphY3RpdmUgeyAgZm9udC1mYW1pbHk6ICIiOyBjb2xvcjogI0ZGMDAwMH0KYTpsaW5rIHsg
-IGZvbnQtZmFtaWx5OiAiIjsgY29sb3I6ICMwMDAwOTl9CmE6dmlzaXRlZCB7ICBmb250LWZh
-bWlseTogIiI7IGNvbG9yOiAjOTkwMDAwfQotLT4KPC9zdHlsZT4KPFNDUklQVCBMQU5HVUFH
-RSA9ICJKYXZhU2NyaXB0Ij4KZnVuY3Rpb24gY1dpbmRvdyggbm8gKQp7Cgl2YXIgYWRkciA9
-ICJodHRwOi8vdHcubmV3cy55YWhvby5jb20vY2dpLWJpbi9tYWlsZnJpZW5kLmNnaT9uZXdz
-c2VxPSIrbm87CndpbmRvdy5vcGVuKGFkZHIsIm1haWwiLCJ0b29sYmFyPW5vLGxvY2F0aW9u
-PW5vLGRpcmVjdG9yaWVzPW5vLHN0YXR1cz1ubyxtZW51YmFyPW5vLHNjcm9sbGJhcnM9eWVz
-LHdpZHRoPTM5NSxoZWlnaHQ9NTQwLHJlc2l6YWJsZT0wJykiKTsKfQo8L1NDUklQVD4KPHNj
-cmlwdCBsYW5ndWFnZT0iamF2YXNjcmlwdCIgc3JjPSJodHRwOi8vZy5raW1vLmNvbS50dy9h
-ZG5ld3MvanMvdmFyaWFibGVzXzJfMC5qcyI+PC9zY3JpcHQ+CjxzY3JpcHQgbGFuZ3VhZ2U9
-ImphdmFzY3JpcHQiIHNyYz0iaHR0cDovL2cua2ltby5jb20udHcvYWRuZXdzL2pzL3ZiXzJf
-MC5qcyI+PC9zY3JpcHQ+CjxzY3JpcHQgbGFuZ3VhZ2U9ImphdmFzY3JpcHQiIHNyYz0iaHR0
-cDovL2cua2ltby5jb20udHcvYWRuZXdzL2pzL2NsaWVudFNuaWZmZXJfMl8wLmpzIj48L3Nj
-cmlwdD4KPHNjcmlwdCBsYW5ndWFnZT0iamF2YXNjcmlwdCIgc3JjPSJodHRwOi8vZy5raW1v
-LmNvbS50dy9hZG5ld3MvanMvZnVuY3Rpb25zXzJfMC5qcyI+PC9zY3JpcHQ+CjxzY3JpcHQg
-bGFuZ3VhZ2U9ImphdmFzY3JpcHQiIHNyYz0iaHR0cDovL2cua2ltby5jb20udHcvYWRuZXdz
-L2pzL25ld3NmbGFzaC5qcyI+PC9zY3JpcHQ+Cgo8L2hlYWQ+Cgo8Ym9keSBCR0NPTE9SPSJX
-aGl0ZSIgVkxJTks9IiMzOTQ4Q0MiIEFMSU5LPSJSZWQiID4KCjwhLS0gYWRfa2luZF9iZWcg
-LS0+Cjxmb3JtIG5hbWU9ImFkZm9ybSI+CjxpbnB1dCB0eXBlPSJoaWRkZW4iIG5hbWU9ImFk
-a2luZDAiIHZhbHVlPSJlbnRlcnRhaW4iPgo8aW5wdXQgdHlwZT0iaGlkZGVuIiBuYW1lPSJh
-ZGtpbmQiIHZhbHVlPSJ1ZG4iPgo8aW5wdXQgdHlwZT0iaGlkZGVuIiBuYW1lPSJoYXZlcGlj
-IiB2YWx1ZT0ibm8iPgo8L2Zvcm0+CjwhLS0gYWRfa2luZF9lbmQgLS0+Cgo8cCBhbGlnbj0i
-Y2VudGVyIj4KCjxNQVAgTkFNRT0iRnJvbnRQYWdlTWFwMCI+CjxBUkVBIFNIQVBFPSJSRUNU
-IiBDT09SRFM9IjE3NywgNCwgMzE3LCAzNSIgSFJFRj0iaHR0cDovL3d3dy51ZG5uZXdzLmNv
-bS8iPgoKPGFyZWEgc2hhcGU9InJlY3QiIGNvb3Jkcz0iMTgsIDMsIDE3NywgMzciIGhyZWY9
-Imh0dHA6Ly90dy5uZXdzLnlhaG9vLmNvbS8iPgo8YXJlYSBocmVmPSJodHRwOi8vbXkua2lt
-by5jb20udHcvIiBjb29yZHM9IjQyNSwgMjEsIDQ4NSwgNDAiIHNoYXBlPSJyZWN0Ij4KPGFy
-ZWEgaHJlZj0iaHR0cDovL2hlbHAua2ltby5jb20udHcvIiBjb29yZHM9IjQ4OSwgMjMsIDU0
-MywgNDAiIHNoYXBlPSJyZWN0Ij4KPGFyZWEgaHJlZj0iaHR0cDovL3R3Lm5ld3MueWFob28u
-Y29tLyIgc2hhcGU9InJlY3QiIGNvb3Jkcz0iNTUyLCAyMywgNTk4LCA0MCI+CjwvTUFQPgo8
-aW1nIFNSQz0iaHR0cDovL3R3LnlpbWcuY29tL2kvdHcvbmV3cy91ZG5fdC5naWYiIHdpZHRo
-PSI2MDAiIGhlaWdodD0iNDAiIGJvcmRlcj0iMCIgSVNNQVA9IiIgdXNlbWFwPSIjRnJvbnRQ
-YWdlTWFwMCI+CjwvcD4KCjwhLS09PT09PSBBRCBCQU5ORVIgYmVnaW4gPT09PT0tLT4KPHAg
-YWxpZ249ImNlbnRlciI+CjxpZnJhbWUgc3JjPSJodHRwOi8vdHcuYWRzZXJ2ZXIueWFob28u
-Y29tL2E/Zj0xNTI5NTIwNTcmcD10d19raW1vJmw9TiZjPXNoJmJnPXdoaXRlIiB3aWR0aD00
-NzIgaGVpZ2h0PTY0IG1hcmdpbndpZHRoPTAgbWFyZ2luaGVpZ2h0PTAgaHNwYWNlPTAgdnNw
-YWNlPTAgZnJhbWVib3JkZXI9MCBzY3JvbGxpbmc9bm8+CjxzY3JpcHQgbGFuZ3VhZ2U9Ikph
-dmFTY3JpcHQiIHR5cGU9InRleHQvamF2YXNjcmlwdCIgc3JjPSJodHRwOi8vdHcuYWRzZXJ2
-ZXIueWFob28uY29tL2E/Zj0xNTI5NTIwNTcmcD10d19raW1vJmw9TiZjPXNqIj48L3Njcmlw
-dD4KPC9pZnJhbWU+CjwvcD4KPCEtLT09PT09IEFEIEJBTk5FUiBlbmQgPT09PT0tLT4KCjxj
-ZW50ZXI+IDx0YWJsZSBib3JkZXI9IjAiIGNlbGxzcGFjaW5nPSIyIiBjZWxscGFkZGluZz0i
-MCIgd2lkdGg9IjYwNCI+CiAgICA8dHI+IDx0ZCBhbGlnbj0iY2VudGVyIj4KICAgIDx0YWJs
-ZSBib3JkZXI9IjAiIGNlbGxzcGFjaW5nPSIyIiBjZWxscGFkZGluZz0iMCIgd2lkdGg9IjYw
-OCI+Cgk8dHI+PHRkIGFsaWduPSJjZW50ZXIiPgoJPHRhYmxlIGJvcmRlcj0iMCIgY2VsbHNw
-YWNpbmc9IjIiIGNlbGxwYWRkaW5nPSIwIiB3aWR0aD0iNjA4Ij4KCTx0cj48dGQgYWxpZ249
-ImNlbnRlciI+CgkJPHRhYmxlIGJvcmRlcj0iMCIgY2VsbHNwYWNpbmc9IjQiIGNlbGxwYWRk
-aW5nPSIzIiB3aWR0aD0iMTAwJSI+CgkJCTx0cj4KCQkJCTx0ZCBhbGlnbj0iQ0VOVEVSIiBi
-Z2NvbG9yPSIjRkVFMjcyIj48Yj4KCQkJCTxhIGhyZWY9Ii9wb2xpdHkvaW5kZXguaHRtbCI+
-CgkJCQmsRqp2CgkJCQk8L2E+PC9iPjwvdGQ+CgoJCQkJPHRkIGFsaWduPSJDRU5URVIiIGJn
-Y29sb3I9IiNGRUUyNzIiPjxiPgoJCQkJPGEgaHJlZj0iL3NvY2lldHkvaW5kZXguaHRtbCI+
-CgkJCQmqwLd8CgkJCQk8L2E+PC9iPjwvdGQ+CgoJCQkJPHRkIGFsaWduPSJDRU5URVIiIGJn
-Y29sb3I9IiNGRUUyNzIiPjxiPgoJCQkJPGEgaHJlZj0iL2ludGVybmF0aW9uYWwvaW5kZXgu
-aHRtbCI+CgkJCQmw6rvaCgkJCQk8L2E+PC9iPjwvdGQ+CgoJCQkJPHRkIGFsaWduPSJDRU5U
-RVIiIGJnY29sb3I9IiNGRUUyNzIiPjxiPgoJCQkJPGEgaHJlZj0iL2ZpbmFuY2UvaW5kZXgu
-aHRtbCI+CgkJCQmwXbhnCgkJCQk8L2E+PC9iPjwvdGQ+CgoJCQkJPHRkIGFsaWduPSJDRU5U
-RVIiIGJnY29sb3I9IiNCMEIwRkYiPjxiPgoJCQkJPGEgaHJlZj0iL2VudGVydGFpbi9pbmRl
-eC5odG1sIj4KCQkJCbx2tfgKCQkJCTwvYT48L2I+PC90ZD4KCgkJCQk8dGQgYWxpZ249IkNF
-TlRFUiIgYmdjb2xvcj0iI0ZFRTI3MiI+PGI+CgkJCQk8YSBocmVmPSIvc3BvcnRzL2luZGV4
-Lmh0bWwiPgoJCQkJxemofAoJCQkJPC9hPjwvYj48L3RkPgoKCQkJCTx0ZCBhbGlnbj0iQ0VO
-VEVSIiBiZ2NvbG9yPSIjRkVFMjcyIj48Yj4KCQkJCTxhIGhyZWY9Ii9sZWlzdXJlL2luZGV4
-Lmh0bWwiPgoJCQkJpfC2ogoJCQkJPC9hPjwvYj48L3RkPgoKCQkJCTx0ZCBhbGlnbj0iQ0VO
-VEVSIiBiZ2NvbG9yPSIjRkVFMjcyIj48Yj4KCQkJCTxhIGhyZWY9Ii90ZWNobm9sb2d5L2lu
-ZGV4Lmh0bWwiPgoJCQkJrOyn3goJCQkJPC9hPjwvYj48L3RkPgoKCQkJCTx0ZCBhbGlnbj0i
-Q0VOVEVSIiBiZ2NvbG9yPSIjRkVFMjcyIj4KCQkJCQk8YSBocmVmPSIvZ2FsbGVyeS5odG1s
-Ij4KCQkJCQk8Zm9udCBjb2xvcj0iYmx1ZSI+PEI+t3O7RLfTpPk8L0I+CgkJCQkJPC9mb250
-PjwvYT4KCQkJCTwvdGQ+CgkJCQk8dGQgYWxpZ249IkNFTlRFUiIgYmdjb2xvcj0iIzVEOEVE
-OCI+CgkJCQkJPGI+PGEgaHJlZj0iaHR0cDovL2N0bmV3cy5raW1vLmNvbS50dy9pbmRleC5o
-dG1sIj4KCQkJCQk8Zm9udCBjb2xvcj0id2hpdGUiPqSkrsmpX7yvs/g8L2ZvbnQ+CgkJCQkJ
-PC9hPjwvYj4KCQkJCTwvdGQ+CgkJPC90cj4KCQk8L3RhYmxlPgoJCTwvdGQ+PC90cj4KCQk8
-L3RhYmxlPgoJPC90ZD48L3RyPgogICAgPC90YWJsZT4KICAgIDwvdGQ+IDwvdHI+CjwvdGFi
-bGU+IDwvY2VudGVyPgoKPGNlbnRlcj4gPHRhYmxlIHdpZHRoPSI2MDAiIGNlbGxwYWRkaW5n
-PSI0IiBDRUxMU1BBQ0lORz0iMCIgYm9yZGVyPTA+CiAgPHRyPiAKICAgIDx0ZCB3aWR0aD0i
-NDAwIiBiZ2NvbG9yPSIjNjY2NkNDIj4KCTxhIGhyZWY9Ii9pbmRleC5odG1sIj48Zm9udCBj
-b2xvcj0iI2ZmZmZmZiI+qV+8r7dzu0Q8L2ZvbnQ+PC9hPiAKCTxmb250IGNvbG9yPSIjRkZG
-RkZGIj6h1jwvZm9udD4gCgk8YSBocmVmPSIvMjAwMS8wOC8xNC9lbnRlcnRhaW4vaW5kZXgu
-aHRtbCI+IAoJPGZvbnQgY29sb3I9IiNGRkZGRkYiPqlfvK+3c7tEvHa1+DwvZm9udD48L2E+
-IAoJPGZvbnQgY29sb3I9IiNGRkZGRkYiPqHWPC9mb250PiAKICAgICAgICA8YSBocmVmPSIv
-MjAwMS8wOC8xNC9lbnRlcnRhaW4vdWRuL2luZGV4Lmh0bWwiPiAKCTxmb250IGNvbG9yPSIj
-RkZGRkZGIj7BcKZYt3O7RLr0vHa1+Ldzu0Q8L2ZvbnQ+PC9hPjwvdGQ+CiAgICA8dGQgd2lk
-dGg9IjIwMCIgYWxpZ249InJpZ2h0IiBiZ2NvbG9yPSIjNjY2NkNDIj4KCTxmb250IGZhY2U9
-IrLTqfrF6SIgY29sb3I9ImZmZmZmZiI+CjwhLS0gQ2hpbmVzZSBkYXRlOiBiZWcgLS0+CiAg
-ICAgICAgICAgIDIwMDGmfjA4pOsxNKTpCjwhLS0gQ2hpbmVzZSBkYXRlOiBlbmQgLS0+CiAg
-ICAgICAgPC9mb250PjwvdGQ+IDwvdHI+CiAgPHRyPiAKICAgIDx0ZCBjb2xzcGFuPSIyIiBh
-bGlnbj0icmlnaHQiIGNsYXNzPWMyIGJnY29sb3I9IiNFOUU5RjgiPgo8IS0tIKW7tEPF6aq6
-t3O7RKTAw/4gYmVnIC0tPgrBcKZYt3O7RLr0pMDD/rdzu0ShRwogLSA8YSBocmVmPSIvMjAw
-MS8wOC8xNC9wb2xpdHkvdWRuL2luZGV4Lmh0bWwiPqxGqnY8L2E+IC0gPGEgaHJlZj0iLzIw
-MDEvMDgvMTQvc29jaWV0eS91ZG4vaW5kZXguaHRtbCI+qsC3fDwvYT4gLSA8YSBocmVmPSIv
-MjAwMS8wOC8xNC9pbnRlcm5hdGlvbmFsL3Vkbi9pbmRleC5odG1sIj6w6rvaPC9hPiAtIDxh
-IGhyZWY9Ii8yMDAxLzA4LzE0L2ZpbmFuY2UvdWRuL2luZGV4Lmh0bWwiPrBduGc8L2E+IC0g
-PGEgaHJlZj0iLzIwMDEvMDgvMTQvZW50ZXJ0YWluL3Vkbi9pbmRleC5odG1sIj68drX4PC9h
-PiAtIDxhIGhyZWY9Ii8yMDAxLzA4LzE0L3Nwb3J0cy91ZG4vaW5kZXguaHRtbCI+xemofDwv
-YT4gLSA8YSBocmVmPSIvMjAwMS8wOC8xNC9sZWlzdXJlL3Vkbi9pbmRleC5odG1sIj6l8Lai
-PC9hPiAtIDxhIGhyZWY9Ii8yMDAxLzA4LzE0L3RlY2hub2xvZ3kvdWRuL2luZGV4Lmh0bWwi
-Pqzsp948L2E+PCEtLSClu7RDxemqurdzu0SkwMP+IGVuZCAtLT4KICAgICAgICA8L2ZvbnQ+
-IAoJPC90ZD4gPC90cj4KPC90YWJsZT4gPC9jZW50ZXI+Cgo8Y2VudGVyPiAKPHRhYmxlIGFs
-aWduPSJjZW50ZXIiIHdpZHRoPSI2MDYiIGNlbGxwYWRkaW5nPSIyIiBib3JkZXI9IjAiIGNl
-bGxzcGFjaW5nPSIzIj4KICAgIDx0cj4gPHRkIHZhbGlnbj0idG9wIiBiZ2NvbG9yPSIjRTlF
-OUY4Ij4gCiAgICA8dGFibGUgY2VsbHBhZGRpbmc9IjIiIGNlbGxzcGFjaW5nPSIwIiBib3Jk
-ZXI9IjAiIHdpZHRoPSIxMDAlIj4KCTx0cj4gPHRkIFZBTElHTj0iVE9QIiBXSURUSD0iMTAw
-JSIgYmdjb2xvcj0iI2ZmZmZmZiIgYWxpZ249Y2VudGVyPiAKCTx0YWJsZSBjZWxscGFkZGlu
-Zz0iMjUiIGNlbGxzcGFjaW5nPSIwIiB3aWR0aD0iOTAlIiBCT1JERVI9IjAiPgoJICAgIDx0
-cj4gPHRkPiAKCSAgICA8dGFibGUgYm9yZGVyPSIwIiBXSURUSD0iMTAwJSIgY2VsbHBhZGRp
-bmc9IjAiIGNlbGxzcGFjaW5nPSIwIj4KCQk8dHI+IDx0ZD4gCgkJPGZvbnQgZmFjZT0ivNC3
-osXpIiBzaXplPSI1IiBjb2xvcj0iIzAwMDBjYyI+IAoJCaazr92ms7h5IKilqdOmsMVTwkms
-sMPSIDwvZm9udD4gPC90ZD4gCgkJPHRkIGFsaWduPSJyaWdodCIgd2lkdGg9IjQwIj4gCjxh
-IGhyZWY9ImphdmFzY3JpcHQ6Y1dpbmRvdygnMjIyNjY2MScpIj4KPGltZyBzcmM9Imh0dHA6
-Ly90dy55aW1nLmNvbS9pL3R3L25ld3MvbWFpbC5naWYiIGJvcmRlcj0wPjwvYT4KCQk8L3Rk
-PgoJCTwvdHI+IAoJICAgIDwvdGFibGU+IDxwPiAKCSAgICA8U1BBTiBzdHlsZT0iTElORS1I
-RUlHSFQ6IDI2cHg7IFRFWFQtSU5ERU5UOiAwcHgiPiAKPCEtLSBhcnRpY2xlIHBob3RvIGJl
-ZyAtLT4KCjwhLS0gYXJ0aWNsZSBwaG90byBlbmQgLS0+Cgo8IS0tIGFydGljbGVfYmVnaW4g
-LS0+CqFAoUCwT6rMp/W74Kn6of6z+L7JPHA+CqFAoUBNVUNIpXi3c7hgpdihdbC4ubOkaqSj
-plChdqFBpLWx37FOvL2lWKilqdOmsK3opVi5RK7JoUGw0aVbpNGlzaZXvNK/76newcmhQazv
-qmG/x8VTwkm6dKVYqrqrQ8DfvNK8y6FBpUikzqa2p7Wk0aFCqVC0/KXBoUKnZKvYu6i1paRI
-qrqxTbNYoUGhdbC4ubOkaqSjplChdq26trCnWbHApVi37az1qrogRjQgr1O/6KFBTVVDSCCq
-7aXcoUGtbsX9xluys6zdsLi5s6FBtE6tbqdAtles9aq6oUHF/cZbsrO5TMV9oUM8cD4KPCEt
-LSBGbGFzaCBBRCBiZWcgLS0+PHNjcmlwdD4KcHJpbnRfZmxhc2goZG9jdW1lbnQuYWRmb3Jt
-LmFka2luZDAudmFsdWUsIGRvY3VtZW50LmFkZm9ybS5oYXZlcGljLnZhbHVlKQo8L3Njcmlw
-dD4KPCEtLSBGbGFzaCBBRCBlbmQgLS0+oUChQKW7ple5+ax2vl+quqilqdOmsKFBpmKpfKW8
-unSlWKF1rHmsUKrhtumhdqtlsbWp56q6vHOnaaFCrbW81r/9vHaxYbp0pVihQaS1sd+hdbC4
-ubOkaqSjplChdrFOsMW/6Ly9pVihQcX9xluys6pZveCye6Ziqrq8ycBzu1ClSKtlqrq8ycBz
-prOm86SjplChQ6ilqdOmsLS/pmIgMTk5OSCmfrDRpVumfqVOpL2lccF8v+yquqF1pNGlzaZX
-vNKhdr/vqd7ByaFBwPKxb7ftrsmquqVEq/mkSK59tdi78aFCsKi0usDctaWkSKq6veDD0aFD
-PHA+CqFAoUC37aZ+qKWp06awqrrAWb52sMWxb6vctXWhQa2xu6qoU6azpNOkaqfvxdyhQait
-p/ehdaazr92ms7h5oXahQaX+qK2kV6RVtLK1b6Z+u7Squq7wrqehQbhgpdixTry9pVilTKir
-qHGhQrG1qPyq7bp0sFa9bb3StXukzrtSwdCqurVlrbGhQ6ilqdOmsKrtpdyhQaVMpl2ssKZi
-oXWzwru2wkGudqF2pKSqurzJwHO0o6TJpEiu8KFBpGquYaVzpUy8ycBzoUGlaa/gt3ylSKyw
-pUy1yq7wvMnEvKFBpUzAqqe8qrqvuruhOiChdaywpEako7N5pqikaq5hqrq7frd8oUGye6Zi
-pL2lcaq6pEizo6Vzp9qheaRwpdWo36F6oUGlSK6+pl6nzrZIoUOhdqV0pX6hQaVMxLGxb6F1
-uUSp+qZ4oXazb63TqKSm4qF1q8SkbK7woXaqurOhpfe48qVMq9y5s6FBxf2lTLp0sF+o07Fv
-pN/As6TioUOzzKrxprOkcLuht9O126VMqrq80rzLoUG1ZaaopWq4y6nxpmKryq2xoUGlTKrt
-pdyms773t3ykXbdRucG41aVquMu6dKVYoUM8cD4KoUChQKlQtPylwbSjqOylTKnnwLiuyaFB
-pky2SLPMsmCo6Kq6pEC59cC4rE+hQaZirvzD5Knnv8u89sC4oUGko6RwpN+ytKXWpMSo7KRq
-U6q6r924bqFBoXWvu6F2wKqnvKFDPHA+CjwhLS0gYXJ0aWNsZV9lbmQgLS0+CgkgICAgPC9z
-cGFuPiAKCSAgICA8dHI+PHRkIGFsaWduPSJyaWdodCI+IAoJCTxhIGhyZWY9ImphdmFzY3Jp
-cHQ6Y1dpbmRvdygnMjIyNjY2MScpIj4gPGltZyBzcmM9Imh0dHA6Ly90dy55aW1nLmNvbS9p
-L3R3L25ld3MvbWFpbC5naWYiIGJvcmRlcj0iMCI+PC9hPiAKCSAgICA8L3RkPjwvdHI+Cgk8
-L3RhYmxlPgoJPC90ZD48L3RyPgoJPHRyPiA8dGQgYWxpZ249ImNlbnRlciI+PHNwYW4gY2xh
-c3M9ImMxIj4KCSAgICCmXjxhIGhyZWY9Ii9lbnRlcnRhaW4vaW5kZXguaHRtbCI+qV+8r7dz
-u0S8drX4PC9hPgoJICAgIDwvc3Bhbj4KCTwvdGQ+PC90cj4KICAgIDwvdGFibGU+CiAgICA8
-L3RkPjwvdHI+CjwvdGFibGU+CjwvY2VudGVyPgoKPHAgYWxpZ249ImNlbnRlciI+CjxtYXAg
-TkFNRT0iRnJvbnRQYWdlTWFwMSI+CiAgICA8YXJlYSBocmVmPSJodHRwOi8vbXkua2ltby5j
-b20udHcvIiBzaGFwZT0icmVjdCIgY29vcmRzPSI0MjIsIDQsIDQ3MywgMTkiPgogICAgPGFy
-ZWEgaHJlZj0iaHR0cDovL2hlbHAua2ltby5jb20udHcvIiBzaGFwZT0icmVjdCIgY29vcmRz
-PSI0ODIsIDMsIDUzMiwgMTkiPgogICAgPGFyZWEgaHJlZj0iaHR0cDovL3R3Lm5ld3MueWFo
-b28uY29tLyIgc2hhcGU9InJlY3QiIGNvb3Jkcz0iNTQyLCAzLCA1OTIsIDIwIj4KPC9tYXA+
-CjxpbWcgU1JDPSJodHRwOi8vdHcueWltZy5jb20vaS90dy9uZXdzL24tZjIuZ2lmIiB3aWR0
-aD0iNjAwIiBoZWlnaHQ9IjIxIiBib3JkZXI9IjAiIElTTUFQPSIiIHVzZW1hcD0iI0Zyb250
-UGFnZU1hcDEiPgo8L3A+Cgo8cCBhbGlnbj0iY2VudGVyIj4KICAgIDxmb250IHNpemU9Ii0x
-Ij6qqcV2qdKmsyZuYnNwOyAKCTxhIGhyZWY9Imh0dHA6Ly93d3cua2ltby5jb20udHcvIiB0
-YWdldD0iX2JsaW5rIj6pX7yvr7g8L2E+oUAKCTxhIGhyZWY9Imh0dHA6Ly93d3cua2ltby5j
-b20udHcvcHJpdmFjeS5odG1sIj7B9KhwxXarT8VArEa1pjwvYT48YnI+PGJyPgo8IS0tIGNv
-cHlyaWdodCBiZWcgLS0+CjwhLS0gY29weXJpZ2h0IGVuZCAtLT4KICAgIDwvZm9udD4KPC9w
-Pgo8L2JvZHk+PC9odG1sPgoKCj==
---XLIqVP7c4PX
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+###
+# There is no actual backup, which is the mad point!!!!=20
+###=20
 
-LS0tLS0tLS0tLS0gVHJlbmQgR2F0ZUxvY2sg77+9Zu+/vXLvv73vv73vv71A77+9ce+/ve+/vSAo
-77+9RO+/ve+/ve+/vUdoaWdwNS5nYXRlbG9jay5jb20udHcpCgoqKiDvv71i77+9ya7vv70gZW5k
-IO+/ve+/ve+/vW/vv71777+9Zu+/vXIgV09STV9LTEVaLkfvv71DCu+/vUzvv71r77+9Te+/ve+/
-ve+/vWbvv71y77+9Qe+/ve+/ve+/vXLvv73Jrtekd++/vVLvv73vv73vv71DCgotLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+24 days of DATA updates are lost right now!
 
---XLIqVP7c4PX--
+I. Environment
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+System:    Dual Prozessor PIII (2 CPU's 1Mhz)
+OS:    Linux 2.4.9=20
+
+Harddisk:    SCSI-3 (as Raid-5)
+Controller:    GDT=20
+LVM version:     1.0.1-rc2(30/08/2001)
+
+Kernel sees one harddrive (/dev/scsi/host2/bus0/target0)
+
+Root is on standard ext3 fs (partition 5)
+
+LVM has a Physical Volumegroup (KI) on partition 7
+The system runs a PostgreSQL Database (version 7.1.3). The =
+Data-Structures live on a Logical-Volume-Group
+which was mounted as /var/lib/postgres as a ext3 filesystem.
+Everything was working until 4 hours ago, before LVG was resized.
+
+II. Changes
+
+The LVG /dev/ki/postgres was reduced from 8 GB to 800MB. Before we did =
+that a df has shown a used size
+of 366 MB data.
+Postgres was shut down. No other process was writing to =
+/dev/ki/postgres.
+
+     # e2fsadm --size - 4,5G=20
+
+Worked out, but remounting has shown incorrect structure.
+
+A new LVG was created=20
+
+    # lvcreate    --size 2,5G --name opt /dev/ki/opt
+
+Here the dump-information from the actual Volume-Group after resizing =
+was successful.
+
+----------------------------------------------schnipp / schnapp =
+------------------------------------------------
+
+
+#vgdisplay -v /dev/ki
+--- Volume group ---
+VG Name               ki
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                7
+Open LV               6
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               48.77 GB
+PE Size               4 MB
+Total PE              12484
+Alloc PE / Size       11968 / 46.75 GB
+Free  PE / Size       516 / 2.02 GB
+VG UUID               P6LodN-bQUg-u5WF-03Cu-A22a-UUhE-NsKhvZ
+
+--- Logical volume ---
+LV Name                /dev/ki/export
+VG Name                ki
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                6 GB
+Current LE             1536
+Allocated LE           1536
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
+
+--- Logical volume ---
+LV Name                /dev/ki/var
+VG Name                ki
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 1
+LV Size                1 GB
+Current LE             256
+Allocated LE           256
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+--- Logical volume ---
+LV Name                /dev/ki/tmp
+VG Name                ki
+LV Write Access        read/write
+LV Status              available
+LV #                   3
+# open                 1
+LV Size                1 GB
+Current LE             256
+Allocated LE           256
+Allocation             next free
+Read ahead sectors     120
+Block device           58:2
+
+--- Logical volume ---
+LV Name                /dev/ki/home
+VG Name                ki
+LV Write Access        read/write
+LV Status              available
+LV #                   4
+# open                 1
+LV Size                30 GB
+Current LE             7680
+Allocated LE           7680
+Allocation             next free
+Read ahead sectors     120
+Block device           58:3
+
+--- Logical volume ---
+LV Name                /dev/ki/postgres
+VG Name                ki
+LV Write Access        read/write
+LV Status              available
+LV #                   5
+# open                 0
+LV Size                3.78 GB
+Current LE             968
+Allocated LE           968
+Allocation             next free
+Read ahead sectors     120
+Block device           58:4
+
+--- Logical volume ---
+LV Name                /dev/ki/www
+VG Name                ki
+LV Write Access        read/write
+LV Status              available
+LV #                   6
+# open                 1
+LV Size                2.44 GB
+Current LE             625
+Allocated LE           625
+Allocation             next free
+Read ahead sectors     120
+Block device           58:5
+
+--- Logical volume ---
+LV Name                /dev/ki/opt
+VG Name                ki
+LV Write Access        read/write
+LV Status              available
+LV #                   7
+# open                 1
+LV Size                2.53 GB
+Current LE             647
+Allocated LE           647
+Allocation             next free
+Read ahead sectors     120
+Block device           58:6
+
+
+--- Physical volumes ---
+PV Name (#)           /dev/scsi/host2/bus0/target0/lun0/part7 (1)
+PV Status             available / allocatable
+Total PE / Free PE    12484 / 516
+
+Volume-Group: KI
+
+----------------------------------------------schnipp / schnapp =
+------------------------------------------------
+
+
+The sysadmin was running a vgscan an lvscan. Afterwards he runs=20
+
+    # e2fsck -y -f /dev/ki/postgres
+
+now the mount on /var/lib/postgres was successful, but all date were =
+gone!
+I found a long list of dir-entries in the lost+found subdir. No =
+file-entries.
+
+What can we do?
+
+Ralf
+
+
+------=_NextPart_001_0021_01C1EA21.4ABBB340
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2600.0" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>hello everybody,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>on a production system we do have a =
+serious data=20
+destruction problem. </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Any help leading us to restore the =
+filesystem will=20
+be honored. We can dicuss financial details later.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>
+<DIV><FONT face=3DArial size=3D2>First I'd like to describe the =
+situation giving you=20
+a picture wether it is possible to restore the data.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Please answer as soon as possible to =
+give me a hint=20
+wether I should wait for a detailed analysis,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>if it make sense to dig deeper or if it =
+is more=20
+likely that people have to reinsert the data from printed </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>information.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>0. PROBLEM:</FONT></DIV>
+<DIV><FONT face=3DArial =
+size=3D2>=3D=3D=3D=3D=3D=3D=3D=3D=3D</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Destructed Filesystem after resizing =
+LVG running a=20
+Postgres Database. </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>###</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2># There is no actual backup, which is =
+the mad=20
+point!!!! </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>### </FONT></DIV></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>24 days of DATA updates are lost right=20
+now!</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I. Environment</FONT></DIV>
+<DIV><FONT face=3DArial =
+size=3D2>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>
+<DIV><FONT face=3DArial size=3D2>System:&nbsp;&nbsp;&nbsp; Dual =
+Prozessor PIII (2=20
+CPU's 1Mhz)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>OS:&nbsp;&nbsp;&nbsp; Linux 2.4.9 =
+</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Harddisk:&nbsp;&nbsp;&nbsp; SCSI-3 (as=20
+Raid-5)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Controller:&nbsp;&nbsp;&nbsp; GDT =
+</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>LVM version:&nbsp;&nbsp;&nbsp; =20
+1.0.1-rc2(30/08/2001)</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Kernel sees one harddrive=20
+(/dev/scsi/host2/bus0/target0)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Root is on standard ext3 fs (partition=20
+5)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>LVM has a Physical Volumegroup (KI)=20
+on&nbsp;partition 7</FONT></DIV>The system runs a PostgreSQL Database =
+(version=20
+7.1.3). The Data-Structures live on a Logical-Volume-Group</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>which&nbsp;was mounted as =
+/var/lib/postgres as a=20
+ext3 filesystem.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Everything was working&nbsp;until 4 =
+hours ago,=20
+before LVG was resized.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>II. Changes</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>The LVG /dev/ki/postgres was reduced =
+from 8 GB to=20
+800MB. Before we did that a df has shown a used size</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>of 366 MB data.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Postgres was shut down. No other =
+process was=20
+writing to /dev/ki/postgres.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp;&nbsp; # e2fsadm =
+--size - 4,5G=20
+</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Worked out, but remounting has shown =
+incorrect=20
+structure.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>A new LVG was created </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; # =
+lvcreate&nbsp;&nbsp;&nbsp;=20
+--size 2,5G --name opt /dev/ki/opt</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Here the dump-information from the =
+actual=20
+Volume-Group after resizing was successful.</FONT></DIV><FONT =
+face=3DArial size=3D2>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial=20
+size=3D2>----------------------------------------------schnipp / schnapp =
+
+------------------------------------------------</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>#vgdisplay -v /dev/ki<BR></FONT><FONT face=3DArial size=3D2>--- =
+Volume group=20
+---<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+ki<BR>VG=20
+Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;=20
+read/write<BR>VG=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;=20
+available/resizable<BR>VG=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+0<BR>MAX=20
+LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;=20
+256<BR>Cur=20
+LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;=20
+7<BR>Open=20
+LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;=20
+6<BR>MAX LV =
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+255.99 GB<BR>Max=20
+PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;=20
+256<BR>Cur=20
+PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;=20
+1<BR>Act=20
+PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;=20
+1<BR>VG=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+48.77 GB<BR>PE=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+4 MB<BR>Total=20
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;=20
+12484<BR>Alloc PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11968 / =
+46.75=20
+GB<BR>Free&nbsp; PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 516 / =
+2.02=20
+GB<BR>VG=20
+UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+P6LodN-bQUg-u5WF-03Cu-A22a-UUhE-NsKhvZ</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>--- Logical volume ---<BR>LV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+/dev/ki/export<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+ki<BR>LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read/write<BR>LV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+available<BR>LV=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1<BR>#=20
+open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1<BR>LV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+6 GB<BR>Current=20
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+1536<BR>Allocated =
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1536<BR>Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;=20
+next free<BR>Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 120<BR>Block=20
+device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+58:0</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>--- Logical volume ---<BR>LV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+/dev/ki/var<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+ki<BR>LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read/write<BR>LV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+available<BR>LV=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+2<BR>#=20
+open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1<BR>LV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+1 GB<BR>Current=20
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+256<BR>Allocated =
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+256<BR>Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;=20
+next free<BR>Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 120<BR>Block=20
+device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+58:1</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>--- Logical volume ---<BR>LV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+/dev/ki/tmp<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+ki<BR>LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read/write<BR>LV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+available<BR>LV=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+3<BR>#=20
+open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1<BR>LV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+1 GB<BR>Current=20
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+256<BR>Allocated =
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+256<BR>Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;=20
+next free<BR>Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 120<BR>Block=20
+device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+58:2</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>--- Logical volume ---<BR>LV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+/dev/ki/home<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+ki<BR>LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read/write<BR>LV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+available<BR>LV=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+4<BR>#=20
+open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1<BR>LV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+30 GB<BR>Current=20
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+7680<BR>Allocated =
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+7680<BR>Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;=20
+next free<BR>Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 120<BR>Block=20
+device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+58:3</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>--- Logical volume ---<BR>LV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+/dev/ki/postgres<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+ki<BR>LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read/write<BR>LV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+available<BR>LV=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+5<BR>#=20
+open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+0<BR>LV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+3.78 GB<BR>Current=20
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+968<BR>Allocated =
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+968<BR>Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;=20
+next free<BR>Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 120<BR>Block=20
+device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+58:4</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>--- Logical volume ---<BR>LV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+/dev/ki/www<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+ki<BR>LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read/write<BR>LV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+available<BR>LV=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+6<BR>#=20
+open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1<BR>LV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+2.44 GB<BR>Current=20
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+625<BR>Allocated =
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+625<BR>Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;=20
+next free<BR>Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 120<BR>Block=20
+device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+58:5</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>--- Logical volume ---<BR>LV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+/dev/ki/opt<BR>VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+ki<BR>LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read/write<BR>LV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+available<BR>LV=20
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+7<BR>#=20
+open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1<BR>LV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+2.53 GB<BR>Current=20
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+647<BR>Allocated =
+LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+647<BR>Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;=20
+next free<BR>Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 120<BR>Block=20
+device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+58:6</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2><BR>--- Physical volumes ---<BR>PV Name =
+
+(#)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/scsi/host2/bus0/target0/lun0/part7 (1)<BR>PV=20
+Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;=20
+available / allocatable<BR>Total PE / Free PE&nbsp;&nbsp;&nbsp; 12484 /=20
+516<BR></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Volume-Group: KI</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>
+<DIV><FONT face=3DArial=20
+size=3D2>----------------------------------------------schnipp / schnapp =
+
+------------------------------------------------</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>The sysadmin was running a vgscan an lvscan. Afterwards he runs =
+</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>&nbsp;&nbsp;&nbsp; # e2fsck -y -f /dev/ki/postgres</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>now the mount on /var/lib/postgres was successful, but all date =
+were=20
+gone!</DIV>
+<DIV>I found a long list of dir-entries in the lost+found subdir. No=20
+file-entries.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>What can we do?</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Ralf</DIV>
+<DIV>&nbsp;</DIV></FONT></DIV></BODY></HTML>
+
+------=_NextPart_001_0021_01C1EA21.4ABBB340--
+
+------=_NextPart_000_0020_01C1EA21.4ABA2CA0
+Content-Type: text/x-vcard;
+	name="Ralf, Zerres.vcf"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+	filename="Ralf, Zerres.vcf"
+
+BEGIN:VCARD
+VERSION:2.1
+N:Ralf;Zerres
+FN:Ralf, Zerres
+ORG:Networkx GmbH
+TEL;WORK;VOICE:+49 221 937725 - 0
+TEL;WORK;FAX:+49 221 937725 - 18
+ADR;WORK:;;Marktstr. 8;K=F6ln;;50968
+LABEL;WORK;ENCODING=3DQUOTED-PRINTABLE:Marktstr. 8=3D0D=3D0AK=3DF6ln =
+50968
+EMAIL;PREF;INTERNET:rzerres@networkx.de
+REV:20020422T151525Z
+END:VCARD
+
+------=_NextPart_000_0020_01C1EA21.4ABA2CA0--
