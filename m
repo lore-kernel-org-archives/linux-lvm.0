@@ -1,12 +1,11 @@
-Return-Path: <dmeyer@dmeyer.net>
-Date: Tue, 6 Feb 2001 03:22:56 -0500
-From: dmeyer@dmeyer.net
-Subject: Re: [linux-lvm] 0.9.1 vgscan doesn't detect upgraded vg's
-Message-ID: <20010206032256.A831@jhereg.dmeyer.net>
-References: <3A7F6413.A80D1803@twisted.net>
+Return-Path: <root@srv.sistina.com>
+Date: Tue, 6 Feb 2001 10:22:45 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] modprobe errors in syslog
+Message-ID: <20010206102245.C8914@srv.sistina.com>
+References: <3A7B1410.6B37C0A5@tampabay.rr.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200102060630.f166UYM32021@webber.adilger.net>
+In-Reply-To: <3A7B1410.6B37C0A5@tampabay.rr.com>; from ozric@tampabay.rr.com on Fri, Feb 02, 2001 at 03:09:52PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,43 +21,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-In article <200102060630.f166UYM32021@webber.adilger.net> you write:
-> Michael McLinn writes:
-> > My theory is each pv is supposed to have the the UUID's of 
-> > itself, and all other pv's in it's vg within it's UUID 
-> > datastructure.  Is this so?
+Hi Richard,
+
+this is well known because vgscan(8) checks for a couple of possibly
+existing devices.
+If they don't exist (i.e. the drivers are not loaded or build into the kernel)
+that run triggers (lots of) messages. If you face more of them your actual
+kernel configuration might include less drivers than your previous one.
+
+There's 2 ways to address this:
+
+ a. change your modules.conf and set the unused drivers to "off".
+ b. ignore the messages ;-)
+
+
+On Fri, Feb 02, 2001 at 03:09:52PM -0500, Richard Smith wrote:
+> I have 2.4.1 patched with .9beta3.  Everything I have tried so far is
+> working,
+> but I get lots of modprobe errors in my log after I run vgscan. please
+> advise,
+> is this from md.o or devfs ?  I am not using md.o for raid. 
 > 
-> Correct.  There was another user who reported the same bug, but after
-> they were playing with the system a bit, it started to work (i.e. the
-> UUIDs were filled in) so it was not looked at further.
-
-That other user was me.  I eventually commented out the UUID check in
-pv_read_all_pv_of_vg as the previous poster suggested.  This let me
-run vgscan, vgchange -ay, and mount my LVs.  Just go to
-pv_read_all_pv_of_vg.c and get rid of the code after the
-    if ( uuids > 0 ) {
-check.
-
-> > If this is the case, it seems it would be possible to write the 
-> > correct UUID's to the datastructure on disk, and potentially 
-> > improve (maybe even fix) my situation.
-
-After getting vgscan to find my VGs, I pretty much just lucked into my
-UUIDs getting set correctly and I'm still not sure what did it.  All I
-did was activate my VGs (which I'm told couldn't have fixed the
-UUIDs), run vgck (ditto), and run vgscan after the VGs were active.
-vgscan at least _calls_ pv_write_uuidlist, so it is a possibility.
-However, running vgscan on the non-active VGs definitely didn't update
-the UUIDs for me.
-
-> > One more note that might be of interest, these volume groups were
-> > created with a much earlier version of lvm, 0.6 or 0.7 I believe.
-> 
-> I don't know what the situation was with the other person who had
-> this same bug, but it is good to know anyways.
-
-Mine were originally created with 0.8final.
+> thanks
+> Richard
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
-Dave Meyer
-dmeyer@dmeyer.net
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
