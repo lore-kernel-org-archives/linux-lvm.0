@@ -1,12 +1,11 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] LVM Striping question
-Message-ID: <9810000.1008525655@dizzy>
-In-Reply-To: <25E4CA13D679FF48BC30769420220971467A23@nd1-clusa.local.bunnings.com.au>
-References: <25E4CA13D679FF48BC30769420220971467A23@nd1-clusa.local.bunnings
- .com.au>
-MIME-Version: 1.0
+Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
+From: Bradley Alexander <storm@tux.org>
+In-Reply-To: <1008560587.831.6.camel@defiant>
+References: <Pine.LNX.4.33.0112170410450.12782-100000@www.scotty.co.at> 
+	<1008560587.831.6.camel@defiant>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Message-Id: <1008573872.790.10.camel@defiant>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,37 +16,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 00:01:01 2001
+Date: Mon Dec 17 01:22:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+On Sun, 2001-12-16 at 22:43, Bradley Alexander wrote:
+> 
+> Its a standard IDE cable. I have a 40-pin/40-wire cable and a
+> 40-pin/80-wire (I'm assuming this is an ATA66/100 cable). Originally, i
+> had both drives on the ATA cable, but since I split them to different
+> channels, I had to use a standard IDE cable on the second channel.
+> However, I was getting the same errors when both were on the ATA cable
+> as well.
 
--- Colin Coe <CCoe@bunnings.com.au>
+I have noticed a couple more symptoms I thought I would forward.
 
-> I have a Linux system using LVM and SGI XFS.  I have just added a second
-> hard disk and I want to change the LVM config so it now stripes over both
-> hard drives.  Also, is this striping RAID0 or RAID1?  If it is only RAID0,
-> how can I do RAID1?
+1. The drive light stays illuminated when the machine is up, whether the
+lv is mounted or not. Could this also be an indication of what killed
+the first drive?
 
-Striping has nada to do with RAID.
+2. Doing normal actions on the volume group, in this case, vg01, causes
+a segmentation fault. This includes vgchange, doing an fdisk on the
+drive or anything else.
 
-You can stripe new LV's as you create them to use the new
-PV's. If you are not using RAID to manage the PV's themselves
-then loosing one disk will loose all of the data on any
-LV's striped across it.
+Anyone have any pointers?
 
-Safest way to use striping is across PV's that are
-themselves RAID1 or RAID5 [let's assume noone uses
-RAID3 for much anymore]. At that point the RAID
-protects you from hardware failure and the LVM
-striping at the LV level spreads out the I/O to
-allow the RAID component to catch up.
-
-The existing volumes can't be striped on the fly; you'd
-have to copy the contents to new, striped LV's.
-
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+thanks,
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm [at] debian.org
+                                         |   storm [at] tux.org
+============================================================================
+Ever notice when you blow in a dog's face he gets mad at you, but
+when you take him in a car he sticks his head out the window?
+						--George Carlin
