@@ -1,8 +1,6 @@
-Message-Id: <200308151705.h7FH5ro28539@mail.osdl.org>
-From: markw@osdl.org
-Subject: Re: [linux-lvm] SEGSEGV with vgcreate
-In-Reply-To: <200308142049.h7EKnFo04036@mail.osdl.org>
-MIME-Version: 1.0
+From: "WOW! Work Out World" <pn@workoutworld.com>
+Message-Id: <E19nkq0-0008EI-00@hermes.sistina.com>
+Subject: [linux-lvm] membership sales
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +11,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 15 12:06:02 2003
+Date: Fri Aug 15 15:07:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've determined that this was caused by the DAC960 driver when LVM
-attempted to open a device that did not exist, which would have been
-attached to that controller.  A fixed driver fixed this problem.
+we used the techniques described in the book
+below to generate over 14 million dollars in revenue last year!!
+(new membership sales, retention, and pt revenue!)
 
-Mark
+read it for yourself, 
+get the FREE BOOK here: www.getwowpower.com 
 
-On 14 Aug, To: linux-lvm@sistina.com wrote:
-> Hi, wasn't sure how to report this problem.  I'll run through what I've
-> done so far.  I'm running a 2.6.0-test3 kernel using LVM2 2.00.05.  I
-> run:
-> 
-> pvcreate /dev/sde
-> dd if=/dev/zero of=/dev/sde bs=1k count=1
-> blockdev --rereadpt /dev/sde
-> vgcreate log_volume /dev/sde
-> 
-> I ran strace on vgcreate, and I'll attached the output.  Is there any
-> other information I can provide?
+(the book is called "HOW TO TRANSFORM YOUR HEALTH
+CLUB INTO A MULTI-MILLION DOLLAR PROFIT MACHINE!")
+
+thanks-pat n.
+WOW! Work Out World
+pnecerato@workoutworld.com
+www.getwowpower.com
+
+********************************************
+Use these manuals to double your membership sales within days:
+www.getwowpower.com/sellingpower.htm
+
+Use the Internet to get hundreds of additional
+membership sales this year (we did!):
+www.getwowpower.com/internet.htm
