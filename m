@@ -1,12 +1,10 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Sat, 6 Jan 2001 22:37:32 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] PB: undefined reference to memset
-Message-ID: <20010106223732.A1686@66bassett.freeserve.co.uk>
-References: <3A5775ED.32380632@libertysurf.fr>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3A5775ED.32380632@libertysurf.fr>; from ph.l@libertysurf.fr on Sat, Jan 06, 2001 at 06:45:49PM -0100
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3A57B052.FA0DFBB2@wrkhors.com>
+Date: Sat, 06 Jan 2001 17:54:58 -0600
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] any way to locate vg's on, say, /etc?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,51 +16,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+currently have a choice:  LVM or devfs.  since devfs essentially
+wipes out any /dev/blah dir's created after boot when it is 
+remounted using /dev/ w/ vgcreate causes pain.  short of hacking
+soft links or archiving the devices w/ cpio every boot, putting
+the vol group dir's outside dev seems like the easiest fix.
 
-I just tried it and it worked fine.
+personal guess would be /etc or /LVM as likely places.
 
-Make sure you start with a vanilla kernel 2.2.17
-patch with rawio
-patch with lvm
-config, build etc.
+just wondering if "/dev" is hard-coded or configurable
+in the kernel headers somewhere...
 
-In my haste I forgot to switch on the lvm procfs output option in make
-config.  This did failed to compile (another bug for the list), but
-it wasn't your error.
-
-- Joe
-
-On Sat, Jan 06, 2001 at 06:45:49PM -0100, Philippe Lefevre wrote:
-> Hello all,
->=20
-> Changing my system release, I patched my kernel 2.2.17 with=20
-> lvm-0.9-2.2.17-stock.patch and linux-2.2.17-rawio.patch
-> Apparently, there was no errors.
->=20
-> Then compiling my new kernel, I get this message:
->=20
-> drivers/block/block.a(lvm.o): In function `lvm_do_vg_rename':
-> lvm.o(.text+0x295a): undefined reference to `memset'
-> lvm.o(.text+0x2972): undefined reference to `memset'
-> make: *** [vmlinux] Erreur 1
->=20
-> I didn't find the same problem described in the mailing list.
->=20
-> Somebody can help ??
->=20
-> In advance thank you !!
-> --=20
-> ----------------------------------------------------------------------
-> Linux 2.2.17 | Philippe Lefevre   E-mail: ph.l@libertysurf.fr |  =3D=EF=
-=BF=BD)
->              |                                                |  /\\
-> ----------------------------------------------------------------_\_V--
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
->=20
+-- 
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
