@@ -1,10 +1,10 @@
-Return-Path: <jeffrey.b.layton@lmco.com>
-Date: Thu, 24 May 2001 12:09:14 -0400
-From: Jeffrey B Layton <jeffrey.b.layton@lmco.com>
-Message-id: <3B0D322A.7037368A@lmco.com>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Subject: [linux-lvm] Problem createing Logical Volumes
+Return-Path: <austin@coremetrics.com>
+Date: Thu, 24 May 2001 11:46:09 -0500 (CDT)
+From: Austin Gonyou <austin@coremetrics.com>
+Subject: Re: [linux-lvm] Raid5 sync problem
+In-Reply-To: <001801c0e444$22d57f20$56dc10c3@tal.org>
+Message-ID: <Pine.LNX.4.33.0105241145560.1276-100000@UberGeek.coremetrics.com>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +16,51 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: linux-raid@vger.kernel.org
 
-Hello,
+You are running off of parity. Until you get that drive fixed, it will
+hurt.
 
-   I've got a 2.2.19 with Beta6 kernel. I've got 6 SCSI disks
-that I'm trying to setup as logical group and then divide
-into logical volumes.
-   I've created all the pv's correctly and the vg (vg01). It
-says that I have the following:
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com
 
-Total PE: 22396
-Free PE: 22396/87.48GB
+On Thu, 24 May 2001, Kaj-Michael Lang wrote:
 
-So I tried to create a 70G logical volume,
-
-lvcreate -i6 -I4 -L70G -nlvol1 -v /dev/vg01
-
-(this corresponds to 17922 PE's). It fails with the following:
-
-not enough allocatble/free physical volume space in "vg01"
-please check if physical volumes are allocatable
-
-   I checked all the pv's and they are allocatable. What should
-I look at next? I'm kind of stuck.
-
-TIA,
-
-Jeff Layton
-
-Lockheed-Martin
+> I'm mailing this to the LVM list as it might also be the cause of this.. I
+> don't know.
+>
+> Anyway I have 4 6g drives in a RAID5 configuration. On top the md device I
+> have a VG and a couple of LV in it. I'm running 2.4.4 with the beta7 LVM
+> patch and using ext2 on all the LV's.
+> It now happened that one drive failed (actually just a IDE cable problem but
+> anyway) and the machine became really really slow. Load was up to 200 and
+> almost every command got stuck so all I could do was to boot.
+> It came up ok, and I hotadded the drive back and it started to sync but
+> after a while the sync was down to 0 kb/sec and the same slow-down started
+> to happen.
+> So I boot again.. and now when it started to fsck the LV's it slowed-down
+> again. So I booted with init=/bin/bash and let the sync finnish without any
+> other access to the RAID/LV's and after that everything worked fine again.
+>
+> So the problem seems to be that when accessing the RAID5 while it is syncing
+> locks somewhere. Does anyone know of a fix or know what I should do so that
+> syncing won't kill the machine.
+>
+>
+> Kaj-Michael Lang
+> milang@tal.org
+> Java? I've heard of it, it is what I drink while hacking PHP!
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
