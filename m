@@ -1,8 +1,8 @@
-From: kyi <kyi@kyi.sytes.net>
-Message-Id: <1042570161.1375.8.camel@Jayson>
-Mime-Version: 1.0
+From: Rich Turner <rich@storix.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm root filesystem
+Message-Id: <1042575714.1983.27.camel@rich.storix.com>
+Mime-Version: 1.0
+Subject: [linux-lvm] LVM bug
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,26 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 14 12:48:02 2003
+Date: Tue Jan 14 14:18:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hello all;
+The following is a situation where LVM fails.
 
-	I'm trying to get my newly installed gentoo system to have it's root
-filesystem on lvm. I have a 25M /boot (sda1) and my other 3 drives are
-all one big lv (/dev/vg0/lv0). I followed some docs I found through
-google about doing this. I created my initrd.gz file with the following
-lvmcreate_initrd 2.4.19-gentoo-r10 and it was created with error. I
-edited my lilo.conf file to load these and re-ran lilo. Could someone
-please point me in the right direction or to the docs on getting this
-working. 
+Previously, I installed a system and created a physical volume on an
+entire disk. I am now re-installing the system and have created a
+physical volume on a partition on the same disk. The partition was
+created with sfdisk. I am able to create volume groups and logical
+volumes with no problem.
 
-Any help is very much apperciated.
-Thanks in advance
+The problem arises after a reboot of the system. vgscan fails to find
+any volume groups. pvscan finds physical volumes on both the disk and
+the partition. It appears LVM fails when creating a physical volume on a
+partition of a disk when there was previously a physical volume on the
+same entire disk.
 
-- Jayson Garrell
+Using LVM 1.0.1
 
--- 
-kyi <kyi@kyi.sytes.net>
+Rich Turner
+Storix Software
