@@ -1,20 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9GA67r26530
-	for <linux-lvm@redhat.com>; Sat, 16 Oct 2004 06:06:07 -0400
-Received: from sphinx.mythic-beasts.com (sphinx.mythic-beasts.com
-	[212.69.37.6])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i9GA5wec017258
-	for <linux-lvm@redhat.com>; Sat, 16 Oct 2004 06:05:58 -0400
-Received: from pdw by sphinx.mythic-beasts.com with local (Exim 4.34)
-	id 1CIlRb-0003wZ-OA
-	for linux-lvm@redhat.com; Sat, 16 Oct 2004 11:05:47 +0100
-Date: Sat, 16 Oct 2004 11:05:47 +0100
-From: Paul Warren <pdw@ex-parrot.com>
-Message-ID: <20041016110547.Q27758@sphinx.mythic-beasts.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i9GD9TQY010549
+	for <linux-lvm@redhat.com>; Sat, 16 Oct 2004 14:09:29 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CIoJN-0002Fa-Fw
+	for linux-lvm@redhat.com; Sat, 16 Oct 2004 14:09:29 +0100
+Date: Sat, 16 Oct 2004 14:09:29 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] "Cannot allocate memory" creating VGDA
+Message-ID: <20041016130929.GH24242@agk.surrey.redhat.com>
+References: <20041016110547.Q27758@sphinx.mythic-beasts.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Sender: Paul Warren <pdw@sphinx.mythic-beasts.com>
-Subject: [linux-lvm] "Cannot allocate memory" creating VGDA
+In-Reply-To: <20041016110547.Q27758@sphinx.mythic-beasts.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,30 +24,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-We've now downgraded our server to 2.4 so that we can use snapshotting
-in lvm1.  Unfortunately:
+On Sat, Oct 16, 2004 at 11:05:47AM +0100, Paul Warren wrote:
+> lvcreate -- ERROR "Cannot allocate memory" creating VGDA for
+> "/dev/mainvg/rootsnapshot" in kernel
 
-woozle:~# lvcreate -s -L3000M -n rootsnapshot  /dev/mainvg/root 
+> Any ideas on this one?
+ 
+Ensure the LVM1 part of your kernel is fully patched (there
+was a memory over-allocation bug IIRC, but I forget the details).
+Try using larger chunk sizes.
 
-lvcreate -- WARNING: the snapshot will be automatically disabled once it
-gets full
-lvcreate -- INFO: using default snapshot chunk size of 64 KB for
-"/dev/mainvg/rootsnapshot"
-lvcreate -- ERROR "Cannot allocate memory" creating VGDA for
-"/dev/mainvg/rootsnapshot" in kernel
-
-woozle:~# free
-             total       used       free     shared    buffers cached
-Mem:       4010688     149192    3861496          0       1824 22944
--/+ buffers/cache:     124424    3886264
-Swap:            0          0          0
-
-This is trying to create a snapshot of a 255GB LV.
-
-Any ideas on this one?
-
-cheers,
-
-Paul
+Alasdair
+-- 
+agk@redhat.com
