@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] VFS lock patch - should it go to Marcelo?
-Message-ID: <20020813160644.A30898@sistina.com>
-References: <FED7EB450413D511ABC100B0D021173246E1A7@hal9000.hermes.si>
+Message-Id: <20020814150744kaoru@rifu.bsd.tnes.nec.co.jp>
 Mime-Version: 1.0
-In-Reply-To: <FED7EB450413D511ABC100B0D021173246E1A7@hal9000.hermes.si>; from luka.renko@hermes.si on Tue, Aug 13, 2002 at 09:27:28AM +0200
+From: kaoru@bsd.tnes.nec.co.jp
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] kernel-Oops in 2.4.19 with LVM-1.0.5 + devfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,57 +13,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 13 09:21:02 2002
+Date: Wed Aug 14 01:08:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-On Tue, Aug 13, 2002 at 09:27:28AM +0200, Luka Renko wrote:
-> > First things first - make sure you've added the VFS lock 
-> > patch to your 
-> > kernel. It is available in the "kernel" directory in the EVMS 
-> > package. You 
-> > will need this patch in your kernel anytime you are going to 
-> > use snapshots 
-> > with journaled filesystems.
-> 
-> I have one question for EVMS and LVM developers: what is the reason that VFS
-> lock patch does not go to Marcelo in order to be included in next 2.4
-> release?
-> This patch is out and being sucessfully used for ages. Is there any good
-> reasno not to merge it into 2.4.20?
+Hi,
 
-No.
-Chris Mason as the maintainer of the VFS lock patch
-was trying to get it in a while ago TTBOMK anyways.
+When I executed the following commands, I get oops 
+running under 2.4.19-rc3 kernel with LVM-1.0.5 + devfs.
 
-Have send him a mail...
+# lvrename /dev/vg11/lv11_01 /dev/vg11/lv11_01new
+# vgdisplay -v vg11
 
-> 
-> Regards,
-> Luka
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+I executed "cat /proc/partitions" instead of "vgdisplay",
+oops occurred, too. 
 
--- 
+I think that the cause of this is the return value of 
+lvm_fs_create_lv() is ignored which is called within 
+a lvm_do_lv_rename function.
 
-Regards,
-Heinz    -- The LVM Guy --
+I made the following patch for this problem, and it seems 
+to work. Any comments? 
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+---8<-----------8<----------8<----------8<----------8<----------
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--- linux/drivers/md/lvm.c.orig  Fri Aug  2 08:51:06 2002
++++ linux/drivers/md/lvm.c       Fri Aug  2 08:50:48 2002
+@@ -2710,6 +2710,7 @@
+                {
+                        lvm_fs_remove_lv(vg_ptr, lv_ptr);
+                        strncpy(lv_ptr->lv_name, lv_req->lv_name, NAME_LEN);
++                       lvm_gendisk.part[MINOR(lv_ptr->lv_dev)].de =
+                        lvm_fs_create_lv(vg_ptr, lv_ptr);
+                        break;
+                }
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+---8<-----------8<----------8<----------8<----------8<----------
+
+--------------------
+Kaoru
