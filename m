@@ -1,10 +1,11 @@
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] First try, first fail with LVM.
-Message-ID: <20040116111752.GF2837@redhat.com>
-References: <20040114214802.24043.55903.Mailman@hermes.sistina.com> <000801c3dae7$ed845880$0201a8c0@kylie>
+Subject: Re: [linux-lvm] How to recover a VG from another PC?
+Message-ID: <20040116111312.GE2837@redhat.com>
+References: <40067D39.20407@iku-ag.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <000801c3dae7$ed845880$0201a8c0@kylie>
+In-Reply-To: <40067D39.20407@iku-ag.de>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,105 +16,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 16 08:57:05 2004
+Date: Fri Jan 16 08:57:09 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Wed, Jan 14, 2004 at 10:46:43PM +0100, Roger Eriksson wrote:
-> I'm new at this list and new with linux lvm.
-> 
-> The story this far. I bought a new hard disk to my file server at home and
-> decided to reinstall the thing with a newer version of Linux (Red Hat 6.2
-> before, now Mandrake 9.2). I decided to go with LVM and reiserfs, during the
-> setup of Mandrake 9.2.
+Kurt,
 
-Roger,
+send me <mauelshagen@redhat.com> a copy of the bzip2'ed output of
+"dd if=3D/dev/hdc2 ibs=3D1k count=3D4k" and i'll have a go on your metada=
+ta trying
+to repair it and send it back to you for VG recovery.
 
-we've got one problem report which might be related, where LVM fails to
-create UUIDs on Mandrake which is probably related to /dev/urandom used
-by LVM to retrieve random numbers. Check if /dev/urandom exists and
-is readable.
-
-Please check with pvdisplay on all you PVs and "vgdisplay -D" if
-they have UUIDs set fine and report results here.
-
-Regards,
+Cheers,
 Heinz    -- The LVM Guy --
 
-
-> 
-> On the server I have two sets of disks. Three 4.6 Gb SCSI disks that I
-> joined together using LVM and three larger IDE disks that I also joined
-> together. Everything went well and I started to copy back the files that I
-> earlier copied to my Window and Linux desktop computers. No problems with
-> that and since it got late a set the computers to move the files back and
-> went to bed. The next morning when I checked the damn thing it had rebooted
-> and reiserfs said that it couldn't find a file system on the IDE set. Now,
-> after carefully examined the situation I think that it might have something
-> to do with LVM. It seems like one disk is missing from the vg.
-> 
-> This is the things I've done (from notes on paper, so it's not the real
-> output from the screen):
-> 
-> > fdisk /dev/hda
-> 
-> Device	boot	start	end	blocks	id	system
-> /dev/hda1	*	1	13	104391	03	Linux		
-> /dev/hda2		14	2482	19832242	5	Extended
-> /dev/hda3		14	2482	19832211	8e	Linux lvm
-> 
-> > fdisk /dev/hdb
-> Device	boot	start	end	blocks	id	system
-> /dev/hdb1	*	1	5005	40202631	8e	Linux lvm
-> 
-> > fdisk /dev/hdc
-> Device	boot	start	end	blocks	id	system
-> /dev/hdc1	*	1	19929	160079661	8e	Linux lvm
-> 
-> > vgscan
-> vgscan -- found active volume group "SystemVolume"
-> vgscan  -- ERROR "vg_read_with_pv_and_lv() : current PV" can't get data of
-> volume group "DataVolume" from physical volume(s)
-> ...
-> 
-> > pvscan
-> -- active PV "/dev/scsi//host0/bus0/target8/lun0/part1" of VG "SystemVolume"
-> [4.22 GB/0 free]
-> -- active PV "/dev/scsi//host0/bus0/target9/lun0/part1" of VG "SystemVolume"
-> [4.22 GB/0 free]
-> -- active PV "/dev/scsi//host0/bus0/target10/lun0/part1" of VG
-> "SystemVolume" [4.22 GB/0 free]
-> -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part5" is associated to
-> unknown VG "DataVolume" (run vgscan)
-> -- inactive PV "/dev/ide/host0/bus0/target1/lun0/part1" is associated to
-> unknown VG "DataVolume" (run vgscan)
-> -- total : 5 [70.01 GB] / in use : 5 [70.01 GB] / in no VG : 0 [0]
-> 
-> 
-> And, as I told you, this is my first try with linux lvm. Not sure what to do
-> now and I rather try to find some answers before I make a mess on my own. I
-> would like to save the files from the system if possible, but it's nothing
-> that I can't replace (what I can't replace I have on tapes also).
-> 
-> Any suggestions how to solve this situation?
-> 
-> Thank's for reading.
-> 
-> /Roger E
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+On Thu, Jan 15, 2004 at 12:44:57PM +0100, Kurt Huwig wrote:
+> Hi!
+>=20
+> I've got the following problem:
+>=20
+> I replaced an old SUSE 7.3, Kernel 2.4.10 (or so) by a current Debian=20
+> with 2.4.23. There was an IDE disk:
+>=20
+> /dev/hdc2            65      5005  39688582+  8e  Linux LVM
+>=20
+> There was a volume group called 'ide' containing only this one partitio=
+n.
+>=20
+> Unfortunately I did the reinstall before reading the LVM manual and so=20
+> did not use the export-feature. What I get from 'vgscan -d' is:
+>=20
+> <333> pv_check_volume -- CALLED  dev_name: "/dev/hdc2"  pv: 804D110
+> <4444> pv_check_name -- CALLED with "/dev/hdc2"
+> <55555> lvm_check_chars -- CALLED with name: "/dev/hdc2"
+> <55555> lvm_check_chars -- LEAVING with ret: 0
+> <4444> pv_check_name -- LEAVING with ret: 0
+> <4444> pv_check_new -- CALLED
+> <4444> pv_check_new -- LEAVING with ret: 0
+> <4444> vg_check_name -- CALLED with VG: ide
+> <55555> lvm_check_chars -- CALLED with name: "ide"
+> <55555> lvm_check_chars -- LEAVING with ret: 0
+> <4444> vg_check_name -- LEAVING with ret: -348
+> <333> pv_check_volume -- LEAVING with ret: 0
+> <22> pv_read_all_pv -- device /dev/hdc2 NOT used
+>=20
+> but no volume group appears.
+>=20
+> What can I do?
+>=20
+>=20
+> Kurt
+> --=20
+> Kurt Huwig             iKu Systemhaus AG        http://www.iku-ag.de/
+> Vorstand               Am R=F6merkastell 4        Telefon 0681/96751-0
+>                        66121 Saarbr=FCcken        Telefax 0681/96751-66
+> GnuPG 1024D/99DD9468 64B1 0C5B 82BC E16E 8940  EB6D 4C32 F908 99DD 9468
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -121,4 +86,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
