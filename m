@@ -1,39 +1,32 @@
-Message-Id: <199906301634.SAA06762@e35.msede.com>
-Subject: Re: [linux-lvm] vgscan -- invalid i/o protocol version
-Date: Wed, 30 Jun 99 18:34:30 MESZ
-In-Reply-To: <Pine.LNX.4.10.9906301639130.2611-100000@fuse.aethos.co.uk>; from "James Pattinson" at Jun 30, 99 4:42 pm
-From: Michael Marxmeier <mike@msede.com>
+From: "Stefan Monnier" <monnier+lists/linux/lvm/news/@tequila.cs.yale.edu>
+Subject: Re: [linux-lvm] Alpha testers rqd for ext2 fs extend utility.
+References: <3779A456.15F5@erols.com> <199906300435.WAA17970@webber.adilger.net>
+Date: 30 Jun 1999 13:42:43 -0400
+Message-ID: <5lu2rppoto.fsf@tequila.cs.yale.edu>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: James Pattinson <jamesp@aethos.co.uk>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-> so i ran vgscan and got the message in the subject line. It's possible I'm
-> being really thick and I don't really know what I'm doing. Do I need the
-> devfs patches too?
+>>>>> "Andreas" == Andreas Dilger <adilger@enel.ucalgary.ca> writes:
+> all of the space on your disks.  It is easy to grow a filesystem, but
+> lots of work to shrink it (ie backup, rebuild, restore).
 
-AFAIR this error message has appeared previously when the /dev/lvm
-device file was missing.
+That's exactly why I don't like this pre-allocation idea.
+It will end up with a grow2fs utility and no way to shrink a filesystem.
+I'd rather see the work be out in a real ext2resize that can both grow and
+shrink a filesystem, as can AdvFS.
+Problem is:  shrinking will necessarily mean heavy disk reorganization
+(most importantly: some files will have to be reassigned to other inodes
+which means `stale filehandle' across NFS).  So I must admit that it is indeed
+desirable to at least try to avoid moving things around when possible,
+via (f.ex.) pre-allocation.
 
-$ ls -l /dev/lvm
-crw-r-----   1 root     root     109,   0 Mar 31 05:13 /dev/lvm
-
-If it's not created, try a mknod /dev/lvm c 109 0
-
-> I'm new to lvm-on-linux but I love it on HP-UX.
-
-You're welcome.
+All in all, it just goes to show that a static inode->block mapping
+as is used in ext2 (and ufs) is not flexible enough.
 
 
-Hope this helps
-Michael
-
---
-Michael Marxmeier           Marxmeier Software GmbH
-E-Mail: mike@msede.com      Besenbruckstrasse 9
-Voice : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+	Stefan
