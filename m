@@ -1,17 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8O6I3r18035
-	for <linux-lvm@redhat.com>; Fri, 24 Sep 2004 02:18:03 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8O6I19A014964
-	for <linux-lvm@redhat.com>; Fri, 24 Sep 2004 02:18:01 -0400
-Date: Fri, 24 Sep 2004 08:17:55 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] which files, which physical volumes?
-Message-ID: <20040924061754.GD13943@percy.comedia.it>
-References: <41538691.2040807@myself.gen.nz>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <41538691.2040807@myself.gen.nz>
+Received: from null.msp.redhat.com (null.msp.redhat.com [172.16.31.120])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id i8ODpOck026720
+	for <linux-lvm@redhat.com>; Fri, 24 Sep 2004 09:51:25 -0400
+Sender: alewis@redhat.com
+Subject: Re: [linux-lvm] How to tell if a logical volume is striped
+References: <mailman.3018.1096000472.3231.linux-lvm@redhat.com>
+From: AJ Lewis <alewis@redhat.com>
+Date: 24 Sep 2004 08:51:24 -0500
+In-Reply-To: <mailman.3018.1096000472.3231.linux-lvm@redhat.com>
+Message-ID: <x05y8izdbc3.fsf@null.msp.redhat.com>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,22 +19,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Sep 24, 2004 at 02:29:37PM +1200, Steve Wray wrote:
->Or maybe pvmove is *still* broken, in which case I need to find the 
->files which occupy that physical volume, move them to a different 
->logical volume altogether and then forcibly remove that physical volume 
->without regard to the files that are no longer on it... and hopefuly 
->this won't cause corruption on the filesystem on that logical volume.
-this will certainly cause corruption.
+lemons_terry@emc.com writes:
 
+> How can I tell if a logical volume is striped?  'lvdisplay' doesn't seem to
+> show this, even in V2.
+
+'lvs --segments' should show you (lvs is only available in lvm2 - you
+might need to run 'lvm lvs --segments' depending on how lvm2 is installed...
+
+regards,
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat Inc.                               E-Mail: alewis@redhat.com
+720 Washington Ave. SE, Suite 200
+Minneapolis, MN 55414
+   
+Current GPG fingerprint = D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
