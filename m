@@ -1,12 +1,8 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] LE/PE Question
-Message-ID: <448380000.1037896711@[192.168.200.4]>
-In-Reply-To: <20021121115752.B8329@sistina.com>
-References: <E18EFOt-0001Qf-00@hermes.sistina.com>
- <20021121115752.B8329@sistina.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.6 available at www.sistina.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20021121214832.UAUW771.imf02bis.bellsouth.net@TAZ2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,45 +13,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 21 10:33:02 2002
+Date: Thu Nov 21 15:47:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>linux-lvm@sistina.com
+
+I was just looking at 2.4.20-rc2 and it has LVM 1.0.5+ per the lvm.h header =
+file.
+
+Do you think LVM 1.0.6 will get into 2.4.20?
+
+Greg Freemyer
+
+ >>  *** ANNOUNCEMENT *** LVM 1.0.6 available at www.sistina.com
+
+ >>  Hi all,
+
+ >>  A tarball is available at
+
+ >>  <http://www.sistina.com/>
+
+ >>  for download.
+
+ >>  Follow the "products" link on top of the Sistina web page
+ >>  and then the "Logical Volume Manager" link.
 
 
--- "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+ >>  LVM 1.0.6 contains lvrename and vgimport bug fixes beside others.
 
-> On Tue, Nov 19, 2002 at 09:50:39PM +0100, kalle@idlar.nu wrote:
->> Hi!
->>
->> Im researching some diffrent what-if-scenarios to be more prepared if
->> our lvm fails. and I'm wondering..Is there any utility to find which
->> file (or fs inode) a specific LE/PE is assigned to?
->
-># lvdisplay -v /dev/YourVG/YourLV # displays mapping logical -> physical
-># extents lvdisplay -v /dev/YourPV # displays mapping physical -> logical
-># extents
->
->>   What I would like to acomplish it to be able to know what files are
->>   located on a specific disk in a
->>
->> VG/LV. So if I detect that a disk in a LV is starting to fail I would
->> like to know which files are more
->>
->> likely to be non-recoverable.
->
-> You need to 'ask' the filesystem, where it puts stuff ;)
-> I.e. "debugfs /dev/YourVG/YourLV" for ext[23].
+ >>  We changed the default physical extent size to 32Mb to support up
+ >>  to 2Tb logical volume size.
 
-The unit of failure, for all pratical purposes, is the LV
-(unless you are into using dd on raw disk devices to make
-your backups). If one drive is likely to fail then any LV
-crossing that LV is going to get fried (short of RAID) and
-will have to be restored.
+ >>  See the CHANGELOG and WHATSNEW files contained in the tarball
+ >>  for further information.
+
+
+ >>  Feed back LVM related information to <linux-lvm@sistina.com>.
+
+ >>  Thanks a lot for your support of LVM.
+
+
+ >>  _______________________________________________
+ >>  linux-lvm mailing list
+ >>  linux-lvm@sistina.com
+ >>  http://lists.sistina.com/mailman/listinfo/linux-lvm
+ >>  read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+
+
+Greg Freemyer
+Internet Engineer
+Deployment and Integration Specialist
+Compaq ASE - Tru64 v4, v5
+Compaq Master ASE - SAN Architect
+The Norcross Group
+www.NorcrossGroup.com
