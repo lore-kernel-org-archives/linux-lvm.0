@@ -1,65 +1,64 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Message-Id: <200005031809.e43I93R26551@webber.adilger.net>
-Subject: Re: [linux-lvm] SuSE/LVM boot problem
-Date: Wed, 3 May 2000 12:09:03 -0600 (MDT)
+Message-ID: <39108F9B.16FC50E0@msede.com>
+Date: Wed, 03 May 2000 22:44:11 +0200
+From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] reproducible segfault in vgscan
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-David Gould writes:
-> > Option 1 is way easier to implement, but has one big disadvantage: Whenever
-> > you move physical extents, you have to re-run lilo.
+Forwarded message form Paul Jakma <paulj@itg.ie>
 
-> Yes. Would it be reasonable to have LVM tools check for this and warn
-> the user?
+-------- Original Message --------
+Date: Wed, 3 May 2000 20:03:41 +0100 (IST)
+From: Paul Jakma <paulj@itg.ie>
+Subject: reproducible segfault in vgscan
+Message-ID: <Pine.LNX.4.21.0005031928440.907-100000@rossi.itg.ie>
+MIME-Version: 1.0
 
-You need to re-run LILO even if you move the kernel on a regular filesystem,
-so I don't think it's that important if LVM doesn't warn you about this.
-How often do you move LVs around anyways?  If you keep them in your /boot
-LV and it's only a couple of PPs in size, it shouldn't be an issue.  Under
-AIX, you are forced to have your boot LV contiguous (which I think LILO
-doesn't need, as long as it is a single disk), and you are still required
-to run "bosboot" if you move or mirror your BLV.
+i have a reproducible segfault with vgscan.
 
-> If I have understood this, we need the following to make this
-> work (some of this may already exist):
-> 
->  - lvm needs to have a way of tracking/enforcing/satisfying the constraint
->    that specified lvs need to be in the bios bootable physical area
+i had pvmove'd several lv's. Then i rebooted. since then, vgscan
+segfaults
+the first 3 times  out of every 4 times i run it.
 
-I think this can mostly be left up to the sysadmin for now.  I think if
-LILO can handle LVs at all, it already complains if your kernel isn't
-in a BIOS bootable area.
+eg:
 
->  - lilo needs to understand about lvm and use the lvm provided ways to
->    get physical mappings.
+[root@rossi linux]# vgscan 
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "Main_VG"
+Segmentation fault
+[root@rossi linux]# vgscan 
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "Main_VG"
+Segmentation fault
+[root@rossi linux]# vgscan 
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "Main_VG"
+Segmentation fault
+[root@rossi linux]# vgscan 
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "Main_VG"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: you may not have an actual VGDA backup of your
+volume
+group
 
-How does LILO do this now?  It currently gets a filename for the kernel,
-and that's it.  It must do some sort of internal calculation or IOCTL to
-get the physical block numbers on the disk.  Is the problem that it does
-its calculations w.r.t. the start of the partition?
+this means i have to call vgscan 4 times in a row from my initscripts
+before i can run vgchange.. :(
 
->  - the kernel needs to be able to reconstruct enough of the lvm
->    descriptors to mount / at boot time.
+vgcfgrestore also has the same behaviour. :( segfault, segfault,
+segfault, ok, segfault, segfault segfault ok.. etc..
 
-You could always require that the / partition be contiguous, so it can
-initially be mounted as ext2 directly.  If you want to resize your root
-filesystem, you have to migrate the blocks after it to another location,
-or move the whole LV to a contiguous region large enough for the new
-size and re-run LILO.  I think it is already possible to specify an offset
-into a block device for the / filesystem (think bootfloppy), so the kernel
-could mount /dev/hda1 + X blocks read-only at boot, and when it goes to
-mount read/write it remounts /dev/rootvg/lv00 as read-write.
+System is 2.3.99-pre6-pre7.
 
-I think I need to dig a bit more into the LILO code to see what's really
-happening there.
+I've looked at the BUGS page but i don't see this problem listed.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Further info available on request..
+
+regards,
+
+Paul Jakma.
