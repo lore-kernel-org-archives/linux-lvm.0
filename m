@@ -1,22 +1,31 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5BNXj027096
-	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 19:33:45 -0400
-Received: from linda-1.paradise.net.nz (bm-1a.paradise.net.nz [202.0.58.20])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i5BNXdXn011258
-	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 19:33:40 -0400
-Received: from smtp-1.paradise.net.nz (smtp-1b.paradise.net.nz [202.0.32.210])
-	by linda-1.paradise.net.nz (Paradise.net.nz)
-	with ESMTP id <0HZ6001CP442QE@linda-1.paradise.net.nz> for
-	linux-lvm@redhat.com; Sat, 12 Jun 2004 11:33:38 +1200 (NZST)
-Received: from fosi (203-79-83-162.cable.paradise.net.nz [203.79.83.162])
-	by smtp-1.paradise.net.nz (Postfix) with ESMTP id 6D92D82783	for
-	<linux-lvm@redhat.com>; Sat, 12 Jun 2004 11:33:38 +1200 (NZST)
-Date: Sat, 12 Jun 2004 11:33:50 +1200
-From: Steve Wray <steve.wray@paradise.net.nz>
-Message-id: <001601c4500c$8cb7c560$0201a8c0@fosi>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5C0DA003103
+	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 20:13:10 -0400
+Received: from pd5mo3so.prod.shaw.ca (shawidc-mo1.cg.shawcable.net
+	[24.71.223.10])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5C0D9i5009681
+	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 20:13:09 -0400
+Received: from pd3mr7so.prod.shaw.ca (pd3mr7so-qfe3.prod.shaw.ca [10.0.141.23])
+	by l-daemon (iPlanet Messaging Server 5.2 HotFix 1.18 (built Jul 28
+	2003))
+	with ESMTP id <0HZ600H9F5NV1K@l-daemon> for linux-lvm@redhat.com; Fri,
+	11 Jun 2004 18:07:07 -0600 (MDT)
+Received: from pn2ml4so.prod.shaw.ca ([10.0.121.148])
+	by pd3mr7so.prod.shaw.ca (Sun ONE Messaging Server 6.0 HotFix 1.01
+	(built Mar
+	15 2004)) with ESMTP id <0HZ600DB05NVLJ70@pd3mr7so.prod.shaw.ca> for
+	linux-lvm@redhat.com; Fri, 11 Jun 2004 18:07:07 -0600 (MDT)
+Received: from tyler (S010600485485bc00.cg.shawcable.net [68.146.152.115])
+	by l-daemon (iPlanet Messaging Server 5.2 HotFix 1.18 (built Jul 28
+	2003))
+	with ESMTP id <0HZ600B8C5NVF4@l-daemon> for linux-lvm@redhat.com; Fri,
+	11 Jun 2004 18:07:07 -0600 (MDT)
+Date: Fri, 11 Jun 2004 18:07:07 -0600
+From: Tyler <tyler@tylercentral.com>
+Message-id: <0HZ600B8D5NVF4@l-daemon>
 MIME-version: 1.0
-Content-transfer-encoding: 7bit
-Subject: [linux-lvm] decommision disks in LVM2 & 2.6 kernel? (pvmove broken)
+Content-transfer-encoding: 7BIT
+Subject: [linux-lvm] Stripes and PE's
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,30 +39,49 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi there!
+I'm having problems creating a logical volume on a 4 disk SCSI volume group.
+I want to use the entire space as 1 LV that is striped, but can't seem to do
+it.
 
-I have two disks which I need to decommission.
+I get an error telling me I don't have enough Physical Extents, when I
+clearly do.
 
-I'm running mandrake 10 official, LVM2, 2.6.3-13 kernel.
+livecd root # vgdisplay
+  --- Volume group ---
+  VG Name               group
+  System ID
+  Format                lvm2
+  Metadata Areas        4
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                255
+  Cur LV                0
+  Open LV               0
+  Max PV                255
+  Cur PV                4
+  Act PV                4
+  VG Size               13.91 GB
+  PE Size               4.00 MB
+  Total PE              3560
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       3560 / 13.91 GB
+  VG UUID               DjxWid-oxqx-zol9-Lu8a-CO94-AsBn-c7k3le
 
-Naturally, pvmove doesn't work.
+livecd root # lvcreate -i4 -I16 -l3560 -nstorage group
+  Insufficient allocatable extents suitable for striping for logical volume
+storage: 3560 required
+livecd root # lvcreate -i4 -I16 -l3000 -nstorage group
+  Insufficient allocatable extents suitable for striping for logical volume
+storage: 3000 required
 
-I get "Temporary mirror activation failed"; I googled for that
-and it wasn't much helpt. In fact I've spent a good couple of
-hours googling for hints on this problem and it hasn't helped. 
-Maybe my google-fu isn't that hot.
+Even if I try to use less space then it says I have, it still wont let me.
 
-I only need a kernel which can perform pvmove just the once.
-I don't care what other features it has, I just want to boot
-into single user, pvmove, pvremove and bring it back up
-with my regular, distribution kernel.
+I've had this error before, but never found a solution.  I also have not
+found the solution on the mailing list archives either.  I can create a
+contiguous LV, but without striping.  I'd like to have it striped if I
+could.
 
-Can anyone please direct me to a 2.6 kernel which supports
-pvmove? (or of course, appropriate patches. Oh and I am not
-particularly interested in EVMS support, just pvmove :)
+What am I doing wrong?
 
-Alternatively, if I could find out which files are on the PV's which
-I want to decommision, I could just move the files off and then pvremove
-without having to pvmove, right? Suggestions?
-
-Thanks!
+Tyler
