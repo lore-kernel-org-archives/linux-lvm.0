@@ -1,11 +1,10 @@
-Date: Fri, 5 Oct 2001 10:30:53 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] pvcreate fails on a software RAID metadisk
-Message-ID: <20011005103053.A2938@colombina.comedia.it>
-References: <3BBC8B5B.1A484028@legis.state.ak.us> <3BBCBF87.5520C8F9@legis.state.ak.us> <20011004144643.B31725@turbolinux.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011004144643.B31725@turbolinux.com>; from adilger@turbolabs.com on Thu, Oct 04, 2001 at 02:46:43PM -0600
+From: "yves.alloyer" <Yves.ALLOYER@slpinfoware.com>
+Subject: RE: [linux-lvm] Root + Software RAID 1 in partition + LVM + Reiserfs
+Date: Fri, 5 Oct 2001 11:04:13 +0200
+Message-Id: <NEBBLHFAEINCLDICDLOAOENICHAA.yves.alloyer@slpinfoware.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20011004120644.J31061@turbolinux.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,42 +17,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Oct 04, 2001 at 02:46:43PM -0600, Andreas Dilger wrote:
-> On Oct 04, 2001  11:59 -0800, Bill Ellis wrote:
-> > <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
-> 
-> This is a problem - MD devices are not partitioned.  Have a look at
-> this function to see why it thinks so.
+There is a very similar thread called [linux-lvm] pvcreate fails on a
+software RAID metadisk
+I'm posting the patch to it too...
 
-no this should be normal
-i believe the problem lies somewhere else in the damned cache
-i tested it on one of my systems, i have 4 disks and 4 md devices there
-md/0 is not detected
-md/1 to md/3 are
-and lvmdiskscan says i have 5 disks and 3 md devices.
+Snip...
+>
+> > pvcreate /dev/md1 complained about using a Linux SWAP partition
+>
+> Did you change the partition type with fdisk to be the LVM partition type?
+> Hmm, I suppose that if you are using MD RAID autostart, you need to have
+> that partition type instead.
+>
+> > I tweaked lvm_check_partitioned_device to have it return FALSE for MD
+> > devices. This would probably prevent me from partitioning any
+> MD device. But
+> > I won't anyway... that's what I use LVM for.
+>
+> I don't think you CAN partition an MD device and use it (what
+> would the minor
+> numbers be?).  Please submit the patch.
+>
+Snip...
 
-look in http://www.comedia.it/bluca/lvm/
-you will find lvmdiskscan output for
-md0 (not working)
-md1 (working)
-and a diff file between the two that may help debugging
-basically pv_read is called for md/1 and not for md/0
+Please beware. This patch is the quick and dirty type. I have no idea as to
+its implications except I know it will prevent from partitioning MD devices.
+------------------------------------------------------------
+diff -ru 1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c
+slp-1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c
+--- 1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c	Mon Aug 20 17:17:56 2001
++++ slp-1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c	Thu Oct  4 14:47:37
+2001
+@@ -55,6 +55,8 @@
+ 	switch (lvm_get_device_type(st_rdev)) {
+ 	case LVM_DEVICE_TYPE_INVALID:
+ 	    break;
++	case 2:	/* YAL: MD device on partition. Won't partition it. */
++		break;
+ 	default:
+ 	    ret = TRUE;
+ 	}
+------------------------------------------------------------
+>
+> Cheers, Andreas
+> --
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+>
+Snip...
 
-(i was using current cvs)
-
-i will look further into this problem since i have to build a new lvm over md
-but if someone else looks in it the better.
-
-
-L.
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Yves
