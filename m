@@ -1,7 +1,8 @@
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130C026@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Subject: RE: [linux-lvm] 33% of my space is missing?
-Date: Thu, 13 Sep 2001 14:53:51 -0600
+Message-ID: <002b01c13c98$d3080be0$6601a8c0@foobarhouse.com>
+From: "Neil Macvicar" <neilm@foobarhouse.com>
+References: <Pine.LNX.4.21.0109130913590.994-100000@tompth.localdomain> <004101c13c4d$cfc929a0$6601a8c0@foobarhouse.com>
+Subject: Re: [linux-lvm] How to boot with LVM?
+Date: Thu, 13 Sep 2001 22:12:41 +0100
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
@@ -16,93 +17,141 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'Kevin M Corry ' <corryk@us.ibm.com>, "'linux-lvm@sistina.com '" <linux-lvm@sistina.com>
-
-Ok, I found my space.  I did something stupid.  Kevin, you were right. 
-
-Now I feel pretty dumb.  I'll get over it.
-
-Thanx,
-Mike Diehl.
-
------Original Message-----
-From: Kevin M Corry
 To: linux-lvm@sistina.com
-Sent: 9/13/2001 2:40 PM
-Subject: Re: [linux-lvm] 33% of my space is missing?
 
-Hi Mike,
+A few notes I missed: This ramdisk I made myself. You can mount it on
+loopback after untarring it to examine it's contents. It's size sould be set
+to 8192.
 
-As I recall from your previous emails, you added a few of these
-drives below as new PVs to your VG. You now need to do an
-lvextend on the existing logical volume to make use of this
-additional space in the volume group. AFTER the lvextend, you
-will need to expand the filesystem so it makes use of the
-new space as well. If you are using ext2 (I can't remember
-if you are using Reiser), then there is an LVM tool (e2fsadm)
-which should do both the lvextend and the fs extend. If you
-are using Reiser or XFS, they will have their own tools for
-doing the fs extend.
+Regards,
+--Neil.
 
-The other option is to create a second logical volume in that
-group, with a new filesystem. If you need a single filesystem
-for all that space, then you will need the procedure above.
-
--Kevin
+----- Original Message -----
+From: "Neil Macvicar" <neilm@foobarhouse.com>
+To: <linux-lvm@sistina.com>
+Sent: Thursday, September 13, 2001 1:15 PM
+Subject: Re: [linux-lvm] How to boot with LVM?
 
 
-----------------------------------
-Hi all.
-
-I seem to be missing 100Gb out of a possible 300Gb!  Check it out:
-
-[root@filmore jdiehl]# fdisk -l | grep LVM
-/dev/sdb5           226      4402  33551721   8e  Linux LVM
-/dev/sdb6          4403      8579  33551721   8e  Linux LVM
-/dev/sdb7          8580     12756  33551721   8e  Linux LVM
-/dev/sdb8         12757     15030  18265873+  8e  Linux LVM
-/dev/sdc6          7015     14028  56339923+  8e  Linux LVM
-/dev/sdc7         14029     21042  56339923+  8e  Linux LVM
-/dev/sdc8         21043     28056  56339923+  8e  Linux LVM
-/dev/sdc9         28057     30945  23205861   8e  Linux LVM
-[root@filmore jdiehl]#
-
-Adding this space up, I get 311Gb.
-
-But:
-
-[root@filmore jdiehl]# lvdisplay /dev/Database2/data
---- Logical volume ---
-LV Name                /dev/Database2/data
-VG Name                Database2
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 1
-LV Size                215.3 GB
-Current LE             27558
-Allocated LE           27558
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
-
-Here we see that I only have access to 215Gb.
-
-Where is the rest of my space?
-
-Mike Diehl.
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> If it's any help, I have put my initrd on public ftp at
+> fruits.foobarhouse.com in the LVM directory. It's served me well for as
+long
+> as I've been using LVM'ed root.
+>
+> I'm currently using LVM 0.9.1beta8.
+>
+> Regards,
+> --Neil.
+>
+> ----- Original Message -----
+> From: "A.R. (Tom) Peters" <tpeters@xs4all.nl>
+> To: <linux-lvm@sistina.com>
+> Sent: Thursday, September 13, 2001 8:18 AM
+> Subject: [linux-lvm] How to boot with LVM?
+>
+>
+> > I bought a 30 GB HD, and decided to put it under the LVM and put
+> > ReiserFS on it.  I managed to initialize it fine, and it now has a base
+> > Debian install on it, but I cannot manage to boot from it.
+> >
+> > You cannot boot from a LV; therefore I made a small (16 MB) ext2
+> > partition with a kernel and an initrd.  My intended root FS is on a LV,
+> > and you need to jump through some hoops to get the kernel mount it on /
+> > : that is documented in the LVM-HOWTO and FAQ that comes with the LVM
+> > tools.  Use of initrd is documented in
+> > /usr/src/linux/Documents/initrd.txt .  Finally, the Bootdisk-HOWTO
+> > helps.
+> >
+> > I use LVM tools 1.0.1-rc2, and a 2.4.10-pre7 kernel, patched with the
+> > patches of the LVM tools; no .rej there.  I compiled the LVM binaries
+> > with liblvm-10 statically linked, because otherwise the executables in
+> > the initrd had problems with finding the .so (I think I know what was
+> > going on, but won't go into that now).  Therefore I have to make a
+> > Ramdisk of 5MB instead of the default 4 MB.
+> >
+> > My new HD is /dev/hdd, and is the 3rd HD in the system: this allows me
+> > to still use my computer to read docs and send you this message.  So for
+> > now I do not want to put a bootloader on the disk because the hardware
+> > config is going to change: instead I use a boot floppy with GRUB.
+> >
+> > LVM has a utility script lvmcreate_initrd to make an initrd suitable to
+> > prepare for mounting a LV on / .
+> >
+> > The system boots with the floppy; the correct kernel is loaded from the
+> > ext2 partition, as well as the initrd; the LVM tools on the initrd are
+> > executed and seem to work properly.
+> >
+> > PROBLEM: subsequently the kernel panics because it still cannot mount a
+> > root.
+> >
+> > I got a GRUB bootdisk that works.  /grub/menu.lst :
+> > title  Linux24
+> > root (hd2,4)
+> > kernel /vmlinuz-2.4.10-pre7 root=/dev/SYSDISK/Root ramdisk_size=5120
+> > # If I specify root=/dev/ram0 then I get a shell on the rudimentary
+> > initrd system.
+> > initrd /initrd-lvm-2.4.10-pre7.gz
+> >
+> > On initrd:
+> >
+> > etc/fstab:
+> > /dev/ram        /               ext2    defaults        0   0
+> > proc            /proc           proc    defaults        0   0
+> >
+> > linuxrc:
+> > #!/bin/sh
+> > /bin/mount /proc
+> > /sbin/vgscan
+> > /sbin/vgchange -a y
+> > /bin/umount /proc
+> >
+> > devices:
+> > # ls -l dev/SYSDISK/
+> > total 0
+> > brw-rw----    1 root     disk      58,   2 Sep 11 19:23 Opt
+> > brw-rw----    1 root     disk      58,   0 Sep 11 19:23 Root
+> > brw-rw----    1 root     disk      58,   4 Sep 11 19:23 Scratch
+> > brw-rw----    1 root     disk      58,   1 Sep 11 19:23 Usr
+> > brw-rw----    1 root     disk      58,   3 Sep 11 19:23 Var
+> > crw-r-----    1 root     disk     109,   0 Sep 11 19:23 group
+> >
+> > Kernel:
+> > # rdev vmlinuz-2.4.10-pre7
+> > Root device /dev/ram0   # Root device /dev/SYSDISK/Root
+> >   (-> 0x3a00) does not make a difference
+> > # rdev -R vmlinuz-2.4.10-pre7
+> > Root flags 0    # i.e. mount ro
+> > # rdev -r vmlinuz-2.4.10-pre7
+> > Ramsize 49152   # i.e. offset=0; bit14=1: load ramdisk; bit15=1:
+> >                 #   prompt before loading rootfs - this never happens!
+> >
+> > What am I supposed to change?  The kernel initrd.txt has a long and
+> > complicated story on using pivot_root to switch rootfs, but apparently
+> > the LVM linuxrc relies on the deprecated method that does this
+> > automatically.
+> >
+> > Any advice welcome.
+> >
+> > --
+> >
+>
+#>!$!%(@^%#%*(&(#@#*$^@^$##*#@&(%)@**$!(&!^(#((#&%!)%*@)(&$($$%(@#)&*!^$)^@*
+> ^@)
+> >
+> > Tom "thriving on chaos" Peters
+> > NL-1062 KD nr 149 tel.    +31-204080204
+> >   Amsterdam e-mail  tpeters@xs4all.nl
+> >
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
