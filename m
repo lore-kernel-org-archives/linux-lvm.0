@@ -1,12 +1,12 @@
 Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Mon, 29 Jan 2001 12:58:26 +0000
+Date: Mon, 29 Jan 2001 13:57:16 +0000
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Help recovering my volume groups
-Message-ID: <20010129125826.E594@tykepenguin.com>
-References: <Pine.LNX.4.30.0101271720570.2092-300000@tweetie.comstar.net>
+Subject: Re: [linux-lvm] configuration question
+Message-ID: <20010129135716.B511@tykepenguin.com>
+References: <3A7235A2.C515ED1C@wrkhors.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.30.0101271720570.2092-300000@tweetie.comstar.net>; from gregm@comstar.net on Sat, Jan 27, 2001 at 05:27:46PM -0500
+In-Reply-To: <3A7235A2.C515ED1C@wrkhors.com>; from lembark@wrkhors.com on Fri, Jan 26, 2001 at 08:42:42PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,40 +22,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Jan 27, 2001 at 05:27:46PM -0500, Gregory McLean wrote:
+On Fri, Jan 26, 2001 at 08:42:42PM -0600, Steven Lembark wrote:
 > 
-> Hi,
->  I've been using the LVM quite happily for some time now, the other day
-> one of the logical volumes in my volume group was getting full so I
-> extended it, unmounted the fs, grew the fs, remounted it and went on my
-> merry way. Today I got annoyed at the machine swapping constantly so I
-> went and got some more mem to put in the machine, shutdown, install
-> additional mem, powerup and:
+> trying to get vg's out of dev for now -- devfs issues.
 > 
->  vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- no volume groups found
+> so i modify ./kernel/lvm.h replacing:
+> 
+> 	#define LVM_DIR_PREFIX  "/dev/"
+> 
+> with 
+> 	#define LVM_DIR_PREFIX  "/lvm/"
+> 
+> then configure and compile the code.
+> 
+> probem is that this doesn't seem to purge /dev/ from
+> all of the code.  is there some other location where
+> the lvm directory is defined or is this just a 
+> configuration bug [perhaps a known one at that]?
 
-Are you running beta3 ? If not then an upgrade would be helpful.
+It looks like there are few hardcoded /dev strings elsewhere
+in the code. try a grep down the lib directory and change 
+those too. I'll fix this in CVS.
 
-If you are then we really need to find out what's happening here. 
-Do you have any snapshots defined ?
-
-Can you do a pvdisplay on all the PVs and post the output, it might also 
-be helpful if you can dd if=/dev/hd?? of=pv-dump.txt bs=1024 count=4 and send
-those four files too so we can see what has actually happened to the on-disk
-metadata.
-
-After than(but not before please!) you could try
-
-vfcfgrestore mmedia /dev/hda7
-vfcfgrestore mmedia /dev/hda8
-vfcfgrestore mmedia /dev/hdb1
-vfcfgrestore mmedia /dev/hdc1
-vgchange -ay
-
-And see if that helps.
-
-Thanks,
-
-Patrick
+patrick
