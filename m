@@ -1,12 +1,9 @@
-Return-Path: <drepper@redhat.com>
-Subject: Re: [linux-lvm] 2.4.3-ac{6,7} LVM hang
-References: <Pine.LNX.4.21.0104161653140.14442-100000@imladris.rielhome.conectiva>
-	<Pine.LNX.4.31.0104192311080.1048-100000@sjoerd.sjoerdnet>
-	<20010419235107.G750@suse.de>
-From: Ulrich Drepper <drepper@redhat.com>
-Date: 19 Apr 2001 18:05:03 -0700
-In-Reply-To: Jens Axboe's message of "Thu, 19 Apr 2001 23:51:07 +0200"
-Message-ID: <m3n19cxtxc.fsf@otr.mynet.cygnus.com>
+Return-Path: <paul@jakma.org>
+Date: Fri, 20 Apr 2001 02:29:09 +0100 (IST)
+From: Paul Jakma <paul@jakma.org>
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+In-Reply-To: <200104191945.f3JJjKRn015661@webber.adilger.int>
+Message-ID: <Pine.LNX.4.33.0104200218460.1083-100000@fogarty.jakma.org>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,18 +16,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>
-Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
 
-Jens Axboe <axboe@suse.de> writes:
+On Thu, 19 Apr 2001, Andreas Dilger wrote:
 
-> Does attached patch fix it?
+> went in, but not other stuff.  Also, it doesn't appear that any of the
+> LVM changes are making it into the stock kernel, which is basically a
+> recepie for disaster.
 
-Yes.
+agreed... after the problematic inclusion of 0.9 into the kernel i
+asked on sistina LVM list whether they could try to be a bit more
+proactive about feeding patches on to linus, to make life easier for
+LVM users - they had fixes for the problems of 0.9 but never, and
+still to this day have not, fed the code on.
 
+Still to this day, nothing from them but announcements on l-k of
+various betas. AFAIK all the patches for LVM submitted to linus since
+0.8 went in have been from core linux developers (Andrea, Jens,
+etc.), not sistina.
+
+shame... their LVM is really nice to use. Just frustrating that they
+do want to feed the code on... more frustrating still when you
+consider the lobbying that went on to try persuade l-k that LVM
+should go in.
+
+> Cheers, Andreas
+
+obHiddenCode: lm-sensors... used to use this a long time ago.
+
+regards,
 -- 
----------------.                          ,-.   1325 Chesapeake Terrace
-Ulrich Drepper  \    ,-------------------'   \  Sunnyvale, CA 94089 USA
-Red Hat          `--' drepper at redhat.com   `------------------------
+Paul Jakma	paul@clubi.ie	paul@jakma.org
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+Happiness is twin floppies.
