@@ -1,11 +1,7 @@
-Message-ID: <3FE7483D.90107@hasw.net>
-From: Sebastian Witt <se.witt@gmx.net>
+From: Rupa Schomaker <rupa-list@rupa.com>
+Message-ID: <m33cb3n9vp.fsf@shakti.rupa.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Endless loop running vgscan
-References: <3FE4DE2E.2030705@hasw.net> <20031221233848.M21022@uk.sistina.com>
-In-Reply-To: <20031221233848.M21022@uk.sistina.com>
-Content-Type: multipart/mixed;
- boundary="------------020807040904010804010102"
+Subject: [linux-lvm] LVM and MD disagree about PV size
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,118 +12,85 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 29 07:51:28 2003
+Date: Mon Dec 29 07:51:36 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
---------------020807040904010804010102
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+-----BEGIN PGP SIGNED MESSAGE-----
 
-Alasdair G Kergon wrote:
-> On Sun, Dec 21, 2003 at 12:41:34AM +0100, Sebastian Witt wrote:
-> 
->>Ignoring duplicate PV  on /dev/hdg1
->>Found /dev/hdf1 in VG raid_vg
->>Ignoring duplicate PV  on /dev/hdf1
->>Found /dev/hdh1 in VG raid_vg
-> 
-> 
-> Set up a filter in lvm.conf so that LVM2 only sees the RAID devices
-> and ignores the constituent devices that make up the RAID devices.
-> 
-> The LVM2 logic isn't clever enough yet always to work out the correct
-> device to use.  This will get fixed.
+Kernel: 2.4.20, stock lvm, debian system with xfs patches.
 
-Sorry, RAID is a little bit wrong in my case. The harddiscs running on
-a Promise RAID-Controller but the RAID-function is disabled and it's 
-used as a normal IDE controller.
-I appended my configuration.
+MD shows the right size of around 80G, LVM thinks the PV is much
+larger ().
 
-I've also this problem if I use this filter:
-filter = [ "a/hd[e-h]1$/", "r/.*/" ]
+1) How can I fix this without destroying the data?
+2) How can I avoid this in the future.
 
-Regards,
-Sebastian
+I still have a spare 45G drive in the system, so I can add it as a PV,
+pvmove the data, destroy md6, recreate it, pvmove the data back and
+see that all is ok.
 
---------------020807040904010804010102
-Content-Type: text/plain;
- name="LVM-VGs-server3"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="LVM-VGs-server3"
+In fact, I think I'll just go ahead and do so...
 
---- Volume group ---
-VG Name               raid_vg
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                2
-Open LV               2
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                4
-Act PV                4
-VG Size               38.15 GB
-PE Size               4 MB
-Total PE              9766
-Alloc PE / Size       9760 / 38.12 GB
-Free  PE / Size       6 / 24 MB
-VG UUID               none
+mdadm --detail /dev/md/6:
 
---- Logical volume ---
-LV Name                /dev/raid_vg/ftp_lv
-VG Name                raid_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 1
-LV Size                25 GB
-Current LE             6400
-Allocated LE           6400
-Stripes                4
-Stripe size (KByte)    64
-Allocation             next free
-Read ahead sectors     1024
-Block device           58:0
+/dev/md/6:
+        Version : 00.90.00
+  Creation Time : Sun Dec 28 17:33:02 2003
+     Raid Level : raid1
+     Array Size : 80003584 (76.30 GiB 81.92 GB)
+    Device Size : 80003584 (76.30 GiB 81.92 GB)
+   Raid Devices : 2
+  Total Devices : 2
+Preferred Minor : 6
+    Persistence : Superblock is persistent
 
---- Logical volume ---
-LV Name                /dev/raid_vg/raid_lv
-VG Name                raid_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   2
-# open                 1
-LV Size                13.12 GB
-Current LE             3360
-Allocated LE           3360
-Stripes                4
-Stripe size (KByte)    64
-Allocation             next free
-Read ahead sectors     1024
-Block device           58:1
+    Update Time : Sun Dec 28 17:33:02 2003
+          State : dirty, no-errors
+ Active Devices : 2
+Working Devices : 2
+ Failed Devices : 0
+  Spare Devices : 0
 
 
---- Physical volumes ---
-PV Name (#)           /dev/hde1 (1)
-PV Status             available / allocatable
-Total PE / Free PE    2440 / 0
-
-PV Name (#)           /dev/hdf1 (2)
-PV Status             available / allocatable
-Total PE / Free PE    2442 / 2
-
-PV Name (#)           /dev/hdg1 (3)
-PV Status             available / allocatable
-Total PE / Free PE    2442 / 2
-
-PV Name (#)           /dev/hdh1 (4)
-PV Status             available / allocatable
-Total PE / Free PE    2442 / 2
+    Number   Major   Minor   RaidDevice State
+       0      33        3        0      active sync   /dev/ide/host2/bus0/target0/lun0/part3
+       1      57        3        1      active sync   /dev/ide/host4/bus1/target0/lun0/part3
+           UUID : 8c24286e:6f758b5a:8d6c9575:d22731fa
+         Events : 0.1
 
 
+pvdisplay /dev/md/6:
 
+- --- Physical volume ---
+PV Name               /dev/md/6
+VG Name               shaktivg
+PV Size               148.80 GB [312062464 secs] / NOT usable 4.31 MB [LVM: 272 KB]
+PV#                   3
+PV Status             available
+Allocatable           yes
+Cur LV                10
+PE Size (KByte)       4096
+Total PE              38092
+Free PE               28645
+Allocated PE          9447
+PV UUID               jeVyqI-g2RE-xHF6-Nfo5-rT40-rGYK-65iJZp
 
---------------020807040904010804010102--
+- -- 
+- -rupa
+
+-----BEGIN PGP SIGNATURE-----
+Version: 2.6.3ia
+Charset: noconv
+Comment: Processed by Mailcrypt 3.5.7, an Emacs/PGP interface
+
+iQEVAwUBP/APNXHDM4ucEopdAQGpoQgAsDptX0/pSxJFPDY9R9i2EbVK+D6O0ieY
+Rg0436j8STek0AcF/CyvG6B0p8yYWoaubtDOVMNv0EdLU0LzIU72SstgOLIeQWXO
++oLHTgvDcd72gjjSrVJ0tKhubBLSz6EcfjbqM5wpyCDoP52/GyF9YPZllgahpH0p
+ayecX1Doi53OOFdSn2T2IIVn0NfXniEhprC17pPzinSfjZsSTsdk6EG70ZTFLkhA
+MzzCw/avSp4HphmMZ1j+iJ2QgFQd07ksTwKcqxBuzVIAWN50ox+RepZeUVhKalfz
+9R0JRho58HZVRo2OB6B9xnpukE6y28Bl56S4VVD5Zv53rIxUp82vIg==
+=s/SN
+-----END PGP SIGNATURE-----
