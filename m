@@ -1,20 +1,10 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3F4u8j05105
-	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 00:56:08 -0400
-Received: from york.smtp.ru (york.smtp.ru [62.118.249.10])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3F4u6u6004386
-	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 00:56:06 -0400
-Received: from [194.85.85.2] (account <01@smtp.ru>)
-	by york.smtp.ru (CommuniGate Pro WebUser 3.5.9)
-	with HTTP id 43168791 for <linux-lvm@redhat.com>;
-	Thu, 15 Apr 2004 08:56:05 +0400
-From: "Stepanov Andrew" <01@smtp.ru>
-Date: Thu, 15 Apr 2004 08:56:05 +0400
-Message-ID: <web-43168791@york.smtp.ru>
-MIME-Version: 1.0
+Date: Thu, 15 Apr 2004 12:42:22 +0200
+From: Ihno Krumreich <ihno@suse.de>
+Message-ID: <20040415104222.GA5243@wotan.suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM2: modprobe: Can't locate module
-	/dev/mapper/vg-home...
+Subject: [linux-lvm] Bug when creating snapshots on lvm on s390
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,49 +15,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com, Mauelshagen@redhat.com
+Cc: Bernhard Kaindl <bk@suse.de>, Uwe Drechsel <uwedr@suse.de>, Ulrich Hecht <uli@suse.de>
 
-Hello!
-First of all sorry for my English.
+Hi,
 
-I'm using Gentoo Linux 2004.0.
-All works fine.
-(LVM2 works and i can using partitions at LVM2)
+we have a filecorruption on a LVM-Volume when a
+snapshot is created. This Problem seem to occur only
+on s390 (31-Bit mode).
 
-But, At boot time there messages:
+are there any known issues when using snapshots on lvm on s390?
 
-*Setting up the Logical Volume Manager...
-modprobe: Can't locate module /dev/mapper/vg-home
-modprobe: Can't locate module /dev/mapper/vg-opt
-modprobe: Can't locate module /dev/mapper/vg-tmp
-modprobe: Can't locate module /dev/mapper/vg-usr
-modprobe: Can't locate module /dev/mapper/vg-var
+regards 
 
-modprobe: Can't locate module /dev/vg/group
-modprobe: Can't locate module /dev/vg/usr
-modprobe: Can't locate module /dev/vg/group
-modprobe: Can't locate module /dev/vg/home
-modprobe: Can't locate module /dev/vg/group
-modprobe: Can't locate module /dev/vg/opt
-modprobe: Can't locate module /dev/vg/group
-modprobe: Can't locate module /dev/vg/var
-modprobe: Can't locate module /dev/vg/group
-modprobe: Can't locate module /dev/vg/tmp      [OK]
-.
-.
-.
-This is coolbox.mydomain.org (Linux i686 2.4.24-xfs-r3)
+Ihno Krumreich
 
-coolbox login:
+How to create the bug:
+
+- Create three volume groups, which are striped over multiple
+  physical disks (9 x 2GByte).
+- use the second volume group to create a logical volume
+- create a file system on this LV (problem occurs with ext2, ext3, reiserfs)
+  and put data in the filesystem
+- create a snapshot of this LVOL
+- the data on the original LVOL are corruptet
+
+- It is important that the filesystem is mounted read/write
+  If it is only mounted readonly and the snapshot is
+  created the corruption does not occur.
+  
+
+Machine setup:
+
+S390 31-Bit with SUSE linux Enterprise Server 8 Service Pack 3
+Machine has 2 Gbyte RAM and 9 Model-3 DASD for the LVM.
+
+SLES8 has LVM Version 1.0.5 with IBM patches for multipath support.
+
+To exclude that Kernel modification from SUSE/IBM cause the
+problem IBM has testet it with the vanilla kernel 2.4.21 and
+LVM Version 1.0.7 and the problem is the same.
+
+At SUSE we tried to reproduce the problem on x86, but without
+success (kernel 2.4.21 with lvm 1.0.5).
+
+In the attached tar-ball is a file which showes the corruption
+starting at byte 0xc000 with a length of 0x1000 Bytes.
 
 
-That's all.
-I can work with my computer.
+-- 
+Best regards/Mit freundlichen Gr��en
 
-Please help me to hide this messages.
+Ihno Krumreich
 
-This messages shows when device mapper compiled into kernel
-or it loaded like module at boot time.
-
-HELLLLP!!!!
+"Never trust a computer you can lift."
+--
+Ihno Krumreich            ihno@suse.de
+SuSE Linux AG             Projectmanager S390 & zSeries
+Maxfeldstr. 5             +49-911-74053-439
+D-90409 N�rnberg          http://www.suse.de
