@@ -1,9 +1,9 @@
-Return-Path: <shane@zeke.yi.org>
-Date: Fri, 22 Dec 2000 13:46:41 -0500 (EST)
-From: Shane Shrybman <shane@zeke.yi.org>
-Message-ID: <Pine.LNX.4.21.0012221336250.1585-100000@zeke.goatskin.org>
+Return-Path: <claudio@conectiva.com>
+Date: Fri, 22 Dec 2000 18:21:40 -0500 (EST)
+From: Claudio Matsuoka <claudio@conectiva.com>
+Message-ID: <Pine.LNX.4.30.0012221813290.1074-100000@pokey.distro.conectiva>
 MIME-Version: 1.0
-Subject: [linux-lvm] Can't find ext2 fs with LVM 0.9
+Subject: [linux-lvm] [PATCH] user check in lvmiopversion
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +17,47 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm mailing list <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hi,
+Quite trivial, but avoids misleading error messages like
 
-This is most likely a pilot error issue. I have tried
-2.2.18aa2 and 2.4.0-test13-pre4 which both contain
-LVM 0.9. I installed the lvm 0.9 tools which seem to
-work fine, I can vgscan and vgchange -a y and everything
-looks fine in the LVM. The only rpoblem is that when
-I try to mount my LVs it says it can't find the ext2
-fs on the LV. I get a message like this one with kernel
-2.2.18aa2:
+  [claudio@pokey:/home/claudio] vgscan
+  lvmiopversion -- LVM driver/module not loaded?
 
-VFS: Can't find an ext2 filesystem on dev lvm(58,1).
-mount: wrong fs type, bad option, bad superblock on /dev/vg01/lv01,
-       or too many mounted file systems
+  vgscan: /lib/lvm-iop not found.  Is lvm-iop installed?
 
-The same thing happens with 2.4.0-test13-pre4, but 
-all is ok with 2.2.18pre17aa1 which contains LVM 0.8.
+when running a wrapped tool. Also a test for the return value != 0 is
+needed in the wrapper script:
 
-What have I missed?
+IOP=`/sbin/lvmiopversion`
+ret=$?
+if [ $ret -ne 0 ]; then
+    exit $ret
+fi
 
-shane
+---8<-----
 
+--- lvmiopversion.c-orig	Fri Dec 22 18:06:14 2000
++++ lvmiopversion.c	Fri Dec 22 18:05:57 2000
+@@ -19,6 +19,12 @@
+  * Boston, MA 02111-1307, USA.
+  */
 
++/*
++ * Changelog
++ *
++ *    22/12/2000 - added SUSER_CHECK to avoid complaints about module
++ *                 not loaded. --claudio
++ */
+ #include <stdio.h>
+ #include <lvm_user.h>
 
--- 
+@@ -31,6 +37,8 @@
+ int main(int argc, char *argv[])
+ {
+ 	int ver = lvm_get_iop_version();
++
++	SUSER_CHECK;
+
+ 	if (ver < 0) {
+ 		fprintf(stderr, "%s -- LVM driver/module not loaded?\n\n", cmd);
