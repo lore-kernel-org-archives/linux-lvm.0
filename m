@@ -1,9 +1,10 @@
-Return-Path: <cblunck2000@yahoo.com>
-Message-ID: <20010811054020.48520.qmail@web10601.mail.yahoo.com>
-Date: Fri, 10 Aug 2001 22:40:20 -0700 (PDT)
-From: Christopher Blunck <cblunck2000@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Volume Groups Disappearing
+Return-Path: <tack@orion.dok.org>
+Date: Sat, 11 Aug 2001 23:57:18 -0400
+From: Jason Tackaberry <tack@linux.com>
+Message-ID: <20010811235718.A20414@linux.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Writing forward compatible applications using /proc
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,45 +20,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Anyone-
+I have some ideas for a comprehensive GUI disk administration tool, and
+I am first thinking about some of the issues I'll face regarding
+interfacing with controllers, disks, partitions, md, and LVM.
 
-Bug 193 I believed covered my issue.  However, I
-cannot tell if the bug was ever resolved.  It appears
-the last activity regarding bug 193 was in March or
-April.  Anyhow, I'd like to ask my question and hope
-someone can help me out.
+I am curious if it's a silly idea to write an application that relies on
+the data in /proc?  Do the kernel developers attempt to keep the data
+and format provided in /proc as stable as possible?  Or is it fair game
+for trivial changes that could break applications that parse it?  Should
+I use ioctl instead?
 
-I am running 2.4.7 of the kernel and was using the
-0.9.0 stable release of the lvm software.  With it I
-created a group named "group1" and attached 1 physical
-volume to it.
+I don't mind having to release a new update to be compatible with a new
+format in /proc every once and a while, but if it's constantly a moving
+target I may want to look at alternatives.
 
-I then created a logical volume based on "group1" and
-then created another physical volume on a different
-device.  I used the vgextend command to add the new
-physical volume to "group1".  That's when things
-turned heel...
+I also have the same question with LVM related tools.  Is it sane to try
+to wrap a GUI around lvm tools or is there some API approach that would
+be better?
 
-vgscan reported didn't report "group1" as being a
-valid group.  In fact, it returned a line stating that
-there weren't any valid volume groups found.
-
-I used pvdata to confirm that my original PV belonged
-to group1 as well as the new PV.  However, I can't get
-vgscan to recognize it.
-
-I downloaded 0.9.1 beta 7 but that didn't solve the
-problem.  I tried the vgcfgrestore command and that
-didn't work.  I tried the dd command to fix the PV and
-that didn't work.
-
-Can someone please help me?
-
-
-Thanks,
-Chris
-
-__________________________________________________
-Do You Yahoo!?
-Send instant messages & get email alerts with Yahoo! Messenger.
-http://im.yahoo.com/
+Cheers,
+Jason.
