@@ -1,8 +1,10 @@
-Message-ID: <3E5B382B.2090908@conterra.de>
-From: Dieter Stueken <stueken@conterra.de>
+From: Jason Smith <jhs@openenterprise.biz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] pv_move failed
+Content-Transfer-Encoding: quoted-printable
+Content-Description: clearsigned data
+Content-Disposition: inline
+Message-Id: <200302251751.19856.jhs@openenterprise.biz>
+Subject: [linux-lvm] RAID5 + LVM stillborn
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,37 +15,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 25 03:33:01 2003
+Date: Tue Feb 25 05:20:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I just got my new 240GB disk and want to move my VG to it.
-Unfortunately I get an unexpected error:
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-lv: /dev/backup/mirror[2]  old_dev: 22:00  new_dev: 03:02
-old_pe_sector: 117703032  new_pe_sector: 357564792
-pvmove -- opening output physical volume "/dev/hda2"
-pvmove -- llseeking input physical volume "/dev/hdc"
-pvmove -- llseeking output physical volume "/dev/hda2"
-pvmove -- /dev/hdc [PE 897 [mirror [LE 2727]] -> /dev/hda2 [PE 2727] [1/247]
-pvmove -- locking physical extent 897 of "/dev/hdc" in kernel
-pvmove -- about to read input physical volume "/dev/hdc" and to write
-output physical volume "/dev/hda2"
-pvmove -- ERROR writing output physical volume "/dev/hda2" (still
-12648448 bytes to write)
-pvmove -- ERROR "pv_move_pe(): writing output PE" moving physical extents
+Hi.  I have a quick RAID 5 question.  Sort of a repost, but I can't get an=
+=20
+answer.
 
-this time I can not identify any reason an no messages on syslog.
-Any idea? What informations should I dump/post in addition?
+May I assume that LVM does not support RAID 5 due to the serialization=20
+problems?  Theoretically, 2.6 will have a fix but this has already been a=20
+problem for over two years.  And if 2.6 develops like 2.4 did, then we shou=
+ld=20
+not use it for production for many months after its release.
 
-I'm using SuSE8.1 with kernel 2.4.20, the LVM-version is 1.0.5.
+Thus it looks like people will not be able to deploy these types of Linux f=
+ile=20
+servers for some time hence -- a terrible thought.
 
-... and, sorry for my ill formed subject line from last week.
+=46or example, testing with LVM2 and DM from CVS, I made one snapshot under=
+=20
+light network load and it brought my machine to a complete stop, then oopse=
+d=20
+it.  I'm glad to help if any developers are interested.
 
-Dieter
--- 
-Dieter St�ken, con terra GmbH, M�nster
-     stueken@conterra.de
-     http://www.conterra.de/
-     (0)251-7474-501
+Thanks.
+
+=2D --=20
+Jason Smith
+Open Enterprise Systems
+Bangkok, Thailand
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+W0qnm5qEoSbpT3kRAt7NAJ0W+h0Mjy1hblBj6c9XcLKxv97QUQCcDkEP
+vvSxFIrFLctlnj9gZ7tnYWQ=3D
+=3DEaAI
+=2D----END PGP SIGNATURE-----
