@@ -1,9 +1,9 @@
-Message-ID: <3BDF01CC.1030307@ednet.ns.ca>
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+From: "James Kelty" <jamesk@ashlandagency.com>
+Subject: RE: [linux-lvm] LVM and 2.4.13
+Message-ID: <JLEILPHBKFODIOEDIAKMEEKMCHAA.jamesk@ashlandagency.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM and 2.4.13
-References: <JLEILPHBKFODIOEDIAKMGEKLCHAA.jamesk@ashlandagency.com>
 Content-Transfer-Encoding: 7bit
+In-Reply-To: <3BDF01CC.1030307@ednet.ns.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,10 +14,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 30 13:38:02 2001
+Date: Tue Oct 30 13:40:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+
+No.
+
+
+root@warbaby: ~ >> lvcreate -L73G vg00
+Segmentation fault (core dumped)
+root@warbaby: ~ >>
+
+-James
+
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of Patrick Boutilier
+Sent: Tuesday, October 30, 2001 11:39 AM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] LVM and 2.4.13
+
 
 Does this work?
 
@@ -35,7 +52,8 @@ James Kelty wrote:
 >
 >I have a new 100GB drive that I carved into 4 slices w/ 8e as the type, did
 >the pvcreate w/o any problems,
->created the vg00 volume group. But! When I try to create the logical volume,
+>created the vg00 volume group. But! When I try to create the logical
+volume,
 >I get a Seg Fault and core dump.
 >
 >What's the deal?
@@ -88,3 +106,12 @@ James Kelty wrote:
 >http://lists.sistina.com/mailman/listinfo/linux-lvm
 >read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 >
+
+
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
