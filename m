@@ -1,53 +1,83 @@
-Message-Id: <199906132236.AA06430@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-ID: <37655841.C5158D5B@mail.isis.de>
+Date: Mon, 14 Jun 1999 21:30:09 +0200
+From: Marcus Ruehmann <m.ruehmann@mail.isis.de>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Inclusion in 2.3.x kernel
-Date: Mon, 14 Jun 1999 0:34:15 METDST
-In-Reply-To: <3760064A.AE91DAD4@mail.isis.de>; from "Marcus Ruehmann" at Jun 10, 99 8:39 pm
+References: <199906132236.AA06430@mailgate1b.telekom.de>
+Content-Transfer-Encoding: quoted-printable
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Marcus Ruehmann <m.ruehmann@mail.isis.de>
-Cc: linux-lvm@msede.com, mge@ts1.ez-darmstadt.telekom.de
+Content-Type: text/plain; charset="iso-8859-1"
+To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Cc: linux-lvm@msede.com
 
-> 
-> Hi there,
-> 
-> can anybody shade my lights when we can expect lvm to be included in
-> stock/devel kernel?
-> 
+Maybe we should ask Alan Cox for putting it into his infamous ac series
+first, then maybe chances are better that Linux will take it.
 
-I've already sent it twice to Linus asking him for inclusion.
+Btw, I just tested Stephen Tweedy=B4s latest raw dev patch together with
+some tweak against Oracle - that rocks. Now I=B4ll test via LVM. This wil=
+l
+be nice for some database guys...
 
-> Please, please do it as soon as possible. The more people are playing
-> with it, the better it=B4ll get.
+Cheers
+Marcus
 
-Yep.
-Everybody, please push Linus to include it.
+Heinz Mauelshagen wrote:
+> =
 
-> 
-> When will be a new version available. Since end of feb there is no new
-> version (except patches) ?
+> >
+> > Hi there,
+> >
+> > can anybody shade my lights when we can expect lvm to be included in
+> > stock/devel kernel?
+> >
+> =
 
+> I've already sent it twice to Linus asking him for inclusion.
+> =
 
-It will take some time...
-I think in about 3-4 weeks.
+> > Please, please do it as soon as possible. The more people are playing=
 
-Regards,
-Heinz
+> > with it, the better it=3DB4ll get.
+> =
 
---
+> Yep.
+> Everybody, please push Linus to include it.
+> =
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> >
+> > When will be a new version available. Since end of feb there is no ne=
+w
+> > version (except patches) ?
+> =
 
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> It will take some time...
+> I think in about 3-4 weeks.
+> =
+
+> Regards,
+> Heinz
+> =
+
+> --
+> =
+
+> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-=3D-
+> =
+
+> Systemmanagement C/S                             Deutsche Telekom AG
+>                                                  Entwicklungszentrum Da=
+rmstadt
+> Heinz Mauelshagen                                Otto-Roehm-Strasse 71c=
+
+> Senior Systems Engineer                          Postfach 10 05 41
+>                                                  64205 Darmstadt
+> mge@ez-darmstadt.telekom.de                      Germany
+>                                                  +49 6151 886-425
+>                                                           FAX-386
+> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-=3D-
