@@ -1,12 +1,13 @@
-Return-Path: <thornber@btconnect.com>
-Date: Thu, 12 Jul 2001 09:46:38 +0100
-Subject: Re: [linux-lvm] syslogd reports:  kernel: lvm -- lvm_chr_ioctl: unknown command 4004fe0a
-Message-ID: <20010712094638.B418@btconnect.com>
+Return-Path: <luca@lucarella.com.ar>
+Message-Id: <200107121612.MAA13656@burns.luca.2y.net>
+Date: Thu, 12 Jul 2001 11:53:58 -0300 (ART)
+From: Leandro Lucarella <luca@lucarella.com.ar>
+MIME-Version: 1.0
+Content-Disposition: INLINE
 References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com>; from tgs@iafrica.com on Wed, Jul 11, 2001 at 08:33:14PM +0200
-From: Joe Thornber <thornber@btconnect.com>
+ <20010712094638.B418@btconnect.com>
+In-Reply-To: <20010712094638.B418@btconnect.com>
+Subject: [linux-lvm] Newbie question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,48 +19,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-we added a new ioctl between beta2 and beta7, it sounds like you are
-using newer tools which are expecting the new ioctl to be there.  When
-they don't find it they just fall back on the old command so no harm
-done, other than a spurious kernel message.
+Hi, I'm new in LVM (I'm so new that I'm not even using it :) and I have a
+question:
 
-- Joe
+I want to know if the stiper mode, the performance gain is somparable to Software
+RAID 0.
+Another question is the boot stuff, what is better? compile LVM as a module
+and use inird or compile the kernel with built-in LVM support?
+Thanks for your help...
 
-On Wed, Jul 11, 2001 at 08:33:14PM +0200, Theo wrote:
-> Hello guys.
-> 
-> This is my first time using lvm.
-> 
-> After using pvcreate and vgcreate I rebooted and tried to activate the
-> volume group.
-> 
-> After the reboot I found the following in the kernel log:
-> Jul 11 19:40:52 alderaan kernel: LVM version 0.9.1_beta2  by Heinz
-> Mauelshagen (18/01/2001)
-> Jul 11 19:40:52 alderaan kernel: lvm -- Driver successfully initialized
-> 
-> Okay the driver is then in the kernel. No problem... later.... in the kernel
-> log:
-> Jul 11 19:40:53 alderaan kernel: lvm -- lvm_chr_ioctl: unknown command
-> 4004fe0a
-> 
-> Same same error appears I run "vgchange"
-> 
-> I am a bit confused about this ?
-> 
-> I'm  using slackware 8.0 and I'm using the 2.4.5 kernel that comes with the
-> bare245.i image file.
-> 
-> Any ideas ?
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--
+LUCA - Leandro Lucarella
+------------------------
+luca@lucarella.com.ar
+http://www.luca.2y.net
+LICQ UIN: 2847576
+------------------------
+Usando Debian GNU/Linux
