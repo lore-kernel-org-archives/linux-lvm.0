@@ -1,23 +1,37 @@
-Message-ID: <19990616193406.A5249@kotnet.org>
-Date: Wed, 16 Jun 1999 19:34:06 +0200
-From: Ulrik De Bie <winmute-lvm@kotnet.org>
-Subject: [linux-lvm] lvm in 2.3.*-ac
-Mime-Version: 1.0
+Message-Id: <199906161851.AA01543@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: [linux-lvm] LVM into mainstream kernel news
+Date: Wed, 16 Jun 1999 20:51:00 METDST
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
+Cc: mge@ts1.ez-darmstadt.telekom.de
 
-Hello,
 
-I talked to Alan Cox today, and he told me had found time
-to look at lvm, and did some indenting clean up and
-alike and that it will appear soon in the ac patches now.
-Some adjustements in the feature will be needed as soon as
-Ingo is ready with the new RAID framework, but that's
-still pending on Ingo who hasn't finished his job yet.
+Hi all,
 
-Kind regards,
-Wintermute
+i have good news from Alan Cox.
+
+He is putting LVM into his 2.3.*ac kernel 8*)
+If it has hold for a while he'll promote it to Linus.
+
+Special thanks to Ulrik De Bie <winmute-lvm@kotnet.org> who helped with this.
+
+Heinz
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
