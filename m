@@ -1,10 +1,6 @@
-Subject: Re: [linux-lvm] DM encryption target?
-From: Christophe Saout <christophe@saout.de>
-In-Reply-To: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
-References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
-Message-Id: <1064343664.10276.3.camel@chtephan.cs.pocnet.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Galen Seitz <galens@seitzassoc.com>
+Message-Id: <20030923192822.DAA858F03@tinman.seitzassoc.com>
+Subject: [linux-lvm] determining lv from mount point
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +11,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 23 14:02:02 2003
+Date: Tue Sep 23 14:29:02 2003
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
-Cc: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Am Di, 2003-09-23 um 17.51 schrieb Greg Freemyer:
+I'm trying to update my backup script (a tweaked version of hostdump.sh
+from backupcentral.com) to use snapshots.  My machine has a mix of 
+normal ext3 and ext3 on lvm filesystems.  What I'm looking for is an
+easy way from a shell script to determine the lv from the mount point.
+The ideal thing would be a shell function that takes the mount point
+as an argument and returns the associated logical volume, or an error
+if the filesystem doesn't use lvm.
 
-> There was talk about creating a DM encrypting target a while ago.
-> 
-> Did this ever proceed?
+Suggestions?
 
-Yes, as Kevin already pointed out, I've written a working implementation
-some time ago. It currently seems to be more stable than the cryptoloop
-implementation in the 2.6-test kernels.
-
-You can find my original announcement with some how-to-use details at
-http://lwn.net/Articles/42000/ . Don't use that patch, I've got a newer
-one one my homepage http://www.saout.de/misc/dm-crypt.diff .
-
---
-Christophe Saout <christophe@saout.de>
-Please avoid sending me Word or PowerPoint attachments.
-See http://www.fsf.org/philosophy/no-word-attachments.html
+thanks,
+galen
