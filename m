@@ -1,19 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2PDHkO20584
-	for <linux-lvm@redhat.com>; Fri, 25 Mar 2005 08:17:46 -0500
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.198])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2PDHe1X014600
-	for <linux-lvm@redhat.com>; Fri, 25 Mar 2005 08:17:41 -0500
-Received: by rproxy.gmail.com with SMTP id r35so767678rna
-	for <linux-lvm@redhat.com>; Fri, 25 Mar 2005 05:17:40 -0800 (PST)
-Message-ID: <bf024e90050325051721be1579@mail.gmail.com>
-Date: Fri, 25 Mar 2005 14:17:40 +0100
-From: <talosso@gmail.com>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2PNhBO28001
+	for <linux-lvm@redhat.com>; Fri, 25 Mar 2005 18:43:11 -0500
+Received: from smtp811.mail.sc5.yahoo.com (smtp811.mail.sc5.yahoo.com
+	[66.163.170.81])
+	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j2PNh5Hw006370
+	for <linux-lvm@redhat.com>; Fri, 25 Mar 2005 18:43:05 -0500
+Message-ID: <4244A203.2050304@eorbit.net>
+Date: Fri, 25 Mar 2005 15:42:59 -0800
+From: Kevin Murphy <kevin@eorbit.net>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vg OK --> reboot --> vg KO
-Reply-To: talosso@gmail.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Issues with md RAID-1, LVM, and snapshots
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,107 +24,71 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi guys,
+I'm having trouble with snapshot volumes when combining software RAID-1
+with LVM2 striping.
 
-I got stuck in a painful problem with lvm.
-I have 4 SATA HD handled by lvm as physical volumes into one large
-logical volume. 
-Everything worked nice, until the last reboot.
+I have a server with four 18GB drives. I would like to combine them into
+two RAID-1 mirrors and then stripe across them with LVM, with the  goal
+of data redundancy and the ability to make hot backups via snapshots.
 
-A couple of info on the configuration:
+System:
+Suse Linux Enterprise Server 9 for x86_64
+kernel 2.6.5-7.147-smp
+lvm2-2.00.15-0.8
 
-root # lvmdiskscan
-  /dev/cdrom [      492.05 MB]
-  /dev/hda1  [      190.94 MB]
-  /dev/sda1  [      189.92 GB]
-  /dev/hda2  [       17.51 GB]
-  /dev/hda3  [      973.05 MB]
-  /dev/sdb1  [      189.92 GB]
-  /dev/sdc   [      189.92 GB] LVM physical volume
-  /dev/sdd   [      189.92 GB] LVM physical volume
-  1 disk
-  5 partitions
-  2 LVM physical volume whole disks
-  0 LVM physical volumes
+When I set up the drives in one big volume group (no RAID), snapshots
+work correctly:
 
-Ok, /dev/hda is the system disk and it's not managed by lvm, thus the
-four HD are the /dev/sd*. As you can see the first two devices have
-one partition each, while the last two don't have it. The big lvm
-volume group (disks_vg) was created at first using the two disks
-/dev/sda and /dev/sdb, where I create the two physical volumes. 
-Later the other two disks has been added to the volume group and
-accordingly the logical volume has been extended.
-Well, this was the story and everything worked fine.
-Then I rebooted and after that I find out that my volume group has not
-been created...
+pvcreate /dev/sdc1
+pvcreate /dev/sdd1
+pvcreate /dev/sdf1
+pvcreate /dev/sde1
+vgcreate -M2 vg1 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1
+lvcreate -i4 -I64 -L32G -n lv1 vg1
+mkfs.ext2 /dev/vg1/lv1
+mount /dev/vg1/lv1 /mnt/bigdisk
+{put some data in /mnt/bigdisk}
+lvcreate -L1G -s -n snap1 /dev/vg1/lv1
+mount /dev/vg1/snap1 /mnt/backup
+find /mnt/backup | cpio -ovHnewc > /tmp/backup.cpio
 
-root # vgdisplay -v
-  Finding all volume groups
-  Finding volume group "disks_vg"
-Couldn't find device with uuid 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
-Couldn't find all physical volumes for volume group disks_vg.
-Couldn't find device with uuid 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
-Couldn't find all physical volumes for volume group disks_vg.
-Volume group "disks_vg" doesn't exist
+This works fine. However, if I set up two RAID-1 volumes and stripe
+across them with LVM, I get errors when reading from a snapshot:
 
-and when I check the physical volumes I get the following message:
+mdadm --create -l1 -n2 /dev/sdc1 /dev/sdd1 /dev/md2
+mdadm --create -l1 -n2 /dev/sde1 /dev/sdf1 /dev/md3
+pvcreate /dev/md2
+pvcreate /dev/md3
+vgcreate -M2 vg1 /dev/md2 /dev/md3
+lvcreate -i2 -I64 -L32G -n lv1 vg1
+mkfs.ext2 /dev/vg1/lv1
+mount /dev/vg1/lv1 /mnt/bigdisk
+{put some data in /mnt/bigdisk}
+lvcreate -L1G -s -n snap1 /dev/vg1/lv1
+mount /dev/vg1/snap1 /mnt/backup
 
-root # pvdisplay -v
-    Scanning for physical volume names
-  Couldn't find device with uuid 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
-  Couldn't find device with uuid 'ChG7VP-E1Bn-EUY3-krvx-2NJu-iHiC-0ByaEZ'.
-  Couldn't find device with uuid 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
-  Couldn't find device with uuid 'ChG7VP-E1Bn-EUY3-krvx-2NJu-iHiC-0ByaEZ'.
-  --- Physical volume ---
-  PV Name               unknown device
-  VG Name               disks_vg
-  PV Size               189.92 GB / not usable 0
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              48620
-  Free PE               0
-  Allocated PE          48620
-  PV UUID               XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi
+I get this error:
+cpio: Read error at byte 2129920 in file /mnt/backup/file1, padding with
+zeros
 
-  --- Physical volume ---
-  PV Name               unknown device
-  VG Name               disks_vg
-  PV Size               189.92 GB / not usable 0
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              48620
-  Free PE               0
-  Allocated PE          48620
-  PV UUID               ChG7VP-E1Bn-EUY3-krvx-2NJu-iHiC-0ByaEZ
+dmesg says:
+attempt to access beyond end of device
+dm-3: rw=0, want=17060337672, limit=67108864
+attempt to access beyond end of device
+dm-3: rw=0, want=134226096, limit=67108864
+attempt to access beyond end of device
+dm-3: rw=0, want=3499657224, limit=67108864
+attempt to access beyond end of device
+dm-3: rw=0, want=3094910976, limit=67108864
+attempt to access beyond end of device
+dm-3: rw=0, want=8894171864, limit=67108864
+attempt to access beyond end of device
+dm-3: rw=0, want=17060337672, limit=67108864
 
-  --- Physical volume ---
-  PV Name               /dev/sdc
-  VG Name               disks_vg
-  PV Size               189.92 GB / not usable 0
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              48620
-  Free PE               0
-  Allocated PE          48620
-  PV UUID               Sh64Kk-w7Ac-FFpj-v2ck-3XKT-sdbc-VuYozC
+When I extract the archive, file1 is corrupted.
 
-  --- Physical volume ---
-  PV Name               /dev/sdd
-  VG Name               disks_vg
-  PV Size               189.92 GB / not usable 0
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              48620
-  Free PE               0
-  Allocated PE          48620
-  PV UUID               hilXy6-nvxA-xMxQ-Wrht-gRM6-ltfU-4gt8SJ
+Is there any special magic that needs to be done with LVM+MD, or have I
+hit a bug?
 
-I think that the volume is still recoverable (that is what I need) and
-that something damaged the first bytes of the first two physical
-volumes... but after all I'm not so sure.
-Can anybody help me recovering the LVM volume and thus my data?
-Thanks a lot
-
-Best regards.
-
-Livio
+--
+Kevin Murphy
