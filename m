@@ -1,10 +1,13 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Thu, 21 Dec 2000 09:37:58 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Subject: Re: [linux-lvm] '/etc/init.d/lvm' script in debian package
-In-Reply-To: <0012210840470T.08762@lyta>
-Message-ID: <Pine.LNX.4.31.0012210915340.10260-100000@falka.mfa.kfki.hu>
+Return-Path: <terje.eggestad@scali.no>
+Message-Id: <200012210915.KAA32105@elin.scali.no>
+Date: Thu, 21 Dec 2000 10:15:40 +0100 (CET)
+From: Terje Eggestad <terje.eggestad@scali.no>
+Subject: Re: [linux-lvm] Can I use LVM with ReiserFS?
+In-Reply-To: <a05001923b66697749fe8@[129.98.91.150]>
+References: <a05001923b66697749fe8@[129.98.91.150]>
 MIME-Version: 1.0
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Disposition: INLINE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,35 +20,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Russell Coker <bofh@coker.com.au>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, mvolaski@aecom.yu.edu
 
-Hi!
+The correct procedure to do this is NOT to create a new fs on the second
+RAID volume. What you do is this:
+(NB: I've only done this on HP-UX before, and even if linux lvm is modelled
+after  HP's I do not know if there are any error here, but I REALLY doubt
+it ).=20
 
-> Thanks for the suggestion about checking for a directory.  But how will I
-> determine what version of LVM if it's a directory?  Will there be
-> /proc/lvm/version?
-$ head -n 1 /proc/lvm/global
-LVM driver version 0.9 (13/11/2000)
+* add the RAID device to the volume group the first RAID device belong to
+using vgextend.=20
+* increase the logical volume you have your reiserfs on using lvextend
+* resize the reiser fs using procedure in http://www.namesys.com/rsz.html
 
-> LVM isn't something that you want to be automatically loading on demand,
-> either you need it or you don't.  If you need it then you will probably want
-> to compile it in or put it in /etc/modules for loading on boot.
-Yes.
+And it seems it can all be done online!
 
-A few ideas ...
-1) if LVM is compiled into the kernel and /boot/System.map is reachable,
-than it could be detected using e.g. 'grep lvm System.map'
+TJ
 
-2) if /usr/src/kernel/.config is reachable, than it could be detected
-using e.g. 'grep -i lvm .config'
+On Wed, 20 Dec 2000 12:31:06 -0500 Maurice Volaski <Maurice Volaski <mvolas=
+ki@aecom.yu.edu>> wrote:
 
-3) maybe doing a check for directories countaining 'group' in /dev would
-be a usable idea...
+> I'm getting ready to install a server that will use hardware RAID 5=20
+> and I want to make a hardware RAID volume, put ReiserFS on it and=20
+> initially make it appear as /home to my users. Then at some point=20
+> later, I want to take another hardware RAID volume, put ReiserFS on=20
+> it and add it to the existing /home so that users all of a sudden see=20
+> a huge increase in the size of /home. Can this be done or will my use=20
+> of ReiserFS make it a problem?
+> --=20
+>=20
+> Maurice Volaski, mvolaski@aecom.yu.edu
+> Computing Support, Rose F. Kennedy Center
+> Albert Einstein College of Medicine of Yeshiva University
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-Maybe it would be a good idea to put a /proc/lvmstat (similar to mdstat)
-as default (not (un)selectable) into proc FS. This would solve most of our
-problems.
 
-Gergely
+--
+_________________________________________________________________________
+
+Terje Eggestad                  terje.eggestad@scali.no
+Scali Scalable Linux Systems    http://www.scali.com
+
+Olaf Helsets Vei 6              tel:    +47 22 62 89 61 (OFFICE)
+P.O.Box 70 Bogerud                      +47 975 31 574  (MOBILE)
+N-0621 Oslo                     fax:    +47 22 62 89 51
+NORWAY           =20
+_________________________________________________________________________
