@@ -1,10 +1,9 @@
-Return-Path: <jweber@valinux.com>
-Date: Tue, 22 May 2001 14:09:04 -0700 (PDT)
-From: Jay Weber <jweber@valinux.com>
-Subject: Re: [linux-lvm] Snapshotting concatenated devices.
-In-Reply-To: <Pine.LNX.4.33.0105221523150.16636-100000@UberGeek.coremetrics.com>
-Message-ID: <Pine.LNX.4.30.0105221408120.8799-100000@shells.valinux.com>
+Return-Path: <braam@mountainviewdata.com>
+Date: Tue, 22 May 2001 15:32:19 -0600 (MDT)
+From: "Peter J. Braam" <braam@mountainviewdata.com>
+Message-ID: <Pine.LNX.4.33.0105221531320.2330-100000@lustre.us.mvd>
 MIME-Version: 1.0
+Subject: [linux-lvm] LVM Snapshots & journal recovery
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,82 +19,84 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Yep, it's not the same issue though.  fsck will return that it's not a
-valid fs, bad magic, etc.  The created snapshot device just doesn't seem
-to have the proper pointers until I shutdown the VG, restart it and
-manipulate the snapshot device before any other devices on the VG.
+---------- Forwarded message ----------
+Date: Tue, 22 May 2001 14:59:32 -0600 (MDT)
+From: Peter J. Braam <braam@mountainviewdata.com>
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: Linus Torvalds <torvalds@transmeta.com>, Alexander Viro <viro@math.psu.edu>,
+     Edgar Toernig <froese@gmx.de>, Ben LaHaise <bcrl@redhat.com>,
+     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+     linux-lvm@vger.kernel.org
+Subject: Re: Why side-effects on open(2) are evil. (was Re: [RFD
+    w/info-PATCH]device arguments from lookup)
 
-On Tue, 22 May 2001, Austin Gonyou wrote:
 
-> Date: Tue, 22 May 2001 15:25:02 -0500 (CDT)
-> From: Austin Gonyou <austin@coremetrics.com>
-> Reply-To: linux-lvm@sistina.com
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Snapshotting concatenated devices.
+Andreas,
+
+
+I think that the issue is something different.  Suppose the snapshot has
+been created. I know that this can be done safely with the API's you
+allude to. Life goes on and the journal FS keeps changing the file system
+and if the system doesn't crash, everything is fine: blocks get copied
+correctly from the primary volume to the snapshot volume.
+
+Now consider a crash -- not during snapshot creation, but way after that
+when "life is going on".  Suppose there is a two block transaction that
+has made it to the journal and after writing one block to the fs location
+the system crashes.  The journal replay will try to write that block
+again.
+
+But during recovery, LVM cannot possibly know if the whole process of
+copying out the data from the current to the snapshot area completed
+during the previous run. Yes, LVM updates the redirection table first and
+then copies, but, still, you don't know _where exactly_ the writes stopped
+happening and in particular you don't know if the block was copied already
+or not.
+
+So during replay it is quite possible that LVM corrupts the snapshot.
+
+It's better to keep the snapshot in the old volume and write the new data
+to a separate area (that's what most commercial systems do I think).  It
+avoid redirections and copying upon write.  When you delete the snapshot
+you have to copy, but you can do that as a low priority process.
+Finally, as you pointed out a full volume is handled better too in that
+way, since you don't terminate the snapshot but you tell the current
+volume that it is full.
+
+Hmm, I was expecting a storm of email explaining what I have
+misunderstood, but it has in fact been rather quiet...
+
+- Peter -
+
+
+
+
+
+
+On Tue, 22 May 2001, Andreas Dilger wrote:
+
+> Peter Braam writes:
+> > On Tue, 22 May 2001, Andreas Dilger wrote:
+> > > Actually, the LVM snapshot
+> > > interface has (optional) hooks into the filesystem to ensure that it
+> > > is consistent at the time the snapshot is created.
+> >
+> > File system journal recovery can corrupt a snapshot, because it copies
+> > data that needs to be preserved in a snapshot. During journal replay such
+> > data may be copied again, but the source can have new data already.
 >
-> Have you tried to fsck that fs? It sounds like a similar problem I'm
-> having with resizing volumes and XFS. It's not an XFS issue, a single
-> drive resize with xfs_growfs works fine, but when resizing a volume to
-> make it bigger, then trying to grow the FS, I get a FS corrupted
-> error.(990). That said, running xfs_repair FS shows that the superblock is
-> in a different place and it repairs it and I can move on.
+> The way it is implemented in reiserfs is to wait for existing transactions
+> to complete, entirely flush the journal and block all new transactions from
+> starting.  Stephen implemented a journal flush API to do this for ext3, but
+> the hooks to call it from LVM are not in place yet.  This way the journal is
+> totally empty at the time the snapshot is done, so the read-only copy does
+> not need to do journal recovery, so no problems can arise.
 >
-> --
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-796-9023
-> email: austin@coremetrics.com
+> Cheers, Andreas
 >
-> On Tue, 22 May 2001, Jay Weber wrote:
->
-> > Hi folks,
-> >
-> > Here's an odd one for you.  When using concatenated logical volumes (an
-> > LV that consists of multiple PVs in the VG) snapshots don't appears to be
-> > proper after they are taken.  It doesn't generate any errors when the
-> > snapshot is performed.  But, if you dumpe2fs or attempt to mount the
-> > snapshot it doesn't see the filesystem superblock, etc.
-> >
-> > To expand on this a bit further, the above isn't always true.  It only
-> > seems to occur when I use a larger volume which uses larger extent sizes.
-> > The larger volume in total consists of about 400G in the VG.  So, for
-> > example, I create an LV of 350G and leave myself 50G for snapshot
-> > purposes.
-> >
-> > It does work properly for me using my memorystick, which is a total of 16M
-> > and I use an extent size of 1M.
-> >
-> > In both cases I just make two partitions on the underlying device and
-> > concat them into the one VG.
-> >
-> > Lastly, in the case where snapshots aren't readable after being created,
-> > there is one step of events I can perform to make the snapshot usable
-> > again.  It consists of:
-> >
-> > 	umount the LV
-> > 	vgchange -an VG
-> > 	vghcnage -ay VG
-> > 	mount the snapshot of the LV first
-> > 	then mount the LV
-> >
-> > If I mount the LV first though, I end up with the unusable snapshot again.
-> > In the above example after the snapshot is mounted, it appears to look
-> > okay and appears to be functioning (COW, etc) properly.
-> >
-> > Any ideas?
-> >
-> > I haven't seen this occur on non concattenated devices.  We also seem to
-> > have this issue when using striped devices.
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
->
+
+-- 
+
+-
+To unsubscribe from this list: send the line "unsubscribe linux-fsdevel" in
+the body of a message to majordomo@vger.kernel.org
