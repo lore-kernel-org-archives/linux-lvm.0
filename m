@@ -1,8 +1,8 @@
-Message-ID: <008c01c3cac0$ceef80c0$db036fa6@wangzheping>
-From: "Wang Zheping" <wangzhp@cic.tsinghua.edu.cn>
+Message-ID: <000001c3cae0$0dfceb30$43b36fa6@wangzheping>
+From: "Chairman" <chairman@catkitty.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0089_01C3CB03.DA6DDF80"
+	boundary="----=_NextPart_000_0077_01C3CB03.BE70A6A0"
 Subject: [linux-lvm] Can I read data from lvm without all PV?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,13 +14,13 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 29 08:00:07 2003
+Date: Mon Dec 29 08:00:11 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0089_01C3CB03.DA6DDF80
+------=_NextPart_000_0077_01C3CB03.BE70A6A0
 Content-Type: text/plain;
 	charset="gb2312"
 Content-Transfer-Encoding: base64
@@ -40,9 +40,9 @@ IHRvIGdldCB0aGUgcmVtYWluZWQgZGF0YSBvdXQ/IA0KICAgIFdoZXRoZXIgbXkgZGF0YSBpcyBh
 bHJlYWR5IGxvc3QgYXQgYWxsPw0KDQogICAgVGhhbmtzIGZvciByZWFkIHRoaXMgbXNnIQ0KDQog
 ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
 ICAgICAgV2FuZw0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIENoYWlybWFuQGNhdGtpdHR5LmNvbSA=
+ICAgICAgICAgICAgICAgICAgIENoYWlybWFuQGNhdGtpdHR5LmNvbQ==
 
-------=_NextPart_000_0089_01C3CB03.DA6DDF80
+------=_NextPart_000_0077_01C3CB03.BE70A6A0
 Content-Type: text/html;
 	charset="gb2312"
 Content-Transfer-Encoding: base64
@@ -82,7 +82,7 @@ Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
 c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
 Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
 c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IA0KPEEgaHJlZj0ibWFpbHRv
-OkNoYWlybWFuQGNhdGtpdHR5LmNvbSI+Q2hhaXJtYW5AY2F0a2l0dHkuY29tPC9BPiA8L0JPRFk+
-PC9IVE1MPg0K
+OkNoYWlybWFuQGNhdGtpdHR5LmNvbSI+Q2hhaXJtYW5AY2F0a2l0dHkuY29tPC9BPjwvQk9EWT48
+L0hUTUw+DQo=
 
-------=_NextPart_000_0089_01C3CB03.DA6DDF80--
+------=_NextPart_000_0077_01C3CB03.BE70A6A0--
