@@ -1,9 +1,7 @@
-Message-ID: <3DEC9B03.B83C0078@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Error creating snapshot, "Cannot allocate memory"
-References: <20021202223223.GC21924@ofb.net> <20021203114821.A25161@sistina.com>
-Content-Transfer-Encoding: 7bit
+From: "Tomaz Beltram" <tomazb@hotmail.com>
+Mime-Version: 1.0
+Message-ID: <F75jCnVGx3R6Vf8xccu0002a6be@hotmail.com>
+Subject: [linux-lvm] mounting ext3 snapshot occasionaly fails
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,41 +12,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  3 05:53:02 2002
+Date: Tue Dec  3 06:35:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-"Heinz J . Mauelshagen" wrote:
-> 
-> On Mon, Dec 02, 2002 at 02:32:23PM -0800, jheiss-linuxlvm@ofb.net wrote:
-> > I have a volume group that is 1.4 TB, with a volume that is 400 GB.
-> > I currently have three 50 GB snapshots of that volume.  When I try
-> > to create a fourth, I get the following error:
-> >
-> > bash-2.05a# lvcreate -L 50G -s -n snap_home1_20021202 /dev/home/home1
-> > lvcreate -- WARNING: the snapshot will be automatically disabled once it
-> > gets full
-> > lvcreate -- INFO: using default snapshot chunk size of 64 KB for
-> > "/dev/home/snap_home1_20021202"
-> > lvcreate -- ERROR "Cannot allocate memory" creating VGDA for
-> > "/dev/home/snap_home1_20021202" in kernel
-> 
-> You don't have enough kernel virtual memory to hold the snapshot exception
-> table in core :(
-> Install more RAM.
+Hi,
 
-I've seen this error as well. In a machine with 1GB memory and the only
-processes
-running were NFS and samba. Just how much memory does it need ?
+I have similar problems as described in this mailing list some months ago, 
+regarding mounting snapshots of journaled file systems.
 
- 
-> We have planned to reduce the amount of RAM needed to hold such tables
-> in LVM2/device-mapper next year.
+Mounting the snapshot fails and dmesg shows:
+EXT3-fs: INFO: recovery required on readonly filesystem.
+EXT3-fs: write access unavailable, cannot proceed.
 
-That would be nice.
+I have observed that the failure is more frequent with longer delays between 
+snapshot creation and mount time.
 
+The problem was solved with the VFS-lock patch for 2.4.18 kernel. But I am 
+using LVM 1.0.5 and 2.4.19-SuSE kernel (64GB-SMP). As I understand, it 
+should already have the VFS-lock patch applied. If not, where can I find 
+one?
 
+Thanks in advance for your help.
+Tomaz
 
-
-JonB
+_________________________________________________________________
+The new MSN 8: advanced junk mail protection and 2 months FREE* 
+http://join.msn.com/?page=features/junkmail
