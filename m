@@ -1,12 +1,12 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Thu, 1 Mar 2001 16:11:54 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Final request for bug fixes!
-Message-ID: <20010301161154.D499@tykepenguin.com>
-References: <20010228214605.C9035@srv.sistina.com> <15006.26023.811857.180115@winux.com> <20010301162034.B12001@sistina.com>
+Return-Path: <bg@blacknet.de>
+Date: Thu, 1 Mar 2001 17:50:42 +0100
+From: Goetz Bock <lvm@blacknet.de>
+Message-ID: <20010301175042.B20512@dragon.blacknet.de>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
 Content-Disposition: inline
-In-Reply-To: <20010301162034.B12001@sistina.com>; from Mauelshagen@sistina.com on Thu, Mar 01, 2001 at 04:20:34PM +0000
+Subject: [linux-lvm] raid-2.2.18-B0 + LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,36 +18,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Mar 01, 2001 at 04:20:34PM +0000, Heinz J. Mauelshagen wrote:
-> On Thu, Mar 01, 2001 at 10:07:19AM -0500, lvm@winux.com wrote:
-> > Heinz J. Mauelshagen writes:
-> > > From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-> > > Sender: linux-lvm-admin@sistina.com
-> > > To: linux-lvm@sistina.com
-> > > Subject: [linux-lvm] Final request for bug fixes!
-> > > Date: Wed, 28 Feb 2001 21:46:05 +0000
-> > > 
-> > > 
-> > > Hi all,
-> > > 
-> > > because we are about to release LVM 0.9.1 Beta 6 on friday,
-> > > please send us your LVM bug fixes to be included in that release *now*.
-> > > 
-> > > Thanks a lot for your support of LVM! :-)
-> > 
-> > Did anyone ever look at the "Oops" I reported last week?
-> > It seems to be easily reproducible.
-> 
-> You are talking about the reiserfs related "journal-1777" oops here?
-> I am not able to reproduce it here at all.
-> 
-> AJ, Joe, Patrick: are you able too?
-> 
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hmm, oopses for me. looks to be in wait queues...ugh!
+Hi,
 
-patrick
+i searched the arcives but did not find any hint.=20
+I would like to compile a 2.2.18 kernel with a few security additions
+(openwall + lids ...) and the new raid code and lvm.
+
+unfortunately the patching of raid and lvm fails. I've tried to solve some=
+=20
+of the conficts manualiy but i'm not to confident on my handwork.
+
+As I've read there should be a new beta soon (friday?) so I stopped
+messing around with the kernel code for now ...
+
+Does anyone alreadhe have patches for raid and lvm on 2.2.18 or can some
+one provide them for the new beta?
+
+Thanks,
+    Goetz.
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6nn3if5srOMkjkQoRAqWqAJ0bLNd4NgnVBYYUZS9GVoznXjPaxQCeKZFF
+e4uX9qUDCWALww4VclMIrRs=
+=C/iS
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
