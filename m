@@ -1,11 +1,9 @@
-Return-Path: <magru@linuxalert.org>
-Subject: Re: [linux-lvm] LVM 1.0 release delayed
-From: Magnus Runesson <magru@linuxalert.org>
-In-Reply-To: <20010622215831.A6347@sistina.com>
-References: <20010622215831.A6347@sistina.com>
-Date: 23 Jun 2001 20:29:11 +0200
-Message-Id: <993320951.1629.0.camel@pamina.linuxalert.org>
+Return-Path: <torsten@imke.infodrom.north.de>
+Date: Sat, 23 Jun 2001 22:02:01 +0200
+From: Torsten Neumann <torsten@imke.infodrom.ffis.de>
+Message-ID: <20010623220201.A9305@imke.infodrom.ffis.de>
 Mime-Version: 1.0
+Subject: [linux-lvm] LVM compile errors
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,40 +19,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+Hi,
 
-Will the bugg 193 in bugzilla (vgscan cant find vg:s after new pv added)
-be fixed to the 1.0 release?
+While building the LVM user-tools on my hp(*), i recognize that gcc-3 doesn't
+like #ifdef directives in printf statements.
+Because I only try to compile lvm-0.9(**) i don't include a patch.
+Sorry to say that lvm still didn't run on the parisc architecture(***). That 
+would be real cool.
 
-/Magnus
+  Torsten
 
-On 22 Jun 2001 21:58:31 +0200, Heinz J. Mauelshagen wrote:
-> 
-> All,
-> 
-> we are sorting out a heavy I/O related snapshot bug.
-> 
-> Don't like to release 1.0 without having fixed this one.
-> Hopefully early next week :-)
-> 
-> Later,
-> Heinz    -- The LVM Guy --
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+(*) Linux imke 2.4.0-pa37 #5 Sat Jun 23 17:57:52 CEST 2001 parisc unknown
+(**) Got many undefined symbols while trying to compile kernel 2.4.0 with 
+latest 0.9.1-beta7 Patches.
+(***) pvcreate(188): unaligned access to 0x40067cf3 at ip=0x400310db, seems
+not an lvm related problem.
