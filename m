@@ -1,12 +1,12 @@
-Return-Path: <josv@osp.nl>
-Date: Wed, 28 Mar 2001 10:30:09 +0200
-From: Jos Visser <josv@osp.nl>
-Subject: Re: [linux-lvm] alternate pathing with lvm?
-Message-ID: <20010328103009.D749@jadzia.azm.nl>
-References: <sac1a0ae.076@lvnbb.brandenburg.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <sac1a0ae.076@lvnbb.brandenburg.de>; from Stephan.Hendl@lds.brandenburg.de on Wed, Mar 28, 2001 at 08:27:53AM +0200
+Return-Path: <tomlins@cam.org>
+From: Ed Tomlinson <tomlins@cam.org>
+Subject: Re: [linux-lvm] lvmgui 0.2 release
+Date: Wed, 28 Mar 2001 07:34:08 -0500
+References: <3ABDD38D.A841FFD3@ida.xs4all.nl> <wxxofumyd8q.fsf@fjorir.ifi.uio.no> <200103280726.JAA02025@detrius.engohol.se>
+In-Reply-To: <200103280726.JAA02025@detrius.engohol.se>
+MIME-Version: 1.0
+Message-Id: <01032807340800.03757@oscar>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,43 +19,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
 
-The Linux LVM does not currently support alternate pathing (or, as HP
-calls it, alternate PV links). LinuxCare did some work on a generic SCSI
-alternate pathing feature for the Sun S3 StorEdge arrays (see the
-LinuxCare web site for more info on this). I have been giving some
-thought to implementing alternate pathing on the "md" level. Basically,
-the lower it is implemented in the driver stack, the more generic and
-useful it is. I do not know whether alternate pathing is in Sistina's
-(or anyone's) roadmap, but it sure would be a cool feature!
+On Wednesday 28 March 2001 02:26, you wrote:
 
-++Jos
+I take a different view than most people here.  Java is fine.
+I do not mind a java gui.  If the program is stuctured right,
+the same code would allow me to administer a linux lvm from
+almost any box (linux or not) all with the same code, without
+any recompiles.
 
-And thus it came to pass that Stephan Hendl wrote:
-(on Wed, Mar 28, 2001 at 08:27:53AM +0200 to be exact)
+Java works.  Your gui will be a nice addition.  Please write it
+in what even lang you want too.
 
-> Hi all,
-> 
-> following the discussions in last June and Hovember, resp. I want to ask oncemore wether there is an alternate pathing with the linux-lvm possible or not. We are using several HP MC/SG-Cluster and want to implement an Linux-Cluster with the RadHat Cluster Software too. In the backend there is a HP XP512 and a SAN; the Linuxserver shell be connected to the Storagebox via two FC-HBAs (like the HP servers are). We do not need an online load balancing, all we want is to have a feature for continous work during firmwareupdates, configuration works on FC-switches and so on.
-> 
-> regards
-> Stephan
-> 
-> 
-> --
-> LDS Brandenburg
-> Dr. Stephan Hendl
-> fon: +49-(0)331-39 471
-> fax: +49-(0)331-27548 1187
-> EMail: stephan.hendl@lds.brandenburg.de
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+Ed Tomlinson
 
--- 
-assert(heaven.isMissing(anAngel));
+> On 28 Mar 2001 01:59:49 +0200, Terje Kvernes wrote:
+> > Jens Benecke <jens@jensbenecke.de> writes:
+> > > well, if you want quick, easy but powerful GUI development try Qt.
+> >
+> >   right. and you'll suggest using C++?  the python-interface isn't
+> >   that grand, to put it bluntly.
+> >
+> > > You can provide a static version for those who don't have a desktop
+> > > environment like KDE running, my main reason for Qt is however that
+> > > it's just plain *FUN* to hack. Easy, straight forward, fast, stable
+> > > and free - GPL'ed.
+> >
+> >   I'll agree to most of that. and the docs are wonderful. the only
+> >   issue is the light fact that it's written in C++. I sadly enough
+> >   think that if I ever start something like this I'll be ending up
+> >   using perl/[G]tk.
+> >
+> > > Just my opinion, however.
+> >
+> >   don't worry, you're entitled to it. :p
+> >
+> > --
+> > Terje - who dislikes C++ a tad more than Java, and a tad less than
+> >         Tcl. maybe something written in TECO would be nice.
+>
+> In case you guys haven't checked out ruby please do.  It's alot cooler
+> than python and there is both tk, gtk, fox and qt-interfaces to it.  (I
+> think the QT one is pre-alpha or something :) )
+>
+> /Erik  - this is kinda of-topic isn't it? :)
