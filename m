@@ -1,11 +1,11 @@
-Date: Sat, 1 Sep 2001 00:32:41 -0500
-From: ^chewie <chewie@wookimus.net>
-Subject: Re: [linux-lvm] Debian apt-get link problem
-Message-ID: <20010901003241.B1210@wookimus.net>
-References: <20010827114957.A23458@dmcom.net> <20010830141259.E22755@dmcom.net>
+Date: Mon, 1 Oct 2001 09:43:50 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] lvm1.0.1rc2 with kernel 2.4.10
+Message-ID: <20011001094350.A24418@colombina.comedia.it>
+References: <3BB7916D.8216.388145@localhost>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010830141259.E22755@dmcom.net>; from wtopa@dmcom.net on Thu, Aug 30, 2001 at 02:12:59PM -0400
+In-Reply-To: <3BB7916D.8216.388145@localhost>; from noodlez84@earthlink.net on Sun, Sep 30, 2001 at 09:41:01PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,21 +21,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Aug 30, 2001 at 02:12:59PM -0400, Wayne Topa wrote:
-> >   I just tried the link 
-> > ( deb ftp://ftp.sistina.com/pub/LVM/binaries/debian unstable main )
+On Sun, Sep 30, 2001 at 09:41:01PM -0400, Karol Pietrzak wrote:
+> make -C md modules
+> make[2]: Entering directory `/tmp/linux/drivers/md'
+> make[2]: *** No rule to make target `lvm-snap.h', needed by 
+> `lvm.o'.  Stop.
+> make[2]: Leaving directory `/tmp/linux/drivers/md'
+> make[1]: *** [_modsubdir_md] Error 2
+> make[1]: Leaving directory `/tmp/linux/drivers'
+> make: *** [_mod_drivers] Error 2
+> 
+bah,
+delete references of lvm-snap.h from makefile.
+anyway with 2.4.10 you would be better with current CVS,
+due tu min/max braindamage.
 
-I hate to state the obvious, but apt does not Debian make.  Try
-manually downloading the *.deb files and installing them manually with
-dpkg -i <pkg.deb>.
-
-I've been out of the loop a little on the Debian LVM packages, but
-I've got a few patches to hand in that might be useful.  Problem is
-that my workstation is out of commission until I can find the time
-next week to reassemble it.
-
-Anyway, good luck!
+L.
 
 -- 
-Chad "^chewie" Walstrom <chewie@wookimus.net>
-        http://wookimus.net/chewie
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
