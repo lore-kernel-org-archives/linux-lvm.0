@@ -1,9 +1,12 @@
-Return-Path: <narancs1@externet.hu>
-Date: Fri, 5 Jan 2001 12:21:07 +0100 (CET)
-From: Narancs 1 <narancs1@externet.hu>
-Message-ID: <Pine.LNX.4.02.10101051206550.5748-100000@prins.externet.hu>
-MIME-Version: 1.0
-Subject: [linux-lvm] lvm: hw error or misconfig?
+Return-Path: <jan@moria.gondor.com>
+Date: Fri, 5 Jan 2001 12:38:20 +0100
+From: Jan Niehusmann <list064@gondor.com>
+Subject: Re: [lvm-devel] Re: [linux-lvm] LVM 0.9 vgscan problem
+Message-ID: <20010105123820.A1886@gondor.com>
+References: <Pine.LNX.4.21.0101041545590.1281-300000@duckman.distro.conectiva> <Pine.LNX.4.21.0101041959040.1295-100000@duckman.distro.conectiva>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0101041959040.1295-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Thu, Jan 04, 2001 at 08:01:10PM -0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,113 +18,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
+Cc: lvm-devel@sistina.com, Rik van Riel <riel@conectiva.com.br>
 
-Dear developers!
+On Thu, Jan 04, 2001 at 08:01:10PM -0200, Rik van Riel wrote:
+> But when I type (with the IOP10 tools) the following
+> all hell breaks loose:
+> 
+> # vgextend vg0 /dev/hda5    (the previously removed PV)
+> 
+> The oops is below.
 
-(sorry for the long mail)
+This is already known, a fix is in cvs. (But I didn't try it, I just remembered
+that somebody mentioned it on the mailinglist).
 
-We have a compaq proliant server with NO raid and 5 scsi discs:
-Host: scsi0 Channel: 00 Id: 04 Lun: 00
-  Vendor: COMPAQ   Model: BD00911934       Rev: 3B02
-  Type:   Direct-Access                    ANSI SCSI revision: 02
+I think the following patch will do the job:
 
-bounded together to a volume group vg00.
-
-This morning we received this strange message, and a file is not readable
-anymore. It is i/o error-ed. unfort. this caused loosing important data.
-
-Jan  5 11:30:21 matrix kernel: attempt to access beyond end of device
-Jan  5 11:30:21 matrix kernel: 08:31: rw=0, want=8883914, limit=8883913
-Jan  5 11:30:21 matrix kernel: dev 3a:00 blksize=1024 blocknr=8551735
-sector=17767820 size=4096 count=1
-
-Does it mean that some of the disks are hw errored or is it a
-misconfiguration, error in lvm or kernel code?
-
-How could I check the disks while they are in live work?
-It would be a big pain to stop the system and reformat the drives, so on.
-any idea?
-
-kernel 2.2.17, lvm 0.8i a la debian woody.
-
-thanks for your help, and hoping for fast answer
-Narancs v1
----------------------------------------------------------
- cat /proc/scsi/sym53c8xx/0
-General information:
-  Chip sym53c876, device id 0xf, revision id 0x14
-  IO port address 0x2000, IRQ number 23
-  Using memory mapped IO at virtual address 0xe0800f00
-  Synchronous period factor 12, max commands per lun 32
-
-vgdisplay -v
---- Volume group ---
-VG Name               vg00
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               1
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                5
-Act PV                5
-VG Size               41.1 GB
-PE Size               4 MB
-Total PE              10521
-Alloc PE / Size       10521 / 41.1 GB
-Free  PE / Size       0 / 0
-
---- Logical volume ---
-LV Name               /dev/vg00/oracle
-VG Name               vg00
-LV Write Access       read/write
-LV Status             available
-LV #                  1
-# open                1
-LV Size               41.1 GB
-Current LE            10521
-Allocated LE          10521
-Allocation            next free
-Read ahead sectors    120
-Block device          58:0
-
-
---- Physical volumes ---
-PV Name (#)           /dev/sda3 (1)
-PV Status             available / allocatable
-Total PE / Free PE    2061 / 0
-
-PV Name (#)           /dev/sdb2 (2)
-PV Status             available / allocatable
-Total PE / Free PE    2061 / 0
-
-PV Name (#)           /dev/sdc2 (3)
-PV Status             available / allocatable
-Total PE / Free PE    2061 / 0
-
-PV Name (#)           /dev/sdd1 (4)
-PV Status             available / allocatable
-Total PE / Free PE    2169 / 0
-
-PV Name (#)           /dev/sde1 (5)
-PV Status             available / allocatable
-Total PE / Free PE    2169 / 0
-
-cat /etc/fstab 
-# /etc/fstab: static file system information.
-#
-# <file system> <mount point>   <type>  <options>
-<dump><pass>
-/dev/sda2       /               ext2    defaults,errors=remount-ro      01
-/dev/sda1       none            swap    sw                      0       0
-/dev/sdb1       none            swap    sw                      0       0
-/dev/sdc1       none            swap    sw                      0       0
-proc            /proc           proc    defaults                        00
-/dev/fd0        /floppy         auto    defaults,user,noauto            00
-/dev/cdrom      /cdrom          iso9660 defaults,ro,user,noauto         00
-/dev/vg00/oracle /u01           ext2    defaults                0       2
+Index: lvm.c
+===================================================================
+RCS file: /data/cvs/LVM/kernel/lvm.c,v
+retrieving revision 1.7.2.1
+retrieving revision 1.7.2.2
+diff -u -1 -b -p -r1.7.2.1 -r1.7.2.2
+--- lvm.c	2000/11/26 12:21:37	1.7.2.1
++++ lvm.c	2000/11/27 23:48:01	1.7.2.2
+@@ -143,2 +143,3 @@
+  *    26/11/2000 - corrected #ifdef locations for PROC_FS
++ *    28/11/2000 - fixed lvm_do_vg_extend() NULL pointer BUG
+  *
+@@ -2089,4 +2090,5 @@ static int lvm_do_vg_extend(vg_t *vg_ptr
+ 				ret = lvm_do_pv_create(arg, vg_ptr, p);
+-				lvm_do_create_proc_entry_of_pv ( vg_ptr, pv_ptr);
+ 				if ( ret != 0) return ret;
++				pv_ptr = vg_ptr->pv[p];
++				lvm_do_create_proc_entry_of_pv ( vg_ptr, pv_ptr);
+ 	
