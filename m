@@ -1,12 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012220138.eBM1cAb17191@webber.adilger.net>
-Subject: Re: [linux-lvm] IOP selection scripts (was: '/etc/init.d/lvm' script
- in debian package)
-In-Reply-To: <Pine.LNX.4.21.0012212101510.15611-100000@scuzzlebutt.helllabs>
- "from Claudio Matsuoka at Dec 21, 2000 09:06:33 pm"
-Date: Thu, 21 Dec 2000 18:38:10 -0700 (MST)
+Return-Path: <mike@marxmeier.com>
+Date: Fri, 22 Dec 2000 03:51:25 +0000 (GMT)
+From: Paul Jakma <paul@clubi.ie>
+Message-ID: <Pine.LNX.4.30.0012220347410.27430-100000@fogarty.jakma.org>
 MIME-Version: 1.0
+Subject: [linux-lvm] 0.9 tools compatible with 0.8 kernel? (and vice versa)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,36 +15,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: Gergely Tamas <dice@mfa.kfki.hu>
+To: Linux LVM list <linux-lvm@msede.com>
 
-Claudio writes:
-> On Thu, 21 Dec 2000, Andreas Dilger wrote:
-> > Why not simply install it as one of the commands (e.g. vgscan) and make
-> > hard links to it.  Hard links don't even take up inodes - only directory
-> > entries.
-> 
-> Uhm.. yes, why not?
+i want to try out test13-pre4, which i see has LVM v0.9 rolled in.
 
-If you have a symlink with a short path (e.g. vgscan -> lvm-wrapper)
-the string "lvm-wrapper" gets stored directly in the inode (for ext2 at
-least), and is called a "fast symlink".  For longer targets (> 56 bytes I
-think), the inode allocates a filesystem block to store the new string.
-There is a directory entry for the symlink (in this case "vgscan")
-which points to the symlink inode.
+if i need to revert to a previous kernel with 0.8, would that cause a
+problem? and if it doesn't, will the 0.9 tools work with 0.8 kernel
+side?
 
-If you have a hard link to a file, what happens is that there is a
-directory entry created (same as with any file), but it only points to the
-inode of the existing file, and the refcount on the inode is increased.
-That's why hard links always have the same owner/permissions/contents -
-because it is reall only one "file" (inode) and just multiple directory
-entries pointing to it.  This is also the reason why you can't have hard
-links across filesystem boundaries.
+(they should, or upgrade path is pretty risky).
 
-Cheers, Andreas
+thanks,
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Paul Jakma	paul@clubi.ie	paul@jakma.org
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+You know, Callahan's is a peaceable bar, but if you ask that dog what his
+favorite formatter is, and he says "roff! roff!", well, I'll just have to...
