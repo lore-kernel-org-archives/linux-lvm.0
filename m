@@ -1,12 +1,12 @@
 Return-Path: <bluca@comedia.it>
-Date: Sun, 17 Dec 2000 11:01:47 +0100
+Date: Sun, 17 Dec 2000 11:04:26 +0100
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Make doesn't abort on error
-Message-ID: <20001217110147.B9917@colombina.comedia.it>
-References: <00121616190202.10070@lyta>
+Subject: Re: [linux-lvm] Patches for 0.8.1
+Message-ID: <20001217110426.C9917@colombina.comedia.it>
+References: <00121619514201.00774@lyta>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <00121616190202.10070@lyta>; from russell@coker.com.au on Sat, Dec 16, 2000 at 04:19:02PM +0100
+In-Reply-To: <00121619514201.00774@lyta>; from russell@coker.com.au on Sat, Dec 16, 2000 at 07:51:42PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,46 +22,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Dec 16, 2000 at 04:19:02PM +0100, Russell Coker wrote:
-> Above is the error condition that make isn't detecting.  I've changed the 
-> makefiles to use sonames so I can have multiple versions installed with ease 
-> (I'll send the patch here when it's working - hopefully within 24 hours 
-> otherwise maybe after Christmas).
+>  
+>  $(SO): $(ALL_OBJECTS)
+> -       ld -shared -o $(SO) $(ALL_OBJECTS)
+> +       ld -shared -soname=${SO} -o $(SO) $(ALL_OBJECTS)
+> +       ln -sf ${SO} ${BASESO}
 
-i already posted such a patch
-
-> Below is the code from make.tmpl.  For some reason when the "make -c 
-> tools/lib all" fails it doesn't result in compilation aborting.  Perhaps 
-> someone who knows make and shell scripting better than I can advise...
-> 
-> all:
->         @for d in $(SUBDIRS); \
->          do \
->             if [ "$$d" = "." ]; \
->             then \
->                $(MAKE) all_this; \
->             else \
->                $(MAKE) -C $$d all; \
->             fi; \
->          done
-
-make checks output of the command it issues, in this case the shell that runs
-the for loop, since the for loop has no error checking make does not complain.
-If you want make to exit you should either recode the for loop or do something
-like this:
-
---- --- --- --- --- ---
-all: $(SUBDIRS)
-
-$(SUBDIRS): dummy
-    $(MAKE) -C $@
-
-dummy:
---- --- --- --- --- ---
+i thought it was better to use 'gcc -shared -Wl,-soname,${SO}' to link
+shared libraries, especially under libc6
 
 L.
-
-
 -- 
 Luca Berra -- bluca@comedia.it
         Communication Media & Services S.r.l.
