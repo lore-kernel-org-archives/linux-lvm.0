@@ -1,9 +1,8 @@
-Message-ID: <3873A8BF.196353CE@msede.com>
-Date: Wed, 05 Jan 2000 21:25:35 +0100
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: Stephan.Mueller@suse.de
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] [3 Questions... (fwd) (fwd)
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-Id: <200001052144.WAA11319@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] Re: Preserving LVs (fwd)
+Date: Wed, 5 Jan 2000 22:44:37 +0100 (MET)
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -11,40 +10,57 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Forwarded message
-
--------- Original Message --------
-From: Stephan Mueller <Stephan.Mueller@suse.de>
-Organization: SuSE Muenchen GmbH
-Subject: Re: [linux-lvm] [3 Questions... (fwd)
-Date: Tue, 4 Jan 2000 07:53:01 +0100
-
-Am Die, 04 Jan 2000 schrieben Sie:
-> -------- Original Message --------
-> Subject: 3 Questions...
-> Date: Tue, 4 Jan 2000 00:44:36 +0000 (GMT)
-> From: James Pattinson <jamesp@emporia.u-net.com>
-> X-Sender: jamesp@greebo.jj.net
-> To: linux-lvm@msede.com
-> Message-ID: <Pine.LNX.4.10.10001040025340.1128-100000@greebo.jj.net>
+> Hi!
 > 
-> Hi,
+> On Sat, 1 Jan 2000, Heinz Mauelshagen wrote:
 > 
-> I have a few questions... well... I keep thinking of more :)
+> > 
+> > Hapy new year Holger.
+> > 
+> > > Hi!
+> > > 
+> > > How can I preserve existing LVs (such as the ones used for the
+> > > "/usr/local" and "/home" fs) over new installations?
+> > 
+> > 
+> > If you don't touch the disks/partitions where the physical volumes forming
+> > the volume group containing your logical volumes reside, just do
+> > a vgscan after upgrading/reinstalling Linux (including LVM).
 > 
-> 1. Raid / LVM
 > 
-> Does anyone have a patch against 2.2.13 that contains both the LVM
-> patch
-> and the super-raid patch (the one that uses MMX)? I want to get max
-> performance by having a striped /dev/md0 as my PV. 
+> Well, in the beginning (immediately after an update or a new
+> installation) commands like "vgscan" are not available to me, since
+> they were delteted during the installation (probably they live under
+> /bin, /sbin, /usr/bin, /usr/sbin), and the file system(s) containing
+> these directories usually get lost during
+> repartitioning/reformatting.
 
-Why are you doing this?? Just use each physical harddisk as a PV. And
-after this you can combine several PVs within one VG (yes, it is
-simmilar
-to a stripped softraid). AFAIK you will have a performace drop when
-you use a
-LVM on top of a (softraid-) stripped device.
+Right (until a distributor puts them on the installation/update
+media what SuSE already did).
 
-Cheers
-Stephan
+> As long as I don't have that command
+> however, I can most likely not access any file systems that were
+> created on a LV (such as /usr/local or /home).
+
+Correct.
+
+> Maybe I have to create
+> an initrd image in order to ensure that the commands as well as the
+> patched kernel is ALWAYS there and to preserve the /boot file system?
+
+Yep.
+
+Heinz
+-- 
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@EZ-Darmstadt.Telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
