@@ -1,8 +1,9 @@
-From: Hadmut Danisch <hadmut@danisch.de>
-Message-ID: <20011030204337.A2598@danisch.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Bug Report LVM 1.0.1 RC4
+From: "Mitch Miller" <mitch@mdmiller.com>
+Subject: RE: [linux-lvm] LVM and 2.4.13
+Message-ID: <000601c1617b$96dfde10$0101a8c0@mdmiller.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <JLEILPHBKFODIOEDIAKMGEKLCHAA.jamesk@ashlandagency.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 30 13:42:02 2001
+Date: Tue Oct 30 13:43:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-LVM@sistina.com
+To: linux-lvm@sistina.com
 
-Hi,
+James,
 
-I'd like to report a bug in LVM 1.0.1 RC4:
+> When I try to create the logical volume,
+> I get a Seg Fault and core dump.
 
-I was using a 2.4.12 Linux Kernel with LVM 1.0.1 RC4
-patched in.
+Take a look at Sistina's web page, and search Bugzilla for core dump.  There
+is a documented issue with the version of GCC you are using, which is
+happening because of broken compiler optimizations.  As I recall, there are
+two workarounds.  First, you can edit your make file, and change -O2 to -O
+or you can edit the source and add a printf() statement inside the function
+which the compiler is to optimize by making it an inline function.
 
-I was removing logical volumes and a volume group
-formerly installed with LVM 0.9.
+I chose the 2nd fix so I didn't have to get rid of all optimizations, but
+that fix has to be applied in a number of places to make sure that all
+command line tools get fixed appropriately.  The first fix has the benefit
+of being changed in one place, and the entire works after recompilation, at
+the cost of compiler optimization.
 
-when removing the volumen group, a segmentation fault
-(null pointer access) occured in the kernel. Same
-problem occured on two independent computers.
+-- Mitch
 
-regards
-Hadmut Danisch
+P.S.  Seems like there is also another version of GCC which you can use, but
+I don't know which one.
