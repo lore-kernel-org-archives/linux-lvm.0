@@ -1,59 +1,46 @@
-Message-ID: <388B01A3.B313730F@msede.com>
-Date: Sun, 23 Jan 2000 14:26:59 +0100
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: sbibb@pacelabs.com
+Message-ID: <15AD5D7936F8D21198240000F831776E3E8158@dboexc1.dbo.cpqcorp.net>
+From: "Jakma, Paul" <Paul.Jakma@compaq.com>
+Subject: RE: [linux-lvm] 0.8i pvcreate doesn't recognise Mylex RAID
+Date: Tue, 25 Jan 2000 17:21:24 -0000
 MIME-Version: 1.0
-Subject: [linux-lvm] my kernel builds but... (fwd)
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
--------- Original Message --------
-Date: Sat, 22 Jan 2000 12:07:07 -0600
-From: "Shawn Bibb" <sbibb@pacelabs.com>
-Subject: [linux-lvm] my kernel builds but...
+> Any solution to this problem? Where can i teach pv_get_size about
+> Mylex /dev/rd? Also does it matter that I'm using devfs and hence
+> have long nested /dev/ path names?
+> 
+> thanks,
 
-the system hangs at the "Finding module dependencies" point of the
-boot
-process.  my system is a dual pII-300 running under mandrake linux
-rel.
-6.5.  i have done:
+Ok, it turns out to be related to the new devfs namespace. I grep'ed for
+/dev/rd in tools/lib, and replaced the 2 occurances i found with
+/dev/rd/disc0 and got LVM working.
 
-(patch my 2.2.13 in /usr/src/linux with the 0.8i patch)
-make xconfig
-make dep
-make clean
-make bzImage
-(move the kernel)
-make modules
-lilo
+So the problem is that the scanning functions only descend down one level.
+Eg in my case the tools/lib/* routines know about /dev/rd, so only nodes in
+/dev/rd will be found, which is not where they are in latest devfs.
 
-all goes well until the point above.  i have lvm in as a module and am
-booting ide (always have on this box).  i have always had aic7870, sb,
-ne2k-pci in as modules.  old kernel boots fine still so i am not down
-but
-i want to put in my mylex bt-958d and some decommissioned drives to
-work
-with lvm on linux.
+However.. this begs the question:
 
-please, any help will be appreciated.  i understand this is *not* the
-kernel list but it involves lvm.  i have tried to follow the INSTALL
-in
-the lvm ftp archive but it is not clear.  it talks of a make.tmpl and
-i
-haven't got one!  or do i?
+Why in the name of god do the LVM tools use such elaborate and convulated
+methods for verifying the supplied device name? LVM tools are effectively
+tied to a very specific /dev namespace, and changing it is non-trivial.
 
-well, thanks in advance.
+I would much prefer that LVM tools only do basic sanity-checking on the
+device file, and leave as much of the namespace policy/sanity as possible up
+to the administrator. As is the Unix way. If i want to change my /dev the
+LVM tools should be able to handle it.
 
-=AF-shawn
+Apart from this LVM works very very nicely. (apart from small issues which
+I'll send a seperate mail about). LVM turns linux into a very capable
+storage server. 
 
+Congratulations!! 
 
-
-
-
-Shawn Bibb  - Manager of Technical Support
-Pace Analytical Services, Inc.
-Shawn.Bibb@pacelabs.com
+-paul jakma
+paul.jakma@compaq.com
+paul@clubi.ie
