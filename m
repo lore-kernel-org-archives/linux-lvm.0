@@ -1,11 +1,12 @@
-From: FEJF <fejf@gmx.de>
-Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Date: Mon, 10 Sep 2001 13:53:53 +0200
-References: <E15f13v-0003bs-00@hermes.sistina.com> <E15gELn-0004OG-00@hermes.sistina.com> <20010910103952.B31660@vestdata.no>
-In-Reply-To: <20010910103952.B31660@vestdata.no>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E15gPgX-0000zK-00@hermes.sistina.com>
+Date: Mon, 10 Sep 2001 14:05:43 +0000
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Subject: Re: [linux-lvm] LVM
+Message-ID: <20010910140543.A9418@dardhal.mired.net>
+References: <NBBBJHKIOKPKOGOEPEDPEEDBDNAA.stuart@bh90210.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <NBBBJHKIOKPKOGOEPEDPEEDBDNAA.stuart@bh90210.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,66 +18,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Monday, 10 September 2001, at 04:37:07 -0700,
+IT3 Stuart B. Tener, USNR-R wrote:
 
-Ragnar Kj=EF=BF=BDrstad, on Montag, 10. September 2001 10:39 wrote:
-[cut]
-> It's better than my patch, but still not "correct":
-> * In my case pe_lock() failed, so it had to be "removed" as well. Was
->   that not the case for you?
-> * ret=3D=3D-1 and ret<to_read should probably be handled differently.
->   * For ret>0 && ret<to_read the regular execution path could be followed.
->   * When red=3D=3D-1 there should be a seek on pv[src_pv_index], so the
->     possition of the filehandle is set correctly. (now it's undefined)
-> * maybe red=3DSECTOR_SIZE; would be better? see next comment.
-
-after this msg i search through the syslog:
-Aug 29 13:29:20 bolm kernel: hdh: read_intr: error=3D0x40 { UncorrectableEr=
-ror=20
-}, LBAsect=3D95091302, sector=3D95091239
-Aug 29 13:29:20 bolm kernel: end_request: I/O error, dev 22:41 (hdh), secto=
-r=20
-95091239
-
-what does this locking do ? i mean copying these few remaining bytes took=20
-about 10minutes... so perhaps it had problems with locking but skipped it ?=
-=20
-or would it abort in such a case ?
-
-> > tools/pvmove.c:
-> >
-> > replace:
-> > 	int buffer_size =3D 64*1024;
-> > with:
-> > 	int buffer_size =3D 512;
-> >
-> > this is an advantage to your patch, because pvmove then copys only 512
-> > byte-blocks and if there's only one block damaged u don't loose 64kb
-> > data. this has one disadvantage: it's SLOW... and slower than that ;)
+> List members:
+> 
+> 	Hello to all, as I am somewhat new to the list. Perhaps one of you will recommend some basic reading to get me started, but I do have a few questions regarding LVM and my proposed deployment of it on my laptop.
+> [...]
 >
-> This is not needed if the read loop is allowed to continue.
+Your best starting point is the new LVM HOWTO at:
+http://tech.sistina.com/lvm/doc/lvm_howto/index.html
 
-and it also copies the whole 64kb if only one 512 byte block damaged with=20
-only 512 bytes of crap ?
+Linux LVM is considered stable, since it passed version 1.0 (now
+1.0.1-rc2). It has been stable for some time before. Current Linux kernels
+include an outdated LVM version (2.4.9 still includes LVM 0.9.1-beta2,
+dated back in January or so).
 
-> It would be great if someone took this patch, made the proposed changes,
-> and integrated it into the standard tools with an "ingore-read-errors"
-> flag... hint hint.
+What LVM provides is a means or managing your disk space in Linux: so
+there is no way to create a Linux LV to hold a Windows or Solaris
+installation. AFAIK, W2K has some sort of volume management in some of
+their versions, and I'm sure Solaris has something on its own.
 
-hehe ;)
-fejf
+Greetings.
 
-- --=20
-Backups are usefull. Most often when you don't have one ;)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7nKnR7Xtp66ctWuIRAubiAJ9YHdZez6QGOUut63knCXcc0kf5DQCgrehc
-Zyntw0mfYTTKn7se0VJZ7O8=3D
-=3D+9/r
------END PGP SIGNATURE-----
+--
+Jos� Luis Domingo L�pez
+Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+ 
+jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+jdomingo AT internautas DOT   org  => Spam at your own risk
