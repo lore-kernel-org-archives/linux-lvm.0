@@ -1,17 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2B9DH818640
-	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 04:13:17 -0500
-Received: from grassmarket.ucs.ed.ac.uk (grassmarket.ucs.ed.ac.uk [129.215.166.64])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2B9DG07001771
-	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 04:13:16 -0500
-Received: from aphrodite (18779905.resnet.ed.ac.uk [10.7.0.72])
-	by grassmarket.ucs.ed.ac.uk (8.12.10/8.12.10) with ESMTP id i2B9D9PH022654
-	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 09:13:15 GMT
-From: "Rupert Hair" <rupert.hair@ntlworld.com>
-Message-ID: <000101c40748$d1b5f860$1530a8c0@aphrodite>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Some LVM 2 questions.
+Received: from reti (vpn50-17.rdu.redhat.com [172.16.50.17])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2B9Gguq011438
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 09:16:43 GMT
+Received: from joe by reti with local (Exim 4.30)
+	id 1B1MKX-0003gV-Ju
+	for linux-lvm@redhat.com; Thu, 11 Mar 2004 09:18:17 +0000
+From: Joe Thornber <thornber@redhat.com>
+Subject: Re: [linux-lvm] [PATCH] calc_max_buckets bug
+Message-ID: <20040311091817.GC2138@reti>
+References: <1078927858.25064.1468.camel@watt.suse.com> <20040310154444.GE643@reti> <1078942647.25076.1530.camel@watt.suse.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1078942647.25076.1530.camel@watt.suse.com>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -23,25 +22,16 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Mar 11 04:11:00 2004
+Date: Thu Mar 11 04:14:03 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I have noticed that a friend's LVM 2 vgdisplay does not show a MAX LV Size
-value.  Should I take this to mean that LVM 2 does not impose a MAX LV Size
-or that it it so large that it will not be an isssue?
+On Wed, Mar 10, 2004 at 01:17:27PM -0500, Chris Mason wrote:
+> Do you see any problems with using a smaller fixed size on the hash
+> table.  It seems like 2MB should be enough to me.
 
-I currently have a LVM 1.0.8 system that is nearing its MAX LV Size.  I
-would like to know if I can migrate it to LVM 2 so that I can expand beyond
-my MAX LV Size?  
+I've done no experiments in this area.
 
-I have four drives containing one linear VG and one LV on top of that
-formatted as ext3.  Can I set LVM (1 or 2) to make a backup of the file
-allocation tables (I'm not sure if that's the right term) of my ext3 system
-onto all my drives so that if the first disk in my LV died I would not loose
-all my data (just what was contained on that disk).
-
-Thanks,
-
-Rupert
+- Joe
