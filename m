@@ -1,9 +1,9 @@
-From: "Jason A. Lixfeld" <jlixfeld@fastvibe.com>
-Date: Thu, 4 Oct 2001 12:02:33 -0400
-Message-ID: <009c01c14ced$facccb10$836788cf@industry>
+Message-ID: <3BBC8B5B.1A484028@legis.state.ak.us>
+Date: Thu, 04 Oct 2001 08:16:27 -0800
+From: Bill Ellis <bill_ellis@legis.state.ak.us>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Removing inactive PV from display
+Subject: [linux-lvm] pvcreate fails on a software RAID metadisk
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,14 +18,38 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-The final part of my dilemma thus far is each time I run pvscan, I get a
-massive number of read_intr errors on two drives.  I have removed them
-from their respective LVs and VGs, but they still display in vgscan (so
-they are active, in a sense).  I want to remove them from the vgscan
-display but there doesn't seem to be a pvremove command anywhere.
-What's the command to get rid of these things from displaying in pvscan
-(exact opposite command to pvcreate /dev/hd*).
+Hi,
 
-TiA
+I'm trying to set up lvm 1.01rc4 under a 2.4.10 kernel.  I'm getting an
+error when I try to use pvcreate on a software RAID metadisk.  From the
+'-v' output of pvcreate, it appears that pvcreate thinks my metadisk is
+zero-length.
 
--JL
+Here's an example:
+
+root@tik-tok:~# pvcreate /dev/md7
+pvcreate -- ERROR "parameter error" setting up  physical volume "/dev/md7"
+
+root@tik-tok:~# pvcreate -v /dev/md7
+pvcreate -- locking logical volume manager
+pvcreate -- checking physical volume name "/dev/md7"
+pvcreate -- getting physical volume size
+pvcreate -- checking partition type
+pvcreate -- creating new physical volume
+pvcreate -- setting up physical volume for /dev/md7 with 0 sectors
+pvcreate -- ERROR "parameter error" setting up  physical volume "/dev/md7"
+
+root@tik-tok:~# pvcreate --version
+pvcreate: Logical Volume Manager 1.0.1-rc4
+Heinz Mauelshagen, Sistina Software  03/10/2001 (IOP 10)
+root@tik-tok:~# cat /proc/mdstat | grep -A2 md7
+md7 : active raid5 sde7[4] sdd7[3] sdc7[2] sdb7[1] sda7[0]
+      24575488 blocks level 5, 128k chunk, algorithm 0 [5/5] [UUUUU]
+
+root@tik-tok:~# grep md7 /proc/partitions
+   9     7   24575488 md7
+
+Any tips on what might be going on here would be appreciated...
+
+Thanks,
+Bill Ellis
