@@ -1,9 +1,6 @@
-From: "PETER BALLA KABILA" <peterkabila@netster.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E19mkg6-0002TT-00@hermes.sistina.com>
-Subject: [linux-lvm] CAN YOU ASSIST
+From: lotteriasl@netscape.net
+Message-Id: <E19muEi-0002LQ-00@hermes.sistina.com>
+Subject: [linux-lvm] WINNING  NOTIFICATION !!!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,78 +11,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 12 20:44:02 2003
+Date: Wed Aug 13 06:57:01 2003
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 To: linux-lvm@sistina.com
 
-Dear Sir=2C
+             LOTTERY LA PRIMITIVA.
+                  C/GUZMAN EL BUENO,137 MADRID - ESPANA.
+                  TEL:0034 696 026 500=20
 
-I AM MAKING THIS CONTACT WITH PROFOUND INTEREST=2C
-HAVING CONSIDERED YOU HIGHLY REPUTABLE AND CAPABLE OF
-ASSISTANCE TO MY UNDERSTATED BUSINESS PROPOSAL AFTER
-GOING THROUGH A BRIEF ADVERTS OF YOUR COMPANY ON
-INTERNET=2E
+FROM: THE DESK OF THE PROMOTIONS MANAGER,=20
+INTERNATIONAL PROMOTIONS/PRIZE AWARD DEPARTMENT,
 
-I AM PETER BALLA KABILA FROM THE DEMOCRATIC REPUBLIC OF
-CONGO ZAIRE=2C SON OF LATE LAURENT M=2E KABILA=2C THE FORMER
-PRESIDENT AND COMMANDER IN CHIEF OF THE ARMED FORCES
-REPUBLIC OF CONGO ZAIRE=2E PRESENTLY TAKING REFUGE HERE
-IN GHANA AFTER THE SUDDEN DEMISE OF MY FATHER=2C
-FOLLOWING HIS ASSASINATION BY HIS PERSONAL BODY GUARD
-ON THE 15TH JANUARY 2001=2E
-
-ON TRUST AND IN UTMOST CONFIDENCE=2C I AM ESTABLISHING
-THIS RELATIONSHIP WITH YOU IN BENEVOLENT SPIRIT AS TO
-ENHANCE IMMEDIATE RESOLUTION TO AN OPPORTUNITY RIGHTLY
-AT HAND=2E IN A CLOSE DOOR MEETING HELD WITH MY FATHER
-BEFORE HIS SUDDEN DEATH=2C HE DISCLOSED TO ME CERTAIN
-FACTS AND SECRETS ABOUT HIMSELF AND THAT OF MY
-STEP-BROTHER GENERAL JOSEPH KABILA =28I MEAN THE PRESENT
-PRESIDENT OF MY COUNTRY=29=2E CERTAIN DOCUMENTS WAS GIVEN
-TO ME THAT DAY BY MY FATHER REGARDING WHICH HE
-DEPOSITED IN A PRIVATE VAULT OF A SECURITY FIRM IN
-ACCRA-GHANA =28WEST AFRICA=29=2E IN ADDITION=2C $168 MILLION
-USA DOLLARS CASH IN TWO TRUNK BOXES ALSO IN THE VAULT=2E
-THE $168 MILLION USD WAS TO BE USED TO WORK ON LEADERS
-OF THE ECOWAS COMMUNITY=2C ENHANCING HIS FULL SUPPORT IN
-POWER=2E BUT THIS AIM WAS NOT ACHIEVED BEFORE HIS DEATH=2E
-
-THE ISSUE OF THIS MONEY HAS BEEN A SECRET BETWEEN MY
-FATHER AND I UNTILL HE DIED=2E THEREFORE=2C I AM TAKING
-THIS AS AN OPPORTUNITY TO ENRICH AND EQUIP MYSELF TO
-FACE MY SECRET AMBITION=2E AS NOBODY CAN CONVINCE ME
-THAT MY STEP-BROTHER =28JOSEPH=29 IS NOT BEHIND THE DEATH
-OF MY FATHER=2E
-
-I HAVE SINCE BEEN IN CONTACT WITH THE SECURITY FIRM IN
-PURSUANCE OF THE CLEARANCE OF THIS CONSIGNMENT AND I
-AM SO FAR ABLE TO CLEARIFY=2FCERTIFY ALL PAPERS WITH THE
-SECURITY COMPANY THROUGH AN ATTORNEY WHO AS WELL DOES
-NOT KNOW THE TRUE CONTENT OF THE CONSIGNMENT=2E BECAUSE
-MY FATHER DID NOT DECLARE THE CONTENT AS MONEY TO THE
-SECURITY FIRM BUT PERSONAL EFFECTS=2E
-
-ALL I NEED NOW IS A RELIABLE FOREIGN PARTNER WITH WHOM
-I CAN CLEAR AND TRANSFER THIS MONEY ABROAD=2EI HAVE
-AGREED TO GIVE A REASONABLE PERCENTAGE OF THE TOTAL
-VALUE OF THIS CONSIGNMENT AS YOUR SHARE=2E YOU MAY ASK
-IF I DON'T HAVE INTERNATIONAL CONTACTS EVEN HERE IN
-GHANA TO ASSIST ME ON THIS ISSUE=2E THE ANSWER IS YES=2C
-BUT I HAVE AN AMBITION RIGHT NOW AND WANT TO LIVE IN
-DISGUISE UNTILL MY AMBITION IS FULFILLED=2E
-
-I EXPECT YOUR KIND URGENT RESPONSE BY EMAIL TO ENABLE
-ME FURNISH YOU WITH MORE DETAILS ON THIS BUSINESS=2E
-
-THANKS IN ANTICIPATION=2E
-
-PETER KABILA BALLA KABILA
-ballaribadu=40mail=2Egr
+REF: LP/26510460037/03 BATCH: 24/00319/IPD
 
 
-NB=3A I SHALL COUNT ON YOUR INDULGENCE TO PLEASE KEEP
-THIS INFORMATION VERY SECRET & CONFIDENTIAL=2E AND
-PLEASE=2C YOU SHOULD HENCEFORTH ADDRESS ME AS THE
-MANAGER OF DAN COMPANY LTD=2E
-THAT IS WHAT I AM NOW USING FOR SECURITY
-REASONS=2E
+RE: AWARD NOTIFICATION FINAL NOTICE.
+
+We are pleased to inform you of the announcement, of winners of the=20
+LOTTERY PRIMITIVA SWEEPSTAKES/INTERNATIONAL PROGRAMMES held on 6=20
+June,2003. Your name is attached to ticket number 004-05117963-198,
+with serial number 99375 drew the lucky numbers 05-07-11-12-13-27, and
+consequently won the lottery in the 3rd category. You have therefore=20
+been approved for a lump sum pay out of EUROS 647,828,87 Thousand in cash=20
+credited to file No:LP/26510460037/03.This is from total prize money of=20
+EUROS 80,400,000.00 shared among the twenty two international winners=20
+in this category. All participants were selected through a computer=20
+ballot system drawn from 25,000 names from Australia,New Zealand,=20
+America,Europe, North America and Asia as part of International Promotions =
+
+Programme, which is conducted annually.
+CONGRATULATIONS!!! Your fund is now insured to your name. Due to the=20
+mix up of some numbers and names, we ask that you keep this award=20
+strictly from public notice until your claim has been processed and your mo=
+ney remitted to your account.=20
+ This is part of our security protocol to avoid double claiming or=20
+unscrupulous acts by participants of this program. We hope with a part=20
+of you prize, you will participate in our end of year high stakes Euros=20
+1.1 billion International Lottery. To begin your claim, please contact=20
+ESPA=EF=BF=BDOL CREDITO SEGURIDAD, MADRID-SPAIN ,PHONE NUMBER (+34 608 701 =
+649)=20
+MR JUAN SANZ RAMON, FOREIGN OPERATION MANAGERS,=20
+Email;(loteria2003@netscape.net). For due processing and remittance of your=
+ prize money to a designated account . Remember, all prize money must be cl=
+aimed not later than 10 September 2003. After this date,all funds will be r=
+eturned as unclaimed. NOTE: In order to avoid=20
+unnecessary delays and complications, please remember to quote your referen=
+ce and batch numbers in every one of your correspondences with the=20
+security company . Furthermore, should there be any change of your address,=
+do inform your claims agent as soon as possible.     =20
+Congratulations again from all our staff and thank you for being part of ou=
+r promotions programme.
+
+Sincerely,
+
+FERNANDO TORRES RODRIGUEZ.=20
