@@ -1,8 +1,8 @@
-From: Benjamin Scott <bscott@ntisys.com>
-Subject: Re: [linux-lvm] is devfs required?
-In-Reply-To: <20020221143602.F328@majestic.ukshells.co.uk>
-Message-Id: <Pine.LNX.4.44.0202211148310.27177-100000@dragon.inside.ntisys.com>
+Message-Id: <3C766B16.A8D3FFA1@cle.philips.com>
+From: Toby Bluhm <tobias.bluhm@cle.philips.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Adaptec 32xx,31xx cards
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,32 +13,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb 22 08:21:01 2002
+Date: Fri Feb 22 10:00:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux LVM <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM Sistina <linux-lvm@sistina.com>
 
-> or are there any known problems with using LVM on an SMP host?
+Has anyone used the Adaptec IO2 (31xx, 32xx) series of raid cards? Any
+success/failure stories to tell?
 
-  We're using LVM 1.0 on kernel 2.2.20 with SMP and without devfs just fine.
+I currently have RH7.2, lvm-1.0.3, 2.4.18-rc2, ext3, 8 disk sw raid5
+across 2 - 29160 cards working fine. Just looking for hardware
+performance/reliability gains.
 
-> without it, ive seen lvcreate SEGV when attempting to create a new
-> volume.  
-[...]
-> i cant think of anything else that might be causing these strange
-> problems.
 
-   I notice from your kernel version (2.4.17-19mdk) that you are using
-Mandrake.  Try compiling from pristine sources.  Who knows what Mandrake has
-done to their kernel or tools?
+TIA
 
-  Also, Mandrake uses Red Hat's goofy "GCC 2.96" compiler by default.  Try
-using "kgcc" to compile your kernel and LVM tools instead.  Red Hat's
-compiler is notorious for causing weird problems.
 
 -- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do not |
-| necessarily represent the views or policy of any other person, entity or  |
-| organization.  All information is provided without warranty of any kind.  |
+toby
