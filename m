@@ -1,7 +1,9 @@
-From: "DJ TweeQ" <djtweeq@hotmail.com>
-Mime-Version: 1.0
-Message-ID: <F736sIQrttDRdNOUivl00022555@hotmail.com>
-Subject: [linux-lvm] Re: LVM 1.0.3 to LVM 1.0.6 upgrade path on a Redhat 8.0 Production System
+From: "William Blunn" <bill+f.9sfuw6uo@tao-group.com>
+Subject: Re: [linux-lvm] Re: LVM 1.0.3 to LVM 1.0.6 upgrade path on a Redhat 8.0 Production System
+Message-ID: <BDEMIPDEGABMNEFIHCPDAEMIEIAA.bill+f.9sfuw6uo@tao-group.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <F736sIQrttDRdNOUivl00022555@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,61 +14,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 18 19:23:01 2003
+Date: Wed Feb 19 02:46:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Thanks for posting my email addy sibby ;) lol
+> If i had any money i suppose i might, but i am flat broke and i 
+> don't even know what i'm going to eat tonight.
 
->a) Is this is the LVM mailing list? :)
+Your subject line says that it is a "Production System", yet there
+is no money around.
 
->>Yes, but you are using a version of LVM that was packaged by Redhat.
+You aren't going to get magic-silver-bullet hand-holding support for
+free.
 
-"but"? :)
+If your production system is for a business (or goverment or military)
+then there should be money to pay for support.
 
->b) I don't have money to pay Redhat to tell me they have no idea or     
->that
->they only support the version included (1.0.3) the latter being the most
->likely response. :)
+If it is not business then, generally, in all other scenarios that I
+can think of (home, education, religion, charity etc.), there's no
+money to speak of, but there are people around that have the time and
+inclination (for whatever reason) to put in the extra hours to do
+things by themselves.
 
->>If you are desperately needing help, try and ask them.
+I would suggest that you are going to have to take some of your own
+time to play around with things and get yourself some more knowledge
+and experience on the various things involved.
 
-If i had any money i suppose i might, but i am flat broke and i don't even 
-know what i'm going to eat tonight.
+The suggestion of going with a stock kernel is probably a good idea.
 
->c) I'm asking you ;) lol
+So you might be asking: Am I going to get problems by going away from
+the distro kernel?
 
->>Use a stock kernel so the patch from sistina applies cleanly.
->>Or go and use SuSE, version 8.1 ships lvm 1.0.5 (I admit I do not
->>know what the LV size limit is there).
+You might want to ask yourself: Am I dependent on any
+RedHat-specific modifications to the kernel?
 
-I would prefer not to re-install and reconfigure my entire setup on both of 
-my systems and use SuSE just to upgrade 1.0.3 to 1.0.6 just because it's 
-"packaged" by redhat? And i have no familiarity with SuSE. And would that be 
-effected by or effect the EXT3 FS? (Is Redhat's package of that different 
-too?). Hmmmm It says sistina when i do a pvcreate and lvm works great it's 
-just that i have to extend it's capacity. :) I also noticed someone helping 
-someone do a Redhat 7.x lvm upgrade on this list (and the 
-instructions/upgrade path was alot more extensive than what the normal lvm 
-installation/upgrade path is currently) so i thought i might ask in case 
-there are any major differences (thinking that most likely there are as 
-there have been many changes to the Redhat distribution already).
+You could always try a stock kernel with the LVM version you want.
 
+If there is a problem, it is unlikely to mash up your filesystems.
 
+More likely it will just temporarily stop your sound card or whatever
+working, or you end up with a system which won't boot by itself. If
+you only have one PC knocking around then you would want to get yourself
+a floppy boot arrangement or some such -- test it!!! --- then you can
+play around with different kernels to your heart's content.
 
+Bill
 
-
-
-
-
-
-
-
-
-
-
-_________________________________________________________________
-Tired of spam? Get advanced junk mail protection with MSN 8.  
-http://join.msn.com/?page=features/junkmail
+The contents of this e-mail and any attachments are confidential and may
+be legally privileged. If you have received this e-mail and you are not
+a named addressee, please inform us as soon as possible on
++44 118 901 2999 and then delete the e-mail from your system. If you are
+not a named addressee you must not copy, use, disclose, distribute,
+print or rely on this e-mail. Any views expressed in this e-mail or any
+attachments may not necessarily reflect those of Tao's management.
+Although we routinely screen for viruses, addressees should scan this
+e-mail and any attachments for viruses. Tao makes no representation or
+warranty as to the absence of viruses in this e-mail or any attachments.
+Please note that for the protection of our business, we may monitor and
+read e-mails sent to and from our server(s).
