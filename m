@@ -1,9 +1,9 @@
-Date: Thu, 8 Jul 1999 10:34:47 -0400
-Message-Id: <199907081434.KAA29476@rsts-11.mit.edu>
+Date: Thu, 8 Jul 1999 18:56:54 -0400
+Message-Id: <199907082256.SAA13689@tsx-prime.MIT.EDU>
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
 In-reply-to: <004a01bec785$01f0f920$0102010a@adminstation.sgymsdam.nl>
 	(buytenh@dsv.nl)
 Subject: Re: [linux-lvm] Re: ext2resize
-From: tytso@mit.edu
 References: <004a01bec785$01f0f920$0102010a@adminstation.sgymsdam.nl>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
