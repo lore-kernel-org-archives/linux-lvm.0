@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] Question about lvm
-From: Paul Furness <paul.furness@vil.ite.mee.com>
-In-Reply-To: <Law14-F71CvvMSaQz8x00013cc6@hotmail.com>
-References: <Law14-F71CvvMSaQz8x00013cc6@hotmail.com>
-Message-Id: <1059562098.6792.11.camel@Zebra.vil.ite.mee.com>
-Mime-Version: 1.0
+Subject: Re: [linux-lvm] not enough free/allocatable physical extents to e xtend logical vo lume
+Mime-Version: 1.0 (Apple Message framework v552)
+From: AJ Lewis <lewis@sistina.com>
 Content-Transfer-Encoding: 7bit
+In-Reply-To: <C6B0A1AF05B7A04E9D8E784173AE3D20163010@ausx2kmpc104.aus.amer.dell.com>
+Message-Id: <8436ABA1-C294-11D7-B5B8-000393DC1896@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,75 +14,108 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 30 05:49:01 2003
+Date: Wed Jul 30 08:49:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi.
+You cannot extend striped volumes past the end of the physical volumes 
+they were originally created on in LVM1.  See
+http://tldp.org/HOWTO/LVM-HOWTO/x140.html  - this limitation is 
+addressed in LVM2.
 
-I'm no expert on lvm, but I am using it for my main file servers. They
-are all running RedHat 7.3, and it was really easy to set up.
+On Wednesday, Jul 30, 2003, at 00:31 US/Central, 
+Taylor_Carpenter@Dell.com wrote:
 
-Are you sure you actually want to put the root f/s on an lvm partition?
-I haven't done that, because I don't honestly see the point.
-
-I installed the system (RH7.3 out of the box) and then added all the
-updates and patches issues by Red Hat to it to bring it up to date. I
-didn't add any lvm stuff at this point.
-
-I then installed the 2.4.20 kernel sources (because at the time, Red Hat
-only released up to 2.4.18, and it didn't have LVM included in it), and
-compiled that with lvm switched on. Compiling the kernel is actually
-really easy, nowadays. IT used to be confusing, but there's a nice GUI
-version of the config program that lets you take as long as you want to
-pick the options that you need. Also, if you are using Grub as your boot
-loader (the default with RH7.3) then it's really easy to install your
-newly compiled kernel and add it to the boot menu so that you can test
-it easily.
-
-
-After doing all that, I created physical volumes and groups which I am
-using for all the data I wanted to store, however I have not changed the
-root file system at all - this is still a normal, ext3 partition on the
-first hard disk. All my lvm volumes are on other disks or partitions.
-
-That way, if anything goes wrong with LVM, it won't stop the system
-booting and therefore I will still be able to fix it. It also makes
-upgrading the system / kernel much easier - I don't need to mess around
-with initrd to make the system boot.
-
-
-Hope all this helps you work out what exactly you want to do... :)
-
-Paul.
-
-On Tue, 2003-07-29 at 21:41, tv fw wrote:
-> I want to install LVM together with Redhat 7.3
-> 
-> I tried invain to read the manual but didn't figure out how to careate the 
-> logican and phisical
-> drives if you don't have a system running (the disks have red hat installed 
-> on them so
-> all the changes to the partitutions are deleting data)
-> 
-> is the only way to install lvm is to install redhat and then change root 
-> file system to lvm system
-> It looked scary and complicated in the lvm-howto??
-> 
-> Is there a more user friendly man pages (the lvm-howto assumes that a person 
-> knows
-> all about linux commands formating and all)
-> I am kind of new to that?????
-> 
-> _________________________________________________________________
-> Add photos to your messages with MSN 8. Get 2 months FREE*.  
-> http://join.msn.com/?page=features/featuredemail
-> 
-> 
+> [root]# lvextend -L +10G /dev/Scratch/Scratch /dev/sde1
+> lvextend -- rounding size to stripe boundary size
+> lvextend -- extending logical volume "/dev/Scratch/Scratch" to 111.02 
+> GB
+> lvextend -- not enough free/allocatable physical extents to extend 
+> logical
+> volume "/dev/Scratch/Scratch"
+>
+>
+> I will try -l now.  Here is a disk already in the group.  It is an 
+> identical
+> disk.
+>
+>
+> [root]# pvdisplay /dev/sdd1
+> --- Physical volume ---
+> PV Name               /dev/sdd1
+> VG Name               Scratch
+> PV Size               33.91 GB [71119692 secs] / NOT usable 4.19 MB 
+> [LVM:
+> 161 KB]
+> PV#                   3
+> PV Status             available
+> Allocatable           yes
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              8680
+> Free PE               60
+> Allocated PE          8620
+> PV UUID               S02n1R-lmdI-CU75-hMVp-gwxl-PAwk-dQiNP5
+>
+>
+> I will use its allocated extent size for the new one
+>
+> lvextend -l +8620 /dev/Scratch/Scratch /dev/sde1
+> lvextend -- rounding size to stripe boundary size
+> lvextend -- extending logical volume "/dev/Scratch/Scratch" to 134.70 
+> GB
+> lvextend -- not enough free/allocatable physical extents to extend 
+> logical
+> volume "/dev/Scratch/Scratch"
+>
+> [root]# pvdisplay /dev/sde1
+> --- Physical volume ---
+> PV Name               /dev/sde1
+> VG Name               Scratch
+> PV Size               33.91 GB [71119692 secs] / NOT usable 4.19 MB 
+> [LVM:
+> 161 KB]
+> PV#                   4
+> PV Status             NOT available
+> Allocatable           yes
+> Cur LV                0
+> PE Size (KByte)       4096
+> Total PE              8680
+> Free PE               8680
+> Allocated PE          0
+> PV UUID               x4xXPp-UXDb-fBfO-tnpb-E4HT-q8qJ-p5X6HT
+>
+> [root]# lvextend -l +7000 /dev/Scratch/Scratch /dev/sde1
+> lvextend -- rounding size to stripe boundary size
+> lvextend -- extending logical volume "/dev/Scratch/Scratch" to 128.37 
+> GB
+> lvextend -- not enough free/allocatable physical extents to extend 
+> logical
+> volume "/dev/Scratch/Scratch"
+>
+> The volume is using striping.  Is there some issue with that?  Do I 
+> have to
+> do some other steps to add the new disk so it is available?
+>
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+>
+>
+--
+AJ Lewis
+Sistina Software Inc.             http://www.sistina.com
+720 Washington Ave, Suite 200     Voice:  612-638-0500
+Minneapolis, MN 55414             E-Mail: 
+lewis_NOSPAM_(AT)sistina(DOT)com
+
+Current GPG fingerprint = D638 9C01 D08F 29A4 5D50  D064 F6A6 0ED6 E386 
+E6EB
+Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
+many keyservers out there...
+
+665.9238429876 - Number of the Pentium Beast
