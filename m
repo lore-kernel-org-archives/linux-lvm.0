@@ -1,10 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105011618.KAA01133@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] LVM & high system load
-Date: Tue, 1 May 2001 10:18:17 -0600 (MDT)
-In-Reply-To: <3AEEAEAA.93304CBB@loria.fr> from "Dominique LARCHEY-WENDLING" at May 01, 2001 02:40:10 PM
+Return-Path: <Dominique.Larchey-Wendling@loria.fr>
+Message-ID: <3AEF2A66.8CC8B530@loria.fr>
+Date: Tue, 01 May 2001 23:28:06 +0200
+From: Dominique LARCHEY-WENDLING <Dominique.Larchey-Wendling@loria.fr>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM & high system load
+References: <200105011605.f41G5kE31140@dixie.dyndns.org>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,28 +20,62 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Dominique Larchey writes:
-> I am newbie to LVM. I am experiencing high cpu load (system time > 90%)
-> and relatively poor IO perf. (my cpu is only PII 333) on LVM volumes.
+> I doubt it, I've got LVM0.9.1b7 on a 486 without any real load... even when
+> compiling the kernel.  I also have reiserfs on 2.2.19.  I noticed in your
+> previous post that you had 3 pv's on the same physical disk... that may be
+> contributing, depending on your PE layout on the PVs.  
 
-Note that I am running LVM on Pentium 90 w 16MB RAM and no problems...
+The layout is linear ...
 
-> I have tested reiserfs and ext2fs and I only get about 2.5Mb/s with 100% CPU
-> load, mostly system time.
+-----------------------------------------------------------------
 
-There is one other person that has reported very slow LVM performance.
-However, there is no obvious reason why they have performance issues,
-and others are unable to reproduce this problem.
+[root@charlie larchey]# /usr/sbin/lvdisplay -v /dev/mmedia/music
 
-Can you please try the following and report results:
+--- Logical volume ---
+LV Name                /dev/mmedia/music
+VG Name                mmedia
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 2
+LV Size                9 GB
+Current LE             2304
+Allocated LE           2304
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
 
-time dd if=/dev/mmedia/music of=/dev/null bs=512
-time dd if=/dev/mmedia/music of=/dev/null bs=65536
-time dd if=/dev/hda1 of=/dev/null bs=512
-time dd if=/dev/hda1 of=/dev/null bs=65536
+   --- Distribution of logical volume on 1 physical volume  ---
+   PV Name                  PE on PV     reads      writes
+   /dev/hda5                2304         2129836    343926   
 
-Cheers, Andreas
+   --- logical volume i/o statistic ---
+   2129836 reads  343926 writes
+
+   --- Logical extents ---
+   LE    PV                        PE     reads      writes
+   00000 /dev/hda5                 00006  1025       1875     
+   00001 /dev/hda5                 00007  1024       1024     
+   00002 /dev/hda5                 00008  1024       1024     
+   00003 /dev/hda5                 00009  1024       961      
+   00004 /dev/hda5                 00010  1024       0        
+.....   
+   02298 /dev/hda5                 02304  2048       1024     
+   02299 /dev/hda5                 02305  2048       1024     
+   02300 /dev/hda5                 02306  2048       1024     
+   02301 /dev/hda5                 02307  2048       1024     
+   02302 /dev/hda5                 02308  2048       1024     
+   02303 /dev/hda5                 02309  2048       1024     
+
+--------------------------------------------------------
+
+> If not, it's definitely silly :)
+
+It is NOT SILLY ... see next post for performance issues
+
+DL
+
 -- 
-Andreas Dilger                               Turbolinux filesystem development
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+Dominique Larchey
+LORIA, Nancy, France
+Tel. (Work) +33 (0) 3 83 59 20 13
