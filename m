@@ -1,9 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Message-ID: <20030620183316.GB20393@tykepenguin.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
-Subject: [linux-lvm] [lvm setup problems]
+Subject: RE: [linux-lvm] Red Hat Advanced Server + LVM
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----_=_NextPart_001_01C33891.884C4DC2"
+Message-ID: <689F43A6CF84E541A721C5C3FD5ADECC02F5B6@blr-m3-msg.wipro.com>
+content-class: urn:content-classes:message
+From: "Sharad Tiwari" <sharad.tiwari@wipro.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,153 +15,182 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 23 08:10:06 2003
+Date: Mon Jun 23 08:10:10 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
+This is a multi-part message in MIME format.
+
+------_=_NextPart_001_01C33891.884C4DC2
+Content-Type: text/plain;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+hi all,
+
+         While testing the LVM2 I came across this scenario.
+
+If I have created a volume group(say 'testvg') containg two physical =
+volumes say /dev/sda5 and /dev/sda6, and then remove one of the physical =
+volume say /dev/sda6 and then do a pvdisplay it shows /dev/sda6 as an =
+unknown device ...=20
+
+Also on doing a vgdisplay the volume group testvg I get the following on =
+stdout ...
+
+[root@earth root]# vgdisplay
+Entering CP VMS CP_VMS_vgdisplay function
+  Couldn't find device with uuid =
+'U5Jw21-3AWD-F7t3-a7CI-cpd1-EVAZ-u3LtgX'.
+  Couldn't find all physical volumes for volume group testvg.
+  Volume group "testvg" doesn't exist
+[root@earth root]#
+
+Now doing a vgreduce gives the proper result. So I did not understand =
+why we are prividing this feature (using pvremove) of removing a =
+physical volume from  an existing VG.
 
 
---YiEDa0DAkWCtVeE4
-Content-Type: message/rfc822
-Content-Disposition: inline
-
-X-Mail-Format-Warning: Bad RFC2822 header formatting in >From patrick  Fri Jun 20 18:50:14 2003
-Return-path: <bgeer@linkmail.net>
-Envelope-to: patrick@localhost
-Delivery-date: Fri, 20 Jun 2003 18:50:14 +0100
-Received: from localhost.pjc.net ([127.0.0.1] helo=localhost)
-	by arthur.pjc.net with esmtp (Exim 3.36 #1 (Debian))
-	id 19TQ1d-0005DH-00
-	for <patrick@localhost>; Fri, 20 Jun 2003 18:50:13 +0100
-Received: from mail.cix.co.uk
-	by localhost with POP3 (fetchmail-5.9.11)
-	for patrick@localhost (single-drop); Fri, 20 Jun 2003 18:50:13 +0100 (BST)
-Received: from master.debian.org (master.debian.org [146.82.138.7])
-	by mta04.mx.cix.co.uk (8.11.3/CIX/8.11.3) with ESMTP id h5KHlxP12152
-	for <patrick@tykepenguin.cix.co.uk>; Fri, 20 Jun 2003 18:48:00 +0100
-X-Envelope-From: bgeer@linkmail.net
-Received: from smtp-1.vancouver.ipapp.com [216.152.192.207] 
-	by master.debian.org with esmtp (Exim 3.35 1 (Debian))
-	id 19TPzS-0006zR-00; Fri, 20 Jun 2003 12:47:58 -0500
-Received: from linkmail.net ([67.209.182.41]) by smtp-1.vancouver.ipapp.com ; Fri, 20 Jun 2003 10:47:54 -0700
-Message-ID: <3EF348CE.4030703@linkmail.net>
-Date: Fri, 20 Jun 2003 13:47:58 -0400
-From: Bob <bgeer@linkmail.net>
-User-Agent: Mozilla/5.0 (Windows; U; Win 9x 4.90; en-US; rv:1.0.2) Gecko/20021120 Netscape/7.01 (NSCD7.01)
-X-Accept-Language: en-us, en
-MIME-Version: 1.0
-To: lvm10@packages.debian.org
-CC: lvm-common@packages.debian.org
-Subject: lvm setup problems
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Country: US
-Delivered-To: lvm10@packages.debian.org
-X-Envelope-To: patrick@tykepenguin.cix.co.uk
-X-Spam-Status: No, hits=-3.7 required=5.0
-	tests=BAYES_01,RCVD_IN_NJABL,RCVD_IN_OSIRUSOFT_COM,
-	      USER_AGENT_MOZILLA_UA
-	version=2.55
-X-Spam-Level: 
-X-Spam-Checker-Version: SpamAssassin 2.55 (1.174.2.19-2003-05-19-exp)
-
-My system:
-
-CPU: 200MHz Intel Pentium
-MLB: AOpen AP53
-IDE Drive: 540M Maxtor
-SCSI Adapter: Compaq wide ultra scsi (68 pin) (uses ncr53c8xx.o)
-SCSI Drives: 2 Compaq (Seagate) 4.5G
-              1 Fujitsu 4.5G
-              1 Seagate 18G
-
-All of the above hardware is 100% functional and works with this and 
-other software. I'm exploring storage management for myself and for a 
-friend who runs an internet server farm.
-
-My reference data:
-
-Man Pages
-On-line howto from Sistina
-various files included in the package
-
-Problems:
-
-1. The howto tells me to alter the command lines described if I'm using 
-  "devfs" but doesn't tell me (a novice) how I'd know whether or not I 
-have it. In /usr/share/doc/lvm-common/readme.gz I am told how to check 
-by inference: it says that a test is made in /etc/init.d/lvm. However, 
-there is no test in the script I have.
-
-2. The stock installation tries to install a module "lvm" in 
-/etc/modules. Exploring my system there is no "lvm.o" anywhere in the 
-/lib tree. Consequently this gives me a modprobe error on every startup. 
-I solved this problem by changing the "lvm" line to "lvm-mod" and 
-everything seems to work okay. There is a related error in the 
-/etc/init.d/lvm script, but it doesn't seem to have any harmful effect. 
-Its modprobe output is redirected to /dev/null. I commented it out anyway.
-
-3. This is a strange and hard to discover problem. I played around with 
-it for one whole day. Only my faith in the Linux community and Sistina 
-kept me after it. The simple explanation is:
-
---------------------------------------------------------------
-
-fdisk  /dev/sda1
-.
-.
-pvcreate /dev/sda1
-..repeat the above for /dev/sd[b-d]1...
-
-             -OR-
-
-dd if=/dev/zero of=/dev/sda1 bs=1K count=1
-pvcreate /dev/sd[a-d]
-
-		-THEN-
-
-vgcreate -n vg0 /dev/sd[a-d]1
-lvcreate -L 9 -n lv0 vg0
-lvcreate -L 20 -n lv1 vg0
-
-		-the following is NOT included in the howto-
-
-vgscan
-
------------------------------------------------------------------
-
-All up to the last command ("vgscan") works perfectly and produces 
-usable devices. However, if you don't do a "vgscan" before you reboot 
-you can "vgscan" to your heart's content and all you'll get is error 
-message after error message. The volume group cannot be used because it 
-can't be found. If you try to re-create it, THEN it can be found and you 
-can't do that either.  Even "lvmchange -R" doesn't remove all traces of 
-the volume group(s) created. I used "find / -name vg0" (and variants) to 
-hunt them down an kill them in places such as /dev. Also common sense 
-made me look in /etc/lvm and the like.
-
-BTW the difference between "pvcreate /dev/sda" and "pvcreate /dev/sda1" 
-is not well explained (at least not where it matters.) I think I used 
-the  "pvcreate /dev/sda1" version. I can't remember for sure because I'm 
-old and my memory isn't as good as it used to be. Guess I'll try both 
-ways later.
-
-Not withstanding all of the above and more, the end result was a fine 
-storage system and great results. We'll probably use lvm on my friend's 
-Red Hat (oops) internet systems too. I hope their lvm layout isn't too 
-different from Debian's.
-
-I also hope that this is of some help to you and the Sistina howto 
-people. I hate to seem like I'm griping or whining because I'm not. This 
-is a genuine attempt to improve an already great product. Assuming you 
-got this far, thanks for your time and effort in reading this account.
-
-Sincerely,
-
-Bob Geer
+The following is the sequence of commands issued.( after creating the =
+PVs and VGs) ...
 
 
---YiEDa0DAkWCtVeE4--
+[root@xyz root]# pvdisplay
+Entering CP VMS CP_VMS_pvdisplay function
+  --- Physical volume ---
+  PV Name               /dev/sda8
+  VG Name               testvg
+  PV Size               496.00 MB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              124
+  Free PE               49
+  Allocated PE          75
+  PV UUID               0m0xxl-xRK3-ojHc-TU8x-BgSF-sy6C-2vKquU
+
+  --- Physical volume ---
+  PV Name               /dev/sda7
+  VG Name               testvg
+  PV Size               396.00 MB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              99
+  Free PE               99
+  Allocated PE          0
+  PV UUID               U5Jw21-3AWD-F7t3-a7CI-cpd1-EVAZ-u3LtgX
+
+[root@xyz root]# pvremove -ff /dev/sda7
+Entering CP VMS CP_VMS_pvremove function
+Really WIPE LABELS from physical volume "/dev/sda7" of volume group =
+"testvg" [y/n]? y
+  WARNING: Wiping physical volume label from /dev/sda7 of volume group =
+"testvg"
+  Labels on physical volume "/dev/sda7" successfully wiped
+[root@earth root]# pvdisplay
+Entering CP VMS CP_VMS_pvdisplay function
+  Couldn't find device with uuid =
+'U5Jw21-3AWD-F7t3-a7CI-cpd1-EVAZ-u3LtgX'.
+  --- Physical volume ---
+  PV Name               /dev/sda8
+  VG Name               testvg
+  PV Size               496.00 MB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              124
+  Free PE               49
+  Allocated PE          75
+  PV UUID               0m0xxl-xRK3-ojHc-TU8x-BgSF-sy6C-2vKquU
+
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               testvg
+  PV Size               396.00 MB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              99
+  Free PE               99
+  Allocated PE          0
+  PV UUID               U5Jw21-3AWD-F7t3-a7CI-cpd1-EVAZ-u3LtgX
+
+
+The other question is ... if I have a VG spanning across two PVs and =
+then create an LV ( big enough to span across two disks ... ) and then =
+do a vgreduce to remove one of the PV, it allows me to do that but does =
+not change the size of the LV or VG being printed ...
+
+Are these known bugs and what is the work around ?
+
+Thanks for the help.
+
+Sharad.
+
+------_=_NextPart_001_01C33891.884C4DC2
+Content-Type: application/ms-tnef;
+	name="winmail.dat"
+Content-Transfer-Encoding: base64
+
+eJ8+IhUHAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEIgAcAGAAAAElQTS5NaWNy
+b3NvZnQgTWFpbC5Ob3RlADEIAQ2ABAACAAAAAgACAAEEgAEALgAAAFJFOiBbbGludXgtbHZtXSBS
+ZWQgSGF0IEFkdmFuY2VkIFNlcnZlciArIExWTQD0DgEFgAMADgAAANMHBgAWAA0ACgAUAAAAIQEB
+IIADAA4AAADTBwYAFgANAAoAFAAAACEBAQmAAQAhAAAANDJFQTc2NDc4N0I2MzI0NEEzMjc0NUQ4
+ODhFODAzMzEA7gYBA5AGAPgMAAA3AAAAAwAmAAAAAAADADYAAAAAAEAAOQDCTUyIkTjDAR4APQAB
+AAAABQAAAFJFOiAAAAAAAgFHAAEAAAAvAAAAYz11czthPSA7cD1XaXBybztsPUJMUi1NMy1NU0ct
+MDMwNjIyMDc0MDIwWi0xMQAAHgBJAAEAAAAuAAAAUmU6IFtsaW51eC1sdm1dIFJlZCBIYXQgQWR2
+YW5jZWQgU2VydmVyICsgTFZNAAAAQABOAADBn3MbN8MBHgBaAAEAAAAcAAAAbGludXgtbHZtLWFk
+bWluQHNpc3RpbmEuY29tAAIBWwABAAAAVQAAAAAAAACBKx+kvqMQGZ1uAN0BD1QCAAAAAGxpbnV4
+LWx2bS1hZG1pbkBzaXN0aW5hLmNvbQBTTVRQAGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbQAA
+AAACAVwAAQAAACEAAABTTVRQOkxJTlVYLUxWTS1BRE1JTkBTSVNUSU5BLkNPTQAAAAAeAF0AAQAA
+ABYAAABIZWlueiBKIC4gTWF1ZWxzaGFnZW4AAAACAV4AAQAAAEsAAAAAAAAAgSsfpL6jEBmdbgDd
+AQ9UAgAAAABIZWlueiBKIC4gTWF1ZWxzaGFnZW4AU01UUABtYXVlbHNoYWdlbkBzaXN0aW5hLmNv
+bQAAAgFfAAEAAAAdAAAAU01UUDpNQVVFTFNIQUdFTkBTSVNUSU5BLkNPTQAAAAAeAGYAAQAAAAUA
+AABTTVRQAAAAAB4AZwABAAAAHAAAAGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbQAeAGgAAQAA
+AAUAAABTTVRQAAAAAB4AaQABAAAAGAAAAG1hdWVsc2hhZ2VuQHNpc3RpbmEuY29tAB4AcAABAAAA
+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
+YWdlL3JmYzgyMgAACwDyEAEAAAAfAPMQAQAAAGwAAABSAEUAJQAzAEEAIABbAGwAaQBuAHUAeAAt
+AGwAdgBtAF0AIABSAGUAZAAgAEgAYQB0ACAAQQBkAHYAYQBuAGMAZQBkACAAUwBlAHIAdgBlAHIA
+IAAlADIAQgAgAEwAVgBNAC4ARQBNAEwAAAALAPYQAAAAAEAABzCeN3xlkTjDAUAACDAcsE6IkTjD
+AQMA3j/kBAAAAwDxPwkEAAAeAPg/AQAAAA4AAABTaGFyYWQgVGl3YXJpAAAAAgH5PwEAAABcAAAA
+AAAAANynQMjAQhAatLkIACsv4YIBAAAAAAAAAC9PPVdJUFJPL09VPUZJUlNUIEFETUlOSVNUUkFU
+SVZFIEdST1VQL0NOPVJFQ0lQSUVOVFMvQ049U0hBUlRJVwAeAPo/AQAAABUAAABTeXN0ZW0gQWRt
+aW5pc3RyYXRvcgAAAAACAfs/AQAAAB4AAAAAAAAA3KdAyMBCEBq0uQgAKy/hggEAAAAAAAAALgAA
+AAMA/T/kBAAAAwAZQAAAAAADABpAAAAAAAMAHUAAAAAAAwAeQAAAAAAeADBAAQAAAAgAAABTSEFS
+VElXAB4AMUABAAAACAAAAFNIQVJUSVcAHgAyQAEAAAAcAAAAbGludXgtbHZtLWFkbWluQHNpc3Rp
+bmEuY29tAB4AM0ABAAAAGAAAAG1hdWVsc2hhZ2VuQHNpc3RpbmEuY29tAB4AOEABAAAACAAAAFNI
+QVJUSVcAHgA5QAEAAAACAAAALgAAAAsAKQAAAAAACwAjAAAAAAADAAYQ7KS/uAMABxBNCAAAAwAQ
+EAAAAAADABEQAQAAAB4ACBABAAAAZQAAAEhJQUxMLFdISUxFVEVTVElOR1RIRUxWTTJJQ0FNRUFD
+Uk9TU1RISVNTQ0VOQVJJT0lGSUhBVkVDUkVBVEVEQVZPTFVNRUdST1VQKFNBWVRFU1RWRylDT05U
+QUlOR1RXT1BIWVMAAAAAAgF/AAEAAAA+AAAAPDY4OUY0M0E2Q0Y4NEU1NDFBNzIxQzVDM0ZENUFE
+RUNDMDJGNUI2QGJsci1tMy1tc2cud2lwcm8uY29tPgAAAIC1
+
+------_=_NextPart_001_01C33891.884C4DC2--
