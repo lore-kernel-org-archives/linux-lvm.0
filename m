@@ -1,10 +1,10 @@
 From: Andres Salomon <dilinger@mp3revolution.net>
-Subject: Re: [linux-lvm] LVM 2
-Message-ID: <20020529155047.GA32711@chunk.voxel.net>
-References: <15347980890.20020529141644@tnonline.net> <20020529141823.GC4655@fib011235813.fsnet.co.uk>
+Subject: Re: [linux-lvm] FYI - Red Hat 7.2 and LVM module
+Message-ID: <20020529155522.GA32739@chunk.voxel.net>
+References: <OFE8C7233D.E443DB74-ON86256BC8.005050DC@lsu.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020529141823.GC4655@fib011235813.fsnet.co.uk>
+In-Reply-To: <OFE8C7233D.E443DB74-ON86256BC8.005050DC@lsu.edu>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,42 +15,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 29 10:51:03 2002
+Date: Wed May 29 10:56:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'll second this.  I've had all my data on LVM2 for months w/out
-problems; I've started moving production machines over to lvm2 w/out
-mishap (other than redhat's broken init system, but that's not lvm's
-fault :).  I only use basic (linear) volume management; no snapshotting,
-striping, etc.
+They support it, they just assume it's compiled in.  For LVM2, I had to
+add a modprobe dm-mod to the previous line, and comment out the if/fi
+lines.
 
-Also note that I'm still using beta2 (w/ 2.4.18-ac3).
-
-On Wed, May 29, 2002 at 03:18:23PM +0100, Joe Thornber wrote:
+On Wed, May 29, 2002 at 10:32:59AM -0500, Michael K Lambert wrote:
 > 
-> On Wed, May 29, 2002 at 02:16:44PM +0200, Anders Widman wrote:
-> > 
-> >    How  stable  is LVM 2
+> Hello, all.
 > 
-> The releases tend to be very stable, cvs obviously is a little less
-> so.  The core functionality (ie. simple LVs) hasn't changed for months
-> - current development is focusing on pvmove and the new metadata
-> format.
+> Although RH does not support LVM in 7.2, I've been making use of it by
+> compiling my own kernel. The LVM patches will not patch clean on my RH 390
+> systems, so we are stuck at version .9.1, but it does work. Just yesterday
+> I built a new kernel and compiled LVM as a module for the first time. After
+> building the kernel, I rebooted and was surpirsed to see that LVM did not
+> initialize. After boot, I could run vgscan manually and lvm would become
+> active, but not during boot up.
 > 
-> The snapshot facility was completed recently (including writeable
-> snapshots).  Judging from the bug reports on the list they seem to be
-> more stable than 1.1rc2, as well as being faster (see
-> http://people.sistina.com/~thornber/snap_performance.html for a pretty
-> graph).
+> After looking into rc.sysinit, I found that for vgscan to run, three
+> conditions needed to be met.../sbin/vgscan had to exist, /etc/lvmtab must
+> exist, and /proc/lvm must exist. Unfortunately, when lvm is modularized,
+> the /proc entry is created whenever the module is loaded, not permanently.
+> This causes the rc.sysinit test to fail and LVM is not initialized. Of
+> course, it is simple to work around this. I changed rc.sysinit to test for
+> /proc/lvm OR the existence of the lvm-mod, and that seemed to work fine.
+> This is just an FYI so that others in similar circumstances can avoid any
+> confusion.
 > 
-> Personally I've had all my data on LVM2 since November without mishap.
+> Michael Lambert
 > 
-[...]
-> 
-> - Joe
 > 
 > _______________________________________________
 > linux-lvm mailing list
