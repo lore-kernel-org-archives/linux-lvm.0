@@ -1,8 +1,10 @@
-Message-Id: <200112051559.fB5Fxbn05258@lewis.abi.tconline.net>
-From: Lewis Bergman <lbergman@abi.tconline.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] tools in the distros?
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] tools in the distros?
+Message-ID: <20011205160556.H1040@tykepenguin.com>
+References: <200112051559.fB5Fxbn05258@lewis.abi.tconline.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200112051559.fB5Fxbn05258@lewis.abi.tconline.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,22 +15,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec  5 09:58:02 2001
+Date: Wed Dec  5 10:04:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Is there any effort to get the distro's to incorporate the tools available 
-for the kernel they are releasing? Now that LVM has been standard in the 
-kernel for a while are any of them looking at including it? Just curious.
+On Wed, Dec 05, 2001 at 09:59:37AM -0600, Lewis Bergman wrote:
+> Is there any effort to get the distro's to incorporate the tools available 
+> for the kernel they are releasing? Now that LVM has been standard in the 
+> kernel for a while are any of them looking at including it? Just curious.
+> 
 
-By the way, thanks for the LVM. I had a boot partition flop on me and decided 
-to do a new install since all my real stuff was on my drive with LVM. Copied 
-over my conf files and ran vgscan and change and all my devs were generated 
-and was up in a couple of seconds. Man this is neat stuff.
--- 
-Lewis Bergman
-Texas Communications
-4309 Maple St.
-Abilene, TX 79602-8044
-915-695-6962 ext 115
+SuSE have been shipping LVM kernel and tools in their distro for ages, and I
+think Debian does too (though that might just be Woody).
+
+patrick
