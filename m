@@ -1,7 +1,7 @@
-Message-ID: <E631530D51ABD411B823009027855C5B0278BF@THOR>
-From: Murthy Kambhampaty <Murthy.Kambhampaty@goeci.com>
-Subject: RE: [linux-lvm] Volume group not found on restart [resent]
+Message-ID: <6D51028899FFD111A95500805FA7465708B5395B@sbkmxsmb04>
+From: "Caballero, Diana" <Diana.Caballero@dowjones.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] Problems restoring the vg metadata
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,44 +12,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 22 14:05:02 2002
+Date: Wed May 22 17:00:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: "'Linux-LVM@Sistina.com'" <Linux-LVM@Sistina.com>
 
-Heinz, 
+Hi,
 
-> 
-> Well, that shouldn't have happened in case "vgreduce db_vol 
-> /dev/sda" went ok
-> back then.
-> Do you have any memory of failure messages for that one?
-There weren't really any failure messages. I was just trying to go through
-the steps of removing the PV from the VG, then "remove the PV", then
-reformat the drive/yank it. I had a similar problem on another box, where
-I'd set up a VG create an LV, use if for a while then try to scrap the
-system because I needed to redeploy my HDDs. Once the vgreduce/vgremove step
-was completed, I'd do a PV scan and it would still list the removed PV as
-belonging to the VG or list the size of the VG at the old size. I'd reboot
-and do a pvscan, and it would give the correct list of PVs/VG
-membership/size of VGs; so I never thought anything of it (I have a couple
-of disks to play with, once I get the data I take care of db_vol, and I will
-try to replicate my experience).
+I'm running SuSe Linux 7 (Server Edition for an S/390) kernel 2.4.7 as an
+image on an IBM Mainframe. I was provided additional disks (dasd) to
+configure into LVM. I added these new disks into LVM but I did not create a
+file system on them. While trying to add other disks from the mainframe into
+Linux, I accidentally fragged one of the new disks (with no file system) in
+one of my volume groups which caused all of the volume group to become
+corrupted and go down. I was able to restore the volume group metadata once
+and then when I rebooted, I got an error stating that group no longer
+existed. Is there a step I am missing?
 
-> > 
-> > So, the preferred course here is to "to change the metadata 
-> in order to get
-> > rid of the gone physical volume", and all will be well. 
-> 
-> So there's cons vs. (temporarly) trying 1.1-rc to quorum 
-> activate db_vol
-> in order to retrieve the data?
-> 
-Only to the extent that your message indicated that LVM 1.1-rc2 was unstable
-(BTW, do I only install the userspace tools and retain my LVM 1.0.1rc4
-kernel code (or do I have to patch the XFS cvs kernel with the LVM 1.1-rc2
-kernel code to implement this alternative?)
+This is what I did the first time when it worked:
 
-Thanks,
-	Murthy
+vgcfgrestore -f /etc/lvmconf/oradg.conf -n oradg /dev/dasdg1
+vgck oradg
+vgscan (I can't remember the error it gave back)
+fsck -t ext2 /dev/oradg/ora01 (Repeated this for the other mounted file
+systems)
+mount /dev/oradg/ora01 (Repeated this for the other mounted file systems and
+I verified the data in there and that I could create/delete data)
+
+I rebooted and it stated it could not find oradg in the /etc/lvmtab
+
+I checked the lvmtab and it no longer had the entry for this oradg group. 
+
+I was able to boot up the system without the oradg group and then I
+proceeded to do the following:
+
+vgcfgrestore -f /etc/lvmconf/oradg.conf -n oradg /dev/dasdg1
+vgck oradg
+vgscan (An error reported lvmtab and the kernel do not match)
+vgchange -a oradg
+vgscan (An error reported lvmtab and the kernel do not match)
+
+I rebooted the image without this group to start fresh and then I did:
+
+vgcfgrestore -f /etc/lvmconf/oradg.conf -n oradg /dev/dasdg1
+vgck oradg
+
+Am I missing a step or doing something incorrectly?
+
+Please advise.
+
+Diana G. Caballero
+Systems Administration Consultant
+DJ Interactive/Factiva.com
+http://djinteractive.com
+http://global.factiva.com
+email:  diana.caballero@dowjones.com
+Phone:  609-520-7882
