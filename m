@@ -1,15 +1,15 @@
 Received: from o.ww.redhat.com (vpn50-9.rdu.redhat.com [172.16.50.9])
 	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i2FClMIE030508
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 13:47:23 +0100
-Date: Mon, 15 Mar 2004 13:47:21 +0100
+	i2FCqxIE030706
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 13:53:00 +0100
+Date: Mon, 15 Mar 2004 13:52:58 +0100
 From: Heinz Mauelshagen <hjm@redhat.com>
-Subject: Re: [linux-lvm] Hard disk failure, restore problem
-Message-ID: <20040315124721.GB17078@redhat.com>
-References: <40520E04.5090505@howest.be>
+Subject: Re: [linux-lvm] Some LVM 2 questions.
+Message-ID: <20040315125258.GC17078@redhat.com>
+References: <000101c40748$d1b5f860$1530a8c0@aphrodite>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <40520E04.5090505@howest.be>
+In-Reply-To: <000101c40748$d1b5f860$1530a8c0@aphrodite>
 Reply-To: hjm@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,88 +25,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Fri, Mar 12, 2004 at 11:22:44AM -0800, Thomas Berton wrote:
-> Hi,
-> I've recently encountered some problems with my LVM.
-> 
-> I had (and still have) a bad hd /dev/hda (used part. /dev/hda1)
-> 
-> I started:
->    pvmove /dev/hda1 /dev/hdf1
-> yet the hd gave an error and I had to reboot.
-> 
-> I have a metadata backup made before I've started the move.
-> 
-> The volume group name is bigspace, yet the 'dir' /dev/bigspace/bigspace1 
-> is also gone...
-> 
-> now I got
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdg1" is in no VG  [74.53 GB]
-> pvscan -- inactive PV "/dev/hde1" is in no VG  [149.05 GB]
-> pvscan -- inactive PV "/dev/hdf1" is in no VG  [149.05 GB]
-> pvscan -- inactive PV "/dev/hdc1" is in no VG  [111.79 GB]
-> pvscan -- inactive PV "/dev/hdd1" is in no VG  [74.53 GB]
-> pvscan -- inactive PV "/dev/hda1" is in no VG  [74.53 GB]
-> pvscan -- inactive PV "/dev/hdb1" is in no VG  [74.53 GB]
-> pvscan -- total: 7 [708 GB] / in use: 0 [0] / in no VG: 7 [708 GB]
+On Thu, Mar 11, 2004 at 09:11:20AM -0000, Rupert Hair wrote:
+> I have noticed that a friend's LVM 2 vgdisplay does not show a MAX LV Size
+> value.  Should I take this to mean that LVM 2 does not impose a MAX LV Size
+> or that it it so large that it will not be an isssue?
 
-Thomas,
+LVM1 is limited by its internal mapping table size of ~2^16 entries.
 
-you ran 'pvcreate -ff' *and* vgcfgrestore ... on all PVs ok ?
-pvscan output looks like the vgcfgrestore went wrong.
+LVM2 doesn't have such iinternal constraint any more.
 
 > 
-> yet if I do the restore I get
-> 
-> I also did a pvcreate -ff /dev/hdx1 for every disk... I've read 
-> somewhere that should fix it. yet id did not.
+> I currently have a LVM 1.0.8 system that is nearing its MAX LV Size.  I
+> would like to know if I can migrate it to LVM 2 so that I can expand beyond
+> my MAX LV Size?  
 
-Yes, you need "pvcreate -ff ..." before you vgcfgrestore to the devices.
-
-> 
-> pvscan -- inactive PV "/dev/hda1"  is associated to unknown VG 
-> "bigspace" (run vgscan)
-> 
-> vgscan gives
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
-> volume group "bigspace" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-> group
-> 
-> there is a LOT of data on this array of disk (as you can imagine)
-> 
-> sometimes, hda is working good, so i hope it want to work long enough to 
-> restore the data.
-
-If you want to activate "bigspace" just in order to backup date *and*
-remove/recreate it afterwards, you might want to use the following workaround:
-
-o identify your actual metadata backup (say, bigspace.conf)
-
-o mkdir /etc/lvmtab.d
-
-o cp bigspace.conf /etc/lvmtab.d/bigspace
-
-o echo -ne "bigspace\0" > /etc/lvmtab
-
-o vgchange -ay
+Yes, you could but would be limited to 2TB in Linux 2.4
+which is gone in Linux 2.6.
 
 > 
-> My guess now is to make a new vg and add those disks... but I want to be 
-> sure, so I don't lose the data.
+> I have four drives containing one linear VG and one LV on top of that
+> formatted as ext3.  Can I set LVM (1 or 2) to make a backup of the file
+> allocation tables (I'm not sure if that's the right term) of my ext3 system
+> onto all my drives so that if the first disk in my LV died I would not loose
+> all my data (just what was contained on that disk).
 
-That won't work, because the PVs are falgged *new* after pvcreate -ff
-and you will just have empty PVs that way.
+No, LVM has no concept of filesystem metadata because it works at the block
+rather than the filesystem level.
+
+You either want filesystem backups, which you need anyway or
+block device redundancy (eg, mirroring in software or hardware).
 
 > 
-> Any suggestions to recover the data or to replace the broken harddisk 
-> with a new one with as little data loss as possible.
+> Thanks,
 > 
-> Regards,
-> Thomas.
+> Rupert
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
