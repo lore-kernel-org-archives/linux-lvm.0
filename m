@@ -2,7 +2,7 @@ From: "NZANGA SEKO MOBUTU" <nzan_seko@hotmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <E19Q43E-0007Fa-00@hermes.sistina.com>
+Message-Id: <E19Q4Fh-0007bY-00@hermes.sistina.com>
 Subject: [linux-lvm] Hello
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,7 +14,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun 11 06:47:02 2003
+Date: Wed Jun 11 06:59:02 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 Cc: linux-lvm-request@sistina.com
