@@ -1,9 +1,7 @@
-Message-ID: <3BD8A30D.EB2E4E37@adelaide.edu.au>
-From: Sean Burford <sean.burford@adelaide.edu.au>
+From: Robert Macaulay <robert_macaulay@dell.com>
+Message-ID: <Pine.LNX.4.33.0110252342580.23688-100000@ping.us.dell.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Segment Failure ,while doing lvcreate
-References: <20011025114525.88548.qmail@web16301.mail.tpe.yahoo.com> <3BD80807.4725174F@carolina.rr.com> <20011025074500.A4615@omnifarious.org>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM read performance bad
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,32 +12,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 25 18:36:01 2001
+Date: Thu Oct 25 23:49:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-"Eric M. Hopper" wrote:
-> On Thu, Oct 25, 2001 at 08:39:35AM -0400, Jason Edgecombe wrote:
-> >   recompile lvm tools with the -O0 flag (no optimization).
-> > this is because of redhat's 7.x borken gcc compiler
-...
->         Does gcc 3.0.1 have this same problem?  Are you sure the bug
-> isn't in the code?  (i.e. having a non-volatile variable randomly
-> modified under your nose, or some such that would tend to not work so
-> well under optimization.)
+I have been running some tests on LVM on 2.4.9-6 kernel from redhat, 
+1.0.1rc4. I have created a test volume, 64k stripe size, 26 stripes, 9Gig 
+size, 8Gig RAM.
 
-I've traced it in gdb, and I saw a function (called via an inline) being
-given valid arguments but receiving junk arguments.  It looks like the
-stack pointer got messed up (I didn't check, I was viewing source not
-asm at the time).  Calling the function directly, rather than through
-the inline (which only added an argument to the argument list) worked
-fine.
+Here is the odd part. I am using iozone to benchmark the disks. I start a 
+9Gig file test. The write gets about 56MB/sec, the re-write gets 68MB/sec, 
+and the read get a whopping 13MB/sec. 
 
-Having your arguments corrupted during a function call sure looks like a
-compiler bug to me.
+This seems completely backward to me. I'm not subscribed to lvm-devel, but 
+a similar question has come up there under the topic, [lvm-devel] stripe 
+performance (read_ahead vs. max_readahead) omn the 15th of October.
 
--- 
-Sean Burford    x34135
-ITS Systems Specialist
-Adelaide University
+Can anyone shed any light on this? The PV's are mirrored Fiber Channel 
+disks. All separate disks. I've tried different FC drivers with the same 
+results. We're about to run some Oracle tests, I was just checking the 
+relative speeds.
+
+Is there any more information I can provide to help speed this up? 
+
+Thanks
+Robert
