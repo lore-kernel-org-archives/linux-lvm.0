@@ -1,9 +1,11 @@
-Message-Id: <3C3AA736.82F90806@knief.net>
-From: Herman Knief <herman@knief.net>
+Message-Id: <200201080927.g089QVJ00669@hammer.brocade.com>
+From: Adrian Head <ahead@bigpond.net.au>
+References: <1010427293.29260.3.camel@UberGeek>
+    <m3666ej5t2.fsf@shakti.rupa.com>
+In-Reply-To: <m3666ej5t2.fsf@shakti.rupa.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] SuSe 7.3 snapshot / reiserfs /
-References: <4575.1010476487@joergli.cocolab.de>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: GRUB + LVM + XFS?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,67 +16,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  8 01:58:02 2002
+Date: Tue Jan  8 03:26:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Rupa Schomaker <rupa-list@rupa.com>, linux-xfs@oss.sgi.com
+Cc: linux-lvm@sistina.com
 
-I believe, if you check, that SuSE already has applied thispatch for you.=
-  If LVM
-snapshot fails with Reiser, then you should send an email to the SuSE lis=
-t, as
-they would want to know that they left it out.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
- - Herman
+On Tue, 8 Jan 2002 05:54, Rupa Schomaker wrote:
+> I'm having toubles with the current CVS version of the XFS kernel.  I
+> haven't had time to look at it completely, but... it could be:
+>
+> 1) mismatch between userspace and kernel (what LVM is in the XFS
+>    kernel?  I'm using the debian lvm10 userspace).
+>
+> 2) bad config
+>
+> 3) ???
+>
+> A quick "bt" at boot in kdb shows that devfs is in the call path.  No,
+> I haven't had time to write everything down. :(  Man, I wish there was
+> an easy to dump the kdb info or an OOPs to disk...
 
-J=FCrgen Vollmer wrote:
+Well all I do is for getting kdb output is to use a serial console and 
+another computer - then cut and past then send  ;-).
 
-> Hi everybody,
->
-> I follow this list a little, and have read that I have to apply some pa=
-tches to
-> the kernel in order to create snapshots with a reiserfs.
->
-> Now my question:
->
-> Could somebody send me some kind of HOWTO to update my kernel as as giv=
-en by
-> SuSe 7.3 (they always apply some patches to the kernel).  Since I have =
-applied
-> kernel patches in earlier times (kernel 0.9x) and compilation quite oft=
-en, I do
-> not need a kernel-compilation HOWTO, but one which specifies which patc=
-hes do I
-> need (for a SuSe 7.3-SMP-kernel!), in which order should they applied, =
-where do
-> I get them etc.
->
-> Thanks in advance, and sorry for asking for a HOWTO, reading the list m=
-ore
-> closely whould help too (I think) but my business (as a freelance) is t=
-o write
-> compilers, parsers etc....
->
-> With best regards
->
-> J=FCrgen
->
-> --
-> Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
-> Tel: +49(721) 9204871 Fax: +49(721) 24874
-> juergen@informatik-vollmer.de,vollmer@cocolab.de,Juergen.Vollmer@acm.or=
-g
-> www.informatik-vollmer.de
->
->   ---------------------------------------------------------------------=
----
->    Part 1.2Type: application/pgp-signature
+It is very interesting that devfs is referenced - there was a LVM memory 
+corruption problem and a patch for LVM/devfs - it can be found here:
+http://marc.theaimsgroup.com/?l=linux-xfs&m=101031443221058&w=2
 
---
-Herman
+- From my experience it seems that LVM 1.0.1rc4(ish) is way more robust than 
+the updated LVM 1.0.1 or even CVS LVM 1.0.1 yesterday.  However, not 
+everything works as expected with either. You can find a results table for a 
+few tests I have conducted here: (of course YMMV)
+http://marc.theaimsgroup.com/?l=linux-lvm&m=100994364215110&w=2
 
-"Everyone's talking, but few of them know.  The rest are pretending, they=
- put on a show.
-If there's a message, I guess this is it... truth isn't easy - the easy p=
-art's shit!"
-                                                          Todd Rundgren
+I think you would be very interested in the discussions and activity that has 
+been occuring on the linux-xfs & linux-lvm lists at the moment regarding XFS 
+and LVM.  If you are seeing problems I would be very interested in finding 
+out how your problems differ from mine.
+
+- -- 
+Adrian Head
+
+(Public Key available on request.)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8OkHO8ZJI8OvSkAcRAsHkAJ9OlEWOQMxiXXsJ0OzsllI7icT8pQCeLfM2
+95t821X+y25nYdf3WCDRg9k=
+=rjIv
+-----END PGP SIGNATURE-----
