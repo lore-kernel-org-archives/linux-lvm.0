@@ -1,10 +1,14 @@
-Return-Path: <dieter.woerz@debis.com>
-Message-ID: <3A77EE78.131F24B5@debis.com>
-Date: Wed, 31 Jan 2001 11:52:40 +0100
-From: Dieter Woerz <dieter.woerz@debis.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Updating from Suse Linux 6.4 to Suse Linux 7.0 with LVM
+Return-Path: <chewie@wookimus.net>
+Date: Wed, 31 Jan 2001 22:25:37 -0600
+From: ^chewie <chewie@wookimus.net>
+Subject: Re: [linux-lvm] Maximum # of PEs Per PV
+Message-ID: <20010131222537.B24922@wookimus.net>
+References: <Pine.LNX.4.21.0101311816020.13129-100000@miami.datech2.er.heitec.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0101311816020.13129-100000@miami.datech2.er.heitec.net>; from Holger.Rauch@heitec.de on Wed, Jan 31, 2001 at 06:30:37PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +20,51 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: suse-linux@suse.com, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Hello,
+--vGgW1X5XWziG23Ko
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am trying to update Suse Linux 6.4 to Suse Linux 7.0 Professional. I ha=
-ve all
-my file systems except /boot and / and swap under lvm.
+On Wed, Jan 31, 2001 at 06:30:37PM +0100, Holger Rauch wrote:
+> Hi!
+>=20
+> A friend of mine installed three 80G disks in order to create a 240G LV
+> for his file server. The machine had a 2.4.1 kernel and LVM 0.9.1beta3
+> installed.
+>=20
+> In order to create the LV, I first created primary partition of type 8e,=
+=20
+> then the PVs using pvcreate:=20
 
-When I try to use Suse's yast1, it doesn't recognize and mount my lvm bas=
-ed file
-systems. Suse writes on its support page, that the lvm version coming wit=
-h the
-7.0 does not recognize lvm partitions in an Win98 extended partition, whi=
-ch is
-the case with me and that I should install a newer version of lvm.
+Why didn't you just use the whole disk partitionless?  Zero out the
+first 512b and do a pvcreate on /dev/hdf, /dev/hdg, /dev/hdh.
 
-When I am trying to reimport the exported vg (vgimport vgxy /dev/hdaz) I =
-always
-get a read error -256 on that partition. Based on that I think that it is=
- still
-using the old lvm library, even though I use the executables from the new
-version of lvm.
+    bash# for i in f g h; do \
+    > dd if=3D/dev/zero of=3D/dev/hd$i bs=3D512 count=3D1\
+    > done
+    bash# pvcreate -v -y /dev/hdf /dev/hdg /dev/hdh
+    bash# vgcreate -v -Ay vg01 /dev/hdf /dev/hdg /dev/hdh
 
-Now my problem is, how do I make Linux Suse 7.0 on CD use that new lvm. W=
-hen I
-try to load liblvm.so e.g. by creating a ld.so.preload, I get an error ab=
-out an
-undefined symbols and I cannot do anything after that. I also get message=
-s about
-undefined symbols when I try to load the module lvm.o with insmod.
 
-I am lost on how to mount my lvm partitions.=20
-
-I do not want to install everyth8ing from scratch.
-
-Thanks in advance
-
-Dieter W=F6rz
 --=20
-Dieter W=F6rz                                        Tel: +49 711  17 497=
-17
-debis Systemhaus Industry                          Tel: +49 7031 90 81141
-Engineering Data Management EDM/S                  Fax: +49 711  17 40331
-Erich-Herion-Strasse 13                           =20
-D 70736 Fellbach                                   Mail: Dieter.Woerz@deb=
-is.com
+Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
+http://www.wookimus.net/                            | s.k.a. gunnarr
+Key fingerprint =3D B4AB D627 9CBD 687E 7A31  1950 0CC7 0B18 206C 5AFD
+
+
+--vGgW1X5XWziG23Ko
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6eOVBDMcLGCBsWv0RAl46AKChAk3ymzGVQwH149t0bjMKDq5zmQCgtOWt
+6k6XGW6dH4x7eSIWKt+raA8=
+=vatq
+-----END PGP SIGNATURE-----
+
+--vGgW1X5XWziG23Ko--
