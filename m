@@ -1,10 +1,12 @@
-Message-ID: <20031109213821.GA4425@amphibian.dyndns.org>
+Subject: Re: [linux-lvm] vgscan can't find my vg.
+Message-ID: <20031109214432.GB4425@amphibian.dyndns.org>
+References: <001e01c31029$015ad760$3c00a8c0@superdatorn>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+	protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
 Content-Disposition: inline
+In-Reply-To: <001e01c31029$015ad760$3c00a8c0@superdatorn>
 From: Toad <toad@amphibian.dyndns.org>
-Subject: [linux-lvm] Instability with 2.6, recovering (meta)data?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,50 +17,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 10 11:13:01 2003
+Date: Mon Nov 10 11:13:04 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---gBBFr7Ir9EOA20Yy
+--WhfpMioaduB5tiZL
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Each time I have deleted an LV on LVM2 on 2.6, it has corrupted my
-metadata. Last time I did a vgcfgrestore on 2.4 and it worked, however I
-have recently been bitten by some sort of incompatibility bug and my LVM
-now only works on 2.6 (it might work on a 2.4+devmapper kernel, I'll
-look into that). Here is what happens when I try to get my metadata
-back:
-root@amphibian:/usr/src/linux# vgdisplay -d -v
-    Finding all volume groups
-    Finding volume group "vg-big"
-  invalid lv in extent map
-  Couldn't fill logical volume maps.
-  Volume group "vg-big" doesn't exist
-root@amphibian:/usr/src/linux# pvscan -d -v
-    Wiping cache of LVM-capable devices
-    Wiping internal cache
-    Walking through all physical volumes
-  invalid lv in extent map
-  Couldn't fill logical volume maps.
-  No matching physical volumes found
-root@amphibian:/usr/src/linux# vgcfgrestore -v -d vg-big
-  PV /dev/hda is a different format (lvm1)
-  Restore failed.
+What kernel are you using? Does it have device mapper enabled? Have you
+tried vgcfgrestore ? IIRC On LVM1, that's vgcfgrestore -n <physical volume>=
+ ,
+on LVM2 it's vgcfgrestore <volume group name>
 
-That last one is particularly perverse; I was always told that LVM1 and
-LVM2 are compatible. Of course later I discovered this not to be the
-case; after some operation or other (creating an LV? resizing one?) on
-LVM on 2.6, I could no longer access my LVs under 2.4/LVM1.
-
-Any help?
+On Thu, May 01, 2003 at 11:31:19PM +0200, Hans T?rnquist wrote:
+> I have change my system from slackware to gentoo and I can't get my lvm t=
+o work.
+>=20
+> When I run vgscan I get:
+>=20
+> # vgscan=20
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of =
+volume group "ftp_vg" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume =
+group
+>=20
+> and pvscan:
+>=20
+> # pvscan=20
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/ataraid/disc0/disc"                is associa=
+ted to unknown VG "ftp_vg" (run vgscan)
+> pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/disc"  is associa=
+ted to unknown VG "ftp_vg" (run vgscan)
+> pvscan -- inactive PV "/dev/ide/host2/bus1/target1/lun0/disc"  is associa=
+ted to unknown VG "ftp_vg" (run vgscan)
+> pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/disc"  is associa=
+ted to unknown VG "ftp_vg" (run vgscan)
+> pvscan -- inactive PV "/dev/ide/host0/bus0/target1/lun0/disc"  is associa=
+ted to unknown VG "ftp_vg" (run vgscan)
+> pvscan -- total: 5 [496.34 GB] / in use: 5 [496.34 GB] / in no VG: 0 [0]
+>=20
+> And now to my problem.
+> when I used slackware all my pv's was located by pvscan at /dev/hdb and f=
+orward but now at /dev/ide/host?/bus?/lun0/disc.
+>=20
+> So if anybody got a clue how to fix it, pleace tell me.=20
+>=20
+> /Hans T?rnquist
 --=20
 Matthew J Toseland - toad@amphibian.dyndns.org
 Freenet Project Official Codemonkey - http://freenetproject.org/
 ICTHUS - Nothing is impossible. Our Boss says so.
 
---gBBFr7Ir9EOA20Yy
+--WhfpMioaduB5tiZL
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 Content-Disposition: inline
@@ -66,9 +81,9 @@ Content-Disposition: inline
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.3 (GNU/Linux)
 
-iD8DBQE/rrPNr5e+zmpNTm8RAi2KAJ9JsvivnL7twIY/aXeext+ugDzMjACfWhps
-VoVj3Pg2AbZ8ARjKKK/vn0w=
-=AXHB
+iD8DBQE/rrU/r5e+zmpNTm8RArwRAJ447b4RRid8swJSQabPeWU4uHTUqACdFHyZ
+B4Y+mKyrPhGw39/6wDoR72A=
+=T4+/
 -----END PGP SIGNATURE-----
 
---gBBFr7Ir9EOA20Yy--
+--WhfpMioaduB5tiZL--
