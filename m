@@ -1,52 +1,58 @@
-Date: Thu, 13 Jul 2000 09:43:44 -0400
-From: Peter Green <pcg@gospelcom.net>
-Subject: [linux-lvm] LVM ready for primetime?
-Message-ID: <20000713094344.M3489@gospelcom.net>
-Mime-Version: 1.0
-Content-Disposition: inline
+Date: Thu, 13 Jul 2000 15:55:07 -0700 (PDT)
+From: Adam Crews <acrews@cisco.com>
+Subject: [linux-lvm] invalid i/o protocal version
+In-Reply-To: <001301bfea54$f84de470$42c225c3@steuer.ofd.niedersachsen.de>
+Message-ID: <Pine.LNX.4.21.0007131531430.3258-100000@scooby.cisco.com>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-I am looking to set up a ``poor-mans'' NetApp for our company. Basically,
-here's what I'm looking at:
+Hello
 
-* Hardware RAID 1+0 (Mylex or something)
-* ~150-300GB storage (all 18GB and 36GB SCSI disks)
-* Logical Volume Manager (LVM)
-* ReiserFS
-* NFS or Coda
-* Redhat Linux
+I have just downgraded from kernel 2.4.0-test1 to 2.2.16.
 
-Here are some of the applications we'd like to use this for:
+I installed the lvm patch to 2.2.16 and can load the lvm module just fine.
+[root@scooby /root]# lsmod
+Module                  Size  Used by
+lvm                    98216   0  (autoclean)
+soundcore               3204   0  (autoclean) (unused)
+ide-probe               6512   0
+autofs                  9504   1  (autoclean)
+eepro100               16752   2  (autoclean)
+unix                   11396  89  (autoclean)
+ide-disk                6332   0
+ide-mod                41656   0  [ide-probe ide-disk]
+ncr53c8xx              52336   6
+sd_mod                 16328   6
+scsi_mod               40716   2  [ncr53c8xx sd_mod]
+[root@scooby /root]# cat /proc/lvm
+LVM module version 0.8i  (02/10/1999)
 
-* Web pages
-* qmail Maildirs
-* RealMedia files
-* Possibly some MySQL/Sybase databases
-* Approx. 20-50 full-time client machines
+Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
+Global: 140 bytes vmalloced   IOP version: 5   0:05:09 active
+[root@scooby /root]#
 
-My question is this: is LVM ready for prime-time? The setup above seems like
-a good idea in comparison with a NetApp (though I don't expect to get near
-the same performance), but if it doesn't work, the comparison is moot.
 
-Anyone have any thoughts on this? (Also, I welcome your recommendations for
-changes to the hw/sw I've laid out above. However, it might be prudent to
-e-mail these comments directly, and not the list.)
+When I try to do any lvm commands I get the following:
+[root@scooby /root]# vgscan -d -v
+<1> lvm_get_iop_version -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_get_iop_version -- AFTER ioctl ret: 0
+<1> lvm_get_iop_version -- LEAVING with ret: 5
+vgscan -- invalid i/o protocol version
 
-Thanks!
+[root@scooby /root]#
 
-/pg
--- 
-Peter Green : Gospel Communications Network, SysAdmin : pcg@gospelcom.net
----
-At first I thought, if I were Superman, a perfect secret identity would be 
-'Clark Kent, Dentist,' because you could save money on tooth X-rays. But then 
-I thought, if a patient said: How's my back tooth? and you just looked at it 
-with your X-ray vision and said: Oh it's okay, then the patient would probably 
-say: Aren't you going to take an X-ray, stupid? and you'd say: Aw &*$# you, 
-get outta here, and then he probably wouldn't even pay his bill.
- (Jack Handey)
+
+I have re-compiled the lvm tools against the 2.2.16 src and libs, but I
+get the same message.
+
+How can I fix this, or what other info is needed to figure out what is
+happening?
+
+-adam
