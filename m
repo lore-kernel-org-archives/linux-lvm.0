@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Error on lvcreate or lvremove!
-Message-ID: <20020523190023.A13788@sistina.com>
-References: <004d01c20110$f2b8ff70$6501a8c0@bomoon> <20020522144651.F9107@sistina.com> <009601c20204$81710e30$6501a8c0@bomoon>
+Subject: Re: [linux-lvm] Volume group not found on restart [resent]
+Message-ID: <20020523191059.B13788@sistina.com>
+References: <E631530D51ABD411B823009027855C5B0278BF@THOR>
 Mime-Version: 1.0
-In-Reply-To: <009601c20204$81710e30$6501a8c0@bomoon>; from bo@sosnetwork.net on Wed, May 22, 2002 at 07:49:49PM -0700
+In-Reply-To: <E631530D51ABD411B823009027855C5B0278BF@THOR>; from Murthy.Kambhampaty@goeci.com on Wed, May 22, 2002 at 03:04:51PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,269 +14,84 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 23 12:04:03 2002
+Date: Thu May 23 12:15:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 22, 2002 at 07:49:49PM -0700, bo wrote:
-> Heinz,
+On Wed, May 22, 2002 at 03:04:51PM -0400, Murthy Kambhampaty wrote:
+> Heinz, 
 > 
-> Thanks for your help, it worked.
-> However, I do not understand why I had this problem and how your suggestion
-> make
-> it work. The logical volume number is managed by LVM functions.
+> > 
+> > Well, that shouldn't have happened in case "vgreduce db_vol 
+> > /dev/sda" went ok
+> > back then.
+> > Do you have any memory of failure messages for that one?
+> There weren't really any failure messages. I was just trying to go through
+> the steps of removing the PV from the VG, then "remove the PV", then
+> reformat the drive/yank it. I had a similar problem on another box, where
+> I'd set up a VG create an LV, use if for a while then try to scrap the
+> system because I needed to redeploy my HDDs. Once the vgreduce/vgremove step
+> was completed, I'd do a PV scan and it would still list the removed PV as
+> belonging to the VG or list the size of the VG at the old size. I'd reboot
+> and do a pvscan, and it would give the correct list of PVs/VG
+> membership/size of VGs; so I never thought anything of it (I have a couple
+> of disks to play with, once I get the data I take care of db_vol, and I will
+> try to replicate my experience).
 
-Right.
+Strange.
+If you were able to "lvremove /dev/db_vol/snap_db" it shouldn't be 
+visible in the metadata I got from you.
 
-These problems occir if volume groups are removed physically in a non-devfs
-system *without* exporting them first using vgexport.
-Then the /dev entries are still there.
-Another example causing this is overwriting all physical volumes of a
-volume group (IOW: brute force removal of a volume group).
+But it still is in there and has extents allocated on the physical volume
+you wanted to remove from the volumegroup "db_vol". Unless there was no
+extents allocated on physical volume /dev/sda, running 
+"vgreduce db_vol /dev/sda" was impossible.
 
-If that happened before, creating new volume groups and/or logical volumes,
-you can end up with multiple links in /dev having the same major minor numbers
-causing such behaviour.
+The steps needed would have been:
 
-If vgexport/vgremove are used successfully instead, that shouldn't occur at all.
+- close /dev/db_vol/db_snap by unmounting it
+- successfully removing the LV with "lvremove /dev/db_vol_snap"
+- reducing the volume group successfully with "vgreduce db_vol /dev/sda"
 
-A 'workaround' for non-devfs configurations is
+To check it:
+- vgdisplay -v db_vol # just showing 1 PV in VG "db_vol"
+- pvscan              # showing /dev/sda to be an unused PV
 
-	ls /dev/*/group | sed 's!/group!!' | xargs rm -r ; vgmknodes
 
-which removes all LVM subdirectories and recreates just the valid ones
-with all device specials in.
 
 > 
-> Another question is
-> 
-> I have the same problem as mentioned in "Poul Petesen's LVM1.04 pvmove is
-> broken" email
-> today as
->         4) The RedHat 7.2 call to vgscan in rc.sysinit happens before
->             mounting other file-systems, for example "/usr". This causes the
-> 1.1-rc2
->             vgscan to fail since libreadline is in /usr/lib.
+> > > 
+> > > So, the preferred course here is to "to change the metadata 
+> > in order to get
+> > > rid of the gone physical volume", and all will be well. 
+> > 
+> > So there's cons vs. (temporarly) trying 1.1-rc to quorum 
+> > activate db_vol
+> > in order to retrieve the data?
+> > 
+> Only to the extent that your message indicated that LVM 1.1-rc2 was unstable
+> (BTW, do I only install the userspace tools and retain my LVM 1.0.1rc4
+> kernel code (or do I have to patch the XFS cvs kernel with the LVM 1.1-rc2
+> kernel code to implement this alternative?)
 
-In order to work around this obstacle, either create the multiple
-executable version by running "./configure --disable-single_exec"
-(which doesn't use readline)
+You can go with just the tools in a temporary location.
 
-- or -
-
-link the single executable statically by running 
-"./configure --enable-static_link" (which doesn't use the shared libs).
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-> I did not have this problem on LVM1.0.x. Now, I need to enable LVM and mount
-> all of these volumes after system boot manually.
-> 
-> Any suggestion or fixes?
 > 
 > Thanks,
-> 
-> Bo
-> 
-> ----- Original Message -----
-> From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-> To: <linux-lvm@sistina.com>
-> Sent: Wednesday, May 22, 2002 5:46 AM
-> Subject: Re: [linux-lvm] Error on lvcreate or lvremove!
-> 
-> 
-> > On Tue, May 21, 2002 at 02:46:22PM -0700, bo wrote:
-> > > Hello,
-> > >
-> > > I did not have this kind of problem before but I installed LVM1.1-rc2,
-> > > I am experiencing the following errors;
-> > >
-> > > Problem1) could not create an LV from RAID1 vol group
-> > >     [root@localhost /]# lvcreate -l 496 -n lvraid1 volRaid1
-> > >     lvcreate -- ERROR "Operation not permitted" opening logical volume
-> "/dev/volRaid1/lvraid1"
-> >
-> > Looks like your logical volume numbers are invalid.
-> >
-> > Take a VGDA backup with vgcfgbackup(8) and store /etc/lvmconf/*
-> > in a safe location.
-> >
-> > Run "vgscan -f" and retry.
-> >
-> > >
-> > > Problem2) I could not remove it
-> > >     [root@localhost /]# lvremove /dev/volRaid1/lvraid1
-> > >     lvremove -- do you really want to remove "/dev/volRaid1/lvraid1"?
-> [y/n]: y
-> > >     lvremove -- ERROR "lv_release(): LV number" releasing logical volume
-> "/dev/volRaid1/lvraid1"
-> > >
-> > > Problem3) I could not create a striped LV
-> > >     [root@localhost /]# lvcreate -l200 -i2 -I4 -n lvjb2s volDisk2
-> > >     lvcreate -- not enough allocatable/free physical volume space in
-> "volDisk2"
-> > >     lvcreate -- please check, if physical volumes are allocatable
-> >
-> > Could be caused by the assumed logical volume number problem but please
-> > check that your physical volumes are allocatable with pvdisplay(8).
-> >
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> >
-> >
-> > >
-> > > Attched are more system information.
-> > >
-> > > Please provide me your help,
-> > >
-> > > Thanks,
-> > >
-> > > Bo
-> > >
-> > > [root@localhost /]# pvscan
-> > > pvscan -- reading all physical volumes (this may take a while...)
-> > > pvscan -- ACTIVE   PV "/dev/md0"   of VG "volRaid0" [1.95 GB / 1.95 GB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/md1"   of VG "volRaid0" [1.95 GB / 1.95 GB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/md2"   of VG "volRaid0" [1.95 GB / 1.95 GB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/md3"   of VG "volRaid1" [992 MB / 992 MB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/md4"   of VG "volRaid1" [992 MB / 992 MB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/md5"   of VG "volRaid5" [1.95 GB / 1.95 GB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/md6"   of VG "volRaid5" [1.95 GB / 1.95 GB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/hdc9"  of VG "volDisk"  [992 MB / 992 MB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/hdc10" of VG "volDisk2" [992 MB / 992 MB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/hdd9"  of VG "volDisk"  [992 MB / 992 MB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/hdd10" of VG "volDisk2" [992 MB / 992 MB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/hda15" of VG "volDisk"  [996 MB / 996 MB
-> free]
-> > > pvscan -- ACTIVE   PV "/dev/hda16" of VG "volDisk2" [996 MB / 996 MB
-> free]
-> > > pvscan -- total: 13 [17.59 GB] / in use: 13 [17.59 GB] / in no VG: 0 [0]
-> > >
-> > > [root@localhost /]# vgdisplay
-> > > --- Volume group ---
-> > > VG Name               volRaid0
-> > > VG Access             read/write
-> > > VG Status             available/resizable
-> > > VG #                  2
-> > > MAX LV                256
-> > > Cur LV                0
-> > > Open LV               0
-> > > MAX LV Size           255.99 GB
-> > > Max PV                256
-> > > Cur PV                3
-> > > Act PV                3
-> > > VG Size               5.84 GB
-> > > PE Size               4 MB
-> > > Total PE              1496
-> > > Alloc PE / Size       0 / 0
-> > > Free  PE / Size       1496 / 5.84 GB
-> > > VG UUID               89ZFBj-yaQ0-c26m-uKgF-YhvG-2lGR-C8cvWm
-> > >
-> > > --- Volume group ---
-> > > VG Name               volRaid1
-> > > VG Access             read/write
-> > > VG Status             available/resizable
-> > > VG #                  3
-> > > MAX LV                256
-> > > Cur LV                0
-> > > Open LV               0
-> > > MAX LV Size           255.99 GB
-> > > Max PV                256
-> > > Cur PV                2
-> > > Act PV                2
-> > > VG Size               1.94 GB
-> > > PE Size               4 MB
-> > > Total PE              496
-> > > Alloc PE / Size       0 / 0
-> > > Free  PE / Size       496 / 1.94 GB
-> > > VG UUID               3keDZ8-jgky-uhKS-q1bi-d1Jf-qmsq-hw7GUs
-> > >
-> > > --- Volume group ---
-> > > VG Name               volRaid5
-> > > VG Access             read/write
-> > > VG Status             available/resizable
-> > > VG #                  4
-> > > MAX LV                256
-> > > Cur LV                0
-> > > Open LV               0
-> > > MAX LV Size           255.99 GB
-> > > Max PV                256
-> > > Cur PV                2
-> > > Act PV                2
-> > > VG Size               3.89 GB
-> > > PE Size               4 MB
-> > > Total PE              996
-> > > Alloc PE / Size       0 / 0
-> > > Free  PE / Size       996 / 3.89 GB
-> > > VG UUID               U2l1OW-L3ha-r3kH-BPXw-IJP5-ksA7-77iRJB
-> > >
-> > > --- Volume group ---
-> > > VG Name               volDisk
-> > > VG Access             read/write
-> > > VG Status             available/resizable
-> > > VG #                  0
-> > > MAX LV                256
-> > > Cur LV                0
-> > > Open LV               0
-> > > MAX LV Size           255.99 GB
-> > > Max PV                256
-> > > Cur PV                3
-> > > Act PV                3
-> > > VG Size               2.91 GB
-> > > PE Size               4 MB
-> > > Total PE              745
-> > > Alloc PE / Size       0 / 0
-> > > Free  PE / Size       745 / 2.91 GB
-> > > VG UUID               7RhXUS-Pw5B-EBYN-GKIM-PO1d-4uD7-4apSvp
-> > >
-> > > --- Volume group ---
-> > > VG Name               volDisk2
-> > > VG Access             read/write
-> > > VG Status             available/resizable
-> > > VG #                  1
-> > > MAX LV                256
-> > > Cur LV                0
-> > > Open LV               0
-> > > MAX LV Size           255.99 GB
-> > > Max PV                256
-> > > Cur PV                3
-> > > Act PV                3
-> > > VG Size               2.91 GB
-> > > PE Size               4 MB
-> > > Total PE              745
-> > > Alloc PE / Size       0 / 0
-> > > Free  PE / Size       745 / 2.91 GB
-> > > VG UUID               VT6shD-P4lh-Rk2g-DUHi-T2ch-p14Q-kl3BuV
-> > >
-> > >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
-> 
+> 	Murthy
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
