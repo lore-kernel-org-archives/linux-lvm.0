@@ -1,9 +1,8 @@
-Subject: Re: [linux-lvm] device-mapper ioctl cmd 2 failed: Invalid argument
-Mime-Version: 1.0 (Apple Message framework v552)
-From: Joe Thornber <ethornber@yahoo.co.uk>
-In-Reply-To: <200309230924.44185.kevcorry@us.ibm.com>
-Message-Id: <E791AEC2-EDDA-11D7-BE69-000393CA5730@yahoo.co.uk>
+From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
+Message-Id: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] DM encryption target?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,19 +13,15 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 23 10:30:02 2003
+Date: Tue Sep 23 11:02:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Kevin Corry <kevcorry@us.ibm.com>
-Cc: linux-lvm@sistina.com, Alasdair G Kergon <agk@uk.sistina.com>, Joe Thornber <thornber@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-On Tuesday, September 23, 2003, at 03:24 PM, Kevin Corry wrote:
->
-> Do we think the v4 interface has now gotten enough testing to remove 
-> the v1
-> stuff from 2.6? :)
->
+There was talk about creating a DM encrypting target a while ago.
 
-The next step is submit a patch that makes v4 the default.
+Did this ever proceed?
 
-- Joe
+Greg
+-- 
+Greg Freemyer
