@@ -1,11 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K1rdi29362
-	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 20:53:39 -0500
-Message-ID: <403566CA.8010907@cyberone.com.au>
-From: Nick Piggin <piggin@cyberone.com.au>
-MIME-Version: 1.0
-References: <20040216133047.GA9330@suse.de> <20040217145716.GE30438@traveler.cistron.net> <20040218235243.GA30621@drinkel.cistron.nl> <20040218172622.52914567.akpm@osdl.org> <20040219021159.GE30621@drinkel.cistron.nl> <20040218182628.7eb63d57.akpm@osdl.org> <20040219101519.GG30621@drinkel.cistron.nl> <20040219101915.GJ27190@suse.de> <20040219205907.GE32263@drinkel.cistron.nl> <40353E30.6000105@cyberone.com.au> <20040219235303.GI32263@drinkel.cistron.nl> <40355F03.9030207@cyberone.com.au>
-In-Reply-To: <40355F03.9030207@cyberone.com.au>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K2Wui08588
+	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 21:32:56 -0500
+From: Andrew Morton <akpm@osdl.org>
+Message-Id: <20040219183218.2b3c4706.akpm@osdl.org>
+In-Reply-To: <40356599.3080001@cyberone.com.au>
+References: <20040216133047.GA9330@suse.de>
+	<20040217145716.GE30438@traveler.cistron.net>
+	<20040218235243.GA30621@drinkel.cistron.nl>
+	<20040218172622.52914567.akpm@osdl.org>
+	<20040219021159.GE30621@drinkel.cistron.nl>
+	<20040218182628.7eb63d57.akpm@osdl.org>
+	<20040219101519.GG30621@drinkel.cistron.nl>
+	<20040219101915.GJ27190@suse.de>
+	<20040219205907.GE32263@drinkel.cistron.nl>
+	<40353E30.6000105@cyberone.com.au>
+	<20040219235303.GI32263@drinkel.cistron.nl>
+	<40355F03.9030207@cyberone.com.au>
+	<20040219172656.77c887cf.akpm@osdl.org>
+	<40356599.3080001@cyberone.com.au>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: [linux-lvm] Re: [PATCH] per process request limits (was Re: IO scheduler, queue
  depth, nr_requests)
@@ -20,18 +33,71 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Feb 19 20:52:02 2004
+Date: Thu Feb 19 21:32:00 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: Nick Piggin <piggin@cyberone.com.au>
-Cc: Miquel van Smoorenburg <miquels@cistron.nl>, Jens Axboe <axboe@suse.de>, Andrew Morton <akpm@osdl.org>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, thornber@redhat.com
+Cc: miquels@cistron.nl, axboe@suse.de, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, thornber@redhat.com
 
-
-Nick Piggin wrote:
-
-> Hi Miquel,
-> Can you see if this patch helps you?
+Nick Piggin <piggin@cyberone.com.au> wrote:
 >
+> 
+> 
+> Andrew Morton wrote:
+> 
+> >Nick Piggin <piggin@cyberone.com.au> wrote:
+> >
+> >>Even with this patch, it might still be a good idea to allow
+> >>pdflush to disregard the limits...
+> >>
+> >
+> >Has it been confirmed that pdflush is blocking in get_request_wait()?  I
+> >guess that can happen very occasionally because we don't bother with any
+> >locking around there but if it's happening a lot then something is bust.
+> >
+> >
+> 
+> Miquel's analysis is pretty plausible, but I'm not sure if
+> he's confirmed it or not, Miquel? Even if it isn't happening
+> a lot, and something isn't bust it might be a good idea to
+> do this.
 
-This patch isn't actually so good because it doesn't wake
-a specific process when it gets below it's limit...
+Seems OK from a quick check.  pdflush will block in get_request_wait()
+occasionally, but not at all often.  Perhaps we could move the
+write_congested test into the mpage_writepages() inner loop but it hardly
+seems worth the risk.
+
+Maybe things are different on Miquel's clockwork controller.
+
+
+
+ drivers/block/ll_rw_blk.c |    2 ++
+ fs/fs-writeback.c         |    2 ++
+ 2 files changed, 4 insertions(+)
+
+diff -puN drivers/block/ll_rw_blk.c~pdflush-blockage-check drivers/block/ll_rw_blk.c
+--- 25/drivers/block/ll_rw_blk.c~pdflush-blockage-check	2004-02-19 18:16:33.000000000 -0800
++++ 25-akpm/drivers/block/ll_rw_blk.c	2004-02-19 18:16:33.000000000 -0800
+@@ -1651,6 +1651,8 @@ static struct request *get_request_wait(
+ 		if (!rq) {
+ 			struct io_context *ioc;
+ 
++			WARN_ON(current_is_pdflush());
++
+ 			io_schedule();
+ 
+ 			/*
+diff -puN fs/fs-writeback.c~pdflush-blockage-check fs/fs-writeback.c
+--- 25/fs/fs-writeback.c~pdflush-blockage-check	2004-02-19 18:22:25.000000000 -0800
++++ 25-akpm/fs/fs-writeback.c	2004-02-19 18:22:43.000000000 -0800
+@@ -279,6 +279,8 @@ sync_sb_inodes(struct super_block *sb, s
+ 		}
+ 
+ 		if (wbc->nonblocking && bdi_write_congested(bdi)) {
++			if (current_is_pdflush())
++				printk("saved pdflush\n");
+ 			wbc->encountered_congestion = 1;
+ 			if (sb != blockdev_superblock)
+ 				break;		/* Skip a congested fs */
+
+_
