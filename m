@@ -1,8 +1,11 @@
-Message-ID: <OF8D6ACD21.34A36C6E-ON87256AB7.007C475A@sc.blm.gov>
-From: dan_mcmanus@co.blm.gov
-Date: Wed, 29 Aug 2001 17:04:01 -0600
+From: Gashaw Teshome <gasht@neopets.com>
+Subject: Re: [linux-lvm] Snapshot sizes
+Date: Wed, 29 Aug 2001 17:19:10 -0700
+References: <20010829173123.A10331@sistina.com>
+In-Reply-To: <20010829173123.A10331@sistina.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] A Caldera related bug?
+Content-Transfer-Encoding: 8bit
+Message-Id: <E15cFXf-0005aa-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,73 +18,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-LVM@sistina.com
+To: linux-lvm@sistina.com
 
-Hello,
+> Make sense?
 
-First off, if I'm not supposed to send this to you, I apologize. I am
-running Caldera Openlinux workstation 3.1 with a kernel of 2.4.8 that has
-LVM support enabled. My computer is a gateway 4200 Pentium II, if you care
-about that. I tried this with lvm 1.0.1-rc1, 1.0, and 0.9, following the
-instructions faithfully. What happens is I type "make" (after having typed
-"./configure", of course) and this same error happens in each case:
+I  think so.  So, if I create a LV of (let's say) 100M, take a snapshot and 
+then do my backup, as long as no changes have occured in excess of that 100M
+I'll be fine.  The total size of the files on the original LV doesn't matter 
+as long as I allocate enough space for the snapshot LV.
 
-[root@co1432 1.0.1-rc1]# make
-make[1]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-make[2]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-make[3]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-gcc -c -pipe -g -O2 -Wall -DDEBUG -I../../tools/lib -I../../tools -o
-basename.o basename.c
-In file included from /usr/include/linux/prefetch.h:13,
-                 from /usr/include/linux/list.h:6,
-                 from ../../tools/lib/lvm.h:115,
-                 from ../../tools/lib/liblvm.h:96,
-                 from basename.c:34:
-/usr/include/asm/processor.h:46: parse error before `u16'
-/usr/include/asm/processor.h:46: warning: no semicolon at end of struct or
-union
-/usr/include/asm/processor.h:55: parse error before `}'
-make[3]: *** [basename.o] Error 1
-make[3]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-make[2]: *** [all] Error 2
-make[2]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-make[2]: Entering directory
-`/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[3]: Entering directory
-`/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[3]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[2]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[2]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-gcc -c -pipe -g -O2 -Wall -DDEBUG -I../tools/lib -I../tools -o e2fsadm.o
-e2fsadm.c
-In file included from /usr/include/linux/prefetch.h:13,
-                 from /usr/include/linux/list.h:6,
-                 from ../tools/lib/lvm.h:115,
-                 from ../tools/lib/liblvm.h:96,
-                 from ../tools/lvm_user.h:41,
-                 from e2fsadm.c:53:
-/usr/include/asm/processor.h:46: parse error before `u16'
-/usr/include/asm/processor.h:46: warning: no semicolon at end of struct or
-union
-/usr/include/asm/processor.h:55: parse error before `}'
-make[2]: *** [e2fsadm.o] Error 1
-make[2]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-make[1]: *** [all] Error 2
-make[1]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-make[1]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1'
+Do I have it right?
 
-**********************************
-There were errors in your compile.
-**********************************
+On Wednesday 29 August 2001 03:31 pm, AJ Lewis wrote:
+> You need enough room in the snapshot to store all the changes written to
+> the
+> disk from the time you take the snapshot to the time you finish backing
+> it
+> up.  What happens is that when there is a write pending to the original
+> LV,
+> we first copy the original data to the snapshot LV, then write the new
+> data
+> to the original LV.  The snapshot only stores the changed data.  It
+> redirects any queries of data that hasn't changed back to the data
+> stored on the original LV.  Make sense?
+>
+> There is more detailed information at:
+> http://tech.sistina.com/lvm/doc/lvm_howto/Taking_a_backup_using_sna.html
+> #sec:Snapshots_Backup
+>
+> Regards,
 
-make[1]: *** [.touchbuilt] Error 1
-make[1]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1'
-make: *** [all] Error 2
-
-
-Any help would be appreciated.
-
-Thanks,
-
-Dan McManus
+-- 
+Gashaw Teshome
+System Administrator
+Neopets.com
