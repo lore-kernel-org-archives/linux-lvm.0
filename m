@@ -1,7 +1,11 @@
-Message-ID: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
-From: Murthy Kambhampaty <murthy.kambhampaty@goeci.com>
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] PostgreSQL and file system level backup
+Message-ID: <58090000.1037406183@[192.168.200.4]>
+In-Reply-To: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
+References: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] PostgreSQL and file system level backup
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,40 +16,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 15:26:02 2002
+Date: Fri Nov 15 18:18:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Postgres Admin List <pgsql-admin@postgresql.org>
-Cc: "Linux-Xfs (E-mail)" <linux-xfs@oss.sgi.com>, "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-The postgresql documentation states that in order to get a usable backup
-from a filesystem dump (or copy) the database server must be shut down.
-Moreover, "Half-way measures such as disallowing all connections will not
-work as there is always some buffering going on. For this reason it is also
-not advisable to trust file systems that claim to support "consistent
-snapshots"."
+> Which gives rise to my present question: given that LVM DOES give an
+> instantaneous snapshot of the filesystem, would an xfsdump of an LVM
+> snapshot of an XFS filesystem give usable backups?
 
-Just to make certain, is this true with running xfsdump on an LVM snapshot
-of the XFS filesystem? My question was prompted by a recent post on the
-linux-xfs list in which one of the xfs maintainers pointed out that xfsdumps
-are cache coherent. In response to my preliminary question, Tom Lane pointed
-out that:
+> PS: Our databases have crossed the 100 GB size, with some tables reaching
+> 25 GB, so pg_dump is taking more than 5 hours to complete (changing the
+> level of compression in custom format dump files from 6 to 1 did not
+> significantly reduce the dump duration). Otherwise, pg_dump-ing the
+> database (and copying the .conf files) was just dandy.
 
-"Unless the postmaster is shut down meanwhile, you'll probably end up with a
-corrupt database.  The problem is that xfsdump does not give you an
-instantaneous snapshot of the filesystem state, so you will probably collect
-inconsistent contents of the various files that make up the database."
+LVM won't give you any more stable of a pictire over 5
+hours than anything else will unless you shut dwon the
+database first. Even if you try it once and the process
+works you are just as likely to be bit my Murphy on the
+next trial.
 
-Which gives rise to my present question: given that LVM DOES give an
-instantaneous snapshot of the filesystem, would an xfsdump of an LVM
-snapshot of an XFS filesystem give usable backups?
+Alternatives:
 
-Thanks,
-	Murthy
+	Use a mirror for the database, split it, and use that
+	copy for a backup. This is a common procedure in data
+	warehousing.
 
-PS: Our databases have crossed the 100 GB size, with some tables reaching 25
-GB, so pg_dump is taking more than 5 hours to complete (changing the level
-of compression in custom format dump files from 6 to 1 did not significantly
-reduce the dump duration). Otherwise, pg_dump-ing the database (and copying
-the .conf files) was just dandy.
+	Make incremental backups of the daily loads and only
+	perform a full backup on, say, weekends at 0300; use
+	RAID5 or mirroring to minimimize the odds of having to
+	restore anything.
+	
+	You may be able to dump portions of the
+	database in parallel to decrease the time (this
+	requires careful partitioning of the space).
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
