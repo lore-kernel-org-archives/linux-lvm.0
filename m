@@ -1,7 +1,9 @@
-From: Erik Rask <erik@strakt.com>
-Message-ID: <Pine.LNX.4.21.0309090835570.2466-100000@rife.strakt.com>
+Message-ID: <3F5DCB63.5020307@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Subject: [linux-lvm] Moving disks
+Subject: Re: [linux-lvm] Software mirror with LVM
+References: <A06B238D6FBAD1118C1F080036D2D40301241854@singwnt.igsea.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,26 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep  9 01:43:02 2003
+Date: Tue Sep  9 13:29:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hello all! I am running LVM (1.0.7-5 according to the Debian package
-list) on two Debian/Sid machines, that act as servers. I have now set up
-an intermediate backup system, with external SCSI disks in separate
-cabinets mirrored each night, to have a quick access backup in case of
-disk failure. These external disks, as well as the internal ones (apart
-from the root partition) are LVM. My question now is this: 
-Would it be possible to take one of those drives and connect it to another
-LVM capable host, and have it recognize the LV's on the disk? I am not
-sure of how much of the VG/LV information is stored on the disk, so I have
-not tried this. 
-RTFM's are fine, if you could include pointers to the FM's, since I have
-had problems digging this up. 
-TIA
-/Erik.
--- 
-Erik Rask, systems administrator @ AB Strakt
-"There is no normal life. There's just life. So get on with it."
+Tan, Hong King wrote:
+> Greetings,
+> 
+> I am proposing a ML350 server with internal raid and another raid
+> controller(Smart Array 5302) connected to StorageWorks Enclosure 4314.
+> 
+> The internal raid is configured as RAID 1 across 2 drives and the external
+> raid is configured as RAID 5 acroos 3 drives. 
+> 
+> Can I use LVM to perform a software mirror between the internal raid and
+> external raid volumes or I would need 3-party software like Veritas
+> Foundation Suite for Linux ?
+
+lvm1 cant be a mirror. LVM2 might have the posibillity, but i wouldnt
+use it for production just yet.
+
+Why cant you just use another software raid ontop of that?
+
+
+
+
+JonB
