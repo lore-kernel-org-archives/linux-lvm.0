@@ -1,12 +1,12 @@
-Return-Path: <thornber@btconnect.com>
-Date: Mon, 13 Aug 2001 21:47:02 +0100
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Tue, 14 Aug 2001 01:49:51 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
 Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010813214702.A1249@btconnect.com>
-References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com> <20010812221650.A6589@vestdata.no> <20010813161301.B6466@uk.sistina.com> <3B782E02.B5DB2FC8@tls.msk.ru> <20010813214943.A19522@cistron.nl> <20010813221837.A25630@dragon.blacknet.de>
+Message-ID: <20010814014951.H26064@vestdata.no>
+References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com> <20010812221650.A6589@vestdata.no> <20010813100858.C362@btconnect.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010813221837.A25630@dragon.blacknet.de>; from bock@blacknet.de on Mon, Aug 13, 2001 at 10:18:37PM +0200
-From: Joe Thornber <thornber@btconnect.com>
+In-Reply-To: <20010813100858.C362@btconnect.com>; from thornber@btconnect.com on Mon, Aug 13, 2001 at 10:08:58AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,32 +22,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 13, 2001 at 10:18:37PM +0200, Goetz Bock wrote:
+On Mon, Aug 13, 2001 at 10:08:58AM +0100, Joe Thornber wrote:
+> > Why will liblvm disappear? To me using a library interface seems much
+> > nicer than wrapping applications.
 > 
-> On Mon, Aug 13 '01 at 21:49, Wichert Akkerman wrote:
-> > Compare with: wow! instead of a few simple modular applications we
-> > now get a single one which tries to do everything. I'm not convinced
-> > this is a step forward, the UNIX philosophy of having lots of small
-> > single-purpose tools is a good one.
-> (I did not check the cvs or how it is done)
-> but if they did it right, they did it the same way busybox works:
-> independent code file that could work as independent executables (if
-> wrapped with some glue logic) but which work from one main executeable.
-> While it keeps the mantainability of lots of small tools, it is actually
-> better to manage for the user/admin (just one file), and the executable
-> might even be smaller (better for bootdisks or simmilar low diskspace
-> situations)
+> Because it's means there's yet another interface (along with the
+> command line tools, and ioctl's) to constrain any implementation
+> changes.  Command line tool interface will not change.  liblvm (if it
+> still existed as a shared library) will change drastically between 1.0
+> and 2.0 - not least because it in turn reflects the driver ioctl
+> interface.
 
-Exactly.
+I'm not complaining if it's changing, but if it's going away, that's bad
+:(
 
-experimental
-wc -l tools/*.[hc]
-9441
+> The experimental branch has a single lvm tool, with liblvm statically
+> linked into it.  There's no need for the outside world to know about
+> liblvm.
+> 
+> It may be a good idea for Sistina to produce a tiny 'wrap the tools'
+> library for use by gui implementors.
 
-beta8
-wc -l tools/*.[hc]
-13566
+yach! An uncomplete list of uglyness:
+* Errorhandling
+* fork/exec
+* having to format input arguments as strings (and quote them)
+* having to parse output data from strings 
 
-and there's a lot left to do.
 
-- Joe
+-- 
+Ragnar Kjorstad
+Big Storage
