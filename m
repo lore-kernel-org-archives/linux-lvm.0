@@ -1,10 +1,8 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lilo or grub patches
-Message-Id: <20020302192015.GA14627@colombina.comedia.it>
-References: <20020302191257.GB1060@cts.com>
+From: Anders Widman <andewid@tnonline.net>
+Message-Id: <13526423765.20020304010840@tnonline.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020302191257.GB1060@cts.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvmove -i does not work..
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +13,15 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Mar  2 13:20:02 2002
+Date: Sun Mar  3 18:08:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Mar 02, 2002 at 11:12:57AM -0800, Wade Curry wrote:
-> I'm experimenting with lvm on a single ide drive. I plan to put the
-> root on a logical volume as I have before.  This time around I'd
-> like to try booting directly from the lv.  I've heard that there
-Lilo 22.2 supports booting from LV out of the box
-L.
+Has anyone tried pvmove -i on a faulty disk (bad blocks)?
 
+pvmove -i /dev/crashed /dev/new stops when it hits the bad blocks.
+This wasn't so bad for me this time as I could use dd to move
+everything from the bad disk to my new disk...
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+//Anders
