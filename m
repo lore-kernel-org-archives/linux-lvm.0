@@ -1,12 +1,12 @@
 From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Cluster LVM
-Message-Id: <20020227101949.M12832@lynx.adilger.int>
-References: <3C7CC4F3.9DA76FC9@lmco.com>
-    <200202271145.MAA11838@mailgate.sara.nl>
+Subject: Re: [linux-lvm] "invalid i/o-protocol version" with e2fsadm
+    (1.0.3) and 2.4.18
+Message-Id: <20020227102215.N12832@lynx.adilger.int>
+References: <20020227131803.A188@sparcie.schaub.loc>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200202271145.MAA11838@mailgate.sara.nl>; from r.post@sara.nl
-    on Wed, Feb 27, 2002 at 12:45:05PM +0100
+In-Reply-To: <20020227131803.A188@sparcie.schaub.loc>; from
+    markus.schaub@gmx.net on Wed, Feb 27, 2002 at 01:18:11PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,31 +17,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 11:19:02 2002
+Date: Wed Feb 27 11:22:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Markus Schaub <markus.schaub@gmx.net>
+Cc: linux-lvm@sistina.com
 
-On Feb 27, 2002  12:45 +0100, Remco Post wrote:
-> clusters all have one major problem to solve: split brain. Make sure that the 
-> node manipulating the LV/VG does indeed have the right to do so, and doesn't 
-> screw up everything for everybody. Maybe introduce a (LV/VG) master concept 
-> into the VG, so as long as that is set, no other node in the cluster will 
-> manipulate anything in the vg. (just some random rant, ignore if I'm talking 
-> nonsense ;)
+On Feb 27, 2002  13:18 +0100, Markus Schaub wrote:
+> I always get an "i/o protocol version" error when trying to resize a
+> lv witch e2fsadm (statically linked, from lvm-1.0.3 with kernel
+> 2.4.18).
 
-Having a single master is a _terrible_ idea, since this would mean that
-if that node is down you are unable to change the VG until/if it is back
-working again.
+You probably have two copies of e2fsadm in your path.  Try something
+like 'which e2fsadm' or 'whereis e2fsadm'.  The other possibility is
+that your static liblvm.a is the wrong one.
 
-Rather use a DLM (as the other poster suggested) and a client needs to
-get a lock on the VG in order to change anything.  You can start with
-a lock per VG and one per shared PV not in a VG, and then go more fine
-grained if you want (e.g. write lock on VG and specific LV being changed,
-which does not block users of other LVs).  In the end, because you are
-not changing a VG configuration very often, and it doesn't take very long
-when you do (excluding pvmove), the big lock is probably enough.
+> Some time ago I got the same error with e2fsadm 1.0.1-rc4 on
+> 2.4.13-ac7. In this case e2fsadm resized the filesystem but could not
+> resize the lv. Resizing the lv with lvreduce (same version) worked.
+
+The I/O protocol version has not changed since LVM 0.8, so you must
+have a bad program.
 
 Cheers, Andreas
 --
