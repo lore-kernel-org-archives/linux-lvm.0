@@ -1,11 +1,10 @@
-Return-Path: <defranco@cup.hp.com>
-Message-ID: <3A3A6F84.223714DD@cup.hp.com>
-Date: Fri, 15 Dec 2000 11:22:45 -0800
-From: John DeFranco <defranco@cup.hp.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM 0.9 patch for 2.2.18
-References: <20001215112455.A1314@66bassett.freeserve.co.uk>
-Content-Transfer-Encoding: 7bit
+Return-Path: <josv@osp.nl>
+Date: Fri, 15 Dec 2000 15:55:29 +0100
+From: Jos Visser <josv@osp.nl>
+Message-ID: <20001215155529.H22904@jadzia.josv.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] RawIO patch for 2.2.18
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,39 +17,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Joe,
+Hi,
 
-I would be willing to try this out.
+I have been looking for the RawIO patch for Linux 2.2.18, but I have not
+been able to find it (my current web connection sucks, so I can not
+glide through the net with my usual agility and speed). Does anyone have
+a current pointer for me? Would be much appreciated.
 
-Thanks.
-
-Joe Thornber wrote:
-> 
-> Hi,
-> 
-> I've made a new kernel patch to get LVM 0.9 working with 2.2.18 and am
-> looking for a couple of people to give it a try before I check it into
-> CVS.
-> 
-> The patch is similar to the 2.2.17 patch except it should allow you to
-> use a software raid device as a PV.  This also has the pleasant side
-> effect of removing a lot of the conditional compiles from
-> drivers/block/ll_rw_block.c
-> 
-> The patch is too big to post on the list (it still contains the
-> lvm.[hc] files) so mail me if you want to try it.
-> 
-> Your help would be appreciated.
-> 
-> - Joe Thornber
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+++Jos
 
 -- 
-==========
-Cheers
-   -jdf
+Only those whose lives are brief can imagine that love is eternal. We
+should embrace that remarkable illusion. It may be the greatest gift 
+our race has ever received.
