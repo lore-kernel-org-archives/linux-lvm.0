@@ -1,52 +1,63 @@
-Date: Sun, 16 Apr 2000 00:56:21 +0200
-From: bert hubert <ahu@ds9a.nl>
-Subject: Re: [linux-lvm] [Patch] lvchange better error reporting
-Message-ID: <20000416005620.A26537@home.ds9a.nl>
-References: <20000415203514.A21662@home.ds9a.nl> <NDBBKHFNKLCILCNALIHPGEIECBAA.hpuxadm@choice.net>
-Mime-Version: 1.0
-In-Reply-To: <NDBBKHFNKLCILCNALIHPGEIECBAA.hpuxadm@choice.net>; from hpuxadm@choice.net on Sat, Apr 15, 2000 at 07:38:24PM -0400
+Message-ID: <38FB29FE.7017CB71@ednet.ns.ca>
+Date: Mon, 17 Apr 2000 12:13:02 -0300
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] vgcfgrestore
+References: <38F4AF07.7136C51@ednet.ns.ca>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Christopher Briggs <hpuxadm@choice.net>
-Cc: mauelsha@ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: LVM Mailing List <linux-lvm@msede.com>
 
-On Sat, Apr 15, 2000 at 07:38:24PM -0400, Christopher Briggs wrote:
+I will answer my own questions just in case somebody is searching through
+the archives for answers to similar problems.
 
-> I've been watching the thread for about a week+ now, and am determined to go
-> with LVM, especially being so HPcentric and loving LVM for that platform.
 
-LVM is cool indeed.
+Patrick Boutilier wrote:
 
-> What rev kernel would be best considering LVM and what is the best way to
-> get there(pointing me to a FAQ/www be more than appropriate.
+> Hello,
+>
+> Looks like I am going to have to resort to using vgcfgrestore as I get
+> the following error running vgscan:
+>
+> vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- scanning for all active volume group(s) first
+> vgscan -- found active volume group "data_vg"
+> vgscan -- reading data of volume group "data_vg" from physical volume(s)
+>
+> vgscan -- ERROR -364: can't get data of volume group "data_vg" from
+> physical volume(s)
+> vgscan -- ERROR -364 creating "/etc/lvmtab" and "/etc/lvmtab.d"
+>
+> I assume with an error like that there is no way I am going to be able
+> to activate my logical volumes on the next reboot?
+>
 
-I'm not sure. Kernel 2.3.99pre6-3 is not ready for mission critical work,
-and the 2.2 revisions of the LVM 0.8final kernel patches aren't available
-yet.
+I will answer my own questions just in case somebody is searching through
+the archives for answers to similar problems.
 
-> Also, Heinz - What are you using to develop your GUI frontend?(just curious)
 
-I think you mean me by this. I am using Glade, libglade and GTK+. On a side
-note, I'm still making good progress with the lvm-manager. It is almost
-useable.
+>
+> Also I haven't seen anywhere where it says that the logical volumes and
+> volume group must be offline when running vgcfgrestore other than this
+> piece at the end of the vgcfgrestore man page:
+>
+> vgcfgrestore returns an exit state of 0 for success and > 0 for error:
+>
+>        1  no physical volume on command line
+>        2  invalid physical volume name
+>        3  volume grou is active
+>         ......
+>
+> So I will ask the question. Can vgcfgrestore be run on active logical
+> volumes and volume groups?
 
-Currenly you can
-
-	create volume groups
-	move PEs from physical volumes
-	move Physical Volumes from/to Volume Groups (with drag-and-drop even!)
-	change active state
-	remove volume groups
-	create/remove logical volumes
-
-Regards,
-
-bert hubert. 
-
--- 
-                       |              http://www.rent-a-nerd.nl
-                       |                     - U N I X -
-                       |          Inspice et cautus eris - D11T'95
+As I thought the volume group did have to be inactive. One note though. I
+could not successfully run vgcfgrestore in single user mode.  I kept
+getting an error (which I didn't write down) until I went to run level 3
+without
+activating my volume group. Good news is that the restore worked and vgscan
+now runs properly.
