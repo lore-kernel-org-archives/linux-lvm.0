@@ -1,9 +1,9 @@
-Date: Thu, 13 Sep 2001 23:44:21 -0500 (CDT)
-From: Xiaoxiang Liu <xiliu@ncsa.uiuc.edu>
-In-Reply-To: <E15hcKE-0003V8-00@hermes.sistina.com>
-Message-ID: <Pine.SOL.3.95.1010913234115.5596A-100000@pecos.ncsa.uiuc.edu>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Date: Thu, 13 Sep 2001 23:00:47 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPIEFCDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] Bad block handling?
+Content-Transfer-Encoding: base64
+Subject: [linux-lvm] Lock Patch
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,15 +15,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: Xiaoxiang Liu <xiliu@ncsa.uiuc.edu>
 
-I have read the thread "badblocks handling with LVM" and reach
-a conclusion that LVM doesn't have its own badblocks handling 
-mechanism, right? Sorry for repeating the question. Just want to
-make sure. Thanks,
-
-
---Xiaoxiang
+TGlzdCBtZW1iZXJzOg0KDQoJSSBhbSBjdXJpb3VzOyBpZiBJIGFtIHJ1bm5pbmcgMi40LjgtMTJt
+ZGsgKE1hbmRyYWtlIDgsMCksIHdoaWNoIGxvY2sgcGF0Y2ggZG8gSSB1c2UgdGhlIDIuNC40IHZl
+cnNpb24gb3IgdGhlIDIuNC45IHZlcnNpb24/DQoNCg0KVmVyeSBSZXNwZWN0ZnVsbHksIA0KDQpT
+dHVhcnQgQmxha2UgVGVuZXIsIElUMywgVVNOUi1SLCBOM0dXRyANCkJldmVybHkgSGlsbHMsIENh
+bGlmb3JuaWENClZUVSAxOTA0RyAoVm9sdW50ZWVyIFRyYWluaW5nIFVuaXQpIA0Kc3R1YXJ0QGJo
+OTAyMTAubmV0IA0Kd2VzdCBjb2FzdDogKDMxMCktMzU4LTAyMDIgUC5PLiBCb3ggMTYwNDMsIEJl
+dmVybHkgSGlsbHMsIENBIDkwMjA5LTIwNDMgDQplYXN0IGNvYXN0OiAoMjE1KS0zMzgtNjAwNSBQ
+Lk8uIEJveCA0NTg1OSwgUGhpbGFkZWxwaGlhLCBQQSAxOTE0OS01ODU5IA0KDQpUZWxlY29waWVy
+OiAoNDE5KS03MTUtNjA3MyBmYXggdG8gZW1haWwgZ2F0ZXdheSB2aWEgd3d3LmVmYXguY29tIChp
+dCdzIGZyZWUhKSANCg0KSk9JTiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5U
+UlksIEFORCBCRU5FRklUIEZST00gSVQgQUxMLiANCg0KVGh1cnNkYXksIFNlcHRlbWJlciAxMywg
+MjAwMSAxMDo1OSBQTQ0KDQo=
