@@ -1,9 +1,12 @@
-Return-Path: <Evan.Day@SUMMITSITE.COM>
-Message-ID: <DC5B1A21E9E7D211B0020090273AD628242BC4@summit15.corvallis.summit>
-From: "Day, Evan" <Evan.Day@SUMMITSITE.COM>
-Subject: RE: [linux-lvm] odd problem
-Date: Tue, 1 May 2001 16:28:07 -0700 
-MIME-Version: 1.0
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Wed, 2 May 2001 08:35:11 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] lvm on alpha/sparc
+Message-ID: <20010502083511.B638@tykepenguin.com>
+References: <20010502012851.A4517@ikar.t17.ds.pwr.wroc.pl>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010502012851.A4517@ikar.t17.ds.pwr.wroc.pl>; from misiek@pld.ORG.PL on Wed, May 02, 2001 at 01:28:51AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,15 +20,17 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-From: Andreas Dilger [mailto:adilger@turbolinux.com]
->Todd Underwood writes:
->> VGS: Mounted root (ext2 filesystem) readonly.
->> change_root: old root has d_count=3
->> Trying to unmount old root ... <7>uhci.c: suspect_hd
->> okay
->
->Don't know about this.
+On Wed, May 02, 2001 at 01:28:51AM +0200, Arkadiusz Miskiewicz wrote:
+> 
+> but on sparc there is problem with linux/string.h which is breaking compilation ;-(
+> Workaround - avoid inclusion of linux/string.h:
 
-Is he using a USB storage device?  Isn't uhci.c part of the USB subsys?
+Hmmm funny that. There was an ifdef __sparc__ in there originally which I
+removed because it broke the ultraSPARC compilation. Then I wen to compile for
+my 32bit SPARCstartion IPC and it was needed again :-(
+
+Just for reference - what kind of SPARC system is it you are using ?
+
+patrick
