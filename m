@@ -1,10 +1,11 @@
-Subject: Re: [linux-lvm] Read_intr errors after reboot 
-In-Reply-To: Your message of "Tue, 02 Oct 2001 08:55:41 EDT."
-             <001901c14b41$8ad50be0$836788cf@industry> 
-References: <001901c14b41$8ad50be0$836788cf@industry> 
-Date: Tue, 02 Oct 2001 09:06:11 -0500
-From: "Chad C. Walstrom" <chewie@wookimus.net>
-Message-Id: <20011002140611.1ADEB18205@skuld.wk>
+Date: Tue, 2 Oct 2001 15:25:44 +0000
+From: Nils Juergens <nils@muon.de>
+Subject: Re: [linux-lvm] segmentation fault problems
+Message-ID: <20011002152544.A403@guldukat.muon.local>
+References: <3BB94718.30441CCA@adelaide.edu.au> <E15oJws-0004t5-00@hermes.sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <E15oJws-0004t5-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +17,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-"Jason A. Lixfeld" writes:
-> A Message was posted about the same thing in '2000.  Here is the
-> link from the archive: 
-> http://lists.sistina.com/pipermail/linux-lvm/2000-August/005017.html
-> 
-> The problem I am having is almost identicle to this gentlemens, only
-> the means are different.  In this particular system I have 10x80G
-> drives. 
+On Tue, 02.10.01, Henning Hogue <henning@randomfactor.net> wrote:
+> Thanks for the patch to lvcreate, I can now create logical volumes but all the 
+> other commands for logical volumes also cause segmentation faults. Are there 
+> patches for these too?
 
-Interesting.  I had the same problem w/an IBM 60GB IDE harddrive.  I
-just figured my drive was dying.  Consequently, that machine hasn't
-been online in probably two months (with moving, the RennFest, etc.).
+As Heinz already suggested, this _might_ be a compiler issue. Are you
+using gcc-3.0.x? If yes, try 2.95.x.
 
-Perhaps I'll have to reinvestigate, or update to a new kernel and LVM
-and see if the problem goes away. ;-)
+Myself, i had problems with 1.0.1-rc2 using gcc-3.0.1. A lot of the
+tools would segfault.
 
---
-Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-http://www.wookimus.net/                            | s.k.a. gunnarr
-Key fingerprint = B4AB D627 9CBD 687E 7A31  1950 0CC7 0B18 206C 5AFD
+good luck,
+
+Nils
+
+-- 
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >  If we all work hard, we can turn this company  <
+ >      around 360 degrees -- gruntbert(LOTD)      <
