@@ -1,17 +1,14 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1MKtci05462
-	for <linux-lvm@redhat.com>; Sun, 22 Feb 2004 15:55:38 -0500
-Received: from Woody.fw.matav.hu (matav-1.matav.hu [145.236.241.98])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1MKtbb01780
-	for <linux-lvm@redhat.com>; Sun, 22 Feb 2004 15:55:37 -0500
-From: =?iso-8859-2?B?TWFnb3PhbnlpIMFycOFk?= <mag@bunuel.tii.matav.hu>
-Subject: Re: [linux-lvm] LVM startup takes too long
-Message-ID: <20040222204714.GC9010@bunuel.tii.matav.hu>
-References: <2F75AEE4E86FDE44BF97709D289BAA7C719649@vega.voltaire.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K7R4i17722
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 02:27:04 -0500
+Received: from p15107633.pureserver.info (daemon@perlnuke.info [217.160.141.122])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1K7R3b08132
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 02:27:03 -0500
+From: Matthias Albert <matthias@ma-c.de>
+Message-Id: <1077262021.885.3.camel@fragger>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2F75AEE4E86FDE44BF97709D289BAA7C719649@vega.voltaire.com>
 Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] ext3 lvm Problem
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -23,46 +20,38 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Sun Feb 22 15:54:12 2004
+Date: Mon Feb 23 08:41:13 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Hi!
+Hallo zusammen,
 
-Maybe you have too much device inodes to check but otherwise
-uninteresting? In this case it is not proportional to the
-amount of your storage.
+ich hab hier ein Raid 5 mit ext3 in einem lvm am laufen. Leider hab ich
+damit nur Probleme. (Produktionsserver nat�rlich noch)
 
-The solution to this is either filter what you scan, or if you
-can, you can try to either rm unnecessary files from /dev,
-or tell your *scan programs to look at a different directory,
-and polupate it only with the needed devices. At the worst
-case you can do it by editing the path in the source and recompile.
+EXT3-fs error (device lvm(58,6)): ext3_readdir: directory #7569548
+contains a
+hole at offset 0
+ttempt to access beyond end of device
+Feb 19 06:26:45 bart kernel: 3a:06: rw=0, want=150290744,
+limit=115343360
+Feb 19 06:26:45 bart kernel: EXT3-fs error (device lvm(58,6)):
+ext3_readdir: directory #7569548 contains a
+hole at offset 4096
 
-A levelez�m azt hiszi, hogy Dan Bar Dov a k�vetkez�eket �rta:
-> When I start up our system, I have a startup script that runs pvscan, vgscan
-> and lvscan, and parses their output.
-> 
-> This takes too long - with a small SAN - 1x6 disks FC jbod + 2 FC RAID
-> controllers, it takes roughly 45 seconds with pvscan and vgscan about 23
-> seconds each.
-> 
-> Its pretty obvious that with more storage it will take longer.
-> 
-> Any ideas how can I speed it up? 
-> (can I run vgscan/pvscan in parallel ?, can I get all the data I need from a
-> single scan ?)
-> 
-> Thanks
-> Dan
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+usw. Von diesen Fehlern hagelt es dann die Mbyte Weise in der syslog.
 
--- 
-GNU GPL: csak tiszta forr�sb�l
+Das ganze wirkt sich so aus dass in manchen Verzeichnisse Files sind die
+�ber 50 Terrabyte gross und von 1932 z.b. sind.
+
+Ich hab mein Problem in die debian-user-german Mailingliste gepackt ->
+dort wurde ich darauf hingewiesen dass es wohl ein Problem mit ext3 und
+lvm ist und ich das ganze hier mal posten soll.
+
+Gibt es daf�r mittlerweile einen Patch? Wenn ja wo find ich den, wenn
+nein wann wird einer kommen. Ist das Problem �berhaupt schon bekannt?
+
+Viele Gr�sse aus Karlsruhe,
+
+Matthias
