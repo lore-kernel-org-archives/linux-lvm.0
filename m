@@ -1,23 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0OLtnO07700
-	for <linux-lvm@redhat.com>; Mon, 24 Jan 2005 16:55:49 -0500
-Received: from omx3.sgi.com (omx3-ext.sgi.com [192.48.171.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0OLtmPu026647
-	for <linux-lvm@redhat.com>; Mon, 24 Jan 2005 16:55:49 -0500
-Date: Tue, 25 Jan 2005 08:55:26 +1100
-From: Nathan Scott <nathans@sgi.com>
-Subject: Re: [linux-lvm] Why the dramatic increase in filesystem performance
-	when usingxfs????
-Message-ID: <20050125085526.B1628305@wobbly.melbourne.sgi.com>
-References: <1106304669.3943.14.camel@grma-lap>
-	<87f94c3705012108241f812e0e@mail.gmail.com>
-	<20050124113204.B1604791@wobbly.melbourne.sgi.com>
-	<87f94c37050124095332866424@mail.gmail.com>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0OMOjO17516
+	for <linux-lvm@redhat.com>; Mon, 24 Jan 2005 17:24:45 -0500
+Received: from out2.smtp.messagingengine.com (out2.smtp.messagingengine.com
+	[66.111.4.26])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0OMOeu3027298
+	for <linux-lvm@redhat.com>; Mon, 24 Jan 2005 17:24:40 -0500
 Content-Disposition: inline
-In-Reply-To: <87f94c37050124095332866424@mail.gmail.com>;
-	from greg.freemyer@gmail.com on Mon, Jan 24, 2005 at 12:53:01PM
-	-0500
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <1106517355.26963.213384700@webmail.messagingengine.com>
+	<20050124002632.GA23702@pob>
+Subject: Re: [linux-lvm] Reducing/Resizing LVM where "/" filesystem is included
+	in the LVM
+In-Reply-To: <20050124002632.GA23702@pob>
+Date: Mon, 24 Jan 2005 14:24:40 -0800
+From: fromkth+lvm@fastmail.fm
+Message-Id: <1106605480.13480.213476562@webmail.messagingengine.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,67 +27,57 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Greg Freemyer <greg.freemyer@gmail.com>
-Cc: Gary.Mansell@ricardo.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+Cc: greenrd@greenrd.org
 
-On Mon, Jan 24, 2005 at 12:53:01PM -0500, Greg Freemyer wrote:
+Thanks for the suggestions, but qtparted does not help.
+
+I ran Knoppix Live CD 3.7 which has qtparted 0.4.4 and it does not
+recognizes the linux lvm partition and shows it as unknown
+type/filesystem in the list, and it does not give any other information
+or any other option(e.g resize) when i right click that partition.
+
+so the question remains how to do it.
+
+Thanks.
+
+-ajeet.
+
+On Mon, 24 Jan 2005 00:26:32 +0000, "Robin Green" <greenrd@greenrd.org>
+said:
+> On Sun, Jan 23, 2005 at 01:55:55PM -0800, fromkth+lvm@fastmail.fm wrote:
+> > Now I want to free some space from the linux LVM(hda6) and create a
+> > FAT32 partition as hda7.
+> > 
+> > So how to reduce that LVM?
 > 
-> You biased, never.  
-
-;-)
-
-> One issue I recently saw (last summer) was SUSE 9.1 QC testing failed
-> to test for XFS capability.
-
-Ugh, don't remind me.  :|
-
-> If I had my core filesystems under XFS, I'm not sure what the fix
-> would have been.  Further booting SUSE 9.1 into rescue mode created an
-> environment that could not mount any of the XFS partitions.
-
-There'll be a supported patch by nowsure.  It was not an XFS fix,
-so lets just leave it there.  You should expect that distribution
-to get alot better wrt XFS in upcoming releases, as they actively
-work with us on supporting XFS nowadays.
-
-> Also, last springs release of Knoppix may have XFS support (I don't
-> know), but it is so unreliable, I still use the 2-year old version. 
-> No XFS support there.
-
-Hmm (looks aside into desk draw) - I have Knoppix 1.0 and it's a
-wonderful thing with complete XFS support.  Pretty sure thats at
-least a couple of years old, so not sure what you've got there?
-Knoppix has supported XFS for as long as I can remember.
-
-> Another problem I've recently read about is that XFS on / and software
-> RAID5 are incompatible.  (I have not tried this.)
-
-That is not correct.
-
-> Basically, I just don't think the various distros get enough testing
-> of XFS to use it for core filesystems and if you need to use
-> distros/repair CDs from 12+ months ago you also have problems with
-> XFS.
-
-Some are better than others.  :)
-
-FWIW, all systems that SGI ship to customers and support in the
-field use XFS as the primary filesystem.
-
-> Now a question for you:
+> I suggest you use qtparted. Basically you need to:
 > 
-> I have not read a status update of XFS/snapshots/2.6.x.   Can you tell
-> me if this is expected to work or not?  (Obviously, I don't care about
-> '/').
-
-Hmm, off the top of my head, not sure - does that test you wrote
-function on device mapper?; I should find time to look into that.
-I remember Christoph doing some work to tie XFS into the 2.6 API
-once that was merged, but I haven't needed to look at it since.
-If there are problems, send details to us on the linux-xfs list.
-
-cheers.
-
--- 
-Nathan
+> 1. Resize /
+> 2. Move the swap volume back so it is adjacent to / (as it is swap, you
+> could just
+> run swapoff, delete the volume, and then recreate it.)
+> 3. Reduce the physical volume size
+> 
+> I don't know if qtparted can do step 3 but it can do steps 1 and 2, I
+> think.
+> 
+> > one more questions my /boot parition is /dev/hda5 but in fstab it shows
+> > it as LABEL=/boot
+> > so how is that?
+> 
+> /dev/hda5 contains a label called /boot. That means if you move /boot to
+> a different
+> partition, you don't have to change your fstab, which is useful, but
+> rarely.
+> 
+> However, if you ever insert another Linux-formatted hard drive in your
+> system,
+> from a different computer, it can cause the OS to become very confused as
+> it cannot
+> determine which "/boot"-labelled partition to use! That is the
+> disadvantage of
+> partition labelling.
+> 
+> -- 
+> Robin
