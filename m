@@ -1,11 +1,11 @@
-Date: Wed, 14 Apr 2004 10:39:19 +0200
+Date: Wed, 14 Apr 2004 10:44:04 +0200
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] quota command does not work
-Message-ID: <20040414083919.GA22343@redhat.com>
-References: <20040413151723.GB19598@oddprocess.org>
+Subject: Re: [linux-lvm] Meaning of strict allocation
+Message-ID: <20040414084404.GB22343@redhat.com>
+References: <BAY16-DAV32wB0jTj7z000022e2@hotmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040413151723.GB19598@oddprocess.org>
+In-Reply-To: <BAY16-DAV32wB0jTj7z000022e2@hotmail.com>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,63 +19,61 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Matthew Daubenspeck <matt@oddprocess.org>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: hjm@redhat.com
 
-On Tue, Apr 13, 2004 at 11:17:23AM -0400, Matthew Daubenspeck wrote:
-> I am using lvm2 with the following logical volume:
+On Thu, Apr 08, 2004 at 07:57:07PM -0700, sachin wrote:
+> Hi
 > 
->   --- Logical volume ---
->   LV Name                /dev/nwlsd_vg/nwlsd_lv
->   VG Name                nwlsd_vg
->   LV UUID                jKXS7Q-2Bda-JpVG-Ba4I-Ocfr-6UyO-182Mek
->   LV Write Access        read/write
->   LV Status              available
->   # open                 1
->   LV Size                55.91 GB
->   Current LE             14312
->   Segments               2
->   Allocation             next free (default)
->   Read ahead sectors     0
->   Block device           254:0
+> when I  executed the lvdisplay command  i get the following output
 > 
-> I am trying to get quota's working on the system. The quotas themselves
-> are working, however, standard users cannot issue the quota command to
-> inspect their own specific information:
+> --- Logical volume ---
+> LV Name                /dev/vg/lv1
+> VG Name                vg
+> LV Write Access        read/write
+> LV Status              available
+> LV #                   1
+> # open                 0
+> LV Size                4 GB
+> Current LE             1024
+> Allocated LE           1024
+> Stripes                4
+> Stripe size (KByte)    16
+> Allocation             next free
+> Read ahead sectors     1024
+> Block device           58:0
 > 
-> $ quota
-> quota: Can't stat() mounted device /dev/nwlsd_vg/nwlsd_lv: Permission
-> denied
-> Disk quotas for user mellofone (uid 1000): none
-> 
-> However, it does work for root:
-> 
-> $ quota mellofone
-> Disk quotas for user mellofone (uid 1000): 
->      Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
-> /dev/nwlsd_vg/nwlsd_lv
->                 19364268*      0  100000            2019       0       0    0
-> 
-> This setup works on other volumes that do not use lvm. Any ideas what I
-> screwed up? Just as an FYI:
+> Can any one tell  me what that ALLOCATION next free means
+> and also what strict allocation means.
 
-chgrp disk /dev/mapper/*
-chmod g=rw /dev/mapper/*
+'Next free' allocates the next free physical extents it finds in
+the VG while extending any logical volume.
 
-We need to fix that in dmlib (if not already done ;)
+There's no 'strict' allocation in LVM.
+Your other option is 'contiguous' which means allocation of subsequent areas
+of PEs.
 
 > 
-> $ lvm version
->   LVM version:     2.00.09 (2004-03-31)
->   Library version: 1.00.08-ioctl (2004-02-27)
->   Driver version:  4.1.0
+> I also tried lvdisplay  with -v option
 > 
-> Thanks.
-> -- 
->   Matthew Daubenspeck
->   http://www.oddprocess.org
+> it gives me read and writes
+> What that exactly means 
+>       1. No of read and write operation
+>       2  No of blocks transferd 
+>       3. No of sectors read or written 
+
+1
+
 > 
-> 11:09:30 up 23 days, 1:21, 1 user, load average: 0.02, 0.03, 0.00
+> One more thing  this io statics is from which time 
+>      1. bootup time
+>      2. lv creation time
+
+3. VG activation time (vgchange -ay)
+
+> 
+> Thanks
+> Sachin. 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
