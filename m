@@ -1,22 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1SI42K21700
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 13:04:02 -0500
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.205])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1SI3vmg012845
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 13:03:57 -0500
-Received: by rproxy.gmail.com with SMTP id g11so335026rne
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 10:03:56 -0800 (PST)
-Message-ID: <a58063aa050228100359ab919@mail.gmail.com>
-Date: Mon, 28 Feb 2005 10:03:55 -0800
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1SIJvK28140
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 13:19:57 -0500
+Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.192])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1SIJpQI016246
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 13:19:52 -0500
+Received: by rproxy.gmail.com with SMTP id g11so340507rne
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 10:19:46 -0800 (PST)
+Message-ID: <a58063aa0502281019185c9845@mail.gmail.com>
+Date: Mon, 28 Feb 2005 10:19:46 -0800
 From: "M. Matt Colgin" <mcolgin@gmail.com>
-Subject: Re: [linux-lvm] LVM1 Bad harddisk. How do I het data off the Volume?
-In-Reply-To: <422351F0.5010005@gozar.dynu.com>
+Subject: Re: [linux-lvm] Adding a disk to a VG gone bad - need help
+In-Reply-To: <45ae9037050225202249decf7a@mail.gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-References: <421E3614.5010107@gozar.dynu.com>
-	<20050228083636.GA18006@tykepenguin.com>
-	<a3558a980502280319499f1d6b@mail.gmail.com>
-	<422351F0.5010005@gozar.dynu.com>
+References: <45ae9037050225202249decf7a@mail.gmail.com>
 Reply-To: "M. Matt Colgin" <mcolgin@gmail.com>,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,57 +26,89 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Jeff Macdonald <macfisherman@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello Heine,
+Weird, I'm not totally following how/what happened, but it sounds like
+you VG went from 1 PV to 3 (but maybe you started off with two). 
+Hopefully you don't have some super important data on it. If you do,
+there are some people with more knowledge than me, repost your
+question with some more/updated information.
 
-It sounds like you're in a bad spot. I've been having issues with
-Maxtor drives as of late myself. In the past 2 months, I've had 4 die
-and 2 WD. Be prepared. I haven't worked with LVM1, but you're probably
-sounds independant of the LVM version at this point.
+Each LVM command will write a "changelog" to the /etc/lvm/archive/*
+directory with the state of the VG before/after the command was
+issued. The best bet to undo the extend would be to issue a
+vgcfgrestore with the file, before your vgextend.
 
-This bad spot... It's because the BIOS won't recognize the drive. The
-only way to get anything off the disk is to get it recognized by the
-computer, only then can you do some magical recovery stuff, like
-dd_rescue.
+It might be worth checking into the physical connections for your new
+drive. The UUID is basically a uniq signature that is written to the
+front of the drive/partition. If this UUID can not be found, then it's
+possible the drive went bad or (most likely) the computer doesn't see
+the drive anymore. Look at the cables, replace a cable, check out the
+BIOS (make sure it's being detected), etc. Fixing a failed connection
+is better than messing around with the LVM VG with a missing drive. If
+you can get the drive to show up, then it would be a simple matter of
+vgreduce.
 
-Since you've already tried multiple controllers, the only thing I can
-suggest is to try a different computer. The key is going to be
-fiddling with the BIOS, only once you get the BIOS to recognize the
-drive, will you be able to proceed. Pull everything out of of the
-computer that isn't needed for running, that includes extra HD's,
-controller cards, sounds cards, everything. Try the Auto-Detect in the
-BIOS, if that doesn't work, try giving it the exact CHS parameters,
-try different computers (some BIOS will detect it). Try the PowerMax
-util from Maxtor, even if you can't get BIOS to quite recognize the
-drive, just a quick test as you don't want to strain the drive much
-more.
 
-If you can get it to POST with the correct drive, use the dd_rescue
-util and another drive. This will copy the old drive to a new one, at
-a sector by sector level. It'll take a *very* long time, but you might
-be able to get some data off the drive. But prepared for the worst and
-you'll be excited if you get anything off.
-
-As I said, I've had this happen quite a lot lately, with these crappy
-Maxtor drives and their 1 year warranty. DD_rescue took 5 days on a
-200 GB drive and was able to get 80% of the data off of the drive,
-enough that I could bring up the VG in paritial mode and get a lot of
-the data off, but alas a lot was lost too.
-
-http://www.garloff.de/kurt/linux/ddrescue/
-
-On Mon, 28 Feb 2005 18:16:32 +0100, Heine Laursen
-<maillist@gozar.dynu.com> wrote:
-> go0ogl3 wrote:
-> > Did you check the ATA/ide cable? Did you try to replace that cable or
-> > to verify if the drive has one or more ide pins bent or shorted?
+On Fri, 25 Feb 2005 23:22:59 -0500, Jeff Macdonald
+<macfisherman@gmail.com> wrote:
+> Hi,
+> I have one volume group and that is used as such:
+> [root@jeff ~]# /usr/sbin/lvscan
+>  ACTIVE            '/dev/VolGroup00/Root' [9.78 GB] inherit
+>  ACTIVE            '/dev/VolGroup00/Home' [231.31 GB] inherit
+>  ACTIVE            '/dev/VolGroup00/Swap' [320.00 MB] inherit
 > 
-> Yes, I have tryed with 2 differnt controlers (onboard, and promse
-> controler) and 2 different ide cables. There are no pins who are bent.
+> I added a whole disk to VolGroup00 like so:
+> [root@jeff ~]# dd if=/dev/zero of=/dev/hde bs=512 count=1
+> 1+0 records in
+> 1+0 records out
 > 
-> Sincerley
-> Heine Laursen
+> created the physical volume:
+> [root@jeff ~]# /usr/sbin/pvcreate /dev/hde
+> 
+> added it to the volume group:
+> [root@jeff ~]# /usr/sbin/vgextend VolGroup00 /dev/hde
+> 
+> added 100G from the 150G drive to Home:
+> [root@jeff ~]# /usr/sbin/lvextend -L+100G /dev/VolGroup00/Home
+>  Extending logical volume Home to 331.31 GB
+>  Logical volume Home successfully resized
+> 
+> At this point the docs suggest umounting the logical volume in order
+> to resize the file system. So I decided I was going to reboot the
+> computer and start it into single user mode. When doing that I'm
+> greated with:
+> 
+> lvm exited abnormally!
+> Couldn't find device with uuid <uuid>
+> Couldn't find all physical volumes for volume group VolGroup00
+> 
+> So it seems that it can't find the new physical volume that I just
+> added.  LVM is totally new to me, so any pointers would be great.
+> Booting from CD into rescue mode I wasn't unable to get very far. I
+> was able to run lvm and pvscan shows this interesting line:
+> 
+> PV /dev/hdf1 VG VolGroup00 lvm2 [ X GB / X GB free]
+> PV /dev/hdg2 VG VolGroup00 lvm2 [ Y GB / Y GB free]
+> PV unknown device VG VolGroup00 lvm2 [ Z GB / Z GB free]
+> Total: 3 [ X GB ] / in use 3
+> 
+> It seems to be that vgreduce is what I want in order to start over,
+> but running this in test mode with -t and --removemissing I see this
+> worrying line:
+> Removing LV Home from VG
+> 
+> and the line I want
+> Removing PV with UUID {correct UUID}
+> 
+> Am I on the right track?
+> 
+> TIA
+> 
+> --
+> Jeff Macdonald
+> Ayer, MA
 > 
 > _______________________________________________
 > linux-lvm mailing list
