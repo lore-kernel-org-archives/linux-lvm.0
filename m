@@ -1,7 +1,10 @@
-From: "Tomaz Beltram" <tomazb@hotmail.com>
-Subject: [linux-lvm] mounting ext3 snapshot occasionaly fails
+Subject: Re: [linux-lvm] Error creating snapshot, "Cannot allocate memory"
+Message-ID: <20021203182119.GD21924@ofb.net>
+References: <20021202223223.GC21924@ofb.net> <20021203114821.A25161@sistina.com> <3DEC9B03.B83C0078@silicide.dk>
 Mime-Version: 1.0
-Message-ID: <F109bnA0FiNJnMKgr6R0000d03d@hotmail.com>
+Content-Disposition: inline
+In-Reply-To: <3DEC9B03.B83C0078@silicide.dk>
+From: Jason Heiss <jheiss@ofb.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,44 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  3 10:24:01 2002
+Date: Tue Dec  3 12:21:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->I don't know whether the SuSE kernel has the VFS lock patch applied or >not 
->- if
->not then one for 2.4.19 is available in the LVM 1.0.6 source package.
+On Tue, Dec 03, 2002 at 12:52:35PM +0100, Jon Bendtsen wrote:
+> "Heinz J . Mauelshagen" wrote:
+> > 
+> > You don't have enough kernel virtual memory to hold the snapshot exception
+> > table in core :(
+> > Install more RAM.
+> 
+> I've seen this error as well. In a machine with 1GB memory and the only
+> processes
+> running were NFS and samba. Just how much memory does it need ?
+> 
 
-I found the linux-2.4.19-VFS-lock.patch in the LVM 1.0.5 src package. 
-However, it results to me that it is already included. Patch says:
-Reversed (or previously applied) patch detected!
+Indeed, my server has 2 GB of RAM and 1 GB of swap, of which free
+reports only a few hundred MB in use.
 
-Beside that, I can see the new symbols that come with the patch in my 
-running kernel:
-# cat /proc/ksyms | grep lockfs
-c014cf90 fsync_dev_lockfs
-c0151680 unlockfs
-
-I was able to reproduce this with following steps:
-VG=vg1
-lvcreate -L 100M -n lv1 $VG
-mke2fs -j /dev/$VG/lv1
-mkdir /mnt/fs1
-mount -t ext3 /dev/$VG/lv1 /mnt/fs1
-lvcreate -L 10M -n lv1_snap -s /dev/$VG/lv1
-mkdir /mnt/fs1_snap
-mkdir /mnt/fs1/dir
-sleep 60
-mount -t ext3 -r /dev/$VG/lv1_snap /mnt/fs1_snap
-
-Please note that the change to the original file system is made *after* the 
-snapshot is created, so this could be different problem.
-
-thanks again
-Tomaz
-
-_________________________________________________________________
-MSN 8 with e-mail virus protection service: 2 months FREE* 
-http://join.msn.com/?page=features/virus
+Jason
