@@ -1,12 +1,12 @@
-Return-Path: <ragnark@stine.vestdata.no>
-Date: Tue, 14 Aug 2001 08:11:25 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] RFC: Visual Disk Administrator project\
-Message-ID: <20010814081125.C6117@vestdata.no>
-References: <20010813200513.A22939@linux.com>
+Return-Path: <thornber@btconnect.com>
+Date: Tue, 14 Aug 2001 09:14:02 +0100
+Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
+Message-ID: <20010814091401.A322@btconnect.com>
+References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com> <20010814150418.E6463@mail.wave.co.nz>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010813200513.A22939@linux.com>; from tack@linux.com on Mon, Aug 13, 2001 at 08:05:13PM -0400
+In-Reply-To: <20010814150418.E6463@mail.wave.co.nz>; from markv@wave.co.nz on Tue, Aug 14, 2001 at 03:04:18PM +1200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,15 +22,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 13, 2001 at 08:05:13PM -0400, Jason Tackaberry wrote:
-> enabling DMA on IDE disks) will be available here.  Resizing partitions
-> probably won't be allowed -- can LVM cope if one of its physical volumes
-> gets resized?
+On Tue, Aug 14, 2001 at 03:04:18PM +1200, Mark van Walraven wrote:
+> On Sun, Aug 12, 2001 at 08:07:02PM +0100, Joe Thornber wrote:
+> > I would much rather see people wrapping the tools than using liblvm, in fact
+> > liblvm will probably disappear in the future.
+> 
+> I think it is a bad idea to eliminte liblvm.  Shared libraries are much
+> easier use to use from programs.  For example, it is much easier in a perl
+> script to use zlib than to run gzip as a subprocess in a bulletproof way.
 
-No, it doesn't.
+I'm just worried about the interface to liblvm changing and breaking
+tools.  Let's wait a bit to see where experimental goes, and then see
+how much the library had to change.
 
-
-
--- 
-Ragnar Kjorstad
-Big Storage
+- Joe
