@@ -1,9 +1,9 @@
-Message-ID: <389975BE.9F10A6C9@msede.com>
-Date: Thu, 03 Feb 2000 13:34:06 +0100
+Message-ID: <389975EF.69B9CCE2@msede.com>
+Date: Thu, 03 Feb 2000 13:34:55 +0100
 From: Michael Marxmeier <mike@msede.com>
 Reply-To: me@jimcain.net
 MIME-Version: 1.0
-Subject: [linux-lvm] Patch 0.8i to 2.3.40: error during make
+Subject: [linux-lvm] Problems with 0.8pre tools (fwd)
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -14,38 +14,35 @@ To: linux-lvm@msede.com
 Forwarded message ...
 
 -------- Original Message --------
-Date: Wed, 2 Feb 2000 23:28:13 -0500 (EST)
+Date: Wed, 2 Feb 2000 23:39:30 -0500 (EST)
 From: Jim Cain <me@jimcain.net>
-Subject: Re: [linux-lvm] Patch 0.8i to 2.3.40: error during make
+Subject: Problems with 0.8pre tools
 
-Okay, I got the kernel to compile. Please ignore my previous message
-about
-not having the appropriate declarations. I was in the wrong linux
-source
-tree on the wrong machine. :-)
+All,
 
-Anyway, I still had to make the changes that were previously noted:
+I had some problems getting the tools to build. First, in
+tools/lib/liblvm.h, the included file <linux/lvm.h> did not compile
+because the reference to spinlock_t on line 573 was unknown. I added
+an
+#include <linux/spinlock.h> to liblvm.h, and everything in the lib
+directory built fine.
 
-> - edit ./include/linux/fs.h
-> - locate line 775
-> - add the following two lines:
-> 
-> extern int blkdev_close(struct inode *, struct file *);
-> extern int block_fsync(struct file *, struct dentry *);
+Next, in tools/lvmchange.c on line 160, the identifier LVM_RESET was
+unknown. This is defined in <linux/lvm.h>, but only if LVM_TOTAL_RESET
+is
+defined. I removed the #ifdef around it so that LVM_RESET is always
+defined. After that change, the tools built okay.
 
-Well, that's *nearly* all. You need to remove the "static" keywords
-from
-both blkdev_close and block_fsync in ./fs/block_dev.c, too.
+Well, not completely okay. Because when I do the following:
 
-Once I was in the correct source tree, these changes were reasonable,
-and
-they allowed the kernel to compile.
+pvcreate /dev/hd[bc]1
+vgcreate vg01 /dev/hd[bc]1
 
-However, I had problems getting the tools to build, and I'll be
-composing
-a separate message with details.
+the vgcreate command dumps core on a segmentation fault. I'm wondering
+if
+any of the fixes I made were incomplete or the wrong way to fix it.
 
-Thanks very much for the help!
+This is being built on kernel 2.3.40 with the 0.8i patch.
 
-Cheers,
+Thanks for the help,
 Jim
