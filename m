@@ -1,10 +1,8 @@
-Message-ID: <4002F072.90808@wanadoo.fr>
-From: Francis SOUYRI <francis.souyri@wanadoo.fr>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] which filesystem to use on slackware
-References: <20040110000045.98531.qmail@web80403.mail.yahoo.com> <1073693715.30384.6.camel@david.internal.NorcrossGroup.com> <1073705576.4883.5.camel@grandmother.littlebald.com> <3FFFCD6F.40107@wanadoo.fr> <20040112115400.GA29090@deepthought.hausboot.org>
-In-Reply-To: <20040112115400.GA29090@deepthought.hausboot.org>
+From: Luca Ferroni <luca.ferroni@studio.unibo.it>
+Message-Id: <20040112153912.1530c7d3.luca.ferroni@studio.unibo.it>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] df and lvs incompatible output
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,65 +13,96 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 12 14:08:02 2004
+Date: Mon Jan 12 18:12:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi Jens,
+Hi all,
+I use LVM2 on my laptop, and I have one volume group called "mio_vg"
 
-Jens Hoffrichter wrote:
+I extended my Logical Volume lv_usr and I experienced some problems:
+according to LVM2 (lvs output) my lv_usr is 7,5G, whereas with df its size seems to be 4,0G.
 
->On Sat, Jan 10, 2004 at 11:01:19AM +0100, Francis SOUYRI wrote:
->
->  
->
->>With Ext3 you can grow the filesystem offline and with a kernel patch 
->>you can grow online,  you can not shrink.
->>    
->>
->This is not true. Using resize2fs you can grow and shrink the filesystem,
->but only offline. I'm not sure about the kernel-patch, but I'm certainly
->sure you can shrink at least offline. And using e2fsadm in conjunction
->  
->
-Excuse me  yes it is possible to shrink offline an ext2 filesystem.
+How can I solve my problem?
 
-For the online grow kernel patch there are informations at:
+wallace ~ # df -h
+Filesystem         Dimens. Usati Disp. Uso% Montato su
+/dev/mio_vg/lv_home   1,4G  939M  405M  70% /home
+/dev/mio_vg/lv_usr    4,0G  3,6G  276M  93% /usr
+/dev/mio_vg/lv_var    2,8G  1,2G  1,6G  42% /var
+/dev/mio_vg/lv_dati    16G   14G  1,7G  89% /mnt/dati
+tmpfs                  30M  1,3M   29M   5% /tmp
 
-http://ext2resize.sourceforge.net/
-or
-http://sourceforge.net/projects/ext2resize/ 
+wallace ~ # lvs
+LV      VG     Attr   LSize  Origin Snap%  Move Move% 
+lv_dati mio_vg -wn-ao 15,77G                          
+lv_home mio_vg -wn-ao  1,39G                          
+lv_usr  mio_vg -wn-ao  7,45G                          
+lv_var  mio_vg -wn-ao  2,83G
 
-For the merge of the patch in the 2.6 kernel there are informations at:
+wallace ~ # lvdisplay 
+  --- Logical volume ---
+  LV Name                /dev/mio_vg/lv_home
+  VG Name                mio_vg
+  LV UUID                000000-0000-0000-0000-0000-0000-000000
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                1,39 GB
+  Current LE             355
+  Segments               1
+  Allocation             next free
+  Read ahead sectors     1024
+  Block device           254:0
+   
+  --- Logical volume ---
+  LV Name                /dev/mio_vg/lv_var
+  VG Name                mio_vg
+  LV UUID                000000-0000-0000-0000-0000-0000-000001
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                2,83 GB
+  Current LE             725
+  Segments               3
+  Allocation             next free
+  Read ahead sectors     1024
+  Block device           254:1
+   
+  --- Logical volume ---
+  LV Name                /dev/mio_vg/lv_usr
+  VG Name                mio_vg
+  LV UUID                000000-0000-0000-0000-0000-0000-000002
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                7,45 GB
+  Current LE             1908
+  Segments               2
+  Allocation             next free
+  Read ahead sectors     1024
+  Block device           254:2
+   
+  --- Logical volume ---
+  LV Name                /dev/mio_vg/lv_dati
+  VG Name                mio_vg
+  LV UUID                000000-0000-0000-0000-0000-0000-000003
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                15,77 GB
+  Current LE             4036
+  Segments               3
+  Allocation             next free
+  Read ahead sectors     1024
+  Block device           254:3
 
-http://www.kernelnewbies.org/status/latest.html
-or
-http://kerneltrap.org/node/view/716
+Thank you in advance
+Bye
 
-but I can not find the patch.
-
->with lvm is even more comfortable ;)) Although it had some issues with
->ext3, as sometimes a filesystem is reported unchecked even if you have run
->an e2fsck -f just right before. But adding a -f to resize2fs has always
->worked for me without any trouble at all.
->
->I chose ext3 2 1/2 years ago, when doing kernel development for my diploma
->thesis, and an occassional ooops or other crash happened almost regularily.
->And waiting for the filesystem check annoyed me after the 3rd time ;)
->
->The argument for ext3 at this moment was, that you can easily convert an
->ext2 filesystem to an ext3 filesystem using tune2fs -j (to add the journal),
->and even mount the ext3 filesystem as ext2, making it available even if
->you have no support for ext3 in your kernel (2 1/2 years ago quite important!)
->
->Ext3 has never failed me in this time, I had no failure of filesystem and
->the performance was also good, at least for my needs :)
->
->CU all,
->Jens
->  
->
-Best regards.
-
-Francis
+-- 
+----------------------------------------
+Luca Ferroni
+www.cs.unibo.it/~fferroni/
+----------------------------------------
