@@ -1,12 +1,25 @@
-Date: Sun, 16 May 2004 14:45:01 -0700
-From: Karen Shaeffer <shaeffer@neuralscape.com>
-Subject: Re: [linux-lvm] snapshot with 2.6.5 kernel
-Message-ID: <20040516214501.GA18886@synapse.neuralscape.com>
-References: <20040503064205.GB1230@synapse.neuralscape.com>
-	<20040511111322.GC31390@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4H5E2009344
+	for <linux-lvm@redhat.com>; Mon, 17 May 2004 01:14:02 -0400
+Received: from chaos.ao.net (root@chaos.ao.net [208.5.40.6])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i4H5Dsx7004906
+	for <linux-lvm@redhat.com>; Mon, 17 May 2004 01:13:54 -0400
+Received: from chaos.ao.net (harik@localhost [127.0.0.1])
+	by chaos.ao.net (8.12.9/8.12.9/Debian-5) with ESMTP id i4H5DpuE002445
+	for <linux-lvm@redhat.com>; Mon, 17 May 2004 01:13:51 -0400
+Received: (from harik@localhost)
+	by chaos.ao.net (8.12.9/8.12.9/Debian-5) id i4H5DoRi002444
+	for linux-lvm@redhat.com; Mon, 17 May 2004 01:13:50 -0400
+Date: Mon, 17 May 2004 01:13:50 -0400
+From: Dan Merillat <dmerillat@sequiam.com>
+Subject: Re: [linux-lvm] /boot on lvm?
+Message-ID: <20040517051350.GA2216@chaos.ao.net>
+References: <40A72846.5050801@mlug.missouri.edu>
+	<1084705130.3126.2.camel@localhost>
+	<40A77537.20107@mlug.missouri.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040511111322.GC31390@redhat.com>
+In-Reply-To: <40A77537.20107@mlug.missouri.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,48 +32,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, May 11, 2004 at 01:13:22PM +0200, Heinz Mauelshagen wrote:
-> On Sun, May 02, 2004 at 11:42:05PM -0700, Karen Shaeffer wrote:
+On Sun, 16 May 2004, Michael wrote:
+
+> 
+> >I run everything on LVM except for /boot, primarily because I use GRUB
+> >as a bootloader and it doesn't understand LVM volumes. As long as your
+> >bootloader understands LVM volumes there should be no problem with it.
 > > 
-> > was in the process of inflating its contents continues for a while,
-> > but finally just crashes and hangs at some point.
-> > 
-> > Am I missunderstanding how to use snapshot here? Or is this just
-> > severly broken software? Any advise is appreciated.
-> 
-> 
-> You should be able to create a snapshot fine in ythat situation, even though
-> the creation will happen slow under load.
-> 
-> Can you repeat the case ?
-> Do you have an oops ? If so, please provide the ksymoops output
-> for further analysis of the problem.
+> >
+> I use Lilo. Does Lilo understand LVM volumes?
 
+Yes, but to put / on LVM you need to use initrd.  You also probably want
+to force the minor number of <VG>/root to something fixed, since the
+kernel isn't mounting by name at that point.
 
-Hello Heinz,
+I built an initrd with busybox, LVM, megaraid and bash.  Great for
+diagnosing problems.
 
-Sorry for the delay in responding, but I am very busy.
+(Recent LILO has a bug with device-mapper.  Either downgrade or upgrade
+to the latest, or follow the debian bugtracking on it)
 
-Yes, the problem is repeatable. The hardware included an external
-RAID array that was accessed with the LSI fibre channel HBA, which
-I believe is known to be buggy. So, I have removed this hardware
-from my test lab and will be conducting additional testing. I will
-provide full details, if I encounter additional problems.
-
-BTW, can you please advise me of the time frame for progress with
-LVM2 and the 2.6.x kernel. Is a patchset planned to support the
-2.6.6 kernel with respect to snapshot?
-
-Also, can you comment on the evms alternative. It seems they already
-have a release supporting the 2.6.6 kernel. My understanding is that
-this latest evms release is production ready. Can you discuss LVM2's
-status in comparison?
-
-Thanks,
-Karen
--- 
- Karen Shaeffer
- Neuralscape, Palo Alto, Ca. 94306
- shaeffer@neuralscape.com  http://www.neuralscape.com
+--Dan
