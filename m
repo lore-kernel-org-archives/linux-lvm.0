@@ -1,8 +1,11 @@
-From: "kaite3@bigfoot.de" <kaite3@bigfoot.de>
-Message-ID: <0999022471.0268982118@mail.bigfoot.com>
-Content-Transfer-Encoding: 7bit
-Date: Tue, 28 Aug 2001 18:52:37 -0500
-Subject: [linux-lvm] Start Accepting Credit Cards``
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Tue, 28 Aug 2001 17:57:21 -0600
+Subject: Re: [linux-lvm] Very small but important whoops in lvmcreate_initrd in 1.0.1-rc1
+Message-ID: <20010828175721.I1367@turbolinux.com>
+References: <200108282153.f7SLr3b05929@foo-bar-baz.cc.vt.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200108282153.f7SLr3b05929@foo-bar-baz.cc.vt.edu>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,38 +17,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: "9249@ayna.com" <9249@ayna.com>
-Cc: linux-ipv6-request@inner.net, linux-ipv6@inner.net, linux-irda@list.uit.no, linux-kernel@netpathway.com, linux-kernel@progressive-comp.com, linux-l-request@mana.landofhaze.com, linux-l@lonewolf.soark.net, linux-l@mana.landofhaze.com, linux-list-request@ssc.com, linux-list@fylz.com, linux-list@ssc.com, linux-list@unix-ag.uni-kl.de, linux-ljfs@majordomo.ibasys.net, linux-lvm-approval@msede.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Valdis.Kletnieks@vt.edu
+Cc: LVM-Devel@sistina.com, Linux-LVM@sistina.com
 
-mvc9vc
-We help business owners accept credit cards!
+On Aug 28, 2001  17:53 -0400, Valdis.Kletnieks@vt.edu wrote:
+> There was a gratuitous 'shift' in the script, causing it to swallow the
+> next parameter.  This wasn't very nice when I tried to call it with
+> '--nodep 2.4.9' and watched it over-write my initrd-lvm-2.4.5.gz ;)
 
-Competitive Rates! Below Market Prices!
+Have fixed this in CVS.
 
-Our approval process is quick and simple!
+Cheers, Andreas
 
-We offer complete processing systems for your business:
-
-*Internet
-*Retail
-*Mail Order
-*Phone Order
-
-Free information request form:
-PLEASE VISIT
-
-http://www.freewebdirect.net/merchantservices/
-
-
-****************************************************************
-Since you have received this message you have either responded
-to one of our offers in the past or your address has been
-registered with us.  If you wish to be removed please reply to:
-mailto:morleads7@yahoo.com?subject=remove
-****************************************************************
-
-mv9vc
-
-*********
+PS - no commit message was mailed out, because "adilger@sistina.com" is
+     not a valid user ID.  Somebody broke the commit message script.
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
