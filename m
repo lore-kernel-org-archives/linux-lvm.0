@@ -1,9 +1,9 @@
-From: "Kai-Min Sung" <k@kaisung.com>
-Message-ID: <002a01c2fffc$057db0c0$02fea8c0@nimiak>
+From: "LAWRENCE MOMOH" <mohlaw@voila.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: 
-Subject: [linux-lvm] RE: extending LVM for school project
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E193wGi-0000YY-00@hermes.sistina.com>
+Subject: [linux-lvm] Business Relationship.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,42 +14,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 11 02:29:01 2003
+Date: Fri Apr 11 06:01:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Linux-lvm@sistina.com
+To: Linux-LVM@sistina.com
 
-Thanks for the slew of suggestions from everyone. Right now, my partner
-and I are thinking of a writing a distributed LVM. We're not too sure of
-the details yet but we imagine it'd be cool to create a cluster of
-storage nodes, each running a distributed LVM that's able to use the
-combined network storage and create volumes out of them. For reliability
-and high-availability, we'd want to use some form of RAID-ing across
-storage nodes so that if any node in the cluster went down, the volume
-data would remain intact. I did a google search for distributed volume
-managers and found one company, ScaleEight that has created their own
-proprietary distributed volume manager. Is anyone familiar with this
-company? There's a whitepaper available on their website but I'm having
-problems registering for it. Anyone happen to have copy of it?
+ Dear sir 
 
-Thanks,
--Kai
+I am Lawrence Momoh of the republic of sierra leone=3BMeanwhile I am on 
+exile in accra ghana =2EAftermuch atrocities =2Chuman right abuses and the 
+overthrow of the government of major general koroma years ago=2E
 
+I served the government as a presidential advisor on finance and mineral resources 
+=2EDuring our term in office we had various sum of cash and gold deposited 
+in various secret vaults overseas=2EDue to the present gorvernment of 
+Ahmed Tejan Kabahand the ECOWAS EMBARGO ON former ministers of major johnny 
+koromah's AFRC we could not travel out beyond west africa =2E Fortunately 
+for me =2C I manage to get access to one of the vaults in accra ghana=2Cthe 
+vaults contains $18=2E37m USD and some quantities of gold =2E
 
+SUBJET MATTER=3B I need a foreign partner who can assist me claim this vault from the security company =2C hence I have rgistered that they belong to a valued 
+friend of mine who left sierra leone at the wake of the civil war for 
+safe keeping =2EAfter the claim of the vaults you will help me to travel to 
+your country where we will invest the sum and arrange the sale of the 
+gold =2E
 
------Original Message-----
-From: Kai-Min Sung [mailto:k@kaisung.com] 
-Sent: Tuesday, April 08, 2003 10:55 PM
-To: 'Linux-lvm@sistina.com'
-Subject: extending LVM for school project
+Kindly reply this message to enable us start the processing of the 
+claims=2CYou are free to ask any questions with regard to this 
+transaction=2E 
 
-Hey everyone,
-	I'm a masters student taking a distributed systems project class
-and would like to work on extending LVM. My initial idea was to modify
-LVM and allow it to create physical volumes using disks on remote nodes.
-But then I read posts about using ENBD to achieve this. Do people on
-this list have suggestions or ideas for a fun/interesting project that
-could be accomplished within 10 weeks?
+Best Regards=2C 
 
-Regards,
-Kai-Min Sung
+MR=2E LAWRENCE MOMOH=2E
