@@ -1,11 +1,10 @@
-Return-Path: <list@showme.wox.org>
-Message-ID: <00ca01c0eea4$500ab4a0$0f01a8c0@ws1>
-From: "Bas" <list@showme.wox.org>
-References: <Pine.BSF.4.33.0106041350560.1884-100000@rogue.tripp.org> <01060413285600.09944@garfield.linux.localdomain> <011501c0ed31$58a54360$0f01a8c0@ws1> <20010605102551.Z97441@boing.melbourne.sgi.com> <3B1CE383.DCFED687@niehs.nih.gov>
-Date: Wed, 6 Jun 2001 18:18:24 +0200
+Return-Path: <michael@auctionwatch.com>
+Message-ID: <5179B27750A9D411B968009027E06E27012D729F@exback.corp.auctionwatch.com>
+From: "Michael S. Fischer" <michael@auctionwatch.com>
+Subject: RE: [linux-lvm] 2.4.5 & Adaptec 7890 U2W Controller solved, LVM 0
+	.9.1 b7 FAILS.
+Date: Wed, 6 Jun 2001 10:53:52 -0700 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] 2.4.5 & Adaptec 7890 U2W Controller solved, LVM 0.9.1 b7 FAILS.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,19 +17,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: 'Bas ' <list@showme.wox.org>, "'linux-xfs@oss.sgi.com '" <linux-xfs@oss.sgi.com>
+Cc: "'linux-lvm@sistina.com '" <linux-lvm@sistina.com>
+
+Search the lvm-devel mailing list archives for "get_hardblocksize" for the
+solution -- you need to change the function call name as the name has
+changed.
+
+-----Original Message-----
+From: Bas
 To: linux-xfs@oss.sgi.com
 Cc: linux-lvm@sistina.com
+Sent: 6/6/01 9:18 AM
+Subject: [linux-lvm] 2.4.5 & Adaptec 7890 U2W Controller solved, LVM 0.9.1
+b7 FAILS.
 
 You're right. Today I downloaded the default kernel coming from
 ftp.kernel.org. Patched it using 06042001-xfs-patch. It compiled and it
-runs. But when I patch this kernel to 0.9.1 beta 7, (CVS or standard patch
+runs. But when I patch this kernel to 0.9.1 beta 7, (CVS or standard
+patch
 makes no difference) it fails to compile.
 
 Now this:
 
 drivers/md/mddev.o: In function `__update_hardblocksize':
-drivers/md/mddev.o(.text+0x22d6): undefined reference to `get_hardblocksize'
-drivers/md/mddev.o(.text+0x2312): undefined reference to `get_hardblocksize'
+drivers/md/mddev.o(.text+0x22d6): undefined reference to
+`get_hardblocksize'
+drivers/md/mddev.o(.text+0x2312): undefined reference to
+`get_hardblocksize'
 make[1]: *** [kallsyms] Error 1
 make: *** [vmlinux] Error 2
 
@@ -58,18 +73,22 @@ Subject: Re: 2.4.5 & Adaptec 7890 U2W Controller.
 > > >
 > > > > > [ ]   Build Adapter Firmware with Kernel Build (NEW)
 > > > > >
-> > > > > It is the last option under Adaptec AIC7xxx support.  The firmware
+> > > > > It is the last option under Adaptec AIC7xxx support.  The
+firmware
 > > > > > included in the 2.4.5 release is out of sync with the kernel
 driver.
 > > > > >
-> > > > > I have not done this myself, since my current XFS machine does not
+> > > > > I have not done this myself, since my current XFS machine does
+not
 have
 > > > a
 > > > > > SCSI controller, but see the below email for more info.
 > > > >
-> > > > Has anyone had any success using this option? Didn't work for me.
+> > > > Has anyone had any success using this option? Didn't work for
+me.
 Problem
-> > > > isn't isolated to just the 7890 it seems, I get the same error on a
+> > > > isn't isolated to just the 7890 it seems, I get the same error
+on a
 > > > Adaptec
 > > > > 2930CU. It still produced:
 > > > >
@@ -78,7 +97,8 @@ Problem
 > > > > I also tried using the old aic7xxx driver, which did load the
 module.
 > > > However
-> > > > it produced a kernel oops immediately after. I don't remember the
+> > > > it produced a kernel oops immediately after. I don't remember
+the
 exact
 > > > point
 > > > > in the boot sequence, I believe it was at "Trying to unmount old
@@ -110,3 +130,9 @@ root".
 >
 > Joe Krahn
 >
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
