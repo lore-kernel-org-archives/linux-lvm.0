@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] RAID & LVM
-Message-ID: <20020626123739.D18125@sistina.com>
-References: <2411209499ABD41180270090274DD8BC0337F1EA@zafnt2> <BDEMIPDEGABMNEFIHCPDAEFLDJAA.bill+f.9sfuw6uo@tao-group.com>
+Subject: Re: [linux-lvm] FW: LVM
+Message-ID: <20020626123951.E18125@sistina.com>
+References: <Pine.LNX.4.44.0206251009190.13871-100000@dragon.inside.ntisys.com> <Pine.LNX.4.44.0206251408300.962-100000@pzat.meep.org>
 Mime-Version: 1.0
-In-Reply-To: <BDEMIPDEGABMNEFIHCPDAEFLDJAA.bill+f.9sfuw6uo@tao-group.com>; from bill+f.9sfuw6uo@tao-group.com on Tue, Jun 25, 2002 at 05:19:41PM +0100
+In-Reply-To: <Pine.LNX.4.44.0206251408300.962-100000@pzat.meep.org>; from oolon@ankh.org on Tue, Jun 25, 2002 at 02:11:39PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,60 +14,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun 26 05:45:02 2002
+Date: Wed Jun 26 05:47:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jun 25, 2002 at 05:19:41PM +0100, William Blunn wrote:
-> > I know it seems to be a very old question, but I can't find in 
-> > the previous messages, the answer for that..
-> > 
-> > Is it possible to use RAID and LVM together? If positive, is 
-> > there a HOW-TO telling something about it?
+On Tue, Jun 25, 2002 at 02:11:39PM +0000, James Hawtin wrote:
+> On Tue, 25 Jun 2002 bscott@ntisys.com wrote:
 > 
-> Yes it works well.
+> > On Tue, 25 Jun 2002, at 8:58am, Montgomery Mouw wrote:
+> > > I was just wondering if I mount 5 drives using LVM and say the forth drive
+> > > dies, do I lose the data only on that forth drive or do I lose the data on
+> > > the whole mount (all 5 drives data)?
+> >
+> >   In general, you will lose everything.
+> >
+> >   Technically: A drive is used to create a PV (Physical Volume).  One or
+> > more PVs is used to create an LV (Logical Volume).  If the drive containing
+> > a PV fails, that PV becomes unavailable.  If an LV needs a PV, and that PV
+> > is unavailable, the LV will become unavailable as well.
+> >
 > 
-> Use the standard RAID stuff to make a raid device, say /dev/md0, then create a PV (LVM Physical Volume) on that, then make a VG (LVM volume group) out of that PV, then create LVs (LVM Logical Volumes) in the VG.
-> 
-> Then (unless you have some other use for them), create filesystems in the LVs.
-> 
-> I use LVM over RAID1 on ATA disks using Ultra-ATA mode 4 (66 MB/s) or higher.
-> 
-> > LVM will support mirroring someday?
+> I thought changes were planned or done so that if a PV failed the vg could
+> be force mounted and only the lvs on the unavailable PV would not be
+> available....
 
-We've got a mirroring target already in device-mapper, which is the generic
-volume mapping driver used by our LVM2 tools (please check it out
-at www.sistina.com).
-Final (L)GPLed release planned for July.
+As Alasdair said that support will show up later in LVM2.
+It is in unstable LVM1.1 already.
 
-We will support mirroring directly further down the LVM2 road later this year.
+See the other RAID > 0 thread on this list if you want to have disk redundancy
+in order to avoid such SPOFs.
+
+BTW: LVM2 will support mirroring directly later this year.
 
 > 
-> Not AFAIK.
+> James
 > 
-> Bill
-> -- 
-> William H. Blunn - <bill+s.9sfuw6uo@tao-group.com> - Developer Support
-> Tao
-> 62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
-> Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
 > 
-> The contents of this e-mail and any attachments are confidential and may
-> be legally privileged. If you have received this e-mail and you are not
-> a named addressee, please inform us as soon as possible on
-> +44 118 901 2999 and then delete the e-mail from your system. If you are
-> not a named addressee you must not copy, use, disclose, distribute,
-> print or rely on this e-mail. Any views expressed in this e-mail or any
-> attachments may not necessarily reflect those of Tao's management.
-> Although we routinely screen for viruses, addressees should scan this
-> e-mail and any attachments for viruses. Tao makes no representation or
-> warranty as to the absence of viruses in this e-mail or any attachments.
-> Please note that for the protection of our business, we may monitor and
-> read e-mails sent to and from our server(s).
-> 
-> Visit our website at http://tao-group.com/
 > 
 > _______________________________________________
 > linux-lvm mailing list
