@@ -1,8 +1,11 @@
-From: Stuart Levy <slevy@ncsa.uiuc.edu>
-Message-Id: <200203071529.JAA18805@niri.ncsa.uiuc.edu>
-Subject: Re: [linux-lvm] System Suggestions
-References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
-    <20020306161130.D855@kluge.net> <200203070415.WAA16951@niri.ncsa.uiuc.edu>
+Message-Id: <3C87A0A3.8080605@theiqgroup.com>
+From: Kelly Corbin <kcorbin@theiqgroup.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] vgscan errors
+References: <3C83AD42.20301@theiqgroup.com>
+    <20020305002428.B13751@sistina.com> <3C85289C.8060606@theiqgroup.com>
+    <20020305223226.A19035@sistina.com> <3C854B93.2060402@theiqgroup.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +16,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar  7 09:29:06 2002
+Date: Thu Mar  7 11:17:02 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Petro <petro@auctionwatch.com>, "Anthony W. Marino" <anthony@AWMObjects.com>
-Cc: linux-lvm@sistina.com, linux-xfs@oss.sgi.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-I'd written:
+OK, now I have another problem.  I got vgscan to run fine now off of my 
+boot CD, but now the system fails the vgscan on boot (/ is an LVM) with 
+an 'ERROR 28 writing volume group backup file /etc/...'
 
-> A 3ware 7850 here  (8 drive hw RAID5) performed erratically
-> until I got their latest .016 driver, which seems to be in
-> the 2.4.18 kernel too.  The earlier .010 driver in 2.4.<=17
-> would sometimes get into a low-performance (~15MB/sec) mode,
-> but the .016 driver has been doing very well.  3ware tech support
-> have been very responsive too.  Based on a few weeks' experience,
-> I'd recommend them.
->
->    Stuart Levy, slevy@ncsa.uiuc.edu
+I'm assuming this is because the initrd created by lvmcreate_initrd is 
+not big enough to accomodate the metadata backup.  What size is this 
+generally (lvmcreate_initrd says it calculates this automatically) and 
+to what size should I set this manually to get this to work?  How much 
+space do I need for the backups during vgscan?
 
-Anthony Marino asked:
-> Are you, too, using XFS and LVM with your 3Ware/RAID5 config?  
+Thanks.
 
-XFS yes, LVM no.
+Kelly Corbin wrote:
+
+> Doh! I didn't get what you were saying in your first reply.  I'm sure 
+> that's it.  It's running in an init. ramdisk image and there's very 
+> little actual space.  Generally speaking, how big do those backups get?
+> 
+> Thanks for your help.
+> 
+> Heinz J . Mauelshagen wrote:
+> 
+>> On Tue, Mar 05, 2002 at 02:20:44PM -0600, Kelly Corbin wrote:
+>>
+>> It is probably too little free space in the root fs.
+>> Because you've got somany extents the size of the metadata backup is 
+>> bigger
+>> as well.
+>>
+>> Check your root fs free space, please.
+>>
+>>
+>>> Thanks.
+>>>
+>>>
+>>> Heinz J . Mauelshagen wrote:
+>>>
+>>>
+>>>> Error 2 is ENOENT (no entry).
+>>>> Could be a space problem in case / run full.
+>>>>
+>>>> Regards,
+>>>> Heinz    -- The LVM Guy --
+>>>
+> 
+> 
+
+
+-- 
+--------------------------------------------
+-- Kelly Corbin
+-- Systems Administrator
+--
+-- http://www.theiqgroup.com
+-- The Future of eServices...
+--
+-- The IQ Group, Inc.
+-- 6740 Antioch Suite 110
+-- Merriam, KS 66204
+-- (913)-722-6700 x105
+-- Fax (913)722-7264
+--------------------------------------------
