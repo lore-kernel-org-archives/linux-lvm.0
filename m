@@ -1,11 +1,12 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgchange -a y /dev/System fails
-Message-Id: <20020130131530.B3769@sistina.com>
-References: <20020125233533.GK26045@merlins.org>
-    <E16ViXz-0001vP-00@hermes.sistina.com>
+Subject: Re: [linux-lvm] software RAID over LVM
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <20020130094342.GA13425@colombina.comedia.it>
+References: <20020130094342.GA13425@colombina.comedia.it>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-SfE7DzmuHq6Wsx4C5r7t"
+Message-Id: <1012410289.11805.0.camel@UberGeek>
 MIME-Version: 1.0
-In-Reply-To: <E16ViXz-0001vP-00@hermes.sistina.com>; from
-    ahead@bigpond.net.au on Wed, Jan 30, 2002 at 10:24:35AM +1000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,72 +17,73 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 30 06:20:02 2002
+Date: Wed Jan 30 11:05:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jan 30, 2002 at 10:24:35AM +1000, Adrian Head wrote:
-> A little while ago I had the same problems - the only way i could get around 
-> it  was using 2.4.16-xfs.  I was using 2.4.17-xfs+lvm (1.0.1) and when a 
-> snapshot failed I couldn't remove it and when I rebooted the system would 
-> hang.  By having a 2.4.16-xfs kernel with lvm-1.0.1rc4(ish) it would fix the 
-> problems on the fly during bootup and all was happy.  YMMV  At the time I did 
-> ask the mailling list why 2.4.16-xfs was more robust than 2.4.17-xfs+lvm; 
-> however, I never recieved an answer.
+--=-SfE7DzmuHq6Wsx4C5r7t
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Well, as linux-kernel reports there's still problems with 2.4 up to .17 in
-the vm subsystem which show up on heavier load or on long running systems.
-Andrea Arcangeli has some fixes but I don't know if they already have been
-ported to 2.4.18-pre jet.
+Right, that's what I'm talking about. If you didn't do it that way,
+you'd be screwed! :)=20
 
-> 
-> Heady
-> 
-> On Sat, 26 Jan 2002 09:35, you wrote:
-> > It fails and says:
-> > parameter error setting up snapshot copy on write exception
-> >
-> > So yes, I have  snapshots in there, but I can't delete  the snapshots if
-> > the volume isn't active, and I can't activate the volume because of a
-> > snapshot.
-> >
-> > To make things worse, /dev/System contains /usr and /var.
-> >
-> > The snapshots were created with 1.0.1rc4 on 2.4.14 and I now run 2.4.17
-> > with 1.0.1rc4-ish
-> >
-> > What's the magic override I need to use to make the volume active again?
-> >
-> > Thanks
-> > Marc
-> 
-> -- 
-> Adrian Head
-> 
-> (Public Key available on request.)
-> 
+On Wed, 2002-01-30 at 03:43, Luca Berra wrote:
+> Well, since the whole point of having LVM is ease of resizing logical
+> volumes,
+> and resizing MD device is impossible or painful, i do not really
+> understand
+> why should anyone want to do this.
+> If mirroring were to be implemented over lvm, it should be at the PE/LE
+> level,
+> in the LVM driver itself, since this is not true (search archives for
+> the reasoning
+> behind this) the only sensible chance is having LVM over MD.
+>=20
+> On Tue, Jan 29, 2002 at 10:58:26PM -0600, Austin Gonyou wrote:
+> > I can think of MANY uses for this. The main one would be a relatively
+> > cheap way of making a RAID0+1, or stripe of mirrors. If you don't have
+> > any hardware to do this with, then software is next. It'd be nice to
+> be
+> > able to do this, for sure. You could even do 0+5, or something crazy
+> > like that too.
+>=20
+>=20
+>=20
+> --=20
+> Luca Berra -- bluca@comedia.it
+>         Communication Media & Services S.r.l.
+>  /"\
+>  \ /     ASCII RIBBON CAMPAIGN
+>   X        AGAINST HTML MAIL
+>  / \
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--=20
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-698-7250
+email: austin@coremetrics.com
 
--- 
+"It is the part of a good shepherd to shear his flock, not to skin it."
+Latin Proverb
 
-Regards,
-Heinz    -- The LVM Guy --
+--=-SfE7DzmuHq6Wsx4C5r7t
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+iD8DBQA8WCew94g6ZVmFMoIRAortAJ99VrkPi7PADuiUsVHRl7qgV5+mGwCgy7wk
+iPxwAa4T4abYqUYLOuNbyds=
+=jR/k
+-----END PGP SIGNATURE-----
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--=-SfE7DzmuHq6Wsx4C5r7t--
