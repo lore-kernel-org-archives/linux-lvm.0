@@ -1,8 +1,10 @@
-From: Sander de Boer <mlist@sanderscorner.com>
-MIME-Version: 1.0
-Message-Id: <03031123304800.00353@sys01>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Patch for LVM online resize for 2.4.20 kernel
+From: jon+lvm@silicide.dk
+Subject: Re: [linux-lvm] Problems with snapshots
+Message-ID: <20030311225454.GB14568@gw.silicide.dk>
+References: <8075D5C3061B9441944E137377645118012E9A@cinshrexc03.shermfin.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <8075D5C3061B9441944E137377645118012E9A@cinshrexc03.shermfin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,19 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar 11 16:33:02 2003
+Date: Tue Mar 11 16:56:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm upgrading to kernel 2.4.20 now and I have a problem finding an EXT2=20
-online resize patch for this kernel, The one supplied with ext2resize is =
-for=20
-2.4.0.
+On Tue, Mar 11, 2003 at 04:20:49PM -0500, Rechenberg, Andrew wrote:
+> 
+> I've just implemented LVM 1.0.3 in the stock Red Hat 2.4.18-19 kernel
+> and I believe I'm having issues with snapshots.  The past two nights my
 
-Thanks in advance,
-Sander
+Of course you have. There has been several bugs in the kode handling
+snapshots. This is quite recently. The bugfixes should be in 1.0.7,
+which you can get from the CVS. (make sure it is 1.0.7)
 
---=20
-My public key is available at=20
-http://www.sanderscorner.com/file/pgp-pubkey-2003-03-02.asc
+
+
+JonB
