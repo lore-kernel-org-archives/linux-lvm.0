@@ -1,13 +1,11 @@
-Return-Path: <axboe@brick.kernel.dk>
-Date: Thu, 19 Apr 2001 23:51:07 +0200
-From: Jens Axboe <axboe@suse.de>
-Subject: Re: [linux-lvm] 2.4.3-ac{6,7} LVM hang
-Message-ID: <20010419235107.G750@suse.de>
-References: <Pine.LNX.4.21.0104161653140.14442-100000@imladris.rielhome.conectiva> <Pine.LNX.4.31.0104192311080.1048-100000@sjoerd.sjoerdnet>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="9jxsPFA5p3P2qPhR"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.31.0104192311080.1048-100000@sjoerd.sjoerdnet>; from iafilius@xs4all.nl on Thu, Apr 19, 2001 at 11:13:49PM +0200
+Return-Path: <miles@megapathdsl.net>
+Message-ID: <3ADF5E3B.6070309@megapathdsl.net>
+Date: Thu, 19 Apr 2001 14:52:59 -0700
+From: Miles Lane <miles@megapathdsl.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+References: <E14qKeF-0007wb-00@the-village.bc.nu>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,47 +17,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: Arjan Filius <iafilius@xs4all.nl>
-Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: AJ Lewis <lewis@sistina.com>, linux-lvm@sistina.com, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Alan Cox wrote:
 
-On Thu, Apr 19 2001, Arjan Filius wrote:
-> Hello,
+>>As far as getting patches into the stock kernel, we've been sending patches
+>>to Linus for over a month now, and none of them have made it in.  Maybe
+>>someone has some pointers on how we get our code past his filters.
+>>
 > 
-> Same here as reported.
-> restoring lvm.c from 2.4.3 into 2.4.4-pre? "fixes" this. (tested not ac's
-> kernel)
+> Has it occured to you that some of this might be because the code does stuff
+> like hide flags in the low bits of addresses and do unchecked kmallocs ?
+> Things people have tried to send patches for ..
+> 
+> The best way to get stuff to Linus is to feed him changes one at a time and
+> make them all clean and clearly correct. When I have a big set of changes I
+> normally start by feeding Linus all the 'fluff' - spelling checks and small
+> warning fixes. After that its normally easy to pick out changes one at a time
+> and feed them on.
+> 
+> Given 500 lines of mixed up diff it is very hard to verify the correctness of
+> anything. 
 
-Does attached patch fix it?
 
--- 
-Jens Axboe
+The IrDA folks have had a similar struggle.  AJ, perhaps it would be
+helpful for you to read the discussion that took place regarding getting
+a bunch of IrDA code merged into the 2.4 tree:
 
+http://www.pasta.cs.uit.no/pipermail/linux-irda/2000-November/001923.html
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=lvm-244p4-1
+Dag Brattli <dagb@fast.no> eventually had a discussion with Linus and
+hashed out what he needed to do to get Linus to accept his big patch. 
+It all
+worked out very well, IIRC.
 
---- /opt/kernel/linux-2.4.4-pre4/drivers/md/lvm.c	Wed Apr 18 14:37:34 2001
-+++ drivers/md/lvm.c	Thu Apr 19 23:40:39 2001
-@@ -1674,10 +1674,11 @@
- 			       int rw,
- 			       struct buffer_head *bh)
- {
--	int ret = lvm_map(bh, rw);
--	if (ret < 0)
--		buffer_IO_error(bh);
--	return ret;
-+	if (lvm_map(bh, rw) >= 0)
-+		return 1;
-+
-+	buffer_IO_error(bh);
-+	return 0;
- }
- 
- 
-
---9jxsPFA5p3P2qPhR--
+	Miles
