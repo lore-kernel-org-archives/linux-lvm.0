@@ -1,11 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+From: Anders Widman <andewid@tnonline.net>
+In-Reply-To: <20020208004550.GC17474@auctionwatch.com>
+Message-Id: <3WQGE83SPL62NI98S3XWDBOL94A6.3c63a5e1@kadzuki>
 Subject: Re: [linux-lvm] using 160GB IDE drives under linux with LVM.
-Message-Id: <20020208101726.A17077@sistina.com>
-References: <wxx3d0d2czp.fsf@nommo.uio.no>
-    <20020207220832.GA4116@wookimus.net> <wxxsn8c1vx1.fsf@nommo.uio.no>
 MIME-Version: 1.0
-In-Reply-To: <wxxsn8c1vx1.fsf@nommo.uio.no>; from terjekv@math.uio.no on
-    Fri, Feb 08, 2002 at 04:42:34AM +0100
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,53 +14,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  8 03:20:02 2002
+Date: Fri Feb  8 04:18:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Feb 08, 2002 at 04:42:34AM +0100, Terje Kvernes wrote:
-> "Chad C. Walstrom" <chewie@wookimus.net> writes:
-> 
-> > On Thu, Feb 07, 2002 at 10:33:46PM +0100, Terje Kvernes wrote:
-> > >   fdisk is only able to address 128GiB, that's rather obvious.  if I
-> > >   make one partition, 
-> > 
-> > Why make a partition at all?  Why not just make a physical volume out of
-> > the whole disk?
-> 
->   like I said, if I pvcreate the device itself, /dev/hdc,
->   /proc/lvm/global then returns the size as 134152192KB.  so it's
->   still off.  :/
+2002-02-08 01:45:50, Petro <petro@auctionwatch.com> wrote:
 
-That's just "134152192 KB / 1024 MB/KB / 1024 GB/MB = 127.937 GB"
-which is close enough to 128 GB ;-)
+>On Fri, Feb 08, 2002 at 01:30:50AM +0100, Anders Widman wrote:
+>> 2002-02-08 00:47:16, Petro <petro@auctionwatch.com> wrote:
+>> 
+>> >On Thu, Feb 07, 2002 at 05:05:27PM -0600, Kirby C. Bohling wrote:
+>> >> Why is he brave, it is just a converted 2.4.15-pre5 with a change to the 
+>> >> version number if I remember correctly that has a filesystem bug when 
+>> >> you umount during a reboot.  As long as he doesn't reboot and/or umount 
+>> >> his data is save. :-)
+>> >    I thought there were more changes than that. 
+>> >    2.5.x is the development series, not the stable series. 
+>> Not that the 2.4.x series is very stable anyway, with problems of different sorts (APIC for example)..
+>    
+>    And problems with the high memory VM (DAMHIK), and...
+>
+>    But if the stable series isn't, how is the unstable going to be
+>    better? 
+>
 
-> 
-> -- 
-> Terje
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Of course they are not. But if you are having problems with one kernel and can't get around it it might be a good idea to test another kernel...
 
--- 
 
-Regards,
-Heinz    -- The LVM Guy --
+Oh, by the way... have a look at http://www.linux-ide.org/ -...
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//Anders
