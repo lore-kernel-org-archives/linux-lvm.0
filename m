@@ -1,10 +1,10 @@
-Return-Path: <jlundell@pobox.com>
-Mime-Version: 1.0
-Message-Id: <p0510030ab77546a455f2@[10.128.7.49]>
-In-Reply-To: <200107132204.f6DM4TR3014602@webber.adilger.int>
-References: <200107132204.f6DM4TR3014602@webber.adilger.int>
-Date: Fri, 13 Jul 2001 17:49:55 -0700
-From: Jonathan Lundell <jlundell@pobox.com>
+Return-Path: <andrewm@uow.edu.au>
+Message-ID: <3B4FBB36.1F692780@uow.edu.au>
+Date: Sat, 14 Jul 2001 13:23:34 +1000
+From: Andrew Morton <andrewm@uow.edu.au>
+MIME-Version: 1.0
+References: <200107132041.f6DKfqM8013404@webber.adilger.int> from "Andreas Dilger" at Jul 13, 2001 02:41:52 PM <E15LAGR-0000HX-00@the-village.bc.nu>
+Content-Transfer-Encoding: 7bit
 Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -17,27 +17,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>, Chris Wedgwood <cw@f00f.org>
-Cc: "Albert D. Cahalan" <acahalan@cs.uml.edu>, Ben LaHaise <bcrl@redhat.com>, Ragnar Kjxrstad <kernel@ragnark.vestdata.no>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Andreas Dilger <adilger@turbolinux.com>, "Albert D. Cahalan" <acahalan@cs.uml.edu>, Ben LaHaise <bcrl@redhat.com>, Ragnar Kjxrstad <kernel@ragnark.vestdata.no>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
 
-At 4:04 PM -0600 2001-07-13, Andreas Dilger wrote:
->**) As I said in my previous posting, it depends on if/how MD RAID does
->    write ordering of I/O to the data sector and the parity sector.  If
->    it holds back the parity write until the data I/O(s) are complete, and
->    trusts the data over parity on recovery, you should be OK unless you
->    have multiple failures (i.e. bad disk + crash).  If it doesn't do this
->    ordering, or trusts parity over data, then you are F***ed (I doubt it
->    would have this problem).
+Alan Cox wrote:
+> 
+> > RAID 5 throws a wrench into this by not guaranteeing that all of the
+> > blocks in a stripe are consistent (you don't know which blocks and/or
+> > parity were written and which not).  Ideally, you want a multi-stage
+> > commit for RAID as well, so that you write the data first, and the
+> > parity afterwards (so on reboot you trust the data first, and not the
+> > parity).  You have a problem if there is a bad disk and you crash.
+> 
+> Well to be honest so does most disk firmware. IDE especially. For one thing
+> the logical sector size the drives writes need not match the illusions
+> provided upstream, and the write flush commands are frequently not implemented
+> because they damage benchmarketing numbers from folks like Zdnet..
 
-That wouldn't help, would it, if >1 data sectors were being written.
+If, after a power outage, the IDE disk can keep going for long enough
+to write its write cache out to the reserved vendor area (which will
+only take 20-30 milliseconds) then the data may be considered *safe*
+as soon as it hits writecache.
 
-The fault mode of a sector simply not being written seems like a real 
-weak point of both RAID-1 and RAID-5. Not that RAID-5 parity ever 
-gets checked, I think, under normal circumstances, nor RAID-1 mirrors 
-get compared, but if they were check and there was an parity or 
-mirror-compare error and no other indication of a fault (eg CRC), 
-there's no way to recover correct data.
--- 
-/Jonathan Lundell.
+In which case it is perfectly legitimate and sensible for the drive
+to ignore flush commands, and to ack data as soon as it hits cache.
+
+Yes?
+
+If I'm right then the only open question is: which disks do and
+do not do the right thing when the lights go out.
+
+-
