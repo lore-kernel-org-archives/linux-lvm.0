@@ -1,7 +1,7 @@
-Message-ID: <85063BBE668FD411944400D0B744267A8885F5@AUSMAIL>
+Message-ID: <85063BBE668FD411944400D0B744267A8885F6@AUSMAIL>
 From: "Gonyou, Austin" <austin@coremetrics.com>
 Subject: RE: [linux-lvm] vgscan 1.0.1-rc2 + kernel 2.4.10
-Date: Wed, 26 Sep 2001 17:52:58 -0500
+Date: Wed, 26 Sep 2001 17:54:44 -0500
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,7 +18,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-I only get this when I run the command as someone other than root. 
+chmod u+s on the file lets anyone run that command. Seems to work ok. Also,
+what does just running vgscan give you? what error message?
 
 -- 
 Austin Gonyou
