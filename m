@@ -1,9 +1,11 @@
-Date: Sat, 6 Oct 2001 13:01:47 +0200
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Message-ID: <20011006130147.C31614@lug-owl.de>
+Date: Sat, 6 Oct 2001 23:18:26 +0000
+From: Nils Juergens <nils@muon.de>
+Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
+Message-ID: <20011006231826.A739@guldukat.muon.local>
+References: <20011004223343.A868@balu.kawo2.rwth-aachen.de> <20011005090810.B1245@sistina.com> <3BBD6084.70106@st-peter.stw.uni-erlangen.de> <20011005095737.A1460@sistina.com> <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Removing direct access to gendisk_head
+In-Reply-To: <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,94 +21,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+On Fri, 05.10.01, svetljo <galia@st-peter.stw.uni-erlangen.de> wrote:
+> 
+> Heinz J . Mauelshagen wrote:
+> 
+> >On Fri, Oct 05, 2001 at 09:25:56AM +0200, svetljo wrote:
+> >
+> >>is gcc-3.0.1 safe, or i should also use "-o0"
+> >>
+> >
+> >Don't have a report for this :-(
+> >Please try it.
+> >
+> it's seems to work
+> 
 
-I'm currently looking over kernel code (for cleaning-up purposes)
-and removed EXPORT_SYMBOL(gendisk_head) which was a no-no for
-current LVM kernel code. Please think about picking up this patch
+I tried gcc-3.0.1 with LVM on linux-2.4.10 and had a lot of problems,
+but it was no problem in LVM, it works with 2.95.4.
 
-	- Named struct initializers
-	- Removing direct use of gendisk_head
-
-There's an open Q: Do we need to nullify ->real_devices and ->next?
-I don't think so (but I am unsure) so please remove these two lines
-upon your oppinion:-)
-
-MfG, JBG
+What i was seeing was funny stuff happening to the stack after
+a function call causing (in my case) lvremove to segfault.
+I have seen this with gcc-3.0.1 before, on another program.
 
 
---- lvm.c.orig	Sat Oct  6 11:19:40 2001
-+++ lvm.c	Sat Oct  6 12:48:27 2001
-@@ -414,17 +414,17 @@
- 
- static struct gendisk lvm_gendisk =
- {
--	MAJOR_NR,		/* major # */
--	LVM_NAME,		/* name of major */
--	0,			/* number of times minor is shifted
--				   to get real minor */
--	1,			/* maximum partitions per device */
--	lvm_hd_struct,		/* partition table */
--	lvm_size,		/* device size in blocks, copied
--				   to block_size[] */
--	MAX_LV,			/* number or real devices */
--	NULL,			/* internal */
--	NULL,			/* pointer to next gendisk struct (internal) */
-+	major:		MAJOR_NR,		/* major number */
-+	major_name:	LVM_NAME,		/* name of major */
-+	minor_shift:	0,			/* number of times minor is shifted
-+						   to get real minor */
-+	max_p:		1,			/* maximum partitions per device */
-+	part:		lvm_hd_struct,		/* partition table */
-+	sizes:		lvm_size,		/* device size in blocks, copied
-+						   to block_size[] */
-+	nr_real:	MAX_LV,			/* number or real devices */
-+	real_devices:	NULL,			/* internal */
-+	next:		NULL,			/* pointer to next gendisk struct (internal) */
- };
- 
- /*
-@@ -454,19 +454,8 @@
- 	lvm_init_vars();
- 	lvm_geninit(&lvm_gendisk);
- 
--	/* insert our gendisk at the corresponding major */
--	if (gendisk_head != NULL) {
--		gendisk_ptr = gendisk_head;
--		while (gendisk_ptr->next != NULL &&
--		       gendisk_ptr->major > lvm_gendisk.major) {
--			gendisk_ptr = gendisk_ptr->next;
--		}
--		lvm_gendisk.next = gendisk_ptr->next;
--		gendisk_ptr->next = &lvm_gendisk;
--	} else {
--		gendisk_head = &lvm_gendisk;
--		lvm_gendisk.next = NULL;
--	}
-+	/* insert our gendisk */
-+	add_gendisk(&lvm_gendisk);
- 
- #ifdef LVM_HD_NAME
- 	/* reference from drivers/block/genhd.c */
-@@ -508,18 +497,8 @@
- 		printk(KERN_ERR "%s -- devfs_unregister_blkdev failed\n",
- 		       lvm_name);
- 
--
--
--	gendisk_ptr = gendisk_ptr_prev = gendisk_head;
--	while (gendisk_ptr != NULL) {
--		if (gendisk_ptr == &lvm_gendisk)
--			break;
--		gendisk_ptr_prev = gendisk_ptr;
--		gendisk_ptr = gendisk_ptr->next;
--	}
- 	/* delete our gendisk from chain */
--	if (gendisk_ptr == &lvm_gendisk)
--		gendisk_ptr_prev->next = gendisk_ptr->next;
-+	del_gendisk(&lvm_gendisk);
- 
- 	blk_size[MAJOR_NR] = NULL;
- 	blksize_size[MAJOR_NR] = NULL;
+Nils
+
 -- 
-Jan-Benedict Glaw . jbglaw@lug-owl.de . +49-172-7608481
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >  If we all work hard, we can turn this company  <
+ >      around 360 degrees -- gruntbert(LOTD)      <
