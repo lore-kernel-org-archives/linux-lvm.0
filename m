@@ -1,206 +1,46 @@
-Message-ID: <376E6D0D.90660D12@mainz.ibm.de>
-Date: Mon, 21 Jun 1999 18:49:17 +0200
-From: Udo Weber <udo.weber@mainz.ibm.de>
+From: Andreas Dilger <adilger@enel.ucalgary.ca>
+Message-Id: <199906211751.LAA11908@munet-d.enel.ucalgary.ca>
+Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9
+Date: Mon, 21 Jun 1999 11:51:57 -0600 (MDT)
+In-Reply-To: <m10v3y9-0000YbC@duffy1.franken.de> from "Rolf Jakob" at Jun 18, 99 09:06:29 pm
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] pvcreate once more
-References: <88256797.005B400D.00@sv-gw1.stsv.seagate.com>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Steve_J_Brueggeman@notes.seagate.com
-Cc: linux-lvm@msede.com
+To: LVM on Linux <linux-lvm@msede.com>, Linux FS development list <linux-fsdevel@vger.rutgers.edu>
 
-Howdy,
-first thanks for the patch.
-But I can't test it at first, sorry. I'm on a business-travel ( 3 month
-duration) in Austin TX
-(where the AIX-LVM was build :) ). On my Thinkpad at the WIN/DOS-part are
-important data for my job and I don't have any backup/install- or other stuff
-to recover if anything goes wrong. This means I can't risc to destroy my
-extended win-partition.
-So it would be nice if anywhere else can tell me if the patch from Steve works.
-Sorry for my care, I hope you understand my situation.
-Thanks,
-Udo
+Rolf writes:
+> Yes, that is very interesting. Ext2fs has been there for quite a long time,
+> so chances are good that it still works. I would like to take a look at it.
+>
+> Could you please send it to me or mail the URL where you put it ?
 
-Steve_J_Brueggeman@notes.seagate.com wrote:
+I have uploaded the old ext2-volume-v0.1.tar.gz to my web site,
+http://www-mddsp.enel.ucalgary.ca/People/adilger/ext2-volume-v0.1.tar.gz
 
-> Oops, I forgot to copy the list.
-> ---------------------- Forwarded by Steve J Brueggeman on 06/21/99 11:34 AM
-> ---------------------------
->
-> Steve J Brueggeman
-> 06/21/99 11:30 AM
->
-> To:   Udo Weber <udo.weber@mainz.ibm.de> @ INTERNET
-> cc:
->
-> Subject:  Re: [linux-lvm] pvcreate once more  (Document link not converted)
->
-> Yep, you've found a bug.  The problem is that you've got a Win-98 extended
-> partition, (ID=0x0f).
->
-> When LVM goes through to determine the validity of the partition you
-> specified, it does not recognize that  you have any extended partitions,
-> thusly, does not scan for any logical partions on an extended partition.
->
-> Try this patch.  (WARNING!! I have not tried this patch, so use at your own
-> risk!!!))
-> To apply this patch, cut-it-out of your E-Mail, and type the following
-> cd {your-lvm-source-tree}; patch -p1 <{win98-patch-filename}
->
-> Where {your-lvm-source-tree} is the name of the directory you untared the
-> LVM sources, and {win98-patch-filename} is the directory/filename of the
-> patch file listed below.  (don't type the braces in the command line above)
->
-> Steve Brueggeman
->
-> -------------Cut here--------------
-> diff -Naur 0.6.new.b/tools/lib/pv_get_size.c
-> 0.6.new.c/tools/lib/pv_get_size.c
-> --- 0.6.new.b/tools/lib/pv_get_size.c    Thu Feb 25 18:46:28 1999
-> +++ 0.6.new.c/tools/lib/pv_get_size.c    Mon Jun 21 11:19:39 1999
-> @@ -111,10 +111,11 @@
->                   i, part[i].sys_ind, i, part[i].nr_sects);
->  #endif
->           /* is it a welcome extended partition? */
-> -         if ( part[i].sys_ind == DOS_EXTENDED_PARTITION ||
-> +         if ( part[i].sys_ind == DOS_EXTENDED_PARTITION   ||
-> +          part[i].sys_ind == WIN98_EXTENDED_PARTITION ||
->                part[i].sys_ind == LINUX_EXTENDED_PARTITION) {
->  #ifdef DEBUG
-> -            debug ( "pv_get_size -- DOS/LINUX_EXTENDED_PARTITION\n");
-> +            debug ( "pv_get_size --
-> DOS/LINUX/WIN98_EXTENDED_PARTITION\n");
->  #endif
->              extended_flag = 1;
->              offset = extended_offset + part[i].start_sect;
-> diff -Naur 0.6.new.b/tools/pvcreate.c 0.6.new.c/tools/pvcreate.c
-> --- 0.6.new.b/tools/pvcreate.c     Thu Feb 25 18:46:29 1999
-> +++ 0.6.new.c/tools/pvcreate.c     Mon Jun 21 11:22:55 1999
-> @@ -199,6 +199,11 @@
->                                "\"%s\"\n",
->                                cmd, pv_name);
->              continue;
-> +         } else if ( part.sys_ind == WIN98_EXTENDED_PARTITION) {
-> +            fprintf ( stderr, "%s -- can't use Win-98 extended partition "
-> +                              "\"%s\"\n",
-> +                              cmd, pv_name);
-> +            continue;
->           } else if ( part.sys_ind != LVM_PARTITION) {
->              fprintf ( stderr, "%s -- invalid partition type 0x%x for
-> \"%s\""
->                                " (must be 0x%x)\n", cmd, part.sys_ind,
-> -------------Cut here--------------
->
-> Udo Weber <udo.weber@mainz.ibm.de> on 06/21/99 09:30:16 AM
->
-> To:   linux-lvm@msede.com
-> cc:    (bcc: Steve J Brueggeman)
->
-> Subject:  [linux-lvm] pvcreate once more
->
-> Hi,
-> sorry for the last mail, I don't know why but something was left of this
-> mail.
-> Here now (I hope so) the complete mail once more and for insurence also
-> the same as
-> attachment:
-> ******************************************************************
-> Hi LVM-specialists,
->
-> <Snippage>
-> mumpel:~ # fdisk -l
->
-> Disk /dev/hda: 240 heads, 63 sectors, 1058 cylinders
-> Units = cylinders of 15120 * 512 bytes
->
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/hda1   *         1       271   2048728+   b  Win95 FAT32
-> /dev/hda2           272      1057   5942160    f  Win95 Extended (LBA)
-> /dev/hda5           272       548   2094088+   6  DOS 16-bit >=32M
-> /dev/hda6           549       687   1050808+   6  DOS 16-bit >=32M
-> /dev/hda7           688       705    136048   82  Linux swap
-> /dev/hda8           706       841   1028128   83  Linux native
-> /dev/hda9           842       977   1028128+  83  Linux native
-> /dev/hda10          978      1057    604768   fe  Unknown
->
-> mumpel:~ # pvcreate /dev/hda10
-> pvcreate -- extended partition "/dev/hda10" doesn't exist
->
-> and here now the debug-info from pvcreate:
-> mumpel:~ # pvcreate -d /dev/hda10
-> lvm_iop_version -- CALLED
-> lv_status_internal -- AFTER ioctl ret: 0
-> lvm_iop_version -- LEAVING with ret: 0
-> pv_check_name -- CALLED
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> pv_check_name -- CALLED  pv_name: "/dev/hda10"
-> pv_check_name -- LEAVING with ret: 0
-> pv_get_size -- CALLED with /dev/hda10 and BFFFF70C
-> pv_check_name -- CALLED
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> pv_check_name -- CALLED  pv_name: "/dev/hda10"
-> pv_check_name -- LEAVING with ret: 0
-> pv_check_part -- CALLED with /dev/hda10
-> pv_check_name -- CALLED
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> pv_check_name -- CALLED  pv_name: "/dev/hda10"
-> pv_check_name -- LEAVING with ret: 0
-> pv_check_part -- LEAVING with 10
-> pv_get_size -- BEFORE llseek 0:0
-> pv_get_size -- part[0].sys_ind: B  part[0].nr_sects: 4097457
-> pv_get_size -- first == 1
-> pv_get_size -- part[1].sys_ind: F  part[1].nr_sects: 11884320
-> pv_get_size -- first == 1
-> pv_get_size -- part[2].sys_ind: 0  part[2].nr_sects: 0
-> pv_get_size -- first == 1
-> pv_get_size -- part[3].sys_ind: 0  part[3].nr_sects: 0
-> pv_get_size -- first == 1
-> pv_get_size -- LEAVING with ret: -242
-> pvcreate -- extended partition "/dev/hda10" doesn't exist
->
-> The same on RedHat 6.0 - same config.
-> only one different output:
-> [root@mumpel 0.6]# fdisk -l
-> Disk /dev/hda: 240 heads, 63 sectors, 1058 cylinders
-> Units = cylinders of 15120 * 512 bytes
->
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/hda1   *         1       271   2048728+   b  Win95 FAT32
-> /dev/hda2           272      1057   5942160    f  Win95 Ext'd (LBA)
-> /dev/hda5           272       548   2094088+   6  FAT16
-> /dev/hda6           549       687   1050808+   6  FAT16
-> /dev/hda7           688       705    136048   82  Linux swap
-> /dev/hda8           706       841   1028128   83  Linux
-> /dev/hda9           842       977   1028128+  83  Linux
-> /dev/hda10          978      1057    604768   fe  LANstep
->
-> ##########################################################################
->
-> What was going wrong here ?
-> What should I do ?
->
-> I'd like to use the LVM for testing. I'm primary working in the
-> AIX-support-center.
-> My special field there are LVM-problems :)
->
-> Thanks with warm regards,
-> Udo Weber
-> ***************************************************************************
->
-> Maybe I put a dot (".") too much between the lines in the last email :)
->
-> But the prob should be the same, I read the answers from Heinz, now I
-> think here is realy
-> a problem.
->
-> Thanks,
-> Udo
->
-> Welcome to SuSE Linux 6.1 (i386) - Kernel 2.2.10 (tty4).
+as I couldn't connect to tsx-11 lately, which is where I found it originally.
+The good news is that the patch was developed for 2.1.42, so it is at least
+half-way to working with 2.2.
+
+I had another quick look at the README/code, and it looks like LVM will
+help with some of the basic problems mentioned therein, such as handling
+multiple disk names, changing e2fsck, changing the mount command.  All
+of those problems go away because we are growing an LV, rather than
+concatenating volumes.  The one trick will be to build the basic ext2
+stuctures on the extended part of the LV without touching the current
+filesystem - this may require modifications to mke2fs.  Another good thing
+is that this definitely claims to work with a mounted filesystem, although
+it requires a remount a-la "mount -o remount,rw...", but I think this will
+work on an FS that has open files on it.
+
+One note is that the original author, Miguel de Icaza, is no longer supporting
+this code (he's busy working on GNOME), so don't bug him about it.
+
+Cheers, Andreas
+-- 
+Andreas Dilger   University of Calgary  \"If a man ate a pound of pasta and
+                 Micronet Research Group \ a pound of antipasto, would they
+Dept of Electrical & Computer Engineering \   cancel out, leaving him still
+http://www-mddsp.enel.ucalgary.ca/People/adilger/       hungry?" -- Dogbert
