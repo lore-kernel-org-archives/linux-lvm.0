@@ -1,8 +1,8 @@
-Message-ID: <3DDA963B.7080309@crepido.com>
-From: Tomas Roos <tomas.roos@crepido.com>
+Message-ID: <3DDAA535.3030206@backflip.com>
+From: Kenny Gorman <kgorman@backflip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Differences between LVM1 and LVM2
+Subject: [linux-lvm] LVM and mounting
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,18 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 19 13:52:02 2002
+Date: Tue Nov 19 14:55:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi.
+I am having a problem where when I boot up the machine, the machine says 
+I need to fsck one of my logical volumes.  This volume I just added a 
+new filesystem to, but it hung on mount, so I rebooted.  Then I tried to 
+  lvremove the volume, and it says it successfully removed it, then I am 
+running vgchange -a n <grp> and vgremove <grp>.  But it says I can't 
+remove the group.. because it belongs to a volume.
 
-I have been using LVM for about a year now at a number of machines. One 
-I have had in production for about 4 months I think. I have never had 
-any problems with this piece of software .. very stable.
+I think my lvmtab or someting is all messed up because the some messages 
+seem to indicate that the volume is there, and some say it's not. 
+lvdisplay says it does not exist.
 
-I would like to know what to think about when upgrading to LVM release 2
+I would just like to remove the entire volume and group and start over 
+so I can get my machine to boot.  Is there some option to just 'ignore' 
+or 'force' destroy the volume?  If I fdisk the disk will I still get 
+this error?
 
-Best regards
-/Tomas
+Any help would be great!!
+
+thx
+-kg
