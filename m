@@ -1,8 +1,15 @@
-Return-Path: <evan.day@home.com>
-From: evan.day@home.com
-Message-Id: <20010727032755.E8509DA7@spock.banal.collective>
-Date: Thu, 26 Jul 2001 20:27:55 -0700 (PDT)
-Subject: [linux-lvm] LVM 0.9.1beta8 upgrade okay?
+Return-Path: <john@oswf.de>
+From: Werner John <john@oswf.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <15201.4293.260605.275782@rigel.oswf.de>
+Date: Fri, 27 Jul 2001 08:57:09 +0200 (MEST)
+Subject: Re: [linux-lvm] Nasty bug in lvm and/or md and/or reiserfs
+In-Reply-To: <20010726151725.A28574@sistina.com>
+References: <20010726131928.D1779@linux.com>
+	<20010726134732.A27706@sistina.com>
+	<20010726160701.H1779@linux.com>
+	<20010726151725.A28574@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,26 +21,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-After a few reboots and fiddling with the RAID (to make sure I always
-had at least one disk that wasn't upgraded and still bootable, since I
-do have my root fs on LVM :), everything seems to be okay at beta 8.  
+AJ Lewis writes:
+> [...]
+> > 
+> > Still, the bugs that surface in md and reiserfs make me a little
+> > worried.  md has been around for a while now, hasn't it?  I get the
+> > feeling it's a bit fragile.  Well, maybe it's just me.
+> 
+> I personally don't know a whole lot about MD, but there seem to be a lot
+> of people using it.  Maybe people on the list using MD and LVM together can
+> comment.
+> [...]
 
-However, at boot time, I get the following:
+I cannot comment on reiserfs, because I only use it on my equipment for
+test reasons, but I have LVM on top of a RAID-5 and a RAID-0 up and running
+for more than 140 days on one of our machines. No problems so far, although
+it is still 0.9.1-beta5 and a "rather old" kernel ;-). Maybe it is time to
+upgrade this one, too.
 
-Jul 26 18:43:14 spock kernel: lvm -- lvm_blk_ioctl: unknown command
-0x5310
+I use RAID since kernel 2.2.14 came out, one machine here is still running
+2.2.18 with a RAID-5 (no LVM) and is up ever since.
 
-Everything comes up okay, though, and pvversion says I have version 2:
+Regards,
 
-spock:~/LVM/0.9.1_beta8/tools# ./pvversion -version /dev/md1
-pvversion -- physical volume "/dev/md1" has version: 2 / data_location:
-6144
-
-Kernel is definitely upgraded, it reports LVM 0.9.1beta8 during boot.  I
-rebuilt the initial ramdisk and it is at beta 8, so I'm not sure about
-that lvm_blk_ioctl error.
+-- 
+   Werner John                         Tel: +49 (0)69 829 757-0
+   Offenbacher Stanzwerkzeugfabrik     Fax: +49 (0)69 829 757-25
+   Ludwigstr. 30                       E-Mail: john at oswf dot de
+   63067 Offenbach, Germany
