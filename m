@@ -1,11 +1,11 @@
-From: Theo Van Dinter <felicity@kluge.net>
-Subject: Re: [linux-lvm] LVM Redhat 7.2 : Volume Group not activated on boot
-Message-Id: <20020211210448.B26850@kluge.net>
-References: <3C686693.2060007@miracleas.dk>
+From: Marc MERLIN <marc@merlins.org>
+Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
+Message-Id: <20020212070020.GN22416@merlins.org>
+References: <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
+    <3C6187A0.3DFEA8BE@lmco.com> <3C6242D0.3090005@promofinarsa.es>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3C686693.2060007@miracleas.dk>; from peter.gram@miracleas.dk
-    on Tue, Feb 12, 2002 at 01:49:23AM +0100
+In-Reply-To: <3C6242D0.3090005@promofinarsa.es>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +16,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 11 19:59:02 2002
+Date: Tue Feb 12 01:00:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Feb 12, 2002 at 01:49:23AM +0100, Peter Gram wrote:
-> # LVM initialization
-> if [ -e /proc/lvm -a -x /sbin/vgchange -a -f /etc/lvmtab ]; then
->         action $"Setting up Logical Volume Management:" /sbin/vgscan && 
-> /sbin/vgchange -a y
-> fi
+On Thu, Feb 07, 2002 at 10:03:12AM +0100, Jesus Manuel NAVARRO LOPEZ wrote:
+> That's plainly untrue: AMANDA for one is free and very good for small 
+> systems.
 
-The problem is the first part of the if statement.  /proc/lvm doesn't exist
-unless the lvm-mod module is loaded, and that doesn't happen by default.
+We use amanda at VA Software, and  also for sourceforge.net, but while it is
+nice as long  as your backup sets  are smaller than half your  tape size, it
+starts to choke  a bit when you  have backups that start  reaching your tape
+size, and it fails miserably if any backup takes more than your tape.
 
-On my RH7.2 box, I make initrd's with the "--with=lvm-mod" option so that
-initrd forcably loads lvm-mod at bootup.  /proc/lvm then exists, and the
-vgchange command is executed.  :)
+It is disapointing  that in the last 3 years,  that major shortcoming hasn't
+effectively been fixed, but  eh, it's free software, I get to  fix it if I'm
+not happy :-)
 
+As for autoloaders  and tape libraries, you  can make it work  with mtx, but
+expect to have  to write some glue  and to go through non  trivial trial and
+error.
+
+Marc
 -- 
-Randomly Generated Tagline:
-"We all know engineers are way better than doctors because doctors can
- only kill people one at a time while engineers can send 600 to a 1000
- people screaming into Mt. Rushmore at 300 to 400 knots." - Unknown
+Microsoft is to operating systems & security ....
+                                      .... what McDonalds is to gourmet cooking
+  
+Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
