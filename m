@@ -1,11 +1,11 @@
-Return-Path: <dalecki@evision-ventures.com>
-Message-ID: <3AE3ED20.FD685CE@evision-ventures.com>
-Date: Mon, 23 Apr 2001 10:51:44 +0200
-From: Martin Dalecki <dalecki@evision-ventures.com>
-MIME-Version: 1.0
-References: <01042110002200.00707@oscar> <20010421162003.F26732@suse.de>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: [BUG] lvm beta7 and ac11 problems
+Return-Path: <root@srv.sistina.com>
+Date: Mon, 23 Apr 2001 12:05:21 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] What have snapshots got to do with LVM ?
+Message-ID: <20010423120521.A27695@sistina.com>
+References: <20010422130924.A10390@66bassett.freeserve.co.uk> <20010423102145.C27367@sistina.com> <20010423093818.B739@66bassett.freeserve.co.uk>
+Mime-Version: 1.0
+In-Reply-To: <20010423093818.B739@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Mon, Apr 23, 2001 at 09:38:18AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +18,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Jens Axboe <axboe@suse.de>
-Cc: Ed Tomlinson <tomlins@cam.org>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Jens Axboe wrote:
+On Mon, Apr 23, 2001 at 09:38:18AM +0100, Joe Thornber wrote:
+> On Mon, Apr 23, 2001 at 10:21:45AM +0000, Heinz J. Mauelshagen wrote:
+> > On Sun, Apr 22, 2001 at 01:09:24PM +0100, Joe Thornber wrote:
+> > > Just a random Sunday morning thought:
+> > > 
+> > > Why don't we split snapshots off into their own driver so we can
+> > > snapshot any block device, putting the COW tables on any other block
+> > > device ?  
+> > 
+> > Any other block device devides into PE similar allocation units carrying their
+> > own COW exception table at the beginning?
 > 
-> On Sat, Apr 21 2001, Ed Tomlinson wrote:
-> > Hi,
-> >
-> > building a kernel with 2.4.3-ac11 and lvm beta7 + vfs_locking_patch-2.4.2 yields:
-> >
-> > oscar# depmod -ae 2.4.3-ac11
-> > depmod: *** Unresolved symbols in /lib/modules/2.4.3-ac11/kernel/drivers/md/lvm-mod.o
-> > depmod:         get_hardblocksize
-> >
-> > ideas?
-> 
-> s/get_hardblocksize/get_hardsect_size
+> I'm not sure I understand your comment.  There are two devices the
+> snapshot origin and the snapshot storage device.  We can divide the
+> snapshot storage device up how we want, the COW exception tables go in
+> here.
 
-And don't forget to have a look whatever the get_hardblocksize == 0
-check
-or similar can't be killed alltogether as well....
+With LVM sanpshots we devide a device into PEs, allocate parts of the
+COW table dealing with exceptions stored in a specific PE at the very
+beginning of the PE.
+
+My point is, that a similar allocation policy needs to take place on a
+general block device too in order to avoid disk access overhead.
+
+
+> 
+> - Joe
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
