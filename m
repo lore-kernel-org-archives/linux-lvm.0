@@ -1,7 +1,7 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009211952.e8LJq6t07194@webber.adilger.net>
-Subject: Re: [linux-lvm] LVM + online resizing e2fs patches
-Date: Thu, 21 Sep 2000 13:52:06 -0600 (MDT)
+Message-Id: <200009220424.e8M4O9x09461@webber.adilger.net>
+Subject: Re: [linux-lvm] what lvm shoudl I be using for 2.2.x?
+Date: Thu, 21 Sep 2000 22:24:08 -0600 (MDT)
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -10,21 +10,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Linux LVM mailing list <linux-lvm@msede.com>
 
-Erik writes:
-> On Wed, Sep 20, 2000 at 02:39:46PM -0600, Andreas Dilger wrote:
-> > The ext2online patch was written originally on 2.0, and it has moved
-> > relatively unscathed through 2.3.99.  However, recent changes in the
-> > VFS and ext2 code have likely broken the patch (I'm currently developing
-> > on 2.2, and haven't had a chance/filesystem-I-want-to-destroy for testing
-> > on 2.4.0-current).  So, yes ext2online will work with 2.2.13.
+Jeremy, you write:
+> Ahh, only one thing I noticed is that lvm doesn't merge with Steven
+> Tweedie's sard patches which are available from:
 > 
-> Any idea when you will try 2.4.x?
-> My dream is really a Journaling filesystem with online resize for 2.4.x.
+> ftp://ftp.uk.linux.org/pub/linux/sct/fs/profiling/
+> 
+> Has anyone gotten these patches to merge?
 
-It shouldn't be too hard to get ext2 online resizing for 2.4, but I can't
-do ext3 resizing until ext3 is available for 2.4...  I will probably start
-working with Stephen to move to 2.4 in the next month or two, because he
-is nearly done metadata-only journalling...
+I put up new patches (vs. my lvm patch and RAID 0.90) at:
+
+ftp://ftp.stelias.com/pub/adilger/sard-2.2.17lvm.diff
+
+Note that they really haven't been tested at all (just compiling now).
+Just the patch was updated to apply on a newer MD and added (basic)
+LVM support.
+
+It would probably good to fix the LVM support so that the accounting
+information for LVM also included the underlying PV, but the LVM
+tools already keep some of the same data as sard, on a per PP basis.
+Not the latency info though, only the number of I/Os.
+
+Let me know how it looks.
 
 Cheers, Andreas
 -- 
