@@ -1,46 +1,33 @@
-Date: Sat, 29 Jan 2000 00:14:49 -0800
-From: Tracy R Reed <treed@ultraviolet.org>
-Subject: [linux-lvm] Re: (reiserfs) Re: AIX JFS dual-mount
-Message-ID: <20000129001449.A13523@ultraviolet.org>
-Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.10.10001280539550.13561-100000@home.suse.com>; from mason@suse.com on Fri, Jan 28, 2000 at 05:47:01AM -0800
+Message-ID: <D1EC4320087FD311895100902773F43C393A3F@gsus.wineasy.se>
+From: =?iso-8859-1?Q?H=E5kan_Jettingstad?= <h.jettingstad@wineasy.se>
+Subject: [linux-lvm] Question about order of drives in a lvm volume
+Date: Sat, 29 Jan 2000 15:34:49 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Chris Mason <mason@suse.com>
-Cc: Russell Coker <russell@coker.com.au>, reiserfs@devlinux.com, gfs-devel@borg.umn.edu, linux-lvm@msede.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@msede.com
 
-On Fri, Jan 28, 2000 at 05:47:01AM -0800, Chris Mason wrote:
-> On Fri, 28 Jan 2000, Russell Coker wrote:
-> > A colleague told me that with AIX machines you can have two systems mount the
-> > same file system, they then lock the bus whenever they need to do updates.
-> > 
-> > Can this give usable write performance?  If so is it worth considering?
-> > 
-> Only if you also include some kind of lock manager.  Without it, the two
-> boxes would have no way if knowing if and when their caches are still
-> valid.  
-> 
-> Once you have the lock manager, you don't need the full device 
-> lock, the systems can coordinate who is writing/reading which blocks.
-> 
-> Anybody know exactly what AIX provides here?  
+Hello,
 
-Sounds similar to GFS (which I only recently learned about and find totally
-amazing and plan to play with soon and perhaps implement it in a production
-environment if it is all it's cracked up to be) only not over fibrechannel. It
-does fine grain locking, manages cache coherency, the works:
+first I'd like to say a big thank you to Heinz for LVM, great work, =
+keep it
+up!
 
-www.globalfilesystem.org
+I have a hopefully simple question:
 
-I've been meaning to mention this to you guys and make sure everyone was aware
-of it. It is a journalling filesystem while allows multiple hosts to mount the
-same filesystem at the same time. I hope to see a lot of integration between
-reiserfs, GFS, LVM, and MD in the future. There is currently a lot of overlap
-in these areas. Linux needs all of these features to be smoothly integrated
-and very stable if it is going to go head to head with the big boys someday.
+I'm using quite a few ide-drives in a raid0 volume (hda -> hdh) and I =
+came
+to think of that it would be good to know in which order I added the =
+drives
+to the volume in case I need to remove one from the volume, is there =
+any way
+I can get the order in which the drives are placed in the raid0 volume? =
+(in
+a list like hda, hdc, hdb, hdg, ... etc)
 
---
-Tracy Reed      http://www.ultraviolet.org
+Regards,
+
+H=E5kan
