@@ -1,11 +1,9 @@
-Date: Thu, 23 Aug 2001 10:11:57 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] how to determine if /dev/... is an LV?
-Message-ID: <20010823101157.B13671@sistina.com>
-References: <20010822034425.F8742@pc.ilinx> <20010822164325.A1216@dardhal.mired.net> <20010822110154.O8742@pc.ilinx>
+Date: Thu, 23 Aug 2001 01:40:12 -0700
+From: David Rees <dbr@greenhydrant.com>
+Message-ID: <20010823014012.A32700@greenhydrant.com>
 Mime-Version: 1.0
-In-Reply-To: <20010822110154.O8742@pc.ilinx>; from dd92f55e6b3d2ae402d737983f92a268@interlinx.bc.ca on Wed, Aug 22, 2001 at 11:01:54AM -0400
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Subject: [linux-lvm] LVM, rawio, ext2?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,71 +15,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Aug 22, 2001 at 11:01:54AM -0400, Brian J. Murrell wrote:
-> On Wed, Aug 22, 2001 at 04:43:26PM +0000, Jos=E9 Luis Domingo L=F3pez w=
-rote:
-> > On Wednesday, 22 August 2001, at 03:44:25 -0400,
-> > Brian J. Murrell wrote:
-> >=20
-> > > Hi all,
-> > > [...]
-> > > Also, is there any relationship between the output from the lvdispl=
-ay
-> > > and the minor number for the device?
->=20
-> [ snip ]
->=20
-> > Hope it helps. Regards,
->=20
-> Well I do apreciate your efforts (thanx!), but no, it doesn't.  You
-> told me everything I already knew but nothing of what I didn't.  :-)
-> What I mean is what is the relationship of the MINOR number to LVs.
+Hi,
 
-# lvdisplay /dev/vg00/u1
---- Logical volume ---
-LV Name                /dev/vg00/u1
-<SNIP>
-Block device           58:0
+I'd like to create an ext2 filesystem over a raw io device, is this even
+possible?  (If not, skip the rest of this message! ;-)
 
-The last line of the lvdisplay output contains the block major:minor numb=
-ers.
-Internally the LVM driver uses a minor number addressed table (today) to =
-access
-a particular LVs in core meteadata.
+I've searched various archives, and it seems that people are using lvm along
+with rawio (and md!) with success, the question I have is "how do I do it?".
 
->=20
-> b.
->=20
-> --=20
-> Brian J. Murrell
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Which way is it best to layer the different io management schemes?  For
+example, is it possible to put a md or lvm device on top of 1 or more raw io
+devices and keep the data from being buffered?  If not, how do I create an
+ext2 filesystem on a raw device?  Forcing it didn't work.
 
---=20
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+Thanks,
+Dave
