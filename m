@@ -1,9 +1,8 @@
-Subject: Re: [linux-lvm] not enough free/allocatable physical extents to extend logical vo lume
-Mime-Version: 1.0 (Apple Message framework v552)
-From: AJ Lewis <lewis@sistina.com>
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <C6B0A1AF05B7A04E9D8E784173AE3D2016300B@ausx2kmpc104.aus.amer.dell.com>
-Message-Id: <49658C34-BEAC-11D7-A0A0-000393DC1896@sistina.com>
+Message-ID: 
+     <1229.68.146.150.149.1059231897.squirrel@webmail.levelonehosting.net>
+From: "Tyler" <tyler@tylercentral.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Can't Create LV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,67 +13,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 25 09:29:01 2003
+Date: Sat Jul 26 10:05:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm guessing you're trying to extend by too large a size.  Use 
-pvdisplay on /dev/sde1 and note the number of physical extents free.  
-Then try passing that to e2fsadm with the '-l' flag instead of passing 
-33.91G with the '-L' flag.  This is just a guess though.  It's pretty 
-hard to tell without all the commands you ran and the output they gave 
-you.
+Hi All,
 
-On Thursday, Jul 24, 2003, at 23:14 US/Central, 
-Taylor_Carpenter@Dell.com wrote:
+I'm a newbie to LVM so please bear with me.
 
-> I am trying to add a 4th disk to an existing lv.  I am following the
-> directions in
->
-> http://tldp.org/HOWTO/LVM-HOWTO/x802.html
->
-> but It is complaing about free physical extents when trying to extend 
-> during
-> the e2fsadm portion.
->
->
-> root]# pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- ACTIVE   PV "/dev/sdb1" of VG "Scratch" [33.91 GB / 240 MB 
-> free]
-> pvscan -- ACTIVE   PV "/dev/sdc1" of VG "Scratch" [33.91 GB / 240 MB 
-> free]
-> pvscan -- ACTIVE   PV "/dev/sdd1" of VG "Scratch" [33.91 GB / 240 MB 
-> free]
-> pvscan -- ACTIVE   PV "/dev/sde1" of VG "Scratch" [33.91 GB / 33.91 GB 
-> free]
-> pvscan -- total: 4 [135.65 GB] / in use: 4 [135.65 GB] / in no VG: 0 
-> [0]
->
->
->
->
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
---
-AJ Lewis
-Sistina Software Inc.             http://www.sistina.com
-720 Washington Ave, Suite 200     Voice:  612-638-0500
-Minneapolis, MN 55414             E-Mail: 
-lewis_NOSPAM_(AT)sistina(DOT)com
+I've created 2 LVM's before, but am stuck on the 3rd one.  I'm trying to
+create a striped volume with 2 IDE disks.  I've created the VG, but the LV
+wont go.
 
-Current GPG fingerprint = D638 9C01 D08F 29A4 5D50  D064 F6A6 0ED6 E386 
-E6EB
-Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
-many keyservers out there...
+--- Volume group ---
+VG Name               storage
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                0
+Open LV               0
+MAX LV Size           2 TB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               111.72 GB
+PE Size               32 MB
+Total PE              3575
+Alloc PE / Size       0 / 0
+Free  PE / Size       3575 / 111.72 GB
+VG UUID               LYZMgA-IqDg-aJ9K-wFRY-80Uv-TUFQ-KFxgkb
 
-A program is a device used to convert data into error messages.
+(/)# lvcreate -i2 -I4 -l3575 -nvolume1 storage
+lvcreate -- rounding to stripe boundary size
+lvcreate -- only 3575 free physical extents in volume group "storage"
+
+I've also tried.
+
+(/)# lvcreate -i2 -I4 -L111G -nvolume1 storage
+lvcreate -- not enough allocatable/free physical volume space in "storage"
+lvcreate -- please check, if physical volumes are allocatable
+
+With no luck.
+
+How can I create an LV that fills the entire VG?
+
+Tyler
