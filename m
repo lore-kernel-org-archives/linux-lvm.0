@@ -1,9 +1,10 @@
-Message-Id: <sf15739a.041@gwia201.syr.edu>
-From: "Stephen Fralich" <sjfralic@syr.edu>
-Subject: Re: [linux-lvm] pvmove error
+From: Nathan Hunsperger <linux-lvm@hunsperger.com>
+Subject: Re: [linux-lvm] PV issues with LVM on 2.4.21
+Message-ID: <20030716221120.GA23833@munchnet.com>
+References: <20030708230524.GE17584@munchnet.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <20030708230524.GE17584@munchnet.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,59 +15,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 16 14:48:01 2003
+Date: Wed Jul 16 17:12:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Right you are.  I reset LD_LIBRARY_PATH with the 1.0.7 lib directory first =
-and it's happy now.  Rasa frassin' shared libraries! ;-)  Thanks a lot.
+For the archive -
 
-Stephen
+I was able to solve this problem by naming my volume group something
+other than 'storage'.  Although vgcreate would allow me to create the
+volume group named 'storage', I now suspect that one of my disks
+contained an incomplete signature for that volume group, and was
+confusing LVM.  After zeroing out the beginning of the drives, I was
+able to create a volume group named 'storage' that lasts between
+reboots.
 
----------------------------------------------------------------------
-Computer & Information Technology Group            help@ecs.syr.edu
-College of Engineering & Computer Science          Link 204, 443-4308
-Syracuse University
+- Nathan
 
->>> jpg@rcom.com.ar 07/16/03 11:29AM >>>
-El mi=E9, 16-07-2003 a las 11:52, Stephen Fralich escribi=F3:
-
-> I'm not using the redhat pvmove (v1.0.3).  I'm using pvmove 1.0.7 which =
-I downloaded from the Sistina site.  I updated the rc scripts to use =
-1.0.7.  The volume was created totally under 1.0.7.  I'm using a plain =
-kernel (from kernel.org) 2.4.21 patched with LVM 1.0.7 (from Sistina).
-
-But may be you are using the redhat liblvm
-
->=20
-> [root@sauron root]# /sbin/pvmove --version
-> pvmove: Logical Volume Manager 1.0.3
-> Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
-> [root@sauron root]# pvmove --version
-> pvmove: Logical Volume Manager 1.0.7
-
-
-Where is the second pvmove? Please try,
-
-        ldd /sbin/pvmove
-        ldd pvmove
-        LD_PRELOAD=3D<unpatchedlvmliblocation> pvmove ...
-       =20
-
-
-
-
-
-Juan Pablo Gim=E9nez=20
-
-http://www.rcom.com.ar/=20
-http://www.rcom.com.ar/comunidad/=20
-Llave GnuPG:
-MIT keyserver=20
-Web Rcom=20
-
-GnuPG fingerprint: ED97 6FB8 A9BE
-26A6 789B 6657 0A15 EC2B D3D8 FD2B=20
-
-http://www.greenpeace.org.ar/secciones/cyberactivismo/nuclear.php3
+On Tue, Jul 08, 2003 at 04:05:24PM -0700, Nathan Hunsperger wrote:
+> Hello -
+> 
+> I'm experiencing an error when trying to scan my volume groups after a
+> reboot.  When running vgscan, I get:
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- ERROR "pv_read_all_pv_of_vg(): no PV" can't get data of volume group "storage" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+> 
+> I am running lvm 1.0.7 on top of software raid 5 on 2.4.21.  I grabbed a
+> fresh copy of 2.4.21 from kernel.org, configured lvm, made the patchset,
+> patched the kernel, configed the kernel, and then made the kernel...so I
+> think I'm following all the directions.
+> 
+> As the raid array is running without problems (all drives online, and
+> array is clean), I suspect a problem with lvm.
+> 
+> Also, just for clarification, on a reboot (after I load the disk
+> controller module, but before I run any lvm commands) if I dd /dev/zero
+> over /dev/md/0, I am able to pvcreate, vgcreate, lvcreate, mkfs, and
+> mount just fine.  After a reboot, however, I get the above error.
+> 
+> Any ideas?  I don't particularly like the idea of a 1/2TB of volatile
+> storage.
+> 
+> - Nathan
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
