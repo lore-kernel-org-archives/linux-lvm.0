@@ -1,8 +1,8 @@
-Date: Fri, 28 Sep 2001 16:33:20 +0200 (MEST)
-From: Henk Birkholz <wahooka@Informatik.Uni-Bremen.DE>
-Message-ID: <Pine.LNX.4.33.0109281622510.28332-100000@x02.informatik.uni-bremen.de>
+Message-ID: <909EA7234316394F80BBB70A85A1EB389609BD@hermes.dimac.net>
+From: "Conny Brunnkvist / dimac.net" <conny@dimac.net>
+Date: Fri, 28 Sep 2001 16:46:15 +0200
 MIME-Version: 1.0
-Subject: [linux-lvm] lvm-1.0-2.4.10.patch - Critical??
+Subject: [linux-lvm] Problems with 2.4.10 > lvm 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,40 +14,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Good evening,
+Hello. I just rebooted to my new 2.4.10 kernel, and my VG was not to be
+found. So, I thought I'd better update my userland tools from beta 7 (I
+think it was) to 1.0.
 
-i aplied the lvm-1.0-2.4.10.patch to my kernel (2.4.10) and tried to
-compile. The result was :
+Making and installing them worked fine. So did the kernel-patch and its
+compilation, but i get the following when trying to install or newly
+compiled 1.0 module:
 
-/usr/src/linux-2.4.10/arch/i386/lib/lib.a \
-        --end-group \
-        -o vmlinux
-drivers/md/mddev.o: In function `lvm_blk_ioctl':
-drivers/md/mddev.o(.text+0xc27): undefined reference to
-`get_hardblocksize'
-drivers/md/mddev.o: In function `__update_hardsectsize':
-drivers/md/mddev.o(.text+0x2701): undefined reference to
-`get_hardblocksize'
-drivers/md/mddev.o(.text+0x274d): undefined reference to
-`get_hardblocksize'
-make: *** [vmlinux] Error 1
+depmod: *** Unresolved symbols in
+/lib/modules/2.4.10/kernel/drivers/md/lvm-mod.o
+depmod:	get_hardblocksize
 
-i replaced the 3 get_hardblocksize() with get_hardsect_size()
+I've read somewhere else in the list-archive that changing the
+get_hardblocksize lines to get_hardsect_size could help, but I have
+absolutely no clue on what difference that'd make: is it all about a
+function that have had its name changed, or is there something else to it? 
 
-So it compiles smoothly now. But was that the right solution?
+I _don't_ want to try it if it means risking corruption of my data..
 
-The system is going to run in production enviroment with a large amount
-of data, which i cannot backup whole. I habe only one try.
+Any ideas would be appreciated.
 
-The current LVM was build with 2.4.9 and runs well.
-
-But i have to switch to 2.4.10 because of the bad memory management of
-2.4.9 as soon as possible.
-
-I'll be glad for comments. Thanks
-
-Henk Birkholz
+//conny
