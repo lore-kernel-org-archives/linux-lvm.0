@@ -1,13 +1,11 @@
-Message-Id: <200201211231.g0LCVs323967@in-cadcae4.ing.temic.de>
-From: Emanuel Quass <emanuel.quass@temic.com>
-Subject: Re: [linux-lvm] ERROR "parameter error" setting up snapshot copy
-    on write exception table
-References: <200201201741.g0KHfEX13025@in-cadcae4.ing.temic.de>
-    <200201211146.g0LBkui23525@in-cadcae4.ing.temic.de>
-    <21530000.1011615003@methusalix>
-In-Reply-To: <21530000.1011615003@methusalix>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] upgrade lvm version
+Message-Id: <20020121150038.B17020@sistina.com>
+References: <3C4C06E4.E237B117@eds.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
+In-Reply-To: <3C4C06E4.E237B117@eds.com>; from stefan.huber@eds.com on Mon,
+    Jan 21, 2002 at 01:17:40PM +0100
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,48 +16,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 21 06:32:03 2002
+Date: Mon Jan 21 08:04:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Marc Grimme <grimme@atix.de>, linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-Hi again,
+On Mon, Jan 21, 2002 at 01:17:40PM +0100, Stefan Huber wrote:
+> hello list
+>=20
+> i would like to upgrade my kernel from 2.2.14 to 2.2.19
+> question:
+>=20
+>  can i first upgrade the lvm version and later the kernel ?
 
+Nope, you need to upgrade the tools *and* the kernel in parallel
+because the interface between the driver and the user tools has been chan=
+ged.
 
-Am Montag, 21. Januar 2002 13:10 schrieb Marc Grimme:
-> Hi
->
-> --On Montag, Januar 21, 2002 12:46:56 +0100 Emanuel Quass
->
-> <emanuel.quass@temic.com> wrote:
-> > Hi
-> >
-> > I rebooted the server several times (and tried several kernel-versions)
-> > but  every time I got the same error!
-> > The problem is (afaik see) the snapshot. I think if I can get rid of the
-> > snapshot everything will work all right. But I am not able to remove the
-> > snapshot because the Volumegroup is not active ......
->
-> I had exactly the same problem and the same thoughts but I really don't
-> know how to delete a snapshot of an inactive volumegroup and I couldn't
-> find any program that was provided and did the job. Perhaps you can recover
-> some old configurations without snapshot with vgcfgrestore and stuff. But
-> I'm not really sure if this works cause the problem went away after I
-> rebooted the machine and was never to be seen again. And I was happy and
-> didn't touch this system again.
+Assuming that you don=C4t have root on an LV, please remember to have a
+lilo configuration which enables you to boot
+the old kernel *and* a copy of /sbin/e2fsadm, /sbin/[lp]v*, /sbin/vg*
+plus /lib/*lvm* online in order to recover in case of problems.
+Copy those files to a /sbin and a /lib subdirectory, so that you can acce=
+ss
+them in single user mode.
 
-I already tried to do so, no result! :-(
-vgcfgrestore didn't helpo me out.
+Because this is a major upgrade, please take backups of your data includi=
+ng
+the LVM metadata backups in /etc/lvmconf/* !
 
->
-> And if vgcfgrestore helps, what if you create a snapshot and then some
-> other vgs and lvs and then your snapshot gets corrupt like this, can
-> vgcfgrestore help here also?
->
-> So I would say I'm out. :-(
->
-> > Is there a way to remove the snapshot (the volumegroup can't be made
-> > active)  without touching the other logical volumes ?
->
-> Would be really interesting to know the answer.
->
+>=20
+> i`m using lvm 0.8e and i plan to upgrade to lvm 1.0.
+>=20
+> greeeetzzzzz
+>=20
+> s
+>=20
+> ________________________________________________________________
+>  Stefan Huber
+>  EDS Information Business GmbH
+>  Storage Management
+>  Telefon   +41(0)52 674 86 56
+>  Fax       +41(0)52 674 86 94
+>  e-mail  stefan.huber@eds.com
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+--=20
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
