@@ -1,11 +1,10 @@
-From: FEJF <fejf@gmx.de>
-Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Date: Mon, 10 Sep 2001 18:13:12 +0200
-References: <E15f13v-0003bs-00@hermes.sistina.com> <20010910132709.G31313@sistina.com> <20010910173851.A3751@vestdata.no>
-In-Reply-To: <20010910173851.A3751@vestdata.no>
+From: "Erick Calder" <e@arix.com>
+Subject: RE: [linux-lvm] ftp.sistina.com down?
+Date: Mon, 10 Sep 2001 09:25:29 -0700
+Message-ID: <001d01c13a15$34d8eb40$0300000a@pacbell.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E15gTfT-0007Q8-00@hermes.sistina.com>
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20010910133533.J31313@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +16,106 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+I'm embarrassed to say I haven't had the time to focus on it but now that
+you ask I will... give me 2 or 3 days and I'll get back to you with it.
 
-Ragnar Kj=EF=BF=BDrstad, on Montag, 10. September 2001 17:38 wrote:
-> On Mon, Sep 10, 2001 at 01:27:09PM +0200, Heinz J . Mauelshagen wrote:
-> > But I wonder, why in your case the locking of the PE failed. Are you ab=
-le
-> > to reporduce your case and provide the error code?
+-----Original Message-----
+From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
+Behalf Of Heinz J . Mauelshagen
+Sent:	Monday, September 10, 2001 4:36 AM
+To:	linux-lvm@sistina.com
+Subject:	Re: [linux-lvm] ftp.sistina.com down?
 
-[cut]
-
-> Sep  6 18:15:51 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
-> Sep  6 18:15:55 argus last message repeated 213 times
-> Sep  6 18:15:55 argus kernel: hdd: read_intr: status=3D0x59 { DriveReady
-> SeekComplete DataRequest E rror } Sep  6 18:15:55 argus kernel: hdd:
-> read_intr: error=3D0x40 { UncorrectableError }, LBAsect=3D11801433 2,
-> sector=3D118014332 Sep  6 18:15:55 argus kernel: end_request: I/O error, =
-dev
-> 16:40 (hdd), sector 118014332
+On Thu, Sep 06, 2001 at 10:20:26AM -0700, Erick Calder wrote:
+> Paul,
 >
-> The kernel is standard 2.4.8 without the LVM-patches. The usersspace
-> tools are version 1.0.1-rc2.
+> I'm putting an RPM together... struggling with the changes between the
+2.4.9
+> configuration file and the 10+ configuration files that come with RH's
+2.4.7
+> .src... if you've built RPMs before help is welcome (we can take this
+> off-list), otherwise I'll let you know when I've managed to put it
+> together... I too have production boxes I don't want to build the tarball
+> on.
 
-i got similar errors - but in my box the damaged hd was slave... so i got t=
-he=20
-uncorrectable errors on the slave (hdh) and the dma "DriveReady=20
-SeekComplete"-Errors on the master-disk (hdg)
+Erick,
 
-kernel 2.4.7-ac7 without lvm-patches and lvm 0.9.1b7 tools
-fejf
+if you have put it together, we'ld be happy to put it onto our ftp server
+for everybodies convenience.
+Thanks.
 
-- --=20
-Backups are usefull. Most often when you don't have one ;)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Regards,
+Heinz    -- The LVM Guy --
 
-iD8DBQE7nOaY7Xtp66ctWuIRAr/rAKDbwC5DMea+yksFvJWZ9ubIvrm7LQCfTHMa
-+aAlDpsQ/RUoakNRe+iUyo8=3D
-=3D93ns
------END PGP SIGNATURE-----
+>
+> - erick
+>
+> -----Original Message-----
+> From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
+> Behalf Of Paul Jakma
+> Sent:	Thursday, September 06, 2001 10:08 AM
+> To:	linux-lvm@sistina.com
+> Subject:	Re: [linux-lvm] ftp.sistina.com down?
+>
+> On Wed, 5 Sep 2001, AJ Lewis wrote:
+>
+> > It should be up again.  Thanks for letting us know.
+>
+> excellent...
+>
+> > > also, are there any RPMS for 1.0.1?
+> >
+> > Nope.  Either grabbing the source tarball or talking to your distro is
+the
+> > best option at this point.  The source is not difficult to build and
+> install
+> > IMHO, so that's probably your best bet for now.
+>
+> ok.. i've no technical problems with source, but from experience i
+> don't like installing from source onto production systems that use
+> package management - bad idea for long term maintainability of the
+> machine.
+>
+> anyway.. thanks AJ!
+>
+> > Regards,
+>
+> --paulj
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
