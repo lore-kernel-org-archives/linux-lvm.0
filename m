@@ -1,9 +1,12 @@
-Return-Path: <jamesp@foobarhouse.com>
-Date: Thu, 26 Jul 2001 12:23:32 +0100 (BST)
-From: James Pattinson <jamesp@foobarhouse.com>
-Message-ID: <Pine.LNX.4.33.0107261218290.1277-100000@greebo.foobarhouse.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] success!
+Return-Path: <weissel@netcologne.de>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
+Date: Thu, 26 Jul 2001 13:36:32 +0200
+Subject: Re: [linux-lvm] lvm on root
+Message-ID: <20010726133632.A26425@tiger.bigcats.invalid>
+References: <Pine.LNX.4.33.0107251827170.28361-100000@willow.nutstreet.net> <Pine.LNX.4.33.0107260038030.3644-100000@greebo.foobarhouse.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0107260038030.3644-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Thu, Jul 26, 2001 at 12:39:20AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +18,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've just upgraded my LVM-on-root system from beta7 to beta8 succesfuly. I
-only had two problems:
+James Pattinson (jamesp@foobarhouse.com) wrote 42 lines:
 
-1.	The lvmcreate_initrd script failed when it tried to mount the
-image in /tmp as a loopback device. The error was ioctl: LOOP_SET_FD:
-Invalid argument. I believe this is due to my /tmp filesystem being tmpfs
-and could be a kernel bug. It worked OK when I used /root instead of /tmp.
+> Because it looks nice, and for the geek-factor :)
 
-2.	The pvversion failure as documented in my previous emails.
+Because one can.  That's why I used soft-raid, that's why I
+use SMP... but I still have a non-lvm root/bootpartition.
 
-Thanks to Heinz and everyone working on LVM to help my linux box look more
-like an HP :)
+> [root@greebo /root]# bdf
+> Filesystem           1k-blocks      Used Available Use% Mounted on
+> /dev/vg00/lvol1         262132     92988    169144  36% /
+> /dev/vg00/lvol2        3145628   2382316    763312  76% /usr
+> /dev/vg00/lvol3         262132    103400    158732  40% /var
+[...]
 
-Regards
+Personally, I name my LVs to match their (usual) mountpoints,
+because I do not want to remember the number/mountpoint
+matching, so I have LV names like 
 
-James
+    /dev/main_vg/usr
+    /dev/main_vg/var
+    /dev/main_vg/var_spool_news         # mounts on /var/spool/news
+etc.
+
+-Wolfgang
