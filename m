@@ -1,9 +1,10 @@
-Message-ID: <000d01c2c19f$f2d45e00$0201a8c0@kezar>
-From: "Joseph Kezar" <jkezar@doc.state.vt.us>
-References: <20030121213110.GT1685@zaurak.cedar.Buffalo.EDU>
-Subject: Re: [linux-lvm] LVM on H/W RAID5s ?
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] LVM Root
+Message-ID: <20030122083853.GA21169@percy.comedia.it>
+References: <1043113906.3e2ca7b2864b6@mail.serviceweb.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1043113906.3e2ca7b2864b6@mail.serviceweb.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 21 16:48:01 2003
+Date: Wed Jan 22 02:38:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
-Cc: ajay@cedar.buffalo.edu
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-I've noted some high load issues with LVM on our RAID5 as well.  I thought
-it might be a hardware compat issue.  But now I am leaning towards LVM/RAID5
-performance issues.
+On Mon, Jan 20, 2003 at 08:51:46PM -0500, tlove@serviceweb.net wrote:
+>VFS: Mounted root reiserfs filesystem) readonly
+>Trying to move old root to /initrd ... failed
+try creating a /initrd directory (i suppose this is a pivot_root call
+which fails).
+>Unmounting old root
+i wonder what is it unmounting since pivot_root failed can you send the
+/linuxrc code
+>Trying to free ramdisk memory ... okay
+>mount_dev_fs(): unable to mount devfs, err: -2
+dunno, hope it comes from an error before
+>Freeing unused kernel memory: 120k freed
+>Warning: unable to open an initial console.
+yep it could'nt mount dev in the above step
+>Kernel panic: No init found.  Try passing init= option to kernel.
+....
 
-Our server performs fine.  But when I need to rsync from the JBOD to the
-local disks the load jumps anywhere between 10 and 20!.
+L.
 
-
------ Original Message -----
-From: "Ajay Shekhawat" <ajay@cedar.buffalo.edu>
-To: <linux-lvm@sistina.com>
-Sent: Tuesday, January 21, 2003 4:31 PM
-Subject: [linux-lvm] LVM on H/W RAID5s ?
-
-
-> I'm trying to combine two H/W RAID5 arrays (6 disks each on a ICP-Vortex
-> 8643RZN controller) into 1 device using LVM, with XFS as the filesystem.
-> Unfortunately, I'm getting terrible read rates (I'm doing my own
-benchmarking,
-> with 1 process creating files of about 400K each, and another process
-> reading and deleting the files). Just an 'ls' in a directory with
-> 1000 files takes forever. A stat+unlink call in perl takes 1sec.
->
-> Are there any 'gotchas' with this sort of a setup?
->
-> The RAID5 partitions themselves work pretty OK by themselves.
->
-> The hardware:
-> - dual Xeon 2.0GHz w/ 2GB memory
-> - ICP Vortex 8643RZN card
-> - 73GB Fuji 10KRPM disks, 14 of them on a controller.
->
-> Any tips, pointers, etc. would be appreciated.
->
-> Ajay
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
