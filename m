@@ -1,15 +1,14 @@
-From: Chad Walstrom <chewie@wookimus.net>
+From: Tim <tim@connectlive.com>
 Subject: Re: [linux-lvm] Error compilng tools on RH7.3
-Message-Id: <20020426215017.GB19569@wookimus.net>
+Message-Id: <20020426165918.B731@connectlive.com>
 References: <43D959D3-58FC-11D6-9EF4-000393452E7E@jvm.de>
     <20020426153434.A21305@sistina.com>
     <20020426162737.A26542@omnifarious.org>
+    <20020426215017.GB19569@wookimus.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="Qxx1br4bt0+wmkIi"
 Content-Disposition: inline
-In-Reply-To: <20020426162737.A26542@omnifarious.org>
+In-Reply-To: <20020426215017.GB19569@wookimus.net>; from
+    chewie@wookimus.net on Fri, Apr 26, 2002 at 04:50:17PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,52 +19,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 26 16:52:02 2002
+Date: Fri Apr 26 17:00:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Fri, Apr 26, 2002 at 04:27:37PM -0500, Eric M. Hopper wrote:
+> > That answer is quite off-putting, and makes me seriously consider
+> > whether or not I want to use LVM on my RH systems.
+> 
+> I run a vanilla kernel w/o any patches and LVM performs just fine for my
+> needs.
 
-On Fri, Apr 26, 2002 at 03:34:34PM +0200, Heinz J . Mauelshagen wrote:
-> you need to pick a vanialla kernel 2.4.18 source and patch the LVM
-> driver in.  We don't support RH prepatched kernels.
+I run a patched (for Symbios 22910 dual-channel Ultra3LVD/SE drivers)
+2.4.13 RedHat kernel with LVM patches as well.  It works great.  If I
+need support, I pay for it, and I have purchased exactly one hour from
+Heinz.  It was well worth it.
 
-On Fri, Apr 26, 2002 at 04:27:37PM -0500, Eric M. Hopper wrote:
-> That answer is quite off-putting, and makes me seriously consider
-> whether or not I want to use LVM on my RH systems.
+I do not expect Heinz and the Sistina guys, who do not work at Red Hat,
+to keep up with the patches and testing that the other company does.  If
+you want Red Hat support, you can obtain it from Red Hat; if you want
+Sistina LVM (custom configurations) support, they request that you pay
+Sistina.  That is not unreasonable.  Someone has to pay the salaries!
 
-That is not a bad consideration to make, honestly.  Wait until the RH
-experts on the list have ported the the LVM changes to their heavily
-patched kernels.  For good reason, Red Hat kernels go through some
-extensive customization for the benefit of the paying customer.  LVM and
-Sistina can't very well keep up with all of the incompatibilities that
-this eclectic set of patches may introduce to the vanilla kernel.
+If you do not want to pay for support you need to be able to do it
+yourself, there is no such thing as a free lunch.
 
-IMHO, Heinz made a perfectly reasonable and logical statement about the
-LVM Team's development policy.  RH developers are responsible for
-"keeping up with the Jones'", not Sistina.
-
-I run a vanilla kernel w/o any patches and LVM performs just fine for my
-needs.
-
---=20
-Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-http://www.wookimus.net/                            | s.k.a. gunnarr
-
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE8ycuYDMcLGCBsWv0RAu5dAJ93dox3atjomVmMYA8QHYkHV0SpAgCcD/ww
-HEV+n/cCCHUjxGWK0L5VCZQ=
-=jUeW
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
+-- 
+    "The Internet, of course, is more than a place to find 
+     pictures of people having sex with dogs." 
+        --Philip Elmer-Dewitt, Time Magazine, July 3, 1995  
