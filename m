@@ -1,8 +1,12 @@
-Message-ID: <OF9C04411A.7FCAD1D6-ON87256AB8.005B14DE@sc.blm.gov>
-From: dan_mcmanus@co.blm.gov
-Date: Thu, 30 Aug 2001 10:38:52 -0600
-MIME-Version: 1.0
-Subject: [linux-lvm] A Caldera related bug?
+Date: Thu, 30 Aug 2001 14:12:59 -0400
+From: Wayne Topa <wtopa@dmcom.net>
+Subject: Re: [linux-lvm] Debian apt-get link problem
+Message-ID: <20010830141259.E22755@dmcom.net>
+References: <20010827114957.A23458@dmcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20010827114957.A23458@dmcom.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,86 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-LVM@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-Hello,
+Wayne Topa(wtopa@dmcom.net) is reported to have said:
+>   I have been trying to use the link in the LVM Howto by AJ Lewis, and
+> the DEBIAN.readme in /pub/LVM, to obtain/upgrade LVM on a Debian testing =
 
-Please disregard my previous message. I have figured out what to do to make
-it compile, namely copying over the /usr/include/linux directory that had
-the files from the old kernel and replacing them with those from the new
-kernel ( /usr/src/linux/include ). And viola, it worked. Thanks anyway,
+> box.  The link does not work.  I have been able to ftp to the sistina=20
+> site to get the lvm 9=EF=BF=BD2 lvm files.
+>=20
+>   I just tried the link=20
+> ( deb ftp://ftp.sistina.com/pub/LVM/binaries/debian unstable main )
+> again and am still gettting the same error;
+> Failed to fetch
+> ftp://ftp.sistina.com/pub/LVM/0.9/binaries/debian/dists/unstable/main/bin=
+ary-i386/Packages
+> Unable to fetch file, server said 'Error opening file; No such file or di=
+rectory.  '
+>=20
+>  If there really is a debian package on the site, would someone please=20
+> let me know what the link to it is.
+>=20
+>   Oh, and update the Debian.readme file with the correct link.
 
-Dan McManus
-
-Previous message follows:
-__________________
-
-Hello,
-
-First off, if I'm not supposed to send this to you, I apologize. I am
-running Caldera Openlinux workstation 3.1 with a kernel of 2.4.8 that has
-LVM support enabled. My computer is a gateway 4200 Pentium II, if you care
-about that. I tried this with lvm 1.0.1-rc1, 1.0, and 0.9, following the
-instructions faithfully. What happens is I type "make" (after having typed
-"./configure", of course) and this same error happens in each case:
-
-[root@co1432 1.0.1-rc1]# make
-make[1]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-make[2]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-make[3]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-gcc -c -pipe -g -O2 -Wall -DDEBUG -I../../tools/lib -I../../tools -o
-basename.o basename.c
-In file included from /usr/include/linux/prefetch.h:13,
-                 from /usr/include/linux/list.h:6,
-                 from ../../tools/lib/lvm.h:115,
-                 from ../../tools/lib/liblvm.h:96,
-                 from basename.c:34:
-/usr/include/asm/processor.h:46: parse error before `u16'
-/usr/include/asm/processor.h:46: warning: no semicolon at end of struct or
-union
-/usr/include/asm/processor.h:55: parse error before `}'
-make[3]: *** [basename.o] Error 1
-make[3]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-make[2]: *** [all] Error 2
-make[2]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/lib'
-make[2]: Entering directory
-`/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[3]: Entering directory
-`/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[3]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[2]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools/man8'
-make[2]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-gcc -c -pipe -g -O2 -Wall -DDEBUG -I../tools/lib -I../tools -o e2fsadm.o
-e2fsadm.c
-In file included from /usr/include/linux/prefetch.h:13,
-                 from /usr/include/linux/list.h:6,
-                 from ../tools/lib/lvm.h:115,
-                 from ../tools/lib/liblvm.h:96,
-                 from ../tools/lvm_user.h:41,
-                 from e2fsadm.c:53:
-/usr/include/asm/processor.h:46: parse error before `u16'
-/usr/include/asm/processor.h:46: warning: no semicolon at end of struct or
-union
-/usr/include/asm/processor.h:55: parse error before `}'
-make[2]: *** [e2fsadm.o] Error 1
-make[2]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-make[1]: *** [all] Error 2
-make[1]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1/tools'
-make[1]: Entering directory `/usr/src/linux/extras/LVM/1.0.1-rc1'
-
-**********************************
-There were errors in your compile.
-**********************************
-
-make[1]: *** [.touchbuilt] Error 1
-make[1]: Leaving directory `/usr/src/linux/extras/LVM/1.0.1-rc1'
-make: *** [all] Error 2
-
-
-Any help would be appreciated.
-
-Thanks,
-
-Dan McManus
+Well if the Debian maintainer doesn't know I guess it isn't available.
+Sorry for wasting your time.
+--=20
+Pascal Users:
+ To show respect for the 313th anniversary (tomorrow) of the
+ death of Blaise Pascal, your programs will be run at half speed.
+_______________________________________________________
