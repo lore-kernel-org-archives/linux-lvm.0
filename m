@@ -1,11 +1,9 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] LVM: logical -> physical mapping info (per file)
-Message-ID: <254970000.1037827617@[192.168.200.4]>
-In-Reply-To: <1037820827.79579.13.camel@grenzik.us.mvd>
-References: <1037820827.79579.13.camel@grenzik.us.mvd>
+From: Dieter =?iso-8859-15?q?N=FCtzel?= <Dieter.Nuetzel@hamburg.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
+Message-Id: <200211210441.48883.Dieter.Nuetzel@hamburg.de>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Is is possible to have "boot" and "/" in LVM on top of SW RAID5?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +14,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 20 15:21:02 2002
+Date: Wed Nov 20 22:03:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
+I have 5 ATA disks (4 RAID5 + spare) all as master on three controllers (2 =
+at=20
+a time on two PCI cards and the spare on first channel of the onbaord=20
+controller.
 
--- Nick Jennings <nick.jennings@mountainviewdata.com>
+Some problems with device mapping in lilo-2.22x (SuSE 8.1).
+Sometimes hda, hde, hdg, hdi, hdk
+the hda, hdc, hde, hdg, hdj
 
->  Hello I would like to determine which, of 3 RAIDs, a certain piece of
-> data is stored. I am trying to determine if the reason I am having
-> trouble with certain pieces of data on an 'lv' partition is because
-> of a RAID enclosure having trouble. I'd like to find out if it is the
-> one containing the file(s) I need.
->
->  Perhaps there is a way to get an inode mapping of every bit of data on
-> a device (lvm partition)? vgdisplay or lvdisplay seems to only show
-> which devices are used, but provides no info on the physical location of
-> each file.
->
->  Please let me know if there is a way to do this, or another way to go
-> about this problem. Thanks.
+Any hints/thought?
 
-see lvdisplay -v
+It would be very nice if this works because than I can pull a whole disk if=
+=20
+one fails and the "spare" jumps in.
 
+Thanks,
+	Dieter
+=2D-=20
+Dieter N=FCtzel
+Graduate Student, Computer Science
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+University of Hamburg
+Department of Computer Science
+@home: Dieter.Nuetzel at hamburg.de (replace at with @)
