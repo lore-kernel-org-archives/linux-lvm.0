@@ -1,11 +1,11 @@
-Return-Path: <smdenton@bellsouth.net>
-From: "S. Michael Denton" <smdenton@bellsouth.net>
-Subject: RE: [linux-lvm] Converting my Root file system to LVM
-Date: Wed, 23 May 2001 01:03:02 -0400
-Message-ID: <000001c0e345$a6088a40$7d80a8c0@dyndns.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJGEMNIOAA.steve.wray@the.net.nz>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 23 May 2001 09:51:42 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Working together
+Message-ID: <20010523095142.A22671@sistina.com>
+References: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com>
+Mime-Version: 1.0
+In-Reply-To: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com>; from peloquin@us.ibm.com on Fri, May 18, 2001 at 09:01:49AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,99 +18,64 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-=20
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Mark,
 
-With pvmove-ing an lv, it's actually quite easy... and I've done it
-several times with the VG active... here's how:
+we thank you for your invitation to join you with work on the EVMS
+project.  Obviously we are interested in the work you are doing and
+support it whole heartedly.
 
-pvcreate <new-pv>
-vgextend <vg> <new-pv>
-[make sure <new-pv> has at least as many pe's as <old-pv>]
-pvmove <old-pv> <new-pv> (may require a -f or something if the lv's
-are open)
-vgreduce <vg> <old-pv> (unless you want to keep the old pv for
-expansion or something)
+We will be happy to help you with any technical assistance you may need
+with regard to the Linux LVM system.  However we do not feel able to commit a
+developer to work full time on your project for various reasons:
 
-viola!  all lv's that were on <old-pv> are now on <new-pv> :)  This
-is also how I "defragment" the lv's if it gets too crazy with the
-allocation... although you really don't need to do this (i just like
-to keep the vgdisplay -v's easier to parse with scripts, etc :) )
+o The LVM team is very small, consisting of three main developers, we
+  really do not have much spare man power.
 
-- -----Original Message-----
-From: linux-lvm-admin@sistina.com
-[mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Steve Wray
-Sent: Wednesday, 23 May 2001 00:02
-To: linux-lvm@sistina.com
-Subject: RE: [linux-lvm] Converting my Root file system to LVM
+o EVMS, though heading in a direction that we like, is a long way from
+  going into production.  Our priority must be with the existing LVM
+  system, especially now 0.9 is approaching production level.
 
+o Our new development for the 1.2/2.0 branches has cluster support as
+  it's main goal.  This does not seem to be anywhere on your roadmap.
 
-> From: linux-lvm-admin@sistina.com
-> [mailto:linux-lvm-admin@sistina.com]On Behalf Of Rupert Heesom
+On a more positive note components of our work, such as the standalone
+snapshot driver, will undoubtedly benefit both projects.  We will take
+the time to ensure that your requirements are taken into consideration
+when writing these.
 
-> Tnx, Steve for the easy howto of your's below.
-> BTW, what on earth is that "mount -o loop" command?
-
-Glad to have helped!
-the "-o loop" tells mount to mount the file on the loopback device.
-This allows ordinary files (not just block devices) to carry a
-filesystem.
-Its quite cool!
-:)
-
-=20
-> Since my LVol is on my 2nd disk, next, I think I'll try extending
-> my Lvol back to cover my 1st disk as well.
-
-Just watch out for your /boot parition.
-You might want to copy lilo.conf over to the /boot partition
-and make /etc/lilo.conf a symlink to it there.
-
-=20
-> One more bit of help, if you can? -
->=20
-> I want to pvmove the file contents of my 2nd disk (/dev/sdb) to my
-> 1st disk (/dev/sda).  My 1st disk is nice & quiet!  Now the
-> lvm-howto
-> specifies my next step (adding the "old partition" into the Lvol)
-> as -- =20
-
-phew... I have no idea about moving things from PV to PV,
-however, you may want to look at setting up a miniroot-in-a-ramdisk
-for this sort of thing. I suspect you need to have the VGs
-deactivated,
-and you can't do *that* when its in use as the root LV.
-
-Check out;
-http://innominate.org/~graichen/projects/miniroot
-
-miniroot is fantastic, but it needs some work to make it useful
-for LVM.
-Mainly, just unzip and mount it (like you did for the initrd file
-before)
-and copy over the lvm programs and libraries.
-
-You'll need to set up a lilo entry too, of course.
-I think its well documented.
-
-BTW; I'd *seriously* recommend this for anyone with LVM root.
-It can get you out of trouble!
+Regards,
+Heinz    -- The LVM Guy --
 
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
+On Fri, May 18, 2001 at 09:01:49AM -0500, Mark Peloquin wrote:
+> Hello everyone,
+> 
+> On behalf of the EVMS project (http://sourceforge.net/projects/evms or
+> http://oss.software.ibm.com/developerworks/opensource/evms) team, we
+> would like to invite the Linux LVM project to join/collaborate with our
+> project.  The goal of this collaboration is to offer a complimentary set of
+<SNIP>
+> 
+> We hope you will join us as we look forward to working with you.
+> 
+> Thanks.
+> 
+> The EVMS Team
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
------BEGIN PGP SIGNATURE-----
-Version: PGP 7.0.1
-
-iQA/AwUBOwtEhnC+DNfF0nVpEQLMOwCfazYeopl/VrVdNYDEn7rAnWlYqJEAn0Mj
-cZX/Oh9MBo5nxV6GBJlC08pT
-=3DLSkE
------END PGP SIGNATURE-----
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
