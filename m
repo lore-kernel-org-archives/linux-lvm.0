@@ -1,9 +1,9 @@
 Return-Path: <gene_yee@hotmail.com>
 From: "hail narcissus" <gene_yee@hotmail.com>
-Date: Thu, 08 Feb 2001 14:32:23 -0800
+Date: Thu, 08 Feb 2001 14:37:42 -0800
 Mime-Version: 1.0
-Message-ID: <F578nbpzJvm2CaO9smk000059c1@hotmail.com>
-Subject: [linux-lvm] Upgrade procedure
+Message-ID: <F77hOQmIpgVCt3hqAde000059ff@hotmail.com>
+Subject: [linux-lvm] fschk & LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,17 +19,11 @@ Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am running .9.1-Beta2 right now and though I am not currently in need to 
-upgrade I would like to know the procedure for future reference.
+First of all, I live in California, home of the rolling blackouts.  :)
 
-My questions are:  Do I need to re-patch and compile the kernel for 
-upgrading?  If so then do I need to start with a clean src or can I re-patch 
-my src?
-
-In other words, my kernel already has a couple of other hacks patched into 
-it.  If possible I would like to just run the LVM .9.1-Beta3 patch over my 
-kernel which was patched for Beta2 on it instead of having to dig up all the 
-other patches I have applied in the past.
+I was wondering what LVM does for 'fschk'.  Can I run it on my volume group 
+or is this considered a pretty bad thing?  If not, is there something that 
+LVM uses in it's place?
 
 Thanks.
 _________________________________________________________________
