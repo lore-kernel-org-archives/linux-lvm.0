@@ -1,18 +1,25 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i78LI2a26007
-	for <linux-lvm@redhat.com>; Sun, 8 Aug 2004 17:18:02 -0400
-Received: from mailbox.openface.ca (mailbox.openface.ca [216.46.1.7])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i78LI0e1013790
-	for <linux-lvm@redhat.com>; Sun, 8 Aug 2004 17:18:01 -0400
-Received: from abnormal.openface.ca (IDENT:root@abnormal.openface.ca
-	[216.46.1.19])
-	by mailbox.openface.ca (8.12.11/8.12.9) with ESMTP id i78LHxF6029799
-	for <linux-lvm@redhat.com>; Sun, 8 Aug 2004 17:18:00 -0400 (EDT)
-Message-ID: <20040808171759.B6463@cs.mcgill.ca>
-Date: Sun, 8 Aug 2004 17:17:59 -0400
-From: Navindra Umanee <navindra@cs.mcgill.ca>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i79HJua29466
+	for <linux-lvm@redhat.com>; Mon, 9 Aug 2004 13:19:56 -0400
+Received: from jinx.internetstaff.com (jinx.internetstaff.com [63.214.174.240])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i79HJte1031835
+	for <linux-lvm@redhat.com>; Mon, 9 Aug 2004 13:19:55 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by jinx.internetstaff.com (Postfix) with ESMTP id 16C324BC221
+	for <linux-lvm@redhat.com>; Mon,  9 Aug 2004 10:19:55 -0700 (MST)
+Received: from jinx.internetstaff.com ([127.0.0.1])
+	by localhost (jinx [127.0.0.1]) (amavisd-new, port 10024) with LMTP
+	id 04485-01-26 for <linux-lvm@redhat.com>;
+	Mon,  9 Aug 2004 10:19:53 -0700 (MST)
+Received: from [10.10.3.135] (unknown [65.161.175.218])
+	by jinx.internetstaff.com (Postfix) with ESMTP id ADE2D4BC0B4
+	for <linux-lvm@redhat.com>; Mon,  9 Aug 2004 10:19:53 -0700 (MST)
+Subject: Re: [linux-lvm] SAN Storage/mirror/lvm
+From: Cott Lang <cott@internetstaff.com>
+Message-Id: <1092071992.3369.48.camel@localhost>
 Mime-Version: 1.0
-Subject: [linux-lvm] overallocation of physical volume
+Date: Mon, 09 Aug 2004 10:19:53 -0700
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,58 +31,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
+>I setup a similar system on a HDS-9570 but with only one
+>card in each machine - 'assuming' that the failover in the
+>driver would cope if a controller on the HDS failed (as
+>opposed to a QLogic failure)
+>
+>This worked fine if I disconncected a path in the fabric but
+>when we took a controller of line the failover failed.
+>
+>Since then I have used md multipath which has tested fine
 
-  --- Volume group ---
-  VG Name               bytepool
-  System ID             localhost.localdomain1073237462
-  Format                lvm1
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                256
-  Cur LV                6
-  Open LV               6
-  Max PV                256
-  Cur PV                5
-  Act PV                5
-  VG Size               46.41 GB
-  PE Size               32.00 MB
-  Total PE              1485
-  Alloc PE / Size       1392 / 43.50 GB
-  Free  PE / Size       93 / 2.91 GB
-  VG UUID               deadbe-efde-adbe-efde-adbe-efde-adbeef
+I have a similar issue, two storage processors, two HBAs, and
+redundant paths between them.
 
+On the host, I see 4 SCSI devices, two valid, two invalid - I'm 
+guessing this is caused because only one storage processor exports
+a particular LUN, so half the paths are invalid until a storage
+processor fails over.
 
-  --- Physical volume ---
-  PV Name               /dev/hda7
-  VG Name               bytepool
-  PV Size               10.00 GB / not usable 60.70 MB
-  Allocatable           yes
-  PE Size (KByte)       32768
-  Total PE              318				 <-------------
-  Free PE               4294967262                       <-------------
-  Allocated PE          352                              <-------------
-  PV UUID               sahdgd-gasj-g21h-xjn4-5jxJ-J45a-asdc3d
+sdd - SP A Path 1
+sde - SP B Path 1
+sdf - SP A Path 2
+sdg - SP B Path 2
 
-  --- Physical volume ---
-  PV Name               /dev/hda8
-  VG Name               bytepool
-  PV Size               10.00 GB / not usable 60.70 MB
-  Allocatable           yes
-  PE Size (KByte)       32768
-  Total PE              318                               <-------------
-  Free PE               4294967279                        <-------------
-  Allocated PE          335                               <-------------
-  PV UUID               sahdgd-gasj-g21h-xjn4-5jxJ-J45a-asdc4d
+I have a LUN currently on SP B, so I can use md multipath configured 
+with /dev/sde and /dev/sdg, and that seems to work.
 
-LVM seems to be claiming to use 352 (or 335 in the second case)
-physical extents when there are only 318 total...  Should I be
-worried?
+However, two things:
 
-Any ideas on how to fix this?
+1) How do I set this up to handle a failover to SP A?
+2) Multipath only seems to work in failover mode, is there a way to
+load balance across the two paths?
 
-Thanks!
-Navin.
+Anyone have any hints?  :)
