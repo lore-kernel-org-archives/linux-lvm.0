@@ -1,9 +1,10 @@
-From: "Steve Wray" <steve.wray@the.net.nz>
-Message-ID: <NBBBKLKHMJHIJLHOGAOJAEJMJCAA.steve.wray@the.net.nz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20011206100443.GA7973@sky.net>
-Subject: [linux-lvm] reinstall system with volumes intact?
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] read hangs when snapshot gets full
+Message-ID: <20011211082914.GA1181@tykepenguin.com>
+References: <OF4A9F315E.E34E5EC4-ONC1256B1E.00574810@de.ibm.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <OF4A9F315E.E34E5EC4-ONC1256B1E.00574810@de.ibm.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,34 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 10 21:05:02 2001
+Date: Tue Dec 11 02:27:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ok,
-I want to reinstall my server from mandrake 8.0 to
-mandrake 8.1
+On Mon, Dec 10, 2001 at 06:18:15PM +0100, Martin Petermann wrote:
+> Hi all,
+> 
+> I'm using a SuSE Linux (V7.2) with a 2.4.4 kernel. If I start a program
+> which reads from a snapshot (e.g. cat /dev/vg/snapshot > /tmp/file) with a
+> low priority (nice -20), sometimes the program hangs within the
+> read() call if the snapshot gets full. If this is the case I'm not able to
+> kill the process of the application (even SIGKILL). In my application I
+> reduced the number of blocks in each read() call reads and I stop
+> reading after the snapshot is full of more then 90%. But this solution is
+> not completely avoiding the problem.
+> 
+> Is there any fix in a newer kernel version?
 
-I have some logical volumes which I don't want to touch
-during the reinstall (they mount under /vol)
-I don't want to have to restore the data to them,
-I want to be able to reboot the server, do the reinstall
-and tell it where to mount the volumes and then have
-all my data still there and in the right places when
-the new system comes up.
+I think this is fixed in 1.0.1 - it certainly works for me on Linux 2.4.16
 
-The rest of the partitions are going to be rearranged.
-
-The question is;
-Do I have to do anything special to have these volumes
-accessible under the new system? Mandrake seems to detect
-LVM at install time and comes with some nice install-time
-tools to set them up.
-
-However, I'm a little concerned with all the export, import
-stuff that I read about; should I export the VG before
-the reinstall? Or what?
-
-Or am I just unecessarily paranoid and LVM will see the old
-volumes on the new system?
+patrick
