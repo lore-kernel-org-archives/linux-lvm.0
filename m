@@ -1,9 +1,11 @@
-Return-Path: <dave@galilean.d2g.com>
-Date: Sun, 18 Mar 2001 12:56:00 +0100
-From: Dave Wapstra <dave@xs4all.nl>
-Message-ID: <20010318125600.A24084@mercury.mercury.multiweb.nl>
-Mime-Version: 1.0
-Subject: [linux-lvm] Kernel 2.4.x with LVM beta 6 on Sun E450?
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3AB51A73.8D931205@wrkhors.com>
+Date: Sun, 18 Mar 2001 14:28:35 -0600
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Kernel 2.4.x with LVM beta 6 on Sun E450?
+References: <20010318125600.A24084@mercury.mercury.multiweb.nl>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +18,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello all,
+> With kernel 2.4.2 "make menuconfig" doesn't work.  No problem,
+> now I'm using v2.4.3-pre3 and this is running fine.
 
-I am trying to setup a Sun E450 with Linux kernel 2.4.x and LVM beta 6,
-but there are a number of difficulties.
+if you have a decent display (or network access) see what 
+"make xconfig" does for you.  it may be a curses/ncurses
+version issue (was for me).  by the time you're done cursing
+[so to speak] you'd be better off in X11.  if you just want
+to get the thing working then:
 
-With kernel 2.4.2 "make menuconfig" doesn't work.  No problem,
-now I'm using v2.4.3-pre3 and this is running fine.
+	take your pre3 .config and move it to /usr/src (i.e., "..").
+	blow off /usr/src/linux-2.4.2-pre3.
+	re-extract 2.4.2 into, say, linux-2.4.2.
+	cp ../config ./.config;
+	make oldconfig;
 
-LVM 0.9.1 beta 6 patches cleanly agains -pre3.  So far so good.
-
-The problem is that I'm trying to apply Patrick Caulfield's ioctl32.c
-patch, which doesn't apply cleanly to -pre3 (at least on my box).
-Applying the patch by hand results in a failed compile.
-
-This might be caused by the fact that I pulled the patch of the web,
-since I wasn't subscribed to linux-lvm at the time.
-
-
-Any success stories on Ultrasparc with 2.4.x and LVM are welcome...
-
-
--Dave
+this will re-use the old (assumedly working) .config from 2.4.3-pre3
+w/ questions about anything new it doesn't have answers for.  you
+can use this method to migrate up versions w/o having to wander 
+through the entire process each time.
 
 -- 
-Dave Wapstra
-dave@xs4all.nl
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
