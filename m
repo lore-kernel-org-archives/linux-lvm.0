@@ -1,109 +1,25 @@
-Date: Thu, 19 Oct 2000 19:07:52 -0700 (PDT)
-From: Myles Uyema <myles@puck.nether.net>
-Subject: [linux-lvm] 2.4.0-test10-pre4 oops with LVM
-Message-ID: <Pine.LNX.4.21.0010191857290.20436-200000@uyema.net>
+From: "Frank Wray" <frank_wray@siliconinfusion.com>
+Subject: [linux-lvm] using previously created lvm
+Date: Fri, 20 Oct 2000 13:07:12 +0100
+Message-ID: <000401c03a8e$4861a620$a200a8c0@babbage.siliconinfusion.com>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="-103731693-224629785-972007330=:20436"
-Content-ID: <Pine.LNX.4.21.0010191905260.3021@uyema.net>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@msede.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-  Send mail to mime@docserver.cac.washington.edu for more info.
+Hi All,
 
----103731693-224629785-972007330=:20436
-Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
-Content-ID: <Pine.LNX.4.21.0010191905261.3021@uyema.net>
+I would like to move a volume group from
+the HPUX 10.20 box that it was created on
+to a Linux box. The logical volumes are
+all of type HFS and currently on a single
+physical volume.
 
-This kernel panic occurred when I attempted to dump my ext2 filesystem
-/home onto /mnt/ide/backup.  My exact dump command was:
+Anybody have any experience in doing this?
+Will vgscan recognise a HPUX vg?
 
-dump -0 -u -M -f /mnt/ide/backup/home -B 2096128 /home
-
-I believe dump managed to start reading directories before the oops
-occurred...Haven't been able to duplicate the oops on 2.4.0-test9.
-
----103731693-224629785-972007330=:20436
-Content-Type: TEXT/PLAIN; NAME="oops.txt"
-Content-Transfer-Encoding: BASE64
-Content-ID: <Pine.LNX.4.21.0010191902100.20436@uyema.net>
-Content-Description: 2.4.0-test10pre4 oops log
-Content-Disposition: ATTACHMENT; FILENAME="oops.txt"
-
-T2N0IDE5IDE3OjU4OjEzIHV5ZW1hIGtlcm5lbDoga2VybmVsIEJVRyBhdCB2
-bXNjYW4uYzoxMDIhDQpPY3QgMTkgMTc6NTg6MTMgdXllbWEga2VybmVsOiBp
-bnZhbGlkIG9wZXJhbmQ6IDAwMDANCk9jdCAxOSAxNzo1ODoxMyB1eWVtYSBr
-ZXJuZWw6IENQVTogICAgMA0KT2N0IDE5IDE3OjU4OjEzIHV5ZW1hIGtlcm5l
-bDogRUlQOiAgICAwMDEwOlt0cnlfdG9fc3dhcF9vdXQrMjUxLzgwNF0NCk9j
-dCAxOSAxNzo1ODoxMyB1eWVtYSBrZXJuZWw6IEVGTEFHUzogMDAwMTAyODIN
-Ck9jdCAxOSAxNzo1ODoxMyB1eWVtYSBrZXJuZWw6IGVheDogMDAwMDAwMWMg
-ICBlYng6IDAwMDAwMjAwICAgZWN4OiBjMTQ2ZTAwMCAgIGVkeDogMDAwMDAw
-MmMNCk9jdCAxOSAxNzo1ODoxMyB1eWVtYSBrZXJuZWw6IGVzaTogYzEzZWRm
-OWMgICBlZGk6IDAwMDAwMDAxICAgZWJwOiAwZWNiMzA0NSAgIGVzcDogYzE0
-NmZlYzgNCk9jdCAxOSAxNzo1ODoxMyB1eWVtYSBrZXJuZWw6IGRzOiAwMDE4
-ICAgZXM6IDAwMTggICBzczogMDAxOA0KT2N0IDE5IDE3OjU4OjEzIHV5ZW1h
-IGtlcm5lbDogUHJvY2VzcyBrc3dhcGQgKHBpZDogMiwgc3RhY2twYWdlPWMx
-NDZmMDAwKQ0KT2N0IDE5IDE3OjU4OjEzIHV5ZW1hIGtlcm5lbDogU3RhY2s6
-IGMwMjNjMGY0IGMwMjNjMzEzIDAwMDAwMDY2IDA4MGFiMDAwIDA4MGY0MDAw
-IGNlZTdhMmE4IDA4MGFhMDAwIDAwMDAwMDAyDQpPY3QgMTkgMTc6NTg6MTMg
-dXllbWEga2VybmVsOiAgICAgICAgYzAxMjk2MzIgYzAxMmIyZWYgY2VlOGJl
-MDAgY2ViYTA4ZTAgMDgwYWEwMDAgY2VlN2EyYTggMDAwMDAwMDQgMDgwYWEw
-MDANCk9jdCAxOSAxNzo1ODoxMyB1eWVtYSBrZXJuZWw6ICAgICAgICBjZWJh
-MDhlMCBjZWU4YmUwMCAwMDAwMDAwNCAwODRhYTAwMCBjZWM3MDA4MCAwODBm
-NDAwMCAwODBmNDAwMCBjZWM3MDA4MA0KT2N0IDE5IDE3OjU4OjEzIHV5ZW1h
-IGtlcm5lbDogQ2FsbCBUcmFjZTogW3R2ZWNzKzc2ODAvNTg0NjBdIFt0dmVj
-cys4MjIzLzU4NDYwXSBbZHJhaW5fY3B1X2NhY2hlcysxNzAvMjA0XSBbc3dh
-cF9vdXRfdm1hKzI4My80MTZdIFtzd2FwX291dF9tbSs2My8xMDhdIFtzd2Fw
-X291dCszMzYvNDY4XSBbcmVmaWxsX2luYWN0aXZlKzE5OS8zNTZdDQpPY3Qg
-MTkgMTc6NTg6MTMgdXllbWEga2VybmVsOiAgICAgICAgW2RvX3RyeV90b19m
-cmVlX3BhZ2VzKzk4LzEyOF0gW3R2ZWNzKzg2MTEvNTg0NjBdIFtrc3dhcGQr
-MTI2LzM1Ml0gW2tlcm5lbF90aHJlYWQrNDAvNTZdDQpPY3QgMTkgMTc6NTg6
-MTMgdXllbWEga2VybmVsOiBDb2RlOiAwZiAwYiA4MyBjNCAwYyBmNyBjNSAw
-MiAwMCAwMCAwMCA3NCAxOCA2YSA2OCA2OCAxMyBjMyAyMyBjMA0KT2N0IDE5
-IDE3OjU4OjE0IHV5ZW1hIGtlcm5lbDoga2VybmVsIEJVRyBhdCB2bXNjYW4u
-YzoxMDIhDQpPY3QgMTkgMTc6NTg6MTQgdXllbWEga2VybmVsOiBpbnZhbGlk
-IG9wZXJhbmQ6IDAwMDANCk9jdCAxOSAxNzo1ODoxNCB1eWVtYSBrZXJuZWw6
-IENQVTogICAgMQ0KT2N0IDE5IDE3OjU4OjE0IHV5ZW1hIGtlcm5lbDogRUlQ
-OiAgICAwMDEwOlt0cnlfdG9fc3dhcF9vdXQrMjUxLzgwNF0NCk9jdCAxOSAx
-Nzo1ODoxNCB1eWVtYSBrZXJuZWw6IEVGTEFHUzogMDAwMTAyODYNCk9jdCAx
-OSAxNzo1ODoxNCB1eWVtYSBrZXJuZWw6IGVheDogMDAwMDAwMWMgICBlYng6
-IDAwMDAwMzAwICAgZWN4OiBjNDIzZTAwMCAgIGVkeDogZmZmZmZmZmYNCk9j
-dCAxOSAxNzo1ODoxNCB1eWVtYSBrZXJuZWw6IGVzaTogYzEzZWUyY2MgICBl
-ZGk6IDAwMDAwMDAxICAgZWJwOiAwZWNiZjA0NSAgIGVzcDogYzQyM2ZiYmMN
-Ck9jdCAxOSAxNzo1ODoxNCB1eWVtYSBrZXJuZWw6IGRzOiAwMDE4ICAgZXM6
-IDAwMTggICBzczogMDAxOA0KT2N0IDE5IDE3OjU4OjE0IHV5ZW1hIGtlcm5l
-bDogUHJvY2VzcyBkdW1wIChwaWQ6IDIwNTQ0LCBzdGFja3BhZ2U9YzQyM2Yw
-MDApDQpPY3QgMTkgMTc6NTg6MTQgdXllbWEga2VybmVsOiBTdGFjazogYzAy
-M2MwZjQgYzAyM2MzMTMgMDAwMDAwNjYgMDgwYWUwMDAgMDgwZjQwMDAgY2Vi
-OTEyYjQgMDgwYWIwMDAgYzE0NjZmMjANCk9jdCAxOSAxNzo1ODoxNCB1eWVt
-YSBrZXJuZWw6ICAgICAgICAwMDAwMDAwNyBjMDEyYjJlZiBjZjQ2NzE2MCBj
-ZmNiNzUyMCAwODBhZDAwMCBjZWI5MTJiNCAwMDAwMDAwMyAwODBhYjAwMA0K
-T2N0IDE5IDE3OjU4OjE0IHV5ZW1hIGtlcm5lbDogICAgICAgIGNmY2I3NTIw
-IGNmNDY3MTYwIDAwMDAwMDAzIDA4NGFiMDAwIGNlYjdlMDgwIDA4MGY0MDAw
-IDA4MGY0MDAwIGNlYjdlMDgwDQpPY3QgMTkgMTc6NTg6MTQgdXllbWEga2Vy
-bmVsOiBDYWxsIFRyYWNlOiBbdHZlY3MrNzY4MC81ODQ2MF0gW3R2ZWNzKzgy
-MjMvNTg0NjBdIFtzd2FwX291dF92bWErMjgzLzQxNl0gW3N3YXBfb3V0X21t
-KzYzLzEwOF0gW3N3YXBfb3V0KzMzNi80NjhdIFtyZWZpbGxfaW5hY3RpdmUr
-MTk5LzM1Nl0gW2RvX3RyeV90b19mcmVlX3BhZ2VzKzk4LzEyOF0NCk9jdCAx
-OSAxNzo1ODoxNCB1eWVtYSBrZXJuZWw6ICAgICAgICBbdHJ5X3RvX2ZyZWVf
-cGFnZXMrMzQvNDRdIFtfX2FsbG9jX3BhZ2VzKzU3MC83MjRdIFtncm93X2J1
-ZmZlcnMrNjIvMzIwXSBbZ2V0YmxrKzI3Ny8zNjBdIFtyZWZpbGxfZnJlZWxp
-c3QrMTAvNDRdIFtnZXRibGsrMzQ0LzM2MF0gW2Jsb2NrX3JlYWQrNjY4LzEy
-MjRdIFtyZXNjaGVkdWxlX2lkbGUrNjYwLzY5Nl0NCk9jdCAxOSAxNzo1ODox
-NCB1eWVtYSBrZXJuZWw6ICAgICAgICBbcmVzY2hlZHVsZV9pZGxlKzY2MC82
-OTZdIFtfX2FsbG9jX3BhZ2VzX2xpbWl0KzEzOC8xNzJdIFtfX2FsbG9jX3Bh
-Z2VzKzMyNi83MjRdIFtoYW5kbGVfbW1fZmF1bHQrMjcyLzQyOF0gW2RvX3Bh
-Z2VfZmF1bHQrMzI3LzEwMDhdIFt1cGRhdGVfd2FsbF90aW1lKzExLzYwXSBb
-dGltZXJfYmgrNTQvNjg4XSBbdHF1ZXVlX2JoKzkwLzEwMF0NCk9jdCAxOSAx
-Nzo1ODoxNCB1eWVtYSBrZXJuZWw6ICAgICAgICBbYmhfYWN0aW9uKzc3LzE3
-Nl0gW3Rhc2tsZXRfaGlfYWN0aW9uKzc5LzEyNF0gWzxmODE5ODAwMD5dIFtz
-eXNfcmVhZCsxNDMvMTk2XSBbPGY4MTk4MDAwPl0gW3N5c3RlbV9jYWxsKzUx
-LzU2XSBbPGY4MTk4MDAwPl0gW3N0YXJ0dXBfMzIrNDMvMjA0XQ0KT2N0IDE5
-IDE3OjU4OjE0IHV5ZW1hIGtlcm5lbDogQ29kZTogMGYgMGIgODMgYzQgMGMg
-ZjcgYzUgMDIgMDAgMDAgMDAgNzQgMTggNmEgNjggNjggMTMgYzMgMjMgYzAN
-Cg==
----103731693-224629785-972007330=:20436--
+Many thanks in advance
+Frank
