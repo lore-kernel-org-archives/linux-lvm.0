@@ -1,11 +1,11 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3A4D4AB6.545DF214@wrkhors.com>
-Date: Fri, 29 Dec 2000 20:38:46 -0600
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200012302036.eBUKaMZ04514@webber.adilger.net>
 Subject: Re: [linux-lvm] OK to backup physical volume to tape?
-References: <3A4D0C25.A4BB534B@xenotrope.com> <3A4D2939.C089EC3B@wrkhors.com> <3A4D337B.5835DE56@xenotrope.com>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3A4D0C25.A4BB534B@xenotrope.com> "from Mits Yanagihashi at Dec
+ 29, 2000 05:11:49 pm"
+Date: Sat, 30 Dec 2000 13:36:22 -0700 (MST)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,42 +18,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> I think I may have to forget about LVM and divide the 130 GB space into
-> slices that can fit on tape.
+Mits writes:
+> I have one tape drive that can store 33 GB (uncompressed).  I want to
+> backup 130 GB over a 5 day week.  I want my users to see two directories
+> "/dir1" and "/dir2", but my tape cannot fit a full dump of either one
+> directory.
+> 
+> This is what I want to do:
+> 
+> 1. Divide /dev/sda into 5 partitions of 26 GB each.  Make each partition
+> a physical volume.  
+> 
+> 2. Make one volume group.  Add two logical volumes (that together use
+> the 5 physical volumes) to the volume group.
+> 
+> 3. My users can use the two logical volumes (dir1 and /dir2, which may
+> be 52 and 78 GB respectively).  Each night a full backup of one physical
+> volume, and incrementals of the other four physical volumes are written
+> to tape.  One tape can store 26 GB, and still have space for incremental
+> backups of the other physical volumes.
+> 
+> My question is, is it safe to backup the physical volume (i.e. dump
+> /dev/sda1 to tape)?  Or are there complications with file system
+> state/meta information?
 
-if you don't have an autoloader then one day's backup 
-cannot exceed a single tape unless someone changes the
-tape by hand.  slicing the total space up into multiple
-mount points won't effect that.  you can do the same 
-thing without separate mounts points by using several
-directories under /dir1 that each hold one tape's
-worth of data and then:
+I would definitely NOT back up individual PVs if they are part of a
+single filesystem.  There is no way to restore this properly if they
+are corrupted, and no way to do incremental backups of the other raw
+partitions.
 
-	find /dir1/a | blah
-	find /dir2/b | blah
+You could use "dump" to do incremental backups of the whole filesystem.
+You would need to start with a FULL (level 0) backup at some time. Then
+only do incremental backups (level 1) until it fills a whole tape. To
+restore, you need to restore the full backup, and the most recent level 1
+incremental tape.
 
-
-if you prefer to back up all of the data then you
-will have to use multiple tapes no matter what
-method you choose.  at that point cpio will work
-as well as anything else, it'll patiently wait for
-you to change the tapes by hand -- no autoloader
-required.
-
-none of this has anything to do with LVM or mount
-points, per se.  
-
-one trick i've used in the past to pack tapes was
-finding all the files, sorting them by decreasing
-size and assigning them using a least-slack rule
-(i.e., whichever tape has the most unused space
-gets the next file).  this won't solve your 
-multi-tape issue but can help if you prefer not
-to span tapes with a single backup.
-
--- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
