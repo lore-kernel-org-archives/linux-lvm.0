@@ -1,10 +1,10 @@
 From: Herbert Poetzl <herbert@13thfloor.at>
-Subject: Re: [linux-lvm] LVM on Raid 5 Performance?
-Message-ID: <20030515214531.GA22215@www.13thfloor.at>
-References: <OFE2CD45B2.0EA112E9-ONC1256D27.002FA1CF-C1256D27.0030AED4@nl.ibm.com>
+Subject: Re: [linux-lvm] Drive failure
+Message-ID: <20030515214959.GB22215@www.13thfloor.at>
+References: <200305141041.37355.bjzolp@wisc.edu> <20030515055917.GB19045@www.13thfloor.at> <200305150909.17331.bjzolp@wisc.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <OFE2CD45B2.0EA112E9-ONC1256D27.002FA1CF-C1256D27.0030AED4@nl.ibm.com>
+In-Reply-To: <200305150909.17331.bjzolp@wisc.edu>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,72 +15,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 15 16:45:02 2003
+Date: Thu May 15 16:49:03 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, May 15, 2003 at 10:51:44AM +0200, Rick van der Linde wrote:
+On Thu, May 15, 2003 at 09:09:17AM -0500, B. J. Zolp wrote:
+> On Thursday 15 May 2003 00:59, Herbert Poetzl wrote:
+> > On Wed, May 14, 2003 at 10:41:37AM -0500, B. J. Zolp wrote:
+> > > One of the drives in my volume group is developing bad sectors on it. 
+> > > When I mount the logical volume spanning that drive my entire machine
+> > > locks up. Should I be able to dd (without reading the bad sectors) the
+> > > failing drive (assuming it spins up and reads all the good sectors) to
+> > > the replacement drive, then run fsck on the unmounted volume and then
+> > > mount the volume with minimal data loss?
+> >
+> > I guess, this should work ... but make sure, that
+> > you do the copy operation on another system, otherwise
+> > the LVM stuff could/will be irritated by two diffent
+> > disks with the same signature (after copying over)
+> >
 > 
-> 
-> Hi All!
-> 
+> What if the LVM is down?  Then when the copy is complete I replace the bad 
+> drive with the replacement and bring the LVM back up.  That seems like it 
+> should work.
 
-To cut it short LVM on 4 Disc RAID 5 reduces RAW
-throughput about 45% from 33MB/s to 18MB/s :(
+just make sure that the kernel or any start script
+scans for vgs or recreates lvmtab or makes any updates
+and/or changes to the pvs ...
 
-> >Has anybody any explanations why the LVM layer eats
-> >up about 45% of the available throughput?
-> >(in this configuration?)
-> 
-> <SNIP results>
-> 
-> I can't yet tell you why, I see same kind of results with 
-> RAID 5 on 4 IDE  disks on seperate channels (as master). 
-> In my case I use an ATA133 and onboard ATA33 controller. 
-> In my case the RAID5 set performs about 50 MB/s and the LVM
-> about 18 MB/s. I suspect my ATA controller as bottelneck 
+given that, it should work ...
 
-hmm, sounds interesting, especially because you
-do not get ~ 27MB/s (55%) but 18MB/s the same as
-I got ...
-
-> because my disks which can do 40 MB/s om the ATA133 
-> controller suddenly operate at 18 MB/s on the ATA33.
-> That made me decide to buy another ATA100/133 controller.
-> 
-> As I searched internet on this issue I saw some discussion 
-> about ext3 in combo with md-raid and lvm. What filesystem 
-> did you use on your lvm volume on top of RAID5?
-
-yeah, I read something similar, that was the reason
-why I conducted my tests on the raw partitions 
-(without any filesystem on top ;)
-
-> What's fun too is when I use ext3 on RAID5 I see a 
-> performance of about 48 MB/s.
-> When I use reiserfs it reduces too abou 44 MB/s. 
-> ext2 shows almost the same results as ext3. 
-
-FYI: at least for ext2/ext3 you should make
-sure that the 'stride' (raid options for mke2fs)
-matches the block/stripe size of the underlying
-RAID configuration ...
-
-> Till now I same same results for ext2, ext3 and reiserfs 
-> in my case, however I still suspect my ATA33 channel 
-> to be the bottleneck in my case. When I have another
-> ATA100/133 controller I'll post new results.
-
-many thanks,
-Herbert
-
-> 
-> Rick
-> 
-> 
-> 
+> > > The other option I can think of is remove that drive from the volume and
+> > > then remount it, but that would mean a loss of everything that is one the
+> > > failing drive, plus I am not sure how reiserfs works with large chunks of
+> > > its file system removed like that.
+> >
+> > I wouldn't do that, neither with reiserfs nor with
+> > any other unix filesystem ... only as last escape
+> > if you disk is completely unreadable ...
+> >
+> > anyway, if possible make a copy of ALL disks involved
+> > before you do any fscking so you can go back and
+> > try any other approach ...
+> >
+> > best,
+> > Herbert
+> >
+> > > thanks
+> > >
+> > > bjz
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 > 
 > 
 > _______________________________________________
