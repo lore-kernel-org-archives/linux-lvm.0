@@ -1,9 +1,11 @@
-Message-ID: <000801c38cf6$4aed8770$0200000a@ray1>
-From: "Reidar Westvik" <brad.p@frisurf.no>
-References: <002701c38c15$b72cbc30$0201a8c0@ray1> <20031007155317.D25676@sistina.com>
-Subject: Re: [linux-lvm] LVM and resize
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Subject: =?iso-8859-1?B?UmWg?=
+	=?iso-8859-1?Q?=3A?= [linux-lvm] Migration to lvm on a new HDD
+Message-ID: <20031007190434.GA1479@tangerine.coulon.evette>
+References: <20031007125916.GA3999@tangerine.coulon.evette> <20031007153045.A25676@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,116 +16,137 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct  7 12:14:01 2003
+Date: Tue Oct  7 14:05:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format="Flowed"; delsp="Yes"; charset="utf-8"
 To: linux-lvm@sistina.com
+Cc: Mauelshagen@Sistina.com
 
-Hi Heinz,
+Heinz,
 
-Thanks for your quick reply! :)
+Thanks for the reply.
 
-I am still able to mount the filesystem, but after a while it goes into
-read-only mode, witch is fine. However I cannot take backup of the volume
-cause it's to big, but it's not "the end of the world" if the data gets
-lost, but we would like to keep data.
+In fact, I'm migrating from non LVM HDD to a bigger LVM one.
+I've created the vg and the needed lv's.
+I've copied all the files from the old disk to the right lv on the new  
+hdd.
+I've updated the /etc/fstab on the new hdd to reflect the new  
+'partionning' scheme.
+I've built the initrd and setup a grub entry for booting the new hdd  
+(still as slave).
 
-I've read about using pvmove -i and when i try to run it i get "command not
-implemented yet". Is there a way around this ?
+Here is the grub block used:
 
-Reidar
------ Original Message ----- 
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-To: <linux-lvm@sistina.com>
-Sent: Tuesday, October 07, 2003 3:53 PM
-Subject: Re: [linux-lvm] LVM and resize
+title  Debian 3.0, GNU/Linux 2.4.22 - LVM
+root (hd1,1)
+kernel (hd1,0)/vmlinuz-2.4.22 root=/dev/vg00/root_lv reboot=warm
+initrd (hd1,0)/initrd-lvm-2.4.22.gz
 
 
->
-> Looks like you are caught IRT to shrinking, because of the fsck errors.
->
-> If you're still able to mount the filesystem, you definitely want to take
-a backup
-> first in order to preserve as much of your files as possible.
->
-> Aftwards (presumably you can add another >=120g drive to your VG with
-vgextend) you
-> want to try moving the data off to that other disk using "pvmove -i ...",
-then
-> removing the failing one (vgreduce).
->
-> Using device-mapper/LVM2, which enables you to remove the drive in
-question
-> (removing LVs allocated to that drive as well), doesn't help you here,
-presumably
-> you just have that one huge Logical Volume.
->
+The system begin to boot with the message:
+
+vgscan -- reading all physical volumes
+vgscan -- found inactive volume group vg00
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created.
+
+vgchange -- volume group "vg00" successfully activated
+
+then:
+
+cannot open root device "vg00/root_lv" or 00:00
+please append a correct "root=" boot option.
+
+and kernel panic ..
+
+Any idea?
+
+---
+Regards
+	Jean-Luc
+
+
+
+Le 07.10.2003 15:30, Heinz J . Mauelshagen a �crit�:
+> 
+> Jean-Luc,
+> 
+> if you essentially want to replace your old disk with the new one
+> (which might be
+> bigger as well ?), you need to "pvcreate /dev/hdb2", vgextend the
+> existing vg00
+> with it (vgextend vg00 /dev/hdb2) and move all LVM data over using
+> "pvmove /dev/hda2". After that you remove your hda from the system
+> ("vgreduce vg00 /dev/hda2" before you shutdown), make the new disk  
+> the
+> master
+> and boot. In your bootscript, vgscan should already get started and
+> that
+> takes care of the changing device nodes for you.
+> 
+> Don't forget to have a backup of your data in case something goes
+> wrong.
+> 
 > Regards,
 > Heinz    -- The LVM Guy --
->
-> On Mon, Oct 06, 2003 at 04:25:39PM +0200, Reidar Westvik wrote:
+> 
+> 
+> On Tue, Oct 07, 2003 at 02:59:16PM +0200, Jean-Luc Coulon (f5ibh)
+> wrote:
 > > Hi,
 > >
-> > I don't know if my question in something that Sistina supports, but i
-need some pointers to make this work.
+> > I've a new HDD it is mounted as slave.
+> > I plan to use it with LVM and use it as the master device.
 > >
-> > We're running a Slackware 9.0 server with kernel 2.5.64 (gcc ver. 2.95.3
-20010315) also on this server we have a LVM volume of 1TB spread over 120GB
-IDE disks. Now, it seems like one of the harddrives has failed in some way.
-Filesystem on the volume is EXT3.
+> > Today, I boot linux from /dev/hda
+> > The new disk has a linux /boot partition as /dev/hdb1 and a lvm
+> > partition as /dev/hdb2.
 > >
-> > When i mount the volume syslog says: "kernel: EXT3-fs warning: mounting
-fs with errors, running e3fschk is recommended" So i've unmounted the volume
-and run e2fschk on the LVM volume. After a long wait (2 days in fact) the
-server hangs, when its checking the part of the volume that is on hdf. The
-box just dies, and only a powercycle will bring it back up again. The
-syslogs displays the following info:
-> > "kernel: hdf: dma_timer_expiry: dma status == 0x61"
-> > "kernel: hdf: (__ide_dma_test_irq) called while not waiting""
+> > I've created the volume group called vg00 and the logical volumes I
+> 
+> > need (var, home, root...) on  /dev/hda2.
 > >
-> > These are the last events of syslog before it's starts to reboot.
+> > When I will move the disk from slave to master, it will change its
+> > partition name from hdb to hda but the devices in /dev (/dev/vg00/
+> > something) are hosted by the old disk.
 > >
-> > Now, after what i've read the way to deal with this issue without loss
-of data is to shrink the volume with aprox. 120gb (there is enough free
-space) and then exclude the defective drive from the logical volume and its
-physical groups, and then add a healthy disk for so to increase the volume
-back to its original size.
+> > Do I've to copy the /dev/vg00 so well?
 > >
-> > However LVM resize tools will not allow resizing of a volume that has a
-filsystem marked with errors. And if i try to force the resize the server
-hangs. I have tryed to resize with both "e2fsadm" and "resize2fs" but they
-both have problem resizing since it has errors.
+> > Do I've to edit something else than the /tc/fstab to have a  
+> bootable
+> 
+> > system on the new disk?
 > >
-> > So this kinda puts me back to basics, is there a way for me to remove
-this disk without loosing data on the volume ?
+> > ---
+> > Regards
+> > 		- Jean-Luc
 > >
-> > All awnsers are very much apriciated! :)
 > >
-> > Best Regards
-> > Reidar
->
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
 > *** Software bugs are stupid.
 >     Nevertheless it needs not so stupid people to solve them ***
->
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
->
-> Heinz Mauelshagen                                 Sistina Software Inc.
+> 
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+> =-=-=-=-=-
+> 
+> Heinz Mauelshagen                                 Sistina Software
+> Inc.
 > Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
+>                                                   56242  
+> Marienrachdorf
 >                                                   Germany
 > Mauelshagen@Sistina.com                           +49 2626 141200
 >                                                        FAX 924446
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
->
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+> =-=-=-=-=-
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
+> 
