@@ -1,12 +1,11 @@
-Return-Path: <bluca@comedia.it>
-Date: Fri, 26 Jan 2001 13:27:01 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Various strangeness (beta3,2.4.0/devfs)
-Message-ID: <20010126132701.A24663@colombina.comedia.it>
-References: <20010126114139.86952.qmail@web10904.mail.yahoo.com>
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 26 Jan 2001 13:56:58 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@Sistina.com>
+Subject: Re: [linux-lvm] OT; any -vollquottels- here?
+Message-ID: <20010126135658.D5559@srv.sistina.com>
+References: <20010125.19171415@dmitzlaff.botschendv.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010126114139.86952.qmail@web10904.mail.yahoo.com>; from penguin_master_2000@yahoo.com on Fri, Jan 26, 2001 at 03:41:39AM -0800
+In-Reply-To: <20010125.19171415@dmitzlaff.botschendv.de>; from hackbyte@gmx.de on Thu, Jan 25, 2001 at 07:17:14PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,46 +19,67 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@Sistina.com
 
-On Fri, Jan 26, 2001 at 03:41:39AM -0800, Mr. Penguin wrote:
-> Hi
+On Thu, Jan 25, 2001 at 07:17:14PM +0000, Daniel Mitzlaff wrote:
+> This is higly OffTopic but....
 > 
-> I'm getting a few strange things happening which may
-> be related to devfs. I'm running 2.4.0 with
-> 0.9.1beta3, and reiserfs 3.6.26. My root filesystem is
-> on LVM so I'm using an initial ramdisk.
-
-> 2. When it does vgchange, it works but i get this
-> error:
-> devfs: devfs_register(): device already registered:
-> "group"
-> (not important, i know, but I like a tidy bootup :) )
-
-it is a known bug with lvm devfs implementation.
-it is harmless, but solving this would be long.
-
-> 3. When the system has booted, doing any vgscans
-> produces this output:
+> Is it possible, that someone here never really has learned, how to cut 
+> quotings to the essential information needed to understand the answer w/o 
+> looking back in old Mails?
 > 
-as above
-
-> 4. If I "lvremove" an LV, the block special device is
-> not removed:
-
-i modified the lvm tools so they don't delete the vg directory
-when running on devfs, because it triggered an annoyng kernel bug
-(the directory could not be recreated anymore), maybe this influences
-also removal of device files.
-
-> That's about all I've found so far. Please let me know
-> if you require any debugging output!
+> I mean, quotes are good, you can directly see what the writer is talking 
+> about and you don't really have to remember your entire mail..
 > 
+> But ... in case of a ML, there are archives, so even peoples who don't 
+> know the originating mail can acces the full thread.
+> 
+> What the heck need people in a complete quoting, splitting his mail into 
+> a answer, a full quote and a signature part?
+> 
+> 
+> (imho - we should send around a lot of (in german we say) "Netiquette" to 
+> everyone who doesn't know them;)
+> 
+> 
+> BTW, TOFU is a cool acronym for this - rotfl;)
+> 
+> hacky
+> 
+> P.s.: Is LVM9.x worth to be tried on a backup-less 62GB nirvana?
+> My last try wasn't really a nice jorney, so does it now work?;)
+> (NO i DON't use CVS, even w/o backups;)
+
+Go with LVM 0.9.1 Beta3 we released yesterday _and_ don't forget to patch
+your kernel as described in PATCHES/README.
+
+> 
+> --
+> hackbyte@gmx.de / me@hackbyte.de aka Daniel Mitzlaf (in rl only please;)
+> IRCNet; hackbyte/hacky_wrk @ #linux.de, +linux.de, #linuxger and 
+> #*hamburg
+> 
+> "Schnell mal eben, geht schnell daneben!" ;)
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
