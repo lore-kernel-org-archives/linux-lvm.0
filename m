@@ -1,67 +1,53 @@
-Message-ID: <3955EE8D.15AE858A@inet.net.nz>
-Date: Sun, 25 Jun 2000 23:35:41 +1200
-From: Dale Kemp <dale@inet.net.nz>
+Message-ID: <39560230.BD4B8131@mpi-hd.mpg.de>
+Date: Sun, 25 Jun 2000 14:59:28 +0200
+From: Stefan Helfert <Stefan.Helfert@mpi-hd.mpg.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM /dev and /proc problems and change proposal
-References: <3955A848.D5071D8E@inet.net.nz> <20000625103032.A3124@hmsysv.t-online.de> <3955D87A.590E9C2C@inet.net.nz> <20000625131619.A3679@hmsysv.t-online.de>
+Subject: [linux-lvm] Patch lvmcreate_initrd
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Mauelshagen@Sistina.com
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-> > And we don't know
-> > what users are going to call their volume groups and we don't know what
-> > device names will be created in the future.
->
-> vgrename(8) is able to address that.
+Dear all,
 
-That's not the point I'm making here.
+sorry if this is old stuff but I did not find any reference in the
+archive.
 
-    # vgcreate yup0
-    # etc...
+When trying to install a root partition with lvm and reiserfs on a
+notebook, I found that the lvmcreate_initrd script is building a
+unusable initrd:
+[initrd]./linuxrc needs /bin/mount and /bin/umount, but those won't be
+copied.
 
-Creates /dev/yup0 and all is well...
+System: SuSE 6.4, but I rechecked this against the lvm_0.8final.tgz.
 
-Then an upgrade occurs with support for the new yup devices from Yups(tm)
-technology. Devices /dev/yup[0-5] are created, or it fails(?). If your yup0 was
-in /dev/lvm/yup0 then things would carry on like normal. We don't know
-what the user will name the vg's and we don't know the names of new devices
-to be added to linux. By using a sub directory:
+With this patch, everything is working fine:
+(since my kernel as the SuSE standard kernel does have lvm included in
+the kernel, not as module, the script complains about the missing lvm.o.
+This could be detected, also...)
 
-    - You keep all the stuff together in one place (well almost /etc/lvm/ /dev/lvm/
-...)
-    - You get around any future name clash problems
-    - Its easier to find what your looking for
-    - Its just plain tidier
-    - Its a simple to do
 
-> > > There's a preprocessor definition LVM_DIR_PREFIX in the code, which
-> > > supports this already.
-> >
-> > So I see. The simplest solution is to change this default prefix, and have the
-> > lvm stuff self-contained in its own subdirectory.
->
-> Yes.
-> Please give it a try and tell me if it works.
+Stefan
 
-Ok - I will. I suspect it will work fine looking at the code.
+--- lvmcreate_initrd    Tue Feb 22 03:09:33 2000
++++ lvmcreate_initrd.new        Sun Jun 25 10:56:44 2000
+@@ -37,7 +37,7 @@
+ DEVRAM=/dev/ram1
+ INITRD=/boot/initrd.gz
+ INITRDSIZE=8192
+-INITRDFILES="/sbin/modprobe /sbin/vgchange /sbin/vgscan /bin/bash
+/bin/sh /bin/rm /sbin/insmod /sbin/modprobe /dev/*
+/lib/modules/${VERSION}/modules.dep /lib/modules/${VERSION}/block/lvm.o"
++INITRDFILES="/sbin/modprobe /sbin/vgchange /sbin/vgscan /bin/bash
+/bin/sh /bin/rm /bin/mount /bin/umount /sbin/insmod /sbin/modprobe
+/dev/* /lib/modules/${VERSION}/modules.dep
+/lib/modules/${VERSION}/block/lvm.o"
+ TMP=/tmp/mnt.$$
 
-> > > Yep.
-> > > Already on the TODO list.
-> > > I share your point of view in regard to /proc.
-> >
-> > The need for /proc/lvm/... is simular to that for /dev/lvm/...
->
-> More or less.
->
-> /proc/* is for programs to parse the contained information.
->
-> Therfore its not primarily addressing a real name clash problem
-> but the answer to the request for easy parsing.
-
-Yes for user and machine.
-
--- Dale.
+ trap "
+-- 
+I wish there was a knob on the TV to turn up the intelligence. 
+There's a knob called brightness, but it doesn't seem to work. 
+                                                     Gallagher
