@@ -1,10 +1,9 @@
-From: Stephen Tweedie <sct@redhat.com>
-Subject: Re: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
-Message-ID: <20020623164611.A1993@redhat.com>
-References: <003401c20c0f$23a7afb0$0300000a@STATION> <000c01c20ccf$fcac9e90$0201a8c0@fosi>
+From: Austin Gonyou <austin@coremetrics.com>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature";
+	boundary="=-MXQT1CJ20ta7jJZf0S5C"
+Message-Id: <1024945627.6892.7.camel@UberGeek>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <000c01c20ccf$fcac9e90$0201a8c0@fosi>; from steve.wray@paradise.net.nz on Thu, Jun 06, 2002 at 08:31:30AM +1200
+Subject: [linux-lvm] Best way to create a 540GB LVM Volume?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +14,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 24 08:41:01 2002
+Date: Mon Jun 24 14:07:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: Stephen Tweedie <sct@redhat.com>, Steve Wray <steve.wray@paradise.net.nz>
+To: Linux LVM Mailinglist <linux-lvm@sistina.com>
 
-Hi,
+--=-MXQT1CJ20ta7jJZf0S5C
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 06, 2002 at 08:31:30AM +1200, Steve Wray <steve.wray@paradise.net.nz> wrote:
+I've got 14 FC1 disks in a PV660F. I want to take 7 of them and make a
+large volume. I can't seem to make a > 450 GB volume though, even though
+lvdisplay is showing xxMB PE free.=20
 
-> /dev/system/home /home ext3 data=journal 1 2
-> 
-> Its the bomb. I have a hell of a lot of dynamic data
-> in that /home so in event of a crash there was a big
-> chance of corruption. Not Any More!!!!!
-> 8-)
+I'm using default 4mb and also 8mb extentsize when creating the VG.
+Please advise.
 
-I'm not quite sure why people think that data=journal is any "safer"
-than the default data=ordered mode.  In fact, data=ordered could well
-be safer simply because the default mode is probably in use on more
-systems, and so is better tested.  :-)
 
-data=journal writes the data to the journal as well as the metadata,
-but *both* ordered and data modes flush data to disk carefully as part
-of their transaction commit.  If you create new files with the default
-of data=ordered, there is still an absolute guarantee that a
-transaction commit will show all the data safe on disk, and you will
-never see stale data blocks show up on disk after a crash.
+--=20
+Austin Gonyou <austin@coremetrics.com>
+Coremetrics, Inc.
 
-Only the looser "data=writeback" mode of ext3 relaxes this guarantee
-and makes data writes independent of metadata writes, as they are for
-most other filesystems.
+--=-MXQT1CJ20ta7jJZf0S5C
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-Cheers,
- Stephen
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA9F23b94g6ZVmFMoIRArNoAKDck3CTPUY7cI5cA2Kxy8YOWd3K7gCfcBnJ
+qYlsGIGGyUYxwm/ZgUTwdeA=
+=2Uds
+-----END PGP SIGNATURE-----
+
+--=-MXQT1CJ20ta7jJZf0S5C--
