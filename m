@@ -1,10 +1,10 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM2 2.6.0-test11
-Message-ID: <20031202081230.GB17340@percy.comedia.it>
-References: <20031202031433.DHOQ11377.front-mail@[172.16.1.237]>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031202031433.DHOQ11377.front-mail@[172.16.1.237]>
+Message-ID: <3FCC8F82.5030704@backtobasicsmgmt.com>
+From: "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>
+MIME-Version: 1.0
+References: <3FCB4AFB.3090700@backtobasicsmgmt.com> <20031201141144.GD12211@suse.de> <3FCB4CFA.4020302@backtobasicsmgmt.com> <20031201155143.GF12211@suse.de> <3FCC0EE0.9010207@backtobasicsmgmt.com> <20031202041513.GN1566@mis-mike-wstn.matchmail.com>
+In-Reply-To: <20031202041513.GN1566@mis-mike-wstn.matchmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Reproducable OOPS with MD RAID-5 on 2.6.0-test11
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +15,14 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  2 02:13:02 2003
+Date: Tue Dec  2 07:13:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Mike Fedyk <mfedyk@matchmail.com>
+Cc: Jens Axboe <axboe@suse.de>, LKML <linux-kernel@vger.kernel.org>, Linux-raid maillist <linux-raid@vger.kernel.org>, linux-lvm@sistina.com
 
-On Tue, Dec 02, 2003 at 03:14:33AM +0000, narm@go.com.jo wrote:
->I have managed to compile 2.6.0-test11 patched with the latest patch <thornber> and the new device-mapper and new LVM2 tools and everything is ok, I boot and everything is fine until the filesystem check!! I get this error
->fsck.ext3
->No such device or address while trying to open /dev/V00/LV00Root
->
->yes may root is on lvm1, when I boot from 2.4.22 <lvm1> there is no problem with my root boots fine here.
->
-lvm2 uses different major/minor number than lvm2.
-you should run vgmknodes (lvm2 2.00.08) before fsck.
+Mike Fedyk wrote:
 
-regards,
-L.
+> Can you try with DM on regular disk tm, instead of sw raid?
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Tested, failure does not occur.
