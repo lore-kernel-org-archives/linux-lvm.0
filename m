@@ -1,8 +1,9 @@
-Message-ID: <3BD1E714.B8CF216D@libertysurf.fr>
-From: Philippe Lefevre <ph.l@libertysurf.fr>
+Message-ID: <004901c159ad$dcf67c40$5300a8c0@adsting.linux>
+From: "stingtaogiga" <stingtao@giga.net.tw>
+References: <3BD1E714.B8CF216D@libertysurf.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] LVM-1.0.1-rc4 and kernel-2.2.19 patch
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] can't pvcreate more than 64 dasds on Linux/390
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,37 +14,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 20 15:12:02 2001
+Date: Sat Oct 20 16:21:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
- Hello all,
- =
+I am using lvm-0.9.1_beta7-1 with TurboLinux6.5(2.2.19) over IBM
+mainframe S/390. I tried to pvcreate 200 dasds(disks) together, than I'll
+make them a vg, totally disk space around 500G.
+    I can work with dasds whose major number is 94 (that is, 64 dasds in
+total)all right. However, I fails to pvcreate those dasds whose major number
+is 253, 252.... The message is:
 
- I had to update my current kernel (2.2.17) to 2.2.19 with ext3 but I
- totaly forget to check if a patch were created for it to support
- LVM-1.0.1-rc4 (which runs fine for me with K2.4.10, thank you LVM team
- !!)
- =
+[root@host96 block]# pvcreate /dev/dasdb[st]1
+pvcreate -- invalid physical volume name "/dev/dasdbs1"
 
- I was able to build one using the rawio patch designed to 2.2.18 and
- easily fixing two small problems (two hunks were failed)
- but I'm tiedous to apply it like this.
- =
-
- What do you think about that ? are there any plans for a 2.2.19 patch
-??
- using 2.2.18 fragments coud it be a solution ?
- shoud I getting back to Kernel 2.2.18 ?
- =
-
- Thanks for any answer,
- PhiL
-
--- =
-
-----------------------------------------------------------------------
-Linux 2.2.17 | Philippe Lefevre   E-mail: ph.l@libertysurf.fr |  =3D=B0)
-             |                                                |  /\\
-----------------------------------------------------------------_\_V--
+    I traced lvm kernel source and found that in
+/usr/src/linux-2.2.19/include/linux/major.h, only dasd with major number 94
+is defined. I think that's the reason pvcreate thought those dasds are
+invalid.
+    Any Solutions?
