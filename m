@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 11 Apr 2001 09:45:45 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] man page of vgdisplay incorrect
-Message-ID: <20010411094545.G22114@sistina.com>
-References: <3AD3543F.6CC8BC6B@ida.xs4all.nl>
+Return-Path: <bg@blacknet.de>
+Date: Wed, 11 Apr 2001 12:10:23 +0200
+From: Goetz Bock <lvm@blacknet.de>
+Message-ID: <20010411121023.A27988@dragon.blacknet.de>
 Mime-Version: 1.0
-In-Reply-To: <3AD3543F.6CC8BC6B@ida.xs4all.nl>; from jorg.de.jong@ida.xs4all.nl on Tue, Apr 10, 2001 at 08:43:11PM +0200
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+Subject: [linux-lvm] LVM 0.9.1_beta7 on RAID-2.2.19-A1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +18,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Apr 10, 2001 at 08:43:11PM +0200, Jorg de Jong wrote:
-> Hi,
-> 
-> the manpage of vgdisplay and the command are not inline.
-> See vgdisplay -c, the uuid is displayed but not mentioned in the manpage.
-> 
-> Minor, I know :-)...
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Don't worry about it :)
+Hi
 
-It's appreciated!
+I've once again tried to get the newst LVM code to patch with the new RAID
+code, but I've failed.
 
-> 
-> 
-> -- 
-> Jorg de Jong
-> Work : jorg.de.jong@ict.nl 
-> Play : jorg.de.jong@ida.xs4all.nl
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+While I'm ablt to sort out the conflicts in=20
+    ./incude/linux/blkdev.h
+I'm not so sure about:
+    ./drivers/md.c
+and I've no idea what to do with:
+    ./drivers/block/ll_rw_blk.c
 
--- 
+Has anyone been successfull with patching 2.2.19 with this two patches?
 
-Regards,
-Heinz    -- The LVM Guy --
+Thanks,=20
+    Goetz.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+iD8DBQE61C2Pf5srOMkjkQoRAvLsAKDIFoEurdVb+qfuQZKfEdDz2y44vQCeONN4
+xzoGJnd/gdIb+eFJ0Jgy+qI=
+=qz/s
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
