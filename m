@@ -1,11 +1,7 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] [patch] lvm2 and md component devices
-Message-ID: <20040128080607.GC28793@percy.comedia.it>
-References: <20040125015538.GB17569@percy.comedia.it>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="azLHFNyN32YCQGCU"
-Content-Disposition: inline
-In-Reply-To: <20040125015538.GB17569@percy.comedia.it>
+From: Martin Keegan <mk270@cam.ac.uk>
+Message-ID: <Pine.LNX.3.96.1040127145056.14634T-100000@ooh.amtp.cam.ac.uk>
+MIME-Version: 1.0
+Subject: [linux-lvm] vg inconsistency between 2.4 and 2.6
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,112 +12,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 28 10:45:12 2004
+Date: Wed Jan 28 10:46:02 2004
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: lvm-devel@sistina.com
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Hi,
 
-On Sun, Jan 25, 2004 at 02:55:39AM +0100, Luca Berra wrote:
->At the moment lvm2 scans devices according to filters in lvm.conf
->There is also provisioning to ignore md component device if an md device
->is found with the same uuid.
-I had someone test this patch and report success,
-Is there any plan on integrating this, or any reason not to?
+I have an LVM system with several Linux installations on it across a large
+number of logical volumes, within a single volume group, called VG, on a
+single partition, /dev/hda1, which takes up the whole disk. The metadata
+flavour is reported as lvm1. I can no longer use 2.4 series kernels with
+this volume group, only 2.6 series kernels, though I used to be able to
+use either.
 
-Regards,
-L.
+What seems to have changed is that I performed an lvextend or lvcreate
+operation (or lvremove?) under 2.6. Since then, no 2.4 kernel has been
+able to access the volume group. 2.6 kernels can access it fine.
+I seem to have two sets of tools installed, which Debian calls lvm10 and
+lvm2, and am pretty sure that the only ones I have been using are the lvm2
+set.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Has anyone any idea how I can repair my system so that 2.4 can see it
+again?
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="lvm2-skipmd.patch"
+Cheers,
 
---- LVM2.2.00.08/lib/device/dev-io.c.skipmd	2004-01-24 19:11:29.000000000 +0100
-+++ LVM2.2.00.08/lib/device/dev-io.c	2004-01-25 02:24:50.056433529 +0100
-@@ -41,11 +41,9 @@
- #  endif
- #endif
- 
--
--/* FIXME Use _llseek for 64-bit
--_syscall5(int,  _llseek,  uint,  fd, ulong, hi, ulong, lo, loff_t *, res, uint, wh);
-- if (_llseek((unsigned) fd, (ulong) (offset >> 32), (ulong) (offset & 0xFFFFFFFF), &pos, SEEK_SET) < 0) { 
--*/
-+#ifndef __dietlibc__
-+extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
-+#endif
- 
- static LIST_INIT(_open_devices);
- 
-@@ -76,7 +74,7 @@
- 		return 0;
- 	}
- 
--	if (lseek(fd, (off_t) where->start, SEEK_SET) < 0) {
-+	if (lseek64(fd, where->start, SEEK_SET) < 0LL) {
- 		log_sys_error("lseek", dev_name(where->dev));
- 		return 0;
- 	}
-@@ -318,7 +316,7 @@
- #endif
- 
- 	if ((flags & O_CREAT) && !(flags & O_TRUNC)) {
--		dev->end = lseek(dev->fd, (off_t) 0, SEEK_END);
-+		dev->end = lseek64(dev->fd, 0, SEEK_END);
- 	}
- 
- 	list_add(&_open_devices, &dev->open_list);
---- LVM2.2.00.08/lib/label/label.c.skipmd	2003-08-26 23:12:05.000000000 +0200
-+++ LVM2.2.00.08/lib/label/label.c	2004-01-25 02:22:05.309194536 +0100
-@@ -98,6 +98,11 @@
- 	return NULL;
- }
- 
-+#define MD_SB_MAGIC     0xa92b4efc
-+#define MD_RESERVED_BYTES       (64 * 1024)
-+#define MD_RESERVED_SECTORS     (MD_RESERVED_BYTES / SECTOR_SIZE)
-+#define MD_NEW_SIZE_SECTORS(x)      ((x & ~(MD_RESERVED_SECTORS - 1)) - MD_RESERVED_SECTORS)
-+
- static struct labeller *_find_labeller(struct device *dev, char *buf,
- 				       uint64_t *label_sector)
- {
-@@ -108,12 +113,26 @@
- 	uint64_t sector;
- 	int found = 0;
- 	char readbuf[LABEL_SCAN_SIZE];
-+	uint32_t md_magic;
- 
- 	if (!dev_open(dev)) {
- 		stack;
- 		return NULL;
- 	}
- 
-+	/* check if it is an md component device */
-+	dev_get_size(dev, &sector);
-+	if (sector > MD_RESERVED_SECTORS*2) {
-+		sector = MD_NEW_SIZE_SECTORS(sector);
-+		sector *= SECTOR_SIZE; 
-+		if (dev_read(dev, sector, sizeof(uint32_t), &md_magic)) {
-+			if (md_magic == MD_SB_MAGIC) {
-+				log_very_verbose("%s: Skipping md component device", dev_name(dev));
-+				goto out;
-+			}
-+		}
-+	}
-+
- 	if (!dev_read(dev, UINT64_C(0), LABEL_SCAN_SIZE, readbuf)) {
- 		log_debug("%s: Failed to read label area", dev_name(dev));
- 		goto out;
+Mk
 
---azLHFNyN32YCQGCU--
+Here's the output of the system under Knoppix's 2.4.20 kernel:
+
+root@tty1[etc]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hda1"  is associated to unknown VG "VG" (run vgscan)
+pvscan -- total: 1 [34.47 GB] / in use: 1 [34.47 GB] / in no VG: 0 [0]
+root@tty1[etc]# vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- reading data of volume group "VG" from physical volume(s)
+vgscan -- found inactive volume group "VG"
+vgscan -- getting block device numbers for logical volumes
+
+vgscan -- checking block device numbers of logical volumes
+
+vgscan -- inserting "VG" into lvmtab
+vgscan -- backing up volume group "VG"
+vgscan -- checking volume group name "VG"
+vgscan -- checking volume group consistency of "VG"
+vgscan -- ERROR "pv_check_consistency_all_pv(): PE" volume group "VG" is inconsistent
+vgscan -- ERROR: unable to do a backup of volume group "VG"
+vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group "VG" from "/etc/lvmtab"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
