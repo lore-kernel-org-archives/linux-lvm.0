@@ -1,16 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBGHAJr18194
-	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 12:10:19 -0500
-Received: from kumc-smtpout.kumc.edu (kumc-smtpout.kumc.edu [169.147.4.11])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iBGHABY0022115
-	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 12:10:18 -0500
-Message-Id: <s1c16d0c.066@kumc-smtpout.kumc.edu>
-Date: Thu, 16 Dec 2004 11:09:52 -0600
-From: "Nicoya Helm" <NHELM2@kumc.edu>
-Subject: RE: [linux-lvm] How to increase/decrease space
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBGIPrr08154
+	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 13:25:53 -0500
+Received: from anubis.medic.chalmers.se (anubis.medic.chalmers.se
+	[129.16.30.218])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iBGIPlMD012044
+	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 13:25:47 -0500
+Received: from [193.11.254.225] (myrium.csbnet.se [193.11.254.225])
+	by anubis.medic.chalmers.se (Postfix) with ESMTP id 545D8DA7F
+	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 19:25:41 +0100 (CET)
+Message-ID: <41C1D30A.6030201@danielroth.se>
+Date: Thu, 16 Dec 2004 19:25:14 +0100
+From: Daniel Roth <daniel@danielroth.se>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Can't mount after crash
+References: <41BB808E.60108@danielroth.se> <41BFC24F.6060207@danielroth.se>
+In-Reply-To: <41BFC24F.6060207@danielroth.se>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,95 +26,77 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com, AdabalaP@schneider.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-What you have done with the commands below is to resize the logical
-volume and partition - not the file system that reside on that logical
-volume/partition.  the df or du commands are only considering file
-system space actively accessible to the OS, which is why you are not
-seeing a change in /usr partition.
+Hi all,
 
-The next step is to "grow" or resize the file system on /usr to fill
-the addtional space on VolGrp00/LogVol04
+Not anyone out there having a clue on what to do? It seems that about 
+the same thing has happened to the submitter of 
+https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=142737 "Fedora Core 
+3 system with lvm2 won't boot". Is this acceptable? Because of its 
+impact., this is the kind of bug my company would consider a 
+"show-stopper", and relabel the project "beta" again.
 
-The simplest way would probably be to umount /usr, the use the
-resize2fs command to grow the file system.  This command works for both
-ext2 and 3.  
+So if there is no way to fix the error, is there any way to recover any 
+of my ~300GB of data? Fourtunately I have backuped all the crucial 
+stuff, but there are a lot of things I would want to recover.
 
-I'm not terribly familiar with resize2fs, as I mostly manage reiserfs,
-but the man page is very straightforward:
+Best regards,
 
-http://www.zevils.com/cgi-bin/man/man2html?resize2fs+8
-
-And the command will probably be something as simple as "resize2fs
-/dev/VolGrp00/LogVol04 [or your specific device]".  According to the man
-page, if you are wanting to extend to the full size of the partition,
-you do not need to specify the size - that is the default interpretation
-of the command.
-
-The e2fsadm command is basically a combination of these two steps - it
-grows the LV and the ext2/3 filesystem at the same time.  But, since
-you've already resized the LV, you only need to grow the file system to
-match.
-
-Hope that helps!
+Daniel
 
 
-
-Nicoya Helm
-Project Manager, Network Services
-University of Kansas Medical Center
-nhelm2@kumc.edu
-
->>> AdabalaP@schneider.com 12/16/04 9:52 AM >>>
-Austine,
-
-I have a hard disk of 4.8GB which i partitioned it into 2 parts (hda1 =
-100
-meg, hda2 = 4.7gb). The whole disk is of ext3 file system type.The hda2
-is
-managed by using lvm2. Following is the partition sizes of the hda2
-disk;
-
-hda2        VolGrp00          4.6 gb
-
-/           VolGrp00/LogVol00 450 meg     35% used
-/usr        VolGrp00/LogVol04 1.9 gb      92% used
-/usr/local  VolGrp00/LogVol05 128 meg     25% used
-/home       VolGrp00/LogVol03 128 meg     60% used
-/opt        VolGrp00/LogVol02 128 meg     35% used
-/var        VolGrp00/LogVol07 450 meg     30 % used
-swap        VolGrp00/LogVol01 342 meg
-
-Here is sequence of steps that i have performed to inc/dec the
-partition
-sizes;
-
-tried to increase /usr size by 400 meg.
-
-      #lvresize -L +450 VolGrp00/LogVol04
-
-      when i display using the "lvdisplay VolGrp00/LogVOl04" i see 2.4
-gig
-allocated to this partition, but when i   see it through "df -m /usr"
-it
-hasn't changed.
-
-      So, As per Jason's email i have done the below;
-
-      #lvextend -L2.4G VolGrp00/LogVol04
-
-      But again this hasn't changed my "df -m /usr" output.
-
-I thought using LVM commands one should be able to take care of the
-inc/dec
-of partitions sizes under a given VG. Why should i be using "fdisk"
-and
-"e2fsadm" ?
-
-If i have missed or done any thing wrong while resizing the partitions
-can
-please provide me an example so that i could try it.
-
-Thanks.
+> Hi!
+>
+>>
+>> roth:/dev# pvscan
+>> ....
+>>  PV /dev/hdi1   VG my_volume_group   lvm2 [149.05 GB / 0    free]
+>>  PV /dev/hde1   VG my_volume_group   lvm2 [76.69 GB / 0    free]
+>>  PV /dev/hdg5   VG my_volume_group   lvm2 [57.25 GB / 964.00 MB free]
+>>  Total: 3 [282.99 GB] / in use: 3 [282.99 GB] / in no VG: 0 [0   ]
+>>
+>> roth:/dev# vgscan
+>>  Found volume group "my_volume_group" using metadata type lvm2
+>
+>
+>
+> With pvscan --partial -vvv I found some extra info.
+>
+>        /dev/mapper/my_volume_group-mylv: Added to device cache
+>        /dev/my_volume_group/mylv: Aliased to 
+> /dev/mapper/my_volume_group-mylv in device cache (preferred name)
+>        /dev/my_volume_group/mylv: Skipping: Unrecognised LVM device 
+> type 254 <---
+> ...
+>    Finding volume group "my_volume_group"
+>        Opened /dev/hde1
+>        Opened /dev/hdi1
+>      /dev/hdi1: lvm2 label detected
+>      /dev/hde1: lvm2 label detected
+>        Opened /dev/hdg5
+>      /dev/hdg5: lvm2 label detected
+>        Read my_volume_group metadata (5) from /dev/hde1 at 4096 size 1341
+>      /dev/hdi1: lvm2 label detected
+>      /dev/hde1: lvm2 label detected
+>      /dev/hdg5: lvm2 label detected
+>        Read my_volume_group metadata (5) from /dev/hdi1 at 4096 size 1341
+>      /dev/hdi1: lvm2 label detected
+>      /dev/hde1: lvm2 label detected
+>      /dev/hdg5: lvm2 label detected
+>        Read my_volume_group metadata (5) from /dev/hdg5 at 4096 size 1341
+>  Found volume group "my_volume_group" using metadata type lvm2
+>
+>
+> Is this perhaps why I cant mount it? How can I restore?
+> I still am a bit confused with Metadata file saying:
+>               pv0 {
+>                       id = "3Pv4bt-9E47-aDii-mJbB-6OYc-pCFS-7dOBv9"
+>                       device = "/dev/hdi"     # Hint only
+>               }
+>
+> when I pv(re)created hdi1
+>
+> Regards,
+> Daniel
