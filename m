@@ -1,25 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBDGe7r07778
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 11:40:07 -0500
-Received: from desire.voip.primustel.com (_postfix@desire.cv.telegroup.com
-	[208.219.5.17])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBDGe1wh023476
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 11:40:01 -0500
-Received: from male.ia.us.primus (male.cv.telegroup.com [10.40.40.244])
-	by desire.voip.primustel.com (Postfix) with ESMTP id 029E111C79
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 16:40:00 +0000 (UTC)
-Received: from benway.cv.telegroup.com (benway.cv.telegroup.com [10.40.41.175])
-	by male.ia.us.primus (8.12.10/8.12.10) with ESMTP id iBDGbOxl007867
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 10:37:24 -0600
-Subject: Re: [linux-lvm] some issues with pvmove
-From: Aran Cox <acox@ia.primustel.com>
-In-Reply-To: <20041209204334.GA11338@agk.surrey.redhat.com>
-References: <1102623183.3579.113.camel@benway>
-	<20041209204334.GA11338@agk.surrey.redhat.com>
-Date: Mon, 13 Dec 2004 10:37:23 -0600
-Message-Id: <1102955844.3579.116.camel@benway>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBDH5Xr18292
+	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 12:05:33 -0500
+Received: from dcs.nac.uci.edu (root@dcs.nac.uci.edu [128.200.34.32])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBDH5R8p029440
+	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 12:05:27 -0500
+From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
+Date: Mon, 13 Dec 2004 09:05:23 -0800
+Message-Id: <1102957523.3784.183.camel@tesuji.nac.uci.edu>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Fedora Core 3 system with lvm2 won't boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,43 +21,86 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-On Thu, 2004-12-09 at 20:43 +0000, Alasdair G Kergon wrote:
-> On Thu, Dec 09, 2004 at 02:13:03PM -0600, Aran Cox wrote:
-> > I've been working on lvmove, a frontend to pvmove that I've used in the
-> > past with LVM1 systems to re-organize the layout of logical volumes in a
-> > volume group.  I keep getting failures with pvmove that require
-> > restoring metadata from backup.  
->  
-> Try to get full diagnostics from the simplest case you can which
-> causes it to fail: turn on debug-to-file in lvm.conf:
->     log {
->         file="/tmp/lvm2.log"
->         level=7
->         activation=1
->     }
-> then when it crashes, grab the current metadata
-> with vgcfgbackup [may need -P if it's corrupt]
-> (and check against /etc/lvm/backup/<vgname>)
-> 
-> [If machine hangs you'll may have to set activation=0
-> but that loses some of the debug info we want]
-> 
-> and dump the device-mapper status:
->   dmsetup info -c
->   dmsetup status
->   dmsetup table
-> 
-> Alasdair
-
-Basically I ended up buying a new HD and after adding that to the VG I
-never triggered that bug again.  I intend to try a similar re-
-organization on a lab machine some time soonish.  If I trigger any such
-bugs in the future I'll try and collect all of the above info before
-posting.
+To: linux-lvm@redhat.com
 
 
+Copied from https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=142737
 
--- 
-Aran Cox <acox@ia.primustel.com>
+Description of problem:
+System won't boot
+
+Version-Release number of selected component (if applicable):
+
+
+How reproducible:
+Probably difficult, but easy on my machine.  :)
+
+Steps to Reproduce:
+1. Shut down FC3 without sync'ing disks
+2. Try to boot
+3. It doesn't.
+  
+Actual results:
+System won't boot
+
+Expected results:
+System should boot.
+
+Additional info:
+I have an FC3 system, that was happy, but is now unhappy.  This may be
+related to someone, who shall remain nameless, having shut off the power
+on it without doing an orderly shutdown.  Then again, maybe it was
+because of a "yum -y update", because I put off rebooting for a while
+after that.
+
+Anyway, now when it tries to boot, I see:
+
+Red Hat nash version 4.1.18 starting
+  Reading all physical volumes.  This may take a while...
+  Found volume group "VolGroup00" using metadata type lvm2
+  2 logical volume(s) in volume group "VolGroup00" now active
+
+
+...and that's it.  I've left it there for over and hour, and it never
+gets past that.
+
+I booted off of an FC3 rescue cd, and found that I could mount the /boot
+partition, but I cannot mount the / partition.  I ran various lvm
+commands that identified two lvm volumes on the system.
+fsck'ing /dev/hda2 (which is /) is getting me no where though - it just
+says "invalid argument".
+
+I tried firing up device mapper and udev in order to get
+a /dev/VolGroup00 directory, but it just wouldn't do it - at least, not
+with the things I tried.  I could mkdir the directory, but then "lvm
+vgmknodes" would remove it.
+
+What do I need to do to get past this?  There's stuff in the filesystem
+I want quite a bit.  :-S
+
+I tried all 3 FC3 kernels I have on the system, but none would come up,
+getting stuck at that same point.
+
+When I boot up into
+the rescue CD and let it try to find my fedora install, it gets really
+confused.  More specifically, it says:
+
+Searching for Fedora Core installations...
+
+        0%              install exited abnormally -- received signal 15
+                                kernel panic - not syncing: Out of
+memory and no killable processes
+
+
+If I remove "quiet" and add "single" to my boot options, I get:
+
+EXT3-fs: INFO: recovery required on readonly filesystem.
+EXT3-fs: write access will be enabled during recovery.
+kjournald starting.  Commit interval 5 seconds
+EXT3-fs: dm-0: orphan cleanup on readonly fs
+
+...and there it hangs.
+
+
+Also, I ran memtest86 on the box for a while (a little over an hour),
+and found no errors.
