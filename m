@@ -1,10 +1,10 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Date: Wed, 25 Jul 2001 21:01:38 -0400
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20010726010139.62B4917B2C@oscar.casa.dyndns.org>
-Subject: [linux-lvm] [WARNING] when upgrading to beta8
+Return-Path: <jbglaw@dvmwest.gt.owl.de>
+Date: Thu, 26 Jul 2001 04:21:40 +0200
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Message-ID: <20010726042140.B546@lug-owl.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Wrong use count?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,32 +17,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+Hi!
 
-I have sucessfully completed the upgrade to beta8.  The upgrade was not without 
-problems.  On the first boot into 2.4.7 with beta8 I got:
+I've got some little box which consists mainly of a SCSI HDD (used
+as system disk) and a LV (to hold data):
 
-LVM_snapshot_full_COW_page failed vgchange -- ERROR "Bad Address" activating volume group "lv"
+db-pg:~# uname -a
+Linux mirror 2.4.7 #1 Mon Jul 23 12:56:36 CEST 2001 i686 unknown
+db-pg:~# mount
+/dev/sda3 on / type ext2 (rw,errors=remount-ro,errors=remount-ro)
+proc on /proc type proc (rw)
+devpts on /dev/pts type devpts (rw,gid=5,mode=620)
+/dev/sda1 on /boot type ext2 (rw)
+/dev/data_vg/data_lv on /home/data type ext2 (rw)
 
-The snapshot in question was full before the upgrade...  booting to a recovery kernel and
-runing the pvversion -1 command worked fine with the pv(s) in version 2 format but the beta7
-tools active.  Once the pv(s) were version 1 again I ran vgscan and vgchange -ay and was
-able to lvremove the snapshot.  After this a pvversion -2 and reboot gave me an upgraded
-kernel and LVM.
+data_vg consists currently of one IDE HDD. Because IDE is not
+needed for boot-up, it's build as modules. However, IDE module's
+use count is zero ATM, which is a bad think (TM) IMHO:
 
-I strongly suggest that any snapshots be lvremoved before upgrading.  
+db-pg:~# lsmod 
+Module                  Size  Used by
+rtc                     5408   0  (autoclean)
+nfs                    73104   1  (autoclean)
+lockd                  49104   1  (autoclean) [nfs]
+sunrpc                 60880   1  (autoclean) [nfs lockd]
+3c59x                  25184   1  (autoclean)
+lvm-mod                40624   2 
+ide-disk                6784   0 
+ide-probe-mod           8240   0 
+ide-mod                62000   0  [ide-disk ide-probe-mod]
+apm                     9040   0  (unused)
+unix                   15040  34  (autoclean)
 
-Think this needs to be part of the readme.
+Is lvm-mod's use count correct? Two seems one too much. And the IDE
+module'S use count seems to be wrong, too. They should be higher.
+I could try to rmmod(8) ide-*, but I fear to loose the volume:-)
 
-I would be very nice if the tools could be compiled to support both formats - this would make
-upgrading simpiler.  It would be ok if a wrapper was used to make this work.  Think its better
-to have twice the number of executables with backwards compatibility.   What could be done is
-in ./configure check the lvm version and if its not beta8 or later generate in compatibility
-mode.
+Could you please enlighten me WRT LVM's and IDE's use count?
 
-BTW I was using the LVM on root procedure from the readme.
-
-Thanks
-Ed Tomlinson
+MfG, JBG
