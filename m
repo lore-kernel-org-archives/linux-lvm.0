@@ -1,13 +1,10 @@
-Return-Path: <luca@lucarella.com.ar>
-Message-Id: <200107121612.MAA13656@burns.luca.2y.net>
-Date: Thu, 12 Jul 2001 11:53:58 -0300 (ART)
-From: Leandro Lucarella <luca@lucarella.com.ar>
+Return-Path: <list@showme.wox.org>
+Message-ID: <003601c10af5$102a56c0$0f01a8c0@ws1>
+From: "Bas" <list@showme.wox.org>
+Date: Thu, 12 Jul 2001 19:06:59 +0200
 MIME-Version: 1.0
-Content-Disposition: INLINE
-References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com>
- <20010712094638.B418@btconnect.com>
-In-Reply-To: <20010712094638.B418@btconnect.com>
-Subject: [linux-lvm] Newbie question
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Oops ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,24 +16,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi, I'm new in LVM (I'm so new that I'm not even using it :) and I have a
-question:
+Hi,
 
-I want to know if the stiper mode, the performance gain is somparable to Software
-RAID 0.
-Another question is the boot stuff, what is better? compile LVM as a module
-and use inird or compile the kernel with built-in LVM support?
-Thanks for your help...
+I'm afraid I'm not able to get more details right now, if necessary I'll get
+'m later on, but I don't like playing with my filesystems ...
 
---
-LUCA - Leandro Lucarella
-------------------------
-luca@lucarella.com.ar
-http://www.luca.2y.net
-LICQ UIN: 2847576
-------------------------
-Usando Debian GNU/Linux
+Kernel 2.4.6
+CVS LVM of 11 July 2001
+an XFS enabled kernel
+devfs 1.82.
+
+Boots fine, loads the LVM driver, but after it oopses after running
+vgchange -a y (line 4, linuxrc).
+
+What can I do ?
+
+Thanks,
+Bas.
