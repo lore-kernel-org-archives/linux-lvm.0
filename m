@@ -1,11 +1,10 @@
-Return-Path: <root@srv.sistina.com>
-Date: Mon, 29 Jan 2001 16:39:42 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@Sistina.com>
-Subject: Re: [linux-lvm] Recommended LVM Version for 2.4.0
-Message-ID: <20010129163942.L8567@srv.sistina.com>
-References: <Pine.LNX.4.21.0101290901290.9793-100000@miami.datech2.er.heitec.net>
-Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.21.0101290901290.9793-100000@miami.datech2.er.heitec.net>; from Holger.Rauch@heitec.de on Mon, Jan 29, 2001 at 09:03:45AM +0100
+Return-Path: <gregm@coco.comstar.net>
+Date: Mon, 29 Jan 2001 10:45:09 -0500 (EST)
+From: Gregory McLean <gregm@comstar.net>
+Subject: Re: [linux-lvm] Help recovering my volume groups
+In-Reply-To: <20010129125826.E594@tykepenguin.com>
+Message-ID: <Pine.LNX.4.10.10101291021220.10901-100000@coco.comstar.net>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,49 +16,70 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@Sistina.com
+To: linux-lvm@sistina.com
 
-Please go for 0.9.1 beta3 we released on 25/01/2001 and don't forget to
-patch the kernel even though LVM is already included which will update it to
-the actual LVM release.
-In order to patch, please follow the instructions in the PATCHES/README file
-of the LVM distribution.
+On Mon, 29 Jan 2001, Patrick Caulfield wrote:
 
-On Mon, Jan 29, 2001 at 09:03:45AM +0100, Holger Rauch wrote:
-> Hi!
+> On Sat, Jan 27, 2001 at 05:27:46PM -0500, Gregory McLean wrote:
+> > 
+[snip]
 > 
-> Which version of the LVM would you recommend using in conjunction with a
-> 2.4.0 kernel? From what I know, only some 0.8 intermediate release seems
-> to be shipped with 2.4.0, and that release is rather old? Is there any
-> newer version that seems to work well with 2.4.0?
+> Are you running beta3 ? If not then an upgrade would be helpful.
+
+No beta2 , I'll upgrade em. And patch the kernel tonight for this (not at
+the affected machine right now)
 > 
-> Thanks in advance for any hints!
+> If you are then we really need to find out what's happening here. 
+> Do you have any snapshots defined ?
+
+No, I haven't had a need for snapshots.
 > 
-> Greetings,
+> Can you do a pvdisplay on all the PVs and post the output, it might also 
+> be helpful if you can dd if=/dev/hd?? of=pv-dump.txt bs=1024 count=4 and send
+> those four files too so we can see what has actually happened to the on-disk
+> metadata.
 > 
-> 	Holger
+> After than(but not before please!) you could try
+
+To save the list bandwidth spammage:
+
+http://tweetie.comstar.net/pvdump/
+
+contains all the generated files so far (both the orginal 2) and the
+requested ones.
+
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> vfcfgrestore mmedia /dev/hda7
+> vfcfgrestore mmedia /dev/hda8
+> vfcfgrestore mmedia /dev/hdb1
+> vfcfgrestore mmedia /dev/hdc1
+> vgchange -ay
 
--- 
+Still didn't find any volume groups :(
 
-Regards,
-Heinz    -- The LVM Guy --
+I did manage to active the group with the following (hack):
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+small perlscript to put a \0 terminated mmedia name in /etc/lvmtab,
+cp /etc/lvmconf/mmedia.conf /etc/lvmtab.d/mmedia
+vgchange -ay
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+This got em activated
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+As you asked in your followup:
+
+vgdisplay -D mmedia
+vgdisplay -- volume group "mmedia" not found
+
+I'll re-try tonight with the beta3 stuff.
+
+Thanks,
+  Greg
+--
+Gregory McLean     | "Why do they call it a TV set when you only get one?"
+globix.net         | - George Carlin 
+Core Engineer      |
+Network Services   |
+PGP Key: 0xE94D1363|
+---------------This is my opinion, All MINE! I tell you-----------------
