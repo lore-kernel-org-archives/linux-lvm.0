@@ -1,37 +1,52 @@
-Message-Id: <199904122247.AA05820@mailgate1b.telekom.de>
+Message-Id: <199904131625.AA06433@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] LVM Front end?
-Date: Tue, 13 Apr 1999 0:46:32 METDST
-In-Reply-To: <4.2.0.32.19990331215714.0098e6c0@mail.msy.bellsouth.net>; from "Daniel Whicker" at Mar 31, 99 9:58 pm
+Date: Tue, 13 Apr 1999 18:25:21 METDST
+In-Reply-To: <3.0.5.32.19990413120146.007c7bc0@helios.uqtr.uquebec.ca>; from "Mathieu Legare" at Apr 13, 99 12:01 (noon)
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Daniel Whicker <heimdall@mail.org>
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
-
-
-Hi and sorry for the late statement.
+To: Mathieu_Legare@uqtr.uquebec.ca
+Cc: mge@u9ete.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
 > 
-> I was curious if anyone was developing an LVM front end?
+> Hi everybody,
 
-Yes, <lars.segerlund@axis.com> is already active with it.
+Hi.
 
-> Maybe something 
-> along the lines of SAM, SMIT, or maybe even something similar to the GUI 
-> that Veritas uses?
+Did you send your mail to linux-lvm@msede.com?
+I have to ask, because i got it direct from your mail address.
 
-His in an early state.
-We'll see ;*)
+> 
+> I have subscribed to the mailing list few days ago. 
+> I know lvm is still in alpha stage, but I'd like to
+> know how reliable it has been so far ? 
+
+Actually it's very reliable in version 0.6 (no alpha any longer).
+But you have to patch in a bug fix which is contained in the
+same directory at ftp://linux.msede.com/lvm/v0.6.
+
+> 
+> At work, we are using AIX, which has the Volume Group, 
+> Logical Volume and Physical Volume manager and I am
+> quite interested in this project.
+
+Great.
+
+You will be able to work with Linux LVM quite easy because
+the commands are similar to HP's which are in turn quite similar to AIX's.
+
+> Is lvm working well
+> when its filesystem are exported via NFS ?
+
+Yes, go ahead and try it.
 
 
 Regards,
 Heinz
-
-
 --
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
