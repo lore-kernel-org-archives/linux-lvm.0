@@ -1,11 +1,10 @@
-Return-Path: <root@srv.sistina.com>
-Date: Mon, 25 Jun 2001 10:25:38 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM 1.0 release delayed
-Message-ID: <20010625102538.A18831@sistina.com>
-References: <20010622215831.A6347@sistina.com> <993320951.1629.0.camel@pamina.linuxalert.org>
+Return-Path: <heinrichs@qis-systemhaus.de>
+Message-Id: <3B372D6D.88998D3F@qis-systemhaus.de>
+Date: Mon, 25 Jun 2001 14:24:13 +0200
+From: Dirk Heinrichs <heinrichs@qis-systemhaus.de>
 Mime-Version: 1.0
-In-Reply-To: <993320951.1629.0.camel@pamina.linuxalert.org>; from magru@linuxalert.org on Sat, Jun 23, 2001 at 08:29:11PM +0200
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Why vgscan not in kernel?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,62 +16,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: Linux LVM <linux-lvm@sistina.com>
 
-On Sat, Jun 23, 2001 at 08:29:11PM +0200, Magnus Runesson wrote:
-> Hi!
-> 
-> Will the bugg 193 in bugzilla (vgscan cant find vg:s after new pv added)
-> be fixed to the 1.0 release?
+Hi all,
 
-It should.
+upon boot, SCSI and IDE drivers check harddrives attached to the device
+for partitions. Wouldn't it be better to have similar functionality
+(scanning for VG's) for LVM in the kernel, instead of using a userland
+command?
 
-Do you have a test configuration and recent LVM CVS in order to make that sure?
+Bye...
 
-We'ld appreciate your help to test this.
-
-Thanks,
-Heinz    -- The LVM Guy --
-
-
-> 
-> /Magnus
-> 
-> On 22 Jun 2001 21:58:31 +0200, Heinz J. Mauelshagen wrote:
-> > 
-> > All,
-> > 
-> > we are sorting out a heavy I/O related snapshot bug.
-> > 
-> > Don't like to release 1.0 without having fixed this one.
-> > Hopefully early next week :-)
-> > 
-> > Later,
-> > Heinz    -- The LVM Guy --
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	Dirk
+--=20
+Dirk Heinrichs		| Tel:	+49 (0)241 413 260
+Configuration Manager	| Fax:	+49 (0)241 413 2640
+QIS Systemhaus GmbH	| Mail:	dheinrichs@qis-systemhaus.de
+J=EF=BF=BDlicher Str. 338b	| Web:	http://www.qis-systemhaus.de
+D-52070 Aachen		| ICQ#:	110037733
