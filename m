@@ -1,10 +1,12 @@
-Return-Path: <iafilius@xs4all.nl>
-Date: Fri, 20 Apr 2001 10:00:31 +0200 (CEST)
-From: Arjan Filius <iafilius@xs4all.nl>
+Return-Path: <bluca@comedia.it>
+Date: Fri, 20 Apr 2001 08:41:22 +0200
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] 2.4.3-ac{6,7} LVM hang
-In-Reply-To: <20010419235107.G750@suse.de>
-Message-ID: <Pine.LNX.4.31.0104200958360.1043-100000@sjoerd.sjoerdnet>
-MIME-Version: 1.0
+Message-ID: <20010420084122.B12971@colombina.comedia.it>
+References: <Pine.LNX.4.21.0104161653140.14442-100000@imladris.rielhome.conectiva>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0104161653140.14442-100000@imladris.rielhome.conectiva>; from riel@conectiva.com.br on Mon, Apr 16, 2001 at 04:55:15PM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +18,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>
-Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
+To: linux-lvm@sistina.com
 
-Hello Jens,
+On Mon, Apr 16, 2001 at 04:55:15PM -0300, Rik van Riel wrote:
+> Hi,
+> 
+> 2.4.3-ac4 seems to work great on my test box (UP K6-2 with SCSI
+> disk), but 2.4.3-ac6 and 2.4.3-ac7 hang pretty hard when I try
+> to access any of the logical volumes on my test box.
+> 
+sorry i am a bit late on ac releases (ac3 at the moment)
+does ac6/7 include lvm 0.9.1beta7, does the problem happen
+with stock kernel lvm, wich was b2 afaik, or with lvm patches applied?
+in the former case, why bother? b2 is broken anyway.
 
-Yes this fixes it.
-
-I'm running 2.4.4-pre4 with only your patch applied.
-
-Greatings,
-
-
-On Thu, 19 Apr 2001, Jens Axboe wrote:
-
-> On Thu, Apr 19 2001, Arjan Filius wrote:
-> > Hello,
-> >
-> > Same here as reported.
-> > restoring lvm.c from 2.4.3 into 2.4.4-pre? "fixes" this. (tested not ac's
-> > kernel)
->
-> Does attached patch fix it?
->
->
+L.
 
 -- 
-Arjan Filius
-mailto:iafilius@xs4all.nl
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
