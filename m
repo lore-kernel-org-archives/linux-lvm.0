@@ -1,32 +1,41 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200011061933.eA6JXtF17815@webber.adilger.net>
-Subject: Re: [linux-lvm] scsi/fc multipath failover patch
-In-Reply-To: <20001106180134.U751@jadzia.josv.com> "from Jos Visser at Nov 6,
- 2000 06:01:34 pm"
-Date: Mon, 6 Nov 2000 12:33:55 -0700 (MST)
+Message-ID: <3A070E00.C4FE25F9@dell.com>
+Date: Mon, 06 Nov 2000 14:01:04 -0600
+From: Michael E Brown <Michael_E_Brown@dell.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] scsi/fc multipath failover patch
+References: <200011061933.eA6JXtF17815@webber.adilger.net>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jos Visser <josv@osp.nl>
-Cc: Michael E Brown <Michael_E_Brown@dell.com>, linux-lvm@msede.com
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: Jos Visser <josv@osp.nl>, linux-lvm@msede.com
 
-Joe Visser writes:
-> Does anyone know whether md, lvm and likeminded drivers are resistant
-> against this alternate pathing solution? I mean, when you connect a SCSI
-> (or FC disk for that matter) through two controllers, any application or
-> driver that does scanning of the attached disks and partitions will
-> encounter the same disk/partitions twice. 
+Andreas Dilger wrote:
 
-Heinz has said that in the upcoming 0.9 release of LVM, there will be
-PVIDs (actually DCE UUIDs) so LVM will remove duplicate PVs from its
-lists.  This can happen for reasons other than multipath, such as
-/dev/md and /dev/{hd,sd} access to the same PV.
+> Joe Visser writes:
+> > Does anyone know whether md, lvm and likeminded drivers are resistant
+> > against this alternate pathing solution? I mean, when you connect a SCSI
+> > (or FC disk for that matter) through two controllers, any application or
+> > driver that does scanning of the attached disks and partitions will
+> > encounter the same disk/partitions twice.
+>
+> Heinz has said that in the upcoming 0.9 release of LVM, there will be
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Is there cvs repository or some such thing so that us mere mortals can
+test/contribute to upcoming release? I've a lab full of machines that can be
+used for the cause, several fibre-channel devices, lots of scsi external
+storage, and lots of other neat toys I can do horrible experiments on without
+whining about lost data.
+
+>
+> PVIDs (actually DCE UUIDs) so LVM will remove duplicate PVs from its
+> lists.  This can happen for reasons other than multipath, such as
+> /dev/md and /dev/{hd,sd} access to the same PV.
+>
+> Cheers, Andreas
+> --
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
