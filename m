@@ -1,87 +1,30 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Wed, 29 Nov 2000 22:08:37 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] lvm 0.9 kernel build problems
-Message-ID: <20001129220837.D26839@srv.t-online.de>
-References: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com>
+Return-Path: <greck@unpunk.com>
+From: Greck Cannon <greck@unpunk.com>
+Date: Wed, 29 Nov 2000 16:13:26 -0500
+Message-ID: <20001129161326.A3120@unpunk.com>
 Mime-Version: 1.0
-In-Reply-To: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com>; from pswartz@digitalrom.com on Wed, Nov 29, 2000 at 09:05:32AM -0600
+Content-Disposition: inline
+Subject: [linux-lvm] availability of 0.8.2, or, where to start?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@Sistina.com
-Cc: mge@Sistina.com
+To: linux-lvm@sistina.com
 
-Somebody figured that one out already.
+There have been a lot of patches to 0.9 flying around, and although
+there are rawio patches for 2.2.17 in 0.8.1 there's no actual lvm patch,
+and the 2.2.16 one bails pretty badly.
 
-It is a bug which shows up in case you deselect LVM proc filesystem support.
+I've got several boxes I'm just now installing lvm on (to prove it works,
+both to myself and others--there are a few real applications I'd like to
+deploy it under) and having run into the same kernel oops with 0.9 that
+Tomas did (and losing the volumes, which I'm attributing to my naivete),
+I'm wondering what set of materials I should be starting with.
 
-Please enable it for now and you should be able to compile quite happily.
-
-On Wed, Nov 29, 2000 at 09:05:32AM -0600, Patrick Swartz wrote:
-> Hello,
-> 
-> Could someone give me some hints to why I get the following error when
-> trying to build my kernel with the lvm 0.9patches.  This box started out as
-> a RH7.0 with all current RH updates, then installed the stock 2.4.0-test10
-> kernel with lvm built into the kernel.  This build worked.  I then applied
-> the two patches for 2.4.0-test10 and they applied cleanly.  I normally build
-> kernels using the following approach -- make dep clean bzImage modules
-> modules_install, then take care of lilo.  This error happens during the
-> bzImage stage.
-> 
-> 
-> lvm.c: In function `lvm_do_vg_extend':
-> lvm.c:2020: warning: implicit declaration of function
-> `lvm_do_create_proc_entry_
-> of_pv'
-> lvm.c: In function `lvm_do_create_proc_entry_of_lv':
-> lvm.c:3012: `pde' undeclared (first use in this function)
-> lvm.c:3012: (Each undeclared identifier is reported only once
-> lvm.c:3012: for each function it appears in.)
-> lvm.c: At top level:
-> lvm.c:3040: warning: type mismatch with previous implicit declaration
-> lvm.c:2020: warning: previous implicit declaration of
-> `lvm_do_create_proc_entry_
-> of_pv'
-> lvm.c:3040: warning: `lvm_do_create_proc_entry_of_pv' was previously
-> implicitly
-> declared to return `int'
-> lvm.c: In function `lvm_do_create_proc_entry_of_pv':
-> lvm.c:3046: `pde' undeclared (first use in this function)
-> lvm.c: At top level:
-> lvm.c:146: warning: `lvm_short_version' defined but not used
-> make[3]: *** [lvm.o] Error 1
-> make[3]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> make[2]: *** [first_rule] Error 2
-> make[2]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> make[1]: *** [_subdir_md] Error 2
-> make[1]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers'
-> make: *** [_dir_drivers] Error 2
-> 
-> Thanks for your help,
-> 
-> Patrick Swartz
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+--greck
 
 -- 
-
-Regards,
-Heinz      -- The LVM guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+to be bored, just click <a href="http://unpunk.com/~greck/">here</a>.
+---------------------------
