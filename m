@@ -1,11 +1,12 @@
-Return-Path: <dave@galilean.d2g.com>
-Date: Mon, 26 Mar 2001 22:09:57 +0200
-From: Dave Wapstra <dave@xs4all.nl>
-Subject: Re: [linux-lvm] LVM corruption with ext2resize on Ultrasparc
-Message-ID: <20010326220957.B19762@mercury.mercury.multiweb.nl>
-References: <20010323225559.A20479@mercury.mercury.multiweb.nl> <200103232311.f2NNBoG24415@webber.adilger.int> <20010324190808.A28688@mercury.mercury.multiweb.nl>
+Return-Path: <mauelshagen@sistina.com>
+Date: Mon, 26 Mar 2001 17:34:36 -0600
+From: Heinz Mauelshagen <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] where is pv_t?
+Message-ID: <20010326173436.A18978@sistina.com>
+References: <3ABB8810.E4216B29@in.tum.de>
 Mime-Version: 1.0
-In-Reply-To: <20010324190808.A28688@mercury.mercury.multiweb.nl>; from dave@xs4all.nl on Sat, Mar 24, 2001 at 07:08:08PM +0100
+Content-Disposition: inline
+In-Reply-To: <3ABB8810.E4216B29@in.tum.de>; from vidalrod@informatik.tu-muenchen.de on Fri, Mar 23, 2001 at 06:29:52PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,30 +22,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On 24 March, 2001 at 19:08:08 +0100, Dave Wapstra <dave@xs4all.nl> wrote:
+On Fri, Mar 23, 2001 at 06:29:52PM +0100, David Vidal Rodriguez wrote:
+> I'm trying to write a program that can put the UUIDs of a PV manually.
+> I'm having a look at the functions and at the structures I need, but I
+> can't find how pv_t looks like. Can sb tell me in which file is it
+> contained?
+
+Look for pv_disk_t in lvm.h
+
 > 
-> On 23 March, 2001 at 16:11:50 -0700, Andreas Dilger <adilger@turbolinux.com> wrote:
-> > I _really_ need to see what you did in between here that could cause the
-> > problem.  Did you do an lvextend or something?  Any messages in the
-> > syslog?  Basically, it is impossible that ext2resize caused any problems.
-> > 
 > 
-> I'll try and reproduce the problem pinpoint the exact order of commands that triggers the problem.
-
-I have not been able to reproduce the problem.  Based on your explanation
-on what ext2resize does, it seems highly unlikely that that is causing
-problems.
-
-The system I'm using used to be a Solaris based configuration.  I suspect
-that the problems I've had are related to partition and disk info
-left-over from Solaris.  After clearing the tables by using dd
-if=/dev/zero of=/dev/sd<x> I've not had any problems.
-
-Other then GNU parted which is having problems with the /dev/sda disk,
-which still has the old Sun tables on it.
-
--Dave
+> 
+> --
+>   ------------------------------------------------------------------------
+>  David Vidal R. (vidalrod@in.tum.de)
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
-Dave Wapstra
-dave@xs4all.nl
+
+Regards,
+Heinz      -- The LVM guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
