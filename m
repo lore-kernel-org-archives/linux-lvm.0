@@ -1,11 +1,11 @@
-Return-Path: <jorg.de.jong@home.ict.nl>
-Message-ID: <3A295FC3.F6CA99AE@home.ict.nl>
-Date: Sat, 02 Dec 2000 21:46:59 +0100
-From: Jorg de Jong <jorg.de.jong@home.ict.nl>
+Return-Path: <j.e.s.de.jong@freeler.nl>
+Message-ID: <3A2A318C.C1666100@freeler.nl>
+Date: Sun, 03 Dec 2000 12:42:04 +0100
+From: Jorg de Jong <j.e.s.de.jong@freeler.nl>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Using Oracle with lvm AND rawio: read(512) from 
  /dev/raw/...
-References: <3A28181B.9B0967CD@tls.msk.ru>
+References: <3A296084.337D6ECA@freeler.nl> <3A2985C4.BA9F7D76@tls.msk.ru>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,23 +21,29 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+"Michael Ju. Tokarev" wrote:
+> 
+> Jorg de Jong wrote:
+> >
+> > my setup is :
+> > - rh7.0
+> > - 2.4.11 stock kernel with
+> 
+> What's the "2.4.11" kernel?  I think that there is no
+> such beast exists, and will not exists for at least
+> some months...  There is only 2.4testN, i.e. pre-2.4.
+> Redhat 7.0 ships with something like 2.2.16-22, and
+> included 2.4-0.something -- maybe this is what you
+> have?  And maybe things go well on 2.4-tobe kernel?
+> (I tried with 2.2.17, 2.4 is still not an option for
+> our applications).
 
-your mail trigged me to try this on my system! 
+your are ride offcource,
+what I ment was 
+- 2.4.0-test11 stock kernel ( downloaded from ftp.kernel.org ) 
 
-SQL> create tablespace x datafile '/dev/raw/raw1' ;
-create tablespace x datafile '/dev/raw/raw1'
+> 
 
-Tablespace created.
-
-and I did not have any problems what so ever!
-my setup is : 
-- rh7.0 
-- 2.4.11 stock kernel with 
-- plain old LVM 8.0 (usertools patched)
-- Oracle is 8.1.6 SE
-
-regards 
 -- 
 Jorg de Jong
 Work : mailto:jorg.de.jong@ict.nl 
