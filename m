@@ -1,8 +1,8 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 30 Apr 2001 16:10:07 +0000
+Date: Mon, 30 Apr 2001 16:11:49 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lowest spec LVM run on ? 
-Message-ID: <20010430161007.J19810@sistina.com>
+Subject: Re: [linux-lvm] vgcreate doesn't work for me
+Message-ID: <20010430161149.K19810@sistina.com>
 Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,44 +19,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Apr 29, 2001 at 06:47:48PM +0100, Kirth wrote:
-> Hi,
-> 
-> 	I'm just wondering whats the lowest spec machine that anyone has an LVM 
-> running (stable) on ?
+Arkadiusz,
+
+in order to be able to investigate your problem better,
+could you provide the following output please:
+
+$ fdisk -l /dev/hdd
+
+$ pvdisplay /dev/hdd[1-3]
+
+$ vgcreate -d test /dev/hdd[1-3]
 
 
-TANSTA a lowest spec.
-
-The hardware should just support Linux 2.2 or 2.4 including LVM ;-)
-
-The only constraint is RAM which must be decently sized, because LVM keeps
-metadata in the kernel.
-
-If you play around with LVM test configurations and for eg. choose to have
-*small* PE sizes you could eventually end up with large LVM mapping tables
-leading to low memory.
-
-Nevertheless the LVM driver checks for this and prevents you from loading
-such amounts of metadata; IOW: you wouldn't be able to activate your VG(s)
-or create/extend your LVs in this case and LVM still shouldn't crash on you.
+Warning: if you create a VG containing PVs in multiple partitions of the
+         same disk, you will likely run into trouble if you want to
+         test striped LVs.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-
-> 	The reason is, I have just built another one, but it's on a p100 with 
-> 16megs of ram, I tried to reiserfs
-> 	the drive but that crashed the kernel (still no idea why, same kernel as 
-> my p133 with 128megs... which
-> 	works fine). I have made the fs just ext2 for now (this is all testing NOT 
-> live).
+On Sun, Apr 29, 2001 at 07:49:50PM +0200, Arkadiusz Miskiewicz wrote:
+> I wanted to do some test with lvm and doing as in LVM-HOWTO:
 > 
-> 	Any suggestions for ensuring it's stable ? I am trying to find some simm's 
-> for the pc ;)
+> [root@arm misiek]# pvcreate /dev/hdd[123]
+> pvcreate -- physical volume "/dev/hdd1" successfully created
+> pvcreate -- physical volume "/dev/hdd2" successfully created
+> pvcreate -- physical volume "/dev/hdd3" successfully created
 > 
-> Kirth
+> [root@arm misiek]# vgcreate test /dev/hdd[123]
+> vgcreate -- no valid physical volumes in command line
 > 
+> [root@arm misiek]# uname -a; rpm -q lvm
+> Linux arm 2.4.4 #1 sob kwi 28 12:49:56 CEST 2001 i686 pld
+> lvm-0.9.1-0.beta7
+> [root@arm misiek]# 
+> 
+> unfortunately vgcreate doesn't want to work for me :-(
+> 
+> Any suggestions?
+> -- 
+> Arkadiusz Mi?kiewicz, AM2-6BONE    [ PLD GNU/Linux IPv6 ]
+> http://www.t17.ds.pwr.wroc.pl/~misiek/ipv6/   [ enabled ]
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
