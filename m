@@ -1,11 +1,10 @@
-Return-Path: <hne@inetnow.net>
-Message-ID: <3B0C3371.80909@inetnow.net>
-Date: Thu, 24 May 2001 07:02:25 +0900
-From: Keith Hopkins <hne@inetnow.net>
+Return-Path: <riel@conectiva.com.br>
+Date: Wed, 23 May 2001 19:28:09 -0300 (BRST)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [linux-lvm] The Info You Requested
+In-Reply-To: <20010523165157.A5993@minime.sistina.com>
+Message-ID: <Pine.LNX.4.33.0105231924170.311-100000@duckman.distro.conectiva>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] unsubscribe
-References: <006801c0e3eb$5c7efde0$2100000a@intranet.zeropiu.it>
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,36 +16,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: christianv@zeropiu.it
 
-Christian Verdelli wrote:
+On Wed, 23 May 2001, Ben Lutgens wrote:
+> On Wed, May 23, 2001 at 04:29:26PM -0300, Rik van Riel wrote:
+> >
+> >No need to move the whole list to another domain.  All the
+> >anti-spam filtering rules from NL.linux.org are publicly
+> >available on a CVS tree.  For more info, see:
+> >
+> >http://spamfilter.nl.linux.org/
+>
+> Thanks Rik, I'll have a look. I have some stuff in place now
+> that I am pretty sure will work. It's not proactive though, I'll
+> have to add rules as we get a spam but it's something.
 
-> Help,
-> 
-> I don't see any link to unsunscribe from this list!!
-> 
+Spamfilter CVS works the same; the difference is that the work is
+shared so once I add something to the list the mailboxes (and lists)
+of everybody using spamfilter are protected.  And, of course, when
+you add something to spamfilter my mailbox is protected ;)
 
-See this pretty link at the bottom of every list distributed message?  (What?  Can't see it?  Quit using HTML in your e-mail.  It's in the last MIME section that is hidden by your mail reader.  Use the VIEW SOURCE option of your mail reader if you doubt me.)
+> >(I just created this site to save me time explaining how
+> >spamfilter works, it may take a few hours to have its DNS
+> >entry percolate through)
+>
+> Yeah, no since making everyone change thier procmail filters now.
 
-http://lists.sistina.com/mailman/listinfo/linux-lvm
+Spamfilter is structured in such a way that the anti-spam procmailrc
+files update themselves automatically when a CVS commit message
+comes in ;)
 
-Click on it.
+regards,
 
-Now READ the page.  See the section titled "linux-lvm Subscribers", that's us.
-Turn on that selective filtering part of your brain and ignore the part about the "list administrator", because that is NOT you.  You see the last BUTTON is EDIT OPTIONS.  Enter you e-mail address and click the pretty button.
+Rik
+--
+Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
 
-    linux-lvm Subscribers
-[ignoring admin options]
+Virtual memory is like a game you can't win;
+However, without VM there's truly nothing to lose...
 
-To change your subscription (set options like digest and delivery modes, get a reminder of your password, or unsubscribe from linux-lvm), enter your subscription email address:
-
-{new page is displayed}
-1st option:  Unsubscribing from linux-lvm
-   Enter you list password, and click the pretty button.
-
-If you have forgotten your password, see the next section.
-   Click: Email My Password To Me.
-
-Glad to have helped!
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com/
