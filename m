@@ -1,9 +1,11 @@
-Subject: Re: [linux-lvm] Problem with LVM over RAID-1
-References: <NEBBLHFAEINCLDICDLOAOEPKCHAA.yves.alloyer@slpinfoware.com>
-From: Urs Thuermann <urs@isnogud.escape.de>
-Date: 15 Oct 2001 21:25:17 +0200
-In-Reply-To: <NEBBLHFAEINCLDICDLOAOEPKCHAA.yves.alloyer@slpinfoware.com>; from "yves.alloyer" on Mon, 15 Oct 2001 13:02:26 +0200
-Message-ID: <m2ofn8904i.fsf@isnogud.escape.de>
+Date: Mon, 15 Oct 2001 22:45:51 +0200
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Subject: Re: [linux-lvm] Problems after restarting my debian
+Message-ID: <20011015224551.E1269@sky.net>
+References: <20011011011444.A2302@sky.net> <20011011163029.B8752@sistina.com> <20011012221759.B416@sky.net> <20011014012746.A2072@sky.net> <20011015115509.A30655@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011015115509.A30655@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-"yves.alloyer" <Yves.ALLOYER@slpinfoware.com> writes:
+* Heinz J . Mauelshagen <mauelshagen@sistina.com> [011015 11:55]:
+> On Sun, Oct 14, 2001 at 01:27:46AM +0200, Ulrich Wiederhold wrote:
+> > Hi again,
+> > all works fine now. Thanks.
+> 
+> What made the difference?
 
-> There is something going wrong in lvm_check_partitioned_dev.
-> AFAIK the problem is being investigated. Since you probably don't want to
-> partition any of your MD devices, the following patch should do it. It just
-> tells LVM to use the whole device.
-> I've got that running... (2.4.10/1.0.1-rc4).
-> Hope it helps.
+I used the uuid_fixer. I tryed it before the upgrade without success.
+After the upgrade to 1.0.1-rc4 it worked.
 
-Thank you (and all others you have replied to my question).  We have
-looked into the source, too, and did a similar but very dirty patch,
-just to get it to work.  We just inserted a return 0.  We'll consider
-upgrading to the CVS version.
+Uli
 
-Thanks again
-urs
+-- 
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
