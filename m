@@ -1,13 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i32COlj21208
-	for <linux-lvm@redhat.com>; Fri, 2 Apr 2004 07:24:47 -0500
-Date: Fri, 2 Apr 2004 14:24:22 +0200
-From: Dumas Patrice <dumas@centre-cired.fr>
-Message-ID: <20040402122422.GA17971@hermes.centre-cired.fr>
+Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i32G63j04043
+	for <linux-lvm@redhat.com>; Fri, 2 Apr 2004 11:06:03 -0500
+Received: (from agk@localhost)
+	by homer.msp.redhat.com (8.11.6/8.11.6) id i32G62D21621
+	for linux-lvm@redhat.com; Fri, 2 Apr 2004 10:06:02 -0600
+Date: Fri, 2 Apr 2004 10:06:02 -0600
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] DESTDIR is broken in 1.00.09
+Message-ID: <20040402100602.U17377@homer.msp.redhat.com>
+References: <200404010207.38892.arekm@pld-linux.org>
+	<406B9F1A.50902@backtobasicsmgmt.com>
+	<20040401104409.T17377@homer.msp.redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] depmod in lvmcreate_initrd erro rmessages with
-	different kernel
+In-Reply-To: <20040401104409.T17377@homer.msp.redhat.com>;
+	from agk@redhat.com on Thu, Apr 01, 2004 at 10:44:09AM -0600
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,31 +27,15 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Thu, Apr 01, 2004 at 10:44:09AM -0600, Alasdair G Kergon wrote:
+> The problem is fixed in make.tmpl.in in the LVM2 release, but I haven't 
+> synced the updates to the build process across to the device-mapper tree yet.
+> I'll do it soon.
 
-I am trying to use lvmcreate_initrd to make an initrd for a kernel different
-than the one which is running (to be more precise, I have a running redhat 9
-and I am doing lvmcreate_initrd chrooted in a gentoo). Thus I run 
-$ lvmcreate_initrd 2.4.24
-When lvmcreate_initrd runs depmod, it runs
-$ depmod -a 2.4.24
-depmod echoes a lot of errors message because there are a lot of unresolved 
-symbols (because the running kernel isn't the kernel I run depmod for). The 
-exit status is 0, though and the initrd is created.
-The right depmod invocation should (if I'm not wrong) be:
-$ depmod -a 2.4.24 -F /usr/src/linux-2.4.24/System.map
-
-Is this a problem (depmod having unresolved symbols) ? (there is a comment in 
-the lvmcreate_initrd code which seems to imply that it is not a problem, but I 
-am not sure)
-
-If yes, I think a new option should be added to lvmcreate_initrd, for the
-System.map location.
-
-If no, this should be stated in the man page.
-
-I can do diffs if you want.
-
-Pat
+I've done this in CVS now; I'll create new tarballs.
+ 
+Alasdair
+-- 
+agk@redhat.com
