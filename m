@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] restoring volume group from file
-Message-ID: <20030425112124.B16006@sistina.com>
-References: <20030424163942.GH12350@mit.edu>
+Subject: Re: [linux-lvm] pvmove errors
+Message-ID: <20030425113525.C16006@sistina.com>
+References: <GNEAKGKKMNLLGBACDNBJMECACGAA.carey@itfreedom.com>
 Mime-Version: 1.0
-In-Reply-To: <20030424163942.GH12350@mit.edu>; from jwa@mit.edu on Thu, Apr 24, 2003 at 12:39:42PM -0400
+In-Reply-To: <GNEAKGKKMNLLGBACDNBJMECACGAA.carey@itfreedom.com>; from carey@itfreedom.com on Wed, Apr 23, 2003 at 07:48:59PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,59 +14,124 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 25 04:27:02 2003
+Date: Fri Apr 25 04:41:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-James,
+Carey,
 
-sounds like you had a problem with your LVs before you copied already,
-which I assume was the reason to copy hde5 and run vgcfgrestore.
+which LVM/kernel versions are you using ?
+The error tells that the change for the mapping in the LVM driver fails.
 
-What does vgck (metadata checker) display ?
+The mapping on disk (lvdisplay -Dv ...) doesn't get changed in that case.
+Must be a flaw in the ioctl error return handling, because it obviously
+got changed in the kernel as "lvdisplay -v " shows.
 
-Maybe you have better luck with an older metadata backup from
-/etc/lvmconf ?
+Regards,
+Heinz    -- The LVM Guy --
 
-On Thu, Apr 24, 2003 at 12:39:42PM -0400, James W Anderson wrote:
+
+On Wed, Apr 23, 2003 at 07:48:59PM -0500, Carey Jung wrote:
 > Hi,
 > 
-> I recently made a copy of an lvm partition to a file, using dd:
+> I'm getting errors from pvmove, similar to a problem reported in December (
+> http://lists.sistina.com/pipermail/linux-lvm/2002-December/012973.html),
+> though I'm not sure if it's exactly the same.  Here's the relevant pvmove
+> output:
 > 
-> dd if=/dev/hde5 of=lvm-file bs=...
+> # pvmove -v -n /dev/backups2/rje /dev/sdd1 /dev/sda6
+> ...
+> pvmove -- starting to move linear logical volume "/dev/backups2/rje"
+> pvmove -- checking for enough free physical extents in "backups2"
+> pvmove -- /dev/sdd1 [PE 0 [rje [LE 0]] -> /dev/sda6 [PE 2542] [1/6400]
+> /dev/backups2/group::/dev/backups2/rje: 0831 65920, 0806 166658560
+> pvmove -- ERROR "Invalid argument" copying extent from "/dev/sdd1"
 > 
-> I would now like to mount this file, which contains a single volume
-> group, on a different machine.  Here is what I have done so far:
+> pvmove -- ERROR "Invalid argument" remapping
+> pvmove -- ERROR "pv_move(): LE of LV remap" moving physical extents
 > 
-> 1) create a loopback device for the file
+> I believe this is telling me that pvmove is having a problem copying PE 0 on
+> /dev/sdd1 to PE 2542 on /dev/sda6....  Yet lvdisplay indicates that LE 0 is
+> already on /dev/sda6, PE 02542 -- if I understand it correctly:
+
+
 > 
-> # losetup /dev/loop0 lvm-file
+> # lvdisplay -v /dev/backups2/rje |head -25
+> --- Logical volume ---
+> LV Name                /dev/backups2/rje
+> VG Name                backups2
+> LV Write Access        read/write
+> LV Status              available
+> LV #                   1
+> # open                 1
+> LV Size                200 GB
+> Current LE             6400
+> Allocated LE           6400
+> Allocation             next free
+> Read ahead sectors     1024
+> Block device           58:2
 > 
-> 2) pvscan, detects the volume group
+>    --- Distribution of logical volume on 1 physical volume  ---
+>    PV Name                  PE on PV     reads      writes
+>    /dev/sdd1                6400         1849755    26252516
 > 
-> # pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/loop0" of VG "vg00" [23.45 GB / 3.20 GB free]
-> pvscan -- total: 1 [23.46 GB] / in use: 1 [23.46 GB] / in no VG: 0 [0]
+>    --- logical volume i/o statistic ---
+>    1849755 reads  26252516 writes
 > 
-> 3) Now, when I try to do vgcfgrestore, I get the following error:
+>    --- Logical extents ---
+>    LE    PV                        PE     reads      writes
+>    00000 /dev/sda6                 02542  904        527167
+>    00001 /dev/sda6                 02543  217        36574
 > 
-> # vgcfgrestore -n vg00 -f vg00.conf -o /dev/hde5 /dev/loop0
-> vgcfgrestore -- size of physical volume /dev/loop0 differs from backup
+> pvdisplay confirms that PE 0 on /dev/sdd1 is free, and LE 0 is already on
+> /dev/sda6, PE 2542:
 > 
+> # pvdisplay -v /dev/sdd1|head -25
+> --- Physical volume ---
+> PV Name               /dev/sdd1
+> VG Name               backups2
+> PV Size               279.47 GB [586099332 secs] / NOT usable 32.19 MB [LVM:
+> 162 KB]
+> PV#                   1
+> PV Status             available
+> Allocatable           yes
+> Cur LV                1
+> PE Size (KByte)       32768
+> Total PE              8942
+> Free PE               2568
+> Allocated PE          6374
+> PV UUID               joJY49-jRXo-3CYM-rL3Q-qy16-CA6g-0AX9tY
 > 
-> I tried passing the -i option to tell it to ignore the size
-> difference, and then it did create the volume group, but all of the
-> logical volumes are unusable---e2fsck cannot find the superblocks on
-> the filesystems.
+>    --- Distribution of physical volume ---
+>    LV Name                   LE of LV  PE for LV
+>    /dev/backups2/rje         6400      6374
 > 
-> Does anyone have any suggestions as to what I might try to get this to
-> work?  Any help would be tremendously appreciated.
+>    --- Physical extents ---
+>    PE    LV                        LE      Disk sector
+>    00000 free
+>    .....
+>    00025 free
+>    00026 /dev/backups2/rje         00026   1769856
+>    00027 /dev/backups2/rje         00027   1835392
 > 
-> Many thanks,
-> James
+> # pvdisplay -v /dev/sda6
+> ...
+>    02542 /dev/backups2/rje         00000   166658560
+>    02543 /dev/backups2/rje         00001   166724096
+>    02544 /dev/backups2/rje         00002   166789632
+>    02545 /dev/backups2/rje         00003   166855168
+>    02546 /dev/backups2/rje         00004   166920704
+> ...
+> 
+> Am I reading this correctly?  Any ideas what the problem is, or how to fix
+> it?  I've been moving several LVs from /dev/sdd1 to /dev/sda6; all completed
+> successfully.  This, the last one, is giving me an error.
+> 
+> Thanks in advance for any help....!
+> 
+> Carey Jung
 > 
 > 
 > _______________________________________________
@@ -74,11 +139,6 @@ On Thu, Apr 24, 2003 at 12:39:42PM -0400, James W Anderson wrote:
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
