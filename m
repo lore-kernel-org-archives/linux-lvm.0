@@ -1,78 +1,43 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200003312234.AAA25470@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Can't locate modules when running vgscan
-In-Reply-To: <Pine.HPP.3.96.1000330171141.7850C-100000@othello.ucs.indiana.edu> from Chris Shelton at "Mar 30, 2000  5:20: 4 pm"
-Date: Sat, 1 Apr 2000 00:34:10 +0200 (MEST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Sat, 1 Apr 2000 17:25:53 -0500 (EST)
+From: Shane Shrybman <shane@zeke.yi.org>
+Subject: [linux-lvm] [PATCH] LVM in 2.3.99-pre4-[12]
+Message-ID: <Pine.LNX.4.10.10004011710460.16258-100000@zeke.goatskin.org>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Chris Shelton <cshelton@indiana.edu>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm mailing list <linux-lvm@msede.com>
 
 
-Because the LVM library scans for a bunch of devices heading to find disks,
-the module loader tries to load the corresponding modules in case the drivers
-for these devices dont exist in the kernel.
+Hello all !
 
-In your case block-major-48 for eg. corresponds to the Mylex DAC960 driver
-which you probably dont have in your system.
+Part of the current LVM patch (patch-2.3.99-pre1-LVM-0.8final.gz)  for
+development  kernels fails when applied to kernels > 2.3.99-pre3.
 
-Basically you can either just ignore these messages _or_
-you can change /etc/conf.modules (or /etc/modules.conf) and
-set the value in the last field to "off" to avoid them.
+This is a little patch to fix that problem. Apply after
+applying patch-2.3.99-pre1-LVM-0.8final.gz
 
-Heinz
+This patch works for me and I think it is relatively safe (since it only
+touches the config file) but, I am not a coder and this is
+my first patch ever. So use at your own risk!
 
-> I've recently started using the LVM software on one of my systems, and
-> I've noticed that there are numerous messages are produced each time I run
-> vgscan:
-> 
-> Mar 30 13:50:19 fmslan kernel: LVM version 0.8i  by Heinz Mauelshagen
-> (02/10/1999) 
-> Mar 30 13:50:19 fmslan kernel: lvm -- Module successfully initialized 
-> Mar 30 13:50:20 fmslan modprobe: can't locate module block-major-48
-> Mar 30 13:50:22 fmslan last message repeated 63 times
-> Mar 30 13:50:22 fmslan modprobe: can't locate module block-major-49
-> Mar 30 13:50:23 fmslan last message repeated 63 times
-> Mar 30 13:50:27 fmslan kernel: cdrom: open failed. 
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-33
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-33
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-34
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-34
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-7
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-7
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-9
-> Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-9
-> 
-> I've added these two lines to my /etc/modules.conf:
-> alias block-major-58      lvm
-> alias char-major-109      lvm
-> 
-> The system is running kernel version 2.2.14, with version 0.8i of the LVM
-> patch.  
-> 
-> The filesystem created in the logical volume I have created seems to work
-> just fine, but I've not sure if I've missed something in the setup that is
-> causing these messages to appear.
-> 
-> Chris Shelton
-> 
-> 
+--- drivers/block/Config.in.orig        Fri Mar 31 12:23:42 2000
++++ drivers/block/Config.in     Fri Mar 31 12:31:41 2000
+@@ -49,6 +49,12 @@
+ #if [ "$CONFIG_MD_LINEAR" = "y" -o "$CONFIG_MD_STRIPED" = "y" ]; then
+ #   bool '    Boot support (linear, striped)' CONFIG_MD_BOOT
+ #fi
++
++ tristate 'Logical volume manager (LVM) support' CONFIG_BLK_DEV_LVM N
++ if [ "$CONFIG_BLK_DEV_LVM" != "n" ]; then
++    bool '   LVM information in proc filesystem' CONFIG_LVM_PROC_FS Y
++ fi
++
+ tristate 'RAM disk support' CONFIG_BLK_DEV_RAM
+ dep_bool '  Initial RAM disk (initrd) support' CONFIG_BLK_DEV_INITRD
+$CONFIG_BLK_DEV_RAM
 
-
--- 
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement TS                              T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ 
+Shane
