@@ -1,10 +1,8 @@
-From: Steven Lembark <lembark@wrkhors.com>
+Message-Id: <se1313e0.064@thpmail.tyndale.com>
+From: "Cameron Thorne" <CLT@tyndale.com>
 Subject: Re: [linux-lvm] lvmcreate_initrd failing...not sure why
-Message-ID: <617990000.1041459011@[192.168.200.4]>
-In-Reply-To: <se12cfa5.015@thpmail.tyndale.com>
-References: <se12cfa5.015@thpmail.tyndale.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,26 +14,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  1 16:02:01 2003
+Date: Wed Jan  1 16:15:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
+>> I am trying to convert my root file system over to LVM
+>
+>Don't.
 
--- Cameron Thorne <CLT@tyndale.com>
+Well, I have read that this is usually the best case before.  But it is =
+more just something I would like to do, not that I feel I need to.  It =
+*is* possible, right?  My system isn't mission critical and LVM is =
+something I have never messed with before, so I figured why not go all the =
+way and just use all my disks as PVs.
 
-> I am trying to convert my root file system over to LVM
+Your recommendation would be to keep root and swap out of LVM, and just =
+mount /usr /var /home as LVs?
 
-Don't. All you do is make it difficult to recover from LVM
-problems. If you mount the major filesystems (including
-/usr and /var) as LV's / only needs to be around 80MB
-for /bin, /lib, /etc, and /boot. For the minimal amount
-of space you use, why bother with it?
+Any idea why lvmcreate_initrd was failing?
 
-
-
-
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 8773 252 1080
+=AF Cameron
