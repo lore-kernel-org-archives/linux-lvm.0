@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] XFS crash on lvm
-From: Christophe Zwecker <czwecker@sysctl.de>
-In-Reply-To: <Pine.LNX.4.21.0204041116060.719-100000@miami.datech2.er.heitec.net>
-References: <Pine.LNX.4.21.0204041116060.719-100000@miami.datech2.er.heitec.net>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1017916499.5373.10.camel@fry.sysctl-office.de>
+From: =?iso-8859-1?q?Fr=E9d=E9ric=20Tronel?= <tronel@nerim.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <20020404210525.6FE4D40FCF@kraid.nerim.net>
+Subject: [linux-lvm] Problem with vgscan at boot time
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +13,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr  4 04:34:01 2002
+Date: Thu Apr  4 15:08:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Thu, 2002-04-04 at 11:18, Holger Rauch wrote:
+Hello,
 
-> 
-> What's the maximum hard drive space a 2.4.18 kernel is able to see without
-> the IDE patch applied? 
+I'm facing the following problem.
+I'm using a Debian system with a stock kernel 2.4.18 
+(lvm 1.0.1-rc4 LVM module, no patch applied) +
+lvm-tools 1.0.3 recompiled from source (not a debian
+package).
+I have my root filesystem on a first hard drive (hda) managed
+by the LVM. My  disks are organised as follows:
 
-like 134 GB or so I think., here my kernel boot msg withouth the patch:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/hdc1" of VG "extractible" 
+[55.89 GB / 45.89 GB free]
+pvscan -- ACTIVE   PV "/dev/hda2" of VG "disk" 
+[16.31 GB / 7.82 GB free]
+pvscan -- ACTIVE   PV "/dev/hda4" of VG "disk"
+[1.65 GB / 1.65 GB free]
+pvscan -- total: 3 [73.87 GB] / in use: 3 [73.87 GB] / in no VG: 0 [0]
 
-Apr  1 21:18:26 dumbo hdc: 268435455 sectors (137439 MB) w/2048KiB
-Cache, CHS=266305/16/63, UDMA(100)
+Everything was working perfectly, until I had a new disk (hdc).
+I have created a single huge 60G partition, and I have created a
+new voluume group ("extractible").
 
-with:
+I'm using an initrd at boot time created by lvmcreate_initrd.
+In the linuxrc script, there is a line calling vgscan.
+If I do NOT comment it, it fails with the following message:
 
-Apr  4 10:24:13 dumbo hdc: 320173056 sectors (163929 MB) w/2048KiB
-Cache, CHS=19929/255/63, UDMA(100)
+If I comment it, it still fails but with this new message:
 
-> Where did you get this IDE patch from?
-
-http://www.kernel.org/pub/linux/kernel/people/hedrick/ide-2.4.18/
-
-enjoy
-
-Christophe
--- 
-Christophe Zwecker
-:Sysctl				
-Susannenstr. 26-28		
-20357 Hamburg			
-phon/fax: +49 40 43099296/7		
-mail: czwecker@sysctl.de
+Any idea ?
