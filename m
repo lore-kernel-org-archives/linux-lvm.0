@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] PV#s are not unique
-Message-ID: <20011212091557.C629@sistina.com>
-References: <20011208170737.GA15685@marvin.palfrader.org> <20011211123626.C27568@sistina.com> <20011211182356.GA864@marvin.palfrader.org>
-Mime-Version: 1.0
-In-Reply-To: <20011211182356.GA864@marvin.palfrader.org>; from peter@palfrader.org on Tue, Dec 11, 2001 at 07:23:56PM +0100
+Message-Id: <200112121228.fBCCSGC18255@mailgate5.cinetic.de>
+MIME-Version: 1.0
+From: <gunther.kuhlmann@web.de>
+Subject: Re: [linux-lvm] pvmove killed vg
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,82 +14,166 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 12 02:16:01 2001
+Date: Wed Dec 12 06:26:07 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Dec 11, 2001 at 07:23:56PM +0100, Peter Palfrader wrote:
-> Hi Heinz!
-> 
-> On Tue, 11 Dec 2001, Heinz J . Mauelshagen wrote:
-> 
-> > But anyway:
-> > 
-> > you need to read te first sector of
-> > 
-> > /dev/ide/host0/bus1/target1/lun0/part1
-> > and
-> > /dev/ide/host0/bus0/target1/lun0/part1.
-> > 
-> > Change unsigned int value (4 byte) at decimal offset 432 to 5 for bus1
-> > and to 7 for bus0 which should give you unique numbering of PVs and store
-> > them back to the corresponding disks.
-> 
-> Thank you for your reply, I did this.  PVids are unique now, but vgscan
-> still does not find and activate the volume group.
-> 
-> Do you have something else I could try?
-> 
-> I think of trying to restore the metadata on all PVs using vgcfgrestore
-> since I have a few copies of vg_stuff.conf in /etc/lvmconf.  Would this
-> be a stupid idea?
+linux-lvm@sistina.com schrieb am 12.12.01:
 
-No, not at all. This is actually the recommended wayx to restore a messy VG ;-)
-You need to run "pvcreate -ff" on all of the (former) PVs and vgcfgrestore on
-each of them afterwards.
+Heinz,
 
-Could you save your VG's metadata before by running
+thank you for your answer! I've done the pvcreate -ff on all
+pv. One came up with ...volume group "<somegarbage>" where it
+should have said volume group "vg0". So that fixed something,
+I presume.
 
-for PV in YOurPVs
-   do dd if=/dev/$PV of=VGDA.${VGName}.$PV bs=1k count=512
-done
+But how do I run the vgcfgrestore on =5Fall=5F PV=3F When I specify
+one PV, it complains it can't restore part of active volume=20
+group. When I specify all PV's, it complains please enter
+physical volume name. How do I do this=3F Does this work with
+lvm 1.0.1=3F=20
 
-and storing the copies on tape or something so that we are able to backup
-for potential further investigation?
+Commands like vgdisplay complain the VG does not exist.
 
-> 
-> TIA
-> 					yours,
-> 					peter
-> 
-> -- 
->  PGP signed and encrypted  |  .''`.  ** Debian GNU/Linux **
->     messages preferred.    | : :' :      The  universal
->                            | `. `'      Operating System
->  http://www.palfrader.org/ |   `-    http://www.debian.org/
-> 
-> _______________________________________________
+As to your second suggestion: I have vg0.conf and vg0.<digit>.old
+in /etc/lvmconf. I assume you mean the first=3F
+
+Thanks for your input!
+
+Regards,
+
+Gunther
+
+> you need to run vgcfgrestore on *all* PVs which where in your=20
+vg0 *after*
+> running "pvcreate -ff" on them. YOu can find out which these=20
+where by
+> "vgcfgrestore -ll -n vg0 -f=20
+/etc/lvmconf/WhateverYourRecentBackupFileIs".
+>=20
+> If that doesn't work a hack to activate it anyway without=20
+running vgscan is
+> to copy /etc/lvmconf/WhateverYourRecentBackupFileIs (I assume
+> /etc/lvmconf/vg0.conf.cd in your case) to /etc/lvmtab.d/vg0,
+> "echo -en 'vg0\0vg1\0' > /etc/lvmtab" and "vgchange -ay".
+> Create a dummy LV with 1 PE afterwards and your=20
+> metadata on all PVs of the VG should be ok again.
+>=20
+> Remember to back /etc/lvmconf/ regularly when you change your=20
+LVM configuration!
+>=20
+> Regards,
+> Heinz    -- The LVM Guy --
+>=20
+>=20
+> We recommend to upgrade to LVM 1.0.1 because a couple of bugs=20
+(some related to
+> pvmove) have been fixed.
+> On Tue, Dec 11, 2001 at 10:34:24PM +0100,=20
+gunther.kuhlmann@web.de wrote:
+> > Hi,
+> >=20
+> > I've got a broken lvm vg as a result of an unsuccessful pvmove
+> > command. My system is a SuSE 7.0 with kernel 2.4.4 and
+> > lvm-0.9.1=5Fbeta7-10.=20
+> >=20
+> > The vg spans several partitions on one disks, one of which I=20
+> > wanted to evacuate. I used the pvmove command with chunks of=20
+> > 32 PE (=3D 1 GB); 10 GB total. The first 8 chunks worked okay,
+> > but the 9th (pvmove -v /dev/hda8:256-287 /dev/hda10) fell over
+> > with error code 23 while moving the fifth PE. So I checked=20
+using
+> > pvdisplay that the four PE had indeed been moved. A further
+> > attempt with pvmove -v /dev/hda8:260-287 /dev/hda10 fell over=20
+as
+> > well, again error code 23. (That's error moving physical
+> > extent(s)).=20
+> >=20
+> > I then rebooted the machine which killed the complete volume
+> > group. Which in turn did not quite impress me. :-((
+> >=20
+> > During my attempts at recovering I think I did a vgscan, which
+> > found the vg "vg1" on /dev/hdb, but not the vg "vg0" on=20
+/dev/hda.
+> >=20
+> > I tried the following commands unsuccessfully:
+> > - vgcfgrestore -v -n vg0: please enter physical volume name=20
+(the
+> >   synopsys of vgcfgrestore did not state it as a mandatory=20
+> > parameter)
+> > - vgcfgrestore -v -n vg0 /dev/hda10: can't restore part of=20
+active
+> > volume grout vg0
+> > - vgcfgrestore -v -n vg0 /dev/hda{6,7,8,10}: please enter=20
+physical
+> > volume name
+> > - vgchange -a n vg0: volume group vg0 does not exist
+> > - vgchange -a y vg0: volume group vg0 does not exist
+> >=20
+> > I still have the file /etc/lvmconf/vg0.conf.cd as well as the
+> > devices /dev/vg0/lv0{0,1,2,3} and /dev/vg0/group. (And
+> > /dev/vg1/..., but that is working.)
+> >=20
+> > Any suggestions on how I can recover the data would be highly
+> > appreciated. I found a reference to a program called
+> > uuid=5Ffixer/uuid=5Feditor, but usage was discouraged. Do I have=20
+to=20
+> > try it
+> > or is there a better way=3F Does upgrading to a newer version of=20
+lvm
+> > help=3F Or do I have to update the kernel as well then=3F And I=20
+> > definately
+> > do =5Fnot=5F want to kill my other vg as well.
+> >=20
+> > Regards,
+> >=20
+> > Gunther
+> >=20
+> >=20
+> >=20
+> >=20
+> >=20
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F
+> > Die sch=F6nsten Ski-Regionen der Alpen - jetzt bei Ferienklick.de
+> > http://ferienklick.de/ski/=3FPP=3D2-5-100-105-38
+> >=20
+> >=20
+> > =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at=20
+http://www.sistina.com/lvm/Pages/howto.html
+>=20
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>=20
+>=20
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+>=20
+> Heinz Mauelshagen                                 Sistina=20
+Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang=20
+11
+>                                                   56242=20
+Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+>=20
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+>=20
+> =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> read the LVM HOW-TO at=20
+http://www.sistina.com/lvm/Pages/howto.html=20
 
--- 
 
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
+Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr!=20
+Beim WEB.DE Lottoservice: http://tippen2.web.de/=3Fx=3D13
