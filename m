@@ -1,12 +1,7 @@
-Subject: Re: [linux-lvm] file system larger than lv
-Message-ID: <20021115134816.GL8377@pc.ilinx>
-References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com> <20021115122708.GK8377@pc.ilinx> <20021115135424.A12164@sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="KQSGybwJm5+gcNx6"
-Content-Disposition: inline
-In-Reply-To: <20021115135424.A12164@sistina.com>
-From: lvm@interlinx.bc.ca
+Message-ID: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
+From: Murthy Kambhampaty <murthy.kambhampaty@goeci.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] PostgreSQL and file system level backup
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,71 +12,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 07:50:02 2002
+Date: Fri Nov 15 15:26:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Postgres Admin List <pgsql-admin@postgresql.org>
+Cc: "Linux-Xfs (E-mail)" <linux-xfs@oss.sgi.com>, "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
---KQSGybwJm5+gcNx6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The postgresql documentation states that in order to get a usable backup
+from a filesystem dump (or copy) the database server must be shut down.
+Moreover, "Half-way measures such as disallowing all connections will not
+work as there is always some buffering going on. For this reason it is also
+not advisable to trust file systems that claim to support "consistent
+snapshots"."
 
-On Fri, Nov 15, 2002 at 01:54:24PM +0100, Heinz J . Mauelshagen wrote:
->=20
-> Brian,
+Just to make certain, is this true with running xfsdump on an LVM snapshot
+of the XFS filesystem? My question was prompted by a recent post on the
+linux-xfs list in which one of the xfs maintainers pointed out that xfsdumps
+are cache coherent. In response to my preliminary question, Tom Lane pointed
+out that:
 
-Hi Heinz.
+"Unless the postmaster is shut down meanwhile, you'll probably end up with a
+corrupt database.  The problem is that xfsdump does not give you an
+instantaneous snapshot of the filesystem state, so you will probably collect
+inconsistent contents of the various files that make up the database."
 
-> yes, at the end of the day you can't prevent people with the necessary
-> credentials from shooting themselves in the foot anyways.
-> That occasionally includes me.
-> At least at ~4pm in the morning ;)
+Which gives rise to my present question: given that LVM DOES give an
+instantaneous snapshot of the filesystem, would an xfsdump of an LVM
+snapshot of an XFS filesystem give usable backups?
 
-I hear ya.  Me too.  :-)
+Thanks,
+	Murthy
 
-> Because LVM is a block layer service transparent to filesystems or any ot=
-her
-> arbitrary block device user, it should just cover the necessary block dev=
-ice
-> functionality.
-
-I don't disagree with that.
-
-> Putting additional overloading block/filesystem layer services not necess=
-arily
-> needed there into the kernel is unlikely to be accepted either IMO.
-
-No.  No.  Not in the kernel.  I mean the user space tools can simply
-check what data is on the block device (i.e. look for a known
-signature of given filesystems) and see if it can determine if it is
-indeed a filesystem.
-
-> Controlling LVM block device and filesystem changes in userspace with an
-> (e2)fsadm tool is a "helping hand" for the unexperienced, not limiting
-> the experienced user.
-> This is our prefered way to go.
-
-That is fair enough.  And I don't care that strongly about this issue,
-but just thought of how many tools (in their "interactive mode"
-anyway) stop and ask a user before they are about to do something
-potentially disasterous.
-
-b.
-
---=20
-Brian J. Murrell
-
---KQSGybwJm5+gcNx6
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQE91Psbl3EQlGLyuXARAvZNAKC3yofruNgR06pusr0JsNUhtG2l+QCfQHiJ
-DJa+MomrHo0beZbm/8LyyWE=
-=k2bk
------END PGP SIGNATURE-----
-
---KQSGybwJm5+gcNx6--
---KQSGybwJm5+gcNx6--
+PS: Our databases have crossed the 100 GB size, with some tables reaching 25
+GB, so pg_dump is taking more than 5 hours to complete (changing the level
+of compression in custom format dump files from 6 to 1 did not significantly
+reduce the dump duration). Otherwise, pg_dump-ing the database (and copying
+the .conf files) was just dandy.
