@@ -1,10 +1,10 @@
 Return-Path: <bcorsello@usa.net>
-Date: Sun, 07 Jan 2001 14:53:31 -0500
+Date: Sun, 07 Jan 2001 14:53:40 -0500
 From: Brad Corsello <bcorsello@usa.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-Path: bcorsello@usa.net
-Message-ID: <014b64953190711NYCSMTP1@nyc.rr.com>
+Message-ID: <0226f5953190711NYCSMTP3@nyc.rr.com>
 Subject: [linux-lvm] Possible bug in vgcfgrestore?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
