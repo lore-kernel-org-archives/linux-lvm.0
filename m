@@ -1,10 +1,13 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 13 Mar 2001 13:25:10 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Return-Path: <lewis@sistina.com>
+Date: Tue, 13 Mar 2001 10:10:40 -0600
+From: AJ Lewis <lewis@sistina.com>
 Subject: Re: [OT] Re: [linux-lvm] *** ANNOUNCEMENT ***  LVM 0.9.1 Beta 6  available at www.sistina.com
-Message-ID: <20010313132510.C11305@sistina.com>
+Message-ID: <20010313101040.C15679@sistina.com>
 References: <20010313012136.A10157@sistina.com> <Pine.LNX.4.21.0103131227130.28428-100000@www.scotty.co.at>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7gGkHNMELEOhSGF6"
+Content-Disposition: inline
 In-Reply-To: <Pine.LNX.4.21.0103131227130.28428-100000@www.scotty.co.at>; from fl@fl.priv.at on Tue, Mar 13, 2001 at 12:31:21PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -17,115 +20,58 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+
+--7gGkHNMELEOhSGF6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 On Tue, Mar 13, 2001 at 12:31:21PM +0100, Friedrich Lobenstock wrote:
 > On Tue, 13 Mar 2001, Heinz J. Mauelshagen wrote:
-> 
+>=20
 > > See the CHANGELOG file contained in the tarball for further information.
-> 
+>=20
 > Despite the CHANGELOG is in the tarball, could you please
-> post its content to this list. 
-
-Sure, I will.
-
-> 
+> post its content to this list.=20
+>=20
 > I think a lot of people who are watching this list like me,
 > don't want to test every beta release but would like to know
 > what's going on.
 
-Here  it is:
+There is a CHANGELOG on the ftp site as well:
+ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/CHANGELOG
 
-<BEGIN Logical Volume Manager Changelog>
-
-Changelog for 0.9.1_beta5 to 0.9.1_beta6
-----------------------------------------
-
-LVM
----
-
-o **IMPORTANT** IOP version has moved back to 10, make sure tools and
-kernel driver are both upgraded to beta6, if you are running beta5.
-
-Driver
-------
-
-o Fixes to get LVM working on UltraSPARC boxes.  Note this requires an
-  additional kernel patch.
-
-o Fixed bug in lvm_do_lvcreate() in order to avoid invalid accesses
-  to user space addresses in vg->lv[]
-
-o factored lvm_get_snapshot_use_rate out of blk_ioctl
-
-o introduced the P_DEV macro and changed some internal functions to be static
-
-o Added VG_CREATE_OLD ioctl for IOP 10 compatibility
-
-o Reverted IOP back to 10
-
-o lvextend/reduce was stamping over the snapshot semaphore causing an oops.
-  This fixes the reiserfs + lvextend problem reported on the mailing list
-
-o status that a snapshot was dropped is now stored on disk in order to be
-  restored correctly by vgchange
-
-o new lvm-release.h include reflecting the version
-
-o lvm locking is now fixed
-
-o bmap IOCTL changes for LILO support
-
-Tools
------
-
-o pvdata -U now works
-
-o lvdisplay on an original LV no lists the active/inactive status per snapshot
-
-o lvscan now shows the target for a snapshot LV
-
-o vgchange now informs the administrator about dropped snapshots and restores
-  them correctly in order to be able to lvremove them
-
-
-Library
--------
-
-o -fPIC flag now used when building shared libs.
-
-Install
--------
-
-<END Logical Volume Manager Changelog>
-
-> 
-> 
-> Regards
-> Friedrich Lobenstock
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
+This is updated for every release.
 
 Regards,
-Heinz    -- The LVM Guy --
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-----Begin Obligatory Humorous Quote----------------------------------------
+Carpe Aptenodytes! (Seize the Penguins!)
+-----End Obligatory Humorous Quote------------------------------------------
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--7gGkHNMELEOhSGF6
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6rkaApE6/iGtdjLERAjYNAJ0dV9tEgi3fzxpVUIz9lQREuj1xMACfbT17
+i5VTrrPvt7H8+CLmCBlQGkg=
+=I4bn
+-----END PGP SIGNATURE-----
+
+--7gGkHNMELEOhSGF6--
