@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] upgrade to rh7.3 broke lvm
-Message-ID: <20020722130252.B23420@sistina.com>
-References: <3D358A8D.27A77928@mooncrest.net>
-Mime-Version: 1.0
-In-Reply-To: <3D358A8D.27A77928@mooncrest.net>; from yossi@Mooncrest.Net on Wed, Jul 17, 2002 at 05:17:33PM +0200
+From: Melinda Taylor <melinda@phys.unsw.edu.au>
+Message-ID: <Pine.OSF.4.33.0207231638100.7125-100000@newt.phys.unsw.edu.au>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM newbie question.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,55 +12,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jul 22 06:13:02 2002
+Date: Tue Jul 23 01:49:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Yossi,
+Hello :)
 
-the upgrade should have brought you compatible user space and kernel LVM parts.
+I am about to setup LVM for the first time on a new server I have just
+installed redhat on. And I have a few questions.
 
-Can you find your VG(s) running vgdisplay?
+When I do a pvcreate on say /dev/sda1 does that destroy all the existing
+data on that partition?
 
-/dev/mg0 is no valid logical volume name to be use for mounting.
-Must be something like /dev/YourVGName/YourLVName.
+Which is better for pvcreate to be used on a whole disk (pvcreate
+/dev/sda) and destroy all the underlying data or for me to merge all my
+existing paritions over to PV to combine in a volume group? Is there any
+advantage over either?
 
-On Wed, Jul 17, 2002 at 05:17:33PM +0200, Yossi wrote:
-> Upgraded from RH7.1 to RH7.3. The 7.1 was built with the lvm patch to
-> the kernel. The 7.3 RH kernel has lvm built in. After the upgrade, I
-> receive the message "/dev/mg0 not a block device" when I try to mount
-> it. I tried exporting the vg and importing it without errors but it
-> still doesn't mount. I suspect that this may be due to different
-> versions of the kernel part of the lvm versus the usermode parts of lvm.
-> 
-> Thanks for any help,
-> 
-> L. Baker
-> MVS, Ltd.
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+I've read the LVM how-to and am stilll alittle confused having never done
+it in practice. One part of the how-to said converting a root system to
+LVM is not recommended. SHould your OS directories /var / /boot
+etc all not be included in the LVM? That was the main idea behind me
+implementing LVM so that specific partitions (say var) could be resized at
+a later date if needed.
 
--- 
+Will I have any trouble restoring my system (which I backed up using dd
+with a BS of 1024k) Do I have to make the LV the same size as my original
+partition were for this to work?
 
-Regards,
-Heinz    -- The LVM Guy --
+Many Thanks for any help. I am just a bit confused as to where to step to
+start.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Thanks,
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+melinda
