@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Core questions from a LVM neophyte...    [OT]
-Message-ID: <20030314120825.A12579@sistina.com>
+Subject: Re: re[4]: [linux-lvm] Core questions from a LVM neophyte...    [OT]
+From: Christopher Barry <cbarry@infiniconsys.com>
+In-Reply-To: <20030314004933.LWHV7626.imf56bis.bellsouth.net@tiger2>
 References: <20030314004933.LWHV7626.imf56bis.bellsouth.net@tiger2>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1047640166.30781.1.camel@tetra>
 Mime-Version: 1.0
-In-Reply-To: <20030314004933.LWHV7626.imf56bis.bellsouth.net@tiger2>; from freemyer@NorcrossGroup.com on Thu, Mar 13, 2003 at 07:58:44PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,25 +15,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 14 05:10:02 2003
+Date: Fri Mar 14 05:12:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Mar 13, 2003 at 07:58:44PM -0500, Greg Freemyer wrote:
+Oops - not sure what I was thinking. I spaced the win2k part - sorry.
+What we're doing with gfs is: 
+
+linuxBox LinuxBox LinuxBox 
+   \\       ||       // 
+    \\      ||      // 
+     \\     ||     // 
+      \\    ||    // 
+       \\   ||   // 
+        \\  ||  // 
+         \\ || // 
+     FiberChannelArray 
+
+where each LinuxBox mounts the same slices out of the array, and a lock
+server manages access to the slices for all connected nodes. I'm told
+future releases of gfs will incorporate a redundant lock-serving
+mechanism into the nodes themselves. 
+
+If *only* there were a driver for win2k... Or better, if you could just
+figure out how to migrate off of win2k as a server. 
+
+
+-Christopher 
+
+
+
+
+
+On Thu, 2003-03-13 at 19:58, Greg Freemyer wrote: 
 > Chris,
 > 
 > GFS can do a block level export to Win2K such that Win2K presents the Virtual Disk as a local disk?
-
-No, GFS is a shared disk filesystem which can be exported to Win$ as such
-(i.e. via Samba).
-
-Sure you could stack loop onto a GFS file and export that ;)
-
-Regards,
-Heinz    -- The LVM Guy --
-
 > 
 > i.e.
 > create a tiered environment of 
@@ -214,16 +233,3 @@ Heinz    -- The LVM Guy --
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
