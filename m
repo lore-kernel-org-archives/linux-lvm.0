@@ -1,10 +1,10 @@
-Return-Path: <jeffrey.b.layton@lmco.com>
-Date: Mon, 19 Feb 2001 08:15:48 -0500
-From: Jeffrey B Layton <jeffrey.b.layton@lmco.com>
-Message-id: <3A911C83.3E562007@lmco.com>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Subject: [linux-lvm] Startup/Shutdown scripts for RH6.2?
+Return-Path: <lda@winux.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <14993.17840.666402.870140@nv.winux.com>
+Date: Mon, 19 Feb 2001 11:11:28 -0500
+From: lvm@winux.com
+Subject: [linux-lvm] snapshot of Reiserfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,16 +19,22 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hello,
+I am using LVM 0.9.1 beta 4 on Linux 2.4.1 with Reiserfs.
 
-   Of course I'm a newbie :) I'm been experimenting with LVM
-prior to a production installation. I've got everything working
-pretty well with a RH6.2 installation and a custom kernel.
-However, I'm a bit stuck on the startup/shutdown scripts. I've
-tried a couple of things after searching the archives, but nothing
-seems to work (i.e. the volume groups are not found and then
-mount complains very loudly). Any suggestions/tips/code?
+Snapshots created when the filesystem is active cannot be mounted.
+If I `umount' the filesystem before creating the snapshot, all is well.
 
-TIA,
+I searched the mailing list archives and found a thread that dealt
+with this problem on Linux 2.4.0 by applying a patch that flushed
+the buffers before creating the snapshot:
 
-Jeff Layton
+  http://lists.sistina.com/pipermail/linux-lvm/2000-December/005512.html
+
+This is clearly the problem I'm seeing.
+
+Is there a comparable patch for 2.4.1?
+
+Will the fix become "standard" in 2.4.2
+so that patching is no longer necessary?
+
+Larry
