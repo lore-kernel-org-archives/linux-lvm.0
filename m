@@ -1,30 +1,34 @@
-Date: Tue, 11 Apr 2000 21:01:10 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm'ing root fs
-Message-ID: <20000411210109.A20092@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <38F2C2BB.BE0AD186@twc.de> <2447.000411@comlineag.de>
-Mime-Version: 1.0
-In-Reply-To: <2447.000411@comlineag.de>
+Message-ID: <38F371A9.E4639CC5@msede.com>
+Date: Tue, 11 Apr 2000 20:40:41 +0200
+From: Michael Marxmeier <mike@msede.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM, hardware raid and stride...
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-On Tue, Apr 11, 2000 at 10:43:46AM +0200, Jens Bruckmann wrote:
-> I used cpio for this:
-> 
-> find /sourcedir -print | cpio -pvumdl /destdir
+Forwarded message from Wesley Darlington (wesley@blackstar.co.uk) ...
 
-thass better, if u have gnu find & cpio use
-find /sourcedir -print0 | cpio -0padmuV
-(-0 deals with files with \n embedded, -l in your command
-would try to link files)
+-------- Original Message --------
+Date: Tue, 11 Apr 2000 15:50:00 +0100
+From: Wesley Darlington <wesley@blackstar.co.uk>
+Subject: LVM, hardware raid and stride...
+Message-ID: <20000411155000.A3774@tux.blackstar.co.uk>
 
-L.
+Hi folks,
 
--- 
-Luca Berra -- bluca@comedia.it
-    Communication Media & Services S.r.l.
+When creating ext2 filesystems upon hardware raid arrays, it is
+traditional
+to pass the "stride" parameter to mke2fs so that it can magically
+optimise 
+the filesystem layout for the array's chunksize/stridesize.
+
+How, if at all, does lvm interfere with this magic? Can any lvm
+parameters
+be tuned to take advantage of arrays?
+
+Thanks,
+Wesley.
