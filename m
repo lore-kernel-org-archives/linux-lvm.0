@@ -1,9 +1,9 @@
 Return-Path: <c.brunnkvist@speednames.com>
-Message-ID: <909EA7234316394F80BBB70A85A1EB389607D9@hermes.dimac.net>
+Message-ID: <909EA7234316394F80BBB70A85A1EB389607DA@hermes.dimac.net>
 From: "Conny Brunnkvist / dimac.net" <c.brunnkvist@speednames.com>
-Date: Tue, 26 Jun 2001 09:55:10 +0200
+Subject: RE: [linux-lvm] lvm_chr_ioctl / unable to activate vg
+Date: Tue, 26 Jun 2001 11:45:29 +0200
 MIME-Version: 1.0
-Subject: [linux-lvm] lvm_chr_ioctl / unable to activate vg
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,38 +19,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hello everyone. After searching around a bit in the list-archives, I still
-can't figure out exactly how to advance.. This is my problem: 
-I was running kernel 2.4.3 (stock) and LVM tools some-earlier-version than
-0.9.1_beta6.. I recently switched to kernel 2.4.4 because I heard that it
-contained lots of LVM and ReiserFS(my FS of choice) related fixes. 
-In the same swing, I also installed the LVM tools from the latest packages
-for slackware, 0.9.1_beta6.
+> vgchange -- creating VGDA for "vg0" in kernel
+> lvm -- lvm_chr_ioctl: unknown command 4004fe0a
+> vgchange -- ERROR "Invalid argument" activating volume group "vg0"
 
-After rebooting into 2.4.4, the volume group wouldn't activate, so I
-switched back to 2.4.3 but now it didn't work there either! Got exactly the
-same error message: 
+> So, I speculate it has to do with the change of userland 
+> tools versions...
 
-# vgchange -v -ay
-vgchange -- locking logical volume manager
-vgchange -- finding all volume group(s)
-vgchange -- checking volume group name "vg0"
-vgchange -- checking existence of volume group "vg0"
-vgchange -- reading volume group data for "vg0" from lvmtab
-vgchange -- checking volume group consistency of "vg0"
-vgchange -- checking if all physical volumes of volume group "vg0" are
-available
-vgchange -- creating VGDA for "vg0" in kernel
-lvm -- lvm_chr_ioctl: unknown command 4004fe0a
-vgchange -- ERROR "Invalid argument" activating volume group "vg0"
+I just found out that it was v0.9 I had used before, and when I switched
+back to that version it started working again! With kernel 2.4.4 and all.
+Perhaps that error message wasn't intuitive enough for me... 8-)
 
-vgchange -- unlocking logical volume manager
+Now I'm just curious about what will happen when I upgrade to v1.0...
 
-
-So, I speculate it has to do with the change of userland tools versions...
-Too bad I just can't remember which version I ran before the reboot... 
-
-Any help on what I should do to get it up and running again would be
-appreciated. I really don't want to loose any data! :-F
+Anyhow, thanks for a wonderful piece of software! ;)
 
 //conny
