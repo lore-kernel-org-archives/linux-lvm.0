@@ -1,21 +1,14 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5KJrGj2006275
-	for <linux-lvm@redhat.com>; Sun, 20 Jun 2004 20:53:16 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1Bc8NQ-0000oo-Gv
-	for linux-lvm@redhat.com; Sun, 20 Jun 2004 20:53:16 +0100
-Date: Sun, 20 Jun 2004 20:53:16 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] LVM2 seems to chop performance by 33%
-Message-ID: <20040620195316.GT6302@agk.surrey.redhat.com>
-References: <40C86F52.4090500@dgreaves.com>
-	<200406101105.47606.StuartHarper@tampabay.rr.com>
-	<40C87F8A.7080304@dgreaves.com>
-	<1086885029.13087.15.camel@localhost>
-	<40D5D4D6.9020307@dgreaves.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <40D5D4D6.9020307@dgreaves.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5L80k007241
+	for <linux-lvm@redhat.com>; Mon, 21 Jun 2004 04:00:46 -0400
+Received: from fmx7.freemail.hu (fmx7.freemail.hu [195.228.242.227])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i5L80je1026032
+	for <linux-lvm@redhat.com>; Mon, 21 Jun 2004 04:00:45 -0400
+Date: Mon, 21 Jun 2004 10:00:05 +0200 (CEST)
+From: Moha Snipa1 <snipa1@freemail.hu>
+Message-ID: <freemail.20040521100005.60543@fm7.freemail.hu>
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm2 install problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,22 +19,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Sun, Jun 20, 2004 at 07:17:58PM +0100, David Greaves wrote:
-> No-one ever replied as to why blockdev --setra / --getra is not the same 
-> as that displayed in lvdisplay
-> And it's not documented that I can find. There's a comment: "Not used by 
-> device-mapper." And that means.....?
+hello,
 
-Any LVM read ahead setting is ignored by LVM2 i.e. not passed to the kernel.
+i have a problem when I try to install the LVM2!
+well, I use a 2.6.7 kernel with device mapper support...
+I have installed device-mapper.1.00.07 and now i try to install LVM2.2.
+00.16 but I get this error message!
 
-If it's demonstrated to be useful it could still be implemented, but
-the current development priorities are still correctness and new features 
-rather than performance.
 
-Alasdair
--- 
-agk@redhat.com
+gcc -c -I. -I../include -DLVM1_INTERNAL -DSNAPSHOT_INTERNAL 
+-DMIRRORED_INTERNAL -DDEVMAPPER_SUPPORT -DO_DIRECT_SUPPORT 
+-DHAVE_LIBDL -DHAVE_GETOPTLONG -fPIC -Wall -Wundef -Wshadow 
+-Wcast-align -Wwrite-strings -Wmissing-prototypes 
+-Wmissing-declarations -Wnested-externs -Winline -O2 cache/lvmcache.
+c -o cache/lvmcache.o
+activate/activate.c: In function `target_present':
+activate/activate.c:302: `DM_DEVICE_LIST_VERSIONS' undeclared (first 
+use in this function)
+activate/activate.c:302: (Each undeclared identifier is reported only once
+activate/activate.c:302: for each function it appears in.)
+activate/activate.c:313: warning: implicit declaration of function 
+`dm_task_get_versions'
+activate/activate.c:313: warning: assignment makes pointer from 
+integer without a cast
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:318: dereferencing pointer to incomplete type
+activate/activate.c:323: dereferencing pointer to incomplete type
+make[1]: *** [activate/activate.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: Leaving directory `/usr/local/src/LVM2.2.00.16/lib'
+make: *** [lib] Error 2
+
+
+what's the problem? can anyone help me?
+
+Snipa
