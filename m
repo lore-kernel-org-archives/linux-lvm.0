@@ -1,10 +1,9 @@
-From: "Jonathan DeHaan" <jdehaan@home.com>
-Subject: RE: [linux-lvm] lvcreate is segfaulting
-Date: Sun, 9 Sep 2001 12:58:37 -0400
-Message-ID: <000101c13950$ab0e69e0$0400a8c0@ci696011a.lxintn1.ky.home.com>
+From: Andreas Gorf <estevesgorf@freenet.de>
+Date: Sun, 09 Sep 2001 16:55:30 GMT
+Message-ID: <20010909.16553000@host.domain.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20010908214133.88257.qmail@web13908.mail.yahoo.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Problems with pvmove
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,167 +15,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-I had the same problem - it was fixed when I configured
-with --enable-static_link.
+I've followed the discussion started by =84fejf=93.
 
-Jonathan DeHaan
-jdehaan@home.com
+Indeed i have the same problem that pvmove exits with an error when i tr=
+y=20
+to
+move PEs from one PV to another.
 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of William Vadnais
-> Sent: Saturday, September 08, 2001 5:42 PM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] lvcreate is segfaulting
->
->
->
-> [root@mp3gimp /root]# lvcreate -L6G -nnew -v test
-> lvcreate -- checking volume group name "test"
-> lvcreate -- checking volume group existence
-> lvcreate -- checking volume group activity
->  [other verbosity removed]
-> lvcreate -- setting up logical volume
-> lvcreate -- setting read ahead sectors
-> lvcreate -- creating logical volume VGDA in kernel
-> Segmentation fault (core dumped)
->
-> >>>>>>>>>>>>>>>>>>>>>>>>>>>
->
-> [root@mp3gimp linux]# dmesg | ksymoops
-> No modules in ksyms, skipping objects
-> Warning (read_lsmod): no symbols in lsmod, is
-> /proc/modules a valid lsmod file?
-> cpu: 0, clocks: 997540, slice: 498770
->   Receiver lock-up bug exists -- enabling work-around.
-> ds: no socket drivers loaded!
->
-> 2 warnings issued.  Results may not be reliable.
->
-> >>>>>>>>>>>>>>>>>>>>>>>>>>>>
->
-> LVM is compiled directly into kernel, not as a module.
->
-> I did remove completely the tools from the non CVS
-> version and then reinstalled LVM from the CVS source
-> (i did this previously, not just now ;)
->
-> [root@mp3gimp src]# strings /sbin/lvcreate | grep CVS
-> liblvm-10.so.CVS
-> Logical Volume Manager CVS
-> Heinz Mauelshagen, Sistina Software  CVS_DATE
-> [root@mp3gimp src]#
->
-> Thanks for the help, btw, it is much appreciated.
->
-> Cheers,
-> -Willie
->
->
-> --- svetljo <galia@st-peter.stw.uni-erlangen.de>
-> wrote:
-> > my mistake
-> >
-> > have you tried
-> > lvcreate -L6G -nnew -v test
-> > and you did installed the tools and lib form the cvs
-> > tree
-> >
-> > is there smth  in "demsg | ksymoops"
-> >
-> > William Vadnais wrote:
-> >
-> > >it was a typo on my part. The patch is installed
-> > >correctly. I don't have a /proc/lvm/general, but
-> > here
-> > >is /proc/lvm/global:
-> > >
-> > >[root@mp3gimp lvm]# ls /proc/lvm
-> > >global  VGs
-> > >[root@mp3gimp lvm]# cat /proc/lvm/global
-> > >LVM driver LVM version CVS(CVS_DATE)
-> > >
-> > >Total:  1 VG  1 PV  0 LVs (0 LVs open)
-> > >Global: 3167 bytes malloced   IOP version: 10
-> > >5:49:19 active
-> > >
-> > >VG:  test  [1 PV, 0 LV/0 open]  PE Size: 4096 KB
-> > >  Usage [KB/PE]: 8949760 /2185 total  0 /0 used
-> > >8949760 /2185 free
-> > >  PV:  [AA] sdb                    8949760 /2185
-> >
-> > >    0 /0        8949760 /2185
-> > >    LVs: none
-> > >[root@mp3gimp lvm]#
-> > >
-> > >
-> > >--- svetljo <galia@st-peter.stw.uni-erlangen.de>
-> > >wrote:
-> > >
-> > >>>
-> > >>>dir then a cd /usr/src/linux and a patch < p1
-> > using
-> > >>>
-> > >>that's a typo i couldn't be misstaken ?
-> > >>
-> > >>you could do
-> > >>
-> > >>.... ; cd PATCHES ;make ; cat lvm-CVS-2.4.9.patch
-> > |
-> > >>patch -p1 -d
-> > >>/usr/src/linux
-> > >>
-> > >>and what tells  " cat /proc/lvm/general " , could
-> > >>you attach it
-> > >>
-> > >>
-> > >>_______________________________________________
-> > >>linux-lvm mailing list
-> > >>linux-lvm@sistina.com
-> >
-> >>http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > >>read the LVM HOW-TO at
-> > >>
-> > >http://www.sistina.com/lvm/Pages/howto.html
-> > >
-> > >
-> > >__________________________________________________
-> > >Do You Yahoo!?
-> > >Get email alerts & NEW webcam video instant
-> > messaging with Yahoo! Messenger
-> > >http://im.yahoo.com
-> > >
-> > >_______________________________________________
-> > >linux-lvm mailing list
-> > >linux-lvm@sistina.com
-> > >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > >read the LVM HOW-TO at
-> > http://www.sistina.com/lvm/Pages/howto.html
-> > >
-> >
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at
-> http://www.sistina.com/lvm/Pages/howto.html
->
->
->
-> __________________________________________________
-> Do You Yahoo!?
-> Get email alerts & NEW webcam video instant messaging with Yahoo!
-> Messenger
-> http://im.yahoo.com
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+To exclude the possibility of a defect HD i tried to reproduce the error=
+=20
+on several
+independent systems.
+
+The error always occurs when i try to move a complete filled PV to=20
+another. In this case all but the last
+PE on this PV are moved. The last one isn't movable whatever i did.
+
+If the PV wasn't filled at 100% everything goes fine.
+
+To reproduce the error try the following:
+
+- create a VG with three Pvs at the same size
+- create a LV which covers the first PV completely and the second partly=
+
+- try to all PEs from the first PV to the third - the error will occur
+- move the moved PEs back to the first PV - everything goes fine
+- try to move the PEs lying on the second PV to the third - everything=20
+goes fine
+
+
+...any ideas?
+
+
+Andreas...
