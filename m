@@ -1,9 +1,9 @@
-Content-Class: urn:content-classes:message
+Message-ID: <005801c161dc$1bbd6160$0a5c010a@ultra>
+From: "Klaus Pedersen" <ultra@mailme.dk>
+References: <002e01c161d6$7fa8a960$0a5c010a@ultra> <20011030235208.F800@lynx.no>
+Subject: Re: [linux-lvm] Re: After power outtage my vg is gone
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] LVM and 2.4.13
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FFD0@mailsrv.linkvest.com>
-From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,125 +14,97 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 31 01:03:08 2001
+Date: Wed Oct 31 01:15:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Try with the tools from lvm1rc1 or rc2. It corrected that for me. Kernel
-can be in rc4 though.
--jec
+I think that gave a little breakthrough :-)
+First of all - as murphys law suggests, I don't have a backup to use with
+vgcfgrestore - but with the tool I did manage to recreate both /etc/lvmtab
+and /etc/lvmtab.d :
 
-> -----Original Message-----
-> From: James Kelty [mailto:jamesk@ashlandagency.com]
-> Sent: mardi, 30. octobre 2001 20:42
-> To: linux-lvm@sistina.com
-> Subject: RE: [linux-lvm] LVM and 2.4.13
->=20
->=20
-> No.
->=20
->=20
-> root@warbaby: ~ >> lvcreate -L73G vg00
-> Segmentation fault (core dumped)
-> root@warbaby: ~ >>
->=20
-> -James
->=20
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com=20
-> [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Patrick Boutilier
-> Sent: Tuesday, October 30, 2001 11:39 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] LVM and 2.4.13
->=20
->=20
-> Does this work?
->=20
-> lvcreate -L73G vg00
->=20
->=20
->=20
->=20
-> James Kelty wrote:
->=20
-> >Ok,
-> >
-> >I created a new kernel using the latest patch from lvm 1.0.1-rc4.  I
-> >compiled it into the kernel, and it loads pretty well.
-> >
-> >I have a new 100GB drive that I carved into 4 slices w/ 8e=20
-> as the type, did
-> >the pvcreate w/o any problems,
-> >created the vg00 volume group. But! When I try to create the logical
-> volume,
-> >I get a Seg Fault and core dump.
-> >
-> >What's the deal?
-> >
-> >
-> >--- Volume group ---
-> >VG Name               vg00
-> >VG Access             read/write
-> >VG Status             available/resizable
-> >VG #                  0
-> >MAX LV                255
-> >Cur LV                0
-> >Open LV               0
-> >MAX LV Size           255.99 GB
-> >Max PV                255
-> >Cur PV                3
-> >Act PV                3
-> >VG Size               73.24 GB
-> >PE Size               4.00 MB
-> >Total PE              18750
-> >Alloc PE / Size       0 / 0
-> >Free  PE / Size       18750 / 73.24 GB
-> >VG UUID               5d6C0e-zgYC-jWju-6Vx1-mzlo-AY0n-kAlDPd
-> >
-> >root@warbaby: ~ >> lvcreate -L73.24G vg00
-> >lvcreate -- rounding up size to physical extent boundary "73.24 GB"
-> >Segmentation fault (core dumped)
-> >root@warbaby: ~ >> lvcreate -L73.00G vg00
-> >Segmentation fault (core dumped)
-> >root@warbaby: ~ >>
-> >
-> >
-> >
-> >
-> >
-> >-James
-> >
-> >--
-> >James Kelty
-> >Sr. Unix Systems Administrator
-> >The Ashland Agency
-> >541.488.0801
-> >jamesk@ashlandagency.com
-> >
-> >
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
->=20
->=20
->=20
->=20
+Vault:/home/ultra# vgcfgrestore -n site_vg /dev/hda8
+vgcfgrestore -- VGDA for "site_vg" successfully restored to physical volume
+"/dev/hda8"
+
+Vault:/home/ultra# vgcfgrestore -n site_vg /dev/hdb1
+vgcfgrestore -- VGDA for "site_vg" successfully restored to physical volume
+"/dev/hdb1"
+
+the only problem is that they are both really empty, so with vgscan I find
+nothing :
+
+Vault:/etc# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
+
+But to my big relief, the data is still present on the physical drives :
+
+Vault:/etc# pvdisplay /dev/hda8
+--- Physical volume ---
+PV Name               /dev/hda8
+VG Name               site_vg
+PV Size               14.1 GB / NOT usable 1.21 MB [LVM: 135 KB]
+PV#                   2
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              3610
+Free PE               108
+Allocated PE          3502
+PV UUID               W9tkR7-eq02-6WBM-CBrU-Cdeb-I32v-RyFuLn
+
+
+Vault:/etc# pvdisplay /dev/hdb1
+--- Physical volume ---
+PV Name               /dev/hdb1
+VG Name               site_vg
+PV Size               57.25 GB / NOT usable 3.96 MB [LVM: 178 KB]
+PV#                   1
+PV Status             NOT available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              14654
+Free PE               0
+Allocated PE          14654
+PV UUID               u5vBzC-Hwu5-mjAt-5yN0-lS4E-crto-1jI9NZ
+
+
+Thanks for the help so far Andreas, but where do I go from here ?
+
+Thanks in advance
+
+Klaus Pedersen
+
+----- Original Message -----
+From: "Andreas Dilger" <adilger@turbolabs.com>
+To: <linux-lvm@sistina.com>
+Sent: Wednesday, October 31, 2001 7:52 AM
+Subject: Re: [linux-lvm] Re: After power outtage my vg is gone
+
+
+> On Oct 31, 2001  07:37 +0100, Klaus Pedersen wrote:
+> > I really need help on this - sorry to send another request for help.
+> > Does anybody have a clue ? anything that can help me remount my vg
+without
+> > dataloss if possible ?
+> > Can anybody point me to documentation in saving a vg ? or a newsgroup on
+> > usenet I can try ?
+>
+> Try "vgcfgrestore".
+>
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+>
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->=20
