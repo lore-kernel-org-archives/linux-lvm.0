@@ -1,8 +1,7 @@
-Message-ID: <20021211122440.GA20881@reti>
-Mime-Version: 1.0
-Content-Disposition: inline
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
-Subject: [linux-lvm] 2.5.51-dm-1
+Message-ID: <20021211202224.79940.qmail@web40906.mail.yahoo.com>
+From: Tru64 User <tru64user@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] pvcreate -- ERROR "Success"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,86 +12,225 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 11 06:24:02 2002
+Date: Wed Dec 11 14:22:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, lvm-devel@sistina.com
+To: linux-lvm@sistina.com
 
-A new stable release of dm for 2.5.51 is available:
+Firsttimer, trying to take advantage of LVM on Linux.
+I have used it on AIX, so i have the concept.
 
-http://people.sistina.com/~thornber/patches/2.5-stable/2.5.51/
+I have a RAID Array (1.1Tb) SCSI-ATA drive (sdb) that
+i was trying to create a volume out of (pvcreate).
+
+However, it gives me an ERROR "Success" message.
+I initially had it formatted with with reiserfs, but
+then wiped it clean, and erased partition table as
+described in howtos (dd /dev/zero....). Debug also
+posted below.
+Any leads to get this working?
+Exact error below. Thnks in advance.
+
+******************
+chinook@/home/moll# pvcreate /dev/sdb
+Password:
+pvcreate -- ERROR "Success" getting size of physical
+volume "/dev/sdb"
 
 
-Changes
--------
+pvcreate [-d|--debug] [-f[f]|--force [--force]]
+[-h|--help] [-y|--yes]
+        [-v|--verbose] [--version] PhysicalVolume
+[PhysicalVolume...]
 
-Revision 1:
-  Four constants:
-     DM_DIR,
-     DM_MAX_TYPE_NAME,
-     DM_NAME_LEN,
-     DM_UUID_LEN
-  
-  Were being declared in device-mapper.h, these are all specific to 
-  the ioctl interface, so they've been moved to dm-ioctl.h.  Nobody
-  in userland should ever include <linux/device-mapper.h> so remove 
-  ifdef __KERNEL guards.
+chinook@/home/moll$ 
 
-Revision 2:
-  An error value was not being checked correctly in open_dev().
-  [Kevin Corry]
+**********BEGIN_Debug*****************
 
-Revision 3:
-  Return -ENOTBLK if lookup_device() finds the inode, but it
-  is not a block device. [Cristoph Hellwig]
+Script started on Wed Dec 11 15:17:09 2002
+cerebus@/home/mollel$ s pvcreate --debug /dev/sdb
+<1> lvm_get_iop_version -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_get_iop_version -- AFTER ioctl ret: 0
+<1> lvm_get_iop_version -- LEAVING with ret: 10
+<1> lvm_lock -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_lock -- LEAVING with ret: 0
+<1> pv_check_name -- CALLED with "/dev/sdb"
+<22> lvm_check_chars -- CALLED with name: "/dev/sdb"
+<22> lvm_check_chars -- LEAVING with ret: 0
+<22> lvm_check_dev -- CALLED
+<333> lvm_check_partitioned_dev -- CALLED
+<4444> lvm_get_device_type called
+<4444> lvm_get_device_type leaving with 1
+<333> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<22> lvm_check_dev -- LEAVING with ret: 1
+<1> pv_check_name -- LEAVING with ret: 0
+<1> pv_get_size -- CALLED with /dev/sdb and 0xbfffdfa0
+<22> lvm_dir_cache -- CALLED
+<333> lvm_add_dir_cache -- CALLED with /dev/sda
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 1
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/sda1
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 1
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/sdb
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 1
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda1
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda2
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda5
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda6
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda7
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda8
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda9
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda9
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
+<22> lvm_dir_cache -- LEAVING with ret: 11
+<22> lvm_dir_cache_find -- CALLED with /dev/sdb
+<333> pv_check_name -- CALLED with "/dev/sdb"
+<4444> lvm_check_chars -- CALLED with name: "/dev/sdb"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 1
+<55555> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> pv_check_name -- LEAVING with ret: 0
+<333> lvm_dir_cache -- CALLED
+<333> lvm_dir_cache -- LEAVING with ret: 11
+<22> lvm_dir_cache_find -- LEAVING with entry: 2
+<22> lvm_check_partitioned_dev -- CALLED
+<333> lvm_get_device_type called
+<333> lvm_get_device_type leaving with 1
+<22> lvm_check_partitioned_dev -- LEAVING with ret:
+TRUE
+<22> lvm_partition_count -- CALLED for 0x810
+<333> lvm_get_device_type called
+<333> lvm_get_device_type leaving with 1
+<22> lvm_partition_count -- LEAVING with ret: 16
+<22> pv_get_dev_size -- CALLED with /dev/sdb and
+0xbfffdfa0
+<22> pv_get_dev_size -- LEAVING with ret: -1951217920
+<1> pv_get_size -- LEAVING with ret: -1951217920
+<1> lvm_error -- CALLED with: -1951217920
+<1> lvm_error -- LEAVING with: "Success"
+pvcreate -- ERROR "Success" getting size of physical
+volume "/dev/sdb"
+pvcreate [-d|--debug] [-f[f]|--force [--force]]
+[-h|--help] [-y|--yes]
+        [-v|--verbose] [--version] PhysicalVolume
+[PhysicalVolume...]
+<1> lvm_unlock -- CALLED
+<1> lvm_unlock -- LEAVING with ret: 0
+chinook@/home/moll# exit
+exit
+Script done on Wed Dec 11 15:17:21 2002
+***************END_DEBUG********************
 
-Revision 4:
-  No need to validate the parameters if we are doing a
-  REMOVE_ALL command.
 
-Revision 5:
-  check_device_area was comparing the bytes with sectors.
-  [Stefan Lauterbach]
 
-Revision 6:
-  minor change for dm-strip.c. Tests for correct chunksize before it allocates
-  the stripe context. [Heinz Mauelshagen]
 
-Revision 7:
-  There's a bug in the dm-stripe.c constructor failing top check if enough
-  destinations are handed in. [Heinz Mauelshagen]
+=====
 
-Revision 8:
-  Give each device its own io mempool to avoid a potential
-  deadlock with stacked devices.  [HM + EJT]
 
-Revision 9:
-  queue_io() was checking the DMF_SUSPENDED flag rather than the new
-  DMF_BLOCK_IO flag.  This meant suspend could deadlock under load.
-
-Revision 10:
-  dm_suspend(): Stop holding the read lock around the while loop that
-  waits for pending io to complete.
-
-Revision 11:
-  Add a blk_run_queues() call to encourage pending io to flush
-  when we're doing a dm_suspend().
-
-Revision 12:
-  dec_pending(): only bother spin locking if io->error is going to be
-  updated. [Kevin Corry]
-
-Revision 13:
-  md->pending was being incremented for each clone rather than just
-  once. [Kevin Corry]
-
-Revision 14:
-  Some fields in the duplicated bio weren't being set up properly in
-  __split_page(). [Kevin Corry]
-
-Revision 15:
-  Remove some paranoia in highmem.c, need to check this with Jens Axboe.
-
-Revision 16:
-  Remove verbose debug message 'Splitting page'.
+__________________________________________________
+Do you Yahoo!?
+Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
+http://mailplus.yahoo.com
