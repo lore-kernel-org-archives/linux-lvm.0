@@ -1,10 +1,10 @@
-From: Nathan Scott <nathans@sgi.com>
-Message-ID: <20020606232137.GB479@frodo>
-References: <OF73D30ECA.36498F9C-ONC1256BD0.004E5691@kancelar.seznam.cz> <200206061435.g56EZpl28164@mail.pronto.tv>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
+Subject: Re: [linux-lvm] filesystem does not reflect new LV size
+Message-ID: <20020607011548.GB29695@tiger.bigcats.invalid>
+References: <200206061638.g56GcYr19414@bach.leonora.org> <20020606165925.GA8756@fib011235813.fsnet.co.uk> <20020606120917.B31838@connectlive.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200206061435.g56EZpl28164@mail.pronto.tv>
-Subject: [linux-lvm] Re: mkfs - cannot set blocksize
+In-Reply-To: <20020606120917.B31838@connectlive.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,43 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun  6 18:23:02 2002
+Date: Thu Jun  6 20:16:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Marek.Les@firma.seznam.cz, Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-Cc: linux-xfs@oss.sgi.com, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-hi,
+Hi, Tim!
 
-On Thu, Jun 06, 2002 at 04:35:51PM +0200, Roy Sigurd Karlsbakk wrote:
-> linux ia32 only supports 4kB block size
+Tim (tim@connectlive.com) wrote 57 lines:
 
-4K pagesize, not blocksize.  [filesystem] blocksizes smaller than 4K
-are also supported.  Thats unrelated to this problem though, which is
-related to the device driver blocksize... mkfs is trying to tell the
-device to do IOs in 512 byte chunks, but its not listening.  There's
-some corner cases where mkfs will fail if the device driver ignores
-its request to change the device block size.
+> Hey, out of curiosity, are there folks out there who have mounted an
+> ext3 filesystem as ext2, resized it, rebuilt the journal, and had good
+> success with the process?
 
-> On Thursday 06 June 2002 16:27, Marek.Les@firma.seznam.cz wrote:
-> > Hello,
-> >
-> > I am trying to test XFS with LVM and I've encountered this error while
-> > trying to do mkfs.xfs on the LVM logical volume:
-> > 
-> > mkfs.xfs: warning - cannot set blocksize on block device
-> > /dev/test_vg/test_lv: Invalid argument
-> > I tried to find something in the mailing list but the only thing I found
-> > was something about EVMS but no LVM stuff. Can anyone tell me, what exactly
-> > this warning means and (if possible) how to get rid of it?
-                                         ^^^^^^^^^^^^^^^^^^^^
-We need to contact the LVM folks and ask them to implement the
-BLKBSZSET ioctl (and while I'm at it, I'll mention that ENOTTY
-should be returned instead of EINVAL for unrecognised ioctls,
-apparently).
+Why would you *mount* a filesystem and resize it, when it's
+safer and easier done unmounted?
 
-cheers.
+Simply umount, resize2fs (use e2fsadm as a wrapper, if you are
+LVMming), mount it and off you go.  To ext2, .journal is but
+another file, AFAIK, and if you umounted cleanly, nothing will
+have to be played back, AFAIK.
 
--- 
-Nathan
+Works well enough for me, when I use it.
+
+-Wolfgang
