@@ -1,10 +1,11 @@
-Return-Path: <harri@smilehouse.com>
-Date: Sun, 17 Dec 2000 16:56:39 +0200 (EET)
-From: Harri Haataja <harri@smilehouse.com>
-Subject: Re: [linux-lvm] serializing fsck
-In-Reply-To: <20001216161810.A1006@bar.nowhere>
-Message-ID: <Pine.LNX.4.21.0012171655470.32257-100000@tolppa.kotisivupalvelu.fi>
-MIME-Version: 1.0
+Return-Path: <blutgens@sistina.com>
+Date: Sun, 17 Dec 2000 17:08:20 -0600
+From: Ben Lutgens <blutgens@usinternet.com>
+Message-ID: <20001217170820.A692@ares.usinternet.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] unauthorized posts
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,18 +17,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Sat, 16 Dec 2000 zoo1@corecomm.net wrote:
+Hi all, I am getting lots of posts from unsubscribed addresses. If you would
+like to post frokm other addresses, please send me a mail and I will add it=
+ to
+the allow list. this way I need not manually "approve" or "discard" your
+posts. Thank you.
 
-> it seems my fsck on bootup is having trouble figuring out on which
-> physical devices various lvols reside, and so is starting up all the
-> fsck's simultaneously. i'm working around this by fiddling with the fsck
-> parameters in /etc/fstab, and i suspect that's probably the only really
-> general solution (since striping would throw wrenches into the works
-> anyway), but i'd like to know if i've overlooked some other possibility?
 
-E2fsck seems to do that on any disk on me. I've ended up adjusting the
-order in fstab by hand.
+--=20
+Ben Lutgens  Cell: 651.387.9065  Home: 651.703.9541
+
+
+Backup not found: (A)bort (R)etry (T)hrowup
+---------------------------------------------------------------------------=
+----=EF=BF=BD
