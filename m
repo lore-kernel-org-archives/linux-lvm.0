@@ -1,24 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2FGs1S13658
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 11:54:01 -0500
-Received: from localhost.localdomain (host-65-120-145-91.coremetrics.com
-	[65.120.145.91] (may be forged))
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2FGs007005029
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 11:54:00 -0500
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by localhost.localdomain (8.12.8/8.12.8) with ESMTP id i2FGrqsN004628
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 10:53:52 -0600
-Received: (from austin@localhost)
-	by localhost.localdomain (8.12.8/8.12.8/Submit) id i2FGrqLs004624
-	for linux-lvm@redhat.com; Mon, 15 Mar 2004 10:53:52 -0600
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2FHStS26055
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 12:28:55 -0500
+Received: from web80605.mail.yahoo.com (web80605.mail.yahoo.com [66.218.79.94])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2FHSr07017164
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 12:28:53 -0500
+Message-ID: <20040315172847.42823.qmail@web80605.mail.yahoo.com>
+Date: Mon, 15 Mar 2004 09:28:47 -0800 (PST)
+From: David Minor <sus4@sbcglobal.net>
 Subject: Re: [linux-lvm] VGs gone!
-From: Austin Gonyou <austin@coremetrics.com>
-In-Reply-To: <20040315094504.30807.qmail@web80601.mail.yahoo.com>
-References: <20040315094504.30807.qmail@web80601.mail.yahoo.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1079369631.3143.10.camel@localhost.localdomain>
-Mime-Version: 1.0
-Date: Mon, 15 Mar 2004 10:53:51 -0600
+In-Reply-To: <1079369631.3143.10.camel@localhost.localdomain>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,30 +21,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-You should not have recreated the lvmtab without backing up the total
-config, and restoring it after dding the partitions back. 
 
-On Mon, 2004-03-15 at 03:45, David Minor wrote:
-> My volumes have disappeared.  can anyone help recover?
+--- Austin Gonyou <austin@coremetrics.com> wrote:
+> You should not have recreated the lvmtab without
+> backing up the total
+> config, and restoring it after dding the partitions
+> back. 
 > 
-> setup: 
-> I have two drives partitioned identically so that they
-> can be mirrored.  each drive has a boot, swap, and a
-> very large lvm partition.  We had a problem with the
-> root partition on the first drive, so we decided to
-> restore from the mirror using dd.  After doing this,
-> the VGs are not in existence anymore.  running
-> 'vgscan' shows it creates /etc/lvmtab and
-> /etc/lvmtab.d correctly, but they are empty.  
-> 
-> Is there a way to recreate this information?
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
--- 
-Austin Gonyou <austin@coremetrics.com>
-Coremetrics, Inc.
+
+The problem seems to have been that the mirrored
+standard root partition didn't have a /proc mount
+point.  Once I created the /proc directory and
+manually mounted it I was able to run vgscan without
+any problems.  Basically, I did:
+
+# mkdir /proc
+# mount -t proc proc /proc
+# vgscan
+# vgdisplay
+# mount -a
+
+and everything worked.
+
+I hear you saying that there's a better way for me to
+backup my system.  Right now I'm just rsync-ing from
+each of the partitions on the primary drive to the
+secondary drive.  Is there something I should do at
+"mirror" time to facilitate the lvm setup coming up
+better next time?
