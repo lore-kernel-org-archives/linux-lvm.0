@@ -1,62 +1,53 @@
-Message-ID: <01C03701.8B2003C0.smdenton@bellsouth.net>
-From: "S. Michael Denton" <smdenton@bellsouth.net>
-Reply-To: "smdenton@bellsouth.net" <smdenton@bellsouth.net>
-Subject: RE: [linux-lvm] lv inactive after reboot
-Date: Sun, 15 Oct 2000 23:42:12 -0400
+Date: Mon, 16 Oct 2000 04:57:20 -0400 (EDT)
+From: Myles Uyema <myles@puck.nether.net>
+Subject: [linux-lvm] LVM recovery suggestions?
+Message-ID: <Pine.LNX.4.10.10010160413440.24443-100000@puck.nether.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Linux LVM mailing list <linux-lvm@msede.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+well, here's my situation:
 
-On Sunday, 15 October 2000 22:12, Eric M. Hopper
-[SMTP:hopper@omnifarious.mn.org] wrote:
-> 	I could do without this ability.  RAID, other than RAID0 should
-> be done in hardware, or you're fooling yourself about reliability. 
-> The  
+/dev/sda2 and /dev/sdb2 physical devices making up VG "uyema"
+/   raid1 mirror (sda1 and sdb1)
 
-Possibly, but even hardware RAID has points of failure... some
-hardware RAID is even designed so poorly as to inadvertently -create-
-more points of failure... 
+/usr /home /var /tmp are all separate LVs in VG "uyema"
 
-> only reason to do any RAID besides RAID0 is reliability, so why
-> pick an option that so clearly doesn't work?  LVM already does
-> RAID0.
+Running kernel 2.4.0-test10-3, I decided to umount /home, and resize
+/dev/uyema/home using e2fsadm.  I had ~8GB free PV space at the time.
 
-On the point of reliability I agree, the only reason to do RAID is
-for reliability... and the reliability factor becomes additive so the
-more options you have, the better.  None of them are perfect... none
-of them work 100% of the time.  But eliminating an option, even if it
-is only partially viable, only reduces the tools you have at your
-disposal.
+I run: e2fsadm -L +1G /dev/uyema/home
+All goes well, and ext2resize finishes successfully and e2fsck checks out
+fine.  I'm feeling lucky....
 
-Besides, wouldn't it be better to have a single tool for software
-volume management instead of multiple?  If we could merge the mdtools
-into lvmtools then we'd have one point for software raid AND logical
-volume management... much better in my opinion :)
+Next I run: e2fsadm -L +5G /dev/uyema/home
+e2fsadm gets to the part where it says "running ext2resize"
 
-BTW as a side note, RAID0 doesn't provide any reliability enhancement
-or protection against failures... it's only striping.
+-kernel panic- which I don't have a paste of, but do recall seeing 
+"ll_rw_block" in the kernel oops message.  I run 'sync' which also
+generates a kernel panic, with "ll_rw_block" again...and a couple other
+lvm commands I've tried also caused the kernel to regenerate OOPs stack
+traces.  Magic SYSRQ Sync - kernel panic.  shutdown -r now - kernel panic.
 
-> Have fun (if at all possible),
+Things are not looking good, so I magic sysrq UMOUNT, then cold boot.
+Upon reboot, lvm doesn't recognize VG "uyema"
+pvscan -v shows /dev/sda2 and /dev/sdb2 as having "uyema" in EXPORTED
+state, and vgscan says no volume groups.
 
-Always... hope you have the same.
+No problem, let's just "vgimport uyema /dev/sda2 /dev/sdb2"
+vgimport -- ERROR "vg_read_with_pv_and_lv" allocate LE of LV" reading data
+of volume group "uyema"
 
-Scott Denton
-smdenton@bellsouth.net
-EFnet Handle: SteelWyng
-ICQ UIN: 24149258
-AIM Screen Name: SteelWyng
+vgcfgrestore won't let me restore, even though /etc/lvmconf/uyema.conf
+exists: "-- ERROR pv_read(): PV exported" reading physical volume
+/dev/scsi/host0/bus0/target0/lun0/part2
+(same goes for sdb2 (target12))
 
------BEGIN PGP SIGNATURE-----
-Version: PGPfreeware 6.5.3 for non-commercial use <http://www.pgp.com>
+So...I'm out of ideas.  I have a backup of /home, not a problem, but if I
+can get the whole uyema Volume Group back online...it would be great. =)
 
-iQA/AwUBOep5FHC+DNfF0nVpEQISGgCfWnsSwETDOnqDwwrcHpLIg3BiZ08AnR6r
-4j8UwOwSFh7AW39QJPczpTAR
-=zSvA
------END PGP SIGNATURE-----
+Any suggestions?
