@@ -1,12 +1,9 @@
-Subject: Re: [linux-lvm] lvm/devfs bug?
-From: rich turner <rich@storix.com>
-In-Reply-To: <20030409072130.GD1366@tykepenguin.com>
-References: <1049829705.2312.16.camel@rich>
-	<20030408204334.GD22951@percy.comedia.it> <1049836943.7411.19.camel@rich> 
-	<20030409072130.GD1366@tykepenguin.com>
+Message-ID: <3E920F5A.E26EC943@ezinc.com>
+From: Miwako Nakai <nakai@ezinc.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Problems
+References: <029601c2f79d$83ff2da0$64451c0a@dokho>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1049932652.7946.4.camel@rich-laptop>
-Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +14,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  9 18:58:01 2003
+Date: Thu Apr 10 00:41:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-i dont completely agree with that because even when i use a kernel that
-does not have devfs i still get the same symptoms. even though
-/proc/partitions does not have a partition for a disk pvcreate still
-complains that there is one. pvcreate must be looking someplace else or
-there is a bug within lvm.
+I think you would be better to set PE size upto 8MB.
+Probably, you are using old version. 1.0.6 or later, PE size is
+16MB at default.
 
-now, if i create a pv within a partition there are no complaints, lvm
-will continue normally. it appears to only happen when i want to create
-a pv on the entire disk.
+And I also think you would be better not to use HTML mail.
 
-why does pvcreate think there is a partition when there clearly isnt
-one?
+> Gaetan wrote:
+> 
+> --- Volume group ---
+> VG Name               FILER
+> VG Access             read/write
+> VG Status             available/resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                2
+> Open LV               1
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                4
+> Act PV                4
+> VG Size               453.63 GB
+> PE Size               4 MB
+> Total PE              116129
+> Alloc PE / Size       58893 / 230.05 GB
+> Free  PE / Size       57236 / 223.58 GB
+> VG UUID               ExxNF9-89PZ-wHbC-LtKX-R3GL-Hp00-EVfvJt
+> 
+> I would like to increase my MAX LV SIZE
+> 
+> ZanZiBar:~# lvextend -L +300G /dev/FILER/MIRROR2
+> lvextend -- size 555745280 KB is larger than maximum VGDA kernel size
+> of 268427264 KB
+> Help !! :(
 
-On Wed, 2003-04-09 at 00:21, Patrick Caulfield wrote:
-> On Tue, Apr 08, 2003 at 02:22:23PM -0700, Rich Turner wrote:
-> > even though devfs is compiled in the kernel it actually is not mounted
-> > at this time. i have tried it using devfs long names also with no
-> > success.
-> 
-> If devfs is in the kernel you MUST have it mounted for LVM. It's to do with the
-> interaction between /proc/partitions and LVM.
-> 
-> 
-> 
-> patrick
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Nakai ezcom
