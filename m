@@ -1,10 +1,11 @@
-Return-Path: <jweber@valinux.com>
-Date: Wed, 2 May 2001 11:55:29 -0700 (PDT)
-From: Jay Weber <jweber@valinux.com>
-Subject: Re: [linux-lvm] lvcreate segfault
-In-Reply-To: <Pine.LNX.4.30.0105020957190.11191-100000@beefcake.hdqt.valinux.com>
-Message-ID: <Pine.LNX.4.30.0105021155070.16582-100000@beefcake.hdqt.valinux.com>
+Return-Path: <glenn@gecpalau.com>
+Message-ID: <3AF091E1.D57CEEA4@gecpalau.com>
+Date: Thu, 03 May 2001 08:01:53 +0900
+From: Glenn Shannon <glenn@gecpalau.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] New details on VGScan crash on 2.4.4
+References: <3AED170B.D5483465@gecpalau.com> <200104301544.JAA10700@lynx.turbolabs.com> <20010502122044.D30791@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,51 +17,74 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-And here's a fix.
+"Heinz J. Mauelshagen" wrote:
 
---- lvcreate.c.orig	Wed May  2 12:08:43 2001
-+++ lvcreate.c	Wed May  2 12:23:50 2001
-@@ -448,6 +448,10 @@
-       strncpy ( lv_snapshot_name, lv_name, sizeof ( lv_name) - 1);
-       dummy = argv[optind];
-       LVM_CHECK_DEFAULT_VG_NAME ( dummy, buffer, NAME_LEN);
-+      if (dummy == NULL) {
-+	fprintf(stderr, "%s -- snapshot name not present, supply -n
-option!\n\n", cmd);
-+	return LVM_EINVALID_CMD_LINE;
-+      }
-       strncpy ( lv_name, dummy, sizeof ( lv_name) - 1);
-       dummy = NULL;
-       lv_name[sizeof ( lv_name) - 1] = 0;
-
-
-On Wed, 2 May 2001, Jay Weber wrote:
-
-> Date: Wed, 2 May 2001 09:58:41 -0700 (PDT)
-> From: Jay Weber <jweber@valinux.com>
-> Reply-To: linux-lvm@sistina.com
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] lvcreate segfault
+> On Mon, Apr 30, 2001 at 09:44:43AM -0600, Andreas Dilger wrote:
+> > Glenn writes:
+> > > Well, after much deliberation as to how BADLY I needed a /usr partition
+> > > under 2.4.4....
+> > >
+> > > I booted it in single-user (blech) under 2.4.4 and ran vgscan and got:
+> > >
+> > > segmentation fault
+> > >
+> > > So I went about investigating as to whether I could get more info than
+> > > that.....
+> > >
+> > > vgscan -d >& vgscan.log generated the textfile vgscan1.txt I am
+> > > attaching to this email...hopefully it sheds some light (?)
+> >
+> > Looks like you have devfs configured but not mounted.  You really need to
+> > mount devfs before running vgscan.  Also, you are far better off to not
+> > use devfs and LVM at the same time.
+> >
+> > Granted, this is no reason for vgscan to segfault, but it may fix your
+> > problem.
 >
-> Hi,
+> Yep ;-)
 >
-> Just noticed this one.
+> Did somebody find the reason why it segfaults already and has
+> the finger pointing to the code location?
 >
-> [root@slippey /root]# lvcreate -l5 -s snap /dev/vol/foo
-> Segmentation fault (core dumped)
+> >
+> > Cheers, Andreas
+> > --
+> > Andreas Dilger                               TurboLabs filesystem development
+> > http://sourceforge.net/projects/ext2resize/
+> > http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
 >
-> Haven't looked at it much, off to a meeting now (sigh), but it appears to
-> be a simple option parsing problem when using -s.
+> --
 >
-> A proper command for that to work would be:
-> lvcreate -l5 -s -n snap /dev/vol/foo
+> Regards,
+> Heinz    -- The LVM Guy --
 >
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
->
+
+I don't know what was causing the segfault, but I suspect it may have been a bad
+compile.
+
+I recompiled all over again and it works now :)
+
+Glenn
