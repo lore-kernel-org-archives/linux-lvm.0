@@ -1,10 +1,12 @@
-From: Jesse Keating <jkeating@pogolinux.com>
-Subject: Re: [linux-lvm] Re: RAID5 bug? [was: Re: raid and lvm]
-References: <20030206.kbn.38328100@si.homelinux.org> <200302071226.49241.jhs@openenterprise.biz>
-In-Reply-To: <200302071226.49241.jhs@openenterprise.biz>
+From: Jason Smith <jhs@openenterprise.biz>
+References: <20030206.kbn.38328100@si.homelinux.org> <200302071226.49241.jhs@openenterprise.biz> <200302062156.59889.jkeating@pogolinux.com>
+In-Reply-To: <200302062156.59889.jkeating@pogolinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <200302062156.59889.jkeating@pogolinux.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: clearsigned data
+Content-Disposition: inline
+Message-Id: <200302071358.25966.jhs@openenterprise.biz>
+Subject: [linux-lvm] Re: RAID5 bug? [was: Re: raid and lvm]
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +17,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  6 23:54:01 2003
+Date: Fri Feb  7 01:14:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-lvm@lists.sistina.com
 
-On Thursday 06 February 2003 21:26, Jason Smith uttered:
-> But I still have not seen a good solution.  Hopefully, I just haven't
-> searched well enough.  Does nobody use RAID level 5 with LVM?  If this is
-> still a problem, then it's a big showstopper for Linux as a file server, as
-> I see it.
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I have a few clients that use LVM on large hardware (3-ware) raid5 arrays.  I 
-don't think they've seen (they might not have looked) these types of errors 
-when the array is in degraded mode.
+On Friday 07 February 2003 12:56 pm, Jesse Keating wrote:
+> I have a few clients that use LVM on large hardware (3-ware) raid5 arrays=
+=2E=20
+> I don't think they've seen (they might not have looked) these types of
+> errors when the array is in degraded mode.
+>
+> Does this effect only software raid?
 
-Does this effect only software raid?
+My guess is yes.  I don't know about HW implementations, but I'm seeing it=
+=20
+with lvm2 on top of software raid5.
 
--- 
-Jesse Keating RHCE MCSE
-Pogo Linux -- Support Tech
-tel: 888.828.7646
+=2D --=20
+Jason Smith
+Open Enterprise Systems
+Bangkok, Thailand
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+Q1kQm5qEoSbpT3kRAtdLAJ43Wecy0zZMwAa3rUHw+x6/0SvmEQCeNwUx
+gFYMypZhMuCWt9AX5AjJehw=3D
+=3DQ3My
+=2D----END PGP SIGNATURE-----
