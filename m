@@ -1,12 +1,10 @@
-Content-Type: text/plain; charset="us-ascii"
 From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Updated patch VFS-lock for 2.4.18+ XFS enabled
-    kernels
-References: <Pine.LNX.4.21.0204030944360.30084-100000@miami.datech2.er.heitec.net>
-In-Reply-To: <Pine.LNX.4.21.0204030944360.30084-100000@miami.datech2.er.heitec.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16shNR-0008V7-00@hermes.sistina.com>
+Content-Type: Multipart/Mixed;
+    boundary="------------Boundary-00=_J0MZ59XA252V2LZZC9VU"
+Message-Id: <E16shtn-0000gF-00@hermes.sistina.com>
+Subject: [linux-lvm] Updated VFS-lock patch for quota32 enabled 2.4 kernels (was:
+ Updated patch VFS-lock for 2.4.18+ XFS enabled kernels)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,53 +15,229 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  3 03:49:01 2002
+Date: Wed Apr  3 04:22:01 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, Holger Rauch <Holger.Rauch@heitec.de>
+To: Chris Mason <mason@suse.com>
+Cc: linux-lvm@sistina.com, linux-xfs@oss.sgi.com, Nathan Scott <nathans@sgi.com>, Holger Rauch <Holger.Rauch@heitec.de>
 
-On Wed, 3 Apr 2002 17:52, Holger Rauch wrote:
-> Hi!
->
-> I tried your patch on a 2.4.18 kernel with XFS, but I got the following
-> error during the linking phase
->
-> fs/fs.o: In function `fsync_dev_lockfs':
-> fs/fs.o(.text+0x2918): undefined reference to `DQUOT_SYNC_DEV'
->
-> During compilation, I also got a warning about an implicit declaration of
-> DQUOT_SYNC_DEV.
->
-> I could apply the patch with no problems, however.
->
-> What went wrong here? How can I get rid of these errors?
->
-> Any help will be greatly appreciated!
+--------------Boundary-00=_J0MZ59XA252V2LZZC9VU
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 
-I'm sorry to hear that your having problems.  It appears that your 2.4.18-xfs 
-kernel doesn't have the new Quota code.
+Chris Mason,
 
-Where did you get your 2.4.18-xfs kernel from?  Is it from SGI XFS CVS? or 
-from the official split patches? or another source?
+Please disregard the email and patch posted yesterday:
+http://marc.theaimsgroup.com/?l=linux-lvm&m=101775613225257&w=2
 
-If is is from the official split patches did you include the 
-xfs-2.4.18-split-quota32 patch?  It appears that oss.sgi.com is down at the 
-moment so I cannot check the current file name.
+After discussions with the nice folks at SGI's XFS project - they have 
+suggested a change of patch name and explanation.
 
-Nathan Scott has advised me that I should change the name of the patch anyway 
-as it relates to any kernel that has the new Quota code not just the XFS 
-kernel.
+I'm still hoping that this linux-2.4.18+-quota32-VFS-lock.patch can be added 
+to the PATCHES directory in the LVM CVS for those people that use both LVM 
+and a 2.4 Kernel with Jan Kara's new Quota patches applied (like a 2.4.18+ 
+XFS enabled kernel).
 
->
-> Greetings,
->
-> 	Holger
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+When compiling _any_ 2.4.18+ kernel with Jan Kara's new Quota code
+ (for example SGI's XFS Kernel - both the official split patches and CVS)
+ with the standard linux-2.4.18-VFS-lock.patch the compile will fail because
+ of an undefined macro DQUOT_SYNC().  LVM uses DQUOT_SYNC() to flush Quota
+ changes to disk before locking the VFS for snapshot creation.  This patch
+ is the standard LVM linux-2.4.18-VFS-lock.patch with DQUOT_SYNC() changed
+ to the new Quota code's DQUOT_SYNC_DEV().
+ *** Kernels without Jan Kara's new Quota patches applied only need the
+ standard LVM linux-2.4.18-VFS-lock.patch ***
+
+For more information:
+
+The new 2.4.x Quota code by Jan Kara can be found here:
+ Kernel patches:
+ ftp://atrey.karlin.mff.cuni.cz/pub/local/jack/quota/v2.4/
+ Userspace tools:
+ http://www.sourceforge.net/projects/linuxquota/
+
+The original email thread relating to this problem can be found here:
+ http://marc.theaimsgroup.com/?l=linux-lvm&m=101770214811117&w=2
+
+The SGI XFS project can be found here:
+ http://oss.sgi.com/projects/xfs/
+
+This is against 2.4.18-xfs + lvm 1.0.4 or lvm 1.1rc1 but is relevent to
+ _any_ 2.4.18+ Kernel that has Jan Kara's new Quota patches applied; until
+ Jan Kara's new Quota code is accepted by Marcelo into the 2.4.x mainline
+ kernel tree.
+ *** Kernels without the new Quota patches applied only need the
+ standard LVM linux-2.4.18-VFS-lock.patch ***
+
+-Adrian
+
+PS: I'm not officially associated with the SGI XFS or Jan Kara's new Quota
+    project(s) - just a happy LVM + XFS + new Quota user.
 
 -- 
 Adrian Head
 
 (Public Key available on request.)
+--------------Boundary-00=_J0MZ59XA252V2LZZC9VU
+Content-Type: text/x-diff;
+  charset="us-ascii";
+  name="linux-2.4.18+-quota32-VFS-lock.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="linux-2.4.18+-quota32-VFS-lock.patch"
+
+SGVsbG8gZXZlcnlvbmUsCgpXaGVuIGNvbXBpbGluZyBfYW55XyAyLjQuMTgrIGtlcm5lbCB3aXRo
+IEphbiBLYXJhJ3MgbmV3IFF1b3RhIGNvZGUKIChmb3IgZXhhbXBsZSBTR0kncyBYRlMgS2VybmVs
+IC0gYm90aCB0aGUgb2ZmaWNpYWwgc3BsaXQgcGF0Y2hlcyBhbmQgQ1ZTKQogd2l0aCB0aGUgc3Rh
+bmRhcmQgbGludXgtMi40LjE4LVZGUy1sb2NrLnBhdGNoIHRoZSBjb21waWxlIHdpbGwgZmFpbCBi
+ZWNhdXNlCiBvZiBhbiB1bmRlZmluZWQgbWFjcm8gRFFVT1RfU1lOQygpLiAgTFZNIHVzZXMgRFFV
+T1RfU1lOQygpIHRvIGZsdXNoIFF1b3RhCiBjaGFuZ2VzIHRvIGRpc2sgYmVmb3JlIGxvY2tpbmcg
+dGhlIFZGUyBmb3Igc25hcHNob3QgY3JlYXRpb24uICBUaGlzIHBhdGNoCiBpcyB0aGUgc3RhbmRh
+cmQgTFZNIGxpbnV4LTIuNC4xOC1WRlMtbG9jay5wYXRjaCB3aXRoIERRVU9UX1NZTkMoKSBjaGFu
+Z2VkCiB0byB0aGUgbmV3IFF1b3RhIGNvZGUncyBEUVVPVF9TWU5DX0RFVigpLgogKioqIEtlcm5l
+bHMgd2l0aG91dCBKYW4gS2FyYSdzIG5ldyBRdW90YSBwYXRjaGVzIGFwcGxpZWQgb25seSBuZWVk
+IHRoZQogc3RhbmRhcmQgTFZNIGxpbnV4LTIuNC4xOC1WRlMtbG9jay5wYXRjaCAqKioKCkZvciBt
+b3JlIGluZm9ybWF0aW9uOgoKVGhlIG5ldyAyLjQueCBRdW90YSBjb2RlIGJ5IEphbiBLYXJhIGNh
+biBiZSBmb3VuZCBoZXJlOgogS2VybmVsIHBhdGNoZXM6CiBmdHA6Ly9hdHJleS5rYXJsaW4ubWZm
+LmN1bmkuY3ovcHViL2xvY2FsL2phY2svcXVvdGEvdjIuNC8KIFVzZXJzcGFjZSB0b29sczoKIGh0
+dHA6Ly93d3cuc291cmNlZm9yZ2UubmV0L3Byb2plY3RzL2xpbnV4cXVvdGEvCgpUaGUgb3JpZ2lu
+YWwgZW1haWwgdGhyZWFkIHJlbGF0aW5nIHRvIHRoaXMgcHJvYmxlbSBjYW4gYmUgZm91bmQgaGVy
+ZToKIGh0dHA6Ly9tYXJjLnRoZWFpbXNncm91cC5jb20vP2w9bGludXgtbHZtJm09MTAxNzcwMjE0
+ODExMTE3Jnc9MgoKVGhlIFNHSSBYRlMgcHJvamVjdCBjYW4gYmUgZm91bmQgaGVyZToKIGh0dHA6
+Ly9vc3Muc2dpLmNvbS9wcm9qZWN0cy94ZnMvCgpUaGlzIGlzIGFnYWluc3QgMi40LjE4LXhmcyAr
+IGx2bSAxLjAuNCBvciBsdm0gMS4xcmMxIGJ1dCBpcyByZWxldmVudCB0bwogX2FueV8gMi40LjE4
+KyBLZXJuZWwgdGhhdCBoYXMgSmFuIEthcmEncyBuZXcgUXVvdGEgcGF0Y2hlcyBhcHBsaWVkOyB1
+bnRpbAogSmFuIEthcmEncyBuZXcgUXVvdGEgY29kZSBpcyBhY2NlcHRlZCBieSBNYXJjZWxvIGlu
+dG8gdGhlIDIuNC54IG1haW5saW5lCiBrZXJuZWwgdHJlZS4KICoqKiBLZXJuZWxzIHdpdGhvdXQg
+dGhlIG5ldyBRdW90YSBwYXRjaGVzIGFwcGxpZWQgb25seSBuZWVkIHRoZQogc3RhbmRhcmQgTFZN
+IGxpbnV4LTIuNC4xOC1WRlMtbG9jay5wYXRjaCAqKioKCi1BZHJpYW4KClBTOiBJJ20gbm90IG9m
+ZmljaWFsbHkgYXNzb2NpYXRlZCB3aXRoIHRoZSBTR0kgWEZTIG9yIEphbiBLYXJhJ3MgbmV3IFF1
+b3RhCiAgICBwcm9qZWN0KHMpIC0ganVzdCBhIGhhcHB5IExWTSArIFhGUyArIG5ldyBRdW90YSB1
+c2VyLgoKSW5kZXg6IGxpbnVzLjIxL2ZzL3JlaXNlcmZzL3N1cGVyLmMKLS0tIGxpbnVzLjIxL2Zz
+L3JlaXNlcmZzL3N1cGVyLmMgRnJpLCAxMSBKYW4gMjAwMiAxMDoxNDo1OSAtMDUwMCByb290IChs
+aW51eC80MV9zdXBlci5jIDEuMi4yLjEuMi4xLjEuMSA2NDQpCisrKyBsaW51cy4yMSh3KS9mcy9y
+ZWlzZXJmcy9zdXBlci5jIE1vbiwgMjggSmFuIDIwMDIgMTM6NTA6NTYgLTA1MDAgcm9vdCAobGlu
+dXgvNDFfc3VwZXIuYyAxLjIuMi4xLjIuMS4xLjEgNjQ0KQpAQCAtNjYsNyArNjYsNyBAQAogICAg
+IHJlaXNlcmZzX3ByZXBhcmVfZm9yX2pvdXJuYWwocywgU0JfQlVGRkVSX1dJVEhfU0IocyksIDEp
+OwogICAgIGpvdXJuYWxfbWFya19kaXJ0eSgmdGgsIHMsIFNCX0JVRkZFUl9XSVRIX1NCIChzKSk7
+CiAgICAgcmVpc2VyZnNfYmxvY2tfd3JpdGVzKCZ0aCkgOwotICAgIGpvdXJuYWxfZW5kKCZ0aCwg
+cywgMSkgOworICAgIGpvdXJuYWxfZW5kX3N5bmMoJnRoLCBzLCAxKSA7CiAgIH0KICAgcy0+c19k
+aXJ0ID0gZGlydHk7CiAgIHVubG9ja19rZXJuZWwoKSA7CkluZGV4OiBsaW51cy4yMS9mcy9zdXBl
+ci5jCi0tLSBsaW51cy4yMS9mcy9zdXBlci5jIE1vbiwgMjggSmFuIDIwMDIgMDk6NTE6NTAgLTA1
+MDAgcm9vdCAobGludXgvZC80NV9zdXBlci5jIDEuNiA2NDQpCisrKyBsaW51cy4yMSh3KS9mcy9z
+dXBlci5jIE1vbiwgMjggSmFuIDIwMDIgMTc6MTk6NTggLTA1MDAgcm9vdCAobGludXgvZC80NV9z
+dXBlci5jIDEuNiA2NDQpCkBAIC01NCw2ICs1NCwxMyBAQAogTElTVF9IRUFEKHN1cGVyX2Jsb2Nr
+cyk7CiBzcGlubG9ja190IHNiX2xvY2sgPSBTUElOX0xPQ0tfVU5MT0NLRUQ7CgorLyoKKyAqIGxv
+Y2svdW5sb2NrZnMgZ3JhYiBhIHJlYWQgbG9jayBvbiBzX3Vtb3VudCwgYnV0IHlvdSBuZWVkIHRo
+aXMgbG9jayB0bworICogbWFrZSBzdXJlIG5vIGxvY2tmcyBydW5zIGFyZSBpbiBwcm9ncmVzcyBi
+ZWZvcmUgaW5zZXJ0aW5nL3JlbW92aW5nCisgKiBzdXBlcnMgZnJvbSB0aGUgbGlzdC4gIAorICov
+CitzdGF0aWMgREVDTEFSRV9NVVRFWChsb2NrZnNfc2VtKTsKKwogLyoKICAqIEhhbmRsaW5nIG9m
+IGZpbGVzeXN0ZW0gZHJpdmVycyBsaXN0LgogICogUnVsZXM6CkBAIC00NTMsNiArNDYwLDE5IEBA
+CiAJcHV0X3N1cGVyKHNiKTsKIH0KIAorc3RhdGljIHZvaWQgd3JpdGVfc3VwZXJfbG9ja2ZzKHN0
+cnVjdCBzdXBlcl9ibG9jayAqc2IpCit7CisJbG9ja19zdXBlcihzYik7CisJaWYgKHNiLT5zX3Jv
+b3QgJiYgc2ItPnNfb3ApIHsKKwkJaWYgKHNiLT5zX2RpcnQgJiYgc2ItPnNfb3AtPndyaXRlX3N1
+cGVyKQorCQkJc2ItPnNfb3AtPndyaXRlX3N1cGVyKHNiKTsKKwkJaWYgKHNiLT5zX29wLT53cml0
+ZV9zdXBlcl9sb2NrZnMpIHsKKwkJCXNiLT5zX29wLT53cml0ZV9zdXBlcl9sb2NrZnMoc2IpOwor
+CQl9CisJfQorCXVubG9ja19zdXBlcihzYik7Cit9CisKIHN0YXRpYyBpbmxpbmUgdm9pZCB3cml0
+ZV9zdXBlcihzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNiKQogewogCWxvY2tfc3VwZXIoc2IpOwpAQCAt
+NDk2LDYgKzUxNiwzOSBAQAogCXNwaW5fdW5sb2NrKCZzYl9sb2NrKTsKIH0KIAorLyoKKyAqIE5v
+dGU6IGRvbid0IGNoZWNrIHRoZSBkaXJ0eSBmbGFnIGJlZm9yZSB3YWl0aW5nLCB3ZSB3YW50IHRo
+ZSBsb2NrCisgKiB0byBoYXBwZW4gZXZlcnkgdGltZSB0aGlzIGlzIGNhbGxlZC4gIGRldiBtdXN0
+IGJlIG5vbi16ZXJvCisgKi8KK3ZvaWQgc3luY19zdXBlcnNfbG9ja2ZzKGtkZXZfdCBkZXYpCit7
+CisJc3RydWN0IHN1cGVyX2Jsb2NrICogc2I7CisKKwlkb3duKCZsb2NrZnNfc2VtKSA7CisJaWYg
+KGRldikgeworCQlzYiA9IGdldF9zdXBlcihkZXYpOworCQlpZiAoc2IpIHsKKwkJCXdyaXRlX3N1
+cGVyX2xvY2tmcyhzYik7CisJCQlkcm9wX3N1cGVyKHNiKTsKKwkJfQorCX0KK30KKwordm9pZCB1
+bmxvY2tmcyhrZGV2X3QgZGV2KQoreworCXN0cnVjdCBzdXBlcl9ibG9jayAqIHNiOworCisJaWYg
+KGRldikgeworCQlzYiA9IGdldF9zdXBlcihkZXYpOworCQlpZiAoc2IpIHsKKwkJCWlmIChzYi0+
+c19vcCAmJiBzYi0+c19vcC0+dW5sb2NrZnMpCisJCQkJc2ItPnNfb3AtPnVubG9ja2ZzKHNiKSA7
+CisJCQlkcm9wX3N1cGVyKHNiKTsKKwkJfQorCX0KKwl1cCgmbG9ja2ZzX3NlbSkgOworfQorCiAv
+KioKICAqCWdldF9zdXBlcgktCWdldCB0aGUgc3VwZXJibG9jayBvZiBhIGRldmljZQogICoJQGRl
+djogZGV2aWNlIHRvIGdldCB0aGUgc3VwZXJibG9jayBmb3IKQEAgLTU2MCw4ICs2MTMsMTAgQEAK
+IAlzLT5zX2RldiA9IGRldjsKIAlzLT5zX2JkZXYgPSBiZGV2OwogCXMtPnNfZmxhZ3MgPSBmbGFn
+czsKKwlkb3duKCZsb2NrZnNfc2VtKTsKIAlzcGluX2xvY2soJnNiX2xvY2spOwogCWluc2VydF9z
+dXBlcihzLCB0eXBlKTsKKwl1cCgmbG9ja2ZzX3NlbSk7CiAJbG9ja19zdXBlcihzKTsKIAlpZiAo
+IXR5cGUtPnJlYWRfc3VwZXIocywgZGF0YSwgZmxhZ3MgJiBNU19WRVJCT1NFID8gMSA6IDApKQog
+CQlnb3RvIG91dF9mYWlsOwpAQCAtNjY0LDYgKzcxOSw3IEBACiAJfQogCiAJZXJyb3IgPSAtRUJV
+U1k7CisJZG93bigmbG9ja2ZzX3NlbSk7CiByZXN0YXJ0OgogCXNwaW5fbG9jaygmc2JfbG9jayk7
+CiAKQEAgLTY3Niw2ICs3MzIsNyBAQAogCQkJc3Bpbl91bmxvY2soJnNiX2xvY2spOwogCQkJZGVz
+dHJveV9zdXBlcihzKTsKIAkJCWJsa2Rldl9wdXQoYmRldiwgQkRFVl9GUyk7CisJCQl1cCgmbG9j
+a2ZzX3NlbSk7CiAJCQlnb3RvIG91dDsKIAkJfQogCQlpZiAoIWdyYWJfc3VwZXIob2xkKSkKQEAg
+LTY4MywxMiArNzQwLDE1IEBACiAJCWRlc3Ryb3lfc3VwZXIocyk7CiAJCWJsa2Rldl9wdXQoYmRl
+diwgQkRFVl9GUyk7CiAJCXBhdGhfcmVsZWFzZSgmbmQpOworCQl1cCgmbG9ja2ZzX3NlbSk7CiAJ
+CXJldHVybiBvbGQ7CiAJfQogCXMtPnNfZGV2ID0gZGV2OwogCXMtPnNfYmRldiA9IGJkZXY7CiAJ
+cy0+c19mbGFncyA9IGZsYWdzOworCiAJaW5zZXJ0X3N1cGVyKHMsIGZzX3R5cGUpOworCXVwKCZs
+b2NrZnNfc2VtKTsKIAogCWVycm9yID0gLUVJTlZBTDsKIAlsb2NrX3N1cGVyKHMpOwpAQCAtNzc5
+LDcgKzgzOSwxMCBAQAogCWlmICghZGVhY3RpdmF0ZV9zdXBlcihzYikpCiAJCXJldHVybjsKIAor
+CWRvd24oJmxvY2tmc19zZW0pOyAKIAlkb3duX3dyaXRlKCZzYi0+c191bW91bnQpOworCXVwKCZs
+b2NrZnNfc2VtKTsKKwogCWxvY2tfa2VybmVsKCk7CiAJc2ItPnNfcm9vdCA9IE5VTEw7CiAJLyog
+TmVlZCB0byBjbGVhbiBhZnRlciB0aGUgc3Vja2VyICovCkluZGV4OiBsaW51cy4yMS9mcy9idWZm
+ZXIuYwotLS0gbGludXMuMjEvZnMvYnVmZmVyLmMgTW9uLCAyOCBKYW4gMjAwMiAwOTo1MTo1MCAt
+MDUwMCByb290IChsaW51eC9pLzQ1X2J1ZmZlci5jIDEuNS4yLjYgNjQ0KQorKysgbGludXMuMjEo
+dykvZnMvYnVmZmVyLmMgTW9uLCAyOCBKYW4gMjAwMiAxMTo1NDozNiAtMDUwMCByb290IChsaW51
+eC9pLzQ1X2J1ZmZlci5jIDEuNS4yLjYgNjQ0KQpAQCAtMzYxLDYgKzM2MSwzNCBAQAogCWZzeW5j
+X2RldihkZXYpOwogfQogCitpbnQgZnN5bmNfZGV2X2xvY2tmcyhrZGV2X3QgZGV2KQoreworCS8q
+IHlvdSBhcmUgbm90IGFsbG93ZWQgdG8gdHJ5IGxvY2tpbmcgYWxsIHRoZSBmaWxlc3lzdGVtcwor
+CSoqIG9uIHRoZSBzeXN0ZW0sIHlvdXIgY2hhbmNlcyBvZiBnZXR0aW5nIHRocm91Z2ggd2l0aG91
+dAorCSoqIHRvdGFsIGRlYWRsb2NrIGFyZSBzbGltIHRvIG5vbmUuCisJKi8KKwlpZiAoIWRldikK
+KwkJcmV0dXJuIGZzeW5jX2RldihkZXYpIDsKKworCXN5bmNfYnVmZmVycyhkZXYsIDApOworCisJ
+bG9ja19rZXJuZWwoKTsKKwkvKiBub3RlLCB0aGUgRlMgbWlnaHQgbmVlZCB0byBzdGFydCB0cmFu
+c2FjdGlvbnMgdG8gCisJKiogc3luYyB0aGUgaW5vZGVzLCBvciB0aGUgcXVvdGEsIG5vIGxvY2tp
+bmcgdW50aWwKKwkqKiBhZnRlciB0aGVzZSBhcmUgZG9uZQorCSovCisJc3luY19pbm9kZXMoZGV2
+KTsKKwlEUVVPVF9TWU5DX0RFVihkZXYpOworCS8qIGlmIGlub2RlcyBvciBxdW90YXMgY291bGQg
+YmUgZGlydGllZCBkdXJpbmcgdGhlCisJKiogc3luY19zdXBlcnNfbG9ja2ZzIGNhbGwsIHRoZSBG
+UyBpcyByZXNwb25zaWJsZSBmb3IgZ2V0dGluZworCSoqIHRoZW0gb24gZGlzaywgd2l0aG91dCBk
+ZWFkbG9ja2luZyBhZ2FpbnN0IHRoZSBsb2NrCisJKi8KKwlzeW5jX3N1cGVyc19sb2NrZnMoZGV2
+KSA7CisJdW5sb2NrX2tlcm5lbCgpOworCisJcmV0dXJuIHN5bmNfYnVmZmVycyhkZXYsIDEpIDsK
+K30KKwogYXNtbGlua2FnZSBsb25nIHN5c19zeW5jKHZvaWQpCiB7CiAJZnN5bmNfZGV2KDApOwpJ
+bmRleDogbGludXMuMjEvZHJpdmVycy9tZC9sdm0uYwotLS0gbGludXMuMjEvZHJpdmVycy9tZC9s
+dm0uYyBNb24sIDI4IEphbiAyMDAyIDExOjUyOjI0IC0wNTAwIHJvb3QgKGxpbnV4L2gvYy8zNF9s
+dm0uYyAxLjUgNjQ0KQorKysgbGludXMuMjEodykvZHJpdmVycy9tZC9sdm0uYyBNb24sIDI4IEph
+biAyMDAyIDExOjU1OjU3IC0wNTAwIHJvb3QgKGxpbnV4L2gvYy8zNF9sdm0uYyAxLjUgNjQ0KQpA
+QCAtMjIzLDkgKzIyMyw2IEBACiAjZGVmaW5lIERFVklDRV9PRkYoZGV2aWNlKQogI2RlZmluZSBM
+T0NBTF9FTkRfUkVRVUVTVAogCi0vKiBsdm1fZG9fbHZfY3JlYXRlIGNhbGxzIGZzeW5jX2Rldl9s
+b2NrZnMoKS91bmxvY2tmcygpICovCi0vKiAjZGVmaW5lCUxWTV9WRlNfRU5IQU5DRU1FTlQgKi8K
+LQogI2luY2x1ZGUgPGxpbnV4L2NvbmZpZy5oPgogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgog
+I2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgpAQCAtMjEwNywxMiArMjEwNCw4IEBACiAJaWYgKGx2
+X3B0ci0+bHZfYWNjZXNzICYgTFZfU05BUFNIT1QpIHsKIAkJbHZfdCAqb3JnID0gbHZfcHRyLT5s
+dl9zbmFwc2hvdF9vcmcsICpsYXN0OwogCi0JCS8qIHN5bmMgdGhlIG9yaWdpbmFsIGxvZ2ljYWwg
+dm9sdW1lICovCi0JCWZzeW5jX2RldihvcmctPmx2X2Rldik7Ci0jaWZkZWYJTFZNX1ZGU19FTkhB
+TkNFTUVOVAogCQkvKiBWRlMgZnVuY3Rpb24gY2FsbCB0byBzeW5jIGFuZCBsb2NrIHRoZSBmaWxl
+c3lzdGVtICovCiAJCWZzeW5jX2Rldl9sb2NrZnMob3JnLT5sdl9kZXYpOwotI2VuZGlmCiAKIAkJ
+ZG93bl93cml0ZSgmb3JnLT5sdl9sb2NrKTsKIAkJb3JnLT5sdl9hY2Nlc3MgfD0gTFZfU05BUFNI
+T1RfT1JHOwpAQCAtMjEzNywxMSArMjEzMCw5IEBACiAJZWxzZQogCQlzZXRfZGV2aWNlX3JvKGx2
+X3B0ci0+bHZfZGV2LCAxKTsKIAotI2lmZGVmCUxWTV9WRlNfRU5IQU5DRU1FTlQKIC8qIFZGUyBm
+dW5jdGlvbiBjYWxsIHRvIHVubG9jayB0aGUgZmlsZXN5c3RlbSAqLwogCWlmIChsdl9wdHItPmx2
+X2FjY2VzcyAmIExWX1NOQVBTSE9UKQogCQl1bmxvY2tmcyhsdl9wdHItPmx2X3NuYXBzaG90X29y
+Zy0+bHZfZGV2KTsKLSNlbmRpZgogCiAJbHZtX2dlbmRpc2sucGFydFtNSU5PUihsdl9wdHItPmx2
+X2RldildLmRlID0KIAkgICAgbHZtX2ZzX2NyZWF0ZV9sdih2Z19wdHIsIGx2X3B0cik7CkluZGV4
+OiBsaW51cy4yMS9rZXJuZWwva3N5bXMuYwotLS0gbGludXMuMjEva2VybmVsL2tzeW1zLmMgTW9u
+LCAyOCBKYW4gMjAwMiAwOTo1MTo1MCAtMDUwMCByb290IChsaW51eC9tL2MvMjVfa3N5bXMuYyAx
+LjUuMi40IDY0NCkKKysrIGxpbnVzLjIxKHcpL2tlcm5lbC9rc3ltcy5jIE1vbiwgMjggSmFuIDIw
+MDIgMTE6NTQ6MzYgLTA1MDAgcm9vdCAobGludXgvbS9jLzI1X2tzeW1zLmMgMS41LjIuNCA2NDQp
+CkBAIC0xNzgsNiArMTc4LDggQEAKIEVYUE9SVF9TWU1CT0woaW52YWxpZGF0ZV9pbm9kZV9wYWdl
+cyk7CiBFWFBPUlRfU1lNQk9MKHRydW5jYXRlX2lub2RlX3BhZ2VzKTsKIEVYUE9SVF9TWU1CT0wo
+ZnN5bmNfZGV2KTsKK0VYUE9SVF9TWU1CT0woZnN5bmNfZGV2X2xvY2tmcyk7CitFWFBPUlRfU1lN
+Qk9MKHVubG9ja2ZzKTsKIEVYUE9SVF9TWU1CT0woZnN5bmNfbm9fc3VwZXIpOwogRVhQT1JUX1NZ
+TUJPTChwZXJtaXNzaW9uKTsKIEVYUE9SVF9TWU1CT0wodmZzX3Blcm1pc3Npb24pOwpJbmRleDog
+bGludXMuMjEvaW5jbHVkZS9saW51eC9mcy5oCi0tLSBsaW51cy4yMS9pbmNsdWRlL2xpbnV4L2Zz
+LmggTW9uLCAyOCBKYW4gMjAwMiAwOTo1MTo1MCAtMDUwMCByb290IChsaW51eC9lL2QvM19mcy5o
+IDEuMi4xLjEuMS4zLjMuMS4xLjIgNjQ0KQorKysgbGludXMuMjEodykvaW5jbHVkZS9saW51eC9m
+cy5oIE1vbiwgMjggSmFuIDIwMDIgMTI6MTU6MjEgLTA1MDAgcm9vdCAobGludXgvZS9kLzNfZnMu
+aCAxLjIuMS4xLjEuMy4zLjEuMS4yIDY0NCkKQEAgLTEyMDUsNiArMTIwNSw3IEBACiBleHRlcm4g
+aW50IHN5bmNfYnVmZmVycyhrZGV2X3QsIGludCk7CiBleHRlcm4gdm9pZCBzeW5jX2RldihrZGV2
+X3QpOwogZXh0ZXJuIGludCBmc3luY19kZXYoa2Rldl90KTsKK2V4dGVybiBpbnQgZnN5bmNfZGV2
+X2xvY2tmcyhrZGV2X3QpOwogZXh0ZXJuIGludCBmc3luY19zdXBlcihzdHJ1Y3Qgc3VwZXJfYmxv
+Y2sgKik7CiBleHRlcm4gaW50IGZzeW5jX25vX3N1cGVyKGtkZXZfdCk7CiBleHRlcm4gdm9pZCBz
+eW5jX2lub2Rlc19zYihzdHJ1Y3Qgc3VwZXJfYmxvY2sgKik7CkBAIC0xMjE2LDYgKzEyMTcsOCBA
+QAogZXh0ZXJuIGludCBmaWxlbWFwX2ZkYXRhc3luYyhzdHJ1Y3QgYWRkcmVzc19zcGFjZSAqKTsK
+IGV4dGVybiBpbnQgZmlsZW1hcF9mZGF0YXdhaXQoc3RydWN0IGFkZHJlc3Nfc3BhY2UgKik7CiBl
+eHRlcm4gdm9pZCBzeW5jX3N1cGVycyhrZGV2X3QpOworZXh0ZXJuIHZvaWQgc3luY19zdXBlcnNf
+bG9ja2ZzKGtkZXZfdCk7CitleHRlcm4gdm9pZCB1bmxvY2tmcyhrZGV2X3QpOwogZXh0ZXJuIGlu
+dCBibWFwKHN0cnVjdCBpbm9kZSAqLCBpbnQpOwogZXh0ZXJuIGludCBub3RpZnlfY2hhbmdlKHN0
+cnVjdCBkZW50cnkgKiwgc3RydWN0IGlhdHRyICopOwogZXh0ZXJuIGludCBwZXJtaXNzaW9uKHN0
+cnVjdCBpbm9kZSAqLCBpbnQpOwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKbGludXgtbHZtQHNpc3RpbmEuY29t
+Cmh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQpyZWFk
+IHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3Rv
+Lmh0bWwKCg==
+
+--------------Boundary-00=_J0MZ59XA252V2LZZC9VU--
