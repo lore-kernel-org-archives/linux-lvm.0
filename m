@@ -1,64 +1,84 @@
-Message-Id: <199910122048.AA00771@mailgate1b.telekom.de>
+Message-Id: <199910122056.AA00304@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Problems with e2fsadm
-Date: Tue, 12 Oct 1999 22:47:22 METDST
-In-Reply-To: <m11ZHs9-000D4UC@londo.rhein-main.de>; from "Torsten Neumann" at Oct 7, 99 8:02 pm
+Subject: Re: [linux-lvm] Can't see /dev/hdk1
+Date: Tue, 12 Oct 1999 22:55:15 METDST
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Torsten Neumann <torsten@londo.rhein-main.de>
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
+> 
+> Michael -- many thanks for the bug fix -- all works really well and I'm
+> migrating a number of our disk towers to LVM! Your time much appreciated!
+> I guess this will make it into the next release?
 
-Hello Torsten,
+Yes.
 
-e2fsadm simply is buggy in 0.7 when dealing with ext2 4k block sizes.
-This will be fixed in 0.8.
-
-Workaround grow  : e2fsck, lvextend, resize2fs
-Workaround shrink: e2fsck, resize2fs, lvreduce
+It's in 0.8.
 
 Regards,
 Heinz
 
 > 
-> I'm having some problems with e2fsadm when using 4096 as blocksize for my
-> ext2 filesystem. e.g
-> 	lvcreate -L 100 -n /dev/vg00/lvoltest vg00
-> 	mke2fs -b 4096 /dev/vg00/lvoltest
-> 	e2fsadm -L 200 /dev/vg00/lvoltest
-> gives something like
-> 	...
-> 	lvextend -- logical volume "/dev/vg00/lvoltest" successfully extended
+> - b
 > 
-> 	ext2_resize_fs: your container (i.e. the file or partition the
-> 					filesystem) is in is not big enough for a filesystem of
-> 					204800 blocks (it's only 51200 blocks)
+> On Sun, 10 Oct 1999, Michael Marxmeier wrote:
 > 
-> If using resize2fs instead of ext2resize I got the similiar message
+> > Hi Bruce.
+> > 
+> > > There is no physical hdj* device, as I have kept the disks to one per IDE
+> > > channel.  (By the way, if it helps, all drives work fine as stand alone
+> > > ext2fs devices, and under md raid).
+> > 
+> > And that triggers a bug in pv_read_all_pv(). To opmize scan time for 
+> > the cluttered /dev directory, pv_read_all_pv() tries to skip all
+> > partitions for devices which don't exist.
+> > Hover it's done in a wrong way ...
+> > 
+> > As a quick fix, have a look at lib/pv_read_all_pv.c and
+> > modify it as below. The current code tries to skip partitions
+> > if the device does not exist. However it blindly skips over the
+> > next 15 devices it has found in /dev.
+> > 
+> > The code should look like:
+> > 
+> >          if ( ( tst = open ( dev_name, O_RDONLY)) == -1) {
+> >             continue;
+> > #if 0
+> >             if ( MAJOR ( dir_cache[n].st_rdev) != MD_MAJOR &&
+> >                  MINOR ( dir_cache[n].st_rdev) % 16 == 0) {
+> >                n += 15;
+> >                continue;
+> >             }
+> > #endif
+> >          } else close ( tst);
+> > 
+> > Does this fix your problem?
+> > 
+> > The correct solution would be to order the dir_cache in major/minor
+> > order and skip based on major/minor.
+> > 
+> > 
+> > Hope this helps
+> > Michael
+> > 
+> > -- 
+> > Michael Marxmeier           Marxmeier Software AG
+> > E-Mail: mike@msede.com      Besenbruchstrasse 9
+> > Phone : +49 202 2431440     42285 Wuppertal, Germany
+> > Fax   : +49 202 2431420     http://www.msede.com/
+> > 
 > 
-> 	The containing partition (or device) is only 51200 blocks.
-> 	You requested a new size of 204800 blocks.
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  | Dr. Bruce C. Hewitson                          Ph:  +27 21 650 2878 |
+>  | Dept. Environmental & Geographical Sc.         Fax: +27 21 650 3791 |
+>  | University of Cape Town, Private Bag, Rondebosch, South Africa 7701 |
+>  |      hewitson@egs.uct.ac.za          http://www.egs.uct.ac.za       |
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 > 
-> Extending ext2 Filesystems on non logical volumes (/dev/sd...) works fine
-> even if using 4096 as blocksize.
-> Looking at the ext2resize code it seems to me that ext2resize is doing the
-> right thing, therefor my guess is that there is some bug in the lvm code.
-> Looking at LVM I find in tools/lib/liblvm.h
-> 	#define BLOCK_SIZE 1024
-> but I don't understand if this has something to do with the above problem.
-> BLOCK_SIZE seems to be used in vg_setup_for_extend to check if there is room
-> for extending. But I don't see what it has to do with the wrong result of
-> the llseek call in ext2resize.
-> 
-> Maybe here is someone smarter then me and could tell me what's going wrong.
-> Would be nice if resizing works for all blocksizes.
-> 
-> Regards,
-> 	Torsten
 > 
 
 
