@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problems with LVM
-Message-ID: <20030713222415.I23240@sistina.com>
-References: <20030712000127.GE15461@corp.vendio.com> <20030713121151.H23240@sistina.com> <20030713182743.GD20860@corp.vendio.com>
+From: Nils Juergens <nils@muon.de>
+Message-ID: <20030714002149.GA1041@trip.muon.local>
 Mime-Version: 1.0
-In-Reply-To: <20030713182743.GD20860@corp.vendio.com>; from petro@corp.vendio.com on Sun, Jul 13, 2003 at 11:27:43AM -0700
+Content-Disposition: inline
+Subject: [linux-lvm] Testing LVM2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,170 +13,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 13 15:26:01 2003
+Date: Sun Jul 13 17:22:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Linux LVM Mailing List <linux-lvm@sistina.com>
 
-On Sun, Jul 13, 2003 at 11:27:43AM -0700, Petro wrote:
-> On Sun, Jul 13, 2003 at 12:11:51PM +0200, Heinz J . Mauelshagen wrote:
-> > Petro,
-> > what's the lvcreate command line ?
-> 
-> lvcreate -L10G -n snap000 -s /dev/vg0 
+Hi,
 
-Looks like another vmalloc bug :(
+i'm currently in the process of starting to test the 2.5 linux kernel
+series, now that the 2.6-pre are around the corner. While i'm at it and
+having set up a box completely for testing (and trying to break) stuff 
+i thought i might give lvm2 a try (not that i expect it to break :) ).
 
-Kernel memory for snapshot exception tables gets allocated with vmalloc()
-which shouldn't fail (presumably there's enough memory free,
-which I assume in your case).
+Thus, i got LVM2.2.00.03-rc4.tgz and device-mapper.1.00.02-rc3.tgz of the
+ftp server.
 
-> 
-> > (highmem may cause problems if you use the snapsho9t, creation should
-> > work fine)
-> 
-> Is this highmem problem across all 2.4 kernels, or just 2.4.19+? The
-> first report I've seen of it is with a 2.4.19 kernel. 
+My question is: Is this stuff supposed to work with the 2.5 kernel series or
+do i have to switch to 2.4 to test lvm2? I know that the device-mapper is
+included in the 2.5 series, but is it recent enough? Also, are there
+different (and thus incompatible) versions of either the device mapper
+and/or the device-mapper-libs around?
 
-Didn't retest with kernel 2.4.21 yet.
-The ones before had it AFAIK.
+Trying to compile the above device-mapper after doing
 
-Regards,
-Heinz    -- The LVM Guy --
+configure --with-kernel-dir=/usr/src/linux-2.5.75
 
-> 
-> > 
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> > 
-> > On Fri, Jul 11, 2003 at 05:01:27PM -0700, Petro wrote:
-> > > Hello again. 
-> > > 
-> > > I'm having a problem with LVM, and I'm really, really hoping you won't
-> > > tell me it's because of:
-> > > 
-> > > # CONFIG_NOHIGHMEM is not set
-> > > CONFIG_HIGHMEM4G=y
-> > > # CONFIG_HIGHMEM64G is not set
-> > > CONFIG_HIGHMEM=y
-> > > CONFIG_HIGHIO=y
-> > > 
-> > > (linux kernel 2.4.21, lvm 1.0.7 stuff installed)  
-> > > 
-> > > I've got 8 boxes with 4 gig of memory, and 6 200 gig drives in a raid 0 
-> > > setup, and I need to use LVM+Snapshots. 
-> > > 
-> > > I can setup and create a 1.09T logical volume, but when I go to create a
-> > > snaphot, I get: 
-> > > 
-> > > lvcreate -- INFO: using default snapshot chunk size of 64 KB for "/dev/vg0/test"
-> > > lvcreate -- ERROR "Cannot allocate memory" creating VGDA for "/dev/vg0/test" in kernel
-> > > 
-> > > Now, in reading past posts there is some talk of how having "high
-> > > memory" turned on will cause problems with snapshots. 
-> > > 
-> > > The problem is that on these machines I *need* 4 gig of memory, and I
-> > > *need* snapshots. 
-> > > 
-> > > Help? 
-> > > 
-> > > 
-> > > --- Physical volume ---
-> > > PV Name               /dev/sda
-> > > VG Name               vg0
-> > > PV Size               1.09 TB [2344319232 secs] / NOT usable 32.31 MB [LVM: 267 KB]
-> > > PV#                   1
-> > > PV Status             available
-> > > Allocatable           yes
-> > > Cur LV                1
-> > > PE Size (KByte)       32768
-> > > Total PE              35770
-> > > Free PE               570
-> > > Allocated PE          35200
-> > > PV UUID               LyEPH1-pq2I-D022-v5c9-98rp-n7Ff-4LnNKL
-> > > 
-> > > --- Volume group ---
-> > > VG Name               vg0
-> > > VG Access             read/write
-> > > VG Status             available/resizable
-> > > VG #                  0
-> > > MAX LV                256
-> > > Cur LV                1
-> > > Open LV               1
-> > > MAX LV Size           2 TB
-> > > Max PV                256
-> > > Cur PV                1
-> > > Act PV                1
-> > > VG Size               1.09 TB
-> > > PE Size               32 MB
-> > > Total PE              35770
-> > > Alloc PE / Size       36032 / 1.10 TB
-> > > Free  PE / Size       4294967034 / 131071.99 TB
-> > > VG UUID               KciSkB-xbr8-22RM-zmke-6A69-6BEM-xLWMzv
-> > > 
-> > > --- Logical volume ---
-> > > LV Name                /dev/vg0/lv0
-> > > VG Name                vg0
-> > > LV Write Access        read/write
-> > > LV Status              available
-> > > LV #                   1
-> > > # open                 1
-> > > LV Size                1.07 TB
-> > > Current LE             35200
-> > > Allocated LE           35200
-> > > Allocation             next free
-> > > Read ahead sectors     1024
-> > > Block device           58:0
-> > > 
-> > > 
-> > >    procs                      memory    swap          io     system         cpu
-> > >  r  b  w   swpd   free   buff  cache  si  so    bi    bo   in    cs  us  sy  id
-> > >  0  0  0      0 3949704   1648  26104   0   0     3     2   27     5   0   0 100
-> > > 
-> > > 
-> > > -- 
-> > > "On two occasions, I have been asked [by members of Parliament], 'Pray, 
-> > > Mr. Babbage, if you put into the machine wrong figures, will the right 
-> > > answers come out?' I am not able to rightly apprehend the kind of confusion 
-> > > of ideas that could provoke such a question." -- Charles Babbage 
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to solve them ***
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> -- 
-> "On two occasions, I have been asked [by members of Parliament], 'Pray, 
-> Mr. Babbage, if you put into the machine wrong figures, will the right 
-> answers come out?' I am not able to rightly apprehend the kind of confusion 
-> of ideas that could provoke such a question." -- Charles Babbage 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+i get (using gcc-3.3 from Debian unstable):
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+[snipped other make output]
+make[1]: Entering directory /root/device-mapper.1.00.02-rc3/lib'
+gcc -c -Iioctl -I. -I../include -I/usr/src/linux-2.5.75/include -fPIC -Wall
+-Wundef -Wshadow -Wcast-align -Wwrite-strings -Wmissing-prototypes
+-Wmissing-declarations -Wnested-externs -Winline -O2 -DDM_COMPAT
+ioctl/libdevmapper.c -o ioctl/libdevmapper.o
+ioctl/libdevmapper.c:55: error: DM_TABLE_LOAD' undeclared here (not in a
+function)
+ioctl/libdevmapper.c:55: error: initializer element is not constant
+ioctl/libdevmapper.c:55: error: (near initialization for _cmd_data_v4[1].cmd')
+ioctl/libdevmapper.c:55: error: initializer element is not constant
+ioctl/libdevmapper.c:55: error: (near initialization for
+_cmd_data_v4[1].version')
+ioctl/libdevmapper.c:55: error: initializer element is not constant
+ioctl/libdevmapper.c:55: error: (near initialization for _cmd_data_v4[1]')
+ioctl/libdevmapper.c:56: error: initializer element is not constant
+ioctl/libdevmapper.c:56: error: (near initialization for
+_cmd_data_v4[2].version')
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+[snipped more "initializer element is not constant" and
+"SOMETHING_IN_UPPERCASE undeclared here" error messages]
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ioctl/libdevmapper.c:648: error: structure has no member named event_nr'
+ioctl/libdevmapper.c: In function _flatten':
+ioctl/libdevmapper.c:851: error: structure has no member named event_nr'
+make[1]: *** [ioctl/libdevmapper.o] Error 1
+make[1]: Leaving directory /root/device-mapper.1.00.02-rc3/lib'
+make: *** [lib] Error 2
+
+thanks,
+
+Nils
+
+-- 
+Nils Juergens  | nils@muon.de | icq 7090774
+Having problems sending big files over the net?
+Try out Efisto (http://efisto.rnbhq.org).
