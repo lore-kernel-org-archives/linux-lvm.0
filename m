@@ -1,8 +1,10 @@
-From: neuron <neuron@hollowtube.mine.nu>
-Message-Id: <20040108203554.2d609d0f@hollowbox>
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] setting VG UUID
+Message-ID: <20040108212542.GF23918@homer.msp.redhat.com>
+References: <20040107065801.A27995@cs.mcgill.ca> <20040107092415.A28215@cs.mcgill.ca>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Moving to a new system.
+Content-Disposition: inline
+In-Reply-To: <20040107092415.A28215@cs.mcgill.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,26 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  8 14:37:01 2004
+Date: Thu Jan  8 16:27:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm moving my data from the old server, kernel 2.4 and lvm1.  To a new server, kernel 2.6 and lvm2.
-I thought I'd start by removing hdd1. It's 80gb and I have about 111gb free.
+On Wed, Jan 07, 2004 at 09:24:15AM -0500, Navindra Umanee wrote:
+> For the record, I'm absolutely crazy, but I fixed this by doing:
+> 
+> echo "deadbeefdeadbeefdeadbeefdeadbeef"|dd of=/dev/hda6 obs=1 seek=4096 count=32
 
-pvmove --test /dev/hdd1
-pvmove -- couldn't find source physical volume "/dev/hdd1" in volume group "vg_main"
+> So much for universal uniqueness...
+The VG UUIDs *are* meant to all be the same on devices that are part of the
+same VG.  It's the PV UUIDs that differ.
+ 
+> For the record, I created my LVM1 partitions with Linux Mandrake 9.2.
+Could /dev/urandom have been missing when pvcreate was run?
+We think that would explain the symptoms.
 
-I have /dev/vg_main/storagelv as the drive I wanna take the space from.
-
-pvdisplay /dev/hdd1 works, total pe's 3575
-would the best way of doing this be:
-lvreduce -l-3575 /dev/vg_main/storagelv
-resize_reiserfs /dev/vg_main/storagelv (I think reiserfs can do online resizing?)
-then umount /mnt/storage
-pvmove /dev/hdd1
-vgreduce /dev/hdd1
-?
-
-I wanna make damn sure I get this right before I do it.
+> Should "vgchange -a n" maybe clean up these symlinks?
+It's supposed to do.
+ 
+Alasdair
+-- 
+agk@redhat.com
