@@ -1,11 +1,10 @@
-Date: Wed, 3 Oct 2001 15:24:26 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] Re: partition table read incorrectly
-Message-ID: <20011003152426.B31796@cistron.nl>
-References: <20011002202934.G14582@wiggy.net> <E15oUUf-0005Xw-00@the-village.bc.nu> <20011002220053.H14582@wiggy.net> <20011002150820.N8954@turbolinux.com> <20011003142633.A16089@cistron.nl> <20011003144236.A31796@cistron.nl>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011003144236.A31796@cistron.nl>; from wichert@cistron.nl on Wed, Oct 03, 2001 at 02:42:36PM +0200
+Content-Class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1-rc3 available at www.sistina.com
+Date: Wed, 3 Oct 2001 15:34:12 +0200
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FEC0@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,16 +17,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Other data point: the 2.2.19 kernel as found on the lnx bootable business
-card also gets it wrong and detect a sdb1..
+> LVM 1.0.1-rc3 supports both version 1 and 2 of the metadata.
+>=20
+> There's *no* need to run any metadata update tools.
 
-Wichert.
+Does it mean that having v1 or v2 metadata is not important?=20
+Or does it means that upgrade is automatic?
+Or does it mean that with v1 some features aren't available until v2 is
+set?
 
--- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+More, I would like also if you include CHANGELOG in the ANNONCEMENT mail
+:-)
+
+Thanks for giving infos.
+-jec
