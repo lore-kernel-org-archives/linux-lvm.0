@@ -1,10 +1,10 @@
-From: "Steven Stillaway" <steve@stillaway.net>
-Subject: Re: [linux-lvm] Re: device-mapper transition
-Message-ID: <20021012172851.GB5529@sparcbox.net>
-References: <1034276879.2396.11.camel@mars.goatskin.org> <20021011075220.GA1153@fib011235813.fsnet.co.uk>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+In-Reply-To: <20021009181259.GA25050@fib011235813.fsnet.co.uk>
+References: <20021009181259.GA25050@fib011235813.fsnet.co.uk>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1034453126.15067.20.camel@irongate.swansea.linux.org.uk>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021011075220.GA1153@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submission
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +15,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 12 12:30:09 2002
+Date: Sat Oct 12 14:56:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-lvm@sistina.com
 
-Hello Joe,
+On Wed, 2002-10-09 at 19:12, Joe Thornber wrote:
+> The 2.5 port of device-mapper is available from:
+> 
+>    bk://device-mapper.bkbits.net/2.5-stable
+> 
+> There are 6 changesets in here that are summarised at the end of this
+> email.
 
-I just noticed on your website (http://people.sistina.com/~thornber)
-that you have the 2.5 DM marked as untested for Intel SMP.
-
-I am running it on an Intel SMP box (Abit BP6 with Dual Celeron 433)
-and it seems fine.
-
-
--- 
-Steven Stillaway
-steve@stillaway.ca
-steve@sparcbox.net
+Until I get it in patch form I can't merge it...
