@@ -1,34 +1,43 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
+Message-ID: <3780FC76.FB361567@msede.com>
+Date: Mon, 05 Jul 1999 20:41:58 +0200
+From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] another invalid i/o ... error
+References: <199907052021.QAA09282@gate.penguinpowered.com>
 Content-Transfer-Encoding: 7bit
-Message-ID: <14208.58694.57289.45093@dukat.scot.redhat.com>
-Date: Mon, 5 Jul 1999 18:03:02 +0100 (BST)
-Subject: Re: [linux-lvm] Re: ext2resize
-In-Reply-To: <199907021658.KAA22753@webber.adilger.net>
-References: <001701bec2dd$7a210d60$0102010a@adminstation.sgymsdam.nl>
-	<199907021658.KAA22753@webber.adilger.net>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Andreas Dilger <adilger@enel.ucalgary.ca>
-Cc: Linux LVM mailing list <linux-lvm@msede.com>, Linux FS development list <linux-fsdevel@vger.rutgers.edu>, Stephen Tweedie <sct@redhat.com>
+To: root@gate.penguinpowered.com
+Cc: galtons@thegeek.org, linux-lvm@msede.com
 
-Hi,
+Hello Simon.
 
-On Fri, 2 Jul 1999 10:58:27 -0600 (MDT), Andreas Dilger
-<adilger@enel.ucalgary.ca> said:
+[snip]
+> But running vgscan results in the oft-reported error:
+> [root@gate 0.6]# vgscan
+> vgscan -- invalid i/o protocol version
+> 
+> So, Here's the end of an strace vgscan, note the open of "di2", whatever
+> that is.  After scratching my head for a few days, I made a device file 
+> in the current directory  (mknod di2 c 109 0) and re-ran vgscan -- got
+> another odd error.  
 
-> I agree that reserving GDT blocks would be a small hack for v0 of ext2, but
-> we could add a "COMPATIBLE" extension to v1 of ext2 that gave the number of
-> GDT blocks reserved.  Also, since the v1 sparse superblock filesystems
-> leave a gap between the structures, there should not be a real problem.
-> We just have to make sure that we agree (for example) that all the blocks
-> from the start of the group to the block bitmap are reserved for the GDT.
-> This is not a big strech, since this is already how v0 ext2 filesystems are.
+Strange.  Please run a vgscan -d and send me the output. This will 
+provide a function trace of the operations so it should be obvious 
+(with the strace) where it fails.
 
-If you're going to be moving user data around anyway (and you have to be
-able to do this for the shrink case anyway), then relocating the
-inode/bitmap blocks is really not that much harder.
+In addition please send me the complete strace (w/o creating the
+"di2")
+and i'll have a look at it.
 
---Stephen
+
+Hope that helps
+Michael
+
+-- 
+Michael Marxmeier           Marxmeier Software GmbH
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Voice : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
