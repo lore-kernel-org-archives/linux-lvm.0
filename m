@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problem with vgscan and md
-Message-ID: <20021010142722.A27412@sistina.com>
-References: <3DA455BD.4090208@comedia.it>
 Mime-Version: 1.0
-In-Reply-To: <3DA455BD.4090208@comedia.it>; from bluca@comedia.it on Wed, Oct 09, 2002 at 06:13:49PM +0200
+Content-Transfer-Encoding: 7bit
+Message-Id: <20021011142810B.jyoshida@miraclelinux.com>
+From: Jun YOSHIDA <jyoshida@miraclelinux.com>
+Subject: [linux-lvm] A tool to administrate LVM.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,137 +13,83 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 10 07:29:42 2002
+Date: Fri Oct 11 00:29:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Luca,
+Hello all,
 
-I tried to reproduce this here with the 1.0.5 and failed.
+I am a developer working for MIRACLE LINUX which is one of the linux
+distributors in Japan.
 
-1.0.5 vgscan only changes minors if there's minor # clashes _and_ if it
-is run with option "-f" in order to keep minors persistent by default.
+I made a tool to administrate LVM easily and named it LVMAdmin temporarily. 
+It will help beginners to create PV/VG/LV easily.
 
-So I deativated all VGs and stopped the device for the first one.
-There was no reason for vgscan to reallocate the device minors because
-there's no clash. After starting the device again and running vgscan,
-both VGs were accessable fine.
+Small screenshot is put at:
+	http://www.miraclelinux.com/developer/lvmadmin.html
+# Though it is Japanese page...
 
-An automatic reallocation of device numbers took place in vgscan up
-to version 1.0.
-Maybe this is an older tool version?
+Please evaluate it if you are interested.
+
+[Implementation]
+
+Currently, LVMAdmin has the following features:
+
+ - create a partition.
+ - create a physical volume.
+ - create a volume group.
+ - create a logical volume.
+ - display disk/partition/PV/VG/LV information.
+
+# The extending logical volume, snapshot, etc. are not implemented yet.
+
+[System Requirements]
+
+LVMAdmin is a Tcl/Tk script so it requires Tcl/Tk 8.0 or highter and,
+ofcourse, the system environment that the LVM can work comfortably.
+
+[Download]
+
+You can download the RPM from:
+ ftp://ftp.miraclelinux.com/pub/Miracle/ia32/standard/2.1/unsupported/RPMS/lvmadmin-0.2.0-3ml.i686.rpm
+
+And SRPM from:
+
+ ftp://ftp.miraclelinux.com/pub/Miracle/ia32/standard/2.1/unsupported/SRPMS/lvmadmin-0.2.0-3ml.src.rpm
+
+The binary package I prepared was built on Miracle Linux V2.1.
+Miracle Linux V2.1 is based on Red Hat Linux 7.1 and we applied some kernel
+patches including LVM kernel module to the kernel.
+Unfortunately, our products have not been shipped outside Japan so I
+think you need to rebuild LVMAdmin from SRPM.
+
+[How to use]
+
+On root account, type the following on xterm or some X terminal program:
+ # lvma
+A window will be appeared on your display.
+
+You can read the manual written in English at:
+   /usr/share/doc/lvmadmin-0.2.0/lvmadmin-doc-e.html
+
+# Since I'm not a native English speaker, I belive there are some
+# incorrect English in the manual. I'll much appreciate if you correct
+# my English and report it to me.
+
+[NOTE]
+ - I have tested LVMAdmin with kernel-2.4.9 and lvm-1.0.1.
+
+ - LVMAdmin outputs trace log to '/var/tmp/lvma.log' when you invoke it
+   with 'debug' option as follows:
+	# lvma debug
+
+   Please attach the log file to the bug report because it will help
+   me investigate where the bug is.
+
+ - Please evaluate it AT YOUR OWN RISK.
+
+Any comments/suggestions will be welcome.
 
 Regards,
-Heinz    -- The LVM Guy --
-
-On Wed, Oct 09, 2002 at 06:13:49PM +0200, Luca Berra wrote:
-> Hello,
-> I found a probable bug in vgscan up to LVM 1.0.5 due to lv device nodes 
-> renumbering
-> 
-> i found the problem in a shared storage environment, but it can be 
-> reproduced on a single machine
-> 
-> the problem can be reproduced with 2 md devices
-> create 2 vg each composed of 1 md device
-> let's say
-> VG /dev/vg00
-> Device 109:0
-> LV /dev/vg00/lvol1
-> Device 58:0
-> LV /dev/vg00/lvol2
-> Device 58:1
-> LV /dev/vg00/lvol3
-> Device 58:2
-> PV /dev/md0
-> 
-> VG /dev/vg01
-> Device 109:1
-> LV /dev/vg01/lvol1
-> Device 58:3
-> LV /dev/vg01/lvol2
-> Device 58:4
-> LV /dev/vg01/lvol3
-> Device 58:5
-> PV /dev/md1
-> 
-> now deactivate all VGs
-> raidstop /dev/md0
-> run vgscan -v
-> 
-> you have
-> 
-> VG /dev/vg01
-> Device 109:0
-> LV /dev/vg01/lvol1
-> Device 58:0
-> LV /dev/vg01/lvol2
-> Device 58:1
-> LV /dev/vg01/lvol3
-> Device 58:2
-> PV /dev/md1
-> 
-> vgchange -a y /dev/vg01
-> 
-> now raidstart /dev/md0
-> 
-> you need to run vgcan again, to see vg00
-> 
-> vgscan renumbers device node for vg00 so you get
-> 
-> VG /dev/vg00
-> Device 109:0
-> LV /dev/vg00/lvol1
-> Device 58:0
-> LV /dev/vg00/lvol2
-> Device 58:1
-> LV /dev/vg00/lvol3
-> Device 58:2
-> PV /dev/md0
-> 
-> vgscan cannot renumber device nodes for vg01 (which is active) so you 
-> also get
-> 
-> VG /dev/vg01
-> Device 109:0
-> LV /dev/vg01/lvol1
-> Device 58:0
-> LV /dev/vg01/lvol2
-> Device 58:1
-> LV /dev/vg01/lvol3
-> Device 58:2
-> PV /dev/md1
-> 
-> so we got two DIFFERENT vgs with the SAME device files
-> 
-> the need to run vgscan is due to having a shared storage so i might want 
-> to activate the md devices and vg devices on different nodes
-> 
-> Regards,
-> Luca
-> 
-> 
-> -- 
-> Luca Berra -- bluca@comedia.it
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-Jun YOSHIDA
