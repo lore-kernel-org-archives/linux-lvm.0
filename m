@@ -1,11 +1,9 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Thu, 11 Jan 2001 09:19:04 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] Oops in 2.4.0 (@ LVM)
-Message-ID: <20010111091904.E13060@66bassett.freeserve.co.uk>
-References: <200101110320.f0B3Klc09014@webber.adilger.net> <3A5D397C.6B3B0CA4@wrkhors.com>
+Return-Path: <okeefe@brule.borg.umn.edu>
+From: "Matthew O'Keefe" <okeefe@brule.borg.umn.edu>
+Date: Thu, 11 Jan 2001 08:31:14 -0600
+Message-ID: <20010111083114.A381363@brule.borg>
 Mime-Version: 1.0
-In-Reply-To: <3A5D397C.6B3B0CA4@wrkhors.com>; from lembark@wrkhors.com on Wed, Jan 10, 2001 at 10:41:32PM -0600
+Subject: [linux-lvm] nagging about the LVM usage survey
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,13 +18,35 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Matthew O'Keefe <okeefe@brule.borg.umn.edu>
 
-On Wed, Jan 10, 2001 at 10:41:32PM -0600, Steven Lembark wrote:
-> 
-> >   There will hopefully be a new LVM release soon.
-> 
-> any gross estimte on when (days, weeks, months)?
+</begin nagging>
 
-Friday or Monday ... iff you guys stop finding bugs.
+Hi,
+we've got a LVM Usage Survey up on the web at
 
-- Joe
+http://www.sistina.com/lvm/Pages/lvm_eval.html
+
+Nearly 2568 downloads of LVM  have taken
+place since , but only about 12 LVM users have actually filled out
+this survey.  So we don't really know what the
+other 2556 potential users are doing with LVM :-(       
+
+If more LVM users and developers fill these out and tell        
+us what they are doing with LVM, and what their immediate needs are,
+we can better understand where to go in the future.
+We are now starting to define the feature set 
+for LVM 5.0.  So please  tell us what you are doing with 
+LVM, and what you want to see
+in future releases.  Filling out this survey helps us
+get more resources to continue development of this free
+software.
+
+If you have privacy concerns,  then make up your name address and
+email.  Also, we won't spam people with stupid sales or marketing
+pitches.
+
+Thanks
+Matt O'Keefe
+
+</end nagging>
