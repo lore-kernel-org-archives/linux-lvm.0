@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Red Hat Advanced Server + LVM
-Message-ID: <20030620130234.A29677@sistina.com>
-References: <1056102632.7379.35.camel@lupin>
-Mime-Version: 1.0
-In-Reply-To: <1056102632.7379.35.camel@lupin>; from geoff.dolman@cimr.cam.ac.uk on Fri, Jun 20, 2003 at 10:50:32AM +0100
+Subject: Re: [linux-lvm] Snapshots problem
+Content-Type: multipart/alternative; boundary=Apple-Mail-3-421497440
+Mime-Version: 1.0 (Apple Message framework v552)
+From: "Dale J. Stephenson" <dalestephenson@mac.com>
+In-Reply-To: <003301c334b5$53d50460$e601010a@h17119.findquick.com>
+Message-Id: <66E851F1-A26E-11D7-8E22-0003937830E4@mac.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,63 +14,90 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 20 06:16:02 2003
+Date: Fri Jun 20 09:30:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jun 20, 2003 at 10:50:32AM +0100, Geoff Dolman wrote:
-> Hi
-> 
-> I am soon to take delivery of a new Server: It's configuration is to be
-> 
-> 584GB disk (hardware raid5) 4 cpu (with Intel hyperthreading)
-> 
-> 32 GB RAM
-> 
-> 
-> I intend to use RH Advanced Server 2.1 (whatever the latest kernel is at
-> time of install).
-> 
-> I would ideally like to be able to snapshot dump this machine (the
-> largest partition will use most of the available disk space (4-500GB)).
-> 
-> Is there any caveat or issue that I should be aware of with lvm in this
-> configuration?
+--Apple-Mail-3-421497440
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=US-ASCII;
+	format=flowed
 
-Snapshots trigger a virtual memory problem with highmem enabled in kernel 2.4 :(
 
-The snapshot exception tables hold in RAM can grow quite big in case
-of large snapshot sizes (which you might not need in case your filesystem(s)
-are not heavily updated during the lifetime of the snapshot).
+On Tuesday, June 17, 2003, at 05:46  AM, beboy wrote:
 
-> 
-> Many thanks
-> 
-> -- 
-> Geoff Dolman <geoff.dolman@cimr.cam.ac.uk>
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Hello All,
+>
+> I have a strange issue of the snapshots on my Linux machine. Currently 
+> my Linux version is 2.4.18-snap.clipper. I have two snapshots are 
+> shown as ORPHAN which cannot be deleted (another thing is their date 
+> are shown as 'bogus' in snaptab). This causes the issue that all the 
+> snapshots following them cannot be deleted also. Is there any forced 
+> method can achieve my goal? Which command should I use and what kind 
+> of document can be found on some web sites?
+>
+> Thanks,
+> -Kevin
+>
+ From the Linux version and the mention of the snaptab, you must be 
+using something from SnapAppliance.  Have you tried talking to customer 
+support?  Snap uses my chained snapshot patch, which isn't part of the 
+LVM1 cvs tree -- that's why the following snapshots can't be deleted, 
+there's a snapshot depending on them.  For documentation, I'd also 
+check SnapAppliance.
 
--- 
+I can tell you that if you reboot the snapshots will almost certainly 
+be deletable.  You should still talk to customer support, as they'll 
+probably want your logs to find out what went wrong.
 
-Regards,
-Heinz    -- The LVM Guy --
+Dale J. Stephenson
+dalestephenson@mac.com
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+--Apple-Mail-3-421497440
+Content-Transfer-Encoding: 7bit
+Content-Type: text/enriched;
+	charset=US-ASCII
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+On Tuesday, June 17, 2003, at 05:46  AM, beboy wrote:
+
+
+<excerpt><fontfamily><param>Verdana</param><smaller>Hello All,</smaller></fontfamily>
+
+
+<fontfamily><param>Verdana</param><smaller>I have a strange issue of
+the snapshots on my Linux machine. Currently my Linux version is
+2.4.18-snap.clipper. I have two snapshots are shown as ORPHAN which
+cannot be deleted (another thing is their date are shown as 'bogus' in
+snaptab). This causes the issue that all the snapshots following them
+cannot be deleted also. Is there any forced method can achieve my
+goal? Which command should I use and what kind of document can be
+found on some web sites?</smaller></fontfamily>
+
+
+<fontfamily><param>Verdana</param><smaller>Thanks,
+
+-Kevin</smaller></fontfamily>
+
+
+</excerpt>From the Linux version and the mention of the snaptab, you
+must be using something from SnapAppliance.  Have you tried talking to
+customer support?  Snap uses my chained snapshot patch, which isn't
+part of the LVM1 cvs tree -- that's why the following snapshots can't
+be deleted, there's a snapshot depending on them.  For documentation,
+I'd also check SnapAppliance.
+
+
+I can tell you that if you reboot the snapshots will almost certainly
+be deletable.  You should still talk to customer support, as they'll
+probably want your logs to find out what went wrong.
+
+
+Dale J. Stephenson
+
+dalestephenson@mac.com
+
+
+--Apple-Mail-3-421497440--
