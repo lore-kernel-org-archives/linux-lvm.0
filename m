@@ -1,9 +1,9 @@
 Return-Path: <wilson@visi.com>
-Date: Thu, 22 Feb 2001 22:56:03 -0600 (CST)
+Date: Thu, 22 Feb 2001 22:59:34 -0600 (CST)
 From: Timothy Wilson <wilson@visi.com>
 Subject: Re: [linux-lvm] lvm on a brand-new server
 In-Reply-To: <200102220906.KAA25228@detrius.engohol.se>
-Message-ID: <Pine.GSO.4.21.0102222252540.4816-100000@isis.visi.com>
+Message-ID: <Pine.GSO.4.21.0102222258320.4816-100000@isis.visi.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Sender: linux-lvm-admin@sistina.com
@@ -22,28 +22,11 @@ To: linux-lvm@sistina.com
 
 On 22 Feb 2001, Erik [ISO-8859-1] B=E5gfors wrote:
 
-> > Can anyone suggest a basic outline of the process? I'm certain there's =
-a lot
-> > more reading to do, but I'm not sure where to start. (I have looked ove=
-r the
-> > LVM How-to and the FAQ.)
->=20
-> This is what I did.
->=20
-> * Compile a 2.4.x-kernel with lvm and reiserfs (make-kpkg is your
-> friend)
+> I think I saw somewhere someone made a reiserfs-enable
+> debian-installdisk but I haven't tried it myself.
 
-I've heard that before. I need to look into the kpkg stuff.
-
-> * Create tar-balls or debian-packages of the lvm-tools and
-> reiserfs-tools (at least mkreiserfs)=20
-
-There aren't any debs for those already? That surprises me. Is the
-development just too fast for the packaging to keep up?
-
-Thanks for the tips. That will really help me focus my reading over the nex=
-t
-week or so until the machine arrives.
+See http://chao.ucsd.edu/debian/boot-floppies/ for more info. At least
+that's the first site my Google search turned up.
 
 -Tim
 
