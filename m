@@ -1,35 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j29HfMn05546
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 12:41:22 -0500
-Received: from psmtp.com (exprod6og2.obsmtp.com [64.18.1.122])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j29HfLl1025557
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 12:41:21 -0500
-From: linux-lvm-bounces@redhat.com
-Received: from uswm.myoverland.net (unverified) by
-	SD-MIS-S36.overland.myoverland.net
-	(Content Technologies SMTPRS 4.3.14) with ESMTP id
-	<T6f931954060a0108295e8@SD-MIS-S36.overland.myoverland.net> for
-	<linux-lvm@redhat.com>; Wed, 9 Mar 2005 09:41:20 -0800
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])	by
-	int-mx1.corp.redhat.com
-	(8.11.6/8.11.6) with ESMTP id j25Ej2n14615	for <linux-lvm@redhat.com>;
-	Sat, 5 Mar 2005 09:45:02 -0500
-Received: from WS0005.indiatimes.com (smtp5.indiatimes.com [203.199.93.15])	by
-	mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j25EirQ4017495	for
-	<linux-lvm@redhat.com>; Sat, 5 Mar 2005 09:44:55 -0500
-Received: from 192.168.57.15 ([192.168.57.73])	by WS0005.indiatimes.com
-	(8.9.3/8.9.3) with SMTP id TAA26825	for "LVM general discussion and
-	development"<linux-lvm@redhat.com>; Sat, 5 Mar 2005 19:04:38 +0530
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j29M93n28580
+	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 17:09:03 -0500
+Received: from mail.utsl.gen.nz (210-54-92-184.ipnets.xtra.co.nz
+	[210.54.92.184])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j29M8u9Q004170
+	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 17:08:56 -0500
+Message-ID: <422F73E8.4070707@vilain.net>
+Date: Thu, 10 Mar 2005 11:08:40 +1300
+From: Sam Vilain <sam@vilain.net>
 MIME-Version: 1.0
-Subject: Re: Re: [linux-lvm] mirroring in LVM2
-Message-ID: <OF2B022FD7.481B2DD5-ON88256FBF.0050256F-88256FBF.00612E88@myoverland.net>
-Sender: lIvey@overlandstorage.com
-Date: Wed, 9 Mar 2005 09:41:29 -0800
-Content-type: multipart/mixed; 
-	Boundary="0__=07BBE52CDFC3A3FF8f9e8a93df938690918c07BBE52CDFC3A3FF"
-Content-Disposition: inline
-Reply-To: pritambhavsar <pritambhavsar@indiatimes.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] Building up a RAID5 LVM home server (long)
+	[0x05B52F13]
+References: <422F679C.8010003@boyko.net>
+In-Reply-To: <422F679C.8010003@boyko.net>
+Content-Transfer-Encoding: 7bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -39,78 +24,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Andy Boyko <andy@boyko.net>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
---0__=07BBE52CDFC3A3FF8f9e8a93df938690918c07BBE52CDFC3A3FF
-Content-type: text/plain; charset=iso-8859-1
-Content-transfer-encoding: quoted-printable
+Andy Boyko wrote:
+>>The underlying principle, is keeping the MD layer as simple as possible,
+>>so that you've got nice little resilient building blocks for your Volume
+>>Group.  Never use concatenation, striping or RAID5 at the MD layer if
+>>you've got LVM, it's simply in the wrong place!
+> Could you by any chance explain this?  Assuming, say, five identical
+> disks, is it really wrong to make an MD RAID-5 out of them, and then
+> put an LVM LV atop that, for later extension?   I'm feeling pretty 
+> dopey, 'cause I'm not immediately grasping what would be an alternative 
+> MD/LVM/EVMS/whatever approach, assuming you do fundamentally want N-1 
+> worth of available space from those disks.  What am I missing?
 
+Sorry, I shouldn't have said "never".  All I'm saying is that most of
+the time, you think you want this but in balance you probably want to
+simply buy a few more disks, or bigger disks, instead of worrying
+about an extra X% of space, which invariably will just increase
+backup requirements anyway.
 
+If you do have an equally sized (ideally also homogenous brand/model)
+set of disks, *and you don't overly care about write performance or
+excessive performance degradation in the case of a single failure*,
+then sure, RAID 5 setup as you say is the right solution.
 
-I am trying to implement the concept of RAID 1 that is the mirroring in=
- the
-LVM2 on 2.6.7 kernel version. LVM2 is implemented with the help of the
-device-mapper. What is the exact reason for adding the device mapper in=
- 2.6
-kernel source tree and throwing LVM2 out of kernel source tree.
+This is just an old saying repeated.
 
+   RAID - Fast, Cheap, Reliable.  Pick any two.
 
+fast+cheap = raid 0/striping
+fast+reliable = raid 1 or 10
+cheap+reliable = raid 5
 
-
--Pritam
-
-"LVM general discussion and development" wrote:
-
-
-
-
- Le 02.03.2005 09:49:17, pritambhavsar a =E9crit :
- > Hello to all
- >
- >
- > I am new to LVM2 and trying do the mirroring, please tell me how to
- > do that.
-
- As mirroring is not yet available in lvm, you have to install a lvm
- over a raid1.
-
- >
- >
- > I have Fedora Core 2 with LVM2 2.00.25.
- >
- >
- > -Pritam
-
- Jean-Luc
-
-Indiatimes Email now powered by APIC Advantage. Help!
-(Embedded image moved to file: pic25547.gif)H! elp
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-=
-
---0__=07BBE52CDFC3A3FF8f9e8a93df938690918c07BBE52CDFC3A3FF
-Content-type: image/gif; 
-	name="pic25547.gif"
-Content-Disposition: attachment; filename="pic25547.gif"
-Content-transfer-encoding: base64
-
-R0lGODlhcwAnAKIAAHJyctvb2xgYGJ2dnTc3N7q6ugAAAP///yH5BAAAAAAALAAAAABzACcAAAP/
-eLrc/jDKSeMQperNu/+DATjA+J1oWgVD0BQC0QSxq954CgO2EhCC3qFgkOWOSA1N1AAYMj4AhlHg
-Ja9YmGDACHF9RSpQiC3faMEFcRRgGVqBQoEgIpvvykO7LeXF5wByc2+CdIFQeIkTgoxyA42NBIeD
-k4qWEZCZjo+PjIaddpeXmowABEACMZKCpow9baKjpBcGtakCtQZbmnynsZZ/kE66AAPGxqa1kwUD
-pqiSv4qawwSaA0AihbiSLdGKwazKpHLDh8YFod5l4My4h8WkTrty6qLsTtXtk/Ce2fT1wCL5YyYo
-xLIqRQQBDFhQVydIDwviepRuYRJw+MZlMvTP/yKeUgk1CjzkUcG/OG0QIeqQktxAkS4DVXxQzKQV
-ltckCaFjYIgyOgrozJQAEgNMR+7QcQhzQMpQB0tO1fqyJmjPHz0PNHsKIdiFeTBD7OK6gKkAExvQ
-QMHqouoBoG+zpmgp55OUXFIJFfJHVkEYIgtMSdmCj4xBKkzonKVFAKsCU0FL6LKB9SxUkISa5V0s
-UW/fA2FgWS021Qnax08ahMH3yJ3juH5FhDCSqtkbB4yuhRynO5/SDUwZwP3LpMvtBQGIm4DLPCtT
-4tyC+2hE6yB1OgQefpZu1a8Mt8hjCE/ttnl30Eagl6j5opG8iKVwgf2tgTts9D5PKxBbwp3J4pvm
-3fccbRhcY0cmtWVCDXzbGTGed/k9MEgRX0R4X4AD+qCYfiZBQgd87bwkyGclnQDRNsU8NBsvJX5E
-nS6nxJCKVNZ1FMEpOOao44489ujjj0ACCZ9YxzRjSlIbBankkkw26eRBPD1zSjI1zgFkiyqwo1iR
-R06lCZZ3sKNbEevdNR8jYJrBDjPY5GILiAqlWUY8ZZ4jB0roiCZBAgA7
-
---0__=07BBE52CDFC3A3FF8f9e8a93df938690918c07BBE52CDFC3A3FF--
+Sam.
