@@ -1,9 +1,7 @@
-Message-ID: <3BD476CF.D6CC2C7D@ieee.org>
-From: Bryan-TheBS-Smith <b.j.smith@ieee.org>
+From: Patrick McCarty <mccartyp@apu.edu>
+Message-ID: <Pine.LNX.4.33.0110221458580.12322-100000@home.apu.edu>
 MIME-Version: 1.0
-References: <E15vISM-0005YX-00.2001-10-21-14-15-58@mail5.svr.pol.co.uk> <002501c15a66$34f8d010$836788cf@industry> <20011022153819.A2744@thunk.org>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: What really works?
+Subject: [linux-lvm] 2.2.13ac5 with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,25 +12,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 22 14:42:02 2001
+Date: Mon Oct 22 17:03:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Theodore Tso <tytso@mit.edu>
-Cc: "Jason A. Lixfeld" <jlixfeld@fastvibe.com>, ext3-users@redhat.com, linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Theodore Tso wrote:
-> (and I haven't even included the ATARAID aspects)
+Hi folks,
 
-Just say *NO* to "trick BIOS" ATA RAID.  Especially from a company
-that seems to be doing little to guarantee Linux compatibility.
+I've currently running a 2.4.8 linus kernel with LVM rc2,
+but now being forced to implement quotas, I must switch to one
+of Alan's kernels. FWIW, we've been serving up well over 500GB with
+multiple volumes via NFS, and it's been rock solid.
 
--- TheBS
+I've been struggling to compile LVM rc4, and CVS against it, but
+fail due to the kiovec issue.
 
--- 
-Bryan "TheBS" Smith    mailto:b.j.smith@ieee.org   chat:thebs413
-Engineer  AbsoluteValue Systems, Inc.  http://www.linux-wlan.org
-President     SmithConcepts, Inc.   http://www.SmithConcepts.com
-----------------------------------------------------------------
-The US National ID is an enhanced Social Security Number.  It
-will give those who abuse it more information than ever before.
-And just like the SSN, they will ignore all the regulations.
+Let me back up a step and ask another question:
+
+What would be the most stable configuration of LVM/ext3/quotas?
+I've considered the latest 2.4.10ac kernel series as well to back up to 
+before he reverted some code to further sync up with linus.
+
+Anyone have any insight?
+
+Thanks!
+
+-- Patrick
+
+Thank you sir. May I have another?
