@@ -1,13 +1,11 @@
-Return-Path: <wichert@cistron.nl>
-Date: Mon, 13 Aug 2001 00:35:13 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010813003513.B30146@cistron.nl>
-References: <20010812135402.A452@dardhal.mired.net> <997636232.20870.2.camel@monster.omnifarious.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <997636232.20870.2.camel@monster.omnifarious.org>; from hopper@omnifarious.org on Sun, Aug 12, 2001 at 12:10:31PM -0500
+Return-Path: <a.bruns@sauerland.de>
+Message-ID: <003901c12396$fbbc6920$0df1d981@piefke>
+From: "Alexander Bruns" <a.bruns@sauerland.de>
+References: <00ac01c11a7f$9fac1bf0$0df1d981@piefke> <3B684CD1.1050209@linuxalert.org>
+Subject: Re: [linux-lvm] volume group not found????
+Date: Mon, 13 Aug 2001 03:26:30 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,29 +17,187 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On 12 Aug 2001 13:54:02 +0000, Jos� Luis Domingo L�pez wrote:
-> As far as I know, there are plans to remove much of the thingss that
-> currently appear under /proc. It seems that only information about
-> processes currently running will remain under /proc.
+Hi,
 
-The name /proc already suggests it is a filesystem for processes,
-not kernel configuration.
 
-> Kernel parameters, system information, kernel variables and kernel
-> tunables will probably disappear and will be replaced by some sort of
-> user-space application that will allow query and modfication of kernel
-> values and tunables. Something similar to Solaris' ndd, AFAIK.
+> It looks like you have hit the bug 193 in bugzilla.
+>
 
-From what I remember the idea is to move all the no-process stuff
-from /proc to (an)other filesystem(s), /kernel or so. 
+Okey, I read about this Bug. But where do i found a way to get on my
+data on the lvm-partition?
 
-Wichert.
+Greetings, Alex
 
--- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+
+> /Magnus
+>
+> Alexander Bruns wrote:
+>
+> > Hi,
+> >
+> > I am new to this group an new to lvm. I reinstalled my personal
+server
+> > with redhat 7.1 an wanted to get lvm run over my three large
+discs.
+> >
+> > I had the following things running for a short while:
+> >
+> > - RedHat 7.1 with all updates.
+> > - self-compiled Kernel 2.4.6 with patched lvm 0.9.1_beta7
+> >
+> > On my first HD Igave the rest space to hda7 with fdisk and set the
+> > partition to "8e" lvm.
+> >
+> > The i followed the howto at sistina at:
+> > file://sistina.com/lvm/doc/lvm_howto/Common_tasks.html
+> >
+> >
+> > - I initalized the Partition:
+> >   pvcreate /dev/hda7
+> >
+> > - I added the partition to a new volume group:
+> >   vgcreate lvm_volume_01 /dev(hda7
+> >
+> > - then o activated the volume group:
+> >   vgchange -a y lvm_volume_01
+> >
+> > - The I put a logical volume on the volume group:
+> >   lvcrate -L50G -nlvm_lv_01 lvm_volume_01
+> >
+> > This logical Volume was then at /dev/lvm_volume_01/lvm_lv_01 and o
+> > formated it woith reiserfs an mounted it! Evething runs fine.
+> >
+> > I copied the old contents of hdb5 and hdc5 of the smaller HDs to
+this
+> > logical volume. on hda7.
+> >
+> >
+> >
+> > Then I added deleted the partition on hdc5, made a new one, set it
+to
+> > 8e an added it to the volume group as explained at:
+> > file://sistina.com/lvm/doc/lvm_howto/Common_tasks.html
+> >
+> >
+> > pvcreate /dev/hdc5
+> > vgextend lvm_volume_01
+> > lvextend -L30G /dev/lvm_volume_01/lvm_lv_01
+> > resize_reiserfs -f /dev/lvm_volume_01/lvm_lv_01
+> >
+> > That was all fine and i could mount the lvm_lv_01 without any
+> > problems.
+> >
+> >
+> > The same I then wanted to manage with the thirt HD at hdb5, but
+then
+> > something went wrong??
+> >
+> > Resize reiserfs did something but when i wanted to mount the LV it
+did
+> > not work. reiserfs-checks did not found a problem but the
+mount-binary
+> > told my something about a superblock......
+> >
+> >
+> > Abter a reboot I now have the following:
+> >
+> > [root@holodeck lvmconf]# pvdisplay /dev/hda7
+> > pvdisplay
+> > --- Physical volume ---
+> > PV Name               /dev/hda7
+> > VG Name               lvm_volume_01
+> > PV Size               48.54 GB / NOT usable 1.06 MB [LVM: 169 KB]
+> > PV#                   1
+> > PV Status             available
+> > Allocatable           yes (but full)
+> > Cur LV                1
+> > PE Size (KByte)       4096
+> > Total PE              12425
+> > Free PE               0
+> > Allocated PE          12425
+> > PV UUID               cFFBJX-aqxr-P7kU-71OY-pgpX-rvtA-XxVpoc
+> >
+> > But for /dev/hdb5 and /ev/hdc5 it does not show the same.
+NOTHING!!
+> >
+> >
+> >
+> > And becouse I did not write anything to the volumegroup or logical
+> > volume after the added two partition al my data must still be on
+hda7.
+> > But how do I manage to get on it?
+> >
+> > The following commands say the folling:
+> > #####################################################
+> >
+> >
+> >
+> > [root@holodeck lvmconf]# vgscan
+> > vgscan
+> > vgscan -- reading all physical volumes (this may take a while...)
+> > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> > vgscan -- WARNING: This program does not do a VGDA backup of your
+> > volume group
+> >
+> > lvm_volume_01 is not found
+> >
+> > [root@holodeck lvmconf]# vgchange -a y lvm_volume_01
+> > vgchange
+> > vgchange -- volume group "lvm_volume_01" does not exist
+> >
+> >
+> >
+> > [root@holodeck lvmconf]# ls -al /dev/lvm*
+> > crw-r-----    1 root     root     109,   0 Jul 20 16:39 /dev/lvm
+> >
+> > /dev/lvm_volume_01:
+> > insgesamt 88
+> > dr-xr-xr-x    2 root     root         4096 Jul 20 23:06 .
+> > drwxr-xr-x   15 root     root        81920 Jul 28 13:12 ..
+> > crw-r-----    1 root     disk     109,   0 Jul 20 23:02 group
+> > brw-rw----    1 root     disk      58,   0 Jul 20 23:06 lvm_lv_01
+> >
+> >
+> > [root@holodeck lvmconf]# ls -al /dev/lvm_volume_01/
+> > insgesamt 88
+> > dr-xr-xr-x    2 root     root         4096 Jul 20 23:06 .
+> > drwxr-xr-x   15 root     root        81920 Jul 28 13:12 ..
+> > crw-r-----    1 root     disk     109,   0 Jul 20 23:02 group
+> > brw-rw----    1 root     disk      58,   0 Jul 20 23:06 lvm_lv_01
+> >
+> >
+> >
+> >
+> > SHIT!
+> >
+> > How do I get on my Data at lvm_volume_01 bzw lvm_lv_01.
+> > lvm_lv_01 was formated with reiserfs
+> >
+> >
+> >
+> > Greetings from Germany from Alex
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> >
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
