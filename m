@@ -1,28 +1,45 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j118EIO26308
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 03:14:18 -0500
-Received: from pcsspz.PATNI.COM (pcsbom.patni.com [203.124.139.208] (may be
-	forged))
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j118EBGZ019579
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 03:14:12 -0500
-Received: from rakshak.patni.com (rakshak.patni.com [203.124.139.54])
-	by pcsspz.PATNI.COM (8.12.8/8.12.8) with SMTP id j118DRwr008496
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 13:43:47 +0530
-Received: from spzha1.patni.com ([192.168.0.6])
-	by rakshak.patni.com (SMSSMTP 4.0.0.59) with SMTP id
-	M2005020113441308535
-	for <linux-lvm@redhat.com>; Tue, 01 Feb 2005 13:44:13 +0530
-Received: from pcp41107 ([172.26.5.95]) (authenticated bits=0)
-	by spzha1.patni.com (8.12.11/8.12.9) with ESMTP id j118EDrf005279
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 13:44:13 +0530
-From: "Sandhya Suman" <sandhya.suman@patni.com>
-Date: Tue, 1 Feb 2005 13:44:52 +0530
-Message-ID: <01bf01c50836$1bcdb750$5f051aac@pcp41107>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j11CF8O11269
+	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 07:15:08 -0500
+Received: from smtp6.wanadoo.fr (smtp6.wanadoo.fr [193.252.22.25])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j11CF63M016326
+	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 07:15:06 -0500
+Received: from me-wanadoo.net (localhost [127.0.0.1])
+	by mwinf0606.wanadoo.fr (SMTP Server) with ESMTP id 6CBBB1C0029C
+	for <linux-lvm@redhat.com>; Tue,  1 Feb 2005 13:15:00 +0100 (CET)
+Received: from tangerine-64.coulon.evette
+	(ALyon-209-1-4-72.w217-128.abo.wanadoo.fr [217.128.237.72])
+	by mwinf0606.wanadoo.fr (SMTP Server) with ESMTP id 2FA7B1C00281
+	for <linux-lvm@redhat.com>; Tue,  1 Feb 2005 13:15:00 +0100 (CET)
+Received: from localhost ([127.0.0.1])
+	by tangerine-64.coulon.evette with esmtp (Exim 4.44)
+	id 1Cvwvq-0002nE-KE
+	for linux-lvm@redhat.com; Tue, 01 Feb 2005 13:14:58 +0100
+Received: from tangerine-64.coulon.evette ([127.0.0.1])
+	by localhost (tangerine-64 [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 07586-07 for <linux-lvm@redhat.com>;
+	Tue, 1 Feb 2005 13:14:50 +0100 (CET)
+Received: from localhost ([127.0.0.1] helo=tangerine-64)
+	by tangerine-64.coulon.evette with esmtp (Exim 4.44)
+	id 1Cvwvi-0002mc-0W
+	for linux-lvm@redhat.com; Tue, 01 Feb 2005 13:14:50 +0100
+Date: Tue, 01 Feb 2005 12:14:39 +0000
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Subject: Re: [linux-lvm] converting ext3 / to LVM
+References: <006901c5069a$db39b690$4857fea9@desktop>
+	<1107077143l.22995l.0l@tangerine-64>
+	<20050130115544.65cfaef3@eric.placeverte.home>
+	<1107084645l.24357l.2l@tangerine-64>
+	<20050130180420.271340f7@eric.placeverte.home>
+	<1107106390l.10159l.2l@tangerine-64>
+	<20050130203638.17a5cba3@eric.placeverte.home>
+In-Reply-To: <20050130203638.17a5cba3@eric.placeverte.home> (from
+	messmate@free.fr on Sun Jan 30 20:36:38 2005)
+Message-Id: <1107260089l.10215l.0l@tangerine-64>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="----------=_1107245653-9059-234"
-Subject: [linux-lvm] pvpath support on SLES9
-Reply-To: sandhya.suman@patni.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+	protocol="application/pgp-signature"; boundary="=-AA1l2v9dmoirL3JSr7iQ"
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -34,46 +51,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format...
-
-------------=_1107245653-9059-234
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+--=-AA1l2v9dmoirL3JSr7iQ
+Content-Type: text/plain; charset=ISO-8859-15; DelSp=Yes; Format=Flowed
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-Is "pvpath" tool available on Suse 9 Bundled lvm(lvm 2 for device mapper)??
-I couldnt find "pvpath" on my machine.
-Bundled LVM version on my m/c is lvm2-2.00.15-0.3
-OS -SLES 9(2.6.5-7.97-default)
+Le 30.01.2005 20:36:38, messmate a =E9crit=A0:
+> On Sun, 30 Jan 2005 17:33:10 +0000
+> "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr> wrote:
+>=20
+[ .. ]
+>> I don't find it neither, do you have any reference?
+>> http://www.tldp.org/HOWTO/LVM-HOWTO/index.html
+> This one :
+> http://www.tldp.org/HOWTO/LVM-HOWTO/multpartitions.html
+>>=20
+>> I've done the migration some time ago from etx3 non LVM to xfs LVM.
+>> Only the migration of the root filesystem is a bit tricky. But this =20
+>> is
+>=20
+>> not really more diffult that moving a (non LVM) system to a new HDD.
 
-From where can i get sources for lvm2-2.00.15-0.3 (lvm-2 tools).I want to
-build lvm tools in debug mode.i also need to embed my own messages in the
-pvscan tools source and build them.
+To be clear:
+It is *always* unsafe to move data over partitions
+I've done it and never got any problem
 
-Regards
-Sandhya Suman
-Software Engineer
-Patni computer Systems
-Mumbai
-India
+But, just is case of, I've backups.
 
 
+>=20
+> mess-mate
 
-http://www.patni.com
-World-Wide Partnerships. World-Class Solutions.
-_____________________________________________________________________
+Jean-Luc
 
-This e-mail message may contain proprietary, confidential or legally
-privileged information for the sole use of the person or entity to
-whom this message was originally addressed. Any review, e-transmission
-dissemination or other use of or taking of any action in reliance upon
-this information by persons or entities other than the intended
-recipient is prohibited. If you have received this e-mail in error
-kindly delete  this e-mail from your records. If it appears that this
-mail has been forwarded to you without proper authority, please notify
-us immediately at netadmin@patni.com and delete this mail. 
-_____________________________________________________________________
+--=-AA1l2v9dmoirL3JSr7iQ
+Content-Type: application/pgp-signature
 
-------------=_1107245653-9059-234--
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.5 (GNU/Linux)
+
+iD8DBQBB/3K5UdGGXzzGnNARAtqUAKCotORf6EKA8zO/8pCq8GxIYDqK4wCgqI2H
+e3tIswfuBlCa7I7iT7/uqsE=
+=2UCT
+-----END PGP SIGNATURE-----
+
+--=-AA1l2v9dmoirL3JSr7iQ--
