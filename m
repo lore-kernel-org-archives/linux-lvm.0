@@ -1,21 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j19J1EO12990
-	for <linux-lvm@redhat.com>; Wed, 9 Feb 2005 14:01:14 -0500
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.196])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j19J1D6A016676
-	for <linux-lvm@redhat.com>; Wed, 9 Feb 2005 14:01:14 -0500
-Received: by rproxy.gmail.com with SMTP id a41so2013963rng
-	for <linux-lvm@redhat.com>; Wed, 09 Feb 2005 11:01:08 -0800 (PST)
-Message-ID: <a58063aa05020911013b724ac9@mail.gmail.com>
-Date: Wed, 9 Feb 2005 11:01:08 -0800
-From: "M. Matt Colgin" <mcolgin@gmail.com>
-Subject: Re: [linux-lvm] moving LVM to a new box
-In-Reply-To: <1107958513l.12640l.4l@tangerine-64>
-Mime-Version: 1.0
-References: <000701c50eae$503fbd20$911ba8c0@godzilla>
-	<1107958513l.12640l.4l@tangerine-64>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1BB0jO15904
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 06:00:45 -0500
+Received: from mail.gmx.net (pop.gmx.de [213.165.64.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j1BB0i6j011966
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 06:00:45 -0500
+From: "Cisco" <cisco66@gmx.de>
+Subject: AW: [linux-lvm] Re: RAID, LVM and dm_crypt, please confirm setup
+Date: Fri, 11 Feb 2005 11:00:37 +0100
+MIME-Version: 1.0
+In-Reply-To: <1042776283.20050114231550@free.fr>
+Message-Id: <20050211100038.C7171757D0@mailer.at.ds9>
 Content-Transfer-Encoding: quoted-printable
-Reply-To: "M. Matt Colgin" <mcolgin@gmail.com>,
+Reply-To: cisco66@gmx.de,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,58 +23,124 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: hoper@free.fr, 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-I think you'll want to make a new installation on the P4 box as it
-would use a new, faster kernel for your processor. Really the question
-is if the old installation for P3 will boot under your new P3, as a
-bit more than the processor will have changed (at least to the OS). If
-you can get the OS to boot on the new computer, then LVM will be found
-and work.
+Well, thanks for the answer.
+Very strange, that only one man here is interested in those things...=20
 
-Moving the LVM to another machine is trival, check the below link:
-http://www.tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html
+I also thought about the way to crypt the RAID devices, but i didn't come to
+a "best" solution.
+And so i decided to crypt the lvm's. One reason was, that i wanted to have
+some unencrypted space for the case that something goes wrong, since i
+didn't find a comparable setup anywhere.
 
-Maybe a FC mailing list will get a more targeted group that would know exac=
-tly.
+But meanwhile i think, your solution may be better for the 3 reasons:
+1) you don't have to write the passphrase so often. Not so important for me,
+it runs 24x7.
+2) you never have to resize the file system.
+3) it seems to be running absolutely stable and there is no reason to hold
+unencrypted space.
+
+I now replaced to disks (2x40 from /dev/md1) with 2x160GB, using pvmove,
+vgreduce etc...
+Everything went fine and now i have the possibility to change everything in
+that way you mentioned.
+But i'm still not sure if i will do this.
+
+If I would plan a completely new setup, i would suggest to do it your way
+and crypt the md-devices.
+
+Since everything runs very stable and without any problems, i think, this
+setup is very secure.
 
 
-On Wed, 09 Feb 2005 14:15:13 +0000, Jean-Luc Coulon (f5ibh)
-<jean-luc.coulon@wanadoo.fr> wrote:
-> Le 09.02.2005 14:50:28, Sutto Zoltan a =EF=BF=BDcrit :
-> > I have a newly installed/configured/updated FC3 with LVM2 on a P3 box.
-> > How can I move this working system to a new P4 box with a larger SATA
-> > disk without reinstalling/upgrading/configuring the whole OS.
-> >
-> > Any help would be appreciated
+-----Urspr=EF=BF=BDngliche Nachricht-----
+Von: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] Im
+Auftrag von Stephane Dupuis
+Gesendet: Freitag, 14. Januar 2005 23:16
+An: LVM general discussion and development
+Betreff: [linux-lvm] Re: RAID, LVM and dm_crypt, please confirm setup
+
+
+Hi,
+
+> I have (at home) the following setup for my data discs:
 >=20
-> If I suppose you can install and boot you old disk in you new system
-> together with the new disk, you can do the following (I suppose the old
-> disk is /dev/hda with a /dev/hda1 partition, and new one /dev/sda with
-> a /dev/sda1 partition, I suppose your volume group is vg0):
+2x 80  GB RAID1 -->> /dev/md0
+2x 40  GB RAID1 -->> /dev/md1
+2x160 GB RAID1 -->> /dev/md2
 >=20
-> make backups  ;-)
+> These are part of volume group vg00, consisting of 9 logical volumes
+> lv00...lv09
 >=20
-> - pvcreate /dev/sda1
-> - vgextend vg0 /dev/sda1
-> - move all the lv data with pvmove /dev/hda1.
-> - vgreduce vg0 /dev/hda2
-> - you will have to configure lilo/grub to install and point on your new
-> disk.
->=20
-> I've done such a way but it was not with lvm2. Maybe there are some
-> pvmove issues with lvm2.
->=20
-> > Zoltan Sutto
->=20
-> Jean-Luc
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
->=20
->
+> Now i set up crypt devices with cryptsetup and named these crypt=20
+> devices clv00...clv09.
+
+Well I found this post really interesting :)
+
+First, I'm sorry cause I can't help you here and say for sure "you are doing
+the right thing" or "take care, what you are doing is dangerous".
+
+But I want to make something like this at home and so have the same concern
+about the good way to resize the files systems.
+
+I don't know if it will help but I thought about another way of mixing raid,
+lvm and dmcrypt.
+Instead of crypting the logical volume, why not crypt the raid device?
+So you can have :
+
+Physical drives -->> /dev/mdX
+using dmcrypt on it -->> /dev/mapper/mdX_crypt And after make your LVM
+physical volume :
+pvcreate /dev/mapper/mdX_crypt   ******* NOTE, SEE UNDER
+vgcreate testvg /dev/mapper/mdX_crypt
+and so on...
+
+In this way, you will never have to resize the crypted device.
+You will just have to resize the logical volume and the filesystem as usual.
+
+****** To be abble to do this, you need to edit the /etc/lvm/lvm.conf file
+and change the "type" line to :
+types =3D [ "device-mapper", 16 ]
+
+Another advantage of this "crypted md" architecture (compare to crypt the
+logical volume) is that the whole volume group are crypted, included all the
+lvm metadata.
+
+With your implementation, anybody can have access to the volume group
+metadata, the logicals volumes names and so on...
+(naming a logical volume "mpeg3_and_warez_fuck_riaa_lv" may not be a good
+idea here ;o)
+
+With all lvm metadata crypted, nobody can even know that you are using
+lvm...
+
+Of course, there are some drawback :(
+First, It's mean that the same key will be use for a whole /dev/dm.
+So, if you make a volme group on it, and.. let's say 10 logical volume, it's
+mean than theses 10 lvs will be crypted with the same key and that you can't
+choose to mount only 9 and think the last one is "secure"
+
+I did'nt decide wich way I will choose yet... but I need to have a logical
+volume that don't have the same key as the other.
+So I can't choose my way. I will surely make as you did... or mix the two
+ways.
+(crypt the /dev/dm, make a vg, make lvs and for one particular lv, crypt it
+again :o) Of course, I guess I will need cpu power here ;o)
+
+So, I can't answer to your questions, I just also wonder about the better
+way of putting all theses tools together...
+
+Any comments are welcome...
+
+Stephane Dupuis
+--
+()  ascii ribbon campaign
+/\      - against html e-mail=20
+        - against microsoft attachments
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
