@@ -1,11 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvcreate's man error (minor)
-Message-Id: <20020426162007.A21552@sistina.com>
-References: <200204261339.g3QDd2s03213@mailhost.aerov.jussieu.fr>
-MIME-Version: 1.0
-In-Reply-To: <200204261339.g3QDd2s03213@mailhost.aerov.jussieu.fr>;
-    from Estienne.Bloch@aerov.jussieu.fr on Fri, Apr 26, 2002 at 03:39:02PM
-    +0200
+Subject: Re: [linux-lvm] Error compilng tools on RH7.3
+MIME-Version: 1.0 (Apple Message framework v481)
+From: Stephan Budach <stephan.budach@jvm.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20020426153434.A21305@sistina.com>
+Message-Id: <66158E7E-592B-11D6-B7F2-000393452E7E@jvm.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,109 +14,140 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 26 09:21:02 2002
+Date: Fri Apr 26 10:35:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-Estienne,
+Oh well,
 
-thanks for pointing the man page flaw out.
-It is fixed in CVS at www.sistina.com now.
+i have managed to get this running with RH. Simply link the provides=20
+autoconfig.h from /usr/src/linux-2.4.18/include/linux/autoconfig to=20
+/usr/include/linux and off we go.
 
+Just tested with some pv/lv stuff and it worked great.
 
-IRT your size related question: in case you use an older LVM version,
-there was some bugs related to the > 1TB support for LVs.
+It=B4s=B4pretty easy to use and straightforward in its design.
 
-If you upgrade to 1.0.3 those should be gone.
+Thanks,
+Stephan
 
-Regards,
-Heinz    -- The LVM Guy --
+Am Freitag den, 26. April 2002, um 15:34, schrieb Heinz J . Mauelshagen:
 
-
-On Fri, Apr 26, 2002 at 03:39:02PM +0200, Estienne Bloch wrote:
-> Hello,
-> 
->  I'm a french user of a Mandrake 8.2 distribution. I notice a little error in 
-> the man of lvcreate command. So, here is what I suggest.
-> 
->  Original man
-> 
->  -p, --permission r/w
-> 	Set access permissions to read only or read and write.
-> 	Default is read and write.
-> 
->  May be
-> 
->  -p, --permission r/rw
-> 	Set access permissions to read only or read and write.
-> 	Default is read and write.
-> 
->  Because if I use
-> 
-> # lvcreate -L 4064m -n fpodlv -p w fpodvg
-> 
->  I obtain
-> 
-> lvcreate -- ERROR option p argument "w"
-> 
->  And if I try
-> 
-> # lvcreate -h
-> 
->  I obtain (extract)
-> 
-> [-p|--permission {r|rw}]
-> 
->  I've got another question. I precise I'm not a realy experienced user under 
-> Linux but I try to make a solution to backup systems with a easy to use 
-> interface called "fpod". This project drives me to use the LVM facilities.
-> I intended to create a big LV on a RAID array of 500 GB. Further this space 
-> could be extended to much more RAID array in the same LV. I notice in the 
-> vgcreate's man a kernel limit to 2 TB per block device.
-> 
->  But, when I test the LVM tools, I obtain a maximum logical volume size of 
-> 1.00 Terabyte after the command :
-> 
-> # vgcreate -s 32m fpodvg /dev/scsi/host0/bus0/target1/lun0/part1
-> 
->  If I try :
-> 
-> # vgcreate -s 16m fpodvg /dev/scsi/host0/bus0/target1/lun0/part1
-> 
->  I obtain
-> 
-> vgcreate -- INFO: maximum logical volume size is 1023.97 Gigabyte
-> 
-> So, my question is : does 2 TB in place of 2 TeraByte or 2 TeraBlock ?
-> 
-> LV' = 16 MByte x 65536 = 1 TeraByte = 2 TeraBlock (if 1 Block = 512 KByte)
-> LV" = 32 MByte x 65536 = 2 TeraByte = 4 TeraBlock (out of range)
-> 
-> Thanks for your attention.
-> 
-> Good day,
-> 
-> Estienne Bloch.
-> 
-> ien2lest@aerov.jussieu.fr
-> 
+>
+> Stephan,
+>
+> you need to pick a vanialla kernel 2.4.18 source and patch the LVM=20
+> driver in.
+> We don't support RH prepatched kernels.
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+>
+> On Fri, Apr 26, 2002 at 11:59:14AM +0200, Stephan Budach wrote:
+>> Hi List,
+>>
+>> I wanted to try out the LVM with my new RH7.3, (okay, in fact its RH
+>> 7.2.93, but I don=B4t think that this is the problem). My linuy box =
+is
+>> running the 2.4.18-0.13 kernel. I was able to apply the patch =
+lvm-1.0.3
+>> and build the kernel.
+>>
+>> Now, when I try to compile the tools I get the following errors:
+>>
+>> make[1]: Wechsel in das Verzeichnis Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/lib?
+>> make[2]: Wechsel in das Verzeichnis Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/lib?
+>> gcc -c -pipe -g -O0 -Wall -DDEBUG -I../../tools/lib -I../../tools
+>> -I/usr/local/src/LVM/1.0.3/tools/lib -o basename.o basename.c
+>> In file included from ../../tools/lib/liblvm.h:59,
+>>                   from basename.c:34:
+>> /usr/include/linux/autoconf.h:1:2: #error Invalid kernel header=20
+>> included
+>> in userspace
+>> make[2]: *** [basename.o] Fehler 1
+>> make[2]: Verlassen des Verzeichnisses Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/lib?
+>> make[1]: *** [all] Fehler 2
+>> make[1]: Verlassen des Verzeichnisses Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/lib?
+>> make[1]: Wechsel in das Verzeichnis Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/man8?
+>> make[2]: Wechsel in das Verzeichnis Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/man8?
+>> make[2]: Verlassen des Verzeichnisses Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/man8?
+>> make[1]: Verlassen des Verzeichnisses Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools/man8?
+>> make[1]: Wechsel in das Verzeichnis Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools?
+>> gcc -c -pipe -g -O0 -Wall -DDEBUG -I../tools/lib -I../tools
+>> -I/usr/local/src/LVM/1.0.3/tools/lib -o e2fsadm.o e2fsadm.c
+>> In file included from ../tools/lib/liblvm.h:59,
+>>                   from ../tools/lvm_user.h:43,
+>>                   from e2fsadm.c:55:
+>> /usr/include/linux/autoconf.h:1:2: #error Invalid kernel header=20
+>> included
+>> in userspace
+>> make[1]: *** [e2fsadm.o] Fehler 1
+>> make[1]: Verlassen des Verzeichnisses Verzeichnis
+>> ?/usr/local/src/LVM/1.0.3/tools?
+>> make: *** [all] Fehler 2
+>>
+>> Can anybody help me with this one?
+>>
+>> Thanks,
+>> Stephan
+>> --
+>> Stephan Budach
+>>
+>> Jung von Matt/Services
+>>
+>> Glash=FCttenstrasse 38   			20357 Hamburg
+>> Telefon: +49-40-4321-1353    		Fax: +49-40-4321-1114
+>> eMail: stephan.budach@jvm.de	Internet: http://www.jvm.de
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@sistina.com
+>> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+> =
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+> -=3D-=3D-
+>
+> Heinz Mauelshagen                                 Sistina Software =
+Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+> -=3D-=3D-
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+--
+Stephan Budach
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Jung von Matt/Services
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Glash=FCttenstrasse 38   			20357 Hamburg
+Telefon: +49-40-4321-1353    		Fax: +49-40-4321-1114
+eMail: stephan.budach@jvm.de	Internet: http://www.jvm.de
