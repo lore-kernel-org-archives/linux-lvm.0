@@ -1,27 +1,33 @@
-Date: Tue, 5 Sep 2000 14:29:18 +0200
-From: Christoph Hellwig <hch@caldera.de>
-Subject: [linux-lvm] [ANNOUNCE] lvmadm tool
-Message-ID: <20000905142918.A31869@ns.lst.de>
-Mime-Version: 1.0
+Message-ID: <39B53992.D2B6E2CF@ping-net.de>
+Date: Tue, 05 Sep 2000 20:21:06 +0200
+From: Daniel Mehrmann <mailinglist.mehrmann@ping-net.de>
+Reply-To: daniel@mehrmann.ping-net.de
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM patch for kernel 2.2.17 ?
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-The program lvmadm is intended to replace e2fsadm and
-do other tasks in the future.
-The major advantage is it's support for generic resize
-tools. You simply put your resize tool to /sbin/resizefs.fstype
-(or /sbin/oresizefs.fstype for online resizing) and lvmadm will
-use it. For some tools (e.g. the reiserfs resize tool) you
-will need a wrapper script in this place to use the right 
-calling convention.
 
-The code can be found at ftp.openlinux.org/pub/people/hch/lvm
+Hi !
 
-	Christoph
+Any plans for a lvm-patch for kernel 2.2.17 ??
+
+My lvm patch for 2.2.16 works at 2.2.17 too but it's version 0.8i.
+ 
+Should we use a newer version ? For example 0.8 final ?
+Should i do that ?
+
+
+[patch avaible at area51.ping-net.de]
 
 -- 
-Always remember that you are unique.  Just like everyone else.
+Regards,
+Daniel
+
+-----------------------------	
+http://www.area51.ping-net.de
+ftp://area51.ping-net.de
