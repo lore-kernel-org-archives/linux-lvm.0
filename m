@@ -1,15 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Desater Recovery <urgent>
-Message-Id: <20020425105940.A16030@sistina.com>
-References: <002401c1ea10$873d91a0$6b01a8c0@PC07>
-    <20020422170544.GB2967@fib011235813.fsnet.co.uk>
-    <00a601c1ea21$1b869630$6b01a8c0@PC07>
-    <20020422172214.GA3145@fib011235813.fsnet.co.uk>
-    <20020422173145.GF3017@turbolinux.com>
-    <002c01c1ea92$c33db310$3b00a8c0@aplabwp0368359>
+Subject: Re: [linux-lvm] lvextend-lvreduce
+Message-Id: <20020425115740.A16336@sistina.com>
+References: <E04CF3F88ACBD5119EFE00508BBB2121026DCB00@exch-01.noida.hcltech.com>
 MIME-Version: 1.0
-In-Reply-To: <002c01c1ea92$c33db310$3b00a8c0@aplabwp0368359>;
-    from weblists@gmx.net on Tue, Apr 23, 2002 at 08:47:40AM +0200
+In-Reply-To: <E04CF3F88ACBD5119EFE00508BBB2121026DCB00@exch-01.noida.hcltech.com>;
+    from cbehera@noida.hcltech.com on Wed, Apr 24, 2002 at 12:48:56PM +0530
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,72 +15,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 25 04:00:02 2002
+Date: Thu Apr 25 04:58:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-All,
+On Wed, Apr 24, 2002 at 12:48:56PM +0530, Chitaranjan Behera, Noida wrote:
+> Hi,
+> 
+> I tried to do lvextend and then lvreduce (same space) without unmounting the
+> file system, bcoz of online read/write operation on that file system. System
+> seems slow (almost hanged). So can anybody please tell me whether the SAME
+> extended block is reduced by the lvreduce command or not.
 
-I supported Ralf on the phone and we analyzed, that the ext2 filesystem was
-already *very* messy before e2fsadm could be run.
+If you extend a LV, N extents are added to its former end.
+If you reduce it by the very same amount N of extents afterwards the very
+same N extents are freed.
 
+> And what could be
+> the reason of system hang.
 
-Brief history was:
-
-- fs run as ext3 (heavily) used for weeks
-
-- try to shrink unmounted fs with e2fsadm (using resize2fs) made e2fsadm
-  end early because manual fsck was required; this was the point in time
-  where a readonly mount and a backup was needed (but didn't happen) in
-  order to save as much data as possible
-
-- manual "fsck -fy" was run exposing piles of messages :-( which
-  convinces me, that the fs data was messy already afterwards
-
-- e2fsadm was run "successfully" ending up with smaller fs and larger
-  LV size which is most likely caused by a resize2fs exit code != 0.
-
-
-As already mentioned in other mails of this thread: no backups :-(
-
-"Remind people of taking backup, remind people of taking backup, remind..."
+Probably locking caused by the filesystem accesses.
+Which version of LVM are you using?
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-
-On Tue, Apr 23, 2002 at 08:47:40AM +0200, Bas wrote:
-> > On Apr 22, 2002  18:22 +0100, Joe Thornber wrote:
-> > > On Mon, Apr 22, 2002 at 07:14:05PM +0200, Ralf Zerres wrote:
-> > > > no, i guess not.
-> > > > I was using e2fsadm which is serializing the steps. As far as I know
-> ...
-> > >
-> > > Yes e2fsadm should have resized the filesystem itself, so that's not
-> > > the problem.
-> >
-> > Unless e2fsadm doesn't work properly with "- 4,5G"...
-> >
-> > Out of curiosity, which resizer did e2fsadm use?  resize2fs or
-> > ext2resize?  By default it would have picked resize2fs if it is
-> > installed.
-> >
-> > I don't suppose you recall (or better, have saved) any of the output
-> > >from e2fsadm, resize2fs, e2fsck, anything?
-> >
-> > Cheers, Andreas
-> > --
-> > Andreas Dilger
+>   
+> --
+> Regards,
+> Chitaranjan
+> 91-4510701/02   Ext -3159
 > 
-> Is it possible to extend the lv to the original size and run fsck on it ?
-> Make a tarball of the available data in advance !
-> 
-> Good luck,
-> Bas.
-> 
+> " Make sincerity and innocence as your real strengths !! "
+> --
+> Disclaimer
+> This document is intended for transmission to the named recipient only.  If
+> you are not that person, you should note that legal rights reside in this
+> document and you are not authorized to access, read, disclose, copy, use or
+> otherwise deal with it and any such actions are prohibited and may be
+> unlawful. The views expressed in this document are not necessarily those of
+> HCL Technologies Ltd. Notice is hereby given that no representation,
+> contract or other binding obligation shall be created by this e-mail, which
+> must be interpreted accordingly. Any representations, contractual rights or
+> obligations shall be separately communicated in writing and signed in the
+> original by a duly authorized officer of the relevant company.
+> --
 > 
 > 
 > _______________________________________________
@@ -93,9 +70,6 @@ On Tue, Apr 23, 2002 at 08:47:40AM +0200, Bas wrote:
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
