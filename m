@@ -1,11 +1,12 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3AFB9CB4.DEFEC342@wrkhors.com>
-Date: Fri, 11 May 2001 03:03:00 -0500
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
+Return-Path: <tandem@dnmi.no>
 Subject: Re: [linux-lvm] SCSI/LVM problems after power outage
-References: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit> <20010509093510.B4918@sistina.com>
-Content-Transfer-Encoding: 7bit
+References: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit>
+	<20010509093510.B4918@sistina.com> <3AFB9CB4.DEFEC342@wrkhors.com>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 11 May 2001 10:37:49 +0200
+In-Reply-To: Steven Lembark's message of "Fri, 11 May 2001 03:03:00 -0500"
+Message-ID: <wveltwffhe.fsf@freeze.oslo.dnmi.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +19,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> Steps needed (crossing your fingers that the flaky drive can still stand this):
+>>>>> "Steven" == Steven Lembark <lembark@wrkhors.com> writes:
 
-q:  any known way to just dump the lv's out to tape?  problem
-w/ pvmove is that you have to update data stored on the flakey
-device.
+    >> Steps needed (crossing your fingers that the flaky drive can
+    >> still stand this):
 
-another out might be to:
+    Steven> q: any known way to just dump the lv's out to tape?
+    Steven> problem w/ pvmove is that you have to update data stored
+    Steven> on the flakey device.
 
- - grab a spare disk.
- - create an equally-sized partition.
- - try to software mirror it.
+I might have misunderstood but : dd if=<lv> of=<tape> 
 
-if the mirror succeeds then you can just pretend the flakey 
-drive died and replace it normally.
+Sincerely,
+
+Adrian Phillips
 
 -- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
