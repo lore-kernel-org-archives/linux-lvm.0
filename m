@@ -1,10 +1,10 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3A9BF392.2E4C3DA5@tls.msk.ru>
-Date: Tue, 27 Feb 2001 21:36:02 +0300
-From: Michael Tokarev <mjt@tls.msk.ru>
+Return-Path: <jweber@valinux.com>
+Date: Tue, 27 Feb 2001 11:18:49 -0800 (PST)
+From: Jay Weber <jweber@valinux.com>
+Subject: Re: [linux-lvm] Possible to raise Max LV?
+In-Reply-To: <20010227132358.A24164@math.ohio-state.edu>
+Message-ID: <Pine.LNX.4.30.0102271116450.21037-100000@beefcake.hdqt.valinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] q: BLOCK_SIZE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,30 +16,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a repost, basically.  When I posted this question
-for a first time (8 Dec 2000), noone answered, but there
-was a way low traffic on this list that time...
+I gather 4M was just a default starting point.  I personally use 64M so I
+can theoretically grow to at least 2TB in the future or beyond even. :)
 
-Little question that I already posted here a long time ago.
-What drawbacks can suffer if one changes BLOCK_SIZE in
-include/linux/lvm.h from 1024 (or 4096 on S/390) to 512?
-I can't understand from code what't a real purpose of
-this constant, -- lvm seemed to work well with BLOCK_SIZE=512,
-no troubles so far, -- but i'm still not shure if it is
-"legal" to change that.  At least there is some purpose on
-having different values for this constant on S/390 and other
-platforms, -- again, can't see that purposes...
+I have several JBODs in the back that are 500G each and ideally I'd like
+to merge a few together and hit 1TB and 2TB filesystems when the time is
+right.
 
-This is about using lvm with rawio -- on 2.2, rawio wan't
-work with i/o size be not a multiple of blocksize, while
-on 2.4 it works.  Or at least this was on Dec-2000.
+I've seen no real difference in performance regarding the PE size myself,
+granted large PE's means larger chunks of allocation when you're adding
+PE's to a LV, etc.
 
-Oh yes, this is about 2.2 kernel and lvm-0.9.
+On Tue, 27 Feb 2001, Dave Alden wrote:
 
-Thank you.
-
-Regards,
- Michael.
+> Date: Tue, 27 Feb 2001 13:23:58 -0500
+> From: Dave Alden <alden@math.ohio-state.edu>
+> Reply-To: linux-lvm@sistina.com
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Possible to raise Max LV?
+>
+> Hi,
+>   First let me apologize -- I just realized my question was in the FAQ.
+> I'm usually brighter than this, honest.  :-)  Now on to my new question:
+>
+> On Tue, Feb 27, 2001 at 09:58:46AM -0700, Andreas Dilger wrote:
+> > The max LV size is dependent upon the PE size that you select at VG
+> > creation time.  This is because there is a limit of 64k PEs per LV.
+>
+> I'm completely new to LVM, so can someone explain to me the purpose of
+> the PE's and why they default to 4M?  Is there some kind of performance
+> or space hit if I raise that to 16M (remember my setup: hardware RAID
+> array that is currently at ~250G, soon to be ~325G)?
+>
+> ...thnx,
+> ...dave alden
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>
