@@ -1,10 +1,12 @@
-Return-Path: <josv@osp.nl>
-Date: Tue, 20 Feb 2001 13:03:03 -0800
-From: Jos Visser <josv@osp.nl>
-Message-ID: <20010220130303.A505@jadzia>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Wed, 21 Feb 2001 08:59:59 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] snapshot of Reiserfs
+Message-ID: <20010221085959.C568@tykepenguin.com>
+References: <20010220224907.D21281@srv.sistina.com> <14995.16871.694699.166774@nv.winux.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Stripe size of 2K allowed?
+In-Reply-To: <14995.16871.694699.166774@nv.winux.com>; from lvm@winux.com on Tue, Feb 20, 2001 at 11:19:51PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,21 +22,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Tue, Feb 20, 2001 at 11:19:51PM -0500, lvm@winux.com wrote:
+> Heinz J. Mauelshagen writes:
+> > ... Linux Logical Volume Manager 0.9.1 Beta 5 is available now ...
+> > ...
+> > Please help us to stabilize for 0.9.1 ASAP and test is as much as possible!
+> 
+> I am using LVM 0.9.1 beta 5 on Linux 2.4.1 with Reiserfs.
+> I have applied both of the following patches:
+> 
+> 0.9.1_beta5/PATCHES/lvm-0.9.1_beta5-2.4.1.patch
+> 0.9.1_beta5/PATCHES/linux-2.4.1-VFS-lock.patch
+> 
+> Snapshots created when the filesystem is active cannot be mounted.
+> If I `umount' the filesystem before creating the snapshot, all is well.
 
-I was trying to create a striped lvol with a stripe size of 2K. This
-failed due to an illegal parameter:
+Did you remember to uncomment LVM_VFS_ENHANCEMENT in lvm.c ?
 
-# lvcreate -i 2 -I 2 -L 100 vg01
-lvcreate -- invalid stripe size 2
-
-It seems that stripe sizes of 1K and 2K are not allowed, although the
-lvcreate manual page says that the stripe size is 2^n with 0<=n<=7.
-
-Duh?
-
-++Jos
-
-
--- 
-I have no need for a spirituality which can not encompass my humanness.
+patrick
