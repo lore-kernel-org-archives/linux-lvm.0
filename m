@@ -1,25 +1,32 @@
-Message-ID: <3843A41F.3B260F2F@geotec.net>
-Date: Tue, 30 Nov 1999 04:17:03 -0600
-From: Eric Smith <seric@geotec.net>
+Date: Tue, 30 Nov 1999 15:48:24 +0100 (CET)
+From: Ole Jakob Skjelten <olesk@pvv.org>
+Subject: [linux-lvm] LVM in the Linux kernel
+Message-ID: <Pine.BSF.4.21.9911301542100.55923-100000@verden.pvv.ntnu.no>
 MIME-Version: 1.0
-Subject: Re: AW: [linux-lvm] Installieren von LVM Systemen
-References: <13FEA0BEF75ED31192D50000F6CCC5E92AE049@XNT-FRABASE-6>
-Content-Transfer-Encoding: base64
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: TORSTEN.NEUMANN@DLH.DE
-Cc: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-T2guLi5JIHNlZS4uLmdyZWF0ISEhDQoNCg0KDQpUT1JTVEVOLk5FVU1BTk5ARExILkRFIHdy
-b3RlOg0KDQo+ID4gLS0tLS0tLS0tLQ0KPiA+IFZvbjogIEVyaWMgU21pdGhbU01UUDpzZXJp
-Y0BnZW90ZWMubmV0XQ0KPiA+IEdlc2VuZGV0OiAgICAgRGllbnN0YWcsIDMwLiBOb3ZlbWJl
-ciAxOTk5IDEwOjE5DQo+ID4gQW46ICAgVE9SU1RFTi5ORVVNQU5OQERMSC5ERQ0KPiA+IENj
-OiAgIGxpbnV4LWx2bUBtc2VkZS5jb20NCj4gPiBCZXRyZWZmOiAgICAgIFJlOiBbbGludXgt
-bHZtXSBJbnN0YWxsaWVyZW4gdm9uIExWTSBTeXN0ZW1lbg0KPiA+DQo+ID4gT2theS4uLm5v
-dywgd2hhdCBkb2VzIHRoYXQgbWVhbiB0byB0aGUgcmVzdCBvZiB1cz8NCj4gPg0KPiBtYXli
-ZSBzb21lb25lIGxpa2VzIHRvIHRlc3QgbXkgc2NyaXB0cyB0byBpbnN0YWxsIGxpbnV4LXN5
-c3RlbXMgd2l0aCBsdm0gYW5kDQo+IGluaXRyZCBkaXJlY3RseS4gQW5kIHRoZW4gSSB3aWxs
-IHdyaXRlIHNvbWUgZG9jdW1lbnRhdGlvbiBmb3IgdGhhdCBzdHVmZi4NCj4gKEluIGVuZ2xp
-c2gsIG1heSB3aWZlIGhhcyB0byB0cmFuc2xhdGUgaXQpDQo+DQo+ICAgVG9yc3Rlbg0K
+Just one small question:
+The current 2.3.x kernels do, to the best of knowledge, not
+contain LVM. And isn't it so that Linus has closed the kernel
+for new additions/features until the release of 2.4.0? I seem to
+have read somwhere that it is now too late to get anything
+radically new into the kernel, at least until development start 
+on 2.5.x kernels. Am I mistaken, or does this mean that it will
+be some time before we see LVM in a stable kernel? (The fact that
+for instance S.u.S.E. is shipping a kernel with LVM support helps,
+but can hardly be said to be satisfactory...).
+
+
+Best regards 
+Ole Jakob - who'd *really* like to see LVM in a stable kernel soon :)
+
+-- 
+Ole Jakob Skjelten (olesk@pvv.org) www.pvv.org/~olesk
+Systemspesialist, AIX
+Bull AS, Fyrstikkalleen 3A, PB 6144 Etterstad, 0602 Oslo, Norway
+Tlf (+47) 22575972(w) / 91820113(m).
