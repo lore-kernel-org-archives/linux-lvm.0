@@ -1,18 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j31EdAO19692
-	for <linux-lvm@redhat.com>; Fri, 1 Apr 2005 09:39:10 -0500
-Received: from asalmela.iki.fi (postfix@addr-213-139-170-200.suomi.net
-	[213.139.170.200])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j31Ed3Js009389
-	for <linux-lvm@redhat.com>; Fri, 1 Apr 2005 09:39:04 -0500
-Date: Fri, 1 Apr 2005 17:38:53 +0300
-From: Antti Salmela <asalmela@iki.fi>
-Message-ID: <20050401143853.GA11763@asalmela.iki.fi>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] 2.6.11ac5 oops while reconstructing md array and moving
-	volumegroup with pvmove
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j316AMP04818
+	for <linux-lvm@redhat.com>; Fri, 1 Apr 2005 01:10:22 -0500
+Received: from WS0005.indiatimes.com (203.199.93.15.static.vsnl.net.in
+	[203.199.93.15] (may be forged))
+	by mx2.redhat.com (8.12.11/8.12.11) with ESMTP id j316WvTJ010573
+	for <linux-lvm@redhat.com>; Fri, 1 Apr 2005 01:32:59 -0500
+Received: from 192.168.57.15 ([192.168.57.66])
+	by WS0005.indiatimes.com (8.9.3/8.9.3) with SMTP id KAA25654
+	for <linux-lvm@redhat.com>; Fri, 1 Apr 2005 10:44:12 +0530
+From: "pritambhavsar" <pritambhavsar@indiatimes.com>
+Message-Id: <200504010514.KAA25654@WS0005.indiatimes.com>
+Date: Fri, 01 Apr 2005 11:05:55 +0530
+Content-Type: multipart/alternative;
+	boundary="=_MAILER_ATTACH_BOUNDARY1_2005415115551215105004"
+MIME-Version: 1.0
+Subject: [linux-lvm] size of lv
+Reply-To: pritambhavsar <pritambhavsar@indiatimes.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,81 +26,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-I had created a new raid1 array and started moving a volume group to it at the
-same time while it was reconstructing. Got this oops after several hours,
-apparently while cron-jobs were run.
+--=_MAILER_ATTACH_BOUNDARY1_2005415115551215105004
+Content-Type: text/plain; charset=us-ascii
 
-1 GB of memory, HIGHMEM configured.
+is there any command in lvm2 that how many space is empty in my active logical volume other than pvscan command.
 
- Unable to handle kernel paging request at virtual address f88d63a0
-  printing eip:
- c028a7f6
- *pde = 018eb067
- *pte = 00000000
- Oops: 0000 [#1]
- Modules linked in: esp6 ah6 nfsd exportfs via686a snd_ymfpci snd_ac97_codec snd_pcm_oss snd_mixer_oss snd_pcm snd_opl3_lib snd_timer snd_hwdep snd_page_alloc snd_mpu401_uart snd_rawmidi snd_seq_device snd soundcore uhci_hcd i2c_dev w83781d i2c_sensor i2c_viapro i2c_core
- CPU:    0
- EIP:    0060:[core_in_sync+6/32]    Not tainted VLI
- EFLAGS: 00010246   (2.6.11ac5) 
- EIP is at core_in_sync+0x6/0x20
- eax: f88d3000   ebx: c0407260   ecx: 00000000   edx: 00019d00
- esi: f21d7aa0   edi: f6c78720   ebp: 00000000   esp: ea22eb74
- ds: 007b   es: 007b   ss: 0068
- Process find (pid: 14250, threadinfo=ea22e000 task=ebdf50e0)
- Stack: c028bf7c f7c05f60 e87945fc f21d7aa0 f882c06c c027ffb0 06740010 00000000 
-        ea22ebe0 ebed0520 ebed0520 c0280367 00000001 00000008 ebdf50e0 c01266e0 
-        e87945fc 0263bff0 00000000 f882c06c ebed0520 ea22ebe0 ebed0520 ea22ec40 
- Call Trace:
-  [mirror_map+76/192] mirror_map+0x4c/0xc0
-  [__map_bio+64/256] __map_bio+0x40/0x100
-  [__clone_and_map+551/576] __clone_and_map+0x227/0x240
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [__split_bio+142/256] __split_bio+0x8e/0x100
-  [dm_request+100/144] dm_request+0x64/0x90
-  [generic_make_request+326/480] generic_make_request+0x146/0x1e0
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [bio_clone+160/176] bio_clone+0xa0/0xb0
-  [__map_bio+64/256] __map_bio+0x40/0x100
-  [__clone_and_map+551/576] __clone_and_map+0x227/0x240
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [__split_bio+142/256] __split_bio+0x8e/0x100
-  [dm_request+100/144] dm_request+0x64/0x90
-  [ext3_get_block_handle+123/736] ext3_get_block_handle+0x7b/0x2e0
-  [dm_request+100/144] dm_request+0x64/0x90
-  [generic_make_request+326/480] generic_make_request+0x146/0x1e0
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [mempool_alloc+99/256] mempool_alloc+0x63/0x100
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [submit_bio+88/224] submit_bio+0x58/0xe0
-  [autoremove_wake_function+0/80] autoremove_wake_function+0x0/0x50
-  [__find_get_block+66/160] __find_get_block+0x42/0xa0
-  [bio_alloc+200/400] bio_alloc+0xc8/0x190
-  [submit_bh+193/272] submit_bh+0xc1/0x110
-  [__ext3_get_inode_loc+309/528] __ext3_get_inode_loc+0x135/0x210
-  [schedule+691/1184] schedule+0x2b3/0x4a0
-  [generic_unplug_device+6/16] generic_unplug_device+0x6/0x10
-  [ext3_read_inode+53/896] ext3_read_inode+0x35/0x380
-  [ext3_alloc_inode+15/80] ext3_alloc_inode+0xf/0x50
-  [alloc_inode+22/336] alloc_inode+0x16/0x150
-  [ext3_lookup+132/176] ext3_lookup+0x84/0xb0
-  [real_lookup+174/208] real_lookup+0xae/0xd0
-  [do_lookup+126/144] do_lookup+0x7e/0x90
-  [link_path_walk+1561/2880] link_path_walk+0x619/0xb40
-  [path_lookup+109/272] path_lookup+0x6d/0x110
-  [__user_walk+47/96] __user_walk+0x2f/0x60
-  [vfs_lstat+26/80] vfs_lstat+0x1a/0x50
-  [sys_lstat64+18/48] sys_lstat64+0x12/0x30
-  [shmem_populate+173/336] shmem_populate+0xad/0x150
-  [do_IRQ+69/96] do_IRQ+0x45/0x60
-  [sysenter_past_esp+82/117] sysenter_past_esp+0x52/0x75
-Code: 27 00 00 00 00 8b 40 04 8b 40 18 0f a3 10 19 d2 31 c0 85 d2 0f 95 c0 c3 8d b6 00 00 00 00 8d bc 27 00 00 00 00 8b 40 04 8b 40 1c <0f> a3 10 19 d2 31 c0 85 d2 0f 95 c0 c3 8d b6 00 00 00 00 8d bc
+-Pritam
+Indiatimes Email now powered by APIC Advantage. Help! 
+Help
 
--- 
-Antti Salmela
+
+--=_MAILER_ATTACH_BOUNDARY1_2005415115551215105004
+Content-Type: text/html; charset=us-ascii
+
+is there any command in lvm2 that how many space is empty in my active logical volume other than pvscan command.
+
+-Pritam
+<hr><font face="Arial" size="2">Indiatimes Email now powered by <b>APIC Advantage</b>. <a href="http://email.indiatimes.com/apic/">Help!</a> </font><br><DIV align=left><a target="_blank" href="http://imaround.indiatimes.com/IMaround/presencefr.mss?userid=pritambhavsar" ><IMG alt="My Presence" border=0 src="http://203.199.93.51/IMaround/getpresence.mss?userid=pritambhavsar" ></a><a target="_blank" href="http://email.indiatimes.com/apic/userpage.html"><FONT face="Arial" size=2>Help</font></a></DIV><hr><br><DIV align="left"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0" width="360" height="80"><param name="movie" value="http://203.199.93.12/image/swap.swp"><param name="quality" value="high"><embed src="http://203.199.93.12/image/swap.swp" quality="high" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x!
+-s!
+hockwave-flash" width="360" height="80"></embed></object></DIV>
+
+--=_MAILER_ATTACH_BOUNDARY1_2005415115551215105004--
