@@ -1,7 +1,7 @@
-Date: Sat, 1 Apr 2000 17:25:53 -0500 (EST)
+Date: Sat, 1 Apr 2000 17:42:49 -0500 (EST)
 From: Shane Shrybman <shane@zeke.yi.org>
-Subject: [linux-lvm] [PATCH] LVM in 2.3.99-pre4-[12]
-Message-ID: <Pine.LNX.4.10.10004011710460.16258-100000@zeke.goatskin.org>
+Subject: [linux-lvm] LVM Status update?
+Message-ID: <Pine.LNX.4.10.10004011728010.16258-100000@zeke.goatskin.org>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -11,33 +11,19 @@ Content-Transfer-Encoding: 7bit
 To: linux-lvm mailing list <linux-lvm@msede.com>
 
 
-Hello all !
+Hi,
 
-Part of the current LVM patch (patch-2.3.99-pre1-LVM-0.8final.gz)  for
-development  kernels fails when applied to kernels > 2.3.99-pre3.
+I am curious about the current status of the linux LVM was with regards
+to the 2.4 kernel.
 
-This is a little patch to fix that problem. Apply after
-applying patch-2.3.99-pre1-LVM-0.8final.gz
+Heinz, I assume you are collecting various patches and continuing to
+improve the code. Is the code now in a form that is acceptable to Alan and
+Linus? Have you had any correspondence with either of them? Are you still
+trying to get a patch thru to Linus? 
 
-This patch works for me and I think it is relatively safe (since it only
-touches the config file) but, I am not a coder and this is
-my first patch ever. So use at your own risk!
+Are there any areas that you think need more testing or that you would
+like to have more feedback on?
 
---- drivers/block/Config.in.orig        Fri Mar 31 12:23:42 2000
-+++ drivers/block/Config.in     Fri Mar 31 12:31:41 2000
-@@ -49,6 +49,12 @@
- #if [ "$CONFIG_MD_LINEAR" = "y" -o "$CONFIG_MD_STRIPED" = "y" ]; then
- #   bool '    Boot support (linear, striped)' CONFIG_MD_BOOT
- #fi
-+
-+ tristate 'Logical volume manager (LVM) support' CONFIG_BLK_DEV_LVM N
-+ if [ "$CONFIG_BLK_DEV_LVM" != "n" ]; then
-+    bool '   LVM information in proc filesystem' CONFIG_LVM_PROC_FS Y
-+ fi
-+
- tristate 'RAM disk support' CONFIG_BLK_DEV_RAM
- dep_bool '  Initial RAM disk (initrd) support' CONFIG_BLK_DEV_INITRD
-$CONFIG_BLK_DEV_RAM
+Thanks again for bringing an LVM to Linux.
 
- 
-Shane
+Shane 
