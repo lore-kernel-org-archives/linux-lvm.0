@@ -1,22 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0LGOjO28477
-	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 11:24:45 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.200])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0LGOd3J002097
-	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 11:24:39 -0500
-Received: by wproxy.gmail.com with SMTP id 67so162803wri
-	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 08:24:29 -0800 (PST)
-Message-ID: <87f94c3705012108241f812e0e@mail.gmail.com>
-Date: Fri, 21 Jan 2005 11:24:29 -0500
-From: Greg Freemyer <greg.freemyer@gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0LIitO11089
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 13:44:55 -0500
+Received: from nile.gs.washington.edu (nile.gs.washington.edu [128.95.231.71])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0LIin7x029825
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 13:44:49 -0500
+Date: Fri, 21 Jan 2005 10:44:39 -0800
+From: "David S." <dgs@gs.washington.edu>
 Subject: Re: [linux-lvm] Why the dramatic increase in filesystem performance
 	when usingxfs????
-In-Reply-To: <1106304669.3943.14.camel@grma-lap>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20050121184439.GA10053@nile.gs.washington.edu>
 References: <1106304669.3943.14.camel@grma-lap>
-Reply-To: Greg Freemyer <greg.freemyer@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1106304669.3943.14.camel@grma-lap>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,32 +24,9 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: Gary.Mansell@ricardo.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, 21 Jan 2005 10:51:09 +0000, Gary Mansell wrote:
-> Hi,
-> 
-> I have always run ext3 filesystem with journalling on Redhat AS as it is
-> the only supported filesystem.
-> 
-> One of my colleagues runs xfs, though, and on comparable hardware
-> configs he gets twice the performance compared to my ext3 tests.
-> 
-> The test that I perform is to create a file at least twice the size of
-> the RAM installed in the system to avoid the possibility of cacheing,
-> measuring the time to write and read the file back gives me the
-> performance figure that I am after. I realise that this is a very simple
-> test of large sequential IO but it is good enough for my needs.
-> 
-> ie
-> 
-> Write test:
-> 
-> # time dd if=/dev/zero of=./testfile bs=16384 count=250000 ; time sync
-> 
-> Read test:
-> 
-> # time dd if=./testfile of=/dev/null bs=16384
 > 
 > As the xfs performance comes back about twice the performance of ext3
 > for this test I am of the opinion that xfs must be cheating somehow. It
@@ -66,11 +40,17 @@ On Fri, 21 Jan 2005 10:51:09 +0000, Gary Mansell wrote:
 > cheating because the file is comprised entirely of zero's?
 > 
 > Can someone please enlighten me
+
+Try mounting your ext3 file system with the "data=writeback" option.
+See mount(8).
+
+David S.
+
 > 
 > Thanks in advance
 > 
 > Gary Mansell
-> --
+> -- 
 > 
 > This e-mail and any files transmitted with it are confidential and intended
 > solely for the use of the individual or entity to whom they are addressed.
@@ -94,41 +74,10 @@ On Fri, 21 Jan 2005 10:51:09 +0000, Gary Mansell wrote:
 > number 00222915.
 > The registered office of Ricardo plc is Bridge Works, Shoreham-by Sea,
 > West Sussex, BN43 5FG.
+>  
 > 
-Nobody is "cheating".
-
-Different filesystems are tuned for different capabilities.
-
-XFS is highly tuned to handle large files because SGI had a major
-interest in video preparation and distribution capability.  This
-tuning involves eliminating excess disk seeks to handle meta-data
-while the actual data is being read/written.  (i.e. Modifying inodes,
-etc. in the middle of a large write operation is very time consuming
-because of the disk head seeks involved.)
-
-Thus, your test is for exactly the enviroment XFS was designed to
-handle efficiently.
-
-OTOH, if you want to run a mail server or a Internet News Feed, you
-need to handle lots of small files.  ReiserFS was tuned for this
-environment a couple years ago, so it would be the way to go.
-
-EXT3, is a good overall filesystem and I have heard people say it
-survives unexpected power-outages the best.
-
-You need to figure out what your needs are from a filesystem, then
-find comparative studies of the various ones and see what fits your
-needs.
-
-Specifically, I would not recommend XFS for the core filesystems.  i.e
-/, /var, /usr, etc.  A lot of debug tools still don't support XFS and
-XFS brings no value to the party.
-
-I personnally use ext3 for all my core filesystems, and XFS for my
-data drives.  (I work with very large files, typically split down to
-iso size.  I also keep a copy on tape, so filesystem reliability is
-less important than speed to me.)
-
-Greg
--- 
-Greg Freemyer
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
