@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Error with 2.5.50-dm-2; vanilla OK
-Message-ID: <20021210093827.GB1479@reti>
-References: <3DF587F2.5060609@starhub.net.sg>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3DF587F2.5060609@starhub.net.sg>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: "Bharavi Oak" <Bharavi.Oak@patni.com>
+Message-ID: <000101c2a035$27dd2370$c1bba5cc@patni.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Linux LVM: Device type for pseudo device
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,17 +13,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 10 03:38:01 2002
+Date: Tue Dec 10 04:05:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Dec 10, 2002 at 02:21:38PM +0800, Richard Chan wrote:
-> Sure - here is more information about my system
+Hi,
 
-Can you mail me (rather than the list) the complete lvm2 log after
-trying your vgchange -ay.  Look at /etc/lvm/lvm.conf to see where it
-is.
+I am writing a pseudo (filter) driver over SCSI disk driver (sd). There
+would be corresponding pseudo devices created. These devices would in turn
+access SCSI disk (thorugh sd) with some added functionality.
+I want to use these pseudo device withe Linux LVM. But when I tried pvcreate
+on such a device, the reponse was "invalid physical volume". Tracing the
+source code showed that lvm_get_device_type does not recognize the pseudo
+device as of a valid device type. In fact, valid device types have been
+specified in a structure defined inside the function itself.
+I used LVM version 1.0.3 as my platform is Red Hat Linux 7.x. Wanted to know
+which LVM version recognizes such pseudo devices. Need some help to make my
+pseudo driver work with LVM.
 
-- Joe
+Thanks and Regards,
+Bharavi Oak.
