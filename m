@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] [RFE] lvm-1.0.3 - progress bar similar to e2fsck for pvmove
-Message-ID: <20020627120350.C21400@sistina.com>
-References: <20020626155454.A3538@xanex.hippierage.org>
-Mime-Version: 1.0
-In-Reply-To: <20020626155454.A3538@xanex.hippierage.org>; from jmm@sublogic.com on Wed, Jun 26, 2002 at 03:54:54PM -0400
+Message-ID: <3D1AF4FB.1080605@ti.com>
+From: christian e <cej@ti.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] problem running vgscan..Is it a megaraid issue or
+ an LVM issue ??
+References: <3D1AD32B.400@ti.com> <20020627115054.B21400@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,66 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 27 05:11:01 2002
+Date: Thu Jun 27 06:20:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-James,
-
-are you sure you didn't use the "-v" option of pvmove?
-
-Without that option pvmove typically display 6-7 lines.
-With that option it displays some more information plus a line for
-every extent moved.
-
-On Wed, Jun 26, 2002 at 03:54:54PM -0400, James Manning wrote:
-> just did a "pvmove /dev/hda5" and got tons and tons of info dumped to
-> the screen as extents were moved.  IMHO, that'd be nice for a verbose
-> mode, but by default it'd be nice to have something basically like
-> the e2fsck/wget/etc progress bar.  As it stands, I had no idea what %
-> of the way through the job I was and couldn't estimate finishing time,
-> both of which would be nice to have.
-
-Well, as with e2fsck and the like such bars heavily depend on total system
-load and just make you feel believe that there's progress, which ps can
-help do as well :)
-
+Heinz J . Mauelshagen wrote:
+> Christian,
 > 
-> Adding to other long-running data-migration things may be a good idea as
-> well, but pvmove is the one I've come across that could really use it :)
-
-We'll do something about it in LVM2.
-
+> are the Megaraid devices all accessable (driver module loaded/linked in)
+> when vgscan runs on reboot?
 > 
-> Thanks!
 > 
-> James
-> -- 
-> James Manning <http://www.sublogic.com/james/>
-> GPG Key fingerprint = B913 2FBD 14A9 CE18 B2B7  9C8E A0BF B026 EEBB F6E4
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
+Yes I can boot the machine up without running vgscan and everything is 
+OK..So it's not a showstopper but it bugs me because it's not always 
+been like that..Could it be the way the PVs are made ?? That one is 
+/dev/sdb1 and the other /dev/sdc ?? So one is actually on a partition 
+taking up the entire disk and the other is directly on the disk without 
+partition ?? Hope that made sense..hehe..It could maybe explain things 
+as our data is now taking up more thatn just the one PV..
+
+best regards
+
+Christian
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Christian Ejstrup, IT Admin / RF Development Engineer
+Texas Instruments A/S, Denmark ,Sofiendalsvej 93,DK-9200 Aalborg SV,Denmark
+Phone:+45 96346868, Phone(direct):+45 96346860, GSM:+45 22234304
