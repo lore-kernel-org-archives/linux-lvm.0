@@ -1,9 +1,9 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105012312.RAA27583@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] odd problem
-Date: Tue, 1 May 2001 17:12:47 -0600 (MDT)
-In-Reply-To: <Pine.LNX.4.10.10105011628100.21405-100000@staff> from "Todd Underwood" at May 01, 2001 04:36:16 PM
+Message-Id: <200105012325.RAA27700@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] LVM & high system load
+Date: Tue, 1 May 2001 17:25:36 -0600 (MDT)
+In-Reply-To: <3AEF2F97.E70A8CA7@loria.fr> from "Dominique LARCHEY-WENDLING" at May 01, 2001 11:50:15 PM
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
@@ -20,43 +20,36 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Todd Underwood writes:
-> All was working well but recently i needed to reboot (i was unable to
-> increase the size of my / with the online ext2 tools and it was full
-> --not sure what the error was there, or whether that is relevant).
-
-Probably not relevant, but it is of interest to me what sort of problems
-you had.  I assume you have patched the kernel with the online ext2
-kernel patches and also enabled CONFIG_EXT2_RESIZE?  You should not have
-any problems resizing root.
-
-> lvm -- lvm_chr_ioctl:  unknown command 4004fe0a
-
-Expected behaviour with new tools (compatibility reasons).  However, it
-_does_ indicate that you do not have beta7 LVM kernel code.
-
-> VGS: Mounted root (ext2 filesystem) readonly.
-> change_root: old root has d_count=3
-> Trying to unmount old root ... <7>uhci.c: suspect_hd
-> okay
-
-Don't know about this.
-
-> a bunch of other stuff
-
-Hmm...
-
-> Activating swap partitions swapon: /dev/rootvg/swap: Invalid argument
-> Setting hostname zapata.staff.osogrande.net execvp: No such file or
-> directory
+Dominique Larchey writes:
+> I point out that /dev/mmedia/music resides on /dev/hda5
 > 
-> /etc/rc.d/rc.sysinit:  domainname: command not found
-> 
-> and so on.  looks like nothing's mounted.  the same kernel boots fine with
-> an older root fs on a 'real' partition.
+> time dd if=/dev/mmedia/music of=/dev/null bs=512
+> count=200000               0m37.113s
+> time dd if=/dev/hda5 of=/dev/null bs=512
+> count=200000                       0m35.437s
 
-Do you run "vgchange -a y" (and optionally vgscan) in startup scripts?
-There is a "LVM root howto" somewhere on the Sistina site.
+LVM shows 4.7% overhead.  This is not so great.
+
+> Ok I am ridiculous ... this has nothing to do with LVM.
+> It has to do with DMA set off by default by linux 2.4.
+> This is the reason of poor IO perf. and CPU eating.
+> 
+> After DMA is set on,
+> 
+> time dd if=/dev/mmedia/music of=/dev/null bs=512
+> count=200000               0m12.934s
+> time dd if=/dev/hda5 of=/dev/null bs=512
+> count=200000                       0m12.110s
+
+Good news - not an LVM problem.  Bad news - LVM shows 6.8% overhead.
+
+> Perhaps poor perf. for the other person is also DMA related ?-)
+
+No, the other person has drastically different performance with LVM for
+512-byte I/O compared to raw disk.  For 64k-byte I/O performance on LVM
+and raw disk are the same.  I _suppose_ that if I/O is done in small
+chunks that PIO mode will have more overhead.  Maybe worth asking if
+CPU is high when he is doing 512-byte I/Os.
 
 Cheers, Andreas
 -- 
