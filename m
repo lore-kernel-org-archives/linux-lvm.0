@@ -1,8 +1,9 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re[2]: [linux-lvm] Summary - Snapshot Effort
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20020904192446.WBJT14662.imf17bis.bellsouth.net@TAZ2>
+Message-ID: <968A257AF9EED211B08E0008C7248C0112598CDB@USA101>
+From: "LaPoint, Adam" <AdamLaPoint@Tupperware.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C2544C.1394C600"
+Subject: [linux-lvm] why no credit to hp?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,84 +14,111 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep  4 14:23:01 2002
+Date: Wed Sep  4 14:49:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
- >>  On Mon, Aug 26, 2002 at 03:10:51PM -0400, Greg Freemyer wrote:
- >>  >  >>  On Thu, Aug 22, 2002 at 05:43:42PM -0400, Greg Freemyer wrote:
- >>  >  >>  > I have not been successful at getting reliable Read-Only
- >>  snapshots
- >>  >  >>  > of XFS via LVM.  Since XFS is being used in Enterprise quality
- >>  >  >>  > applications, I suggest this is a major shortcoming that should
- >>  be
- >>  >  >>  > prioritized.
- >>  >=20
- >>  >  >>  Have you tried LVM2 ?
- >>  >=20
- >>  >  >>  - Joe
- >>  >=20
- >>  > No I haven't. =20
- >>  >=20
- >>  > Instead of trying a bunch of configs myself, I have decided to write a
- >>  xfs/LVM snapshot regression module to add the xfs test suite. (They don't
- >>  have one currently.)
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
- >>  Yes, I read that they don't on the list.
- >>  Thanks for this effort.
+------_=_NextPart_001_01C2544C.1394C600
+Content-Type: text/plain
 
- >>  >=20
- >>  > Once that is done, I hope that a few different LVM configs can be
- >>  tested. =20
+Why no mention of how closely your LVM is modeled after the one that comes
+with HP/UX?
 
- >>  Could you offer the regression modules and test configs on the LVM and XFS
- >>  lists so that everybody can take advantage?
+ 
 
-This test is now in XFS cvs.
+Adam LaPoint
 
-Using a current XFS CVS kernel, I have run over 1,000 iterations of the test =
-with no errors.
+UNIX System Administrator
 
-FYI:  Using a xfs cvs kernel from last week, the kernel would lock up after =
-just a few iterations. =20
-FYI:  Using a SuSE 8.0 kernal (XFS 1.1 release based), lvcreate would lockup =
-after a few iterations.
+Tupperware Corp.
 
-=3D=3D=3D=3D=3D=3D Details
-See test 068 at =
-http://oss.sgi.com/cgi-bin/cvsweb.cgi/linux-2.4-xfs/cmd/xfstests/
+ <mailto:AdamLaPoint@Tupperware.com> AdamLaPoint@Tupperware.com
 
-It uses the fsstress executable that can be found at
+Phone: (407) 826 8732
 
-http://oss.sgi.com/cgi-bin/cvsweb.cgi/linux-2.4-xfs/cmd/xfstests/src/
+Pager: (407) 400 0603
 
-It assumes there is a subdirectory of where it is run that has the fsstress =
-executable in it.  i.e. ./src/fsstress must exist.
-
-It currently assumes you have an existing VG (LVscratch) and that you have an =
-existing LV (scratch) that you want to run the test against.
-
-It will lvremove the scratch LV at the end of test, so be sure it is truly =
-scratch.
-
-I put in logic to have it create the PV, VG, and LV, but this is all untested =
-and commented out with a # TODO
-
-It also currently assumes that a few environmental variables are set before it =
-is invoked.  This is because the XFS check routine sets them.
-
-If you want to run it standalone, you will find the appropriate variable =
-assignments commented out at the beginning of the file.
-
-Last, but now least, this test should be easily modified to test any Linux FS, =
-not just XFS.
+ 
 
 
-Greg Freemyer
-Internet Engineer
-Deployment and Integration Specialist
-Compaq ASE - Tru64 v4, v5
-Compaq Master ASE - SAN Architect
-The Norcross Group
-www.NorcrossGroup.com
+------_=_NextPart_001_01C2544C.1394C600
+Content-Type: text/html
+
+<html>
+
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=us-ascii">
+
+
+<meta name=Generator content="Microsoft Word 10 (filtered)">
+
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=Section1>
+
+<p class=MsoNormal><font size=2 face=Arial><span style='font-size:10.0pt;
+font-family:Arial'>Why no mention of how closely your LVM is modeled after the
+one that comes with HP/UX?</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Arial><span style='font-size:10.0pt;
+font-family:Arial'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 color=blue face="Times New Roman"><span
+style='font-size:10.0pt;color:blue'>Adam LaPoint</span></font></p>
+
+<p class=MsoNormal><font size=2 color=blue face="Times New Roman"><span
+style='font-size:10.0pt;color:blue'>UNIX System Administrator</span></font></p>
+
+<p class=MsoNormal><font size=2 color=blue face="Times New Roman"><span
+style='font-size:10.0pt;color:blue'>Tupperware Corp.</span></font></p>
+
+<p class=MsoNormal><font size=3 face="Times New Roman"><span style='font-size:
+12.0pt'><a href="mailto:AdamLaPoint@Tupperware.com"><font size=2><span lang=FR
+style='font-size:10.0pt'>AdamLaPoint@Tupperware.com</span></font></a></span></font></p>
+
+<p class=MsoNormal><font size=2 color=blue face="Times New Roman"><span
+lang=FR style='font-size:10.0pt;color:blue'>Phone: (407) 826 8732</span></font></p>
+
+<p class=MsoNormal><font size=2 color=blue face="Times New Roman"><span
+lang=FR style='font-size:10.0pt;color:blue'>Pager: (407) 400 0603</span></font></p>
+
+<p class=MsoNormal><font size=3 face="Times New Roman"><span lang=FR
+style='font-size:12.0pt'>&nbsp;</span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C2544C.1394C600--
