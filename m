@@ -1,10 +1,8 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102080116.f181G5L26592@webber.adilger.net>
-Subject: Re: [linux-lvm] Help! Problems finding VG after reboot.
-In-Reply-To: <Pine.LNX.4.30.0102071946280.22244-100000@tweetie.comstar.net> from
- Gregory McLean at "Feb 7, 2001 07:47:56 pm"
-Date: Wed, 7 Feb 2001 18:16:05 -0700 (MST)
+Message-Id: <200102080133.f181XvH06009@webber.adilger.net>
+Date: Wed, 7 Feb 2001 18:33:57 -0700 (MST)
+Subject: [linux-lvm] Yay, my LVM is broken.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,16 +17,18 @@ List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Linux LVM mailing list <linux-lvm@sistina.com>
 
-Gregory McLean writes:
-> I've edited around in the startup files to _not_ call vgscan at all
-> and things are working for now. Though if I need to add a drive to
-> the system I'm screwed.
+Good news for everyone having LVM problems.  I have now succeeded in
+breaking my LVM setup on my development laptop (looks similar to what
+Rik is having - segfault in vgscan), so it looks like I will have to fix.
 
-I disagree.  I never have vgscan in my system startup, and have never
-had problems.  The only time I run vgscan is by accident, or on my
-rescue partition (where the VGDA info can get out of date).
+I'm running latest CVS, but with lots of patches, so I don't rule out
+that I have broken something.  All I had done was play with vgexport on
+a test VG, and then when trying to import it and it was broken.  I ran
+vgscan to detect it again, which went and deleted the entries for my
+other active VG, and then it broke as well.  No rebooting until it works
+I guess.
 
 Cheers, Andreas
 -- 
