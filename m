@@ -1,6 +1,6 @@
-From: Patrick Caulfield <caulfield@sistina.com>
+From: Wichert Akkerman <wichert@cistron.nl>
 Subject: Re: [linux-lvm] debian package
-Message-Id: <20020215111547.GE1078@tykepenguin.com>
+Message-Id: <20020215112826.GO32284@wiggy.net>
 References: <20020212232032.GB2993@gmx.de>
     <200202130006.AA188608817@fb0442.mathematik.tu-darmstadt.de>
     <20020213002332.GB8060@gmx.de> <20020213025236.GA26408@dmcom.net>
@@ -18,31 +18,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb 15 05:16:01 2002
+Date: Fri Feb 15 05:28:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Jan Niehusmann <list039@gondor.com>, Wayne Topa <wtopa@dmcom.net>
 
-On Fri, Feb 15, 2002 at 12:03:55PM +0100, Jan Niehusmann wrote:
-> On Tue, Feb 12, 2002 at 09:52:37PM -0500, Wayne Topa wrote:
-> > Wiktor Wodecki(wodecki@gmx.de) is reported to have said:
-> > > hm. Well, I search with apt-cache, dpkg -s dpkg -L and on the debian.org
-> > > webpage...anyway, forget that then :-)
-> > > 
-> > Wiktor
-> > 
-> >   It's not in woody so maybe that is in the sid (unstable) branch.(?)
-> 
+Previously Jan Niehusmann wrote:
 > You're right, lvm10 is in debian sid, not in woody. As far as I can tell
 > this is caused by build problems on powerpc and s390. There seems to be
 > a patch for s390 available, I don't know about s390. 
-> 
-> It would be great if lvm10/lvm-common could become part of debian woody.
-> So if somebody knows how to fix this, please tell!
-> 
 
-There were fixes to the way LVM uses the kernel headers for 1.0.2 that _may_ fix
-those problems.
+And things like the little problem that the LVM tools apparently do
+nothing but segfault on sparc since they mix -fPIC and -pg (see
+http://bugs.debian.org/123322).
 
-patrick
+Wichert.
+
+-- 
+  _________________________________________________________________
+ /wichert@wiggy.net         This space intentionally left occupied \
+| wichert@deephackmode.org            http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
