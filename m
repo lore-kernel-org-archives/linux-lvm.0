@@ -1,10 +1,11 @@
 From: "Mark H. Wood" <mwood@IUPUI.Edu>
 Subject: Re: [linux-lvm] Drive gone bad, now what?
-In-Reply-To: <3F9989C9.1070909@xs4all.nl>
-Message-ID: <Pine.LNX.4.55.0310280920570.14569@mhw.ULib.IUPUI.Edu>
+In-Reply-To: <3F9DB7D8.5080502@xs4all.nl>
+Message-ID: <Pine.LNX.4.55.0310280943350.14569@mhw.ULib.IUPUI.Edu>
 References: <20031021171817.GA28462@mail.parplies.de> <3F985B2D.5060008@xs4all.nl>
  <16280.27367.874758.610758@gargle.gargle.HOWL> <3F98B691.7090902@webhackande.se>
- <3F9989C9.1070909@xs4all.nl>
+ <3F9989C9.1070909@xs4all.nl> <16285.12868.20878.180441@gargle.gargle.HOWL>
+ <3F9DB7D8.5080502@xs4all.nl>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,7 +17,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 28 08:40:02 2003
+Date: Tue Oct 28 08:57:04 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -25,41 +26,44 @@ To: linux-lvm@sistina.com
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-On Fri, 24 Oct 2003, Gert van der Knokke wrote:
-> Rickard Olsson wrote:
-> > John> If you had just a simple concatenation of all the disks, then
-> > you are
-> > John> toast.  How do you expect LVM to restore the missing 60gb if
-> > there's
-> > John> no parity information or mirrored blocks?  It's impossible!
->
-> I didn't expect lvm to restore the missing data, I guessed it would just
-> let me access the rest of the data.
+On Tue, 28 Oct 2003, Gert van der Knokke wrote:
+> John Stoffel wrote:
+> >Gert> I didn't expect lvm to restore the missing data, I guessed it
+> >Gert> would just let me access the rest of the data.
+> >
+> >At this point, you have to think, how can my filesystem cope with the
+> >loss of a 60gb chunk of data in the middle (start or end even) of the
+> >300+ gb of data?  There's all sorts of meta-data and true data which
+> >is now gone, and re-building the filesystem into a consistent state is
+> >really impossible.
+> >
+> Hmm, and so I think LVM still needs a warning label :-)
 
-To elaborate a bit, there are three cases to consider:
+Maybe, in the same way that McDonald's now feels compelled to remind its
+customers that hot coffee is hot.  I don't recall anything in the
+description of LVM which suggests that it provides redundancy or other
+data-protection mechanisms.  RAID, regular backups, and retention of
+distribution media are still required if you value your data.
 
-o  An LV with no extents stored on the failed drive.  This LV is intact
-   and LVM should be able to provide it as if nothing had happened,
-   because nothing *has* happened to this LV.
+> I wonder why LVM doesn't work the other way around:
+> Create filesystems on several disks and then concatenate these to the
+> outside as one large filesystem. This way if one drive goes bad you can
+> always individually mount the drives and use the data.
 
-o  An LV all of whose extents were stored on the failed drive.  This LV's
-   content is entirely lost and may only be recovered from other media.
+man mount
 
-o  An LV, some but not all of whose extents were stored on the failed
-   drive.  Once the lost storage has been replaced, LVM *could* present
-   this LV, which would contain a damaged filesystem.  'fsck' might be
-   able to repair the filesystem enough to recover files which were stored
-   in the undamaged extents, or a filesystem debugger might be available
-   to facilitate manual recovery.  Some of the content is lost and may
-   only be recovered from other media, but other content is undamaged.
+> >If you are looking for a large/cheap/reliable bunch of storage,
+> >instead of mirroring, you might want to think about RAID5 instead.
+> >
+> No, what we're looking for is an 'expandable as needed' filesystem and
+> this is what LVM pretends to be.
 
-   I don't yet know LVM well enough to say whether it *does* handle this
-   case, but it can in theory and I would expect it to be written to do
-   so.  Others' comments suggest that this is so.
-
-BTW I've used various logical-volume schemes for years on top of hardware
-RAID.  It's a combination that works well.  I don't understand why some
-people want to put (soft) RAID on top of LVM rather than underneath it.
+That's what it *is*.  You can slice and dice your physical storage and
+recombine as needed.  Do that to redundant physical storage and you have a
+highly reliable expandable storage stack.  Do it to a simple concatenation
+of cheap disks and you have a cheap failure-prone expandable storage
+stack.  Expandability and reliability are orthogonal, and you use separate
+tools to provide them.
 
 - -- 
 Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
@@ -68,7 +72,7 @@ MS Windows *is* user-friendly, but only for certain values of "user".
 Version: GnuPG v1.2.2 (GNU/Linux)
 Comment: pgpenvelope 2.10.2 - http://pgpenvelope.sourceforge.net/
 
-iD8DBQE/nn9/s/NR4JuTKG8RArSyAJ93Bdog6U2fNrbpF/dAJ6BZOVlMyQCeKhmU
-fEB18by5nkGWlKt/Ge35olE=
-=8ETo
+iD8DBQE/noNls/NR4JuTKG8RAjZZAJ9/bdnzRL07utWgLrw0FKR3Jw2hFQCaAwMr
++J7f6p3l6Arpds78jK2TKgE=
+=QaKC
 -----END PGP SIGNATURE-----
