@@ -1,9 +1,9 @@
 Return-Path: <plamb_98@yahoo.com>
-Message-ID: <20010726132500.76749.qmail@web13402.mail.yahoo.com>
-Date: Thu, 26 Jul 2001 06:25:00 -0700 (PDT)
+Message-ID: <20010726140805.68707.qmail@web13403.mail.yahoo.com>
+Date: Thu, 26 Jul 2001 07:08:05 -0700 (PDT)
 From: Pierre Lamb <plamb_98@yahoo.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] lvm -- help
+Subject: [linux-lvm] lvm help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -29,6 +29,8 @@ the vgscan the correct entries are made. Ant help
 would be appreciated.
 
 Pierre
+
+
 
 __________________________________________________
 Do You Yahoo!?
