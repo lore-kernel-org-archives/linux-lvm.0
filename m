@@ -1,11 +1,14 @@
-Message-ID: <3F9D327C.6020102@elitedvb.net>
-From: Felix Domke <tmbinc@elitedvb.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LV only detected when using "lvscan -D" on amd64
- kernel
-References: <3F994F88.8030908@elitedvb.net> <20031025091006.I848@sistina.com> <3F9C0AC9.6050805@elitedvb.net> <20031027120104.K848@sistina.com>
-In-Reply-To: <20031027120104.K848@sistina.com>
 Content-Transfer-Encoding: 7bit
+Message-ID: <16285.12868.20878.180441@gargle.gargle.HOWL>
+From: "John Stoffel" <stoffel@lucent.com>
+Subject: Re: [linux-lvm] Drive gone bad, now what?
+In-Reply-To: <3F9989C9.1070909@xs4all.nl>
+References: <20031021171817.GA28462@mail.parplies.de>
+	<3F985B2D.5060008@xs4all.nl>
+	<16280.27367.874758.610758@gargle.gargle.HOWL>
+	<3F98B691.7090902@webhackande.se>
+	<3F9989C9.1070909@xs4all.nl>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +19,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 27 08:55:02 2003
+Date: Mon Oct 27 08:59:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+Gert> Yes, it was just concatenation, no striping, since lvm is
+Gert> 'expandable as needed' we opted for this.
 
->User space parses and passes it via ioctls to the kernel.
->Please look at lvm.h for the ioctls defined and the structures involved.
->Grep the LVM1 library source in tools/lib/ for "ioctl" to get you started.
->  
->
-Where exactly is the LV information passed to the kernel? is it 
-"LV_CREATE"?
+Ok.
 
-The kernel seems to don't know the LV, the LV_STATUS_BYINDEX on the 
-"/dev/fast/group" returns "No such device or address" (ENXIO) for each 
-index, including 0, which should be the LV in question.
+Gert> I didn't expect lvm to restore the missing data, I guessed it
+Gert> would just let me access the rest of the data.
 
-It looks as "lvm_do_lv_status_byindex" in the kernel returns -ENXIO 
-because vg_ptr->lv[lv_status_byindex_req.lv_index] is zero. Where is the 
-point where this array is written? I only found LV_CREATE, but that's 
-only called in vgimport, vgmerge and lvcreate, so it looks as there is 
-another place.
+At this point, you have to think, how can my filesystem cope with the
+loss of a 60gb chunk of data in the middle (start or end even) of the
+300+ gb of data?  There's all sorts of meta-data and true data which
+is now gone, and re-building the filesystem into a consistent state is
+really impossible.  
 
+Sure, you spent heroic amounts of time, you might be able to pull back
+lots of data from individual sections where it's still around, but in
+general, it's not going to happen.
 
-Can you point me in the direction?
+If you are looking for a large/cheap/reliable bunch of storage,
+instead of mirroring, you might want to think about RAID5 instead.  In
+your case, you had a mix of disks, so what you could do is build a
+pair of RAID5 arrays using disks of the same size for each array
+(minimum of three disks each of course) and then stripe the filesystem
+across both arrays.  
 
+To add more storage, you need to work on chunks of three disks, but
+since 120gb disks are going for around $100 these days, it's not that
+expensive.
 
-Felix
+Good luck! 
+
+John
