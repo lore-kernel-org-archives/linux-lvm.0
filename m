@@ -1,11 +1,11 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
-Message-Id: <20020207091719.GE5188@auctionwatch.com>
-References: <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
-    <3C6187A0.3DFEA8BE@lmco.com> <3C6242D0.3090005@promofinarsa.es>
+Subject: Re: [linux-lvm] one PV crashed
+References: <878zad8qrx.fsf@papadoc.bayour.com>
+    <20020201111151.B15491@sistina.com> <87wuxx1duy.fsf@papadoc.bayour.com>
+    <87r8nyan7a.fsf@papadoc.bayour.com> <20020206205702.A6967@sistina.com>
+From: Turbo Fredriksson <turbo@bayour.com>
+In-Reply-To: <20020206205702.A6967@sistina.com>
+Message-Id: <87g04deij8.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3C6242D0.3090005@promofinarsa.es>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,18 +16,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  7 03:17:04 2002
+Date: Thu Feb  7 03:41:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Feb 07, 2002 at 10:03:12AM +0100, Jesus Manuel NAVARRO LOPEZ wrote:
-> That's plainly untrue: AMANDA for one is free and very good for small 
-> systems.
+Quoting "Heinz J . Mauelshagen" <mauelshagen@sistina.com>:
 
-    Define "small". 
+> On Wed, Feb 06, 2002 at 12:01:29PM +0100, Turbo Fredriksson wrote:
+> > Quoting Turbo Fredriksson <turbo@bayour.com>:
+> > 
+> > > [papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 /dev/loop0
+> > > vgcfgrestore -- physical volume "/dev/loop0" doesn't belong to volume group "vg1"
+> > > 
+> > > [papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 -o /dev/sdg1 /dev/loop0
+> > > vgcfgrestore -- ERROR "pv_read(): pv_create_name_from_kdev_t" reading physical volume "/dev/loop0"
+> > >
+> > > [papadoc.root]# pvdisplay -v /dev/loop0 
+> > > pvdisplay -- getting physical volume size
+> > > pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical volume "/dev/loop0"
+> > 
+> > 
+> > Does anyone have a solution to this? What am I doing wrong?
+> 
+> Turbo,
+> 
+> you seem to be using an older LVM version with broken loop support :-(
+> Found a bug in vgcfgrestore(8) which will likely cause problems with this too.
+> More to follow...
 
+Dang! My LVM version is: 1.0.1-rc4
 
--- 
-Share and Enjoy. 
+I'll try the other solution, with a separate harddisk. I borrowed a 18Gb disk to at least hold
+SOME of the data I and my users are collecting (mail etc) :)
+
+smuggle Honduras Iran class struggle Treasury PLO Serbian colonel spy
+nuclear president FSF assassination Soviet kibo
+[See http://www.aclu.org/echelonwatch/index.html for more about this]
