@@ -1,16 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3M8mqp10847
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 04:48:52 -0400
-Received: from vega.voltaire.com ([212.143.27.73])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i3M8moFe017529
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 04:48:51 -0400
-Message-ID: <2F75AEE4E86FDE44BF97709D289BAA7C71975A@vega.voltaire.com>
-From: Dan Bar Dov <danb@voltaire.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3MEWPp08301
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 10:32:25 -0400
+Received: from northshorelij.com (451be50f.cst.lightpath.net [69.27.229.15])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i3MEWOFe017588
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 10:32:25 -0400
+Received: from nt40wb972xch03.northshorelij.com ([10.170.170.101])
+	by nt2kwb972ngw01.northshorelij.com (SAVSMTP 3.1.5.43) with SMTP id
+	M2004042210315310036
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 10:31:53 -0400
+Message-ID: <DD0BAC5EF106D7118E6D0002557B6A8C711DB5@nt40wb972xch03.nshs.edu>
+From: "Yang, Fred" <FYang@nshs.edu>
 Subject: RE: [linux-lvm] LVM and multiple HBA ports
-Date: Thu, 22 Apr 2004 11:48:40 +0300
+Date: Thu, 22 Apr 2004 10:31:47 -0400
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C42846.9C619880"
+	boundary="----_=_NextPart_001_01C42876.8AF2A028"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,14 +25,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>, "'csc@cadence.com'" <csc@cadence.com.redhat.com>
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
 This message is in MIME format. Since your mail reader does not understand
 this format, some or all of this message may not be legible.
 
-------_=_NextPart_001_01C42846.9C619880
-Content-Type: text/plain;
-	charset="iso-8859-1"
+------_=_NextPart_001_01C42876.8AF2A028
+Content-Type: text/plain
+
+It seems the trend is OS vendor start to put the MPIO feature into OS, e.g.
+SUN's MPxIO, IBM's MPIO(Only on AIX5.2), and even Microsoft start program to
+implement MPIO in it's Windows OS. I guess that's one of the reason why
+relatively smaller storage vendor don't want to jump in to develop their own
+driver. 
+I'm really curious are there anybody heard about any project about MPIO on
+Linux? 
+ 
+Fred
+
+  _____  
+
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On
+Behalf Of Dan Bar Dov
+Sent: Thursday, April 22, 2004 4:49 AM
+To: 'LVM general discussion and development'; 'csc@cadence.com'
+Subject: RE: [linux-lvm] LVM and multiple HBA ports
+
 
 I wouldn't call them 'most storage vendors'  rather the 'large vendors'.
  
@@ -60,7 +82,7 @@ balancing&failover between multiple path.
 -Fred 
 
 -----Original Message----- 
-From: linux-lvm-bounces@redhat.com [ mailto:linux-lvm-bounces@redhat.com
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com
 <mailto:linux-lvm-bounces@redhat.com> ] On Behalf Of Chris Croswhite 
 Sent: Wednesday, April 21, 2004 12:17 PM 
 To: LVM general discussion and development 
@@ -113,17 +135,37 @@ read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 <http://tldp.org/HOWTO/LVM-HOWTO/>  
 
 
-------_=_NextPart_001_01C42846.9C619880
-Content-Type: text/html;
-	charset="iso-8859-1"
+------_=_NextPart_001_01C42876.8AF2A028
+Content-Type: text/html
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML><HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=us-ascii">
 <TITLE>RE: [linux-lvm] LVM and multiple HBA ports</TITLE>
 
-<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<META content="MSHTML 6.00.2800.1400" name=GENERATOR></HEAD>
 <BODY>
+<DIV dir=ltr align=left><SPAN class=214521814-22042004><FONT face=Arial 
+color=#0000ff size=2>It seems the trend is OS vendor start to put the MPIO 
+feature into OS, e.g. SUN's MPxIO, IBM's MPIO(Only on AIX5.2), and even 
+Microsoft start program to implement MPIO in it's Windows OS.&nbsp;I guess 
+that's one of the reason why relatively smaller storage vendor don't want to 
+jump in to develop their own driver.&nbsp;</FONT></SPAN></DIV>
+<DIV dir=ltr align=left><SPAN class=214521814-22042004><FONT face=Arial 
+color=#0000ff size=2>I'm really&nbsp;curious are there anybody heard about any 
+project about MPIO on Linux? </FONT></SPAN></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><SPAN class=214521814-22042004></SPAN><FONT face=Arial><FONT 
+color=#0000ff><FONT size=2>F<SPAN 
+class=214521814-22042004>red</SPAN></FONT></FONT></FONT><BR></DIV>
+<DIV class=OutlookMessageHeader lang=en-us dir=ltr align=left>
+<HR tabIndex=-1>
+<FONT face=Tahoma size=2><B>From:</B> linux-lvm-bounces@redhat.com 
+[mailto:linux-lvm-bounces@redhat.com] <B>On Behalf Of </B>Dan Bar 
+Dov<BR><B>Sent:</B> Thursday, April 22, 2004 4:49 AM<BR><B>To:</B> 'LVM general 
+discussion and development'; 'csc@cadence.com'<BR><B>Subject:</B> RE: 
+[linux-lvm] LVM and multiple HBA ports<BR></FONT><BR></DIV>
+<DIV></DIV>
 <DIV><SPAN class=769324308-22042004><FONT face=Arial color=#0000ff size=2>I 
 wouldn't call them 'most storage vendors'&nbsp; rather the 'large 
 vendors'.</FONT></SPAN></DIV>
@@ -208,4 +250,4 @@ style="PADDING-LEFT: 5px; MARGIN-LEFT: 5px; BORDER-LEFT: #0000ff 2px solid; MARG
   target=_blank>http://tldp.org/HOWTO/LVM-HOWTO/</A></FONT> 
 </P></BLOCKQUOTE></BODY></HTML>
 
-------_=_NextPart_001_01C42846.9C619880--
+------_=_NextPart_001_01C42876.8AF2A028--
