@@ -1,13 +1,19 @@
-Date: Wed, 5 Sep 2001 15:41:56 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] My VG is gone...
-Message-ID: <20010905154156.A6046@sistina.com>
-References: <B51F0C636E578A4E832D3958690CD73E0130BFFB@es04snlnt>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Content-Disposition: inline
-In-Reply-To: <B51F0C636E578A4E832D3958690CD73E0130BFFB@es04snlnt>; from jdiehl@sandia.gov on Wed, Sep 05, 2001 at 12:56:10PM -0600
+Date: Thu, 06 Sep 2001 00:02:31 +0200
+From: Olivier Sessink <olivier@lx.student.wau.nl>
+Subject: Re: [linux-lvm] PBs with LVM over software RAID
+In-reply-to: <3B900E92.7060607@st-peter.stw.uni-erlangen.de>; from
+ galia@st-peter.stw.uni-erlangen.de on Sat, Sep 01, 2001 at 12:24:18AM +0200
+Message-id: <20010906000231.A4373@fender.fakenet>
+MIME-version: 1.0
+Content-disposition: inline
+References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de>
+ <20010830083546.A20989@sistina.com>
+ <3B8EC633.40202@st-peter.stw.uni-erlangen.de>
+ <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de>
+ <20010831110512.V541@turbolinux.com>
+ <3B8FD95C.60702@st-peter.stw.uni-erlangen.de>
+ <20010831130718.C541@turbolinux.com>
+ <3B900E92.7060607@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,92 +25,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On  0, svetljo <galia@st-peter.stw.uni-erlangen.de> wrote:
+> hi
+> it works with IMB's JFS
+> when i try mkfs -t reiserfs -f /dev/myData/SRC it segfaults :
+> 
+> [root@svetljo mnt]# mkfs -t reiserfs -f /dev/myData/SRC
+> mkreiserfs, 2001 - reiserfsprogs 3.x.0j
+> ===================================================================
+> LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
+> -------------------------------------------------------------------------------
+> |###|type|ilen|f/sp| loc|fmt|fsck|                   
+> key                      |
+> |   |    |    |e/cn|    |   
+> |need|                                            |
+> -------------------------------------------------------------------------------
+> Segmentation fault
+> 
+> isn't that a bit strange that reiserfs and xfs doesn't handle it, but 
+> jfs does
 
-On Wed, Sep 05, 2001 at 12:56:10PM -0600, Diehl, Jeffrey wrote:
-> I will be formating 311Gb of hard drives today.  These drives were 40% fu=
-ll.
-> This is the second time that LVM has bitten me.  The first time I tried to
-> expand a VG, the VG was gone when the machine rebooted.  Same thing this
-> time.  AND THERE IS APEARANTLY NO WAY TO RECOVER!  It seems that all of t=
-he
-> vg data is recorded in each member pv.  So, why isn't there a utility to
-> recover a vg in this situation?  This is very fragile!=20
+reiserfs is known to stress hardware more, a lot of people with
+almost-stable hardware get problems when using reiserfs. XFS might behave
+the same. Test your system using memtest86, and run 'make -j3 clean bzImage'
+in a loop for a while to check if your hardware is OK.
 
-Did you try the uuid_fixer previously mentioned?
-
->=20
-> -----Original Message-----
-> From: Rasmus Wiman
-> To: linux-lvm@sistina.com
-> Sent: 9/5/2001 2:04 AM
-> Subject: Re: [linux-lvm] My VG is gone...
->=20
-> "Diehl, Jeffrey" <jdiehl@sandia.gov> skrev:
->=20
-> > Any ideas about how to recover without losing my data.  I need to get
-> > going
-> > soon, so if I haven't fixed it by late this week, I'm going to
-> > reformat....
-> > And lose several Gb of data.
->=20
-> I have already reformated my hard disks, alas. I didn't have time to
-> wait
-> for a solution. But If someone would have helped me or suppllied code
-> that
-> fixed the problem, it could have beed the start of a Doctor LVM project.
-> I
-> think there should really be crash recover tools for any file system and
-> LVM system since they all do crash some times.
->=20
->=20
-> ---------------------
-> Rasmus Wiman
-> SAMI Labs
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD D=
-E95
-
------Begin Obligatory Humorous Quote----------------------------------------
-FATAL ERROR! SYSTEM HALTED! - Press any key to do nothing...
------End Obligatory Humorous Quote------------------------------------------
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7lo4Ub2fpvETN3pURAj/3AJ9vwafShb7bLscEsi3PPog/hXgCgACfZPib
-6+O4KnlouLkh6RyjBeB7X9Q=
-=QK91
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
+regards,
+	Olivier
+-- 
+begin signature_virus.TXT.vbs
+Hi, I'm a signature virus. plz set me as your signature and help me
+spread :)
+end
