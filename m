@@ -1,41 +1,40 @@
-Date: Sat, 24 Jun 2000 00:49:54 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
 Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
-In-Reply-To: <85256907.0073BA85.00@d54mta02.raleigh.ibm.com>
-Message-ID: <Pine.LNX.4.21.0006240048000.30225-100000@fogarty.jakma.org>
+References: <85256906.006BCDB7.00@d54mta02.raleigh.ibm.com>
+From: "Martin K. Petersen" <mkp@linuxcare.com>
+Date: 23 Jun 2000 22:55:44 +0200
+In-Reply-To: benr@us.ibm.com's message of "Thu, 22 Jun 2000 15:37:29 -0400"
+Message-ID: <yq1r99oi0bz.fsf@tyra.mkp.net>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: benr@us.ibm.com
-Cc: hpuxadm@choice.net, linux-lvm@msede.com
+Cc: linux-lvm@msede.com
 
-On Fri, 23 Jun 2000 benr@us.ibm.com wrote:
+>>>>> "Ben" == benr <benr@us.ibm.com> writes:
 
-> 
-> 
-> Christopher,
-> 
-> Welcome to the discussion!  To answer your question, if the Linux
-> Community is interested in the LVMS outlined in the white paper,
-> then IBM will release code (under the GPL!) to begin moving this
-> technology to Linux.  I suspect that IBM will also dedicate some
-> resources to assist in moving this technology to Linux as that
-> will expedite the process. 
+[Musings deleted]
 
-would it not perhaps be more efficient and more purposeful if rather
-than releasing IBM specific code which will not 'drop-in' to linux,
-IBM were instead to use their knowledge gained from IBM LVM to assist
-with improving the current Linux LVM?
+Ben> This is exactly what you would have under the LVMS described in
+Ben> the white paper.  Your example shows nothing which could not be
+Ben> done through the LVMS architecture with partitions.  Am I missing
+Ben> something here?
 
-regards,
+I am advocating:
+
+1. Using existing partitioning schemes to encapsulate logical disks.
+
+   This is only relevant in the migration case and if people want to
+   test LVMS on a few disks that are already partitioned.  If your
+   system has hundreds of disks connected, you'll use a 1:1 physical
+   to logical disk mapping anyway.
+
+2. Avoid using existing partitioning schemes to encapsulate logical
+   partitions/extents.
+
 -- 
-Paul Jakma	paul@clubi.ie
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-I don't mind what Congress does, as long as they don't do it in the
-streets and frighten the horses.
-		-- Victor Hugo
+Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
+mkp@linuxcare.com, http://www.linuxcare.com/
+Linuxcare. Support for the revolution.
