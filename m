@@ -1,9 +1,9 @@
-Return-Path: <paul@clubi.ie>
-Date: Fri, 5 Jan 2001 03:56:46 +0000 (GMT)
-From: Paul Jakma <paul@clubi.ie>
-Subject: Re: [linux-lvm] LVM 0.9 vgscan problem
-In-Reply-To: <Pine.LNX.4.21.0101041545590.1281-300000@duckman.distro.conectiva>
-Message-ID: <Pine.LNX.4.30.0101050353430.31107-100000@fogarty.jakma.org>
+Return-Path: <riel@conectiva.com.br>
+Date: Fri, 5 Jan 2001 09:57:34 -0200 (BRDT)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [lvm-devel] Re: [linux-lvm] LVM 0.9 vgscan problem
+In-Reply-To: <20010105123820.A1886@gondor.com>
+Message-ID: <Pine.LNX.4.21.0101050956050.1295-100000@duckman.distro.conectiva>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,28 +18,39 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Rik van Riel <riel@conectiva.com.br>
-Cc: linux-lvm@sistina.com
+To: Jan Niehusmann <jan@gondor.com>
+Cc: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-On Thu, 4 Jan 2001, Rik van Riel wrote:
+On Fri, 5 Jan 2001, Jan Niehusmann wrote:
+> On Thu, Jan 04, 2001 at 08:01:10PM -0200, Rik van Riel wrote:
+> > But when I type (with the IOP10 tools) the following
+> > all hell breaks loose:
+> > 
+> > # vgextend vg0 /dev/hda5    (the previously removed PV)
+> > 
+> > The oops is below.
+> 
+> This is already known, a fix is in cvs. (But I didn't try it, I
+> just remembered that somebody mentioned it on the mailinglist).
 
-> Any chance this stuff gets fixed so I can go on testing
-> (fixing?) the 2.4 VM?  ;)
+Then the all-important question:
 
-easy matter to strip the LVM update out of the 2.4.0-pre patch as it
-only touches LVM files:
+Why the hell wasn't this bugfix given to Linus for
+inclusion in the 2.4.0 kernel ?
 
-[root@hibernia /root]# uname -r ;  cat /proc/lvm | grep LVM
-2.4.0-prerelease
-LVM driver version 0.8final  (15/02/2000)
+IMHO it is nothing but unresponsible to sit on bugfixes
+and not give them back to the maintainers of the main
+source repository (in this case, the kernel tarball).
 
-Don't think it was a good idea to update to 0.9 in Linus kernel.
+LVM folks: please send this patch to Linus, Alan and the
+list asap so we have a chance of a working LVM in 2.4.
 
 regards,
--- 
-Paul Jakma	paul@clubi.ie	paul@jakma.org
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-"Protozoa are small, and bacteria are small, but viruses are smaller
-than the both put together."
+
+Rik
+--
+Virtual memory is like a game you can't win;
+However, without VM there's truly nothing to loose...
+
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com.br/
