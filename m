@@ -1,20 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0EMFfr31498
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 17:15:41 -0500
-Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0EMFZWE021408
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 17:15:35 -0500
-Received: from scorpion (unknown [82.227.230.101])
-	by postfix3-1.free.fr (Postfix) with ESMTP id 148AC1734C6
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 23:15:34 +0100 (CET)
-Date: Fri, 14 Jan 2005 23:15:50 +0100
-From: Stephane Dupuis <hoper@free.fr>
-Message-ID: <1042776283.20050114231550@free.fr>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0F2cOO05390
+	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 21:38:24 -0500
+Received: from e-liberty.pl (yh226.internetdsl.tpnet.pl [80.55.241.226])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0F2cMF9003294
+	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 21:38:23 -0500
+Received: from PIW (mizzar.multicon.pl [81.219.100.2])
+	by e-liberty.pl (Postfix) with ESMTP id 9659D497DC
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 05:02:56 +0100 (CET)
+Date: Sat, 15 Jan 2005 03:38:04 +0100
+From: Piw <piw@e-liberty.pl>
+Message-ID: <415694421.20050115033804@e-liberty.pl>
+Subject: Re: [linux-lvm] understanding large LVM volumes
+In-Reply-To: <1266458715.20050114224006@free.fr>
+References: <41E80382.1000403@svs.gsfc.nasa.gov>
+	<1266458715.20050114224006@free.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: RAID, LVM and dm_crypt, please confirm setup
-Reply-To: hoper@free.fr,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,81 +29,90 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+NiHao Stephane,
 
-Hi,
+>> How does the Physical Extent size affect the maximum VG size?
+>> How does one go about chosing a PE size for a VG?
 
-> I have (at home) the following setup for my data discs:
-> 
-2x 40  GB RAID1 -->> /dev/md0
-2x 80  GB RAID1 -->> /dev/md1
-2x160 GB RAID1 -->> /dev/md2
-> 
-> These are part of volume group vg00, consisting of 9 logical volumes 
-> lv00...lv09
-> 
-> Now i set up crypt devices with cryptsetup and named these crypt devices 
-> clv00...clv09.
+> The PE Size does not affect VG size, but it's affect the maximum
+> size of a logical volume.
 
-Well I found this post really interesting :)
+> extract of the vgcreate man page :
 
-First, I'm sorry cause I can't help you here and say for sure "you are
-doing the right thing" or "take care, what you are doing is dangerous".
+> --
+> To limit kernel memory usage, there is a limit of 65536 physical
+> extents (PE) per logical volume,  so
+>        the  PE  size determines the maximum logical volume size. 
+> The default PE size of 4MB limits a single
+>        logical volume to 256GB (see the -s option to raise that
+> limit).  There is also (as of Linux  2.4)  a
+>        kernel limitation of 2TB per block device.
+> --
 
-But I want to make something like this at home and so have the same
-concern about the good way to resize the files systems.
+> So, to limit the size of the mapping between the physical extend (PE)
+> and the real physical location of the data, gods say that you can't
+> use more than 65536 PE for a logical volume.
 
-I don't know if it will help but I thought about another way of
-mixing raid, lvm and dmcrypt.
-Instead of crypting the logical volume, why not crypt the raid device?
-So you can have :
+and...
 
-Physical drives -->> /dev/mdX
-using dmcrypt on it -->> /dev/mapper/mdX_crypt
-And after make your LVM physical volume :
-pvcreate /dev/mapper/mdX_crypt   ******* NOTE, SEE UNDER
-vgcreate testvg /dev/mapper/mdX_crypt
-and so on...
+> So if you want to make logicals volumes as big a 1TB each, you need to
+> change the size of the PE to, at least : 1024*1024 MB /65536 = 16 MB
+> Of course, stick to the limit so much seems not really secure, so
+> I advive you to choose at least 32 MB for the PE size in this case
+> (or even more). I read that the maximum size for the physical extend
+> is 16 GB, so choosing a big value here (128 MB ?) is not a problem.
 
-In this way, you will never have to resize the crypted device.
-You will just have to resize the logical volume and the filesystem
-as usual.
+Those limits (65536 LE per LV) does not apply to LVM 2 and 2.6 kernel.
+Your LV can have MUCH more LE (I dont know if there is even reachable
+limit  for  this).  One  and only feedback (if you can notice this) is
+that  userspace  programs for managing LVM works _little_ slower, when
+there is enormous number od LE to administrate.
+I tested it with 4GB LV on 16MB LE (but I didnt see difference)
 
-****** To be abble to do this, you need to edit the /etc/lvm/lvm.conf
-file and change the "type" line to :
-types = [ "device-mapper", 16 ]
+> Also note that with a 32 bit kernel, you have a limit of 2TB per
+> logical volume, I don't know if this limit disappear with a 64 bit
+> kernel.
 
-Another advantage of this "crypted md" architecture (compare to
-crypt the logical volume) is that the whole volume group are crypted,
-included all the lvm metadata.
+About kerenel. Limit od 2GB per block device is also an antique.
+You  can  easly  "bypass" this limit by setting (in make menuconfig)
+Devices Drivers->Block Devices->Support for Large Block Devices.
 
-With your implementation, anybody can have access to the volume group
-metadata, the logicals volumes names and so on...
-(naming a logical volume "mpeg3_and_warez_fuck_riaa_lv" may not be a
-good idea here ;o)
+> But think hard about it....
+> Are you sure you can't "logicaly" split it ? and that the 10 TB of
+> data will concern the same software or pool of user and so on ?
+> Are you sure you will not have to move only a part of the data one day ?
+> (add a new server and need to export some of the data to import it
+> to the new server ?)
+> Also think about how you will (if you need) backup the whole thing...
 
-With all lvm metadata crypted, nobody can even know that you are
-using lvm...
+When  I  create  logical structure of my LVM diskspace, I always think
+about those things:
 
-Of course, there are some drawback :(
-First, It's mean that the same key will be use for a whole /dev/dm.
-So, if you make a volme group on it, and.. let's say 10 logical
-volume, it's mean than theses 10 lvs will be crypted with the same
-key and that you can't choose to mount only 9 and think the last
-one is "secure"
+1) Never assign ALL your disks at once between VGs.
+You can ALWAYS add disk later to vg, according to your needs. Removing
+involves  pvmove,  whitch is more stressing then vgextend. (of course,
+if  U  have  more, then 5-6 disks). And almost all filesystems support
+extending of FS, but not all like shrinking.
 
-I did'nt decide wich way I will choose yet... but I need to have
-a logical volume that don't have the same key as the other.
-So I can't choose my way. I will surely make as you did... or mix the two ways.
-(crypt the /dev/dm, make a vg, make lvs and for one particular lv,
-crypt it again :o) Of course, I guess I will need cpu power here ;o)
+2) Never create BIG vg, unless they are base on raid disks.
+Damage of one disk whitch is not in RAID, damages VG (of course, U
+can  recreate  structure of vg by clonig PV ID, but filesystems will be
+damaged - mabye in more then one LV.)
 
-So, I can't answer to your questions, I just also wonder about the
-better way of putting all theses tools together...
+3) Always try to have some space left in vg.
+It helps you extend LV when needed, and create snapshots of LV.
+Generaly,  when  you  have  lower then 20% (of biggest LV in VG) free
+space  in VG, think about extendig VG. If you have no spare PVs, think
+about  buying  some  disks. In there is no room for disks, thing about
+another disks enclosure. If no.... etc. etc.
 
-Any comments are welcome...
+> Well, again, all this post is just guessing and a quick look
+> at the man page, so you should wait for a answer from someone
+> who really know it anyway :o)
 
-Stephane Dupuis
--- 
-()  ascii ribbon campaign
-/\      - against html e-mail 
-        - against microsoft attachments
+Unfortunatly man pages R not 100% compilant with latest of LVM.
+Buy hey, they are not right about limits, so we should be happy ;]
+
+--
+Piw
+Jabb with me at piwATe-liberty.pl M0r3 1nf0 4t http://www.jabberpl.org/
