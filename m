@@ -1,8 +1,9 @@
-Subject: Re: [linux-lvm] Root on LV
-Message-ID: <OFE0B97CD3.C5A33405-ON85256ACA.004E9D80@raleigh.ibm.com>
-From: "Steve Pratt" <slpratt@us.ibm.com>
-Date: Mon, 17 Sep 2001 09:26:12 -0500
+Message-ID: <3BA66769.1030001@kenamea.com>
+Date: Mon, 17 Sep 2001 14:13:13 -0700
+From: Kenny Gorman <kenny@kenamea.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Phantom Vol Grp
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,31 +15,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
->> > dobos_s@IBCnet.hu wrote:
->> > >My kernel has no modules.
->> > >Why should I create an ext2 partition for holding an initrd which is
-not
->> > >doing any essential things except vgscan and vgchange -ay ?
->>
->> You don't need vgscan at boot time unless the disks have moved around.
->> You DO need "vgchange -a y" in order to load the LVM data into the
-kernel.
+I can not delete a vol grp, but it doesn't show as there.  When I try to 
+create a new one with the same name, then it says it exists...  how do I 
+  'clean out' old references?
 
-> If you are running EVMS you don't need that.
+See below:
 
->But you need EVMS tools which are not available fo far :-(
+colobus:~ # pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sdb1" of VG "oraredo1" [100 MB / 100 MB free]
+pvscan -- inactive PV "/dev/sdb2" is in no VG  [16.99 GB]
+pvscan -- ACTIVE   PV "/dev/sdc1" of VG "oraredo2" [100 MB / 100 MB free]
+pvscan -- inactive PV "/dev/sdc2" is in no VG  [16.99 GB]
+pvscan -- ACTIVE   PV "/dev/sdd1" of VG "redogrp3" [17.09 GB / 16.98 GB 
+free]
+pvscan -- ACTIVE   PV "/dev/sdd2" of VG "sysgrp"   [16.99 GB / 12.49 GB 
+free]
+pvscan -- total: 6 [68.26 GB] / in use: 4 [34.28 GB] / in no VG: 2 
+[33.98 GB]
 
-Actually that is not entirely true.  All of the volume group and physical
-volumes tools are done.  We have started on all of the logical volume
-commands.  We have stand alone utilities which minic the LVM ones, as well
-as a GUI which integrates LVM function with other volume management
-functions such as partitioning.
+colobus:~ # vgcreate indxgrp /dev/sdc2
+vgcreate -- volume group directory or file already exists
+vgcreate -- please choose a different name
+
+colobus:~ # vgremove indxgrp
+vgremove -- ERROR: can't remove active volume group "indxgrp"
+
+colobus:~ # vgchange -a n indxgrp
+vgchange -- volume group "indxgrp" does not exist
+
+colobus:~ # vgdisplay indxgrp
+vgdisplay -- volume group "indxgrp" not found
 
 
-EVMS Development - http://www.sf.net/projects/evms
-Linux Technology Center - IBM Corporation
-(512) 838-9763  EMAIL: SLPratt@US.IBM.COM
+
+-kg
