@@ -1,10 +1,9 @@
-Message-ID: <3B96A4CC.2080701@st-peter.stw.uni-erlangen.de>
-Date: Thu, 06 Sep 2001 00:18:52 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+Date: Wed, 5 Sep 2001 17:42:15 -0500 (EST)
+From: John Marquart <jomarqua@indiana.edu>
+Subject: Re: [linux-lvm] lvcreate segfaults
+In-Reply-To: <20010905153703.A5914@sistina.com>
+Message-ID: <Pine.A41.4.21.0109051740340.31142-100000@gigue.dlib.indiana.edu>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] PBs with LVM over software RAID
-References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de> <20010831110512.V541@turbolinux.com> <3B8FD95C.60702@st-peter.stw.uni-erlangen.de> <20010831130718.C541@turbolinux.com> <3B900E92.7060607@st-peter.stw.uni-erlangen.de> <20010906000231.A4373@fender.fakenet>
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,43 +15,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-i'll do the loop and i already did the memtest86 i had no probs
-and what about mke2fs it also segfaults
-and when it stresses the hardware why didn't it crashed the system and 
-only segfaults without errors ?
+Alas alas,
+        This patch seemed to have changed the problem mroe then anything
+else.
+ 
+I am still getting segfaults - however this time in a different place.
+ 
+(from gdb ./lvcreate w/ set args = rootvg -L4M -nfoo):
+-----
+Starting program: /usr/src/LVM/1.0.1-rc2/./tools/lvcreate rootvg -L4M
+-nfoo
+ 
+Program received signal SIGSEGV, Segmentation fault. lv_create (vg=0x4,
+lv=0xbffffae4,
+    lv_name=0xbffffaf8 "\023.Rt~A`z\217\003\021\034'") at
+lv_create_remove.c:42
+42      int lv_create ( vg_t *vg, lv_t *lv, char *lv_name) {     
 
-Olivier Sessink wrote:
+-----
 
->On  0, svetljo <galia@st-peter.stw.uni-erlangen.de> wrote:
->
->>hi
->>it works with IMB's JFS
->>when i try mkfs -t reiserfs -f /dev/myData/SRC it segfaults :
->>
->>[root@svetljo mnt]# mkfs -t reiserfs -f /dev/myData/SRC
->>mkreiserfs, 2001 - reiserfsprogs 3.x.0j
->>===================================================================
->>LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
->>-------------------------------------------------------------------------------
->>|###|type|ilen|f/sp| loc|fmt|fsck|                   
->>key                      |
->>|   |    |    |e/cn|    |   
->>|need|                                            |
->>-------------------------------------------------------------------------------
->>Segmentation fault
->>
->>isn't that a bit strange that reiserfs and xfs doesn't handle it, but 
->>jfs does
->>
->
->reiserfs is known to stress hardware more, a lot of people with
->almost-stable hardware get problems when using reiserfs. XFS might behave
->the same. Test your system using memtest86, and run 'make -j3 clean bzImage'
->in a loop for a while to check if your hardware is OK.
->
->regards,
->	Olivier
->
+As far as I can tell - the only significant difference between this putput
+and the pre-patched output - is that it is now int lv_create instead of
+inline int lv_create.
+
+If there is any other info I can provide - as always - please ask.
+
+-j
