@@ -1,9 +1,9 @@
-Message-ID: <038601c2ccf3$780d1e00$5a07a8c0@yckim>
-From: "YongChul Kim" <yckim@linuxsecurity.co.kr>
-References: <Pine.LNX.4.44.0301290929500.25534-100000@zeus.itg.uiuc.edu>
-Subject: Re: [linux-lvm] resize an ext3 on an LV
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Does LVM2 support RAID?
+Message-ID: <20030205185056.A18933@sistina.com>
+References: <000701c2caba$18106290$0101a8c0@youriwyju5dfsf>
+Mime-Version: 1.0
+In-Reply-To: <000701c2caba$18106290$0101a8c0@youriwyju5dfsf>; from gozila@ms20.url.com.tw on Sun, Feb 02, 2003 at 08:53:32PM +0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,45 +14,88 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  5 02:47:01 2003
+Date: Wed Feb  5 11:54:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-WW91IGNhbiBkbyBleHQzIGV4cGFuZCB3aXRoICJlMmZzYWRtIC1MICt4eHhHIC1uIC9kZXYvaG9t
-ZXZnL3VzZXJzbHYiLg0KQnV0IGJlZm9yZSB1c2luZyB0aGlzIGNvbW1hbmQsIG11c3QgcmVkdWNl
-IExWIHZvbHVtZSB0byBvcmlnaW5hbCBzaXplLg0KZTJmc2FkbSAgbWF5IHJlc2l6ZSBmaWxlc3lz
-dGVtIGFuZCBsb2dpY2FsIHZvbHVtZSBCT1RILg0KLW4gIGlzIG5vZnNjay4NCllvdSBtdXN0IGNo
-ZWNrIGZpbGVzeXN0ZW0gIGJlZm9yZSAiZTJmc2FkbSIgIGJ5IGUyZnNjay4NCg0Kd2lzaCB5b3Vy
-IGdvb2QgTHVjayAhISENCllvbmdjaHVsIEtpbS4NCg0KDQotLS0tLSBPcmlnaW5hbCBNZXNzYWdl
-IC0tLS0tIA0KRnJvbTogIkFsZXhhbmRlciBMYXphcmV2aWNoIiA8YWxhemFyZXZAaXRnLnVpdWMu
-ZWR1Pg0KVG86ICJMaW51eCBMVk0gU2lzdGluYSIgPGxpbnV4LWx2bUBzaXN0aW5hLmNvbT4NClNl
-bnQ6IFRodXJzZGF5LCBKYW51YXJ5IDMwLCAyMDAzIDEyOjMyIEFNDQpTdWJqZWN0OiBSZTogW2xp
-bnV4LWx2bV0gcmVzaXplIGFuIGV4dDMgb24gYW4gTFYNCg0KDQo+IFRoZSBMViBpcyBhbHJlYWR5
-IGV4cGFuZGVkLiBBbGwgSSB3YW50IHRvIGRvIGlzIHJlc2l6ZSB0aGUgZXh0MyBmaWxlc3lzdGVt
-IA0KPiB0byB0aGUgbmV3IHNpemUgb2YgdGhlIExWLCB3aGljaCBpcyBub3cgMjc1R0IuDQo+IA0K
-PiBCdXQgSSBuZWVkIHRvIGtub3cgdGhlIGNvbW1hbmRzLiBPciBzb21lIGhpbnQgb2Ygd2hhdCB0
-aGUgY29tbWFuZCBpcy4gSXMgDQo+IGl0IGp1c3QgInJlc2l6ZTJmcyAvZGV2L2hvbWV2Zy91c2Vy
-c2x2Ij8gSSd2ZSBzZWVuIHNvbWUgcG9zdHMgc2F5aW5nIHRoYXQgDQo+IHVzaW5nIHJlc2l6ZTJm
-cyB3aWxsIGRlc3Ryb3kgYW4gZXh0MyBmaWxlc3lzdGVtLCBpcyB0aGF0IG5vdCB0cnVlPyBXaWxs
-IA0KPiB0aGUgam91cm5hbCBzdGF5IGludGFjdD8gV2hhdCdzIHRoZSBjb21tYW5kIHRoYXQgeW91
-IHVzZT8NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIGhlbHAhDQo+IA0KPiBBbGV4DQo+IA0KPiBPbiBX
-ZWQsIDI5IEphbiAyMDAzLCBKYW4tQmVuZWRpY3QgR2xhdyB3cm90ZToNCj4gDQo+ID4gT24gV2Vk
-LCAyMDAzLTAxLTI5IDA5OjE2OjE1IC0wNjAwLCBBbGV4YW5kZXIgTGF6YXJldmljaCA8YWxhemFy
-ZXZAaXRnLnVpdWMuZWR1Pg0KPiA+IHdyb3RlIGluIG1lc3NhZ2UgPFBpbmUuTE5YLjQuNDQuMDMw
-MTI5MDkwMDM1MC4yMjQ2My0xMDAwMDBAemV1cy5pdGcudWl1Yy5lZHU+Og0KPiA+ID4gQSByZWhh
-c2ggb2Ygc29tZSBxdWVzdGlvbnMgSSBhc2tlZCBlYXJsaWVyLCBidXQgSSB3YW50IHRvIGNsYXJp
-Znk6DQo+ID4gPiANCj4gPiA+IFJlZGhhdCA3LjMsIDIuNC4xOC0xOS43LnhzbXAga2VybmVsLCB1
-c2luZyBMVk0gMS4wMy4NCj4gPiA+IA0KPiA+ID4gSSd2ZSBnb3QgYSAxODBHQiBMViAoL2Rldi9o
-b21ldmcvdXNlcnNsdikgd2hpY2ggY29udGFpbnMgYW4gZXh0MyANCj4gPiA+IGZpbGVzeXN0ZW0g
-KG1vdW50IHBvaW50IC9ob21lL3VzZXJzKS4NCj4gPiA+IA0KPiA+ID4gT25jZSBJIHVtb3VudCB0
-aGUgL2Rldi9ob21ldmcvdXNlcnNsdiwgY2FuIEkgdXNlIHJlc2l6ZTJmcyB0byBleHRlbmQgdGhl
-IA0KPiA+ID4gZXh0MyBmaWxlc3lzdGVtPyBPciBtdXN0IEkgZmlyc3QgcmVtb3ZlIHRoZSBqb3Vy
-bmFsIGZyb20gZXh0MywgdGhlbiANCj4gPiA+IHJlc2l6ZSwgdGhlbiBhZGQgdGhlIGpvdXJuYWwg
-YmFjayB0byBpdCwgdGhlbiByZW1vdW50Pw0KPiA+IA0KPiA+IFlvdSBjYW4gZGlyZWN0bHkgZW5s
-YXJnZSB0aGUgZmlsZXN5c3RlbSwgYnV0LCBvZiBjb3Vyc2UsIHlvdSd2ZSBnb3QgdG8NCj4gPiBl
-eHRlbmQgdGhlIGxvZ2ljYWwgdm9sdW1lIGJlZm9yZSB0aGF0Li4uIFlvdSBkb24ndCBuZWVkIHRv
-IHJlbW92ZSB0aGUNCj4gPiBqb3VybmFsLCBhdCBsZWFzdCwgdGhpcyB3b3JrZWQgbnVtZXJvdXMg
-dGltZXMgZm9yIG1lOi0pDQo+ID4gDQo+ID4gSG93ZXZlciwgYmFja3VwIGlzIGFsd2F5cyBhIGdv
-b2QgaWRlYSwgdGhvdWdoLg0KPiA+IA0KPiA+IE1mRywgSkJHDQo+ID4gDQo+ID4gDQo+IA0KPiAN
-Cj4g
+On Sun, Feb 02, 2003 at 08:53:32PM +0800, Rocky Lee wrote:
+> 
+> 
+> 
+>  Hi
+> 
+> 
+>  Thank you Mr. Heinz   : - D
+> 
+>  I'm interesting in differents between  LVM1 and LVM2,
+
+Some highlights IRT LVM2/device-mapper
+(see www.sistina.com for download information):
+
+- device-mapper has been accepted as the future generic mapping driver
+  for the 2.5 kernel
+
+- tools are LVM1 ondisk metadata compatible
+
+- atomic updates on ondisk metadata and multiple metadata copies for
+  extended resilience
+
+- config file support for device name filters, logging levels and more
+
+- LVM shell to avoid overhead on mass changes reloading the tools on
+  every change
+
+- generic device mapping with a much smaller driver (aka device-mapper)
+
+- arbitrary mapping modules can be added at runtime
+
+- RAID0 LVs can beextended beyond physical volume limits
+
+
+>  I like LVM, it's very simple but powerful tool to maintain volumes.
+> 
+> 
+> > > > If I use LVM2 will be better than use LVM1 + MD?
+> >
+> > > You still need to combine LVM2 with MD in order to have RAID > 0 (RAID0
+> is
+> > > supported natively as it is in LVM1).
+> > > Because LVM2 offers various enhancements you migth still want to give it
+> > > a try :-)
+> >
+> 
+> Does LVM2 will support bad block reallocation?
+>  It'll be great to use with MD.
+> 
+>  Have a nice day ^_^
+> 
+>  Rocky Lee
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
