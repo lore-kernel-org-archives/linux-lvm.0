@@ -1,10 +1,12 @@
-Return-Path: <paul@clubi.ie>
-Date: Thu, 21 Jun 2001 01:58:32 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
-Subject: Re: [linux-lvm] LVM problems
-In-Reply-To: <20010620155023.B25048@sistina.com>
-Message-ID: <Pine.LNX.4.33.0106210143280.996-100000@fogarty.jakma.org>
+Return-Path: <lembark@wrkhors.com>
+Date: Wed, 20 Jun 2001 21:29:05 -0500
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] Re: another nice feature for packagers ...
+Message-ID: <34770000.993090545@dizzy>
+In-Reply-To: <20010618103116.A32391@sistina.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,57 +18,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Wed, 20 Jun 2001, Heinz J. Mauelshagen wrote:
 
-> Ed,
-
-> Linus *never* answered when we send hom patches even though I've
-> send them multiple times.
-
-and linus has said many many times on l-k: he gets loads and loads of
-mail, he reads it with his finger on the D key, if you hear nothing
-from him, keep sending.
-
-also, you can almost take it as given that he won't look at anything
-but emails that contain an inline diff (unified format) that tackles
-one specific problem/update. URL or mime attachment -> deleted.
-
-> We are working together with Alan Cox since weeks to get his -ac
-> tree updated.
+>> It would be nice if --prefix worked consistently for the new release.
+>> Until some final kinks in devfs get worked over keeping the VG's out of
+>> /dev without having to hack the source code would be helpful.
 >
-> Once he has it in he will push it to Linus.  Hopefully small
-> changes in the future will make it in easier (sigh).
+> Care to explain further?  I don't know what you're talking about here.
+> --prefix works fine for me in all cases.
 
-hopefully so and look forward to it.
+Try:
 
->
-> Regards,
-> Heinz    -- The LVM Guy --
+	./configure --prefix=/lvm;
 
-again, just like Ed, i have to say that i'm not bitching.. i think
-LVM is just about the best thing since sliced bread - truly my
-favourite linux kernel feature. so all i want to point out is that
-LVM'd be just that -> <- much better if you guys kept LVM closely
-in-sync with Linus. and best of all, for everyone ultimately, if
-you'd ditch your private CVS tree altogether and just sync through
-Linus very regularly..
-
-(we don't care if sometimes you introduce bugs by sending patches
-very frequently to Linus, cause we'll know that you just as regularly
-send fixes.  but don't accumulate bug-fixes over many months in a cvs
-tree and sit on them.)
-
-but i do love LVM.
-
-regards,
--- 
-Paul Jakma	paul@clubi.ie	paul@jakma.org
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-That government is best which governs least.
-		-- Henry David Thoreau, "Civil Disobedience"
+build and install everything.  Notice where the vgXX directories go:  /dev,
+not /lvm.  None of the configure switches (last time I compiled) were able
+to keep the vg's out of devfs's clutches w/o hacking a #define in the code.
+As a temporary fix until all the devfs glitches are worked out (some not lvm
+related) it'd be nice to avoid problems. 
