@@ -1,12 +1,11 @@
-Date: Fri, 1 Apr 2005 16:10:01 +0100
+Date: Fri, 1 Apr 2005 16:17:21 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20050401151001.GB14307@agk.surrey.redhat.com>
-References: <20050401142031.GA21976@wavehammer.waldi.eu.org>
+Subject: Re: [linux-lvm] Relationship between Device Mapper and LVM2
+Message-ID: <20050401151721.GC14307@agk.surrey.redhat.com>
+References: <424CF437.1050607@cs.wisc.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20050401142031.GA21976@wavehammer.waldi.eu.org>
-Subject: [linux-lvm] Re: [Linux-cluster] [PATCH] iddev - convert to general
-	purpose device identifier
+In-Reply-To: <424CF437.1050607@cs.wisc.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,18 +18,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-cluster@redhat.com
-Cc: linux-lvm@redhat.com
+To: Vivek Shrivastava <viveks@cs.wisc.edu>
+Cc: linux-LVM@redhat.com
 
-On Fri, Apr 01, 2005 at 04:20:31PM +0200, Bastian Blank wrote:
-> I currently try to do some cleanups in lvm2/fsadm. This tool currently
-> relies on an entry in /etc/fstab to get the filesystem type and a
-> temporary mount to get the block size. With this changes I can just use
-> iddev to gather the informations.
+On Fri, Apr 01, 2005 at 01:11:51AM -0600, Vivek Shrivastava wrote:
+> Is LVM2 based on top of "device mapper" and uses "device mapper" as the 
+> underlying layer of support for writing /reading on the disk. Or Device 
+> mapper is placed between the kernel and the LVM2. Aslo if possible 
+> please tell us the entry point of kernel into the device mapper.
  
-Also, if online and offline resizers are both available, fsadm
-should choose whichever is most appropriate according to whether
-the filesystem is already mounted or not.
+> Any suggestions on this topic will be highly appreciated.
+ 
+http://people.redhat.com/agk/talks/FOSDEM_2005/
+
+esp.  http://people.redhat.com/agk/talks/FOSDEM_2005/img3.gif
+      http://people.redhat.com/agk/talks/FOSDEM_2005/img4.gif
 
 Alasdair
 -- 
