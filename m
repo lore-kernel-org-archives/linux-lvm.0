@@ -1,45 +1,24 @@
-Date: Thu, 30 Mar 2000 17:20:04 -0500 (EST)
-From: Chris Shelton <cshelton@indiana.edu>
-Subject: [linux-lvm] Can't locate modules when running vgscan
-Message-ID: <Pine.HPP.3.96.1000330171141.7850C-100000@othello.ucs.indiana.edu>
+Message-ID: <38E4F5B4.DF212C4B@freeler.nl>
+Date: Fri, 31 Mar 2000 21:00:04 +0200
+From: jorg de jong <j.e.s.de.jong@freeler.nl>
 MIME-Version: 1.0
+Subject: [linux-lvm] BUG: use of lvchange leads to disk corruption 
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@msede.com" <linux-lvm@msede.com>
 
-I've recently started using the LVM software on one of my systems, and
-I've noticed that there are numerous messages are produced each time I run
-vgscan:
+Hi,
 
-Mar 30 13:50:19 fmslan kernel: LVM version 0.8i  by Heinz Mauelshagen
-(02/10/1999) 
-Mar 30 13:50:19 fmslan kernel: lvm -- Module successfully initialized 
-Mar 30 13:50:20 fmslan modprobe: can't locate module block-major-48
-Mar 30 13:50:22 fmslan last message repeated 63 times
-Mar 30 13:50:22 fmslan modprobe: can't locate module block-major-49
-Mar 30 13:50:23 fmslan last message repeated 63 times
-Mar 30 13:50:27 fmslan kernel: cdrom: open failed. 
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-33
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-33
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-34
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-34
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-7
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-7
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-9
-Mar 30 13:50:27 fmslan modprobe: can't locate module block-major-9
+the use of lvhange can lead to corruption of the lvm data structure on
+disk,
+and by doing so preventing you to access you data.
 
-I've added these two lines to my /etc/modules.conf:
-alias block-major-58      lvm
-alias char-major-109      lvm
+Incase you have more than one LV in one VG the use of lvchange will make
+your VG inaccessable.
 
-The system is running kernel version 2.2.14, with version 0.8i of the LVM
-patch.  
+regards,
 
-The filesystem created in the logical volume I have created seems to work
-just fine, but I've not sure if I've missed something in the setup that is
-causing these messages to appear.
-
-Chris Shelton
+jorg de jong
