@@ -1,9 +1,8 @@
-Message-Id: <m10vr8B-0000YbC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9 and devfs-patch-v99.2
-In-Reply-To: <5lbtea33d6.fsf@tequila.cs.yale.edu> from Stefan Monnier at "Jun 20, 1999  6:37:41 pm"
-Date: Mon, 21 Jun 1999 01:36:06 +0200 (MET DST)
-MIME-Version: 1.0
+Date: Tue, 22 Jun 1999 17:22:19 -0700
+From: "George Nicolaou" <gnicolao@my-deja.com>
+Message-ID: <ENJGHHKIMLNCBAAA@my-deja.com>
+Mime-Version: 1.0
+Subject: [linux-lvm] Compiling LVM 0.6 on Redhat 6.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -11,19 +10,34 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-> >>>>> "Rolf" == Rolf Jakob <rjakob@duffy1.franken.de> writes:
-> > I managed to resize a mounted file system and several times it was possible
-> > to copy more files on it after the resize. But from time to time I got an
-> 
-> Is it supposed to work on mounted filesystems ?
-> The webpage doesn't seem to mention such a feature.
+Hi all,
+  I have just found LVM and attempting to install it on a newly installed headhat 6 box. When compiling I get the following error:
 
-Well, some debug says something about flushing used blocks, so I think
-yes, it's supposed to be. I was just hoping and trying :-)
-But you're right, it isn't stated clearly. The author is just starting
-a FAQ section on his home page.
+Using the static LVM Library
+make[2]: *** No rule to make target `/usr/local/src/LVM/0.6/tools/lib/liblvm.a', needed by `e2fsadm'.  Stop.
+make[2]: Leaving directory /usr/local/src/LVM/0.6/tools'
+make[1]: *** [all] Error 2
+make[1]: Leaving directory '/usr/local/src/LVM/0.6/tools'
+make: *** [all] Error 2
 
-Rolf
--- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+Using XLINKER
+make[1]: Entering directory `/usr/local/src/LVM/0.6/tools'
+cc  -L/usr/local/src/LVM/0.6/tools/lib -Xlinker -rpath /usr/local/src/LVM/0.6/to
+ols/lib -Xlinker -rpath /lib -Xlinker -rpath /usr/lib -llvm -o e2fsadm e2fsadm.o
+
+/usr/bin/ld: cannot open -llvm: No such file or directory
+collect2: ld returned 1 exit status
+make[1]: *** [e2fsadm] Error 1
+make[1]: Leaving directory `/usr/local/src/LVM/0.6/tools'
+make: *** [all] Error 2
+
+
+Can someone please shead some light on this error.
+
+Cheers
+George
+
+
+
+--== Sent via Deja.com http://www.deja.com/ ==--
+Share what you know. Learn what you don't.
