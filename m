@@ -1,8 +1,10 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Mime-Version: 1.0
+From: Steve Brueggeman <xioborg@yahoo.com>
+Subject: Re: [linux-lvm] re: iSCSI and LVM
+Message-ID: <0vcacvsnbiq3kpgokrl5co8iuhe78f1ud7@4ax.com>
+References: <001301c31aad$4018fe30$3200a8c0@nimiak>
+In-Reply-To: <001301c31aad$4018fe30$3200a8c0@nimiak>
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030516183147.OJLZ24149.imf23bis.bellsouth.net@tiger2>
-Subject: [linux-lvm] Ensuring a LV does not move to a new PV?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +15,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 16 13:29:03 2003
+Date: Fri May 16 14:00:16 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-I had a single hardware mirrored PV I have been using with 3 LVs on it.
+About a year ago, I had worked with the UNH iSCSI driver backend.  I
+ended up writing another backend that did reads/writes directly to the
+block layer.
 
-I just added a JBOD PV to the VG for use with snapshot LVs.
+The backend that is (was? I haven't looked at it for a while) was
+extremely simple minded, and will need a bit of work for proper
+operation.  For example, when you used "file' as the backend, with the
+file being the LV, you reported the capacity as being incorrect.  This
+is because, (if  I recall correctly) the read_capacity SCSI command
+was hard-coded to the file size of the file that would have been
+created, had you not renamed it to the LV block dev.  You'll need to
+check the actual size of the device  when a read_capacity command is
+received.
 
-Is there anything I need to do to ensure that the main LVs never add any PEs =
-from the new PV?
+Also, I don't recall any mode page support being there, and their
+implementation of buffering is quite simplistic.
 
-i.e.
-Are the existing LVs sparse?
+I'll see if I can find my old back-end patches.  Would you be
+interested???
 
-And do new PEs get allocated as data is written to the LV?
+Steve Brueggeman
 
-If so, I can easily see PEs coming from the wrong PV.
 
-Thanks
-Greg
---=20
-Greg Freemyer
- =20
+On Wed, 14 May 2003 23:43:09 -0700, you wrote:
+
+>Hi Greg,
+>	Thanks for responding. I'm currently trying out the iSCSI
+>implementation provided by the UNH IOL iSCSI Consortium:
+>
+>http://www.iol.unh.edu/consortiums/iscsi/
+>
+>They provide modules for both target and initiator. Unfortunately, the
+>implementation is based on the v18 draft and doesn't include support for
+>ErrorRecoveryLevel 2. I'd like level 2 recovery so that I can failover
+>the node running the iSCSI target, and have the initiator automatically
+>reconnect to the new iSCSI target node. Also, their implementation
+>doesn't have support for setting up a logical volume as an iSCSI target.
+>You can specify a file as an iSCSI target, so I tried specifying the
+>logical volume's block device file, but when I imported it on the
+>initiator node, the capacity of the device was all screwed up. Anyways,
+>I'll try your pointer to the Intel implementation and see if it works
+>better. Alternatively, I may try looking into using ENBD to export the
+>logical volumes.
+>
+>Thanks,
+>-Kai=20
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
