@@ -1,8 +1,8 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 21 Feb 2001 10:08:49 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Return-Path: <joe@66bassett.freeserve.co.uk>
+Date: Wed, 21 Feb 2001 08:50:13 +0000
+From: Joe Thornber <joe@66bassett.freeserve.co.uk>
 Subject: Re: [linux-lvm] Stripe size of 2K allowed?
-Message-ID: <20010221100849.A24951@srv.sistina.com>
+Message-ID: <20010221085013.A368@66bassett.freeserve.co.uk>
 References: <20010220130303.A505@jadzia>
 Mime-Version: 1.0
 In-Reply-To: <20010220130303.A505@jadzia>; from josv@osp.nl on Tue, Feb 20, 2001 at 01:03:03PM -0800
@@ -32,39 +32,9 @@ On Tue, Feb 20, 2001 at 01:03:03PM -0800, Jos Visser wrote:
 > 
 > It seems that stripe sizes of 1K and 2K are not allowed, although the
 > lvcreate manual page says that the stripe size is 2^n with 0<=n<=7.
-
-An error in the documentation.
-The minimum stripe size is 4k.
-
-Going to correct it...
-
 > 
-> Duh?
-> 
-> ++Jos
-> 
-> 
-> -- 
-> I have no need for a spirituality which can not encompass my humanness.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
--- 
+This has been changed so the minimum size is the page size of your
+system.  I'll update the man page.
 
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+- Joe
