@@ -1,11 +1,12 @@
-Return-Path: <robf@geekthing.com>
-Date: Sat, 13 Jan 2001 16:35:15 -0600
-From: Rob Fugina <robf@geekthing.com>
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at www.sistina.com
-Message-ID: <20010113163514.A24224@goliath.geekthing.com>
-References: <20010113011532.B21587@srv.t-online.de> <20010113170408.A4296@gondor.com>
-Mime-Version: 1.0
-In-Reply-To: <20010113170408.A4296@gondor.com>; from list039@gondor.com on Sat, Jan 13, 2001 at 05:04:08PM +0100
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3A60E42E.B7588C50@wrkhors.com>
+Date: Sat, 13 Jan 2001 17:26:38 -0600
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at 
+ www.sistina.com
+References: <20010113011532.B21587@srv.t-online.de> <20010113170408.A4296@gondor.com> <20010113163514.A24224@goliath.geekthing.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,48 +19,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Jan 13, 2001 at 05:04:08PM +0100, Jan Niehusmann wrote:
-> On Sat, Jan 13, 2001 at 01:15:32AM +0000, Heinz J. Mauelshagen wrote:
-> > We'ld appreciate a couple of days for test feedback before pushing a 2.4.0
-> > patch to Linus.
+> I wonder if this is why I lost all of my data last Thursday...
 > 
-> It still has the problem I reported on Dec 22. On Dec 23 I wrote:
+> vg w/ 2 pv's (hde1 & hdg1) and 3 lv's.  Add a pv (hdc1) and
+> reboot, and all of a sudden, even though the vg is still there,
+> with 3 pv's and 3 lv's, the lv's won't even fsck (bad magic
+> number in superblock -- doesn't even look like a filesystem was
+> even there).  I though maybe it had a problem w/ rearranging the
+> pv's or something...  How else could it completely lose track
+> of my data?
 > 
-> : Ok, I found the problem: The sort order of the pv's is wrong, and 0.9 is
-> : missing the code that sorts them. 0.8final's pv_read_all_pv_of_vg.c contains
-> : 
-> :       for ( p = 0; pv_tmp[p] != NULL; p++) {
-> :          if ( strcmp ( pv_tmp[p]->vg_name, vg_name) == 0) {
-> :             pv_this[pv_tmp[p]->pv_number-1] = pv_tmp[p];
-> :             np++;
-> :          }
-> :       }
-> : 
-> : and 0.9's doesn't.
+> It was kernel 2.4.0 w/ the several-line vg_extend patch, and the 0.9
+> tools...
 
-I wonder if this is why I lost all of my data last Thursday...
+you probably hadn't lost anything.  one approach that usually
+works is to:
 
-vg w/ 2 pv's (hde1 & hdg1) and 3 lv's.  Add a pv (hdc1) and
-reboot, and all of a sudden, even though the vg is still there,
-with 3 pv's and 3 lv's, the lv's won't even fsck (bad magic
-number in superblock -- doesn't even look like a filesystem was
-even there).  I though maybe it had a problem w/ rearranging the
-pv's or something...  How else could it completely lose track
-of my data?
+	vgexport vg0;
+	vgimport vg0 /first/disk /second/disk;
 
-It was kernel 2.4.0 w/ the several-line vg_extend patch, and the 0.9
-tools...
+likely to get you back to where you were before the vgextend.
 
-Oh, well -- just a WAG...
-
-Rob
+if vgimport doesn't like them anymore you can create a new lv,
+vgextend it to the two devices and create new vg's w/ the same
+allocations as the old ones (simple enough if they havn't been
+extended too many times).
 
 -- 
-Rob Fugina, Systems Guy
-robf@geekthing.com -- http://www.geekthing.com
-My firewall filters MS Office attachments.
-
-               Mud is not one of the four food groups.
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
