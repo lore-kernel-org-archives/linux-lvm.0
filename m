@@ -1,10 +1,10 @@
 From: Lewis Bergman <lbergman@abi.tconline.net>
-Subject: Re: what i need is a little attention-RE [linux-lvm] SoftRaid and LVM Jean-Eric Cuendet
-Date: Tue, 4 Sep 2001 14:40:43 -0500
-References: <3B950A7A.40902@st-peter.stw.uni-erlangen.de>
-In-Reply-To: <3B950A7A.40902@st-peter.stw.uni-erlangen.de>
+Subject: Re: [linux-lvm] rh kernel patches
+Date: Tue, 4 Sep 2001 14:43:30 -0500
+References: <20010904192513.41746.qmail@web13406.mail.yahoo.com>
+In-Reply-To: <20010904192513.41746.qmail@web13406.mail.yahoo.com>
 MIME-Version: 1.0
-Message-Id: <01090414404300.15441@lewis.abi.tconline.net>
+Message-Id: <01090414433001.15441@lewis.abi.tconline.net>
 Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,9 +20,17 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I don't know if you saw my post or if it was helpfull. I posted my complete 
-configs regarding my software RAID 1 config and my LVM configs. It should be 
-in that same thread.
+On Tuesday 04 September 2001 02:25 pm, you wrote:
+> I quess I don't understand the whole picture. From the
+> /PATCHES/readme file I was lead to believe all I need
+> to to id use the patch file labeled
+> "lvm-0.8final-2.4.0.patch" and apply it to the rh
+> kernel 2.4.7.  Am I mistaken???? PLease provide
+> guidance..
+RedHat kernel? I didn't think there was such a thing. Especially not 2.4.7.
+Read the README again and you'll see you must  run make to generate a kernel 
+specific patch.
+
 -- 
 Lewis Bergman
 Texas Communications
