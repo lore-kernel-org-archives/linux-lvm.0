@@ -1,22 +1,26 @@
-Message-ID: <39D0AE71.CAF71BB8@infologic.fr>
-Date: Tue, 26 Sep 2000 16:10:57 +0200
-From: Benoit SERRA <bs@infologic.fr>
+Date: Tue, 26 Sep 2000 07:44:40 -0700 (PDT)
+From: Tim Pepper <tpepper@opensales.com>
+Subject: Re: [linux-lvm] lv not persistent across reboot?
+In-Reply-To: <20000926125708.A6231@gondor.com>
+Message-ID: <Pine.LNX.4.21.0009260744030.29722-100000@tp.sf.opensales.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] General LVM question
-Content-Transfer-Encoding: quoted-printable
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Jan Niehusmann <jan@gondor.com>
+Cc: Mauelshagen@Sistina.com, linux-lvm@msede.com
 
-I used to use LVM under AIX
+On Tue, 26 Sep 2000, Jan Niehusmann wrote:
 
-Does Linux's implementation close to Aix's one or does it close to
-HPUX's one ?
+> It's easily fixed if you comment out the last two lines of drivers/block/sd.c,
+> or correctly fixed in later test9-preX-Kernels. 
 
--- =
+Is that drivers/scsi/sd.c or did it get moved between test8 and test9-preX?
 
-Moi j'aime Windows NT car cela me rappele mes petits cousins :
-
-"Ah non, j'y rien fait cela s'est cass=E9 tout seul"
+--
+*********************************************************
+*  tim.pepper@opensales dot com     * Venimus, Vidimus, *
+*  http://www.opensales.com         * Dolavimus         *
+*********************************************************
