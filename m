@@ -1,17 +1,22 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i4LGsttl029929
-	for <linux-lvm@redhat.com>; Fri, 21 May 2004 17:54:55 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1BRDIN-0004oN-SK
-	for linux-lvm@redhat.com; Fri, 21 May 2004 17:54:55 +0100
-Date: Fri, 21 May 2004 17:54:55 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] lvm2 migration issue
-Message-ID: <20040521165455.GE18338@agk.surrey.redhat.com>
-References: <20040519185015.GA4623@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4M51O018866
+	for <linux-lvm@redhat.com>; Sat, 22 May 2004 01:01:24 -0400
+Received: from bucket.localnet (dsl-202-72-149-28.wa.westnet.com.au
+	[202.72.149.28])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i4M51LGG009313
+	for <linux-lvm@redhat.com>; Sat, 22 May 2004 01:01:23 -0400
+Received: from [127.0.0.1] (6to4-localhost [127.0.0.1] (may be forged))
+	by bucket.localnet (8.12.8/8.12.8) with ESMTP id i4M523mn009468
+	for <linux-lvm@redhat.com>; Sat, 22 May 2004 13:02:04 +0800
+Subject: Re: [linux-lvm] Snapshot support for LVM2?
+From: Craig Ringer <craig@postnewspapers.com.au>
+In-Reply-To: <20040517133351.L5945@homer.msp.redhat.com>
+References: <8CCBDD5583C50E4196F012E79439B45C04C9A3EF@atl-ms1.megatrends.com>
+	<20040517133351.L5945@homer.msp.redhat.com>
+Message-Id: <1085202063.25224.17.camel@rasputin.localnet>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040519185015.GA4623@redhat.com>
+Date: Sat, 22 May 2004 13:01:04 +0800
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,24 +28,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM <linux-lvm@redhat.com>
 
-On Wed, May 19, 2004 at 07:50:15PM +0100, Joe Orton wrote:
-> I'm trying to upgrade one of my Fedora Core 1 boxes to FC2, which has
-> the root filesystem on LVM.  The installer won't allow me to ugprade
-> because, it seems, vgscan is returning an error.
- 
-> The output of "lvm vgscan -v -d" from a VC whilst running the installer
-> is:
- 
-> so it doesn't recognise /dev/hda2 as a PV, for some reason.
- 
-> Any ideas how I can get round this?
- 
-Depends what's causing it: try turning up the verbosity (eg. vgscan -vvv)
-and see if it gives a reason for avoiding hda2.
+On Tue, 2004-05-18 at 02:33, Alasdair G Kergon wrote:
 
-Alasdair
--- 
-agk@redhat.com
+> For 2.6, there is not a stable snapshot release yet, but it's close.
+> The snapshot support in
+>   ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.6-rc2/2.6.6-rc2-udm1.tar.bz2
+> is the best available; there's still an issue with SMP.
+
+Is there anywhere I could go for more detail on the status of the patch
+- especially said SMP issue?
+
+Craig Ringer
