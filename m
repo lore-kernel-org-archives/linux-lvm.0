@@ -1,10 +1,10 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Thu, 8 Feb 2001 19:16:27 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Subject: Re: [linux-lvm] debianized lvm 0.9.1b3 package
-In-Reply-To: <20010208110044.C5273@wookimus.net>
-Message-ID: <Pine.LNX.4.32.0102081909470.16584-100000@falka.mfa.kfki.hu>
-MIME-Version: 1.0
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102081838.f18Icgf11614@webber.adilger.net>
+Subject: Re: [linux-lvm] lvm buglet in 0.9.1_beta
+In-Reply-To: <20010208091418.A529@tykepenguin.com> from Patrick Caulfield at
+ "Feb 8, 2001 09:14:18 am"
+Date: Thu, 8 Feb 2001 11:38:42 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +16,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Chad C. Walstrom" <chewie@wookimus.net>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Hi!
+Patrick, you write:
+> On Wed, Feb 07, 2001 at 11:15:55AM -0700, Andreas Dilger wrote:
+> > Sure you can run fdisk on just about anything, but you can't access the
+> > partitions unless it is a partitioned device (i.e. the minor numbers
+> > mean "look at a partition").
+> 
+> I wasn't being entirely serious here, but the original bug report had 
+> a /proc/partitions file showing several minors attached to major 72 so
+> it seemed reasonable to me that it was partitioned.
 
-> > Hi!
-> >
-> > I've debianized the lvm 0.9.1b3 sources based on your 0.9 packages.
-> >
-> > http://dice.mfa.kfki.hu/download/lvm/
->
-> There's been a lot of work going on this lately.  You should really
-> try to download Tom Lees' <tom@debian.org> packages[1] and upgrade
-> from there.  AJ's packages install the binaries and libraries under
-> the /usr directories, which is a Bad Thing(TM).
-Yes, I know. I was an active poster too, to this thread. :)
-As I wrote, this packages are >>based<< uppon AJ's packages. Maybe I
-didn't emphasize it too much, that my packages are a bit modified (both,
-in init.d script and in file locations).
+There is a problem, IMHO, that LVM assumes a partitioned device is the
+same thing as a DOS partitioned device.  I'm sure that anyone using
+BSD/Sun/SGI/etc disklabels can not use LVM for this reason.  The only
+reason LVM does this is to check the partition type (not very important
+IMO), otherwise we could just check /proc/partitions and be done, like
+the #ifdef __alpha__ code.
 
-I use my packages on a server wich has /usr on an lvm, as you pointed.
-They work well.
+> It would be nice to know if adding the entries into lvm_check_partitioned_dev
+> did actually fix the problem.
 
-But thanks for mention this. I will have a look@Tom's packages too.
+I would like to know as well.
 
-Thanks,
-Gergely
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
