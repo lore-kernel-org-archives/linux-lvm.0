@@ -1,11 +1,10 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Fri, 5 Jan 2001 15:29:53 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] LVM 0.9 vgscan problem
-Message-ID: <20010105152953.A27289@srv.t-online.de>
-References: <Pine.LNX.4.21.0101041545590.1281-300000@duckman.distro.conectiva> <Pine.LNX.4.30.0101050353430.31107-100000@fogarty.jakma.org>
-Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.30.0101050353430.31107-100000@fogarty.jakma.org>; from paul@clubi.ie on Fri, Jan 05, 2001 at 03:56:46AM +0000
+Return-Path: <riel@conectiva.com.br>
+Date: Fri, 5 Jan 2001 13:10:22 -0200 (BRDT)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [lvm-devel] Re: [linux-lvm] LVM 0.9 vgscan problem
+In-Reply-To: <20010105153451.B27289@srv.t-online.de>
+Message-ID: <Pine.LNX.4.21.0101051308461.1295-100000@duckman.distro.conectiva>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,56 +16,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 05, 2001 at 03:56:46AM +0000, Paul Jakma wrote:
-> On Thu, 4 Jan 2001, Rik van Riel wrote:
-> 
-> > Any chance this stuff gets fixed so I can go on testing
-> > (fixing?) the 2.4 VM?  ;)
-> 
-> easy matter to strip the LVM update out of the 2.4.0-pre patch as it
-> only touches LVM files:
-> 
-> [root@hibernia /root]# uname -r ;  cat /proc/lvm | grep LVM
-> 2.4.0-prerelease
-> LVM driver version 0.8final  (15/02/2000)
-> 
-> Don't think it was a good idea to update to 0.9 in Linus kernel.
+On Fri, 5 Jan 2001, Heinz J. Mauelshagen wrote:
 
-IMO Andrea Arcangeli just wanted to help us (thanks Andrea!) and
-send it to Linus.
+> Rik, nobody was "sitting" on bugfixes. It just got fixed
+> recently and still needed some testing before making it into
+> 2.4.0.
 
-We fixed the bug and it will be soon with Linus.
+Ahh I see...
 
-> 
-> regards,
-> -- 
-> Paul Jakma	paul@clubi.ie	paul@jakma.org
-> PGP5 key: http://www.clubi.ie/jakma/publickey.txt
-> -------------------------------------------
-> Fortune:
-> "Protozoa are small, and bacteria are small, but viruses are smaller
-> than the both put together."
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> As I stated in my other email: Andrea Arcangeli's help to
+> integrate 0.9 into 2.4.0 brought it in. TTBOMK there was no
+> previous negotiation about 0.9 inclusion in 2.4.0 with us
+> before :-(
 
--- 
+OUCH ... so LVM 0.9 got pushed into the kernel before you
+had a chance to do some serious testing ? ;(
 
-Regards,
-Heinz    -- The LVM Guy --
+regards,
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Rik
+--
+Virtual memory is like a game you can't win;
+However, without VM there's truly nothing to loose...
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com.br/
