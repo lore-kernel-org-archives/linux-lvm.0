@@ -1,9 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] RAID Failure Problems
-Message-ID: <20030602114637.E5039@sistina.com>
-References: <1054146530.1176.19.camel@mosix>
+Subject: Re: [linux-lvm] Disc crash when using LVM...
+Message-ID: <20030602115243.F5039@sistina.com>
+References: <007801c3207b$32639880$f500a8c0@xerxes> <001701c32447$8a833b40$4242ca51@collote>
 Mime-Version: 1.0
-In-Reply-To: <1054146530.1176.19.camel@mosix>; from mschilli@vss.fsi.com on Wed, May 28, 2003 at 01:28:50PM -0500
+In-Reply-To: <001701c32447$8a833b40$4242ca51@collote>; from FNT@mail.ono.es on Tue, May 27, 2003 at 02:00:17PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,96 +15,90 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  2 04:57:02 2003
+Date: Mon Jun  2 05:03:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Wed, May 28, 2003 at 01:28:50PM -0500, Matt Schillinger wrote:
-> I recently had a RAID disk failure, which, due to a firmware bug, a
-> second drive went down.. Anyway, the data is being rebuilt (via RAID
-> Controller) now. It is online, but when i do a vgscan, i now only see 2
-> of the 4 volumes that were setup.  I am using reiserfs on all
-> filesystems affected.
-> 
-> Anyway, for lvm, i have simply used: 'pvcreate /dev/sda' (for the
-> /dev/sda). In other words, I didn't fdisk and set to Linux LVM. From
-> what I've seen, this so far has caused no problems.  Anyway, now, when i
-> do a vgscan, i only see 2 of the volumes.  When I do a pvdata /dev/sda
-> (one of the PVs not showing up), i get what looks like corrupted
-> naming..
+On Tue, May 27, 2003 at 02:00:17PM +0200, fnt wrote:
+> I think there is a vgrestore or sometthing like that
+> and then u will have to recreate the volumen
+>=20
+> vgcfgrestore<-- that one is the comand.
 
-This is a bit confusing. Did you pvcreate /dev/sda which was under
-construction by the RAID controller. If so that would have been a mistake,
-because the rebuild should have been completely transparent to LVM.
-You pvdata output pelow convinces me, that you didn't run pvcreate though.
-
-Because you mention a RAID controller firmware bug: are you sure that this
-bug didn't toast your data silently before ?
-
-If you rebuild ended successfully, you might want to vgcfgrestore(8) your
-LVM metadata to all PVs (you need to run "pvcreate -ff ..." on all of them).
-Check with "vgcfgrestore -ll ..." if the metadata backups are valid before
-you go for the real restore.
-
-"vgscan;vgchange -ay" will activated your VG and you need to check the
-filesystem integrity then (because of the assumed firmware data toaster ;)
+Right, and you need to run "pvcreate -ff ..." on the PV you want to vgcfg=
+restore
+to first.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-
-> 
-> 
-> --------------------------------
-> 
-> [root@thor root]# pvdata /dev/sda
-> --- Physical volume ---
-> PV Name               /dev/sda
-> VG Name               ???
-> PV Size               93.13 GB [195312500 secs] / NOT usable 2.49 GB
-> [LVM: 16.15 MB]
-> PV#                   48979801
-> PV Status             NOT available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              23840
-> Free PE               0
-> Allocated PE          23840
-> PV UUID               ?
-> 
-> 
-> --- List of logical volumes ---
-> 
-> Segmentation fault
-> [root@thor root]#
-> 
-> 
-> Is there a way I can fix this?
-> 
-> Thanks for all your help,
-> 
-> -- 
-> Matt Schillinger
-> System Administrator
-> FlightSafety International
-> mschilli@vss.fsi.com
-> 314-551-8403
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>=20
+> Best Regads
+>   ----- Original Message -----=20
+>   From: Kim Kr=FCger-Monsen=20
+>   To: linux-lvm@sistina.com=20
+>   Sent: Thursday, May 22, 2003 5:59 PM
+>   Subject: [linux-lvm] Disc crash when using LVM...
+>=20
+>=20
+>   I'm desperate... please help...
+>=20
+>   First of all I'm rather new to this LVM business, but I managed to ge=
+t a three disc LVM up and running, but now everything is chaos. One disc =
+just crashed and I can't retrieve any of the information from the 2 remai=
+ning discs, please help me retrieve my data. Yes, it was an IBM drive, bu=
+t it was of a rather new model (80GB) and not much used, so I was rather =
+astonished about the crash.
+>=20
+>   I have read about another guy who also experienced a disc crash (IBM)=
+ and he solved it by replacing the faulty drive with another one, but he =
+didn't mention how he managed to get it up and running again. Did he use =
+a replacement drive of the same size? What commands did he have to use in=
+ order to get it up and running again?
+>=20
+>   I've been searching for hours to find any relevant information about =
+what to do in order to retrieve the remaining data from my other drives. =
+I'm not good at this so I really don't want to issue any commands that wi=
+ll delete my remaining data permanently.
+>=20
+>   Here's how it looks like now:
+>=20
+>   >pvscan
+>   pvscan -- reading all physical volumes (this may take a while...)
+>   pvscan -- inactive PV "/dev/hdd1"  is associated to unknown VG "vg01"=
+ (run vgscan)
+>   pvscan -- inactive PV "/dev/hda8"  is associated to unknown VG "vg01"=
+ (run vgscan)
+>   pvscan -- total: 2 [139.70 GB] / in use: 2 [139.70 GB] / in no VG: 0 =
+[0]
+>=20
+>   >vgscan
+>   vgscan -- reading all physical volumes (this may take a while...)
+>   vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data=
+ of volume group "vg01" from physical volume(s)
+>   vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+>   vgscan -- WARNING: This program does not do a VGDA backup of your vol=
+ume group
+>=20
+>   >lvscan
+>   lvscan -- no volume groups found
+>=20
+>   I have no idea what has happened to my volume group, it seems like it=
+ has disappeared. All I can do is scan for the physical volumes.
+>=20
+>   What to do next?? I'm still searching for information relevant to the=
+ problem, but please give me a hint or two...
+>=20
+>       /Kim
+>=20
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -111,4 +106,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
