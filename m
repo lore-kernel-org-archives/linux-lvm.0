@@ -1,10 +1,10 @@
 From: Stephan Austermuehle <au@hcsd.de>
-Subject: Re: [linux-lvm] Re: Recovering inconsistent vg
-Message-ID: <20020605180238.B15163@babbage.hcsd.de>
-References: <20020605003728.GA3783@continuum.cm.nu> <20020605172356.A15163@babbage.hcsd.de> <20020605152904.GN1061@tykepenguin.com>
+Subject: Re: [linux-lvm] Re: pvmove: ERROR "pv_read(): device major number"
+Message-ID: <20020605180402.C15163@babbage.hcsd.de>
+References: <20020604145334.A8663@babbage.hcsd.de> <20020604152042.D17699@sistina.com> <20020604154638.B8663@babbage.hcsd.de> <20020605164338.A14990@babbage.hcsd.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020605152904.GN1061@tykepenguin.com>; from caulfield@sistina.com on Wed, Jun 05, 2002 at 04:29:04PM +0100
+In-Reply-To: <20020605164338.A14990@babbage.hcsd.de>; from au@hcsd.de on Wed, Jun 05, 2002 at 04:43:38PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,17 +15,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun  5 11:03:01 2002
+Date: Wed Jun  5 11:04:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 05, 2002 at 04:29:04PM +0100, Patrick Caulfield wrote:
+On Wed, Jun 05, 2002 at 04:43:38PM +0200, Stephan Austermuehle wrote:
 
-> yeah, it's a bug in 1.1 which is fixed in the debian patched
-> 1.0.4-4. If you built from source here's the workaround:
+> > I've just tried it with 1.1-rc2 without success:
+> Same problem with LVM 1.0.4 using LVM 1.0.4 tools.
 
-Thanks, that worked.
+Oh, oh... the problem is sitting in front of the screen... I forgot
+giving '-n' before the LV... Sorry.
 
 Stephan
