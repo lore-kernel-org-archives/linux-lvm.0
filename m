@@ -1,12 +1,14 @@
-Return-Path: <terje.eggestad@scali.no>
-Subject: Re: [linux-lvm] Ow.. not again
-From: Terje Eggestad <terje.eggestad@scali.no>
-In-Reply-To: <Pine.LNX.4.21.0108210453440.15709-100000@nutrot.ern-e.org>
-References: <Pine.LNX.4.21.0108210453440.15709-100000@nutrot.ern-e.org>
-Content-Transfer-Encoding: 7bit
-Date: 21 Aug 2001 13:25:31 +0200
-Message-Id: <998393131.880.31.camel@pc-16.office.scali.no>
+Return-Path: <lewis@sistina.com>
+Date: Tue, 21 Aug 2001 07:04:03 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] vgscan && vgchange -ay at startup
+Message-ID: <20010821070403.A16248@sistina.com>
+References: <20010821130033.D402@sky.net>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
+Content-Disposition: inline
+In-Reply-To: <20010821130033.D402@sky.net>; from U.Wiederhold@gmx.net on Tue, Aug 21, 2001 at 01:00:33PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,60 +20,59 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: elim <elim@nutrot.ern-e.org>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Not sure if it applies to you, but vgscan fail on my box if there
-is a CD in the CDROM. (audio and data), looks like you get a different
-error, but just in case.....
+--HlL+5n6rz5pIUxbD
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Den 21 Aug 2001 05:53:48 -0400, skrev elim:
-> Hiya
-> 
-> After a lengthy period of uptime, my Linux box was rebooted today and this
-> is what it spewed out on bootup:
-> 
-> vgscan -- found inactive volume group "vg01"
-> vgscan -- reading data of volume group "vg01" from physical volume(s)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "vg01" from physical volume(s)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-> "/etc/lvmtab" and "/etc/lvmtab.d"
-> 
-> 
-> I tried the vgcfgrestore but then I ended up with "No volume groups
-> found" error. I then tried dd'ing the vg info onto the pv's as per a
-> previous post which basically got me back to the "ERROR
-> "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "vg01" from physical volume(s)" error. 
-> 
-> Basically Im going in circles. I even tried the uuid_fixer but it seems it
-> does the same thing as the dd trick.
-> 
-> I've scoured the faq's and read one too many list messages... can somebody
-> please help??? Having my fs's back would be really convenient right now :)
-> 
-> Kernel is 2.2.19aa1 and Iam using 0.9beta4 of lvm and the tools. The vg
-> on disk was created pre 0.6.. i cant remember exactly.
-> 
-> Thanks.
-> Ernie
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
--- 
-_________________________________________________________________________
+On Tue, Aug 21, 2001 at 01:00:33PM +0200, Ulrich Wiederhold wrote:
+> Hello,
+> if I reboot, the file /etc/rcS.d/S25lvm failed to find and activate my
+> vg.
+> I suppose that=B4s because the shutdown of the vg fails. (Not umounted all
+> before?)
 
-Terje Eggestad                  terje.eggestad@scali.no
-Scali Scalable Linux Systems    http://www.scali.com
+Hmm...the shutdown shouldn't matter.  I rarely run vgchange -an on my
+systems (I have LVM as root, so there really is no way to do it...)
 
-Olaf Helsets Vei 6              tel:    +47 22 62 89 61 (OFFICE)
-P.O.Box 70 Bogerud                      +47 975 31 574  (MOBILE)
-N-0621 Oslo                     fax:    +47 22 62 89 51
-NORWAY            
-_________________________________________________________________________
+> Anybody else had this problems with debian unstable?
+
+There's a good chance that your startup script is running either before root
+is mounted read/write (in which case the LVM tools can't write to /etc) or
+before /proc is mounted (which is less likely because this usually just
+makes vgscan really slow, not fail).  Check your init scripts and verify
+that root is writable before the S25lvm script runs.
+
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+Bad command or file name. Bad, bad command! Sit! Stay! Staaaay...
+-----End Obligatory Humorous Quote------------------------------------------
+
+--HlL+5n6rz5pIUxbD
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7gk4zpE6/iGtdjLERAiYyAJ48Akspc6veqYAaxXbtbw4t6wZCOACfbA9n
+T8Hlo5dxKIUAl1uP9A2eF3g=
+=sSz+
+-----END PGP SIGNATURE-----
+
+--HlL+5n6rz5pIUxbD--
