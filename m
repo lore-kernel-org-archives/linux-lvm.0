@@ -1,8 +1,8 @@
-From: Alexy Khrabrov <braver@pobox.com>
-Message-ID: <20030211175123.A5038@pdb-pc-6.rutgers.edu>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] enclosure separation/turnoff
+From: =?iso-8859-1?Q?Tim-Patrick_M=E4rk?= <tpmaerk@gmx.net>
+Message-ID: <000301c2d22f$ae474f40$0400000a@lenina>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Erroneously formatted PV; 'vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group'...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,42 +13,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 11 16:55:03 2003
+Date: Tue Feb 11 18:44:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I would like to see what would be a good way to use LVM
-with a bunch of external SCSI enclosures ("boxes").  I have
-several of these, with the number of drives ranging
-from 1 to 2 to 4 per each.  First I created a logical volume
-per each box, but then realized the sizes were not exactly
-matched, and now I get thrashing when trying to move stuff
-from one enclosure box to another.  So the first question
-is, (1) how does one create a logical volume exactly corresponding 
-to an external box (a set of drives)? (2) Is it a good idea
-to stripe an external box, given that data moves occur primarily
-between the boxes, not within each?  Then I'd stripe each
-box with the number of stripes being the number of drives in it.
-(3) Is there a way to resize the logical volumes so they are 
-remapped to their enclosures exactly, without reloading the
-contents?  (4) To make sure my latest box is done right, I created
-a new volume group for it.  Is this a good use for multiple
-volume groups (other than the usual lone "system")?
+Heinz,
 
-Now, I wanted to temporarily turn off the external enclosures
-as I didn't need their contents.  However, Linux would not boot
-properly!  Even when I disable the boxes in /etc/fstab,
-it fails to boot; even when I deactivate the logical volumes
-corresponding to the boxes with lvchange -a n <path>
-for each, and deactivate the last box with vgchange -a n <group>,
-failure on boot -- can't find many standard paths!  Looks
-like vgscan thinks something is still there and I get a message
-"spinning sdd", while sdd is in one of the deactivated LVs,
-and I'm forced to power on all of the boxes even while none
-is mounted nor used.  (5) How do I achieve clean separation so
-that I can shut down any or all external enclosures easily?
+thank you very much!
 
-Cheers,
-Alexy Khrabrov
+I built a kernel with LVM2/ device-mapper (and XFS) on my emergency
+system and ran 'vgscan' and 'vgchange --partial -a y' as you said.
+The LVs were mounted read-only, so I copied the root-LV to another
+partition (ext2), booted it and restored the old LVM metadata using
+'vgcfgrestore'.
+Some "minor" problems (related to properly patching the kernel etc.)
+occured during this process, but all in all it worked well and now I'm
+very happy to have my data back :)!
+
+Tank you again!
+
+
+> 
+> Tim-Patrick,
+> 
+> with your root on LV setup you either need:
+> 
+> 
+> an emergency boot media with LVM1 on it _and_ /etc/lvmconf/* backup in
+> order to restore you LVM metadata using vgcfgrestore presuming you
+setup
+> your partitions exactly the way they were before ("vgscan;vgchange
+-ay" a=
+> fter
+> metadata restore)
+> 
+> - or -
+> 
+> an emergency boot media with LVM2/device-mapper on it to
+> run "vgscan ; vgchange --partial -a y" in order to
+> access your partioal VG without the gone partition
+> 
+> - or -
+> 
+> that LVM2 boot media to restore the metadata.
+> 
+> - or -
+> 
+> to attach your HDDs to another LVM equipped system to repair the
+> volume group configuration
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> 
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+> 
+>
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+=3D=
+>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+-=
+> =3D-=3D-
+> 
+> Heinz Mauelshagen                                 Sistina Software
+Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+>
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+=3D=
+>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+-=
+> =3D-=3D-
