@@ -1,8 +1,8 @@
-From: James Manning <jmm@sublogic.com>
-Message-ID: <20020626155454.A3538@xanex.hippierage.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] [RFE] lvm-1.0.3 - progress bar similar to e2fsck for pvmove
+Message-ID: <OF3B31F066.8A4165E6-ON48256BE5.000AAA65@legend.com.cn>
+MIME-Version: 1.0
+Content-transfer-encoding: base64
+From: lilha@legend.com.cn
+Subject: [linux-lvm] why do striping and mirroring in LVM?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +13,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun 26 14:55:03 2002
+Date: Wed Jun 26 21:36:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-just did a "pvmove /dev/hda5" and got tons and tons of info dumped to
-the screen as extents were moved.  IMHO, that'd be nice for a verbose
-mode, but by default it'd be nice to have something basically like
-the e2fsck/wget/etc progress bar.  As it stands, I had no idea what %
-of the way through the job I was and couldn't estimate finishing time,
-both of which would be nice to have.
-
-Adding to other long-running data-migration things may be a good idea as
-well, but pvmove is the one I've come across that could really use it :)
-
-Thanks!
-
-James
--- 
-James Manning <http://www.sublogic.com/james/>
-GPG Key fingerprint = B913 2FBD 14A9 CE18 B2B7  9C8E A0BF B026 EEBB F6E4
+DQoNCmkga25vdyB0aGF0IGx2bSBzdXBwb3J0IHN0cmlwaW5nIG5vdyBhbmQgTFZNMiB3aWxsIHN1
+cHBvcnQgbWlycm9yaW5nDQpkaXJlY3RseSBsYXRlciB0aGlzIHllYXIuDQpidXQgaSdtIHB1enps
+ZWQgdGhhdCB3aHkgbHZtIGRvIHRoYXQ/DQoNCmkgdGhpbmsgdGhlIG1haW4gR29hbHMgb2YgTFZN
+IGFyZQ0KICAgICAxLkltcGxlbWVudCBhIHZlcnkgZmxleGlibGUgdmlydHVhbCBkaXNrIHN1YnN5
+c3RlbSB0byBoYW5kbGUgZGlzaw0Kc3RvcmFnZS4NCiAgICAgMi5PbmxpbmUgYWxsb2NhdGlvbiBh
+bmQgcmVsb2NhdGlvbiBvZiBzdG9yYWdlLg0KICAgICAzLk9ubGluZSBleHRlbnNpb24gYW5kIHJl
+ZHVjdGlvbiBvZiBzdG9yYWdlLg0KQW5kIGRpc2sgcmVkdW5kYW5jeSBpcyB0aGUgZ29hbHMgb2Yg
+IGhhcmR3YXJlLiBvciBzb2Z0d2FyZS5SQUlELg0KDQppIHRoaW5rIHNvZnR3YXJlLlJBSUQrTFZN
+IGlzIGdvb2QgaWRlYSxhbmQgdGhhdCdzIGVub3VnaC4NCndoeSBMVk0gZm9jdXMgb24gdGhlIHN0
+cmlwaW5nIGFuZCBtaXJyb3Jpbmc/DQppIGRvbid0IHRoaW5rIGl0J3MgYSBnb29kIGlkZWEgdG8g
+ZG8gYSBiaWcgYW5kIGZ1bGwgc29mdHdhcmUuDQoNCnRoZXJlIGFyZSBhbnkgcmVhc29ucyBhbmQg
+YWR2YW50YWdlcyB0byB1c2Ugc3RyaXBpbmcgb3IgbWlycm9yaW5nIExWTSB0aGFuDQpzb2Z0d2Fy
+ZS5SQUlEK0xWTSA/DQoNCmkgdGhpbmsgdGhlIHJlYXNvbiBpcyBMVk0gaXQgZG9lcyBub3QgbWF0
+dGVyIHdoZXJlIHRoZSBkaXNrcyBhcmUgYXQgYWxsLg0KV2UgY2FuIGRvIHRoZSBzYW1lIHdpdGgg
+dHdvIGJpZyBleHRlcm5hbCBzdG9yYWdlIHRvd2Vycywgbm90IGp1c3Qgd2l0aCB0d28NCmRpc2tz
+Lg0KDQpidXQgaSB0aGluayB0aGlzIHJlYXNvbiBpcyBub3QgZW5vdWdoLCBjYW4gYW55b25lIGdp
+dmUgbWUgc29tZSBzdXBwb3J0Pw0KYW5kIGhvdyBtYW55IHBlb3BsZSB1c2Ugc3RyaXBpbmcgb3Ig
+bWlycm9yaW5nIExWTaOsbm90IHNvZnR3YXJlLlJBSUQrTFZNo78NCg0KDQpUSUEgZm9yIHlvdXIg
+aGVscCBhbmQgc29ycnkgZm9yIG15IHBvb3IgRW5nbGlzaC4NCg0KRWNobw==
