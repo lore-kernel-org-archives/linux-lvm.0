@@ -1,29 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i87IQT309049
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 14:26:29 -0400
-Received: from linux.interlinx.bc.ca (linux.interlinx.bc.ca [66.11.173.224])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i87IQNS0009853
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 14:26:28 -0400
-Received: from pc.interlinx.bc.ca (pc [10.75.22.1])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 7D35A81CFB
-	for <linux-lvm@redhat.com>; Tue,  7 Sep 2004 14:26:05 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by pc.interlinx.bc.ca (Postfix) with ESMTP id BC2F4C466
-	for <linux-lvm@redhat.com>; Tue,  7 Sep 2004 14:26:04 -0400 (EDT)
-Subject: Re: [linux-lvm] LVM2 snapshots on root fs
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <20040907181748.GD6264@agk.surrey.redhat.com>
-References: <20040907110330.GE2689@server.klaube.net>
-	<20040907181748.GD6264@agk.surrey.redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-OKR4q1+3uNzsE5+c4zwx"
-Date: Tue, 07 Sep 2004 14:26:03 -0400
-Message-Id: <1094581563.9586.98.camel@pc>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i881kB303934
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 21:46:11 -0400
+Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.199])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i881k5S0018442
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 21:46:10 -0400
+Received: by mproxy.gmail.com with SMTP id 73so305947rnk
+	for <linux-lvm@redhat.com>; Tue, 07 Sep 2004 18:46:05 -0700 (PDT)
+Message-ID: <ce9f1f9e04090718394fa17cde@mail.gmail.com>
+Date: Tue, 7 Sep 2004 18:39:24 -0700
+From: Stanley Yue <stanley.yue@gmail.com>
+Subject: Re: [linux-lvm] Resend: API for retrieving linux lvm information
+In-Reply-To: <20040907094413.GA6264@agk.surrey.redhat.com>
 Mime-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+References: <ce9f1f9e04090623046460fed8@mail.gmail.com>
+	<20040907094413.GA6264@agk.surrey.redhat.com>
+Reply-To: Stanley Yue <stanley.yue@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -33,41 +26,82 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Stanley Yue <stanley.yue@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
+
+Alasdair:
+
+Thanks for your response.
+
+Given your last comment, I think i'm going to just perform the parsing
+from cmd-line or through /proc/lvm instead if using the apis.
+
+As far as the parsing goes, is it better (in terms of compatibility,
+output stability) to parse against the command line output (i.e.
+lvdisplay) or against the /proc/filesystems (i.e.
+/proc/lvm/VGs/vg00/LVs)?
+
+Also, it is unclear to me what is the meaning of each fields/values by
+looking at the information stored in the /proc/* by itself.
+
+[root@DAP-RHLNX1 LVs]# cat /proc/lvm/VGs/vg00/LVs/vol1 
+name:         /dev/vg00/vol1
+size:         409600
+access:       3
+status:       1
+number:       0
+open:         0
+allocation:   0
+device:       58:00
+
+For example, what does it mean by "access: 3"?
+
+Is all the information available from query apis (i.e. pvdisplay,
+lvdisplay) also available from the /proc/lvm subdirectories?
+How can we find out the meaning of each fields/value from the
+/proc/lvm information?
+
+Thanks,
+
+Stanley
 
 
---=-OKR4q1+3uNzsE5+c4zwx
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 2004-09-07 at 19:17 +0100, Alasdair G Kergon wrote:
->=20
-> We don't support pvmove or snapshots of volumes used by the tools themsel=
-ves.
-
-That seems rather limiting.  Is this something that should change in the
-future?
-
-> It is possible to snapshot the root volume, but the method is probably=20
-> distribution-specific.
-
-Like what?  Using a copy of the /sbin/lvm2 binary not living in the
-rootfs when you want to snapshot it?  What about /lib/libdevmapper.so.*?
-Does it have the same problem?
-
-b.
-
-
---=-OKR4q1+3uNzsE5+c4zwx
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
-
-iD8DBQBBPf07l3EQlGLyuXARArLOAJ4vBUW79RGS9vf1oBChDqmA0YCHoQCdE6HZ
-E68hBS9vd5GyEp/2IBqZvq4=
-=9PSS
------END PGP SIGNATURE-----
-
---=-OKR4q1+3uNzsE5+c4zwx--
+On Tue, 7 Sep 2004 10:44:13 +0100, Alasdair G Kergon <agk@redhat.com> wrote:
+> These answers are for LVM2.
+> 
+> On Mon, Sep 06, 2004 at 11:04:09PM -0700, Stanley Yue wrote:
+> > 1) Is there any api library for retrieve linux lvm configuration? I.e.
+> > querying for all the vg(s), pv(s), lv(s) on the system?
+>  
+> The commands: lvs, pvs, vgs with numerous cmdline flags.
+> See lib/report/columns.h for field names
+> 
+> Access to cmds via library interface: configure --enable-cmdlib
+> 
+> include lvm2cmd.h
+> 
+> Example usage: doc/example_cmdlib.c
+> 
+> Recommend only manipulating one thing at once, so if it
+> returns an error you don't have to work out which thing
+> went wrong.
+> 
+> [May yet add an optional argc/argv-style entry point.]
+> 
+> > 2) If yes, what license is the library release under?
+> The library API is intended to be LGPL.
+> It's effectively a wrapper around the command-line interface,
+> but more efficient because it's able to cache some internal
+> state between commands.
+> [I shall correct the copyright notices: the library entry-point
+> got moved which messed up the original GPL/LGPL code split.]
+> 
+> liblvm.a does *not* provide a supported API and will sometimes
+> change in subtle or incompatible ways without warning.  Don't be
+> tempted to link against it.  The only interface supported
+> is the one based on the command-line.
+> 
+> Alasdair
+> --
+> agk@redhat.com
+>
