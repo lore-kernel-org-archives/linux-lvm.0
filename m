@@ -1,10 +1,10 @@
-Message-ID: <3EBD22B3.4090808@inode.at>
-From: Manfred Gschweidl <m.gschweidl@inode.at>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] mount root filesystem on lvm
-References: <3EBBF411.6060405@inode.at>  <3EBBFF45.4050006@inode.at> <1052511447.6321.22.camel@chtephan.cs.pocnet.net>
-In-Reply-To: <1052511447.6321.22.camel@chtephan.cs.pocnet.net>
-Content-Transfer-Encoding: 7bit
+From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] help using LVM & md for RAID10
+Message-ID: <20030510175708.GA3353@localhost>
+References: <3EB07551.87856170@kasenna.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3EB07551.87856170@kasenna.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,100 +15,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 10 11:02:02 2003
+Date: Sat May 10 12:56:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Christophe Saout <christophe@saout.de>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@sistina.com
 
-hello,
+On Wednesday, 30 April 2003, at 18:16:02 -0700,
+Alberto wrote:
 
-thanks for your response. ;-)
+> # cat /proc/mdstat
+> Personalities : [linear] [raid0] [raid1] [raid5] [multipath]
+> read_ahead 1024 sectors
+> md4 : active raid0 md3[3] md2[2] md1[1] md0[0]
+>       143372288 blocks 512k chunks
+> md3 : active raid1 sdi[1] sdh[0]
+>       35843584 blocks [2/2] [UU]
+> md2 : active raid1 sdg[1] sdf[0]
+>       35843584 blocks [2/2] [UU]
+> md1 : active raid1 sde[1] sdd[0]
+>       35843584 blocks [2/2] [UU]
+> md0 : active raid1 sdc[1] sdb[0]
+>       35843584 blocks [2/2] [UU]
+> unused devices: <none>
+> 
+> # pvcreate /dev/md0
+> # pvcreate /dev/md1
+> # pvcreate /dev/md2
+> # pvcreate /dev/md3
+> # vgcreate vg01 /dev/md[0-3]
+>
+In short, you set up a RAID1+0, four RAID1 devices bounded together in
+one big RAID0 (md4). But next, you configure md[0-3] as PVs, instead of
+just creating a PV from md4, the higher level RAID device.
 
-i have one more question: what does your "lilo.conf" look like???
-especially the "root=...." parameter ist he most interesting one. how 
-does it need to be named with device-mapper???
+You should just do:
+# pvcreate /dev/md4
+# vgcreate vg01 /dev/md4
 
-thanks for any reply again,
+And then create LV from this new VG (vg01). Should work, and you get
+high performance (RAID0 md4), protection agains physical disk failures
+(between one and four disk crashes, depends on luck), and the ability to
+hot create, modify and destroy "partitions" (LVM).
 
+Hope it helps.
 
-manfred
-
-
-
-
-
-Christophe Saout wrote:
-> Am Fre, 2003-05-09 um 21.19 schrieb Manfred Gschweidl:
-> 
-> 
->>was anyone successfull with booting the root-filesystem on am lvm-volume 
->>with lvm2 and device-mapper interface, using an initial ramdisk??
->>
->>can anyone point me in the right direction??
-> 
-> 
-> I built my own ramdisk for that purpose (loosely based on the old LVM1
-> ramdisk). It's contains the following files:
-> 
-> -rwxr-xr-x  1 root root  442740 Dec 13 00:48 bin/bash
-> -rwxr-xr-x  1 root root   17196 Nov  7  2002 bin/mknod
-> -rwsr-xr-x  1 root root   60896 Jan 20  2002 bin/mount
-> -rwxr-xr-x  1 root root   46692 Nov  7  2002 bin/sed
-> -rwxr-xr-x  1 root root    4948 Dec 25 18:02 bin/true
-> -rwsr-xr-x  1 root root   27524 Jan 20  2002 bin/umount
-> -rw-r--r--  1 root root      66 Jan 11 17:17 etc/fstab
-> -rw-r--r--  1 root root   16932 Dec 12 23:36 etc/modprobe.conf
-> -rw-r--r--  1 root root      24 Jan 11 17:17 etc/mtab
-> -rwxr-xr-x  1 root root   91790 Nov  7  2002 lib/ld-linux.so.2
-> -rwxr-xr-x  1 root root 1193240 Nov  7  2002 lib/libc.so.6
-> -rwxr-xr-x  1 root root   17300 Nov  7  2002 lib/libdevmapper.so.0.96
-> -rwxr-xr-x  1 root root    9140 Nov  7  2002 lib/libdl.so.2
-> -rwxr-xr-x  1 root root   23256 Dec 12 23:56 lib/libhistory.so.4
-> -rwxr-xr-x  1 root root  289484 Jan 20  2002 lib/libncurses.so.5
-> -rwxr-xr-x  1 root root  156144 Dec 13 00:39 lib/libreadline.so.4
-> -r-xr-xr-x  1 root root     433 Dec 25 18:24 linuxrc
-> -rwxr-xr-x  1 root root    5876 Jan 11 17:15 sbin/insmod
-> -r-xr-xr-x  1 root root  329956 Jan 11 17:13 sbin/lvm
-> -rwxr-xr-x  1 root root   18556 Jan 11 17:15 sbin/modprobe
-> 
-> Note: I'm using kernel 2.5.69, so instead of modprobe.conf you should
-> use modules.conf, the only purpose of this file in conjunction with
-> modprobe is to suppress a lot of kernel messages that say it couldn't
-> load the module for major blabla). The shared libraries were used by my
-> bash, you can check that with ldd.
-> 
-> The shell script /linuxrc looks like this (note: I removed the
-> indentation to fit everything into one line, you might want to correct
-> this):
-> 
-> #!/bin/sh
-> /bin/mount /proc
-> echo /sbin/modprobe > /proc/sys/kernel/modprobe
-> if test ! -e /dev/.devfsd ; then
-> set -e
-> MAJOR=$(/bin/sed -n 's/^ *\([0-9]\+\) \+misc$/\1/p' /proc/devices)
-> MINOR=$(/bin/sed -n 's/^ *\([0-9]\+\) \+device-mapper$/\1/p' /proc/misc)
-> if test -n "$MAJOR" -a -n "$MINOR" ; then
->     /bin/mknod --mode=600 /dev/mapper/control c $MAJOR $MINOR
-> fi
-> fi
-> /sbin/lvm vgchange --ignorelockingfailure -a y
-> /bin/umount /proc
-> 
-> The other text files contain this:
-> 
-> chtephan:/mnt/tmp # cat etc/mtab
-> /dev/ram0 / ext2 rw 0 0
-> chtephan:/mnt/tmp # cat etc/fstab
-> /dev/ram0       /               ext2    defaults        0   0
-> proc            /proc           proc    defaults        0   0
-> 
-> You can also find this ramdisk under
-> http://www.saout.de/misc/initrd-2.5.67-lvm2-athlon.gz - as the name
-> suggets my libc is athlon optimized, so you might want to replace some
-> libraries or executables.
-> 
-> BTW: I've also got some lilo patches on that page (remove the filename
-> after the last slash) that make it recognize device-mapper volumes.
-> 
+-- 
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Sid (Linux 2.5.69)
