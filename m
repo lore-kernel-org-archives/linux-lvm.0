@@ -1,15 +1,16 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5P9fNvl021991
-	for <linux-lvm@redhat.com>; Fri, 25 Jun 2004 10:41:23 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1BdnD1-0004EB-N3
-	for linux-lvm@redhat.com; Fri, 25 Jun 2004 10:41:23 +0100
-Date: Fri, 25 Jun 2004 10:41:23 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20040625094123.GF6302@agk.surrey.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 Release 2.00.18: clustering
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5SElo022226
+	for <linux-lvm@redhat.com>; Mon, 28 Jun 2004 10:47:50 -0400
+Received: from taurus.voltaire.com ([212.143.27.73])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i5SElhXn008563
+	for <linux-lvm@redhat.com>; Mon, 28 Jun 2004 10:47:44 -0400
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Mon, 28 Jun 2004 17:47:25 +0300
+Message-ID: <D4F8F0B3820E754C887699BEF26A89400E4AB3@taurus.voltaire.com>
+From: "Dan Bar Dov" <danb@voltaire.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Cannot deactivet LV - why?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,17 +22,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-    ftp://sources.redhat.com/pub/lvm2/LVM2.2.00.18.tgz
-    http://sources.redhat.com/lvm2/
- 
-Fixes a recently-introduced vgchange bug.
-Adds support for clusters over shared storage:
-  See also CLVM and usage.txt at 
-  http://sources.redhat.com/cluster/
+I'm trying to do something thst seems very normal to me
 
-Alasdair
--- 
-agk@redhat.com
+bash-2.05a# lvchange -a n /dev/0/idolv1
+lvchange -- operation not permitted for (open) logical volume
+"/dev/0/idolv1"
+
+
+Why is the operation not permitted? The LV is not in use, its not
+mounted, there's no process using it.
+
+Any ideas?
+
+Thanks,
+Dan
