@@ -1,9 +1,9 @@
-Message-Id: <3C48001E.7010503@ti.com>
-From: christian e <cej@ti.com>
-MIME-Version: 1.0
 Subject: Re: [linux-lvm] lvm and Debian
 References: <E16RWI7-00083Z-00@arwen.dev33.cvf>
-Content-Transfer-Encoding: 7bit
+From: Adrian Phillips <a.phillips@dnmi.no>
+In-Reply-To: <E16RWI7-00083Z-00@arwen.dev33.cvf>
+Message-Id: <wvpu47hqdr.fsf@freeze.oslo.dnmi.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,28 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 05:00:02 2002
+Date: Fri Jan 18 05:05:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Pierrick PONS wrote:
+>>>>> "Pierrick" == Pierrick PONS <ppons@cvf.fr> writes:
 
-> Hello all,
-> 
-> I'd like to use lvm. I got a 2.4.17 kernel and I'm under Debian.
-> 
-> Do you know if some debian packages do exist to use lvm commands (lvcreate, 
-> vgcreate, ... ) ?
-> 
-> Am I obliged to use lvm_1.0.1-rc4 (that's the latest I found on Sistina web 
-> site ) if I'm under a 2.4.17 kernel ?
+    Pierrick> Hello all, I'd like to use lvm. I got a 2.4.17 kernel
+    Pierrick> and I'm under Debian.
 
+    Pierrick> Do you know if some debian packages do exist to use lvm
+    Pierrick> commands (lvcreate, vgcreate, ... ) ?
 
-I'm running LVM 1.0.1 on our main Debian machine.I installed it from 
-source.There's not any packages as far as I know and if there were I'd 
-still install from source.It needs to be up-to-date.
+From woody :-
 
-best regards
+ii  lvm-common             1.3                    The Logical Volume Manager for Linux (common files)
+ii  lvm10                  1.0.1-1                The Logical Volume Manager for Linux
 
-Christian
+Sincerely,
+
+Adrian Phillips
+
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
