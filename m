@@ -1,8 +1,13 @@
-Message-ID: <3397328CD915D711BE07000802B083C20236507B@bwga522a.ts.siemens.de>
-From: "Sathiamoorthy Balasubramaniyan (ext_TCS)"
-	 <Balasubramaniyan.Sathiamoorthy.ext_TCS@ts.siemens.de>
-MIME-Version: 1.0
-Subject: [linux-lvm] help on pvcreate usage
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Message-ID: <20031016145034.GA11023@tangerine.coulon.evette>
+References: <3F8D1195.EF8D0EA1@multitech.co.in> <1066236364.19483.103.camel@david.NorcrossGroup.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1066236364.19483.103.camel@david.NorcrossGroup.com> (from freemyer-ml@NorcrossGroup.com on mer, oct 15, 2003 at 18:46:06 +0200)
+Subject: [linux-lvm] =?iso-8859-1?Q?Re=A0=3A_=5Blinux-lvm=5D_Vi?=
+ =?iso-8859-1?Q?rtual_Fil?=
+ =?iso-8859-1?Q?e?= Drivers for a VoD(Video on Demand) application Project
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,36 +18,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 16 09:20:02 2003
+Date: Thu Oct 16 09:51:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; format="Flowed"; delsp="Yes"; charset="utf-8"
+To: linux-lvm@sistina.com
 
-Hi all,
-I have 2 external disks connected to my suse 7.0 box :
-sdb 80GB (has 4 partitions)
-sdc  8GB (has 3 partitions)
-I need to increase the size of the 3rd partition, i.e sdc3, of the disk sdc
-by borrowing some space from one of the free partitions,ie, sdb4 of the disk
-sdb.
+Le 15.10.2003 18:46, Greg Freemyer a �crit�:
+> On Wed, 2003-10-15 at 05:21, balasubramanya wrote:
+ >
+> > Some of the File System specifications are as follows:
+> >
+> >   Block size : 4096 bytes
+> >   Large File size: 1 G byte
+> >   Number of Maximum Large files: 1M
+> 
+> 1 GB per file with a million files is an Exabyte.  That is certainly
+> pushing the limits of todays technology and is not supported in any
+> released vanilla kernel.org kernel.  I believe it is supported by the
+> 2.6.0-test series of kernels, but I have not heard of anyone building
+> a
+> filesystem that big yet.
 
- Iam not sure whether i can do this by LVM. My question is:
- Can i use the command pvcreate /dev/sdb4 without disturbing the data on
-other partitions in the disk sdb ?
+I think 1Gb per file with 1M files is "only" one Petabyte?
 
-Thanks in Advance,
-Bala Sath
-SIEMENS Transportation Systems
-TS RA D OC
-Tel  +49 531 226-6154
-Fax +49 531 226-4477
-mailto:Balasubramaniyan.Sathiamoorthy.ext_TCS@ts.siemens.de
-
-Note: This e-mail may contain privileged, undisclosed or otherwise
-confidential information. 
-If you have received this e-mail in error, you are hereby notified that any
-review, copying or distribution 
-of it is strictly prohibited. Please inform the sender immediately and
-destroy the original transmittal.
-Thank you for your understanding
+--
+Regards
+		- Jean-Luc
