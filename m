@@ -1,8 +1,10 @@
-Message-Id: <3CAE9F23.3C58CB1E@vtc.edu.hk>
-From: Nick Urbanik <nicku@vtc.edu.hk>
+Message-Id: <000b01c0be71$7c6c7b40$961471dc@XW>
+From: "netxiong" <netxiong@263.net>
+References: <3C4690E7.000029.23123@smtp2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Red Hat upgrade over existing LVM
+Content-Type: multipart/alternative;
+    boundary="----=_NextPart_000_0006_01C0BEB4.7F6637D0"
+Subject: [linux-lvm] It doesn't work
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +15,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Apr  6 01:08:02 2002
+Date: Sat Apr  6 02:09:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Dear team,
+This is a multi-part message in MIME format.
 
-We have a number of servers with /usr and /var on LVM.  The difficulty
-arises when upgrading from one version of Red Hat to another; the
-installation disks do not recognise the logical volumes.
+------=_NextPart_000_0006_01C0BEB4.7F6637D0
+Content-Type: text/plain;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
 
-Do any of you have any reasonable approach to solving this?  Do I need
-to create a new network installation boot disk with a small kernel with
-support for LVM and scripts to turn on LVM groups?
+QXQgMDItNC0zIDEyOjUxOjAwIHlvdSB3cm90ZToNCj5PbiBUdWUsIDMgQXByIDIwMDEsIG5ldHhp
+b25nIHdyb3RlOg0KPg0KPj4gSSBoYXZlIHNldHVwIGEgVkcgb24gYSBzb2Z0cmFpZCBzeXN0ZW0g
+Y29uc2lzdCBvZiAzIGRpc2tzLEkgbmFtZSB0aGUgVkcgYXMgbHZtcmFpZCBhbmQgbWFrZSBhIGV4
+dDIgZmlsZSBzeXN0ZW0gb24gaXQsSXQgY2FuIGJlIG1vdW50ZWQgdG8gYSBkaXJjdG9yeSBhbmQg
+d29yayB3ZWxsLGJ1dCBhZnRlciBJIHJlYm9vdCB0aGUgc3lzdGVtLEkgY2FuJ3QgZmluZCB0aGUg
+VkcsdGhlIHByb2Mgc3lzdGVtIGFsc28gZG9lc24ndCBzaG93IGl0IGFuZCBJIGNhbid0IHVzZSB2
+Z3JlbW92ZSB0byByZW1vdmUgaXQuDQo+PiB3aGF0IGlzIHdyb25nIHdpdGggaXQsaGVsbGxsbGxs
+bGxsbGxsbGxsbGxsbGxwISEhdGhpcyBoYXMgdHJvdWJsZWQgbWUgZm9yIHR3byBkYXlzDQo+Pg0K
+Pj4NCj4NCj5BcmUgdGhlIGZvbGxvd2luZyB0d28gbGluZXMgaW4geW91ciByYy5zeXNpbml0Pw0K
+Pg0KPkRvIHRoYXQgYWZ0ZXIgeW91IGFjdGl2YXRlIHlvdXIgcmFpZC4NCj4NCj4jIGFjdGl2YXRp
+bmcgdm9sdW1lIG1hbmFnZXINCj52Z3NjYW4NCj52Z2NoYW5nZSAtYSB5DQo+DQo+V2hlbiB5b3Ug
+c2h1dGRvd24geW91IG11c3QuLi4uDQo+DQo+dmdjaGFuZ2UgLWEgbg0KPg0KPmRvIHRoYXQganVz
+dCBiZWZvcmUNCj5tb3VudCAtbiAtbyByZW1vdW50LHJvIC8NCj4NCg0KdGhpbmsgZm9yIHlvdXIg
+cmVwbHksSSBoYXZlIGFkZGVkIHRob3NlIGNvbW1hbmRzIGluIHJjLnN5c2luaXQsYnV0IGl0IHN0
+aWxsIGRvZXNuJ3Qgd29yay4NCnZnc2NhbiBjYW5uJ3QgZmluZCB0aGUgdm9sdW1lIHNldCB1cCBv
+biBzb2Z0cmFpZCBwYXJ0aXRpb25zLg0KDQoNCg==
 
---
-Nick Urbanik   RHCE                                  nicku@vtc.edu.hk
-Dept. of Information & Communications Technology
-Hong Kong Institute of Vocational Education (Tsing Yi)
-Tel:   (852) 2436 8576, (852) 2436 8579          Fax: (852) 2436 8526
-PGP: 53 B6 6D 73 52 EE 1F EE EC F8 21 98 45 1C 23 7B     ID: 7529555D
-GPG: 7FFA CDC7 5A77 0558 DC7A 790A 16DF EC5B BB9D 2C24   ID: BB9D2C24
+------=_NextPart_000_0006_01C0BEB4.7F6637D0
+Content-Type: text/html;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
+
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PWdi
+MjMxMiIgaHR0cC1lcXVpdj1Db250ZW50LVR5cGU+DQo8TUVUQSBjb250ZW50PSJNU0hUTUwgNS4w
+MC4yNTE2LjE5MDAiIG5hbWU9R0VORVJBVE9SPg0KPFNUWUxFPjwvU1RZTEU+DQo8L0hFQUQ+DQo8
+Qk9EWSBiZ0NvbG9yPSNmZmZmZmY+DQo8RElWPjxGT05UIHNpemU9Mj5BdCAwMi00LTMgMTI6NTE6
+MDAgeW91IHdyb3RlOjxCUj4mZ3Q7T24gVHVlLCAzIEFwciAyMDAxLCANCm5ldHhpb25nIHdyb3Rl
+OjxCUj4mZ3Q7PEJSPiZndDsmZ3Q7IEkgaGF2ZSBzZXR1cCBhIFZHIG9uIGEgc29mdHJhaWQgc3lz
+dGVtIA0KY29uc2lzdCBvZiAzIGRpc2tzLEkgbmFtZSB0aGUgVkcgYXMgbHZtcmFpZCBhbmQgbWFr
+ZSBhIGV4dDIgZmlsZSBzeXN0ZW0gb24gaXQsSXQgDQpjYW4gYmUgbW91bnRlZCB0byBhIGRpcmN0
+b3J5IGFuZCB3b3JrIHdlbGwsYnV0IGFmdGVyIEkgcmVib290IHRoZSBzeXN0ZW0sSSBjYW4ndCAN
+CmZpbmQgdGhlIFZHLHRoZSBwcm9jIHN5c3RlbSBhbHNvIGRvZXNuJ3Qgc2hvdyBpdCBhbmQgSSBj
+YW4ndCB1c2UgdmdyZW1vdmUgdG8gDQpyZW1vdmUgaXQuPEJSPiZndDsmZ3Q7IHdoYXQgaXMgd3Jv
+bmcgd2l0aCBpdCxoZWxsbGxsbGxsbGxsbGxsbGxsbGxsbHAhISF0aGlzIGhhcyANCnRyb3VibGVk
+IG1lIGZvciB0d28gZGF5czxCUj4mZ3Q7Jmd0OzxCUj4mZ3Q7Jmd0OzxCUj4mZ3Q7PEJSPiZndDtB
+cmUgdGhlIA0KZm9sbG93aW5nIHR3byBsaW5lcyBpbiB5b3VyIHJjLnN5c2luaXQ/PEJSPiZndDs8
+QlI+Jmd0O0RvIHRoYXQgYWZ0ZXIgeW91IA0KYWN0aXZhdGUgeW91ciByYWlkLjxCUj4mZ3Q7PEJS
+PiZndDsjIGFjdGl2YXRpbmcgdm9sdW1lIA0KbWFuYWdlcjxCUj4mZ3Q7dmdzY2FuPEJSPiZndDt2
+Z2NoYW5nZSAtYSB5PEJSPiZndDs8QlI+Jmd0O1doZW4geW91IHNodXRkb3duIHlvdSANCm11c3Qu
+Li4uPEJSPiZndDs8QlI+Jmd0O3ZnY2hhbmdlIC1hIG48QlI+Jmd0OzxCUj4mZ3Q7ZG8gdGhhdCBq
+dXN0IA0KYmVmb3JlPEJSPiZndDttb3VudCAtbiAtbyByZW1vdW50LHJvIC88QlI+Jmd0OzwvRk9O
+VD48L0RJVj4NCjxESVY+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIHNpemU9Mj50aGluayBmb3Ig
+eW91ciByZXBseSxJIGhhdmUgYWRkZWQgdGhvc2UgY29tbWFuZHMgaW4gDQpyYy5zeXNpbml0LGJ1
+dCBpdCBzdGlsbCBkb2Vzbid0IHdvcmsuPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+
+dmdzY2FuIGNhbm4ndCBmaW5kIHRoZSB2b2x1bWUgc2V0IHVwIG9uIHNvZnRyYWlkIA0KcGFydGl0
+aW9ucy48L0ZPTlQ+PC9ESVY+DQo8RElWPiZuYnNwOzwvRElWPg0KPERJVj4mbmJzcDs8L0RJVj48
+L0JPRFk+PC9IVE1MPg0K
+
+------=_NextPart_000_0006_01C0BEB4.7F6637D0--
