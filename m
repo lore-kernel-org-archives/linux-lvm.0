@@ -1,7 +1,9 @@
-From: aby@templatestyles.com
-Message-ID: <04117112@trvyg>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] 2.4.20-pre4 and lvm-1.0.5
+Message-ID: <20020828151805.A27323@sistina.com>
+References: <20020827091844.B20836@sistina.com> <Pine.LNX.4.44.0208271022040.20666-100000@junior.lunanet.biz>
 Mime-Version: 1.0
-Subject: [linux-lvm] facelift! check it out!
+In-Reply-To: <Pine.LNX.4.44.0208271022040.20666-100000@junior.lunanet.biz>; from dlt@lunanet.biz on Tue, Aug 27, 2002 at 10:26:45AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,22 +14,66 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug 28 07:37:02 2002
+Date: Wed Aug 28 08:38:53 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hey,
+On Tue, Aug 27, 2002 at 10:26:45AM -0600, Donald Thompson wrote:
+> 
+> On Tue, 27 Aug 2002, Heinz J . Mauelshagen wrote:
+> 
+> > On Mon, Aug 26, 2002 at 12:21:52PM -0600, Donald Thompson wrote:
+> > >
+> > > That is correct. I boot, vgscan fails (I'm assuming it segfaults but I
+> > > really can't tell during the normal boot process what actually happened)
+> > > to detect my VGs, my system goes into a maintenance mode situation since
+> > > my /usr is on an LV, I login and run lsmod and absolutely no modules
+> > > appear in the list. I try vgscan and/or pvscan and they fail with a
+> > > segmentation fault. So yeah, if no module tree exists system boots fine,
+> > > if module tree exists vgscan fails regardless of whether modules are
+> > > loaded. Yes it defies logic, but I swear thats how it worked:)
+> >
+> > I wonder if there might be a single user case disabling lsmod to list?
+> 
+> Well I doubt that. Originally rtc.o was being loaded and was listed by
+> lsmod, so I figured maybe that was the problem. rtc.o gets loaded I think
+> automatically when my system is setting the software clock from the
+> hardware. But removing rtc.o from the module tree, running depmod -a, and
+> rebooting, I got the same result where vgscan segfaults.
 
-Our cool template resource www.templatestyles.com got a facelift. Check it out. We are the best web designers in the word for now.
-Just starting out? Need something professional, clean and quickly?
-We believe that your time is precious and we intend not to go against this belief. In fact we intend to provide technological solutions that will optimize your costs, reduce your time and also added sting to your services. 
-"The No.1 wins. The No.2 survives. And the third is taken over." 
-We believe that competency drives the way for being one, while complacency works in opposite direction.
-At Hades Media, we believe that web is a new human eco system, with evolving ideas & technologies. And we further believe that it's an emerging medium with new set of rules & ethics. 
-Interestingly, the new human eco system follows the conventional Darwin's theory of 'survival of the fittest' to the core. 
+Donald,
 
-Yourth truly,
-Aby Sultan
-aby@templatestyles.com
+I figured out that it is the gendisk thing (again).
+2.4.20-pre4 even segfaults on "cat /proc/partitions" !!!
+
+Investigating...
+
+> 
+> -Don
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
