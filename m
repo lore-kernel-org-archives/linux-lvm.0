@@ -1,11 +1,10 @@
-Return-Path: <hne@inetnow.net>
-Message-ID: <3B811C0D.3060006@inetnow.net>
-Date: Mon, 20 Aug 2001 23:17:49 +0900
-From: Keith Hopkins <hne@inetnow.net>
-MIME-Version: 1.0
+Return-Path: <carenas@chasqui.lared.net.pe>
+Date: Mon, 20 Aug 2001 09:34:39 -0500 (PET)
+From: Carlo Marcelo Arenas Belon <carenas@chasqui.lared.net.pe>
 Subject: Re: [linux-lvm] LVM on Redhat 7.1
-References: <20010820125700.B26824@sistina.com>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20010820125700.B26824@sistina.com>
+Message-ID: <Pine.LNX.4.33.0108200925520.18241-100000@chasqui.LaRed.net.pe>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,22 +16,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Heinz J . Mauelshagen wrote:
-
-> Louis,
-> 
 > since Friday you should better get LVM 1.0.1-rc1 from www.sistina.com,
 > which *directly* supports the old and new metadata formats and avoids running
 > an explicit upgrade program.
-> 
 
+i am willing to do a new kernel rpm for RH 7.1 including the LVM 1.0.1
+tools and a corresponding lvm RPM, to help make this easier, and also
+upgrade my system running on an old beta kernel with old beta tools ;)
 
-Hi Heinz (good job to you and the team!)
+do you know of any ETA for rc1 becoming the formal 1.0.1?, avoiding the
+strings "beta", "rc" and any manual procedure is something that usually
+makes packagers and package users happy :)
 
-   How far back is the "old" metadata supported?  I'm still running the "0.8 by Heinz Mauelshagen  04/11/1999" version that shipped on SuSE 6.4.
+regards,
 
-Lost in Tokyo,
-   Keith
+Carlo
