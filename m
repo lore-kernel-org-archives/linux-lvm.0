@@ -1,13 +1,10 @@
-Date: Mon, 10 Sep 2001 08:01:24 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] LVM and -ac kernels?
-Message-ID: <20010910080124.A8459@sistina.com>
-References: <20010909104606.B967@befunk.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-In-Reply-To: <20010909104606.B967@befunk.com>; from ranger@befunk.com on Sun, Sep 09, 2001 at 10:46:06AM -0400
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM
+Date: Mon, 10 Sep 2001 06:03:03 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPEEDCDNAA.stuart@bh90210.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+In-Reply-To: <20010910140543.A9418@dardhal.mired.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,73 +16,77 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Sep 09, 2001 at 10:46:06AM -0400, Benjamin Reed wrote:
-> I've tried applying 1.0.1-rc2 to 2.4.9-ac9 and it appears
-> that something's not matching up; I was wondering if anyone
-> has had any luck with the 2.4.9 ac kernels?
->=20
-> I get a reject in the Makefile for something that Alan's
-> already added to his tree, and when I build, I get:
->=20
-> ---(snip!)---
-> make[3]: Entering directory `/usr/src/linux-2.4.9-ac9-eb1/drivers/md'
-> gcc -D__KERNEL__ -I/usr/src/linux-2.4.9-ac9-eb1/include -Wall -Wstrict-pr=
-ototypes -Wno-trigraphs -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-=
-common -pipe -mpreferred-stack-boundary=3D2 -march=3Di686    -c -o lvm.o lv=
-m.c
-> lvm.c: In function `__extend_reduce':
-> lvm.c:2329: warning: implicit declaration of function `min'
-
-Yep, this is caused by the great MIN/MAX macro change in the 2.4.9 stock
-kernel.   Alan didn't think it was a good idea, so his AC series kernels
-still use the old style MIN/MAX macros.  Unfortunately, the way the patches
-are currently generated, any kernel above 2.4.9 is assumed to have the new
-format.
-
-> Feel free to tell me "don't bother with -ac kernels and LVM", all
-> I *truly* care about from the -ac tree is ext3, but it would be nice
-> if it's a simple fix.
-
-I'm not sure what the best way to fix this is.  You possibly could go in and
-manually change the kernel version in the PATCHES/Makefile file to be
-2.4.8-ac9; this shouldn't change anything but which versions of the patches
-are put into the patch and the patch name, but it may not work.  I would try
-this first...if that doesn't work, we'll have to start looking at
-alternatives.
-
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD D=
-E95
-
------Begin Obligatory Humorous Quote----------------------------------------
-Employment tip #127: Never take a beer to a job interview.
------End Obligatory Humorous Quote------------------------------------------
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7nLmkb2fpvETN3pURAoFaAKCbTQHfTqooWcQYwBsJ2y2u1lIe7gCdHZ5S
-ZrUebhM8/L6sgroNd5vJ0Vk=
-=hwEt
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+TGlzdCBtZW1iZXJzOg0KDQpJIGRvd25sb2FkZWQgdGhlIExWTSBIb3ctVG8gKDMwIEFVRyAyMDAx
+LCBpcyB0aGlzIHRoZSBsYXRlc3QgdmVyc2lvbikuDQoNCiAgICAgICAgUHJlc3VtaW5nIEkgaGF2
+ZSAyLjQuOCBvciAyLjQuOSAoZG9uJ3QgcmVtZW1iZXIgb2ZmIGhhbmQpIGluc3RhbGxlZCwgaXMg
+dGhlcmUgYSBwYXRjaCBmaWxlIEkgY2FuIGFwcGx5IHRvIGJyaW5nIGl0IHRvIGEgc3RhYmxlIHZl
+cnNpb24/IElmIHNvLCB3aGVyZSB3b3VsZCBJIGdldCB0aGlzIHBhdGNoIGZpbGUgZm9yIE1hbmRy
+YWtlIDguMCBvciBrZXJuZWwgdmVyc2lvbiAyLjQuOC8yLjQuOT8NCg0KSSBub3RpY2VkIHRoYXQg
+TFZNIGNhbiBiZSBpbnN0YWxsZWQgaW50byBhIHBhcnRpdGlvbiwgYW5kIHRodXMgZG9lcyBub3Qg
+bmVlZCB0byBjb250cm9sIHRoZSBub24tTGludXggcG9ydGlvbiBvZiB0aGUgZGlzay4NCg0KICAg
+ICAgICBJbiB0ZXJtcyBvZiBXaW5kb3dzIFZvbHVtZSBNYW5hZ2VtZW50LCBpdCBkb2VzIGhhdmUg
+aXQsIGJ1dCBpdCBoYXMgYmVlbiBzcGVjaWZpY2FsbHkgdHVybmVkIG9mZiBpbiBXMksvUFJPIGZv
+ciBsYXB0b3AgdXNlcnMhDQoNCg0KICAgICAgICBQZXJmb3JtaW5nIHRoZSB1cGdyYWRlOg0KDQpP
+bmNlIEkgaGF2ZSBwYXRjaGVkIHRoZSBNYW5kcmFrZSA4LjAgMi40LjggKEkgdGhpbmspIGtlcm5l
+bCB0byBoYXZlIHRoZSBsYXRlc3QgTFZNIHVwZGF0ZXMsIEkgYW0gaW50ZXJlc3RlZCB0byB0YWtl
+IG15IE5PTi1MVk0gZGlzayBhbmQgY29udmVydCBpdCB0byBMVk0uIExldCBtZSBleHBsYWluIGEg
+Yml0IGFib3V0IG15IGNvbmZpZ3VyYXRpb24gc28geW91IGNhbiBiZXN0IGd1aWRlIG1lLg0KDQog
+ICAgICAgIEkgaGF2ZSB0d28gKGV4YWN0bHkgdGhlIHNhbWUgbW9kZWwpIDMyR0IgSERzIGluIG15
+IERlbGwgTGFwdG9wLiBJIGFsc28gaGF2ZSBhIDEzOTQgNDBHQiBIRC4gUHJlc3VtZSB0aGUgNDBH
+QiBIRCAoMTM5NCkgYW5kIHRoZSAybmQgMzJHQiBIRCBhcmUgYWJsZSB0byBiZSB1c2VkIGF0IHdp
+bGwgYW5kIGhhdmUgbm90aGluZyBpbXBvcnRhbnQgb24gdGhlbS4gVGhlIDFzdCAzMkdCIEhELCBo
+YXMgYSBXMksgYW5kIExpbnV4IHBhcnRpdGlvbiBvbiBpdC4gVGhlIExpbnV4IHBhcnRpdGlvbiBo
+YXMgYSBzaW5nbGUgKGxhcmdlIDE0R0IpIHJvb3QgcGFydGl0aW9uIChkb24ndCBhc2sgd2h5LCBi
+dXQgaXQgaXMgdGhpcyB3YXkgZHVlIHRvIHNvbWUgY2lyY3Vtc3RhbmNlIEkgbmVlZGVkIGZvciBh
+IGNsaWVudCkuIEkgd291bGQgbGlrZSB0byBtYWtlIGEgYm9vdGFibGUgcm9vdCBwYXJ0aXRpb24g
+KHNhbWUgc2l6ZSBmb3IgdGhlIG1vbWVudCkgb24gdGhlIDJuZCBkaXNrLCBhbmQgdGhlbiB0YWtl
+IHRoZSAybmQgZGlzayBhbmQgcHV0IGl0IGludG8gdGhlIDFzdCBkaXNrJ3MgcG9zaXRpb24gYW5k
+IHRlc3QgaXQgYnkgYm9vdGluZyBpdCB1cC4NCiAgICAgICAgIEkgd2FzIHBsYW5uaW5nIG9uIHVz
+aW5nIHRoZSAxMzk0IEhEIHRvIG1ha2UgYSBiYWNrdXAgY29weSBvZiB0aGUgMzJHQiBIRCAoImRk
+IGlmPS9kZXYvaGRhIG9mPS9kZXYvc2RhIGJzPTUyNDI4OCIpIGJlZm9yZSBzdGFydGluZywgYW5k
+IHVzaW5nIHRoZSAybmQgMzJHQiBIRCBhcyBhIHN0YWdpbmcgZHJpdmUgdG8gbW92ZSBhbGwgdGhl
+IGZpbGVzIGFuZCBzdWNoLCBhbmQgdGVzdCB0aGUgYm9vdCB1cCBvdXQuIElmIGl0IHdvcmtlZCwg
+SSB3b3VsZCB0aGVuIGNvcHkgaXQgYmFjayB0byB0aGUgb3RoZXIgMzJHQiBIRC4NCg0KICAgICAg
+ICBXaGF0IHJlY29tbWVuZGF0aW9ucyBkbyB5b3Ugb2ZmZXIgYXMgYSBtaWdyYXRpb24gcGxhbiBm
+b3IgZG9pbmcgdGhpcz8NCg0KDQoNClZlcnkgUmVzcGVjdGZ1bGx5LA0KDQpTdHVhcnQgQmxha2Ug
+VGVuZXIsIElUMywgVVNOUi1SLCBOM0dXRw0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRV
+IDE5MDRHIChWb2x1bnRlZXIgVHJhaW5pbmcgVW5pdCkNCnN0dWFydEBiaDkwMjEwLm5ldA0Kd2Vz
+dCBjb2FzdDogKDMxMCktMzU4LTAyMDIgUC5PLiBCb3ggMTYwNDMsIEJldmVybHkgSGlsbHMsIENB
+IDkwMjA5LTIwNDMNCmVhc3QgY29hc3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQ
+aGlsYWRlbHBoaWEsIFBBIDE5MTQ5LTU4NTkNCg0KVGVsZWNvcGllcjogKDQxOSktNzE1LTYwNzMg
+ZmF4IHRvIGVtYWlsIGdhdGV3YXkgdmlhIHd3dy5lZmF4LmNvbSAoaXQncyBmcmVlISkNCg0KSk9J
+TiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklUIEZS
+T00gSVQgQUxMLg0KDQpNb25kYXksIFNlcHRlbWJlciAxMCwgMjAwMSA1OjE0IEFNDQoNCi0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb20g
+W21haWx0bzpsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb21dT24gQmVoYWxmIE9mIEpvc+kgTHVp
+cyBEb21pbmdvIEzzcGV6DQpTZW50OiBNb25kYXksIFNlcHRlbWJlciAxMCwgMjAwMSA3OjA2IEFN
+DQpUbzogbGludXgtbHZtQHNpc3RpbmEuY29tDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTFZN
+DQoNCk9uIE1vbmRheSwgMTAgU2VwdGVtYmVyIDIwMDEsIGF0IDA0OjM3OjA3IC0wNzAwLA0KSVQz
+IFN0dWFydCBCLiBUZW5lciwgVVNOUi1SIHdyb3RlOg0KDQo+IExpc3QgbWVtYmVyczoNCj4NCj4g
+ICAgICAgSGVsbG8gdG8gYWxsLCBhcyBJIGFtIHNvbWV3aGF0IG5ldyB0byB0aGUgbGlzdC4gUGVy
+aGFwcyBvbmUgb2YgeW91IHdpbGwgcmVjb21tZW5kIHNvbWUgYmFzaWMgcmVhZGluZyB0byBnZXQg
+bWUgc3RhcnRlZCwgYnV0IEkgZG8gaGF2ZSBhIGZldyBxdWVzdGlvbnMgcmVnYXJkaW5nIExWTSBh
+bmQgbXkgcHJvcG9zZWQgZGVwbG95bWVudCBvZiBpdCBvbiBteSBsYXB0b3AuDQo+IFsuLi5dDQo+
+DQpZb3VyIGJlc3Qgc3RhcnRpbmcgcG9pbnQgaXMgdGhlIG5ldyBMVk0gSE9XVE8gYXQ6DQpodHRw
+Oi8vdGVjaC5zaXN0aW5hLmNvbS9sdm0vZG9jL2x2bV9ob3d0by9pbmRleC5odG1sDQoNCkxpbnV4
+IExWTSBpcyBjb25zaWRlcmVkIHN0YWJsZSwgc2luY2UgaXQgcGFzc2VkIHZlcnNpb24gMS4wIChu
+b3cNCjEuMC4xLXJjMikuIEl0IGhhcyBiZWVuIHN0YWJsZSBmb3Igc29tZSB0aW1lIGJlZm9yZS4g
+Q3VycmVudCBMaW51eCBrZXJuZWxzDQppbmNsdWRlIGFuIG91dGRhdGVkIExWTSB2ZXJzaW9uICgy
+LjQuOSBzdGlsbCBpbmNsdWRlcyBMVk0gMC45LjEtYmV0YTIsDQpkYXRlZCBiYWNrIGluIEphbnVh
+cnkgb3Igc28pLg0KDQpXaGF0IExWTSBwcm92aWRlcyBpcyBhIG1lYW5zIG9yIG1hbmFnaW5nIHlv
+dXIgZGlzayBzcGFjZSBpbiBMaW51eDogc28NCnRoZXJlIGlzIG5vIHdheSB0byBjcmVhdGUgYSBM
+aW51eCBMViB0byBob2xkIGEgV2luZG93cyBvciBTb2xhcmlzDQppbnN0YWxsYXRpb24uIEFGQUlL
+LCBXMksgaGFzIHNvbWUgc29ydCBvZiB2b2x1bWUgbWFuYWdlbWVudCBpbiBzb21lIG9mDQp0aGVp
+ciB2ZXJzaW9ucywgYW5kIEknbSBzdXJlIFNvbGFyaXMgaGFzIHNvbWV0aGluZyBvbiBpdHMgb3du
+Lg0KDQpHcmVldGluZ3MuDQoNCi0tDQpKb3PpIEx1aXMgRG9taW5nbyBM83Bleg0KTGludXggUmVn
+aXN0ZXJlZCBVc2VyICMxODk0MzYgICAgIERlYmlhbiBHTlUvTGludXggUG90YXRvIChQMTY2IDY0
+IE1CIFJBTSkNCg0KamRvbWluZ28gRU4gaW50ZXJuYXV0YXMgUFVOVE8gb3JnICA9PiC/IFNwYW0g
+PyBBdGVudGUgYSBsYXMgY29uc2VjdWVuY2lhcw0KamRvbWluZ28gQVQgaW50ZXJuYXV0YXMgRE9U
+ICAgb3JnICA9PiBTcGFtIGF0IHlvdXIgb3duIHJpc2sNCg0KDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KbGludXgtbHZtIG1haWxpbmcgbGlzdA0KbGlu
+dXgtbHZtQHNpc3RpbmEuY29tDQpodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1hbi9saXN0
+aW5mby9saW51eC1sdm0NCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5h
+LmNvbS9sdm0vUGFnZXMvaG93dG8uaHRtbA0K
