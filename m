@@ -1,9 +1,10 @@
-From: Andreas Pakulat <ap125@informatik.uni-rostock.de>
-Message-id: <20030816154556.GA23415@debian.pakulat>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Content-disposition: inline
-Subject: [linux-lvm] Repair inconsistent PV
+From: Jan Niehusmann <list039@gondor.com>
+Subject: Re: [linux-lvm] pvmove hangs
+Message-ID: <20030816154708.GA17166@gondor.com>
+References: <20030816102005.GA12916@gondor.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20030816102005.GA12916@gondor.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,61 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Aug 16 10:47:02 2003
+Date: Sat Aug 16 10:48:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Sat, Aug 16, 2003 at 12:20:06PM +0200, Jan Niehusmann wrote:
+> On my computer, pvmove just hangs at 0.2% done. First it looked like the
+> reason was that I hadn't loaded dm-mirror before calling pvmove.
 
-yesterday I lost my / partition due to hardware problem. Now to reinstall
-the system I had to reduce the size of my VG, i did that using the
-KNOPPIX CD and first all went Ok. But during the Removal of one LV one
-harddisk "crashed", had several read errors. I could fix this, as It was
-due to a broken connection to the drive. But now the PV that was on that
-drive is inconsisten:
+I just noticed I forgot an important detail: Version numbers :-)
 
-root@tty2[/]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found inactive volume group "vgmatrix"
-vgscan -- ERROR "pv_check_consistency_all_pv(): PE" volume group
-"vgmatrix" is inconsistent
-vgscan -- ERROR: unable to do a backup of volume group "vgmatrix"
-vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
-"vgmatrix" from "/etc/lvmtab"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
-root@tty2[/]#
+# pvmove --version
+  LVM version:     2.00.05 (2003-07-18)
+  Library version: 1.00.02-ioctl (2003-07-12)
+  Driver version:  4.0.1
 
-If i do a pvcreate -ff /dev/hdc2 the inconsistency is gone, but also the
-metadata and as my / is also gone, I have no backup of the
-Metadata. So the Question is, can I somehow repair the PV Metadata or am
-I lost? It is also hard for me at the moment to get a Kernel with
-device-mapper support, so using LVM2 is only the last option for me.
-
-Please say if you need any additional Information, here is pvdisplay 
-of the problematic PV:
-
-root@tty2[/]# pvdisplay -v /dev/hdc2
---- Physical volume ---
-PV Name               /dev/hdc2
-VG Name               vgmatrix
-PV Size               5.84 GB [12241530 secs] / NOT usable 4.19 MB [LVM:
-133 KB]
-PV#                   2
-PV Status             available
-Allocatable           NO
-Cur LV                2
-PE Size (KByte)       4096
-Total PE              1493
-Free PE               444
-Allocated PE          1049
-PV UUID               v7FOLU-uCS4-ZD8R-2z6S-GIKR-RCbf-RI2Nax
-
-
-Andreas
-
--- 
-Wie man sein Kind nicht nennen sollte: 
-  Harry Bo 
+Jan
