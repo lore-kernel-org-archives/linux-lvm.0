@@ -1,9 +1,11 @@
-Return-Path: <raheesom@navpoint.com>
-From: Rupert Heesom <raheesom@navpoint.com>
-Date: 08 May 2001 19:11:14 -0400
-Message-Id: <989363474.1329.2.camel@localhost>
-Mime-Version: 1.0
-Subject: [linux-lvm] Patching my kernel.
+Return-Path: <h.kerndler@jusline.com>
+Message-ID: <3AF8B558.CBAB57EB@jusline.com>
+Date: Wed, 09 May 2001 05:11:21 +0200
+From: Harald Kerndler <h.kerndler@jusline.com>
+MIME-Version: 1.0
+Subject: Re: [Fwd: [linux-lvm] LVM export]
+References: <3AF6A532.38B30041@lanzenberg.at>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,62 +17,127 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Mauelshagen@sistina.com
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@sistina.com
 
-I had previously patched the kernel (stock 2.4.3) with the beta 6 patch.
+We have found the command vgcfgrestore and we have him tested.
+We have follow command used: vgcfgrestore -n vol0 /dev/hda4 and then comes this
+error:
+vgcfgrestore -- ERROR "pv_read(): PV exported" reading physical volume "/dev/hda4"
 
-Now I'm trying to update to beta 7.  I tried patching the kernel is
-exactly the same way as before (maybe a mistake).  Most of the output is
-pasted in here (at the end).  I'm concerned about the prompts I got -
+Is the VG demaged ?
 
-"Reversed (or previously applied) patch detected!  Assume -R? [n]"
+>
+>
+>   ------------------------------------------------------------------------
+>
+> Subject: Re: [linux-lvm] LVM export
+> Date: Mon, 7 May 2001 13:58:47 +0200
+> From: Torsten Landschoff <torsten@pclab.ifg.uni-kiel.de>
+> Reply-To: linux-lvm@sistina.com
+> To: linux-lvm@sistina.com
+> References: <3AF68126.93ACCE81@lanzenberg.at> <20010507134024.A26477@sistina.com>
+>
+> On Mon, May 07, 2001 at 01:40:24PM +0000, Heinz J. Mauelshagen wrote:
+>
+> > There's a hack to reactivate it in case you still have a valid VGDA backup,
+> > but let me first understand what your actual problem is, before we can decide
+> > to try that.
+>
+> I guess he tried to move a disk to a new one by exporting the volume
+> group, moving the data onto the new disk and importing that one. I guess
+> the solution would be to import the volume group from the old disk
+> (assuming the data is still available on it) and using pvcreate,
+> vgextend and pvmove to get the data on the new disk, the use vgreduce
+> to remove the pv of the old disk and remove it from the system.
+>
+> Greetings
+>
+>         Torsten
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>
+>   ------------------------------------------------------------------------
+>
+> Subject: Re: [linux-lvm] LVM export
+> Date: Mon, 7 May 2001 13:40:24 +0000
+> From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+> Reply-To: linux-lvm@sistina.com
+> To: linux-lvm@sistina.com
+> References: <3AF68126.93ACCE81@lanzenberg.at>
+>
+> On Mon, May 07, 2001 at 01:04:06PM +0200, h.kerndler@lanzenberg.at wrote:
+> > Hello !
+> > Yesterday, I have tested the export/import Funktion from LVM.
+> > I have exported the LVM, that has gone.
+>
+> Without further information, I can't provide a solution.
+>
+> Do you mean you successfully run "vgexport VGName" on your deactivated VG
+> named "VGName"?
+>
+> > In the next step I would import the LVM on a other disk.
+>
+> What do you mean with "other disk"?
+>
+> The vgimport(8) command has the synopsis:
+>
+>    vgimport VGName PhysicalVolumePath [PhysicalVolumePath...]
+>
+> If you exported the VG just to test the feature as you mentioned,
+> you should run pvscan which should list you all of the physical volume
+> pathes belonging to the exported VG and feed those pathes into vgimport.
+>
+> See "man vgimport" for further details.
+>
+> > The LVM has not imported the LVM on a other disc, becaus I became a
+> > Failure.
+>
+> What was the failure message?
+>
+> > My question, can I make a un-export on the old-disk?
+>
+> No, you can just import it.
+>
+> There's a hack to reactivate it in case you still have a valid VGDA backup,
+> but let me first understand what your actual problem is, before we can decide
+> to try that.
+>
+> >
+> > Thanks, Harald
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+>
+> --
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-As you can see, I decided to reply "Y".  Was that a correct assumption?
+--
+mit freundlichen Gr��en
+J�rgen Greil
 
-Afterwards I read the man page on "patch" and am now even less sure that
-I did the right thing.
-
-I don't want to compile the kernel modules (I have lvm as a module)
-until I know that the source is in good condition.
-
-patching file drivers/md/Makefile
-Reversed (or previously applied) patch detected!  Assume -R? [n] y
-The next patch would delete the file drivers/md/lvm-snap.h,
-which does not exist!  Assume -R? [n] y
-patching file drivers/md/lvm-snap.h
-patching file Documentation/ioctl-number.txt
-Reversed (or previously applied) patch detected!  Assume -R? [n] y
-Hunk #1 succeeded at 187 (offset 1 line).
-
-I've now just tried compiling the kernel modules anyway (not the main
-kernel file), using make modules, make modules_install.
-
-At the end of the "make modules_install", I got these msgs -
-
-
-
-find kernel -path '*/pcmcia/*' -name '*.o' | xargs -i -r ln -sf ../{}
-pcmcia
-if [ -r System.map ]; then /sbin/depmod -ae -F System.map  2.4.3; fi
-depmod: *** Unresolved symbols in
-/lib/modules/2.4.3/kernel/drivers/md/lvm-mod.odepmod: 	lvm_init_fs
-depmod: 	lvm_fs_remove_vg
-depmod: 	lvm_fin_fs
-depmod: 	lvm_fs_remove_lv
-depmod: 	lvm_fs_remove_pv
-depmod: 	lvm_fs_create_vg
-depmod: 	lvm_fs_create_lv
-depmod: 	lvm_fs_create_pv
-
-
-Do I assume that I did the wrong thing if the lvm-mod file is now (I
-assume) incorrectly built?
-
-How do I patch the kernel correctly???
-
--- 
-regs
-rupert
+JUSLINE - Direkt zu Ihrem Recht
+http://www.jusline.com
+e-mail: dev5@jusline.com
