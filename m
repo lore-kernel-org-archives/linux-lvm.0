@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 24 Apr 2001 13:50:37 +0000
+Date: Tue, 24 Apr 2001 14:00:26 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] What have snapshots got to do with LVM ?
-Message-ID: <20010424135037.B31988@sistina.com>
-References: <20010422130924.A10390@66bassett.freeserve.co.uk> <20010423102145.C27367@sistina.com> <20010423093818.B739@66bassett.freeserve.co.uk> <20010423120521.A27695@sistina.com> <20010423112638.B1060@66bassett.freeserve.co.uk> <20010423152748.A28301@sistina.com> <20010423150556.C1492@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] Does LVM support alternate links?
+Message-ID: <20010424140026.C31988@sistina.com>
+References: <Pine.LNX.4.31.0104201858090.1159-100000@dgently.hh.suse.de>
 Mime-Version: 1.0
-In-Reply-To: <20010423150556.C1492@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Mon, Apr 23, 2001 at 03:05:56PM +0100
+In-Reply-To: <Pine.LNX.4.31.0104201858090.1159-100000@dgently.hh.suse.de>; from bruck@suse.de on Fri, Apr 20, 2001 at 07:00:10PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,30 +21,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 23, 2001 at 03:05:56PM +0100, Joe Thornber wrote:
-> On Mon, Apr 23, 2001 at 03:27:48PM +0000, Heinz J. Mauelshagen wrote:
-> > You said it already above: the general concept still needs to deal with chunks 
-> > which could eventually map to LVM PEs in case we run LV snapshots carying
-> > metadata (COW table sections) and data.
-> > The abstraction therefore will be one in notion basically
-> > (chunk rather than PE).
+On Fri, Apr 20, 2001 at 07:00:10PM +0200, Jens Bruckmann wrote:
+> Hallo everybody,
 > 
-> I'm certain this is the way to go for 1.2, having thought about it for
-> a day.  Snapshot's would still be part of the LVM suit, but just
-> implemented in a seperate driver.
+> I would like to know if the LVM supports alternate-links to the same
+> physical device over two fiber-channel links, so if one link fails, LVM
+> automatically uses the second link as it does under its "original" HP-UX.
+
+No, as someone else already answered.
+
+There's work queued though to enhance LVM to support multi-pathing.
+
+A brief description of our ideas includes that a path to a device has
+properties related to it like for eg. bandwidth or reliability of that
+particular path.
+These properties will be fed into the automatic decision taking process
+in the LVM driver to which path (if there's multiple available) a switch-over
+is going to take place.
+There'l be CLI and config file support to configure pathes/properties,
+keep that state and allow the user to witch over to different pathes manually.
+
+Time line for this is summer.
+
 > 
-> The only problem is the per device hook.  Has anyone else implemented
-> something similar ?
-
-Didn't see something in public so far :(
-
-> or shall I just have a bash and upset the gurus.
-
-Yes!
-The typical "we need to suffer in order to make things better" thing.
-
+> Has anyone ever connected an EMC-Symmetrix with redundant fiber-channel
+> links with LVM and Linux?
 > 
-> - Joe Thornber
+> Then I was very pleased if he/she could tell me about the experiences.
+> 
+> Thanks a lot,
+> 
+>         Jens
+> 
+> -----------------------------------------------------------------------
+> Jens Bruckmann              .-.       Mail:    jens.bruckmann@suse.de
+> SuSE Linux Solutions AG     /v\       Phone:   +49 - 40 - 89 69 82 18
+> Friesenweg 5F              // \\      Fax:     +49 - 40 - 85 40 04 35
+> D-22763 Hamburg           /(   )\
+>                            ^^-^^
+> -----------------------------------------------------------------------
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
