@@ -1,10 +1,11 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Linux 2.4.20 devmapper + userland utilities issue
-Message-ID: <20030105205306.A6754@uk.sistina.com>
-References: <20030105090400.1d4e61be.david@eelf.ddts.net>
+Message-Id: <se193c5d.063@bne17srv215.workcover.qld.gov.au>
+From: "Damian Hickey" <hickeyd@workcoverqld.com.au>
 Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20030105090400.1d4e61be.david@eelf.ddts.net>; from david@eelf.ddts.net on Sun, Jan 05, 2003 at 09:04:00AM -0500
+Subject: [linux-lvm] Re: linux-lvm digest, Vol 1 #750 - 12 msgs (On Leave until Jan 28th
+ 2003)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +16,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan  5 14:52:01 2003
+Date: Sun Jan  5 16:20:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Jan 05, 2003 at 09:04:00AM -0500, David B Harris wrote:
->   Aborting. Failed to wipe snapshot exception store. Remove new LV and
-> retry.
-I've glanced at the code and the error message here is misleading: I'll
-change it.
+Dear all,
 
-The error occurred when it was trying to use device-mapper to activate 
-the new LV for the first time.  (The LV already exists in the VG metadata 
-at this point.)
- 
-> Hopefully the log isn't too much. :) 
-I can't see it - please email the full debug log(*) from the lvcreate
-directly to me and I'll investigate on Monday.
+I am on leave until Jan 28th 2003. Please forward any work queries to:
+upport@workcoverqld.com.au
 
-Also send the version numbers: 
-  lvcreate --version
+With thanks,
 
-Alasdair
--- 
-agk@uk.sistina.com
+Damian Hickey
+Unix Administrator
+Workcover Queensland
+15th Floor, 280 Adelaide St.
+Brisbane
+ph 07 30066422
+fax 07 30066424
+mob 0421 093582
 
-(*) e.g. run with -vvv and capture all output incl. stderr, or use 
-following config file section and send /tmp/lvm2.log
 
-  log {
-          file="/tmp/lvm2.log"
-	  level=6
-  }
+***************************************************************************
+Messages included in this e-mail and any of its attachments are those
+of the author unless specifically stated to represent WorkCover Queensland.
+The contents of this message are to be used for the intended purpose only
+and are to be kept confidential at all times. This message may contain
+privileged information directed only to the intended addressee/s.
+Accidental receipt of this information should be deleted promptly
+and the sender notified.
+This e-mail has been scanned by Sophos for known viruses.
+However, no warranty nor liability is implied in this respect.
+**********************************************************************
