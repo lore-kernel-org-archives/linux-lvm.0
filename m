@@ -1,31 +1,25 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3A25CE05.4A4E0B54@wrkhors.com>
-Date: Wed, 29 Nov 2000 21:48:21 -0600
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm 0.9 kernel build problems
-References: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com> <20001129211909.C26635@srv.t-online.de>
-Content-Transfer-Encoding: 7bit
+Return-Path: <postmaster@bobas.nowytarg.top.pl>
+Date: Wed, 29 Nov 2000 09:40:25 +0100
+From: Daniel Podlejski <underley@underley.eu.org>
+Message-ID: <20001129094025.A1206@underley.eu.org>
+Mime-Version: 1.0
+Resent-To: linux-lvm@sistina.com
+Subject: [linux-lvm] /sbin/vgchange -a y core dumped
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> I guess that this could be a nasty gcc flaw showing up here.
-> 
-> Anybody else who tried to patch/compile LVM 0.9 with linux-2.4.0-test10
-> on RH 7.0 who is able to help?
-> <snip>
+Hi,
 
-tried, failed, gave up...
-
-if anyone who knows more about what problems to expect wants
-to take a shot at it i can put a copy of the 7.0 respin *
-& 0.9 on a machine here and give you a login to try it out.
+I got core dumped after /sbin/vgchange -a y, but
+diskgroup is visible. kernel 2.4.0-test11,
+LVM - yesterday checkout from CVS.
 
 -- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+Daniel Podlejski <underley@underley.eu.org>
+   ... It's enough to make you stay
+   It's enough to make you go away ...
