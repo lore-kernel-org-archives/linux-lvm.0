@@ -1,9 +1,11 @@
-Message-ID: <001e01c31029$015ad760$3c00a8c0@superdatorn>
-From: =?iso-8859-1?Q?Hans_T=F6rnquist?= <hanst@geflefxp.net>
+From: Ewen McNeill <lvm@ewen.mcneill.gen.nz>
+Subject: Re: [linux-lvm] (no subject) 
+In-Reply-To: Message from "Michael Vogt" <MichaelVogt@abcsystems.ch> 
+   of "Fri, 02 May 2003 10:51:22 +0200." <772FBCA525B8FB4C9299D8D27FD4A5AA04105A@ABCSYSEXC1.abcsystems.ch> 
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_001B_01C31039.C4663A00"
-Subject: [linux-lvm] vgscan can't find my vg.
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7949.1052008696.1@basilica.la.naos.co.nz>
+Message-Id: <20030504003817.0BB2EAE4F5@basilica.la.naos.co.nz>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,116 +16,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 10 08:37:23 2003
+Date: Sat May 10 08:37:33 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+[Resent: first copy had wrong From: address, and doesn't appear to have
+ been accepted by the mailing list]
 
-------=_NextPart_000_001B_01C31039.C4663A00
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+In message <772FBCA525B8FB4C9299D8D27FD4A5AA04105A@ABCSYSEXC1.abcsystems.ch>, "M
+ichael Vogt" writes:
+>well ewen, what do you mean with types recognised from matching against =
+>/proc/devices? it contains the following:  [...]
 
-I have change my system from slackware to gentoo and I can't get my lvm =
-to work.
+Based on what I found when looking at LVM and ataraid issues:
 
-When I run vgscan I get:
+The function lvm_get_device_type() in tools/lib/lvm_check_partitioned_dev.c 
+(LVM 1.0.7) is used to check that a device being considered for a LVM
+physical volume is of an appropriate type.
 
-# vgscan=20
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of =
-volume group "ftp_vg" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume =
-group
+It does this by comparing the device's number (ie, major/minor) against
+the list in /proc/devices, and ensuring that the driver associated with
+the major number is one of the ones in its list. 
 
-and pvscan:
+It has the following device names in its list:
 
-# pvscan=20
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/ataraid/disc0/disc"                is =
-associated to unknown VG "ftp_vg" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/disc"  is =
-associated to unknown VG "ftp_vg" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus1/target1/lun0/disc"  is =
-associated to unknown VG "ftp_vg" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/disc"  is =
-associated to unknown VG "ftp_vg" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus0/target1/lun0/disc"  is =
-associated to unknown VG "ftp_vg" (run vgscan)
-pvscan -- total: 5 [496.34 GB] / in use: 5 [496.34 GB] / in no VG: 0 [0]
+-=- cut here -=-
+        { "ide", LVM_DEVICE_TYPE_IDE },   /* IDE disk                        */
+        { "sd", LVM_DEVICE_TYPE_SD },     /* SCSI disk                       */
+        { "md", LVM_DEVICE_TYPE_MD },     /* Multiple Disk driver (SoftRAID) */
+        { "loop", LVM_DEVICE_TYPE_LOOP }, /* Loop device                     */
+        { "dasd", LVM_DEVICE_TYPE_DASD }, /* DASD disk (IBM S/390, zSeries)  */
+        { "rd", LVM_DEVICE_TYPE_DAC960 }, /* DAC960 (2.2 kernel name)        */
+        { "dac960", LVM_DEVICE_TYPE_DAC960 },/* DAC960 (2.4 kernel name)     */
+        { "nbd", LVM_DEVICE_TYPE_NBD },   /* Network Block Device            */
+        { "ida", LVM_DEVICE_TYPE_COMPAQ_SMART2 },/* Compaq SMART2            */
+        { "cciss", LVM_DEVICE_TYPE_COMPAQ_CISS },/* Compaq CISS array        */
+        { "ubd", LVM_DEVICE_TYPE_UBD },   /* User-mode virtual block device  */
+        { "ataraid", LVM_DEVICE_TYPE_ATARAID }, /* ATA Raid                  */
+        { "i2o_block", LVM_DEVICE_TYPE_I2O }, /* i2o disk */
+        { NULL, LVM_DEVICE_TYPE_INVALID } /* Device not recognized           */
+-=- cut here -=-
 
-And now to my problem.
-when I used slackware all my pv's was located by pvscan at /dev/hdb and =
-forward but now at /dev/ide/host?/bus?/lun0/disc.
+If the device you're trying to use doesn't match one of those types,
+then LVM will refuse to use it, viz:
 
-So if anybody got a clue how to fix it, pleace tell me.=20
+>linuxsvm:/usr/src/linux # lvmdiskscan -vd
+>lvmdiskscan -- reading all disks / partitions (this may take a while...)
+>lvmdiskscan -- filling directory cache...
+><1> lvm_dir_cache -- CALLED MICHU
+><22> lvm_add_dir_cache -- CALLED with /dev/svmaa=20
+><22> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
+><22> lvm_add_dir_cache -- CALLED with /dev/svmab=20
+><22> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
+><22> lvm_add_dir_cache -- CALLED with /dev/svmac=20
+><22> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
 
-/Hans T=F6rnquist
-------=_NextPart_000_001B_01C31039.C4663A00
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+The "NOT ADDED" there means "didn't recognise /dev/svmac as a type of
+device that can have LVM on it".
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2800.1141" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>I have change my system from slackware =
-to gentoo=20
-and I can't get my lvm to work.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>When I run vgscan I get:</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2># vgscan <BR>vgscan -- reading all =
-physical volumes=20
-(this may take a while...)<BR>vgscan -- ERROR "vg_read_with_pv_and_lv(): =
-current=20
-PV" can't get data of volume group "ftp_vg" from physical =
-volume(s)<BR>vgscan --=20
-"/etc/lvmtab" and "/etc/lvmtab.d" successfully created<BR>vgscan -- =
-WARNING:=20
-This program does not do a VGDA backup of your volume =
-group<BR></FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>and pvscan:</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2># pvscan <BR>pvscan -- reading all =
-physical volumes=20
-(this may take a while...)<BR>pvscan -- inactive PV=20
-"/dev/ataraid/disc0/disc"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-is associated to unknown VG "ftp_vg" (run vgscan)<BR>pvscan -- inactive =
-PV=20
-"/dev/ide/host2/bus1/target0/lun0/disc"&nbsp; is associated to unknown =
-VG=20
-"ftp_vg" (run vgscan)<BR>pvscan -- inactive PV=20
-"/dev/ide/host2/bus1/target1/lun0/disc"&nbsp; is associated to unknown =
-VG=20
-"ftp_vg" (run vgscan)<BR>pvscan -- inactive PV=20
-"/dev/ide/host2/bus0/target1/lun0/disc"&nbsp; is associated to unknown =
-VG=20
-"ftp_vg" (run vgscan)<BR>pvscan -- inactive PV=20
-"/dev/ide/host0/bus0/target1/lun0/disc"&nbsp; is associated to unknown =
-VG=20
-"ftp_vg" (run vgscan)<BR>pvscan -- total: 5 [496.34 GB] / in use: 5 =
-[496.34 GB]=20
-/ in no VG: 0 [0]<BR></FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>And now to my problem.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>when I used slackware all my pv's was =
-located by=20
-pvscan at /dev/hdb and forward but now at=20
-/dev/ide/host?/bus?/lun0/disc.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>So if anybody got a clue how to fix it, =
-pleace tell=20
-me.&nbsp;</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>/Hans =
-T=F6rnquist</DIV></FONT></BODY></HTML>
+So at very least you'd need to change that table.  You'll also need to
+add to the enumerated type (lvm_device_type_t) in liblvm.h, so that
+you have a value to put on the right hand side of that table in
+tools/lib/lvm_check_partitioned_dev.c.
 
-------=_NextPart_000_001B_01C31039.C4663A00--
+And there may well be some other areas that you need to add to as well.
+
+Since LVM 2 apparently supports control with regular expressions that
+might be a better choice than trying to hack support into LVM 1.0.7.
+(although LVM 2 isn't officially released yet AFAIK).
+
+Ewen
