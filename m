@@ -1,10 +1,10 @@
-From: =?ISO-8859-1?Q?Trond_Eivind_Glomsr=F8d?= <teg@redhat.com>
-Message-ID: <Pine.LNX.4.33.0112171205010.30369-100000@halden.devel.redhat.com>
-MIME-Version: 1.0
-ReSent-To: <Linux-LVM@sistina.com>
-ReSent-Message-ID: <Pine.LNX.4.33.0112171214430.30439@halden.devel.redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Build bugs for lvm 1.0.1
+Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
+From: Bradley Alexander <storm@tux.org>
+In-Reply-To: <Pine.LNX.4.33.0112171315110.18781-100000@www.scotty.co.at>
+References: <Pine.LNX.4.33.0112171315110.18781-100000@www.scotty.co.at>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1008610700.829.15.camel@defiant>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,26 +15,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 11:12:02 2001
+Date: Mon Dec 17 11:36:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
-To: Linux-LVM-Bug@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-1) Trying to set group/user on install is evil. It shouldn't be the=20
-   default, as this option will fail when you build as non-root =20
+On Mon, 2001-12-17 at 07:20, Friedrich Lobenstock wrote:
+> On 16 Dec 2001 22:43, Bradley Alexander wrote:
+> 
+> > Its a standard IDE cable. I have a 40-pin/40-wire cable and a
+> > 40-pin/80-wire (I'm assuming this is an ATA66/100 cable). Originally, i
+> > had both drives on the ATA cable, but since I split them to different
+> > channels, I had to use a standard IDE cable on the second channel.
+> > However, I was getting the same errors when both were on the ATA cable
+> > as well.
+> >
+> 
+> So please do yourself a favour and only use 80-wire cables nowadays.
+> That's why you are getting the
+>   hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+>   hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280, sector=0
+> messages.
 
-2) When using "--without-user --without-group", it tries to install with=20
-   user/group of no/no. Needless to say, this fails.
+I was getting the same type of errors even when both drives were on an
+ATA cable. However, I will try to run out and get an ATA cable this
+afternoon.
 
-3) It has prototypes of lseek64/basename which are incompatible with=20
-   glibc. Use "-DGNU_SOURCE -O2" for CFLAGS and enjoy.
-
-4) It shouldn't look in /usr/src/linux for the linux kernel sources -=20
-   look at /lib/modules/`uname -r`/build. Also, the current running kerne=
-l=20
-   doesn't necesarrily (or for people who package it, almost certainly=20
-   doesn't match) what you build it for. =20
-
---=20
-Trond Eivind Glomsr=F8d
-Red Hat, Inc.
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm [at] debian.org
+                                         |   storm [at] tux.org
+============================================================================
+No, just _a_ Zaphod Beeblebrox. Didn't you hear? I come in six-packs."
