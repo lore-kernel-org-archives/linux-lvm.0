@@ -1,8 +1,10 @@
-Message-ID: <3DAEDEE5.4540B954@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] creating a LVM ontop of a cryptated (ppdd) loop back device
+Subject: Re: [linux-lvm] vgcreate on 1.5TB volume
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <16900000.1034642423@[192.168.200.4]>
+References: <16900000.1034642423@[192.168.200.4]>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-iqoawv9tKwaAGTuLFCXQ"
+Message-Id: <1034880612.30299.8.camel@UberGeek.coremetrics.com>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,33 +15,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 11:02:01 2002
+Date: Thu Oct 17 13:50:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I'm trying to cryptate my filesystems, and be able to take snapshots of
-them.
-I cannot get a snapshot of a cryptated LV to work (maybe because it is
-readonly)
-So i wanted to go the other way, and put the encryption in the bottom.
-But, i cant create a VG ontop of a cryptated (ppdd) loop back device. It
-works on a
-unencrypted device. 
+--=-iqoawv9tKwaAGTuLFCXQ
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-It pvcreates just fine, but when it comes to vgcreate, it says:
-ve:/# pvcreate /dev/loop1
-pvcreate -- physical volume "/dev/loop1" successfully created
-
-ve:/# vgcreate vgt /dev/loop1
-vgcreate -- no valid physical volumes in command line
+Sorry for the late response. This will be a backup/software mirroring
+volume for our large DB.
 
 
+On Mon, 2002-10-14 at 19:40, Steven Lembark wrote:
+> > What is the best way to get all 1.5TB in one LV?
+>=20
+> What are you using the space for? Nearly anything that would
+> handle that much space can divide the space up into multiple
+> areas (e.g., oracle tablespaces) that allow more reasonably
+> sized filesystems.
+>=20
+>=20
+> --
+> Steven Lembark                               2930 W. Palmer
+> Workhorse Computing                       Chicago, IL 60647
+>                                             +1 800 762 1582
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--=20
+Austin Gonyou <austin@coremetrics.com>
+Coremetrics, Inc.
 
-Does anyone know any other encryption that works with LVM and/or allows
-one to take snapshots?
+--=-iqoawv9tKwaAGTuLFCXQ
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
+iD8DBQA9rwZk94g6ZVmFMoIRAtSkAJwKjX2KIumX3lLhiw52QLe0yPx7jgCgtuuR
+//aWQ2fMTZx3DfSn8Vs3IgY=
+=wtQG
+-----END PGP SIGNATURE-----
 
-
-JonB
+--=-iqoawv9tKwaAGTuLFCXQ--
