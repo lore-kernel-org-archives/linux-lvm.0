@@ -1,12 +1,12 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementationre
-    ady for beta testing
-Message-Id: <20020201102439.B15135@sistina.com>
+Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementation
+    ready for beta testing
+Message-Id: <20020131125211.A8934@fib011235813.fsnet.co.uk>
 References: <OFBCE93B66.F7B9C14E-ON85256B52.006B8AB3@raleigh.ibm.com>
-    <3C59A3A4.71A869A8@bellsouth.net>
 MIME-Version: 1.0
-In-Reply-To: <3C59A3A4.71A869A8@bellsouth.net>; from
-    laytonjb@bellsouth.net on Thu, Jan 31, 2002 at 03:05:56PM -0500
+Content-Disposition: inline
+In-Reply-To: <OFBCE93B66.F7B9C14E-ON85256B52.006B8AB3@raleigh.ibm.com>;
+    from slpratt@us.ibm.com on Thu, Jan 31, 2002 at 01:52:29PM -0600
+From: Joe Thornber <thornber@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,93 +17,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 03:29:02 2002
+Date: Fri Feb  1 03:47:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: lvm-devel@sistina.com
+Cc: Jim McDonald <Jim@mcdee.net>, Andreas Dilger <adilger@turbolabs.com>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, evms-devel@lists.sourceforge.net
 
-On Thu, Jan 31, 2002 at 03:05:56PM -0500, Jeff Layton wrote:
-> (snip)
+On Thu, Jan 31, 2002 at 01:52:29PM -0600, Steve Pratt wrote:
+> Joe Thornber wrote:
+> >On Wed, Jan 30, 2002 at 10:03:40PM +0000, Jim McDonald wrote:
+> >> Also, does/where does this fit in with EVMS?
 > 
-> >
-> > >LVM2 may not seem that exciting initially, since the first release is
-> > >just concentrating on reproducing LVM1 functionality.  But a lot of
-> > >the reason for this rewrite is to enable us to add in the new features
-> > >that we want (such as a transaction based disk format).  It's on this
-> > >new feature list that we'll be mainly competing with EVMS.
-> >
-> > Why compete, come on over and help us :-)
+> >EVMS differs from us in that they seem to be trying to move the whole
+> >application into the kernel,
 > 
-> You guy man!
+> No, not really.  We only put in the kernel the things that make sense to be
+> in the kernel, discovery logic, ioctl support, I/O path.  All configuration
+> is handled in user space.
+
+There's still a *lot* of code in there; > 26,000 lines in fact.
+Whereas device-mapper weighs in at ~2,600 lines.  This is just because
+you've decided to take a different route from us, you may be proven to
+be correct.
+
+> > whereas we've taken the opposite route
+> >and stripped down the kernel side to just provide services.
 > 
-> I've worked with Kevin a few months ago on using EVMS
-> to recover a filesystem ontop of LVM when a disk went
-> south and we had no backups
+> Then why does snapshot.c in device mapper have a read_metadata function
+> which populates the exception table from on disk metadata?  Seems like you
+> agree with us that having metadata knowledge in the kernel is a GOOD thing.
 
-It is quite intersting how many people don't take backups even though
-almost everybody claims to know that backups are crucial and some of them
-know that they are still, even though they might have RAID in place.
+In the case of snapshots the exception data has to be written by the
+kernel for performance reasons, as you know.  This is still a far cry
+from understanding the LVM1 metadata format.
 
-Well I guess it, but you didn't mention if you had success to recover.
+> Since device_mapper does not support in kernel discovery, and EVMS relies
+> on this, it would be very difficult to change EVMS to use device_mapper.
 
-Was it quorum (we are implementing it with LVM2 BTW) which helped and have
-you been lucky that at least a part of your LVs where sitting on other than the
-gone disk? Otherwise you probably had your VG back but no usable data.
+So do the discovery on the EVMS side, and then pass the tables across
+to device-mapper to activate the LV's.
 
-> (I know, but I was told by the
-> people in charge that backups were not needed - that's why
-> I left).
+> Why compete, come on over and help us :-)
 
-Probably a good choice to leave if they don't understand such basics
-and you couldn't convince them.
+I would like the two projects to help each other, but not to the point
+where one group of people has to say 'you are completely right, we
+will stop developing our project'.  It's unlikely that either of us is
+100% correct; but I do think device-mapper splits off a nice chunk of
+services that is useful to *all* people who want to do volume
+management.  As such I see that as one area where we may eventually
+work together.
 
+Similarly I expect to be providing an *optional* kernel module for LVM
+users who wish to do in kernel discovery of a root LV, so if the EVMS
+team has managed to get a nice generic way of iterating block devices
+etc.  into the kernel, we would be able to take advantage of that.
+Are you trying to break out functionality so it benefits other Linux
+projects ? or is EVMS just one monolithic application embedded in the
+kernel ?
 
-> I really like EVMS and can't wait for it to be in 2.5 and
-> then 2.6 (just keep up the patches for 2.4 please :)
-
-EVMS hallelujah on linux-lvm? ;-)
-
-> 
-> Jeff Layton
-> 
-> 
-> >
-> >
-> > Steve
-> >
-> > EVMS Development - http://www.sf.net/projects/evms
-> > Linux Technology Center - IBM Corporation
-> > (512) 838-9763  EMAIL: SLPratt@US.IBM.COM
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+- Joe
