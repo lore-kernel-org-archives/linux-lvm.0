@@ -1,10 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102082249.f18MnQB08316@webber.adilger.net>
-Subject: Re: [linux-lvm] Installation question: SW RAID1 + LVM for boot and root
-In-Reply-To: <EA63CEA50DF8D311ABAD00B0D0211732024BE020@hal9000.hermes.si> from
- Luka Renko at "Feb 8, 2001 09:39:49 pm"
-Date: Thu, 8 Feb 2001 15:49:26 -0700 (MST)
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 9 Feb 2001 00:03:22 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Upgrade procedure
+Message-ID: <20010209000322.C19887@srv.sistina.com>
+References: <F578nbpzJvm2CaO9smk000059c1@hotmail.com>
+Mime-Version: 1.0
+In-Reply-To: <F578nbpzJvm2CaO9smk000059c1@hotmail.com>; from gene_yee@hotmail.com on Thu, Feb 08, 2001 at 02:32:23PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,69 +17,62 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Luka write:
-> I would like to setup server with two SCSI disks of same size on two SCSI
-> channels with software RAID1 (md) and would like to put LVM on top of it.
-> This RAID1 will be used for root, boot, swap and should also have other user
-> data on it (this is why I want some flexibility that LVM can provide). 
+On Thu, Feb 08, 2001 at 02:32:23PM -0800, hail narcissus wrote:
 > 
-> 1. Is it possible to install OS directly on SW RAID1 + LVM?
-> If not, how to do it in multiple steps (RAID HOWTO just mentions how to
-> install OS on SW RAID1, but not using LVM on top of SW RAID)?
+> I am running .9.1-Beta2 right now and though I am not currently in need to 
+> upgrade I would like to know the procedure for future reference.
+> 
+> My questions are:  Do I need to re-patch and compile the kernel for 
+> upgrading?
 
-Unless installer supports it, you will have some problems.  You also need
-latest CVS LVM kernel code, and patched LILO (not yet available) to have
-/boot on LVM.  Unfortunately, I haven't released my LILO LVM /boot patch
-because at this time my system is broken...
+Yes, you need to apply the release dependent LVM kernel patch.
 
-> 2. Are there any known problems on LVM over SW RAID1 (I have seen some bug
-> reports on that)?
+> If so then do I need to start with a clean src or can I re-patch 
+> my src?
 
-Some problems, but I think they are fixed.
+It depends. In 2.4 you can most likely just apply a LVM delta patch which
+will be generated during the LVM installation. This is documented in INSTALL
+and PATCHES/README contained in the LVM distro.
 
-> 3. RAID HOWTO talks about slow read performance with RAID1 and that it
-> should be improved in new patches to come? Is this still true? Do I need to
-> apply any patches for that?
+> 
+> In other words, my kernel already has a couple of other hacks patched into 
+> it.  If possible I would like to just run the LVM .9.1-Beta3 patch over my 
+> kernel which was patched for Beta2 on it instead of having to dig up all the 
+> other patches I have applied in the past.
 
-Ask on RAID mailing list.
+As mentioned: with 2.4. applying the LVM 0.9.1-BetaN patch will (most
+              likely) work.
+              With 2.2 it depends on the patches you added and how they
+              interfere with the LVM patch.
 
-> 4. I have also seen some discussion about issues with putting swap on SW
-> RAID? Is this still true?
+> 
+> Thanks.
+> _________________________________________________________________
+> Get your FREE download of MSN Explorer at http://explorer.msn.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-Ask on RAID mailing list.
-
-> 5. Should I create one or two (system, user) md devices? Is there any
-> difference?
-
-Ask on RAID mailing list.
-
-> What about multiple LVM VGs and PVs? It seems to me, that it does not make
-> any real difference...
-
-Depends if you are running a production system or not.  In many cases, you
-want to prevent a bad process from filling the filesystem and causing
-problems for other processes (i.e. /tmp, /var, /home, /).
-
-> 6. What version of kernel (2.2 or 2.4) is better for such configuration?
-> What version of SW RAID and LVM should I use? Are there any additional
-> patches I should apply?
-
-Depends on what you use it for.  2.2 patch gives same LVM code as 2.4.  If
-you apply Ingo RAID patches on 2.2, it is basically the same as well.
-
-> 7. Does any distribution on the market (RedHat, SuSE, Mandrake...) have good
-> support for configuration I want? Or even is able to install on SW RAID1 +
-> LVM?   
-
-I'm working on this for Turbolinux, but not yet there...
-
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
