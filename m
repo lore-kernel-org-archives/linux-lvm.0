@@ -1,9 +1,13 @@
-Message-ID: <B5B1F1162663D411BB8000508B691B20076332BA@stimxch1.dev.mediagrif.com>
-From: Jean Aumont <jaumont@mediagrif.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C2FF68.E007E290"
-Subject: [linux-lvm] Raid 5 Performance
+Subject: Re: [linux-lvm] lvm/devfs bug?
+From: rich turner <rich@storix.com>
+In-Reply-To: <1049932652.7946.4.camel@rich-laptop>
+References: <1049829705.2312.16.camel@rich>
+	<20030408204334.GD22951@percy.comedia.it> <1049836943.7411.19.camel@rich> 
+	<20030409072130.GD1366@tykepenguin.com> 
+	<1049932652.7946.4.camel@rich-laptop>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1049998095.1031.5.camel@rich-laptop>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,106 +18,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 10 09:10:07 2003
+Date: Thu Apr 10 13:08:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+does anyone recognize this as a bug within lvm?
 
-------_=_NextPart_001_01C2FF68.E007E290
-Content-Type: text/plain;
-	charset="iso-8859-1"
+there clearly is not a partition on sda (according to /proc/partitions)
+but pvcreate thinks there is one. if pvcreate examines only
+/proc/partitions for disk partitions and there is not a partition on a
+disk then why does pvcreate fail? i may not understand all of the
+underlying behavior of pvcreate but it appears to be failing when it
+shouldnt. is this a bug?
 
-Hi everyone,
-
-I have 4 identical disks that I have configured using the Linux Software
-raid.
-They are set-up in a raid 5 using a "chunksize" of 128 Kbytes as recommended
-in the Linux Software Raid HowTo.
-
-I could create an Ext3 file system directly over my raid 5 with the
-following parameters:
-chunksize=128KB, block size=4KB and stride=32.
-I think those parameters are the best for performance. (Any better
-suggestion would be appreciated !!!)
-
-My question is: 
-
-Since I want to be able to create/resize many file systems (ext3, XFS
-ReiserFS) over the raid5, do I need to specified: 
-"chunksize, stripe and stripesize", when performing the "lvcreate" command
-(the logical volume creation) or are those
-parameters used for backup and creating a raid 0 (stripe) ???
-
-If I do need to specified those parameters, what would be the best values
-regarding performance of the raid 5 ???
-
-Thanks in advance,
-
-Jean Aumont 
-
-
-------_=_NextPart_001_01C2FF68.E007E290
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Diso-8859-1">
-<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
-5.5.2653.12">
-<TITLE>Raid 5 Performance</TITLE>
-</HEAD>
-<BODY>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">Hi everyone,</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">I have 4 identical disks that I =
-have configured using the Linux Software raid.</FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Courier New">They are set-up in a raid 5 =
-using a &quot;chunksize&quot; of 128 Kbytes as recommended in the Linux =
-Software Raid HowTo.</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">I could create an Ext3 file =
-system directly over my raid 5 with the following parameters:</FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Courier New">chunksize=3D128KB, block =
-size=3D4KB and stride=3D32.</FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Courier New">I think those parameters are =
-the best for performance. (Any better suggestion would be appreciated =
-!!!)</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">My question is: </FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">Since I want to be able to =
-create/resize many file systems (ext3, XFS ReiserFS) over the raid5, do =
-I need to specified: </FONT></P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">&quot;chunksize, stripe and =
-stripesize&quot;, when performing the &quot;lvcreate&quot; command (the =
-logical volume creation) or are those</FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Courier New">parameters used for backup and =
-creating a raid 0 (stripe) ???</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">If I do need to specified those =
-parameters, what would be the best values regarding performance of the =
-raid 5 ???</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">Thanks in advance,</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Courier New">Jean Aumont </FONT>
-</P>
-
-</BODY>
-</HTML>
-------_=_NextPart_001_01C2FF68.E007E290--
+On Wed, 2003-04-09 at 16:57, rich turner wrote:
+> i dont completely agree with that because even when i use a kernel that
+> does not have devfs i still get the same symptoms. even though
+> /proc/partitions does not have a partition for a disk pvcreate still
+> complains that there is one. pvcreate must be looking someplace else or
+> there is a bug within lvm.
+> 
+> now, if i create a pv within a partition there are no complaints, lvm
+> will continue normally. it appears to only happen when i want to create
+> a pv on the entire disk.
+> 
+> why does pvcreate think there is a partition when there clearly isnt
+> one?
+> 
+> On Wed, 2003-04-09 at 00:21, Patrick Caulfield wrote:
+> > On Tue, Apr 08, 2003 at 02:22:23PM -0700, Rich Turner wrote:
+> > > even though devfs is compiled in the kernel it actually is not mounted
+> > > at this time. i have tried it using devfs long names also with no
+> > > success.
+> > 
+> > If devfs is in the kernel you MUST have it mounted for LVM. It's to do with the
+> > interaction between /proc/partitions and LVM.
+> > 
+> > 
+> > 
+> > patrick
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
