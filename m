@@ -1,9 +1,9 @@
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BFFB@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Subject: RE: [linux-lvm] My VG is gone...
-Date: Wed, 5 Sep 2001 12:56:10 -0600
+Date: Wed, 5 Sep 2001 13:57:52 -0500 (EST)
+From: John Marquart <jomarqua@indiana.edu>
+Subject: Re: [linux-lvm] lvcreate segfaults
+In-Reply-To: <Pine.A41.4.21.0109051323340.22482-300000@gigue.dlib.indiana.edu>
+Message-ID: <Pine.A41.4.21.0109051357240.22482-100000@gigue.dlib.indiana.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,49 +15,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'Rasmus Wiman ' <rasmus.wiman@sami.se>, "'linux-lvm@sistina.com '" <linux-lvm@sistina.com>
-
-I will be formating 311Gb of hard drives today.  These drives were 40% full.
-This is the second time that LVM has bitten me.  The first time I tried to
-expand a VG, the VG was gone when the machine rebooted.  Same thing this
-time.  AND THERE IS APEARANTLY NO WAY TO RECOVER!  It seems that all of the
-vg data is recorded in each member pv.  So, why isn't there a utility to
-recover a vg in this situation?  This is very fragile! 
-
-Mike Diehl.
-
-
------Original Message-----
-From: Rasmus Wiman
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Sent: 9/5/2001 2:04 AM
-Subject: Re: [linux-lvm] My VG is gone...
 
-"Diehl, Jeffrey" <jdiehl@sandia.gov> skrev:
+One piece of info i forgot - not sure its relevance - but this is a SMP
+machine running 2 zeon processors.
 
-> Any ideas about how to recover without losing my data.  I need to get
-> going
-> soon, so if I haven't fixed it by late this week, I'm going to
-> reformat....
-> And lose several Gb of data.
+-j
 
-I have already reformated my hard disks, alas. I didn't have time to
-wait
-for a solution. But If someone would have helped me or suppllied code
-that
-fixed the problem, it could have beed the start of a Doctor LVM project.
-I
-think there should really be crash recover tools for any file system and
-LVM system since they all do crash some times.
+On Wed, 5 Sep 2001, John Marquart wrote:
+
+> Good afternoon,
+> 	I am running LVM 1.0.1rc2 on  2.4.8 kernel ontop of a IBM
+> Serverraid 4Mx RAID5 filesystem.  I am trying to create a new lv using
+> "lvcreate -n foo -L 4M rootvg" - however that command insists on giving me
+> a segfault.  
+> 
+> Attached are the complete outputs of the above lvreate command w/ the -v
+> and -d flags.  excerpts (the last few lines) are listed below:
+> 
+> ----lvcreate ... -v----
+> lvcreate -- setting up logical volume
+> lvcreate -- setting read ahead sectors
+> lvcreate -- creating logical volume VGDA in kernel
+> Segmentation fault (core dumped)
+> 
+> ----lvcreate ... -d----
+> <1> lv_setup_for_create -- pv_reserve_pe returned: 0   pe_last: 1  pe: 0
+> <1> lv_setup_for_create -- pe: 0
+> <1> lv_setup_for_create -- LEAVING with ret: 0
+> <1> lvm_dont_interrupt -- CALLED
+> <1> lvm_dont_interrupt -- LEAVING
+> Segmentation fault (core dumped)
+> -----------------------------------
+> 
+> 
+> If there is any other info I can provide - please let me know.  I only
+> attached what seemed most pertinent.
+> 
+> thanks,
+> -jamie / vaix
+> 
 
 
----------------------
-Rasmus Wiman
-SAMI Labs
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+John "Jamie" Marquart		|     This message posted 100% MS free.
+Digital Library SysAdmin	|  Work: 812-856-5174   Pager: 812-334-6018
+Indiana University Libraries	|  ICQ: 1131494	 	D'net Team:  6265
