@@ -1,11 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 7 Feb 2001 12:49:37 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: Re: [linux-lvm] vgscan -- ERROR -132: volume group "vgall" is inconsistent
-Message-ID: <20010207124937.J8914@srv.sistina.com>
-References: <3A809408.C2FADBC9@cs.tu-berlin.de>
-Mime-Version: 1.0
-In-Reply-To: <3A809408.C2FADBC9@cs.tu-berlin.de>; from wipeout@cs.tu-berlin.de on Wed, Feb 07, 2001 at 01:17:12AM +0100
+Return-Path: <jcarles@dtic.ua.es>
+From: "Joan Carles Monllor" <jcarles@dtic.ua.es>
+Date: Wed, 7 Feb 2001 13:49:27 +0100
+Message-ID: <NDBBIPFGCOKBKKOFONLLEEMMCCAA.jcarles@dtic.ua.es>
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_NextPart_000_0070_01C0910C.C9E5F5A0"
+Subject: [linux-lvm] I can't add other disk in lvm system
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,42 +17,69 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Happy to hear that this helped.
+This is a multi-part message in MIME format.
 
-In case you are forced into this again, please provide a "vgscan -d" output.
+------=_NextPart_000_0070_01C0910C.C9E5F5A0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 07, 2001 at 01:17:12AM +0100, Andreas Martin wrote:
-> Hi Heinz,
-> I had a valid vgall.conf file, so I was lucky to save all my datas.
-> Seems that yast only deleted vgall.con and lvmtab.
-> Thanks a lot and good luck for the project.
-> I still think that lvm rocks!
-> 
-> Cheers Andreas.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
--- 
+	Hello, I am new in this mailing list. And, I am new in lvm system too.
 
-Regards,
-Heinz    -- The LVM Guy --
+	My problem is:
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+	I have create a logical volume, correctly. And, I want to add other disk to
+logical volum.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	I already have create a volumen group named "vm0".
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	I think that I have run "vgextend -v vm0 /dev/hdc1", for exemple.
+
+	Then display this:
+
+vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+Unable to handle kernel NULL pointer dereference at virtual address 0000002c
+ printing eip:
+c01ecd4f
+*pde = 00000000
+Oops: 0000
+CPU:    0
+EIP:    0010:[<c01ecd4f>]
+EFLAGS: 00010282
+....
+....
+.
+.
+.
+Segment violation
+
+	The problem is in mine or in the kernel or the lvm tools ?
+
+		thanks for your help in avanced.
+
+Joan Carles Monllor
+Universitat d'ALacant
+jcarles@dtic.ua.es        Tel. 965903681
+Spain                     Fax 965903902
+
+
+------=_NextPart_000_0070_01C0910C.C9E5F5A0
+Content-Type: text/x-vcard;
+	name="Joan Carles Monllor.vcf"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="Joan Carles Monllor.vcf"
+
+BEGIN:VCARD
+VERSION:2.1
+N:Monllor;Joan;Carles
+FN:Joan Carles Monllor
+NICKNAME:jcarles
+EMAIL;PREF;INTERNET:jcarles@dtic.ua.es
+REV:20000608T070409Z
+END:VCARD
+
+------=_NextPart_000_0070_01C0910C.C9E5F5A0--
