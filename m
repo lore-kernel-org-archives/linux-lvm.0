@@ -1,14 +1,12 @@
-Return-Path: <lewis@sistina.com>
-From: lewis@sistina.com
-Date: Thu, 14 Dec 2000 10:46:41 -0600
+Return-Path: <ex8k-hbn@asahi-net.or.jp>
+Date: Fri, 15 Dec 2000 02:43:13 +0900
+Message-ID: <87hf46kifi.wl@pear.hibi-local.net>
+From: HIBINO Kei <ex8k-hbn@asahi-net.or.jp>
 Subject: Re: [linux-lvm] Debian packaging
-Message-ID: <20001214104641.A15193@sistina.com>
+In-Reply-To: <Pine.LNX.4.30.0012141645040.17005-100000@falka.mfa.kfki.hu>
 References: <0012132115222N.00826@lyta>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
-Content-Disposition: inline
-In-Reply-To: <0012132115222N.00826@lyta>; from russell@coker.com.au on Wed, Dec 13, 2000 at 09:15:22PM +0100
+	<Pine.LNX.4.30.0012141645040.17005-100000@falka.mfa.kfki.hu>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,128 +18,73 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---tKW2IUtsqtDRztdT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+At Thu, 14 Dec 2000 16:50:41 +0100 (CET),
+Tamas Gergely wrote:
 
-On Wed, Dec 13, 2000 at 09:15:22PM +0100, Russell Coker wrote:
-> I plan to take over the Debian package of lvm because the current maintai=
-ner=20
-> hasn't fixed serious bugs for quite a while.
+> As I noticed the LVM utilities are placed under /usr in this LVM.DEB .
+> 
+> Wouldn't it be better to use '/' as root not '/usr'?
+> I mean, it would be better to place the utilities into /sbin instead of
+> /usr/sbin.
+> 
+> (on many systems /usr is located on an LV. But activiting/disactivating
+> using vgchange is impossible after unmounting /usr)
 
-A couple of questions.  Have you tried contacting Tom Lees <tal26@cam.ac.uk=
->?  I have talked to him and he is working on LVM 0.9 packages for sure.  H=
-as this transfer of maintainers been approved by the powers that be at Debi=
-an yet?
+I fixed the above and some problems of pacakges placed under
+'ftp://ftp.sistina.com/pub/LVM/0.9/binaries/debian/'.
 
-> I have created packages for lvm 0.8.1 and lvm 0.9.  One change I think sh=
-ould=20
-> be done is an option for ./configure to specify whether a shared library=
-=20
-> should be used or whether the programs should be statically linked.  If t=
-his=20
-> is desired then someone please tell me which version I should create a pa=
-tch=20
-> against and I'll send it in.
+I put this fixed pacakge under
+'http://www.asahi-net.or.jp/~ex8k-hbn/deb/lvm/'.
 
-Since the configure.in scripts are essentially the same, you can just submi=
-t a
-patch to one or the other to the lvm-devel list and we'll get it in on the
-next release.  I am the one responsible for the conversion of LKM to the au=
-toconf system, so I'd be interested to see how you intend to accomplish thi=
-s.
+-- lvm_0.9-2.1 --
+  * Fix pv_get_size.		(for md device.)
+  * Fix vg_read_from_pv.	(for md device.)
+  * Fix pv_read_uuidlist.	(for md device.)
+  * Fix install directories.	(from /usr/sbin to /sbin)
+  * Set soname to liblvm.so.
+  * Add 'liblvm-dev' package.
+  * Add some default configuration files.
+--             --
 
-> Also as part of the Debian packaging I have put the following patch in to=
-=20
-> make it clean up all files after compiling:
-> diff -ruN ../LVM.orig/lvm-0.8.1.orig/Makefile.in lvm-0.8.1-0/Makefile.in
-> --- ../LVM.orig/lvm-0.8.1.orig/Makefile.in      Sun Nov 12 19:52:12 2000
-> +++ lvm-0.8.1-0/Makefile.in     Wed Dec 13 15:40:06 2000
-> @@ -39,4 +39,5 @@
->  distclean: clean
->         $(MAKE) -C tools distclean
->         rm -f config.cache config.log config.status
-> -       rm -f Makefile make.tmpl
-> +       rm -f Makefile make.tmpl tools/Makefile tools/tools_and_lib.make.=
-tmpl=20
-> \
-> +              tools/lib/Makefile tools/man8/Makefile=20
->=20
-> Also I have put in the following patch to work with the way Debian packag=
-es=20
-> have different compile and install directories:
-> --- ../LVM.orig/lvm-0.8.1.orig/make.tmpl.in     Sun Nov 12 19:52:12 2000
-> +++ lvm-0.8.1-0/make.tmpl.in    Wed Dec 13 15:40:06 2000
-> @@ -35,11 +35,16 @@
->  # Setup directory variables
->  prefix =3D @prefix@
->  exec_prefix =3D @exec_prefix@
-> -bindir =3D @bindir@
-> -sbindir =3D @sbindir@
-> -libdir =3D @libdir@
-> -infodir =3D @infodir@
-> -mandir =3D @mandir@
-> +bindir =3D ${PREFIX}@bindir@
-> +sbindir =3D ${PREFIX}@sbindir@
-> +libdir =3D ${PREFIX}@libdir@
-> +infodir =3D ${PREFIX}@infodir@
-> +mandir =3D ${PREFIX}@mandir@
-> +
-> +ifeq ($(TOP),)
-> +TOP :=3D $(shell cd `for i in . .. ../..; do if [ -f $$i/LVM-HOWTO ]; th=
-en=20
-> echo $$i; break; fi; done`; pwd)
-> +export TOP
-> +endif
-> =20
->  # helper scripts
->  UNINSTALL =3D ${TOP}/autoconf/uninstall.pl
+This package is working well at my mirroring device.
 
-Are you saying you want this patch applied to the upstream source?  That
-really doesn't make much sense to me.  The Makefile.in patch is completely
-unnecessary because the subdirectories Makefile.in files handle those
-cleanups.  And it doesn't make any sense to me to put the ${PREFIX} stuff in
-the upstream version, as it is not necessary.  That is what the
-package.diff.gz file is created for when you build Debian packages.  That w=
-ay
-when you make a new version, the changes you made to the source are applied=
- to
-the new code.
 
-> Also I would prefer to have the Debian packaging files in the upstream=20
-> source.  They are about 5K of data in 11 files in a separate sub-director=
-y. =20
-> Please let me know if this would be desired/accepted as part of the LVM=
-=20
-> upstream source and I will send the relevant patch to you.
+pear:~# pvdisplay /dev/md1
+--- Physical volume ---
+PV Name               /dev/md1
+VG Name               dev1_vg
+PV Size               36.45 GB / NOT usable 2.81 MB [LVM: 157 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                5
+PE Size (KByte)       4096
+Total PE              9330
+Free PE               3186
+Allocated PE          6144
+PV UUID               0lnZ0l-ZmHh-jY0S-lT4t-1Ig9-fuGw-BviVvq
 
-One question.  Why?  Seems completely unnecessary to me.
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-
-No-one suspects the butterfly!
-
---tKW2IUtsqtDRztdT
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6OPlxpE6/iGtdjLERArDcAJ9lpY9QhmQkc4Vih+sccTUM3KYTyQCfe4Y1
-wQg7vRvxYdTvfsr3eBthyBo=
-=m6u9
------END PGP SIGNATURE-----
-
---tKW2IUtsqtDRztdT--
+pear:~# cat /proc/mdstat 
+Personalities : [raid0] [raid1] 
+read_ahead 1024 sectors
+md1 : active raid1 hdg4[1] hde4[0] 38218560 blocks [2/2] [UU]
+md0 : active raid0 hdg3[1] hde3[0] 1027968 blocks 32k chunks
+unused devices: <none>
+pear:~# mount
+/dev/hde1 on / type ext2 (rw,errors=remount-ro,errors=remount-ro)
+proc on /proc type proc (rw)
+devpts on /dev/pts type devpts (rw,gid=5,mode=620)
+/dev/md0 on /tmp type ext2 (rw)
+/dev/dev1_vg/var_lv on /var type ext2 (rw)
+/dev/dev1_vg/usr_lv on /usr type ext2 (rw)
+/dev/dev1_vg/export_lv on /export type ext2 (rw)
+/dev/dev1_vg/home_lv on /home type ext2 (rw)
+/dev/dev1_vg/local_lv on /usr/local type ext2 (rw)
+            .
+            .
+            .
