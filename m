@@ -1,11 +1,14 @@
-Return-Path: <juergens@muon.de>
-Date: Sat, 3 Feb 2001 14:43:23 +0100
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] startup scripts
-Message-ID: <20010203144323.A704@guldukat.muon>
-References: <3A7B17B2.8A75537B@asosa.org> <Pine.LNX.4.21.0102021002400.23087-100000@compath.asosa.org>
+Return-Path: <chewie@wookimus.net>
+Date: Sat, 3 Feb 2001 15:29:53 -0600
+From: ^chewie <chewie@wookimus.net>
+Subject: Re: [linux-lvm] Maximum # of PEs Per PV
+Message-ID: <20010203152953.C20708@wookimus.net>
+References: <20010131222537.B24922@wookimus.net> <Pine.LNX.4.21.0102021133080.15143-100000@miami.datech2.er.heitec.net>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.21.0102021002400.23087-100000@compath.asosa.org>; from gashaw@asosa.org on Fri, Feb 02, 2001 at 10:04:22AM -0800
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/e2eDi0V/xtL+Mc8"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0102021133080.15143-100000@miami.datech2.er.heitec.net>; from Holger.Rauch@heitec.de on Fri, Feb 02, 2001 at 11:34:35AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +20,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 02.02.01, Gashaw Mengistu <gashaw@asosa.org> wrote:
-> 
-> Oh .. I am using Mandrake 7.2 with Kernel 2.4.1 compiled with RAID and LVM
-> support built in.
-> 
+--/e2eDi0V/xtL+Mc8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well, if you compiled your kernel with raid autodetect support it does
-not matter that much where you put it. If your raid is started by some
-startup-script you have to put the lvm-stuff after that.
+On Fri, Feb 02, 2001 at 11:34:35AM +0100, Holger Rauch wrote:
+> Hi!
+>=20
+> On Wed, 31 Jan 2001, ^chewie wrote:
+>=20
+> > Why didn't you just use the whole disk partitionless?  Zero out the
+> > first 512b and do a pvcreate on /dev/hdf, /dev/hdg, /dev/hdh.
+>=20
+> Thanks a lot for this hint, but what's the advantage compared to creating
+> a partition of type 8e?
 
-I think it is quite reasonable to initialize LVM quite early, after
-the initial mount of the / filesystem. That way you can mount the
-filesystems the usal way at startup - using /etc/fstab. If one of your
-PV's is a MD, autodetect support is mandatory.
+I'm not a harddrive guru, so I'm not really qualified to give you a
+technical reason other than, "Why waste 512 bytes?"  I like to
+operate under the principle of Occam's Razor, or the principle of
+simplicity.  It's latin and heady, but the way it is known to me is
+this: "The simplest answer is most likey the correct one."
 
-greetings,
+There are others on the list that may be able to give you a more heady
+technical answer.
 
-Nils
+--=20
+Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
+http://www.wookimus.net/                            | s.k.a. gunnarr
+Key fingerprint =3D B4AB D627 9CBD 687E 7A31  1950 0CC7 0B18 206C 5AFD
 
--- 
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >  If we all work hard, we can turn this company  <
- >      around 360 degrees -- gruntbert(LOTD)      <
+
+--/e2eDi0V/xtL+Mc8
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6fHhRDMcLGCBsWv0RAuhpAJwOx58oWp61PYeN1JxU7rYw+CcS9ACfeWUu
+flrlwHRYe/9eq9PCZQzg8zM=
+=N+Sq
+-----END PGP SIGNATURE-----
+
+--/e2eDi0V/xtL+Mc8--
