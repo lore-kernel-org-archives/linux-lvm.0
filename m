@@ -1,14 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1R6H8810155
-	for <linux-lvm@redhat.com>; Fri, 27 Feb 2004 01:17:08 -0500
-Received: from hotmail.com (law11-oe43.law11.hotmail.com [64.4.16.15])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1R6H7b10800
-	for <linux-lvm@redhat.com>; Fri, 27 Feb 2004 01:17:07 -0500
-From: "sachin" <sachindurge@hotmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <Law11-OE43CLqi3KvyG00005570@hotmail.com>
-Subject: [linux-lvm] Snapshot validity
+Received: from reti (vpn50-18.rdu.redhat.com [172.16.50.18])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i1R8xcuq000334
+	for <linux-lvm@redhat.com>; Fri, 27 Feb 2004 08:59:39 GMT
+Received: from joe by reti with local (Exim 4.30)
+	id 1Awdqh-0000B7-7a
+	for linux-lvm@redhat.com; Fri, 27 Feb 2004 08:59:59 +0000
+From: Joe Thornber <thornber@redhat.com>
+Subject: Re: [linux-lvm] Snapshot validity
+Message-ID: <20040227085959.GA32428@reti>
+References: <Law11-OE43CLqi3KvyG00005570@hotmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Law11-OE43CLqi3KvyG00005570@hotmail.com>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -20,25 +22,17 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 27 01:15:03 2004
+Date: Fri Feb 27 03:58:02 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi All
+On Fri, Feb 27, 2004 at 11:52:45AM -0800, sachin wrote:
+> Hi All
+> 
+> I have a question.
 
-I have a question.
-What happen if i have change the configuration of the snapshot origin volume
-i.e i may change the size of the volume .Is the snapshot is valid or its of
-no use
+LVM1 or LVM2 ?
 
-What i think is data is of no use ,because internally the driver may
-checking the
-extent mapping of the origin of the  snapshot and then it scanning the
-ioexception table
-i.e COW table .If my assumption is not correct ,If any one knows the actual
-working
-Please tell  me .
-
-Thanks
-SachiN_
+- Joe
