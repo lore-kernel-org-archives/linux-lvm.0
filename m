@@ -1,10 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] LVM limit on PE's/size?
-Message-ID: <20011129095948.G29249@lynx.no>
-References: <200111291636.fATGa3L15288@jay.phy.queensu.ca> <20011129114031.A15298@jay.phy.queensu.ca>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
+Message-ID: <20011129181708.B16013@colombina.comedia.it>
+References: <Pine.LNX.4.21.0111290858230.435-100000@sol.rune.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011129114031.A15298@jay.phy.queensu.ca>; from peter@owl.Phy.Queensu.CA on Thu, Nov 29, 2001 at 11:40:31AM -0500
+In-Reply-To: <Pine.LNX.4.21.0111290858230.435-100000@sol.rune.org>; from sarwer.zafiruddin@rune.org on Thu, Nov 29, 2001 at 09:00:02AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 29 10:58:02 2001
+Date: Thu Nov 29 11:15:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Peter Skensved <peter@owl.Phy.Queensu.CA>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Nov 29, 2001  11:40 -0500, Peter Skensved wrote:
->       
-> >In general you should plan for the largest possible Logical Volume size
-> >during the lifetime of a Volume Group and set the Physical Extent size
-> >(vgcreate -s) acordingly. Even though Linux does not support more than 2TB
-> >per block device today, it will be in the future and you won't suffer from
-> >the LVM1 constraint ITR.
-> 
->     Is there any way to change the PE size `after the fact ' ?
- 
- No.
+On Thu, Nov 29, 2001 at 09:00:02AM -0500, Sarwer Zafiruddin wrote:
+> For those Mandrake 8.1 users out there.  Does anyone know if you can setup
+> the Linux Logical Volume Manager (LVM) during the install?  Ideally, I
+> would like to put my /,/var,/usr,/tmp filesystems under LVM control, so I
+> have the ability to expand the filesystems if it every gets full.
 
-> I have a 255.99 GB logical volume ( three 80 GB drives ) with PE size set
-> to 4 Mb. Is there a non-destructive way to increase the PE size so that I
-> can add more drives ? Or do I have to back everything up and start from
-> scratch ?
+you can setup lvm during install, but you cannot put root over lvm
+sorry.
 
-Well, if you are adding more drives, you could always create a new VG with
-the larger PE size, copy over all of your data, and then add the old drives
-into the new VG after removing them from the old VG.  Sadly, the PE size
-seems to be stored in the PV header (as well as the VG header), so it may
-be that you need to re-initialize the PV to change the PE size (maybe not,
-I don't know).
+L.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
