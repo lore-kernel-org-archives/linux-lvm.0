@@ -1,11 +1,11 @@
-Return-Path: <austin@coremetrics.com>
-Date: Fri, 25 May 2001 18:16:06 -0500 (CDT)
-From: Austin Gonyou <austin@coremetrics.com>
-Subject: Re: [linux-lvm] EMC Storage + LVM + XFS
-In-Reply-To: <20010525195526.B28981@vestdata.no>
-Message-ID: <Pine.LNX.4.33.0105251815170.7060-100000@UberGeek.coremetrics.com>
+Return-Path: <harvell@nortelnetworks.com>
+Message-ID: <3B0F1423.267CEE40@americasm01.nt.com>
+Date: Fri, 25 May 2001 21:25:39 -0500
+From: "Joe Harvell" <harvell@nortelnetworks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] lvm on root filesystem with devfs
+References: <NBBBKLKHMJHIJLHOGAOJGEOIIOAA.steve.wray@the.net.nz>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +17,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-That is my initial assumption, but I only want to make sure that vgscan
-_will_ in fact work they way it seems it should and that the private
-region of all volumes or groups will be able to be read and recovered.
+Yes, the lvm module is on the initrd.
+Yes, the module is being loaded.
 
---=20
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com
+As I said, This works just fine if I am not using devfs.
 
-On Fri, 25 May 2001, Ragnar Kj=EF=BF=BDrstad wrote:
+Steve Wray wrote:
 
-> On Fri, May 25, 2001 at 05:09:08PM +0200, Stephan Austermuehle wrote:
-> > On Fri, May 25, 2001 at 09:47:34AM -0500, Austin Gonyou wrote:
-> > > I don't think I'm clear on your statement. As far as I know, which is=
- a
-> > > lot about EMC, you can definitely plug disks online. Having Linux see
-> > > them? Not necessarily so, but I believe the polling interval for the =
-Fibre
-> > > driver will take care of that.
+> > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> > Behalf Of Joe Harvell
+> [snip]
+> > When I run with devfs, though, the /dev entries don't ever show up in
+> > /dev when I do a vgscan.  The result is that I am not able to mount the
+> > lvm root filesystem.
 > >
-> > Oh, of course the Symmetrix allows hot plugging of disks and online
-> > mapping of hypers to one or more channels via a Bin upgrade or the
-> > SDR. But at the moment I do not know any way to make Linux recognise
-> > the additional disks without reloading (rebooting) the driver. But
-> > even if there's a way to online detect new disks -- if a vgscan is
-> > necessary to tell the Linux LVM about where its VGs have gone it isn't
-> > a very smart solution because it often requires application down time.
+> >
+> >    * Does the fact that I have lvm compiled as a module have anything to
+> >      do with this?
 >
-> I believe if you write things to /proc/scsi/scsi to make linux detect
-> new devices, they will be added _after_ the existing ones. The order
-> will not be messed up until next reboot, and then vgscan will take care
-> of it. Someone please correct me if I'm wrong :)
+> uh huh. Unless;
+> 1. the lvm module is on the initrd
+> and
+> 2. the initrd loads this module
 >
+> the lvm module will be on a logical volume which can't be mounted
+> because the kernel doesn't know how to...
 >
->
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
