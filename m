@@ -1,10 +1,13 @@
+Received: from o.ww.redhat.com (vpn50-5.rdu.redhat.com [172.16.50.5])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i1DEcmi26446
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:38:48 -0500
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Volume groups on SAN storage
-Message-ID: <20040213142829.GA10943@redhat.com>
-References: <402CD9D6.5CAAA796@gmx.net>
+Subject: Re: [linux-lvm] LVM Problems :)
+Message-ID: <20040213143846.GB10943@redhat.com>
+References: <402CD9E4.8070402@demonlord.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <402CD9D6.5CAAA796@gmx.net>
+In-Reply-To: <402CD9E4.8070402@demonlord.de>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -16,76 +19,113 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 13 09:28:01 2004
+Date: Fri Feb 13 09:38:00 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
-Cc: hjm@redhat.com
 
-Thomas,
+Christian,
 
-sounds odd that your storage system exposes more than one device
-to access the same data.
+the size of your filesystem and logical volume differs already.
+That's why e2fsadm fails.
+Did you eventually run resize2fs in order to shrink the filesystem ?
 
-Anyway: the only way to avoid accesses to SCSI devices you don't want to be used
-by LVM1 is to move their device nodes out of /dev
-(eg, mkdir /dev/.SAV; mv /dev/sdc2 to /dev/.SAV) and rerun vgscan afterwards.
+Your logical volume size is 1091456MB (32MB/PE * 34108 PE) but your
+filesystem size is 963584GB (941GB * 1024MB/GB; check with
+"tune2fs -l" and look for the block count and block size to calculate
+this correctly).
 
-FYI: with LVM2, youd can set up device name filters to avoid accesses
-     to devices.
+In case the result shows, that your filesystem is already smaller than the LV,
+lvreduce the logical volume appropriately.
+
+Use the block count * block size result and round it up to the next PE!
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Fri, Feb 13, 2004 at 03:06:14PM +0100, Thomas Meller wrote:
-> Hello everybody,
+
+
+On Fri, Feb 13, 2004 at 03:06:28PM +0100, Christian Reiss wrote:
+> Greetings!
 > 
-> recently (today) I had a problem.
+> I am trying to dissolve a running LVM, so i am doing
+> the e2fsadm, lvreduce, pvmove thingy. But ever since I
+> removed the first hdd, I am unable to resize the lvm
+> any more. The error can be seen below, with e2fsadm.
+> I also included the vg&lvdisplay commands.
 > 
-> I'm trying to create a HA Cluster for a DCE server.
-> This is difficult work and sometimes very confusing.
+> I am running the LVM1 sources (non-cvs, approx mid last
+> year), as i am unable to run LVM2 (need to downgrade kernel
+> to 2.4.22 (no patch included in lvm2 for 2.4.23)).
+> Also, I am (too dumb/unable) to locate a e2fsadm alike
+> tool for lvm2, as e2fsadm needs the lvm-tab thingy,
+> which lvm2 no longer provides.
 > 
-> My goal is to make it bootable from a SAN.
-> So far I managed to install GRUB and boot the machine. The rootfs and the rest can be
-> mounted.
-> I found, then, that the SCSI-devices inside one of my volume groups were the wrong ones.
+> Any help is greatly appreciated. :)
 > 
-> What is special about that is that the same content on a device can be seen on different
-> SCSI-devices. This is due to some mirroring within the storage sytems. I cannot avoid that.
+> -Christian.
 > 
-> Now, I have a readonly physical volume inside one of my volume groups. I want to insert the
-> writeable mirror and get rid of the readonly.
-> AFAICS this is not possible because I cannot force vgscan to insert a specified SCSI-device.
-> Of course the VGDA is marked "part of VG xxx" and cannot be written anymore. So it cannot be
-> imported nor exported or added to a new VG.
 > 
-> Maybe there is an option anywhere how to scan a particular device. 
+> ::::::::::::::::::
+> ::: vgdisplay ::::
 > 
-> Does anybody know how to trick LVM?
-> Is there a hexeditor to patch the VGDA backups to use different /dev/sdXX devices?
-> And if so, does that help?
+> --- Volume group ---
+> VG Name               share
+> VG Access             read/write
+> VG Status             available/NOT resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                1
+> Open LV               1
+> MAX LV Size           2 TB
+> Max PV                256
+> Cur PV                11
+> Act PV                11
+> VG Size               1.12 TB
+> PE Size               32 MB
+> Total PE              36668
+> Alloc PE / Size       34108 / 1.04 TB
+> Free  PE / Size       2560 / 80 GB
+> VG UUID               PSYbaQ-bl8d-xvHp-6re2-hoKd-9mE5-Wa5Tqz
 > 
-> I'm using redhat 8.0 and I'm bound to that version.
+> :::::::::::::::
+> :: lvdisplay ::
 > 
-> TIA
+> --- Logical volume ---
+> LV Name                /dev/share/data
+> VG Name                share
+> LV Write Access        read/write
+> LV Status              available
+> LV #                   1
+> # open                 1
+> LV Size                1.04 TB
+> Current LE             34108
+> Allocated LE           34108
+> Allocation             next free
+> Read ahead sectors     1024
+> Block device           58:0
 > 
-> Thomas
+> :::::::::::::
+> :: e2fsadm ::
+> 
+> e2fsadm -L-10G /dev/share/data
+> e2fsadm -- logical volume size for "/dev/share/data" invalid
+> 
+> :::::::::::
+> :: df -h ::
+> 
+> Filesystem            Size  Used Avail Use% Mounted on
+> /dev/share/data       941G  910G   32G  97% /share/filebase
+> 
 > 
 > -- 
-> Thomas Meller
-> mailto: thomas.meller@t-systems.ch
-> mailto: thomas.meller@gmx.net
-> ----
-> ...Our continuing mission: To seek out knowledge of C, to explore strange
-> UNIX commands, and to boldly code where no one has had a man page before.
+> Christian Reiss <email@demonlord.de>
+> demonserver.de
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
+> Public Key can be obtained here: http://www.demonlord.de/pgp.txt
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
