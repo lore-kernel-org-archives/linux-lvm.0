@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] How to upgrade old LVM version.
-Message-ID: <20020909125357.B15934@sistina.com>
-References: <3D790636.5010603@lingbrae.com>
+Subject: Re: [linux-lvm] Please Help, vgscan finds too much LEs
+Message-ID: <20020909125734.C15934@sistina.com>
+References: <3D78E549.8408.39D5AA@localhost>
 Mime-Version: 1.0
-In-Reply-To: <3D790636.5010603@lingbrae.com>; from dick@lingbrae.com on Fri, Sep 06, 2002 at 08:47:02PM +0100
+In-Reply-To: <3D78E549.8408.39D5AA@localhost>; from thorsten.pawlak@gmx.net on Fri, Sep 06, 2002 at 05:26:33PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +14,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep  9 06:24:54 2002
+Date: Mon Sep  9 06:26:22 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Sep 06, 2002 at 08:47:02PM +0100, Dick Middleton wrote:
+On Fri, Sep 06, 2002 at 05:26:33PM +0200, T. Pawlak wrote:
 > Hi,
 > 
->     I'm currently running LVM 0.9.1_beta6 on Debian 2.2 with kernel 
-> 2.2.19 and have been trying
-> for some time to upgrade to something more recent.
+> this is the second email for my problem. Unfortunately i haven't got an answer to my 
+> first one. So i'm posting again.
 > 
-> Whenever I try this I find that vgscan from any newer version of LVM 
-> hangs (without
-> error messages) - I'm forced to reboot.  The only evidence I can find is 
-> if I run pvscan.  
-> This reports "different structure size".
+> After i've pvreduce my VG vgscan can't activate it. here is the output:
+> 
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- only found 28926 of 28672 LEs for LV /dev/data/home (0)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of 
+> volume group "data" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+> group
+> 
+> i don't know what i can do, it is very funny problem because 28926 LEs are found of 
+> and only 28672 sems to be needed, where are the 254 LEs from?!?
 
-vgscan coming with a newer LVM version should scan your disks fine.
-Tha fact that it hangs could refer to an empty CDROM or the like scanned
-and a large timeout involved.
+That looks really odd :(
 
-Running "vgscan -d" should find the relevant 'candidate'.
-If so, temporarily inserting a valid CD or removing the /dev/ entry
-could help it.
+Could you send me the "dd bs=1k count=4k" of all PVs tar'ed+bzip2'ed to
+mge@sistina.com and the /etc/lvmconf/data* archives as well, please.
 
 > 
-> I currently have all my filesystem including root running on LVM on top 
-> of software RAID so
-> it's a fairly delicate business mucking about with this.  I'm looking 
-> for  a way to fix the problem
-> other than decanting everything to tape and starting from scratch again.
+> i've made a pvdata -Eva from all 5 PEs, the file is about 1mb of size, so dave 
+> everyones bandwidth i put it here: http://www.pawlak-world.de/pvdata
 > 
-> I do have a separate bootable disc with 2.4 kernel and LVM 1.0 which I 
-> can use as a stepping
-> stone but so far this too hangs as soon as vgscan is run.
+> if more infos of my configuration is needed please conact me!
 > 
-> Any advice would be appreciated.
+> i'm using LVM v1.0.5 with kernel patch (i upgraded from 1.0.3 before i made the 
+> pvreduce)
 > 
-> Dick
+> I hope someone can help me now! It would be very nice if i can reconstruct my data, 
+> although i have a backup, but only of 60gb of the whole 200gb and it would be nice to 
+> access the rest again somehow!
 > 
-> 
-> 
+> bye Thorsten
 > 
 > _______________________________________________
 > linux-lvm mailing list
