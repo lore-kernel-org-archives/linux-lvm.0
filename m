@@ -1,13 +1,13 @@
 Return-Path: <lewis@sistina.com>
-Date: Thu, 19 Apr 2001 14:24:00 -0500
+Date: Thu, 19 Apr 2001 14:26:15 -0500
 From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20010419142400.E10345@sistina.com>
-References: <20010419132927.D10345@sistina.com> <E14qJhd-0007oR-00@the-village.bc.nu>
+Message-ID: <20010419142615.F10345@sistina.com>
+References: <d37l0gvkuf.fsf@lxplus015.cern.ch> <20010419132927.D10345@sistina.com> <d3lmowu2ba.fsf@lxplus015.cern.ch>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tMbDGjvJuJijemkf"
+	protocol="application/pgp-signature"; boundary="RE3pQJLXZi4fr8Xo"
 Content-Disposition: inline
-In-Reply-To: <E14qJhd-0007oR-00@the-village.bc.nu>; from alan@lxorguk.ukuu.org.uk on Thu, Apr 19, 2001 at 08:02:50PM +0100
+In-Reply-To: <d3lmowu2ba.fsf@lxplus015.cern.ch>; from jes@linuxcare.com on Thu, Apr 19, 2001 at 09:17:29PM +0200
 Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,38 +20,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+To: Jes Sorensen <jes@linuxcare.com>
+Cc: linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
 
---tMbDGjvJuJijemkf
+--RE3pQJLXZi4fr8Xo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 19, 2001 at 08:02:50PM +0100, Alan Cox wrote:
-> Well their approach to patches that fix bugs is to reject emails. They've=
- done
-> that to stuff I've reported any many others. So there is a problem. And i=
-ts
-> kind of hard to discuss a problem when you are being moderated out of exi=
-stance.
+On Thu, Apr 19, 2001 at 09:17:29PM +0200, Jes Sorensen wrote:
+> This was tried, trust me. We didn't create this list because someone
+> forgot to respond to a single posting. As we wrote in the announcement
+> there has been too many incidents: At least two people got kicked off
+> the old lvm list for posting comments about the latest release using
+> lower bits in pointers to store data. Other people have posted patches
+> for serious bugs like NULL pointer dereferences and the postings were
+> denied. Another person complained about the behavior and got no
+> response.
 
-Hmm...i guess there is a communication issue here.  It sounds like the
-message that our ML server was sending was misleading.  We were not
-rejecting mail because of content.  The ML server was rejecting it because
-the address was not subscribed.  Our idea was that we don't want spam.=20
-If it's completely unmoderated, then we will get a *lot* of spam.
+What are you talking about???  Got kicked off?  If so, it was not
+intentional, I can assure you.  That would just be stupid.  As far as
+patches being rejected, refer to the e-mail I just sent.
 
-Did anyone bother to e-mail the list admins?  Perhaps it was too difficult
-to figure out who to mail about this, but I know for a fact that Rik van
-Riel and Jens Axboe could post to linux-lvm@sistina.com.  It would have been
-nice if they had mentioned something to us.
+> For modules included in the Linux kernel, an open development forum is
+> a minimum requirement.
 
-> The openlvm list is open to existing LVM hackers too..
+Who asked for this?  Who did you talk to?  I haven't seen anything to this
+effect for months.
 
-True, but it seems silly to duplicate the load if it's not necessary.
-
-Regards,
 --=20
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-379-3951
@@ -65,13 +61,11 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Sometimes I have a difficult time handling myself in social situations.
-I just start scampering around neurotically, frantically jumping all
-over guests. I think it all goes back to when I was raised in the wild
-by miniature schnauzers.
+Over and over I find being redundant is key to success
+in the art of redundancy - Jay Armstrong
 -----End Obligatory Humorous Quote------------------------------------------
 
---tMbDGjvJuJijemkf
+--RE3pQJLXZi4fr8Xo
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -79,9 +73,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE63ztQpE6/iGtdjLERAinvAJ4urN6/tQyEfUB2sCRuwhRJuv7m/gCfXlKP
-tidskjA851qXF8RG/HUK42s=
-=lek6
+iD8DBQE63zvXpE6/iGtdjLERAvKVAJ9AjAJPbNWNgu7jJEBnH+7/vi+0vQCfQQZ8
+5NYr5YmTttzoCzXROyvS5Oc=
+=XakL
 -----END PGP SIGNATURE-----
 
---tMbDGjvJuJijemkf--
+--RE3pQJLXZi4fr8Xo--
