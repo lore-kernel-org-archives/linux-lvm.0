@@ -1,8 +1,13 @@
-Message-ID: <909EA7234316394F80BBB70A85A1EB389609C8@hermes.dimac.net>
-From: "Conny Brunnkvist / dimac.net" <conny@dimac.net>
-Subject: RE: [linux-lvm] success report 2.4.10 + 1.0.1-rc2 + diff
-Date: Mon, 1 Oct 2001 09:43:27 +0200 
-MIME-Version: 1.0
+Date: Mon, 1 Oct 2001 07:58:55 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Problems with 2.4.10 > lvm 1.0
+Message-ID: <20011001075855.A29215@sistina.com>
+References: <909EA7234316394F80BBB70A85A1EB389609BD@hermes.dimac.net> <20010928172320.A4111@dragon.blacknet.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <20010928172320.A4111@dragon.blacknet.de>; from bock@blacknet.de on Fri, Sep 28, 2001 at 05:23:20PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,138 +19,65 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I tried the exact same approach, except having earlier (at v1.0) run
-pvversion and converted to v2 metadata as I was upgrading from 0.9.x betaY.
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But it did NOT work properly for me. Compiles OK, but after a reboot vgscan
-fails:
- ERROR "pv_read_pe(): PV size invalid" can't get data of volume groups "vg0"
-from physical volumes.
+On Fri, Sep 28, 2001 at 05:23:20PM +0200, Goetz Bock wrote:
+>=20
+> On Fri, Sep 28 '01 at 16:46, Conny Brunnkvist / dimac.net wrote:
+> > Making and installing them worked fine. So did the kernel-patch and its
+> > compilation, but i get the following when trying to install or newly
+> > compiled 1.0 module:
+> Are you sure you patched the same kernel you're running?
 
-I really can't afford to loose my vg, so I'm sort of desperate for a
-solution right now. Btw, going back to my old kernel version (2.4.4) didn't
-help, either. 911!
+Yeah, there was a bug in the patch generation scripts that was fixed in
+1.0.1-rc1 i believe.  So what is happening is the patch generation thinks
+you have kernel 2.4.1
 
+> > depmod:	get_hardblocksize
+> >=20
+> > I've read somewhere else in the list-archive that changing the
+> > get_hardblocksize lines to get_hardsect_size could help, but I have
+> There is a 1.0.1rc2 that has fixed this bug, but has a new one with the
+> min/max macros. For 2.4.10 you have to change the min/max macros to
+> min_t/max_t.
 
-> and possibly a couple manual edits to lvm-*.c;
+There will be a 1.0.1-rc3 coming out (hopefully) today that addresses the
+kernel changes in 2.4.10.
 
-"Possibly" - what does that mean? You don't remember?! :)
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-//conny
+Current GPG fingerprint =3D 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD D=
+E95
 
-> -----Original Message-----
-> From: Jim Cromie [mailto:jcromie@divsol.com]
-> Sent: den 28 september 2001 08:15
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] success report 2.4.10 + 1.0.1-rc2 + diff
-> 
-> 
-> fwiw,
-> 
-> Im pleased to report success using linux-2.4.10, LVM-1.0.1-rc2,
-> and this patch: 
-> http://incandescent.mp3revolution.net/lvm/inline_fix.diff
-> on a basically stock RH-7.1 installation.
-> 
-> I made 1 minor patch to /etc/rc.d/rc.sysinit, probably theres a better
-> way..
-> 
-> + # LVM initialization
-> + action "loading LVM:" /sbin/insmod lvm-mod
-> if [ -e /proc/lvm -a -x /sbin/vgchange -a -f /etc/lvmtab ]; then
->         action $"Setting up LVM:" /sbin/vgscan && /sbin/vgchange -a y
-> fi
-> 
-> and possibly a couple manual edits to lvm-*.c;
-> min(z,x,y) -> min(x,y), max() too
-> 
-> so now, bootup works, and shows results as follows
-> 
-> [jimc@groucho jimc]$ df
-> Filesystem           1k-blocks      Used Available Use% Mounted on
-> ...
-> /dev/hdc5              4031656   3762168     64692  99% /home
-> /dev/_vgb/vl_tmp        495844        24    470220   1% /tmp
-> /dev/_vgb/vl_t2        1511856    326156   1108900  23% /mnt/new
-> 
-> [root@groucho /root]# vgdisplay
-> --- Volume group ---
-> VG Name               _vgb
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                255
-> Cur LV                2
-> Open LV               2
-> MAX LV Size           255.99 GB
-> Max PV                255
-> Cur PV                1
-> Act PV                1
-> VG Size               9.36 GB
-> PE Size               4.00 MB
-> Total PE              2397
-> Alloc PE / Size       500 / 1.95 GB
-> Free  PE / Size       1897 / 7.41 GB
-> VG UUID               6w4vI8-x2Qp-rqFg-soa6-eYOF-2Uwp-8sB7z8
-> 
-> [root@groucho /root]# lvdisplay /dev/_vgb/vl_t*
-> --- Logical volume ---
-> LV Name                /dev/_vgb/vl_t2
-> VG Name                _vgb
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                1.46 GB
-> Current LE             375
-> Allocated LE           375
-> Allocation             next free
-> Read ahead sectors     120
-> Block device           58:0
-> 
-> --- Logical volume ---
-> LV Name                /dev/_vgb/vl_tmp
-> VG Name                _vgb
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   2
-> # open                 1
-> LV Size                500.00 MB
-> Current LE             125
-> Allocated LE           125
-> Allocation             next free
-> Read ahead sectors     120
-> Block device           58:1
-> 
-> 
-> 
-> the only hitch I had configing was using lvrename, vgrename;
-> IIRC. I had to mv the /dev/_vgb special files myself,
-> causing a couple of fstab-umount-reboot-to-single
-> sessions to clean up errs.  I used the 2nd cmd-form,
-> "vgrename vg02 my_volume_group", if that matters.
-> 
-> 
-> Perhaps a FAQ entry explaining what I may have mis-understood:
-> 
-> {lv,vg} rename dont change names of /dev/ special-files,
-> nor corresponding entries in /etc/fstab.  You must manually 
-> edit your mount
-> points.
-> 
-> 
-> looking forward, I plan to fix the problem with 99% on /home
-> 
-> thanks for great software.
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+-----Begin Obligatory Humorous Quote----------------------------------------
+Sometimes I have a difficult time handling myself in social situations.
+I just start scampering around neurotically, frantically jumping all
+over guests. I think it all goes back to when I was raised in the wild
+by miniature schnauzers.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7uGiPb2fpvETN3pURAo2TAKC0KYdOhum1L7yLEZOlma1j8pup3gCePXl4
+JbO8CmshYgZLX32RKxdGRao=
+=wYRW
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
