@@ -1,58 +1,60 @@
-Date: Fri, 25 Aug 2000 00:46:13 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Date: Fri, 25 Aug 2000 20:39:44 -0400
+From: Peter Green <pcg@gospelcom.net>
 Subject: Re: [linux-lvm] LVM and sw RAID1
-Message-ID: <20000825004612.A16428@vestdata.no>
-References: <20000824124613.B19952@colombina.comedia.it> <200008241747.e7OHlNd04033@webber.adilger.net> <20000824200438.A32379@colombina.comedia.it>
+Message-ID: <20000825203944.E5159@gospelcom.net>
+References: <20000823162957.B8398@gospelcom.net>
 Mime-Version: 1.0
-In-Reply-To: <20000824200438.A32379@colombina.comedia.it>; from Luca Berra on Thu, Aug 24, 2000 at 08:04:38PM +0200
+Content-Disposition: inline
+In-Reply-To: <20000823162957.B8398@gospelcom.net>; from pcg@gospelcom.net on Wed, Aug 23, 2000 at 04:29:57PM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Luca Berra <bluca@comedia.it>, Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Thu, Aug 24, 2000 at 08:04:38PM +0200, Luca Berra wrote:
-> > > fixed that and pvmoved everything onto my lvm+raid5 (fixing another bug
-> > > in the process).  Well, i discovered that reiserfs + LVM + raid DOES NOT
-> > > WORK, it actually filled 95% of my files with zeroes :)
-> > 
-> > No journalling filesystem will work properly with RAID 5 - not reiserfs
-> > and not ext3.  You need to stick with a non-journalling filesystem, or
-> > use RAID1.  It may be that this is supposed to be fixed in 2.4, but I'm
-> > not 100% sure...
-> > 
-> I probably dinna specify but it i am running 2.4.0-test7pre5
-> so i can confirm reiserfs not working on raid+lvm with 2.4
+also sprach pcg:
+> I am having a really difficult time being able to get LVM to recognize my
+> /dev/md[012] arrays. The system:
+> 
+>   (pcg@dmna) ~> uname -a
+>   Linux dmna 2.4.0-0.21 #2 Wed Aug 23 11:46:12 EDT 2000 i686 unknown
+>   
+>   (pcg@dmna) ~> cat /proc/lvm
+>   LVM driver version 0.8final  (15/02/2000)
+> 
+>   Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
+>   Global: 143 bytes malloced   IOP version: 6   4:01:56 active
+>   
+>   (pcg@dmna) ~> cat /proc/mdstat 
+>   Personalities : [linear] [raid0] [raid1] [raid5] 
+>   read_ahead 1024 sectors
+>   md2 : active raid1 sdg1[1] sdd1[0]
+>         17920384 blocks [2/2] [UU]
+> 	      
+>   md1 : active raid1 sdf1[1] sdc1[0]
+>         35840896 blocks [2/2] [UU]
+> 
+>   md0 : active raid1 sde1[1] sdb1[0]
+>         17936448 blocks [2/2] [UU]
+> 
+> (User-space tools are 0.8final+0.8final-2 patch. /dev/sda is on a BusLogic
+> BT-958, while sd[b-g] are on two separate channels of an Adaptec 39160.)
 
-If you have more information, please send a bugrapport to
-reiserfs@devlinux.com.
+Just as a followup, with the exact same system BUT using the SuSE lvm tools
+(lvm-0.8-70; see rpmfind.net), everything seems to work. (The Mandrake RPM
+at rpmfind did *not* work.)
 
-> AFAIR the problem with journaling and raid was due to raid's usage
-> of the buffer cache during recnstruction, there was no reconstrucion
-> happening on my system. i will also try reiserfs on raid without
-> lvm, i cannot try ext3 since there isn't any patch for 2.4
+I would be interested in seeing what SuSE has done to the source for the
+tools. I'm sure the developers here ought to be as well. :)
 
-For linux 2.2 it will not work with raid5 at all, the reconstruction
-issue is just for mirroring....I think.
+Anyway, thanks for all the help. Anyone who is running into similar problems
+might consider fetching the RPM I've mentioned above; you'll be glad you
+did!
 
-From Chris Mason on reiserfs@devlinux.com:
-
-> reiserfs and raid:
-> The FAQ should state that hardware RAID is not a problem
-> 2.2: I found a mail saying that concatening, striping and mirroring
->      are ok, but raid5 has issues, but I also seem to remember reading
->      there were issues with reconstructing mirroring?
-
-Correct, any hardware raid is safe.  For software, striping is ok.
-Mirroring is ok, but you *cannot* use the online mirror rebuild.
-software raid5 is unsafe.  lvm is safe.
-
-> 2.4: Is everything working here? both lvm and md?
->
-Yes, software raid in 2.4 is working properly, and so is lvm.
-
-
+/pg
 -- 
-Ragnar Kjorstad
-Torque Systems / Big Storage
+Peter Green : Gospel Communications Network, SysAdmin : pcg@gospelcom.net
+---
+I'd rather be rich than stupid.
+ (Jack Handey)
