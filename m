@@ -1,10 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103190633.f2J6XxU01283@webber.adilger.int>
-Subject: Re: [linux-lvm] Recovering PV's VG metadata
-In-Reply-To: <3AB49365.2020606@inetnow.net> from HopNet at "Mar 18, 2001 07:52:21
- pm"
-Date: Sun, 18 Mar 2001 23:33:59 -0700 (MST)
+Return-Path: <dlt@dataventures.com>
+Message-ID: <3AB5AFC0.5C4A58C9@dataventures.com>
+Date: Mon, 19 Mar 2001 00:05:36 -0700
+From: Donald Thompson <dlt@dataventures.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Apparent performance degradation for each PV with 
+ striping
+References: <3AB59501.FF6ED9F3@dataventures.com> <15029.41256.426234.309500@nv.192.168.71.6>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,133 +18,78 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-"Hopnet" writes:
->  OS disk got trashed & system wasn't bootable.
->  Reinstalled OS.  I think at this point, LILO, thinking hda was the
->boot drive, overwrote some of the VG data.
->  no LVMtab or conf files to vgcfgrestore from. :-(
+Actually, I've learned a lot from Eric's comments. After looking
+into hdparm and a couple other things, it looks like the kernel settings
+as well as hdparm settings are set to about the worst possible (ie. safest)
+I could have. Probably most importantly, they aren't using DMA, and
+I'll need to recompile the kernel to get it to do so.
+
+I actually was thinking seriously about getting a 3ware card when I
+started this machine, but I wussed out and just went with the two onboard
+IDE interfaces. Its definately a cheaper option than replacing or adding
+SCSI drives to the system.
+
+-Don
+
+lvm@winux.com wrote:
+
+> Donald Thompson writes:
+> > I notice during the dd operation that my system CPU state is 90% or
+> > more.  So I think I just answered my own question, I'm CPU bound.
+> > Moving on, is there any known ways to improve my performance off
+> > each PV with this type of hardware setup?
+> > ...
+> > Should I expect that I won't see the performance drop on individual PV's
+> > with striping on SCSI drives? I originally setup this system with no
+> > intentions of it being a high performance file server, until a few
+> > people I work with decided they wanted to use it for a database machine.
+> > So I'm not afraid to spend a couple grand to get some faster disks in it
+> > if thats the only thing
+> > thats gonna help me.
 >
->Now:
->  pvdata sees partial data on hda, and everything on hdc
+> Hi Donald,
 >
->What I'm looking for:
->  Is there anyway to take common data from hdc and write it back to
->hda.  What tools are available for sector editing (LVM or general)?
+> I think what you're seeing is to be expected from vanilla IDE.
+> Not only is it not Linux LVM's fault but Linux LVM can't fix it.
+> IDE controllers are not able to do the things more sophisicated
+> controllers and host adapters do to increase performance in a
+> multi-spindle environment.  Fortunately, there is a solution that's
+> fast, cheap, and reliable.
 >
->zeus:~ # pvdata -a /dev/hda
->--- Physical volume ---
->PV Name
->VG Name
->ΦR
->PV Size               12.14 GB / NOT usable 3.21 MB [LVM: 16.09 MB]
->PV#                   0
->PV Status             NOT available
->Allocatable           yes (but full)
->Cur LV                1
->PE Size (KByte)       4096
->Total PE              3106
->Free PE               0
->Allocated PE          3106
+> I suggest that, rather than replacing the drives with
+> expensive SCSI drives and an expensive SCSI host adapter,
+> you buy an Escalade Switch from http://www.3ware.com/ and
+> use your existing drives.
 >
->Segmentation fault
->zeus:~ # pvdata -N -P /dev/hdc
->--- Physical volume ---
->PV Name               /dev/hdc
->VG Name               vg00
->PV Size               12.14 GB / NOT usable 3.24 MB [LVM: 242 KB]
->PV#                   2
->PV Status             available
->Allocatable           yes (but full)
->Cur LV                1
->PE Size (KByte)       4096
->Total PE              3106
->Free PE               0
->Allocated PE          3106
-
-"pvdata -PP" will show you "pe_on_disk.base" and "pe_on_disk.size", e.g.
-
-# pvdata -PP
-...
-pe_on_disk.base          184320
-pe_on_disk.size          6385664
-
-add numbers "(184320 + 6385664) / 1024 = 6416 kB".  This is the start
-of the on-disk data for your LV, and if valid it should be < 1 PE in
-size, normally 4MB (my system has 16MB PE size).  You could use "dd"
-to back up from disk, for example:
-
-dd if=/dev/hda bs=1k of=/dev/tape skip=6416
-dd if=/dev/hdc bs=1k of=/dev/tape skip=6416
-
-YOU SHOULD DO THIS BEFORE YOU DO ANYTHING ELSE, SO YOUR DATA IS SAFE.
-
-If you have a disk or LV that is > 24GB in size, you could even dump the
-whole LV into this backup disk, using:
-
-dd if=/dev/hda bs=1k of=/dev/vgbackup/lvbackup skip=6416
-dd if=/dev/hdc bs=1k of=/dev/vgbackup/lvbackup skip=6416 seek=(hda size)
-
-The seek in the second "dd" will be the number of blocks written from the
-first "dd" step.
-
-
-You have two things you can try:
-
-If it is LILO that wrote to the disk, it may only be the first 512 bytes
-boot sector.  This would only overwrite the PV data on the disk, and not
-any of the VG/LV info.  If your disks are both the same, you _could_ try:
-
-dd if=/dev/hdc of=/dev/hda bs=512 count=1
-
-which will copy the PV info over to /dev/hda, but it will be slightly wrong.
-You then would need to fix the pv_number to be 0x00000001 (at byte offset
-0x1b0), and the pv_uuid, 32 bytes at byte offset 2C.  You should be able
-to get the correct UUID with:
-
-pvdata -PU /dev/hdc
-
-to list UUID of /dev/hdc, and UUID of both disks.  To write the correct
-data to /dev/hda, you should be able to do this with (I'm assuming there
-is "0x00000001" at offset 436, but you can use "od" to find this somewhere
-else on the disk):
-
-dd if=/dev/hdc of=/dev/hda bs=1 skip=436 seek=432 count=4
-dd if=/dev/hdc of=/dev/hda bs=1 skip=<pv_uuidlist_on_disk.base> seek=44 count=32
-
-This should allow you to use the disks as before.  If not, you can try the
-second method, which is to create totally new PV/VG/LV data on the disk,
-and then hope that it all works.  It will only work correctly if the first
-PV was totally full before the second one was started, otherwise it is NOT
-going to work.  IF IT DOESN'T WORK, IT WILL TOTALLY RUIN YOUR LVM CONFIG!!!
-
-dd if=/dev/zero of=/dev/hda bs=1k count=1
-dd if=/dev/zero of=/dev/hdc bs=1k count=1
-
-pvcreate /dev/hda /dev/hdc
-vgcreate  vgrecover /dev/hda /dev/hdc
-lvcreate -n lvrecover -l 6212 vgrecover
-
-You may then be able to mount /dev/vgrecover/lvrecover and access your
-data.  If not, there is nothing else easy to do.  Try working with the
-data you copied in step 1 above.
-
-Cheers, Andreas
-
-PS - Again and again, people have problems with LVM, and they HAVE NO BACKUP.
-     Why, oh why, do people not make backups of their data?  It may be LVM
-     that is causing some problems (obviously this is the list to report
-     them), but your disk may also fail, you may run "rm -r" in the wrong
-     place, you may get a lightening strike near your house, your house
-     burns down, etc.  PEOPLE SHOULD MAKE BACKUPS!!!  Give a copy to your
-     friend some time (especially one that doesn't know anything about
-     Linux), so that they are safe in case of a house fire/flood/etc.  It
-     WILL happen to YOU sooner or later, don't kid yourself.
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> The Escalade is a hybrid controller of sorts.  It presents itself as a
+> SCSI host adapter to the host's PCI bus and as multiple (up to 8)
+> independent IDE controllers to the IDE drives.  It's essentially a
+> cross-bar switch that lets multiple IDE drives act independently of
+> one another.  They use some clever controller software to get a BETTER
+> than 2x boost in read-performance when you mirror drives.
+>
+> It has the additional advantage of providing RAID for the attached drives.
+> It supports RAID 0, 1, 10, and 5, so you get all those benefits
+> without imposing ANY additional CPU load.  The controller is actually
+> quite a gem and is very reasonably priced.  I've been using them on
+> all of my systems where performance and/or reliability are critical.
+>
+> The Escalade driver is supported in the standard 2.2.x and 2.4.x Linux kernels.
+>
+> In short, let 3ware's hardware handle the striping/RAID and use Linux LVM
+> to manage the volume.  It's a powerful combination.
+>
+> Larry
+>
+> DISCLAIMER:  These statements reflect my personal opinions... bla bla bla.
+> I don't have any affiliation with 3ware or anyone else in this business.
+>
+> CLAIMER:  3ware makes good stuff that works very well.
+> It solved my problems and it could solve yours.
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
