@@ -1,7 +1,7 @@
-Message-ID: <20040127231104.52100.qmail@web80402.mail.yahoo.com>
-From: Chris Conn <cmcgoat@yahoo.com>
+Message-ID: <20040128163917.13042.qmail@web21402.mail.yahoo.com>
+From: duane no-name <duanexbox@yahoo.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] multi-disk vg?
+Subject: [linux-lvm] How To Question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,43 +12,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 28 10:48:02 2004
+Date: Wed Jan 28 11:41:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I've finally finished setting up my Slackware 9.1 box
-with LVM and ReiserFS, here's what I've got:
+Perhaps this is more obvious to others - but it is not
+obvious to me after reading the howtos and docs.
 
-disk 0 (one partition)
- 
-   /dev/mainvg/root          /
-   (and swap space)
+The Docs - common tasks section has part of my
+answers, but it lacks what I believe to be a commbined
+two step example.
 
-disk 1 (two partitions)
+Right now, I have a single /var/foo implimented as an
+LVM vol using reiserfs. It turns out - I allocated too
+much space to it.
 
-   /dev/rootvg/usr           /usr
-   /dev/rootvg/var           /var
-   /dev/rootvg/tmp           /tmp
+I now need a /var/bar.
 
-   /dev/datavg/home          /home
-   /dev/datavg/data          /data
+I'd like to re-allocate or shrink /var/foo by say 20G,
+and give it to /var/bar.
 
-I set up rootvg and datavg first and then last night
-I followed the LVM How-To and converted the setup the
-mainvg VG with root. All works well.
+The "How To" do this two step process is not very
+clear in the docs.
 
-Now I'm wondering if I can merge mainvg and rootvg
-as one VG though they're on two seperate disks. Is this
-possible? And if so is it a good idea? 
+I'm quite able to shrink and expand /var/foo - at
+will. My confusion is - now that I have shrunk it -
+reallocate the space I just got back?
 
-BTW I left /etc in / because I had trouble mounting it
-as a seperate filesystem with /etc/fstab.
+What am i not reading correctly?
 
-Thanks for any advice, 
+Thanks.
 
-=====
-Chris Conn   
-cmcgoat@swbell.net   http://storm.cadcam.iupui.edu/~cmcgoat
-Austin, TX
+
+__________________________________
+Do you Yahoo!?
+Yahoo! SiteBuilder - Free web site building tool. Try it!
+http://webhosting.yahoo.com/ps/sb/
