@@ -1,42 +1,36 @@
-Message-ID: <B14BF8753E65D211ABCA00104B301EF5015BAF65@cairn-gorm.cragtech.com>
-From: Rochelle Lakey <RLakey@Connex.com>
-Subject: [linux-lvm] LVM and HW Raid
-Date: Thu, 12 Oct 2000 13:20:54 -0700
-MIME-Version: 1.0
+Date: Thu, 12 Oct 2000 22:43:38 +0200
+From: Nils Juergens <nils@muon.de>
+Subject: Re: [linux-lvm] lv inactive after reboot
+Message-ID: <20001012224338.A17900@muon.de>
+References: <Pine.LNX.4.21.0010051925000.1212-100000@rossi.itg.ie> <Pine.LNX.4.21.0010100923370.31996-100000@rossi.itg.ie>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.21.0010100923370.31996-100000@rossi.itg.ie>; from paulj@itg.ie on Tue, Oct 10, 2000 at 09:35:22AM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "LVM Mailing List (E-mail)" <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Hello All,
-My original message still has not been posted.
-I'm resending just in case.
-Thank you,
-Rochelle
+On Tue, 10.10.00, Paul Jakma <paulj@itg.ie> wrote:
+> i still can not get this LV to come up as active after a vgscan -ay. I
+> have to activate it manually with lvchange.
+> 
+> is this a known problem? is there a fix?
 
------Original Message-----
-From: Rochelle Lakey 
-Sent: Wednesday, October 11, 2000 12:06 PM
-To: LVM Mailing List (E-mail)
-Subject: Help: LVM and HW Raid
+Isn't this default behavior? My vgscan showns no sign of -a or -y, these
+are vgchange options.
 
+This is what i do in my startup-scripts:
 
-Hello,
+/sbin/vgscan
+/sbin/vgchange -a y
 
-I am having trouble using HW RAID implementation with LVM.
-Using steps in the INSTALL file, I have added the necessary
-commands to the startup and halt scripts.  The problem is
-upon system startup (after issuing shutdown or reboot) the 
-volume groups and logical volumes are in a "bad" state.  I have
-to use vgcfgrestore in order to get them recognized and activated
-again.  Note: My volume groups, logical volumes and data are 
-successfully deactivated and reactived when running a system 
-without HW RAID implementation.
+cu,
 
-My question is there another command or anything I should be aware
-of so that this does not happen during system shutdown or reboot?
+Nils
 
-Thanks,
-Rochelle Lakey
+-- 
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >  If we all work hard, we can turn this company  <
+ >      around 360 degrees -- gruntbert(LOTD)      <
