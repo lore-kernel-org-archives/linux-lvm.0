@@ -1,52 +1,76 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Message-Id: <200008021755.e72Ht2D29237@webber.adilger.net>
-Subject: Re: [linux-lvm] Generic resize tool
-In-Reply-To: <20000802120457.E28254@pinguin.conetix.de> "from Jens Benecke at
- Aug 2, 2000 12:04:57 pm"
-Date: Wed, 2 Aug 2000 11:55:02 -0600 (MDT)
-MIME-Version: 1.0
+Date: Wed, 2 Aug 2000 13:55:02 -0700
+From: Charles Duffy <cduffy@mvista.com>
+Subject: [linux-lvm] 0.8final crash in lvmdiskscan
+Message-ID: <20000802135502.B4447@mvista.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jens Benecke <jens@pinguin.conetix.de>
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Jens writes:
-> One suggestion, also for Heinz: PLEASE put a notice into "lvresize" that
-> you might actually be better off with e2fsadm, if the lv is formatted ext2.
-> So that you use
-> 
-> 	pvcreate
-> 	vgextend
-> 	e2fsadm
-> 
-> instead of
-> 
-> 	pvcreate
-> 	vgextend
-> 	lvextend
-> 
-> and then being stuck with not knowing how (and how much) to resize the FS
-> within.
 
-Actually, the resize tools for ext2 (resize2fs, ext2resize, ext2online) will
-all figure out the size of the device, so if you are resizing to the
-full device size (the most common case) then you don't need to specify
-the device size at all.
+--24zk1gE8NUlDmwG9
+Content-Type: multipart/mixed; boundary="h31gzZEtNLTqOjlF"
+Content-Disposition: inline
 
-> Another question: If I shrink a LV, how do I know what PVs in the VG get
-> freed? i.e. I have  one big LV in VG00 = (hda1 hdb2 hdc1)  and I want to
-> remove hdb2 out of the VG. 
 
-They are always taken from the end of the LV.  There is no other way to do
-it.  What you would need to do is shrink the lv(s) enough to have free
-PEs equal to the number of PEs on hdb2.  Then migrate any in-use PEs on
-hdb2 to the other PVs using pvmove.
+--h31gzZEtNLTqOjlF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+As per the subject, I've been experiencing a segfault in lvmdiskscan.
+The following gdb log will hopefully be useful in debugging.
+
+--h31gzZEtNLTqOjlF
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="lvmdiskscan_gdb_session.bz2"
+Content-Transfer-Encoding: base64
+
+QlpoOTFBWSZTWYcQsUMABeNfgHDyXGf//7/n37q/7//6YAZ/eabiGhPsyKroGgANFR6QDQ0D
+QNAAADTQ0AAAAAZQhpT9GlPwqYxRoAAAABoAAA0BxkaZMTQZMmE0yBkNAaA0yaGAE0BhISQk
+mm9TRDagaepoxGgBoAaDEAA0eoMqnqMgAAA0AAAAAAADR6gBJEBE9IAJpoaE0Mmk9JgaQDR6
+TEBpk0awXh9iNoWXc3txPtrv377t/JvN90daEgP6i4mZEIW+t/HrPax229Pp24raNnlUR6Mc
+XX68Hi1+XCmgxQSPI9UqLNa7DKS5IG3hcgpBgyK4LihsqiqwydZ/F6gvtVCaIkopYMFDICSo
+OYbhIgoccdLZgwZwQlFTNsOZzuadyXFF+/sHJcNvIRBBDgjNRUkCneFRtBaOwirMY3ZCpUGR
+b6ao+95lMog8uwrpTSkheYZXRkdO3FGYTI9D3482ZWEhWjsy/JXfBZBBtxVfARMy4Esv3Yrg
+MKXwBRbD7pa1P5iTUBIqVfJoeqbQA4qYXcZ+kx89dC7DHBhTnVjAAADO+lkbwiBCW5TlokmH
+OGmSyoENCKhj2rsi4ggKc0LcktZAyuEmRts78Kbtfz4j6mBkIKZGx97lAy5YkDIfSAlpOxJw
+TIGDr0mL1HbzHUg5MPjV6s8W/tutl5DMDj4ziEkJkAl28nogbNB2c6nt3yDDAu8zLwyDgy4F
+DQ58wqY/2j5ImCRIPOhQsc+gHCmC5poD690CGeEjhJvsXVTLxxTvDTG0X7CpI7LWmYcNkjPc
+YbiPQMDXkVmgOzajuSpaJiq5IQFLFTKIC4K+CggXUIFh0OIFmBU6MJ4EgFUF18JVcJ6zgCGW
+EAKBHDOuDnibRri7CkiGjAkbhYqHzjw1w0owWmLVMgeXpQg0q5thVzxfxncv+FkhC5MiWwyE
+zym3vGphgCM3EcchIIhIIhNKzbTtaSVVNpAxsbZUhIVvfNJC1UIWQ2k/6xIX011ASC2wlXz2
+XJBBSlQKj4HC5xoEkggukBmGCEu2L633IQtDkRIWQSFoEhenF6TCdwYrIQvlnJYXPGZkhGlI
+QIjjSGB7iVkIWAaCQ9xyh5/CxwehaxiZeQ7YI3BIX7AggN0Qxbot4sJNtgio2gYxDELFK5Ji
+BlgGkMoTDxgMZ5gvIe8h4kkLcCL63MWtNu6pFQQKIoLuIjkj3O5ED4hUYFGPaOiUsmO1IAqc
+pw9qP3+y3G3r1kNLB2ERe3gBKjCF7/YLr3XTwagGCSExArhAuGyKE9QDulxnKCDY2M1T1EoN
+YI3AoZkh7AjKEcVgAyoWcdJjjMXDO68EomJDGNBSHkTz0Z85oMRKwSCIDBqk+LmfmjntSVCo
+s9HCMrzVEUQiRcSJDCAUD9CBReoAUWVvAfmTthHYiAuVxsIqe5IE2Q55JC8VUhLL3kT5A3kY
+iO8jltE59AOipSZMVpHIghyhUU7cbf7iT37Us2h0CNBfBBoshOCUjvuhIG3NCYggUIVrmb3f
+mrcrB2b6Qv2HE3QfBpqCLX4+/9u6ylIAcmkhUxXDNAAmN1cUhBKDcQagSLwVCGVB6doDshMy
+EyTAGa0AHHGJT3HEcs7rFVPjamVpAAo9aZ8VF3gAUBhQRe0lWzdT0otJy8bavlQgr7dRILAz
+w5gIhSrFzlxBkQQ0RQ4JXSCcBTTzHbSvRXNNXdWqy2mENkzABzY4OwYRgercQ1tI1cWE/Xcl
+jNWwvGEMVMo6M4ZCRBAVAkO0mDAmCXxZAo41jNhBqki0d2TL4CiEFS1Ay86ykQH9TaKCMbBV
+hK4znDBswHOUIsUaW5mvDpLyosgTh47zpIbRMsSR9GQ/Q5kg7Lo4wdghLlHz4DoGqOgdWNMi
+ciRnaaeD6JoQVGSbFXmu45NcAKZqaN5EScFDW2TaYyyDcWKbY83rI/9jwgYO4n5teq2pCRHI
+gHQuY0XUEgTF28ZcnC/EMCRt/USxdscAzX23aNEZTDbJ69g+0NelBI/8XckU4UJCHELFDA==
+
+--h31gzZEtNLTqOjlF--
+
+--24zk1gE8NUlDmwG9
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE5iIqmr/O29KUQmJURAmOLAJ4sJhEPX9YXPbTbmnKsTy04TwUQ/QCdEb1+
+FjLJZR3BGHGDA5RBENdhcAQ=
+=LvUI
+-----END PGP SIGNATURE-----
+
+--24zk1gE8NUlDmwG9--
