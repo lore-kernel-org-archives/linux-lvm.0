@@ -1,12 +1,10 @@
-Return-Path: <mason@suse.com>
-Date: Wed, 21 Feb 2001 14:17:27 -0500
-From: Chris Mason <mason@suse.com>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102212323.f1LNNqH14620@webber.adilger.net>
 Subject: Re: [linux-lvm] snapshot of Reiserfs
-Message-ID: <2320640000.982783047@tiny>
-In-Reply-To: <200102211855.f1LItGq04889@webber.adilger.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+In-Reply-To: <2320640000.982783047@tiny> from Chris Mason at "Feb 21, 2001 02:17:27
+ pm"
+Date: Wed, 21 Feb 2001 16:23:51 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,80 +16,60 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: mason@suse.com
 
-
-On Wednesday, February 21, 2001 11:55:14 AM -0700 Andreas Dilger
-<adilger@turbolinux.com> wrote:
-
->> > Given that the VFS support for the *unlockfs methods is included in
->> > 2.4.1, this should probably become something like:
->> > 
->> > /* lvm_do_lv_create calls fsync_dev_lockfs()/unlockfs() */
->> > #if LINUX_KERNEL_VERSION >= KERNEL_VERSION(2,4,1)
->> > #define     LVM_VFS_ENHANCEMENT
->> > #else
->> > /* Need to apply a kernel patch to add lockfs/unlockfs VFS methods */
->> > /* #define  LVM_VFS_ENHANCEMENT */
->> > #endif
->> > 
->> 
->> I like this idea.
+Chris Mason writes:
+> Hmmm, fsync_dev_lockfs should look like this:
 > 
-> Note that I thought the fsync_dev_lockfs() code was added to 2.4.1 when
-> reiserfs was added.  However, it appears that only the *lockfs pointers
-> were added to the super_operations, and the actual code that uses them
-> was NOT added.  This means we can't do the above until fsync_dev_lockfs()
-> is actually there.
+> +int fsync_dev_lockfs(kdev_t dev)
+> +{
+> +	sync_buffers(dev, 0);
+> +
+> +	lock_kernel();
+> +	sync_supers(dev);
+>  	^^^^^^^^^^^^^^^^^^
 > 
-Yes, it would have been smarter for me to push for the entire lockfs patch
-a long time ago.
+> +	/* note, the FS might need to start transactions to 
+> +	** sync the inodes, or the quota, no locking until
+> +	** after these are done
+> +	*/
+> +	sync_inodes(dev);          
+> +	DQUOT_SYNC(dev);
+> +	/* if inodes or quotas could be dirtied during the
+> +	** sync_supers_lockfs call, the FS is responsible for getting
+> +	** them on disk, without deadlocking against the lock
+> +	*/
+> +	sync_supers_lockfs(dev) ;
+> +	unlock_kernel();
+> +
+> +	return sync_buffers(dev, 1) ;
+> +}
 
->> > Also, if the sync_supers_lockfs() method is changed to call
->> > write_super() if write_super_lockfs() doesn't exist, like:
->> 
->> The fsync_dev_lockfs call does this for us, if there is no
->> write_super_lockfs provided, fsync_dev_lockfs is effectively the same as
->> calling fsync_dev.
-> 
-> Except that fsync_dev() calls the write_super() method, and
-> fsync_dev_lockfs() only calls the write_super_lockfs() method if it
-> exists - it does not call write_super() if write_super_lockfs() does not
-> exist.  If it were changed as I suggest, then the two would be the same.
+Some overhead in calling sync_supers() and sync_supers_lockfs() because
+they do both do the same list traversal.  Granted, on most systems the
+total number of superblocks is small...  Last time I had a look at this,
+I suggested that the sync_supers_lockfs() call be changed, namely that
+it is illegal to call it with a zero "dev" parameter, otherwise you
+will lock all filesystems and that may be a bad thing.  This simplifies
+the code a bit.  If we also have it call write_super() if write_super_lockfs()
+is missing, it is better yet.
 
-Hmmm, fsync_dev_lockfs should look like this:
+> It is amost exactly a cut n' paste of fsync_dev, with an extra call to
+> sync_supers_lockfs.  It should do what fsync_dev does, even when there are
+> no sync_super_lockfs methods are provided.  The only reason I didn't just
+> call fsync_dev from fsync_dev_lockfs is because I wanted the sync_buffers
+> call to happen after the lockfs call ;-)
 
-+int fsync_dev_lockfs(kdev_t dev)
-+{
-+	sync_buffers(dev, 0);
-+
-+	lock_kernel();
-+	sync_supers(dev);
+And the reason for this is?  The first call to sync_buffers doesn't wait
+on completion (unlike the second sync_buffers call), so there is no
+guarantee that they are all written out.
 
-        ^^^^^^^^^^^^^^^^^^
-
-+	/* note, the FS might need to start transactions to 
-+	** sync the inodes, or the quota, no locking until
-+	** after these are done
-+	*/
-+	sync_inodes(dev);          
-+	DQUOT_SYNC(dev);
-+	/* if inodes or quotas could be dirtied during the
-+	** sync_supers_lockfs call, the FS is responsible for getting
-+	** them on disk, without deadlocking against the lock
-+	*/
-+	sync_supers_lockfs(dev) ;
-+	unlock_kernel();
-+
-+	return sync_buffers(dev, 1) ;
-+}
-+
-
-It is amost exactly a cut n' paste of fsync_dev, with an extra call to
-sync_supers_lockfs.  It should do what fsync_dev does, even when there are
-no sync_super_lockfs methods are provided.  The only reason I didn't just
-call fsync_dev from fsync_dev_lockfs is because I wanted the sync_buffers
-call to happen after the lockfs call ;-)
-
--chris
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
