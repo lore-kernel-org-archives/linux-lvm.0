@@ -1,11 +1,10 @@
-Return-Path: <glenn@gecpalau.com>
-Message-ID: <3AF092F1.4196DB9B@gecpalau.com>
-Date: Thu, 03 May 2001 08:06:25 +0900
-From: Glenn Shannon <glenn@gecpalau.com>
+Return-Path: <noc@industrysuppliers.com>
+Message-ID: <25B9BEF7071AD511ADF000D0B74753B0018DAE@MAIL>
+From: Lionel COTTIN <noc@industrysuppliers.com>
+Subject: RE: [linux-lvm] Problems compiling 2.4.4
+Date: Thu, 3 May 2001 01:19:23 +0200 
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problems compiling 2.4.4
-References: <20010502182804.A6768@in-cadcae4.ing.temic.de>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,61 +16,77 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Emanuel Quass wrote:
+Hi,
 
-> Hi,
->
-> I compiled a kernel(2.4.4) with your lvm patch (0.9.1_beta7).
-> At the end of make bzImage an error occours:
->
-> ld -m elf_i386 -T /mnt/kernel/linux/arch/i386/vmlinux.lds -e \
->  stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o \
->  init/main.o init/version.o \
->         --start-group \
->         arch/i386/kernel/kernel.o arch/i386/mm/mm.o \
-> kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
->         drivers/block/block.o drivers/char/char.o \
-> drivers/misc/misc.o drivers/net/net.o drivers/media/media.o \
-> drivers/ide/idedriver.o drivers/scsi/scsidrv.o \
-> drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o \
-> drivers/md/mddev.o \
->         net/network.o \
->         /mnt/kernel/linux/arch/i386/lib/lib.a \
-> /mnt/kernel/linux/lib/lib.a /mnt/kernel/linux/arch/i386/lib/lib.a \
->         --end-group \
->         -o vmlinux \
-> drivers/md/mddev.o: In function `__update_hardblocksize':
-> drivers/md/mddev.o(.text+0x2316): undefined reference to `get_hardblocksize'
-> drivers/md/mddev.o(.text+0x2352): undefined reference to `get_hardblocksize'
-> make: *** [vmlinux] Error 1
-> Does anybody knwo where this comes from!
->
-> Thanks in advance
->
->         Emanuel
->
-> P.S. Please CC me because I am not in the list.
->
-> --
->
-> ++++++++++++++++++++++++++++++++
-> Emanuel Quass
-> email :  emanuel.quass@temic.com
->
-> In a world without fences and walls,
-> who needs Windows and Gates?
-> ++++++++++++++++++++++++++++++++
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+it seems you have activated the md driver (raid 0...5), which is not =
+LVM
+related....
+try to de-activate it if possible, then try again.
 
-go to your /usr/src/linux directory.....go to drivers/md and edit lvm.c and
-change the two entries of get_hardblocksize with get_hardsect_size
+I have compiled the 2.4.4 kernel with LVM 0.9.1beta7 today without any
+problem.
 
-That should do the trick.
+Good luck ;)
 
-Glenn
+Lionel
+
+-----Message d'origine-----
+De : linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]De
+la part de Emanuel Quass
+Envoy=E9 : mercredi 2 mai 2001 18:28
+=C0 : linux-lvm@sistina.com
+Objet : [linux-lvm] Problems compiling 2.4.4
+
+
+Hi,
+
+I compiled a kernel(2.4.4) with your lvm patch (0.9.1_beta7).
+At the end of make bzImage an error occours:
+
+ld -m elf_i386 -T /mnt/kernel/linux/arch/i386/vmlinux.lds -e \
+ stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o \
+ init/main.o init/version.o \
+        --start-group \
+        arch/i386/kernel/kernel.o arch/i386/mm/mm.o \
+kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
+        drivers/block/block.o drivers/char/char.o \
+drivers/misc/misc.o drivers/net/net.o drivers/media/media.o \
+drivers/ide/idedriver.o drivers/scsi/scsidrv.o \
+drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o \
+drivers/md/mddev.o \
+        net/network.o \
+        /mnt/kernel/linux/arch/i386/lib/lib.a \
+/mnt/kernel/linux/lib/lib.a /mnt/kernel/linux/arch/i386/lib/lib.a \
+        --end-group \
+        -o vmlinux \
+drivers/md/mddev.o: In function `__update_hardblocksize':=20
+drivers/md/mddev.o(.text+0x2316): undefined reference to =
+`get_hardblocksize'
+drivers/md/mddev.o(.text+0x2352): undefined reference to =
+`get_hardblocksize'
+make: *** [vmlinux] Error 1
+
+Does anybody knwo where this comes from!
+
+Thanks in advance
+
+        Emanuel
+
+P.S. Please CC me because I am not in the list.
+
+--=20
+
+++++++++++++++++++++++++++++++++
+Emanuel Quass
+email :  emanuel.quass@temic.com
+
+In a world without fences and walls,=20
+who needs Windows and Gates?
+++++++++++++++++++++++++++++++++
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
