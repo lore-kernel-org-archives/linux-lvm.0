@@ -1,19 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3M2Xip02671
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 22:33:44 -0400
-Received: from mail.execflight.com (207.66.193.130.nwinternet.com
-	[207.66.193.130] (may be forged))
-	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i3M2XhMc022812
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 22:33:43 -0400
-From: sterling@zixion.com
-Subject: Re: [linux-lvm] SuSe 8 Enterprise version, LVM and Oracle
-Date: Wed, 21 Apr 2004 19:33:33 -0700
-References: <1935187734.20040421215725@sanderscorner.com>
-In-Reply-To: <1935187734.20040421215725@sanderscorner.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3M45Vp05854
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 00:05:31 -0400
+Received: from newsguy.com (smtp.newsguy.com [129.250.170.69])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i3M45UMc010141
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 00:05:31 -0400
+Received: from pobox.com (node-423a1512.mdw.onnet.us.uu.net [66.58.21.18])
+	by newsguy.com (8.12.9/8.12.8) with ESMTP id i3M45O4n040538
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 21:05:24 -0700 (PDT)
+	(envelope-from msroark@pobox.com)
+Message-ID: <4087447F.2060906@pobox.com>
+Date: Wed, 21 Apr 2004 23:05:19 -0500
+From: Mike Roark <msroark@pobox.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [linux-lvm] OS (Debian Sarge) reinstall led to my lvm partition
+	being marked 82 "Linux swap!"
+References: <20040421160426.690797376D@hormel.redhat.com>
+In-Reply-To: <20040421160426.690797376D@hormel.redhat.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <200404211933.33673.sterling@zixion.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,24 +27,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-> Hi,
->
-> For a client I intend to install SuSe 8 and Oracle with LVM. Are there
-> any known issues with LVM in this combination?
->
-> Thanks in advance.
+> 
+> Just changing the partition type is perfectly safe - provided you don't change
+> any other partition parameters! if the partition type is wrong then LVM1 will
+> fail to recognise the VGs so that sounds like it is your problem.
+> 
+> 
+> -- patrick
 
-We have used SLES 8 and LVM for about a year now and it works great. We 
-recently upgraded to LVM2 due to a drive failure that took out an entire 
-400Gig spanned Volume Group. Ouch!
+Patrick,
+	Thanks for the advice. I was too afraid to try it, but after your input 
+and some other people I know I gave it a shot and vgscan picked up the 
+volume on the first try. Problem solved. I have also opened a bug with 
+Debian over the potential issue with their new installer.
+			Thanks again,
 
-The VG was spanned across two 200Gig disks. The first disk failed and left the 
-entire VG unusable. LVM2 uses meta-data stores and allows you to mount an 
-incomplete VG ( one that is missing pv's ) to aid in recovering data.
-
-LVM and SLES 8 have been great.
-
-Sterling.
+				-Mike
