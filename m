@@ -1,11 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Wed, 5 Sep 2001 12:11:29 -0600
-Subject: Re: [linux-lvm] LV size maximum
-Message-ID: <20010905121129.I32553@turbolinux.com>
-References: <20010905113307.A19406@lug-owl.de> <20010905122428.A19885@vestdata.no>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010905122428.A19885@vestdata.no>
+Message-ID: <3B966C63.7080309@st-peter.stw.uni-erlangen.de>
+Date: Wed, 05 Sep 2001 20:18:11 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
+References: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com> <3B95E36E.6070703@st-peter.stw.uni-erlangen.de> <20010905120549.H32553@turbolinux.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,25 +16,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Sep 05, 2001  12:24 +0200, Ragnar Kj?rstad wrote:
-> My guess is that you will be able to extend an old LV to more than 1 TB
-> when the patches are in place, without having to do backup/restore, if
-> you only choose a big enough extent size. (because the ondisk formats
-> deal with extents, not sectors). Can anyone more familiar with the
-> format please confirm this?
+and what should i try now
+i was writing to Nail Brown about the XFS mount problem  but i think he 
+stop writing to me
+after i couldn't recreate the problem
 
-There is a current limit of 65536 LEs/LV so you need to work out LE/PE
-size for the maximum LV size you want.  For 2TB (=40 bits) LV you need
-16MB (= 40 - 16 = 24 bits) PE size.  Scale accordingly.  32MB PE size
-is not a bad choice in any case, but as you get larger you also have
-wastage of 3*PEsize/2 per LV with the new LVM tools.
+which kernel should i test 2.4.5 2.4.6 2.4.7
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Andreas Dilger wrote:
+
+>On Sep 05, 2001  10:33 +0200, svetljo wrote:
+>
+>>some ideas whom should i write to and what else should i try
+>>i've already written to the developers of e2fsprogs and to Hans Reiser
+>>but i still don't have a reply( it was 2-3 days ago) and mr Hans Reiser 
+>>wonts $25 for looking at a problem
+>>
+>
+>I don't think it has anything to do with e2fsprogs or reiserfs.  The
+>problem is clearly in LVM, MD, or the block layer.  Thousands of people
+>are using both e2fsprogs and reiserfsprogs, and if they had such problems
+>more people would know about it.
+>
+>Cheers, Andreas
+>
