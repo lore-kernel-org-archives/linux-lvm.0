@@ -1,14 +1,8 @@
-Subject: Re: [linux-lvm] LVM Snapshots for remote archiving.
-From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
-In-Reply-To: <401807B2.6060900@gene.concordia.ca>
-References: <4016EE45.1050300@gene.concordia.ca>
-	 <1075246162.25365.16.camel@david.internal.NorcrossGroup.com>
-	 <4017E699.5020703@gene.concordia.ca>
-	 <1075310348.25365.43.camel@david.internal.NorcrossGroup.com>
-	 <401807B2.6060900@gene.concordia.ca>
-Message-Id: <1075394278.25365.93.camel@david.internal.NorcrossGroup.com>
-Mime-Version: 1.0
+Message-ID: <40196F7D.4070601@skyraven.pcnet.ro>
+From: Mihai Tanasescu <Mihai.Tanasescu@skyraven.pcnet.ro>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM integration problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,46 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 29 11:52:02 2004
+Date: Thu Jan 29 15:41:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Wed, 2004-01-28 at 14:04, Chris Beck wrote:
+Hello,
 
-> >I don't think that is a trivial issue, and I think the code would have
-> >to implemented in the kernel.
-> >  
-> >
-> Why the kernel? ... surely reading the flag tables could be done in user 
-> space?  I think you have the necessary logic spot on.
+I've recently installed a gentoo system...building from scratch with lvm 
+support (as it comes with the gentoo live cd 2.4 kernel..so the lvm 
+created is version 1.0).
+But I've built my system with a 2.6 kernel and lvm2 in it....
+After finishing the install I've rebooted the system only to see some 
+error messages like no volume groups detected ...but 2 PV's detected or 
+something like that..
+As a consequence of this I can't access /usr  /var /tmp ..
+I've tried first using the old lvm 1.0 user utils ..with no succes. 
+...then removed them..compiled the lvm 2.0 user utils and I got the 
+error described above upon booting the new system.
 
-I don't think the COW flag table is accessible from userspace, but I
-could be wrong.
+I've tried google but didn't have any luck..
 
-FYI: I am a LVM user, not a developer.
-
-> 
-> >New code would also have to be developed to apply the above blocks.
-> >  
-> >
-> Hmmm.  I can mess around in perl and java as well as the next guy, but 
-> my c-fu is weak, very weak.  How much would it cost to sponsor someone 
-> to do this do you think?
-
-I don't have any idea.  If your serious, I would recommend doing it with
-LVM 2 (requires DM in the kernel), since DM is part of 2.6.x vanilla and
-2.6.x will not likely ever support LVM 1.x.
-
-In that case, I would post on the dm-devel list.  There seem to be a few
-non-Sistina people that are very knowledgable and post regularily.
-
-http://lists.sistina.com/mailman/listinfo/dm-devel
-
-FYI: Since Sistina is in the process of being bought by Redhat, I doubt
-they would consider a new project (or sub-project) right now.
-
-HTH
-Greg
--- 
-Greg Freemyer
+Can anyone point me in the right direction to look ?
