@@ -1,11 +1,14 @@
-Return-Path: <root@srv.sistina.com>
-Date: Mon, 2 Jul 2001 13:08:32 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Return-Path: <john@oswf.de>
+From: Werner John <john@oswf.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <15168.33453.645650.476763@rigel.oswf.de>
+Date: Mon, 2 Jul 2001 16:18:21 +0200 (MEST)
 Subject: Re: [linux-lvm] Request for misalignment tests
-Message-ID: <20010702130832.D18512@sistina.com>
-References: <20010626161947.A11918@sistina.com> <3B3A0F47.37860696@ida.xs4all.nl>
-Mime-Version: 1.0
-In-Reply-To: <3B3A0F47.37860696@ida.xs4all.nl>; from jorg.de.jong@ida.xs4all.nl on Wed, Jun 27, 2001 at 06:52:23PM +0200
+In-Reply-To: <20010702130832.D18512@sistina.com>
+References: <20010626161947.A11918@sistina.com>
+	<3B3A0F47.37860696@ida.xs4all.nl>
+	<20010702130832.D18512@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,59 +21,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jorg,
+Dear Heinz
 
-please avoid recent CVS and if possible don't create PVs with
-LVM versions > 0.9.1 Beta 5.
-
-Sorry for the incenvenience.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-On Wed, Jun 27, 2001 at 06:52:23PM +0200, Jorg de Jong wrote:
-> Heinz Mauelshagen wrote:
-> > 
-> > All,
-> > 
-> > we need your help in regard to the misalignment problems we are trying
-> > to fix right now in order to get facts concerning how many people are actually
-> > suffering from it.
-> > 
-> > In case you created VGs or extended them with LVM 0.9.1 Beta 6 or 7,
-> > we'd appreciate if you could send us the output (if any) of
-> > 
-> >    pvdisplay -v /dev/YourPVname | grep "^ *00000"
-> > 
-> > if the sector offset in the last column is odd.
-> > 
-> > If so, please add a "pvdisplay /dev/YourPVname" as well.
-> > 
-> > We appreciate your help!
-> > 
-> Here is one:
+Heinz J. Mauelshagen writes:
 > 
-> [jorg] /home/jorg > sudo pvdisplay -v /dev/hda9 | grep "^ *00000"
->    00000 /dev/vg00/home            00776   4685
+> Jorg,
 > 
-> attached is the pvdisplay
-> 
-> regards
-> 
-> jorg
+> please avoid recent CVS and if possible don't create PVs with
+> LVM versions > 0.9.1 Beta 5.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+What if we have already done this some month ago?  Is it enough to avoid
+pvmove until everything is fixed?  Will there be a tool to fix bad PVs in
+use?
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> Sorry for the incenvenience.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Sorry for the questions ;-)
+
+> Regards,
+> Heinz    -- The LVM Guy --
+> [...]
+
+Best regards
+
+Werner
