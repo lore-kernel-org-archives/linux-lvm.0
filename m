@@ -1,14 +1,12 @@
-Return-Path: <treed@ultraviolet.org>
-Date: Tue, 7 Aug 2001 00:41:22 -0700
-From: Tracy R Reed <treed@ultraviolet.org>
-Subject: Re: [linux-lvm] LVM with multi-path disks?
-Message-ID: <20010807004122.D29793@ultraviolet.org>
-References: <20010807072327.A10691@vestdata.no> <Pine.LNX.4.33.0108070024270.18365-100000@chasqui.LaRed.net.pe>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 7 Aug 2001 08:24:52 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Missing (or double) logical volume after upgrade to 2.4.7 and beta8
+Message-ID: <20010807082452.A677@tykepenguin.com>
+References: <01080621060101.00882@giant.koningspage.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0108070024270.18365-100000@chasqui.LaRed.net.pe>; from carenas@chasqui.lared.net.pe on Tue, Aug 07, 2001 at 12:38:26AM -0500
+In-Reply-To: <01080621060101.00882@giant.koningspage.nl>; from m.vd.brink@worldonline.nl on Mon, Aug 06, 2001 at 09:06:01PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,54 +18,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---VMt1DrMGOVs3KQwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 06, 2001 at 09:06:01PM +0200, Melis van den Brink wrote:
+> Hello,
+> 
+> I'm experiencing a bit of trouble with LVM (just as I was becoming very happy 
+> with it :-().
+> I had it running on a 2.4.6 kernel patched with the beta7 lvm-stuff and some 
+> patches from the reiserfs-guys. That was running quite fine.
+> Today I performed the upgrade to linux 2.4.7 and lvm beta8. I followed the 
+> advice from the README.1st in upgrading to the new meta-format. I installed 
+> the beta8 tools and booted with the new kernel (including the patches from 
+> beta8). It seemed to be working until I discovered that one of my LV's was 
+> missing. Or better it showed the same filesystem as the one mounted on /var.
+> 
+> I could try to fix it, but would like to know some options as I am fairly new 
+> to LVM.
+> Attached is some information about the LVM-setup. I can give you some more, 
+> but I don't know what to provide you with...
 
-On Tue, Aug 07, 2001 at 12:38:26AM -0500, Carlo Marcelo Arenas Belon wrote:
-> ATF is a pretty interesting hack, where you can virtualize the path to the
-> LUNs on a failover configuration, but it is not as good as EMC's PowerPath
-> (bundled with Symmetrix drivers) where you actually can do the same thing
-> and also share bandwith using the different paths at the same time.
+At a guess it sounds like one (or more) of the PVs hasn't had it's metadat
+version number updated - there are several inactive PVs shown by PVSCAN. Check
+that all your PVs are shown there (if not then get the beta6 tools and run
+pvversion on them) and then run vgscan.
 
-Yes, it is interesting. Although we avoid the Symmetrix line because it's
-even more closed than the Clariion arrays. We are very independent and
-slice and dice harware to our liking. I sometimes think EMC finds us
-frustrating to deal with because we are so independent when they are used
-to holding the customers hand and not letting them touch the box. :) We
-share bandwidth using the different paths at the same time by distributing
-the LUNs equally over the two SP's.
+The "duplicate" volume is probably just an old volume not being activated and
+it's major/minor number being reused by another volume that has been activated.
+"ls -l" on the names will show this. If you're worried about it then just delete
+the incorrect device nodes. Once all the VGs are activated they should sort
+themselves out.
 
-> i am not sure tough that this would be the right way to go as it is pretty
-> hardware specific and IMHO too low level, the same could be done on
-> software just like the Verita's DMP and probably the actual RedHat's
-> multipath capabilities for md could be just a step on the right direction.
-
-Yes, it is definitely hardware specific. I was just wondering if anyone
-happened to know of drivers for Linux. We have a ton of money invested in
-many of these arrays and md's multipath won't work for us...unless I can
-somehow bind a LUN to both SP's at the same time but I'm pretty sure that
-is not possible.
-
---=20
-Tracy Reed      http://www.ultraviolet.org
-Bill Gates to his broker: "You idiot, I said $150 million on
-**SNAPPLE**!!!"
-
---VMt1DrMGOVs3KQwf
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iEYEARECAAYFAjtvm6IACgkQ9PIYKZYVAq0jDQCgg14jt1Su3ipb1w+oFHHj4ACH
-vSYAn1dlEmy0UrqpM7BAn//gQCYsAedZ
-=1mjG
------END PGP SIGNATURE-----
-
---VMt1DrMGOVs3KQwf--
+patrick
