@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102271700.f1RH0iE27053@webber.adilger.net>
-Subject: Re: [linux-lvm] NFS
-In-Reply-To: <Pine.LNX.4.20.0102270825260.27799-100000@rdb.linux-help.org> from
- "ardy@rdb.linux-help.org" at "Feb 27, 2001 08:26:35 am"
-Date: Tue, 27 Feb 2001 10:00:44 -0700 (MST)
+Message-Id: <200102271702.f1RH2lm27059@webber.adilger.net>
+Subject: Re: [linux-lvm] Problem mounting ext2 fs on LVM
+In-Reply-To: <m24rxg2lqi.fsf@isnogud.escape.de> from Urs Thuermann at "Feb 27,
+ 2001 04:23:33 pm"
+Date: Tue, 27 Feb 2001 10:02:47 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,14 +21,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andy writes:
-> Are there any issues regarding exporting lvm mounted filesystems
-> over NFS?
+Urs writes:
+> After having decided that the performance problem I described in the
+> other thread in this ML are probably not that important for me, I
+> tried to create an ext2 fs with 1024 byte blocks on a 1 GB LV.
+> 
+> But I can't mount it after creating the fs.  I can mount it if I
+> create it on sda5 instead of the LV, or if I choose 4K block size.
+> 
+>     isnogud:/root# mount /dev/vg0/test /mnt
+>     mount: wrong fs type, bad option, bad superblock on /dev/vg0/test,
+>     	   or too many mounted file systems
 
-No, I've been doing it a long time.  LVM is a block device like a disk,
-while NFS is a filesystem interface.  As long as the filesystem can
-support NFS you are OK.  This limits you pretty much to ext2 or ext3 only,
-unless you have reiserfs with up-to-date patches.
+What does it say in the syslog?  This will tell you why ext2 thinks it
+can't mount, and will give us a clue on how to fix LVM.  I'm guessing
+that when ext2 tries to set the blocksize to 1k it fails.
 
 Cheers, Andreas
 -- 
