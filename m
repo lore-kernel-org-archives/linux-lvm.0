@@ -1,13 +1,7 @@
-From: Eike Bernhardt <eike@unorganized.net>
-Subject: Re: [linux-lvm] Known Issues with FreeBSD Slices on Disks?
-Message-Id: <20020410150204.GA50366@unorganized.homeip.net>
-References: <20020405172933.GA71085@unorganized.homeip.net>
-    <20020408142641.GE1321@tykepenguin.com>
-    <20020408173054.GA77542@unorganized.homeip.net>
-    <20020410073925.GK1321@tykepenguin.com>
+Message-Id: <E04CF3F88ACBD5119EFE00508BBB212102418D31@exch-01.noida.hcltech.com>
+From: "Chitaranjan Behera, Noida" <cbehera@noida.hcltech.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020410073925.GK1321@tykepenguin.com>
+Subject: [linux-lvm] LVM 2 patch
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,45 +12,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 10 10:01:01 2002
+Date: Thu Apr 11 04:53:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: "listname"@sistina.com
 
-Hi!
+Hi, 
 
-On Wed Apr 10 09:39:25 2002 CEST Patrick Caulfield wrote:
+I downloaded the LVM2 beta version from Sistina site. But it's unable to
+create path for kernel-2.4.7-10. Patches are available for 2.4.16/17. But I
+want to build it over kernel-2.4.7-10. Can anybody help me ??
 
-> On Mon, Apr 08, 2002 at 07:30:54PM +0200, Eike Bernhardt wrote:
-> > On Mon Apr  8 16:26:41 2002 CEST Patrick Caulfield wrote:
-> 
-> It sounds a lot like
-> 
-> http://lists.sistina.com/pipermail/lvm-devel/2002-March/000873.html
+--
+Regards,
+Chitaranjan
+91-4510701/02   Ext -3159
 
-Hm, must have missed that one while searching for similar problems.
-
-> Can you try removing the lines
-> 
-> 
->         /* Check parallel LV spindown (LV remove) */
->         if (lv_ptr->lv_status & LV_SPINDOWN)
->                         return -EPERM;
-> 
-> 
-> in lvm_blk_open() and see if that fixes the problem please ?
-
-The "operation not permitted" is happening with a unpatched 2.4.19-pre5
-Kernel, and also when the Kernel is patched to lvm-1.1-rc1.
-
-When removing the lines quoted above, it is possible to create another
-VG without the "operation not permitted" Problem.
-
-I don't know how to debug this further, so if anyone needs more specific
-Information, please tell me.
-
--- 
-Eike Bernhardt              http://unorganized.net/                ICQ: 11256658
-      "Duct tape is like the force. It has a light side, and a dark side,
-       and it holds the universe together."               -- Carl Zwanzig
+" Make sincerity and innocence as your real strengths !! "
+--
+Disclaimer
+This document is intended for transmission to the named recipient only.  If
+you are not that person, you should note that legal rights reside in this
+document and you are not authorized to access, read, disclose, copy, use or
+otherwise deal with it and any such actions are prohibited and may be
+unlawful. The views expressed in this document are not necessarily those of
+HCL Technologies Ltd. Notice is hereby given that no representation,
+contract or other binding obligation shall be created by this e-mail, which
+must be interpreted accordingly. Any representations, contractual rights or
+obligations shall be separately communicated in writing and signed in the
+original by a duly authorized officer of the relevant company.
+--
