@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgchange error code -22
-Message-ID: <20011114113139.A16026@sistina.com>
-References: <01111415112606.02444@nerds>
-Mime-Version: 1.0
-In-Reply-To: <01111415112606.02444@nerds>; from frode@gangstah.net on Wed, Nov 14, 2001 at 03:11:26PM +0100
+Message-ID: <3BF270A2.36E36B24@phor.com>
+From: Darin Perusich <Darin.Perusich@cognigencorp.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] 1.0.1-rc4 and kernel 2.4.14
+References: <3BF19929.959A3055@phor.com> <20011113231527.D28062@colombina.comedia.it>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,78 +14,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 14 04:40:02 2001
+Date: Wed Nov 14 07:28:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: bluca@comedia.it
 
-On Wed, Nov 14, 2001 at 03:11:26PM +0100, Frode Ulsund wrote:
-> Hi there!
+this fixed the problem,
+
+thank you
+
+Luca Berra wrote:
 > 
-> I have read all the documentation in the LVM-package, but
-> i can't find a sollution to my problem in the HOW-TOs.
+> On Tue, Nov 13, 2001 at 10:05:29PM +0000, Darin Perusich wrote:
+> > hello all,
+> >
+> > i'm setting up LVM on a redhat 7.1 system with kernel 2.4.14. i'm able
+> redhat ships with a buggy compiler,
+> please rebuild with -O0
 > 
-> I run kernel 2.4.13 with Slackware 8.0. I tried to patch the rc.S with the 
-> LVM-patch, but it looks like the patch is allready applied in the 
-> distribution.
+> L.
+> --
+> Luca Berra -- bluca@comedia.it
+>         Communication Media & Services S.r.l.
+>  /"\
+>  \ /     ASCII RIBBON CAMPAIGN
+>   X        AGAINST HTML MAIL
+>  / \
 
-Frode,
-
-I don't understand which LVM chnges you applied to your system.
-Did you install new LVM tools and library but didn't patch the kernel
-with the LVM driver as described in PATCHES/README?
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-> 
-> When i run  : vgchange -v -d -a y i get the following output, but I don't 
-> really know what the problem is.
-> 
-> Any help is aprichiated.
-> 
-> .....
-> Frode Ulsund
-> -----------------------------------------------------------------
-> <333> vg_check_name -- vg_name: "vg01"
-> <4444> lvm_check_chars -- CALLED with name: "vg01"
-> <4444> lvm_check_chars -- LEAVING with ret: 0
-> <333> vg_check_name -- LEAVING with ret: 0
-> <22> vg_check_consistency -- LEAVING with ret: 0
-> <1> vg_create_remove -- IOCTL
-> <1> vg_create_remove -- IOCTL returned: -22
-> <1> vg_create_remove -- LEAVING with ret: -22
-> <> vgchange -- vg_create returned: -22
-> <1> lvm_error -- CALLED with: -22
-> <1> lvm_error -- LEAVING with: "Invalid argument"
-> vgchange -- ERROR "Invalid argument" activating volume group "vg01"
-> <1> vg_free -- CALLED
-> <1> vg_free -- entering PV loop
-> <1> vg_free -- entering LV loop
-> <1> vg_free -- LEAVING with ret: 0
-> vgchange -- unlocking logical volume manager
-> <1> lvm_unlock -- CALLED
-> <1> lvm_unlock -- LEAVING with ret: 0
-> <1> lvm_unlock -- CALLED
-> <1> lvm_unlock -- LEAVING with ret: -104
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+Darin Perusich
+Unix Systems Administrator
+Cognigen Corp.
+darinper@cognigencorp.com
