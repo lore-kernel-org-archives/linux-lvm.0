@@ -1,11 +1,11 @@
 From: Andreas Dilger <adilger@turbolabs.com>
-Date: Thu, 13 Sep 2001 14:38:15 -0600
-Subject: Re: [linux-lvm] 33% of my space is missing?
-Message-ID: <20010913143815.L1541@turbolinux.com>
-References: <B51F0C636E578A4E832D3958690CD73E0130C024@es04snlnt>
+Date: Thu, 13 Sep 2001 14:39:19 -0600
+Subject: Re: [linux-lvm] changing LE / PE table
+Message-ID: <20010913143919.M1541@turbolinux.com>
+References: <3636.213.191.82.129.1000409919.squirrel@hactar.dnsalias.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <B51F0C636E578A4E832D3958690CD73E0130C024@es04snlnt>
+In-Reply-To: <3636.213.191.82.129.1000409919.squirrel@hactar.dnsalias.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,48 +21,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sep 13, 2001  14:11 -0600, Diehl, Jeffrey wrote:
-> I seem to be missing 100Gb out of a possible 300Gb!  Check it out:
-> 
-> [root@filmore jdiehl]# fdisk -l | grep LVM
-> /dev/sdb5           226      4402  33551721   8e  Linux LVM
-> /dev/sdb6          4403      8579  33551721   8e  Linux LVM
-> /dev/sdb7          8580     12756  33551721   8e  Linux LVM
-> /dev/sdb8         12757     15030  18265873+  8e  Linux LVM
-> /dev/sdc6          7015     14028  56339923+  8e  Linux LVM
-> /dev/sdc7         14029     21042  56339923+  8e  Linux LVM
-> /dev/sdc8         21043     28056  56339923+  8e  Linux LVM
-> /dev/sdc9         28057     30945  23205861   8e  Linux LVM
-> [root@filmore jdiehl]#
-> 
-> Adding this space up, I get 311Gb.
+On Sep 13, 2001  21:38 +0200, Julian Glashoff wrote:
+> As I already said, my volume group is not accessible because of a crash
+> while trying to extend a logical volume. 'vgscan' says 'only found 768 of
+> 769 LEs for LV /dev/vg00/lvol1' and does not find my volume group.
+> I have not been able to restore the backups with _any_ version of LVM.
+> So now I am wondering if it is possible to change the 'LE' table while the
+> volume group is offline.
 
-But it is only 296 GiB, which is what LVM measures.
-
-> [root@filmore jdiehl]# lvdisplay /dev/Database2/data
-> --- Logical volume ---
-> LV Name                /dev/Database2/data
-> VG Name                Database2
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                215.3 GB
-> Current LE             27558
-> Allocated LE           27558
-> Allocation             next free
-> Read ahead sectors     120
-> Block device           58:0
-> 
-> Here we see that I only have access to 215Gb. 
-
-What PE size are you using?  If (default) 4MiB, you would lose about 3MiB
-per PV, so 3MiB * 8 = 24MiB.  If you are using LVM 1.0+ user tools you will
-lose 1.5x PE size (on average) per PV, so if you have 32MiB PEs, you lose
-48MiB * 8 = 384MiB.  So this is still not enough to explain your losses.
-
-Are you sure you have added all PVs into this VG, and used all of the PEs
-in this LV?  Something like pvscan would show better information.
+Please read my description posted a couple of days ago to fix a similar
+problem (subject: only 626 of 625 PEs available).
 
 Cheers, Andreas
 -- 
