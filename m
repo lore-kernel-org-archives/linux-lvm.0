@@ -1,14 +1,11 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 19 Apr 2001 14:26:15 -0500
-From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20010419142615.F10345@sistina.com>
-References: <d37l0gvkuf.fsf@lxplus015.cern.ch> <20010419132927.D10345@sistina.com> <d3lmowu2ba.fsf@lxplus015.cern.ch>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RE3pQJLXZi4fr8Xo"
-Content-Disposition: inline
-In-Reply-To: <d3lmowu2ba.fsf@lxplus015.cern.ch>; from jes@linuxcare.com on Thu, Apr 19, 2001 at 09:17:29PM +0200
-Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104191945.f3JJjKRn015661@webber.adilger.int>
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+In-Reply-To: <20010419142400.E10345@sistina.com> "from AJ Lewis at Apr 19, 2001
+ 02:24:00 pm"
+Date: Thu, 19 Apr 2001 13:45:20 -0600 (MDT)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,62 +17,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: Jes Sorensen <jes@linuxcare.com>
-Cc: linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
 
---RE3pQJLXZi4fr8Xo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+AJ Lewis writes:
+> On Thu, Apr 19, 2001 at 08:02:50PM +0100, Alan Cox wrote:
+> > Well their approach to patches that fix bugs is to reject emails. They've
+> > done that to stuff I've reported any many others. So there is a problem.
+> > And it's kind of hard to discuss a problem when you are being moderated
+> > out of existance.
 
-On Thu, Apr 19, 2001 at 09:17:29PM +0200, Jes Sorensen wrote:
-> This was tried, trust me. We didn't create this list because someone
-> forgot to respond to a single posting. As we wrote in the announcement
-> there has been too many incidents: At least two people got kicked off
-> the old lvm list for posting comments about the latest release using
-> lower bits in pointers to store data. Other people have posted patches
-> for serious bugs like NULL pointer dereferences and the postings were
-> denied. Another person complained about the behavior and got no
-> response.
+Not to be negative, but isn't Alan the pot calling the kettle black?  You
+use ORBS to block email as well, with no hope of reprieve.  AFAIK, the
+linux-lvm list has a moderator which _should_ forward legitimate emails
+on to the list.  Maybe they are piling up somewhere, unread?
 
-What are you talking about???  Got kicked off?  If so, it was not
-intentional, I can assure you.  That would just be stupid.  As far as
-patches being rejected, refer to the e-mail I just sent.
+> Hmm...i guess there is a communication issue here.  It sounds like the
+> message that our ML server was sending was misleading.  We were not
+> rejecting mail because of content.  The ML server was rejecting it because
+> the address was not subscribed.  Our idea was that we don't want spam. 
+> If it's completely unmoderated, then we will get a *lot* of spam.
 
-> For modules included in the Linux kernel, an open development forum is
-> a minimum requirement.
+I don't think that the subscription is necessarily the only issue.  I'm
+subscribed to all of the LVM mailing lists, and still a lot of what I
+submit (legitimate bug fixes, and not just features/code cleanup) does
+not get added to CVS.  Yes, the no-possible-harm patches like man pages
+went in, but not other stuff.  Also, it doesn't appear that any of the
+LVM changes are making it into the stock kernel, which is basically a
+recepie for disaster.
 
-Who asked for this?  Who did you talk to?  I haven't seen anything to this
-effect for months.
+Basically, I'm at the point where trying to create clean patches from my
+LVM source tree to apply to CVS is so much work it is hardly worth it.
+I'm seriously looking at devoting the time I used to spend on LVM to the
+EVMS project instead.  They (appear to) have in-kernel LVM support working
+already, so no user tools needed for VG/LV activation.  Granted, they don't
+yet have tools to create/modify VG/LVs, but I think I can help them there.
+It appears more likely that EVMS will only support Linux LVM volumes for
+compatibility, and move to a more robust on-disk format for metadata.
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+The openlvm list may change my mind, I'll see.
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Over and over I find being redundant is key to success
-in the art of redundancy - Jay Armstrong
------End Obligatory Humorous Quote------------------------------------------
-
---RE3pQJLXZi4fr8Xo
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE63zvXpE6/iGtdjLERAvKVAJ9AjAJPbNWNgu7jJEBnH+7/vi+0vQCfQQZ8
-5NYr5YmTttzoCzXROyvS5Oc=
-=XakL
------END PGP SIGNATURE-----
-
---RE3pQJLXZi4fr8Xo--
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
