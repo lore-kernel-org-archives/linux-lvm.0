@@ -1,10 +1,19 @@
-From: Eric Sandeen <sandeen@sgi.com>
-In-Reply-To: <200201020451.g024pPg00867@oss.sgi.com>
-References: <200201020451.g024pPg00867@oss.sgi.com>
-Content-Type: multipart/mixed; boundary="=-3JA8M45IzWcayTxBRmV3"
-Message-Id: <1010615039.17321.2.camel@stout.americas.sgi.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] A way to bypass LVM and extract the raw data off?
+Message-Id: <20020109152549.Y769@lynx.adilger.int>
+References: <1010309724.3c381a5ce8cbe@www.snappymail.ca>
+    <1010343969.3c38a0214056f@www.snappymail.ca>
+    <20020106152433.Q12868@lynx.no>
+    <1010359883.3c38de4b3692f@www.snappymail.ca>
+    <1010543196.3c3baa5c40c49@www.snappymail.ca>
+    <20020109023404.GC1096@auctionwatch.com>
+    <1010545378.3c3bb2e2a4dec@www.snappymail.ca>
+    <20020109124025.O769@lynx.adilger.int>
+    <1010612597.3c3cb975632ae@www.snappymail.ca>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to coexist happily
+Content-Disposition: inline
+In-Reply-To: <1010612597.3c3cb975632ae@www.snappymail.ca>; from
+    ipso@snappymail.ca on Wed, Jan 09, 2002 at 01:43:17PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,77 +24,79 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  9 16:25:01 2002
+Date: Wed Jan  9 16:26:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: Adrian Head <ahead@bigpond.net.au>
-Cc: Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
-
---=-3JA8M45IzWcayTxBRmV3
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: IpSo <ipso@snappymail.ca>
+Cc: linux-lvm@sistina.com
 
-On Tue, 2002-01-01 at 21:51, Adrian Head wrote:
-
-> I'm starting to play around with LVM with the goal of having XFS, ext3, 
-> reiserfs and LVM coexist nicely together.  
+On Jan 09, 2002  13:43 -0800, IpSo wrote:
+> Quoting Andreas Dilger <adilger@turbolabs.com>:
+> > On Jan 08, 2002  19:02 -0800, IpSo wrote:
+> > > Yup! I'm confident everything as far as the reiser filesystem is fine,
+> > > just LVM is very confused. 
+> > > 
+> > >    Device Boot    Start       End    Blocks   Id  System
+> > > /dev/hda1   *         1       507    255496+  82  Linux swap
+> > > /dev/hda2           508     39813  19810224    5  Extended
+> > > /dev/hda5           508      4633   2079472+  83  Linux
+> > > /dev/hda6          4634     39813  17730688+  8e  Linux LVM
+> > > 
+> > > Does the LVM information take up the first 2mb or something that I
+> > > could set the offset as, so it doesn't carry over to the loopback file?
+> > 
+> > No, it uses a variable amount of space.
+> > 
+> > What you could do is try
+> > 
+> > od -Ad -a /dev/hda6 | grep "R   e   I   s   E   r   2   F   s"
+> > 
+> > and start your dd 65584 bytes before the address at the line this is
+> > found on (it should align to an even block boundary).
 > 
-> Has anyone been able to get , ext3, reiserfs, XFS and LVM running nicely 
-> together?  
+> At the "line", I tried the command and I got about 1000+ lines that seem to
+> match. I assume I just try from the first line minus 65584 (3276800) like you 
+> said? 
+> 
+> [root@ipso big]# od -Ad -a /dev/hda6 | grep "R   e   I   s   E   r   2   F   s"
+> 3342384  bs nul soh nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3383344 eot nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3424304 eot nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3498032 stx nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3547184 eot nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3616816 ack nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3706928  nl nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3825712  nl nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3842096 dc4 nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3932208 dc4 nul soh nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3944496 dc4 nul soh nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 3956784 dc4 nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> 4001840 dc4 nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+> ...
+> 
+> dd if=/dev/hda6 bs=512 skip=3276800 of=/big/backup_hda6.bin
+> 
+> -rw-r--r--    1 root     root     16478502912 Jan  9 12:50 backup_hda6.bin
 
-This patch, on top of xfs cvs (2.4.17-xfs), with the LVM 1.0.1 upgrade
-patch applied, then the VFS lock patch, works for me.  Note that this is
-stolen from the 1.0.1rc4(ish) version of LVM in Linus' kernel.  It uses
-the built-in blocks from lv_snap->lv_iobuf->blocks rather than declaring
-a new chunk of blocks.
+Well, since "od" outputs a _byte_ offset, and "dd" is skipping _sectors_,
+you need to use:
 
-I tested snapshot creation & overflow with ext2, ext3, reiser, and xfs. 
-I have not looked closely enough to see why xfs breaks w/o this patch,
-and why it works with it, but... give it a shot.
+dd if=/dev/hda6 bs=512 skip=6400 of=/big/backup_hda6.bin
 
--Eric
+Granted, all of these superblock copies might be in the journal, so it
+is hard to tell (with ext2/ext3 there are backup superblocks, but they
+have numbers assigned to them, so you can still find the proper start
+of the filesystem.
 
--- 
-Eric Sandeen      XFS for Linux     http://oss.sgi.com/projects/xfs
-sandeen@sgi.com   SGI, Inc.
+> I also tried: (/dev/hda)
+> dd if=/dev/hda bs=512 skip=3276800 of=/big/backup_hda6.bin
 
---=-3JA8M45IzWcayTxBRmV3
-Content-Disposition: attachment; filename=lvm-1.0.1-xfs-fix.patch
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=ISO-8859-1
+Well, this doesn't make sense, since the offset is relative to the start
+of /dev/hda6.
 
---- lvm-snap.c	Wed Jan  9 16:10:01 2002
-+++ /localhome/eric/lvm-1.0.1-works/lvm-snap.c	Wed Jan  9 16:07:52 2002
-@@ -349,7 +349,6 @@
- 	unsigned long phys_start;
- 	int idx =3D lv_snap->lv_remap_ptr, chunk_size =3D lv_snap->lv_chunk_size;
- 	struct kiobuf * iobuf;
--	unsigned long blocks[KIO_MAX_SECTORS];
- 	int blksize_snap, blksize_org, min_blksize, max_blksize;
- 	int max_sectors, nr_sectors;
-=20
-@@ -400,19 +399,19 @@
-=20
- 		iobuf->length =3D nr_sectors << 9;
-=20
--		if (!lvm_snapshot_prepare_blocks(blocks, phys_start,
-+		if (!lvm_snapshot_prepare_blocks(iobuf->blocks, phys_start,
- 						 nr_sectors, blksize_org))
- 			goto fail_prepare;
-=20
--		if (__brw_kiovec(READ, 1, &iobuf, org_phys_dev, blocks,
-+		if (__brw_kiovec(READ, 1, &iobuf, org_phys_dev, iobuf->blocks,
- 				 blksize_org, lv_snap) !=3D (nr_sectors<<9))
- 			goto fail_raw_read;
-=20
--		if (!lvm_snapshot_prepare_blocks(blocks, snap_start,
-+		if (!lvm_snapshot_prepare_blocks(iobuf->blocks, snap_start,
- 						 nr_sectors, blksize_snap))
- 			goto fail_prepare;
-=20
--		if (__brw_kiovec(WRITE, 1, &iobuf, snap_phys_dev, blocks,
-+		if (__brw_kiovec(WRITE, 1, &iobuf, snap_phys_dev, iobuf->blocks,
- 				 blksize_snap, lv_snap) !=3D (nr_sectors<<9))
- 			goto fail_raw_write;
-=20
-
---=-3JA8M45IzWcayTxBRmV3--
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
