@@ -1,39 +1,42 @@
-Date: Mon, 2 Aug 1999 20:21:06 +0100 (IST)
+Date: Tue, 3 Aug 1999 21:24:46 +0100 (IST)
 From: Paul Jakma <paul@clubi.ie>
 Subject: Re: [linux-lvm] RAID and LVM?
-In-Reply-To: <Pine.LNX.4.10.9908021419460.1912-100000@fuse.aethos.co.uk>
-Message-ID: <Pine.LNX.4.10.9908021532440.960-100000@hibernia.spin.ie>
+In-Reply-To: <852567BA.0076DBF1.00@USCOMM02.aholdusa.com>
+Message-ID: <Pine.LNX.4.10.9908032111350.2456-100000@hibernia.spin.ie>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: James Pattinson <jamesp@aethos.co.uk>
-Cc: linux-lvm@msede.com
+To: David Venus <dvenus@aholdusa.com>
+Cc: Linux LVM list <linux-lvm@msede.com>
 
-On Mon, 2 Aug 1999, James Pattinson wrote:
-
-  Cheers - I'll try that later on.
+On Mon, 26 Jul 1999, David Venus wrote:
   
-  Does anyone have a such thing as a patch against 2.2.10 which includes LVM
-  and RAID0145? It's just I feel a lot happier running 2.2.10, rather than
-
-i have 2.2.11pre4, with raid0145-19990724, lvm and devfs (plus some
-more stuff aswell). Both raid and lvm work, but not on top of each
-other, at least not for raid5 anyway. (luca has reported success with
-lvm on raid1 or raid0 i believe).
-
-if you want i'll do a diff against plain 2.2.11pre4 if you want.
-
-  PS - I tried devfs on -ac12 last week as well, impressive, but I couldn't
-  seem to use my SCSI cdrom drive anymore, no such thing as /dev/scd or even
-  /dev/*cd* exists! Also, I had to `modprobe loop` before I could access
-  /dev/loop*.
+  Hi!
   
-that's cause it'd be under /dev/sr/ now. :) incidentally are you sure
-you had a /dev/scd?? scsi cdrom's are usually /dev/sr<something>.
-ATAPI cdrom's would appear under ide/cd/.
+  I am guessing the difference is that one accesses the
+  drive/device in block mode (bh_dev) and the other as a
+  character/raw device (bh_rdev).
+
+i'm not much of a kernel hacker, but i think b_dev/r_dev is
+device/real device... ie md0/sda3 type of thing. but i'm not sure.
+
+what i'd like to know is: if i'm right, why does lvm want to make
+bh->b_dev=bh->b_rdev?? .. i don't know. it means if lvm tries to read
+from mdx, then the md code is invoked with hd<something> instead of
+md.. which fails miserably of course...
+
+i left this hack out, and the kernel booted. RAID worked, LVM worked
+on normal devices.. but the LVM tools gave errors when i tried to
+build VLM ontop of a RAID device (ingo's latest raid that is).
+  
+The reason for the device remap is something to do with the original
+md code, but i don't know why. Ingo's new RAID code should be pretty
+transparent and hence LVM shouldn't need to do low-level fiddling
+around in ll_rw_blk. an mdx device is afaik pretty much the same as
+an hdax device.. (right?)
 
 regards,
 -- 
@@ -42,6 +45,4 @@ paul@clubi.ie	http://hibernia.clubi.ie
 PGP5 key: http://www.clubi.ie/jakma/publickey.txt
 -------------------------------------------
 Fortune:
-There are only two things in this world that I am sure of, death and
-taxes, and we just might do something about death one of these days.
-		-- shades
+Now and then an innocent man is sent to the legislature.
