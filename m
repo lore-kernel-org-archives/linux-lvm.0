@@ -1,9 +1,11 @@
-Date: Thu, 6 Sep 2001 12:32:45 +0000
-From: Tomas Edwardsson <tommi@tommi.org>
-Message-ID: <20010906123245.B28532@hp.is>
+Date: Thu, 6 Sep 2001 08:46:36 -0400
+From: Rob Latham <rlatham@plogic.com>
+Subject: Re: [linux-lvm] Will LVM stay GPL?
+Message-ID: <20010906084636.C15933@otto.plogic.internal>
+References: <200109061207.f86C79N7021746@pcrz175.HRZ.Uni-Marburg.DE>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Problem with vgscan "only found 626 of 625 LEs for LV"
+In-Reply-To: <200109061207.f86C79N7021746@pcrz175.HRZ.Uni-Marburg.DE>; from gebhardt@HRZ.Uni-Marburg.DE on Thu, Sep 06, 2001 at 02:07:08PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,20 +21,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Here is what vgscan shows:
+On Thu, Sep 06, 2001 at 02:07:08PM +0200, Thomas Gebhardt wrote:
+> Hi,
+> 
+> after the GFS switch to the non-free SPL: can we hope/trust that
+> LVM will remain GPL'd ?
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found inactive volume group "vg00"
-vgscan -- only found 626 of 625 LEs for LV /dev/vg00/lvol1 (0)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "vg00" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
+Thomas:
 
-I also tried pvscna, but I don't know if that's relevant:
+I don't think you've been paying very close attention :>  
+I already asked this question a week ago, and started far too much
+discussion: end result, it'd be very hard to change LVM's license.
 
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdb2"  is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/hdc2"  is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/hdd1"  is associated to an unknown VG (run vgscan)
-pvscan -- total: 3 [16.00 GB] / in use: 3 [16.00 GB] / in no VG: 0 [0]
+==rob
 
-- Tomas Edwardsson
+-- 
+[ Rob Latham <rlatham@plogic.com>         Developer, Admin, Alchemist ]
+[ Paralogic Inc. - www.plogic.com                                     ]
+[                                                                     ]
+[ EAE8 DE90 85BB 526F 3181                   1FCF 51C4 B6CB 08CC 0897 ]
