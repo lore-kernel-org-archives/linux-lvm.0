@@ -1,57 +1,33 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200001071520.QAA12318@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Fwd: Re: file system size limits
-In-Reply-To: <3875F3DE.9B79A0C2@msede.com> from Michael Marxmeier at "Jan 7, 2000  3:10:38 pm"
-Date: Fri, 7 Jan 2000 16:20:29 +0100 (MET)
+Date: Fri, 7 Jan 2000 18:14:47 GMT
+Message-Id: <200001071814.SAA27064@dukat.scot.redhat.com>
+Resent-Message-ID: <14454.11543.314058.762282@dukat.scot.redhat.com>
+Resent-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>,
+        linux-LVM@msede.com
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+From: "Stephen C. Tweedie" <sct@redhat.com>
+Subject: [linux-lvm] Re: Backing up life filesystems
+In-Reply-To: <Pine.LNX.4.02.10001071011260.9693-100000@carissimi.coda.cs.cmu.edu>
+References: <14453.63001.151113.328292@dukat.scot.redhat.com>
+	<Pine.LNX.4.02.10001071011260.9693-100000@carissimi.coda.cs.cmu.edu>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: andrea@suse.de
-Cc: tytso@MIT.EDU, linux-lvm@msede.com, ak@muc.de, linux-fsdevel@vger.rutgers.edu, manfreds@colorfullife.com
+To: "Peter J. Braam" <braam@cs.cmu.edu>
+Cc: "Stephen C. Tweedie" <sct@redhat.com>, linux-ha@muc.de, Lars Marowsky-Bree <lmb@kernel.org>, Larry McVoy <lm@bitmover.com>, mauelsha@ez-darmstadt.telekom.de
 
-> Forwarded to the list ...
-> 
-> -------- Original Message --------
-> Date: Fri, 7 Jan 2000 13:34:20 +0100 (CET)
-> Resent-Date: Fri, 07 Jan 2000 15:07:52 MEZ
-> From: Andrea Arcangeli <andrea@suse.de>
-> X-Sender: andrea@alpha.random
-> To: Manfred Spraul <manfreds@colorfullife.com>
-> cc: "Theodore Y. Ts'o" <tytso@MIT.EDU>, linux-LVM@msede.com,
->         Andi Kleen <ak@muc.de>, linux-fsdevel@vger.rutgers.edu
-> Subject: Re: file system size limits
-> 
-> On Fri, 7 Jan 2000, Manfred Spraul wrote:
-> 
-> >eg it seems that lvm doesn't contain the checks for lvm's > 2 TB on
-> >32-bit platforms.
-> 
-> Actually lvm has real issues as well. When the real issues will gets
-> fixed
-> we'll add the avoid-admin-to-do-silly-things checks too :).
-> 
-> Andrea
-> 
+Hi,
 
-Absolutely.
-I'm only checking the limits in the, because the 32bit restriction in the
-block devive layer forces me to do that.
+On Fri, 7 Jan 2000 10:13:00 -0500 (EST), "Peter J. Braam"
+<braam@cs.cmu.edu> said:
 
-Heinz
+> I fully concur that snapshots are good for this purpose.  Are the LVM
+> snapshots coming at the expense of suspending striping?  They are not
+> the "copy on write" snapshots which WAFL, Coda/AFS and our little
+> project (www.lustre.org) have right?
 
--- 
+They should be proper COW from what I understand: Heinz, correct me if
+I'm wrong?
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--Stephen
