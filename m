@@ -1,15 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3T72Mv07409
-	for <linux-lvm@redhat.com>; Thu, 29 Apr 2004 03:02:22 -0400
-Received: from vega.voltaire.com ([212.143.27.73])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i3T72L99000583
-	for <linux-lvm@redhat.com>; Thu, 29 Apr 2004 03:02:21 -0400
-Message-ID: <2F75AEE4E86FDE44BF97709D289BAA7C719775@vega.voltaire.com>
-From: Dan Bar Dov <danb@voltaire.com>
-Subject: RE: [linux-lvm] LVM and multiple HBA ports
-Date: Thu, 29 Apr 2004 10:02:14 +0300
-MIME-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from o.ww.redhat.com (vpn50-23.rdu.redhat.com [172.16.50.23])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	i3UApuNv028610
+	for <linux-lvm@redhat.com>; Fri, 30 Apr 2004 12:51:56 +0200
+Date: Fri, 30 Apr 2004 12:49:47 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] About extending partiton with lvm+ext3
+Message-ID: <20040430104947.GA15691@redhat.com>
+References: <200404261903.i3QJ3HTk030443@smtp.doruk.net.tr>
+	<20040426222921.GB16292@redhat.com>
+	<20040427121034.GG2990@tangerine.coulon.evette>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20040427121034.GG2990@tangerine.coulon.evette>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,85 +24,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-The MD multipath solution works only sometimes. Unplugging the active path
-during data transfer hanged the system. 
-Unplugging between data transfers works fine, but this is hardly real world.
+On Tue, Apr 27, 2004 at 02:10:34PM +0200, Jean-Luc Coulon (f5ibh) wrote:
+> Le 27.04.2004 00:29:21, Heinz Mauelshagen a �crit�:
+> >On Mon, Apr 26, 2004 at 09:59:54PM +0300, Vahric MUHTARYAN wrote:
+> >> Hi Everybody ,
+> >>
+> >> I'm reading lvm-how to and I wonder those any tools like e2fsadm ,
+> >> ext2resize ?!! in Redhat ... Because I want to exten ext3
+> >>
+> >> Does command for only ext2 ?!
+> >
+> >Yes.
+> 
+> You can resize an ext3 filesystem with the resize2fs command. Both  
+> enlarge or shrink it.
 
-Seems like there's some work on the multipath issue in 2.6, but 2.4 really
-lacks a working solution.
+Well, of course. ext3 is identical metadata-wise.
 
-Does anyone have experience with qlogic driver multipath support? Any idea
-how to activate it programatically (not using their JAVA GUI).
+> But : this is allowed only on an *offline* (umounted) filsystem,  
+> resize2fs doesnt take care of the underlaying partition, you have to  
+> enlarge the partition (logical volume) before an enlarge operation or  
+> shrink it after a shrink operation.
+> 
+> man 8 resize2fs
+> 
+> <<
+> RESIZE2FS(8)
+> 
+> NAME
+>       resize2fs - ext2/ext3 file system resizer
+> 
+> [ ... ]
+> >>
+> 
+> Do the operation as following:
+> -unmount the logical volume holding the filesystem you want to enlarge
+> -lvwextend to enlarge the partition
+> -resize2fs to enlarge the filesystem
+> -remount the logical volume
+> 
+> --
+> 		- Jean-Luc
+> >
+> >>
+> >> # export E2FSADM_RESIZE_CMD=ext2resize
+> >> # e2fsadm /dev/ops/batch -L+500M
+> >>
+> >> Thanks Everybody ...
+> >> Vahric
+> >
+> >--
+> >
+> >Regards,
+> >Heinz    -- The LVM Guy --
+> >
 
-Dan
 
-> -----Original Message-----
-> From: Franc Carter [mailto:franc@mml.usyd.edu.au]
-> Sent: Monday, April 26, 2004 4:15 AM
-> To: LVM general discussion and development
-> Subject: Re: [linux-lvm] LVM and multiple HBA ports
-> 
-> 
-> 
-> 
-> They way I have handled this is to use an md multipath device 
-> to combine the
-> two luns that are seen in to one md device, and then put lvm on top of
-> that.
-> 
-> Seems to work well - however testing 'real' failures rather 
-> than capable
-> pulling is somewhat more difficult/risky
-> 
-> On Wed, Apr 21, 2004 at 07:04:13PM +0300, Dan Bar Dov wrote:
-> > I have a problem using two (or more) ports connected to the 
-> same storage.
-> > 
-> > Linux does not identify that the two LUNs it discovers is 
-> actually the same.
-> > When I create a PV all is well. 
-> > The PV gets created and is ACTIVE. However, through the 
-> other port, the PV
-> > is also discovered, but is marked INACTIVE in the LVM database.
-> > 
-> > When I try to create a VG using the active path, LVM scans 
-> all PVs in order.
-> > If it finds the INACTIVE instance first, the VG creation fails.
-> > 
-> > I'm using LVM 1.0.3, please let mw know if such a situation 
-> (connecting
-> > storage through multiple ports) is handled better in 
-> another version, or
-> > suggest how to overcome the problem.
-> > 
-> > Thanks,
-> > Dan
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> -- 
-> Franc Carter     Ph:61-2-8374-5071      Fax: 61-2-8374-5070
-> Systems Manager, SIRCA Ltd              http://www.sirca.org.au/
-> 
-> DISCLAIMER: The contents of this email, inclusive of attachments, may
-> be legally privileged and confidential. Any unauthorised use of the
-> contents is expressly prohibited. If you have received this message in
-> error or are not the intended recipient, you should destroy the email
-> message along with any attachment(s).  Unintended recipients of this
-> email are prohibited from retaining, disclosing, distributing or using
-> any information contained herein.  This email is also subject to
-> copyright. No part of it should be reproduced, adapted or transmitted
-> without the written consent of the copyright owner.
+
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
