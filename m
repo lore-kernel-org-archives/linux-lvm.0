@@ -1,8 +1,11 @@
-Message-ID: <4012D858.1020005@dpincorp.com>
-From: "Mr. David" <david@dpincorp.com>
+From: Arkadiusz Miskiewicz <arekm@pld-linux.org>
+Subject: Re: [linux-lvm] lvm on initrd
+References: <200401240137.35706.arekm@pld-linux.org> <20040124095810.GA6204@percy.comedia.it>
+In-Reply-To: <20040124095810.GA6204@percy.comedia.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Raid and LVM, GFS newbie question
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200401252110.07895.arekm@pld-linux.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,36 +16,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan 24 15:44:01 2004
+Date: Sun Jan 25 15:12:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: Luca Berra <bluca@comedia.it>
 
-Hi,
-I apologize if my questions are too basic for the list.  I am new to 
-Redhat implementation in production environment.  I am in proccess of 
-impletmenting Redhat ES 2.1 and Redhat AS 2.1..  My background is solaris.
+Dnia sob 24. stycznia 2004 10:58, Luca Berra napisa=B3:
+> On Sat, Jan 24, 2004 at 01:37:35AM +0100, Arkadiusz Miskiewicz wrote:
+> >Are there any plans to add makefile target which would produce very small
+> > + features stripped down lvm binary with only two commands:
+> >vgscan vgchange
+> >for usage on initrd images?
+>
+> patches for lvm2 are:
+> http://www.comedia.it/~bluca/cooker/lvm2/lvm2-2.00.08-7mdk/LVM2.2.00.08-d=
+ie
+>t.patch.bz2
+Thanks, I've modified these for my needs.
+http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/lvm2-initrd.patch?rev=3D1.1
 
-1.  How does most people manage root file systems in linux production 
-environment?  I have two JBOD scsi disks for root file systems.  I 
-already install the OS on one disk.  I just need to mirror the OS disk 
-to the other disk.  Do I use raidtool? or do I use LVM to mirror?  How 
-does raidtool and LVM work together?  Or does LVM have RAID 0, 1, 5 
-capability also?  What is the easiest/best setup for 24/7 production 
-environment?
+Unfortunately this doesn't give any significant size drop:
+lvm staticly linked with uClibc and device-mapper lib with all features
+=2Drwxr-xr-x    1 misiek   users      555815 2004-01-25 21:05 initrd-lvm
+lvm staticly linked with uClibc and device-mapper lib using my patch above =
+(so=20
+only vgscan and vgchange functions available)
+=2Drwxr-xr-x    1 root     root       482428 2004-01-25 20:51 initrd-lvm
 
-2.  I need to have LVM support for data disks, does ES 2.1 or AS 2.1 
-come with LVM?  If not how difficult is it to implement it.  Is it 
-recommended with ES 2.1 or AS 2.1?  Your reccomendation?
+How these sizes look with dietlibc?
 
-4.  How do people do this in production if you have to mass install 
-identical systems with Root file systems using Software RAID or LVM?   
-Will Ghost/DD do the job?  Any reccomdation?
+Also some problems with lvm way of checking what command user wants based o=
+n=20
+argv[0] came out:
+[root@arm misiek]# /sbin/initrd-lvm
+  No such command.  Try 'help'.
+[root@arm misiek]# ln -s /sbin/initrd-lvm lvm
+[root@arm misiek]# ./lvm
+  Please supply an LVM command.
+  Available lvm commands:
+  Use 'lvm help <command>' for more information
 
-3.  I need to have mulitiple nodes see the same file systems through the 
-SAN impletmentation.  I read about Sistina's GFS.   Is this product 
-similar to Veritas SanPoint foundation suite where multiple nodes can 
-see same file systems.  How much does GFS cost for, say  for 2 cpu's, 4 
-- 6 nodes?  Are there other products that does similiar job?
+  help            Display help for commands
+  vgchange        Change volume group attributes
+  vgscan          Search for all volume groups
+  version         Display software and driver version information
 
-Thank you for your help!
+It would be much better if when argv[0] is not known internally for lvm the=
+n=20
+work as argv[0] =3D lvm.
+
+> L.
+
+=2D-=20
+Arkadiusz Mi=B6kiewicz     CS at FoE, Wroclaw University of Technology
+arekm.pld-linux.org, 1024/3DB19BBD, JID: arekm.jabber.org, PLD/Linux
