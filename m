@@ -1,25 +1,25 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0CAoSr22502
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 05:50:28 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0CE8Kr29368
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 09:08:20 -0500
 Received: from main.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0CAoQ3b017388
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 05:50:27 -0500
-Received: from root by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1Cog4z-0008BJ-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 11:50:21 +0100
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0CE8I5N029523
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 09:08:19 -0500
+Received: from list by main.gmane.org with local (Exim 3.35 #1 (Debian))
+	id 1CojAY-0005Vy-00
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 15:08:18 +0100
 Received: from 195.25.40.253 ([195.25.40.253])
 	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
 	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 11:50:21 +0100
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 15:08:18 +0100
 Received: from bonfils by 195.25.40.253 with local (Gmexim 0.1 (Debian))
 	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 11:50:21 +0100
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 15:08:18 +0100
 From: Bruno Bonfils <bonfils@fimasys.fr>
-Date: Wed, 12 Jan 2005 11:24:12 +0100
-Message-ID: <87zmzfq71v.fsf@mononoke.fimasys.fr>
+Date: Wed, 12 Jan 2005 14:23:15 +0100
+Message-ID: <87y8eypyrg.fsf@mononoke.fimasys.fr>
 Mime-Version: 1.0
 Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Trouble with LVM and snaphot
+Subject: [linux-lvm] Trouble with XFS/Snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -78,6 +78,8 @@ SCSI AACRAID Controler with a lot of disk (11 x 68GB)
 Linux Kernel 2.6.10 with dm-snapshot, dm-mirror, etc.. (running debian sarge)
 XFS (xfsprogs version 2.6.20)
 LVM 2.00.24-1 (Debian Sarge Version)
+
+(sorry if you have received two times this mail, may have trouble with gmane)
 
 -- 
 Bruno Bonfils
