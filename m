@@ -1,11 +1,11 @@
 Return-Path: <thornber@btconnect.com>
-Date: Fri, 13 Jul 2001 09:39:46 +0100
-Subject: Re: [linux-lvm] Oops ...
-Message-ID: <20010713093946.C1563@btconnect.com>
-References: <003601c10af5$102a56c0$0f01a8c0@ws1>
+Date: Fri, 13 Jul 2001 09:42:10 +0100
+Subject: Re: [linux-lvm] Mounting LVM volume with set UID and GID? (REPOST )
+Message-ID: <20010713094210.D1563@btconnect.com>
+References: <85063BBE668FD411944400D0B744267A6433B5@AUSMAIL>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <003601c10af5$102a56c0$0f01a8c0@ws1>; from list@showme.wox.org on Thu, Jul 12, 2001 at 07:06:59PM +0200
+In-Reply-To: <85063BBE668FD411944400D0B744267A6433B5@AUSMAIL>; from austin@coremetrics.com on Thu, Jul 12, 2001 at 02:20:37PM -0500
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -22,40 +22,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-All,
+On Thu, Jul 12, 2001 at 02:20:37PM -0500, Gonyou, Austin wrote:
+> To clarify this, When I try mounting with the options uid=xxx,gid=xxx,rw
+> I cannot mount the volume. I get a mount error. Nothing out of the ordinary,
+> just that it can't "read supberblock", but if I mount it without those
+> options, it's just fine. 
 
-Do not use the current CVS code on existing VG's, and certainly not on
-production systems.  I thought this had been mentioned on the list
-before.
-
-Changes have been made to the PE locations !
-
-Bas: you need to roll back your tools to beta7, the CVS kernel driver
-should be ok.
+Does uid=xxx, gid=xx work without LVM ?
 
 - Joe
-
-On Thu, Jul 12, 2001 at 07:06:59PM +0200, Bas wrote:
-> Hi,
-> 
-> I'm afraid I'm not able to get more details right now, if necessary I'll get
-> 'm later on, but I don't like playing with my filesystems ...
-> 
-> Kernel 2.4.6
-> CVS LVM of 11 July 2001
-> an XFS enabled kernel
-> devfs 1.82.
-> 
-> Boots fine, loads the LVM driver, but after it oopses after running
-> vgchange -a y (line 4, linuxrc).
-> 
-> What can I do ?
-> 
-> Thanks,
-> Bas.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
