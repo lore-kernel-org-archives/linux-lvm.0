@@ -1,10 +1,10 @@
-From: Peter Skensved <peter@sno.Phy.Queensu.CA>
-Subject: Re: [linux-lvm] LVM limit on PE's/size?
-Message-ID: <20011129114031.A15298@jay.phy.queensu.ca>
-References: <200111291636.fATGa3L15288@jay.phy.queensu.ca>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] ext2online fails
+Message-ID: <20011129095307.F29249@lynx.no>
+References: <OFF0F6A876.96B3BE16-ON86256B13.005A4F63@TEXASMUTUAL.COM>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200111291636.fATGa3L15288@jay.phy.queensu.ca>; from MAILER-DAEMON@sno.Phy.Queensu.CA on Thu, Nov 29, 2001 at 11:36:03AM -0500
+In-Reply-To: <OFF0F6A876.96B3BE16-ON86256B13.005A4F63@TEXASMUTUAL.COM>; from JPolache@texasmutual.com on Thu, Nov 29, 2001 at 10:32:48AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +15,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 29 10:38:01 2001
+Date: Thu Nov 29 10:51:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "Jonathan S. Polacheck" <JPolache@texasmutual.com>
+Cc: linux-lvm@sistina.com
 
-      
->In general you should plan for the largest possible Logical Volume size
->during the lifetime of a Volume Group and set the Physical Extent size
->(vgcreate -s) acordingly. Even though Linux does not support more than 2TB
->per block device today, it will be in the future and you won't suffer from
->the LVM1 constraint ITR.
->
->Regards,
->Heinz    -- The LVM Guy --
->
+On Nov 29, 2001  10:32 -0600, Jonathan S. Polacheck wrote:
+> I am trying to resize a filesystem after lvextend.  ext2online returns the
+> following;
+> 
+> [root@netman root]# ext2online /dev/vg1/vol_usr
+> ext2online v1.1.14 - 1999/10/14 for EXT2FS 0.5b
+> 
+> ext2online: resizing to 258048 blocks
+> ext2online: resize failed while in kernel
+> ext2online: Invalid argument
+> 
+> The ext2online man page states;
+> 
+> In  order  to  use ext2online, you need to have the Online ext2 resize
+> support (CONFIG_EXT2_RESIZE) compiled into the kernel  (this  is  an
+> optional patch for the 2.x series of kernels).
+> 
+> How do I tell if my kernel is properly compiled?  If it is not properly
+> compiled, I have a problem as I currently do not have the disk space to
+> install gcc, make or the kernel source.
 
-    Is there any way to change the PE size `after the fact ' ?  I have a
-255.99 GB logical volume ( three 80 GB drives ) with PE size set to 4 Mb.
-Is there a non-destructive way to increase the PE size so that I can add
-more drives ? Or do I have to back everything up and start from scratch ?
-                                                   peter
+Unless you patched it yourself, I don't know of any kernels that include
+this patch by default.  Finally with 2.5 here, it will go into the main
+kernel.
 
-----
+If you need to resize your filesystem, you need to unmount it (go into
+single user mode from a console window (not X!) with "telinit 1", which
+will stop most of the programs running on the system).  Then run
+"ext2resize /dev/vg1/vol_usr" which will detect the size of the LV and
+resize the filesystem to fill it.
 
-Peter Skensved                          Email : peter@SNO.Phy.QueensU.CA
-Dept. of Physics,                       Phone:  (613) 533-2676
-Queen's University,                     Fax:    (613) 533-6813
-Kingston, Ontario,
-Canada
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
