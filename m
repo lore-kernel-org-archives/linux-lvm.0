@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200106090011.f590BTpT002272@webber.adilger.int>
-Subject: Re: [linux-lvm] pvmove failure ...
-In-Reply-To: <20010609004002.B3656@knoll.ln> "from Timshel Knoll at Jun 9, 2001
- 00:40:02 am"
-Date: Fri, 8 Jun 2001 18:11:29 -0600 (MDT)
-MIME-Version: 1.0
+Return-Path: <timshel@pobox.com>
+Date: Sat, 9 Jun 2001 10:38:37 +1000
+From: Timshel Knoll <timshel@pobox.com>
+Message-ID: <20010609103837.A29022@knoll.ln>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010609004002.B3656@knoll.ln>
+Subject: [linux-lvm] Re: pvmove failure ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,34 +21,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Timshel writes:
-> I am having problems trying to pvmove stuff from one physical volume to
-> another. I first experienced this using kernel 2.4.3 with lvm
-> 0.9.1beta6 and the 0.9.1beta7 Debian package of the lvm tools. I then
-> updated to 2.4.4 with the CVS version of lvm (as of 08/06/2001 +1000),
-> and I am still experiencing the same problems. Basically, pvmove simply
-> reports:
-> 
-> pvmove -- ERROR "pv_move_pe(): PE lock" pv_move_pe
- [Note error return is -6 => ENXIO]
-> 
-> pvmove -- ERROR "pv_move_pe(): PE lock" moving physical extents
-> 
-> and nothing is moved :-(
+[Sorry, should have mentioned that I'm not subscribed to get mail from
+ this list - I get enough mail already ;-) - please CC all replies to me]
 
-The ENXIO error is returned if the vg you are trying to move does not
-exist (at least that's what it looks like).  This is returned from
-within the kernel when vg_ptr = NULL inside lvm_do_pe_lock_unlock().
+> It appears from the attached file that you have also applied XFS patches
+> into the kernel.  Which version of the XFS patches did you apply?  Has
+> anyone else tried 'pvmove' with that combination of patches successfully?
+> It's possible we're seeing some kind of conflict between the two.
+>
+> Also, in which order did you patch the kernel, and did you apply any other
+> patches?
 
-It would _appear_ that /dev/vg0/group is pointing to a bogus device.
-In lvm_chr_open() you are allowed to open non-existent devices (so
-that you can create new devices if desired).
+The first version I tried was a vanilla 2.4.3 with the default LVM in it
+(version 0.9.1beta6?) and the XFS 1.0 patch. The last one I tried was
+the CVS version of the XFS kernel (from SGI, 2.4.4, dated 15/05/2001)
+patched with the CVS version of LVM ...
 
-When was the last time you ran vgscan and/or rebooted?  Did you do anything
-strange in the meantime?
+I'm going to try the latest CVS XFS patched with CVS LVM, but I've got
+to wait for the CVS update (which takes ages over my 56K link) :-(
 
-Cheers, Andreas
+Everything else is working fine, just not pvmove :-(
+
+Thanks,
+
+Timshel
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+   Timshel Knoll <timshel@pobox.com>  for Debian email: <timshel@debian.org>
+                Geomatics/Computer Science double degree, RMIT
+      Debian GNU/Linux developer, see http://people.debian.org/~timshel/
+                For GnuPG public key: finger timshel@debian.org
