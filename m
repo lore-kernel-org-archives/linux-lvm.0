@@ -1,11 +1,10 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3AB47740.13F03E87@wrkhors.com>
-Date: Sun, 18 Mar 2001 02:52:16 -0600
-From: Steven Lembark <lembark@wrkhors.com>
+Return-Path: <hne@inetnow.net>
+Message-ID: <3AB49365.2020606@inetnow.net>
+Date: Sun, 18 Mar 2001 19:52:21 +0900
+From: HopNet <hne@inetnow.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Getting LVM to startup on RedHat
-References: <5.0.2.1.2.20010318030921.00a677d0@bugs.home.shadowstar.net>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Recovering PV's VG metadata
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,64 +16,79 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 To: linux-lvm@sistina.com
 
-> to touch NT with a 10' pole as a server.
+Hello all.  I would appreciate any help or pointers to recovering the VG
+data on a "blown" PV.
 
-closer than i'd get :-)
+My setup:
+  Logical Volume Manager 0.8 by Heinz Mauelshagen  04/11/1999  (IOP 6)
+  x86/OS SuSE 6.4 on system disk (scsi, non-LVM)
+  data on VG00 on hda & hdc (whole disk, no partitions)
+  only one LVol exists, and takes up whole VG.
+  hda & hdc are identical models of hard drives.
+  VG01 in examples is a NEW VG on scsi array and can be ignored.
 
-> To get LVM working, I ended up specifying noauto in the fstab. vgscan and
-> vgchange -ay don't seem to work when placed before mounting of filesystems
-> as directed in the HowTO, but will work if placed at the end of rc.sysinit.
-> On the downside, I had to hardcode the mount of the LVM filesystem.
+Problem:
+  OS disk got trashed & system wasn't bootable.
+  Reinstalled OS.  I think at this point, LILO, thinking hda was the
+boot drive, overwrote some of the VG data.
+  no LVMtab or conf files to vgcfgrestore from. :-(
 
-bit of a hack but:
+Now:
+  pvdata sees partial data on hda, and everything on hdc
 
-	/etc/fstab has noauto for all of the lvm file systems, your
-	volume groups all have "/vg" in them (e.g., /dev/vg00) [sue
-	me, i've spent 10+ years running HP systems].
+What I'm looking for:
+  Is there anyway to take common data from hdc and write it back to
+hda.  What tools are available for sector editing (LVM or general)?
 
-allows:
+zeus:~ # pvdata -a /dev/hda
+--- Physical volume ---
+PV Name
+VG Name
+ΦR
+PV Size               12.14 GB / NOT usable 3.21 MB [LVM: 16.09 MB]
+PV#                   0
+PV Status             NOT available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              3106
+Free PE               0
+Allocated PE          3106
 
-	/usr/bin/perl -n -a -e 'print STDERR qx(mount $F[0]) if m{/vg}'
-/etc/fstab;
+Segmentation fault
+zeus:~ # pvdata -N -P /dev/hdc
+--- Physical volume ---
+PV Name               /dev/hdc
+VG Name               vg00
+PV Size               12.14 GB / NOT usable 3.24 MB [LVM: 242 KB]
+PV#                   2
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              3106
+Free PE               0
+Allocated PE          3106
 
-i.e., reading every line in /etc/fstab with out printing it (-n) 
-and splitting all the fields on whitespace (-a) print the result
-of "mount" for the first autosplit field ($F[0]) tp stderr if the
-line we just read contains "/vg" (m{/vg}) for all the lines in
-/etc/fstab.
+--- List of physical volumes ---
 
-add:
+000: /dev/hda
+001: /dev/hdc
 
-	BEGIN{$|=1; print qx(/sbin/vgchange -a -y)} 
+zeus:~ # pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sdb1" of VG "vg01" [21.26 GB / 11.26 GB
+free]
+pvscan -- inactive PV "/dev/hdc"  is associated to an unknown VG (run
+vgscan)
+pvscan -- total: 2 [33.4 GB] / in use: 2 [33.4 GB] / in no VG: 0 [0]
 
-i.e., flush lines on output and run the vgchange beforehand,
-and you get a one-liner to activate LVM and mount the volumes.
+zeus:~ #
 
-which looks like:
+  If there is any other info that might be helpful, please ask.
 
-/usr/bin/perl -n -a \
--e '
-	BEGIN
-	{
-		$| = 1;
-		print qx( /sbin/vgchange -a -y );
-	}
-
-	print qx( mount $F[0] if m{/vg} )
-' /dev/fstab;
-
-if you want it prettified.
-
-cute thing is that you can re-run this as useful since both
-the vgchange and mount will fail harmlessly for already active
-or mounted systems.
-
-enjoi.
-
--- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+Thanks again,
+  Keith@HopNet
