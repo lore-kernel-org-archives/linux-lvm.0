@@ -1,23 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1DElei29538
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:47:40 -0500
-Received: from demonserver.de (p15093797.pureserver.info [217.160.109.186])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1DEldb03915
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:47:39 -0500
-Received: from demonlord.de (160.12.204.212.sr1.DTM1.ip.versanet.de [212.204.12.160])
-	(authenticated bits=0)
-	by demonserver.de (8.12.8/8.12.8) with ESMTP id i1DElbK8012179
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 15:47:38 +0100
-Message-ID: <402CE3BC.3070704@demonlord.de>
-From: Christian Reiss <email@demonlord.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM Problems :)
-References: <402CD9E4.8070402@demonlord.de> <20040213143846.GB10943@redhat.com>
-In-Reply-To: <20040213143846.GB10943@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enigC0866CF8DF1D6E65556E795D"
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1DGTri02865
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 11:29:53 -0500
+From: Miquel van Smoorenburg <miquels@cistron.net>
+Message-ID: <20040213162901.GM14554@traveler.cistron.net>
+References: <20040212015710.3b0dee67.akpm@osdl.org> <20040212203306.GA13192@cistron.nl> <20040212212811.GA655@frodo> <20040212143417.41d2ce58.akpm@osdl.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20040212143417.41d2ce58.akpm@osdl.org> (from akpm@osdl.org on Thu, Feb 12, 2004 at 23:34:17 +0100)
+Subject: [linux-lvm] Re: 2.6.3-rc2-mm1 (dm)
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -29,208 +20,35 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 13 12:08:02 2004
+Date: Fri Feb 13 12:08:09 2004
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Andrew Morton <akpm@osdl.org>
+Cc: Nathan Scott <nathans@sgi.com>, miquels@cistron.nl, linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enigC0866CF8DF1D6E65556E795D
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Hi there!
-
-Big thanks for the very fast answer!!
-Much appreciated!
-
-Just to be VERY sure, tune2fs -l says:
-
-tune2fs -l /dev/share/data
-tune2fs 1.32 (09-Nov-2002)
-Filesystem volume name:   <none>
-Last mounted on:          <not available>
-Filesystem UUID:          e89bf0d8-31fc-4ef0-945a-8cc4bb0c1d4c
-Filesystem magic number:  0xEF53
-Filesystem revision #:    1 (dynamic)
-Filesystem features:      filetype sparse_super large_file
-Default mount options:    (none)
-Filesystem state:         not clean
-Errors behavior:          Continue
-Filesystem OS type:       Linux
-Inode count:              125288448
-Block count:              250576896
-Reserved block count:     0
-Free blocks:              8128738
-Free inodes:              125210458
-First block:              0
-Block size:               4096
-Fragment size:            4096
-Blocks per group:         32768
-Fragments per group:      32768
-Inodes per group:         16384
-Inode blocks per group:   512
-Filesystem created:       Fri May 30 17:14:27 2003
-Last mount time:          Fri Feb 13 14:58:30 2004
-Last write time:          Fri Feb 13 14:58:30 2004
-Mount count:              12
-Maximum mount count:      20
-Last checked:             Thu Feb 12 18:53:36 2004
-Check interval:           15552000 (6 months)
-Next check after:         Tue Aug 10 19:53:36 2004
-Reserved blocks uid:      0 (user root)
-Reserved blocks gid:      0 (group root)
-First inode:              11
-Inode size:               128
-
-----
-
-So What lvreduce size should i use to shrink it?
-I better have a guru look over it, better safe than
-sorry :)
-
--Christian.
-
-Heinz Mauelshagen wrote:
-> Christian,
+On 2004.02.12 23:34, Andrew Morton wrote:
+> Nathan Scott <nathans@sgi.com> wrote:
+> >
+> > > This forces the underlying device(s) to a soft blocksize of 512. And
+> > > I had my 80 MB/sec write speed back !
+> > > 
+> > > I'm not sure if setting the blocksize of the underlying device
+> > > always to 512 is the right solution. I think that set_blocksize
+> > 
+> > Hmm... that set_blocksize there must be new in -mm, I don't see
+> > that in mainline yet.  I would guess that bdev_hardsect_size()
+> > would be more appropriate here than hard-coding 512 bytes.  I
+> > don't know the details of the problem being solving by adding
+> > set_blocksize() in there though, so I might be completely wrong.
 > 
-> the size of your filesystem and logical volume differs already.
-> That's why e2fsadm fails.
-> Did you eventually run resize2fs in order to shrink the filesystem ?
+> Yes, 2.6.3-rc2-mm1 has a new device-mapper update.
 > 
-> Your logical volume size is 1091456MB (32MB/PE * 34108 PE) but your
-> filesystem size is 963584GB (941GB * 1024MB/GB; check with
-> "tune2fs -l" and look for the block count and block size to calculate
-> this correctly).
-> 
-> In case the result shows, that your filesystem is already smaller than the LV,
-> lvreduce the logical volume appropriately.
-> 
-> Use the block count * block size result and round it up to the next PE!
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> 
-> 
-> 
-> On Fri, Feb 13, 2004 at 03:06:28PM +0100, Christian Reiss wrote:
-> 
->>Greetings!
->>
->>I am trying to dissolve a running LVM, so i am doing
->>the e2fsadm, lvreduce, pvmove thingy. But ever since I
->>removed the first hdd, I am unable to resize the lvm
->>any more. The error can be seen below, with e2fsadm.
->>I also included the vg&lvdisplay commands.
->>
->>I am running the LVM1 sources (non-cvs, approx mid last
->>year), as i am unable to run LVM2 (need to downgrade kernel
->>to 2.4.22 (no patch included in lvm2 for 2.4.23)).
->>Also, I am (too dumb/unable) to locate a e2fsadm alike
->>tool for lvm2, as e2fsadm needs the lvm-tab thingy,
->>which lvm2 no longer provides.
->>
->>Any help is greatly appreciated. :)
->>
->>-Christian.
->>
->>
->>::::::::::::::::::
->>::: vgdisplay ::::
->>
->>--- Volume group ---
->>VG Name               share
->>VG Access             read/write
->>VG Status             available/NOT resizable
->>VG #                  0
->>MAX LV                256
->>Cur LV                1
->>Open LV               1
->>MAX LV Size           2 TB
->>Max PV                256
->>Cur PV                11
->>Act PV                11
->>VG Size               1.12 TB
->>PE Size               32 MB
->>Total PE              36668
->>Alloc PE / Size       34108 / 1.04 TB
->>Free  PE / Size       2560 / 80 GB
->>VG UUID               PSYbaQ-bl8d-xvHp-6re2-hoKd-9mE5-Wa5Tqz
->>
->>:::::::::::::::
->>:: lvdisplay ::
->>
->>--- Logical volume ---
->>LV Name                /dev/share/data
->>VG Name                share
->>LV Write Access        read/write
->>LV Status              available
->>LV #                   1
->># open                 1
->>LV Size                1.04 TB
->>Current LE             34108
->>Allocated LE           34108
->>Allocation             next free
->>Read ahead sectors     1024
->>Block device           58:0
->>
->>:::::::::::::
->>:: e2fsadm ::
->>
->>e2fsadm -L-10G /dev/share/data
->>e2fsadm -- logical volume size for "/dev/share/data" invalid
->>
->>:::::::::::
->>:: df -h ::
->>
->>Filesystem            Size  Used Avail Use% Mounted on
->>/dev/share/data       941G  910G   32G  97% /share/filebase
->>
->>
->>-- 
->>Christian Reiss <email@demonlord.de>
->>demonserver.de
->>
->>Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
->>Public Key can be obtained here: http://www.demonlord.de/pgp.txt
-> 
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Red Hat, Inc.
-> Consulting Development Engineer                   Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@RedHat.com                            +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Miquel, thanks for picking this up.  I shall wait for the LVM team to
+> suggest the preferred fix.
 
+Nah, forget about it. I don't think this actually matters, it's still something
+with the 3ware driver in RAID5 mode that fsckes this up. It needs more
+investigation (it seems there's some heisenberg effect in there, or
+I need more sleep).
 
--- 
-Christian Reiss <email@demonlord.de>
-demonserver.de
-
-Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
-Public Key can be obtained here: http://www.demonlord.de/pgp.txt
-
---------------enigC0866CF8DF1D6E65556E795D
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
-
-iD8DBQFALOO8GLayMgL/cbIRApPzAJ47ztUwpD9/T6OamZoHc9ZCoaPjqACdEJRs
-4vPpqlUdPkh84b+Okdvi1kg=
-=pn5J
------END PGP SIGNATURE-----
-
---------------enigC0866CF8DF1D6E65556E795D--
+Mike.
