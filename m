@@ -1,12 +1,12 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Fri, 20 Apr 2001 11:34:19 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-Message-ID: <20010420113419.B569@tykepenguin.com>
-References: <20010419142400.E10345@sistina.com> <200104191945.f3JJjKRn015661@webber.adilger.int> <20010419145337.K10345@sistina.com> <3ADF45FC.EE7B2003@mandrakesoft.com>
+Return-Path: <wichert@cistron.nl>
+Date: Fri, 20 Apr 2001 12:36:24 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] LVM and DRDB
+Message-ID: <20010420123624.F13067@cistron.nl>
+References: <20010420111022.C6133@cistron.nl> <200104201031.f3KAVT05030575@webber.adilger.int>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3ADF45FC.EE7B2003@mandrakesoft.com>; from jgarzik@mandrakesoft.com on Thu, Apr 19, 2001 at 04:09:32PM -0400
+In-Reply-To: <200104201031.f3KAVT05030575@webber.adilger.int>; from adilger@turbolinux.com on Fri, Apr 20, 2001 at 04:31:29AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,28 +20,18 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: AJ Lewis <lewis@sistina.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
+To: linux-lvm@sistina.com, linux-openlvm@nl.linux.org
 
-On Thu, Apr 19, 2001 at 04:09:32PM -0400, Jeff Garzik wrote:
-> AJ Lewis wrote:
-> > Ok, the issue here is that we're trying to get a release out and so anything
-> > that majorly changes the code is getting shunted aside for the moment.  It
-> > would be stupid to just add everything that comes in on the ML without
-> > review.  Linus does the exact same thing.  I've said this before to you
-> > Andreas, but apparently you feel that you should have final say on whether
-> > your patches go in or not.
-> 
-> > As far as getting patches into the stock kernel, we've been sending patches
-> > to Linus for over a month now, and none of them have made it in.  Maybe
-> > someone has some pointers on how we get our code past his filters.
-> 
-> Read Documentation/SubmittingPatches, and also listen to kernel hackers
-> who know the block layer and want to fix lvm.
+Previously Andreas Dilger wrote:
+> Hopefully you have some sort of journaled filesystem for this?
 
-OK, we're in the process of splitting the big patch up into nice clean small
-patches to go to Linus. Hopefully this should be done today, or very shortly at
-least.
+Either ext3 or reiserfs, depending on the kernel we use. Doing a
+fsck on 5TB of data is not something I would enjoy doing :)
 
+Wichert.
 
-patrick
+-- 
+   ________________________________________________________________
+ / Generally uninteresting signature - ignore at your convenience  \
+| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
