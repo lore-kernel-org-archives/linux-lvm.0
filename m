@@ -1,11 +1,10 @@
-Return-Path: <>
-Date: Wed, 23 May 2001 13:07:52 +0200
-From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231107.NAA32087@aseara.com>
-MIME-Version: 1.0
-Content-Type: multipart/report; report-type=delivery-status;
-	boundary="NAA32087.990616072/aseara.com"
-Subject: [linux-lvm] Returned mail: Service unavailable
+Return-Path: <lord@sgi.com>
+Message-Id: <200105231113.f4NBDLA21032@jen.americas.sgi.com>
+Subject: Re: [linux-lvm] XFS and LVM 
+In-Reply-To: Message from Harald Milz <hmilz@linux-magazin.de> 
+   of "Wed, 23 May 2001 10:34:30 +0200." <20010523083432.3601F15CB5@mail.linux-new-media.de> 
+Date: Wed, 23 May 2001 06:13:21 -0500
+From: Steve Lord <lord@sgi.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,79 +16,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
-
-This is a MIME-encapsulated message
-
---NAA32087.990616072/aseara.com
-
-The original message was received at Wed, 23 May 2001 13:07:22 +0200
-from bin@localhost
-
-   ----- The following addresses had permanent fatal errors -----
-jldomingo@softhome.net
-
-   ----- Transcript of session follows -----
-... while talking to mx0c.softhome.net.:
->>> MAIL From:<linux-lvm@sistina.com>
-<<< 554 does not resolve - check your DNS (#4.3.0)
-554 jldomingo@softhome.net... Service unavailable
-
---NAA32087.990616072/aseara.com
-Content-Type: message/delivery-status
-
-Reporting-MTA: dns; aseara.com
-Arrival-Date: Wed, 23 May 2001 13:07:22 +0200
-
-Final-Recipient: RFC822; jldomingo@softhome.net
-Action: failed
-Status: 5.0.0
-Remote-MTA: DNS; mx0c.softhome.net
-Diagnostic-Code: SMTP; 554 does not resolve - check your DNS (#4.3.0)
-Last-Attempt-Date: Wed, 23 May 2001 13:07:52 +0200
-
---NAA32087.990616072/aseara.com
-Content-Type: text/rfc822-headers
-
-Return-Path: <linux-lvm@sistina.com>
-Received: (from bin@localhost)
-	by aseara.com (8.9.3/8.9.3) id NAA32085
-	for jldomingo@softhome.net; Wed, 23 May 2001 13:07:22 +0200
-Received: from sistina.com (hermes.sistina.com [208.210.145.141])
-	by aseara.com (8.9.3/8.9.3) with SMTP id NAA32079
-	for <jdomingo@internautas.org>; Wed, 23 May 2001 13:07:21 +0200
-Received: (qmail 18615 invoked from network); 23 May 2001 11:05:06 -0000
-Received: from localhost (HELO hermes.sistina.com) (127.0.0.1)
-  by localhost with SMTP; 23 May 2001 11:05:06 -0000
-Delivered-To: linux-lvm@sistina.com
-Received: (qmail 18267 invoked from network); 23 May 2001 11:04:13 -0000
-Received: from professorwhealth.com (HELO aseara.com) (216.121.96.120)
-  by hermes.sistina.com with SMTP; 23 May 2001 11:04:13 -0000
-Received: from localhost (localhost)
-	by aseara.com (8.9.3/8.9.3) with internal id NAA29393;
-	Wed, 23 May 2001 13:05:21 +0200
-From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231105.NAA29393@aseara.com>
-To: linux-lvm@sistina.com
 MIME-Version: 1.0
-Content-Type: multipart/report; report-type=delivery-status;
-	boundary="NAA29393.990615921/aseara.com"
-Auto-Submitted: auto-generated (failure)
-Subject: [linux-lvm] Returned mail: Service unavailable
-Sender: linux-lvm-admin@sistina.com
-Errors-To: linux-lvm-admin@sistina.com
-X-BeenThere: linux-lvm@sistina.com
-X-Mailman-Version: 2.0.4
-Precedence: bulk
-Reply-To: linux-lvm@sistina.com
-List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
-List-Post: <mailto:linux-lvm@sistina.com>
-List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
-List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
-List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed, 23 May 2001 13:05:21 +0200
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
---NAA32087.990616072/aseara.com--
+> But that was just once. I still have everything on reiserfs on LVM on my
+> machines, and just started to experiment with XFS. The fact that it is not
+> shrinkable is a bit annoying though. Like AIX JFS. ...
+> 
+> --
+> Harald Milz           |     hm@linux-magazin.de     | If one studies too
+
+Growing is a fairly simple operation for filesystems, shrinking complexity
+is a function of metadata complexity, and XFS metadata is very complex,
+the exception to this is the case of filesystems designed with shrinking
+in mind, but they will almost certainly have to make compromises to support
+this.
+
+Shrinking is also a less used operation in production situations than growing,
+it might be fun to play with, but the type of system XFS comes from you would
+tend to just buy more disks than move one out of an existing filesystem.
+The only really useful 'shrink' operation in this scenario is remove a
+failing drive, and given the volume managers which usually sit under XFS
+the only thing capable of doing this is mirroring the drive (or using
+hardware raid).
+
+Oh, and online shrinking would be the preferable implementation in a
+production situation, which means doing it with transactions.
+
+So these are the reasons XFS does not have a shrink capability. As a
+technical option it is possible to implement this, but the code would
+be very complex and we have a lot of other things to do which have a
+higher priority. As I have said before, if someone wants to try it
+I would be happy to offer suggestions.
+
+Steve
