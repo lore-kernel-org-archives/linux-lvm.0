@@ -1,15 +1,9 @@
-Return-Path: <mkp@mkp.net>
-Subject: Re: [linux-lvm] LVM and DRDB
-References: <20010420111022.C6133@cistron.nl>
-	<200104201031.f3KAVT05030575@webber.adilger.int>
-	<20010420123624.F13067@cistron.nl> <d3y9svheu9.fsf@lxplus015.cern.ch>
-	<20010420154246.R13067@cistron.nl> <yq1u23jvbv8.fsf@jaguar.mkp.net>
-	<3AE05A22.6305B727@lmco.com>
-From: "Martin K. Petersen" <mkp@linuxcare.com>
-Date: 20 Apr 2001 12:13:42 -0400
-In-Reply-To: <3AE05A22.6305B727@lmco.com>
-Message-ID: <yq1lmovv9ah.fsf@jaguar.mkp.net>
-MIME-Version: 1.0
+Return-Path: <gene_yee@hotmail.com>
+From: "hail narcissus" <gene_yee@hotmail.com>
+Subject: Re: [linux-lvm] Removal of PV
+Date: Fri, 20 Apr 2001 10:22:12 -0700
+Mime-Version: 1.0
+Message-ID: <F11003oHMwVN7miR9Od00000ad3@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,30 +15,69 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Jeffrey" == Jeffrey B Layton <jeffrey.b.layton@lmco.com> writes:
+Thanks, thought no one was going to reply.  :)
 
-Wichert> How stable is XFS compared to ext3 and reiserfs? For this
-Wichert> system minimum downtime is very important..
->>
->> I mkfs.xfs'ed the / and /home filesystems on my primary workstation
->> on September 7th last year.
+I'll back up more critical data and try this weekend.
 
-Jeffrey> What happens with I/O loads? (I've heard that XFS dies a
-Jeffrey> nasty death - but that was early this year).
+>From: Patrick Caulfield <caulfield@sistina.com>
+>Reply-To: linux-lvm@sistina.com
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] Removal of PV
+>Date: Fri, 20 Apr 2001 11:29:23 +0100
+>
+>On Mon, Apr 16, 2001 at 02:50:07PM -0700, hail narcissus wrote:
+> >
+> > I know this has been asked before and I browsed the archives for the 
+>info.
+> > But I want to be sure since I am dealing with 500+GB of data.
+> >
+> > Here is my configuration:
+> > hda-h (80Gig IDE's)
+> > sda-n (9Gig SCSI's)
+> > 652.81 GB VG
+> > 505GB Used 140GB Free
+> >
+> > I want to remove the SCSI drives since I am having some SCSI bus 
+>problems
+> > and they are just old and I am not feeling comfortable with it's
+> > reliability.
+> >
+> > I believe this would be the proper steps:
+> >
+> > resize2fs /dev/lv/vg 520G  <-- Is 520G correct, particularly the G.
+> > pvmove /dev/sda /dev/hdh   <-- Assuming /dev/hdh has free space
+> > pvmove /dev/sdb /dev/hdh
+> > pvmove /dev/sdc /dev/hdh
+> > ...
+> > lvreduce -L 520G /dev/lv/vg
+> > vgreduce vg /dev/sda
+> > vgreduce vg /dev/sdb
+> > vgreduce vg /dev/sdc
+> >
+> > I saw in the mailing list where someone suggested:
+> >
+> > ext2resize/resize2fs
+> > lvreduce
+> > pvmove
+> > vgreduce
+> >
+> > But I would think you would want to do pvmove before the lvreduce.
+> > Otherwise you might truncate data?
+>
+>Either way round should be fine. If you're using <beta7 then, due to bugs, 
+>you
+>should take the volume offline before moving it though.
+>
+>patrick
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-We're fine to the extent that 2.4 is fine.  The latter has had a few
-rough edges but is getting better.
-
-FWIW, at lot of people are using XFS in production now.  So do check
-it out:
-
-        http://oss.sgi.com/projects/xfs/
-
--- 
-Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
-mkp@linuxcare.com, http://www.linuxcare.com/
-SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
+_________________________________________________________________
+Get your FREE download of MSN Explorer at http://explorer.msn.com
