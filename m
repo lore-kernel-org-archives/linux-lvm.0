@@ -1,11 +1,10 @@
-Date: Wed, 10 Oct 2001 23:41:58 +0200
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
-Message-ID: <20011010234158.A14457@muon.de>
-References: <20011004223343.A868@balu.kawo2.rwth-aachen.de> <20011005090810.B1245@sistina.com> <3BBD6084.70106@st-peter.stw.uni-erlangen.de> <20011005095737.A1460@sistina.com> <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de> <20011006231826.A739@guldukat.muon.local> <20011008120207.A18314@sistina.com>
+Date: Thu, 11 Oct 2001 01:14:44 +0200
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Message-ID: <20011011011444.A2302@sky.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011008120207.A18314@sistina.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Problems after restarting my debian
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,19 +16,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
-Cc: mauelshagen@sistina.com
 
-On Mon, 08.10.01, "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
-> 
-> Does LVM compiled under gcc-3.0.1 *without* optimization work?
-> 
-No, with -O0 i get the same seg'fault.
+Hello,
+I had to restart my PC because of a power-failure...
+Now I can=B4t mount my lvm-volume anymore.
 
-Nils
--- 
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >  If we all work hard, we can turn this company  <
- >      around 360 degrees -- gruntbert(LOTD)      <
+I fixed the uuids using the uuid_fixer on all my pv=B4s.
+
+home:/home/fzzgrr# vgscan=20
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
+
+Now I wanna restore my backups using
+home:/home/fzzgrr# vgcfgrestore -n vg01 -l
+Speicherzugriffsfehler
+
+(memory access failure)
+
+
+I can=B4t even make a pvscan or pvdisplay:
+home:/home/fzzgrr# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ERROR "pv_read(): LVM structure version" reading physical
+volumes
+
+home:/home/fzzgrr# pvdisplay /dev/sdb1
+pvdisplay -- ERROR "pv_read(): LVM structure version" no VALID physical
+volume "/dev/sdb1"
+
+
+What can I do?
+Uli
+
+
+--=20
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
