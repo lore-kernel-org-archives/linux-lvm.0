@@ -1,9 +1,9 @@
-Message-ID: <020301c25fca$239f7340$1c01a8c0@internal.tripnet.int>
-From: "Robin Edgar - Tripany" <red@tripany.com>
-References: <00cd01c25f0c$2990ffd0$1c01a8c0@internal.tripnet.int> <00f001c25f1b$3a24ef50$1c01a8c0@internal.tripnet.int> <20020918155938.A28041@sistina.com> <011401c25f21$b15f7da0$1c01a8c0@internal.tripnet.int> <20020919120453.C32578@sistina.com>
-Subject: Re: [linux-lvm] Help! unable to mount lv's - can't see why!
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Frank =?iso-8859-1?Q?Matthie=DF?= <Frank.Matthiess_NOSpam@Microdata-POS.de>
+Message-ID: <20020919101939.GB20119@microdata-pos.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] [OT] Reply to list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,123 +14,15 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 19 05:17:22 2002
+Date: Thu Sep 19 05:21:18 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Fair enough, but I would very much like to access the files and determine
-later what has errors and what doesn't - at the moment, I can only do this
-with the docu lv and none of the others...
+I'm sorry for the reply [Virus Warning].. to this list.=20
+Now i fix our systemwide procmailrc not to resend an matching mail to the
+original receiver, which is the list...
 
-You were right, I did manage to get a whole load of lost+found entries using
-fsck after the mount. The docu entry was on the physical extent though, and
-seems to be working fine.
-Anyway I thought I'd upgrade LVM to 1.0.5 from 1.0.1 and refit the disks to
-the 'old' configuration (4 disks + 1 for backup), to do a pvmove.
-Now when I do a pvscan, it finds all the disks, but also the disk I did the
-dd to, as part of the vg. So I de-activated the vg, and tried to reduce the
-vg /dev/hdb1, hoiwever this is not working:
-
-# vgreduce tripserv_vol /dev/hdb1
-vgreduce -- ERROR: can't reduce volume group "tripserv_vol" by used physical
-volume "/dev/hdb1"
-
-# pvscan -v
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- walking through all physical volumes found
-pvscan -- ACTIVE   PV "/dev/hdg1" of VG "tripserv_vol" [38.16 GB / 7.93 GB
-free]
-pvscan -- ACTIVE   PV "/dev/hdh1" of VG "tripserv_vol" [38.16 GB / 8.01 GB
-free]
-pvscan -- inactive PV "/dev/hde1" of VG "tripserv_vol" [55.91 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdf1" of VG "tripserv_vol" [55.91 GB / 3.37 GB
-free]
-pvscan -- ACTIVE   PV "/dev/hdb1" of VG "tripserv_vol" [55.91 GB / 0 free]
-pvscan -- total: 5 [244.08 GB] / in use: 5 [244.08 GB] / in no VG: 0 [0]
-
-If i vgchange -a n it will deactivate them all, but then I get:
-# vgreduce tripserv_vol /dev/hdb1
-vgreduce -- ERROR: volume group "tripserv_vol" is not active
-
-After I restore the vg to it's 'old' configuration, I want to empty
-/dev/hdb1 and add it to the volume group. Then doing a pvmove -i /dev/hde1
-should move all the data it can find there to the rest of the vg shouldn't
-it?
-
-Thank you for all your help so far,
-Robin Edgar
-
------ Original Message -----
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-To: <linux-lvm@sistina.com>
-Sent: Thursday, September 19, 2002 12:04 PM
-Subject: Re: [linux-lvm] Help! unable to mount lv's - can't see why!
-
-
-> On Wed, Sep 18, 2002 at 04:42:54PM +0200, Robin Edgar - Tripany wrote:
-> > Doing the lvdisplay -v shows that pv /dev/hde1 had bits of all of the
-lv's
-> > on it (including the docu lv, which I *can* mount).
->
-> Then it is most likely, that all filesystems will have errors.
->
-> Regards,
-> Heinz    -- The LVM Guy --
->
->
-> >
-> > ----- Original Message -----
-> > From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-> > To: <linux-lvm@sistina.com>
-> > Sent: Wednesday, September 18, 2002 3:59 PM
-> > Subject: Re: [linux-lvm] Help! unable to mount lv's - can't see why!
-> >
-> >
-> > > On Wed, Sep 18, 2002 at 03:56:36PM +0200, Robin Edgar - Tripany wrote:
-> > > > I've discovered that there is a problem with /all/ the superblocks
-> > except for those of the /docu lv (see below). It does lead me to another
-> > question though - only one of the HDs crashed: is it possible that LVM
-wrote
-> > all the superblocks on 1 HD?! If so this seems like a pretty serious bug
-in
-> <SNIP>
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > >
-> > >
-> >
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
->
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
->
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
+--=20
+Frank Matthie=EF=BF=BD                                          fm@Microdat=
+a-pos.de
