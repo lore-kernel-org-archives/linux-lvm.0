@@ -1,8 +1,7 @@
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@users.sourceforge.net>
-Message-ID: <yw1x4r4yfiab.fsf@zaphod.guide>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Trouble switching from LVM2 to LVM1
+From: WIND-UP YOUR MATES <linux-lvm@sistina.com>
+Mime-Version: 1.0
+Message-Id: <E195wIX-0004gc-00@hermes.sistina.com>
+Subject: [linux-lvm] Fwd: WIND-UP YOUR MATES
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,18 +12,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 16 12:46:01 2003
+Date: Wed Apr 16 18:27:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I decided to take linux 2.5 with devicemapper and lvm2 for a spin.
-Everything lvm related worked just fine.  Now I want to boot linux
-2.4.21-preX, without devicemapper.  The problem is that vgscan runs
-without errors, but all the LV device nodes are created with minor 0.
-This way they all point to the same LV.  That is not what I want.  Is
-there any way to get them back, or am I stuck with device-mapper?
+=====TELPHONE JOKES=====
 
---=20
-M=E5ns Rullg=E5rd
-mru@users.sf.net
+
+How to use this service:
+
+1 Dial 0906 664 1902
+2 Select the prank [Eg: Inland Revenue, STD Clinic +  many more].
+3 Enter your victims telephone number.
+4 Listen to their reaction as the computer dials out to them!
+
+
+==Now includes these features==
+
+# Voice recognition.
+# Calls back victim if they hang up..
+# Listen in as your victim is wound up.
+# A total of 17 different pranks to play on your mates.
+
+
+
+
+Data ticket:6321. Calls to 0906 664 1902 cost one pound and fifty pence per minute. Service provider: TPX 0871 872 3731. To unsubscribe call 0871 872 3731. Promotion code: baecg
+
+beabpwmroyhcdvhudu
