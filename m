@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Fri, 9 Feb 2001 00:03:22 +0000
+Date: Fri, 9 Feb 2001 00:10:11 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Upgrade procedure
-Message-ID: <20010209000322.C19887@srv.sistina.com>
-References: <F578nbpzJvm2CaO9smk000059c1@hotmail.com>
+Subject: Re: [linux-lvm] fschk & LVM
+Message-ID: <20010209001011.E19887@srv.sistina.com>
+References: <F77hOQmIpgVCt3hqAde000059ff@hotmail.com>
 Mime-Version: 1.0
-In-Reply-To: <F578nbpzJvm2CaO9smk000059c1@hotmail.com>; from gene_yee@hotmail.com on Thu, Feb 08, 2001 at 02:32:23PM -0800
+In-Reply-To: <F77hOQmIpgVCt3hqAde000059ff@hotmail.com>; from gene_yee@hotmail.com on Thu, Feb 08, 2001 at 02:37:42PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,33 +21,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Feb 08, 2001 at 02:32:23PM -0800, hail narcissus wrote:
+On Thu, Feb 08, 2001 at 02:37:42PM -0800, hail narcissus wrote:
 > 
-> I am running .9.1-Beta2 right now and though I am not currently in need to 
-> upgrade I would like to know the procedure for future reference.
-> 
-> My questions are:  Do I need to re-patch and compile the kernel for 
-> upgrading?
+> First of all, I live in California, home of the rolling blackouts.  :)
 
-Yes, you need to apply the release dependent LVM kernel patch.
-
-> If so then do I need to start with a clean src or can I re-patch 
-> my src?
-
-It depends. In 2.4 you can most likely just apply a LVM delta patch which
-will be generated during the LVM installation. This is documented in INSTALL
-and PATCHES/README contained in the LVM distro.
+:-)
 
 > 
-> In other words, my kernel already has a couple of other hacks patched into 
-> it.  If possible I would like to just run the LVM .9.1-Beta3 patch over my 
-> kernel which was patched for Beta2 on it instead of having to dig up all the 
-> other patches I have applied in the past.
+> I was wondering what LVM does for 'fschk'.
 
-As mentioned: with 2.4. applying the LVM 0.9.1-BetaN patch will (most
-              likely) work.
-              With 2.2 it depends on the patches you added and how they
-              interfere with the LVM patch.
+LVM knows nothing about file system checks because it is a block device layer
+entity just supporting io to blocks.
+
+> Can I run it on my volume group 
+> or is this considered a pretty bad thing?
+
+You can't access *the* VG directly anyway outside the scope of the LVM tools.
+So you can't for eg. not do a fsck on a VG.
+
+> If not, is there something that 
+> LVM uses in it's place?
+
+Yes, LVM has a VGDA (Volume Group Descriptor Area; that's the metadata LVM
+stores on every device it uses) consistency checker called vgck(8).
+
+Pleas have a look at "man lvm" in order to get an overview of LVM
+and pointers to all of its tools.
 
 > 
 > Thanks.
