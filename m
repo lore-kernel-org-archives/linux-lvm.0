@@ -1,10 +1,10 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 24 Apr 2001 14:54:04 +0000
+Date: Tue, 24 Apr 2001 14:58:53 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010424145404.F31988@sistina.com>
-References: <d37l0gvkuf.fsf@lxplus015.cern.ch> <20010419132927.D10345@sistina.com> <20010419204819.D30135@suse.de>
+Message-ID: <20010424145853.G31988@sistina.com>
+References: <20010419132927.D10345@sistina.com> <Pine.LNX.4.33.0104191532370.17635-100000@duckman.distro.conectiva>
 Mime-Version: 1.0
-In-Reply-To: <20010419204819.D30135@suse.de>; from axboe@suse.de on Thu, Apr 19, 2001 at 08:48:19PM +0200
+In-Reply-To: <Pine.LNX.4.33.0104191532370.17635-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Thu, Apr 19, 2001 at 03:35:43PM -0300
 Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,52 +19,63 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>
-Cc: AJ Lewis <lewis@sistina.com>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+To: Rik van Riel <riel@conectiva.com.br>
+Cc: AJ Lewis <lewis@sistina.com>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, linux-lvm@sistina.com
 
-On Thu, Apr 19, 2001 at 08:48:19PM +0200, Jens Axboe wrote:
-> On Thu, Apr 19 2001, AJ Lewis wrote:
+On Thu, Apr 19, 2001 at 03:35:43PM -0300, Rik van Riel wrote:
+> On Thu, 19 Apr 2001, AJ Lewis wrote:
+> 
 > > It is unfortunate that this could not have been resolved in a more mature
 > > manner.  Saying "I don't like the way somebody is doing something.  I won't
 > > bother to talk to them about it, I'll just flame them and try to undermine
 > > their work." is not acceptable.  It would have been nice if you'd actually
 > > tried to work this out instead of handling it this way.
 > 
-> LVM concerns us all now that it is not just an addon, but actually a
-> part of the kernel.
+> We tried, but the last time we had something to say about your
+> code the message wasn't allowed on your list.
 
-As I stated before: there's many more people with lots of expertise *now*
-                    and we appreciate that!
+As mentioned in other mails multiple times:
+The reject answer contained information about how to become a subscriber.
+Our list admin just hated spam and now he has pain in the neck ;-)))
 
-> Rejecting mails and reports from users and
-> developers who just might be able to lend you a hand fixing bugs, is not
-> just counter productive it's downright rude!
-
-As our (former) list maintainer Ben Lutgens stated:
-The rejetc answer contained information how to subscribe to the list which
-is a seconds deal ;-)
-
-Anyway: all LVM related lists at sistina.com are now completely open!
-
-People already send hints to spam filters; thank you guys!
+The lists at sistina.com are completely open now anyway :)
 
 > 
-> Besides, I didn't think the posting was flame material at all. If
-> nothing else, it's a wake up call.
+> Now that the code is in the kernel, we are of the opinion that
+> it is no longer acceptable to censor messages when they are too
+> critical about the LVM source code.
 
-We take it like this and we take it serious that you got annoyed, no matter
-what the actual reason is.
+This is completely misleading!
 
-I think the facts that the sistina.com lists are open to everybody
-now *and* that we will release policies to allow write access to our
-CVS repository for major contributors *and* that we'll have a set of (small)
-patches in the next couple of days to get vanilla updated will help a lot.
+There has *never* been censoring in place!
 
-Thanks for the wake up call ;-) and all your support!
+It was just rejects for mail from non subscribers who actually could subscribe
+in a seconds effort.
+
+So please let us stop claiming wrong things here.
+Thanks!
+
+
+> This beast is in the kernel,
+> now we'd better be allowed to talk about the source code and
+> maintain the thing.
+
+Yes, yes, yes!!!
+
+Thanks for all your future appreciated patch and advice input in advance.
 
 > 
-> -- 
-> Jens Axboe
+> regards,
+> 
+> Rik
+> --
+> Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
+> 
+> Virtual memory is like a game you can't win;
+> However, without VM there's truly nothing to lose...
+> 
+> 		http://www.surriel.com/
+> http://www.conectiva.com/	http://distro.conectiva.com/
 > 
 > -
 > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
