@@ -1,11 +1,9 @@
-Date: Tue, 28 Aug 2001 19:36:53 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Strange message with 2.4.8+1.0.1rc1
-Message-ID: <20010828193652.A4986@tykepenguin.com>
-References: <B45465FD9C23D21193E90000F8D0F3DF0178FD26@mailsrv.linkvest.com>
+Date: Tue, 28 Aug 2001 13:57:26 -0500
+Message-ID: <20010828135726.A22794@beaver.iucha.org>
+From: "Florin Iucha" <florin@iucha.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF0178FD26@mailsrv.linkvest.com>; from Jean-Eric.Cuendet@linkvest.com on Tue, Aug 28, 2001 at 09:10:12AM +0200
+Subject: [linux-lvm] lvm-1.0.1-rc1 doesn't generate proper patch for linux-2.4.10-pre1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,21 +19,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Aug 28, 2001 at 09:10:12AM +0200, Jean-Eric Cuendet wrote:
-> 
-> > Logical volume. All is fine. Then, I reboot. After that, it's 
-> > no more visible. 
-> > If I run vgscan, nothing is found. vgchange -ay doesn't help 
-> 
-> I found that if my VG name is : NORAID_HDX (10 characters), it's no more
-> visible after a reboot (no way to get it back, data loss) but if it's
-> named : NORAID then it's found after a reboot!
-> 
-> Is there a limit to 8 characters in LVM VGs names?
+Hello,
 
-No. The limit is 128 characters and I've had plenty that were longer than 10. I
-suspect that the action of renaming has made the difference. I suspect (and if
-you're brave you could try this!) that if you rename the VG back to NORAID_HDX
-will still work.
+There is a problem with generating the lvm-1.0.1-rc1 patch for kernel
+2.4.10-pre1. 
 
-patrick
+The patched kernel will not compile because of the
+   get_hardsect_size/get_hardblocksize problem that occured in the transition
+from 2.4.2 to 2.4.3.
+
+Thinking about it a little, it looks like the patching mechanism got confused
+about the kernel version and generated a patch for 2.4.1 . I am not sure about
+this and I have not investigated it, but it smells like it.
+
+Please look into it.
+
+florin
+
+-- 
+
+"If it's not broken, let's fix it till it is."
+
+41A9 2BDE 8E11 F1C5 87A6  03EE 34B3 E075 3B90 DFE4
