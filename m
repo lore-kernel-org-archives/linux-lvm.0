@@ -1,10 +1,11 @@
-From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] ftp.sistina.com down?
-Date: Thu, 6 Sep 2001 10:20:26 -0700
-Message-ID: <001101c136f8$38bbb6e0$0300000a@pacbell.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <Pine.LNX.4.33.0109061806460.28151-100000@dunlop.dub.ie.alphyra.com>
+Date: Thu, 6 Sep 2001 13:15:58 -0400
+From: Wayne Topa <wtopa@dmcom.net>
+Subject: Re: [linux-lvm] Debian apt-get link problem
+Message-ID: <20010906131558.A723@dmcom.net>
+References: <20010827114957.A23458@dmcom.net> <20010830141259.E22755@dmcom.net> <20010901003241.B1210@wookimus.net> <20010901095643.A7188@dmcom.net> <20010904110319.A1028@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010904110319.A1028@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,53 +18,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Paul,
+AJ Lewis(lewis@sistina.com) is reported to have said:
+> On Sat, Sep 01, 2001 at 09:56:43AM -0400, Wayne Topa wrote:
+> > ^chewie(chewie@wookimus.net) is reported to have said:
+> > > On Thu, Aug 30, 2001 at 02:12:59PM -0400, Wayne Topa wrote:
+> > > > >   I just tried the link 
+> > > > > ( deb ftp://ftp.sistina.com/pub/LVM/binaries/debian unstable main )
+> > > 
+> > > I hate to state the obvious, but apt does not Debian make.  Try
+> > > manually downloading the *.deb files and installing them manually with
+> > > dpkg -i <pkg.deb>.
+> > 
+> > Thanks.  Yes that is what I did do, but when both the docs had the
+> > apt-get sources address, which didn't work, I thought I was doing
+> > something wrong.  I don't rely on .deb files, just use apt-get when
+> > there are files available.
+> 
+> I've removed the info about using apt-get from the README.Debian on the ftp
+> site.  The HowTo no longer contains this information.  Sorry for the
+> confusion.  :(
 
-I'm putting an RPM together... struggling with the changes between the 2.4.9
-configuration file and the 10+ configuration files that come with RH's 2.4.7
-.src... if you've built RPMs before help is welcome (we can take this
-off-list), otherwise I'll let you know when I've managed to put it
-together... I too have production boxes I don't want to build the tarball
-on.
+Thanks for the reply. 
 
-- erick
+Good Idea to remove the link, I think.
 
------Original Message-----
-From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-Behalf Of Paul Jakma
-Sent:	Thursday, September 06, 2001 10:08 AM
-To:	linux-lvm@sistina.com
-Subject:	Re: [linux-lvm] ftp.sistina.com down?
+BTW, that a great HowTo!
 
-On Wed, 5 Sep 2001, AJ Lewis wrote:
-
-> It should be up again.  Thanks for letting us know.
-
-excellent...
-
-> > also, are there any RPMS for 1.0.1?
->
-> Nope.  Either grabbing the source tarball or talking to your distro is the
-> best option at this point.  The source is not difficult to build and
-install
-> IMHO, so that's probably your best bet for now.
-
-ok.. i've no technical problems with source, but from experience i
-don't like installing from source onto production systems that use
-package management - bad idea for long term maintainability of the
-machine.
-
-anyway.. thanks AJ!
-
-> Regards,
-
---paulj
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Wayne
+-- 
+For any problem there is a solution that is simple, quick, and
+ultimately worse than the problem.
+_______________________________________________________
