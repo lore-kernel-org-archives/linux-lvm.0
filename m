@@ -1,10 +1,10 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3A620788.AA688305@wrkhors.com>
-Date: Sun, 14 Jan 2001 14:09:44 -0600
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] error creating non-existant lv w/ 0.9.1-beta1, 2.4.0-test10
+Return-Path: <dmeyer@dmeyer.net>
+Date: Sun, 14 Jan 2001 21:28:50 -0500
+From: dmeyer@dmeyer.net
+Message-ID: <20010114212850.A9102@yendi.dmeyer.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Re: vgcfgrestore bug followup
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,19 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-root@dizzy : /root # lvcreate -l256 vg00
-lvcreate -- ERROR "File exists" creating VGDA for "/dev/vg00/lvol4" in
-kernel
+On Sun, 07 Jan 2001 16:23:50 -0500,  Brad Corsello wrote:
+> Following up on my own post, I seem to have solved my problem by
+> editing the vg data in the first physical volume with a hex editor,
+> adding the uuid of the second PV where it was supposed to be.  Once
+> I did that, vgscan ran successfully and found the volume group.  But
+> I think this just proves vgcfgrestore is not restoring the uuid list
+> to disk properly.
 
-root@dizzy : /root # ls /dev/vg00/
-group  lvol1  lvol2  lvol3
+Could you describe what you had to do in detail?  I just had a similar
+problem to what you described, but am quite new to LVM.
 
+Also, please cc: me at meyer@virtc.com since my main mail machine is
+down with, well, serious LVM problems. :-(.  Thanks.
 
-
-
--- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+     Dave
