@@ -1,10 +1,7 @@
-From: Herbert Poetzl <herbert@13thfloor.at>
-Subject: Re: [linux-lvm] snapshots+highmem+'md raid5'
-Message-ID: <20030612235501.GA15452@www.13thfloor.at>
-References: <3560BA143F45D5118E670000E82459214C2084@ssk.schneiderkenzingen.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3560BA143F45D5118E670000E82459214C2084@ssk.schneiderkenzingen.de>
+Message-ID: <20030613002945.80024.qmail@web20419.mail.yahoo.com>
+From: Matt E <mgeusenet@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Questions about Physical Volumes...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +12,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 12 18:55:02 2003
+Date: Thu Jun 12 19:30:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jun 12, 2003 at 03:28:59PM +0200, Koch, Steffen wrote:
-> > > Anyone out there using MD RAID5 as physical volumes, high 
-> > memory enabled
-> > > (> 960m of physical memory) and snapshots under load successfully ?
-> > FYI: I use MD RAID5 as physical but I had to disable the
-> > himem completely, because otherwise 1.0.7 would live-lock
-> > the entire system ...
-> 
-> I've a similar problem. My machine has only 768M RAM but I think it may be
-> related. I've 4 IDE disks making up a MD raid5. This md is a single PV in a
-> VG. If I copy some amount of data (mostly from about 2-4 gigabytes) to a LV
-> created in that VG the complete system locks up, no chance to press
-> ctrl-alt-del, only hard reset works.
-> 
-> If someone has a solution for this please help.
+Hello!
 
-hmm, do you have himem enabled (in kernel config)?
-if yes, try to disable it ...
+I'm going to be adding a RAID 5 setup to my system,
+but I need to get all the data off my disks that are
+currently installed and put on to the new raid array. 
+Once this is done, I'll take one of the disks that is
+currently in my system and add it to the RAID array.
 
-best,
-Herbert
+I'm going to run LVM ontop of this RAID array.  The
+raid tools package has a tool "raidreconf" that will
+allow me to add another disk to the array without
+destroying the data on it.
 
-> BTW: I'm using LVM 1.0.7
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Once this is done, I'd want to use this extra space in
+LVM.  However, I can't pvcreate /dev/md0 again,
+beacuse I will already have an LVM setup on it.  Is
+there anyway to let LVM know that /dev/md0 has grown,
+so I could then use this extra space in VGs?
+
+Anyone know anything about this?
+
+Cheers!
+
+__________________________________
+Do you Yahoo!?
+Yahoo! Calendar - Free online calendar with sync to Outlook(TM).
+http://calendar.yahoo.com
