@@ -1,59 +1,73 @@
-Date: Mon, 8 Nov 1999 09:13:04 +0100
-From: Adrien Farkas <freddy@redneck.sk.oracle.com>
-Subject: Re: [linux-lvm] Booting
-Message-ID: <19991108091304.A22527@redneck.sk.oracle.com>
-Reply-To: freddy@sk.oracle.com
-References: <199911080537.AAA29555@e35.msede.com> <3826689B.FB07190E@kent.myip.org>
-Mime-Version: 1.0
-In-Reply-To: <3826689B.FB07190E@kent.myip.org>; from kent@kent.myip.org on Sun, Nov 07, 1999 at 09:07:23PM -0900
+From: mschout@gkg.net
+Date: Tue, 9 Nov 1999 18:13:54 -0600 (CST)
+Subject: [linux-lvm] Status on LVM 0.7 + raid0145-19990824
+Message-ID: <Pine.LNX.4.10.9911091800520.1253-100000@cdm-24-019.tca.net>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Kent Overstreet <kent@kent.myip.org>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Kent Overstreet (kent@kent.myip.org) wrote :
+Hi.
 
-> I just subscribed to the list, so this may have been thought of, but I
-> didn't see it in the archives.
-> 
-> From reading the archives, the biggest (long-term) problem with booting
-> straight of the LVM is having lilo find the kernel. So how about this:
-> dedicate the first extant or three for kernel images. Have regular block
-> files in dev, maybe ex0 etc. When you install a new kernel, just dd the
-> image to the extant. It would probably take minimal hacking for lilo to
+I have had some success in my attempts to get LVM 0.7 working on top of a md
+raid5 device using the raid0145-19990824 patch.
 
-this is the way e.g. Alpha boots from SRM loader. You have some part (preferrably in the beginning) of the disk dedicated for kernel and loader boots from there. But I'm definitely not sure whether this is a good idea. if you run 'file' on kernel image you find out that it's an x86 (e.g.) bootsector so taken pure theoretically you can boot from the disk if you change root device accordingly. But the problem is not kernel but root partition.
+I first applied the raid patch, and then applied the lvm patch against clean
+2.2.13 kernel sources.
 
-Two solutions appear in my mind (I guess it's official solutions for using LVM):
-1) use initrd with minimal support (modules, LVM utils and basic libs)
-2) use some small (20MB) partition with content as above.
+There were some rejects in ll_rw_blk.c that needed to be resolved.  Many of
+these were trivial to fix.
 
-Decide and read HOWTOs
+However, the major change is that the new raid patch has changed the prototype
+for md_make_request:
 
-> find it. Then, we just move the vgscan and vgchange stuff into the
-> kernel. Besides, the idea of user-mode utilities being required to find
-> partitions *REALLY* bugs me. I don't know how i.e. AIX does it, but it
-> would probably have to have kernel level support for all the basic
-> scanning stuff. This would also port well to platforms where the kernel
-> is stored in flashrom or whatever it is (is alpha this way?). Also, we
-> could keep a compressed root fs image on one of the extants, and use it
-> like the slackware boot/root disks if something goes wrong (very
-> useful). We might do something like 2 kernels to an extant (chop it in
-> half), but it doesn't even really matter that much - 12 meg total out of
-> an 18 gig drive isn't going to be missed. This also makes it easy to
-> boot from any root fs you want to, provided a beginning of a pv is where
-> the bios can get to it. Well, how does it sound? Can it be done? Is it
-> worth it? This isn't my area of greatest expertise, but this sounds like
-> it could be a great multi-purpose solution, especially once md and
-> striping become common (make your root fs a raid 5!).
+-int md_make_request (int minor, int rw, struct buffer_head * bh)
++int md_make_request (struct buffer_head * bh, int rw)
 
--- 
-                                             freddy
+Inside that function (in md.c), I made the following change.
 
-----==-- _                      Adrien "freddy" Farkas
----==---(_)__  __ ____  __       freddy@sk.oracle.com
---==---/ / _ \/ // /\ \/ /  We all know Linux is great... It
--=====/_/_//_/\___/ /_/\_\  does infinite loops in 5 seconds
+-       mddev_t *mddev = kdev_to_mddev(bh->b_dev);  
++       mddev_t *mddev = kdev_to_mddev(bh->b_rdev);  
+
+This seems to do the trick.  I have created a raid5 device using 3 8GB drives,
+and set /dev/md0 up as /dev/vg00  I created 4 lv's on it, and have been doing
+some hand tests (writing large files, comparing them).  So far, so good.  No
+system hangs / ooops's / panic's / corruptions yet.
+
+I am not sure what the rammification is of the above change is to using plain
+raid5 devices without LVM though.  I have also only tested LVM on top of raid5.
+I have not tested other levels.  I dont really have the disk resources / spare
+time to test all of the cases :).
+
+The major issue I see though is that we can't really integrate this back into
+the lvm patch itself.  This change is only relevant if you have already applied
+the raid0145-19990824 patch before applying the lvm patch.  So either we need
+to have separate patches, or leave this to people like me as "unsupported"
+patches or something.
+
+I am planning to release a big patch this week against 2.2.13 that contains:
+
+LVM 0.7
+Raid0145-19990824
+Reiserfs-3.5.5-journaling
+knfsd patches (not sure on these yet... ).
+
+So people would be welcome to get the patch from me.
+
+Im not sure what the best way is to proceed with this.  If either LVM or
+raid0145 makes it into the mainline kernel soon, then we wont have this problem
+to deal with anymroe, but I think there is not a generic solution to the
+problem without maintaining two patches until then.
+
+Does anyone have any thoughts/comments on this?
+
+I can post my diff's from a vanilla-2.2.13+raid0145-19990824 kernel as well if
+anyone wants to.  But Ill refrain from posting that to the list as it will be
+somewhat long.  If you want to see it, let me know and I will email it to your
+private address.
+
+Regards,
+Mike
