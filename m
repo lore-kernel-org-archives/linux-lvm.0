@@ -1,9 +1,11 @@
-Return-Path: <kirth@hole.org>
-Message-Id: <5.0.2.1.0.20010429184602.00ac9e88@mail.hole.org>
-Date: Sun, 29 Apr 2001 18:47:48 +0100
-From: Kirth <kirth@hole.org>
+Return-Path: <misiek@pld.ORG.PL>
+Date: Sun, 29 Apr 2001 19:49:50 +0200
+From: Arkadiusz Miskiewicz <misiek@pld.ORG.PL>
+Message-ID: <20010429194950.A12337@ikar.t17.ds.pwr.wroc.pl>
 Mime-Version: 1.0
-Subject: [linux-lvm] lowest spec LVM run on ?
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] vgcreate doesn't work for me
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +17,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hi,
+I wanted to do some test with lvm and doing as in LVM-HOWTO:
 
-	I'm just wondering whats the lowest spec machine that anyone has an LVM 
-running (stable) on ?
-	The reason is, I have just built another one, but it's on a p100 with 
-16megs of ram, I tried to reiserfs
-	the drive but that crashed the kernel (still no idea why, same kernel as 
-my p133 with 128megs... which
-	works fine). I have made the fs just ext2 for now (this is all testing NOT 
-live).
+[root@arm misiek]# pvcreate /dev/hdd[123]
+pvcreate -- physical volume "/dev/hdd1" successfully created
+pvcreate -- physical volume "/dev/hdd2" successfully created
+pvcreate -- physical volume "/dev/hdd3" successfully created
 
-	Any suggestions for ensuring it's stable ? I am trying to find some simm's 
-for the pc ;)
+[root@arm misiek]# vgcreate test /dev/hdd[123]
+vgcreate -- no valid physical volumes in command line
 
-Kirth
+[root@arm misiek]# uname -a; rpm -q lvm
+Linux arm 2.4.4 #1 sob kwi 28 12:49:56 CEST 2001 i686 pld
+lvm-0.9.1-0.beta7
+[root@arm misiek]#=20
+
+unfortunately vgcreate doesn't want to work for me :-(
+
+Any suggestions?
+--=20
+Arkadiusz Mi=EF=BF=BDkiewicz, AM2-6BONE    [ PLD GNU/Linux IPv6 ]
+http://www.t17.ds.pwr.wroc.pl/~misiek/ipv6/   [ enabled ]
