@@ -1,11 +1,9 @@
-Return-Path: <markv@wave.co.nz>
-Date: Tue, 14 Aug 2001 15:04:18 +1200
-From: Mark van Walraven <markv@wave.co.nz>
-Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010814150418.E6463@mail.wave.co.nz>
-References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com>
-Mime-Version: 1.0
-In-Reply-To: <20010812200701.A657@btconnect.com>; from Joe Thornber on Sun, Aug 12, 2001 at 08:07:02PM +0100
+Return-Path: <austin@coremetrics.com>
+Message-ID: <85063BBE668FD411944400D0B744267A6436B6@AUSMAIL>
+From: "Gonyou, Austin" <austin@coremetrics.com>
+Subject: RE: [linux-lvm] RFC: Visual Disk Administrator project
+Date: Mon, 13 Aug 2001 22:16:01 -0500
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,16 +17,197 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Sun, Aug 12, 2001 at 08:07:02PM +0100, Joe Thornber wrote:
-> I would much rather see people wrapping the tools than using liblvm, in fact
-> liblvm will probably disappear in the future.
+Yes. This is very good. This is definitely what LVM needs to be further
+accepted in certain realms who are teetering on the brink of using/pursuing
+open source alternatives. 
 
-I think it is a bad idea to eliminte liblvm.  Shared libraries are much
-easier use to use from programs.  For example, it is much easier in a perl
-script to use zlib than to run gzip as a subprocess in a bulletproof way.
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com 
 
-Regards,
-
-Mark.
+> -----Original Message-----
+> From: Jason Tackaberry [mailto:tack@linux.com]
+> Sent: Monday, August 13, 2001 7:05 PM
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] RFC: Visual Disk Administrator project
+> 
+> 
+> Below is an initial project plan for the GUI disk 
+> administration tool I
+> have been talking about that I'm calling Visual Disk Administrator
+> (VDA).  This is an RFC, so please let me know of any suggestions and
+> general comments you have about the proposal.  It is mostly a 
+> collection
+> of my thoughts over the last couple of days.  There's a URL below with
+> some small mock-up images, so read on ...
+> 
+> -----
+> 
+> Primary Goal: A comprehensive GUI disk administration tool for Linux
+> that makes managing software RAID devices and logical volumes 
+> as simple
+> and user-friendly as possible, as well as providing a 
+> convenient-to-use
+> interface for typical tasks such as partitioning disks, and creating,
+> resizing and tuning file systems.
+> 
+> Under the scenes, VDA will handle partitions, physical volumes, md
+> devices, and volume groups, and logical volumes (hopefully) 
+> seamlessly.
+> In particular, I want md and LVM to work transparently together.  You
+> should be able to create a volume-managed RAID5 configuration without
+> worrying about md or lvm differences.  
+> 
+> Consequently, this is going to sacrifice some flexibility.  But that's
+> fair game for a GUI tool.  Flexibility is gotten from the command line
+> and manual setup.  How much flexibility I'm talking about here is open
+> for debate. 
+> 
+> The interface will be organized into the following categories:
+> 
+>  - Controllers
+>  - Disks
+>  - Volume Groups
+>  - Logical Volumes
+>  - File Systems
+> 
+> Each of those categories can have 2 different types of views: a tree
+> view, and an object view.  The tree view is simply a hierarchical list
+> of the particular category.  For example:
+> 
+>    controllers
+>    |
+>    +-- ide0
+>    +-- ide1
+> 
+> or
+> 
+>    disks
+>    |
+>    +--- hda
+>    |    |
+>    |    +-- hda1
+>    |    +-- hda2
+>    +--- hdb
+> 
+> etc.
+> 
+> The object view is a graphical model (in a canvas) of the 
+> category.  The
+> main purpose of the object view is to quickly let you get an overall
+> picture of your disk setup.  Ideally, the object view should 
+> scale well.
+> In other words, complex disk configurations should not get so visually
+> cluttered that it defeats the purpose of the view.  (This is 
+> harder than
+> it sounds!)
+> 
+> I have made mock-ups of how I want to represent certain configurations
+> of volume groups.  These mock-ups are modelled after screenshots of
+> Veritas Volume Manager 3.0.  I welcome comments and suggestions about
+> these too.  They can be viewed at:
+> 
+>    http://sault.org/vda/mock.html
+>  
+> (For those reading this email in an archive, this URL is temporary and
+> will probably go away in a few weeks.)
+> 
+> When looking at these sketches, keep in mind that one of my 
+> goals is to
+> seamlessly merge LVM and md at the GUI level.
+> 
+> Here is a summary of the categories:
+> 
+> Controllers: A view of all disk controllers (SCSI and IDE initially),
+> and information about the devices.  Any tuning parameters 
+> available for
+> the controller can be interfaced here.
+> 
+> Disks: A view of all hard disks attached to the known 
+> controllers above.
+> This view will also list partitions, and allow the user to 
+> partition the
+> disks or modify existing partitions.  Tuning parameters (such as
+> enabling DMA on IDE disks) will be available here.  Resizing 
+> partitions
+> probably won't be allowed -- can LVM cope if one of its 
+> physical volumes
+> gets resized?
+> 
+> Volume Groups: A view of all LVM controlled volume groups.  This is
+> where all the real LVM/md functionality will happen.  The 
+> user should be
+> able to create a volume group that may contain plain 
+> partitions, RAID0,
+> RAID1, RAID0+1, and RAID5, any number of which may be linearly
+> concatenated together.  (e.g. a volume group that concatenates 3 disks
+> in a RAID5 setup and 2 other disks in a RAID1 setup.)  I see md
+> happening below the LVM in all cases for simplification.  In this
+> section you should be able to monitor the health of your 
+> volume groups,
+> and any md devices inside them.  If a disk encapsulated by an 
+> md device
+> is failing or recovering this information should be visually obvious.
+> 
+> Logical Volumes: A view of all logical volumes in all volume groups.
+> Here you will be able to remove, add, and resize logical volumes.
+> Resizing a logical volume will also resize a filesystem (if the user
+> requests it) if that filesystem supports resizing, and, of 
+> course, if a
+> filesystem actually exists on the logical volume.
+> 
+> Filesystems: A view of all known filesystems in all logical 
+> volumes and
+> all non-LVM-controlled partitions.  If the filesystem is mounted, it
+> will show the mount point.  Resizing operations will also be available
+> here if the filesystem supports it, with the option to modify the
+> size of the underlying logical volume if one exists.  Also,
+> filesystem-specific tuning options will be available.
+> 
+> -----
+> 
+> I haven't exactly worked out any implementation details yet.  
+> I do know:
+> 
+>   - I'll be doing the GUI in Qt because I want to learn it, but will
+>     design the GUI so it is abstracted and the VDA can be ported to
+>     other toolkits.  
+>   - Statically compiled versions are a must since this tool 
+> is intended 
+>     to be used on servers where X libraries may not exist.
+>   - Interfacing with the LVM will be done through command-line tools.
+> 
+> Initial versions will only view existing configurations.  The 
+> ability to
+> actually modify or create volume groups will come once I get enough
+> feedback and am satisfied with the quality of the design.
+> 
+> Naturally a project like this must undergo intensive testing 
+> in lots of
+> different environments.  Fortunately I have some different hardware at
+> my disposal, but I hope after the initial design that releases will be
+> frequent, and there will be enough interest to generate sufficient
+> user-feedback.
+> 
+> So, let the comments begin!
+> 
+> TIA,
+> Jason.
+> 
+> --
+> Academic Computing Support Specialist         Assistant Section Editor
+> Algoma University College                     http://linux.com/develop
+> Sault Ste. Marie, Ontario                 
+> 705-949-2301 x330                                   Personal Home Page
+> http://www.auc.ca                                     http://sault.org
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
