@@ -1,11 +1,11 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Tue, 9 Oct 2001 21:58:45 -0600
-Subject: Re: [linux-lvm] kernel reports vg twice
-Message-ID: <20011009215845.L6348@turbolinux.com>
-References: <20011008160013.A26865@cistron.nl>
+Date: Wed, 10 Oct 2001 09:06:22 +0100
+Subject: Re: [linux-lvm] lvcreate cores dump (NTCTA001 - MSV)
+Message-ID: <20011010090622.C340@btconnect.com>
+References: <03256AE0.0073B44E.00@ntrjo009.nt.embratel.com.br>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011008160013.A26865@cistron.nl>
+In-Reply-To: <03256AE0.0073B44E.00@ntrjo009.nt.embratel.com.br>; from norman@embratel.com.br on Tue, Oct 09, 2001 at 12:00:49AM -0300
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,32 +21,4 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Oct 08, 2001  16:00 +0200, Wichert Akkerman wrote:
-> LVM still does not work for me on one of my machines work:
-> 
-> cloud:/dev/discs/disc1# vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "vg_user"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
-> 
-> cloud:/dev/discs/disc1# vgchange -a y
-> vgchange -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
-> 
-> I did a bit of looking around and it seems the confusement is in the
-> kernel: when lvm_check_kernel_lvmtab_consistency() compares the kernel
-> and the lvmtab entries the list from the kernel mentions the vg_user
-> volume group twice, while the lvmtab only mentions it once. This
-> results in an immediate abort and as a result I can't do anything
-> with the LVM tools.
-
-I take it that this is after a reboot?
-
-Does "vgscan -d -v" process vg_user twice, or does "vgchange -a y -v -d"
-send vg_user to the kernel twice?  Don't know what else to say.
-
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Turn off optimisation.
