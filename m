@@ -1,9 +1,8 @@
-Message-ID: <3B97A5DB.8000203@st-peter.stw.uni-erlangen.de>
-Date: Thu, 06 Sep 2001 18:35:39 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130C001@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Subject: RE: [linux-lvm] My VG is gone...
+Date: Thu, 6 Sep 2001 10:36:33 -0600
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Root on LV
-References: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu> <3B978B57.8000208@st-peter.stw.uni-erlangen.de> <20010906093729.R32553@turbolinux.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,25 +15,98 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
+Yes, I did try this utility.  Thanx for your suggestion.
 
-Andreas Dilger wrote:
+Mike Diehl,
+Network Monitoring Tool Devl.
+Sandia National Laboratories.
+(505) 284-3137
+jdiehl@sandia.gov
 
->On Sep 06, 2001  16:42 +0200, svetljo wrote:
->
->>it probably will hold the kernel also
->>and as far i know there is no bootloader which can access logical volume
->>am i wrong
->>
->
->Yes, you are wrong.  LILO+patch can get a kernel from a logical volume.
->Now that Linus has accepted my patch to fix LV_USER_BMAP from causing
->an oops I will submit the patch to the LILO maintainer.  It can also be
->found in the archives for this mailing list (have posted several times).
->
-does this mean that i can have my kernel on LV of any type ( can i have 
-it on striped one)
-i think i have read some time ago that lilo can boot from linear RAID or 
-RAID1 but not from RAID-0
+> -----Original Message-----
+> From: AJ Lewis [mailto:lewis@sistina.com]
+> Sent: September 05, 2001 2:42 PM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] My VG is gone...
+> 
+> 
+> On Wed, Sep 05, 2001 at 12:56:10PM -0600, Diehl, Jeffrey wrote:
+> > I will be formating 311Gb of hard drives today.  These 
+> drives were 40% full.
+> > This is the second time that LVM has bitten me.  The first 
+> time I tried to
+> > expand a VG, the VG was gone when the machine rebooted.  
+> Same thing this
+> > time.  AND THERE IS APEARANTLY NO WAY TO RECOVER!  It seems 
+> that all of the
+> > vg data is recorded in each member pv.  So, why isn't there 
+> a utility to
+> > recover a vg in this situation?  This is very fragile! 
+> 
+> Did you try the uuid_fixer previously mentioned?
+> 
+> > 
+> > -----Original Message-----
+> > From: Rasmus Wiman
+> > To: linux-lvm@sistina.com
+> > Sent: 9/5/2001 2:04 AM
+> > Subject: Re: [linux-lvm] My VG is gone...
+> > 
+> > "Diehl, Jeffrey" <jdiehl@sandia.gov> skrev:
+> > 
+> > > Any ideas about how to recover without losing my data.  I 
+> need to get
+> > > going
+> > > soon, so if I haven't fixed it by late this week, I'm going to
+> > > reformat....
+> > > And lose several Gb of data.
+> > 
+> > I have already reformated my hard disks, alas. I didn't have time to
+> > wait
+> > for a solution. But If someone would have helped me or 
+> suppllied code
+> > that
+> > fixed the problem, it could have beed the start of a Doctor 
+> LVM project.
+> > I
+> > think there should really be crash recover tools for any 
+> file system and
+> > LVM system since they all do crash some times.
+> > 
+> > 
+> > ---------------------
+> > Rasmus Wiman
+> > SAMI Labs
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
+> -- 
+> AJ Lewis
+> Sistina Software Inc.                  Voice:  612-638-0500
+> 1313 5th St SE, Suite 111              Fax:    612-638-0500
+> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+> http://www.sistina.com
+> 
+> Current GPG fingerprint = 60F3 160D C0D5 2C4B 751B  4FF9 6F67 
+> E9BC 44CD DE95
+> 
+> -----Begin Obligatory Humorous 
+> Quote----------------------------------------
+> FATAL ERROR! SYSTEM HALTED! - Press any key to do nothing...
+> -----End Obligatory Humorous 
+> Quote------------------------------------------
+> 
