@@ -1,25 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9UJQ4r08718
-	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 15:26:04 -0400
-Received: from smtp3.libero.it (smtp3.libero.it [193.70.192.127])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id i9UJPrth008904
-	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 15:25:58 -0400
-Received: from localhost (172.16.1.83) by smtp3.libero.it (7.0.027-DD01)
-	id 4178F14A001D0D2E for linux-lvm@redhat.com;
-	Sat, 30 Oct 2004 21:25:47 +0200
-Received: from [192.168.0.2] (151.41.157.110) by smtp0.libero.it (7.0.027-DD01)
-	id 40CB280C058F4690 for linux-lvm@redhat.com;
-	Sat, 30 Oct 2004 21:25:47 +0200
-From: "\"KieZz\"" <kiezz@libero.it>
-Date: Sat, 30 Oct 2004 21:22:30 +0200
-References: <41801ADE.6030308@monjoin.net> <41814060.4040400@mikebabcock.ca>
-	<20041030172738.GF13737@kluge.net>
-In-Reply-To: <20041030172738.GF13737@kluge.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9UNogr20433
+	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 19:50:42 -0400
+Received: from marketresearchsite.net
+	(IDENT:U2FsdGVkX18cAzbkUjTp9+jrNVo6d5mynztdyRrEzr0@smtp-outbound.host.net
+	[64.135.6.3])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id i9UNoa4Y012415
+	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 19:50:36 -0400
+Message-ID: <418428C6.7070707@staff.theuseful.com>
+Date: Sat, 30 Oct 2004 19:50:30 -0400
+From: Yaroslav Klyukin <yklyukin@staff.theuseful.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200410302122.30956.kiezz@libero.it>
-Subject: [linux-lvm] LVM DISK DIE
+Subject: [linux-lvm] LVM Oops
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,46 +22,93 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, linux-kernel@vger.kernel.org
 
-Hi
-i have a lvm whit 4 disk on a machine whit lvm2 and kernel 2.6.8.1 .
-One is dead, i've tried whit pvmove to 2 disk (200 gb -> 120 +80 ) but it die 
-before moving 30 Gb.
-Now the disk i think is totaly unusable, cfdisk refuse to open it (like 
-opening a non exitent device) and i have this:
 
-root@Orange:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find all physical volumes for volume group orange_vg.
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find all physical volumes for volume group orange_vg.
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find all physical volumes for volume group orange_vg.
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find all physical volumes for volume group orange_vg.
 
-and also this:
+Hello!
 
-root@Orange:~# pvscan
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find device with uuid '9X3e0u-IqHl-B7Eh-CcGa-7Zbp-Awv8-5dfBnj'.
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find device with uuid '9X3e0u-IqHl-B7Eh-CcGa-7Zbp-Awv8-5dfBnj'.
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find device with uuid '9X3e0u-IqHl-B7Eh-CcGa-7Zbp-Awv8-5dfBnj'.
-  Couldn't find device with uuid '42cK3V-88Wm-SEMU-1qUb-fAsZ-Fo1V-QFzFvG'.
-  Couldn't find device with uuid '9X3e0u-IqHl-B7Eh-CcGa-7Zbp-Awv8-5dfBnj'.
-  PV /dev/hdb         VG orange_vg   lvm2 [189.92 GB / 0    free]
-  PV /dev/hdc         VG orange_vg   lvm2 [189.92 GB / 0    free]
-  PV unknown device   VG orange_vg   lvm2 [189.92 GB / 0    free]
-  PV unknown device   VG orange_vg   lvm2 [189.92 GB / 150.89 GB free]
-  PV /dev/hdg         VG orange_vg   lvm2 [114.49 GB / 956.00 MB free]
-  PV /dev/hdh         VG orange_vg   lvm2 [74.52 GB / 4.00 MB free]
-  Total: 6 [948.70 GB] / in use: 6 [948.70 GB] / in no VG: 0 [0   ]
+Oops happened after several days of normal operation diring snapshot.
 
-There is a way to save something ?
 
-Thanks 
+Linux backup-db2 2.4.27 #1 SMP Fri Oct 22 05:22:55 EST 2004 i686 unknown 
+unknown GNU/Linux
+
+Filesystem - reiserfs.
+
+Logical Volume Manager 1.0.8
+Heinz Mauelshagen, Sistina Software  17/11/2003 (IOP 10)
+
+
+Unable to handle kernel NULL pointer dereference at virtual address 00000004
+c02adbea
+*pde = 126d9001
+Oops: 0002
+CPU:    0
+EIP:    0010:[<c02adbea>]    Not tainted
+Using defaults from ksymoops -t elf32-i386 -a i386
+EFLAGS: 00010202
+eax: f8c3b4b0   ebx: fb20bde8   ecx: f89edc38   edx: 00000000
+esi: 33dbdf00   edi: 00000001   ebp: 00000803   esp: c5bc3dac
+ds: 0018   es: 0018   ss: 0018
+Process kupdated (pid: 9, stackpage=c5bc3000)
+Stack: 00000038 00000803 00000000 eae59400 f4ff7800 f4ff7970 00002000 
+c02aa5fa
+        c5bc3e00 c5bc3df8 33dbc580 f4ff7800 f73a9000 00000400 f77db240 
+eae59570
+        f73a9000 33dbc580 0002cdd0 33dbdf38 33dbdf38 08030803 00003a06 
+f2046d00
+Call Trace:    [<c02aa5fa>] [<c02aa727>] [<c022a4be>] [<c022a59e>] 
+[<c02b8d08>]
+   [<c013ebdc>] [<c013ece5>] [<c0142b48>] [<c0142e41>] [<c01072b6>] 
+[<c0142d50>]
+   [<c0105000>] [<c01057ae>] [<c0142d50>]
+Code: 89 42 04 8b 03 89 48 04 89 01 89 59 04 89 0b 89 ca 90 8d 74
+
+
+ >>EIP; c02adbea <lvm_snapshot_remap_block+aa/100>   <=====
+
+Trace; c02aa5fa <lvm_map+36a/480>
+Trace; c02aa727 <lvm_make_request_fn+17/30>
+Trace; c022a4be <generic_make_request+be/140>
+Trace; c022a59e <submit_bh+5e/130>
+Trace; c02b8d08 <netif_receive_skb+188/1c0>
+Trace; c013ebdc <write_locked_buffers+2c/40>
+Trace; c013ece5 <write_some_buffers+f5/140>
+Trace; c0142b48 <sync_old_buffers+78/b0>
+Trace; c0142e41 <kupdate+f1/1c0>
+Trace; c01072b6 <ret_from_fork+6/20>
+Trace; c0142d50 <kupdate+0/1c0>
+Trace; c0105000 <_stext+0/0>
+Trace; c01057ae <arch_kernel_thread+2e/40>
+Trace; c0142d50 <kupdate+0/1c0>
+
+Code;  c02adbea <lvm_snapshot_remap_block+aa/100>
+00000000 <_EIP>:
+Code;  c02adbea <lvm_snapshot_remap_block+aa/100>   <=====
+    0:   89 42 04                  mov    %eax,0x4(%edx)   <=====
+Code;  c02adbed <lvm_snapshot_remap_block+ad/100>
+    3:   8b 03                     mov    (%ebx),%eax
+Code;  c02adbef <lvm_snapshot_remap_block+af/100>
+    5:   89 48 04                  mov    %ecx,0x4(%eax)
+Code;  c02adbf2 <lvm_snapshot_remap_block+b2/100>
+    8:   89 01                     mov    %eax,(%ecx)
+Code;  c02adbf4 <lvm_snapshot_remap_block+b4/100>
+    a:   89 59 04                  mov    %ebx,0x4(%ecx)
+Code;  c02adbf7 <lvm_snapshot_remap_block+b7/100>
+    d:   89 0b                     mov    %ecx,(%ebx)
+Code;  c02adbf9 <lvm_snapshot_remap_block+b9/100>
+    f:   89 ca                     mov    %ecx,%edx
+Code;  c02adbfb <lvm_snapshot_remap_block+bb/100>
+   11:   90                        nop
+Code;  c02adbfc <lvm_snapshot_remap_block+bc/100>
+   12:   8d 74 00 00               lea    0x0(%eax,%eax,1),%esi
+
+
+1 error issued.  Results may not be reliable.
+
+-- 
+Senior Systems Administrator, NiuTech LLC.
+AIM: infiniteparticle
+Cellular: (561) 843-1552
