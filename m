@@ -1,9 +1,9 @@
-Message-ID: <3873A332.91205918@msede.com>
-Date: Wed, 05 Jan 2000 21:01:54 +0100
+Message-ID: <3873A8BF.196353CE@msede.com>
+Date: Wed, 05 Jan 2000 21:25:35 +0100
 From: Michael Marxmeier <mike@msede.com>
-Reply-To: kressb@moose.net
+Reply-To: Stephan.Mueller@suse.de
 MIME-Version: 1.0
-Subject: [linux-lvm] [Fwd: First draft list of 2.3.x "Things to fix"] (fwd)
+Subject: Re: [linux-lvm] [3 Questions... (fwd) (fwd)
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -11,56 +11,40 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
+Forwarded message
 
 -------- Original Message --------
-Date: Wed, 05 Jan 2000 11:34:58 -0500
-From: Brian Kress <kressb@moose.net>
-Subject: [Fwd: First draft list of 2.3.x "Things to fix"]
+From: Stephan Mueller <Stephan.Mueller@suse.de>
+Organization: SuSE Muenchen GmbH
+Subject: Re: [linux-lvm] [3 Questions... (fwd)
+Date: Tue, 4 Jan 2000 07:53:01 +0100
 
-Hi all,
-
-	This was posted to linux-kernel by Alan.  This
-is interesting, because I haven't seen anything before
-about this barrier to LVM being included in 2.3.  Is there
-any chance to get the formatting fixed in 0.8?
-
-Brian
-
-
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: First draft list of 2.3.x "Things to fix"
-To: kparse@salem.k12.va.us ("David L. Parsley (lkml account)")
-Date:   Wed, 5 Jan 2000 01:30:31 +0000 (GMT)
-Cc: alan@lxorguk.ukuu.org.uk (Alan Cox), linux-kernel@vger.rutgers.edu
-
-> including mine.  With the proliferation of ext2 resizing tools, this sure
-> would be sweet; LVM could have saved my butt a few times in the last few
-> years.
+Am Die, 04 Jan 2000 schrieben Sie:
+> -------- Original Message --------
+> Subject: 3 Questions...
+> Date: Tue, 4 Jan 2000 00:44:36 +0000 (GMT)
+> From: James Pattinson <jamesp@emporia.u-net.com>
+> X-Sender: jamesp@greebo.jj.net
+> To: linux-lvm@msede.com
+> Message-ID: <Pine.LNX.4.10.10001040025340.1128-100000@greebo.jj.net>
 > 
-> Any numbers on the "minimal" performance loss of the extra layer?
+> Hi,
+> 
+> I have a few questions... well... I keep thinking of more :)
+> 
+> 1. Raid / LVM
+> 
+> Does anyone have a patch against 2.2.13 that contains both the LVM
+> patch
+> and the super-raid patch (the one that uses MMX)? I want to get max
+> performance by having a striped /dev/md0 as my PV. 
 
-When I tried it for a bit in 2.2.x-ac I couldnt measure any. 
+Why are you doing this?? Just use each physical harddisk as a PV. And
+after this you can combine several PVs within one VG (yes, it is
+simmilar
+to a stripped softraid). AFAIK you will have a performace drop when
+you use a
+LVM on top of a (softraid-) stripped device.
 
-The reason I gave up adding it to -ac was that I cleaned it up , I
-fixed it for the
-Coding Style document and I fixed some bugs. I got an update from the
-author that simply
-ignored all that work and reverted to wrong formats. 
-
-Every annoyance I personally have with the LVM code comes down to two
-things
-	1.	Not following the Coding Style
-	2.	General poor readability - lots of complex loops, huge ioctl
-functions
-
-The main thing it made me wonder was if the ioctl interface layer was
-perhaps structured
-badly and perhaps using different ways to pass the data would avoid a
-lot of the mess
-in the existing code.
-
-The actual remapping code is fast, clean and works. It also has about
-zero impact if the
-LVM is disabled.
-
-Alan
+Cheers
+Stephan
