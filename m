@@ -1,11 +1,12 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3B240ED6.F8951EE8@tls.msk.ru>
-Date: Mon, 11 Jun 2001 04:20:38 +0400
-From: Michael Tokarev <mjt@tls.msk.ru>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com> <3B1FED48.DB80BF00@tls.msk.ru> <20010608153036.G21909@jensbenecke.de> <20010611120459.A26558@mail.wave.co.nz>
-Content-Transfer-Encoding: 7bit
+Return-Path: <peter@bartosch.net>
+Date: Mon, 11 Jun 2001 06:44:59 +0200
+From: Peter Bartosch <peter@bartosch.net>
+Message-ID: <20010611064459.C21955@mind.bartosch.net>
+References: <20010610222138.A21955@mind.bartosch.net> <20010610222719.B21955@mind.bartosch.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010610222719.B21955@mind.bartosch.net>; from peter@bartosch.net on Sun, Jun 10, 2001 at 10:27:19PM +0200
+Subject: [linux-lvm] Re: [reiserfs-list] Reiserfs fragments my MP3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,40 +19,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Reiserfs List <reiserfs-list@namesys.com>, Linux LVM List <linux-lvm@sistina.com>
+Cc: Peter Bartosch <peter@bartosch.net>
 
-Mark van Walraven wrote:
+Hi!
+
+
+> > 
+> > my kernel is 2.4.5 with the LVM parts of -AA2
+> > 
+> > hmm, i haven't this with an "normal" partition
 > 
-> On Fri, Jun 08, 2001 at 03:30:36PM +0200, Jens Benecke wrote:
-> > On Fri, Jun 08, 2001 at 01:08:24AM +0400, Michael Tokarev wrote:
-> > > Another thing to consider if you run 2.4 kernel -- mount tmpfs on /tmp
-> > > (and give some reasonable size restrictions).   This way, /tmp works much
-> > > faster, does not need to be cleaned on boot, and will not eat root's
-> > > space.  You should have reasonable swap space it you plan to use it
-> > > heavily.  Works very well here.
-> >
-> > tmpfs? I thought that existed only on Solaris, and the primary reason for
-> > tmpfs is that Solaris's UFS is so ssllooww compared to other FS (e.g.
-> > ext2, reiser, etc.)
+> i just tested it with a normal partition - that works -- so i think i
+> had to adress this to linux-lvm ...
 > 
-> It's in Linux 2.4 also.  It has the same unfortunate problem as on Solaris,
-> that once someone fills /tmp, you run out swap and daemons start dying.
 
-Hey, do not allow users to fill it up! ;)  There is a mount option for
-tmpfs on linux that allows you to specify max size of a filesystem to
-create.
+a little more information:
 
-About tmpfs and a "real" filesystems.  No, ufs isn't so slow on solaris,
-it is comparable with ext2, and faster sometimes (and slow other times),
-it is hard to say which is better (I prefer ufs on solaris, as it is
-more reliable with almost the same speed).  But with any real on-disk fs,
-it is impossible to skip writing to disk (as fs designed to store data,
-not to loose it), while tmpfs shurely can skip writing if there is
-enouth memory, or with short files (ext2 will update directory at least,
-maybe batching that update for many files, but it will not eliminate
-update if a file will be created and deleted shortly).
+kernel 2.4.5 with:
 
-BTW, this started to be offtopic... ;)
+ reiserfs-2.4.5-knfsd (aus linux-nfs)
+ linux-2.4.5-NFS_ALL 2001-06-03
+ lvm-0.9.1_beta7-4 from 2.4.5aa2
+ umount OOPS from AlViro
 
-Regards,
- Michael.
+ reiserfs 3.6.25 
+
+debian reiserfstools 3.x.0j-1
+
+
+
+BTW: could someone tell me if there's a linux-hardware list? -- i've got
+some issues with an 40G WD - yeah i know WD ,-)
+
+
+wq - until next mail B-), l8r
+
+Peter
+-- 
+   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+   :          student of technical computer science           :
+   :     university of applied sciences krefeld (germany)     :
+    ~~~~~~~~~~~~~~~~~~~~~~ gpg: 40c9053e ~~~~~~~~~~~~~~~~~~~~~
