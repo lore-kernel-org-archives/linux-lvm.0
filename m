@@ -1,56 +1,40 @@
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200001052144.WAA11319@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Re: Preserving LVs (fwd)
-Date: Wed, 5 Jan 2000 22:44:37 +0100 (MET)
+Message-Id: <200001052234.XAA14354@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] devfs...
+In-Reply-To: <Pine.LNX.4.10.10001051729490.1995-100000@fuse.aethos.co.uk> from James Pattinson at "Jan 5, 2000  5:33: 7 pm"
+Date: Wed, 5 Jan 2000 23:34:33 +0100 (MET)
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: James Pattinson <jamesp@aethos.co.uk>
+Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-> Hi!
+> Hi
 > 
-> On Sat, 1 Jan 2000, Heinz Mauelshagen wrote:
+> I'm sure this is a FAQ but I can't find the answer anywhere.
 > 
-> > 
-> > Hapy new year Holger.
-> > 
-> > > Hi!
-> > > 
-> > > How can I preserve existing LVs (such as the ones used for the
-> > > "/usr/local" and "/home" fs) over new installations?
-> > 
-> > 
-> > If you don't touch the disks/partitions where the physical volumes forming
-> > the volume group containing your logical volumes reside, just do
-> > a vgscan after upgrading/reinstalling Linux (including LVM).
-> 
-> 
-> Well, in the beginning (immediately after an update or a new
-> installation) commands like "vgscan" are not available to me, since
-> they were delteted during the installation (probably they live under
-> /bin, /sbin, /usr/bin, /usr/sbin), and the file system(s) containing
-> these directories usually get lost during
-> repartitioning/reformatting.
+> I've am using LVM 0.8i on 2.2.14 with the latest devfs patch.
 
-Right (until a distributor puts them on the installation/update
-media what SuSE already did).
+Sorry, this combination is not yet supported.
+I still have to focus on devfs support 8*(
 
-> As long as I don't have that command
-> however, I can most likely not access any file systems that were
-> created on a LV (such as /usr/local or /home).
+> My root
+> filesystem in on an LV and I have an initrd that does a vgscan and a
+> vgchange. However now I'm using devfs, vgscan dooesn't find any of my
+> volume groups - maybe because vgscan doesn't know to look in /dev/scsi or
+> whatever. Is there a patch to fix this?
 
-Correct.
+vgscan (respectively the library routines involved) already
+take care of devfs naming conventions.
 
-> Maybe I have to create
-> an initrd image in order to ensure that the commands as well as the
-> patched kernel is ALWAYS there and to preserve the /boot file system?
+Did you mount devfs in linuxrc before running vgscan?
 
-Yep.
-
+Regards,
 Heinz
+
 -- 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
