@@ -1,9 +1,12 @@
-content-class: urn:content-classes:message
+From: Jason Smith <jhs@openenterprise.biz>
+Subject: Re: [linux-lvm] Long-term snapshots possible?
+References: <200303112228.39201.jhs@openenterprise.biz> <20030311204616.GB14278@gw.silicide.dk> <20030311212731.GB20134@kluge.net>
+In-Reply-To: <20030311212731.GB20134@kluge.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] Problems and questions with LVM on a large raid system.
-Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B3B7@mercury.infiniconsys.com>
-From: "Barry, Christopher" <cbarry@infiniconsys.com>
+Content-Description: clearsigned data
+Content-Disposition: inline
+Message-Id: <200303131405.24829.jhs@openenterprise.biz>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,45 +17,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 21:03:02 2003
+Date: Thu Mar 13 01:08:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Wouldn't some of the processing be off-loaded to a dedicated controller?
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
---
-Christopher Barry
-Manager of Information Systems
-InfiniCon Systems
-http://www.infiniconsys.com
+On Wednesday 12 March 2003 04:27 am, Theo Van Dinter wrote:
+> "Mmmm, WAFL ...  <gargle gargle>" -- Homer Simpson, IT Manager   ;)
 
------Original Message-----
-From: jon+lvm@silicide.dk [mailto:jon+lvm@silicide.dk]
-Sent: Wednesday, March 12, 2003 6:16 PM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid
-system.
+That was exactly what I want.  Presumably, the best answer is indeed in=20
+the filesystem.  _Maybe_ something could be done with the Reiserfs 4=20
+plugin architecture.
 
+Still, it's great news to hear that chaining is in the pipe.
 
-On Wed, Mar 12, 2003 at 03:59:57PM -0700, Kevin P. Fleming wrote:
-> jon+lvm@silicide.dk wrote:
-> >you're talking about raid0. You dont rebuild raid0. Not in hardware, =
-not
-> >in software.
->=20
-> OK, I missed that extremely important and very obvious point :-)
+=2D --=20
+Jason Smith
+Open Enterprise Systems
+Bangkok, Thailand
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
 
-thought so. Anyway, why would it take longer time to rebuild the
-array using software rather than hardware raid? It's still the
-same ammount of data needed to be copied.
-
-
-
-JonB
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+iD8DBQE+cC2zm5qEoSbpT3kRAr2iAJ94Ioq0Nmkz07RgMiAcvBNCRoZr8gCfbTkS
+STz/9neqhw0/BDCwv/gBsvA=3D
+=3DDlEV
+=2D----END PGP SIGNATURE-----
