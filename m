@@ -1,7 +1,8 @@
-Date: Thu, 9 Mar 2000 21:35:28 +0200 (SAST)
+Date: Thu, 9 Mar 2000 22:39:33 +0200 (SAST)
 From: Bruce Hewitson <hewitson@egs.uct.ac.za>
-Subject: [linux-lvm] 12 disks -- new problems ....
-Message-ID: <Pine.LNX.4.10.10003092129410.22470-100000@tie.egs.uct.ac.za>
+Subject: Re: [linux-lvm] 12 disks -- new problems ....
+In-Reply-To: <Pine.LNX.4.10.10003092129410.22470-100000@tie.egs.uct.ac.za>
+Message-ID: <Pine.LNX.4.10.10003092237070.23268-100000@tie.egs.uct.ac.za>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -11,18 +12,14 @@ Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
 
-Many thanks for the pointers to the major numbers -- I have modified
-MAKEDEV and created/fdisk'ed the devices, and can make ext2 partitions all
-the way to hdp.
+Answering my own message -- seems that there must be something in LVM that
+only looks at ide0 - ide5 -- I found the latest version of hdparm which
+goes up to ide9.
 
-However, I wonder if anybody else has used 12 disks -- now I find that
-while I can make ext2 partitions up to /dev/hdp, neither pvcreate nor
-hdparm will see anything beyond /dev/hdl, ie - I can't get lvm to
-work with /dev/hd[m-p].
+So -- does anybody know how to patch lvm to look at least as far as ide7?
 
-Is there a hard coded limit in both lvm and perhaps hdparm? 
+thanks
 
-Any help much appreciated
 
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  | Assoc. Prof. Bruce C. Hewitson                  Ph: +27 21 650 2878 |
