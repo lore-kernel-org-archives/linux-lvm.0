@@ -1,10 +1,12 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvcreate, vgscan problem!
-Message-Id: <20020118154628.GL1684@tykepenguin.com>
-References: <20020118141431.32744.qmail@web13005.mail.yahoo.com>
+Subject: Re: [linux-lvm] LVM on 2.4.17
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <Pine.LNX.4.33.0201180011090.26948-100000@greebo.foobarhouse.com>
+References: <Pine.LNX.4.33.0201180011090.26948-100000@greebo.foobarhouse.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-QIgGq+SxLvpZZq+k8p2c"
+Message-Id: <1011411634.1992.19.camel@UberGeek>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020118141431.32744.qmail@web13005.mail.yahoo.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +17,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 09:47:02 2002
+Date: Fri Jan 18 21:41:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 18, 2002 at 06:14:31AM -0800, Prashant Kharche wrote:
-> Hi! 
->     I have LVM 1.0.4.rc4 package and linux kernel
-> 2.4.17. Following commands are giving me errors :
-> 
-> vgscan - > gives error message as 
-> " Invalidate :Busy Buffer ..."
-> pvcreate, vgcreate commands are working properly.. and
-> also manages to create to volume groups.. 
-> my sequence of commands is -
-> 1.vgscan 
-> 2.pvcreate
-> 3.vgcreate
-> 4.lvcreate : gives me error ..
-> 
+--=-QIgGq+SxLvpZZq+k8p2c
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-If it's a segfault and you're using RedHat then edit make.tmpl and change
--O2 to -O0 or ... better still... download the released 1.0.1 which already 
-has this change in it.
+Did you compile any MD support in there?
 
-patrick
+On Thu, 2002-01-17 at 18:12, James Pattinson wrote:
+> Hi!
+>=20
+> I've been neglecting my systems and LVM... currently trying to upgrade
+> from 2.4.16 to 2.4.17. 2.4.17 seems to include LVM 1.0.1-rc4 but it
+> fails
+> when I compile:
+>=20
+> lvm-snap.c: In function `lvm_snapshot_COW':
+> lvm-snap.c:380: `phys_start' undeclared (first use in this function)
+> lvm-snap.c:380: (Each undeclared identifier is reported only once
+> lvm-snap.c:380: for each function it appears in.)
+>=20
+> Do I need to apply additional patches?
+>=20
+> Cheers!
+>=20
+> James
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--=20
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-698-7250
+email: austin@coremetrics.com
+
+"It is the part of a good shepherd to shear his flock, not to skin it."
+Latin Proverb
+
+--=-QIgGq+SxLvpZZq+k8p2c
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA8SOqx94g6ZVmFMoIRAvoXAKCnfvgaUY2A2w+Uk35P/sJBdQO2iwCfTX+G
+4jIrCtECjmOErOB6uJy5zQU=
+=cBCa
+-----END PGP SIGNATURE-----
+
+--=-QIgGq+SxLvpZZq+k8p2c--
