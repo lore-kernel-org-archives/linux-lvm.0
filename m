@@ -1,11 +1,11 @@
-Date: Thu, 4 Oct 2001 19:23:22 +0200
-From: Christoph Hellwig <hch@ns.caldera.de>
-Subject: Re: [linux-lvm] kernel 2.2.19 support
-Message-ID: <20011004192322.A6376@caldera.de>
-References: <3BBC4146.51CD437D@promofinarsa.es> <wv669v3b96.fsf@freeze.oslo.dnmi.no> <3BBC4E6E.BCA3EE70@promofinarsa.es> <wvzo771uju.fsf@freeze.oslo.dnmi.no> <3BBC535B.59D6A5CB@promofinarsa.es> <wv3d4zh1r8.fsf@freeze.oslo.dnmi.no> <20011004111023.C31061@turbolinux.com>
+Date: Thu, 4 Oct 2001 18:30:37 +0100
+Subject: Re: [linux-lvm] lvm 1.0 and kernel 2.2.19.Is rawio patch necessary ??
+Message-ID: <20011004183037.A3711@btconnect.com>
+References: <3BBC550E.442F190C@ti.com> <3BBC7C22.1119BF0@promofinarsa.es>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011004111023.C31061@turbolinux.com>; from adilger@turbolabs.com on Thu, Oct 04, 2001 at 11:10:23AM -0600
+In-Reply-To: <3BBC7C22.1119BF0@promofinarsa.es>; from jesus_navarro@promofinarsa.es on Thu, Oct 04, 2001 at 05:11:30PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,18 +21,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Oct 04, 2001 at 11:10:23AM -0600, Andreas Dilger wrote:
-> What you need to do to "properly" fix this is add a lines like
+On Thu, Oct 04, 2001 at 05:11:30PM +0200, Jesus Manuel NAVARRO LOPEZ wrote:
+> Hi, Christian:
 > 
-> #if LINUX_VERSION_CODE > KERNEL_VERSION ( 2, 3, X)
-> 	foo.de = bar;
-> #endif
+> christian e wrote:
+> > 
+> > Hi,all
+> > 
+> > I downloaded lvm 1.0 and kernel 2.2.19.Couldn't find a rawio for 2.2.19
+> > so I thought it wasn't necessary.Is it ? The rawio patch for 2.2.19 is
+> > not here:
+> > 
+> > ftp://ftp.kernel.org/pub/linux/kernel/people/sct/raw-io/
+> > or in the PATHCES dir..
+> > 
 > 
-> around the two offending code sections, and find the appropriate kernel version
-> where this entry was added.  This can be done by looking at the kernel CVS:
->                 http://lxr.linux.no/
+> Well, I'm in same position than you, but having problems.
+> I also asked about the necesity of raw-io patches (specifically for
+> 2.2.19) but till the moment no answer.
 > 
-> (best to start by checking if it is in 2.4.0, or a recent addition, and then
-> going back through 2.3.X kernels).
+> > I did a ./configure and then a make in the patches dir.Applied that
+> > patch without problems.After compiling the kernel and booting up again I
+> 
+> Well, I patched kernel with raw-io for 2.2.18, and then with the lvm
+> patch provided by ./configure then make at PATCHES, but my kernel didn't
+> compile (well, the kernel did, but the make modules failed).
 
-devfs was added in 2.3.48
+The rawio patch is needed for snapshots.
+
+- Joe
