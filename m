@@ -1,11 +1,10 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3AB41AB7.41A3AAFA@wrkhors.com>
-Date: Sat, 17 Mar 2001 20:17:27 -0600
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
+Return-Path: <alec@shadowstar.net>
+Message-Id: <5.0.2.1.2.20010318030921.00a677d0@bugs.home.shadowstar.net>
+Date: Sun, 18 Mar 2001 03:22:35 -0500
+From: Alec Smith <alec@shadowstar.net>
 Subject: Re: [linux-lvm] Getting LVM to startup on RedHat
-References: <01C0AF18.CB0D5B60.smdenton@bellsouth.net>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <F3871yEXUIEAOeIiGXi00001997@hotmail.com>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,87 +16,72 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> > congenital defect in the lvm.  you might want to schedule it
-> > post-boot in /etc/rc.d/rc1.d.  i've nearly given up on the
-> > entire LVM due to the vgscan-at-startup requirement.  to
-> > speed things up you can use
-> 
-> Last I heard, this "vgscan-at-startup requirement" was taken out
-> several releases ago.  I've successfully crashed and booted (unclean
-> and clean restart, respectively) my system several times with various
-> different versions of LVM and kernel without having to run vgscan
-> once.
+Where are the LVM patches for 2.2.18? Or, will I have to run 0.9.1beta6 for 
+this? As the server I'm working with is half a continent away and will cost 
+me $100/hr for local administration, I'd like to stick with well-tested and 
+stable versions of kernel patches.
 
-lacking a vgscan at startup -- even with one frequently --
-i keep getting problems with bad minor numbers after a 
-reboot.  so long as i don't reboot LVM works nicely, afterwards
-i'm frequently stuck restoring from tape.  i was running this
-by hand well after startup to get the sequences correct for 
-whatever i had to code into rc.sysinit (or rc0.d/lvm) and 
-have never gotten any good results out of the process.
+Personally I prefer Debian over RedHat because of the init script setup. 
+Other than RedHat, my only other options were FreeBSD or WinNT. I've never 
+quite understood FreeBSD (limited tinkering time on a test box) and refuse 
+to touch NT with a 10' pole as a server.
+
+To get LVM working, I ended up specifying noauto in the fstab. vgscan and 
+vgchange -ay don't seem to work when placed before mounting of filesystems 
+as directed in the HowTO, but will work if placed at the end of rc.sysinit. 
+On the downside, I had to hardcode the mount of the LVM filesystem.
+
+Alec
 
 
-> >       ( /usr/sbin/vgscan && /usr/sbin/vgchange -a -y ) &
-> >
-> > to background the whole thing.  problem there is that you
-> > will have problems mounting things -- can't use mount -a
-> > to get them if lvm startup isn't in /etc/rc.d/rc.sysinit
-> > but probably don't want anything this tricky in there at
-> > all.
-> 
-> My init sequence is closer to SYSV than pure redhat but it should
-> still work for this... i put a vgchange -a y in my rcS.d (which i
-> think is rc.sysinit in redhat) and the mount calls are in rc1.d and
-> have never had a problem with them.  In fact, my swap partition is
-> also lvm.
-> 
-> I could be wrong, and the LVM maintainers/developers could probably
-> steer you properly if i am, but it appears to me that if you can
-> start your LVs via commandline but rc script initialization fails to
-> start the LVs, you may have a mistiming in your rc scripts.  Perhaps
-> you're using the module instead of the compiled-in and somehow
-> vgchange is starting before modprobe/insmod?  Or perhaps you've not
-> yet mounted /proc and vgchange is failing?  The fact that you can
-> vgchange at all seems to imply that LVM is working properly and that
-> your rc/init scripts need to be tweaked.
+At 03:59 PM 3/17/01 -0800, you wrote:
 
-if "rcS" == single user then rcS.d and rc.sysinit are basically
-equivalent.  main reason for an rc.sysinit is to keep the really
-basic stuff (e.g., fsck, remount / read+write) in one place for
-recovery.  i actually prefer your method for most things :-)
-
-the bootstrap issue is non-trivial:  w/o LVM you cannot get 
-all of the volumes mounted but can easily run into pain 
-trying to get LVM up.  
-
-> > other fix is to put the mounts directly into an lvm init.d
-> > file and live with hard-coding them, write your own version
-> > of /etc/fstab to mount the lvm's...  none of which are
-> > very pretty.
-> 
-> I'd be curious to see how you change /etc/fstab to mount an LV that's
-> not yet started... that would be horrific.  However, you did remind
-> me of one caveat... I had to change the mount sequence from a
-> mountall -a to mount /proc, /dev/pts, etc before lvm initialization
-> then go back in another script to do the actual LV mounts.  Not all
-> that inelegant as far as I see, however, as that's how most other
-> unix variants I've seen do LVM-type init.  mount -t no<fstype> is
-> your friend :)
-
-that's the point:  you'd have to write /etc/myfstab and have 
-another process -- not mount -- process the contents to mount
-the items after LVM has started up.  one slight hack is to 
-take the file system types and add a new one, say "lvmfs" as
-an alias for "ext2".  the first stage of mounting would do
-something like "mount -a -text2" and the later stuff would then
-"mount -a -tlvmfs".  another way is to have the lvm stuff noauto
-then grep (or whatever) the mounts by looking for "/dev/vg" in
-the /etc/fstab.
-
--- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+>I put mine in rc.3 or whatever runlevel you boot at.  I just created a 
+>small script that kicks it off and it works fine.  Maybe that would do the 
+>trick for ya.
+>
+>And if you are compiling why not just jump up to 2.2.18.
+>
+>>From: Alec Smith <alec@shadowstar.net>
+>>Reply-To: linux-lvm@sistina.com
+>>To: <linux-lvm@sistina.com>
+>>Subject: [linux-lvm] Getting LVM to startup on RedHat
+>>Date: Sat, 17 Mar 2001 18:19:22 -0500 (EST)
+>>
+>>I've compiled kernel 2.2.17+LVM-0.9 patches on a RedHat 6.2 machine. If I
+>>run
+>>
+>>vgscan
+>>vgchange -ay
+>>mount /dev/malepages/data /data
+>>
+>>at a command prompt, all works well. However, if I include
+>>
+>>/usr/sbin/vgscan
+>>/usr/sbin/vgchange -ay
+>>
+>>(exactly as above) in my /etc/rc.d/rc.sysinit the commands don't seem to
+>>be run at reboot. After the reboot, I can run the vgchange and mount
+>>commands without first doing a vgscan without incident.
+>>
+>>Any ideas what could be going on?
+>>
+>>Thanks,
+>>Alec
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>
+>_________________________________________________________________
+>Get your FREE download of MSN Explorer at http://explorer.msn.com
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
