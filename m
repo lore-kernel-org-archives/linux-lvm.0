@@ -1,42 +1,64 @@
-Date: 1 Sep 2000 10:37:30 +0000
-From: "Mervyn THOMAS" <Mervyn.THOMAS@mmsuk.co.uk>
-Subject: [linux-lvm] Baffled by errors
-Message-Id: <"C730ZYPXGM4B6*/PN=Mervyn.THOMAS/CN=Mervyn
- THOMAS/OU=Portsmouth/O=Matra Marconi
- Space/PRMD=MMSP400/ADMD=ATLAS/C=GB/"@MHS>
+Date: Fri, 1 Sep 2000 13:29:36 +0200
+From: Jan Niehusmann <jan@gondor.com>
+Subject: [linux-lvm] lvm.h kernel/userspace differences
+Message-ID: <20000901132936.A3526@gondor.com>
+References: <20000829203239.A1030@gondor.com> <200009010540.XAA04818@lynx.turbolabs.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200009010540.XAA04818@lynx.turbolabs.com>; from adilger@turbolinux.com on Thu, Aug 31, 2000 at 11:40:10PM -0600
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm <linux-lvm@msede.com>
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: linux-lvm@msede.com
 
-Here are a few questions from a linux newbie, I hope this is the right forum to 
-raise them, forgive me if it ain't.
+On Thu, Aug 31, 2000 at 11:40:10PM -0600, Andreas Dilger wrote:
+> Jan Niehusmann, you write:
+> > I think it's better not to use linux/lvm.h because kernel headers may belong
+> > to an older kernel version without lvm support. (Linus said on linux-kernel
+> > that he prefers that /usr/include/linux and /usr/src/linux are of the kernel
+> > version used when glibc was compiled)
+> There was always something that confused me, and I never got a response
+> back from Heinz - in the 0.8final user tools/lib/lvm.h it says the IOP
+> version is 7, but the 2.4 kernel lvm.h has IOP version 6 right now,
+> so it shouldn't work, but I think the wrong header is being used...
 
-I'm trying [without success] to build lvm (0.8-pre02.10.1999) on my Sparc 10 
-(RH6.2, kernel 2.2.14-5). Linux itself is running without problems.
+I just compared lvm.h from 0.8final and from linux 2.4.0-test7 (which is 
+running on this computer). You are right, IOP version is different.
 
-I get lots of parse errors during compile that I don't understand:
-    /usr/include/XXX/XXX.h parse error before XXX
-    
-Is my compiler screwed? Have I missed something blindingly obvious? Should this 
-code work on Sparc? Is this version of lvm the right one for my kernel?
-
-Is anyone able to offer advice on these problems. Will summarise.
-
-
-TIA
+But: Kernel defines LVM_DRIVER_IOP_VERSION to "6" and exports it via 
+ioctl LVM_GET_IOP_VERSION. Userspace requests this in lvm_get_iop_version.
+The only place where lvm_get_iop_version gets called is LVM_CHECK_IOP in
+lvm_user.h, where the result (the kernel IOP version) is compared to
+LVM_LIB_IOP_VERSION (and not to LVM_DRIVER_IOP_VERSION), and 
+LVM_LIB_IOP_VERSION is "6", as defined in liblvm.h. 
 
 
-Merv Thomas.
-- - -
-This email is for the intended addressee only. If you have received it in error, you must not use, copy, retain, disseminate or otherwise deal with it. Please notify the sender by return email.
+Additionaly, the following things have changed between 0.8final lvm.h and
+the linux-2.4.0-test7 version:
 
-The views of the author may not necessarily constitute the views of Astrium Limited.
+- some includes and #ifdef KERNEL have changed, nothing that should cause
+  binary incompatibilities, probably
 
-Nothing in this email shall bind Astrium Limited in any contract or obligation.
+- many type changes uint -> uint32_t and stuff like that. It looks like only
+  the names have changed, not the real types, so no problem, again. 
 
-Astrium Limited, Registered in London No. 2449259
-Registered Office: The Grove, Warren Lane, Stanmore, Middlesex, HA7 4LY
+- kernel's lv_v2_t has an additional field "uint8_t __unused;" _in the middle_
+  of the struct. Huh. What's that?
+  
+- in the kernel, there is an lv_disk_v2_t that's missing from 0.8final. 
+  But it's identical to lv_disk_v1_t, so what's the point?
+
+- pv_flush_req_t is missing the field "kdev_t pv_dev" in kernel. As it is 
+  shorter in kernel, and the missing field is at the end, and the struct is
+  only copied into the kernel, this shouldn't cause problems. But things like
+  that may become a maintenance nightmare. 
+
+- similar problem with lv_status_byname_req_t, lv_req_t and 
+  lv_status_byindex_req_t: They are missing "ushort size" in kernel.
+
+
+
+Jan
