@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Removing an old disk, and some vgexport/import love..
-Message-ID: <20020919115935.A32578@sistina.com>
-References: <002001c25fa7$482b2740$ccc67140@ownage>
+Subject: Re: [linux-lvm] pvcreate & pvscan error on MD device
+Message-ID: <20020919120146.B32578@sistina.com>
+References: <20020919033059.36563.qmail@web10409.mail.yahoo.com>
 Mime-Version: 1.0
-In-Reply-To: <002001c25fa7$482b2740$ccc67140@ownage>; from lightning@aci.net on Wed, Sep 18, 2002 at 11:39:19PM -0700
+In-Reply-To: <20020919033059.36563.qmail@web10409.mail.yahoo.com>; from mooasun@yahoo.com on Wed, Sep 18, 2002 at 08:30:59PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,199 +14,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 19 05:00:02 2002
+Date: Thu Sep 19 05:04:13 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Sep 18, 2002 at 11:39:19PM -0700, Matt wrote:
-> Helu,
-> 
->  
-> 
-> I am in dire need of some help.I recently removed an old disk from my PV
-> and added a new one  
-> 
->  in place of the old one.
-> 
-> e.g.
-> 
->             
-> 
-> pvmove garage /dev/hdj1 /dev/hde1 (hde1 being the new drive)
-> 
->  
-> 
-> The physical extents moved over to the new drive and everything was
-> looking good until
-> 
-> I made a pretty big mistake, I figured I'd need to export the group
-> 'garage' and import it.
-> 
-> Wrong! Now when I go and try to import my group it freaks stating:
-> 
->             
-> 
->             # vgimport garage /dev/hde1 /dev/hdg1 /dev/hdf1
-> 
-> vgimport -- ERROR: wrong number of physical volumes to import volume
-> group "garage"
-
-Matt,
-
-you didn't need to export the volume group unless you want to move it to 
-a different system. It looks like you exported the VG and removed /dev/hdj1,
-right?
-
-If that assumption is true, you still need /dev/hdj1 in order to get your
-VG back.
-
-Then do the following:
-
-# vgimport garage /dev/hd[efgj]1
-# vgchange -ay garage
-# vgreduce garage /dev/hdj1
-
-That should bring your VG back and reduce it by the empty /dev/hdj1
-physical volume.
-
-You can physically remove /dev/hdj1 afterwards if you want to.
+Which LVM version are you using?
+Maybe an older one is causing you trouble.
 
 Regards,
 Heinz    -- The LVM Guy --
 
+
+On Wed, Sep 18, 2002 at 08:30:59PM -0700, BOIK MOON wrote:
+> Hello, I do not have any error on PVCREATE, but
+> I do not have more than one MD device registred on my PVSCAN.
+> However, it is OK for the regular devices. Please help me, any clues?
 > 
->  
+> The following are console message:
 > 
-> I can't do a vgcfgrestore either, because it is currently exported and I
-> am not sure if that would
-> fix anything anyways. Here is some more information:
+> root# cat /proc/mdstat
+> Personalities : [linear] [raid0] [raid1] [raid5]
+> read_ahead 1024 sectors
+> md1 : active raid1 hdd4[1] hdb4[0]
+>       2048192 blocks [2/2] [UU]
 > 
->  
+> md0 : active raid1 hdc4[1] hda4[0]
+>       2048192 blocks [2/2] [UU]
 > 
->             # pvscan
+> unused devices: <none>
+> root# pvcreate /dev/md1
+> pvcreate -- physical volume "/dev/md1" successfully created
 > 
+> root# pvcreate /dev/md0
+> pvcreate -- physical volume "/dev/md0" successfully created
+> 
+> root# pvscan
 > pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/md0"  is in no VG  [1.95 GB]
+> pvscan -- inactive PV "/dev/hdg4" is in no VG  [1000.12 MB]
+> pvscan -- inactive PV "/dev/hdh4" is in no VG  [1000.12 MB]
+> pvscan -- total: 3 [3.91 GB] / in use: 0 [0] / in no VG: 3 [3.91 GB]
 > 
-> pvscan -- inactive PV "/dev/hdg1"  is in EXPORTED VG "garage" [74.55 GB
-> / 0 free]
+> root# pvdisplay /dev/md1
+> pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical
+> volume "/dev/md1"
 > 
-> pvscan -- inactive PV "/dev/hde1"  is in EXPORTED VG "garage" [76.33 GB
-> / 0 free]
 > 
-> pvscan -- inactive PV "/dev/hdf1"  is in EXPORTED VG "garage" [74.52 GB
-> / 60.21 GB free]
+> root# pvdisplay /dev/md0
+> pvdisplay -- "/dev/md0" is a new physical volume of 1.95 GB
 > 
-> pvscan -- total: 3 [225.42 GB] / in use: 3 [225.42 GB] / in no VG: 0 [0]
+> root# pvdata /dev/md1
+> --- NEW Physical volume ---
+> PV Name               /dev/md1
+> VG Name
+> PV Size               1.95 GB
+> PV#                   0
+> PV Status             NOT available
+> Allocatable           NO
+> Cur LV                0
+> PE Size (KByte)       0
+> Total PE              0
+> Free PE               0
+> Allocated PE          0
+> PV UUID               Ke5PpL-bWgO-GTkR-E6Wt-QOzz-pRhy-cJQcPW
 > 
->  
 > 
->             vgscan -d output can be found at:
-> http://www.planetgarage.net/vgscan.txt (long)
 > 
->  
 > 
-> root@deify:~ # vgdisplay -Dv
-> 
-> vgdisplay -- WARNING: volume group "garagePV_EXP" is exported
-> 
-> --- Volume group ---
-> 
-> VG Name               garagePV_EXP
-> 
-> VG Access             read/write
-> 
-> VG Status             NOT available/exported/resizable
-> 
-> VG #                  0
-> 
-> MAX LV                256
-> 
-> Cur LV                1
-> 
-> Open LV               0
-> 
-> MAX LV Size           255.99 GB
-> 
-> Max PV                256
-> 
-> Cur PV                3
-> 
-> Act PV                3
-> 
-> VG Size               225.41 GB
-> 
-> PE Size               4 MB
-> 
-> Total PE              57705
-> 
-> Alloc PE / Size       42290 / 165.20 GB
-> 
-> Free  PE / Size       15415 / 60.21 GB
-> 
-> VG UUID               fs8lXY-bca9-tFHT-yv8g-HP7U-Ssh7-v13m9h
-> 
->  
-> 
-> --- Logical volume ---
-> 
-> LV Name                /dev/garage/LLAMA
-> 
-> VG Name                garage
-> 
-> LV Write Access        read/write
-> 
-> LV Status              NOT available
-> 
-> LV #                   1
-> 
-> # open                 0
-> 
-> LV Size                165.20 GB
-> 
-> Current LE             42290
-> 
-> Allocated LE           42290
-> 
-> Allocation             next free
-> 
-> Read ahead sectors     120
-> 
-> Block device           58:0
-> 
->  
-> 
->  
-> 
-> --- Physical volumes ---
-> 
-> PV Name (#)           /dev/hde1 (1)
-> 
-> PV Status             available / allocatable
-> 
-> Total PE / Free PE    19541 / 0
-> 
->  
-> 
-> PV Name (#)           /dev/hdg1 (3)
-> 
-> PV Status             available / allocatable
-> 
-> Total PE / Free PE    19086 / 0
-> 
->  
-> 
-> PV Name (#)           /dev/hdf1 (4)
-> 
-> PV Status             available / allocatable
-> 
-> Total PE / Free PE    19078 / 15415
-> 
->  
-> 
->  
-> 
+> ---------------------------------
+> Do you Yahoo!?
+> New DSL Internet Access from SBC & Yahoo!
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
