@@ -1,8 +1,8 @@
-Message-ID: <3E70411C.AC385DAD@silicide.dk>
+Message-ID: <3E704492.DF386E61@silicide.dk>
 From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Help: LVM on top of SW RAID0+1
-References: <Pine.LNX.4.53.0303121824410.2531@light.webcon.net>
+Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
+References: <20030312195217.GC18876@auctionwatch.com> <20030312221320.GA15196@gw.silicide.dk> <20030312234520.GA19335@auctionwatch.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,50 +14,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar 13 02:29:01 2003
+Date: Thu Mar 13 02:44:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-"Ian E. Morgan" wrote:
-> 
-> Current config:
-> 
-> md1: raid0 of hda3, hdb3
-> md2: raid0 of hdc3, hdd3
-> md3: raid1 of md1, md2
+Petro wrote:
 
-hmm. I tried various combinations of raid0 and raid1 ontop
-of each other. One combination had a REALLY REALLY severe
-performance penalty.
+[cut]
 
+>     The production data we gathered showed the opposite--at least for the
+>     3ware cards in our environment (we had about 5-8% more overhead
+>     running the 3ware cards RAID0 than we did running either raw disk
+>     (cheap IDE cards) or having the 3ware card pretend to be a jbod.
 
-> md1 was created first, and is currently one big PV in VG "foo".
-> 
-> md2 was created identically to md1, and then md3 was created causing md2 to
-> be synced to be identical to md1.
-> 
-> I would now like VG "foo" to use md3 instead of md1.
-> 
-> I tried:
-> 
-> # vgexport foo
-> # vgimport foo /dev/md3
-> 
-> This seemed to suceed, but vgdisplay says that VG "foo" is still only using
-> PV md1.
-> 
-> It seems that pvscan and friends see md[123] all as belonging to VG "foo".
-> 
-> How do I make LVM ignore md1 and md2, and force only md3 to be used on VG
-> "foo"?
+you mean the cpu was more used ?
 
-shut down the raid.
-use only md1.
-Make md2 and md3, with md1 MARKED AS FAILED.
-create new VG, move data.
-mark md1 okay, and include it into md3 with mdadm/raidhotadd
+ 
+>     This wasn't benchmarking, this was set it up and throw it over the
+>     wall for a month or two and see what the numbers looked like.
 
+i ran quite alot of tiobench on it with various parameters. I still
+have a .pdf somewhere if you want it.
+
+ 
+>     A really nervous way of testing.
+> 
+> > > I'm running kernel 2.4.18, with LVM version 1.0.3, and the lvmtools
+> > > version 1.0.1rc3-1 (long story, but upgrading is a path-of-last-resort).
+> > if you need snapshots, get 1.0.7
+> 
+>     If I get the chance I'm probably going to ditch LVM since I don't
+>     need snapshots. I initially was give snapshots as a requirement.
+> 
+>     Unfortunately I'll probably not get a chance to redo these.
+
+a shame, because if you dont need snapshots, LVM is a overhead.
+
+ 
+[cut]
+
+> > that depends. You can stripe the lvm, but then you cant resize it.
+> > if you made a LV, then it would proberly just allokate all on one
+> > "disk", aka sda, and then on sdb.
+> 
+>     I'm using 100% of the VG for the same LV.
+> 
+>     I'm fine with not being able to resize it. Do I need the MD stuff to
+>     stripe it?
+
+No. You can stripe using the LV system. But i would think that
+if you can shutdown the LV, then you might as well stop the VG,
+and do it on the raw device. (except this isnt as future proof
+as a LVM system is).
+
+ 
+> > > Since I need the disk write rate of all 6 drives, I'm *REALLY* hoping
+> > > that it's interleaved.
+> > sorry... it is not interleaved.
+> > JonB
+> > ps: how big a partition do you need stripping for? Do you need the
+> > advanced LVM stuff, like resize, snapshot...
+> 
+>     I need slightly over 1T of formatted disk space on each system.
+> 
+>     Which means i really need to find a way to send an <alt-3> through
+>     an ssh session to a telnet window.
+
+may i suggest
+http://www.realweasel.com/intro.html
+It's a pci GFX<->serial card.
+I dont have one, but i want 3. If you buy one... do tell us how it
+works.
 
 
 
