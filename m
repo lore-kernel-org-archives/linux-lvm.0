@@ -1,8 +1,8 @@
-From: Frode Ulsund <frode@gangstah.net>
+Message-ID: <3BF14F8E.477BC73E@divsol.com>
+From: Jim Cromie <jcromie@divsol.com>
 MIME-Version: 1.0
-Message-Id: <01111415112606.02444@nerds>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgchange error code -22
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] patch to fix segfault complaints.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,46 +13,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 13 08:09:01 2001
+Date: Tue Nov 13 10:50:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-Hi there!
+others have noted various segfaults,
+ex:
 
-I have read all the documentation in the LVM-package, but
-i can't find a sollution to my problem in the HOW-TOs.
+>>vgextend -- extending volume group "vg01" by physical volume
+"/dev/hde1"
+>>in kernel
+>>Segmentation fault (core dumped)
 
-I run kernel 2.4.13 with Slackware 8.0. I tried to patch the rc.S with the 
-LVM-patch, but it looks like the patch is allready applied in the 
-distribution.
 
-When i run  : vgchange -v -d -a y i get the following output, but I don't 
-really know what the problem is.
+This patch fixes configure script to build good (no segfault) lvm tools
+for me
+theres probably a more comprehensive way to do this, ymmv.
 
-Any help is aprichiated.
+note also that Im only checking for 2.96, not 2.96-85.  this may or may
+not matter
 
-.....
-Frode Ulsund
------------------------------------------------------------------
-<333> vg_check_name -- vg_name: "vg01"
-<4444> lvm_check_chars -- CALLED with name: "vg01"
-<4444> lvm_check_chars -- LEAVING with ret: 0
-<333> vg_check_name -- LEAVING with ret: 0
-<22> vg_check_consistency -- LEAVING with ret: 0
-<1> vg_create_remove -- IOCTL
-<1> vg_create_remove -- IOCTL returned: -22
-<1> vg_create_remove -- LEAVING with ret: -22
-<> vgchange -- vg_create returned: -22
-<1> lvm_error -- CALLED with: -22
-<1> lvm_error -- LEAVING with: "Invalid argument"
-vgchange -- ERROR "Invalid argument" activating volume group "vg01"
-<1> vg_free -- CALLED
-<1> vg_free -- entering PV loop
-<1> vg_free -- entering LV loop
-<1> vg_free -- LEAVING with ret: 0
-vgchange -- unlocking logical volume manager
-<1> lvm_unlock -- CALLED
-<1> lvm_unlock -- LEAVING with ret: 0
-<1> lvm_unlock -- CALLED
-<1> lvm_unlock -- LEAVING with ret: -104
+
+[root@groucho 1.0.1-rc4]# diff -u configure configure~
+--- configure Tue Nov 13 09:35:54 2001
++++ configure~ Thu Sep  6 07:02:34 2001
+@@ -796,33 +796,22 @@
+
+ fi
+
+-${CC-cc} -v 2>&1 | grep -l 2.96
+-if [ $? = 0 ] ; then
+-    echo "this gcc version breaks with -g -O2"
+-    optimize=1
+-else
+-    optimize=2
+-fi
+-
+ echo "$ac_t""$ac_cv_prog_cc_g" 1>&6
+ if test "$ac_test_CFLAGS" = set; then
+   CFLAGS="$ac_save_CFLAGS"
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O$optimize"
++    CFLAGS="-g -O2"
+   else
+     CFLAGS="-g"
+   fi
+ else
+   if test "$GCC" = yes; then
+-    CFLAGS="-O$optimize"
++    CFLAGS="-O2"
+   else
+     CFLAGS=
+   fi
+ fi
+
+ # Find a good install program.  We prefer a C program (faster),
+ # so one script is as good as another.  But avoid the broken or
