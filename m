@@ -1,10 +1,8 @@
-From: Michael Frotscher <michael@frotscher.net>
-Subject: Re: [linux-lvm] drive-spindown
-References: <200209251011.05774.michael@frotscher.net> <20020925112539.A29192@sistina.com>
-In-Reply-To: <20020925112539.A29192@sistina.com>
+Message-ID: <3D919C3C.E7B15B85@cti-paysloire.cnamts.fr>
+From: LEBRETON Philippe <philippe.lebreton@cti-paysloire.cnamts.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200209251151.25358.michael@frotscher.net>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM 1.0.5 Debian Package : apt-get doesnt work
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +13,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 25 05:05:07 2002
+Date: Wed Sep 25 06:31:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: LVM <linux-lvm@sistina.com>
 
-On Wednesday 25 September 2002 11:25, Heinz J . Mauelshagen wrote:
+hello,
 
-> that could be either some regular access to extents residing on hdb
+I want install LVM 1.0.5 on my Debian 3.0 and i add in my sources.list
+the url :
+deb ftp://fp.sistina.com/pub/LVM/binaries/debian unstable main
 
-So you are saying that the volume can be used (like accessing hdb) even=20
-though hdc is spun down? Amazing - I did not know that was possible.=20
-But if, it is a good explanation as my volume still has plenty of space=20
-so hdc would not be accessed until hdb is full.
---=20
-Cheers,
+when i want update my package database, apt-get does'nt found Packages
+file.
+I think that the symbolic link from binary-i386 to ../..../0.9.1-beta7
+is not compatible wiht apt-get
 
-Michael=20
+Thanks
+
+Philippe LEBRETON
