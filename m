@@ -1,17 +1,12 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i8CBjFrI003775
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 12:45:15 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1C6SnD-0001Y3-2b
-	for linux-lvm@redhat.com; Sun, 12 Sep 2004 12:45:15 +0100
-Date: Sun, 12 Sep 2004 12:45:15 +0100
+Date: Sun, 12 Sep 2004 12:48:05 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pvmove: ABORTING: Volume group metadata update failed.
-Message-ID: <20040912114514.GI1094@agk.surrey.redhat.com>
-References: <Pine.LNX.4.58.0409120340470.3989@philos.nvg.ntnu.no>
+Subject: Re: [linux-lvm] How to detect lvm1 configuration using lvm2
+	utlititles?
+Message-ID: <20040912114805.GJ1094@agk.surrey.redhat.com>
+References: <ce9f1f9e0409112054eb75ccf@mail.gmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.58.0409120340470.3989@philos.nvg.ntnu.no>
+In-Reply-To: <ce9f1f9e0409112054eb75ccf@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,11 +19,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Stanley Yue <stanley.yue@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-LVM2 pvmove only supports the new on-disk metadata format, not the 
-old format used by LVM1, so you need to 'vgconvert' first: I'll add a 
-specific error message to explain this!
+On Sat, Sep 11, 2004 at 08:54:08PM -0700, Stanley Yue wrote:
+> Using LVM2 utilities and kernel modules, how do we detect lvm1
+> configurations/metadata that are stored in the disk?
+ 
+LVM2 tools do it automatically: run 'pvs' and look at the 
+'Fmt' column.
+
+> Similiar, using LVM2 utilities, how do we create lvm1
+> configurations/metadata that lvm1 utilities can interpret?
+ 
+-M1 - see 'man lvm'.
 
 Alasdair
 -- 
