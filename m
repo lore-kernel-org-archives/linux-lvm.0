@@ -1,11 +1,11 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Sun, 3 Dec 2000 13:56:17 +0000
+Date: Sun, 3 Dec 2000 14:25:54 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] /sbin/vgchange -a y core dumped
-Message-ID: <20001203135617.C3922@srv.t-online.de>
-References: <20001129094025.A1206@underley.eu.org>
+Subject: Re: [linux-lvm] kernel hang
+Message-ID: <20001203142554.G3984@srv.t-online.de>
+References: <20001201020029.A1073@gondor.com>
 Mime-Version: 1.0
-In-Reply-To: <20001129094025.A1206@underley.eu.org>; from underley@underley.eu.org on Wed, Nov 29, 2000 at 09:40:25AM +0100
+In-Reply-To: <20001201020029.A1073@gondor.com>; from jan@gondor.com on Fri, Dec 01, 2000 at 02:00:29AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,21 +20,35 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: mge@sistina.com
 
-On Wed, Nov 29, 2000 at 09:40:25AM +0100, Daniel Podlejski wrote:
-> Hi,
+On Fri, Dec 01, 2000 at 02:00:29AM +0100, Jan Niehusmann wrote:
 > 
-> I got core dumped after /sbin/vgchange -a y, but
-> diskgroup is visible. kernel 2.4.0-test11,
-> LVM - yesterday checkout from CVS.
+> Is there something wrong with doing 
+> while true; do dd if=/dev/zero of=/dev/vg1/test; done
+> and
+> lvextend -L+90M /dev/vg1/test
+> 
+> at the same time?
 
-Please provide a "vgchange -a y -d" output to enable us to drill that one down.
+No.
+The extension of the LV is done in an atomic way.
 
 > 
-> -- 
-> Daniel Podlejski <underley@underley.eu.org>
->    ... It's enough to make you stay
->    It's enough to make you go away ...
+> It caused a system hang (no messages, no log) on linux-2.4.0-test12-pre3
+> (with ext2 online resize patches, but there obviously was no filesystem 
+> on the volume)
+
+Did you experience other heavy load hangs in general?
+
+> 
+> Jan
+> 
+> 
+> PS: Andreas, perhaps the errors I saw were not ext2 related. Maybe the 
+> kernel doesn't like writing to the device and resizing it at the same time?
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
