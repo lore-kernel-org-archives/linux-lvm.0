@@ -1,8 +1,7 @@
-From: "Catherine Shen" <catherineShen@iei.com.tw>
-Subject: [linux-lvm] LVM 1.0.3 VGDA corrupted often ?? 
-Message-ID: <HDECLOCKOCGGLBCFEEHCMEKFCAAA.catherineShen@iei.com.tw>
+From: Alexander Elbs <alex@m406a.hadiko.de>
+Message-ID: <Pine.LNX.4.44.0206280905050.780-100000@m406a.hadiko.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Subject: [linux-lvm] old metadata
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,15 +12,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 27 22:20:02 2002
+Date: Fri Jun 28 02:16:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@sistina.com
 
-RGVhciBIZWlueiwNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIHF1aWNrIHJlc3BvbnNlIQ0KDQpJ
-J3ZlIG5vdCBzZWVuIHRoZSBwcm9ibGVtIGZvciBhIHdlZWsgc2luY2UgSSBhZGRlZCBhICJzeW5j
-KCkiIHJpZ2h0IGFmdGVyDQpldmVyeSBvcGVyYXRpb24sIGluY2x1ZGluZyAidmdjcmVhdGUiLCAi
-dmdleHRlbmQiLCAibHZjcmVhdGUiLi4uLi4uDQoNCklzIHRoaXMgdGhlIGFuc3dlciB0byBteSBW
-R0RBIHByb2JsZW0/DQpJIGRvbid0IGtub3cuDQpCdXQgaXQncyBqdXN0IGdvbmUhIQ0KDQpJJ2xs
-IGtlZXAgdGhlIHNjcmlwdCB5b3UgZ2F2ZSBtZSBpZiB0aGUgcHJvYmxlbSBzaG91bGQgY29tZSB1
-cCBhZ2Fpbi4NCihIb3BlZnVsbHkgbm90ISEpDQoNClRoYW5rcyBhZ2FpbiENCg0KQ2F0aGVyaW5l
+hi,
+
+is it somehow possible to update the metadata without doing the according
+changes to the rest of the disk?
+
+Because:
+
+I currently have a VG containing 3 PV's. This worked fine, since
+yesterday. Now for some odd reason vgscan doesn't work:
+
+vgscan -- reading data of volume group "data" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+volume
+group "data" from physical volume(s)
+
+looking at the metadata (with pvdata, vgcfgrestore -l ) it looks like that
+every version of the metadata I have describes a configuration with 4
+PV's. I had this config, but several months ago!
+A few months ago I added a new disk, did a pvmove and removed a old disk.
+So temporarly there were 4 disks in my VG.
+
+One way to fix my problem could be, that i somehow fake a pvmove. so only
+the metadata is updated. Then I would have a newer version of my metadata
+that hopefully reflect my real vg. But I also would have to fake the 4th
+disk to get vgscan working.
+
+So is there a metadata editor or something like that? Or do I have to
+hexedit my disk?
+
+Ciao
+Alex
+
+-- 
+Alexander Elbs  ***  eMail Alexander.Elbs@hadiko.de
