@@ -1,8 +1,8 @@
-From: Daniel Savard <dsavard@videotron.ca>
-Subject: Re: [linux-lvm] root fs on a LVM cause kernel panic
+Message-ID: <5E34D857F6BB704CA3369B7553233A81651A80@ntsviemxs0152.connect.at-work.ent>
+From: "Csuk, Ferenc" <Ferenc.Csuk@one.at>
 MIME-Version: 1.0
-Message-Id: <01111514345801.02805@dirac.cids.ca>
 Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] More LVM on RAID issues
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,61 +13,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 15 13:40:02 2001
+Date: Thu Nov 15 16:09:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Yes I did.
+Dear All,
 
-The behavior is exactly as you stated. It seems the VGs are never detected =
-and
-then the device for the root filesystem remains invalid.
+Could someone tell me why I don=B4t receive the mails from the mailing =
+list?
+Did I subsscribe wrongly? I just checked the internet and saw the =
+answers
+for my questions.
 
-Is there anything I can do to check what is going wrong? I am new to the in=
-itrd
-and its usage. I don't know how to work with this beast... I don't think it=
- is
-related to the lilo.conf. I saw a comment in the linux-lvm mailing list fro=
-m Les
-Hazelton Sat, 13 Jan 2001 01:11:05-0500, it is very similar to my problem.
-However, no solution is described.
+Anyway, I couldn=B4t complete the setup for LVM on top of RAID1. =
+Though,
+suddenly pvcreate statement worked after deleting the volume groups, =
+and the
+partitions, but now it creates physical volumes with wrong size. For =
+example
+there is a partition with 16GB(/dev/md0), but pvcreate use only 50M.=20
 
-I looked at the lvmcreate_initrd script and found the actual libraries where
-not included in the image, just the symlinks where taken. I modified the sc=
-ript
-in order to include the actual libraries. It didn't work.
+Just to make the configuration clear we have 4 drives(sda, sdb, sdc, =
+sdd)
+and we created primary partitions on sda for boot(50M), root(200M), and
+swap(700M), and another one for the rest(tmp, opt, var home 16GB).=20
 
-The exact message is as follow:
+Then we created 4 RAID1 device on sdb to be mirrored on sdc using =
+exactly
+the same size as I wrote above. We followed the instruction of Software =
+RAID
+HowTO(raidtab file, and mkraid).=20
 
-(snip)
-VFS: Cannot open root device "3a01" or 3a:01
-Please append a correct "root=3D" boot option
-Kernel panic: VFS: Unable to mount root fs on 3a:01
+The problem came when we created the physical volumes on top of the =
+RAID
+devices as I mentioned already.
 
-Daniel Savard
+Where did we do make a mistate?
 
-Le jeu, 15 nov 2001, vous avez =EF=BF=BDcrit :
-> On Nov 15, 2001  00:41 -0500, Daniel Savard wrote:
-> > I read the lvmcreate_initrd man page and followed the instructions to c=
-reate
-> > the kernel image with LVM support. However, I am unsuccessful to make it
-> > working properly. The system boot and is showing its messages, includin=
-g the
-> > message about LVM support in the kernel and while it is trying to mount=
- the
-> > root filesystem, I am getting a kernel panic message saying the "root=
-=3D" stanza
-> > should be provided with a valid device for the root filesystem.
-> >=20
-> > What am I doing wrong? Is there anything missing? Any way to get extra
-> > debugging messages?
->=20
-> Did you add the initrd image to the kernel stanza in lilo.conf and re-run
-> lilo?  It sounds like your kernel is booting, but the VGs are not active.
->=20
-> Cheers, Andreas
-> --
-> Andreas Dilger
-> http://sourceforge.net/projects/ext2resize/
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+Actually, our final aim is to establish a mirrored system. Originally =
+we
+also wanted to move root, and boot into the mirror but we had so many
+difficulties that we gave that idea. However, we would like to complete =
+the
+LVM on RAID1 installation somehow, please help.
+
+Regards,
+Ferenc
