@@ -1,7 +1,9 @@
-From: Turbo Fredriksson <turbo@bayour.com>
-Message-ID: <87wv0lu1rw.fsf@papadoc.bayour.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] LAZY MODE: Exchanging a LVM'ed disk
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] vgcfgrestore error !
+Message-ID: <20011120121947.B18529@sistina.com>
+References: <3BF8E5DE.ABAEB618@LTUtech.com> <20011119125632.A12388@sistina.com> <3BF8F8BF.3FE1491C@LTUtech.com> <20011119151746.A13040@sistina.com> <3BF923C3.A2060FDD@LTUtech.com>
+Mime-Version: 1.0
+In-Reply-To: <3BF923C3.A2060FDD@LTUtech.com>; from Igor.Dumaire@LTUtech.com on Mon, Nov 19, 2001 at 04:22:43PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,34 +14,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 05:24:02 2001
+Date: Tue Nov 20 05:25:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I currently have a disk in my LVM set which is only 1Gb. It's also quite old,
-so I'd like to replace that with a newer/bigger one..
+On Mon, Nov 19, 2001 at 04:22:43PM +0100, Igor Dumaire wrote:
+> > 
+> > I overlooked the 'active VG' message vgcfgrestore is displaying.
+> > Because 'vgchange -an lvm1' wont't work in your situation I am afraid you need
+> > to reboot before being able to run vgcfgrestore successfully.
+> > 
+> After the reboot vgcfgrestore doesn't work !
+> 
+> # vgchange -an lvm1
+> vgchange -- volume group "lvm1" does not exist
+> 
+> # vgcfgrestore  -n lvm1  /dev/hde1
+> vgcfgrestore -- can't restore part of active volume group "lvm1"
 
-How would I go about doing this?
+Strange.
+Please provide "vgdisplay -v;pvscan;lvmdiskscan" and "pvdata -PP" for all
+PVs belonging to the missing VG.
 
-        1. Add the new disk at the end of the LVM
-        2. Extend the filesystem
-        3. Move the data from the old disk to the new
-        4. Remove the old disk
+Thanks,
+Heinz    -- The LVM Guy --
 
-Is this about right? Or is there a simpler/faster way?
+> 
+> What do I do ?
+> 
+> Regards,
+> -- 
+> Igor Dumaire
+> 
+> www.LTUtech.com - Making Sense of Visual Content
+> ------------------------------------------------
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Bare in mind that all the SCSI id's will change when i remove the old disk,
-will that complicate issues?
 
--- 
- Turbo     __ _     Debian GNU     Unix _IS_ user friendly - it's just 
- ^^^^^    / /(_)_ __  _   ___  __  selective about who its friends are 
-         / / | | '_ \| | | \ \/ /    Debian Certified Linux Developer  
-  _ /// / /__| | | | | |_| |>  <  Turbo Fredriksson   turbo@bayour.com
-  \\\/  \____/_|_| |_|\__,_/_/\_\         Gothenburg/Sweden
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-domestic disruption ammonium Cocaine FSF quiche 747 FBI terrorist
-Serbian smuggle Noriega Panama Treasury Qaddafi kibo
-[See http://www.aclu.org/echelonwatch/index.html for more about this]
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
