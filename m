@@ -1,11 +1,11 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Wed, 17 Oct 2001 14:53:27 -0600
+From: FEJF <fejf@gmx.de>
 Subject: Re: [linux-lvm] shrink issue
-Message-ID: <20011017145327.L7859@turbolinux.com>
-References: <E15twHP-0005Ro-00@hermes.sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E15twHP-0005Ro-00@hermes.sistina.com>
+Date: Wed, 17 Oct 2001 23:03:42 +0200
+References: <E15twHP-0005Ro-00@hermes.sistina.com> <20011017145327.L7859@turbolinux.com>
+In-Reply-To: <20011017145327.L7859@turbolinux.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <E15txpF-0008F2-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,20 +18,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Oct 17, 2001  21:24 +0200, FEJF wrote:
-> is it possible to tell the lvmtools (when shrinking a lvm-volume with 
-> resizereiserfs and lvreduce) which hd should be used for free space and which 
-> should stay in the lvm ?
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-No.  When you reduce the size of an LV, the free space is made from the end
-of the LV only.  If you want to make a particular PV free, then you need to
-use "pvmove" to free any PEs that are allocated on it.
+Andreas Dilger, on Mittwoch, 17. Oktober 2001 22:53 wrote:
+> On Oct 17, 2001  21:24 +0200, FEJF wrote:
+> > is it possible to tell the lvmtools (when shrinking a lvm-volume with 
+> > resizereiserfs and lvreduce) which hd should be used for free space and 
+which 
+> > should stay in the lvm ?
+> 
+> No.  When you reduce the size of an LV, the free space is made from the end
+> of the LV only.  If you want to make a particular PV free, then you need to
+> use "pvmove" to free any PEs that are allocated on it.
+> 
+> Cheers, Andreas
 
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+hmm... does "the end" means the last harddrive when counting hda, hdb...etc ?
+f.e. if i have a hdb, hdc,hdd in the lvm and want the hdc free - does it help 
+to change the hdc to hde an reduce the lvm then ?
+fejf
+
+- -- 
+Backups are usefull. Most often when you don't have one ;)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7zfIz7Xtp66ctWuIRAvyuAJ9jZR5LG0pPex9JHc9mw+sxksyj0gCgibGY
+LRveTnqkyoCru+MMiv8TpvE=
+=lQq8
+-----END PGP SIGNATURE-----
