@@ -1,20 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i992aPr16682
-	for <linux-lvm@redhat.com>; Fri, 8 Oct 2004 22:36:25 -0400
-Received: from bedevere.spamaps.org (ip-65-77-168-70-muca.aerosurf.net
-	[65.77.168.70])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i992aGrP029261
-	for <linux-lvm@redhat.com>; Fri, 8 Oct 2004 22:36:19 -0400
-Received: from [216.34.226.122] (helo=spamaps.org)
-	by bedevere.spamaps.org with esmtp (Exim 3.35 #1 (Debian))
-	id 1CG75e-0001Wr-00
-	for <linux-lvm@redhat.com>; Fri, 08 Oct 2004 19:36:11 -0700
-Date: Fri, 8 Oct 2004 19:36:09 -0700
-Mime-Version: 1.0 (Apple Message framework v553)
-From: Clint Byrum <cbyrum@spamaps.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <FA3C970D-199B-11D9-BCB4-000A95730E92@spamaps.org>
-Subject: [linux-lvm] lvm2 pvmove memory leak?
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9A3Qnr12859
+	for <linux-lvm@redhat.com>; Sat, 9 Oct 2004 23:26:49 -0400
+Received: from clown.omnifarious.org (dsl231-056-102.sea1.dsl.speakeasy.net
+	[216.231.56.102])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i9A3Qbmh024668
+	for <linux-lvm@redhat.com>; Sat, 9 Oct 2004 23:26:42 -0400
+Date: Sat, 9 Oct 2004 20:26:31 -0700
+From: Eric Hopper <hopper@omnifarious.org>
+Message-ID: <20041010032631.GO32455@omnifarious.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TN8pJM9vJMHHFgJc"
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 features
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,21 +23,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-root      3773  0.0 23.5 122764 120816 tty2  D+   14:58   0:10 lvm 
-pvmove -i 10 /dev/md2
 
-This has been running for about 5 hours, moving 335GB to a new disk 
-array.
+--TN8pJM9vJMHHFgJc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-2 hours ago it was at 60MB.
+So, what features of LVM actually work in LVM2 if you have version
+2.00.15 of the tools, and version 2.6.8 of the kernel?
 
-Has anyone else seen this?
+Do snapshots work?
+Does pvmove work?
 
-   LVM version:     2.00.25 (2004-09-29)
-   Library version: 1.00.19-ioctl (2004-07-03)
-   Driver version:  4.1.0
+Are there interesting and weird limitations people should be aware of?
+Are there things that are distinctly better about those features than
+their LVM1 equivalents?
 
-Kernel version 2.6.8 running on Fedora Core 1.
+Thanks,
+--=20
+"It does me no injury for my neighbor to say there are twenty gods or no Go=
+d.
+It neither picks my pocket nor breaks my leg."  --- Thomas Jefferson
+"Go to Heaven for the climate, Hell for the company."  -- Mark Twain
+-- Eric Hopper (hopper@omnifarious.org  http://www.omnifarious.org/~hopper)=
+ --
+
+--TN8pJM9vJMHHFgJc
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQFBaKvmjtsvlOwvazYRAqzvAKCGPeKFfYPcJbuu5I5dj0SyuV04aQCeICQy
+5aZHKPPcEXkiKCoOfc1yhbQ=
+=ua7y
+-----END PGP SIGNATURE-----
+
+--TN8pJM9vJMHHFgJc--
