@@ -1,11 +1,11 @@
-Date: Wed, 10 Oct 2001 21:27:56 -0400
-From: Chris Mason <mason@suse.com>
-Message-ID: <1148250000.1002763676@tiny>
-In-Reply-To: <20011011003731.A9ADE160A8@oscar.casa.dyndns.org>
-References: <20011003230330.508E91104F@oscar.casa.dyndns.org> <20011010212821.D540EB630@oscar.casa.dyndns.org> <1114900000.1002756114@tiny> <20011011003731.A9ADE160A8@oscar.casa.dyndns.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="==========1995180887=========="
-Subject: [linux-lvm] Re: [OOPS] full snapshot (with test vfs locking patch for reiserfs snapshots in 11-pre)
+Date: Thu, 11 Oct 2001 04:56:21 -0400
+From: Andres Salomon <dilinger@mp3revolution.net>
+Subject: Re: [linux-lvm] eta for a 2.4.10 compatible release?
+Message-ID: <20011011045621.A18923@mp3revolution.net>
+References: <20011011023724.A22101@cistron.nl>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011011023724.A22101@cistron.nl>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,97 +17,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: Ed Tomlinson <tomlins@CAM.ORG>
-Cc: linux-lvm@sistina.com
-
---==========1995180887==========
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+To: linux-lvm@sistina.com
+
+This is by no means blessed by the official LVM folks, but what I've
+been doing for quite a while is the following (assuming the latest
+lvm and kernel tarballs are unpacked in the current directory):
+
+cp LVM/1.0.1-rc4/kernel/*.c LVM/1.0.1-rc4/kernel/lvm-internal.h \
+	linux/drivers/md/
+cp LVM/1.0.1-rc4/kernel/lvm.h linux/include/linux/
+cat linux/drivers/md/Makefile | \
+	sed 's/^\(lvm-mod-objs.*\)$/\1 lvm-fs.o/' > m && \
+	mv m linux/drivers/md/Makefile
+
+Very simple procedure; replace all the lvm stuff in the kernel w/ the
+new lvm files, and just add lvm-fs.o to the md Makefile:
+-lvm-mod-objs	:= lvm.o lvm-snap.o
++lvm-mod-objs	:= lvm.o lvm-snap.o lvm-fs.o
+
+No worries about rejected patches, and so on.
 
 
-
-On Wednesday, October 10, 2001 08:37:31 PM -0400 Ed Tomlinson <tomlins@CAM.ORG> wrote:
-
-> I just finished running about 40 mins of debench filling 3 1G snapshots.
-> No stalls/opps.  I am creating the snapshot with
+On Thu, Oct 11, 2001 at 02:37:24AM +0200, Wichert Akkerman wrote:
 > 
-> lvcreate -L1G -s -n snap /dev/lv/root /dev/hda3
 > 
-> /dev/lv/root lives on hde.  Does your snapshot live on the same physical
-> disk as its source disk?
-
-Yes, at least partly.
-
+> I'm looking at the LVM CVS tree and the last change in the kernel
+> patches I can find is from August 22, and the patches don't
+> apply to a 2.4.10 ( which is almost 3 weeks old now) or 2.4.11,
+> either Linus or ac tree.
 > 
-> Can you please send me the version of stress.sh you are using?  I'll see
-> if that triggers anything here.
+> Are there any plans to make a new release that does work with a
+> recent kernel or even just to update the CVS? 
+> 
+> Wichert.
+> 
+> -- 
+>   _________________________________________________________________
+>  /       Nothing is fool-proof to a sufficiently talented fool     \
+> | wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+> | 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
 
-Attached.  I run stress.sh -n 10 -c (some ~40MB dir) -s /mntpoint.
-Each process makes a local copy of the working dir, and verifies the 
-contents of the copy.
-
-thanks,
-Chris
---==========1995180887==========
-Content-Type: application/x-sh; name="stress.sh"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="stress.sh"; size=3126
-
-IyEvYmluL2Jhc2ggLQojIC0qLSBTaGVsbC1zY3JpcHQgLSotCiMKIyBDb3B5cmlnaHQgKEMpIDE5
-OTkgQmlibGlvdGVjaCBMdGQuLCA2MzEtNjMzIEZ1bGhhbSBSZC4sIExvbmRvbiBTVzYgNVVRLgoj
-CiMgJElkOiBzdHJlc3Muc2gsdiAxLjIgMTk5OS8wMi8xMCAxMDo1ODowNCByaWNoIEV4cCAkCiMK
-IyBDaGFuZ2UgbG9nOgojCiMgJExvZzogc3RyZXNzLnNoLHYgJAojIFJldmlzaW9uIDEuMiAgMTk5
-OS8wMi8xMCAxMDo1ODowNCAgcmljaAojIFVzZSBjcCBpbnN0ZWFkIG9mIHRhciB0byBjb3B5Lgoj
-CiMgUmV2aXNpb24gMS4xICAxOTk5LzAyLzA5IDE1OjEzOjM4ICByaWNoCiMgQWRkZWQgZmlyc3Qg
-dmVyc2lvbiBvZiBzdHJlc3MgdGVzdCBwcm9ncmFtLgojCgojIFN0cmVzcy10ZXN0IGEgZmlsZSBz
-eXN0ZW0gYnkgZG9pbmcgbXVsdGlwbGUKIyBwYXJhbGxlbCBkaXNrIG9wZXJhdGlvbnMuIFRoaXMg
-ZG9lcyBldmVyeXRoaW5nCiMgaW4gTU9VTlRQT0lOVC9zdHJlc3MuCgpuY29uY3VycmVudD01MApj
-b250ZW50PS91c3IvZG9jCnN0YWdnZXI9eWVzCgp3aGlsZSBnZXRvcHRzICJjOm46cyIgYzsgZG8K
-ICAgIGNhc2UgJGMgaW4KICAgIGMpCgljb250ZW50PSRPUFRBUkcKCTs7CiAgICBuKQoJbmNvbmN1
-cnJlbnQ9JE9QVEFSRwoJOzsKICAgIHMpCglzdGFnZ2VyPW5vCgk7OwogICAgKikKCWVjaG8gJ1Vz
-YWdlOiBzdHJlc3Muc2ggWy1vcHRpb25zXSBNT1VOVFBPSU5UJwoJZWNobyAnT3B0aW9uczogLWMg
-Q29udGVudCBkaXJlY3RvcnknCgllY2hvICcgICAgICAgICAtbiBOdW1iZXIgb2YgY29uY3VycmVu
-dCBhY2Nlc3NlcyAoZGVmYXVsdDogNCknCgllY2hvICcgICAgICAgICAtcyBBdm9pZCBzdGFnZ2Vy
-cmluZyBzdGFydCB0aW1lcycKCWV4aXQgMQoJOzsKICAgIGVzYWMKZG9uZQoKc2hpZnQgJCgoJE9Q
-VElORC0xKSkKaWYgWyAkIyAtbmUgMSBdOyB0aGVuCiAgICBlY2hvICdGb3IgdXNhZ2U6IHN0cmVz
-cy5zaCAtPycKICAgIGV4aXQgMQpmaQoKbW91bnRwb2ludD0kMQoKZWNobyAnTnVtYmVyIG9mIGNv
-bmN1cnJlbnQgcHJvY2Vzc2VzOicgJG5jb25jdXJyZW50CmVjaG8gJ0NvbnRlbnQgZGlyZWN0b3J5
-OicgJGNvbnRlbnQgJyhzaXplOicgYGR1IC1zICRjb250ZW50IHwgYXdrICd7cHJpbnQgJDF9J2Ag
-J0tCKScKCiMgQ2hlY2sgdGhlIG1vdW50IHBvaW50IGlzIHJlYWxseSBhIG1vdW50IHBvaW50LgoK
-I2lmIFsgYGRmIHwgYXdrICd7cHJpbnQgJDZ9JyB8IGdyZXAgXiRtb3VudHBvaW50XCQgfCB3YyAt
-bGAgLWx0IDEgXTsgdGhlbgojICAgIGVjaG8gJG1vdW50cG9pbnQ6IFRoaXMgZG9lc25cJ3Qgc2Vl
-bSB0byBiZSBhIG1vdW50cG9pbnQuIFRyeSBub3QKIyAgICBlY2hvIHRvIHVzZSBhIHRyYWlsaW5n
-IC8gY2hhcmFjdGVyLgojICAgIGV4aXQgMQojZmkKCiMgQ3JlYXRlIHRoZSBkaXJlY3RvcnksIGlm
-IGl0IGRvZXNuJ3QgZXhpc3QuCgplY2hvIFdhcm5pbmc6IFRoaXMgd2lsbCBERUxFVEUgYW55dGhp
-bmcgaW4gJG1vdW50cG9pbnQvc3RyZXNzLiBUeXBlIHllcyB0byBjb25maXJtLgpyZWFkIGxpbmUK
-aWYgWyAiJGxpbmUiICE9ICJ5ZXMiIF07IHRoZW4KICAgIGVjaG8gIlNjcmlwdCBhYmFuZG9uZWQu
-IgogICAgZXhpdCAxCmZpCgppZiBbICEgLWQgJG1vdW50cG9pbnQvc3RyZXNzIF07IHRoZW4KICAg
-IHJtIC1yZiAkbW91bnRwb2ludC9zdHJlc3MKICAgIGlmICEgbWtkaXIgJG1vdW50cG9pbnQvc3Ry
-ZXNzOyB0aGVuCgllY2hvIFByb2JsZW0gY3JlYXRpbmcgJG1vdW50cG9pbnQvc3RyZXNzIGRpcmVj
-dG9yeS4gRG8geW91IGhhdmUgc3VmZmljaWVudAoJZWNobyBhY2Nlc3MgcGVybWlzc2lvbnNcPwoJ
-ZXhpdCAxCiAgICBmaQpmaQoKZWNobyBDcmVhdGVkICRtb3VudHBvaW50L3N0cmVzcyBkaXJlY3Rv
-cnkuCgojIENvbnN0cnVjdCBNRDUgc3VtcyBvdmVyIHRoZSBjb250ZW50IGRpcmVjdG9yeS4KCmVj
-aG8gLW4gIkNvbXB1dGluZyBNRDUgc3VtcyBvdmVyIGNvbnRlbnQgZGlyZWN0b3J5OiAiCiggY2Qg
-JGNvbnRlbnQgJiYgZmluZCAuIC10eXBlIGYgLXByaW50MCB8IHhhcmdzIC0wIG1kNXN1bSB8IHNv
-cnQgLWsgMiAtbyAkbW91bnRwb2ludC9zdHJlc3MvY29udGVudC5zdW1zICkKZWNobyBkb25lLgoK
-IyBTdGFydCB0aGUgc3RyZXNzaW5nIHByb2Nlc3Nlcy4KCmVjaG8gLW4gIlN0YXJ0aW5nIHN0cmVz
-cyB0ZXN0IHByb2Nlc3NlczogIgoKcGlkcz0iIgoKcD0xCndoaWxlIFsgJHAgLWxlICRuY29uY3Vy
-cmVudCBdOyBkbwogICAgZWNobyAtbiAiJHAgIgoKICAgICgKCgkjIFdhaXQgZm9yIGFsbCBwcm9j
-ZXNzZXMgdG8gc3RhcnQgdXAuCglpZiBbICIkc3RhZ2dlciIgPSAieWVzIiBdOyB0aGVuCgkgICAg
-c2xlZXAgJCgoMTAqJHApKQoJZWxzZQoJICAgIHNsZWVwIDEwCglmaQoKCXdoaWxlIHRydWU7IGRv
-CgoJICAgICMgUmVtb3ZlIG9sZCBkaXJlY3Rvcmllcy4KCSAgICBlY2hvIC1uICJEJHAgIgoJICAg
-IHJtIC1yZiAkbW91bnRwb2ludC9zdHJlc3MvJHAKCgkgICAgIyBDb3B5IGNvbnRlbnQgLT4gcGFy
-dGl0aW9uLgoJICAgIGVjaG8gLW4gIlckcCAiCgkgICAgbWtkaXIgJG1vdW50cG9pbnQvc3RyZXNz
-LyRwCgkgICAgIyggY2QgJGNvbnRlbnQgJiYgdGFyIGNmIC0gLiApIHwgKCBjZCAkbW91bnRwb2lu
-dC9zdHJlc3MvJHAgJiYgdGFyIHhmIC0gKQoJICAgIGNwIC1heCAkY29udGVudC8qICRtb3VudHBv
-aW50L3N0cmVzcy8kcAoKCSAgICAjIENvbXBhcmUgdGhlIGNvbnRlbnQgYW5kIHRoZSBjb3B5LgoJ
-ICAgIGVjaG8gLW4gIlIkcCAiCgkgICAgKCBjZCAkbW91bnRwb2ludC9zdHJlc3MvJHAgJiYgZmlu
-ZCAuIC10eXBlIGYgLXByaW50MCB8IHhhcmdzIC0wIG1kNXN1bSB8IHNvcnQgLWsgMiAtbyAvdG1w
-L3N0cmVzcy4kJC4kcCApCgkgICAgZGlmZiAkbW91bnRwb2ludC9zdHJlc3MvY29udGVudC5zdW1z
-IC90bXAvc3RyZXNzLiQkLiRwCgkgICAgcm0gLWYgL3RtcC9zdHJlc3MuJCQuJHAKCWRvbmUKICAg
-ICkgJgoKICAgIHBpZHM9IiRwaWRzICQhIgoKICAgIHA9JCgoJHArMSkpCmRvbmUKCmVjaG8KZWNo
-byAiUHJvY2VzcyBJRHM6ICRwaWRzIgplY2hvICJQcmVzcyBeQyB0byBraWxsIGFsbCBwcm9jZXNz
-ZXMiCgp0cmFwICJraWxsICRwaWRzIiBTSUdJTlQKCndhaXQKCmtpbGwgJHBpZHMK
-
---==========1995180887==========--
+-- 
+"I think a lot of the basis of the open source movement comes from
+  procrastinating students..."
+	-- Andrew Tridgell <http://www.linux-mag.com/2001-07/tridgell_04.html>
