@@ -1,10 +1,8 @@
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] creating a LVM ontop of a cryptated (ppdd) loop back device
-Message-ID: <20021017211217.GB4861@localhost>
-References: <3DAEDEE5.4540B954@silicide.dk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3DAEDEE5.4540B954@silicide.dk>
+Message-ID: <3DAF2D33.3030800@homemedianetworks.com>
+From: Berrie Bloem <berrie@homemedianetworks.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM 1.0.5 MDK 2.4.19 ReiserFS or Ext3 Lockup
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +13,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 16:13:01 2002
+Date: Thu Oct 17 16:43:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Thursday, 17 October 2002, at 18:01:41 +0200,
-Jon Bendtsen wrote:
+Hello,
 
-> I'm trying to cryptate my filesystems, and be able to take snapshots of
-> them.
-> I cannot get a snapshot of a cryptated LV to work (maybe because it is
-> readonly)
->
-I haven't tried, but wouldn't it be possible to just take a snapshots
-from a LV containing an encrypted filesystem, and then loop-mount it
-(assuming encrypted via the loop device), give the password, and then
-backup ?
+I've installed Mandrake 9.0 on an older machine (P200) with several 
+smaller IDE HD's to make a volume group. var and home are mounted on the 
+vg and whether I use ReiserFS or Ext3, under heavy IO (copying the 
+Mandrake ISO's onto home) after a little while the whole system locks up.
 
-I think from the loop-aes type of filesystem encryption point of view.
-But as I have said previously, I haven't tried if this works, although
-if my understanding of all these things is OK, should work.
+I've patched the original 2.4.19 kernel with LVM 1.0.5, done a full 
+rebuild of kernel, modules and LVM programs, but still the lockup remains.
 
-I will try to test this setup tomorrow when I get to work :-)
+Where have I gone wrong?
 
--- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Woody (Linux 2.4.19-pre6aa1)
+BB
