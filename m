@@ -1,9 +1,10 @@
-Message-ID: <20010911011612.37371.qmail@web13407.mail.yahoo.com>
-Date: Mon, 10 Sep 2001 18:16:12 -0700 (PDT)
-From: Pierre Lamb <plamb_98@yahoo.com>
-Subject: Re: [linux-lvm] rc2 problems
-In-Reply-To: <20010910132133.F31313@sistina.com>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM kernel patch request
+Date: Mon, 10 Sep 2001 19:26:00 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPCEDEDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+In-Reply-To: <20010910154853.B15329@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,109 +16,70 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-Here is what I did:
-  Built patch, then applied it I got this
- it patched various file, next it said it detected a
-provious patch I said (y) then it wanted to remove a
-file not detected.
-
-Next I did a xconfig selecting LVM. did a make dep
-then a make clean did a make bzImage, then a make
-modules ( no errors), then make modules_install there
-at the en it gave an error :
-
-Unsolved sysmbols in (path)lvm-mod.o
-
-depmod  lvm_init_fs
-depmod  lvm_fs_remove.vg
-depmod  lvm_fin_fs
-depmod  lvm_fs_remove_lv
-depmod  lvm_fs_remove_pv
-depmod  lvm_fs_create_vg
-depmod  lvm_fs_create_lv
-depmod  lvm_fs_create_pv
-
-know what ???
-
-Pierre
-
-
---- "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-wrote:
-> On Fri, Sep 07, 2001 at 06:07:38AM -0700, Pierre
-> Lamb wrote:
-> > Well I got rh 2.4.7 made the rc2 patches and
-> patched
-> > the kernel. No errors, complied the kernel,
-> modules,
-> > and installed the modules. All with no errors.
-> Upon
-> > booting the lvm-mod modules doesn't load so I did
-> a
-> > insmod on lvm-mod and get errors about
-> non-resloved
-> > symbols,  What to do next????
-> 
-> Could you send what symbols are non resolved?
-> 
-> > 
-> > PIerre
-> > 
-> > __________________________________________________
-> > Do You Yahoo!?
-> > Get email alerts & NEW webcam video instant
-> messaging with Yahoo! Messenger
-> > http://im.yahoo.com
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> >
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at
-> http://www.sistina.com/lvm/Pages/howto.html
-> 
-> -- 
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to
-> solve them ***
-> 
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                
-> Sistina Software Inc.
-> Senior Consultant/Developer                       Am
-> Sonnenhang 11
->                                                  
-> 56242 Marienrachdorf
->                                                  
-> Germany
-> Mauelshagen@Sistina.com                          
-> +49 2626 141200
->                                                     
->   FAX 924446
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://www.sistina.com/lvm/Pages/howto.html
-
-
-
-__________________________________________________
-Do You Yahoo!?
-Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
-http://im.yahoo.com
+RGVhciBTaXI6DQoNCglTaWxseSBtZSwgSSBmb2xsb3dlZCB0aGUgaW5zdHJ1Y3Rpb25zIGluIHRo
+ZSBIb3ctVG8gKDMwIEFVRyAyMDAxKSB3aGljaCBub3RlcyB0aGVyZSBpcyBhIHBhdGNoIGRpcmVj
+dG9yeSBvbiB0aGUgZnRwIHNpdGUgd2hpY2ggb2J2aW91c2x5IGRvZXMgbm90IGV4aXN0LiBQZXJo
+YXBzIHRoZSBtYWludGFpbmVyIG9mIHRoZSBIb3ctVG8gY2FuIGNvcnJlY3QgdGhpcyBhbm9tYWx5
+IHNvIEkgYW0gYWJsZSB0byBmb2xsb3cgY29ycmVjdCBpbnN0cnVjdGlvbnMuDQoNCg0KVmVyeSBS
+ZXNwZWN0ZnVsbHksIA0KDQpTdHVhcnQgQmxha2UgVGVuZXIsIElUMywgVVNOUi1SLCBOM0dXRyAN
+CkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENClZUVSAxOTA0RyAoVm9sdW50ZWVyIFRyYWluaW5n
+IFVuaXQpIA0Kc3R1YXJ0QGJoOTAyMTAubmV0IA0Kd2VzdCBjb2FzdDogKDMxMCktMzU4LTAyMDIg
+UC5PLiBCb3ggMTYwNDMsIEJldmVybHkgSGlsbHMsIENBIDkwMjA5LTIwNDMgDQplYXN0IGNvYXN0
+OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0NTg1OSwgUGhpbGFkZWxwaGlhLCBQQSAxOTE0OS01
+ODU5IA0KDQpUZWxlY29waWVyOiAoNDE5KS03MTUtNjA3MyBmYXggdG8gZW1haWwgZ2F0ZXdheSB2
+aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUhKSANCg0KSk9JTiBUSEUgVVMgTkFWWSBSRVNFUlZF
+LCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklUIEZST00gSVQgQUxMLiANCg0KTW9uZGF5
+LCBTZXB0ZW1iZXIgMTAsIDIwMDEgNzoyMyBQTQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KRnJvbTogbGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tIFttYWlsdG86bGludXgtbHZtLWFk
+bWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBPZiBIZWlueiBKIC4gTWF1ZWxzaGFnZW4NClNlbnQ6
+IE1vbmRheSwgU2VwdGVtYmVyIDEwLCAyMDAxIDY6NDkgQU0NClRvOiBsaW51eC1sdm1Ac2lzdGlu
+YS5jb20NClN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBMVk0ga2VybmVsIHBhdGNoIHJlcXVlc3QN
+Cg0KT24gTW9uLCBTZXAgMTAsIDIwMDEgYXQgMDY6MzU6MjVBTSAtMDcwMCwgSVQzIFN0dWFydCBC
+LiBUZW5lciwgVVNOUi1SIHdyb3RlOg0KPiBMaXN0IG1lbWJlcnM6DQo+DQo+ICAgICAgIEkgYW0g
+cnVubmluZyBhIE1hbmRyYWtlIDguMCAyLjQuOCAob3IgMi40LjkpIGtlcm5lbCBhbmQgY2Fubm90
+IGZpbmQgdGhlIHBhdGNoIGZpbGVzIG9uIHRoZSBmdHAgc2l0ZS4NCg0KU3VhcnQsDQoNCnBhdGNo
+ZXMgYXJlIGNyZWF0ZWQgYXV0b21hZ2ljYWxseShUTSkgcnVubmluZyBtYWtlIGluIHRoZSBQQVRD
+SEVTLyBzdWJkaXJlY3RvcnkNCm9mIHRoZSBMVk0gc291cmNlIGRpc3Ryby4gUGxlYXNlIGZvbGxv
+dyB0aGUgaW5zdHJ1Y3Rpb25zIGluIHRoZSBjb250YWluZWQNCklOU1RBTEwgYW5kIFBBVENIRVMv
+UkVBRE1FIGZpbGVzIGluIG9yZGVyIHRvIGhlYXIgdGhlIGZ1bGwgc3RvcnkuDQoNCj4NCj4gICAg
+ICAgSGFzIGFueW9uZSB0aG91Z2h0IHRvIGFkZCB0aGUgIkZBUSIgaW50byB0aGUgIkhvdy1UbyIg
+b3IgY3JlYXRlIGEgY29tYmluZWQgUERGIHZlcnNpb24gb2YgdGhlIEZBUS9Ib3ctVG8gb3IgYSBQ
+REYgdmVyc2lvbiBvZiB0aGUgRkFRPw0KDQpJIGRpZG4ndCB0aGluayBhYm91dCB0aGlzIHRoYXQg
+d2F5IGJlZm9yZSwgYmVjYXVzZSBib3RoIGRvY3VtZW50cyBzb2x2ZQ0KZGlmZmVyZW50IHB1cnBv
+c2VzLg0KDQpGQVEgaXMgbWVudCB0byBiZSBhIHNvdXJjZSBvZiBxdWVzdGlvbnMvYW5zd2VycyBm
+b3IgdHlwaWNhbCBwcm9ibGVtcw0KDQoqYnV0Kg0KDQpIT1dUTyBpcyBhIGJ1bmNoIG9mIHByb2Nl
+c3MgZGVzY3JpcHRpb25zIGZvciBhY2hpdmluZyBhcmJpdHJhcnkNCmdvYWxzIHdpdGggTFZNIGNv
+cnJlY3RseS4NCg0KSWYgSSBtaXNzZWQgeW91ciBwb2ludCwgcGxlYXNlIHByb3ZpZGUgc29tZSBl
+eGFtcGxlcyBIT1dUTyA7LSkgaW50ZWdyYXRlDQpGQVFzIGFuZCBIT1dUTy4NCg0KUmVnYXJkcywN
+CkhlaW56ICAgIC0tIFRoZSBMVk0gR3V5IC0tDQoNCg0KPg0KPg0KPiBWZXJ5IFJlc3BlY3RmdWxs
+eSwNCj4NCj4gU3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNHV0cNCj4gQmV2ZXJs
+eSBIaWxscywgQ2FsaWZvcm5pYQ0KPiBWVFUgMTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0
+KQ0KPiBzdHVhcnRAYmg5MDIxMC5uZXQNCj4gd2VzdCBjb2FzdDogKDMxMCktMzU4LTAyMDIgUC5P
+LiBCb3ggMTYwNDMsIEJldmVybHkgSGlsbHMsIENBIDkwMjA5LTIwNDMNCj4gZWFzdCBjb2FzdDog
+KDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1
+OQ0KPg0KPiBUZWxlY29waWVyOiAoNDE5KS03MTUtNjA3MyBmYXggdG8gZW1haWwgZ2F0ZXdheSB2
+aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUhKQ0KPg0KPiBKT0lOIFRIRSBVUyBOQVZZIFJFU0VS
+VkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwuDQo+DQo+IE1v
+bmRheSwgU2VwdGVtYmVyIDEwLCAyMDAxIDY6MzEgQU0NCj4NCj4g////////////////////////
+///////////////////////linux/lvmKHRtKailinglistlinux/lvm/sistina/comhttp///l
+ists/sistina/com/maiLWan/listinfo/linuz/LfkieadtLi4u4tUwcy39M5q2G23////DDQr/
+sistinb/com/Lfm/Pagts/howtr/htmlDQoNCioqKiBTb2Z0d2FyZSBidWdzIGFyZSBzdHVwaWQu
+DQogICAgTmV2ZXJ0aGVsZXNzIGl0IG5lZWRzIG5vdCBzbyBzdHVwaWQgcGVvcGxlIHRvIHNvbHZl
+IHRoZW0gKioqDQoNCj0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0t
+PS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LQ0KDQpIZWlueiBNYXVlbHNoYWdlbiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNpc3RpbmEgU29mdHdhcmUgSW5jLg0KU2Vu
+aW9yIENvbnN1bHRhbnQvRGV2ZWxvcGVyICAgICAgICAgICAgICAgICAgICAgICBBbSBTb25uZW5o
+YW5nIDExDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDU2MjQyIE1hcmllbnJhY2hkb3JmDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIEdlcm1hbnkNCk1hdWVsc2hhZ2VuQFNpc3RpbmEuY29tICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgKzQ5IDI2MjYgMTQxMjAwDQogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRkFYIDkyNDQ0Ng0KPS09LT0tPS09LT0t
+PS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09
+LT0tPS09LT0tDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fDQpsaW51eC1sdm0gbWFpbGluZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGluYS5jb20NCmh0dHA6
+Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KcmVhZCB0aGUg
+TFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5odG1s
+DQo=
