@@ -1,26 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2FBFYS14610
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 06:15:34 -0500
-Received: from grassmarket.ucs.ed.ac.uk (grassmarket.ucs.ed.ac.uk
-	[129.215.166.64])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2FBFW07029824
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 06:15:32 -0500
-Received: from grassmarket.ucs.ed.ac.uk (localhost [127.0.0.1])
-	by grassmarket.ucs.ed.ac.uk (8.12.10/8.12.10) with ESMTP id
-	i2FBFVla013501
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 11:15:31 GMT
-Received: (from nobody@localhost)
-	by grassmarket.ucs.ed.ac.uk (8.12.10/8.12.9/Submit) id i2FBFVob013496
-	for linux-lvm@redhat.com; Mon, 15 Mar 2004 11:15:31 GMT
-Message-ID: <1079349331.405590535c638@sms.ed.ac.uk>
-Date: Mon, 15 Mar 2004 11:15:31 +0000
-From: Rupert Hair <rupert.hair@ntlworld.com>
-Subject: Re: [linux-lvm] VGs gone!
-References: <20040315094504.30807.qmail@web80601.mail.yahoo.com>
-In-Reply-To: <20040315094504.30807.qmail@web80601.mail.yahoo.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Date: Mon, 15 Mar 2004 13:34:45 +0100
+From: Heinz Mauelshagen <hjm@redhat.com>
+Subject: Re: [linux-lvm] LVM Problems when moving data off a PV
+Message-ID: <20040315123445.GA17078@redhat.com>
+References: <1079271129.2414.7.camel@rockley.barbados>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1079271129.2414.7.camel@rockley.barbados>
+Reply-To: hjm@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,20 +18,102 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: nick@gushlow.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Quoting David Minor <sus4@sbcglobal.net>:
+On Sun, Mar 14, 2004 at 01:32:09PM +0000, Nick Gushlow wrote:
+> I've got a volume group (vg2) that spans 3 partitions on two disks;
+> hdb1, hdb5, hdc.  hdb1 and hdb5 are the only partitions on disk hdb.
+> 
+> Disk hdb is failing and I've got an identical replacement from Maxtor,
+> so I stuck the new disk in and tried to follow the instructions on the
+> LVM howto for removing a disk. 
+> 
+> I've successfully transfered hdb5 to the new disk (hdd) but I got an
+> error when trying to move hdb1; I can't remember that error now but I am
+> assuming that there may be damage to that part of the disk as the disk
+> is failing.
+> 
+> After trying a few things I found on the lvm lists and other places and
+> I'm now at a stage where a vgscan reports
 
-<SNIP>
-> We had a problem with the
-> root partition on the first drive, so we decided to
-> restore from the mirror using dd.  After doing this,
-> the VGs are not in existence anymore.  running
-> 'vgscan' shows it creates /etc/lvmtab and
-> /etc/lvmtab.d correctly, but they are empty.  
-How were the drives mirrored?  Did you use some sort of raid or was it all done
-by using dd to copy the whole drive?
+Nick,
 
-What does pvscan show?
+what exactly were those 'things' ?
 
-Rupert
+> 
+> ------------------------------------------------------------------------
+> vgscan -- only found 4253 of 4267 LEs for LV /dev/vg2/storage (0) 
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+> data of volume group "vg2" from physical volume(s)
+> ------------------------------------------------------------------------
+
+You need to select the last valid metadata backup of vg2 from /etc/lvmconf
+(check it with vgcfgrestore -ll -f /etc/lvmconf/vg2.conf[.#.old]; see
+'man vgcfgrestore for metadata archive file names) and restore it.
+
+Say vg.conf.1.old is the valid one:
+
+for dev in AllPVsOfVG2 # list all PVs reported by vgcfgrestore -ll above
+do
+	pvcreate -ff $dev
+	vgcfgrestore -f /etc/lvmconf/vg.conf.1.old $dev
+done
+vgscan
+vgchange -ay vg2
+
+> 
+> I tried a couple of things from very old posts I found on the lvm
+> mailing list including compiling LVM2 from cvs so I could do a vgreduce
+> --removemissing but that didn't work (I assume because they are lvm1) 
+
+The LVM2 tools support LVM1 metadata format.
+What went wrong running vgreduce --removemissing ?
+
+In order to activate LVM1 VGs with LVM2, you need a kernel with device-mapper.
+
+> 
+> Can anyone tell me what might be wrong, and more importantly how I can
+> get the volume group back up. 
+
+See vgcfgrestore above.
+
+> 
+> I am assuming that as the data is spread across 3 disks if I can't
+> recover from this error then I will have lost everything on them. 
+> 
+> Unfortunately I don't have a backup because I have nothing large enough
+> to backup the data in the volume group. 
+
+<preach>
+You need backups in order to be able to survive user/sw/hw failure.
+</preach>
+
+> 
+> TIA,
+> 
+> Nick Gushlow.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
