@@ -1,9 +1,9 @@
-Message-ID: <20020715124035.GA4609@fib011235813.fsnet.co.uk>
-References: <3D2F6464.60908@us.ibm.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3D2F6464.60908@us.ibm.com>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: Andrew Theurer <habanero@us.ibm.com>
+References: <3D2F6464.60908@us.ibm.com> <20020715085954.GB3432@fib011235813.fsnet.co.uk>
+In-Reply-To: <20020715085954.GB3432@fib011235813.fsnet.co.uk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200207150939.15138.habanero@us.ibm.com>
 Subject: [linux-lvm] Re: [Announce] device-mapper beta3 (fast snapshots)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,45 +15,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jul 15 07:40:02 2002
+Date: Mon Jul 15 09:44:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andrew Theurer <habanero@us.ibm.com>
+To: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Cc: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-Andrew,
+On Monday 15 July 2002 03:59, Joe Thornber wrote:
+> Andrew,
+>
+> On Fri, Jul 12, 2002 at 06:21:08PM -0500, Andrew Theurer wrote:
+> > Thanks for the results.  I tried the same thing, but with the latest
+> > release (beta 4) and I am not observing the same behavior.  Your resu=
+lts
+> > show very little difference in performance when using different chunk
+> > sizes for snapshots, but I observed a range of 10 to 24 seconds for t=
+his
+> > same test on beta4 (I have also included EVMS 1.1 pre4):
+>
+> I must admit your results are strange to say the least, the only
+> explanation that I can think of at the moment is that you have been
+> running LVM1.
+>
+> Just to reassure me that this is not the case, can you please make
+> sure that the LVM1 driver is not available, and that your path are not
+> picking up old LVM1 tools by mistake.  There was a time when the tools
+> were installed in /usr/sbin rather than /sbin.
 
-On Fri, Jul 12, 2002 at 06:21:08PM -0500, Andrew Theurer wrote:
-> Thanks for the results.  I tried the same thing, but with the latest 
-> release (beta 4) and I am not observing the same behavior.
+Joe,=20
 
-I've just read through the evms 1.1-pre4 code.
+I assure you this is not LVM1.  I have both tools installed, but they are=
+=20
+under different directories, and my test scripts call them with full path=
+s. =20
+I have also done some tracing to verify I am in device-mapper code.  Also=
+,=20
+the kernel I tested with has only device mapper and evms, no lvm1.=20
 
-You (or Kevin Corry rather) have obviously looked at the
-device-mapper snapshot code and tried to reimplement it.  I think it
-might have been better if you'd actually used the relevent files from
-device-mapper such as the kcopyd daemon.
-
-Also I have serious concerns about the correctness of your
-implementation, for example:
-
-i) It is possible for the exception table to be updated *before* the
-   copy on write of the data actually occurs.  This means that briefly
-   the on disk state of the snapshot is inconsistent.  Users of EVMS
-   that experience a machine failure will therefor have no option but to
-   delete all snapshots.
-
-ii) The exception table is only written out every
-    (EVMS_VSECTOR_SIZE/sizeof(u_int64_t)) exceptions.  Surely I've misread
-    the code here ?  This would mean I could have a machine that
-    triggers 1 fewer exceptions than this, then does nothing to this
-    volume, at no point would the exception table get written to disk?
-    Or do you periodically flush the exception table as well ?
-    Again if the machine crashed the snapshot would be useless.
-
-iii) EVMS is writing the exception table data to the cow device
-     asynchronously, you *cannot* do this without risking deadlocks with
-     the VM system.
-
-- Joe
+-Andrew Theurer
