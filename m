@@ -1,12 +1,9 @@
-Subject: Re: [linux-lvm] LV recovery
-From: Lawrence Strydom <laurie@midafrica.com>
-In-Reply-To: <20021209185433.A20282@sistina.com>
-References: <1039437938.1422.27.camel@lawrence>
-	<20021209143005.A19400@sistina.com> <1039448039.1422.42.camel@lawrence> 
-	<20021209185433.A20282@sistina.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1039461519.1422.52.camel@lawrence>
-Mime-Version: 1.0
+From: "MR.IKE COLLINS" <ikecollins001@safe-mail.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E18LZQL-0005Hw-00@hermes.sistina.com>
+Subject: [linux-lvm] CALL FOR ASSISTANCE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,142 +14,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 13:15:03 2002
+Date: Mon Dec  9 19:44:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Thanks for the help Heinz. I actually managed to get it going with a bit
-of a long-winded route though. I installed the SuSE email server III
-software on another machine and configured it with a small VG to make
-sure the modules are all there. Then I removed hdc from the broken
-machine, put in the new machine and ran vgscan again. Vgscan correctly 
-identified my LV and created /etc/lvmtab and /etc/lvmtab.d. After that
-it was a simple matter of editting /etc/fstab to mount /var on
-/dev/system/VAR. 
+MR=2EIKE COLLINS
+BRANCH MANAGER=2C
+UNITED BANK FOR AFRICA PLC
+ILUPEJU BRANCH
+LAGOS NIGERIA
+TELEPHONE=3A 234-1-776 0962
+FAX=3A 234-1-759-4725                               
+ 
+ATTN=3A PRESIDENT=2FC=2EE=2EO
+               
+ 
+I am pleased to get across to you for a very urgent and profitable business proposal=2C though I don't know you neither have I seen you before but my confidence was reposed on you when the Chief Executive of Lagos State chamber of Commerce and Industry handed me your contact for a confidential business=2E 
+I am the manager of United Bank for Africa Plc =28UBA=29=2C Ilupeju branch=2C Lagos Nigeria=2E
+The intended business is thus=3B We had a customer=2C a Foreigner =28a Turkish=29 resident in Nigeria=2C he was a Contractor with one of the Government Parastatals=2EHe has in his Account in my branch the sum of US 38=2E6 Million =28Thirty Eight Million=2C Six Hundred Thousand U=2ES=2E Dollars=29=2E
+ 
+Unfortunately=2C the man died four years ago until today non-of his next of kin has come forward to claim the money=2E 
+Having noticed this=2C I in collaboration with two other top Officials of the bank have covered up the account all this while=2E  
+Now we want you =28being a foreigner=29 to be fronted as one of his next of kin and forward your account and other relevant documents to be advised to you by us to attest to the Claim=2E 
 
-Once again, thanks for the effort :-)
+We will use our positions to get all internal documentations to back up the claims =2EThe whole procedures will last only five working days to get the fund retrieved successfully without trace even now or in future=2E
+ 
+Your response is only what we are waiting for as we have arranged all necessary things=2E As soon as this message comes to you kindly get back to me indicating your interest=2C then I will furnish you with the whole procedures to ensure that the deal is successfully concluded=2E 
 
-Lawrence
+For your assistance we have agreed to give you twenty five percent =2825%=29 of the Total sum at the end of the transaction while 65% would be for my colleagues and I and the remaining 10% would be for any form of expenses that may be incurred during the course of the transaction which would be given to us when the money is transferred into your account before splitting the balance on the agreed percentage of 65% to 25%=2E 
+ 
+I await your earliest response=2E  
 
+Thanks=2C 
 
-On Mon, 2002-12-09 at 19:54, Heinz J . Mauelshagen wrote:
-> On Mon, Dec 09, 2002 at 05:33:58PM +0200, Lawrence Strydom wrote:
-> > Hi Heinz,
-> > I get the following output:
-> > insmod: /lib/modules/2.4.7-4GB/kernel/drivers/md/lvm-mod.o: insmod
-> > char-major-109 failed.
-> > 
-> > vgscan --  LVM driver module not loaded
-> > 
-> > That freaks me out a bit because the module is present. When I try to
-> > load it manually with insmod I get the same error. Does this mean the
-> > metadata has been overwritten?
-> 
-> No, it does only mean that insmod fails loading the lvm modules which is
-> likely caused by the depmod problem not being able to write the module
-> dependency file. Is your root filesystem full ? In that case you need to
-> free some space there in order to run "depmod -a" fine.
-> If you didn't boot the Linux version you want to create the module dependency
-> file(s) for, you may need "depmod -F System.map -a Linuxversion".
-> 
-> If the modules can't be loaded or the LVM driver is not statically
-> bound into your kernel, you can't activate any volume groups and therefore
-> can't access any logical volumes :(
-> 
-> BTW: You are using a rather old version of the 2.4 kernel and likely of LVM too.
->      Is there a chance that you can upgrade ?
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> > 
-> > Thanks
-> > Lawrence
-> > 
-> > On Mon, 2002-12-09 at 15:30, Heinz J . Mauelshagen wrote:
-> > > 
-> > > Lawrence,
-> > > 
-> > > vgscan should recognize your VG fine if nothing overwrote the LVM metadata
-> > > on /dev/hdc.
-> > > What does vgscan dispay ?
-> > > 
-> > > On Mon, Dec 09, 2002 at 02:45:36PM +0200, Lawrence Strydom wrote:
-> > > > Hi,
-> > > > My company uses a SuSE email server III solution. The box has 2 IDE
-> > > > drives, hda with /boot, /, and swap partintions on. The second, hdc, was
-> > > > placed in a LVG with a LV for /var occupying all availlable space.
-> > > > While I was away (quick absolution of self) one of the junior guys did
-> > > > an online update of the software after which the system wouldn't start
-> > > > again. To make a long story short, I managed to get the system going
-> > > > again BUT..... /var cannot be mounted. 
-> > > > /etc/fstab points to /dev/system/VAR. Upon inspection, this binary file
-> > > > turns out to contain nothing but an error message about being unable to
-> > > > write to /lib/modules/2.4.18-nnnnn/modules.dep. Ooops...
-> > > > Now my question is this: Is it possible to recover the data from the
-> > > > /var LV if the /dev/system/VAR file has gone AWOL? 
-> > > > Any pointers to documentation/tools will be very much appreciated.
-> > > > 
-> > > > Thanks,
-> > > > Lawrence
-> > > > 
-> > > > 
-> > > > 
-> > > > 
-> > > > _______________________________________________
-> > > > linux-lvm mailing list
-> > > > linux-lvm@sistina.com
-> > > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > > 
-> > > -- 
-> > > 
-> > > Regards,
-> > > Heinz    -- The LVM Guy --
-> > > 
-> > > *** Software bugs are stupid.
-> > >     Nevertheless it needs not so stupid people to solve them ***
-> > > 
-> > > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > > 
-> > > Heinz Mauelshagen                                 Sistina Software Inc.
-> > > Senior Consultant/Developer                       Am Sonnenhang 11
-> > >                                                   56242 Marienrachdorf
-> > >                                                   Germany
-> > > Mauelshagen@Sistina.com                           +49 2626 141200
-> > >                                                        FAX 924446
-> > > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Yours Sincerely
+
+Ike Collins
