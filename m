@@ -1,34 +1,36 @@
-Date: Fri, 16 Jun 2000 17:26:51 -0500 (EST)
-From: John Marquart <jomarqua@indiana.edu>
-Subject: [linux-lvm] VLM 0.8 w/ 2.2.16?
-Message-ID: <Pine.A41.4.20.0006161717590.22958-100000@gigue.music.indiana.edu>
+Message-ID: <394AB19E.E841EA6E@tuxtops.com>
+Date: Fri, 16 Jun 2000 16:00:46 -0700
+From: Mark Allen <mallen@tuxtops.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux Community
+References: <85256900.005C0E79.00@d54mta02.raleigh.ibm.com>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: benr@us.ibm.com
+Cc: linux-lvm@msede.com
 
-Hello,
+benr@us.ibm.com wrote:
+> Hello everyone.  Sorry for the delay in responding.  Here is something I
+> posted to Slashdot.  I think it answers some questions and gives a little
+> context for what IBM is doing.  I'll try to begin answering the specific
+> questions that have been submitted this afternoon.
 
-  I was looking for a patch for linux-2.2.16 so that I might get LVM 0.8
-working.  In the archives for this month there are a few messages alluding
-to the patch being at:
-	ftp://ftp.kernel.org/pub/linux/kernel/people/andrea/lvm 
-& also in the update dir on the suse site:
-	(ftp://ftp.suse.com/pub/suse_update/6.4/kernel/ ???)
+I'm really excited that IBM is considering releasing their LVM
+technology -- JFS and the LVM were really the best features of AIX by
+far. 
 
-However - I have not been able to find anything that appears to be the
-appropriate patch.  Is it still available?  Has it been pulled
-temporarily?  I would obviously like 2.2.16 to fix the security hole -
-however, I am not comfortable w/ a development/pre-release kernel for a
-production machine.
+Could you address the prospect of IBM's LVM incorporating "shared"
+volume groups like the commercial high-availablity software (IBM's
+HA/CMP or HP's Service Guard or Sun's HA offering).  That kind of
+software would allow a disk group to transfer to another system if the
+main host failed.
 
-Any help would be greatly appreciated.
--j
+Would something like that be a "feature plug-in" in the framework which
+was proposed in the white paper?
 
+Regards,
 
-John "Jamie" Marquart		|     This message posted 100% MS free.
-Digital Library SysAdmin	|  Work: 812-856-5174   Pager: 812-334-6018
-Indiana University Libraries	|  ICQ: 1131494	 	D'net Team:  6265
+Mark
