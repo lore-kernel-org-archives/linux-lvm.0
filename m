@@ -1,10 +1,7 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Kernel-2.4.15pre6
-Message-ID: <20011120161418.C807@tykepenguin.com>
-References: <20011117231937.D12510@auctionwatch.com> <20011119083610.B755@tykepenguin.com> <20011119111218.A25684@auctionwatch.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011119111218.A25684@auctionwatch.com>
+From: "Marco Pighi/Peru/Contr/IBM" <mpighi@pe.ibm.com>
+Message-ID: <OFBB873518.294BA1D6-ON05256B0A.005AE0D8@pe.ibm.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM + 2.4.7 kernel
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +12,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 10:13:02 2001
+Date: Tue Nov 20 10:36:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Nov 19, 2001 at 11:12:18AM -0800, Petro wrote:
-> > If you want to do snapshots of reiserfs (and, I think, ext3) then you will
-> > still need the VFS lock patch yes.
-> 
->     Is there any indication that this patch will make it in to the
->     official kernel at some point? 
+Hi folks,
 
-I don't know is the honest answer. It's Chris Mason's patch, we just distribute
-it for convenience of LVM users, I don't know if (or how many times!) he's tried
-to submit it for inclusion.
+We have upgraded the kernel from a SuSE 7.0 (2.2.16 kernel) to a 2.4.7
+kernel in our Linux for S/390 system. We upgraded modutils, binutils, gcc
+and installed s390 tools as well. Almost everything is working well; the
+only problem we have is lvm: it loads without problems at boot time but
+when we try the vgscan command we get the following message:
 
-patrick
+     invalid i/o protocol version
+
+Does anyone have any idea what could be wrong?
+
+Thanks in advance.
+
+Regards,
+
+Marco.
