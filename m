@@ -1,8 +1,11 @@
-Message-ID: <OF9050ED8F.CEC7BA29-ON85256AE3.0053EEC0@mkm.can.ibm.com>
-From: "David R Scott/Markham/IBM" <dscott7@ca.ibm.com>
-Date: Fri, 12 Oct 2001 13:54:02 -0400
-MIME-Version: 1.0
-Subject: [linux-lvm] LVM kernel patch request
+Date: Fri, 12 Oct 2001 22:03:46 +0200
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Subject: Re: [linux-lvm] Problems patching 2.4.12 with xfs _and_ lvm-1.0.1-rc4-2.4.12.patch
+Message-ID: <20011012220346.A416@sky.net>
+References: <20011012103919.A26896@sky.net> <20011012102242.D971@tykepenguin.com> <20011012122221.A11616@sky.net> <20011012113156.F971@tykepenguin.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011012113156.F971@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,17 +21,9 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am trying to install LVM-1.0.1-rc4 on a S/390 SuSe 7.0 system with kernel
-2.2.16.
-Has anyone successfully managed to create a patch for kernel 2.2.16 ?
-I have copied the fragments-2.2.18 to 2.2.16 and have made the
-lvm-1.0.1-rc4-2.2.16.patch  file.
-It will need some reworking to get the patch to apply correctly.  Has
-anyone else succeded in doing this, and have they shared the patch file ?
+Thanks Patrick,
+I could compile the kernel now.
+Uli
 
-Thanks,
-Dave Scott
-e-business Development - Hosting, Managed Storage Services, IBM Global
-Services
-Tel  (416) 490-4987     Fax  (416) 490-4730   TieLine 492
-email:  dscott7@ca.ibm.com
+-- 
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
