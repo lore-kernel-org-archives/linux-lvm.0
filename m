@@ -1,18 +1,13 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i7HMKsIa023702
-	for <linux-lvm@redhat.com>; Tue, 17 Aug 2004 23:20:54 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1BxCK6-00070p-KK
-	for linux-lvm@redhat.com; Tue, 17 Aug 2004 23:20:54 +0100
-Date: Tue, 17 Aug 2004 23:20:54 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pvmove problem
-Message-ID: <20040817222054.GG6264@agk.surrey.redhat.com>
-References: <115936e9040807092135ccc2be@mail.gmail.com>
-	<20040807115431.A17768@homer.msp.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040807115431.A17768@homer.msp.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7I2sMa08320
+	for <linux-lvm@redhat.com>; Tue, 17 Aug 2004 22:54:22 -0400
+Message-ID: <025001c484ce$95942560$5208580a@b034547>
+From: "Rob Schwartz" <rschwartz@boscovs.com>
+Date: Tue, 17 Aug 2004 22:53:48 -0400
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_024D_01C484AD.0E790F80"
+Subject: [linux-lvm] vgscan vs vgcfgrestore
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,28 +18,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Linux-LVM@Sistina.com
 
-On Sat, Aug 07, 2004 at 11:54:31AM -0500, Alasdair G Kergon wrote:
-> Summary: How do I pvmove data with LVM2 if contiguous runs of
-> PEs in the source LVs will have to be split up to make them fit?
-  
-> Quick answer:
-> LVM2 doesn't support this directly yet: it's being worked on.
+This is a multi-part message in MIME format.
 
-This code is now in CVS for testing.
+------=_NextPart_000_024D_01C484AD.0E790F80
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-It lets you restrict the PEs you want to move. 
-Can only move off one PV at once (ie. only one cmdline arg).
+Hello Heinz,
 
-And of course you can still restrict the PEs available for allocation
-by listing them afterwards, and/or use -n to restrict the PEs
-moved to those belonging to a specific LV.
+Forgive me for writing in English.   As I come from the United States I =
+am embarassingly uni-lingual.   I have been working with LVM for several =
+months now and finally have had the opportunity to get into the guts of =
+the lvm configuration.   I am preparing myself for the situation where =
+my LVM environment gets corrupted in some manner.  Actually, last week I =
+encountered a problem with LVM and was unable to quickly recover so I =
+ended up simply rebuilding the LVM PV's, VG's and LV's and restoring =
+data.  Fortunately, it was an easy restore.   I have been comparing the =
+vgscan utility with vgcfgrestore.   In a test environment I have deleted =
+the /etc/lvm* stuff and even deleted the /dev/lvm* stuff and =
+successfully recovered the VG and LV by simply doing a vgscan.   Whew... =
+nice... I understand vgcfgbackup and vgcfgrestore but am not sure when I =
+would need to use the configuration backup.   The VGDA as I understand =
+it is stored on the PV's.   If I have the PV's intact I therefore have =
+the VGDA and hence am able to recover using vgscan.    When would I need =
+to use vgcfgrestore?   I have found much information on LVM on the web =
+but nothing that really pinpoints my question.  If there is something =
+out there that I can refer to, please tell me.
 
-pvmove /dev/sda2:1000-1999 /dev/sdb1:1000-1499:2000- /dev/sdc1:500-1000
+Regards,
+Rob
+------=_NextPart_000_024D_01C484AD.0E790F80
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Alasdair
--- 
-agk@redhat.com
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2800.1458" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT size=3D2>Hello Heinz,</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>Forgive me for writing in English.&nbsp;&nbsp; As I =
+come from=20
+the United States I am embarassingly uni-lingual.&nbsp;&nbsp; I have =
+been=20
+working with LVM for several months&nbsp;now and finally have had the=20
+opportunity to get into the guts of the lvm configuration.&nbsp;&nbsp; I =
+am=20
+preparing myself for the situation where my LVM environment gets =
+corrupted in=20
+some manner.&nbsp; Actually, last week I encountered a problem with LVM =
+and was=20
+unable to quickly recover so I ended up simply rebuilding the LVM PV's, =
+VG's and=20
+LV's and restoring data.&nbsp; Fortunately, it was an easy =
+restore.&nbsp;&nbsp;=20
+I have been comparing the vgscan utility with vgcfgrestore.&nbsp;&nbsp; =
+In a=20
+test environment I have deleted the /etc/lvm* stuff and even deleted the =
+
+/dev/lvm* stuff and successfully recovered the VG and LV by simply doing =
+a=20
+vgscan.&nbsp;&nbsp; Whew... nice... I understand&nbsp;vgcfgbackup and=20
+vgcfgrestore but am not sure when I would need to use the configuration=20
+backup.&nbsp;&nbsp; The VGDA as I understand it is stored on the=20
+PV's.&nbsp;&nbsp; If I have the PV's intact I therefore have the VGDA =
+and hence=20
+am able to recover using vgscan.&nbsp;&nbsp;&nbsp; When would I need to =
+use=20
+vgcfgrestore?&nbsp;&nbsp; I have found much information on LVM on the =
+web but=20
+nothing that really pinpoints my question.&nbsp; If there is something =
+out there=20
+that I can refer to, please tell me.</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>Regards,</FONT></DIV>
+<DIV><FONT size=3D2>Rob</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_024D_01C484AD.0E790F80--
