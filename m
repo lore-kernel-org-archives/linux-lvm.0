@@ -1,20 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5OJkX009906
-	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 15:46:33 -0400
-Received: from mail.gurulabs.com (mail.gurulabs.com [67.137.148.7])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i5OJkSXn026697
-	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 15:46:28 -0400
-Received: from [10.2.3.71] (dhcp71.glwlan.gurulabs.com [10.2.3.71])
-	by mail.gurulabs.com (Postfix) with ESMTP id D0BFB7878
-	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 13:46:27 -0600 (MDT)
-From: Dax Kelson <dax@gurulabs.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-U4ljksVnyvS8LE0sp4Ln"
-Date: Thu, 24 Jun 2004 13:46:21 -0600
-Message-Id: <1088106381.3810.22.camel@mentor.gurulabs.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5P9fNvl021991
+	for <linux-lvm@redhat.com>; Fri, 25 Jun 2004 10:41:23 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1BdnD1-0004EB-N3
+	for linux-lvm@redhat.com; Fri, 25 Jun 2004 10:41:23 +0100
+Date: Fri, 25 Jun 2004 10:41:23 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20040625094123.GF6302@agk.surrey.redhat.com>
 Mime-Version: 1.0
-Subject: [linux-lvm] LVM 2 limits?
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 Release 2.00.18: clustering
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,45 +20,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+    ftp://sources.redhat.com/pub/lvm2/LVM2.2.00.18.tgz
+    http://sources.redhat.com/lvm2/
+ 
+Fixes a recently-introduced vgchange bug.
+Adds support for clusters over shared storage:
+  See also CLVM and usage.txt at 
+  http://sources.redhat.com/cluster/
 
---=-U4ljksVnyvS8LE0sp4Ln
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-What limits exist in LVM2?
-
-How many Volume Groups per system?
-Max size of Volume Groups?
-How many Physical Extents per VG?
-What is the valid PE size range?
-How many Logical volumes per system?
-
-2.6 kernel VFS limits?
-
-What is the maximum block device size?
-What is the maximum filesystem size?
-What is the maximum ext3 filesystem size?
-What is the maximum reiserfs3 filesystem size?
-What is the maximum xfs filesystem size?
-What is the maximum jfs filesystem size?
-
-
---=20
-Dax Kelson <dax@gurulabs.com>
-
---=-U4ljksVnyvS8LE0sp4Ln
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
-
-iD8DBQBA2y+NESq34TbtkiIRAnQDAJ9SWBWa3RJBvhcPv2jN6KT3VHOZkwCffhgz
-CqjoBfkRPY1uQ/WncmEFY1w=
-=2gPn
------END PGP SIGNATURE-----
-
---=-U4ljksVnyvS8LE0sp4Ln--
+Alasdair
+-- 
+agk@redhat.com
