@@ -1,12 +1,11 @@
-Return-Path: <bluca@comedia.it>
-Date: Tue, 5 Jun 2001 01:28:45 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Migrating to an LVM system (boot/root) disk
-Message-ID: <20010605012845.B26506@colombina.comedia.it>
-References: <3B1AC411.D6E307CD@tls.msk.ru> <200106041734.f54HYLbh020302@webber.adilger.int> <20010604171512.A348@sistina.com> <3B1C16AA.AD983576@tls.msk.ru>
+Return-Path: <187af5f55d873a942f63a4b03d540827@interlinx.bc.ca>
+Date: Mon, 4 Jun 2001 19:01:23 -0700
+Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
+Message-ID: <20010604190123.C2560@pc.ilinx>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3B1C16AA.AD983576@tls.msk.ru>; from mjt@tls.msk.ru on Tue, Jun 05, 2001 at 03:15:54AM +0400
+In-Reply-To: <20010604092142.A734@minime.sistina.com>
+From: "Brian J. Murrell" <lvm@interlinx.bc.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,23 +21,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jun 05, 2001 at 03:15:54AM +0400, Michael Tokarev wrote:
-> So basename also should be placed to initrd? ;)  I think that
-> problem should be resolved at a first place (in mkinitrd), not
-> by putting numerous workarounds all other the place.
-> BTW, bash have nice construct ${var##*/} to be used instead of
-> basename, and it works *much* faster (also ${var%/*} for dirname
-> etc).
-naw it ain't bash, luckily thass a posix construct
-please use parameter expansion instead of basename/dirname
-in any script.
+On Mon, Jun 04, 2001 at 09:21:42AM -0500, Ben Lutgens wrote:
+> 
+> Just curious, /boot only needs to be like 100 megs tops why would you want
+> that to be an LV. Isn't it more trouble than it's worth?
 
-L.
+If nothing else, how about "on principle"?  :-)  Seriously though, I
+want to abandon screwing around with MS-DOS partitions and use LVs
+instead.  They just make so much better sense than partitions.
+
+b.
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Brian J. Murrell
