@@ -1,42 +1,34 @@
-Message-Id: <199911152103.AA03992@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Date: Mon, 15 Nov 1999 13:38:51 -0800
+From: Ryan Murray <rmurray@cyberhqz.com>
 Subject: Re: [linux-lvm] Actual status of LVM in stock kernel
-Date: Mon, 15 Nov 1999 21:59:12 MET
-In-Reply-To: <19991115190945.C17713@colombina.comedia.it>; from "Luca Berra" at Nov 15, 99 7:09 pm
+Message-ID: <19991115133851.A18138@cyberhqz.com>
+References: <19991115190945.C17713@colombina.comedia.it> <199911152103.AA03992@mailgate1b.telekom.de>
+Mime-Version: 1.0
+In-Reply-To: <199911152103.AA03992@mailgate1b.telekom.de>; from mauelsha@ez-darmstadt.telekom.de on Mon, Nov 15, 1999 at 09:59:12PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: bluca@comedia.it
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
+On Mon, Nov 15, 1999 at 09:59:12PM +0100, Heinz Mauelshagen wrote:
+> > 
+> > On Mon, Nov 15, 1999 at 09:39:59AM -0600, Daniel Whicker wrote:
+> > > Heinz, have you heard from anyone at RedHat?  With their recent push 
+> > > towards servers as well as their deal with Oracle, LVM seems like it would 
+> > > be a perfect fit, especially if you're looking at breaking into Data Centers.
+> > IFAIRC sct@redhat.com signed the (in)famous LVM petition
+> > 
 > 
-> On Mon, Nov 15, 1999 at 09:39:59AM -0600, Daniel Whicker wrote:
-> > Heinz, have you heard from anyone at RedHat?  With their recent push 
-> > towards servers as well as their deal with Oracle, LVM seems like it would 
-> > be a perfect fit, especially if you're looking at breaking into Data Centers.
-> IFAIRC sct@redhat.com signed the (in)famous LVM petition
-> 
+> YEP.
 
-YEP.
+I would suggest posting the patch to linux-kernel, cc: it to linus, and
+ask whether it is too late for 2.4, or if there is something else that
+needs to be addressed before it is ready.  I haven't seen it discussed
+on lkml, which may well be why linus isn't replying.
 
-Ted T'so, Hans Reiser, Jim Mostek and a lot of other nice guys 8*)
-
-Heinz
-
-
---
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+Ryan Murray (rmurray@cyberhqz.com, rmurray@glenayre.com)
+Software Designer, Glenayre Technologies Inc.
+The opinions expressed here are my own.
