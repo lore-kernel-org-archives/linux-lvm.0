@@ -1,10 +1,9 @@
-Return-Path: <gerry@dorfam.ca>
-Date: Sat, 7 Apr 2001 12:46:39 -0400 (EDT)
-From: <gerry@dorfam.ca>
-Subject: Re: [linux-lvm] 2.2.19 Patches??
-In-Reply-To: <3ACE5D8E.26CADB95@ednet.ns.ca>
-Message-ID: <Pine.LNX.4.30.0104071239490.1215-100000@leopard.dorfam.ca>
-MIME-Version: 1.0
+Return-Path: <cjs2895@hotmail.com>
+From: "cjs 2895" <cjs2895@hotmail.com>
+Date: Sat, 07 Apr 2001 13:58:08 -0400
+Mime-Version: 1.0
+Message-ID: <F31rRjbDt3HvoFOAmEa00002377@hotmail.com>
+Subject: [linux-lvm] "I have no root and I want to scream"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,30 +15,48 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Well, I tried to follow the instructions and surprisingly...LVM is working
-with a fresh new 2.2.19 kernel!  I found it confusing to install patches
-labeled for other kernels.  Also, I don't normally venture into the realm
-of building my own kernel patches!
+Howdy folks,
 
-I had a question though.  When I got LVM working with the older 2.2.17
-kernel I had two choices when I was running make xconfig.  The first was
-to include LVM as inline or a module and the second was for lvm proc
-support.  This time around with the 2.2.19 kernel I didn't get the lvm
-proc support option.  Did I miss something???
+I'm one step closer to having a working LVM system then I was
+yesterday. I've managed to create my volume group and all the
+logical volumes that I want too, and I've got the operating
+system installed on them -- once I mounted them to the
+appropriate places the Debian boot/setup program worked as
+expected with a non-LVM setup. And I've got LILO setup per
+the LVM-on-root howto. One difference, when I try to specify
+/dev/vg00/lv03 as a boot device, I get an error from lilo
+saying that "/dev/vg00/lv03 isn't a number", so I specified
+it as 5803 like you do with rdev.
 
-Gerry
+When I boot the ramdisk gets loaded, and both vgscan and
+vgchange seem to work as expected, but when it comes time
+to "fall through" to the real root device, I get one of the
+following errors:
 
+If I specified root as "5803" at the lilo command prompt,
+which I intend to use the thrid LV as my root volume, then
+when it falls through it says that it can't mount device
+58:03. It should be able to, there is a valid ext2 filesystem
+on it, and ext2 is compiled into the kernel -- not a module.
 
-On Fri, 6 Apr 2001, Patrick Boutilier wrote:
+If I specified root as "/dev/vg00/lv03" at the lilo command
+prompt, then when it falls through I get the message
+"Kernel Panic: I have no root and I want to scream"
 
-> Below is some instructions direct from the README in the PATCHES directory.
-> If you want to get your own raw-io patch get
-> ftp://ftp.kernel.org/pub/linux/kernel/people/sct/raw-io/kiobuf-2.2.18.tar.bz2.
-> I used raw-2.2.18.FULL.diff to patch my 2.2.19 kernel.
->
->snip....
->
+I can still get in via the debian boot disk and make changes
+to the lilo/LVM setup. Anyone know what changes I need to make?
+
+My kernel is stock 2.4.3 + 0.9.1-Beta6 kernel patches.
+My tools are stock 0.9.1-Beta6
+Everything else is whats in stock Debian 2.2 -- I can look up
+  versions of specific things if need be.
+
+Thanks,
+Christopher
+
+_________________________________________________________________
+Get your FREE download of MSN Explorer at http://explorer.msn.com
