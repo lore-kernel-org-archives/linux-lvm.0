@@ -1,9 +1,12 @@
-Message-ID: <004d01c175fd$2d527980$1a00000a@isdesign.com>
-From: "Tim Nichols" <tnichols@Is-design.com>
-References: <002301c1755e$964da0d0$1a00000a@isdesign.com> <20011125191225.A4404@guldukat.muon.local>
-Subject: Re: [linux-lvm] lvcreate seg faults in 1.0.1-r4
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] LVM performance
+Message-ID: <39970000.1006679656@dizzy>
+In-Reply-To: <Pine.LNX.4.33.0111230911340.6061-100000@dragon.inside.ntisys.com>
+References: <Pine.LNX.4.33.0111230911340.6061-100000@dragon.inside.ntisys.co
+ m>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,47 +17,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 25 16:03:01 2001
+Date: Sun Nov 25 21:15:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-That seems to have solved the problem.  
 
- Thanks....
+-- Benjamin Scott <bscott@ntisys.com>
 
- Tim
+>  Actually,
+> I favor SCSI.  :-)
 
------ Original Message ----- 
-From: "Nils Juergens" <nils@muon.de>
-To: <linux-lvm@sistina.com>
-Sent: Sunday, November 25, 2001 10:12 AM
-Subject: Re: [linux-lvm] lvcreate seg faults in 1.0.1-r4
+Me too, but more scsi-ish behavior can be arrived at by
+tinkering with hdparm. Mainly the delayed write, buffer
+size can help enormously.
 
-
-> Tim,
-> 
-> On Sat, 24.11.01, Tim Nichols <tnichols@Is-design.com> wrote:
-> > I am having trouble getting lvcreate to work.  I've been able to
-> > create the PV and VG, but lvcreate always core dumps with a seg
-> > fault.  I've confirmed that I have the same code level in the kernel
-> > and tools (1.0.1-rc4).  I've tried compiling the tools with gcc
-> > (v2.96) and egcs (v2.91.66), but both fail.  I'm running a 2.4.14
-> 
-> try to compile the lvm userspace utilities without opimisation (-O0).
-> 
-> good luck
-> 
-> Nils
-> 
-> -- 
->  >   Nils Juergens  | nils@muon.de | icq 7090774   <
->  >  If we all work hard, we can turn this company  <
->  >      around 360 degrees -- gruntbert(LOTD)      <
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
