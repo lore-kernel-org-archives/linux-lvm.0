@@ -1,20 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2SCHmO00400
-	for <linux-lvm@redhat.com>; Mon, 28 Mar 2005 07:17:48 -0500
-Received: from anubis.medic.chalmers.se (anubis.medic.chalmers.se
-	[129.16.30.218])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2SCHesx010210
-	for <linux-lvm@redhat.com>; Mon, 28 Mar 2005 07:17:42 -0500
-Received: from bilbo.dd.chalmers.se (bilbo.dd.chalmers.se [129.16.116.8])
-	by anubis.medic.chalmers.se (Postfix) with ESMTP id 967E15BAA
-	for <linux-lvm@redhat.com>; Mon, 28 Mar 2005 14:17:39 +0200 (CEST)
-Date: Mon, 28 Mar 2005 14:17:39 +0200 (MEST)
-From: Peter Karlsson <petekarl@student.chalmers.se>
-Subject: Re: [linux-lvm] lvm corruption...
-In-Reply-To: <Pine.GSO.4.62.0503281214020.12615@bilbo.dd.chalmers.se>
-Message-ID: <Pine.GSO.4.62.0503281411590.13841@bilbo.dd.chalmers.se>
-References: <Pine.GSO.4.62.0503281214020.12615@bilbo.dd.chalmers.se>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2Q3MvO19359
+	for <linux-lvm@redhat.com>; Fri, 25 Mar 2005 22:22:57 -0500
+Received: from mail.oum.edu.my ([202.185.23.9])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2Q3MtVv025378
+	for <linux-lvm@redhat.com>; Fri, 25 Mar 2005 22:22:56 -0500
+Received: from webmail.oum.edu.my ([192.168.68.16])
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2005 11:20:13 +0800
+From: ainuddin@oum.edu.my
+Message-ID: <2921.192.168.5.24.1111805770.squirrel@192.168.5.24>
+Date: Sat, 26 Mar 2005 10:56:10 +0800 (MYT)
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] ia64bit Clustered
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,17 +22,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/html; charset="utf-8"
+To: linux-lvm@redhat.com
 
-On Mon, 28 Mar 2005, Peter Karlsson wrote:
 
-> I'm new to this list... and I have a problem (or rather, It's my friend's
-
-Ok, we've fixed the problem with accessing the vg (the vg was inactive). 
-Sorry for raising the snr (signal-to-noise-ratio)...
-
-Best regards
-
-Peter K
+Dear LVM subscribers.<br /><br />I just subscribe to this list. I was just wondering if
+any of you can kindly assist me. I have 3 questions but even if you can answer only one
+of my question I would be very grateful.<br /><br />We are in the middle of clustering
+Oracle server running Itanium 64 bit Redhat Advanced Server 3. From what I know, RHAS 3
+has LVM version 1.<br /><br />1.� I was looking into the possibility of setting up an
+LVM in the clustered server (even if we are the first organization in the world that
+done this). Is there any other organization or anybody that have done this before ?<br
+/><br />2.� I read RAC Best Practice using Oracle 10G and it mention about LVM is not
+cluster-aware (page 11). What does it mean ?<br /><br />3.� My plan is like this. I
+would just leave these partition and folders to it default filesystem, ext3:-<br />/<br
+/>swap<br />/boot<br />/usr<br /><br />These partition below would be setup as LVM:-<br
+/>/var<br />/var/log<br />/tmp<br />/home<br />/root<br /><br />This is because in /home
+and /root, our users usually like to save their backups and did not removed it
+afterwards. Usually we got / partition full as a result.<br /><br />----------<br
+/>Ainuddin<br />
