@@ -1,10 +1,11 @@
-Return-Path: <heartboy@nycap.rr.com>
-From: Joe Morris <heartboy@nycap.rr.com>
-Date: Mon, 2 Jul 2001 18:33:06 -0400
+Return-Path: <e@arix.com>
+From: "Erick Calder" <e@arix.com>
+Subject: RE: [linux-lvm] RedHat 7.0?
+Date: Mon, 2 Jul 2001 16:26:08 -0700
+Message-ID: <002a01c1034e$5f748a10$0300000a@pacbell.net>
 MIME-Version: 1.0
-Message-Id: <01070218330601.01439@alb-66-66-254-86>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgcreate
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20010702235812.A22678@dragon.blacknet.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,21 +20,36 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hey everyone, I'm new to this list adn have a question regarding LVM.  I 
-wanted to experiment with LVM, so I went into fdisk and changed /dev/hde11's 
-type to 8e.  I then ran
-pvcreate /dev/hde11
+very cool.
 
-To make sure everything went okay, I ran pvscan:
-pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/part11" is in no VG  
-[9.76 GB]
+I've created RPMs under Redhat before so if that's what you mean by "compile
+SRPMS/spec-files", send it my way!
 
-Things were looking up until I ran vgcreate:
-vgcreate experiment /dev/hde11
-vgcreate -- no valid physical volumes in command line  
+if I get it to work I will publish the resulting RH RPMs on my site so
+anyone else running 7.0 can get them.  plus, since I also run a 7.1 system
+I'll put out 7.1 RPMs when I get them to work.
 
-I tried disabling devfs and got the same things.  I'm using kernel 2.4.5 and 
-have LVM 0.9.1-beta7.  I made sure to patch the kernel and replace all the 
-get_blocksize's with get_sect_size (or something like that, I forget).  Can 
-anyone help me?  Thanks!
-Joe
+- e@arix.com
+
+-----Original Message-----
+From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
+Behalf Of Goetz Bock
+Sent:	Monday, July 02, 2001 2:58 PM
+To:	linux-lvm@sistina.com
+Subject:	Re: [linux-lvm] RedHat 7.0?
+
+ << File: ATT00040.dat >>
+On Mon, Jul 02 '01 at 12:15, Erick Calder wrote:
+> I've searched through the archives but have not found anyone else using
+> Redhat 7.0 (Guiness) with LVM.  I've found a thread about 7.1 (Seawolf)
+but
+> that uses the 2.4.2 kernel and I'm running the 2.2.19 kernel.
+I could offer a set of patches and a spec file for a 2.2.19 kernel, and
+an SRPM/i686.rpm for the LVM tools all tailored to Trustix (which is
+simmilar to a Redhat 6.2/7.0 but tailored for a secure server)
+
+If you don't need bigmem (not in my patches) and know how to compile
+SRPMS/spec-files, I could mail you this files.
+--
+Goetz Bock                                              IT Consultant
+Dipl.-Inf. Univ.
