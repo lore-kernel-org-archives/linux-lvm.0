@@ -1,10 +1,11 @@
-From: jon+lvm@silicide.dk
-Subject: Re: [linux-lvm] RFC: DM encryption target?
-Message-ID: <20030927133351.GA3231@gw.silicide.dk>
-References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com> <1064343664.10276.3.camel@chtephan.cs.pocnet.net> <3F717F13.1050407@silicide.dk> <1064404776.5915.9.camel@chtephan.cs.pocnet.net> <20030924142145.GV12384@shell.blacknet.de> <1064506078.31091.15.camel@chtephan.cs.pocnet.net> <20030926124805.GA2462@gw.silicide.dk> <1064603189.1744.264.camel@david.internal.NorcrossGroup.com>
-Mime-Version: 1.0
+From: Qv6 <sundiatah1@comcast.net>
+Subject: Re: [linux-lvm] vgcreate problem
+References: <200309230122.09869.sundiatah1@comcast.net> <20030923064024.GA28343@percy.comedia.it>
+In-Reply-To: <20030923064024.GA28343@percy.comedia.it>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <1064603189.1744.264.camel@david.internal.NorcrossGroup.com>
+Message-Id: <200309230745.09785.sundiatah1@comcast.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +16,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Sep 27 08:35:01 2003
+Date: Sun Sep 28 09:49:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, bluca@comedia.it
 
-On Fri, Sep 26, 2003 at 03:06:29PM -0400, Greg Freemyer wrote:
-> Christophe / Jon,
-> 
-> Are either of your code bases compatible with 2.4?
+On Tuesday 23 September 2003 02:40 am, Luca Berra wrote:
+ 
+>
+> you are using lvm 1 with a kernel compiled with devfs
+> you have to use the long devfs names, check /proc/partitions
+>
+ 
 
-Dunno, ours are develloped using 2.5.73, and we'll proberly release it
-on wednesday 1. october. We might miss some tools though. As for speed...
-we havent testet yet.
+Thanks for the tip.
+Tried this:
 
+vgcreate genis /dev/ide/host0/bus0/target0/lun0/part6
 
+vgcreate genis /dev/ide/host0/bus0/target1/lun0/disc
 
-JonB
+and got the same error message (vgcreate -- no valid physical volumes in 
+command line)
+
+Any clues as to what is going on here?
+
+Qv6
