@@ -1,18 +1,22 @@
-Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5ECnTj2011517
-	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 13:49:30 +0100
-Received: from patrick by fentible.pjc.net with local (Exim 4.34)
-	id 1BZqu2-0001Lt-Rg
-	for linux-lvm@redhat.com; Mon, 14 Jun 2004 13:49:30 +0100
-Date: Mon, 14 Jun 2004 13:49:30 +0100
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] cluster questions
-Message-ID: <20040614124930.GF30294@tykepenguin.com>
-References: <Pine.LNX.4.55.0406111220100.24071@mallet-l.d2.com>
+Received: from null.msp.redhat.com (null.msp.redhat.com [172.16.31.120])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id i5EDMaVN004086
+	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 09:22:36 -0400
+Received: from null.msp.redhat.com (localhost.localdomain [127.0.0.1])
+	by null.msp.redhat.com (8.12.11/8.12.11) with ESMTP id i5EDMZDK018600
+	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 08:22:35 -0500
+Received: (from alewis@localhost)
+	by null.msp.redhat.com (8.12.11/8.12.11/Submit) id i5EDMZQk018599
+	for linux-lvm@redhat.com; Mon, 14 Jun 2004 08:22:35 -0500
+Date: Mon, 14 Jun 2004 08:22:35 -0500
+From: AJ Lewis <alewis@redhat.com>
+Subject: Re: [linux-lvm] Stripes and PE's
+Message-ID: <20040614132235.GI5508@null.msp.redhat.com>
+References: <0HZ600B8D5NVF4@l-daemon>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9/eUdp+dLtKXvemk"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.55.0406111220100.24071@mallet-l.d2.com>
-Sender: Patrick <patrick@tykepenguin.com>
+In-Reply-To: <0HZ600B8D5NVF4@l-daemon>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,55 +27,103 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Jun 11, 2004 at 12:35:43PM -0700, Sebastien Boving wrote:
-> 
-> 
-> I know LVM does not support clusters.  The HOWTO makes a good job in
-> explaining how it is not, and how you could use it at your own risk, at:
-> 
-> http://tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html
-> 
-> I realize nothing protects an in-use LV to be mounted by another host,
-> which can severely corrupt non-clustered filesystems.
-> 
-> i still have a few questions in this regard though:
-> 
-> 
-> 1) What are my advantages of running LVM2 instead of LVM?
-> 
-> LVM does all i need, i think, part from being cluster-enabled.  LVM2 is
-> also not clustered enabled, though it is the basis of CLVM (which is on
-> its way?).  Any advantages in this regard to already go to LVM2 now, even
-> if only cause the upgrade to CLVM will go smoother?  The only reason i
-> wouldn't go to LVM2 is cause my RHES3.0 supports LVM out of the box, not
-> LVM2, and i rather stick to included software / kernel modules / ...
-> unless i have a valid reason not to.
 
-When clustered LVM does become available you will need LVM2. 
-Even if you don't use that, lvm2 offers better metadata integrity features than
-LVM1 which might make it easier to recover if you do make a mistake in your
-"manual" clustering! Plus all the other normal benefits of LVM2...
- 
-> 
-> 
-> 2) Can snapshots safely be used by other nodes on the cluster?
-> 
-> Say a 'master node' owns the LVM config of a particular node.  It mounts
-> all (non-snapshot) LV's in there.  Can i have it create a snapshot on one
-> of its LV's, mount this on another node to perform a backup (sparing the
-> first node's cpu and network resources), then delete the snapshot on the
-> master mode, all this while observing the 'Other Nodes' procedure on the
-> above mentionned FAQ page?  Is this a 100% safe & supported way of doing
-> things?
+--9/eUdp+dLtKXvemk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-No. the current snapshot implementation behviour is single-node only. If you try
-to back up a snapshot on another node you won't get a valid backup because the
-snapshot exceptions are written on the node that has the original LV mounted. 
+On Fri, Jun 11, 2004 at 06:07:07PM -0600, Tyler wrote:
+> I'm having problems creating a logical volume on a 4 disk SCSI volume gro=
+up.
+> I want to use the entire space as 1 LV that is striped, but can't seem to=
+ do
+> it.
+>=20
+> I get an error telling me I don't have enough Physical Extents, when I
+> clearly do.
 
--- 
+look at the output of 'pvs' - it will tell you the number of physical
+extents free on each disk.  Take the lowest number of physical extents in
+the set of PVs in your VG and multiply it by 4, then use that number when
+doing your striping.  LVM requires each stripe to be on a separate PV
+currently.
 
-patrick
+=20
+> livecd root # vgdisplay
+>   --- Volume group ---
+>   VG Name               group
+>   System ID
+>   Format                lvm2
+>   Metadata Areas        4
+>   Metadata Sequence No  1
+>   VG Access             read/write
+>   VG Status             resizable
+>   MAX LV                255
+>   Cur LV                0
+>   Open LV               0
+>   Max PV                255
+>   Cur PV                4
+>   Act PV                4
+>   VG Size               13.91 GB
+>   PE Size               4.00 MB
+>   Total PE              3560
+>   Alloc PE / Size       0 / 0
+>   Free  PE / Size       3560 / 13.91 GB
+>   VG UUID               DjxWid-oxqx-zol9-Lu8a-CO94-AsBn-c7k3le
+>=20
+> livecd root # lvcreate -i4 -I16 -l3560 -nstorage group
+>   Insufficient allocatable extents suitable for striping for logical volu=
+me
+> storage: 3560 required
+> livecd root # lvcreate -i4 -I16 -l3000 -nstorage group
+>   Insufficient allocatable extents suitable for striping for logical volu=
+me
+> storage: 3000 required
+>=20
+> Even if I try to use less space then it says I have, it still wont let me.
+>=20
+> I've had this error before, but never found a solution.  I also have not
+> found the solution on the mailing list archives either.  I can create a
+> contiguous LV, but without striping.  I'd like to have it striped if I
+> could.
+>=20
+> What am I doing wrong?
+>=20
+> Tyler
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--=20
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat Inc.                               E-Mail: alewis@redhat.com
+720 Washington Ave. SE, Suite 200
+Minneapolis, MN 55414
+
+Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
+A5A
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
+-----Begin Obligatory Humorous Quote----------------------------------------
+665.9238429876 - Number of the Pentium Beast
+-----End Obligatory Humorous Quote------------------------------------------
+
+--9/eUdp+dLtKXvemk
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQFAzaaa9QxUqFeMhxURAtyPAKDWVjDe1P6wTKP6SUiFlXcaZ1YgJgCeMbD6
+VPEuz+7/3a7mNLD7EP2fQWA=
+=362S
+-----END PGP SIGNATURE-----
+
+--9/eUdp+dLtKXvemk--
