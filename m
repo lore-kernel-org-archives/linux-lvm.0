@@ -1,10 +1,10 @@
 Return-Path: <Dominique.Larchey-Wendling@loria.fr>
-Message-ID: <3AEF2A66.8CC8B530@loria.fr>
-Date: Tue, 01 May 2001 23:28:06 +0200
+Message-ID: <3AEF2F97.E70A8CA7@loria.fr>
+Date: Tue, 01 May 2001 23:50:15 +0200
 From: Dominique LARCHEY-WENDLING <Dominique.Larchey-Wendling@loria.fr>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVM & high system load
-References: <200105011605.f41G5kE31140@dixie.dyndns.org>
+References: <200105011618.KAA01133@lynx.turbolabs.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,58 +20,48 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> I doubt it, I've got LVM0.9.1b7 on a 486 without any real load... even when
-> compiling the kernel.  I also have reiserfs on 2.2.19.  I noticed in your
-> previous post that you had 3 pv's on the same physical disk... that may be
-> contributing, depending on your PE layout on the PVs.  
+Andreas Dilger wrote:
 
-The layout is linear ...
+> There is one other person that has reported very slow LVM performance.
+> However, there is no obvious reason why they have performance issues,
+> and others are unable to reproduce this problem.
+> 
+> Can you please try the following and report results:
+> 
+> time dd if=/dev/mmedia/music of=/dev/null bs=512
+> time dd if=/dev/mmedia/music of=/dev/null bs=65536
+> time dd if=/dev/hda1 of=/dev/null bs=512
+> time dd if=/dev/hda1 of=/dev/null bs=65536
 
------------------------------------------------------------------
+Here are the tests I have done ...  I use the command line
 
-[root@charlie larchey]# /usr/sbin/lvdisplay -v /dev/mmedia/music
+dd if=/dev/sda of=/dev/null bs=1k count=500k
 
---- Logical volume ---
-LV Name                /dev/mmedia/music
-VG Name                mmedia
-LV Write Access        read/write
-LV Status              available
-LV #                   2
-# open                 2
-LV Size                9 GB
-Current LE             2304
-Allocated LE           2304
-Allocation             next free
-Read ahead sectors     120
-Block device           58:1
+to fill up the buffer cache before any timing measure.
+I point out that /dev/mmedia/music resides on /dev/hda5
 
-   --- Distribution of logical volume on 1 physical volume  ---
-   PV Name                  PE on PV     reads      writes
-   /dev/hda5                2304         2129836    343926   
+time dd if=/dev/mmedia/music of=/dev/null bs=512
+count=200000               0m37.113s
+time dd if=/dev/hda5 of=/dev/null bs=512
+count=200000                       0m35.437s
 
-   --- logical volume i/o statistic ---
-   2129836 reads  343926 writes
+Ok I am ridiculous ... this has nothing to do with LVM.
+It has to do with DMA set off by default by linux 2.4.
+This is the reason of poor IO perf. and CPU eating.
+(as you might have understood, I usually do not use IDE drives)
 
-   --- Logical extents ---
-   LE    PV                        PE     reads      writes
-   00000 /dev/hda5                 00006  1025       1875     
-   00001 /dev/hda5                 00007  1024       1024     
-   00002 /dev/hda5                 00008  1024       1024     
-   00003 /dev/hda5                 00009  1024       961      
-   00004 /dev/hda5                 00010  1024       0        
-.....   
-   02298 /dev/hda5                 02304  2048       1024     
-   02299 /dev/hda5                 02305  2048       1024     
-   02300 /dev/hda5                 02306  2048       1024     
-   02301 /dev/hda5                 02307  2048       1024     
-   02302 /dev/hda5                 02308  2048       1024     
-   02303 /dev/hda5                 02309  2048       1024     
+After DMA is set on,
 
---------------------------------------------------------
+time dd if=/dev/mmedia/music of=/dev/null bs=512
+count=200000               0m12.934s
+time dd if=/dev/hda5 of=/dev/null bs=512
+count=200000                       0m12.110s
 
-> If not, it's definitely silly :)
+Sorry for anoying you with my stupidity ...
 
-It is NOT SILLY ... see next post for performance issues
+Perhaps poor perf. for the other person is also DMA related ?-)
+
+Thanks anyway
 
 DL
 
