@@ -1,10 +1,8 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] Keep snapshots active for 24 hours?
-Message-ID: <20011217005544.GB14300@auctionwatch.com>
-References: <20011214113804.I940@lynx.no> <NBBBKLKHMJHIJLHOGAOJKELIJCAA.steve.wray@the.net.nz> <20011216202511.D26924@tiger.bigcats.invalid> <3C1D1B23.2080805@birddog.com>
+From: Bradley Alexander <storm@tux.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1008557869.831.2.camel@defiant>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3C1D1B23.2080805@birddog.com>
+Subject: [linux-lvm] Can someone _please_ tell me whats going on?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +13,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Dec 16 18:53:02 2001
+Date: Sun Dec 16 20:56:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Dec 16, 2001 at 04:07:31PM -0600, Kirby C. Bohling wrote:
-> 	It would be nice to essentially get a chance to install software in 
-> 	a controlled manner and once your sure it is working then roll it forward. 
+Hi all,
 
-    There is. They are called "testing machines". 
+I posted last month (Please see message
+<20011111194145.A715@sonsofthunder.yi.org>,
+<20011112141948.P715@sonsofthunder.yi.org> regarding problems i was
+having with lvm. I am working with a 1GHz Athlon machine, with 2 30GB
+hard drives. One of the problems that I was seeing seek errors on the
+hard drive. Everyone who responded mentioned that it was hardware
+problems. 
 
-    I interviewed at a firm that traded on a financial market in Chicago
-    many years ago, and on every traders desk there were 3 machines. Two
-    production machines running identical software more or less in
-    parallel, and a third "testing" machine that the did the same stuff,
-    only with new versions of the software. 
+Well, I took that Quantum drive out and put an almost brand new Maxtor
+(I took great pleasure in whacking windows on it) identical to my first
+drive (Maxtor Maxtor 53073U6). I did the pvcreate, vgcreate and
+lvcreate, followed by mkreiserfs. When I rebooted, again, I saw 
 
-    Software spent 6 months in that "testing" environment before being
-    rolled live. 
+hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+sector=0
+hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+sector=0
+hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+sector=0
+hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+sector=0
+hdc: DMA disabled
+hdd: DMA disabled
+ide1: reset: success
+hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error
+}
+hdc: read_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+sector=0
+hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error
+}
+hdc: read_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+sector=0
+hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error
+}
 
-    While I think LVM is a really neat hammer, not everthing is a nail. 
+I know for a fact that this drive is good, as was the Quantum. However,
+the Quantum has since stopped working. Obviously it is not a hardware
+issue. Can someone please tell me why whenever I try to turn a second
+drive into a logical volume, I get drive errors?
+
+I would appreciate any suggestions on why this is happening and how to
+fix it.
+
 
 -- 
-Share and Enjoy. 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm [at] debian.org
+                                         |   storm [at] tux.org
+============================================================================
+If Guns cause Crime, then Matches cause Arson.
