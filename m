@@ -1,10 +1,7 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
-Message-ID: <20021021151240.GG838@tykepenguin.com>
-References: <3DB3BDA4.75B552B6@silicide.dk>
+From: Frank Joerdens <frank@joerdens.de>
+Message-ID: <20021021194052.B8228@superfly.archi-me-des.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3DB3BDA4.75B552B6@silicide.dk>
+Subject: [linux-lvm] Is it possible to change the PE size on a live volume?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,54 +12,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 21 10:13:02 2002
+Date: Mon Oct 21 12:41:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: hank@fas-art.com
 
-On Mon, Oct 21, 2002 at 10:41:08AM +0200, Jon Bendtsen wrote:
-> Since i want to run with ext3 and use snapshots, i applied the 
-> 	linux-2.4.18-VFS-lock.patch
-> to my default 2.4.18 kernel. I just did that file since making
-> the patches, and applying that would fail during compilation.
-> (something about md driver ?, which i dont use)
-> 
-> So, after just getting the VFS-lock patch to work, i've tried
-> to use it on my debian woody, with 
-> 	lvm-common     1.5.5
-> 	lvm10          1.0.4-4
-> installed. But i get alot of errors :/
-> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
-> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
-> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
-> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
-> 
-> And sometimes vgscan cant find my VG, and i cant activate it with
-> 	vgchange -a y ...
-> 
-> 
-> It _MIGHT_ be because i'm running lvm ontop of a loop-AES, but it does
-> work most of the time.
-> 
-> 
-> 
-> JonB
-> ps: right now i'm starting all over with 
-> 	2.4.19
-> 	lvm_1.1-rc2.tar.gz
+Greetings. My volume is 225 GB in size and getting too small.
+Unfortunately, I used the default PE size when creating the volume
+group. Is there any way I can overcome the 256 GB limit without
+recreating the entire thing (where would I put all the data that's on
+there right now?)?
 
-You really don't want to do that... 1.1 is well broken.
-
-> and removing those debian packages.
-
-The Debian packages should be fine. Plenty of other people are using them.
-
-Can you tell which command is issued the illegal ioctl ? It could be that the
-LVM device has a wrong major/minor or something else has take the LVM
-major/minor device number, because those are /not/ LVM ioctl numbers.
-
-If you can determine what command is issuing those odd ioctls then you're
-probably half-way to finding the culprit.
-
-patrick
+Cheers, Frank
