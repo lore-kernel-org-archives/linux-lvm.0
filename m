@@ -1,8 +1,10 @@
-From: Stefan Weigel <sw@global-linxs.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200210161748.48980.sw@global-linxs.de>
-Subject: [linux-lvm] problem with lvm on root-fs
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] lvm on linux RAID5?
+Message-ID: <20021016192819.D2330@zealot.blacknet.de>
+References: <1034773372.1658.8.camel@frodo.xelin.se>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1034773372.1658.8.camel@frodo.xelin.se>; from anders.henriksson@xelin.se on Wed, Oct 16, 2002 at 03:02:52PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,34 +15,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 16 11:22:44 2002
+Date: Wed Oct 16 12:33:51 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
-I'm trying to get lvm on my root-fs working. But there's is an kernel-pan=
-ic=20
-error. Some details:
+On Wed, Oct 16 '02 at 15:02, Anders Henriksson wrote:
+> I want to run lvm over four linux raid5 devices, can I just treat the
+> raid devices as discs? i.e. run pvcreate on them directly and go on from
+> there.
+You've more than 12 discs in your box? No? Oh, if you ment you're trying
+to run LVM ontop of a 4disk RAID5 drive (using linux md drivers), than
+try:
 
-- system with Mylex RAID-controller (DAC960). It's included in the initrd=
-=2E
+pvcreate /dev/md0
 
-- root-partition is /dev/rd/c0d0p1
+vgcreate ... /dev/md0
 
-I used the HowTo from sistina.com, copied the files from /dev/rd/c0d0p1 t=
-o=20
-/dev/sysvg/rootlv, edited the /etc/fstab pointing to the new partition=20
-/dev/sysvg/rootlv.
-I made a reboot and everything worked fine. But in /etc/lilo.conf there's=
- the=20
-entry root=3D/dev/rd/c0d0p1. I changed this entry to /dev/sysvg/rootlv. T=
-hen I=20
-run lilo. After another reboot I got the kernel panic.
-The initrd is IMO working. But when I change the "root=3D" entry in=20
-/etc/lilo.conf a kernel panic occurs.
-Can anybody help me ??
+lvcreate ... 
 
-Best regards=20
+I'm running LVM since v1.0.0 ontop of a 6 device RAID5 drive using 2.4.x
+MD driver.
 
-Stefan Weigel
+> I am running a linux 7.3 server almost out of the box.
+And what distribution are you using? But that should not matter.
+-- 
+Goetz Bock       (c) 2002 as     blacknet.de - Munich - Germany   /"\
+IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
+                                                                   X
+ ASCII Ribbon Campaign against HTML email & microsoft attachments / \
