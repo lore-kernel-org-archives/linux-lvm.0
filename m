@@ -1,14 +1,11 @@
-Return-Path: <lembark@wrkhors.com>
-Date: Wed, 18 Jul 2001 12:02:32 -0500
-From: Steven Lembark <lembark@wrkhors.com>
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Wed, 18 Jul 2001 21:23:01 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
 Subject: Re: [linux-lvm] HUGE LVM log file...
-Message-ID: <476390000.995475752@dizzy>
-In-Reply-To: <5.0.2.1.2.20010718104547.00a40ec0@193.0.0.208>
-References: <85063BBE668FD411944400D0B744267A643448@AUSMAIL>   <85063BBE668FD411944400D0B744267A643448@AUSMAIL>
- <5.0.2.1.2.20010718104547.00a40ec0@193.0.0.208>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Message-ID: <20010718212300.E26849@vestdata.no>
+References: <85063BBE668FD411944400D0B744267A643448@AUSMAIL> <85063BBE668FD411944400D0B744267A643448@AUSMAIL> <20010718092201.C382@btconnect.com> <5.0.2.1.2.20010718104547.00a40ec0@193.0.0.208> <20010718103321.A540@btconnect.com>
+Mime-Version: 1.0
+In-Reply-To: <20010718103321.A540@btconnect.com>; from Joe Thornber on Wed, Jul 18, 2001 at 10:33:21AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,27 +18,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> In AIX, the system create PPS (PE) from the middle of the disk for 
-> performance reasons.
+On Wed, Jul 18, 2001 at 10:33:21AM +0100, Joe Thornber wrote:
+> This comment is interesting:
+> 
+> "Seagate uses horizontal mapping with this drive, so that it reaches
+> maximum performance at the beginning of the medium, decreasing at the
+> end of the medium."
+> 
+> So obviously this varies from drive to drive.
 
-And systematically fry their performance in some cases.
+You can use zcav from the bonnie++ package
+(http://www.coker.com.au/bonnie++) to find the transfer-rates for your
+drive. I believe finding seek times is a little more tricky since it
+depends on where you're seeking from and that will depend on your
+application.
 
 
-The theory behind middle-tracks is reducing butterfly reads.
-Eventually, however, the drive gets full and you end up with
-butterflys anyway.
 
-With newer (last 5 years+) drives the outer cyl's have more
-sectors to keep the bit density constant.  This leaves you with
-much more storate at the outside edge, which reduces seeks
-which is faster (especially since at least SCSI drives normally
-do cyl buffering).
-
-For even finer control you can create fast/med/slow part's 
-on the drive and then use them as PV's in different VG's.
-Used carefully this can be a serious performance boost for
-high-I/O systems.
-
-sl
+-- 
+Ragnar Kjorstad
+Big Storage
