@@ -1,10 +1,10 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] removing a failed disk from VG
-Message-ID: <20030128125219.A12578@uk.sistina.com>
-References: <E18dFrq-00042Q-00@adroit.an-dns.com> <20030128114724.A17531@sistina.com>
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] raid and lvm
+Message-ID: <20030128145317.G11767@zealot.blacknet.de>
+References: <1043751787.3989.20.camel@sidell.home.network>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20030128114724.A17531@sistina.com>; from mauelshagen@sistina.com on Tue, Jan 28, 2003 at 11:47:24AM +0100
+In-Reply-To: <1043751787.3989.20.camel@sidell.home.network>; from si@mindspring.com on Tue, Jan 28, 2003 at 05:03:07AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 28 06:53:01 2003
+Date: Tue Jan 28 07:54:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-On Tue, Jan 28, 2003 at 11:47:24AM +0100, Heinz J . Mauelshagen wrote:
-> b. you implement LVM2/device-mapper and run "vgscan ; vgchange -P -ay", which
->    will activate your VG without the missing drive. This solution enables
->    you to retrieve the data still accessable _but_ won't let you change
->    your volume group configuration. We are working on an enhancement supporting
->    such changes.
+On Tue, Jan 28 '03 at 05:03, SI Reasoning wrote:
+> I was reading back in 1999 mailing list about trying to merge in some
+> raid functions into lvm. Did this ever happen?
+except for striping (some call it RAID0) it did not happen
 
-So far, 'vgreduce --removemissing' is in CVS; this removes everything
-necessary to make a VG consistent again after losing disk(s).
-If *any* part of an LV is missing, the *entire* LV gets deleted, so
-you should ensure you've made a copy of anything you want to retain
-first.  Running first with '--test' shows you which LVs would get
-deleted.
+> Is it possible to use lvm to safeguard data (like raid 5) so that if a
+> hard drive fails, the data is picked up by another volume group/or
+> parts of the volume group not on the failed drive?
+Why do people always want to bloat everything? LVM is one funcunality
+and RAID a different one, you can layer tham as you please and get the
+benefit of both with out any efford. So why should anyone integrate
+them.
 
-Alternatively, if you have replacement disk(s), you can use pvcreate &
-vgcfgrestore to put it into the VG in place of the one(s) lost.
-
-Or if you want to do anything differently, you can edit the metadata
-in text form and use vgcfgrestore to effect your changes.
-
-Alasdair
+I know that the device mapper allows to add RAID5 functionality, but in
+a different way (not as part of LVM, but as a plugin into DM)
 -- 
-agk@uk.sistina.com
+Goetz Bock       (c) 2003 as     blacknet.de - Munich - Germany   /"\
+IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
+                                                                   X
+ ASCII Ribbon Campaign against HTML email & microsoft attachments / \
