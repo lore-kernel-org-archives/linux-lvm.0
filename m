@@ -1,9 +1,9 @@
-Subject: Re: [linux-lvm] lvm and md
-Mime-Version: 1.0 (Apple Message framework v551)
-From: "Dale J. Stephenson" <dalestephenson@mac.com>
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <001501c2ef4b$98bf6160$c70aa8c0@RD.proware.com.tw>
-Message-Id: <3CE8FFA8-5BB5-11D7-A761-0003937830E4@mac.com>
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] LVM snap size weirdness...
+Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B582@mercury.infiniconsys.com>
+From: "Barry, Christopher" <cbarry@infiniconsys.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,32 +14,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 21 09:54:17 2003
+Date: Fri Mar 21 11:20:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Thursday, March 20, 2003, at 08:45  PM, Rocky Lee wrote:
-> I've set the
-> "persistent_superbit  1"  in raidtab
-> all disk partition type were also all " raid auto detect"
->
-> then if I delete the original raidtab file and reboot.
-> the system couldn't find the raid device, the LVM coundn't find the 
-> volume
-> either.
-> does md have to depend on the raidtab file?
->
-Did you change the persistent_superbit in raidtab before creating the 
-RAID?  If not, it didn't get written to the RAID superblock stored 
-inside the partitions
-used for the RAID -- and that's where it must be for raid autodetect to 
-work.
-Autodetect doesn't use raidtab -- the only thing that uses raidtab are 
-the
-raidtools themselves.
+Ok. Cool. Thanks very much for the knowledge. I have so much more to =
+learn about LVM.
 
-You might want to consider using mdadm instead of raidtools.
+So, by quiesce, would you suggest then, that I stop samba, nfs, apache - =
+take a snapshot and immediately restart them? Then, fire off my backups? =
+Stopping/starting nfs can really wreak havoc on connections (e.g. 'stale =
+file handles' and all).=20
 
-Dale J. Stephenson
-dalestephenson@mac.com
+For my clarification, and possibly others as well, what happens if, =
+during a snapshot, someone is writing a file to the server via nfs? Is =
+this file snapshotted is an unstable state? Is it skipped? Should I =
+issue a sync immediately prior to snapshotting? How does snapshotting =
+handle this case?=20
+
+Regards and thanks,
+--
+Christopher Barry
+Manager of Information Systems
+InfiniCon Systems
+http://www.infiniconsys.com
+
+-----Original Message-----
+From: Alasdair G Kergon [mailto:agk@uk.sistina.com]
+Sent: Friday, March 21, 2003 10:25 AM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] LVM snap size weirdness...
+
+
+You're quite right - you must *always* worry about applications=20
+changing the filesystem when taking a backup.
+
+Backing up from a filesystem snapshot means your backup will at
+least contain the complete filesystem as it looked at the moment in
+time when the snapshot was created.
+(Consider instead if you were to run 'tar' on a changing filesystem:
+if a process was moving directories at the same time, your tar
+backup might completely miss them e.g. if they were moved from a=20
+place 'tar' hadn't backed up yet into a place it already had.
+If you backup from a snapshot, that problem disappears.)
+
+If you backup from a snapshot, you want to ensure that your
+on-disk application data is consistent (i.e. checkpointed)
+at the time you create the snapshot.  So you have to worry
+about applications that are running at the point at which=20
+you take the snapshot: e.g. quiesce them, take the snapshot,
+then set them off again.
+
+Alasdair
+--=20
+agk@uk.sistina.com
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
