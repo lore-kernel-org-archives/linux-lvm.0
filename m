@@ -1,11 +1,9 @@
-Date: Fri, 24 Aug 2001 21:41:31 -0700
-From: David Rees <dbr@greenhydrant.com>
-Subject: Re: [linux-lvm] LVM, rawio, ext2?
-Message-ID: <20010824214131.A26364@greenhydrant.com>
-References: <20010823014012.A32700@greenhydrant.com> <46CEA578.B03DDD14@qis-systemhaus.de> <20010824194456.A25251@greenhydrant.com> <20010825131329.B337103@wobbly.melbourne.sgi.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010825131329.B337103@wobbly.melbourne.sgi.com>; from nathans@sgi.com on Sat, Aug 25, 2001 at 01:13:29PM +1000
+From: Arkadiusz Miskiewicz <misiek@pld.ORG.PL>
+Date: 25 Aug 2001 19:37:49 +0200
+Message-ID: <87n14o82he.fsf@arm.t19.ds.pwr.wroc.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvm-1.0.1rc1 cvs snapshot and devfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,21 +15,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Sat, Aug 25, 2001 at 01:13:29PM +1000, Nathan Scott wrote:
-> hi,
-> 
-> Does Sybase use O_DIRECT? (Direct I/O) - if so, you can use a
-> filesystem which supports this (like XFS) to achieve what you
-> describe above.
-> 
-> I understand some database vendors recommend this above raw I/O
-> because its easier to backup (using filesystem backup tools).
+Hi,
 
-Getting off-topic now, but as far as I know, no.  Is it possible to use
-chattr or some other tool to force it to open in O_DIRECT mode?
+I'm using 2.4.7/x86 kernel with xfs, devfs and LVM version
+1.0.1-rc1(17/08/2001). Unfortunately devfs support isn't nice.
 
--Dave
+Simple example (/dev/hdc5 is Linux-LVM partition (8e))
+
+[root@arm misiek]# pvcreate /dev/hdc5
+pvcreate -- physical volume "/dev/hdc5" successfully created
+
+[root@arm misiek]# vgextend storage /dev/hdc5
+vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgextend -- ERROR: no physical volumes usable to extend volume group "storage"
+
+[root@arm misiek]# ls -l /dev/hdc5
+lr-xr-xr-x    1 root     root           33 sie 25  2001 /dev/hdc5 -> ide/host0/bus1/target0/lun0/part5
+[root@arm misiek]# vgextend storage /dev/ide/host0/bus1/target0/lun0/part5
+vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgextend -- doing automatic backup of volume group "storage"
+vgextend -- volume group "storage" successfully extended
+
+[root@arm misiek]# 
+
+So LVM tools are working fine with real devfs device names while some
+tools don't work with old non-devfs names (vgextend and other vg*).
+
+IMHO simplest solution is inside LVM use real devfs names - always (or
+only when devfs is in kernel and is used/mounted by user) call
+readlink(2) on device specified by user on command line.
+
+-- 
+ Arkadiusz Mi�kiewicz, AM2-6BONE, 1024/3DB19BBD
+ IPv6 ready PLD Linux at http://www.pld.org.pl/
+My jsme Borg. Odpor je marn�, budete asimilov�ni
