@@ -1,18 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j29KWTn30383
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 15:32:29 -0500
-Received: from wavehammer.waldi.eu.org (postfix@wavehammer.waldi.eu.org
-	[82.139.196.55])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j29KWS5S008589
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 15:32:28 -0500
-Date: Wed, 9 Mar 2005 21:32:26 +0100
-From: Bastian Blank <bastian@waldi.eu.org>
-Message-ID: <20050309203225.GA25309@wavehammer.waldi.eu.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
-Content-Disposition: inline
-Subject: [linux-lvm] [PATCH] fix clean target
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2AFtdn18216
+	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 10:55:39 -0500
+Received: from mail02.malor.com (host.malor.com [69.93.140.74] (may be forged))
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2AFtbVf013874
+	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 10:55:37 -0500
+Received: from vanish (mail02.malor.com [127.0.0.1])
+	by mail02.malor.com (Postfix) with SMTP id 41AA44A044
+	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 09:55:44 -0600 (CST)
+Message-ID: <001301c52589$978d1500$32dcdc0a@vanish>
+From: "Ron Watkins" <linux-lvm@malor.com>
+References: <422F679C.8010003@boyko.net> <422F73E8.4070707@vilain.net>
+Subject: Re: [linux-lvm] Building up a RAID5 LVM home server (long)[0x05B52F13]
+Date: Thu, 10 Mar 2005 10:55:33 -0500
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,104 +24,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="response"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Remember, this is for a HOME SERVER, not a corporate database.  Assuming he 
+doesn't have Gigabit Ethernet, and assuming the CPU in his server is 
+reasonably beefy (at least a gigahertz), the extra speed in RAID 1 or 10 
+will be entirely wasted.   For almost any home application, RAID5 is going 
+to be exactly what folks want.... cheap, reliable, and more than fast enough 
+to saturate the wire.
 
---xXmbgvnjoT4axfJE
-Content-Type: multipart/mixed; boundary="cWoXeonUoKmBZSoM"
-Content-Disposition: inline
+Doing RAID 10 properly would cost a great deal for disks, a lot for 
+motherboards with proper, non-PCI choked Gigabit ports (need them on both 
+server and client, mind you), and would take a significant amount of 
+learning on the part of the home admin to get really running properly.... 
+how many people want to learn about jumbo frames and cat5e wiring to set up 
+a video server that will only be serving one or two videos at a time?
 
+Yes, your solution would run faster in some circumstances, but it would be a 
+LOT more expensive.   After investing all that money, he'd see it run 
+somewhat faster on writes, and the server wouldn't be speed-impaired during 
+a rebuild.   But he's a HOME USER.  It doesn't MATTER if the server is slow 
+for a night or two.  Everything will be sluggish for a couple nights, once a 
+year or so.  So what?  Since when is this is worth spending a couple grand 
+to avoid?
 
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It would often make sense for a business to do that, but from a home user 
+perspective, it seems like following this specific advice would be a 
+gigantic waste of money.
 
-The attached patch fixes the clean target in tools.
-
-Bastian
-
---=20
-Fascinating is a word I use for the unexpected.
-		-- Spock, "The Squire of Gothos", stardate 2124.5
-
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: attachment; filename=diff
-Content-Transfer-Encoding: quoted-printable
-
-Date: Tue Mar  8 11:40:45 2005
-New Revision: 71
-
-Modified:
-   lvm2/trunk/tools/Makefile.in
-Log:
-* tools/Makefile.in: Fix clean.
-
-
-Modified: lvm2/trunk/tools/Makefile.in
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
---- lvm2/trunk/tools/Makefile.in	(original)
-+++ lvm2/trunk/tools/Makefile.in	Tue Mar  8 11:40:45 2005
-@@ -20,7 +20,7 @@
-   SUBDIRS +=3D fsadm
- endif
-=20
--SOURCES =3D\
-+lib_SOURCES =3D\
- 	archiver.c \
- 	dumpconfig.c \
- 	formats.c \
-@@ -64,6 +64,12 @@
- 	vgscan.c \
- 	vgsplit.c
-=20
-+tool_SOURCES =3D lvm.c
-+
-+lib_OBJECTS =3D $(lib_SOURCES:%.c=3D%.o)
-+
-+SOURCES =3D $(lib_SOURCES) $(tool_SOURCES)
-+
- TARGETS =3D\
- 	.commands \
- 	lvm
-@@ -92,14 +98,14 @@
-=20
- include $(top_srcdir)/make.tmpl
-=20
--lvm: $(OBJECTS) lvm.o $(top_srcdir)/lib/liblvm.a
--	$(CC) -o $@ $(OBJECTS) lvm.o $(LDFLAGS) $(LVMLIBS) $(LIBS) -rdynamic
-+lvm: $(OBJECTS) $(top_srcdir)/lib/liblvm.a
-+	$(CC) -o $@ $(OBJECTS) $(LDFLAGS) $(LVMLIBS) $(LIBS) -rdynamic
-=20
--lvm.static: $(OBJECTS) lvm.o $(top_srcdir)/lib/liblvm.a
--	$(CC) -o $@ $(OBJECTS) lvm.o -static $(LDFLAGS) $(LVMLIBS) $(LIBS) \
-+lvm.static: $(OBJECTS) $(top_srcdir)/lib/liblvm.a
-+	$(CC) -o $@ $(OBJECTS) -static $(LDFLAGS) $(LVMLIBS) $(LIBS) \
- 		-rdynamic
-=20
--liblvm2cmd.a: $(top_srcdir)/lib/liblvm.a $(OBJECTS)
-+liblvm2cmd.a: $(top_srcdir)/lib/liblvm.a $(lib_OBJECTS)
- 	cat $(top_srcdir)/lib/liblvm.a > $@
- 	$(AR) rs $@ $(OBJECTS)
-=20
-
---cWoXeonUoKmBZSoM--
-
---xXmbgvnjoT4axfJE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.0 (GNU/Linux)
-
-iEYEARECAAYFAkIvXVkACgkQnw66O/MvCNESoACgkjMMMKUZ8OW36I8mecx9T5t+
-NgQAnjunw/ut51hHRlzD9x1ctBBdN4eR
-=yU0S
------END PGP SIGNATURE-----
-
---xXmbgvnjoT4axfJE--
+For nearly all home users with reasonably modern hardware, RAID5 is the 
+right way to go for servers, at least for now.
