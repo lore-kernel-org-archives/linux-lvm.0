@@ -1,8 +1,7 @@
-Message-ID: <3EA450A0.8010302@tiscali.be>
-From: Joel Soete <joel.soete@tiscali.be>
+Message-ID: <20030421232813.2742.qmail@web14410.mail.yahoo.com>
+From: grenoml <grenoml@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] cvs anonymous update problem && ftp anonymous acces failed
+Subject: [linux-lvm] Is 1.0.6 causing regular data corruption
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,20 +12,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr 21 14:59:01 2003
+Date: Mon Apr 21 18:28:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+Redhat indicates that 1.0.6 is regularly corrupting data?
 
-That is a long time that I regulary update without pb your lvm src cvs.
-But since some days I couldn't any more because:
-Unknown host tech.sistina.com
+  http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=89233
 
-The same for ftp.sistina.com or lists.sistina.com??
+Does 1.0.6 have a chronic problem with pvmove?  Or is the pvmove issue
+I see in the list just an isolated incident?
 
-Could this be an ISP pb?
 
-Thanks in advance for advice,
-    Joel
+
+
+
+
+
+
+
+__________________________________________________
+Do you Yahoo!?
+The New Yahoo! Search - Faster. Easier. Bingo
+http://search.yahoo.com
