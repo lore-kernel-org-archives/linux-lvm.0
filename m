@@ -1,11 +1,11 @@
-Date: Fri, 7 Sep 2001 12:17:22 -0400
-From: Benjamin Reed <ranger@befunk.com>
-Subject: Re: [linux-lvm] lvcreate segfaults
-Message-ID: <20010907121721.F13717@befunk.com>
-References: <8F120FA493CAD743B30EEB8F356985B501A78136@AUSXMBT102VS1.amer.dell.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Fri, 7 Sep 2001 10:59:29 -0600
+Subject: Re: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
+Message-ID: <20010907105929.C32553@turbolinux.com>
+References: <20010906123245.B28532@hp.is> <20010907103515.B32257@hp.is>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <8F120FA493CAD743B30EEB8F356985B501A78136@AUSXMBT102VS1.amer.dell.com>; from Robert_Macaulay@Dell.com on Fri, Sep 07, 2001 at 10:59:44AM -0500
+In-Reply-To: <20010907103515.B32257@hp.is>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,21 +21,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> > As far as I can tell - the only significant difference 
-> > between this putput
-> > and the pre-patched output - is that it is now int lv_create 
-> > instead of
-> > inline int lv_create.
+On Sep 07, 2001  10:35 +0000, Tomas Edwardsson wrote:
+> Hmm, anyone able to help with this? All my data is currently offline and
+> I really need it back so if anyone could help please!
+> 
+> - Tommi
+> 
+> On Thu, Sep 06, 2001 at 12:32:45PM +0000, Tomas Edwardsson wrote:
+> > Here is what vgscan shows:
 > > 
-> > If there is any other info I can provide - as always - please ask.
+> > vgscan -- reading all physical volumes (this may take a while...)
+> > vgscan -- found inactive volume group "vg00"
+> > vgscan -- only found 626 of 625 LEs for LV /dev/vg00/lvol1 (0)
+> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "vg00" from physical volume(s)
+> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
 
-Not sure if it helps, but I had problems on RH71 with
-lvcreate segfaulting, switching to the compat-* compiler
-(egcs 2.91) instead of the default gcc-2.96 fixed my
-problem, so I would expect it to be something in the
-newer, more anal, gcc-3-style compiler.
+It looks like the PE table does not match what is in the LV table for
+that LV (i.e. the PE table has 626 PEs that claim to be part of the LV,
+but the LV says it has only 625 LEs allocated).
 
+Two possibilities: you recently added an LE to the LV and you had a crash
+(or an LVM bug), or somehow you had an error writing to disk.  You can try
+restoring a copy of the metadata with vgcfgrestore to see if it helps.
+
+Failing that, check pvdata -avP <disk> to see what is wrong.
+
+Cheers, Andreas
 -- 
-Ben Reed a.k.a. Ranger Rick (ranger@befunk.com)
-http://defiance.dyndns.org/ / http://radio.scenespot.org/
-The devil's in the broad, sweeping generalizations.
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
