@@ -1,11 +1,9 @@
-Message-Id: <200110032240.TAA05834@inter.lojasrenner.com.br>
+Message-Id: <200110032244.TAA06029@inter.lojasrenner.com.br>
 From: Andre Margis <andre@sam.com.br>
-Date: Wed, 3 Oct 2001 19:36:00 -0300
-References: <Pine.LNX.4.33.0110031934200.20952-100000@www.scotty.co.at>
-In-Reply-To: <Pine.LNX.4.33.0110031934200.20952-100000@www.scotty.co.at>
+Date: Wed, 3 Oct 2001 19:40:00 -0300
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Patch for lvm-1.0.1-rc4 to work under linux-2.4.10-ac4
+Subject: [linux-lvm] Patch for lvm-1.0.1-rc4 to work under linux-2.4.10-ac4 (Re-edition)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,10 +18,14 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+Sorry, for last message i wrong the function alloc_kiovec, is to be 
+alloc_kiovec_sz
+
+
 I change two programs to run under linux.2.4.10-ac4
 
 
-I don't if this is correct. I test on my machine a believe it's working
+I don't if this is correct. I test on my machine I believe it's working
 
 
 This is my corrections:
@@ -71,10 +73,11 @@ on lvm-snap.c
 add line 53
 int kio_max_sectors = KIO_MAX_SECTORS;
 
-change all functions alloc_kiovec(a,b) by alloc_kiovec(a,b,&kio_max_sectors) 
+change all functions alloc_kiovec(a,b) by 
+alloc_kiovec_sz(a,b,&kio_max_sectors)
 at lines 518 and 527.
 
-change all functions  free_kiovec(a,b) by free_kiovec(a,b,&kio_max_sectors)
+change all functions  free_kiovec(a,b) by free_kiovec_sz(a,b,&kio_max_sectors)
 at lines 543, 548, 573 and 580
 
 
@@ -84,8 +87,16 @@ Any help?
 
 
 
-Thanks 
+Thanks
 
 
 
 Andre
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-------------------------------------------------------
