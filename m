@@ -1,9 +1,10 @@
-From: Kevin Buyting <rotaticus@web.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] LVM inaccessible after OS reinstall
+Message-ID: <20031103175217.GE12396@percy.comedia.it>
+References: <5.2.0.9.0.20031103225927.01cbecb0@mail.mame.net>
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200311031840.36724.rotaticus@web.de>
-Subject: [linux-lvm] lvextend doesn't extend the first time ...
+In-Reply-To: <5.2.0.9.0.20031103225927.01cbecb0@mail.mame.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,41 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  3 11:41:01 2003
+Date: Mon Nov  3 11:53:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: Karl Stenerud <kstenerud@mame.net>
+Cc: linux-lvm@sistina.com
 
-gentoo 1.4
-vanilla-sources 2.4.22
-lvm-user 1.0.7-r1
+On Mon, Nov 03, 2003 at 11:19:34PM +0900, Karl Stenerud wrote:
+besides the rant, do you think providing more useful data
+would result in people actually helping you?
 
-I am trying to extend my /dev/vg/lv01 (EXT3) by 3Gig's so i did a 
+did you roun vgchange -a y after vgscan?
+can you provide a vgdisplay -v?
+is there anything in syslog?
+L.
 
-# lvextend -L +3G /dev/vg/lv01
-
-then
-
-# e2fsadm -L +3G /dev/vg/lv01 
-
-*making chkfs reporting errors ... fixing them*
-... and nothing happens ... then i did
-
-# sync
-# mount /dev/vg/lv01 /mnt/somewhere
-# df 
-
-says it's still 80G NOT 83G! so i try again *fearing the worst*
-
-# e2fsadm -L +3G /dev/vg/lv01
-
-*making chkfs ... resizing*
-again and get 6G more to my /dev/vg/lv01
-files are ok... *the best that could happen* 8))
-
-the question is:
-how come it isn't extendet by 3G instead of 6G ?
-what am i doing wrong?
-just to know for the next time ...
-
-thanks in advance for any advice
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
