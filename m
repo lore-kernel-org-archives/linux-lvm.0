@@ -1,7 +1,7 @@
 From: "Krisztian Gyoerffy" <krisztian.gyoerffy@selecktra.com>
-Message-ID: <web-490049@selecktra.com>
+Message-ID: <web-490053@selecktra.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="_===490049====selecktra.com===_"
+Content-Type: multipart/mixed; boundary="_===490053====selecktra.com===_"
 Subject: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm 1.0.7
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -13,9 +13,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 29 08:54:02 2003
+Date: Wed Oct 29 08:54:07 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
+
+This is a multi-part MIME message
+
+--_===490053====selecktra.com===_
+Content-Type: text/plain; charset="ISO-8859-1"; format="flowed"
+Content-Transfer-Encoding: 8bit
+
+
+
+
+   --- the forwarded message follows ---
+
+--_===490053====selecktra.com===_
+Content-Type: message/rfc822
+
+From: "Krisztian Gyoerffy" <krisztian.gyoerffy@selecktra.com>
+Subject: Problem at compiling kernel 2.4.18 with lvm 1.0.7
+To: linux-lvm@sistina.com
+X-Mailer: CommuniGate Pro WebUser Interface v.4.1.6
+Date: Tue, 28 Oct 2003 16:18:15 +0100
+Message-ID: <web-490049@selecktra.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="_===490049====selecktra.com===_"
 
 This is a multi-part MIME message
 
@@ -1626,3 +1649,5 @@ b3IgKGkgPSAwOyAqc3JjICYmIChiICE9IGUpOyBpKyspIHsKKwkJaWYgKGkgJiYgIShpICYg
 MHgzKSkKIAkJCSpiKysgPSAnLSc7CiAJCSpiKysgPSAqc3JjKys7CiAJfQo=
 
 --_===490049====selecktra.com===_--
+
+--_===490053====selecktra.com===_--
