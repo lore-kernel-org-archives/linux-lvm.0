@@ -1,8 +1,10 @@
-From: Nathan Hunsperger <nathan@munchnet.com>
-Message-ID: <20030708230524.GE17584@munchnet.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] PV issues with LVM on 2.4.21
+From: Lars Grobe <grobe@gmx.net>
+MIME-Version: 1.0
+References: <20030708211242.GD8053@questra.com>
+Subject: Re: [linux-lvm] Multiple Path possible with LVM ?
+Message-ID: <18486.1057708801@www37.gmx.net>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,35 +15,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul  8 18:06:01 2003
+Date: Tue Jul  8 19:01:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello -
+Hi!=20
+=20
+> Just put your lvm volume on an md multipath device.  Note=20
+> that these are not loadbalanced paths in stock kernels, just=20
+> failover paths.=20
+=20
+Well, in evms 2.1, with 2.4.21 and the md-multipath, I am offered=20
+a load-balanced multipath configuration. However, as I currently=20
+have the expensive emc module mentioned in the firt mail ;-), I=20
+didn't really try this.=20
+=20
+If you want to have load balancing, just divide each raidset into=20
+two luns / "devices", and access each raidset via two paths by this=20
+configuration. If you put an lvm-stripeset over those two luns,=20
+you get a "load-balanced" access to your raidset over both channels.=20
+=20
+I am currently doing tests with these configurations, but I have moved=20
+to evms with our new fileserver because of some cluster functionality=20
+in the 2.x-releases of evms. We have shared storage between two nodes,=20
+and while you can do this with lvm, it is AFAIK a bit dangerous because=20
+you must make sure that one nodes commits an vgscan if the other one=20
+changed the lvm configuration.=20
+=20
+Good luck, CU Lars.=20
 
-I'm experiencing an error when trying to scan my volume groups after a
-reboot.  When running vgscan, I get:
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "pv_read_all_pv_of_vg(): no PV" can't get data of volume group "storage" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+--=20
++++ GMX - Mail, Messaging & more  http://www.gmx.net +++
 
-I am running lvm 1.0.7 on top of software raid 5 on 2.4.21.  I grabbed a
-fresh copy of 2.4.21 from kernel.org, configured lvm, made the patchset,
-patched the kernel, configed the kernel, and then made the kernel...so I
-think I'm following all the directions.
-
-As the raid array is running without problems (all drives online, and
-array is clean), I suspect a problem with lvm.
-
-Also, just for clarification, on a reboot (after I load the disk
-controller module, but before I run any lvm commands) if I dd /dev/zero
-over /dev/md/0, I am able to pvcreate, vgcreate, lvcreate, mkfs, and
-mount just fine.  After a reboot, however, I get the above error.
-
-Any ideas?  I don't particularly like the idea of a 1/2TB of volatile
-storage.
-
-- Nathan
+Jetzt ein- oder umsteigen und USB-Speicheruhr als Pr=EF=BF=BDmie sichern!
