@@ -1,13 +1,9 @@
-Return-Path: <tack@linux.com>
-Subject: Re: [linux-lvm] GUI front-end for LVM
-From: Jason Tackaberry <tack@linux.com>
-In-Reply-To: <3B5F0635.1070503@ednet.ns.ca>
-References: <20010725134425.A30937@linux.com> 
-	<3B5F0635.1070503@ednet.ns.ca>
-Content-Transfer-Encoding: 7bit
-Date: 25 Jul 2001 14:29:26 -0400
-Message-Id: <996085766.403.12.camel@somewhere.auc.ca>
-Mime-Version: 1.0
+Return-Path: <austin@coremetrics.com>
+Message-ID: <85063BBE668FD411944400D0B744267A643506@AUSMAIL>
+From: "Gonyou, Austin" <austin@coremetrics.com>
+Subject: RE: [linux-lvm] When Do I need to install the VFS patch?
+Date: Wed, 25 Jul 2001 13:28:08 -0500
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,20 +16,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On 25 Jul 2001 14:47:33 -0300, Patrick Boutilier wrote:
-> There are a couple out there. Try searching for LVM on Freshmeat.net
+Should only need to install that up to 2.4.6 I believe. 
 
-I do see a couple.  None of them appear to incorporate md support, which
-would be quite nice.
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com 
 
-Imagine a GUI tool that would let you create and manipulate RAID devices
-(using md) and combine them or manage them using LVM.  A convenient GUI
-to convert an existing non-md/lvm system to say LVM-managed RAID1 would
-be impressive too, even if it's a logistical nightmare. :)
-
-Not that I have tons of free time, but I might tinker around with
-something this weekend.
-
-Jason.
+> -----Original Message-----
+> From: John DeFranco [mailto:defranco@cup.hp.com]
+> Sent: Wednesday, July 25, 2001 12:51 PM
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] When Do I need to install the VFS patch?
+> 
+> 
+> Hi,
+> 
+> When do I need to apply the linux-2.4.X-VFS-lock.patch?
+> Is it only required if I'm going to do snapshots and/or
+> use reiserfs? I could not find any documentation that
+> complete described this.
+> 
+> Thanks!
+> -- 
+> ==========
+> Cheers
+>    -jdf
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
