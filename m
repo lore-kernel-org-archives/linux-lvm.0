@@ -1,10 +1,9 @@
-Return-Path: <julien@atix.de>
-Message-ID: <3B3B3AB9.C4A492D6@atix.de>
-Date: Thu, 28 Jun 2001 16:10:01 +0200
-From: Julien Baboud <julien@atix.de>
+Return-Path: <jspies@maties.sun.ac.za>
+From: Johann Spies <jspies@maties.sun.ac.za>
+Date: 28 Jun 2001 16:18:10 +0000
+Message-ID: <87d77oefy5.fsf@#maties.sun.ac.za>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pb with activating VG after rebooting
+Subject: [linux-lvm] Problem installing lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,33 +16,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-in the world of bugs&errors:
-i've obtained the following msg at kernel booting and with the vgscan
-command :
+I am trying to install lvm_0.9.1_beta7 on a machine with a 2.4.5
+kernel.
 
-%vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vg1"
-vgscan -- found inactive volume group "vg2"
-vgscan -- found inactive volume group "vg3"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-groups
+After following the instructions in LVM/0.9.1_beta7/PATCHES/README a
+patch was created: lvm-0.9.1_beta7-2.4.5.patch
 
-and when i try to activate the inactive VGs, i get this :
+I patched the kernel with it and then tried to recompile the kernel.
+The process ended with:
+------------------------
+/usr/src/linux/arch/i386/lib/lib.a /usr/src/linux/lib/lib.a
+/usr/src/linux/arch/i386/lib/lib.a \
+        --end-group \
+        -o vmlinux
+drivers/md/mddev.o: In function `__update_hardblocksize':
+drivers/md/mddev.o(.text+0xcec1): undefined reference to `get_hardblocksize'
+drivers/md/mddev.o(.text+0xcf0d): undefined reference to `get_hardblocksize'
+make: *** [vmlinux] Error 1
 
-%vgchange -a y vg2
-vgchange -- ERROR "parameter error" setting up snapshot copy on write
-exception table for "/dev/vg2/lv2_1_snap"
+I hope you can help me to get this right.
 
-%vgchange -a y vg3
-vgchange -- ERROR "parameter error" setting up snapshot copy on write
-exception table for "/dev/vg3/lv3_1_snap"
+Regards.
 
-what is the matter since the same operations have been doing on the 3 VG
-(except that the 3rd VG was extended...) ?
-and how to repare this ?
+Johann
+-- 
+Johann Spies
+Informasietegnologie
+Universiteit van Stellenbosch
 
- julien4atix
+     "The Spirit of the Lord is upon me, because he hath 
+      anointed me to preach the gospel to the poor; he hath 
+      sent me to heal the brokenhearted, to preach  
+      deliverance to the captives, and recovering of sight 
+      to the blind, to set at liberty them that are  
+      bruised..."         Luke 4:18 
