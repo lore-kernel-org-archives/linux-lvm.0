@@ -1,25 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j310OOO16580
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2005 19:24:24 -0500
-Received: from seeker3.pacific.net.ph (seeker3.pacific.net.ph [210.23.235.106])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j310OIGZ012708
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2005 19:24:18 -0500
-Received: from congo2.pacific.net.ph (congo2.pacific.net.ph [210.23.235.89])
-	by seeker3.pacific.net.ph with ESMTP
-	id j310OGgB011170 for <linux-lvm@redhat.com>;
-	Fri, 1 Apr 2005 08:24:16 +0800
-Received: from [210.1.105.173] (ppp173.dyn1.105.pacific.net.ph [210.1.105.173]
-	(may be forged)) by congo2.pacific.net.ph with ESMTP
-	id j310OELh008602 for <linux-lvm@redhat.com>;
-	Fri, 1 Apr 2005 08:24:15 +0800 (PHT)
-Message-ID: <424CA0D1.5060905@nospam.com>
-Date: Fri, 01 Apr 2005 09:16:01 +0800
-From: Andy Sy <andy@nospam.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: putting lvm autodetect into the kernel ala md
-Reply-To: andy@neotitans.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j217caK16263
+	for <linux-lvm@redhat.com>; Tue, 1 Mar 2005 02:38:36 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j217cYEW007509
+	for <linux-lvm@redhat.com>; Tue, 1 Mar 2005 02:38:34 -0500
+Date: Tue, 1 Mar 2005 08:38:28 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Having duplicate PV problems,
+	think there's a bug in LVM2 md component detection
+Message-ID: <20050301073828.GC16775@percy.comedia.it>
+References: <20050228213856.GA4151@percy.comedia.it>
+	<001101c51de4$ed5448c0$32dcdc0a@vanish>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <001101c51de4$ed5448c0$32dcdc0a@vanish>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,21 +24,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Luca Berra wrote:
+On Mon, Feb 28, 2005 at 05:29:11PM -0500, Ron Watkins wrote:
+>I am using LVM version 2.01.04 (2005-02-09).  The Library Version is 
+>1.01.00-ioctl (2005-01-17).  The Driver Version is 4.1.0.  (no date given). 
+>I don't have any easy way to determine if the Debian maintainer is patching 
+http://packages.debian.org/lvm2
+>this.  Should I be submitting the bug report directly to him/her/them 
+>instead?
+well, they do explicitely add -D_FILE_OFFSET_BITS=64 to CFLAGS
+i wonder if this changes the lseek behaviour
+i'd try asking the debian maintainer first....
 
-> no, [lvm partition detection and activation] is a user space
-> task, there is no reason to burden the kernel with this.
-
-I find that a spurious argument.  The kernel autodetects physical
-partitions, so how is that different from detecting logical ones?
-From the user's point of view he would want it to happen the
-same way.  In fact, given the flexibility and [purported] negligible
-overhead of logical volumes, he should not even be bothering
-with physical partitions anymore.
-
-
+L.
 -- 
-reply-to: a n d y @ n e o t i t a n s . c o m
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
