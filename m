@@ -1,9 +1,7 @@
-From: "William Blunn" <bill+f.9sfuw6uo@tao-group.com>
-Subject: Re: [linux-lvm] pvcreate -- ERROR "Success"
-Message-ID: <BDEMIPDEGABMNEFIHCPDKEFLEEAA.bill+f.9sfuw6uo@tao-group.com>
+Message-ID: <20021212161221.69659.qmail@web20703.mail.yahoo.com>
+From: ronnie <roen51@yahoo.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20021211202224.79940.qmail@web40906.mail.yahoo.com>
+Subject: [linux-lvm] vgchange -a y -A n error furing installation
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +12,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 12 04:05:02 2002
+Date: Thu Dec 12 10:12:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> Firsttimer
+hello list
+Problem:
+when installing SuSE Linux 7.3 (SEMS3.1). during the
+"preparing your harddisk" phase, i get the following
+error:
 
-> chinook@/home/moll# pvcreate /dev/sdb
+LVM error
+vgchange -a y -A n
+internal YaST error
 
-Hello Firsttimer
+my setup:
+SuSe linux email server running SuSE 7.3
+2.4.17 kernel
+Dell poweredge 14000sc
+adaptec aic 7899 scsi controller
+Fujitsu scsi drive (x2)
 
-This may or may not be the problem, but it seems you are going against
-the standard advice to put PVs on *partitions* rather than *drives*,
-even if it results in a single partition using all the available space.
+what i kknow (or think i know)
+-its not the aic_7xxx module b/c ive manually loaded
+module aic_7xxx_old
+-the ins goes ok when using regular partitioning b/c
+this is a reinstall
+-dell servers are a pain in the neck
 
-It may seem pointless to create a single partition to cover the whole
-drive, but it is the best way.
+cheers
 
-(Remember to reboot after changing the partition table.)
+ronnie regev
 
-Regards,
-
-Bill
---=20
-William H. Blunn - <bill+s.9sfuw6uo@tao-group.com> - Developer Support
-Tao
-62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
-Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
-
-The contents of this e-mail and any attachments are confidential and may
-be legally privileged. If you have received this e-mail and you are not
-a named addressee, please inform us as soon as possible on
-+44 118 901 2999 and then delete the e-mail from your system. If you are
-not a named addressee you must not copy, use, disclose, distribute,
-print or rely on this e-mail. Any views expressed in this e-mail or any
-attachments may not necessarily reflect those of Tao's management.
-Although we routinely screen for viruses, addressees should scan this
-e-mail and any attachments for viruses. Tao makes no representation or
-warranty as to the absence of viruses in this e-mail or any attachments.
-Please note that for the protection of our business, we may monitor and
-read e-mails sent to and from our server(s).
+__________________________________________________
+Do you Yahoo!?
+Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
+http://mailplus.yahoo.com
