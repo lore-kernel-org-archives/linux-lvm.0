@@ -1,8 +1,10 @@
-Message-ID: <3FF277FF.1D5400B4@groupe-ips.com>
-From: Jean Marie =?iso-8859-1?Q?Ari=E8s?= <jeanmarie.aries@groupe-ips.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Understand the snapshot process
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
+Message-ID: <20031231093358.GG31937@percy.comedia.it>
+References: <OFC233D70E.1FE3DC79-ON00256E0D.001186FF-00256E0D.00118725@svunta.os.is>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <OFC233D70E.1FE3DC79-ON00256E0D.001186FF-00256E0D.00118725@svunta.os.is>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,44 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 31 01:19:01 2003
+Date: Wed Dec 31 03:35:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Wed, Dec 31, 2003 at 03:11:27AM +0000, Kjartan Reynir Hauksson wrote:
+>Hello all.
+>
+>I've been scratching my head on this for a few days now.  I decided to to
+>migrate to kernel 2.6 but first I need to migrate from lvm1 to dm+lvm2
+>(from what I understand).  So I've allready patched a vanilla 2.4.22 kernel
+are you running a particular distro? if so telling which one it is could
+be useful in gifing you the right hints.
 
-I'm using LVM under SuSE Linux 8.0, and I don't understand all the
-snapshot process.
-I know a snapshot is an exact copy of an existing volume :o)
+your distro probably has an mkinitrd command, so you would need to patch
+it to support lvm2 if it does not already.
+you might also need to patch your sysinit boot script
 
-Our config is :
+you will also need patching lilo to understand device-mapper, else it
+will not run anymore on your dm patched kernel (see
+http://www.saout.de/misc/)
 
-2 disks 73 Go RAID 1
---> 1 VG "OVG" (60 GB)
---> 1 LV /dev/OVG/data (40 GB) mounted on /share/data
+L.
 
-To create a snapshot whith ReiserFS, we do this (I'm following the LVM
-How-To) :
-
-Tux :# lvcreate -L30G -s -n snap_admin /dev/OVG/data
-
-and so, we mount the snapshot :
-
-Tux :# mount /dev/OVG/snap_admin /share/snapshot
-
-At this point, the /share/snapshot contain a copy of the /share/data
-directory.
-
-The How To say "Do the backup" for exemple with tar.
-
-My question is : Why we must to copy the data with a system command on
-the snapshot ? Is a "create snapshot/remove snapshot" not possible ?
-
-
-Thanks in advnace for your response.
-
-
---
-
-Jean Marie Ari=EF=BF=BDs
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
