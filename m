@@ -1,8 +1,8 @@
+Content-Class: urn:content-classes:message
 Subject: RE: [linux-lvm] read-only media in a LVM?
-Message-ID: <C42D120999B1CC4C886B6BB2832F356019BF91@hermes.genomatica.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Class: urn:content-classes:message
+Message-ID: <C42D120999B1CC4C886B6BB2832F356019BF95@hermes.genomatica.com>
 From: "Sean P. Kane" <spkane@genomatica.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,15 +14,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun 24 11:27:02 2003
+Date: Tue Jun 24 18:49:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Thanks for all the useful thoughts and pointers. I'll give them a try
-and see what I can manage to pull together.
+Wolfgang, can I get your email address so that I can ask you a few
+questions about this off-line?
 
+Thanks,
 Sean
+
 
 ------------------------------------------------------------------------
 Sean P. Kane
