@@ -1,37 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2B3njn06216
-	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 22:49:45 -0500
-Received: from pd4mo1so.prod.shaw.ca (shawidc-mo1.cg.shawcable.net
-	[24.71.223.10])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2B3ndup001775
-	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 22:49:39 -0500
-Received: from pd2mr1so.prod.shaw.ca
-	(pd2mr1so-qfe3.prod.shaw.ca [10.0.141.110]) by l-daemon
-	(Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15 2004))
-	with ESMTP id <0ID600F1H58N85N2@l-daemon> for linux-lvm@redhat.com; Thu,
-	10 Mar 2005 20:48:23 -0700 (MST)
-Received: from pn2ml2so.prod.shaw.ca ([10.0.121.146])
-	by pd2mr1so.prod.shaw.ca (Sun ONE Messaging Server 6.0 HotFix 1.01
-	(built Mar
-	15 2004)) with ESMTP id <0ID600KSN58NS870@pd2mr1so.prod.shaw.ca> for
-	linux-lvm@redhat.com; Thu, 10 Mar 2005 20:48:23 -0700 (MST)
-Received: from [192.168.1.124]
-	(S01060050ba84447c.vc.shawcable.net [24.86.200.241])
-	by l-daemon (iPlanet Messaging Server 5.2 HotFix 1.18 (built Jul 28
-	2003))
-	with ESMTP id <0ID600L8N58N6N@l-daemon> for linux-lvm@redhat.com; Thu,
-	10 Mar 2005 20:48:23 -0700 (MST)
-Date: Thu, 10 Mar 2005 19:48:22 -0800
-From: Terry Rigby <t-rigby@shaw.ca>
-Subject: Re: [linux-lvm] LVM Broken on boot.
-In-reply-to: <200503101941.52371.t-rigby@shaw.ca>
-Message-id: <200503101948.22955.t-rigby@shaw.ca>
-MIME-version: 1.0
-Content-transfer-encoding: 7bit
-Content-disposition: inline
-References: <200503101633.54212.t-rigby@shaw.ca>
-	<200503101941.52371.t-rigby@shaw.ca>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2C6n4Y01043
+	for <linux-lvm@redhat.com>; Sat, 12 Mar 2005 01:49:04 -0500
+Received: from server.echohome.org (s233-64-29-217.try.wideopenwest.com
+	[64.233.217.29])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2C6mvnc001460
+	for <linux-lvm@redhat.com>; Sat, 12 Mar 2005 01:48:58 -0500
+Received: from echo (echo.echohome.org [192.168.2.254])
+	by server.echohome.org (8.12.8/8.12.8) with ESMTP id j2C6mohS012868
+	for <linux-lvm@redhat.com>; Sat, 12 Mar 2005 01:48:51 -0500
+From: "Erik Ohrnberger" <erik@echohome.org>
+Subject: RE: [linux-lvm] Building up a RAID5 LVM home server (long)[0x05B52F13]
+Date: Sat, 12 Mar 2005 01:49:27 -0500
+Message-ID: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAA+n58x6G5jEO2amEm6MlYuwEAAAAA@echohome.org>
+MIME-Version: 1.0
+In-Reply-To: <001301c52589$978d1500$32dcdc0a@vanish>
+Content-Transfer-Encoding: 8bit
+Reply-To: Erik@echohome.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -42,94 +27,84 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-I tried mounting the device manually "mount -t 
-reiserfs /dev/4474/storage /storage" and IT WORKED.  It doesnt work without 
-specifying the filesystem but at least it works.  I basically removed all 
-drives from the lv and removed the info on the drive using pvremove. Then I 
-complety restarted from scratch (following the howto at tldp.org) making sure 
-I added the devices in the same order as I originally had them.
+Ron,
+    All your conclusions are very true.  
 
-Thats about all I can offer for advice.  I don't even know if it is dangerous 
-to do it this way or not but it worked for me, maybe it will work for someone 
-else one day also.
+    The machine is a 2 GHz AMD Althorn with 512 MB RAM running SuSE 9.1.
+The local network is very small.  Only 5 or 6 devices (laptop) at most, and
+is serviced by two 100 Mb hubs quite well.  Hardly ever see collisions, and
+then only when there is a large file transfer going on.
 
-Terry
+    At some point in time, I may be fooling around with MythTV or KnoppMyth,
+which would generate a lot of data, and I figure that I could NFS mount the
+large disk space across the network.  In addition, all the stuff that I
+download from the net is on there too, patches for programs (mostly MS) and
+other software install sets.
 
-On March 10, 2005 07:41 pm, Terry Rigby wrote:
-> Well, I might be somewhere now but I might have also screwed up all my data
-> on the device.  I fixed the initial problem and ended up having to
-> basically start fron scratch to create the LV again.  I didnt format
-> anything, the only thing I did havnt to do with a filesystem was to do
-> resize_reiserfs -f /dev/4474/storage.  All went fine except when I try to
-> mount the device.
->
-> mount /dev/4474/storage (setup in my fstab)
->
-> mount: wrong fs type, bad option, bad superblock on /dev/4474/storage,
->        or too many mounted file systems
->
-> :(  Dont know where to go from here
-> :
-> >Re: [linux-lvm] LVM Broken on boot.
-> >(Sam Vilain, Thu Mar 10 18:48:40 2005)
-> >Hmm, that looks nasty.  You might get somewhere using the -P option to the
-> >commands... something like
-> >
-> >vgscan -P
-> >vgchange -P -ay
-> >vgreduce --removemissing myvg
-> >
-> >Please follow-up to the list on success!
-> >
-> >Sam.
->
-> On March 10, 2005 04:33 pm, Terry Rigby wrote:
-> > Today I rebooted my system and upon reboot my LVM wouldnt mount saying
-> > "you must specify filesystem".  So I tried specifying the filesystem and
-> > I got the error "mount: special device /dev/4474/storage does not exist".
-> >
-> > I am pretty new to LVM so I did some googling and found that pvscan
-> > should show my PV's.  This returned the following;
-> > fileserver:~# pvscan
-> >   Couldn't find device with uuid
-> > 'pvifBp-Fii0-wKCx-gM4m-VxGz-Q6Ee-oyNKL4'. Couldn't find device with uuid
-> > 'pvifBp-Fii0-wKCx-gM4m-VxGz-Q6Ee-oyNKL4'. Couldn't find device with uuid
-> > 'pvifBp-Fii0-wKCx-gM4m-VxGz-Q6Ee-oyNKL4'. PV /dev/hda2        VG 4474  
-> > lvm2 [18.18 GB / 18.18 GB free]
-> >   PV /dev/hdb         VG 4474   lvm2 [74.52 GB / 74.52 GB free]
-> >   PV /dev/hdc         VG 4474   lvm2 [74.52 GB / 74.52 GB free]
-> >   PV unknown device   VG 4474   lvm2 [74.52 GB / 74.52 GB free]
-> >   Total: 4 [241.75 GB] / in use: 4 [241.75 GB] / in no VG: 0 [0   ]
-> >
-> > the "unknown" device is /dev/hdd.  When I have a look at /dev/hdd using
-> > pvdisplay it shows the following.
-> > fileserver:~# pvdisplay /dev/hdd
-> >   --- Physical volume ---
-> >   PV Name               /dev/hdd
-> >   VG Name               4474
-> >   PV Size               74.52 GB / not usable 0
-> >   Allocatable           yes
-> >   PE Size (KByte)       4096
-> >   Total PE              19078
-> >   Free PE               19078
-> >   Allocated PE          0
-> >   PV UUID               pvifBp-Fii0-wKCx-gM4m-VxGz-Q6Ee-oyNKL4.
-> >
-> > I really have no idea where to go from here.  Thanks to anyone that
-> > responds. I'll keep the mailing list updated for archiving purposes.
-> >
-> > Terry Rigby
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+    Has LVM2 been upgraded to handle an LVM size larger than before?  Last I
+recall, it was limited to 256 PVs, and 250 GB or so usable space.
+
+    Thanks for all your ideas and contributions.
+
+    Erik.
+
+> -----Original Message-----
+> From: linux-lvm-bounces@redhat.com 
+> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Ron Watkins
+> Sent: Thursday, March 10, 2005 10:56 AM
+> To: LVM general discussion and development
+> Subject: Re: [linux-lvm] Building up a RAID5 LVM home server 
+> (long)[0x05B52F13]
+> 
+> 
+> Remember, this is for a HOME SERVER, not a corporate 
+> database.  Assuming he 
+> doesn't have Gigabit Ethernet, and assuming the CPU in his server is 
+> reasonably beefy (at least a gigahertz), the extra speed in 
+> RAID 1 or 10 
+> will be entirely wasted.   For almost any home application, 
+> RAID5 is going 
+> to be exactly what folks want.... cheap, reliable, and more 
+> than fast enough 
+> to saturate the wire.
+> 
+> Doing RAID 10 properly would cost a great deal for disks, a lot for 
+> motherboards with proper, non-PCI choked Gigabit ports (need 
+> them on both 
+> server and client, mind you), and would take a significant amount of 
+> learning on the part of the home admin to get really running 
+> properly.... 
+> how many people want to learn about jumbo frames and cat5e 
+> wiring to set up 
+> a video server that will only be serving one or two videos at a time?
+> 
+> Yes, your solution would run faster in some circumstances, 
+> but it would be a 
+> LOT more expensive.   After investing all that money, he'd see it run 
+> somewhat faster on writes, and the server wouldn't be 
+> speed-impaired during 
+> a rebuild.   But he's a HOME USER.  It doesn't MATTER if the 
+> server is slow 
+> for a night or two.  Everything will be sluggish for a couple 
+> nights, once a 
+> year or so.  So what?  Since when is this is worth spending a 
+> couple grand 
+> to avoid?
+> 
+> It would often make sense for a business to do that, but from 
+> a home user 
+> perspective, it seems like following this specific advice would be a 
+> gigantic waste of money.
+> 
+> For nearly all home users with reasonably modern hardware, 
+> RAID5 is the 
+> right way to go for servers, at least for now.
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
+> linux-lvm@redhat.com https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
