@@ -1,8 +1,8 @@
-Message-Id: <F47B5C16711BEC4BBB0651C75F724809D568@qntsv14.quant.com>
-From: =?iso-8859-1?Q?Gesine_Sch=E4fer-Reimers?=
-    <G.SchaeferReimers@quant-forum.de>
+Message-Id: <20020424153354.GA627@fib011235813.fsnet.co.uk>
 MIME-Version: 1.0
-Subject: [linux-lvm] restore of parts of a logical volume group
+Content-Disposition: inline
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] LVM2 beta2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 24 03:03:01 2002
+Date: Wed Apr 24 10:34:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-My question is: How can I restore one or more logical volumes in a big
-volume group with the constellation (system filesystems and "private
-filesystems") described later?
+There are tarballs available for the second beta test of LVM2.
 
-I have one logical volume group named quant. This is placed in a physical
-volume that is a partition in a RAID 5 system on SUSE Linux 7.2 with Kernel
-2.4. 
-The quant volume group is divided into a lot of logical volumes. Some of
-them hold the filesystems /home /opt /tmp /var and the swap system. The
-other volumes have no file systems since they serve as a medium for informix
-database data. These database-logical-volumes are bound to raw devices.
+  ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.0-beta2.0.tgz
+  ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper-beta2.0.tgz
 
-I tried to do a restore of one of the "private" logical volumes but it
-failed since I cannot down the volume group because of the file systems
-mentioned above (it was denied by the system) and on a running volume group
-there is no possibility to access the device since it is in use.
+The main new addition to the release is that we have begun merging in
+the asynchronous snapshot code.  This code tries to minimise the time
+taken to perform the copy on write operation.  In addition it has
+identical performance at all snapshot chunk sizes, unlike LVM1 and
+EVMS whose performance degrades exponentially as the chunk size
+decreases.
 
-Is there a possibility to handle that or to devide the volume group into two
-parts (that for the system file systems and another one for the data)?
+The default snapshot chunk size for LVM2 has now dropped to 16k, it
+may be reduced further depending on test results.
+
+Please not that although snapshots are available in this release they
+are currently non-persistent, ie. the snapshot will be lost if you
+deactivate it, or reboot the machine.  Persistent snapshots will
+follow shortly.
+
+- Joe
