@@ -1,8 +1,10 @@
-From: "Carey Jung" <carey@itfreedom.com>
-Message-ID: <GNEAKGKKMNLLGBACDNBJCEDLCKAA.carey@itfreedom.com>
+From: Josh Berkus <josh@agliodbs.com>
+References: <Pine.BSF.4.44.0310160740510.5719-100000@torgo.978.org>
+In-Reply-To: <Pine.BSF.4.44.0310160740510.5719-100000@torgo.978.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM corruption
+Content-Transfer-Encoding: 8bit
+Message-Id: <200310160949.59442.josh@agliodbs.com>
+Subject: [linux-lvm] Re: [PERFORM] backup/restore - another area.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,39 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 16 13:07:01 2003
+Date: Thu Oct 16 14:06:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Jeff <threshar@torgo.978.org>, "markw@osdl.org" <markw@osdl.org>
+Cc: "pgsql-performance@postgresql.org" <pgsql-performance@postgresql.org>, "linux-lvm@sistina.com" <linux-lvm@sistina.com>, pgsql-admin@postgresql.org
 
-It appears that  I have some kind of LVM corruption, and I can't figure out
-how to locate it.  I started getting lots of EXT3 errors in
-/var/log/messages, relating to lvm devices.  On one device in particular,
-when I tried to copy a large quantity of data to it, I got the following
-errors:
+Jeff,
 
-Oct 16 12:19:17 big kernel: EXT3-fs: mounted filesystem with ordered data
-mode.
-Oct 16 12:21:01 big kernel: EXT3-fs error (device lvm(58,17)):
-ext3_new_block: Allocating block in system zone - block = 21856256
-Oct 16 12:21:21 big kernel: EXT3-fs error (device lvm(58,17)):
-ext3_new_block: Allocating block in system zone - block = 21856280
+> The downside is
+> this method will only work on that specific version of PG and it isn't the
+> "cleanest" thing in the world since you are essentially simulating a power
+> failure to PG. Luckly the WAL works like a champ. Also, these backups can
+> be much larger since it has to include the indexes as well. but this is a
+> price you have to pay.
 
-I first tried reformatting (mkfs) the partition, but afterwards got the same
-errors.
+The other downside is, of course, that the database needs to be shut down.
 
-I then tried deleting and recreating the logical volume, reformatting, and
-copying again, and got the same errors on the brand new volume/filesystem.
+> COOL HUH?
 
-I suspect that the problem is in the LVM layer, but I'm not aware of any
-tools that will perform a consistency check on the entire lvm subsystem.
-Anybody got any ideas?
+Certainly very useful in the DBA's arsenal of backup tools.
 
-This is lvm-1.0.3-4, stock redhat 7.3 rpm.  The raw devices on which the
-physical extents reside are very large, nearly 2TB each (there are two).
-
-Any help would be appreciated.
-
-
-thanks,
-Carey Jung
+-- 
+Josh Berkus
+Aglio Database Solutions
+San Francisco
