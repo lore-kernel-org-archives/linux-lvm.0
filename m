@@ -1,6 +1,8 @@
-Message-ID: <1056566770.699@mail168.jellyjam.biz>
-From: servicesltpgpq@innd.biz
-Subject: [linux-lvm] your account
+Message-ID: <3560BA143F45D5118E670000E82459214C20F8@ssk.schneiderkenzingen.de>
+From: "Koch, Steffen" <steffen.koch@sphinx-electronics.de>
+Subject: RE: [linux-lvm] HELP! 'can't get data of volume group "vg01" from
+	 physical volume(s)'
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,31 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun 25 16:23:02 2003
+Date: Thu Jun 26 03:27:01 2003
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-How would you like to earn $50 or more for completing a short survey?
-
-What about $100 for an hour of your time participating in a focus group?
-
- http://www.xtrameg.com/trt/
-
-Your time and opinions are valuable - you just need to know
-which companies are willing to pay you for them. 
-Our membership program provides....
-
-- An updated database of hundreds of paid survey, focus group, 
-and market research companies
-- Unlimited access - 24 hours a day, 7 days a week 
-
- http://www.xtrameg.com/trt/
-
-This is a great way to boost your income, with minimal effort.Best of
-all, you can participate in as many surveys or focus groups as you choose!
-
-
-yvahk-yiz^fvfgvan(pbz
+> I had two PVs, hdc (whole disk) and hda4 (partition), in VG vg01. This
+> VG contains one LV called 'home'.
+> 
+> I wanted to add a 120G disk, hdb,  so I did 'pvcreate /dev/hdb'. After
+> some discusssion it was decided that we did not want to give the whole
+> disk to LVM, so I partitioned the disk (thinking that the PV 
+> structures
+> would be overwritten that way) and did 'pvcreate /dev/hdb4', the other
+> three partitions being normal non-LVM partitions.
+> 
+> Then we decided to change our file system to ReiserFS so I 
+> added hdb4 to
+> the vg01 group, created a LV "newhome" inside (spanning the hdb4
+> partition), formatted this LV with REiserfs, and copied 
+> everything from
+> the (still mounted) 'home' LV over.
+> 
+> Then I rebooted.
+did you reboot to update your partition table BEFORE creating your PVs??
