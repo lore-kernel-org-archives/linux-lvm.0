@@ -1,10 +1,9 @@
-From: GCS <gcs@lsc.hu>
-Subject: Re: [linux-lvm] Kernel 2.4.12 bug?
-Message-ID: <20011024082146.A3130@lsc.hu>
-References: <20011020111357.A13288@lsc.hu> <20011022094833.B557@tykepenguin.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011022094833.B557@tykepenguin.com>; from caulfield@sistina.com on Mon, Oct 22, 2001 at 09:48:33AM +0100
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] Kernel 2.4.12 bug?
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FF82@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 24 01:08:02 2001
+Date: Wed Oct 24 02:19:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+> Also at reboot/halt I get:
+>  printing eip:
+> c014c022
+> Oops: 0000
+> CPU:    0
+> EIP:    0010:[proc_match+18/56]    Tainted: P
+> EFLAGS: 00010206
+> eax: d9fc2609   ebx: 03   ecx: 03   edx: 5a5a5a5a
+> esi: d9fc2609   edi: d9fc260d   ebp: d65f7d18   esp: d65f7d10
+> ds: 0018   es: 0018   ss: 0018
+> Process vgchange (pid: 345, stackpage=3Dd65f7000)
+> etc...
 
-On Mon, Oct 22, 2001 at 09:48:33AM +0100, Patrick Caulfield <caulfield@sistina.com> wrote:
-> Not that I've seen. I'm running 2.4.12 ATM quite happily, LVM is a module rather
-> than in the kernel though.
- My kernel is still complaining during vgscan, see the syslog:
-lvm -- Module successfully initialized
-invalidate: busy buffer
-last message repeated 8 times
+I also have problems with 2.4.12 + LVM rc4. I have a kernel panic with a
+"stack trace" in the kernel *before* it mounts ROOT.
+Any idea? Everything works fine with 2.4.7 / 2.4.9
 
-Also at reboot/halt I get:
- printing eip:
-c014c022
-Oops: 0000
-CPU:    0
-EIP:    0010:[proc_match+18/56]    Tainted: P
-EFLAGS: 00010206
-eax: d9fc2609   ebx: 03   ecx: 03   edx: 5a5a5a5a
-esi: d9fc2609   edi: d9fc260d   ebp: d65f7d18   esp: d65f7d10
-ds: 0018   es: 0018   ss: 0018
-Process vgchange (pid: 345, stackpage=d65f7000)
-etc...
-
-Eip points inside c014bf4c t meminfo_read_proc. I have even patched it to
-2.4.13pre3, but I get the same result. What should I check out? With 2.4.9
-everything works normaly.
-
-Cheers, GCS
+-jec
