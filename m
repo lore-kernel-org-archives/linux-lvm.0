@@ -1,9 +1,9 @@
-Message-Id: <3C5D5140.8070505@wanadoo.fr>
-From: Francis SOUYRI <francis.souyri@wanadoo.fr>
+Message-Id: <000801c1ad34$01fa4c90$a0c9ecc2@orbit>
+From: "=?iso-8859-1?B?QW5kcmXpIMVzdHL2bQ==?=" <andree.astrom@home.se>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Root fs on LV on software RAID
-References: <Pine.LNX.4.40.0202020226580.695-100000@phobos.internal.parmastocks.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+    boundary="----=_NextPart_000_0005_01C1AD3C.63216320"
+Subject: [linux-lvm] Regarding pvscan
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,49 +14,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Feb  3 09:09:02 2002
+Date: Sun Feb  3 22:26:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hello Georges,
+This is a multi-part message in MIME format.
 
-    Yes it is possible. I have a hardware raid 5 system and two systems 
-without raid where all the filesystem are on lv's (also /boot, I used a 
-patched lilo). You can find some informations in the LVM mail archive.
+------=_NextPart_000_0005_01C1AD3C.63216320
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Best regards.
+Hello,
 
-Francis
+Whenever i run pvscan, my settings on the HDDs get disabled.
 
-George Karaolides wrote:
+DMA gets turned off, I/O sets to default 16bit when i'm running it
+with DMA=3D1 and 32bit i/O.
 
->Hi all,
->
->I'm a new subscriber to this list, learning how to use LVM on Debian
->woody with kernel version 2.4.17.
->
->So far, I've managed to build filesystems (ext2) in logical volumes on
->top of software RAID-1, mount them and copy data into them.
->
->I'd like to know if it is possible to have the root filesystem on an LV on
->top of software RAID (provided, of course, that /boot is on a separate
->partition readable by lilo).  I've searched the past few months' worth of
->list archives and have found no reference to whether this is actually
->possible or not.  Has anyone done this?
->
->Thanks in advance and best regards,
->
->|      George Karaolides       8, Costakis Pantelides St.,         |
->|      tel:   +357 99 68 08 86                  Strovolos,         |
->|      email: george@karaolides.com       Nicosia CY 2057,         |
->|      web:   www.karaolides.com      Republic  of Cyprus          |
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Just wondering if this is a bug or have i missed something?
+
+Running LVM-1.0.0
+
+Regards,
+Andre=E9
+
+------=_NextPart_000_0005_01C1AD3C.63216320
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2712.300" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hello,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Whenever i run pvscan, my settings on =
+the HDDs get=20
+disabled.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>DMA gets turned off, I/O sets to =
+default 16bit when=20
+i'm running it</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>with DMA=3D1 and 32bit =
+i/O.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Just wondering if this is a bug or have =
+i missed=20
+something?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Running LVM-1.0.0</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Regards,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Andre=E9</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_0005_01C1AD3C.63216320--
