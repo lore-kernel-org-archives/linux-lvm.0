@@ -1,10 +1,8 @@
-From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] Max LV size
-Message-ID: <20021111225220.GA13022@localhost>
-References: <Pine.A41.4.43.0211111602380.53894-100000@hera.itg.uiuc.edu>
+Message-ID: <20021111225340.GA3587@lina.inka.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.A41.4.43.0211111602380.53894-100000@hera.itg.uiuc.edu>
+From: Bernd Eckenfels <ecki@lina.inka.de>
+Subject: [linux-lvm] [patch] make device mapper compile on 2.5.4x
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +13,77 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 11 16:53:01 2002
+Date: Mon Nov 11 16:54:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux LVM Sistina <linux-lvm@sistina.com>
+To: dm@uk.sistina.com, linux-lvm@sistina.com
+Cc: linux-kernel@vger.kernel.org
 
-On Monday, 11 November 2002, at 16:10:05 -0600,
-Alexander Lazarevich wrote:
+Hello,
 
-> vgdisplay -v tells me the max LV size is 255GB. So I figured I'd decrease
-> the number of Max LV's (currently at 256) to 128, and then that would
-> increase the size that each LV could be. But when I do a "vgchange -l 128
-> blah", it just stops and says "segmentation fault".
-> 
-> What gives? I really hope 255GB isn't a limit. Any ideas?
-> 
-Yes, just read the documentation :-). From man vgcreate:
+device mapper does not compile on my 2.4.x tree, because of an argument
+incompatibility in set_device_ro(). Please find attached a patch, which
+makes this file compile. I am not sure if it is correct, since I do not
+unterstand whats going on here, and have not tested it yet. Please somebody
+have a look at it since it it broken for multiple releases, yet.
 
-       -s, --physicalextentsize PhysicalExtentSize[kKmMgGtT]
-              Sets  the  physical extent size on physical volumes
-              of this volume group.  A size suffix (k  for  kilo
-              bytes up to t for terabytes) is optional, megabytes
-              is the default if no suffix is present.  Values can
-              be  from  8 KB to 16 GB in powers of 2. The default
-              of 4 MB causes maximum LV sizes of  ~256GB  because
-              as  many  as  ~64k extents are supported per LV. In
-              case larger maximum LV sizes  are  needed  (later),
-              you  need  to  set the PE size to a larger value as
-              well. Later changes of the PE size in  an  existing
-              VG are not supported.
+BTW: I also suggest to remove the www.sistina.com/lvm/ url from the
+MAINTAINER file since it does not contain any useful information anymore.
 
-Hope it helps.
+Greetings
+Bernd
+
+--- drivers/md/dm-ioctl.c~	2002-11-11 23:27:38.000000000 +0100
++++ drivers/md/dm-ioctl.c	2002-11-11 23:43:41.000000000 +0100
+@@ -560,6 +560,7 @@
+ 	struct dm_table *t;
+ 	struct mapped_device *md;
+ 	int minor;
++	struct block_device *bdev;
+ 
+ 	r = check_name(param->name);
+ 	if (r)
+@@ -585,7 +586,12 @@
+ 	}
+ 	dm_table_put(t);	/* md will have grabbed its own reference */
+ 
+-	set_device_ro(dm_kdev(md), 0/*(param->flags & DM_READONLY_FLAG)*/);
++	bdev = bdget(kdev_t_to_nr(dm_kdev(md)));
++	if (!bdev)
++		return -ENXIO;
++	set_device_ro(bdev, (param->flags & DM_READONLY_FLAG));
++	bdput(bdev);
++
+ 	r = dm_hash_insert(param->name, *param->uuid ? param->uuid : NULL, md);
+ 	dm_put(md);
+ 
+@@ -847,6 +853,7 @@
+ 	int r;
+ 	struct mapped_device *md;
+ 	struct dm_table *t;
++	struct block_device *bdev;
+ 
+ 	r = dm_table_create(&t, get_mode(param));
+ 	if (r)
+@@ -871,7 +878,12 @@
+ 		return r;
+ 	}
+ 
+-	set_device_ro(dm_kdev(md), (param->flags & DM_READONLY_FLAG));
++	bdev = bdget(kdev_t_to_nr(dm_kdev(md)));
++	if (!bdev)
++		return -ENXIO;
++	set_device_ro(bdev, (param->flags & DM_READONLY_FLAG));
++	bdput(bdev);
++
+ 	dm_put(md);
+ 
+ 	r = info(param, user);
+
 
 -- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Woody (Linux 2.4.19-pre6aa1)
+  (OO)      -- Bernd_Eckenfels@Wendelinusstrasse39.76646Bruchsal.de --
+ ( .. )  ecki@{inka.de,linux.de,debian.org} http://home.pages.de/~eckes/
+  o--o     *plush*  2048/93600EFD  eckes@irc  +497257930613  BE5-RIPE
+(O____O)  When cryptography is outlawed, bayl bhgynjf jvyy unir cevinpl!
