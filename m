@@ -1,8 +1,12 @@
-In-Reply-To: <20040115230502.22365.27437.Mailman@hermes.sistina.com>
-MIME-Version: 1.0
-From: Frank Bagehorn <fba@zurich.ibm.com>
-Message-ID: <OFD32F6C3A.281F6118-ONC1256E1D.002ADACC-C1256E1D.002BA837@ch.ibm.com>
-Subject: [linux-lvm] Problems with booting after changing certain volumes
+Subject: Re: [linux-lvm] No Subject
+From: Rob Cash <trylinux@nc.rr.com>
+In-Reply-To: <200401151804.i0FI4gZ32327@ecstasy.winternet.com>
+References: <6413350.1074097638140.JavaMail.Administrator@atp>
+	 <20040114234655.GA20045@aquila.katkansky.org>
+	 <200401151804.i0FI4gZ32327@ecstasy.winternet.com>
+Message-Id: <1074228332.11965.0.camel@playground.robcash.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,43 +17,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 16 02:58:02 2004
+Date: Fri Jan 16 08:57:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Recently I had problems on a SuSE SLES 8 install.
-When I created two more logical volumes in the rootvg, the machine would 
-hang during boot stating
-        ERROR 2 - writing volume group backup file 
-/etc/lvmtab.d/rootvg.tmp in vg_cfgbackup
-        unable to do a backup of volume group "rootvg"
-        removing volume group "rootvg" from /etc/lvmtab
-I tried to increase the root file system from 512MB to 1GB but that didn't 
-help.
-So I removed the two lvs (and assumed I run into a strange bug that allow 
-not more than 7 lvs..)
-Instead I increased one of the other lvs and put the data in those.
-Now I rebooted again (first time since I increased the lv) and get the 
-same error.
+On Thu, 2004-01-15 at 18:04, Ken Fuchs wrote:
+> >On Wed, Jan 14, 2004 at 08:27:18AM -0800, trylinux wrote:
+> 
+[...]
+> Brant Katkansky <lists@katkansky.org> wrote:
+> 
+> >You need to rebuild the kernel initrd if you change your root device,
+> >as the linuxrc script in the initrd has the root device hard-coded.
+> 
+> lvmcreate_initrd(8) can be used to do this, but one might learn more by
+> using the following manual approach.
+> 
+[...]
 
-Question:
-How much space is necessary to do the volume group backup ?
-Shall I increase the rootlv even further (e.g. to 2GB) ?
-Or is the problem more than just not enough space ?
-The lv in question is about 60GB. I have another lv in a second volume 
-group that is the same size.
-(i.e. a copy of the same data is held on an external disk.) And that 
-doesn't seem to make a problem.
+Thanks!
 
-----------------------------------------------------------------------
-Dr. Frank Bagehorn
-IBM Zurich Research Lab.
-Saeumerstr. 4
-CH-8803 Rueschlikon 
-Switzerland
-----------------------------------------------------------------------
-SMTP: fba@zurich.ibm.com
-Notes: Frank Bagehorn/Zurich/IBM@IBMCH
-phone: ++41 (01) 724 83 23  fax: ++41 (01) 724 89 59
+Cheers,
+Rob
