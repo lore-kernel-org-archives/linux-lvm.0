@@ -1,10 +1,10 @@
-Message-ID: <1024572480.3d11bc400c205@webmail3.wanadoo.nl>
-From: sander@sanderscorner.com
+From: Andreas Dilger <adilger@clusterfs.com>
 Subject: Re: [linux-lvm] ext2online and 2.4.18
-References: <1024512969.1862.6.camel@hiro.prowell.org.bogus> <20020619195508.GA22427@clusterfs.com> <1024521044.1861.6.camel@hiro.prowell.org.bogus>  <20020619214731.GB22427@clusterfs.com> <1024525638.1861.54.camel@hiro.prowell.org.bogus>
-In-Reply-To: <1024525638.1861.54.camel@hiro.prowell.org.bogus>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <20020620163420.GN22427@clusterfs.com>
+References: <1024512969.1862.6.camel@hiro.prowell.org.bogus> <20020619195508.GA22427@clusterfs.com> <1024521044.1861.6.camel@hiro.prowell.org.bogus> <20020619214731.GB22427@clusterfs.com> <1024525638.1861.54.camel@hiro.prowell.org.bogus> <1024572480.3d11bc400c205@webmail3.wanadoo.nl>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1024572480.3d11bc400c205@webmail3.wanadoo.nl>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 20 06:28:01 2002
+Date: Thu Jun 20 11:36:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: sander@sanderscorner.com
+Cc: linux-lvm@sistina.com
 
-Hi Ian,
+On Jun 20, 2002  13:28 +0200, sander@sanderscorner.com wrote:
+> I applied your patch to 2.4.18 kernel. It applied cleanly. Compiled the new
+> kernel and no problems doing that but... ext2online still fails while in the
+> kernel.
 
-I applied your patch to 2.4.18 kernel. It applied cleanly. Compiled the new
-kernel and no problems doing that but... ext2online still fails while in the
-kernel.
+Could you be more specific?  Do you get any messages in syslog or from
+dmesg?  Does the command just lock up and never return?  If you mount
+the filesystem with "-o debug,check" you get a few extra messages that
+may help narrow down the problem.
 
-Hope this helps,
-Sander de Boer
-
-Citeren Ian Prowell <ip_lvm@prowell.org>:
-
-> Attached is the reject file.  It looks like hunk 10 removes 27 lines
-> from super.c around line 594, but these were not getting removed in
-> 2.4.18.  Also attached is what I think the 2.4.18 patch should be.
-> 
-> -Ian
-> 
-> 
-
-
-
-
-
-
-__________________________________________________________
-
-Snel en makkelijk mailen
-
-Wanadoo webmail || http://webmail.wanadoo.nl
+Cheers, Andreas
+--
+Andreas Dilger
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
+http://sourceforge.net/projects/ext2resize/
