@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] How big are PEs by default?
-Message-ID: <689F43A6CF84E541A721C5C3FD5ADECC1A21EA@blr-m3-msg.wipro.com>
-From: "Sharad Tiwari" <sharad.tiwari@wipro.com>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] How big are PEs by default?
+Message-ID: <20030415130901.GG1250@tykepenguin.com>
+References: <689F43A6CF84E541A721C5C3FD5ADECC1A21EA@blr-m3-msg.wipro.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <689F43A6CF84E541A721C5C3FD5ADECC1A21EA@blr-m3-msg.wipro.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,41 +15,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 15 08:02:07 2003
+Date: Tue Apr 15 08:09:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-4MB is what I know ..
+On Tue, Apr 15, 2003 at 10:47:18AM +0530, Sharad Tiwari wrote:
+> 4MB is what I know ..
 
-> >> Finally, is there any documentation that's more detailed than the
-> >> HOWTO, and explains a bit more about the theory of LVM - what
-happens
-> >> when you change the size of existing file systems, and so on? The
-> >> HowTo is ok (although not all that great if you've never patched a
-> >> kernel before), but necessarily brief. :)
-> >>
-> >Suse put out a white paper that may offer a little more detailed
-> >explanation
-> >of LVM. It's available at:
->
->http://www.suse.com/en/business/certifications/certified_software/oracl
-e/
-> >doc
-> >s/lvm_whitepaper.pdf
-> >
-> >
-> >Aaron M. Brock
-> >
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+They were until 1.0.6
+
+Now they are 32MB
+-- 
+
+patrick
