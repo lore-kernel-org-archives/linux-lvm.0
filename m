@@ -1,10 +1,13 @@
-Date: Mon, 27 Aug 2001 11:49:57 -0400
-From: Wayne Topa <wtopa@dmcom.net>
-Message-ID: <20010827114957.A23458@dmcom.net>
+Date: Mon, 27 Aug 2001 10:57:43 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Problem mounting snapshot with reiserfs
+Message-ID: <20010827105743.A14120@sistina.com>
+References: <E15bMBF-0002FJ-00@hermes.sistina.com> <20010827150751.14611.qmail@web14405.mail.yahoo.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Debian apt-get link problem
+In-Reply-To: <20010827150751.14611.qmail@web14405.mail.yahoo.com>; from shahi_aman@yahoo.com on Mon, Aug 27, 2001 at 08:07:51AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,30 +19,53 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-  I have been trying to use the link in the LVM Howto by AJ Lewis, and
-the DEBIAN.readme in /pub/LVM, to obtain/upgrade LVM on a Debian testing=20
-box.  The link does not work.  I have been able to ftp to the sistina=20
-site to get the lvm 9=EF=BF=BD2 lvm files.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  I just tried the link=20
-( deb ftp://ftp.sistina.com/pub/LVM/binaries/debian unstable main )
-again and am still gettting the same error;
-Failed to fetch
-ftp://ftp.sistina.com/pub/LVM/0.9/binaries/debian/dists/unstable/main/binar=
-y-i386/Packages
-Unable to fetch file, server said 'Error opening file; No such file or dire=
-ctory.  '
+On Mon, Aug 27, 2001 at 08:07:51AM -0700, Aman Shahi wrote:
+> I am having problem in mounting snapshot with
+> reiserfs.
+>=20
+> I am using linux kernel 2.4.8 and lvm 1.0. Here
+> is the sequence of steps I did. Same steps with
+> ext2 I did not have nay problem. But with reiserfs
+> I am not able to do the mounting.
 
- If there really is a debian package on the site, would someone please=20
-let me know what the link to it is.
+You need to use the linux-2.4.x-VFS-lock.patch against the kernel to enable
+snapshotting to work with LVM and reiserfs.
 
-  Oh, and update the Debian.readme file with the correct link.
-
-Many Thanks
-Wayne
 --=20
-A user friendly computer first requires a friendly user.
-_______________________________________________________
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+Quitters never win, and winners never quit,
+but those who never quit AND never win are idiots.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7im33pE6/iGtdjLERAiJqAJoCC8tsaJ/wjzBF0m8VgrJ9gleg/ACglj8m
+GRdJ3UrKMApkDl2PGrzykck=
+=HDBq
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
