@@ -1,13 +1,12 @@
-Return-Path: <hopper@omnifarious.org>
+Return-Path: <thornber@btconnect.com>
+Date: Sun, 12 Aug 2001 20:07:02 +0100
 Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-From: "Eric M. Hopper" <hopper@omnifarious.org>
-In-Reply-To: <20010812135402.A452@dardhal.mired.net>
-References: <20010812135402.A452@dardhal.mired.net>
-Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature";
-	boundary="=-4z4oXTy6nzqU1Za6Avm/"
-Date: 12 Aug 2001 12:10:31 -0500
-Message-Id: <997636232.20870.2.camel@monster.omnifarious.org>
+Message-ID: <20010812200701.A657@btconnect.com>
+References: <20010811235718.A20414@linux.com>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010811235718.A20414@linux.com>; from tack@linux.com on Sat, Aug 11, 2001 at 11:57:18PM -0400
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,47 +18,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---=-4z4oXTy6nzqU1Za6Avm/
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Sat, Aug 11, 2001 at 11:57:18PM -0400, Jason Tackaberry wrote:
+> I have some ideas for a comprehensive GUI disk administration tool, and
+> I am first thinking about some of the issues I'll face regarding
+> interfacing with controllers, disks, partitions, md, and LVM.
+> 
+> I am curious if it's a silly idea to write an application that relies on
+> the data in /proc?  Do the kernel developers attempt to keep the data
+> and format provided in /proc as stable as possible?  Or is it fair game
+> for trivial changes that could break applications that parse it?  Should
+> I use ioctl instead?
 
-On 12 Aug 2001 13:54:02 +0000, Jos=E9 Luis Domingo L=F3pez wrote:
-> As far as I know, there are plans to remove much of the thingss that
-> currently appear under /proc. It seems that only information about
-> processes currently running will remain under /proc.
->=20
-> Kernel parameters, system information, kernel variables and kernel
-> tunables will probably disappear and will be replaced by some sort of
-> user-space application that will allow query and modfication of kernel
-> values and tunables. Something similar to Solaris' ndd, AFAIK.
+We won't change the format of the /proc data for the 1.0 series of LVM
+(including 0.9.1 betas).  I do *not* suggest you use the ioctls directly, at
+some point the ioctl interface will change.
 
-This is sad.  The whole point of the filesystem under Unix is to provide
-a unified namespace for all the system objects you might want to talk
-about.
+> I don't mind having to release a new update to be compatible with a new
+> format in /proc every once and a while, but if it's constantly a moving
+> target I may want to look at alternatives.
 
-I can see adding a new filesystem for kernel parameters that's
-completely seperate from /proc, but getting rid of the ability to have
-access to them directly through the filesystem is a bad idea IMHO.
+You should also be able to get all the information you need from the tools.
 
-:-(,
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.org=20
-http://www.omnifarious.org/~hopper) --
+> 
+> I also have the same question with LVM related tools.  Is it sane to try
+> to wrap a GUI around lvm tools or is there some API approach that would
+> be better?
 
---=-4z4oXTy6nzqU1Za6Avm/
-Content-Type: application/pgp-signature
+I would much rather see people wrapping the tools than using liblvm, in fact
+liblvm will probably disappear in the future.
 
------BEGIN PGP MESSAGE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+It would be really good to see a comprehensive LVM gui tool.  You
+should certainly dig up Jorg de Jong's Java based gui to get ideas
+(http://www.xs4all.nl/~mmj/lvm/), from the screen shots it looks nice.
+Are you planning to implement in C and gtk ? or use some higher level
+language ?
 
-iD8DBQA7driHG4QeWBeRdS8RAur+AKCgYJ8bVTF4MMeluXVrStbuarh7TACgvXPG
-EWDA/H5J8Zv1NbXuEO4Ef5c=
-=hSkX
------END PGP MESSAGE-----
-
---=-4z4oXTy6nzqU1Za6Avm/--
+- Joe
