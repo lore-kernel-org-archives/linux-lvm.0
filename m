@@ -1,11 +1,12 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Tue, 11 Sep 2001 10:49:34 -0600
-Subject: Re: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
-Message-ID: <20010911104934.C29347@turbolinux.com>
-References: <20010911112241.A16588@hp.is> <20010911113054.B16588@hp.is>
+Date: Tue, 11 Sep 2001 19:26:43 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] pv_move_pe() error again :/
+Message-ID: <20010911192643.A31067@vestdata.no>
+References: <E15f13v-0003bs-00@hermes.sistina.com> <E15fJux-0005Kk-00@hermes.sistina.com> <20010910001643.A19424@vestdata.no> <E15gELn-0004OG-00@hermes.sistina.com> <20010910103952.B31660@vestdata.no> <20010910132709.G31313@sistina.com> <20010910173851.A3751@vestdata.no> <20010911163120.F20767@sistina.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010911113054.B16588@hp.is>
+In-Reply-To: <20010911163120.F20767@sistina.com>; from mauelshagen@sistina.com on Tue, Sep 11, 2001 at 04:31:20PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,49 +18,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Sep 11, 2001  11:30 +0000, Tomas Edwardsson wrote:
-> I had already tried the vgcfgrestore, it didn't seem to help but I discovered
-> that the UUID for one of my PVs was missing so I ran the uuid-fixer and now
-> they all have UUIDs again (don't know if that is relevant). 
-> 
-> I have run the pvdata on all my PVs although I think the right one is the
-> following file run with pvdata -avP /dev/hdd1:
->   http://vefur.hp.is/lvm/pvdata-hdd1.txt
+On Tue, Sep 11, 2001 at 04:31:20PM +0200, Heinz J . Mauelshagen wrote:
+> > Sep  6 18:15:51 argus kernel: lvm -- lvm_blk_ioctl: unknown command 5=
+87
+> > Sep  6 18:15:55 argus last message repeated 213 times
+> > Sep  6 18:15:55 argus kernel: hdd: read_intr: status=3D0x59 { DriveRe=
+ady SeekComplete DataRequest E rror }
+> > Sep  6 18:15:55 argus kernel: hdd: read_intr: error=3D0x40 { Uncorrec=
+tableError }, LBAsect=3D11801433 2, sector=3D118014332
+> > Sep  6 18:15:55 argus kernel: end_request: I/O error, dev 16:40 (hdd)=
+, sector 118014332
+>=20
+> Ragnar, the block ioctl error the lvm driver shows is not related to th=
+e locking
+> of a physical extent, because that is achived by the PE_LOCK_UNLOCK ioc=
+tl
+> (0x50 BTW) using the character ioctl function.
+> Wasn't able to find that ioctl grepping the kernel sources.
+> Could it be some application checking devices regularly like a desktop
+> CD-ROM tool or something?
 
-Yes, this clearly shows that lvol1 has 625 LEs (in the LV data), but it
-has PE 0-625 from that PV assigned to it (total of 626 PEs).  I don't
-know which one is correct, nor how it got that way.  If you have a
-filesystem on that LV, you could find out how big the fs is to figure
-out which value needs fixing.  For ext2, you can do:
+Could it be badblocks?
 
-dumpe2fs -h /dev/vg00/lvol1
 
-and figure out if it is 2500MB (625 LE) or 2504MB (626LE).  Then (the fun
-part) you need to go and edit either the LV table or the PE table to have
-the right numbers in it.  I'm guessing the LV table is wrong (and even if
-not, it is safer to add the PE to the end than to truncate your filesystem).
+> I gues your problem was just the dying disk and therefore temporarily a=
+voiding
+> the read() check in pv_move_pe() should have catched this one as well.
 
-dd if=/dev/hdd1 of=/hdd.sav bs=1024 count=188		# backup LVM metadata
-dd if=/dev/hdd1 of=/lv1.dat bs=1 skip=43008 count=328	# get lvol1 metadata
-od -Ad -tx1 /lv1.dat					# show lvol1 metadata
+I ran pv_move with debugging enabled, and it showed that it died in
+lock_pe(). I'll try to reproduce this next time I find I broken disk.
 
-# 625 = 0x271 which you should see at offset 300, 301 of the LV struct
-# 626 = 0x272 = 0x02 0x72, 0x72 = "r" in ASCII, so we write this into LV
-echo "r" | dd of=/lv1.dat count=1 seek=300		# write 0x72 to LE count
 
-od -Ad -tx1 /lv1.dat					# show lvol1 metadata
-# we should now see 0x72 0x02 0x00 0x00 at offset 300 of the LV metadata
 
-dd if=/lv1.dat of=/dev/hdd1 bs=1 seek=43008		# write LV meta to disk
-pvdata -avP /dev/hdd1					# verify all is well
-vgscan							# should be OK now
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+--=20
+Ragnar Kj=F8rstad
+Big Storage
