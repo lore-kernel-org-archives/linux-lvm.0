@@ -1,28 +1,42 @@
-Message-ID: <20000306222239.14845.qmail@web106.yahoomail.com>
-Date: Mon, 6 Mar 2000 14:22:39 -0800 (PST)
-From: Chris Campbell <dash_ampersand@yahoo.com>
-Subject: [linux-lvm] building the binary utilities
+Message-ID: <38C43860.64241E97@msede.com>
+Date: Mon, 06 Mar 2000 23:59:44 +0100
+From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] building the binary utilities
+References: <20000306222239.14845.qmail@web106.yahoomail.com>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Chris Campbell <dash_ampersand@yahoo.com>
+Cc: linux-lvm@msede.com
 
-I got a patched kernel to compile ok, but now I have
-problems building the binary lvm utilities.  There are
-errors about not being about to find lvm.h and
-liblvm.h.  I copied them to /usr/include, and then it
-got farther but complained about gnu/types.h.  After
-symlinking that, I got an error about lots of
-redeclarations.  What's going on?  Thanks.
+Chris Campbell wrote:
+> I got a patched kernel to compile ok, but now I have
+> problems building the binary lvm utilities.  There are
+> errors about not being about to find lvm.h and
+> liblvm.h.  I copied them to /usr/include, and then it
+> got farther but complained about gnu/types.h.  After
+> symlinking that, I got an error about lots of
+> redeclarations.  What's going on?  Thanks.
+
+At least for glibc2.1 you need a patch for the user mode tools,
+otherwise compile fails. Please install patch patch-lvm_0.8final-2
+
+For a list of know issues please have a look at
+http://linux.msede.com/lvm/doc/BUGS
+
+Instead of copying lvm.h to /usr/include you should modify the
+KERNEL_LOCATION in make.tmpl. By default it assumes your kernel 
+sources in /usr/src/linux.
 
 
+Hope this helps
+Michael
 
-Chris
-
-__________________________________________________
-Do You Yahoo!?
-Talk to your friends online with Yahoo! Messenger.
-http://im.yahoo.com
+-- 
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
