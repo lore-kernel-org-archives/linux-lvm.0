@@ -1,8 +1,8 @@
 Return-Path: <jdiehl@sandia.gov>
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BEE1@es04snlnt>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BEE2@es04snlnt>
 From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
 Subject: RE: [linux-lvm] Can't pvcreate second partition...
-Date: Mon, 7 May 2001 16:12:35 -0600
+Date: Mon, 7 May 2001 16:13:38 -0600
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
@@ -19,11 +19,8 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Yup, rebooting the server fixed it.  On the way home, it occured to me to
-try that, but I've never had to boot a linux box after fdisking it.  Go
-figure.  
+The problem with this theory is that I'm running 2.2.18, not 2.4.x.
 
-Thanx,
 Mike Diehl,
 Network Monitoring Tool Devl.
 284-3137
@@ -31,92 +28,54 @@ jdiehl@sandia.gov
 
 
 > -----Original Message-----
-> From: Glenn Shannon [mailto:glenn@gecpalau.com]
-> Sent: May 04, 2001 5:14 PM
+> From: AJ Lewis [mailto:lewis@sistina.com]
+> Sent: May 06, 2001 10:12 PM
 > To: linux-lvm@sistina.com
 > Subject: Re: [linux-lvm] Can't pvcreate second partition...
 > 
 > 
-> "Diehl, Jeffrey" wrote:
+> On Sun, May 06, 2001 at 10:36:13AM -0700, Darren Young wrote:
+> > Funny, I had the same issue at the same time. I
+> > created /dev/hdb7 with fdisk and then a pvcreate just
+> > after. pvcreate stated that the dev didn't exist.
+> > Reboot fixed the problem. This could be a problem for
+> > machines already up in production with small windows
+> > for restarts. Why is this necessary and will it become
+> > a "non-issue" in future releases? If this will be
+> > necessary forever, then some simple planning would
+> > solve the problem, at least on new installations. Any
+> > way around this?
 > 
-> > Hi all.
-> >
-> > I'm new to LVM, but think I understad it, at least... <grin>
-> >
-> > Anyway, I'm trying to setup the first VG but can't seem to 
-> build my PV's.
-> > The transcript of what I did is at the bottom of this message.
-> >
-> > As you can see, I was able to do pvcreate on /dev/sdc2, but not on
-> > /dev/sdc3.  These partitions are on a hardware raid5.
-> >
-> > Am I missing something?
-> >
-> > Thanx,
-> > Mike Diehl,
-> > Network Monitoring Tool Devl.
-> > 284-3137
-> > jdiehl@sandia.gov
-> >
-> > Script started on Fri May  4 07:33:56 2001
-> > [root@filmore /mnt]# fdisk /dev/sdc
-> >
-> > The number of cylinders for this disk is set to 30945.
-> > There is nothing wrong with that, but this is larger than 1024,
-> > and could in certain setups cause problems with:
-> > 1) software that runs at boot time (e.g., LILO)
-> > 2) booting and partitioning software from other OSs
-> >    (e.g., DOS FDISK, OS/2 FDISK)
-> >
-> > Command (m for help): p
-> >
-> > Disk /dev/sdc: 255 heads, 63 sectors, 30945 cylinders
-> > Units = cylinders of 16065 * 512 bytes
-> >
-> >    Device Boot    Start       End    Blocks   Id  System
-> > /dev/sdc1             1     15472 124278808+  8e  Unknown
-> > /dev/sdc2         15473     15476     32130   8e  Unknown
-> > /dev/sdc3         15477     15480     32130   8e  Unknown
-> > /dev/sdc4         15481     15484     32130   8e  Unknown
-> >
-> > Command (m for help): w
-> > The partition table has been altered!
-> >
-> > Calling ioctl() to re-read partition table.
-> > Re-read table failed with error 16: Device or resource busy.
-> > Reboot your system to ensure the partition table is updated.
-> >
-> > WARNING: If you have created or modified any DOS 6.x
-> > partitions, please see the fdisk manual page for additional
-> > information.
-> > Syncing disks.
-> >
-> > [root@filmore /mnt]# pvcreate /dev/sdc2
-> > pvcreate -- physical volume "/dev/sdc2" successfully created
-> >
-> > [root@filmore /mnt]# pvcreate /dev/sdc3
-> > pvcreate -- can't open physical volume "/dev/sdc3" to get its size
-> >
-> > pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help] 
-> [-y|--yes]
-> >         [-v|--verbose] [-V|--version] PhysicalVolume 
-> [PhysicalVolume...]
-> >
-> > Script done on Fri May  4 07:34:33 2001
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> This appears to be an issue with fdisk and the 2.4.x series 
+> Linux kernels.
+> It has nothing to do with LVM as far as i can tell.  I've had 
+> problems where
+> I run fdisk to change the size of a partition, but linux 
+> doesn't detect the
+> change.  /proc/partitions is identical before and after i 
+> attempt to write
+> out the changes with fdisk.  I'm not sure what has caused this. Maybe
+> someone else on the list knows?
 > 
-> Can you try rebooting and trying the pvcreate again? I 
-> suspect that it was
-> because the partition table was unable to be updated.
+> I'll try to verify this when i get into work tomorrow.
 > 
-> Glenn
+> Regards,
+> -- 
+> AJ Lewis
+> Sistina Software Inc.                  Voice:  612-638-0500
+> 1313 5th St SE, Suite 111              Fax:    612-638-0500
+> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+> http://www.sistina.com
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 
+> 1261 0029 2648
+> Get my key at: http://www.sistina.com/~lewis/gpgkey
+>  (Unfortunately, the PKS-type keyservers do not work with 
+> multiple sub-keys)
+> 
+> -----Begin Obligatory Humorous 
+> Quote----------------------------------------
+> Life's unfair - but root password helps!
+> -----End Obligatory Humorous 
+> Quote------------------------------------------
 > 
