@@ -1,12 +1,9 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Tue, 15 May 2001 13:13:57 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
-Message-ID: <20010515131357.D524@tykepenguin.com>
-References: <200104111949.f3BJnFHt014761@webber.adilger.int> <m2n18eygvs.fsf@isnogud.escape.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m2n18eygvs.fsf@isnogud.escape.de>; from urs@isnogud.escape.de on Tue, May 15, 2001 at 01:46:15PM +0200
+Return-Path: <Jean-Eric.Cuendet@linkvest.com>
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683CB1@mailsrv.linkvest.com>
+From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+Date: Tue, 15 May 2001 14:34:57 +0200
+MIME-Version: 1.0
+Subject: [linux-lvm] Lost filesystems on LVs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,43 +19,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 15, 2001 at 01:46:15PM +0200, Urs Thuermann wrote:
-> 
-> And am I really the only one who sees this?  I would really be
-> interested to hear from some more people about performance for their
-> LVM.
+Hi,
+I have a BIG problem. I have an LVM VG of 160Gb. There is 3 LVs defined:
+- MS
+- Distrib
+- backups
+This morning, I made a e2fsadm to reduce the MS volume and grow the backup
+one.
+I umounted the MS volume, made the e2fsadm. All was OK, no error.
+I then umounted the backups LV and made the e2fsadm. e2fsck refused to work
+saying that there was no filesystem on it! All was OK, until I umount it!
+And now, I'm sticked with the backups LV with no filesystem (it was OK until
+this night, all backups were OK) and the MS LV with things that I don't
+understand (files that shouldn't be here...)
 
-I think one problem is that your "benchmarks" are not very realistic. In 
-real world use the overhead of LVM is very small. I would respectfully suggest
-that you try something like bonnie++ before getting too worried about the 
-performance of LVM on your machine - unless you spend most of your day doing
-"dd" to your disks :-)
+Any idea? Help?
+thanks
+-jec
 
-Here are some bonnie++ benchmarks of a disk partition and and LV (same disk)
-using reiserfs* on my machine:
-
-
-Disk Partition:
-Version 1.00g       ------Sequential Output------ --Sequential Input- --Random-
-                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
-Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
-tyke           496M 10462  98 20675  53  7699  20 11707  96 17808  16 257.0   1
-                    ------Sequential Create------ --------Random Create--------
-                    -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
-              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
-                 16  8426 100 +++++ +++ 12622 100  8031 100 +++++ +++  9635 100
-
-Logical Volume:
-Version 1.00g       ------Sequential Output------ --Sequential Input- --Random-
-                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
-Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
-tyke           496M 10577 100 20631  52  7739  20 11676  96 17622  17 260.7   1
-                    ------Sequential Create------ --------Random Create--------
-                    -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
-              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
-                 16  8521 100 +++++ +++ 12661  99  8007 100 +++++ +++  9555  99
-
-
-patrick
-
-* ext2 is comparable, just the numbers are different.
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Jean-Eric Cuendet
+Linkvest SA
+Av des Baumettes 19, 1020 Renens Switzerland
+Tel +41 21 632 9043  Fax +41 21 632 9090
+http://www.linkvest.com  E-mail: jean-eric.cuendet@linkvest.com
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
