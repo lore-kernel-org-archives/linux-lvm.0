@@ -1,51 +1,99 @@
-From: pbmonday@imation.com
-Message-ID: <OF290F58B3.93D6CDEA-ON86256996.007579D7@imation.com>
-Subject: [linux-lvm] network block device support in LVM
-Date: Thu, 16 Nov 2000 09:05:01 -0600
+Date: Thu, 16 Nov 2000 13:48:52 -0800 (PST)
+From: Bruno Kraychete da Costa <brunokc@kraychete.com>
+Subject: [linux-lvm] Patch not applying cleanly in 2.4.0-test9
+Message-ID: <Pine.LNX.4.21.0011161320200.2562-100000@duron.kraychete.com>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Hi There,
 
-A while back (about 2 weeks) I mentioned (indirectly) that I couldn't get
-network block devices working with the LVM.  Heinz mentioned that there
-were fixes available, these didn't seem to fix my problem.  After digging a
-bit more I discovered that although there was support for the NBD (assuming
-I set NBD_MAJORS), the lvm_dir_cache function would not go beyond the
-/proc/partitions data.
+Hi all,
 
-The logic in lvm_dir_cache (in my version at least) goes:
+Forgive me if this is a known issue, but I'm not being able to apply the
+current Adilger's kernel 2.4 patch in kernel 2.4.0-test9. It seems to be a
+very simple thing. Here is the lvm.h.rej:
 
-if ( dir_cache == NULL) {
-     if ( ( proc = fopen ("/proc/partions") .... ) {
-          // add partitions which subsequently increases cache_size
-                }
-                if (!cache_size) {
-                    // add other devices
-     }
-}
+***************
+*** 597,606 ****
+      __u32 lv_remap_end;
+      __u32 lv_chunk_size;
+      __u32 lv_snapshot_minor;
+      struct kiobuf * lv_iobuf;
+      struct semaphore lv_snapshot_sem;
+      struct list_head * lv_snapshot_hash_table;
+-     unsigned long lv_snapshot_hash_mask;
+  } lv_v2_t;
+  
+  /* disk */
+--- 558,571 ----
+      __u32 lv_remap_end;
+      __u32 lv_chunk_size;
+      __u32 lv_snapshot_minor;
++ #ifdef __KERNEL__
+      struct kiobuf * lv_iobuf;
+      struct semaphore lv_snapshot_sem;
+      struct list_head * lv_snapshot_hash_table;
++     ulong  lv_snapshot_hash_mask;
++ #else
++     char  dummy[200];
++ #endif
+  } lv_v2_t;
+  
+  /* disk */
 
-So, my NBDs were never being added because my /proc/partions added 8 items
-to the cache.
 
-I removed the if(!cache_size) by changing it to if(1) and lvmdiskscan and
-pvcreate now work, sort of, for NBD...though I haven't pushed it far.
 
-There is one odd result, with the enhanced network block device support,
-each entry is actually represented by several /dev entries, I think to
-allow for alternate pipes.  So when I assign /dev/nda, it actually uses
-/dev/nda and /dev/ndaX where X is 0 to 15.  So, lvmdiskscan reports
-incorrectly.
+Changing all occurrences of '__u32' to 'uint32_t' makes the patch apply
+cleanly, but trying to compile it results if the following error:
 
-Anyway, my pvcreate works now so I can go on testing.  My questions are, is
-the cache_size problem a bug or is something funky on my system?  And, of
-course, if it is a bug, could it be fixed up?
 
-Thank you,
-Paul Monday
-pbmonday@imation.com
+make[1]: Leaving directory `/usr/src/linux-2.4.0-test9/arch/i386/lib'
+ld -m elf_i386 -T /usr/src/linux/arch/i386/vmlinux.lds -e stext
+arch/i386/kernel/head.o arch/i386/kernel/init_task.o init/main.o
+init/version.o \
+        --start-group \
+        arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o
+mm/mm.o fs/fs.o ipc/ipc.o \
+        drivers/block/block.o drivers/char/char.o drivers/misc/misc.o
+drivers/net/net.o drivers/media/media.o drivers/parport/parport.a
+drivers/ide/idedriver.o drivers/cdrom/cdrom.a drivers/pci/pci.a
+drivers/pcmcia/pcmcia.o drivers/net/pcmcia/pcmcia_net.o drivers/pnp/pnp.o
+drivers/video/video.o drivers/usb/usbdrv.o drivers/md/mddev.o \
+        net/network.o \
+        /usr/src/linux/arch/i386/lib/lib.a /usr/src/linux/lib/lib.a
+/usr/src/linux/arch/i386/lib/lib.a \
+        --end-group \
+        -o vmlinux
+drivers/md/mddev.o: In function `lvm_init':
+drivers/md/mddev.o(.text.init+0x13c): undefined reference to `lvm_hd_name_ptr'
+make: *** [vmlinux] Error 1
+
+
+I found out that making a little change in include/linux/lvm.h solved this
+problem. I just commented out the line:
+
+#define      LVM_HD_NAME 
+
+since LVM_HD_NAME was being undefined in the original lvm.h (before 
+patching), and the kernel compiled successfully. I really don't know what
+are the consequences of having this line out, though. Can some one make my
+mind rest on this?
+
+On a side note, I'm also seeing the following warning:
+
+gcc -D__KERNEL__ -I/usr/src/linux/include -Wall -Wstrict-prototypes -O2
+-fomit-frame-pointer -pipe  -mpreferred-stack-boundary=2 -march=i686
+-malign-functions=4  -fno-strict-aliasing    -c -o lvm.o lvm.c
+lvm.c: In function `lvm_do_lv_create':
+lvm.c:1931: warning: `lv_buf' might be used uninitialized in this function
+
+
+I hope this report helps in some form.
+
+Thanks,
+
+Bruno.
