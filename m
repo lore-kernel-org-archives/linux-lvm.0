@@ -1,45 +1,53 @@
-Date: Thu, 15 Jul 1999 00:15:13 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
-Subject: Re: [linux-lvm] RAID and LVM?
-In-Reply-To: <199907142305.AA12097@mailgate1b.telekom.de>
-Message-ID: <Pine.LNX.4.10.9907150012250.30426-100000@hibernia.spin.ie>
-MIME-Version: 1.0
+Message-Id: <199907181949.AA29540@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: [linux-lvm] *** Anouncement: LVM 0.7 ***
+Date: Sun, 18 Jul 1999 21:48:20 METDST
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com, linux-kernel@vger.rutgers.edu
+Cc: mge@ts1.ez-darmstadt.telekom.de
 
-On Thu, 15 Jul 1999, Heinz Mauelshagen wrote:
 
-  > 
-  > I'm wondering: is it possible to run LVM on top of the linux-raid
-  > patches?
-  
-  Yes, go ahead.
-  LVM can run on MD.
+I'm happy to announce that
 
-That's great!! I've avoided moving totally over to RAID cause i knew
-that at some point in the future i'll want to shuffle things around.
-In which case I'd be better off using LVM.. And I'd heard somewhere
-that the two patches couldn't play with each other.. So i decided to
-wait before committing to either.
+Logical Volume Manager 0.7 is available
 
-So this is excellent news. I have a project for next week!! :)
+at <http://linux.msede.com/lvm>.
 
-thanks,
-  
 
-  Regards,
-  Heinz
+New features include:
 
-regards,
--- 
-Paul Jakma
-paul@clubi.ie	http://hibernia.clubi.ie
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-Got Mole problems?  Call Avogadro at 6.02 x 10^23.
+   - loop devices can be used as physical volumes for
+     testing or evaluation purposes
+
+   - correction of block device major in case of existing VGs with
+     pre official one
+
+   - support to create an initial ramdisk to have the root filesystem
+     in a logical volume
+
+   - support for volume group and logical volume names containing '.'
+
+   - /proc/partitions support regardless of Linux version
+
+   - larger stripe sizes up to 512k 
+
+Regards,
+Heinz
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS/TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
