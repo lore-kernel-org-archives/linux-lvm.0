@@ -1,42 +1,27 @@
-Date: Sun, 3 Oct 1999 12:14:15 +0200
-From: Adrien Farkas <freddy@redneck.sk.oracle.com>
+From: Harald Milz <hm@seneca.muc.de>
 Subject: Re: [linux-lvm] LVM, raw-io, devfs
-Message-ID: <19991003121415.A30243@redneck.sk.oracle.com>
-Reply-To: freddy@sk.oracle.com
-References: <006201bf0bb7$6eae4a60$030116ac@fd1> <14324.58266.920834.895229@dukat.scot.redhat.com> <002e01bf0cf8$b4667720$030116ac@fd1>
-Mime-Version: 1.0
-In-Reply-To: <002e01bf0cf8$b4667720$030116ac@fd1>
+Date: 3 Oct 1999 07:43:01 GMT
+Message-ID: <7t71e5$fmv$1@seneca.muc.de>
+References: <006201bf0bb7$6eae4a60$030116ac@fd1> <14324.58266.920834.895229@dukat.scot.redhat.com> <37F4FFCD.6AE2EC3E@mainland.ab.ca>
+Reply-To: h.milz@seneca.muc.de
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Fernando Dammous <ferdam@internetcom.com.br>
-Cc: "Stephen C. Tweedie" <sct@redhat.com>, Linux LVM msede <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Fernando Dammous (ferdam@internetcom.com.br) wrote :
+Drew Smith <drew@winterland.mainland.ab.ca> wrote:
 
-> HI Stephen and everybody,
-> 
-> > I've never tried the raw IO code on 2.0: let me know how it goes!  In
-> > principle, there is no reason why raw IO on LVM should not work.
-> >
-> > --Stephen
-> >
-> 
-> I prefer to update my kernel (to 2.3.18 or even to wait for the 2.4), before
-> and then to use RAW-IO.
-> I just hope I can simply alter Oracle to use RAW-IO instead of having
-> reinstall it.
+> 	IBM's ADSM(*) (well, TSM now, thanks to Tivoli) uses raw logical
+> volumes on a fairly native level as storage pools, etc.  I'm curious,
+> having never looked into raw IO under Linux, whether it's the same
+> principles - and, that said, whether or not IBM will be porting the TSM
+> server to Linux?  
 
-Forget it, Linux port of Oracle DB doesn't support raw-io.
+I'm working on that one. Ummm... should we launch a petition? I'd be
+willing to host a web page. 
 
-> Using Oracle with LVM is already very good, with RAW-IO it will be better (I
-> believe).
 -- 
-                                             freddy
-
-----==-- _                      Adrien "freddy" Farkas
----==---(_)__  __ ____  __       freddy@sk.oracle.com
---==---/ / _ \/ // /\ \/ /  We all know Linux is great... It
--=====/_/_//_/\___/ /_/\_\  does infinite loops in 5 seconds
+Don't you feel more like you do now than you did when you came in?
