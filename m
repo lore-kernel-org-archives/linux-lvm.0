@@ -1,34 +1,39 @@
-Message-ID: <BCEBF94C8572D311B65600600864419EA2A6@tornado>
-From: Holger Baust <baust@impuls.de>
-Subject: [linux-lvm] rootFS on LVM at InstallTime
-Date: Mon, 3 Jan 2000 10:21:52 +0100 
+Message-ID: <38715858.5FBC6EB6@msede.com>
+Date: Tue, 04 Jan 2000 03:18:00 +0100
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: jamesp@emporia.u-net.com
 MIME-Version: 1.0
+Subject: [linux-lvm] Swap (fwd)
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
-
-Hi !
-
-I want to install a S.u.S.E.-Linux 6.3 with an LV as the root
-Filesystem. But I have Problems to configure the LILO to boot
-correctly. What do I have to do ?
-
-I only have 2 or 3 500 MB Harddisks. It only works if I delete
-some Software which I need on this System.
+To: linux-lvm@msede.com
 
 
-	MfG,
-		Holger Baust
+-------- Original Message --------
+Subject: Swap
+Date: Tue, 4 Jan 2000 01:48:30 +0000 (GMT)
+From: James Pattinson <jamesp@emporia.u-net.com>
+To: linux-lvm@msede.com
+Message-ID:
+<Pine.LNX.4.10.10001040146350.1544-100000@fuse.aethos.co.uk>
 
+Hi
 
---
+I'm using /dev/vg00/swapvol1 as my swap device - it all seems OK but I
+get
+this when I try to turn swap off...
 
-Holger Baust, Technischer Support und Internet Services
-impuls@wachendorf AG i.G.                    TeleFon: +49-2151-8533
-email: baust@impuls.de                       TeleFax: +49-2151-853402
-FTP-Server impuls@wachendorf AG:             ftp://ftp.impuls.de
-WEB-Server impuls@wachendorf AG:             http://www.impuls.de
- 
+[root@fuse /root]# swapoff -a -v
+swapoff on /dev/vg00/swapvol1
+swapoff: /dev/vg00/swapvol1: Invalid argument
+
+I've done mkswap and everything, and swap is working.
+
+Any ideas?
+
+Cheers
+
+James
