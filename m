@@ -1,15 +1,10 @@
-Return-Path: <raheesom@navpoint.com>
-Message-Id: <200104261605.f3QG5tt09735@west.navpoint.com>
-Subject: Re: [linux-lvm] I need to convert my root file system to LVM
-	(adding a 2nd disk as well).
-From: Rupert Heesom <raheesom@navpoint.com>
-In-Reply-To: <20010426082509.A14077@tykepenguin.com>
-References: <200104241645.f3OGjE001662@west.navpoint.com>
-	<20010425083538.B806@tykepenguin.com>
-	<200104252211.f3PMBK026102@west.navpoint.com> 
-	<20010426082509.A14077@tykepenguin.com>
-Date: 26 Apr 2001 06:58:13 -0400
-Mime-Version: 1.0
+Return-Path: <banal@home.com>
+Message-ID: <3AE91AEF.22ABDC51@home.com>
+Date: Fri, 27 Apr 2001 00:08:31 -0700
+From: Evan Day <banal@home.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM on root, Kernel panic: "I have no root and I must scream"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,23 +17,48 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On 26 Apr 2001 08:25:09 +0100, Patrick Caulfield wrote:
-> On Wed, Apr 25, 2001 at 01:03:29PM -0400, Rupert Heesom wrote:
-> > On 25 Apr 2001 08:35:38 +0100, Patrick Caulfield wrote:
-> > > On Tue, Apr 24, 2001 at 11:39:02AM -0400, Rupert Heesom wrote:
-> What you need to do is lvreduce the volume to the size of the PV /dev/sdb1
-> (which will be slightly smaller than the actual partition), then use pvmove to
-> move the used extents from sdb2 to sdb2. *then* you can vgreduce vg /dev/sdb2.
-> 
-> That might sound a little over-complicated but it's really the more common case
-> in "real world" situations to be LV focussed rather than PV focussed. (I think!)
+I thought I had everything set up right...
 
-Thanks, Patrick.  I'll try that.
+I've got a system with two SCSI disks.  Currently the system is mostly
+installed on /dev/sda using a straight ext2 setup.  I'm using GRUB as the
+bootloader since LILO has been giving me problems.  Currently on kernel 2.4.3
+using the lvm 0.9.1beta7 patches and lvm tools.
 
+My intention is to mirror the disks using Linux software RAID, with 
+/dev/sda1 and /dev/sdb1 as /dev/md0 (mounted as /boot) and /dev/sda4 and
+/dev/sdb4 as /dev/md1, which will be VG00 and have the rest of the system
+on it, with most everything using the reiserfs.
 
--- 
-regs
-rupert
+Right now, /dev/md0 is working as /boot (reiserfs), with the rest of the
+system on /dev/sda (/dev/sda2 is root).  I've created /dev/vg00 and 
+/dev/md1 (with /dev/sda4 failed) and built a new root logical volume on
+/dev/vg00/lvol1.  This works fine and I can mount it on /mnt and copy 
+/ over to it just fine, then edit /mnt/etc/fstab to put root on
+/dev/vg00/lvol1.
+
+I used lvmcreate_initrd to make /boot/initrd-lvm-2.4.3.gz, and can boot grub
+with initrd just fine.  At boot time, it boots the kernel, loads the ram 
+disk, runs /linuxrc and successfully activates /dev/vg00.  I have LVM, 
+reiserfs, and, RAID-1 in the kernel (no modules).
+
+After activating vg00 and umounting /proc (in initrd/linuxrc), the system 
+dies:
+
+Kernel panic: I have no root and I must scream!
+
+I thought it might be that having the LV on the RAID was too complex, and 
+tried creating a VG on a partition, but I still get the same result.  I've 
+edited the linuxrc on the initrd and both vgdisplay and lvdisplay show the 
+correct info.
+
+The line from /etc/fstab
+
+/dev/vg00/lvol1	/	reiserfs	defaults,errors=remount-ro 0 1
+(tried formatting ext2 and it still fails)
+
+Saw one other message on this dated April 9, 2001, but no apparent 
+resolution.
+
+HELP!
