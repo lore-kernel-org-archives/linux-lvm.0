@@ -1,61 +1,25 @@
-From: benr@us.ibm.com
-Message-ID: <85256903.007E3595.00@d54mta02.raleigh.ibm.com>
-Date: Mon, 19 Jun 2000 18:58:31 -0400
-Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
-	 Community
+Date: Mon, 19 Jun 2000 19:13:52 -0400
+From: zoo1@corecomm.net
+Subject: Re: [linux-lvm] vgscan fails to find vg
+Message-ID: <20000619191352.A2775@bar.nowhere>
+References: <394E85F6.E8263F85@msede.com>
 Mime-Version: 1.0
-Content-Disposition: inline
+In-Reply-To: <394E85F6.E8263F85@msede.com>; from mike@msede.com on Mon, Jun 19, 2000 at 10:43:34PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mark Allen <mallen@tuxtops.com>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
+On Mon, Jun 19, 2000 at 10:43:34PM +0200, Michael Marxmeier wrote:
 
+>-------- Original Message --------
+>From: "Tobias Reber" <t.reber@dkfz-heidelberg.de>
+>References: <20000612190824.A7258@bar.nowhere>
+>Subject: Re: [linux-lvm] vgscan fails to find vg
+>Date: Wed, 14 Jun 2000 09:18:24 +0200
 
-Mark,
+>for me it helped to start devfsd before vgscan
 
-While I can not talk about IBM's high availability products (different
-product group within the company), I can say that high availability was a
-consideration in our design, and that it can be handled through plug-ins.
-
-Ben
-
-
-
-Mark Allen <mallen@tuxtops.com>@msede.com on 06/16/2000 06:00:46 pm
-
-Sent by:  owner-linux-lvm@msede.com
-
-
-To:   Ben Rafanello/Austin/IBM@IBMUS
-cc:   linux-lvm@msede.com
-Subject:  Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
-      Community
-
-
-
-benr@us.ibm.com wrote:
-> Hello everyone.  Sorry for the delay in responding.  Here is something I
-> posted to Slashdot.  I think it answers some questions and gives a little
-> context for what IBM is doing.  I'll try to begin answering the specific
-> questions that have been submitted this afternoon.
-
-I'm really excited that IBM is considering releasing their LVM
-technology -- JFS and the LVM were really the best features of AIX by
-far.
-
-Could you address the prospect of IBM's LVM incorporating "shared"
-volume groups like the commercial high-availablity software (IBM's
-HA/CMP or HP's Service Guard or Sun's HA offering).  That kind of
-software would allow a disk group to transfer to another system if the
-main host failed.
-
-Would something like that be a "feature plug-in" in the framework which
-was proposed in the white paper?
-
-Regards,
-
-Mark
+i am, long before.
