@@ -1,13 +1,12 @@
-Return-Path: <lembark@wrkhors.com>
-Date: Sat, 14 Jul 2001 08:54:30 -0500
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
-Message-ID: <750880000.995118870@dizzy>
-In-Reply-To: <E15LL3Y-0000yJ-00@the-village.bc.nu>
+Return-Path: <jlundell@pobox.com>
+Mime-Version: 1.0
+Message-Id: <p05100305b7761878d7b1@[207.213.214.37]>
+In-Reply-To: <20010715025001.B6722@weta.f00f.org>
 References: <E15LL3Y-0000yJ-00@the-village.bc.nu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+ <20010715025001.B6722@weta.f00f.org>
+Date: Sat, 14 Jul 2001 08:41:52 -0700
+From: Jonathan Lundell <jlundell@pobox.com>
+Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,28 +18,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: Chris Wedgwood <cw@f00f.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Andrew Morton <andrewm@uow.edu.au>, Andreas Dilger <adilger@turbolinux.com>, "Albert D. Cahalan" <acahalan@cs.uml.edu>, Ben LaHaise <bcrl@redhat.com>, Ragnar Kjxrstad <kernel@ragnark.vestdata.no>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
 
-- Alan Cox <alan@lxorguk.ukuu.org.uk> on 07/14/01 09:45:44 +0100:
+At 2:50 AM +1200 2001-07-15, Chris Wedgwood wrote:
+>On Sat, Jul 14, 2001 at 09:45:44AM +0100, Alan Cox wrote:
+>
+>     As far as I can tell none of them at least in the IDE world
+>
+>SCSI disk must, or at least some... if not, how to peopel like NetApp
+>get these cool HA certifications?
 
->> If, after a power outage, the IDE disk can keep going for long enough
->> to write its write cache out to the reserved vendor area (which will
->> only take 20-30 milliseconds) then the data may be considered *safe*
->> as soon as it hits writecache.
-> 
-> Hohohoho.
-
-Don't laugh, it works.  A 10KRPM drive has enough inertia and
-stored charge to write a full cyl in less time than the BFC's in 
-the switcher can discharge.
-
->> If I'm right then the only open question is: which disks do and
->> do not do the right thing when the lights go out.
-> 
-> As far as I can tell none of them at least in the IDE world
-
-Some SCSI's will use intertia to write a single cyl if the power
-goes out.  I've never seen a spec for IDE's that allows for this.
-
-One more reason to use SCSI.
+NetApp uses a large system-local NVRAM buffer, do they not?
+-- 
+/Jonathan Lundell.
