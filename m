@@ -1,11 +1,7 @@
-From: Andreas Dilger <adilger@clusterfs.com>
-Subject: Re: [linux-lvm] bug in lvm 1.0.[23]
-Message-Id: <20020301115523.S22608@lynx.adilger.int>
-References: <20020301185709.GC1654@kakerlak>
+Message-Id: <BC9564600E40C541983FCD6BEAF814FE03C94EC0@xch-knt-15.nw.nos.boeing.com>
+From: "Wolfe, Gordon W" <gordon.w.wolfe@boeing.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020301185709.GC1654@kakerlak>; from wodecki@gmx.de on Fri,
-    Mar 01, 2002 at 07:57:09PM +0100
+Subject: [linux-lvm] Volume groups not found
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +12,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar  1 12:55:02 2002
+Date: Fri Mar  1 14:25:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Wiktor Wodecki <wodecki@gmx.de>
-Cc: linux-lvm@sistina.com
+To: "IBM LINUX-VM-L (E-mail)" <LINUX-VM@VM.MARIST.EDU>, "IBM-linux-lvm (E-mail)" <linux-lvm@sistina.com>
 
-On Mar 01, 2002  19:57 +0100, Wiktor Wodecki wrote:
-> Well, my new drives were merged to a vg called "storage", lv's were
-> created, everything fine. Now I pluged-in the old drives, and, well,
-> okay, it was party my fault by now, the old 'storage' vg was accessible,
-> the new one wasn't. I renamed the active vg to vg0 and rebootet in
-> hope for two vg's to be available. There still was only one vg active,
-> the old one. Suprisingly it was accessible under the new *and* the old
-> name. Rather strange. I pluged the old disks of, and started my pc, to
-> discover that the new vg was accessible under those two names, too. I
-> could rename them and work with the old and the new vg, but the point
-> is that I have 4 vgs now in my system - I only should see two. It's a
-> nasty bug and one shouldn't be so dumb as I was, but I think some sanity
-> checks in the code wouldn't be bad.
+This is crossposted to both the Linux-390 list and the Linux-LVM list.
+Sorry for the duplicates, but I'm desparate.
 
-Probably just old devices in /dev.  Just delete /dev/storage and /dev/vg0
-and re-run vgscan.  It should set it up properly now.
+I've been running more than a dozen Linux guests under z/VM running SuSE
+Linux/390 with the 2.2.16 kernel.  This was supplied with LVM 0.8-157.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+We are in the process of upgrading to SuSE Linux/390 with the 2.4.7 kernel,
+supplied with LVM 0.9.1-beta-32.
+
+One server is running as a Samba print and file server for a department.
+The /home directory is an ext2 logical volume consisting of ten real 3390-3
+volumes.  This arrangement has been working fine for about six months.
+
+In doing the upgrade from 2.2.16 to 2.4.7, we essentially replace everything
+but /home and a few files in /etc.  I booted from the 2.4.7 reader ramdisk,
+insmod dasd for all dasd devices, mounted the root dasd as /mnt, did a
+chroot to /mnt and mounted the /usr dasd.  To recover /home, I did the usual
+
+
+vgscan;vgchange -ay
+
+This should have found all ten volumes of the volume group and logical
+volumes and rebuilt the information to remount the /home logical volume.
+Instead I get the messages that a) it's scanning all disk devices and b) no
+logical volumes were found.
+
+Needless to say, this is a real show-stopper.   Can anyone help me find the
+solution to this problem?
+
+"Never trust any computer you can lift."
+Gordon Wolfe, Ph.D. (425)865-5940
+VM Technical Services, The Boeing Company
