@@ -1,14 +1,11 @@
-Return-Path: <lewis@sistina.com>
-From: lewis@sistina.com
-Date: Wed, 20 Dec 2000 16:30:22 -0600
-Subject: Re: [linux-lvm] Debian packaging
-Message-ID: <20001220163022.A5042@sistina.com>
-References: <XFMail.20001219212422.fionn@unix-ag.org> <0012210853290U.08762@lyta>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-In-Reply-To: <0012210853290U.08762@lyta>; from bofh@coker.com.au on Thu, Dec 21, 2000 at 08:53:29AM +1100
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200012202308.eBKN8GH02199@webber.adilger.net>
+Subject: Re: [linux-lvm] '/etc/init.d/lvm' script in debian package
+In-Reply-To: <Pine.LNX.4.21.0012202018200.3255-100000@scuzzlebutt.helllabs>
+ "from Claudio Matsuoka at Dec 20, 2000 08:21:16 pm"
+Date: Wed, 20 Dec 2000 16:08:16 -0700 (MST)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,61 +17,120 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Gergely Tamas <dice@mfa.kfki.hu>
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Claudio writes:
+> On Thu, 21 Dec 2000, Russell Coker wrote:
+> 
+> > Thanks for the suggestion about checking for a directory.  But how will I 
+> > determine what version of LVM if it's a directory?  Will there be 
+> > /proc/lvm/version?
+> 
+> You can check the LVM and IOP version in /proc/lvm/global.
+> 
+> [claudio@pokey:/home/claudio] cat /proc/lvm/global
+> LVM module version 0.9 (13/11/2000)
+> 
+> Total:  1 VG  1 PV  5 LVs (5 LVs open 5 times)
+> 
+> Global: 15258 bytes malloced   IOP version: 10   14:55:25 active
+> 
 
-On Thu, Dec 21, 2000 at 08:53:29AM +1100, Russell Coker wrote:
-> > > Think PATH - this is really easy, and shells already support it.  No =
-more
-> > > work to be done, and it's not ugly.  The IOP version will probably ne=
-ver
-> > > change within a boot (unless LVM is a module and it gets upgraded wit=
-hout
-> > > upgrading the kernel - unlikely).
-> >
-> > Shouldnt the debian alternatives mechanism (see "man 8
-> > update-alternatives") be most appropriate for this task?
->=20
-> Update-alternatives doesn't work when the file-system in question is moun=
-ted=20
-> read-only.  Also it's not really designed to be run at every boot.
->=20
-> PATH is a bad idea IMHO.  It is set in too many places and has too many=
-=20
-> possibilities to be stuffed up.
+My current (path-based) LVM startup (rc.sysinit) looks like:
 
-Doesn't the liblvm.so versioning in the cvs code take care of this problem?
+# Try to load LVM module first in case it isn't compiled in or already loaded
+[ -f /etc/lvmtab -a ! -e /proc/lvm ] && modprobe lvm 2> /dev/null
+if [ -f /etc/lvmtab -a -e /proc/lvm ]; then
+	[ -f /proc/lvm ] && IOP=`awk '/IOP/ { print $7 }' /proc/lvm`
+	[ -d /proc/lvm ] && IOP=`awk '/IOP/ { print $7 }' /proc/lvm/global`
+	[ "$IOP" -a -d /sbin/lvm-$IOP ] && PATH=/sbin/lvm-$IOP:$PATH
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+	vgchange -a y
+	rc=$?
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
------Begin Obligatory Humorous Quote----------------------------------------
-No-one suspects the butterfly!
------End Obligatory Humorous Quote------------------------------------------
+	# error handling
+	if [ $rc -ne 0 ]; then
+		# blah
+	fi
+fi
 
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+I also have the 3 lines of LVM path setting in the root .bashrc.
+This approach means that anyone who has old tools directly installed in
+/sbin can still survive the installation of new tools in /sbin/lvm-$IOP.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+My next change will to have an lvmiopversion command (see below).  This
+has the benefit of not needing extra parsing and such (like awk), and it
+won't care what /proc/lvm is, or even if /proc is mounted.  It will also
+have the side effect of loading the LVM module if it needs to be loaded.
+This will leave me with the following in rc.sysinit/.bashrc:
 
-iD8DBQE6QTL+pE6/iGtdjLERAhayAJ9O4VyPOaorO0RLQhOWGgVxxgUOnACfXYQa
-+g0kSUB4iHN21iby90dyoew=
-=cE2F
------END PGP SIGNATURE-----
+if [ -f /etc/lvmtab ]; then
+	IOP=`lvmiopversion 2> /dev/null`
+	rc=$?
+	if [ $rc -eq 0 ]; then
+		[ -d /sbin/lvm-$IOP ] && PATH=/sbin/lvm-$IOP:$PATH
+		vgchange -a y
+		rc=$?
+	fi
 
---2oS5YaxWCcQjTEyO--
+	# error handling
+	if [ $rc -ne 0 ]; then
+		# blah
+	fi
+fi
+
+Heinz, can you consider adding the lvmiopversion.c file to the LVM CVS?
+No matter which way we go it will probably be a useful command to have.
+
+Cheers, Andreas
+========================== lvmiopversion.c ===================================
+/*
+ * tools/lvmiopversion.c
+ *
+ * Copyright (C) 2000  Andreas Dilger <adilger@turbolinux.com>
+ *
+ * LVM is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * LVM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LVM; see the file COPYING.  If not, write to
+ * the Free Software Foundation, 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <stdio.h>
+#include <lvm_user.h>
+
+#ifdef DEBUG
+int opt_d;
+#endif
+
+char *cmd = "lvmiopversion";
+
+int main(int argc, char *argv[])
+{
+	int ver = lvm_get_iop_version();
+
+	if (ver < 0) {
+		fprintf(stderr, "%s -- LVM driver/module not loaded?\n\n", cmd);
+		return LVM_EDRIVER;
+	}
+
+	printf("%d\n", ver);
+	return 0;
+}
+
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
