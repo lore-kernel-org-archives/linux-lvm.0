@@ -1,9 +1,10 @@
-Subject: Re: [linux-lvm] LAZY MODE: Exchanging a LVM'ed disk
-References: <Pine.LNX.4.33.0111201025540.2520-100000@dragon.inside.ntisys.com>
-From: Turbo Fredriksson <turbo@bayour.com>
-In-Reply-To: <Pine.LNX.4.33.0111201025540.2520-100000@dragon.inside.ntisys.com>
-Message-ID: <87r8qt78v4.fsf@papadoc.bayour.com>
-MIME-Version: 1.0
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Kernel-2.4.15pre6
+Message-ID: <20011120161418.C807@tykepenguin.com>
+References: <20011117231937.D12510@auctionwatch.com> <20011119083610.B755@tykepenguin.com> <20011119111218.A25684@auctionwatch.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011119111218.A25684@auctionwatch.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 09:39:01 2001
+Date: Tue Nov 20 10:13:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Quoting Benjamin Scott <bscott@ntisys.com>:
-
-> On 20 Nov 2001, Turbo Fredriksson wrote:
-> > I currently have a disk in my LVM set which is only 1Gb. It's also quite
-> > old, so I'd like to replace that with a newer/bigger one..
+On Mon, Nov 19, 2001 at 11:12:18AM -0800, Petro wrote:
+> > If you want to do snapshots of reiserfs (and, I think, ext3) then you will
+> > still need the VFS lock patch yes.
 > 
->   1. Backup the existing filesystem(s)
->   2. Verify the backup
->   3. Create a PV on the new disk (pvcreate)
->   4. Add the new PV to the existing VG (vgextend)
->   5. Move the data from the old PV to the new PV (pvmove)
->   6. Remove the old PV from the VG (vgreduce)
->   7. Extend the LV to use the entire new PV (lvextend)
->   8. Resize the filesystem to use the entire LV
+>     Is there any indication that this patch will make it in to the
+>     official kernel at some point? 
 
-Quoting Benjamin Scott <bscott@ntisys.com>:
+I don't know is the honest answer. It's Chris Mason's patch, we just distribute
+it for convenience of LVM users, I don't know if (or how many times!) he's tried
+to submit it for inclusion.
 
-> On 20 Nov 2001, Turbo Fredriksson wrote:
-> > Do I _have_ to copy all the info to a empty disk, then create the lv
-> > (pvcreate et al)?
-> 
->  No, you could just blow away your existing non-LVM partition and lose all
-> your data.  ;-)  But if you would like to *keep* your data, the answer is
-> "Yes, you have to copy it all to another filesystem".
-
-Dang! I was hopping I could get away easy here! :)
-
-Thanx for the answer, I appreciate it, even though I don't "like it" if you know
-what I mean :)
-
--- 
- Turbo     __ _     Debian GNU     Unix _IS_ user friendly - it's just 
- ^^^^^    / /(_)_ __  _   ___  __  selective about who its friends are 
-         / / | | '_ \| | | \ \/ /    Debian Certified Linux Developer  
-  _ /// / /__| | | | | |_| |>  <  Turbo Fredriksson   turbo@bayour.com
-  \\\/  \____/_|_| |_|\__,_/_/\_\         Gothenburg/Sweden
-
-plutonium NSA arrangements SEAL Team 6 toluene tritium
-counter-intelligence pits 747 CIA Mossad Honduras munitions Saddam
-Hussein colonel
-[See http://www.aclu.org/echelonwatch/index.html for more about this]
+patrick
