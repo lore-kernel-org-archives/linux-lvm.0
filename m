@@ -1,12 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 10 Jul 2001 15:45:30 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
-Message-ID: <20010710154530.A18025@sistina.com>
-References: <20010705083402.D11805@vestdata.no> <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com>
+Return-Path: <eli@zendo.net>
+Date: Tue, 10 Jul 2001 09:39:02 -0500
+From: Eli Criffield <lvm@zendo.net>
+Message-ID: <20010710093902.B30416@zendo.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com>; from bcrl@redhat.com on Thu, Jul 05, 2001 at 03:35:31AM -0400
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
+Content-Disposition: inline
+Subject: [linux-lvm] vg gone after vgextend
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,109 +18,94 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, Jul 05, 2001 at 03:35:31AM -0400, Ben LaHaise wrote:
-> On Thu, 5 Jul 2001, Ragnar Kj=EF=BF=BDrstad wrote:
->=20
-> > What do you mean?
-> > Is it not feasible to fix this in LVM as well, or do you just not know
-> > what needs to be done to LVM?
->=20
-> Fixing LVM is not on the radar of my priorities.  The code is sorely in
-> need of a rewrite and violates several of the basic planning tenents that
-> any good code in the block layer should follow.  Namely, it should have 1)
-> planned on supporting 64 bit offsets,
+--H1spWtNR+x+ondvy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What is the particular problem with 1?
-Changes need to take place in the whole block device layer during 2.5
-development in order to be 64 bit clean.
+Hello
 
-LVM will just be one member of the bunch :-)
+I had LVM up and working great, even on the / filesystem. I had a
+/dev/hda1 that was a 4 gig filesystem that i tared my distribution to and
+/dev/hda2 that use to be my / filesystem and /dev/hda3 that was my volume
+group. I resized /dev/hda1 down to around 30 megs and made /dev/hda2
+4+gig. I made /dev/hda1 /boot and had a initrd to turn on LVM and boot to
+the / filesystem on /dev/rootvg/root_lv. That all worked fine.
 
-> 2) never used multiplication,
-> division or modulus on block numbers,
+Until i added /dev/hda2 (now about 4gig) to the volumegroup rootvg. All
+looked ok when i went to reboot. On the reboot it died in the ramdisk when
+it ran vgscan.
+"vgscan -- no volume groups found"
 
-I assume that you mean an advice ("never use") rather than a statement
-that you never used it, right?
+I was then stuck with a none bootable machine. I'll save you the long
+story about the trouble i had making some kind of rescue disk, but i
+finally got one to work off a cd i had a friend burn for me.
 
-FYI: this takes place in multiple block device layer functions.
+Now when i run pvscan i get=20
+"pvscan -- inactive PV "/dev/hda3" is associated to an unknown VG (run
+vgscan)
+pvscan -- total: 14.4GB / in use 1 [14.4GB] / in no VG 0 [0]"
 
-For sure you can argue that this is supposed to vanish in 2.5 but
-were's the document recommending this and defining how to do it?
+it doesn't see /dev/hda2 that i added to the vg right before reboot, but
+thats not a problem because there was nothing on it yet anyway.
 
-> and 3) don't allocate memory
-> structures that are indexed by block numbers.
+pvscan -vv gives
 
-Why?
-
-Remapping block devices do that!
-Checks against index mismatches are in LVM already.
-
-> Even LVM failed on all three of
-> these -- and this si just what I noticed in a quick 5 minute glance
-> through the code.  Sorry, but LVM is obsolete by design.
-
-Sorry but you are argueing weakly in a political manor.
-
-Please speak up clearly and talk about the caveats you see and change reque=
-st
-you recommend as an expert or say nothing!
-
-> It will continue
-> to work on 32 bit block devices, but if you try to use it beyond that, it
-> will fail.
-
-As I said above.
-During the 2.5 development cycle it will be addressed.
-
-> That said, we'll have to make sure these failures are graceful
-> and occur prior to the user having a chance at loosing any data.
-
-Once 64 bit support will be implemented in the block device layer
-and the VFS, LVM as a block device layer entity will support it as well :-)
-
->=20
-> Now, thankfully there are alternatives like ELVM, which are working on
-> getting the details right from the lessons learned.
-
-ELVM is not in production so far...
-If you would have read the EVMS kernel code, you had realized that they do
-modulo calculations as well and I think they are doing right!
+-- Physical volume ---
+PV Name		/dev/hda3
+VG Name		rootvg
+PV Size		14.4 GB / NOT usable 3.48 MB [LVM: 135KB]
+PV#		1
+PV Status	available
+Allocatable	yes
+CurLV		6
+P ESize (KByte)	4096
+Total PE	3685
+Free PE		1261
+Allocated PE	2424
+PV UUID		elhLo-Mw5J-8qaE-gN2D-zEYo-Woqh-qH7H5a
+System Id	eli.custom-edge.com993738446
 
 
-> Given that, I think
-> we'll be in good shape during the 2.5 cycle.
+from what i can tell from the archives to do a vgcfgrestore is the next
+logical thing but it doesn't work for me
 
-I agree (from a different standpoint though ;-)
+vgcfgrestore -n rootvg /dev/hda3
+vgcfgrestore -- "/etc/lvmconf/rootvg.conf" doesn't exist
+vgcfgrestore -- a backup for volume group rootvg is not available
 
-Waiting for your serious advice...
+which makes since because i booted off a rescue disk in a ram disk.
 
->=20
-> 		-ben
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+vgscan still gives
+vgscan -- no volume groups found
 
---=20
+i did find this answer in the archives for a similar problem:
 
-Regards,
-Heinz    -- The LVM Guy --
+> You need to edit the disk signatures and for each PV, insert all the
+> _other_ PV signatures in the right place.
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+but no explanation on how to do that?
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+Is that what i should be doing? If so how do i do that? If not what can i
+do to save this box?
+
+thanks a ton it will save a lot of hassle if i don't have to reinstall.
+
+eli
+
+--H1spWtNR+x+ondvy
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7SxOFm2VvYlVjW2oRAsEiAJ9S7s/v1JTZDJWFALqFVoLV1A6m8gCePppn
+xwvZzr7fjGHwsOOUB6C84kw=
+=Rato
+-----END PGP SIGNATURE-----
+
+--H1spWtNR+x+ondvy--
