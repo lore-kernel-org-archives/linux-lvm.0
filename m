@@ -1,10 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Device Resets?
-Message-Id: <20020419151813.C25208@sistina.com>
-References: <200204172133.OAA08410@hpgssl.cup.hp.com>
+Message-Id: <00e301c1e7b2$4f501d90$f42cb69d@cerc.wvu.edu>
+From: "Ning Ye" <nye@csee.wvu.edu>
 MIME-Version: 1.0
-In-Reply-To: <200204172133.OAA08410@hpgssl.cup.hp.com>; from
-    defranco@cup.hp.com on Wed, Apr 17, 2002 at 01:33:42PM -0800
+Content-Type: multipart/alternative;
+    boundary="----=_NextPart_000_00E0_01C1E790.C1B9CA10"
+Subject: [linux-lvm] Howto Make LVM Work With NBD/ENBD?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,52 +14,85 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 19 08:18:02 2002
+Date: Fri Apr 19 09:58:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Apr 17, 2002 at 01:33:42PM -0800, John DeFranco wrote:
-> Hi,
-> 
-> I was wondering if anyone could tell me of LVM issues device resets, like a 
-> bus reset or target device reset or something similiar?
+This is a multi-part message in MIME format.
 
-No, it doesn't do resets.
+------=_NextPart_000_00E0_01C1E790.C1B9CA10
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Old versions did cache flushes and invalidations which was crappy;
-the actual ones don't do this any longer.
+Hi!,
 
-> 
-> Thanks!
-> 
-> ===============================================================
-> John DeFranco			Hewlett-Packard Company
-> john_defranco@hp.com		Availability Clusters Solution Division
-> phone: 408-447-7543		19111 Pruneridge Ave, M/S 4101
-> fax: 408-447-0056		Cupertino, CA 95014 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+    I want to make them work together, which makes me crazy these days.  =
 
--- 
 
-Regards,
-Heinz    -- The LVM Guy --
+    I can initialize the disks and partitions exported by ENBD, but when =
+trying to create a volume group on it, vgcreate fails.
+# vgcreate my_volume /dev/ndb
+vgcreate -- ERROR "pv_read(): read" reading physical volumes
+    After examine the debug output, it looks to me lvm trying to =
+enumerate all physical disks present to the system.  These disks include =
+SCSI disks(sda...), IDE disks(hda...) and loops(loop0...).  However, the =
+LVM will not recognize the exported disk as a physical one.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+    Did any one ever make it work before?  I would like to know before I =
+am trying to look into the code.  Combining these two great packages =
+would be wonderful.  But how?  Help needed.  Thanks.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+                Ning
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+------=_NextPart_000_00E0_01C1E790.C1B9CA10
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2715.400" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hi!,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; I want to make them =
+work=20
+together, which makes me crazy these days.&nbsp; </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; I can initialize the =
+disks and=20
+partitions exported by ENBD, but when trying to create a volume group on =
+it,=20
+vgcreate fails.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2># vgcreate my_volume =
+/dev/ndb<BR>vgcreate -- ERROR=20
+"pv_read(): read" reading physical volumes<BR>&nbsp;&nbsp;&nbsp; After =
+examine=20
+the debug output, it looks to me lvm trying to enumerate all physical =
+disks=20
+present to the system.&nbsp; These disks include SCSI disks(sda...), IDE =
+
+disks(hda...) and loops(loop0...).&nbsp; However, the LVM will not =
+recognize the=20
+exported disk as a physical one.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; Did any one ever =
+make it work=20
+before?&nbsp; I would like to know before&nbsp;</FONT><FONT face=3DArial =
+size=3D2>I=20
+am trying to look into the code.&nbsp; Combining these two great =
+packages would=20
+be wonderful.&nbsp; But how?&nbsp; Help needed.&nbsp; =
+Thanks.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Ning</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
+
+------=_NextPart_000_00E0_01C1E790.C1B9CA10--
