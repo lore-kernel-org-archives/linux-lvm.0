@@ -1,9 +1,8 @@
-Message-ID: <3D9D4F63.75700F39@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
-MIME-Version: 1.0
+From: Xavier Montagutelli <Xavier.Montagutelli@gmm.insa-tlse.fr>
 Subject: Re: [linux-lvm] mounting reiserfs snaphost fails
-References: <3D6DD029.1010905@dotcom.pl> <20020829130219.A32269@sistina.com> <3D9D4C5B.F4352F4E@silicide.dk>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3D9D4C5B.F4352F4E@silicide.dk>
+Message-ID: <Pine.LNX.4.44.0210041047310.21409-100000@gmmpc1.gmm.priv>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,30 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct  4 03:46:02 2002
+Date: Fri Oct  4 03:53:32 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jon Bendtsen wrote:
-> 
+On Fri, 4 Oct 2002, Jon Bendtsen wrote:
+
 > "Heinz J . Mauelshagen" wrote:
 > >
 > > Did you put the VFS lock patch in?
 > > You need that to be able to mount snapshots of *journaled* filesystems.
-> 
+>
 > Where do i find that patch ?
 > Does 2.4.19 contain it ? does the latest kernel, if 2.4.19 isnt the
 > latest ?
 
-never mind, i did a cvs checkout, and made a patch for the linux kernel.
-i believe it included the VFS-LOCK.patch (did a make in the PATCHES
-subdir)
+You will find it under PATCHES/linux-2.4.19-VFS-lock.patch in the LVM
+source archive.
 
-Do i need to update the LVM tools, or can i use default debian woody
-tools
-and still get this effect ?
-
-
-
-JonB
+--
+[ Xavier Montagutelli          `""'                                   ]
+[ INSA Toulouse                0--0                                   ]
+[               ---------oOOo---()---oOOo----------                   ]
+[ Dpt de Math / Service Informatique  Tel: +33 5 61 55 93 38 / 67     ]
+[ 135, Avenue de Rangueil             Fax: +33 5 61 55 93 20 / 60     ]
+[ 31077 Toulouse Cedex 4              Mel: montagut@gmm.insa-tlse.fr  ]
