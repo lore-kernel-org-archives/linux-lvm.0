@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] recovering a bad physical volume
-Message-ID: <20020722082919.GA1096@tykepenguin.com>
-References: <20020719064133.GA1184@tykepenguin.com> <Pine.SOL.4.44.0207191201590.3998-100000@yellow.csi.cam.ac.uk>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [E.Kowallik@tu-bs.de: [linux-lvm] lvm and raw devices (with Oracle 9 RAC)]
+Message-ID: <20020722125828.A23420@sistina.com>
+References: <20020703195115.E999@portatile.milano.dt> <20020704113000.C9129@sistina.com> <20020719212754.A1121@portatile.milano.dt>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.SOL.4.44.0207191201590.3998-100000@yellow.csi.cam.ac.uk>
+In-Reply-To: <20020719212754.A1121@portatile.milano.dt>; from E.Kowallik@tu-bs.de on Fri, Jul 19, 2002 at 09:27:54PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,60 +14,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jul 22 03:29:01 2002
+Date: Mon Jul 22 06:08:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jul 19, 2002 at 12:10:30PM +0100, Matthew Johnson wrote:
-> On Fri, 19 Jul 2002, Patrick Caulfield wrote:
+On Fri, Jul 19, 2002 at 09:27:54PM +0200, Eike Kowallik wrote:
+> Hello!
 > 
-> > Other than fdisk and parted I don't know of any other way of doing it. and parted
-> > works in MB/GB rather than cylinders so I doubt you'd get the control you need
-> > here.
-> >
-> > Don't worry about the partition numbers being the same, LVM doesn't care what the
-> > partitions are called, as long as it can find the PV metadata (which contains a
-> > UUID)and a complete PV somewhere it should be able to activate the VG. LVM is
-> > designed to cope with things like SCSI devices which rename themselves if you move
-> > them around of the SCSI chain so IDE partitions that do the same will be no
-> > problem.
+> On Thu, Jul 04, 2002 at 11:30:00AM +0200, Heinz J . Mauelshagen wrote:
+> > On Wed, Jul 03, 2002 at 07:51:15PM +0200, Eike Kowallik wrote:
 > 
-> It complained that /de/hde8 was not part of the volumegroup, so I just
-> made sure the partition numbers were correct.
+> > > Hmm...  nobody can give me a hint? Are my problems and my questions
+> > > so strange??
+> > 
+> > No, it is because we are all at the beach ;-)
 > 
-> Anyway, I still get the "vgcfgrestore -- size of physical volume /dev/hde6
-> differs from backup" [from vgcfgrestore -n lvm1 /dev/hde6]. So, heres a
-> few details - see if ou can see the
-> problem.
+> Oh, sorry, I didn't know... ;-)
 > 
-> vgcfgrestore -n lvm1 -ll :
 > 
-> [cut lv & pv details]
-> --- Physical volume ---
-> PV Name               /dev/hde6
-> VG Name               lvm1
-> PV Size               2.96 GB [6204177 secs] / NOT usable 4.19 MB [LVM:
-> 130 KB]
-> PV#                   1
-> PV Status             available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              756
-> Free PE               0
-> Allocated PE          756
-> PV UUID               9F9nNV-cQS2-BSl6-Ex72-NV1J-9J2v-2wE04a
+> > You are using a rather old LVM version. In case you can afford an upgrade
+> > to LVM 1, your problem will be gone.
 > 
-> now, 4096*1024*756 = 3170893824
+> Yes, now the following command works here without any problems! :-))
+> 
+> > # raw -qa
+> > /dev/raw/raw1:  bound to major 58, minor 0
+> > dd if=/dev/raw/raw1 of=/dev/null bs=512 count=10
+> > 10+0 records in
+> > 10+0 records out
+> 
+> Before I wrote my first email to this list I had read the CHANGELOG,
+> because I hadn't found any hint for my problem. Now, knowing the
+> solution, I would like to understand the problem - a little bit. ;-)
+> Which fix made the above command work?
 
-Ah yes, but you should be using the PV size rather than the number of PEs to
-work out the partition size! The PV is greater than the aggregated size of the
-PEs because of the space needed for the LVM metadata.
+We had 1024 byte minimal block sizes earlier.
+Recent versions are back to 512 byte :)
 
-So I make it that 6204177 sectors is 3176538624 bytes so you're still a little
-short.
+> 
+> Of course, this isn't a real important thing...
+> 
+> 
+> > Heinz    -- The LVM Guy --
+> 
+> Thanks a lot, Heinz! Bye, Eike
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
+-- 
 
-patrick
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
