@@ -1,12 +1,11 @@
-Return-Path: <stefan.helfert@mpi-hd.mpg.de>
-Message-ID: <3ADF74AA.CEED3E97@mpi-hd.mpg.de>
-Date: Fri, 20 Apr 2001 01:28:42 +0200
-From: Stefan Helfert <stefan.helfert@mpi-hd.mpg.de>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104200013.f3K0DaBu016387@webber.adilger.int>
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+In-Reply-To: <20010419232834.40495.qmail@web12405.mail.yahoo.com>
+ "from Cygnus at Apr 19, 2001 04:28:34 pm"
+Date: Thu, 19 Apr 2001 18:13:35 -0600 (MDT)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] disk add means trouble: vgscan -- invalid i/o protocol 
- version 5
-References: <3ADB3B2A.B28AC133@mpi-hd.mpg.de> <20010416142849.B16508@sistina.com>
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,76 +18,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: linux-openlvm@nl.linux.org
 
-I am reposting this, since I believe I have run into a serious condition
-here:
+Casey writes:
+> What is the EVMS project? Is this just improvements to LVM, or something
+> entirely different?
 
-A stable, running configuration consisted of one IDE disk with one LVM
-VG on it, and adding another IDE disk leads to a non-working vgscan. If
-I go back to the one IDE disk configuration, the LVM gets discovered,
-and adding the second disk again leads to non-working vgscan. 
-I cannot completely rule out any hardware issues here (since the disk
-with the LVM VG is apparently having lots of SMART redirects and
-significant access time increases), but I'd like to investigate this
-vgscan problem further.
-(Since it reduces my confidence in LVM very much, so much that I am
-currently killing the LVM on my terabyte raid because I do not want to
-see anything like that there.)
+EVMS is a new project which is designed to work with a number of "LVM"
+on-disk formats.  It is relatively new, but intends to support (via
+modules) on-disk formats from the current LVM, MD RAID, IBM OS/2 and
+AIX LVM, potentially HP/UX LVM, etc.  It is a more modular implementation
+than the current LVM code, and allows additional stacking of modules to
+handle encryption, device merging, multipath, etc.
 
-So if anyone has an idea of how to investigate this, I am open to
-experiments. If not, I'll send the disk back to the manufacturer for
-replacement.
+It will not (AFAIK) be a complete re-implementation of all of the current
+kernel code for MD, partitions, etc.  Rather it will incorporate much of
+the existing code into a new framework.
 
-Stefan
+You can find out about it at:
+http://oss.software.ibm.com/developerworks/opensource/evms/
 
-AJ Lewis wrote:
-> 
-> On Mon, Apr 16, 2001 at 08:34:18PM +0200, Stefan Helfert wrote:
-> > Dear list,
-> >
-> > I was running a stable configuration until yesterday:
-> > several SCSI disks with standard partitions, two IDE disks, only one IDE
-> > disk (Maxtor 40Gig /dev/hda) holding a LVM partition. LVM version that
-> > of
-> > SuSE 7.0, that was lvm-0.8 Build 111 from SuSE.
-> >
-> > When I added a 60 GB Maxtor IDE as primary slave, I found that vgscan
-> > only
-> > throws an "invalid i/o protocol" error. Upgrading to a SuSE 7.0 update
-> > lvm did not help. Upgrading to the SuSE 7.1 lvm-0.9.1_beta-3 did not
-> > help
-> > except detailing the error "... protocol version 5".
-> >
-> > When detaching the 60 GB disk, everything works again. (The 60 Gig disk
-> > is empty, it did not hold a partition table -- and it does not work with
-> > a
-> > partition table and some partition either.)
-> 
-> Can you run vgscan w/o the 60GB disk attached?  If so, that's very
-> odd...there may be some crud on the front of the disk that the LVM tools are
-> reading as metadata.
+Just so people don't get the wrong impression, this isn't a new project
+started because of the mailing list issues.  It was launched last year,
+and Heinz, myself, and a lot of other kernel developers have provided
+input to the project.
 
-I'm sorry to tell:
-The 40 Gig disk alone, w/o 60GB disk attached, vgscan runs.
-I now have moved the data with the help of another machine, and
-currently the 40 GB disk is primary master and the 60GB disk is primary
-slave -- and vgscan does not run anymore. Note that the 60GB disk is
-holding partitions now -- a NTFS partition and a ext2, but no LVM
-partition there.
-
-Ideas how to investigate ?
-
-> 
-> If you've updated the tools, you need to upgrade the kernel as well.  That's
-> normally why you'd get the invalid IOP protocol message.
-
-I understand. I did downgrade to LVM-0.8 again, since 0.9.1-beta3 did
-not run with my 2.2 kernel.
-
-
-Stefan
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
