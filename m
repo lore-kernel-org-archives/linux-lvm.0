@@ -1,21 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j22HjmK26452
-	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 12:45:48 -0500
-Received: from pastinakel.tue.nl (pastinakel.tue.nl [131.155.2.7])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j22HjklG000954
-	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 12:45:47 -0500
-Received: from iris.tue.nl (iris.tue.nl [131.155.2.34])
-	by pastinakel.tue.nl (Postfix) with ESMTP id 6815014BB40
-	for <linux-lvm@redhat.com>; Wed,  2 Mar 2005 18:45:45 +0100 (CET)
-Received: from [131.155.224.41] (t-26-41.athome.tue.nl [131.155.224.41])
-	by iris.tue.nl (Postfix) with ESMTP id 9851210C0AF
-	for <linux-lvm@redhat.com>; Wed,  2 Mar 2005 18:45:44 +0100 (CET)
-Message-ID: <4225FBC8.9020904@are-b.org>
-Date: Wed, 02 Mar 2005 18:45:44 +0100
-From: oliver <oliver@are-b.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Partition table gone? Any way to restore?
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j22HmSK26992
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 12:48:28 -0500
+Received: from lug-owl.de (lug-owl.de [195.71.106.12])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j22HmN37032469
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 12:48:23 -0500
+Date: Wed, 2 Mar 2005 18:48:19 +0100
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Subject: Re: [linux-lvm] Partition table gone? Any way to restore?
+Message-ID: <20050302174819.GN17589@lug-owl.de>
+References: <4225FBC8.9020904@are-b.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DIHcrpw6feLlKbIE"
+Content-Disposition: inline
+In-Reply-To: <4225FBC8.9020904@are-b.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,44 +24,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi,
 
-I just moved my HDD's from the onboard IDE controller to a PCI 
-controller, the HighPoint RocketRaid454. Since one of the harddisk once, 
-a long time ago, was hooked up to an identical raid controller and had a 
-raid created on it, the rocketraid for some reason found it. Even though 
-it shouldn't have been there anymore to my knowlegde.
+--DIHcrpw6feLlKbIE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The raid controller complained about a corrupt volume and destroyed it. 
-It was done within a blink of an eye. (So i don't think everything is wiped.
+On Wed, 2005-03-02 18:45:44 +0100, oliver <oliver@are-b.org>
+wrote in message <4225FBC8.9020904@are-b.org>:
+> The raid controller complained about a corrupt volume and destroyed it.=
+=20
+> It was done within a blink of an eye. (So i don't think everything is wip=
+ed.
+>=20
+> However LVM can't find my VG anymore. fdisk -l /dev/hde shows me that=20
+> there simply isn't anything on it. Where as fdisk -l /dev/hdg tells me=20
+> "Disk /dev/hdg doesn't contain a valid partition table" as I would have=
+=20
+> expected.
 
-However LVM can't find my VG anymore. fdisk -l /dev/hde shows me that 
-there simply isn't anything on it. Where as fdisk -l /dev/hdg tells me 
-"Disk /dev/hdg doesn't contain a valid partition table" as I would have 
-expected.
+gpart could possibly help by guessing a partition table. This helped me
+several times getting some friend's broken Windoze machines to work
+again. (@gpart author: if we ever meet IRL, I owe you a beer!)
 
-First thing came to mind was to check via vgcfgrestore if it could do 
-anything. However I get this error:
-root@enterprise:/etc/lvmconf# vgcfgrestore -l -n vg00
-vgcfgrestore -- INFO: using backup file "/etc/lvmconf/vg00.conf"
-vgcfgrestore -- ERROR: different structure size stored in 
-"/etc/lvmconf/vg00.conf" than expected in file vg_cfgrestore.c [line 120]
-vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "vg00"
+MfG, JBG
 
-I don't think I have ever changed the version installed so don't see 
-where this error is coming from. (The *.conf files apprear to be from 
-late last night, so are quite 'new')
+--=20
+Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481             =
+_ O _
+"Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur | Gegen Krieg  =
+_ _ O
+ fuer einen Freien Staat voll Freier B=C3=BCrger" | im Internet! |   im Ira=
+k!   O O O
+ret =3D do_actions((curr | FREE_SPEECH) & ~(NEW_COPYRIGHT_LAW | DRM | TCPA)=
+);
 
-I don't want to recreate the volume on /dev/hde because i don't want to 
-loose the information on there. Since as mentioned the operation was 
-over quite swiftly I doubt the entire disk is gone, only the partition 
-table itself, or whatever LVM creates.
+--DIHcrpw6feLlKbIE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-Thus my question, what can I do to restore my LVM!
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.0 (GNU/Linux)
 
-Thanks a lot in advance,
+iD8DBQFCJfxjHb1edYOZ4bsRAh9HAJ94mNNWsJV3QeCs0Nv6G1aPhHhoQQCggznN
+r0XZjX0xfNH09E0cFQ3KPXE=
+=xAnO
+-----END PGP SIGNATURE-----
 
-oliver
+--DIHcrpw6feLlKbIE--
