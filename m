@@ -1,10 +1,14 @@
-Return-Path: <gregm@coco.comstar.net>
-Date: Mon, 29 Jan 2001 10:45:09 -0500 (EST)
-From: Gregory McLean <gregm@comstar.net>
-Subject: Re: [linux-lvm] Help recovering my volume groups
-In-Reply-To: <20010129125826.E594@tykepenguin.com>
-Message-ID: <Pine.LNX.4.10.10101291021220.10901-100000@coco.comstar.net>
-MIME-Version: 1.0
+Return-Path: <lewis@sistina.com>
+From: lewis@sistina.com
+Date: Mon, 29 Jan 2001 09:51:54 -0600
+Subject: Re: [linux-lvm] Follow-up 2: Help: lvm 0.9.1_beta3 oops (can't get my data)
+Message-ID: <20010129095154.E20423@sistina.com>
+References: <3A746B67.4FA4CD18@nortelnetworks.com> <20010128200649.C17449@sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3O1VwFp74L81IIeR"
+Content-Disposition: inline
+In-Reply-To: <20010128200649.C17449@sistina.com>; from lewis@sistina.com on Sun, Jan 28, 2001 at 08:06:49PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,70 +20,68 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, 29 Jan 2001, Patrick Caulfield wrote:
+--3O1VwFp74L81IIeR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Sat, Jan 27, 2001 at 05:27:46PM -0500, Gregory McLean wrote:
-> > 
-[snip]
-> 
-> Are you running beta3 ? If not then an upgrade would be helpful.
+On Sun, Jan 28, 2001 at 08:06:49PM -0600, lewis@sistina.com wrote:
+> On Sun, Jan 28, 2001 at 12:56:39PM -0600, Joe Harvell wrote:
+> > When I do a 'vgdisplay -vD w0', I don't run into any problems.  Does th=
+is rule out the possibility of a vgcfgrestore helping?
+> >=20
+> > I looked at the man pages for vcfgrestore, but I don't know which desti=
+nation I should specify.  Is it /dev/w0, or is it 'dev/hda8' and '/dev/hdb3=
+'?
+>=20
+> I believe you want to do a 'vgcfgrestore -nw0 /dev/hda8; vgcfgrestore -nw0
+> /dev/hdb3'.  Let me know if that fixes things.  And remember, do *not* do=
+ a
+> vgscan right after your vgcfgrestore because it will revert to the previo=
+us
+> state.  Simply run the vgcfgrestore command, and then try the 'vgchange -=
+ay'
+> to activate the volume group.
 
-No beta2 , I'll upgrade em. And patch the kernel tonight for this (not at
-the affected machine right now)
-> 
-> If you are then we really need to find out what's happening here. 
-> Do you have any snapshots defined ?
+I was told that this is incorrect information by Heinz and that you _should_
+run vgscan after running vgcfgrestore because it brings the /etc/lvmtab and
+/etc/lvmtab.d/ in sync with the newly restored VGDA.  Sorry about that.  I
+was mixed up.
 
-No, I haven't had a need for snapshots.
-> 
-> Can you do a pvdisplay on all the PVs and post the output, it might also 
-> be helpful if you can dd if=/dev/hd?? of=pv-dump.txt bs=1024 count=4 and send
-> those four files too so we can see what has actually happened to the on-disk
-> metadata.
-> 
-> After than(but not before please!) you could try
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-To save the list bandwidth spammage:
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-http://tweetie.comstar.net/pvdump/
+-----Begin Obligatory Humorous Quote----------------------------------------
+THE LESSER-KNOWN PROGRAMMING LANGUAGES #16:
+C- This language was named for the grade received by its creator when he
+submitted it as a class project in a graduate programming class.  C- is
+best described as a "low-level" programming language.  In fact, the
+language generally requires more C- statements than machine-code statements
+to execute a given task.  In this respect, it is very similar to COBOL.
+-----End Obligatory Humorous Quote------------------------------------------
 
-contains all the generated files so far (both the orginal 2) and the
-requested ones.
+--3O1VwFp74L81IIeR
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-> 
-> vfcfgrestore mmedia /dev/hda7
-> vfcfgrestore mmedia /dev/hda8
-> vfcfgrestore mmedia /dev/hdb1
-> vfcfgrestore mmedia /dev/hdc1
-> vgchange -ay
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Still didn't find any volume groups :(
+iD8DBQE6dZGapE6/iGtdjLERAoJLAJsHJpnQ5/VOep61WJevxj6Gvoxw2wCfVCiq
+fFW7Fa/uc2azkZU9uugAo6I=
+=d8op
+-----END PGP SIGNATURE-----
 
-I did manage to active the group with the following (hack):
-
-small perlscript to put a \0 terminated mmedia name in /etc/lvmtab,
-cp /etc/lvmconf/mmedia.conf /etc/lvmtab.d/mmedia
-vgchange -ay
-
-This got em activated
-
-As you asked in your followup:
-
-vgdisplay -D mmedia
-vgdisplay -- volume group "mmedia" not found
-
-I'll re-try tonight with the beta3 stuff.
-
-Thanks,
-  Greg
---
-Gregory McLean     | "Why do they call it a TV set when you only get one?"
-globix.net         | - George Carlin 
-Core Engineer      |
-Network Services   |
-PGP Key: 0xE94D1363|
----------------This is my opinion, All MINE! I tell you-----------------
+--3O1VwFp74L81IIeR--
