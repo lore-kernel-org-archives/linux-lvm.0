@@ -1,10 +1,11 @@
-Return-Path: <dmeyer@dmeyer.net>
-Date: Mon, 15 Jan 2001 15:33:59 -0500
-From: dmeyer@dmeyer.net
-Subject: [linux-lvm] hard-lock seems to have caused serious LVM problems
-Message-ID: <20010115153359.A10551@jhereg.dmeyer.net>
-Mime-Version: 1.0
-Content-Disposition: inline
+Return-Path: <jfrank@lxco.com>
+Message-ID: <3A63F53F.BA790549@lxco.com>
+Date: Tue, 16 Jan 2001 08:16:15 +0100
+From: =?iso-8859-1?Q?J=FCrgen?= Frank <jfrank@lxco.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] how can I init LVM on software RAID  ?
+References: <3A5EE491.5E4FB886@lxco.com> <3A5F1C1A.5D9C8CE4@symbionsys.com> <3A5F1E6C.CD1D1A3E@lxco.com> <3A5F27F0.1090002@liberate.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,36 +17,141 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: Chris Worley <cworley@liberate.com>, LVM <linux-lvm@sistina.com>
 
-In article <20010115172200.A31217@srv.t-online.de> you write:
-> On Mon, Jan 15, 2001 at 11:03:58AM -0500, dmeyer@dmeyer.net wrote:
-> > Interestingly enough, something seems to have fixed my PVs in the
-> > meantime - now they all have every UUID.  Either activating the VG or
-> > running vgck must have done it.
-> 
-> No, it doesn't happen while activating VGs or checking them.
-> 
-> The following tools call vg_write_with_pv_and_lv() in the library
-> which in turn calls pv_write_uuidlist() to do the UUID list update:
+Hi everyone, Hi Chris =
 
-Maybe it was calling vgscan on the messed up VG once I managed to get
-it online did it, then.  I didn't call any of the others.
 
-> You must have run one of those tools in order to update the UUID list.
-> It is still rather interesting what caused the mess you reported in the first
-> place.
+ok, I think I have a little solution for my problem with the LVM over
+SoftwareRaid. It's seems to =
 
-I wonder if it wasn't somehow related to calling vgscan -d and getting
-seg faults in the middle of it.  Or, more likely, running vgscan in
-the debugger trying to extract more information about what was going
-on.  
+work with the new beta version (sorry I don't try the patch for the
+0.9). =
 
-In any case, I hope fervantly never to have the opportunity to find
-out again :-).
+So we have only one little problem, if we boot our system the raid1
+(mirror)-system don't start correctly.
+(on off the mirror disk isn't running). In that case the lvm don't start
+too !?
 
--- 
-David M. Meyer
-dmeyer@dmeyer.net
+But I think that's more a problem of the SoftwareRaid , possible it's a
+hardware failure of the disk or the disk have a very high startup time.
+But I don't understand why lvm don't startup, normally this is a =
+
+transparenc fault , or ?
+
+byebye Juergen
+
+
+>Chris Worley wrote:
+> =
+
+> J=FCrgen,
+> =
+
+> You are correct.  That is a very good question (and valid for this
+> newsgroup).  I don't have an answer.  I've seen the documentation that
+> says you can make raid 10 & 50 (etc...) by mixing MD's under PV's, as
+> well as making VG's out of LVM's (but why?).  I've also seen errors if
+> I haven't set my PV's partition to 8e... and there's no way to fdisk
+> an MD (to set the partition type).  I would worry about the
+> performance of two layers of software overhead below the file system.
+> =
+
+> I had barely crawled out of bed when I saw your post and thought "I
+> can help a newbie".  This is not a trivial question, I was wrong ;)
+> =
+
+> Chris
+> =
+
+> J=FCrgen Frank wrote:
+> =
+
+> > Chris Worley wrote:
+> >
+> >> J=FCrgen,
+> >>
+> >> "md" and "lvm" are two different ways of making a software raid.
+> >>
+> >> lvm only does raid0.  The main purpose of LVM is to allow you to man=
+age
+> >> disks underneath the file system... adding and removing disks
+> >> dynamically.
+> >>
+> >
+> >
+> > Jep, that's the point why I want to use this two systems. So I want t=
+o
+> > create a RAID 1 / 5 system and on the top I put the LVM. With this
+> > method I have a good system with snapshot and enlargment feature !!!
+> > And if I read all the docu (the howto, the pdf from sistina) lvm work=
+s
+> > fine with the md - drives. But, that is the point which I can't follo=
+w
+> > in the moment. Because I can't make partitions on a md drive and LVM
+> > need this partitions ...
+> >
+> >
+> >
+> >
+> >> There should be HOWTO's for md in your /usr/doc area.  The LVM newsg=
+roup
+> >> is not a good place to ask MD related questions.  There are a few
+> >> "howto's" for LVM:
+> >>
+> >> http://www.sistina.com/lvm/Pages/howto.html
+> >>
+> >> I like:
+> >>
+> >> http://www.ds9a.nl/lvm-howto/HOWTO//cvs/lvm-howto/lvm-howto.html
+> >>
+> >> Chris
+> >>
+> >
+> >
+> > I read all this docu, but I can't find any help for a system LVM over=
+
+> > MD-Drives (Software RAID) !!!
+> >
+> >
+> > Juergen
+> >
+> >
+> >> J=FCrgen Frank wrote:
+> >>
+> >>> Hi !!
+> >>>
+> >>> I want to create the following system :
+> >>>
+> >>> I use the new kernel (2.4) and I want to use the software raid and =
+the
+> >>> lvm,
+> >>> but my problem is... how ?
+> >>>
+> >>> I can't find a step by step documentation and all what I try don't =
+work.
+> >>>
+> >>> So what did I done :
+> >>>
+> >>> * create a mirror system with software raid (last version), after t=
+his
+> >>>   step I have a good raid system with the drive /dev/md0
+> >>>
+> >>> * normally now I need to create a partition on the drive , but I re=
+ad in
+> >>> the raid docu that the md-drives don't support partitions !!!
+> >>>
+> >>> But, without a partiton of the type 0x8e I can't run vgscan and
+> >>> pvcreate...
+> >>>
+> >>> So, can anyone help me ?!
+> >>>
+> >>> Juergen
+> >>>
+> >>> (sorry for the bad english)
+> >>> _______________________________________________
+> >>> linux-lvm mailing list
+> >>> linux-lvm@sistina.com
+> >>> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >>
