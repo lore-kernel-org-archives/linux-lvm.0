@@ -1,9 +1,6 @@
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20020530062138.GA31973@colombina.comedia.it>
-References: <OF5BD3342B.53CED801-ON48256BC9.00097D87@legend.com.cn>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF5BD3342B.53CED801-ON48256BC9.00097D87@legend.com.cn>
+Message-ID: <OF812C20AD.43539AFD-ON48256BC9.0028280B@legend.com.cn>
+MIME-Version: 1.0
+From: lilha@legend.com.cn
 Subject: [linux-lvm] Re: md and lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,12 +12,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 01:22:02 2002
+Date: Thu May 30 03:34:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-raid@vger.kernel.org
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
+Cc: bluca@comedia.it
+
+
+
+
+
+
 
 On Thu, May 30, 2002 at 09:44:27AM +0800, lilha@legend.com.cn wrote:
 > i try extend a LV with md, but failed,why?
@@ -34,15 +37,27 @@ On Thu, May 30, 2002 at 09:44:27AM +0800, lilha@legend.com.cn wrote:
 >       272960 blocks [2/1] [_U]
 is this a bad disk???
 
+
+yes. md1 is bad, but I have delete the inforamtion about md1 in the file
+(/etc/raidtab)
+and change the partition type to 83.
+after reboot the machine, i change the partion type to FD, and reboot
+again.
+I dont't know why the md1 still can be find and how to delete it.
+
+
 > md2 : active raid5 hda12[2] hda11[1] hda10[0]
 >       1638400 blocks level 5, 32k chunk, algorithm 0 [3/3] [UUU]
-> 
+>
 > md4 : active raid5 hdc7[2] hdc6[1] hdc5[0]
 >       1023872 blocks level 5, 32k chunk, algorithm 0 [3/3] [UUU]
 raid 5 on the same disk (cool!)
 
+i just want to test whether a LV with MD can be extend or not, so i don't c
+are the performance
+
 > and now is the error information(i didn't use lvextend before):
-> 
+>
 > [root@snap /root]# e2fsadm -L+1G /dev/raid-lvm/lv_raid
 > e2fsck 1.18, 11-Nov-1999 for EXT2 FS 0.5b, 95/08/09
 > The filesystem size (according to the superblock) is 338944 blocks
@@ -52,37 +67,18 @@ raid 5 on the same disk (cool!)
 seems you have some problem with the filesystem in /dev/raid-lvm/lv_raid
 did you play at reducing it before?
 
-> Pass 1: Checking inodes, blocks, and sizes
-> Error reading block 262148 (Invalid argument) while doing inode scan.
-> Ignore error<y>? yes
-> Error reading block 262149 (Invalid argument) while doing inode scan.
-> Ignore error<y>?  no
-> Error while scanning inodes (135680): Can't read next inode
 
-it seems you lvreduced the logical volume without resizing the filesystem
-before, or your fs is badly corrupt.
-Try copying data somewhere else and mkfs the lv again.
+yes, i use lvextend to extend it and then use lvreduce to reduce it, at
+last i use
+e2fsadm -L+1G /dev/raid-lvm/lv_raid
 
-> and last is the error information of useing lvextend before:
-> [root@snap /root]# lvextend -L+1G /dev/raid-lvm/lv_raid
-> lvextend -- extending logical volume "/dev/raid-lvm/lv_raid" to 1.90 GB
-> lvextend -- doing automatic backup of volume group "raid-lvm"
-> lvextend -- logical volume "/dev/raid-lvm/lv_raid" successfully extended
-ok
-> [root@snap /root]# e2fsadm -L+1G /dev/raid-lvm/lv_raid
-> e2fsadm -- new size too large for "raid-lvm"
-> e2fsadm -- size of "/dev/raid-lvm/lv_raid" would  be invalid
-e2fsadm = lvextend then resize2fs if extending
-          resize2fs then lvreduce if shrinking
+i think the lvextend and lvreduce are no effect for e2fsadm
+thougt e2fsadm = lvextend then resize2fs if extending or resize2fs then
+lvreduce if shrinking
+Is it right? i don't know why it can't work.
 
-so you try to extend the lv by 1G and you succeed, then you try
-to extend it by 1G again, but you don't have enugh free PE on the
-volume group.
+And now I mkfs the lv and use "e2fsadm -L+1G /dev/raid-lvm/lv_raid"
+it works well.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+thanks for your help,but i still puzzled why it can't work. Can you help
+me?
