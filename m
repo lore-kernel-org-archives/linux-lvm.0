@@ -1,10 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] disk failure
-Message-ID: <20020903124137.A21136@sistina.com>
-References: <5.1.1.6.2.20020901044548.01d61470@pop.tvnet.hu> <5.1.1.6.2.20020901044548.01d61470@pop.tvnet.hu> <20020902155415.A17591@sistina.com> <5.1.1.6.2.20020902213332.038cd008@pop.tvnet.hu>
+Message-Id: <200209031504.g83F4fD07835@superglide.netfx-2000.net>
+Content-Disposition: inline
 Mime-Version: 1.0
-In-Reply-To: <5.1.1.6.2.20020902213332.038cd008@pop.tvnet.hu>; from newsmail@satimex.tvnet.hu on Mon, Sep 02, 2002 at 09:36:15PM +0100
-Content-Transfer-Encoding: quoted-printable
+From: zing@linuxfreemail.com
+Subject: [linux-lvm] vgscan limitation:  can't find the real md device/barfs on raid10
+ config
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,120 +14,666 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep  3 05:58:01 2002
+Date: Tue Sep  3 10:05:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Sep 02, 2002 at 09:36:15PM +0100, Newsmail wrote:
-> thx for your answer. actually I had this 3 drive linear array, with 170=
-=20
-> gigs. 60+80+30. the 30 gig one died. Only 20gigs of data were on the ar=
-ray.=20
-> My big problem is, that I dont even have an idea in which order I added=
-=20
-> them. is there a way to determine the order of the drives in the array?
+hello lvm-users,
 
-If you added them one after the other without ever removing/adding other
-disks to the VG in the meantime, "vgdisplay -v" gives you the internal
-numbers of the PVs. Higher numbers were added later.
+I have a raid10+lvm config that i just created:
 
-Looks like:
+md1: raid 1
+md2: raid 1
+md3: raid 0 of md1 and md2
 
-<SNIP>
---- Physical volumes ---
-PV Name (#)           /dev/sdc1 (1)
-PV Status             available / allocatable
-Total PE / Free PE    8808 / 2934
-<SNIP>
+md3 is a member of volume group: 'mainvg'
 
-where the (1) above is the internal number.
+after reboot vgscan gets to md1 and spits out:
 
-BTW: "lvdisplay -v" on any LV shows the allocation table (IOW: the mappin=
-g of
-     the logical extents to the physical extents on the PVs.
+<1> lvm_error -- LEAVING with: "vg_read_with_pv_and_lv(): current PV"
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "mainvg" from physical volume(s)
 
-Regards,
-Heinz    -- The LVM Guy --
+... and then stops.
 
-> greg
-> At 14:54 2002. 09. 02.=AD, you wrote:
-> >On Sun, Sep 01, 2002 at 04:50:27AM +0100, Newsmail wrote:
-> > > Hello everybody,
-> > > maybe its an already answered problem, I dont know,
-> > > I just have an lvm array of 3 disks. and the last disk of the array=
- just
-> > > died, as is. I cannot to anything with it, it died, it doesnt even =
-spin=20
-> > up.
-> > > what should I do with my array to make it work, or at least save th=
-e=20
-> > data I
-> > > have on it?
-> > > I tried vgchange -an -qn to make it active without a quorum, but af=
-ter I
-> > > didnt have an idea what to do. how can I remove the faultive, non-e=
-xisting
-> > > drive from it? what should I do?
-> >
-> >Well, you should backup any data you can still access this way or copy
-> >it to new LVs in a newly created VG.
-> >Either way you need to reinitialize the 2 remaining PVs after that to =
-use them
-> >in some other VG.
-> >
-> >Your only other option to regain quorum (with all data of the failed P=
-V lost!)
-> >is to vgcfgrestore the metadata of the failed drive to a replacement o=
-ne,
-> >and "vgscan ; vgchange -ay".
-> >
-> > > thanx in advance,
-> > > regards,
-> > > greg
-> > >
-> > > ps: I'm using reiserfs.
-> > >
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
-> >--
-> >
-> >Regards,
-> >Heinz    -- The LVM Guy --
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+I think I've hit a situation that vgscan cannot handle correctly.  Can someone help me out...
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+my guess is that if I can get vgscan to skip the "auto-scanning" of md1 and md2, then it will find the volume group 'data' sitting on md3.
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+thanks,
+zing
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+here is the tail end of the vgscan debug output (i can post the whole thing if needed):
+
+<1> vg_check_exist_all_vg -- checking vg_name: mainvg[0/0]
+<1> vg_check_exist_all_vg -- vg_name_ptr[0]: mainvg
+<1> vg_check_exist_all_vg -- checking vg_name: mainvg[1/1]
+<1> vg_check_exist_all_vg -- LEAVING with 1 VGs
+<1> vg_check_active -- CALLED with VG: mainvg
+<22> vg_check_name -- CALLED with VG: mainvg
+<333> lvm_check_chars -- CALLED with name: "mainvg"
+<333> lvm_check_chars -- LEAVING with ret: 0
+<22> vg_check_name -- LEAVING with ret: 0
+<22> vg_status -- CALLED with VG: mainvg
+<333> vg_check_name -- CALLED with VG: mainvg
+<4444> lvm_check_chars -- CALLED with name: "mainvg"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<333> vg_check_name -- LEAVING with ret: 0
+<22> vg_status -- LEAVING with ret: -6
+<1> vg_check_active -- LEAVING with ret: -6
+<1> vg_check_active -- CALLED with VG: mainvg
+<22> vg_check_name -- CALLED with VG: mainvg
+<333> lvm_check_chars -- CALLED with name: "mainvg"
+<333> lvm_check_chars -- LEAVING with ret: 0
+<22> vg_check_name -- LEAVING with ret: 0
+<22> vg_status -- CALLED with VG: mainvg
+<333> vg_check_name -- CALLED with VG: mainvg
+<4444> lvm_check_chars -- CALLED with name: "mainvg"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<333> vg_check_name -- LEAVING with ret: 0
+<22> vg_status -- LEAVING with ret: -6
+<1> vg_check_active -- LEAVING with ret: -6
+<1> vg_free -- CALLED
+<1> vg_free -- LEAVING with ret: -99
+<1> vg_read_with_pv_and_lv -- CALLED
+<22> vg_check_name -- CALLED with VG: mainvg
+<333> lvm_check_chars -- CALLED with name: "mainvg"
+<333> lvm_check_chars -- LEAVING with ret: 0
+<22> vg_check_name -- LEAVING with ret: 0
+<22> vg_read -- CALLED
+<333> vg_check_name -- CALLED with VG: mainvg
+<4444> lvm_check_chars -- CALLED with name: "mainvg"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<333> vg_check_name -- LEAVING with ret: 0
+<333> pv_read_all_pv_of_vg -- CALLED with vg_name: "mainvg"
+<4444> vg_check_name -- CALLED with VG: mainvg
+<55555> lvm_check_chars -- CALLED with name: "mainvg"
+<55555> lvm_check_chars -- LEAVING with ret: 0
+<4444> vg_check_name -- LEAVING with ret: 0
+<4444> pv_read_all_pv -- CALLED
+<4444> pv_read_all_pv -- avoiding multiple entries in case of MD; np: 0
+<4444> pv_read_all_pv -- LEAVING with ret: 0
+<4444> pv_check_consistency -- CALLED
+<55555> pv_check_name -- CALLED with "/dev/md1"
+<666666> lvm_check_chars -- CALLED with name: "/dev/md1"
+<666666> lvm_check_chars -- LEAVING with ret: 0
+<55555> pv_check_name -- LEAVING with ret: 0
+<55555> vg_check_name -- CALLED with VG: mainvg
+<666666> lvm_check_chars -- CALLED with name: "mainvg"
+<666666> lvm_check_chars -- LEAVING with ret: 0
+<55555> vg_check_name -- LEAVING with ret: 0
+<55555> pv_check_new -- CALLED
+<55555> pv_check_new -- LEAVING with ret: 0
+<4444> pv_check_consistency -- LEAVING with ret: 0
+<4444> pv_read_uuidlist -- CALLED with /dev/md1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<55555> lvm_check_uuid -- CALLED with uuidstr: ""
+<55555> lvm_check_uuid -- LEAVING with ret: -1
+<4444> pv_read_uuidlist -- LEAVING with ret: 0
+<333> pv_read_all_pv_of_vg -- LEAVING with ret: 0
+<22> vg_read -- pv[0]->pv_name: "/dev/md1"
+<333> vg_read_from_pv -- CALLED
+<4444> pv_check_name -- CALLED with "/dev/md1"
+<55555> lvm_check_chars -- CALLED with name: "/dev/md1"
+<55555> lvm_check_chars -- LEAVING with ret: 0
+<4444> pv_check_name -- LEAVING with ret: 0
+<4444> pv_read -- CALLED with /dev/md1
+<55555> pv_check_name -- CALLED with "/dev/md1"
+<666666> lvm_check_chars -- CALLED with name: "/dev/md1"
+<666666> lvm_check_chars -- LEAVING with ret: 0
+<55555> pv_check_name -- LEAVING with ret: 0
+<4444> pv_read -- going to read /dev/md1
+<55555> lvm_check_dev -- CALLED
+<666666> lvm_check_partitioned_dev -- CALLED
+<7777777> lvm_get_device_type called
+<7777777> lvm_get_device_type leaving with 2
+<666666> lvm_check_partitioned_dev -- LEAVING with ret: FALSE
+<55555> lvm_check_dev -- LEAVING with ret: 1
+<55555> pv_copy_from_disk -- CALLED
+<55555> pv_copy_from_disk -- LEAVING ret = 0x80585a8
+<55555> pv_create_name_from_kdev_t -- CALLED with 9:1
+<666666> lvm_check_dev -- CALLED
+<7777777> lvm_check_partitioned_dev -- CALLED
+<88888888> lvm_get_device_type called
+<88888888> lvm_get_device_type leaving with 2
+<7777777> lvm_check_partitioned_dev -- LEAVING with ret: FALSE
+<666666> lvm_check_dev -- LEAVING with ret: 1
+<666666> lvm_dir_cache -- CALLED
+<666666> lvm_dir_cache -- LEAVING with ret: 33
+<55555> pv_create_name_from_kdev_t -- LEAVING with dev_name: /dev/md1
+<55555> system_id_check_exported -- CALLED
+<55555> system_id_check_exported -- LEAVING with ret: 0
+<4444> pv_read -- LEAVING with ret: -271
+<4444> vg_copy_from_disk -- CALLED
+<4444> vg_copy_from_disk -- LEAVING
+<333> vg_read_from_pv -- LEAVING with ret: 0
+<22> vg_read -- LEAVING with ret: 0
+<1> vg_read_with_pv_and_lv -- AFTER vg_read;  vg_this->lv_cur: 0
+<1> vg_read_with_pv_and_lv -- LEAVING with ret: -367
+<1> lvm_error -- CALLED with: -367
+<1> lvm_error -- LEAVING with: "vg_read_with_pv_and_lv(): current PV"
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "mainvg" from physical volume(s)
+<1> vg_free -- CALLED
+<1> vg_free -- LEAVING with ret: -99
+<1> lvm_interrupt -- CALLED
+<1> lvm_interrupt -- LEAVING
+<1> lvm_unlock -- CALLED
+<1> lvm_unlock -- LEAVING with ret: 0
+<1> lvm_unlock -- CALLED
+<1> lvm_unlock -- LEAVING with ret: -104
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+
+Get your own FREE E-mail address at http://www.linuxfreemail.com
+Linux FREE Mail is 100% FREE, 100% Linux, and 100% yours!
