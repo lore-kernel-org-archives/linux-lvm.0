@@ -1,9 +1,10 @@
-From: Christoph Resch <mailing-oit@tttech.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Message-ID: <20031211194806.C27307@uk.sistina.com>
+References: <Pine.LNX.4.43.0312101753040.24122-100000@cibs9.sns.it> <Pine.LNX.4.56.0312101659260.1218@fogarty.jakma.org> <20031210234007.GD15401@matchmail.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200312111402.11063.mailing-oit@tttech.com>
-Subject: [linux-lvm] funny PV action
+In-Reply-To: <20031210234007.GD15401@matchmail.com>; from mfedyk@matchmail.com on Wed, Dec 10, 2003 at 03:40:07PM -0800
+Subject: [linux-lvm] Re: Device-mapper submission for 2.4
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,70 +15,111 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 11 07:03:01 2003
+Date: Thu Dec 11 14:34:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+Cc: Paul Jakma <paul@clubi.ie>, Mike Fedyk <mfedyk@matchmail.com>, Joe Thornber <thornber@sistina.com>, Marcelo Tosatti <marcelo.tosatti@cyclades.com>, Linus Torvalds <torvalds@osdl.org>
 
-Hi all,
+On Wed, Dec 10, 2003 at 03:40:07PM -0800, Mike Fedyk wrote:
+> On Wed, Dec 10, 2003 at 05:00:43PM +0000, Paul Jakma wrote:
+> > On Wed, 10 Dec 2003 venom@sns.it wrote:
+> > > DM is back compatible with LVM1, tested and runs well.
+> > What about the patches posted by Joe last (?) week which remove LVM1 
+> > support from 2.6 DM? 
 
-may someone kindly assist me in thei quite funny behavior of LVM
+They remove support for the broken version 1 of the device-mapper 
+ioctl interface.  This is nothing to do with LVM1.
+ 
+> If this is what I was reading being discussed a few weeks ago, then the
+> support for the LVM1 sysctls/ioctls has/will be removed, so you will have to
+> use the DM utilities instead of the old LVM1 utilities.  LVM1 on-disk format
+> should still be supported.
 
-i work on a runnging LVM system .. everything works as it should BUT:
-
-when running pvscan i get 
-
-root@prime:~# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/md1" of VG "system"   [19.97 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/md2" of VG "dataraid" [13.88 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/md3" of VG "dataraid" [68.36 GB / 0 free]
-pvscan -- total: 3 [102.24 GB] / in use: 3 [102.24 GB] / in no VG: 0 [0]
-
-# well /dev/md1 is my system ( / , /usr, /var ,... ) it works quite fine :-o
-
-root@prime:~# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "system"
-vgscan -- found active volume group "dataraid"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-groups
-
-# well thats great ;-) 
+2.6 does not support LVM1 ioctls.
+LVM2 userspace tools and EVMS both support LVM1 on-disk format using
+device-mapper.
 
 
-root@tttprime:~# lvscan
-lvscan -- ACTIVE            "/dev/dataraid/ttchip" [9 GB]
-lvscan -- ACTIVE            "/dev/dataraid/private" [20 GB]
-lvscan -- ACTIVE            "/dev/dataraid/tttech" [20 GB]
-lvscan -- ACTIVE            "/dev/dataraid/projects" [17 GB]
-lvscan -- ACTIVE            "/dev/dataraid/sandbox" [9 GB]
-lvscan -- ACTIVE            "/dev/dataraid/marketing+pr" [7.23 GB]
-Segmentation fault
+Here's a reference sheet to help clarify the terminology and explain
+what's happening.
 
-# oops i miss al my systemLVs .. still running on it ;-( 
+LVM1 = Userspace tools + kernel ioctls included in marcelo's 2.4 tree
+  - LVM1 kernel ioctls are *not* included in or available for 2.6
+  - LVM1 userspace tools do *not* work with 2.6 kernels
 
-root@tttprime:~# cat /proc/mounts
-rootfs / rootfs rw 0 0
-/dev/root.old /initrd ext2 rw 0 0
-/dev/root / ext3 rw 0 0
-proc /proc proc rw 0 0
-devpts /dev/pts devpts rw 0 0
-/dev/md0 /boot ext2 rw 0 0
-/dev/system/tmp /tmp ext3 rw 0 0
-/dev/system/var /var ext3 rw 0 0
-/dev/system/usr /usr ext3 rw 0 0
-/dev/system/usr_local /usr/local xfs rw 0 0
-/dev/dataraid/private /ttt/private xfs rw 0 0
-/dev/dataraid/ttchip /ttt/ttchip xfs rw 0 0
-/dev/dataraid/tttech /ttt/tttech xfs rw 0 0
-/dev/dataraid/marketing+pr /ttt/tttech/company/marketing+pr xfs rw 0 0
-/dev/dataraid/projects /ttt/tttech/projects xfs rw 0 0
-/dev/dataraid/sandbox /ttt/tttech/projects/sandbox xfs rw 0 0
+dm = Kernel driver (GPL) for new volume managers to use.
+  - Included in Linus's 2.6 kernels.
+  - Available as a patch for 2.4 kernels from the Sistina website.
+  - Knows *nothing* about volume manager's on-disk metadata layouts.
+  - Userspace volume managers (e.g. EVMS and LVM2) communicate via a new 
+    ioctl interface.
+  - This ioctl interface is currently "version 4" and we regard it as
+    stable.  [Some enhancements are on the horizon, but nothing that 
+    breaks existing code/binaries.]
+  - An old development version of this device-mapper ioctl interface known
+    as "version 1" has problems with it, is deprecated and should be
+    removed from kernel trees ASAP.  
+    Always use "version 4" when building new kernels today.
 
-still everything runs .. but i want it to be clean .. any advice would help 
+libdevmapper = Userspace shared library (LGPL) which wraps a volume manager 
+               application interface around the device-mapper ioctls
+  - Can determine transparently whether the kernel device-mapper is using
+    "version 4" dm ioctl interface or the deprecated "version 1" interface
+    and adapt itself accordingly.  [configure --enable-compat]
+  - Can only communicate with device-mapper: it cannot use LVM1 ioctls.
+  - Designed primarily for use by LVM2 tools.  [EVMS does not use it]
+  - Some parts of the libdevmapper API are not yet stable and are likely 
+    to get changed.
 
-thanks and best regards
+dmsetup = Userspace utility (GPL) which provides full command-line access to
+          the libdevmapper API.
+  - Designed for use by shell scripts and for testing and debugging.
+  - Command line interface may be considered stable.  New features may get 
+    added, but we'll try not to break existing commands.
 
--c-
+LVM2 = New Logical Volume Manager command line tools (GPL) designed to
+       be backward-compatible with LVM1 and offering new features and
+       more flexibility, configurability and stability.
+  - Supports existing LVM1 on-disk metadata.
+    This means you do *not* have to make changes to your existing on-disk 
+    LVM1 volumes to switch between using LVM1 and LVM2.
+  - Uses command lines similar to LVM1.
+  - By default uses a new on-disk metadata format supporting more
+    features than the original LVM1 version.
+  - Communicates with the device-mapper kernel driver via libdevmapper's
+    API.
+
+
+Miscellaneous points:
+  - LVM1 uses block major number 58: dm selects one or more major numbers
+    dynamically as required instead.
+  - LVM1 uses character major number 109: dm selects a misc minor number
+    dynamically instead.
+  - There's a (non-devfs) script for creating /dev/mapper/control at
+    startup (or after dm module load).
+  - You can use LVM1 tools with unpatched 2.4 kernels.
+  - You can use LVM2 tools with patched 2.4 and unpatched 2.6 kernels.
+  - Device-mapper support for snapshots and pvmove is so far released 
+    only for 2.4.  Patches for 2.6 are being tested.
+  - Multipath and mirror support are under development for 2.6.
+    (Then get back-ported to 2.4.)
+
+Web download page: http://www.sistina.com/products_lvm_download.htm
+
+The device-mapper tarball contains: 
+  device-mapper kernel patches - needed only for 2.4;
+  userspace libdevmapper and dmsetup - needed with all dm kernels.
+The LVM2 tarball contains the LVM2 command line tools.
+
+Development code can be found via:
+  http://people.sistina.com/~thornber/  (for kernel patches)
+  http://www.sistina.com/products_CVS.htm  (for userspace code)
+
+Device-mapper mailing list:
+  http://lists.sistina.com/mailman/listinfo/dm-devel
+
+Alasdair
+-- 
+agk@uk.sistina.com
