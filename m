@@ -1,10 +1,10 @@
-From: jon+lvm@silicide.dk
+From: Petro <petro@auctionwatch.com>
 Subject: Re: [linux-lvm] Max storage size per system
-Message-ID: <20030306162150.GA11451@gw.silicide.dk>
-References: <20030304114851.GA22965@hcsd.de> <3E64B885.1AF49EDA@silicide.dk> <20030304144121.GB23975@hcsd.de> <4857903125.20030305160532@tnonline.net> <20030305194551.GA11043@hcsd.de>
+Message-ID: <20030307013431.GB6942@auctionwatch.com>
+References: <20030305195052.GC11043@hcsd.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20030305194551.GA11043@hcsd.de>
+In-Reply-To: <20030305195052.GC11043@hcsd.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar  6 10:23:02 2003
+Date: Thu Mar  6 19:35:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Mar 05, 2003 at 08:45:51PM +0100, Stephan Austermuehle wrote:
-> On Wed, Mar 05, 2003 at 04:05:32PM +0100, Anders Widman wrote:
-> 
-> > Hm,  sounds  like  lots.  :)  What kind of devices will you be running
-> > with.  Even  with  300GB  drives  you will need 300-400 of them to get
-> > 100TB.
-> 
-> A single HP XP 1024 (which is an OEM product of a HDS Lightning) stores
-> 130 TB with a 7p1 RAID5 configuration and 146 GB disks.
+On Wed, Mar 05, 2003 at 11:50:52AM -0800, Stephan Austermuehle wrote:
+> On Wed, Mar 05, 2003 at 08:54:10AM -0800, Jesse Keating wrote:
+> > Easily achieved w/ such technologies as iscsi and hyperscsi (;
+> Which are nothing but trash.
 
-hmm, that would need 130T/0.146T = 890 disks. And running raid 5...
-personaly i dont like raid5, because if you loose more than one
-disk your data are gone, and with this ammount of disks, i expect
-failure rather often. (it's proberly not one big raid5 array,
-but that just makes it need more disks).
+    Hey man, don't pull any punches, tell us how you *Really* feel. 
 
-
-
-JonB
+-- 
+"On two occasions, I have been asked [by members of Parliament], 'Pray, 
+Mr. Babbage, if you put into the machine wrong figures, will the right 
+answers come out?' I am not able to rightly apprehend the kind of confusion 
+of ideas that could provoke such a question." -- Charles Babbage 
