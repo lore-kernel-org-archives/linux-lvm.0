@@ -1,9 +1,10 @@
-Subject: RE: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm 1.0.7
-Message-Id: <3148427bab931f44bbc9f77bed7a9b67@10.3.11.254>
-In-Reply-To: <20031030112411.A1850@sistina.com>
-MIME-Version: 1.0
-From: "Krisztian Gyoerffy" <krisztian.gyoerffy@selecktra.com>
-Content-Transfer-Encoding: quoted-printable
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Problems with initrd for LVM2 on 2.6.0-test8 and -test9 kernels.. .
+Message-ID: <20031030134909.GB1163@percy.comedia.it>
+References: <253458D17524064C996F67C97116BF88065927@Oscar-5.north.mcld.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <253458D17524064C996F67C97116BF88065927@Oscar-5.north.mcld.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,137 +15,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 30 05:00:02 2003
+Date: Thu Oct 30 07:50:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: "Weber, Geoffrey M." <Geoffrey.Weber@mcleodusa.com>
+Cc: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hello Heinz,
+On Wed, Oct 29, 2003 at 09:26:14AM -0600, Weber, Geoffrey M. wrote:
+>   library).    As   soon  as  I  try  to  use  LILO  or  GRUB  with  the
+>   "root=/dev/vg00/root" or "root=3f00" (device major and minor numbers),
+>   my  machine  hangs  after  "Uncompressing  Linux...  Ok,  booting  the
+>   kernel.".
+could you give us some more details about your setup, including actual
+lines from your configuration.
 
+>   I  have  also tried (unsuccessfully) to use an initrd image I found on
+>   the 'net at [1]http://www.comedia.it/~bluca/cooker/lvm2/
 
-no I haven't, because till now I ever patched my kernels with any of the
-LVM versions I chose to compile the kernel by myself. And it was ok.
-This is the first time that I get a compilation error like this.
+There is no initrd image at that location.
+What you find there is modified Mandrake rpm to support lvm2 in Mandrake
+Linux 9.2/cooker, and has not been tested with anything different than
+that.
 
-Can we fix the problem somehow, that I can compile then kernel with the
-LVM patch 1.0.7?
+>   to  see  what  I  could find out. When trying to use the Busybox "ash"
+>   command  inside  the  modified evms initrd image, however, the machine
+>   doesn't halt and give me a shell at all but keeps booting.
+i saw this problem as well, i don't know if it is caused by some device
+file missing in the initrd image or what.
 
-Because to tell the truth I don't really rely on that rpm from suse,
-since I had big troubles with an apache rpm, and finaly it turned out
-that there was a failure in it, and when I compiled apache from the
-source it was ok.
+L.
 
-
-Thanks a lot
-
-Krisztian
-
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Heinz J . Mauelshagen
-Sent: Donnerstag, 30. Oktober 2003 11:24
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm
-1.0.7
-
-
-
-Krisztian,
-
-running the SuSE LVM rpm with the SuSE kernel should work fine.
-Have you tried that yet ?
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Wed, Oct 29, 2003 at 01:19:26PM +0100, Krisztian Gyoerffy wrote:
-> Hi LVM friends,
-> 
-> 
-> I have problems with the following scenario:
-> 
-> - I use SuSE linux 7.1 (I know, this might be a bit old, but I follow
-> the rule "never touch a running system") with kernel 2.4.16 and lvm
-> 1.0.7
-> 
-> - Since SuSE rolled out the latest kernel for 7.1 and I would like to
-> keep my OS up to date I installed the 2.4.18 kernel source from SuSE
-on
-> my machine
-> 
-> - I tried to patch the kernel with the LVM 1.0.7, so I executed
-exactly
-> the steps written in INSTALL and PATCH/README. Everything was ok
-> 
-> - Then I configured the rest of the kernel and tried to compile. But
-> after a while, when it was compiling the LVM stuff, it stopped
-compiling
-> with the following message:
-> 
-> gcc -D__KERNEL__ -I/usr/src/linux-2.4.18.SuSE/include -Wall
-> -Wstrict-prototypes -Wno-trigraphs -O2 -fno-strict-aliasing
--fno-common
-> -fomit-frame-pointer -pipe -mpreferred-stack-boundary=3D2 -march=3Di686
-> -DKBUILD_BASENAME=3Dlvm  -c -o lvm.o lvm.c
-> gcc -D__KERNEL__ -I/usr/src/linux-2.4.18.SuSE/include -Wall
-> -Wstrict-prototypes -Wno-trigraphs -O2 -fno-strict-aliasing
--fno-common
-> -fomit-frame-pointer -pipe -mpreferred-stack-boundary=3D2 -march=3Di686
-> -DKBUILD_BASENAME=3Dlvm_snap  -c -o lvm-snap.o lvm-snap.c
-> lvm-snap.c: In function `lvm_snapshot_COW':
-> lvm-snap.c:365: structure has no member named `blocks'
-> make[3]: *** [lvm-snap.o] Error 1
-> make[3]: Leaving directory 
-> `/usr/src/linux-2.4.18.SuSE/drivers/md'
-> make[2]: *** [first_rule] Error 2
-> make[2]: Leaving directory 
-> `/usr/src/linux-2.4.18.SuSE/drivers/md'
-> make[1]: *** [_subdir_md] Error 2
-> make[1]: Leaving directory 
-> `/usr/src/linux-2.4.18.SuSE/drivers'
-> make: *** [_dir_drivers] Error 2
-> 
-> Afterwards I looked into the patch file, and into the lvm-snap.c at
-the
-> given position, line 365. There is the reference to the "blocks"
-> variable of the iobuf structure. This iobuf structure is defined in
-the
-> /usr/src/linux/include/linux/iobuf.h header file. But this header file
-> is completly different in the source of the 2.4.18 kernel than in the
-> source of the 2.4.16 kernel, where the patch and compiling were ok.
-> 
-> Do you have any idea what can I do to get it compiled?
-> 
-> I attach the lvm patch file generated by make and the iobuf.h file for
-> both versions 2.4.16 and 2.4.18.
-> 
-> 
-> Hope to hear from you soon, and thanks in advance
-> 
-> 
-> Krisztian
-> 
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-=3D-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-=3D-=3D-=3D-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
