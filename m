@@ -1,8 +1,8 @@
-Message-ID: <85063BBE668FD411944400D0B744267A888558@AUSMAIL>
-From: "Gonyou, Austin" <austin@coremetrics.com>
-Subject: RE: [linux-lvm] Will LVM stay GPL?
-Date: Sat, 8 Sep 2001 14:22:07 -0500 
+Message-ID: <20010908192308.773.qmail@web13903.mail.yahoo.com>
+Date: Sat, 8 Sep 2001 12:23:08 -0700 (PDT)
+From: William Vadnais <giordanobruno@yahoo.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] lvcreate is segfaulting
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,56 +16,40 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-All, 
-  LVM is currently part of Linus tree. So, while you are correct on the
-branching bit, it may in-fact not be necessary. GFS is NOT already in Linus
-tree, so that could lend some foreshadowing. I agree with all of the points
-made below though.
+Hello--
 
--- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com 
+I'm getting segfaults when attempting to build a
+logical volume using lvcreate...
 
-> -----Original Message-----
-> From: Ralph Jennings [mailto:ralph@oro.net]
-> Sent: Thursday, September 06, 2001 8:10 PM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Will LVM stay GPL?
-> 
-> 
-> On Thu, Sep 06, 2001 at 01:55:02PM +0100, Joe Thornber wrote:
-> > Mike Declerck has already addressed this issue on the mailing list,
-> > but I'll reiterate.  The LVM kernel driver is GPL, the LVM userland
-> > tools are GPL.  We have no intention to change this, and even if we
-> > wanted to we couldn't since lots of people outside Sistina have
-> > contributed.
-> > 
-> > If it makes people feel happier I will accept patches that add their
-> > names to the copyright notices (assuming they've made significant
-> > contributions).
-> 
-> Besides, if they *do* decide to switch the licensing, all we have
-> to do is go back one revision and branch a new LVM project from the
-> GPL'd code.  So lets wait till that happens, then branch off an
-> OpenLVM project from the latest GPL released LVM code.  But untill
-> that happens who cares, they can't pull the carpet out from under
-> our feet untill they change the license, and untill they decide to
-> do that (if they decide to), all work is GPL'd, and they're doing a
-> great job of it.
-> 
-> IANAL of course, but I've been told that you can't make a license
-> change from GPL to anything else retroactive?!?!?
-> 
->   -Ralph
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+[root@mp3gimp /root]# lvcreate -v -n now -L 8G test
+lvcreate -- checking volume group name "test"
+lvcreate -- checking volume group existence
+lvcreate -- checking volume group activity
+lvcreate -- checking logical volume path
+/dev/test/now" 
+    [other verbosity ignored]
+lvcreate -- setting up logical volume
+lvcreate -- setting read ahead sectors
+lvcreate -- creating logical volume VGDA in kernel
+Segmentation fault (core dumped)
+
+This is a Redhat 7.1 box with a custom kernel. I've
+tried using both 2.4.9 and 2.4.10pre5 to no avail. LVM
+module is compiled into the kernel directly and I've
+applied the patches in the /PATCHES dir.  I've also
+tried the latest tarball release of rc2 as well as a
+CVS install as late as today (September 8th, 2001).
+
+If anybody has any insight on this, i'd appreciate it.
+Thanks.
+
+-Willie
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
+http://im.yahoo.com
