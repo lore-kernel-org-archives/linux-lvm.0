@@ -1,49 +1,32 @@
-Message-ID: <34BE27FD7F4BD111B9C600805F15B7DC016E7DA4@info-akh.linz.at>
-From: Michelic Adalbert <adalbert.michelic@akh.linz.at>
-Subject: Re: [linux-lvm] Cannot access VG due to "hd error"
-Date: Thu, 3 Aug 2000 09:38:45 +0200 
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200008030742.e737gX632588@webber.adilger.net>
+Subject: Re: [linux-lvm] lvrename oddities
+In-Reply-To: <OF47714B36.BB532552-ONC125692F.00703DF0@resnova.de>
+ "from Peter.Wuestefeld@resnova.de at Aug 3, 2000 08:47:40 am"
+Date: Thu, 3 Aug 2000 01:42:33 -0600 (MDT)
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: 'Justin Hamilton' <JHamilton@Earthling.Net>, "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+To: Peter.Wuestefeld@resnova.de
+Cc: Linux LVM mailing list <linux-lvm@msede.com>
 
-Hello Justin,
+Peter Wuestefeld writes:
+> When booting, vgscan wipes out /etc/lvmtab.d and its contents as well as
+> /etc/lvmtab.
 
-Justin Hamilton wrote:
-> I believe this is a Kernel issue.  Take a look at the following,
-> I think it fits you needs:
-> 
-> ATA/IDE/MFM/RLL support
-> ->IDE, ATA and ATAPI Block devices
-> --->Use multi-mode by default
-> 
-> CONFIG_IDEDISK_MULTI_MODE:
-> 
-> If you get this error, try to say Y here:
-> hda: set_multmode: status=0x51 { DriveReady SeekComplete Error }
-> hda: set_multmode: error=0x04 { DriveStatusError }
-> If in doubt, say N.
+Not that it is a fix for your problem, but I wonder about the reason for
+using vgscan at boot time...  I know that this is what the LVM documentation
+says to do, but _I_ would much rather have only "vgchange -a y" at boot time.
+If LVM work needs to be done (PV/VG added or removed) the sysadmin should
+know about it and be required to do something.  Nothing like having all of
+your VGs dissapear after a reboot because a cable was disconnected...  At
+most, it should do like AIX and simply mark the PV/VG as inactive or similar.
 
-I have tried the CONFIG_IDEDISK_MULTI_MODE kernel option - but
-unfortunately it doesn't help.
-
-I tried to make a ReiserFS on the "defect" disk and copying a lot
-of files from and to the disk (on the same machine) - everything
-works without a single problem. But if I restore the LVM-PV from
-my backup disk the problems start again.
-
-Could it be, that the LVM on-disk structures are corrupted and
-vgscan therefore accesses the disk in a wrong way which then
-causes this kernel messages?
-
-
-BTW: I have some logical volumes on the first disk of the volume
-group - is it possible to use only these volumes?
-Currently my /usr-volume is in the defect VG (on the first disk) -
-and therefore I can't do anything with my machine ...
-
-
-Rgds, Adalbert
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
