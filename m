@@ -1,10 +1,7 @@
-From: Kai Weber <lists@glorybox.de>
-Subject: Re: [linux-lvm] Get rid of files of a non existing volume group
-Message-ID: <20020706130052.GA915@glorybox.de>
-References: <20020705205324.GA1287@glorybox.de> <20020706082758.GC13154@tykepenguin.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020706082758.GC13154@tykepenguin.com>
+From: Rik van Riel <riel@conectiva.com.br>
+Message-ID: <Pine.LNX.4.44L.0207061339150.8346-100000@imladris.surriel.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm & 2.5
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +12,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jul  6 08:01:01 2002
+Date: Sat Jul  6 11:42:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-+ Patrick Caulfield <caulfield@sistina.com>:
+Hi,
 
-> > Can I 'rm -rf /dev/datavg' the files? Or should I do a vgextend?
-> 
-> You can safely delete the directory. When you re-created the VG and
-> LVs then nodes will be re-created.
+are there any plans to fix lvm support for 2.5 or should I
+drop lvm from my test boxes until 2.6 comes out ?
 
-It worked. I ever thought the dev-files for LVM are created dynamicly.
-So I feared removing the files would not be succesfull. And I am not a
-friend of experiments... *g*
+Rik
+-- 
+Bravely reimplemented by the knights who say "NIH".
 
-Thank you
-Kai
+http://www.surriel.com/		http://distro.conectiva.com/
