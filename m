@@ -1,12 +1,9 @@
-Return-Path: <raheesom@navpoint.com>
-Subject: Re: [linux-lvm] Converting my Root file system to LVM [last
-	question]
-From: Rupert Heesom <raheesom@navpoint.com>
-In-Reply-To: <200105231649.f4NGnDCR028588@webber.adilger.int>
-References: <200105231649.f4NGnDCR028588@webber.adilger.int>
-Date: 23 May 2001 11:02:39 -0400
-Message-Id: <990630164.1175.0.camel@localhost>
-Mime-Version: 1.0
+Return-Path: <slpratt@us.ibm.com>
+Subject: Re: [linux-lvm] LVM Snapshots & journal recovery
+Message-ID: <OF2E735924.F8A0C9C9-ON85256A55.006660F2@raleigh.ibm.com>
+From: "Steve Pratt" <slpratt@us.ibm.com>
+Date: Wed, 23 May 2001 14:10:37 -0500
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,58 +17,113 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "Peter J. Braam" <braam@mountainviewdata.com>
+Cc: linux-lvm@sistina.com, Joe Thornber <thornber@btconnect.com>, adilger@turbolinux.com, linux-fsdevel@vger.kernel.org, evms-devel@lists.sourceforge.net
 
-On 23 May 2001 10:49:13 -0600, Andreas Dilger wrote:
-> Rupert Heesom writes:
-> 
-> Yes, you can do that...  However, once you have LVM you should start to
-> think differently about "partitions" and such.  You can create a lot of
-> small partitions for different needs.
-> 
-> Why is this useful?  Because it makes moving stuff around, updating the
-> OS, etc easier.  You can have multiple OS installs, but keep your /home
-> and /mp3 data available to both.  You can put /mp3 on a new disk and it
-> will spin down when you are not listening to them.  You can put /var/log
-> and /var/spool/mail on different LVs so that lots of logs or lots of
-> email don't make your system unusable.
 
-Tnx for the advise here.  I'll try to start thinking in those terms.
+On Wed, 23 May 2001, Peter Braam wrote:
 
-I've now got one more question which I'll post in this msg -
+>On Wed, 23 May 2001, Steven Pratt wrote:
+>> Peter, I fail to see how your proposed method of remapping writes to the
+>> original to the snapshot volume avoids the synchronous write penalties.
 
-I've discovered that my /etc/rc.d/init.d/halt script is set up
-incorrectly for LVM.  When I previously installed LVM, I followed
-instructions, and put a "vgchange -an" into the halt script just after
-/proc is umounted.
+>Hmm, I think you are raising many interesting issues.
 
-What I'm finding now is that when I'm shutting the PC down, vgchange is
-complaining that it can't close the VG down because there's an active
-partition (something like that).  I've had a look at the halt script,
-and I can't figure out exactly how umounting the LV & deactivating the
-VG would work.
+>> For example in your scenario, the filesystem journal itself will have to
+be
+>> written to the snapshot volume, so in order to ensure journal
+consistency
+>> you will need to write the remapping meta data synchronously with the
+>> remapped journal chunk or you would not know that the journal had been
+>> remapped.  Both writes must done synchronously or you have possible
+>> corruption.
+>>
 
-I put a tentative line right above the "/sbin/vgchange -an" saying
-"umount /dev/vg/root".   However, if I'm unmounting root BEFORE
-deactivating the VG, then the system won't find the /sbin/vgchange util
-will it?  
+>The journal itself really shouldn't be on a snapshotted device - that
+>makes no sense.
 
-I do have  /boot/initrd-lvm-2.4.3.gz which is used at boot time.  This
-ramdisk does have /sbin/vgchange in it (which you probably know).  If
-root is unmounted when /sbin/vgchange is called, will the system use the
-ramdisk?   If so, how does it know to use it?   (I'm kinda new to
-figuring out how ramdisks work, I just follow instructions and they
-work!)
+Well that depends on where the filesystem keeps the journal.  If the
+journal is stored on the same volume as the filesystem, then if you are
+snapshotting from a Volume Manager you have no choice but to remap the
+journal to the snapshot device.  If the journal is stored on another volume
+than I agree.  However my point still apply to regular data.
 
-Once I'm satisfied that my LVM setup is not good, then I'm going to try
-taking the plunge & extending the LV to my other disk.
+>The write operations are now idempotent: there is in fact no need
+>whatsoever to write anything synchronous since the journal replay will
+>always get it right.
 
-BTW, since my other disk still has the old file system on it, is this
-filesystem wiped when I change partition type to "8e", or when I create
-a PV on it, or not at all?  I can't think that anything but the e2fsadm
-extending the LV file system onto the other disk will wipe the previous
-contents out.
+Hmmmm, you seem to be implying that the snapshot metadata is covered by the
+journal.  While this may be possible (and desirable) if the snapshotting is
+done in the filesystem, I don't see how this is possible when the remapping
+happens in the Volume Manager below the filesystem layer.
 
--- 
-regs
-rupert
+>For writing I believe what I have proposed is vastly superior:
+>no synchronous writes _and_ no copying of blocks.
+
+As stated above, I don't see how you can avoid the synchronous write, but
+you do save the copy.
+
+>> In addition to having to do the same number of synchronous writes, you
+have
+>> the additional penalty that you mentioned of the sync time when deleting
+>> the snapshot.  This resyncing also come with a whole new set of
+consistency
+>> issues (whole new code path)
+
+>It's not an additional penalty at all: this code again is idempotent too.
+>If it fails you can run it again - I think it has very simple logic but of
+>course I may be overlooking something.  Before you start the deletion
+>process the snapshot becomes unusable.  After it has completed the extra
+>partition becomes superfluous.
+
+>Also such a process can run in the background and would copy no more
+>blocks than doing the writes the other way around.
+
+Agreed, you just pay the price all at once instead of spread out.
+
+>> Also, you have moved the remapping lookup processing time penalty for
+reads
+>> from the snapshot to the original.  I think it is much better to
+optimize
+>> the access to the original as opposed to the snapshot for most cases.
+
+>This is a serious point: the reads need an indirection.
+
+Yes.
+
+>We did benchmarking of this in SnapFS and the redirection blocks are not
+>many and are typically cached.  It didn't seem to cost much at all.
+
+I think the same reasoning would apply to the LVM/EVMS method of
+snapshotting. We are just starting to do some benchmarking on our EVMS
+snapshotting code.  If you have any good benchmark tools or setups, we
+would love to run them on our system to see how they compare.
+
+>What do you think of this?
+
+I am still leaning toward the copy on write method for a number of reasons.
+
+Paranoia is one of them.  I don't like the idea of having my production,
+critical volume not fully contained in 1 place.  In copy on write
+snapshotting if the snapshot dies, all you lose is the old static copy that
+presumably you were using to back up an active volume.  In your method, if
+I lose the snapshot, I lose everything, ie no valid current copy of data
+exists.
+
+Disk full is another big issue, in copy on write again all that happens if
+the snapshot fills up is that the snapshot becomes invalid.  In you method
+what happens?  I think you lose the ability to write new data to the
+original volume.  Ouch!  Does this mean that my database that was being
+accessed by hundreds of people is down?  How do I get it back? resync from
+the snapshot, but his may take hours depending on how much data was
+snapshotted (enough to fill the snapshot).
+
+I can see possible advantages to your method if done in the filesystem as I
+believe SnapFS does, but from a Volume Manager standpoint I see to many
+negatives.
+
+Steve
+
+EVMS Development - http://www.sf.net/projects/evms
+Linux Technology Center - IBM Corporation
+(512) 838-9763  EMAIL: SLPratt@US.IBM.COM
