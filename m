@@ -1,13 +1,12 @@
-Date: Wed, 17 Mar 2004 15:31:06 +0100
+Date: Wed, 17 Mar 2004 15:34:13 +0100
 From: Heinz Mauelshagen <heinzm@redhat.com>
-Subject: Re: [linux-lvm] LVM Problems when moving data off a PV
-Message-ID: <20040317143106.GA14348@redhat.com>
-References: <1079271129.2414.7.camel@rockley.barbados>
-	<20040315123445.GA17078@redhat.com>
-	<1079478248.28877.6.camel@rockley.barbados>
+Subject: Re: [linux-lvm] Hard disk failure, restore problem
+Message-ID: <20040317143413.GB14348@redhat.com>
+References: <40520E04.5090505@howest.be> <20040315124721.GB17078@redhat.com>
+	<40561772.5070302@howest.be>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1079478248.28877.6.camel@rockley.barbados>
+In-Reply-To: <40561772.5070302@howest.be>
 Reply-To: heinzm@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,64 +20,101 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: nick@gushlow.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: Thomas Berton <thomas.berton@howest.be>
+Cc: hjm@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Mar 16, 2004 at 11:04:09PM +0000, Nick Gushlow wrote:
-> On Mon, 2004-03-15 at 12:34, Heinz Mauelshagen wrote:
-> 
-> > 
-> > You need to select the last valid metadata backup of vg2 from /etc/lvmconf
-> > (check it with vgcfgrestore -ll -f /etc/lvmconf/vg2.conf[.#.old]; see
-> > 'man vgcfgrestore for metadata archive file names) and restore it.
-> > 
-> > Say vg.conf.1.old is the valid one:
-> > 
-> > for dev in AllPVsOfVG2 # list all PVs reported by vgcfgrestore -ll above
-> > do
-> > 	pvcreate -ff $dev
-> > 	vgcfgrestore -f /etc/lvmconf/vg.conf.1.old $dev
-> > done
-> > vgscan
-> > vgchange -ay vg2
-> > 
-> 
-> 
-> That did the trick thanks. :-)
-> 
-> Of course in a moment of not concentrating I messed things up again.  I
-> still had pvremove on the disk from when I previously installed the lvm2
-> tools, and although I wanted to do a vgreduce I did a pvremove.  Even
-> when it kicked up an error I just followed what it said and typed
-> pvremove -ff. oops :-/
-> 
-> Now I get a a similar error as before with vgscan, and other tools give
-> a 'VGDA in kernel and lvmtab are NTO consistent: please run vgscan'
-> error.
-> 
-> I tried re-running what you suggested above but vgcfgrestore gives a
-> 'can't restore part of active volume group "vg2"' error.
-> 
-> Is there anyway to recover from my stupidity (other than a lobotomy!)?
 
-:)
+Thomas,
 
-Deactivate the VG and rerun pvcreate/vgcfgrestore on the pvremoved disk,
-vgscan and "vgchange -ay vg2" afterwards.
+don't run vgscan after the procedure below.
 
-> 
-> 
-> 
+Remember this is a workaround *just* to get you to the point to be able
+to backup your data and recreate your VG.
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
+Run vgmknodes to create your device nodes in /dev/bigspace/
+after step "vgchange -ay" below.
 
 Regards,
 Heinz    -- The LVM Guy --
+
+
+On Mon, Mar 15, 2004 at 09:52:02PM +0100, Thomas Berton wrote:
+> Hello,
+> 
+> I've done
+> 
+> > o identify your actual metadata backup (say, bigspace.conf)
+> >
+> > o mkdir /etc/lvmtab.d
+> >
+> > o cp bigspace.conf /etc/lvmtab.d/bigspace
+> >
+> > o echo -ne "bigspace\0" > /etc/lvmtab
+> >
+> > o vgchange -ay
+> 
+> 
+> after being sure to restore the metadata I have
+> 
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdg1" of VG "bigspace" [74.47 GB / 768 MB free]
+> pvscan -- inactive PV "/dev/hde1" of VG "bigspace" [149 GB / 0 free]
+> pvscan -- inactive PV "/dev/hdf1" of VG "bigspace" [149 GB / 139.16 GB free]
+> pvscan -- inactive PV "/dev/hdc1" of VG "bigspace" [111.75 GB / 0 free]
+> pvscan -- inactive PV "/dev/hdd1" of VG "bigspace" [74.47 GB / 0 free]
+> pvscan -- inactive PV "/dev/hda1" of VG "bigspace" [74.47 GB / 8.22 GB free]
+> pvscan -- inactive PV "/dev/hdb1" of VG "bigspace" [74.47 GB / 0 free]
+> pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
+> 
+> 
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- only found 17904 of 17876 LEs for LV /dev/bigspace/bigspace1 (0)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+> data of volume group "bigspace" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> group
+> 
+> => after the vgscan the echo -ne "bigspace\0" > /etc/lvmtab is gone gone
+> again....
+> 
+> [root@ment root]# lvscan
+> lvscan -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please
+> run vgscan
+> 
+> after doing the vgscan, I get
+> 
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG
+> "bigspace" (run vgscan)
+> pvscan -- inactive PV "/dev/hde1"  is associated to unknown VG
+> "bigspace" (run vgscan)
+> pvscan -- inactive PV "/dev/hdf1"  is associated to unknown VG
+> "bigspace" (run vgscan)
+> pvscan -- inactive PV "/dev/hdc1"  is associated to unknown VG
+> "bigspace" (run vgscan)
+> pvscan -- inactive PV "/dev/hdd1"  is associated to unknown VG
+> "bigspace" (run vgscan)
+> pvscan -- inactive PV "/dev/hda1"  is associated to unknown VG
+> "bigspace" (run vgscan)
+> pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG
+> "bigspace" (run vgscan)
+> pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
+> 
+> again.
+> 
+> 
+> the /dev/bigspace/bigspace1 doesn't exists, so I can't mount.
+> 
+> should I recreate bigspace and force an import ?
+> 
+> I 've alse rebooted once after the vgchange -ay, but he also didn't find
+> the bigspace.
+> 
+> thanx again for your help!!
+> 
+> kind regards,
+> Thomas.
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
