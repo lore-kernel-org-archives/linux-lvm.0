@@ -1,9 +1,10 @@
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Can't make an on-line snapshot with LVM !
+Message-ID: <20030527072034.GA1168@tykepenguin.com>
+References: <OF3FA18EC2.6DB9EC24-ONC1256D2F.00199A52@phoenixcontact.com> <1053696372.1216.92.camel@prvpcompq249.css.twable.com> <001401c3214b$89789230$6c7745cb@codevel>
+Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-From: "Ellis Whitehead" <lists@ellisw.net>
-Message-Id: <20030526032356.20922.h022.c007.wm@mail.ellisw.net.criticalpath.net>
-Subject: [linux-lvm] vgscan -f created duplicate block devices
+In-Reply-To: <001401c3214b$89789230$6c7745cb@codevel>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,26 +15,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 26 05:23:02 2003
+Date: Tue May 27 02:20:03 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Heinz,
+On Sat, May 24, 2003 at 12:51:16AM +0800, armani wrote:
+> Dear Sir
+> 
+> I don't know that if this is a FAQ.
+> But when I create a snapshot for my LV2
+> 
 
-> have you removed _all_ /dev/-Entries for LVs and retried 
-> "vgscan -f" without success so far ?
+It is a FAQ
 
-I'm using devfs, and removal of the /dev/{VG}/{LV} entries isn't permitted.  The
-VG and LVs show up under /dev if the VG is active, and otherwise they aren't
-present.  Once the VG is active, the LV entries cannot be modified by the usual
-command line tools, as far as I've seen...
+You need the VFS lock patch
+-- 
 
-Since vgscan can only works on active volumes, and since active volumes are
-already immutably set in /dev, I'm afraid this solution won't work.
-
-Is there any way to manually set the block device?  Or is there any way to get
-vgscan to start anew without the block device numbers in /dev?
-
-Thanks!
-Ellis
+patrick
