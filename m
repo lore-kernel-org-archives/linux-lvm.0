@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105152043.f4FKhRoR021412@webber.adilger.int>
-Subject: Re: [linux-lvm] Lost filesystems on LVs (forgot the attachment)
-In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF683CBE@mailsrv.linkvest.com>
- "from Jean-Eric Cuendet at May 15, 2001 06:36:45 pm"
-Date: Tue, 15 May 2001 14:43:26 -0600 (MDT)
+Message-Id: <200105152124.f4FLOmis021456@webber.adilger.int>
+Subject: Re: [linux-lvm] Software RAID and LVM hangs
+In-Reply-To: <Pine.LNX.4.31.0105151507530.2334-100000@dgently.hh.suse.de>
+ "from Jens Bruckmann at May 15, 2001 03:20:51 pm"
+Date: Tue, 15 May 2001 15:24:46 -0600 (MDT)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,26 +21,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-You write:
-> I have 1.19 version. Here is the output of the fsck:
+Jens Bruckmann writes:
+> I have problems using software-RAID and LVM. We have connected two HP
+> XP256 via two fiber channel controllers and want to mirror from one
+> storage-box to the other. So I set up a RAID1-device /dev/md0 which
+> mirrors from one LUN of the 1st box to another LUN in the 2nd box. After
+> that, I set up a VG on that device with one LV.
 > 
-> e2fsck /dev/NORAID_HDX/backups
-> e2fsck 1.19ea, 30-Aug-2000 for EXT2 FS 0.5b, 95/08/09
-> Group descriptors look bad... trying backup blocks...
-> e2fsck: Bad magic number in super-block while trying to open
-> /dev/NORAID_HDX/backups
->  
-> The superblock could not be read or does not describe a correct ext2
-> filesystem.  If the device is valid and it really contains an ext2
-> filesystem (and not swap or ufs or something else), then the superblock
-> is corrupt, and you might try running e2fsck with an alternate superblock:
->     e2fsck -b 8193 <device>
->  
-> [root@fatboy filesrv]#
+> So far, all works fine.
 > 
-> e2fsck -b 8193 doesn't help...
+> Then we tested, what happens, if one link to one of the two boxes fails
+> and we saw, that the software raid does not continue working if one link
+> is down. As I understand, the RAID1 should go on working on the second
+> copy and do a resync after the failed connection returns (that's what I
+> know from HP-UX with MirrorDisk/UX).
+> 
+> In /proc/mdstat you cannot see any hint, that one link is broken.
+> 
+> Do you have any solutions for this behaviour. Otherwise it would not make
+> any sense to use the software-raid in a high-availability environment.
 
-Try e2fsck -b 32768 -B 4096
+This should probably be sent to the RAID list, and not the LVM list.  It
+does not really have anything to do with LVM.
+
+Cheers, Andreas
 -- 
 Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
                  \  would they cancel out, leaving him still hungry?"
