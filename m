@@ -1,8 +1,9 @@
-From: "Arie Bant@mail.com" <abant@mail.com>
-Message-ID: <002701c25d0a$c10ac5c0$28bf18ac@abant.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Can't start LVM root fs
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Error extending an lv
+Message-ID: <20020916125745.A17122@sistina.com>
+References: <20020823224424.GB6812@kluge.net> <Pine.LNX.4.31.0209142054090.4852-100000@kern.srcf.societies.cam.ac.uk>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.31.0209142054090.4852-100000@kern.srcf.societies.cam.ac.uk>; from mjj29@cam.ac.uk on Sat, Sep 14, 2002 at 08:59:07PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,81 +14,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Sep 15 17:54:02 2002
+Date: Mon Sep 16 05:58:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux-LVM@Sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hello Heinz,
+On Sat, Sep 14, 2002 at 08:59:07PM +0100, Matthew Johnson wrote:
+> Hi, I've just had to resize one of the lv's on my lvm system (debian
+> woody), so I ran lvextend -L +5G /dev/lvm1/music, then ran
+> resize_reiserfs /dev/lvm1/music - and continued copying stuff on. This
+> was done with the vg active, but I had to unmount the partition to
+> resize the reiserfs (my mount is screwed up - I'm going to reinstall the
+> system anyway in a couple of weeks, I'm just booting it in single user
+> mode atm to put some data somewhere temporarily).
+> 
+> Anyway, when I next booted and ran vgchange -ay, I get the message
+> "physical volume /dev/hde8 inconsistant", and the partition won't mount.
+> 
+> Any ideas?
 
-Thanks for LVM.  I have been using it on HP-UX and AIX and provided one can
-control the placing of the LV's over the disk so as to avoid excessive head
-movement it saves a few problems here and there.
+Matthew,
 
-Hint: On AIX and HP-UX one can, but does not have to, control in which area
-of the disk an LV is placed, or even which PV's will be part of it.  This
-allows leaving spaces between LV's which later can be used to grow them.
-The advantage over just making the LV bigger in the first place is that the
-intermediate space can be used for growing either LV at a time when one does
-not know which LV is going to need more space.
+so /dev/hde8 belonged to your VG "lvm1", was empty before (no extents allocated)
+and extending /dev/lvm1/music changed that?
+What does "vgck lvm1" tell you?
 
-But now my problem:
+Before you change anything, make sure that you have backups of all files
+in /etc/lvmconf/ !!!
 
-I have installed LVM 1.0.1 on my Mandrake 8.0 Linux box (PIII 550Mhz, 512
-MB) from the Mandrake 8.2 DVDROM.  No problems.
-After creating boot partition, PV, VG and root/usr/var LV's on an extra disk
-(/dev/sdb) added to the system,
-I have copied the content of the boot directory to the bootpart on the new
-disk,
-root/usr/var to the new LV's,
-used lvmcreate _initrd to create a new boot image,
-copied that to the new bootpart,
-modified lilo.conf as suggested in the man page for lvmcreate _initrd and
-ran lilo and
-rebooted from the new FS.
-First time vgscan complained that LVM was not installed and suggested
-checking the module stuff.
+> 
+> (that pv might only now have data on it, but it created fine with the
+> pvcreate command earlier)
+> 
+> Matt.
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Indeed I could not find where in the new boot image the lvm module got
-loaded.  I then modified modules.conf to load the LVM module on the
-appropriate devices ( 54 & 109 ), added the module in the appropriate place
-in the "lib"directory tree and tried again.
-The system now boots a little further, vgscan has created /etc/lvmtab and
-/etc/lvmtab.d, until vgchange says it can not find any volume groups.
+-- 
 
-When I reboot from the existing system it is fine and all the logical
-volumes are accessible.
+Regards,
+Heinz    -- The LVM Guy --
 
-Any suggestions how to proceed?
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Note: There is a third disk in the system (/dev/sdc/, containing the swap
-file system.  This used to be /dev/sdb before I added  the new disk.  I have
-changed all references to the "old" /dev/sdb into /dev/sdc in /etc/fstab of
-the current root FS.
-I have also taken care that the /etc/fstab in the new root LV  resembles the
-current situation seen from the point of view when that becomes the current
-root FS and that lilo.conf in the new boot/root FS is correct for the
-situation when in all works and the new disk becomes /dev/sda (I am taking
-the old drive out)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Best Regards,
-
-Arie Bant.
-*******************************
-Maes,  Llandrillo
-Corwen,  LL21 0TE
-United Kingdom
-tel.: +44 (0)1490 440 487/370
-e-mail: abant@mail.com
-
-
-
-
-
-*******************************
-Maes,  Llandrillo
-Corwen,  LL21 0TE
-United Kingdom
-tel.: +44 (0)1490 440 487/370
-fax.: +44 (0)870 284 1575 (via e-mail)
-e-mail: abant@mail.com
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
