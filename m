@@ -1,12 +1,11 @@
-Return-Path: <blutgens@sistina.com>
-Date: Wed, 23 May 2001 09:39:16 -0500
-From: Ben Lutgens <blutgens@sistina.com>
-Message-ID: <20010523093916.A2585@minime.sistina.com>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 23 May 2001 15:02:49 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Returned mail: Service unavailable
+Message-ID: <20010523150249.A24867@sistina.com>
+References: <200105231151.NAA00019@aseara.com> <20010523141109.A967@pclab.ifg.uni-kiel.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Content-Disposition: inline
-Subject: [linux-lvm] test
+In-Reply-To: <20010523141109.A967@pclab.ifg.uni-kiel.de>; from torsten@pclab.ifg.uni-kiel.de on Wed, May 23, 2001 at 02:11:09PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,33 +17,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 23, 2001 at 02:11:09PM +0200, Torsten Landschoff wrote:
+> On Wed, May 23, 2001 at 01:51:18PM +0200, Mail Delivery Subsystem wrote:
+> > The original message was received at Wed, 23 May 2001 13:50:47 +0200
+> > from bin@localhost
+> > 
+> >    ----- The following addresses had permanent fatal errors -----
+> > jldomingo@softhome.net
+> > 
+> >    ----- Transcript of session follows -----
+> > ... while talking to mx0a.softhome.net.:
+> > >>> MAIL From:<linux-lvm@sistina.com>
+> > <<< 554 does not resolve - check your DNS (#4.3.0)
+> > 554 jldomingo@softhome.net... Service unavailable
+> 
+> I can't believe it. Softhome.net should really check their own name 
+> server since sistina.com resolves here just fine. And now - could
+> somebody be so kind and take this subscriber off the list?
 
-Added some anti spam stuff. Making sure the posts still make it.
---=20
-Ben Lutgens	=09
-Sistina Software Inc.=09
-MIS Geek
-http://www.sistina.com/	<--- great software=20
-http://www.gentoo.org/  <--- great distro
-Kernel panic: I have no root and I want to scream <--- perfect error message
+I already pointed our admins to this they'll fix it soon.
 
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Sorry for the inconvenience :-(
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Regards,
+Heinz    -- The LVM Guy --
 
-iD8DBQE7C8uULxkxGgLdGQgRAiioAKDODVb/2xfNcFvvWyAM4IErYvkr9gCgihEl
-+Pbl9zgLztX4BNeljSuKhgI=
-=Dm2a
------END PGP SIGNATURE-----
+> 
+> Thanks
+> 
+> 	Torsten
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
---zhXaljGHf11kAtnf--
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
