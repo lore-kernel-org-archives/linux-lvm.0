@@ -1,11 +1,8 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Again (still?): File size limit exceeded
-Message-Id: <20020116104338.C775@lynx.adilger.int>
-References: <Pine.LNX.4.21.0201161424150.1030-100000@yaq.axel.ma>
+From: "carlos xavier" <cbastos@connection.com.br>
+Subject: Re: [linux-lvm] lvm 1.0.1-rc4 and vgcreate error
+Message-Id: <3c45bd7c.4041.0@connection.com.br>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0201161424150.1030-100000@yaq.axel.ma>;
-    from hinrichs@bitscape.de on Wed, Jan 16, 2002 at 02:36:32PM +0100
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,49 +13,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 16 11:45:02 2002
+Date: Wed Jan 16 11:57:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Axel Hinrichs <hinrichs@bitscape.de>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; 
+To: linux-lvm@sistina.com
 
-On Jan 16, 2002  14:36 +0100, Axel Hinrichs wrote:
-> I'm using Kernel 2.4.17, LVM 1.0.1 and everything was fine. The biggest
-> used LV is 1.5GB and I used to have an 8GB standby LV (I was able to
-> create and format without problems). Now I just deleted and recreated this
-> 8GB LV and when I now try to format - reiserfs or ext2 - it I get the
-> error "File size limit exceeded". I read the thread about this last month
-> and checked my ulimits (even if they said this issue is fixed since
-> 2.4.17-pre-something):
-> 
-> # ulimit -H -a
-> core file size (blocks)     unlimited
-> data seg size (kbytes)      unlimited
-> file size (blocks)          unlimited
-> max locked memory (kbytes)  unlimited
-> max memory size (kbytes)    unlimited
-> open files                  1024
-> pipe size (512 bytes)       8
-> stack size (kbytes)         unlimited
-> cpu time (seconds)          unlimited
-> max user processes          unlimited
-> virtual memory (kbytes)     unlimited
-> 
-> Further tests leaded to the following: I'm able to format an 2GB
-> LV, but 2GB+1PE gives the above error.
-> 
-> Does anyone know why and how to correct?
+Heins,
 
-Kernel + libc bug.  You need to log in directly as root (no "su",
-no "sudo") and you must not have any ulimits set.  Even if you try
-to set your ulimit to "unlimited" (and even if it shows "unlimited")
-it is really 2GB.
+I'm sorry, I made a mistake when I was posting the message, what I did
+was pvcreate /dev/sda1 and /dev/sdb1.
+Actually, I even pvcreated /dev/hda10 and /dev/hda11 and tryed do run
+vgcreate lvmdisk2 /dev/hda10 /dev/hda11 but the result was the same.
 
-You can also upgrade to 2.4.18-pre2+ or glibc-2.2 to fix this.
+Regards,
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+Carlos
+
+
+     > Carlos,
+
+     > you say you pvcreated /dev/sda[12] successfully, but run
+     > "vgcreate lvmdisk /dev/sda1 /dev/sdb1" which makes vgcreate complain
+like
+     > you reported below unless /dev/sdb1 is a valid PV too.
+
+     > On Tue, Jan 15, 2002 at 10:08:37PM -0200, carlos xavier wrote:
+     >> Hi there,
+     >> 
+     >> I'm trying to get LVM working on Linux but is being very frustrating
+to me.
+     >> 
+     >> I'm running kernel version 2.4.14 and the disks where I'm tryng to do
+LVM are
+     >> 
+     >> QUANTUM Model: ATLAS10K2-TY367 (scsi)
+     >> I've already tried these versions of LVM: lvm_0.6, lvm_1.0.1 and
+     >> lvm_1.0.1-rc4. All of them give some trouble, but the main problem is
+that I
+     >> 
+     >> can't create the volume group.
+     >> I followed the howto and partitioned the disks and changed the type
+to 8e, I
+     >> 
+     >> was able to run pvcreate on the two disks /dev/sda1 and /dev/sda2, but
+when
+     >> I
+     >> tried to create the volume group I'm getting the following error
+     >> 
+     >> # vgcreate lvmdisk /dev/sda1 /dev/sdb1
+     >> vgcreate -- ERROR "pv_read(): PV identifier invalid" reading physical
+
+     >>volumes
+<pre>
+################################
+Connection Web Mail
+http://www.connection.com.br
+Visite http://www.achando.com.br
+################################
+</pre>
