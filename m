@@ -1,8 +1,9 @@
-Message-ID: <20010908074256.72205.qmail@web13008.mail.yahoo.com>
-Date: Sat, 8 Sep 2001 00:42:56 -0700 (PDT)
-From: "Taher H. Haveliwala" <taherh24@yahoo.com>
+Message-ID: <3B9A02B3.1090006@st-peter.stw.uni-erlangen.de>
+Date: Sat, 08 Sep 2001 13:36:19 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Subject: [linux-lvm] installing lvm 1.0 on stock RedHat 7.1
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] PBs with LVM over linear software RAID ( and XFS ? ext2 reiserfs?)-2.4.7-2.4.4-2.4.5
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,66 +15,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I installed lvm on a stock RedHat 7.1 installation
-without rebuilding the kernel (and without rebooting)
-as follows:
+Hi again the mail-server in the student residence was down for 2
+days,but here are the results
 
-(If this is common knowledge, I apologize in advance,
-but I didn't see it in the docs, howto, or mailing
-list archives.)
+vanila 2.4.4 lvm-1.0 and vanila 2.4.5 lvm-1.0
+----------------------------------------------------------
+mke2fs and mkreiserfs segfaults , nothing in 'demsg | ksymoops'
 
-(as root)
+vanila 2.4.4 lvm-1.0 and vanila 2.4.5 lvm-1.0 with JFS-patch aplied
+----------------------------------------------------------------------------------------
+mke2fs and mkreiserfs segfaults, nothing in 'demsg | ksymoops'
+jfs seems to work
 
-1) install the kernel sources rpm
-(kernel-source-2.4.2-2.rpm)
-2) follow the instruction in the lvm tarball for
-creating a patch for the kernel.  Apply the patch. 
-Note that since only the lvm module files are modified
-by the patch (at least for stock redhat 7.1), you
-won't need to rebuild the whole kernel.
-3) cd /usr/src/linux-2.4
-   gmake mrproper
-   gmake xconfig
-4) "Load Configuration from File"
-   Load up the file in /usr/src/linux-2.4/configs/
-that matches the kernel you are currently running.  If
-you don't pick the right one, step 9/10 will fail. 
-'uname -a' might help you pick.
-5) Go to "Multi-Device Support" and check off module
-support for lvm.
-6) Save and quit
-7) gmake dep
-   gmake modules
-8) cp drivers/md/lvm-mod.o
-/lib/modules/2.4.2-2/kernel/drivers/md/
-9) /sbin/depmod -a
-10) /sbin/modprobe lvm-mod
+any ideas
 
-and to check:
+probably from the beginning the name of the thread was wrong
+it had to be more accurate
 
-11) ls /proc/lvm
+and i'm wondering whether there is smbd with working LVM over _linear
+software RAID_
 
-Voila, it's there, an no reboot necessary.  Continue
-following the rest of the steps in the lvm tarball.
-
-Most of the above was probably obvious, except for the
-part about loading the right file from configs/, so
-that you don't get module versioning problems.
-
-I imagine the above should work with minor changes
-regardless of which redhat kernel rpm you're currently
-using.
-
-Taher
-
-
-
-
-__________________________________________________
-Do You Yahoo!?
-Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
-http://im.yahoo.com
+i'm going to checkout the XFS-tree and the LVM-tree
+( there are raid fixes from Neil Brown in 2.4.10pre5 )
+and try again
+and run the benchmarks over the weekend
