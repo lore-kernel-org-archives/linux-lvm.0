@@ -1,10 +1,10 @@
-Message-ID: <3BA249C0.3050402@st-peter.stw.uni-erlangen.de>
-Date: Fri, 14 Sep 2001 20:17:36 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] Lock Patch
+Date: Fri, 14 Sep 2001 14:21:26 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPCEFKDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Lock Patch
-References: <NBBBJHKIOKPKOGOEPEDPKEFGDNAA.stuart@bh90210.net>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+In-Reply-To: <3BA249C0.3050402@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,158 +16,126 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-content-type: text/plain; format="flowed"
+content-type: text/plain
 To: linux-lvm@sistina.com
 
-Hi
-thats in case we are tolking about linux-2.4.1-VFS-lock.patch, 
-linux-2.4.2-VFS-lock.patch, linux-2.4.4-VFS-lock.patch
-and linux-2.4.9-VFS-lock.patch which are in LVM/1.0x/PATCHES
-
-there is no such speciefic patch , you should create it yourself
-have you folowed what i told you, you should then have it
-
-from the beginig
-untar the lvm-code lvm-1.0.1-rc2.tar.bz2: tar xjvf lvm-1.0.1-rc2.tar.bz2
-you have now directory LVM and in it 1.0.1-rc2
-cd LVM/1.0.1-rc2
-configure the sources for your system: ./configure
-go to PATCHES and prepare the patch for your kernel: make
-you should have now the patch for your kernel
-apply the patch
-
-recompile the kernel or modules
-and compile the tools - go back to LVM/1.0.1-rc2 and type make
-and then install them : make install
-
-
-IT3 Stuart B. Tener, USNR-R wrote:
-
->Svetljo:
->
->	Where does one get the patch you refer to? Can you provide a link for it?
->
->
->Very Respectfully, 
->
->Stuart Blake Tener, IT3, USNR-R, N3GWG 
->Beverly Hills, California
->VTU 1904G (Volunteer Training Unit) 
->stuart@bh90210.net 
->west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
->east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
->
->Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
->
->JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
->
->Friday, September 14, 2001 9:26 AM
->
->-----Original Message-----
->From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of svetljo
->Sent: Friday, September 14, 2001 4:55 AM
->To: linux-lvm@sistina.com
->Subject: Re: [linux-lvm] Lock Patch
->
->one question
->are we talking about LVM/PATCHES/linux-2.4.x-VFS-lock-patch
->if thats so i don't think it's that good idea to try  both patches
->
->simply run  $LVM_ROOT./configure ; cd PATCHES ; make ; and aply the patch
->
->linux-lvm-1.0.1rc2-2.4.8-12mdk.mdk
->
->but in case we are not tolking about this patch
->what are we talking about , which lock.patch
->
->
->Heinz J . Mauelshagen wrote:
->
->>Stuart,
->>
->>Patrick gave you a helpfull hint, so there's no reason for your rude reaction.
->>Doing what he recommended is a matter of little time as well.
->>
->>Ask the Mandrake LVM maintainer if that's more preferable for you.
->>
->>Regards,
->>Heinz    -- The LVM Guy --
->>
->>On Fri, Sep 14, 2001 at 04:10:08AM -0700, IT3 Stuart B. Tener, USNR-R wrote:
->>
->>>Mr. Caulfield:
->>>
->>>     Well thank you for that most helpful suggestion, but silly me, I consider my time more valuable. I shall wait for someone to post a proper answer, rather than one, which is both obvious and inefficient.
->>>
->>>
->>>Very Respectfully,
->>>
->>>Stuart Blake Tener, IT3, USNR-R, N3GWG
->>>Beverly Hills, California
->>>VTU 1904G (Volunteer Training Unit)
->>>stuart@bh90210.net
->>>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
->>>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
->>>
->>>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!)
->>>
->>>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
->>>
->>>Friday, September 14, 2001 4:05 AM
->>>
->>>-----Original Message-----
->>>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Patrick Caulfield
->>>Sent: Friday, September 14, 2001 1:55 AM
->>>To: linux-lvm@sistina.com
->>>Subject: Re: [linux-lvm] Lock Patch
->>>
->>>On Thu, Sep 13, 2001 at 11:00:47PM -0700, IT3 Stuart B. Tener, USNR-R wrote:
->>>
->>>>List members:
->>>>
->>>>     I am curious; if I am running 2.4.8-12mdk (Mandrake 8,0), which lock patch do I use the 2.4.4 version or the 2.4.9 version?
->>>>
->>>>
->>>I would try the 2.4.4 one. If that doesn't apply then try the 2.4.9.
->>>
->>>patrick
->>>
->>>
->>>_______________________________________________
->>>linux-lvm mailing list
->>>linux-lvm@sistina.com
->>>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>>?????????????????????????????????????{??[?????x%??e?{??[?????)???&??i?????l????)???&?f??f??X??)???b??????y?m???0s??3??m????
->>>
->??+-?v?r?????=?-??h??????
->
->>*** Software bugs are stupid.
->>   Nevertheless it needs not so stupid people to solve them ***
->>
->>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->>
->>Heinz Mauelshagen                                 Sistina Software Inc.
->>Senior Consultant/Developer                       Am Sonnenhang 11
->>                                                 56242 Marienrachdorf
->>                                                 Germany
->>Mauelshagen@Sistina.com                           +49 2626 141200
->>                                                      FAX 924446
->>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>
->
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+U3ZldGxqbzoNCg0KICAgICAgICBBcmUgeW91IHNheWluZyB0aGF0IHR5cGluZywgIm1ha2UiIGlu
+IHRoZSAiUEFUQ0hFUyIgZGlyZWN0b3J5IHdpbGwgY2F1c2UgYSBwYXRjaCB0byBiZSBnZW5lcmF0
+ZWQgc3BlY2lmaWNhbGx5IGZvciBteSBrZXJuZWw/IFdoYXQgbmFtZSB3aWxsIGl0IGJlIGdpdmVu
+Pw0KICAgICAgICBUaGUgZG9jdW1lbnRhdGlvbiBzYXlzIHRvIGFkZCBhIGRhc2ggZGFzaCBrZXJu
+ZWwtZGlyPSBvciBzb21ldGhpbmcgb3Igb3RoZXIgYWZ0ZXIgdGhlICIuL2NvbmZpZ3VyZSIgY29t
+bWFuZCwgYXJlIHlvdSBzYXlpbmcgaXQgaXMgYmV0dGVyIHRvIHVzZSAiLi9jb25maWd1cmUiIGFi
+c2VudCB0aGF0IGFwcGVuZGVkIHN0YXRlbWVudD8NCiAgICAgICAgIFdoZXJlIGRvIEkgdW50YXIg
+dGhlIExWTSBzb3VyY2U/IERvZXMgaXQgbWF0dGVyIHdoZXJlIEkgZG8gc28/IE1heSBJIGRvIGl0
+IGluIC90bXA/DQoNCg0KVmVyeSBSZXNwZWN0ZnVsbHksDQoNClN0dWFydCBCbGFrZSBUZW5lciwg
+SVQzLCBVU05SLVIsIE4zR1dHDQpCZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUgMTkwNEcg
+KFZvbHVudGVlciBUcmFpbmluZyBVbml0KQ0Kc3R1YXJ0QGJoOTAyMTAubmV0DQp3ZXN0IGNvYXN0
+OiAoMzEwKS0zNTgtMDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDkt
+MjA0Mw0KZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVs
+cGhpYSwgUEEgMTkxNDktNTg1OQ0KDQpUZWxlY29waWVyOiAoNDE5KS03MTUtNjA3MyBmYXggdG8g
+ZW1haWwgZ2F0ZXdheSB2aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUhKQ0KDQpKT0lOIFRIRSBV
+UyBOQVZZIFJFU0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBB
+TEwuDQoNCkZyaWRheSwgU2VwdGVtYmVyIDE0LCAyMDAxIDI6MTAgUE0NCg0KLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRv
+OmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1PbiBCZWhhbGYgT2Ygc3ZldGxqbw0KU2VudDog
+RnJpZGF5LCBTZXB0ZW1iZXIgMTQsIDIwMDEgMTE6MTggQU0NClRvOiBsaW51eC1sdm1Ac2lzdGlu
+YS5jb20NClN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBMb2NrIFBhdGNoDQoNCkhpDQp0aGF0cyBp
+biBjYXNlIHdlIGFyZSB0b2xraW5nIGFib3V0IGxpbnV4LTIuNC4xLVZGUy1sb2NrLnBhdGNoLA0K
+bGludXgtMi40LjItVkZTLWxvY2sucGF0Y2gsIGxpbnV4LTIuNC40LVZGUy1sb2NrLnBhdGNoDQph
+bmQgbGludXgtMi40LjktVkZTLWxvY2sucGF0Y2ggd2hpY2ggYXJlIGluIExWTS8xLjB4L1BBVENI
+RVMNCg0KdGhlcmUgaXMgbm8gc3VjaCBzcGVjaWVmaWMgcGF0Y2ggLCB5b3Ugc2hvdWxkIGNyZWF0
+ZSBpdCB5b3Vyc2VsZg0KaGF2ZSB5b3UgZm9sb3dlZCB3aGF0IGkgdG9sZCB5b3UsIHlvdSBzaG91
+bGQgdGhlbiBoYXZlIGl0DQoNCmZyb20gdGhlIGJlZ2luaWcNCnVudGFyIHRoZSBsdm0tY29kZSBs
+dm0tMS4wLjEtcmMyLnRhci5iejI6IHRhciB4anZmIGx2bS0xLjAuMS1yYzIudGFyLmJ6Mg0KeW91
+IGhhdmUgbm93IGRpcmVjdG9yeSBMVk0gYW5kIGluIGl0IDEuMC4xLXJjMg0KY2QgTFZNLzEuMC4x
+LXJjMg0KY29uZmlndXJlIHRoZSBzb3VyY2VzIGZvciB5b3VyIHN5c3RlbTogLi9jb25maWd1cmUN
+CmdvIHRvIFBBVENIRVMgYW5kIHByZXBhcmUgdGhlIHBhdGNoIGZvciB5b3VyIGtlcm5lbDogbWFr
+ZQ0KeW91IHNob3VsZCBoYXZlIG5vdyB0aGUgcGF0Y2ggZm9yIHlvdXIga2VybmVsDQphcHBseSB0
+aGUgcGF0Y2gNCg0KcmVjb21waWxlIHRoZSBrZXJuZWwgb3IgbW9kdWxlcw0KYW5kIGNvbXBpbGUg
+dGhlIHRvb2xzIC0gZ28gYmFjayB0byBMVk0vMS4wLjEtcmMyIGFuZCB0eXBlIG1ha2UNCmFuZCB0
+aGVuIGluc3RhbGwgdGhlbSA6IG1ha2UgaW5zdGFsbA0KDQoNCklUMyBTdHVhcnQgQi4gVGVuZXIs
+IFVTTlItUiB3cm90ZToNCg0KPlN2ZXRsam86DQo+DQo+ICAgICAgIFdoZXJlIGRvZXMgb25lIGdl
+dCB0aGUgcGF0Y2ggeW91IHJlZmVyIHRvPyBDYW4geW91IHByb3ZpZGUgYSBsaW5rIGZvciBpdD8N
+Cj4NCj4NCj5WZXJ5IFJlc3BlY3RmdWxseSwNCj4NCj5TdHVhcnQgQmxha2UgVGVuZXIsIElUMywg
+VVNOUi1SLCBOM0dXRw0KPkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENCj5WVFUgMTkwNEcgKFZv
+bHVudGVlciBUcmFpbmluZyBVbml0KQ0KPnN0dWFydEBiaDkwMjEwLm5ldA0KPndlc3QgY29hc3Q6
+ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0y
+MDQzDQo+ZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVs
+cGhpYSwgUEEgMTkxNDktNTg1OQ0KPg0KPlRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0
+byBlbWFpbCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpDQo+DQo+Sk9JTiBU
+SEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklUIEZST00g
+SVQgQUxMLg0KPg0KPkZyaWRheSwgU2VwdGVtYmVyIDE0LCAyMDAxIDk6MjYgQU0NCj4NCj4tLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNv
+bSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1PbiBCZWhhbGYgT2Ygc3ZldGxq
+bw0KPlNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDE0LCAyMDAxIDQ6NTUgQU0NCj5UbzogbGludXgt
+bHZtQHNpc3RpbmEuY29tDQo+U3ViamVjdDogUmU6IFtsaW51eC1sdm1dIExvY2sgUGF0Y2gNCj4N
+Cj5vbmUgcXVlc3Rpb24NCj5hcmUgd2UgdGFsa2luZyBhYm91dCBMVk0vUEFUQ0hFUy9saW51eC0y
+LjQueC1WRlMtbG9jay1wYXRjaA0KPmlmIHRoYXRzIHNvIGkgZG9uJ3QgdGhpbmsgaXQncyB0aGF0
+IGdvb2QgaWRlYSB0byB0cnkgIGJvdGggcGF0Y2hlcw0KPg0KPnNpbXBseSBydW4gICRMVk1fUk9P
+VC4vY29uZmlndXJlIDsgY2QgUEFUQ0hFUyA7IG1ha2UgOyBhbmQgYXBseSB0aGUgcGF0Y2gNCj4N
+Cj5saW51eC1sdm0tMS4wLjFyYzItMi40LjgtMTJtZGsubWRrDQo+DQo+YnV0IGluIGNhc2Ugd2Ug
+YXJlIG5vdCB0b2xraW5nIGFib3V0IHRoaXMgcGF0Y2gNCj53aGF0IGFyZSB3ZSB0YWxraW5nIGFi
+b3V0ICwgd2hpY2ggbG9jay5wYXRjaA0KPg0KPg0KPkhlaW56IEogLiBNYXVlbHNoYWdlbiB3cm90
+ZToNCj4NCj4+U3R1YXJ0LA0KPj4NCj4+UGF0cmljayBnYXZlIHlvdSBhIGhlbHBmdWxsIGhpbnQs
+IHNvIHRoZXJlJ3Mgbm8gcmVhc29uIGZvciB5b3VyIHJ1ZGUgcmVhY3Rpb24uDQo+PkRvaW5nIHdo
+YXQgaGUgcmVjb21tZW5kZWQgaXMgYSBtYXR0ZXIgb2YgbGl0dGxlIHRpbWUgYXMgd2VsbC4NCj4+
+DQo+PkFzayB0aGUgTWFuZHJha2UgTFZNIG1haW50YWluZXIgaWYgdGhhdCdzIG1vcmUgcHJlZmVy
+YWJsZSBmb3IgeW91Lg0KPj4NCj4+UmVnYXJkcywNCj4+SGVpbnogICAgLS0gVGhlIExWTSBHdXkg
+LS0NCj4+DQo+Pk9uIEZyaSwgU2VwIDE0LCAyMDAxIGF0IDA0OjEwOjA4QU0gLTA3MDAsIElUMyBT
+dHVhcnQgQi4gVGVuZXIsIFVTTlItUiB3cm90ZToNCj4+DQo+Pj5Nci4gQ2F1bGZpZWxkOg0KPj4+
+DQo+Pj4gICAgIFdlbGwgdGhhbmsgeW91IGZvciB0aGF0IG1vc3QgaGVscGZ1bCBzdWdnZXN0aW9u
+LCBidXQgc2lsbHkgbWUsIEkgY29uc2lkZXIgbXkgdGltZSBtb3JlIHZhbHVhYmxlLiBJIHNoYWxs
+IHdhaXQgZm9yIHNvbWVvbmUgdG8gcG9zdCBhIHByb3BlciBhbnN3ZXIsIHJhdGhlciB0aGFuIG9u
+ZSwgd2hpY2ggaXMgYm90aCBvYnZpb3VzIGFuZCBpbmVmZmljaWVudC4NCj4+Pg0KPj4+DQo+Pj5W
+ZXJ5IFJlc3BlY3RmdWxseSwNCj4+Pg0KPj4+U3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlIt
+UiwgTjNHV0cNCj4+PkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENCj4+PlZUVSAxOTA0RyAoVm9s
+dW50ZWVyIFRyYWluaW5nIFVuaXQpDQo+Pj5zdHVhcnRAYmg5MDIxMC5uZXQNCj4+Pndlc3QgY29h
+c3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIw
+OS0yMDQzDQo+Pj5lYXN0IGNvYXN0OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0NTg1OSwgUGhp
+bGFkZWxwaGlhLCBQQSAxOTE0OS01ODU5DQo+Pj4NCj4+PlRlbGVjb3BpZXI6ICg0MTkpLTcxNS02
+MDczIGZheCB0byBlbWFpbCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpDQo+
+Pj4NCj4+PkpPSU4gVEhFIFVTIE5BVlkgUkVTRVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQg
+QkVORUZJVCBGUk9NIElUIEFMTC4NCj4+Pg0KPj4+RnJpZGF5LCBTZXB0ZW1iZXIgMTQsIDIwMDEg
+NDowNSBBTQ0KPj4+DQo+Pj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4+RnJvbTogbGlu
+dXgtbHZtLWFkbWluQHNpc3RpbmEuY29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEu
+Y29tXU9uIEJlaGFsZiBPZiBQYXRyaWNrIENhdWxmaWVsZA0KPj4+U2VudDogRnJpZGF5LCBTZXB0
+ZW1iZXIgMTQsIDIwMDEgMTo1NSBBTQ0KPj4+VG86IGxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KPj4+
+U3ViamVjdDogUmU6IFtsaW51eC1sdm1dIExvY2sgUGF0Y2gNCj4+Pg0KPj4+T24gVGh1LCBTZXAg
+MTMsIDIwMDEgYXQgMTE6MDA6NDdQTSAtMDcwMCwgSVQzIFN0dWFydCBCLiBUZW5lciwgVVNOUi1S
+IHdyb3RlOg0KPj4+DQo+Pj4+TGlzdCBtZW1iZXJzOg0KPj4+Pg0KPj4+PiAgICAgSSBhbSBjdXJp
+b3VzOyBpZiBJIGFtIHJ1bm5pbmcgMi40LjgtMTJtZGsgKE1hbmRyYWtlIDgsMCksIHdoaWNoIGxv
+Y2sgcGF0Y2ggZG8gSSB1c2UgdGhlIDIuNC40IHZlcnNpb24gb3IgdGhlIDIuNC45IHZlcnNpb24/
+DQo+Pj4+DQo+Pj4+DQo+Pj5JIHdvdWxkIHRyeSB0aGUgMi40LjQgb25lLiBJZiB0aGF0IGRvZXNu
+J3QgYXBwbHkgdGhlbiB0cnkgdGhlIDIuNC45Lg0KPj4+DQo+Pj5wYXRyaWNrDQo+Pj4NCj4+Pg0K
+Pj4+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4+Pmxp
+bnV4LWx2bSBtYWlsaW5nIGxpc3QNCj4+PmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KPj4+aHR0cDov
+L2xpc3RzLnNpc3RpbmEuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtDQo+Pj5yZWFkIHRo
+ZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3RvLmh0
+bWwNCj4+Pj8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz97Pz9bPz8/Pz94JT8/
+ZT97Pz9bPz8/Pz8pPz8/Jj8/aT8/Pz8/bD8/Pz8pPz8/Jj9mPz9mPz9YPz8pPz8/Yj8/Pz8/P3k/
+bT8/PzBzPz8zPz8bbT8/Pz8NCj4+Pg0KPj8/Ky0/dj9yPz8/Pz89Py0/P2g/Pz8/Pz8NCj4NCj4+
+KioqIFNvZnR3YXJlIGJ1Z3MgYXJlIHN0dXBpZC4NCj4+ICAgTmV2ZXJ0aGVsZXNzIGl0IG5lZWRz
+IG5vdCBzbyBzdHVwaWQgcGVvcGxlIHRvIHNvbHZlIHRoZW0gKioqDQo+Pg0KPj49LT0tPS09LT0t
+PS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09
+LT0tPS09LT0tPS0NCj4+DQo+PkhlaW56IE1hdWVsc2hhZ2VuICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgU2lzdGluYSBTb2Z0d2FyZSBJbmMuDQo+PlNlbmlvciBDb25zdWx0YW50L0Rl
+dmVsb3BlciAgICAgICAgICAgICAgICAgICAgICAgQW0gU29ubmVuaGFuZyAxMQ0KPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNTYyNDIgTWFyaWVucmFj
+aGRvcmYNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IEdlcm1hbnkNCj4+TWF1ZWxzaGFnZW5AU2lzdGluYS5jb20gICAgICAgICAgICAgICAgICAgICAg
+ICAgICArNDkgMjYyNiAxNDEyMDANCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgRkFYIDkyNDQ0Ng0KPj49LT0tPS09LT0tPS09LT0tPS09LT0t
+PS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS0N
+Cj4+DQo+Pl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+
+PmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCj4+bGludXgtbHZtQHNpc3RpbmEuY29tDQo+Pmh0dHA6
+Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KPj5yZWFkIHRo
+ZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3RvLmh0
+bWwNCj4+DQo+DQo+DQo+DQo+DQo+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18NCj5saW51eC1sdm0gbWFpbGluZyBsaXN0DQo+bGludXgtbHZtQHNpc3RpbmEu
+Y29tDQo+aHR0cDovL2xpc3RzLnNpc3RpbmEuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZt
+DQo+cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdl
+cy9ob3d0by5odG1sDQo+DQoNCg0KDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fDQpsaW51eC1sdm0gbWFpbGluZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGlu
+YS5jb20NCmh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2
+bQ0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdl
+cy9ob3d0by5odG1sDQo=
