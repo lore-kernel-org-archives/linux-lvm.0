@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] LVM and Linux quotas
 From: R Dicaire <rdicaire@kritek.net>
-In-Reply-To: <20040127231733.GA25501@oddprocess.org>
-References: <20040127231733.GA25501@oddprocess.org>
-Message-Id: <1075247560.334.3.camel@ws.rdb.linux-help.org>
+Message-Id: <1075248058.337.12.camel@ws.rdb.linux-help.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] mounting snapshot errors
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,16 +13,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 27 18:53:02 2004
+Date: Tue Jan 27 19:02:02 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: lvm <linux-lvm@sistina.com>
 
-On Tue, 2004-01-27 at 18:17, Matthew Daubenspeck wrote:
+I apologize for the repeat but never got a response.
 
-I'm using xfs quotas on a logical volume with no problems.
+I posted a few days ago regarding the inability to mount snapshots
+if the volume's file system is ext3/xfs/reiserfs. Using current lvm
+1.0.8 on linux kernel 2.4.23-xfs with lvm 1.0.8 patch and 1.0.8 lvm
+tools.
 
+Is there a fix for this issue?
 
-> -- 
->       aRDy Music
-> http://www.ardynet.com
+-- 
+      aRDy Music
+http://www.ardynet.com
