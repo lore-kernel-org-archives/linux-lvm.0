@@ -1,42 +1,42 @@
-Message-ID: <38C43860.64241E97@msede.com>
-Date: Mon, 06 Mar 2000 23:59:44 +0100
-From: Michael Marxmeier <mike@msede.com>
+Message-ID: <38C4537E.E3166219@netconnect.com.au>
+Date: Tue, 07 Mar 2000 00:55:26 +0000
+From: bug1 <bug1@netconnect.com.au>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] building the binary utilities
-References: <20000306222239.14845.qmail@web106.yahoomail.com>
+Subject: Re: [linux-lvm] compiling lvm into 2.3.49 Q.
+References: <200003061555.QAA16394@u9etz.ez-darmstadt.telekom.de>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Chris Campbell <dash_ampersand@yahoo.com>
-Cc: linux-lvm@msede.com
+To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-Chris Campbell wrote:
-> I got a patched kernel to compile ok, but now I have
-> problems building the binary lvm utilities.  There are
-> errors about not being about to find lvm.h and
-> liblvm.h.  I copied them to /usr/include, and then it
-> got farther but complained about gnu/types.h.  After
-> symlinking that, I got an error about lots of
-> redeclarations.  What's going on?  Thanks.
+Heinz Mauelshagen wrote:
+> 
+> The problem is that necessary parts of the LVM stock kernel patch
+> didn't make it in and that i was to busy to get back to Linus
+> about that.
+> 
+> Have send him another patch vs. 2.3.49 which will hopefully show
+> up soon...
+> 
+> Till then you can add the full LVM patch from linux.msede.com on your own.
+> 
+> Sorry about the inconvenience.
+> 
+> Heinz
+> 
 
-At least for glibc2.1 you need a patch for the user mode tools,
-otherwise compile fails. Please install patch patch-lvm_0.8final-2
+No worries, thanks for the pointers, i look forward to meddling with lvm
+and raid and seeing what trouble i can get into.
 
-For a list of know issues please have a look at
-http://linux.msede.com/lvm/doc/BUGS
+It will be great if two can get along and provide both the flexibility
+of managment which is what i see as the main benefit of LVM and
+configurable performance/redundancy of software raid.
 
-Instead of copying lvm.h to /usr/include you should modify the
-KERNEL_LOCATION in make.tmpl. By default it assumes your kernel 
-sources in /usr/src/linux.
+Thanks for your help.
 
+Glenn McGrath
 
-Hope this helps
-Michael
-
--- 
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+P.S. Ill try and come up with more challenging questions next time :-)
