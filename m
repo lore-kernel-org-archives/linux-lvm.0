@@ -1,12 +1,10 @@
-Return-Path: <m.vd.brink@worldonline.nl>
-From: Melis van den Brink <m.vd.brink@worldonline.nl>
-Subject: Re: [linux-lvm] Missing (or double) logical volume after upgrade to 2.4.7 and beta8
-Date: Tue, 7 Aug 2001 19:19:21 +0200
-References: <01080621060101.00882@giant.koningspage.nl> <20010807082452.A677@tykepenguin.com>
-In-Reply-To: <20010807082452.A677@tykepenguin.com>
+Return-Path: <plamb_98@yahoo.com>
+Message-ID: <20010807173530.52899.qmail@web13409.mail.yahoo.com>
+Date: Tue, 7 Aug 2001 10:35:30 -0700 (PDT)
+From: Pierre Lamb <plamb_98@yahoo.com>
+Subject: Re: [linux-lvm] Looking for recipe for LVM
+In-Reply-To: <20010807170843.B9052@tykepenguin.com>
 MIME-Version: 1.0
-Message-Id: <01080719192100.04758@giant.koningspage.nl>
-Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,41 +17,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tuesday 07 August 2001 09:24, you wrote:
-> On Mon, Aug 06, 2001 at 09:06:01PM +0200, Melis van den Brink wrote:
-> > Hello,
-> >
-> > I'm experiencing a bit of trouble with LVM (just as I was becoming very
-> > happy with it :-().
-> > I had it running on a 2.4.6 kernel patched with the beta7 lvm-stuff and
-> > some patches from the reiserfs-guys. That was running quite fine.
-> > Today I performed the upgrade to linux 2.4.7 and lvm beta8. I followed
-> > the advice from the README.1st in upgrading to the new meta-format. I
-> > installed the beta8 tools and booted with the new kernel (including the
-> > patches from beta8). It seemed to be working until I discovered that one
-> > of my LV's was missing. Or better it showed the same filesystem as the
-> > one mounted on /var.
-> >
-> > I could try to fix it, but would like to know some options as I am fairly
-> > new to LVM.
-> > Attached is some information about the LVM-setup. I can give you some
-> > more, but I don't know what to provide you with...
->
-> At a guess it sounds like one (or more) of the PVs hasn't had it's metadat
-> version number updated - there are several inactive PVs shown by PVSCAN.
-> Check that all your PVs are shown there (if not then get the beta6 tools
-> and run pvversion on them) and then run vgscan.
-Do you mean the beta8 tools (meaning '6' is just a typo) or is there a reason 
-for pointing to the beta6 tools ?
+Painless is a relative term.
 
->
-> The "duplicate" volume is probably just an old volume not being activated
-> and it's major/minor number being reused by another volume that has been
-> activated. "ls -l" on the names will show this. If you're worried about it
-> then just delete the incorrect device nodes. Once all the VGs are activated
-> they should sort themselves out.
->
+Pierre
+--- Patrick Caulfield <caulfield@sistina.com> wrote:
+> On Tue, Aug 07, 2001 at 07:43:34AM -0700, Pierre
+> Lamb wrote:
+> > Unfortunately 2.4.3 kernels need to be patched to
+> use
+> > the latest LVM iop  the kernels were build with
+> beta2
+> > the latest is beta8. Certian tools may not work
+> > completeky if not patched.
+> 
+> Indeed. Patching up to beta8 was implied in my
+> reference to the HOWTO. For a new
+> installation that should be painless :-)
+> 
+> patrick
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at
+http://www.sistina.com/lvm/Pages/howto.html
 
-Melis
+
+__________________________________________________
+Do You Yahoo!?
+Make international calls for as low as $.04/minute with Yahoo! Messenger
+http://phonecard.yahoo.com/
