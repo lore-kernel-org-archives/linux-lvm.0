@@ -1,13 +1,13 @@
 Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id i1PEg7a5005976
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 15:42:07 +0100
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id i1PEjra5006238
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 15:45:53 +0100
 From: Heinz Mauelshagen <Mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] badblocks on lvm1 lv using device mapper and lvm2 userland tools
-Message-ID: <20040225144207.GD11757@redhat.com>
-References: <20040222065536.GA10657@tric>
+Subject: Re: [linux-lvm] Reading Cow table
+Message-ID: <20040225144553.GE11757@redhat.com>
+References: <000d01c3f7d9$eb1f5950$2e5cd40a@sachin>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040222065536.GA10657@tric>
+In-Reply-To: <000d01c3f7d9$eb1f5950$2e5cd40a@sachin>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,29 +19,29 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Feb 25 09:40:10 2004
+Date: Wed Feb 25 09:44:13 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Sun, Feb 22, 2004 at 07:55:36AM +0100, Volker Gropp wrote:
-> Hi,
-> 
-> is there any way to handle badblocks on a lvm1 lv in an dm lvm2
-> environment. EVMS seem to be able to reallovate those, but i dont wanna
-> switch.
+On Fri, Feb 20, 2004 at 09:49:40AM -0800, sachin wrote:
+> Hi Everyone
+> Can any one tell  me is it possible to read the cow table & find out the =
+> exact location of the data on the disk or partition . If yes give me any =
+> clue to read the COW table and other data.
 
-You don't want to throw away the flaky disk(s) ? ;)
+Not supported directly.
 
-A disk should be sorted out IMO in case it starts showing bad blocks because
-that means that it ran out of internal space to remap (presumably it is
-decently actual it will have), which is very bad.
+If you're up for some investigation, look at the on-disk format definitions
+for COW in lvm.h and check into the *COW*() lib functions.
 
 > 
-> my kernel is 2.4.25, no patches on a debian system using IDE drives.
+> I am using a lvm 1.0.3  . Copy of the cow table should be consistant with
+> the data on disk
 > 
-> Volker Gropp
+> Thanks in advance.
+> SachiN_
 > 
 > _______________________________________________
 > linux-lvm mailing list
