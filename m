@@ -1,10 +1,11 @@
-Return-Path: <mike@marxmeier.com>
-Date: Thu, 8 Feb 2001 20:55:51 +0100
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Message-ID: <20010208205551.C21949@vestdata.no>
+Return-Path: <morellato@infinito.it>
+Message-Id: <5.0.2.1.2.20010207172015.02861948@mira-sjc5-6.cisco.com>
+Date: Wed, 07 Feb 2001 17:23:13 -0800
+From: Simone Morellato <morellato@infinito.it>
+In-Reply-To: <Pine.LNX.4.21.0101311816020.13129-100000@miami.datech2.er.
+ heitec.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] questions
+Subject: [linux-lvm] Linuxlvm configuration data structure
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,24 +17,12 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hi
-
-Is there a limit for the maximum size of a LVM diskgroup?
-(internally in LVM-code, or because of other limits in the kernel)
-The 2TB (1 TB) maximum devicesize in the linux-kernel doesn't apply, does
-it?
-
-How does LVM handle that one of it's devices changes size? E.g. if one
-of the physical disks is a RAIDset, and more disks are added to it?
-Is there any way to tell LVM to use more or less of the disk?
-
-
-Thanks.
-
-
---=20
-Ragnar Kj=EF=BF=BDrstad
-BigStorage
+Can you tell me which is the configuration data structure of Linux lvm,
+what is the information that lvm saves in the disks  to understand how it 
+is built the volume?
+Thanks
+Simone
