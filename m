@@ -1,11 +1,11 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Tue, 23 Jan 2001 14:18:47 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] Dumb question
-Message-ID: <20010123141847.D28863@srv.sistina.com>
-References: <3A6D73AB.FC7E1753@infologic.fr>
+Return-Path: <okeefe@brule.borg.umn.edu>
+Resent-Message-Id: <200101231414.IAA26711@brule.borg.umn.edu>
 Mime-Version: 1.0
-In-Reply-To: <3A6D73AB.FC7E1753@infologic.fr>; from bs@infologic.fr on Tue, Jan 23, 2001 at 01:06:03PM +0100
+From: "Michael J. Declerck" <declerck@sistina.com>
+Message-Id: <20010123005357.CA270E0B7@wraith>
+Date: Mon, 22 Jan 2001 16:53:57 -0800
+Resent-To: linux-lvm@sistina.com
+Subject: [linux-lvm] [gfs-announce] GFS version 4.0 released
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,37 +19,40 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: gfs-users@sistina.com, gfs-devel@sistina.com, gfs-announce@sistina.com
 
-On Tue, Jan 23, 2001 at 01:06:03PM +0100, Benoit SERRA wrote:
-> Is LVM faster when you don't compile it as a module ?
+All,
 
-As Patrick pointed out: no.
+GFS version 4.0 has been released and is available via the Sistina web site
 
-You can't almost measure LVM's impact on performance at all.
-A different thing is the overhead implied when you take snapshots of logical
-volumes because there's additional writes for every write to the original
-logical volume necessary which degrades performance almost linear.
+-> http://www.sistina.com/gfs/software/
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+This is the first non-beta release of GFS version 4.0.  All known bugs have 
+been
+documented in the Release Notes.  This is not to say that there are not other
+bugs, just that we have not seen them in our testing.
 
--- 
+In the near future a timeline for feature additions and performance 
+enhancements
+will be released.  It will also be available at the above listed URL.
 
-Regards,
-Heinz    -- The LVM Guy --
+If you experience any problems please report them via Bugzilla at Sistina.com
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+-> Bugs     ==> http://bugzilla.sistina.com
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+If you would like to tell us how you are using GFS version 4.0 so that we can
+provide a better product please fill out the survery at
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-> Feedback ==> http://www.sistina.com/gfs/Pages/gfs_eval.html
+
+Thank you for your continued support.  Now, go grab and start using it!
+
+---
+Michael Declerck, declerck@sistina.com   +1.510.823.7991
+
+
+_______________________________________________
+gfs-announce mailing list
+gfs-announce@sistina.com
+http://lists.sistina.com/mailman/listinfo/gfs-announce
+Read the GFS HOWTO http://www.sistina.com/gfs/Pages/howto.html
