@@ -1,23 +1,26 @@
-Date: Thu, 9 Sep 1999 11:37:47 +0200 (MEST)
-From: Carsten Schabacker <CarstenSchabacker@gmx.de>
+Date: Sat, 11 Sep 1999 23:38:54 -0500 (CDT)
+From: "Dominic J. Eidson" <sauron@the-infinite.org>
+Subject: [linux-lvm] Feature Freeze for 2.4...
+Message-ID: <Pine.LNX.4.05.9909112337150.8956-100000@morannon.kdi.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Announce: LVM-Debian Package [0.7-3]
-Message-ID: <14712.936869867@www5.gmx.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM <linux-lvm@msede.com>
 
-Hi all,
 
-I made a few changes on the Debian-Package I build from lvm-0.7.
-You can download it from http://www.rhein-neckar.de/~spock .
+Found this off of /.:
 
-If you have any problems or suggestions please mail me!
+http://kernelnotes.org/lnxlists/linux-kernel/lk_9909_02/msg00460.html
 
-cheers Carsten.
+Wonder what we did wrong... :(
+
+
 
 -- 
-Sent through Global Message Exchange - http://www.gmx.net
+Dominic J. Eidson
+                                         "Baruk Khazad! Khazad ai-menu!" - Gimli
+--------------------------------------------------------------------------------
+http://www.the-infinite.org/               http://www.the-infinite.org/~dominic/
