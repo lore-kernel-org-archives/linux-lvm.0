@@ -1,20 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2UCaJO04501
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2005 07:36:19 -0500
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.205])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2UCaDkF012605
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2005 07:36:13 -0500
-Received: by rproxy.gmail.com with SMTP id g11so167928rne
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2005 04:36:08 -0800 (PST)
-Message-ID: <bf024e9005033004367d15c2ba@mail.gmail.com>
-Date: Wed, 30 Mar 2005 14:36:08 +0200
-From: <talosso@gmail.com>
-Subject: Re: [linux-lvm] vg OK --> reboot --> vg KO
-In-Reply-To: <F1AF8CC9F864B04DAC52ECBB82D5AF5A1961C9@dealer.corp.snocap.com>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2TNwvO30039
+	for <linux-lvm@redhat.com>; Tue, 29 Mar 2005 18:58:57 -0500
+Received: from seeker3.pacific.net.ph (seeker3.pacific.net.ph [210.23.235.106])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2TNwoL3000568
+	for <linux-lvm@redhat.com>; Tue, 29 Mar 2005 18:58:51 -0500
+Received: from congo2.pacific.net.ph (congo2.pacific.net.ph [210.23.235.89])
+	by seeker3.pacific.net.ph with ESMTP
+	id j2TNwmk9021913 for <linux-lvm@redhat.com>;
+	Wed, 30 Mar 2005 07:58:48 +0800
+Received: from [210.1.105.9] (ppp9.dyn1.105.pacific.net.ph [210.1.105.9] (may
+	be forged)) by congo2.pacific.net.ph with ESMTP
+	id j2TNwlmb028193 for <linux-lvm@redhat.com>;
+	Wed, 30 Mar 2005 07:58:47 +0800 (PHT)
+Message-ID: <4249EC29.5000706@nospam.com>
+Date: Wed, 30 Mar 2005 08:00:41 +0800
+From: Andy Sy <andy@nospam.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-References: <F1AF8CC9F864B04DAC52ECBB82D5AF5A1961C9@dealer.corp.snocap.com>
-Reply-To: talosso@gmail.com,
+Subject: [linux-lvm] Putting lvm autodetect into the kernel
+Reply-To: andy@neotitans.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,166 +30,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Hector Villalobos <hector@snocap.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi,
+Just like the kernel is now able to autodetect and
+autoenable md RAID arrays, are there plans to make
+lvm do the same?  (i.e integrate the functionality
+of vgscan / vgchange -ay,-an into the kernel)
 
-At startup I run the necessary boot scripts, the problem was more subtle and 
-I have solved it, reading another thread on this mailing list....what
-caused the problem still remains a mystery for me, perhaps you can
-enlight my mind :)
-
-I solved my issue simply by removing the partition table from the head
-of the two
-incriminate HDs and re-activating the volume group.
-The mysterious questions are: who creates those partitions on the two
-disks, and even if those partitions existed from the creation of the
-two physical volumes and their insertion into the the volume group (in
-the scenario that I was the one that created the partitions onto the
-disks and I have now completely lost my mind), why did this problem
-manifest itself only at this reboot? (I'm sure I have made many other
-reboots since the creation of that volume group).
-
-I'm looking for an explanation
-Kind regards.
-
-Livio
+If lvm really introduces as negligible an overhead
+as it is touted to, there really seems to be no
+reason to go with 'physical' partitions anymore and
+it should go the way of the dodo.  I can see a future
+where everyone installs their Linux distros on logical
+volumes.
 
 
 
-On Fri, 25 Mar 2005 16:59:33 -0800, Hector Villalobos <hector@snocap.com> wrote:
-> Have you checked that on startup your are running the boot scripts for
-> lvm.
-> 
-> Look here
-> 
-> http://www.tldp.org/HOWTO/LVM-HOWTO/initscriptredhat.html
-> 
-> Good Luck.
-> 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-> On Behalf Of talosso@gmail.com
-> Sent: Friday, March 25, 2005 5:18 AM
-> To: linux-lvm@redhat.com
-> Subject: [linux-lvm] vg OK --> reboot --> vg KO
-> 
-> Hi guys,
-> 
-> I got stuck in a painful problem with lvm.
-> I have 4 SATA HD handled by lvm as physical volumes into one large
-> logical volume.
-> Everything worked nice, until the last reboot.
-> 
-> A couple of info on the configuration:
-> 
-> root # lvmdiskscan
->  /dev/cdrom [      492.05 MB]
->  /dev/hda1  [      190.94 MB]
->  /dev/sda1  [      189.92 GB]
->  /dev/hda2  [       17.51 GB]
->  /dev/hda3  [      973.05 MB]
->  /dev/sdb1  [      189.92 GB]
->  /dev/sdc   [      189.92 GB] LVM physical volume
->  /dev/sdd   [      189.92 GB] LVM physical volume
->  1 disk
->  5 partitions
->  2 LVM physical volume whole disks
->  0 LVM physical volumes
-> 
-> Ok, /dev/hda is the system disk and it's not managed by lvm, thus the
-> four HD are the /dev/sd*. As you can see the first two devices have one
-> partition each, while the last two don't have it. The big lvm volume
-> group (disks_vg) was created at first using the two disks /dev/sda and
-> /dev/sdb, where I create the two physical volumes.
-> Later the other two disks has been added to the volume group and
-> accordingly the logical volume has been extended.
-> Well, this was the story and everything worked fine.
-> Then I rebooted and after that I find out that my volume group has not
-> been created...
-> 
-> root # vgdisplay -v
->  Finding all volume groups
->  Finding volume group "disks_vg"
-> Couldn't find device with uuid 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
-> Couldn't find all physical volumes for volume group disks_vg.
-> Couldn't find device with uuid 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
-> Couldn't find all physical volumes for volume group disks_vg.
-> Volume group "disks_vg" doesn't exist
-> 
-> and when I check the physical volumes I get the following message:
-> 
-> root # pvdisplay -v
->    Scanning for physical volume names
->  Couldn't find device with uuid
-> 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
->  Couldn't find device with uuid
-> 'ChG7VP-E1Bn-EUY3-krvx-2NJu-iHiC-0ByaEZ'.
->  Couldn't find device with uuid
-> 'XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi'.
->  Couldn't find device with uuid
-> 'ChG7VP-E1Bn-EUY3-krvx-2NJu-iHiC-0ByaEZ'.
->  --- Physical volume ---
->  PV Name               unknown device
->  VG Name               disks_vg
->  PV Size               189.92 GB / not usable 0
->  Allocatable           yes (but full)
->  PE Size (KByte)       4096
->  Total PE              48620
->  Free PE               0
->  Allocated PE          48620
->  PV UUID               XBrEsM-mSRT-vuDl-XwxU-Ae5Q-kIQr-nkm4gi
-> 
->  --- Physical volume ---
->  PV Name               unknown device
->  VG Name               disks_vg
->  PV Size               189.92 GB / not usable 0
->  Allocatable           yes (but full)
->  PE Size (KByte)       4096
->  Total PE              48620
->  Free PE               0
->  Allocated PE          48620
->  PV UUID               ChG7VP-E1Bn-EUY3-krvx-2NJu-iHiC-0ByaEZ
-> 
->  --- Physical volume ---
->  PV Name               /dev/sdc
->  VG Name               disks_vg
->  PV Size               189.92 GB / not usable 0
->  Allocatable           yes (but full)
->  PE Size (KByte)       4096
->  Total PE              48620
->  Free PE               0
->  Allocated PE          48620
->  PV UUID               Sh64Kk-w7Ac-FFpj-v2ck-3XKT-sdbc-VuYozC
-> 
->  --- Physical volume ---
->  PV Name               /dev/sdd
->  VG Name               disks_vg
->  PV Size               189.92 GB / not usable 0
->  Allocatable           yes (but full)
->  PE Size (KByte)       4096
->  Total PE              48620
->  Free PE               0
->  Allocated PE          48620
->  PV UUID               hilXy6-nvxA-xMxQ-Wrht-gRM6-ltfU-4gt8SJ
-> 
-> I think that the volume is still recoverable (that is what I need) and
-> that something damaged the first bytes of the first two physical
-> volumes... but after all I'm not so sure.
-> Can anybody help me recovering the LVM volume and thus my data?
-> Thanks a lot
-> 
-> Best regards.
-> 
-> Livio
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> This e-mail and any attachments are for the authorized use by the intended recipient only. It may contain proprietary material, confidential information and/or be subject to legal privilege. It should not be copied, disclosed to, retained or used by, any other party. If you are not an intended recipient then please promptly delete this e-mail and any attachments and all copies and inform the sender. Thank you.
-> 
->
+-- 
+reply-to: a n d y @ n e o t i t a n s . c o m
