@@ -1,13 +1,15 @@
-Date: Sat, 15 May 2004 10:11:38 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Can't seem to make pvmove do the work
-Message-ID: <20040515081138.GA25352@redhat.com>
-References: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAA1z/y+RiMjUG0rnE3+S6yhMKAAAAQAAAA9PM3uSfHCESqMaQcwxAYfwEAAAAA@EchoHome.org>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4FA4F001538
+	for <linux-lvm@redhat.com>; Sat, 15 May 2004 06:04:15 -0400
+Received: from hotmail.com (bay18-f54.bay18.hotmail.com [65.54.187.104])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i4FA498K029336
+	for <linux-lvm@redhat.com>; Sat, 15 May 2004 06:04:09 -0400
+From: "Bob Goddard" <bib_aab@hotmail.com>
+Date: Sat, 15 May 2004 10:04:03 +0000
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAA1z/y+RiMjUG0rnE3+S6yhMKAAAAQAAAA9PM3uSfHCESqMaQcwxAYfwEAAAAA@EchoHome.org>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <BAY18-F54PzADZgsSTF000262e9@hotmail.com>
+Subject: [linux-lvm] lost all logical volumes
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -17,75 +19,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Erik@echohome.org, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: hjm@redhat.com
+To: linux-lvm@redhat.com
 
-On Fri, May 14, 2004 at 02:39:46PM -0400, Erik Ch. Ohrnberger wrote:
-> It's strange.  I need to reduce a disk, either hdg or hdh from the volume
-> group.
-> 
-> I've already gone and reduced the allocated size using e2fsadm to change
-> free file system space into free pv allocations.  Here is what vgdisplay -v
-> says:
-> 
-> --- Physical volumes ---
-> PV Name (#)           /dev/hdg1 (4)
-> PV Status             available / allocatable
-> Total PE / Free PE    9814 / 0
-> 
-> PV Name (#)           /dev/hdh1 (3)
-> PV Status             available / allocatable
-> Total PE / Free PE    9815 / 880
-> 
-> PV Name (#)           /dev/hde1 (2)
-> PV Status             available / allocatable
-> Total PE / Free PE    19078 / 8347
-> 
-> PV Name (#)           /dev/hdf1 (6)
-> PV Status             available / allocatable
-> Total PE / Free PE    19078 / 5365
-> 
-> Now, I perform the following pvmove command:
-> 
-> Pvmove /dev/hdg1
-> 
-> And it says that there are insufficient free/allocatable physical extents.
-> 
-> But if I look at the list, the 9814 pvs on hdg1 should be across hdh1, hde1
-> and hdf1.
-> 
-> Have I got this correct?  Is there perhaps a step that I'm missing?  If I
-> am, do please let me know.
+I was reinstalling the O/S when I created a new LVM2 volume group over the
+existing LVM1 partition. It was named system but was recreated as system2.
 
-LV(s) on hdg1 larger than 8347 PEs with contiguous allocation pollicy set ?
-(see "man lvchange" how to reset)
+vgscan -v gives:
+    Wiping cache of LVM-capable devices
+    Wiping internal cache
+  Reading all physical volumes.  This may take a while...
+    Finding all volume groups
+    Finding volume group "system"
+  Found volume group "system" using metadata type lvm2
+    Finding volume group "system2"
+  Found volume group "system2" using metadata type lvm1
 
-> 
-> 	Thanks,
-> 		Erik.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+while vgchange -ay gives:
+  8 logical volume(s) in volume group "system" now active
+  0 logical volume(s) in volume group "system2" now active
 
--- 
+No logical volumes were recreated and hence were not formatted.
+Is there any way to recover these or do I have to resort to a disk editor.
 
-Regards,
-Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Bob Goddard
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+_________________________________________________________________
+Want to block unwanted pop-ups? Download the free MSN Toolbar now!  
+http://toolbar.msn.co.uk/
