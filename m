@@ -1,12 +1,8 @@
-From: Tim <tim@connectlive.com>
-Subject: Re: [linux-lvm] System Suggestions
-Message-Id: <20020306234746.B26236@connectlive.com>
-References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
-    <20020306161130.D855@kluge.net> <20020307034009.GJ32504@auctionwatch.com>
+From: Seth Mos <knuffie@xs4all.nl>
+Subject: Re: re[2]: [linux-lvm] System Suggestions
+In-Reply-To: <auto-000020233424@front1.mail.megapathdsl.net>
+Message-Id: <Pine.BSI.4.10.10203070728480.16043-100000@xs3.xs4all.nl>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020307034009.GJ32504@auctionwatch.com>; from
-    petro@auctionwatch.com on Wed, Mar 06, 2002 at 07:40:09PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,21 +13,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 22:47:02 2002
+Date: Thu Mar  7 00:32:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "Anthony W. Marino" <anthony@AWMObjects.com>
+Cc: Greg Freemyer <freemyer@NorcrossGroup.com>, Petro <petro@auctionwatch.com>, linux-lvm@sistina.com, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
 
->     We're also having some problems with Mysql that people keep pointing
->     fingers at LVM for, but at this time we're point right back and
->     saying "No!" in a firm voice...
+On Wed, 6 Mar 2002, Anthony W. Marino wrote:
 
-MySQL is weak under real read/write concurrent loads.  PostgreSQL is
-terrific for that.  On the other hand, MySQL buries psql for keeping up
-with my IDS alerts.  Gotta use the right tool for the job...
+> >
+> > If you are looking into using the 3Ware controllers watch the following:
+> > The 64xx controllers are underpowered and should better not be used in
+> > raid 5 mode.
+> > The 74xx controllers seem to be good and should be fine with raid5 but
+> > note that raid5 will always have slow write speeds.
+> >
+> Is there a way to minimize the write penalty using both XFS and LVM with RAID 
+> 5?
 
--- 
-     "To be suspended from the legal profession is the moral equivalent of 
-      being ostracized by child molesters."
-                                                           --Ian Rowan
+Don't use raid5. I always use a combination of raid 1 and 10 for a
+database server. If you have a database that frequently updates records
+you don't want the extra write overhead.
+
+Software raid 1 or 10 will do fine in that case.
+If you have 4 disks you make 2 raid 1 arrays and then stripe those in a
+raid 0. You then have optimum speed at the lowest possible overhead.
+
+Generally that is what you want for a database server.
+
+Cheers
+Seth
