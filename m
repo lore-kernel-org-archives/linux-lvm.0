@@ -1,10 +1,11 @@
-Return-Path: <jmoser@erc.wisc.edu>
-From: "John Moser" <jmoser@erc.wisc.edu>
-Date: Fri, 11 May 2001 06:45:36 -0500
-Message-ID: <MPEBLKGAGHMJAPMMNPGGAEAJCAAA.jmoser@erc.wisc.edu>
+Return-Path: <tandem@dnmi.no>
+Subject: Re: [linux-lvm] LVM vgscan problems
+References: <MPEBLKGAGHMJAPMMNPGGAEAJCAAA.jmoser@erc.wisc.edu>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 11 May 2001 14:07:47 +0200
+In-Reply-To: "John Moser"'s message of "Fri, 11 May 2001 06:45:36 -0500"
+Message-ID: <wvr8xwdr70.fsf@freeze.oslo.dnmi.no>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM vgscan problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +18,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-After having a bit of success with LVM under Linux (kernel 2.4, LVM version
-0.9) over the past couple of months, I've encountered this problem on a
-reboot of my LVM-enabled machine:
+>>>>> "John" == John Moser <jmoser@erc.wisc.edu> writes:
 
-root@computer:/etc# vgscan -v
-vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- scanning for all active volume group(s) first
-vgscan -- found inactive volume group "test "
-vgscan -- reading data of volume group "test" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-data of volume group "test" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-"/etc/lvmtab" and "/etc/lvmtab.d"
+    John> After having a bit of success with LVM under Linux (kernel
+    John> 2.4, LVM version 0.9) over the past couple of months, I've
+    John> encountered this problem on a reboot of my LVM-enabled
+    John> machine:
 
-Does anyone know how to fix this?  Or what might cause it?
-There's critical data on the filesystem, and I'd like to get it back up and
-running asap.
+    John> root@computer:/etc# vgscan -v vgscan -- removing
+    John> "/etc/lvmtab" and "/etc/lvmtab.d" vgscan -- reading all
+    John> physical volumes (this may take a while...)  vgscan --
+    John> scanning for all active volume group(s) first vgscan --
+    John> found inactive volume group "test " vgscan -- reading data
+    John> of volume group "test" from physical volume(s) vgscan --
+    John> ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't
+    John> get data of volume group "test" from physical volume(s)
+    John> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of
+    John> LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
 
-Thanks,
-John Moser
+    John> Does anyone know how to fix this?  Or what might cause it?
+    John> There's critical data on the filesystem, and I'd like to get
+    John> it back up and running asap.
+
+Note I'm a LVM newbie so possibly may be of little help, but some
+standard questions :-
+
+- anything else in your logs, hardware, SCSI problems
+
+- which 2.4, from what I gather, anything before 2.2.4 has problems in
+  various places (not LVM)
+
+Sincerely,
+
+Adrian Phillips
+
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
