@@ -1,11 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Mon, 23 Apr 2001 15:27:48 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] What have snapshots got to do with LVM ?
-Message-ID: <20010423152748.A28301@sistina.com>
-References: <20010422130924.A10390@66bassett.freeserve.co.uk> <20010423102145.C27367@sistina.com> <20010423093818.B739@66bassett.freeserve.co.uk> <20010423120521.A27695@sistina.com> <20010423112638.B1060@66bassett.freeserve.co.uk>
-Mime-Version: 1.0
-In-Reply-To: <20010423112638.B1060@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Mon, Apr 23, 2001 at 11:26:38AM +0100
+Return-Path: <dalecki@evision-ventures.com>
+Message-ID: <3AE42B9D.AAEDD666@evision-ventures.com>
+Date: Mon, 23 Apr 2001 15:18:21 +0200
+From: Martin Dalecki <dalecki@evision-ventures.com>
+MIME-Version: 1.0
+References: <Pine.LNX.4.33.0104232109570.326-100000@boston.corp.fedex.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: [BUG] lvm beta7 and ac11 problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,71 +18,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Jeff Chua <jeffchua@silk.corp.fedex.com>
+Cc: Jens Axboe <axboe@suse.de>, Ed Tomlinson <tomlins@cam.org>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>
 
-On Mon, Apr 23, 2001 at 11:26:38AM +0100, Joe Thornber wrote:
-> On Mon, Apr 23, 2001 at 12:05:21PM +0000, Heinz J. Mauelshagen wrote:
-> > On Mon, Apr 23, 2001 at 09:38:18AM +0100, Joe Thornber wrote:
-> > > On Mon, Apr 23, 2001 at 10:21:45AM +0000, Heinz J. Mauelshagen wrote:
-> > > > On Sun, Apr 22, 2001 at 01:09:24PM +0100, Joe Thornber wrote:
-> > > > > Just a random Sunday morning thought:
-> > > > > 
-> > > > > Why don't we split snapshots off into their own driver so we can
-> > > > > snapshot any block device, putting the COW tables on any other block
-> > > > > device ?  
-> > > > 
-> > > > Any other block device devides into PE similar allocation units carrying their
-> > > > own COW exception table at the beginning?
-> > > 
-> > > I'm not sure I understand your comment.  There are two devices the
-> > > snapshot origin and the snapshot storage device.  We can divide the
-> > > snapshot storage device up how we want, the COW exception tables go in
-> > > here.
-> > 
-> > With LVM sanpshots we devide a device into PEs, allocate parts of the
-> > COW table dealing with exceptions stored in a specific PE at the very
-> > beginning of the PE.
+Jeff Chua wrote:
 > 
-> Yes, we would divide the snapshot storage into chunks consisting of
-> COW table + data.  This chunk size would be configurable, so we can
-> make it the same as the PE size *if* we were taking a snapshot of an
-> LV.
+> On Mon, 23 Apr 2001, Martin Dalecki wrote:
 > 
-> > My point is, that a similar allocation policy needs to take place on a
-> > general block device too in order to avoid disk access overhead.
+> > > > depmod: *** Unresolved symbols in /lib/modules/2.4.3-ac11/kernel/drivers/md/lvm-mod.o
 > 
-> Still not getting it.  Am I being stupid ?
-
-You're the last if at all ;-)
-
-Just refering to your original statement you made that the snapshot code
-knows to much about PEs et al.
-
-You said it already above: the general concept still needs to deal with chunks 
-which could eventually map to LVM PEs in case we run LV snapshots carying
-metadata (COW table sections) and data.
-The abstraction therefore will be one in notion basically
-(chunk rather than PE).
-
+> try this (after you have applied the patch for lvm 0.9.1_beta7) ...
 > 
-> - Joe
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Jeff
+> [jchua@fedex.com]
+> 
+> --- /u2/src/linux/drivers/md/lvm.c.org  Mon Apr 23 21:11:32 2001
+> +++ /u2/src/linux/drivers/md/lvm.c      Mon Apr 23 21:12:27 2001
+> @@ -1791,7 +1791,7 @@
+>         int max_hardblocksize = 0, hardblocksize;
+> 
+>         for (le = 0; le < lv->lv_allocated_le; le++) {
+> -               hardblocksize =
+> get_hardblocksize(lv->lv_current_pe[le].dev);
+> +               hardblocksize =
+> get_hardsect_size(lv->lv_current_pe[le].dev);
 
--- 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 if (hardblocksize == 0)
+>                         hardblocksize = 512;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Regards,
-Heinz    -- The LVM Guy --
+Those above two code lines can be killed, since get_hardsect_size
+is returning the default sector size of Linux (namely 512 bytes)
+in case the driver didn't have a chance to set hardsect_size[] array
+in time for usage (Which shouldn't happen anyway).
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>                 if (hardblocksize > max_hardblocksize)
+> @@ -1801,7 +1801,7 @@
+>         if (lv->lv_access & LV_SNAPSHOT) {
+>                 for (e = 0; e < lv->lv_remap_end; e++) {
+>                         hardblocksize =
+> -                               get_hardblocksize(
+> +                               get_hardsect_size(
+> 
+> lv->lv_block_exception[e].rdev_new);
+>                         if (hardblocksize == 0)
+>                                 hardblocksize = 512;
+> 
+> -
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
