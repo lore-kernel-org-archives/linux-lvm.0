@@ -1,26 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6SFwAa18582
-	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 11:58:10 -0400
-Received: from mochilla.bms.com (usintout01.bms.com [165.89.129.231])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i6SFw9e1005711
-	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 11:58:09 -0400
-Received: from meusmsg05 ([127.0.0.1])
-	by mochilla.bms.com (iPlanet Messaging Server 5.2 HotFix 1.21 (built
-	Sep 8 2003)) with ESMTP id <0I1K00L0FKBFCP@mochilla.bms.com> for
-	linux-lvm@redhat.com; Wed, 28 Jul 2004 15:57:15 +0000 (GMT)
-Received: from bms.com (A069890.hpw.stf.bms.com [140.176.175.174])
-	by meusmsg05.net.bms.com
-	(iPlanet Messaging Server 5.2 HotFix 1.21 (built Sep  8 2003))
-	with ESMTPA id <0I1K0009DKBFF8@meusmsg05.net.bms.com> for
-	linux-lvm@redhat.com; Wed, 28 Jul 2004 15:57:15 +0000 (GMT)
-Date: Wed, 28 Jul 2004 11:57:09 -0400
-From: Anu Matthew <anu.matthew@bms.com>
-In-reply-to: <20040727231026.D639874913@hormel.redhat.com>
-Message-id: <4107CCD5.5010405@bms.com>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-References: <20040727231026.D639874913@hormel.redhat.com>
-Subject: [linux-lvm] Re: linux-lvm Digest, Vol 5, Issue 12
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6SGbRa02159
+	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 12:37:27 -0400
+Received: from smtp105.mail.sc5.yahoo.com (smtp105.mail.sc5.yahoo.com
+	[66.163.169.225])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i6SGbQe1017400
+	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 12:37:27 -0400
+Sender: frank@redhat.com
+Message-ID: <4107D640.F972EC04@yahoo.de>
+Date: Wed, 28 Jul 2004 18:37:20 +0200
+From: Frank Mohr <f_mohr@yahoo.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] pvscan fails (some more debugging - cause found)
+References: <4106E0D6.10D6AA3D@yahoo.de>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,138 +23,119 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Wayne,
+I did some debugging and found where and why pvscan crashes.
 
-1) I guess it is sane.
+Is the any tool to fix PE entries on disk?
+There seem to be 7 corrupted entries.
 
-2) Look at rc.sysinit. What you want to do is to bring the raiddevices 
-before the volume groups are activated. Assuming you are running AS3.0 
-and have mdadm installed, add a line like: (Around line no. 328).
 
-# LVM initialization
-if [ -f /etc/lvmtab ]; then
-    [ -e /proc/lvm ] || modprobe lvm-mod > /dev/null 2>&1
-    if [ -e /proc/lvm -a -x /sbin/vgchange ]; then
-        action $"Special raiddevice startup for `hostname` " mdadm 
---assemble --scan
-        action $"Setting up Logical Volume Management:" /sbin/vgscan && 
-/sbin/vgchange -a y
-    fi
-fi
+I've added some debug messages to vg_read_with_pv_and_lv
 
-Move onto mdadm, raidtools are deprecated, unless you are on RHEL 2.1
+there seems to be a mismatch between vg_this->lv[l]->lv_allocated_le and
+some PE
 
---HTH
-./AM
+i've change/added a check to the loop:
 
-linux-lvm-request@redhat.com wrote:
 
->Send linux-lvm mailing list submissions to
->	linux-lvm@redhat.com
->
->To subscribe or unsubscribe via the World Wide Web, visit
->	https://www.redhat.com/mailman/listinfo/linux-lvm
->or, via email, send a message with subject or body 'help' to
->	linux-lvm-request@redhat.com
->
->You can reach the person managing the list at
->	linux-lvm-owner@redhat.com
->
->When replying, please edit your Subject line so it is more specific
->than "Re: Contents of linux-lvm digest..."
->
->
->Today's Topics:
->
->   1. Sanity check - Raid 0+1 solution (Wayne Pascoe)
->   2. vgexports-Parameters. (Ronald Laszlob)
->   3. Re: LVM2 and RAID 1 not working on Fedora Core 2 (Zachary Hamm)
->   4. Device mapper error ioctl cmd 9. What is this? (Nathan Richardson)
->   5. Change PV size? (Michael Bellears)
->   6. Re: Change PV size? (Luca Berra)
->   7. RE: Change PV size? (Michael Bellears)
->   8. Re: LVM2 and RAID 1 not working on Fedora Core 2
->      (Patrick Caulfield)
->   9. pvscan fails  (Frank Mohr)
->
->
->----------------------------------------------------------------------
->
->Message: 1
->Date: Fri, 23 Jul 2004 14:48:08 +0100 (BST)
->From: "Wayne Pascoe" <lists-june2004@penguinpowered.org>
->Subject: [linux-lvm] Sanity check - Raid 0+1 solution
->To: linux-lvm@redhat.com
->Message-ID:
->	<9644.195.50.100.20.1090590488.squirrel@webmail.penguinpowered.org>
->Content-Type: text/plain;charset=iso-8859-1
->
->Hi all,
->
->I think I've found a solution that will provide for our Raid 0+1
->needs, and I'd just like to bounce it off of people for a sanity
->check... I would like to explore EVMS, but Red Hat will not be
->including it in the current version of AS (3). The same goes for LVM2
->I believe. So I need to try and make this work with LVM1, or admit I
->was wrong about this and go the Veritas route. I really don't want to
->admit I was wrong just yet :D
->
->I've started with a fresh RHEL AS installation (thanks to pxeboot and
->kickstart, this is easy enough). My base system is all installed on 1
->disk (/dev/sda), leaving me 5 to play with.
->
->I've then done the following:
->
->Created a 10GB partition on sdb, sdc, sdd and sde with a type of fd
->(Linux raid autodetect). I've then created two RAID-1 devices in
->/etc/raidtab, and used mkraid to create the raid devices.
->
->Next, I've used
->vgscan
->pvcreate /dev/md0 /dev/md1
->vgcreate vol01 /dev/md0 /dev/md1
->lvcreate -i 2 -I 64 -n data01 -L6G vol01
->mkfs.ext3 /dev/vol01/data01
->mkdir /data01
->mount /dev/vol01/data01 /data01
->
->I then get a usable filesystem that I can copy things to. Next, I
->unmounted the filesystem, and expanded it to 19G. When I remounted the
->filesystem, it still looks healthy. I then attempted to copy 24GB of
->data to the disk, and it barfed at 19GB, as expected. All files that
->_were_ successfully copied looked healthy and checksums matched the
->source files. So it looks like the expanded volume worked.
->
->I then added /dev/vol01/data01  /data01  ext3   defaults  0 0 to
->/etc/fstab and rebooted. My LVM volume was still there at boot time.
->The only problem is that after the reboot, /proc/mdstat doesn't appear
->to have my raid devices listed. I've seen this before, where if they
->are not mounted at boot time, they do not appear in /proc/mdstat. If I
->manually raidstart /dev/md0; raidstart /dev/md1, then they appear in
->/proc/mdstat.
->
->So where I am now :)
->
->1. Is this sane ? I figure that I can loose any 1 disk, and my volumes
->will still be ok. Is that correct ?
->
->2. Can anyone advise how to bring the raid devices up at boot time,
->since mounting the volume that is made up of these devices does not
->appear to do the trick.
->
->The biggest downside I can see to this solution is that I _HAVE_ to
->assign the whole disk to the mirror at the beginning of my process.
->Unlike with VxVM, I can't have part of a disk mirrored, and another
->part of that disk part of a striped array, and still maintain the
->ability to resize the mirrored part of the disk.
->
->Having said that, disk is a lot cheaper than VxVM licences, and I
->should be able to justify this solution.
->
->Can anyone confirm, deny, or change my mind on these points ?
->
->  
->
+               debug ( "construct the lv_current_pe pointer array\n");
+               /* construct the lv_current_pe pointer array */
+               p = npe = 0;
+               for ( p = 0; p < vg_this->pv_cur && npe <
+vg_this->lv[l]->lv_allocated_le; p++)
+               {
+                   debug ( "p = %d - pe_total =
+%d\n",p,vg_this->pv[p]->pe_total);
+                  for ( ope = 0; ope < vg_this->pv[p]->pe_total; ope++)
+                  {
+                       debug ( "ope = %d\n",ope);
+                     if ( vg_this->pv[p]->pe[ope].lv_num == lv_num)
+                     {
+                        pe_index = vg_this->pv[p]->pe[ope].le_num;
+                       debug ( "pe_index = %d\n",pe_index);
+                        if( pe_index > vg_this->lv[l]->lv_allocated_le)
+                        {
+                            debug("(fm) Error pe_index = %lu >
+vg_this->lv[l]->lv_allocated_le = %lu\n",
+                                pe_index ,
+vg_this->lv[l]->lv_allocated_le);
+                        }
+                        else
+                        {
+                        vg_this->lv[l]->lv_current_pe[pe_index].dev =
+vg_this->pv[p]->pv_dev;
+                       debug ( "get_pe_offset = %d\n",ope);
+                        vg_this->lv[l]->lv_current_pe[pe_index].pe =
+get_pe_offset(ope, vg_this->pv[p]);
+                       debug ( "get_pe_offset ->
+%lu\n",vg_this->lv[l]->lv_current_pe[pe_index].pe);
+                        vg_this->lv[l]->lv_current_pe[pe_index].reads =
+\
+                        vg_this->lv[l]->lv_current_pe[pe_index].writes =
+0;
+                        npe++;
+                        }
+                     }
+                  }
+               }
+               debug ( "construct the lv_current_pe pointer array --
+done\n");
+
+
+the result is:
+
+<1> p = 1 - pe_total = 19632
+...
+<1> ope = 17014
+<1> pe_index = 28542
+<1> get_pe_offset = 17014
+<1> get_pe_offset -> 139387384
+<1> ope = 17015
+<1> pe_index = 32639
+<1> (fm) Error pe_index = 32639 > vg_this->lv[l]->lv_allocated_le =
+32500
+<1> ope = 17016
+<1> pe_index = 28544
+<1> get_pe_offset = 17016
+<1> get_pe_offset -> 139403768
+<1> ope = 17017
+<1> pe_index = 28545
+<1> get_pe_offset = 17017
+...
+<1> ope = 17142
+<1> pe_index = 28670
+<1> get_pe_offset = 17142
+<1> get_pe_offset -> 140435960
+<1> ope = 17143
+<1> pe_index = 32767
+<1> (fm) Error pe_index = 32767 > vg_this->lv[l]->lv_allocated_le =
+32500
+<1> ope = 17144
+<1> pe_index = 28672
+<1> get_pe_offset = 17144
+<1> get_pe_offset -> 140452344
+<1> ope = 17145
+<1> pe_index = 28673
+...
+<1> construct the lv_current_pe pointer array -- done
+vgscan -- only found 32493 of 32500 LEs for LV /dev/DATAVG/DATALV (0)
+<1> vg_read_with_pv_and_lv -- LEAVING with ret: -365
+<1> lvm_error -- CALLED with: -365
+<1> lvm_error -- LEAVING with: "vg_read_with_pv_and_lv(): allocated LE
+of LV"
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "DATAVG" from physical volume(s)
+<1> vg_free -- CALLED
+<1> vg_free -- LEAVING with ret: -99
+<1> lvm_interrupt -- CALLED
+<1> lvm_interrupt -- LEAVING
+<1> lvm_unlock -- CALLED
+<1> lvm_unlock -- LEAVING with ret: 0
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
+
+<1> lvm_unlock -- CALLED
+<1> lvm_unlock -- LEAVING with ret: -104
