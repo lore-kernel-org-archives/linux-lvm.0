@@ -1,11 +1,11 @@
-From: "Anthony W. Marino" <anthony@AWMObjects.com>
-Subject: Re: [linux-lvm] System Suggestions
-References: <auto-000021455115@front2.mail.megapathdsl.net>
-    <20020306194023.GB32504@auctionwatch.com>
-In-Reply-To: <20020306194023.GB32504@auctionwatch.com>
+From: Frank Lenaerts <frank.lenaerts@advalvas.be>
+Message-Id: <20020306203532.GA622@human.galaxy>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <auto-000020218640@front1.mail.megapathdsl.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="sm4nu43k4a2Rpi4c"
+Content-Disposition: inline
+Subject: [linux-lvm] LVM/RAID again
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,38 +16,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 14:22:02 2002
+Date: Wed Mar  6 14:35:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Petro <petro@auctionwatch.com>, linux-lvm@sistina.com
-Cc: linux-xfs@oss.sgi.com, mysql@lists.mysql.com
+To: linux-lvm@sistina.com
 
-On Wednesday 06 March 2002 02:40 pm, Petro wrote:
-> On Wed, Mar 06, 2002 at 11:52:30AM -0500, Anthony W. Marino wrote:
-> > Could someone, please, provide me with a link and/or facilitate some
-> > suggestons for configuration of the following components for a new DB
-> > server hosting MySQL 4.01MAX?  I'm only looking to get a start and don't
-> > expect "THE" answer since all things are relative and I will have to
-> > further test the various scenarios.
-> > SuSE 7.3-2.4.18
-> > 512MB RAM
-> > 4x40GB Maxtor IDE (7200RPM) drives
-> > 3Ware 7800 RAID Controller
-> > LVM
-> > XFS
->
->     You really don't provide us with enough information here.
->
->     How big is your database, both in total size and in number of
->     tables. How are those tables utilized, when they get used do you
->     primarily open one table, manipulate it, then close it, or do you go
->     across a bunch of tables?
->
->     All of these, and more will have a dramatic impact on how you set
->     this stuff up.
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.  I'm more concerned about any specifics as it applies to MySQL Max 
-and XFS, RAID and LVM as a whole.  Are there any nuances as it applies to the 
-whole?
+I've been reading several LVM/RAID postings on this mailinglist to
+find out if someone else is also having the same question as I have,
+but this does not seem to be the case; I hope this is the right place
+to ask this.
 
-Anthony
+As LVM does not provide RAID1 (etc.) as VXVM does with its plexes, I
+wanted to use LVM on top of the standard Linux metadevices
+(RAID1). However, I wanted to do this for a cluster system using a
+shared SCSI bus. I am aware of the fact that ownership of disks is
+important, while something like LVM actually tries to abstract this
+away, but I want to use LVM to be able to extend the filesystem, to
+take snapshot backups etc.. The problem I currently face however, is
+the fact that both nodes autodetect the metadevices and start syncing
+the mirrors, independently of each other (I do not have the LVM and
+cluster software installed on these machines yet). The synchronization
+however, is initiated by the raidstart command, that is true (it is
+not the detection itself which does this), but I wonder how I should
+solve this problem. Below, some ideas that come to my mind:
+
+- do not use LVM at all, just use the physical disks instead
+
+- have two separate raidtab files where each of them is only "owned"
+  by a single node (to prevent syncing problems) and only start the
+  raid for a certain metadevice when a logical volume is imported on a
+  node
+
+What do you think about this?
+
+--=20
+frank.lenaerts@advalvas.be
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8hn2UuSr0q5/7NwcRArLeAJ96S2MDOPdvHy4d8dkInJjIv7p7UwCfWrJz
+kvzM568PI+yIHNTpZCemrfQ=
+=NMfZ
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
