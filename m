@@ -1,8 +1,7 @@
-From: Sven Falk <lvm@bailong.de>
-Message-ID: <20030127182006.GA6523@zeus.bailong.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] recover LVM system
+From: "Alois Schneider" <alois@pustertal-info.net>
+MIME-Version: 1.0
+Message-Id: <E18dFrq-00042Q-00@adroit.an-dns.com>
+Subject: [linux-lvm] removing a failed disk from VG
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,40 +12,83 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 27 12:21:01 2003
+Date: Mon Jan 27 14:29:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+I had a VG scsi_vg consisting of 4 PV's (sda1, sdb1, hdb1,hdc1). 
+Now /dev/sdb1 failed and was no longer recogniced by th SCSI-
+controller. I had to remove it.
 
-seems I can't mount my LVM anymore, here are the details:
+vgscan now fails with the following error:
 
-I created a logical volume called data containing the partitions hda5
-and hdb5 on Suse 8.0. Here is the output from:
-
-zeus:/home/bailong # pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/hda5" of VG "system" [50.98 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdb5" of VG "system" [57.26 GB / 40 MB
-free]
-pvscan -- total: 2 [108.26 GB] / in use: 2 [108.26 GB] / in no VG: 0
-[0]
-
-zeus:/home/bailong # vgscan
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data 
+of volume group "scsi_vg" from physical volume(s)
 vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "system"
 vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your
+vgscan -- WARNING: This program does not do a VGDA backup of your 
 volume group
+ 
+vgchange -ay gives
+-- no volume group found
 
-zeus:/home/bailong # lvscan
-lvscan -- ACTIVE            "/dev/system/data" [108.20 GB]
-lvscan -- 1 logical volumes with 108.20 GB total in 1 volume group
-lvscan -- 1 active logical volumes
+The remaining PV's seem to be ok and the failed disk was only 4Gb 
+large.
 
-Actually I can't mount the /dev/system/data anymore :-(
+Here is the output of pvdisplay:
 
-Cheers
-Sven
+--- Physical volume ---
+PV Name               /dev/sda1
+VG Name               scsi_vg
+PV Size               4.04 GB [8466192 secs] / NOT usable 1.88 MB 
+[LVM: 125 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              1033
+Free PE               0
+Allocated PE          1033
+PV UUID               pJsMFv-ci9Q-orNK-3cRr-2aTl-w1N9-TEHDI1
+
+
+--- Physical volume ---
+PV Name               /dev/hdb1
+VG Name               scsi_vg
+PV Size               76.69 GB [160826652 secs] / NOT usable 4.25 MB 
+[LVM: 200 KB]
+PV#                   3
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                2
+PE Size (KByte)       4096
+Total PE              19631
+Free PE               0
+Allocated PE          19631
+PV UUID               u5I40y-Op34-nnVV-aInj-Jekc-VJT7-s2q8OK
+
+
+--- Physical volume ---
+PV Name               /dev/hdc1
+VG Name               scsi_vg
+PV Size               19.01 GB [39873267 secs] / NOT usable 4.18 MB 
+[LVM: 143 KB]
+PV#                   5
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              4866
+Free PE               2040
+Allocated PE          2826
+PV UUID               3PCGsY-hUr6-QEUt-MkoJ-fKlX-24vG-pS0HJY
+
+What can I do? How can I remove the no longer existing PV sdb1 from 
+scsi_vg?
+
+Any help will be appreciated.
+Regards
+Alois
