@@ -1,9 +1,14 @@
-Return-Path: <ardy@rdb.linux-help.org>
-Date: Sun, 25 Feb 2001 13:33:05 -0500 (EST)
-From: ardy@rdb.linux-help.org
-Message-ID: <Pine.LNX.4.20.0102251304220.27667-100000@rdb.linux-help.org>
-MIME-Version: 1.0
-Subject: [linux-lvm] Slackware init
+Return-Path: <lewis@sistina.com>
+Date: Sun, 25 Feb 2001 17:52:46 -0600
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Slackware init
+Message-ID: <20010225175246.A31937@sistina.com>
+References: <Pine.LNX.4.20.0102251304220.27667-100000@rdb.linux-help.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.20.0102251304220.27667-100000@rdb.linux-help.org>; from ardy@rdb.linux-help.org on Sun, Feb 25, 2001 at 01:33:05PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,67 +20,68 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've set up LVM on a slackware 7.0 box, its working for the most part, I
-have some oddities I'd like to clear up as I may not be initializing LVM
-correctly at boot. I'm trying to mount the volumes from fstab, when the
-other partitions get mounted after /.
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have the following in fstab:
+On Sun, Feb 25, 2001 at 01:33:05PM -0500, ardy@rdb.linux-help.org wrote:
+> What happens is when vgscan starts, it takes about 1.5 minutes to scan,
+> and while its scanning, the kernel is reporting a whole lot of modprobe
+> errors for modules I don't have/need. What I ended up doing was aliasing
+> off the block-major devices that were being scanned that I don't have on
+> my system:
+>=20
+> alias block-major-9     off
+> alias block-major-22    off
+> alias block-major-33    off
+> alias block-major-34    off
+> alias block-major-48    off
+> alias block-major-49    off
+> alias block-major-50    off
+> alias block-major-51    off
+> alias block-major-52    off
+> alias block-major-53    off
+> alias block-major-54    off
+> alias block-major-55    off
+>=20
+> Consequently, the loop block module gets loaded because it too is scanned=
+.=20
+> After the 1.5 minute scan, everything is mounted from fstab, including the
+> LVM volumes.=20
 
-/dev/ws_scsi/ws_scsi_01 /home reiserfs        defaults   1   1
-/dev/ws_scsi/ws_scsi_02 /mnt/scsi reiserfs    defaults   1   1
+Are you by chance using a 2.4.x kernel with devfs support compiled in, but
+not being mounted?  I am seeing the same thing with that setup.
 
-I have lvm as a module, and two modules.conf aliases for it:
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-alias block-major-58      lvm-mod
-alias char-major-109      lvm-mod
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-I have placed the two lvm startup commands in rc.S right after / is
-mounted read-write:
+-----Begin Obligatory Humorous Quote----------------------------------------
+Carpe Aptenodytes! (Seize the Penguins!)
+-----End Obligatory Humorous Quote------------------------------------------
 
- # Remount the root filesystem in read-write mode
- echo "Remounting root device with read-write enabled."
- /sbin/mount -w -v -n -o remount /
- # Initialize Logical Volume Manager
- /sbin/vgscan
- /sbin/vgchange -ay
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-What happens is when vgscan starts, it takes about 1.5 minutes to scan,
-and while its scanning, the kernel is reporting a whole lot of modprobe
-errors for modules I don't have/need. What I ended up doing was aliasing
-off the block-major devices that were being scanned that I don't have on
-my system:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-alias block-major-9     off
-alias block-major-22    off
-alias block-major-33    off
-alias block-major-34    off
-alias block-major-48    off
-alias block-major-49    off
-alias block-major-50    off
-alias block-major-51    off
-alias block-major-52    off
-alias block-major-53    off
-alias block-major-54    off
-alias block-major-55    off
+iD8DBQE6mZrOpE6/iGtdjLERAhMNAJ0W4YS0Z8hBjaJeSQJxWsJsguLGIQCgkIVK
+oZxIGk6+AWyEg5HigeQB0lM=
+=COUl
+-----END PGP SIGNATURE-----
 
-Consequently, the loop block module gets loaded because it too is scanned. 
-After the 1.5 minute scan, everything is mounted from fstab, including the
-LVM volumes. 
-
-Also, I had written my own rc.lvm, and was calling it at the end of rc.S,
-now this worked, but wasn't exactly what I wanted, since what I want is
-for the volumes to load from fstab with the rest of the partitions.
-But the scan only took a few moments when done this way.
-
-So, am I doing something incorrectly here? 
-Why is the scan taking so long?
-Why are devices nonexistent on my machine being scanned for?
-Is there a better way to implement this under Slackware?
-
-Thanks,
-R. Dicaire
+--AqsLC8rIMeq19msA--
