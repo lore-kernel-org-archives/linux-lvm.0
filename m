@@ -1,8 +1,8 @@
-Message-Id: <200308152304.h7FN4eo12611@mail.osdl.org>
-From: markw@osdl.org
-Subject: Re: [linux-lvm] lvcreate with a 52 drive volume
-In-Reply-To: <20030815213131.G12107@uk.sistina.com>
-MIME-Version: 1.0
+From: Jan Niehusmann <list039@gondor.com>
+Message-ID: <20030816102005.GA12916@gondor.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] pvmove hangs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,51 +13,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 15 18:05:02 2003
+Date: Sat Aug 16 05:21:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ok, I've put the log file:
+Hi!
 
-http://developer.osdl.org/markw/lvm2.log
+On my computer, pvmove just hangs at 0.2% done. First it looked like the
+reason was that I hadn't loaded dm-mirror before calling pvmove.
+Modprobe was called automatically, but tried to write to
+/var/log/ksymoops/, which was on one of the lvs to move.
 
-Compressed:
-http://developer.osdl.org/markw/lvm2.log.gz
+But then I booted to singe user mode and didn't mount any partitions on
+lvm, and still, pvmove was hanging at 0.2%.
 
-Thanks,
-Mark
+Another unusual detail about my installation is that the target pv is on
+a degraded raid1 array. Perhaps there is some locking issue?
 
-On 15 Aug, Alasdair G Kergon wrote:
-> On Fri, Aug 15, 2003 at 01:11:51PM -0700, markw@osdl.org wrote:
->> # lvcreate -i52 -I4 -l450996 -n mydata data_volume
->>   device-mapper ioctl cmd 9 failed: Invalid argument
->>   Couldn't load device 'data_volume-mydata'.
->>   Failed to activate new LV.
-> 
-> Mark, please would you enable the debug messages
-> as described in the docs,
-> viz. the following settings in lvm.conf:
-> 
->   log {
->           file="/tmp/lvm2.log"
-> 	  level=7
-> 	  activation=1
->   }
-> 
-> then look at /tmp/lvm2.log after running the
-> problematic command?
->  
->> device-mapper: couldn't split parameters
->> device-mapper: error adding target to table
-> 
-> The log file will show you the actual parameters 
-> that were passed to device-mapper leading to
-> the error messages.
->  
-> Please put the log file(s) somewhere on the web and 
-> post URL(s) to the list - or mail the log file(s)
-> to me privately as a *compressed* attachment.
-> 
-> Alasdair
+Jan
