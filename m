@@ -1,10 +1,8 @@
-From: "Kai Iskratsch" <kai@stella.at>
-Subject: AW: [linux-lvm] removing a failed disk from VG
-Message-ID: <GCEFLNAMMNKGEECOBAMNGEGNCEAA.kai@stella.at>
+From: <jrelist@ntlworld.com>
+Subject: Re: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_NextPart_000_0004_01C2C6C5.E40E3AF0"
-In-Reply-To: <20030128114724.A17531@sistina.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20030128110811.OREX14589.mta02-svc.ntlworld.com@[10.137.100.62]>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,253 +13,151 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 28 05:08:02 2003
+Date: Tue Jan 28 05:09:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: "Peter A. Castro" <doctor@fruitbat.org>
+Cc: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Peter
 
-------=_NextPart_000_0004_01C2C6C5.E40E3AF0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Still get the problem with kernel 2.4.9-38. I took your advice and checked out the System.map and got this:
 
-would the first method of this also work for me.
-I should get an identical harddisk from the vendor since i have still
-warranty on it.
+000315e8 T lock_kiovec               
+00031800 T unlock_kiovec             
+00050940 T brw_kiovec                
+00068688 T alloc_kiovec_sz           
+0006873c T free_kiovec_sz            
+001ca412 ? __kstrtab_alloc_kiovec_sz 
+001ca430 ? __kstrtab_free_kiovec_sz  
+001ca4a4 ? __kstrtab_lock_kiovec     
+001ca4be ? __kstrtab_unlock_kiovec   
+001ca4da ? __kstrtab_brw_kiovec      
+001d1d68 ? __ksymtab_alloc_kiovec_sz 
+001d1d70 ? __ksymtab_free_kiovec_sz  
+001d1d90 ? __ksymtab_lock_kiovec     
+001d1d98 ? __ksymtab_unlock_kiovec   
+001d1da0 ? __ksymtab_brw_kiovec      
 
-I tried allready the second one, and I was lucky to succsessfully get the
-data out of 2 from my 3 LVs since they didn't use the broken disk.
-The last one which used the broken Harddisk will not mount without a fs
-scan, since this is not an option with a readonly FS I still couldn't even
-try to get any data from it.
+Strikes me that it could be something (hopefully) as simple as amending labels in the appropriate lvm code - just got to suss out what needs changing now.
 
-regards
+Thanks for the advice so far
 
-Kai
-
-
-> -----Ursprungliche Nachricht-----
-> Von: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]Im
-> Auftrag von Heinz J . Mauelshagen
-> Gesendet: Dienstag, 28. Janner 2003 11:47
-> An: linux-lvm@sistina.com
-> Betreff: Re: [linux-lvm] removing a failed disk from VG
->
->
-> On Mon, Jan 27, 2003 at 09:28:08PM +0100, Alois Schneider wrote:
-> > I had a VG scsi_vg consisting of 4 PV's (sda1, sdb1, hdb1,hdc1).
-> > Now /dev/sdb1 failed and was no longer recogniced by th SCSI-
-> > controller. I had to remove it.
-> >
->
-> Alois,
->
-> then you probably lost data with the gone disk. Backup time :-(
-> Please make sure that you've got backups of /etc/lvmconf/* and
-> /etc/lvmtab*
-> before you proceed.
->
-> There's 2 options:
->
-> a. you get a replacement drive (which can be a loop device)
->    of the same size (4G), run pvcreate on it, restore the metadata onto
->    it (vgcfgrestore) and run "vgscan ; vgchange -ay"
->
-> b. you implement LVM2/device-mapper and run "vgscan ; vgchange -P
-> -ay", which
->    will activate your VG without the missing drive. This solution enables
->    you to retrieve the data still accessable _but_ won't let you change
->    your volume group configuration. We are working on an
-> enhancement supporting
->    such changes.
->
-> Regards,
-> Heinz    -- The LVM Guy --
->
->
-> > vgscan now fails with the following error:
-> >
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data
-> > of volume group "scsi_vg" from physical volume(s)
-> > vgscan -- reading all physical volumes (this may take a while...)
-> > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> > vgscan -- WARNING: This program does not do a VGDA backup of your
-> > volume group
-> >
-> > vgchange -ay gives
-> > -- no volume group found
-> >
-> > The remaining PV's seem to be ok and the failed disk was only 4Gb
-> > large.
-> >
-> > Here is the output of pvdisplay:
-> >
-> > --- Physical volume ---
-> > PV Name               /dev/sda1
-> > VG Name               scsi_vg
-> > PV Size               4.04 GB [8466192 secs] / NOT usable 1.88 MB
-> > [LVM: 125 KB]
-> > PV#                   1
-> > PV Status             available
-> > Allocatable           yes (but full)
-> > Cur LV                1
-> > PE Size (KByte)       4096
-> > Total PE              1033
-> > Free PE               0
-> > Allocated PE          1033
-> > PV UUID               pJsMFv-ci9Q-orNK-3cRr-2aTl-w1N9-TEHDI1
-> >
-> >
-> > --- Physical volume ---
-> > PV Name               /dev/hdb1
-> > VG Name               scsi_vg
-> > PV Size               76.69 GB [160826652 secs] / NOT usable 4.25 MB
-> > [LVM: 200 KB]
-> > PV#                   3
-> > PV Status             available
-> > Allocatable           yes (but full)
-> > Cur LV                2
-> > PE Size (KByte)       4096
-> > Total PE              19631
-> > Free PE               0
-> > Allocated PE          19631
-> > PV UUID               u5I40y-Op34-nnVV-aInj-Jekc-VJT7-s2q8OK
-> >
-> >
-> > --- Physical volume ---
-> > PV Name               /dev/hdc1
-> > VG Name               scsi_vg
-> > PV Size               19.01 GB [39873267 secs] / NOT usable 4.18 MB
-> > [LVM: 143 KB]
-> > PV#                   5
-> > PV Status             available
-> > Allocatable           yes
-> > Cur LV                1
-> > PE Size (KByte)       4096
-> > Total PE              4866
-> > Free PE               2040
-> > Allocated PE          2826
-> > PV UUID               3PCGsY-hUr6-QEUt-MkoJ-fKlX-24vG-pS0HJY
-> >
-> > What can I do? How can I remove the no longer existing PV sdb1 from
-> > scsi_vg?
-> >
-> > Any help will be appreciated.
-> > Regards
-> > Alois
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
->
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> =-=-=-=-=-=-
->
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> =-=-=-=-=-=-
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-------=_NextPart_000_0004_01C2C6C5.E40E3AF0
-Content-Type: message/rfc822
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment
-
-Reply-To: <linux-lvm@sistina.com>
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Sender: <linux-lvm-admin@sistina.com>
-To: <linux-lvm@sistina.com>
-References: <000101c2c19c$83a6f090$0300a8c0@quaiky>
-Subject: Re: [linux-lvm] Broken Harddisk in LVM
-Date: Wed, 22 Jan 2003 12:14:46 +0100
-Message-ID: <20030122121446.A25896@sistina.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3 (Normal)
-X-MSMail-Priority: Normal
-X-Mailer: Mutt 1.0.1i
-In-Reply-To: <000101c2c19c$83a6f090$0300a8c0@quaiky>; from kai@stella.at on Tue, Jan 21, 2003 at 11:29:08PM +0100
-X-Sender: mauelshagen@sistina.com
-X-Spam-Status: No, hits=-4.4 required=7.0 tests=IN_REP_TO version=2.20
-X-Spam-Level: 
-X-BeenThere: linux-lvm@sistina.com
-X-Mailman-Version: 2.0.11
-X-Reply-To: mauelshagen@sistina.com
-List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
-List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,<mailto:linux-lvm-request@sistina.com?subject=subscribe>
-List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-X-Original-Date: Wed, 22 Jan 2003 12:14:46 +0100
-Importance: Normal
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+John
 
 
-Install device-mapper + LVM2 tools _additionally_ in a seperate
-location and run "vgscan ; vgchange -a y -P".
-
-That might still leave you with unusable LVs in case their beginning
-is gone with the failed disk.
-
-If you decide to do that get back to us in case you've got installation
-related questions.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-On Tue, Jan 21, 2003 at 11:29:08PM +0100, Kai Iskratsch wrote:
-> One hard disk of my lvm System is completely broken, so that even the
-> controller cannot find it.
-> Is there a possibility to get the lvm running again without the data of
-> this disk.
->
-> Kai Iskratsch
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-------=_NextPart_000_0004_01C2C6C5.E40E3AF0--
+> 
+> From: "Peter A. Castro" <doctor@fruitbat.org>
+> Date: 2003/01/24 Fri AM 12:31:55 GMT
+> To: jrelist@ntlworld.com
+> CC: linux-lvm@sistina.com
+> Subject: Re: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
+> 
+> On Thu, 23 Jan 2003 jrelist@ntlworld.com wrote:
+> 
+> > Peter
+> 
+> Hi John,
+> 
+> > I followed the instructions from the LVM how-to to do the configuration
+> > and patch. To be safe, each time I tried I re-installed the kernel-source
+> > & header rpms (Saving my .config beforehand) then amending the kernel
+> > extension in the Makefile before configure / patching, then went through
+> > the process in the r/h doc 
+> > 
+> > make mrproper
+> > make config   (actually xconfig)
+> 
+> You'd missing the 'make dep' step here.  Creating the dependencies is
+> important.
+> 
+> > make clean
+> > make image
+> > make modules
+> > 
+> > which would all work very nicely
+> 
+> You might try saving the output from the 'make image' and 'make modules'
+> to see if iobuf.c gets compiled and linked into fs.o
+> 
+> > then make modules_install which would always give the error.
+> > I tried it with config_modversions on and off in the config, no joy. 
+> > 
+> > I'll try getting the version you have. You mention timer patches - are
+> > they significant ? Also, those depmods that cause problems - do you know
+> > of anywhere else I might locate them or might need to do during the
+> > building of the patch to get them ? 
+> 
+> The specific version shouldn't matter much, nor should the distro as long
+> as it supports S/390.
+> I'm not the one who built our systems here, but I'll ask.  I'd assume it
+> was the stock distro from SuSE.  Not sure about the timer patches, again
+> I'll ask, and in any case it wouldn't help with your module symbol
+> resolving problem.
+> 
+> > Thanks
+> > 
+> > John
+> > 
+> > > 
+> > > From: "Peter A. Castro" <doctor@fruitbat.org>
+> > > Date: 2003/01/23 Thu PM 08:50:33 GMT
+> > > To: jrelist@ntlworld.com
+> > > Subject: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
+> > > 
+> > > On Thu, 23 Jan 2003 jrelist@ntlworld.com wrote:
+> > > 
+> > > > Hi
+> > > 
+> > > Hi John,
+> > > 
+> > > > I'm wondering has anybody been able to install LVM onto s/390 Redhat
+> > > > Linux 7.2 ? I have kernel 2.4.7-39 running and the rpm for lvm 1.0.3. is
+> > > > part of the build, but not the lvm-mod.o module. 
+> > > 
+> > > We have LVM 0.9.1_beta7 running on SuSE SLES-7.2 (s390) under
+> > > a 2.4.7-SuSE-SMP kernel, with some timer patches, at work.
+> > > 
+> > > > I've attempted rebuilding the kernel from source with patches etc. from
+> > > > versions 1.0.3 and 1.0.6 following the instructions from sistina and
+> > > > redhat (including enabling lvm support !) but I always fall at the final
+> > > > hurdle, when doing the make_install : 
+> > > > 
+> > > > ---------------------------------------
+> > > > cd /lib/modules/2.4.9-37lvm; \
+> > > > mkdir -p pcmcia; \
+> > > > find kernel -path '*/pcmcia/*' -name '*.o' | xargs -i -r ln -sf ../{} pcmcia
+> > > > if [ -r System.map ]; then /sbin/depmod -ae -F System.map  2.4.9-37lvm; fi
+> > > > depmod: *** Unresolved symbols in /lib/modules/2.4.9-37lvm/kernel/drivers/md/lvm-mod.o
+> > > > depmod:         alloc_kiovec
+> > > > depmod:         free_kiovec
+> > > > make: *** [_modinst_post] Error 1
+> > > > [root@rother-8 linux]#
+> > > > ------------------------------------
+> > > > 
+> > > > If anyone can help me, I'd be grateful. I'm an os/390 guy, this is my
+> > > > first dive into the Linux pool and so far I'm enjoying it ! 
+> > > 
+> > > alloc_kiovec and free_kiovec are part of the fs code and should always be
+> > > present.  You should be able to grep for either in the System.map.
+> > > 
+> > > Did you do a 'make dep' and 'make clean' before doing a 'make all'?  For
+> > > that matter, did you do a 'make mrproper' before creating your config
+> > > ('make menuconfig')?  Save your existing .config before doing make mrproper!!
+> > > 
+> > > > Thanks in advance
+> > > > John Ellis
+> > > > UK
+> > > 
+> > > -- 
+> > > Peter A. Castro <doctor@fruitbat.org> or <Peter.Castro@oracle.com>
+> > > 	"Cats are just autistic Dogs" -- Dr. Tony Attwood
+> > > 
+> > > 
+> > 
+> 
+> -- 
+> Peter A. Castro <doctor@fruitbat.org> or <Peter.Castro@oracle.com>
+> 	"Cats are just autistic Dogs" -- Dr. Tony Attwood
+> 
+> 
