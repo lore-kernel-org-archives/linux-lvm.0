@@ -1,11 +1,10 @@
-From: Kevin Corry <kevcorry@us.ibm.com>
+From: Alasdair G Kergon <agk@uk.sistina.com>
 Subject: Re: [linux-lvm] What are they talking about?
+Message-ID: <20030521222500.A22200@uk.sistina.com>
 References: <20030521204843.ZNFH1333.imf40bis.bellsouth.net@tiger2>
-In-Reply-To: <20030521204843.ZNFH1333.imf40bis.bellsouth.net@tiger2>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200305211603.39641.kevcorry@us.ibm.com>
+In-Reply-To: <20030521204843.ZNFH1333.imf40bis.bellsouth.net@tiger2>; from freemyer@NorcrossGroup.com on Wed, May 21, 2003 at 04:53:23PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,35 +15,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 21 16:12:02 2003
+Date: Wed May 21 16:24:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Greg Freemyer <freemyer@NorcrossGroup.com>, "Anastasios A. Papadopoulos (Tas)" <vze2sjj7@verizon.net>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 Cc: EVMS <evms-devel@lists.sourceforge.net>
 
-On Wednesday 21 May 2003 15:53, Greg Freemyer wrote:
-> Kevin,
->
-> I understand how LVM2, DM, and EVMS are architected.
->
+On Wed, May 21, 2003 at 04:53:23PM -0400, Greg Freemyer wrote:
 > I still have no idea what the article is talking about.
->
-> Are you saying that the referenced sources just don't understand how it all
-> works and that the "industrial-strength Logical Volume Manager" they want
-> is achievable via the current DM implementation in combination with
-> appropriate high quality user-space tools?
 
-Yes, that would be my opinion. DM provides all of the infrastructure that the 
-kernel requires. (It can be further enhanced by adding sub-modules 
-("targets") to provide new ways to map devices). Then it's up to the 
-user-space tools to figure out how to best use this infrastructure.
+Ask the author?
 
-> That certainly agrees with what I thought and why I was so confused by the
-> article.
+Try to imagine you never read it?
 
-I was quite confused by the article as well. :)
-
+Alasdair
 -- 
-Kevin Corry
-kevcorry@us.ibm.com
-http://evms.sourceforge.net/
+agk@uk.sistina.com
