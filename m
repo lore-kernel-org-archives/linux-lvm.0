@@ -1,10 +1,11 @@
-Subject: Re: [linux-lvm] Re: LVM writes on raw disk of ATA RAID Mirror
-From: Andrew Rechenberg <arechenberg@shermfin.com>
-In-Reply-To: <20030430003023.8CC3CAE4F5@basilica.la.naos.co.nz>
-References: <20030430003023.8CC3CAE4F5@basilica.la.naos.co.nz>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1051724087.19901.287.camel@cinshrlnxws01.shermfin.com>
-Mime-Version: 1.0
+From: Ewen McNeill <lvm@ewen.mcneill.gen.nz>
+Subject: Re: [linux-lvm] Re: LVM writes on raw disk of ATA RAID Mirror 
+In-Reply-To: Message from Andrew Rechenberg <arechenberg@shermfin.com> 
+   of "30 Apr 2003 13:34:48 -0400." <1051724087.19901.287.camel@cinshrlnxws01.shermfin.com> 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6150.1051731030.1@basilica.la.naos.co.nz>
+Message-Id: <20030430193030.AF83AAE4F5@basilica.la.naos.co.nz>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,85 +16,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 30 12:35:14 2003
+Date: Wed Apr 30 14:31:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-vgscan has similar problems with MD devices in a software RAID10 (but
-not RAID1) configuration.
+In message <1051724087.19901.287.camel@cinshrlnxws01.shermfin.com>, Andrew Reche
+nberg writes:
+>>[LVM 1.0.x; vgscan finds parts of RAID arrays and uses those instead]
+>vgscan has similar problems with MD devices in a software RAID10 (but
+>not RAID1) configuration. [...]
 
-In software RAID10 one creates a number of software RAID1 devices and
-then stripes across those with RAID0.  For example if you have a 4 disk
-RAID10 setup you would have /dev/md0 and /dev/md1 as RAID1 devices and
-then /dev/md2 would be a stripe across /dev/md[0,1]
+Interesting.  I've been told, and found in the source, that there were
+some hacks in LVM to make LVM and md work in some common situations
+(basically there's a loop after the first device scan which tries to
+eliminate some of the duplicates; and there's a /* FIXME */ comment
+immediately before that loop).  It seems that you've found one of
+the situations where these hacks are too limited.
 
-The problem occurs when vgcreate adds the LVM metadata to the device. 
-When you run 'vgcreate somename0 /dev/md2' it adds the metadata to
-/dev/md2, but since /dev/md0 is the first device in the RAID10 array,
-the metadata is in the exact same location on /dev/md0 and /dev/md2. 
-Upon reboot (or a subsequent vgscan), LVM complains that it can't find
-all of the PE's on the volume group created because it's reading the
-information from md0 instead of md2
+>I was trying to hack vgscan to get my setup working but I needed the box
+>working ASAP so time dictated that I use the KludgeMethod(tm).  Someone
+>on the list recommended that I move /dev/md0 before I run my vgscan. 
+>[....]
 
-I was trying to hack vgscan to get my setup working but I needed the box
-working ASAP so time dictated that I use the KludgeMethod(tm).  Someone
-on the list recommended that I move /dev/md0 before I run my vgscan. 
-That worked in my case and I hacked my sysint script to move md0, run
-vgscan, and then move it back.  Not elegant AT ALL, but it works.
+That is really quite ugly :-)  I suspect something like that might work
+for the ataraid case too, right up to the point that someone runs vgscan
+for some reason without going through the "hide things from vgscan so it
+doesn't get it wrong" ritual -- at which point (with a little prompting)
+it silently swaps over to using part of the RAID array, and the RAID
+array gets out of sync, and then on next reboot it swaps back to using
+the RAID array, and the partitions are corrupt.
 
-I'm not sure if a similar quick fix could work for you or not.  You
-would have to make sure that the ataraid driver "built" the
-/dev/ataraid* entries, then move /dev/hd* somewhere, run vgscan, and
-then move them back.
+I'm afraid that's a little too much potential excitement for my liking!
 
-Make sure you test first and have a backup (do people still do those? :)
-) before trying anything.
+I've been told that LVM 2 has some support where you can say what
+devices to scan (and what devices not to scan).  I've not looked at LVM
+2 yet, so I don't know how fine grained it is, but it might suit your
+situation.
 
-HTH,
-Andy.
+However after all this investigation I can't help thinking that the LVM
+vgscan approach is broken by design, particularly to be run automatically
+on startup.  The idea that one can somehow look through all the connected
+devices and guess which one to use, and then automatically use those
+guesses on the assumption they'll always be right, just seems to be asking
+for trouble.  Static configuration files, and having these things under
+manual control, seems a far more reliable way to approach the situation.
 
+For now this ataraid system will be built without LVM, as it seems the
+only way to be sure that the RAID array will actually always be used.
 
-On Tue, 2003-04-29 at 20:30, Ewen McNeill wrote:
-> In message <20030429232352.DC21EAE4F5@basilica.la.naos.co.nz>, Ewen McNeill writes:
-> >In message <20030430011344.N16789@zealot.blacknet.de>, Goetz Bock writes:
-> >>during my last/first/only time i had to deal with ataraid, and IIRC,
-> >>the promise IDE driver had a compile time flag where it would not touch
-> >>initialised raid arrays.
-> >>aktivating this flag would simply remove the offending disks from the
-> >>list of ide disks and make it available via ataraid only.
-> >
-> >It would be nice if it were possible to do this.  Is this perhaps the
-> >CONFIG_PDC202XX_FORCE flag (turned off, or on)?  
-> 
-> According to this message:
-> 
-> http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&selm=20030405112008%2462da%40gated-at.bofh.it
-> 
-> from Andre Hedrick (Linux IDE maintainer), the CONFIG_PDC202XX_FORCE
-> option is intended to force recognition of the Promise card's IDE
-> channels as IDE devices, in order to be able to use the Linux pdcraid
-> (ATA-RAID) driver.  (They are apparently semi-disabled in the PCI
-> configuration data, by default, so that only the Promise SCSI device
-> driver can find them.)  It should be on for using the pdcraid/ata-raid
-> support, and off if you are using the Promise "SCSI" device driver.
-> (And as I noted earlier, only certain chipsets seem to actually use this
-> option; the rest just default to forced on.)
-> 
-> This tends to confirm my view that if you use the ataraid driver, then
-> you'll see both the raw /dev/hd* devices, and also the /dev/ataraid/d0*
-> devices, since the ataraid/pdcraid driver appears to search the /dev/hd*
-> IDE controllers for likely devices based on partition signatures.
-> 
-> Which means that LVM needs to deal with the aliasing effects in some
-> manner, either by recognising the ataraid devices first and ignoring the
-> underlying devices, or by very loudly refusing to work with ataraid at
-> all.
-> 
-> Ewen
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks for your comments,
+
+Ewen
