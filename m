@@ -1,16 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0AMfZr27968
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 17:41:35 -0500
-Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0AMfSuY006527
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 17:41:28 -0500
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0AMgkr28209
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 17:42:46 -0500
+Received: from postfix4-2.free.fr (postfix4-2.free.fr [213.228.0.176])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0AMgfVm009993
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 17:42:41 -0500
 Received: from eric.placeverte.home
 	(lns-vlq-9-lil-82-65-150-249.adsl.proxad.net [82.65.150.249])
-	by postfix3-1.free.fr (Postfix) with SMTP id 0501E1734B5
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 23:41:27 +0100 (CET)
-Date: Mon, 10 Jan 2005 23:41:27 +0100
+	by postfix4-2.free.fr (Postfix) with SMTP id A35312A0072
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 23:42:40 +0100 (CET)
+Date: Mon, 10 Jan 2005 23:42:40 +0100
 From: messmate <messmate@free.fr>
-Message-ID: <20050110234127.291fb93d@eric.placeverte.home>
+Message-ID: <20050110234240.749ebab3@eric.placeverte.home>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: [linux-lvm] strange logical volume issue
@@ -40,3 +40,8 @@ Manually, with lvremove and lvcreate.....
 Is there a special way to do this changes ?
 Thanks for your help in advance.
 mess-mate
+
+Forgot to say :
+LVM version:     2.00.32 (2004-12-22)
+  Library version: 1.00.19-ioctl (2004-07-03)
+  Driver version:  4.1.0
