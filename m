@@ -1,11 +1,11 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3AB528E0.D6BA04C8@wrkhors.com>
-Date: Sun, 18 Mar 2001 15:30:08 -0600
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
+Return-Path: <dave@galilean.d2g.com>
+Date: Sun, 18 Mar 2001 23:28:31 +0100
+From: Dave Wapstra <dave@xs4all.nl>
 Subject: Re: [linux-lvm] Kernel 2.4.x with LVM beta 6 on Sun E450?
-References: <20010318125600.A24084@mercury.mercury.multiweb.nl> <3AB51A73.8D931205@wrkhors.com> <20010318222501.A30232@mercury.mercury.multiweb.nl>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20010318232831.A30928@mercury.mercury.multiweb.nl>
+References: <20010318125600.A24084@mercury.mercury.multiweb.nl> <3AB51A73.8D931205@wrkhors.com> <20010318222501.A30232@mercury.mercury.multiweb.nl> <3AB528E0.D6BA04C8@wrkhors.com>
+Mime-Version: 1.0
+In-Reply-To: <3AB528E0.D6BA04C8@wrkhors.com>; from lembark@wrkhors.com on Sun, Mar 18, 2001 at 03:30:08PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,18 +18,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> Thanks, but this is a non-X box. It is probably worth trying to use the
-> .config of -pre3 with 2.4.2 and use the beta6 plus ioctl patches to try
-> and get this thing to compile correctly.
+On 18 March, 2001 at 15:30:08 -0600, Steven Lembark <lembark@wrkhors.com> wrote:
 > 
-> I'll just give that a try...
+> > Thanks, but this is a non-X box. It is probably worth trying to use the
+> > .config of -pre3 with 2.4.2 and use the beta6 plus ioctl patches to try
+> > and get this thing to compile correctly.
+> > 
+> > I'll just give that a try...
+> 
+> or just "make config".  takes a while but doesn't depend on any
+> fancy display system.
 
-or just "make config".  takes a while but doesn't depend on any
-fancy display system.
+Did that indeed. I copied the .config from -pre3 and used the good old
+"make config" and the enter key ;)
+
+I got the ioctl32 patch once again via the web mail-archive and did a
+"s/       /^V<tab>/g" to get a correct format.
+
+Now I've got a running system with 2.4.2 and LVM-0.9.1-beta 6 including
+the ioctl32 patch!
+
+I just created a 16 Gig (2x8) VG/LV and it looks fine.
+
+Now I can start playing around to see how stable the system really is.
+
+-Dave
 
 -- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+Dave Wapstra
+dave@xs4all.nl
