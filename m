@@ -1,8 +1,6 @@
-From: Dan Sully <daniel@electricrain.com>
-Message-ID: <20040111090130.GB4825@electricrain.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] No VFS-lock under 2.6.x ?
+From: lvm@freakout.de
+Message-Id: <200401111044.i0BAiV48002620@bongo.freakout.de>
+Subject: [linux-lvm] LVM2 migration on 2.4.24 - prepare for 2.6
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +11,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 11 04:02:02 2004
+Date: Sun Jan 11 05:59:01 2004
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@redhat.com
 
-To my surprise, when attempting to do a live snapshot of a XFS filesystem on
-2.6.1, it failed miserably, and caused the machine to spin out of control,
-denying access to the main filesystems.
+Hello,
 
-I couldn't find a patch on the net anywhere.
+i tried to migrate my system to LVM2 on 2.4 before migration to 2.6
+to avoid troubles with LVM. I got the newest device-mapper/LVM2 tools
+and installed them alongside with a patched kernel and dm-mod.
 
-What is the state of VFS locking on 2.6.x?
+When i try to "vgchange -ay" with device-mapper/LVM2 i get all of my lv's
+except one! All my snapshots are also corrupt (I use snapshots intensively).
 
-And in a related question, is the 2.4.xx patch ever going to be integrated
-into the mainline kernel? This is getting silly now.
+Back to LVM1 was no problem - everything running and Ok. On another
+machine without snapshots moving to dm/LVM2 on 2.4.24 was no problem.
 
-Thanks.
+Are there incompatibilities regarding snapshots with LVM1/2?
+Details, logs, config can be sent on interest.
 
--D
--- 
-Begin the unnecessarily slow-moving dipping mechanism!
+Regards
+Axel Reinhold
