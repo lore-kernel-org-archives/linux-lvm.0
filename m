@@ -1,14 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7I2sMa08320
-	for <linux-lvm@redhat.com>; Tue, 17 Aug 2004 22:54:22 -0400
-Message-ID: <025001c484ce$95942560$5208580a@b034547>
-From: "Rob Schwartz" <rschwartz@boscovs.com>
-Date: Tue, 17 Aug 2004 22:53:48 -0400
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_024D_01C484AD.0E790F80"
-Subject: [linux-lvm] vgscan vs vgcfgrestore
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from o.ww.redhat.com (vpnuser6.stuttgart.redhat.com [172.16.4.6])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	i7IJ6BRE001279
+	for <linux-lvm@redhat.com>; Wed, 18 Aug 2004 21:06:12 +0200
+Date: Wed, 18 Aug 2004 21:06:10 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Message-ID: <20040818190610.GA6267@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] *** Announcement: dmraid 1.0.0-rc3 ***
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -18,88 +19,114 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Linux-LVM@Sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
 
-------=_NextPart_000_024D_01C484AD.0E790F80
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+               *** Announcement: dmraid 1.0.0-rc3 ***
 
-Hello Heinz,
+dmraid 1.0.0-rc3 is available at
+http://people.redhat.com:/~heinzm/sw/dmraid/ in source, source rpm and i386 rpm.
 
-Forgive me for writing in English.   As I come from the United States I =
-am embarassingly uni-lingual.   I have been working with LVM for several =
-months now and finally have had the opportunity to get into the guts of =
-the lvm configuration.   I am preparing myself for the situation where =
-my LVM environment gets corrupted in some manner.  Actually, last week I =
-encountered a problem with LVM and was unable to quickly recover so I =
-ended up simply rebuilding the LVM PV's, VG's and LV's and restoring =
-data.  Fortunately, it was an easy restore.   I have been comparing the =
-vgscan utility with vgcfgrestore.   In a test environment I have deleted =
-the /etc/lvm* stuff and even deleted the /dev/lvm* stuff and =
-successfully recovered the VG and LV by simply doing a vgscan.   Whew... =
-nice... I understand vgcfgbackup and vgcfgrestore but am not sure when I =
-would need to use the configuration backup.   The VGDA as I understand =
-it is stored on the PV's.   If I have the PV's intact I therefore have =
-the VGDA and hence am able to recover using vgscan.    When would I need =
-to use vgcfgrestore?   I have found much information on LVM on the web =
-but nothing that really pinpoints my question.  If there is something =
-out there that I can refer to, please tell me.
+dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
+properties of software RAID sets (ie. ATARAID) and contained DOS
+partitions using the device-mapper runtime of the 2.6 kernel.
+
+The following ATARAID types are supported on Linux 2.6:
+
+Highpoint HPT37X
+Highpoint HPT45X
+Intel Software RAID
+Promise FastTrack
+Silicon Image Medley
+
+This ATARAID type is only basically supported in this version (I need
+better metadata format specs; please help):
+LSI Logic MegaRAID
+
+Please provide insight to support those metadata formats completely.
+
+Thanks.
+
+See files README and CHANGELOG, which come with the source tarball for
+prerequisites to run this software, further instructions on installing
+and using dmraid!
+
+CHANGELOG is contained below for your convenience as well.
+
+
+Call for testers:
+-----------------
+
+I need testers with the above ATARAID types, to check that the mapping
+created by this tool is correct (see options "-t -ay") and access to the ATARAID
+data is proper.
+
+You can activate your ATARAID sets without danger of overwriting
+your metadata, because dmraid accesses it read-only unless you use
+option -E with -r in order to erase ATARAID metadata (see 'man dmraid')!
+
+This is a release candidate version so you want to have backups of your valuable
+data *and* you want to test accessing your data read-only first in order to
+make sure that the mapping is correct before you go for read-write access.
+
+
+The author is reachable at <Mauelshagen@RedHat.com>.
+
+For test results, mapping information, discussions, questions, patches,
+enhancement requests and the like, please subscribe and mail
+to <ataraid@redhat.com>.
+
+--
 
 Regards,
-Rob
-------=_NextPart_000_024D_01C484AD.0E790F80
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Heinz    -- The LVM Guy --
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2800.1458" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT size=3D2>Hello Heinz,</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>Forgive me for writing in English.&nbsp;&nbsp; As I =
-come from=20
-the United States I am embarassingly uni-lingual.&nbsp;&nbsp; I have =
-been=20
-working with LVM for several months&nbsp;now and finally have had the=20
-opportunity to get into the guts of the lvm configuration.&nbsp;&nbsp; I =
-am=20
-preparing myself for the situation where my LVM environment gets =
-corrupted in=20
-some manner.&nbsp; Actually, last week I encountered a problem with LVM =
-and was=20
-unable to quickly recover so I ended up simply rebuilding the LVM PV's, =
-VG's and=20
-LV's and restoring data.&nbsp; Fortunately, it was an easy =
-restore.&nbsp;&nbsp;=20
-I have been comparing the vgscan utility with vgcfgrestore.&nbsp;&nbsp; =
-In a=20
-test environment I have deleted the /etc/lvm* stuff and even deleted the =
 
-/dev/lvm* stuff and successfully recovered the VG and LV by simply doing =
-a=20
-vgscan.&nbsp;&nbsp; Whew... nice... I understand&nbsp;vgcfgbackup and=20
-vgcfgrestore but am not sure when I would need to use the configuration=20
-backup.&nbsp;&nbsp; The VGDA as I understand it is stored on the=20
-PV's.&nbsp;&nbsp; If I have the PV's intact I therefore have the VGDA =
-and hence=20
-am able to recover using vgscan.&nbsp;&nbsp;&nbsp; When would I need to =
-use=20
-vgcfgrestore?&nbsp;&nbsp; I have found much information on LVM on the =
-web but=20
-nothing that really pinpoints my question.&nbsp; If there is something =
-out there=20
-that I can refer to, please tell me.</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>Regards,</FONT></DIV>
-<DIV><FONT size=3D2>Rob</FONT></DIV></BODY></HTML>
+CHANGELOG:
+---------
 
-------=_NextPart_000_024D_01C484AD.0E790F80--
+Changelog from dmraid 1.0.0-rc2 to 1.0.0-rc3		2004.08.18
+
+FIXES:
+------
+o HPT37X mapping on first disk of set
+o dietlibc sscanf() use prevented activation
+o le*_to_cpu() for certain glibc environments (Luca Berra)
+o sysfs discovery (Luca Berra)
+o permissions to write on binary, which is needed
+  by newer strip versions (Luca Berra)
+o SCSI serial number string length bug
+o valgrinded memory leaks
+o updated design document
+o comments
+
+FEATURES:
+---------
+o added basic support for activation of LSI Logic MegaRAID/MegaIDE;
+  more reengineering of the metadata needed!
+o root check using certain options (eg, activation of RAID sets)
+o implemented locking abstraction
+o implemented writing device metadata offsets with "-r[D/E]"
+  for ease of manual restore
+o file based locking to avoid parallel tool runs competing
+  with each other for the same resources
+o streamlined library context
+o implemented access functions for library context
+o streamlined RAID set consistency checks
+o implemented log function and removed macros to shrink binary size further
+o removed superfluous disk geometry code
+o cleaned up metadata.c collapsing free_*() functions
+o slimmed down minimal binary (configure option DMRAID_MINI
+  for early boot environment)
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
