@@ -1,11 +1,12 @@
 From: Steven Lembark <lembark@wrkhors.com>
 Subject: Re: [linux-lvm] offtopic but ...
-Message-ID: <1263110000.1021300134@[192.168.200.4]>
-In-Reply-To: <20020513123901.D12633@azrael.smilehouse.com>
-References: <Pine.LNX.4.33.0205081213340.3518-100000@diablo.unixag-zw.fh-kl.d
-  <064b01c1f69a$71b9c100$070414ac@Home.PIN.LU>
+Message-ID: <1266960000.1021300755@[192.168.200.4]>
+In-Reply-To: <20020513073733.B31182@connectlive.com>
+References: <064b01c1f69a$71b9c100$070414ac@Home.PIN.LU>
  <94260000.1020868034@[192.168.200.4]>
  <20020513123901.D12633@azrael.smilehouse.com>
+ <20020513094350.GB864@tykepenguin.com>
+ <20020513073733.B31182@connectlive.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
@@ -19,55 +20,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 13 09:29:02 2002
+Date: Mon May 13 09:39:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
 
--- Harri Haataja <harri.haataja@smilehouse.com>
+-- Tim <tim@connectlive.com>
 
-> On Wed, May 08, 2002 at 09:27:14AM -0500, Steven Lembark wrote:
->> You are not going to get reliability on multi-drive sytems without
->> SOME sort of redundancy. Either back the data up offline (e.g., to
->> tape, another disk or CD) or use RAID. If you really find the cost
->                             ^^
->
-> For the nth time, RAID is no substitute for backups :)
+> Incremental backups are orthogonal to true high availability, but you're
+> guaranteed to have low availability if you have no disaster recovery
+> plans.  I wish there were a more succinct way to express that!
 
-Depends on the size of a system. If you have too much
-(e.g.,NASA has roughly a PetaByte on line at any time) of
-data there is no effective way to back it up and restore
-it. The only way to keep it on line is RAID1+0 or RAID5+1
-and hope to hell you can fix any hardware problems before
-they kill you. Even if you kept all the info on line there
-simply wouldn't be time to restore any of it before people
-needed the stuff.
+How about:
 
-Banks are a good example of this: they have huge amounts
-of data and simply cannot afford downtime. Every minute
-their boxes are offline they loose millions. Net result
-is that they use multiple centers with multiple computers
-with multiple EMC systems with multiple volumes RAID-ed
-across multiple sets of duplicated drives connected by
-multiple controllers across multiple lans and heartbeat
-systems monitoring each of them.
+    "Don't tempt Murphy."
 
-For a few tens of millions you can avoid tapes too :-)
+    "Lack of planning is a disaster in itself."
 
-In this case I should have been clearer about backups vs.
-archival storage. Archiving data to tape is a wonderful
-thing but won't help you if hardware fails and you need
-quick access to the system. If the high-speed stuff fails
-you may be able to get by with CD Jukes or
-older, slower disk systems that have the most-used data
-or data marts on them. The daily update cycle burns a set
-of CD's that contain the most recent storage units that
-are used if the high-speed storage fries.
+    "0 to the 10th equals nothing at all"
 
-This is a bit different from having to archive the data
-for recovery purposes in that backup online storage is
-in an immediately restorable format.
+(the last from Jethro Tull if you handn't seen it before).
+
+
+But this depends on the environment. In a number of the
+data warehouses I've worked on there simply would not be
+time to restore the data from archival media. The best
+they can do is make the "high" approach 100% and live with
+it. There will be a relatively small set of archival storage
+that can be brought on line, but there is no way that
+restoring data from archival media is an acceptable recovery
+plan in these cases ("Sorry, General, we can't respond to
+that nuclear bomb comming in: it'll take us at least 3 more
+hours to recover from these tapes." Think banker, heavy
+industrial plant and you have the same situation).
+
+The good news is that today's near-term storage hardware
+(from fiber scsi cards down to the disks) will handle
+anything short of a nuclear blast without failing miserably.
+This leaves "full availability" systems as a viable alternative
+in many cases.
+
+
 
 --
 Steven Lembark                               2930 W. Palmer
