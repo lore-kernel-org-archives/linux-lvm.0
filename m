@@ -1,9 +1,9 @@
 content-class: urn:content-classes:message
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-ID: <689F43A6CF84E541A721C5C3FD5ADECC143380@blr-m3-msg.wipro.com>
+Message-ID: <689F43A6CF84E541A721C5C3FD5ADECC1A13B9@blr-m3-msg.wipro.com>
 From: "Sharad Tiwari" <sharad.tiwari@wipro.com>
-Subject: [linux-lvm] expanding on LVM2
+Subject: [linux-lvm] lvchange not being able to change read/write permission !!!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,60 +14,165 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  2 05:13:03 2003
+Date: Wed Apr  2 05:13:05 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: linux-lvm-admin@sistina.com, mauelshagen@sistina.com
 
-Hi all,
-	This is a plain text mail (no html) ... hope it does reach you
-all ...
+Hi all,=20
 
-> >LVM(2) handles that by using physical volume uuids (as you mention
-> >below).
-> >
-> >Device paths can change that way and LVM will stil find the disks and
-> >assemble them correctkly into volume groups.
+	Is this a bug ? When I do an lvchange to change the read/write
+permission and then do the lvdisplay the changes are not reflected,
+whereas the file in /etc/lvm/backup/testvg shows the permission changed
+to read only. Other changes are reflected. ( I have checked with the
+read ahead sectors )
 
-Will the PV uuid be unique ... I mean to say is there a possibility of
-two nodes issuing same PV uuid (when working independently)
+Does this mean there is some inconsistency in the various metadata.
+Where does lvdisplay  and its family read the information from ?? Apart
+from the disk and the files in /etc/lvm/backup or /etc/lvm/archive, is
+there any other place where the metadata information is stored.
 
-If I connect multiple hard disks to a node, take a partition on a node
-(say /dev/hdd1) and make a physical volume out of it, and then connect
-the hard disk as a primary slave( /dev/hdb) and then run a pvdisplay ,
-the physical volume does show the device name as /dev/hdb but cribs
-about not finding /dev/hdd ... can this be avoided.
+I have reproduced the operations performed and also the content of
+/etc/lvm/backup/testvg.
 
-
-One more question I had was, How exactly is a raw device operation
-request handled in LVM.
-
-I was going through the code and did not find any character device
-interface(for raw device operations) ... but again dd worked on the
-logical volume .. so I am wondering how dd worked in the absebce of a
-raw device operation support.
-
-> >For 'pricate' volume group the situation is a failover situation.
-> >You need have a design which makes sure that only one node can have
-that
-> >volume group active at any given time and if that one fails,
-recognize
-> >the failure, make sure the the failed node can't get back to life
-(which > >will cause strange problems) and take the VG over at an
-arbitrary other node.
-
-Two questions I have on this are :
-
-What is the failover mechanism being followed in LVM2 ???
-I found out that when I do a vgcreate, a file called vgcreate.tmp is
-created which is later renamed as vgcreate, now what happens if the node
-happens to crash just after these entries are written onto the hard
-disk.
-
-If I happen to change the configurations where are they stored  ??
-
-Thanks for the help,
-
-Regards,
+Thanks in advance,
 Sharad.
+
+[root@volts root]# vgdisplay
+  --- Volume group ---
+  VG Name               testvg
+  System ID             volts1048777986
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                255
+  Cur LV                2
+  Max PV                255
+  Cur PV                2
+  VG Size               692.00 MB
+  PE Size               4.00 MB
+  Total PE              173
+  Alloc PE / Size       100 / 400.00 MB
+  Free  PE / Size       73 / 292.00 MB
+  VG UUID               NzLsW6-92uE-ssdu-wbl5-7w53-l6Gz-JrgM77
+
+[root@volts root]# lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/testvg/testvol
+  VG Name                testvg
+  LV UUID                000000-0000-0000-0000-0000-0000-000000
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                200.00 MB
+  Current LE             50
+  Segments               2
+  Allocation             next free
+  Read ahead sectors     0
+  Block device           254:0
+
+[root@volts root]# lvchange -p r /dev/testvg/testvol
+  Logical volume "testvol" changed
+
+[root@volts root]# lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/testvg/testvol
+  VG Name                testvg
+  LV UUID                000000-0000-0000-0000-0000-0000-000000
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                200.00 MB
+  Current LE             50
+  Segments               2
+  Allocation             next free
+  Read ahead sectors     0
+  Block device           254:0
+
+
+[root@volts root]# cat /etc/lvm/backup/testvg
+# This file was originally generated by the LVM2 library
+# Generated: Mon Mar 31 09:22:33 2003
+
+
+description =3D "Created *after* executing 'lvchange -p r
+/dev/testvg/testvol'"
+creation_time =3D 1049082753
+testvg {
+        id =3D "NzLsW6-92uE-ssdu-wbl5-7w53-l6Gz-JrgM77"
+        seqno =3D 0
+        status =3D ["RESIZEABLE", "READ", "WRITE"]
+        system_id =3D "volts1048777986"
+        extent_size =3D 8192              # 4 Megabytes
+        max_lv =3D 255
+        max_pv =3D 255
+
+        physical_volumes {
+
+                pv0 {
+                        id =3D "5bMwLT-NYR2-Uzoy-pMPu-0pm1-FrvD-tyCYNr"
+                        device =3D "/dev/hdb5"    # Hint only
+
+                        status =3D ["ALLOCATABLE"]
+                        pe_start =3D 256
+                        pe_count =3D 49   # 196 Megabytes
+                }
+
+                pv1 {
+                        id =3D "U51jx4-8okp-SoV3-lygT-W2PT-xww4-Bp0fO2"
+                        device =3D "/dev/hdb6"    # Hint only
+
+                        status =3D ["ALLOCATABLE"]
+                        pe_start =3D 256
+                        pe_count =3D 124  # 496 Megabytes
+                }
+        }
+
+        logical_volumes {
+
+                testvol {
+                        id =3D "000000-0000-0000-0000-0000-0000-000000"
+                        status =3D ["READ", "ALLOC_SIMPLE"]
+                        read_ahead =3D 0
+                        segment_count =3D 2
+
+                        segment1 {
+                                start_extent =3D 0
+                                extent_count =3D 49       # 196 =
+Megabytes
+                                stripes =3D 1
+
+                                areas =3D [
+                                        "pv0", 0
+                                ]
+                        }
+                        segment2 {
+                                start_extent =3D 49
+                                extent_count =3D 1        # 4 Megabytes
+                                stripes =3D 1
+
+                                areas =3D [
+                                        "pv1", 0
+                                ]
+                        }
+                }
+
+                testvol_1 {
+                        id =3D "000000-0000-0000-0000-0000-0000-000001"
+                        status =3D ["READ", "WRITE", "ALLOC_SIMPLE"]
+                        read_ahead =3D 0
+                        segment_count =3D 1
+
+                        segment1 {
+                                start_extent =3D 0
+                                extent_count =3D 50       # 200 =
+Megabytes
+                                stripes =3D 1
+
+                                areas =3D [
+                                        "pv1", 1
+                                ]
+                        }
+                }
+        }
+
+}
