@@ -1,8 +1,9 @@
-From: =?ISO-8859-1?Q?Bj=F6rn?= Medin <b.medin@telia.com>
-Message-Id: <1053855014.15745.10.camel@crux>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] PV and disk recovery
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From: "Ellis Whitehead" <lists@ellisw.net>
+Message-Id: <20030526032356.20922.h022.c007.wm@mail.ellisw.net.criticalpath.net>
+Subject: [linux-lvm] vgscan -f created duplicate block devices
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,50 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun May 25 04:29:02 2003
+Date: Mon May 26 05:23:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hello,
+Hi Heinz,
 
-I had a VG with two full disks in two PV:s (/dev/hda1 and /dev/hdb1).
-The second drive, a new IBM 120GB disk fried after some weeks and
-was totally inacessable (not even recognised by BIOS).
+> have you removed _all_ /dev/-Entries for LVs and retried 
+> "vgscan -f" without success so far ?
 
-To my understanding the first PV on /dev/hda1 is OK
+I'm using devfs, and removal of the /dev/{VG}/{LV} entries isn't permitted.  The
+VG and LVs show up under /dev if the VG is active, and otherwise they aren't
+present.  Once the VG is active, the LV entries cannot be modified by the usual
+command line tools, as far as I've seen...
 
-Can I recover and get back access to my old data that was on
-/dev/hda1? I have tried various things suggested in HOWTO:s and
-this list.
+Since vgscan can only works on active volumes, and since active volumes are
+already immutably set in /dev, I'm afraid this solution won't work.
 
-If I do vgscan I get:
-
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
-volume group "Volume00" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
-
-Any command like vgchange -a y only gets: vgchange -- no volume groups
-found
-
-I have tried create a new VG: vgcreate extra /dev/hda1
-
-but I then get:
-vgcreate -- "/dev/hda1" is not a new physical volume
-vgcreate -- physical volume "/dev/hda1" already belongs to volume group
-"Volume00"
-
------------
-
-Seems like I dont have any config data for Volume00 left but still I am
-not allowed to use/change Volume00 or the PV.
-
-What can I do? Is there any way to reclaim possible intact data on my
-old /dev/hda1????
+Is there any way to manually set the block device?  Or is there any way to get
+vgscan to start anew without the block device numbers in /dev?
 
 Thanks!
-
-/Bj=C3=B6rn
+Ellis
