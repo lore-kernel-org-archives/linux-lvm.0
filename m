@@ -1,9 +1,8 @@
-Message-ID: <007301c29d95$7dfebe50$6a01a8c0@bmoon>
-From: "bmoon" <bo@anthologysolutions.com>
-References: <1038231397.21369.23.camel@defiant.sonsofthunder.yi.org> <02bb01c29b04$31556650$6a01a8c0@bmoon> <20021204130227.B29881@sistina.com>
-Subject: Re: [linux-lvm] Painless upgrade to lvm2?
-MIME-Version: 1.0
+From: Aran Cox <spin@avalon.net>
 Content-Transfer-Encoding: 7bit
+Message-Id: <1039235299.2304.21.camel@delight>
+Mime-Version: 1.0
+Subject: [linux-lvm] pvdisplay/lvdisplay discrepancy
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,143 +13,83 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec  6 20:11:01 2002
+Date: Fri Dec  6 23:48:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+I've discovered that pvdisplay and lvdisplay seem to disagree on the
+exact location of some extents in a volume group on my system.
 
-Are there any good references or document to understand the LVM2 and
-device mapper?
+I am using stock 2.4.19 kernel with the lvm tools from the RPM package 
+of the same name for RH7.3.
 
-I could not find any except man pages for dm & lvm.
+I'll show the output of the *display programs below but to summarize:
+pvdisplay shows a small number of extents in /dev/main/var as being on
+hde4.  lvdisplay of /dev/main/var shows them to be on sdb starting at
+1064.  pvdisplay of sdb shows those extents as free.
+
+The /dev/main/var logical volume works fine: it's mounted and I just did
+a complete backup of it.  I tried moving these extents but pvmove always
+fails.  (See below.)
+
+I get the impression that the extents are really on hde4 and that
+lvdisplay is wrong. (I just checked, I can pvmove other extents into
+sdb:1064, but this doesn't change lvdisplays output for /dev/main/var.) 
+I can only assume that something became corrupt when I was using pvmove
+to shuffle some extents around recently.  I'm not sure what to do about
+this but I'd like to fix it without a re-install, if anyone has any
+suggestions I'd appreciate it.
 
 Thanks,
-
-Bo
------ Original Message -----
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-To: <linux-lvm@sistina.com>
-Sent: Wednesday, December 04, 2002 4:02 AM
-Subject: Re: [linux-lvm] Painless upgrade to lvm2?
+Aran
 
 
-> On Tue, Dec 03, 2002 at 11:43:02AM -0800, bmoon wrote:
-> > Hello,
-> >
-> > I followed the instruction but I am facing the following cimpile error.
-> > Would you provide me any help on this error?
-> >
-> > ---------------
-> > make[1]: Entering directory `/usr/src/device-mapper.0.96.07/lib'
-> >
-gcc -c -Iioctl -I. -I../include -I/usr/src/linux/include -Wall -fPIC -g -fno
-> > -omit-frame-pointer ioctl/libdevmapper.c -o ioctl/libdevmapper.o
-> >
-gcc -c -Iioctl -I. -I../include -I/usr/src/linux/include -Wall -fPIC -g -fno
-> > -omit-frame-pointer libdm-common.c -o libdm-common.o
-> > gcc -shared -Wl,-soname,libdevmapper.so.0.96 \
-> > -Wl,--version-script,.export.sym ioctl/libdevmapper.o libdm-common.o -o
-> > ioctl/libdevmapper.so
-> > /usr/bin/ld:.export.sym:1: parse error in VERSION script
->
-> Please see Alasdairs answer.
->
-> > collect2: ld returned 1 exit status
-> > make[1]: *** [ioctl/libdevmapper.so] Error 1
-> > make[1]: Leaving directory `/usr/src/device-mapper.0.96.07/lib'
-> > make: *** [lib] Error 2
-> > --------------------------
-> >
-> > Additional question, If I use linux2.4.20 then Are there any patches for
-it
-> > or we do not need
-> > any patch for LVM2 or device mapper?
->
-> Use
-http://people.sistina.com/~thornber/patches/2.4-stable/2.4.20-dm-1.tar.bz2
->
-> Regards,
-> Heinz    -- The LVM Guy --
->
->
-> >
-> > Thanks in advance,
-> >
-> > Bo
-> >
-> > ----- Original Message -----
-> > From: "Bradley Alexander" <storm@tux.org>
-> > To: <linux-lvm@sistina.com>
-> > Sent: Monday, November 25, 2002 5:36 AM
-> > Subject: [linux-lvm] Painless upgrade to lvm2?
-> >
-> >
-> > > I'm running lvm-1.0.6 on a Debian/sid system, and was wondering what
-> > > would be the best upgrade path? Install from debs? From source? Is
-there
-> > > some kind of howto for making this transition?
-> > >
-> > > Thanks,
-> > > --
-> > > --Brad
-> > >
-> >
-============================================================================
-> > > Bradley M. Alexander                |
-> > > Debian Developer, Security Engineer |   storm [at] tux.org
-> > > Debian/GNU Linux Developer          |   storm [at] debian.org
-> > >
-> >
-============================================================================
-> > > Key fingerprints:
-> > > DSA 0x54434E65: 37F6 BCA6 621D 920C E02E  E3C8 73B2 C019 5443 4E65
-> > > RSA 0xC3BCBA91: 3F 0E 26 C1 90 14 AD 0A  C8 9C F0 93 75 A0 01 34
-> > >
-> >
-============================================================================
-> > > Stay out of clouds. The silver lining everyone keeps talking
-> > > about might be another airplane going in the opposite direction.
-> > > Reliable sources also report that mountains have been known to hide
-> > > out in clouds.
-> > > --Rules of the Air, #13
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > >
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
->
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
->
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+
+
+
+pvdisplay -v /dev/hde4
+...
+   01528 /dev/main/var             00252   12525944
+   01529 /dev/main/var             00253   12534136
+   01530 /dev/main/var             00254   12542328
+   01531 /dev/main/var             00255   12550520
+   01532 /dev/main/var             00256   12558712
+   01533 /dev/main/var             00257   12566904
+...
+
+
+lvdisplay -v /dev/main/var
+...
+   00252 /dev/sdb                  01064  2118       0
+   00253 /dev/sdb                  01065  2558       326
+   00254 /dev/sdb                  01066  2048       0
+   00255 /dev/sdb                  01067  2048       0
+   00256 /dev/sdb                  01068  5558       23077
+   00257 /dev/sdb                  01069  2685       102
+...
+
+pvdisplay -v /dev/sdb
+   01064 free
+   .....
+   01083 free
+
+
+pvmove --verbose /dev/hde4:1528 /dev/hde2
+
+...
+pvmove -- starting to move extents away from physical volume "/dev/hde4"
+pvmove -- checking for enough free physical extents in "main"
+pvmove -- /dev/hde4 [PE 1528 [var [LE 252]] -> /dev/hde2 [PE 5398] [1/1]
+/dev/main/group::/dev/main/var: 2104 12525944, 2102 44228984
+pvmove -- ERROR "Invalid argument" copying extent from "/dev/hde4"
+
+pvmove -- ERROR "Invalid argument" remapping
+pvmove -- ERROR "pv_move(): LE of LV remap" moving physical extents
+
+
+pvmove --verbose /dev/sdb:1064 /dev/hde2:
+...
+pvmove -- checking destination physical volume names in command line
+pvmove -- ERROR: source physical extent 1064 invalid for physical volume
+"/dev/sdb"
