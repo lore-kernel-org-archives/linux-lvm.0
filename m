@@ -1,10 +1,8 @@
-Message-ID: <XFMail.20020821200341.cfreeze@alumni.clemson.edu>
+From: Jeroen Baten <jeroen@i2rs.nl>
 MIME-Version: 1.0
-Content-Type: multipart/signed;
- boundary="_=XFMail.1.5.3.Linux:20020821200341:10266=_";
- micalg=pgp-md5; protocol="application/pgp-signature"
-From: Chris Freeze <cfreeze@alumni.clemson.edu>
-Subject: [linux-lvm] vg_read_with_pv_and_lv error
+Content-Transfer-Encoding: 8bit
+Message-Id: <200208221116.26702.jeroen@i2rs.nl>
+Subject: [linux-lvm] writing book, having LVM question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,121 +13,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug 21 20:04:01 2002
+Date: Thu Aug 22 04:18:01 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-LVM@sistina.com
 
-This message is in MIME format
---_=XFMail.1.5.3.Linux:20020821200341:10266=_
-Content-Type: text/plain; charset=us-ascii
+Hello,
 
-I've come across a problem with my lvm drive(s).  When I try to mount it, I get
-/dev/diskvg/share does not exist.  Running pvscan I get,
+I got this name from the kernel maintainers file. I hope someone can help me.
+If so, please email me directly.
 
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hdg2"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hdg3"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hdh1"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hdh2"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hdh3"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hdh4"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hde1"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hde2"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hde3"  is associated to unknown VG "diskvg" (run
-vgscan)
-pvscan -- inactive PV "/dev/hdf1" is in no VG  [19.53 GB]
-pvscan -- inactive PV "/dev/hdf2" is in no VG  [18.82 GB]
-pvscan -- total: 12 [267.09 GB] / in use: 10 [228.74 GB] / in no VG: 2 [38.35
-GB]
+While writing an LPI level 2 book I stumbled acros 2 issues. 
+Can you respond on the following info?
+I use a redhaf 7.2 system for these test with 6 old scsi disks attached.
+-------------------------------------------------------------------------
+issue 1:
 
-which is correct (other than having an unknown vg), and when I run vgscan I
-get, 
+[root@redhat lvmconf]# vgcfgrestore -n lpi_vg_1  /dev/sdb1
+vgcfgrestore -- INFO: using backup file "/etc/lvmconf/lpi_vg_1.conf"
+vgcfgrestore -- can't restore part of active volume group "lpi_vg_1"
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- only found 33727 of 33556 LEs for LV /dev/diskvg/share (0)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data
-of volume group "diskvg" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+[root@redhat lvmconf]# lvchange -a n /dev/lpi_vg_1/lpi_lv_1
+lvchange -- logical volume "/dev/lpi_vg_1/lpi_lv_1" changed
+lvchange -- doing automatic backup of volume group "lpi_vg_1"
 
-vgcfgrestore -n diskvg -b 1 /dev/hdg1
+[root@redhat lvmconf]# vgcfgrestore -n lpi_vg_1  /dev/sdb1
+vgcfgrestore -- INFO: using backup file "/etc/lvmconf/lpi_vg_1.conf"
+vgcfgrestore -- can't restore part of active volume group "lpi_vg_1"
 
-but running pvdata /dev/hdg1 I still get
+[root@redhat lvmconf]# vgchange -a n
+vgchange -- volume group "lpi_vg_1" successfully deactivated
 
---- Physical volume ---
-PV Name               /dev/hdg1
-VG Name               diskvg
-PV Size               19.53 GB [40960017 secs] / NOT usable 4.19 MB [LVM: 147
-KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              4998
-Free PE               0
-Allocated PE          4998
-PV UUID               DKfGe0-VsMw-zeK1-5tJn-f7Nb-Uv6u-j93KLp
+[root@redhat lvmconf]# vgcfgrestore -n lpi_vg_1  /dev/sdb1
+vgcfgrestore -- INFO: using backup file "/etc/lvmconf/lpi_vg_1.conf"
+vgcfgrestore -- VGDA for "lpi_vg_1" successfully restored to physical volume 
+"/dev/sdb1"
 
---- Volume group ---
-VG Name
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                7
-Act PV                7
-VG Size               131.75 GB
-PE Size               4 MB
-Total PE              33727
-Alloc PE / Size       33556 / 131.08 GB
-Free  PE / Size       171 / 684 MB
-VG UUID               t36afg-UyqZ-HqLo-9SHT-TfYe-1yNg-hQxfRv
+[root@redhat lvmconf]# vgchange -a y
+vgchange -- volume group "lpi_vg_1" successfully activated
+
+[root@redhat lvmconf]# lvchange -a y /dev/lpi_vg_1/lpi_lv_1
+lvchange -- volume group "lpi_vg_1" is not active
+
+[root@redhat lvmconf]# lvchange -a y /dev/lpi_vg_1/lpi_lv_1
+lvchange -- volume group "lpi_vg_1" is not active
+
+[root@redhat lvmconf]#
+-----------------------------------------------------------------------------
+issue 2: Other problem:
+
+Wanting to do an vgexport and import on same system:
+
+[root@redhat root]#  vgimport   lpi_vg_1 /dev/sdb1 /dev/sdc1
+vgimport -- ERROR "pv_read(): open" reading physical volume "/dev/sdb1"
+
+your respons will be highly appreciated.
+
+kind regards,
 
 
-Is there any hope of restoring the data?
-
-
-
-
--- 
-Regards,
-
-Chris
-
-Better to light one candle than to curse the darkness.
-                -- motto of the Christopher Society
-
------
-Chris Freeze           Email: cfreeze@alumni.clemson.edu
-                         Web: http://www.cfreeze.com 
-
-
---_=XFMail.1.5.3.Linux:20020821200341:10266=_
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE9ZDhspYf63jYRQj8RAlOYAKCpShMOQUzu0g8ruj9+Pu8xzs8GzACgr4P1
-SYoXETzSv+RaGDn9OFg2xEM=
-=UExk
------END PGP SIGNATURE-----
-
---_=XFMail.1.5.3.Linux:20020821200341:10266=_--
-End of MIME message
+  Jeroen Baten            | EMAIL :  JEROEN@I2RS.NL
+ ____  _  __              | web   :  www.i2rs.nl
+  |  )|_)(_               | tel   :  +31 (0)30 221 00 11
+ _|_/_| \__)              | fax   :  +31 (0)30 220 31 91
+           Kometenlaan 26, 3721 JT, Bilthoven
