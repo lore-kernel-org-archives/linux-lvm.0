@@ -1,11 +1,9 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 26 Jun 2001 15:49:47 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvmove error
-Message-ID: <20010626154947.A27637@sistina.com>
-References: <000301c0fe45$9d865940$7d80a8c0@dyndns.org>
-Mime-Version: 1.0
-In-Reply-To: <000301c0fe45$9d865940$7d80a8c0@dyndns.org>; from smdenton@bellsouth.net on Tue, Jun 26, 2001 at 09:40:50AM -0400
+Return-Path: <dice@mfa.kfki.hu>
+Date: Tue, 26 Jun 2001 22:28:30 +0200 (CEST)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Message-ID: <Pine.LNX.4.33.0106262221410.7216-100000@moon.dice.hu>
+MIME-Version: 1.0
+Subject: [linux-lvm] problems with gcc 3.0 & lvm tools
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,51 +15,366 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jun 26, 2001 at 09:40:50AM -0400, S. Michael Denton wrote:
->  
-> Heinz:
-> 
-> Good news, I was lucky enough that the pe in question was near the
-> end of the lv, so i could reduce the fs, reduce the lv, then create
-> another lv of 1 pe to put there so nothing actually uses the
-> offset-affected pe, and bring the volume/fs back to original size...
-> and i checked the other pv's i have and this disk seems the only one
-> affected by this offset problem, so i can live with losing 4MB on
-> this drive :)
+Hi!
 
-Great!
-Please check 1.0 once it is available (which is hopefully soon ;-)
+GCC 3.0 implements ``printf'' as a macro.
 
-Regards,
-Heinz    -- The LVM Guy --
+So the following lines in the userspace utils are invalid.
+printf ("...
+#ifdef DEBUG
+                     "\t[-d/--debug]\n"
+#endif
+...");
 
-> 
-> Thanks again!
-> 
-> Scott Denton
-> smdenton@bellsouth.net 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Hereby GCC 3.0 cannot compile the tools.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+As a workaround you can use the following patch to comment-out all such
+lines. So they can compile.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks,
+Gergely
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--- LVM-orig/tools/lvchange.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvchange.c	Tue Jun 26 21:51:17 2001
+@@ -168,9 +168,11 @@
+                      "\t[-A/--autobackup y/n]\n"
+                      "\t[-a/--available y/n]\n"
+                      "\t[-C/--contiguous y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-p/--permission r/rw]\n"
+                      "\t[-r/--readahead ReadAheadSectors]\n"
+--- LVM-orig/tools/lvcreate.c	Thu Jun 14 21:14:03 2001
++++ LVM/tools/lvcreate.c	Tue Jun 26 21:52:47 2001
+@@ -250,9 +250,11 @@
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+                      "\t[-C/--contiguous y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-i/--stripes Stripes [-I/--stripesize StripeSize]]\n"
+                      "\t{-l/--extents LogicalExtentsNumber |\n"
+--- LVM-orig/tools/lvdisplay.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvdisplay.c	Tue Jun 26 21:53:44 2001
+@@ -125,9 +125,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-c/--colon]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-D/--disk]\n"
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v[v]/--verbose [--verbose]]\n"
+--- LVM-orig/tools/lvextend.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvextend.c	Tue Jun 26 21:55:00 2001
+@@ -140,9 +140,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t{-l/--extents [+]LogicalExtentsNumber |\n"
+                      "\t -L/--size [+]LogicalVolumeSize[kKmMgGtT]}\n"
+--- LVM-orig/tools/lvmchange.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvmchange.c	Tue Jun 26 21:55:59 2001
+@@ -117,9 +117,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-f/--force]\n"
+                      "\t[-h/-?/--help]\n"
+                      "\t[-i/-?/--iop_version]\n"
+--- LVM-orig/tools/lvmdiskscan.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvmdiskscan.c	Tue Jun 26 21:56:55 2001
+@@ -119,9 +119,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-l/--lvmpartition]\n"
+                      "\t[-v/--verbose]\n\n",
+--- LVM-orig/tools/lvmsadc.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvmsadc.c	Tue Jun 26 21:57:56 2001
+@@ -95,9 +95,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\t[LogFilePath]\n\n",
+--- LVM-orig/tools/lvmsar.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvmsar.c	Tue Jun 26 21:58:49 2001
+@@ -105,9 +105,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-f/--full]\n"
+                      "\t[-h/-?/--help]\n"
+                      "\t[-s/--stdin]\n"
+--- LVM-orig/tools/lvreduce.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvreduce.c	Tue Jun 26 21:59:30 2001
+@@ -142,9 +142,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-f/--force]\n"
+                      "\t[-h/-?/--help]\n"
+                      "\t{-l/--extents [-]LogicalExtentsNumber |\n"
+--- LVM-orig/tools/lvremove.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/lvremove.c	Tue Jun 26 22:00:19 2001
+@@ -121,9 +121,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-f/--force]\n"
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+--- LVM-orig/tools/pvchange.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/pvchange.c	Tue Jun 26 22:01:12 2001
+@@ -134,9 +134,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\t[-a/--all]\n"
+--- LVM-orig/tools/pvdisplay.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/pvdisplay.c	Tue Jun 26 22:02:07 2001
+@@ -107,9 +107,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-c/--colon]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-s/--short]\n"
+                      "\t[-v[v]/--verbose [--verbose]]\n"
+--- LVM-orig/tools/vgck.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgck.c	Tue Jun 26 22:02:58 2001
+@@ -92,9 +92,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\t[VolumeGroupName...]\n\n",
+--- LVM-orig/tools/vgextend.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgextend.c	Tue Jun 26 22:03:52 2001
+@@ -127,9 +127,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\tVolumeGroupName\n"
+--- LVM-orig/tools/vgmerge.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgmerge.c	Tue Jun 26 22:04:37 2001
+@@ -122,9 +122,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-l/--list]\n"
+                      "\t[-t/--test]\n"
+--- LVM-orig/tools/vgmknodes.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgmknodes.c	Tue Jun 26 22:05:20 2001
+@@ -91,9 +91,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\t[VolumeGroupName...]\n\n",
+--- LVM-orig/tools/vgreduce.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgreduce.c	Tue Jun 26 22:06:07 2001
+@@ -129,9 +129,11 @@
+                      "%s\n"
+                      "\t[-a/--all]\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\tVolumeGroupName\n"
+--- LVM-orig/tools/vgremove.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgremove.c	Tue Jun 26 22:06:47 2001
+@@ -98,9 +98,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\tVolumeGroupName [VolumeGroupName...]\n\n",
+--- LVM-orig/tools/vgrename.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgrename.c	Tue Jun 26 22:07:29 2001
+@@ -122,9 +122,11 @@
+                      "---------\n\n"
+                      "%s\n"
+                      "\t[-A/--autobackup y/n]\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n"
+                      "\tOldVolumeGroupPath NewVolumeGroupPath /\n"
+--- LVM-orig/tools/vgscan.c	Tue Apr 24 16:29:20 2001
++++ LVM/tools/vgscan.c	Tue Jun 26 22:08:07 2001
+@@ -174,9 +174,11 @@
+                      "Synopsis:\n"
+                      "---------\n\n"
+                      "%s\n"
+-#ifdef DEBUG
+-                     "\t[-d/--debug]\n"
+-#endif
++/*
++ * #ifdef DEBUG
++ *                   "\t[-d/--debug]\n"
++ * #endif
++ */
+                      "\t[-h/-?/--help]\n"
+                      "\t[-v/--verbose]\n\n",
+                      lvm_version, LVM_LIB_IOP_VERSION,  cmd, cmd);
