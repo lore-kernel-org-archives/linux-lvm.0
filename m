@@ -1,9 +1,11 @@
-From: "Steffen Koch" <Steffen.Koch@koch-enterprises.de>
-In-Reply-To: <20030419192108.A18402@ultraviolet.org>
-MIME-Version: 1.0
+Subject: Re: [linux-lvm] Question about VFS Locking patch, why is a change
+	needed?
+From: Chris Mason <mason@suse.com>
+In-Reply-To: <3E9F4A2C.9090806@mvista.com>
+References: <3E9F4A2C.9090806@mvista.com>
+Message-Id: <1050930393.13309.9.camel@tiny.suse.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] pvcreate problem on new IDE disk
-Message-Id: <E197Ybh-00065W-00@mrelayng.kundenserver.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,18 +16,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr 21 05:33:02 2003
+Date: Mon Apr 21 08:07:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Sat, 19 Apr 2003 19:21:08 -0700, Tracy R Reed wrote:
+On Thu, 2003-04-17 at 20:43, Steven Dake wrote:
+> Folks,
+> 
+> I was analyzing the VFS locking patch and I wanted to know if someone 
+> could explain the purpose of a change in the reiserfs for me:
+> 
+> The change is:
+> Index: linus.21/fs/reiserfs/super.c
+> --- linus.21/fs/reiserfs/super.c Fri, 11 Jan 2002 10:14:59 -0500 root 
+> (linux/41_super.c 1.2.2.1.2.1.1.1 644)
+> +++ linus.21(w)/fs/reiserfs/super.c Mon, 28 Jan 2002 13:50:56 -0500 root 
+> (linux/41_super.c 1.2.2.1.2.1.1.1 644)
+> @@ -66,7 +66,7 @@
+>      reiserfs_prepare_for_journal(s, SB_BUFFER_WITH_SB(s), 1);
+>      journal_mark_dirty(&th, s, SB_BUFFER_WITH_SB (s));
+>      reiserfs_block_writes(&th) ;
+> -    journal_end(&th, s, 1) ;
+> +    journal_end_sync(&th, s, 1) ;
+>    }
+>    s->s_dirt = dirty;
+>    unlock_kernel() ;
+> 
+> I tried LVM with and without this change even under heavy load and LVM 
+> can still create mountable snapshots of a reiser filesystem without the 
+> change.  Why is it there?
 
->But when I do the pvcreate I get this error:
->
->home:~# pvcreate /dev/hdd2
->  Failed to read existing physical volume '/dev/hdd2'
->  /dev/hdd2: Couldn't find device.
->  Failed to setup physical volume "/dev/hdd2"
+journal_end will do an asynchronous commit, which means it won't wait
+for the journal to actually finish writing to disk.  journal_end_sync
+will wait until the commit is fully on disk.
 
-did you reboot after fdisk??
+In most cases, the reiserfs_block_writes call is sufficient and the
+journal_end_sync change isn't needed, but there are a few corner cases
+depending on the number of log writers where journal_end_sync is
+required.
+
+-chris
