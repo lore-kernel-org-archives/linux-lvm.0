@@ -1,7 +1,7 @@
 From: Andreas Dilger <adilger@enel.ucalgary.ca>
-Message-Id: <199908270338.VAA23939@webber.adilger.net>
-Subject: [linux-lvm] Revised petition WAS: LVM in stock kernel!?
-Date: Thu, 26 Aug 1999 21:38:37 -0600 (MDT)
+Message-Id: <199908270344.VAA23954@webber.adilger.net>
+Subject: [linux-lvm] e2fsadm Q's
+Date: Thu, 26 Aug 1999 21:44:12 -0600 (MDT)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
@@ -10,24 +10,26 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: Linux LVM mailing list <linux-lvm@msede.com>
 
-Shane writes:
-> - Integration with IBM's ADSM backup allows Linux machines to be backed up
->   "snapshot" style by simply syncing volumes and grabbing volume data.
+Johhny Brassow writes:
+> The reason I'm asking is because I am going to start work on a file 
+> system resizer for GFS.  I would like it to be an online resizer (mmm... 
+> lots of problems:).  Does anyone have any experience in this or could 
+> point me to some source code (other than the LVM stuff - I'm looking that 
+> over now:)?
 
-I would like to learn specifically what this is before we post this list
-anywhere.  I don't know of any "integration" with ADSM and Linux LVM.  I
-don't think the current LVM supports mirrored LVs, so there is no possibility
-of a snapshot of a filesystem...
+There are several ext2 offline resizers available, as well as my online
+ext2 resizer.  If the filesystem is structured correctly on disk, there
+isn't much change needed in the kernel to make online resizing work.  I
+did much of the change in user-space, and then called (effectively):
 
-> - The ability to add a sort of volume log allows almost instant volume
->   resyncing while maintaining an active data volume.
+mount -o remount,resize=<new block count> /dev/XXX
 
-I don't think this is currently possible either with Linux LVM...  Let's
-stick with what works before we go talking about features that don't
-exist yet.
-
-You can add me as a strong supporter of LVM for Linux.  I think any OS
-that doesn't have LVM these days is a pain in the a**.
+to have the kernel do the modifications to the parts of the superblock in
+use, and to update the kernel data about the filesystem.  If you are
+going to write a similar tool for GFS, feel free to use my code, and it
+would be nice to keep the interfaces to the user-space tools and kernel
+as similar as possible, so maybe there can be a common front-end (like
+there is with fsck calling fsck.ext2, etc).
 
 Cheers, Andreas
 -- 
