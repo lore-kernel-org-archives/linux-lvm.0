@@ -1,12 +1,11 @@
-Return-Path: <wichert@cistron.nl>
-Date: Fri, 20 Apr 2001 19:39:28 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-Message-ID: <20010420193928.D23541@cistron.nl>
-References: <20010419144815.J10345@sistina.com> <20010420192413.A17717@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010420192413.A17717@sistina.com>; from Mauelshagen@sistina.com on Fri, Apr 20, 2001 at 07:24:13PM +0000
+Return-Path: <alan@lxorguk.ukuu.org.uk>
+Date: Fri, 20 Apr 2001 19:04:21 +0100 (BST)
+In-Reply-To: <20010420192413.A17717@sistina.com> from "Heinz J. Mauelshagen" at Apr 20, 2001 07:24:13 PM
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <E14qfGa-0001pJ-00@the-village.bc.nu>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,23 +18,11 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: Mauelshagen@sistina.com
+Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
 
-Previously Heinz J. Mauelshagen wrote:
-> Linux LVM is a Sistina GPL project and there's no danger at all
-> that we want to change its GPL nature!
+> We will announce when they are available ASAP and would appreciate if
+> people like Alan Cox, Andrea Arcangeli and Andreas Dilger
+> could check them *before* we start submitting them to Linus.
 
-I think the general sentiment is that LVM is a Linux project,
-currently being managed by Sistina. 
-
-Also, since you have merged patches from other you no longer can
-change the license since Sistina is not the sole copyright holder.
-
-Wichert.
-
--- 
-   ________________________________________________________________
- / Generally uninteresting signature - ignore at your convenience  \
-| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+I'll be glad to help look over them.
