@@ -1,14 +1,22 @@
-Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i1DNPui24670
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 18:25:56 -0500
-Received: (from agk@localhost)
-	by homer.msp.redhat.com (8.11.6/8.11.6) id i1DNPtx26729
-	for linux-lvm@redhat.com; Fri, 13 Feb 2004 17:25:55 -0600
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20040213172555.B14206@homer.msp.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 Internationalisation
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1DNSQi25330
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 18:28:26 -0500
+Received: from steelemr-loadb-nat-49.caltech.edu (SteeleMR-loadb-NAT-49.caltech.edu [131.215.49.69])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1DNSQb09517
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 18:28:26 -0500
+Received: from earth-dog (earth-dog [192.168.1.3])
+	by water-ox-postvirus (Postfix) with ESMTP id 8D4F426AC7E
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 15:28:20 -0800 (PST)
+Received: from caltech.edu (good.work.caltech.edu [131.215.164.3])
+	by earth-ox.its.caltech.edu (Postfix) with ESMTP id B9A00109BF7
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 15:28:19 -0800 (PST)
+Message-ID: <402D5D93.7040802@caltech.edu>
+From: Ling Li <ling@caltech.edu>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvm pvscan or vgscan very slow
+References: <402C0D65.80905@caltech.edu> <20040212180824.O10533@homer.msp.redhat.com>
+In-Reply-To: <20040212180824.O10533@homer.msp.redhat.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -20,24 +28,27 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 13 18:25:01 2004
+Date: Fri Feb 13 18:27:06 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-I've just checked in some changes to support internationalisation.
+Alasdair G Kergon wrote:
+> It shouldn't be that slow!
+> Look at your system log and/or run with -vvv to see why it's so slow.
 
-If anyone feels inclined to translate any of the messages,
-the template file is po/lvm2.po, created with 'make pofile'. 
-You can edit the makefile in that directory to exclude debug
-messages etc. by removing one or more '--keyword' arguments
-if you want to exclude the rarer messages.
+# lvm pvscan -vvv > ~/pvscan-list
+# grep "Added to device cache" pvscan-list  | wc -l
+   15813
 
-Be aware that there is active development on this project, so some
-messages will change.  A few don't support internationalisation
-properly yet (e.g. plural 's' parameter). 
+I guess the number of devices to be scanned is just too large (and my 
+computer is also a very slow one). Is there some way to specify a 
+narrower range of devices to be scanned in LVM2?
 
-Alasdair
--- 
-agk@redhat.com
+> We've a couple of speed-ups that might help (one uses sysfs to reduce
+> the number of devices to scan) - they're in the queue of things waiting
+> to be checked into CVS after the repository move.
+> I'll try to get them imported tomorrow.
+This kind of patch will definitely help!
+
+--Ling
