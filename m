@@ -1,8 +1,7 @@
-Message-ID: <004601c253ba$da0701f0$6a01a8c0@bmoon>
-From: "bmoon" <bo@sosnetwork.net>
-Subject: Fw: [linux-lvm] Any way to remove a PV from LV for backup?
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: engco@alibaba.com
+Mime-Version: 1.0
+Message-Id: <E17mQmr-0005kQ-00@hermes.sistina.com>
+Subject: [linux-lvm] We want to buy...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +12,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep  3 21:29:01 2002
+Date: Tue Sep  3 22:26:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I lost the last 3 days' email and did not have any response yet.
-So sending the same question again.
+Dear sirs,
+We are searching for some promotional items for our clients in USA, 
+visit http://cnmousepad.com/items/index.htm to get the details.
+if you can supply, please contact us asap.
 
-> Hello,
-> 
->  The system has 4 PVs, which belongs to one VG and one LV.
->  I want to remove a disk and replace it with new when the system
->  consumes all of its space then start to use next PV.
->  
->  Q1: Is it really possible by LVM concept?
-> Q2: If I have one extra PV I could use "pvmove", but I do not have.
->         Any way to resolve it?
-> Q3: Are there any way to replay each PV(backup PV) independently on 
->        the seperate system?
->  
->  Any other idea or hint?
->  
->  Thanks,
->  
->  Bo
+Thank you
+
+Anchor at cnmousepad.com
+
+1-609,Duoli Indultrial Area, Shangmeilin, Futian, Shenzhen, GD, 518049 P.R.China
+
+t: 86-755-83974748
+f: 86-755-83151481
+m:86-138-2351-8101
+e: anchor@szonline.net
+w: www.cnmousepad.com
