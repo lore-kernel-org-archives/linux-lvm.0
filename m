@@ -1,14 +1,11 @@
-Return-Path: <lewis@sistina.com>
-Date: Mon, 18 Jun 2001 10:31:16 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Re: another nice feature for packagers ...
-Message-ID: <20010618103116.A32391@sistina.com>
-References: <Pine.LNX.4.33.0106171519240.14970-200000@moon.dice.hu> <20010618095533.A32072@sistina.com> <18830000.992877113@dizzy>
+Return-Path: <root@srv.sistina.com>
+Date: Mon, 18 Jun 2001 17:39:11 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Problems with 0.9.1b7 and 2.2.20-2
+Message-ID: <20010618173911.A15676@sistina.com>
+References: <20010605092436.B856@jaquet.dk> <20010605123417.A23541@sistina.com> <20010605154656.A1384@jaquet.dk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Content-Disposition: inline
-In-Reply-To: <18830000.992877113@dizzy>; from lembark@wrkhors.com on Mon, Jun 18, 2001 at 10:11:53AM -0500
+In-Reply-To: <20010605154656.A1384@jaquet.dk>; from rasmus@jaquet.dk on Tue, Jun 05, 2001 at 03:46:57PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,56 +17,84 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 05, 2001 at 03:46:57PM +0200, Rasmus Andersen wrote:
+> On Tue, Jun 05, 2001 at 12:34:17PM +0200, Heinz J. Mauelshagen wrote:
+> > 
+> > This sounds like a well known ext2 problem.
+> > Did you run fsck successfully? And if so, didn't it work again?
+> 
+> Uhm. Known problem? Could you elaborate a bit?
 
-On Mon, Jun 18, 2001 at 10:11:53AM -0500, Steven Lembark wrote:
->=20
-> > Just FYI, the entire build system is going to get an overhaul after the
-> > 1.0    release, so I will definitely be making sure these detail are ke=
-pt
-> > in mind     for that.
->=20
-> It would be nice if --prefix worked consistently for the new release.  Un=
-til
-> some final kinks in devfs get worked over keeping the VG's out of /dev
-> without having to hack the source code would be helpful.
+I was refering to ext2 consistency problems in older kernels which have been
+fixed in the meantime. You need to have recent ext2 tool as well.
 
-Care to explain further?  I don't know what you're talking about here.
---prefix works fine for me in all cases.
+> I have not seen it
+> before and would like to know if it is something I will encounter
+> regularily using ext2 and LVM.
+
+No, you shouldn't in case you have recent ext2 software.
+
+> 
+> I have run e2fsck a number of times now, and while I do not get
+> the kernel log message after the reboot (se below) fsck complain
+> and fix stuff every time in lost+found which contain a lot of
+> junk I cannot delete manually either.
+> 
+> > 
+> > 
+> > > 
+> > > I can do a 'dd if=/dev/<diskX> of=/dev/null' for the disks that are
+> > > part of the volume group without problems but if I do it for /dev/vg1/
+> > > lvol4, I get the error above (without the EXT2-part).
+> > 
+> > Did you *really* run "dd if=/dev/vg1/lvol4 of=/dev/null" and got that error
+> > in the log? Never have seen that before.
+> 
+> I will try to reproduce. But trying to get as much as the (used) 
+> filesystem with off the disk with tar resulted in a kernel panic
+> (this was just after my last mail):
+> 
+> panic: brw_page: page not locked for IO
+> 
+> This was put after a couple of lines of 
+> 
+> Jun  5 10:04:35 firewall kernel: attempt to access beyond end of device 
+> Jun  5 10:04:35 firewall kernel: 08:01: rw=0, want=530420, limit=410608 
+> Jun  5 10:04:35 firewall kernel: dev 3a:03 blksize=1024 blocknr=622592 sector=1060832 size=4096 count=1 
+> 
+> on the console.
+> 
+> -- 
+> Regards,
+>         Rasmus(rasmus@jaquet.dk)
+> 
+> "I'm not going to have some reporters pawing through our papers. We are
+> the president."  -Hillary Clinton commenting on the release of subpoenaed
+> documents.
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
 
 Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Heinz    -- The LVM Guy --
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
------Begin Obligatory Humorous Quote----------------------------------------
-"We succeed because our competitors are idiots" - anonymous
------End Obligatory Humorous Quote------------------------------------------
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7Lh7EpE6/iGtdjLERAmkFAJ0XZ0kLMmF7kfsX/EkamcFTbanM4QCcDWY8
-PbN+pPspS/OZu5Sb/XyTKtA=
-=cphB
------END PGP SIGNATURE-----
-
---uAKRQypu60I7Lcqm--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
