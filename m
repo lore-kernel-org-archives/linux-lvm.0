@@ -1,12 +1,12 @@
-Return-Path: <wichert@cistron.nl>
-Date: Fri, 27 Jul 2001 14:52:20 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] File System type on (LVM) partition
-Message-ID: <20010727145219.B29848@cistron.nl>
-References: <20010727133117.A29848@cistron.nl> <20010727121801.38519.qmail@web13403.mail.yahoo.com>
+Return-Path: <tack@orion.dok.org>
+Date: Fri, 27 Jul 2001 09:02:45 -0400
+From: Jason Tackaberry <tack@linux.com>
+Subject: Re: [linux-lvm] Nasty bug in lvm and/or md and/or reiserfs
+Message-ID: <20010727090245.A4262@linux.com>
+References: <20010726131928.D1779@linux.com> <20010726134732.A27706@sistina.com> <20010726160701.H1779@linux.com> <20010726151725.A28574@sistina.com> <15201.4293.260605.275782@rigel.oswf.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010727121801.38519.qmail@web13403.mail.yahoo.com>; from plamb_98@yahoo.com on Fri, Jul 27, 2001 at 05:18:01AM -0700
+In-Reply-To: <15201.4293.260605.275782@rigel.oswf.de>; from john@oswf.de on Fri, Jul 27, 2001 at 08:57:09AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,17 +22,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Previously Pierre Lamb wrote:
-> I believe the stand ext2 is 83 and lvm is 8e so one
-> could check for those values
+> I cannot comment on reiserfs, because I only use it on my equipment for
+> test reasons, but I have LVM on top of a RAID-5 and a RAID-0 up and running
 
-That's a really poor check. 83 is `Linux Native', which isn't limited
-to ext2 at all. My LVM PV happens to be type 83 as well actually.
+I guess you mean software RAID using md? 
 
-Wichert.
+> for more than 140 days on one of our machines. No problems so far, although
+> it is still 0.9.1-beta5 and a "rather old" kernel ;-). Maybe it is time to
+> upgrade this one, too.
 
--- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+I guess this is the concern: md clearly works when all is going well,
+but when somethings goes awry (like, for example, in my case where a
+kernel bug in reiserfs caused umount to segfault while it had a lock on
+/etc/mtab), is it robust enough?
+
+Are there others on this list who can share their md/lvm experiences use
+with me?
+
+Thanks,
+Jason.
