@@ -1,10 +1,11 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] hello sir
-Message-Id: <20020406125516.GA27677@tiger.bigcats.invalid>
-References: <20020406183800.5697.qmail@eyou.com>
+From: Eike Bernhardt <eike@unorganized.net>
+Message-Id: <20020406160419.GA8506@unorganized.homeip.net>
+References: <20020405172933.GA71085@unorganized.homeip.net>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="a8Wt8u1KmwUX3Y2C"
 Content-Disposition: inline
-In-Reply-To: <20020406183800.5697.qmail@eyou.com>
+In-Reply-To: <20020405172933.GA71085@unorganized.homeip.net>
+Subject: [linux-lvm] Re: Known Issues with FreeBSD Slices on Disks?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,42 +16,124 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Apr  6 06:55:02 2002
+Date: Sat Apr  6 10:03:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux-LVM@sistina.com
+To: linux-lvm@sistina.com
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 Hello!
 
-seaward@eyou.com (seaward@eyou.com) wrote 32 lines:
+On Fri Apr  5 19:29:33 2002 CEST Eike Bernhardt wrote:
 
->     Two:after creating /dev/hda3 and changing it to type 0x8e by fdisk,why
-> does pvcreate say it is a invalid partition?
+> lvcreate -- ERROR "Operation not permitted" opening logical volume
+> "/dev/pile/test"
+> 
+> (Attached is a Logfile which shows this in Context, and more Info)
 
-To be able to read in the patition table of a HD in *all*
-cases, the complete HD must be completely umounted.  No Swap,
-no /-partition, nothing may be in use or just allocated.
+*arg* OK, so this time with the Log attached ...
 
-Otherwise it will work in some cases but not in other cases,
-and if you are very unlucky, you could lose data.  (But then,
-if you can create partitions, you can also run
-dd if=/dev/zero of=/dev/hda)
+Bye, Eike
+-- 
+Eike Bernhardt              http://unorganized.net/                ICQ: 11256658
+     "PEOPLE'S WHOLE LIVES DO PASS IN FRONT OF THEIR EYES BEFORE THEY DIE.
+THE PROCESS IS CALLED 'LIVING'."  Death -- (Terry Pratchett, The Last Continent
 
-> But pvcreate can process it after reboot the system.
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="lvmlog.txt"
 
-This happens eg. during the boot process, so rebooting can
-be needed there, if you have a single-HD-system and are not
-running completely from the ramdisk.
+root@teefax:~ # fdisk -l /dev/hda
 
-> However, it is ok for a existing partition(needn't create
-> but need change type).
+Disk /dev/hda: 255 heads, 63 sectors, 7297 cylinders
+Units = cylinders of 16065 * 512 bytes
 
-In this case, it seems, your kernel had the good luck of
-picking up the change, even without completely umounting and
-de-allocating the HD.
+   Device Boot    Start       End    Blocks   Id  System
+/dev/hda1   *         1       765   6144831    b  Win95 FAT32
+/dev/hda2           766      2040  10241437+  a5  FreeBSD
+/dev/hda3          2041      3315  10241437+   c  Win95 FAT32 (LBA)
+/dev/hda4          3316      7297  31985415   8e  Linux LVM
+root@teefax:~ # pvcreate -v /dev/hda4
+pvcreate -- locking logical volume manager
+pvcreate -- checking physical volume name "/dev/hda4"
+pvcreate -- getting physical volume size
+pvcreate -- checking maximum physical volume size
+pvcreate -- checking partition type
+pvcreate -- checking volume group name
+pvcreate -- creating new physical volume
+pvcreate -- setting up physical volume for /dev/hda4 with 63970830 sectors
+pvcreate -- writing physical volume data to disk "/dev/hda4"
+pvcreate -- physical volume "/dev/hda4" successfully created
+pvcreate -- unlocking logical volume manager
 
-At least, that's my best understanding based on personal
-experience and discussion on several mailing lists.
+root@teefax:~ # vgdisplay pile
+--- Volume group ---
+VG Name               pile 
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               85.52 GB
+PE Size               4 MB
+Total PE              21892
+Alloc PE / Size       21892 / 85.52 GB
+Free  PE / Size       0 / 0
+VG UUID               7F14se-04WD-dxtR-gHMd-PpLz-oGqw-Ceh56p
 
--Wolfgang
+root@teefax:~ # vgextend pile /dev/hda4
+vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgextend -- creating archive of volume group "pile" in "/etc/lvmconf"
+vgextend -- volume group "pile" successfully extended
+
+root@teefax:~ # vgdisplay pile
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               116.01 GB
+PE Size               4 MB
+Total PE              29699
+Alloc PE / Size       21892 / 85.52 GB
+Free  PE / Size       7807 / 30.50 GB
+VG UUID               7F14se-04WD-dxtR-gHMd-PpLz-oGqw-Ceh56p
+
+
+root@teefax:~ # lvcreate -v -n test -L 100 pile
+--- Volume group ---
+VG Name               pile 
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GBlvcreate -- checking volume group name "pile"
+lvcreate -- reading volume group data of volume group "pile" from disk(s)
+lvcreate -- checking volume group activity
+lvcreate -- checking logical volume path "/dev/pile/test"
+lvcreate -- checking stripe count
+lvcreate -- checking stripe size
+lvcreate -- locking logical volume manager
+lvcreate -- getting volume group status from VGDA in kernel
+lvcreate -- checking stripe size against volume group physical extent size
+lvcreate -- checking logical volume maximum size
+lvcreate -- checking volume group free space
+lvcreate -- checking stripe count against physical volume count
+lvcreate -- checking for maximum logical volume count
+lvcreate -- setting up logical volume
+lvcreate -- setting read ahead sectors
+lvcreate -- creating logical volume VGDA in kernel
+lvcreate -- storing logical volume VGDA on disk(s)
+lvcreate -- creating device special file
+lvcreate -- opening logical volume "/dev/pile/test" for init
+lvcreate -- ERROR "Operation not permitted" opening logical volume "/dev/pile/test"
+root@teefax:~ # 
+
+--a8Wt8u1KmwUX3Y2C--
