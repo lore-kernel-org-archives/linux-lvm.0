@@ -1,10 +1,10 @@
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] strange behavior with 1.0.5 on Linux 2.4.19?
-Message-ID: <20021029212009.GE18253@percy.comedia.it>
-References: <1033579350.6468.61.camel@gopher> <20021004105057.B8575@sistina.com> <1034107599.28928.105.camel@pslgregory> <20021009133650.E23965@sistina.com> <1035782975.3398.128.camel@gopher> <20021028203549.GA24302@gw.silicide.dk> <1035844780.9075.64.camel@gopher>
+Subject: Re: [linux-lvm] Support for RedHat AS2.1?
+Message-ID: <20021029220336.GF18253@percy.comedia.it>
+References: <200210280943.40808.defranco@cup.hp.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1035844780.9075.64.camel@gopher>
+In-Reply-To: <200210280943.40808.defranco@cup.hp.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +15,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 29 15:21:02 2002
+Date: Tue Oct 29 16:04:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Oct 28, 2002 at 02:39:40PM -0800, Gregory K. Ade wrote:
->On Mon, 2002-10-28 at 12:35, jon+lvm@silicide.dk wrote:
->> On Sun, Oct 27, 2002 at 09:29:35PM -0800, Gregory K. Ade wrote:
->Is it possible that similar issues may be present in LVM?  How many
->people here are running LVM on systems with ~100GB available storage or
->more and 4GB or more of RAM?
+On Mon, Oct 28, 2002 at 10:43:40AM -0700, John DeFranco wrote:
+>I see on the Sistina web page that LVM is supported on RedHat Advanced Server 
+>2.1. So I have a couple of questions:
+>
+>2. Which redhat kernel errata (2.4.9-e.3 and/or 2.4.9-e.8)?
+latest (if that kernel can be called recent) is 2.4.9-e.9
 
-i am, rh 2.4.18-5 kernel (with rh-supplied lvm [1.0.3 + fixes])
-8 cpus
-8GB ram
-two FC cards (emulex)
-about 1 tb of space on an HP VA7xxx (through a brocade switch)
+>3. I did try to apply the 1.0.6 version on the 2.4.9-e.3 kernel I got a couple 
+>of patch installation errors (Makefile and lvm-snap.c was missing). Are these 
+>expected? I cannot find any other directions that are specific to AS2.1. Are 
+>there any others?
+anyway standard lvm patch process supposes you have a stock kernel, and
+AFAIR that was the only setup supported by sistina (feel free to correct
+me if i am wrong).
 
-i have had other problems, but not the one you mention
+i expected a difference in makefile lvm-mod-objs should be correct on rh
+kernels (read the reject and the original and see for yourself)
+and lvm-snap.h (not .c) has also been removed.
+the rest of the patch is more or less a diff between your current lvm
+files and those in LVM/1.0.6/kernel
+so you can ignore those.
 
 regards,
 L.
-(cannot do ANY test, that baby is in production)
 
 -- 
 Luca Berra -- bluca@comedia.it
