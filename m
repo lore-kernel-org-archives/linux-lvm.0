@@ -1,14 +1,12 @@
-Return-Path: <lewis@sistina.com>
-Date: Wed, 7 Feb 2001 15:35:15 -0600
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Re: [lvm-commit] cvs commit: LVM/tools/lib pv_read_all_pv_of_vg.c
-Message-ID: <20010207153515.O22166@sistina.com>
-References: <20010207134128.9EA0716B31@postfix.conectiva.com.br> <Pine.LNX.4.21.0102071814030.1193-100000@duckman.distro.conectiva>
+Return-Path: <treed@ultraviolet.org>
+Date: Wed, 7 Feb 2001 14:25:10 -0800
+From: Tracy R Reed <treed@ultraviolet.org>
+Message-ID: <20010207142510.D16262@ultraviolet.org>
+References: <20010202103049.B872@66bassett.freeserve.co.uk> <Pine.LNX.4.30.0102021124370.2352-100000@tweetie.comstar.net> <20010202165642.A1955@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E187YRO8KGM40JwS"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0102071814030.1193-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Wed, Feb 07, 2001 at 06:29:24PM -0200
+In-Reply-To: <20010202165642.A1955@66bassett.freeserve.co.uk>; from joe@66bassett.freeserve.co.uk on Fri, Feb 02, 2001 at 04:56:42PM +0000
+Subject: [linux-lvm] Snapshots with 2.4.1?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,74 +18,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---E187YRO8KGM40JwS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Feb 02, 2001 at 04:56:42PM +0000, Joe Thornber wrote:
+> 2.4.1 hadn't been released when we made the beta3 tarball.  If you
+> want to make a beta3 patch for the kernel create an empty file call
+> PATCHES/fragments-2.4.1 (2.4.1 needs no extra fragments) then run
+> PATCHES/make.  That should remove all the conflicts.
 
-On Wed, Feb 07, 2001 at 06:29:24PM -0200, Rik van Riel wrote:
-> On Wed, 7 Feb 2001, Heinz Mauelshagen wrote:
->=20
-> >   Modified files:        (Branch: LVM_0-9-patches)
-> >     tools/lib            pv_read_all_pv_of_vg.c=20
-> >   Log:
-> >   fixed multiple access path avoidance problem
-> >   leading to removed but valid PV structure;
-> >   this could probably be the reason for lost PVs we faced in the past
->=20
-> I've gathered a bit more debugging output to see why even
-> this fix failed to make vgscan run.
->=20
-> It turns out the LVM utilities messed up some of the info
-> in the PV headers so badly that there's no way to reasonably
-> expect the LVM utilities to pick up their mess ...
->=20
-> I have attached the output from pvdata -a on the PVs to:
-> 	http://bugzilla.sistina.com/show_bug.cgi?id=3D193
->=20
-> Would it be an idea to have some debugging tool around which
-> allows us to fix (simple) things like this ourselves ?
+I need to get snapshots working with 2.4.1. I've tried using just the
+straight LVM that comes with the kernel and I have tried applying the
+patches as described above. I either case, when I uncomment:
 
-It looks like the following *should* fix things for you (this from Patrick):
+#define LVM_VFS_ENHANCEMENT 
 
- o Grab the latest CVS code for LVM.
- o Create a very small LV (or extend an existing one) to force a meta-data
-   update.
- o The UUIDs should be cleaned up
+in drivers/md/lvm.c to enable the hooks for snapshots the compile fails:
 
-If this is not possible with your setup, or does not work for you, let me
-know and we'll see what else we can do to fix the problem.
+drivers/md/mddev.o: In function `lvm_do_lv_create':
+drivers/md/mddev.o(.text+0x11bdb): undefined reference to `fsync_dev_lockfs'
+drivers/md/mddev.o(.text+0x11c90): undefined reference to `unlockfs'
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Can someone point out what else I am missing?
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Proofread carefully to see if you any words out.
------End Obligatory Humorous Quote------------------------------------------
-
---E187YRO8KGM40JwS
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6gb+TpE6/iGtdjLERAl1cAJ9yprkp3MQv52idTjsksKRKOr0SHACghe9S
-rMqODMsT1Nv9tCJGZ8kyzeA=
-=5DYu
------END PGP SIGNATURE-----
-
---E187YRO8KGM40JwS--
+--
+Tracy Reed      http://www.ultraviolet.org
+Those who do not understand Unix are condemned to reinvent it, poorly.
+-- Henry Spencer
