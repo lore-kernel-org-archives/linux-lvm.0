@@ -1,8 +1,16 @@
-From: darren.miller@philips.com
+Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i2BDap808102
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 08:36:51 -0500
+Received: (from agk@localhost)
+	by homer.msp.redhat.com (8.11.6/8.11.6) id i2BDaot21828
+	for linux-lvm@redhat.com; Thu, 11 Mar 2004 07:36:50 -0600
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] LVM2-Snapshot
-MIME-Version: 1.0
-Message-ID: <OFDE50545C.8D84AC86-ON80256E54.00496A13-80256E54.0049C310@philips.com>
-Content-Type: multipart/alternative; boundary="=_alternative 0049C30C80256E54_="
+Message-ID: <20040311073650.B4622@homer.msp.redhat.com>
+References: <20040310173002.75ca7590.Christoph.Pleger@uni-dortmund.de> <20040311092007.GD2138@reti> <1079007845.6842.4.camel@albert.localnet>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1079007845.6842.4.camel@albert.localnet>; from craig@postnewspapers.com.au on Thu, Mar 11, 2004 at 08:24:05PM +0800
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -14,56 +22,23 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Mar 11 08:24:01 2004
+Date: Thu Mar 11 08:34:01 2004
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-Cc: linux-lvm-admin@redhat.com
-
-This is a multipart message in MIME format.
---=_alternative 0049C30C80256E54_=
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
->The last udm was 2.6.4-rc2-udm1, I'm working on a 2.6.4 version now.
->                       ^^^
->
->- Joe
+On Thu, Mar 11, 2004 at 08:24:05PM +0800, Craig Ringer wrote:
+> Is there any chance to tweak lvm in the mean time, so that it doesn't
+> /try/ to take a snapshot? 
 
-Ahh I see, I couldn't get hold of the rc2 simply wasn't available for 
-download.  well my last mail may be of some use?  gave you what I am 
-seeing error wise with the current udm
+Yes, I'm working on this.
 
-Anyway snapshot don't error any more the lvcreate -s commands just hang 
+I'll update the installation documentation to refer to the information
+about upgrading recently added to the HOWTO:
 
-Daz
-==============================================================================
-Darren Miller 
-Senior Systems Support Engineer
-Microsoft Certified Professional
-SCO Advanced Certified Engineer 
-Infomation Systems Department (Core Server Support)
-Philips Semiconductors,Milbrook Industrial Estate,Southampton,SO15 
-0DJ,England
-Direct Dial In: +44 (0) 2380 312681
---=_alternative 0049C30C80256E54_=
-Content-Type: text/html; charset="us-ascii"
+  http://www.tldp.org/HOWTO/LVM-HOWTO/lvm2faq.html
 
-
-<br><font size=2 face="Courier New">&gt;The last udm was 2.6.4-rc2-udm1, I'm working on a 2.6.4 version now.<br>
-&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ^^^<br>
-&gt;<br>
-&gt;- Joe</font>
-<br>
-<br><font size=2 face="sans-serif">Ahh I see, I couldn't get hold of the rc2 simply wasn't available for download. &nbsp;well my last mail may be of some use? &nbsp;gave you what I am seeing error wise with the current udm</font>
-<br>
-<br><font size=2 face="sans-serif">Anyway snapshot don't error any more the lvcreate -s commands just hang </font>
-<br>
-<br><font size=2 face="sans-serif">Daz<br>
-==============================================================================<br>
-Darren Miller &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br>
-Senior Systems Support Engineer<br>
-Microsoft Certified Professional<br>
-SCO Advanced Certified Engineer &nbsp; &nbsp; &nbsp; &nbsp;<br>
-Infomation Systems Department (Core Server Support)<br>
-Philips Semiconductors,Milbrook Industrial Estate,Southampton,SO15 0DJ,England<br>
-Direct Dial In: +44 (0) 2380 312681</font>
---=_alternative 0049C30C80256E54_=--
+Alasdair
+-- 
+agk@redhat.com
