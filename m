@@ -1,11 +1,8 @@
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] PostgreSQL and file system level backup
-Message-ID: <20021116031032.V17827@vestdata.no>
-References: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>; from murthy.kambhampaty@goeci.com on Fri, Nov 15, 2002 at 04:25:49PM -0500
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <008d58d08d4a$3764b6b3$5bb12be8@nmvymw>
+From: <befghfghfgginner@linux.org>
+MiME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] re:frage
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +13,16 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 20:11:02 2002
+Date: Sat Nov 16 03:56:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
-Cc: Postgres Admin List <pgsql-admin@postgresql.org>, "Linux-Xfs (E-mail)" <linux-xfs@oss.sgi.com>
 
-On Fri, Nov 15, 2002 at 04:25:49PM -0500, Murthy Kambhampaty wrote:
-> "Unless the postmaster is shut down meanwhile, you'll probably end up w=
-ith a
-> corrupt database.  The problem is that xfsdump does not give you an
-> instantaneous snapshot of the filesystem state, so you will probably co=
-llect
-> inconsistent contents of the various files that make up the database."
->=20
-> Which gives rise to my present question: given that LVM DOES give an
-> instantaneous snapshot of the filesystem, would an xfsdump of an LVM
-> snapshot of an XFS filesystem give usable backups?
+Hallo!
+Sch�n das Du Dich bei mir gemeldet hast. Hast jetzt noch Lust Dich mit mir zu treffen? Mich w�rde es auf jeden Fall sehr freuen.
+Schau Dir auch mal meine neue Homepage an und melde Dich dann bei mir.
 
-Yes, it should.
+Meine Adresse lautet: http://www.netmails.com/members/petra/
 
-Allthough, some of the postgresql-developers use the term "corrupt
-database" of a database where the table-files are inconsistant. That's
-generally _always_ the case when the server is running, as the latest
-updates are only available in the database-log. That's also the case for
-the LVM-snapshot.
-
-This "inconsistancy" will be fixed by log-replay when you start the serve=
-r
-(after restore).
-
-If you want to avoid it, you can:
-- shut down databasee
-- take snapshot
-- start database
-- backup from snapshot
-
-
-
-There was a long thread on this subject on the postgresql-list a month
-or two ago.
-
-
-
-
---=20
-Ragnar Kj=F8rstad
-Big Storage
+Bussi, Petra
+5412wgVo0-096gGil1729MeDD3-861PaMC4370ifJj9-740nsGG0936RUfa3-999xzl62
