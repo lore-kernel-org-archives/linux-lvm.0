@@ -1,25 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0CE8Kr29368
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 09:08:20 -0500
-Received: from main.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0CE8I5N029523
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 09:08:19 -0500
-Received: from list by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1CojAY-0005Vy-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 15:08:18 +0100
-Received: from 195.25.40.253 ([195.25.40.253])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 15:08:18 +0100
-Received: from bonfils by 195.25.40.253 with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 15:08:18 +0100
-From: Bruno Bonfils <bonfils@fimasys.fr>
-Date: Wed, 12 Jan 2005 14:23:15 +0100
-Message-ID: <87y8eypyrg.fsf@mononoke.fimasys.fr>
-Mime-Version: 1.0
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Trouble with XFS/Snapshot
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0CG1Sr03159
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 11:01:28 -0500
+Received: from e-liberty.pl (yh226.internetdsl.tpnet.pl [80.55.241.226])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0CG1Qc7030188
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 11:01:27 -0500
+Received: from [10.0.0.193] (aji238.internetdsl.tpnet.pl [83.16.242.238])
+	by e-liberty.pl (Postfix) with ESMTP id D9BD13CF91
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 18:26:24 +0100 (CET)
+Message-ID: <41E549C8.7000507@e-liberty.pl>
+Date: Wed, 12 Jan 2005 17:01:12 +0100
+From: Piw <piw@e-liberty.pl>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Trouble with XFS/Snapshot
+References: <87y8eypyrg.fsf@mononoke.fimasys.fr>
+In-Reply-To: <87y8eypyrg.fsf@mononoke.fimasys.fr>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,57 +25,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Bruno Bonfils wrote:
+> Hello,
+> 
+> I'm trying to use the snapshot feature, but i have trouble. I don't
+> have error message (kernel or others), i don't know how to check if
+> lvcreate still running..
+> 
+> 
+> My first try was with a volume group of ~ 580 GB (hardware raid 5)
+> I created a logical volume 50GB, create a XFS Filesystem, put some
+> data (~1GB) and run the following commands :
+> 
+> $ xfs_freeze -f <mount point>
+> $ lvcreate -v -s -L 2GB -n snapshot <device>
+> 
 
-Hello,
+I got same problem (and even wrote on this group).
+Don't do xfs_freeze before taking snapshot. lvcreate when snapshoting 
+tries to lock filesystem by itself, and when filesystem is locked with 
+xfs_freeze, is hand during lock and wait... and wait... and wait...
+According to my tests, lvm locking is enought to create stable snap.
 
-I'm trying to use the snapshot feature, but i have trouble. I don't
-have error message (kernel or others), i don't know how to check if
-lvcreate still running..
+HTH
 
-
-My first try was with a volume group of ~ 580 GB (hardware raid 5)
-I created a logical volume 50GB, create a XFS Filesystem, put some
-data (~1GB) and run the following commands :
-
-$ xfs_freeze -f <mount point>
-$ lvcreate -v -s -L 2GB -n snapshot <device>
-
-I have high load average, small io (~ 170 blk_wrtn/s), but nothings
-happens after more than hour, lvcreate is still running, i can't kill
-him, i can't do a software reboot, etc..
-
-My second try has the same config, except i tried to set the -c
-argument to 6 (which correspond to the chunk_size of the raid 5, 64K) if i
-understand correctly how to use this options, same result than the first.
-
-My third and last try was with a simple volume of 60 GB, a logicial
-volume of 1G, !50M of data put in the fs, and the command :
-
-$ xfs_freeze -f <mount point> 
-$ lvcreate -v -s -L 500M -n <name> <device>
-
-And still the same problem. I hard reboot the computer after one hour
-lvcreate running.. I don't think the system need more 1h to copy 500M
-
-So my question, are there some know wells trouble about the snapshot
-features ? Do you think that work better with LVM 1 ? How can i check
-the state/progress of lvcreate ?
-
-Thanks for your help.
-
--- here my hard/software configuration --
-
-SCSI AACRAID Controler with a lot of disk (11 x 68GB)
-Linux Kernel 2.6.10 with dm-snapshot, dm-mirror, etc.. (running debian sarge)
-XFS (xfsprogs version 2.6.20)
-LVM 2.00.24-1 (Debian Sarge Version)
-
-(sorry if you have received two times this mail, may have trouble with gmane)
-
--- 
-Bruno Bonfils
-Fimasys
+--
+Piw
