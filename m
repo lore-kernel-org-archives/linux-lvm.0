@@ -1,12 +1,10 @@
-Return-Path: <peter@bartosch.net>
-Date: Thu, 31 May 2001 20:40:03 +0200
-From: Peter Bartosch <peter@bartosch.net>
-Subject: Re: [linux-lvm] Re: [reiserfs-list] lvm-list pointed to reiserfs: fs/lvm-problems?
-Message-ID: <20010531204003.A806@mind.bartosch.net>
-References: <20010528183105.C924@mind.bartosch.net> <15123.55304.751997.122954@crimson.namesys.com> <20010529222304.A4888@mind.bartosch.net> <15124.56124.422024.340431@crimson.namesys.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <15124.56124.422024.340431@crimson.namesys.com>; from zam@namesys.com on Wed, May 30, 2001 at 03:36:28PM +0400
+Return-Path: <daleto@swipnet.se>
+Message-ID: <3B16A8B9.761EFB83@swipnet.se>
+Date: Thu, 31 May 2001 22:25:29 +0200
+From: Tomas =?iso-8859-1?Q?Dalebj=F6rk?= <daleto@swipnet.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] LVM on / and SuSE 7.1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,64 +16,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: reiserfs-list@namesys.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-Hi!
+Hi,
 
+I tryed to create:
+Volume Group : rootvg
+(Containing)
+Logical Volume : rootvol1
 
->  >> 
->  >> Sorry, but it looks for me like a lvm problem.  Can you test you LV by
->  >> coping some random data (~ 64 MB) to a file in reliable location and
->  >> to LV, and compare them (or md5 hashes) after reboot ?
-> 
->  PB> hmm, i haven't really tried another filesystem, maybe i should try ext2?
-> 
-> Yes, try to run this script over ext2:
-> http://namesys.com/stress.sh
+But when I get to the point where I need to install my LiLO, I recieved
+the following message:
+Fatal : Not a number : "/dev/rootvg/rootvol1"
 
-i've done that, but it gave me some cruel errors - like an ext2 panic or
-so (can't find anything about it in the logs)
+This disk was already pre-filled from SuSE installations, and I have
+allready done all the needed installations.
+If I read the man pages for lvmcreate_initrd, =
 
-anyway - the PC was frozen
+lvmcreate_initrd assumes that /dev/vg00/root contains  the  root
+filesystem. But my volume group is rootvg, and my logical volume is
+rootvol1.
 
+Is this step important to make the image bootable.?
 
-after the reboot e2fsck showed me that:
+Please help me.
 
-Inode 1313467 has imagic flag set.  Clear<y>? yes
+Thanks in advance.
 
-Inode 1313468 is in use, but has dtime set.  Fix<y>? yes
+Regards Tomas
+                                ,,,,,
+                                (o o)
+---------------------------o000--(_)--000o-----------------------
 
-and - of course not only once :-( but hundred times
+Tomas Dalebj=F6rk                            Mail: Tomas@daleto.com
+ =
 
->  >> Same reason (damaged data), I think, prevented reiserfs volume from
->  >> mounting. 
-> 
->  PB> yes you're right - but why does it oops when i _only_ want to do an "ls
->  PB> -l"?
-> 
-> I agree with you, such behaviour is not good, but I do not think
-> that you want to run reiserfs on an unstable block device.
-
-it's (mostly) only because of the fschk-times -- this is (or should be)
-an 125GB directory tree for music
-
-
-the next step i'll do ist to give the new kernel (2.4.5) a try (hmm,
-eventually with ac4-patch - i've read that there are some
-reiserfs-issues are solved ...)
-
-
-thanks for your attention
-
-
-:wq - until next mail B-), l8r
-
-Peter
--- 
-   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
-   :          student of technical computer science           :
-   :     university of applied sciences krefeld (germany)     :
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+Back up my hard drive? I can't find the reverse switch!
