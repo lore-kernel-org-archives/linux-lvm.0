@@ -1,24 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2TFPCj00826
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 10:25:12 -0500
-Received: from anor.ics.muni.cz (root@anor.ics.muni.cz [147.251.4.35])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2TFPB1X022929
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 10:25:11 -0500
-Received: from anxur.fi.muni.cz (IDENT:0@anxur.fi.muni.cz [147.251.48.3])
-	by anor.ics.muni.cz (8.12.1/8.12.1) with ESMTP id i2TFPAh2029497
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 17:25:10 +0200
-Received: from anxur.fi.muni.cz (IDENT:11561@localhost [127.0.0.1])
-	by anxur.fi.muni.cz (8.12.10/8.12.8) with ESMTP id i2TFP9uw006119
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 17:25:09 +0200 (MEST)
-Received: (from kas@localhost)
-	by anxur.fi.muni.cz (8.12.10/8.12.8/Submit) id i2TFP9Oq006116
-	for linux-lvm@redhat.com; Mon, 29 Mar 2004 17:25:09 +0200 (MEST)
-Date: Mon, 29 Mar 2004 17:25:09 +0200
-From: Jan Kasprzak <kas@informatics.muni.cz>
-Message-ID: <20040329152509.GA27@fi.muni.cz>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 over RAID-5 (AMD64)
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2TGpGj04201
+	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 11:51:16 -0500
+Received: from mail.osdl.org (fw.osdl.org [65.172.181.6])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2TGpD1X031704
+	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 11:51:15 -0500
+Message-Id: <200403291650.i2TGop212446@mail.osdl.org>
+Date: Mon, 29 Mar 2004 08:50:42 -0800 (PST)
+From: markw@osdl.org
+In-Reply-To: <06sb60hni6h5cok941gqnuo4ld1b0v1rgi@email.aon.at>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: [HACKERS] PostgreSQL block size vs. LVM2 stripe
+	width
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,113 +21,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: mkoi-pg@aon.at
+Cc: linux-lvm@redhat.com, linux-ia64@vger.kernel.org, pgsql-hackers@postgresql.org
 
-	Hello,
+Hi Manfred,
 
-	I have problems creating a LV on top of SW RAID-5 volume.
-I have Fedora Core 1/AMD64, and LVM2 utils 2.00.08-5 RPM from the latest
-Fedora Core beta (1.90, I think). My kernel is 2.6.4. The problem is that
-1) Metadata version 2 does not work at all, and
-2) If I use version 1, I cannot create LV once the VG is created -
-	"lvm lvcreate" tries to write metadata to /dev/sda4 (one of the parts
-	of my SW RAID-5 volume) instead of the /dev/md5 itself.
+On 27 Mar, Manfred Koizar wrote:
+> Mark,
+> 
+> how often did you run your tests?  Are the results reproduceable?
 
-	Details are attached. Thanks for any help.
+In this case, I've only done 1 per each combination.  I've found the
+results for this test to be reproduceable.
+ 
+> On Fri, 26 Mar 2004 14:00:01 -0800 (PST), markw@osdl.org wrote:
+>>                        Linux-2.6.3, LVM2 Stripe Width
+>>                        (going across)
+>>PostgreSQL
+>>BLCKSZ
+>>(going down)    16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
+>>2 KB            2617    2656    2652    2664    2667    2642
+>>4 KB            4393    4486    4577    4557    4511    4448
+>>8 KB            4337    4423    4471    4576    4111    3642
+>>16 KB           4412    4495    4532    4536    2985    2312
+>>32 KB           3705    3784    3886    3925    2936    2362
+> 
+> Unless someone can present at least an idea of a theory why a BLCKSZ of
+> 8 KB is at a local minimum (1 or 2% below the neighbouring values) for
+> stripe widths up to 64 KB I'm not sure whether we can trust these
+> numbers.
+> 
+> Before I hit the send button, I did a quick check of the link you
+> provided.  The links in the table contain the following test numbers:
+> 
+>         16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
+> 2 KB     72      71      70       69      66      65
+> 4 KB     64      63      62       61      60      58
+> 8 KB     54      53      52       51      50      49
+> 16 KB    79      78      77       76      75      74
+> 32 KB    86      85      84       83      82      80
+> 
+> Does this mean that you first ran all test with 8 KB, then with 4, 2, 16
+> and 32 KB BLCKSZ?  If so, I suspect that you are measuring the effects
+> of something different.
 
--Yenya
+Yes, that's correct, but why do you suspect that?
 
-ad 1)
-# lvm pvcreate /dev/md5
-  Physical volume "/dev/md5" successfully created
-# lvm vgcreate -s 64M data_vg /dev/md5
-  Volume group "data_vg" successfully created
-# lvm lvcreate -l 4534 -n test_lv data_vg
-  Volume group "data_vg" doesn't exist
-# lvm vgs
-#
-
-ad 2)
-# lvm pvcreate -M1 /dev/md5
-  Physical volume "/dev/md5" successfully created
-# lvm vgcreate -M1 -s 64M data_vg /dev/md5
-  Volume group "data_vg" successfully created
-# lvm vgdisplay
-  --- Volume group ---
-  VG Name               data_vg
-  System ID             hostname.domain.cz1080572966
-  Format                lvm1
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                255
-  Cur LV                0
-  Open LV               0
-  Max PV                255
-  Cur PV                1
-  Act PV                1
-  VG Size               283.38 GB
-  PE Size               64.00 MB
-  Total PE              4534
-  Alloc PE / Size       0 / 0
-  Free  PE / Size       4534 / 283.38 GB
-  VG UUID               cqall8-M9B6-BUJM-uAs6-Ykn3-WSCc-pW6bXm
-# lvm lvcreate -l 4534 -n test_lv data_vg
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'data_vg-test_lv'.
-  Failed to activate new LV.
-# dmesg|tail -2
-device-mapper: dm-linear: Device lookup failed
-device-mapper: error adding target to table
-# lvm lvremove /dev/data_vg/test_lv
-Do you really want to remove active logical volume "test_lv"? [y/n]: y
-  Logical volume "test_lv" successfully removed
-# lvm lvcreate -l 4534 -n test_lv data_vg -v -v
-      global/locking_type not found in config: defaulting to 1
-      global/locking_dir not found in config: defaulting to /var/lock/lvm
-      File-based locking enabled.
-      Locking /var/lock/lvm/V_data_vg WB
-    Finding volume group "data_vg"
-      /dev/sda: No label detected
-      [...]
-      /dev/sda4: lvm1 label detected
-      /dev/md5: lvm1 label detected
-      Duplicate PV wqQ2AyMMX3z1or14EvqOwLEL3RKaldUf on /dev/sda4 - using md /dev/md5
-      /dev/sdb: No label detected
-      /dev/sdb1: No label detected
-      [...]
-      Found /dev/sda4 in VG data_vg
-    Creating logical volume test_lv
-    Archiving volume group "data_vg" metadata.
-      Failed to read PV data from /dev/loop0
-      /dev/sda does not have a valid LVM1 PV identifier
-      /dev/md0 does not have a valid LVM1 PV identifier
-      [...]
-      Found /dev/sda4 in VG data_vg
-      Duplicate PV wqQ2AyMMX3z1or14EvqOwLEL3RKaldUf on /dev/sda4 - using md /dev/md5
-      Found /dev/md5 in VG data_vg
-      Duplicate PV wqQ2AyMMX3z1or14EvqOwLEL3RKaldUf - using md /dev/md5
-      [...]
-      format1: Unknown metadata version 18881 found on /dev/sdd4
-      Successfully wrote data to /dev/sda4
-    Creating volume group backup "/etc/lvm/backup/data_vg"
-      Finding volume group for uuid ll8M9B6BUJMuAs6Ykn3WSCcpW6bXm00000000000000000000000000000000
-      Found /dev/sda4 in VG data_vg
-    Found volume group "data_vg"
-      activation/missing_stripe_filler not found in config: defaulting to /dev/ioerror
-      activation/mirror_region_size not found in config: defaulting to 512
-      Locking memory
-    Loading data_vg-test_lv
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'data_vg-test_lv'.
-      Unlocking memory
-  Failed to activate new LV.
-      Unlocking /var/lock/lvm/V_data_vg
-
--- 
-| Jan "Yenya" Kasprzak  <kas@{fi.muni.cz - work | yenya.net - private}> |
-| GPG: ID 1024/D3498839      Fingerprint 0D99A7FB206605D7 8B35FCDE05B18A5E |
-| http://www.fi.muni.cz/~kas/   Czech Linux Homepage: http://www.linux.cz/ |
- Any compiler or language that likes to hide things like memory allocations
- behind your back just isn't a good choice for a kernel.   --Linus Torvalds
+Mark
