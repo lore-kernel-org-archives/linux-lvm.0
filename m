@@ -1,46 +1,58 @@
-Message-Id: <4.2.0.58.20000803111053.016d5600@127.0.0.1>
-Date: Thu, 03 Aug 2000 11:33:14 -0500
-From: "William L. Jones" <jones@tacc.cc.utexas.edu>
-Subject: [linux-lvm] Yet another patch to lvm_dir_cache.c
+Date: Thu, 3 Aug 2000 21:26:02 +0200
+From: Jens Benecke <jens@pinguin.conetix.de>
+Subject: Re: [linux-lvm] Generic resize tool
+Message-ID: <20000803212602.I11582@pinguin.conetix.de>
+References: <20000802120457.E28254@pinguin.conetix.de> <200008021755.e72Ht2D29237@webber.adilger.net>
 Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <200008021755.e72Ht2D29237@webber.adilger.net>; from adilger@turbolinux.com on Wed, Aug 02, 2000 at 11:55:02AM -0600
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: Linux LVM mailing list <linux-lvm@msede.com>
 
+On Wed, Aug 02, 2000 at 11:55:02AM -0600, Andreas Dilger wrote:
+> Jens writes:
+> > ... and then being stuck with not knowing how (and how much) to resize
+> > the FS within.
+> Actually, the resize tools for ext2 (resize2fs, ext2resize, ext2online)
+> will all figure out the size of the device, so if you are resizing to the
+> full device size (the most common case) then you don't need to specify
+> the device size at all.
 
+Yes, I realized that, but it doesn't SAY so anywhere.
 
-linux-2.4-test5 problem.
+See, I am trying to stay non-knowledgeable (or "semi-") for as long as
+possible to be able to see beginner's problems and mistakes. If I really
+dive into the stuff I will surely be able to solve any problem by
+experimenting around, but that is not my short-term goal - rather, to
+discover first-usage inconsistencies and misunderstandings and explain
+them.
 
-lvm_dir_cache.c has a minor problem when it scans the output of 
-/proc/partitions. It does not correctly skip the rest of the line.  The 
-following patch fixes this problem:
+It's not functionality, its usability I'm worried about.
+=20
+> > Another question: If I shrink a LV, how do I know what PVs in the VG
+> > get freed? i.e. I have  one big LV in VG00 =3D (hda1 hdb2 hdc1)  and I
+> > want to remove hdb2 out of the VG.=20
+> They are always taken from the end of the LV.  There is no other way to
+> do it.  What you would need to do is shrink the lv(s) enough to have free
+> PEs equal to the number of PEs on hdb2.  Then migrate any in-use PEs on
+> hdb2 to the other PVs using pvmove.
 
+Sounds logical. Thanks for pointing this out. :)
 
-[root@xfs lib]# diff -c lvm_dir_cache.c.orig lvm_dir_cache.c
-*** lvm_dir_cache.c.orig        Mon Feb 21 20:09:32 2000
---- lvm_dir_cache.c     Thu Aug  3 11:11:04 2000
-***************
-*** 83,91 ****
-      }
+I guess in time, there will be a set of tools that allow you to point to a
+PV and say "Remove this!" and everything else will be automagic. [just as
+an example, of course there are just too many ways of combining the
+available tools, to write a new tool for every specific task.]
+=20
 
-      if ( dir_cache == NULL) {
-!       if ( ( proc = fopen ( "/proc/partitions", "r")) != NULL) {
-            while ( !feof ( proc)) {
-!              fscanf ( proc, " %s %s %s %s\n", major, minor, blocks, devname);
-                if ( atoi ( major) > 0 && atoi ( major) != LVM_BLK_MAJOR) {
-                   lvm_add_dir_cache ( "/dev", devname);
-                }
---- 83,91 ----
-      }
-
-      if ( dir_cache == NULL) {
-!       if (( proc = fopen ( "/proc/partitions", "r")) != NULL) {
-            while ( !feof ( proc)) {
-!              fscanf ( proc, " %s %s %s %s%*[^\n]s\n", major, minor, 
-blocks, devname);
-                if ( atoi ( major) > 0 && atoi ( major) != LVM_BLK_MAJOR) {
-                   lvm_add_dir_cache ( "/dev", devname);
-                }
+--=20
+ciao, Jens (mailaddr im Header)                 http://www.pinguin.conetix.=
+de
+"Schiebe nie etwas auf Boshaftigkeit, was           http://www.hitch-hiker.=
+de
+ausreichend durch Dummheit erkl=EF=BF=BDrt werden kann."       http://www.l=
+inuxfaq.de
