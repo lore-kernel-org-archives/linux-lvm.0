@@ -1,7 +1,10 @@
-From: Marek Jan <xjan@informatics.muni.cz>
-Message-ID: <Pine.LNX.4.44.0311261511490.21217-100000@nymfe06.fi.muni.cz>
+From: Spam <spam@tnonline.net>
+Message-ID: <11659189187.20031126163948@tnonline.net>
+Subject: Re: [linux-lvm] LVM across network
+In-Reply-To: <Pine.LNX.4.44.0311261511490.21217-100000@nymfe06.fi.muni.cz>
+References: <Pine.LNX.4.44.0311261511490.21217-100000@nymfe06.fi.muni.cz>
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM across network
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,15 +15,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 26 08:58:01 2003
+Date: Wed Nov 26 09:41:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Marek Jan <linux-lvm@sistina.com>
 
-Hello, 
-I have simple question. Is it possible run LVM across network ?
-For example, first disk on pc1, second on pc3, third on pc3...
-I need file system that colecting free space across network onto one 
-point.
-Thank you, Marek Jan 
+  Yes.  This is possible with NBD 2.0 and later (earlier nbd tools has
+  limitation  of  4GB  per  shared  disk/volume/device).  You  need to
+  compile the NBD (Network Block Device) module in the kernel too.
+
+  Then simply run on the server (the machines hosting spare volumes):
+
+    nbd-server  10000 /dev/hdax  (replace 10009 with the port you want
+    to use)
+
+  On  the  client  machine  (where  you want to run LVM to collect all
+  space;
+
+    nbd-client IP port /dev/nbd/0
+
+  For  each  server  you connect simply change the IP/port and the NBD
+  device number. After this you run "vgscan" and "vgchange -ay vg"
+
+  You  should  be warned though. If you loose network connectivity you
+  can end up with filesystem damage.
+
+
+> Hello, 
+> I have simple question. Is it possible run LVM across network ?
+> For example, first disk on pc1, second on pc3, third on pc3...
+> I need file system that colecting free space across network onto one
+> point.
+> Thank you, Marek Jan 
+
+
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
