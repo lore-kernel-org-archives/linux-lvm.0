@@ -1,23 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9CL3mr03816
-	for <linux-lvm@redhat.com>; Tue, 12 Oct 2004 17:03:48 -0400
-Received: from ti41.telemetry-investments.com (209-166-240-202.cust.walrus.com
-	[209.166.240.202])
-	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i9CL3aoF003232
-	for <linux-lvm@redhat.com>; Tue, 12 Oct 2004 17:03:41 -0400
-Received: from ti64.telemetry-investments.com (ti64 [192.168.8.64])
-	by ti41.telemetry-investments.com (Postfix) with ESMTP id 5641A100E6
-	for <linux-lvm@redhat.com>; Tue, 12 Oct 2004 17:03:31 -0400 (EDT)
-Date: Tue, 12 Oct 2004 17:03:31 -0400
-From: "Bill Rugolsky Jr." <brugolsky@telemetry-investments.com>
-Subject: Re: [linux-lvm] LVM2 lockup while snapshotting root
-Message-ID: <20041012210331.GA4288@ti64.telemetry-investments.com>
-References: <20041012195853.GA6352@omnifarious.org>
-Mime-Version: 1.0
+From: Toby Dickenson <toby@tarind.com>
+Subject: Re: [linux-lvm] PV corruption: allocated PE > total PE
+Date: Wed, 13 Oct 2004 00:01:19 +0100
+References: <200410120841.14323@trumpet.tarind.com>
+	<20041012131024.GR6404@agk.surrey.redhat.com>
+In-Reply-To: <20041012131024.GR6404@agk.surrey.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20041012195853.GA6352@omnifarious.org>
-Reply-To: "Bill Rugolsky Jr." <brugolsky@telemetry-investments.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Message-Id: <200410130001.19680@trumpet.tarind.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,26 +19,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+Cc: Alasdair G Kergon <agk@redhat.com>
 
-On Tue, Oct 12, 2004 at 12:58:53PM -0700, Eric Hopper wrote:
-> First, it could be updates to /etc/lvm while the filesystem is
-> suspended.  This shouldn't be done at all.  First, a journal of what the
-> planned change is should be written to /etc/lvm, the filesystem
-> suspended, the change made, the filesystem unsuspended, then a marker
-> indicating that the change succeeded to /etc/lvm.
+On Tuesday 12 Oct 2004 14:10, Alasdair G Kergon wrote:
+> On Tue, Oct 12, 2004 at 08:41:14AM +0100, Toby Dickenson wrote:
+> > Ive just noticed that one of my PVs has more allocated PE's than the
+> > total available, leading to a negative amount of free space:
+> >
+> > This is on a gentoo linux system, kernel 2.6.6. The latest LVM userland
+> > in gentoo is 2.00.08, I havent tried anything more recent, but there
+> > doesnt seem anything relevant in the change log.
+>
+> Definitely try the latest version: there've been a few related fixes.
 
-Sounds like a good starting point.  Other interesting cases are swap on
-LVM, and rolling back the root fs to a snapshot.
+OK, I'm on lvm .25 and device mapper .19. 
 
-> Second, it could be the fact that the LVM executable is demand paged.
-> It could be that a page of the executable is read in while the
-> filesystem is suspended.  This is trickier to solve, and having the
-> problem is much more excusable than the first.
+I removed the newest LV in that PV, then rebooted. Everything looked right, 
+and the metadata backup was as I expected. However using lvcreate again to 
+create a sufficiently large LV (large enough to fill this PV plus a bit more) 
+recreated the original problem in pvdisplay's output.
 
-mlockall(2)?
+> (With lvm1 on-disk format, may need to backup restore/metadata if it's
+> wrong on disk.)
 
-Regards,
+The following values all seem to be consistent:
+* pvdisplay 'Total PE'
+* pe_count in /etc/lvm/backup/
+* the total of the relevant 'extent_count' fields in /etc/lvm/backup/
 
-	Bill Rugolsky
+But the value reported by pvdisplay 'Allocated PE' is too large. Where does 
+pvdisplay get that value from? Do I need to worry about data corruption, or 
+could this be just a display formatting bug?
