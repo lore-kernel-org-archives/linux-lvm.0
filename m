@@ -1,10 +1,12 @@
-Date: Thu, 11 Oct 2001 01:14:44 +0200
-From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
-Message-ID: <20011011011444.A2302@sky.net>
-Mime-Version: 1.0
+Date: Wed, 10 Oct 2001 19:21:54 -0400
+From: Chris Mason <mason@suse.com>
+Message-ID: <1114900000.1002756114@tiny>
+In-Reply-To: <20011010212821.D540EB630@oscar.casa.dyndns.org>
+References: <20011003230330.508E91104F@oscar.casa.dyndns.org> <20011009015759.BF5E472AE3@oscar.casa.dyndns.org> <175160000.1002594564@tiny> <20011010212821.D540EB630@oscar.casa.dyndns.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Problems after restarting my debian
+Subject: [linux-lvm] Re: [OOPS] full snapshot (with test vfs locking patch for reiserfs snapshots in 11-pre)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,42 +18,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
-
-Hello,
-I had to restart my PC because of a power-failure...
-Now I can=B4t mount my lvm-volume anymore.
-
-I fixed the uuids using the uuid_fixer on all my pv=B4s.
-
-home:/home/fzzgrr# vgscan=20
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
-
-Now I wanna restore my backups using
-home:/home/fzzgrr# vgcfgrestore -n vg01 -l
-Speicherzugriffsfehler
-
-(memory access failure)
+Content-Type: text/plain; charset="us-ascii"
+To: Ed Tomlinson <tomlins@CAM.ORG>
+Cc: linux-lvm@sistina.com
 
 
-I can=B4t even make a pvscan or pvdisplay:
-home:/home/fzzgrr# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ERROR "pv_read(): LVM structure version" reading physical
-volumes
+On Wednesday, October 10, 2001 05:28:21 PM -0400 Ed Tomlinson <tomlins@CAM.ORG> wrote:
 
-home:/home/fzzgrr# pvdisplay /dev/sdb1
-pvdisplay -- ERROR "pv_read(): LVM structure version" no VALID physical
-volume "/dev/sdb1"
+> Chris, with 2.4.11, your test vfs locking patch (manually fixing a reject) plus
+> the second snapshot full patch with the addon from this message I have not been
+> able to break things.  
+> 
+> If you are happy too, suggest you post the patches.
 
+Good to hear Ed, many thanks.  Would you mind running one extra
+set of tests?  I'm having problems with the system crashing/deadlocking
+under high snapshot COW load.  10 concurrent writers onto the source
+volume triggers it within 10-20 minutes.  I'm using stress.sh, 
+but dbench should work too...I'm seeing this on pure rc4 (2.4.1[01],
+and with my^zes).
 
-What can I do?
-Uli
+Once this is worked out, I'll send everything in.
 
-
---=20
-'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
+-chris
