@@ -1,14 +1,10 @@
-Return-Path: <eli@zendo.net>
-Date: Wed, 11 Jul 2001 14:53:08 -0500
-From: Eli Criffield <eli@zendo.net>
-Subject: Re: [linux-lvm] about to give up
-Message-ID: <20010711145308.B2450@zendo.net>
-References: <85063BBE668FD411944400D0B744267A643394@AUSMAIL>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
-Content-Disposition: inline
-In-Reply-To: <85063BBE668FD411944400D0B744267A643394@AUSMAIL>; from austin@coremetrics.com on Wed, Jul 11, 2001 at 02:40:17PM -0500
+Return-Path: <ka@filanet.dk>
+From: "Klaus Agnoletti" <ka@filanet.dk>
+Date: Wed, 11 Jul 2001 22:03:47 +0200
+Message-ID: <MPEELPOMDADEHPNEDEPBCELPCAAA.ka@filanet.dk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Just installed LVM on deb - got module errors - retry
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,39 +16,65 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
---V0207lvV8h4k8FAm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi there
+
+I tried reading both the How-to and the README.debian file - and everything
+else I could find, and found nothing that could help me.
+I must be missing some block device - how do I get that ?
+Can I do it the easy way at all ? - without compiling a new kernel ? (I am
+just being lazy on this - I know that :-)
+Later on when I tried LVM out and know how great it is, I will make it all
+the hard way =3D)
+
+Thanks in advance
+
+/Klaus
+-----Oprindelig meddelelse-----
+Fra: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]P=EF=
+=BF=BD
+vegne af Klaus Agnoletti
+Sendt: 10. juli 2001 22:08
+Til: linux-lvm@sistina.com
+Emne: [linux-lvm] Just installed LVM on deb - got module errors
 
 
+Hi,
 
-On Wed, Jul 11, 2001 at 02:40:17PM -0500, Gonyou, Austin wrote:
-> Since you cat access /etc..you have no way of getting to /etc/lvmtab.d or
-> /etc/lvmtab. If you could get to either of those, I believe it would work=
-.=20
+I just installed lvm 0.9.1 beta 7 from .deb archives via apt-get
+For some reason I get the following error when trying to prepare a LVM
+partition :
 
-there still in /dev/hda3 somewhere
+vault:/etc/modutils# pvcreate /dev/hdb1
+pvcreate -- LVM driver/module not loaded?
 
-/ was part in /dev/rootvg/root_lv and all of the lvs where in /dev/hda3
+Clearly it is missing a kernel module.
 
-is there some way to use pvdata and dd to get the files out of there?
+trying to modprobe lvm-mod gives the following error :
 
-eli
+vault:/etc/modutils# modprobe lvm-mod
+modprobe: Can't locate module lvm-mod
 
---V0207lvV8h4k8FAm
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+I assume the following messages in /var/log/syslog is related :
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Jul 10 22:00:02 vault modprobe: modprobe: Can't locate module char-major-109
+Jul 10 22:00:02 vault modprobe: modprobe: Can't locate module char-major-109
 
-iD8DBQE7TK6km2VvYlVjW2oRAnf4AJ92Pi3boBBj5PUCktDXzCqQMmx43wCg1057
-XPFM+QZT+RcCGHyhrObtHzo=
-=zaMB
------END PGP SIGNATURE-----
+So I guess that this really is what it needs. Am I right ? - how do I get
+this then ?
 
---V0207lvV8h4k8FAm--
+If I am totally off the track, please help me back =3D)
+
+
+Thanks in advance
+
+
+Klaus Agnoletti
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
