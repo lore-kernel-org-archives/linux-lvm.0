@@ -1,11 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104201031.f3KAVT05030575@webber.adilger.int>
-Subject: Re: [linux-lvm] LVM and DRDB
-In-Reply-To: <20010420111022.C6133@cistron.nl> "from Wichert Akkerman at Apr
- 20, 2001 11:10:22 am"
-Date: Fri, 20 Apr 2001 04:31:29 -0600 (MDT)
-MIME-Version: 1.0
+Return-Path: <wichert@cistron.nl>
+Date: Fri, 20 Apr 2001 12:32:53 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] Re: LVM and DRDB
+Message-ID: <20010420123252.D13067@cistron.nl>
+References: <20010420111022.C6133@cistron.nl> <20010420114432.Q501@suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010420114432.Q501@suse.de>; from axboe@suse.de on Fri, Apr 20, 2001 at 11:44:32AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,22 +20,18 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: linux-openlvm@nl.linux.org
+To: linux-lvm@sistina.com, linux-openlvm@nl.linux.org
 
-Wichert writes:
-> Does anyone know if LVM will work correctly on top of DRDB? I
-> need to keep an off-site copy of a 5TB fileserver synchronized
-> and that might be an usefull approach.
+Previously Jens Axboe wrote:
+> Should work, at least LVM does proper stacking in 2.4.4-pre kernels and
+> I gope DRDB does too.
 
-Probably not out of the box.  You will need to add the DRDB major
-number to the list of devices that LVM will check for PVs/VGs.
-Other than that (and the fact that the Linux kernel doesn't support
-block devices > 2TB) you should be fine.  Hopefully you have some
-sort of journaled filesystem for this?
+Is there any hope for 2.2 kernels?
 
-Cheers, Andreas
+Wichert.
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+   ________________________________________________________________
+ / Generally uninteresting signature - ignore at your convenience  \
+| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
