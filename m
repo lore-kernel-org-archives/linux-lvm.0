@@ -1,12 +1,12 @@
-Return-Path: <peter@bartosch.net>
-Date: Tue, 29 May 2001 22:23:04 +0200
-From: Peter Bartosch <peter@bartosch.net>
-Message-ID: <20010529222304.A4888@mind.bartosch.net>
-References: <20010528183105.C924@mind.bartosch.net> <15123.55304.751997.122954@crimson.namesys.com>
+Return-Path: <josv@osp.nl>
+From: josv@osp.nl
+Date: Tue, 29 May 2001 23:55:23 +0200
+Subject: Re: [linux-lvm] Problem extending a LV
+Message-ID: <20010529235523.B1414@gatekeeper.osp.nl>
+References: <20010529120104.C29771@sistina.com> <Pine.LNX.4.33.0105291333520.8330-100000@UberGeek.coremetrics.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <15123.55304.751997.122954@crimson.namesys.com>; from zam@namesys.com on Tue, May 29, 2001 at 09:10:32PM +0400
-Subject: [linux-lvm] Re: [reiserfs-list] lvm-list pointed to reiserfs: fs/lvm-problems?
+In-Reply-To: <Pine.LNX.4.33.0105291333520.8330-100000@UberGeek.coremetrics.com>; from austin@coremetrics.com on Tue, May 29, 2001 at 01:35:07PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,49 +20,70 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: reiserfs-list@namesys.com, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
+Cc: AJ Lewis <lewis@sistina.com>
 
-Hi!
+Hi,
 
+You mention that Veritas (presumably the Volume Manager) has this
+functionality. Are you sure that you can add a subdisk to a striped plex
+in a volume? I'm just curious because I can not remember that this is
+actually possible....
 
->  PB> extend an existing (0.8i) LV)
+++Jos
+
+And thus it came to pass that Austin Gonyou wrote:
+(on Tue, May 29, 2001 at 01:35:07PM -0500 to be exact)
+
+> Are there plans to have this functionality? As in, I have a 2 disk striped
+> set, and now I'm running out of space, so I add a third pv, and now I want
+> to restripe and extend onto the third disk? I ask because Veritas has this
+> ability, and it could be a deal breaker for some choosing which to use.
 > 
->  PB> so i created a new kernel (2.4.2) with lvm 0.9.1_beta7
+> -- 
+> Austin Gonyou
+> Systems Architect, CCNA
+> Coremetrics, Inc.
+> Phone: 512-796-9023
+> email: austin@coremetrics.com
 > 
-> Linux-2.4.4 has serious reiserfs bugs fixed.
-
-hmm, i tried to make a LVM patch for it but this fails - yesterday i saw a
-message, that there's somewhere a patch for the 2.4.4 that LVM-sources
-will make a patch
-
->  PB> i created the reiserfs on it, but when i tried to mount it, the mount
->  PB> failed
->  PB> an reiserfsck --rebuild-sb and after that reiserfsck --rebuild-tree
->  PB> clears it and i could mount my LV -- UNTIL the next reboot
+> On Tue, 29 May 2001, AJ Lewis wrote:
 > 
-> What kernel messages were ?
+> > On Tue, May 29, 2001 at 11:33:54AM +0200, Carsten Balzer wrote:
+> > > If I try to extend the LV with:
+> > > lvextend -L+78164M /dev/NVolGroup/nVol
+> > > then I get:
+> > > lvextend -- rounding size 240119808 KB to stripe boundary size
+> > 240123904
+> > > KB
+> > > lvextend -- only 19541 free physical extents in volume group
+> > "NVolGroup"
+> > >
+> > > Next try with: lvextend -l+19541 /dev/NVolGroup/nVol
+> > > lvextend -- rounding size 240119808 KB to stripe boundary size
+> > 240123904
+> > > KB
+> > > lvextend -- only 19541 free physical extents in volume group
+> > "NVolGroup"
+> >
+> > You cannot currently extend a striped LV onto a new disk.  It would
+> > involve
+> > completely rearranging the data to account for the new striping
+> > configuration.  The reason you get the error is because the tools know
+> > this
+> > and are trying to extend on the two original PVs.  If you want to have
+> > the
+> > ability to extend the LV onto new disks, you must use linear LVs.
+> >
+> > Regards,
+> >
 > 
-> Sorry, but it looks for me like a lvm problem.  Can you test you LV by
-> coping some random data (~ 64 MB) to a file in reliable location and
-> to LV, and compare them (or md5 hashes) after reboot ?
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-hmm, i haven't really tried another filesystem, maybe i should try ext2?
-
-> Reiserfs error handling not an ideal one.  Kernel oops below is a
-> normal :( reaction on damaged data coming from disk.
-> 
-> Same reason (damaged data), I think, prevented reiserfs volume from
-> mounting. 
-
-yes you're right - but why does it oops when i _only_ want to do an "ls
--l"?
-
-:wq - until next mail B-), l8r
-
-Peter
 -- 
-   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
-   :          student of technical computer science           :
-   :     university of applied sciences krefeld (germany)     :
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
+If you do what you've always done,
+You get what you've always gotten.
