@@ -1,26 +1,23 @@
-Date: Fri, 21 Jan 2000 01:15:12 +0000 (GMT)
-From: James Pattinson <jamesp@aethos.co.uk>
-Subject: [linux-lvm] extending a striped LV
-Message-ID: <Pine.LNX.4.10.10001210110090.2815-100000@fuse.aethos.co.uk>
+Message-ID: <38886E0B.78D7FEE2@bct.ericsson.se>
+Date: Fri, 21 Jan 2000 15:32:43 +0100
+From: Sebastian Tomac <sebastian.tomac@bct.ericsson.se>
 MIME-Version: 1.0
+Subject: [linux-lvm] lvm mirroring
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Hi...
+Correct me if I'm wrong, but if I read the LVM-0.8 code right there is
+no mirroring  implemented.  Both AIX and Solaris lvm has mirroring
+capabilities (sk. lv copies).
 
-Just ran into a problem trying to extend /opt on my system. /opt is
-/dev/vg00/lvol5 (yeah I work with HPUX!! :) ) and it's currently striped
-across 2 disks on my system that has 4 disks total (8GB 4GB 4GB 6GB).
+If there is interest to enable this feature in LVM, I  would be prepared
+to start working on it.
 
-When I tried to extend it from 512MB to 640MB, the command failed because
-one of the discs that /opt resides on is full. However there is over 10GB
-free in the entire VG so is it possible to tell lvextend to use a
-different disk, or can it only be extended on the same two disks?
+Let me know...
 
-Cheers
-
-James
+regards
+Sebastian
