@@ -1,10 +1,8 @@
-From: "Steve Wray" <steve.wray@paradise.net.nz>
-Message-Id: <NBBBKLKHMJHIJLHOGAOJKEOOJEAA.steve.wray@paradise.net.nz>
+Message-Id: <A76258F91728D211882A0008C7280E0C05E1F9A0@nzwnm202.nz.eds.com>
+From: "Jones, Steven" <sjones08@eds.com>
+Subject: RE: [linux-lvm] lvm and 'poor mans raid' on heterogenous hard dri
+    ves!
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20020219205054.A3751@sistina.com>
-Subject: [linux-lvm] lvm and 'poor mans raid' on heterogenous hard drives!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,9 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 19 20:54:02 2002
+Date: Tue Feb 19 21:12:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+striping or concatination?
+
+striping means yes same size spaces, but you can just concatinate which
+simply means adding together. So 12+5+4= 21, you could then mirror against
+the 20 gig in software and only loose 1 gig. Whether the controller is
+bright enough to tell the difference is another matter.
+
+Thing
+
+-----Original Message-----
+From: Steve Wray [mailto:steve.wray@paradise.net.nz]
+Sent: Wednesday, 20 February 2002 3:54 
 To: linux-lvm@sistina.com
+Subject: [linux-lvm] lvm and 'poor mans raid' on heterogenous hard
+drives!
+
 
 Hmmmm,
 Ok so I have 4 hard drives of very varying capacity
@@ -70,3 +87,14 @@ I'd like a second opinion! There are some strange things,
 like when file size gets above 16M performance drops dramatically
 regardless of striped or linear volumes... Maybe its something
 to do with extents?
+
+
+
+
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
