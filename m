@@ -1,11 +1,13 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104140028.f3E0SNqE014656@webber.adilger.int>
-Subject: Re: [linux-lvm] What is the the maximum logical volume size?
-In-Reply-To: <200104131745.f3DHjGa17509@lvadp.fc.hp.com> "from Andrew Patterson
- at Apr 11, 2001 03:58:09 pm"
-Date: Fri, 13 Apr 2001 18:28:23 -0600 (MDT)
+Return-Path: <mason@suse.com>
+Date: Fri, 13 Apr 2001 19:53:58 -0500
+From: Chris Mason <mason@suse.com>
+Subject: Re: [reiserfs-list] Re: [linux-lvm] mounting reiserfs snapshot
+ fails
+Message-ID: <398930000.987209638@tiny>
+In-Reply-To: <200104140023.f3E0NSIm014650@webber.adilger.int>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,30 +20,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@sistina.com
+Cc: reiserfs-list@namesys.com
 
-Andrew PAtterson writes:
-> I am tring to figure out what the maximum logical volume size is.
 
-It may be 1 TB or it may be 2TB.  Depends on whether all of the code
-in use use uses unsigned longs for block numbers, or if some use signed
-longs.  2TB is the outer limit for now (unless you start playing games
-inside LVM, to have 4kB hard sector size, and remap to the disk 512 byte
-sector size).
+On Friday, April 13, 2001 06:23:28 PM -0600 Andreas Dilger
+<adilger@turbolinux.com> wrote:
 
-Does it really matter?  This is PER LV, so if you really need to have an
-LV that large, give it a try and let us know what works.  I've seen a
-report of someone with a 1 TB device (some kind of HW RAID, not LVM)
-under Linux, so I know that works, but I haven't seen larger yet.
+> Ed Tomlinson writes:
+>> Using debian sid, 2.4.3-ac5, lvm 0.91 beta7, with the vfs locking
+>> patch applied I get:
+>> 
+>> oscar# mount /dev/lv/snap /snap -t reiserfs -oro
+>> mount: wrong fs type, bad option, bad superblock on /dev/lv/snap,
+>>        or too many mounted file systems
+>> 
+>> When trying to mount the snap shot.  It was created with: 
+>> lvcreate -L 1G -s -n snap /dev/lv/root /dev/hdg1
+>> without problems
+> 
+> Are you sure that the VFS patch is applied, and that the LVM and
+> reiserfs code was compiled with "enable VFS patch" (whatever it is
+> called) enabled?  That has been a source of problems in the past.
+> The patch was applied, but you also need to enable it for both the
+> reiserfs and LVM code.
 
-I wouldn't want to be keeping all of my eggs in such a large basket.  I'd
-much rather have several smaller filesystems, especially since you STILL
-need to fsck on occasion (don't let reiserfs journaling fool you, you can
-still have SW/HW problems that will corrupt the filesystem).
+That would be a different error, reiserfs would complain that it found a
+filesystem, but was unable to mount it because it needed replay and the
+device was readonly.  In this case, the snapshot is not a valid FS at all,
+even though the source looks fine.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+I'll upgrade to the latest LVM and try to reproduce...
+
+-chris
