@@ -1,11 +1,10 @@
-From: Joachim Banzhaf <jbanzhaf@ngi.de>
-Subject: Re: [linux-lvm] lvm and a dead disk
-References: <16228.26968.804811.803799@gargle.gargle.HOWL> <20030915152521.N2618@sistina.com>
-In-Reply-To: <20030915152521.N2618@sistina.com>
+Message-ID: <3F660218.5080604@free.fr>
+From: Emmanuel Varagnat <emmanuel.varagnat@free.fr>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvm and a dead disk
+References: <16228.26968.804811.803799@gargle.gargle.HOWL>
+In-Reply-To: <16228.26968.804811.803799@gargle.gargle.HOWL>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200309151838.27194.jbanzhaf@ngi.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,25 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 15 11:39:02 2003
+Date: Mon Sep 15 13:18:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Am Montag, 15. September 2003 15:25 schrieb Heinz J . Mauelshagen:
-> Peter,
->
-> the LVM1 way is to replace the broken disk, pvcreate the new one and
-> vgcfgrestore the metadata to it.
+Peter wrote:
 
-In other words: since you did that already, it is as good as it gets as far as 
-LVM is concerned. Now contact your filesystem guru(s). :-)
+> Hello,
+> 
+> using lvm under Debian woody with packages 
+> lvm-common v1.5.5 and lvm10 v1.04-5 and linux 2.4.21 I once had a
+> volume group vg0 with three physical volumes:
+> 
+> /dev/scsi/host0/bus0/target5/lun0/part1
+> /dev/scsi/host0/bus0/target3/lun0/part1
+> /dev/scsi/host0/bus0/target4/lun0/part6
+> 
+> Unfortunately the first disk failed, but while Linux was still up I
+> could still access some of the files.  That obviously changed after I
+> rebooted the system as the first disk was hopelessly broken and vg0
+> could no longer be activated.
 
-I am not an expert on that, but if the filesystem is reiserfs, perhaps the -S 
-switch of reiserfsck helps? But before you try, better make a backup of the 
-current status (something like dd if=/dev/your-vg/your-lv 
-of=/your-big-backuppath/bakfile).
+If your filesystem was Ext2 you give a try to e2retrieve: 
+http://coredump.free.fr/linux/e2retrieve.php
 
-good luck,
+Good luke.
 
-Joachim Banzhaf
+-=( manu )=-
