@@ -1,8 +1,8 @@
-Message-ID: <1043839567.3e37ba4fd327e@secure.st-peter.stw.uni-erlangen.de>
-From: Svetoslav Slavtchev <galia@st-peter.stw.uni-erlangen.de>
+Message-ID: <4343.193.189.186.50.1043846076.squirrel@webmail.literal.si>
+From: "Jure Simsic" <jure.simsic@literal.si>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] 2.4.20 + xfs +lvm2 =  raid0_make_request bug
+Subject: [linux-lvm] Unusable VG after a failed pvmove
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,45 +13,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 05:27:01 2003
+Date: Wed Jan 29 07:15:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-xfs@oss.sgi.com
-Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-Hi, a kind of repost 
-useing lvm2(with lvm1 everything is working perfect for the last 6 months)
- when i try to mount a xfs filesystem wich is on 
-lv over soft raid-0, i'm getting just like in
-2.5.2x - 2.5.4x (i didn't try later kernels) :
+Hi all,
 
-############################
-raid0_make_request bug: can't convert block across chunks or bigger than 16k
-25181311 4
-raid0_make_request bug: can't convert block across chunks or bigger than 16k
-25181343 4
-############################
+Last time I had some warnings about  IDE error which indicated that one of
+my disks is starting to fail.  So i bought a new one and tried to *pvmove*
+the stuff from that disk to a new one.After  pvmoving for a while, I got:
 
-is this know problem, is it fixed ?
-i thought that the problem exist only in 2.5 kernel
+pvmove -- ERROR reading input physical volume "/dev/hda2" (still 786432
+bytes to readpvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
+pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extends
 
-everything works with reiserfs and jfs
-( well not really sure but i could transfer ~10Gb to and from the LV, mkfs ..)
+and the thing stopped. After a couple of minutes, my computer froze
+completely (no kbd, no network) - something one knows more from M$ world -
+so there was nothing else to do than to power off/on..
+When it started, all went ok, untill the LVM part. Then I got this:
 
-but with xfs got this:
-mkfs.xfs -- 
-device-mapper: unknown block ioctl 0x6424
-device-mapper: unknown block ioctl 0x6424
+vgscan -- found inactive volume group "vg0"
+vgscan -- only found 1033 of 1070 LEs for LV /dev/vg0/usr (0)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg0" from physical volume(s)vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lvmtab" and "/etc/lvmtab.d"
+vgchange -- no volume groups found
 
-and with mount again :
 
-raid0_make_request bug: can't convert block across chunks or bigger than 16k
-213164570 4
-raid0_make_request bug: can't convert block across chunks or bigger than 16k
-213164602 4
+So I'm stuck with / only, my /usr and /home are gone.
+If it maters at all, I used to run reiserfs on /usr and /home...
 
-any hints?
+Is there any way I can try to recover from this?
 
-regards,
+Thanks for any help
 
-svetljo
+Jure
+vgscan --
