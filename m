@@ -1,12 +1,25 @@
-Message-ID: <40561772.5070302@howest.be>
-Date: Mon, 15 Mar 2004 21:52:02 +0100
-From: Thomas Berton <thomas.berton@howest.be>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Hard disk failure, restore problem
-References: <40520E04.5090505@howest.be> <20040315124721.GB17078@redhat.com>
-In-Reply-To: <20040315124721.GB17078@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2FL2FS14271
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 16:02:15 -0500
+Received: from p15124399.pureserver.info (p15124399.pureserver.info
+	[217.160.182.169])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2FL2E07026263
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 16:02:15 -0500
+Received: from rockley.barbados (81-5-142-175.dsl.eclipse.net.uk
+	[81.5.142.175]) (authenticated (0 bits))
+	by p15124399.pureserver.info (8.11.6/8.11.6) with ESMTP id i2FL28V23075
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 21:02:08 GMT
+Subject: Re: [linux-lvm] LVM Problems when moving data off a PV
+From: Nick Gushlow <nick@gushlow.com>
+In-Reply-To: <20040315123445.GA17078@redhat.com>
+References: <1079271129.2414.7.camel@rockley.barbados>
+	<20040315123445.GA17078@redhat.com>
+Message-Id: <1079384528.2369.17.camel@rockley.barbados>
+Mime-Version: 1.0
+Date: Mon, 15 Mar 2004 21:02:08 +0000
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: nick@gushlow.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -16,82 +29,65 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: hjm@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hello,
+Thanks for your reply Heinz.
 
-I've done
+On Mon, 2004-03-15 at 12:34, Heinz Mauelshagen wrote:
+> what exactly were those 'things' ?
 
- > o identify your actual metadata backup (say, bigspace.conf)
- >
- > o mkdir /etc/lvmtab.d
- >
- > o cp bigspace.conf /etc/lvmtab.d/bigspace
- >
- > o echo -ne "bigspace\0" > /etc/lvmtab
- >
- > o vgchange -ay
+I can't remember :-( but there was very little of help, most of it was
+running some of the tools with different switches to try to find the
+error being reported in more detail, but none of it made much sense to
+me! :-)
 
 
-after being sure to restore the metadata I have
+> 
+> You need to select the last valid metadata backup of vg2 from /etc/lvmconf
+> (check it with vgcfgrestore -ll -f /etc/lvmconf/vg2.conf[.#.old]; see
+> 'man vgcfgrestore for metadata archive file names) and restore it.
+> 
+> Say vg.conf.1.old is the valid one:
+> 
+> for dev in AllPVsOfVG2 # list all PVs reported by vgcfgrestore -ll above
+> do
+> 	pvcreate -ff $dev
+> 	vgcfgrestore -f /etc/lvmconf/vg.conf.1.old $dev
+> done
+> vgscan
+> vgchange -ay vg2
+> 
 
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdg1" of VG "bigspace" [74.47 GB / 768 MB free]
-pvscan -- inactive PV "/dev/hde1" of VG "bigspace" [149 GB / 0 free]
-pvscan -- inactive PV "/dev/hdf1" of VG "bigspace" [149 GB / 139.16 GB free]
-pvscan -- inactive PV "/dev/hdc1" of VG "bigspace" [111.75 GB / 0 free]
-pvscan -- inactive PV "/dev/hdd1" of VG "bigspace" [74.47 GB / 0 free]
-pvscan -- inactive PV "/dev/hda1" of VG "bigspace" [74.47 GB / 8.22 GB free]
-pvscan -- inactive PV "/dev/hdb1" of VG "bigspace" [74.47 GB / 0 free]
-pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
+I'll give that a go, a quick scan of the lvmconf directory shows two
+files with recent timestamps, I assume that vg2.conf is not good
+otherwise all would work, so vg2.conf.1.old must be the one.  All the
+others are dated months ago before I transferred one of the partitions.
 
+Time to hit those man pages! :-)
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- only found 17904 of 17876 LEs for LV /dev/bigspace/bigspace1 (0)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-data of volume group "bigspace" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
+> The LVM2 tools support LVM1 metadata format.
+> What went wrong running vgreduce --removemissing ?
+> 
+> In order to activate LVM1 VGs with LVM2, you need a kernel with device-mapper.
 
-=> after the vgscan the echo -ne "bigspace\0" > /etc/lvmtab is gone gone
-again....
-
-[root@ment root]# lvscan
-lvscan -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please
-run vgscan
-
-after doing the vgscan, I get
-
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG
-"bigspace" (run vgscan)
-pvscan -- inactive PV "/dev/hde1"  is associated to unknown VG
-"bigspace" (run vgscan)
-pvscan -- inactive PV "/dev/hdf1"  is associated to unknown VG
-"bigspace" (run vgscan)
-pvscan -- inactive PV "/dev/hdc1"  is associated to unknown VG
-"bigspace" (run vgscan)
-pvscan -- inactive PV "/dev/hdd1"  is associated to unknown VG
-"bigspace" (run vgscan)
-pvscan -- inactive PV "/dev/hda1"  is associated to unknown VG
-"bigspace" (run vgscan)
-pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG
-"bigspace" (run vgscan)
-pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
-
-again.
+Off the top of my head I don't remember, but a quick look at my kernel
+config shows no device mapper support, so I guess that's it.
 
 
-the /dev/bigspace/bigspace1 doesn't exists, so I can't mount.
+What would you recommend doing first? your suggestion about the metadata
+backup or recompiling the kernel and running the lvm2 tools?
 
-should I recreate bigspace and force an import ?
+> <preach>
+> You need backups in order to be able to survive user/sw/hw failure.
+> </preach>
 
-I 've alse rebooted once after the vgchange -ay, but he also didn't find
-the bigspace.
+Yeah I know, fortunately the critical drives are backed up, this is none
+important stuff that can be replaced (but would be a pain in the
+backside.)
 
-thanx again for your help!!
 
-kind regards,
-Thomas.
+Say I don't manage to recover the vg, is it possible to create a new vg
+out of the pvs on the good disks and recover the data that's on those?
+
+Nick.
