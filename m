@@ -1,62 +1,42 @@
-Message-Id: <200402062021.i16KL7m26084@ecstasy.winternet.com>
-From: Ken Fuchs <kfuchs@winternet.com>
-In-reply-to: <20040206124830.GA2127@samadhi.local> (message from Dale
-	Gallagher on Fri, 6 Feb 2004 14:48:30 +0200)
-Subject: Re: [linux-lvm] advice sought on setting up new system
-References: <20040206124830.GA2127@samadhi.local>
-Sender: linux-lvm-admin@sistina.com
-Errors-To: linux-lvm-admin@sistina.com
-Reply-To: linux-lvm@sistina.com
-List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
-List-Post: <mailto:linux-lvm@sistina.com>
-List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
-List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  6 15:14:02 2004
-List-Id: <linux-lvm.redhat.com>
+Received: from manatee.rdu.redhat.com (manatee.rdu.redhat.com [172.16.52.82])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i17JKDa01735
+	for <linux-lvm@redhat.com>; Sat, 7 Feb 2004 14:20:13 -0500
+Received: from manatee.rdu.redhat.com (localhost.localdomain [127.0.0.1])
+	by manatee.rdu.redhat.com (8.12.8/8.12.8) with ESMTP id i17JK7ad005044
+	for <linux-lvm@redhat.com>; Sat, 7 Feb 2004 14:20:07 -0500
+Received: from localhost (nate@localhost)
+	by manatee.rdu.redhat.com (8.12.8/8.12.8/Submit) with ESMTP id i17JK7uV005040
+	for <linux-lvm@redhat.com>; Sat, 7 Feb 2004 14:20:07 -0500
+Message-ID: <Pine.LNX.4.44.0402071419020.1403-100000@manatee.rdu.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: linux-lvm-admin@redhat.com
+Subject: [linux-lvm][admin] List Changes Complete
+Sender: linux-lvm-admin@redhat.com
+Errors-To: linux-lvm-admin@redhat.com
+Reply-To: linux-lvm@redhat.com
+List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
+List-Post: <mailto:linux-lvm@redhat.com>
+List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
+List-Id: LVM general discussion and development <linux-lvm.redhat.com>
+List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
+List-Archive: <https://www.redhat.com/archives/linux-lvm/>
+Date: Sat Feb  7 14:36:02 2004
+List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@redhat.com
 
-Dale Gallagher wrote:
+The list changes are now complete.  If you have any questions or problems 
+please contact one of the list administrators at 
+linux-lvm-admin@redhat.com.
 
->The primary goal here is for flexibility and I/O performance - the
->hardware RAID takes care of availability/redundancy, together with
->backup media.
+-Nate
 
-The location of the extents of a logical volume can have a great impact
-on its I/O performance:
 
-1) LVM does its best to make the logical extents physically contiguous,
-   but pvmove(8) can be used to improve this as the need arises.
-
-2) Here's an often neglected fact:  The performance of the outer
-   cylinders of almost any hard drive (larger than a few GB) is usually
-   about double that of the inner cylinders of the same drive.  (This is
-   due to the fact that there are about twice as many sectors per track
-   on the outside of the platter as there are on the inside of the
-   platter and thus data moves past the read/write heads about twice as
-   fast on the outer cylinders as the inner cylinders.)
-
-   Therefore, to improve I/O performance, try to create often used
-   logical volumes first as LVM tends to allocate lower physical extents
-   first.  Otherwise, use pvmove(8) to move the more frequently accessed
-   extents to the fastest (lowest) physical extents of the fastest LVM
-   physical volume.  It is best to use (almost) whole disks as LVM
-   physical volumes, since smaller physical volumes (partitions) would be
-   either fast, average, or slow and not the full spectrum of fast
-   through slow.  The least accessed logical extents should be moved to
-   the highest numbered (slow) physical extents of the slowest disks.
-
-3) LVM striping can also be used to improve I/O performance over two or
-   more spindles (disks).  Avoid LVM striping over two physical volumes
-   on the same spindle (disk), since this reduces performance as the
-   system waits for seeks between these two physical volumes (for a
-   simple sequential access).
-
-Sincerely,
-
-Ken Fuchs <kfuchs@winternet.com>
+-- 
+Nate Golnik			Phone:  (919) 754-3700 x44382
+	Red Hat System Administrator
+	1801 Varsity Drive 
+	Raleigh, NC 27606
