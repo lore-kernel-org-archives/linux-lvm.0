@@ -1,15 +1,18 @@
-Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i6FKZqsL011834
-	for <linux-lvm@redhat.com>; Thu, 15 Jul 2004 22:35:53 +0200
-Date: Thu, 15 Jul 2004 22:35:53 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Message-ID: <20040715203553.GA18626@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] *** Announcement: dmraid 1.0.0-rc2 ***
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6FLR3a30355
+	for <linux-lvm@redhat.com>; Thu, 15 Jul 2004 17:27:03 -0400
+Received: from web11806.mail.yahoo.com (web11806.mail.yahoo.com
+	[216.136.172.160])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i6FLR2e1026278
+	for <linux-lvm@redhat.com>; Thu, 15 Jul 2004 17:27:02 -0400
+Message-ID: <20040715212701.10322.qmail@web11806.mail.yahoo.com>
+Date: Thu, 15 Jul 2004 14:27:01 -0700 (PDT)
+From: <bowmailtmp-lvm@yahoo.com>
+Subject: Re: [linux-lvm] vgscan can not find active volume group when i add a
+	cdrom
+In-Reply-To: <20040715124328.GJ25352@meuh.dyndns.org>
+MIME-Version: 1.0
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,102 +24,222 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Have you tried using the "filter" directive in the
+/etc/lvm/lvm.cnf  to force vgscan to ignore the
+/dev/hdd device?  In my config it ignores /dev/cdrom
+which does not actually point to my real cdrom on
+/dev/hdc and it still has no issues, but it may be
+worth a shot anyway.
+
+Also, it might be worth strace-ing the vgscan to see
+what happens when it tries to fstat the /dev/hdd
+device:
+strace vgscan >& output.log
+
+-dave
 
 
-               *** Announcement: dmraid 1.0.0-rc2 ***
+--- Christophe Nowicki <cscm@meuh.dyndns.org> wrote:
+> Hi all,
+> 
+> I'am running Debian GNU/Linux "sarge" with Linux
+> 2.4.26, LVM version 
+> 1.0.8 (lib lvm-common 1.5.16).
+> 
+> My server has 3 IDE hard drives when I plug a ide
+> cdrom on /dev/hdd,
+> vgscan can not find my active volume.
+> 
+> Here is my dmesg output without the cdrom ide plug
+> in :
+> [...]
+> ide: Assuming 33MHz system bus speed for PIO modes;
+> override with
+> idebus=xx
+> NET4: Unix domain sockets 1.0/SMP for Linux NET4.0.
+> ide: late registration of driver.
+> VP_IDE: IDE controller at PCI slot 00:07.1
+> VP_IDE: chipset revision 6
+> VP_IDE: not 100% native mode: will probe irqs later
+> VP_IDE: VIA vt82c686b (rev 40) IDE UDMA100
+> controller on pci00:07.1
+>     ide0: BM-DMA at 0xd000-0xd007, BIOS settings:
+> hda:DMA, hdb:DMA
+>     ide1: BM-DMA at 0xd008-0xd00f, BIOS settings:
+> hdc:DMA, hdd:pio
+> hda: ST3120026A, ATA DISK drive
+> hdb: ST3120026A, ATA DISK drive
+> blk: queue f0825120, I/O limit 4095Mb (mask
+> 0xffffffff)
+> blk: queue f082525c, I/O limit 4095Mb (mask
+> 0xffffffff)
+> hdc: ST3120022A, ATA DISK drive
+> blk: queue f0825574, I/O limit 4095Mb (mask
+> 0xffffffff)
+> ide0 at 0x1f0-0x1f7,0x3f6 on irq 14
+> ide1 at 0x170-0x177,0x376 on irq 15
+> hda: attached ide-disk driver.
+> hda: 234441648 sectors (120034 MB) w/8192KiB Cache,
+> CHS=14593/255/63,
+> UDMA(100)
+> hdb: attached ide-disk driver.
+> hdb: 234441648 sectors (120034 MB) w/8192KiB Cache,
+> CHS=14593/255/63,
+> UDMA(100)
+> Partition check:
+>  /dev/ide/host0/bus0/target0/lun0: p1 p2 < p5 p6 >
+>  /dev/ide/host0/bus0/target1/lun0: p1
+> Journalled Block Device driver loaded
+> [..]
+> 
+> Everything is ok, I can mount all disk and I see my
+> 2 volume groupe :
+> 
+> vgscan -v output :
+> vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+> vgscan -- creating empty "/etc/lvmtab" and
+> "/etc/lvmtab.d"
+> vgscan -- reading all physical volumes (this may
+> take a while...)
+> vgscan -- scanning for all active volume group(s)
+> first
+> vgscan -- found active volume group "vg_hda"
+> vgscan -- reading data of volume group "vg_hda" from
+> physical volume(s)
+> vgscan -- inserting "vg_hda" into lvmtab
+> vgscan -- backing up volume group "vg_hda"
+> vgscan -- checking volume group name "vg_hda"
+> vgscan -- checking volume group consistency of
+> "vg_hda"
+> vgscan -- checking existence of "/etc/lvmtab.d"
+> vgscan -- storing volume group data of "vg_hda" in
+> "/etc/lvmtab.d/vg_hda.tmp"
+> vgscan -- storing physical volume data of "vg_hda"
+> in
+> "/etc/lvmtab.d/vg_hda.tmp"
+> vgscan -- storing logical volume data of volume
+> group "vg_hda" in
+> "/etc/lvmtab.d/vg_hda.tmp"
+> vgscan -- renaming "/etc/lvmtab.d/vg_hda.tmp" to
+> "/etc/lvmtab.d/vg_hda"
+> vgscan -- removing special files and directory for
+> volume group "vg_hda"
+> vgscan -- creating directory and group character
+> special file for
+> "vg_hda"
+> vgscan -- creating block device special files for
+> vg_hda
+> vgscan -- found active volume group "vg_hdb"
+> vgscan -- reading data of volume group "vg_hdb" from
+> physical volume(s)
+> vgscan -- inserting "vg_hdb" into lvmtab
+> vgscan -- backing up volume group "vg_hdb"
+> vgscan -- checking volume group name "vg_hdb"
+> vgscan -- checking volume group consistency of
+> "vg_hdb"
+> vgscan -- checking existence of "/etc/lvmtab.d"
+> vgscan -- storing volume group data of "vg_hdb" in
+> "/etc/lvmtab.d/vg_hdb.tmp"
+> vgscan -- storing physical volume data of "vg_hdb"
+> in
+> "/etc/lvmtab.d/vg_hdb.tmp"
+> vgscan -- storing logical volume data of volume
+> group "vg_hdb" in
+> "/etc/lvmtab.d/vg_hdb.tmp"
+> vgscan -- renaming "/etc/lvmtab.d/vg_hdb.tmp" to
+> "/etc/lvmtab.d/vg_hdb"
+> vgscan -- removing special files and directory for
+> volume group "vg_hdb"
+> vgscan -- creating directory and group character
+> special file for
+> "vg_hdb"
+> vgscan -- creating block device special files for
+> vg_hdb
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d"
+> successfully created
+> vgscan -- WARNING: This program does not do a VGDA
+> backup of your volume
+> groups
+> 
+> When I plug the IDE cdrom drive nothing is working.
+> 
+> Here is my dmesg output with the cdrom plug in :
+> 
+> [...]
+> VP_IDE: IDE controller at PCI slot 00:07.1
+> VP_IDE: chipset revision 6
+> VP_IDE: not 100% native mode: will probe irqs later
+> ide: Assuming 33MHz system bus speed for PIO modes;
+> override with
+> idebus=xx
+> VP_IDE: VIA vt82c686b (rev 40) IDE UDMA100
+> controller on pci00:07.1
+>     ide0: BM-DMA at 0xd000-0xd007, BIOS settings:
+> hda:DMA, hdb:DMA
+>     ide1: BM-DMA at 0xd008-0xd00f, BIOS settings:
+> hdc:DMA, hdd:DMA
+> hda: ST3120026A, ATA DISK drive
+> hdb: ST3120026A, ATA DISK drive
+> blk: queue f082a2c0, I/O limit 4095Mb (mask
+> 0xffffffff)
+> blk: queue f082a3fc, I/O limit 4095Mb (mask
+> 0xffffffff)
+> hdc: ST3120022A, ATA DISK drive
+> hdd: Hewlett-Packard CD-Writer Plus 7500, ATAPI
+> CD/DVD-ROM drive
+> blk: queue f082a714, I/O limit 4095Mb (mask
+> 0xffffffff)
+> ide0 at 0x1f0-0x1f7,0x3f6 on irq 14
+> ide1 at 0x170-0x177,0x376 on irq 15
+> hda: attached ide-disk driver.
+> hda: 234441648 sectors (120034 MB) w/8192KiB Cache,
+> CHS=14593/255/63,
+> UDMA(100)
+> hdb: attached ide-disk driver.
+> hdb: 234441648 sectors (120034 MB) w/8192KiB Cache,
+> CHS=14593/255/63,
+> UDMA(100)
+> hdc: attached ide-disk driver.
+> hdc: 234441648 sectors (120034 MB) w/2048KiB Cache,
+> CHS=14593/255/63,
+> UDMA(100)
+> Partition check:
+>  /dev/ide/host0/bus0/target0/lun0: p1 p2 < p5 p6 >
+>  /dev/ide/host0/bus0/target1/lun0: p1
+>  /dev/ide/host0/bus1/target0/lun0: p1
+> Journalled Block Device driver loaded
+> [...]
+> As you can see /dev/hdd, the ide cdrom is detected
+> by the linux kernel.
+> But vgscan doesn't find my volume groups:
+> 
+> vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+> vgscan -- creating empty "/etc/lvmtab" and
+> "/etc/lvmtab.d"
+> vgscan -- reading all physical volumes (this may
+> take a while...)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d"
+> successfully created
+> vgscan -- WARNING: This program does not do a VGDA
+> backup of your volume
+> group
+> 
+> Did I miss something? What's wrong with my setup?
+> 
+> Best Regards,
+> -- 
+> Nowicki Christophe                                  
+> EPITECH Promo 2006                                 
+> http://etudiant.epita.fr/~nowick_c/                 
+> 
 
-Following a good tradition, dmraid 1.0.0-rc2 is available at
-http://people.redhat.com:/~heinzm/sw/dmraid/ in source and i386 rpm,
-before I leave for a 2 weeks vacation trip followed by LWE ;)
-
-Won't read my email before July, 30th.
-
-dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
-properties of software RAID sets (ie. ATARAID) and contained DOS
-partitions using the device-mapper runtime of the 2.6 kernel.
-
-The following ATARAID types are supported on Linux 2.6:
-
-Highpoint HPT37X
-Highpoint HPT45X
-Intel Software RAID
-Promise FastTrack
-Silicon Image Medley
-
-This ATARAID type can be discovered only in this version:
-LSI Logic MegaRAID
-
-Please provide insight to support those metadata formats completely.
-
-Thanks.
-
-See files README and CHANGELOG, which come with the source tarball for
-prerequisites to run this software, further instructions on installing
-and using dmraid!
-
-CHANGELOG is contained below for your convenience as well.
-
-
-Call for testers:
------------------
-
-I need testers with the above ATARAID types, to check that the mapping
-created by this tool is correct (see options "-t -ay") and access to the ATARAID
-data is proper.
-
-You can activate your ATARAID sets without danger of overwriting
-your metadata, because dmraid accesses it read-only unless you use
-option -E with -r in order to erase ATARAID metadata (see 'man dmraid')!
-
-This is a release candidate version so you want to have backups of your valuable
-data *and* you want to test accessing your data read-only first in order to
-make sure that the mapping is correct before you go for read-write access.
-
-
-The author is reachable at <Mauelshagen@RedHat.com>.
-Later, I told you ;)
-
-For test results, mapping information, discussions, questions, patches,
-enhancement requests and the like, please subscribe and mail
-to <ataraid@redhat.com>.
-
-CHANGELOG:
----------
-
-Changelog from dmraid 1.0.0-rc1 to 1.0.0-rc2		2004.07.15
-
-o Intel Software RAID discovery and activation support
-o allow more than one format handler name with --format
-o display "raid10" sets properly rather than just "mirror"
-o enhanced activate.c to handle partial activation of sets (eg, degraded RAID0)
-o enhanced command line option checks
-o implemented a library context for variables such as debug etc.
-o fixed memory leak in discover_partitions
-o fixed recursion in _find_set()
-o continued writing subsets in case we fail on one because of RAID1
-o format handler template update
-o fixed dietlibc build
-o fixed shared library configure
-o use default_list_set() instead of &raid_sets where possible
-o name change of list_head members to the more commonly used 'list'
-o renamed msdos partition format handler to dos
-o lots of inline comments corrected/updated
-o streamlined tools/*.[ch]
-o moved get.*level() and get_status to metadata.[ch] and changed level
-  name to type
-
---
-
-Regards,
-Heinz    -- The LVM Guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> ATTACHMENT part 1.2 application/pgp-signature
+name=signature.asc
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at
+http://tldp.org/HOWTO/LVM-HOWTO/
