@@ -1,11 +1,11 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Sun, 17 Dec 2000 10:48:31 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] vgextend segfaults (lvm 0.9, kernel test10)
-Message-ID: <20001217104831.B471@66bassett.freeserve.co.uk>
-References: <20001217035948.24536.qmail@nw174.netaddress.usa.net>
-Mime-Version: 1.0
-In-Reply-To: <20001217035948.24536.qmail@nw174.netaddress.usa.net>; from bcorsello@usa.net on Sat, Dec 16, 2000 at 10:59:48PM -0500
+Return-Path: <claudio@conectiva.com>
+Date: Sun, 17 Dec 2000 08:49:35 -0200 (BRST)
+From: Claudio Matsuoka <claudio@conectiva.com>
+Subject: Re: [linux-lvm] Debian packaging
+In-Reply-To: <20001217030021.A29319@vestdata.no>
+Message-ID: <Pine.LNX.4.21.0012170847040.16662-100000@scuzzlebutt.helllabs>
+MIME-Version: 1.0
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,14 +17,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: Tamas Gergely <dice@mfa.kfki.hu>
 
-> I take it from your comment that the current CVS code is not the 0.9 code.  Is
-> that correct?
+On Sun, 17 Dec 2000, Ragnar Kj=F8rstad wrote:
 
-Correct.  The main branch will be the cluster LVM development, you
-really don't want this at the moment.
+> > I was thinking that perhaps what I should do is have /sbin/lvm-ver and=
+=20
+> > /lib/lvm-ver directories where "ver" is the version of LVM in question.=
+  Then=20
+> > at boot time there is a script that determines the version of LVM in th=
+e=20
+> > kernel and creates sym-links from /sbin and /lib to the correct directo=
+ries. =20
+> > This is REALLY ugly, but it enables a user to cleanly have a machine th=
+at can=20
+> > be booted on 2.2 or 2.4 kernel and just work each time you boot it.
+>
+> What about putting shell-scripts in /sbin, and have theese scripts
+> execute the real programs?
 
-- Joe Thornber
+
+Placing a single script (symlinked from several names) that detects the
+protocol version and executes $0 in /lib/lvm-ver could make maintenance
+easier.
