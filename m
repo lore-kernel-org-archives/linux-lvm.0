@@ -1,12 +1,12 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] multiple volumes..
-References: <18044083656.20020409231800@tnonline.net>
-    <611310000.1018387687@[192.168.200.4]> <3CB364D2.F612BD9B@silicide.dk>
-In-Reply-To: <3CB364D2.F612BD9B@silicide.dk>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Known Issues with FreeBSD Slices on Disks?
+Message-Id: <20020410073925.GK1321@tykepenguin.com>
+References: <20020405172933.GA71085@unorganized.homeip.net>
+    <20020408142641.GE1321@tykepenguin.com>
+    <20020408173054.GA77542@unorganized.homeip.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16v6GS-0001n5-00@hermes.sistina.com>
+Content-Disposition: inline
+In-Reply-To: <20020408173054.GA77542@unorganized.homeip.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,63 +17,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr  9 19:48:02 2002
+Date: Wed Apr 10 02:38:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, 10 Apr 2002 08:01, you wrote:
-but that REQUIRES, that the disks are not
-> hd<a,b,c,d,e,f,g,h>
-> You should try to avoid having more than one (active) disk at the same
-> controller at once.
+On Mon, Apr 08, 2002 at 07:30:54PM +0200, Eike Bernhardt wrote:
+> Hello!
+> 
+> On Mon Apr  8 16:26:41 2002 CEST Patrick Caulfield wrote:
 
-I've always wondered about this statement.  
+It sounds a lot like
 
-The idea AFAIK is that unlike SCSI, IDE has the master drive control the 
-slave drive on the same controller.  
-1) This causes problems where the drives are a different 
-model/make/manufactuer as the master drive will downgrade the settings of the 
-drives (master & slave) to the lowest common denominator; and therefore, the 
-speed in this case is affected.  
-2) Having the master drive control the slave drive also causes problems if 
-the master fails as then both drives fail or if a drive takes down the chain 
-both drives fail.
-3) maybe a couple of others that I have forgotten at the moment.
+http://lists.sistina.com/pipermail/lvm-devel/2002-March/000873.html
 
-When I was setting up my server at home 1.2GAthlon AsusA7V-133 384M RAM 9x 
-IBM 40G drives, 1 Promise Ultra100 & 2 Promise Ultra100TX2 I did a couple of 
-tests.  
-I found by using a flaky drive from a previous life (a western digital that 
-when it would die would take down the controller) that it didn't matter if 
-the drive was a single master on a controller, a master on a shared 
-controller or a slave on a shared controller.  When the drive would fail - it 
-would take the whole machine down with it.  The Kernel would not die but it 
-would deadlock waiting for interrupts to return and the only way to fix the 
-issue was to hard reset.  Having the flaky dirve as a standalone drive or as 
-part of a software RAID made no difference.  So I concluded that at least in 
-my setup I gained nothing by only having one IDE drive per controller.
+Can you try removing the lines
 
-I also ran bonnie++ tests on a software RAID0 using 4 master only drives 
-(hde, hdg, hdi, hdk) and 4 master-slave drives (hde, hdf, hdg, hdh).  The 
-results of the test were that seek times for the master-slave case were half 
-that for the master-master case.  Read times did drop but only by about 
-.75M/s from 80M/s but the write times improved by about .25-.75M/s from 
-50M/s.  So I concluded that at least for my setup it was better to have the 
-master-slave case because the loss of read speed was made up by the increase 
-in write speed.  
 
-So my final configuration was that hda, hdb were system disks.  The RAID5 
-used hde, hdg, hdi, hdk with a hot spare hdo and the RAID0 used hdm & hdn.
+        /* Check parallel LV spindown (LV remove) */
+        if (lv_ptr->lv_status & LV_SPINDOWN)
+                        return -EPERM;
 
-Now the tests weren't what I would call conclusive or proper scientific tests 
-but I believe they were valid.  I've always wondered what others have found 
-as what I found seems to fly in the face of common rules of thumb.
 
-There is a specific mailing list "linux ide" 
-<linux-ide-arrays@lists.math.uh.edu> that deal with large IDE arrays so you 
-might like to also ask your question there and see what is suggested.
+in lvm_blk_open() and see if that fixes the problem please ?
 
--- 
-Adrian Head
 
-(Public Key available on request.)
+patrick
