@@ -1,13 +1,8 @@
-Date: Mon, 01 Oct 2001 16:29:37 -0400
-From: Chris Mason <mason@suse.com>
-Subject: Re: [linux-lvm] Release of LVM 1.0.1 into mainstream kernel...
-Message-ID: <159480000.1001968177@tiny>
-In-Reply-To: <20011001150622.A2906@sistina.com>
-References: <Pine.LNX.4.21.0110011520100.435-100000@sol.rune.org>
- <20011001150622.A2906@sistina.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Mime-Version: 1.0
+Date: Mon, 01 Oct 2001 15:17:40 -0700
+From: Henning Hogue <henning@randomfactor.net>
+Message-Id: <E15oBO3-00035u-00@hermes.sistina.com>
+Subject: [linux-lvm] segmentation fault problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,30 +15,14 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+I have been having a problem getting the LVM working due to lvcreate causing a 
+segmentation fault when it's run. I am running redhat 7.1 on a SMP system with 
+kernel 2.4.9. I have had the same problem with versions 1.0.1rc2 and the CVS 
+code. A copy of the output from the command /sbin/lvcreate -d -l1000 -ntestlv 
+volume_1  2> debug.out is available at http://www.randomfactor.net/~henning/deb
+ug.out
 
-On Monday, October 01, 2001 03:06:22 PM -0500 AJ Lewis <lewis@sistina.com>
-wrote:
-
-> On Mon, Oct 01, 2001 at 03:25:39PM -0400, Sarwer Zafiruddin wrote:
->> I know this question has probably been answered hundreds of times, but
->> I'll go ahead and ask it again.... :-)  When will LVM 1.0.1 will become
->> part of the mainstream kernel?  I'm kinda holding my breath on installing
->> LVM on a production system un-till it is supported in the mainstream
->> Linus kernel.  *keeping my hopes that I will find it in 2.4.11* ;-) 
-> 
-> Whenever Linus decides to encorporate the changes.  we can only submit the
-> changes (which we are doing through Alan Cox at the moment).  The AC
-> series is much more up-to-date.  We're hoping the changes get into the
-> mainstream kernel soon as well.  :)
-
-Linus has been focusing on the VM and blkdev changes recently, it seems now
-that 2.4.11pre1 is out, the merging will start again.  I'd suggest testing
-2.4.11pre1 as hard as you can.  There are fundamental changes in there that
-really need testing.
-
-Once you are sure it is working correctly, ask both alan and linus what
-their timetable is for updating.
-
--chris
+	-Henning
