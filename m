@@ -1,8 +1,11 @@
-Message-ID: <20010827161137.97280.qmail@web14406.mail.yahoo.com>
-Date: Mon, 27 Aug 2001 09:11:37 -0700 (PDT)
-From: Aman Shahi <shahi_aman@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: Problem mounting snapshot with reiserfs
+Date: Sat, 25 Aug 2001 12:34:53 -0600
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] LVM, rawio, ext2?
+Message-ID: <20010825123453.A20447@lynx.no>
+References: <20010823014012.A32700@greenhydrant.com> <46CEA578.B03DDD14@qis-systemhaus.de> <20010824194456.A25251@greenhydrant.com> <20010825131329.B337103@wobbly.melbourne.sgi.com> <20010824214131.A26364@greenhydrant.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010824214131.A26364@greenhydrant.com>; from dbr@greenhydrant.com on Fri, Aug 24, 2001 at 09:41:31PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,20 +19,17 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: David Rees <dbr@greenhydrant.com>, linux-lvm@sistina.com
 
->> You need to use the linux-2.4.x-VFS-lock.patch 
->> against the kernel to enable snapshotting to work 
->> with LVM and reiserfs.
+On Aug 24, 2001  21:41 -0700, David Rees wrote:
+> Getting off-topic now, but as far as I know, no.  Is it possible to use
+> chattr or some other tool to force it to open in O_DIRECT mode?
 
-Thanx AJ.
-Sorry my fault, I assumed without checking whether I
-need to apply the VFS Lock patch for 2.4.8 or not. I 
-applied the patch, and it works fine.
+You can get per-file synchronous I/O behaviour by using 'chattr +s <file>'.
+This is not quite the same as O_DIRECT, because it still buffers the data.
 
-Aman Shahi.
-
-__________________________________________________
-Do You Yahoo!?
-Make international calls for as low as $.04/minute with Yahoo! Messenger
-http://phonecard.yahoo.com/
+Cheers, Andreas
+-- 
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
