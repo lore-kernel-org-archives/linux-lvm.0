@@ -1,8 +1,9 @@
-Message-ID: <61741.64.34.222.41.1004630228.squirrel@webmail.tekmd.com>
-From: <gdurand@tekmd.com>
+From: "Mitch Miller" <mitch@mdmiller.com>
+Subject: RE: [linux-lvm] badiane:  Problem
+Message-ID: <000201c162ef$9f2bacf0$0101a8c0@mdmiller.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] badiane:  Problem
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <61741.64.34.222.41.1004630228.squirrel@webmail.tekmd.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,10 +14,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  1 09:54:02 2001
+Date: Thu Nov  1 10:08:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+
+On my redhat system, I had to build LVM into the kernel ... but I had to fix
+the Segmentation fault you talked about.  Search the archives for that one
+... it's a compiler issue.
+
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of gdurand@tekmd.com
+Sent: Thursday, November 01, 2001 9:57 AM
+To: linux-lvm@sistina.com
+Subject: [linux-lvm] badiane: Problem
+
 
 I have created five volume groups (vg0 - vg4) to hold respectively /var,
 /home, /home/music, /usr, /usr/local.
@@ -41,3 +54,12 @@ again be avail able.
 Thanks in advance.
 
 Badiane
+
+
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
