@@ -1,10 +1,9 @@
-From: Andres Salomon <dilinger@mp3revolution.net>
-Subject: Re: [linux-lvm] FYI - Red Hat 7.2 and LVM module
-Message-ID: <20020529155522.GA32739@chunk.voxel.net>
-References: <OFE8C7233D.E443DB74-ON86256BC8.005050DC@lsu.edu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OFE8C7233D.E443DB74-ON86256BC8.005050DC@lsu.edu>
+From: "James B. Byrne " <ByrneJB@Harte-Lyne.ca>
+MIME-Version: 1.0
+Message-ID: <3CF4C4D4.13851.A9276BF@localhost>
+Content-transfer-encoding: 7BIT
+Content-description: Mail message body
+Subject: [linux-lvm] LVM 1.03 root file system on Redhat 7.3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,49 +14,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 29 10:56:02 2002
+Date: Wed May 29 11:10:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-They support it, they just assume it's compiled in.  For LVM2, I had to
-add a modprobe dm-mod to the previous line, and comment out the if/fi
-lines.
+We are using the grub bootloader.  We have followed the 
+instructions contained in the the lvm howto document provided by 
+sistina, to the best of my ability to understand them.
 
-On Wed, May 29, 2002 at 10:32:59AM -0500, Michael K Lambert wrote:
-> 
-> Hello, all.
-> 
-> Although RH does not support LVM in 7.2, I've been making use of it by
-> compiling my own kernel. The LVM patches will not patch clean on my RH 390
-> systems, so we are stuck at version .9.1, but it does work. Just yesterday
-> I built a new kernel and compiled LVM as a module for the first time. After
-> building the kernel, I rebooted and was surpirsed to see that LVM did not
-> initialize. After boot, I could run vgscan manually and lvm would become
-> active, but not during boot up.
-> 
-> After looking into rc.sysinit, I found that for vgscan to run, three
-> conditions needed to be met.../sbin/vgscan had to exist, /etc/lvmtab must
-> exist, and /proc/lvm must exist. Unfortunately, when lvm is modularized,
-> the /proc entry is created whenever the module is loaded, not permanently.
-> This causes the rc.sysinit test to fail and LVM is not initialized. Of
-> course, it is simple to work around this. I changed rc.sysinit to test for
-> /proc/lvm OR the existence of the lvm-mod, and that seemed to work fine.
-> This is just an FYI so that others in similar circumstances can avoid any
-> confusion.
-> 
-> Michael Lambert
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+The problem is that system gives a kernel panic when started using 
+the lvm boot option.  Is there a way to redirect the boot dialogue 
+output to a file?  It appears that the most informative messages may 
+be scrolling of the top of the screen.  What I am seeing is this:
 
--- 
-<dilinger> people fear what they don't understand
-<zinx> that is not true
-<zinx> most people fear what they don't understand, and the rest get killed
-	by those people
+kmod: failed to exec /sbin/modeprobe -s -k block-major-7 errno = 2 
+
+repeated 16 times, followed by
+
+vgvchange -- volume group "vg00" successfully activated
+
+VFS: Cannot open root device "vg00"/lv01: or 00:00
+Please append correct "root=" boot option
+Kernel panic: VFS: Unable to mount root fs on 00:00
+
+Help?
+
+Regards,
+Jim
+---     e-mail is NOT a secure channel 
+James B. Byrne                mailto:ByrneJB@Harte-Lyne.ca
+Harte & Lyne Limited          http://www.harte-lyne.ca
+9 Brockley Drive              vox: +1 905 561 1241
+Hamilton, Ontario             fax: +1 905 561 0757
+Canada  L8E 3C3
