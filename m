@@ -1,10 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105171531.f4HFV6Bc023180@webber.adilger.int>
-Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
-In-Reply-To: <3B0336BC.B8BC97D4@home.com> "from Tom Otake at May 16, 2001 09:26:04
- pm"
-Date: Thu, 17 May 2001 09:31:05 -0600 (MDT)
+Return-Path: <terjekv@ifi.uio.no>
+Subject: Re: [linux-lvm] LVM 1.0 release decision
+References: <20010511155311.A17689@sistina.com> <wxxoft055j0.fsf@fjorir.ifi.uio.no> <20010517080900.5240B15CB6@mail.linux-new-media.de>
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 17 May 2001 22:11:59 +0200
+In-Reply-To: Harald Milz's message of "Thu, 17 May 2001 10:08:58 +0200 (CEST)"
+Message-ID: <wxxitizag6o.fsf@fimm.ifi.uio.no>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,19 +21,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Tom Otake writes:
-> I've recreated the system hang exactly as I've described below with a pvscan
-> during a copy.  I used a new kernel with hacking enabled, redirected 1 into
-> /proc/sys/kernel/sysrq.  None of the sysrq commands seemed to have worked.
-> The system hung about 20 to 30 seconds into the copy process.
+Harald Milz <hmilz@linux-magazin.de> writes:
 
-Try using the kdb patches (available at Sourceforge).  They will allow you
-to interrupt the kernel anywhere and to a stack trace (via "bt" command)
-to find out where you are stuck.  The SysRQ key does not work if you are
-in a tight loop somewhere.
+> In article <wxxoft055j0.fsf@fjorir.ifi.uio.no>, Terje Kvernes <terjekv@math.uio.no> wrote:
+>
+> > this reminds me of XFS to be honest -- and that annoys me a great
+> > deal. I want to test XFS, but currently I can't. because after LVM
+> > and ReiserFS are patched (they pull rank :), the XFS-patches botch
+> > badly. and they're far from in sync with current kernels.
+> 
+> That seems to depend. I recently patched 2.4.2-SuSE (not famous for
+> being a vanilla kernel, and containing LVM and Reiserfs) with the
+> 2.4.2 XFS patch, and just got 1 reject in a Makefile which I could
+> safely ignore because the SuSE kernel already contained that patch.
 
-Cheers, Andreas
+  yes, well. I often want the latest kernel (down to -ac). try
+  grabbing a totally vanilla kernel and patching it up. I've tried a
+  few times but not bothered in the end. especially with the
+  knfsd-patch to ReiserFS. 
+
+> And guess what: XFS and Reiserfs work nicely together with LVM on
+> the same machine!
+
+  goodie. that's something I'll need to test a new 600GB raid system
+  soonish. I certainly hope it'll be doable, and easier than the last
+  two attempts... another worry is that if someone (XFS / ReiserFS /
+  LVM or someone else) comes up with a critical fix, how easy will it
+  be to make the new kernel again?
+
+  it's not enough that I can get _one_ kernel to work, I need to be
+  able to get new kernels to work. within a day or so if it's anything
+  like ptrace with friends.
+  
+  LVM isn't bad in this manner at all. it's just not "perfect". I'm
+  very impressed with the way the LVM-crew have handled the kernel
+  issue, and the criticism regarding the mailinglist and everything...
+  the only thing left is that LVM is the key for a lot of mainstream
+  server usage. there are several filesystems that can be used, but
+  there isn't much to take the place of LVM.
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Terje
