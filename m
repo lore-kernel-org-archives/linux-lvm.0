@@ -1,12 +1,12 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Thu, 28 Jun 2001 10:22:53 -0500
+Date: Thu, 28 Jun 2001 11:04:17 -0500
 From: Heinz Mauelshagen <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm on alpha
-Message-ID: <20010628102253.A24904@sistina.com>
-References: <20010627051755.A26216@sistina.com> <Pine.LNX.4.30.0106271038080.7196-100000@cs.clark.edu>
+Subject: Re: [linux-lvm] LVM metadata corruption?
+Message-ID: <20010628110417.B24904@sistina.com>
+References: <20010628022307.A380@vestdata.no>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.30.0106271038080.7196-100000@cs.clark.edu>; from smcconnell@clark.edu on Wed, Jun 27, 2001 at 10:41:25AM -0700
+In-Reply-To: <20010628022307.A380@vestdata.no>; from lvm@ragnark.vestdata.no on Thu, Jun 28, 2001 at 02:23:07AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,118 +22,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Sean,
+On Thu, Jun 28, 2001 at 02:23:07AM +0200, Ragnar Kj?rstad wrote:
+> Hi
+> 
+> We had a LVM problem that we believe was caused by corrupted
+> LVM-metadata. Can anyone confirm if this is a likely explanation?
+> 
+> 1. Installed LVM 
+> 2. Created a single vg on a single device with a single lv
+> 3. Used without problems for a while
+> 4. Added a new device
+> 5. Add the device to the vg, extend the lv and the filesystem
+> 6. We experienced scsi-problems at this time.
+> 7. Fixed scsi termination
+> 
+> After a reboot, mounting the filesystem(xfs) oopsed.
+> 
+> lvdisplay -v segfaulted, but there was no backtrace.
+> 
+> We recreated the lvm vg and lv, and the filesytem - everything worked
+> fine.
+> 
+> 
+> My theory is that the vgextend or lvextend corrupted the lvm-metadata
+> because of the scsi-termination problem. LVM doesn't update the metadata
+> using a transactional log, does it?
 
-your output looks like you run pvcreate on /dev/sdb rather than on /dev/sdb1.
-Did you try the later as well without success?
+Ragnar,
+no it doesn't so far.
+That's a planned enhgancement for post 1.0.
+
+> so if a write failed, the data will
+> become corrupted? (yes, I know a copy is saved in the /etc/lvm files)
+
+Yep, but this corruption could only take place, because the hardware
+wasn't able to spot the data corruption.
+
+With that kind of silent data corruption even transaction oriented models
+will have problems while aiming to make nonatomic I/Os behave atomic.
+They can't garantee either that no silent data corruption took place.
+
+In order to avoid such trouble after changing the SCSI HW configurations you
+could to write data to free areas on the disks and verify it multiple times
+while imposing read load to the disks.
+SCSI is pushable over the edge far too easy :-(
 
 Regards,
 Heinz    -- The LVM Guy --
  
-
-
-On Wed, Jun 27, 2001 at 10:41:25AM -0700, Sean McConnell wrote:
 > 
-> i thought i had sent a prior email with the info, but
-> i guess not, well here it is:
-> 
-> # fdisk -l /dev/sdb
-> 
-> Disk /dev/sdb: 134 heads, 62 sectors, 1019 cylinders
-> Units = cylinders of 8308 * 512 bytes
-> 
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/sdb1             1      1019   4232895   8e  Linux LVM
-> 
-> # pvcreate -vd /dev/sdb
-> <1> lvm_get_iop_version -- CALLED
-> <22> lvm_check_special -- CALLED
-> <22> lvm_check_special -- LEAVING
-> <1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> <1> lvm_get_iop_version -- LEAVING with ret: 10
-> pvcreate -- locking logical volume manager
-> <1> lvm_lock -- CALLED
-> <22> lvm_check_special -- CALLED
-> <22> lvm_check_special -- LEAVING
-> <1> lvm_lock -- LEAVING with ret: 0
-> pvcreate -- checking physical volume name "/dev/sdb"
-> <1> pv_check_name -- CALLED with "/dev/sdb"
-> <22> lvm_check_chars -- CALLED with name: "/dev/sdb"
-> <22> lvm_check_chars -- LEAVING with ret: 0
-> <22> lvm_check_dev -- CALLED
-> <22> lvm_check_dev -- LEAVING with ret: 1
-> <1> pv_check_name -- LEAVING with ret: 0
-> pvcreate -- getting physical volume size
-> pvcreate -- checking partition type
-> pvcreate -- invalid partition type 0x1 for "/dev/sdb" (must be 0x8e)
-> 
-> <1> lvm_unlock -- CALLED
-> <1> lvm_unlock -- LEAVING with ret: 0
+> Unfortenately we needed the system back online right away, so the
+> metadata is no gone. No way of debugging it futher.
 > 
 > 
-> i can set the partition at 83 or 82 and it still says it's fat12
+> Thank you.
 > 
 > 
-> On Wed, 27 Jun 2001, Heinz Mauelshagen wrote:
-> 
-> >
-> > Sean,
-> >
-> > could you provide your "fdisk -l" output on the disk(s) in question
-> > and the pvcreate output as well?
-> >
-> > Thanks,
-> > Heinz      -- The LVM guy --
-> >
-> > On Tue, Jun 26, 2001 at 03:50:31PM -0700, Sean McConnell wrote:
-> > >
-> > > I may just be blind, but do people have the lvm working
-> > > on alphas.  I compiled and tryied both 2.4.4 and 2.4.5
-> > > on Rh7 on my alpha, but no matter what pvcreate won't
-> > > see the partition type of any partition, just says
-> > > they're 0x1...
-> > > a simple NO will do unless there's a solution.
-> > > thanks
-> > >
-> > > sean mcconnell
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to solve them ***
-> >
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >
-> > Heinz Mauelshagen                                 Sistina Software Inc.
-> > Senior Consultant/Developer                       Am Sonnenhang 11
-> >                                                   56242 Marienrachdorf
-> >                                                   Germany
-> > Mauelshagen@Sistina.com                           +49 2626 141200
-> >                                                        FAX 924446
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
 > 
 > -- 
-> Sean McConnell, smcconnell@clark.edu
-> Unix System Administrator
-> Computer Technology/Science
-> Clark College
-> 
+> Ragnar Kjorstad
+> Big Storage
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
