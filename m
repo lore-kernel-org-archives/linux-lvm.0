@@ -1,11 +1,7 @@
-Subject: Re: [linux-lvm] lilo wrote to an lvm disk
-From: Justin Bauer <jbauer@engr.smu.edu>
-In-Reply-To: <20030402072605.GC27228@percy.comedia.it>
-References: <1049253225.1486.7.camel@jb>
-	 <20030402072605.GC27228@percy.comedia.it>
-Message-Id: <1049301157.1479.15.camel@jb>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20030402164704.61870.qmail@web14403.mail.yahoo.com>
+From: Aman Shahi <shahi_aman@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM1 Snapshot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,36 +12,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  2 10:33:01 2003
+Date: Wed Apr  2 10:47:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Luca,
+does that mean that I will have to dedicate that
+physical device for the Snapshot. I mean if I had
+4 device /dev/sda /dev/sdb /dev/sdc /dev/sdd and
+previously if I was striping my original LV over
+all the 4 devices, in the current context I stripe
+the original LV over 3 devices and create the
+Snapshot LV over the 4th (dev/sdd) ?
 
-> >I was having trouble earlier with lilo, and while configuring it, I
-> >wrote it to the mbr on a disk I had lvm on.  The only place I found that
-> >mentioned this problem was in an email to this list in march 2001, over
-> >two years ago.  It basically said that the lvm disk would be hosed.  Is
-> >there anyway to get the data off the disk? or repair it?
+-------------------------
+On Tue, Apr 01, 2003 at 07:35:16AM -0800, Aman Shahi
+wrote:
 > 
-> if you have a recent metadata backup you can try using vgcfgrestore to
-> put the metadata back on the disk.
-
-I didn't back anything up, but doesn't it do that by default?  It writes
-something to /etc/lvmconf right?
-
+> Using LVM1, how do I create a snapshot LV on a
+> different physical device than the original LV
 > 
-> other options depend on what was the disk layout:
-> was it the only disk you had in the volume group?
-> are there lv sharing more than one pv?
-> do you recall the LV layout?
 
-The bad disk happens to be the first disk in the group.  I didn't do
-striping.  The first disk is completely full, well except for the 512
-bytes at the beginning :)  There are two other disks as well, the second
-disk is mostly full, and the third is empty.
+Just add the PV name to the end of the command-line.
 
-Thanks,
+eg. if your original LV (/dev/vg/original) is on
+/dev/sdc1 and you want the
+snapshot on /dev/sdj1 do:
 
-Justin
+lvcreate -L<size> -s -n snapshot /dev/vg/original
+/dev/sdj1
+
+-- 
+
+patrick
+
+
+
+
+
+__________________________________________________
+Do you Yahoo!?
+Yahoo! Tax Center - File online, calculators, forms, and more
+http://tax.yahoo.com
