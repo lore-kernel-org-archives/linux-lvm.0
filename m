@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] LVM2 setup notes and questions
-Message-ID: <20020807083823.GB1468@fib011235813.fsnet.co.uk>
-References: <1028495668.1455.44.camel@cygnusx-1.okcforum.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1028495668.1455.44.camel@cygnusx-1.okcforum.org>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: "William Blunn" <bill+f.9sfuw6uo@tao-group.com>
+Subject: Re: [linux-lvm] ext2resize error
+Message-ID: <BDEMIPDEGABMNEFIHCPDIEGDDNAA.bill+f.9sfuw6uo@tao-group.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <OF05C6CA97.9049849B-ON86256C0D.0071EC23@TEXASMUTUAL.COM>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,123 +14,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug  7 03:38:02 2002
+Date: Wed Aug  7 05:12:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Nathan,
+> I have a Mandrake Linux 8.1 system with a 2.4.8 kernel.  My=20
+> logical volumes
+> include /usr, /var and /home (not / or /boot).  I originally set up all
+> lv(s) as ext3, which seemed to preclude the ext2_online patch.  My
+> /dev/sys/usr lv shows 2.44 gig in lvdisplay.  My one PV shows 3616 free
+> PEs.  df shows /usr to be 2,015,824 (k) and 96% utilized.  I run telinit 1
+> then umount -a.  /usr unmounts.  I then run ext2resize /dev/sys/usr.  It
+> returns "Your filesystem is too occupied to resize it to 16000 bytes."
 
-Thanks for your mail, this sort of information is really helpful.
+The e2fsprogs package (the package which contains e2fsck etc.) has containe=
+d resize2fs ever since version 1.19 (13 July 2000).
 
-On Sun, Aug 04, 2002 at 04:14:27PM -0500, Nathan G. Grennan wrote:
->   Just got finished making device-mapper 0.96.03 work with RedHat Limbo
-> beta2, LVM tools 2.1.95.10, kernel 2.4.19-r7 from gentoo, and raw two
-> drives as one physical volume and one logical volume. Ran into a few
-> gotchas, but I was able to workaround them all.
-> 
->   The first problem was with make apply-patches not finding the patches
-> because I told it I was using 2.4.19 during configure instead of
-> 2.4.19-rc1. I fixed this by changing the version line in the Makefile.
+resize2fs, being part of the e2fsprogs, is therefore the official ext2 resi=
+zer.
 
-We'll update the script to deal with extra version fields.
+ext2resize and resize2fs are completely different in implementation althoug=
+h they (notionally) do the same job.
 
-> The second problem was simple rejects during running make apply-patches.
-> They were caused by small differences in the gentoo kernel.
+resize2fs was originally written to be part of a commercial product, but th=
+e contract allowed for it to be made open after a period of time.
 
-Nothing we can do about this, we only develop against the vanilla 2.4
-kernel.  There are too many distros for us to make patch sets for them
-all.
+In the meantime, the open community were desperate for an open ext2fs resiz=
+er, so ext2resize was written.
 
-> of it. The first was vgscan and vgchange being linked to readline and
-> the readline libraries being in /usr/lib, but rc.sysinit was trying to
-> run them before /usr was mounted. At first I didn't read closely and
-> staticly linked libdevmapper thinking it would make the whole program
-> staticly linked. That didn't help, so I checked ./configure --help again
-> and find the option to disable readline.
+However resize2fs is the better tool.
 
-I think maybe we should disable readline support by default, very few
-people use it.
+I have personally found that ext2resize fails for filesystems over 64GiB in=
+ size.
 
-> Then I had a problem with "setlocale failed". I did a Google
-> search and found mention that other programs worked when LANG was LANG=C
-> instead of LANG=en_US so I added a workaround to the rc.sysinit. 
+Since an official tool has been available for over two years, I can't see h=
+ow ext2resize would have received much attention in that time.
 
-I think this is more of a distro problem than an LVM2 prob.
+My advice would be to cut your losses and switch to the official, maintaine=
+d, tool, resize2fs.
 
-> The next problem I ran into was a common one of vgscan trying to scan
-> cdrom drives at hda and hdc. After reading the man page for lvm.conf and
-> doing a little Google searching I figure out the correct format to
-> filter both. I think the man page could use some additional examples to
-> show the format for more than one filter.
+Bill
 
-Did you find the examples in LVM/doc/example.conf ?
+The contents of this e-mail and any attachments are confidential and may
+be legally privileged. If you have received this e-mail and you are not
+a named addressee, please inform us as soon as possible on
++44 118 901 2999 and then delete the e-mail from your system. If you are
+not a named addressee you must not copy, use, disclose, distribute,
+print or rely on this e-mail. Any views expressed in this e-mail or any
+attachments may not necessarily reflect those of Tao's management.
+Although we routinely screen for viruses, addressees should scan this
+e-mail and any attachments for viruses. Tao makes no representation or
+warranty as to the absence of viruses in this e-mail or any attachments.
+Please note that for the protection of our business, we may monitor and
+read e-mails sent to and from our server(s).
 
-> The final problem I ran into
-> once the volume group was being activated was the device name change
-> from /dev/vg/data to /dev/device-mapper/vg-data
-
-There should automatically be a symbolic link from /dev/vg/data to
-/dev/device-mapper/vg-data.  Can you confirm that this isn't happening
-on your system please ?
-
->   The reason I converted from LVM1 to LVM2 is so that I could recover
-> data if one of the drives failed. Since I only don't plan to snapshot or
-> move I don't forsee many problems.
-
->   Now I have some questions. What are the steps involved in recovering
-> should either of my drives fail?
-
-I'll let Alasdair answer this one since he wrote that code.
-
-> How do I convert the metadata from LVM1
-> format to LVM2 format?
-
-Format2 hasn't been released yet, it's currently undergoing a lot of
-testing, we want to be confident it is correct before trusting peoples
-data to it.  The upgrade procedure will be in the form a little shell
-script which backs up your vgs in the normal text format, and then
-restores from this text format to new format2 metadata areas.
-
-> If I wanted to add a partition on a third drive would it be as simple as
-> adding it to the physical volume group and then used parted resize the
-> filesystem?
-
-The partition will count as a PV, so just use vgextend, eg,
-
-vgextend vg0 /dev/hdc2
-
-> Is there a tool in the LVM2 packages that will do the same
-> thing that parted does for ext3?
-
-Not sure what you mean here, if you are asking if LVM2 will
-automatically resize filesystems the answer is no.  We're just
-concentrating on volume management, not filesystem management.
-
-> Any bugs known in device-mapper 0.96.03
-> that would make it a good idea to upgrade to the CVS version?
-
-I can't think of any major bug that would force you to upgrade.
-
-We tend to work off an internal bitkeeper repository and occasionally
-sync up with CVS or the public bitkeeper.  So you shouldn't be shy
-about using the CVS version since it is very stable.
-
-If you are a bitkeeper user the latest stable 2.4 version can be
-pulled from:
-
-bk://device-mapper.bkbits.net/2.4-stable
-
-This gets updated more frequently than cvs.  You can see the changeset log here:
-
-http://device-mapper.bkbits.net:8080/2.4-stable
-
-
-> Any other things any of you think I should know about LVM2?
-
-/dev/device-mapper is being renamed to /dev/mapper (kernel hackers
-don't like typing).  So if you do pick up patches that implement this
-change (ie. from bitkeeper), please remember to rebuild libdevmapper.
-
-- Joe
+Visit our website at http://tao-group.com/
