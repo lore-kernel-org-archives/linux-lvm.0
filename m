@@ -1,36 +1,8 @@
-Message-ID: <1519.24.46.54.254.1031935361.squirrel@mail.scottsavarese.com>
-Subject: Re: [linux-lvm] software mirroring
-From: "Scott Savarese" <scott@scottsavarese.com>
-In-Reply-To: <3D820EB3.5060801@comedia.it>
-References: <2100.24.46.54.254.1031670341.squirrel@mail.scottsavarese.com>
-        
-        
-        
-        
-        
-        
-        
-        <3D7E0CC0.D7B06D44@silicide.dk>
-        
-        
-        
-        
-        
-        
-        
-        <2951.24.46.54.254.1031678903.squirrel@mail.scottsavarese.com>
-        
-        
-        
-        
-        
-        
-        
-        <20020911080049.GA28187@gw.silicide.dk>
-        <1596.24.46.54.254.1031862235.squirrel@mail.scottsavarese.com>
-        <3D820EB3.5060801@comedia.it>
+Message-ID: <2984.208.210.149.34.1031939187.squirrel@webmail.sistina.com>
+From: "Laurie E. Miller" <lmiller@sistina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="----=_20020913124627_32875"
+Subject: [linux-lvm] [Fwd: [support] (no subject)]
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -41,29 +13,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 13 11:46:17 2002
+Date: Fri Sep 13 12:51:25 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, support@sistina.com
 
-Luca Berra said:
-> which problems did you find in putting / (or /boot) on LVM over MD? (btw
-> i am running such a setup)
+------=_20020913124627_32875
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-Lilo has been completely unable to figure out where my root and boot
-partitions are. No matter how I was setting up lilo.conf, it wouldn't find
-the lvm root partition. I would get L 80 80 80... or L 40 40 40. Sadly, I
-never kept a log of exactly what I did (it would have been helpful). I
-have a feeling it was more a problem with setting up the raid and getting
-lilo to understand where everything is as opposed to an issue with lvm.
 
->
->> Is there a howto out there on how to combine raid and lvm? Is there a
->> need
-> not that i know of
->> to write one?
-> probably yes
+-------- Original Message --------
+Subject: [support] (no subject)
+From: "Mark Morris" <mark@computernewz.com>
+Date: Fri, September 13, 2002 12:19
+To: <support@sistina.com>
 
-Once I figure it all out I'll try and write one...
+I have a quick question about LVM and large volumes.
 
-Scott
+It appears to use 4 129 gb harddrives, an extent size of 8 mb is
+required.
+
+Does this mean that any small file will be saved using 8 mb of disk
+space, or will small files be evenly distributed over one 8 mb extent?
+
+Thanks in advance.
+
+Mark Morris
+
+
+Laurie E. Miller
+support@sistina.com
+
+--
+
+NOTICE: The attached electronic message is communication from Sistina
+Software, Inc. to you pursuant to the contract for maintenance and support
+services that you or your company has with Sistina Software, Inc.  The
+attached electronic message is confidential information of Sistina
+Software, Inc.  You may not share the attached electronic message, or any
+of its contents, with any third parties without express prior written
+consent from Sistina Software, Inc. If you are not the intended recipient,
+you are hereby notified that you have received this transmittal in error;
+any review, dissemination, distribution or copying of this transmittal is
+strictly prohibited.  If you have this communication in error, please
+notify us immediately by telephone (612/638-0500) and immediately delete
+this message and all its attachments.
+
+
+------=_20020913124627_32875
+Content-Type: text/html; name="untitled-2"
+Content-Disposition: attachment; filename="untitled-2"
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.2719.2200" name=GENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<DIV><FONT face=Arial size=2>I have a quick question about LVM and large 
+volumes.</FONT></DIV>
+<DIV><FONT face=Arial size=2></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial size=2>It appears to use 4 129 gb harddrives, an extent 
+size of 8 mb is required.</FONT></DIV>
+<DIV><FONT face=Arial size=2></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial size=2>Does this mean that any small file will be saved 
+using 8 mb of disk space,&nbsp;or will small files be evenly distributed over 
+one 8 mb extent?</FONT></DIV>
+<DIV><FONT face=Arial size=2></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial size=2>Thanks in advance.</FONT></DIV>
+<DIV><FONT face=Arial size=2></FONT>&nbsp;</DIV>
+<DIV><FONT face=Arial size=2>Mark Morris</FONT></DIV></BODY></HTML>
+
+------=_20020913124627_32875--
