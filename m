@@ -1,58 +1,22 @@
-Message-ID: <31A612FE6020D2119F6400A0C9B67EBB0381B27A@FTHW901E>
-From: Franken Klaus <Klaus.Franken@fth2.siemens.de>
-Subject: RE: [linux-lvm] dual adapter machine
-Date: Mon, 7 Aug 2000 16:06:10 +0200 
+Message-ID: <20000808083833.28744.qmail@abv.bg>
+From: "Rumen Ginev" <rumen@abv.bg>
+Date: Tue, 08 Aug 2000 08:38:33 +0200
+Subject: [linux-lvm] kernel 2.2.14
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: 'Michael Lausch' <mla@1012surf.net>, linux-lvm@msede.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@msede.com
 
-Hi,
+I patched my kernel (2.2.14-15mdk) with patch-2.2.13-LVM-0.8i. Next I built a new kernel successfully and after reboot loaded LVM module with no problems.
+I managed to create physical and volume group, but when I tried to create a logical volume the system just hung.
 
-there is a commercial software called "Duplex Data Manager (DDM)" from
-Fujitsu-Siemens-Computers for exactly this.
-Unfortunately I can't found an online documentation.
-I can send you a PDF and a powerpoint ducumentation if needed.
-In the german magazin "Linux Enterprise" (1.2000) was an article about DDM.
-
-DDM seems very well designed, you can use it in conjunction with MD, LVM etc.
-
-But an open-source tool would be nice too.
+Is this patch the correct one for my kernel (I could not find patch-2.2.14-LVM-0.8i) or I have missed something?
 
 
-Klaus.Franken@fth2.siemens.de    +49 911 978 3707
-Siemens Business Services IP 21F
-
-
-> -----Original Message-----
-> From: Michael Lausch [mailto:mla@1012surf.net]
-> Sent: Monday, August 07, 2000 12:33 PM
-> To: linux-lvm@msede.com
-> Subject: [linux-lvm] dual adapter machine
-> 
-> 
-> 
-> We are going to use linux LVM on some servers using 2 FCAL adapters
-> per machine, since our RAID System (HP XP256) has two FCAL
-> channels. So in order to have no single point of failure, we want to
-> use 2 FCAL adapters in each machine, connected to the same (virttual)
-> disks. This means i see the same partition on two controlers.
-> 
-> For example: controller 1, SCSIID 3, LUN 1, Partition 1
-> and          controller 2, SCSIID 3, LUN 1, Partition 1
-> 
-> refer to the same blocks.
-> 
-> So when everything is okay i'll talk to the disk through c1d3l1s1 (in
-> solaris notation). When this FCAL has an error, i want to talk to the
-> same disk via c2d3l1s1. How can this be done with linux LVM?
-> 
-> Anybody got any ideas? 
-> 
-> thanks in advance.
-> -- 
-> michael lausch
-> 
+----------------------------------------------------
+������� ����!   http://www.abv.bg   Send your mail!
+������ �� !   http://www.netinfo.bg   Get connected!
+������ !   http://gyuvetch.bg  Visit! 
