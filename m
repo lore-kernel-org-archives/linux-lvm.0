@@ -1,11 +1,11 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Wed, 29 Nov 2000 21:19:09 +0000
+Date: Wed, 29 Nov 2000 21:57:37 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] lvm 0.9 kernel build problems
-Message-ID: <20001129211909.C26635@srv.t-online.de>
-References: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com>
+Subject: Re: [linux-lvm] Old problem cropping up again with 0.9 lvm tools?
+Message-ID: <20001129215737.A26839@srv.t-online.de>
+References: <20001129174952.A26362@colombina.comedia.it> <200011291849.eATInOJ22818@webber.adilger.net>
 Mime-Version: 1.0
-In-Reply-To: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com>; from pswartz@digitalrom.com on Wed, Nov 29, 2000 at 09:05:32AM -0600
+In-Reply-To: <200011291849.eATInOJ22818@webber.adilger.net>; from adilger@turbolinux.com on Wed, Nov 29, 2000 at 11:49:23AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,57 +15,54 @@ Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 Cc: mge@sistina.com
 
-I guess that this could be a nasty gcc flaw showing up here.
+On Wed, Nov 29, 2000 at 11:49:23AM -0700, Andreas Dilger wrote:
+> Luca writes:
+> > you should apply the attached patch
+> 
+> Heinz, I believe this patch was also included in my 0.8 patchset, but
+> was dropped from 0.8.1...
 
-Anybody else who tried to patch/compile LVM 0.9 with linux-2.4.0-test10
-on RH 7.0 who is able to help?
+Sorry?
+
+Already reintegrated it for 0.8.2.
 
 
-On Wed, Nov 29, 2000 at 09:05:32AM -0600, Patrick Swartz wrote:
-> Hello,
 > 
-> Could someone give me some hints to why I get the following error when
-> trying to build my kernel with the lvm 0.9patches.  This box started out as
-> a RH7.0 with all current RH updates, then installed the stock 2.4.0-test10
-> kernel with lvm built into the kernel.  This build worked.  I then applied
-> the two patches for 2.4.0-test10 and they applied cleanly.  I normally build
-> kernels using the following approach -- make dep clean bzImage modules
-> modules_install, then take care of lilo.  This error happens during the
-> bzImage stage.
-> 
-> 
-> lvm.c: In function `lvm_do_vg_extend':
-> lvm.c:2020: warning: implicit declaration of function
-> `lvm_do_create_proc_entry_
-> of_pv'
-> lvm.c: In function `lvm_do_create_proc_entry_of_lv':
-> lvm.c:3012: `pde' undeclared (first use in this function)
-> lvm.c:3012: (Each undeclared identifier is reported only once
-> lvm.c:3012: for each function it appears in.)
-> lvm.c: At top level:
-> lvm.c:3040: warning: type mismatch with previous implicit declaration
-> lvm.c:2020: warning: previous implicit declaration of
-> `lvm_do_create_proc_entry_
-> of_pv'
-> lvm.c:3040: warning: `lvm_do_create_proc_entry_of_pv' was previously
-> implicitly
-> declared to return `int'
-> lvm.c: In function `lvm_do_create_proc_entry_of_pv':
-> lvm.c:3046: `pde' undeclared (first use in this function)
-> lvm.c: At top level:
-> lvm.c:146: warning: `lvm_short_version' defined but not used
-> make[3]: *** [lvm.o] Error 1
-> make[3]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> make[2]: *** [first_rule] Error 2
-> make[2]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> make[1]: *** [_subdir_md] Error 2
-> make[1]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers'
-> make: *** [_dir_drivers] Error 2
-> 
-> Thanks for your help,
-> 
-> Patrick Swartz
-> 
+> Cheers, Andreas
+> ===========================================================================
+> --- lib/pv_get_size.c.bluca	Mon Nov 13 01:20:11 2000
+> +++ lib/pv_get_size.c	Sun Nov 26 10:53:09 2000
+> @@ -87,6 +87,7 @@
+>        goto pv_get_size_end;
+>     }
+>  
+> +   memset ( disk_dev_name, 0, sizeof ( disk_dev_name));
+>     if ( ( cache_entry = lvm_dir_cache_find ( dev_name)) != NULL) {
+>        if ( lvm_check_partitioned_dev ( cache_entry->st_rdev) == TRUE) {
+>           st_rdev = cache_entry->st_rdev -
+> @@ -96,14 +97,14 @@
+>              if ( dir_cache[i].st_rdev == st_rdev)
+>                 break;
+>           }
+> -      }
+> +         strncpy ( disk_dev_name, dir_cache[i].dev_name, sizeof ( disk_dev_name) - 1);
+> +      } else {
+> +         strncpy ( disk_dev_name, dev_name, sizeof ( disk_dev_name) - 1);
+> +	  }
+>     } else {
+>        ret = -LVM_EPV_GET_SIZE_LVM_DIR_CACHE;
+>        goto pv_get_size_end;
+>     }
+> -
+> -   memset ( disk_dev_name, 0, sizeof ( disk_dev_name));
+> -   strncpy ( disk_dev_name, dir_cache[i].dev_name, sizeof ( disk_dev_name) - 1);
+>  
+>     first = 1;
+>     if ( ( pv_handle = open ( disk_dev_name, O_RDONLY)) == -1) {
+> -- 
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
