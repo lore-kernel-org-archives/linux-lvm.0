@@ -1,10 +1,8 @@
-From: Kai Weber <lists@glorybox.de>
-Subject: Re: [linux-lvm] vgscan messages regarding read-only cdrom
-Message-ID: <20031201100842.GA3038@glorybox.de>
-References: <20031130185807.GF7634@glorybox.de> <20031130212501.GO19217@percy.comedia.it>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031130212501.GO19217@percy.comedia.it>
+Message-ID: <3FCB0D87.960E97F7@in.ibm.com>
+From: Sachin Sant <sachinp@in.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvchange -r 256 lv-name does not work
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,47 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 04:11:02 2003
+Date: Mon Dec  1 07:57:05 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-* Luca Berra <bluca@comedia.it>:
+Hi , i came across a problem with lvchange command.
 
-> >* why is vgscan reading /dev/cdrom (a link to my first IDE
-> >CD-ROM /dev/hdc)?
-> >
-> >* how can I disable this message?
-> 
-> man lvm.conf
+I have a VG with 3 pv and a lv created using command 
 
-Done and and /etc/lvm/lvm.conf adjusted:
-                                                                                
-devices {
-    dir = "/dev"
-    scan = [ "/dev" ]
-    filter = [ "r|cdrom|" ]
-    cache = "/etc/lvm/.cache"
-    write_cache_state = 1
-}
-                                                                                
-vgscan still reports
-"/dev/cdrom: open failed: Read-only file system"
+lvcreate -i3 -I32 -l98 -nmy_lv my_vg
+lvdisplay shows 1024 as the value for Read Ahead Sectors.
 
-I tried the following variants:
-                                                                                
-        filter = [ "r|/dev/cdrom" ]
-        filter = [ "r|/dev/cdrom", "r|/dev/hdc" ]
-        filter = [ "r|cdrom", "r|hdc" ]
-                                                                                
-Ideas? Kernel is 2.6.0-test9
-                                                                                
-LVM version:     2.00.07 (2003-09-16)
-Library version: 1.00.05-ioctl-cvs (2003-09-01)
-Driver version:  4.0.0
-                                                                                
-Kai
--- 
-* mail kai.weber@glorybox.de . icq 102024972
-  web http://www.glorybox.de . pgp 0x594D4132
+When i use the command lvchange to change the value of read ahead
+sector with value more that or equal to 256 i get following error..
+
+linux# lvchange -r 340 /dev/my_vg/my_lv
+lvchange -- ERROR "Invalid Argument" read ahead sector change
+linux#
+linux#
+
+Is there a limitation that read ahead value cannot be greater 
+than 255?
+
+Thanks
+-Sachin
