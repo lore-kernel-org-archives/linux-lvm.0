@@ -1,16 +1,10 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9PGakr25968
-	for <linux-lvm@redhat.com>; Mon, 25 Oct 2004 12:36:46 -0400
-Received: from mail.intellij.net (mail.intellij.net [213.182.181.98])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id i9PGadlZ013503
-	for <linux-lvm@redhat.com>; Mon, 25 Oct 2004 12:36:45 -0400
-Message-Id: <200410251636.i9PGadlZ013503@mx1.redhat.com>
-From: <sergey@17234.copi.ru>
-Sender: "Sergey Zhukov" <Sergey.Zhukov@jetbrains.com>
-Date: Mon, 25 Oct 2004 20:36:38 +0400
+Sender: alewis@redhat.com
+Subject: Re: [linux-lvm] kernel 2.6 + LVM 1.0.8
+References: <mailman.15273.1098718671.3231.linux-lvm@redhat.com>
+From: AJ Lewis <alewis@redhat.com>
+Date: 25 Oct 2004 14:05:29 -0500
+Message-ID: <x05breq7h52.fsf@null.msp.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] How to restore PV header ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,22 +16,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Mariano Cunietti <mcunietti@enter.it>
 
-Hello, Everybody !
+"Mariano Cunietti" <mcunietti@enter.it> writes:
 
-I've deleted header of PV by mistake...
-/dev/sda3 - is partition for PV and I've executed "disk /dev/sda3", created partitions and written it back. I know, I'm stupid.
-:-(
-I've made a mistake and instead 3-rd physical HDD that I was need to partitioning I've created partition on the first HDD in 3-rd
-partition...
-pvdispaly no tells "no PV" about /dev/sda3
+> can you please address me to some *useful* informatioin about
+> patching linux 2.6.9 kernel source for compiling LVM 1.0.8 support?
+> I read the /PATCHES readme but i always get a "You haven't applied
+> the rawio patch, please see the README" My system is a RH Enterprise
+> 3ES (unlicensed), I'm trying to compile a Vanilla 2.6.9 kernel on it
+> I've been googling around since yesterday, but I can't find out any
+> solution (neither on RedHat website)
 
-Currently server is working and I think it will be work until reboot. I have correct structures under "/proc/lvm"
+That's because you can't use LVM 1.0.8 with a 2.6 kernel.  You need to
+use the device-mapper kernel module and LVM2.  Please read the LVM
+Howto at http://www.tldp.org/HOWTO/LVM-HOWTO/ - especially the LVM2
+FAQ entries for information about LVM2.  Also
+http://sources.redhat.com/lvm2/ and http://sources.redhat.com/dm/ will
+be useful.
 
-Could somebody tell me, is there some way to restore PV header before reboot ? System is RHEL 3.
+LVM2 will work with your LVM1 volumes.
 
-Thanks a lot to everybody in advance !
-
-Thanks,
-Sergey 
+Regards,
+-- 
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat Inc.                               E-Mail: alewis@redhat.com
+720 Washington Ave. SE, Suite 200
+Minneapolis, MN 55414
+   
+Current GPG fingerprint = D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
