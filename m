@@ -1,12 +1,10 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Mon, 2 Apr 2001 15:27:47 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvcreate error
-Message-ID: <20010402152747.A512@tykepenguin.com>
-References: <Pine.LNX.4.21.0104011921510.3969-100000@rdb.linux-help.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0104011921510.3969-100000@rdb.linux-help.org>; from ardy@rdb.linux-help.org on Sun, Apr 01, 2001 at 07:32:51PM -0400
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104022100.f32L0jL13101@webber.adilger.int>
+Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
+In-Reply-To: <01040207434300.00937@darkvader> from Diederick van Dijk at "Apr
+ 2, 2001 07:43:43 am"
+Date: Mon, 2 Apr 2001 15:00:44 -0600 (MDT)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,21 +16,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Apr 01, 2001 at 07:32:51PM -0400, ardy@rdb.linux-help.org wrote:
-> I'm trying to add a seventh logical volume on a two-disk, striped volume
-> group. vgdisplay shows the following:
-> 
-> I've redone this system, and the only difference is that I'm striping this
-> time. I was capable of creating more logical volumes when I wasn't
-> striping. Also, I could create a seventh volume using 3900MB, but not
-> 4000MB.
+Diederick van Dijk writes:
+> I've a LVM of 8 physical volumes that I've created with LVM 0.9.1 beta 2.
+> I've the know problem that vgscan reports that it can't find my VG.
+> So I upgraded to LVM 0.9.1 beta 6 (tools and kernel) and runned on each
+> physical disk a vgcfgrestore. Unfortunately I didn't solve the problem.
+> Attached is the output of the commands vgdisplay -v and a pvdata -U for each 
+> physical disk. Debug logs a very huge so I won't attach them.
 
-When you create a striped LV of 4g you will need 2g free on both disks. You can
-check this with pvscan.
+OK, I have figured out why vgcfgrestore doesn't work properly with broken
+UUIDs.  It is because vgcfgrestore only restores the backup VGDA data to
+each disk separately.  This means it is not possible to have consistent
+UUIDs generated for all PVs in a VG when vgcfgrestore is run.
 
+You can try the following (experimental) procedure to fix the UUIDs:
 
-patrick
+Check each PV with "pvdata -PP /dev/hdX" to ensure it has a valid
+UUID assigned.  Also get the PV numbers (starting with 1) for each of
+the PVs.  Finally, check the pv_uuidlist_on_disk.base for each PV.
+It will normally be 6144, but it does not have to be.
+
+for each PV (in PV# order)
+    dd if=/dev/hdX bs=1 skip=44 count=128 >> /tmp/uuids
+
+This should create a file /tmp/uuids which has all of the PV UUIDs in it.
+Make sure there are as many UUIDs in the file ("od -a /tmp/uuids" is good)
+as you have PVs (8 in your case).
+
+Now, we want to write the UUID list back to the PVs so vgscan is happy:
+
+for each PV (in any order)
+    dd if=/tmp/uuids of=/dev/hdX bs=1 seek=<pv_uuidlist_on_disk.base for hdX>
+
+example:
+    dd if=/tmp/uuids of=/dev/hda2 bs=1 seek=6144
+
+Now vgscan should be able to detect all of the disks and work properly.
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
