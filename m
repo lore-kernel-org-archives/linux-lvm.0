@@ -1,11 +1,10 @@
-Return-Path: <tandem@dnmi.no>
-Subject: Re: [linux-lvm] Request for misalignment tests
-References: <20010626161947.A11918@sistina.com>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 27 Jun 2001 07:11:14 +0200
-In-Reply-To: Heinz Mauelshagen's message of "Tue, 26 Jun 2001 16:19:47 -0500"
-Message-ID: <wvofrao6bx.fsf@freeze.oslo.dnmi.no>
-MIME-Version: 1.0
+Return-Path: <mauelshagen@sistina.com>
+Date: Wed, 27 Jun 2001 05:17:55 -0500
+From: Heinz Mauelshagen <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] lvm on alpha 
+Message-ID: <20010627051755.A26216@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,85 +20,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Heinz" == Heinz Mauelshagen <mauelshagen@sistina.com> writes:
+Sean,
 
-    Heinz> All,
+could you provide your "fdisk -l" output on the disk(s) in question
+and the pvcreate output as well?
 
-    Heinz> we need your help in regard to the misalignment problems we
-    Heinz> are trying to fix right now in order to get facts
-    Heinz> concerning how many people are actually suffering from it.
+Thanks,
+Heinz      -- The LVM guy --
 
+On Tue, Jun 26, 2001 at 03:50:31PM -0700, Sean McConnell wrote:
+> 
+> I may just be blind, but do people have the lvm working
+> on alphas.  I compiled and tryied both 2.4.4 and 2.4.5
+> on Rh7 on my alpha, but no matter what pvcreate won't
+> see the partition type of any partition, just says
+> they're 0x1...
+> a simple NO will do unless there's a solution.
+> thanks
+> 
+> sean mcconnell
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+ 
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-    Heinz> In case you created VGs or extended them with LVM 0.9.1
-    Heinz> Beta 6 or 7, we'd appreciate if you could send us the
-    Heinz> output (if any) of
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    Heinz>    pvdisplay -v /dev/YourPVname | grep "^ *00000"
-
-    Heinz> if the sector offset in the last column is odd.
-
-    Heinz> If so, please add a "pvdisplay /dev/YourPVname" as well.
-
-Linux dusk 2.2.20pre2 #1 Tue Jun 12 10:17:08 CEST 2001 i686 unknown
-(patched with reiserfs 3.5.32, lvm 0.9.1beta7)
-
-ii  lvm            0.9.1beta7-1   The Logical Volume Manager for Linux
-
-dusk:~# pvdisplay -v /dev/rd/c0d0p2 | grep "^ *00000"
-   00000 /dev/rootvg/tmplv         00000   537
---- Physical volume ---
-PV Name               /dev/rd/c0d0p2
-VG Name               rootvg
-PV Size               34.02 GB / NOT usable 268 KB [LVM: 155 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                6
-PE Size (KByte)       4096
-Total PE              8709
-Free PE               7909
-Allocated PE          800
-PV UUID               YZtLqC-1ETn-hEqv-cfm2-OUCD-vF0p-IC1ur0
-
-***** DAC960 RAID Driver Version 2.2.10 of 1 February 2001 *****
-Copyright 1998-2001 by Leonard N. Zubkoff <lnz@dandelion.com>
-Configuring Mylex AcceleRAID 170 PCI RAID Controller
-  Firmware Version: 6.00-01, Channels: 1, Memory Size: 32MB
-  PCI Bus: 0, Device: 9, Function: 1, I/O Address: Unassigned
-  PCI Address: 0xE6800000 mapped at 0xD0803000, IRQ Channel: 11
-  Controller Queue Depth: 512, Maximum Blocks per Command: 2048
-  Driver Queue Depth: 511, Scatter/Gather Limit: 128 of 257 Segments
-  Physical Devices:
-    0:0  Vendor: IBM       Model: DDYS-T18350M      Revision: S93E
-         Wide Synchronous at 40 MB/sec
-         Serial Number:         4EY9B929
-         Disk Status: Online, 35807232 blocks
-    0:1  Vendor: IBM       Model: DDYS-T18350M      Revision: S93E
-         Wide Synchronous at 40 MB/sec
-         Serial Number:         4EY99390
-         Disk Status: Online, 35807232 blocks
-    0:2  Vendor: IBM       Model: DDYS-T18350M      Revision: S93E
-         Wide Synchronous at 40 MB/sec
-         Serial Number:         4EY9F875
-         Disk Status: Online, 35807232 blocks
-    0:7  Vendor: MYLEX     Model: AcceleRAID 170    Revision: 0600
-         Wide Synchronous at 160 MB/sec
-         Serial Number:   
-  Logical Drives:
-    /dev/rd/c0d0: RAID-5, Online, 71614464 blocks
-                  Logical Device Initialized, BIOS Geometry: 255/63
-                  Stripe Size: 64KB, Segment Size: 8KB
-                  Read Cache Disabled, Write Cache Disabled
-  No Rebuild or Consistency Check in Progress
-
-Let me know if you need more info. Note, that I've not noticed any
-problems.
-
-Sincerely,
-
-Adrian Phillips
-
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
