@@ -1,11 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012222205.eBMM59319580@webber.adilger.net>
-Subject: Re: [linux-lvm] [PATCH] user check in lvmiopversion
-In-Reply-To: <Pine.LNX.4.30.0012221813290.1074-100000@pokey.distro.conectiva>
- "from Claudio Matsuoka at Dec 22, 2000 06:21:40 pm"
-Date: Fri, 22 Dec 2000 15:05:09 -0700 (MST)
-MIME-Version: 1.0
+Return-Path: <jan@moria.gondor.com>
+Date: Sat, 23 Dec 2000 00:09:04 +0100
+From: Jan Niehusmann <list039@gondor.com>
+Message-ID: <20001223000904.B2334@gondor.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] pv_read_all_pv_of_vg.c
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,49 +20,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Claudio, you write:
-> Quite trivial, but avoids misleading error messages like
-> 
->   [claudio@pokey:/home/claudio] vgscan
->   lvmiopversion -- LVM driver/module not loaded?
-> 
->   vgscan: /lib/lvm-iop not found.  Is lvm-iop installed?
-> 
-> when running a wrapped tool.
+I found the following lines in pv_read_all_pv_of_vg.c: (line 183ff)
 
-Argh.  I don't like the "SUSER_CHECK" at all (not your fault Claudio).
-Basically, it doesn't do anything for us because the check is in user
-space, so if there are LVM security holes someone could simply recompile
-the user tools without the SUSER_CHECK.  All the access checks need to be
-done inside the kernel.  Secondly, the permission shouldn't be by UID,
-but rather read/write permission on the device files OR capabilities.
+      /* Check for contiguous PV array */
+      for ( p = 0; pv_this[p] != NULL; p++)
+         if ( pv_this[p] == NULL && p < np)
+            ret = -LVM_EPV_READ_ALL_PV_OF_VG_NP_SORT;
 
-So, define SUSER_CHECK to nothing, because it doesn't help anyways.  I
-will dig up my patch to have proper permission checking in the kernel.
 
-> Also a test for the return value != 0 is needed in the wrapper script:
-> 
-> IOP=`/sbin/lvmiopversion`
-> ret=$?
-> if [ $ret -ne 0 ]; then
->     exit $ret
-> fi
+the if condition can never be true, because of the condition in the for
+statement. I don't think this does what it should do...
 
-Yes.  In my version, if the IOP version wasn't set by lvmiopversion, it
-would still try to use the old tools in /sbin.  With the wrapper scripts
-this won't work.
-
-int main(int argc, char *argv[])
-
-	int ver = lvm_get_iop_version();
-
-	if (ver < 0) {
-		perror(cmd);
-		fprintf(stderr, "%s -- LVM driver/module not loaded?\n\n", cmd);
-	}
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Jan
