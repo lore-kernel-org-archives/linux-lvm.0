@@ -1,12 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 29 May 2001 21:11:28 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: Help! Upgrade 2.2.18 -> 2.4.4 killed a PV
-Message-ID: <20010529211128.B27030@sistina.com>
-References: <20010529010628.E1971@jensbenecke.de> <20010529093436.A792@jensbenecke.de>
+Return-Path: <peter@bartosch.net>
+Date: Tue, 29 May 2001 22:23:04 +0200
+From: Peter Bartosch <peter@bartosch.net>
+Message-ID: <20010529222304.A4888@mind.bartosch.net>
+References: <20010528183105.C924@mind.bartosch.net> <15123.55304.751997.122954@crimson.namesys.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20010529093436.A792@jensbenecke.de>; from jens@jensbenecke.de on Tue, May 29, 2001 at 09:34:36AM +0200
+Content-Disposition: inline
+In-Reply-To: <15123.55304.751997.122954@crimson.namesys.com>; from zam@namesys.com on Tue, May 29, 2001 at 09:10:32PM +0400
+Subject: [linux-lvm] Re: [reiserfs-list] lvm-list pointed to reiserfs: fs/lvm-problems?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,142 +18,51 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: reiserfs-list@namesys.com, linux-lvm@sistina.com
 
-Jens,
-you need to run pvcreate on the invalid PV before running vgcfgrestore.
+Hi!
 
-Regards,
-Heinz    -- The LVM Guy --
 
-On Tue, May 29, 2001 at 09:34:36AM +0200, Jens Benecke wrote:
-> On Tue, May 29, 2001 at 01:06:28AM +0200, Jens Benecke wrote:
-> > Hello,
-> >=20
-> > I upgraded to 2.2.4 (0.9.1-beta2) from 2.2.18 (LVM 0.9) and this seems =
-to
-> > have killed one of my PVs. I tried the 0.9 utilities and updated to
-> > 0.9.1-beta7 when I noticed the problems. No change. Booting back to 2.2=
-.18
-> > didn't help, the PV was gone there as well.
->=20
-> follow-up:
->=20
-> vgcfgrestore doesn't work, because LVM thinks my hdc1 is no PV. Here's the
-> output:
->=20
->=20
-> vgcfgrestore -n data -ll:
-> 	--- Volume group ---
-> 	VG Name               data
-> 	VG Access             read/write
-> 	VG Status             NOT available/resizable
-> 	VG #                  0
-> 	MAX LV                256
-> 	Cur LV                1
-> 	Open LV               0
-> 	MAX LV Size           255.99 GB
-> 	Max PV                256
-> 	Cur PV                2
-> 	Act PV                2
-> 	VG Size               95.44 GB
-> 	PE Size               4 MB
-> 	Total PE              24432
-> 	Alloc PE / Size       24432 / 95.44 GB
-> 	Free  PE / Size       0 / 0
-> 	VG UUID               ec0e1J-hf9c-2DVg-VMGE-Qn1c-HPgl-z1jMGO
-> =09
-> 	--- Logical volume ---
-> 	LV Name                /dev/data/archiv
-> 	VG Name                data
-> 	LV Write Access        read/write
-> 	LV Status              NOT available
-> 	LV #                   1
-> 	# open                 0
-> 	LV Size                95.44 GB
-> 	Current LE             24432
-> 	Allocated LE           24432
-> 	Allocation             next free
-> 	Read ahead sectors     120
-> 	Block device           58:0
-> =09
-> =09
-> 	--- Physical volume ---
-> 	PV Name               /dev/hdc1
-> 	VG Name               data
-> 	PV Size               76.33 GB / NOT usable 3.96 MB [LVM: 197 KB]
-> 	PV#                   1
-> 	PV Status             NOT available
-> 	Allocatable           yes (but full)
-> 	Cur LV                1
-> 	PE Size (KByte)       4096
-> 	Total PE              19539
-> 	Free PE               0
-> 	Allocated PE          19539
-> 	PV UUID               Re4KFN-ES3b-K2zz-EIer-iYKv-i7wX-lHTPGN
-> =09
-> 	--- Physical volume ---
-> 	PV Name               /dev/hda1
-> 	VG Name               data
-> 	PV Size               19.12 GB / NOT usable 2.27 MB [LVM: 140 KB]
-> 	PV#                   2
-> 	PV Status             NOT available
-> 	Allocatable           yes (but full)
-> 	Cur LV                1
-> 	PE Size (KByte)       4096
-> 	Total PE              4893
-> 	Free PE               0
-> 	Allocated PE          4893
-> 	PV UUID               qT529c-dwfb-utXE-1Ds4-18AV-0I6O-2cHdfR
->=20
->=20
-> vgcfgrestore -v -n data /dev/hdc1:
-> 	vgcfgrestore -- locking logical volume manager
-> 	vgcfgrestore -- restoring volume group "data" from "/etc/lvmconf/data.co=
-nf"
-> 	vgcfgrestore -- checking existence of "/etc/lvmconf/data.conf"
-> 	vgcfgrestore -- reading volume group data for "data" from "/etc/lvmconf/=
-data.conf"
-> 	vgcfgrestore -- reading physical volume data for "data" from "/etc/lvmco=
-nf/data.conf"
-> 	vgcfgrestore -- reading logical volume data for "data" from "/etc/lvmcon=
-f/data.conf"
-> 	vgcfgrestore -- checking volume group consistency of "data"
-> 	vgcfgrestore -- checking volume group consistency of "data"
-> 	vgcfgrestore -- reading physical volume "/dev/hdc1"
-> 	vgcfgrestore -- ERROR "pv_read(): PV identifier invalid" reading physica=
-l volume "/dev/hdc1"
->=20
->=20
-> Thank you!
->=20
-> --=20
-> Jens Benecke             /* Nobody will ever see this error message :-) */
->                             panic("Cannot initialize video hardware\n");
->                                   -- Linux 2.0.38,  arch/m68k/atari/atafb=
-.c
-> http://www.hitchhikers.de/ - Die kostenlose Mitfahrzentrale f=EF=BF=BDr g=
-anz Europa
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>  PB> extend an existing (0.8i) LV)
+> 
+>  PB> so i created a new kernel (2.4.2) with lvm 0.9.1_beta7
+> 
+> Linux-2.4.4 has serious reiserfs bugs fixed.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+hmm, i tried to make a LVM patch for it but this fails - yesterday i saw a
+message, that there's somewhere a patch for the 2.4.4 that LVM-sources
+will make a patch
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+>  PB> i created the reiserfs on it, but when i tried to mount it, the mount
+>  PB> failed
+>  PB> an reiserfsck --rebuild-sb and after that reiserfsck --rebuild-tree
+>  PB> clears it and i could mount my LV -- UNTIL the next reboot
+> 
+> What kernel messages were ?
+> 
+> Sorry, but it looks for me like a lvm problem.  Can you test you LV by
+> coping some random data (~ 64 MB) to a file in reliable location and
+> to LV, and compare them (or md5 hashes) after reboot ?
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+hmm, i haven't really tried another filesystem, maybe i should try ext2?
+
+> Reiserfs error handling not an ideal one.  Kernel oops below is a
+> normal :( reaction on damaged data coming from disk.
+> 
+> Same reason (damaged data), I think, prevented reiserfs volume from
+> mounting. 
+
+yes you're right - but why does it oops when i _only_ want to do an "ls
+-l"?
+
+:wq - until next mail B-), l8r
+
+Peter
+-- 
+   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+   :          student of technical computer science           :
+   :     university of applied sciences krefeld (germany)     :
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
