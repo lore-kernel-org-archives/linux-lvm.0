@@ -1,7 +1,9 @@
-Message-ID: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM>
-From: "Jonathan S. Polacheck" <JPolache@texasmutual.com>
+Message-ID: <00c101c28bf4$60465ba0$640a010a@winda>
+From: "myciel" <myciel@dotcom.pl>
 MIME-Version: 1.0
-Subject: [linux-lvm] file system larger than lv
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_00BC_01C28BFC.BC5D8460"
+Subject: [linux-lvm] vfs-lock patch
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,53 +14,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 14 09:36:02 2002
+Date: Thu Nov 14 09:48:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: lvm-list <linux-lvm@sistina.com>
 
-I posted the following to the ext2 help forum and got the included
-response;
+This is a multi-part message in MIME format.
 
-By: jpolache ( Jon Polacheck )
- reasize2fs fails
-2002-11-13 13:23
-I have an lvm volume for my /usr filesystem on a Mandrake 8.1 server. I did
-a
-lvextend, and am now trying to resize the filesystem into the logical
-volume.
+------=_NextPart_000_00BC_01C28BFC.BC5D8460
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I went to runlevel 1, unmounted all my filesystems (umount -a) and ran
-e2fsck on /dev/sys/usr. I got output indicating that the superblock size
-was 793600 blocks and the "physical" size was 665600 blocks.
+Hi
 
-e2fsck ended with the following;
+there is a nice way to create lvm patch for 'custom' kernels invoking =
+make in PATCHES
+directory of lvm source - is there an easy way to create VFS-lock =
+patches?
 
-Error scanning inodes (336000): can't read next inode
+thanks
 
-/dev/sys/usr: 13494/400000 files (1.2% non-contiguous), 578502/793600
-blocks
+rafal mycielski
 
-When I then run resize2fs, I get the following output;
+------=_NextPart_000_00BC_01C28BFC.BC5D8460
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-resize2fs: Can't read a block bitmap while trying to resize /dev/sys/usr.
-The file system on /dev/sys/usr is now 665600 blocks long.
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Diso-8859-1" =
+http-equiv=3DContent-Type>
+<META content=3D"MSHTML 5.00.3103.1000" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hi</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>there is a nice way to create lvm patch =
+for=20
+'custom' kernels invoking make in PATCHES</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>directory of lvm source - is there an =
+easy way to=20
+create VFS-lock patches?</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>thanks</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>rafal =
+mycielski</FONT></DIV></BODY></HTML>
 
-Any suggestions?
-
-By: tytso ( Theodore Ts'o )
- RE: reasize2fs fails
-2002-11-14 07:28
-That's an LVM problem. e2fsck was very clear when it told you that device
-was smaller than the size specified in the superblock.
-
-...there was probably severe damage to the filesystem which was done,
-because resize2fs attempted to shrink the filesystem down to 665600 from
-the superblock size of 793600. But since LVM had apparently already gotten
-the idea that the device was now smaller, any data that was stored in the
-blocks between 665600 and 793600 has been lost.
-
-......................................................................................
-
-Any suggestions as to how I can proceed from here?
+------=_NextPart_000_00BC_01C28BFC.BC5D8460--
