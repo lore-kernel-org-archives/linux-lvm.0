@@ -1,93 +1,237 @@
-Message-Id: <199907011150.AA23766@mailgate1b.telekom.de>
+Message-Id: <199907011608.AA20815@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] vgscan -- invalid i/o protocol version
-Date: Thu, 01 Jul 1999 13:46:55 METDST
-In-Reply-To: <Pine.LNX.4.10.9907010958120.3721-100000@fuse.aethos.co.uk>; from "James Pattinson" at Jul 1, 99 10:17 am
+Date: Thu, 01 Jul 1999 18:04:54 METDST
+In-Reply-To: <852567A1.0047037F.00@USCOMM02.aholdusa.com>; from "David Venus" at Jul 1, 99 8:46 am
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: James Pattinson <jamesp@aethos.co.uk>
+To: David Venus <dvenus@aholdusa.com>
 Cc: mge@u9ete.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-> 
-> That's exactly the problem. In fact I found out that was the problem after
-> I sent the mail by looking at the output from `strace vgscan' but I
-> couldn't find the require major and minor numbers for the device file
-> anywhere in the docs.
 
-The patch lvm_0.6-patch-15031999a.gz (sorry for my typo in my previous
-mail :*( ) is needed to take care of automatic creation of the /dev/lvm special.
+Hi Dave.
 
 > 
-> I'm a bit stumped for now though as I don't have any spare partitions
-> (yet) - I tried to be cunning with loopback devices but it doesn't seem to
-> work:
-> 
-> [root@fuse /root]# dd if=/dev/zero bs=1024k count=32 of=loop1
-> [root@fuse /root]# dd if=/dev/zero bs=1024k count=32 of=loop2
-> [root@fuse /root]# dd if=/dev/zero bs=1024k count=32 of=loop3
-> [root@fuse /root]# losetup /dev/loop1 loop1
-> [root@fuse /root]# losetup /dev/loop2 loop2
-> [root@fuse /root]# losetup /dev/loop3 loop3
-> [root@fuse /root]# pvcreate /dev/loop1 /dev/loop2 /dev/loop3
-> pvcreate -- invalid physical volume name "/dev/loop1"
-> pvcreate -- invalid physical volume name "/dev/loop2"
-> pvcreate -- invalid physical volume name "/dev/loop3"
-> 
-> Is there any way I can bodge it like this to try it out?
-
-Sorry, no loop device support with 0.6.
-
-It will be in 0.7 as an evaluation support for people who don't
-have lots of disk partitions to play with.
-
-I should better throw out 0.7 soon 8*)))
-
-> 
-> One more thing - I am a big fan of the raid patches that allow you to
-> autodetect raid partitions on boot - currently my machine has it's root
-> partition striped across two disks. What is the striping like on LVM? Is
-> it feasible to boot from an LVM?
+> Can you send me the contents of the INITRD partition? Is this in the LVM
+> documentation?
 > 
 
-That's one issue i'm working on with 0.7 right know.
-After i asked for input of people who claimed already to be able to
-have root in a LV but never got a return i wanted to bring support with 0.7.
+No it's not in the 0.6 documentation.
 
-Maybe i better release 0.7 and give that support later?!
+Here are lvmcreate_initrd which creates an initial ram disk image
+and an example /boot/lilo.conf to boot from a boot partition and change
+root to a LV based root filesystem.
 
-It bassically works like this:
+You have to have a /boot fs on a bios adressable disk (saw in /dev/hda5).
+16 MB is sufficient, if you want to make this boot partition standalone
+bootable and not only want to use it to store an INITRD image.
 
-LILO -> INITRD (in very small partition) -> activate volume groups ->
-change root to root LV -> copy /etc/lcmtab* to real LV root -> start as usual
+Copy vmlinux, System.map, lilo.conf, boot.b and chain.b to that boot fs.
+Make /etc/lilo.conf a symlink to /boot/lilo.conf.
 
-The INITRD only contains some needed executables, shared libraries, dirs
-and /linuxrc.
+Set up LVs for /, /usr etc. and copy existing partition bases filesystem
+contents to the temporary mounted LV based new filesystems.
 
+The lvmcreate_initrd script below assumes /boot as your mountpoint of
+the boot filesystem and that you load LVM as a module.
+Don't forget to configure RAM disk and Initial RAM disk support in the kernel
+and to copy any files to /boot you need for standalone emergency boot of
+your boot fs (see end of the lilo.conf example).
 
-Regards,
+Regards and good luck,
 Heinz
 
 
-> Cheers,
-> 
-> James
-> 
-> On Wed, 30 Jun 1999, Michael Marxmeier wrote:
-> 
-> > > so i ran vgscan and got the message in the subject line. It's possible I'm
-> > > being really thick and I don't really know what I'm doing. Do I need the
-> > > devfs patches too?
-> > 
-> > AFAIR this error message has appeared previously when the /dev/lvm
-> > device file was missing.
-> 
-> 
-> 
 
+A lilo.conf example assuming you would set up a vg00 as the "boot" VG,
+your boot partition is on /dev/hda5 and your LV based root is on /dev/vg00/root:
+
+#########################################################################
+# LILO Configuration
+
+# Start LILO global Section
+boot = /dev/hda
+install = /boot/boot.b	# must be redable by bios
+read-only
+prompt
+timeout = 100
+vga = normal    # force sane state
+message = /boot/message
+map = /boot/map	# must be readable by bios
+# End LILO global Section
+
+#
+image = /boot/vmlinuz
+  initrd = /boot/initrd.gz
+  root = /dev/vg00/root
+  alias = 1
+  label = linuxinitrd
+
+#
+image = /boot/vmlinuz.old
+  initrd = /boot/initrd.old.gz
+  root = /dev/vg00/root
+  alias = 2
+  label = lnxoldinitrdold
+
+#
+image = /boot/vmlinuz
+  append = "init=/bin/sh"
+  root = /dev/hda5
+  alias = 3
+  label = linuxhda5
+# End ###################################################################
+
+
+
+
+#!/bin/sh
+#
+#  Copyright (C) 1997 - 1999  Heinz Mauelshagen, Germany
+# 
+#  June 1999
+# 
+#  LVM is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2, or (at your option)
+#  any later version.
+#  
+#  LVM is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with LVM; see the file COPYING.  If not, write to
+#  the Free Software Foundation, 59 Temple Place - Suite 330,
+#  Boston, MA 02111-1307, USA. 
+# 
+
+#
+# make it devfs clean
+#
+
+cmd=`basename $0`
+DEVRAM=/dev/ram1
+INITRD=/boot/initrd.gz
+INITRDSIZE=8192
+INITRDFILES="/sbin/modprobe /sbin/vgchange /sbin/vgscan /bin/bash /bin/sh /bin/rm /sbin/insmod /dev/* /lib/modules/`uname -r`/modules.dep /lib/modules/`uname -r`/block/lvm.o"
+TMP=/tmp/mnt.$$
+
+trap "
+  cd /
+  umount $DEVRAM
+  freeramdisk $DEVRAM
+  echo -e 'Bye bye...\n'
+" 1 2 3 15
+
+
+function create_linuxrc {
+   echo "#!/bin/sh
+   /sbin/insmod lvm
+   /sbin/vgscan
+   /sbin/vgchange -a y" > linuxrc
+   chmod 555 linuxrc
+}
+
+#
+# Main
+#
+echo -e "\nLogical Volume Manager 0.7 by Heinz Mauelshagen  01/07/1999\n"
+echo -e "$cmd -- this script creates a LVM initial ram disk in $INITRD\n"
+
+echo "$cmd -- making ram filesystem"
+mke2fs -m0 -N 4096 $DEVRAM $INITRDSIZE >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR making ram disk filesystem\n"
+   exit 1
+fi
+
+mkdir -p $TMP/ram >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR making $TMP/ram\n"
+   exit 1
+fi
+
+echo "$cmd -- mounting ram filesystem"
+mount -t ext2 $DEVRAM $TMP/ram >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR mounting $DEVRAM on $TMP/ram\n"
+   exit 1
+fi
+
+cd $TMP/ram
+[ ! -d etc ] && mkdir etc
+
+#
+# create new conf.modules to avoid kmod complaining about nonexsisting modules.
+#
+echo "$cmd -- creating etc/conf.modules"
+i=0
+while [ $i -lt 256 ]; do
+   echo "alias	block-major-$i	off"
+   echo "alias	char-major-$i	off"
+   let i=i+1
+done > etc/conf.modules
+
+# to ensure, that modprobe doesn complain about timestamps
+echo "$cmd -- creating new modules.dep"
+depmod -a >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR depmod\n"
+   exit 1
+fi
+
+# copy necessary files to ram disk
+echo "$cmd -- copying files to ram disk"
+find $INITRDFILES|cpio -pdm $TMP/ram >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR cpio to ram disk\n"
+   exit 1
+fi
+
+# figure out which actual shared libraries we need in our initrd
+echo "$cmd -- figuring out shared libraries"
+SHLIBS=`ldd sbin/vg* bin/sh|awk '{if(/=>/){print $3}}'|sort -u 2>/dev/null`
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR figuring out needed shared libraries\n"
+   exit 1
+fi
+
+echo "$cmd -- copying shared libraries to ram disk"
+find $SHLIBS|cpio -Lpdm $TMP/ram >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR copying needed shared libraries to ram disk\n"
+   exit 1
+fi
+
+echo "$cmd -- creating linuxrc"
+create_linuxrc >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR creating linuxrc\n"
+   exit 1
+fi
+
+cd /
+echo "$cmd -- ummounting ram disk"
+umount $DEVRAM
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR umounting $DEVRAM\n"
+   exit 1
+fi
+
+echo "$cmd -- creating compressed initrd in $INITRD"
+gzip -9 < $DEVRAM > $INITRD 2>/dev/null
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR creating $INITRD\n"
+   exit 1
+fi
+
+freeramdisk $DEVRAM
 
 --
 
