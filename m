@@ -1,46 +1,43 @@
-Date: Wed, 22 Dec 1999 20:11:28 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] booting w/o initrd
-Message-ID: <19991222201127.C13180@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <3860D151.21FD732B@twc.de>
-Mime-Version: 1.0
-In-Reply-To: <3860D151.21FD732B@twc.de>
+Message-ID: <38616C38.636DF278@msede.com>
+Date: Thu, 23 Dec 1999 01:26:32 +0100
+From: Michael Marxmeier <mike@msede.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: LVM 0.8 2.3.33 compile error
+References: <199912220022.BAA19406@novworld.Novecom.Fr> <3860CF2B.615B86F7@xinit.se>
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="utf-8"
+To: Josef =?iso-8859-1?Q?H=F6=F6k?= <joh@xinit.se>
+Cc: Willy Tarreau <willy@novworld.Novecom.Fr>, linux-kernel <linux-kernel@vger.rutgers.edu>, Heinz Mauelshagen <mge@ez-darmstadt.telekom.de>, linux-lvm@msede.com
 
-there are some good ideas here, i will only point the problems.
-On Wed, Dec 22, 1999 at 02:25:37PM +0100, Ulf Bartelt wrote:
-<snip>
-
-> And when bringing the system down, LVM can be stopped cleanly because the 
-> root filesystem is only addressed via the partition alias.
-
-add mirrored LV to the equation and you'll obtain a mess.
-
-> But what if ...
-> ---------------
+Josef H��k wrote:
+> got this error when compiling 2.3.33-LVM
 > 
-> ... you want to resize the root?
-> 
-> It is not much more complicated to do this compared to booting via initrd.
-> Even when booting via initrd, you cannot resize the root while it is
-> mounted. So this way is not responsible for the main problem in resizing 
-> the root.
-it is, you are adding one more constraint, that the root must
-be contiguous. enjoy pvmoving things around (if you have 2 disks)
-btw you can resize a mounted filesystem, and i hope this wil become
-standard practice.
+> make[3]: Entering directory `/usr/src/linux/drivers/block'
+> gcc -D__KERNEL__ -I/usr/src/linux/include -Wall -Wstrict-prototypes -O2
+> -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-strength-reduce
+> -DCPU=686 -march=i686   -DEXPORT_SYMTAB -c ll_rw_blk.c
+> In file included from /usr/src/linux/include/linux/lvm.h:92,
+>                  from ll_rw_blk.c:32:
+> /usr/src/linux/include/asm/spinlock.h:36: warning: `SPIN_LOCK_UNLOCKED'
+> redefined
+...
+> is it me or is it a bug :)?
 
-what's the problem with initrd, just look at it as a very big
-__initfunc(), just easier to debug.
+In include/linux/lvm.h please change the
+#include <asm/spinlock.h>
+against
+#include <linux/spinlock.h>
 
-L.
+This fixed it for me (lvm 0.8i)
+
+Hope this helps
+Michael
 
 -- 
-Luca Berra -- bluca@comedia.it
-    Communication Media & Services S.r.l.
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
