@@ -1,11 +1,11 @@
-Return-Path: <ramin@motakef.de>
-Subject: Re: [linux-lvm] lvm and software raid1
+Return-Path: <mag@fbab.net>
+Message-ID: <030b01c10269$390e61b0$020a0a0a@totalmef>
+From: "Magnus Naeslund\(f\)" <mag@fbab.net>
 References: <873d8gtpjl.fsf@nase.motakef.de>
-From: Ramin Motakef <ramin@motakef.de>
-Date: 01 Jul 2001 22:01:49 +0200
-In-Reply-To: <873d8gtpjl.fsf@nase.motakef.de>
-Message-ID: <87pubks9jm.fsf@nase.motakef.de>
+Subject: Re: [linux-lvm] lvm and software raid1
+Date: Sun, 1 Jul 2001 22:05:49 +0200
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,10 +18,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ramin Motakef <ramin@motakef.de> writes:
+I think maybe you should use cfdisk instead of fdisk...
+That solved my similar problem
+
+Magnus
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ Programmer/Networker [|] Magnus Naeslund
+ PGP Key: http://www.genline.nu/mag_pgp.txt
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+----- Original Message ----- 
+From: "Ramin Motakef" <ramin@motakef.de>
+To: <linux-lvm@sistina.com>
+Sent: Sunday, July 01, 2001 9:30 PM
+Subject: [linux-lvm] lvm and software raid1
+
 
 > Hi!
 > This is my first contact with LVM, so maybe i am doing something
@@ -48,10 +62,9 @@ Ramin Motakef <ramin@motakef.de> writes:
 > 
 > Thanks, Ramin
 > 
-
-As normal i found the solution 5 minutes after posting :-(.
-
-I had the wrong debian package (lvw-common and lvm10 instead of lvm)
-installed.
-Sorry for the noise,
-Ramin
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
