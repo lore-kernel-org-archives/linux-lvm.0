@@ -1,11 +1,10 @@
-Date: Wed, 22 Aug 2001 17:35:28 +0100
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Mail troubles at hermes.sistina.com[208.210.145.141]?
-Message-ID: <20010822173528.B10677@uk.sistina.com>
-References: <3B83CDA2.AB7F6B3D@tls.msk.ru>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3B83CDA2.AB7F6B3D@tls.msk.ru>; from mjt@tls.msk.ru on Wed, Aug 22, 2001 at 07:20:02PM +0400
+Message-ID: <3B83E04D.86C7816C@gmx.net>
+Date: Wed, 22 Aug 2001 18:39:41 +0200
+From: "Lars O. Grobe" <grobe@gmx.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] restoring lvm cinfiguration
+References: <20010821125350.B402@sky.net> <4438.998393026@www26.gmx.net> <20010821145329.A763@sky.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,32 +17,16 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Michael Tokarev <mjt@tls.msk.ru>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Wed, Aug 22, 2001 at 07:20:02PM +0400, Michael Tokarev wrote:
-> Today morning I noticied that our mailserver
-> rejected some mails from hermes.sistina.com
-> due to invalid (non-FQDN) SMTP HELO argument
-Thanks for bringing this to our attention!
-Our sysadmin team has now fixed this particular problem.
+Hi!
 
->  451 Cannot check <postmaster@sistina.com> at this time -
->  please try later)
-> So Sistina also have no valid postmaster address
-> that is also required by RFC?  
-No - what you saw was of course a *transient* error as the 
-error code starts with a 4 not a 5 (see the RFC).
+Ulrich Wiederhold wrote:
 
-There *is* a postmaster address, but there was a 
-transient problem affecting certain deliveries, including
-messages sent to the postmaster address, but not the list
-addresses.
+> I think you should use .conf.1.old then. The newest file is .conf, the
+> oldest one .conf.9.old (at my system, "ls -l" shows you this).
+> You can use the -t option to test the command.
 
-Again, I believe this is also now resolved, but do let
-us know if you notice any more problems!
+It worked fine here! Thank You!
 
-Alasdair
--- 
-agk@uk.sistina.com
+CU, Lars.
