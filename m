@@ -1,60 +1,54 @@
-Message-Id: <199908282250.AA10839@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] LVM and devices
-Date: Sun, 29 Aug 1999 0:47:10 METDST
-In-Reply-To: <199908281918.NAA29020@webber.adilger.net>; from "Andreas Dilger" at Aug 28, 99 1:18 pm
+Date: Sun, 29 Aug 1999 00:29:31 -0400 (EDT)
+From: "S. Ryan Quick" <ryan@phaedo.com>
+Subject: Re: [linux-lvm] xfs
+In-Reply-To: <37C82891.987EDB34@geotec.net>
+Message-ID: <Pine.LNX.3.96.990829002728.23961J-100000@aristotle.phaedo.com>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@enel.ucalgary.ca>
-Cc: linux-lvm@msede.com, mge@ts1.ez-darmstadt.telekom.de
+To: Eric Smith <seric@geotec.net>
+Cc: linux-lvm@msede.com
+
+-----BEGIN PGP SIGNED MESSAGE-----
+
+On Sat, 28 Aug 1999, Eric Smith wrote:
+
+> Has anyone looked at xfs?  Works great on IRIX.  If you don't think
+> ext2fs lends itself well to LVM-ing, then what about xfs?
+
+
+I have used xfs quite extensively on SGI systems, and have heard about SGI delivering the goods to the Linux world.  Some features of the
+filesystem (especially direct I/O access for io intesive applications like video production and the ability to maintain internal or external
+logging volumes a la xlv) make it a very tempting bet for Linux in the future.  Have you heard more information on this?
+
+Ryan
+
 
 > 
-> Heinz writes:
-> > > I haven't had a chance to
-> > > look yet).  For that matter, LVM shouldn't be tied to the /dev names of
-> > > anything, since you could just start traversing the available devices,
-> > > find a list of UUIDs that make up a VG, and not have to worry about the
-> > > /dev names of anything (nor even store them anywhere).
-> > 
-> > Actually, it depends on /dev namespace today.
-> > 
-> > But the sole reason for this is perforrmance.
-> > 
-> > We could simply throw that dependency away, if we go devfs or
-> > could live with performance impacts without devfs.
-> 
-> It shouldn't be a big change to have LVM not STORE the device names in
-> the VGDA,
-
-It doesn't use a stored devices name in the PV part of the VGDA today.
-The device name is inserted at PV read time (see pv_read()).
-
-> and something like a pvscan is done at boot-time (after the LVM
-> module is loaded, if a module) to determine PV -> /dev mapping.  The LVM
-> kernel code would still use the device name/major+minor in memory to
-> access the devices, so there should be no performance impact outside a
-> small amount of scanning at boot time or when a new VG is imported.
+> --Eric Smith
 > 
 
-What i meant with performance impact is the longer time to scan large
-/dev configurations in user space (vgscan, pvscan and friends).
+%                                                       %%%%%%%%%%
+%%           S. Ryan Quick                               %%%%%%%%%
+%%%           UNIX Systems Engineer                       %%%%%%%%
+%%%%           Phaedo Consulting, Inc. -- Exec VP          %%%%%%%
+%%%%%                                                       %%%%%%
+%%%%%%         www.phaedo.com/ryan/  ryan@phaedo.com         %%%%%
+%%%%%%%       ------------ PGP FingerPrint -------------      %%%%
+%%%%%%%%  CF 19 6B BA 31 8E B8 8E  20 DF 4F 2B 2E 69 81 F5     %%%
+%%%%%%%%%     ------------------------------------------        %%
+%%%%%%%%%%                                                       %
 
-Regards,
-Heinz
---
+-----BEGIN PGP SIGNATURE-----
+Version: 2.6.3a
+Charset: noconv
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+iQCVAwUBN8i3LfUYDAQiV+tNAQEwBwP8DQ6kFL4C3euUbGOCYtTYuSiIpzeQ3K+J
+ReELybBsZBZIffgLstP0oYPEM7TX9736t4QvgzrlLy0VgOhLsNpdFiBT1bGzagFi
+4b0CZMLgIhBHGwaaE1PqUxG2ZUJNe0FXBDYTeY41HOztK7YmJTJsTwkCCYClgEYT
+f5CowQVyjcc=
+=NFLJ
+-----END PGP SIGNATURE-----
