@@ -1,45 +1,32 @@
-Message-Id: <199908151715.AA12453@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] lvm in kernel 2.4 ?
-Date: Sun, 15 Aug 1999 19:12:38 METDST
-In-Reply-To: <Pine.LNX.3.96.990815125146.31823A-100000@zeke.sympatico.ca>; from "Shane Shrybman" at Aug 15, 99 12:59 (noon)
+Date: Sun, 15 Aug 1999 15:09:51 -0400 (EDT)
+From: Shane Shrybman <shane@zeke.yi.org>
+Reply-To: Shane Shrybman <shane@zeke.yi.org>
+Subject: [linux-lvm] Re: lvm in kernel 2.4 ?
+Message-ID: <Pine.LNX.3.96.990815150115.31823B-100000@zeke.sympatico.ca>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: shane@zeke.yi.org
-Cc: linux-lvm@msede.com, mge@ts1.ez-darmstadt.telekom.de
-
-> 
-> I noticed that Alan Cox said that lvm will not be included in a formal
-> release of 2.2 ( just the -ac patches). Are there plans for it to be
-> included in 2.4 ? 
-> 
-
-Alan said he will push it to Linus to include it in 2.3.x if it
-'holds up for a while' about 2 month ago.
-
-Everybody is welcome to ask Alan, if he'll hand it over to Linus now.
-
-Because 2.4 will come in a while, please go ahead...
+To: linux-lvm mailing list <linux-lvm@msede.com>
 
 
-Regards,
-Heinz
+Date: Fri, 13 Aug 1999 11:51:00 +0100 (BST)
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+To: eric.smith@wcom.com
+Cc: linux-kernel@vger.rutgers.edu
+Subject: Re: lvm?
 
+> I guess I thought Heinz' lvm stuff would be in 2.2.11.   But, sadly, I
+> find it not.  Will we see it soon?
 
---
+It depends what Heinz, Linus and people do for 2.3.x. The 2.2. one will stay
+in -ac only
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+<snip>
 
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Heinz, did you see this post in linux-kernel ?  Alan seems to be implying
+that he is "out of the loop" regarding lvm and 2.3[4].
+
+Shane
