@@ -1,9 +1,8 @@
-Message-ID: <3D31C52B.6050000@birddog.com>
-From: "Kirby C. Bohling" <kbohling@birddog.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] RAID extension and lvm
-References: <Pine.LNX.4.44.0207142010160.29796-100000@poseidon.ihs.uni-stuttgart.de>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20020714190504.GA880@glorybox.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+From: Kai Weber <kai.weber@glorybox.de>
+Subject: [linux-lvm] Extending an LVM-Partition
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 14 13:45:01 2002
+Date: Sun Jul 14 14:05:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Did you partition the disk, or did you put LVM on the raw disk 
-unpartitioned?
+Hi,
 
-If the disk is partitioned, run fdisk/cfdisk/disk druid to add that 
-partition on the end (I've never done this, so take it with a grain of 
-salt).  I don't believe that the partition table has the complete size 
-of the disk, I believe it just has the sizes of the current partitions. 
-  So it should be safe (the key work being: should).
+I read the "RAID extension" thread. I have a similiar problem but
+without RAID:
 
-Run pvcreate on the newly created partition.
+I have a hard disk with an setup like that
 
-Now follow the HOWTO on adding another pv to a vg.  I believe all you do 
-is run vgextend then lvextend or lvcreate.
+/dev/hda1	Linux LVM
+/dev/hda2	ext2
 
-If you didn't set it up using partitions, and it is a raw block device 
-you have issues.  I've got no idea how to help.  Sorry...  Report back 
-if what works :-)
+I want to remove the hda2 partition and use the free space for LVM. I
+read in the HOWTO (or was it some FAQ) that 2 or more PV's on one hard
+disk are not a good idea. So I am searching for a way, to extend the LVM
+partition easily.
 
-	Thanks,
-		Kirby
+Or I ask for an "you can just add the PV hda2 and it does not matter, if
+there is another PV on this disk" advice.
 
-
-Ralf Eisinger wrote:
-> Sorry, I think there is/was something confusing. We want to have the
-> following scenario:
-> 
-> - we had an hardware raid5 with three disks (so we get the size from two
->   of them)
-> - from the view of the kernel there is one big SCSI disk
-> - on that disk I install lvm (for snapshots) and ext3
-> - ...
-> - we are working (heavily ;-) on that disks
-> - ...
-> - Because we are running out of disk space, I plug in a new disk
->   and add them to the existing raid5. So it will have now four disks.
->   This adding is done by the hardware.
-> - Now the disk size of the "one big disk" is changed to the new
->   "netto" size of the raid5.
-> 
-> Is it possible to handle that with lvm and when the answer is "yes", in
-> which way? One point was a command named "pvresize" but I didn't find it
-> in my distribution (SuSE 8.0) and I find nothing about that in the HOWTO.
-> 
-> 
+Kai
