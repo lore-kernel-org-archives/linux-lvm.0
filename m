@@ -1,37 +1,65 @@
-Date: Sun, 3 Oct 1999 17:42:41 +0200 (CEST)
-From: Andreas Kostyrka <andreas@mtg.co.at>
-Subject: Re: [linux-lvm] LVM & Raid
-In-Reply-To: <199910031148.NAA24977@seger.axis.se>
-Message-ID: <Pine.LNX.4.10.9910031740360.5099-100000@gatekeeper.zwax.mtg.co.at>
-MIME-Version: 1.0
+From: mortgage2000@cs.ait.ac.th
+Message-Id: <199910040737.AAA18601@sieco.com.cn>
+Subject: [linux-lvm] Purchase a home with NO MONEY DOWN!
+Date: Sun, 03 Oct 1999 09:18:42 -0700
+Reply-To: hcheldon@iobox.com
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Lars Segerlund <lars.segerlund@axis.com>
-Cc: linux-lvm@msede.com
+To: linux-lvm@redhat.com
 
-On Sun, 3 Oct 1999, Lars Segerlund wrote:
+Home loans are available for EVERY credit and equity situation!
+Whether your credit rating is A+ or you are "credit challenged" 
+we have thousands of loan programs through hundreds of 
+lenders. If you are in the market for a new home, want to
+save money by refinancing, or get a second mortgage, fill in
+our quick pre-qualification form and we will forward your 
+information to the lender most able to make a loan on YOUR terms.
 
-> 
->  Hello,
-> 
->  I'm having trouble setting up lvm on a raid5 array ( /dev/md0 ),
->  my trouble is that pvscan doesn't find it, ( how in the heck
-Well, see the list archives, I've posted a small patch so that it can be
-found.
->  do I label a raid partitium so that pvscan vill recognize and vgcreate
->  will think of it a partitiun ?? )
-> 
->  I have been running lvm with raw disks, but now I seem a bit stuck.
-Well, I did get some hung boxes (completely hung, without oopses, etc.
-on a raid0145 / LVM 0.7 box with a RAID5 physical volume. So I reverted
-to using raid0145 with LVM :( )
+-Save Time
+-Save Money
+-Save Aggravation
 
-Andreas
---
-Andreas Kostyrka                     | andreas@mtg.co.at
-phone: +43/1/7070750                 | phone: +43/676/4091256   
-MTG Handelsges.m.b.H.                | fax:   +43/1/7065299
-Raiffeisenstr. 16/9                  | 2320 Zwoelfaxing AUSTRIA        
+There is NEVER any fee to consumers for using this service.
+
+Second Mortgages - Up to 125% of your homes value!
+Refinancing - Reduce your monthly payments and get cash back!
+Home Improvement Loans - Add that deck or pool!
+Debt Consolidation - Get rid of those high interest cards!
+New Purchases - Buy a home with NO MONEY DOWN! and get cash back too.
+
+http://www.TheHomeLoanSource.net
+
+Click on the link above for your FREE Mortgage Evaluation.
+If the link is dead please send 
+mailto:wegoturmoney@iobox.com?subject=Free_Loan_Eval
+
+
+-------------------------------------------------
+This email complies with ALL Federal and State laws.
+
+To be removed from the mailing list send 
+mailto:HCheldon@iobox.com?subject=remove_tc3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Home loans are available for EVERY credit and equity situation!
+Whether your credit rating is A+ or you are "credit challenged" 
+we have thousands of loan programs through hundreds of 
+lenders. If you are in the market for a new home, want to
