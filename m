@@ -1,13 +1,10 @@
-Subject: Re: [linux-lvm] error in mounitng snapshot LVs
-In-Reply-To: Your message of
-    "Tue, 05 Feb 2002 23:33:35 MST."
-    <20020205233335.I2928@lynx.turbolabs.com>
-References: <20011221084531.A22947@lsc.hu>
-    <Pine.LNX.4.43.0202060830060.24753-100000@anubhav.lan.deeproot.co.in>
-    <20020205233335.I2928@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] one PV crashed
+References: <878zad8qrx.fsf@papadoc.bayour.com>
+    <20020201111151.B15491@sistina.com> <87wuxx1duy.fsf@papadoc.bayour.com>
+From: Turbo Fredriksson <turbo@bayour.com>
+In-Reply-To: <87wuxx1duy.fsf@papadoc.bayour.com>
+Message-Id: <87r8nyan7a.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-From: Pierrick PONS <ppons@cvf.fr>
-Message-Id: <E16YPmA-0002pD-00@arwen.dev33.cvf>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,30 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  6 04:58:01 2002
+Date: Wed Feb  6 05:01:04 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> You need the "VFS-lock" patch, from the LVM CVS repository.
+Quoting Turbo Fredriksson <turbo@bayour.com>:
+
+> [papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 /dev/loop0
+> vgcfgrestore -- physical volume "/dev/loop0" doesn't belong to volume group "vg1"
 > 
-> Cheers, Andreas
-> --
-> Andreas Dilger
-> http://sourceforge.net/projects/ext2resize/
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/
-> 
+> [papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 -o /dev/sdg1 /dev/loop0
+> vgcfgrestore -- ERROR "pv_read(): pv_create_name_from_kdev_t" reading physical volume "/dev/loop0"
 >
-
-I'm under 2.4.17, which patch do I have to get to use snapshot ? The 
-linux-2.4.11-VFS-lock.patch or linux-2.4.18-VFS-lock.patch ?
-
-Can I use whatever file system I want for snapshots ?
+> [papadoc.root]# pvdisplay -v /dev/loop0 
+> pvdisplay -- getting physical volume size
+> pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical volume "/dev/loop0"
 
 
+Does anyone have a solution to this? What am I doing wrong?
 
-Thanks
 
-
-Pierrick
+SEAL Team 6 Iran killed KGB Kennedy Treasury cracking Semtex quiche
+strategic radar Honduras Legion of Doom nitrate PLO
+[See http://www.aclu.org/echelonwatch/index.html for more about this]
