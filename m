@@ -1,14 +1,14 @@
 Return-Path: <lewis@sistina.com>
-Date: Tue, 13 Mar 2001 10:10:40 -0600
+Date: Tue, 13 Mar 2001 11:35:52 -0600
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [OT] Re: [linux-lvm] *** ANNOUNCEMENT ***  LVM 0.9.1 Beta 6  available at www.sistina.com
-Message-ID: <20010313101040.C15679@sistina.com>
-References: <20010313012136.A10157@sistina.com> <Pine.LNX.4.21.0103131227130.28428-100000@www.scotty.co.at>
+Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
+Message-ID: <20010313113552.D15679@sistina.com>
+References: <20010313012313.A3042@cistron.nl> <200103130056.f2D0uTi01167@webber.adilger.int> <20010313021438.A6401@cistron.nl> <20010312231208.A14087@sistina.com> <20010313095711.A516@tykepenguin.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7gGkHNMELEOhSGF6"
+	protocol="application/pgp-signature"; boundary="bjuZg6miEcdLYP6q"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0103131227130.28428-100000@www.scotty.co.at>; from fl@fl.priv.at on Tue, Mar 13, 2001 at 12:31:21PM +0100
+In-Reply-To: <20010313095711.A516@tykepenguin.com>; from caulfield@sistina.com on Tue, Mar 13, 2001 at 09:57:11AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,27 +22,44 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---7gGkHNMELEOhSGF6
+--bjuZg6miEcdLYP6q
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 13, 2001 at 12:31:21PM +0100, Friedrich Lobenstock wrote:
-> On Tue, 13 Mar 2001, Heinz J. Mauelshagen wrote:
+On Tue, Mar 13, 2001 at 09:57:11AM +0000, Patrick Caulfield wrote:
+> On Mon, Mar 12, 2001 at 11:12:08PM -0600, AJ Lewis wrote:
+> > On Tue, Mar 13, 2001 at 02:14:39AM +0100, Wichert Akkerman wrote:
+> > > BTW, the current LVM tools violate the FHS by putting binaries in
+> > > /sbin/lvm-*/. Would you accept a patch to move that to /lib/lvm-*/
+> > > instead?
+> >=20
+> > Erm.../lib/lvm-*/?  Really?  Hmm...guess I need to read the FHS.  Anyon=
+e got
+> > a pointer to that?
 >=20
-> > See the CHANGELOG file contained in the tarball for further information.
->=20
-> Despite the CHANGELOG is in the tarball, could you please
-> post its content to this list.=20
->=20
-> I think a lot of people who are watching this list like me,
-> don't want to test every beta release but would like to know
-> what's going on.
+> www.pathname.com/fhs
 
-There is a CHANGELOG on the ftp site as well:
-ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/CHANGELOG
+OK, I'm confused now.  The current LVM tools are installed in /sbin, not
+/sbin/lvm-*/.  If you are getting packages from distros that place the
+binaries in /sbin/lvm-*/ you need to talk to the distros.  AFAICT, the LVM
+tools *should* be in /sbin
 
-This is updated for every release.
+This from the current FHS 2.1 standard:
+
+Utilities used for system administration (and other root-only commands) are
+stored in /sbin, /usr/sbin, and /usr/local/sbin. /sbin typically contains
+binaries essential for booting the system in addition to the binaries in
+/bin. Anything executed after /usr is known to be mounted (when there are no
+problems) should be placed into /usr/sbin. Local-only system administration
+binaries should be placed into /usr/local/sbin
+
+And this is what the FHS has to say about /lib:
+
+The /lib directory contains those shared library images needed to boot the
+system and run the commands in the root filesystem.
+
+So how does having LVM binaries in /lib/lvm-*/ _not_ violate the FHS?
 
 Regards,
 --=20
@@ -58,10 +75,11 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Carpe Aptenodytes! (Seize the Penguins!)
+Einstein said that talking to yourself is a sign of intelligence.
+Answering yourself, however, is a sign of insanity.
 -----End Obligatory Humorous Quote------------------------------------------
 
---7gGkHNMELEOhSGF6
+--bjuZg6miEcdLYP6q
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -69,9 +87,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE6rkaApE6/iGtdjLERAjYNAJ0dV9tEgi3fzxpVUIz9lQREuj1xMACfbT17
-i5VTrrPvt7H8+CLmCBlQGkg=
-=I4bn
+iD8DBQE6rlp4pE6/iGtdjLERAmbyAKCKJUdTJzTM9mT19p1/oXR6BGGvTACfSnDu
+uICDOzIRlHQY5Kuc8/F1k1o=
+=FHR7
 -----END PGP SIGNATURE-----
 
---7gGkHNMELEOhSGF6--
+--bjuZg6miEcdLYP6q--
