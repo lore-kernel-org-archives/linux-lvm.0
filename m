@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Message-ID: <20031024123135.G848@sistina.com>
-References: <courier.3F987755.00006508@softhome.net>
-Mime-Version: 1.0
-In-Reply-To: <courier.3F987755.00006508@softhome.net>; from adimaths@softhome.net on Thu, Oct 23, 2003 at 06:50:29PM -0600
-Subject: [linux-lvm] Re: Problem of LVM on Suse
+Message-ID: <3F994F88.8030908@elitedvb.net>
+From: Felix Domke <tmbinc@elitedvb.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LV only detected when using "lvscan -D" on amd64 kernel
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,90 +13,107 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 24 06:34:07 2003
+Date: Fri Oct 24 11:10:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: adimaths@softhome.net
-Cc: Mauelshagen@sistina.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On Thu, Oct 23, 2003 at 06:50:29PM -0600, adimaths@softhome.net wrote:
-> Hi, 
-> 
-> I am facing a problem in using LVM bundled with Suse Enterprise server 8 
-> ,connected to storage area newtork
-> System configuration:
-> A storage area network is connected to a server with OS Suse Enterprise 
-> server 8.
-> So there are multiple scsi devices whose physical disk is identical. 
-> 
-> We are creating a Pseudo device file asscociated with identical scsi devices 
-> using a driver that we have created.
-> eg : /dev/pseudo-device -> /dev/sda , /dev/sdb 
-> 
-> Now using the bundled LVM on such pseudo device is a problem.
-> problem details:
-> pvcreate /dev/pseudo-device
-> [result] ok. 
-> 
-> pvscan
-> [result] it shows the scsi device associated with this pseudo device ie 
-> /dev/sda and not our pseudo device. 
-> 
-> If LVM bypasses our pseudo device then the purpose of creating this device 
-> and associating it with scsi is futile. 
-> 
-> The irony is, LVM works fine on RH 2.1 kernel = 2.4.9-e.3 and also with RH 
-> 7.2
-> However the above mention problem is observed on Suse Enterprise server 8 
-> ,RH 2.1 kernel =2.4.9-e.25, RH 7.3 and RH 8.0. 
-> 
-> Would request you to clarify the following :
-> 1>Could you please tell me how this problem can be rectified ? 
+Hi,
 
-Change the sort-order (as you suggested below)
+i have an amd64-based machine, upgraded from a normal one. I'm using 
+debian, right now still the 32bit version (except for compiling the kernel).
 
-> 
-> 2>Is it that Lvm that is bundled with the OS can't be used for
-> the above mentioned purpose ? 
-> 
-> 3>If it can't be , then what design feature
-> of the current LVM prevents it from supporting the above task? 
-> 
-> 4> Can any change in our product help us to solve this problem? 
-> 
-> 5>Moreover I think LVM on RedHat is working just by chance.
-> I think pvscan depends on the order of the devices in the
-> /proc/partitions , and hence when our pseudo devices are
-> at the end of the /proc/paritions , pvscan shows our devices
-> as active else it shows scsi as active. 
-> 
-> Is my inference correct? 
+I'm using
+Linux opt 2.4.22-bk38 #4 SMP Wed Oct 22 06:44:13 UTC 2003 x86_64 GNU/Linux
 
-Yes.
+using
+# dmesg  | grep "LVM"
+LVM version 1.0.7(28/03/2003)
 
-LVM2 is much more suitable to cover such vendor-specific configurations,
-because it has configurable device name filters. LVM1 needs code changes
-to support additional device name spaces.
+The LVM consists of 4 disks, two 40GB, one 20GB and one 120GB, gives a 
+total of roughly 220GB. All disks seem to work properly,
+pvscan gives
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/hdg" of VG "fast" [115.03 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hdf" of VG "fast" [19.16 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hdc" of VG "fast" [38.16 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hdd" of VG "fast" [38.16 GB / 0 free]
+pvscan -- total: 4 [210.54 GB] / in use: 4 [210.54 GB] / in no VG: 0 [0]
 
-> 
-> Regards
-> Aditya Vasudevan 
+vgscan gives
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "fast"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+group
 
--- 
+so everything looks fine. The logical volume worked fine with the old 
+kernel (2.4.20 or something like this, for ia32.).
 
-Regards,
-Heinz    -- The LVM Guy --
+but
+# lvscan
+lvscan -- no logical volumes found
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+and
+# vgdisplay
+--- Volume group ---
+VG Name               fast
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                0
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                4
+Act PV                4
+VG Size               210.52 GB
+PE Size               4 MB
+Total PE              53893
+Alloc PE / Size       0 / 0
+Free  PE / Size       53893 / 210.52 GB
+VG UUID               NiBxzC-W5zF-Mb37-5ajN-ljE9-5k53-Fzc26O
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+So the logical volume seems to be gone :/
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+HOWEVER,
+
+# lvscan -D
+lvscan -- reading all physical volumes (this may take a while...)
+lvscan -- inactive          "/dev/fast/lvol1" [210.52 GB]
+lvscan -- 1 logical volumes with 210.52 GB total in 1 volume group
+lvscan -- 1 inactive logical volumes
+
+and
+
+# vgdisplay -D
+--- Volume group ---
+VG Name               fast
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                4
+Act PV                4
+VG Size               210.52 GB
+PE Size               4 MB
+Total PE              53893
+Alloc PE / Size       53893 / 210.52 GB
+Free  PE / Size       0 / 0
+VG UUID               NiBxzC-W5zF-Mb37-5ajN-ljE9-5k53-Fzc26O
+
+so i think there must be still some hope. Looks like the kernel LVM 
+stuff is somehow broken. Can this be a 64bit issue? Is there anything  i 
+could test/upgrade/whatever? Do you need more outputs?
+Or did i simply forget to do anything?
+
+
+thanks,
+Felix
