@@ -1,65 +1,51 @@
-Message-ID: <39C65C87.76E67263@marxmeier.com>
-Date: Mon, 18 Sep 2000 20:18:47 +0200
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: hch@ns.lst.de
+From: "Justin Hamilton" <JHamilton@Earthling.Net>
+Subject: [linux-lvm] Ut-Oh! - I need MAJOR help.
+Date: Tue, 19 Sep 2000 01:17:18 -0400
+Message-ID: <NDBBKIEANAMHBNPAILKPEEODCMAA.JHamilton@Earthling.Net>
 MIME-Version: 1.0
-Subject: [linux-lvm] [PATCH] align lv_on_disk.base to 512K blocks
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@marxmeier.com
+To: Linux LVM mailing list <linux-lvm@msede.com>
 
-Forwarded message from Christoph Hellwig (hch@ns.lst.de) ...
+Just had my machine lock up after CPU Fan failure.  Anyway, after repairs, a
+reboot (and subsequent vgscan's) gives the following response:
 
--------- Original Message --------
-Date: Thu, 14 Sep 2000 20:48:33 +0200
-From: Christoph Hellwig <hch@ns.lst.de>
-To: "Heinz J. Mauelshagen" <Heinz.Mauelshagen@t-online.de>
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
-Subject: [PATCH] align lv_on_disk.base to 512K blocks
-Message-ID: <20000914204833.A25390@ns.lst.de>
+[root@Voyager /root]# vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- found active volume group "vg02"
+vgscan -- reading data of volume group "vg02" from physical volume(s)
+vgscan -- inserting "vg02" into lvmtab
+vgscan -- backing up volume group "vg02"
+vgscan -- checking volume group name "vg02"
+vgscan -- checking volume group consistency of "vg02"
+vgscan -- checking existence of "/etc/lvmtab.d"
+vgscan -- making directory "/etc/lvmtab.d"
+vgscan -- storing volume group data of "vg02" in "/etc/lvmtab.d/vg02.tmp"
+vgscan -- storing physical volume data of "vg02" in "/etc/lvmtab.d/vg02.tmp"
+vgscan -- storing logical volume data of volume group "vg02" in
+"/etc/lvmtab.d/vg02.tmp"
+vgscan -- renaming "/etc/lvmtab.d/vg02.tmp" to "/etc/lvmtab.d/vg02"
+vgscan -- removing special files and directory for volume group "vg02"
+vgscan -- creating directory and group character special file for "vg02"
+vgscan -- creating block device special files for vg02
+vgscan -- found inactive volume group "vg01"
+vgscan -- reading data of volume group "vg01" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg01" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lvmtab" and "/etc/lvmtab.d"
 
-Hi Heinz,
 
-this patch makes vgcreate align the lv structures to 512K on disk,
-this makes reading them from kernel using bread much easier.
+How screwed am I?
 
-Could you aplly it to 0.9?
+I've got reiserfs on the LV's, so recovering the data from the LV's should
+not be too big an issue.  What I need to know is how to rebuild the VG.
 
-	Christoph
+TIA
 
--- 
-Always remember that you are unique.  Just like everyone else.
-
-
---- vg_setup_for_create.c~      Thu Sep 14 19:30:11 2000
-+++ vg_setup_for_create.c       Thu Sep 14 19:30:22 2000
-@@ -43,6 +43,7 @@
-    int ret = 0;
-    uint pe_total = 0;
-    ulong rest = 0;
-+   ulong size = 0;
- 
- #ifdef DEBUG
-    debug_enter ( "vg_setup_for_create -- CALLED\n");
-@@ -89,8 +90,11 @@
-       vg->pv[p]->vg_on_disk.size = LVM_VG_DISK_SIZE;
-       vg->pv[p]->pv_namelist_on_disk.base =
-LVM_PV_NAMELIST_DISK_BASE;
-       vg->pv[p]->pv_namelist_on_disk.size = ( max_pv + 1) * NAME_LEN;
--      vg->pv[p]->lv_on_disk.base =
-vg->pv[p]->pv_namelist_on_disk.base +
--                                  
-vg->pv[p]->pv_namelist_on_disk.size;
-+      
-+      size = vg->pv[p]->pv_namelist_on_disk.base +
-vg->pv[p]->pv_namelist_on_disk.size;
-+      vg->pv[p]->lv_on_disk.base = (size / SECTOR_SIZE) *
-SECTOR_SIZE;
-+      if (size % SECTOR_SIZE)
-+         vg->pv[p]->lv_on_disk.base += SECTOR_SIZE;
-       vg->pv[p]->lv_on_disk.size = ( max_lv + 1) * sizeof ( lv_t);
-       LVM_PE_ON_DISK_BASE ( vg->pv[p]);
-       strcpy ( vg->pv[p]->vg_name, vg->vg_name);
+Justin Hamilton.
