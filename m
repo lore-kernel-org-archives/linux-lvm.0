@@ -1,8 +1,8 @@
-Message-ID: <3F5E4BBD.7080107@yahoo.fr>
-From: guillaume <foulmetal@yahoo.fr>
+Message-ID: <3F5E9A43.5010202@gbrmpa.gov.au>
+From: Glen Harris <glen@gbrmpa.gov.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm2 and initrd
+Subject: [linux-lvm] Multiple snapshots do weird things?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,38 +13,110 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep  9 16:53:02 2003
+Date: Tue Sep  9 22:29:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I wonder if my initrd affects the system, because after running the 
-initrd, the VFS is unable to detect any partition of my group volume. 
-Although "vgscan" and "vgchange -a y" detect the group volume.
+ From a few notes here and there, I've been under the impression that
+multiple snapshots of a single LV are possible. The problem is that
+whenever I try to take more than two, everything falls apart.
 
-Here is what initrd is doing (and me) :
- >>
-Found volume group "vglfs" using metadata type lvm2
-6 logical volume(s) in volume group "vglfs" now active
-sh: no job control in this shell
-ls -l /dev/mapper/{control,vglfs-racine}
-crw-------   1 0            0             10, 63 Sep 9 23:19 control
-brw-------   1 0            0            254,  0 Sep 9 23:20 vglfs-racine
+I'm running Debian unstable, kernel 2.4.20, with the following packages:
+kernel-patch-device-mapper	1.00.03-1
+libdevmapper1.0		1.00.03-1
+lvm2			2.00.06-1
+lvm-common		1.5.9.3
 
-sh-2.05b# mount /dev/mapper/vglfs-racine /tmp/
-found reiserfs format "3.6" with standard journal
-Reiserfs journal params: device dm-0, size 8192, journal first block 18, 
-max tra
-ns len 1024, max batch 908, max commit age 30, max trans age 30
-reiserfs: checking transaction log (dm-0) for (dm-0)
-Using r5 hash to sort names
+I've also applied the linux-2.4.20-VFS-lock.patch from the device-mapper
+1.00.05 tarball at sistina.
 
-sh-2.05b# exit
-VFS: Cannot open root device "mapper/vglfs-racine" or unknown-block(0,0)
-Please append a correct "root=" boot option
-Kernel panic: VFS: Unable to mount root fs on unknown-block(0,0)
-<<
+The kernel compiles fine and dm-mod loads. I've run devmap_mknod.sh from
+the tarball as well, and I can create PVs, VGs and LVs. I can make file-
+systems on them which survive reboots, and everything looks fine.
 
-Anyone got an idea ?
+I have a shell script which creates a snapshot named for the current time:
+===
+#!/bin/bash
+WHEN=`date "+%Y%m%d%H%M%S"`
+lvcreate -L 4M -s -n $WHEN /dev/vg0/lv0
+mkdir /test/snap/$WHEN
+mount /dev/vg0/$WHEN /test/snap/$WHEN
+===
 
-Guillaume.
+So, here's an example session which demonstrates my problem. Everything
+looks fine until the third snapshot, which gives an I/O error when I try
+to mount it, and also appears to trash the first snapshot - "ls -la"
+doesn't even list "." or ".."!
+
+test:~# pvcreate /dev/hdb
+   Physical volume "/dev/hdb" successfully created
+
+test:~# vgcreate -s 256k vg0 /dev/hdb
+   Volume group "vg0" successfully created
+
+test:~# lvcreate -L 512m -n lv0 vg0
+   Logical volume "lv0" created
+
+test:~# mke2fs /dev/vg0/lv0
+[SNIPPED - Believe me, it worked fine]
+
+test:~# mount /dev/vg0/lv0 /test/fs
+
+test:~# df
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/hda2               841340    742420     56184  93% /
+/dev/mapper/vg0-lv0     507748        13    481521   1% /test/fs
+
+test:~# ./snap
+   Logical volume "20030910123716" created
+
+test:~# cp -R * /test/fs/
+
+test:~# sync
+
+test:~# ./snap
+   Logical volume "20030910123756" created
+
+test:~# rm -rf /test/fs/src/
+
+test:~# ./snap
+   Logical volume "20030910123812" created
+/dev/vg0/20030910123812: Input/output error
+mount: you must specify the filesystem type
+
+test:~# ls -la /test/snap/20030910123716/
+total 0
+
+test:~# ls -la /test/snap/20030910123756/
+total 22
+drwxr-xr-x    4 root     root         1024 Sep 10 12:37 .
+drwxr-xr-x    5 root     root         4096 Sep 10 12:38 ..
+drwx------    2 root     root        12288 Sep 10 12:37 lost+found
+-rwxr-xr-x    1 root     root           62 Sep 10 12:37 makelv0
+-rwxr-xr-x    1 root     root           41 Sep 10 12:37 makelv0~
+-rwxr-xr-x    1 root     root          166 Sep 10 12:37 snap
+-rwxr-xr-x    1 root     root          151 Sep 10 12:37 snap~
+drwxr-xr-x    5 root     root         1024 Sep 10 12:37 src
+
+test:~# ls -la /test/snap/20030910123812/
+total 8
+drwxr-xr-x    2 root     root         4096 Sep 10 12:38 .
+drwxr-xr-x    5 root     root         4096 Sep 10 12:38 ..
+
+Thanks, glen.
+
+-- 
+| Nine megs for the secretaries fair,      | One disk to rule them all,     |
+| Seven megs for the hackers scarce,       | One disk to bind them,         |
+| Five megs for the grads in smoky lairs,  | One disk to hold the files     |
+| Three megs for system source;            | And in the darkness grind 'em. |
+-----------------------------------------------------------------------------
+| Glen Harris | glen@gbrmpa.gov.au | 07 47500893 | http://www.gbrmpa.gov.au |
+-----------------------------------------------------------------------------
+
+=============================================================================
+If you have received this transmission in error please notify us immediately
+by return email and delete all copies. Any unauthorised use, disclosure or
+distribution of this email is prohibited.
+=============================================================================
