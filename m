@@ -1,12 +1,11 @@
-Return-Path: <tsm@idealx.com>
-Date: Wed, 23 May 2001 14:48:14 +0200
-From: Thierry Mallard <thierry.mallard@idealx.com>
-Subject: Re: How about ext3? (was RE: [linux-lvm] XFS and LVM)
-Message-ID: <20010523144814.A29931@IDEALX.com>
-References: <20010523083432.3601F15CB5@mail.linux-new-media.de> <NBBBKLKHMJHIJLHOGAOJAEMPIOAA.steve.wray@the.net.nz> <20010523103432.D27177@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010523103432.D27177@redhat.com>; from sct@redhat.com on Wed, May 23, 2001 at 10:34:32AM +0100
+Return-Path: <mjt@tls.msk.ru>
+Message-ID: <3B0BB7C5.2F2881B8@tls.msk.ru>
+Date: Wed, 23 May 2001 17:14:45 +0400
+From: Michael Tokarev <mjt@tls.msk.ru>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Converting my Root file system to LVM
+References: <200105222325.f4MNPJVw012336@webber.adilger.int>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,22 +18,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 23, 2001 at 10:34:32AM +0100, Stephen C. Tweedie wrote:
-> Hi,
-> 
-> On Wed, May 23, 2001 at 08:35:36PM +1200, Steve Wray wrote:
-> > Any experience with ext3?
-> > Is it shrinkable?
-> 
-[...]
+Andreas Dilger wrote:
+[]
+> No, the problem is in the wrapper script for the LVM tools.  It is using
+> "sed" in the script, but that is not on the initrd.  I don't see sed in
+> my LVM wrapper script, so you must have a different one.  Either fix the
+> wrapper script (edit /sbin/vgscan should be enough), or add "sed" to the
+> list of required files, INITRDFILES, in lvmcreate_initrd.
 
-Just curious, but I was told that ext3 wasn't supported on linux 2.4.. is this
-true ?
+Initrd intended to be used with exactly one version of kernel, so there should
+be NO sed there -- it is used to determine kernel iop version, but that known
+at an initrd creation time.  Initrd should contain real utils, not wrappers.
 
--- 
-Thierry Mallard                    | GnuPG key on pgp.ai.mit.edu
-http://IDEALX.com                  | key 0xA3D021CB
-http://thierry.mallard.com         | 
+Regards,
+ Michael.
