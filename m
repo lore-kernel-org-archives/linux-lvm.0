@@ -2,7 +2,7 @@ content-class: urn:content-classes:message
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Subject: RE: [linux-lvm] Core questions from a LVM neophyte...
-Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB01258A7F@mercury.infiniconsys.com>
+Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB01258A8E@mercury.infiniconsys.com>
 From: "Barry, Christopher" <cbarry@infiniconsys.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,10 +14,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar 10 12:31:01 2003
+Date: Mon Mar 10 14:16:11 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+
+Andy,
+OK, so I RTFM'd and have the LVM2 patch created against the vanilla =
+kernel.org 2.4.20. Sorry for asking such a dumb question. Also, just got =
+the latest xfs patch from sgi too, and am awaiting your instructions on =
+what to change before applying either.
+
+Patiently Yours,
+
+--
+Christopher Barry
+Manager of Information Systems
+InfiniCon Systems
+http://www.infiniconsys.com
+
+-----Original Message-----
+From: Barry, Christopher=20
+Sent: Monday, March 10, 2003 1:30 PM
+To: linux-lvm@sistina.com
+Subject: RE: [linux-lvm] Core questions from a LVM neophyte...
+
 
 Andy,
 
@@ -119,6 +140,12 @@ error, and may be safely ignored.
 
 Andy
 
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 _______________________________________________
 linux-lvm mailing list
