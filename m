@@ -1,10 +1,9 @@
-Return-Path: <tack@orion.dok.org>
-Date: Tue, 14 Aug 2001 17:11:59 -0400
-From: Jason Tackaberry <tack@linux.com>
-Message-ID: <20010814171159.B28266@linux.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Adding a mirror after-the-fact
+Return-Path: <soohoon.lee@api-networks.com>
+Message-ID: <051DFF3BBA73D3119A5800A0C95BD021C03C2A@barracuda.alpha-processor.com>
+From: Soohoon Lee <soohoon.lee@api-networks.com>
+Date: Tue, 14 Aug 2001 23:55:13 -0400
+MIME-Version: 1.0
+Subject: [linux-lvm] lvreduce & lvextend problem fix
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,15 +17,38 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-I know this isn't strictly an LVM question, but ...
+Hi,
+I'm trying to use LVM because of its snapshot and extend/reduce feature.
+But I found that they have some problem so I started debugging and found
+something.
+Please verify that and do further debugging.
 
-Suppose I have a volume group with 1 physical volume, say a 9GB disk.
-Now, after some time, I decide I want to mirror this VG with another 9GB
-disk.  What options do I have?  AFAICS, the only way to do this would be
-to start from scratch?  This is a pretty simple and presumably common
-thing to want to do, so I hope I'm wrong.  :)
+lvreduce calls pv_release_pe() to mark unnecessary PEs.
+while doing that it does following calculation.
 
-Cheers,
-Jason.
+pv_release_pe()
+{
+...............
+	pe_index = ( vg->lv[i]->lv_current_pe[p].pe -
+		LVM_VGDA_SIZE ( vg->pv[pv_num]) / SECTOR_SIZE) /
+		vg->pe_size;
+...............
+}
+
+I don't know why you don't just use p instead of long calculation but 
+problem is vg->lv[i]->lv_current_pe[p].pe is not 8192 bytes aligned and
+first pe value is bigger than 8192.
+In my case it was 8352. And it frees worng PE.
+
+If I subtract 1 from pe_index or just use p then it works fine.
+So questions
+Why lv_current_pe[x].pe is not 8192 aligned, Is it intended? does it mean
+PEs are not aligned in physical disk?
+Why does the long calculation is needed only to get the same value with p? 
+     when is the case that pe_index is different from p? scattered PEs in
+one VG?
+
+Thanks,
+Soohoon.
