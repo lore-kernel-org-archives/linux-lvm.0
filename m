@@ -1,10 +1,10 @@
-Return-Path: <mike@marxmeier.com>
-Date: Sat, 23 Dec 2000 17:58:31 +0000 (GMT)
-From: Paul Jakma <paul@clubi.ie>
+Return-Path: <claudio@conectiva.com>
+Date: Sat, 23 Dec 2000 16:46:52 -0200 (BRST)
+From: Claudio Matsuoka <claudio@conectiva.com>
 Subject: Re: [linux-lvm] 0.9 tools compatible with 0.8 kernel? (and vice
  versa)
-In-Reply-To: <200012220613.eBM6Dwx06755@webber.adilger.net>
-Message-ID: <Pine.LNX.4.30.0012231751490.5052-100000@fogarty.jakma.org>
+In-Reply-To: <Pine.LNX.4.30.0012231751490.5052-100000@fogarty.jakma.org>
+Message-ID: <Pine.LNX.4.21.0012231630430.649-100000@scuzzlebutt.helllabs>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,59 +20,58 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Linux LVM list <linux-lvm@msede.com>
 
-On Thu, 21 Dec 2000, Andreas Dilger wrote:
+On Sat, 23 Dec 2000, Paul Jakma wrote:
 
-> No.
->
+> on-disk LVM isn't touched though, right? so it's just a tools issue,
+> right? ie, booting lvm 0.9 isn't going to leave me with on-disk
+> structures that 0.8 would barf on?
 
-eek.
+It's tools + kernel, but the files in /etc/lvmtab.d are different
+(so make sure you're doing a vgscan after the root filesystem is
+mounted read-write).
 
-> Yes, that's why we have been discussing all of the "LVM user tools wrappers"
+> > rpm http://distro.conectiva.com.br/experimental/
+> 
+> excellent. thanks!
 
-ah, i tuned out out of that one cause i thought it was to do with
-debian packaging.
 
-> issues here over the last week.  With the current setup, you can't even
-> _install_ multiple versions of the LVM tools at the same time, let alone
-> have a single version handle multiple protocols.
->
+LVM initialization is tricky -- just calling lvmiopversion to load
+lvm-mod with IOP 10 (lvm 0.9) didn't work in all machines I tried :\
+An explicit insmod may be necessary. Something is being delayed in
+the module initialization, it would be nice to fix this as well in
+future versions.
 
-ehhmm.. problem.
+Also to avoid a "failed" status (in RH-style initscripts) when you have
+the tools installed but no VGs configured, you may need to do something
+like
 
-on-disk LVM isn't touched though, right? so it's just a tools issue,
-right? ie, booting lvm 0.9 isn't going to leave me with on-disk
-structures that 0.8 would barf on?
+# Set up LVM
+# Warning: this requires lvm-base >= 1.0-4cl
 
-> Try out Marcelo's latest LVM user tools install, which is really required
-> before trying to update your system, as it allows multiple versions of
-> user tools to be installed and work well.  Also keep a boot floppy with the
-> LVM 0.8 and LVM 0.9 tools available in case of trouble, if you don't have
-> an emergency non-LVM boot partition.
->
+activate_lvm() {
+    lvm_msg="Activating logical volumes (LVM IOP $1): "
+    (/sbin/vgscan; /sbin/vgchange -a y) >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        action "$lvm_msg" true
+    else
+        action "$lvm_msg" false
+    fi
+}   
 
-my root is non-lvm. i think what'll do is remove the LVM v0.9 update
-from t13pre4 and see how well it works wrt to the issues i had with
-t12, before committing to upgrading lvm.
+if [ -x /sbin/lvmiopversion ]; then
+    insmod -q lvm-mod >/dev/null
+    iopver=`/sbin/lvmiopversion`
+    if [ $iopver -gt 0 -a $iopver -lt 10 ]; then
+        grep -q VG /proc/lvm && activate_lvm $iopver
+    else
+        grep -q VG /proc/lvm/global && activate_lvm $iopver
+    fi
+fi
 
-how stable is 0.9 compared to 0.8.1? (guess i should have paid more
-attention to this list).
+just after the root fs is mounted read-write. I still prefer debian-style
+initialization, but if you're using RH/Mandrake/Conectiva you'll probably
+have to put that in rc.sysinit.
 
-> rpm http://distro.conectiva.com.br/experimental/
->
 
-excellent. thanks!
-
-> Cheers, Andreas
->
-
-happy christmas!
-
-regards,
--- 
-Paul Jakma	paul@clubi.ie	paul@jakma.org
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-The finest eloquence is that which gets things done.
+claudio
