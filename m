@@ -1,45 +1,29 @@
-Date: Mon, 3 Jul 2000 15:05:24 +0100
-From: "Stephen C. Tweedie" <sct@redhat.com>
+Date: Mon, 3 Jul 2000 18:16:27 +0200
+From: "Andi Kleen" <ak@suse.de>
 Subject: Re: [linux-lvm] ReiserFS/XFS/JFS, LVM, Raid5
-Message-ID: <20000703150524.E2931@redhat.com>
-References: <B45465FD9C23D21193E90000F8D0F3DF6834F1@mailsrv.linkvest.ch>
+Message-ID: <20000703181627.A19757@gruyere.muc.suse.de>
+References: <B45465FD9C23D21193E90000F8D0F3DF6834F1@mailsrv.linkvest.ch> <20000703150524.E2931@redhat.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF6834F1@mailsrv.linkvest.ch>; from Jean-Eric.Cuendet@linkvest.com on Wed, Jun 28, 2000 at 11:21:30AM +0200
+In-Reply-To: <20000703150524.E2931@redhat.com>; from sct@redhat.com on Mon, Jul 03, 2000 at 03:05:24PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
-Cc: linux-lvm@msede.com, Stephen Tweedie <sct@redhat.com>
+To: "Stephen C. Tweedie" <sct@redhat.com>
+Cc: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>, linux-lvm@msede.com
 
-Hi,
+On Mon, Jul 03, 2000 at 03:05:24PM +0100, Stephen C. Tweedie wrote:
+> The only known problem with journaling and software raid is to do with
+> the raid array rebuild code in raid1/5.  The rebuild could cause I/O
+> to be done in the wrong order for the filesystem, causing clean blocks
+> in the buffer cache to be flushed to disk as part of the rebuild.
+> That is fixed in the 2.4 soft raid.  raid0 and LVM were never affected
+> by this as they have no rebuild operation.
 
-On Wed, Jun 28, 2000 at 11:21:30AM +0200, Jean-Eric Cuendet wrote:
-> 
-> > > 	Currently you cannot put journaled filesystems on a software 
-> > > raid I believe, because they use the buffer cache in incompatible 
-> > > ways.  If I am wrong, someone correct me.  Ext2 (what I use) works
-> > > fine. 
-> > 
-> > I'm using etx3 on top of 20GB raid0 for over an year with no 
-> > problem...
-> 
-> In fact, if you have ext3 and a crash, in the worst case, journal will be
-> out of sync (In the case of writes were not like the filesystems thought due
-> to LVM)
+Note this applies only to the RAID1 in Raid 0.90 or in 2.4.
+Unpatched 2.2 does Raid1 reconstruction in user space only and should be 
+safe for journaling.
 
-No, LVM never lies in any way which will confuse a journaling
-filesystem.  The block remapping which happens inside LVM does not
-result, ever, in early I/O completion notifications.
 
-The only known problem with journaling and software raid is to do with
-the raid array rebuild code in raid1/5.  The rebuild could cause I/O
-to be done in the wrong order for the filesystem, causing clean blocks
-in the buffer cache to be flushed to disk as part of the rebuild.
-That is fixed in the 2.4 soft raid.  raid0 and LVM were never affected
-by this as they have no rebuild operation.
-
-Cheers,
- Stephen
+-Andi
