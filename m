@@ -1,13 +1,13 @@
-Date: Mon, 1 Oct 2001 07:58:55 -0500
+Date: Mon, 1 Oct 2001 08:01:14 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Problems with 2.4.10 > lvm 1.0
-Message-ID: <20011001075855.A29215@sistina.com>
-References: <909EA7234316394F80BBB70A85A1EB389609BD@hermes.dimac.net> <20010928172320.A4111@dragon.blacknet.de>
+Subject: Re: [linux-lvm] [BUG] vgscan and removeable scsi disks
+Message-ID: <20011001080114.B29215@sistina.com>
+References: <20010929113728.02CC8AD2A@oscar.casa.dyndns.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+	protocol="application/pgp-signature"; boundary="GID0FwUMdk1T2AWN"
 Content-Disposition: inline
-In-Reply-To: <20010928172320.A4111@dragon.blacknet.de>; from bock@blacknet.de on Fri, Sep 28, 2001 at 05:23:20PM +0200
+In-Reply-To: <20010929113728.02CC8AD2A@oscar.casa.dyndns.org>; from tomlins@CAM.ORG on Sat, Sep 29, 2001 at 07:37:27AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,33 +21,38 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---xHFwDpU9dbj6ez1V
+--GID0FwUMdk1T2AWN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 28, 2001 at 05:23:20PM +0200, Goetz Bock wrote:
+On Sat, Sep 29, 2001 at 07:37:27AM -0400, Ed Tomlinson wrote:
+> I just had an lvm problem that triggered softdog to reboot my box.  I hav=
+e a
+> digital camera and a smartmeadia reader.  Both the camera and the reader =
+can
+> appear as sbd and/or sda.  Running a vgscan after I have inserted/mounted=
+,=20
+> unmounted/removed these devices can cause vgscan to loop, or worst yet, to
+> stall the system (and trigger the watchdog code...).
+
+Hmm...looks like you're seeing the /proc/partitions error in 2.4.10.  :)
+Before trying to run vgscan, try catting /proc/partitions after you have
+inserted/mounted, unmounted/removed these devices.  I believe it is an issue
+with the SCSI layer somehow.
+
+> 1. Its obvious that vgscan needs better error checking/handling - once it=
+ gets
+> an error it should stop trying the device.
 >=20
-> On Fri, Sep 28 '01 at 16:46, Conny Brunnkvist / dimac.net wrote:
-> > Making and installing them worked fine. So did the kernel-patch and its
-> > compilation, but i get the following when trying to install or newly
-> > compiled 1.0 module:
-> Are you sure you patched the same kernel you're running?
+> 2. It would be a good idea to be able to supply vgscan with a backlist.  =
+ie.=20
+> under no circumstances should it look at sda or sdb on my box.  Think of =
+a box
+> with a defective drive you cannot replace just yet...
 
-Yeah, there was a bug in the patch generation scripts that was fixed in
-1.0.1-rc1 i believe.  So what is happening is the patch generation thinks
-you have kernel 2.4.1
-
-> > depmod:	get_hardblocksize
-> >=20
-> > I've read somewhere else in the list-archive that changing the
-> > get_hardblocksize lines to get_hardsect_size could help, but I have
-> There is a 1.0.1rc2 that has fixed this bug, but has a new one with the
-> min/max macros. For 2.4.10 you have to change the min/max macros to
-> min_t/max_t.
-
-There will be a 1.0.1-rc3 coming out (hopefully) today that addresses the
-kernel changes in 2.4.10.
+This is being addressed in the LVM2 experimental tree, but I don't know that
+it will get into LVM 1.0x
 
 Regards,
 --=20
@@ -61,13 +66,11 @@ Current GPG fingerprint =3D 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD D=
 E95
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Sometimes I have a difficult time handling myself in social situations.
-I just start scampering around neurotically, frantically jumping all
-over guests. I think it all goes back to when I was raised in the wild
-by miniature schnauzers.
+Hope is NOT a thing with feathers, the thing with feathers is my nephew,
+and I have to take him to a specialist in Zurich. - Woody Allen
 -----End Obligatory Humorous Quote------------------------------------------
 
---xHFwDpU9dbj6ez1V
+--GID0FwUMdk1T2AWN
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -75,9 +78,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7uGiPb2fpvETN3pURAo2TAKC0KYdOhum1L7yLEZOlma1j8pup3gCePXl4
-JbO8CmshYgZLX32RKxdGRao=
-=wYRW
+iD8DBQE7uGkab2fpvETN3pURAjL9AJ0bfmT5eEPLrRGElGKpQkmmqFA+TwCfU28T
+pEspSfH/n1+wwiqt+FEpSYo=
+=/97l
 -----END PGP SIGNATURE-----
 
---xHFwDpU9dbj6ez1V--
+--GID0FwUMdk1T2AWN--
