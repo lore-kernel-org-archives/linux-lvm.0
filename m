@@ -1,16 +1,13 @@
-Received: from arthur.pjc.net (vpnuser4.surrey.redhat.com [172.16.9.4])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i1KDJGxn005265
-	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 13:19:20 GMT
-Received: from patrick by arthur.pjc.net with local (Exim 4.30)
-	id 1AuAYi-0003E3-7c
-	for linux-lvm@redhat.com; Fri, 20 Feb 2004 13:19:12 +0000
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] LVM reducing.
-Message-ID: <20040220131910.GC3949@tykepenguin.com>
-References: <4034F710.7050106@demonlord.de>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1KEuxi16251
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 09:56:59 -0500
+From: Joe Thornber <thornber@redhat.com>
+Message-ID: <20040220145944.GM27549@reti>
+References: <20040219101519.GG30621@drinkel.cistron.nl> <20040219101915.GJ27190@suse.de> <20040219205907.GE32263@drinkel.cistron.nl> <40353E30.6000105@cyberone.com.au> <20040219235303.GI32263@drinkel.cistron.nl> <40355F03.9030207@cyberone.com.au> <20040219172656.77c887cf.akpm@osdl.org> <40356599.3080001@cyberone.com.au> <20040219183218.2b3c4706.akpm@osdl.org> <20040220144042.GC20917@traveler.cistron.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4034F710.7050106@demonlord.de>
+In-Reply-To: <20040220144042.GC20917@traveler.cistron.net>
+Subject: [linux-lvm] Re: [PATCH] bdi_congestion_funp (was: Re: [PATCH] per process request limits (was Re: IO scheduler, queue depth, nr_requests))
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -22,37 +19,38 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 20 08:18:03 2004
+Date: Fri Feb 20 09:56:00 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: Miquel van Smoorenburg <miquels@cistron.net>
+Cc: Andrew Morton <akpm@osdl.org>, Nick Piggin <piggin@cyberone.com.au>, miquels@cistron.nl, axboe@suse.de, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, thornber@redhat.com
 
-On Thu, Feb 19, 2004 at 06:49:04PM +0100, Christian Reiss wrote:
-> Greetings,
-> 
-> I am running the LVM2 version now, as LVM1 corrupted the VG.
-> So i converted it to LVM2 (figured it would re-do the 
-> master-data-thingy), and it works.
-> 
-> Now, (presumably Heinz :) how can I safely reduce the size under LVM2? 
-> LVM1 had this e2fsadm jiggamagic-thingy-thing - anything LVM2 offers to 
-> safely reduce the data?
+On Fri, Feb 20, 2004 at 03:40:42PM +0100, Miquel van Smoorenburg wrote:
+> --- linux-2.6.3/drivers/md/dm-table.c.ORIG	2004-02-04 04:44:59.000000000 +0100
+> +++ linux-2.6.3/drivers/md/dm-table.c	2004-02-20 15:14:35.000000000 +0100
 
-There is no e2fsadm for LVM2.
+<snip>
 
-What I tend to do is to reduce the filesystem by a little more than I need, then
-reduce the LV by the "correct" amount, then resize the the filesystem to fill
-the LV. It's a little bit of a faff  but it avoids any nasty accidents or
-rounding errors:
+> +	if ((t = dm_get_table(md)) == NULL)
+> +		return 0;
 
-eg: To remove 2Gig from an LV
+struct mapped_device has no business in this file.  You should move
+this function to dm.c, and provide accessor fns in dm-table.c.
 
-# resize_reiserfs -s -2300M /dev/vg00/fs
-# lvreduce -L -2G /dev/vg00/fs
-# resize_reiserfs /dev/vg00/fs
+> +	devices = dm_table_get_devices(t);
+> +	for (d = devices->next; d != devices; d = d->next) {
+> +		struct dm_dev *dd = list_entry(d, struct dm_dev, list);
+> +		request_queue_t *q = bdev_get_queue(dd->bdev);
+> +		r |= test_bit(bdi_state, &(q->backing_dev_info.state));
 
-That works for ext2/3 etc as well as reiser, just use the relevant resize
-command.
+Shouldn't this be calling your bdi_*_congested function rather than
+assuming it is a real device under dm ? (often not true).
 
-patrick
+I'm also very slightly worried that or'ing together the congestion
+results for all the seperate devices isn't always the right thing.
+These devices include anything that the targets are using, exception
+stores for snapshots, logs for mirror, all paths for multipath (or'ing
+is most likely to be wrong for multipath).
+
+- Joe
