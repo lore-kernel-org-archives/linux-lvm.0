@@ -1,7 +1,9 @@
-From: Rupa Schomaker <rupa-list@rupa.com>
-Message-ID: <m33cb3n9vp.fsf@shakti.rupa.com>
+Message-ID: <008c01c3cac0$ceef80c0$db036fa6@wangzheping>
+From: "Wang Zheping" <wangzhp@cic.tsinghua.edu.cn>
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM and MD disagree about PV size
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0089_01C3CB03.DA6DDF80"
+Subject: [linux-lvm] Can I read data from lvm without all PV?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,85 +14,75 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 29 07:51:36 2003
+Date: Mon Dec 29 08:00:07 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
+This is a multi-part message in MIME format.
 
-Kernel: 2.4.20, stock lvm, debian system with xfs patches.
+------=_NextPart_000_0089_01C3CB03.DA6DDF80
+Content-Type: text/plain;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
 
-MD shows the right size of around 80G, LVM thinks the PV is much
-larger ().
+SGk6DQogICAgVGhlcmUgaXMgYSBzZXJpb3VzIHByb2JsZW0gZm9yIG1lIGZvciAyIHdlZWtzLCBJ
+IGhvcGUgc29tZW9uZSBjb3VsZCBnaXZlIHNvbWUgYWR2aWNlLi4uLg0KICAgIEkgaGF2ZSBhIExW
+KExWTSAxKSBmb3JtZWQgYnkgNCBQViBvbiA0IEhEIERyaXZlcywgZm9ybWF0dGVkIHVzaW5nIHJl
+aXNlcmZzLg0KICAgIE5vdyAxIGRyaXZlIGJyb2tlbiwgYnV0IEkgY2FuJ3QgZ2V0IGEgcmVwbGFj
+ZSBkcml2ZS4NCiAgICBUaGVuIEkgdHJ5IGZpeCBkaXNrIHdpdGggcmVpc2VyZnNjaywgbm8gdXNl
+Li4uDQogICAgVGhlbiBJIHRyeSBmaXggZGlzayB3aXRoOiByZWlzZXJmc2NrIC0tcmVidWlsZC10
+cmVlLCBidXQgZ290IGEgZmFpbCBpbmZvLg0KICAgIEkgdHJ5IG1hbnkgdGltZXMsIHdpdGggTFZN
+IDIncyIgdmdjaGFuZ2UgLVAgLWF5ICIgY29tbWFuZCwgYnV0IGFsc28gY2FuJ3QgcmVidWlsZHRy
+ZWUuDQogICAgU28gSSBjYW4ndCBhY2Nlc3MgdGhlc2UgZGF0YSBub3cuDQogICAgU29tZSBkYXRh
+IG9uIGl0IGlzIGltcG9ydGFudCwgc28gSSB3YW50IHRvIGNvcHkgdGhlIGRhdGEgb24gMyByZW1h
+aW5lZCBkcml2ZSBvdXQuDQoNCiAgICBXaG8gY2FuIGdpdmUgbWUgc29tZSBhZHZpY2Ugb24gaG93
+IHRvIGdldCB0aGUgcmVtYWluZWQgZGF0YSBvdXQ/IA0KICAgIFdoZXRoZXIgbXkgZGF0YSBpcyBh
+bHJlYWR5IGxvc3QgYXQgYWxsPw0KDQogICAgVGhhbmtzIGZvciByZWFkIHRoaXMgbXNnIQ0KDQog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgV2FuZw0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIENoYWlybWFuQGNhdGtpdHR5LmNvbSA=
 
-1) How can I fix this without destroying the data?
-2) How can I avoid this in the future.
+------=_NextPart_000_0089_01C3CB03.DA6DDF80
+Content-Type: text/html;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
 
-I still have a spare 45G drive in the system, so I can add it as a PV,
-pvmove the data, destroy md6, recreate it, pvmove the data back and
-see that all is ok.
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PWdiMjMxMiI+DQo8TUVUQSBjb250ZW50PSJNU0hUTUwgNS41
+MC40OTM0LjE2MDAiIG5hbWU9R0VORVJBVE9SPg0KPFNUWUxFPjwvU1RZTEU+DQo8L0hFQUQ+DQo8
+Qk9EWSBiZ0NvbG9yPSNmZmZmZmY+SGk6PEJSPiZuYnNwOyZuYnNwOyZuYnNwOyBUaGVyZSBpcyBh
+IHNlcmlvdXMgcHJvYmxlbSBmb3IgDQptZSBmb3IgMiB3ZWVrcywgSSBob3BlIHNvbWVvbmUgY291
+bGQgZ2l2ZSBzb21lIGFkdmljZS4uLi48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IA0KSSBoYXZlIGEg
+TFYoTFZNIDEpIGZvcm1lZCBieSA0IFBWIG9uIDQgSEQgRHJpdmVzLCBmb3JtYXR0ZWQgdXNpbmcg
+DQpyZWlzZXJmcy48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IE5vdyAxIGRyaXZlIGJyb2tlbiwgYnV0
+IEkgY2FuJ3QgZ2V0IGEgcmVwbGFjZSANCmRyaXZlLjxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgVGhl
+biBJIHRyeSBmaXggZGlzayB3aXRoIHJlaXNlcmZzY2ssIG5vIA0KdXNlLi4uPEJSPiZuYnNwOyZu
+YnNwOyZuYnNwOyBUaGVuIEkgdHJ5IGZpeCBkaXNrIHdpdGg6IHJlaXNlcmZzY2sgDQotLXJlYnVp
+bGQtdHJlZSwgYnV0IGdvdCBhIGZhaWwgaW5mby48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IEkgdHJ5
+IG1hbnkgdGltZXMsIA0Kd2l0aCBMVk0gMidzIiB2Z2NoYW5nZSAtUCAtYXkgIiBjb21tYW5kLCBi
+dXQgYWxzbyBjYW4ndCANCnJlYnVpbGR0cmVlLjxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgU28gSSBj
+YW4ndCBhY2Nlc3MgdGhlc2UgZGF0YSANCm5vdy48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IFNvbWUg
+ZGF0YSBvbiBpdCBpcyBpbXBvcnRhbnQsIHNvIEkgd2FudCB0byBjb3B5IHRoZSANCmRhdGEgb24g
+MyByZW1haW5lZCBkcml2ZSBvdXQuPEJSPjxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgV2hvIGNhbiBn
+aXZlIG1lIHNvbWUgDQphZHZpY2Ugb24gaG93IHRvIGdldCB0aGUgcmVtYWluZWQgZGF0YSBvdXQ/
+IDxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgV2hldGhlciBteSANCmRhdGEgaXMgYWxyZWFkeSBsb3N0
+IGF0IGFsbD88QlI+PEJSPiZuYnNwOyZuYnNwOyZuYnNwOyBUaGFua3MgZm9yIHJlYWQgdGhpcyAN
+Cm1zZyE8QlI+PEJSPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyANCldhbmc8
+QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IA0KPEEgaHJlZj0ibWFpbHRv
+OkNoYWlybWFuQGNhdGtpdHR5LmNvbSI+Q2hhaXJtYW5AY2F0a2l0dHkuY29tPC9BPiA8L0JPRFk+
+PC9IVE1MPg0K
 
-In fact, I think I'll just go ahead and do so...
-
-mdadm --detail /dev/md/6:
-
-/dev/md/6:
-        Version : 00.90.00
-  Creation Time : Sun Dec 28 17:33:02 2003
-     Raid Level : raid1
-     Array Size : 80003584 (76.30 GiB 81.92 GB)
-    Device Size : 80003584 (76.30 GiB 81.92 GB)
-   Raid Devices : 2
-  Total Devices : 2
-Preferred Minor : 6
-    Persistence : Superblock is persistent
-
-    Update Time : Sun Dec 28 17:33:02 2003
-          State : dirty, no-errors
- Active Devices : 2
-Working Devices : 2
- Failed Devices : 0
-  Spare Devices : 0
-
-
-    Number   Major   Minor   RaidDevice State
-       0      33        3        0      active sync   /dev/ide/host2/bus0/target0/lun0/part3
-       1      57        3        1      active sync   /dev/ide/host4/bus1/target0/lun0/part3
-           UUID : 8c24286e:6f758b5a:8d6c9575:d22731fa
-         Events : 0.1
-
-
-pvdisplay /dev/md/6:
-
-- --- Physical volume ---
-PV Name               /dev/md/6
-VG Name               shaktivg
-PV Size               148.80 GB [312062464 secs] / NOT usable 4.31 MB [LVM: 272 KB]
-PV#                   3
-PV Status             available
-Allocatable           yes
-Cur LV                10
-PE Size (KByte)       4096
-Total PE              38092
-Free PE               28645
-Allocated PE          9447
-PV UUID               jeVyqI-g2RE-xHF6-Nfo5-rT40-rGYK-65iJZp
-
-- -- 
-- -rupa
-
------BEGIN PGP SIGNATURE-----
-Version: 2.6.3ia
-Charset: noconv
-Comment: Processed by Mailcrypt 3.5.7, an Emacs/PGP interface
-
-iQEVAwUBP/APNXHDM4ucEopdAQGpoQgAsDptX0/pSxJFPDY9R9i2EbVK+D6O0ieY
-Rg0436j8STek0AcF/CyvG6B0p8yYWoaubtDOVMNv0EdLU0LzIU72SstgOLIeQWXO
-+oLHTgvDcd72gjjSrVJ0tKhubBLSz6EcfjbqM5wpyCDoP52/GyF9YPZllgahpH0p
-ayecX1Doi53OOFdSn2T2IIVn0NfXniEhprC17pPzinSfjZsSTsdk6EG70ZTFLkhA
-MzzCw/avSp4HphmMZ1j+iJ2QgFQd07ksTwKcqxBuzVIAWN50ox+RepZeUVhKalfz
-9R0JRho58HZVRo2OB6B9xnpukE6y28Bl56S4VVD5Zv53rIxUp82vIg==
-=s/SN
------END PGP SIGNATURE-----
+------=_NextPart_000_0089_01C3CB03.DA6DDF80--
