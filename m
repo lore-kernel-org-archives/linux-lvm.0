@@ -1,12 +1,12 @@
 From: Wiktor Wodecki <wodecki@gmx.de>
-Subject: Re: [linux-lvm] ioctl interface mismatch
-Message-ID: <20030628113724.GA800@gmx.de>
-References: <20030626201310.GA1042@gmx.de> <200306270849.22072.kevincorry@sbcglobal.net>
+Message-ID: <20030628115033.GA660@gmx.de>
+References: <20030627202130.066c183b.akpm@digeo.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
 Content-Disposition: inline
-In-Reply-To: <200306270849.22072.kevincorry@sbcglobal.net>
+In-Reply-To: <20030627202130.066c183b.akpm@digeo.com>
+Subject: [linux-lvm] Re: 2.5.73-mm2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,56 +17,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 30 09:51:05 2003
+Date: Mon Jun 30 09:51:10 2003
 List-Id: <linux-lvm.redhat.com>
-To: Kevin Corry <kevincorry@sbcglobal.net>
+To: Andrew Morton <akpm@digeo.com>
 Cc: linux-lvm@sistina.com
 
---FL5UXtIhxfXey3p5
+--nFreZHaLTZJo0R7j
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-yes I do. I wanted to play with it a bit, so I installed it. However it
-cannot initalize the dm engine. So the problem is evms related?
+Hello,
 
-On Fri, Jun 27, 2003 at 08:49:21AM -0500, Kevin Corry wrote:
-> On Thursday 26 June 2003 15:13, Wiktor Wodecki wrote:
-> > Hello,
-> >
-> > I am running 2.5.72 and use device-mapper to manage two vg's with
-> > several lv's. However at boot-time I see the following message:
-> >
-> > device-mapper: ioctl interface mismatch: kernel(1.0.6), user(3.0.0),
-> > cmd(0)
-> >
-> > 1.0.6 could be an lvm release, however, I have lvm2 metadata and not
-> > lvm1. My system runs debian testing with the lvm2 utilities installed
-> > (1.95.15-1). I run x86.
-> >
-> > Any help would be appreciated.
+On Fri, Jun 27, 2003 at 08:21:30PM -0700, Andrew Morton wrote:
+> ftp://ftp.kernel.org/pub/linux/kernel/people/akpm/patches/2.5/2.5.73/2.5.=
+73-mm2/
 >=20
-> The EVMS tools use version 3.0.0 of the Device-Mapper ioctl interface. Ar=
-e you=20
-> boot-scripts running evms_activate?
->=20
-> -Kevin Corry
+> Just bits and pieces.
+
+I have problems with lvm2 and the 2.5.73-mm2 patchset. I have two volume
+groups, one with 4 lv's (lvm2 metadata) the other one with only one lv
+(lvm2, too). When I boot the 2.5.73 stock kernel everything seems to be
+fine, however when I boot into -mm2 only the first lv of the first vg is
+found. A subsequent lvscan doesn't find anything.  I've seen this bug a
+couple of kernel releases ago in your tree (I think it was
+2.5.69-mmsomething) but I didn't had time to look into it then, I had
+other 2.5 problems back then.  There are more things in my lvm
+configuration (some pv's beeing md devices) but I don't think that is
+important, since the raid stuff comes up properly.=20
+Booting into stock 2.5.73 brings up the lv's as expected.
+
+I'm running debian testing on x86 with the lvm2 package installed.
+LVM version:     1.95.15 (2003-01-10)
+Library version: 0.96.07-ioctl-cvs (2002-11-21)
+Driver version:  1.0.6
+
+If you need more infos or patches to be tested I'd be happy to help.
 
 --=20
 Regards,
 
 Wiktor Wodecki
 
---FL5UXtIhxfXey3p5
+--nFreZHaLTZJo0R7j
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.1 (GNU/Linux)
 
-iD8DBQE+/X306SNaNRgsl4MRAloUAKCdlBwxj/LkDLKvQ2tHY4qgrNKScwCfcEqr
-heF9ARVmiXVCg8v+I7UnWuA=
-=5yxH
+iD8DBQE+/YEJ6SNaNRgsl4MRAq6RAKDOTTYClMgZ2TfdEZSgW8BDtQM5mACgqfEO
+dsAx0Sy27wRhBcrwAIyY2Wo=
+=U1l8
 -----END PGP SIGNATURE-----
 
---FL5UXtIhxfXey3p5--
+--nFreZHaLTZJo0R7j--
