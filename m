@@ -1,29 +1,42 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200010121644.MAA03016@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] Very tricky new install of Linux (using LVM and Kernel 2.4)
-Date: Thu, 12 Oct 2000 12:44:57 -0400 (EDT)
-In-Reply-To: <20001012160136.E413@destiny.ist.flinders.edu.au> from "Mark Phillips" at Oct 12, 2000 04:01:36 PM
+Message-ID: <B14BF8753E65D211ABCA00104B301EF5015BAF65@cairn-gorm.cragtech.com>
+From: Rochelle Lakey <RLakey@Connex.com>
+Subject: [linux-lvm] LVM and HW Raid
+Date: Thu, 12 Oct 2000 13:20:54 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Mark Phillips <mark@ist.flinders.edu.au>
-Cc: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: "LVM Mailing List (E-mail)" <linux-lvm@msede.com>
 
-Mark Phillips, you write:
-> I want to install it on logical partitions using LVM.  This introduces
-> a number of problems.  Firstly I need kernel 2.4 to use LVM.  I've
-> compiled my own 2.4-test9 kernel and it runs fine on my old disk
-> (using debian).  But the debian installation disk uses an older
-> kernel, nor will it probably know how to cope with LVM.
+Hello All,
+My original message still has not been posted.
+I'm resending just in case.
+Thank you,
+Rochelle
 
-I have made a kernel patch for 0.8 final on 2.2.  You will also need the
-rawio kernel patch (or a vendor kernel which already includes this patch).
+-----Original Message-----
+From: Rochelle Lakey 
+Sent: Wednesday, October 11, 2000 12:06 PM
+To: LVM Mailing List (E-mail)
+Subject: Help: LVM and HW Raid
 
-You can get the 2.2 LVM patch (along with bug-fixed 0.8 final user tools) at:
 
-ftp://ftp.stelias.com/pub/adilger
+Hello,
 
-Cheers, Andreas
+I am having trouble using HW RAID implementation with LVM.
+Using steps in the INSTALL file, I have added the necessary
+commands to the startup and halt scripts.  The problem is
+upon system startup (after issuing shutdown or reboot) the 
+volume groups and logical volumes are in a "bad" state.  I have
+to use vgcfgrestore in order to get them recognized and activated
+again.  Note: My volume groups, logical volumes and data are 
+successfully deactivated and reactived when running a system 
+without HW RAID implementation.
+
+My question is there another command or anything I should be aware
+of so that this does not happen during system shutdown or reboot?
+
+Thanks,
+Rochelle Lakey
