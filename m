@@ -1,9 +1,11 @@
-From: Mark van Walraven <markv@wave.co.nz>
-Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-Message-ID: <20011204151431.B11429@mail.wave.co.nz>
-References: <3C06A624.80205@larsshack.org> <Pine.LNX.4.33.0111291548580.4437-100000@lx1.daboard.com>
+Subject: Re: [linux-lvm] Problems after upgrading LVM
+From: Klaus Agnoletti <ultra@mailme.dk>
+In-Reply-To: <20011203130616.E20168@auctionwatch.com>
+References: <1007411943.2423.2.camel@ultra> 
+	<20011203130616.E20168@auctionwatch.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1007456242.666.2.camel@ultra>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0111291548580.4437-100000@lx1.daboard.com>; from mitch@mdmiller.com on Thu, Nov 29, 2001 at 03:50:54PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,22 +16,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  3 20:12:02 2001
+Date: Tue Dec  4 00:55:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Nov 29, 2001 at 03:50:54PM -0600, mitch@mdmiller.com wrote:
-> Pardon me for being a neophyte here, but what else goes on the root
-> partition which takes any significant or dynamic amount of space?  Isn't
-> the root just a place to put all the top level directories, the contents
-> of which are typically all on another partition anyway?
+>     2.4.13-ac8 is no good on Intel, regress to ac7. 
+> 
 
-/bin, /sbin and /lib can get quite large; /etc can also get a little fat.
-I like to keep them (and /boot) on the root partition, I guess because
-they are all critical for booting and seldom altered.
+I have no idea if this is the case either.
+I have no experience in upgrading LVM before, as far as I've been able
+to read from the documentation, it should't be a problem - so I really
+have no idea.
 
-Regards,
+It came out rather unclear in my last mail, but I am using the lvm10 and
+lvm-common deb packages.
 
-Mark.
+I hope anybody can give me a clear answer on this - It's no problem for
+me to regress to 2.4.13-ac7, but I would like to be sure that it would
+solve my problem in advance.
+
+Thanks,
+
+/Klaus
