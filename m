@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] 2.4.20pre5 CONFIG_BLK_STATS breaks LVM tools
-Message-ID: <20020909130011.D15934@sistina.com>
-References: <3D77B43B.7000506@domdv.de>
-Mime-Version: 1.0
-In-Reply-To: <3D77B43B.7000506@domdv.de>; from ast@domdv.de on Thu, Sep 05, 2002 at 09:44:59PM +0200
+Message-ID: <2005.24.46.54.254.1031578510.squirrel@mail.scottsavarese.com>
+Subject: Re: [linux-lvm] software mirroring
+From: "Scott Savarese" <scott@scottsavarese.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,63 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep  9 06:28:41 2002
+Date: Mon Sep  9 08:41:18 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Andreas,
+Jos=E9 Luis Domingo L=F3pez said:
+> There shouldn't be any problems at all, except for bootup: it can be
+> tricky (complex, prone to error or simply impossible, I don't know ;)
+> to get a box boot off a LV on top of a software RAID1. But
+> technically, it should be as simple as creating a partition on each
+> disk, creating the RAID1 from them, initialize /dev/md0 as a PV for
+> use with LVM, create a VG consisting of just this PV, and finally
+> create as many LV as you need (size permitting).
+>
+> I have not had the chance to try it by myself, due to lack of
+> hardware, but should work. Maybe the hard part is to do it at install
+> time and get the system to boot from a LV created this way.
 
-this is a known issue and I am working on a patch to send to Marcelo.
+Bootup is definantly the issue right now... I created two raid1 sets
+/dev/md0 and /dev/md1 on my second hard drive telling it that my first
+harddrive was failed (so it wouldn't use it and break it). The first
+will hold my /boot and the second (for now) will hold my /. I then
+installed LVM onto my /dev/md1 and copied the filesystems over to the
+appropriate locations. However after I configure lilo and fstab I have
+issues. Depending on my lilo.conf I get either
+L 80 80 80 ...
+or
+LI
 
-Try removing the add_gendisk() call (~line 460) in drivers/md/lvm.c and
-retry as a workaround for now,
-
-On Thu, Sep 05, 2002 at 09:44:59PM +0200, Andreas Steinmetz wrote:
-> If CONFIG_BLK_STATS is enabled in 2.4.20pre5 this breaks at least the
-> LVM tools. The symptom on a system running initrd to do vgscan/vgchange
-> to be able to boot is that after
-> 
-> RAMDISK: Compressed image found at block 0
-> Freeing initrd memory: 734k freed
-> VFS: Mounted root (ext2 filesystem).
-> 
-> the system hangs with the CPU under load. It is difficult for me to
-> investigate this further as both systems I do have available run a
-> LVM/reiserfs only setup and thus I can't have a look at the layout of
-> /proc/partitions in the CONFIG_BLK_STATS enabled page.
-> 
-> It would, however, be worth a word of warning in Configure.help that
-> this option can break userspace tools that may be important for system
-> boot and other system functions.
-> -- 
-> Andreas Steinmetz
-> D.O.M. Datenverarbeitung GmbH
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Is there a proper way to boot up?
+Thanks,
+Scott
