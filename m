@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] PV Status NOT available
-Message-ID: <20030213130520.A20098@sistina.com>
-References: <000801c2d0e8$91e8d320$0d01a8c0@aphrodite> <20030210143353.A5958@sistina.com> <004e01c2d119$ce050be0$0d01a8c0@aphrodite> <20030211163014.C10750@sistina.com> <3E4927E0.5040502@ednet.ns.ca> <000a01c2d21f$d37e8ae0$0d01a8c0@aphrodite>
+Subject: Re: [linux-lvm] Snapshot resizing bug (LVM1)
+Message-ID: <20030213131105.B20098@sistina.com>
+References: <A00B669E-3934-11D7-A9B9-0003937830E4@mac.com> <20030206112752.B22450@sistina.com> <3E424EDF.CC7A4F56@silicide.dk> <20030206194148.B23955@sistina.com> <3E4A9FD7.88850BEE@silicide.dk>
 Mime-Version: 1.0
-In-Reply-To: <000a01c2d21f$d37e8ae0$0d01a8c0@aphrodite>; from rupert.hair@ntlworld.com on Tue, Feb 11, 2003 at 10:49:22PM -0000
+In-Reply-To: <3E4A9FD7.88850BEE@silicide.dk>; from jon+lvm@silicide.dk on Wed, Feb 12, 2003 at 08:26:15PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,24 +14,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 13 06:09:01 2003
+Date: Thu Feb 13 06:15:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Feb 11, 2003 at 10:49:22PM -0000, Rupert Hair wrote:
-> > Works for me.
-> Same here.  
+On Wed, Feb 12, 2003 at 08:26:15PM +0100, Debian User wrote:
+> "Heinz J . Mauelshagen" wrote:
+> > 
+> > On Thu, Feb 06, 2003 at 01:02:39PM +0100, Jon Bendtsen wrote:
+> > > "Heinz J . Mauelshagen" wrote:
+> > > >
+> > > > Dale,
+> > > >
+> > > > thanks for finding this bug.
+> > >
+> > > yeah, thanks from me too, i plan to TEST it.
+> > 
+> > Good :)
+> > 
+> > Please checkout from MAIN.
+> > We reverted 1.0.6 as mentioned in my other email today.
+> 
+> so, i got to test it, and... i dont think i did the correct CVS.
+> i followed what was written on
+> http://www.sistina.com/products_CVS.htm
+> 
+> but it appears that the patch isnt in, or that i have lvm-rc1 ?
+> from the changelog
+> 
+> "
+> Logical Volume Manager Changelog
+> 
+> Changelog for 1.1-rc1 to 1.1-rc2
+> 
+> "
+> 
+> hmmm
+> How do i checkout MAIN ?
+> I did try writing MAIN instead of LVM, but that failed.
 
-k.
+Obviously an update problem with our external CVS.
+Will be fixed later today.
 
 > 
-> Thanks again Heinz.
-> 
-> Rupert
 > 
 > 
+> 
+> JonB
 > 
 > _______________________________________________
 > linux-lvm mailing list
