@@ -1,7 +1,9 @@
-From: "kiran dalvi" <kiran_bd@hotmail.com>
-Mime-Version: 1.0
-Message-ID: <BAY1-F141ddbQYaBzkg00020a7c@hotmail.com>
-Subject: [linux-lvm] Help : pvmove -- not enough free/allocatable physical extents
+From: ratler@lunar-linux.org
+Message-ID: <Pine.LNX.4.56.0307221242540.30328@gumpie.wea.se>
+MIME-Version: 1.0
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-1332444705-1058870714=:30328"
+Content-ID: <Pine.LNX.4.56.0307221245240.30328@gumpie.wea.se>
+Subject: [linux-lvm] LVM1 problem, exported volumegroup with one dead drive (fwd)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,120 +14,189 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 22 05:41:01 2003
+Date: Tue Jul 22 08:44:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hii All,
-I am trying to use LVM on my Red-Hat Linux 8.0.
-I haved created volume group using 3 partitions on my machine
-(/dev/hda7,/dev/hda8,/dev/hda9).All the partions are of same size 200 
-MB.Then
-I have created stripped logical volume on 3 partitions using following 
-command.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+  Send mail to mime@docserver.cac.washington.edu for more info.
 
-#lvcreate -i3 -I4 -l24 -nmy_stripped_lv1 my_volume_group
+--8323328-1332444705-1058870714=:30328
+Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
+Content-ID: <Pine.LNX.4.56.0307221245241.30328@gumpie.wea.se>
 
-I have also tried extending logical volume and shrinking logical volume. All
-this worked fine for me.
+Hi,
 
-Now I tried pvmove command.
+I think I have tried all solutions google could give me without any luck
+restoring any data.
 
-        #pvmove /dev/hda9
+The problem is the following:
 
-But it will be giving following error message
-
-***********************
-pvmove /dev/hda9
-pvmove -- moving physical extents in active volume group "my_volume_group"
-pvmove -- WARNING: if you lose power during the move you may need
-        to restore your LVM metadata from backup!
-pvmove -- do you want to continue? [y/n] y
-pvmove -- not enough free/allocatable physical extents
-
-**************************
-
-When I get above error message the output of vgdisplay is as follows
-
-*************
-        --- Volume group ---
-VG Name               my_volume_group
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                3
-Act PV                3
-VG Size               564 MB
-PE Size               4 MB
-Total PE              141
-Alloc PE / Size       24 / 96 MB
-Free  PE / Size       117 / 468 MB
-VG UUID               ywZQkl-Exfm-KQma-0s14-yi4V-kAz7-iw8Bhl
+1. I had to reinstall a server to where this volumegroup belonged
+2. I umounted all LVs. And deactivated the VG. And then I did a vgexport
+of the VG
+3. After the reinstall of the linux server it was time to import the VG
+that had 2 harddrives. I ran a pvscan and it only detected one drive! I
+started some investigation and i noticed the second drive was totaly dead!
 
 
-************
+And of course since this was a server at my home I didnt have any backups
+of this VG. And since one drive is missing it's impossible to import the
+part of the VG I have left. I know that most of all PEs for my /home
+are on the drive that is still working.
 
-When I get above error message the output of lvdisplay is as follows
+Now I wonder how on earth can I restore any of the data that is still on
+my working drive? I had 4 years of mail and some source code I would die
+for to get back. Since I only have metadata from the only drive working I
+think I have a little problem ;)
+All I want is to get as much of the data out from datavg/homelv.
 
-******************
+I attached a log file with the output from pvscan and pvdata.
 
-        --- Logical volume ---
-LV Name                /dev/my_volume_group/my_stripped_lv1
-VG Name                my_volume_group
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 0
-LV Size                96 MB
-Current LE             24
-Allocated LE           24
-Stripes                3
-Stripe size (KByte)    4
-Allocation             next free
-Read ahead sectors     1024
-Block device           58:0
+Sincerely
+Stefan Wold
+--8323328-1332444705-1058870714=:30328
+Content-Type: APPLICATION/OCTET-STREAM; NAME="lvm.log.bz2"
+Content-Transfer-Encoding: BASE64
+Content-ID: <Pine.LNX.4.56.0307221245140.30328@gumpie.wea.se>
+Content-Description: 
+Content-Disposition: ATTACHMENT; FILENAME="lvm.log.bz2"
 
+QlpoOTFBWSZTWQXwLMYAJrpfgG2/yGP/8D////q/7//wYD3nAAAAAAEewAAA
+AABvo7hZYA4AFAAKY0aWstIA2lt27gaArsAZVCroAAUKFAAChQqgCqFCgNAN
+ChQAClCgAFClCgChSqLkAAAAAAAAAAAAgAAAeESkaRoymIaaTaEyCejKeSPU
+bVA/Sj0anqNqfqmxJ+lDjRkyMIxAMJoMAmg0DJk0ZMhhAY40ZMjCMQDCaDAJ
+oNAyZNGTIYQGKp/6pQN/6pRRKYkeoAAADQGTQAAAAGNVKUP9/qlKEmmE0YTQ
+GgAAANAANABKfqlKlD3/qUkkZNDTQAAAAAAAAAN8HWQTQiM/n48dwcE9miws
+5Nufk5L8oP57hkyfpfo5qVLIUpLMB5c56VrlHQOUaD8BoVwHJTDDRpz3bnn/
+S5+vMzMzMzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+oAYAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAX33333336fyrZ7t0cdNOXLm/g
+b645WzZnttt3uFBV0WZrtOXduv1qqp9BxOGg0euJAkIsGh4DKEGwp30fZJBp
+CEhCT4wbh6dcX6ijngkks2lm0s81lsstvz/W9j2PW9f0/f9j3/aVVVVVAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB+aA
+MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAH1fwfd1239v92u2lWNF+ebNz8R+PaqACps2UGIU
+gkgkmWstWTzbLVkWRZFkWRZEkgkgkgxb4siKSAWxSg46zVr3pv27RzDeiiK7
+fr8JLEURXzobxfw4atHDIMHd3P3N7D5aNXjpwMMOCiylAJmrYPqMRvEVepvx
+y+9LLbfkeVr7fy/g+V7Xt+97vwe4qqqqqqqoAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAqqqqqvryy23+/nsttv0ZSef15fVlltd7UoAHG8ED1jCyucUELEQ
+AtU+X6b319xh9Df8x/HafD6Fm01+o5NvLa86ffE4diavb+A94911pbUut9Et
+nm8/qb9Mv6uvpel6vw+t37vPh+YqqqqqqqAAAAAAAAAAAAAAAAAAAAAAAAAA
+APr/m+9mZmZmddAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfy+9e/fv3795mAA
+B+HXrXbtrz58+czM4wAAAAPHGuGu3bW93az7NZWNeeWRZFlFZFZFZFZFZFZF
+ZfnefJ8vlWRWRWRWRWRWRWRWRWRWXy8+T5fKsisisisisisisisisist8eeV
+kVkVkVkVkVkVkVkVkVlvjzysisisisisisisisisist83LMsszN82sisisis
+isisisisisist8eeVkVkVkVkVkVkVkVkVkVlvjzysisisisisisisisisist
+8eeVkVkVkVkVkVkVkVkVkVl58fH2Pj4+Pjve7gAAAHHFN2a121WtdtVrXbUr
+IrIrIrIrIrIrLfPNeVkVkVkVkVkVkVkVkVkVlvnmvKyKySskrJKySskrJKyS
+skrLfPNXlZJWSVklZJWSVklZJWSVklZb55q8rJKySskrJKySskrJKySskrLf
+PNXlZJWSVklZJWSVklZJWSVklZb55q8rJKySskrJKySskrJKySskrLfPNXlZ
+JWSVklZJWSVklZJWSVklZb55q8rJKySskrJKySskrJKySskrLfPNXlZJWSVk
+lZJWSVkmZiWSWSWTz3333333jAAAAA44pu1mu2rVrtq0skskskskskskzFvm
+6rJu6rJu6rJrSsm7qsm7qsm7ukswGkswGssOc5znOdqqqqqqqqqr33smkswG
+kswGkswGkswGkswGkswGkswGkswGkswGmu2tgOAAAAAccU3a1ZgNJZgNJZgN
+JZgNJZgNJZgNJZgNJZgNJZgNJYKqvaqqqqqqqqq997JpLMBpLMBpLG7qsm7q
+sm7qsm/Y88Vk83VZLdNJZgNJYL6Sr2qqqy2yy2qqqqqqvfeyaSzs66OiSw6D
+SWYDSybuqybuqybuqybuqybuqybvdrXbW3gHAAAAAOOKarJu6rJrSsm7qsm7
+qsm7qrMBpLMBpLMBpLMBpLBVV7VVVVVVVVVXvvZNJZgNJZgFZN3VZN3VZN3V
+ZbulZbbpWaqta7aqta7a2A4AAAA7u7vn83FZBWQVkFZBWQVk+ebqsgrIKyCs
+v6f8vy/wvrXy+PvfZ758fPz8/GfIAAAAAAAAAAAAAAcccccccccAAAAAAAAA
+AAAAAB9n4ADnkAAAAAAAAAAAAAAAAOOOOOOOOOAAAAAAAAAAAAA158+fPnyA
+AA79+/cAAaAAFV9Zdzefy6ml/LKSyeW3RJYbBZPa1s6zzay03ay03ar8ZXh5
+tZabuX2WZnW3RJYbBJYTvy9Ho9Ho9Hoe++++++++4qqq99999999847m6JLC
+Y0lhsElhsEnqaSTw82stN2stN2stN2stN2stN3Wu2uNeczv7zM4wAaAAAYWb
+oksNgssNgssNgssNgks+L4jy28qIlJKURKSUoiUk02VrVErJbQEuxxxxx+Pj
+jABoAABhm6777a7a3W9vvlleB5uWWm7llpu5ZabblloFlhsFlhsFlhsElnl4
+8ePHjx474qqrFVVVVVXi8Nuiyw2Cyw2Cyw2Cyw2Cyw2Cyw2Cyw2Cyw2Cyw2C
+SzrnOc5znfFVVYqqqqqq/t8c4e55vLbossNgssNgssNgssNgssNgssNgssNg
+ssNgssNgk7a8dddddddcYANAAAMM3XfdlhsEnx6yTrbossNgssNgssNgssNg
+ssNgssNgssNgks8vHjx48ePHfFVVYqqqqqq8Xht0WWGwWWGwWWGwWWGwWWGw
+WWGwWWGwWWGwWWGwSWdc5znOc74qqrFVVVVVXi8Nuiyw2Cyw2Cyw2Cyw2Cyw
+2Cyw2Cyw2Cyw2Cyw2N61213zMzMzjABoAAB8c5nO9uiyw2Cyw9MOiyw2Cyw2
+Cyw2PFiJZJZQTimiJbJbRSklKKUkpRTZvZKkvvp9Pp9Pj6cgAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAHPPfn7ft666666dZ8AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAdevXr169ZmYAALv333AAGgKqqqr6F4bdFsNgthsFsNgthsFsNgthsF
+sNgthsFvs+yeW3l6Xm83m6666zABoAABhm6773W972A2A2A2A2A2A2A2N1zn
+Oc5zigGgAAGGbrvvdb3ut73QGwGwGwGwGwGxuuc5znOcVVVYqqqqqq8Xht0G
+wGwGwGwGwGwGwGwGxuuc5znOcVVVaqqqqqq8Xht0GwGwGwGwGwGt73W97re9
+1u6urz11111110AGgBVVVfMvDboNgNgNgNgNjx555eWqqqqub11366666ABo
+AAd3d9O73QAAADt0ALzPGZmYADQAADDN1VVVVVVVVVVVVreZmZmAA0AAA4yW
+sqqqqqqqqqqqqqy77zMzMABoAABh97nvVVVVVVVVm91VVVXH1euvXXXrrpgA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+f6/rzMzMzOugAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAPPnz58+QAAHjx48eAABoAAB9DN1VVVVVVVVVVVVreZmZmAA
+0AAA97vdIAAAAAC+39vfl9OuuuuuuQA0AAA6M3VVVVVVVVVVVd97rXfMzMzA
+AaAAAYZuqqqqqqqqqqqqtbzMzMwAGgAB3d3vd7oAAAAABb7mZmYADQAADjJm
+6qqqqqqqqqqqq1vMzMzAAaAAAYZuqqqqqqqqqqqqtbzMzMwAGgAB3d3vd7oA
+AAAABb7mZmYADQAADDN1VVVVVVVVVVVVreZmZmAA0AAAwzdVVVVVVVVVVVVf
+c788888885gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD6e/o2BzyAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAB9vr169evWZmAAD549evXr1me8wANAAAMM3VVVVV
+VVVX4n5nfvVVVb/F1vz8fHx8fHx8cgBoAAB8GbqqqqqqqqqqqqrW8zMzMABo
+AABnd/L8eAAAB9N0+vugB9h9f6fTrrr2ABoAAB0ZuqqqqqqqqqqqqtbzMzMw
+AGgAAGGbqqqqqqqqqqqqrW8zMzMABoAAHd73e6fG6AAAAAF58fHPPPPIANAA
+AOTN1VVVVVVVVVVVVreZmZmAA0AAAwzdVVVVVVVVVVVVa3mZmZgAPqszMzMz
+AHd3x3e6AAAAAAW++5mZgANAAAMM3VVUAAAAD82/avufWr19X1fV8vq+r6vp
+9O4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG9fP3QeznkAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAH4/nx3357+fGZmYAAef2fOsvXr14zMYAGgAO7u7u+13e6fT
+dAAA93QAK1458c8888gA0AAA5M3UPu/d88AAAAAvl9Pp9Pp9Pp9O7uAaAAAd
+GbqqqqqqqqqqqqrW8zMzMABoAABhm6qqqqqqqqqqqq1vMzMzAAaAAAYZugAA
+AAALfffffffe7u4DQAAD3jebqqqqqqqqqqqqreqzMzMwAHYAABjKqqqqqqqq
+qqqqtZmZmZgANAAAMZUAAAAAAe+++++++93cA0AAAxlVVVVVVVVVVVVXOu1z
+zzzzzzzgAaAAAcsqqqqqqqqqqqrN7r6/9ff2c6+5x8/Pj5+ePn4+AAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAVVXuda92Wyy2/JVfUXnOKqqqqgAAAAAAAAAAAA
+AAAAAAAAAAAAAAAHvX09evXr1mcZgAB379+4AAaAAAYyqqqqqqqqqqqqqszM
+zMwAGgAADM3VVaqqqqqqqqqqrWZmZmYADQAA7u73vQAAAAABe++5mZgANAAA
+MZVVVVVVVVVVVVVrMzMzMABoAABjKqqqqqqqqqqqqu9mZmZnAALxsHoAO735
+8AAAAAALu7uMABoAADOFVVVVVVTe6qqqqrWwMABoAADOFVVVVVVVVVVVVWgG
+AA0AAB+VywAAAAAAXvvvvvvvx3ADQAAGcKqqqqqqqqqqqqvt/a865555559d
+c8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfPv379+/fvMwAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAHx58+fPnMzMAAPyfHjx4zMzMADQAAHPCqqqqqqqqqqqqr
+QDAAaAAAzhVVVVVVVVVVVVVoBgAOwAAGcKoAAAAAH4D3333333497u4DQAAH
+PCqqqqqqqqqqqqrQDAAaAA7u7u9+fAAAAAAC4DAAaAAAzhVVVVVVVVVVVVVo
+BgANAAAZwqqqqqqqqqqqqq0AwAGgAAM+fAAAAAAC7u7u70AGgAAM4VVVVVVV
+VVVVVVaAYADQAAGcKqqqqqr1vdVVVVVX4df+c88++eeeueQAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAO/09+/fj3795mAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AePj1v169eszMAAPs768XjxmZmYAGgAAOeFVVVVVVVVVVVVWgGAA0AAB78+A
+AAAAAGu7u7mYAGgAAM4VVVVVVVVVVVVVaAYADQAAGcKqqqqqqqqqqqqtAMAB
+oAADOMzcAPxd0AAAAvj4+Pj4+Pj3u4A0AABzwqqqqqqqqqqqqqoBgAAA7u7u
+7vuXx3oAAAAACrVmZmZnIAAAAM4VVVVVVVVVVVVVaAYAAAADOFVVVVVVVVVV
+VVWgGAAAADu9+fAAAAO3QAPsWfL7fnM85mc88gAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAfT379+/fv3mYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD156vXr16z
+MYAAb73fuAAAAd3d3d3vz4AAAAAAaAYAAAADOFVVVVVVVVVVVVWgGABwgAAZ
+wqqqqqqqqqqqqq0AwAAAAGfPgAAAAABd3d3d6AAAADOFVVVeN7qqqqqqqqrQ
+PbAAAHd3d3d3e/O4AAAAACrQDAAb432bBwAGcKAABEiIh3d3d3vd3d3AAABn
+CtVqtVqtVqtVqtVAMAAAABnCtVqtVqvVu1Wq1Wqh5GAAB3d3d3d3d31fHekR
+ERERH8V9uUUA7kURWAggp6R8NGTMmWbhUzLzgFO8hAkndYM/YyFiG15/AGL/
+QgitIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAsszP+r8m+9fa+dvo6Fq4afo+2fO7wiKoreDIIRFEV
+7O4+diGFSiT18lB6rQDR7T+p+5/ICuT+26Y2jaqiK9tGiaOvJbgeHTyZR2XI
+nTqA9FSrfxZG73nMZiSLIsgyDIMiKIrlRlCuWD7zh6Ok0YnvymU+Px8p1j5P
+2E/9T+/HTTKWUshBFWl1x8V+1c1lyrgP3jeBcfqCAE86tn+kuEVcBFW6CxG4
+DotWiP5dx3J6lOvn5j5bQQAsF5loOK2DvW94irQaxbwc/ussXzQHm1iKuHUM
+Hv8lF1jQTA4l4BwGlOM45JJIb42+UsYsGDdSiyytw1qCq0yVr+p9u0fsOtYM
+Gq5QKAX03BFXKto2eytm4uQRV5hdXnHNxoquFB/4IqzYDUjVAALOriB9N+q2
+fU59zoGEUVc47ecyZwOAcRFXdEzPkM+tGeJAik4Bgl4oAV2gepS8x9CtVekc
+VFXYCAGOmeXVj2FlFc6gAZIVtEVbBiwTxOofuLV5e40Im4iq7Booq+QDriir
+z7B2iZB8ukdfyODf6dhwD25j0n0toIq1VVenu/MzPT1avEeW8eMfcbo3di/Y
+fV6OrcHeXiEVbxuG0kHznjXlEVequZPbtXUIq8D0Z6peJlsWiVyCKu/aIq/i
+OdRV5By6HERVwc9hYoq6idgERtRxou7dfYPm2YDURVxqBURV+7KIq7hvdAIA
+bNPrQ2AcGjs6DKOwD8Dt0lskNQGWgirRHiMg5lAA23LtuqBiIq8vhXqfJ7OV
+Q30C7kinChIAvgWYwA==
 
-****************
-
-When I get above error message the output of pvdisplay for
-/dev/hda7,/dev/hda8, /dev/hda9 is as follows (same for all)
-
-************************
-
---- Physical volume ---
-PV Name               /dev/hda9
-VG Name               my_volume_group
-PV Size               196.08 MB [401562 secs] / NOT usable 4.19 MB [LVM: 128
-KB]
-PV#                   3
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              47
-Free PE               39
-Allocated PE          8
-PV UUID               cLI0Fw-Ezcz-dZ01-oEmE-LDat-K1Ep-q5k5Bl
-
-
-**********************
-
-
-So please guide me what should I need to do so that I will be able to get 
-pvmove working
-
-Thanks and Regards
-Kiran
-
-_________________________________________________________________
-They are beautiful. They are in danger. 
-http://server1.msn.co.in/Slideshow/BeautyoftheBeast/index.asp Our 
-four-legged friends.
+--8323328-1332444705-1058870714=:30328--
