@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Disk crash - can't remove...
-Message-ID: <20030926115046.F2618@sistina.com>
-References: <82706A2FAC4D08468A1652B4B7DD0C44CB098F@mx1.bouvet.no>
+From: jon+lvm@silicide.dk
+Subject: Re: [linux-lvm] RFC: DM encryption target?
+Message-ID: <20030926124805.GA2462@gw.silicide.dk>
+References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com> <1064343664.10276.3.camel@chtephan.cs.pocnet.net> <3F717F13.1050407@silicide.dk> <1064404776.5915.9.camel@chtephan.cs.pocnet.net> <20030924142145.GV12384@shell.blacknet.de> <1064506078.31091.15.camel@chtephan.cs.pocnet.net>
 Mime-Version: 1.0
-In-Reply-To: <82706A2FAC4D08468A1652B4B7DD0C44CB098F@mx1.bouvet.no>; from kjetil.paulsen@bouvet.no on Thu, Sep 25, 2003 at 10:14:08PM +0200
+Content-Disposition: inline
+In-Reply-To: <1064506078.31091.15.camel@chtephan.cs.pocnet.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,88 +15,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 26 05:02:02 2003
+Date: Fri Sep 26 07:50:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Kjetil,
+On Thu, Sep 25, 2003 at 06:07:58PM +0200, Christophe Saout wrote:
+> Am Mi, den 24.09.2003 schrieb Goetz Bock um 16:21:
+> 
+> > > Another way to do a password change would be to not reencrypt the device
+> > > but to store the symmetrical key somewhere else and encrypt it with a
+> > > password hash and to just reencrypt that key with another password.
+> > That would be nice, just use the first block for the key (giving you
+> > 512byte keysize, and you can generate a realy strong key[*]).
+> > 
+> > Just in idea.
+> > 
+> > [*] yes, i know it's only as strong as the user's password. 
+> >     Security is only as good as it's weekest link, and in the end
+> >     that's always the user.
+> 
+> I don't know, but couldn't the use of a one-sector block slow things
+> down because of alignment issues? Perhaps using a 4k block would be more
+> useful or storing the sector at the end of the device (like the linux
+> raid info sector).
 
-the PVs must be initialized before you can use them in some other VG.
-
-Run "pvcreate -ff on /dev/hd[abe-h]" on them.
-
-Regards,
-Heinz    -- The LVM Guy --
+maybe, but does it matter? You only read the sector once, when you "open"
+the device, and write to it when you change password. During use, the real
+key is stored in memory, like any other encryption device.
 
 
-On Thu, Sep 25, 2003 at 10:14:08PM +0200, Kjetil H. Paulsen wrote:
-> Hi
+> I think that 512 bytes / 4096 bits should really be enough to store the
+> keys.
 > 
-> One of the disks in my volume was destroyed, I really don't care about
-> the data but now I can't remove my volume group.
-> And I can't add the disks to other volumes either. Tried the UUID fixer,
-> but no luck :(
-> Any help appreciated... (using RH9 and LVM 1.0.3)
+> I could store the data in a simple text format, starting with a magic
+> header. Something like:
 > 
-> Pvscan:
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdg"  is associated to unknown VG
-> "stuff_group" (run vgscan)
-> pvscan -- inactive PV "/dev/hdh" is in no VG  [114.50 GB]
-> pvscan -- inactive PV "/dev/hde"  is associated to unknown VG
-> "stuff_group" (run vgscan)
-> pvscan -- inactive PV "/dev/hdf"  is associated to unknown VG
-> "stuff_group" (run vgscan)
-> pvscan -- inactive PV "/dev/hda"  is associated to unknown VG
-> "stuff_group" (run vgscan)
-> pvscan -- inactive PV "/dev/hdb"  is associated to unknown VG
-> "stuff_group" (run vgscan)
-> pvscan -- total: 6 [296.77 GB] / in use: 5 [182.27 GB] / in no VG: 1
-> [114.50 GB]
-> 
-> Vgscan:
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
-> volume group "stuff_group" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> group
-> 
-> [root@theone root]# vgchange -a n stuff_group
-> vgchange -- couldn't  open volume group "stuff_group" group special file
-> vgchange -- try vgmknodes
-> 
-> [root@theone root]# vgmnodes
-> -bash: vgmnodes: command not found
-> [root@theone root]# vgmknodes
-> vgmknodes -- no volume groups found to create nodes for
-> 
-> [root@theone root]# vgmknodes stuff_group
-> vgmknodes -- volume group "stuff_group" doesn't exist
-> 
-> [root@theone root]# vgremove stuff_group 
-> vgremove -- volume group "stuff_group" doesn't exist
-> 
-> 
-> /kjetilhp
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> #CrYpT
+> version = 1
+> cipher = "aes"
+> mode = "cbc"
+> keysize = 256
+> pwdsalt = "0e3a5b4c"
+> pwdhash = "md5"
+> pwdenc = "3des"
+> key = "8e3eb...blabla..."
+> hash = "23e4f"
+> node = "/dev/mapper/crypt"
+> offset = ...useful?
+> size = ...useful? 
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+this could be usefull
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> I'm really no crypto expert, but does this sound reasonable?
+
+yes, see how ppdd does it, or, in one week how me and my friend does it.
+
+ 
+
+
+JonB 
