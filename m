@@ -1,10 +1,11 @@
-Date: Tue, 16 Oct 2001 23:37:37 +0200
+Date: Tue, 16 Oct 2001 23:40:34 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pv problem?
-Message-ID: <20011016233737.A7778@sistina.com>
-References: <B8E11CED6182E246A9A427A68A9F640670E58B@OA4-SERVER.oa.oclc.org>
+Subject: Re: [linux-lvm] Remount a LVM Vol after a system crash
+Message-ID: <20011016234034.B7778@sistina.com>
+References: <000201c1565e$5affe980$6c88e289@tweety>
 Mime-Version: 1.0
-In-Reply-To: <B8E11CED6182E246A9A427A68A9F640670E58B@OA4-SERVER.oa.oclc.org>; from foughtt@oclc.org on Tue, Oct 16, 2001 at 02:57:32PM -0400
+In-Reply-To: <000201c1565e$5affe980$6c88e289@tweety>; from chberger@pool.informatik.rwth-aachen.de on Tue, Oct 16, 2001 at 06:19:38PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,124 +17,118 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-Tom,
+Christoph,
 
-you seem to have hit the gcc 2.96 or similar optimizer bug.
+I assume that you are suffering from a PE missalignent flaw which was
+in 0.9 Beta 7.
 
-Please regenerate the LVM software *without* optimization (change "-O2"
-to "-O0" in the configure script;run "make distclean";
-run "./configure;make;make install").
-
-With regard to PVs displayed as "NOT available": they simply belong
-to a not activated volume group and hence have that status.
+Please update to the recent LVM version available at www.sistina.com.
+Follow the information in INSTALL and PATCHES/README to get your SuSE sys=
+tem
+updated. You need to have the kernel source package and the gcc packages
+installed in order to be able to do this.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Tue, Oct 16, 2001 at 02:57:32PM -0400, Fought,Tom wrote:
-> Just started working with LVM.
-> I have 2 6GB IDE drives. Had test logical volumes working.
-> Destroyed and attempted to create new PVs, VGs, LVs.
-> I can create PVs, and VGs but I get a segmentation violation/core dump
-> when trying to create LVs.
->  
-> I have /dev/hdb1 and /dev/hdb2 assigned to a VG. 
-> When I try to create an LV with lvcreate it errors out.
->  
-> The curious thing for me is the pvdisplay.. the PVs have a 
-> status of NOT Available. I am trying to determine why this would be.
->  
-> Here is what I have:
-> vgdisplay -v
-> --- Volume group ---
-> VG Name               testvg
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                255
-> Cur LV                0
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                255
-> Cur PV                2
-> Act PV                2
-> VG Size               3.80 GB
-> PE Size               4.00 MB
-> Total PE              974
-> Alloc PE / Size       0 / 0
-> Free  PE / Size       974 / 3.80 GB
-> VG UUID               yawi5j-Trcb-fYu0-7xFZ-A467-63hW-MTJzMM
->  
-> --- No logical volumes defined in "testvg" ---
->  
-> 
-> --- Physical volumes ---
-> PV Name (#)           /dev/hdb1 (1)
-> PV Status             available / allocatable
-> Total PE / Free PE    487 / 487
->  
-> PV Name (#)           /dev/hdb2 (2)
-> PV Status             available / allocatable
-> Total PE / Free PE    487 / 487
-> 
->  
->  
-> pvdisplay /dev/hdb1
+On Tue, Oct 16, 2001 at 06:19:38PM +0200, Christoph Berger wrote:
+> Hello,
+> A few days ago my system crashes and i=92ve used LVM v 0.8 with one vol=
+ume
+> group(server), two physical volumes(hda6, hdb6) and one logical
+> volume(dev/server/ftp)
+> Now i=92ve installed Suse 7.2 with LVM v 0.9 Beta7, but i can=92t mount=
+ the
+> logical volume.
+> The error message is:
+> # mount /dev/server/ftp /mnt
+> mount: wrong fs type, bad option, bad superblock on /dev/server/ftp,
+>        or too many mounted file systems
+> =20
+> I get the following outputs from my system:
+> =20
+> # vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "server"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volum=
+e
+> group
+> =20
+> # pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- ACTIVE   PV "/dev/hda6" of VG "server" [37.78 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb5" of VG "server" [41.92 GB / 0 free]
+> pvscan -- total: 2 [79.71 GB] / in use: 2 [79.71 GB] / in no VG: 0 [0]
+> =20
+> # pvdisplay /dev/hda6
 > --- Physical volume ---
-> PV Name               /dev/hdb1
-> VG Name               testvg
-> PV Size               1.91 GB / NOT usable 5.18 MB [LVM: 125.00 KB]
+> PV Name               /dev/hda6
+> VG Name               server
+> PV Size               37.78 GB / NOT usable 3.75 MB [LVM: 267 KB]
 > PV#                   1
-> PV Status             NOT available
-> Allocatable           yes
-> Cur LV                0
+> PV Status             available
+> Allocatable           yes (but full)
+> Cur LV                1
 > PE Size (KByte)       4096
-> Total PE              487
-> Free PE               487
-> Allocated PE          0
-> PV UUID               CwulSL-NPB0-Bega-3tTP-S0qR-Nlcu-T3wYQb
->  
-> pvdisplay /dev/hdb2
+> Total PE              9671
+> Free PE               0
+> Allocated PE          9671
+> PV UUID               /dev/h-da6
+> =20
+> # pvdisplay /dev/hdb5
 > --- Physical volume ---
-> PV Name               /dev/hdb2
-> VG Name               testvg
-> PV Size               1.91 GB / NOT usable 5.21 MB [LVM: 125.00 KB]
+> PV Name               /dev/hdb5
+> VG Name               server
+> PV Size               41.93 GB / NOT usable 3.45 MB [LVM: 271 KB]
 > PV#                   2
-> PV Status             NOT available
-> Allocatable           yes
-> Cur LV                0
+> PV Status             available
+> Allocatable           yes (but full)
+> Cur LV                1
 > PE Size (KByte)       4096
-> Total PE              487
-> Free PE               487
-> Allocated PE          0
-> PV UUID               FyLY4F-odGj-1iHA-KRnD-YVhV-Mf8O-jlhB4z
->  
->  
-> trying to create the lv... just the last part of debug included..
-> lvcreate -d -v -L1G -n testlv testvg
->  
-> <4444> pv_check_consistency -- LEAVING with ret: 0
-> <333> lv_check_on_pv -- LEAVING with ret: 1
-> <22> pv_reserve_pe -- LEAVING with ret: 0
-> <1> lv_setup_for_create -- pv_reserve_pe returned: 0   pe_last: 256  pe: 0
-> <1> lv_setup_for_create -- pe: 0
-> <1> lv_setup_for_create -- LEAVING with ret: 0
-> lvcreate -- setting read ahead sectors
-> <1> lvm_dont_interrupt -- CALLED
-> <1> lvm_dont_interrupt -- LEAVING
-> lvcreate -- creating logical volume VGDA in kernel
-> Segmentation fault (core dumped)
->  
+> Total PE              10732
+> Free PE               0
+> Allocated PE          10732
+> PV UUID               /dev/h-db5
+> =20
+> # vgchange -ay
+> vgchange -- volume group "server" already active
+> =20
+> # lvchange -ay /dev/server/ftp
+> lvchange -- logical volume "/dev/server/ftp" is already active
+> lvchange -- availability of logical volume "/dev/server/ftp" doesn't
+> have to be changed
+> lvchange -- logical volume "/dev/server/ftp" didn't have to be changed
+> =20
+> =20
+> I=92ve tried to follow the instructions of the mailing list article, i=92=
+ve
+> found at http://www.geocrawler.com/archives/3/3500/2001/4/0/5655568/
+> But it doesn=92t work, After vgchange =96ay I get an error message, too=
+,
+> like
+> =20
+> vgcfgrestore -- ERROR: different structure size stored in
+> "/etc/lvmconf/export.conf"
+> than expected in file vg_cfgrestore.c [line=20
+> > 120]
+> > vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group
+> "export"
+> =20
+> I hope you can help me,
+> Thanks=20
+> Christoph=20
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -141,4 +136,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
