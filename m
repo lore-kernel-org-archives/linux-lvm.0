@@ -1,11 +1,9 @@
-Return-Path: <ulf@twc.de>
-Message-ID: <3A7E61D7.D417A879@twc.de>
-Date: Mon, 05 Feb 2001 09:18:31 +0100
-From: Ulf Bartelt <ulf@twc.de>
+Return-Path: <james@fr.clara.net>
+Date: Mon, 5 Feb 2001 12:16:51 +0100 (CET)
+From: James <james@fr.clara.net>
+Message-ID: <Pine.LNX.4.21.0102051213590.432-100000@munster.noc.fr.clara.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] startup stuff an dnew question :-)
-References: <Pine.LNX.4.21.0102021438490.380-100000@munster.noc.fr.clara.net>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lv extend
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,48 +15,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-JAmes wrote:
-> 
-> It works ! Thanks to everybody who helped. I am too used to debian
-> packages doing all for you.
-> 
-> /etc/rcS.d is the one that worked. So has init2 got anything to do with
-> /etc/rc2.d ???
-> 
-> Another question I have is can anybody show me a good install plan, a
-> partition scheme for a machine where everything but the / is lvm'ed. I
-> haven't seen this discussed anywhere. At the moment I am just testing on a
-> box with a partition / a swap and a /home .
-> 
-> If I did a standard installation using say 5 partitions / /usr /var/ /home
-> swap, it would be a pain transferring this to an lvm system. So how do you
-> lot do it ?
+Hello
 
-This is how I did it on my router/mailserver:
+Is it normal after growing an LV not to see the change with df -h ? But it
+can be seen with vgdisplay -v ?
 
-Filesystem           1k-blocks      Used Available Use% Mounted on
-/dev/hda2                31729     14865     15226  49% /
-/dev/hda1                 3963      1273      2486  34% /boot
-/dev/vgodo/tmp           63461        19     60821   0% /tmp
-/dev/vgodo/usr          222135    180405     30262  86% /usr
-/dev/vgodo/var           63461     27578     33917  45% /var
-/dev/vgodo/home          63461      2467     60339   4% /home
-/dev/vgodo/spool_squid  507748     23395    458139   5% /var/spool/squid
+james@munster:~$ df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/hda1             4.6G  1.5G  2.9G  33% /
+/dev/lvdev/home       984M  322M  613M  35% /home
+/dev/lvdev/var        984M   91M  843M  10% /var
+/dev/lvdev/usr        984M  485M  450M  52% /usr
 
-But the tricky part is: hda2 and hda1 are LVs too...
 
-I just faked partition map entries for them and I use them only by this
-"partition aliases", so I can boot a system living totally in LVs using
-conventional things like lilo...
+I added half a gig to /usr ??
 
-Have a look into http://www.freenet.de/y.e.t.i./
+--- Logical volume ---
+LV Name                /dev/lvdev/usr
+VG Name                lvdev
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 1
+LV Size                1.46 GB
+Current LE             375
+Allocated LE           375
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
 
-I'm using this trick for over a year now and I'm still happy with it.
-All my Linuxes @home are set up this way ( if not a diskless install :-)
-)...
-
-Bye!
-	Ulf.
+Thanks
