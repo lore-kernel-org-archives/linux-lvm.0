@@ -1,14 +1,14 @@
 Return-Path: <lewis@sistina.com>
-Date: Thu, 5 Jul 2001 07:00:55 -0500
+Date: Thu, 5 Jul 2001 11:46:18 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Re: another nice feature for packagers ...
-Message-ID: <20010705070055.A15869@sistina.com>
-References: <Pine.LNX.4.33.0106171519240.14970-200000@moon.dice.hu> <20010618095533.A32072@sistina.com> <20010629140922.B32501@mail.wave.co.nz> <20010703131338.A23563@sistina.com> <20010704124620.B7376@mail.wave.co.nz>
+Subject: Re: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
+Message-ID: <20010705114618.A5662@sistina.com>
+References: <20010705083402.D11805@vestdata.no> <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
 Content-Disposition: inline
-In-Reply-To: <20010704124620.B7376@mail.wave.co.nz>; from markv@wave.co.nz on Wed, Jul 04, 2001 at 12:46:20PM +1200
+In-Reply-To: <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com>; from bcrl@redhat.com on Thu, Jul 05, 2001 at 03:35:31AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,50 +20,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: Mark van Walraven <markv@wave.co.nz>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 04, 2001 at 12:46:20PM +1200, Mark van Walraven wrote:
-> On Tue, Jul 03, 2001 at 01:13:39PM -0500, AJ Lewis wrote:
-> > On Fri, Jun 29, 2001 at 02:09:23PM +1200, Mark van Walraven wrote:
-> > > On Mon, Jun 18, 2001 at 09:55:33AM -0500, AJ Lewis wrote:
-> > > > Just FYI, the entire build system is going to get an overhaul after=
- the 1.0  =20
-> > > > release, so I will definitely be making sure these detail are kept =
-in mind   =20
-> > > > for that.
-> > >=20
-> > > Would it be possible to automatically build a liblvm_pic.a?  That wou=
-ld
-> > > allow building a "reduced" liblvm.so (containing only those functions
-> > > required for vgscan and vgchange), suitable for a tight initrd.
-> >=20
-> > How is this different than the liblvm-10.a that is built now?
+On Thu, Jul 05, 2001 at 03:35:31AM -0400, Ben LaHaise wrote:
+> On Thu, 5 Jul 2001, Ragnar Kj=F8rstad wrote:
+> > What do you mean?
+> > Is it not feasible to fix this in LVM as well, or do you just not know
+> > what needs to be done to LVM?
 >=20
-> I don't know about 1.0, but 0.9.1_beta6 built a liblvm-10.so but no
-> liblvm-10.a.
+> Fixing LVM is not on the radar of my priorities.  The code is sorely in
+> need of a rewrite and violates several of the basic planning tenents that
+> any good code in the block layer should follow.  Namely, it should have 1)
+> planned on supporting 64 bit offsets, 2) never used multiplication,
+> division or modulus on block numbers, and 3) don't allocate memory
+> structures that are indexed by block numbers.  LVM failed on all three of
+> these -- and this si just what I noticed in a quick 5 minute glance
+> through the code.  Sorry, but LVM is obsolete by design.  It will continue
+> to work on 32 bit block devices, but if you try to use it beyond that, it
+> will fail.  That said, we'll have to make sure these failures are graceful
+> and occur prior to the user having a chance at loosing any data.
 
-Yeah, the latest CVS now builds liblvm-10.a instead of just liblvm.a (That
-was an oversight on my part :( )
+So are these tenents written down somewhere, or is it just understood that
+this is how it needs to be?
 
-> Liblvm.a could not be reduced - the reduction tool was expecting to
-> find a "PIC archive library" containing "individual shared objects"
-> with .os suffixes.
-
-Hmm...interesting.  Which reduction tool is this?  I haven't dealt with this
-before, but it definitely would be worth supporting.
-
-> Or are you saying that liblvm-10.a already contains only the minimum
-> necessary for vgscan and vgchange?  If so, is there any potential for
-> saving initrd space with cut-down versions of vgscan and vgchange?
-
-I don't think the current liblvm-10.a does this.  I was not aware of a tool
-that handled this case, but would love to get it to work. :)
+Getting LVM 64-bit ready is certainly a priority for the LVM team, but this
+is the first I've seen of concrete requirements for doing so.  Of course, I
+could just be blind and have missed everything too.  ;)
 
 Regards,
 --=20
@@ -79,8 +66,8 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Students nowadays, complaining they only get 5MBs of disk space!
-In my day we were lucky if we had one file, and that was /dev/null.
+The three most dangerous things are a programmer with a soldering iron, a
+manager who codes, and a user who gets ideas.
 -----End Obligatory Humorous Quote------------------------------------------
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-638-0500
@@ -94,10 +81,10 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-File not found. Should I fake it? (Y/N)
+Linux: Because rebooting is for adding new hardware.
 -----End Obligatory Humorous Quote------------------------------------------
 
---qDbXVdCdHGoSgWSk
+--envbJBWh7q8WU6mo
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -105,9 +92,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7RFb3pE6/iGtdjLERAjwcAJ4+PzfdJwWa1+MWBXYuUkqO4s9P6QCfapK2
-mbmyhDr45a+kZBjFSFQ/kHA=
-=0z1D
+iD8DBQE7RJnapE6/iGtdjLERAi4gAJwIl1t1qoyWxjn+iXj78Snvydp62wCgl+jJ
+MqmkhnuqjcMAPdFRbmHcbOE=
+=v2m/
 -----END PGP SIGNATURE-----
 
---qDbXVdCdHGoSgWSk--
+--envbJBWh7q8WU6mo--
