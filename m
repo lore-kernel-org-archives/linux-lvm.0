@@ -1,13 +1,11 @@
-Date: Tue, 18 Sep 2001 01:35:04 +0200
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] LVM RPMs
-Message-ID: <20010918013504.C17835@dragon.blacknet.de>
-References: <20010910133533.J31313@sistina.com> <003801c13fce$b1e19b50$0300000a@pacbell.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="vEao7xgI/oilGqZ+"
-Content-Disposition: inline
-In-Reply-To: <003801c13fce$b1e19b50$0300000a@pacbell.net>; from e@arix.com on Mon, Sep 17, 2001 at 04:15:52PM -0700
+From: Ed Tomlinson <tomlins@cam.org>
+Subject: Re: [linux-lvm] Re: lvcreate dumping core with 2.4.10-pre9 (was pvcreate ...)
+Date: Mon, 17 Sep 2001 20:26:32 -0400
+References: <200109160203.WAA10814@erez.physics.lsa.umich.edu> <3BA50657.3020600@st-peter.stw.uni-erlangen.de> <200109172228.SAA24083@erez.physics.lsa.umich.edu>
+In-Reply-To: <200109172228.SAA24083@erez.physics.lsa.umich.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <20010918002633.7B46869D@oscar.casa.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,37 +17,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com, David Chin <dwchin@umich.edu>
 
---vEao7xgI/oilGqZ+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On September 17, 2001 06:28 pm, David Chin wrote:
+> In message <3BA50657.3020600@st-peter.stw.uni-erlangen.de>, svetljo writes:
+> > Hi
+> > why don't you try pre 2.4.10-pre8 kernel, lvm is not ready for
+> > 2.4.10-pre9 i think
+> > and have you tried compileing the tools with configure
+> > --enable-static_link
+>
+> I just tried 2.4.10-pre8, but without the "enable-static_link" option.
+> Still dumps core.  Has anyone on this list had success with lvm-1.0.1-rc2
+> and a 2.4.10 kernel?
 
+Seems to work fine here.  2.4.10-pre10 / lvm-1.01-rc2 with the generated lvm 
+patch updated as explained in a previous message.  I have use lvcreate but only 
+to make snapshots and its working correctly.
 
-On Mon, Sep 17 '01 at 16:15, Erick Calder wrote:
-> just a quick status update.  I'm still working on this!
-I've SRPMs for kernel and tools for Trustix Secure Linux on
-
-    http://www.blacknet.de/linux
-
-they might just work with redhat ...
-
---=20
-Goetz Bock                                              IT Consultant
-Dipl.-Inf. Univ.
-
---vEao7xgI/oilGqZ+
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7poinf5srOMkjkQoRAjiOAKDExCNRiB5qJBW/+l2NKNku+9j0TgCfdpei
-TJRh0Yds9WN0cxDUIAAWjYo=
-=SQEV
------END PGP SIGNATURE-----
-
---vEao7xgI/oilGqZ+--
+Ed Tomlinson
