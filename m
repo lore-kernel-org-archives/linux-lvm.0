@@ -1,60 +1,32 @@
-Date: Thu, 19 Oct 2000 01:29:57 -0500
-From: ^chewie <chewie@wookimus.net>
-Subject: [linux-lvm] Thanks! and Swap on LVM?
-Message-ID: <20001019012957.C699@wookimus.net>
-References: <39E3008D.A969BC89@winqvist.net> <200010112229.QAA01048@lynx.turbolabs.com>
+Message-Id: <5.0.0.25.1.20001019102030.00adc700@pcsmail>
+Date: Thu, 19 Oct 2000 10:24:55 +0200
+From: Henrik Andersson <h.andersson@pcs-pfundner.at>
+Subject: [linux-lvm] installing / on lvm with suse 7
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
-Content-Disposition: inline
-In-Reply-To: <200010112229.QAA01048@lynx.turbolabs.com>; from adilger@turbolinux.com on Wed, Oct 11, 2000 at 04:29:05PM -0600
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
+Hi everybody!
 
---5QAgd0e35j3NYeGe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm trying to install suse 7 and have the following circumstances:
 
-On Wed, Oct 11, 2000 at 04:29:05PM -0600, Andreas Dilger wrote:
-> Try the updated lvm tools (SRPM) at:
->=20
-> ftp://ftp.stelias.com/pub/adilger/
+- made different lvm groups, one of them is 'unix'
+- seperated 'unix' in 3 parts
+- 1 = root
+- 2 = usr
+- 3 = usr2
 
-Thank you!!!  I usually stay away from SRPM's, but now that I've got
-alien, it's not so bad.  'alien --to-tgz' is a dream.  A plus side to
-all of this, my pvscan no longer segfaults! ;-)  Neither does my
-vgscan! ;-)  I was actually going to sit down with gdb tonight and do
-some backtracing when I saw your update.  Very nice to have a 1:00 in
-the morning. ;-)  Again, thanks!
+when i come to the point to specify the mountpoints and i'm putting
+/ on 'root' then i get the message that putting / on an lvm
+is not supported from suse but it should work. You just have
+to make some trivial settings but i haven't found what
+settings i have to do.
 
-OH.  I've noticed a problem as of late.  While trying lvm on both the
-2.4.0-test9 and 2.2.17, I have not been able to use an lv device as a
-swap device.  The computer starts acting like it's got bad memory and
-segfaults during compile time, most notably during kernel compiles.
+Does anybody know about those settings?
 
-Has anyone successfully used a lv parition as a swap device???
-
-{good thing I had an extra HD}
-
---=20
-  Chad "^chewie, gunnarr" Walstrom <chewie@wookimus.net>
-              http://wookimus.net/chewie
-
---5QAgd0e35j3NYeGe
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.3 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE57pTlDMcLGCBsWv0RAg9WAJ9fOhyGXGMf5oj+cS7z+VDioudL1QCfS5+h
-SxxKyi5SQlxoQq4NmN1xR80=
-=BwLP
------END PGP SIGNATURE-----
-
---5QAgd0e35j3NYeGe--
+thanks,
+Henrik
