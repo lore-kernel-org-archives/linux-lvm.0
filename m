@@ -1,8 +1,10 @@
-From: Jan Rhebergen <jan@rhebergen.net>
-Message-Id: <20031111173043.4ad75d3b.jan@rhebergen.net>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] lvm metadata
+Message-ID: <20031111180703.GA32757@percy.comedia.it>
+References: <200311111144.36636.benoit.peccatte@enst-bretagne.fr>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] how do i recover "lost" vg info?
+Content-Disposition: inline
+In-Reply-To: <200311111144.36636.benoit.peccatte@enst-bretagne.fr>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,44 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 11 10:32:02 2003
+Date: Tue Nov 11 12:08:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: Benoit <benoit.peccatte@enst-bretagne.fr>
+Cc: linux-lvm@sistina.com
 
-Hello there,
+On Tue, Nov 11, 2003 at 11:44:36AM +0100, Benoit wrote:
+>You may ask why. Then is my second question, why aren't vgscan and vgchange 
+>implemented in kernel and called at boot time ? This would make us be able to 
+>consider logical volumes as standard partitions and mount them easily, even 
+>as /
+because lvm tools are too big and complex to go into kernel space,
+they are better into userspace and invoked via initrd if you want to
+use lvm root.
 
-Trough inexperience with LVM i've got landed myself into trouble. Before posting an even lengthier story about exactly what i did i'll first briefly describe what happend.
-
-I created an LVM system on host "titan' running Debian (sarge). It took some effort to get an LVM root file system working but I finally got it right. 
-
-Over confident by my recent succes I decided to give another host called "doors" a similar treatment. In the process I parked a huge amount of data from "doors" on "titan". Before (i think) doing that I made a vg called doors_vg on the second hd of titan (using the whole disk as a pe). I then removed titans first hd and put doors second (data) hd in its place. Not having an os running on either drives i booted a knoppix cdrom and used that to access the lv i had created earlier. In this way I was able to copy between the drives. So far so good. 
-
-I replaced to original first hd in titan and booted expecting my rootfs system to come up but alas it didn't. vgscan reported this error message.
-
-ERROR "vg_read_with_pv_and_lv(): current PV" can't getdata of volume group "vg" from physical volume(s).
-
-The vg on the second drive called "door_vg" (containing a backup of doors data) is however recognised and accessible. Logical volumes seem in order but the size of the vg seems wrong. 
-
-pvdisplay reports a pv size of 111GB with 32GB not usable
-
-Now, the 111GB is the size of the combined lv's on titans second drive. The non usable 32GB seems to be the combined size of the lv's on titans first drive.
-
-I need to recover access to the vg and lv's that should be present on the first drive. How do I go about restoring this? What steps should I take to "debug"? 
-
-I think part of the problem was using the Knoppix cdrom. Although it had lvm support it (vgscan) cannot write in the /etc directory. Reading the howtos I see that I did not go about the process in the right way.
-
-Any advice? 
-
-
-regards,
-
-Jan
-
-
-
-
+L.
 
 -- 
-Message originates from the laptop of:
-  J.B Rhebergen, Scientist EM Effects, TNO-FEL
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
