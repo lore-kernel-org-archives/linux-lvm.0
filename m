@@ -1,27 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9SKLKr11446
-	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 16:21:20 -0400
-Received: from main.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id i9SKL9mC003626
-	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 16:21:09 -0400
-Received: from root by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1CNGlg-0007No-00
-	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 22:21:08 +0200
-Received: from triangulo.it.uc3m.es ([163.117.139.109])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 22:21:08 +0200
-Received: from ptb by triangulo.it.uc3m.es with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 22:21:08 +0200
-From: Peter T. Breuer <ptb@lab.it.uc3m.es>
-Date: Thu, 28 Oct 2004 21:17:11 +0200
-Message-ID: <n6t752-uf2.ln1@triangulo.it.uc3m.es>
-References: <41801ADE.6030308@monjoin.net> <20041028011738.GD13737@kluge.net>
-	<41808B37.40406@monjoin.net>
-	<20041028063530.GA13279@percy.comedia.it>
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: Software raid on top of lvm logical volume
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9T9Xor17455
+	for <linux-lvm@redhat.com>; Fri, 29 Oct 2004 05:33:50 -0400
+Received: from it-ep1-exch.ocsdom.ko.local (it-ep1-exch.krollontrack.com
+	[204.73.176.253])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id i9T9Xn1F015469
+	for <linux-lvm@redhat.com>; Fri, 29 Oct 2004 05:33:49 -0400
+Message-ID: <2E9DA7DCA1129B4DA2DCA703100F387D7C7CCF@deexch.ontrack.com>
+From: hengelland@krollontrack.de
+Date: Fri, 29 Oct 2004 04:32:57 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C4BD9A.4632DEEE"
+Subject: [linux-lvm] Datarecovery on LVM volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,36 +22,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Luca Berra <bluca@comedia.it> wrote:
-> On Thu, Oct 28, 2004 at 08:01:27AM +0200, Eric Monjoin wrote:
-> >md9 : active raid1 emcpowerd1[2] [dev e8:e1][0]
-> >      42829184 blocks [2/1] [U_]
-> >      [>....................]  recovery =  1.4% (630168/42829184) 
-> >finish=68.1min speed=10315K/sec
-> this is a problem with linux md raid. it does not support fast resync
-> with a bitmap of changed sectors, there is a project to implement it,
-> but it is not yet in the standard kernel.
-> look on the linux-raid mailing list archives for something called 'fast
-> raid 1'.
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-   fr1.sf.net (also fr5.sf.net may be of interest).
+------_=_NextPart_001_01C4BD9A.4632DEEE
+Content-Type: text/plain;
+	charset="iso-8859-1"
 
-   and http://www.it.uc3m.es/ptb/fr1
+We got a couple of drives with the partiton identifier "0x8E". They are all
+part of an LVM with kind of EXT2 structures.
+The EXT2 structures do not look like they usually do ... superblocks are way
+different.
+I would like to ask if somebody could provide me with some Offset
+information how
+physical volumes, volume groups and logical volumes work together on a
+sector table basis ...
+ 
+Many thanks
+ 
+Holger Engelland
+DataRecovery Supervisor
+Kroll Ontrack Germany  
 
-(yes, I am the author). Those are for 2.4 kernels. A version fo fr1
-for 2.6 kernels with additional ondisk bitmaps has been done by Paul
-Clements, the linux nbd maintainer, and patches by him are around.
+------_=_NextPart_001_01C4BD9A.4632DEEE
+Content-Type: text/html;
+	charset="iso-8859-1"
 
-I should look them up and merge the two .. bids accepted!
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 
-> i do not believe you would have any advantage in stacking md above lvm
-> anyway.
 
-That is right. In fact it sounds downright risky to me.
+<META content="MSHTML 6.00.2800.1476" name=GENERATOR></HEAD>
+<BODY>
+<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>We got a couple of 
+drives with the partiton identifier "0x8E". They are all part of an LVM with 
+kind of EXT2 structures.</FONT></SPAN></DIV>
+<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>The EXT2 structures 
+do not look like they usually do ... superblocks are way 
+different.</FONT></SPAN></DIV>
+<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>I would like to ask 
+if somebody could provide me with some Offset information 
+how</FONT></SPAN></DIV>
+<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>physical volumes, 
+volume groups and logical volumes work together on a sector table basis 
+...</FONT></SPAN></DIV>
+<DIV><SPAN class=718561809-29102004><FONT face=Arial 
+size=2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>Many 
+thanks</FONT></SPAN></DIV>
+<DIV><SPAN class=718561809-29102004><FONT face=Arial 
+size=2></FONT></SPAN>&nbsp;</DIV>
+<DIV><B><I><FONT face="Arial Black" color=#000080 size=2>Holger 
+Engelland</FONT><BR></I><FONT face="Arial Narrow" color=#808080 
+size=2>DataRecovery Supervisor</FONT></B><FONT face=Arial><BR></FONT><B><FONT 
+face="Arial Narrow"><FONT size=2><FONT color=#808080>Kroll Ontrack&nbsp;<SPAN 
+class=718561809-29102004><FONT color=#000000>Germany</FONT></SPAN></FONT><FONT 
+color=#000080>&nbsp;</FONT></FONT></FONT><U> </U></B></DIV></BODY></HTML>
 
-Peter
+------_=_NextPart_001_01C4BD9A.4632DEEE--
