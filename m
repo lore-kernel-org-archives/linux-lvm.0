@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102262235.f1QMZcT11483@webber.adilger.net>
+Message-Id: <200102262238.f1QMc3O11494@webber.adilger.net>
 Subject: Re: [linux-lvm] Boot with LVM on RAID1 on entire disk
 In-Reply-To: <20010226140905.A523@oro.net> from Ralph Jennings at "Feb 26, 2001
  02:09:05 pm"
-Date: Mon, 26 Feb 2001 15:35:38 -0700 (MST)
+Date: Mon, 26 Feb 2001 15:38:02 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,44 +21,161 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ralph writes:
-> I would like to be able to RAID mirror my entire hard drive,
-> and run LVM on top of that (/, /boot, /usr, swap, MBR).  So
-> that if 1 of them dies, I only have to take out the good one,
-> put it in the hda rack, and reboot.
+PS - here is that LILO patch I promised.
 
-Are you using MD RAID or hardware RAID?
-
-> First off, I need the patch to Lilo to allow /, and /boot to
-> be LVM partitions.  Can somebody please point me to this?
-
-You need to boot from initrd (using lvmcreate_initrd to build it)
-to have / in LVM.  My (relatively untested) LILO patch is at the
-end.
-
-> Second, I need a way to tell pvcreate or lvcreate not to mess
-> with the MBR.  Some sort of paramater to one of them that I
-> can use to tell it not to use the first 512 bytes (or 4K, or
-> whatever it needs).  Or alternatively, some way to create an
-> LV which covers the MBR, which I can keep blank, by just not
-> writting to it.  I also saw mention of a patch for this in
-> the list before, but to an old version of LVM.  If this exists
-> for LVM 0.9.1b5, and kernel 2.4.2 can somebody point me to
-> this also?
-
-If you have disk partitions, LVM will not mess with the MBR.  If
-you pvcreate on a whole disk, then it will overwrite the MBR.
-lvcreate is completely irrelevant in this case.  If you really
-need to leave the MBR alone, simply create a partition which is
-the size of the whole disk, and then pvcreate that partition.
-
-Unless you are terribly unlucky with the disk size, you will not lose any
-usable disk space.  LVM can only utilize full multiples of the PE size
-(4MB by default), and the LVM metadata (a few hundred kB) usually fits
-in the remainder, leaving a extra unused space.  In the future we may
-use some of this extra space for LVM metadata backups.
+Note that I don't think it works with LVM on MD yet (I don't use/test MD),
+although there is no real reason you couldn't do that.  You definitely can
+NOT run a /boot partition on a striped MD or LVM device.  MD MUST be RAID 1
+only and not RAID 0 or RAID 5.
 
 Cheers, Andreas
+============================================================================
+diff -ru lilo-21.6.1/geometry.c lilo-21.6.1a/geometry.c
+--- lilo-21.6.1/geometry.c	Sat Dec 16 15:09:21 2000
++++ lilo-21.6.1a/geometry.c	Tue Jan 30 13:40:02 2001
+@@ -39,6 +39,15 @@
+ #endif
+ #endif
+ 
++struct lv_bmap {
++    __u32 lv_block;
++    __u32 lv_dev;
++};
++
++#ifndef LV_BMAP
++#define LV_BMAP				_IOWR(0xfe, 0x30, 1)
++#endif
++
+ #ifndef HDIO_GETGEO
+ #define HDIO_GETGEO HDIO_REQ
+ #endif
+@@ -265,6 +274,22 @@
+ }
+ 
+ 
++void lvm_bmap(struct lv_bmap *lbm)
++{
++    DEVICE dev;
++    static int lvmfd = -1;
++
++    if (lvmfd == -1) {
++	lvmfd = dev_open(&dev, lbm->lv_dev, O_RDONLY);
++	if (lvmfd < 0)
++		die("can't open LVM device %#x\n", lbm->lv_dev);
++    }
++    if (ioctl(lvmfd, LV_BMAP, lbm) < 0) {
++	perror(__FUNCTION__);
++	pdie("LV_BMAP error or ioctl unsupported, can't have image in LVM.\n");
++    }
++}
++
+ void geo_query_dev(GEOMETRY *geo,int device,int all)
+ {
+     DEVICE dev;
+@@ -421,7 +450,9 @@
+     DT_ENTRY *walk;
+     int inherited,keep_cyls;
+ 
+-    if (MAJOR(device) == MD_MAJOR) {
++    switch (MAJOR(device)) {
++    case MD_MAJOR:
++    {
+         char mdxxx[11];
+ 	int md_fd, pass;
+ 	md_array_info_t md_array_info;
+@@ -446,6 +477,19 @@
+ 	    }
+ 	}
+ 	close(md_fd);
++	break;
++    }
++    case MAJOR_LVM:
++    {
++	struct lv_bmap lbm;
++
++	lbm.lv_dev = device;
++	lbm.lv_block = 0;
++
++	lvm_bmap(&lbm);
++	device = lbm.lv_dev;
++	break;
++    }
+     }
+     for (walk = disktab; walk; walk = walk->next)
+ 	if (walk->device == device) break;
+@@ -523,7 +567,8 @@
+     if (fstat(geo->fd,&st) < 0) die("fstat %s: %s",name,strerror(errno));
+     if (!S_ISREG(st.st_mode) && !S_ISBLK(st.st_mode))
+ 	die("%s: neither a reg. file nor a block dev.",name);
+-    geo_get(geo,S_ISREG(st.st_mode) ? st.st_dev : st.st_rdev,user_dev,1);
++    geo->dev = S_ISREG(st.st_mode) ? st.st_dev : st.st_rdev;
++    geo_get(geo, geo->dev, user_dev, 1);
+     geo->file = S_ISREG(st.st_mode);
+     geo->boot = 0;
+ #ifndef FIGETBSZ
+@@ -549,16 +594,15 @@
+ int geo_open_boot(GEOMETRY *geo,char *name)
+ {
+     struct stat st;
+-    dev_t dev;
+ 
+     if (stat(name,&st) < 0) die("stat %s: %s",name,strerror(errno));
+     if (!S_ISREG(st.st_mode) && !S_ISBLK(st.st_mode))
+ 	die("%s: neither a reg. file nor a block dev.",name);
+-    dev = S_ISREG(st.st_mode) ? st.st_dev : st.st_rdev;
+-    if (MAJOR(dev) == MAJOR_FD) geo->fd = 0;
++    geo->dev = S_ISREG(st.st_mode) ? st.st_dev : st.st_rdev;
++    if (MAJOR(geo->dev) == MAJOR_FD) geo->fd = 0;
+     else if ((geo->fd = open(name,O_NOACCESS)) < 0)
+ 	    die("open %s: %s",name,strerror(errno));
+-    geo_get(geo,dev,-1,0);
++    geo_get(geo, geo->dev, -1, 0);
+     geo->file = S_ISREG(st.st_mode);
+     geo->boot = 1;
+     geo->spb = 1;
+@@ -600,6 +643,15 @@
+ 	if (ioctl(geo->fd,FIBMAP,&block) < 0) pdie("ioctl FIBMAP");
+ 	if (!block) {
+ 	    return 0;
++	}
++	if (MAJOR(geo->dev) == MAJOR_LVM) {
++	    struct lv_bmap lbm;
++
++	    lbm.lv_dev = geo->dev;
++	    lbm.lv_block = block;
++
++	    lvm_bmap(&lbm);
++	    block = lbm.lv_block;
+ 	}
+     }
+     sector = block*geo->spb+((offset/SECTOR_SIZE) % geo->spb);
+diff -ru lilo-21.6.1/geometry.h lilo-21.6.1a/geometry.h
+--- lilo-21.6.1/geometry.h	Sat Nov  6 14:09:40 1999
++++ lilo-21.6.1a/geometry.h	Tue Jan 23 18:16:09 2001
+@@ -16,6 +16,7 @@
+     int spb; /* sectors per block */
+     int fd,file;
+     int boot; /* non-zero after geo_open_boot */
++    dev_t dev;
+ } GEOMETRY;
+ 
+ typedef struct _dt_entry {
+diff -ru lilo-21.6.1/lilo.h lilo-21.6.1a/lilo.h
+--- lilo-21.6.1/lilo.h	Thu Sep 21 17:18:50 2000
++++ lilo-21.6.1a/lilo.h	Tue Jan 23 14:49:59 2001
+@@ -39,8 +39,9 @@
+ #define MAJOR_IDE4	34 /* IDE on fourth interface */
+ #define MAJOR_ESDI	36 /* PS/2 ESDI drives */
+ #define MAJOR_DAC960	48 /* First Mylex DAC960 PCI RAID controller */
+-#define MAJOR_IDE5	55 /* IDE on fifth interface */
++#define MAJOR_IDE5	56 /* IDE on fifth interface */
+ #define MAJOR_IDE6	57 /* IDE on sixth interface */
++#define MAJOR_LVM	58 /* Logical Volume Manager devices */
+ #define COMPAQ_SMART2_MAJOR	72 /* First Smart/2 Major */
+ 
+ #define MAX_IMAGES      ((SECTOR_SIZE*2-2)/sizeof(IMAGE_DESCR))
+
+
 -- 
 Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
                  \  would they cancel out, leaving him still hungry?"
