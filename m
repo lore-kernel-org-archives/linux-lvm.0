@@ -1,11 +1,11 @@
-Return-Path: <dg@suse.com>
-Date: Thu, 7 Dec 2000 22:33:00 -0800
-From: David Gould <dg@suse.com>
-Subject: Re: [linux-lvm] How do you mount a snapshot?
-Message-ID: <20001207223300.D25533@archimedes.oak.suse.com>
-References: <20001207123743.B24307@ultraviolet.org> <24530000.976222571@coffee>
+Return-Path: <Heinz.Mauelshagen@t-online.de>
+Date: Fri, 8 Dec 2000 09:39:50 +0000
+From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
+Subject: Re: [linux-lvm] list announcements
+Message-ID: <20001208093950.E17073@srv.t-online.de>
+References: <20001206171503.A3929@socrates.sistina.com> <20001207024716.A14640@gruyere.muc.suse.de> <20001207090329.A20948@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <24530000.976222571@coffee>; from mason@suse.com on Thu, Dec 07, 2000 at 03:56:11PM -0500
+In-Reply-To: <20001207090329.A20948@sistina.com>; from lewis@sistina.com on Thu, Dec 07, 2000 at 09:03:29AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,35 +20,49 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: mge@sistina.com
 
-On Thu, Dec 07, 2000 at 03:56:11PM -0500, Chris Mason wrote:
-> 
-> On Thursday, December 07, 2000 12:37:43 -0800 Tracy R Reed
-> <treed@ultraviolet.org> wrote:
-> 
-> > So...can I or can I not use snapshots with reiserfs? The snapshot was
-> > taken of a currently mounted and functioning (reiserfs module
-> > loaded...compiled into the kernel, actually) so if I did the snapshot
-> > correctly there should be a filesystem there. I'm going to wipe it out
-> > (nothing on it but some test files) and try again with ext2 and see what
-> > happens. 
+On Thu, Dec 07, 2000 at 09:03:29AM -0600, lewis@sistina.com wrote:
+> On Thu, Dec 07, 2000 at 02:47:16AM +0100, Andi Kleen wrote:
+> > On Wed, Dec 06, 2000 at 05:15:03PM -0600, Ben Lutgens wrote:
+> > > Hi all, it's your friendly neighborhood list admin again we have a new list
+> > > for you posting pleasure. Please subscribe to lvm-devel for general
+> > > development related discussion. linux-lvm@sistina.com will remain but will be
+> > > for user questions and support.
+> > > 
+> > > Also I get alot of posts that require my intervention from non-subscribers.
+> > > This is an anti spam measure. Please send me a mail if you would like to post
+> > > from addresses that are not subscribed and encourage people who post to
+> > > subscribe as I do not wish to open the list to posts from non-subscribers
+> > > (unless you guys like spam :-)
 > > 
-> > This should work, shouldn't it?
+> > ... it just makes it impossible to have technical discussions with people
+> > not subscribed cc'ed to the list. Also users cannot send bug reports
+> > without subscribing, which I would consider unfortunate.
 > 
-> It should work with ext2.
+> Isn't that what we have bugzilla for?  http://bugzilla.sistina.com has LVM
+> options now, and I think that is a better way to track and nail down bugs.
+> Heinz, could you comment on this? 
 
-Really? I wonder. Maybe right after a sync before anything gets dirtied,
-but otherwise, how could the disk image be consistantly, er, consistant?
-And would not e2fsck have the same issues about writing?
+Yes it is.
 
-Or did I just wake up pessimistic today?
+Sistina provides a Bugzilla interface on the WEB at http://www.sistina.com/lvm
+Everybody is hereby invited to use it.
 
--dg
- 
+Thanks a lot for your support of LVM.
+
+
 -- 
-David Gould                                                 dg@suse.com
-SuSE, Inc.,  580 2cd St. #210,  Oakland, CA 94607          510.628.3380
-"As I've gained more experience with Perl it strikes me that it
- resembles Lisp in many ways, albeit Lisp as channeled by an awk
- script on acid."  -- Tim Moore <moore@herschel.bricoworks.com>,
-                      on comp.lang.lisp
+
+Regards,
+Heinz      -- The LVM guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
