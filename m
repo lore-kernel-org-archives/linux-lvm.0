@@ -1,10 +1,9 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Re: After power outtage my vg is gone
-Message-ID: <20011030235208.F800@lynx.no>
-References: <002e01c161d6$7fa8a960$0a5c010a@ultra>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <002e01c161d6$7fa8a960$0a5c010a@ultra>; from ultra@mailme.dk on Wed, Oct 31, 2001 at 07:37:23AM +0100
+Content-Class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] Bug Report LVM 1.0.1 RC4
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FFCF@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +14,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 31 00:51:01 2001
+Date: Wed Oct 31 01:03:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Oct 31, 2001  07:37 +0100, Klaus Pedersen wrote:
-> I really need help on this - sorry to send another request for help.
-> Does anybody have a clue ? anything that can help me remount my vg without
-> dataloss if possible ?
-> Can anybody point me to documentation in saving a vg ? or a newsgroup on
-> usenet I can try ?
+I have the same with 2.4.12 and lvm1rc4.
+Went back to 2.4.9 and all works well.
+-jec
 
-Try "vgcfgrestore".
-
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> -----Original Message-----
+> From: Hadmut Danisch [mailto:hadmut@danisch.de]
+> Sent: mardi, 30. octobre 2001 20:44
+> To: linux-LVM@sistina.com
+> Subject: [linux-lvm] Bug Report LVM 1.0.1 RC4
+>=20
+>=20
+> Hi,
+>=20
+> I'd like to report a bug in LVM 1.0.1 RC4:
+>=20
+> I was using a 2.4.12 Linux Kernel with LVM 1.0.1 RC4
+> patched in.
+>=20
+> I was removing logical volumes and a volume group
+> formerly installed with LVM 0.9.
+>=20
+> when removing the volumen group, a segmentation fault
+> (null pointer access) occured in the kernel. Same
+> problem occured on two independent computers.
+>=20
+> regards
+> Hadmut Danisch
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>=20
