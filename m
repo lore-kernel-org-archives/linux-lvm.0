@@ -1,11 +1,12 @@
-Return-Path: <jorg.de.jong@ida.xs4all.nl>
-Message-ID: <3B7AC6A8.56791B8D@ida.xs4all.nl>
-Date: Wed, 15 Aug 2001 20:59:52 +0200
-From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] RFC: Visual Disk Administrator project
-References: <20010813200513.A22939@linux.com>
-Content-Transfer-Encoding: 7bit
+Return-Path: <mantel@suse.de>
+Date: Wed, 15 Aug 2001 21:14:29 +0200
+From: Hubert Mantel <mantel@suse.de>
+Message-ID: <20010815211429.A28868@suse.de>
+References: <20010815175659.A29749@sistina.com> <20010815182548.U3941@gum01m.etpnet.phys.tue.nl> <20010815185005.A32239@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010815185005.A32239@sistina.com>; from mauelshagen@sistina.com on Wed, Aug 15, 2001 at 06:50:05PM +0200
+Subject: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 1.0 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,23 +19,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Cc: Kurt Garloff <garloff@suse.de>, linux-lvm@sistina.com, lvm-devel@sistina.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, sistina@sistina.com, mge@sistina.com
 
-Jason Tackaberry wrote:
+Hi,
+
+On Wed, Aug 15, Heinz Mauelshagen wrote:
+
+> Well, as explained before on the lists we had an algorithm calculating
+> the offset to the first PE in place till 0.9.1 Beta 7.
 > 
-> So, let the comments begin!
-> 
+> Therefore, we *need* to run the installed version < LVM 0.9.1 Beta 8 to
+> retrieve that sector offset for all PVs and change the metadata to hold the
+> offset. No known way around this.
+          ^^^^^^^^^^^^^^^^^^^^^^^^
 
-sounds good, maybe you can have a look at my LVM gui project at
-	http://www.xs4all.nl/~mmj/lvm
-I have build a java based gui for lvm. The main draw back from my 
-project is the fact that it is a java program. But other that that
-you can do your day to day lvm changes. 
-But any way just to let you know what is out there.
+You are kidding, aren't you?
 
-regards,
-
--- 
-Jorg de Jong
-Work : jorg.de.jong@ict.nl 
-Play : jorg.de.jong@ida.xs4all.nl
+> Heinz    -- The LVM Guy --
+                                                                  -o)
+    Hubert Mantel              Goodbye, dots...                   /\\
+                                                                 _\_v
