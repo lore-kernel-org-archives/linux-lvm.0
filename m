@@ -1,20 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBS0Dvr08460
-	for <linux-lvm@redhat.com>; Mon, 27 Dec 2004 19:13:57 -0500
-Received: from mail.hamachi.us (dsl081-048-014.sfo1.dsl.speakeasy.net
-	[64.81.48.14])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBS0DkEb028430
-	for <linux-lvm@redhat.com>; Mon, 27 Dec 2004 19:13:51 -0500
-Date: Mon, 27 Dec 2004 16:13:39 -0800
-From: Steven Ihde <x-linux-raid@hamachi.dyndns.org>
-Message-ID: <20041228001339.GA5614@hamachi.us>
-References: <200412082241.iB8Mfo915469@www.watkins-home.com>
-	<41BC07C2.5020303@dgreaves.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j01EL2r20574
+	for <linux-lvm@redhat.com>; Sat, 1 Jan 2005 09:21:02 -0500
+Received: from sv0.iquer.net (sv0.iquer.net [195.234.230.70])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j01EL1KO013142
+	for <linux-lvm@redhat.com>; Sat, 1 Jan 2005 09:21:01 -0500
+From: Erik Wasser <erik.wasser@iquer.net>
+Subject: Re: [linux-lvm] Very long startup times of the lv*-tools
+Date: Sat, 1 Jan 2005 15:20:52 +0100
+References: <200412291742.04569.erik.wasser@iquer.net>
+	<20041230191239.GW26670@agk.surrey.redhat.com>
+In-Reply-To: <20041230191239.GW26670@agk.surrey.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <41BC07C2.5020303@dgreaves.com>
-Subject: [linux-lvm] Re: Looking for the cause of poor I/O performance - a
-	test script
+Message-Id: <200501011520.53713.erik.wasser@iquer.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,108 +25,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: David Greaves <david@dgreaves.com>
-Cc: linux-raid@vger.kernel.org, linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Thursday 30 December 2004 20:12, Alasdair G Kergon wrote:
 
+> On Wed, Dec 29, 2004 at 05:42:04PM +0100, Erik Wasser wrote:
+> > I'm using lvm2 2.00.08 on a 'Linux fuzz 2.6.9-gentoo-r13 #1 Wed Dec
+> > 29 10:41:06 CET 2004 i686 AMD Athlon(tm) XP 2800+ AuthenticAMD
+> > GNU/Linux'
+> >
+> > Is there is something known about this issue? What else can I
+> > check?
+>
+> Upgrade LVM2!
 
-I found strange behavior with this script.  You may recall my setup
-has a three disk RAID5, kernel 2.6.8, lvm2.
+Thanks for your help. lvm 2.00.25 is now working here fine.
 
-While I can achieve 80MB/s reading from /dev/md1 (my RAID5 device), I
-can't get better than 60MB/s from any of the logical volumes which
-exist on that array.  (/dev/md1 is the only PV in that VG.)
-Furthermore, the readahead settings on /dev/md1 don't seem to make any
-difference, only the readahead setting on /dev/vg0/lvol0 (for example)
-matters.  This doesn't make any sense to me.  I didn't think LVM was
-supposed to impose any significant overhead.  
+> Anyone know why so many gentoo users find themselves using old
+> versions like that and don't upgrade?
+> I don't see this with Debian or Fedora users.
 
-Is the LVM2/DM layer doing its own readahead through to the PV,
-regardless of the settings I'm doing with blockdev --setra?
+Well I think we have to blame the distributation politics for this. B-) 
 
-Finally, when trying to test throughput reading from an actual file on
-a filesystem, I couldn't figure out how to flush the cache reliably.
-"blockdev --flushbufs" works great when the test is reading straight
-from the block device but has no effect when reading from a file on a
-filesystem.  Any advice here?  A pointer to an up-to-date in-depth
-description (for 2.6) of how the whole cache/buffer thing works would
-be very much appreciated.
-
-Thanks!
-
--Steve
-
-
-
-On Sun, 12 Dec 2004 08:56:34 +0000, David Greaves wrote:
-> I hacked up a quick script to test permutations of readahead - it's not 
-> exactly bonnie+++ but it may be useful.
-> I wish I'd bothered with mdadm stripe sizes too - but the array is 
-> pretty full now and I'll live with what it delivers.
-> 
-> Essentially I found the best performance on *my* system with all low 
-> level devices and the md device set to a 0 readahead and the lvm device 
-> set to 4096.
-> I'm only interested in video streaming big (1+Gb) files. Your needs (and 
-> hence test) may differ.
-> 
-> my system is 2.6.10-rc2, xfs, lvm2, raid5, sata disks.
-> 
-> cc'ed the lvm group since this often seems to come up in conjunction 
-> with you guys :)
-> 
-> For your entertainment...
-> 
-> #!/bin/bash
-> RAW_DEVS="/dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/hdb"
-> MD_DEVS=/dev/md0
-> LV_DEVS=/dev/huge_vg/huge_lv
-> 
-> LV_RAS="0 128 256 1024 4096 8192"
-> MD_RAS="0 128 256 1024 4096 8192"
-> RAW_RAS="0 128 256 1024 4096 8192"
-> 
-> function show_ra()
-> {
-> for i in $RAW_DEVS $MD_DEVS $LV_DEVS
-> do echo -n "$i `blockdev --getra $i`  ::  "
-> done
-> echo
-> }
-> 
-> function set_ra()
-> {
->  RA=$1
->  shift
->  for dev in $@
->  do
->    blockdev --setra $RA $dev
->  done
-> }
-> 
-> function show_performance()
-> {
->  COUNT=4000000
->  dd if=/dev/huge_vg/huge_lv of=/dev/null count=$COUNT 2>&1 | grep seconds
-> }
-> 
-> for RAW_RA in $RAW_RAS
->  do
->  set_ra $RAW_RA $RAW_DEVS
->  for MD_RA in $MD_RAS
->    do
->    set_ra $MD_RA $MD_DEVS
->    for LV_RA in $LV_RAS
->      do
->      set_ra $LV_RA $LV_DEVS
->      show_ra
->      show_performance
->      done
->    done
->  done
-> 
-> -
-> To unsubscribe from this list: send the line "unsubscribe linux-raid" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+So long... Fuzz
