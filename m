@@ -1,12 +1,36 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24CnZK01223
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 07:49:35 -0500
-Message-ID: <CEEE90D87043AA4487634844B31B03631141B17B@ukspkem01.corp.hds.com>
-From: Matthias Rudolph <Matthias.Rudolph@hds.com>
-Date: Fri, 4 Mar 2005 12:49:00 -0000 
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24FWKK22443
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 10:32:20 -0500
+Received: from smtp9.wanadoo.fr (smtp9.wanadoo.fr [193.252.22.22])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j24FWEWh003112
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 10:32:14 -0500
+Received: from me-wanadoo.net (localhost [127.0.0.1])
+	by mwinf0909.wanadoo.fr (SMTP Server) with ESMTP id 80A0E2400117
+	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 16:32:03 +0100 (CET)
+Received: from tangerine.coulon.evette
+	(ADijon-151-1-31-175.w83-194.abo.wanadoo.fr [83.194.126.175])
+	by mwinf0909.wanadoo.fr (SMTP Server) with ESMTP id 031C72400127
+	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 16:32:03 +0100 (CET)
+Received: from localhost ([127.0.0.1])
+	by tangerine.coulon.evette with esmtp (Exim 4.50) id 1D7EmX-0002bn-3n
+	for linux-lvm@redhat.com; Fri, 04 Mar 2005 16:32:01 +0100
+Received: from tangerine.coulon.evette ([127.0.0.1])
+	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 09098-10 for <linux-lvm@redhat.com>;
+	Fri, 4 Mar 2005 16:31:52 +0100 (CET)
+Received: from localhost ([127.0.0.1] helo=tangerine)
+	by tangerine.coulon.evette with esmtp (Exim 4.50) id 1D7EmN-0002bS-VP
+	for linux-lvm@redhat.com; Fri, 04 Mar 2005 16:31:51 +0100
+Date: Fri, 04 Mar 2005 15:31:51 +0000
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Subject: Re: [linux-lvm] mirroring in LVM2
+References: <200503020821.NAA11008@WS0005.indiatimes.com>
+In-Reply-To: <200503020821.NAA11008@WS0005.indiatimes.com> (from
+	pritambhavsar@indiatimes.com on Wed Mar  2 09:49:17 2005)
+Message-Id: <1109950311l.10385l.1l@tangerine>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM Question
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+	protocol="application/pgp-signature"; boundary="=-7vtS6BpyTjApWG2NkapJ"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,137 +41,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Linux-LVM@Sistina.com
+To: linux-lvm@redhat.com
 
-Hello all,
- 
-how can I force to activate a VG on a special device file?
-One FC Storage Disk is visible over two pathes (sda and sdb). We use our
-Path Management Software. It creates sddlmaa. After creating the VG the
-sddlmaa is ACTIVE - OK. But after deactivating and activating sdb is ACTIVE.
-This means: no pathfailover.
- 
-Here a typescript:
- 
-# fdisk -l /dev/sd*
--> scannt nach neuen disks und zeigt sie an
+--=-7vtS6BpyTjApWG2NkapJ
+Content-Type: text/plain; charset=iso-8859-1; DelSp=Yes; Format=Flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-# fdisk /dev/sddlmaa
--> Partition 1 anlegen �ber gesmten Bereich
--> Partitions System ID von 83 (Linux) auf 8e (Linux LVM) �ndern
+Le 02.03.2005 09:49:17, pritambhavsar a =E9crit=A0:
+> Hello to all
+>=20
+>=20
+> I am new to  LVM2 and trying do the mirroring, please tell me how to
+> do that.
 
-[root@D-SRV-L-43 root]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ERROR "pv_read(): read" reading physical volumes
+As mirroring is not yet available in lvm, you have to install a lvm =20
+over a raid1.
 
-[root@D-SRV-L-43 root]# pvcreate /dev/sddlmaa1
-pvcreate -- physical volume "/dev/sddlmaa1" successfully created
+>=20
+>=20
+> I have Fedora Core 2 with LVM2 2.00.25.
+>=20
+>=20
+> -Pritam
 
-[root@D-SRV-L-43 root]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sddlmaa1" is in no VG  [6.87 GB]
-pvscan -- inactive PV "/dev/sda1"     is in no VG  [6.87 GB]
-pvscan -- inactive PV "/dev/sdb1"     is in no VG  [6.87 GB]
-pvscan -- total: 3 [20.61 GB] / in use: 0 [0] / in no VG: 3 [20.61 GB]
+Jean-Luc
 
-[root@D-SRV-L-43 root]# lvmdiskscan
-lvmdiskscan -- reading all disks / partitions (this may take a while...)
-lvmdiskscan -- /dev/sddlmaa1 [       6.87 GB] new LVM whole disk
-lvmdiskscan -- /dev/sda1     [       6.87 GB] new LVM whole disk
-lvmdiskscan -- /dev/sdb1     [       6.87 GB] new LVM whole disk
-lvmdiskscan -- /dev/hda1     [     103.33 MB] free whole disk
-lvmdiskscan -- 4 disks
-lvmdiskscan -- 4 whole disks
-lvmdiskscan -- 0 loop devices
-lvmdiskscan -- 0 multiple devices
-lvmdiskscan -- 0 network block devices
-lvmdiskscan -- 6 partitions
-lvmdiskscan -- 0 LVM physical volume partitions
+--=-7vtS6BpyTjApWG2NkapJ
+Content-Type: application/pgp-signature
 
-[root@D-SRV-L-43 root]# vgcreate vg00 /dev/sddlmaa1
-vgcreate -- INFO: using default physical extent size 4 MB
-vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-vgcreate -- doing automatic backup of volume group "vg00"
-vgcreate -- volume group "vg00" successfully created and activate
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.0 (GNU/Linux)
 
-[root@D-SRV-L-43 root]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vg00"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
+iD8DBQBCKH9nUdGGXzzGnNARAodwAJ9q9zqZ76uD+BLFOEFNELPx46ZuWgCeJ0wt
+t/gciHetUfbQ4aXhaB5Bvvc=
+=0YNg
+-----END PGP SIGNATURE-----
 
-[root@D-SRV-L-43 root]# vgdisplay -v
---- Volume group ---
-VG Name               vg00
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                0
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               6.87 GB
-PE Size               4 MB
-Total PE              1758
-Alloc PE / Size       0 / 0
-Free  PE / Size       1758 / 6.87 GB
-VG UUID               INPtDi-kBhS-USzo-WuCW-xQWZ-DFkq-NerC0u
-
---- No logical volumes defined in "vg00" ---
-
-
---- Physical volumes ---
-PV Name (#)           /dev/sddlmaa1 (1)
-PV Status             available / allocatable
-Total PE / Free PE    1758 / 1758
-
-[root@D-SRV-L-43 root]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/sddlmaa1" of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- inactive PV "/dev/sda1"     of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- inactive PV "/dev/sdb1"     of VG "vg00" [6.87 GB / 6.87 GB free]
-
-[root@D-SRV-L-43 root]# vgchange -an vg00
-vgchange -- volume group "vg00" successfully deactivated
-
-[root@D-SRV-L-43 root]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sddlmaa1" of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- inactive PV "/dev/sda1"     of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- inactive PV "/dev/sdb1"     of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- total: 3 [20.61 GB] / in use: 3 [20.61 GB] / in no VG: 0 [0]
-
-[root@D-SRV-L-43 root]# vgchange -ay vg00
-vgchange -- volume group "vg00" successfully activated
-
-[root@D-SRV-L-43 root]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sddlmaa1" of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- inactive PV "/dev/sda1"     of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- ACTIVE   PV "/dev/sdb1"     of VG "vg00" [6.87 GB / 6.87 GB free]
-pvscan -- total: 3 [20.61 GB] / in use: 3 [20.61 GB] / in no VG: 0 [0]
- 
-
-Best Regards
-
-Matthias Rudolph
-Country Software Specialist 
-
-HITACHI DATA SYSTEMS GmbH
-Im Steingrund 10
-D-63303 Dreieich-Buchschlag
-Tel:   +49 (0)6103 804 1208
-Mob: +49 (0)171 240 9326
-matthias.rudolph@hds.com <mailto:matthias.rudolph@hds.com>  
-
-
-This e-mail may contain confidential and/or privileged information. If you
-are not the intended recipient (or have received this e-mail in error)
-please notify the sender immediately and destroy this e-mail. Any
-unauthorised copying, disclosure or distribution of the material in this
-e-mail is strictly forbidden.
+--=-7vtS6BpyTjApWG2NkapJ--
