@@ -1,8 +1,8 @@
-Message-ID: <3A0694E7.52D2AF89@fl.priv.at>
-Date: Mon, 06 Nov 2000 12:24:23 +0100
-From: Friedrich Lobenstock <fl@fl.priv.at>
+Message-ID: <3A06D4BC.FE2819CE@dell.com>
+Date: Mon, 06 Nov 2000 09:56:44 -0600
+From: Michael E Brown <Michael_E_Brown@dell.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] / on LVM - what to do on shutdown?
+Subject: [linux-lvm] scsi/fc multipath failover patch
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -10,40 +10,18 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Hi!
+All,
+  I've been lurking on the list for a while, and I just found something
+that would probably be of great value to everyone. While I've heard
+people ask for it, I haven't seen anybody who knew of a patch to provide
+multipath failover for Linux.  Linuxcare developed multipath failover
+when they made the Sun T3 driver, although I haven't seen it publicized.
+Their kernel patch provides a generic multipath-failover layer for
+linux. The kernel patch is fairly small and clean, and comes with a
+couple userspace tools to set everything up. The URLS are below
 
-I have a problem because I don't know what to do when / is on lvm.
+http://open-projects.linuxcare.com/t3/   <--Generic project homepage
+http://open-projects.linuxcare.com/t3/download/sun-t3-0.3.1.tar.gz
 
-Currently /sbin/init.d/halt does the following (/ is not on lvm):
-
-  [..]
-  echo "Unmounting file systems"
-  umount -avt noproc,nonfs 
-  [..]
-  umount -anvt proc
-  
-  if test -d /etc/lvmtab.d -a -x /sbin/vgchange ; then
-      /sbin/vgchange -a n
-  fi
-  
-  [..]
-  mount -no remount,ro / 2> /dev/null
-  sync                
-  [..]
-  halt -d -f
-
-
-Now what if / is on lvm? Should I really call "/sbin/vgchange -a n" ?
-What are with the commands afterwards will they fail or might
-the lvm device get mixed up because of not correctly closing it?
-Or should I load a ramdisk to do the work, if at all possible?
-
-I think the md-Device does a clean shutdown by itself, because
-I use md to create a raid1 with lvm on top?
-
-PS: You might gess that I'm using SuSE Linux, 7.0 to precise.
-The kernel ist 2.4.0-test10.
-
-
-MfG / Regards
-Friedrich Lobenstock
+cheers!
+Michael Brown
