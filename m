@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] I broke my PVs!
 From: Austin Gonyou <austin@coremetrics.com>
-In-Reply-To: <20021020213439.GA28082@percy.comedia.it>
-References: <20021020213439.GA28082@percy.comedia.it>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1035154982.29693.5.camel@localhost.localdomain>
+Message-Id: <1035163216.1245.4.camel@localhost.localdomain>
 Mime-Version: 1.0
+Subject: [linux-lvm] vgcfgrestore ouput
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,50 +13,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 20 18:03:01 2002
+Date: Sun Oct 20 20:20:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Sun, 2002-10-20 at 16:34, Luca Berra wrote:
-> On Sun, Oct 20, 2002 at 03:16:34PM -0500, Austin Gonyou wrote:
-> >I ran fdisk, then just saved. So I guess you could say I just lost the
-> >partition table.
-> 
-> ok, you lost lvm metadata...
+I tarred up the /etc/lvm* stuff from one box that has a similar
+configuration (two whole disks, /dev/sdb and /dev/sdc, in one vg), and
+then put it on my target host and attempted to restore the
+configuration. 
 
-If I lost metadata, what is the best procudure to put it back? I
-thought, on linux anyway, that pvcreate was descructive. Can someone
-tell me if I'm wrong there?
+Below is the output I get. I guess, all I need to know right now, is are
+the first 512 bytes of each disk all that is used for the pv
+information, or is it more than that? 
 
- > >> destructive, it only touched disk metadata. so you could try
-> pvcreate,
-> >> vgcreate and lvcreate.
-> >> DO A BACKUP OF YOUR RAW DISK DATA FIRST
-> >
-> >what about vgcfgrestore from another set of smaller disks that are laid
-> >out the same way? could that work?
-> >
-> >Wish I could, but I can't. Don't have enough disk space. :(
-> 
-> i believe it should be the same...
+Also, can pvcreate be used without destroying the underlying
+filesystems? TIA!!!
 
-If anyone can give me a definitive answer, I'd truly appreciate it!
+<vgcfgrestore>
+[root@localhost root]# vgcfgrestore -n data /dev/sdb
+vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data.conf"
+vgcfgrestore -- ERROR "pv_read(): PV identifier invalid" reading
+physical volume "/dev/sdb"
 
-> Heinz? someone?
-> 
-> l.
-> 
-> -- 
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+[root@localhost root]# vgcfgrestore -n data /dev/sdc
+vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data.conf"
+vgcfgrestore -- ERROR "pv_read(): PV identifier invalid" reading
+physical volume "/dev/sdc"
+</vgcfgrestore>
+
+
+Austin
