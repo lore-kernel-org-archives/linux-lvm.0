@@ -1,11 +1,12 @@
-Return-Path: <terjekv@ifi.uio.no>
-Subject: Re: [linux-lvm] lvmgui 0.2 release
-References: <3ABDD38D.A841FFD3@ida.xs4all.nl>
-From: Terje Kvernes <terjekv@math.uio.no>
-Date: 27 Mar 2001 04:02:10 +0200
-In-Reply-To: Jorg de Jong's message of "Sun, 25 Mar 2001 13:16:29 +0200"
-Message-ID: <wxx1yrkklzx.fsf@fjorir.ifi.uio.no>
-MIME-Version: 1.0
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 27 Mar 2001 09:07:06 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] LVM-0.9.1beta6, XFS and 2.4.2 ...
+Message-ID: <20010327090706.B556@tykepenguin.com>
+References: <008b01c0b293$2873fac0$0e01a8c0@myplace.net> <yq1lmpyrgcb.fsf@jaguar.mkp.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <yq1lmpyrgcb.fsf@jaguar.mkp.net>; from mkp@linuxcare.com on Wed, Mar 21, 2001 at 03:56:36PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,33 +22,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jorg de Jong <jorg.de.jong@ida.xs4all.nl> writes:
-
-> In this release I have also include the source code, for those who
-> are interested.
-
-  rather interesting, yes. I guess I'll someday have to install java
-  on my boxes... :/
- 
-> Although I did not get that match feedback on my first release, I
-> still hope people find the LVM Gui useful, despite the fact that it
-> is written in java.
-
-  well, I, and a lot of people I know, don't use java much (read: at
-  all) and hence don't have it installed. it might be useful to at
-  least have some links pointing people to where they could download a
-  working java system for their linux flavor. :)
- 
-> + New Features / Enhancements / Bug Fixes
+On Wed, Mar 21, 2001 at 03:56:36PM -0500, Martin K. Petersen wrote:
+> >>>>> "Bas" == Bas  <list@showme.wox.org> writes:
 > 
-> - added images for LV and PV. 
-> - extend/reduce a VG
-> - extend/reduce a LV
-> - added vgscan in menu
-> - changed File->Rescan to File->Refresh
+> Bas> Mar 21 20:22:40 wisdom kernel: lvm -- lvm_blk_ioctl: unknown
+> Bas> command 0x126e
+> 
+> Hmmm. That's me (XFS-specific).
 
-  sounds cute. I was actually thinking of writing something like this
-  myself, but can't really decide on what language to do it in. :)
+Yes XFS does that - it has some private ioctls it likes to do on the block 
+device that aren't implemented in LVM. Ignore it. 
 
--- 
-Terje
+The XFS patch adds support for their ioctl to the generic devices but not LVM,
+but seeing as thy all retrun the same value (the default) anyway it doesn't do
+much...yet.
+
+patrick
