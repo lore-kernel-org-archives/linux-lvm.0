@@ -1,10 +1,8 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] LVM1 compat support in 2.6.0-test11 misses one of my 2.4.23 VGs
-Message-ID: <20031201014229.N16901@uk.sistina.com>
-References: <20031129185055.74160.qmail@web40612.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031129185055.74160.qmail@web40612.mail.yahoo.com>; from rankincj@yahoo.com on Sat, Nov 29, 2003 at 06:50:55PM +0000
+From: "Tom Parker" <tom@carrott.org>
+Message-ID: <1293.435T2650T11474321tom@carrott.org>
+MIME-Version: 1.0
+Content-transfer-encoding: 7bit
+Subject: [linux-lvm] Overlapping logical volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +13,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 30 19:44:01 2003
+Date: Sat Nov  1 00:10:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Nov 29, 2003 at 06:50:55PM +0000, Chris Rankin wrote:
-> The tools (vgscan, vgchange -ay) complain
-> about finding a "duplicate" PV on /dev/hda2, and say
-> that they will ignore it. Natually, I have *not*
-> mounted either filesystem under 2.6 yet!
+Hi,
 
-Chris sent me his metadata and I reproduced the problem.
+I have just experianced a rather nasty bug in lvextend. I grew a logical
+volume and it used extents that were already in use for another logical
+volume.
 
-> uuid:         syst-em
-> uuid:         user
- 
-Only the last bit of the UUID gets displayed here.
-Actually invalid UUIDs > 32 chars long, and the first 32 chars of each
-are identical => duplicate PV.
+I'm using Debian Woody and Linux 2.4.22 (unpatched Linus kernel.org sources)
 
-I've done a patch which uses the last 32 chars as the UUID in
-these cases.
+amislave:/# lvextend --help
 
-Alasdair
+Logical Volume Manager 1.0.4
+Heinz Mauelshagen, Sistina Software  02/05/2002 (IOP 10)
+
+Luckily I noticed the corrupting filesystems fairly quickly and was able to
+mostly recover the situation with minimal losses. Currently I still have the
+two overlapping logical volumes and a lot less trust in the LVM than I had
+before.
+
+Is there a program that can validate the logical volume configuration and
+ensure that no physical extent is allocated to more the one logical volume?
+
+When extending a logical volume, or creating a new one, is anything written to
+the newly allocated extents? If this were to happen again, and I discovered
+the problem before I made use of the extra space or a new logical volume,
+would I have any corruption of the first logical volume to use the extents in
+question?
+
+To finish my data recovery, I would like to allocate another large logical
+volume, I'm somewhat wary of doing this without a tool to ensure that the
+group is valid.
+
+--
+Tom Parker - tom@carrott.org
+           - http://www.carrott.org
