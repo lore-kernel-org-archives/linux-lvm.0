@@ -1,23 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1BAP8O10634
-	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 05:25:08 -0500
-Received: from ROSMIME02.enterprise.veritas.com (skyway-bridge.veritas.com
-	[143.127.131.4])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1BAP3Dp031596
-	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 05:25:03 -0500
-Received: from lmoxch01.enterprise.veritas.com (unverified) by
-	ROSMIME02.enterprise.veritas.com
-	(Content Technologies SMTPRS 4.3.12) with ESMTP id
-	<T6f0c1252620a5298ce428@ROSMIME02.enterprise.veritas.com> for
-	<linux-lvm@redhat.com>; Fri, 11 Feb 2005 04:24:57 -0600
-Message-ID: <A41E5B11C35656429C850B8018E39D4101D210ED@itpxchmb1.enterprise.veritas.com>
-From: Amitsingh Pardesi <amitsingh.pardesi@veritas.com>
-Date: Fri, 11 Feb 2005 05:23:52 -0500
-MIME-Version: 1.0
-content-class: urn:content-classes:message
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C51023.EE165C63"
-Subject: [linux-lvm] Re: LVM2 Error
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1BJ5eO19880
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 14:05:40 -0500
+Received: from ns3.linuxquebec.com (ns3.linuxquebec.com [64.40.111.7])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1BJ5YZK022012
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 14:05:35 -0500
+Received: from ns2.linuxquebec.com (unknown [64.18.178.21])
+	by ns3.linuxquebec.com (Postfix) with ESMTP id B3A652B8032
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 14:13:36 -0500 (EST)
+Received: from aragorn.intranet (unknown [10.10.1.116])
+	by ns2.linuxquebec.com (Postfix) with ESMTP id 52FDF13ED8
+	for <linux-lvm@redhat.com>; Fri, 11 Feb 2005 14:01:43 -0500 (EST)
+From: Paul Pianta <pantz@lqt.ca>
+Date: Fri, 11 Feb 2005 14:05:23 -0500
+Message-Id: <1108148723.4699.32.camel@aragorn.intranet>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] waah waah - disaster recovery
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,30 +26,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+hi people
 
-------_=_NextPart_001_01C51023.EE165C63
-Content-Type: text/plain;
-	charset="iso-8859-1"
+I have a major problem involving lvm and quite possibly software raid.
+Here's how it goes ...
 
- 
+I installed a machine with 2 identical 200Gb disks and I set them up
+using software RAID (on Fedora Core 2). I made three partitions on each
+disk. /boot and / were created on md0 and md1 respectively using ext3.
 
-------_=_NextPart_001_01C51023.EE165C63
-Content-Type: text/html;
-	charset="iso-8859-1"
+The third partition was setup as a large volume group on md2 which was
+mounted at /data. Within this vg I set up 3 logical volumes lv-backup,
+lv-isos, lv-repositories.
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+The installation and setup went great and all was good for a while until
+the first hard disk /dev/hda died. No problem - I had installed grub on
+the mirror disk (/dev/hdc) and so was able to boot into the system.
 
+Yet again all was going along fine, running on one disk while waiting
+for a replacement disk to come back from Maxtor. I knew this was not
+wise to run so long on a single disk but when the boss says to do it - I
+thought well he knows what he's doing ...
 
+And then Mr Murphy and his famous law kicked in and the second drive
+(the only drive) froze up on me last night!
 
+Rebooting the machine, I was able to fsck my way through the /boot and /
+partition errors but the boot process gets stuck when trying to read the
+journal for /data/repositories. The /data/backup and /data/isos volumes
+mounted ok after they recovered their respective journals, but I don't
+ever get past the 'recovering journal' message for /data/repositories.
 
-<META content="MSHTML 6.00.2900.2523" name=GENERATOR></HEAD>
-<BODY>
-<DIV>&nbsp;</DIV></BODY></HTML>
+Needless to say - there is some important data on the /dev/md2 partition
+inside of the logical volume group lv-repositories. I have tried several
+live cds but none of them seem to understand that I have any LVM volumes
+setup.
 
-------_=_NextPart_001_01C51023.EE165C63--
+Does anyone have any ideas on how I might be able to restore/mount
+the /dev/md2 partition - even if it is just enough to copy the data
+elsewhere??
+
+thanks
+
+pantz
