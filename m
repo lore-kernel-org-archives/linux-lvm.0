@@ -1,9 +1,11 @@
-From: Frank Joerdens <frank@joerdens.de>
-Subject: Re: [linux-lvm] Is it possible to change the PE size on a live volume?
-Message-ID: <20021022152305.A12672@superfly.archi-me-des.de>
-References: <20021021194052.B8228@superfly.archi-me-des.de> <005c01c2792c$cd0f9e70$f707a182@gimmie.tudelft.nl>
-Mime-Version: 1.0
-In-Reply-To: <005c01c2792c$cd0f9e70$f707a182@gimmie.tudelft.nl>; from D.Andriessen@pink.nl on Mon, Oct 21, 2002 at 08:08:04PM +0200
+Message-ID: <3DB56303.F23DCDD2@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvdisplay -- logical volume 
+ "/dev/optVG/1hour_snapshot_opt_1035237601"doesn't exist
+References: <3DB53F96.BC133713@silicide.dk> <3DB54B99.15BF6280@silicide.dk>
+Content-Type: multipart/mixed;
+ boundary="------------452CC36A799A797E2F0A5FCB"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,29 +16,166 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 22 08:23:02 2002
+Date: Tue Oct 22 09:39:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Oct 21, 2002 at 08:08:04PM +0200, Denie Andriessen wrote:
-> Hi,
-> 
-> I had that same problem/miscalculation once..
-> 
-> What I wanted to do was, to create a new volumegroup, that only holds the
-> last (new) disk(s) that you want to add.
-> Then, move as much as possible of the data to the new disk, scrink the old
-> volume as much as possible (e2fsadm first, then vgreduce old voulme, PVmove,
-> vgextend on the new volume, e2fsadm on the new volume, repeat untill done..
-> last go, vgremove old volumegroup, and presto..It takes quite a while to
-> complete, depending on the size of your volume..... (and I was in the
-> situation that the disk I added was larger then the largest partition I had
-> in the initial situation..
-> 
-> Good tip: Try and test it with the empty space on the new disk first !
+This is a multi-part message in MIME format.
+--------------452CC36A799A797E2F0A5FCB
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-Good plan!
+Jon Bendtsen wrote:
+> 
+> Jon Bendtsen wrote:
+> >
+> > Cron Daemon wrote:
+> > >
+> > > lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035237601" doesn't exist
+> 
+> Sometimes i get a
+> lvremove -- can't remove open snapshot logical volume
+> "/dev/optVG/1hour_snapshot_opt_1035266401"
+> 
+> from the hourly script. But it _IS_ unmounted.
 
-Thanks, Frank
+I ran lvdisplay and lvremove with -debug, and attached the output as 2
+.gz
+files, which i expect the lvm mailinglist to remove ;-D
+Mailme if you want them.
+
+
+
+JonB
+--------------452CC36A799A797E2F0A5FCB
+Content-Type: application/x-gzip;
+ name="lvdisplay.debug.txt.gz"
+Content-Transfer-Encoding: base64
+Content-Disposition: inline;
+ filename="lvdisplay.debug.txt.gz"
+
+H4sICLZgtT0AA2x2ZGlzcGxheS5kZWJ1Zy50eHQA7Z3fb+LeEcXf81dYeWkrdRXPtQ12tPpK
+LElWlVZVVVV5qSrLC05ACxhhQjb968vvELAvNnOSbLaHhzwkd8ZzPz4zYB/hfJY/nMFsGN+n
+07ifjeNZOsn72cj59Mlpt759u746+2zMakmnl3Z+xPk47fSTQaUF365bt3/7+9ezz+UHad38
+6/qfTj/rTAfOJJ1eOq5t9Tqh89if9lbLZbN+ffRRMkyfa1stnP9x8etL5/yim84usvH09utF
+2MseJnmcj5Jx3sum8fy3sbheYKLAuHK+v6tOL5nk+4lxWQ835q7Wzu4tG7v9euksj3v22fO8
+quUuI87LQ6rXUriy6GyULZxnXCyJs7t4MEOeNrgaavBFpC0EtlxcVRD+/FVXEaUxNcopVU81
+UWz6Y5gMBllnv968/9/UERPugJukhSvHWX80TSeO+9f9oDjpdher7yfZY39073x/cgLXSUfT
+ST/NixO/qHSTOXTbchWGRSUfX/8h2/qgW/cXPhexHuHT5Hu8Pe/pz34+3S+evf3/1duvMPHX
+nOGyqEMZkrcQ2mp1VWUEi1ddaZQH1amoXEfV1LFtl2Oj/5lfndlfGFU6qG9aYWFFFQI+bBPX
+GO+bt7zFfN8eoHC+r5Puvz99SEhbPSy2PVdRd/ci6PmoFv02XjRbRfmWBpWJ0bieW1yQPaJw
+fwUkHKebTJPLTaCzLPNyUec2w90kPTit5cfbrN5eL1aZBcYP/ROGgSWsIp1aOBfKurufpPk0
+m6SHevmoc31vbScb5fPmT0edp909rguousnG8lV3l5aowtLLijphn5aQI+IN5KRRYAkr1WJ0
+HdYcBjsR41mlMzy2ffpafTgaZNnYtZ+uss9VFUJtZ/qguFqy+DhaPdhu+mg9Vas/WzRcdvIV
+sm+EfniS8G2BpUL+clP3fbA0omAr7mkbKQ0rKerKbbn1OngvolIH179+6mXD9LR+rhpfqLPN
++qqN2ly96naqLaxeXbZerXZl9PFHk12KmrdR457WhrbA0rZq+/XmiSXiHefJle/XnCcvI15p
+nuTJ8HuiGSgVEnCicKIcnyinDpTajdgIa86T8oh3nCfXrbDmPHkZ8UrzZP5TM02OhnOWcJbY
+W9B3o9Oa0BpY2lTtds1pUh7xftPkOmy3602TvYhXmiblrk7DMw3NoNFk5gziDDrimLnGP6Vz
+bXGljXjj1ptAloh3nECRV/N+y17EK00gWcwJi6188gBSJOb84fz5deZPFNS8P2OJeM/5E9W8
+P3MQYXdfS5dv7dffDMgrDeRu8lQwNYNIOY5PTsthzGH8Cw3jLzVvblki3nP23NS8uXUQcWwY
+lyz/ZYexEsgrDePHNP1RMDbdph/5mml8el6OY47jX2cct6Tm3UFLxDtOn1ZQ9+7gfsSRcVy2
+/FcdxwRCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARC
+IARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARC
+IARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARC
+IARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARC
+IARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARC
+IARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARC
+IARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARCIARC
+IARCIARCIARCIARCIATymwCZ3cd5On0Yx+vQPL7LJnE+SsZ5L5vmzweoEXB4iE4v7fyIO9ko
+7+fTdNR5ihflxuNZnIy68WC2e5g1x6Ko3WWN5Wtn3SgZHvC4/XrpZOPp7byW5uq1grHO3Esm
++X7IIs2lc76MOreHvThTk3R66biWugpXH9msLWYO7xDrXEVzqlZOJTy3G60KNFy/6hK1xhVu
+uLy0amegCtRNUBHVQkzbhUWYzi+66exikGVj99iOC0hVD7bjOiixJt2PduILNp4+Hjl5qwUn
+SULRnLbQQVno7picE/n0x3zlMPl56ZigUTV6FfZv9z+X8/eIK7flhs76NC1FtzxVF71smD5v
+vyhjIdSBrSPmf9xV9/OBTu2P6hkKYT9HVJV9tHnV1b09sG51duUfnIPfvOWPiVTRaOtWkVWr
+XPl+UavkyfB78ia9sjySrlkqpWC3sFtO7xaz6pbrVljULfOfb9Ir85+6TqmQgH3CPjm9T7xl
+n1yH7XZRn4S97GF+Yb25qI7nv43F9QITNTzTeJMWspeg6y5dbjYeG+/0xvNXjRd5hVc+slBm
+kTAD48qb9J21Al3bqVKz69h1p3ddMO86d9Nvfx49DAZ/qZmhse7bqPAyrJs8FQg7iN6qay3H
+1/WsIjE7lh17esc21R0brjv2pvBS8DFNfxQo2236kf8mLWsrQNezmsxsWjbt6U0bqZtWXH0K
+0acw+hSePoWvT6H/4CMNfQr9MJdQn0KvTqNXp9Gr0+jVafTqNHp1Gr06jV6dRq9Oo1en0avT
+06vT06vT06vT06vT06vT06vT06vT06vT06vT06vT16vT16vT16vT16vT16vT16vT16vT16vT
+16vT16sz0Ksz0Ksz0Ksz0Ksz0Ksz0Ksz0Ksz0Ksz0Ksz0KuzoVdnQ6/Ohl6dDb06G3p1NgC3
+g/XqbOjV2dCrs6FXZ1OvzqZenU29Opt6dTb16mzq1dnUq7OpV2dTr86mXp2hXp2hXp2hXp2h
+Xp2hXp2hXp2hXp0hwB7QqzPUqzPSqzPSqzPSqzPSqzPSqzPSqzPSqzPSqzPSqzNC3I0H3I53
+AffjXcANeRdwR94F3JJ3AffkXcBNeRdwV94F3JZ3ATqF2EYAnSKMI4RzhLCOEN4RwjxCuEcI
++wjgHwnAQBKAgyQAC0kAHpIATCQBuEgCsJEE4CMJwEgSgJMkACtJAF6SAMwkAbhJArCTBOAn
+CcBQEoCjJABLSQCekgBMJQG4SgKwlQTgKwnAWBKAsyQAa0kA3pIAzCUBuEsCsJcE4C8JwGAS
+gMMkAItJAB6TAEwmAbhMArCZBOAzCcBoEoDTJACrSQBekwDMJgG4TQKwmwTgNwnAcBKA4yQA
+y0kAnpMATCcBuE4CsJ0E4DsJwHgSgPMkAOtJAN6TAMwnAbhPArCfBOA/CcCAEoADJQALSgAe
+lABMKAG4UAKwoQTgQwnAiBKAEyUAK0oAXpQAzCgBuFECsKME4EcZgB9lAH6UAfhRBuBHGYAf
+ZQB+lAH4UQbgRxmAH2UAfpQB+FEG4EcZgB9lAH6UAfhRBuBHGYAfZQB+lAH4UQbxfSbEF5og
+32gC6BTxnSbEl5oQ32pCfK0J8b0mxBebAH6UAfhRBuBHGYAfZQB+lAH4UQbgRxmAH2UAfpQB
++FEG4EcZgB9lAH6UAfhRBuBHGYAfZQB+lAH4UQbgRxmAH2UAfpQB+FEG4EcZgB9lAH6UAfhR
+RuNHFT56odbT6wszeJ63SnB3P0nzaTYpfziEMYsih/E0+R5vD5n+nB+wOERWIfOlL/8PwMGv
+08VD+vuje+cft87imeLOXTbZPCpjWd/x/yXQNl9u3ILV2+f8V84TXYe2PGWlf1uVXvlAV27b
+RxS8fEA2Is9VI4TUs3gKMSLPdbsNqWfxnFdAnuvwxkXUs3yeJiJPFED0s3zMICTPF4h+lo9P
+Q+RpCUQ/y4dDQQaL61nr2RsshRNYngfw9t3CMoDds8Gs28/Hg2T58J5Bdt/vJANnlg0ehmnF
+x50uH7zodLM0H/1p6iwPdrYt5GE0yDo/dif7wR8Oq/okrr9duNju/D1uh9ti9gfuYrBO+mn+
+/K5zBK9cLU7T/uIXdKtkuWnZshwW/WJ7w3SYTZ6cZPFvcpJp2t09Z6+FaofUCdWd/Q+9hylr
+6aQBAA==
+--------------452CC36A799A797E2F0A5FCB
+Content-Type: application/x-gzip;
+ name="lvremove.debut.txt.gz"
+Content-Transfer-Encoding: base64
+Content-Disposition: inline;
+ filename="lvremove.debut.txt.gz"
+
+H4sICOpgtT0AA2x2cmVtb3ZlLmRlYnV0LnR4dADtnVtr40oWhd/7V4i8zAxME+3SxVJoDji3
+ZuAwD4dDvwyDUBwlMbEtYylOZ379yNf4oiqrvJTkpFl+CN1J7V1Vn9besrWw9E1+cwbTYXKf
+lUk/HyfTbFL085Hz9atz0f3996vLL9+UWgzpPWS9x6QYZ71+Omg04Per7o9//fv7l2/6SbrX
+f1794fTzXjlwJll55rim0cuEznO/fFgMl9fxg7z3+DbrXmXen34x+3iaTLL0NkkHg6T6d2+Q
+pZOkl1Z5N6c7OHB32rtJtpFgMes474/KbLKBaTWqzeglklE63EtR/XH26zPn5PQ2m57m4/LH
+99PoIX+aFEkxSsfFQ14m1W8Tcb1AxYFy5WQXde8hnRS7idvLWnuYZmOn94aN/fh+5szn/fLN
+87ymy51HnOhDmq9FJ669o6EbWGWcDUnyu2QwbfOwta4GC75tpK0FNh/cVBB+9bJVhDbGYjla
+9TQTxao+hlW/yXu76y36/8scUdEGuKo51Y1ct41/7gYl6e3tbPT9JH/uj+6dmxcncJ1sVE76
+WVGfeGulq8yReyGXUVS35MPjP2VZ71Xr7sDXRSxbdZneJOv02c9+Ue4ufplzY/2fE89KBLMd
+z86Xm2fR9ZQGUYeb1ddQ07oYrfyuu1HtaswBdVurYeA4t2mZnq3inPkaz2aLXCUwnd73Zts7
+yzfoDMqPfPvWoI9qxsWG40xMd/eTrCjzSbankU/Z27eH9vJRUZV5Nuq9bG5vMXvT/QWzl+0G
+9UG1y9asyH6L+ogDag3kmKLXR+nUp+KwfkUNAsbTJsd1bHq/tXg/NMjzsWs8Srp3UocjDcd3
+b2U2Wvgk6tzdafZsOkKLv+pFqzvix8s8jPzoGKEb4rTKPQ/tznDagJptuEdtQhelWdGlG0dW
+1bod0KRa7T8dPeTD7KjabRheq63l8KZVGc5ftmVpiLJalKEwm33u+dwtyKg+4ASp3KOKzhCn
+raLzc6vOoQ/4sM5x6V3YdY6tgLfpHEU6vEmB1nE4nr2DvUPTO45sHbZlF1zbdQ5twId1jquu
+a9c5tgLepnNUP4G+cSiaXYNdo6bgfDc+quRMcdoauvDs+oY24KP6xlV04Vv1je2At+kbessl
+9FQItBQgMbsNu02dkeUq/4g6NYRp6+6qY9Vr9AEf1mtiZXddZDvgbXqNzFqCwd09ttUcn5ed
+hp3mQztN7NtdR9EHfFynieyuo+wGmG1O3ei1z/nroHibpnubvtS0xiDGWu6xWdlw2XA/tuF2
+7S4/6QM+rstc211+2g041HDrR/81Gy6E4m0a7nOWPdb0Rrfjxz7QcY9Oy5bLlvuhLbcrdlfu
+9AEf1me6geWVu52AAy1XM/ov2XKJgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiI
+giiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiI
+giiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiI
+giiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiI
+giiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiI
+giiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiI
+giiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiIgiiI
+giiIgiiIgiiIgiiIgiiIgiiIgiiIgih2UEzvkyIrn8bJMrBI7vJJUozScfGQl8Vr+ubj9ybo
+PWS9x6SXj4p+UWaj3ksyW2oynibp6DYZTDcnWQCsC9ocFcxeG8NG6XCPxI/vZ04+Ln9UCwnn
+rwWGZd6HdFLsRsyynDkn86ATY9TWAZpk5Znj6hdVO9i8T0NIRW2fZ6WcCqeJkAbkao9NSXYW
+L1uUprDavWrX1Yh8E5rLmDqcdYDW4+oAnZzeZtPTQZ6P3QObrWHUONYIam99dlg/1eHe33P2
+bD5mi78fo4PjK9EQOdBFbvbCCsbX36qRw/TnmaOCsGHwIuo/7n/PqnPApRtHrrM8PHOhzQ/R
+6UM+zNZbr0tYh3NgKoHqj5t6fp3myIJonKAW8zqgqdCj5ctW6cY4y6UZtb4H/xeu7wO6PL6w
+lrUhi9q49C7qaqNIhzfpOxTHfB6oOppkYHmwPCzLQy3K46rr1pVH9fMdiqP6CZXG4XgWBgvD
+sjC8eWFcRRd+XWFED/lT9XF49VE4qX6biOsFKg49Fb5DzZgXAJUTlJqVxkqzrDR/UWmxqv30
+IjM11okxUK68Q6EZ54fqDMnMMmOZWZZZUJXZusD+PnoaDP5hlyBc1mlU+0nqNn2p0XIQv0+V
+GmaHavT4vKxQVqhlhXbQCo2WFXpd+2HuOcsea8TsdvzYf4cSNU0P1SiQmEXKIrUs0hgtUnHh
+DAJnUHAGD87gwxngtzQSwhngpi0RnAHWpII1qWBNKliTCtakgjWpYE0qWJMK1qSCNalgTXqw
+Jj1Ykx6sSQ/WpAdr0oM16cGa9GBNerAmPViTPqxJH9akD2vShzXpw5r0YU36sCZ9WJM+rEkf
+1mQAazKANRnAmgxgTQawJgNYkwGsyQDWZABrMoA1GcKaDGFNhrAmQ1iTIazJEL9sC2syhDUZ
+wpoMYU12YE12YE12YE12YE12YE12YE12YE12YE12YE12YE1GsCYjWJMRrMkI1mQEazKCNRnB
+mozwC/iwJiNYkzGsyRjWZAxrMoY1GcOajGFNxrAmY1iTMazJuIVr5vhFcxe/au7il81d/Lq5
+i184d/Er5y5+6dzFr527+MVzF1dnG5YOrs4WTJ0WXJ0WbJ0WfJ0WjJ0WnJ0WrB3c2xHc3BHc
+3RHc3hHc3xHc4BHc4RHc4hHc4xHc5BHc5RHc5hHc5xHc6BHc6RHc6hHc6xHc7BHc7RHc7hHc
+7xHc8BHc8RHc8hHc8xHc9BHc9RHc9hHc9xHc+BHc+RHc+hHc+xHc/BHc/RHc/hHc/xHcABLc
+ARLcAhLcAxLcBBLcBRLcBhLcBxLcCBLcCRLcChLcCxLcDBLcDRLcDhLcDxLcEBLcERLcEhLc
+ExLcFBLcFRLcFhLcFxLcGBLcGRLcGhLcGxLcHBLcHRLcHhLcHxLcIBLcIRLcIhLcIxLcJBLc
+JRLcJhLcJxLcKBLcKRLcKhLcK1K4V6Rwr0jhXpHCvSKFe0UK94oU7hUp3CtSuFekcK9I4V6R
+wr0ihXtFCveKFO4VKdwrUrhXpHCvSOFekWrhe0AtfBGojW8C4eps4btALXwZqIVvA7XwdaAW
+vg/UwheCcK9I4V6Rwr0ihXtFCveKFO4VKdwrUrhXpHCvSOFekcK9IoV7RQr3ihTuFSncK1K4
+V6Rwr0jhXpHCvSKFe0UK94oU7hUp3CtSuFekcK9I4V6RAryi2lsQ2Nw+vTaBUov4u/tJVpT5
+RH+HBJmtcJiU6U2ynjD7WU1XHyHziO2Rye1TOpgN19waQh9wMH/aK/tT020nVhudj57hN4xd
+3w9/ibXB7Sl0IUboW2sxjSzKtHzaW8LuiptubyU3m/1pYxrI0rjDJg9bqHqhv7mEhk9bMIS1
+/LiFvcOkq6AaveqkXbWDRb7k5mVG0CztJo+rWG/L5mkVdUFaGFfXUd1ymozf3mwyHzPa7Ba/
+gMgNKx/Y3a1zea8/m022krfJcyoOHJj1nXZsjow+yGZFFsdG242NSu1e/3n1h9PPe+WgeZBh
+KmNN+27cCe2r2hCmq9Nz8WqX1GQ865p1zbrefhe9d2KvGzqYTrJhvniP0EtHfyud5f/zcTZy
+VsfYGeT3/V414TQfPFVbtJHD+j3906gq6MfNktz7g+kjweypUVVP2DjUd/nECVwnG5WTfla8
+tg7z06gu5DKK9gevnxXVNMt1t4UsKg7dFrKch/ha5k9oaSHL+XkLa5k9EaOFLMF1C2uZPX6g
+hSwXHr6W+R3fW8hy1WlhLbN7YreQxW9BL/P7/raQpduCXuZ3OMWzdKUNvbx+cISyXLXBZfv9
+3V6W/Ta/dTYYVqelyYszf1eYltnt5qnhqDPLV3H9AyeXjXPLEav7P5/IOSUrowEA
+--------------452CC36A799A797E2F0A5FCB--
