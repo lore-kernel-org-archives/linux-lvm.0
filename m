@@ -1,8 +1,8 @@
-From: Stefan Majer <stefan@x-cellent.com>
-Message-Id: <1069848492.4436.15.camel@dom>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] multiple snapshots
+Message-ID: <3FC47B24.DBE8143@groupe-ips.com>
+From: Jean Marie =?iso-8859-1?Q?Ari=E8s?= <jeanmarie.aries@groupe-ips.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Newbie to LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,30 +13,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 26 06:10:01 2003
+Date: Wed Nov 26 08:57:17 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
 Hi,
 
-Im currently working on a samba fileserver setup based on LVM2 on top of
-kernel 2.4.22.
+LVM seems to be a good choice for split a linux box hdd. I would like to
+use this for a database/file server (samba), running under SuSE Linux
+8.0 PRO.
+I have 2 disks of 73 Go, in RAID 1.
 
-Our customer now wants to keep several snapshots (one every day) from
-the main share for backup purpose. He wants to keep up to two weeks
-online, that leads in 14 different snapshots for one source LV.
+Here is the LVM partition I've created :
 
-All of these snapshot LVs should be mountet.
-The Source LV is about 1TB in Size, we have about 300Gb for snapshots
-free.
+linux:/ # lvscan
+lvscan -- ACTIVE            "/dev/vg/mysql" [10 GB]
+lvscan -- ACTIVE            "/dev/vg/index" [4 GB]
+lvscan -- ACTIVE            "/dev/vg/data" [15 GB]
+lvscan -- ACTIVE            "/dev/vg/share" [29.35 GB]
+lvscan -- 4 logical volumes with 58.35 GB total in 1 volume group
+lvscan -- 4 active logical volumes
 
-Is this possible ?, did anyone else something like this before ?, how
-big would the performance impact be ?
+LV are mounted with ReiserFS :
 
-If someone can give me some hints,numbers 
-all would be welcome.
+/dev/vg/mysql --> /mysql
+/dev/vg/index --> /index
+/dev/vg/data --> /data
+/dev/vg/share --> /share
 
-greetings
+All of the LV are shared with samba.
 
-Stefan Majer
+
+I have some questions :
+
+1. I can write 4.3 GB of data for my XP station to the /index share. The
+LV is 4 GB ?????
+
+2. What is exactly the extent value ? (default 4MB).
+
+3. What is the best value of this parameter for database ? and a file
+server ?
+
+
+Thanks in advance for your response.
+
+
+--
+Sinc�rement,
+
+Jean Marie Ari�s
