@@ -1,9 +1,7 @@
-From: "Dale Gallagher" <foobar@mighty.co.za>
-Subject: Re: [linux-lvm] Compile problem - Linux 2.6.1 + LVM2.2.00.08
-Message-ID: <web-210831654@mail01.infosat.net>
-In-Reply-To: <20040119115243.GD5542@percy.comedia.it>
+Message-ID: <2F75AEE4E86FDE44BF97709D289BAA7C38E0FF@vega.voltaire.com>
+From: Dan Bar Dov <danb@voltaire.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] forcing scan
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,28 +12,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 09:33:01 2004
+Date: Mon Jan 19 10:07:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> compile and install device mapper first
+I have 2 systems connected to the same storage. I automate the storage
+discovery and the lvm discovery on startup.
 
-Tried that earlier and it failed too - after reading the
-docs, wasn't certain if I had to do this, since 2.6.x has
-device-mapper in the kernel....
+I removed a PV all the way, dding the disks 1st block, on system A.
+I then wanted to re-discover my lvm status on ssytem B.
 
-Anyway, everything succeeded now - the problem was with my
-kernel-headers.  I'd been a twit and symlinked
-/usr/include/linux to
-/usr/src/linux-2.6.1/usr/include/linux and found Linus'
-post regarding this, before rectifying my mistake:
+Whatever I did, lvscan -D, vgscan, pvscan, nothing got rid of the indication
+that the cleared disk is a PV. The only thing that worked was to rmmod
+lvm-mod and insmoding it again. Then the scans worked, but it is
+unacceptable since there are other active VGs.
 
-http://www.ussg.iu.edu/hypermail/linux/kernel/0007.3/0587.html
+I'm pretty sure there is a way to "force" real rediscovery. If only I could
+find it.
 
-So I removed my symlink madness and re-installed the
-original kernel-headers package as per my original post and
-then successfully installed both device-mapper and LVM!
+Any ideas?
 
-Thanks
-Dale
+Thanks,
+Dan
