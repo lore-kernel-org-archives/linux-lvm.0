@@ -1,64 +1,75 @@
-Message-ID: <39F9ADBB.B938E21A@imim.es>
-Date: Fri, 27 Oct 2000 18:30:51 +0200
-From: Xavi Fustero <xfustero@imim.es>
-MIME-Version: 1.0
-Subject: [linux-lvm] Problems compiling LVM
-Content-Transfer-Encoding: 7bit
+Date: Sat, 28 Oct 2000 10:50:07 +0000
+From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
+Subject: Re: [linux-lvm] [RFC] LVM mainatainance release
+Message-ID: <20001028105007.C18563@srv.t-online.de>
+Reply-To: Mauelshagen@sistina.com
+References: <20001027011512.A9942@gondor.com> <200010270304.e9R34k127613@webber.adilger.net>
+Mime-Version: 1.0
+In-Reply-To: <200010270304.e9R34k127613@webber.adilger.net>; from adilger@turbolinux.com on Thu, Oct 26, 2000 at 09:04:46PM -0600
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM group <linux-lvm@msede.com>
+Content-Transfer-Encoding: 7bit
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: linux-lvm@msede.com, mge@sistina.com
 
-I have Red Hat 6.2 with kernel 2.2.17 patched with mosix. I downloaded:
-lvm_0.8-pre02.10.1999.tar.gz  and  patch-2.2.13-LVM-0.8i.gz
+On Thu, Oct 26, 2000 at 09:04:46PM -0600, Andreas Dilger wrote:
+> Jan writes:
+> > As Heinz seems to release his next version as 0.9, there will be no
+> > numbering conflicts, and even if your 0.8.1 will not be 'made official'
+> > by him, it'll be a common ground for further 0.8 bugfixing. 
+> 
+> I agree we should make bugfix releases available between the major
+> updates from Heinz.  It would save a lot of people grief, and a lot
+> of FAQs here.
+> 
+> > The problem I have with Andreas' RPMs is, that there are no announcements
+> > of new versions (at least not on any mailing list I read), so I need to
+> > regularily check if they contain some new patches I need. And tar is more
+> > convenient for people not using rpm.
+> 
+> Initially I made just the SRPM available because that's what my development
+> is based on, and I can use alien to convert it to .deb format.  If people
+> really want, I can also make a patched tarball available with very little
+> effort, since I keep a patched and unpatched tree already.  I will make
+> a tarball available with my next release (today or tomorrow).
+> 
+> Actually, I don't do too many updates to my SRPM.  Normally only when
+> people have reported a bug here, as I'm waiting for 0.9 before I do any
+> more changes.  I do normally post something to linux-lvm, but I will make
+> a point of being more verbose about it, rather than hiding it in another
+> discussion.
+> 
+> I would prefer if Heinz opened a project on SourceForge, so that we can
+> have CVS, bugzilla, patch tracking, etc, and allow a limited number of
+> developers write access to the project.  My second choice is simply a
+> URL from the official LVM site pointing to wherever I keep my patches -
+> this frees both Heinz and myself from having to co-ordinate a bugfix
+> release.  Failing that, I will simply make the files available on my
+> site and keep pointing it out to people when they report a problem here.
 
-I patched the kernel and it went right. Mosix still works properly and I
-can load lvm modules.
-However, I can not compile the LVM application. I try to understand and
-modify the makefile but I did not success. I report my error messages to
-see if anybody can help me because I do not see the light !!!!
+Sistina is working on setting up CVS and Bugzilla for LVM.
+Will announce it on the list once we are done.
 
->make
+> 
+> Cheers, Andreas
+> -- 
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 
-make[1]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools'
-make[2]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
-make[3]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
-cc -c -pipe -Wall -I/root/src/LVM/0.8-pre02.10.1999 /tools
--I/root/src/LVM/0.8-pre02.10.1999 /tools/lib
--I/root/src/LVM/0.8-pre02.10.1999 /kernel -D__KERNEL__ -O2 -DDEBUG -o
-basename.o basename.c
-cc: cannot specify -o with -c or -S and multiple compilations
-make[3]: *** [basename.o] Error 1
-make[3]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
-make[2]: *** [all] Error 2
-make[2]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
-make[2]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
+-- 
 
-make[3]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
+Regards,
+Heinz      -- The LVM guy --
 
-make[3]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
-make[2]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
-make[2]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools'
-cc -c -pipe -Wall -I/root/src/LVM/0.8-pre02.10.1999 /tools
--I/root/src/LVM/0.8-pre02.10.1999 /tools/lib
--I/root/src/LVM/0.8-pre02.10.1999 /kernel -D__KERNEL__ -O2 -DDEBUG -o
-e2fsadm.o e2fsadm.c
-cc: cannot specify -o with -c or -S and multiple compilations
-make[2]: *** [e2fsadm.o] Error 1
-make[2]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools'
-make[1]: *** [all] Error 2
-make[1]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools'
-make: *** [all] Error 2
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-I do not see how to fix it !!!!! If anybody can help me I would
-appreciate his/her help so much.
-Thanks in advance,
-yours sincerely,
-Xavi !
-
---
-Xavi Fustero Benavent
-Institut Municipal d'Investigacio Medica (IMIM)
-Departament Genome Informatics
-Tel.: +34-93-221 10 09    Ext: 2016
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
