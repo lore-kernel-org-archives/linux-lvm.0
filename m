@@ -1,12 +1,7 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] lvm and Debian
-Message-Id: <20020118140005.GB22956@auctionwatch.com>
-References: <E16RWI7-00083Z-00@arwen.dev33.cvf>
-    <20020118104418.GA29876@balu.kawo2.rwth-aachen.de>
-    <E16RWih-0000HQ-00@arwen.dev33.cvf>
+Message-Id: <20020118141431.32744.qmail@web13005.mail.yahoo.com>
+From: Prashant Kharche <pdkharche@yahoo.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E16RWih-0000HQ-00@arwen.dev33.cvf>
+Subject: [linux-lvm] lvcreate, vgscan problem!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +12,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 08:00:02 2002
+Date: Fri Jan 18 08:15:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 18, 2002 at 11:58:03AM +0100, Pierrick PONS wrote:
-> > > 
-> > > Am I obliged to use lvm_1.0.1-rc4 (that's the latest I found on Sistina web 
-> > > site ) if I'm under a 2.4.17 kernel ?
-> > 
-> > The text on http://www.sistina.com/products_lvm_download.htm is not up
-> > to date. There's 1.0.1 final already on the FTP server. Just follow the
-> > link to 1.0.1rc4.
-> > 
-> > Although I did not have any problems with the 1.0.1rc4(ish) code in
-> > stock kernel 2.4.17, I'd recommend using 1.0.1. 
-> > 
-> > Regards, Markus
-> > 
-> > -- 
-> > Free the Fluffy Bunny.
-> > 
-> 
-> There's a thing I don't understand : is the lvm_1.0.1rc4 patch still in the 
-> 2.4.17 kernel or do I have to patch my 2.4.17 kernel to use lvm and lvm 
-> commands ?
+Hi! 
+    I have LVM 1.0.4.rc4 package and linux kernel
+2.4.17. Following commands are giving me errors :
 
-    Yes, it's still in the kernel.
+vgscan - > gives error message as 
+" Invalidate :Busy Buffer ..."
+pvcreate, vgcreate commands are working properly.. and
+also manages to create to volume groups.. 
+my sequence of commands is -
+1.vgscan 
+2.pvcreate
+3.vgcreate
+4.lvcreate : gives me error ..
 
-    You're better off patching to 1.0.1 release, and if you want to do
-    snaps, the VFS lock patch. 
+What should i do to avoid this error ??
 
-> I thought that using a 2.4.17 kernel permitted to have lvm fonctionalities and 
-> not to be obliged to patch the kernel.
+Also, I have compiled the kernel 2.4.17 and loaded the
+LVM module.. and installed the LVM package 1.0.4rc4..
 
-    You don't have to. 
+Everytime i have to load the module "lvm-mod.o"
+manually.. how do i add it to startup script.. ??
 
--- 
-Share and Enjoy. 
+PLEASE REPLY ASAP,
+
+
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Send FREE video emails in Yahoo! Mail!
+http://promo.yahoo.com/videomail/
