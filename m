@@ -1,9 +1,10 @@
-Message-ID: <3BB94405.AA906FBD@americasm01.nt.com>
-Date: Mon, 01 Oct 2001 23:35:17 -0500
-From: "Joe Harvell" <harvell@nortelnetworks.com>
+Message-ID: <3BB94718.30441CCA@adelaide.edu.au>
+Date: Tue, 02 Oct 2001 14:18:24 +0930
+From: Sean Burford <sean.burford@adelaide.edu.au>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] segmentation fault problems
+References: <E15oBO3-00035u-00@hermes.sistina.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] how to upgrade from rh70 to rh71
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,33 +19,48 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hmm:
+Henning Hogue wrote:
+> 
+> I have been having a problem getting the LVM working due to lvcreate causing a
+> segmentation fault when it's run. I am running redhat 7.1 on a SMP system with
+> kernel 2.4.9. I have had the same problem with versions 1.0.1rc2 and the CVS
+> code. A copy of the output from the command /sbin/lvcreate -d -l1000 -ntestlv
+> volume_1  2> debug.out is available at http://www.randomfactor.net/~henning/deb
+> ug.out
 
-I never really thought about this when I decided to put all my
-filesystems on LVM logical volumes; but how am I going to be able to
-upgrade to RedHat 7.1? If I remember correctly, the installer has its
-own custom kernel and root filesystem to boot into for the upgrade.
+This sounds like the lvcreate problem I am seeing.  I modified
+lvcreate.c to use lv_create_remove() rather than the lv_create() inline,
+as illustrated below, and it worked.
 
-My setup is two IDE disks with 4 RAID-1 devices.  I have an LVM volume
-group (/dev/w0) on one of these (/dev/md2), that has all my filesystems
-on it (except /boot).
+This suggests a problem with the lv_create() inline in
+lib/lv_create_remove.c.  gdb shows that it is messing up the three
+parameters vg, lv and lv_name.
 
-/dev/w0/root
-/dev/w0/var
-/dev/w0/usr
-/dev/w0/home
-/dev/w0/opt.
+*** tools/lvcreate.c    Thu Jul 26 00:22:19 2001
+--- tools.patched/lvcreate.c    Tue Oct  2 14:14:27 2001
+***************
+*** 788,794 ****
+     /* create it in kernel */
+     if ( opt_v > 0)
+        printf ( "%s -- creating logical volume VGDA in kernel\n", cmd);
+!    if ( ( ret = lv_create ( vg, vg->lv[l], vg->lv[l]->lv_name)) < 0) {
+        fprintf ( stderr,
+                  "%s -- ERROR \"%s\" creating VGDA for \"%s\" in
+kernel\n",
+                          cmd, lvm_error ( ret), lv_name_ptr);
+--- 788,794 ----
+     /* create it in kernel */
+     if ( opt_v > 0)
+        printf ( "%s -- creating logical volume VGDA in kernel\n", cmd);
+!    if ( ( ret = lv_create_remove ( vg, vg->lv[l], vg->lv[l]->lv_name,
+LV_CREATE)) < 0) {
+        fprintf ( stderr,
+                  "%s -- ERROR \"%s\" creating VGDA for \"%s\" in
+kernel\n",
+                          cmd, lvm_error ( ret), lv_name_ptr);
 
-So the redhat upgrade kernel will need to have support for RAID and
-LVM.  And it will need to run vgscan, and vgchange -ay.  And it will
-need to have devfs support or it will need to use mknod to make the
-directories enumerated above.  Does anyone know if it does all these
-things?
 
-Am I going to have to use my own rescue disk as the platform from which
-to manually do the upgrade (by issuing the appropriate rpm commands?
-
-Has anyone with a similar configuration done this?
-
----
-Joe Harvell
+-- 
+Sean Burford    x34135
+ITS Systems Specialist
+Adelaide University
