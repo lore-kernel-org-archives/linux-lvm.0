@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgscan / vgimport problems
-Message-ID: <20011105125510.B25559@sistina.com>
-References: <C9B993D4214AD511BC010002A537DFE30A8B96@acsexchweb.corp.acsalaska.com>
+Subject: Re: [linux-lvm] IO issue causing unkillable processes.
+Message-ID: <20011105130120.D25559@sistina.com>
+References: <85063BBE668FD411944400D0B744267A8886B0@AUSMAIL>
 Mime-Version: 1.0
-In-Reply-To: <C9B993D4214AD511BC010002A537DFE30A8B96@acsexchweb.corp.acsalaska.com>; from snay@acsalaska.com on Tue, Oct 30, 2001 at 09:38:43AM -0900
+In-Reply-To: <85063BBE668FD411944400D0B744267A8886B0@AUSMAIL>; from austin@coremetrics.com on Tue, Oct 30, 2001 at 02:24:03PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,77 +14,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  5 05:58:02 2001
+Date: Mon Nov  5 06:05:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Shawn,
+Austin,
 
-you need to get the actual LVM version running in order to solve your
-problem.
-If there's no constraints to stay with the Redhat patched kernel, you should
-follow the patch instructions in the LVMs distro contained files INSTALL
-and PATHCE/README (guess that you probably know those already from the
-things you say below ;-), build+install the kernel and the LVM lib and tools.
+no problem on ext2 in an LV.
+Probaly just a particular load related problem in your SW/HW config.
 
-vgscan should find your VG then (crossing fingers ;-)
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Tue, Oct 30, 2001 at 09:38:43AM -0900, Nay, Shawn wrote:
-> I am an LVM newbie but did manage to get it up and running on a non-system
-> disk.
-> I rebuild my system with the same version of Linux (Redhat 7.2), the same
-> kernel (2.4.9-7, which I recompiled for LVM), and the same version of LVM
-> (0.9.1_beta7).  By the way...I am using an old release of LVM due to my
-> inability to patch this kernel with 1.0.1-rc4.  The problem is that I am
-> unable to import my old vg.  This disk has remained untouched since my
-> previous install.
+On Tue, Oct 30, 2001 at 02:24:03PM -0600, Gonyou, Austin wrote:
+> This perl script: #!/usr/bin/perl -w
 > 
-> pvscan output:
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdd"  is associated to an unknown VG (run
-> vgscan)
-> pvscan -- total: 1 [31.08 MB] / in use: 1 [31.08 MB] / in no VG: 0 [0]
+> $|=1;
+> open(FD, ">>spew.out");
+> while (true) {
+> print FD "asdklfasd;kfjsad;kfjs;dlj
+> a;sdlkfnas,nfp9ibvp98ay085hq325l;mndfg'adfa
+> 'sd;lmf,m/,sd\fasdfna.,mdnf.m,ansdflkjanfoiuahsel;kjrqwe\as\df]adfh\||PPOt'r
+> q[tjwq.,mnt/><ZXDNF{OLPIAHSEMN>M<Nl;kjahestlkjahsdklfmsd;lifqpownj;n;lakfn;K
+> H;LKH;LKGJAPSOIJ"
+> }
+> close FD;
+> will cause an unkillable process under the proper circumstances. I'm not
+> sure what they are, so...
+> if anyone who's NOT running xfs, rather Reiser or ext3 or ext2, and LVM,
+> could run this and let me know if they experience similar symptoms. I'm not
+> sure where the culprit is right now.(whether it's SMP, SCSI, or IDE, the VM,
+> whatever.) I'd greatly appreciate your help.
 > 
-> vgscan output:
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "sundogvg"
-> vgscan -- only found 0 of 5120 LEs for LV /dev/sundogvg/datalv (0)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "sundogvg" from physical volume(s)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-> "/etc/lvmtab" and "/etc/lvmtab.d"
-> 
-> vgimport output:
-> vgimport -- ERROR: physical volume "/dev/hdd" doesn't belong to an exported
-> volume group
-> 
-> Any help would be greatly appreciated.
-> 
-> Shawn
-> 
-> 
-> 
-> 
-> This transmittal may contain confidential information intended solely for
-> the addressee. If you are not the intended recipient, you are hereby
-> notified that you have received this transmittal in error; any review,
-> dissemination, distribution or copying of this transmittal is strictly
-> prohibited. If you have received this communication in error, please notify
-> us immediately by reply or by telephone (collect at 907-564-1000) and ask to
-> speak with the message sender. In addition, please immediately delete this
-> message and all attachments. Thank you.
+> -- 
+> Austin Gonyou
+> Systems Architect, CCNA
+> Coremetrics, Inc.
+> Phone: 512-796-9023
+> email: austin@coremetrics.com 
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
