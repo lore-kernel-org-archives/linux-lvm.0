@@ -1,10 +1,11 @@
-Return-Path: <james@fr.clara.net>
-Date: Sat, 3 Feb 2001 09:22:08 +0100 (CET)
-From: James <james@fr.clara.net>
-Subject: Re: [linux-lvm] newbie question
-In-Reply-To: <200102022056.f12KuxW23594@webber.adilger.net>
-Message-ID: <Pine.LNX.4.21.0102030905100.4364-100000@munster.noc.fr.clara.net>
-MIME-Version: 1.0
+Return-Path: <juergens@muon.de>
+Date: Sat, 3 Feb 2001 14:43:23 +0100
+From: Nils Juergens <nils@muon.de>
+Subject: Re: [linux-lvm] startup scripts
+Message-ID: <20010203144323.A704@guldukat.muon>
+References: <3A7B17B2.8A75537B@asosa.org> <Pine.LNX.4.21.0102021002400.23087-100000@compath.asosa.org>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.21.0102021002400.23087-100000@compath.asosa.org>; from gashaw@asosa.org on Fri, Feb 02, 2001 at 10:04:22AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,58 +17,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Ok, so say I have 1 36gb scsi drive, do I do a basic installation using
-say 1gb or less all on the first partition or say with a boot and a /
-taking up two partitions? Then when I have everything installed I create a
-huge 35gb partition as LVM, create /usr /var /home etc on it and remount
-everything there? Then a similar idea when using raid1?
+On Fri, 02.02.01, Gashaw Mengistu <gashaw@asosa.org> wrote:
+> 
+> Oh .. I am using Mandrake 7.2 with Kernel 2.4.1 compiled with RAID and LVM
+> support built in.
+> 
 
-cheers
+Well, if you compiled your kernel with raid autodetect support it does
+not matter that much where you put it. If your raid is started by some
+startup-script you have to put the lvm-stuff after that.
 
-On Fri, 2 Feb 2001, Andreas Dilger wrote:
+I think it is quite reasonable to initialize LVM quite early, after
+the initial mount of the / filesystem. That way you can mount the
+filesystems the usal way at startup - using /etc/fstab. If one of your
+PV's is a MD, autodetect support is mandatory.
 
-> James writes:
-> > If I did a standard installation using say 5 partitions / /usr /var/ /home
-> > swap, it would be a pain transferring this to an lvm system. So how do you
-> > lot do it ? WHat sort of installation do you do?
-> 
-> AIX comes with 7 partitions standard:
-> 
-> / /usr /var /home /tmp swap boot
-> 
-> You can put all of these into Linux LVM, except boot.  That should be
-> working fairly soon.
-> 
-> > my partitions at the moment
-> > 
-> >  Device Boot    Start       End    Blocks   Id  System
-> > /dev/hda1   *         1       608   4883728+  83  Linux
-> > /dev/hda2           609       627    152617+  82  Linux swap
-> > /dev/hda3           628       749    979965   83  Linux
-> > /dev/hda4           750      1601   6843690    5  Extended
-> > /dev/hda5           750       871    979933+  8e  Linux LVM
-> > /dev/hda6           872       993    979933+  8e  Linux LVM
-> > /dev/hda7           994      1601   4883728+  8e  Linux LVM
-> 
-> I would suggest combining all of the LVM partitions into a single one.
-> You are wasting space with having multiple LVM partitions on a single
-> drive, and it doesn't benefit anything.  Each PV can waste up to
-> (PE size - 1)  bytes, so up to 4MB if you use default PE size.  The only
-> reason you might want to do this is if you have multiple VGs, but there
-> is not really a reason to do this with only a single drive.
-> 
-> Cheers, Andreas
-> -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
+greetings,
+
+Nils
+
+-- 
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >  If we all work hard, we can turn this company  <
+ >      around 360 degrees -- gruntbert(LOTD)      <
