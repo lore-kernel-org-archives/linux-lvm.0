@@ -1,9 +1,8 @@
-Message-Id: <3CB364D2.F612BD9B@silicide.dk>
-From: Jon Bendtsen <jon+vserver@silicide.dk>
+Message-Id: <3CB365F4.F90C2347@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] multiple volumes..
 References: <18044083656.20020409231800@tnonline.net>
-    <611310000.1018387687@[192.168.200.4]>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,51 +14,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr  9 17:01:03 2002
+Date: Tue Apr  9 17:06:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Steven Lembark wrote:
- 
-> > There is an expamle of my ideas at http://www.tnonline.net/raid-lvm.png
-> > As you can see there are 8 chains and about 50 GB unallocated data in
-> > this example. Can I minimize the loss even better?
-> >
-> > Any help or insight in this would be greatly appreciaded
+Anders Widman wrote:
 > 
-> One way is to mirror the hard drives (requires an even number
-> of the same size/type) then build your LVM system on top of
-> the mirrored drives. Nice thing about this is that the messy
-> part (paring and mirroring the drives) is done once only and
-> is transparent to the LVM system.
+> I have a problem which I want to solve as efficiently as possible.
+> 
+> The problem is that I have 13 drives os various sizes (30-120GB) which
+> I want to combine into one (or a few) logical volumes with redundancy
+> if one drive would fail.
 
-Okay, my suggestion would be to mirror alot, and possibly if you want
-to,
-to raid0 ontop of the mirrors, but that REQUIRES, that the disks are not
-hd<a,b,c,d,e,f,g,h>
-You should try to avoid having more than one (active) disk at the same
-controller at once.
-Anyway, mirror the 80GB disks, and the 75GB disks, possibly raid0 that.
-raid0 2 60GB disks, and mirror that against the 120GB, or divide the 120
-gb disk in 2, and mirror each partition for one 60GB disk.
-The rest of the 60GB disks (4??) can do mirror, or mirror/raid
-As for the 30, 40 and those 2*5GB from the 80GB disks, being raid0'ed
-against
-the 75GB disks, you could mirror the 30, 30 from the 40GB, and the last
-10 GB,
-well, same procedure as the 120GB disk, and the 2*60GB disks
+13 disks... in one computer. How many controllers do you have ??
+Are they all filled up ?? aka, using hd<a,b,c,d,e,f,g,h,...>
 
-Or you could just do what you suggested and then only create a mirror
-from the
-30GB disk, the leftovers from the 75GB disks, and the leftovers from the
-120GB
-disk.
-30+2*5 = 40, which is left from the 120GB disk.
 
-Personaly i dont think it is wise to raid5 over too many disks.
-Especialy if
-they are located on the same controller.
+> How would the smartest layout be? I was thinking about multiple
+> partiontions and then combine them into several RAID 5 chains, and
+> then use LVM to manage the logical volumes.
+
+And how many disks would you have in your raid5 thingy ?? Way too
+many pr. controller i fear. Only run one (active) ide hd pr.
+controller. As for scsi, more, but not many more.
+
+Why not use raid1, or possibly, raid0 ontop of raid1?
+
+ 
+> There is an expamle of my ideas at http://www.tnonline.net/raid-lvm.png
+> As you can see there are 8 chains and about 50 GB unallocated data in
+> this example. Can I minimize the loss even better?
+
+Yes, you could avoid it.
+Run raid1 on much of it, possibly raid0 on top for speed.
+The 30GB disk, and the leftovers from the 2*75GB disks, can
+with the leftovers from the 120GB disk be turned into raid1
+partitions.
+
+ 
+> Any help or insight in this would be greatly appreciaded
+
+More info about the disks, ide, scsi, mixed, controllers ??
+
 
 
 
