@@ -1,8 +1,7 @@
-Date: Fri, 20 Oct 2000 15:41:24 +0200
-From: Luca Berra <bluca@comedia.it>
+Date: Fri, 20 Oct 2000 16:23:58 +0200
+From: Jos Visser <josv@osp.nl>
 Subject: Re: [linux-lvm] using previously created lvm
-Message-ID: <20001020154123.A10018@colombina.comedia.it>
-Reply-To: bluca@comedia.it
+Message-ID: <20001020162358.I442@jadzia.josv.com>
 References: <000401c03a8e$4861a620$a200a8c0@babbage.siliconinfusion.com>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -15,7 +14,18 @@ Content-Transfer-Encoding: 7bit
 To: Frank Wray <frank_wray@siliconinfusion.com>
 Cc: linux-lvm@msede.com
 
-On Fri, Oct 20, 2000 at 01:07:12PM +0100, Frank Wray wrote:
+As far as I know, this will NOT work, because:
+
+a) The HP-UX and Linux LVM disk layouts are different, so vgscan on
+   Linux will not recognise the disks.
+b) And even if vgscan would recognise it, Linux does not support the
+   HP-UX HFS.
+
+++Jos
+
+And thus it came to pass that Frank Wray wrote:
+(on Fri, Oct 20, 2000 at 01:07:12PM +0100 to be exact)
+
 > Hi All,
 > 
 > I would like to move a volume group from
@@ -23,17 +33,12 @@ On Fri, Oct 20, 2000 at 01:07:12PM +0100, Frank Wray wrote:
 > to a Linux box. The logical volumes are
 > all of type HFS and currently on a single
 > physical volume.
-No way, the format of PV under HP-UX and linux are different,
-besides Linux does not support HFS Filesystems.
-you have to backup all data on the HP9000 then restore on
-the linux.
-Besides HP9000 mainly use scsi differential disks, which
-do not work with Scsi single-ended controllers found on PCs
-
-Regards,
-L.
-
+> 
+> Anybody have any experience in doing this?
+> Will vgscan recognise a HPUX vg?
+> 
+> Many thanks in advance
+> Frank
 
 -- 
-Luca Berra -- bluca@comedia.it
-    Communication Media & Services S.r.l.
+Never underestimate the power of denial.
