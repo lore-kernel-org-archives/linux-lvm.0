@@ -1,11 +1,11 @@
-Return-Path: <>
-Date: Wed, 23 May 2001 14:19:07 +0200
-From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231219.OAA20726@aseara.com>
+Return-Path: <jweber@valinux.com>
+Date: Wed, 23 May 2001 05:21:35 -0700 (PDT)
+From: Jay Weber <jweber@valinux.com>
+Subject: Re: How about ext3? (was RE: [linux-lvm] XFS and LVM)
+In-Reply-To: <NBBBKLKHMJHIJLHOGAOJAEMPIOAA.steve.wray@the.net.nz>
+Message-ID: <Pine.LNX.4.33.0105230512360.8571-100000@beefcake.hdqt.valinux.com>
 MIME-Version: 1.0
-Content-Type: multipart/report; report-type=delivery-status;
-	boundary="OAA20726.990620347/aseara.com"
-Subject: [linux-lvm] Returned mail: Service unavailable
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,79 +17,86 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-This is a MIME-encapsulated message
+Yes, it is shrinkable.  It performs the same as ext2 other than the fact
+it has journaling for the most part. :)
 
---OAA20726.990620347/aseara.com
+Snapshotting is a bit different at present.  You can snapshot just fine if
+you umount the filesystem first, since that leaves the filesystem in a
+clean state.  If you want to do online snapshotting you'll have to add in
+a hook to ext3 to use the LVM_VFS_ENHANCEMENT fsync_dev_lockfs() and
+unlockfs() features.  The recent ext3 0.0.6b does support a journal
+barrier feature so you can flush the journal and set the fs to a clean
+state during the snapshot.  I've a dated patch here somewhere, I'll dig
+around for it.  The problem the above resolves is that snapshotting an
+active ext3 filesystem means there's a journal with bits of data hanging
+about that needs to be addressed prior to the snapshot.  If it's not you
+won't be able to mount the snapshot since they are read-only and the
+journal would not be able to replay.
 
-The original message was received at Wed, 23 May 2001 14:18:36 +0200
-from bin@localhost
+There is also online resizing available to some degree for ext2/ext3.
+Andreas Dilger maintains that if I'm correct, I haven't messed with it
+much myself yet. :)
 
-   ----- The following addresses had permanent fatal errors -----
-jldomingo@softhome.net
+On Wed, 23 May 2001, Steve Wray wrote:
 
-   ----- Transcript of session follows -----
-... while talking to mx0d.softhome.net.:
->>> MAIL From:<linux-lvm@sistina.com>
-<<< 554 does not resolve - check your DNS (#4.3.0)
-554 jldomingo@softhome.net... Service unavailable
-
---OAA20726.990620347/aseara.com
-Content-Type: message/delivery-status
-
-Reporting-MTA: dns; aseara.com
-Arrival-Date: Wed, 23 May 2001 14:18:36 +0200
-
-Final-Recipient: RFC822; jldomingo@softhome.net
-Action: failed
-Status: 5.0.0
-Remote-MTA: DNS; mx0d.softhome.net
-Diagnostic-Code: SMTP; 554 does not resolve - check your DNS (#4.3.0)
-Last-Attempt-Date: Wed, 23 May 2001 14:19:07 +0200
-
---OAA20726.990620347/aseara.com
-Content-Type: text/rfc822-headers
-
-Return-Path: <linux-lvm@sistina.com>
-Received: (from bin@localhost)
-	by aseara.com (8.9.3/8.9.3) id OAA20724
-	for jldomingo@softhome.net; Wed, 23 May 2001 14:18:36 +0200
-Received: from sistina.com (hermes.sistina.com [208.210.145.141])
-	by aseara.com (8.9.3/8.9.3) with SMTP id OAA20710
-	for <jdomingo@internautas.org>; Wed, 23 May 2001 14:18:35 +0200
-Received: (qmail 3074 invoked from network); 23 May 2001 12:05:07 -0000
-Received: from localhost (HELO hermes.sistina.com) (127.0.0.1)
-  by localhost with SMTP; 23 May 2001 12:05:07 -0000
-Delivered-To: linux-lvm@sistina.com
-Received: (qmail 2859 invoked from network); 23 May 2001 12:04:25 -0000
-Received: from professorwhealth.com (HELO aseara.com) (216.121.96.120)
-  by hermes.sistina.com with SMTP; 23 May 2001 12:04:25 -0000
-Received: from localhost (localhost)
-	by aseara.com (8.9.3/8.9.3) with internal id OAA09993;
-	Wed, 23 May 2001 14:05:32 +0200
-From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231205.OAA09993@aseara.com>
-To: linux-lvm@sistina.com
-MIME-Version: 1.0
-Content-Type: multipart/report; report-type=delivery-status;
-	boundary="OAA09993.990619532/aseara.com"
-Auto-Submitted: auto-generated (failure)
-Subject: [linux-lvm] Returned mail: Service unavailable
-Sender: linux-lvm-admin@sistina.com
-Errors-To: linux-lvm-admin@sistina.com
-X-BeenThere: linux-lvm@sistina.com
-X-Mailman-Version: 2.0.4
-Precedence: bulk
-Reply-To: linux-lvm@sistina.com
-List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
-List-Post: <mailto:linux-lvm@sistina.com>
-List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
-List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
-List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed, 23 May 2001 14:05:32 +0200
-
---OAA20726.990620347/aseara.com--
+> Date: Wed, 23 May 2001 20:35:36 +1200
+> From: Steve Wray <steve.wray@the.net.nz>
+> Reply-To: linux-lvm@sistina.com
+> To: linux-lvm@sistina.com
+> Subject: How about ext3? (was RE: [linux-lvm] XFS and LVM)
+>
+> Any experience with ext3?
+> Is it shrinkable?
+>
+>
+> > -----Original Message-----
+> > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]O=
+n
+> > Behalf Of Harald Milz
+> > Sent: Wednesday, May 23, 2001 8:35 PM
+> > To: linux-lvm@sistina.com
+> > Subject: Re: [linux-lvm] XFS and LVM
+> >
+> >
+> > In article <20010523010640.C2933@vestdata.no>, Ragnar Kj=F8rstad
+> > <lvm@ragnark.vestdata.no> wrote:
+> > >>
+> > >> It wouldn't mount afterward... It was only on /usr/local
+> > >> whuch was backed up.
+> >
+> > > Did you report it to reiserfs-list@namesys.com?
+> >
+> > That doesn't always help. I once had a ~1 meg file in the reiserfs root
+> > filesystem which wouldn't delete but I laways got a nice oops. I report=
+ed
+> > it to Hans and got a reply that someone would look at it bit that never
+> > actually happened (at least got no feedback).
+> >
+> > But that was just once. I still have everything on reiserfs on LVM on m=
+y
+> > machines, and just started to experiment with XFS. The fact that it is =
+not
+> > shrinkable is a bit annoying though. Like AIX JFS. ...
+> >
+> > --
+> > Harald Milz           |     hm@linux-magazin.de     | If one studies to=
+o
+> > Linux Magazin         | phone  +49 (0) 89 993411-20 | zealously,
+> > one easily
+> > Stefan-George-Ring 24 | fax    +49 (0) 89 993411-99 | loses his pants. =
+--
+> > D-81929 Muenchen      | http://www.linux-magazin.de | A. Einstein.
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>
