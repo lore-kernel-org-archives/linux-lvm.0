@@ -1,10 +1,8 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] problem
-Message-ID: <20030108231456.J28021@uk.sistina.com>
-References: <1042049056.1433.29.camel@tux.its.uiowa.edu> <33170000.1042057292@[192.168.200.4]> <1042057991.12153.0.camel@tux.its.uiowa.edu> <20030108214555.F28021@uk.sistina.com> <1042064687.12147.7.camel@tux.its.uiowa.edu> <20030108223008.G28021@uk.sistina.com> <1042065269.12147.10.camel@tux.its.uiowa.edu> <20030108225455.H28021@uk.sistina.com> <20030108231014.I28021@uk.sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030108231014.I28021@uk.sistina.com>; from agk@uk.sistina.com on Wed, Jan 08, 2003 at 11:10:14PM +0000
+Message-ID: <3E1CB9E4.1030704@email.arizona.edu>
+From: Gary Windham <windhamg@email.arizona.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM2 snapshot creation problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,19 +13,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  8 17:14:02 2003
+Date: Wed Jan  8 17:48:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Wed, Jan 08, 2003 at 11:10:14PM +0000, Alasdair Kergon wrote:
-> Write the metadata back to disk:
->   vgcfgrestore -f /tmp/vgbackup rootvg
+I am testing LVM2 under the 2.4.20 (vanilla) kernel running on RedHat 
+8.0.  I'm Using device-mapper0.96.07 and the userspace tools 
+LVM2.1.95.13 packages.  I applied the device-mapper kernel patches 
+located at 
+http://people.sistina.com/~thornber/patches/2.4-stable/2.4.20/2.4.20-dm-2.tar.bz2.
 
-Add -M1 there to make sure it uses LVM1 format metadata!
-   vgcfgrestore -M1 -f /tmp/vgbackup rootvg
+My problem is that I have not been able to create LV snapshots under 
+LVM2.  Here's an example (command and output follow):
 
-Alasdair
+===
+# /lvm2/sbin/lvcreate -s -L 20g -n snap -v mytestvg/testlv
+
+     Setting chunksize to 16 sectors.
+     Finding volume group "mytestvg"
+     Creating logical volume snap
+     Archiving volume group "mytestvg" metadata.
+     Found volume group "mytestvg"
+     Loading mytestvg-snap
+     Found volume group "mytestvg"
+     Zeroing start of logical volume "snap"
+     Found volume group "mytestvg"
+     Removing mytestvg-snap
+     Found volume group "mytestvg"
+     Found volume group "mytestvg"
+     Found volume group "mytestvg"
+     Loading mytestvg-testlv-real
+     Loading mytestvg-testlv
+     Loading mytestvg-snap-cow
+     Loading mytestvg-snap
+   device-mapper ioctl cmd 2 failed: Invalid argument
+   Couldn't load device 'mytestvg-snap'.
+     Creating volume group backup "/etc/lvm/backup/mytestvg"
+   Logical volume "snap" created
+===
+
+The logical volume is then in an "INACTIVE destination" for my original 
+LV, and cannot be activated.  All I can do is "lvremove" it.
+
+Any advice would be most appreciated!
+
+Thanks,
+--Gary
 -- 
-agk@uk.sistina.com
+Gary Windham
+Systems Programmer, Principal
+The University of Arizona, CCIT
