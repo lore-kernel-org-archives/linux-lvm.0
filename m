@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Error on vgscan & lvremove
-Message-ID: <20020525124928.A19221@sistina.com>
-References: <004d01c20110$f2b8ff70$6501a8c0@bomoon> <20020522144651.F9107@sistina.com> <009601c20204$81710e30$6501a8c0@bomoon> <20020523190023.A13788@sistina.com> <017301c202d0$c77c2410$6501a8c0@bomoon> <20020524105744.B15896@sistina.com> <002701c2036a$7ba96170$6501a8c0@bomoon>
+Subject: Re: [linux-lvm] LVM 1.0.4 pvmove is broken
+Message-ID: <20020525125043.B19221@sistina.com>
+References: <F888C30C3021D411B9DA00B0D0209BE8038F94FF@cvo-exchange.cvo.roguewave.com>
 Mime-Version: 1.0
-In-Reply-To: <002701c2036a$7ba96170$6501a8c0@bomoon>; from bo@sosnetwork.net on Fri, May 24, 2002 at 02:32:19PM -0700
+In-Reply-To: <F888C30C3021D411B9DA00B0D0209BE8038F94FF@cvo-exchange.cvo.roguewave.com>; from petersp@roguewave.com on Fri, May 24, 2002 at 09:03:44AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,180 +14,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 25 05:53:01 2002
+Date: Sat May 25 05:54:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 24, 2002 at 02:32:19PM -0700, bo wrote:
-> Heinz,
+On Fri, May 24, 2002 at 09:03:44AM -0700, Poul Petersen wrote:
+> > Poul,
+> > 
+> > please try the  patch below which should fix the locking problem I
+> > introduced in 1.0.4.
+> > 
+> > This is against a clean 2.4.18 kernel patched with LVM 1.0.4.
+> > 
+> > Regards,
+> > Heinz    -- The LVM Guy --
 > 
-> I verified these two issues as commented below;
-> 
-> > >
-> > > > A 'workaround' for non-devfs configurations is
-> > > >
-> > > > ls /dev/*/group | sed 's!/group!!' | xargs rm -r ; vgmknodes
-> > > >
-> > >
-> > > ??Something wrong on "sed 's!/group!!' ", it did not work.
-> >
-> > Works fine here. Maybe your sed doesn't like the delimiter?
-> >
-> > Try '/' rather than '!' with sed like "sed 's/\/group//'".
-> >
-> 
-> worked w/o delimiters like
-> 
->         ls /dev/*/group | sed 's/group//' | xargs rm -r ; vgmknodes
+> 	That fixes it! Thanks!
 
-Yes, trailing / doesn't matter in the rm args :)
+Alright. Is in CVS (LVM_BRANCH_1-0) and will show up in 1.0.5 soon.
 
 > 
-> > >
-> > > >
-> > > > link the single executable statically by running
-> > > > "./configure --enable-static_link" (which doesn't use the shared
-> libs).
-> > > >
-> > >
-> > > It did not work. I rebuilt LINUX kernel & LVM after
-> > > "./configure --enable-static_link".
-> > > I got the same result.
-> >
-> > Did you start with a fresh source tree or run "make distclean"
-> > before "./configure --enable-static_link"?
-> >
-> > >
 > 
-> Yes, worked with "make distclean".
-
-Good.
-
-> 
-> For the backward compatibilty I will try later.
-
-OK.
-
-> 
-> One more question related with activating PV,
-> 
-> Of course I could make them active after removing the volume and recreating
-> it.
-> As you can notice on the attached log VG is ok,  How could I make these PVs
-> active
-> w/o removing the volume?
-> 
-> Did it corrupt the VGDA? any way to recover it?
-
-See below.
-
-> (PS: you can notice TWO "volDisk" group in the following "vgdisplay", should
-> be
->         volDisk  & volDisk2 ???)
-
-You still seem to have wrong /dev/ entries :-(
-Maybe because of earlier problems, 2 VGs (volDisk and volDisk2) now
-have the same internal number?
-Please send the output of
-"pvdata -a /dev/hd[cd]9 /dev/hda15 /dev/hd[cd]10 /dev/hda16 ; ls -lR /dev"
-directly to me (mge@sistina.com).
-
-If volDisk and VolDisk2 have the same internal numbers, we can try "vgscan -f"
-which comes with LVM >= 1.0.3.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-> 
-> Thanks again,
-> 
-> Bo
-> ----------------------------------------------------------------------------
-> -----------------
-> [root@localhost /root]# pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- ACTIVE   PV "/dev/md0"   of VG "volRaid0" [1.95 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/md1"   of VG "volRaid0" [1.95 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/md2"   of VG "volRaid0" [1.95 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/md3"   of VG "volRaid1" [992 MB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/md4"   of VG "volRaid1" [992 MB / 484 MB free]
-> pvscan -- ACTIVE   PV "/dev/md5"   of VG "volRaid5" [1.95 GB / 992 MB free]
-> pvscan -- ACTIVE   PV "/dev/md6"   of VG "volRaid5" [1.95 GB / 1.95 GB free]
-> pvscan -- ACTIVE   PV "/dev/hdc9"  of VG "volDisk"  [992 MB / 992 MB free]
-> pvscan -- inactive PV "/dev/hdc10" of VG "volDisk2" [992 MB / 788 MB free]
-> pvscan -- ACTIVE   PV "/dev/hdd9"  of VG "volDisk"  [992 MB / 992 MB free]
-> pvscan -- inactive PV "/dev/hdd10" of VG "volDisk2" [992 MB / 792 MB free]
-> pvscan -- ACTIVE   PV "/dev/hda15" of VG "volDisk"  [996 MB / 996 MB free]
-> pvscan -- inactive PV "/dev/hda16" of VG "volDisk2" [996 MB / 0 free]
-> pvscan -- total: 13 [17.59 GB] / in use: 13 [17.59 GB] / in no VG: 0 [0]
-> 
-> [root@localhost /root]# pvdisplay /dev/hdc10
-> --- Physical volume ---
-> PV Name               /dev/hdc10
-> VG Name               volDisk2
-> PV Size               1000.09 MB [2048193 secs] / NOT usable 4.19 MB [LVM:
-> 128 KB]
-> PV#                   2
-> PV Status             available
-> Allocatable           yes
-> Cur LV                2
-> PE Size (KByte)       4096
-> Total PE              248
-> Free PE               197
-> Allocated PE          51
-> PV UUID               b5ybET-1zOq-HPnP-QQda-zjgQ-5avz-aGFMav
-> 
-> [root@localhost /root]# vgdisplay
-> --- Volume group ---
-> VG Name               volDisk
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  1
-> MAX LV                256
-> Cur LV                0
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                3
-> Act PV                3
-> VG Size               2.91 GB
-> PE Size               4 MB
-> Total PE              745
-> Alloc PE / Size       0 / 0
-> Free  PE / Size       745 / 2.91 GB
-> VG UUID               7RhXUS-Pw5B-EBYN-GKIM-PO1d-4uD7-4apSvp
-> 
-> --- Volume group ---
-> VG Name               volDisk
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  1
-> MAX LV                256
-> Cur LV                0
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                3
-> Act PV                3
-> VG Size               2.91 GB
-> PE Size               4 MB
-> Total PE              745
-> Alloc PE / Size       0 / 0
-> Free  PE / Size       745 / 2.91 GB
-> VG UUID               7RhXUS-Pw5B-EBYN-GKIM-PO1d-4uD7-4apSvp
-> 
-> 
-> 
-> 
+> -poul
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
