@@ -1,21 +1,21 @@
-Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4KGOL000984
-	for <linux-lvm@redhat.com>; Thu, 20 May 2004 12:24:21 -0400
-Received: (from agk@localhost)
-	by homer.msp.redhat.com (8.11.6/8.11.6) id i4KGOLc10895
-	for linux-lvm@redhat.com; Thu, 20 May 2004 11:24:21 -0500
-Date: Thu, 20 May 2004 11:24:21 -0500
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Snapshot support for LVM2?
-Message-ID: <20040520112421.F3566@homer.msp.redhat.com>
-References: <8CCBDD5583C50E4196F012E79439B45C04C9A3EF@atl-ms1.megatrends.com>
-	<20040517133351.L5945@homer.msp.redhat.com>
-	<20040518172418.GA23849@synapse.neuralscape.com>
+Received: from localhost.localdomain (radish.cambridge.redhat.com
+	[172.16.18.90])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4JIoG005403
+	for <linux-lvm@redhat.com>; Wed, 19 May 2004 14:50:16 -0400
+Received: from radish.cambridge.redhat.com (localhost.localdomain [127.0.0.1])
+	by localhost.localdomain (8.12.10/8.12.7) with ESMTP id
+	i4JIoFm1004662
+	for <linux-lvm@redhat.com>; Wed, 19 May 2004 19:50:15 +0100
+Received: (from jorton@localhost)
+	by radish.cambridge.redhat.com (8.12.10/8.12.10/Submit) id
+	i4JIoFnn004661
+	for linux-lvm@redhat.com; Wed, 19 May 2004 19:50:15 +0100
+Date: Wed, 19 May 2004 19:50:15 +0100
+From: Joe Orton <jorton@redhat.com>
+Message-ID: <20040519185015.GA4623@redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040518172418.GA23849@synapse.neuralscape.com>;
-	from shaeffer@neuralscape.com on Tue, May 18, 2004 at 10:24:18AM
-	-0700
+Subject: [linux-lvm] lvm2 migration issue
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,14 +28,57 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, May 18, 2004 at 10:24:18AM -0700, Karen Shaeffer wrote:
-> I was hoping you folks would at least rev the 2.6-unstable patchset for the
-> 2.6.6 kernel that was recently released.
+I'm trying to upgrade one of my Fedora Core 1 boxes to FC2, which has
+the root filesystem on LVM.  The installer won't allow me to ugprade
+because, it seems, vgscan is returning an error.
 
-  ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.6/2.6.6-udm1.tar.bz2
- 
-Alasdair
--- 
-agk@redhat.com
+The output of "lvm vgscan -v -d" from a VC whilst running the installer
+is:
+
+  1 PV(s) found for VG mainvg: expected 2
+  Volume group "mainvg" not found
+    Wiping cache of LVM-capable devices
+    Wiping internal cache
+  Reading all physical volumes.  This may take a while...
+    Finding all volume groups
+    Finding volume group "mainvg"
+
+"lvm pvscan" gives:
+
+  1 PV(s) found for VG mainvg: expected 2
+  Logical volume (usrvol) contains an incomplete mapping table.
+    Wiping cache of LVM-capable devices
+    Wiping internal cache
+    Walking through all physical volumes
+  PV /dev/hda7   VG mainvg   lvm1 [19.82 GB / 0    free]
+  Total: 1 [19.82 GB] / in use: 1 [19.82 GB] / in no VG: 0 [0   ]
+
+so it doesn't recognise /dev/hda2 as a PV, for some reason.
+
+When booted into FC1, /proc/lvm/global has:
+
+LVM module LVM version 1.0.5+(22/07/2002)
+
+Total:  1 VG  2 PVs  2 LVs (1 LV open 1 times)
+
+Global: 105960 bytes malloced   IOP version: 10   0:30:18 active
+
+VG:  mainvg  [2 PV, 2 LV/1 open]  PE Size: 4096 KB
+  Usage [KB/PE]: 25907200 /6325 total  25907200 /6325 used  0 /0 free
+  PVs: [AA] hda2                   5120000 /1250     5120000 /1250           0 /0     
+       [AA] hda7                  20787200 /5075    20787200 /5075           0 /0     
+    LVs: [AWDL  ] usrvol                     5120000 /1250     1x open
+         [AWDL  ] storevol                  20787200 /5075     close
+
+and back booted into the FC2 installer, 
+
+# lvm pvdisplay  /dev/hda2
+  Failed to read physical volume "/dev/hda2"
+
+Any ideas how I can get round this?
+
+Regards,
+
+joe
