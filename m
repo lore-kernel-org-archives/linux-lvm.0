@@ -1,9 +1,10 @@
-From: James Hawtin <oolon@ankh.org>
-Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementation
-    ready for beta testing
-In-Reply-To: <20020130145408.I763@lynx.adilger.int>
-Message-Id: <Pine.LNX.4.10.10201302234340.19357-100000@pzat.meep.org>
+Message-Id: <3C588C6C.1010300@larsshack.org>
+From: Lars Kellogg-Stedman <lars@larsshack.org>
 MIME-Version: 1.0
+References: <20020130202254.A7364@fib011235813.fsnet.co.uk>
+    <20020130145408.I763@lynx.adilger.int> <1012428221.1750.253.camel@lapcat>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re:  [ANNOUNCE] LVM reimplementation ready for beta testing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,13 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 30 16:37:02 2002
+Date: Wed Jan 30 18:15:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Licencing is important to me, too. Also is it pv/lv compatible with lvm 1
-or is it system rebuild time.....
+> Also, does/where does this fit in with EVMS?
 
-James
+It doesn't :).  They're essentially competing implementations that offer 
+similar functionality.  I've been running the EVMS stuff for a while 
+now, and it's (a) been pretty darn solid, and (b) is completely 
+compatible with LVM1 on disk.
+
+The next release of EVMS should also allow you to replace the standard 
+MD subsystem (RAID 0/1/5) with EVMS.
+
+I think that, in general, competition is good.  A stable, robust, and 
+flexible logical volume implementation is a good thing, and we'll 
+probably get there faster with two groups acting as inspirations for 
+each other.
+
+Cheers,
+
+-- Lars
