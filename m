@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Fri, 9 Feb 2001 00:10:11 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] fschk & LVM
-Message-ID: <20010209001011.E19887@srv.sistina.com>
-References: <F77hOQmIpgVCt3hqAde000059ff@hotmail.com>
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Fri, 9 Feb 2001 00:30:03 +0100
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] questions
+Message-ID: <20010209003003.B29707@vestdata.no>
+References: <20010208205551.C21949@vestdata.no> <200102082244.f18MiYt07465@webber.adilger.net>
 Mime-Version: 1.0
-In-Reply-To: <F77hOQmIpgVCt3hqAde000059ff@hotmail.com>; from gene_yee@hotmail.com on Thu, Feb 08, 2001 at 02:37:42PM -0800
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <200102082244.f18MiYt07465@webber.adilger.net>; from Andreas Dilger on Thu, Feb 08, 2001 at 03:44:33PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,61 +18,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, Feb 08, 2001 at 02:37:42PM -0800, hail narcissus wrote:
-> 
-> First of all, I live in California, home of the rolling blackouts.  :)
+On Thu, Feb 08, 2001 at 03:44:33PM -0700, Andreas Dilger wrote:
+> Ragnar Kj_rstad writes:
+> > Is there a limit for the maximum size of a LVM diskgroup?
+> > (internally in LVM-code, or because of other limits in the kernel)
+> > The 2TB (1 TB) maximum devicesize in the linux-kernel doesn't apply, do=
+es
+> > it?
+>=20
+> Yes, even LVM has the 2TB limit at this point.  This is because LVM
+> presents itself to the rest of the kernel as a block device (just like
+> any other), so the kernel 2TB limit for block devices still holds.
 
-:-)
+For the volume, but not for the diskgroup, right?
 
-> 
-> I was wondering what LVM does for 'fschk'.
+> Heinz talked about allowing LVM to have PAGE_SIZE (4k) blocks (unlike
+> the rest of the kernel, which uses 512 byte blocks) so it may be possible
+> to go up to 16TB with LVM without a huge amount of kernel redesign.
 
-LVM knows nothing about file system checks because it is a block device layer
-entity just supporting io to blocks.
+This sounds really interesting.=20
+What exactly would be needed to do that?
+I believe there have been issues with lvm block sizes and XFS (maybe
+other filesystems too). Would changing it to 4k create new issues?
+Would it be possible to increese it even futher? if the filesystem used
+more than 4k blocksize?
 
-> Can I run it on my volume group 
-> or is this considered a pretty bad thing?
 
-You can't access *the* VG directly anyway outside the scope of the LVM tools.
-So you can't for eg. not do a fsck on a VG.
+Thanks.
 
-> If not, is there something that 
-> LVM uses in it's place?
 
-Yes, LVM has a VGDA (Volume Group Descriptor Area; that's the metadata LVM
-stores on every device it uses) consistency checker called vgck(8).
 
-Pleas have a look at "man lvm" in order to get an overview of LVM
-and pointers to all of its tools.
-
-> 
-> Thanks.
-> _________________________________________________________________
-> Get your FREE download of MSN Explorer at http://explorer.msn.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--=20
+Ragnar Kj=EF=BF=BDrstad
+BigStorage
