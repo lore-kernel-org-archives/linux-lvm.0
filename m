@@ -1,12 +1,13 @@
 Return-Path: <fzzgrr@gmx.net>
-Date: Tue, 21 Aug 2001 14:53:29 +0200
+Date: Tue, 21 Aug 2001 15:03:31 +0200
 From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
-Subject: Re: [linux-lvm] restoring lvm cinfiguration
-Message-ID: <20010821145329.A763@sky.net>
-References: <20010821125350.B402@sky.net> <4438.998393026@www26.gmx.net>
+Subject: Re: [linux-lvm] vgscan && vgchange -ay at startup
+Message-ID: <20010821150331.B763@sky.net>
+References: <20010821130033.D402@sky.net> <20010821070403.A16248@sistina.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4438.998393026@www26.gmx.net>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20010821070403.A16248@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,30 +19,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hi,
-* Lars Grobe <grobe@gmx.net> [010821 13:23]:
-> My question is concerning the naming conventions of the files. So is vg01
-> the name of your vg?
-Yes.
+Hello,
+* AJ Lewis <lewis@sistina.com> [010821 14:04]:
+> On Tue, Aug 21, 2001 at 01:00:33PM +0200, Ulrich Wiederhold wrote:
+>=20
+> > Anybody else had this problems with debian unstable?
+>=20
+> There's a good chance that your startup script is running either before r=
+oot
+> is mounted read/write (in which case the LVM tools can't write to /etc) or
+> before /proc is mounted (which is less likely because this usually just
+> makes vgscan really slow, not fail).  Check your init scripts and verify
+> that root is writable before the S25lvm script runs.
 
-> I did a vgcfgrestore -l with the different files in /etc/lvmconf, and while
-> the <vgname>.conf gives me the current config (that is after resize, and I
-> want to get the config before resizing), I have a file <vgname>.conf.1.old that
-> seams to hold the data before resizing.
-> 
-> So I would like where lvm will store the data if I resize a lv - is .conf
-> the new (current after resizing) and .conf.1.old the old (before resizing)
-> configuration? So if I want to undo resizing, should I restore from .conf.1.old?
+I thaught about this problem too and disabled the "read-only" entry in
+/etc/lilo.conf, this hasn=B4t solved the problem.
 
-I think you should use .conf.1.old then. The newest file is .conf, the
-oldest one .conf.9.old (at my system, "ls -l" shows you this).
-You can use the -t option to test the command.
+Now I looked into /etc/rcS.d/ and found out that root in mounted ro in
+S10checkroot.sh together with /proc.
+Lvm runs in S25lvm and I think root will be mount rw in S35mountall.sh,
+so I think it=B4s a bug in the debian-packages.
+Right?
 
+Thanks.
 Uli
 
--- 
+
+--=20
 'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
