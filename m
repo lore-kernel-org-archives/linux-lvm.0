@@ -1,5 +1,5 @@
 From: MAILER-DAEMON@softhome.net
-Message-Id: <E163bmf-00059f-00@hermes.sistina.com>
+Message-Id: <E163bnZ-0005Mb-00@hermes.sistina.com>
 Subject: [linux-lvm] failure notice
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -11,12 +11,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 13 05:32:01 2001
+Date: Tue Nov 13 05:33:02 2001
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+
+Hi. This is the qmail-send program at softhome.net.
+I'm afraid I wasn't able to deliver your message to the following addresses.
+This is a permanent error; I've given up. Sorry it didn't work out.
+
+<jldomingo@softhome.net>:
+Recipient's mailbox is full, message returned to sender. (#5.2.2)
+
+--- Below this line is a copy of the message.
+
+Return-Path: <linux-lvm@sistina.com>
+Received: (qmail 30937 invoked by uid 417); 13 Nov 2001 11:26:26 -0000
+Received: from unknown (HELO aseara.com) (216.121.96.120)
+  by 192.168.0.6 with SMTP; 13 Nov 2001 11:26:26 -0000
+Received: (from bin@localhost)
+	by aseara.com (8.9.3/8.9.3) id NAA00718
+	for jldomingo@softhome.net; Tue, 13 Nov 2001 13:26:31 +0200
+Received: from hermes.sistina.com (hermes.sistina.com [208.210.145.141])
+	by aseara.com (8.9.3/8.9.3) with ESMTP id NAA00712
+	for <jdomingo@internautas.org>; Tue, 13 Nov 2001 13:26:30 +0200
+Received: from localhost ([127.0.0.1] helo=hermes.sistina.com)
+	by hermes.sistina.com with esmtp (Exim 3.32 #6)
+	id 163bnP-0005KA-00; Tue, 13 Nov 2001 05:32:03 -0600
+Received: from jive.softhome.net ([66.54.152.27])
+	by hermes.sistina.com with smtp (Exim 3.32 #6)
+	id 163bmf-00059f-00
+	for linux-lvm@sistina.com; Tue, 13 Nov 2001 05:31:18 -0600
+Received: (qmail 27881 invoked for bounce); 13 Nov 2001 11:25:32 -0000
+From: MAILER-DAEMON@softhome.net
+To: linux-lvm@sistina.com
+Message-Id: <E163bmf-00059f-00@hermes.sistina.com>
+Subject: [linux-lvm] failure notice
+Sender: linux-lvm-admin@sistina.com
+Errors-To: linux-lvm-admin@sistina.com
+X-BeenThere: linux-lvm@sistina.com
+X-Mailman-Version: 2.0.6
+Precedence: bulk
+Reply-To: linux-lvm@sistina.com
+List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
+List-Post: <mailto:linux-lvm@sistina.com>
+List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
+List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
+List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
+List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
+X-Original-Date: 13 Nov 2001 11:25:32 -0000
+Date: 13 Nov 2001 11:25:32 -0000
 
 Hi. This is the qmail-send program at softhome.net.
 I'm afraid I wasn't able to deliver your message to the following addresses.
@@ -159,6 +207,12 @@ vgchange -- unlocking logical volume manager
 <1> lvm_unlock -- LEAVING with ret: 0
 <1> lvm_unlock -- CALLED
 <1> lvm_unlock -- LEAVING with ret: -104
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 _______________________________________________
 linux-lvm mailing list
