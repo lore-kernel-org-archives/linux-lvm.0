@@ -1,9 +1,10 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Fri, 15 Dec 2000 11:24:55 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Message-ID: <20001215112455.A1314@66bassett.freeserve.co.uk>
-Mime-Version: 1.0
-Subject: [linux-lvm] LVM 0.9 patch for 2.2.18
+Return-Path: <dice@mfa.kfki.hu>
+Date: Fri, 15 Dec 2000 18:58:20 +0100 (CET)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Subject: Re: [linux-lvm] Debian packaging
+In-Reply-To: <87hf46kifi.wl@pear.hibi-local.net>
+Message-ID: <Pine.LNX.4.30.0012151849540.24097-100000@falka.mfa.kfki.hu>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +16,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: HIBINO Kei <ex8k-hbn@asahi-net.or.jp>
+Cc: linux-lvm@sistina.com
 
-Hi,
+Hi!
 
-I've made a new kernel patch to get LVM 0.9 working with 2.2.18 and am
-looking for a couple of people to give it a try before I check it into
-CVS.
+> I fixed the above and some problems of pacakges placed under
+> 'ftp://ftp.sistina.com/pub/LVM/0.9/binaries/debian/'.
+>
+> I put this fixed pacakge under
+> 'http://www.asahi-net.or.jp/~ex8k-hbn/deb/lvm/'.
 
-The patch is similar to the 2.2.17 patch except it should allow you to
-use a software raid device as a PV.  This also has the pleasant side
-effect of removing a lot of the conditional compiles from
-drivers/block/ll_rw_block.c
+Good work.
 
-The patch is too big to post on the list (it still contains the
-lvm.[hc] files) so mail me if you want to try it.
+But here are some remarks to your /etc/init.d/lvm script ...
 
-Your help would be appreciated.
+1]----
+if [ ! -f /proc/lvm ]; then
+	if [ ! -f /lib/modules/`uname -r`/block/lvm.o -a ! -f /lib/modules/`uname -r`/block/lvm-mod.o ]; then
+		exit 0
+	fi
+fi
+------
 
-- Joe Thornber
+What if somebody compiled lvm into the kernel, not as a module? This
+script doesn't work. :(
+
+2]----
+case "$1" in
+	start|"")
+		echo "Setting up LVM Volume Groups..."
+		#/sbin/vgscan
+		/sbin/vgchange -a y
+		;;
+------
+
+Why did you use 'start|""' above? If run without parameters, it should
+simply display a usage help.
+
+Thanks,
+Gergely
