@@ -1,7 +1,9 @@
-Subject: Re: [linux-lvm] ext2resize error
-Message-ID: <OF4C7BCDD3.EAA70700-ON86256C0E.004A63CB@TEXASMUTUAL.COM>
-From: "Jonathan S. Polacheck" <JPolache@texasmutual.com>
+From: "Jorge Melhado" <jrgmelhado@hotmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0009_01C23E05.3706B420"
+Message-ID: <OE50LHN0t0oY6k8zpHy0000da29@hotmail.com>
+Subject: [linux-lvm] kernel panic - converting root fs to lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,138 +14,447 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug  7 08:33:02 2002
+Date: Wed Aug  7 09:27:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-resize2fs did the trick.  Here is the additional system information;
+This is a multi-part message in MIME format.
 
-ext2resize -v -d;
-ext2_resize_fs
-ext2_shrink_fs
-Your filesystem is too occupied to resize it to 160000
-blocks. Sorry.
-direct hits: 0, indirect hits: 0, misses: 0
+------=_NextPart_000_0009_01C23E05.3706B420
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-strace ext2resize;
-ext2resize v1.1.14 - 1999/08/28 for EXT2FS 0.5b
-execve("/lvm/ext2resize", ["/lvm/ext2resize", "/dev/sys/usr"], [/* 17 vars
-*/]) = 0
-uname({sys="Linux", node="netman3", ...}) = 0
-brk(0)                                  = 0x8052ab8
-old_mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1,
-0) = 0x40016000
-open("/etc/ld.so.preload", O_RDONLY)    = -1 ENOENT (No such file or
-directory)
-open("/etc/ld.so.cache", O_RDONLY)      = 3
-fstat64(3, {st_mode=S_IFREG|0644, st_size=62598, ...}) = 0
-old_mmap(NULL, 62598, PROT_READ, MAP_PRIVATE, 3, 0) = 0x40017000
-close(3)                                = 0
-open("/lib/libc.so.6", O_RDONLY)        = 3
-read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0\260\306"..., 1024)
-= 1024
-fstat64(3, {st_mode=S_IFREG|0755, st_size=1285480, ...}) = 0
-old_mmap(NULL, 1301800, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) =
-0x40027000
-mprotect(0x4015c000, 36136, PROT_NONE)  = 0
-old_mmap(0x4015c000, 20480, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED, 3,
-0x134000) = 0x4015c000
-old_mmap(0x40161000, 15656, PROT_READ|PROT_WRITE,
-MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x40161000
-close(3)                                = 0
-munmap(0x40017000, 62598)               = 0
-fstat64(1, {st_mode=S_IFCHR|0600, st_rdev=makedev(5, 1), ...}) = 0
-ioctl(1, 0x5401, {B38400 opost isig icanon echo ...}) = 0
-old_mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1,
-0) = 0x40017000
-write(1, "ext2resize v1.1.14 - 1999/08/28 "..., 48) = 48
-brk(0)                                  = 0x8052ab8
-brk(0x8052ad8)                          = 0x8052ad8
-brk(0x8053000)                          = 0x8053000
-open("/dev/sys/usr", O_RDONLY)          = 3
-open("/dev/sys/usr", O_WRONLY)          = 4
-brk(0x805c000)                          = 0x805c000
-_llseek(3, 1024, [1024], SEEK_SET)      = 0
-read(3, "\0\350\3\0\0\320\7\0\0d\0\0B\301\0\0\305\1\2\0\0\0\0\0"..., 1024)
-= 1024
-brk(0x805d000)                          = 0x805d000
-old_mmap(NULL, 528384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1,
-0) = 0x40165000
-_llseek(3, 4096, [4096], SEEK_SET)      = 0
-read(3, "\2\0\0\0\3\0\0\0\4\0\0\0\323\21\33 ;\2\0\0\0\0\0\0\0\0"..., 4096)
-= 4096
-ioctl(3, 0x1260, 0xbffffd18)            = 0
-old_mmap(NULL, 4198400, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
--1, 0) = 0x401e6000
-write(2, "Your filesystem is too occupied "..., 55Your filesystem is too
-occupied to resize it to 160000
-) = 55
-write(2, "blocks. Sorry.\n", 15blocks. Sorry.
-)        = 15
-munmap(0x401e6000, 4198400)             = 0
-fdatasync(4)                            = 0
-munmap(0x40165000, 528384)              = 0
-fdatasync(4)                            = 0
-close(3)                                = 0
-close(4)                                = 0
-munmap(0x40017000, 4096)                = 0
-_exit(0)                                = ?
+Hello.
 
-/proc/partitions
-major minor  #blocks  name     rio rmerge rsect ruse wio wmerge wsect wuse
-running use aveq
+Please, help me.
 
-  58     0    2560000 lvma 0 0 0 0 0 0 0 0 0 0 0
-  58     1     155648 lvmb 0 0 0 0 0 0 0 0 0 0 0
-  58     2      20480 lvmc 0 0 0 0 0 0 0 0 0 0 0
-  58     3      53248 lvmd 0 0 0 0 0 0 0 0 0 0 0
-  58     4     471040 lvme 0 0 0 0 0 0 0 0 0 0 0
-  58     5    1048576 lvmf 0 0 0 0 0 0 0 0 0 0 0
-   3     0   19551168 ide/host0/bus0/target0/lun0/disc 31762 48151 375856
-271600 195205 98603 2015628 30848380 0 646720 31121890
-   3     1      16033 ide/host0/bus0/target0/lun0/part1 30 419 898 280 22
-21 86 3670 0 1820 3950
-   3     2     257040 ide/host0/bus0/target0/lun0/part2 4 11 120 50 27 256
-2264 1030 0 340 1080
-   3     3     152617 ide/host0/bus0/target0/lun0/part3 2607 10167 25548
-18010 8039 11978 40082 1093780 0 472170 1111790
-   3     4   19125382 ide/host0/bus0/target0/lun0/part4 29119 37554 349286
-253250 187117 86348 1973196 29749900 0 637410 30005060
+I installed RedHat 7.3 (kernel 2.4.18-3) and I=B4m trying to convert my =
+root filesystem to LVM (lvm-1.0.3-4).=20
+My filesystems were:
+    $ df -k
+    Filesystem           1k-blocks      Used Available Use% Mounted on
+    /dev/sda2              2063316    400240   1558264  21%   /
+    /dev/sda1                  30985       5915       23470  21%  /boot
+    none                       257180            0      257180   0%  =
+/dev/shm
+
+/boot is ext2.
+/ is ext3
+swap is on /dev/sda5
+
+I created a new partition on /dev/sda6 and changed its type to "8e" =
+(Linux LVM)
+
+I followed whole the chapter 18 from LVM HOWTO, except I created one =
+logical volume for /, /usr, /home, /var and /tmp and copied files with =
+"find / -xdev | cpio -pvmd /mnt" replacing "/" and "/mnt" for each new =
+logical volume created.
+
+So, I have:
+     $ df -k
+     Filesystem           1k-blocks      Used      Available Use%   =
+Mounted on
+     /dev/sda2                  2063316    400240   1558264  21%    /
+     /dev/sda1                     30985        5915      23470   21%   =
+/boot
+     none                          257180             0     257180   0%  =
+  /dev/shm
+     /dev/rootvg/root           198337       56448    131649  31%    =
+/mnt
+     /dev/rootvg/usr            806288      317880    447448  42%   =
+/mnt/usr
+     /dev/rootvg/home        198337          4133    183964   3%    =
+/mnt/home
+     /dev/rootvg/var            198337        13400     174697   8%   =
+/mnt/var
+     /dev/rootvg/tmp            99150          4128      89902   5%    =
+/mnt/tmp
 
 
-                                                                                                              
-                    Andreas Dilger                                                                            
-                    <adilger@clust       To:     "Jonathan S. Polacheck" <JPolache@texasmutual.com>           
-                    erfs.com>            cc:     linux-lvm@sistina.com                                        
-                                         Subject:     Re: [linux-lvm] ext2resize error                        
-                    08/06/2002                                                                                
-                    04:25 PM                                                                                  
-                                                                                                              
-                                                                                                              
+My /etc/fstab was:
+   =20
+LABEL=3D/             /                       ext3      defaults         =
+               1 1
+LABEL=3D/boot       /boot                 ext2     defaults              =
+          1 2
+none                   /dev/pts             devpts   gid=3D5,mode=3D620  =
+         0 0
+none                   /proc                 proc      defaults          =
+              0 0
+none                   /dev/shm           tmpfs     defaults             =
+           0 0
+/dev/sda5            swap                 swap     defaults              =
+          0 0
+/dev/cdrom          /mnt/cdrom        iso9660  noauto,owner,kudzu,ro  0 =
+0
+/dev/fd0               /mnt/floppy        auto       noauto,owner,kudzu  =
+    0 0
 
 
+I changed /mnt/etc/fstab to:
+
+LABEL=3D/dev/rootvg/root  /                           ext3      defaults =
+                       1 1
+LABEL=3D/boot                /boot                     ext2      =
+defaults                         1 2
+none                            /dev/pts                 devpts    =
+gid=3D5,mode=3D620            0 0
+none                            /proc                      proc      =
+defaults                         0 0
+none                            /dev/shm                 tmpfs    =
+defaults                         0 0
+/dev/sda5                     swap                      swap     =
+defaults                         0 0
+/dev/cdrom                   /mnt/cdrom              iso9660 =
+noauto,owner,kudzu,ro   0 0
+/dev/fd0                        /mnt/floppy              auto      =
+noauto,owner,kudzu       0 0
 
 
-On Aug 06, 2002  15:54 -0500, Jonathan S. Polacheck wrote:
-> I have a Mandrake Linux 8.1 system with a 2.4.8 kernel.  My logical
-volumes
-> include /usr, /var and /home (not / or /boot).  I originally set up all
-> lv(s) as ext3, which seemed to preclude the ext2_online patch.  My
-> /dev/sys/usr lv shows 2.44 gig in lvdisplay.  My one PV shows 3616 free
-> PEs.  df shows /usr to be 2,015,824 (k) and 96% utilized.  I run telinit
-1
-> then umount -a.  /usr unmounts.  I then run ext2resize /dev/sys/usr.  It
-> returns "Your filesystem is too occupied to resize it to 16000 bytes."
+And I changed my /etc/lilo.conf including the last image:
 
-Can you run "ext2resize -v -d /dev/sys/usr" and send me the output?  If
-that doesn't produce anything useful, you may also need to run
-"strace ext2resize /dev/sys/user" as well.  What does /proc/partitions
-say about /dev/sys/usr?
+    prompt
+    timeout=3D50
+    default=3Dlinux
+    boot=3D/dev/sda
+    map=3D/boot/map
+    install=3D/boot/boot.b
+    message=3D/boot/message
+    linear
 
-Cheers, Andreas
---
-Andreas Dilger
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
-http://sourceforge.net/projects/ext2resize/
+    image=3D/boot/vmlinuz-2.4.18-3
+            label=3Dlinux
+            initrd=3D/boot/initrd-2.4.18-3.img
+            read-only
+            root=3D/dev/sda2
+
+    image=3D/boot/vmlinuz-2.4.18-3
+            label=3Dlvm
+            initrd=3D/boot/initrd-lvm-2.4.18-3.gz
+            read-only
+            root=3D/dev/rootvg/root
+            append=3D"ramdisk_size=3D8192
+
+
+I reran lilo and when I reboot I got these messages:
+   =20
+    kmod: failed to exec /sbin/mdprobe -s -k block-major-114, errno=3D2
+   =20
+    vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+    vgscan -- WARNING: This program does not do a VGDA backup of your =
+volume group
+
+    vgchange -- no volume groups found
+
+    VFS: Cannot open root devide "3a00" or 3a:00
+    Please append a correct "root=3D" boot option
+    kernel panic: VFS: Unable to mount root fs on 3a:00
+
+------=_NextPart_000_0009_01C23E05.3706B420
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2600.0" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hello.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Please, help me.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I installed RedHat 7.3 (kernel =
+2.4.18-3) and I=B4m=20
+trying to convert my root filesystem to LVM (lvm-1.0.3-4). </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>My filesystems were:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; $ df -k</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp;=20
+Filesystem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1k-blocks&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Used Available Use% Mounted=20
+on<BR>&nbsp;&nbsp;&nbsp;=20
+/dev/sda2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;=20
+2063316&nbsp;&nbsp;&nbsp; 400240&nbsp;&nbsp; 1558264&nbsp; =
+21%&nbsp;&nbsp;=20
+/<BR>&nbsp;&nbsp;&nbsp;=20
+/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+30985&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5915&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;=20
+23470&nbsp; 21%&nbsp; /boot<BR>&nbsp;&nbsp;&nbsp;=20
+none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2571=
+80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 257180&nbsp;&nbsp; 0%&nbsp;=20
+/dev/shm</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>/boot is ext2.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>/ is ext3</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>swap is on /dev/sda5</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I created a new partition on /dev/sda6 =
+and changed=20
+its type to "8e" (Linux LVM)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I followed whole the chapter 18 from =
+LVM HOWTO,=20
+except I created one logical volume for /, /usr, /home, /var and /tmp =
+and copied=20
+files with "find / -xdev | cpio -pvmd /mnt" replacing "/" and "/mnt" for =
+each=20
+new logical volume created.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>So, I have:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp;&nbsp; $ df =
+-k</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp;&nbsp;=20
+Filesystem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1k-blocks&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+Used&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+Available Use%&nbsp;&nbsp;&nbsp;Mounted on<BR>&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/sda2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;2063316&nbsp;&nbsp;&nbsp; 400240&nbsp;&nbsp; 1558264&nbsp;=20
+21%&nbsp;&nbsp;&nbsp; /<BR>&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;30985&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+5915&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;23470&nbsp; =
+&nbsp;21%&nbsp;&nbsp;&nbsp;/boot<BR>&nbsp;&nbsp;&nbsp;&nbsp;=20
+none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;=20
+257180&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+0&nbsp;&nbsp;&nbsp; &nbsp;257180&nbsp;&nbsp; 0%&nbsp;&nbsp;&nbsp;=20
+/dev/shm<BR>&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/rootvg/root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;198337&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;56448&nbsp;&nbsp=
+;&nbsp;=20
+131649&nbsp; 31%&nbsp;&nbsp;&nbsp; /mnt<BR>&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/rootvg/usr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;=20
+806288&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 317880&nbsp;&nbsp;&nbsp; =
+447448&nbsp;=20
+42%&nbsp;&nbsp;&nbsp;/mnt/usr<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/dev/rootv=
+g/home&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+198337&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; =
+4133&nbsp;&nbsp;&nbsp;=20
+183964&nbsp;&nbsp; 3%&nbsp;&nbsp;&nbsp; =
+/mnt/home<BR>&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/rootvg/var&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+&nbsp;=20
+198337&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13400&nbsp;&nbsp; =
+&nbsp;=20
+174697&nbsp;&nbsp; 8%&nbsp;&nbsp; /mnt/var<BR>&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/rootvg/tmp&nbsp;&nbsp;&nbsp;&nbsp; =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+99150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;4128&nbsp;=20
+&nbsp;&nbsp;&nbsp; 89902&nbsp;&nbsp; 5%&nbsp;&nbsp;&nbsp; =
+/mnt/tmp</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>My /etc/fstab was:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; </FONT></DIV>
+<DIV><FONT face=3DArial=20
+size=3D2>LABEL=3D/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;=20
+ext3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+=20
+1=20
+1<BR>LABEL=3D/boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/boot&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+ext2&nbsp;&nbsp;&nbsp;&nbsp;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;1=20
+2<BR>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/dev/pts&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;devpts&nbs=
+p;&nbsp;=20
+gid=3D5,mode=3D620&nbsp;&nbsp; =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0=20
+0<BR>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/proc&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;proc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+=20
+0=20
+0<BR>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/dev/shm&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpfs&nbsp;&nbsp;&nbsp=
+;&nbsp;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+=20
+0=20
+0<BR>/dev/sda5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;swap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap&nbsp;&nbsp;&nbsp;&nbsp=
+;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+=20
+0=20
+0<BR>/dev/cdrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;/mnt/cdrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iso9660&nbsp;=
+=20
+noauto,owner,kudzu,ro&nbsp; 0=20
+0<BR>/dev/fd0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/mnt/floppy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;auto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+noauto,owner,kudzu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I changed /mnt/etc/fstab =
+to:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>LABEL=3D/dev/rootvg/root&nbsp;=20
+/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+ext3&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;=20
+1=20
+1<BR>LABEL=3D/boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;/boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;ext2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;=20
+1=20
+2<BR>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/pts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;=20
+&nbsp; devpts&nbsp;&nbsp;&nbsp;=20
+gid=3D5,mode=3D620&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;=20
+0=20
+0<BR>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;=20
+/proc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp; proc&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;=20
+0=20
+0<BR>none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;=20
+/dev/shm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tmpfs&nbsp;&nbsp;&nbsp;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+=20
+&nbsp;0=20
+0<BR>/dev/sda5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+swap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;=20
+&nbsp; &nbsp;&nbsp;&nbsp; swap&nbsp;&nbsp;&nbsp;&nbsp;=20
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;=20
+0=20
+0<BR>/dev/cdrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+/mnt/cdrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+iso9660 noauto,owner,kudzu,ro&nbsp;&nbsp; 0=20
+0<BR>/dev/fd0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;=20
+/mnt/floppy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+auto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+noauto,owner,kudzu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>And I changed my /etc/lilo.conf =
+including the last=20
+image:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; =
+prompt<BR>&nbsp;&nbsp;&nbsp;=20
+timeout=3D50<BR>&nbsp;&nbsp;&nbsp; default=3Dlinux<BR>&nbsp;&nbsp;&nbsp; =
+
+boot=3D/dev/sda<BR>&nbsp;&nbsp;&nbsp; =
+map=3D/boot/map<BR>&nbsp;&nbsp;&nbsp;=20
+install=3D/boot/boot.b<BR>&nbsp;&nbsp;&nbsp;=20
+message=3D/boot/message<BR>&nbsp;&nbsp;&nbsp; linear</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp;=20
+image=3D/boot/vmlinuz-2.4.18-3<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+label=3Dlinux<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+initrd=3D/boot/initrd-2.4.18-3.img<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read-only<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root=3D/dev/sda2</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp;=20
+image=3D/boot/vmlinuz-2.4.18-3<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+label=3Dlvm<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+initrd=3D/boot/initrd-lvm-2.4.18-3.gz<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+read-only<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+root=3D/dev/rootvg/root<BR>&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+append=3D"ramdisk_size=3D8192</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I reran lilo and when I reboot I got =
+these=20
+messages:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; kmod: failed to exec =
+
+/sbin/mdprobe -s -k block-major-114, errno=3D2</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; vgscan -- =
+"/etc/lvmtab" and=20
+"/etc/lvmtab.d" successfully created</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; vgscan -- WARNING: =
+This program=20
+does not do a VGDA backup of your volume group</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; vgchange -- no =
+volume groups=20
+found</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; VFS: Cannot open =
+root devide=20
+"3a00" or 3a:00</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; Please append a =
+correct "root=3D"=20
+boot option</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; kernel panic: VFS: =
+Unable to=20
+mount root fs on 3a:00</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_0009_01C23E05.3706B420--
