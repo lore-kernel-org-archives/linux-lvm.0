@@ -1,10 +1,10 @@
-From: "Markus Baertschi" <markus@markus.org>
-In-Reply-To: <3FD4A42E.3070609@stercomm.com>
+Message-ID: <3FD4B28E.6030602@stercomm.com>
+From: Chris Cox <chris_cox@stercomm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] EXT3 vs Reiserfs
-Message-Id: <E1ATOLU-0004dz-1c@server6.hostpoint.ch>
+References: <E1ATOLU-0004dz-1c@server6.hostpoint.ch>
+In-Reply-To: <E1ATOLU-0004dz-1c@server6.hostpoint.ch>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +15,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  8 10:36:02 2003
+Date: Mon Dec  8 11:20:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On=20Mon,=2008=20Dec=202003=2010:17:50=20-0600,=20Chris=20Cox=20wrote:
->We=20love=20the=20ability=20to=20do=20resize_reiserfs=20while=20the=20fil=
-esystem=20is=20mounted.
->Constantly=20amazes=20the=20"Unix"=20purists.
+Markus Baertschi wrote:
+> On Mon, 08 Dec 2003 10:17:50 -0600, Chris Cox wrote:
+> 
+>>We love the ability to do resize_reiserfs while the filesystem is mounted.
+>>Constantly amazes the "Unix" purists.
+> 
+> 
+> This is the one feature I like most on my AIX boxes, where the stock
+> LVM & JFS setup has done this for more than a decade.
+> 
+> That a broken reiser on RH is the source of the occasiona data loss reported
+> is good possibility. But that means there were broken reiser implementations
+> out there of which RH assumed they were stable and they weren't.
 
-This=20is=20the=20one=20feature=20I=20like=20most=20on=20my=20AIX=20boxes,=
-=20where=20the=20stock
-LVM=20&=20JFS=20setup=20has=20done=20this=20for=20more=20than=20a=20decade=
-.
 
-That=20a=20broken=20reiser=20on=20RH=20is=20the=20source=20of=20the=20occa=
-siona=20data=20loss=20reported
-is=20good=20possibility.=20But=20that=20means=20there=20were=20broken=20re=
-iser=20implementations
-out=20there=20of=20which=20RH=20assumed=20they=20were=20stable=20and=20the=
-y=20weren't.
+I have never experienced the data loss element, however, since
+reiser3 does not do true data journaling, but only metadata, it is
+well known fact that while reiser can bring the filesystem
+integrity back to normal after a bad shutdown, some data loss
+is possible.  This is usually true of any metadata only journaling
+filesystem.  Reiser4 supposed fixes this and of course has that
+whiz-bang plugins feature.  Could make reiser4 the best (feature wise).
 
-Markus
+I certainly have nothing against JFS or AIX.  I really like its ability
+to dynamically grow without intervention (though that could give
+some administrators a headache).
 
---
-=20=20Markus=20Baertschi=20=20=20=20=20=20=20=20=20=20=20=20=20Phone:=20++=
-41=20(21)=20807=201677
-=20=20Bas=20du=20Ross=E9=2014b=20=20=20=20=20=20=20=20=20=20=20=20=20Fax=20=
-=20:=20++41=20(21)=20807=201678
-=20=20CH-1163,=20Etoy=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20Email=
-:=20markus@markus.org
-=20=20Switzerland=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20Hom=
-epage:=20www.markus.org
+I can't say what's going on with reiserfs and RH... again, just
+because of the "stories" I've heard and occasional "ewww's" I've
+personally seen with RH, I just avoid it on RH.  They chose their
+filesystem and that filesystem is ext3.  It would be foolish
+to do anything else on RH.
+
+I have seen problems with ext3 even under RH where we would lose
+entire filesystems... but anytime I mention this, I'm always
+trampled on... to tell you the truth, I suspect it is an error
+in ext2 even... but that opinion really offends people.  I don't
+use RH in general unless I have to (we're an ISV, so we support
+everything).  But YMMV of course!
