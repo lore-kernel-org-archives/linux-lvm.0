@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
-Message-ID: <20030130120456.GJ802@tykepenguin.com>
-References: <20030130115503.LFHJ14589.mta02-svc.ntlworld.com@[10.137.100.62]>
+From: =?ISO-8859-1?Q?Alpha-online.com?= <jenny@theportal.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030130115503.LFHJ14589.mta02-svc.ntlworld.com@[10.137.100.62]>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E18eGFe-0006vV-00@hermes.sistina.com>
+Subject: [linux-lvm] =?ISO-8859-1?Q?ALPHA-ONLINE.COM?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +13,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 30 06:05:02 2003
+Date: Thu Jan 30 09:06:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 30, 2003 at 11:55:03AM +0000, jrelist@ntlworld.com wrote:
-> 
-> Well, it's kind of working now ! I followed the link, got the patch. I patched lvm 1.0.6 to my kernel, ended up having to manually change lvm-snap.c, went throught the build and IPL'd successfully !
-> 
-> However, I'm now faced with another problem. After creating, then extending a VG, a subsequent vgscan gives 'segmentation error' and a pvscan now says the vg the devices are connected to is unknown. The rpm installed for the lvm utilities is 1.0.3-10, and from searching the lists I believe I need an updated version of VGSCAN. I know there won't be a binary available for s/390 redhat at 1.0.6 level, but I'd like to what would be the best SRPMS to get - I've seen a couple of different versions but nothing specifically mentioned as for a Redhat distro.
-> 
-> Thanks for your help so far, nearly there.... !
-> 
-
-I don't think there are any SRPMS (not official ones anyway), but the tar.gz
-sources should build just fine.
-
--- 
-
-patrick
+Dear Sir/Madam,=20
+=20
+=20
+ALPHA-ONLINE.COM - US$ 780=20
+=20
+Please note that after years,the registration on the domain name=20
+ALPHA-ONLINE.COM was not renewed and this domain had become available to=
+ register.=20
+=20
+Consequently, we have been approached to market this domain name that ha=
+s been tracked and registered by a client. As a result,ALPHA-ONLINE.COM =
+is now available from us for IMMEDIATE transfer.=20
+=20
+With so many companies using these initials along with what many would c=
+onsider to be a genuine investment,we expect to find an interested party=
+ for this excellent.com.=20
+=20
+This is a VALUABLE and HIGH PROFILE domain and we believe that this deve=
+lopment could be of genuine interest and benefit to your operation.=20
+Please note that the domain name market is extremely solid at the moment=
+ and similar domains are currently selling on afternic.com, greatdomains=
+.com (domain auction sites) and by domain name brokers, in some cases, f=
+or many thousands of US dollars.=20
+=20
+Please note that transfers take just 15 minutes and are extremely=20
+straightforward - absolutely NO technical knowledge required!=20
+=20
+For our client's peace of mind, we use an escrow service for all transac=
+tions and domains are ALWAYS secured by the buyer prior to us=20
+receiving any funds. We pay all fees connected with the escrow process.=20
+=20
+If you would like to use WWW.ALPHA-ONLINE.COM for your online business, =
+please contact us at your earliest convenience. We will be on hand shoul=
+d you require any further assistance or information.=20
+=20
+We thank you for your attention and sincerely apologise if this e-mail=20
+has not been of interest to you.=20
+=20
+=20
+Yours Sincerely,=20
+=20
+Jenny.=20
+=20
+Marketing,=20
+The Portal=20
