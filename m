@@ -1,9 +1,10 @@
-From: Friedrich Lobenstock <fl@fl.priv.at>
-Subject: Re: [OT] List concerns and dieas (was Re: [linux-lvm] next step of
- recovering from tha vgchange problem)
-In-Reply-To: <20011103190608.A18080@mail.wave.co.nz>
-Message-ID: <Pine.LNX.4.33.0111031253200.16058-100000@www.scotty.co.at>
+Message-ID: <3BE42711.EA8A6D72@carolina.rr.com>
+From: Jason Edgecombe <jedgecombe@carolina.rr.com>
 MIME-Version: 1.0
+Subject: Re: [OT] List concerns and dieas (was Re: [linux-lvm] next step 
+ ofrecovering from tha vgchange problem)
+References: <Pine.LNX.4.33.0111031253200.16058-100000@www.scotty.co.at>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,35 +15,16 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov  3 05:58:02 2001
+Date: Sat Nov  3 11:19:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Sat, 3 Nov 2001, Mark van Walraven wrote:
+> I strongly advocate reply-to munging on this list. Period
 
-> Hello,
->
-> On Fri, Nov 02, 2001 at 10:18:11PM +0100, Friedrich Lobenstock wrote:
-> > Leave this on. Most mails are to be mailed to the list anyway. It's
-> > annoying if you'd alway needed to use the reply-to-all feature of your
-> > mail client and then delete the original sender address to keep the
-> > mail on the list and not sending the original sender two mails. I'm
->
-> In my opinion, an annoying mail client is not reason to break the 'reply'
-> function for people with sensible clients.
+as do I,
 
-In one or the other aspect each mail client is broken - this world is
-not perfect. I couldnt' find the ultimate one. One might be good at
-this filtering duplicate message-ids but it might be totaly crap when
-it comes to user-interface, IMAP4, and and and....YMMV
+  Replying to the list should be the default so that everyone can benfit
+from an answer t a question posted on the list.
 
-
-> I strongly oppose reply-to munging.
-
-I strongly advocate reply-to munging on this list. Period
-
--- 
-MfG / Regards
-Friedrich Lobenstock
+Jason Edgecombe
