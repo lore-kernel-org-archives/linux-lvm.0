@@ -1,8 +1,9 @@
-From: Daniel Barklon <dan@veddma.com>
-Message-Id: <1051864754.15671.56.camel@localhost>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] recovering from VGDA loss
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <772FBCA525B8FB4C9299D8D27FD4A5AA04105A@ABCSYSEXC1.abcsystems.ch>
+From: "Michael Vogt" <MichaelVogt@abcsystems.ch>
+Subject: [linux-lvm] (no subject)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,84 +14,136 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May  2 03:13:01 2003
+Date: Fri May  2 03:51:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
-    I was running lvm with one PV [/dev/hdb3], making up one GV
-[/dev/data], which was completely allocated to one LV
-[/dev/data/homes].  My root was a separate harddisk [/dev/hda1].  Hda is
-now gone, and so is my /etc, where my VGDA was.
+hey everyone
 
-Is there a way for me to get at the data that is still stored on
-/dev/hdb3 (I am running slackware linux 9; linux-2.4.20, lvm-1.0.6)?
+well ewen, what do you mean with types recognised from matching against =
+/proc/devices? it contains the following:
 
-When I run pvscan I get the following:
+linuxsvm:~ # cat /proc/devices
+Character devices:
+  1 mem
+  2 pty
+  3 ttyp
+  4 ttyS
+  5 cua
+  7 vcs
+ 10 misc
+ 13 input
+ 14 sound
+ 21 sg
+ 29 fb
+ 81 video_capture
+109 lvm
+116 alsa
+128 ptm
+136 pts
+162 raw
+180 usb
+226 drm
+240 vdd
+248 vsd
+254 HbaApiDev
 
-root@ved:~# pvscan -v    
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- walking through all physical volumes found
-pvscan -- inactive PV "/dev/hdb3"  is associated to unknown VG "data"
-(run vgscan)
-pvscan -- total: 1 [13.64 GB] / in use: 1 [13.64 GB] / in no VG: 0 [0]
+Block devices:
+  1 ramdisk
+  2 fd
+  7 loop
+  8 sd
+  9 md
+ 22 ide1
+ 58 lvm
+240 vdd
+241 vdd
+242 vdd
+243 vdd
+244 vdd
+245 vdd
+246 svm
+247 mv
+248 vsd
+249 vsd
+250 vsd
+251 vsd
+252 vsd
+253 vsd
+254 vsd
 
-This suggests I run vgscan...
+ahh and im using lvm1.07. well so no solution for my problem? or is =
+there another way to use lvm with my special devices? i woulnd like to =
+hack the lvm code... a lvmdiskscan looks like this:
 
-root@ved:~# vgscan -v    
-vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- scanning for all active volume group(s) first
-vgscan -- reading data of volume group "data" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
-volume group "data" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
+linuxsvm:/usr/src/linux # lvmdiskscan -vd
+lvmdiskscan -- reading all disks / partitions (this may take a while...)
+lvmdiskscan -- filling directory cache...
+<1> lvm_dir_cache -- CALLED MICHU
+<22> lvm_add_dir_cache -- CALLED with /dev/svmaa=20
+<22> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
+<22> lvm_add_dir_cache -- CALLED with /dev/svmab=20
+<22> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
+<22> lvm_add_dir_cache -- CALLED with /dev/svmac=20
+<22> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
 
-...
+it seems like he "sees" my device but simply dont add it.... what im =
+doing wrong?
 
-vgimport segfaults on me when I try to import the VG as shown:
+---OLD MESSAGE---
+[linux-lvm] access special devices=20
+Ewen McNeill linux-lvm@sistina.com=20
+Wed Apr 30 04:00:02 2003=20
 
-root@ved:~# vgimport -fv data /dev/hdb3
-vgimport -- locking logical volume manager
-vgimport -- checking volume group name
-vgimport -- checking volume group "data" existence
-vgimport -- trying to read physical volume
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hdb3"
-vgimport -- reading data of physical volume "/dev/hdb3" from disk
-vgimport -- checking for exported physical volume "/dev/hdb3"
-vgimport -- checking consistency of physical volume "/dev/hdb3"
-vgimport -- reallocating memory
-Segmentation fault
+Previous message: [linux-lvm] access special devices=20
+Next message: [linux-lvm] me=20
+Messages sorted by: [ date ] [ thread ] [ subject ] [ author ]=20
 
-"pvdata -P /dev/hdb3" yields
+-------------------------------------------------------------------------=
+-------
 
---- Physical volume ---
-PV Name               /dev/hdb3
-VG Name               data
-PV Size               13.64 GB [28611765 secs] / NOT usable 4.19 MB
-[LVM: 141 KB]
-PV#                   1
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              3491
-Free PE               0
-Allocated PE          3491
-PV UUID               gdtjvf-8UHQ-SbSF-zmaG-7E0z-5olx-cCQRrI
+In message =
+<772FBCA525B8FB4C9299D8D27FD4A5AA04715E@ABCSYSEXC1.abcsystems.ch>, "M
+ichael Vogt" writes:
+>ive a question, i want to use lvm in my san environment, i use a san=20
+>virtualisation. the point is, my (scsi) disks are not called /dev/sdX,=20
+>they are called /dev/svm/svmXXX.  [not seen by lvmdiskscan]
+>so i checked the source, and in the file /tools/lib/lvm_dir_cache.c are =
 
+>some definitions called LVM_DIR_PREFIX. i tried to add my definitions=20
+>(/dev/svm/svm and svm/svm) but this didnt work. what i need to do, that =
 
+>my disks are aviable for lvm?
 
-Any help will be greatly appreciated.  I am still sifting through the
-linux-lvm archive, but I can't seem to find a case that resmbles mine
-closely enough...
+Having been down this road today (investigating the ataraid
+issues I've posted about), you'll probably also need to look at
+tools/lib/lvm_check_dev.c and tools/lib/lvm_check_partitioned_dev.c
+and liblvm.h (and perhaps some others).  In particular with LVM 1 (eg,
+1.0.7) there is an enumerated type, lvm_device_type_t used to identify
+applicable devices, and a function lvm_get_device_type() which is used =
+as
+a filter on the lvm_dir_cache() results, based on that enumerated list,
+and another table, when scanning for physical volumes.
 
-Thanks,
+I suspect your virtualisation layer isn't one of the types recognised
+from matching against /proc/devices, and so it's being ignored.
 
--- 
-Daniel Barklon <dan@veddma.com>
+In the case of ataraid it appears that (in addition to not having the
+same hacks as for md to prevent aliasing, and hence the
+accessing-raw-devices issues I've mentioned) LVM considers ataraid to be
+unpartitioned (a la, md, loopback, etc).  In fact this isn't the case,
+ataraid is a whole-disk device, with partitions (/dev/ataraid/dNpM where
+N is the raid array, and M is the partition number).
+
+BTW, I'm not sure if you're trying to use LVM 1 or LVM 2.  I've been
+told that LVM 2 has a more configurable system for scanning for physical
+volumes which might avoid some of the ataraid issues I found; and might
+perhaps allow you to get it to see your san virtualisation devices
+without hacking on the code.
+
+For now, I've put aside the idea of using LVM on ataraid.  When LVM 2
+is released, and I've got some more time, I might give that a go =
+instead.
+
+Ewen
