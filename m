@@ -1,12 +1,11 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <bofh@coker.com.au>
-Subject: Re: [linux-lvm] Upgrade path from 0.8i to 0.9?
-Date: Sun, 17 Dec 2000 09:40:56 +0100
-References: <20001216184849.A12569@pclab.ifg.uni-kiel.de>
-In-Reply-To: <20001216184849.A12569@pclab.ifg.uni-kiel.de>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200012171800.eBHI0J129132@webber.adilger.net>
+Subject: Re: [linux-lvm] Debian packaging
+In-Reply-To: <00121417221738.00826@lyta> "from Russell Coker at Dec 14, 2000
+ 05:22:17 pm"
+Date: Sun, 17 Dec 2000 11:00:18 -0700 (MST)
 MIME-Version: 1.0
-Message-Id: <0012170940560K.00774@lyta>
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,34 +18,67 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Torsten Landschoff <torsten@pclab.ifg.uni-kiel.de>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
+Cc: Tamas Gergely <dice@mfa.kfki.hu>, Linux-LVM@sistina.com
 
-On Saturday 16 December 2000 18:48, Torsten Landschoff wrote:
-> We are planning to upgrade a production server tomorrow. As we have to
-> build a new kernel anyway I would like to upgrade the LVM code from 0.8=
-i
-> to 0.9.
->
-> I just tried the same thing on a test system and I was unable to get it
-> working. After installing the new kernel I installed the lvm Debian
-> package from sistina.com (which removed /etc/lvmtab and /etc/lvmtab.d)
-> and tried to reactivate the volumes. This is what I get:
+Russel Coker writes:
+> >I mean, it would be better to place the utilities into /sbin instead of
+> >/usr/sbin.
+> 
+> Depends.  One thing I would like to do is go through the utilities and put 
+> things that are needed to kickstart a system or to recover a hosed system 
+> into /sbin .  Then things that aren't so critical to the boot process (lvmsar 
+> springs to mind) belong in /usr/sbin .
 
-I should have this sort of thing working cleanly from the Debian packagin=
-g=20
-part within 2 weeks.  This includes having /etc/lvmtab and /etc/lvmtab.d=20
-owned by the lvm-common package which won't need to be upgraded (except f=
-or=20
-when man pages change).  Also upgrading lvm-common won't trash things bec=
-ause=20
-they will be registered as conffiles.
+As with other people, I think it would be best to place the LVM user utils
+into /sbin/lvm-<IOP version>.  However, I think it is NOT a good idea to
+put wrapper scripts in /sbin.  Instead, simply set the path at boot time
+(/etc/rc.d/rc.sysinit, and for root) to include the correct directory if
+it exists.
 
-Please try out my test packages of 0.8.1 on http://www.coker.com.au/lvm/ =
-on a=20
-test machine (NOT A PRODUCTION SERVER) and let me know how they go.
+Basically, I'm going to write a 5 line program that only gets the LVM IO
+protocol version and spits it to stdout, ala:
 
---=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+IOP=`lvmiopversion`	# only this command will be directly in /sbin
+
+[ "$IOP" ] && PATH=/sbin/lvm-$IOP:$PATH
+
+so if the version-specific LVM user tools directory doesn't exist, we will
+still look for old tools in /sbin.  Never reference LVM tools by absolute path.
+It would be nice if the stock LVM configuration also started doing this,
+but it will be a minor change to the Makefile.
+
+> Yes.  My package will differ quite a bit from the existing Debian package.  
+> Also I plan to make everything use shared libraries.  ls, cp, and mv are not 
+> statically linked so I don't think that there is any need for statically 
+> linked lvm utilities.  My lvm package will be considerably smaller than the 
+> current one (which is necessary for boot support).
+
+Probably not a bad idea.
+
+> One other thing, it seems that the protocol is changing often.  How should 
+> this be managed in Debian packages?  I had thought of doing lvm22 and lvm24 
+> as package names for the 2.2.x and 2.4.x kernels, but now I get the 
+> impression that the interfaces will change between those series.  Also 0.8.1, 
+> 0.9, and 0.8i all seem to have different protocol versions.
+
+You should name packages by the IOP version.  It will be a bit of a challenge
+as LVM 0.8i was IOP 5, LVM 0.8final was IOP 6, and LVM 0.9 is IOP 10.  Maybe
+Heinz can number future LVM releases by their IOP version?
+
+> I was thinking that perhaps what I should do is have /sbin/lvm-ver and 
+> /lib/lvm-ver directories where "ver" is the version of LVM in question.
+> Then at boot time there is a script that determines the version of LVM in the 
+> kernel and creates sym-links from /sbin and /lib to the correct directories.  
+
+Think PATH - this is really easy, and shells already support it.  No more
+work to be done, and it's not ugly.  The IOP version will probably never
+change within a boot (unless LVM is a module and it gets upgraded without
+upgrading the kernel - unlikely).
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
