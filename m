@@ -1,23 +1,14 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6LCQFa25230
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 08:26:15 -0400
-Received: from smtp.mailbox.co.uk (smtp.mailbox.net.uk [195.82.125.32])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6LCQ9Xn015458
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 08:26:09 -0400
-Received: from core.penguinpowered.org ([212.18.250.170]
-	helo=smtp.penguinpowered.org)
-	by smtp.mailbox.co.uk with esmtp (Exim 4.30) id 1BnGAi-0002VG-T0
-	for linux-lvm@redhat.com; Wed, 21 Jul 2004 13:26:08 +0100
-Received: from localhost ([127.0.0.1] helo=webmail.penguinpowered.org)
-	by smtp.penguinpowered.org with smtp (Exim 4.30; FreeBSD)
-	id 1BnG7Z-00032N-FX
-	for linux-lvm@redhat.com; Wed, 21 Jul 2004 13:22:53 +0100
-Message-ID: <39112.195.50.100.20.1090412573.squirrel@webmail.penguinpowered.org>
-Date: Wed, 21 Jul 2004 13:22:53 +0100 (BST)
-From: "Wayne Pascoe" <lists-june2004@penguinpowered.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6LEg2a01672
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 10:42:02 -0400
+Received: from atl-ms1.megatrends.com (mail2.megatrends.com [155.229.80.16])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6LEfuXn005869
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 10:41:56 -0400
+Message-ID: <8CCBDD5583C50E4196F012E79439B45C04C9A463@atl-ms1.megatrends.com>
+From: Vinesh Christopher <vineshc@ami.com>
+Subject: RE: [linux-lvm] Raid 0+1
+Date: Wed, 21 Jul 2004 10:41:12 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Raid 0+1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,7 +20,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+
+The softraid comes with linux does not support resize.
+
+Try DM + EVMS. This is much simpler and powerful. You can create Raid over 
+Raid (Any raid level not limited to 0 and 1)
+The next EVMS release 2.4 scheduled for Aug 2004, has features to resize
+RAID 1 and 4/5.
+
+-----Original Message-----
+From: Wayne Pascoe [mailto:lists-june2004@penguinpowered.org] 
+Sent: Wednesday, July 21, 2004 8:23 AM
 To: linux-lvm@redhat.com
+Subject: [linux-lvm] Raid 0+1
 
 Hi all,
 
@@ -76,3 +81,8 @@ Thanks in advance,
 
 -- 
 Wayne Pascoe
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
