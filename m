@@ -1,11 +1,14 @@
-Return-Path: <ragnark@stine.vestdata.no>
-Date: Mon, 11 Jun 2001 15:49:19 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <reiserfs@ragnark.vestdata.no>
-Message-ID: <20010611154917.F7798@vestdata.no>
-References: <20010610222138.A21955@mind.bartosch.net> <20010610222719.B21955@mind.bartosch.net> <20010611064459.C21955@mind.bartosch.net>
+Return-Path: <bg@blacknet.de>
+Date: Mon, 11 Jun 2001 23:11:00 +0200
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] Switching one of my disks to hdc from hdb
+Message-ID: <20010611231100.B14752@dragon.blacknet.de>
+References: <01060621061602.01075@notch> <20010606232620.B6704@dragon.blacknet.de> <01060623465900.02898@notch>
 Mime-Version: 1.0
-In-Reply-To: <20010611064459.C21955@mind.bartosch.net>; from Peter Bartosch on Mon, Jun 11, 2001 at 06:44:59AM +0200
-Subject: [linux-lvm] Re: [reiserfs-list] Reiserfs fragments my MP3
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
+Content-Disposition: inline
+In-Reply-To: <01060623465900.02898@notch>; from pwk.linuxfan@gmx.de on Wed, Jun 06, 2001 at 11:46:59PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +20,70 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Peter Bartosch <peter@bartosch.net>, Reiserfs List <reiserfs-list@namesys.com>, Linux LVM List <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Mon, Jun 11, 2001 at 06:44:59AM +0200, Peter Bartosch wrote:
-> BTW: could someone tell me if there's a linux-hardware list? -- i've got
-> some issues with an 40G WD - yeah i know WD ,-)
-
-There was a thread on reiserfs-list about write-caching on some IDE
-drives. I think it was stated that WD did write-caching by default.
-(and write-caching can make your filesystem inconsistent, and cause all
-kinds of problems, if you happen to shutdown the machine at a bad time).
-
-Check if write-caching is enabled with the hdparm command - turn it off
-if it is. You should also run fsck to check if your filesystem is ok
-(remember to back up first).
-
-BTW: It isn't clear from your previous mail that this in fact a
-filesystem problem. The output from fsck may or may not confirm that it
-is. You could also strace your mpg123 process, to see exactly what it
-tries to do and how it failes. You should also check /var/log/messages
-for errors.
+--V0207lvV8h4k8FAm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
--- 
-Ragnar Kjorstad
-Big Storage
+On Wed, Jun 06 '01 at 23:46, Peter Kirk wrote:
+> > Well, as I don't know your current configuration to well, it's just
+> > pocking in the dark ...
+> Here it comes:
+> I have two disks, currently on hda and hdb.
+> hda:
+> 10MB of /boot
+> 1GB for SWAP
+> the lot (18GB) in LV with hdb
+>=20
+> hdb:
+> 19GB in LV with hda
+>=20
+> [ ... ]
+Sorry, but I was unable to come back to you any erlier.
+
+If you still don't have just tried it, I'd suggest you to simply do so
+:-) (but see the warning at the end).
+
+But only if your /boot contains an initrd, that runs vgscan and=20
+vgchange.=20
+
+If this is the case, you should be able to simply switch the drive to
+hdc.
+
+IF your system should not boot, because it can't find some LV, don't
+panik.
+
+In this case you've two options:
+- shutdown as clean as possible (CRTL-ALT-DELETE) and switch back.
+  Your system will come up again. (savest version)
+- Hope that the boot throws you into a shell (to repair your system),
+  mount the drive that contains /etc as RW (probably mount -o remount,rw /)
+  and do a vgscan (this should fix the /etc/lvm* entries). Now all
+  your LV should be detected again. Now your system should work as=20
+  before.
+
+Everything basicaly depends on the quality of your initrd and you
+should be fine if you use the one provided by lvmcreate_initrd.
+
+For savety reasond you should make a backup of the /etc/lvm* files. (or
+better of all files, but this is most likely no an option)
+
+    Goetz.
+
+--V0207lvV8h4k8FAm
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7JTPkf5srOMkjkQoRAllrAJ9Gwo/A/z8rIj4ouqa9coTXoFd3vQCgxxc6
+xTli9dGzU0bkqvWj8ws2mFw=
+=xoxn
+-----END PGP SIGNATURE-----
+
+--V0207lvV8h4k8FAm--
