@@ -1,5 +1,5 @@
-Message-ID: <3B95E1D0.6000000@st-peter.stw.uni-erlangen.de>
-Date: Wed, 05 Sep 2001 10:26:56 +0200
+Message-ID: <3B95E36E.6070703@st-peter.stw.uni-erlangen.de>
+Date: Wed, 05 Sep 2001 10:33:50 +0200
 From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
 Subject: Re: what i need is a little attention-RE [linux-lvm] SoftRaid and LVM   Jean-Eric Cuendet
@@ -19,12 +19,14 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-thanks
+some ideas whom should i write to and what else should i try
+i've already written to the developers of e2fsprogs and to Hans Reiser
+but i still don't have a reply( it was 2-3 days ago) and mr Hans Reiser 
+wonts $25 for looking at a problem
+i'll write them again
 
-i think it was 2.4.9 and Alan Cox still doesn't wont it, it's quite a 
-long time 2.4.9 being out there
- 
- 
+
+
 Jean-Eric Cuendet wrote:
 
 >>and one more question about the min-max
