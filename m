@@ -1,10 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Continued error with snapshots (unable to init journal)
-Message-ID: <20011213082407.GB942@tykepenguin.com>
-References: <3C17D4D2.5020204@kenamea.com>
+From: Petro <petro@auctionwatch.com>
+Subject: Re: [linux-lvm] Patching Kernel 2.4.16.
+Message-ID: <20011213083846.GC14581@auctionwatch.com>
+References: <20011213002345.GA13832@auctionwatch.com> <20011213004917.GB13832@auctionwatch.com> <20011213010814.GC13832@auctionwatch.com> <20011213082314.GA942@tykepenguin.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3C17D4D2.5020204@kenamea.com>
+In-Reply-To: <20011213082314.GA942@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 13 02:22:01 2001
+Date: Thu Dec 13 02:36:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Dec 12, 2001 at 02:06:10PM -0800, Kenny Gorman wrote:
-> I posted before, but since I have upgraded my SuSE 2.4.7-64GB system to 
-> include reiserfs-3.x.0k_pre9-43 and lvm-1.0.0.2_rc2-27.  I am still 
-> getting the below error in /var/log/messages every once in a while 
-> during mount of the snapshot volume.
+On Thu, Dec 13, 2001 at 08:23:14AM +0000, Patrick Caulfield wrote:
+> On Wed, Dec 12, 2001 at 05:08:14PM -0800, Petro wrote:
+> >     
+> >     Wait a minute. 
+> > 
+> >     I still need to apply the VFS Lock Patch, right? 
 > 
-> Does anyone know what this is about?
-> 
-> Dec 11 18:20:02 ino kernel: reiserfs: checking transaction log (device 
-> 3a:01) ...
-> Dec 11 18:20:02 ino kernel: clm-2076: device is readonly, unable to 
-> replay log
-> Dec 11 18:20:02 ino kernel: Replay Failure, unable to mount
-> Dec 11 18:20:02 ino kernel: reiserfs_read_super: unable to initialize 
-> journal space
+> Only if you need snapshotting of journalled filesystems.
 
-You need to apply the VFS lock patch to the kernel after patching it for LVM.
+    Yeah, that's our primary reason for using LVM.
 
-patrick
+    I applied the patch and it works fine now. a
+
+    Sorry about that last email, that was me thinking aloud.
+-- 
+Share and Enjoy. 
