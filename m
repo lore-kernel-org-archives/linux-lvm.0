@@ -1,21 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2C6n4Y01043
-	for <linux-lvm@redhat.com>; Sat, 12 Mar 2005 01:49:04 -0500
-Received: from server.echohome.org (s233-64-29-217.try.wideopenwest.com
-	[64.233.217.29])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2C6mvnc001460
-	for <linux-lvm@redhat.com>; Sat, 12 Mar 2005 01:48:58 -0500
-Received: from echo (echo.echohome.org [192.168.2.254])
-	by server.echohome.org (8.12.8/8.12.8) with ESMTP id j2C6mohS012868
-	for <linux-lvm@redhat.com>; Sat, 12 Mar 2005 01:48:51 -0500
-From: "Erik Ohrnberger" <erik@echohome.org>
-Subject: RE: [linux-lvm] Building up a RAID5 LVM home server (long)[0x05B52F13]
-Date: Sat, 12 Mar 2005 01:49:27 -0500
-Message-ID: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAA+n58x6G5jEO2amEm6MlYuwEAAAAA@echohome.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2E0n3Y12753
+	for <linux-lvm@redhat.com>; Sun, 13 Mar 2005 19:49:03 -0500
+Received: from jive.SoftHome.net (jive.SoftHome.net [66.54.152.27])
+	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j2E0mw29029536
+	for <linux-lvm@redhat.com>; Sun, 13 Mar 2005 19:48:58 -0500
+From: Andrew <andy_b@softhome.net>
+Date: Sun, 13 Mar 2005 19:48:47 -0500
 MIME-Version: 1.0
-In-Reply-To: <001301c52589$978d1500$32dcdc0a@vanish>
-Content-Transfer-Encoding: 8bit
-Reply-To: Erik@echohome.org,
+Content-Description: clearsigned data
+Content-Disposition: inline
+Message-Id: <200503131732.40512.andy_b@softhome.net>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM Woes (hope this isn't a repeat. sorry)
+Reply-To: andy_b@softhome.net,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,85 +23,89 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Ron,
-    All your conclusions are very true.  
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-    The machine is a 2 GHz AMD Althorn with 512 MB RAM running SuSE 9.1.
-The local network is very small.  Only 5 or 6 devices (laptop) at most, and
-is serviced by two 100 Mb hubs quite well.  Hardly ever see collisions, and
-then only when there is a large file transfer going on.
+My problem is that I accidentally left my LVM disks in my system when I
+installed windows XP On a seperate drive.  I did not install windows to
+either of the LVM's so that should not be an issue.
 
-    At some point in time, I may be fooling around with MythTV or KnoppMyth,
-which would generate a lot of data, and I figure that I could NFS mount the
-large disk space across the network.  In addition, all the stuff that I
-download from the net is on there too, patches for programs (mostly MS) and
-other software install sets.
+However when I replaced my linux drive, and booted into linux, I got the
+following error when my system tried to start up LVM
+(for vgchange -ay)
+mog root # vgchange -ay
+2 logical volume(s) in volume group "vg0" now active
+Logical volume (lv0) contains an incomplete mapping table
+Unable to find volume group "vg_samsung"
 
-    Has LVM2 been upgraded to handle an LVM size larger than before?  Last I
-recall, it was limited to 256 PVs, and 250 GB or so usable space.
 
-    Thanks for all your ideas and contributions.
+vg0 is my other lvm which thankfully is still there.
 
-    Erik.
+now, whenever I do any of the 'scan' tools (vgscan, pvscan, lvscan) I get the
+following errors:
+vgscan:
+...
+Logical volume (lv0) contains an incomplete mapping table
+Unable to find volume group "vg_samsung"
 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com 
-> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Ron Watkins
-> Sent: Thursday, March 10, 2005 10:56 AM
-> To: LVM general discussion and development
-> Subject: Re: [linux-lvm] Building up a RAID5 LVM home server 
-> (long)[0x05B52F13]
-> 
-> 
-> Remember, this is for a HOME SERVER, not a corporate 
-> database.  Assuming he 
-> doesn't have Gigabit Ethernet, and assuming the CPU in his server is 
-> reasonably beefy (at least a gigahertz), the extra speed in 
-> RAID 1 or 10 
-> will be entirely wasted.   For almost any home application, 
-> RAID5 is going 
-> to be exactly what folks want.... cheap, reliable, and more 
-> than fast enough 
-> to saturate the wire.
-> 
-> Doing RAID 10 properly would cost a great deal for disks, a lot for 
-> motherboards with proper, non-PCI choked Gigabit ports (need 
-> them on both 
-> server and client, mind you), and would take a significant amount of 
-> learning on the part of the home admin to get really running 
-> properly.... 
-> how many people want to learn about jumbo frames and cat5e 
-> wiring to set up 
-> a video server that will only be serving one or two videos at a time?
-> 
-> Yes, your solution would run faster in some circumstances, 
-> but it would be a 
-> LOT more expensive.   After investing all that money, he'd see it run 
-> somewhat faster on writes, and the server wouldn't be 
-> speed-impaired during 
-> a rebuild.   But he's a HOME USER.  It doesn't MATTER if the 
-> server is slow 
-> for a night or two.  Everything will be sluggish for a couple 
-> nights, once a 
-> year or so.  So what?  Since when is this is worth spending a 
-> couple grand 
-> to avoid?
-> 
-> It would often make sense for a business to do that, but from 
-> a home user 
-> perspective, it seems like following this specific advice would be a 
-> gigantic waste of money.
-> 
-> For nearly all home users with reasonably modern hardware, 
-> RAID5 is the 
-> right way to go for servers, at least for now.
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+pvscan:
+Logical volume (lv0) contains an incomplete mapping table
+...
+
+lvscan:
+...
+Logical volume (lv0) contains an incomplete mapping table
+Unable to find volume group "vg_samsung"
+
+however, if I do pvdisplay on my 2 drives I get some info
+mog root # pvdisplay /dev/hde     <--my 160gig drive, I think the second drive
+in the LVM
+
+- --- NEW Physical volume ---
+PV Name		/dev/hde
+VG Name		/vg_samsung
+PV Size		19.84 MB
+Allocatable	NO
+PE Size (K..)	0
+Total PE		0
+Free PE		0
+Allocated PE	0
+PV UUID		fXhdbW-S1KK-lSNs-kGSQ-dsb6-9Kkn-Q7xeTk
+
+That looks bad to me, but the first drive in the volume looks ok:
+
+mog root # pvdisplay /dev/hdg <--my 80gig drive
+- --- Physical volume ---
+PV Name		/dev/hdg
+VG Name		/vg_samsung
+PV Size		74.56 GB / not usable 31.57 MB
+Allocatable	yes (but full)
+PE Size (K..)	16384
+Total PE		4770
+Free PE		0
+Allocated PE	4770
+PV UUID		aE0Tfs-UX8r-oTma-Eo35-mxSg-ZT5w-ZHPPTW
+
+so it looks like windows only blasted the second of the two drives  (which
+came first in the bios) (or the
+first one it found?)
+
+I am desperate to get this data back (and unfortunately my /etc/lvm/backup or
+archive are empty :(
+
+Thankyou very much in advance!
+- --
+
+- --Andrew Bovill
+PGP fingerprint:  A00A 1E75 3AB0 610E 2300  6855 1890 C61E E590 F777
+Link to PGP key:  http://linuxboy.dyndns.org/~andy/public_key.gpg
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQFCNN9xGJDGHuWQ93cRAtPnAJ9FbTYTo4qQHq4KAtCgchboewhtRQCfce/l
+Bk3ODWAXSpgnJz0i55RJK/Y=
+=bymV
+-----END PGP SIGNATURE-----
