@@ -1,7 +1,10 @@
-From: "Paul.Casteels" <casteels@uia.ua.ac.be>
-Message-Id: <Pine.OSF.4.30.0202271006050.25336-100000@hhipe.uia.ac.be>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Re: lvm 1.0.3, kernel 2.4.17 and the libs...
+Message-Id: <20020227101648.A19249@sistina.com>
+References: <1014762518.12325.76.camel@dirac.cids.ca>
 MIME-Version: 1.0
-Subject: [linux-lvm] VGDA error
+In-Reply-To: <1014762518.12325.76.camel@dirac.cids.ca>; from
+    dsavard@cids.ca on Tue, Feb 26, 2002 at 05:28:38PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,61 +15,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 03:15:02 2002
+Date: Wed Feb 27 03:17:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello,
+On Tue, Feb 26, 2002 at 05:28:38PM -0500, Daniel Savard wrote:
+> I managed to get the vgcfgrestore execute using the executable in the
+> lvm-build tree. I still don't know why the installed executable is
+> missing a definition for the opt_ignore (this is a variable that seems
+> to be used by pv_move() and introduced around mid February according to
+> the source files).
 
-I am having trouble using LVM.
+Yes.
+Did you do a clean build?
+That should avoid the missing definition.
 
-This is my configuration :
-#uname -a
-Linux natl2.uia.ac.be 2.4.9-21custom #1 SMP Tue Feb 26 15:17:02 CET 2002
-i686 unknown
-#cat /proc/lvm/global
-LVM driver version LVM 0.9.1_beta7(ish) (20 June 2001)
+> 
+> The operation cannot be completed. I will explain my big mistake and I
+> would like to know if something can be try to recover from this or if I
+> must check this as an unrecoverable error.
+> 
+> I was making some changes in order to move my partitions to LV in my VG.
+> The idea was to recover as much space as possible from my drive, making
+> all remaining partitions continguous and creating a new partition marked
+> for LVM and add the new partition to the VG in order to migrate as much
+> stuff as possible into the VG.
+> 
+> So, I was to the point I needed to create a partition contiguous to the
+> other one, move stuff on it, delete the old one and recover contiguous
+> space for the future LVM partition to be added to the VG. I add just
+> remove an obsolete partition, say /dev/sda6, my existing LVM partition
+> was /dev/sda8, so the partition numbers were decreased by one for all
+> partitions above 6 as usual, I then created a new partition which became
+> /dev/sda8 and the LVM partition was the /dev/sda7. Everything would be
+> just fine if I didn't forget to reboot the machine before proceeding
+> with the following:
+> 
+> I did mkfs.ext2 on /dev/sda8 !!! However, this was still pointing to my
+> LVM partition even if fdisk was not showing this.
+> 
+> The big question: Is it still possible to recover some data from the LVM
+> partition which was the only partition in my VG?
+> 
+> If yes, HOW.
+> 
+> -- 
+> 
+> =======================================
+> Daniel Savard
+> 
+> Internet: dsavard@cids.ca
+> =======================================
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Total:  1 VG  4 PVs  0 LVs (0 LVs open)
-Global: 4991 bytes malloced   IOP version: 10   2:14:27 active
+-- 
 
-VG:  NUsers  [4 PV, 0 LV/0 open]  PE Size: 4096 KB
-  Usage [KB/PE]: 143622144 /35064 total  0 /0 used  143622144 /35064 free
-  PVs: [AA] sdb1 35905536 /8766 0 /0 35905536 /8766
-       [AA] sdc1 35905536 /8766 0 /0 35905536 /8766
-       [AA] sdd1 35905536 /8766 0 /0 35905536 /8766
-       [AA] sde1 35905536 /8766 0 /0 35905536 /8766
-    LVs: none
-# vgdisplay --version
-vgdisplay
-vgdisplay: Logical Volume Manager 1.0.1-rc4
-Heinz Mauelshagen, Sistina Software  03/10/2001 (IOP 10)
+Regards,
+Heinz    -- The LVM Guy --
 
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-After I started vgchange -a y, most commands report :
-ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-If I do this I get :
-# vgscan
-vgscan
- vgscan -- reading all physical volumes (this may take a while...)
- vgscan -- found active volume group "NUsers"
- vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
- vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
-
-and the error does not go away.
-
-I tried a more recent (1.0.3) version of the tools, but this has no
-effect.
-
-Best regards and thanks,
-
-Paul Casteels		Paul.Casteels@ua.ac.be	Tel: +32.3.8202455
-						Fax: +32.3.8202470
-University of Antwerp	Dpt.Physics
-Universiteitsplein 1
-B-2610 Wilrijk
-Belgium
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
