@@ -1,10 +1,11 @@
 From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] Converting existing partitions/disks to LVM?
-Message-ID: <20030503114008.GA541@guldukat>
-References: <20030502145325.418.h006.c000.wm@mail.stanger.com.criticalpath.net>
+Subject: Re: [linux-lvm] Trouble with pvmove
+Message-ID: <20030503114458.GB541@guldukat>
+References: <001401c31014$efdcc840$0100a8c0@andre6xtbp6uza>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20030502145325.418.h006.c000.wm@mail.stanger.com.criticalpath.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <001401c31014$efdcc840$0100a8c0@andre6xtbp6uza>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,64 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May  3 05:37:02 2003
+Date: Sat May  3 05:42:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Fri, 02.05.03, jan@stanger.com wrote:
+On Thu, 01.05.03, Andre� �str�m <andree.astrom@home.se> wrote:
 
-> Q1: Now I want to add another data disk to my system
-> and would like both, that new disk and my existing 120G
-> disk to be logically combined so that they appear as
-> only one disk. I understand that this is where LVM
-> comes into play. Can I convert my existing, full 120G
-> drive to be using LVM in conjunction with the new
-> drive, or will I have to reformat/repartition it first?
+> In one of my volume groups a disk have gone bad.
+> I extended the volumegroup with another disk to be able to pvmove it.
 
-You can do the following:
+Is the disk already producing read errors or are you using a SMART monitor
+that tells you it is bad?
 
-0. Make a backup of your data! (you should have this anyway (-: )
+> 
+> pvmove -i -v /dev/hdh
+> 
+> It went fine until,
+> pvmove -- /dev/hdh [PE 259 [archive [LE 259]] -> /dev/hdj [PE 259]
+> [260/1831]
+> 
+> The machine got total dead. The whole volumegroup consists of 1.1TB so i
+> couldn't backup it all up beforehand.
 
-1. Install new harddisk, create one big partition for lvm (type 8e).
+Which version of LVM are you using? IIRC there has been trouble with pvmove
+and lockups before, so try to upgrade to newest version.
 
-2. Create a physical lvm volume (with pvcreate) on the partition.
-
-3. Create a volume group with that pv (vgcreate)
-
-4. Create logical volumes (lvcreate) and copy the data from your old disk
-onto the volumes. Also, make sure to add lvm stuff (like vgscan, vgchange)
-to your boot scripts and edit fstab.
-
-5. Wipe old disk, create one lvm partition, pvcreate it
-
-6. Add old disk to volume group via vgextend.
-
-7. Expand your logical volumes. The lvs are now distributed over both disks.
-Important: if one drive goes bad you loose _all_ you data.
-You might want to use 'e2fsadm' which expands your lv and also extends the
-filesystem on it. 
-
-As it is not trivial to do all this with a running system so i suggest you use
-a rescue cd that has lvm support. I use Knoppix for those things.
-(http://www.knopper.net/knoppix/index-en.html)
-
-> Q2: I am afraid to convert my root fs on /dev/hda to
-> LVM, so that currently is out of the question. But can
-> I resize my 40G hdd, say, to only have 20G for the
-> Linux installation, and combine the remaining 20G
-> together with the two data disks to one single logical
-> volume?
-
-Knoppix (see above) also contains GNU parted which is able to resize ext2
-partitions. If lilo gives you trouble after resizing, boot into Knoppix,
-mount root fs, chroot to root fs and then call lilo.
-
-> Thanks
-> Jan
-
-hope that helps,
+cya,
 
 Nils
 
