@@ -1,9 +1,10 @@
-Return-Path: <jamesp@foobarhouse.com>
-Date: Wed, 25 Jul 2001 16:14:40 +0100 (BST)
-From: James Pattinson <jamesp@foobarhouse.com>
-Message-ID: <Pine.LNX.4.33.0107251611250.9570-100000@greebo.foobarhouse.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] pvversion failure
+Return-Path: <mark@unirez.com>
+Date: Wed, 25 Jul 2001 10:36:40 -0500
+From: Mark Bainter <mark@unirez.com>
+Message-ID: <20010725103640.J5363@unirez.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Reiserfs, 2.4.7, snapshots w/ 0.9
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +16,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi
+I'm using LVM on a couple of our production systems, and I'm very 
+happy with it.  It's been working very well for us.  However, we
+have a very large database and backing it up has become problematic.
 
-Trying to upgrade from beta7 to beta8. I have 2 PVs, neither of which are
-empty, that belong to a single VG, vg00.
+So, naturally, I began looking into using LVM's snapshot feature. 
+The filesystem the database rests on is a reiserfs partition.  
+Creating the snapshot volume (acc to the directions in the howto) 
+works fine, but when I try to actually mount it I get:
 
-When trying to upgrade the PVs to version 2, I get:
+$ sudo mount -t reiserfs -oro /dev/main/db_backup /mnt/dbbackup 
+mount: wrong fs type, bad option, bad superblock on /dev/main/db_backup,
+       or too many mounted file systems
 
-./pvversion -1 /dev/ide/host2/bus0/target0/lun0/part1
-pvversion -- created dummy LV "/dev/vg00/pvversionpart19519" on empty PV
-"/dev/ide/host2/bus0/target0/lun0/part1"
-pvversion -- ERROR: pv_display() failed again
-pvversion -- giving up on "/dev/ide/host2/bus0/target0/lun0/part1"
+checking dmesg reveals:
+reiserfs: checking transaction log (device 3a:04) ...
+clm-2076: device is readonly, unable to replay log
+Replay Failure, unable to mount
+reiserfs_read_super: unable to initialize journal space
 
-[root@greebo tools]# lvmdiskscan | grep LVM
-lvmdiskscan -- /dev/ide/host2/bus0/target0/lun0/part1  [      16.02 GB]
-Primary  LVM partition [0x8E]
-lvmdiskscan -- /dev/ide/host2/bus1/target0/lun0/part1  [      16.02 GB]
-Primary  LVM partition [0x8E]
-lvmdiskscan -- 2 LVM physical volume partitions
-[root@greebo tools]#
+Ok, so I did some searching and found some people back in the first
+part of this year had a similar problems but none of the solutions
+really applied to me fwict.  They all appeared to be using a 
+previous version of the kernel, or of the lvm code.  I looked through
+the changelog and did see a few notations of fixes since 0.9 related
+to the snapshot code.  But, I'm kind of wary about putting a beta 
+on my production systems with something this critical, w/out knowing
+for sure that it will fix the problem.
 
-It seems the pvversion program thinks my PV is empty, and tries to create
-a dummy LV on it. But of course it's not empty.
+So, is the problem in lvm?  reiserfs?  Or is it just me?  Is there
+any other information I can give that might be helpfull in figuring
+out the problem?  Just let me know. 
 
-I created my PVs, VG and LVs using beta7 kernel and tools not too long
-ago. Im using devfs as you can see.
-
-Any ideas?
-
-James
+TIA
