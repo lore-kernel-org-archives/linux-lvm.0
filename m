@@ -1,11 +1,10 @@
-Return-Path: <thomasko321d@gmx.at>
-Message-ID: <0ac701c10b0a$85e4d6f0$0301a8c0@none56n4x0fcnq>
-From: "Thomas Kotzian" <thomasko321d@gmx.at>
-References: <85063BBE668FD411944400D0B744267A6433B5@AUSMAIL>
-Date: Thu, 12 Jul 2001 21:40:22 +0200
+Return-Path: <list@showme.wox.org>
+Message-ID: <005a01c10b2a$148cd370$0f01a8c0@ws1>
+From: "Bas" <list@showme.wox.org>
+Date: Fri, 13 Jul 2001 01:26:30 +0200
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Misbehavior LVM - RAID
+Subject: [linux-lvm] LVM 0.9.1 beta 7 & CVS differences ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,23 +19,33 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I've set up a server with a software-Raid 5 under linux. (6x80GB IDE). Raid5
-(autodetect) works without any problems ... - but when i want to put the
-raid into a pv the problems begin .... - everything works - creating a pv,
-vg, lv but when i try to shutdown - the system stops (HARD FREEZE) when the
-drives are unmounted .... - sometimes they can be unmounted - but then the
-system freezes at the halt/reboot - command at the end of the halt-script
-...
+Hi,
 
-Are there any interactions between raid autodetect and lvm known???
+I'm using an XFS enabled 2.4.6 kernel. It used to run with 0.9.1 beta 6, and
+could be upgraded to 0.9.1 beta 7. LVM is not compiled as a module, it's in
+the kernel.
 
-Base Distro is: SuSE 7.1 and SuSE 7.2 on intel ...
-Kernel from suse or original - linus-release ones - tested: 2.4.6-pre3,
-2.4.6-pre5/6, 2.4.7-pre3, 2.4.7-pre6 - tested with the version 0.9.7_beta2
-and patched with 0.9.7_beta7
+I applied the CVS patch today (after the Oops ... message), and tried to
+boot using a newly generated initrd. Now it can't seem to find my volume
+group. Whenever I start using my old LVM kernel, it can read my VG and all
+assiocated LV's. When I run the new tools on my old kernel, it says
 
-Both show the same behaviour ....
+lsvg -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run
+vgscan. Whenever I run vgscan, I end up with an empty /etc/lvmtab.d and an
+empty  /etc/lvmtab, but it doesn't change anything.
 
-Please help!!
+pvscan returns:
+[bigdude]#pvscan -u
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ERROR "pv_read(): LVM structure version" reading physical volumes
 
-Thomas K.
+I recompiled the 0.9.1 beta 7 tools, and it returns:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/scsi/host0/bus0/target0/lun0/part2" of VG
+"rootvg" [8.45 GB / 3.89 GB free]
+pvscan -- total: 1 [8.45 GB] / in use: 1 [8.45 GB] / in no VG: 0 [0]
+
+Is there some kind of migration tool ?
+
+Thanks,
+Bas.
