@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LV Fragmentation determination
-Message-ID: <20021107180002.B8382@sistina.com>
-References: <Pine.LNX.4.44.0211060108110.8692-100000@junior.lunanet.biz> <20021106135537.A1228@sistina.com> <95154593687.20021106141700@tnonline.net> <20021106133803.GA22411@reti>
+Subject: Re: [linux-lvm] PVscan Question.
+Message-ID: <20021107181110.C8382@sistina.com>
+References: <Pine.LNX.4.30.0211062334420.1036-100000@localhost.localdomain>
 Mime-Version: 1.0
-In-Reply-To: <20021106133803.GA22411@reti>; from joe@fib011235813.fsnet.co.uk on Wed, Nov 06, 2002 at 01:38:03PM +0000
+In-Reply-To: <Pine.LNX.4.30.0211062334420.1036-100000@localhost.localdomain>; from dj@online.bg on Wed, Nov 06, 2002 at 11:44:38PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +14,81 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  7 11:05:01 2002
+Date: Thu Nov  7 11:16:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Nov 06, 2002 at 01:38:03PM +0000, Joe Thornber wrote:
-> On Wed, Nov 06, 2002 at 02:17:00PM +0100, Anders Widman wrote:
-> > >> First off, can LV's become fragmented across a PV/VG? If yes then...
-> > 
-> > > Yes, they can.
-> > 
-> > >> 
-> > >> I'm looking for an easy way to determine how fragmented an LV might been
-> > >> inside the VG. Is there any command I can run that'll give me nice
-> > >> estimate on this?
-> > 
-> > > You can analyze the "lvdisplay -v" output on your LVs in question.
-> > > That shows you the mapping information and therefore, if your LVs are
-> > > fragemented.
-> > 
-> > Will LVM include a defragment procedure?
+Ivan,
+
+the output of pvscan is strange already, because it shows /dev/hdg _and_
+/dev/hdg1 as PVs both at the same time which is impossible (same for hdc).
+
+Partition tables seem to be messy on those devices.
+
+What does "fdisk -l /dev/hd[cg]" show?
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+
+On Wed, Nov 06, 2002 at 11:44:38PM +0200, Ivan Uzunov wrote:
 > 
-> LVM2 will at some point, in that arbitrary remappings will be
-> supported.  However I'm not convinced that this is a big problem, the
-> extents are 4M after all.
-
-True.
-
-BTW: the default got changed to 32MB to support up to 2TB LVs in
-     LVM 1.0.6 by default rather than by "vgchange -s" which makes the
-     impact even smaller.
-
+> 	Hi :)
 > 
-> - Joe
+> 	I have small and may be stupid questions, I run LVM 1.0.6 with
+> kernel 2.4.19 onto redhat system. The LVM is running but when i run
+> pvdisplay command onto one of the HDD into LVM output is :
+> 
+> PV Name               /dev/hdc1
+> VG Name               home
+> PV Size               76.69 GB [160836417 secs] / NOT usable 16.18 MB
+> [LVM: 143
+> KB]
+> PV#                   3
+> PV Status             NOT available
+> 			^^^^^^^^^^^
+> 
+> What's this mean ?
+> 
+> I have 6 HDD in this LVM and
+> HDD : /dev/hda7 /dev/hdc1 /dev/hde1 /dev/hdh1 has this status ; other for
+> example /dev/hdb1 is :
+> PV Status             available
+> 		       ^^^^^^^^^
+> 
+> 
+> 	And second when i run pvscan program i see this :
+> 
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdg"  is in no VG  [8.01 GB]
+> pvscan -- ACTIVE   PV "/dev/hdg1" of VG "home" [76.67 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdh1" of VG "home" [114.47 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hde1" of VG "home" [76.67 GB / 0 free]
+> pvscan -- inactive PV "/dev/hdc"  is in no VG  [8.01 GB]
+> pvscan -- ACTIVE   PV "/dev/hdc1" of VG "home" [76.67 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hda7" of VG "home" [60 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb1" of VG "home" [114.47 GB / 0 free]
+> pvscan -- total: 8 [535.10 GB] / in use: 6 [519.09 GB] / in no VG: 2
+> [16.01 GB]
+> 
+> 	Where this 16Gigs goes ? 8 onto /dev/hdg and 8 onto /dev/hdc
+> Can i extend LVM volume and use this Gigs without destroying data onto LVM
+> ?
+> 
+> Thank You.
+> 
+> 
+> 						WWell : Ivan Uzunov
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
