@@ -1,39 +1,45 @@
-Message-ID: <001701bf1114$c8274c60$030116ac@fd1>
-From: "Fernando Dammous" <ferdam@internetcom.com.br>
-References: <m11ZIFi-000D4UC@londo.rhein-main.de>
-Subject: Re: [linux-lvm] Problems with raid1 and LVM and initrd
-Date: Thu, 7 Oct 1999 19:38:11 -0300
+From: Stephan Mueller <smueller@suse.de>
+Subject: [linux-lvm] Re: Large LVM-Partitions Update
+Date: Fri, 8 Oct 1999 11:10:21 +0200
+References: <99100810084701.03116@edamer>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-Id: <99100811122305.03116@edamer>
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Torsten Neumann <torsten@londo.rhein-main.de>, LVM for Linux <linux-lvm@msede.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@msede.com
+Cc: muc-tech@suse.de
 
-Hi
------ Original Message -----
-From: Torsten Neumann <torsten@londo.rhein-main.de>
-To: LVM for Linux <linux-lvm@msede.com>
-Sent: Thursday, October 07, 1999 3:26 PM
-Subject: [linux-lvm] Problems with raid1 and LVM and initrd
-
-
-> Hi,
-> Everythings works, execpt if I start it via initrd.
->
-> Any Ideas ?
-I had a similar problem.  (I'm not using RAID).
-
-There was a difference among /dev  and /etc/lvmtab from the real-root-device
-and your correspondents in the initrd (it lacked /dev/vg00 / *).
-I copied /dev and /etc/lvmtab and I re-built the initrd.
-Today no longer vg01 exists, just vg00. Everything works fine.
-
-BTW: my SWAP also lives in a LV (only /boot is out) .
-I hope this helps !
-> Regards
-> Torsten
-
-Cheers,
-Fernando
+Am Fre, 08 Okt 1999 schrieben Sie:
+> Hi folks,
+> 
+> I have the following problem: my VG is 32 GB in size and there is 26 GB left.
+> Now I want to create a LV with 26 GB, but LVM tells me that there is only 6,8
+> GB left. OK, I created a LV with 6,8 GB. Now I wanted to extend it to 26 GB.
+> Again it tells me there is only 12 GB left (Now I have nearly 19 GB). Again I
+> wanted to extend but again there  is only 3 GB left and so forth. After several
+> extends (with decreasing space) I could finally use all 26 GB.
+> 
+> Could somebody tell me, what is the problem?
+> 
+> Technical Data:
+> Netfinity 5500 (2 CPUs, 512 MB RAM)
+> 36 GB SCSI RAID 5 (/dev/sda)
+> 
+Some additional info:
+SuSE Linux 6.2
+Kernel 2.2.12
+LVM 0.7
+(Sorry I forgot)
+> 
+> Cheers
+> Stephan
+--
+Stephan M�ller			smueller@suse.de
+SuSE M�nchen GmbH		phone 	+49 (0) 89 42769-0
+Stahlgruberring 28		fax 	+49 (0) 89 42017701
+D-81829 M�nchen			mobile 	+49 (0) 179 6978712
+http://www.suse.de		http://www.suse.com
+>>> Wer Rechtschreibfehler findet, darf sie behalten. <<<
