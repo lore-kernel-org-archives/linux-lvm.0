@@ -1,75 +1,56 @@
-Message-ID: <389FD267.FD41DA95@ep-ag.com>
-Date: Tue, 08 Feb 2000 09:23:03 +0100
-From: Klaus Strebel <stb@ep-ag.com>
+Date: Wed, 9 Feb 2000 00:11:18 +0000 (GMT)
+From: James Pattinson <jamesp@aethos.co.uk>
+Subject: [linux-lvm] Library strangeness
+Message-ID: <Pine.LNX.4.10.10002090009460.18572-100000@greebo.jj.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Building lvm tools? (fwd)
-References: <389F6445.218E6DD7@msede.com>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: lars@larsshack.org
-Cc: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-Hi Lars,
+Hi!
 
-> Howdy,
-> 
-> I'm trying to build the lvm under RedHat 6.1 (linux 2.2.14 + devfs),
-...
-> I'm using the 0.8-pre02.10.1999 release of the tools.
-> 
-> After typing 'make', the build dies with errors along these lines:
-> 
->   cc -c -pipe -Wall -I/usr/src/LVM/0.8-pre02.10.1999/tools
-> -I/usr/src/LVM/0.8-pre0
->   2.10.1999/tools/lib -I/usr/src/LVM/0.8-pre02.10.1999/kernel
-> -D__KERNEL__ -O2 -DD
->   EBUG -o debug.o debug.c
->   In file included from /usr/include/linux/fs.h:20,
->                    from /usr/include/linux/devfs_fs_kernel.h:4,
->                    from /usr/include/linux/genhd.h:14,
->                    from /usr/src/LVM/0.8-pre02.10.1999/tools/lib/liblvm.h:103,
->                    from basename.c:26:
->   /usr/include/linux/stat.h:12: warning: `S_IFMT' redefined
->   /usr/include/sys/stat.h:92: warning: this is the location of the
-> previous defini
->   tion
->   /usr/include/linux/stat.h:13: warning: `S_IFSOCK' redefined
->   /usr/include/sys/stat.h:105: warning: this is the location of the
-> previous defin
->   ition
->   [...ad nauseum...]
-> 
-> These errors occur for virtually every file in the distribution.  Has
-> anyone else encountered this problem?
-well, the devfs includes seem to depend on __KERNEL__ things, it solved
-it on my box with the following hack (houuu, real ugly ;-)):
+Just saw something that confused me for a while:
 
-First, remove the -D__KERNEL__ from the Makefiles (of the lvm-tools of
-cause!), then add this to $(KERN_SOURCES)/include/linux/lvm.h around the
-include of linux/kdev_t.h (about line 90 or so):
+[root@greebo][/root]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
 
-/* KS : Look out! Following is a bad, bad hack solving compile problems
-for tools! */
-#if !defined (__KERNEL__)
-#define  __KERNEL__ 1
-#include <linux/kdev_t.h>
-#undef __KERNEL__
-#else
-#include <linux/kdev_t.h>
-#endif
-#include <linux/major.h>
-#include <asm/spinlock.h>
+Even though I am running on LVM at the moment! After some looking round I
+discovered that it was trying to use liblvm in totally the wrong
+directory, which I had been hacking around with:
 
-Works for, hope the same for you.
+[root@greebo][/root]# ldd `which vgscan`
+        /lib/libNoVersion.so.1 => /lib/libNoVersion.so.1 (0x40014000)
+        liblvm.so => /root/LVM/0.8-pre02.10.1999/tools/lib/liblvm.so
+(0x40016000)
+        libc.so.6 => /lib/libc.so.6 (0x4003a000)
+        /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
+[root@greebo][/root]# mv LVM LVM-hacked
+[root@greebo][/root]# ldd `which vgscan`
+        /lib/libNoVersion.so.1 => /lib/libNoVersion.so.1 (0x40014000)
+        liblvm.so => /lib/liblvm.so (0x40016000)
+        libc.so.6 => /lib/libc.so.6 (0x4003a000)
+        /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
+[root@greebo][/root]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "vg00"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: you may not have an actual backup of your volume group
+[root@greebo][/root]#
 
-Bye
-Klaus
--- 
-Klaus Strebel
-stb@ep-ag.com
-EIGNER + PARTNER AG   - The Engineering Warehouse Company -
-<http://www.ep-ag.com>
------------------------------------------------------------------------
+So, removing /root/LVM solved the problem! Why does the linker try and
+use the library here first rather than what's in /lib ? My ld.so.conf has
+nothing to do with /root/LVM in it!
+
+I think this could be the offending line, from tools/Makefile:
+
+XLINKER = -Xlinker -rpath $(TOP)/tools/lib -Xlinker -rpath /lib -Xlinker
+
+Perhaps -rpath $(TOP)/tools/lib needs to be /after/ the rest?
+
+Cheers!
+
+James (running Dual Celeron 450 / LVM 0.8i / 2.2.14 / devfs)
