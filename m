@@ -1,13 +1,7 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to
-    coexist happily
-Message-Id: <20020110152713.GC1018@tykepenguin.com>
-References: <200201020451.g024pPg00867@oss.sgi.com>
-    <200201050212.TAA16774@cthulhu.turbolabs.com>
-    <20020105142527.I12868@lynx.no> <E16Oh1M-0003UB-00@hermes.sistina.com>
+Message-Id: <OFF21038E8.8E1F7C47-ONC1256B3D.006602E0@de.ibm.com>
+From: "Martin Petermann" <martin.petermann@de.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E16Oh1M-0003UB-00@hermes.sistina.com>
+Subject: [linux-lvm] read is blocking if reading snapshots with 16k blocks on mp systems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,39 +12,102 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 10 09:28:01 2002
+Date: Thu Jan 10 12:58:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 11, 2002 at 01:21:26AM +1000, Adrian Head wrote:
-> In the process of trying to fix this issue I have been playing around with a 
-> patch from the great SGI XFS developers.  It certainly fixes the problems I 
-> was having but I'm now trying to help clean the patch up.
-> 
-> The problem now is that when I try to mount a ext3 snapshot using:
-> mount /dev/HDA/SNAP /mnt/snapshot
-> The kernel mounts the snapshot as ext2.  Is was not happening before the 
-> patch and I was wondering if anyone thinks this is a problem.  As ext3 is 
-> backward compatible with ext2 there doesn't seem to be any problems during my 
-> testing with respect to standard file operations.  I can mount the snapshot 
-> as ext3 if I use:
-> mount -t ext3 /dev/HDA/SNAP /mnt/snapshot
-> 
-> The next problem is that when the ext3 snapshot (mounted as ext3) overflows 
-> lvm generates an error in the logs:
-> lvm -- giving up to snapshot /dev/HDA/XFS on /dev/HDA/SNAP: out of space
-> lvm - lvm_map: ll_rw_blk for inactive LV /dev/HDA/SNAP
-> 
-> The 1st line I understand but the 2nd I don't.  I was hoping that some LVM 
-> guru/developer could explain the 2nd line and what it means.
+Hi all,
 
-When a snapshot gets full it can no longer be valid so LVM makes it inactive and
-fails any further I/O to it.
+I had some performance problems, than I wrote a small program to see where
+it was hanging:
 
-Because there's no more space for copy-on-write operations into the snapshot
-there's no way the filesystem can be consistent. OK this isn't that nice but
-it's arguably better than returning corrupted data.
+-my configuration:
 
-patrick
+I'm using a SuSE 7.1 and SuSE 7.2 mp system (two processors).
+I've created a snapshot in the following way:
+
+   peanuts:root >lvcreate -L 50 -n snapshot -s /dev/zweite_testvg/testfs1
+
+   >lvscan
+   ...
+   lvscan -- ACTIVE   Original "/dev/develop/400M" [400.00 MB]
+   lvscan -- ACTIVE   Snapshot "/dev/develop/snapshot" [31.50 MB] of
+   /dev/develop/400M
+   ....
+   lvscan -- 13 logical volumes with 17.05 GB total in 2 volume groups
+   lvscan -- 13 active logical volumes
+
+
+-small program which simply reads from a snapshot and writes to a file
+
+   #define SIZE 4*4096
+
+   int main(int argc, char **argv)
+
+   {
+      struct timeval now,save;
+      struct timezone tz;
+      char buffer[SIZE];
+      ssize_t size,count=SIZE;
+      int fd,fd2,counter=0;
+
+      fd=open(argv[1], O_RDONLY, O_NONBLOCK); // filedescriptor for reading
+      fd2=open("/BIGFS/file", O_RDWR);        // filedescriptor for writing
+
+      if (fd>0)
+      {
+         printf("%s opened for reading\n",argv[1]);
+         do
+         {
+            gettimeofday(&save,&tz);
+            size= read(fd, (void *) buffer, count);
+            gettimeofday(&now,&tz);
+            if( now.tv_sec-save.tv_sec > 1 )
+               printf("%d: %ld seconds needed for bytes
+   %d\n",counter,now.tv_sec-save.tv_sec,(int) size);
+            size= write(fd2, (void *) buffer, size);
+            counter++;
+         } while ( size > 0 );
+      }
+
+      close(fd);
+      close(fd2);
+
+      return 0;
+   }
+
+
+
+-output using different values for SIZE (16384, 16383, 16385):
+
+/dev/zweite_testvg/snapshot opened for reading
+9704: 11 seconds needed for bytes 16384
+12002: 12 seconds needed for bytes 16384
+12435: 29 seconds needed for bytes 16384
+14661: 7 seconds needed for bytes 16384
+14669: 40 seconds needed for bytes 16384
+16071: 17 seconds needed for bytes 16384
+18456: 11 seconds needed for bytes 16384
+/develop/rem/peterman/C/linux
+
+peanuts:root >gcc -o myread myread.cpp
+/develop/rem/peterman/C/linux
+peanuts:root >./myread /dev/zweite_testvg/snapshot
+/dev/zweite_testvg/snapshot opened for reading
+7532: 2 seconds needed for bytes 16383
+/develop/rem/peterman/C/linux
+
+peanuts:root >gcc -o myread myread.cpp
+/develop/rem/peterman/C/linux
+peanuts:root >./myread /dev/zweite_testvg/snapshot
+/dev/zweite_testvg/snapshot opened for reading
+/develop/rem/peterman/C/linux
+
+
+The maximum time read was hanging was 40 seconds. I detected similar
+problems reading 3*4096 bytes.
+
+Regards
+   Martin
