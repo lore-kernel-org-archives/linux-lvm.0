@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102081915.f18JFdc17650@webber.adilger.net>
-Subject: Re: [linux-lvm] Setup for RAID1 with LVM
-In-Reply-To: <3A827F18.4B387240@suse.de> from Jens Bruckmann at "Feb 8, 2001
- 12:12:25 pm"
-Date: Thu, 8 Feb 2001 12:15:39 -0700 (MST)
+Message-Id: <200102081919.f18JJgF17656@webber.adilger.net>
+Subject: Re: [linux-lvm] the curious case of the semi-created Logical Volume
+In-Reply-To: <m2ae7xchx1.fsf@andy.off.redeye.com> from Andy Cowling at "Feb 8,
+ 2001 03:29:14 pm"
+Date: Thu, 8 Feb 2001 12:19:42 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,37 +21,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jens, you write:
-> I would like to setup a configuration with LVM and RAID1. Poorly you
-> can't just do a lvextend -m 1 like on HP-UX :-))
+Andy Cowling writes:
+> # lvdisplay -?                  
+> Logical Volume Manager 0.8 by Heinz Mauelshagen  04/11/1999 (IOP 6)
+
+This is a fairly old LVM code (2 years almost)...
+
+> # uname -a
+> Linux h2o 2.2.16-SMP #1 SMP Wed Aug 2 20:01:21 GMT 2000 i686 unknown
 > 
-> I have two SCSI-Disks of nearly the same size, on Disk 1 I already have
-> a working installation of Linux.
+> I tried to build 0.9 and got the following error (presumably because
+> the 2.2.16 kernel is not supported)
+> 
+> # ./lvdisplay -v -D /dev/pv01/lv01
+> lvdisplay -- invalid i/o protocol version 6
 
-You need to use MD to do mirroring on Linux, not LVM (as in HP-UX and AIX).
+It is not just the user tools that need to be updated.  You always need
+to patch the kernel to have the same LVM version.  Get the latest 0.9.1
+beta code, run configure, and then "make" in the PATCHES directory, to
+build a kernel patch.
 
-> /usr, /opt and /var reside on LVs. I want these three LVs to be mirrored
-> online to the second disk as it is possible on HP-UX.
+> I tried to build 0.8final but am missing
+>                /usr/src/linux/include/linux/lvm.h
 
-You _may_ be able to create an MD RAID-0 mirror of your existing disk,
-and then run vgscan again to detect the new configuration.  However, this
-has probably never been done - normally, you would create the MD mirror
-first and then create VG/LV on top of it.  It may NOT work, because I
-recall something about MD storing a backup superblock at the end of the
-MD device, and this would break LVM I think (LVM aligns the PEs at the
-end of the partition as well).
-
-> Can someone shortly describe, how to setup such a configuration?
-
-The safest would be to backup your system, and start with creating an
-MD device, and then adding LVM on top of it.  If you have a backup,
-you could test to see if mirroring an existing LVM disk works, because
-this may be something people want to do in the future.
-
-It is also be possible (if you have extra disk space) to create a mirrored
-MD device, make a PV of it, add it into the VG, and pvmove all of your
-existing LVs to the mirrored device.  You can then vgreduce the old
-(unmirrored) PV out of the VG.
+You could get this from tools/lib/lvm.h.
 
 Cheers, Andreas
 -- 
