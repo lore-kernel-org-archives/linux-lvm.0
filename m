@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvcreate & pvscan error on MD device
-Message-ID: <20020919120146.B32578@sistina.com>
-References: <20020919033059.36563.qmail@web10409.mail.yahoo.com>
+Subject: Re: [linux-lvm] Help! unable to mount lv's - can't see why!
+Message-ID: <20020919120453.C32578@sistina.com>
+References: <00cd01c25f0c$2990ffd0$1c01a8c0@internal.tripnet.int> <00f001c25f1b$3a24ef50$1c01a8c0@internal.tripnet.int> <20020918155938.A28041@sistina.com> <011401c25f21$b15f7da0$1c01a8c0@internal.tripnet.int>
 Mime-Version: 1.0
-In-Reply-To: <20020919033059.36563.qmail@web10409.mail.yahoo.com>; from mooasun@yahoo.com on Wed, Sep 18, 2002 at 08:30:59PM -0700
+In-Reply-To: <011401c25f21$b15f7da0$1c01a8c0@internal.tripnet.int>; from red@tripany.com on Wed, Sep 18, 2002 at 04:42:54PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,78 +14,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 19 05:04:13 2002
+Date: Thu Sep 19 05:05:23 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Which LVM version are you using?
-Maybe an older one is causing you trouble.
+On Wed, Sep 18, 2002 at 04:42:54PM +0200, Robin Edgar - Tripany wrote:
+> Doing the lvdisplay -v shows that pv /dev/hde1 had bits of all of the lv's
+> on it (including the docu lv, which I *can* mount).
+
+Then it is most likely, that all filesystems will have errors.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Wed, Sep 18, 2002 at 08:30:59PM -0700, BOIK MOON wrote:
-> Hello, I do not have any error on PVCREATE, but
-> I do not have more than one MD device registred on my PVSCAN.
-> However, it is OK for the regular devices. Please help me, any clues?
 > 
-> The following are console message:
-> 
-> root# cat /proc/mdstat
-> Personalities : [linear] [raid0] [raid1] [raid5]
-> read_ahead 1024 sectors
-> md1 : active raid1 hdd4[1] hdb4[0]
->       2048192 blocks [2/2] [UU]
-> 
-> md0 : active raid1 hdc4[1] hda4[0]
->       2048192 blocks [2/2] [UU]
-> 
-> unused devices: <none>
-> root# pvcreate /dev/md1
-> pvcreate -- physical volume "/dev/md1" successfully created
-> 
-> root# pvcreate /dev/md0
-> pvcreate -- physical volume "/dev/md0" successfully created
-> 
-> root# pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/md0"  is in no VG  [1.95 GB]
-> pvscan -- inactive PV "/dev/hdg4" is in no VG  [1000.12 MB]
-> pvscan -- inactive PV "/dev/hdh4" is in no VG  [1000.12 MB]
-> pvscan -- total: 3 [3.91 GB] / in use: 0 [0] / in no VG: 3 [3.91 GB]
-> 
-> root# pvdisplay /dev/md1
-> pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical
-> volume "/dev/md1"
+> ----- Original Message -----
+> From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+> To: <linux-lvm@sistina.com>
+> Sent: Wednesday, September 18, 2002 3:59 PM
+> Subject: Re: [linux-lvm] Help! unable to mount lv's - can't see why!
 > 
 > 
-> root# pvdisplay /dev/md0
-> pvdisplay -- "/dev/md0" is a new physical volume of 1.95 GB
-> 
-> root# pvdata /dev/md1
-> --- NEW Physical volume ---
-> PV Name               /dev/md1
-> VG Name
-> PV Size               1.95 GB
-> PV#                   0
-> PV Status             NOT available
-> Allocatable           NO
-> Cur LV                0
-> PE Size (KByte)       0
-> Total PE              0
-> Free PE               0
-> Allocated PE          0
-> PV UUID               Ke5PpL-bWgO-GTkR-E6Wt-QOzz-pRhy-cJQcPW
+> > On Wed, Sep 18, 2002 at 03:56:36PM +0200, Robin Edgar - Tripany wrote:
+> > > I've discovered that there is a problem with /all/ the superblocks
+> except for those of the /docu lv (see below). It does lead me to another
+> question though - only one of the HDs crashed: is it possible that LVM wrote
+> all the superblocks on 1 HD?! If so this seems like a pretty serious bug in
+<SNIP>
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> >
 > 
 > 
 > 
-> 
-> ---------------------------------
-> Do you Yahoo!?
-> New DSL Internet Access from SBC & Yahoo!
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
