@@ -1,11 +1,11 @@
 Return-Path: <lembark@wrkhors.com>
-Date: Wed, 18 Jul 2001 11:58:22 -0500
+Date: Wed, 18 Jul 2001 12:02:32 -0500
 From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] FW: LVM on Linux
-Message-ID: <473510000.995475502@dizzy>
-In-Reply-To: <20010718091639.B382@btconnect.com>
-References: <85063BBE668FD411944400D0B744267A643418@AUSMAIL>   <20010717174008.A1000@btconnect.com> <20010717122318.A20564@d3.front>
- <20010718091639.B382@btconnect.com>
+Subject: Re: [linux-lvm] HUGE LVM log file...
+Message-ID: <476390000.995475752@dizzy>
+In-Reply-To: <5.0.2.1.2.20010718104547.00a40ec0@193.0.0.208>
+References: <85063BBE668FD411944400D0B744267A643448@AUSMAIL>   <85063BBE668FD411944400D0B744267A643448@AUSMAIL>
+ <5.0.2.1.2.20010718104547.00a40ec0@193.0.0.208>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
@@ -23,12 +23,25 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-- Joe Thornber <thornber@btconnect.com> on 07/18/01 09:16:39 +0100:
+> In AIX, the system create PPS (PE) from the middle of the disk for 
+> performance reasons.
+
+And systematically fry their performance in some cases.
 
 
->> >    Should we restrict stripes sets to powers of 2 ?
+The theory behind middle-tracks is reducing butterfly reads.
+Eventually, however, the drive gets full and you end up with
+butterflys anyway.
 
-Anything else can (a) lead to performance degredation  and/or
-(b) serious bugs dealing with a fairly offball case.  
+With newer (last 5 years+) drives the outer cyl's have more
+sectors to keep the bit density constant.  This leaves you with
+much more storate at the outside edge, which reduces seeks
+which is faster (especially since at least SCSI drives normally
+do cyl buffering).
 
-Especially due to (b) I'd bow down at the alter of KISS.
+For even finer control you can create fast/med/slow part's 
+on the drive and then use them as PV's in different VG's.
+Used carefully this can be a serious performance boost for
+high-I/O systems.
+
+sl
