@@ -1,12 +1,10 @@
-Return-Path: <bluca@comedia.it>
-Date: Tue, 24 Apr 2001 18:45:46 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Re: Your message to linux-lvm awaits moderator approval
-Message-ID: <20010424184546.A1949@colombina.comedia.it>
-References: <20010420073845.6485D5056@colombina.comedia.it> <20010420095614.H12971@colombina.comedia.it> <20010424140211.D31988@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010424140211.D31988@sistina.com>; from Mauelshagen@sistina.com on Tue, Apr 24, 2001 at 02:02:11PM +0000
+Return-Path: <fabian.herschel@suse.de>
+From: fabian herschel <fabian.herschel@suse.de>
+Date: Tue, 24 Apr 2001 19:00:59 +0200
+MIME-Version: 1.0
+Message-Id: <01042419005900.11967@workstation>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] vgscan does not found my VG, but pvscan does...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,24 +17,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: fabian@suse.de
 
-On Tue, Apr 24, 2001 at 02:02:11PM +0000, Heinz J. Mauelshagen wrote:
-> On Fri, Apr 20, 2001 at 09:56:14AM +0200, Luca Berra wrote:
-> > fanculo!
-> 
-> No comment ;-)
-none was expected,
-i hoped more comments would have been made on the actual text of the e-mail
-;-)
+Hi *,
 
-L.
+I have a strage problem on my Desktop. I have installed Kernel 2.2.18 
+and lvm 0.9.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+All things have been fine till this morning. I have increased a logical volume
+(and the reiserfs which resides on that volume) from 1000M to 2000M (not 2GB).
+
+Some time later I had to reboot the machine (because I want to attach some 
+devices to the SCSI bus). After the reboot vgscan does NOT find my VG any
+longer. It only says something like "no voulme group found".
+
+If I call pvscan it tells me that it found two physical disks (thats ok). But 
+both  PVs are in an unknown VG. I should call vgscan (but see obove :-)
+
+Then I called pvdata to find out something out about whats going wrong here.
+
+pvdata -a /dev/sda1 ; pvdata -a /dev/sda2 ; are working fine , they also tell 
+me that these PVs are members of sysvg.
+
+Does anybody have an idear how to get vgscan to read this info?
+pvdata finds members of a VG but vgscan does not :-((.
+
+I hope someone can help me!!
+(Yes I do have backup data, but I want to sleep well, if there are so many
+lvm installations out in the world).
+
+Best regards,
+Fabian Herschel
