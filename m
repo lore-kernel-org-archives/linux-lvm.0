@@ -1,41 +1,40 @@
-Date: Thu, 27 Jan 2000 17:45:29 +0100 (MET)
-From: Joerg Fraune <fraune@muenster.com>
-Subject: [linux-lvm] ReiserFS & LVM?
-Message-ID: <Pine.LNX.4.10.10001271743500.3114-100000@moses.muenster.com>
+Message-ID: <3890E458.54A9FC63@msede.com>
+Date: Fri, 28 Jan 2000 01:35:36 +0100
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: rf@prima.de
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] ReiserFS & LVM? (fwd)
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
 
+-------- Original Message --------
+From: Robert Flach <rf@random.my-disc.de>
+Reply-To: rf@prima.de
+Subject: Re: [linux-lvm] ReiserFS & LVM?
+References:
+<Pine.LNX.4.10.10001271743500.3114-100000@moses.muenster.com>
 
- Hi,
+Joerg Fraune wrote:
+> 
+>  Hi,
+> 
+>  the reiserfs documentation says that reiserfs is incompatible with
+> software raid due to conflicts in buffer page usage; is this also
+> true for reiserfs & LVM?
 
- the reiserfs documentation says that reiserfs is incompatible with
-software raid due to conflicts in buffer page usage; is this also
-true for reiserfs & LVM?
+No.
+I'm running LVM 0.8i and Reiserfs with Kernel 2.2.13-SuSE-reiserfs on
+my
+router (ok, I know reiserfs is not fully stable yet).
 
- Joerg
+-- 
+Bis denne...
 
-- -------------------------------------------------------------
-| Joerg Fraune               | netServe GmbH & Co KG        |
-| Malvenweg 108              | Fresnostrasse 10a            |
-| 48163 Muenster             | 48159 Muenster               |
-|                            | http://www.muenster.com/     |
-| Tel: 02501/987929          | Tel: 0251/98725-11           |
-| Tel: 0179/4910257          | FAX: 0251/866977             |
-| EMail: joerg@fraune.de     | EMail: netserve@muenster.com |
-- -------------------------------------------------------------
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Robert Flach
 
-iD8DBQE4kHYtY+4EMdURX1wRAixIAKCWK9v+c/CunldoBJSRZCXIkxdk3QCeMy3e
-rjPli3jfpvMx2z0ajkqwnp4=
-=/riG
------END PGP SIGNATURE-----
+rf@random.prima.de  -*-  www.random.prima.de
