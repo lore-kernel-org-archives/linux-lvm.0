@@ -1,10 +1,11 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] LVM
-Date: Wed, 12 Sep 2001 02:08:25 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPKEDMDNAA.stuart@bh90210.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-reply-to: <20010911122020.A1836@dardhal.mired.net>
+Date: Wed, 12 Sep 2001 09:40:47 +0000
+From: Tomas Edwardsson <tommi@tommi.org>
+Subject: Re: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
+Message-ID: <20010912094047.A19059@hp.is>
+References: <20010911112241.A16588@hp.is> <20010911113054.B16588@hp.is> <20010911104934.C29347@turbolinux.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010911104934.C29347@turbolinux.com>; from adilger@turbolabs.com on Tue, Sep 11, 2001 at 10:49:34AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,42 +18,69 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-TFZNIExpc3QgbWVtYmVyczoNCg0KCUkgaGF2ZSBiZWVuIGRvaW5nIHNvbWUgcGxheWluZyBhcm91
-bmQgYW5kIGFtIG5vdCBnZXR0aW5nIHZlcnkgZmFyISBQZXJoYXBzIHlvdSBjYW4gYW5zd2VyIHNv
-bWUgcXVlc3Rpb25zIGFuZCBndWlkZSBtZS4NCg0KSSBoYXZlIDIgMzJHQiBIRHMsIHdoaWNoIEkg
-Y2FuIGhhdmUgYm90aCBpbiB1c2Ugb24gbXkgbGFwdG9wIHNpbXVsdGFuZW91c2x5LiBUaGUgMm5k
-IEhEIEkgY2FuIGVyYXNlIHRvIG15IGhlYXJ0cyBjb250ZW50LiBJdCdzIGEgc3RhZ2luZyBkcml2
-ZS4NCg0KCU15IGN1cnJlbnQgY29uZmlndXJhdGlvbiBpczoNCg0KCS9kZXYvaGRhMQl3aW5kb3dz
-IDIwMDAgcHJvDQoJL2Rldi9oZGEyCS8JKExpbnV4IG1hbmRyYWtlIDguMCkNCg0KCUkgZG8gbm90
-IGhhdmUgYSBzd2FwIHBhcnRpdGlvbiBhdCB0aGUgbW9tZW50IChJIGhhdmUgNTEyTUIgb2YgcmFt
-LCBhbmQgSSB1c2UgYSBzd2FwIGZpbGUgaWYgSSBuZWVkIHRvbyksIGFuZCBoYXZlIGV2ZXJ5dGhp
-bmcgaW5zdGFsbGVkIGludG8gdGhlIHJvb3QgKEkga25vdyB0aGUgZHJhd2JhY2tzIG9mIHRoaXMs
-IGJ1dCBpdCBtYWRlIGZvciBzaW1wbGljaXR5IGF0IHRoZSB0aW1lKS4gSSBhbHNvIHVzZSBSZWlz
-ZXJGUywgYW5kIHdhbnQgdG8gaW1wbGVtZW50IExWTS4NCg0KCVRoZSAiSG93IFRvIiBzcGVha3Mg
-b2YgYW4gZXhhbXBsZSBpbmNsdXNpdmUgb2YgYSAvYm9vdCBwYXJ0aXRpb24gYW5kIGEgc3dhcCBw
-YXJ0aXRpb24uIEkgaWdub3JlZCB0aGUgc3dhcCBwYXJ0aXRpb24sIGJ1dCB3YXMgY3VyaW91cyBh
-Ym91dCB0aGUgL2Jvb3QgcGFydGl0aW9uIGluIHRoZSBob3ctdG8uDQoNCmEpIERvIEkgbmVlZCB0
-byBoYXZlIGEgc2VwYXJhdGUgL2Jvb3QgcGFydGl0aW9uLCBvciBjYW4gSSBjcmVhdGUgYW4gTFZN
-IGltcGxlbWVudGF0aW9uIChmb3IgdGhlIG1vbWVudCkgd2l0aCBldmVyeXRoaW5nIGluIHRoZSBy
-b290ICgvKT8NCmIpIFRoZSBleGFtcGxlIHNlZW1zIHRvIHNob3cgdGhlIC9ib290IGJlaW5nIG91
-dHNpZGUgdGhlIExWTSBhcmVhLCBpcyB0aGF0IGNvcnJlY3Qgb3IgZG9lcyB0aGUgaG93LXRvIG1l
-YW4gdG8gc2hvdyB0aGUgL2Jvb3QgYXMgYmVpbmcgd2l0aGluIHRoZSBkb21haW4gb2YgdGhlIExW
-TSBjb250cm9sbGVkIGFyZWE/DQpjKSBIb3cgd2lsbCB1c2luZyBSZWlzZXJGUyBvbiBteSByb290
-IHBhcnRpdGlvbiBhbmQgTFZNIG92ZXIgdGhlIHJvb3QgYWZmZWN0IHdoYXQgSSBuZWVkIHRvIGRv
-IGZvciBhbiBpbml0cmQgYW5kIGtlcm5lbCBjb21waWxhdGlvbiBvcHRpb25zPw0KDQpPbmNlIHRo
-ZSBMVk0gaW1wbGVtZW50YXRpb24gaXMgY29tcGxldGVkIHdpdGggZXZlcnl0aGluZyBpbiB0aGUg
-LyBwYXJ0aXRpb24sIGFuZCBSZWlzZXJGUyBvbiB0aGUgcm9vdCwgYW5kIGl0IGJvb3RzIHVwLCB0
-aGVuIEkgcGxhbiB0byBicmVhayBhcGFydCB0aGUgLyBpbnRvIHNlcGFyYXRlIGZpbGVzeXN0ZW1z
-IHdpdGhpbiB0aGUgTFZNIGVudmlyb25tZW50LiBBdCB0aGF0IHBvaW50LCByZWNvbW1lbmRhdGlv
-bnMgb2Ygd2hhdCBmaWxlc3lzdGVtcyB0byBjcmVhdGUgd2lsbCBiZSBoZWxwZnVsLg0KDQoNClZl
-cnkgUmVzcGVjdGZ1bGx5LCANCg0KU3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNH
-V0cgDQpCZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUgMTkwNEcgKFZvbHVudGVlciBUcmFp
-bmluZyBVbml0KSANCnN0dWFydEBiaDkwMjEwLm5ldCANCndlc3QgY29hc3Q6ICgzMTApLTM1OC0w
-MjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzIA0KZWFzdCBj
-b2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkx
-NDktNTg1OSANCg0KVGVsZWNvcGllcjogKDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdhdGV3
-YXkgdmlhIHd3dy5lZmF4LmNvbSAoaXQncyBmcmVlISkgDQoNCkpPSU4gVEhFIFVTIE5BVlkgUkVT
-RVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4gDQoNCldl
-ZG5lc2RheSwgU2VwdGVtYmVyIDEyLCAyMDAxIDI6MDEgQU0NCiANCg==
+Well, problem number 1. vgscan fails and therefore vgchange does also.
+
+]# ll -d /dev/vg00
+ls: /dev/vg00: No such file or directory
+
+
+I ran the rest of the commands just the same since we have a backup.
+After I did that it seems all LV and LE info has evaporated.
+
+Current pvdata is http://vefur.hp.is/lvm/pvdata-hdd1-new.txt
+
+Thanks, Tommi
+
+On Tue, Sep 11, 2001 at 10:49:34AM -0600, Andreas Dilger wrote:
+> On Sep 11, 2001  11:30 +0000, Tomas Edwardsson wrote:
+> > I had already tried the vgcfgrestore, it didn't seem to help but I discovered
+> > that the UUID for one of my PVs was missing so I ran the uuid-fixer and now
+> > they all have UUIDs again (don't know if that is relevant). 
+> > 
+> > I have run the pvdata on all my PVs although I think the right one is the
+> > following file run with pvdata -avP /dev/hdd1:
+> >   http://vefur.hp.is/lvm/pvdata-hdd1.txt
+> 
+> Yes, this clearly shows that lvol1 has 625 LEs (in the LV data), but it
+> has PE 0-625 from that PV assigned to it (total of 626 PEs).  I don't
+> know which one is correct, nor how it got that way.  If you have a
+> filesystem on that LV, you could find out how big the fs is to figure
+> out which value needs fixing.  For ext2, you can do:
+> 
+> dumpe2fs -h /dev/vg00/lvol1
+> 
+> and figure out if it is 2500MB (625 LE) or 2504MB (626LE).  Then (the fun
+> part) you need to go and edit either the LV table or the PE table to have
+> the right numbers in it.  I'm guessing the LV table is wrong (and even if
+> not, it is safer to add the PE to the end than to truncate your filesystem).
+> 
+> dd if=/dev/hdd1 of=/hdd.sav bs=1024 count=188		# backup LVM metadata
+> dd if=/dev/hdd1 of=/lv1.dat bs=1 skip=43008 count=328	# get lvol1 metadata
+> od -Ad -tx1 /lv1.dat					# show lvol1 metadata
+> 
+> # 625 = 0x271 which you should see at offset 300, 301 of the LV struct
+> # 626 = 0x272 = 0x02 0x72, 0x72 = "r" in ASCII, so we write this into LV
+> echo "r" | dd of=/lv1.dat count=1 seek=300		# write 0x72 to LE count
+> 
+> od -Ad -tx1 /lv1.dat					# show lvol1 metadata
+> # we should now see 0x72 0x02 0x00 0x00 at offset 300 of the LV metadata
+> 
+> dd if=/lv1.dat of=/dev/hdd1 bs=1 seek=43008		# write LV meta to disk
+> pvdata -avP /dev/hdd1					# verify all is well
+> vgscan							# should be OK now
+> 
+> Cheers, Andreas
+> -- 
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
