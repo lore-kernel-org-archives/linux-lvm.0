@@ -1,11 +1,8 @@
-From: Theo Van Dinter <felicity@kluge.net>
-Subject: Re: [linux-lvm] System Suggestions
-Message-Id: <20020306161130.D855@kluge.net>
-References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
+From: Seth Mos <knuffie@xs4all.nl>
+Subject: Re: re[2]: [linux-lvm] System Suggestions
+In-Reply-To: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
+Message-Id: <Pine.BSI.4.10.10203062217030.17216-100000@xs3.xs4all.nl>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>;
-    from freemyer@NorcrossGroup.com on Wed, Mar 06, 2002 at 03:59:50PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +13,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 15:11:02 2002
+Date: Wed Mar  6 15:23:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: "Anthony W. Marino" <anthony@AWMObjects.com>, Petro <petro@auctionwatch.com>, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
+To: Greg Freemyer <freemyer@NorcrossGroup.com>
+Cc: "Anthony W. Marino" <anthony@AWMObjects.com>, Petro <petro@auctionwatch.com>, linux-lvm@sistina.com, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
 
-On Wed, Mar 06, 2002 at 03:59:50PM -0500, Greg Freemyer wrote:
+On Wed, 6 Mar 2002, Greg Freemyer wrote:
+
+> Anthony,
+> 
+> I'd be careful with the IDE Raid controller.
+> 
+> We just built a lab machine with a Promise IDE Raid controller and the assumption that we could get it and XFS to co-exist.
+> 
+> I'm not doing the work, but the engineer that is tells me that the Promise Patch Kit only works with a very limited number of stock Redhat Kernels, and that we are NOT free to add the XFS patch.  Even worse, promise does not supply their patch in source, so we are not free to tweak it ourselves.
+> 
+> I'm not sure I really believe that, but that is what I'm told.
+> 
 > If you do get the 3Ware IDE RAID controller to work with XFS, please let me know.
 
-Works beautifully.  Have RH7.2, XFS, LVM, and a 3Ware 7410 running the
-box that I'm sending this from. :)
+3Ware IDE controllers and XFS are just fine. The driver is available in
+source form and can be added to any kernel. The promise raid controllers
+are not really nice. They have never ever been open about the hardware
+specs of the cards. For some reason they seem to think that their IDE
+controllers are something special. Which they are not.
 
-The Promise RAID cards are cute but crappy from what I've heard.
-The 3ware cards seem to be excellent quality so far, and the driver (as
-far as I can tell) was GPLed and is standard in the 2.4 kernel series
-(well, it's in 2.4.9 anyway...)
+If you are looking into using the 3Ware controllers watch the following:
+The 64xx controllers are underpowered and should better not be used in
+raid 5 mode.
+The 74xx controllers seem to be good and should be fine with raid5 but
+note that raid5 will always have slow write speeds.
 
--- 
-Randomly Generated Tagline:
-I'm a white male, aged 18 to 49.  Everyone listens to me!  No matter
- how dumb my suggestions are.
- 
- 		-- Homer Simpson
- 		   Lisa vs. Malibu Stacy
+Software raid can be used if you need a lot of speed _and_ redundancy.
+
+Cheers
+Seth
