@@ -1,27 +1,23 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8BBZAr00365
-	for <linux-lvm@redhat.com>; Sat, 11 Sep 2004 07:35:10 -0400
-Received: from copilotconsulting.com (ip-66-181-5-46.cust.i2bnetworks.com
-	[66.181.5.46])
-	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8BBZA8u004075
-	for <linux-lvm@redhat.com>; Sat, 11 Sep 2004 07:35:10 -0400
-Received: from localhost (copilotconsulting.com [127.0.0.1])
-	by copilotconsulting.com (Postfix) with ESMTP id 8B66DA936C
-	for <linux-lvm@redhat.com>; Sat, 11 Sep 2004 04:25:35 -0700 (PDT)
-Received: from copilotconsulting.com ([127.0.0.1])
-	by localhost (copilotconsulting.com [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id 12988-05 for <linux-lvm@redhat.com>;
-	Sat, 11 Sep 2004 04:25:34 -0700 (PDT)
-Date: Sat, 11 Sep 2004 04:25:34 -0700
-From: Tracy R Reed <treed@copilotconsulting.com>
-Subject: Re: [linux-lvm] massive LV corruption
-Message-ID: <20040911112534.GD32306@copilotconsulting.com>
-References: <20040911110830.GC32306@copilotconsulting.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eheScQNz3K90DVRs"
-Content-Disposition: inline
-In-Reply-To: <20040911110830.GC32306@copilotconsulting.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8BKIEr03425
+	for <linux-lvm@redhat.com>; Sat, 11 Sep 2004 16:18:14 -0400
+Received: from priv-edtnes32.telusplanet.net (defout.telus.net
+	[199.185.220.240])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8BKIDFX001440
+	for <linux-lvm@redhat.com>; Sat, 11 Sep 2004 16:18:13 -0400
+Received: from tor.lat ([154.5.5.164]) by priv-edtnes32.telusplanet.net
+	(InterMail vM.6.01.03.02 201-2131-111-104-20040324) with ESMTP
+	id <20040911201807.GPZ20020.priv-edtnes32.telusplanet.net@tor.lat>
+	for <linux-lvm@redhat.com>; Sat, 11 Sep 2004 14:18:07 -0600
+Received: from [192.168.179.43] (fis.lat [192.168.179.43])
+	by tor.lat (Postfix) with ESMTP id B22EA10C281
+	for <linux-lvm@redhat.com>; Sat, 11 Sep 2004 13:18:06 -0700 (PDT)
+Mime-Version: 1.0 (Apple Message framework v619)
+Content-Transfer-Encoding: 7bit
+Message-Id: <B825AF1D-042F-11D9-9080-000A95C71776@freezone.co.uk>
+From: ms419@freezone.co.uk
+Date: Sat, 11 Sep 2004 13:18:18 -0700
+Subject: [linux-lvm] initrd for LVM2 root partition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,37 +28,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+How does one manually build an initrd to mount an LVM2 root partition?
 
---eheScQNz3K90DVRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm aware of the lvmcreate_initrd tool, but in my distribution (Debian 
+unstable) it accompanies LVM1, not 2; besides, I am building the initrd 
+for a foreign architecture, so I think I would have to build it 
+manually anyway.
 
-On Sat, Sep 11, 2004 at 04:08:30AM -0700, Tracy R Reed spake thusly:
-> after I made the change which probably caused the damage in case they are
-> of use to someone. They can be found here:
-> =20
-> http://ultraviolet.org/tmp
+I've read the LVM HOWTO, particularly 
+http://www.tldp.org/HOWTO/LVM-HOWTO/upgradetolvmroot.html, which 
+mentions initrds, but I couldn't find any instructions for manually 
+building an LVM initrd. Can someone suggest some documentation to me?
 
-I just added system.conf.4.old so you can see the lvm config from before I
-executed the lvextend commands.=20
+Currently, I am confronted with the following problem, when I run 
+vgscan on my initrd:
 
---=20
-Tracy Reed                     The attachment is a digital signature.
-http://copilotconsulting.com   More info: http://copilotconsulting.com/sig
+# vgscan
+   Locking type 1 initialization failed.
+#
 
---eheScQNz3K90DVRs
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+I suspect this may be because I'm using a read-only filesystem? 
+According to this (almost ancient?) message: 
+http://www.redhat.com/archives/linux-lvm/2003-January/msg00184.html, 
+vgscan requires a writable filesystem; Is this still the case?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
+This message describes using tmpfs to avoid this problem: 
+https://www.redhat.com/archives/linux-lvm/2003-January/msg00259.html; 
+are these instructions accurate?
 
-iD8DBQFBQuCt9PIYKZYVAq0RAk5UAJ94lYNCua13ZRBst6Hlj97JPrcFMQCcC4gI
-vl6Q+/3zF6xtY2VdwRDQ3rs=
-=sGSg
------END PGP SIGNATURE-----
+Thanks very much; any help much appreciated!
 
---eheScQNz3K90DVRs--
+Jack
