@@ -1,13 +1,8 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] snapshots of busy ext2 file system corrupt
-Message-Id: <20020226142731.X12832@lynx.adilger.int>
-References: <m28z9guz53.fsf@isnogud.escape.de>
-    <20020226095919.F12832@lynx.adilger.int> <2412370000.1014745130@tiny>
-    <m2bsecdouv.fsf@isnogud.escape.de> <2621690000.1014757084@tiny>
+From: Daniel Savard <dsavard@cids.ca>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1014762518.12325.76.camel@dirac.cids.ca>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2621690000.1014757084@tiny>; from mason@suse.com on Tue,
-    Feb 26, 2002 at 03:58:05PM -0500
+Subject: [linux-lvm] Re: lvm 1.0.3, kernel 2.4.17 and the libs...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,46 +13,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 26 15:27:01 2002
+Date: Tue Feb 26 16:28:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Feb 26, 2002  15:58 -0500, Chris Mason wrote:
-> On Tuesday, February 26, 2002 08:28:40 PM +0100
-> Urs Thuermann <urs@isnogud.escape.de> wrote:
-> > Chris Mason <mason@suse.com> writes:
-> >> For ext2, the best we could do would probably be a hack based on 
-> >> locking the super.  As far as I know, nobody is planning on this,
+I managed to get the vgcfgrestore execute using the executable in the
+lvm-build tree. I still don't know why the installed executable is
+missing a definition for the opt_ignore (this is a variable that seems
+to be used by pv_move() and introduced around mid February according to
+the source files).
 
-It probably wouldn't be hard to do, just create a function
-"ext2_write_super_lockfs()" which is a call to lock an ext2-specific
-superblock semaphore and "ext2_unlockfs()" which is a call to
-unlock the same semaphore.  You would then change all instances of
-"lock_super()" in the ext2 code to be ext2_lock_super() which will
-lock this semaphore in addition to the normal lock_super() call.
+The operation cannot be completed. I will explain my big mistake and I
+would like to know if something can be try to recover from this or if I
+must check this as an unrecoverable error.
 
-You can't just call lock_super() directly, because the write_super_lockfs()
-call itself calls this, and you would instantly deadlock.
+I was making some changes in order to move my partitions to LV in my VG.
+The idea was to recover as much space as possible from my drive, making
+all remaining partitions continguous and creating a new partition marked
+for LVM and add the new partition to the VG in order to migrate as much
+stuff as possible into the VG.
 
-> > Some performance tests I made with ext2, ext3, and reiserfs convinced
-> > me to stay with ext2.  ext3 was significantly slower than ext2 on some
-> > operations (and reiserfs even worse than that).
-> 
-> You trade speed for safety sometimes, but you can lower the performance
-> hit by mounting ext3 with -o data=writeback, and help both filesystems
-> by playing with bdflush values (increment the metadata timeout up from 5
-> seconds).
+So, I was to the point I needed to create a partition contiguous to the
+other one, move stuff on it, delete the old one and recover contiguous
+space for the future LVM partition to be added to the VG. I add just
+remove an obsolete partition, say /dev/sda6, my existing LVM partition
+was /dev/sda8, so the partition numbers were decreased by one for all
+partitions above 6 as usual, I then created a new partition which became
+/dev/sda8 and the LVM partition was the /dev/sda7. Everything would be
+just fine if I didn't forget to reboot the machine before proceeding
+with the following:
 
-Well, in many cases, data=ordered is actually faster than data=writeback
-because you get all of your journal I/O finished before you start writing
-to the FS.  In some cases (e.g. mail spool, NFS) it is faster to have
-data=journal for the same reason (because sync I/O is very fast when it
-is written to the journal).
+I did mkfs.ext2 on /dev/sda8 !!! However, this was still pointing to my
+LVM partition even if fdisk was not showing this.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+The big question: Is it still possible to recover some data from the LVM
+partition which was the only partition in my VG?
+
+If yes, HOW.
+
+-- 
+
+=======================================
+Daniel Savard
+
+Internet: dsavard@cids.ca
+=======================================
