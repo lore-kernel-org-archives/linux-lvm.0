@@ -1,10 +1,10 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3B1FED48.DB80BF00@tls.msk.ru>
-Date: Fri, 08 Jun 2001 01:08:24 +0400
-From: Michael Tokarev <mjt@tls.msk.ru>
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3B1FEFB6.93B4FBF7@wrkhors.com>
+Date: Thu, 07 Jun 2001 16:18:46 -0500
+From: Steven Lembark <lembark@wrkhors.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com>
+References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com> <20010607104301.A29848@stocks.pillory.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,21 +20,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Steven Lembark wrote:
+> cd / ; mv tmp tmp.old ; ln -s /var/tmp .
+> reboot
+> rm -rf /tmp.old
 > 
-[]
-> Use separate mount points for /var, /usr & /home.  This keeps
-> root down to mainly /etc, /dev, /bin, /sbin and /lib -- none of
-> which is all that enormous.  Short of writing the File From Hell
-> to /tmp a 128MB root file system works well enough for me.  I do
-> put /usr & /opt on LVM but only because all the tools needed to
-> revive the system are in /bin, /sbin & /lvm on the root.
+>     Now you don't have to worry about root filling up at all...
 
-Another thing to consider if you run 2.4 kernel -- mount tmpfs
-on /tmp (and give some reasonable size restrictions).   This way,
-/tmp works much faster, does not need to be cleaned on boot, and
-will not eat root's space.  You should have reasonable swap space
-it you plan to use it heavily.  Works very well here.
+until you have to boot in single user w/o /var mounted and
+the whole sysystem fries for lack of /tmp :-)
 
-Regards,
- Michael.
+-- 
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
