@@ -1,37 +1,33 @@
-From: Patrick Swartz <pswartz@digitalrom.com>
-Subject: [linux-lvm] Size limits and kernel versions
-Date: Thu, 26 Oct 2000 14:04:39 -0500
-Message-ID: <OLEAJMNOEMOMMNEIMMINEEEBCBAA.pswartz@digitalrom.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Thu, 26 Oct 2000 21:52:48 +0200
+From: Christoph Hellwig <hch@caldera.de>
+Subject: [linux-lvm] [RFC] LVM mainatainance release
+Message-ID: <20001026215248.A23413@caldera.de>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Heinz Mauelshagen <mauelshagen@sistina.com>
+Cc: linux-lvm@msede.com
 
-I am just getting start with LVM and have a few questions.  First let me
-describe my situation. I have 2 RH7.0 servers each with an ICP-Vortex RAID
-controller that is attached to a chassis with 11 50GB drives in a raid5 +
-hot spare.  This gives me about 450GB of usable data space.  I would like to
-combine these controllers in a single server and use LVM to create one large
-logical volume.
+Hi Heinz,
 
-Is this possible?
+there has been lots of discussion about a 0.8.1 release lately,
+because there are too much patches for 0.8 out.
 
-Will I loose the data that is on both? just one?
+If no one else is interested I would like to take the job and try
+to get a 0.8.1 out. This should consist of a fixed tools tarball
+and a patch for Linux 2.2. All this is floating around on this
+list and has been collected in different rpms, mostly due to the
+work of Andreas Dilger.
 
-If so, what kernel patch do I use for RedHat 7.0?
+I would test all this (escpecially for Linux 2.2/2.4 compatiblity)
+and you would only have to make it official.
 
-Or, should I install the latest kernel (2.4.0-test9)?
+Comments?
 
-If that is the case what do I need to do to get the user tools to compile?
+	Christoph
 
-I have spent most of the day reading the archives and how-to's, but have not
-been able to answer these questions.  If I have missed something I
-apologize.
-
-Thank you for your help,
-
-Patrick Swartz
-pswartz@digitalrom.com
+-- 
+Always remember that you are unique.  Just like everyone else.
