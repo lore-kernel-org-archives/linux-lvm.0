@@ -1,21 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6R4Zwa13218
-	for <linux-lvm@redhat.com>; Tue, 27 Jul 2004 00:35:58 -0400
-Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.200])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i6R4Zve1004693
-	for <linux-lvm@redhat.com>; Tue, 27 Jul 2004 00:35:57 -0400
-Received: by mproxy.gmail.com with SMTP id 80so36318rnk
-	for <linux-lvm@redhat.com>; Mon, 26 Jul 2004 21:35:54 -0700 (PDT)
-Message-ID: <f7cb724604072621351067b070@mail.gmail.com>
-Date: Tue, 27 Jul 2004 00:35:54 -0400
-From: Nathan Richardson <nathan.richardson@gmail.com>
-In-Reply-To: <f7cb724604072615406248f765@mail.gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-References: <f7cb724604072615406248f765@mail.gmail.com>
-Subject: [linux-lvm] Device mapper error ioctl cmd 9. What is this?
-Reply-To: richarnd@georgetown.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6R5JUa20359
+	for <linux-lvm@redhat.com>; Tue, 27 Jul 2004 01:19:30 -0400
+Received: from webmail.datafx.com.au (mail03.datafx.com.au [203.149.65.13]
+	(may be forged))
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6R5JLXn014906
+	for <linux-lvm@redhat.com>; Tue, 27 Jul 2004 01:19:22 -0400
+MIME-Version: 1.0
+Content-class: urn:content-classes:message
+Date: Tue, 27 Jul 2004 15:21:50 +1000
+Message-ID: <7B5E506659A5D344A505F0F27972D87549CE0F@datafx-sbs.DataFX.local>
+From: "Michael Bellears" <MBellears@staff.datafx.com.au>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Change PV size?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,39 +23,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Newbie-be gentle.
+We have a Hardware Raid 5, with one partition being LVM.
 
-I'm trying to set up a very simple LVM logical volume and get the
-following (verbose) output from lvcreate:
+c0d0p1         Boot            Primary      Linux ReiserFS
+98.71
+c0d0p5                         Logical      Linux ReiserFS
+10001.95
+c0d0p6                         Logical      Linux LVM
+429302.04
 
-    Creating logical volume video_lg
-    Archiving volume group "video_vg" metadata.
-    Creating volume group backup "/etc/lvm/backup/video_vg"
-    Found volume group "video_vg"
-    Loading video_vg-video_lg
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'video_vg-video_lg'.
-  Failed to activate new LV.
+dfx-nas-01:~# pvdisplay /dev/cciss/c0d0p6
+--- Physical volume ---
+PV Name               /dev/cciss/c0d0p6
+VG Name               nasvg
+PV Size               399.82 GB [838480482 secs] / NOT usable 32.19 MB
+[LVM: 177 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                6
+PE Size (KByte)       32768
+Total PE              12793
+Free PE               2649
+Allocated PE          10144
+PV UUID               AY5IUI-0wto-lQpS-AoKb-SpQZ-ku3p-51nvIY
 
-All LVM utils also seem to scan all my drives, even if I don't have
-them (for example, /dev/hda6 gets listed even though I only have 5
-partitions).
+We will be adding additional physical disks to the Raid array as need
+dictates - How would I go about making this new free space "available"
+for use in the PV?
 
-Anyway, this seems like a device-mapper issue rather than an LVM one,
-but I can't tell for sure.
+- Turn off server, add new HD's, boot into HP Top Tools and add the new
+drives to the array (Giving additional space).
+- cfdisk(or fdisk), delete the data partition(Making note of the
+starting cylinder), then recreate the data partition with the same
+starting cylinder, but incorporate the new free space.
+- pvresize? (I do not seem to have this utility?)
+- xfs_growfs
 
-I'm running Fedora core 1 with a standard 2.6.7 kernel. I have LVM2
-and version 1.00.19 of the DM userspace tools.
+Thanks in advance.
 
-I have no problems creating the volume group, and even after the
-lvcreate seems to fail, I have an entry for the LV/VG in /dev/mapper/.
-I never get the entry in /dev that I apparently need for the lvcreate
-to complete and to be able to actually mount the LV.
-
-Sorry if this is unclear - if more info is needed, let me know. Any
-help is appreciated. 
-
-Thanks,
-Nathan Richardson
+Regards,
+MB  
