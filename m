@@ -1,11 +1,8 @@
-Date: Thu, 6 Sep 2001 19:52:51 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Root on LV
-Message-ID: <20010906195251.A20643@colombina.comedia.it>
-References: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu> <3B978B57.8000208@st-peter.stw.uni-erlangen.de> <20010906093729.R32553@turbolinux.com> <3B97A5DB.8000203@st-peter.stw.uni-erlangen.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3B97A5DB.8000203@st-peter.stw.uni-erlangen.de>; from galia@st-peter.stw.uni-erlangen.de on Thu, Sep 06, 2001 at 06:35:39PM +0200
+Date: Thu, 6 Sep 2001 21:51:00 +0200 (MEST)
+From: Henk Birkholz <wahooka@Informatik.Uni-Bremen.DE>
+Message-ID: <Pine.LNX.4.30.0109062137150.11080-100000@x14.informatik.uni-bremen.de>
+MIME-Version: 1.0
+Subject: [linux-lvm] Feature : Merge two LV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,32 +14,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Sep 06, 2001 at 06:35:39PM +0200, svetljo wrote:
-> Andreas Dilger wrote:
-> >Yes, you are wrong.  LILO+patch can get a kernel from a logical volume.
-> does this mean that i can have my kernel on LV of any type ( can i have 
-> it on striped one)
-> i think i have read some time ago that lilo can boot from linear RAID or 
-> RAID1 but not from RAID-0
-NO!!!!
-lilo uses your pc bios to boot, it cannot do anything fancy,
-it just reads from a disk into memory then jumps there.
+Hello dear Sirs,
 
-in order to boot kernel lilo needs to store a mapfile on
-the /boot fs, the disk offset of this file is stored in
-lilo 1-st stage loader a 512 byte program, and you cannot read
-a striped lv from a 512 byte proggie yet.
+Iam using LVM for the first time right now and i am already very fond of
+it. Fast to understand, it creates a nice feeling to work with larger disk
+capacities. I was at a point i already filled the storage ready sized and
+partiotioned with data. Half full i recognized a conceptional problem with
+my structure of lv and the best way to solve it would have been to merge
+two lv. Instead i had to empty one of the lv (by moving data to other
+space) remove it and then extend another lv over the space of the old one.
+It would have been easier (without moving the date manually) if some kind
+of lvmerge would exist, which would merge the lv and thier fs
+automatically. Maybe there is ia wayto do it, i simply don't know.
+In that case i would be glad to know that way from you. (and be added to
+you FAQ). If there is no such way i only wanted to "ask for a missing
+feature" as mentioned in your FAQ :)
 
-L.
+Despite of that. Great tool. Thank you!
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Regards,
+
+Henk Birkholz / germany
