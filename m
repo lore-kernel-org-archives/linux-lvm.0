@@ -1,32 +1,37 @@
-Message-Id: <4.2.1.9.19991003080618.00a7b500@mail.msy.bellsouth.net>
-Date: Sun, 03 Oct 1999 08:06:22 -0500
-From: Daniel Whicker <heimdall@mail.org>
-Subject: Re: [linux-lvm] LVM, raw-io, devfs
-Mime-Version: 1.0
+Date: Sun, 3 Oct 1999 17:42:41 +0200 (CEST)
+From: Andreas Kostyrka <andreas@mtg.co.at>
+Subject: Re: [linux-lvm] LVM & Raid
+In-Reply-To: <199910031148.NAA24977@seger.axis.se>
+Message-ID: <Pine.LNX.4.10.9910031740360.5099-100000@gatekeeper.zwax.mtg.co.at>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Lars Segerlund <lars.segerlund@axis.com>
+Cc: linux-lvm@msede.com
 
-At 02:43 AM 10/3/99 , Harald Milz wrote:
->Drew Smith <drew@winterland.mainland.ab.ca> wrote:
->
-> >       IBM's ADSM(*) (well, TSM now, thanks to Tivoli) uses raw logical
-> > volumes on a fairly native level as storage pools, etc.  I'm curious,
-> > having never looked into raw IO under Linux, whether it's the same
-> > principles - and, that said, whether or not IBM will be porting the TSM
-> > server to Linux?
+On Sun, 3 Oct 1999, Lars Segerlund wrote:
 
-   This is a bit off topic, buy hey.  ADSM (TSM) actually gives you the 
-option of using either files or raw i/o.  I don't see that there would be 
-any problems with a Linux port of the server.  They could simply disable 
-the ability to use raw i/o for your disk storage pools, log volumes, and db 
-volumes.  What may pose a problem is the amount of disk space required for 
-a significant ADSM server.  If you're looking at a half terabyte or more of 
-disks, you may run into the limit of Linux major/minor numbers for SCSI 
-disks.  (Btw: I'm unclear on whether the devfs patch resolves this?)
-									-Daniel
-		------------------------------------------
-		Daniel Whicker  (heimdall@mail.org)
+> 
+>  Hello,
+> 
+>  I'm having trouble setting up lvm on a raid5 array ( /dev/md0 ),
+>  my trouble is that pvscan doesn't find it, ( how in the heck
+Well, see the list archives, I've posted a small patch so that it can be
+found.
+>  do I label a raid partitium so that pvscan vill recognize and vgcreate
+>  will think of it a partitiun ?? )
+> 
+>  I have been running lvm with raw disks, but now I seem a bit stuck.
+Well, I did get some hung boxes (completely hung, without oopses, etc.
+on a raid0145 / LVM 0.7 box with a RAID5 physical volume. So I reverted
+to using raid0145 with LVM :( )
+
+Andreas
+--
+Andreas Kostyrka                     | andreas@mtg.co.at
+phone: +43/1/7070750                 | phone: +43/676/4091256   
+MTG Handelsges.m.b.H.                | fax:   +43/1/7065299
+Raiffeisenstr. 16/9                  | 2320 Zwoelfaxing AUSTRIA        
