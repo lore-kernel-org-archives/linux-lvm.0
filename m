@@ -1,56 +1,57 @@
-Message-ID: <388E5A68.F92FFCEF@msede.com>
-Date: Wed, 26 Jan 2000 03:22:32 +0100
+Message-ID: <388E615E.308E3B68@msede.com>
+Date: Wed, 26 Jan 2000 03:52:14 +0100
 From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] 0.8i pvcreate doesn't recognise Mylex RAID
-References: <200001260001.BAA19078@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] LVM seems to break tar and cp "stay-local" option s
+References: <88256871.006FAB7E.00@sv-gw1.stsv.seagate.com> <20000126015911.A2968@gruyere.muc.suse.de>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: Jakma Paul <Paul.Jakma@compaq.com>, linux-lvm@msede.com
+To: Andi Kleen <ak@suse.de>
+Cc: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
 
-Heinz Mauelshagen wrote:
-> > However.. this begs the question:
-> >
-> > Why in the name of god do the LVM tools use such elaborate and convulated
-> > methods for verifying the supplied device name? LVM tools are effectively
-> > tied to a very specific /dev namespace, and changing it is non-trivial.
-> 
-> Yes, it's an obvious disadvantage to do this 8-{(((
-> 
-> The simple reason for it is performance enhancement.
+Andi Kleen wrote:
+> This could explain some NFS failures too. dev_t is part of the nfs
+> filehandle given out by knfsd, when two LVs with different file systems
+> have the same dev_t it may chose another file with the same inode number.
+> Normally it does not matter because knfsd maintains a fh cache that has the
+> right file, but when the cache overflows or the nfs server is rebooted
+> it could access the file with the same ino on the wrong LV afterwards :/
 
-But when/how often is this information needed? As far as i can see
-lvmdiskscan, vgscan, pvscan and lvscan are afftected.
+st_dev looks fine to me (st_rdev looks inconsistent with libc5 for
+non dev files).
 
-The only "frequent" operation is vgscan during boot. Frequent in this 
-context means that it is executed once per boot and performance
-should not be _that_ critical - even given a cluttered /dev.
+SuSE 6.3 (glibc 2.1.2), LVM 0.8i:
 
-> That's why a change to use /proc/partitions is
-> in the current developement code.
+$ df /usr /var
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/vg00/usr          2031360    783652   1142852  41% /usr
+/dev/vg00/var           253920     30048    210768  12% /var
 
-Does /proc/partitions have a mapping to real (existing) device files?
-Judging from the source it does not. This also does not handle cases 
-when loop devices are involved. So /proc/partitions could be used
-to create a list of major/minor for lvm_check_dev().
+$ ./stat /usr/bin/host /var/tmp/vi.recover
+dev=3a00 ino=33505 mode=100755 rdev=0 /usr/bin/host
+dev=3a02 ino=32809 mode=41777 rdev=0 /var/tmp/vi.recover
 
-I would propose to traverse the /dev directory _recursively_ and 
-filtering entries by major/minor (possibly obtained from
-/proc/partitions
-and/or /proc/devices). 
-This should be fast enough, remove the special meanings from device 
-names and take care of dynamically created device major/minors. 
-If /proc is not present, the hard coded list of majors could be used 
-as now.
+$ ls -l /dev/vg00
+...
+brw-r-----   1 root     root      58,   0 Dec 23 01:39 usr
+brw-r-----   1 root     root      58,   2 Dec 23 01:39 var
 
-Supporting devfs is another issue. AFAIR at least older versions did
-no longer require major/minors so association of devices must be done 
-by inspecting the path? If a stat() on devfs does return a major/minor
-it should not be necessary to special case it.
+
+SuSE 5.x (libc5), LVM 0.7:
+
+$ df /mnt3
+Filesystem         1024-blocks  Used Available Capacity Mounted on
+/dev/vg00/lvol1      4098376 3605796   281024     93%   /mnt3
+
+$ ./stat /mnt3/db/db01.vol 
+dev=3a00 ino=384770 mode=100600 rdev=84b /mnt3/db/db01.vol
+
+$ ls -l /dev/vg00
+...
+brw-r-----   1 root     root      58,   0 Nov 19 08:26 lvol1
 
 
 Michael
