@@ -1,10 +1,9 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Wed, 7 Feb 2001 21:00:28 -0200 (BRDT)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] Re: [lvm-commit] cvs commit: LVM/tools/lib
- pv_read_all_pv_of_vg.c
-In-Reply-To: <Pine.LNX.4.21.0102072046440.1193-100000@duckman.distro.conectiva>
-Message-ID: <Pine.LNX.4.21.0102072058440.1249-100000@duckman.distro.conectiva>
+Return-Path: <gregm@comstar.net>
+Date: Wed, 7 Feb 2001 19:47:56 -0500 (EST)
+From: Gregory McLean <gregm@comstar.net>
+Subject: Re: [linux-lvm] Help! Problems finding VG after reboot.
+In-Reply-To: <3A8042FC.FC4A5923@tampabay.rr.com>
+Message-ID: <Pine.LNX.4.30.0102071946280.22244-100000@tweetie.comstar.net>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,32 +20,16 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, 7 Feb 2001, Rik van Riel wrote:
-> On Wed, 7 Feb 2001, AJ Lewis wrote:
+On Tue, 6 Feb 2001, Richard Smith wrote:
 
-> > It looks like the following *should* fix things for you (this from Patrick):
-> 
-> # lvcreate -h
-> lvcreate -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
+> --snip--
+> I agree as well.
+>
+> The .9 versions are still marked as beta.
+> I have been banging it around abit, but I would
+> not trust important data to it yet, without a backup.
 
-Oooops, this was in a running system with lvm 0.8,
-in the not-runnable system with 0.9.x (latest from
-CVS) I get the following:
-
-# lvcreate -h
-lvcreate -- ERROR: "/etc/lvmtab" doesn't exist; please run vgscan
-
-(and, of course, vgscan doesn't work because the metadata
-is inconsistent -- catch22)
-
-regards,
-
-Rik
---
-Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
-
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
-
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com/
+I would have to agree also, vgscan no longer works here either, I've
+edited around in the startup files to _not_ call vgscan at all and things
+are working for now. Though if I need to add a drive to the system I'm
+screwed.
