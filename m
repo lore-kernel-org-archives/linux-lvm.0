@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Snapshot Problem JFS
-Message-ID: <20030620110908.A29306@sistina.com>
-References: <2E7F9C924F6A6546AF777BD072071EC6091243@mars.lbmc.net>
+Subject: Re: [linux-lvm] Lost Disk, System Recovery
+Message-ID: <20030620111419.B29306@sistina.com>
+References: <002501c335f4$089c9e00$6601a8c0@ajf>
 Mime-Version: 1.0
-In-Reply-To: <2E7F9C924F6A6546AF777BD072071EC6091243@mars.lbmc.net>; from dsornig@lbmc.com on Thu, Jun 19, 2003 at 09:07:30PM -0500
+In-Reply-To: <002501c335f4$089c9e00$6601a8c0@ajf>; from afabian@anjero.com on Wed, Jun 18, 2003 at 07:47:49PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +14,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 20 04:23:01 2003
+Date: Fri Jun 20 04:28:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jun 19, 2003 at 09:07:30PM -0500, David Sornig wrote:
-> I am running RedHat 9.0
-> Kernel 2.4.20-8
-> LVM Version 1.0.5+(22/07/2002)
->  
-> I have a 1.4T LogVol with 400G of space being used on a JFS file system.
->  
-> The LVM is working excellent.  However,  I cannot create a snapshot.  I run the following lvcreate command as per the man page and get the following error:
->  
-> lvcreate --error "Cannot allocate memory"  creating VGDA for "/dev/Volume00/snap01" in kernel
->  
+Andrew,
 
-David,
+see my mail (Subject: PV and disk recovery) dated May 27 on this list.
 
-memory allocated to the snapshot needs free physical RAM.
-
-With 400GB and default snapshot extent size we're talking about ~1GB
-(using virtual memory for snapshot exception tables so that the table doesn't
-need to be in RAM completely any longer is a work item for LVM2).
-
-Do you really expect that much change to your 1.4TB LV during the lifetime of
-the snapshot ?
-If you use it for a backup, you might get along with a couple of GB allocated
-to the snapshot reducing exception table size drastically.
-
-
-> Not sure why this is happening.  I have read the list and maybe I just don't understand the problem.  These servers have 4 Gigs of RAM.
->  
-> Regards,
->  
-> David
-
+On Wed, Jun 18, 2003 at 07:47:49PM -0400, Andrew Fabian wrote:
+> I'm having a problem that sounds similar to the one described in http://lists.sistina.com/pipermail/linux-lvm/2003-February/013420.html.  I lost one disk out of a four-disk VG.  I'm 99% sure the disk was empty at the time.  Now I can't get vgscan to recognize the VG.  pvscan displays:
+> 
+> pvscan -- inactive PV "/dev/hdg1" is associated to unknown VG "vg" (run vgscan)
+> pvscan -- inactive PV "/dev/hdh1" is associated to unknown VG "vg" (run vgscan)
+> pvscan -- inactive PV "/dev/hdc2" is associated to unknown VG "vg" (run vgscan)
+> pvscan -- total: 3 [69.92 GB] / in use: 3 [69.92 GB] / in no VG: 0 [0]
+> 
+> and vgscan displays:
+> 
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "vg" from physical volume(s)
+> 
+> I tried running vgcfgrestore -f /mnt/etc/lvmconf/vg.conf /dev/hdg1 (I'm running knoppix off of a CD at the moment, with my root partition mounted on /mnt) and got the response:
+> 
+> vgcfgrestore -- this is a backup of volume group "vg"
+> vgcfgrestore -- physical volume "/dev/hdg1" doesn't belong to volume group "vg"
+> 
+> Same result for each other disk.  Any ideas how to get the three remaining disks up and running?  Thanks.
+> 
+> Andrew Fabian
 -- 
 
 Regards,
