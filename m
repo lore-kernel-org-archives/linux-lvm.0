@@ -1,11 +1,9 @@
-Message-ID: <3FF21BE1.9070603@cs.wisc.edu>
-From: Mike Christie <michaelc@cs.wisc.edu>
-MIME-Version: 1.0
-References: <20031229130055.GA30647@cistron.nl> <20031230034239.27950054.akpm@osdl.org>
-In-Reply-To: <20031230034239.27950054.akpm@osdl.org>
-Content-Type: multipart/mixed;
- boundary="------------020807000803000903020304"
-Subject: [linux-lvm] Re: System hangs after echo value > /sys/block/dm-0/queue/nr_requests
+From: german.torresromero@telefonica-data.com
+Message-ID: <C1256E0D.0035ACDC.00@notes06.telefonica-data.com>
+Subject: [linux-lvm] Upgrade from LVM1 (kernel 2.4) to LVM2 (kernel 2.6)
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-transfer-encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,57 +14,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  1 11:29:05 2004
+Date: Thu Jan  1 11:29:07 2004
 List-Id: <linux-lvm.redhat.com>
-To: Andrew Morton <akpm@osdl.org>
-Cc: Miquel van Smoorenburg <miquels@cistron.nl>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, Nick Piggin <piggin@cyberone.com.au>, Jens Axboe <axboe@suse.de>
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
---------------020807000803000903020304
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Andrew Morton wrote:
+Hi,
 
-> Where queue_requests_store() does wake_up(&rl->wait[READ]);
-> 
-> It looks like nobody has called blk_init_queue() for this queue and the
-> waitqueue head is uninitialised.
-> 
+I have to migrate  from kernel 2.4 (LVM1) to kernel 2.6 (LVM2) . I woul=
+d like to
+know what are the steps  to migrate lvm1 to lvm2. Could you help me?
 
-DM, MD, rd and loop use blk_alloc_queue and blk_queue_make_request to 
-initialize their queue, because they only use the make_request_fn. The 
-attached patch prevents the queue from being registered if only 
-blk_alloc_queue was called.
+I need to know before migrating if I=B4ll have dual boot, I mean if I c=
+ould choose
+working in 2.4 or 2.6.
 
-Mike Christie
+Thanks in advance for any help.
 
---------------020807000803000903020304
-Content-Type: text/plain;
- name="queue_attr.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="queue_attr.patch"
+Regards,
 
---- linux-2.6.0-orig/drivers/block/ll_rw_blk.c	2003-12-28 23:09:16.000000000 -0800
-+++ linux-2.6.0/drivers/block/ll_rw_blk.c	2003-12-30 16:11:00.690504036 -0800
-@@ -2902,7 +2902,7 @@ int blk_register_queue(struct gendisk *d
- 
- 	request_queue_t *q = disk->queue;
- 
--	if (!q)
-+	if (!q || !q->request_fn)
- 		return -ENXIO;
- 
- 	q->kobj.parent = kobject_get(&disk->kobj);
-@@ -2929,7 +2929,7 @@ void blk_unregister_queue(struct gendisk
- {
- 	request_queue_t *q = disk->queue;
- 
--	if (q) {
-+	if (q && q->request_fn) {
- 		elv_unregister_queue(q);
- 
- 		kobject_unregister(&q->kobj);
+Germ=E1n.
 
---------------020807000803000903020304--
+
+=
