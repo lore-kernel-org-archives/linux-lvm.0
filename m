@@ -1,10 +1,6 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Changing the PE on an existing VG
-Message-Id: <20020204115331.C29233@sistina.com>
-References: <001201c1ac41$f5767f40$6402000a@slartibartfast>
-MIME-Version: 1.0
-In-Reply-To: <001201c1ac41$f5767f40$6402000a@slartibartfast>;
-    from ha@dvdtrade.net on Sun, Feb 03, 2002 at 12:33:03AM +0100
+From: Urs Thuermann <urs@isnogud.escape.de>
+Message-Id: <m2wuxtie4o.fsf@isnogud.escape.de>
+Subject: [linux-lvm] Q: allocation of PEs to LVs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,61 +11,118 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb  4 04:59:02 2002
+Date: Mon Feb  4 07:15:02 2002
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Feb 03, 2002 at 12:33:03AM +0100, Henric Andersson wrote:
-> Just wondering if and when LVM will support changing the PE of an existing
-> VG? I just realized that I had painted myself into a corner by not setting
-> my PE bigger than 4MB :-(  (And shuffling 212 gig of data between drives &
-> tapes is no happy thought)
+How are PEs allocated when LVs are created using lvcreate?  I created
+a LV unsing lvcreate from LVM-1.0.1 on an empty VG and was surprised
+that PEs are allocated starting with PE 1 and not PE 0 as I expected:
 
-This limit will fall with LVM2 and its new metadata format (so-called format2).
-LVM1 (format1) has the restriction of ~64k logical extenents maximum per
-logical volume which can't be worked around without a metadata format change.
+    isnogud:root# pvcreate /dev/sdd1
+    pvcreate -- physical volume "/dev/sdd1" successfully created
+    
+    isnogud:root# vgcreate vg1 /dev/sdd1
+    vgcreate -- INFO: using default physical extent size 4.00 MB
+    vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+    vgcreate -- doing automatic backup of volume group "vg1"
+    vgcreate -- volume group "vg1" successfully created and activated
+    
+    isnogud:root# lvcreate -n test vg1 -L32M
+    lvcreate -- doing automatic backup of "vg1"
+    lvcreate -- logical volume "/dev/vg1/test" successfully created
+    
+    isnogud:root# lvdisplay -v /dev/vg1/test
+    --- Logical volume ---
+    LV Name                /dev/vg1/test
+    VG Name                vg1
+    LV Write Access        read/write
+    LV Status              available
+    LV #                   1
+    # open                 0
+    LV Size                32.00 MB
+    Current LE             8
+    Allocated LE           8
+    Allocation             next free
+    Read ahead sectors     10000
+    Block device           58:11
+    
+       --- Distribution of logical volume on 1 physical volume  ---
+       PV Name                  PE on PV     reads      writes
+       /dev/sdd1                8            0          4        
+    
+       --- logical volume i/o statistic ---
+       0 reads  4 writes
+    
+       --- Logical extents ---
+       LE    PV                        PE     reads      writes
+       00000 /dev/sdd1                 00001  0          4        
+       00001 /dev/sdd1                 00002  0          0        
+       00002 /dev/sdd1                 00003  0          0        
+       00003 /dev/sdd1                 00004  0          0        
+       00004 /dev/sdd1                 00005  0          0        
+       00005 /dev/sdd1                 00006  0          0        
+       00006 /dev/sdd1                 00007  0          0        
+       00007 /dev/sdd1                 00008  0          0        
+    
+    
+    isnogud:root# 
 
-We have released LVM2 Beta1 last week on Wednesday (which supports format1 on
-disk format). That means that you are able to switch bac and force between LVM1
-and LVM2 because they just use the same on-disk format!
 
-Format2 is being implemented right now and will be in one of the next Betas.
+The first LV in my other VG starts at PE 0 as expected.  I created
+that VG and LVs using vgcreate and lvcreate from LVM-0.9.1_beta7:
 
-You will be able to migrate from LVM1 format to LVM2 format2.
+    isnogud:root# lvdisplay -v /dev/vg0/root
+    --- Logical volume ---
+    LV Name                /dev/vg0/root
+    VG Name                vg0
+    LV Write Access        read/write
+    LV Status              available
+    LV #                   1
+    # open                 1
+    LV Size                128.00 MB
+    Current LE             32
+    Allocated LE           32
+    Stripes                2
+    Stripe size (KByte)    4
+    Allocation             next free
+    Read ahead sectors     120
+    Block device           58:0
+    
+       --- Distribution of logical volume on 2 physical volumes  ---
+       PV Name                  PE on PV     reads      writes
+       /dev/sda2                16           41814      100298   
+       /dev/sdb2                16           42184      161941   
+    
+       --- logical volume i/o statistic ---
+       83998 reads  262239 writes
+    
+       --- Logical extents ---
+       LE    PV                        PE     reads      writes
+       00000 /dev/sda2                 00000  2814       663      
+       00001 /dev/sda2                 00001  978        24114    
+       ...
+       00014 /dev/sda2                 00014  1955       223      
+       00015 /dev/sda2                 00015  4050       277      
+       00016 /dev/sdb2                 00000  2835       634      
+       00017 /dev/sdb2                 00001  946        72276    
+       ...
+       00030 /dev/sdb2                 00014  1984       205      
+       00031 /dev/sdb2                 00015  4083       311      
+    
+    
+    isnogud:root# 
 
-As long as you stay within the limits of the LVM1 format you will be
-even able to migrate form format2 back to format1.
 
-Please be aware that LVM2 BetaX is not meant to be production ready!
-We hope to get there in a couple of weeks.
-If you can wait that long... :-)
+Can someone explain this, please?  Is it intentional?
 
-> 
-> /Henric
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
--- 
+Also, the "Read ahead sectors" seem to have changed from 120 to 10000,
+which seems quite a lot to me.  10000 sectors is roughly 5 MB.  Does
+every read really cause the next 5 MB to be read from the disk(s)?
 
-Regards,
-Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+urs
