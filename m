@@ -1,22 +1,14 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i9FLnjuA027970
-	for <linux-lvm@redhat.com>; Fri, 15 Oct 2004 22:49:45 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1CIZxJ-0001YH-6B
-	for linux-lvm@redhat.com; Fri, 15 Oct 2004 22:49:45 +0100
-Date: Fri, 15 Oct 2004 22:49:45 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Re: [OxLUG] LVM2 problems
-Message-ID: <20041015214945.GE24242@agk.surrey.redhat.com>
-References: <20041015192848.O30562@sphinx.mythic-beasts.com>
-	<20041015185452.GG565@scooby.ox.compsoc.net>
-	<20041015201822.B29778@sphinx.mythic-beasts.com>
-	<20041015215049.A27758@sphinx.mythic-beasts.com>
-	<20041015210917.GD24242@agk.surrey.redhat.com>
-	<20041015221807.C27758@sphinx.mythic-beasts.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9FMwQr13484
+	for <linux-lvm@redhat.com>; Fri, 15 Oct 2004 18:58:26 -0400
+Received: from hotmail.com (bay17-f9.bay17.hotmail.com [64.4.43.59])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i9FMwEPI019891
+	for <linux-lvm@redhat.com>; Fri, 15 Oct 2004 18:58:19 -0400
+From: "Kai Leibrandt" <k_leibrandt@hotmail.com>
+Subject: RE: [linux-lvm] Re: [OxLUG] LVM2 problems
+Date: Sat, 16 Oct 2004 00:57:22 +0200
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20041015221807.C27758@sphinx.mythic-beasts.com>
+Message-ID: <BAY17-F9oHzGkzMcvsq00073cf9@hotmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,29 +19,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Fri, Oct 15, 2004 at 10:18:07PM +0100, Paul Warren wrote:
-> Is there any way around this?  Would growing the partition help?
- 
-Only some careful calculations and growing it backwards
-so there's the right amount of space at the start.
+> > > Our primary problem is that creating snapshots occassionally hangs the
+> > > machine.
+> >
+> > Known issue now - unfortunately the fix involves a lot of coding and
+> > other things have a higher priority at the moment.
+>
+>OK - I saw a previous post about this, but from that I wasn't sure that
+>it (a) killed the machine and (b) affected ext3 partitions.
 
-Otherwise you'd have to relocate the first physical extents of
-data elsewhere, so you have enough unused space at the beginning 
-of the disk, then edit the metadata carefully to remove
-the now-unused extents and shift the start of the data to where
-LVM1 expects it to be.
+It _is_ a problem with LVM2, and for me it's totally reproducible - with 
+ext3, ext2 and xfs, but only on / LV's. I am slightly saddened by the fact 
+that this has low pri at the moment though :-(
+I am more than willing to shoot my testbed down a few times for anyone who's 
+willing to help.
 
-The tests in lib/format1/format1.c:_pv_setup() 
-  /* Retain existing extent locations exactly */
-check for equality because that's all there's been time to test
-(and should cover most cases of lvm1->lvm2->lvm1).
-Checking instead for no overlap should be sufficient but hasn't been
-tested.
+Kai.
 
-Alasdair
--- 
-agk@redhat.com
+_________________________________________________________________
+Express yourself instantly with MSN Messenger! Download today it's FREE! 
+http://messenger.msn.com/
