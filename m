@@ -1,11 +1,11 @@
-From: Ed Tomlinson <tomlins@CAM.ORG>
-Date: Tue, 9 Oct 2001 07:42:58 -0400
-References: <20011003230330.508E91104F@oscar.casa.dyndns.org> <20011009015759.BF5E472AE3@oscar.casa.dyndns.org> <175160000.1002594564@tiny>
-In-Reply-To: <175160000.1002594564@tiny>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20011009114258.EE8BA11D3@oscar.casa.dyndns.org>
-Subject: [linux-lvm] Re: [OOPS] full snapshot (with test vfs locking patch for reiserfs snapshots in 11-pre)
+Date: Tue, 9 Oct 2001 15:49:00 +0200
+From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
+Subject: Re: [linux-lvm] Too many problems
+Message-ID: <20011009154900.A21825@balu.kawo2.rwth-aachen.de>
+References: <002901c150b3$9d330860$836788cf@industry>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <002901c150b3$9d330860$836788cf@industry>; from jlixfeld@andromedas.com on Tue, Oct 09, 2001 at 07:14:50AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,38 +18,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Chris Mason <mason@suse.com>
+Content-Transfer-Encoding: 7bit
+To: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
 Cc: linux-lvm@sistina.com
 
-On October 8, 2001 10:29 pm, Chris Mason wrote:
+On Tue, Oct 09, 2001 at 07:14:50AM -0400, Jason A. Lixfeld wrote:
+> I just need to know what a stable release of LVM is for RedHat and what
+> compiler to use.  The stock RedHat 7.1 compiler is buggy, from what I
+> understand here.  I've had so many problems in the last week and I'm
+> getting really frustrated with all of this :(  I'm using kernel 2.4.10
+> but am more than willing go to down a couple revs for something stable.
 
-> We've got a write lock on the lv semaphore, so nobody else should be
-> calling lvm_drop_snapshot on us.  I hate to ask, but are you sure you did
-> an rmmod before the modules_install?
+Redhat 7.1, the Redhat version of gcc, stock kernel 2.4.10 +
+lvm-1.0.1rc4 work fine for me, _AFTER_ switching off any optimization
+in the configure-script of LVM (change -O2 to -O0).
 
-my root is lvm so the only way to reload the module is to boot.  In this case
-I rebuilt from scratch (clean, dep, bzImage, modules, modules_install, stuff, 
-lvmcreate_initrd <kernel>, lilo, reboot).  After I got the oops I rebooted
-and rechecked the source...
-
-> Regardless, we can fix the oops in _disable_snapshot, I just don't see how
-> the locking allows it to happen.  This incremental fix should do it:
-
-I will try this tonight.  Was off yesterday.
-
-Thanks Chris
-Ed
-
-> --- 0.21/drivers/md/lvm-snap.c Sat, 06 Oct 2001 00:07:22 -0400
-> +++ 0.21(w)/drivers/md/lvm-snap.c Mon, 08 Oct 2001 22:39:54 -0400
-> @@ -687,6 +694,10 @@
->
->  static void _disable_snapshot(vg_t *vg, lv_t *lv) {
->  	const char *err;
-> +	if (!lv->lv_block_exception) {
-> +		printk(KERN_ERR "%s -- snapshot already disabled\n", lvm_name);
-> +		return ;
-> +	}
->  	lv->lv_block_exception[0].rsector_org = LVM_SNAPSHOT_DROPPED_SECTOR;
->  	if(_write_COW_table_block(vg, lv, 0, &err) < 0) {
->  		printk(KERN_ERR "%s -- couldn't disable snapshot: %s\n",
+Regards, Markus
