@@ -1,10 +1,10 @@
-From: Austin Gonyou <austin@coremetrics.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="=-Qb3U2pQ+913g5uq6JEDs"
-Message-Id: <1010433555.30682.4.camel@UberGeek>
+From: Keith Owens <kaos@sgi.com>
+In-Reply-To: Your message of
+    "Tue, 08 Jan 2002 02:50:27 +1000."
+    <200201071648.IAA08511@sgi.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] [Fwd: Re: GRUB + LVM + XFS?]
+Message-Id: <687.1010435796@ocs3.intra.ocs.com.au>
+Subject: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to coexist happily
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,117 +15,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan  7 13:57:02 2002
+Date: Mon Jan  7 14:34:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Adrian Head <ahead@bigpond.net.au>
+Cc: Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
 
---=-Qb3U2pQ+913g5uq6JEDs
-Content-Type: multipart/mixed; boundary="=-jNo2Q3ZYQjuSlytry9Zy"
-
-
---=-jNo2Q3ZYQjuSlytry9Zy
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Here is a forwarded message about How you would do the GRUB + LVM. Hope
-this helps.=20
---=20
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-698-7250
-email: austin@coremetrics.com
-
-"It is the part of a good shepherd to shear his flock, not to skin it."
-Latin Proverb
-
---=-jNo2Q3ZYQjuSlytry9Zy
-Content-Disposition: inline
-Content-Description: Forwarded message - Re: GRUB + LVM + XFS?
-Content-Type: message/rfc822
-
-Received: from oss.sgi.com ([216.32.174.27]) by ausmail.coremetrics.com
-	with SMTP (Microsoft Exchange Internet Mail Service Version 5.5.2653.13) id
-	CDZCT4C0; Mon, 7 Jan 2002 13:54:21 -0600
-Received: from localhost (mail@localhost) by oss.sgi.com (8.11.2/8.11.3)
-	with SMTP id g07KsKO24417; Mon, 7 Jan 2002 12:54:20 -0800
-Received: by oss.sgi.com (bulk_mailer v1.13); Mon, 7 Jan 2002 12:54:11 -0800
-Received: (from majordomo@localhost) by oss.sgi.com (8.11.2/8.11.3) id
-	g07KsAx24362 for linux-xfs-outgoing; Mon, 7 Jan 2002 12:54:10 -0800
-Received: from shakti.rupa.com (foobar@cx838204-a.alsv1.occa.home.com
-	[24.16.83.66]) by oss.sgi.com (8.11.2/8.11.3) with SMTP id g07Ks4g24340 for
-	<linux-xfs@oss.sgi.com>; Mon, 7 Jan 2002 12:54:05 -0800
-Received: from shakti.rupa.com (localhost [127.0.0.1]) by
-	localhost.rupa.com (Postfix) with ESMTP id 4D9FC48FC8; Mon,  7 Jan 2002
-	11:54:02 -0800 (PST)
-Received: by shakti.rupa.com (Postfix, from userid 9) id D8A3E48D59; Mon, 
-	7 Jan 2002 11:54:01 -0800 (PST)
-Received: from 192.168.1.20 by 192.168.1.20 with nntp;  7 Jan 2002 11:54:01
-	PST
-Message-ID: <m3666ej5t2.fsf@shakti.rupa.com>
-From: Rupa Schomaker <rupa-list@rupa.com>
-To: linux-xfs@oss.sgi.com
-Subject: Re: GRUB + LVM + XFS?
-Date: Mon, 7 Jan 2002 13:54:01 -0600 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-You need a ext2 /boot (or if you've applied the xfs patches to grub
-you can use that).  /boot cannot be in the LVM.
-
-You'll need an initrd that initializes the LVM.  Your lvm package
-should come with the command "lvmcreate_initrd" -- this will create a
-minimal initrd that *only* starts lvm.  If you need other things in
-your initrd then you'll have to "hack" the generated one.  I'd
-recommend compiling in all the other components you need in the kernel
-rather than using modules.  (for example, compile in your scsi
-drivers)
-
-I'm having toubles with the current CVS version of the XFS kernel.  I
-haven't had time to look at it completely, but... it could be:
-
-1) mismatch between userspace and kernel (what LVM is in the XFS
-   kernel?  I'm using the debian lvm10 userspace).
-
-2) bad config
-
-3) ???
-
-A quick "bt" at boot in kdb shows that devfs is in the call path.  No,
-I haven't had time to write everything down. :(  Man, I wish there was
-an easy to dump the kdb info or an OOPs to disk...
-
-Austin Gonyou <austin@coremetrics.com> writes:
-
-> Is it possible to boot a LVM XFS root with GRUB?
-> --=20
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-698-7250
-> email: austin@coremetrics.com
+On Tue, 8 Jan 2002 02:50:27 +1000, 
+Adrian Head <ahead@bigpond.net.au> wrote:
+>On Tue, 8 Jan 2002 00:41, Keith Owens wrote:
+>> On Tue, 8 Jan 2002 00:08:11 +1000,
+>> Adrian Head <ahead@bigpond.net.au> wrote:
+>> >
+>> >Entering kdb (current=0xd600e000, pid 940) Oops: Oops
+>> >due to oops @ 0xb800
+>> >eax = 0xffffffff ebx = 0xd600e000 ecx = 0x0000b800 edx = 0xc018fd25
+>> >esi = 0x00000008 edi = 0xd600e000 esp = 0xd600ff0c eip = 0x0000b800
+>> >ebp = 0xd600ff30 xss = 0x00000018 xcs = 0x00000010 eflags = 0x00010086
+>> >xds = 0x00000018 xes = 0x00000018 origeax = 0xffffffff &regs = 0xd600fed8
+>> >kdb> bt
+>> >    EBP       EIP         Function(args)
+>> >0xd600ff30 0x0000b800 <unknown>+0xb800 (0x1)
+>> >                               kernel <unknown> 0x0 0x0 0x0
+>> >           0xc011ce83 dequeue_signal+0x43 (0xd600e560, 0xd600ff30,
+>> >0xd600e560, 0xd600ffc4, 0xc01392ff)
+>> >                               kernel .text 0xc0100000 0xc011ce40
+>> > 0xc011cef0 0xc01069b9 do_signal+0x59 (0x11, 0xbfffec40, 0xbfffebb0, 0x8,
+>> > 0x11) kernel .text 0xc0100000 0xc0106960 0xc0106c00 0xc0106d54
+>> > signal_return+0x14
+>> >                               kernel .text 0xc0100000 0xc0106d40
+>> > 0xc0106d58
+>>
+>> kdb is correctly reporting the current eip, but the kernel has taken a
+>> swan dive into nowhere.  It looks like the chunk of code below.  To
+>> confirm, run
+>>
+>>   objdump --start-addr=0xc011ce40 --stop-address=0xc011ce90 vmlinux
 >
-> "It is the part of a good shepherd to shear his flock, not to skin
-it."
-> Latin Proverb
+>How did you get 0xc011ce40 and 0xc011ce90?  Do they come from above?  How are 
+>they derived? Just interested.
 
---=20
--rupa
+The backtrace shows a branch out of the kernel, the last good address
+is the starting point to find out why we branched to an invalid
+address.  Back trace is listed as 0xc011ce83 dequeue_signal+0x43,
+subtract 0x43 so dequeue_signal starts at 0xc011ce40.  Stop address is
+the backtrace entry plus a bit to bracket the probable call
+instruction.
 
---=-jNo2Q3ZYQjuSlytry9Zy--
+>vmlinux - where does that come from?  I assume it is not the compressed 
+>kernel found in /boot.
 
---=-Qb3U2pQ+913g5uq6JEDs
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQA8Of4T94g6ZVmFMoIRAlP1AJ9+ZMCG+etL85gY/eGm3mhmaackBwCfUA2P
-0C8HWr3nAboE5pIvgNCFubA=
-=XakF
------END PGP SIGNATURE-----
-
---=-Qb3U2pQ+913g5uq6JEDs--
+The kernel build creates vmlinux under /usr/src/linux or wherever you
+build your kernel.  All architectures build vmlinux then modify it as
+required for booting.  Binutils tools like objdump do not understand
+bzImage, they need the original ELF kernel, i.e. vmlinux.
