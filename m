@@ -1,9 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM 1.0.4 pvmove is broken
-Message-ID: <20020524131106.A16236@sistina.com>
-References: <F888C30C3021D411B9DA00B0D0209BE8038F94F7@cvo-exchange.cvo.roguewave.com>
+Subject: Re: [linux-lvm] pecopy or lecopy
+Message-ID: <20020524164815.A16749@sistina.com>
+References: <20020417013928.I27907@progsoc.uts.edu.au>
 Mime-Version: 1.0
-In-Reply-To: <F888C30C3021D411B9DA00B0D0209BE8038F94F7@cvo-exchange.cvo.roguewave.com>; from petersp@roguewave.com on Wed, May 22, 2002 at 04:22:04PM -0700
+Content-Type: multipart/mixed; boundary="dDRMvlgZJXvWKvBx"
+In-Reply-To: <20020417013928.I27907@progsoc.uts.edu.au>; from wildfire@progsoc.uts.edu.au on Wed, Apr 17, 2002 at 01:39:28AM +1000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,133 +15,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 24 06:15:02 2002
+Date: Fri May 24 11:26:15 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Poul,
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
 
-please try the  patch below which should fix the locking problem I
-introduced in 1.0.4.
 
-This is against a clean 2.4.18 kernel patched with LVM 1.0.4.
+Hi Anand.
+
+On Wed, Apr 17, 2002 at 01:39:28AM +1000, Anand Kumria wrote:
+> Hi there,
+> 
+> Quite some time ago, Heinz assisted me with a partial recovery of
+> data from one of my LVM volumes. In the meantime I've managed to
+> reconstruct a lot of it but have discovered there are one or two
+> items I need to get back from the original.
+> 
+> I'm using LVM tool 1.1rc1 reports:
+> caliban:~# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "caliban"
+> vgscan -- only found 11364 of 11520 LEs for LV /dev/caliban/h2
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+> 
+> If I try and mount the h2 filesystem my kernel opps as the first 150
+> PE<->LE mappings don't exist. Has anyone written a tool that copies
+> either PEs or LEs from disk without mounting the affected partition?
+
+Not that I am aware if.
+
+A tool to extract accessable LEs of a LV basically needs to:
+
+- run "lvdisplay -Dv /dev/caliban/h2" in order to retrieve all
+  physical volumes and extents of the LV
+
+- pvdisplay -v on all of the PVs to get the mapping and run
+  dd commands for every extend which name the output files per le
+
+Attached script, which *needs* 1.1-rc tools to run, tries this:
+
+Tell me, if it is of any use for you.
 
 Regards,
 Heinz    -- The LVM Guy --
 
---- linux-2.4.18-LVM-1.0.4/drivers/md/lvm.c     Fri May 24 15:03:22 2002
-+++ linux-2.4.18-LVM-1.0.4.patched/drivers/md/lvm.c     Fri May 24 14:57:11 2002
-@@ -1488,26 +1488,22 @@
-                        continue;
-
-                if (strcmp(lv_ptr->lv_name, le_remap_req.lv_name) == 0) {
--                       down_read(&lv_ptr->lv_lock);
-+                       down_write(&lv_ptr->lv_lock);
-                        for (le = 0; le < lv_ptr->lv_allocated_le; le++) {
-                                if (lv_ptr->lv_current_pe[le].dev ==
-                                    le_remap_req.old_dev &&
-                                    lv_ptr->lv_current_pe[le].pe ==
-                                    le_remap_req.old_pe) {
--                                       up_read(&lv_ptr->lv_lock);
--                                       down_write(&lv_ptr->lv_lock);
-                                        lv_ptr->lv_current_pe[le].dev =
-                                            le_remap_req.new_dev;
-                                        lv_ptr->lv_current_pe[le].pe =
-                                            le_remap_req.new_pe;
--                                       up_write(&lv_ptr->lv_lock);
--                                       down_read(&lv_ptr->lv_lock);
--
-                                        __update_hardsectsize(lv_ptr);
-+                                       up_write(&lv_ptr->lv_lock);
-                                        return 0;
-                                }
-                        }
--                       up_read(&lv_ptr->lv_lock);
-+                       up_write(&lv_ptr->lv_lock);
-                        return -EINVAL;
-                }
-        }
-
-On Wed, May 22, 2002 at 04:22:04PM -0700, Poul Petersen wrote:
-> 	I've done a lot of testing with pvmove and these are the results:
 > 
-> 	1) The pvmove tool (versions 1.0.3, 1.0.4, 1.1-rc2) all fail on an
-> active volume group when running a LVM-1.0.4 patched 2.4.18 kernel
-> 
-> 	2) If the volume group is inactive, pvmove works fine in all cases.
-> 
-> 	3) The LVM-1.0.3 and 1.1-rc2 patches against the 2.4.18 kernel also
-> work fine with all versions of pvmove.
-> 
-> 	4) The RedHat 7.2 call to vgscan in rc.sysinit happens before
-> mounting other file-systems, for example "/usr". This causes the 1.1-rc2
-> vgscan to fail since libreadline is in /usr/lib. 
-> 
-> 	By using the -vv option to pvmove, I can see that pvmove is hanging
-> at lv_le_remap from tools/lib (see attached pvmove output) - this combined
-> with the strace output I posted before suggests that the ioctl call in
-> tools/lib/lv_le_remap.c is where it is dying. 
-> 
-> 	I've tested this on three different machines (RedHat 7.1, 7.2) with
-> the same results, so I don't think I am doing anything wrong. There seems to
-> be something amiss in the Makefile generated patch for lvm-1.0.4 with kernel
-> 2.4.18. I welcome any suggestions on how I can persue tracking this problem
-> down. I would like to use 1.0.4 as it is the latest stable release and I
-> intend to install it on a production machine, so I would like to avoid
-> 1.1-rc2.
+> That would allow me to salvage more of the data. I'm at the point where
+> writing the code myself is an option if only I got some pointers. I'm
+> unclear on where the mapping from LE<->PE<->disk blocks is stored. Plus
+> I'm finding it confusing trying to see which version of the on-disk metadata
+> LVM is using.
 > 
 > Thanks,
+> Anand
 > 
-> -poul
-> 
-> --- pvmove output 
-> 
-> [root@nfs1node1 root]# pvmove -vv /dev/sdb1
-> pvmove -- checking name of source physical volume "/dev/sdb1"
-> pvmove -- locking logical volume manager
-> pvmove -- reading data of source physical volume from "/dev/sdb1"
-> pvmove -- checking volume group existence
-> pvmove -- reading data of volume group "vg0" from lvmtab
-> pvmove -- checking volume group consistency of "vg0"
-> pvmove -- searching for source physical volume "/dev/sdb1" in volume group
-> "vg0"
-> pvmove -- building list of possible destination physical volumes
-> pvmove -- checking volume group activity
-> pvmove -- moving physical extents in active volume group "vg0"
-> pvmove -- WARNING: if you lose power during the move you may need to restore
-> your LVM metadata from backup!
-> pvmove -- do you want to continue? [y/n] y
-> pvmove -- starting to move extents away from physical volume "/dev/sdb1"
-> pvmove -- checking for enough free physical extents in "vg0" lv:
-> /dev/vg0/lv0[1]  old_dev: 08:17  new_dev: 08:18  old_pe_sector: 8576
-> new_pe_sector: 8576
-> pvmove -- opening output physical volume "/dev/sdb2"
-> pvmove -- llseeking input physical volume "/dev/sdb1"
-> pvmove -- llseeking output physical volume "/dev/sdb2"
-> pvmove -- /dev/sdb1 [PE 0 [lv0 [LE 0]] -> /dev/sdb2 [PE 0] [1/25]
-> pvmove -- locking physical extent 0 of "/dev/sdb1" in kernel
-> pvmove -- about to read input physical volume "/dev/sdb1" and to write
-> output physical volume "/dev/sdb2"
-> pvmove -- remapping physical extent in VGDA of kernel
-> pvmove -- unlocking physical extent
-> pvmove -- changing source "/dev/sdb1" in VGDA of kernel
-> pvmove -- changing destination "/dev/sdb2" in VGDA of kernel
-> pvmove -- writing physical extent part of VGDA on source "/dev/sdb1"
-> pvmove -- writing physical extent part of VGDA on destination "/dev/sdb2"
-> lv: /dev/vg0/lv0[1]  old_dev: 08:17  new_dev: 08:18  old_pe_sector: 16768
-> new_pe_sector: 16768
-> pvmove -- opening output physical volume "/dev/sdb2"
-> pvmove -- llseeking input physical volume "/dev/sdb1"
-> pvmove -- llseeking output physical volume "/dev/sdb2"
-> pvmove -- /dev/sdb1 [PE 1 [lv0 [LE 1]] -> /dev/sdb2 [PE 1] [2/25]
-> pvmove -- locking physical extent 1 of "/dev/sdb1" in kernel
-> pvmove -- about to read input physical volume "/dev/sdb1" and to write
-> output physical volume "/dev/sdb2"
-> pvmove -- remapping physical extent in VGDA of kernel
-> 
-> *This is where it dies*
+> -- 
+>  `` We are shaped by our thoughts, we become what we think.
+>  When the mind is pure, joy follows like a shadow that never
+>  leaves. '' -- Buddha, The Dhammapada
 > 
 > _______________________________________________
 > linux-lvm mailing list
@@ -160,3 +95,53 @@ Senior Consultant/Developer                       Am Sonnenhang 11
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/x-sh
+Content-Disposition: attachment; filename="save_les.sh"
+
+#!/bin/sh
+#
+# (C)opyleft  Heinz Mauelshagen 2002, Sistina Software Inc.
+#
+# Quick tool hack to retrieve as many logical extents of a logical volume
+# as possible from a volume group without quorum.
+#
+# Run "save_les LogicalVolumePath"
+#
+# Stores every logical extent found in a sperate file named after the
+# logical extent number in the actual directory.
+#
+# Needs >= LVM 1.1-rc* tools to run successfully.
+#
+
+if [ $# -ne 1 ]
+then
+	echo -e "Please provide a logical volume path\n" >&2
+	exit 1
+fi
+
+LV=$1
+
+PVS=$(lvdisplay -Dv $LV | sed -n 's/^ \{1,\}\(\/[^ ]\{1,\}\).*$/\1/p')
+for pv in $PVS
+do
+	BS=$(pvdisplay $pv|sed -n 's/^pe size[^0-9]\{1,\}\([0-9]\{1,\}\) *$/\1/ip')
+	let BS=BS*2
+	break
+done
+
+for pv in $PVS
+do
+	pvdisplay -v $pv | sed -n "s?^ \{1,\}[0-9]\{5\} \{1,\}$LV \{1,\}\([0-9]\{5\}\) \{1,\}\([0-9]\{5\}\)?dd if=$pv of=\1 skip=\2 ibs=512 count=$BS?p" | while read cmd
+	do
+		echo $cmd | grep '\?'
+		if [ $? -ne 0 ]
+		then
+			echo $cmd
+			$cmd
+		fi
+	done
+done
+
+--dDRMvlgZJXvWKvBx--
