@@ -1,27 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3DFHUj02114
-	for <linux-lvm@redhat.com>; Tue, 13 Apr 2004 11:17:30 -0400
-Received: from mx2.nwlehighsd.org (ns1.nwlehighsd.org [209.50.139.56])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3DFHTu6029337
-	for <linux-lvm@redhat.com>; Tue, 13 Apr 2004 11:17:30 -0400
-Received: from amavis by mx2.nwlehighsd.org with scanned-ok (Exim 3.35 #1
-	(Debian)) id 1BDPf9-0005wD-00
-	for <linux-lvm@redhat.com>; Tue, 13 Apr 2004 11:17:23 -0400
-Received: from mx2.nwlehighsd.org ([127.0.0.1])
-	by localhost (oddprocess [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 21837-08 for <linux-lvm@redhat.com>;
-	Tue, 13 Apr 2004 11:17:23 -0400 (EDT)
-Received: from matt by mx2.nwlehighsd.org with local (Exim 3.35 #1 (Debian))
-	id 1BDPf9-0005w6-00
-	for <linux-lvm@redhat.com>; Tue, 13 Apr 2004 11:17:23 -0400
-Date: Tue, 13 Apr 2004 11:17:23 -0400
-From: Matthew Daubenspeck <matt@oddprocess.org>
-Message-ID: <20040413151723.GB19598@oddprocess.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] quota command does not work
-Reply-To: matt@oddprocess.org,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3DMRMj07250
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2004 18:27:22 -0400
+Received: from swlx166.swmed.edu (swlx166.swmed.edu [199.165.152.166])
+	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i3DMRL87003520
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2004 18:27:21 -0400
+Received: from [129.112.118.137] (helo=utsouthwestern.edu)
+	by swlx166.swmed.edu with esmtp (Exim 4.30) id 1BDWN8-0003aO-Ul
+	for linux-lvm@redhat.com; Tue, 13 Apr 2004 17:27:14 -0500
+Message-ID: <407C693E.2020700@utsouthwestern.edu>
+Date: Tue, 13 Apr 2004 17:27:10 -0500
+From: Peter Smith <peter.smith@utsouthwestern.edu>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig271B0FD8695D5ECE6FED06F0"
+Subject: [linux-lvm] >2TB with LVM v1.0.3?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,54 +25,73 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I am using lvm2 with the following logical volume:
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig271B0FD8695D5ECE6FED06F0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  --- Logical volume ---
-  LV Name                /dev/nwlsd_vg/nwlsd_lv
-  VG Name                nwlsd_vg
-  LV UUID                jKXS7Q-2Bda-JpVG-Ba4I-Ocfr-6UyO-182Mek
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                55.91 GB
-  Current LE             14312
-  Segments               2
-  Allocation             next free (default)
-  Read ahead sectors     0
-  Block device           254:0
+I'm running Redhat v7.2 (very old I know) and LVM v1.0.3 .  I have a 
+1600GB ext3 partition currently in use and am planning to grow that by ~ 
+6000GB.  From the documentation that I have found, it looks like I may 
+be able to do this without modification to my system.  However, I'm 
+querying to verify it..
 
-I am trying to get quota's working on the system. The quotas themselves
-are working, however, standard users cannot issue the quota command to
-inspect their own specific information:
+Current ext3 filesystem has 4KB block size (supposedly good to 16TB total.)
 
-$ quota
-quota: Can't stat() mounted device /dev/nwlsd_vg/nwlsd_lv: Permission
-denied
-Disk quotas for user mellofone (uid 1000): none
+I have one LV defined with a size of "3456106496".  I have two PVs, the 
+first (sdc) with a size of "1646481408" and a PE size of "1048576", the 
+second (sdd) with a size of "1815863296" and a PE size of "1048576" as well.
 
-However, it does work for root:
+Allocation of the ext3 is at "1152717492" 1k-blocks used and "548221548" 
+1k-blocks available right now.  The RAID system that the storage resides 
+on has, up until now, sort-of enforced a roughly <2TB limit per device 
+(2 cabinets currently with 1600GB and the RAID can not span cabinets,) I 
+can continue to allocate ~ 2TB per device to fit within the kernel 2.4 
+32-bit block device limit.  I do not know if I am actually limited to 
+1TB per device as I've read before from Redhat, so that may be a 
+possibility.
 
-$ quota mellofone
-Disk quotas for user mellofone (uid 1000): 
-     Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
-/dev/nwlsd_vg/nwlsd_lv
-                19364268*      0  100000            2019       0       0    0
+Here is my current vgdisplay
+[root@swlx201 root]# vgdisplay
+--- Volume group ---
+VG Name               data
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           2 TB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               1.61 TB
+PE Size               1 GB
+Total PE              1648
+Alloc PE / Size       1648 / 1.61 TB
+Free  PE / Size       0 / 0
 
-This setup works on other volumes that do not use lvm. Any ideas what I
-screwed up? Just as an FYI:
 
-$ lvm version
-  LVM version:     2.00.09 (2004-03-31)
-  Library version: 1.00.08-ioctl (2004-02-27)
-  Driver version:  4.1.0
+Any comments, questions, etc VERY welcome.
 
-Thanks.
--- 
-  Matthew Daubenspeck
-  http://www.oddprocess.org
+Peter Smith
 
-11:09:30 up 23 days, 1:21, 1 user, load average: 0.02, 0.03, 0.00
+
+
+--------------enig271B0FD8695D5ECE6FED06F0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.7 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+
+iD8DBQFAfGlC/TMBbARZqsERArZ5AJ42GUtp7GTWGCbQ3x2YrpdYYD0jUACaA4sM
+7r3pLG/MwMeNdmKkqb5GVRI=
+=NZMg
+-----END PGP SIGNATURE-----
+
+--------------enig271B0FD8695D5ECE6FED06F0--
