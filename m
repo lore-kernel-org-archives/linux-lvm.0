@@ -1,47 +1,35 @@
-Date: Thu, 31 Aug 2000 15:15:16 -0300 (BRT)
-From: Marcelo Tosatti <marcelo@conectiva.com.br>
-Subject: Re: [linux-lvm] Dazed & Confused
-In-Reply-To: <200008291622.KAA02929@lynx.turbolabs.com>
-Message-ID: <Pine.LNX.4.21.0008311508270.898-100000@freak.distro.conectiva>
-MIME-Version: 1.0
+Date: Thu, 31 Aug 2000 23:51:00 +0200
+From: Nils Juergens <nils@muon.de>
+Subject: Re: [linux-lvm] ExChange of Harddisks
+Message-ID: <20000831235100.A320@guldukat.muon>
+References: <30657.967667781@www17.gmx.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <30657.967667781@www17.gmx.net>; from a.kloecker@gmx.net on Wed, Aug 30, 2000 at 10:36:21PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@msede.com
 
+On Wed, 30.08.00, Arne Kl=EF=BF=BDcker <a.kloecker@gmx.net> wrote:
+> > If i understand your setup right you can just move the physical
+> > extents from your IDE-Drive to the SCSI-Drives. You do this with
+> > "pvmove <device>", <device> being the physical volume you want to
+> > remove.
+> I did this, but it stopped with an Error 208 leaving 1 PE on the IDE
+> Disk...
 
-On Tue, 29 Aug 2000, Andreas Dilger wrote:
+Well, i had similar problems with pvmove before, but was to lazy to work
+it out. But if you post some strace/debug output we might be able to
+track this down. Might be some work but being able to clean PVs to
+remove them is quite important, IMHO.
 
-> Ulf Bartelt writes:
-> > /dev/vgkira/ftp on /home/ftp type ext2 (ro,errors=remount-ro)
-> > /dev/vgkira/ftp2 on /home/ftp2 type ext2 (rw,errors=remount-ro)
-> > 
-> > (root@kira:/0)~# e2fsadm -L+1G /dev/vgkira/ftp
-> > e2fsadm -- ERROR: "/dev/vgkira/ftp" is mounted on "/home/ftp2"
-> > e2fsadm -- please umount it to resize
-> 
-> This is a bug in how e2fsadm checks to see if a filesystem is mounted.
-> I have fixed this in my version of e2fsadm, as well as adding support
-> for ext2resize and ext2online, so you don't even need to unmount the
-> filesystem to resize it (if you have the ext2online kernel patch).
-> 
-> See ftp.lustre.org:/pub/adilger for an SRPM which has a patch to fix
-> all known LVM user-tools bugs, as well as a kernel patch for 0.8final
-> on 2.2.16.  I was told by Les Hazelton that my LVM kernel patch will
-> apply cleanly to kernel-source-2.2.17-0.16mdk.i586.rpm, from the
-> mandrake cooker section on rpmfind.net.
+'later,
 
-While looking at your patch I found something which seems to be wrong. 
+Nils
 
-The function lvm_snapshot_COW returns 1 on success. lvm_map() returns  
-lvm_snapshot_COW() return code. ll_rw_block calls lvm_map_ptr() (which is
-lvm_map()) and expects 0 on success: 
-
-+                       if ((lvm_map_ptr) (bh[i], rw) != 0) {
-+                               printk(KERN_ERR
-+                                      "Bad lvm_map in ll_rw_block\n");
-+                               goto sorry;
-+                       }
+--=20
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >  If we all work hard, we can turn this company  <
+ >      around 360 degrees -- gruntbert(LOTD)      <
