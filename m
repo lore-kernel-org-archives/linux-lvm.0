@@ -1,10 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104032230.f33MUQj17503@webber.adilger.int>
-Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
-In-Reply-To: <01040400155200.00918@darkvader> from Diederick van Dijk at "Apr
- 4, 2001 00:15:52 am"
-Date: Tue, 3 Apr 2001 16:30:26 -0600 (MDT)
+Return-Path: <darwin@gazeta.pl>
+Message-ID: <3ACAD385.9FE9BF6C@gazeta.pl>
+Date: Wed, 04 Apr 2001 09:55:49 +0200
+From: Artur Wiak <darwin@agora.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] problem with vgcreate ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +16,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm <linux-lvm@sistina.com>
 
-Diederick van Dijk writes:
-> ]# dd --version
-> dd (GNU fileutils) 4.0p
-> 
-> # strace dd of=/dev/hda2 bs=1 seek=6144 if=/etc/uuids
-> open("/dev/hda2", O_RDWR|O_CREAT|O_LARGEFILE, 0666) = 1
-> ftruncate64(0x1, 0x1800, 0, 0, 0x1)     = -1 EINVAL (Invalid argument)
+Hi !
 
-Strange, it is trying to truncate the block device!  You need to
-add the option "conv=notrunc" to "dd" so that it will not do this.
-It really shouldn't try truncating a block device, so maybe this is
-a bug?  I don't know if "GNU fileutils 4.0p" is newer or older than
-"GNU fileutils 4.0.35".  If you update to the latest fileutils and it
-still has this problem, I suggest submitting a bug report.
+I have problem with LVM beta6.
+I have RedHat 7.0 with 2.4.2 kernel (compilation with
+util-linux 2.10o, modutlis 2.4.2 & e2fsprogs 1.19).
+After compilation all is OK.
+I'm installing LVM (first- .configure - OK,
+second- compilation with LVM as module - OK,
+third- make - OK, fourth- make install - OK).
+but when i started module and i want create lvm group
+(vgcreate lvmgrp /dev/sd?? /dev/sd??) I obtain:
+lvm -- lvm_chr_ioctl: unknown command 4004fe0a
+vgcreate -- ERROR "Invalid argument" creating VGDA for volume group
+"lvmgrp" in kernel.
+I don't known what i do bad (maybe any patch)?
+(With beta4 end beta5 this error recurs too.)
+Help me please.
 
-In any case, it is not so important because you already have your VG back,
-but good to know for future reference.
+Thanks for Your help.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Artur
