@@ -1,10 +1,9 @@
-From: Fred Ruffet <fred.ruffet@free.fr>
-Subject: Re: [linux-lvm] Problems while trying to crash Oracle database
-Message-Id: <20030511152454.42dd814a.fred.ruffet@free.fr>
-In-Reply-To: <3EB16F3C.50807@mvista.com>
-References: <A11077E28200D51182EA00D0B775525307142799@xin02.india.hp.com>
-	<3EB16F3C.50807@mvista.com>
-Mime-Version: 1.0
+Message-ID: <3EBE8FCC.10302@inode.at>
+From: Manfred Gschweidl <m.gschweidl@inode.at>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] mount root filesystem on lvm
+References: <3EBBF411.6060405@inode.at>  <3EBBFF45.4050006@inode.at>	 <1052511447.6321.22.camel@chtephan.cs.pocnet.net>	 <3EBD22B3.4090808@inode.at>	 <1052607008.1489.2.camel@chtephan.cs.pocnet.net>	 <3EBDAFF0.5090608@inode.at> <1052647076.580.9.camel@chtephan.cs.pocnet.net>
+In-Reply-To: <1052647076.580.9.camel@chtephan.cs.pocnet.net>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,229 +15,111 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun May 11 08:33:02 2003
+Date: Sun May 11 13:00:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Christophe Saout <christophe@saout.de>
+Cc: linux-lvm@sistina.com
 
-You need to be sure Oracle reads where your dd owerwrote its data. While Oracle doesn't read, it won't crash.
+hello and thanks for your help.
 
-Even if it reads, it depends on what have been recovered. You might just have errors in alert.log file telling you you have corrupted blocks, but the databse may not crash.
+i modified my linuxrc file on the ramdisk, so that it does a "cat 
+/proc/devices" and "ls -l /dev/mapper". so i found out, that the device 
+number is also 254 and with the ls-comand i get the information that the 
+minor number was 6 (with the 2.4.12 kernel i couldn't find ot out, 
+because there i was not using the device-mapper interface).
 
-The more efficient would be to make sure dd writes over the system tablespace.
+after appending this to the new kernel on startup, the root filesystem 
+can now be found, and the system boots.
 
-Regards,
+but now i have an problem... ;-)
 
-On Thu, 01 May 2003 12:02:20 -0700, Steven Dake <sdake@mvista.com> told us :
+when booting up with the initial ramdisk, and doing a "lvm vgscan" and 
+"lvm vgchange -a y", all volume groups and logical volumes are found 
+("ls /dev/mapper" on the end of the linuxrc script shows all found 
+logical volumes).
+but after freeing memory of the initial ramdisk and mounting of the root 
+fs, now one of the entries in "/dev/mapper" exists, except the "control" 
+entry. and "lvm vgscan" and "lvm vgchange -a y" does not help. so i 
+cannot mount any other logical volumes?????
+the kernel complaines, that maybe a old kernel driver is using the 
+volume groups, but how can that be???
 
-> you could try kill -9 ? :)
-> 
-> HERUR,CHANNABASAPPA (HP-India,ex2) wrote:
-> 
-> >Hi ,
-> >	I am basically trying to crash the oracle database which has been
-> >created using raw logical volumes . When I use 'dd' command to crash the
-> >oracle database I find that the database is actually not crashing . 
-> >
-> >	I used the following steps to create Oracle database on raw logical
-> >volumes .
-> >
-> >
-> >1. Created Physical Volumes's using pvcreate command 
-> ># pvcreate /dev/sdp
-> >pvcreate -- physical volume "/dev/sdp" successfully created
-> >
-> ># pvcreate /dev/sdq
-> >pvcreate -- physical volume "/dev/sdq" successfully created
-> >
-> >2. Created Volume Groups's
-> ># vgcreate vg06 /dev/sdp
-> >vgcreate -- INFO: using default physical extent size 4.00 MB
-> >vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-> >vgcreate -- doing automatic backup of volume group "vg06"
-> >vgcreate -- volume group "vg06" successfully created and activated
-> >
-> ># vgcreate vg07 /dev/sdq
-> >vgcreate -- INFO: using default physical extent size 4.00 MB
-> >vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-> >vgcreate -- doing automatic backup of volume group "vg07"
-> >vgcreate -- volume group "vg07" successfully created and activated
-> >
-> >3. Created Logical Volume's
-> >
-> ># lvcreate -l 25 -n control01.ctl /dev/vg06
-> >lvcreate -- doing automatic backup of "vg06"
-> >lvcreate -- logical volume "/dev/vg06/control01.ctl" successfully created
-> >
-> ># lvcreate -l 25 -n control02.ctl /dev/vg06
-> >lvcreate -- doing automatic backup of "vg06"
-> >lvcreate -- logical volume "/dev/vg06/control02.ctl" successfully created
-> >
-> ># lvcreate -l 100 -n system01.dbf /dev/vg06
-> >lvcreate -- doing automatic backup of "vg06"
-> >lvcreate -- logical volume "/dev/vg06/system01.dbf" successfully created
-> >
-> ># lvcreate -l 100 -n log01.log /dev/vg07
-> >lvcreate -- doing automatic backup of "vg07"
-> >lvcreate -- logical volume "/dev/vg07/log01.log" successfully created
-> >
-> ># lvcreate -l 100 -n log02.log /dev/vg07
-> >lvcreate -- doing automatic backup of "vg07"
-> >lvcreate -- logical volume "/dev/vg07/log02.log" successfully created
-> >
-> >4. Removed the existing raw devices
-> >
-> >[root@LNXSRVZ /dev]# rm /dev/raw/raw41
-> >rm: remove `/dev/raw/raw41'? y
-> >[root@LNXSRVZ /dev]# rm /dev/raw/raw42
-> >rm: remove `/dev/raw/raw42'? y
-> >[root@LNXSRVZ /dev]# rm /dev/raw/raw43
-> >rm: remove `/dev/raw/raw43'? y
-> >[root@LNXSRVZ /dev]# rm /dev/raw/raw44
-> >rm: remove `/dev/raw/raw44'? y
-> >[root@LNXSRVZ /dev]# rm /dev/raw/raw45
-> >rm: remove `/dev/raw/raw45'? y
-> >
-> >5.Recreate raw devices using 'mknod' command
-> >
-> ># mknod /dev/vg06/rsystem01.dbf c 162 41
-> ># mknod /dev/vg06/rcontrol01.ctl c 162 42
-> ># mknod /dev/vg06/rcontrol02.ctl c 162 43
-> ># mknod /dev/vg07/rlog01.log c 162 44
-> ># mknod /dev/vg07/rlog02.log c 162 45
-> >
-> >
-> >6. Used 'raw' command to bind raw device to block device
-> >
-> ># raw /dev/vg06/rsystem01.dbf /dev/vg06/system01.dbf
-> >/dev/raw/raw41: bound to major 58, minor 19
-> ># raw /dev/vg06/rcontrol01.ctl /dev/vg06/control01.ctl
-> >/dev/raw/raw42: bound to major 58, minor 17
-> ># raw /dev/vg06/rcontrol02.ctl /dev/vg06/control02.ctl
-> >/dev/raw/raw43: bound to major 58, minor 18
-> ># raw /dev/vg07/rlog01.log /dev/vg07/log01.log
-> >/dev/raw/raw44: bound to major 58, minor 20
-> ># raw /dev/vg07/rlog02.log /dev/vg07/log02.log
-> >/dev/raw/raw45: bound to major 58, minor 21
-> >
-> >
-> >7. CHANGED THE FILE PERMISSIONS
-> ># chmod 766 /dev/vg06
-> ># chmod 766 /dev/vg06/*
-> ># chmod 766 -R /dev/vg07         
-> ># chmod 766 -R /dev/vg07/*            
-> ># chown oracle:oinstall -R /dev/vg07  
-> >
-> ># ll /dev/vg06/*
-> >brwxrw-rw-    1 oracle   oinstall  58,  17 Apr 29 14:06
-> >/dev/vg06/control01.ctl
-> >brwxrw-rw-    1 oracle   oinstall  58,  18 Apr 29 14:06
-> >/dev/vg06/control02.ctl
-> >crwxrw-rw-    1 oracle   oinstall 109,   6 Apr 29 14:05 /dev/vg06/group
-> >crwxrw-rw-    1 oracle   oinstall 162,  42 Apr 29 14:10
-> >/dev/vg06/rcontrol01.ctl
-> >crwxrw-rw-    1 oracle   oinstall 162,  43 Apr 29 14:10
-> >/dev/vg06/rcontrol02.ctl
-> >crwxrw-rw-    1 oracle   oinstall 162,  41 Apr 29 14:10
-> >/dev/vg06/rsystem01.dbf
-> >brwxrw-rw-    1 oracle   oinstall  58,  19 Apr 29 14:06
-> >/dev/vg06/system01.dbf
-> >
-> ># ll /dev/vg07/*
-> >crwxrw-rw-    1 oracle   oinstall 109,   7 Apr 29 14:05 /dev/vg07/group
-> >brwxrw-rw-    1 oracle   oinstall  58,  20 Apr 29 14:06 /dev/vg07/log01.log
-> >brwxrw-rw-    1 oracle   oinstall  58,  21 Apr 29 14:07 /dev/vg07/log02.log
-> >crwxrw-rw-    1 oracle   oinstall 162,  44 Apr 29 14:10 /dev/vg07/rlog01.log
-> >crwxrw-rw-    1 oracle   oinstall 162,  45 Apr 29 14:10 /dev/vg07/rlog02.log
-> >
-> >9. init$ORACLE_SID.ora file had the following contents
-> >
-> >db_name                         = rawlvm1
-> >
-> >db_files                        = 400
-> >
-> >db_file_multiblock_read_count   = 16
-> >
-> >db_block_buffers                = 550
-> >
-> >shared_pool_size                = 5000000
-> >
-> >log_checkpoint_interval         = 10000
-> >
-> >processes                       = 100
-> >
-> >parallel_max_servers            = 8
-> >
-> >log_buffer                      = 32768
-> >
-> >global_names                    = TRUE
-> >
-> >control_files                   = (/dev/raw/raw42, /dev/raw/raw43)
-> >
-> >db_block_checksum               = true
-> >
-> >db_block_size                   = 4096
-> >
-> >background_dump_dest            = /u00/app/oracle/admin/hard/rawlvm/bdump
-> >
-> >core_dump_dest                  = /u00/app/oracle/admin/hard/rawlvm/cdump
-> >
-> >user_dump_dest                  = /u00/app/oracle/admin/hard/rawlvm/udump
-> >
-> >10. Created oracle database
-> >
-> >SQL> startup nomount;
-> >ORACLE instance started.
-> >
-> >Total System Global Area   53178448 bytes
-> >Fixed Size                   450640 bytes
-> >Variable Size              50331648 bytes
-> >Database Buffers            2252800 bytes
-> >Redo Buffers                 143360 bytes
-> >SQL>
-> >SQL> create database "rawlvm1"
-> >  2    controlfile reuse
-> >  3    maxinstances 8
-> >  4    maxlogfiles 32
-> >  5    datafile
-> >  6         '/dev/raw/raw41' size 40M reuse
-> >  7      logfile
-> >  8         '/dev/raw/raw44'  size 20M ,
-> >  9         '/dev/raw/raw45'  size 20M ;
-> >
-> >Database created.
-> >
-> >	Please let me know if there is something fundamentally wrong in the
-> >above steps used for creating Oracle database . After creating the database
-> >I used the following 'dd' command to crash the database 
-> >
-> >	dd if=/boot/vmlinux-2.4.2-2 of=/dev/sdp
-> >
-> >	Strangely this command does'nt seem to crash the database . Can
-> >anybody help me out to crash the Oracle database ?
-> >
-> >
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> >
-> >
-> >  
-> >
+cat /proc/devices show up, that there is still an entry for lvm, but 
+also for device-mappper. is this maybe the error???
+
+
+if you can't help me out with this, this is no problem, because you 
+helped me a lot, since i can boot now...;-)
+but the "/usr", "/var".... directories are also residing on lvm volumes...
+
+
+thanks for your detailed help,
+
+
+manfred
+
+
+
+
+
+
+Christophe Saout wrote:
+> Am Son, 2003-05-11 um 04.05 schrieb Manfred Gschweidl:
 > 
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
--- 
-Fred Ruffet - fred.ruffet@free.fr
-
-"When people say nothing, they don't necessarily mean nothing."
+>>when i use "/dev/progs/root" boot up ends with:
+>>VFS: Cannot open root device "3a00" or 3a:00
+>>Please append s correct "root=" boot option
+>>Kernel panic: VFS: Unable to mount root fs on 3a:00
+> 
+> 
+> 0x3a is the LVM1 device major.
+> 
+> 
+>>when i use "/dev/mapper/progs-root" boot up ends with:
+>>VFS: Cannot open root device "mapper/progs-root" or 00:00
+>>Please append s correct "root=" boot option
+>>Kernel panic: VFS: Unable to mount root fs on 00:00
+> 
+> 
+> Ok, 00:00 means that he didn't find anything there.
+> 
+> 
+>>i use the append option for "/dev/mapper/progs-root", because i can't 
+>>run lilo with it, because lilo says, that it doesn't find the device....
+> 
+> 
+> Yep.
+> 
+> It looks like you are currently running on LVM1 but want to switch to
+> LVM2 after the next reboot, right?
+> 
+> LILO can only look at the device numbers currently in use in /dev, but
+> when there is no device-mapper device there, he can't find the device
+> number to use with LVM2.
+> 
+> I don't think you can't activate a volume group at the same time with
+> LVM1 and LVM2, so you'll have to give it explicitly to the kernel
+> "command line" on the next reboot.
+> 
+> Before reboot, can you find out what major device-mapper uses? Type "cat
+> /proc/devices" and search for the line with device-mapper. My kernel is
+> currently using the major 254, but I don't know if the numbers are
+> allocated the same way with the 2.4 kernel.
+> 
+> Ok, then you'll have to translate the number to hexdecimal (e.g. using
+> this command line where you should replace 254 with your major number if
+> it differs: perl -e 'printf "%02x\n", 254).
+> 
+> After rebooting you interrupt lilo and append root=##00 to the command
+> line, where ## is the major number in hex (so it looks like "linux
+> root=fe00"). If he doesn't find the root device, try fe01, fe02, etc...
+> until he finds the root device. The problem is that you can't know
+> exactly which minor number the kernel number will assign the volume
+> without having tested it first.
+> 
+> This should of course only work when the ramdisk has correctly activated
+> the volume before the kernel tries to mount the root filesystem, there
+> should be a message printed.
+> 
