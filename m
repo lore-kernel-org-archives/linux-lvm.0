@@ -1,10 +1,13 @@
-Return-Path: <mikem@twisted.net>
-Message-ID: <3A7F6413.A80D1803@twisted.net>
-Date: Mon, 05 Feb 2001 21:40:19 -0500
-From: Michael McLinn <mikem@twisted.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] 0.9.1 vgscan doesn't detect upgraded vg's
+Return-Path: <zoo1@corecomm.net>
+Date: Mon, 5 Feb 2001 21:39:17 -0500
+From: zoo1@corecomm.net
+Subject: Re: [linux-lvm] startup stuff an dnew question :-)
+Message-ID: <20010205213917.C29990@bar.nowhere>
+References: <Pine.LNX.4.21.0102021438490.380-100000@munster.noc.fr.clara.net> <3A7E61D7.D417A879@twc.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+In-Reply-To: <3A7E61D7.D417A879@twc.de>; from ulf@twc.de on Mon, Feb 05, 2001 at 09:18:31AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,54 +19,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hello,
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
 
-I was running some large vg's with 0.8final, and upgraded
-to 0.9.1_beta3 w/ kernel 2.4.1-ac2.  
+On Mon, Feb 05, 2001 at 09:18:31AM +0100, Ulf Bartelt wrote:
 
-After the upgrade, vgscan does not find any volume groups.
+>This is how I did it on my router/mailserver:
 
-Reverting to prior tools + kernel does not work as the on disk
-vg structures have been altered (presumably upgraded to the v2 
-format). 
+[...]
 
-I have no suitably recent vgcfg backups, so restoring is not an
-option.  
+>But the tricky part is: hda2 and hda1 are LVs too...
+>I just faked partition map entries for them and I use them only by this
+>"partition aliases", so I can boot a system living totally in LVs using
+>conventional things like lilo...
 
-Thus, I have been digging in vgscan to see what is going wrong.
+erm... just what does this gain you, then? if you resize or move those
+LVs, wouldn't you have to manually change the fake partition map
+entries, sort of negating the entire point of using LVM...?
 
-My question is this...
+--
+   PGP/GnuPG key (ID 1024D/BFE0D6D0) available from keyservers everywhere
 
-I look at the output of pvdata -U on a physical volume. 
-I see 3 UUID slots, which matches the number of pv's in the vg.
-However, on the first pv in the vg, only the first one is filled.
-On the second pv in the vg, the first two are filled.  On the 
-third pv of the vg, all three are filled. 
+       "Everything I am today, I owe to people whom it is now too late
+                                   to punish."
 
-Within pv_read_all_pv_of_vg.c, there is a call to 
-pv_read_uuidlist(), this routine is scanning the first pv, 
-and thus only returns one uuid.
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature
 
-Later the result is only the first pv is returned from
-pv_read_all_pv_of_vg().  
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-My theory is each pv is supposed to have the the UUID's of 
-itself, and all other pv's in it's vg within it's UUID 
-datastructure.  Is this so?
+iD8DBQE6f2PVNfZCE7/g1tARAp1HAJ0cctqFQtHuTYcgd02LVvjBkWiCqACfZoLO
+e/hIOM6PorHN5gwrFkqy1Qw=
+=zyJr
+-----END PGP SIGNATURE-----
 
-If this is the case, it seems it would be possible to write the 
-correct UUID's to the datastructure on disk, and potentially 
-improve (maybe even fix) my situation.
-
-Any advice would be welcome.  A lot of important data is riding on 
-solving this problem.
-
-One more note that might be of interest, these volume groups were
-created with a much earlier version of lvm, 0.6 or 0.7 I believe.
-
-Thank you.
-
--Michael McLinn
+--qlTNgmc+xy1dBmNv--
