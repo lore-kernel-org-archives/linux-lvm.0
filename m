@@ -1,22 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1PEfpi24253
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 09:41:51 -0500
-Received: from host1.appws.com ([216.136.72.3])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1PEfob26058
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 09:41:50 -0500
-Received: from grandmother.littlebald.com (localhost.localdomain [127.0.0.1])
-	by grandmother.littlebald.com (8.12.8/8.12.8) with ESMTP id i1PEfgPD007183
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 09:41:42 -0500
-Received: (from david@localhost)
-	by grandmother.littlebald.com (8.12.8/8.12.8/Submit) id i1PEfgXT007181
-	for linux-lvm@redhat.com; Wed, 25 Feb 2004 09:41:42 -0500
-Subject: Re: [linux-lvm] lvm size mismatch?
-From: David Johnston <david@littlebald.com>
-In-Reply-To: <20040224005603.GA17483@kldp.net>
-References: <20040224005603.GA17483@kldp.net>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1077720101.6906.6.camel@grandmother.littlebald.com>
+Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id i1PEg7a5005976
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 15:42:07 +0100
+From: Heinz Mauelshagen <Mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] badblocks on lvm1 lv using device mapper and lvm2 userland tools
+Message-ID: <20040225144207.GD11757@redhat.com>
+References: <20040222065536.GA10657@tric>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20040222065536.GA10657@tric>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -28,30 +19,50 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Feb 25 09:40:04 2004
+Date: Wed Feb 25 09:40:10 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Mon, 2004-02-23 at 19:56, Soon-Son Kwon wrote:
-> Hi I am using lvm on debian woody.
-> The version would be about 1.0.x.
+On Sun, Feb 22, 2004 at 07:55:36AM +0100, Volker Gropp wrote:
+> Hi,
 > 
-> foo:/var# df -h
-> Filesystem            Size  Used Avail Use% Mounted on
-> /dev/vol/var           18G   16G  2.7G  85% /var
-> 
-> foo:/var# du . -sh
-> 5.4G    .
-> 
-> where does this size mismatch come from?
+> is there any way to handle badblocks on a lvm1 lv in an dm lvm2
+> environment. EVMS seem to be able to reallovate those, but i dont wanna
+> switch.
 
-iirc, df looks at the filesystem's free space maps, while du sums the
-file sizes as listed in the directories.  I'd guess that you've got
-10.6G marked as "in use" in the free space maps that isn't referenced by
-any inode. 'fsck -f /var' should fix it; remember that you'll have to
-unmount /var first.
+You don't want to throw away the flaky disk(s) ? ;)
+
+A disk should be sorted out IMO in case it starts showing bad blocks because
+that means that it ran out of internal space to remap (presumably it is
+decently actual it will have), which is very bad.
+
+> 
+> my kernel is 2.4.25, no patches on a debian system using IDE drives.
+> 
+> Volker Gropp
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 -- 
-David Johnston <david@littlebald.com>
-Little Bald Consulting, LLC
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
