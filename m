@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] snapshot with bigmem broken
-Message-ID: <20030516125958.B24422@sistina.com>
-References: <37885B2630DF0C4CA95EFB47B30985FB020EBD2E@exchange-1.umflint.edu>
+Subject: Re: [linux-lvm] Vol management problems over loopback mounted files
+Message-ID: <20030516130104.C24422@sistina.com>
+References: <2EDAF6DC7CE9D4118D4C00508BAED31508DFED5D@icex3.cc.ic.ac.uk>
 Mime-Version: 1.0
-In-Reply-To: <37885B2630DF0C4CA95EFB47B30985FB020EBD2E@exchange-1.umflint.edu>; from jlauro@umflint.edu on Wed, May 14, 2003 at 06:50:46AM -0400
+In-Reply-To: <2EDAF6DC7CE9D4118D4C00508BAED31508DFED5D@icex3.cc.ic.ac.uk>; from mark.neil@imperial.ac.uk on Wed, May 14, 2003 at 11:06:39AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +14,113 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 16 06:08:02 2003
+Date: Fri May 16 06:09:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 14, 2003 at 06:50:46AM -0400, Lauro, John wrote:
-> Hello,
+On Wed, May 14, 2003 at 11:06:39AM +0100, Neil, Mark wrote:
+> Dear All,
 > 
->  
+> I am trying to set up a volume managed file system over ordinary files using
+> the loopback devices.  However whatever I try seems to work until I try and
+> actually use any logical volumes as file systems.  Otherwise the volume
+> management system is completely happy with what I have done according to the
+> various display utilities 
 > 
-> I did more testing, and it appears that snapshots in LVM will not work
-> with either 4GB or or 64GB support enabled in the kernel under 2.4.20.
-> This includes both LVM 1.0.7 or the latest LVM2.  
-> 
+> What am I doing wrong?  
 
-That's a known issue. You are faced with a VM flaw.
-
-I presume that it's not LVM snapshots only bacause HIGHMEM is
-basically broken.
-
->  
-> 
-> Is there anyone using LVM snapshots with 64GB RAM support (or even 4GB
-> RAM support, as snapshots would be good for at least our medium size
-> servers if not our large ones)?  Is so, let me know the kernel version
-> and LVM version you are using so that I can try it.
-
-Probably not, because the system lifelocks on bounce buffers (which is
-the sympton of the principle HIGHMEM bug).
-Obviously not a lot of HIGHMEM users out there raising priorities to fix this.
-
-> 
->  
-> 
-> PS: As mentioned previously, everything else in LVM seems to be ok
-> with larger kernel memory models.  It's mainly just snapshots that
-> appear to be broken using the latest LVMs and kernel.
-> 
->  
-> 
-
--- 
+Likely the LVM version shipped with RedHat (1.0.3 ?).
+Try 1.0.7. Works fine with loop devices here.
 
 Regards,
 Heinz    -- The LVM Guy --
+
+> 
+> As a simple example of this problem see below (all on a Redhat 9.0 system,
+> Kernel 2.4.20-9 - also fails in the same way on a Redhat 8 system with a
+> 2.4.18 kernel)
+> 
+> [root@dex root]# dd if=/dev/zero of=/tmp/diskfile0 bs=512M count=1
+> 1+0 records in
+> 1+0 records out
+> [root@dex root]# dd if=/dev/zero of=/tmp/diskfile1 bs=512M count=1
+> 1+0 records in
+> 1+0 records out
+> [root@dex root]# dd if=/dev/zero of=/tmp/diskfile2 bs=512M count=1
+> 1+0 records in
+> 1+0 records out
+> [root@dex root]# losetup /dev/loop0 /tmp/diskfile0
+> [root@dex root]# losetup /dev/loop1 /tmp/diskfile1
+> [root@dex root]# losetup /dev/loop2 /tmp/diskfile2
+> [root@dex root]# pvcreate /dev/loop[0-2]
+> pvcreate -- physical volume "/dev/loop0" successfully created
+> pvcreate -- physical volume "/dev/loop1" successfully created
+> pvcreate -- physical volume "/dev/loop2" successfully created
+> 
+> [root@dex root]# vgcreate test_vg /dev/loop[0-2]
+> vgcreate -- INFO: using default physical extent size 4 MB
+> vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+> vgcreate -- doing automatic backup of volume group "test_vg"
+> vgcreate -- volume group "test_vg" successfully created and activated
+> 
+> [root@dex root]# lvcreate -L768M -n test_lv test_vg
+> lvcreate -- doing automatic backup of "test_vg"
+> lvcreate -- logical volume "/dev/test_vg/test_lv" successfully created
+> 
+> [root@dex root]# mke2fs /dev/test_vg/test_lv
+> mke2fs 1.32 (09-Nov-2002)
+> Filesystem label=
+> OS type: Linux
+> Block size=4096 (log=2)
+> Fragment size=4096 (log=2)
+> 98304 inodes, 196608 blocks
+> 9830 blocks (5.00%) reserved for the super user
+> First data block=0
+> 6 block groups
+> 32768 blocks per group, 32768 fragments per group
+> 16384 inodes per group
+> Superblock backups stored on blocks:
+>         32768, 98304, 163840
+> 
+> Writing inode tables: done
+> Writing superblocks and filesystem accounting information: done
+> 
+> This filesystem will be automatically checked every 33 mounts or
+> 180 days, whichever comes first.  Use tune2fs -c or -i to override.
+> [root@dex root]# mkdir /mnt/tmp
+> [root@dex root]# mount /dev/test_vg/test_lv /mnt/tmp
+> mount: you must specify the filesystem type
+> [root@dex root]# mount -t ext2 /dev/test_vg/test_lv /mnt/tmp
+> mount: wrong fs type, bad option, bad superblock on /dev/test_vg/test_lv,
+>        or too many mounted file systems
+> [root@dex root]# e2fsck /dev/test_vg/test_lv
+> e2fsck 1.32 (09-Nov-2002)
+> Couldn't find ext2 superblock, trying backup blocks...
+> e2fsck: Bad magic number in super-block while trying to open
+> /dev/test_vg/test_lv
+> 
+> The superblock could not be read or does not describe a correct ext2
+> filesystem.  If the device is valid and it really contains an ext2
+> filesystem (and not swap or ufs or something else), then the superblock
+> is corrupt, and you might try running e2fsck with an alternate superblock:
+>     e2fsck -b 8193 <device>
+> 
+> [root@dex root]#
+> 
+> Cheers
+> 
+> Mark Neil
+> Imperial College
+> London 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
