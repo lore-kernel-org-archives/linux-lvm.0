@@ -1,8 +1,8 @@
-Message-ID: <20011211183257.23795.qmail@web9506.mail.yahoo.com>
-From: SI Reasoning <sczjd@yahoo.com>
-In-Reply-To: <20011211115418.B27568@sistina.com>
+Message-ID: <3C167AD5.60700@chaven.com>
+From: List User <lists@chaven.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] problem resizing without losing data
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Creating LV's with _very large_ PV's
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,34 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 11 12:31:01 2001
+Date: Tue Dec 11 15:28:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I am using Mandrake cooker and lvm-0.9-3mdk. I
-recently created lvm group Mandrake with volume 1 =
-/usr, vol 2 = var and vol 3 = home. vol 1 and 2 are
-xfs and 3 is reiserfs. I recently attempted to shrink
-var by 500 meg and then expand usr by  500 meg. This
-hosed my system as many files in var were lost
-(although there was plenty of room to spare on var). 
-Also, even though lvscan showed my changes had taken
-place, the rest of the system still only recognized
-prior values.
+I am running Mandrake 8.1 here and am looking to create a very large array.
+I have Promise UltraTrak 100 TX8 external arrays which format each out to
+approx 670GB as one large volume.
 
-Is there a way to do non-destructive resizing with lvm?
+Initially I wanted to add just this one to a volume group but couldn't. 
+ Said something
+to the regards of physical volume is too large.  It spewed something 
+that looked like
+256GB is the largest PV that it can handle?!?
 
-=====
-SI Reasoning
-sczjd@yahoo.com
+Anyway, the real goal is to have three of these arrays (670*3) each 
+array will be
+one physical volume.  The three together would be added to create an approx
+2TB array.
 
-"They that can give up essential liberty to obtain a little temporary safety deserve neither liberty nor safety." 
-Benjamin Franklin
+Is this possible?  Feasible?  
 
-__________________________________________________
-Do You Yahoo!?
-Check out Yahoo! Shopping and Yahoo! Auctions for all of
-your unique holiday gifts! Buy at http://shopping.yahoo.com
-or bid at http://auctions.yahoo.com
+Or do I have to carve each tower into multiple parts which I don't 
+really want to do.
+
+
+Steve
