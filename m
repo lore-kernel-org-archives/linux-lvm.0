@@ -1,9 +1,8 @@
-Message-ID: <3DAE79B3.F19BBF21@silicide.dk>
+Message-ID: <3DAE7A20.2F8896A1@silicide.dk>
 From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] lvm on linux RAID5?
-References: <1034773372.1658.8.camel@frodo.xelin.se> 
-		<3DAD6971.3040305@ednet.ns.ca> <1034779135.1652.13.camel@frodo.xelin.se>
+References: <1034773372.1658.8.camel@frodo.xelin.se> <20021016192819.D2330@zealot.blacknet.de>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,31 +14,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 04:02:04 2002
+Date: Thu Oct 17 04:06:43 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Anders Henriksson wrote:
+Goetz Bock wrote:
 > 
-> On Wed, 2002-10-16 at 15:28, Patrick Boutilier wrote:
-> > Anders,
-> >
-> > That should work. I run LVM on top of one raid5 device but I don't see
-> > why it wouldn't work over 4 of them.
-> >
-> > For example run pvcreate on /dev/sda, then /dev/sdb, etc..
-> 
-> It seems to work fine, I just tried it and it works smoother than
-> expected.
-> 
-> >
-> > What kind of machine did you manage to get 4 RAID5 arrays into?
-> 
-> It is actually not that hard, take your one array and split it into 4.
-> I have 4 discs which are split into 4 raid partitions each.
+> On Wed, Oct 16 '02 at 15:02, Anders Henriksson wrote:
+> > I want to run lvm over four linux raid5 devices, can I just treat the
+> > raid devices as discs? i.e. run pvcreate on them directly and go on from
+> > there.
+> You've more than 12 discs in your box? No? Oh, if you ment you're trying
+> to run LVM ontop of a 4disk RAID5 drive (using linux md drivers), than
+> try:
 
-Why would you split the raid, for then just to run LVM ontop of it ?
+No, he doesnt have 12 disks. He wrote he have 4 which is splitted into
+4.
+aka, 4 disks made into a raid5, and then 4 partitions, and he wants to
+run
+LVM ontop of (one of) those partitions. (rather silly to split it into
+partitions
+for then to run LVM...)
+
 
 
 
