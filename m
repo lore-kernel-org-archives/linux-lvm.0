@@ -1,10 +1,13 @@
-From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] troubled Guiness - no longer!
-Date: Mon, 27 Aug 2001 12:17:59 -0700
-Message-ID: <002601c12f2c$fbee27c0$0300000a@pacbell.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20010827092903.A12257@sistina.com>
+Date: Mon, 27 Aug 2001 14:44:44 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] troubled Guiness - no longer!
+Message-ID: <20010827144444.A3886@sistina.com>
+References: <20010827092903.A12257@sistina.com> <002601c12f2c$fbee27c0$0300000a@pacbell.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <002601c12f2c$fbee27c0$0300000a@pacbell.net>; from e@arix.com on Mon, Aug 27, 2001 at 12:17:59PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +19,55 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-thank you guys for the help and all the work that has gone into this
-software.
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I got the rc1 version and everything went swimmingly.  I finally have LVM
-compiled!!! (yes I did fill out the survey).
+On Mon, Aug 27, 2001 at 12:17:59PM -0700, Erick Calder wrote:
+> thank you guys for the help and all the work that has gone into this
+> software.
+>=20
+> I got the rc1 version and everything went swimmingly.  I finally have LVM
+> compiled!!! (yes I did fill out the survey).
 
-now I have to figure out how to use it :)  I'll be working on packaging this
-as RPMs next.
+Woohoo!  Thanks!
 
-- e r i c k
+> now I have to figure out how to use it :)  I'll be working on packaging t=
+his
+> as RPMs next.
 
------Original Message-----
-From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-Behalf Of AJ Lewis
-Sent:	Monday, August 27, 2001 7:29 AM
-To:	linux-lvm@sistina.com
-Subject:	Re: [linux-lvm] troubled Guiness
+Cool.
 
- << File: ATT00036.dat >> On Sun, Aug 26, 2001 at 02:36:44PM -0700, Erick
-Calder wrote:
-> I'm running RH 7.0 (Guiness) with the 2.2.16-22 kernel and gcc-2.96-85 and
-> have downloaded the Linus 2.4.9 stock kernel which I'm trying to make... I
-> built the patch and applied it with no apparent problem but when I try to
-> build the kernel I get the errors in the log below.
->
-> has anyone been here before?
-
-I just responded to Peter Druck about this same problem.  See the thread
-with subject "Problems compiling lvm 1.0 and 2.4.x kernel" on this list.
-
---
+--=20
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-638-0500
 1313 5th St SE, Suite 111              Fax:    612-638-0500
 Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
 http://www.sistina.com
 
-Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2648
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
 Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-This message has been brought to you by the language C and the number F.
+Computer Science: solving today's problems tomorrow.
 -----End Obligatory Humorous Quote------------------------------------------
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7iqMspE6/iGtdjLERAjNnAJ46nuBPLDbsicMb57iNXXngwuLICwCeJ+Hl
+GlIzQVL/lhpqby/9jzMnQ5I=
+=DqfW
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
