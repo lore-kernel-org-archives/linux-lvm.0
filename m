@@ -1,9 +1,9 @@
-Subject: Re: [linux-lvm] LVM on top of a 3ware 7500-12 RAID5 set.
-References: <4.3.2.7.2.20020817000006.02708b78@mail.bussink.ch>
-From: Jason L Tibbitts III <tibbs@math.uh.edu>
-In-Reply-To: Erik Bussink's message of "Sat, 17 Aug 2002 00:06:21 +0200"
-Message-ID: <ufad6siifx3.fsf@epithumia.math.uh.edu>
-MIME-Version: 1.0
+From: lvm@interlinx.bc.ca
+Message-ID: <20020817070901.GA5022@linux.interlinx.bc.ca>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] moving single LVM disk from one system to another
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,20 +14,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 16 17:43:01 2002
+Date: Sat Aug 17 02:10:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "EB" == Erik Bussink <mailinglist@bussink.ch> writes:
+My workstation died (the MB, not the disk).  :-(
 
-EB> But when I start I'll probably only get 5 disk, and add disks to
-EB> the system as my need grow. This is where the LVM will help me
-EB> expand the LVs.
+In it I have a single ATA disk with three fdisk type partitions:
 
-You can't just add a disk to a RAID5 set, though, unless 3ware has
-added that feature very recently.  You can add a whole new RAID set
-and add it to your volume group, of course.
+hd?1 Linux boot
+hd?2 Windows ~hangs head in shame~ (it's for testing only :-)
+hd?3 LVM
 
- - J<
+Inside the LVM partition is the root, swap and a couple of other
+filesystems.  On the ext3 /boot partition there is an initrd with all
+the magic in it to get LVM and ext3 up and running.
+
+On the dead machine, where the disk was built and last running, the
+disk was device /dev/hde on a Promise ATA100 bus.  I want to move it
+to another (working) machine on the primary ATA bus so it will be
+/dev/hda.
+
+When I boot the system, the initrd fires up and runs a vgscan but it
+does not find the rootvol volume group.  So I boot on my Linux
+distro's boot CD in rescue mode, install the LVM module, run vgscan
+(the vendor was nice enough to put the lvm tools on the boot/rescue
+cd) and it finds it fine.  I run "vgchange -a y" and whammo, the
+volume group is active and I can mount my rootfs.  Great.  So I chroot
+the HD (LVM) rootfs and mount /boot and run vgscan again so that it
+updates the /etc/lvm* stuff and also build a new initrd, hoping that
+the new configuration information will make it into the initrd.
+
+I reboot again and still vgscan finds no volume groups.  What am I
+missing here?  Why can the rescue mode of the boot CD find the volume
+group no problem with a vgscan and my initrd's vgscan cannot?
+
+Thanx in advance for any enlightment.
+
+b.
+
+--=20
+Brian J. Murrell
