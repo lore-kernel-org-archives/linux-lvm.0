@@ -1,9 +1,10 @@
-From: "Mike \(TrueTel\)" <mike@truetel.com>
-Subject: RE: [linux-lvm] Graphical tool to configure LVM for RedHat 8
-Message-ID: <MKEMJIDBOEBAOIPCPABKMEFECLAA.mike@truetel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-Reply-To: <1042065949.3e1caa1d4258e@secure.st-peter.stw.uni-erlangen.de>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] LVM2 snapshot creation problem
+Message-ID: <20030109000506.L28021@uk.sistina.com>
+References: <3E1CB9E4.1030704@email.arizona.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3E1CB9E4.1030704@email.arizona.edu>; from windhamg@email.arizona.edu on Wed, Jan 08, 2003 at 04:53:08PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,43 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  8 17:59:01 2003
+Date: Wed Jan  8 18:04:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-VHJ5ICJsdm1ndWkiICwgaXQgZGlkIHdvcmsgZm9yIG1lDQpodHRwOi8vd3d3LnhzNGFsbC5ubC9+
-bW1qL2x2bS8NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IGxpbnV4LWx2bS1h
-ZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1PbiBC
-ZWhhbGYgT2YgU3ZldG9zbGF2IFNsYXZ0Y2hldg0KU2VudDogVGh1cnNkYXksIEphbnVhcnkgMDks
-IDIwMDMgNjo0NiBBTQ0KVG86IGxpbnV4LWx2bUBzaXN0aW5hLmNvbTsgTWEsIFRoYW5oKEluZFN5
-cywgR0UgSW50ZXJsb2dpeCkNClN1YmplY3Q6IFJFOiBbbGludXgtbHZtXSBHcmFwaGljYWwgdG9v
-bCB0byBjb25maWd1cmUgTFZNIGZvciBSZWRIYXQgOA0KDQoNClF1b3RpbmcgIk1hLCBUaGFuaChJ
-bmRTeXMsIEdFIEludGVybG9naXgpIiA8VGhhbmguTWFAZ2UuY29tPjoNCg0KPiANCj4gDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZGVycyBXaWRtYW4gW21haWx0bzph
-bmRld2lkQHRub25saW5lLm5ldF0NCj4gU2VudDogV2VkbmVzZGF5LCBKYW51YXJ5IDA4LCAyMDAz
-IDM6MTIgUE0NCj4gVG86IExpbnV4LUxWTUBzaXN0aW5hLmNvbQ0KPiBTdWJqZWN0OiBSZTogW2xp
-bnV4LWx2bV0gR3JhcGhpY2FsIHRvb2wgdG8gY29uZmlndXJlIExWTSBmb3IgUmVkSGF0IDgNCj4g
-DQo+ICogVGhlIGNvbW1hbmQgbGluZSB0b29scyBhcmUgZ3JlYXQgYnV0IEkganVzdCB3b25kZXIg
-aWYgdGhlcmUgaXMgYQ0KPiBncmFwaGljYWwgdG9vbCB0byBkbyB0aGUgc2FtZSB0aGluZyAoZm9y
-IFJlZEhhdCwgQlRXKSA/DQo+IA0KPiBJICBrbm93ICBSZWRIYXQgIDggIChncmFwaGljYWwpICBp
-bnN0YWxsYXRpb24gIGhhcyBzdXBwb3J0IGZvciBMVk0gYW5kDQo+IGNyZWF0aW5nICBvZiAgTFZN
-ICBhcnJheXMuICBIb3dldmVyLCAgSSBoYXZlIG5vIGlkZWEgaWYgc3VjaCB0b29scyBhcmUNCj4g
-aW5jbHVkZWQgYWZ0ZXIgdGhlIGluc3RhbGxhdGlvbi4NCj4gKiANCj4gKiBOby4gdGhleSBhcmUg
-bm90Lg0KPiANCj4gSW4gIGFueSBjYXNlLiBJIGRvIG5vIHJlY29tbWVuZCB1c2luZyAzcmQgcGFy
-dHkgdG9vbHMgdG8gY29uZmlndXJlIGFuZA0KPiBtYW5hZ2UgeW91ciBkaXNrcy4NCg0KPiAqIFdo
-YXQgM3JkIHBhcnR5IHRvb2xzIGNhbiB5b3Ugc3VnZ2VzdC4gPw0KPiAqIEkgZ3Vlc3MgdGhpcyBz
-aG91bGQgYmUgcGFydCBvZiB0aGUgRkFRIGFzIHdlbGwuDQo+IA0KPiBUaGFuaA0KdHJ5IGEgZ29v
-Z2xlIHNlYXJjaCBmb3IgDQpsdm1ndWkgW2phdmFdIGFuZCBsdm12aWV3ZXJbcGVybCBpIHRoaW5r
-XQ0KYm90aCB3ZXJlIHRoZSBhIGJpdCBhYmFuZGVuZCB0aGUgbGFzdCB0aW1lIGkgdHJpZWQgdGhl
-bSwNCmJ1dCBob3BlZnVsbHkgdGhleSdsbCB3b3JrIHdpdGggUkg4DQoNCm1heSBiZSgganVzdCBt
-YXkgYmUpIGFub3RoZXIgc29sdXRpb24gd291bGQgYmUgDQp0aGUgdG9vbHMgcHJvdmlkZWQgd2l0
-aCBtYW5kcmFrZSAoZGlza2RyYWtlKSBvciBldmVudHVhbHkNCnRoZSBFVk1TIEdVSSAoc2VlIGh0
-dHA6Ly9ldm1zLnNmLm5ldCApDQoNCmlmIHlvdSBmaW5kIHNvbWUgb3RoZXIgcG9pbnRlcnMsIGRy
-b3AgYSBsaW5lIDopDQpieSB0aGUgd2F5IFN1U0UgaGFkIGEgcGVyZmVjdCB0ZXh0KG5jdXJzZXMp
-IGluc3RhbGxlcihtYW5hZ2VyKSBmb3IgbHZtIHNpbmNlDQpTdVNFIDYuNCAoaSB0aGluayBhYm91
-dCBhIHllYXIgb3IgdHdvIGFnbykNCg0KDQphIGxvdCBvZiBMdWNrLA0KDQpzdmV0bGpvDQoNCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQpsaW51eC1sdm0g
-bWFpbGluZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGluYS5jb20NCmh0dHA6Ly9saXN0cy5zaXN0aW5h
-LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBo
-dHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLw0K
+On Wed, Jan 08, 2003 at 04:53:08PM -0700, Gary Windham wrote:
+> My problem is that I have not been able to create LV snapshots under 
+> LVM2.  Here's an example (command and output follow):
+
+(Assuming you've checked that device-mapper snapshot support 
+is compiled/loaded into the kernel)
+
+Please turn on full debugging and look for the last few sets 
+of lines starting with 'Adding target' and 'dm'.  [Lines
+starting with other things are probably irrelevant here.]
+
+Also check for kernel log messages from device-mapper 
+(e.g. /var/log/whatever).
+
+See example.conf for details of how to log to a file, or run
+with -vvv flags.  If you prefer you could send us (dm@uk.sistina.com)
+the whole (compressed) log file for the command and we'll take a 
+look.
+
+Alasdair
+-- 
+agk@uk.sistina.com
