@@ -1,10 +1,10 @@
-Date: Tue, 9 Oct 2001 11:21:18 +0200
+Date: Tue, 9 Oct 2001 11:23:23 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM seems to be causing SCSI errors.
-Message-ID: <20011009112118.A25020@sistina.com>
-References: <134902074.1002552720175.JavaMail.root@boots>
+Subject: Re: [linux-lvm] kernel reports vg twice
+Message-ID: <20011009112323.B25020@sistina.com>
+References: <20011008160013.A26865@cistron.nl>
 Mime-Version: 1.0
-In-Reply-To: <134902074.1002552720175.JavaMail.root@boots>; from rmvzj001@sneakemail.com on Mon, Oct 08, 2001 at 10:51:42AM -0000
+In-Reply-To: <20011008160013.A26865@cistron.nl>; from wichert@cistron.nl on Mon, Oct 08, 2001 at 04:00:13PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,43 +20,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Oct 08, 2001 at 10:51:42AM -0000, Karl wrote:
-> > IIRC you said, that your test LVs spanned physical drives.
-> > Another known problem is flaky SCSI subsystem behaviour when LVM causes
-> > more load in configurations like this.
-> >
-> > Can you trigger the problem, if you've got just one LV being allocated
-> > on one PV?
-> 
-> The problem is still there when the LVM is only on a single SCSI volume.
-> In fact, changing the volume from one drive to the other shows SCSI
-> errors on the new drive and the old drive used on a non LVM file system
-> stops having errors.
-> 
-> > What did the file system consistency check I mentioned in my other mail say?
-> 
-> When I ran an fsck on the file system with the errors (I did not re-do
-> this experiment recently) it found bad blocks on the files system, but
-> no inconsistencies on the file system itself.
+Wichert,
 
-Strange, running out of ideas here.
-We don't have similar reports, do we?
+which LVM version are you using? 1.0.1 rc4 is recommended.
 
+Regards,
+Heinz    -- The LVM Guy --
+
+On Mon, Oct 08, 2001 at 04:00:13PM +0200, Wichert Akkerman wrote:
 > 
+> Since I got exactly no response to this I'll report it with a
+> different subject.
 > 
-> -----------------------------------------------------
-> Protect yourself from spam, use http://sneakemail.com
+> LVM still does not work for me on one of my machines work:
+> 
+> cloud:/dev/discs/disc1# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "vg_user"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+> 
+> cloud:/dev/discs/disc1# vgchange -a y
+> vgchange -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
+> 
+> I did a bit of looking around and it seems the confusement is in the
+> kernel: when lvm_check_kernel_lvmtab_consistency() compares the kernel
+> and the lvmtab entries the list from the kernel mentions the vg_user
+> volume group twice, while the lvmtab only mentions it once. This
+> results in an immediate abort and as a result I can't do anything
+> with the LVM tools.
+> 
+> Wichert.
+> 
+> -- 
+>   _________________________________________________________________
+>  /       Nothing is fool-proof to a sufficiently talented fool     \
+> | wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+> | 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
+> 
+> 
+> ----- End forwarded message -----
+> 
+> -- 
+>   _________________________________________________________________
+>  /       Nothing is fool-proof to a sufficiently talented fool     \
+> | wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+> | 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
