@@ -1,29 +1,31 @@
-Date: Sat, 1 Apr 2000 17:42:49 -0500 (EST)
-From: Shane Shrybman <shane@zeke.yi.org>
-Subject: [linux-lvm] LVM Status update?
-Message-ID: <Pine.LNX.4.10.10004011728010.16258-100000@zeke.goatskin.org>
-MIME-Version: 1.0
+Date: Sun, 2 Apr 2000 02:02:01 +0200
+From: bert hubert <ahu@ds9a.nl>
+Subject: [linux-lvm] English HOWTO available - first release
+Message-ID: <20000402020201.A27493@home.ds9a.nl>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
+Hi everybody,
 
-Hi,
+You can find a first shot at an English HOWTO available on
+http://www.ds9a.nl/lvm-howto. I know this is a bit rash with English
+translations going on but I hope people won't be too upset.
 
-I am curious about the current status of the linux LVM was with regards
-to the 2.4 kernel.
+The HOWTO is very open, so if you notice something that's wrong, just yell.
+I'll be handing out cvs accounts freely to people who have committed good
+stuff.
 
-Heinz, I assume you are collecting various patches and continuing to
-improve the code. Is the code now in a form that is acceptable to Alan and
-Linus? Have you had any correspondence with either of them? Are you still
-trying to get a patch thru to Linus? 
+Regards,
 
-Are there any areas that you think need more testing or that you would
-like to have more feedback on?
+bert hubert.
 
-Thanks again for bringing an LVM to Linux.
-
-Shane 
+-- 
+                       |              http://www.rent-a-nerd.nl
+                       |                  
+                       |                     - U N I X -
+                       |          Inspice et cautus eris - D11T'95
