@@ -1,17 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j17LR8O20080
-	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 16:27:08 -0500
-Received: from mail.clunker.utsl.gen.nz (210-54-92-184.ipnets.xtra.co.nz
-	[210.54.92.184])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j17LR6VW005487
-	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 16:27:07 -0500
-Message-ID: <4207DD26.9050603@vilain.net>
-Date: Tue, 08 Feb 2005 10:27:02 +1300
-From: Sam Vilain <sam@vilain.net>
+Received: from redhat.com (astrea.boston.redhat.com [172.16.80.45])
+	by mail.boston.redhat.com (8.12.8/8.12.8) with ESMTP id j17NVVZq024966
+	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 18:31:31 -0500
+Message-ID: <4207FA53.9080107@redhat.com>
+Date: Mon, 07 Feb 2005 18:31:31 -0500
+From: James Parsons <jparsons@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Regarding info about Device mapper.
-References: <021301c51de4$4deeece0$7c051aac@pcp42078>
-In-Reply-To: <021301c51de4$4deeece0$7c051aac@pcp42078>
+Subject: Re: [linux-lvm] Mapping between PEs and Logical Volumes.
+References: <1107704665.20387.214438621@webmail.messagingengine.com>
+In-Reply-To: <1107704665.20387.214438621@webmail.messagingengine.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,18 +20,37 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: tayyeb.hagalwadi@patni.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Tayyeb Hagalwadi(Patni) wrote:
->   This is regarding the information about Device mapper. Could you please
-> provide documents, white papers or  related URL regarding the Device mapper
-> for LVM2. And could u explain, what are the feature of device mapper in LVM
-> 1, and what extra feature are we going to achieve  in LVM2.
+fromkth+lvm@fastmail.fm wrote:
 
-Have a look at
+>Hi,
+>
+>I have one Volume Group and it contains two Logical Volumes.
+>There are many free PEs in Volume Group.
+>I want to know which PEs inside a Physical Volume(Volume Group) are
+>assigned to which Logical Volume.
+>
+>So which command shows this.
+>  
+>
+There is a GUI for LVM2 that is included in the latest Fedora release 
+called system-config-lvm that visually displays the mapping between PVs 
+and LVs. Here is the rpmfind URL:
 
-http://www.google.com/search?q=device+mapper+lvm
+http://fr.rpmfind.net/linux/RPM/fedora/devel/x86_64/system-config-lvm-0.9.18-1.1.noarch.html
 
--- 
-Sam Vilain, sam /\T vilain |><>T net, PGP key ID: 0x05B52F13
-(include my PGP key ID in personal replies to avoid spam filtering)
+system-config-lvm has undergone a couple of rounds of QA. It will NOT 
+work with the very latest (lvm2-2.01.03-1.0)  LVM2 package, due to a 
+path issue discovered today and being addressed now, but will work just 
+fine between lvm2-2.00.25-1.01 and the version listed above.
+
+This version of system-config-lvm is the first GA version. It is under 
+active development, and near term planned features include support for 
+snapshotting and resizing, as well as fixes for some UI nits. Try it 
+out, and please report any bugs you find or features/changes you would 
+like to see.
+
+Regards,
+
+-Jim Parsons
