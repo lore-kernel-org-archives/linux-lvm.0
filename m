@@ -1,11 +1,10 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Thu, 11 Jan 2001 17:13:30 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
+Return-Path: <michael_e_brown@dell.com>
+Date: Thu, 11 Jan 2001 10:21:07 -0600 (CST)
+From: Michael E Brown <michael_e_brown@dell.com>
 Subject: Re: [linux-lvm] nagging about the LVM usage survey
-Message-ID: <20010111171330.A15903@srv.t-online.de>
-References: <hch@ns.caldera.de> <20010111151415.210ABE0B7@wraith>
-Mime-Version: 1.0
-In-Reply-To: <20010111151415.210ABE0B7@wraith>; from declerck@sistina.com on Thu, Jan 11, 2001 at 07:14:15AM -0800
+In-Reply-To: <20010111153817.A25307@caldera.de>
+Message-ID: <Pine.LNX.4.30.0101111019130.28832-100000@blap.linuxdev.us.dell.com>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +16,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Matthew O'Keefe <okeefe@brule.borg.umn.edu>
 
-On Thu, Jan 11, 2001 at 07:14:15AM -0800, Michael J. Declerck wrote:
-> I believe that Matt meant LVM 1.0 and GFS 5.0
+On Thu, 11 Jan 2001, Christoph Hellwig wrote:
 
-Yes, I am sure.
+> On Thu, Jan 11, 2001 at 08:31:14AM -0600, Matthew O'Keefe wrote:
+> > If more LVM users and developers fill these out and tell
+> > us what they are doing with LVM, and what their immediate needs are,
+> > we can better understand where to go in the future.
+> > We are now starting to define the feature set
+> > for LVM 5.0.
+>
+> Why 5.0?
+>
+> 	Christoph
+>
 
-> 
-> hch@ns.caldera.de said:
-> > Why 5.0? 
-> 
-> 
-> ---
-> Michael Declerck, declerck@sistina.com   +1.510.823.7991
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+This looks like a Cut-N-Paste error between the message that was sent out
+to the LVM and GFS mailing lists (GFS is approaching release of 4.0, so it
+makes sense that they are "starting to define the feature set for GFS
+5.0". That probably should have been cut from the LVM msg :-) )
 
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
