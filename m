@@ -1,11 +1,7 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] read is blocking if reading snapshots with 16k
-    blocks on mp systems
-Message-Id: <20020111154408.GF1274@tykepenguin.com>
-References: <OFF21038E8.8E1F7C47-ONC1256B3D.006602E0@de.ibm.com>
+Message-Id: <51F1673834E2D211A9B400104B3FFD5A029C2C5C@cdserv.meridian-data.com>
+From: "Stephenson, Dale" <dstephenson@snapserver.com>
+Subject: RE: [linux-lvm] kernel: zam-7001: io error in reiserfs_find_entry
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OFF21038E8.8E1F7C47-ONC1256B3D.006602E0@de.ibm.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +12,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 11 09:45:02 2002
+Date: Fri Jan 11 11:31:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Thu, Jan 10, 2002 at 07:58:37PM +0100, Martin Petermann wrote:
-> Hi all,
+Patrick Caulfield wrote:
+> On Fri, Jan 11, 2002 at 11:47:37AM +0100, Thomas Ziegler wrote:
+[snip]
+> > - Is there a way to get the snapshot not destroyed if it is 
+> getting full?
 > 
-> I had some performance problems, than I wrote a small program to see where
-> it was hanging:
+> No. Once the snapshot is full then it can't be valid because 
+> there may be
+> blocks written to the original device that the snapshot can't 
+> backup. The only
+> way aoud this is to make your snapshots large enough to hold 
+> all the data that
+> is going to change on the original device during the backup.
 > 
-> -my configuration:
-> 
-> I'm using a SuSE 7.1 and SuSE 7.2 mp system (two processors).
-> I've created a snapshot in the following way:
+If it isn't full yet, is there any reason you couldn't just do an lvextend
+on the snapshot volume?  (This assumes there is space available in the
+volume group for the lvextend.)
 
- 
-> The maximum time read was hanging was 40 seconds. I detected similar
-> problems reading 3*4096 bytes.
-
-Can you tell us more about your system - I can't get this to over 3 seconds even
-on a dog slow IDE system with next-to no memory. 
-
-patrick
+Dale Stephenson
+steph@snapserver.com
