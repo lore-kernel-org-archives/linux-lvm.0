@@ -1,8 +1,8 @@
-From: =?ISO-8859-1?Q?=CC=B7=DE=C8=C8=F0?= <tone.tan@storage-tech.com>
-Mime-Version: 1.0
+Message-ID: <036201c29cab$b40878f0$6a01a8c0@bmoon>
+From: "bmoon" <bo@anthologysolutions.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <E18JlM6-0005oM-00@hermes.sistina.com>
-Subject: [linux-lvm] (no subject)
+Subject: [linux-lvm] Re: any document on DM & LVM2?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,15 +13,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec  4 20:04:01 2002
+Date: Thu Dec  5 16:18:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux-LVM@sistina.comLinux-LVM@sistina.com
+To: linux-lvm@sistina.com
+Cc: thornber@sistina.com
 
-hello
-    how can I create lv of character in VG? 
-     
-                     www.storage-tech.com
+Hi,
 
+I could not find any documents(design or review doc) on device mapper
+and LVM2.
 
-                     tone.tan@storage-tech.com
+Really I want to know the differences( or characteristics or pros & cons)
+between LVM and LVM2, and DM.
+
+Please provide me any information I could get any help from.
+
+Thanks,
+
+Bo
