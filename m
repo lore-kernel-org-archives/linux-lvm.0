@@ -1,8 +1,10 @@
-Return-Path: <Jean-Eric.Cuendet@linkvest.com>
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683CB6@mailsrv.linkvest.com>
-From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
-Subject: RE: [linux-lvm] Lost filesystems on LVs
-Date: Tue, 15 May 2001 15:07:49 +0200
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200105151543.f4FFhuQg018741@webber.adilger.int>
+Subject: Re: [linux-lvm] Lost filesystems on LVs (forgot the attachment)
+In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF683CB2@mailsrv.linkvest.com>
+ "from Jean-Eric Cuendet at May 15, 2001 02:37:22 pm"
+Date: Tue, 15 May 2001 09:43:56 -0600 (MDT)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -17,34 +19,32 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-> > I have a BIG problem. I have an LVM VG of 160Gb. There is 3 
-> LVs defined:
-> > - MS
-> > - Distrib
-> > - backups
+Jean-Eric Cuendet writes:
+> I have a BIG problem. I have an LVM VG of 160Gb. There is 3 LVs defined:
+> - MS
+> - Distrib
+> - backups
+> This morning, I made a e2fsadm to reduce the MS volume and grow the backup
+> one.
+> I umounted the MS volume, made the e2fsadm. All was OK, no error.
+> I then umounted the backups LV and made the e2fsadm. e2fsck refused to work
+> saying that there was no filesystem on it! All was OK, until I umount it!
+> And now, I'm sticked with the backups LV with no filesystem (it was OK until
+> this night, all backups were OK) and the MS LV with things that I don't
+> understand (files that shouldn't be here...)
 > 
-> I assume that all LVs use the ext2 fs...
+> I added in attach, the dump2fs and "cat /proc/lvm/global"
 
-Yes, they all use ext2. (no reiser nor xfs, nor...)
+If dumpe2fs shows the superblock, then e2fsck should also work.  I assume
+that you ran dumpe2fs AFTER the resize?  Is it possible e2fsck is
+refusing to work on the backups LV because of the large_file flag set?
+What version of e2fsck are you using?  You should update to 1.19 at:
+http://sourceforge.net/projects/e2fsprogs/
 
-> Can you deactivate everything (LVs and VG), delete the 
-> /dev/<your_vg_nme> and
-> do a vgscan? I think that LVM has got confused with the 
-> special devices' major
-> and minor numbers, and that would be why you see things where 
-> they wouldn't be
-
-I thought of that, but after a look at the numers, all seems OK. I can't
-stop that now, I'll do it this evening.
-I'll let you know further.
-
-> expected to be. But I'm (almost) sure that not all of your 
-> LVs are using the
-> same fs, do they?
-
-Yes, they all use ext2
-
-Thanks
--jec
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
