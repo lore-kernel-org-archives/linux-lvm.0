@@ -1,25 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB7KGmr03391
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 15:16:48 -0500
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.199])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB7KGgb9020763
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 15:16:42 -0500
-Received: by rproxy.gmail.com with SMTP id f1so434725rne
-	for <linux-lvm@redhat.com>; Tue, 07 Dec 2004 12:16:38 -0800 (PST)
-Message-ID: <b9a453c204120712167b2e9c96@mail.gmail.com>
-Date: Tue, 7 Dec 2004 21:16:30 +0100
-From: =?ISO-8859-1?Q?=D2scar_=C1lvarez_Vilaplana?= <grimborg@gmail.com>
-Subject: Re: [linux-lvm] recovering a lvm volume group after one partition's
-	deletion
-In-Reply-To: <20041207195818.GE24229@agk.surrey.redhat.com>
-Mime-Version: 1.0
-References: <b9a453c204120710477fb9fcf7@mail.gmail.com>
-	<20041207192907.GD24229@agk.surrey.redhat.com>
-	<b9a453c204120711564bb852b0@mail.gmail.com>
-	<20041207195818.GE24229@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 8bit
-Reply-To: =?ISO-8859-1?Q?=D2scar_=C1lvarez_Vilaplana?= <grimborg@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB8FVmr20900
+	for <linux-lvm@redhat.com>; Wed, 8 Dec 2004 10:31:48 -0500
+Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB8FVgH4023327
+	for <linux-lvm@redhat.com>; Wed, 8 Dec 2004 10:31:42 -0500
+Received: from pcemmanuel (defense-3-81-57-219-151.fbx.proxad.net
+	[81.57.219.151])
+	by postfix3-1.free.fr (Postfix) with ESMTP id DD448173531
+	for <linux-lvm@redhat.com>; Wed,  8 Dec 2004 16:31:41 +0100 (CET)
+From: "EC" <wingman@waika9.com>
+Date: Wed, 8 Dec 2004 16:32:12 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20041208153141.DD448173531@postfix3-1.free.fr>
+Subject: [linux-lvm] EXT3-fs: INFO: recovery required on readonly filesystem
+	?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,31 +25,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Thanks a million!! It's working now. 
+Hi,
 
+I'm trying to use the snapshots as indicated in the LVM HOWTO. I use LVM2.
+But I seem to get EXT to claim recovery each time I lvcreate the backup..
+Please understand I'm newbie to LVM..
 
-On Tue, 7 Dec 2004 19:58:18 +0000, Alasdair G Kergon <agk@redhat.com> wrote:
-> On Tue, Dec 07, 2004 at 08:56:14PM +0100, �scar �lvarez Vilaplana wrote:
-> > Now the logical volumes appear in /dev/mygroup/, but when I try to
-> > mount them I get the error "mount: special device /mount/mygroup/myvol
-> > does not exist"
-> 
-> vgmknodes
-> 
-> lvchange -ay
-> 
-> 
-> 
-> Alasdair
-> --
-> agk@redhat.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+My syslog gives something like : 
+
+EXT3-fs: INFO: recovery required on readonly filesystem
+
+... kernel: EXT3-fs: INFO: recovery required on readonly filesystem.
+... kernel: EXT3-fs: write access will be enabled during recovery.
+... kernel: kjournald starting.  Commit interval 5 seconds
+... kernel: EXT3-fs: recovery complete.
+... kernel: EXT3-fs: mounted filesystem with ordered data mode.
+
+I'm using : 
+2.4.28 kernel , linux-2.4.26-rc1-devmapper-ioctl.patch, 1.00.18 device
+mapper , 2.00.25 LVM2. 
+
+I saw some messages about this in may 2004 but cannot understand if I'm
+supposed to apply other patches or so.. Please note this is to be used in
+production environment, so unstable patches cannot be applied...
+
+Please help if possible..
+
+EC.
