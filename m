@@ -1,11 +1,8 @@
-From: "Bill Rugolsky Jr." <brugolsky@telemetry-investments.com>
-Subject: Re: [linux-lvm] Block-Level Backup
-Message-ID: <20030807151127.GB5036@ti19>
-References: <1060247670.28307.37.camel@rocky> <20030807093631.GE381@fib011235813.fsnet.co.uk> <1060260466.4360.2.camel@chtephan.cs.pocnet.net> <20030807134451.GA30494@www.13thfloor.at>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030807134451.GA30494@www.13thfloor.at>
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <3F32710D.6040206@web.de>
+From: Eckhard Neber <eckhard.neber@web.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] same PV detected twice -> VGs mix up
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +13,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug  7 10:12:02 2003
+Date: Thu Aug  7 10:33:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Thu, Aug 07, 2003 at 03:44:51PM +0200, Herbert P=F6tzl wrote:
-> anyway, as pointed out in another response, there is
-> no good way, at least none I know of, to find the
-> blocks changed since the last backup ...
-=20
-The DM snapshot target already keeps track of which blocks have
-been written.  For incremental backup, we really only need
-to know the block numbers.  Why not a new block-meta-data-only
-snapshot target that just records block numbers?  That
-should have *much* lower overhead and consume insignificant
-disk space.
+Hello,
 
-For archival storage, I've lately become enamored of hashed-indexing
-as used in Plan 9's Venti (for a single server target) or the various
-distributed-hash systems (Chord, etc.) for distributed, replicated
-storage.
+I have a strange problem here.
+During installation we misconfigured our external raid somehow to 
+provide the same lodical drive as lun0 as well as lun1. Linux detects 
+both and maps them as sdb and sdc.
+Lvm activates one of them and everything works well, so we decided to 
+leave it that way as the server was already in use when we discovered 
+this problem.
+Now we wanted to add two more ATA discs to the server that were used in 
+a different computer as one logical volume (data120).
+Here is the output of some of the tools:
 
-Regards,
+5#e:~ pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sdb" of VG "raid"    [1.01 TB / 173.03 GB free]
+pvscan -- ACTIVE   PV "/dev/sdc" of VG "raid"    [1.01 TB / 173.03 GB free]
+pvscan -- inactive PV "/dev/hdc" of VG "data120" [57.26 GB / 0 free]
+pvscan -- inactive PV "/dev/hdd" of VG "data120" [57.26 GB / 0 free]
+pvscan -- total: 4 [2.13 TB] / in use: 4 [2.13 TB] / in no VG: 0 [0]
 
-	Bill Rugolsky
+
+5#e:~ vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "raid"
+vgscan -- found active volume group "data120"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+groups
+
+
+5#e:~ lvscan
+lvscan -- ACTIVE            "/dev/raid/soft" [200 GB]
+lvscan -- ACTIVE            "/dev/raid/mail" [10 GB]
+lvscan -- ACTIVE            "/dev/raid/backup" [600 GB]
+lvscan -- ACTIVE            "/dev/raid/users" [50 GB]
+lvscan -- ACTIVE            "/dev/raid/soft" [200 GB]
+lvscan -- ACTIVE            "/dev/raid/mail" [10 GB]
+lvscan -- ACTIVE            "/dev/raid/backup" [600 GB]
+lvscan -- ACTIVE            "/dev/raid/users" [50 GB]
+lvscan -- 8 logical volumes with 1.68 TB total in 2 volume groups
+lvscan -- 8 active logical volumes
+
+
+It is remarkable that the LVs of raid show up twice. What is really 
+strange is that if I mount /dev/data120/backup, which is the LV of the 
+ATA disks, it works, but I get the contents of /dev/raid/soft.
+How can it be that these two VGs get mixed up? Is it because there are 
+identical names?
+A quick solution could probably be to restrict the kernel to probe only 
+for lun0. I'd like to avoid to change the configuration of the raid 
+because it would require to fully back it up (in case that something 
+goes wrong).
+We are using a kernel that was build from SuSE's sorces 
+linux-2.4.20.SuSE-86.
+
+I don't dare to mount and modify anything with data120 as I fear that it 
+could damage the other LVs.
+
+Any help would be appreciated.
+Thanks in advance
+
+Eckhard Neber
+-- 
+-----------------------------------------------------------------
+Eckhard Neber                           Tel: ++49-(0)731-50-26354
+Abt. Mikrowellentechnik                 Fax: ++49-(0)731-50-26359
+Universitaet Ulm                     e-mail: eckhard.neber@web.de
+89069 Ulm
+-----------------------------------------------------------------
