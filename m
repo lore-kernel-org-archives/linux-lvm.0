@@ -1,12 +1,9 @@
-Return-Path: <okeefe@brule.borg.umn.edu>
-Resent-Message-Id: <200101021426.IAA42319@brule.borg.umn.edu>
+Return-Path: <iain@g7iii.junglelink.co.uk>
+Date: Tue, 2 Jan 2001 14:28:37 +0000
+From: Iain Young <iain@g7iii.junglelink.co.uk>
+Message-ID: <20010102142837.A1294@g7iii.junglelink.co.uk>
 Mime-Version: 1.0
-From: "Michael J. Declerck" <declerck@sistina.com>
-Message-Id: <20010102005127.76955E0B3@wraith>
-Date: Mon, 01 Jan 2001 16:51:27 -0800
-Resent-To: gfs-announce@sistina.com, gfs-users@sistina.com,
-        linux-lvm@sistina.com
-Subject: [linux-lvm] [gfs-users] GFS 4.0 Beta 4 released
+Subject: [linux-lvm] pvcreate (appears to) work, but then pvdisplay and vgcreate fail
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,58 +17,39 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: gfs-announce@sistina.com, gfs-devel@sistina.com, gfs-users@sistina.com
+To: linux-lvm@sistina.com
 
-All,
+Hi Everyone,
 
-GFS 4.0 Beta 4 has been released and is available via the Sistina web site
+I have rather a strange problem for you, and was hoping someone had
+come across it before.
 
--> http://www.sistina.com/gfs/software/
+I have LVM 0.91, and am running a stock 2.4.0-prerelease on SPARC 
+(although I have had the same symptons on previous 2.4 test kernels)
 
-Updates in this release include:
+I managed to compile the user space tools, and the required kernel
+components.
 
- o Updated to run on 2.2.18
+Anyway, on with it: I can do a pvcreate, both on a whole disk,
+and a partition with no problem, However an attempt to do either
+a pvdisplay, or vgcreate on that PV fails, with the following errors:
 
- o Update to the kernel patches
+vgcreate -- ERROR "pv_read(): PV identifier invalid" reading physical volumes
 
- o Initial work has begun on porting to 2.4.  It is not ready yet, but it
-   should be shortly after 2.4 is officially released.
+pvdisplay -- ERROR "pv_read(): LVM structure version" no VALID physical volume "/dev/scsi/host0/bus0/target1/lun0/disc"
 
- o Initial support for exporting GFS filesystems via kernel-space NFS.  This
-   capability has just been added and has not received extension testing yet.
-   Use it with extreme care!  You have been warned!
+Now, I am running devfs, so is LVM OK with that ? Or is that where my problem
+is ?
 
- o Support for banning a client from a GNBD server has been added, as well as,
-   a new STOMITH method that utilizes this functionality.
+A Strange thing is that if I go back into fdisk after doing (a supposidly
+successfull) pvcreate, it moans that the label is corrupt blah blah, so
+pvcreate must be writing _something_ to the disk.
 
- o Enhancements have been made to both `gclient' and `gserv' to provide better
-   user feedback.
-
- o New tools for DMEP operations.  `dmep_conf' is for enabling/configuring
-   DMEP capable devices.  `do_dmep' is for testing the actual capabilities
-   and conformance of a DMEP device.
-
- o Further enhancements to the `memexpd' high availability failover setup.
-   This includes a new tool, `initds', that is used for initializing the
-   data segment utilized to maintain lock state info.
-
-This should hopefully be the final beta release!  Go get it!  Use it and let
-us know if you experience any problems via:
-
--> Bugs     ==> http://bugzilla.sistina.com
-
-or
-
--> Feedback ==> http://www.sistina.com/gfs/Pages/gfs_eval.html
+Has anyone had similar experiences to this ? I couldn't find anything
+in the FAQs, apart from the old problem of forgetting to pvcreate before
+vgcreate or vgextend :)
 
 
+Thanks in Advance
 
----
-Michael Declerck, declerck@sistina.com   +1.510.823.7991
-
-
-_______________________________________________
-gfs-users mailing list
-gfs-users@sistina.com
-http://lists.sistina.com/mailman/listinfo/gfs-users
-Read the GFS Howto:  http://www.sistina.com/gfs/Pages/howto.html
+Iain
