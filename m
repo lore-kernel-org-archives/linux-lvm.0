@@ -1,10 +1,12 @@
-Return-Path: <josv@osp.nl>
-Date: Fri, 15 Dec 2000 15:55:29 +0100
-From: Jos Visser <josv@osp.nl>
-Message-ID: <20001215155529.H22904@jadzia.josv.com>
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Fri, 15 Dec 2000 23:10:42 +0100
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] Debian packaging
+Message-ID: <20001215231042.D25445@vestdata.no>
+References: <87hf46kifi.wl@pear.hibi-local.net> <Pine.LNX.4.30.0012151849540.24097-100000@falka.mfa.kfki.hu>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] RawIO patch for 2.2.18
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Pine.LNX.4.30.0012151849540.24097-100000@falka.mfa.kfki.hu>; from Gergely Tamas on Fri, Dec 15, 2000 at 06:58:20PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,20 +18,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: HIBINO Kei <ex8k-hbn@asahi-net.or.jp>
 
-Hi,
+On Fri, Dec 15, 2000 at 06:58:20PM +0100, Gergely Tamas wrote:
+> > 'http://www.asahi-net.or.jp/~ex8k-hbn/deb/lvm/'.
+>=20
+> Good work.
+>=20
+> But here are some remarks to your /etc/init.d/lvm script ...
+>=20
+> 1]----
+> if [ ! -f /proc/lvm ]; then
+> 	if [ ! -f /lib/modules/`uname -r`/block/lvm.o -a ! -f /lib/modules/`unam=
+e -r`/block/lvm-mod.o ]; then
+> 		exit 0
+> 	fi
+> fi
+> ------
+>=20
+> What if somebody compiled lvm into the kernel, not as a module? This
+> script doesn't work. :(
 
-I have been looking for the RawIO patch for Linux 2.2.18, but I have not
-been able to find it (my current web connection sucks, so I can not
-glide through the net with my usual agility and speed). Does anyone have
-a current pointer for me? Would be much appreciated.
+If lvm was compiled into the kernel /proc/lvm will exist, right?
 
-++Jos
 
--- 
-Only those whose lives are brief can imagine that love is eternal. We
-should embrace that remarkable illusion. It may be the greatest gift 
-our race has ever received.
+--=20
+Ragnar Kj=EF=BF=BDrstad
