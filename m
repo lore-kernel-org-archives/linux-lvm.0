@@ -1,11 +1,9 @@
-Return-Path: <jcarles@dtic.ua.es>
-From: "Joan Carles Monllor" <jcarles@dtic.ua.es>
-Date: Wed, 7 Feb 2001 13:49:27 +0100
-Message-ID: <NDBBIPFGCOKBKKOFONLLEEMMCCAA.jcarles@dtic.ua.es>
+Return-Path: <Jean-Eric.Cuendet@linkvest.com>
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683913@mailsrv.linkvest.ch>
+From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+Subject: RE: [linux-lvm] lvm with raid
+Date: Wed, 7 Feb 2001 14:35:13 +0100 
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_NextPart_000_0070_01C0910C.C9E5F5A0"
-Subject: [linux-lvm] I can't add other disk in lvm system
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,69 +15,58 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
-
-This is a multi-part message in MIME format.
-
-------=_NextPart_000_0070_01C0910C.C9E5F5A0
-Content-Type: text/plain;
-	charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+> I created /dev/md0 (raid autodetect)
+> Did a pvcreate /dev/md0
+> lvcreate'd partitions /usr /home /var
+
+I think it's because of NO "LVM linux" partition ID.
+Your md0 partition is "RAID Auto detect" and that's normal.
+I'm not a guru of LVM, so I have no idea of what to do, but anyone out
+there?
+I'm interested too in this thing.
+It works for me to have RAID partitions in LVM because I have a mix of hda1
++ hda2 + md0 + md1, so vgscan and vgchange works because of the "Linux LVM"
+IDs on hda1 and hda2
+Thanks for the GURU response.
+
+-jec
 
 
-	Hello, I am new in this mailing list. And, I am new in lvm system too.
-
-	My problem is:
-
-	I have create a logical volume, correctly. And, I want to add other disk to
-logical volum.
-
-	I already have create a volumen group named "vm0".
-
-	I think that I have run "vgextend -v vm0 /dev/hdc1", for exemple.
-
-	Then display this:
-
-vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
-Unable to handle kernel NULL pointer dereference at virtual address 0000002c
- printing eip:
-c01ecd4f
-*pde = 00000000
-Oops: 0000
-CPU:    0
-EIP:    0010:[<c01ecd4f>]
-EFLAGS: 00010282
-....
-....
-.
-.
-.
-Segment violation
-
-	The problem is in mine or in the kernel or the lvm tools ?
-
-		thanks for your help in avanced.
-
-Joan Carles Monllor
-Universitat d'ALacant
-jcarles@dtic.ua.es        Tel. 965903681
-Spain                     Fax 965903902
-
-
-------=_NextPart_000_0070_01C0910C.C9E5F5A0
-Content-Type: text/x-vcard;
-	name="Joan Carles Monllor.vcf"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="Joan Carles Monllor.vcf"
-
-BEGIN:VCARD
-VERSION:2.1
-N:Monllor;Joan;Carles
-FN:Joan Carles Monllor
-NICKNAME:jcarles
-EMAIL;PREF;INTERNET:jcarles@dtic.ua.es
-REV:20000608T070409Z
-END:VCARD
-
-------=_NextPart_000_0070_01C0910C.C9E5F5A0--
+> 
+> copied and remounted everything.
+> This all goes surprisingly well, until I decided to test with 
+> a reboot.
+> 
+> vgscan and vgchange don't find a thing !
+> 
+> test:/home/james# vgscan 
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- no volume groups found
+> 
+> test:/home/james# vgchange -a y
+> vgchange -- no volume groups found
+> 
+> but if I try to recreate a PV 
+> 
+> test:/home/james# pvcreate /dev/md0
+> pvcreate -- ERROR: can't initialize physical volume 
+> "/dev/md0" of volume
+> group "devlvm" without -ff
+>  
+> Everything is still there apparantly.
+> 
+> I must be missing something fundamental. Thanks fot any help 
+> in advance.
+> 
+> James
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 
