@@ -1,17 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6T8qua28874
-	for <linux-lvm@redhat.com>; Thu, 29 Jul 2004 04:52:56 -0400
-Received: from smtp106.mail.sc5.yahoo.com (smtp106.mail.sc5.yahoo.com
-	[66.163.169.226])
-	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i6T8qoXn003667
-	for <linux-lvm@redhat.com>; Thu, 29 Jul 2004 04:52:50 -0400
-Sender: frank@redhat.com
-Message-ID: <4108BADB.758AEB0@yahoo.de>
-Date: Thu, 29 Jul 2004 10:52:43 +0200
-From: Frank Mohr <f_mohr@yahoo.de>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6TGfra14093
+	for <linux-lvm@redhat.com>; Thu, 29 Jul 2004 12:41:53 -0400
+Received: from mail.ecdl.hut.fi (mail.ecdl.hut.fi [130.233.167.1])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6TGflXn024705
+	for <linux-lvm@redhat.com>; Thu, 29 Jul 2004 12:41:47 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.ecdl.hut.fi (Postfix) with ESMTP id 26F5B78016
+	for <linux-lvm@redhat.com>; Thu, 29 Jul 2004 19:41:41 +0300 (EEST)
+Received: from zaphod.ecdl.hut.fi (zaphod.ecdl.hut.fi [130.233.167.69])
+	by mail.ecdl.hut.fi (Postfix) with ESMTP id 747A07800D
+	for <linux-lvm@redhat.com>; Thu, 29 Jul 2004 19:41:39 +0300 (EEST)
+From: Mika =?iso-8859-1?q?L=E4nsirinne?= <Mika.Lansirinne@iki.fi>
+Date: Thu, 29 Jul 2004 19:41:53 +0300
 MIME-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] looking for tool to edit LVM structures on disk
+Message-Id: <200407291941.53919.Mika.Lansirinne@iki.fi>
+Subject: [linux-lvm] old md-partitions to pvs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,21 +30,47 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-hi
+Hello all,
 
-Is the any tool to fix PE entries on disk?
+I converted couple of md partitions to pvs. The reason for this was to remove 
+unnecessary md layer (raid0) and to replace it with striped lvs.
 
-My LVM system seems to have some corrupted PE entries.
-A vgcfgrestore doesn't fix these (even with some older backups).
-Shouldn't the backup contain the PE entries?
+When I had stopped the md and edited the partition types in the partition 
+tables (and rebooted) I tried to pvcreate those, but it told me that the 
+device was not found.
 
-Is there any way to fix the entries? 
-By some debugging in vg_read_with_pv_and_lv() I found that some (7)
-pe[ope].le_num values
-are out of sequence and outside lv_allocated_le (and even some
-duplicated).
+I found out that vgscan or pvscan (or whatever which creates the .cache file) 
+skipped those partitions because it thought they still are part of a md.
 
-A better description is in my last mail -- "Re: [linux-lvm] pvscan fails
-(some more debugging - cause found)"
+vgscan -vvv:
+...
+      Getting size of /dev/hda3
+        Opened /dev/hda3
+        /dev/hda3: Skipping md component device
+        Closed /dev/hda3
+...
 
-Frank
+and same for hdb3 also.
+
+
+It seems that it founds MD_SB_MAGIC in those partitions 
+(lib/filters/filter-md.c, lines 54-62).
+
+
+I have my system working now by hand editing the /etc/lvm/.cache and to never 
+vgscan again :). The pvcreate and all the rest works now.
+
+
+The question is that how could I get rid of those md signatures? pvcreate 
+obviously didn't do it, because it complained them in the first place. Of 
+course, I could have wiped the whole partitions with zeros in the beginning 
+(a long time), but now I already have a vg and several lvs and filesystems 
+there. Maybe I should write the filesystems full temporarily? Would that even 
+help?
+
+
+lvm tools version used is 2.00.15, kernel 2.6.7 and the system is fedora 2.
+
+
+
+-Mika
