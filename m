@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] LVM1 Snapshot
-Message-ID: <20030403070800.GA1273@tykepenguin.com>
-References: <20030402164704.61870.qmail@web14403.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030402164704.61870.qmail@web14403.mail.yahoo.com>
+Message-ID: <002f01c2f9b2$40d326f0$c70aa8c0@RD.proware.com.tw>
+From: "Rocky Lee" <rocky_lee@proware.com.tw>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm-1.0.7-2.4.20-xfs.patch and lvm version
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr  3 01:08:02 2003
+Date: Thu Apr  3 01:24:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Apr 02, 2003 at 08:47:04AM -0800, Aman Shahi wrote:
-> 
-> does that mean that I will have to dedicate that
-> physical device for the Snapshot. I mean if I had
-> 4 device /dev/sda /dev/sdb /dev/sdc /dev/sdd and
-> previously if I was striping my original LV over
-> all the 4 devices, in the current context I stripe
-> the original LV over 3 devices and create the
-> Snapshot LV over the 4th (dev/sdd) ?
 
-Not at all. the LV will take up only as much space on
-that PV as you allocate to it. All that is happening by
-adding the device name to the end of command is that LVM is
-forced to use only that device when allocating the volume, 
-rather than being allowed to use any device in the Volume Group.
+ Hi
 
-Whether it affects the performance of other devices on the
-system is up to you and how you have spread the load across
-devices. 
+ when I patch the original linux-2.4.20-vfs-lock.patch file and reboot, the
+ kernel boot message shows that lvm version is still 1.0.5+,
 
-Personally I allocate performance-critical filesystems on seperate
-disks and low-use filesystems I leave to LVM to allocate.
+ if I patch lvm-1.0.7-2.4.20-xfs.patch(108KB), it will be changed the
+version name
+ to 1.0.7.
 
-Of course if the load changes you can always use pvmove to change
-where the data is located.
+ I forgot how I got this patch.
+ I download lvm-1.0.7.tar.gz again, I can't find the
+lvm-1.0.7-2.4.20-xfs.patch file.
+ does anyone know this file?
 
-In the case of 4 disks with 4 stripes (ie there is no "spare" disk)
-I think what I would do would be to allocate a striped snapshot LV
-so that at least the COW load is also spread evenly across all the 
-disks.
-
-None of this is mandatory, you are free to allocate LVs where you like
-(that's the point of LVM) and performance matters are very much specific
-to the particular installation.
-
-patrick
+ Have a nice day
+ Rocky
