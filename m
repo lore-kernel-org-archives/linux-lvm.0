@@ -1,10 +1,9 @@
-From: "=?iso-8859-1?Q?J=FCrgen?= Vollmer" <juergen@informatik-vollmer.de>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] shrink lvm without harddisk ?
+Message-ID: <20011022094230.A5688@sistina.com>
+References: <55159047260.20011020155124@gmx.de> <20011021155622.A9367@btconnect.com> <12725665012.20011021174357@gmx.de> <E15vLep-00079E-00@hermes.sistina.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_-1332358667P";
-	 micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Message-ID: <22712.1003733873@joergli.cocolab.de>
-Subject: [linux-lvm] mounting a reiserfs snaphsot fails
+In-Reply-To: <E15vLep-00079E-00@hermes.sistina.com>; from fejf@gmx.de on Sun, Oct 21, 2001 at 06:42:48PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,58 +14,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 22 02:18:01 2001
+Date: Mon Oct 22 02:44:02 2001
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---==_Exmh_-1332358667P
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Sun, Oct 21, 2001 at 06:42:48PM +0200, FEJF wrote:
+> hi,
+> i've got a harddisk that crashed... (again :( ) - and so i can't even xs the 
+> lvm anymore... i want to ask if there's a way to mount the lvm with one 
+> harddisk missing (of corse there will be dataloss - but i think loosing only 
+> 40gigs is better than loosing the whole lvm...) ?
 
+Well, this only makes sense if there is LV(s) which don't have *any* PEs
+alocated on the crashed disk. If not so you'ld end up in an filesystem mess
+(assuming that the LV(s) contain(s) filesystems) anyway, because fs metadata
+and data will be missing.
 
-Hi erverybody,
+If you still want to go for it you need a replacement drive, vgcfgrestore
+the LVM metadata to it and restart LVM.
+In order to avoid such problems you might consider to go for soft/hard RAID
+as PV storage.
 
-I just created a snapshot and tried to mount it:
+> fejf
+> 
+> -- 
+> Backups are usefull. Most often when you don't have one ;)
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
- lvcreate --size 112m --snapshot --name lvm-snapshot /dev/LVMhome_vg/home=
+-- 
 
- mount -oro -t reiserfs /dev/LVMhome_vg/lvm-snapshot /lvm-snapshot
+Regards,
+Heinz    -- The LVM Guy --
 
-but I get only:
- mount: wrong fs type, bad option, bad superblock on
-        /dev/LVMhome_vg/lvm-snapshot, or too many mounted file systems
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-The logical volumes have been created with SuSe 7.2 (i.e. an older versio=
-n of
-the LVM tools), now I use SuSe 7.3,
- lvcreate --version
-   lvcreate: Logical Volume Manager 1.0.1-rc2
-   Heinz Mauelshagen, Sistina Software  30/08/2001 (IOP 10)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Obviously, /dev/LVMhome_vg/home is a reiserfs.
-
-Any idea?
-
-J=FCrgen
--- =
-
-Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
-office: juergen@informatik-vollmer.de,  vollmer@cocolab.de
-	    www.informatik-vollmer.de Tel: +49(721) 9204871 Fax: +49(721) 24874
-private: Juergen.Vollmer@acm.org
-
-
-
---==_Exmh_-1332358667P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: Exmh version 2.3.1 01/18/2001
-
-iD8DBQE708Nxn1Xi7IT+kG0RAq72AJ9WowFTwXkguGdQuKzYFv+RC0wDrACdHw/j
-9IairzYmG2KJLl9KjrWbQs8=
-=oCjV
------END PGP SIGNATURE-----
-
---==_Exmh_-1332358667P--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
