@@ -1,8 +1,9 @@
-From: bscott@ntisys.com
-Subject: Re: [linux-lvm] Growing the size of the lv
-In-Reply-To: <20020801014624.5F3855F22C@dell103.hee.net>
-Message-ID: <Pine.LNX.4.44.0207312159430.2592-100000@dragon.inside.ntisys.com>
-MIME-Version: 1.0
+From: Eamonn Hamilton <eamonn@snifter.freeserve.co.uk>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1025610944.12711.29.camel@snifter>
+Mime-Version: 1.0
+Subject: [linux-lvm] ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+ volume group
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,26 +14,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 31 20:53:02 2002
+Date: Tue Jul  2 06:55:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Wed, 31 Jul 2002, at 6:46pm, Hee So wrote:
-> After some twittling around, the LV Size was that of all 3 PVs.
 
-  Than you have extended the size of the LV.
+Hi.
 
-> when I run df -kh, I still get the size of the original diskspace
+I'm getting the error as shown in the subject line from a system which
+was shut down improperly ( read: turned off ! ). Is there anything I can
+do to recover this, as the disks all seem fine, and pvscan finds the
+physical volumes.
 
-  You need to extend the size of the filesystem, which is stored on the LV.
+Any pointers gratefully received ..
 
-  This is in the HOWTO on the website:
-  http://www.sistina.com/lvm_howtos/lvm_howto/
+Cheers,
+Eamonn
 
--- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do not |
-| necessarily represent the views or policy of any other person, entity or  |
-| organization.  All information is provided without warranty of any kind.  |
+P.S
+
+pvscan -d and vgscan -d on request, as I don't want to throw 70k at the
+list :-)
