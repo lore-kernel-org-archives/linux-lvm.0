@@ -1,12 +1,9 @@
-Return-Path: <thornber@btconnect.com>
-Date: Wed, 9 May 2001 16:03:19 +0100
-Subject: Re: [linux-lvm] Patching my kernel.
-Message-ID: <20010509160319.C898@66bassett.freeserve.co.uk>
-References: <989363474.1329.2.camel@localhost> <20010509085110.G23157@colombina.comedia.it> <989404772.3725.0.camel@localhost>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <989404772.3725.0.camel@localhost>; from raheesom@navpoint.com on Wed, May 09, 2001 at 06:39:31AM -0400
-From: Joe Thornber <thornber@btconnect.com>
+Return-Path: <jamesp@foobarhouse.com>
+Date: Wed, 9 May 2001 16:12:09 +0100 (BST)
+From: James Pattinson <jamesp@foobarhouse.com>
+Message-ID: <Pine.LNX.4.30.0105091611570.32661-100000@greebo.foobarhouse.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] 2.4.4 compile
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,51 +15,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Neil Macvicar <neilm@foobarhouse.com>
 
-On Wed, May 09, 2001 at 06:39:31AM -0400, Rupert Heesom wrote:
-> On 09 May 2001 08:51:10 +0200, Luca Berra wrote:
-> > On Tue, May 08, 2001 at 07:11:14PM -0400, Rupert Heesom wrote:
-> > > I had previously patched the kernel (stock 2.4.3) with the beta 6 patch.
-> > > 
-> > > Now I'm trying to update to beta 7.  I tried patching the kernel is
-> > > exactly the same way as before (maybe a mistake).  Most of the output is
-> > > pasted in here (at the end).  I'm concerned about the prompts I got -
-> > > 
-> > > "Reversed (or previously applied) patch detected!  Assume -R? [n]"
-> > are you starting with a clean kernel or with the kernel you previously
-> > patched with b6?
-> > the former is the correvt approach,
-> > the latter....
-> 
-> I was not using a clean kernel.  I'll try that.
-> 
-> BTW, I know there's a way to keep the config from the "used kernel", so
-> that I don't have to guess the settings again for my system (I made
-> several config errors last time).  Can you remind me how to migrate the
-> .config file across to a new source tree?   I'll try & find some docs on
-> how to do this, but have forgotten where I last read about it.
+Hi
 
-Just keep a copy of the .config file, when you untar a new kernel
-tree copy the .config file back and do a 'make oldconfig', you will be
-prompted for any new options.
+I'm trying to compile vanilla 2.4.4 + LVM beta7 patch.
 
-I tend to have a few of these .config's for different setups.  eg. 
+If I use the standard config (make config - hold down enter for defaults)
+then I can build a kernel. However if I enable LVM then the final kernel
+linking fails:
 
-config-2.2-new_raid-lvm-kdb
-config-2.2-lvm-kdb
-etc.
+ld -m elf_i386 -T /usr/src/v2.4.4/linux/arch/i386/vmlinux.lds -e stext
+arch/i386/kernel/head.o arch/i386/kernel/init_task.o init/main.o
+init/version.o \
+        --start-group \
+        arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o
+mm/mm.o fs/fs.o ipc/ipc.o \
+        drivers/block/block.o drivers/char/char.o drivers/misc/misc.o
+drivers/net/net.o drivers/media/media.o  drivers/char/agp/agp.o
+drivers/char/drm/drm.o drivers/ide/idedriver.o drivers/scsi/scsidrv.o
+drivers/cdrom/driver.o drivers/sound/sounddrivers.o drivers/pci/driver.o
+drivers/pcmcia/pcmcia.o drivers/net/pcmcia/pcmcia_net.o drivers/pnp/pnp.o
+drivers/video/video.o drivers/usb/usbdrv.o drivers/md/mddev.o \
+        net/network.o \
+        /usr/src/v2.4.4/linux/arch/i386/lib/lib.a
+/usr/src/v2.4.4/linux/lib/lib.a /usr/src/v2.4.4/linux/arch/i386/lib/lib.a
+\
+        --end-group \
+        -o vmlinux
+drivers/md/mddev.o: In function `__update_hardblocksize':
+drivers/md/mddev.o(.text+0x24c1): undefined reference to
+`get_hardblocksize'
+drivers/md/mddev.o(.text+0x24fd): undefined reference to
+`get_hardblocksize'
+make: *** [vmlinux] Error 1
 
-- Joe
+Has anyone had success with LVM + 2.4.4 ?
 
-> 
-> -- 
-> regs
-> rupert
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+Cheers!
+
+James
