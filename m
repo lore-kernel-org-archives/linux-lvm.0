@@ -1,8 +1,10 @@
-From: <mitch@mdmiller.com>
 Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-In-Reply-To: <20011130193234.C1239@wookimus.net>
-Message-ID: <Pine.LNX.4.33.0112010023440.6167-100000@lx1.daboard.com>
-MIME-Version: 1.0
+Message-ID: <20011201150605.GW26712@pc.ilinx>
+References: <Pine.LNX.4.21.0111291704550.435-100000@sol.rune.org> <NBBBKLKHMJHIJLHOGAOJMEDIJCAA.steve.wray@the.net.nz> <20011130093656.C18867@colombina.comedia.it>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011130093656.C18867@colombina.comedia.it>
+From: "Brian J. Murrell" <lvm@interlinx.bc.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec  1 00:15:02 2001
+Date: Sat Dec  1 10:17:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> > Where do I find this document?
->
-> As any good google.com crack-baby would know:
->
->     http://www.google.com/search?q=FHS+2.2+Linux
->
-> Turns up these helpful links:
->
->     http://www.pathname.com/fhs/
->     http://www.opengroup.org/testing/lsb-fhs/
->
-> OK, now back to your regularily scheduled LVM-ness.  Sorry for the
-> tangent.
->
->
-Duh ... thanks.  Didn't mean to make someone else do the work ... guess I
-just lost my head there for a moment.
+On Fri, Nov 30, 2001 at 09:36:56AM +0100, Luca Berra wrote:
+> 
+> with mandrake rescue media you should be able to do lvm mainteinance (but
+> mandrake rescue media has other bugs....)
 
--- Mitch
+Beware.  I don't think Mandrake install (is that what you are
+referencing as rescue) media has the tools.  I put some lvmtools in my
+/boot partition which is not LVM.  I can then mount that from the
+install CD (in rescue mode) and get LVM going again in the case of
+booting problem.
+
+b.
+
+-- 
+Brian J. Murrell
