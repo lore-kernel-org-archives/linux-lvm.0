@@ -1,10 +1,8 @@
-Message-ID: <3F6B1281.8080300@webhackande.se>
-From: Rickard Olsson <richie@webhackande.se>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Migrate from LVM1 to LVM2...
-References: <1063917231.1786.13.camel@super.gamux.chezmoi> <3F6B0E0F.5080807@webhackande.se> <1063980916.3f6b0f740b738@secure.st-peter.stw.uni-erlangen.de>
-In-Reply-To: <1063980916.3f6b0f740b738@secure.st-peter.stw.uni-erlangen.de>
+From: Eddahbi Karim <installation_fault_association@yahoo.fr>
+Message-Id: <1063981890.1127.5.camel@super.gamux.chezmoi>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Migrate from LVM1 to LVM2...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +13,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 19 09:29:01 2003
+Date: Fri Sep 19 09:35:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Svetoslav Slavtchev wrote:
+Hi,
 
-> so your scripts are already for dm-mod ?-)
+I want to test 2.6 kernels, but I can't do it without migrate from LVM 1
+to LVM 2.
 
-The LVM2 ebuild has device-mapper as a dependency and although I haven't 
-checked what it does in detail, it seems to install properly.
+So, I tried to find some documentations, but the only I can found is the
+README of the LVM 2 package.
 
- > ( happy Gentoo users :-) )
+Is there a howto somewhere ?
 
-Well, we're forced to use devfs...
+Is there something I must do before migrate to LVM2 (I'll test LVM 2 on
+a kernel 2.4.21 first).
 
-    / Rickard Olsson,IT-Konsult/
-   / Telefon: +46 70 635 01 42/
-  / http://www.webhackande.se/
+Must I edit my init script to add new LVM commands after installing the
+device-mapper, LVM2 and the new kernel patched for LVM2 ?
+
+I'm working with a Gentoo system, vanilla source 2.4.21 + preempt.
+gcc 3.2
+
+Thank you.
+
+-- 
+ThE_TemPLaR
