@@ -1,13 +1,13 @@
-Date: Mon, 27 Aug 2001 09:29:03 -0500
+Date: Mon, 27 Aug 2001 09:40:55 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] troubled Guiness
-Message-ID: <20010827092903.A12257@sistina.com>
-References: <Pine.LNX.4.33.0108260910540.1071-100000@leopard.dorfam.ca> <000e01c12e77$3382ca80$0300000a@pacbell.net>
+Subject: Re: [linux-lvm] Installed the lvm on the Red Hat 7.1 then what to do
+Message-ID: <20010827094055.A12574@sistina.com>
+References: <994015538.6465.5.camel@detrius>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
 Content-Disposition: inline
-In-Reply-To: <000e01c12e77$3382ca80$0300000a@pacbell.net>; from e@arix.com on Sun, Aug 26, 2001 at 02:36:44PM -0700
+In-Reply-To: <994015538.6465.5.camel@detrius>; from erik@bagfors.nu on Sun, Jul 01, 2001 at 09:25:38PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,23 +19,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+To: =?iso-8859-1?Q?Erik_B=E5gfors?= <erik@bagfors.nu>
+Cc: linux-lvm@sistina.com
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 26, 2001 at 02:36:44PM -0700, Erick Calder wrote:
-> I'm running RH 7.0 (Guiness) with the 2.2.16-22 kernel and gcc-2.96-85 and
-> have downloaded the Linus 2.4.9 stock kernel which I'm trying to make... I
-> built the patch and applied it with no apparent problem but when I try to
-> build the kernel I get the errors in the log below.
->=20
-> has anyone been here before?
+n Sun, Jul 01, 2001 at 09:25:38PM +0200, Erik B=E5gfors wrote:
+>     hda1   hdc1      (PV:s on partitions or whole disks)
+>        \   /
+>         \ /
+>        diskvg        (VG)
+>        /  |  \
+>       /   |   \
+>   usrlv rootlv varlv (resizeable LV:s, think of them as resizeable virtua=
+l partitions)
+>     |      |     |
+>  ext2  reiserfs  xfs (filesystems)
 
-I just responded to Peter Druck about this same problem.  See the thread
-with subject "Problems compiling lvm 1.0 and 2.4.x kernel" on this list.
+I hope you don't mind, but I've stuck this diagram in the LVM howto.  Is
+that ok, or should i pull it out?
 
 --=20
 AJ Lewis
@@ -50,10 +55,10 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-This message has been brought to you by the language C and the number F.
+Programming graphics in X is like finding sqrt(pi) using Roman numerals.
 -----End Obligatory Humorous Quote------------------------------------------
 
---5mCyUwZo2JvN/JJP
+--vkogqOf2sHV7VnPd
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -61,9 +66,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7ilkvpE6/iGtdjLERAsbRAJwMtDc/gFeKKiVmr1vI2vzA9CmBFQCfRiDt
-Q1KX6B2LsfzQ00eKaFVyMI4=
-=/Jk4
+iD8DBQE7ilv3pE6/iGtdjLERAnkjAJ91PCrnZlv3SUM5aSwBUOuykuW85wCeKSvO
+RjwcmuOaEk7jaza3F1GIWcc=
+=7unp
 -----END PGP SIGNATURE-----
 
---5mCyUwZo2JvN/JJP--
+--vkogqOf2sHV7VnPd--
