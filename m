@@ -1,16 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2TGpGj04201
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 11:51:16 -0500
-Received: from mail.osdl.org (fw.osdl.org [65.172.181.6])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2TGpD1X031704
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 11:51:15 -0500
-Message-Id: <200403291650.i2TGop212446@mail.osdl.org>
-Date: Mon, 29 Mar 2004 08:50:42 -0800 (PST)
-From: markw@osdl.org
-In-Reply-To: <06sb60hni6h5cok941gqnuo4ld1b0v1rgi@email.aon.at>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2THirj27213
+	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 12:44:53 -0500
+Received: from emilia.lsd.ic.unicamp.br (emilia.lsd.ic.unicamp.br
+	[143.106.24.129])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2THip1X025783
+	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 12:44:51 -0500
+Subject: Re: [linux-lvm] Extents allocation
+References: <BAY16-DAV28kO22ZhCl0000884d@hotmail.com>
+From: Alexandre Oliva <oliva@lsd.ic.unicamp.br>
+Date: 29 Mar 2004 14:43:11 -0300
+In-Reply-To: <BAY16-DAV28kO22ZhCl0000884d@hotmail.com>
+Message-ID: <orlllj35xs.fsf@free.redhat.lsd.ic.unicamp.br>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: [HACKERS] PostgreSQL block size vs. LVM2 stripe
-	width
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,52 +22,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: mkoi-pg@aon.at
-Cc: linux-lvm@redhat.com, linux-ia64@vger.kernel.org, pgsql-hackers@postgresql.org
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: sachin <sachindurge@hotmail.com>
 
-Hi Manfred,
+On Mar 29, 2004, "sachin" <sachindurge@hotmail.com> wrote:
 
-On 27 Mar, Manfred Koizar wrote:
-> Mark,
-> 
-> how often did you run your tests?  Are the results reproduceable?
+> lv1 LE  1     to  n      map to PE 1-n     of dev1
+> lv1 LE  n+1 to  m     map to PE 1-x     of dev2
+> lv1 LE m+1 to  x      map to PE n+1-z of dev1
 
-In this case, I've only done 1 per each combination.  I've found the
-results for this test to be reproduceable.
- 
-> On Fri, 26 Mar 2004 14:00:01 -0800 (PST), markw@osdl.org wrote:
->>                        Linux-2.6.3, LVM2 Stripe Width
->>                        (going across)
->>PostgreSQL
->>BLCKSZ
->>(going down)    16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
->>2 KB            2617    2656    2652    2664    2667    2642
->>4 KB            4393    4486    4577    4557    4511    4448
->>8 KB            4337    4423    4471    4576    4111    3642
->>16 KB           4412    4495    4532    4536    2985    2312
->>32 KB           3705    3784    3886    3925    2936    2362
-> 
-> Unless someone can present at least an idea of a theory why a BLCKSZ of
-> 8 KB is at a local minimum (1 or 2% below the neighbouring values) for
-> stripe widths up to 64 KB I'm not sure whether we can trust these
-> numbers.
-> 
-> Before I hit the send button, I did a quick check of the link you
-> provided.  The links in the table contain the following test numbers:
-> 
->         16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
-> 2 KB     72      71      70       69      66      65
-> 4 KB     64      63      62       61      60      58
-> 8 KB     54      53      52       51      50      49
-> 16 KB    79      78      77       76      75      74
-> 32 KB    86      85      84       83      82      80
-> 
-> Does this mean that you first ran all test with 8 KB, then with 4, 2, 16
-> and 32 KB BLCKSZ?  If so, I suspect that you are measuring the effects
-> of something different.
+> I want to know this kind of extent allotment is allowed or not
 
-Yes, that's correct, but why do you suspect that?
+It is.  Look for LVreorg in my home page for a (not very user
+friendly) script that will help you set things up the way you want.
 
-Mark
+-- 
+Alexandre Oliva             http://www.ic.unicamp.br/~oliva/
+Red Hat Compiler Engineer   aoliva@{redhat.com, gcc.gnu.org}
+Free Software Evangelist  oliva@{lsd.ic.unicamp.br, gnu.org}
