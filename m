@@ -1,10 +1,10 @@
 Return-Path: <russell@coker.com.au>
 From: Russell Coker <russell@coker.com.au>
-Date: Sat, 16 Dec 2000 16:19:02 +0100
+Date: Sat, 16 Dec 2000 19:44:54 +0100
 MIME-Version: 1.0
-Message-Id: <00121616190202.10070@lyta>
+Message-Id: <00121619445400.00774@lyta>
 Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Make doesn't abort on error
+Subject: [linux-lvm] lvm-081 package available for testing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +17,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: debian-devel@lists.debian.org
+Cc: linux-lvm@sistina.com
 
-ln -s liblvm.so.0.8final liblvm.so
-ln: `liblvm.so': File exists
-make[4]: *** [liblvm.so.0.8final] Error 1
-make[4]: Leaving directory `/home/rjc/debian/LVM/lvm-0.8.1-0/tools/lib'
-make[3]: *** [all] Error 2
-make[3]: Leaving directory `/home/rjc/debian/LVM/lvm-0.8.1-0/tools/lib'
-make[3]: Entering directory `/home/rjc/debian/LVM/lvm-0.8.1-0/tools/man8'
-make[4]: Entering directory `/home/rjc/debian/LVM/lvm-0.8.1-0/tools/man8'
+At http://www.coker.com.au/lvm/ I have my first attempt at packaging LVM =
+for=20
+Linux.  It is only lvm0.8.1 at the moment, I will do 0.9 shortly.
 
-Above is the error condition that make isn't detecting.  I've changed the=
+There are 2 packages that depend on each other, lvm-common provides the m=
+an=20
+pages, wrappers, init script, etc.  lvm081 does the binaries and the shar=
+ed=20
+library.
+
+Please let me know what you think.
+
+Also please DON'T install this on a server type system.  I can't guarante=
+e=20
+that it'll work well.  Install it on a machine where you are just playing=
 =20
-makefiles to use sonames so I can have multiple versions installed with e=
-ase=20
-(I'll send the patch here when it's working - hopefully within 24 hours=20
-otherwise maybe after Christmas).
-
-Below is the code from make.tmpl.  For some reason when the "make -c=20
-tools/lib all" fails it doesn't result in compilation aborting.  Perhaps=20
-someone who knows make and shell scripting better than I can advise...
-
-all:
-        @for d in $(SUBDIRS); \
-         do \
-            if [ "$$d" =3D "." ]; \
-            then \
-               $(MAKE) all_this; \
-            else \
-               $(MAKE) -C $$d all; \
-            fi; \
-         done
-
-
+with LVM.  Preferrably do it on a test machine that doesn't matter much.
 
 --=20
 http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
