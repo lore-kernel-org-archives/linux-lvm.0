@@ -1,11 +1,11 @@
-Return-Path: <artur.wiak@agora.pl>
-Message-ID: <3AC8BECC.DF37AA1F@agora.pl>
-Date: Mon, 02 Apr 2001 20:02:52 +0200
-From: Artur Wiak <artur.wiak@agora.pl>
+Return-Path: <darwin@gazeta.pl>
+Message-ID: <3AC97D28.2C597E4B@gazeta.pl>
+Date: Tue, 03 Apr 2001 09:35:04 +0200
+From: Artur Wiak <darwin@agora.pl>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="------------8B7BFAA92E458498FE39DE52"
-Subject: [linux-lvm] vgcreate error
+ boundary="------------70787B86DF7138196EDA9E23"
+Subject: [linux-lvm] problem with vgcreate ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,10 +17,10 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+To: linux-lvm <linux-lvm@sistina.com>
 
---------------8B7BFAA92E458498FE39DE52
-Content-Type: text/plain; charset=us-ascii
+--------------70787B86DF7138196EDA9E23
+Content-Type: text/plain; charset=iso-8859-2
 Content-Transfer-Encoding: 7bit
 
 Hi !
@@ -37,7 +37,7 @@ but when i started module and i want create lvm group
 lvm -- lvm_chr_ioctl: unknown command 4004fe0a
 vgcreate -- ERROR "Invalid argument" creating VGDA for volume group
 "lvmgrp" in kernel.
-I don't known what i do bad?
+I don't known what i do bad (maybe any patch)?
 (With beta4 end beta5 this error recurs too.)
 Help me please.
 
@@ -45,9 +45,20 @@ Thanks for Your help.
 
 Artur
 
+--
 
---------------8B7BFAA92E458498FE39DE52
-Content-Type: text/html; charset=us-ascii
+
+                 Z Powazaniem
+
+                 Artur J.Wiak
+         E-mail:  Artur.Wiak@gazeta.pl
+        Gazeta Wyborcza,  IT Department
+                ul.Czerska 8/10
+                tel.55-(55-952)
+
+
+--------------70787B86DF7138196EDA9E23
+Content-Type: text/html; charset=iso-8859-2
 Content-Transfer-Encoding: 7bit
 
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
@@ -65,11 +76,25 @@ Hi !
 <br><b>lvm -- lvm_chr_ioctl: unknown command 4004fe0a</b>
 <br><b>vgcreate -- ERROR "Invalid argument" creating VGDA for volume group
 "lvmgrp" in kernel.</b>
-<br>I don't known what i do bad?
+<br>I don't known what i do bad (maybe any patch)?
 <br>(With beta4 end beta5 this error recurs too.)
 <br>Help me please.
 <p>Thanks for Your help.
 <p>Artur
+<p>--
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Z Powazaniem
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Artur J.Wiak
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; E-mail:&nbsp; Artur.Wiak@gazeta.pl
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gazeta Wyborcza,&nbsp; IT
+Department
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ul.Czerska 8/10
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tel.55-(55-952)
 <br>&nbsp;</html>
 
---------------8B7BFAA92E458498FE39DE52--
+--------------70787B86DF7138196EDA9E23--
