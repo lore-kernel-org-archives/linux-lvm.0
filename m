@@ -1,10 +1,7 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Are there problems with same VG on same hard disk?
-Message-ID: <20030409124155.GH1366@tykepenguin.com>
-References: <20030409112739.GA1244@glorybox> <1899663439.20030409133243@tnonline.net> <20030409123606.GA1752@glorybox>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030409123606.GA1752@glorybox>
+Message-ID: <5F51EB83DC94D211827A0008C75DE6B40705AE25@alrh41.bc>
+From: "GONAY Benjamin (ANS/AXS)" <benjamin.gonay@belgacom.be>
+MIME-Version: 1.0
+Subject: [linux-lvm] Any tools to read vgcfgbackup config ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +12,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  9 07:42:01 2003
+Date: Wed Apr  9 07:59:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Wed, Apr 09, 2003 at 02:36:06PM +0200, Kai Weber wrote:
-> On Wed, Apr 09, 2003 at 01:32:43PM +0200, Anders Widman wrote:
-> 
-> > Why  would  you want to do that? One of the major benefits with LVM is
-> > that  you  do  not have to divide your physical disks into partitions,
-> > but  to  do  that through LVM. Also, performance-wise it is not a good
-> > idea to do what you suggested.
-> 
-> I have removed Windows from a partition. So it is now empty and could be
-> used an included in the VG. If it's possible to resize the partitions...
-> 
-> /dev/hda7          1923      2520   4803403+  8e  Linux LVM
-> /dev/hda8          2521      3198   5446003+  8e  Linux LVM
-> /dev/hda9          3199      9729  52460226   8e  Linux LVM
-> 
-> /dev/hda7 is VG system, /dev/hda9 is VG data and /dev/hda8 the new and
-> empty partition. I have no space to backup /dev/hda9 for merging hda8
-> and hda9. There seems to be no "pvresize" for LVM1.
-> 
+ Hi all,
 
-Sounds perfectly reasonable to me, that's pretty much what I have, though
-without the shame of previously having windows on the machine :-)
+ I'm using LVM 1.0.5(mp-V6) with SuSE8.1, all is fine. 
+ I'm thinking about a future crash of my lvm config (just hoping this will
+never happens..) and telling me :
 
-  PV /dev/sda7   VG vg00   lvm1 [20.00 GB / 0    free]
-  PV /dev/sda8   VG vg00   lvm1 [9.89 GB / 0    free]
-  PV /dev/sdb1   VG vg00   lvm1 [34.18 GB / 3.18 GB free]
+   how could i known the configuration saved in the vgxxx.conf files
+(results of the vgcfgbackup command) ??
 
-...and yes, I swap to an LV too...
+ Is there any tool to display the saved config in theses files ?
 
-patrick
+ Thanks.
+ Benjamin Gonay 
+
+---
+... So after the Soviet Union's attempts to register and control all
+typewriters and fax machines, TCPA attempts to register and control all
+computers. The implications for liberty, democracy and justice are worrying.
+: SO DON'T LET PALLADIUM TO BORN !
+http://www.cl.cam.ac.uk/~rja14/tcpa-faq.html
+
+**** DISCLAIMER **** 
+"This e-mail and any attachments thereto may contain information 
+which is confidential and/or protected by intellectual property 
+rights and are intended for the sole use of the recipient(s) named above. 
+Any use of the information contained herein (including, but not limited to, 
+total or partial reproduction, communication or distribution in any form) 
+by persons other than the designated recipient(s) is prohibited. 
+If you have received this e-mail in error, please notify the sender either 
+by telephone or by e-mail and delete the material from any computer. 
+Thank you for your cooperation."
