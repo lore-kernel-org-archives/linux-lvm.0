@@ -1,12 +1,12 @@
 Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Fri, 20 Apr 2001 11:29:23 +0100
+Date: Fri, 20 Apr 2001 11:34:19 +0100
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Removal of PV
-Message-ID: <20010420112923.A569@tykepenguin.com>
-References: <F29e4wk2UfxhUIBSIeS000025b8@hotmail.com>
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Message-ID: <20010420113419.B569@tykepenguin.com>
+References: <20010419142400.E10345@sistina.com> <200104191945.f3JJjKRn015661@webber.adilger.int> <20010419145337.K10345@sistina.com> <3ADF45FC.EE7B2003@mandrakesoft.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <F29e4wk2UfxhUIBSIeS000025b8@hotmail.com>; from gene_yee@hotmail.com on Mon, Apr 16, 2001 at 02:50:07PM -0700
+In-Reply-To: <3ADF45FC.EE7B2003@mandrakesoft.com>; from jgarzik@mandrakesoft.com on Thu, Apr 19, 2001 at 04:09:32PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,45 +21,27 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: AJ Lewis <lewis@sistina.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
 
-On Mon, Apr 16, 2001 at 02:50:07PM -0700, hail narcissus wrote:
+On Thu, Apr 19, 2001 at 04:09:32PM -0400, Jeff Garzik wrote:
+> AJ Lewis wrote:
+> > Ok, the issue here is that we're trying to get a release out and so anything
+> > that majorly changes the code is getting shunted aside for the moment.  It
+> > would be stupid to just add everything that comes in on the ML without
+> > review.  Linus does the exact same thing.  I've said this before to you
+> > Andreas, but apparently you feel that you should have final say on whether
+> > your patches go in or not.
 > 
-> I know this has been asked before and I browsed the archives for the info.  
-> But I want to be sure since I am dealing with 500+GB of data.
+> > As far as getting patches into the stock kernel, we've been sending patches
+> > to Linus for over a month now, and none of them have made it in.  Maybe
+> > someone has some pointers on how we get our code past his filters.
 > 
-> Here is my configuration:
-> hda-h (80Gig IDE's)
-> sda-n (9Gig SCSI's)
-> 652.81 GB VG
-> 505GB Used 140GB Free
-> 
-> I want to remove the SCSI drives since I am having some SCSI bus problems 
-> and they are just old and I am not feeling comfortable with it's 
-> reliability.
-> 
-> I believe this would be the proper steps:
-> 
-> resize2fs /dev/lv/vg 520G  <-- Is 520G correct, particularly the G.
-> pvmove /dev/sda /dev/hdh   <-- Assuming /dev/hdh has free space
-> pvmove /dev/sdb /dev/hdh
-> pvmove /dev/sdc /dev/hdh
-> ...
-> lvreduce -L 520G /dev/lv/vg
-> vgreduce vg /dev/sda
-> vgreduce vg /dev/sdb
-> vgreduce vg /dev/sdc
-> 
-> I saw in the mailing list where someone suggested:
-> 
-> ext2resize/resize2fs
-> lvreduce
-> pvmove
-> vgreduce
-> 
-> But I would think you would want to do pvmove before the lvreduce.  
-> Otherwise you might truncate data?
+> Read Documentation/SubmittingPatches, and also listen to kernel hackers
+> who know the block layer and want to fix lvm.
 
-Either way round should be fine. If you're using <beta7 then, due to bugs, you
-should take the volume offline before moving it though.
+OK, we're in the process of splitting the big patch up into nice clean small
+patches to go to Linus. Hopefully this should be done today, or very shortly at
+least.
+
 
 patrick
