@@ -1,11 +1,7 @@
-From: Daniel Phillips <dphillips@sistina.com>
-Subject: Re: [linux-lvm] where do i find the device mapper/LVM2 documentation?
-References: <3ED32F3E.9000009@silicide.dk> <3ED478E1.1020509@silicide.dk> <200305281643.04803.jhs@oes.co.th>
-In-Reply-To: <200305281643.04803.jhs@oes.co.th>
+Message-ID: <23233866A70C32479532C8D0B8AE7B96032AAC5B@i2km07-ukbr.domain1.systemhost.net>
+From: narsimha.kulkarni@bt.com
+Subject: RE: [linux-lvm] Problems with volume group
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200305291427.15518.dphillips@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,20 +12,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 29 07:26:02 2003
+Date: Thu May 29 07:55:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, "Jason H. Smith" <jhs@oes.co.th>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Wednesday 28 May 2003 11:42, Jason H. Smith wrote:
-> > >>How it is built up. Detailed information explaining to me how i can
-> > >> expand it, stuff like that.
->
-> May I suggest the source code?
+Hi,
 
-One can always suggest the source code, and without understating the value of 
-that, we can and will do better.
+want to delete a volume group and remove a physical volume,
+the backup config file for the volume group has been deleted.
+if i go to remove it, it says it is not found,
+when i do a vgscan, it show as an active volume.
 
-Regards,
+can anyone help me please
 
-Daniel
+Thanks in advance
+Narsimha
