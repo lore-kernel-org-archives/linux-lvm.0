@@ -1,8 +1,10 @@
-From: <jrelist@ntlworld.com>
-Subject: Re: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
+Subject: Re: [linux-lvm] LVM2 for kernels 2.4.20(another problem raid-0)
+Message-ID: <1043676687.3e353e0f8cf19@secure.st-peter.stw.uni-erlangen.de>
+From: Svetoslav Slavtchev <galia@st-peter.stw.uni-erlangen.de>
+References: <1043622448.3e346a3057b43@secure.st-peter.stw.uni-erlangen.de> <20030127111301.GD1698@tykepenguin.com> <1043666356.3e3515b44e061@secure.st-peter.stw.uni-erlangen.de> <20030127112714.GE1698@tykepenguin.com> <1043667262.3e35193e470c0@secure.st-peter.stw.uni-erlangen.de> <20030127115012.GG1698@tykepenguin.com> <1043669513.3e3522096e53e@secure.st-peter.stw.uni-erlangen.de> <20030127124956.GI1698@tykepenguin.com>
+In-Reply-To: <20030127124956.GI1698@tykepenguin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20030127130452.CQOX14589.mta02-svc.ntlworld.com@[10.137.100.62]>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,136 +15,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 27 07:05:01 2003
+Date: Mon Jan 27 08:12:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I had been doing the make dep, forgot to list it. 
+Quoting Patrick Caulfield <caulfield@sistina.com>:
 
-I've moved up to kernel 2.4.9-38, going to try with that. Failing that, I might have to get an evaluation copy of Suse linux. 
-
-John
-
-
-> 
-> From: "Peter A. Castro" <doctor@fruitbat.org>
-> Date: 2003/01/24 Fri AM 12:31:55 GMT
-> To: jrelist@ntlworld.com
-> CC: linux-lvm@sistina.com
-> Subject: Re: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
-> 
-> On Thu, 23 Jan 2003 jrelist@ntlworld.com wrote:
-> 
-> > Peter
-> 
-> Hi John,
-> 
-> > I followed the instructions from the LVM how-to to do the configuration
-> > and patch. To be safe, each time I tried I re-installed the kernel-source
-> > & header rpms (Saving my .config beforehand) then amending the kernel
-> > extension in the Makefile before configure / patching, then went through
-> > the process in the r/h doc 
+> On Mon, Jan 27, 2003 at 01:11:53PM +0100, Svetoslav Slavtchev wrote:
+> > Quoting Patrick Caulfield <caulfield@sistina.com>:
 > > 
-> > make mrproper
-> > make config   (actually xconfig)
-> 
-> You'd missing the 'make dep' step here.  Creating the dependencies is
-> important.
-> 
-> > make clean
-> > make image
-> > make modules
-> > 
-> > which would all work very nicely
-> 
-> You might try saving the output from the 'make image' and 'make modules'
-> to see if iobuf.c gets compiled and linked into fs.o
-> 
-> > then make modules_install which would always give the error.
-> > I tried it with config_modversions on and off in the config, no joy. 
-> > 
-> > I'll try getting the version you have. You mention timer patches - are
-> > they significant ? Also, those depmods that cause problems - do you know
-> > of anywhere else I might locate them or might need to do during the
-> > building of the patch to get them ? 
-> 
-> The specific version shouldn't matter much, nor should the distro as long
-> as it supports S/390.
-> I'm not the one who built our systems here, but I'll ask.  I'd assume it
-> was the stock distro from SuSE.  Not sure about the timer patches, again
-> I'll ask, and in any case it wouldn't help with your module symbol
-> resolving problem.
-> 
-> > Thanks
-> > 
-> > John
-> > 
-> > > 
-> > > From: "Peter A. Castro" <doctor@fruitbat.org>
-> > > Date: 2003/01/23 Thu PM 08:50:33 GMT
-> > > To: jrelist@ntlworld.com
-> > > Subject: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
-> > > 
-> > > On Thu, 23 Jan 2003 jrelist@ntlworld.com wrote:
-> > > 
-> > > > Hi
-> > > 
-> > > Hi John,
-> > > 
-> > > > I'm wondering has anybody been able to install LVM onto s/390 Redhat
-> > > > Linux 7.2 ? I have kernel 2.4.7-39 running and the rpm for lvm 1.0.3. is
-> > > > part of the build, but not the lvm-mod.o module. 
-> > > 
-> > > We have LVM 0.9.1_beta7 running on SuSE SLES-7.2 (s390) under
-> > > a 2.4.7-SuSE-SMP kernel, with some timer patches, at work.
-> > > 
-> > > > I've attempted rebuilding the kernel from source with patches etc. from
-> > > > versions 1.0.3 and 1.0.6 following the instructions from sistina and
-> > > > redhat (including enabling lvm support !) but I always fall at the final
-> > > > hurdle, when doing the make_install : 
+> > > On Mon, Jan 27, 2003 at 12:34:22PM +0100, Svetoslav Slavtchev
+> wrote:
 > > > > 
-> > > > ---------------------------------------
-> > > > cd /lib/modules/2.4.9-37lvm; \
-> > > > mkdir -p pcmcia; \
-> > > > find kernel -path '*/pcmcia/*' -name '*.o' | xargs -i -r ln -sf ../{} pcmcia
-> > > > if [ -r System.map ]; then /sbin/depmod -ae -F System.map  2.4.9-37lvm; fi
-> > > > depmod: *** Unresolved symbols in /lib/modules/2.4.9-37lvm/kernel/drivers/md/lvm-mod.o
-> > > > depmod:         alloc_kiovec
-> > > > depmod:         free_kiovec
-> > > > make: *** [_modinst_post] Error 1
-> > > > [root@rother-8 linux]#
-> > > > ------------------------------------
-> > > > 
-> > > > If anyone can help me, I'd be grateful. I'm an os/390 guy, this is my
-> > > > first dive into the Linux pool and so far I'm enjoying it ! 
+> > > > do you think it's only xfs related,
+> > > > if i remmember correctly it's not only xfs problem
 > > > 
-> > > alloc_kiovec and free_kiovec are part of the fs code and should always be
-> > > present.  You should be able to grep for either in the System.map.
-> > > 
-> > > Did you do a 'make dep' and 'make clean' before doing a 'make all'?  For
-> > > that matter, did you do a 'make mrproper' before creating your config
-> > > ('make menuconfig')?  Save your existing .config before doing make mrproper!!
-> > > 
-> > > > Thanks in advance
-> > > > John Ellis
-> > > > UK
-> > > 
-> > > -- 
-> > > Peter A. Castro <doctor@fruitbat.org> or <Peter.Castro@oracle.com>
-> > > 	"Cats are just autistic Dogs" -- Dr. Tony Attwood
-> > > 
-> > > 
-> > 
-> 
-> -- 
-> Peter A. Castro <doctor@fruitbat.org> or <Peter.Castro@oracle.com>
-> 	"Cats are just autistic Dogs" -- Dr. Tony Attwood
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+> > > I'm fairly sure it was just XFS. It makes (to us) odd assumptions
+> about
+> > > the
+> > > alignment of the journal or something.
+> > > > i'll check later with reiser and jfs 
+
+
+no problems at the first check,
+transfered ~10Gb to and from the LV useing jfs and reiser
+
+but with xfs got this:
+mkfs.xfs -- 
+device-mapper: unknown block ioctl 0x6424
+device-mapper: unknown block ioctl 0x6424
+
+and with mount again :
+
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+213164570 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+213164602 4
+
+so let's try the patch :(
+
+svetljo
+
+> > may be i should try this patch:
+> >
+>
+http://cgi.cse.unsw.edu.au/~neilb/patches/linux-stable/2.4.leading/2003-01-06:00/015RaidSplit
+> > after i check reiser and jfs
