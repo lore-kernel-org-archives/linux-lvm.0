@@ -1,21 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0BJXJr25905
-	for <linux-lvm@redhat.com>; Tue, 11 Jan 2005 14:33:19 -0500
-Received: from postfix3-2.free.fr (postfix3-2.free.fr [213.228.0.169])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0BJX7sS010439
-	for <linux-lvm@redhat.com>; Tue, 11 Jan 2005 14:33:12 -0500
-Received: from eric.placeverte.home
-	(lns-vlq-7-lil-82-254-192-167.adsl.proxad.net [82.254.192.167])
-	by postfix3-2.free.fr (Postfix) with SMTP id D4477C18C
-	for <linux-lvm@redhat.com>; Tue, 11 Jan 2005 20:33:06 +0100 (CET)
-Date: Tue, 11 Jan 2005 20:32:45 +0100
-From: messmate <messmate@free.fr>
-Subject: Re: [linux-lvm] stripped or not ?
-Message-ID: <20050111203245.5dd73d5f@eric.placeverte.home>
-In-Reply-To: <1105469627.6118.14.camel@localhost.localdomain>
-References: <20050111184621.52d06aef@eric.placeverte.home>
-	<1105469627.6118.14.camel@localhost.localdomain>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0C8rgr01217
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 03:53:42 -0500
+Received: from mail.clunker.utsl.gen.nz (210-54-92-184.ipnets.xtra.co.nz
+	[210.54.92.184])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0C8rUPG023815
+	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 03:53:36 -0500
+Message-ID: <41E4E575.6030802@vilain.net>
+Date: Wed, 12 Jan 2005 21:53:09 +1300
+From: Sam Vilain <sam@vilain.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Resizing a volume group
+References: <853E1A0C-6071-11D9-A1E3-000A95AF6760@hawaii.rr.com>
+In-Reply-To: <853E1A0C-6071-11D9-A1E3-000A95AF6760@hawaii.rr.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,35 +23,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: deant@hawaii.rr.com
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 11 Jan 2005 10:53:47 -0800
-Dan Stromberg <strombrg@dcs.nac.uci.edu> wrote:
+Dean Takemori wrote:
+> I'm running a Fedora Core 1 box using LVM on RAID (lvm-1.0.3-13)  I moved
+> from a pair of RAID1 hard drives to a larger pair of drives by 
+> strategically
+> failing and replacing the drives. 
+> This has left me with the following situation : Volume group lv0 (26GB) 
+> resides
+> on /dev/md1, which are a pair of 250GB partitions.  But the lvm tools 
+> only see
+> /dev/md1 as being 26GB (which is what it was on the old hard drives).  
+> (Oddly,
+> vgdisplay does note that the maximum lv size is 250GB).
+> 
+> Is it possible to resize the pv and lv so that they use up the full 
+> space of
+> the partition?
 
->On Tue, 2005-01-11 at 18:46 +0100, messmate wrote:
->> Hi,
->> I'm in doubt if my volumes are stripped or not.
->> They were setted-up by the debian-installer ( no choice 
->> for stripping or not).
->> 
->> How can I seen they are striped ?
->> Thanks in advance
->> mess-mate
->
->You could probably use dstat to verify this:
->
->1) Fire up a dstat
->
->2) Write a significant amount of data to the "mirror"
->
->3) If both disks show heavy activity in dstat, then you're probably
->good to go
->
->
->There are probably other ways as well.
->
->
-Thanks Dan,
-Would be /usr/bin/datastat fo debian.
-best regards
+so, blockdev -s /dev/md1 shows 26 or 250GB ?
+
+I'm struggling to see how you would have changed the size of a block
+device with "strategically failing and replacing" drives.
+
+> ~ > pvdisplay /dev/md1
+> PV Size               26.44 GB [55453952 secs] / NOT usable 4.19 MB 
+
+If /dev/md1 really is 250GB then you might have some surgical disk 
+partitioning to do.  ie, get it back to the size it was, then add the
+rest of the disk as another /dev/md PV.
+
+Sam.
