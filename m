@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Defect in vgchange
-Message-ID: <20030523123119.B24103@sistina.com>
-References: <000801c3205a$31d69dc0$ebbba5cc@patni.com>
+Subject: Re: [linux-lvm] Question on VG activation
+Message-ID: <20030523123645.C24103@sistina.com>
+References: <099901c31fac$c0722d50$fc6a6d0a@corp.int.digex.com>
 Mime-Version: 1.0
-In-Reply-To: <000801c3205a$31d69dc0$ebbba5cc@patni.com>; from sachin.gupta@patni.com on Thu, May 22, 2003 at 05:33:15PM +0530
+In-Reply-To: <099901c31fac$c0722d50$fc6a6d0a@corp.int.digex.com>; from vze2sjj7@verizon.net on Wed, May 21, 2003 at 11:22:11AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 23 05:40:02 2003
+Date: Fri May 23 05:46:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Sachin,
+On Wed, May 21, 2003 at 11:22:11AM -0400, Anastasios A. Papadopoulos Tas" wrote:
+> What is the best way to have LVM auto-activate the VG's on bootup?
 
-have you tried to reproduce with LVM 1.0.7 already ?
+Put "vgchange -ay" into your pre-fsmount startup script (if your distributor
+didn't do it for you already).
 
-LVM1 from Sistina doesn't support multi-pathing (you need to use MD
-multi-pathing additionally to LVM1).
+If your HW-configuration changes (e.g. new disk drives), you need
+to run vgscan as well (in case of LVM2 tools, you eant to check, if your
+device name filters are still ok in /etc/lvm/lvm.conf).
 
-LVM2.2 later this year is planned to have it.
+^
+> 
+> Tas Papadopoulos
 
-
-On Thu, May 22, 2003 at 05:33:15PM +0530, Sachin (Patni) wrote:
-> hi 
-> 
-> I am a software engineer working in the area of Storage Area Networks . 
-> 
-> But whenever I give the following command
-> 
-> vgchange -l 128 test_vg 
-> 
-> test_vg being a volume group on physical volumes created on sd device partitions (type 8e) 
-> 
-> It results in segmentation fault.  (I am working on a multi path system ;  lvm version : lvm-1.0.3-4 )
-> 
-> Kindly give me the reason for this , whether this version is not suited for multi-path or this is a defect. 
->  
-> 
-> 
-> Thanks and regards 
-> 
-> 
-> Sachin Gupta
-> 
 
 -- 
 
