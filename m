@@ -1,26 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2BEet827501
-	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 09:40:55 -0500
-Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2BEes07001678
-	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 09:40:54 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by salusa.poochiereds.net (Postfix) with ESMTP id E679275B1
-	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 09:40:53 -0500 (EST)
-Received: from salusa.poochiereds.net ([127.0.0.1])
-	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 19867-05 for <linux-lvm@redhat.com>;
-	Thu, 11 Mar 2004 09:40:53 -0500 (EST)
-Received: from localhost (salusa.ix.dyndns.org [192.168.1.2])
-	by salusa.poochiereds.net (Postfix) with ESMTP id 6C7D62926
-	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 09:40:53 -0500 (EST)
-Subject: Re: [linux-lvm] Patch for Miguel Cabeca's lvm2create_initrd script
-From: Jeffrey Layton <jtlayton@poochiereds.net>
-In-Reply-To: <1078968102.3348.20.camel@localhost>
-References: <1078968102.3348.20.camel@localhost>
-Message-Id: <1079016053.2262.26.camel@tesla.mmt.bellhowell.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2BMPP823001
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 17:25:25 -0500
+Received: from mail.osdl.org (fw.osdl.org [65.172.181.6])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2BMPO07024510
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 17:25:24 -0500
+From: Mark Wong <markw@osdl.org>
+Message-ID: <20040311142515.A27177@osdlab.pdx.osdl.net>
+References: <200403081916.i28JGgE25794@mail.osdl.org> <4050E453.3010809@tmr.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <4050E453.3010809@tmr.com>; from davidsen@tmr.com on Thu, Mar 11, 2004 at 05:12:35PM -0500
+Subject: [linux-lvm] Re: lvm2 performance data with linux-2.6
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -32,41 +22,40 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Mar 11 09:39:00 2004
+Date: Thu Mar 11 17:23:02 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Bill Davidsen <davidsen@tmr.com>
+Cc: linux-lvm@redhat.com, linux-kernel@vger.kernel.org
 
-On Wed, 2004-03-10 at 20:21, Jeff Layton wrote:
-> Ok -- I think I have it now (for real this time :-). I've overhauled the
-> mechanism for cleaning up device entries:
+On Thu, Mar 11, 2004 at 05:12:35PM -0500, Bill Davidsen wrote:
+> markw@osdl.org wrote:
+> > I've started collecting various data (including oprofile) using our
+> > DBT-2 (OLTP) workload with lvm2 on linux 2.6.2 and 2.6.3 on ia32 and
+> > ia64 platforms:
+> > 	http://developer.osdl.org/markw/lvm2/
+> > 
+> > So far I've only varied the stripe width with lvm, from 8 KB to 512 KB,
+> > for PostgreSQL that is using 8 KB sized blocks with ext2.  It appears
+> > that a stripe width of 16 KB through 128KB on the ia64 system gives the
+> > best throughput for the DBT-2 workload on a volume that should be doing
+> > mostly sequential writes.
+> > 
+> > I'm going to run through more tests varying the block size that
+> > PostgreSQL uses, but I wanted to share what I had so far in case there
+> > were other suggestions or recommendations.
+> > 
+> Here's one thought: look at the i/o rates on individual drives using 
+> each stripe size. You *might* see that one size does far fewer seeks 
+> than others, which is a secondary thing to optimize after throughput IMHO.
 > 
-> 1) we first remove /rootvol/dev/mapper
-> 2) mknod a /rootvol/dev/mapper/control device file
-> 3) chroot to /rootvol, mount /proc, run /sbin/vgmknodes, and umount
-> /proc
-> 
-> This should make all the correct device entries and vg symlinks under
-> /dev, and should allow the initrd images to cope with the renumbering of
-> major/minor numbers, as I've found sometimes happens on kernel upgrades.
-> 
-> Attached is a patch to Miguel's original script. The current one is
-> available from:
-> 
-> http://poochiereds.net/svn/lvm2create_initrd
-> 
-> As always, comments and/or patches are welcome.
+> If you don't have a tool for this I can send you the latest diorate 
+> which does stuff like this, io rate perdrive or per partition, something 
+> I occasionally find revealing.
 
-Alas, I think I've solved this problem in the wrong place. The real
-problem is that the LVM startup script on Debian that runs prior to the
-mountall script doesn't add the --mknodes flag when it runs vgscan.
+Yeah, please do send me a copy.  I'd be interested to see what that might 
+turn up.  I've just been using iostat -x so far.
 
-I think that's the correct place to have it fix the device entries. I'm
-working with the maintainer of the lvm-common debian package now to see
-if we can get the fix rolled into their package.
-
-So the only change that should be needed to Miguel's script is to add
-/initrd entries to the PATH.
-
-Cheers,
-Jeff
+Thanks,
+Mark
