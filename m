@@ -1,10 +1,9 @@
-Return-Path: <totake66@home.com>
-Message-ID: <3B005823.33AEE05D@home.com>
-Date: Mon, 14 May 2001 17:11:47 -0500
-From: Tom Otake <totake66@home.com>
+Return-Path: <paulj@itg.ie>
+Date: Tue, 15 May 2001 09:04:54 +0100 (IST)
+From: Paul Jakma <paulj@itg.ie>
+Message-ID: <Pine.LNX.4.33.0105150857180.24660-100000@rossi.itg.ie>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm deadlock with 2.4.x kernel?
+Subject: [linux-lvm] segfaults and "VGDATA .. inconsistent" beta7 tools
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,45 +15,87 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux LVM <linux-lvm@sistina.com>
 
-I'm not sure if this has been brought up yet.  Over the weekend, my
-Linux hung up on me twice.  Considering that this never happened before
-and only two things have recently changed (LVM and ReiserFS) , I did
-some reading and came across the bug report for LVM on sistina's website
-about LVM deadlocking Linux.
+I have the same problem with 2 machines.
 
-I'm running kernle 2.4.3 with LVM compiled into the kernel.  LVM is
-0.9.1_beta7, reiser is 3.x.0j.  All essential fs (/, /usr, /var, /tmp)
-are still using ext2 and linux partitions, non essential fs (/home
-amongst others) are all on  reiserfs with LVM, excluding /usr/local,
-which is still on ext2 and Linux partition.
+They are both running 2.4.5-pre1 with LVM 0.9.1beta7 patch applied and
+the beta7 RPMs. On boot they run vgscan then vgchange -ay. (and
+i've tried running pvscan too)
 
-The first occurance:
-Running vmware (not on lvm/reiser) while browsing the web using netscape
-and running seti@home.  The system hung on me when I tried to access a
-web page that appeared to be task intensive, wether servlets,
-javascript, flash, or something else, I don't know.
+problem is thus:
 
-The second occurance:
-I was copying a large amount of data from a CDROM to my home dir (on
-lvm).  While the copy was in progress, I created a new LV.  This
-worked.  The system hung when I ran mkreiserfs on the new LV.
+[root@ns /root]# vgdisplay
+vgdisplay
+--- Volume group ---
+VG Name               VG01
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                7
+Open LV               6
+MAX LV Size           1023.97 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               13.61 GB
+PE Size               16 MB
+Total PE              871
+Alloc PE / Size       297 / 4.64 GB
+Free  PE / Size       574 / 8.97 GB
+VG UUID               8HMZzp-xzeK-13Fu-D4vx-a3hM-GhED-gUsh1x
 
-All hdisks and CD are SCSI, no IDE at all.
 
-As I said, I'm not sure if the system hang was caused by the deadlock,
-since the system was dead.  If this is related to the deadlock issue,
-are there any possible workarounds, besides being mindful of the system
-load?
+[root@ns /root]# vgdisplay -v
+vgdisplay
+Segmentation fault (core dumped)
 
-Thanks
+[root@ns /root]# pvdisplay /dev/ida/c0d0p6
+pvdisplay
+pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID
+physical volume "/dev/ida/c0d0p6"
 
---
-_______________
-Intolerance is the last defense of the insecure.
+[root@ns /root]# vgextend VG01 /dev/ida/c0d0p6
+vgextend
+vgextend -- INFO: maximum logical volume size is 1023.97 Gigabyte
+vgextend -- ERROR "pv_read_all_pv(): lvm_dir_cache" can't extend;
+couldn't read physical volume data
 
--- Tom Otake
--- totake66@home.com
--- #550
+[root@ns /root]# vgcfgbackup
+vgcfgbackup
+vgcfgbackup -- volume groups found: VG01
+vgcfgbackup -- ERROR -262 checking existence of colume group "VG01"
+vgcfgbackup -- ERROR "vg_cfgbackup(): vg_check_exist" backing up
+volume group VG01
+
+so i do a vgscan:
+
+[root@ns /root]# vgscan
+vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your
+volume group
+
+and from now on, no more segfaults instead:
+
+[root@ns /root]# vgdisplay -v
+vgdisplay
+vgdisplay -- ERROR: VGDA in kernel and lvmtab are NOT consistent;
+please run vgscan
+
+[root@ns /root]# vgextend VG01 /dev/ida/c0d0p6
+vgextend
+vgextend -- ERROR: VGDA in kernel and lvmtab are NOT consistent;
+please run vgscan
+
+etc.. etc...
+
+is this a known problem? And what other debug output would be helpful?
+
+thanks,
+
+Paul Jakma
