@@ -1,52 +1,41 @@
-Return-Path: <chewie@wookimus.net>
-Date: Thu, 30 Nov 2000 15:01:08 -0600
-From: Chewie <chewie@wookimus.net>
-Subject: OT: Re: [linux-lvm] lvm 0.9 kernel build problems
-Message-ID: <20001130150108.N1381@wookimus.net>
-References: <20001130024449.J1381@wookimus.net> <Pine.LNX.4.21.0011301646390.26098-100000@duckman.distro.conectiva>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cs5saTBZh7UZl2eX"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0011301646390.26098-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Thu, Nov 30, 2000 at 04:46:53PM -0200
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200011302154.eAULsJZ02315@webber.adilger.net>
+In-Reply-To: <20001130214121.D18804@athlon.random> "from Andrea Arcangeli at
+ Nov 30, 2000 09:41:21 pm"
+Date: Thu, 30 Nov 2000 14:54:19 -0700 (MST)
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: [PATCH] Re: [bug] infinite loop in generic_make_request()
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Andrea Arcangeli <andrea@suse.de>
+Cc: Andreas Dilger <adilger@turbolinux.com>, Neil Brown <neilb@cse.unsw.edu.au>, Linus Torvalds <torvalds@transmeta.com>, V Ganesh <ganesh@veritas.com>, linux-kernel@vger.kernel.org, linux-LVM@sistina.com, mingo@redhat.com
 
---cs5saTBZh7UZl2eX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Andrea writes:
+> On Thu, Nov 30, 2000 at 01:05:53PM -0700, Andreas Dilger wrote:
+> > the RAID and LVM make_request functions should be changed to do that
+> > instead (i.e. 0 on success, -ve on error, and maybe "1" if they do their
+> > own recursion to break the loop)?
+> 
+> We preferred to let the lowlevel drivers to handle error themselfs to
+> simplify the interface. The lowlevel driver needs to call buffer_IO_error
+> before returning in case of error.
 
-{ Modified for the sake of brevity }
-Falcon> You must to change gcc by kgcc in the Makefile
-Chewie> <rant> Is it just me, or does this sound like a Red
-        Hat-like solution?  Gee.=20
-Rik>    It's just you, don't worry.
+Even if the lowlevel driver handles the error case, it would still
+make more sense to stick with the normal kernel practise of -ERROR,
+and 0 for success.  Then, if in the future we can do something with the
+error codes, at least we don't have to change the interface yet again.
+Also, it is a bit confusing, because the lvm (and md, I suppose) driver
+returned "0" for success in 2.2, so now you need to special-case the
+return value depending on kernel version, if you want to keep the same
+code for 2.2 and 2.4.
 
-I find it odd then, that I've had no problems compiling stock and
-patched kernels with 3.95.2 that weren't my own fault.  Anyway, I'll
-take this off list as its leaning toward being off topic and as it was
-said earlier, this topic's been beaten to death on lkml.  Sorry for
-bringing it up.
-
---=20
-Chad "^chewie, gunnarr" Walstrom <chewie@wookimus.net>
-             http://www.wookimus.net/
-
---cs5saTBZh7UZl2eX
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6JsAUDMcLGCBsWv0RArGXAJ97KuM/vRJU4XuCfIGiKMeFajWoTwCgvz3R
-j7ZdHvuoEY5lQztk/QAPLBc=
-=3Jn5
------END PGP SIGNATURE-----
-
---cs5saTBZh7UZl2eX--
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
