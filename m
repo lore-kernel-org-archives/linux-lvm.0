@@ -1,8 +1,8 @@
-Message-ID: <3DF15385.2020102@mvista.com>
-From: Steven Dake <sdake@mvista.com>
+Message-ID: <007301c29d95$7dfebe50$6a01a8c0@bmoon>
+From: "bmoon" <bo@anthologysolutions.com>
+References: <1038231397.21369.23.camel@defiant.sonsofthunder.yi.org> <02bb01c29b04$31556650$6a01a8c0@bmoon> <20021204130227.B29881@sistina.com>
+Subject: Re: [linux-lvm] Painless upgrade to lvm2?
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Recovering from a disaster...
-References: <Pine.LNX.4.44.0212061842370.13951-100000@dragon.inside.ntisys.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,27 +14,143 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec  6 19:48:02 2002
+Date: Fri Dec  6 20:11:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+Hi,
 
->  
->
->>Someday we'll even see PC-class machines without a BIOS.
->>    
->>
->
->  Perhaps I misunderstand, but how does one boot without a BIOS?
->  
->
-You could boot a PC class machine using EFI (which is really just a BIOS 
-on steroids).  The nice thing about EFI is it isn't 16 bit, it can be 
-developed easily in C, and its much faster then all that legacy 16 bit 
-expansion rom PCI bootstrapping technique that really sucks.
+Are there any good references or document to understand the LVM2 and
+device mapper?
 
--steve
+I could not find any except man pages for dm & lvm.
 
->  
+Thanks,
+
+Bo
+----- Original Message -----
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+To: <linux-lvm@sistina.com>
+Sent: Wednesday, December 04, 2002 4:02 AM
+Subject: Re: [linux-lvm] Painless upgrade to lvm2?
+
+
+> On Tue, Dec 03, 2002 at 11:43:02AM -0800, bmoon wrote:
+> > Hello,
+> >
+> > I followed the instruction but I am facing the following cimpile error.
+> > Would you provide me any help on this error?
+> >
+> > ---------------
+> > make[1]: Entering directory `/usr/src/device-mapper.0.96.07/lib'
+> >
+gcc -c -Iioctl -I. -I../include -I/usr/src/linux/include -Wall -fPIC -g -fno
+> > -omit-frame-pointer ioctl/libdevmapper.c -o ioctl/libdevmapper.o
+> >
+gcc -c -Iioctl -I. -I../include -I/usr/src/linux/include -Wall -fPIC -g -fno
+> > -omit-frame-pointer libdm-common.c -o libdm-common.o
+> > gcc -shared -Wl,-soname,libdevmapper.so.0.96 \
+> > -Wl,--version-script,.export.sym ioctl/libdevmapper.o libdm-common.o -o
+> > ioctl/libdevmapper.so
+> > /usr/bin/ld:.export.sym:1: parse error in VERSION script
+>
+> Please see Alasdairs answer.
+>
+> > collect2: ld returned 1 exit status
+> > make[1]: *** [ioctl/libdevmapper.so] Error 1
+> > make[1]: Leaving directory `/usr/src/device-mapper.0.96.07/lib'
+> > make: *** [lib] Error 2
+> > --------------------------
+> >
+> > Additional question, If I use linux2.4.20 then Are there any patches for
+it
+> > or we do not need
+> > any patch for LVM2 or device mapper?
+>
+> Use
+http://people.sistina.com/~thornber/patches/2.4-stable/2.4.20-dm-1.tar.bz2
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+>
+> >
+> > Thanks in advance,
+> >
+> > Bo
+> >
+> > ----- Original Message -----
+> > From: "Bradley Alexander" <storm@tux.org>
+> > To: <linux-lvm@sistina.com>
+> > Sent: Monday, November 25, 2002 5:36 AM
+> > Subject: [linux-lvm] Painless upgrade to lvm2?
+> >
+> >
+> > > I'm running lvm-1.0.6 on a Debian/sid system, and was wondering what
+> > > would be the best upgrade path? Install from debs? From source? Is
+there
+> > > some kind of howto for making this transition?
+> > >
+> > > Thanks,
+> > > --
+> > > --Brad
+> > >
+> >
+============================================================================
+> > > Bradley M. Alexander                |
+> > > Debian Developer, Security Engineer |   storm [at] tux.org
+> > > Debian/GNU Linux Developer          |   storm [at] debian.org
+> > >
+> >
+============================================================================
+> > > Key fingerprints:
+> > > DSA 0x54434E65: 37F6 BCA6 621D 920C E02E  E3C8 73B2 C019 5443 4E65
+> > > RSA 0xC3BCBA91: 3F 0E 26 C1 90 14 AD 0A  C8 9C F0 93 75 A0 01 34
+> > >
+> >
+============================================================================
+> > > Stay out of clouds. The silver lining everyone keeps talking
+> > > about might be another airplane going in the opposite direction.
+> > > Reliable sources also report that mountains have been known to hide
+> > > out in clouds.
+> > > --Rules of the Air, #13
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> > >
+> >
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+>
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
