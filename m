@@ -1,19 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0LApgO08571
-	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 05:51:42 -0500
-Received: from jinx.stc.ricplc.com (smtp.ricardo.co.uk [195.162.98.110])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0LApWL4008592
-	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 05:51:32 -0500
-From: "Gary Mansell" <Gary.Mansell@ricardo.com>
-Content-Class: urn:content-classes:message
-Message-ID: <1106304669.3943.14.camel@grma-lap>
-MIME-Version: 1.0
-Date: Fri, 21 Jan 2005 10:51:09 +0000
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Why the dramatic increase in filesystem performance
-	when usingxfs????
-Reply-To: Gary.Mansell@ricardo.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0LBkfO18992
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 06:46:41 -0500
+Received: from crusaders.powertech.no
+	(IDENT:fDHMKgr46UvzGcOS/xAqBBVkc7yqvxz8@www2.gathering.org
+	[195.159.31.10])
+	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j0LBkZoP015874
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 06:46:35 -0500
+Date: Fri, 21 Jan 2005 12:40:57 +0100
+From: Per Kristiansen <per@gathering.org>
+Message-ID: <20050121114057.GA4961@gathering.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Issues with large LVM's ?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,71 +23,30 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
+I've been following this list for a while now.
+running LVM on home systems and smaller production systems.
 
-I have always run ext3 filesystem with journalling on Redhat AS as it is
-the only supported filesystem.
+But now I'm about to deploy LVM on a slightly larger scale.
 
-One of my colleagues runs xfs, though, and on comparable hardware
-configs he gets twice the performance compared to my ext3 tests.
+I'm currently planning to merge three storage systems.
 
-The test that I perform is to create a file at least twice the size of
-the RAM installed in the system to avoid the possibility of cacheing,
-measuring the time to write and read the file back gives me the
-performance figure that I am after. I realise that this is a very simple
-test of large sequential IO but it is good enough for my needs.
+-Eon Store A16U-G2421 (1.6TB)
+-StorCase DS560 (1.5TB)
+-SGI TP9100 (1.4TB)
 
-ie
+Still waiting for confirmation on the usability of the TP9100 on linux thou,
+so it's more of a wish that a fact :)
 
-Write test:
+From past experience I'm leaning toward reiserfs, but I'm looking for 
+advice from people that have been playing with large filesystems and LVM
 
-# time dd if=/dev/zero of=./testfile bs=16384 count=250000 ; time sync
-
-Read test:
-
-# time dd if=./testfile of=/dev/null bs=16384
+So..Am I courting disaster here ? :)
 
 
-As the xfs performance comes back about twice the performance of ext3
-for this test I am of the opinion that xfs must be cheating somehow. It
-has always been my opinion that the IO bottleneck is the hardware and
-not the filesystem hence changing the filesystem but using the same
-hardware should not make a huge difference to performance (you still
-have to get the same amount of data out to disk at the end of the day)
 
-I am struggling to comprehend how xfs can cheat, though, as it can't
-cache such a huge file as there is not enough memory. Is it perhaps
-cheating because the file is comprised entirely of zero's?
-
-Can someone please enlighten me
-
-Thanks in advance
-
-Gary Mansell
 -- 
-
-This e-mail and any files transmitted with it are confidential and intended
-solely for the use of the individual or entity to whom they are addressed.
-If you have received this e-mail in error please notify the sender immediately
-and delete this e-mail from your system.  Please note that any views or opinions
-presented in this e-mail are solely those of the author and do not necessarily
-represent those of Ricardo (save for reports and other documentation formally
-approved and signed for release to the intended recipient).  Only Directors
-or Duly Authorised Officers are authorised to enter into legally binding
-obligations on behalf of Ricardo unless the obligation is contained within
-a Ricardo Purchase Order.
-
-Ricardo may monitor outgoing and incoming e-mails and other telecommunications
-on its e-mail and telecommunications systems.  By replying to this e-mail you
-give consent to such monitoring.  The recipient should check this e-mail and
-any attachments for the presence of viruses.  Ricardo accepts no liability for
-any damage caused by any virus transmitted by this e-mail.  "Ricardo" means
-Ricardo plc and its subsidiary companies.
-
-Ricardo plc is a public limited company registered in England with registered
-number 00222915.
-The registered office of Ricardo plc is Bridge Works, Shoreham-by Sea,
-West Sussex, BN43 5FG.
- 
+Per Kristiansen
+per@gathering.org
