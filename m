@@ -1,10 +1,8 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] RE:
-Message-ID: <20020730214410.A8789@uk.sistina.com>
-References: <E04CF3F88ACBD5119EFE00508BBB212103B7EA2F@exch-01.noida.hcltech.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E04CF3F88ACBD5119EFE00508BBB212103B7EA2F@exch-01.noida.hcltech.com>; from amitag@noida.hcltech.com on Tue, Jul 30, 2002 at 10:35:44AM +0530
+From: Anders Widman <andewid@tnonline.net>
+Message-ID: <549012796.20020731132606@tnonline.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Problem compiling LVM 1.0.5
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +13,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 30 15:44:02 2002
+Date: Wed Jul 31 06:25:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: amitag@noida.hcltech.com
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Tue, Jul 30, 2002 at 10:35:44AM +0530, Amit  Agrawal, Noida wrote:
-> 			Would you please help by suggesting the changes
-> required in LVM internal data structures to make LV's greater than 2TB on 32
-> bit machine for 2.4.18 kernel. As far as kernel limitations are there we
-> have removed them all and want lv's greater than 2TB also.
+   I have a problem with compiling LVM 1.0.5.
 
-Well if you've already made the necessary kernel-side changes, don't
-you simply want to take the same approach to the userspace code, looking
-for any fields that need to grow and for references to the 2TB limit?
+   Configure works fine. but when I run make I get this message:
 
-The comments in the code suggest there shouldn't be much more needing
-changing except for the hard-coded limitations like LVM_LV_SIZE_2TB.
 
-But don't forget to choose large PEs of course - up to 16GB!
+[root@server 1.0.5]# make
+make[1]: Entering directory `/usr/src/LVM/1.0.5/tools'
+make[2]: Entering directory `/usr/src/LVM/1.0.5/tools/lib'
+make[3]: Entering directory `/usr/src/LVM/1.0.5/tools/lib'
+gcc -c -pipe -g -O0 -Wall -DDEBUG -I../../tools/lib -I../../tools -I/usr/src/LVM/1.0.5/tools/lib -o basename.o basename.c
+In file included from ../../tools/lib/liblvm.h:59,
+                 from basename.c:34:
+/usr/include/linux/autoconf.h:1:2: #error Invalid kernel header included in userspace
+make[3]: *** [basename.o] Error 1
+make[3]: Leaving directory `/usr/src/LVM/1.0.5/tools/lib'
+make[2]: *** [all] Error 2
+make[2]: Leaving directory `/usr/src/LVM/1.0.5/tools/lib'
+make[2]: Entering directory `/usr/src/LVM/1.0.5/tools/man8'
+make[3]: Entering directory `/usr/src/LVM/1.0.5/tools/man8'
+make[3]: Leaving directory `/usr/src/LVM/1.0.5/tools/man8'
+make[2]: Leaving directory `/usr/src/LVM/1.0.5/tools/man8'
+make[2]: Entering directory `/usr/src/LVM/1.0.5/tools'
+gcc -c -pipe -g -O0 -Wall -DDEBUG -I../tools/lib -I../tools -I/usr/src/LVM/1.0.5/tools/lib -o e2fsadm.o e2fsadm.c
+In file included from ../tools/lib/liblvm.h:59,
+                 from ../tools/lvm_user.h:43,
+                 from e2fsadm.c:55:
+/usr/include/linux/autoconf.h:1:2: #error Invalid kernel header included in userspace
+make[2]: *** [e2fsadm.o] Error 1
+make[2]: Leaving directory `/usr/src/LVM/1.0.5/tools'
+make[1]: *** [all] Error 2
+make[1]: Leaving directory `/usr/src/LVM/1.0.5/tools'
+make[1]: Entering directory `/usr/src/LVM/1.0.5'
 
-Alasdair
--- 
-agk@uk.sistina.com
+**********************************
+There were errors in your compile.
+**********************************
+
+make[1]: *** [.touchbuilt] Error 1
+make[1]: Leaving directory `/usr/src/LVM/1.0.5'
+make: *** [all] Error 2
+   
+
+I am running Red Hat 7.3 with GCC 3.1.1 (and tried with the 2.96 that
+came with Red Hat..)
+
+Thanks for any help.
+
+//Anders
