@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvcreate distributed extent option
-Message-ID: <20021203121104.B25215@sistina.com>
-References: <615A249B783CD41192F400D0B747AC860898265A@hesse.bbn.hp.com> <3DE8D816.E84D4D82@adelphia.net>
-Mime-Version: 1.0
-In-Reply-To: <3DE8D816.E84D4D82@adelphia.net>; from tkb9@adelphia.net on Sat, Nov 30, 2002 at 10:24:06AM -0500
+Message-ID: <3DEC9B03.B83C0078@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Error creating snapshot, "Cannot allocate memory"
+References: <20021202223223.GC21924@ofb.net> <20021203114821.A25161@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,71 +14,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  3 05:19:02 2002
+Date: Tue Dec  3 05:53:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Nov 30, 2002 at 10:24:06AM -0500, toby wrote:
-> "ZECHA,HOLGER (HP-Germany,ex1)" wrote:
-> > 
-> > Hello,
-> > 
-> > what do you mean with
-> > > How about striping with the strip size equal to that of a logical extent?
-> > 
-> > Can you give an example for the lvcreate command.
-> > 
-> > The reason to do this is to distribute the disk I/O accross all disks. the
-> > logical extent 1 is on disk1, logical extent 2 on disk 2 and so on.
-> > This means during read of logical extent 1, the heade of the second disk can
-> > already be moved to prepare to read logical extent 2.
-> > 
-> > This allows us to do more I/O's per second
-> > 
-> > Holger
-> > 
+"Heinz J . Mauelshagen" wrote:
 > 
+> On Mon, Dec 02, 2002 at 02:32:23PM -0800, jheiss-linuxlvm@ofb.net wrote:
+> > I have a volume group that is 1.4 TB, with a volume that is 400 GB.
+> > I currently have three 50 GB snapshots of that volume.  When I try
+> > to create a fourth, I get the following error:
+> >
+> > bash-2.05a# lvcreate -L 50G -s -n snap_home1_20021202 /dev/home/home1
+> > lvcreate -- WARNING: the snapshot will be automatically disabled once it
+> > gets full
+> > lvcreate -- INFO: using default snapshot chunk size of 64 KB for
+> > "/dev/home/snap_home1_20021202"
+> > lvcreate -- ERROR "Cannot allocate memory" creating VGDA for
+> > "/dev/home/snap_home1_20021202" in kernel
 > 
-> Once you create a striped lv, you cannot extend it by adding more disks. Current
-> lvm version anyway.
+> You don't have enough kernel virtual memory to hold the snapshot exception
+> table in core :(
+> Install more RAM.
 
-That constraint doesn't exits any longer in LVM2/device-mapper
-using the new LVM2 ondisk metadata format.
+I've seen this error as well. In a machine with 1GB memory and the only
+processes
+running were NFS and samba. Just how much memory does it need ?
 
-> 
-> I wanted mine to be more flexible, so I first made a software raid set then made
-> the pv on top of the raid. That was in Jan this year. Last week I doubled the
-> size by adding another software raid set. I expanded two of the ext3 formatted
-> lvs in the process.
-> 
-> Perhaps not the fastest system in terms of throughput, but quite convenient to
-> resize.
-> 
-> 
-> -tkb
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+ 
+> We have planned to reduce the amount of RAM needed to hold such tables
+> in LVM2/device-mapper next year.
 
--- 
+That would be nice.
 
-Regards,
-Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+JonB
