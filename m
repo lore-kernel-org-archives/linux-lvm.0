@@ -1,12 +1,10 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Recovering from a disaster...
-Message-ID: <98420000.1039364520@[192.168.100.3]>
-In-Reply-To: <Pine.LNX.4.44.0212061842370.13951-100000@dragon.inside.ntisys.com>
-References: <Pine.LNX.4.44.0212061842370.13951-100000@dragon.inside.ntisys.c
- om>
+Message-ID: <3DF39CAE.1050301@comedia.it>
+From: Luca Berra <bluca@comedia.it>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Recovering from a disaster...
+References: <Pine.LNX.4.44.0212061842370.13951-100000@dragon.inside.ntisys.c om> <98420000.1039364520@[192.168.100.3]>
+In-Reply-To: <98420000.1039364520@[192.168.100.3]>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,70 +15,75 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Dec  8 10:26:02 2002
+Date: Sun Dec  8 13:25:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
->   And to fuss a bit more, "the BIOS" is an outdated term.  Most systems do
-> not have a single "BIOS" anymore; they have multiple components, each with
-> their own "BIOS".  These various "BIOSes" are just firmware; they contain
-> what is needed to run the device and bootstrap the OS (plus a ton of
-> legacy code leftover from the days of MS-DOS and floppy-only systems).
->
->   Server-class systems built on the x86-compatible "PC" design now have
-> many (but not all) of the firmware features previously only found in
-> propriatary systems from Sun, SGI, etc.
+Steven Lembark wrote:
 
-Among the things they don't have is a sane boot command prompt
-that allows cleaning up the system by bypassing LVM on startup
-(e.g., "boot -lm /dev/blah" on HP PARISC systems). And, yes,
-this is true of Wintel-look-alike systems also, AMD has not
-done any better job of leaving you with a command line at boot
-to handle nasty situations.
+> Among the things they don't have is a sane boot command prompt
+> that allows cleaning up the system by bypassing LVM on startup
+> (e.g., "boot -lm /dev/blah" on HP PARISC systems). And, yes,
+> this is true of Wintel-look-alike systems also, AMD has not
+> done any better job of leaving you with a command line at boot
+> to handle nasty situations.
 
-Net result is that if LVM gets zapped you have no way to access
-the root volume without it if your root volume is in LVM if you
-have a Wintel motherboard or a clone or a lookalike or a nearly
-similarly functional item of the general motherboard type (think
-that covers all of it).
-
-At least if your root volume (80MB of generally non-changing
-space) is on a partition then you can boot it if LVM -- or
-software RAID -- has problems and fix it using native tools
-on the root voulme. Obviously, if you install your LVM or
-RAID application and supporting files into /usr or /opt then
-having the root volume online won't help much -- you can always
-shoot yourself in the foot at some point. But with the simple
-step of having recovery files on the root volume, booting single
-user is usually sufficient to fix or recover things.
-
-In theory people will have rescue CD's or floppys with the
-current versions of everything on them that they can use to
-recover it all; and printouts of the volume group configs;
-and drive slowly enough that we don't have speed-related
-accidents. Right. So, given the number of people who do get
-zapped by this, the simple expedient of keeping the root
-volume on a simple partition seems like a really easy fix...
-
->> Someday we'll even see PC-class machines without a BIOS.
->
->   Perhaps I misunderstand, but how does one boot without a BIOS?
-
-Hardwire the behavior to the level that even a ROM-ed BIOS
-cannot modify it. Cheaper than dealing with copyrighted
-code and leaves the machines even more braindead at boot.
-You can do it with a MUX and a timer: iterate the bus wires
-kicking them with a "boot me" sequence until something responds.
-No configuration required: everything directly addressable
-via the MOBO's bus will get kicked in turn; first one wins.
-You won't be able to boot off of external cards since the
-wires don't run there but the board mfr's are into cheap not
-effective.
+i won't say about sgi or sun, but HP PARISC system do not provide this 
+in firmware.
 
 
+i have already posted on this list about hp systems, i'll do again (from 
+memory so forgive any imprecisions)
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+hp 9000 firmware is able of identifying most hardware and of booting 
+from disk, cd, tape or lan (dhcp + proprietary load method)
+
+on the boot media ther is a 2Mb area called LIF area that contains an 
+archive with some utilities (you can peek at containts using 'lifls 
+/dev/rdsk/cXtYdZ)
+hp firmware loads and runs something called ISL contained in this archive.
+- end of firmware work (mostly) -
+
+ISL is a secondary loader it can load other utilities contained in the lif.
+HPUX is one of these utilities: it is able to read data from an hfs 
+formatted filesystem and sets up the kernel using this data.
+it can pass parameters to the kernel.
+the magic
+hpux -lm (device path)/path/to/kernel
+works by reading a file contained in the same place as the kernel called 
+rootconf, rootconf contains in binary form the offset on disk and lenght 
+of the root filesystem.
+
+That's all, it can be implemented with grub and linux lvm NOW if we want 
+to accept the limit of having a fixed size contiguous root filesystem.
+
+we can do better than that even with the crippling pc bios and we should 
+be able to disregarding the firmware we are running from (assuming it is 
+at least able to boot from one of (disk/tape/cd/floppy/lan)
+
+I am strongly annoyed at ppl that continuously state 'dont put root on 
+lvm because it is unsafe'.
+
+the only difference between code parsing a partition table and code 
+parsing lvm metadata is complexity, if you screw the partition table
+(or if you rm /stand/rootconf on hp-ux AND screw LVM boot area) you are 
+in the same situation.
+
+linux already has the means of making it extremely safe and much more 
+extensible than what other systems have. and if it is designed to work 
+on the most crippled firmware we have (pc bios) it will certainly work 
+with better firmware.
+
+just create an lvm on disk format that reserves the first megabytes for 
+a secondary loader (we can even use a linux kernel and it's initramfs as 
+a secondary loader with 2.6).
+
+tell the secondary loader where the root filesystem is placed (in case 
+you screw LVM) it should not be a very complex map and it can be 
+replicated in more than one place if necessary.
+
+oh, we probably have to dump pc partition table format for this (too 
+sorry :)
+
+L.
