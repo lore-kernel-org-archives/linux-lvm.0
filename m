@@ -1,10 +1,11 @@
-Return-Path: <list@showme.wox.org>
-Message-ID: <008b01c0b293$2873fac0$0e01a8c0@myplace.net>
-From: "Bas" <list@showme.wox.org>
-Date: Wed, 21 Mar 2001 21:44:27 -0800
+Return-Path: <mkp@mkp.net>
+Subject: Re: [linux-lvm] LVM-0.9.1beta6, XFS and 2.4.2 ...
+References: <008b01c0b293$2873fac0$0e01a8c0@myplace.net>
+From: "Martin K. Petersen" <mkp@linuxcare.com>
+Date: 21 Mar 2001 15:56:36 -0500
+In-Reply-To: <008b01c0b293$2873fac0$0e01a8c0@myplace.net>
+Message-ID: <yq1lmpyrgcb.fsf@jaguar.mkp.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM-0.9.1beta6, XFS and 2.4.2 ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,18 +18,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Bas <list@showme.wox.org>
+Cc: linux-lvm@sistina.com
 
-Hi,
+>>>>> "Bas" == Bas  <list@showme.wox.org> writes:
 
-Today this message showed up in my system log.
+Bas> Mar 21 20:22:40 wisdom kernel: lvm -- lvm_blk_ioctl: unknown
+Bas> command 0x126e
 
-Mar 21 20:22:40 wisdom kernel: lvm -- lvm_blk_ioctl: unknown command 0x126e
-Mar 21 20:23:08 wisdom kernel: Start mounting filesystem: lvm(58,13)
-Mar 21 20:23:13 wisdom kernel: Ending clean XFS mount for filesystem:
-lvm(58,13)
+Hmmm. That's me (XFS-specific).
 
-What does it mean ?
+You running with latest and greatest?
 
-Thanks,
-Bas.
+-- 
+Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
+mkp@linuxcare.com, http://www.linuxcare.com/
+SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
