@@ -1,10 +1,8 @@
-From: James Manning <jmm@sublogic.com>
-Message-ID: <20020716141406.W7316@xanex.hippierage.org>
-References: <3D2F6464.60908@us.ibm.com> <02071513565400.06209@boiler> <20020716084234.GA431@fib011235813.fsnet.co.uk> <200207161105.49328.habanero@us.ibm.com> <20020716163157.GA11334@fib011235813.fsnet.co.uk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020716163157.GA11334@fib011235813.fsnet.co.uk>; from joe@fib011235813.fsnet.co.uk on Tue, Jul 16, 2002 at 05:31:57PM +0100
-Subject: [linux-lvm] Re: device-mapper beta3 (fast snapshots)
+From: Matthew Johnson <mjj29@hermes.cam.ac.uk>
+Subject: Re: [linux-lvm] recovering a bad physical volume
+In-Reply-To: <20020716071417.GB957@tykepenguin.com>
+Message-ID: <Pine.SOL.4.44.0207162219080.19234-100000@green.csi.cam.ac.uk>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,25 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 16 13:13:01 2002
+Date: Tue Jul 16 16:22:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-[Joe Thornber]
-> > It seems we can go 'round and 'round to no end, as long as we have HW
-> > differences, so I have asked for use on a OSDL system we can both run on.
-> > This way there is no difference in our HW.  I'll let you know when I hear
-> > back from them, so we can both test on the same system (if you want to).
-> 
-> Excellent idea, we should probably think up some better benchmarks too.
 
-I'd love any feedback about tiobench - it's gotten kinda stale and I
-really need to find out what can get added to make it a more useful tool
-for benchmarking filesystems.
+On Tue, 16 Jul 2002, Patrick Caulfield wrote:
 
-http://sf.net/projects/tiobench
--- 
-James Manning <http://www.sublogic.com/james/>
-GPG Key fingerprint = B913 2FBD 14A9 CE18 B2B7  9C8E A0BF B026 EEBB F6E4
+> On Tue, Jul 16, 2002 at 01:02:08AM +0100, Matthew Johnson wrote:
+> > Hi, I have just got lvm setup on my machine - and it works fine. However,
+> > I had a problem with my root partition (not lvm) and when it came back up
+> > one of the 2 lvm partitions on that disk said it wasn't a valid physical
+> > volume. The otherone was fine, and the logical volumes that weren't on the
+> > first physical volume (it wasn't striped) mounted OK. The one that
+was
+> > partially on that first pv didn't, though - it said the device was not a
+> > valid block device.
+> >
+> > The question is, can I easily get the partition back so it mounts OK, and
+> > failing that can I recover all (or any) of the data. all my /usr is on
+> > there, plus some other less critical stuff, so I really could do with it.
+> >
+> > more system details: Debian woody, with a custom 2.4.19 kernel with lvm
+> > compiled in. The fs's all run reiserfs. THe volume group contains
+> > /dev/hde6 /dev/hde7 & /dev/hda5. e7 & a5 are OK when I run pvdisplay, and
+> > /dev/lvm1/var and /dev/lvm1/utils mount fine. /dev/lvm1/music doesn't
+> > mount - I get errors reading superblock etc, and when I pvdisplay
+> > /dev/hde6 it says it is not a valid physical volume.
+>
+> # pvcreate /dev/hde6
+> # vgcfgrestore -n lvm1 /dev/hde6
+> # vgscan
+>
+> should recover the volume group for you.
+>
+
+OK, from that I get the error "size of volume differs from backup",
+although the volume group mounts fine. However, mount can't find a
+filesystem. Bit more info - I checked the partition sizes (I was playing
+around with some) - but they cylinder numbers are the same as the list I
+have before I started. Second - its a 3gb partition, and the missing
+logical volume is a 10Gb one. Hence, the last 7Gb are on the OK physical volumes. Can I
+get back at least those, if not the whole lot.
+
+Alternatively, at this point the question might better be asked to the
+reiserfs lists.
+
+Matt
