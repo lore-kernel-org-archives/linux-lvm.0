@@ -1,11 +1,14 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 30 May 2001 15:43:47 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] ERROR pv_move_pe()
-Message-ID: <20010530154347.A32114@sistina.com>
-References: <Pine.GSO.4.33.0105301150450.9306-100000@zuse>
+Return-Path: <lewis@sistina.com>
+Date: Wed, 30 May 2001 09:25:15 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Re: Help! Upgrade 2.2.18 -> 2.4.4 killed a PV
+Message-ID: <20010530092515.B8950@sistina.com>
+References: <20010529010628.E1971@jensbenecke.de> <20010529093436.A792@jensbenecke.de> <20010529211128.B27030@sistina.com> <20010529214021.A1594@jensbenecke.de> <20010530112809.C30938@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <Pine.GSO.4.33.0105301150450.9306-100000@zuse>; from tv@rz-zw.fh-kl.de on Wed, May 30, 2001 at 02:33:40PM +0200
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Content-Disposition: inline
+In-Reply-To: <20010530112809.C30938@sistina.com>; from Mauelshagen@sistina.com on Wed, May 30, 2001 at 11:28:09AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,85 +20,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 30, 2001 at 02:33:40PM +0200, Timo Veith wrote:
-> Hi all!
-> 
-> We have a Red Hat Linux system with kernel 2.4.3 using LVM 0.9.1 beta7.
-> There is one VG defined with 6 PVs. We added another hard disk to the
-> VG, trying to replace a smaller PV by using pvmove. The pvmove command
-> failed after a long run with the following error message:
-> 
-> root@host[~] pvmove /dev/hdd1
-> pvmove -- moving physical extents in active volume group "vg00"
-> pvmove -- WARNING: if you lose power during the move you may need to
-> restore your LVM metadata from backup!
-> pvmove -- do you want to continue? [y/n] y
-> pvmove -- ERROR reading input physical volume "/dev/hdd1" (still 65536 bytes to read)
-> 
-> pvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
-> 
-> pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
-> 
-> TH output of pvdisplay /dev/hdd1 shows that there is only one PE left
-> to move away from /dev/hdd1. We've tried to change the state of the
-> VG from active to inactive and from the LV also. Even with the
-> filesystem (reiserfs) mounted or unmounted the same error message
-> appears.
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Do I get right that you deactivated the VG, activated it again and
-were not able to pvmove that last PE away from /dev/hdd1.
+Just an update on this:
 
-If so, it sounds like a bug in pv_move_pes() in the library or something.
-
-Could you please send "pvmove -d" output to me in direct mail to sort
-this one out.
-
-> 
-> Where is this error message coming from, how can we solve this
-> problem?
-> 
-> What happens if we just reduce the VG by /dev/hdd1 although there is
-> still one PE of the VG on it?
-
-You can't do that. A PV must have *no* PEs allocated to LVs.
-
-> 
-> 
-> Thanks in advance for any help.
-> 
-> Regards,
-> 
-> 
->      Timo
-> 
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
+Jens and I talked on IRC (irc.openprojects.net #lvm) about the problem.
+Turns out it was our old friend the missing UUID again.  We fixed it by
+manually adding the missing UUIDs in using a hexeditor on a copy of the
+metadata, then using dd to copy the metadata back onto the disk.  Nothing
+else seemed to work.
 
 Regards,
-Heinz    -- The LVM Guy --
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-----Begin Obligatory Humorous Quote----------------------------------------
+Quitters never win, and winners never quit,
+but those who never quit AND never win are idiots.
+-----End Obligatory Humorous Quote------------------------------------------
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7FQLJpE6/iGtdjLERAsDyAKCEnywRQWEXMQdacblXU0tqhE/7EwCfT3Wu
+7HITvcNUJMj+MCJZAMTRaEY=
+=c3zp
+-----END PGP SIGNATURE-----
+
+--qlTNgmc+xy1dBmNv--
