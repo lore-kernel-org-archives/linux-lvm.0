@@ -1,10 +1,8 @@
-From: Andres Salomon <dilinger@mp3revolution.net>
-Subject: Re: [linux-lvm] lvm2 debian packages
-Message-ID: <20020519034931.GA21574@chunk.voxel.net>
-References: <20020508011851.GA2587@chunk.voxel.net> <20020513161418.GA12207@ntlworld.com> <20020514024053.GA26951@chunk.voxel.net> <20020515161719.GA20704@ntlworld.com>
+From: David Stes <stes@pandora.be>
+Message-ID: <20020519112259.A23704@newt.stes.be>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020515161719.GA20704@ntlworld.com>
+Subject: [linux-lvm] writable snapshots ? (a la timefinder BCV)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +13,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 18 22:50:02 2002
+Date: Sun May 19 04:21:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Andy Baillie <andrew.baillie@ntlworld.com>
 
-I've committed some code which should fix this, assuming the problem
-you're having is related to mkdir("/var/lock/lvm") failing because of a
-missing /var/lock (and not because /var is read-only or something).
+Hello,
 
-On Wed, May 15, 2002 at 05:17:19PM +0100, Andy Baillie wrote:
-[...]
-> 
-> The only other issue outstanding is that the vgscan process uses
-> /var/lock if this directory does not exist when the vgscan occurs
-> then the scan fails. Though I mount /var as an lvm partition I have
-> created /var/lock from root and this seems to work fine. I havn't
-> found any problems with that yet.
-> 
-[...]
+There is an option --snap to the lvcreate utility to create a read-only snapshot(frozen image) of a volume.
 
--- 
-<dilinger> people fear what they don't understand
-<zinx> that is not true
-<zinx> most people fear what they don't understand, and the rest get killed
-	by those people
+Is there a possibility to quickly create a rw (read/write) snapshot of a logical volume ?
+
+I'm thinking here of applications in the style of EMC Timefinder BCV's (bcv = business continuance volumes).
+
+For example, I want to create a snapshot of a mounted volume running Informix.
+
+The snapshot of the mounted logical volume will be inconsistent, but it appears then to contain a 'crashed' instance of Informix, and when mounting the snapshot, I'd like to replay logfiles (do a recovery on the crashed instance) for which I need read/write access to the snapshot ...
+
+Thank you,
+David Stes.
