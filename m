@@ -1,9 +1,8 @@
-From: "James Kelty" <jamesk@ashlandagency.com>
-Subject: RE: [linux-lvm] LVM and 2.4.13
-Message-ID: <JLEILPHBKFODIOEDIAKMIELCCHAA.jamesk@ashlandagency.com>
+Message-ID: <002e01c161d6$7fa8a960$0a5c010a@ultra>
+From: "Klaus Pedersen" <ultra@mailme.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <000601c1617b$96dfde10$0101a8c0@mdmiller.com>
+Subject: [linux-lvm] Re: After power outtage my vg is gone
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,51 +13,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 30 15:25:02 2001
+Date: Wed Oct 31 00:35:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Thanks to everyone!  The optimization changes worked perfectly.
+Hi again,
+I really need help on this - sorry to send another request for help.
+Does anybody have a clue ? anything that can help me remount my vg without
+dataloss if possible ?
+Can anybody point me to documentation in saving a vg ? or a newsgroup on
+usenet I can try ?
 
--James
+To say it another way - _any_ help would be appreciated !
 
+Thanks in advance
 
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Mitch Miller
-Sent: Tuesday, October 30, 2001 11:47 AM
-To: linux-lvm@sistina.com
-Subject: RE: [linux-lvm] LVM and 2.4.13
+/Klaus Pedersen
 
-
-James,
-
-> When I try to create the logical volume,
-> I get a Seg Fault and core dump.
-
-Take a look at Sistina's web page, and search Bugzilla for core dump.  There
-is a documented issue with the version of GCC you are using, which is
-happening because of broken compiler optimizations.  As I recall, there are
-two workarounds.  First, you can edit your make file, and change -O2 to -O
-or you can edit the source and add a printf() statement inside the function
-which the compiler is to optimize by making it an inline function.
-
-I chose the 2nd fix so I didn't have to get rid of all optimizations, but
-that fix has to be applied in a number of places to make sure that all
-command line tools get fixed appropriately.  The first fix has the benefit
-of being changed in one place, and the entire works after recompilation, at
-the cost of compiler optimization.
-
--- Mitch
-
-P.S.  Seems like there is also another version of GCC which you can use, but
-I don't know which one.
+----- Original Message -----
+From: "Klaus Pedersen" <ultra@mailme.dk>
+To: <linux-lvm@sistina.com>
+Sent: Sunday, October 28, 2001 7:09 PM
+Subject: After power outtage my vg is gone
 
 
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> I'm using Debian Linux on 2.4.6 (and whatever version of LVM that comes
+with
+> it).
+> After accidentaly pushing the power switch on my Linux server and starting
+> it up again, I have problems mounting my vg again.
+>
+> This is what happens :
+>
+> Vault:/home/ultra# mount /glftpd/site
+> mount: /dev/site_vg/lvol1 is not a valid block device
+> Vault:/home/ultra# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found inactive volume group "site_vg"
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+> data of volume group "site_vg" from physical volume(s)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+> "/etc/lvmtab" and "/etc/lvmtab.d"
+>
+> Vault:/home/ultra#
+>
+>
+> I read through the archive of the list because I am absolutely sure I am
+not
+> the first who had this problem. I read some stuff about using the
+uuid_fixer
+> tool, bit as far as I was able to read, the problem that fixes only shows
+up
+> after extending the VG (Which I did a week or so, ago), and only for
+kernels
+> up to 2.4.5.
+> Is this true ?
+>
+> Vault:~/uuid_fixer# ./uuid_fixer /dev/hda8 /dev/hdb1
+>
+> UUIDs discovered:
+> W9tkR7eq026WBMCBrUCdebI32vRyFuLn
+> u5vBzCHwu5mjAt5yN0lS4Ecrto1jI9NZ
+>
+> I tried running it anyway, and after that I ran vgscan - and the same
+> problems showed up.
+>
+> What do I do to recoved my data ?
+>
+>
+> Any help is greatly appreciated
+>
+> /Klaus
+>
