@@ -1,10 +1,9 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] LVM and mounting
-Message-ID: <20021120132912.A21708@uk.sistina.com>
-References: <3DDAA535.3030206@backflip.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3DDAA535.3030206@backflip.com>; from kgorman@backflip.com on Tue, Nov 19, 2002 at 12:55:17PM -0800
+Message-ID: <003f01c290a8$032ecf20$7327dbd1@policeforum.org>
+From: "TED MORRIS" <Ted@panafsat.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_003C_01C2907E.1A0046E0"
+Subject: [linux-lvm] LMV install on RH 7.1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +14,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 20 07:29:28 2002
+Date: Wed Nov 20 09:15:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: LVM-LINUX <linux-lvm@sistina.com>
 
-On Tue, Nov 19, 2002 at 12:55:17PM -0800, Kenny Gorman wrote:
-> I would just like to remove the entire volume and group and start over 
-You'll need to wipe the LVM label at the start of each PV.
+This is a multi-part message in MIME format.
 
-LVM2 has a tool which will do this for you called pvremove: 
-  e.g. if the PV to wipe is /dev/sdb4:  pvremove -ff /dev/sdb4
-  (works for both old and new metadata formats)
+------=_NextPart_000_003C_01C2907E.1A0046E0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Or you can just use "dd" - example for the old (LVM1) metadata format:
-  dd if=/dev/zero of=/dev/sdb4 count=1
+I am a linux newbie. I desperately need to install LVM 1.0.6 on Redhat =
+7.1 but can't seem to make it work.The file is a tar file. Any tips.
 
-Alasdair
--- 
-agk@uk.sistina.com
+Thanks
+
+Ted
+------=_NextPart_000_003C_01C2907E.1A0046E0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 5.50.4915.500" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>I am a linux newbie. I&nbsp;desperately =
+need to=20
+install LVM 1.0.6 on Redhat 7.1 but can't seem to make it work.The file =
+is a tar=20
+file. Any tips.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Thanks</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Ted</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_003C_01C2907E.1A0046E0--
