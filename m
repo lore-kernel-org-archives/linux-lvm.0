@@ -1,11 +1,9 @@
-Date: Wed, 17 Oct 2001 15:29:57 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] read_intr errors
-Message-ID: <20011017152957.E644@tykepenguin.com>
-References: <20011016234034.B7778@sistina.com> <002601c156ed$ecc4c180$0300000a@pacbell.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <002601c156ed$ecc4c180$0300000a@pacbell.net>; from e@arix.com on Wed, Oct 17, 2001 at 02:27:21AM -0700
+From: "Christoph Berger" <chberger@pool.informatik.rwth-aachen.de>
+Date: Wed, 17 Oct 2001 17:22:44 +0200
+Message-ID: <000001c1571f$91f28f80$6c88e289@tweety>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] problem to compile lvm-1.0.1.rc4
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,34 +16,51 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Oct 17, 2001 at 02:27:21AM -0700, Erick Calder wrote:
-> hi everyone, I've read a number of dialogues on the archives concerning the
-> errors below which I'm getting but have not found any answers:
-> 
-> I'm running RedHat 7.0 (2.4.9 kernel + LVM 1.0.1rc1) on a little PIII box
-> and I'm using the ide controllers built into the motherboard (drivers built
-> into the kernel - not modules).  I have CONFIG_IDEDISK_MULTI_MODE set to y
-> in the .config for the kernel.  The drive is an IBM-DTLA-307030 (as reported
-> by /proc/ide) and is brand new.
-> 
-> here are the errors:
-> 
-> Oct 17 02:00:34 beowulf kernel: hdc: read_intr: error=0x04 {
-> DriveStatusError }
-> Oct 17 02:00:34 beowulf kernel: hdc: read_intr: status=0x59 { DriveReady
-> SeekComplete DataRequest Error }
-> Oct 17 02:00:34 beowulf kernel: hdc: read_intr: error=0x04 {
-> DriveStatusError }
-> Oct 17 02:00:34 beowulf kernel: ide1: reset: success
-> 
-> I've been moving data in and out of the drive and everything seems ok but I
-> get lots of the above errors which leaves me with a queasy feeling...
-> anyone know what the deal is with this?
+Hello,
+i've tried to compile a newer version of LVM.
+I followed the instructions in INSTALL. After patching my kernel 2.4.10,
+i tried to compile LVM, but i get the following error message:
 
-I'm afraid they look a lot like hardware errors to me. It might just be that it
-doesn't like MULTI_MODE though. I'm not an IDE expert.
+:/usr/src/LVM/1.0.1-rc4 # make
+make[1]: Entering directory `/usr/src/LVM/1.0.1-rc4/tools'
+make[2]: Entering directory `/usr/src/LVM/1.0.1-rc4/tools/lib'
+make[3]: Entering directory `/usr/src/LVM/1.0.1-rc4/tools/lib'
+gcc -c -pipe -g -O2 -Wall -pg -DDEBUG -I../../tools/lib -I../../tools
+-I/usr/src/LVM/1.0.1-rc4/tools/lib -o basename.o basename.c
+In file included from basename.c:34:
+../../tools/lib/liblvm.h:50: linux/autoconf.h: No such file or directory
+make[3]: *** [basename.o] Error 1
+make[3]: Leaving directory `/usr/src/LVM/1.0.1-rc4/tools/lib'
+make[2]: *** [all] Error 2
+make[2]: Leaving directory `/usr/src/LVM/1.0.1-rc4/tools/lib'
+make[2]: Entering directory `/usr/src/LVM/1.0.1-rc4/tools/man8'
+make[3]: Entering directory `/usr/src/LVM/1.0.1-rc4/tools/man8'
+make[3]: Leaving directory `/usr/src/LVM/1.0.1-rc4/tools/man8'
+make[2]: Leaving directory `/usr/src/LVM/1.0.1-rc4/tools/man8'
+make[2]: Entering directory `/usr/src/LVM/1.0.1-rc4/tools'
+gcc -c -pipe -g -O2 -Wall -pg -DDEBUG -I../tools/lib -I../tools
+-I/usr/src/LVM/1.0.1-rc4/tools/lib -o e2fsadm.o e2fsadm.c
+In file included from ../tools/lvm_user.h:41,
+                 from e2fsadm.c:53:
+../tools/lib/liblvm.h:50: linux/autoconf.h: No such file or directory
+make[2]: *** [e2fsadm.o] Error 1
+make[2]: Leaving directory `/usr/src/LVM/1.0.1-rc4/tools'
+make[1]: *** [all] Error 2
+make[1]: Leaving directory `/usr/src/LVM/1.0.1-rc4/tools'
+make[1]: Entering directory `/usr/src/LVM/1.0.1-rc4'
+/bin
+**********************************
+There were errors in your compile.
+**********************************
 
-patrick
+make[1]: *** [.touchbuilt] Error 1
+make[1]: Leaving directory `/usr/src/LVM/1.0.1-rc4'
+make: *** [all] Error 2
+
+i have configured LVM with "--with-kernel_dir=/usr/src/linux/".
+
+Can anyone help me?
+Thanks for all
+Christoph
