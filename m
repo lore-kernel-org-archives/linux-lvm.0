@@ -1,8 +1,9 @@
-Message-ID: <3D1AD32B.400@ti.com>
-From: christian e <cej@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] problem running vgscan..Is it a megaraid issue or an LVM issue ??
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LVM hang with some uses of raw i/o
+Message-ID: <20020627114441.A21400@sistina.com>
+References: <3D19F9A0.9FBA6B7E@funsoft.com>
+Mime-Version: 1.0
+In-Reply-To: <3D19F9A0.9FBA6B7E@funsoft.com>; from eheman@funsoft.com on Wed, Jun 26, 2002 at 01:28:00PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,115 +14,133 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 27 03:56:02 2002
+Date: Thu Jun 27 04:52:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux lvm <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hi,all
+Gary,
 
-I posted this on the megaraid devel list thinking it was a megaraid 
-problem..But maybe it's LVM doing tricks..Here goes:
+the LVM code doesn't handle buffered and raw accesses differently at all,
+because it get's an IO request and remaps it in both cases.
 
-I've had problems with a volume group not showing up after a reboot..
-After booting up the volume group on the megaraid is not 
-detected.Running vgcfgrestore on the individual disks the volume group 
-can bring it back...That is until I run a vgscan resulting in this output:
+Either ll_rw_block calls submit_bh() in case of buffered IOs *or*
+submit_bh() is called from brw_kiovec which in turn gets called by
+the raw driver. Once submit_bh() is in the game, the LVM drivers remapping
+function is called further down the chain facing no differences.
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vg0"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-group
+It could therefore well be a raw device driver flaw not showing present
+buffer alignment problems.
 
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 0
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 2
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 4
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 6
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 0
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 2
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 4
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 6
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 0
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 2
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 4
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 6
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 0
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 2
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 4
-SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
-  I/O error: dev 08:21, sector 6
+If I follow the VM code chain correctly down to find_extend_vma(),
+an offset into a page gets silently ignored on finding the VMA.
+This will petentially cause a user page to be overwritten corrupting user data
+which shouldn't cause the system to hang, but your process to go nuts.
 
-these errors appear on the console after running it along with a lot of:
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
-invalidate: busy buffer
+In order to get a better idea what might be hanging your SMP system:
 
-and the volume group vg1 is completely gone..It can be brought up again 
-like this:
+- what distinguishes the other systems running the same code well from the SMP
+  system which hangs?
 
-vgcfgrestore -v -n vg1 /dev/sdb1
-vgcfgrestore -v -n vg1 /dev/sdc
-vgchange -ay
+- do they have less memory? In particular high memory bounces introduce
+  additional code paths.
 
-and then it's OK until vgscan is run...
+- are they UP/SMP?
 
-setup:
+- do they run different Linux versions or patches?
 
-Poweredge 2550
+- did you try the LVM 1.0.4 driver?
 
-Megaraid (2 adapters)..from dmesg:
-  megaraid: v1.18 (Release Date: Thu Oct 11 15:02:53 EDT 2001
-)<5>megaraid: found 0x101e:0x1960:idx 0:bus 2:slot 0:func 0
-scsi1 : Found a MegaRAID controller at 0xf8805000, IRQ: 20
-scsi1 : Enabling 64 bit support
-megaraid: [161N:3.17] detected 1 logical drives
-megaraid: channel[1] is raid.
-megaraid: channel[2] is raid.
-megaraid: found 0x101e:0x1960:idx 1:bus 4:slot 0:func 0
-scsi2 : Found a MegaRAID controller at 0xf8807000, IRQ: 18
-scsi2 : Enabling 64 bit support
-megaraid: [161N:3.17] detected 1 logical drives
-megaraid: channel[1] is raid.
-megaraid: channel[2] is raid.
-scsi1 : LSI Logic MegaRAID 161N 254 commands 16 targs 5 chans 7 luns
-scsi2 : LSI Logic MegaRAID 161N 254 commands 16 targs 5 chans 7 luns
+Another option is LVM2 and device-mapper (see www.sistina.com; products)
+which will replace LVM1 further down the road :)
 
-running Debian 2.2 with kernel 2.4.17
-lvm version 1.0.1
+Regards,
+Heinz    -- The LVM Guy --
 
-Anyone know what's going on with this ?? It's our main server so it's 
-not possible to boot very often..That's why I'd like to investigate all 
-possible options before trying to debug further..
 
-best regards
+On Wed, Jun 26, 2002 at 01:28:00PM -0400, Gary Eheman wrote:
+> Greetings:
+>   I have been using and experimenting with LVM on linux with a product from my
+> employer.  I have had excellent results on a few different systems, but am
+> having difficulty with one now that is prompting me to post looking for help and
+> guidance.
+>   At the moment, I am using the LVM 1.1rc2 code, having upgraded from the 1.0.4
+> code when it was failing. The reason I went to the 1.1rc2 code was this is an
+> SMP system and I noticed SMP related fixes mentioned in the changelog.
+>   The hardware setup is an IBM x232 server with two 1.3Mhz cpus.  No raid
+> adapter. Four scsi drives on the scsi bus.  I took the last two drives, one 75G
+> and one 36G, put one large partition on each over all the space and set the
+> partition type to '8e'x. I then created two different volume groups, one each
+> containing each of those two drives. (Yes, I know about all of the many other
+> ways that I could define it multiple drives in one group. I did it this way for
+> a reason.)  I then created a set of logical volumes 2.8G in size on each of the
+> two volume groups. 
+>   The Linux setup is a Redhat 2.4.17 kernel.  I have used this same kernel tree
+> on a few other systems with LVM and our product with no difficulty.  We need to
+> use raw i/o with our product as can concurrently do tons of I/O to up to 255
+> slices (or logical volumes using LVM) and we use raw i/o on the other unix
+> platforms.
+>   Using the Suse whitepaper's suggestion, I automated one of our boot time
+> startup scripts to create a set of /dev/raw devices with my preferred names and
+> issue the raw command to associate the raw devices to the logical volumes. Since
+> Redhat already has a /dev/raw/raw1 thru /dev/raw/raw128, I decided to create
+> mine starting with minor 129.       
+> 
+> This all appears to work well as I end up with (one example)
+> crw-rw----    1 myowner   mygroup   162, 129 Jun 26 10:36 33903c0
+> and
+> raw -q /dev/raw/33903c0
+> /dev/raw/raw129:        bound to major 58, minor 16
+> 
+> and in /var/log/messages I see the timestamped messages like this:
+> /dev/raw/raw129:^Ibound to major 58, minor 16
+> 
+> I can use one of our utilities to prepare (format) the logical volume for use by
+> our
+> product by specifying "/dev/raw/33903c0"  with no difficulty and similarly for
+> all of the other logical volume names via their respective /dev/raw
+> specification.  Our product also seems to run ok with all of the /dev/raw/xxx
+> devices, too.
+> 
+> Here comes the problem description.
+> 
+> Two of our other utilties which will backup (read from) or restore (write to)
+> data to the /dev/raw devices cause Linux to hang (must reset or power off to
+> recover).  I have tried to do an strace of them, but it hangs the system before
+> any trace data has been written.  In an attempt to see if dd caused the same
+> problem, I used another system (laptop) with LVM and our product and strace'd
+> our utility to see what blocksize it was using for reads from the raw device.  I
+> then straced a dd bs=875520 if=/dev/raw/33903c0 of=/dev/null.  I ctrl-c killed
+> it after about 200 records.  I was just starting to look at that trace file
+> using vi when the system hung again!  This helps shine the light off of our
+> utilities (I think), though I also see that dd is not supposed to be used
+> against raw devices in the man pages.  The author of our utility is well aware
+> of the need to align the buffers, and the same code does work on other raw
+> devices on other LVM linux systems I have put together.
+> 
+> I need suggestions for debugging and/or other help to figure out what is going
+> on with this system. 
+> -- 
+> Gary Eheman
+> Fundamental Software, Inc.
+> http://www.funsoft.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Christian
--- 
-Christian Ejstrup, IT Admin / RF Development Engineer
-Texas Instruments A/S, Denmark ,Sofiendalsvej 93,DK-9200 Aalborg SV,Denmark
-Phone:+45 96346868, Phone(direct):+45 96346860, GSM:+45 22234304
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
