@@ -1,10 +1,11 @@
-Return-Path: <fabian.herschel@suse.de>
-From: fabian herschel <fabian.herschel@suse.de>
-Date: Tue, 24 Apr 2001 19:00:59 +0200
+Return-Path: <paulo_fessel@optiglobe.com.br>
+Message-ID: <1D15D20781EB404E9EA6129359E0243909784E@sp1email.optiglobe.com.br>
+From: Paulo Fessel <paulo_fessel@optiglobe.com.br>
+Subject: RE: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
+Date: Tue, 24 Apr 2001 14:21:54 -0300
 MIME-Version: 1.0
-Message-Id: <01042419005900.11967@workstation>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgscan does not found my VG, but pvscan does...
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C0CCE3.0ECE56A0"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,36 +17,198 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
-Cc: fabian@suse.de
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hi *,
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-I have a strage problem on my Desktop. I have installed Kernel 2.2.18 
-and lvm 0.9.
+------_=_NextPart_001_01C0CCE3.0ECE56A0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-All things have been fine till this morning. I have increased a logical volume
-(and the reiserfs which resides on that volume) from 1000M to 2000M (not 2GB).
+I've run into problems trying to compile 2.4.3 on Mandrake 7.2 with =
+2.4.3
+(Linus) and 2.4.3-8mdk (Mandrake customized kernel). So I've copied the
+files from lvm "kernel" directory to their proper places and everything
+worked out smoothly. Try to do the same thing...
 
-Some time later I had to reboot the machine (because I want to attach some 
-devices to the SCSI bus). After the reboot vgscan does NOT find my VG any
-longer. It only says something like "no voulme group found".
+HugZ
 
-If I call pvscan it tells me that it found two physical disks (thats ok). But 
-both  PVs are in an unknown VG. I should call vgscan (but see obove :-)
+Paulo Afonso Graner Fessel
+Suporte de Sistemas
+OptiGlobe Telecom, Ltda. - The Internet Lives Here
+R.Bento Branco de Andrade Filho, 621
+S=E3o Paulo, SP, 04757-000
+Brasil
+http://www.optiglobe.com.br
 
-Then I called pvdata to find out something out about whats going wrong here.
+Tel.:+55 11 3365-4478
+Fax:+55 11 3365-4445
+Cel.:+55 11 9198-9985
+E-mail: paulo_fessel@optiglobe.com.br
 
-pvdata -a /dev/sda1 ; pvdata -a /dev/sda2 ; are working fine , they also tell 
-me that these PVs are members of sysvg.
 
-Does anybody have an idear how to get vgscan to read this info?
-pvdata finds members of a VG but vgscan does not :-((.
 
-I hope someone can help me!!
-(Yes I do have backup data, but I want to sleep well, if there are so many
-lvm installations out in the world).
+> -----Original Message-----
+> From: Ernesto Silva [mailto:silva@athenea.ort.edu.uy]
+> Sent: Tuesday, April 24, 2001 12:20 PM
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] K=3D2.4.3 - LVM0.9.1.B7 compiling problem.
+>=20
+>=20
+> Hi,
+>=20
+> 	In order to make things right I downloaded the 2.4.3 kernel and
+> compiled it (i386).
+>=20
+> 	With the new kernel running (lvm-mod load ok) I'm=20
+> trying to compile lvm
+> tools, but there are lots of warinigs, all the same thing,=20
+> the first of them is:
+> -----------------------------------------------------------
+> gcc -c -pipe -g -O2 -Wall -DDEBUG -I ../../tools/lib -I=20
+> ../../tools - debug.o
+> debug.c
+> In file included from ../../tools/lib/liblvm.h:97
+> 		from basename.c:34
+> ../../tools/lib/lvm_log.h:47:59: warning: nothing can be=20
+> pasted after this token
+> ../../tools/lib/lvm_log.h:48:59: warning: nothing can be=20
+> pasted after this token
+> ../../tools/lib/lvm_log.h:49:59: warning: nothing can be=20
+> pasted after this token
+> ../../tools/lib/lvm_log.h:52:39: warning: nothing can be=20
+> pasted after this token
+> gasename.c:41:69: warning: pasting would not give a valid=20
+> preprocessing token
+> gasename.c:59:68: warning: pasting would not give a valid=20
+> preprocessing token
+> ----------------------------------------------------------
+>  This messages repeats several times.
+>=20
+> Does anyone had a problem like this before???
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>=20
 
-Best regards,
-Fabian Herschel
+------_=_NextPart_001_01C0CCE3.0ECE56A0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+5.5.2653.12">
+<TITLE>RE: [linux-lvm] K=3D2.4.3 - LVM0.9.1.B7 compiling =
+problem.</TITLE>
+</HEAD>
+<BODY>
+
+<P><FONT SIZE=3D2>I've run into problems trying to compile 2.4.3 on =
+Mandrake 7.2 with 2.4.3 (Linus) and 2.4.3-8mdk (Mandrake customized =
+kernel). So I've copied the files from lvm &quot;kernel&quot; directory =
+to their proper places and everything worked out smoothly. Try to do =
+the same thing...</FONT></P>
+
+<P><FONT SIZE=3D2>HugZ</FONT>
+</P>
+
+<P><FONT SIZE=3D2>Paulo Afonso Graner Fessel</FONT>
+<BR><FONT SIZE=3D2>Suporte de Sistemas</FONT>
+<BR><FONT SIZE=3D2>OptiGlobe Telecom, Ltda. - The Internet Lives =
+Here</FONT>
+<BR><FONT SIZE=3D2>R.Bento Branco de Andrade Filho, 621</FONT>
+<BR><FONT SIZE=3D2>S=E3o Paulo, SP, 04757-000</FONT>
+<BR><FONT SIZE=3D2>Brasil</FONT>
+<BR><FONT SIZE=3D2><A HREF=3D"http://www.optiglobe.com.br" =
+TARGET=3D"_blank">http://www.optiglobe.com.br</A></FONT>
+</P>
+
+<P><FONT SIZE=3D2>Tel.:+55 11 3365-4478</FONT>
+<BR><FONT SIZE=3D2>Fax:+55 11 3365-4445</FONT>
+<BR><FONT SIZE=3D2>Cel.:+55 11 9198-9985</FONT>
+<BR><FONT SIZE=3D2>E-mail: paulo_fessel@optiglobe.com.br</FONT>
+</P>
+<BR>
+<BR>
+
+<P><FONT SIZE=3D2>&gt; -----Original Message-----</FONT>
+<BR><FONT SIZE=3D2>&gt; From: Ernesto Silva [<A =
+HREF=3D"mailto:silva@athenea.ort.edu.uy">mailto:silva@athenea.ort.edu.uy=
+</A>]</FONT>
+<BR><FONT SIZE=3D2>&gt; Sent: Tuesday, April 24, 2001 12:20 PM</FONT>
+<BR><FONT SIZE=3D2>&gt; To: linux-lvm@sistina.com</FONT>
+<BR><FONT SIZE=3D2>&gt; Subject: [linux-lvm] K=3D2.4.3 - LVM0.9.1.B7 =
+compiling problem.</FONT>
+<BR><FONT SIZE=3D2>&gt; </FONT>
+<BR><FONT SIZE=3D2>&gt; </FONT>
+<BR><FONT SIZE=3D2>&gt; Hi,</FONT>
+<BR><FONT SIZE=3D2>&gt; </FONT>
+<BR><FONT SIZE=3D2>&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; In order to make =
+things right I downloaded the 2.4.3 kernel and</FONT>
+<BR><FONT SIZE=3D2>&gt; compiled it (i386).</FONT>
+<BR><FONT SIZE=3D2>&gt; </FONT>
+<BR><FONT SIZE=3D2>&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With the new =
+kernel running (lvm-mod load ok) I'm </FONT>
+<BR><FONT SIZE=3D2>&gt; trying to compile lvm</FONT>
+<BR><FONT SIZE=3D2>&gt; tools, but there are lots of warinigs, all the =
+same thing, </FONT>
+<BR><FONT SIZE=3D2>&gt; the first of them is:</FONT>
+<BR><FONT SIZE=3D2>&gt; =
+-----------------------------------------------------------</FONT>
+<BR><FONT SIZE=3D2>&gt; gcc -c -pipe -g -O2 -Wall -DDEBUG -I =
+../../tools/lib -I </FONT>
+<BR><FONT SIZE=3D2>&gt; ../../tools - debug.o</FONT>
+<BR><FONT SIZE=3D2>&gt; debug.c</FONT>
+<BR><FONT SIZE=3D2>&gt; In file included from =
+../../tools/lib/liblvm.h:97</FONT>
+<BR><FONT SIZE=3D2>&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; from basename.c:34</FONT>
+<BR><FONT SIZE=3D2>&gt; ../../tools/lib/lvm_log.h:47:59: warning: =
+nothing can be </FONT>
+<BR><FONT SIZE=3D2>&gt; pasted after this token</FONT>
+<BR><FONT SIZE=3D2>&gt; ../../tools/lib/lvm_log.h:48:59: warning: =
+nothing can be </FONT>
+<BR><FONT SIZE=3D2>&gt; pasted after this token</FONT>
+<BR><FONT SIZE=3D2>&gt; ../../tools/lib/lvm_log.h:49:59: warning: =
+nothing can be </FONT>
+<BR><FONT SIZE=3D2>&gt; pasted after this token</FONT>
+<BR><FONT SIZE=3D2>&gt; ../../tools/lib/lvm_log.h:52:39: warning: =
+nothing can be </FONT>
+<BR><FONT SIZE=3D2>&gt; pasted after this token</FONT>
+<BR><FONT SIZE=3D2>&gt; gasename.c:41:69: warning: pasting would not =
+give a valid </FONT>
+<BR><FONT SIZE=3D2>&gt; preprocessing token</FONT>
+<BR><FONT SIZE=3D2>&gt; gasename.c:59:68: warning: pasting would not =
+give a valid </FONT>
+<BR><FONT SIZE=3D2>&gt; preprocessing token</FONT>
+<BR><FONT SIZE=3D2>&gt; =
+----------------------------------------------------------</FONT>
+<BR><FONT SIZE=3D2>&gt;&nbsp; This messages repeats several =
+times.</FONT>
+<BR><FONT SIZE=3D2>&gt; </FONT>
+<BR><FONT SIZE=3D2>&gt; Does anyone had a problem like this =
+before???</FONT>
+<BR><FONT SIZE=3D2>&gt; </FONT>
+<BR><FONT SIZE=3D2>&gt; =
+_______________________________________________</FONT>
+<BR><FONT SIZE=3D2>&gt; linux-lvm mailing list</FONT>
+<BR><FONT SIZE=3D2>&gt; linux-lvm@sistina.com</FONT>
+<BR><FONT SIZE=3D2>&gt; <A =
+HREF=3D"http://lists.sistina.com/mailman/listinfo/linux-lvm" =
+TARGET=3D"_blank">http://lists.sistina.com/mailman/listinfo/linux-lvm</A=
+></FONT>
+<BR><FONT SIZE=3D2>&gt; </FONT>
+</P>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C0CCE3.0ECE56A0--
