@@ -1,89 +1,74 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200008241858.e7OIwIZ12336@webber.adilger.net>
+Date: Thu, 24 Aug 2000 21:00:20 +0200
+From: Nils Juergens <nils@muon.de>
 Subject: Re: [linux-lvm] LVM and sw RAID1
-In-Reply-To: <20000823224300.E8398@gospelcom.net> "from Peter Green at Aug 23,
- 2000 10:43:00 pm"
-Date: Thu, 24 Aug 2000 12:58:18 -0600 (MDT)
-MIME-Version: 1.0
+Message-ID: <20000824210020.A2073@guldukat.muon>
+References: <20000823162957.B8398@gospelcom.net> <20000824111944.A974@guldukat.muon> <20000824083001.E7996@gospelcom.net>
+Mime-Version: 1.0
+In-Reply-To: <20000824083001.E7996@gospelcom.net>; from pcg@gospelcom.net on Thu, Aug 24, 2000 at 08:30:01AM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Peter Green <pcg@gospelcom.net>
-Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Peter writes:
-> The problem occurs in pv_get_size() starting around line 87. The device name
-> is looked up in the cache. If found, it is tested to be a partitioned device
-> or not. This call returns false for the /dev/md? devices; MD_MAJOR is not
-> listed as a valid major number for partitioned devices (rightly so, I
-> think).
+On Thu, 24.08.00, Peter Green <pcg@gospelcom.net> wrote:
+> 
+> Could it be a LVM+RAIDn problem where n != 5?
+> 
 
-I _think_ it would be possible to replace all of this partition-reading crap
-with a much simpler solution - read /proc/partitions, or do BLKGETSIZE ioctl,
-or failing that do a binary search of the device trying to read data - code
-exists in mke2fs and ext2resize.  The below is half of Andrea Arcangeli's
-Alpha code, and half code from ext2resize.  Give it a try for pv_get_size.c.
+I'm not sure. I just tried raid1 on my setup and was able to use
+pvcreate without (obvious) problems...
 
-I also don't see much use for lvm_check_dev(), which seems to be very high
-maintenance (it needs to track all new devices added to the kernel), and
-pv_check_name() also really relies on specific names for specific devices.
-Can't lvm_check_dev() simply check if we are dealing with a rw block device,
-and get rid of pv_check_name() entirely?  Granted that some people will try
-to make PVs on /dev/ram0 or /dev/fd0, but maybe they should be allowed to
-try, and maybe they have a good reason to do so (e.g. /dev/fd0 is really a
-100MB zip disk or something).  I suppose it shouldn't be possible to make
-a PV on an LV...
+-----------------------------------------------------------------------
+sisko:~# pvcreate -v /dev/md1
+pvcreate -- locking logical volume manager
+pvcreate -- checking physical volume name "/dev/md1"
+pvcreate -- getting physical volume size
+pvcreate -- checking partition type
+pvcreate -- creating new physical volume
+pvcreate -- setting up physical volume for /dev/md1 with 79746048 sectors
+pvcreate -- writing physical volume data to disk "/dev/md1"
+pvcreate -- physical volume "/dev/md1" successfully created
+pvcreate -- unlocking logical volume manager
+-----------------------------------------------------------------------
 
-The only remaining difficulty lies in checking the partition type.  This could
-be done by a shell command out to fdisk or cfdisk, or by simply trusting the
-user to do the right thing.  None of the other tools like mke2fs check if the
-partition type is correct - they simply go ahead and do what you ask.  I can
-see checking if the partition is mounted but that's about it...
+but then i find lvm reports the wrong size on that pv, it actually
+reports the size to be the same as on the other pv (/dev/md0)
 
-Cheers, Andreas
---- cut here ---
-int valid_off(int fd, __loff_t offset)
-{
-	char c;
+------------------------------------------------------------------------
+sisko:~# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/md0" of VG "raidvolumes" [38.02 GB / 16.02 GB free]
+pvscan -- inactive PV "/dev/md1"  is in no VG  [38.03 GB]
+pvscan -- total: 2 [76.05 GB] / in use: 1 [38.03 GB] / in no VG: 1 [38.03 GB]
+------------------------------------------------------------------------
 
-	/* should probably use lseek64 if available */
-	return (llseek(fd, offset, SEEK_SET) < 0 || read(fd, &c, 1) < 1)? 0 : 1;  
-}
+/dev/md1 should be about 1.2 GB, not 38 GB.
 
-unsigned long pv_get_size(char *dev_name, struct partition *dummy)
-{
-	loff_t low, high;
-	int pv_fd;
-	unsigned long size;
+I now remeber i also had troubles with vgchange which had to do with
+vg_check_online_all_pv(). I applied a _very_dirty_ hack to get around the
+problem (which i think only works because i just use raid-devices as
+pv's so use at own risk :)) )
 
-	pv_fd = open(dev_name, O_RDONLY);
-	if (pv_fd < 0)
-		return -LVM_EPV_GET_SIZE_OPEN;
+-----------------------------------------------------------------------
+--- vgchange.c.orig     Thu Aug 24 20:24:38 2000
++++ vgchange.c  Thu Jul 27 20:48:09 2000
+@@ -343,7 +343,7 @@
+             if ( opt_v > 0) printf ( "%s -- checking if all physical volumes "
+                                      "of volume group \"%s\" are available\n",
+                                      cmd, vg_name);
+-            if ( ( ret = vg_check_online_all_pv ( vg, &pv_offl,
++            if ( ! ( ret = vg_check_online_all_pv ( vg, &pv_offl,
+                                                   &pv_incons)) < 0) {
+                if ( ret == -LVM_EPV_READ_PV_CREATE_NAME_FROM_KDEV_T) {
+                      fprintf ( stderr, "%s -- ERROR: can't get name(s) of "
+-----------------------------------------------------------------------
 
-	if (ioctl(pv_fd, BLKGETSIZE, &size) < 0) {
-		for (low = 0, high = 1024; valid_off(pv_fd, high); high *= 2)
-			low = high;
+have fun,
 
-		while (low < high - 1) {
-			loff_t mid = (low + high) / 2;
-
-			if (valid_off(pv_fd, mid))
-				low = mid;
-			else
-				high = mid;
-		}
-
-		size = high >> 9;
-	}
-	close(pv_fd);
-	return size;
-}
---- cut here ---
-
-
+Nils
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >    Yes, Sir. Deathmatch _is_ a marketing term   <
+ >        for "online brainstorming session"       <
