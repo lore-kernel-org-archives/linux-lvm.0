@@ -1,13 +1,7 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Severe problem: data lost while adding a partition
-Message-ID: <264070000.1045520730@[192.168.200.4]>
-In-Reply-To: <3E515E16.8050209@stamppot.demon.nl>
-References: <3E3C62E4.7030409@home.nl> <20030203113148.B8501@sistina.com>
- <3E42D82B.3070003@stamppot.demon.nl> <20030207152736.C27442@sistina.com>
- <3E515E16.8050209@stamppot.demon.nl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+From: "DJ TweeQ" <djtweeq@hotmail.com>
+Mime-Version: 1.0
+Message-ID: <F72QD6ue9Ol97tndcne000139d5@hotmail.com>
+Subject: [linux-lvm] Howto Upgrade/Install LVM 1.0.6 patch on Redhat 8.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,34 +12,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 17 16:17:01 2003
+Date: Mon Feb 17 17:58:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+Sup peeps! :)
 
--- Sander Alberink <alberink@stamppot.demon.nl>
+I am currently running LVM 1.0.3 and have been using LVM since Redhat 7.1 
+and I would like to Upgrade/Install LVM to 1.0.6 on Redhat 8.0 to support 
+2TB LV's...? I was proceeding along fine until i was about to install the 
+patch and have concerns regarding the documentation and whether or not the 
+upgrade is possible with Redhat 8.0 and HOWTO if different than the 
+instructions and also hopefully without any data loss? (I mounted and 
+converted the old ext2 lvm's to ext3 lvm's and everything is ok so far but i 
+would like to increase capacity beyond 240gigs per volume. Also have a 
+concern regarding mounting a 2nd LV on another system via NFS which i'll 
+refer to later in this post? :)
 
-> Heinz, all,
+so we were getting along just fine until...
+the INSTALL doc under PATCHES says...
+
+>"This patch will be suitable for applying to a clean kernel from Linus.
+>The kernels supplied with popular distributions (eg, RedHat) are not
+>Linus kernels."
+
+Not sure if this has been rectified or not but isn't the above stating  that 
+the patch it is not possible on Redhat distributions?
+
+Also in the same doc:
+
+>"Applying the patch to a 2.4 kernel
+>----------------------------------
 >
-> I really appreciate your help in this. However, I am rather reluctant to
-> dive in and be hasty in my commands. I really don't want to destroy my
-> data.... As I understand it, pvcreate -ff would re-initialize the
-> physical volume. As I understand it, I will have to add them to a volume
-> group again. But will the filesystem still be intact after that then?
->
-> Sorry if this sound like a beginner question to you. It very well might
-> be, but I'd rather be careful....
+>linux-2.4 contains LVM already so the patch for these kernels does
+>little more than update the lvm source files.  You only need to apply
+>the one patch."
 
-Thing to understand is that LVM commands update a small
-header on the phyiscal volume. You can munge the LVM
-portion without touching your data at all. In this case
-the data has no way of knowing that anything happend to
-the LVM portion of life: they live in entirely different
-parts of the disk drive.
+does this not contradict the instructions on the HOWTO webpages?
+ie.
+http://tldp.org/HOWTO/LVM-HOWTO/x298.html
+http://tldp.org/HOWTO/LVM-HOWTO/buildlvmpatch.html
+
+So the question is...is it possible without messing anything up? And if 
+so...is there clear documentation somewhere on such (because i haven't found 
+anything 100% straightforward yet) :) or can someone who has done this with 
+Redhat 8.0 (running the latest kernel) let me know if/what should be done to 
+install the patch and avoid any messups? :)
+
+please? :)
 
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 773 252 1080
+
+
+_________________________________________________________________
+Add photos to your e-mail with MSN 8. Get 2 months FREE*.  
+http://join.msn.com/?page=features/featuredemail
