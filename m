@@ -1,14 +1,12 @@
-Return-Path: <hopper@omnifarious.mn.org>
-Date: Sun, 18 Mar 2001 23:20:12 -0600
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
-Subject: Re: [linux-lvm] Apparent performance degradation for each PV with striping
-Message-ID: <20010318232012.A1169@omnifarious.mn.org>
+Return-Path: <lda@winux.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <15029.41256.426234.309500@nv.192.168.71.6>
+Date: Mon, 19 Mar 2001 01:03:20 -0500
+From: lvm@winux.com
+Subject: [linux-lvm] Apparent performance degradation for each PV with striping
+In-Reply-To: <3AB59501.FF6ED9F3@dataventures.com>
 References: <3AB59501.FF6ED9F3@dataventures.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Content-Disposition: inline
-In-Reply-To: <3AB59501.FF6ED9F3@dataventures.com>; from dlt@dataventures.com on Sun, Mar 18, 2001 at 10:11:29PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,49 +18,59 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Donald Thompson writes:
+> I notice during the dd operation that my system CPU state is 90% or
+> more.  So I think I just answered my own question, I'm CPU bound.
+> Moving on, is there any known ways to improve my performance off
+> each PV with this type of hardware setup?
+> ...
+> Should I expect that I won't see the performance drop on individual PV's
+> with striping on SCSI drives? I originally setup this system with no
+> intentions of it being a high performance file server, until a few
+> people I work with decided they wanted to use it for a database machine.
+> So I'm not afraid to spend a couple grand to get some faster disks in it
+> if thats the only thing
+> thats gonna help me.
 
-On Sun, Mar 18, 2001 at 10:11:29PM -0700, Donald Thompson wrote:
-> I started playing with iostat tonight and saw a few things I didn't
-> really expect to see.
->=20
-> I've got a volume group consisting of 4 82 gig drives. All 4 are IDE
-> drives.  Reading directly from the raw device, a PV in this case, with
-> something like
->=20
-> dd if=3D/dev/ide/host0/bus0/target0/lun0/disc of=3D/dev/null
+Hi Donald,
 
-	Have you played with hdparm to try to tune the way the kernel
-talks to your IDE drives?
+I think what you're seeing is to be expected from vanilla IDE.
+Not only is it not Linux LVM's fault but Linux LVM can't fix it.
+IDE controllers are not able to do the things more sophisicated
+controllers and host adapters do to increase performance in a
+multi-spindle environment.  Fortunately, there is a solution that's
+fast, cheap, and reliable.
 
-	That may be the reason for being CPU bound.  The kernel tends to
-default to the slowest possible method because there are a lot of bad
-IDE controllers and drives out there that will trash your data if you
-try to talk to them in a way they aren't expecting.
+I suggest that, rather than replacing the drives with
+expensive SCSI drives and an expensive SCSI host adapter,
+you buy an Escalade Switch from http://www.3ware.com/ and
+use your existing drives.
 
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
+The Escalade is a hybrid controller of sorts.  It presents itself as a
+SCSI host adapter to the host's PCI bus and as multiple (up to 8)
+independent IDE controllers to the IDE drives.  It's essentially a
+cross-bar switch that lets multiple IDE drives act independently of
+one another.  They use some clever controller software to get a BETTER
+than 2x boost in read-performance when you mirror drives.
 
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+It has the additional advantage of providing RAID for the attached drives.
+It supports RAID 0, 1, 10, and 5, so you get all those benefits
+without imposing ANY additional CPU load.  The controller is actually
+quite a gem and is very reasonably priced.  I've been using them on
+all of my systems where performance and/or reliability are critical.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+The Escalade driver is supported in the standard 2.2.x and 2.4.x Linux kernels.
 
-iD8DBQE6tZcMG4QeWBeRdS8RAryAAKCrm7DIUXD5rVXyPV8HxNFRe1ZD0ACfcROz
-QZUWAsGGagv8FiAfdMvCv1U=
-=6GEJ
------END PGP SIGNATURE-----
+In short, let 3ware's hardware handle the striping/RAID and use Linux LVM
+to manage the volume.  It's a powerful combination.
 
---vkogqOf2sHV7VnPd--
+Larry
+
+DISCLAIMER:  These statements reflect my personal opinions... bla bla bla.
+I don't have any affiliation with 3ware or anyone else in this business.
+
+CLAIMER:  3ware makes good stuff that works very well.
+It solved my problems and it could solve yours.
