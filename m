@@ -1,10 +1,11 @@
-Return-Path: <blutgens@minime.sistina.com>
-Date: Thu, 19 Apr 2001 15:02:07 -0500
-From: Ben Lutgens <blutgens@sistina.com>
-Message-ID: <20010419150207.C3948@minime.sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] censoring
+Return-Path: <jgarzik@mandrakesoft.com>
+Message-ID: <3ADF45FC.EE7B2003@mandrakesoft.com>
+Date: Thu, 19 Apr 2001 16:09:32 -0400
+From: Jeff Garzik <jgarzik@mandrakesoft.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+References: <20010419142400.E10345@sistina.com> <200104191945.f3JJjKRn015661@webber.adilger.int> <20010419145337.K10345@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,18 +18,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: AJ Lewis <lewis@sistina.com>
+Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
 
-The mail has never been selectively censored. If it was blatant SPAM I marked
-it as discard, if it was legit mail but from someone not on the list it got
-REJECTED in mailman. The idea is to get people to subscribe in order to be
-allowed to post. This way I could DISCARD all the SPAM. I hate spam. Perhaps
-the error you recieved was misleading but I never intended to anger any of
-you. I didn't think it was unreasonable to expect someone to subscribe if they
-wanted to post, and it is possible with mailman to subscribe a given address
-as "nomail"
+AJ Lewis wrote:
+> Ok, the issue here is that we're trying to get a release out and so anything
+> that majorly changes the code is getting shunted aside for the moment.  It
+> would be stupid to just add everything that comes in on the ML without
+> review.  Linus does the exact same thing.  I've said this before to you
+> Andreas, but apparently you feel that you should have final say on whether
+> your patches go in or not.
 
-Please be patient with me as I try to get this situation resolve and keep in
-mind when the spam starts comming, why it's comming. The only truly viable way
-I can stop it is to limit posting to members. 
+> As far as getting patches into the stock kernel, we've been sending patches
+> to Linus for over a month now, and none of them have made it in.  Maybe
+> someone has some pointers on how we get our code past his filters.
+
+Read Documentation/SubmittingPatches, and also listen to kernel hackers
+who know the block layer and want to fix lvm.
+
+And I wonder, if kernel hackers are saying lvm is broken... why do you
+want to freeze it and ship it in that state?
+
+-- 
+Jeff Garzik       | "The universe is like a safe to which there is a
+Building 1024     |  combination -- but the combination is locked up
+MandrakeSoft      |  in the safe."    -- Peter DeVries
