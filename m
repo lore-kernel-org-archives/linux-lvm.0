@@ -1,14 +1,9 @@
-Return-Path: <hopper@omnifarious.mn.org>
-Date: Mon, 30 Apr 2001 08:23:19 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.org>
-Subject: Re: [linux-lvm] Interesting note on 2.4.4 (off topic)
-Message-ID: <20010430082319.A4878@omnifarious.org>
-References: <3AED1F1A.BA8DD33A@gecpalau.com>
+Return-Path: <root@srv.sistina.com>
+Date: Mon, 30 Apr 2001 15:58:27 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010430155827.B19810@sistina.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
-Content-Disposition: inline
-In-Reply-To: <3AED1F1A.BA8DD33A@gecpalau.com>; from glenn@gecpalau.com on Mon, Apr 30, 2001 at 05:15:22PM +0900
+Subject: [linux-lvm] Re: [lvm-devel] 1.2 directory heirarchy
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,50 +15,98 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Apr 27, 2001 at 04:34:43PM -0600, Andreas Dilger wrote:
+> Heinz writes:
+> > On Thu, Apr 26, 2001 at 01:15:23PM +0100, Joe Thornber wrote:
+> > > Common code will be used for the metadata io in the kernel and
+> > > userland tools.  I can't think of any other common code.
+> > 
+> > That's the one I was talking about.
+> > 
+> > But actually we need to make use of other parts of the library as well like
+> > 
+> >  - code which sets up structure hierarchies before/after VGDA io
+> > 
+> >  - consistency checking code
+> 
+> If I could vent on an LVM pet peeve here...  When we re-organize the structure
+> of the LVM code, can we ensure that data is verified exactly _once_?
 
-On Mon, Apr 30, 2001 at 05:15:22PM +0900, Glenn Shannon wrote:
-> I have just seen another effect of running 2.4.4 (on my system only???)
->=20
-> Apparently the DevFS in this kernel is buggy....
->=20
-> I just tried to open an xterm...apparently I have no ptys available
-> (what?????????)
->=20
-> Hmmmmmmmmmmmmmm
+Sure, this is a resonable recommendation at first glance ;-)
 
-	I'm not using DevFS, and I've had suing from root to someone
-else fail for reasons that also seem to involve ptys.  Also, using the
-loop device crashed every program that tried to access files on the
-mounted filesystem caused evil looking kernel messages about
-dereferencing NULL pointers and made everything unstable until I
-rebooted.
+> Any
+> data coming from the disk should be checked,
 
-	I think it's back to 2.4.3 for me.  :-(
+Yep.
 
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.org  http://www.omnifarious.org/~hopper)=
- --
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+> and any data coming from the
+> user should be checked.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Ok.
 
-iD8DBQE67WdHG4QeWBeRdS8RAsCdAKCOyKRPscprcFsEz3/l1ei8HS/8qQCePbnk
-VHTIBw8wpx5jxvnHPd6SdUg=
-=ECHJ
------END PGP SIGNATURE-----
+> In between, we should assume that it is correct
+> otherwise madness will quickly follow.
 
---X1bOJ3K7DJ5YkBrT--
+It depends on your definition of madness :-)
+
+> 
+> This will also ensure we have good interface abstraction (i.e. routines that
+> read data from disk (with checks), user-interface routines (with checks), and
+> intermediate routines (without checks)).
+
+For everybodies information:
+the reason why Andreas recommends things like this is IMO, that LVM already
+has plenty of check functions which are called in multiple layers of
+the sofatware (like in the tools and in the library itself).
+
+For eg. the tool layer which has the need to check the name of a PV
+handed in on the command line, calls pv_check_name() in order to display an
+error message in case of a crappy name and exits.
+
+If that PV name is passed into a library routine it will be checked again
+using pv_check_name() because the function takes care that it gets called
+with reasonable parameters.
+
+IMO this doesn't imply bad interface abstraction at all.
+It just addresses different needs of different levels in the LVM software
+*but* has the tradeof of calling the same check functions multiple times.
+
+This might be seen as an overhead but we should pay it because the
+LVM library is in principle designed to be used by different CLIs or GUIs.
+In this regard the checks need to stay in place in order to recognize bad
+actual arguments and to return an error code then.
+
+
+> 
+> Cheers, Andreas
+> -- 
+> Andreas Dilger                               TurboLabs filesystem development
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> _______________________________________________
+> lvm-devel mailing list
+> lvm-devel@sistina.com
+> http://lists.sistina.com/mailman/listinfo/lvm-devel
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
