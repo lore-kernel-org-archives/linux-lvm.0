@@ -1,10 +1,10 @@
-From: Nathan Scott <nathans@sgi.com>
-Message-ID: <20031203143229.A1918624@wobbly.melbourne.sgi.com>
-References: <3FCB4AFB.3090700@backtobasicsmgmt.com> <20031201141144.GD12211@suse.de> <3FCB4CFA.4020302@backtobasicsmgmt.com> <20031201155143.GF12211@suse.de> <3FCC0EE0.9010207@backtobasicsmgmt.com> <20031202082713.GN12211@suse.de> <20031202211002.C2009778@wobbly.melbourne.sgi.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031202211002.C2009778@wobbly.melbourne.sgi.com>; from nathans@sgi.com on Tue, Dec 02, 2003 at 09:10:02PM +1100
-Subject: [linux-lvm] Re: Reproducable OOPS with MD RAID-5 on 2.6.0-test11
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C3B9A2.7E1FCBCF"
+Message-ID: <5EDC40261519564AB9A8760651C77A1D58581F@btiburmail01.bustech.com>
+content-class: urn:content-classes:message
+From: "George Campbell" <george.campbell@bustech.com>
+Subject: [linux-lvm] LVM backup server
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,93 +15,231 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec  3 07:42:07 2003
+Date: Wed Dec  3 07:42:09 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>, "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux-raid maillist <linux-raid@vger.kernel.org>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
+Cc: Charlie Pasquariello <charlie.pasquariello@bustech.com>
 
-On Tue, Dec 02, 2003 at 09:10:02PM +1100, Nathan Scott wrote:
-> On Tue, Dec 02, 2003 at 09:27:13AM +0100, Jens Axboe wrote:
-> > On Mon, Dec 01 2003, Kevin P. Fleming wrote:
-> > > 
-> > > without device-mapper in place, though, and I could not reproduce the 
-> > > problem! I copied > 500MB of stuff to the XFS filesystem created using 
-> > > the entire /dev/md/0 device without a single unusual message. I then 
-> > > unmounted the filesystem and used pvcreate/vgcreate/lvcreate to make a 
-> > > 3G volume on the array, made an XFS filesystem on it, mounted it, and 
-> > > tried copying data over. The oops message came back.
-> > 
-> > Smells like a bio stacking problem in raid/dm then. I'll take a quick
-> > look and see if anything obvious pops up, otherwise the maintainers of
-> > those areas should take a closer look.
-> 
-> One thing that might be of interest - XFS does tend to pass
-> variable size requests down to the block layer, and this has
-> tripped up md and other drivers in 2.4 in the distant past.
-> 
-> Log IO is typically 512 byte aligned (as opposed to block or
-> page size aligned), as are IOs into several of XFS' metadata
-> structures.
+This is a multi-part message in MIME format.
 
-The XFS tests just tripped up a panic in raid5 in -test11 -- a kdb
-stacktrace follows.  Seems to be reproducible, but not always the
-same test that causes it.  And I haven't seen a double bio_put yet,
-this first problem keeps getting in the way I guess.
+------_=_NextPart_001_01C3B9A2.7E1FCBCF
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Looks like its in a raid5 kernel thread, doing asynchronous stuff?,
-so I don't really have any extra hints about what XFS was doing at
-the time for y'all either.
+I followed the LVM HOW-TO to install and configure LVM on a Linux =
+server. I defined a single volume group, a single logical volume, and =
+about 14 separate physical extents on a SAN. It works fine.=20
+My question is, what steps need to be done beyond the initial rpm =
+install and activation to configure LVM on a second server that will =
+only be used for backup if the first server goes down. I don't want to =
+do anything that would wipe out any data on the logical volume, but I =
+want the volume group and logical volume to be defined exactly as the =
+original server has them defined.=20
+It seems I should NOT do any pvcreates. Can I just do the vgcreate, =
+followed by the lvcreate, skip doing the mk2fs, and do the mount of the =
+logical volume?=20
+=20
+Thanks,
+George Campbell
+Bus-Tech, Inc.
+=20
+=20
 
-cheers.
+------_=_NextPart_001_01C3B9A2.7E1FCBCF
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
---
-Nathan
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
 
-XFS mounting filesystem md0
-Unable to handle kernel paging request at virtual address d1c92c00
- printing eip:
-c0387be6
-*pde = 00048067
-*pte = 11c92000
-Oops: 0000 [#1]
-CPU:    3
-EIP:    0060:[<c0387be6>]    Not tainted
-EFLAGS: 00010086
-EIP is at handle_stripe+0xda6/0xef0
-eax: f315df94   ebx: 00000000   ecx: 00000000   edx: f6d25ef8
-esi: d1c92bfc   edi: d1c92bfc   ebp: f36d3f88   esp: f36d3ef8
-ds: 007b   es: 007b   ss: 0068
-Process md0_raid5 (pid: 1435, threadinfo=f36d2000 task=f684a9d0)
-Stack: f6d25ef8 f2f84ebc f302e000 00000020 f2f84fc0 f7127000 f712760c f36d3f30
-       f315de3c f7101ef8 00000000 00000000 f36d3f3c f315df68 c04fde00 f7f9a9d0
-       f684a9d0 df449de8 00000000 f315df94 00000000 00000000 00000001 00000000
-Call Trace:
- [<c0388173>] raid5d+0x73/0x120
- [<c039048c>] md_thread+0xbc/0x180
- [<c0118ef0>] default_wake_function+0x0/0x30
- [<c03903d0>] md_thread+0x0/0x180
- [<c010750d>] kernel_thread_helper+0x5/0x18
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
 
-Code: 8b 56 04 8b 48 58 8b 58 5c 8b 06 83 c1 08 83 d3 00 39 da 72
 
-Entering kdb (current=0xf684a9d0, pid 1435) on processor 3 Oops: Oops
-due to oops @ 0xc0387be6
-eax = 0xf315df94 ebx = 0x00000000 ecx = 0x00000000 edx = 0xf6d25ef8
-esi = 0xd1c92bfc edi = 0xd1c92bfc esp = 0xf36d3ef8 eip = 0xc0387be6
-ebp = 0xf36d3f88 xss = 0xc0390068 xcs = 0x00000060 eflags = 0x00010086
-xds = 0xf6d2007b xes = 0x0000007b origeax = 0xffffffff &regs = 0xf36d3ec4
-[3]kdb> bt
-Stack traceback for pid 1435
-0xf684a9d0     1435        1  1    3   R  0xf684ad00 *md0_raid5
-EBP        EIP        Function (args)
-0xf36d3f88 0xc0387be6 handle_stripe+0xda6 (0xf315dea0, 0x292, 0xf36d2000, 0xf5e90578, 0xf5e90580)
-                               kernel <NULL> 0x0 0xc0386e40 0xc0387d30
-0xf36d3fa4 0xc0388173 raid5d+0x73 (0xf6d25ef8, 0x0, 0xf36d2000, 0xf36d2000, 0xf36d2000)
-                               kernel <NULL> 0x0 0xc0388100 0xc0388220
-0xf36d3fec 0xc039048c md_thread+0xbc
-                               kernel <NULL> 0x0 0xc03903d0 0xc0390550
-           0xc010750d kernel_thread_helper+0x5
-                               kernel <NULL> 0x0 0xc0107508 0xc0107520
-[3]kdb>
+<meta name=3DProgId content=3DWord.Document>
+<meta name=3DGenerator content=3D"Microsoft Word 9">
+<meta name=3DOriginator content=3D"Microsoft Word 9">
+<link rel=3DFile-List href=3D"cid:filelist.xml@01C3B978.94AAC720">
+<!--[if gte mso 9]><xml>
+ <o:OfficeDocumentSettings>
+  <o:DoNotRelyOnCSS/>
+ </o:OfficeDocumentSettings>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:View>Normal</w:View>
+  <w:Zoom>0</w:Zoom>
+  <w:DocumentKind>DocumentEmail</w:DocumentKind>
+  <w:EnvelopeVis/>
+  <w:DrawingGridHorizontalSpacing>3.9 =
+pt</w:DrawingGridHorizontalSpacing>
+  <w:DrawingGridVerticalSpacing>5.3 pt</w:DrawingGridVerticalSpacing>
+  =
+<w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEve=
+ry>
+  =
+<w:DisplayVerticalDrawingGridEvery>2</w:DisplayVerticalDrawingGridEvery>
+  <w:Compatibility>
+   <w:SpaceForUL/>
+   <w:BalanceSingleByteDoubleByteWidth/>
+   <w:DoNotLeaveBackslashAlone/>
+   <w:ULTrailSpace/>
+   <w:DoNotExpandShiftReturn/>
+   <w:PrintColBlack/>
+   <w:ShowBreaksInFrames/>
+   <w:SuppressSpBfAfterPgBrk/>
+   <w:SwapBordersFacingPages/>
+   <w:ConvMailMergeEsc/>
+   <w:UsePrinterMetrics/>
+   <w:WW6BorderRules/>
+   <w:FootnoteLayoutLikeWW8/>
+   <w:ShapeLayoutLikeWW8/>
+   <w:AlignTablesRowByRow/>
+   <w:ForgetLastTabAlignment/>
+   <w:AutoSpaceLikeWord95/>
+   <w:NoSpaceRaiseLower/>
+   <w:DoNotUseHTMLParagraphAutoSpacing/>
+   <w:LayoutRawTableWidth/>
+   <w:LayoutTableRowsApart/>
+  </w:Compatibility>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoAutoSig, li.MsoAutoSig, div.MsoAutoSig
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+span.EmailStyle16
+	{mso-style-type:personal-compose;
+	mso-ansi-font-size:10.0pt;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:.4in 0in 0in 1.0in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+</head>
+
+<body lang=3DEN-US style=3D'tab-interval:.5in'>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><span class=3DEmailStyle16><font size=3D2 =
+color=3Dblack
+face=3DArial><span =
+style=3D'font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:
+Arial'>I followed the LVM HOW-TO to install and configure LVM on a Linux
+server. I defined a single volume group, a single logical volume, and =
+about 14
+separate physical extents on a SAN. It works fine. =
+<o:p></o:p></span></font></span></p>
+
+<p class=3DMsoNormal><span class=3DEmailStyle16><font size=3D2 =
+color=3Dblack
+face=3DArial><span =
+style=3D'font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:
+Arial'>My question is, what steps need to be done beyond the initial rpm
+install and activation to configure LVM on a second server that will =
+only be
+used for backup if the first server goes down. I don&#8217;t want to do =
+anything that
+would wipe out any data on the logical volume, but I want the volume =
+group and
+logical volume to be defined exactly as the original server has them =
+defined. <o:p></o:p></span></font></span></p>
+
+<p class=3DMsoNormal><span class=3DEmailStyle16><font size=3D2 =
+color=3Dblack
+face=3DArial><span =
+style=3D'font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:
+Arial'>It seems I should NOT do any pvcreates. Can I just do the =
+vgcreate,
+followed by the lvcreate, skip doing the mk2fs, and do the mount of the =
+logical
+volume? <o:p></o:p></span></font></span></p>
+
+<p class=3DMsoNormal><span class=3DEmailStyle16><font size=3D2 =
+color=3Dblack
+face=3DArial><span =
+style=3D'font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:
+Arial'><![if =
+!supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></font></span></p>
+
+<p class=3DMsoNormal><span class=3DEmailStyle16><font size=3D2 =
+color=3Dblack
+face=3DArial><span =
+style=3D'font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:
+Arial'>Thanks,<o:p></o:p></span></font></span></p>
+
+<p class=3DMsoAutoSig><!--[if supportFields]><font color=3Dblack><span=20
+style=3D'color:black'><span =
+style=3D'mso-element:field-begin'></span><span=20
+style=3D"mso-spacerun: yes">&nbsp;</span>AUTOTEXTLIST \s &quot;E-mail=20
+Signature&quot; <span =
+style=3D'mso-element:field-separator'></span></span></font><![endif]--><f=
+ont
+color=3Dblack><span style=3D'color:black'>George =
+Campbell</span></font><font
+color=3Dblack><span =
+style=3D'color:black;mso-color-alt:windowtext'><o:p></o:p></span></font><=
+/p>
+
+<p class=3DMsoAutoSig><font size=3D3 color=3Dblack face=3D"Times New =
+Roman"><span
+style=3D'font-size:12.0pt;color:black'>Bus-Tech, Inc.</span></font><font
+color=3Dblack><span =
+style=3D'color:black;mso-color-alt:windowtext'><o:p></o:p></span></font><=
+/p>
+
+<p class=3DMsoAutoSig><font size=3D1 color=3Dblack face=3DArial><span =
+style=3D'font-size:
+8.0pt;mso-bidi-font-size:12.0pt;font-family:Arial;mso-bidi-font-family:"T=
+imes New Roman";
+color:black'><![if =
+!supportEmptyParas]>&nbsp;<![endif]></span></font><font
+size=3D1 color=3Dblack face=3DArial><span =
+style=3D'font-size:8.0pt;mso-bidi-font-size:
+12.0pt;font-family:Arial;mso-bidi-font-family:"Times New =
+Roman";color:black;
+mso-color-alt:windowtext'><o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><!--[if supportFields]><font color=3Dblack><span=20
+style=3D'color:black'><span =
+style=3D'mso-element:field-end'></span></span></font><![endif]--><font
+color=3Dblack><span style=3D'color:black'><![if =
+!supportEmptyParas]>&nbsp;<![endif]></span></font><font
+color=3Dblack><span =
+style=3D'color:black;mso-color-alt:windowtext'><o:p></o:p></span></font><=
+/p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C3B9A2.7E1FCBCF--
