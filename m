@@ -1,27 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2A25H827723
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 21:05:17 -0500
-Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2A25G07010640
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 21:05:16 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by salusa.poochiereds.net (Postfix) with ESMTP id 7D271BD1F
-	for <linux-lvm@redhat.com>; Tue,  9 Mar 2004 21:05:15 -0500 (EST)
-Received: from salusa.poochiereds.net ([127.0.0.1])
-	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 01227-02 for <linux-lvm@redhat.com>;
-	Tue, 9 Mar 2004 21:05:15 -0500 (EST)
-Received: from tleilax.ix.dyndns.org (tleilax.ix.dyndns.org [192.168.1.3])
-	by salusa.poochiereds.net (Postfix) with ESMTP id ECF834D5F
-	for <linux-lvm@redhat.com>; Tue,  9 Mar 2004 21:05:14 -0500 (EST)
-From: Jeff Layton <jtlayton@poochiereds.net>
-In-Reply-To: <403E8A0E.9070308@ist.utl.pt>
-References: <403E8A0E.9070308@ist.utl.pt>
-Content-Type: multipart/mixed; boundary="=-rRt/pUDtiCHV8sZCf/Jb"
-Message-Id: <1078884314.2919.16.camel@localhost>
-Mime-Version: 1.0
-Subject: [linux-lvm] Patch for Miguel =?ISO-8859-1?Q?Cabe=E7a's?= lvm2create_initrd
- script
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2ABTB803149
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 06:29:11 -0500
+Received: from zaphod.bangor.ac.uk (zaphod42.bangor.ac.uk [147.143.42.245])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2ABT807022145
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 06:29:08 -0500
+Received: from sbs.bangor.ac.uk (milliways [147.143.41.38])
+	by zaphod.bangor.ac.uk (Postfix) with ESMTP id 49088182D4
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:29:07 +0000 (GMT)
+Message-ID: <404EFC03.5030006@sbs.bangor.ac.uk>
+From: Simeon Walker <simeon@sbs.bangor.ac.uk>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] unknown ioctl problems
+References: <871xpynzwy.fsf@freezer.burling>
+In-Reply-To: <871xpynzwy.fsf@freezer.burling>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -33,69 +25,47 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Tue Mar  9 21:03:04 2004
+Date: Wed Mar 10 06:27:03 2004
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
---=-rRt/pUDtiCHV8sZCf/Jb
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Jason Parker-Burlingham wrote:
 
-Hi all,
- I recently upgraded the kernel on my box and had an awful time getting
-my old initrd image that relies on change_root() to work. I switched to
-Miguel's new script and it works great, though I had to make a couple of
-tweaks:
+>I'm running LVM (version 1 with 1.0.7 tools) on a 2.4 system
+>(2.4.24-pre1, recently upgraded to 2.4.25-pre4).  When the initrd
+>boots (/ is an LVM filesystem, /boot is a standard block device) I see 
+>
+>   lvm -- lvm_blk_ioctl: unknown cmd 0x5310
+>
+>which I guess is something to do with mounting the ramdisk.
+>
+>But at other times I have noticed that the machine will lock up; I'm
+>not sure if it's a hardware problem but lately it seems to be related
+>to disk activity.  I turned off screen blanking before the most recent
+>crash and saw no kernel oops, but a couple of repetitions of
+>
+>   lvm -- lvm_blk_ioctl: unknown cmd 0x801c6d02
+>
+>Is it possible that this is some sort of reasonable ioctl?  Is it
+>possible that this is what's crashing the machine?  How can I find out
+>what the system is trying do (and maybe even why)?  I don't see any
+>reports of exactly this problem through google, so I'm pretty lost.
+>
+>jason
+>  
+>
+I have just seen your latter problem. I am running Debian unstable (as 
+of late Feb) and building Kernel 2.4.24. I use debian's make-kpg, when 
+doing dpkg -i I get the above error. Because I had not yet installed the 
+matching modules package (for i2c) I get some unresolved symbols. The 
+lockup seems to occur during or just after the depmod. I'm still looking 
+into it...
 
- The first one is pretty minor. I have /usr set up as a separate
-partition, and debian puts chroot in /usr/sbin. Luckily, chroot is also
-a busybox function, so I simply added /initrd/sbin and /initrd/bin to
-the PATH so that it could find a working chroot after pivot_root occurs.
-
- The second one is an ugly hack, and I'm definitely open to better ways
-of handling it. After my kernel upgrade (from 2.6.1 to 2.6.4-rc2), the
-major number of the device mapper devices on my system changed. So, I
-added a hack to copy the contents of the ramdisk /dev/mapper directory
-to the /dev/mapper directory on the lvm2 root filesystem, prior to the
-pivot_root. It works for me, but I'd love to hear about better ways of
-handling this.
-
-I've attached a patch to this email, or you can get the updated script
-from:
-
-http://poochiereds.net/svn/lvm2create_initrd
+Sim
 
 -- 
-Jeff Layton <jtlayton@poochiereds.net>
-
---=-rRt/pUDtiCHV8sZCf/Jb
-Content-Disposition: attachment; filename=lvm2create_initrd.patch
-Content-Type: text/x-patch; name=lvm2create_initrd.patch; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-
-Index: lvm2create_initrd.sh
-===================================================================
---- lvm2create_initrd.sh        (revision 70)
-+++ lvm2create_initrd.sh        (working copy)
-@@ -77,7 +77,7 @@
-                                                                                
- # include in the path some dirs from the real root filesystem
- # for chroot, blockdev
--PATH="/sbin:/bin:/usr/sbin:/usr/bin:/lib/lvm-200"
-+PATH="/sbin:/bin:/usr/sbin:/usr/bin:/lib/lvm-200:/initrd/bin:/initrd/sbin"
- PRE="initrd:"
-                                                                                
- echo "$PRE Remounting / read/write"
-@@ -141,6 +141,10 @@
-        return 0
- fi
-                                                                                
-+echo "$PRE Copying /dev/mapper devices to $rootvol"
-+cd /dev
-+tar cf - ./mapper | ( cd /rootvol/dev; tar xvf - )
-+
- echo "$PRE Umounting /proc"
- umount /proc
-                                                                                
-
---=-rRt/pUDtiCHV8sZCf/Jb--
+Simeon Walker,                      email: simeon@sbs.bangor.ac.uk
+School of Biological Sciences,      phone: +44 (0)1248 383702
+University of Wales, Bangor,        fax: +44 (0)1248 382569
+Gwynedd, LL57 2UW, UK.              www: http://biology.bangor.ac.uk/
