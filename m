@@ -1,7 +1,7 @@
 From: "Robert P. J. Day" <rpjday@mindspring.com>
 Subject: Re: [linux-lvm] problem building LVM2 for 2.6 kernel
 In-Reply-To: <20030719004618.J31325@uk.sistina.com>
-Message-ID: <Pine.LNX.4.53.0307181952500.10840@localhost.localdomain>
+Message-ID: <Pine.LNX.4.53.0307182143150.1407@localhost.localdomain>
 References: <Pine.LNX.4.53.0307181659170.6115@localhost.localdomain>
  <20030719004618.J31325@uk.sistina.com>
 MIME-Version: 1.0
@@ -15,7 +15,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 18 18:56:01 2003
+Date: Fri Jul 18 20:46:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -31,9 +31,9 @@ On Sat, 19 Jul 2003, Alasdair G Kergon wrote:
 > (e.g. update the package for your linux distribution or symlink 
 > /usr/include/linux to include/linux in your -ac tree)
 
-i already added a 3-line patch that deals with that, but it would
-be nice if that wasn't necessary.  i'll take a look at the possibility
-of upgrading my glibc kernel headers.  you wouldn't know what
-version i should be looking at offhand, would you?
+just FYI, i seem to have built a 2.6.0-test1-ac2 kernel with LVM2
+support, and also built libdevmapper and the lvm utilities.  haven't
+had time to actually use all that to start creating my VGs and LVs,
+but the fact that it all built is a good sign.
 
 rday
