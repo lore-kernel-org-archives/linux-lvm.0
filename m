@@ -1,34 +1,32 @@
-Date: Tue, 13 Jul 1999 13:28:02 +0200
+Date: Tue, 13 Jul 1999 17:05:26 +0200
 From: Adrien Farkas <freddy@redneck.sk.oracle.com>
-Subject: [linux-lvm] ERROR -6 activating volume group
-Message-ID: <19990713132802.A7208@redneck.sk.oracle.com>
-Reply-To: freddy@oracle.sk
+Subject: Re: [linux-lvm] ERROR -6 activating volume group
+Message-ID: <19990713170526.B8866@redneck.sk.oracle.com>
+Reply-To: freddy@sk.oracle.com
+References: <19990713132802.A7208@redneck.sk.oracle.com> <199907131455.AA30837@mailgate1b.telekom.de>
 Mime-Version: 1.0
+In-Reply-To: <199907131455.AA30837@mailgate1b.telekom.de>; from Heinz Mauelshagen on Tue, Jul 13, 1999 at 04:54:34PM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Cc: linux-lvm@msede.com
 
-Hi,
+Heinz Mauelshagen (mauelsha@ez-darmstadt.telekom.de) wrote :
 
-I'v got the following problem: I've created volume group, logical volume, everything ran okay. vgscan and vgschange both ran with no problems. Then I recompiled the kernel (2.2.10-ac) with LVM included and now the situation is:
+> vgscan -d
+> vgchange -day
+> vgdisplay -Dv
+> ls -l /dev/lvm /etc/lvmt* /dev/vg1
 
-vgscan runs okay, gives
+here it is (it the attachments). just to note, vgchange -day gave
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found volume group "vg1"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-
-but vgchange -a y gives
-
+Trying to vfree() bad address (0804f030)
 vgchange -- ERROR -6 activating volume group "vg1"
 
-Anyone can guess what's wrong and how to avoid it?
-
-
-Thanks in advance
+in addition to the attachment info.
 -- 
                                              freddy
 
