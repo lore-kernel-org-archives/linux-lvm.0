@@ -1,23 +1,50 @@
-From: TORSTEN.NEUMANN@DLH.DE
-Message-ID: <13FEA0BEF75ED31192D50000F6CCC5E92AE058@XNT-FRABASE-6>
-Subject: [linux-lvm] initrd and stripped / volume
-Date: Fri, 3 Dec 1999 10:42:19 +0100 
-MIME-Version: 1.0
+Message-Id: <s847de40.025@pgkvfax>
+Date: Fri, 03 Dec 1999 15:13:43 +0100
+From: "Stephan Hendl" <Stephan.Hendl@lds.brandenburg.de>
+Subject: [linux-lvm] LVM and Compaq Smart Array
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
-Cc: torsten@londo.rhein-main.de
 
-Moin,
+Hi all,
 
-has anyone experience in setting up a system with initrd and the root
-partition on a stripped logical volume. So far Im only able to boot from
-initrd, but when the System tries to mount / i got error messages: trying to
-access beyond of device.
+I tried to set up LVM 0.7 on a Compaq Pro Liant 3000 Server with 2 CPUs =
+and a Smart Array Controller 4200 that include 3 9.1 GB SCSI Disks. The =
+patch and the new kernel gave no errors, but I can't create a physical =
+volume. Here are the outputs of fdisk and pvcreate:
 
-Is it possible ? ( I know I need good backups for such a setup )
+sgate:/dev/ida # fdisk -lu
 
-   Torsten
+Disk /dev/ida/c0d0: 255 heads, 32 sectors, 4355 cylinders
+Units =3D sectors of 1 * 512 bytes
+
+         Device Boot    Start       End    Blocks   Id  System
+/dev/ida/c0d0p1   *     73440   1101599    514080   83  Linux
+/dev/ida/c0d0p2       1101600   2154239    526320   82  Linux swap
+/dev/ida/c0d0p3            32     73439     36704   12  Compaq diagnostics
+/dev/ida/c0d0p4       2154240  35536799  16691280   fe  LANstep
+
+sgate:/dev/ida # pvcreate -v /dev/ida/c0d0p4
+pvcreate -- locking logical volume manager
+pvcreate -- checking physical volume name "/dev/ida/c0d0p4"
+pvcreate -- invalid physical volume name "/dev/ida/c0d0p4"
+pvcreate -- unlocking logical volume manager
+
+Does anybody have a Solution. Could it be that the partition is too =
+big?=20
+
+Thanks=20
+Stephan
+
+
+--
+LDS Brandenburg
+Dr. Stephan Hendl
+fon: +49-(0)331-39 471
+fax: +49-(0)331-27548 1187
+EMail: stephan.hendl@lds.brandenburg.de
