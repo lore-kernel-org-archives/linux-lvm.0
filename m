@@ -1,13 +1,8 @@
-Message-ID: <3DB264D3.A994B237@silicide.dk>
+Message-ID: <3DB26648.7CFB73FE@silicide.dk>
 From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
-References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
-		<3DAFB7D4.B88B6737@silicide.dk>
-		<ufaelanvnav.fsf@epithumia.math.uh.edu>
-		<3DB02DD6.B8B4B48E@silicide.dk>
-		<ufa65vzviuo.fsf@epithumia.math.uh.edu>
-		<3DB0348D.42FFC0A4@silicide.dk> <ufawuoftw8h.fsf@epithumia.math.uh.edu>
+References: <1034915787.3daf8fcb66a42@mail.dornquast.com> <20021018224521.G8100@zealot.blacknet.de>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,29 +14,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 20 03:10:02 2002
+Date: Sun Oct 20 03:16:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Jason L Tibbitts III wrote:
+Goetz Bock wrote:
 > 
-> >>>>> "JB" == Jon Bendtsen <jon+lvm@silicide.dk> writes:
-> 
-> JB> True true, but then your boot device is software raid ??
-> 
-> Yes, but not on LVM.  /boot and / were mirrored (all eight ways, which
-> I know is overkill).
-> 
-> JB> And lilo ??
-> 
-> It didn't have any problem; it wrote identical boot blocks to all
-> eight disks, and would boot with the first disk in the system
-> disconnected.  This was the first such server I built and I did it
-> some time ago so I haven't tried with anything more modern like Grub.
+> On Thu, Oct 17 '02 at 23:36, Nathan Dornquast wrote:
 
-Well, grub doesnt matter i use lilo myself.
-How did you get lilo to write it to all 8 bootblocks ?
+
+[snip]
+
+
+> > Goetz, I am interested to hear your MD RAID 1/5 - particularly how it handles
+> > powering off a drive while operating.  Does your box spit, sputter and puke, or
+> > can you hotswap?
+> i've two of this boxes, one with a 6850 (old 3ware card) and 8 60GB
+> (what was top of the line when the box was build) now running in JOBD
+> mode with MD on top of it (it's a lot faster than native RAID5) there I
+> can hostswap, but's a pain. The box can go down after about 18:00, so I
+
+Why is it a pain ??
+Pull out the drive, plug in a new, and then raidhotadd it to your md
+device.
+
+
+[snip]
+
+
+> as most people on the linux-ide-arrays list will tell you: 3ware 7xxx
+> are nice/fast/stable cards for RAID5 and IDE, but a version with
+> 64bit/66MHz would be nice.
+
+my cards are 64 bit ? Are they not 66 MHz ?
+I thought all 64bit cards were 66MHz.
+
+
+> Personaly I'm looking forward to SATA ... no more flat cables
+
+3ware has a controller for that, with 15 disks *drool
+*
+
+ 
+> > I know this RAID info is off-topic.  Feel free to email me directly
+> > ...
+> I first thought we're on linux-ide-array already, and than I wanted to
+> reply privately, but others have replied to the list already, and so did
+> I (what if not RAID arrays do you want to run LVM on?)
+
+oops, you are right, it is (getting) offtopic.
+
 
 
 
