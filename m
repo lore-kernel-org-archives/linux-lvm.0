@@ -1,11 +1,10 @@
-Date: Thu, 4 Oct 2001 20:28:47 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Root + Software RAID 1 in partition + LVM + Reiserfs
-Message-ID: <20011004202847.E31965@colombina.comedia.it>
-References: <NEBBLHFAEINCLDICDLOAEENBCHAA.yves.alloyer@slpinfoware.com> <20011004120644.J31061@turbolinux.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011004120644.J31061@turbolinux.com>; from adilger@turbolabs.com on Thu, Oct 04, 2001 at 12:06:44PM -0600
+Message-ID: <3BBCB1C1.92EE150F@promofinarsa.es>
+Date: Thu, 04 Oct 2001 21:00:17 +0200
+From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvm 1.0 and kernel 2.2.19.Is rawio patch necessary ??
+References: <3BBC550E.442F190C@ti.com> <3BBC7C22.1119BF0@promofinarsa.es> <3BBC90C9.309A3D75@ti.com> <3BBCA384.EC6D4D53@ti.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,45 +16,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, Oct 04, 2001 at 12:06:44PM -0600, Andreas Dilger wrote:
-> On Oct 04, 2001  16:51 +0200, yves.alloyer wrote:
-> > pvcreate /dev/md1 complained about using a Linux SWAP partition
-strange post output of lvmdiskscan
+Hi again christian:
 
-> Did you change the partition type with fdisk to be the LVM partition type?
-> Hmm, I suppose that if you are using MD RAID autostart, you need to have
-> that partition type instead.
-yes lvm code looks for either lvm partition or md device.
+christian e wrote:
+>=20
+> christian e wrote:
+>=20
+> > I think I'll try the 2.2.18 patch as well..Will let you all know if it
+> > turned out ok or not..
+>=20
+> Just tried the following:
+>=20
+> removed old kernel source tree,untarred a fresh 2.2.19 source.Did a
+> ./configure in the lvm source dir.Then a make in the PATCHES DIR.Then
+> applied the rawio patch for 2.2.18 and then the lvm-1.0 patch for my
+> kernel 2.2.19.Patched clean without problems.
+>=20
+> Then compiled the kernel again.Then the modules..mind you I compiled lvm
+> into the kernel not as module..No problems.
+>=20
+> Bootup withput problems (only forgetting to patch with aacraid driver
+> but htat's another story :-)
+>=20
+> compiled lvm and installed..Works ok..
+>=20
 
-> > I tweaked lvm_check_partitioned_device to have it return FALSE for MD
-> > devices. This would probably prevent me from partitioning any MD device. But
-> > I won't anyway... that's what I use LVM for.
-this should not be needed, i'll have to check that code...
-
-> I don't think you CAN partition an MD device and use it (what would the minor
-> numbers be?).  Please submit the patch.
-if you look on Neil Brown (md maintainer) site you will find patches to
-partition md devices
-http://cgi.cse.unsw.edu.au/~neilb/patches/linux
-
-> > Has anyone experience with that kind of layout? Is it just plain insane?
-> 
-> No, sounds sensible to me.  Make sure you have a rescue disk/partition which
-> has MD, LVM, and reiserfs tools on it.
-
-i was able to put everything in my initrd using busybox for most tools
-(i have lvm over raid5 and 3 way mirrored /boot)
-
-L.
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+I had a fast day with some other snmp stuff so I didn't have time for
+the LVM stuff.  Only concern i I won't use root as LVM and it is stayed
+that LVM should be compiled as a module preferably (I think coz the
+developers don't considered that code so stable).  Anyway, it seems that
+we're near of a goal (at least, what's the problem with the de struct
+member is allocated and pointed out to some 2.3.x kernel addition, so I
+think it can be repaired for rc5 next week).   Let's see...
+In any case, thanks for your aid folks.
+--=20
+SALUD,
+Jes=EF=BF=BDs
+***
+jesus_navarro@promofinarsa.es
+***
