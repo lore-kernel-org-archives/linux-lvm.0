@@ -1,9 +1,9 @@
-Message-ID: <3F111240.5080807@xs4all.nl>
-From: Gert van der Knokke <gertk@xs4all.nl>
+Message-ID: <3F11153B.8080909@portrix.net>
+From: Jan Dittmer <j.dittmer@portrix.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM disk died
-References: <5.1.1.6.0.20030712160456.02b2e398@imap.phys.unsw.edu.au>
-In-Reply-To: <5.1.1.6.0.20030712160456.02b2e398@imap.phys.unsw.edu.au>
+Subject: Re: [linux-lvm] lvm2, extending a physical volume
+References: <3F0A9604.5000101@portrix.net> <20030709100320.A17130@sistina.com> <3F1078F9.9050608@portrix.net> <20030713005734.G23240@sistina.com>
+In-Reply-To: <20030713005734.G23240@sistina.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,30 +15,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 13 03:04:01 2003
+Date: Sun Jul 13 03:17:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Melinda Taylor wrote:
-
-> can someone direct me to the faq that shows me how to recover from a 
-> dead drive.
+Heinz J . Mauelshagen wrote:
+> On Sat, Jul 12, 2003 at 11:09:13PM +0200, Jan Dittmer wrote:
+> 
+>>Hi,
+>>
+>>would this be a reasonable course of action?
+>>
+>>vgcfgbackup myraid
+>>pvcreate -yff -u wZQg66-cWrF-VDi5-GcRN-aYVg-RQQ3-PPm5K5 /dev/md0
+>>`take the size pvcreate reports and change the backup file accordingly`
+>>vgcfgrestore myraid
+> 
+> 
+> Yes, this is the workaround.
+> (vgcfgbackup shouldn't be necessary though)
 >
-> I had LVM spanning 4 HDDs and one will no longer spin up. 
 
-Hi Melinda,
+Being on the careful side here (don't want to restore 300GB of data).
+pvdisplay reports (after pvcreate):
+--- NEW Physical volume ---
+   PV Name               /dev/md0
+   VG Name
+   PV Size               447.15 GB
+   Allocatable           NO
+   PE Size (KByte)       0
+   Total PE              0
+   Free PE               0
+   Allocated PE          0
+   PV UUID               wZQg66-cWrF-VDi5-GcRN-aYVg-RQQ3-PPm5K5
 
-Sometimes a 'dead' drive can be brought back to (temporary) live again 
-by giving it a hard knock or better: a sharp twist, as the heads tend to 
-stick to the surface of the platters. Mind though that such a drive is 
-not trustworthy anymore but if it does spin up you might be able to get 
-the data off it.
+So how do I get the PEs? Can I also create a new Volumegroup without damaging 
+anything? Or is there another way to get the total/free PEs?
 
-Best way to this is to take the drive out of the PC and  hold it flat in 
-your hand and give it a sharp twist in the horizontal direction. This  
-helped me  a few times with such 'sticky' drives. After that, mount it 
-back in the PC and try it.
+Thanks for the insight,
 
-Good luck,
-Gert
+Jan
+
+
+
+-- 
+Linux rubicon 2.5.75-mm1-jd10 #1 SMP Sat Jul 12 19:40:28 CEST 2003 i686
