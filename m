@@ -1,20 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1DBLti08552
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 06:21:55 -0500
-Received: from mail.behrgroup.com (mail.behrgroup.com [194.99.122.162])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1DBLsb08786
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 06:21:55 -0500
-Received: from mh1.st.behr.de ([172.27.16.1])
- by mail.behrgroup.com (SAVSMTP 3.1.0.29) with SMTP id M2004021312223501788
- for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 12:22:35 +0100
-Received: from stdoad02.st.behr.de (stdoad02.st.behr.de [172.27.15.12])
-	by mh1.st.behr.de (8.11.6/8.11.6) with ESMTP id i1DBIXW05201
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 12:18:33 +0100
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1DE5ii16608
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:05:44 -0500
+Received: from demonserver.de (p15093797.pureserver.info [217.160.109.186])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1DE5ib23015
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:05:44 -0500
+Received: from demonlord.de (160.12.204.212.sr1.DTM1.ip.versanet.de [212.204.12.160])
+	(authenticated bits=0)
+	by demonserver.de (8.12.8/8.12.8) with ESMTP id i1DE5dK8010788
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 15:05:40 +0100
+Message-ID: <402CD9E4.8070402@demonlord.de>
+From: Christian Reiss <email@demonlord.de>
 MIME-Version: 1.0
-Message-ID: <OFD4D5146F.E5D627CD-ONC1256E39.0037D4CE-C1256E39.003E351F@st.behr.de>
-From: "Andreas Reschke" <Andreas.Reschke@behrgroup.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Probs with lvm on large filesystem
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enig3858B1768637FF1308261F0E"
+Subject: [linux-lvm] LVM Problems :)
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -26,75 +27,103 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 13 09:12:10 2004
+Date: Fri Feb 13 09:13:39 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Hello,
-we want to use our Red Hat Enterprise ES 3.0 with lvm as a file server. 
-The server is connected to a IBM Fast T 900 via qlogic2200 Fiber Channel. 
-On the FastT I have created a partition with 295 GB.
-Fdisk shows this partition as /dev/sda1 with 292,5 GB:
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig3858B1768637FF1308261F0E
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Output of fdisk:
-fdisk -l
+Greetings!
 
-Platte /dev/sda: 292.5 GByte, 292555849728 Byte
-255 K�pfe, 63 Sektoren/Spuren, 35567 Zylinder
-Einheiten = Zylinder von 16065 * 512 = 8225280 Bytes
+I am trying to dissolve a running LVM, so i am doing
+the e2fsadm, lvreduce, pvmove thingy. But ever since I
+removed the first hdd, I am unable to resize the lvm
+any more. The error can be seen below, with e2fsadm.
+I also included the vg&lvdisplay commands.
 
-    Ger�t boot.  Anfang      Ende    Bl�cke   Id  Dateisystemtyp
-/dev/sda1             1     35567 285691896   8e  Linux LVM
+I am running the LVM1 sources (non-cvs, approx mid last
+year), as i am unable to run LVM2 (need to downgrade kernel
+to 2.4.22 (no patch included in lvm2 for 2.4.23)).
+Also, I am (too dumb/unable) to locate a e2fsadm alike
+tool for lvm2, as e2fsadm needs the lvm-tab thingy,
+which lvm2 no longer provides.
 
-[root@fastlinux lvmgui-0.4]# pvcreate  /dev/sda1
-pvcreate -- physical volume "/dev/sda1" successfully created
+Any help is greatly appreciated. :)
 
-[root@fastlinux lvmgui-0.4]# vgcreate -s 8M vg_daten /dev/sda1
-vgcreate -- INFO: maximum logical volume size is 511.98 Gigabyte
-vgcreate -- doing automatic backup of volume group "vg_daten"
-vgcreate -- volume group "vg_daten" successfully created and activated
+-Christian.
 
-[root@fastlinux lvmgui-0.4]#lvcreate -c 8k -L 292G -n lvo1 vg_daten
-lvcreate -- only 34873 free physical extents in volume group "vg_daten"
-[root@fastlinux lvmgui-0.4]# lvcreate -c 1024k -L 292G -n lvo1 vg_daten
-lvcreate -- only 34873 free physical extents in volume group "vg_daten"
 
-vgdisplay
+::::::::::::::::::
+::: vgdisplay ::::
+
 --- Volume group ---
-VG Name               vg_daten
+VG Name               share
 VG Access             read/write
-VG Status             available/resizable
+VG Status             available/NOT resizable
 VG #                  0
 MAX LV                256
-Cur LV                0
-Open LV               0
-MAX LV Size           511.98 GB
+Cur LV                1
+Open LV               1
+MAX LV Size           2 TB
 Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               272.45 GB
-PE Size               8 MB
-Total PE              34873
-Alloc PE / Size       0 / 0
-Free  PE / Size       34873 / 272.45 GB
-VG UUID               OOjBLA-sHjN-LtHG-YRlE-JIRZ-miEk-m6S5vv
+Cur PV                11
+Act PV                11
+VG Size               1.12 TB
+PE Size               32 MB
+Total PE              36668
+Alloc PE / Size       34108 / 1.04 TB
+Free  PE / Size       2560 / 80 GB
+VG UUID               PSYbaQ-bl8d-xvHp-6re2-hoKd-9mE5-Wa5Tqz
 
-I have a volume group with maximum 511.98 Gigabyte and want to create a 
-logical volume with 292 GB (greater than 266 GB), but lvcreate allow only 
-34873 extents (= 266 BG).
+:::::::::::::::
+:: lvdisplay ::
 
-Where is the resulotion?
+--- Logical volume ---
+LV Name                /dev/share/data
+VG Name                share
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                1.04 TB
+Current LE             34108
+Allocated LE           34108
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
 
+:::::::::::::
+:: e2fsadm ::
 
+e2fsadm -L-10G /dev/share/data
+e2fsadm -- logical volume size for "/dev/share/data" invalid
 
-Thanks
-Andreas
+:::::::::::
+:: df -h ::
+
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/share/data       941G  910G   32G  97% /share/filebase
+
 
 -- 
-BEHR GmbH & Co                          Tel. 0711-896-4598
-Andreas Reschke                         Fax: 0711-8902-4598
-Abteilung BG-IM23 IT-Services           Mobil: 0172-6307978
-Unix/Linux-Administration               andreas.reschke@behrgroup.com
-Siemensstrasse 164
-D-70469 Stuttgart
+Christian Reiss <email@demonlord.de>
+demonserver.de
+
+Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
+Public Key can be obtained here: http://www.demonlord.de/pgp.txt
+
+--------------enig3858B1768637FF1308261F0E
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
+
+iD8DBQFALNnmGLayMgL/cbIRArCHAJ4v11cM7C4Vug90pLSzLKRzPN5ycQCgqzFA
+xM6PN7U9Luso7ebuXPnyWl0=
+=ELQh
+-----END PGP SIGNATURE-----
+
+--------------enig3858B1768637FF1308261F0E--
