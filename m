@@ -1,64 +1,72 @@
-Date: Wed, 13 Sep 2000 10:37:32 +0000
+Date: Fri, 15 Sep 2000 09:01:14 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: [linux-lvm] *** Announcement ***  2nd Annual Linux Storage Management Workshop
-Message-ID: <20000913103732.A8174@srv.t-online.de>
+Subject: [linux-lvm] Re: [PATCH] align lv_on_disk.base to 512K blocks
+Message-ID: <20000915090114.B15090@srv.t-online.de>
 Reply-To: Mauelshagen@sistina.com
+References: <20000914204833.A25390@ns.lst.de> <20000914214554.A29553@ns.lst.de>
 Mime-Version: 1.0
+In-Reply-To: <20000914214554.A29553@ns.lst.de>; from hch@ns.lst.de on Thu, Sep 14, 2000 at 09:45:54PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-admin@vger.kernel.org, linux-lvm@msede.com
-Cc: mge@sistina.com, okeefe@sistina.com
+To: Christoph Hellwig <hch@ns.lst.de>
+Cc: mge@sistina.com, linux-lvm@msede.com
 
 
-Hi,
+Done.
 
-Please consider attending the 2nd Annual Linux Storage
-Management Workshop in Miami, Florida, to be held from
-Oct. 15th-19th at the University of Miami.  More information
-about the conference can be found at 
+How far are you with your driver enhancements?
 
-http://www.globalfilesystem.org/Pages/Miami2000.html
-
-Speakers include:
-Stephen Tweedie, Red Hat (ext2fs and ext3fs) 
-Hans Reiser, Namesys (ReiserFS) 
-Peter Braam, Turbolinux (Intermezzo) 
-Heinz Mauelshagen, Sistina Software (LVM) 
-Ken Preslan, Sistina Software (GFS) 
-Rik van Riel, Connectiva (VM system) 
-Ted Ts'o, VA Linux (ext2fs and friends) 
-Alan Robertson, Suse (Heartbeat) 
-John Jackson, Purdue University (Amanda) 
-Steve Best, IBM (IBM's Journaled File System) 
-Ben Rafanello, IBM (IBM's LVM) 
-Rick Wheeler, EMC (EMC & Linux) 
-Chris Feist, StorageTek (Secure File System) 
-Steve Lord, SGI (SGI's XFS) 
-Jeremy Allison, VA Linux (Samba) 
-Gawain Lavers, Big Storage (Linux DMAPI) 
-Steve Pate, Veritas (Veritas' VxFS & VxVM on Linux) 
-Dave Higgen, VA Linux (Linux NFS V3) 
-Matthew O'Keefe, Sistina (Linux Storage Clusters) 
-and others... 
-
-If you plan on attending, please make your reservations as soon as
-possible, as hotel space in Miami is limited.  More details
-on reservations and registration can be found at the web page.
-
-Hope to see you there,
 Regards,
-Matt and Heinz
+Heinz
 
-
-The Workshop Organizers 
-
-Matthew O'Keefe                          Heinz Mauelshagen 
-Sistina Software, Inc.                   Sistina Software, Inc. 
-okeefe@sistina.com                       mauelshagen@sistina.com 
-http://www.sistina.com                   http://www.sistina.com 
+On Thu, Sep 14, 2000 at 09:45:54PM +0200, Christoph Hellwig wrote:
+> On Thu, Sep 14, 2000 at 08:48:33PM +0200, Christoph Hellwig wrote:
+> > Hi Heinz,
+> > 
+> > this patch makes vgcreate align the lv structures to 512K on disk,
+> > this makes reading them from kernel using bread much easier.
+> > 
+> > Could you apply it to 0.9?
+> > 
+> > 	Christoph
+> 
+> Sorry, forgot to attach the patch ;)
+> 
+> Here it is:
+> 
+> 	Christoph
+> 
+> -- 
+> Always remember that you are unique.  Just like everyone else.
+> 
+> 
+> --- vg_setup_for_create.c~	Thu Sep 14 19:30:11 2000
+> +++ vg_setup_for_create.c	Thu Sep 14 19:30:22 2000
+> @@ -43,6 +43,7 @@
+>     int ret = 0;
+>     uint pe_total = 0;
+>     ulong rest = 0;
+> +   ulong size = 0;
+>  
+>  #ifdef DEBUG
+>     debug_enter ( "vg_setup_for_create -- CALLED\n");
+> @@ -89,8 +90,11 @@
+>        vg->pv[p]->vg_on_disk.size = LVM_VG_DISK_SIZE;
+>        vg->pv[p]->pv_namelist_on_disk.base = LVM_PV_NAMELIST_DISK_BASE;
+>        vg->pv[p]->pv_namelist_on_disk.size = ( max_pv + 1) * NAME_LEN;
+> -      vg->pv[p]->lv_on_disk.base = vg->pv[p]->pv_namelist_on_disk.base +
+> -                                   vg->pv[p]->pv_namelist_on_disk.size;
+> +      
+> +      size = vg->pv[p]->pv_namelist_on_disk.base + vg->pv[p]->pv_namelist_on_disk.size;
+> +      vg->pv[p]->lv_on_disk.base = (size / SECTOR_SIZE) * SECTOR_SIZE;
+> +      if (size % SECTOR_SIZE)
+> +         vg->pv[p]->lv_on_disk.base += SECTOR_SIZE;
+>        vg->pv[p]->lv_on_disk.size = ( max_lv + 1) * sizeof ( lv_t);
+>        LVM_PE_ON_DISK_BASE ( vg->pv[p]);
+>        strcpy ( vg->pv[p]->vg_name, vg->vg_name);
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
