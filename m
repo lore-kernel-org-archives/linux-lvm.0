@@ -1,11 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] quick pvresize question
-Message-Id: <20020419151617.B25208@sistina.com>
-References: <20020417222416.GA29978@arohk.troll.no>
-    <Pine.LNX.4.44.0204172318010.3143-100000@pzat.meep.org>
+Subject: Re: [linux-lvm] Device Resets?
+Message-Id: <20020419151813.C25208@sistina.com>
+References: <200204172133.OAA08410@hpgssl.cup.hp.com>
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44.0204172318010.3143-100000@pzat.meep.org>;
-    from oolon@ankh.org on Wed, Apr 17, 2002 at 11:23:43PM +0000
+In-Reply-To: <200204172133.OAA08410@hpgssl.cup.hp.com>; from
+    defranco@cup.hp.com on Wed, Apr 17, 2002 at 01:33:42PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,51 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 19 08:16:02 2002
+Date: Fri Apr 19 08:18:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Apr 17, 2002 at 11:23:43PM +0000, James Hawtin wrote:
-> On Thu, 18 Apr 2002, Trond Are Haugland wrote:
+On Wed, Apr 17, 2002 at 01:33:42PM -0800, John DeFranco wrote:
+> Hi,
 > 
-> > Hello people at Sistina!
-> >
-> > Is it possible/safe to resize a physical volume to use
-> > free space _before_ the start block of the pv?
-> >
-> > Thank you so much for creating LVM for Linux,
-> > it absolutely ROCKS :-)
-> > --
-> > Trond Are Haugland <trondare@trolltech.com>
-> > Trolltech AS
-> >
-> 
-> No, its not, pv cannot be expanded or reduced in size, A dirty hack would
-> be to create another PV on the disk, just make sure you speficy pvs when
-> you do striping so you don't strip the same drive ;-)
+> I was wondering if anyone could tell me of LVM issues device resets, like a 
+> bus reset or target device reset or something similiar?
 
-You actually can pvresize.
+No, it doesn't do resets.
 
-If you have two partitions you can concatinate (fdisk) and
-the first holds a PV, pvresize it to take the additional space.
-
-Or you want to take advantage of the extended space in a RAID subsystems
-volume (could be MD or a HW subsystem).
+Old versions did cache flushes and invalidations which was crappy;
+the actual ones don't do this any longer.
 
 > 
-> Its fine for concatinated volumes. If you have a spare disk and a little
-> time, create a new pv on your space disk use pvmove to mvoe from your old
-> disk to the temp. vgreduce out the old disks pv, repartion the disk then
-> create a new pv on it. vgexpand to the (old/new disk) then pvmove your
-> data back then vgreduce out your temp disk.
+> Thanks!
 > 
-> I have done this a few times :-) make sure you use latest version of lvm
-> there are some problems with pvmove before that.
-> 
-> James
-> 
+> ===============================================================
+> John DeFranco			Hewlett-Packard Company
+> john_defranco@hp.com		Availability Clusters Solution Division
+> phone: 408-447-7543		19111 Pruneridge Ave, M/S 4101
+> fax: 408-447-0056		Cupertino, CA 95014 
 > 
 > _______________________________________________
 > linux-lvm mailing list
