@@ -1,12 +1,9 @@
-Subject: Re: [linux-lvm] Strange hard drive behaviour
-Message-ID: <20030405173116.GA27048@mitethe.eudyptes>
-References: <Pine.LNX.4.44.0304051859320.7718-100000@omega.telia.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0304051859320.7718-100000@omega.telia.net>
-From: idsfa@visi.com
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] extending LVM for school project
+Message-ID: <689F43A6CF84E541A721C5C3FD5ADECC1A1C30@blr-m3-msg.wipro.com>
+From: "Sharad Tiwari" <sharad.tiwari@wipro.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,57 +14,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 10 09:10:02 2003
+Date: Thu Apr 10 09:10:05 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+Cc: k@kaisung.com
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What about working towards making LVM cluster aware and making it more
+available, putting in better failover mechanisms in a clustered
+environment ...
 
-On Sat, Apr 05, 2003 at 07:18:11PM +0200, vegh@omega.telia.net wrote:
+If the work is done for for a hybrid setup (no need to have a shared
+disk, or you may have a mix of shared disk and just a some disks
+connected to one of the nodes in the network.) you can save the cost of
+having to buy expensive disks and switches and can do the work with the
+available setup in the university.
 
-> I have a question regarding strange hard drive behaviour with an LVM=20
-> volume. When I am creating the ext2 file system over my volume, the=20
-> process takes much more time than expected, and the hard drive makes
-> a strange noise, it sounds like its head is jumping back and forth all
-> the time.
+I am myself planning to work towards extending LVM2 for such a setup and
+we can share our work : )O
 
-That nasty click is an IDE drive resetting itself.  Failure may be
-moments away.  In the hardware RAID you described, it may be a bit
-harder to isolate which drive is dying ... you may actually have to
-get your head next to each one to find it.
+Thanks,
+Sharad.
 
-The problem then is that you need to evacuate that PV (which may be the
-whole array from your description of the setup) and replace the faulty
-drive.  You may be able to take less drastic action, depending upon the
-capabilities of your RAID card.
-
-If you are mirroring, you can also get this if one of the drives in the
-mirror is slower than the other (also happens if you are striping, but
-you said that you weren't).
-
-While drives can live for months this way, they drag your system
-performance to the ground and eventually fail anyway.  Get out
-while you can still save your data!
-
-
-Michael Kellen
---=20
-Think Locally, Act Globally: =20
-"It's cold in here ... I'd better release a few million tons of CFCs!"
-
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQE+jxLkzCEwIKHWl1kRAlWMAJwKHX1vtXfMahhPCliN3mPnKuF/gwCfWDu4
-0CUKWpho3j9w1LMh9ytxHoE=
-=ImZC
------END PGP SIGNATURE-----
-
---2oS5YaxWCcQjTEyO--
+> >-----Original Message-----
+> >From: Kai-Min Sung [mailto:k@kaisung.com]
+> >Sent: Wednesday, April 09, 2003 11:25 AM
+> >To: Linux-lvm@sistina.com
+> >Subject: [linux-lvm] extending LVM for school project
+> >
+> >Hey everyone,
+> >	I'm a masters student taking a distributed systems project class
+> >and would like to work on extending LVM. My initial idea was to
+modify
+> >LVM and allow it to create physical volumes using disks on remote
+nodes.
+> >But then I read posts about using ENBD to achieve this. Do people on
+> >this list have suggestions or ideas for a fun/interesting project
+that
+> >could be accomplished within 10 weeks?
+> >
+> >Regards,
+> >Kai-Min Sung
+> >
+> >
+> >
+> >_______________________________________________
+> >linux-lvm mailing list
+> >linux-lvm@sistina.com
+> >http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
