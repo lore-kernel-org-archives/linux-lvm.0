@@ -1,10 +1,10 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] LVM
-Date: Wed, 12 Sep 2001 03:51:55 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPKEDNDNAA.stuart@bh90210.net>
+Message-ID: <3B9F4B72.9050801@st-peter.stw.uni-erlangen.de>
+Date: Wed, 12 Sep 2001 13:48:02 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-reply-to: <3B9F3201.6030007@st-peter.stw.uni-erlangen.de>
+Subject: Re: [linux-lvm] LVM
+References: <NBBBJHKIOKPKOGOEPEDPKEDNDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,103 +16,183 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-U3ZldGpvOg0KDQoJL2Rldi9oZGExCXcyay9wcm8NCgkvZGV2L2hkYTIJL2Jvb3QNCgkvZGV2L2hk
-YTMJLw0KDQoJU29tZXRoaW5nIGxpa2UgdGhlIGFib3ZlPw0KDQoJT2theSwgSSBkaWQgdGhhdCwg
-YW5kIG5vdyBJIGdldCAiTEkiIHdoZW4gSSBib290ZWQgdXAhIFdoYXQgZG9lcyAiTEkiIGluIGxp
-bG8gbWVhbj8gV2hhdCBwYXJ0IG9mIG15IGJvb3QgdXAgc2VxdWVuY2UgaXMgYnJva2VuPw0KDQoJ
-U29tZW9uZSB0b2xkIG1lIGl0IG1lYW50IG15IHNlY29uZCBzdGFnZSBib290IGxvYWRlciB3YXMg
-ZmFpbGluZy4gV2hhdCBkb2VzIHRoYXQgbWVhbj8gV2hhdCBhcmUgdGhlIHN0YWdlcyBvZiBib290
-aW5nPyBDYW4gYW55b25lIGhvb2sgbWUgdXAgaGVyZT8NCg0KCUFzIGZhciBhcyBJIGtub3csIEkg
-aGF2ZSBSZWlzZXJGUyBjb21waWxlZCBpbnRvIHRoZSBrZXJuZWwgYWxvbmcgd2l0aCBMVk0gc3Vw
-cG9ydCBpbiB0aGUga2VybmVsLg0KDQoJSSBtdXN0IGFkbWl0IFJlaXNlckZTIGhhcyB3b3JrZWQg
-cXVpdGUgd2VsbCBmb3IgbWUsIGFuZCBpcyB2ZXJ5IGJ1Zy1mcmVlLiBJIGFtIHVzaW5nIHRoZSB2
-ZXJzaW9uIHRoYXQgY29tZXMgd2l0aCB0aGUgMi40LjgtMTJtZGsgKG1hbmRyYWtlKSBrZXJuZWws
-IHNvIHBlcmhhcHMgdSB0cmllZCBhbiBvbGRlciB2ZXJzaW9uLg0KDQoNClZlcnkgUmVzcGVjdGZ1
-bGx5LCANCg0KU3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNHV0cgDQpCZXZlcmx5
-IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUgMTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KSAN
-CnN0dWFydEBiaDkwMjEwLm5ldCANCndlc3QgY29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94
-IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzIA0KZWFzdCBjb2FzdDogKDIxNSkt
-MzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OSANCg0K
-VGVsZWNvcGllcjogKDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdhdGV3YXkgdmlhIHd3dy5l
-ZmF4LmNvbSAoaXQncyBmcmVlISkgDQoNCkpPSU4gVEhFIFVTIE5BVlkgUkVTRVJWRSwgU0VSVkUg
-WU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4gDQoNCldlZG5lc2RheSwgU2Vw
-dGVtYmVyIDEyLCAyMDAxIDM6NDMgQU0NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZy
-b206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBz
-aXN0aW5hLmNvbV1PbiBCZWhhbGYgT2Ygc3ZldGxqbw0KU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1i
-ZXIgMTIsIDIwMDEgMjo1OSBBTQ0KVG86IGxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KU3ViamVjdDog
-UmU6IFtsaW51eC1sdm1dIExWTQ0KDQpIaQ0KeW91IG5lZWQgYSBub3JtYWwgcGFydGl0aW9uIHZv
-ciAvYm9vdCBub3Qgb24gTFYgYW5kIGl0IHdvdWxkIGJlIGdvb2QgdG8NCmhhdmUgYWxzbyBhIG5v
-cm1hbCBwYXJ0aXRpb24gYXMgc3dhcCwNCmJ1dCBpbiBjYXNlIHlvdSBkb24ndCB1c2Ugc3dhcCB5
-b3UgZG9uJ3QgbmVlZCB0bywNCnRoZSB0aGluZyBpcyB0aGF0IHRoZSBzd2FwIGlzIG11Y2ggZmFz
-dGVyIHdoZW4gaXQgaXMgb24gcGFydGl0aW9uIG5vdCBmaWxlDQp5b3UgY2FuIHRyeSB0byBkbyBp
-dCB3aXRob3V0IGZvcm1hdGluZyB0aGUgc2Vjb25kIGRpc2sNCnlvdSBjYW4gc2hyaW5rIFJlaXNl
-ckZTLCB0aGVuIHdpdGggZGlza2RyYWtlIHNocmluayB0aGUgcGFydGl0aW9uDQogYW5kIG1ha2Ug
-YSBuZXcgb25lIGZvciBib290IGFuZCBmb3IgdGhlIFZHICwgbWFrZSBhbiBMViBvbiB0aGUgVkcg
-LA0KY3JlYXRlIGZpbGVzeXN0ZW1zIG9uIHRoZSBMViBhbmQgL2Jvb3QsIG1vdW50IHRoZSBMViAv
-bW50L25ldy1yb290ICwNCm1rZGlyIC9tbnQvbmV3LXJvb3QvYm9vdCBhbmQgbW91bnQgaGVyZSB0
-aGUgL2Jvb3QgcGFydGl0aW9uDQp0cmFzbmZlciB5b3VyIGluc3RhbGxhdGlvbiB0byAvbW50L25l
-dy1yb290Og0KY2QgLw0KIGZpbmQgLiAteGRldiB8IGNwaW8gLXBtIC9tbnQvbmV3LXJvb3QNCg0K
-ZWRpdCAvbW50L25ldy1yb290L2V0Yy9mc3RhYiB0byBtYXRjaCB0aGUgTFYgYXMgLyBhbmQgYWQg
-YW4gZW50cnkgZm9yIC9ib290DQoNCnJlYm9vdA0KYW5kIHBhc3MgdG8gbGlsbyByb290PS9kZXYv
-W3lvdXIgVkddL1t5b3VyIC8gTFZdDQppdCBzaG91bGQgYmUgd29ya2luZw0KDQplZGl0IGxpbG8u
-Y29uZiBhbmQgcmVpbnN0YWxsIGxpbG8gb3IgZ3J1YiAoIGknbSBub3Qgc2h1cmUgdGhhdCBsaWxv
-IGNhbg0KYm9vdCBmcm9tIHRoZSBlbmQgb2YgMzJHYiBkcml2ZSkNCg0KcmVib290IG9uY2UgbW9y
-ZSBpZiBldmVyeXRoaW5nIGlzIE9LDQp5b3UgY2FuIG1ha2UgYSBQViBmcm9tIHlvdXIgb2xkIC8g
-YW5kIGFkIGl0IHRvIHRoZSBWRw0KdGhhdCBzaG91bGQgYmUgaXQNCg0KYWJvdXQgdGhlIEZTJ3MN
-Cg0Kc210aCBpbXBvcnRhbnQgKCBtYXkgYmUpIGFzIGZhciBpIGtub3cgb25seSBSZWlzZXJmcyBj
-b3VsZCBiZSBzaHJpbmtlZCAsDQp5b3UgY2FuIG9ubHkgZ3JvdyBYRlMgYW5kIEpGUyB5b3UgY2Fu
-IG5vdCBtYWtlIHRoZW0gc21hbGxlcg0KDQppIHJlYWxseSBsaWtlIFhGUyxhbmQgbm90IHRoYXQg
-bXVjaCB0aGUgb3RoZXJzDQppIGhhZCBzb21lIGNyYXNoZXMgYW5kIHdpdGggcmVpc2VyZnMgaSBo
-YXZlIHNvbWUgZmlsZSBlbnRyaWVzIHdoaWNoIGFyZQ0KcmVwb3J0ZWQgdG8gZXhpc3QgLGJ1dCB0
-aGV5IGNhbiBub3QgYmUgc3RhdGVkIHdoZW4gaSB0cnkgdG8gZGVsZXRlIHRoZW0NCm9yIHRvIHNl
-ZSB0aGVtDQppIGhhdmUgbm90IG11Y2ggZXhwaXJpYW5jZSB3aXRoIEpGUyAsIGJ1dCBpJ20gaGVh
-cmluZyB0aGF0IGl0IHdhcyBub3QNCnRoYXQgc3RhYmxlIGFzIG9mIDEuMC4zDQphbmQgd2l0aCBY
-RlMgaSBmb3VuZCBhbGwgbG9zdCBmaWxlcyBpbiAiIGxvc3QgYW5kIGZpbmQgIiBhbmQgaXQgd2Fz
-DQpwcmV0dHkgZWFzeSB0byBicmluZyB0aGVtIGJhY2sNCmkgbWVudGlvbiBvbmx5IHRoZSBqb3Vy
-bmFsIG9uZXMgYmVjb3VzZSB5b3UgYXJlIHNwZWFraW5nIGFib3V0IDMyR2INCg0KDQoNCg0KDQoN
-Cg0KSVQzIFN0dWFydCBCLiBUZW5lciwgVVNOUi1SIHdyb3RlOg0KDQo+TFZNIExpc3QgbWVtYmVy
-czoNCj4NCj4gICAgICAgSSBoYXZlIGJlZW4gZG9pbmcgc29tZSBwbGF5aW5nIGFyb3VuZCBhbmQg
-YW0gbm90IGdldHRpbmcgdmVyeSBmYXIhIFBlcmhhcHMgeW91IGNhbiBhbnN3ZXIgc29tZSBxdWVz
-dGlvbnMgYW5kIGd1aWRlIG1lLg0KPg0KPkkgaGF2ZSAyIDMyR0IgSERzLCB3aGljaCBJIGNhbiBo
-YXZlIGJvdGggaW4gdXNlIG9uIG15IGxhcHRvcCBzaW11bHRhbmVvdXNseS4gVGhlIDJuZCBIRCBJ
-IGNhbiBlcmFzZSB0byBteSBoZWFydHMgY29udGVudC4gSXQncyBhIHN0YWdpbmcgZHJpdmUuDQo+
-DQo+ICAgICAgIE15IGN1cnJlbnQgY29uZmlndXJhdGlvbiBpczoNCj4NCj4gICAgICAgL2Rldi9o
-ZGExICAgICAgIHdpbmRvd3MgMjAwMCBwcm8NCj4gICAgICAgL2Rldi9oZGEyICAgICAgIC8gICAg
-ICAgKExpbnV4IG1hbmRyYWtlIDguMCkNCj4NCj4gICAgICAgSSBkbyBub3QgaGF2ZSBhIHN3YXAg
-cGFydGl0aW9uIGF0IHRoZSBtb21lbnQgKEkgaGF2ZSA1MTJNQiBvZiByYW0sIGFuZCBJIHVzZSBh
-IHN3YXAgZmlsZSBpZiBJIG5lZWQgdG9vKSwgYW5kIGhhdmUgZXZlcnl0aGluZyBpbnN0YWxsZWQg
-aW50byB0aGUgcm9vdCAoSSBrbm93IHRoZSBkcmF3YmFja3Mgb2YgdGhpcywgYnV0IGl0IG1hZGUg
-Zm9yIHNpbXBsaWNpdHkgYXQgdGhlIHRpbWUpLiBJIGFsc28gdXNlIFJlaXNlckZTLCBhbmQgd2Fu
-dCB0byBpbXBsZW1lbnQgTFZNLg0KPg0KPiAgICAgICBUaGUgIkhvdyBUbyIgc3BlYWtzIG9mIGFu
-IGV4YW1wbGUgaW5jbHVzaXZlIG9mIGEgL2Jvb3QgcGFydGl0aW9uIGFuZCBhIHN3YXAgcGFydGl0
-aW9uLiBJIGlnbm9yZWQgdGhlIHN3YXAgcGFydGl0aW9uLCBidXQgd2FzIGN1cmlvdXMgYWJvdXQg
-dGhlIC9ib290IHBhcnRpdGlvbiBpbiB0aGUgaG93LXRvLg0KPg0KPmEpIERvIEkgbmVlZCB0byBo
-YXZlIGEgc2VwYXJhdGUgL2Jvb3QgcGFydGl0aW9uLCBvciBjYW4gSSBjcmVhdGUgYW4gTFZNIGlt
-cGxlbWVudGF0aW9uIChmb3IgdGhlIG1vbWVudCkgd2l0aCBldmVyeXRoaW5nIGluIHRoZSByb290
-ICgvKT8NCj5iKSBUaGUgZXhhbXBsZSBzZWVtcyB0byBzaG93IHRoZSAvYm9vdCBiZWluZyBvdXRz
-aWRlIHRoZSBMVk0gYXJlYSwgaXMgdGhhdCBjb3JyZWN0IG9yIGRvZXMgdGhlIGhvdy10byBtZWFu
-IHRvIHNob3cgdGhlIC9ib290IGFzIGJlaW5nIHdpdGhpbiB0aGUgZG9tYWluIG9mIHRoZSBMVk0g
-Y29udHJvbGxlZCBhcmVhPw0KPmMpIEhvdyB3aWxsIHVzaW5nIFJlaXNlckZTIG9uIG15IHJvb3Qg
-cGFydGl0aW9uIGFuZCBMVk0gb3ZlciB0aGUgcm9vdCBhZmZlY3Qgd2hhdCBJIG5lZWQgdG8gZG8g
-Zm9yIGFuIGluaXRyZCBhbmQga2VybmVsIGNvbXBpbGF0aW9uIG9wdGlvbnM/DQo+DQo+T25jZSB0
-aGUgTFZNIGltcGxlbWVudGF0aW9uIGlzIGNvbXBsZXRlZCB3aXRoIGV2ZXJ5dGhpbmcgaW4gdGhl
-IC8gcGFydGl0aW9uLCBhbmQgUmVpc2VyRlMgb24gdGhlIHJvb3QsIGFuZCBpdCBib290cyB1cCwg
-dGhlbiBJIHBsYW4gdG8gYnJlYWsgYXBhcnQgdGhlIC8gaW50byBzZXBhcmF0ZSBmaWxlc3lzdGVt
-cyB3aXRoaW4gdGhlIExWTSBlbnZpcm9ubWVudC4gQXQgdGhhdCBwb2ludCwgcmVjb21tZW5kYXRp
-b25zIG9mIHdoYXQgZmlsZXN5c3RlbXMgdG8gY3JlYXRlIHdpbGwgYmUgaGVscGZ1bC4NCj4NCj4N
-Cj5WZXJ5IFJlc3BlY3RmdWxseSwNCj4NCj5TdHVhcnQgQmxha2UgVGVuZXIsIElUMywgVVNOUi1S
-LCBOM0dXRw0KPkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENCj5WVFUgMTkwNEcgKFZvbHVudGVl
-ciBUcmFpbmluZyBVbml0KQ0KPnN0dWFydEBiaDkwMjEwLm5ldA0KPndlc3QgY29hc3Q6ICgzMTAp
-LTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzDQo+
-ZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwg
-UEEgMTkxNDktNTg1OQ0KPg0KPlRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFp
-bCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpDQo+DQo+Sk9JTiBUSEUgVVMg
-TkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklUIEZST00gSVQgQUxM
-Lg0KPg0KPldlZG5lc2RheSwgU2VwdGVtYmVyIDEyLCAyMDAxIDI6MDEgQU0NCj4NCj4NCg0KDQoN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQpsaW51eC1s
-dm0gbWFpbGluZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGluYS5jb20NCmh0dHA6Ly9saXN0cy5zaXN0
-aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KcmVhZCB0aGUgTFZNIEhPVy1UTyBh
-dCBodHRwOi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5odG1sDQo=
+i should tell you about that
+that was the problem that i had when i tried with /boot behind the first=20
+1024cyl of the first disk
+some people tells that the new lilo can handle this (it comes with MDK-8)
+some people tells that probably a BIOS update should solve the problem
+it didn't work for me
+
+you can try to update lilo to the latest beta version and to update the BIOS
+but with GRUB it works
+the problem is that LILO can not read from /boot
+my partitions
+/dev/hda1 470Mb win-boot
+extended
+/dev/hda5   32Mb /boot
+......
+
+can you boot with a floppy and install grub?  it must work
+IT3 Stuart B. Tener, USNR-R wrote:
+
+>Svetjo:
+>
+>	/dev/hda1	w2k/pro
+>	/dev/hda2	/boot
+>	/dev/hda3	/
+>
+>	Something like the above?
+>
+>	Okay, I did that, and now I get "LI" when I booted up! What does "LI" in =
+lilo mean? What part of my boot up sequence is broken?
+>
+>	Someone told me it meant my second stage boot loader was failing. What do=
+es that mean? What are the stages of booting? Can anyone hook me up here?
+>
+>	As far as I know, I have ReiserFS compiled into the kernel along with LVM=
+ support in the kernel.
+>
+>	I must admit ReiserFS has worked quite well for me, and is very bug-free.=
+ I am using the version that comes with the 2.4.8-12mdk (mandrake) kernel, =
+so perhaps u tried an older version.
+>
+>
+>Very Respectfully,=20
+>
+>Stuart Blake Tener, IT3, USNR-R, N3GWG=20
+>Beverly Hills, California
+>VTU 1904G (Volunteer Training Unit)=20
+>stuart@bh90210.net=20
+>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043=20
+>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859=20
+>
+>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's fre=
+e!)=20
+>
+>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.=20
+>
+>Wednesday, September 12, 2001 3:43 AM
+>
+>-----Original Message-----
+>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On B=
+ehalf Of svetljo
+>Sent: Wednesday, September 12, 2001 2:59 AM
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] LVM
+>
+>Hi
+>you need a normal partition vor /boot not on LV and it would be good to
+>have also a normal partition as swap,
+>but in case you don't use swap you don't need to,
+>the thing is that the swap is much faster when it is on partition not file
+>you can try to do it without formating the second disk
+>you can shrink ReiserFS, then with diskdrake shrink the partition
+> and make a new one for boot and for the VG , make an LV on the VG ,
+>create filesystems on the LV and /boot, mount the LV /mnt/new-root ,
+>mkdir /mnt/new-root/boot and mount here the /boot partition
+>trasnfer your installation to /mnt/new-root:
+>cd /
+> find . -xdev | cpio -pm /mnt/new-root
+>
+>edit /mnt/new-root/etc/fstab to match the LV as / and ad an entry for /boot
+>
+>reboot
+>and pass to lilo root=3D/dev/[your VG]/[your / LV]
+>it should be working
+>
+>edit lilo.conf and reinstall lilo or grub ( i'm not shure that lilo can
+>boot from the end of 32Gb drive)
+>
+>reboot once more if everything is OK
+>you can make a PV from your old / and ad it to the VG
+>that should be it
+>
+>about the FS's
+>
+>smth important ( may be) as far i know only Reiserfs could be shrinked ,
+>you can only grow XFS and JFS you can not make them smaller
+>
+>i really like XFS,and not that much the others
+>i had some crashes and with reiserfs i have some file entries which are
+>reported to exist ,but they can not be stated when i try to delete them
+>or to see them
+>i have not much expiriance with JFS , but i'm hearing that it was not
+>that stable as of 1.0.3
+>and with XFS i found all lost files in " lost and find " and it was
+>pretty easy to bring them back
+>i mention only the journal ones becouse you are speaking about 32Gb
+>
+>
+>
+>
+>
+>
+>
+>IT3 Stuart B. Tener, USNR-R wrote:
+>
+>>LVM List members:
+>>
+>>      I have been doing some playing around and am not getting very far! =
+Perhaps you can answer some questions and guide me.
+>>
+>>I have 2 32GB HDs, which I can have both in use on my laptop simultaneous=
+ly. The 2nd HD I can erase to my hearts content. It's a staging drive.
+>>
+>>      My current configuration is:
+>>
+>>      /dev/hda1       windows 2000 pro
+>>      /dev/hda2       /       (Linux mandrake 8.0)
+>>
+>>      I do not have a swap partition at the moment (I have 512MB of ram, =
+and I use a swap file if I need too), and have everything installed into th=
+e root (I know the drawbacks of this, but it made for simplicity at the tim=
+e). I also use ReiserFS, and want to implement LVM.
+>>
+>>      The "How To" speaks of an example inclusive of a /boot partition an=
+d a swap partition. I ignored the swap partition, but was curious about the=
+ /boot partition in the how-to.
+>>
+>>a) Do I need to have a separate /boot partition, or can I create an LVM i=
+mplementation (for the moment) with everything in the root (/)?
+>>b) The example seems to show the /boot being outside the LVM area, is tha=
+t correct or does the how-to mean to show the /boot as being within the dom=
+ain of the LVM controlled area?
+>>c) How will using ReiserFS on my root partition and LVM over the root aff=
+ect what I need to do for an initrd and kernel compilation options?
+>>
+>>Once the LVM implementation is completed with everything in the / partiti=
+on, and ReiserFS on the root, and it boots up, then I plan to break apart t=
+he / into separate filesystems within the LVM environment. At that point, r=
+ecommendations of what filesystems to create will be helpful.
+>>
+>>
+>>Very Respectfully,
+>>
+>>Stuart Blake Tener, IT3, USNR-R, N3GWG
+>>Beverly Hills, California
+>>VTU 1904G (Volunteer Training Unit)
+>>stuart@bh90210.net
+>>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
+>>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
+>>
+>>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's fr=
+ee!)
+>>
+>>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
+>>
+>>Wednesday, September 12, 2001 2:01 AM
+>>
+>>
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>=EF=BF=BD
+>
