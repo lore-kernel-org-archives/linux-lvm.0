@@ -1,9 +1,7 @@
-Message-ID: <3DC97C42.7080305@mp.pl>
-From: Tomasz Francuz <tfrancuz@mp.pl>
+From: Ivan Uzunov <dj@online.bg>
+Message-ID: <Pine.LNX.4.30.0211062334420.1036-100000@localhost.localdomain>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm oddities seen
-References: <HMEIJJCJJMDMOBLPBABOMEHDCDAA.ej_external@bigfoot.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] PVscan Question.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,55 +12,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov  6 14:50:01 2002
+Date: Wed Nov  6 15:47:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->
->
->Can anyone explain this for me?  I added a new hard drive to my LVM and
->while lvdisplay of the LVM shows the full size of all disks/partitions in
->the LVM, df -k does not:
->
->[root@bergamo sbin]# lvscan
->lvscan -- ACTIVE            "/dev/lvm01/1" [176.76 GB]
->lvscan -- 1 logical volumes with 176.76 GB total in 1 volume group
->lvscan -- 1 active logical volumes
->
->[root@bergamo sbin]# lvdisplay /dev/lvm01/1
->--- Logical volume ---
->LV Name                /dev/lvm01/1
->VG Name                lvm01
->LV Write Access        read/write
->LV Status              available
->LV #                   1
-># open                 1
->LV Size                176.76 GB
->Current LE             45251
->Allocated LE           45251
->Allocation             next free
->Read ahead sectors     120
->Block device           58:0
->
->
->
->[root@bergamo sbin]# df -k
->Filesystem           1k-blocks      Used Available Use% Mounted on
->/dev/hda6             10317796   3808332   5985348  39% /
->/dev/hda1                62193     17850     41132  31% /boot
->none                     95628         0     95628   0% /dev/shm
->/dev/lvm01/1         115382824  63615676  47078212  58% /mnt/lvm01.01
->
->
->So while lvm shows the lvm size to be 176.76G, df -k shows the filesystem to
->be about 115G.  What is happening with this?
->
->  
->
-Probably you have to extend your filesystem. Make resize2fs 
-/dev/lvm/yourvolumename.
+	Hi :)
+
+	I have small and may be stupid questions, I run LVM 1.0.6 with
+kernel 2.4.19 onto redhat system. The LVM is running but when i run
+pvdisplay command onto one of the HDD into LVM output is :
+
+PV Name               /dev/hdc1
+VG Name               home
+PV Size               76.69 GB [160836417 secs] / NOT usable 16.18 MB
+[LVM: 143
+KB]
+PV#                   3
+PV Status             NOT available
+			^^^^^^^^^^^
+
+What's this mean ?
+
+I have 6 HDD in this LVM and
+HDD : /dev/hda7 /dev/hdc1 /dev/hde1 /dev/hdh1 has this status ; other for
+example /dev/hdb1 is :
+PV Status             available
+		       ^^^^^^^^^
 
 
->  
->
+	And second when i run pvscan program i see this :
+
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdg"  is in no VG  [8.01 GB]
+pvscan -- ACTIVE   PV "/dev/hdg1" of VG "home" [76.67 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hdh1" of VG "home" [114.47 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hde1" of VG "home" [76.67 GB / 0 free]
+pvscan -- inactive PV "/dev/hdc"  is in no VG  [8.01 GB]
+pvscan -- ACTIVE   PV "/dev/hdc1" of VG "home" [76.67 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hda7" of VG "home" [60 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hdb1" of VG "home" [114.47 GB / 0 free]
+pvscan -- total: 8 [535.10 GB] / in use: 6 [519.09 GB] / in no VG: 2
+[16.01 GB]
+
+	Where this 16Gigs goes ? 8 onto /dev/hdg and 8 onto /dev/hdc
+Can i extend LVM volume and use this Gigs without destroying data onto LVM
+?
+
+Thank You.
+
+
+						WWell : Ivan Uzunov
