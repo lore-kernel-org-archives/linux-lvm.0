@@ -1,32 +1,37 @@
-From: "Stefan Monnier" <monnier+lists/linux/lvm/news/@tequila.cs.yale.edu>
-Subject: Re: [linux-lvm] Alpha testers rqd for ext2 fs extend utility.
-References: <3779A456.15F5@erols.com> <199906300435.WAA17970@webber.adilger.net>
-Date: 30 Jun 1999 13:42:43 -0400
-Message-ID: <5lu2rppoto.fsf@tequila.cs.yale.edu>
+Message-Id: <m10zT4p-0000YkC@duffy1.franken.de>
+From: Rolf Jakob <rjakob@duffy1.franken.de>
+Subject: Re: [linux-lvm] vgscan -- invalid i/o protocol version
+In-Reply-To: <Pine.LNX.4.10.9906301639130.2611-100000@fuse.aethos.co.uk> from James Pattinson at "Jun 30, 1999  4:42:41 pm"
+Date: Thu, 1 Jul 1999 00:43:35 +0200 (MET DST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
->>>>> "Andreas" == Andreas Dilger <adilger@enel.ucalgary.ca> writes:
-> all of the space on your disks.  It is easy to grow a filesystem, but
-> lots of work to shrink it (ie backup, rebuild, restore).
+> Anyone seen this error msg before?
+Yes :-)
 
-That's exactly why I don't like this pre-allocation idea.
-It will end up with a grow2fs utility and no way to shrink a filesystem.
-I'd rather see the work be out in a real ext2resize that can both grow and
-shrink a filesystem, as can AdvFS.
-Problem is:  shrinking will necessarily mean heavy disk reorganization
-(most importantly: some files will have to be reassigned to other inodes
-which means `stale filehandle' across NFS).  So I must admit that it is indeed
-desirable to at least try to avoid moving things around when possible,
-via (f.ex.) pre-allocation.
+> I'm running RH6 with kernel 2.2.10 and the LVM patches applied. I
+> originially tried to follow the HOWTO but on the first command i got:
+> 
+> pvcreate -- ERROR: "/etc/lvmtab" doesn't exist; please run vgscan
+> 
+> so i ran vgscan and got the message in the subject line. It's possible I'm
 
-All in all, it just goes to show that a static inode->block mapping
-as is used in ext2 (and ufs) is not flexible enough.
+Did you build LVM as a module ? Is the module loaded ? I get the same
+message when I run vgscan without modprobe lvm.o.
 
+> being really thick and I don't really know what I'm doing. Do I need the
+> devfs patches too?
 
-	Stefan
+Not that I know of. I never tried it without devfs, but that has other
+reasons (having to remove the first SCSI disk is a strong argument for
+devfs :-)
+
+Rolf
+-- 
+Rolf Jakob at home (rjakob@duffy1.franken.de)
+WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
