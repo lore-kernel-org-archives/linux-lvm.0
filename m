@@ -1,19 +1,39 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i8CFVwrI021619
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 16:31:58 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1C6WKc-0005Bq-1K
-	for linux-lvm@redhat.com; Sun, 12 Sep 2004 16:31:58 +0100
-Date: Sun, 12 Sep 2004 16:31:58 +0100
-From: Alasdair G Kergon <agk@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8CFfjr06608
+	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 11:41:45 -0400
+Received: from mwinf0903.wanadoo.fr (smtp9.wanadoo.fr [193.252.22.22])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8CFfdwf025268
+	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 11:41:39 -0400
+Received: from me-wanadoo.net (localhost [127.0.0.1])
+	by mwinf0903.wanadoo.fr (SMTP Server) with SMTP id CA4EA1800180
+	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 17:41:33 +0200 (CEST)
+Received: from tangerine.coulon.evette
+	(ADijon-107-1-10-144.w81-249.abo.wanadoo.fr [81.249.82.144])
+	by mwinf0903.wanadoo.fr (SMTP Server) with ESMTP id 09578180016C
+	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 17:41:32 +0200 (CEST)
+Received: from localhost ([127.0.0.1])
+	by tangerine.coulon.evette with esmtp (Exim 4.34) id 1C6WTh-0001X8-ER
+	for linux-lvm@redhat.com; Sun, 12 Sep 2004 17:41:21 +0200
+Received: from tangerine.coulon.evette ([127.0.0.1])
+	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 00616-06 for <linux-lvm@redhat.com>;
+	Sun, 12 Sep 2004 17:41:20 +0200 (CEST)
+Received: from localhost ([127.0.0.1] helo=tangerine)
+	by tangerine.coulon.evette with esmtp (Exim 4.34) id 1C6WTf-0001Wx-7O
+	for linux-lvm@redhat.com; Sun, 12 Sep 2004 17:41:19 +0200
+Date: Sun, 12 Sep 2004 15:41:15 +0000
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
 Subject: Re: [linux-lvm] pvmove: ABORTING: Volume group metadata update failed.
-Message-ID: <20040912153157.GL1094@agk.surrey.redhat.com>
 References: <Pine.LNX.4.58.0409120340470.3989@philos.nvg.ntnu.no>
 	<20040912114514.GI1094@agk.surrey.redhat.com>
 	<1094990549l.5671l.0l@tangerine>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1094990549l.5671l.0l@tangerine>
+	<20040912153157.GL1094@agk.surrey.redhat.com>
+In-Reply-To: <20040912153157.GL1094@agk.surrey.redhat.com> (from
+	agk@redhat.com on Sun Sep 12 17:31:58 2004)
+Message-Id: <1095003678l.5671l.10l@tangerine>
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	boundary="=-9mGWSszvkLwIopl/BkJP"; micalg=PGP-SHA1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,17 +44,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Sun, Sep 12, 2004 at 12:02:22PM +0000, Jean-Luc Coulon (f5ibh) wrote:
-> Does running  "vgconvert -M2 vg00"  safe if vg00 is an active VG ?
- 
-Normally should be OK: it should detect situations when LVs 
-mustn't be active (e.g. when they need renumbering) and gives 
-an error instead.
+--=-9mGWSszvkLwIopl/BkJP
+Content-Type: text/plain; charset=ISO-8859-1; DelSp=Yes; Format=Flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Alasdair
--- 
-agk@redhat.com
+Le 12.09.2004 17:31:58, Alasdair G Kergon a =E9crit=A0:
+>On Sun, Sep 12, 2004 at 12:02:22PM +0000, Jean-Luc Coulon (f5ibh)
+>wrote:
+>> Does running  "vgconvert -M2 vg00"  safe if vg00 is an active VG ?
+>
+>Normally should be OK: it should detect situations when LVs
+>mustn't be active (e.g. when they need renumbering) and gives
+>an error instead.
+>
+
+Done, it seems to be ok so far, I will see at the next reboot ;-)
+
+[root@tangerine] /home/jean-luc # vgconvert -M2  -v vg00
+    Using volume group(s) on command line
+    Finding volume group "vg00"
+    Archiving volume group "vg00" metadata.
+    Set up physical volume for "/dev/hda2" with 56114661 available =20
+sectors
+    Physical volume "/dev/hda2" successfully created
+    Deleting existing metadata for VG vg00
+    Writing metadata for VG vg00 using format lvm2
+  Volume group vg00 successfully converted
+    Creating volume group backup "/etc/lvm/backup/vg00"
+
+>Alasdair
+
+Regards
+
+Jean-Luc
+
+
+--=-9mGWSszvkLwIopl/BkJP
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.5 (GNU/Linux)
+
+iD8DBQBBRG4eUdGGXzzGnNARAvTnAKCOyo7BNy25MJ5sPNqEkv+VK7txdACeIAnp
+BFyu0Ux34daJ5E8x+vPQTW8=
+=k1Sq
+-----END PGP SIGNATURE-----
+
+--=-9mGWSszvkLwIopl/BkJP--
