@@ -1,8 +1,13 @@
-Message-Id: <3C4C06E4.E237B117@eds.com>
-From: Stefan Huber <stefan.huber@eds.com>
+Message-Id: <200201211231.g0LCVs323967@in-cadcae4.ing.temic.de>
+From: Emanuel Quass <emanuel.quass@temic.com>
+Subject: Re: [linux-lvm] ERROR "parameter error" setting up snapshot copy
+    on write exception table
+References: <200201201741.g0KHfEX13025@in-cadcae4.ing.temic.de>
+    <200201211146.g0LBkui23525@in-cadcae4.ing.temic.de>
+    <21530000.1011615003@methusalix>
+In-Reply-To: <21530000.1011615003@methusalix>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] upgrade lvm version
+Content-Transfer-Encoding: 7BIT
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +18,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 21 06:21:01 2002
+Date: Mon Jan 21 06:32:03 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: mailing list lvm <linux-lvm@sistina.com>
+To: Marc Grimme <grimme@atix.de>, linux-lvm@sistina.com
 
-hello list
+Hi again,
 
-i would like to upgrade my kernel from 2.2.14 to 2.2.19
-question:
 
- can i first upgrade the lvm version and later the kernel ?
+Am Montag, 21. Januar 2002 13:10 schrieb Marc Grimme:
+> Hi
+>
+> --On Montag, Januar 21, 2002 12:46:56 +0100 Emanuel Quass
+>
+> <emanuel.quass@temic.com> wrote:
+> > Hi
+> >
+> > I rebooted the server several times (and tried several kernel-versions)
+> > but  every time I got the same error!
+> > The problem is (afaik see) the snapshot. I think if I can get rid of the
+> > snapshot everything will work all right. But I am not able to remove the
+> > snapshot because the Volumegroup is not active ......
+>
+> I had exactly the same problem and the same thoughts but I really don't
+> know how to delete a snapshot of an inactive volumegroup and I couldn't
+> find any program that was provided and did the job. Perhaps you can recover
+> some old configurations without snapshot with vgcfgrestore and stuff. But
+> I'm not really sure if this works cause the problem went away after I
+> rebooted the machine and was never to be seen again. And I was happy and
+> didn't touch this system again.
 
-i`m using lvm 0.8e and i plan to upgrade to lvm 1.0.
+I already tried to do so, no result! :-(
+vgcfgrestore didn't helpo me out.
 
-greeeetzzzzz
-
-s
-
-________________________________________________________________
- Stefan Huber
- EDS Information Business GmbH
- Storage Management
- Telefon   +41(0)52 674 86 56
- Fax       +41(0)52 674 86 94
- e-mail  stefan.huber@eds.com
+>
+> And if vgcfgrestore helps, what if you create a snapshot and then some
+> other vgs and lvs and then your snapshot gets corrupt like this, can
+> vgcfgrestore help here also?
+>
+> So I would say I'm out. :-(
+>
+> > Is there a way to remove the snapshot (the volumegroup can't be made
+> > active)  without touching the other logical volumes ?
+>
+> Would be really interesting to know the answer.
+>
