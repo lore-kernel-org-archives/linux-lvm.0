@@ -1,8 +1,9 @@
-From: Richard Chan <rspchan@starhub.net.sg>
-Message-id: <3DF4A591.8010109@starhub.net.sg>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Subject: [linux-lvm] Error with 2.5.50-dm-2; vanilla OK
+Mime-Version: 1.0 (Apple Message framework v548)
+From: Tod Detre <tod@tod.net>
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20021207215432.A23843@infradead.org>
+Message-Id: <0DD2B431-0B81-11D7-A700-000393B2C740@tod.net>
+Subject: [linux-lvm] Re: xfs_growfs, lvm, and sparcs....
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,70 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 08:14:02 2002
+Date: Mon Dec  9 08:18:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
-Cc: cshihpin@dso.org.sg
 
-Hi, I'm getting an error with 2.5.50-dm2 but vanilla 2.5.50 is OK.
+oops, sorry, you're right it's an Ultrasparc 5 with  64bit kernel.
 
-When I try lvm vgchange -ay I get the error messages
+Is there a way around this issue with the 64/32 bit difference?
 
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 0.
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: device /dev/hdb7 too 
-small for target
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: internal error adding 
-target to table
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: destroying table
+On Saturday, December 7, 2002, at 04:54 PM, Christoph Hellwig wrote:
 
-3 of 4 LVs in the VG are OK
-
-If I use vanilla 2.5.50 the LVs are created OK
-
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 0.
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 1.
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 2.
-Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 3.
-
-lvm version
-  LVM version:     1.95.11-cvs (2002-11-18)
-  Library version: 0.96.07-ioctl-cvs (2002-11-21)
-  Driver version:  1.0.6
-
-lvm vgdisplay vg00
- --- Volume group ---
-  VG Name               vg00
-  System ID             caesar1000557946
-  Format                lvm1
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                255
-  Cur LV                4
-  Open LV               2
-  Max PV                255
-  Cur PV                2
-  Act PV                2
-  VG Size               39.89GB
-  PE Size               4.00MB
-  Total PE              10212
-  Alloc PE / Size       9920 / 38.75GB
-  Free  PE / Size       292 / 1.14GB
-  VG UUID               SsC7qF-Jb43-vh72-TctL-wlpU-iPvx-1Hr3hS
-
-This is the LV that causes grief:
- 
-lvm lvdisplay vg00
-  --- Logical volume ---
-  LV Name                /dev/vg00/LVmisc
-  VG Name                vg00
-  LV UUID                000000-0000-0000-0000-0000-0000-000001
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                20.00GB
-  Current LE             5120
-  Segments               2
-  Allocation             next free
-  Read ahead sectors     120
-  Block device           254:1
+> On Fri, Dec 06, 2002 at 09:35:16AM -0500, Tod Detre wrote:
+>> xfs kernel from cvs 2.4.20-xfs
+>> xfsprogs from cvs (same as kernel)
+>> Sparcstation 5, ide disks
+>
+> how did you get ide disks connected to a SS5?  Sounds more like a 
+> Ultra5
+> to me.  If it's really an Ultra5 and you use a sparc64 kernel with a
+> 32bit userland the error is expected.
+>
+--
+Tod Detre
+Unix Technical Support
+Case Western Reserve University
+usworkstation@po.cwru.edu
+216-368-3060
