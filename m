@@ -1,9 +1,10 @@
-From: "Erick Calder" <e@arix.com>
-Message-ID: <00a601c3b619$479bdb20$c900a8c0@mithrandir>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: 
-Subject: [linux-lvm] block-major-43
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] RPM for 1.0.8?
+Message-ID: <20031129084035.GG22999@percy.comedia.it>
+References: <008c01c3b605$a311f2a0$c900a8c0@mithrandir>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <008c01c3b605$a311f2a0$c900a8c0@mithrandir>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,26 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 28 19:49:01 2003
+Date: Sat Nov 29 02:42:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've installed 1.0.8 on a RH9 box.  the INSTALL says to either add:
+On Fri, Nov 28, 2003 at 03:16:22PM -0800, Erick Calder wrote:
+>I can't find an RPM for the 1.0.8 version... surely someone's out there on
+>RH??
+>
+>I've been trying to make one with the spec file for 1.0.3 (which comes
+>included in Shriek) but am not having much success...
+>
+uhm,
+afaik redhat's lvm 1.0.3 was modified by sct (toghether with the kernel
+part) to change pvmove behaviour, so if you are staying with rh's kernel
+i'd leave that package alone
 
-      alias block-major-58      lvm-mod
-      alias char-major-109      lvm-mod
-
-to the modules.conf, however after I added those lines to the file, without
-rebooting I do a vgscan and get in /var/log/messages:
-
-Nov 28 17:44:17 beowulf kernel: lvm -- Module successfully deactivated
-Nov 28 17:44:32 beowulf kernel: LVM version 1.0.5+(22/07/2002) module loaded
-Nov 28 17:44:32 beowulf modprobe: modprobe: Can't locate module
-block-major-43
-
-vgscan then dumps core.
-
-wtf?
-
-- e
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
