@@ -1,7 +1,10 @@
-Message-ID: <9BBB7C9EFEF1874BAC4DC204E867EFAF02560D71@s99mail06>
-From: "Little, Chris" <Chris.Little@okdhs.org>
-Subject: RE: [linux-lvm] EXT3 vs Reiserfs
-MIME-Version: 1.0
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Is there a maximum for LV?
+Message-ID: <20031209220733.U16901@uk.sistina.com>
+References: <CEADF0D83077F7458B763904E47AA709BD64@exchange.neokimia.com> <20031209192646.GB4188@localhost>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20031209192646.GB4188@localhost>; from linux-lvm@24x7linux.com on Tue, Dec 09, 2003 at 08:26:46PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,42 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  9 14:36:01 2003
+Date: Tue Dec  9 16:09:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-on this topic, xfs was merged into 2.4
+> > How I'm testing LVM2. The field "MAX LV Size" is not there anymore. Is this means that LV doesn't have a maximum?
+Correct: Provided you use the new "lvm2" metadata format, you're 
+limited only by disk space and the maximum device size that your kernel
+will support.
 
-http://kerneltrap.org/node/view/1751
+> >From vgcreate(8):
+> -s, --physicalextentsize PhysicalExtentSize[kKmMgGtT]
 
-> -----Original Message-----
-> From: Chris Cox [mailto:chris_cox@stercomm.com]
-> Sent: Tuesday, December 09, 2003 12:29 PM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] EXT3 vs Reiserfs
-> 
-> 
-> Remco Post wrote:
-> ...
-> > AIX LVM system (even booting from a LV, though not in the 
-> most elegant
-> > fashion thinkable) is quite mature. It is one of AIX 
-> typical features I like
-> > the most (unlike smitty... ;-)
-> > 
-> 
-> But you know... smitty makes some tasks on AIX easier.  Their file
-> formats for config info are quite verbose sometimes.  And there's
-> always the evil ODM.
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+> So it seems you have a 255 GiB limit on LV sizes with your LVM2 setup.
+That section now only applies to PVs in "lvm1" format.
+It needs updating...
+
+For tool performance reasons it's still a good idea to use large 
+physical extent sizes for large volume groups.  (This will get 
+fixed eventually.)
+
+Alasdair
+-- 
+agk@uk.sistina.com
