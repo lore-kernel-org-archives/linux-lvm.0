@@ -1,11 +1,9 @@
-From: Ewen McNeill <lvm@ewen.mcneill.gen.nz>
-Subject: Re: [linux-lvm] Drive failure 
-In-Reply-To: Message from "B. J. Zolp" <bjzolp@wisc.edu> 
-   of "Thu, 15 May 2003 18:34:10 EST." <200305151834.10480.bjzolp@wisc.edu> 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2361.1053042909.1@basilica.la.naos.co.nz>
-Message-Id: <20030515235509.D3662AE4F5@basilica.la.naos.co.nz>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] RE: stock kernel 2.4.20 + LVM 1.0.7 + ext3fs => snapshot problem?
+Message-ID: <20030516125517.A24422@sistina.com>
+References: <BC28A9E979C56C44BCBC2DED313A4470017E823E@bond.ncl.ac.uk>
+Mime-Version: 1.0
+In-Reply-To: <BC28A9E979C56C44BCBC2DED313A4470017E823E@bond.ncl.ac.uk>; from C.R.Ritson@newcastle.ac.uk on Thu, May 15, 2003 at 01:27:13PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,47 +14,77 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 15 18:55:02 2003
+Date: Fri May 16 06:03:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-In message <200305151834.10480.bjzolp@wisc.edu>, "B. J. Zolp" writes:
->I'm doing a
-> dd bs=512 conv=noerror,sync if=/dev/hdf of=/dev/null 
->right now.  It has been going for a few hours, but does not seem to be taking 
->up any cpu cycles (it looks hung up).  
+On Thu, May 15, 2003 at 01:27:13PM +0100, C R Ritson wrote:
+> The solution appears to be to apply the patches in the other order. To
+> create a kernel capable of making a snapshot of an active ext3 or
+> reiserfs volume, the drill appears to be to apply the VFS-lock patch for
+> the appropriate kernel version to the un-patched kernel tree, and only
+> THEN to apply the generated LVM patch.
+> 
+> This makes me wonder if it would be possible to add this to the
+> configure script, so that I could say
+> 
+> 	configure --with-VFS-lock
 
-I suspect that it will "hang" several times during the process,
-especially if you have IDE disks, each time it encounters a bad block
-(IDE is somewhat more prone to this as the IDE code seems to retry the
-read more times, and to not get quite the same degree of error reporting
-as the SCSI code does -- eg, to distinguish how fatal the problem is).
+Certainly doable but people still need to be told to set that option.
+We tried to have the VFS lock patch added to vanilla a couple of times but
+failed so far. Retrying...
 
-Watching the kernel log output (eg, dmesg) will probably give you some
-insight into what is going on.
+Regards,
+Heinz    -- The LVM Guy --
 
-Also with bs=512 it will be a very slow copy at the best of times.
 
->What would you suggest I do if the I can only get the data on the HD up 
->until the bad sector (or where ever it is hung up).  
+> 
+> I envisage makeing --with-ext3 and --with-reiserfs aliases for the
+> above. Just an idea.
+> 
+> > -----Original Message-----
+> > From: C R Ritson 
+> > Sent: 09 May 2003 16:51
+> > To: 'linux-lvm@sistina.com'
+> > Subject: stock kernel 2.4.20 + LVM 1.0.7 + ext3fs => snapshot problem?
+> > 
+> > ... cannot make a snapshot of a mounted 
+> > ext3 filesystem. When I attempt to mount the snapshot 
+> > (readonly) I get:-
+> > 
+> > 	mount: wrong fs type, bad option, bad superblock on 
+> > /dev/vga/addon.backup,
+> >       or too many mounted file systems
+> > 
+> > ... applying this patch 
+> > separately after the generated LVM patch breaks the kernel, 
+> > leaving me with unresolved reverences to fsync_dev_lockfs and 
+> > unlockfs.
+> 
+> Chris Ritson (Computing Officer)
+> 
+> Rm 618, Claremont Bridge,       EMAIL: C.R.Ritson@newcastle.ac.uk
+> School of Computing Science,    PHONE: +44 191 222 8175
+> University of Newcastle,        FAX  : +44 191 222 8232
+> Newcastle on Tyne, UK NE1 7RU.  http://www.cs.ncl.ac.uk/~c.r.ritson/
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-With some care you can skip over the bad sectors another way; look at
-the "skip=" argument.  I've recovered data from bad floppies in the past
-by DDing each of the readable chunks out, making up padding blocks of
-the right size, and joining it all together.  
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Again you've got to be careful that the blocks you read off go back onto
-the new disk in the same position as they came off the old disk.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
->This is the last drive in the logical volume, so there was not too much 
->data on it, but how would I go about added the new replacement drive to 
->the logical volume without messing up my entire filesystem?
-
-Pass.  This is almost certainly file system specific, and even then I
-don't know how well any common Linux file system would cope with loosing
-whole chunks of the file system.  (I also don't know the right LVM magic
-to substitute in another -- blank or mostly blank -- disk in place of
-the broken one.)
-
-Ewen
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
