@@ -1,43 +1,57 @@
-Date: Mon, 17 Jul 2000 00:44:20 +0100
-From: Steve McIntyre <stevem@chiark.greenend.org.uk>
-Subject: [linux-lvm] Problems with pvmove?
-Message-ID: <20000717004420.A4161@chiark.greenend.org.uk>
+Date: Tue, 18 Jul 2000 23:15:57 +0200
+From: =?iso-8859-1?Q?Erik_B=E5gfors?= <bagfors@pdc.kth.se>
+Subject: [linux-lvm] made a big misstake
+Message-ID: <20000718231557.B13413@zyrgelkwyt.pdc.kth.se>
 Mime-Version: 1.0
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@msede.com
 
-Love the lvm code - I've been using it for a few months now and it's
-been great so far. However, now I'm trying to do something more
-complicated with it...
+Hi!
 
-I'm trying to replace one of the disks in my array. I have enough
-space to move things around, so now I'm using pvmove to move the
-contents of /dev/sde1 to /dev/sdj1. I'm getting problems:
+I just installed a new computer the other day and since I'm a long time
+aix-user and love there lvm-system I installed the linux-lvm.
 
-# pvmove -d -vv /dev/sde1 /dev/sdj1
+So far I am VERY impressed.  I've tried resizeing and moving end extending
+and all kinds of stuff and everything worked!! Good work!!!
 
-...
-vg_check_name -- vg_name: "vg_scratch"
-lvm_check_chars -- CALLED
-lvm_check_chars -- LEAVING
-vg_check_name -- LEAVING with ret: 0
-pe_lock_internal -- LEAVING with ret: -6
-pvmove -- ERROR -204 pv_move_pe
 
-pv_move_pes -- LEAVING with ret: -204
-pvmove -- ERROR -204 moving physical extents
-# 
+However I screwed up today. =20
+I had one vg (disk_vg) that was on two pv's (hda5 and hdb1).  I wanted to
+remove one of them and did a pvmove and could see that the pv I wanted to
+remove was empty.  Great!
 
-Checking pe_lock_internal, errno -6 (-ENXIO) is coming from an ioctl
-call into kernel. Any ideas?
+Now the misstake, I did not run a vgreduce before I fdisk'ed the whole=20
+disk (hdb).  Now when I start up, vgscan cannot find any vg's.
 
--- 
-Steve McIntyre, Cambridge, UK.                   stevem@chiark.greenend.org.uk
-I sent ten dollars to death.net and all I got was... well, nothing.
-"Can't keep my eyes from the circling sky,                 +------------------
-"Tongue-tied & twisted, Just an earth-bound misfit, I..."  |Finger for PGP key
+all the vg*-utilities say they cannot find any vg's.
+
+pvdisplay shows my vg on the pv but it's also on another pv :(
+
+pvscan says 'inactive PV "/dev/hda5" is associated to an unknown VG (run
+vgscan)'
+
+I was thinking that creating a new pv (on /dev/hdb1) and running=20
+vgcfgrestore -n disk_vg /dev/hdb1 would help me get it back but it just
+say that "size of physical volume /dev/hdb1 differs from backup" and I
+cannot remember what size I had last time.
+
+Is ther any way of finding that out?
+
+There is nothing important on this box but it would be fun not having to
+reinstall it!
+
+So.. anyone knows how to solve this?  Sorry I don't have better output from
+my commands but it's hard since the network is not working on it right now =
+:)
+
+/Erik
+
+--=20
+Erik B=EF=BF=BDgfors               | Center for Parallel Computers
+http://erik.bagfors.nu/    | http://www.pdc.kth.se/
+erik@bagfors.nu            | bagfors@pdc.kth.se =20
+Supporter of free software | GSM +46 70 398 54 43=20
