@@ -1,10 +1,10 @@
-Message-ID: <3BBD6A34.439845AA@promofinarsa.es>
-Date: Fri, 05 Oct 2001 10:07:16 +0200
-From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
+Message-ID: <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de>
+Date: Fri, 05 Oct 2001 10:15:19 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] no such member 'de'
-References: <20011004170447.A17897@reason.marist.edu>
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
+References: <20011004223343.A868@balu.kawo2.rwth-aachen.de> <20011005090810.B1245@sistina.com> <3BBD6084.70106@st-peter.stw.uni-erlangen.de> <20011005095737.A1460@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,43 +16,88 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi, Michael:
 
-urmk@reason.marist.edu wrote:
->=20
-> LVM 1.0.1rc4, Linux 2.2.19 stock kernel:
->=20
-> I applied the rawio patch for 2.2.18 (no errors, a few fuzzy offsets).
-> Configured LVM, ran make in the PATCHES dir.
-> Applied the newly made LVM patch.  Again, no errors, some fuzzy offsets.
-> Configured LVM support in the kernel.
->=20
-> Make fails, with:
->=20
-> cc -D__KERNEL__ -I/usr/src/linux-2.2.19/include -Wall -Wstrict-prototypes=
- -O2 -fomit-frame-pointer -fno-strict-aliasing -D__SMP__ -pipe -fno-strengt=
-h-reduce -m486 -malign-loops=3D2 -malign-jumps=3D2 -malign-functions=3D2 -D=
-CPU=3D586   -c -o lvm.o lvm.c
-> lvm.c: In function `lvm_do_lv_create':
-> lvm.c:2192: structure has no member named `de'
-> lvm.c: In function `lvm_do_lv_remove':
-> lvm.c:2277: structure has no member named `de'
-> make[3]: *** [lvm.o] Error 1
-> make[3]: Leaving directory `/usr/src/linux-2.2.19/drivers/block'
-> make[2]: *** [first_rule] Error 2
-> make[2]: Leaving directory `/usr/src/linux-2.2.19/drivers/block'
-> make[1]: *** [_subdir_block] Error 2
-> make[1]: Leaving directory `/usr/src/linux-2.2.19/drivers'
->=20
+Heinz J . Mauelshagen wrote:
 
-It's have been described.  Look for the thread "kernel 2.2.19 support".
-I *hope* this will be repaired on next rc.
---=20
-SALUD,
-Jes=EF=BF=BDs
-***
-jesus_navarro@promofinarsa.es
-***
+>On Fri, Oct 05, 2001 at 09:25:56AM +0200, svetljo wrote:
+>
+>>is gcc-3.0.1 safe, or i should also use "-o0"
+>>
+>
+>Don't have a report for this :-(
+>Please try it.
+>
+it's seems to work
+
+xxscan xxdiplay lvcreate lvremove lvrename lvextend lvreduce work without pb
+but i tried yesterday to install 2.4.11-pre2-xfs-cvs lvm-cvs
+and vgscan from the initrd segfaults , i can not boot to my LV's with it
+probbably it's some other trouble, i'll try with 2.4.11-pre3-xfs
+i think it's not relevant but all my VG's are over softRAIDs
+
+>>
+>>Heinz J . Mauelshagen wrote:
+>>
+>>>Markus,
+>>>
+>>>go without optimization "-O0" rather than "-O2" in LVMs configure stript
+>>>*or* with gcc 2.95.2.
+>>>
+>>>On Thu, Oct 04, 2001 at 10:33:43PM +0200, Markus Dobel wrote:
+>>>
+>>>>Hi,
+>>>>
+>>>>vgextend, vgreduce and lvextend segfaulted for me today, too. I'm using 
+>>>>
+>>>> gcc version 2.96 20000731 (Red Hat Linux 7.1 2.96-95)
+>>>>
+>>>>which I guess is the reason for those problems.
+>>>>
+>>>>For vgextend/vgreduce gdb told me, that in vg_extend_reduce "vg_name"
+>>>>pointed to 0x1. So i did a little debugging and therefore also
+>>>>inserting the line:
+>>>>
+>>>>int vg_extend ( char *vg_name, pv_t *pv, vg_t *vg) {
+>>>>  printf("VG Name is %s\n",vg_name ); // this one
+>>>>  return vg_extend_reduce ( vg_name, pv, vg, VG_EXTEND);
+>>>>}
+>>>>
+>>>>in vg_extend_reduce.c, the same in vg_reduce(). Without changing
+>>>>anything else, vgextend and vgreduce work for me now.
+>>>>
+>>>>
+>>>>Similar in lv_extend_reduce.c:
+>>>>
+>>>>int lv_extend ( vg_t *vg, lv_t *lv, char *lv_name) {
+>>>>  printf("Extending %s\n", lv_name); // added this line.
+>>>>  return lv_extend_reduce ( vg, lv, lv_name, LV_EXTEND);
+>>>>}
+>>>>
+>>>>I don't speak C too fluently, and I don't know if printf() does some
+>>>>implicit casting or something or if it's gcc 2.96, but maybe this
+>>>>information helps a bit in finding the mistake.
+>>>>
+>>>>Regards, Markus
+>>>>
+>>>>-- 
+>>>>Spiegel-Leser wissen mehr. Fuer ein Semester-Abo!
+>>>>http://www.kawo2.rwth-aachen.de/~mdobel/semesterabo.html
+>>>>
+>>>>_______________________________________________
+>>>>linux-lvm mailing list
+>>>>linux-lvm@sistina.com
+>>>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>>>
+>>
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>
+>
