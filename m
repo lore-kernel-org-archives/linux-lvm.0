@@ -1,16 +1,21 @@
-Received: from reti (vpn50-34.rdu.redhat.com [172.16.50.34])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2AFhEuq009937
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 15:43:14 GMT
-Received: from joe by reti with local (Exim 4.30)
-	id 1B15sy-0000W5-U8
-	for linux-lvm@redhat.com; Wed, 10 Mar 2004 15:44:44 +0000
-From: Joe Thornber <thornber@redhat.com>
-Subject: Re: [linux-lvm] [PATCH] calc_max_buckets bug
-Message-ID: <20040310154444.GE643@reti>
-References: <1078927858.25064.1468.camel@watt.suse.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2AGUB803487
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:30:11 -0500
+Received: from waldorf.cs.uni-dortmund.de (waldorf.cs.uni-dortmund.de [129.217.4.42])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2AGU907001674
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:30:09 -0500
+Received: from postamt.cs.uni-dortmund.de (postamt [129.217.4.40])
+        by waldorf.cs.uni-dortmund.de  with ESMTP id i2AGU38n010014
+        for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 17:30:03 +0100 (MET)
+Received: from brown (brown [129.217.24.134])
+	by postamt.cs.uni-dortmund.de (8.12.5/8.12.5) with ESMTP id i2AGU20k022323
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NOT)
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 17:30:03 +0100 (MET)
+From: Christoph Pleger <Christoph.Pleger@uni-dortmund.de>
+Message-Id: <20040310173002.75ca7590.Christoph.Pleger@uni-dortmund.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1078927858.25064.1468.camel@watt.suse.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM2-Snapshot
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -22,22 +27,25 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Mar 10 10:42:03 2004
+Date: Wed Mar 10 11:28:44 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Wed, Mar 10, 2004 at 09:10:59AM -0500, Chris Mason wrote:
-> Hello everyone,
-> 
-> This is in both 2.4.x lvm and 2.6.x dm code, calc_max_buckets is broken
-> for 32bit machines with > 4GB of ram.  This leads to -ENOMEM errors
-> during snapshot creation.
+Hello,
 
-heh, this must be the only bit of code I copied from LVM1 :) Serves me
-right for being lazy.
+I have problems when I try to create a snapshot of a logical volume
+under LVM2 (Kernel 2.6.3). I get the following messages after using
+"lvcreate -s -l 227 -n snap /dev/vg1/lv1":
 
-Thanks,
+device_mapper ioctl cmd 9 failed: Invalid argument
+Couldn't load device 'vg1-snap'.
+Problem reactivating origin lv1
 
-- Joe
+
+How can I solve that?
+
+Using google, I found that snapshots under LVM2 and Kernel 2.6 generally
+do not work. I hope that that is no longer true, is it? 
+
+Christoph
