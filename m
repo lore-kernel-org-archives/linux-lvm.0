@@ -1,10 +1,11 @@
-Subject: Re: [linux-lvm] one PV crashed
-References: <878zad8qrx.fsf@papadoc.bayour.com>
-    <20020201111151.B15491@sistina.com>
-From: Turbo Fredriksson <turbo@bayour.com>
-In-Reply-To: <20020201111151.B15491@sistina.com>
-Message-Id: <87wuxx1duy.fsf@papadoc.bayour.com>
+In-Reply-To: <20020201051251.B10893@devserv.devel.redhat.com> from
+    "Arjan van de Ven"
+    at Feb 01, 2002 05:12:51 AM
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <E16WevQ-0005H0-00@the-village.bc.nu>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: [linux-lvm] Re: [ANNOUNCE] LVM reimplementation ready for beta testing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,52 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 08:22:02 2002
+Date: Fri Feb  1 08:32:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Arjan van de Ven <arjanv@redhat.com>
+Cc: Joe Thornber <thornber@fib011235813.fsnet.co.uk>, lvm-devel@sistina.com, Jim McDonald <Jim@mcdee.net>, Andreas Dilger <adilger@turbolabs.com>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, evms-devel@lists.sourceforge.net
 
-Quoting "Heinz J . Mauelshagen" <mauelshagen@sistina.com>:
+> But "flushes all pending io" is *far* from trivial. there's no current
+> kernel functionality for this, so you'll have to do "weird shit" that will
+> break easy and often.
+> 
+> Also "suspending" is rather dangerous because it can deadlock the machine
+> (think about the VM needing to write back dirty data on this LV in order to
+>  make memory available for your move)...
 
-> dd if=/dev/zero of=/tmp/my_sdg1.vgda bs=1k count=512
-> losetup /dev/loop0 /tmp/my_sdg1.vgda
-> pvcreate /dev/loop0
-> vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 /devloop0
-> vgscan
+I don't think you need to suspend I/O except momentarily. I don't use LVM and
+while I can't resize volumes I migrate them like this
 
------ s n i p -----
-[papadoc.root]# dd if=/dev/zero of=/var/my_sdg1.vgda bs=1k count=512
-512+0 records in
-512+0 records out
-[papadoc.root]# losetup /dev/loop0 /var/my_sdg1.vgda
-[papadoc.root]# pvcreate /dev/loop0
-pvcreate -- physical volume "/dev/loop0" successfully created
+	mdhotadd /dev/md1 /dev/newvolume
 
-[papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 /dev/loop0
-vgcfgrestore -- physical volume "/dev/loop0" doesn't belong to volume group "vg1"
+[wait for it to resync]
 
-[papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 -o /dev/sdg1 /dev/loop0
-vgcfgrestore -- ERROR "pv_read(): pv_create_name_from_kdev_t" reading physical volume "/dev/loop0"
+	mdhotremove /dev/md1 /dev/oldvolume
 
-[papadoc.root]# vgscan 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+the situation here seems analogous. You never need to suspend I/O to the
+volume until you actually kill it, by which time you can just skip the write
+to the dead volume.
 
------ s n i p -----
+(The above procedure with ext3 does btw make a great backup system 8))
 
-> pvdisplay -v /dev/loop0
-
------ s n i p -----
-[papadoc.root]# pvdisplay -v /dev/loop0 
-pvdisplay -- getting physical volume size
-pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical volume "/dev/loop0"
-
-
------ s n i p -----
-
-
-Panama Soviet Iran North Korea Kennedy smuggle Cocaine Ft. Meade 747
-toluene 767 Qaddafi kibo cryptographic Clinton
-[See http://www.aclu.org/echelonwatch/index.html for more about this]
+Alan
