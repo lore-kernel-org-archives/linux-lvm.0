@@ -1,21 +1,10 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1QDm8819919
-	for <linux-lvm@redhat.com>; Thu, 26 Feb 2004 08:48:08 -0500
-Received: from isbox.insidesystems.net (verbotenplanet.net [209.123.232.30])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1QDm7b23325
-	for <linux-lvm@redhat.com>; Thu, 26 Feb 2004 08:48:07 -0500
-Received: from [65.204.53.10] (helo=grayskies.net)
-	by isbox.insidesystems.net with asmtp (Exim 4.30; FreeBSD)
-	id 1AwLry-0005XF-LR
-	for linux-lvm@redhat.com; Thu, 26 Feb 2004 08:48:06 -0500
-Message-ID: <403DF916.9060808@grayskies.net>
-From: David Powers <david@grayskies.net>
-MIME-Version: 1.0
-References: <2F75AEE4E86FDE44BF97709D289BAA7C719649@vega.voltaire.com>
-In-Reply-To: <2F75AEE4E86FDE44BF97709D289BAA7C719649@vega.voltaire.com>
-Content-Type: multipart/alternative;
- boundary="------------090007070109000506020201"
-Subject: [linux-lvm] snapshots with XFS and 2.6 kernel
+From: Miquel van Smoorenburg <miquels@cistron.nl>
+Message-ID: <20040226162810.GA13985@cistron.nl>
+References: <1qJVx-75K-15@gated-at.bofh.it> <1r6fH-3L8-11@gated-at.bofh.it> <1r6S4-6cv-1@gated-at.bofh.it> <403D02E3.4070208@tmr.com> <c1j4mb$gmd$1@news.cistron.nl> <20040225162431.1f08365d.akpm@osdl.org> <20040226103704.GA13717@traveler.cistron.net> <20040226024714.768e3c71.akpm@osdl.org> <20040226105120.GC7580@suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20040226105120.GC7580@suse.de>
+Subject: [linux-lvm] PATCH: bdi_congested-core.patch (was: Re: IO scheduler, queue depth, nr_requests)
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -27,95 +16,76 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Feb 26 08:46:05 2004
+Date: Thu Feb 26 11:27:00 2004
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-
-This is a multi-part message in MIME format.
---------------090007070109000506020201
-Content-Type: text/plain; charset=windows-1255; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: Jens Axboe <axboe@suse.de>
+Cc: Andrew Morton <akpm@osdl.org>, thornber@redhat.com, piggin@cyberone.com.au, linux-lvm@redhat.com
 
-I was attempting to implement a quick snapshot backup solution using 
-lvm2, XFS, and snapshots on a 2.6 kernel.  After some very odd hangs I 
-started hunting around in the lists and came across some posts that 
-snapshots were not yet properly implemented in 2.6.  These were from a 
-few months ago and a quick scan of the lvm2 tarball (in particular 
-WHATS_NEW and README) doesn't seem to indicate that snaphots should be 
-avoided.  So the question is, are snapshots usable?  And if they aren't 
-where would I find more current information about when they will be?  as 
-it stands now creating a snapshot tends to produce:
+According to Jens Axboe:
+> On Thu, Feb 26 2004, Andrew Morton wrote:
+> > Miquel van Smoorenburg <miquels@cistron.nl> wrote:
+> > > Well, I'm looking for guidance from Jens first, since I'm not sure if
+> > > he wants the first solution (congestion testing passed down), the second
+> > > (congestion setting passed up) or both.
+> > 
+> > The first patch looks nice.  Why do we need the "pass it up" feature?
+> 
+> Miquel, the newer patches do tend to get too complicated. I suppose I'm
+> fine with the first patch as well, modulo the dm part (I'd suggest
+> merging it without and talking to Joe about doing it properly).
 
-disk1 snapshots # lvcreate -L5G -nsnaptest -s /dev/filestore/archive
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'filestore-snaptest'.
-  Problem reactivating origin archive
+Okay here you go. I added bdi_rw_congested() for code in xfs and ext2
+that calls both bdi_read_congested() and bdi_write_congested() in
+a row, and it was "free" anyway.
 
-an lvscan afterwards shows the snapshot:
+bdi_congested-core.patch
 
-disk1 snapshots # lvscan
-  ACTIVE   Original '/dev/filestore/archive' [60.00 GB] next free (default)
-  ACTIVE            '/dev/filestore/groups' [50.00 GB] next free (default)
-  ACTIVE            '/dev/filestore/personal' [50.00 GB] next free (default)
-  ACTIVE   Snapshot '/dev/filestore/snaptest' [5.00 GB] next free (default)
-
-but the device isn't actually created and it takes hard rebooting and a 
-lot of fiddling and poking to delete it.  Any help or insight is 
-appreciated.
-
--David
-
---------------090007070109000506020201
-Content-Type: text/html; charset=windows-1255
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta content=3D"text/html;charset=3Dwindows-1255"
- http-equiv=3D"Content-Type">
-  <title></title>
-</head>
-<body>
-<small><font face=3D"Helvetica, Arial, sans-serif">I was attempting to
-implement a quick snapshot backup solution using lvm2, XFS, and
-snapshots on a 2.6 kernel.=A0 After some very odd hangs I started hunting=
-
-around in the lists and came across some posts that snapshots were not
-yet properly implemented in 2.6.=A0 These were from a few months ago and
-a quick scan of the lvm2 tarball (in particular WHATS_NEW and README)
-doesn't seem to indicate that snaphots should be avoided.=A0 So the
-question is, are snapshots usable?=A0 And if they aren't where would I
-find more current information about when they will be?=A0 as it stands
-now creating a snapshot tends to produce:<br>
-<br>
-disk1 snapshots # lvcreate -L5G -nsnaptest -s /dev/filestore/archive <br>=
-
-=A0 device-mapper ioctl cmd 9 failed: Invalid argument<br>
-=A0 Couldn't load device 'filestore-snaptest'.<br>
-=A0 Problem reactivating origin archive<br>
-<br>
-an lvscan afterwards shows the snapshot:<br>
-<br>
-disk1 snapshots # lvscan<br>
-=A0 ACTIVE=A0=A0 Original '/dev/filestore/archive' [60.00 GB] next free
-(default)<br>
-=A0 ACTIVE=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 '/dev/filestore/groups' [50.0=
-0 GB] next free
-(default)<br>
-=A0 ACTIVE=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 '/dev/filestore/personal' [50=
-=2E00 GB] next free
-(default)<br>
-=A0 ACTIVE=A0=A0 Snapshot '/dev/filestore/snaptest' [5.00 GB] next free
-(default)<br>
-<br>
-but the device isn't actually created and it takes hard rebooting and a
-lot of fiddling and poking to delete it.=A0 Any help or insight is
-appreciated.<br>
-<br>
--David<br>
-</font></small>
-</body>
-</html>
-
---------------090007070109000506020201--
+--- linux-2.6.3.orig/include/linux/backing-dev.h	2004-02-04 04:43:38.000000000 +0100
++++ linux-2.6.3-congested_fn/include/linux/backing-dev.h	2004-02-26 16:17:49.000000000 +0100
+@@ -20,10 +20,14 @@ enum bdi_state {
+ 	BDI_unused,		/* Available bits start here */
+ };
+ 
++typedef int (congested_fn)(void *, int);
++
+ struct backing_dev_info {
+ 	unsigned long ra_pages;	/* max readahead in PAGE_CACHE_SIZE units */
+ 	unsigned long state;	/* Always use atomic bitops on this */
+ 	int memory_backed;	/* Cannot clean pages with writepage */
++	congested_fn *congested_fn; /* Function pointer if device is md/dm */
++	void *congested_data;	/* Pointer to aux data for congested func */
+ };
+ 
+ extern struct backing_dev_info default_backing_dev_info;
+@@ -32,14 +36,27 @@ int writeback_acquire(struct backing_dev
+ int writeback_in_progress(struct backing_dev_info *bdi);
+ void writeback_release(struct backing_dev_info *bdi);
+ 
++static inline int bdi_congested(struct backing_dev_info *bdi, int bdi_bits)
++{
++	if (bdi->congested_fn)
++		return bdi->congested_fn(bdi->congested_data, bdi_bits);
++	return (bdi->state & bdi_bits);
++}
++
+ static inline int bdi_read_congested(struct backing_dev_info *bdi)
+ {
+-	return test_bit(BDI_read_congested, &bdi->state);
++	return bdi_congested(bdi, 1 << BDI_read_congested);
+ }
+ 
+ static inline int bdi_write_congested(struct backing_dev_info *bdi)
+ {
+-	return test_bit(BDI_write_congested, &bdi->state);
++	return bdi_congested(bdi, 1 << BDI_write_congested);
++}
++
++static inline int bdi_rw_congested(struct backing_dev_info *bdi)
++{
++	return bdi_congested(bdi, (1 << BDI_read_congested)|
++				  (1 << BDI_write_congested));
+ }
+ 
+ #endif		/* _LINUX_BACKING_DEV_H */
