@@ -1,10 +1,9 @@
-Subject: Re: re[2]: [linux-lvm] Draft Snapshot Regression Test
-From: Steve Lord <lord@sgi.com>
-In-Reply-To: <20020829152401.LOFW15640.imf00bis.bellsouth.net@TAZ2>
-References: <20020829152401.LOFW15640.imf00bis.bellsouth.net@TAZ2>
+Message-ID: <3D6E44DB.7090202@dotcom.pl>
+From: myciel <myciel@dotcom.pl>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] mounting reiserfs snaphost fails
+References: <3D6DD029.1010905@dotcom.pl> <20020829130219.A32269@sistina.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1030635020.31693.9.camel@jen.americas.sgi.com>
-Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,34 +14,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 29 10:31:02 2002
+Date: Thu Aug 29 10:59:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: freemyer@norcrossgroup.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On Thu, 2002-08-29 at 10:21, Greg Freemyer wrote:
+thanks, this helped ofcourse
 
-> 
-> Steve,
-> 
-> Thanks for running it.  
-> 
-> I was afraid I would get that question.
-> 
-> I have never compiled a kernel, and I was specifically avoiding it until I got at least one "it works with cvs" message.  I guess I have that now.
-> 
-> It might take a day or two to get it done, but I will try to do so.
-> 
+rafal
 
-Greg, there are lots of folks who can help with that, the hardest 
-part is probably getting the correct kernel configuration for your
-setup, the ones vendor's supply will basically build all the
-possible device drivers - which you do not need. There are
-instructions on the oss web site for how to download the cvs tree.
-
-Steve
-
--- 
-
-Steve Lord                                      voice: +1-651-683-3511
-Principal Engineer, Filesystem Software         email: lord@sgi.com
+Heinz J . Mauelshagen wrote:
+> Did you put the VFS lock patch in?
+> You need that to be able to mount snapshots of *journaled* filesystems.
+> 
+> On Thu, Aug 29, 2002 at 09:41:29AM +0200, myciel wrote:
+> 
+>>Hi All
+>>
+>>I can't mount reisefs snapshot:
+>>
+>>mount: block device /dev/interia/intbackup is write-protected, mounting 
+>>read-only
+>>mount: wrong fs type, bad option, bad superblock on /dev/interia/intbackup,
+>>        or too many mounted file systems
+>>
+>>
+>>linux kernel 2.4.19 and lvm utils version 1.05.
+>>
+>>any hints?
+>>
+>>thanks
+>>
+>>rafal
+>>
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
+> 
