@@ -1,11 +1,11 @@
-From: FEJF <fejf@gmx.de>
-Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Date: Fri, 7 Sep 2001 13:45:22 +0200
-References: <E15f13v-0003bs-00@hermes.sistina.com> <E15f8l7-0008Di-00@hermes.sistina.com> <20010907124649.B31313@sistina.com>
-In-Reply-To: <20010907124649.B31313@sistina.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E15fK3i-0005bl-00@hermes.sistina.com>
+Date: Fri, 7 Sep 2001 14:24:05 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] disk swap
+Message-ID: <20010907142405.C24173@colombina.comedia.it>
+References: <Pine.LNX.4.33.0109061240350.10967-100000@jupiter.loonybin.net> <20010907131008.A30548@tiger.bigcats.invalid>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010907131008.A30548@tiger.bigcats.invalid>; from weissel@netcologne.de on Fri, Sep 07, 2001 at 01:10:08PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,39 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Fri, Sep 07, 2001 at 01:10:08PM +0200, Wolfgang Weisselberg wrote:
+> Hi, Rob!
+> 
+> Rob Foehl (rwf@loonybin.net) wrote 29 lines:
+> 
+> > I'm assuming its possible to put swap on LVM, I may be wrong..
+> 
+> I have never tried making a swap partition on LVM. Ssince the
+> kernel can and will strip over swap with equal priority and you
+> want swap to be FAST, you should put it 'near the beginning'
+> of (each?) disk, outside LVM or similar.
 
-Heinz J . Mauelshagen, on Freitag, 7. September 2001 12:46 wrote:
-[cut]
-> Well, assuming your disk has a flaw, the only way to work around your
-> problem is patching pv_move_pe() in order to ignore read errors (this takes
-> place around line 520 in LVM 1.0) which will cause a copy of the data to
-> some other device with probably flaky data in it.
+i am swapping over LVM with no noticeable problem
+but then i don't swap much
+i have 512Mb of RAM and 1GB swap
+having swap on lvm has been essential when i moved from 128 to 512Mb of ram
+this spring.
 
-search a bit through the file... but i actually don't know what to change 
-there... would a single 
-   ret:=1;
-just before
-   pe_moved += ret;
-help ? 
+(i have set swap lv to be contigous anyway)
+L.
 
-> In case you've got some filesystem data in there, fsck will complain
-> accordingly and some file or metadata of the filesystem will be gone which
-> will cause more or less filesystem data loss.
-
-loose some bytes is nothing against the whole lvm... ;)
-fejf
-
-- -- 
-Backups are usefull. Most often when you don't have one ;)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7mLNS7Xtp66ctWuIRAgRGAKDL9Us+S5NUHUhOhymfTidbzJYOTwCgg9ti
-WFlbMA5xs29zsHYyOLiA0EM=
-=uSq4
------END PGP SIGNATURE-----
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
