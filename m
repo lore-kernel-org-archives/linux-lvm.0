@@ -1,9 +1,9 @@
-From: d.levitin@gmx.de
+From: James Hawtin <oolon@ankh.org>
+Subject: Re: [linux-lvm] vgscan -- ERROR "vg_read_with_pv_and_lv(): current
+ PV" can't get data of volume group
+In-Reply-To: <9732.1028372252@www42.gmx.net>
+Message-ID: <Pine.LNX.4.44.0208031112290.2922-100000@pzat.meep.org>
 MIME-Version: 1.0
-Message-ID: <9732.1028372252@www42.gmx.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,54 +14,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Aug  3 05:56:01 2002
+Date: Sat Aug  3 06:36:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello,
-I have a problem with my vg00 - the LVM doesn't have it any more. I found
-such postings in the list archive, but I don't want to restore - as I think.
-To the problem: 
-I had 10 disks in my Computer (/dev/sda.../dev/sdj) in the vg00. Then I have
-2 of them (/dev/sdj and /dev/sdi) unplugged. I hoped it would be no problem
-for the LVM to work with the rest 8, but it doesn't do. I dont' worry about
-the volumes on the sdi and sdj, but the other volumes are a problem...
-So why the LVM dosn't see the other disks as well?
 
-Thanks a lot for your help
-Dmitri
- 
+On Sat, 3 Aug 2002 d.levitin@gmx.de wrote:
 
-# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data
-of volume group "vg00" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your
-volume group
+> Hello,
+> I have a problem with my vg00 - the LVM doesn't have it any more. I found
+> such postings in the list archive, but I don't want to restore - as I think.
+> To the problem:
+> I had 10 disks in my Computer (/dev/sda.../dev/sdj) in the vg00. Then I have
+> 2 of them (/dev/sdj and /dev/sdi) unplugged. I hoped it would be no problem
+> for the LVM to work with the rest 8, but it doesn't do. I dont' worry about
+> the volumes on the sdi and sdj, but the other volumes are a problem...
+> So why the LVM dosn't see the other disks as well?
+>
+> Thanks a lot for your help
+> Dmitri
+>
 
-# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sda4"  is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdb3"  is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdc"   is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdd"   is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- inactive PV "/dev/sde"   is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdf"   is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdg"   is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdh"   is associated to unknown VG "vg00"
-(run vgscan)
-pvscan -- total: 8 [200.21 GB] / in use: 8 [200.21 GB] / in no VG: 0
-[0]
+Because LVM does not currently mount part volume groups for safety...
+I believe at some in in the future this might be solved.
+
+Do you still have /dev/sdj and /dev/sdi you say they are unpluged at the
+moment and you don't want access to the info on them... if they have data
+that is split onto other pvs use pvmove move so only have lvs you don't
+what on those two pvs then use vgsplit to remove them from the vg, then
+you can unplug those two disks as they will be in a new volume group.
+
+lv = logical volume
+pv = physical volume
+vg = volume group
 
 
--- 
-GMX - Die Kommunikationsplattform im Internet.
-http://www.gmx.net
+james
