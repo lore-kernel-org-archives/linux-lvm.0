@@ -1,15 +1,31 @@
-Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iAI9J1iX002707
-	for <linux-lvm@redhat.com>; Thu, 18 Nov 2004 09:19:01 GMT
-Date: Thu, 18 Nov 2004 09:18:57 +0000
-From: Patrick Caulfield <patrick@debian.org>
-Message-ID: <20041118091857.GB23843@tykepenguin.com>
-References: <87fz376h40.fsf@blackdown.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87fz376h40.fsf@blackdown.de>
-Sender: Patrick <patrick@tykepenguin.com>
-Subject: [linux-lvm] Re: Bug#281831: lvm2: opendir errors at boot
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAIHNcr14236
+	for <linux-lvm@redhat.com>; Thu, 18 Nov 2004 12:23:38 -0500
+Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAIHNRwJ005706
+	for <linux-lvm@redhat.com>; Thu, 18 Nov 2004 12:23:27 -0500
+Received: from localhost (lucy.ukfsn.org [127.0.0.1])
+	by mail.ukfsn.org (Postfix) with ESMTP id 5C2E7E6A96
+	for <linux-lvm@redhat.com>; Thu, 18 Nov 2004 17:21:13 +0000 (GMT)
+Received: from mail.ukfsn.org ([127.0.0.1])
+	by localhost (lucy.ukfsn.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 28488-03 for <linux-lvm@redhat.com>;
+	Thu, 18 Nov 2004 17:21:13 +0000 (GMT)
+Received: from oak.dgreaves.com (modem-1848.parera.dialup.pol.co.uk
+	[81.78.183.56]) by mail.ukfsn.org (Postfix) with ESMTP id 211A2E6A86
+	for <linux-lvm@redhat.com>; Thu, 18 Nov 2004 17:21:12 +0000 (GMT)
+Received: from ash.dgreaves.com ([10.0.0.101])
+	by oak.dgreaves.com with esmtp (Exim 4.20) id 1CUq4R-0007ZC-TG
+	for linux-lvm@redhat.com; Thu, 18 Nov 2004 17:27:47 +0000
+Message-ID: <419CDA86.6050503@dgreaves.com>
+Date: Thu, 18 Nov 2004 17:23:18 +0000
+From: David Greaves <david@dgreaves.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Software RAID 5 Resizing and LVM
+References: <OF26153F74.622A298A-ON86256F4F.005C138B-86256F4F.005CBE3E@austinlogistics.com>
+	<1100732495.2496.6.camel@Slacktop.local>
+In-Reply-To: <1100732495.2496.6.camel@Slacktop.local>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,78 +36,101 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Juergen Kreileder <jk@blackdown.de>, 281831@bugs.debian.org, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Nov 18, 2004 at 03:11:43AM +0100, Juergen Kreileder wrote:
-> Package: lvm2
-> Version: 2.00.25-1
-> Severity: minor
-> 
-> I'm getting a bunch of "opendir" errors at startup on my PPC machine.
-> They seem to be harmless as LVM otherwise works fine and /dev/linux
-> looks after after startup:
-> 
-> lrwxrwxrwx  1 root root   22 2004-11-18 02:22 home -> /dev/mapper/linux-home
-> lrwxrwxrwx  1 root root   21 2004-11-18 02:22 srv -> /dev/mapper/linux-srv
-> lrwxrwxrwx  1 root root   22 2004-11-18 02:22 swap -> /dev/mapper/linux-swap
-> lrwxrwxrwx  1 root root   21 2004-11-18 02:22 tmp -> /dev/mapper/linux-tmp
-> lrwxrwxrwx  1 root root   21 2004-11-18 02:22 usr -> /dev/mapper/linux-usr
-> lrwxrwxrwx  1 root root   21 2004-11-18 02:22 var -> /dev/mapper/linux-var
-> lrwxrwxrwx  1 root root   25 2004-11-18 02:22 var_log -> /dev/mapper/linux-var_log
-> 
-> On an x86 machine with a similar setup I don't get these errors.  Both
-> machines use udev.
-> 
-> ,----
-> | Thu Nov 18 02:22:05 2004: Creating device-mapper devices...done.
-> | Thu Nov 18 02:22:05 2004: Setting up LVM Volume Groups...
-> | Thu Nov 18 02:22:05 2004:   Reading all physical volumes.  This may take a while...
-> | Thu Nov 18 02:22:05 2004:   Found volume group "linux" using metadata type lvm2
-> | Thu Nov 18 02:22:05 2004:   /dev/linux: opendir failed: No such file or directory
-> | Thu Nov 18 02:22:05 2004:   /dev/linux: opendir failed: No such file or directory
-> | Thu Nov 18 02:22:05 2004:   /dev/linux: opendir failed: No such file or directory
-> | Thu Nov 18 02:22:05 2004:   /dev/linux: opendir failed: No such file or directory
-> | Thu Nov 18 02:22:05 2004:   /dev/linux: opendir failed: No such file or directory
-> | Thu Nov 18 02:22:05 2004:   /dev/linux: opendir failed: No such file or directory
-> | Thu Nov 18 02:22:05 2004:   /dev/linux: opendir failed: No such file or directory
-> | Thu Nov 18 02:22:05 2004:   7 logical volume(s) in volume group "linux" now active
-> | Thu Nov 18 02:22:05 2004: Starting crypto disks:.
-> | Thu Nov 18 02:22:05 2004: Checking all file systems...
-> | Thu Nov 18 02:22:05 2004: fsck 1.35 (28-Feb-2004)
-> | Thu Nov 18 02:22:05 2004: Setting kernel variables ...
-> | Thu Nov 18 02:22:05 2004: ... done.
-> | Thu Nov 18 02:22:05 2004: Mounting local filesystems...
-> | Thu Nov 18 02:22:05 2004: /dev/mapper/linux-home on /home type xfs (rw,noatime,nodiratime)
-> | Thu Nov 18 02:22:05 2004: /dev/mapper/linux-srv on /srv type xfs (rw,noatime,nodiratime)
-> | Thu Nov 18 02:22:05 2004: /dev/mapper/linux-tmp on /tmp type xfs (rw,noatime,nodiratime)
-> | Thu Nov 18 02:22:05 2004: /dev/mapper/linux-usr on /usr type xfs (rw,noatime,nodiratime)
-> | Thu Nov 18 02:22:05 2004: /dev/mapper/linux-var on /var type xfs (rw,noatime,nodiratime)
-> | Thu Nov 18 02:22:05 2004: /dev/mapper/linux-var_log on /var/log type xfs (rw,noatime,nodiratime)
-> `----
-> 
-> 
-> -- System Information:
-> Debian Release: 3.1
->   APT prefers unstable
->   APT policy: (500, 'unstable')
-> Architecture: powerpc (ppc64)
-> Kernel: Linux 2.6.10-rc2jk1
-> Locale: LANG=en_US.UTF-8, LC_CTYPE=en_US.UTF-8 (charmap=UTF-8)
-> 
-> Versions of packages lvm2 depends on:
-> ii  debconf                     1.4.40       Debian configuration management sy
-> ii  libc6                       2.3.2.ds1-18 GNU C Library: Shared libraries an
-> ii  libdevmapper1.00            2:1.00.19-4  The Linux Kernel Device Mapper use
-> ii  lvm-common                  1.5.17       The Logical Volume Manager for Lin
-> 
-> -- debconf information:
->   lvm2/snapshots:
- 
+For those googling this thread, can I also suggest looking at EVMS.
 
-I see this on my x86 box with udev installed so it's not PPC specific. 
+I'm in the same situation and it appears that EVMS now have an md raid 5 
+grow facility that manages this up through an 'lvresize' operation and 
+into a xfs_growfs.
 
--- 
+I have a 5x250Gb raid5 with lvm2 - I want to grow to 6x250Gb.
 
-patrick
+Seems neat and doesn't have the 'may eat your babies' threats of raidreconf.
+
+I've not tried it yet so YMMV.
+
+David
+PS I'm LVM2 too
+
+
+Adam K-F wrote:
+
+>Thanks Jon,
+>
+>What I was trying to achieve was a a single, really big raid drive that
+>I could _easily_ expand later on down the track.  It only needs to have
+>the single filesystem on it (i'm going to use reiserfs) which has to be
+>resizable (using resize_reiserfs).
+>
+>So yeah, I ended figuring out what i actally needed to do in the end,
+>after playing with LVM, which incidently was a bit of fun :)  I've found
+>an application for it for my other file server. As they say, all's well
+>that ends well :)
+>
+>Adam
+>  
+>
+>
+> ------------------------------------------------------------------------
+>
+>I asked pretty much that exact question on Monday! :)  The only difference
+>was that mine is a hardware RAID.  Someone replied with a possible
+>workaround if you're using LVM2, but if you're using LVM1 like me, and you
+>pvcreate'd your PV across the entire disk like me, then you're screwed like
+>me. :(
+>
+>If you partitioned the logical disk and pvcreate'd a partition, then you
+>should be able to create a new partition on the newly-available space, then
+>pvcreate a second PV and add it into the VG.  The wonders of 20/20
+>hindsight.
+>
+>Cheers,
+>
+>Jon Etkins
+>IT Administration & Support
+>Austin Logistics, Inc
+>ph:  (512) 651-5641
+>fax: (512) 329-5625
+>
+>
+>linux-lvm-bounces@redhat.com wrote on 11/16/2004 05:29:54 PM:
+>
+>  
+>
+>>I've been playing around with adding disks to a software RAID 5 array,
+>>    
+>>
+>and it
+>  
+>
+>>works fine.  However, i have LVM running over the top of that and i can't
+>>figure out how to enlarge the Phisical Volume to encompass the newly
+>>    
+>>
+>added
+>  
+>
+>>capacity on the raid device.  Has anyone achieved this at all?
+>>
+>>Am I barking up the wrong tree here? If so, how would you go about
+>>adding drives
+>>to a software RAID 5 device, and actually adding the new space to
+>>the filesystem
+>>inside the RAID device?
+>>
+>>Thanks in advance
+>>
+>>Adam
+>>
+>>----------------------------------------------------------------
+>>This message was sent using IMP, the Internet Messaging Program.
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@redhat.com
+>>https://www.redhat.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>    
+>>
