@@ -1,8 +1,7 @@
-Message-Id: <200308192012.h7JKCvo00429@mail.osdl.org>
+Message-Id: <200308192223.h7JMN6o06498@mail.osdl.org>
 From: markw@osdl.org
-Subject: Re: [linux-lvm] lvcreate with a 52 drive volume
-In-Reply-To: <20030819163419.H29420@uk.sistina.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] Insufficient space in params[] to write target parameters.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +12,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 19 15:14:03 2003
+Date: Tue Aug 19 17:24:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, agk@uk.sistina.com
-Cc: dm-devel@sistina.com
+To: linux-lvm@sistina.com
 
-On 19 Aug, Alasdair G Kergon wrote:
-> On Mon, Aug 18, 2003 at 05:00:12PM -0700, markw@osdl.org wrote:
->> On 18 Aug, Alasdair G Kergon wrote:
->> > On Mon, Aug 18, 2003 at 02:09:18PM -0700, markw@osdl.org wrote:
->> >> Ok, I increased the size of argv to 2048 in the dm-table.c file that's
->> > 2048 is probably too big for the kernel stack.
->> > Set it only as big as you need it.
->> Yeah, I got greedy, 1024 worked for me. :)
->  
-> Here's a patch to try that removes the hard-coded limit of 32.
-> 
-> (Plus one to fix the error message if you give a linear
-> target more than 2 arguments.)
+Hi again, I've reconfigured and repartitioned my drives and now I run
+into this error message:
 
-I've applied it to 2.6.0-test3-mm3 and it works.
+# lvcreate -i52 -I8 -l225420 -n mydata data_volume
+  Insufficient space in params[] to write target parameters.
+  Unable to build table for 'mydata'
+  Couldn't populate device 'data_volume-mydata'.
+  Failed to activate new LV.
+
+vgdisplay says this, if it helps:
+
+  --- Volume group ---
+  VG Name               data_volume
+  System ID             
+  Format                lvm2
+  Metadata Areas        52
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                256
+  Cur LV                0
+  Open LV               0
+  Max PV                256
+  Cur PV                52
+  Act PV                52
+  VG Size               880.55 GB
+  PE Size               4.00 MB
+  Total PE              225420
+  Alloc PE / Size       0 / 0   
+  Free  PE / Size       225420 / 880.55 GB
+  VG UUID               WgC7yB-QkUx-aYy8-nAhp-SuYj-sRZ5-pmNvUv
+
+I've copied a new lvm2.log.gz file to:
+	http://developer.osdl.org/markw/lvm2.log.gz
+
+Let me know if there's anything else I can provide.
 
 Thanks,
 Mark
