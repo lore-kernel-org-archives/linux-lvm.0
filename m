@@ -1,11 +1,8 @@
-Subject: Re: [linux-lvm] Help!  VG corrupted?
-From: Ben <kf4wbx@hamsnet.net>
-In-Reply-To: <20011120113607.A18529@sistina.com>
-References: <1006197162.28796.26.camel@outback.key> 
-	<20011120113607.A18529@sistina.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1006830613.2791.27.camel@outback.key>
+From: Lars Kellogg-Stedman <lars@larsshack.org>
+Message-ID: <20011127002330.B14754@piglet.house>
 Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Re: Here we go again: vgscan doesn't see my volume groups.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,136 +13,81 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 26 21:10:02 2001
+Date: Mon Nov 26 23:20:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: lvm-devel@sistina.com
+Cc: linux-lvm@sistina.com
 
-Sorry for the accidental repost :(
+Arrrgh, after much fiddling with floppies, as I trundle patched code between my
+laptop and my hosed machine, this looks partly like a bug in LVM.
 
-I will try to get a newer version of LVM installed this week and give
-you the response from vgck.
+Specifically, in tools/lib/pv_read_all_pv_of_vg.c, in this section of code:
 
-BTW, is it safe for me to just use the 1.0.1rc4 utils and kernel on a VG
-created with the 0.9 release?
+          /* make array contiguous again */
+          for ( i = 0; i < np - 2; i++) {
+             if ( pv_this[i] == NULL) {
+                /* ensure we don't have a sequence of NULLs */
+                if ( pv_this[i+1] == NULL) {
+                   int j = i + 1;
+                   while ( pv_this[j] == NULL && j < np - 1) j++;
+                   if ( j < np - 1) pv_this[i+1] = pv_this[j];
+                }
+                pv_this[i] = pv_this[i+1];
+                pv_this[i+1] = NULL;
+             }
+          }
+          np=0;
+          while ( pv_this[np] != NULL) np++;
 
-Until then,
-thanks for your advice.
--BAK
+Let's step through this.  Before multiple path/md handling, pv_this[] looked
+like this:
 
+  [0] /dev/md0
+  [1] /dev/sda
+  [2] /dev/sde3
+  [3] /dev/sde4
 
-On Tue, 2001-11-20 at 05:36, Heinz J . Mauelshagen wrote:
-> 
-> Ben,
-> 
-> what does vgck(8) tell you about the health of your LVM on disk metadata?
-> BTW: it is recommended that you upgrade to LVM 1.0.1
-> 
-> On Mon, Nov 19, 2001 at 02:12:31PM -0500, Ben wrote:
-> > Hello,
-> > 
-> > I am running Mandrake 8.1 which installs Linux LVM 0.9.  I've read posts
-> > that mention that 0.9 is "bad for your health."  While I'm not totally
-> > sure why or how, it seems to be the case for me as well.
-> > 
-> > I installed the OS and ran find with one IDE HD partition dedicated
-> > (/dev/hda9, one VG on one PV) to LVM and two LV's (/usr and /var).
-> > Yesterday, I added another partition (/dev/hda7) and added its PEs to
-> > the VG.  I thhen added the newly added PE's to the /usr LV.  Everything
-> > was great.  Then I rebooted.  Upon reboot, I got:
-> > [root@cray]# vgscan -v
-> > vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-> > vgscan -- reading all physical volumes (this may take a while...)
-> > vgscan -- scanning for all active volume group(s) first
-> > vgscan -- found inactive volume group "vg0"
-> > vgscan -- reading data of volume group "vg0" from physical volume(s)
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> > data of volume group "vg0" from physical volume(s)
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-> > "/etc/lvmtab" and "/etc/lvmtab.d"
-> > [root@cray]#
-> > 
-> > I then tried the vgcfgrestore, which ran sucessfully.  Now I get vgscan
-> > reporting no volumes.  Found a reference on how to fix this (using dd
-> > and reading uuids from pv's, then writing them back to the disk).  That
-> > procedure brings me back to the starting point.
-> > 
-> > It seems the data is there because pvscan reports:
-> > 
-> > [root@cray]# pvscan
-> > pvscan -- reading all physical volumes (this may take a while...)
-> > pvscan -- inactive PV "/dev/ide0/host0/bus0/target0/lun0/part7" is
-> > associated to an unknown VG (run vgscan)
-> > pvscan -- inactive PV "/dev/ide0/host0/bus0/target0/lun0/part9" is
-> > associated to an unknown VG (run vgscan)
-> > pvscan -- total 2 [12.02 GB] / in use: 2 [12.02 GB] / in no VG: 0 [0]
-> > [root@cray]#
-> > 
-> > One more note of interest:  My partitions on disk are out of order.
-> > hda7 occupies cylinders 2848-3736 and hda9 occupies cylinders 2168-2847.
-> > 
-> > [root@cray]# fdisk /dev/hda
-> > Command (m for help): p
-> > 
-> > Disk /dev/hda: 255 heads, 63 sectors, 3763 cylinders
-> > Units = cylinders of 16065 * 512 bytes
-> > 
-> >    Device Boot     Start       End      Blocks    Id  System
-> > /dev/hda1  *           1       934     7502323+    b  Win95 FAT32
-> > /dev/hda2            935      3736    22507065     5  Extended
-> > /dev/hda5  *         935      1874     7550518+    7  HPFS/NTFS
-> > /dev/hda6           1875      2135     2096451    83  Linux
-> > /dev/hda7           2848      3736     7140861    8e  Linux LVM
-> > /dev/hda8           2136      2167      256977    82  Linux swap
-> > /dev/hda9           2168      2847     5462037    8e  Linux LVM
-> > 
-> > Partition table entries are not in disk order
-> > 
-> > 
-> > 
-> > 
-> > So, can anyone help me?  Would recreating the VG and adding the PV's to
-> > it restore access to my data?  Or would I just blow it all away in the
-> > attempt?
-> > 
-> > Please send responses directly to kf4wbx@hamsnet.net
-> > 
-> > 
-> > Thanks for any help!
-> > -Ben K
-> > kf4wbx@hamsnet.net
-> > 
-> > 
-> > 
-> > 
-> > 
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+pv_this[1] is set to NULL, because sda is part of md0, so we enter the
+above section of code with pv_this[] looking like this:
+
+  [0] /dev/md0
+  [1] NULL
+  [2] /dev/sde3
+  [3] /dev/sde4
+
+In the first iteration of the loop (i=0) nothing changes.
+
+In the second iteration of this loop (i=1), we encounter a NULL value, so
+we shift the list down one and set the following element to NULL, leaving us
+with:
+
+  [0] /dev/md0
+  [1] /dev/sde3
+  [2] NULL
+  [3] /dev/sde4
+
+And that's it.  Due to the loop condition (i < np - 2), the loop exits,
+since np=4 and i would be 2 in the next iteration.  The following code:
+
+          while ( pv_this[np] != NULL) np++;
+
+Will end up setting np to 2, since the NULL value in pv_this[2] will cause
+the loop to exit.
+
+I think this loop will work as intended if the loop condition were
+i < np -1.  In our situtation, this would cause one more iteration of the loop, and the NULL value in pv_this[2] would cause another shift to occur leaving us with:
+
+  [0] /dev/md0
+  [1] /dev/sde3
+  [2] /dev/sde4
+  [3] NULL
+
+Which looks just great.  I'm ignoring the sub-loop (...ensure we don't have
+a sequence of NULLs...) for now, but it probably needs fixing.
+
+I'm about to go check this out.  I noticed that there is@least one other
+place in this file that may have a similar problem.  Results in a few minutes.
+
+-- Lars
