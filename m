@@ -1,10 +1,9 @@
-From: jon+lvm@silicide.dk
-Subject: Re: [linux-lvm] [OT] Encrypted FS performance hit?
-Message-ID: <20030312221707.GB15196@gw.silicide.dk>
-References: <20030312220650.DPRI1864.imf54bis.bellsouth.net@tiger2>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030312220650.DPRI1864.imf54bis.bellsouth.net@tiger2>
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <8075D5C3061B9441944E137377645118012E9B@cinshrexc03.shermfin.com>
+From: "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>
+Subject: [linux-lvm] Patching a kernel that already has VFS-lock
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +14,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 16:18:02 2003
+Date: Wed Mar 12 16:20:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Mar 12, 2003 at 05:08:49PM -0500, Greg Freemyer wrote:
-> All,
-> 
-> I know this is off-topic, but does anyone know where I can find info on the CPU hit from using a software encrypting FS.
+Good day,
 
-well, i'll quickly bring in some LVM stuff, as i run encryption both under
-and ontop of a LVM-system. (different cihper though).
+I'm trying to upgrade my kernel from LVM 1.0.3 to 1.0.7.  My kernel with
+1.0.3 already has the VFS lock pactch installed and all I want to do is
+upgrade the LVM code because my snapshots are misbehaving.  I should not
+have to re-patch to get the VFS-lock to work should I?
+
+The reason I ask is because when I just patch the kernel with LVM 1.0.7
+and reboot all my VG's/LV's come up clean, and I can create snapshots
+but the snapshots do not mount.  I get the:
+
+mount: wrong fs type, bad option, bad superblock on /dev/flux1/snap,
+       or too many mounted file systems
+
+error which would indicate to me that the VFS lock is not working with
+my ext3 filesystem.  Does anyone have any ideas on what could be causing
+this problem? =20
+
+Red Hat kernel source RPM 2.4.18-26
+LVM 1.0.7 from the Sistina FTP site
+
+If you need any additional information please let me know.
+
+Thanks,
+Andy.
 
 
-> In particular I would like to see a comparison between None, Microsoft EFS, and Linux loopback encryption.
-
-well, isnt EFS a FS encryption? loopback is a block encryption, there is a
-difference. My experience is that i with loop-AES or PPDD, (blowfish as
-cipher) gets about 1/4 to 1/3 of the performance of raw.
-
-
-
-JonB
+Regards,
+Andrew Rechenberg
+Infrastructure Team, Sherman Financial Group
