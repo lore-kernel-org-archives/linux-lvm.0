@@ -1,57 +1,40 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200005120814.KAA07017@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] 2.2.15 Kernel LVM 0.8 vgscan -- invalid i/o proto
-In-Reply-To: <200005112151.XAA00152@e35.marxmeier.com> from Michael Marxmeier at "May 11, 2000 11:51:56 pm"
-Date: Fri, 12 May 2000 10:14:33 +0200 (MEST)
-Mime-Version: 1.0
+Message-ID: <391FC4D1.833698B8@msede.com>
+Date: Mon, 15 May 2000 11:35:13 +0200
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: kressb@icp.siemens.com
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM over MD on 2.3.x
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Michael Marxmeier <mike@msede.com>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com, tmdg@avbrief.com
+To: linux-lvm@msede.com
 
-> > You don't need a newer kernel. The format changed between <= 0.8 and 0.8final.
-> > You have to re-create your physical volumes and to re-compile the new lvm-utils.
-> 
-> As far as i recall the physical format should be the same. Only the
-> format of the data exchanged between kernel and user mode was changed.
+Forwarded message from Brian Kress (kressb@icp.siemens.com) ...
 
-Absolutely!
+-------- Original Message --------
+Message-ID: <391F4C50.3842370A@icp.siemens.com>
+Date: Sun, 14 May 2000 21:01:04 -0400
+From: Brian Kress <kressb@icp.siemens.com>
+Subject: LVM over MD on 2.3.x
 
-The i/o protocol related message tells you that you have a driver/library
-combination which would mess with the data exchanged between user and
-kernelspace.
+	Since RAID 1/5 has finally been included in 2.3,
+I can not try to get my setup working under 2.3.  I have
+run into a problem with getting LVM working over RAID5. This
+works under 2.2.x, with LVM 0.8i and RAID 0.90, but with
+2.3.99pre8, it doesn't work.  I can get vgscan to find
+the VGs, and I can get vgchange to activate them (with
+a small hack to the source, anyway), but the kernel driver
+has problems.  Any access to an LV returns the contents of
+md0.  It looks like the LVM driver isn't remapping blocks
+when used over raid.
+	I remember Andrea Arcangeli posting to the
+linux-kernel list about stacking block drivers and saying
+something about this, but I can't find the post.
+	Any idea what's going wrong and what I can do
+fix it?
 
-The physical on disk metadata format (the so called VGDA) didn't change!
 
-In future cases where I possibly have to change the VGDA on the disks i'll
-provide transparent library functions which do the changes (actually i had this
-case already and nobody complained).
-
-Message: I don't like to destroy your installed configurations out there ;-{)
-
-> 
-> So using user-mode tools which are compatible with the LVM kernel
-> components should be sufficient - no re-creation of PVs or other
-> drastic options should be required.
-
-Correct.
-
-Regards,
-Heinz
-
----
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement TS                              T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Brian Kress
+kressb@icp.siemens.com
