@@ -1,9 +1,10 @@
-From: Juhapekka Tolvanen <juhtolv@st.jyu.fi>
-Message-ID: <20020617033321.A14511@verso.st.jyu.fi>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Re: Bug#150005: LVM does not fscking work at all
+Message-ID: <20020617060608.GA8570@colombina.comedia.it>
+References: <20020614223602.A20065@verso.st.jyu.fi> <20020615090126.GA1173@tykepenguin.com> <20020615134314.A8160@verso.st.jyu.fi> <20020615110941.GA1663@tykepenguin.com> <20020615141843.A9586@verso.st.jyu.fi> <20020615114712.GA1794@tykepenguin.com> <20020615150026.A10954@verso.st.jyu.fi> <20020615122045.GA1926@tykepenguin.com> <20020617014818.A11995@verso.st.jyu.fi>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] About my LVM-problems
+In-Reply-To: <20020617014818.A11995@verso.st.jyu.fi>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,24 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jun 16 19:33:01 2002
+Date: Mon Jun 17 01:06:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Linux-LVM@sistina.com, marcelo@conectiva.com.br, Alan.Cox@linux.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@sistina.com
 
-This the official homepage of my bugreport:
+On Mon, Jun 17, 2002 at 01:48:18AM +0300, Juhapekka Tolvanen wrote:
+> This is really really weird! What should I do? Shall I post you that
+> latest .config ?
+yes please,
+also try applying lvm patches from www.sistina.com and see if it changes something
 
-http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D150005&repeatmerged=3D=
-yes
+L.
 
-If you Cc: your answers to this address, they will be seen in that
-WWW-page, too:
-
-150005@bugs.debian.org
-
-
---=20
-Juhapekka "naula" Tolvanen * * http://www.st.jyu.fi/~juhtolv/
-"Pettymyst=E4 kahmalolla, on ammennettu sovinnolla ja laarit
-vastoink=E4ymisien eiv=E4t ehdy aivan hetimmiten. Vaan kun multaa
-suussa maistuu, on katkeruus j=E4=E4nyt taa."             Viikate
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
