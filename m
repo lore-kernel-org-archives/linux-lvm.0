@@ -1,11 +1,10 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] Setup for RAID1 with LVM
-Message-ID: <20011117155519.C27459@tiger.bigcats.invalid>
-References: <"Csuk, <5E34D857F6BB704CA3369B7553233A81651A7E@ntsviemxs0152.connect.at-work.ent> <ufay9l8hv5v.fsf@epithumia.math.uh.edu> <3.0.6.32.20011115134027.00a7c100@mail.doorpi.net>
+From: Bradley M Alexander <storm@tux.org>
+Subject: Re: [linux-lvm] Restricted partitions?
+Message-ID: <20011117123350.A3073@sonsofthunder.yi.org>
+References: <20011115020138.J1585@sonsofthunder.yi.org> <20011117154632.B27459@tiger.bigcats.invalid>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3.0.6.32.20011115134027.00a7c100@mail.doorpi.net>; from bharding@doorpi.net on Thu, Nov 15, 2001 at 01:40:27PM -0600
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20011117154632.B27459@tiger.bigcats.invalid>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +15,77 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov 17 09:04:06 2001
+Date: Sat Nov 17 11:32:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Brent!
+On Sat, Nov 17, 2001 at 03:46:32PM +0100, Wolfgang Weisselberg wrote:
+> Hi, Bradley!
+> 
+> Bradley M Alexander (storm@tux.org) wrote 50 lines:
+> 
+> > Are there any partitions/filesystems that should not be used without an
+> > initrd besides /? Here is my partition list:
+> 
+> > /dev/hda1                 7746      3499      3847  48% /boot
+> 
+> This one might be a problem.  (think: growing it, and it might
+> even end up on a different HD.)
 
-Brent Harding (bharding@doorpi.net) wrote 34 lines:
-> >>>>>> "FC" =3D=3D Ferenc Csuk <Csuk> writes:
+Actually, that was not one that I was going to LVM.
 
-> >FC> [...]  when we start pvcreate /dev/md0 we get the following error:
-> >FC> invalid partition type 0x83 for /dev/md0" (must be
-> >FC> 0x8e). Unfortunatelly we can=B4t change it using fdisk.
+> > I have two 30GB
+> > drives, the secomd of which is empty, so I was going to put /var, /tmp,
+> > /home, /usr/local, /opt, /mirror and /archive on a volgroup on the second
+> > drive, then once it stabilized, create a second volgroup on /dev/hda from
+> > the partitions that are now on the volgroup on hdb.
+> 
+> Why 2 volumegroups, why not one that grows by appending the
+> (then free) space of /dev/hda?  
 
-> >For whole disk devices only the partition table must be erased, which
+I thought it might be more efficient to have two than one that straddled
+drives. 
 
-> Can it be done to just a partition? I suppose raid devices are consider=
-ed
-> whole disks no matter what portion of various partitions they take up.
+> > I went in, using 1.0.1rc4 and kernel 2.4.13 and created the partitions on
+> > the volume group on hdb. Ran lilo and changed fstab. Rebooted and it could
+> > not mount the volumes, and gave me a "Can't locate module /dev/vg01" and
+> > for each partition, it tries to load them as modules. The LVM code is
+> > compiled into the kernel.
+> 
+> /dev/vg01 is your new volume group, right?  I _think_ devfs
+> sees it accessed and tries to load the appropriate module
+> (none, but it doesn't know).
 
-Yep, to the kernel a RAID looks like a complete HD.
+Yes it is. Then further down in dmesg, it kept trying to load
+/dev/vg01/lv_tmp, lv_archive and all of the other partitions as modules as
+well.
 
-83 is, BTW, the standard partition type for Linux, while fd
-is the Linux auto raid (automatically Kernel-mounted RAID)
+> > At this point, I have two prime suspects. Either one of the partitions I am
+> > trying to mount on the volume group should not be without an initrd (/tmp
+> > or /var?)
+> 
+> Both are on LVM here -- and if my system really needs /tmp it
+> can easily use /tmp -- which would be on / then ( /tmp is not mounted
+> then).  The only problem will be that after mounting those
+> you won't be able to access the files which are there, but on
+> the root partition.  But then mounting is a very early step
+> in the boot process, so that won't be a problem.
+> 
+> > or its a problematic interaction with devfs. 
+> 
+> That would be my guess.
 
-I guess you can simply erase the beginning of the RAID
-(/dev/md0) or even make partitions on the RAID -- but I don't
-know why you'd want that when you're going with LVM anyway.
+I have tried asking this same question on two LUG lists, this list, the
+debian and debian-devel irc channels, and thus far, no one has an answer.
 
--Wolfgang
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm@debian.org
+                                         |   storm@tux.org
+============================================================================
+Know guns, Know peace and safety. No guns, no peace nor safety.
