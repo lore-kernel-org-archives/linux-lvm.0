@@ -1,7 +1,6 @@
-Message-ID: <20030716955.10786.qmail@mail.yahoo.com>
-From: "imurs4now_2000" <mcsolton15745oytunturper@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] You don't need to work any more!
+From: linux-fbdev-announce-admin@lists.sourceforge.net
+Message-Id: <E19ba62-000761-00@sc8-sf-list2.sourceforge.net>
+Subject: [linux-lvm] Your message to Linux-fbdev-announce awaits moderator approval
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,21 +11,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 13 00:24:01 2003
+Date: Sun Jul 13 01:13:02 2003
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-You can earn as much as you wish!
-You don't  need to work any more!
-Just do it! Come and invest!
-Your deposit - 1$ - 5000$ 
-Interest rate - 7% per week. 
-Every week! Every Day!! 
-The more you invest the more you get!
-This is your profit week!
+Your mail to 'Linux-fbdev-announce' with the subject
 
-Get Weekly Profit with http://www.get-wp.com/
+    Re: Movie
 
-Administration!
+Is being held until the list moderator can review it for approval.
+
+The reason it is being held:
+
+    Message body is too big: 111480 bytes but there's a limit of 40 KB
+
+Either the message will get posted to the list, or you will receive
+notification of the moderator's decision.
