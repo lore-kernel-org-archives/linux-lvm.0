@@ -1,13 +1,7 @@
-From: lembark@wrkhors.com
-Subject: Re: [linux-lvm] RAID support...
-Message-Id: <7480000.1009644669@duke.wrkhors.com>
-In-Reply-To: <20011229104244.GB23434@irc.fem.tu-ilmenau.de>
-References: <3C2CBAFB.90103@cdimed.com>
-    <20011228123140.A9647@omnifarious.org>
-    <20011229104244.GB23434@irc.fem.tu-ilmenau.de>
+Message-Id: <20011230005214.88869.qmail@web13005.mail.yahoo.com>
+From: Prashant Kharche <pdkharche@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Subject: [linux-lvm] installation of LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,43 +12,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec 29 10:50:02 2001
+Date: Sat Dec 29 18:50:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-LVM@sistina.com
+
+Hi !
+Im trying to install LVM 1.0.1-rc4 on Red Hat linux
+7.1. First step given in the install file is to run
+"configure" script. But when i run "./configure", it
+says "No such file or directory exists.." im not
+getting whats the problem..
+
+So please give me the detailed installation
+procedure..
+
+Also, im trying to use LVM loadable module of kernel
+2.4.2. When i do 
+make config (select the LVM module)
+make dep
+make clean
+make modules
+make modules_install
+make bzImage
+lilo
+and load the compiled kernel it gives me following
+errors
+like
+delaying eth0 initialization..
+vfat not supported by this kernel
+sound driver fails
+
+How should i remove these errors??
 
 
--- Mario 'BitKoenig' Holbe <Mario.Holbe@RZ.TU-Ilmenau.DE> on 12/29/01 11:42:44
-+0100
 
-> On Fri, Dec 28, 2001 at 12:31:40PM -0600, Eric M. Hopper wrote:
->> OS.  I question whether even RAID0 support is really necessary in LVM.
->> RAID should be stacked below, or above LVM, not packed inside.
-> 
-> Totally agreed. There is working RAID0 code in the Software-RAID.
-> Why blowing up the kernel with two RAID0-code-trees...
-
-There really isn't any "RAID" anything code in LVM. The 
-striping, etc, capacity that combines PV's isn't about
-RAID since it works above the hardware level. RAID0 
-knows low-level things about the disk drives as hardware;
-LVM only knows about PV's, which are a software abstracton
-of hardware.
-
-As an example, if you used a RAID controller to combine 
-two drives you'd be stuck with both drives as RAID0 for
-all time. No striping, whatever, just appending the space.
-With LVM you can stripe some LV's, have others on one or
-the other disk and other's growing. 
-
-I've never seen a working case of RAID(n>0) being useful 
-on LVM. The main reason is that RAID[135+] are about 
-increasing hardware reliability while LVM is about abstracting
-hardware out of existance. Stacking LVM on top of RAID gives
-the best of both: Increased flexability of the large 
-spaces on combined disks that are more reliable together.
-
---
-Steven Lembark                              2930 W. Palmer
-Workhorse Computing                      Chicago, IL 60647
-                                           +1 800 762 1582
+__________________________________________________
+Do You Yahoo!?
+Send your FREE holiday greetings online!
+http://greetings.yahoo.com
