@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM for a Database
-Message-ID: <20021127144739.B1578@sistina.com>
-References: <012401c2958a$6b6baf40$4b66699f@win.doc.state.vt.us> <4131936328.20021126213826@tnonline.net>
+Subject: Re: [linux-lvm] LVM & GFS?
+Message-ID: <20021127144839.C1578@sistina.com>
+References: <200211261131.gAQBVrFS005853@mailserver1.hrz.tu-darmstadt.de>
 Mime-Version: 1.0
-In-Reply-To: <4131936328.20021126213826@tnonline.net>; from andewid@tnonline.net on Tue, Nov 26, 2002 at 09:38:26PM +0100
+In-Reply-To: <200211261131.gAQBVrFS005853@mailserver1.hrz.tu-darmstadt.de>; from grobe@gmx.net on Tue, Nov 26, 2002 at 01:02:22PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,54 +14,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 27 11:24:10 2002
+Date: Wed Nov 27 11:24:28 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Nov 26, 2002 at 09:38:26PM +0100, Anders Widman wrote:
-> > We are in the process of building a database on a 4 processor 1.8GHz, 4GB RAM Dell 6650.
+On Tue, Nov 26, 2002 at 01:02:22PM +0100, Lars O. Grobe wrote:
+> Hi!
 > 
-> > I am trying to figure out the most efficient way to use LVM for our raw data storage.  We have a RAID array with 8x36GB drives in it.  Should I do a raid 1+0(mirror 4 disks, and span them to get
-> > one logical volume)?
+> I am currently running a Linux fileserver with LVM 1.x, on kernel 2.4.19. The 
+> storage system consists of two scsi-raid5 (ibm serveraid 4m) both as physical 
+> volumes in a vg containing the volumes we share with netatalk and samba to 
+> our clients.
 > 
-> This  is  a  fast  and easy setup.. But what will you use to the disks
-> for?  RAID  5  is generally fast and space efficient, though it can be
-> slower on writes.
+> We are going to buy a new fileserver system now. As we need high-availability 
+> in future (the new server will hold all data of the faculty of architecture 
+> here), we are going to implement a failover-scenario with to nodes accessing 
+> a fibrechannel storage with redundant paths'. We didn't decide so for wether 
+> to use ibm, compaq ore fujitsu-siemens hardware, but all three offer these 
+> solutions.
 > 
-> > If so this leaves me a /dev/sdb.  Or would I get better performance if I mirror 1 + 5, 2 + 6, 3 + 7, 4+ 8 to give me /dev/sd[b-e].
-> > Is it possible to figure out where the center of our spindles are?  So I can arrange for the heads to spend little time seeking?
-> 
-> By  mirroring  pairs  your would end up with 4 logical drives that you
-> can  use LVM (with striping if necessary) on top and have more freedom
-> to  replace and change drive setup (like if you want to replace a pair
-> of disks for newer/bigger models).
-> 
-> I am not sure if LVM 1.x support changing size of striped volumes, but
-> LVM  2  should  have  much  freedom  to do basically whatever you want
-> (still in beta though). Disk spanning with LVM 1 is quite fast though,
-> for most applications.
+> As I know about gfs, I wonder how difficult it would be to add load balancing 
+> to this configuration by using gfs (so far we are on reiserfs 3.6x). Would we 
+> still need LVM (and is this a common combination)? I use LVM to give any 
+> department it's own volume, so that filesystem settings are made on a per 
+> department base, and I would like to keep this.
 
-LVM1 stripes are restricted to the physical volume.
-LVM2 doesn't have that constraint.
+Yes, you can achieve load balancing using GFS on both nodes.
+_Plus_ it gives you much better resilience WRT server failures presuming
+your clients support failover (any of the 2 nodes can crash and the service
+is still available). Such configurations are the ones we can leverage
+with GFS :)
 
-Using LVM1 is in general a good idea for databases, because you can
-relocate data later once you realize performance problems on certain
-spindels with pvmove(8).
+Yes, you can use LVM in combination with GFS _but_ because LVM is a single
+host volume manager you need to use its 'static mode' in order to access
+its volume groups throughout the cluster in order to run GFS on top of it.
+You need to unmount all GFS file systems on all nodes and deactivate LVM
+on all but one in order to change the LVM configuration though.
 
-pvmove is the only missing major feature in LVM2 (to be added ASAP).
-Smooth migration from LVM1 to LVM2 without loosing any VGs/LVs is possible.
-
-Once pvmove is available on LVM2 that is the path to go.
+We are working on LVM2 which is the base for CLVM (Cluster LVM)
+planned for next year. CLVMs major advantage is for sure that all LVM commands
+will run cluster wide and that all changes to volume groups and/or logical
+volumes are visible in the cluster immediately.
+You are able to do a smooth upgrade from LVM1+GFS to
+CLVM+GFS because it supports the LVM1 metadata. IOW: no need for
+backup+reinstall+reconfigure+restore, just SW upgrade.
 
 > 
-> > Any perfomance hints would be greatly appreciated.
+> I am not sure wether this is OT here, but as I have been on this list for a 
+> while now, I would like to ask which contact could help me further. I will 
+> download the eval version of gfs5.1 now and install it on my laptop - one 
+> node ;-)
+
+For now, GFS comes with a simple volume manager called POOL which enables you
+to group whole disks together. You can use that one _or_ LVM1 in 'static mode'.
+Upgrade to CLVM is potentially easier the second way though we plan to support
+POOL -> CLVM upgrades as well.
+
+Feel free to contact sales@sistina.com for further information.
+
 > 
-> 
-> > thanks
-> > Joe K.
-> 
+> CU, Lars.
 > 
 > _______________________________________________
 > linux-lvm mailing list
@@ -69,13 +83,8 @@ Once pvmove is available on LVM2 that is the path to go.
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
--- 
-
 Regards,
 Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
