@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problems restoring the vg metadata
-Message-ID: <20020523192459.D13788@sistina.com>
-References: <6D51028899FFD111A95500805FA7465708B5395B@sbkmxsmb04>
-Mime-Version: 1.0
-In-Reply-To: <6D51028899FFD111A95500805FA7465708B5395B@sbkmxsmb04>; from Diana.Caballero@dowjones.com on Wed, May 22, 2002 at 05:57:24PM -0400
+Message-ID: <E631530D51ABD411B823009027855C5B0278C2@THOR>
+From: Murthy Kambhampaty <Murthy.Kambhampaty@goeci.com>
+Subject: RE: [linux-lvm] Volume group not found on restart [resent]
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,97 +12,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 23 12:29:02 2002
+Date: Thu May 23 14:10:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Diana,
+Heinz, thanks for the response.
 
-because you overwrote the LVM metadata on the 'fragged' disk, you
-need to run pvcreate on it before vgcfgrestore.
+> Strange.
+> If you were able to "lvremove /dev/db_vol/snap_db" it shouldn't be 
+> visible in the metadata I got from you.
+> 
+> But it still is in there and has extents allocated on the 
+> physical volume
+> you wanted to remove from the volumegroup "db_vol". Unless 
+> there was no
+> extents allocated on physical volume /dev/sda, running 
+> "vgreduce db_vol /dev/sda" was impossible.
+> 
+> The steps needed would have been:
+> 
+> - close /dev/db_vol/db_snap by unmounting it
+> - successfully removing the LV with "lvremove /dev/db_vol_snap"
+> - reducing the volume group successfully with "vgreduce 
+> db_vol /dev/sda"
+> 
+> To check it:
+> - vgdisplay -v db_vol # just showing 1 PV in VG "db_vol"
+> - pvscan              # showing /dev/sda to be an unused PV
+> 
+I'm pretty sure I went throught the sequence you describe above, and the
+pvscan at the end said /dev/sda was in "db_vol. I'll replicate the setup (I
+have two volumes that are now tmp volumes with filesystems on disk, which
+I'll convert to two different PVs and go through building up and tearing
+down the setup I had before) and let you know if I get the same behavior.
 
-Depending on which version of the LVM tools you are running, you might
-have a physical volume uuid flaw preventing vgscan from finding your
-volume group too :-(
+> 
+> > 
+> > > > 
+> > > > So, the preferred course here is to "to change the metadata 
+> > > in order to get
+> > > > rid of the gone physical volume", and all will be well. 
+> > > 
+> > > So there's cons vs. (temporarly) trying 1.1-rc to quorum 
+> > > activate db_vol
+> > > in order to retrieve the data?
+> > > 
+> > Only to the extent that your message indicated that LVM 
+> 1.1-rc2 was unstable
+> > (BTW, do I only install the userspace tools and retain my 
+> LVM 1.0.1rc4
+> > kernel code (or do I have to patch the XFS cvs kernel with 
+> the LVM 1.1-rc2
+> > kernel code to implement this alternative?)
+> 
+> You can go with just the tools in a temporary location.
+I tried it (download 1.1-rc2, built the kernel and tools, installed the
+tools (about which time I got your message), then ran "vgscan; vgchange -qn
+-ay "db_vol") and got the error message "vgchange -- driver doesn't support
+volume group quorum!"
 
-If you still have problems after that, please send the error output
-of "vgscan -d" to me directly (mge@sistina.com) for further help.
+I'll install the patched kernel, and try it. Once I recover the data, I can
+go back to the stock 2.4.18-xfs kernel, installing the lvm-tools rpm
+supplied with RH 7.2.
 
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Wed, May 22, 2002 at 05:57:24PM -0400, Caballero, Diana wrote:
-> Hi,
-> 
-> I'm running SuSe Linux 7 (Server Edition for an S/390) kernel 2.4.7 as an
-> image on an IBM Mainframe. I was provided additional disks (dasd) to
-> configure into LVM. I added these new disks into LVM but I did not create a
-> file system on them. While trying to add other disks from the mainframe into
-> Linux, I accidentally fragged one of the new disks (with no file system) in
-> one of my volume groups which caused all of the volume group to become
-> corrupted and go down. I was able to restore the volume group metadata once
-> and then when I rebooted, I got an error stating that group no longer
-> existed. Is there a step I am missing?
-> 
-> This is what I did the first time when it worked:
-> 
-> vgcfgrestore -f /etc/lvmconf/oradg.conf -n oradg /dev/dasdg1
-> vgck oradg
-> vgscan (I can't remember the error it gave back)
-> fsck -t ext2 /dev/oradg/ora01 (Repeated this for the other mounted file
-> systems)
-> mount /dev/oradg/ora01 (Repeated this for the other mounted file systems and
-> I verified the data in there and that I could create/delete data)
-> 
-> I rebooted and it stated it could not find oradg in the /etc/lvmtab
-> 
-> I checked the lvmtab and it no longer had the entry for this oradg group. 
-> 
-> I was able to boot up the system without the oradg group and then I
-> proceeded to do the following:
-> 
-> vgcfgrestore -f /etc/lvmconf/oradg.conf -n oradg /dev/dasdg1
-> vgck oradg
-> vgscan (An error reported lvmtab and the kernel do not match)
-> vgchange -a oradg
-> vgscan (An error reported lvmtab and the kernel do not match)
-> 
-> I rebooted the image without this group to start fresh and then I did:
-> 
-> vgcfgrestore -f /etc/lvmconf/oradg.conf -n oradg /dev/dasdg1
-> vgck oradg
-> 
-> Am I missing a step or doing something incorrectly?
-> 
-> Please advise.
-> 
-> Diana G. Caballero
-> Systems Administration Consultant
-> DJ Interactive/Factiva.com
-> http://djinteractive.com
-> http://global.factiva.com
-> email:  diana.caballero@dowjones.com
-> Phone:  609-520-7882
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+I'll let you know how it goes ... ;)
+	Murthy
