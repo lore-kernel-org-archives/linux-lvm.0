@@ -1,10 +1,10 @@
-Subject: Re: [linux-lvm] lvm-1.0.1 not working with DAC960/2.2.20
-Message-ID: <20011128080052.B434@btconnect.com>
-References: <wvbshoy54w.fsf@freeze.oslo.dnmi.no> <20011127111424.A8179@sistina.com> <20011127102808.A730@lynx.no>
+From: vincent_kuo@sercomm.com
+Message-ID: <48256B12.00325F26.00@mail.sercomm.com.tw>
 Mime-Version: 1.0
+Content-type: multipart/mixed; 
+	Boundary="0__=3Yn0k4vEh8W768WaZaDBuJM7UJBRCgRFJmPXoWLFTepd0hAFx8QUmOwK"
 Content-Disposition: inline
-In-Reply-To: <20011127102808.A730@lynx.no>; from adilger@turbolabs.com on Tue, Nov 27, 2001 at 10:28:08AM -0700
-From: Joe Thornber <thornber@btconnect.com>
+Subject: [linux-lvm] Can't create the Logical Volume in my system
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +15,148 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 28 03:06:03 2001
+Date: Wed Nov 28 03:08:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Linux-LVM@sistina.com
 
-On Tue, Nov 27, 2001 at 10:28:08AM -0700, Andreas Dilger wrote:
-> On Nov 27, 2001  11:14 +0100, Heinz J . Mauelshagen wrote:
-> > 
-> > Checked it in.
-> 
-> But now it is broken.
-> 
-> > On Tue, Nov 27, 2001 at 09:44:47AM +0100, Adrian Phillips wrote:
-> > > --- tools/lib/lvm_check_partitioned_dev.c.orig  Tue Nov 27 09:16:03 2001
-> > > +++ tools/lib/lvm_check_partitioned_dev.c       Tue Nov 27 09:42:38 2001
-> > > @@ -140,7 +140,8 @@
-> > >         "md",                   /* Multiple Disk driver (SoftRAID)   */
-> > >         "loop",                 /* Loop device              */
-> > >         "dasd",                 /* DASD disk (IBM S/390, zSeries)      */
-> > > -       "dac960",               /* DAC960              */
-> > > +       "rd",                   /* DAC960 2.2          */
-> > > +       "dac960",               /* DAC960 2.4          */
-> > >         "nbd",                  /* Network Block Device              */
-> > >         "ida",                  /* Compaq SMART2              */
-> > >         "cciss",                /* Compaq CCISS array              */
-> 
-> Note that this will break other things, because you also need to update
-> the LVM_DEVICE_TYPE_<foo> defines when you change this array (it was
-> Joe or Alistair that wrote it this way, not me).
+--0__=3Yn0k4vEh8W768WaZaDBuJM7UJBRCgRFJmPXoWLFTepd0hAFx8QUmOwK
+Content-type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No, Stefan Bader wrote it that way.
+Dear sir,
+     I am trying the current version of LVM on my machine. I download the
+lvm-1.0.1-rc4.tar.gz file from the FTP site. But I can't create any Logical
+Volume on my machine. So I need your help. Thanks.
 
-- Joe
+     My H/W information is:
+          VIA Socket7 motherboard with VT82C686A, VT8501 chip
+          CPU Cyrix MII-333
+          RAM 192MB
+          HDD x 3 =      hda 40GB (hda1=2G, hda5=rest size, hda6=64 swap)
+                    hdc 20GB (hdc1=2G, hdc2=2G, hdc3=2G, hdc5=128 swap, hdc6=5G,
+hdc7=5G, hdc8=rest size)
+                    hdd 40GB (hdd1=200MB, hdd5=rest size, hdd6=32 swap)
+          FileSystem XFS V1.0.1 on HDA, EXT2 on HDC and HDD.
+     My OS and Software..:
+          Red Hat Linux 7.1 with Kernel 2.4.10 (with XFS patches)
+     My testing procedure:
+          1. ./configure --with-kernel_dir=/usr/src/linux-2.4
+          2. cd PATCHES, make
+          3. cd /usr/src/linux-2.4
+          3. patch -p1 < lvm-1.0.1=rc4-2.4.10-xfs.patch
+          4. Configure the Kernel with LVM as Module (and RAID + linear, because
+I don't want to test the Software RAID now) There ever happen the Makefile
+patched during this procedure. (drivers/md/Makefile has already got "lvm-fs.o"
+line before the patch)
+          5. make bzImage, make modules, make modules_install, change lilo...
+          6. make, make install (LVM tool and library)
+          7. reboot
+          8. Change the partition ID by FDISK (83 Linux Native-> 8e Linux LVM)
+on /dev/hdc3, /dev/hdc8, /dev/hdd1
+          9. pvcreate  /dev/hdc3, pvcreate /dev/hdc8  -->  OK
+          10. vgcreate MyVG01 /dev/hdc3, vgcreate MyVG02 /dev/hdc8  -->  OK
+                 The result of "vgdisplay" is:  (See attached file: VolumeGroup)
+          11. vgchange -ay MyVG01, vgchange -ay MyVG02  -->  OK
+          12.  lvcreate -L 2G -n HDD01 MyVG01  -->  core dump
+          13.  lvcreate -L 2G -n HDD02 MyVG02  -->  core dump
+          14. What ever I do (changing the LV size or deactive/active the VG,
+format the partition....), it always display core dump.
+          15. The result of "pvdisplay" are: (See attached file:
+PhysicalVolume02)(See attached file: PhysicalVolume01)
+     I don't know what's wrong with my LVM. Did I make any mistake during the
+kernel or tool build procedure? Or I can't use XFS or EXT2 filesystem. I ever
+combine 2 partitions into one VolumeGroup, it still got "core dump". I plan to
+use LVM in a couple of weeks in all of my machine. So this procedure is my first
+try. Please tell me how to fix it (or what's wrong)?
+     By the way, the "lvcreate -d ...." will dump a lots of messages but I can't
+pipeline into a text file. The last few line are like below:
+     ............
+     <7777777> lvm_get_Device_type called
+     <7777777> lvm_get_Device_Type leaving with 0
+     <666666> lvm_check_partition_dev -- LEAVING with ret: TRUE
+     <55555> lvm_check_dev -- LEAVING with ret: 1
+     <55555> pv_check_new -- CALLED
+     <55555> pv_check_new -- LEAVING with ret: 0
+     <4444> pv_check_consistency -- LEAVING with ret: 0
+     <333> lv_check_on_pv -- LEAVING with ret: 1
+     <22> pv_reserve_pe -- EAVING with ret: 0
+     <1> lv_setup_for_create -- pv_reserve_pe returned: 0 pe_last: 13  pe:0
+     <1> lv_setup_for_create -- pe: 0
+     <1> lv_setup_for_create 00 LEAVING with ret: 0
+     <1> lvm_dont_interrupt -- CALLED
+     <1> lvm_dont_interrupt -- LEAVING
+     Segmentation fault (core dumped)
+     I wish they are helpful. (Also, I haven't mount any filesystem that they
+are not on hda. So HDC and HDD are definitely un-mounted.)
+Regards,
+
+--
+Vincent C. Kuo
+vincent_kuo@sercomm.com
+---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+Take a little time, I will be your friend. ^-^
+---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+
+
+
+
+
+--0__=3Yn0k4vEh8W768WaZaDBuJM7UJBRCgRFJmPXoWLFTepd0hAFx8QUmOwK
+Content-type: application/octet-stream; 
+	name="VolumeGroup"
+Content-Disposition: attachment; filename="VolumeGroup"
+Content-transfer-encoding: base64
+
+LS0tIFZvbHVtZSBncm91cCAtLS0KVkcgTmFtZSAgICAgICAgICAgICAgIE15VkcwMQpWRyBBY2Nl
+c3MgICAgICAgICAgICAgcmVhZC93cml0ZQpWRyBTdGF0dXMgICAgICAgICAgICAgYXZhaWxhYmxl
+L3Jlc2l6YWJsZQpWRyAjICAgICAgICAgICAgICAgICAgMApNQVggTFYgICAgICAgICAgICAgICAg
+MjU1CkN1ciBMViAgICAgICAgICAgICAgICAwCk9wZW4gTFYgICAgICAgICAgICAgICAwCk1BWCBM
+ViBTaXplICAgICAgICAgICAyNTUuOTkgR0IKTWF4IFBWICAgICAgICAgICAgICAgIDI1NQpDdXIg
+UFYgICAgICAgICAgICAgICAgMQpBY3QgUFYgICAgICAgICAgICAgICAgMQpWRyBTaXplICAgICAg
+ICAgICAgICAgMi4wMCBHQgpQRSBTaXplICAgICAgICAgICAgICAgNC4wMCBNQgpUb3RhbCBQRSAg
+ICAgICAgICAgICAgNTEyCkFsbG9jIFBFIC8gU2l6ZSAgICAgICAwIC8gMApGcmVlICBQRSAvIFNp
+emUgICAgICAgNTEyIC8gMi4wMCBHQgpWRyBVVUlEICAgICAgICAgICAgICAgVVVXWDA1LVQ5Q0It
+SFFHMS1lclBFLTZjb2ctek9vYy1YSFpSOXAKCi0tLSBWb2x1bWUgZ3JvdXAgLS0tClZHIE5hbWUg
+ICAgICAgICAgICAgICBNeVZHMDIKVkcgQWNjZXNzICAgICAgICAgICAgIHJlYWQvd3JpdGUKVkcg
+U3RhdHVzICAgICAgICAgICAgIGF2YWlsYWJsZS9yZXNpemFibGUKVkcgIyAgICAgICAgICAgICAg
+ICAgIDEKTUFYIExWICAgICAgICAgICAgICAgIDI1NQpDdXIgTFYgICAgICAgICAgICAgICAgMApP
+cGVuIExWICAgICAgICAgICAgICAgMApNQVggTFYgU2l6ZSAgICAgICAgICAgMjU1Ljk5IEdCCk1h
+eCBQViAgICAgICAgICAgICAgICAyNTUKQ3VyIFBWICAgICAgICAgICAgICAgIDEKQWN0IFBWICAg
+ICAgICAgICAgICAgIDEKVkcgU2l6ZSAgICAgICAgICAgICAgIDQuMDAgR0IKUEUgU2l6ZSAgICAg
+ICAgICAgICAgIDQuMDAgTUIKVG90YWwgUEUgICAgICAgICAgICAgIDEwMjQKQWxsb2MgUEUgLyBT
+aXplICAgICAgIDAgLyAwCkZyZWUgIFBFIC8gU2l6ZSAgICAgICAxMDI0IC8gNC4wMCBHQgpWRyBV
+VUlEICAgICAgICAgICAgICAgQ2w0clhNLUdNQ1ctUUFaQS10QVd2LXhFSTEteTlSYi1NT2l0SjEK
+Cgo=
+
+--0__=3Yn0k4vEh8W768WaZaDBuJM7UJBRCgRFJmPXoWLFTepd0hAFx8QUmOwK
+Content-type: application/octet-stream; 
+	name="PhysicalVolume02"
+Content-Disposition: attachment; filename="PhysicalVolume02"
+Content-transfer-encoding: base64
+
+LS0tIFBoeXNpY2FsIHZvbHVtZSAtLS0KUFYgTmFtZSAgICAgICAgICAgICAgIC9kZXYvaGRjOApW
+RyBOYW1lICAgICAgICAgICAgICAgTXlWRzAyClBWIFNpemUgICAgICAgICAgICAgICA0LjAxIEdC
+IC8gTk9UIHVzYWJsZSA2LjUxIE1CIFtMVk06IDEyOC4wMCBLQl0KUFYjICAgICAgICAgICAgICAg
+ICAgIDEKUFYgU3RhdHVzICAgICAgICAgICAgIE5PVCBhdmFpbGFibGUKQWxsb2NhdGFibGUgICAg
+ICAgICAgIHllcwpDdXIgTFYgICAgICAgICAgICAgICAgMApQRSBTaXplIChLQnl0ZSkgICAgICAg
+NDA5NgpUb3RhbCBQRSAgICAgICAgICAgICAgMTAyNApGcmVlIFBFICAgICAgICAgICAgICAgMTAy
+NApBbGxvY2F0ZWQgUEUgICAgICAgICAgMApQViBVVUlEICAgICAgICAgICAgICAgREc4ajN5LWUx
+TnItVVpNOS1BajNuLVlSUDAtS0FURi10YVRDd0EKCgo=
+
+--0__=3Yn0k4vEh8W768WaZaDBuJM7UJBRCgRFJmPXoWLFTepd0hAFx8QUmOwK
+Content-type: application/octet-stream; 
+	name="PhysicalVolume01"
+Content-Disposition: attachment; filename="PhysicalVolume01"
+Content-transfer-encoding: base64
+
+LS0tIFBoeXNpY2FsIHZvbHVtZSAtLS0KUFYgTmFtZSAgICAgICAgICAgICAgIC9kZXYvaGRjMwpW
+RyBOYW1lICAgICAgICAgICAgICAgTXlWRzAxClBWIFNpemUgICAgICAgICAgICAgICAyLjAxIEdC
+IC8gTk9UIHVzYWJsZSA3LjE5IE1CIFtMVk06IDEyNi4wMCBLQl0KUFYjICAgICAgICAgICAgICAg
+ICAgIDEKUFYgU3RhdHVzICAgICAgICAgICAgIE5PVCBhdmFpbGFibGUKQWxsb2NhdGFibGUgICAg
+ICAgICAgIHllcwpDdXIgTFYgICAgICAgICAgICAgICAgMApQRSBTaXplIChLQnl0ZSkgICAgICAg
+NDA5NgpUb3RhbCBQRSAgICAgICAgICAgICAgNTEyCkZyZWUgUEUgICAgICAgICAgICAgICA1MTIK
+QWxsb2NhdGVkIFBFICAgICAgICAgIDAKUFYgVVVJRCAgICAgICAgICAgICAgIE1pM1gySS1Ycm10
+LTROTHctelEwdy1YWExXLWg4cVQtNXdXdnNHCgoK
+
+--0__=3Yn0k4vEh8W768WaZaDBuJM7UJBRCgRFJmPXoWLFTepd0hAFx8QUmOwK--
