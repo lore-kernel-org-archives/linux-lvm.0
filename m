@@ -1,10 +1,9 @@
-Message-ID: <3B95E36E.6070703@st-peter.stw.uni-erlangen.de>
-Date: Wed, 05 Sep 2001 10:33:50 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: what i need is a little attention-RE [linux-lvm] SoftRaid and LVM   Jean-Eric Cuendet
-References: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com>
-Content-Transfer-Encoding: 7bit
+Date: Wed, 5 Sep 2001 11:33:07 +0200
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Message-ID: <20010905113307.A19406@lug-owl.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LV size maximum
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +15,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-some ideas whom should i write to and what else should i try
-i've already written to the developers of e2fsprogs and to Hans Reiser
-but i still don't have a reply( it was 2-3 days ago) and mr Hans Reiser 
-wonts $25 for looking at a problem
-i'll write them again
+Hi!
 
+I'm to build some storage pool for an in-company network. It
+will exceed 1TB in some time, so I'd like to get some proper
+information on this *before* I get into trouble:-) So, my
+final question is: How big may an LV be?
 
+The FAQ tells me (in Q9) something of 2TB, but lvextend INFOs
+me of a maximum of 1TB. Where's the real limit? My understanding
+is that limitation is coming from kernel to handle all data
+in chunks of 512Bytes. Is the maximum number of 512Byte blocks
+per device to be increased in some time?
 
-Jean-Eric Cuendet wrote:
+MfG, JBG
 
->>and one more question about the min-max
->>i don't speak "C" can you tell me how to do it with pre
->>linux-2.4.9patches wich i wont to aply to linux-2.4.10pre2 
->>and they are giving me problems 
->>with min-max definition
->>
->
->The min/max functions are simple functions that return the min/max of
->two numbers.
->Ex: min(3,4) return 3
->Now, Linus has added a type to those functions in 2.4.8 (I think):
->Ex: min(int, 3, 4) = 3
->Or: min(float, -6.45, 4.5) = -6.45
->
->So, either you change the call from:
->min(a, b) to min(int,a,b)
->Or you add the provided replacement functions:
->#define min(a,b) (((a)<(b))?(a):(b)) 
->#define max(a,b) (((a)>(b))?(a):(b)) 
->At the *beginning* of the file (before anything else).
->
->Note that these are not real functions but just macros. That's why it's
->so simple (just add them and forget).
->
->Bye
->-jec
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+-- 
+Jan-Benedict Glaw . jbglaw@lug-owl.de . +49-172-7608481
