@@ -1,15 +1,8 @@
-From: "Jason H. Smith" <jhs@oes.co.th>
-Subject: Re: [linux-lvm] snapshots on RAID5 blow up machine ("switching cache buffer size")
-References: <20030702073723.GC30882@questra.com>
-In-Reply-To: <20030702073723.GC30882@questra.com>
+From: rosatadobe@netscape.net
 MIME-Version: 1.0
-Content-Type: multipart/signed;
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1;
-  boundary="Boundary-02=_N4oA/lR16haD/iZ";
-  charset="tis-620"
-Content-Transfer-Encoding: 7bit
-Message-Id: <200307021447.25888.jhs@oes.co.th>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E19YUEc-0002sq-00@hermes.sistina.com>
+Subject: [linux-lvm] A CRY FOR HELP.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,60 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul  4 08:28:01 2003
+Date: Fri Jul  4 12:21:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---Boundary-02=_N4oA/lR16haD/iZ
-Content-Type: text/plain;
-  charset="tis-620"
-Content-Transfer-Encoding: quoted-printable
-Content-Description: signed data
-Content-Disposition: inline
+Dear Friend=2E
 
-On Wednesday 02 July 2003 02:37 pm, Scott Mcdermott wrote:
-> I've searched the archives and see that this is related to
-> the filesystem using 4k blocks whereas snapshot IO uses 1k
-> blocks, so RAID5 code gets confused, but I don't understand
-> the internals of the filesystem to be able to say this is
-> expected behavior.
->
-> My questions are these:
->
->     - Is this a RAID5 problem or an LVM problem, or both?
+I am Mrs=2E Sara Tadobe wife to the late Chife Micheal Tadobe from Sierra Leone=2EI am writing you in absolute confidence primarily to seek 
+your assistance to transfer our cash of Twelve Million and five hundred thousand Dollars =28$12=2C500=2E000=2E00=29 now in the custody of a private 
+Security trust firm in Europe the money is in trunk boxes deposited and declared as Precious stones by my late Husband as a matter of 
+fact the company does not know the content as money=2C although my husband made them to understand that the boxes belongs to his foreign partner=2E
 
-I ran into this a while ago and I eventually decided that, currently,=20
-software RAID 5 and LVM are, to put it nicely, "incompatible" if you want=20
-long-term snapshots.  I'm no expert, but IMO, these days, the RAID5=20
-subsystem should not assume i/o of equal chunk sizes, so it is md's=20
-problem.  IIRC, the 2.6 kernel is supposed to address this; but there's=20
-not much you can do at the moment.
+Source of the money=3A
 
-Somebody please correct me if I'm wrong.
+My late Husband Chief Michael Tadobe =2C a native of Mende District in the Northern province of Sierra Leone=2C was the General Manager of Sierra
+Leone Mining co-operation =28S=2EL=2EM=2EC=2E=29 Freetown =2E According to my Husband=2C this money was the income accrued from Mining Co-operation's over draft
+and minor sales=2E
 
->     - Is this problem nonexistent on RAID1 backed or
->       RAID10 backed VGs (especially the latter since I am
->       contemplating a switch thereto)?
+Before the peak of the civil war between the rebels forces of Major Paul Koroma and the combined forces of ECOMOG peace keeping operation that almost
+destroyed my country=2C following the forceful removal from power of the civilian elected President Ahmed Tejan Kabbah by the rebels=2E My Husband had already
+made arrangement for I and my two children to be evacuated to Ivory coast with the CERTIFICATE OF DEPOSIT he made with a security firm in
+Europe through the aid of U=2EN evacuation team=2E
 
-I believe that's correct, but please don't quote me.  Testing this should=20
-be simple enough.
+During the war in my country and following the indiscriminate looting of Public and Government properties by the rebel forces=2C the Sierra Leone
+mining coop=2E Was one of the target looted and it was destroyed=2E My husband including other top Government functionaries were attacked and killed by the rebels in
+November 2000 because of his relationship with the civilian Government of Ahmed Tejan Kabbah=2E
 
-=2D-=20
-Jason Smith
-Open Enterprise Systems
-Bangkok, Thailand
-http://www.oes.co.th
+As a result of my husband's death and with the information we got that the rebels are out for us the burden became too much for me to handle coupled with the ill health
+of my daughter she died in the process as I could not afford her a decent medical care=2EThe unrest in Ivory Coast and the threat from the rebels against our lifes=2Cmade us to
+be evacuted to Nederland last December where i and my only surviving son are seeking political asylum=2Cwe are at present in an asylum camp in a small village in Nederlands=28HOLLAND=29=2E
+Our only hope now is in you and the boxes deposited in the Security Firm To this effect=2Chumbly solicit your assistance in the followings ways=2E
 
---Boundary-02=_N4oA/lR16haD/iZ
-Content-Type: application/pgp-signature
-Content-Description: signature
+1=2E to assist me claim this boxes from the security Firm as our beneficiary
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
+2=2E to transfer this money =28USD$12=2E5 M=29 in your name to your country
 
-iD8DBQA/Ao4Nm5qEoSbpT3kRAgG5AKC0BI2v5Uy5cvpggrSdbcaWj4qF+wCbBMhV
-h5n5AIlo9O93BBV9066PS3U=
-=sKaJ
------END PGP SIGNATURE-----
+3=2E to make a good arrangement for a joint business investment on our behalf in your country and you=2C our Adviser=2F Manager=2E
 
---Boundary-02=_N4oA/lR16haD/iZ--
+For your assistance=2C I have agreed with my only surviving son that 20% of the total amount will be for your effort and another 5 % to cover all the
+expenses that may incur during the business transaction=2C Last=2C I urge you to keep this transaction strictly confidential as no one knows our where about=2E
+
+Please as you show your willingness=2C Forward to us your full name=2C address and Tel=2F Fax numbers=2C to me via my private email address as indicated bellow=2C this is for security reasons
+as I will only be accessing my private email earnestly awaiting your response=2E
+
+Thanks=2E
+
+May God bless you as you assist us=2E
+
+MRS=2E SARA TADOBE=2E
