@@ -1,19 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i37Ig4j02235
-	for <linux-lvm@redhat.com>; Wed, 7 Apr 2004 14:42:04 -0400
-Received: from mail.parperfeito.com.br (host-84.c8b96a.parperfeito.com.br
-	[200.185.106.84])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i37Ig2WB008235
-	for <linux-lvm@redhat.com>; Wed, 7 Apr 2004 14:42:03 -0400
-Received: from tec02 (unknown [192.168.4.2])
-	by mail.parperfeito.com.br (Postfix) with SMTP id 2DB1D19C02C
-	for <linux-lvm@redhat.com>; Wed,  7 Apr 2004 15:41:51 -0300 (GMT+3)
-Message-ID: <01d401c41cd0$06477c60$0204a8c0@tec02>
-From: =?Windows-1252?Q?Jo=E3o_Assad?= <jfassad@parperfeito.com.br>
-Date: Wed, 7 Apr 2004 15:42:05 -0300
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i38EL5j31586
+	for <linux-lvm@redhat.com>; Thu, 8 Apr 2004 10:21:05 -0400
+Received: from hotmail.com (bay16-dav32.bay16.hotmail.com [65.54.186.212])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i38EL3Gl027475
+	for <linux-lvm@redhat.com>; Thu, 8 Apr 2004 10:21:04 -0400
+From: "sachin" <sachindurge@hotmail.com>
+Date: Thu, 8 Apr 2004 19:57:07 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] GFS + LVM ?
+Content-Transfer-Encoding: 7bit
+Message-ID: <BAY16-DAV32wB0jTj7z000022e2@hotmail.com>
+Subject: [linux-lvm] Meaning of strict allocation
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,22 +20,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello,
+Hi
 
-I'd like to know if there is a way to concatenate multiple shared file
-systems from multiple storage devices into one single file system to be
-accessed by multiple hosts.
+when I  executed the lvdisplay command  i get the following output
 
-maybe using lvm on top of gfs?
+--- Logical volume ---
+LV Name                /dev/vg/lv1
+VG Name                vg
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                4 GB
+Current LE             1024
+Allocated LE           1024
+Stripes                4
+Stripe size (KByte)    16
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
 
-please cc to my e-mail as I am not subscribed to linux-lvm.
+Can any one tell  me what that ALLOCATION next free means
+and also what strict allocation means.
 
-Thanks in advance.
+I also tried lvdisplay  with -v option
 
---------------------------------
-- Jo�o Assad
-- ParPerfeito Comunica��o LTDA
-- http://www.parperfeito.com.br/
+it gives me read and writes
+What that exactly means 
+      1. No of read and write operation
+      2  No of blocks transferd 
+      3. No of sectors read or written 
+
+One more thing  this io statics is from which time 
+     1. bootup time
+     2. lv creation time
+
+Thanks
+Sachin. 
