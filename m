@@ -1,76 +1,52 @@
-From: "Christopher Briggs" <hpuxadm@choice.net>
-Subject: RE: [linux-lvm] [Patch] lvchange better error reporting
-Date: Sat, 15 Apr 2000 19:38:24 -0400
-Message-ID: <NDBBKHFNKLCILCNALIHPGEIECBAA.hpuxadm@choice.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20000415203514.A21662@home.ds9a.nl>
+Date: Sun, 16 Apr 2000 00:56:21 +0200
+From: bert hubert <ahu@ds9a.nl>
+Subject: Re: [linux-lvm] [Patch] lvchange better error reporting
+Message-ID: <20000416005620.A26537@home.ds9a.nl>
+References: <20000415203514.A21662@home.ds9a.nl> <NDBBKHFNKLCILCNALIHPGEIECBAA.hpuxadm@choice.net>
+Mime-Version: 1.0
+In-Reply-To: <NDBBKHFNKLCILCNALIHPGEIECBAA.hpuxadm@choice.net>; from hpuxadm@choice.net on Sat, Apr 15, 2000 at 07:38:24PM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: bert hubert <ahu@ds9a.nl>, mauelsha@ez-darmstadt.telekom.de, linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Christopher Briggs <hpuxadm@choice.net>
+Cc: mauelsha@ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-Quick question for Hubert "or" the general dist. list..
+On Sat, Apr 15, 2000 at 07:38:24PM -0400, Christopher Briggs wrote:
 
-I've been watching the thread for about a week+ now, and am determined to go
-with LVM, especially being so HPcentric and loving LVM for that platform.
+> I've been watching the thread for about a week+ now, and am determined to go
+> with LVM, especially being so HPcentric and loving LVM for that platform.
 
-With that in mind, I have a decision to make, which is(I think) switch to a
-kernel other than Redhat's default 6.0/6.1 kernel(2.2.5).
+LVM is cool indeed.
 
-What rev kernel would be best considering LVM and what is the best way to
-get there(pointing me to a FAQ/www be more than appropriate.
+> What rev kernel would be best considering LVM and what is the best way to
+> get there(pointing me to a FAQ/www be more than appropriate.
 
-Also, Heinz - What are you using to develop your GUI frontend?(just curious)
+I'm not sure. Kernel 2.3.99pre6-3 is not ready for mission critical work,
+and the 2.2 revisions of the LVM 0.8final kernel patches aren't available
+yet.
 
-Thanks all,
+> Also, Heinz - What are you using to develop your GUI frontend?(just curious)
 
-Christopher.
+I think you mean me by this. I am using Glade, libglade and GTK+. On a side
+note, I'm still making good progress with the lvm-manager. It is almost
+useable.
 
+Currenly you can
 
+	create volume groups
+	move PEs from physical volumes
+	move Physical Volumes from/to Volume Groups (with drag-and-drop even!)
+	change active state
+	remove volume groups
+	create/remove logical volumes
 
------Original Message-----
-From: owner-linux-lvm@msede.com [mailto:owner-linux-lvm@msede.com]On
-Behalf Of bert hubert
-Sent: Saturday, April 15, 2000 2:35 PM
-To: mauelsha@ez-darmstadt.telekom.de; linux-lvm@msede.com
-Subject: [linux-lvm] [Patch] lvchange better error reporting
+Regards,
 
+bert hubert. 
 
-Heinz, people,
-
-It annoyed me that lvchange sometimes reported that volume group "(null)"
-was invalid. This patch fixes this behaviour. Please apply.
-
-diff -u -r 0.8final.orig/tools/lvchange.c 0.8final/tools/lvchange.c
---- 0.8final.orig/tools/lvchange.c	Tue Feb 22 03:09:33 2000
-+++ 0.8final/tools/lvchange.c	Sat Apr 15 20:32:34 2000
-@@ -255,9 +255,15 @@
-       /* does VG exist? */
-       if ( opt_v > 0) printf ( "%s -- checking volume group existence\n",
-cmd);
-       if ( lvm_tab_vg_check_exist ( vg_name, NULL) != TRUE) {
--         fprintf ( stderr, "%s -- can't change logical volume: volume group
-"
--                           "\"%s\" doesn't exist\n\n", cmd, vg_name);
--         return LVM_ELVCHANGE_VG_CHECK_EXIST;
-+
-+         if(vg_name)
-+            fprintf ( stderr, "%s -- can't change logical volume: volume
-group "
-+                 "\"%s\" doesn't exist\n\n", cmd, vg_name);
-+         else
-+            fprintf ( stderr, "%s -- can't change logical volume: need to
-specify "
-+                              "volume group\n\n", cmd);
-+
-+         return LVM_ELVCHANGE_VG_CHECK_EXIST;
-       }
-
-       if ( opt_v > 0) printf ( "%s -- checking for active volume "
-
---
+-- 
                        |              http://www.rent-a-nerd.nl
                        |                     - U N I X -
                        |          Inspice et cautus eris - D11T'95
