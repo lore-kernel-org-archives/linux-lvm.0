@@ -1,12 +1,9 @@
-Return-Path: <pwk.linuxfan@gmx.de>
-From: Peter Kirk <pwk.linuxfan@gmx.de>
-Subject: Re: [linux-lvm] Problems: reiserfs lvm as /
-Date: Mon, 21 May 2001 16:08:16 +0200
-References: <01051916333601.00791@mama> <3B08F910.D42A5F52@uksr.hp.com>
-In-Reply-To: <3B08F910.D42A5F52@uksr.hp.com>
+Return-Path: <benr@us.ibm.com>
+Subject: Re: [linux-lvm] Working together
+Message-ID: <OF8C69C15E.B16C638F-ON86256A53.0057D7D1@raleigh.ibm.com>
+From: "Ben Rafanello" <benr@us.ibm.com>
+Date: Mon, 21 May 2001 13:42:58 -0500
 MIME-Version: 1.0
-Message-Id: <01052116081602.00950@mama>
-Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,33 +16,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Matthew O'Keefe <okeefe@brule.borg.umn.edu>
 
-Am Montag, 21. Mai 2001 13:16 schrieben Sie:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
->
-> Hi,
->
-> 	These messages are similar to the ones I saw building my
-> / on LVM system yesterday.  I am using ext2 file systems though.
-> The default kernel parameter is ramdisk size 4096.  I read the messages
-> to mean the ramdisk is not large enough.
->
-> I fixed it by adding a ramdisk option to the root on lvm entry in lilo.conf
-> so it looked like this:-
->
-> image=/boot/vmlinuz-2.4.2-2-lvm.1
->         label=linux-lvm
->         initrd=/boot/initrd_from_lvmcreate_initrd
->         read-only
->         root=/dev/vg00/root
-> 	ramdisk=5120
->
-> Could have up the kernel parameter instead I guess.
-> I have not done testing yet and will give a better account of my
-> problems and solutions later.
->
-I added the line, and now it works :-)))
+Hi Matt,
 
-Thanks
+Thanks for your reply.  To answer your question, we are not in what I would
+consider
+to be a production mode today.  We are in the development phase making
+rapid
+progress.  Your team is about to release your 1.0 version, and then (I
+assume) begin
+work on an enhanced version (2.0?).  Thus, after your 1.0 version is
+released, both of
+our teams will be in development mode, and that is why we thought this
+would be a
+good time to join forces.
+
+Ben Rafanello
+IBM Linux Technology Center
+(512) 838-4762
+benr@us.ibm.com
+
+
+
+
+>Hi,
+>does the EVMS code work in production today?  If not, then saying
+>it "can offer some immediate solutions to current Linux LVM issues"
+>is inaccurate.  That said, its great to see another alternative
+>LVM appearing on the horizon for Linux.
+>
+>Matt O'Keefe
+>Sistina Software, Inc.
