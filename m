@@ -1,23 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1SHEXK03315
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 12:14:33 -0500
-Received: from pfepb.post.tele.dk (pfepb.post.tele.dk [195.41.46.236])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j1SHEULc026226
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 12:14:32 -0500
-Received: from debian (0x50a44a50.arcnxx14.adsl-dhcp.tele.dk [80.164.74.80])
-	by pfepb.post.tele.dk (Postfix) with ESMTP id 8334E5EE090
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 18:14:23 +0100 (CET)
-Received: from [192.168.0.29] (helo=[192.168.0.29])
-	by debian with esmtp (Exim 3.35 #1 (Debian)) id 1D5oTO-0003UL-00
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 18:14:22 +0100
-Message-ID: <42235179.4090806@gozar.dynu.com>
-Date: Mon, 28 Feb 2005 18:14:33 +0100
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1SHGYK04091
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 12:16:34 -0500
+Received: from pfepa.post.tele.dk (pfepa.post.tele.dk [195.41.46.235])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1SHGS6G003102
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 12:16:29 -0500
+Message-ID: <422351F0.5010005@gozar.dynu.com>
+Date: Mon, 28 Feb 2005 18:16:32 +0100
 From: Heine Laursen <maillist@gozar.dynu.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVM1 Bad harddisk. How do I het data off the Volume?
-References: <421E3614.5010107@gozar.dynu.com>
-	<20050228083636.GA18006@tykepenguin.com>
-In-Reply-To: <20050228083636.GA18006@tykepenguin.com>
+References: <421E3614.5010107@gozar.dynu.com>	<20050228083636.GA18006@tykepenguin.com>
+	<a3558a980502280319499f1d6b@mail.gmail.com>
+In-Reply-To: <a3558a980502280319499f1d6b@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,18 +24,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: go0ogl3 <go0ogl3@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Patrick Caulfield wrote:
-> On Thu, Feb 24, 2005 at 09:16:20PM +0100, Heine Laursen wrote:
-> 
->>How can I rescue as mutch data as possebill?
-> 
-> 
-> Restore from your backups ?
+go0ogl3 wrote:
+> Did you check the ATA/ide cable? Did you try to replace that cable or
+> to verify if the drive has one or more ide pins bent or shorted?
 
-I don't have any backup!
+Yes, I have tryed with 2 differnt controlers (onboard, and promse 
+controler) and 2 different ide cables. There are no pins who are bent.
 
---
 Sincerley
 Heine Laursen
