@@ -1,10 +1,7 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] upgrading..
-Message-ID: <20021223165435.GC1113@tykepenguin.com>
-References: <Pine.LNX.4.44.0212231717400.31560-100000@server.piarista-kkt.sulinet.hu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0212231717400.31560-100000@server.piarista-kkt.sulinet.hu>
+From: NagyZ <nagyz@piarista-kkt.sulinet.hu>
+Message-ID: <Pine.LNX.4.44.0212231927280.31788-100000@server.piarista-kkt.sulinet.hu>
+MIME-Version: 1.0
+Subject: [linux-lvm] vgcreate bug?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +12,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 23 10:54:02 2002
+Date: Mon Dec 23 12:28:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Dec 23, 2002 at 05:19:01PM +0100, NagyZ wrote:
-> hi!
-> 
-> i did some test last night at my test machine..
-> i upgraded my vg from 1.0.6 to last lvm2+dm..
-> after the upgrade, i cant mount my lv's..
-> is this a bug? or i wont be able to use my data after upgrade?..
+so..
+i did:
+(with 1.0.6 tools)
 
-Sounds odd to me. I regularly flip between LVM1 and LVM2.
--- 
+dd if=/dev/zero of=/testlvmimage bs=1024k count=300
+losetup /dev/loop0 /testlvmimage
+pvcreate /dev/loop
+vgcreate test /dev/loop0
+lvcreate -l 8 -n testlv test
+mkfs.ext3 /dev/test/testlv
 
-patrick
+then copy some files..
+
+vgchange -an
+and (with lvm2 tools):
+vgconvert -M2 test
+
+then:
+debian:~# mount /dev/test/testlv /teszt
+mount: /dev/test/testlv is not a valid block device
+
+so..
+any idea? :)
+
+check http://tom.tdc.hu/~nagyz/lvm
+
+thnx!
+
+NagyZ
