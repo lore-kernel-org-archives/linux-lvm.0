@@ -1,8 +1,9 @@
-Message-ID: <25369470B6F0D41194820002B328BDD23004@ATLOPS>
-From: Arvind Jain <arvind_jain@ivivity.com>
-Date: Tue, 2 Oct 2001 14:17:09 -0400 
-MIME-Version: 1.0
-Subject: [linux-lvm] SNMP MIB for LVM
+Date: Tue, 2 Oct 2001 20:29:34 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Message-ID: <20011002202934.G14582@wiggy.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] partition table read incorrectly
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,8 +17,26 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-Has anybody written or come across MIB for LVM configuration and
-maintenance? It will be nice if could configure LVM using SNMP MIB. thx,
-arv.
+I seem to run into a weird problem. LVM refused to work properly,
+after a "vgscan" command "vgchange -a y" would still complain
+that things weren't consistent and I got a messages about an
+I/O error on 08:11.
+
+Interestingly my sdb does not have any partitions since it's one
+big PV, and fdisk agrees with me on that. However the kernel
+seems to thing I do have a partition there and as a result LVM
+seems to get somewhat confused.
+
+This happens with both 2.4.9-ac17 and 2.4.10-ac3. If anyone has
+any ideas on how to go about fixing this don't hestitate to ask
+me for more details.
+
+Wichert.
+
+-- 
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
