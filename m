@@ -1,12 +1,11 @@
-Return-Path: <bluca@comedia.it>
-Date: Fri, 13 Jul 2001 20:01:13 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Newbie question
-Message-ID: <20010713200112.A11175@colombina.comedia.it>
-References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com> <20010712094638.B418@btconnect.com> <200107121612.MAA13656@burns.luca.2y.net> <20010713131200.C32198@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010713131200.C32198@sistina.com>; from Mauelshagen@sistina.com on Fri, Jul 13, 2001 at 01:12:00PM +0200
+Return-Path: <acahalan@saturn.cs.uml.edu>
+From: "Albert D. Cahalan" <acahalan@cs.uml.edu>
+Message-Id: <200107131820.f6DIKvg190902@saturn.cs.uml.edu>
+Date: Fri, 13 Jul 2001 14:20:57 -0400 (EDT)
+In-Reply-To: <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com> from "Ben LaHaise" at Jul 05, 2001 03:35:31 AM
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,31 +18,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Ben LaHaise <bcrl@redhat.com>
+Cc: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <kernel@ragnark.vestdata.no>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
 
-On Fri, Jul 13, 2001 at 01:12:00PM +0200, Heinz J. Mauelshagen wrote:
-> > Another question is the boot stuff, what is better? compile LVM as a module
-> > and use inird or compile the kernel with built-in LVM support?
+Ben LaHaise writes:
+> On Thu, 5 Jul 2001, Ragnar Kj\370rstad wrote:
+
+>> What do you mean?
+>> Is it not feasible to fix this in LVM as well, or do you just not know
+>> what needs to be done to LVM?
+>
+> Fixing LVM is not on the radar of my priorities.  The code is sorely in
+> need of a rewrite and violates several of the basic planning tenents that
+> any good code in the block layer should follow.  Namely, it should have 1)
+> planned on supporting 64 bit offsets, 2) never used multiplication,
+> division or modulus on block numbers, and 3) don't allocate memory
+> structures that are indexed by block numbers.  LVM failed on all three of
+> these -- and this si just what I noticed in a quick 5 minute glance
+> through the code.  Sorry, but LVM is obsolete by design.  It will continue
+> to work on 32 bit block devices, but if you try to use it beyond that, it
+> will fail.  That said, we'll have to make sure these failures are graceful
+> and occur prior to the user having a chance at loosing any data.
 > 
-> It doesn't make a difference if you go for the module or the build in driver,
-> you need to have an initrd today anyway to activate your VGs at boot time.
-> 
-> We are working on boot time recognition of VGs in the driver which will vanish
-> the initrd. That will be in a post 1.0 version of the Linux LVM.
+> Now, thankfully there are alternatives like ELVM, which are working on
+> getting the details right from the lessons learned.  Given that, I think
+> we'll be in good shape during the 2.5 cycle.
 
-is this still worthwile since i read Linus in thinking of a new way
-to handle initrd (appending a tar file to a kernel image and populating
-a ramfs with it) and moving many _init code that now bloats kernel
-to userspace.
+How does can any of this even work?
 
-Regards,
-L.
+Say I have N disks, mirrored, or maybe with parity. I'm trying
+to have a reliable system. I change a file. The write goes out
+to my disks, and power is lost. Some number M, such that 0<M<N,
+of the disks are written before the power loss. The rest of the
+disks don't complete the write. Maybe worse, this is more than
+one sector, and some disks have partial writes.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Doesn't RAID need a journal or the phase-tree algorithm?
+How does one tell what data is old and what data is new?
