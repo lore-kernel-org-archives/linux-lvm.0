@@ -1,11 +1,8 @@
-Return-Path: <lukasz@hq.nawigator.pl>
-Date: Mon, 12 Mar 2001 15:16:01 +0100 (CET)
-From: Lukasz Trabinski <lukasz@hq.nawigator.pl>
-Subject: Re: [linux-lvm] Problems with vgscan
-In-Reply-To: <Pine.LNX.4.30.0103100129080.12825-201000@hq.nawigator.pl>
-Message-ID: <Pine.LNX.4.30.0103121513520.5250-100000@hq.nawigator.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Return-Path: <urs@isnogud.escape.de>
+From: Urs Thuermann <urs@isnogud.escape.de>
+Date: 12 Mar 2001 16:39:41 +0100
+Message-ID: <m2pufnc7ya.fsf@isnogud.escape.de>
+Subject: [linux-lvm] resizing a mounted ext2 file system?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,23 +14,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, 10 Mar 2001, Lukasz Trabinski wrote:
+IIRC, I have read somewhere of the possibility to resize a mounted
+ext2 file system.  I think I will have to patch the kernel and the
+resize2fs utility (or install a new utility) to be able to do it.
 
-> On Fri, 9 Mar 2001, Andreas Dilger wrote:
-> >
-> > Please run "vgscan -v -d" and post the output (compressed if very long).
->
-> OK. There is gzipped output from vgscan -v -d
-> I'm posting patched pv_read_all_pv_of_vg.c, too verify it.
+Can someone give me a URL or other pointer, where to find it?  How
+stable is this?  And will this go into the mainstream kernel/e2fsprogs
+in near future?
 
-Does anybody can verify output from my vgscan -v -d? (posted on my last
-mail). What's wrong on that?
 
-Thank's
-
--- 
-*[ �ukasz Tr�bi�ski ]*
-SysAdmin @polvoice.com
+urs
