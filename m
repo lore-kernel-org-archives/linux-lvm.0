@@ -1,11 +1,14 @@
-Return-Path: <wcurry@cts.com>
-Date: Tue, 7 Aug 2001 14:03:21 -0700
-From: Wade Curry <wcurry@cts.com>
-Subject: Re: [linux-lvm] Installing Linux on LVM
-Message-ID: <20010807140321.C31158@verb.syntaxsleuth.org>
+Return-Path: <bg@blacknet.de>
+Date: Tue, 7 Aug 2001 23:53:26 +0200
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] Looking for recipe for LVM
+Message-ID: <20010807235326.A30149@dragon.blacknet.de>
+References: <20010807165556.C29254@dragon.blacknet.de> <Pine.LNX.4.33.0108071749560.5978-100000@dunlop.itg.ie>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
 Content-Disposition: inline
-In-Reply-To: <000901c11f71$1b950100$f04b7818@lvcm.com>
+In-Reply-To: <Pine.LNX.4.33.0108071749560.5978-100000@dunlop.itg.ie>; from paulj@alphyra.ie on Tue, Aug 07, 2001 at 05:50:35PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,49 +20,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Glenn Shannon(warl0k@lvcm.com)@Tue, Aug 07, 2001 at 11:45:19AM -0700:
-> Hi there and thanks for the info!
-> 
-> What I did last time was:
-> Install to a normal partition all on one partition (only partition created
-
---snip---
-> 
-> Booted into LVMed Debian.(yay!)
-> 
-> So all told I have been there done that already.. what my real question was
-> is if there is any way to get Debian (or any linux really) to install
-> straight into an LVM without the aforementioned steps above? Or would I need
-> to create my own bootfloppy/installation system?
-> 
-> Anyhow thanks for the info on your experience!
-> 
-
-Ah well, you're welcome.  Sorry it's not the information you were
-after.  I don't know of any boot floppies (official or not) for any
-distro that does that.  I honestly don't expect to see it for a
-while, either.  I don't mean to be just pessimistic.  Someone on
-this list (Hienz I think) said that boot-time recognition of
-logical volumes is a feature to be added _after_ 1.0.  Doesn't seem
-quite worth the effort to work out all the logistics of initrds and
-whatnot in the boot disks, if we can hold off for that functionality
-just a bit.  In the meantime the few of us who want to explore, are
-already having success with the current scheme of things. Just
-doesn't seem that there is as much pressure to create that
-functionality as there would be if new boot floppies were
-absolutely necessary.
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-Gonna wait it out :)
+On Tue, Aug 07 '01 at 17:50, Paul Jakma wrote:
+> > I'll try to make my RPMs workable on redhat (But I've a lot of work to
+> To save you some work: Alan Cox's latest patches have a 'make rpm'
+> target.
+Well, nice to hear, but I was talking about making my patched 2.2.19
+kernel work on RedHat 7.1. Apparently there are some small compatibility
+problems, and the build targets (basically only i686) do not smouthely
+integrate with RH.
+--=20
+Goetz Bock                                              IT Consultant
+Dipl.-Inf. Univ.
 
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Wade Curry                            wcurry(AT)cts.com
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-The industry doesn't want [MP3] pushed, and Microsoft and
-RealNetworks don't want it pushed. The consumer is going to eat
-what he's given.
-                               - David Farber, FCC
+iD8DBQE7cGNWf5srOMkjkQoRAtAlAKDeFcxq1oh8dHrhqw82a09ttpwHywCfQfBe
+7YdwaA1QU/zI7v6iLZrfbd8=
+=UGOv
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
