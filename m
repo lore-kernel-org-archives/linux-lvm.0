@@ -1,9 +1,10 @@
-From: "Yves Alloyer" <Yves.ALLOYER@slpinfoware.com>
-Subject: RE: [linux-lvm] Does LVM work with NBD?
-Message-Id: <NEBBLHFAEINCLDICDLOAAEELCKAA.yves.alloyer@slpinfoware.com>
+From: Anselm Kruis <A.Kruis@science-computing.de>
+Subject: Re: [linux-lvm] Re: [lvm-devel] *** ANNOUNCEMENT *** LVM 1.1-rc1
+    available at www.sistina.com
+In-Reply-To: <20020317180920.A9996@sistina.com>
+Message-Id: <Pine.LNX.4.02.10203201650360.28349-100000@murnau.science-computing.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <1BD922A62552D411B48A00D0B74723751120A947@kecmsg04.ad.infosys.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,99 +15,156 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 20 09:29:02 2002
+Date: Wed Mar 20 09:51:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-I had a similar problem once upon a time (1.0.1rc4) with LVM over software
-RAID. The fix here was to tell LVM that the device type did not support
-partitions.
-The source file is tools/lib/lvm_check_partitioned_dev.c
+On Sun, 17 Mar 2002, Heinz J . Mauelshagen wrote:
 
-From what I see however (lines 62 through 66), in 1.0.3 devices that are
-known not be partitioned are:
-	LVM_DEVICE_TYPE_NBD
-	LVM_DEVICE_TYPE_LOOP
-	LVM_DEVICE_TYPE_MD
-	LVM_DEVICE_TYPE_ATARAID
+>=20
+> Thanks AJ!
+>=20
+> And I even forgot to mention writable snapshots and pvresize ;-)
+Excelent. :-))
 
-1.0.2 used the same list but it went into the source code sometime after
-1.0.1rc4. I don't know when exactly.
+Regards Anselm
 
-In other words, what version of LVM userland are you using? My guess is you
-should be fine with 1.0.3.
+> Need to rework CHANGELOG later...
+>=20
+> Regards,
+> Heinz    -- The LVM Guy --
+>=20
+>=20
+> On Fri, Mar 15, 2002 at 02:52:57PM -0600, AJ Lewis wrote:
+> > Hi all - Heinz is unavailable, so I'm sending this out for him:
+> >=20
+> > LVM 1.1-rc1 release candidate supports both version 1 and 2 of the meta=
+data.
+> >=20
+> > Disclaimer:
+> > -----------
+> > This is not meant to be used on production systems!
+> >=20
+> >=20
+> > There's *no* need to run any metadata update tools.
+> >=20
+> > Please test this release candidate and feed back results to the linux-l=
+vm
+> > list in order to help us to release 1.1 ASAP.
+> >=20
+> > A tarball is available now at
+> >=20
+> >    <http://www.sistina.com/>
+> >=20
+> > for download (Follow the "LVM 1.1-rc1" link).
+> >=20
+> >=20
+> > Changes to LVM 1.1-rc1 include:
+> >=20
+> > o volume group quorum support is in enabling optional activation of vol=
+ume
+> >   groups (vgchange -qn) in case at least one physical volume out of man=
+y is
+> >   still accessable enabling retrieval of data in logical volumes alloca=
+ted
+> >   on the accessable devices
+> >=20
+> > o vgimport supports importing by volume group name rather than requirin=
+g
+> >   a physical volume list
+> >=20
+> > o creation of metadata backup files in /etc/lvmtab* and metadata archiv=
+es in
+> >   /etc/lvmconf/ is now optional to help saving space for eg. on ram dis=
+ks.
+> >   If vgscan is not run at all and /etc/lvmtab* are removed, no backup f=
+iles
+> >   will be created.  If vgcfgbackup is not run at all and /etc/lvmconf/ =
+is
+> >   removed, no archive files will be created.
+> >=20
+> > o locations of metadata backups and archives are configurable through
+> >   environment varibles LVM_BACKUP_INDEX/LVM_BACKUP_DIR and LVM_ARCHIVE_=
+DIR
+> >   respectively
+> >=20
+> > o volume group static mode in order to avoid all configuration changes =
+to a
+> >   volume group once set. This is useful to 'freeze' a volume group in o=
+rder
+> >   to activate it in a cluster of for fail-over configurations
+> >=20
+> > o the llseek cast bug has been fixed, which caused pvmove to fail beyon=
+d the
+> >   2GB offset
+> >=20
+> >=20
+> > o more...
+> >=20
+> >=20
+> > See the CHANGELOG file contained in the tarball for further information=
+=2E
+> >=20
+> > Feed back LVM related information to <linux-lvm@sistina.com>.
+> >=20
+> > Thanks a lot for your support of LVM.
+> >=20
+> > --=20
+> > AJ Lewis
+> > Sistina Software Inc.                  Voice:  612-638-0500
+> > 1313 5th St SE, Suite 111              E-Mail: lewis@sistina.com
+> > Minneapolis, MN 55414
+> > http://www.sistina.com
+> >=20
+> > Current GPG fingerprint =3D  7792 2F3E 9D86 DA4C 9111 7837 982D 737B 9D=
+BC 4EC9
+> > -----Begin Obligatory Humorous Quote-----------------------------------=
+-----
+> > Sticks and stones may break my bones, and so would an 80 lb. carrot.
+> > -----End Obligatory Humorous Quote-------------------------------------=
+-----
+>=20
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>=20
+> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-
+>=20
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>=20
 
-Hope that helps.
-Yves
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of ASHISH GUPTA
-Sent: Wednesday, March 20, 2002 11:35 AM
-To: linux-lvm@sistina.com
-Subject: [linux-lvm] Does LVM work with NBD?
+---
+ Anselm Kruis                                 Tel. +49 (0)89-356386-74
+ science + computing ag=09=09              FAX  +49 (0)89-356386-37
+ Ingolst=E4dter Str. 22             mailto: A.Kruis@science-computing.de
+ D-80807 M=FCnchen                 WWW: http://www.science-computing.de/
 
-
-Hi All,
-
-1) I'm using NBD and LVM . I have mounted the remote device
-using NBD(version 2.4.27). When I do pvcreate on mounted disk,it is
-successful.
-
-#pvcreate /dev/nb0
-pvcreate -- physical volume "/dev/nb0" successfully created
-
-But when we try out other commands such as pvdisplay, vgcreate etc. it gives
-the
-following error.
-
- #pvdisplay /dev/nb0
-pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical
-volume "/d
-ev/nb0"
-
-# ./vgcreate /dev/nb0
-vgcreate -- please enter physical volume name(s)
-
-pvcreate uses the information from /proc/partitions.
-It  works although the /proc/partitions is not updated with the remote
-device information.
-However the other LVM commands like "vgcreate", "pvdisplay" look for remote
-device
-information in /proc/partition and as the entry is not there in dir_cache,
-it fails.
-
-To make it run, I have added a entry for nb0 in the file lvm_dir_cache.c in
-_noprocdir.
-/* devices *not* showing up in /proc/partitions must be scanned anyway */
-static char *_noprocdir[] = {
-        LVM_DIR_PREFIX "loop",
-        LVM_DIR_PREFIX "nb0",
-        NULL
-};
-
-After doing,I am able to do pvcreate, vgcreate and so.Is it right way to do
-this?
-
-2)As per some mail in lvm-linux archieve, if I make an entry for nbd device
-in _devdir[] in file lvm_dir_cache.c
- and just modify this following check by replacing _cache_size with
-'1'.Still pvcreate fails.And it gives the following error.
-
-if(!_cache_size)
-                        _scan_devs( TRUE);
-                else
-                        _scan_devs( FALSE);
-        }
-
-
-# pvcreate /dev/nb0
-"/dev/nb0 has a partition table"
-
-
-3) Is there any patch available to make NBD working with LVM?
-
-
-
-Regards,
-Ashish
+**********************************************************************
+***     Wir freuen uns auf Ihren Besuch                            ***
+***                                                                ***
+***     CeBIT 2002                                                 ***
+***     13.-20.03.2002, Messegel=E4nde Hannover, Halle 11, F 64      ***
+***                                                                ***
+***     Automotive Circle International                            ***
+***     18.-19.04.2002, Bad Nauheim                                ***
+***                                                                ***
+***     VDI-Tagung: Berechnung und Simulation im Fahrzeugbau       ***
+***     01.-02.10.2002, Congress-Centrum W=FCrzburg                  ***
+***                                                                ***
+**********************************************************************=20
