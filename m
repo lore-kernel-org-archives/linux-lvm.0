@@ -1,12 +1,8 @@
-From: Christoph Hellwig <hch@caldera.de>
+From: Linus Torvalds <torvalds@transmeta.com>
 Subject: Re: [linux-lvm] Re: [RFLART] kdev_t in ioctls
-Message-Id: <20020114194554.A5885@caldera.de>
-References: <20020114191342.A3731@caldera.de>
-    <E16QCHl-0002XJ-00@the-village.bc.nu>
+In-Reply-To: <20020114194554.A5885@caldera.de>
+Message-Id: <Pine.LNX.4.33.0201141048050.1161-100000@penguin.transmeta.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E16QCHl-0002XJ-00@the-village.bc.nu>; from
-    alan@lxorguk.ukuu.org.uk on Mon, Jan 14, 2002 at 06:56:44PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +13,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 14 12:47:02 2002
+Date: Mon Jan 14 12:53:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: linux-lvm@sistina.com, Alexander Viro <viro@math.psu.edu>, Linus Torvalds <torvalds@transmeta.com>, linux-kernel@vger.kernel.org
+To: Christoph Hellwig <hch@caldera.de>
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-lvm@sistina.com, Alexander Viro <viro@math.psu.edu>, linux-kernel@vger.kernel.org
 
-On Mon, Jan 14, 2002 at 06:56:44PM +0000, Alan Cox wrote:
-> > > Glibc disagrees with you (bits/types.h):
-> > > 
-> > > typedef __u_quad_t __dev_t;             /* Type of device numbers.  */
-> > > 
-> > > We'd have to use __kernel_dev_t instead which again pulls kernel
-> > > headers in..
-> > 
-> > Argg.  That's also non-funny:
-> 
-> glibc is meant to disagree. glibc provides a virtualised dev_t to user space
-> so that the kernel one can be expanded in future without application
-> breakage.
+On Mon, 14 Jan 2002, Christoph Hellwig wrote:
+>
+> I know - still it makes Linus' suggestion not work on ~90% of the
+> systems.
 
-I know - still it makes Linus' suggestion not work on ~90% of the
-systems.
+It doesn't matter if user-land compilation breaks. As long as old binaries
+work (and they will), we're fine.
+
+User-land was _already_ broken. By virtue of using a type that it should
+NOT have used.
+
+If you want to use __kernel_dev_t, go ahead.
+
+		Linus
