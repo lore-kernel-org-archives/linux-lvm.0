@@ -1,10 +1,7 @@
-From: Herbert Poetzl <herbert@13thfloor.at>
-Subject: Re: [linux-lvm] vgscan and initrd
-Message-ID: <20030703035030.GB16773@www.13thfloor.at>
-References: <200306272113.h5RLDD7E020638@ruby.ridersoft.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200306272113.h5RLDD7E020638@ruby.ridersoft.net>
+Message-Id: <200307030458.h634wX2U007493@socrates.catalyst.net.nz>
+From: Steve Wray <stevew@catalyst.net.nz>
+Subject: Re: [linux-lvm] shuffling drives along the chain?
+References: <200306250215.h5P2ExF8008008@socrates.catalyst.net.nz> <20030625081201.GA437@fib011235813.fsnet.co.uk> <200306262103.h5QL3SF8027269@socrates.catalyst.net.nz> <20030627113108.C27001@sistina.com> <200307012144.h61LiLxE022026@socrates.catalyst.net.nz> <20030703034447.GA16773@www.13thfloor.at>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,48 +12,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul  2 22:51:02 2003
+Date: Wed Jul  2 23:59:01 2003
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Mark de Ruijter <lvm@ruby.ridersoft.net>
 
-On Fri, Jun 27, 2003 at 11:13:13PM +0200, Mark de Ruijter wrote:
-> I tried to do that just now. 
-> Sadly, it didn't work. Still vgscan doesn't see any volume group at all. So once again, kernel panic strikes.
+Sorry, finger slipped,
+Mandrake 9.0
+
+
+Herbert Poetzl <herbert@13thfloor.at> writes:
+
+> On Wed, Jul 02, 2003 at 09:44:21AM +1200, Steve Wray wrote:
+> > 
+> > This happened about a year ago, I have no record of which
+> > version of LVM it was, except that it would have been Mandrake 9.1
+> > and the LVM subsystem that comes with that.
 > 
-> This is so frustrating :) I mean, the livecd things boot just fine, but it absolutly refuses to boot to that lvm.
+> are you sure about that?
+> just because of http://lwn.net/Articles/26657/ ;)
 > 
-> Any more suggestions ?
-
-are you sure that the device nodes for the physical
-volumes are present? (in case of doubt, try with devfs
-and mount at boot option ;)
-
-just an idea ...
-
-best,
-Herbert
-
-> "Mark H. Wood" <mwood@IUPUI.Edu> wrote ..
-> > Your follow-up makes it sound as though you have a different problem from
-> > mine, but I can answer your question about mounting tmpfs over /etc:
-> > 
-> >   mount -t tmpfs tmpfs /etc
-> > 
-> > You wind up with an empty /etc, but at that point there should be no
-> > problem.  vgscan just wants some place to store a metadata backup which
-> > you are going to throw away, and after pivot-root runs you'll have a
-> > different /etc anyway.  If the Gentoo startup scripts are like Red Hat's,
-> > they'll do a second LVM metadata backup into the "real" /etc later.
-> > 
-> > -- 
-> > Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
-> > MS Windows *is* user-friendly, but only for certain values of "user".
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> best,
+> Herbert
