@@ -1,54 +1,87 @@
-Message-ID: <81BB5D677B55D311BF4700508B09015829508F@NTSERVER1>
-From: Sarath Chandra M <sarath@uaeexcent.co.ae>
-Subject: [linux-lvm] LVM on redhat 2.2.14-12smp 
-Date: Sat, 9 Sep 2000 16:17:26 +0400 
+Message-ID: <39BA3D62.E21B13E1@gnu.org>
+Date: Sun, 10 Sep 2000 00:38:42 +1100
+From: Andrew Clausen <clausen@gnu.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C01A57.EAAF9790"
+Subject: Re: [linux-lvm] LVM, partitions, RAID, and the Grand Scheme of Things TM
+References: <200009070053.SAA05253@lynx.turbolabs.com>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: parted@gnu.org, linux-lvm@msede.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+Andreas Dilger wrote:
+> 
+> Andrew Clausen, you write:
+> > First, we think it would be useful for the LVM tools to be able to
+> > resize logical volumes, along with the file systems on it.  Perhaps
+> > a --filesystem parameter to lvreduce, lvextend and lvcreate?
+> 
+> The existing LVM user tools ship with something called "e2fsadm" which
+> does this for ext2 filesystems, first extending the LV and then the
+> filesystem.  I have updated e2fsadm to also handle online filesystem
+> resizing, but this is not in the official tools yet.
 
-------_=_NextPart_001_01C01A57.EAAF9790
-Content-Type: text/plain;
-	charset="iso-8859-1"
+I'm not sure I like this idea of file system specific programs
+doing LVM stuff.  What you describe here is better:
 
- 
-Hi,
-    Is there anyway to configure LVM on redhat 2.2.14-12smp on an i686 ?
- 
-TIA
-Sarath Chandra M
+> Yesterday, a tool
+> called lvmadm was announced which does this in a more generic way,
+> similar to fsck, by calling a fs-specific resizer depending on the fs
+> type.
 
+It would be trivial (i.e. a bit of beaurocracy) to write a front end
+to libparted, to do this (or even, a shell script wrapper of parted)
 
-------_=_NextPart_001_01C01A57.EAAF9790
-Content-Type: text/html;
-	charset="iso-8859-1"
+One thing: there is non-trivial interaction between the file system
+and partition table handling (not with LVM), when resizing the start
+of a partition.  Some resizers (including ext2resize, and reiserfs's
+resizer) can't resize the start, and use the partition as the
+address space.  When resizing the start, this doesn't make sense.
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+So, while it's rather cute to do:
 
+	# ext2resize /dev/hda3 [new-size]
 
-<META content="MSHTML 5.50.4134.600" name=GENERATOR></HEAD>
-<BODY bgColor=#b8b8b8>
-<DIV><FONT face="Book Antiqua" color=#008000 size=2></FONT>&nbsp;</DIV>
-<DIV>
-<DIV class=OutlookMessageHeader><FONT face="Times New Roman" 
-size=2></FONT></DIV><SPAN class=890532607-31082000><FONT face=Tahoma 
-color=#0000ff size=2>Hi,</FONT></SPAN></DIV>
-<DIV><SPAN class=890532607-31082000>&nbsp;&nbsp;&nbsp; <FONT face=Tahoma 
-color=#0000ff size=2>Is there anyway to configure LVM on redhat 2.2.14-12smp on 
-an i686 ?</FONT></SPAN></DIV>
-<DIV><SPAN class=890532607-31082000><FONT face="Book Antiqua" color=#008000 
-size=2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=890532607-31082000><FONT face=Tahoma color=#0000ff 
-size=2>TIA</FONT></SPAN></DIV>
-<DIV><FONT color=#ff0000 size=2><EM>Sarath Chandra M</EM></FONT><BR><FONT 
-face=Tahoma color=#0000ff size=2></FONT></DIV></BODY></HTML>
+It generalizes to:
 
-------_=_NextPart_001_01C01A57.EAAF9790--
+	# ext2resize /dev/hda3 [new-start] [new-end]
+
+Doing this only makes sense if ext2resize (or whatever) updates the
+partition table (as Parted does).
+
+So, having /sbin/resize.* isn't as elegant as it looks.  Were
+you suggesting have resize.* deal with partition table stuff?
+
+> I think Heinz's stated direction is that LVM will stay layered on top
+> of MD/RAID rather than incorporating this functionality itself.
+
+OK.
+
+> > However, it doesn't look like partition tables will disappear anytime
+> > soon. Rather, it looks like LVM will have to cooperate with partition
+> > tables.  And, perhaps Microsoft's new system as well (?).
+> 
+> Personally, I would rather get all knowledge of partition tables out of
+> LVM and have the existing partition table support in the kernel handle
+> everything.  Having a library to do all the partition-table parsing and
+> writing would be a boon not only to parted, but also if it was added to
+> fdisk, cfdisk, grub, et-al.
+
+Yep.  OTOH, Parted already has lots of partition table parsing stuff
+already.  It could be separated into a different library.
+
+libparted's partition table API (version 1.3.x) is much cleaner than
+anything else I've seen.  It supports msdos, mac and pc98 so far.
+
+> You should read the LVM mailing list archive for June.  IBM has already
+> proposed such a system, called LVMS, which would be the glue layer between
+> LVM, partitions, filesystems, RAID, etc.  From the sounds of it, they will
+> try and leverage as much of the existing code from the kernel as possible.
+
+Looks like I have lots of reading to do!
+
+Thanks,
+Andrew Clausen
