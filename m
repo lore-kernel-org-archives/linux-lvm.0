@@ -1,10 +1,12 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] lvcreate with a 52 drive volume
-Message-ID: <20030818222002.E29420@uk.sistina.com>
-References: <20030818185934.D29420@uk.sistina.com> <200308182109.h7IL9Lo27219@mail.osdl.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200308182109.h7IL9Lo27219@mail.osdl.org>; from markw@osdl.org on Mon, Aug 18, 2003 at 02:09:18PM -0700
+From: Andreas Pakulat <ap125@informatik.uni-rostock.de>
+Subject: Re: [linux-lvm] Repair inconsistent PV
+In-reply-to: <20030817012336.GA26462@debian.pakulat>
+Message-id: <20030818214207.GC22587@debian.pakulat>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Content-disposition: inline
+References: <20030816154556.GA23415@debian.pakulat>
+ <20030817012336.GA26462@debian.pakulat>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +17,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 18 16:21:02 2003
+Date: Mon Aug 18 16:43:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 18, 2003 at 02:09:18PM -0700, markw@osdl.org wrote:
-> Ok, I increased the size of argv to 2048 in the dm-table.c file that's
+Hi,
 
-2048 is probably too big for the kernel stack.
+only wanted to notify everyone, that I could now solve my problem with
+hexedit and lvm.h. I changed the Major/Minor Numbers in both hdXX and
+then looked at the VG Data, I found that the one in hdc2 seemed OK,
+while the one in hda7 looked like random Data was written in it. So I
+copied the VG Metadata into hda7 using dd. A vgscan marked lvtmp as
+problematic, it was in hda7 but in the vgmetadata were only 3 LV's, so I
+changed that and threw out the LV Metadata of that particular lv. It
+is also the one I was deleting when the hardware error occured. Now I
+can read my data again.
 
-Set it only as big as you need it.
-
-We're working on a proper fix.
-
-Alasdair
--- 
-agk@uk.sistina.com
+Andreas
