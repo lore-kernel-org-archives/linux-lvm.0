@@ -1,14 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i29H4V811506
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 12:04:31 -0500
-Received: from shell.blacknet.de (shell.blacknet.de [80.254.131.106])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i29H4UST007670
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 12:04:30 -0500
-From: Goetz Bock <bock@blacknet.de>
-Message-ID: <20040309165824.GC5481@shell.blacknet.de>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2A1Px819430
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 20:25:59 -0500
+Received: from mwinf0804.wanadoo.fr (smtp8.wanadoo.fr [193.252.22.23])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2A1Pw07031850
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 20:25:59 -0500
+Received: from wwinf0803 (wwinf0803 [172.22.139.30])
+	by mwinf0804.wanadoo.fr (SMTP Server) with ESMTP id 624C41800075
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 02:25:53 +0100 (CET)
+Message-ID: <399262.1078881953394.JavaMail.www@wwinf0803>
+From: "dld.pascal.garcia" <dld.pascal.garcia@wanadoo.fr>
+Subject: Re: [linux-lvm] Help : vg not accessible (with pvdata result)
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] accessing devfs vg on non-devfs system
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -20,33 +23,28 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Tue Mar  9 16:50:01 2004
+Date: Tue Mar  9 20:24:00 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi all,
-
-this looked like a FAQ to me, but apparently it's not. (neither google,
-a manual search of the archive on redhat.com (the automatic search is
-still down) nor in my personal archive revieled anything).
-
-I've a disk, that used to be in a devfs enabled 2.4.20 (or so) with LVM
-1.0.x (some small number). The disk has one partition (/dev/sda6) that
-used to be the on and only PV of a VG. The new box is running 2.4.23
-with LVM 1.0.8 without devfs.
-
-Unfortunately the VG was not exported on the original box (which does not
-exist anymore). But pvdisplay looks very ok.
-
-My question how do i get to the VG? vgscan does not detect anything,
-vgimport does not touch the PV (it's not exported), vgcreate complains
-the PV is not unused.
-
-Any pointers welcome.
--- 
-/"\ Goetz Bock at blacknet dot de  --  secure mobile Linux everNETting
-\ /                     (c) 2003 as GNU FDL 1.1
- X   [ 1. Use descriptive subjects - 2. Edit a reply for brevity -  ]
-/ \  [ 3. Reply to the list - 4. Read the archive *before* you post ]
+Hello, 
+remind of the probem : by some manipulation quite uncontrolled, I ended with a pv of a 
+vg completly unconsistant. 
+ 
+I finally modified the vgda to have a vg consistant enough to restart. And I activate the 
+vg, and my data is now available. Thanks to Heinz. 
+ 
+But I found and interresting bug on vgimport that mixed the data of an active vg on the 
+system and the vg I imported. The condition to have this problem is to have the name of 
+an active vg identical to the name of the vg to be imported.   
+ 
+As soon as I know the end I inform you. 
+ 
+Regards 
+ 
+ 
+Pascal Garcia 
+ 
+ 
+ 
