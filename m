@@ -1,10 +1,14 @@
-Return-Path: <mowrer@lexmark.com>
-Message-Id: <200106211215.IAA20601@interlock2.lexmark.com>
-From: mowrer@lexmark.com
-Date: Thu, 21 Jun 2001 08:13:03 -0400
-Subject: Re: [linux-lvm] Mandrake 8.0 with LVM and mount
+Return-Path: <lewis@sistina.com>
+Date: Thu, 21 Jun 2001 09:28:11 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Re: another nice feature for packagers ...
+Message-ID: <20010621092811.A7832@sistina.com>
+References: <20010618103116.A32391@sistina.com> <34770000.993090545@dizzy>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
 Content-Disposition: inline
+In-Reply-To: <34770000.993090545@dizzy>; from lembark@wrkhors.com on Wed, Jun 20, 2001 at 09:29:05PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,71 +20,63 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Activation is done via Mandrake 8.0 ...  I have to put my mount in S99local for
-it to mount properly..  Any suggestions?  Thanks Jim
+On Wed, Jun 20, 2001 at 09:29:05PM -0500, Steven Lembark wrote:
+> > Care to explain further?  I don't know what you're talking about here.
+> > --prefix works fine for me in all cases.
+>=20
+> Try:
+>=20
+> 	./configure --prefix=3D/lvm;
+>=20
+> build and install everything.  Notice where the vgXX directories go:  /de=
+v,
+> not /lvm.  None of the configure switches (last time I compiled) were able
+> to keep the vg's out of devfs's clutches w/o hacking a #define in the cod=
+e.
+> As a temporary fix until all the devfs glitches are worked out (some not =
+lvm
+> related) it'd be nice to avoid problems.=20
 
-
-
-
-"Heinz J. Mauelshagen" <Mauelshagen%sistina.com@interlock.lexmark.com> on
-06/20/2001 03:36:22 PM
-
-Please respond to linux-lvm%sistina.com@interlock.lexmark.com
-
-To:   linux-lvm%sistina.com@interlock.lexmark.com
-cc:    (bcc: Jim Mowrer/Lex/Lexmark)
-Subject:  Re: [linux-lvm] Mandrake 8.0 with LVM and mount
-
-
-
-
-Jim,
-
-where do you activate your VG(s)?
-This must happen before local filesystems are mounted and it looks like
-"vgchange -ay" runs after that during startup.
-
-
-On Wed, Jun 20, 2001 at 02:45:33PM -0400, mowrer@lexmark.com wrote:
->
->
-> Running LVM on Mandrake 8.0.  Have all working well, but upon reboot, my FS on
-> this LV does not mount without putting a mount in S99local.
->
-> Where should this happen..  I suppose /etc/fstab wont work! or should it..
-> Thanks Jim
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
---
+Erm...this was never intended to change where the device nodes go, only
+where the tools and libs and docs go.  There's a simple solution: don't
+use devfs.  Or submit patches.  That's the beauty of free software. You can
+do that.
 
 Regards,
-Heinz    -- The LVM Guy --
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-----Begin Obligatory Humorous Quote----------------------------------------
+I can bend minds with my spoon.
+-----End Obligatory Humorous Quote------------------------------------------
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7MgR7pE6/iGtdjLERAvpsAJ9fg06aTzy8lELhcHmk/KarbZ9QxgCeLl74
+GxHZ9OlT544CFSDBsF4LpEk=
+=A5J8
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
