@@ -1,10 +1,8 @@
-From: Daniel Gardner <daniel@danielgardner.org>
-Subject: Re: [linux-lvm] vgcreate -- no valid physical volumes in command line
-References: <002a01c25748$4bfdeef0$3200a8c0@warl0k>
-In-Reply-To: <002a01c25748$4bfdeef0$3200a8c0@warl0k>
+From: Xavier Montagutelli <Xavier.Montagutelli@gmm.insa-tlse.fr>
+Subject: Re: [linux-lvm] md + lvm + reiser
+In-Reply-To: <20020907221823.GL22569@maybe.net>
+Message-ID: <Pine.LNX.4.44.0209082340310.3113-100000@gmmpc1.gmm.priv>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200209081615.14001.daniel@danielgardner.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +13,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Sep  8 10:21:03 2002
+Date: Sun Sep  8 16:46:10 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sunday 08 September 2002 3:59 pm, Glenn Shannon wrote:
-> It's not bad, I use it. It just takes a couple of tweaks.
->
-> For one, the actual devices are in subdirs now. Like what was /dev/hda2
-> is now /dev/ide/host0/bus0/target0/lun0/part2.
->
-> So one needs to pass the devfs'ed name for the device to the lvmtools.
+On Sat, 7 Sep 2002, Chris Jantzen wrote:
 
-ahh, symlinks, i see... yes... I'd read about devfs back when there was=20
-argument about wether it should be in the kernel or not, but gentoo final=
-ly=20
-dragged me into the modern age. I presume it's the symlinks that vgcreate=
-=20
-doesn't like... could that be construed as a bug?
+> Excuse me if this has been covered already, though I did try to read
+> through the archives. I am running md raid5 (software) over several
+> drives and importing that into LVM and using reiserfs. It's worked fine
+> for some time, but now I want to start snapshots. I've learned about the
+> VFS lock patch, yes, but my real question is: why is the raid5 buffer
+> cache constantly thrashing back and forth? I assume this has to do with
+> a conflict between reiserfs's 4096 byte blocks and LVM's 512
+> SECTOR_SIZE. Or did I configure something wrong somewhere? Is it safe to
+> just change SECTOR_SIZE in lvm.h or will that mess up on-disk
+> structures? Thank you.
 
-Right, onwards for fun and games with grub and lvmcreate_initrd :)
+I have exactly the same symptoms with the same configuration (md + lvm +
+reiser) ; the raid5 cache size keeps changing when I start using
+snapshots. Does someone have some tips to avoid/explain this ?
 
-Thanks for the help,
-Daniel
+
+--
+[ Xavier Montagutelli          `""'                                   ]
+[ INSA Toulouse                0--0                                   ]
+[               ---------oOOo---()---oOOo----------                   ]
+[ Dpt de Math / Service Informatique  Tel: +33 5 61 55 93 38 / 67     ]
+[ 135, Avenue de Rangueil             Fax: +33 5 61 55 93 20 / 60     ]
+[ 31077 Toulouse Cedex 4              Mel: montagut@gmm.insa-tlse.fr  ]
