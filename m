@@ -1,12 +1,12 @@
-Return-Path: <jorg.de.jong@ida.xs4all.nl>
-Message-ID: <3B3A0F47.37860696@ida.xs4all.nl>
-Date: Wed, 27 Jun 2001 18:52:23 +0200
-From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Request for misalignment tests
-References: <20010626161947.A11918@sistina.com>
-Content-Type: multipart/mixed;
- boundary="------------3A7E0294F00C8DCE35CB3747"
+Return-Path: <setha@plaza.ds.adp.com>
+Date: Wed, 27 Jun 2001 10:24:56 -0700
+From: "Seth D. Alford" <setha@plaza.ds.adp.com>
+Message-Id: <20010627102456.B9715@mallard.plaza.ds.adp.com>
+References: <20010625100253.A2770@mallard.plaza.ds.adp.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010625100253.A2770@mallard.plaza.ds.adp.com>; from setha@plaza.ds.adp.com on Mon, Jun 25, 2001 at 10:02:53AM -0700
+Subject: [linux-lvm] Re: pvcreate: possible problem near line 98 of lib/pv_get_size.c
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,198 +18,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
-
-This is a multi-part message in MIME format.
---------------3A7E0294F00C8DCE35CB3747
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
+Cc: "Seth D. Alford" <setha@plaza.ds.adp.com>
 
-Heinz Mauelshagen wrote:
+On Mon, Jun 25, 2001 at 10:02:53AM -0700, Seth D. Alford wrote:
+> I'm trying to install RedHat 7.1 onto a system which has no existing partitions.
+> I want one of the filesystems to be an LVM volume.  I modified the RH 7.1
+> BOOT kernel to include an lvm-mod.o, and I managed to get the LVM binaries
+> included in the ramdisk itself.  When I try to run pvcreate, though, it
+> gets a segmentation fault.
 > 
-> All,
-> 
-> we need your help in regard to the misalignment problems we are trying
-> to fix right now in order to get facts concerning how many people are actually
-> suffering from it.
-> 
-> In case you created VGs or extended them with LVM 0.9.1 Beta 6 or 7,
-> we'd appreciate if you could send us the output (if any) of
-> 
->    pvdisplay -v /dev/YourPVname | grep "^ *00000"
-> 
-> if the sector offset in the last column is odd.
-> 
-> If so, please add a "pvdisplay /dev/YourPVname" as well.
-> 
-> We appreciate your help!
-> 
-Here is one:
+> The partitions which RedHat is trying to create are in /mnt/sysimage.
+> Part of my installation process runs chrooted in /mnt/sysimage.
 
-[jorg] /home/jorg > sudo pvdisplay -v /dev/hda9 | grep "^ *00000"
-   00000 /dev/vg00/home            00776   4685
+There appears to be a workaround: make sure that all the /dev/ entries
+for the disk drives exist.  When we do that, the problem disappears.
 
-attached is the pvdisplay
-
-regards
-
-jorg
---------------3A7E0294F00C8DCE35CB3747
-Content-Type: application/x-gzip;
- name="hda.txt.gz"
-Content-Transfer-Encoding: base64
-Content-Disposition: inline;
- filename="hda.txt.gz"
-
-H4sICMIOOjsAA2hkYS50eHQAhJ1Bk2bFcUX38ys6whtpMaIys6pepXfGwrIDJAiD2Di8GEED
-Y40ZgunBgl/vrMx51wYUdVuLUcx0dXf1/b5bVee89/juhy9fvvnu1YsfH54/f/j68enp5bdf
-P3z3zY9vXn7x4tXDD69fvf3vx4c3L396fPY8PuGTX/xD/N2zTz5/+NOL+P8//3jvy8cf3vvm
-yxf+7PM//L1//+Hr1vbQT+NL/+Kf7HfNHv7w/sN7D3/6+LOHt29e/OXV44P+Tv3hj+8//MdH
-n//xHx9k6cOH7/9nfIF/ePj1h+YXfnrx9PbNz/7+xQ8vXr7aX+3ZP7169fqLF0/5lf/v48fH
-Nw+/+cvbp4ev3r569dtn//z2+4ePPv/lF5dnn3xQP/VvPnz/x6fH3777+958Pvvs9VP8cuIT
-fvZxXfPZv3z/+Pirf3ho90/y+OXP/nGPiDn8+c//9vtfjPju658+/Pivzz949fF3zz/95uP2
-/N//p9vzf/2sffl8/PT5p8//69XfPvn6s2fP4lN3YL9/+ebp+5cxp5evv314/dWvkt0Bxqd+
-9Hcz3B8ffbCH7V9D/Hxfvd6/kT0g490ZvvfN65+PkzEUk8g/8cPg1fP4t6fHb5/e3N+9Zv7r
-X/X/+xnyIybz14c3j188vf5+D2v74/CTtFY/QZ9r3J8v5POvPQNd13UPUDJgxZ8qbfo9wMgA
-3wNcp9wD+nnAavGnXX3YPWCQAbLnPGbHpCcZsPMatgyTvsgAiz+nNsWkFxnQ48+rqWLSTgaM
-PWB1uSctJOi1g15ztnvSQpJeO2nvl9+TFpL02klLzHndsxYS9dpRS3yse9pCsvaWI9wuzJuE
-7Tts0WtMTJyk7TttsXENzJzE7Ttu6eYdMyd5+85bhkrHzEngvgOX2czumStJ3GeOWEPvmSuJ
-3PPNfc1L7pkrydwz89W93TNXkrln5m7S7pnrOfPVduYaLz/HzM+ZryY5wjtqTc+Zr7Yz1z11
-zPyc+Wo7c9WxUGx6zny1nblab2g2PWe+2s5ce3yXe+Z2zny1nbmO1tFtds58tStHrIlys3Pm
-q2Wjz7nQbnbOfLWs9Gs01JuRzCUzX6boNyOZS2bu0lFwRjKXzNx9oOGMZC47c9trGmZOMped
-uclwNJyRzGVnbtoFDddJ5rIzN1NDw3WSuezM44U40HCdZC4rR6wLDddJ5rIztzEdDddJ5prr
-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
---------------3A7E0294F00C8DCE35CB3747--
+--Seth
