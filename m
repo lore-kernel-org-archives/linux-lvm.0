@@ -1,14 +1,9 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3FFhhj06330
-	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 11:43:43 -0400
-Received: from www.okdhs.org (s99eagle01.okdhs.org [204.87.68.21])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3FFhgu6023777
-	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 11:43:42 -0400
-Message-ID: <9BBB7C9EFEF1874BAC4DC204E867EFAF0256133F@s99mail06>
-From: "Little, Chris" <Chris.Little@okdhs.org>
-Subject: RE: [linux-lvm] Bug when creating snapshots on lvm on s390
-Date: Thu, 15 Apr 2004 10:45:06 -0500
-MIME-Version: 1.0
+Date: Thu, 15 Apr 2004 10:57:23 -0700
+From: Dave Olien <dmo@osdl.org>
+Message-ID: <20040415175723.GA23061@osdl.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Oops with snapshot running udm3
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,177 +14,65 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: thornber@redhat.com
+Cc: linux-lvm@redhat.com
 
-Please disregard.  I need to read the whole email first.....
 
-> -----Original Message-----
-> From: Little, Chris [mailto:Chris.Little@okdhs.org]
-> Sent: Thursday, April 15, 2004 10:40 AM
-> To: 'LVM general discussion and development'
-> Subject: RE: [linux-lvm] Bug when creating snapshots on lvm on s390
-> 
-> 
-> This is a known issue.  I have a bug open with IBM who in 
-> turn has opened
-> one with SUSE :
-> 
-> ---------------
-> 
-> This is a short update from SuSE LVL3 folks.
-> 
-> his is a short status about the work that has been done to 
-> fix this bug.
-> 
-> Since the bug has been posted, different SuSE developers have 
-> been working
-> on that.
-> 
-> They have found a way to track the problem:
-> "by simply deleting and rewriting 200 MB to the first 
-> original volume after
-> creating the backups caused corruption on the second original volume."
-> 
-> <citat> of one developer
-> 
-> I have finally been able to reproduce it, on s390l2.
-> 
-> I have set up LVM similar to the setup described in the bug 
-> report (three
-> volume groups, several striped volumes on vg01), created two ext3
-> filesystems
-> (/dev/vg01/lvol[12]), filled them up with several copies of 
-> /opt/kde3, then
-> made backups (/dev/vg01/backup[12]) with the filesystems mounted as
-> described
-> above, then mounted those backups read-only.
-> 
-> No corruption on any volume so far.
-> 
-> After deleting some kde3 copies on /dev/vg01/lvol1 and 
-> copying them back
-> again
-> with different names, seemingly random corruption reared its 
-> ugly head on
-> _all_ volumes. Try "for i in /mnt/*/? /mnt/*/?? /mnt/*/??? ; 
-> do diff -r
-> /opt/
-> kde3 $i ; done" (ignore the dangling symlinks). 
-> /var/log/messages may be
-> worth
-> a look as well.
-> 
-> </citat>
-> 
-> Afterwards we have contacted IBM Boeblingen, and they have 
-> been also able to
-> reproduce the issue in the vanilla LVM-code.  Even in version 1.0.7.
-> 
-> We tried to reproduce it on x86, but it was not possible, on 
-> PPC we do not
-> know yet.
-> 
-> Summary:
-> 
-> The corruption we see on S/390 can be caused anywhere in the kernel,
-> starting
-> from the memory subsystem to the iobuf on S/390 (suspection of Andrea
-> Arcangeli) to the buffer header code within LVM(suspection of Martin
-> Schwidefsky) to the remapping of blocks within LVM-snapshot 
-> specific code
-> paths(and there are many) inside LVM including LV locking issues and
-> list-handling for the exception table which seems to be the 
-> instance where
-> the
-> LVM code works out the snapshot-specific block mapping.
-> 
-> By next week, you will hear from me; our developers are 
-> intensively working
-> on that issue.
-> 
-> With kind regards, 
-> 
-> Thomas Fenton
-> Staff Software Engineer
-> IBM Integrated Technical Services
-> Linux and NUMA-Q support
-> > -----Original Message-----
-> > From: Ihno Krumreich [mailto:ihno@suse.de]
-> > Sent: Thursday, April 15, 2004 5:42 AM
-> > To: linux-lvm@redhat.com; Mauelshagen@redhat.com
-> > Cc: Bernhard Kaindl; Uwe Drechsel; Ulrich Hecht
-> > Subject: [linux-lvm] Bug when creating snapshots on lvm on s390
-> > 
-> > 
-> > Hi,
-> > 
-> > we have a filecorruption on a LVM-Volume when a
-> > snapshot is created. This Problem seem to occur only
-> > on s390 (31-Bit mode).
-> > 
-> > are there any known issues when using snapshots on lvm on s390?
-> > 
-> > regards 
-> > 
-> > Ihno Krumreich
-> > 
-> > How to create the bug:
-> > 
-> > - Create three volume groups, which are striped over multiple
-> >   physical disks (9 x 2GByte).
-> > - use the second volume group to create a logical volume
-> > - create a file system on this LV (problem occurs with ext2, 
-> > ext3, reiserfs)
-> >   and put data in the filesystem
-> > - create a snapshot of this LVOL
-> > - the data on the original LVOL are corruptet
-> > 
-> > - It is important that the filesystem is mounted read/write
-> >   If it is only mounted readonly and the snapshot is
-> >   created the corruption does not occur.
-> >   
-> > 
-> > Machine setup:
-> > 
-> > S390 31-Bit with SUSE linux Enterprise Server 8 Service Pack 3
-> > Machine has 2 Gbyte RAM and 9 Model-3 DASD for the LVM.
-> > 
-> > SLES8 has LVM Version 1.0.5 with IBM patches for multipath support.
-> > 
-> > To exclude that Kernel modification from SUSE/IBM cause the
-> > problem IBM has testet it with the vanilla kernel 2.4.21 and
-> > LVM Version 1.0.7 and the problem is the same.
-> > 
-> > At SUSE we tried to reproduce the problem on x86, but without
-> > success (kernel 2.4.21 with lvm 1.0.5).
-> > 
-> > In the attached tar-ball is a file which showes the corruption
-> > starting at byte 0xc000 with a length of 0x1000 Bytes.
-> > 
-> > 
-> > -- 
-> > Best regards/Mit freundlichen Gr��en
-> > 
-> > Ihno Krumreich
-> > 
-> > "Never trust a computer you can lift."
-> > --
-> > Ihno Krumreich            ihno@suse.de
-> > SuSE Linux AG             Projectmanager S390 & zSeries
-> > Maxfeldstr. 5             +49-911-74053-439
-> > D-90409 N�rnberg          http://www.suse.de
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Below is the console output for a panic I got while running with a snapshot
+of a striped device.  The hardware configuration has 8 processors and
+16 gigabytes of memory.
+
+I'm using a 1 gigabyte extent size in this volume group. The striped device
+has 10 striped disks with a stripe size of 512k and is 160 extents big.
+The snapshot device also has 160 extents.
+
+This is running with the udm3 patch set.  It also occurs with the udm1
+patch set.  At the time this occurs, the striped device has an ext2
+file system containing a 140 gigabyte. An application is starting to do
+sequential writes to that file.  The snapshot device is not being accessed
+at all.  It's not even mounted.
+
+This is very repeatable for me.
+
+here's the console output:
+
+
+Unable to handle kernel paging request at virtual address f8a6f000
+ printing eip:
+c0354473
+*pde = 00000000
+Oops: 0002 [#1]
+PREEMPT SMP 
+CPU:    2
+EIP:    0060:[<c0354473>]    Not tainted VLI
+EFLAGS: 00010202   (2.6.5-mm2-udm3) 
+EIP is at persistent_commit+0x53/0x100
+eax: c0352d90   ebx: f688df90   ecx: 00000000   edx: f8a6f000
+esi: 00000000   edi: d269aba4   ebp: f7cb4eb0   esp: f7cb4e88
+ds: 007b   es: 007b   ss: 0068
+Process kcopyd/2 (pid: 53, threadinfo=f7cb4000 task=f7cd2190)
+Stack: f688df90 000005a6 f7cb4e94 0000184f 00000000 000007fa 00000000 de740620 
+       00000000 d269aba4 f7cb4ec8 c0352de9 f6c108e0 d269aba4 c0352d90 d269aba4 
+       f7cb4ef0 c034f5f0 00000000 00000000 d269aba4 c0352da0 00000000 f7cb4000 
+Call Trace:
+ [<c0352de9>] copy_callback+0x49/0x50
+ [<c0352d90>] commit_callback+0x0/0x10
+ [<c034f5f0>] run_complete_job+0x60/0x70
+ [<c0352da0>] copy_callback+0x0/0x50
+ [<c034fa15>] process_jobs+0xc5/0x2a0
+ [<c034fc0a>] do_work+0x1a/0x50
+ [<c034f590>] run_complete_job+0x0/0x70
+ [<c0135ba8>] worker_thread+0x228/0x380
+ [<c034fbf0>] do_work+0x0/0x50
+ [<c011d4da>] __wake_up_common+0x3a/0x60
+ [<c011d480>] default_wake_function+0x0/0x20
+ [<c011d480>] default_wake_function+0x0/0x20
+ [<c013a153>] kthread_exit_files+0x33/0x60
+ [<c013a23a>] kthread+0xba/0xc0
+ [<c0135980>] worker_thread+0x0/0x380
+ [<c013a180>] kthread+0x0/0xc0
+ [<c0103305>] kernel_thread_helper+0x5/0x10
+
+Code: 45 e4 89 55 f0 89 44 24 08 8b 43 20 89 44 24 04 ff 43 20 89 1c 24 e8 1d fc ff ff 8b 53 2c 8b 43 28 8d 14 c2 40 89 43 28 8b 45 10 <89> 02 8b 45 14 89 42 04 f0 ff 4b 24 0f 94 c0 84 c0 75 10 8b 43 
