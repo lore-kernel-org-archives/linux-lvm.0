@@ -1,12 +1,9 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] [BUG] segmentation fault on snapshot with beta8
-Date: Fri, 27 Jul 2001 12:27:47 -0400
-References: <20010726122738.E052917573@oscar.casa.dyndns.org> <20010727102132.A4314@sistina.com>
-In-Reply-To: <20010727102132.A4314@sistina.com>
+Return-Path: <jamesp@foobarhouse.com>
+Date: Fri, 27 Jul 2001 17:31:38 +0100 (BST)
+From: James Pattinson <jamesp@foobarhouse.com>
+Message-ID: <Pine.LNX.4.33.0107271727460.16916-100000@greebo.foobarhouse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20010727162747.9542515354@oscar.casa.dyndns.org>
+Subject: [linux-lvm] snapshots & reiserfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,52 +15,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, AJ Lewis <lewis@sistina.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On July 27, 2001 11:21 am, AJ Lewis wrote:
-> On Thu, Jul 26, 2001 at 08:27:38AM -0400, Ed Tomlinson wrote:
-> > tob is a wrapper script for afio that can installed from a debian
-> > package.  The snapshotted fs is reiserfs.  I have the vfs locking
-> > patch installed along with:
-> >
-> > --------
-> > diff -Nru a/fs/reiserfs/super.c b/fs/reiserfs/super.c
-> > --- a/fs/reiserfs/super.c       Sun Apr 29 20:44:38 2001
-> > +++ b/fs/reiserfs/super.c       Sun Apr 29 20:44:38 2001
-> > @@ -80,7 +80,7 @@
-> >      reiserfs_prepare_for_journal(s, SB_BUFFER_WITH_SB(s), 1);
-> >      journal_mark_dirty(&th, s, SB_BUFFER_WITH_SB (s));
-> >      reiserfs_block_writes(&th) ;
-> > -    journal_end(&th, s, 1) ;
-> > +    journal_end_sync(&th, s, 1) ;
-> >    }
-> >    s->s_dirt = dirty;
-> >    unlock_kernel() ;
-> > --------
->
-> Hmm...trying to reproduce this on 2.4.6...and after applying the lvm 0.9.1
-> beta8 patch, the linux-2.4.4-VFS-lock patch and the above patch (in that
-> order), I still get this when trying to create and mount a snapshot:
->
-> reiserfs: checking transaction log (device 3a:00) ...
-> Using r5 hash to sort names
-> ReiserFS version 3.6.25
-> reiserfs: checking transaction log (device 3a:01) ...
-> clm-2076: device is readonly, unable to replay log
-> Replay Failure, unable to mount
-> reiserfs_read_super: unable to initialize journal space
->
-> Is there some other patch or magic I need to do to get ReiserFS snapshots
-> working?  I thought the VFS-lock patch was supposed to fix that...
+Hi
 
-that should be it.  My fstab has:
+Im sure this is a FAQ but I can't find it.
 
-/dev/lv/snap    /snap           reiserfs  defaults,ro,noauto    0       0 
+I want to be able to use snapshots on my beta8 / reiserfs (stock 2.5.7)
+system. I can create a snapshot OK, but when I try to mount it I get an
+error saying we can't replay the logs since we are mounted read only.
 
-I did not add any other patches for lvm/reiserfs other than what you have above.
+Also, i've just noticed this in my dmesg:
 
-My impression with the above bug is that the snapshot is filling much too quickly
-and getting disabled.  At this point seg faults start happening.
+lvm -- _pv_get_number failed for rdev = 0
+lvm -- giving up to snapshot /dev/vg00/lvol6 on /dev/vg00/greebo_snap:
+couldn't prepare kiovec blocks (start probably isn't block aligned)
+lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
+lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
+read_super_block: unable to read superblock on dev 3a:0f
+read_old_super_block: try to find super block in old location
+lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
+read_old_super_block: unable to read superblock on dev 3a:0f
+lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
+FAT bread failed
 
-Ed Tomlinson
+Any ideas? snapshots seem really cool, and i want to play :)
+
+James
