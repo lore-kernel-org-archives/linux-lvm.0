@@ -1,28 +1,44 @@
-Date: Thu, 18 Feb 1999 15:37:07 GMT
-Message-Id: <199902181537.PAA09873@dax.scot.redhat.com>
-From: "Stephen C. Tweedie" <sct@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] User count, general question for all y'all
-In-Reply-To: <36C9C1C0.2C4ADAAD@select-tech.si>
-References: <199902161420.AA06705@mailgate1b.telekom.de>
-	<36C9C1C0.2C4ADAAD@select-tech.si>
+From: jens@pinguin.conetix.de
+Date: Thu, 18 Feb 1999 20:03:12 +0100
+Subject: [linux-lvm] LVM or mdutils/raidtools?
+Message-ID: <19990218200312.C1529@debian.zuhause.de>
+References: <19990216180955.G972@debian.zuhause.de> <Pine.GHP.4.05.9902161554060.25565-100000@ixion.honeywell.com>
+Mime-Version: 1.0
+In-Reply-To: <Pine.GHP.4.05.9902161554060.25565-100000@ixion.honeywell.com>; from Shawn Leas on Tue, Feb 16, 1999 at 03:56:48PM -0600
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Dori Seliskar <dori.seliskar@select-tech.si>
-Cc: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, linux-lvm@msede.com, Stephen Tweedie <sct@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: sleas@ixion.honeywell.com, linux-lvm@msede.com
 
-Hi,
+On Tue, Feb 16, 1999 at 03:56:48PM -0600, Shawn Leas wrote:
+> On Tue, 16 Feb 1999 jens@pinguin.conetix.de wrote:
+> > not yet. I am wonderin whether I should. Or probably use
+> > mdutils/raidtools instead. Maybe you can give me an ( unbiased ;> )
+> > suggestion.
+> Using LVM you would gain experience useful in Solaris, HPUX, etc...
 
-On Tue, 16 Feb 1999 19:06:40 +0000, Dori Seliskar
-<dori.seliskar@select-tech.si> said:
+I do not need that just yet, it's only a home system.
 
-> I would be also happy to test it, but I believe first usable
-> implementation is/will be from Stephen Tweedie and he said that it
-> won't be ready for testing until some time this summer.
+> Also, it's a LOT more flexible, and extensible.
 
-Current guesses are a month or two until usable demonstration code.
+ACK, but partitions do not change _that_ often round here. What I would
+like, though is to seamlessly integrate a new hard disk into the existing
+volumes, when using striping.
 
---Stephen
+>> Primary issue is speed, but of course (as I have not had a single disk
+>> failure save my two ZIP drives which were both broken) data safety would
+>> be important as well. I do monthly complete backups (roughly) but I just
+>> cannot afford a filesystem slowly corrupting itself.
+> For being labeled ALPHA, LVM is awesome.  I haven't had a single LV
+> related issue that I can see.
+
+I'll play around with it on my 'playground server'. If I like it, I'll
+probably use it. Thanks. :)
+
+
+-- 
+_ciao, Jens_______________________________ http://www.pinguin.conetix.de
+    cat /dev/boiler/water | tea | sieve > /cup
+    mount -t hdev /dev/human/mouth01 /mouth ; cat /cup >/mouth/gulp
