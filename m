@@ -1,14 +1,9 @@
-Return-Path: <tandem@dnmi.no>
-Subject: Re: [linux-lvm] LVM Questions
-References: <20010503004851.897.qmail@web10803.mail.yahoo.com>
-	<3AF0B857.74F16371@home.com> <wv4rv26hvj.fsf@freeze.oslo.dnmi.no>
-	<20010504093350.D4700@sistina.com> <wvlmod7e23.fsf@freeze.oslo.dnmi.no>
-	<20010504103827.A10758@sistina.com>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 04 May 2001 11:38:43 +0200
-In-Reply-To: "Heinz J. Mauelshagen"'s message of "Fri, 4 May 2001 10:38:27 +0000"
-Message-ID: <wvhez178t8.fsf@freeze.oslo.dnmi.no>
+Return-Path: <dice@mfa.kfki.hu>
+Date: Fri, 4 May 2001 11:47:47 +0200 (CEST)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Message-ID: <Pine.LNX.4.32.0105041145080.651-100000@falka.mfa.kfki.hu>
 MIME-Version: 1.0
+Subject: [linux-lvm] CVS checkout unavailable ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,58 +15,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Heinz" == Heinz J Mauelshagen <Mauelshagen@sistina.com> writes:
+Hi!
 
-<snip>
+I'm not able to check-out current LVM from CVS.
 
-    >>  HP/UX, how unfortunate :-) Thanks for the info. though.
+(Logging in to cvs@cvs.globalfilesystem.org)
+CVS password:
+cvs server: Updating LVM
+cvs server: failed to create lock directory in repository `/data/cvs/LVM':
+Permission denied
+cvs server: failed to obtain dir lock in repository `/data/cvs/LVM'
+cvs [server aborted]: read lock failed - giving up
+(Logging out of cvs@cvs.globalfilesystem.org)
 
-    Heinz> ;-)
+What happend to it?
 
-    Heinz> Actually the HP/UX LVM and its CLI has some major
-    Heinz> advantages over others:
+I use this script
 
-    Heinz>  - it has a very simple layering (the PV, VG, LV thingies)
-    Heinz> and therefore is very easy to understand
+#!/bin/sh
+export CVSROOT=:pserver:cvs@cvs.globalfilesystem.org:/data/cvs
+cvs login
+cvs -z3 checkout -r LVM_0-9-patches LVM
+cvs logout
 
-    Heinz>  - the CLI follows the layers transparently
-
-    Heinz>  - CLI is "self explaining" in regard of having native
-    Heinz> language postfixes in the command names like create,
-    Heinz> extend, reduce, change etc.
-
-    Heinz> In production this boils down to shorter learning cycles
-    Heinz> for admin newbies and easier handling in regular production
-    Heinz> -> less money spend!
-
-Actually I thought that LVM had been modelled upon AIX's LVM when I
-first started using it; the commands are very similar.
-
-Actually, it gives me an idea for AIX compatiblity wrappers (possibly
-something else for the TODO list if it hasn't filled up the LV
-already, then again you can always lvextend it:-)
-
-    Heinz> BTW: what's unfortunate IYO with the HP/UX LVM? :-)
-
-Sorry, I meant HP/UX OS itself (not from personal experience but the
-years of reading of non-standard HP/UX command, libraries, etc., then
-again AIX has had it share of those).
-
-<snip>
-
-Anyway, thats to you and others who had a hand in LVM. It makes
-using Linux as easy (on the FS side) as its been to use AIX for the
-years I've admining it (almost 10 now).
-
-Regards,
-
-Adrian
-
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Thanks in advance,
+Gergely
