@@ -1,11 +1,9 @@
-Subject: Re: [linux-lvm] Anyone with LVM, XFS, Grub?
 From: Austin Gonyou <austin@coremetrics.com>
-In-Reply-To: <20020604221717.L8663@babbage.hcsd.de>
-References: <20020604221717.L8663@babbage.hcsd.de>
 Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-encrypted";
-	boundary="=-ObDrZFy+zSO53dGQ84Rs"
-Message-Id: <1023223040.9106.0.camel@UberGeek>
+	boundary="=-olY/gCTqH7KOg8cE8LQZ"
+Message-Id: <1023224082.9106.17.camel@UberGeek>
 Mime-Version: 1.0
+Subject: [linux-lvm] LVM 1.1rc2 compile error
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,37 +14,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun  4 15:38:02 2002
+Date: Tue Jun  4 15:55:01 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---=-ObDrZFy+zSO53dGQ84Rs
+--=-olY/gCTqH7KOg8cE8LQZ
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-Yeah..like I said..I think there is a patch for grub to allow it to
-address the LV. I'm not 100% sure though, but I'd think that would be a
-better list to address in general, since it's a GRUB related issue I
-think.
+kernel 2.4.19-pre9-aa2
+LVM 1.1rc2 source, patch created applies cleanly.=20
 
-On Tue, 2002-06-04 at 15:17, Stephan Austermuehle wrote:
-> On Tue, Jun 04, 2002 at 03:09:11PM -0500, Austin Gonyou wrote:
->=20
-> > I thinkn there is a patch for this..but I don't, and probably *wont*
-> > do this ever.
->=20
-> I do not like initrd. So I'm searching for a way that allows booting
-> the system without initrd. Maybe I worked too much with non x86
-> systems...
->=20
-> Stephan
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+lvm-snap.c:364: structure has no member named `blocks'
+lvm-snap.c:369: structure has no member named `blocks'
+
+
+The struct being used is indeed named blocks..but seems undefined or
+inaccessible. Should it be something else?
+
 --=20
 Austin Gonyou
 Systems Architect, CCNA
@@ -60,7 +45,7 @@ But if you meet it promptly and without flinching, you will=20
 reduce the danger by half."
 Sir Winston Churchill
 
---=-ObDrZFy+zSO53dGQ84Rs
+--=-olY/gCTqH7KOg8cE8LQZ
 Content-Type: application/pgp-encrypted; name=signature.asc
 Content-Description: This is a digitally signed message part
 
@@ -68,9 +53,9 @@ Content-Description: This is a digitally signed message part
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQA8/SUA94g6ZVmFMoIRAguGAKDurB6EXIbVtdUzgDCf1f1Mu60RQgCdEfkQ
-FlHH2uAPlHifq71FpGZN5+0=
-=QykJ
+iD8DBQA8/SkS94g6ZVmFMoIRAsTeAKDxrTukS7EqultTh1wCkx0i5rE/yQCfcD9k
+M7YSZwONktt7A6lVG6eyMgs=
+=s6mu
 -----END PGP SIGNATURE-----
 
---=-ObDrZFy+zSO53dGQ84Rs--
+--=-olY/gCTqH7KOg8cE8LQZ--
