@@ -1,10 +1,13 @@
-Return-Path: <mauelshagen@sistina.com>
-Date: Tue, 26 Jun 2001 16:19:47 -0500
-From: Heinz Mauelshagen <mauelshagen@sistina.com>
-Message-ID: <20010626161947.A11918@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Request for misalignment tests
+Return-Path: <misiek@pld.ORG.PL>
+Subject: Re: [linux-lvm] problems with gcc 3.0 & lvm tools
+References: <Pine.LNX.4.33.0106262221410.7216-100000@moon.dice.hu>
+	<3B38F9ED.29BA245A@tls.msk.ru>
+From: Arkadiusz Miskiewicz <misiek@pld.ORG.PL>
+Date: 26 Jun 2001 23:28:50 +0200
+In-Reply-To: <3B38F9ED.29BA245A@tls.msk.ru>
+Message-ID: <877kxzkk19.fsf@arm.t19.ds.pwr.wroc.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,37 +19,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-All,
+Michael Tokarev <mjt@tls.msk.ru> writes:
 
-we need your help in regard to the misalignment problems we are trying
-to fix right now in order to get facts concerning how many people are actually 
-suffering from it.
+> Gergely Tamas wrote:
+> > 
+> > GCC 3.0 implements ``printf'' as a macro.
+> 
+> Why *gcc* *implements* printf at all???  It is in
+> C library, not in compiler, or always was that.
 
+glibc defines printf() as fprintf(stdout, ...) macro when it detects
+compiler >= 2.97 (because gcc can optimize fprintf()), so it's not gcc
+problem.
 
-In case you created VGs or extended them with LVM 0.9.1 Beta 6 or 7,
-we'd appreciate if you could send us the output (if any) of
+> But wait: *if* this *is* an issue, then TONS of other programs
+> will break the same way.  And gcc people should just not do so,
+> is is a bug (serious) in gcc in this case and should be fixed
+> in a first place.
 
-   pvdisplay -v /dev/YourPVname | grep "^ *00000"
+http://sources.redhat.com/ml/libc-alpha/2001-01/msg00187.html
+http://sources.redhat.com/ml/libc-alpha/2001-01/msg00214.html
+and whole thread
+http://sources.redhat.com/ml/libc-alpha/2001-01/msg00186.html
 
-if the sector offset in the last column is odd.
+>  Michael.
 
-If so, please add a "pvdisplay /dev/YourPVname" as well.
-
-We appreciate your help!
-
-Regards,
-Heinz      -- The LVM guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+ Arkadiusz Mi�kiewicz, AM2-6BONE, 1024/3DB19BBD
+ IPv6 ready PLD Linux at http://www.pld.org.pl/
+My jsme Borg. Odpor je marn�, budete asimilov�ni
