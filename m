@@ -1,12 +1,14 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Wed, 3 Jan 2001 13:55:35 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] Another strange setup by a newbie, but strange oops resulted while trying vgextend/vgmerge!
-Message-ID: <20010103135535.A1302@66bassett.freeserve.co.uk>
-References: <20010103.13131495@dmitzlaff2.botschendv.de>
+Return-Path: <lewis@sistina.com>
+From: lewis@sistina.com
+Date: Wed, 3 Jan 2001 09:37:15 -0600
+Message-ID: <20010103093715.A6969@sistina.com>
+References: <20010103030948.I7563@athlon.random>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010103.13131495@dmitzlaff2.botschendv.de>; from hackbyte@gmx.de on Wed, Jan 03, 2001 at 01:13:14PM +0000
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+In-Reply-To: <20010103030948.I7563@athlon.random>; from andrea@suse.de on Wed, Jan 03, 2001 at 03:09:48AM +0100
+Subject: [linux-lvm] Re: [jjs@toyota.com: Re: LVM 0_9-1 woes on 2.4.0-prerelease+diffs]
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,38 +20,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+To: Andrea Arcangeli <andrea@suse.de>
+Cc: linux-lvm@sistina.com
 
-> First, i ran into the same problems as reported before here on the list, 
-> vgmerge and vgextend give me OOPS while extending the LE counter for the 
-> VG.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Grab the latest code from the LVM_0-9-patches branch of cvs.  You will
-need to repatch/build the kernel module as well as the userland tools.
+On Wed, Jan 03, 2001 at 03:09:48AM +0100, Andrea Arcangeli wrote:
+> Hello, J Sloan had a problem using a spec file for lvmtools 0.9 package
+> that was apparently written by you, so I'm sending you his modified versi=
+on.
+> He simply needs the libs in /lib (so they overwrite the old libs and
+> so he can use lvm on /usr ;).
 
-> other patches? (CVS snapshots are no choice!)
-Then wait for the next release which shouldn't be too long.
+Yeah, I saw that on the kernel list.  I've been trying to come up with some
+scripts to ease the transition between LVM 0.8.x and LVM 0.9.x before I redo
+the LVM packages, but perhaps I should just redo them now and make them aga=
+in
+once a transition solution has been decided on.
 
-> Ok, next ->
-> What the heck are you guy's doing? I use a native RH6.2 installation w/o 
-> any updates/fixes (except for network security), using 2.2.17 and 2.2.18 
-> kernel-tarballs (the ..17 patches works well on ..18, only a few rejects 
-> which can easily inserted by hand;). But you CAN'T release a version that 
-> does not work w/o telling users if they had to look at some dependencies! 
-> (if there are some, remember i use a really clear RH6.2!)
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-???  
-The lvm-2.2.17 and 2.2.18 patches apply cleanly to the vanilla
-kernel + rawio.  The redhat kernel is almost certainly not a vanilla
-kernel.
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+-----Begin Obligatory Humorous Quote----------------------------------------
+"Memory is like gasoline. You use it up when you are running. Of
+course you get it all back when you reboot..."; Actual explanation
+obtained from the Micro help desk.
+-----End Obligatory Humorous Quote------------------------------------------
 
-> reports and patches adressing this, but there's no help. And don't think 
-> all your users, who want to use LVM, are able to use CVS snapshots (i 
-> never use cvs snapshots on my server � release is release � features 
-> against bugs;).
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-I don't think 0.9 is quite ready for production systems.  Maybe you
-should play with 0.8.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-- Joe
+iD8DBQE6U0crpE6/iGtdjLERAku5AJ0dZVxOTvCbFjLy/a9x4WEdYgheigCggAji
+mjwD6w0RTbihXI8HEfm1Pk8=
+=dMNO
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
