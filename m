@@ -1,17 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6SE5Fa09017
-	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 10:05:15 -0400
-Received: from smtp012.mail.yahoo.com (smtp012.mail.yahoo.com [216.136.173.32])
-	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i6SE58Xn008531
-	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 10:05:08 -0400
-Sender: frank@redhat.com
-Message-ID: <4107B28E.C22CF115@yahoo.de>
-Date: Wed, 28 Jul 2004 16:05:02 +0200
-From: Frank Mohr <f_mohr@yahoo.de>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6SEGZa12031
+	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 10:16:35 -0400
+Received: from fwproxy.iosmd.com ([195.6.124.189])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i6SEGXe1005590
+	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 10:16:34 -0400
+Received: from [1.1.1.20] (pc-dev.ios.loc [1.1.1.20])
+	by fwproxy.iosmd.com (AIX4.3/8.9.3p2/8.9.3) with ESMTP id QAA15790
+	for <linux-lvm@redhat.com>; Wed, 28 Jul 2004 16:15:43 +0200
+Message-ID: <4107B498.5060906@iosmd.com>
+Date: Wed, 28 Jul 2004 16:13:44 +0200
+From: =?ISO-8859-15?Q?St=E9phane_Danel?= <stephane.danel@iosmd.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] pvscan fails (more informations)
-References: <4106E0D6.10D6AA3D@yahoo.de>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Restore partial volume group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,61 +23,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: linux-lvm@redhat.com
 
-Frank Mohr wrote:
-> 
-> Hi
-> 
-> after a system crash my system can't find it's LVM volumes:
-> 
+Hi,
 
-some more informations:
+one disk crashed in a volume group which have 2 disks.
 
-- the system didn't crash but was switched of before "vgchange -a n" was
-called
-- pvdisplay shows "PV Status available" for all PV's
+Heinz told me
+"With the missing disk, you need LVM2 (eg, in Fedora > 1) to access
+the non-quorum VG."
 
-- vgcfgrestore
-  even some backups back doesn't help
-- vgcfgrestore -t -ll -f /etc/lvmconf/DATAVG.conf -n DATAVG
-  showns the same results as pvdisplay
-- pvdisplay on all 3 partions shown "good" results
+I installed LVM 2 , it tells me that it expects 2 disks.
 
-- pvdata -a /dev/hdb1 /dev/hdc1 /dev/hdd1
-  looks good 
-  displays the same "VG UUID" for all PV's
+    #vgscan
+ Reading all physical volumes.  This may take a while...
+  1 PV(s) found for VG MonGroupeVolume: expected 2
+  Volume group "MonGroupeVolume" not found
 
-- tried vgimport -f -v DATAVG /dev/hdb1 /dev/hdc1 /dev/hdd1
+    #pvscan
+  1 PV(s) found for VG MonGroupeVolume: expected 2
+  PV /dev/hdc1    is in exported VG MonGroupeVolume [28.51 GB / 18.51 GB=20
+free]
+  Total: 1 [18.51 GB] / in use: 1 [18.51 GB] / in no VG: 0 [0   ]
 
-odie:~/LVM/1.0.8/tools # vgimport -f -v DATAVG /dev/hdb1 /dev/hdc1
-/dev/hdd1
-vgimport -- locking logical volume manager
-vgimport -- checking volume group name
-vgimport -- checking volume group "DATAVG" existence
-vgimport -- trying to read physical volumes
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hdb1"
-vgimport -- reading data of physical volume "/dev/hdb1" from disk
-vgimport -- checking for exported physical volume "/dev/hdb1"
-vgimport -- checking consistency of physical volume "/dev/hdb1"
-vgimport -- reallocating memory
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hdc1"
-vgimport -- reading data of physical volume "/dev/hdc1" from disk
-vgimport -- checking for exported physical volume "/dev/hdc1"
-vgimport -- checking consistency of physical volume "/dev/hdc1"
-vgimport -- reallocating memory
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hdd1"
-vgimport -- reading data of physical volume "/dev/hdd1" from disk
-vgimport -- checking for exported physical volume "/dev/hdd1"
-vgimport -- checking consistency of physical volume "/dev/hdd1"
-vgimport -- reallocating memory
-vgimport -- physical volumes "/dev/hdc1" and "/dev/hdb1" are in
-different volume groups
+    #lvscan
+  1 PV(s) found for VG MonGroupeVolume: expected 2
+  Volume group "MonGroupeVolume" not found
 
-vgimport [-d|--debug] [-f|--force] [-h|--help] [-v|--verbose]
-        VolumeGroupName PhysicalVolumePath [PhysicalVolumePath...]
-odie:~/LVM/1.0.8/tools #
+    # pvdisplay
+  1 PV(s) found for VG MonGroupeVolume: expected 2
+  Physical volume "/dev/hdc1" of volume group "MonGroupeVolume" is exported
+  --- Physical volume ---
+  PV Name               /dev/hdc1
+  VG Name               MonGroupeVolume (exported)
+  PV Size               28.51 GB / not usable 4.22 MB
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              7298
+  Free PE               4738
+  Allocated PE          2560
+  PV UUID               Wpa9Ti-SAI0-rhCh-03K6-7D55-m7XA-42Twvh
+
+=20
+What I have to do now without mistakes ?
+
+Is it possible to attach this physical volume to another VG and get his=20
+datas ?
+
+
+thank you,
+
+
+St=EF=BF=BDphane Danel
