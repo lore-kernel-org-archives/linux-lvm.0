@@ -1,11 +1,11 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Wed, 25 Jul 2001 21:33:00 +0200
+Date: Wed, 25 Jul 2001 21:44:51 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] GUI front-end for LVM
-Message-ID: <20010725213300.A27765@sistina.com>
-References: <85063BBE668FD411944400D0B744267A643507@AUSMAIL> <20010725144221.D30937@linux.com>
+Subject: Re: [linux-lvm] Reiserfs, 2.4.7, snapshots w/ 0.9
+Message-ID: <20010725214451.B27765@sistina.com>
+References: <20010725103640.J5363@unirez.com>
 Mime-Version: 1.0
-In-Reply-To: <20010725144221.D30937@linux.com>; from tack@linux.com on Wed, Jul 25, 2001 at 02:42:21PM -0400
+In-Reply-To: <20010725103640.J5363@unirez.com>; from mark@unirez.com on Wed, Jul 25, 2001 at 10:36:40AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,39 +21,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jul 25, 2001 at 02:42:21PM -0400, Jason Tackaberry wrote:
-> * Gonyou, Austin (austin@coremetrics.com) [010725 14:39]:
-> > I agree....but this would have to be something like what I was talking
-> > about earlier with what I thought that LVM should be able to do
-> > eventually.  Dynamic reallocation/re-striping at any raid level. 
+Mark,
+
+Chris Mason implemented an interface between the VFS and LVM, which is defined
+by 2 new functions VFS functions. They have to be supported in the filesystem
+itself in order to flush the journal and lock the filesystem for I/O, get
+back to LVM so that it can activate the prepared snapshot. LVM unlocks the
+filesystem after this.
+You pay a (small) I/O penalty for the journal flush.
+
+Because those functions are not in vanilla, you still need to patch the
+kernel with the linux-2.4.X-VFS-lock-patch contained in the LVM distribution :-(
+
+That patch will enable the above feature after a kernel recompile/reboot.
+
+
+On Wed, Jul 25, 2001 at 10:36:40AM -0500, Mark Bainter wrote:
+> I'm using LVM on a couple of our production systems, and I'm very 
+> happy with it.  It's been working very well for us.  However, we
+> have a very large database and backing it up has become problematic.
 > 
-> The impression I got from the LVM FAQ was that LVM will not support
-> RAID1 basically because md does.
-
-And not just RAID1.
-
-Yes, the idea is to combine existing modular feature sets like LVM/MD.
-With the enhancent stacking support in 2.4 the user has all the flexibility
-to stack LVM on top of MD or vice versa.
-
-> Maybe Heinz can shed some light on
-> that situation and about the dynamic reallocation/restriping issue?
-
-LVM just supports RAID0 to offer performance.
-
-Constraint in the actual allocator is, that you can't extend a stripe beyond
-a PV :-(
-We want to remove that constraint in post 1.0 LVM.
-
-If that's done, users can add additional PVs (which can be based on
-SW/HW RAID1/5/whatever) and extend RAID0 LVs onto those.
-
-Until then, one can stripe over multiple LVs using MD. Those LVs can be
-resized equally in order to resize the striped MD. Care needs to be taken,
-that the LVs are allocated/extended on distinct PVs.
-
+> So, naturally, I began looking into using LVM's snapshot feature. 
+> The filesystem the database rests on is a reiserfs partition.  
+> Creating the snapshot volume (acc to the directions in the howto) 
+> works fine, but when I try to actually mount it I get:
 > 
-> Jason.
+> $ sudo mount -t reiserfs -oro /dev/main/db_backup /mnt/dbbackup 
+> mount: wrong fs type, bad option, bad superblock on /dev/main/db_backup,
+>        or too many mounted file systems
+> 
+> checking dmesg reveals:
+> reiserfs: checking transaction log (device 3a:04) ...
+> clm-2076: device is readonly, unable to replay log
+> Replay Failure, unable to mount
+> reiserfs_read_super: unable to initialize journal space
+> 
+> Ok, so I did some searching and found some people back in the first
+> part of this year had a similar problems but none of the solutions
+> really applied to me fwict.  They all appeared to be using a 
+> previous version of the kernel, or of the lvm code.  I looked through
+> the changelog and did see a few notations of fixes since 0.9 related
+> to the snapshot code.  But, I'm kind of wary about putting a beta 
+> on my production systems with something this critical, w/out knowing
+> for sure that it will fix the problem.
+> 
+> So, is the problem in lvm?  reiserfs?  Or is it just me?  Is there
+> any other information I can give that might be helpfull in figuring
+> out the problem?  Just let me know. 
+> 
+> TIA
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
