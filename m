@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] How to migrate data from one Hard Drive to a new one
-Message-ID: <9226-27988@sneakemail.com>
-References: <1062272914.11039.103.camel@candido> <3F51BF42.6070403@silicide.dk> <1062451252.2391.28.camel@candido>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1062451252.2391.28.camel@candido>
-From: "Wolfgang Weisselberg" <uzx87lvfmukwc001@sneakemail.com>
+Message-ID: <3F54CEFE.2080203@redshift.com>
+From: "Samuel A. Rogers" <srogers@redshift.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Can not boot: unable to mount root fs:
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep  2 07:29:01 2003
+Date: Tue Sep  2 12:11:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Luca Da Col wrote 199 lines:
+So far I can not compile and boot any kernel from 2.4.19 - 2.4.21. I get the below error message:
 
-> 1) pvcreate /dev/hda5
-> 2) vgextend Volume00 /dev/hda5
+VFS: cannot open device 3a:00
+kernel panic: VFS: unable to mount root fs 3a:00
 
-Ok, the Volume Group now has /dev/hda5 added.
+I took this from an archive message and it should be very close to the message I get except for the 
+device number. I think mine says 1a:00 as I am only using ide and not scsi. The system locks up and 
+I have to manually press the reset button to reboot.
 
-> 3) lvextend  --size +97.4g /dev/Volume00/LogVol02 /dev/hda5
+I have checked the archives but could not find a solution.
 
-> but my /home is still 28G
+Also the kernels I get from Redhat can boot just fine, but they have turned off my sound card so I 
+need to regen the kernel. I have tried to get ahold of Redhat by phone, e-mail and newsgroup but no 
+reply.
 
-Well, of course!
-You have increased the partition (/dev/Volume00/LogVol02).
-You have *not* increased the filesystem /home.
+Regards,
 
-Instead of lvextend you should have used e2fsadm which runs both
-lvextend and resize2fs (or ext2resize), and fsck, in the correct
-order.  It's a good idea, generally, to umount /home first.
-
-Please read the manpages of e2fsadm, resize2fs and ext2resize
-for more information.
-
--Wolfgang
+	Sam Rogers.
