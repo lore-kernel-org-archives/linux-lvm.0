@@ -1,11 +1,10 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 6 Mar 2001 17:15:27 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Where is the limit on Max VGs coming from?
-Message-ID: <20010306171527.F25332@sistina.com>
-References: <200103060710.MAA08060@wipro.wipsys.sequent.com>
-Mime-Version: 1.0
-In-Reply-To: <200103060710.MAA08060@wipro.wipsys.sequent.com>; from kishore.sampathkumar@wipro.com on Tue, Mar 06, 2001 at 12:40:45PM +0530
+Return-Path: <bill@mbsmm.com>
+Message-ID: <3AA65DD7.B1256051@mbsmm.com>
+Date: Wed, 07 Mar 2001 11:12:07 -0500
+From: Bill Clark <bill@mbsmm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] EXT2-fs panic (device lvm(58,0)):
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,49 +17,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Mar 06, 2001 at 12:40:45PM +0530, Kishore wrote:
-> Hi,
-> 
-> I wanted to know the reason for the limitation for Maximum number of
-> VGs, which is 100 currently.
+Not sure if this is a LVM problem or a ext2fs problem. It is happening
+with the 2.4.2 kernel and the 0.9 release of the LVM user tools.  
 
-Just, what I've set in order to make a reasonable sized VG table in
-the driver.
+kernel: Kernel panic: EXT2-fs panic (device lvm(58,0)):
+load_block_bitmap: block_group >= groups_count - block_group = 131071,
+groups_count = 24
 
-I did never see a volume manager configure system with more than a couple of
-dozens of VGs.
+There is a 1gig+ file on the filesystem, and most operations on it seem
+to bring about the error.  
 
-> 
-> If it was based on bits in minor number, I was under the impression that
-> it should have been 255 (where /dev/lvm occupies minor number 0 for the
-> LVM Character device interface).
-> 
-> Can someone clarify?
-> 
-> Thanks,
-> - Kishore
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+Any ideas?
 
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanx
+Bill
