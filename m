@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Drive gone bad, now what?
-Message-ID: <20031028081933.GA1629@tykepenguin.com>
-References: <20031021171817.GA28462@mail.parplies.de> <3F985B2D.5060008@xs4all.nl> <16280.27367.874758.610758@gargle.gargle.HOWL> <3F98B691.7090902@webhackande.se> <3F9989C9.1070909@xs4all.nl> <16285.12868.20878.180441@gargle.gargle.HOWL> <3F9DB7D8.5080502@xs4all.nl>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LV only detected when using "lvscan -D" on amd64 kernel
+Message-ID: <20031028103644.N848@sistina.com>
+References: <3F994F88.8030908@elitedvb.net> <20031025091006.I848@sistina.com> <3F9C0AC9.6050805@elitedvb.net> <20031027120104.K848@sistina.com> <3F9D327C.6020102@elitedvb.net> <20031027160955.M848@sistina.com> <3F9D3C4B.6050809@elitedvb.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3F9DB7D8.5080502@xs4all.nl>
+In-Reply-To: <3F9D3C4B.6050809@elitedvb.net>; from tmbinc@elitedvb.net on Mon, Oct 27, 2003 at 04:39:55PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,42 +14,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 28 02:20:02 2003
+Date: Tue Oct 28 03:36:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Oct 28, 2003 at 01:27:04AM +0100, Gert van der Knokke wrote:
-> John Stoffel wrote:
+On Mon, Oct 27, 2003 at 04:39:55PM +0100, Felix Domke wrote:
+> Hi,
 > 
-> >Gert> I didn't expect lvm to restore the missing data, I guessed it
-> >Gert> would just let me access the rest of the data.
-> >
-> >At this point, you have to think, how can my filesystem cope with the
-> >loss of a 60gb chunk of data in the middle (start or end even) of the
-> >300+ gb of data?  There's all sorts of meta-data and true data which
-> >is now gone, and re-building the filesystem into a consistent state is
-> >really impossible.  
-> >
-> Hmm, and so I think LVM still needs a warning label :-)
+> oh well, i just used 64bit versions of vgscan and vgchange, and it works 
+> then. must be definitely a 32/64bit problem. (i didn't realized that i 
+> had of course to re-run vgscan and vgchange before :/ ).
 > 
-> I wonder why LVM doesn't work the other way around:
-> Create filesystems on several disks and then concatenate these to the 
-> outside as one large filesystem. This way if one drive goes bad you can 
-> always individually mount the drives and use the data.
-> 
-> >If you are looking for a large/cheap/reliable bunch of storage,
-> >instead of mirroring, you might want to think about RAID5 instead.
-> >
-> No, what we're looking for is an 'expandable as needed' filesystem and 
-> this is what LVM pretends to be.
 
-No. LVM does in no way "pretend to be a file system". It's an expandable block
-device. What the filesystem does with that block device is up to it. 
+You better do ;)
+So the solution is to work in a 64bit clean kernel/tool environment.
 
-If a disk fails and you're not using RAID then you restore from backups.
+> 
+> as i don't understand the 32bit->64bit ioctl wrapping (with pointers) i 
+> don't know how it is supposed to work with 32bit userspace tools. If you 
+> still want to have access to the machine, contact me.
+
+Thanks for the offer.
+We'll probably have Itaniums pretty soon.
+
+> 
+> 
+> Felix
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 -- 
 
-patrick
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
