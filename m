@@ -1,10 +1,10 @@
-Return-Path: <carenas@chasqui.lared.net.pe>
-Date: Mon, 23 Apr 2001 18:22:56 -0500 (PET)
-From: Carlo Marcelo Arenas Belon <carenas@chasqui.lared.net.pe>
-Subject: Re: [linux-lvm] LVM version of 2.4.2 kernel?
-In-Reply-To: <Pine.LNX.4.33.0104231933220.17635-100000@duckman.distro.conectiva>
-Message-ID: <Pine.LNX.4.33.0104231810270.13970-100000@chasqui.LaRed.net.pe>
+Return-Path: <medi@sc.prepass.com>
+Message-ID: <3AE46CC1.FEE62DC@sc.prepass.com>
+Date: Mon, 23 Apr 2001 10:56:17 -0700
+From: Medi Montaseri <medi@sc.prepass.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Need help with LVM on RedHat 7.1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,53 +16,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM <linux-lvm@sistina.com>
 
-> On Mon, 23 Apr 2001, Joe Thornber wrote:
-> > On Mon, Apr 23, 2001 at 04:13:32PM +0200, David Vidal Rodriguez wrote:
-> > > Hi!
-> > > I want to know what version of LVM (beta_x etc.) is included within
-> > > Kernel 2.4.2 and if I can use the fresh compiled beta7 tools with it.
-> >
-> > Beta2 is in the 2.4.2 kernel.  You are advised to upgrade both the
-> > kernel and the userland tools to beta7.
->
-> Ummm ?
+I have been holding my breath for 2.4 for so long and as I download and
+install RedHat 7.1 with 2.4.2-2, I find that LVM is not by default
+configured.
+vgscan(1) reports no lvm.o module found.
 
-:(, not again please, i am a noname lvm user and i really found this kind
-of misunderstanding really frustating.
+So I get the sources and compile with RAID and LVM marked as modules.
 
-but there is a time when "clearing the air" is needed and i am pretty sure
-that you all (developers) love much to code than to argue.
+#
+# Multi-device support (RAID and LVM)
+#
+CONFIG_MD=y
+CONFIG_BLK_DEV_MD=m
+CONFIG_MD_LINEAR=m
+CONFIG_MD_RAID0=m
+CONFIG_MD_RAID1=m
+CONFIG_MD_RAID5=m
+# CONFIG_MD_MULTIPATH is not set
+CONFIG_BLK_DEV_LVM=m
 
-please, take my words as they come, from a linux user and developer
-wannabe that loves the way opensource is getting into the world.
+My make menuconfig; make dep; make clean; make bzImage are all fine.
+Based on some docs, I was now supposed to do 'make modules'.
+this part is breaking with some errors from 'drivers/md/linear.c"
 
-> Weren't you people saying that the Linus tree would be the
-> main LVM repository from now on?
+Other documents say, one has to install the kernel and reboot and then
+make modules.
 
-sure we all hope it is, but if you take a look to the currently released
-linus kernel (2.4.3 and for sure the olders), it is obvious than a broken
-lvm was in place there.
+Can someone help me with this.
+Is RedHat planning to include LVM in their kernel. I don't like to have
+to build kernel
+for production. (just in case I have to bring one up fast as a
+replacement).
 
-and for sure taking the beta7 userland tools with that module is going to
-piss anyone.
+Thanks
 
-> Would it be possible to get at least the important bugfixes
-> merged in Linus' kernel ?
-
-i'll bet they (sistina) are working on that as they explained before, BTW
-i just found it on 2.4.4-pre6
-
-+ *    05/04/2001 - lvm_map bugs: don't use b_blocknr/b_dev in lvm_map, it
-+ *                destroys stacking devices. call b_end_io on failed maps.
-+ *                (Jens Axboe)
-
-and i am pretty sure that there are more to come (Alan, Heinz, your turn
-with the ball)
-
-best regards,
-
-Carlo
+--
+=======================================================================
+Medi Montaseri, medi@prepass.com, 408-450-7114
+Prepass Inc, IT/Operations, Software Eng.
+=======================================================================
