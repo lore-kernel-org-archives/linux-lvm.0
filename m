@@ -1,11 +1,12 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] filesystem errors
-Message-Id: <20020304112801.D10007@sistina.com>
-References: <Pine.LNX.4.44.0203011542510.31215-100000@tassadar.physics.auth.gr>
+Subject: Re: [linux-lvm] LVM1.0.3 tools on a kernel with LVM1.0.1-rc4?
+Message-Id: <20020304112921.E10007@sistina.com>
+References: <87k7sx26lw.fsf@papadoc.bayour.com>
+    <20020301104924.A30022@sistina.com>
+    <20020301084436.C21548@connectlive.com>
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44.0203011542510.31215-100000@tassadar.physics.auth.gr>;
-    from dzila@tassadar.physics.auth.gr on Fri, Mar 01, 2002 at 03:56:04PM
-    +0200
+In-Reply-To: <20020301084436.C21548@connectlive.com>; from
+    tim@connectlive.com on Fri, Mar 01, 2002 at 08:44:36AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,54 +17,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  4 04:29:02 2002
+Date: Mon Mar  4 04:31:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Mar 01, 2002 at 03:56:04PM +0200, Dimitris Zilaskos wrote:
+On Fri, Mar 01, 2002 at 08:44:36AM -0800, tim@connectlive.com wrote:
+> > > cracking $400 million in gold bullion Noriega president supercomputer
+> > > Cocaine PLO fissionable ammonium ammunition spy class struggle Rule
+> > > Psix South Africa Panama
+> > 
+> > Was that English?
 > 
->  Hello ,
->  I have setup an lvm consisted of 10 loopback attached files which are
-> exported with samba from windows2000 workstations . Occasionaly , during
-> write operations i get messages like the following
+> No, it was a knock-off of the old soda.cs.berkeley.edu anonymous
+> remailer... the greatest anonymizer ever.  Whoever designed the original
+> was brilliant -- it would insert a phrase like 'Tell Muhammad the
+> Stingers have been liberated, delivery of the bearer bonds may proceed'
+> and the phrase was actually the hash fingerprint for the message.  The
+> replies to the original could be collected by the sender based on this.
 > 
-> 
-> EXT2-fs error (device lvm(58,0)): read_inode_bitmap: Cannot read inode
-> bitmap - block_group = 1521, inode_bitmap = 49840129
-> EXT2-fs error (device lvm(58,0)): read_block_bitmap: Cannot read block
-> bitmap - block_group = 1521, block_bitmap = 49840128
-> 
-> after that i must perform a umount and filesystem check which finds and
-> fixes some errors . Data is usually only slightly damaged .  Read operations
-> work fine no matter how intensive they are .
-> 
-> On kernel 2.4.16 , there were no such errors but there were oopses , again
-> during write operations . From 2.4.17 to the 2.4.18-ac1 i am using now ,
-> the ext2 errors showed up .  The lvm tools version is 1.0.3 . All kernels
-> are smp .
->  I did several huge transfers between the workstations and the linux box ,
-> as well as pings with big packets to make sure the networking is ok , and
-> it seems to be . No packetloss with 65000 bytes packets ,no suspicious
-> delays . I really want to track this problem down . Any help is
-> appreciated .
+> Best fed-baiting I ever saw in my entire life.  Too bad I work *with*
+> those guys now, can't really run around engaging in such mischief :-)
 
-Because you mention *huge* transfers the usual suspect is the VM subsystem IMO.
-Did you try 2.4.<10 which didn't have the faulty VM subsystem?
+:)
 
+THX for the insight.
 
 > 
->  Kind regards
-> 
-> --
-> =============================================================================
-> 
-> Dimitris Zilaskos
-> 
-> Department of Physics @ Aristotle Univercity of Thessaloniki , Greece
-> =============================================================================
-> 
+> --t
 > 
 > _______________________________________________
 > linux-lvm mailing list
