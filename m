@@ -1,73 +1,56 @@
-Message-ID: <39D11E0A.18E83DA2@cup.hp.com>
-Date: Tue, 26 Sep 2000 15:07:06 -0700
-From: John DeFranco <defranco@cup.hp.com>
+Message-ID: <39D14B6C.4C9F6C26@us.oracle.com>
+Date: Tue, 26 Sep 2000 18:20:44 -0700
+From: David Brower <dbrower@us.oracle.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM on 2.2.17 (again)
-References: <200009260151.e8Q1pdw19220@webber.adilger.net>
+Subject: [linux-lvm] current lvm function questions
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Thanks! That helped alot. One other question,
-I wanted to pvcreate a software RAID device
-(/dev/md0 in this case). This is a simple two
-disk mirror (since LVM does not do mirroring).
-It would not let me do this however. The FAQ
-seems to indicate that I can (at least that
-the way I am interpreting the last section: 
+Hi, sorry to ask what might be FAQs, but I couldn't find
+the answers on the list archive or the HOWTO.  There may
+be overlap in my interests between lvm and md, so please
+straighten me out.
 
-  I recommend to use dedicated hardware RAID 
-  subsystems or Multiple Devices to have the 
-  redundancy below the LVM. In this case you 
-  just don't care about Logical Volume data 
-  redundancy and you don't run into the 
-  dangerous situation that your data is 
-  not redundant by accident.
-).
+Area 1:  Stable device naming.
 
-Does anyone know if this is possible and if so how
-to accomplish it?
+Is there a way in Linux to get a stable name for a
+disk that survive reconfiguration and discovery 
+randomization?
 
-Thanks! 
+One of the things linux has problems with is
+stable device naming.  If you pull a disk out of a chain,
+the following devices will move up in the /dev entries, 
+and not have the same name they had before.  This can
+be a real problem with massive storage subsystems.
 
-Andreas Dilger wrote:
-> 
-> John DeFranco writes:
-> > I've checked the LVM email archives so I know there has
-> > been lots of discussions on how to get LVM to work on
-> > 2.2.17, but unfortunately I'm having problems just
-> > building the kernel. I started with Turbolinux Server
-> > 6.0.2 (which is 2.2.14) and then added the 2.2.15-2.2.17
-> > patches. When I build I get:
-> >
-> > lvm-snap.c:28: linux/iobuf.h: No such file or directory
-> > lvm-snap.c: In function `lvm_snapshot_COW':
-> > lvm-snap.c:253: dereferencing pointer to incomplete type
-> > lvm-snap.c:257: warning: implicit declaration of function
-> > `brw_kiovec'
-> > lvm-snap.c: In function `lvm_snapshot_alloc_iobuf_pages':
-> > lvm-snap.c:308: warning: implicit declaration of function
-> > `expand_kiobuf'
-> 
-> Are you using my 2.2 patches (which is a backport of 0.8final from 2.4)?
-> In this case you need to also apply the RAWIO patches available at
-> Stephen Tweedie's site  ftp://ftp.linux.org.uk/pub/linux/sct/
-> Alternately, if you don't need/want LVM snapshots, you can delete lvm-snap.c,
-> and delete the references in lvm.c to any "snap" functions, etc.  There
-> are about half a dozen places where this happens.  If I get around to
-> it, I will update my patch to simplify turning off lvm snapshots...
-> 
-> Cheers, Andreas
-> --
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+I know of two ways of handling this.  (1) is to slap
+a label on the disk, and make sure it shows up as the
+device in the label when the disk is discovered.  (2)
+is to keep a separate database mapping devices to fixed
+locations.  I think the label is the best idea.
 
--- 
-==========
-Cheers
-   -jdf
+It seems to me that lvm already slaps a label on the 
+disk when it does pvcreate.  What i'm not sure of is
+whether the label used is (a) globally unique and suitable
+for stable device naming, or (b) tied to the device it
+happened to be on at the time the pvcreate was issued.
+
+Specifically, if a pv/vg/lv is created on /dev/sda6, and 
+a subsequent reconfig has that partition show up as 
+/dev/sdb3, does it still show up as /dev/lvname?
+
+
+2.  Raw device access
+
+Can lvm volumes be accessed as raw devices?  If so, how?
+Is there /dev/rlvname?
+
+I'm sure /dev/fs falls in here somewhere...
+
+thanks!
+
+-dB
