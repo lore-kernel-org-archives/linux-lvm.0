@@ -1,68 +1,41 @@
-Message-ID: <3966E6FA.83BF1347@marxmeier.com>
-Date: Sat, 08 Jul 2000 10:31:54 +0200
-From: Michael Marxmeier <mike@msede.com>
+Message-Id: <m13Avjj-0000YgC@duffy1.franken.de>
+From: Rolf Jakob <rjakob@duffy1.franken.de>
+Subject: Re: [linux-lvm] [Fwd: boot from lvm volume]
+In-Reply-To: <3966E6FA.83BF1347@marxmeier.com> from Michael Marxmeier at "Jul 8, 2000 10:31:54 am"
+Date: Sat, 8 Jul 2000 16:37:43 +0200 (MEST)
 MIME-Version: 1.0
-Subject: [linux-lvm] [Fwd: boot from lvm volume]
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
+Cc: corporate@ncincwi.com
 
-Forwarded message from Michael Nittmann <corporate@ncincwi.com>
+Hello,
 
--------- Original Message --------
-Subject: boot from lvm volume
-Date: Sat, 08 Jul 2000 00:07:03 -0500
-From: Michael Nittmann <corporate@ncincwi.com>
-Organization: NCinc, Inc.
-To: linux-lvm-approval@msede.com
+> Is it yet possible to boot from an LVM volume?
+AFAIK no. I use a small partition for the kernel, an initrd image and
+the lilo.conf which is later mounted as /boot.
+So when the system is up the / filesystem is a logical volume and can
+be resized online like all the other filesystems I use.
+Lilo boots the kernel from that partition, loads an initial ramdisk
+and executes the linuxrc script. In this script the needed modules are
+loaded (ide.o or the SCSI modules and the lvm module), the volume group
+is activated and by writing the major/minor number of the boot logical
+volume ( I use the first logical volume as the root LV ) to
+/proc/sys/kernel/real-root-dev the kernel will mount that one as the
+new root filesystem.
+I use that for five different systems now. My plannings were to use the
+boot partition as a rescue system as well but I did it only on one
+system (proof of concept, but I found out that rescue floppies are enough
+for me).
 
-Is it yet possible to boot from an LVM volume?
-A big advantage of LVM is the live resizing of volumes. Especially
-after
-installing I would like to collapse / and have as many directories in
-fact as file systems on LVMs as possible.
-The big advantage is a very fast recovery time, and also a quick
-change
-of the kernel, e.g. keeping all /etc config files in place (production
-/etc/ mounted over sysgen /etc after sysgen/etc is merged into
-production /etc).
-I like also mirrored / .
+> I like also mirrored / .
+Hmm, that would mean that the master boot record should be mirrored as well,
+otherwise you would loose your installed lilo. I haven't tried that yet.
 
-Is anyone working on a logical volume manager that supports Raid 1-5?
-(well, raid0 is the lvm itself, concatenation across physical media).
-
-I am not on the list, please copy me in.
-
-Thanks
-
-Mike
-
---
------------------------------------------------------------------------
-Michael Nittmann, President/CEO                 Voice/FAX
-(715)552-8755
-NCinc, Inc.                                      
-Corporate@NCincWI.com
-P.O. Box 466                         We make your
-Eau Claire, WI 54702-0466               NetWork        
-www.ncincwi.com
-.... now also with Internet access, see our special    
-www.ncincwi.net
-     at www.ncincwi.com, click on 'Internet Access'
-
-We do not accept unsolicited commercial promotional messages via
-email.
-We welcome promotional material and offers sent via USPS. If you chose
-to use our systems to transport, store and deliver your promotional
-materials and messages, then you have to pay us for the use of our
-resources. See www.ncincwi.com and look at SPAM/UCE Fee Schedules.
-We report all unauthorized use of our systems, which includes sending
-commercial promotions through our lines, our storage and computing
-resources, to the authorities as unauthorized use of computer
-equipment.
-
-We do not allow any unsolicited promotions of Adult, X-rated,
-or other offending material to be sent to our systems or employees.
+Rolf
+-- 
+Rolf Jakob at home (rjakob@duffy1.franken.de)
+WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
