@@ -1,38 +1,39 @@
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF6834DF@mailsrv.linkvest.ch>
-From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
-Subject: [linux-lvm] ReiserFS/XFS/JFS, LVM, Raid5
-Date: Mon, 26 Jun 2000 13:14:15 +0200
-MIME-Version: 1.0
+Date: Mon, 26 Jun 2000 14:09:55 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@Sistina.com>
+Subject: Re: [linux-lvm] LVM
+Message-ID: <20000626140955.C2368@hmsysv.t-online.de>
+Reply-To: Mauelshagen@Sistina.com
+References: <39572807.5B0507E2@inet.net.nz>
+Mime-Version: 1.0
+In-Reply-To: <39572807.5B0507E2@inet.net.nz>; from dale@inet.net.nz on Mon, Jun 26, 2000 at 09:53:11PM +1200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+To: Dale Kemp <dale@inet.net.nz>
+Cc: linux-lvm@msede.com
 
+On Mon, Jun 26, 2000 at 09:53:11PM +1200, Dale Kemp wrote:
+> Hi!,
+> 
+> Just letting you all know there is a poll on http://www.linux.com/
+> about useful 2.4 feature - one of them is LVM ;-)
 
-Hi,
-I'd like to build such a system:
-- Kernel + root on non-LVM Raid0/ext2 partition (no problemo)
-A big partition (100Gb) which lokks like:
-- Raid5 (linux md)
-- LVM
-- filesystem
+We are #3 of 9 so far.
+Not too bad ;-{)
 
-It's a classic schema, but my question is:
-Does anyone already tried it?
-Any success? failure? Drawback?
-Does XFS + LVM or JFS + LVM or ReiserFS + LVM be stable enough for
-production?
-Do they all have resize tools?
+-- 
 
-Thanks
--jec
+Regards,
+Heinz      -- The LVM guy --
 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-Jean-Eric Cuendet
-Linkvest SA
-Av des Baumettes 19, 1020 Renens Switzerland
-Tel +41 21 632 9043  Fax +41 21 632 9090
-http://www.linkvest.com  E-mail: jean-eric.cuendet@linkvest.com
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
