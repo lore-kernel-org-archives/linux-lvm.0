@@ -1,10 +1,6 @@
-From: gibaud@cerfacs.fr
-References: <F2DL3D2GG5E6KJBI@sistina.com>
-In-Reply-To: <F2DL3D2GG5E6KJBI@sistina.com>
-Message-ID: <35KJ092ALC2E79B0@cerfacs.fr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] new mail            KWLWB7Uk
+From: =?GB2312?B?z+O427mry77XorLhzfg=?= <info@register828.com>
+Message-Id: <E19flBe-0004sP-00@hermes.sistina.com>
+Subject: [linux-lvm] =?GB2312?B?16Ky4bPJwaLP47jbuavLvqGizdjVubqjzeLStc7x?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +11,66 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jul 24 12:30:02 2003
+Date: Thu Jul 24 13:52:02 2003
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-To: Linux-lvm <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 8bit
+To: linux-lvm@sistina.com
 
-�� ���� ���������� ��� ����� ���������� �������� ������ http://www.mail15.com. ��� ������������� �����������:
-1) ������ ����� 15 ��;
-2) ������������ � ����������;
-3) ����������� ������������� ����� �������� ��������(POP,IMAP,SMTP);
-4) ������ �� ������ ����� � ����� �����;
-5) ������� � ��������� ������������ � ������ ����������� �������;
-6) ������������ � ������������ ��������;
-7) ���������� ��������� �����.
+ע�������۹�˾����չ����ҵ��
 
-���� �� �� ������ �������� ����� ������ ��������, ������ mailto:unsubscribe@mail15.com?subject=unsubscribe
+����!
 
-*************
+��۹�˾ע����
+רҵ�������ؿͻ������ע��Ǽ����޹�˾��
+�����ṩ�������׷���ʹ���ؿͻ���������
+��������ң�ط�ʽ���Ƽ�����һ�������ע
+��Ǽǵ����޹�˾��������չ����ҵ��
 
- We are glad to invite you at new free mail service http://www.mail15.com. The advantages of this service are:
- 1) mailbox, up to 15 Mb;
- 2) absolute privacy and high reliability;
- 3) ability to use mail clients (POP3, IMAP4, SMTP);
- 4) access from anywhere, anytime;
- 5) flexible light-weight web interface without advertising banners;
- 6) antivirus and antispam control;
- 7) fast mail transfer;
- 8) high speed network channel;
- 9) flexible light-weight web interface;
- 10) wide spread ability of mail filtering and forwarding mail;
- 11) clock around support;
+��������ֻ��۱�5200Ԫ / �����5600Ԫ
 
- If you wish to be removed:
-mailto:unsubscribe@mail15.com?subject=unsubscrib
+ע�������۹�˾�ĺô���
 
-bn4LOkPftz
+��Ӫ��Χ��������
+ע���ʽ���������
+��˾��������ѡ��
+�������л��ڡ������Ϸ���������
+ͨ���绰���С��������з���ң����������ʻ�
+˰�ʵͣ�ֻ��һ�걨˰һ�Σ��������Ӫҵ˰����ֵ˰��
+��������ɽ����ڡ���֣�������������֤
+����۹�˾����ע���̱ꡢר���������������硢������š������ڿ��ţ���������
+
+��רҵ��ʦ����
+�����򵥡����
+����ʱ��ֻ��12�������죨�������ʵ�ʱ�䣩
+
+���׷���ɰ�����   
+�ṩ��˾����
+�ṩ��˾ע���ַ
+�ṩ����������
+�ṩ�����绰��
+�������п���
+��������
+�����ʰ����ļ�
+��������ѯ
+
+������ֻ���ṩ�ⶨ��˾���ơ��ɶ�/��������������/����֤����
+
+��������ʣ�www.register828.com����۹�˾ע����
+
+��ϵ���� :
+��۹�˾ע����
+��ַ:  �����и�����������·2�����Ŵ���3604��
+�绰:  (0755) 82092416 ����
+����:  (0755) 82092412				
+�ֻ�:��135 10362845	
+��ϵ��: ������
+����:  office@register828.com  mailto:office@register828.com 
+��ַ:��www.register828.com
+
+������������������
+��!
+  ������������������������
+��۹�˾ע����
+www.register828.com
