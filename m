@@ -1,12 +1,12 @@
-Return-Path: <josv@osp.nl>
-Date: Tue, 27 Mar 2001 16:56:30 +0200
-From: Jos Visser <josv@osp.nl>
-Subject: Re: [linux-lvm] Can I use snapshots for this?
-Message-ID: <20010327165629.W453@jadzia.josv.com>
-References: <20010327163701.B6980@dragon.blacknet.de>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 27 Mar 2001 16:15:17 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] safe to ru-run vgscan after mounting LV root?
+Message-ID: <20010327161517.G993@tykepenguin.com>
+References: <20010328021421.B4557@mail.wave.co.nz>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010327163701.B6980@dragon.blacknet.de>; from lvm@blacknet.de on Tue, Mar 27, 2001 at 04:37:01PM +0200
+In-Reply-To: <20010328021421.B4557@mail.wave.co.nz>; from markv@wave.co.nz on Wed, Mar 28, 2001 at 02:14:21AM +1200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,47 +22,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Goetz,
-
-You can indeed use snapshots for this. Basically what you need to do is
-create a snapshot each night at 4:00 of your /whatever lvol (e.g.
-/home). Then mount that snapshot as /nightly. Through that mountpointm
-your users will see the status of the /whatever file system (including
-file presence and contents) as it was when the snapshot was created!
-Because the snapshot feature saves only the updates content from the
-original logical volume, you need allocate only a fraction of the space
-of the original lvol to the snapshot. It depends on the update rate, but
-typically only 10%.
-
-++Jos
-
-P.S. Don't forget to umount and remove the old snapshot in your nightly
-     procedures...
-
-
-And thus it came to pass that Goetz Bock wrote:
-(on Tue, Mar 27, 2001 at 04:37:01PM +0200 to be exact)
-
+On Wed, Mar 28, 2001 at 02:14:21AM +1200, Mark van Walraven wrote:
+> Hi All,
 > 
-> Hi,
+> First, let me say how impressed I am with LVM.  I've just set up a 2.4.2
+> system with all filesystems in logical volumes, on an MD mirror.  I am
+> an experienced (i.e., "jaded") sysadmin, so please take my enthusiasm
+> as a truly singular occurrence.  Kudos to you.
 > 
-> I'm sorry, if this whould haven been obvious by simply triing, but I did
-> can not remember to read anything in the docs:
-> 
-> I'm currently running a small 20GB RAID array and allow my users a
-> simple versioning by storing a copy of all files one an IDE drive in the
-> system every night at 4:00.
-> 
-> As 20GB are very small, we'll get a 180GB RAID in the next month.
-> Unfortunately there is no cheep 180GB ide drive do have this way of
-> verioning :-(.
-> 
-> But I thought about using LVMs snapshoots for this. Can I do so?
-> 
-> Thanks,
->     Goetz.
+> Now for my question: The system above runs vgscan (and vgchange) from an
+> initrd before mounting the root filesystem.  After that, the /etc/lvmtab*
+> files and directories need to be refreshed from the initrd.  Instead of
+> keeping the initrd hanging around until then, could vgscan simply be
+> run again to recreate /etc/lvmtab*, even though PVs and LVs are active?
 
+You can run vgscan as many times as you like. The main reason you wouldn't is
+the time it can take. But even that is small compared to the initialisation time
+of most SCSI cards so at bootup it shouldn't be a problem.
 
-
--- 
-assert(heaven.isMissing(anAngel));
+patrick
