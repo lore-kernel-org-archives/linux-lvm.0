@@ -1,10 +1,10 @@
-Content-Class: urn:content-classes:message
+Message-ID: <3BC44C95.50101@st-peter.stw.uni-erlangen.de>
+Date: Wed, 10 Oct 2001 15:26:45 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] More strangeness
-Date: Wed, 10 Oct 2001 14:37:03 +0200
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FF07@mailsrv.linkvest.com>
-From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
+Subject: Re: [linux-lvm] Downgrading
+References: <000001c15181$7c3b32d0$836788cf@industry>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,16 +16,13 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-> No official patch for ext3 and 2.4.10?!  Can I run an older=20
-> kernel version?  2.4.8 or 9 maybe?  Will that run ext3 and=20
-> lvmtools 1.0.1rc4?
-
-I use 2.4.9 from RedHat 7.2 (rawhide) that already have ext3.
-I patched LVM 1.0.1rc{2,4} and all is fine.
-
--jec
-
-PS: Take the sources of the kernel from SRPMS of rawhide.
+>
+>
+>As I have recently discovered, there isn't yet an official patch for
+>EXT3 on 2.4.10.  If that is the case, I suppose I should downgrade in
+>
+why dont you try -ac kernel, they have ext3 integrated
+so go vor a 2.4.10-ac10 + lvm-1.0.1-rc4 and it should be pretty stable
