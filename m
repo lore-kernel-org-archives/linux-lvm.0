@@ -1,12 +1,12 @@
-Return-Path: <bluca@comedia.it>
-Date: Wed, 9 May 2001 19:45:22 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM-i2o problem
-Message-ID: <20010509194522.E26444@colombina.comedia.it>
-References: <5c1df9db30f63ca9.30f63ca95c1df9db@apollo.zeropiu.it>
+Return-Path: <thornber@btconnect.com>
+Date: Wed, 9 May 2001 19:58:43 +0100
+Subject: Re: [linux-lvm] Patching my kernel.
+Message-ID: <20010509195843.A1351@66bassett.freeserve.co.uk>
+References: <989363474.1329.2.camel@localhost> <20010509085110.G23157@colombina.comedia.it> <989404772.3725.0.camel@localhost> <20010509160319.C898@66bassett.freeserve.co.uk> <989408594.3725.3.camel@localhost>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5c1df9db30f63ca9.30f63ca95c1df9db@apollo.zeropiu.it>; from christianv@zeropiu.it on Wed, May 09, 2001 at 05:15:25PM +0200
+In-Reply-To: <989408594.3725.3.camel@localhost>; from raheesom@navpoint.com on Wed, May 09, 2001 at 07:43:14AM -0400
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,75 +22,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-add
-#ifdef I2O_MAJOR
-I2O_MAJOR,
-#endif
+On Wed, May 09, 2001 at 07:43:14AM -0400, Rupert Heesom wrote:
+> Joe:  I've untarred a new kernel archive & sorted the linux symlink to
+> "kernel-2.4.3", etc.  Copied the .config file to the linux directory.
+> 
+> Then ran the patch -p1 < <path to patch file> from the linux directory.
+> 
+> I got a whole lot of errors -
+> 
+> [root@localhost linux]#patch -p1 <
+> /usr/src/patch_gen_7/PATCHES/lvm-0.9.1_beta7-2.4.3.patch
+> patching file include/linux/lvm.h
+> Hunk #1 FAILED at 67.
 
-at the end of valid_majors[] just above the -1 in 
-tools/lib/lvm_check_partitioned_dev.c
+<snip>
 
-add 
+hmmmm... not sure what you've done here.  It looks like the patch
+generation has gone astray.  My advice is to start with a fresh LVM dir:
 
-"/dev/i2o" (above the NULL) to devdir[]
-in tools/lib/lvm_dir_cache.c
+untar clean kernel
+untar LVM_beta7
+cd LVM
+./configure
+cd PATCHES
+make 
+cd /usr/src/linux
+patch -p1 < <where ever>/LVM/PATCHES/lvm-0.9.1_beta7-2.4.3.patch
 
-if there are still problems you should check with lvmdiskscan -d
-and/or pvcreate -d
+If this doesn't work please send me (off list) the LVM patch so I can
+see what has gone wrong.
 
-to see where it fails,
-then submit either a bug report with those two output or a patch that
-adds i2o support to lvm :)
+Also please be aware that beta7 needs an extra little patch to fix the
+get_hardblocksize -> hardsectsize name change.  Search this mailing
+list for it, or grab code from CVS.
 
+> What a learning curve!!  What next?
 
+Please persevere, it gets easy once you've done it a couple of times.
 
-On Wed, May 09, 2001 at 05:15:25PM +0200, Christian Verdelli wrote:
-> Dear friends,
-> 
-> we have been trying to install LVM on a 
-> Linux system running a i20 RAID volume.
-> 
-> After having configured and installed LVM binaries,
-> we receive the following error message when creating
-> a physical volume:
-> 
-> ./pvcreate /dev/i2o/hda2
-> pvcreate --- invalid physical volume name  "/dev/i2o/hda2"
-> 
-> 
-> After having consulted the archives we have tried to modify
-> the configuration files lvm_dir_cache.c & lvm_check_dev.c 
-> lvm_check_partition.c.
-> 
-> Unfortunately we cannot make out precisely what has to be done,
-> could someone please explain us how to make these changes?
-> 
-> Thanks in advance.
-> 
-> 
-> 
-> 
-> 
-> 
-> Verdelli Christian
-> 
-> ZEROPIU SpA
-> via Melzi d'Eril, 26 - 20154 Milano
-> ITALY
-> Tel: +39-02-34530018 - Fax: +39-02-34532148
-> 
-> e-mail: christian.verdelli@zeropiu.it
-> homepage: http://www.zeropiu.com
-
-Content-Description: Card for Christian Verdelli <christianv@zeropiu.it>
-> Unrecognized switch: -
-  (-h will show valid options).
-
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+- Joe
