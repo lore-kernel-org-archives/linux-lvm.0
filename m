@@ -1,18 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1P5N6K24281
-	for <linux-lvm@redhat.com>; Fri, 25 Feb 2005 00:23:06 -0500
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1QF9TK32307
+	for <linux-lvm@redhat.com>; Sat, 26 Feb 2005 10:09:29 -0500
 Received: from server.echohome.org (s233-64-29-217.try.wideopenwest.com
 	[64.233.217.29])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1P5Mxsa026926
-	for <linux-lvm@redhat.com>; Fri, 25 Feb 2005 00:22:59 -0500
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j1QF9S6f028210
+	for <linux-lvm@redhat.com>; Sat, 26 Feb 2005 10:09:28 -0500
 Received: from echo (echo.echohome.org [192.168.2.254])
-	by server.echohome.org (8.12.8/8.12.8) with ESMTP id j1P5MrYY013460
-	for <linux-lvm@redhat.com>; Fri, 25 Feb 2005 00:22:53 -0500
+	by server.echohome.org (8.12.8/8.12.8) with ESMTP id j1QF9LYY027763
+	for <linux-lvm@redhat.com>; Sat, 26 Feb 2005 10:09:22 -0500
 From: "Erik Ohrnberger" <erik@echohome.org>
-Date: Fri, 25 Feb 2005 00:23:22 -0500
-Message-ID: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAA6AM/OwSzgkau2+5tufHyMgEAAAAA@echohome.org>
+Date: Sat, 26 Feb 2005 10:09:51 -0500
+Message-ID: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAAfEOWBfOtF0efRP286+fnTQEAAAAA@echohome.org>
 MIME-Version: 1.0
-In-Reply-To: <7C5D17C4190B2A4BBD47C71727973DA701741577@ausyms22.ca.com>
 Content-Transfer-Encoding: 8bit
 Subject: [linux-lvm] Building up a RAID5 LVM home server (long)
 Reply-To: Erik@echohome.org,
@@ -27,7 +26,7 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
 Dear Peeps of the LVM discussion list,
 
@@ -39,8 +38,7 @@ practical knowledge.  So I pose to you this discussion.  Mind you that if
 there is a web page that covers the topic, please don't hesitate to point
 into that direction.  This has been a self study project all along.
 
-Some History: (skip if you want - see The Questions below)
-=============
+Some History: (skip if you want - see The Questions below) =============
     I've had a LVM up and running for some time for large file storage.  As
 the storage needs grew, it was easy to add another hard disk, add it to the
 volume group, and grow the file system.  This worked fairly seamlessly and
