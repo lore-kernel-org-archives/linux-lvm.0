@@ -1,36 +1,39 @@
-Date: Wed, 20 Oct 1999 17:57:29 +0200
-From: Adrien Farkas <freddy@redneck.sk.oracle.com>
-Subject: Re: [linux-lvm] how to remove PV from a VG?
-Message-ID: <19991020175729.A1301@redneck.sk.oracle.com>
-Reply-To: freddy@sk.oracle.com
-References: <199910201149.AA09133@mailgate1b.telekom.de> <E11dvS2-000687-00@chatteris.cl.cam.ac.uk>
-Mime-Version: 1.0
-In-Reply-To: <E11dvS2-000687-00@chatteris.cl.cam.ac.uk>; from Piete.Brooks@cl.cam.ac.uk on Wed, Oct 20, 1999 at 02:06:41PM +0100
+From: mschout@gkg.net
+Date: Tue, 2 Nov 1999 15:34:39 -0600 (CST)
+Subject: [linux-lvm] raid0145 + lvm 0.7 woes..
+Message-ID: <Pine.LNX.4.10.9911021529400.2208-100000@cdm-24-019.tca.net>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Piete Brooks <Piete.Brooks@cl.cam.ac.uk>
-Cc: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Piete Brooks (Piete.Brooks@cl.cam.ac.uk) wrote :
+Hi.
 
-> >> How do I really, physically remove the devices from the PV list?
-> > Set the partition type identifier to something different than 0xfe.
-> 
-> What if the disks were to not have a `partition type', e.g. /dev/sdb or
-> /dev/md33 ?
-dd if=/dev/zero of=/dev/sdb count=8 bs=1024 does the trick
+I am trying to get LVM to work on top of a software raid5 volume (/dev/md0).
 
-thanks to all who responded (and subsequently helped).
+I am using Andreas patch from http://www.mtg.co.at/projects/lvm_raid_tools/ to
+pristine 2.2.12 kernel sources.  I am using the raidtools and LVM package also
+provided at that url.
 
-regards,
+I was successful in getting LVM to do pvcreate / vgcreate / lvcreate operations
+on the /dev/md0 device.
 
--- 
-                                             freddy
+I found that if I create a single lv in the vg, then that appears to work, and
+I can write to it fine.
 
-----==-- _                      Adrien "freddy" Farkas
----==---(_)__  __ ____  __       freddy@sk.oracle.com
---==---/ / _ \/ // /\ \/ /  We all know Linux is great... It
--=====/_/_//_/\___/ /_/\_\  does infinite loops in 5 seconds
+But if I create *multiple* lv's in the vg (e.g.: lvol1, lvol2), then I have
+been successful in doing mke2fs on lvol1, but halfway through the mke2fs on the
+second lv, mke2fs freezes the machine.  The only way out is to send the SysRq-b
+to reset the machine on the console.
+
+So it would appear that at current it is not possible to use LVM 0.7 on top of
+a raid5 device using raid0145-19990824.  Is this correct?  Has anyone been
+following up on this?   I would love to get this working :).
+
+Thanks for any info anyone has on this matter.
+
+Regards,
+Mike
