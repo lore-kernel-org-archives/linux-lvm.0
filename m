@@ -1,20 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2EE1RS01146
-	for <linux-lvm@redhat.com>; Sun, 14 Mar 2004 09:01:27 -0500
-Received: from gaimboi.tmr.com (mail.tmr.com [216.238.38.203])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2EE1P07016481
-	for <linux-lvm@redhat.com>; Sun, 14 Mar 2004 09:01:25 -0500
-Message-ID: <405465F4.4030303@tmr.com>
-Date: Sun, 14 Mar 2004 09:02:28 -0500
-From: Bill Davidsen <davidsen@tmr.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2FFAjS10295
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 10:10:45 -0500
+Received: from web80603.mail.yahoo.com (web80603.mail.yahoo.com [66.218.79.92])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2FFAh07000698
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 10:10:43 -0500
+Message-ID: <20040315151037.73788.qmail@web80603.mail.yahoo.com>
+Date: Mon, 15 Mar 2004 07:10:37 -0800 (PST)
+From: David Minor <sus4@sbcglobal.net>
+Subject: Re: [linux-lvm] VGs gone!
+In-Reply-To: <1079349331.405590535c638@sms.ed.ac.uk>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: lvm2 performance data with linux-2.6
-References: <200403081916.i28JGgE25794@mail.osdl.org>	
-	<4050E453.3010809@tmr.com>
-	<20040311142515.A27177@osdlab.pdx.osdl.net>
-	<1079046114.3850.349.camel@d158140025182.Cadence.COM>
-In-Reply-To: <1079046114.3850.349.camel@d158140025182.Cadence.COM>
-Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,19 +20,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: csc@cadence.com
-Cc: linux-kernel@vger.kernel.org, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Chris Croswhite wrote:
-> Is this generally available to all?  Where can it be had?
+--- Rupert Hair <rupert.hair@ntlworld.com> wrote:
+> > We had a problem with the
+> > root partition on the first drive, so we decided
+> to
+> > restore from the mirror using dd.  After doing
+> this,
+> > the VGs are not in existence anymore.  running
+> > 'vgscan' shows it creates /etc/lvmtab and
+> > /etc/lvmtab.d correctly, but they are empty.  
+> How were the drives mirrored?  Did you use some sort
+> of raid or was it all done
+> by using dd to copy the whole drive?
 
-I stuck it on the page I use to avoid beating my fractional T1 to death.
-   http://pages.prodigy.net/davidsen/diorate.pl
+sorry, left that part out:  using rsync to mirror the
+drives.  
 
-Enjoy, any misfeatures please feed back to me.
+> What does pvscan show?
+> 
 
--- 
-bill davidsen <davidsen@tmr.com>
-   CTO TMR Associates, Inc
-   Doing interesting things with small computers since 1979
+pvscan complains about "pv_read(): read" reading
+physical volumes.
+
+with -d on pvscan, I think everything looks good
+until:
+pv_read -- going to read /dev/md9 
+pv_read -- LEAVING with ret: -282
+
+Thanks,
+dm
