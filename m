@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105232256.f4NMuZgf030596@webber.adilger.int>
-Subject: Re: [linux-lvm] Converting my Root file system to LVM
-In-Reply-To: <990627110.1179.0.camel@localhost> "from Rupert Heesom at May 23,
- 2001 10:11:45 am"
-Date: Wed, 23 May 2001 16:56:35 -0600 (MDT)
+Message-Id: <200105232355.f4NNtQ7q030802@webber.adilger.int>
+Subject: Re: [linux-lvm] ORACLE OPS and Fibre channel
+In-Reply-To: <85256A55.0061ED1B.00@IBJS06DS.ibjs.com> "from Slava Tulchinsky
+ at May 23, 2001 02:16:38 pm"
+Date: Wed, 23 May 2001 17:55:26 -0600 (MDT)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,25 +21,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Rupert writes:
-> The expanding the LV & file system using e2fsadm is what I'm dithering
-> about now.   I think it's necessary to umount the LV to change it's size
-> (my e2fsadm is using the resize2fs util).  Since my current new root is
-> already an LVM partition, I need some way of unmounting it, doing the
-> LVM work on it, then remounting it.
-> 
-> I think the miniroot ramdisk which Steve Wray pointed out is probably my
-> answer. However I do wonder whether it's possible to do this another
-> way?   The miniroot ramdisk is still a great idea that I will implement.
+Slava Tulchinsky writes:
+> After successfully installing Oracle 8.1.7.0.1 OPS on Redhat 6.2 with
+> 2.2.19-6.2.1 using Compaq fibre channel card RA4000 to connect to Compaq
+> external drive enclosure RA4100 (kernel driver cpqfc), We decided see if OPS
+> will work with lvm 0.9.1-Beta7.
 
-If you patch your kernel with the online ext2 patches, you can resize
-your root partition while it is still mounted.  You will still need a
-reboot to install the new kernel, however, but only the one time.  See
-http://sourceforge.net/projects/ext2resize/
+> LVM part seems to work fine, but when booting with the newly
+> compiled kernel no longer able to use raw partitions with OPS
+> with or without LVM.
 
-It still isn't a bad idea to have a small non-LVM partition on one of
-your disks which has a kernel you can boot from, along with useful
-tools in /lib and /sbin.  I guess miniroot is such a thing.
+Two things.  You need the raw-io patch for 2.2 kernels, and you also need
+to change the SECTOR_SIZE in the lvm.h header to be 512 bytes (the latter
+may have been fixed in recent LVM code releases).
 
 Cheers, Andreas
 -- 
