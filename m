@@ -1,10 +1,9 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] 2  LVM questions -  LVM and 2.4.19, and extent based striping.
-Message-ID: <20021126213244.D6509@uk.sistina.com>
-References: <OFB3E6E776.74CCEE3A-ON85256C7D.0055BB76@LocalDomain>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OFB3E6E776.74CCEE3A-ON85256C7D.0055BB76@LocalDomain>; from GBanschbach@sandata.com on Tue, Nov 26, 2002 at 02:14:29PM -0500
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] LVM for a Database
+Message-ID: <8075D5C3061B9441944E137377645118012DB3@cinshrexc03.shermfin.com>
+From: "Rechenberg, Andrew" <arechenberg@shermfin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +14,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 26 15:52:04 2002
+Date: Tue Nov 26 16:19:03 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Nov 26, 2002 at 02:14:29PM -0500, GBanschbach@sandata.com wrote:
-> In the linux LVM world, we can't seem to do this......      We get stripes
-> WITHIN extents, but the extents are still visited serially:
+You're going to get better performance if you have /dev/sd[b-e] and then
+span across those devices or use LVM striping.  That is RAID10.
 
-> 1st  64k on Log. Ext Zero which is Physical Zero on disk1.  The 2nd is on
-> LE 1 on disk 1.  
+I have a Dell 6600 with two PowerVault 220S with the second
+configuration (12 RAID1 arrays, /dev/sd[c-n]) and then use Linux
+software RAID0 to stripe across those 12 RAID1 arrays.  It gives fairly
+good performance.
 
-I don't think it's *supposed* to be doing that.  
-Have you confirmed this by examining the actual contents of the disks?
+I don't have LVM on top of the RAID0, but I will be doing just that in
+the near future and I can post the results here if you wish.
 
-If you have 18 extents (PEs) with 6 on each disk numbered:
-  disk1:   0  1  2  3  4  5
-  disk2:   6  7  8  9 10 11
-  disk3:  12 13 14 15 16 17
+Regards,
+Andy.
 
-and the stripesize is 64k, I think it should write the first 64k of 
-the LV to disk1 (PE 0), the second 64k to the start of disk2 (PE 6)
-the third 64k to the start of disk3 (PE 12) and then the fourth 64k 
-to PE 0 again etc.
+-----Original Message-----
+From: Joseph Kezar [mailto:jkezar@doc.state.vt.us]=20
+Sent: Tuesday, November 26, 2002 3:29 PM =20
+To: linux-lvm@sistina.com
+Subject: [linux-lvm] LVM for a Database
 
-Alasdair
--- 
-agk@uk.sistina.com
+
+We are in the process of building a database on a 4 processor 1.8GHz,
+4GB RAM Dell 6650.
+
+I am trying to figure out the most efficient way to use LVM for our raw
+data storage.  We have a RAID array with 8x36GB drives in it.  Should I
+do a raid 1+0(mirror 4 disks, and span them to get one logical volume)?
+
+If so this leaves me a /dev/sdb.  Or would I get better performance if I
+mirror 1 + 5, 2 + 6, 3 + 7, 4+ 8 to give me /dev/sd[b-e].
+Is it possible to figure out where the center of our spindles are?  So I
+can arrange for the heads to spend little time seeking?
+
+Any perfomance hints would be greatly appreciated.
+
+thanks
+Joe K.
