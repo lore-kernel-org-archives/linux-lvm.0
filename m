@@ -1,9 +1,8 @@
-Message-ID: <3C06DC9D.5020205@larsshack.org>
-From: Lars Kellogg-Stedman <lars@larsshack.org>
+Message-Id: <200111300514.fAU5EvE17808@demai05.mw.mediaone.net>
+From: Brian <hiryuu@envisiongames.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-References: <Pine.LNX.4.33.0111291548580.4437-100000@lx1.daboard.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Linux 2.4.16+SMP+Ext3+LVM snapshots
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,26 +13,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 29 19:09:01 2001
+Date: Thu Nov 29 23:13:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-mitch@mdmiller.com wrote:
+So I'm building a file server with a 3ware raid card (6800, maybe replaced 
+with a 7800).
 
+This is a dual-1.2 Athlon running 2.4.16 with LVM sitting below our ~700GB 
+ext3 data partition.  At first, we used the lvm support included in the 
+kernel.
 
-> Pardon me for being a neophyte here, but what else goes on the root
-> partition which takes any significant or dynamic amount of space?  Isn't
-> the root just a place to put all the top level directories, the contents
-> of which are typically all on another partition anyway?
+After some copying, I tested
+	lvcreate -s -l 200 -n test1 /dev/vol0/cobra
+The snapshot was corrupt.  Known problem.  Fair enough.
 
+So I grabbed lvm 1.0.1 (released a couple days ago).  I patched the kernel 
+with the new lvm and the VFS-lock patch for 2.4.11.  There were quite a 
+few offsets, but it otherwise applied cleanly.
 
-It largely depends on how you set up your system.
+I started a big cp off an NFS mount and ran
+	lvcreate -s -l 200 -n test1 /dev/vol0/cobra
+The cp and lvcreate deadlocked.  Both are frozen in D state and they're 
+not coming out.
 
-For instance, on most systems I set up, I end up having / and /usr on 
-the same filesystem, which means that any RPMS I install end up on the 
-root partition.  If you start with a fairly small install and later 
-decide to add a bunch of flashy office suites, games, or multimedia 
-applications, your storage requirements can change drastically.
+Snapshots were the big reason for us to use LVM, so this is not good.
 
--- Lars
+Help!
+	-- Brian
