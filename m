@@ -1,9 +1,9 @@
-Message-ID: <3FBC1FAC.2050504@wanadoo.es>
-From: Xose Vazquez Perez <xose@wanadoo.es>
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------040800070301040804040707"
-Subject: [linux-lvm] [Fwd: [PATCH] LVM-1.0.8 for 2.4.23-rc1]
+From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
+Message-ID: <yw1xr803yxiw.fsf@kth.se>
+References: <20031021171817.GA28462@mail.parplies.de> <200311191103.57697.gregory@castandcrew.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: RAID 1 on Device Mapper - best practices?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,112 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 20 07:20:13 2003
+Date: Thu Nov 20 08:33:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
---------------040800070301040804040707
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+"Gregory K. Ruiz-Ade" <gregory@castandcrew.com> writes:
 
+> Doesn't MD allow background resyncs, anyway?
 
-here it goes...
+It does.
 
--------- Original Message --------
-Subject: [PATCH] LVM-1.0.8 for 2.4.23-rc1
-Date: Tue, 18 Nov 2003 03:10:22 +0100
-From: Xose Vazquez Perez <xose@wanadoo.es>
-To: linux-kernel <linux-kernel@vger.kernel.org>, Tosatti <marcelo.tosatti@cyclades.com>
+> Sure, it might suck the living daylights out of system performance,
 
-Changelog for 1.0.7 to 1.0.8
+It does.
 
-Driver
-------
-o fixed list handling in lvm_find_exception_table()
+> but at least it should be usable.
 
-o corrected physical extent counters
-
-user space utils and complete patch at:
-ftp://ftp.sistina.com/pub/LVM/1.0/
-
--thanks-
---
-Software is like sex, it's better when it's bug free.
-
-
+Sort of.  Anything timing critical, like music, is out of the
+question.
 
 -- 
-HTML mails are going to trash automagically
-
---------------040800070301040804040707
-Content-Type: text/plain;
- name="lvm_1.0.8.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="lvm_1.0.8.diff"
-
-diff -Nuar old/drivers/md/lvm.c new/drivers/md/lvm.c
---- old/drivers/md/lvm.c	2003-11-18 02:45:25.000000000 +0100
-+++ new/drivers/md/lvm.c	2003-11-18 02:40:24.000000000 +0100
-@@ -2594,8 +2594,9 @@
- 				      new_lv->lv_block_exception[e].
- 				      rsector_org, new_lv);
- 
--		vg_ptr->pe_allocated -= old_lv->lv_allocated_le;
-+		vg_ptr->pe_allocated -= old_lv->lv_allocated_snapshot_le;
- 		vg_ptr->pe_allocated += new_lv->lv_allocated_le;
-+		old_lv->lv_allocated_snapshot_le = new_lv->lv_allocated_le;
- 	} else {
- 		vfree(old_lv->lv_current_pe);
- 		vfree(old_lv->lv_snapshot_hash_table);
-diff -Nuar old/drivers/md/lvm-snap.c new/drivers/md/lvm-snap.c
---- old/drivers/md/lvm-snap.c	2003-11-18 02:45:25.000000000 +0100
-+++ new/drivers/md/lvm-snap.c	2003-11-18 02:50:37.000000000 +0100
-@@ -44,6 +44,7 @@
-  *    26/06/2002 - support for new list_move macro [patch@luckynet.dynu.com]
-  *    26/07/2002 - removed conditional list_move macro because we will
-  *                 discontinue LVM1 before 2.6 anyway
-+ *    27/08/2003 - fixed unsafe list handling in lvm_find_exception_table() [HM]
-  *
-  */
- 
-@@ -114,7 +115,7 @@
- 							     org_start,
- 							     lv_t * lv)
- {
--	struct list_head *hash_table = lv->lv_snapshot_hash_table, *next;
-+	struct list_head *hash_table = lv->lv_snapshot_hash_table, *next, *n;
- 	unsigned long mask = lv->lv_snapshot_hash_mask;
- 	int chunk_size = lv->lv_chunk_size;
- 	lv_block_exception_t *ret;
-@@ -123,8 +124,9 @@
- 	hash_table =
- 	    &hash_table[hashfn(org_dev, org_start, mask, chunk_size)];
- 	ret = NULL;
--	for (next = hash_table->next; next != hash_table;
--	     next = next->next) {
-+
-+	for (next = hash_table->next, n = next->next; next != hash_table;
-+             next = n, n = next->next) {
- 		lv_block_exception_t *exception;
- 
- 		exception = list_entry(next, lv_block_exception_t, hash);
-diff -Nuar old/include/linux/lvm.h new/include/linux/lvm.h
---- old/include/linux/lvm.h	2003-11-18 02:45:19.000000000 +0100
-+++ new/include/linux/lvm.h	2003-11-18 02:41:05.000000000 +0100
-@@ -80,8 +80,8 @@
- #ifndef _LVM_H_INCLUDE
- #define _LVM_H_INCLUDE
- 
--#define LVM_RELEASE_NAME "1.0.7"
--#define LVM_RELEASE_DATE "28/03/2003"
-+#define LVM_RELEASE_NAME "1.0.8"
-+#define LVM_RELEASE_DATE "17/11/2003"
- 
- #define	_LVM_KERNEL_H_VERSION	"LVM "LVM_RELEASE_NAME" ("LVM_RELEASE_DATE")"
- 
-
-
-
---------------040800070301040804040707--
+M�ns Rullg�rd
+mru@kth.se
