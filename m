@@ -1,11 +1,8 @@
-From: Qv6 <sundiatah1@comcast.net>
-Subject: Re: [linux-lvm] vgcreate problem
-References: <200309230122.09869.sundiatah1@comcast.net> <20030923064024.GA28343@percy.comedia.it>
-In-Reply-To: <20030923064024.GA28343@percy.comedia.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200309230745.09785.sundiatah1@comcast.net>
+Message-id: <200309261446.hIxs@karlsruher.de>
+From: THORSTEN TOVACOVSKY <THORSTEN.D.TOVACOVSKY@KARLSRUHER.DE>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] KLV: LVM-Probleme mit 31Bit-Linux auf s390x
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +13,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Sep 28 09:49:02 2003
+Date: Mon Sep 29 08:07:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, bluca@comedia.it
+Content-Type: text/plain; charset="iso-8859-1"
+To: LINUX-LVM@SISTINA.COM
 
-On Tuesday 23 September 2003 02:40 am, Luca Berra wrote:
- 
->
-> you are using lvm 1 with a kernel compiled with devfs
-> you have to use the long devfs names, check /proc/partitions
->
- 
+--- Erhalten von  A12.TOVACO 0721/353-4569                   26.09.03 15.=
+46
 
-Thanks for the tip.
-Tried this:
+=20 -> LINUX-LVM(A)SISTINA.COM
 
-vgcreate genis /dev/ide/host0/bus0/target0/lun0/part6
+Hallo Herr Mauelshagen,
 
-vgcreate genis /dev/ide/host0/bus0/target1/lun0/disc
+wir nutzen Suse SLS8 31Bit auf einer z900 (2C1) unter z/VM (64Bit).
 
-and got the same error message (vgcreate -- no valid physical volumes in 
-command line)
+Wir versuchen den LVM mit Raid0 - Devices arbeiten zu lassen.
 
-Any clues as to what is going on here?
+Des =F6fteren kommt bei diversen Commands der LVM scheinbar durcheinander=
+=20und
+zeigt pl=F6tzlich das 1.Devices unterm Raid0-Device an.
 
-Qv6
+Beispiel:
+VG mit 6 PVs
+per pvmove eines dieser PVs freigeschaufelt,
+dann per vgreduce dieses aus der VG versucht zu entfernen.
+
+ein pvscan bringt dann pl=F6tzlich sowohl das md-dev als auch die 1.devic=
+e im md
+als inaktiv.
+
+Da ist also sowieso schon was schiefgegangen. Leider sind diese beiden da=
+nn per
+pvchange -xn /dev/xxx nicht als PVs entfernbar. Siehe Meldung:
+
+=20> pvchange -- unable to find volume group of "/dev/dasdk1" (VG not act=
+ive?) <
+
+Scheints mu=DF die VG doch noch aktiv sein, doch dann bekomm ich die PVs =
+ja auch
+nicht raus, dann dann folgende Meldung kommt:
+
+=20> pvchange -- physical volume "/dev/md0" is unallocatable <
+
+
+Und nun ?
+Haben Sie=B4nen Tipp f=FCr uns ?
+K=F6nnen Wir sie bei einer eventuellen Fehlersuche unterst=FCtzen ?
+
+Gr=FC=DFe
+Thorsten
+(Karlsruher Lebensversicherung AG)
+###########################################################
+
+This e-mail message has been scanned for Viruses=20
+by a Content Security Software.=20
+
+KARLSRUHER Lebensversicherung AG, 2003
+
+###########################################################
