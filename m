@@ -1,7 +1,11 @@
-From: laurent.ml@linuxfr.org
-Message-ID: <wazza.87fzhdbh1t.fsf@message.id>
+From: "Mark H. Wood" <mwood@IUPUI.Edu>
+Subject: Re: [linux-lvm] Drive gone bad, now what?
+In-Reply-To: <3F9989C9.1070909@xs4all.nl>
+Message-ID: <Pine.LNX.4.55.0310280920570.14569@mhw.ULib.IUPUI.Edu>
+References: <20031021171817.GA28462@mail.parplies.de> <3F985B2D.5060008@xs4all.nl>
+ <16280.27367.874758.610758@gargle.gargle.HOWL> <3F98B691.7090902@webhackande.se>
+ <3F9989C9.1070909@xs4all.nl>
 MIME-Version: 1.0
-Subject: [linux-lvm] access beyond end of the device :(
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,115 +16,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 28 06:59:02 2003
+Date: Tue Oct 28 08:40:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I've been experienced "access beyond end of the device" kind of error
-on my lvm1 logical volume.
-I'm using:
-- LVM2.2.00.07
-- DM 2.4.23-pre7-dm3
-- linux kernel 2.4.23-pre8
-- debian sid
-- ext3
+On Fri, 24 Oct 2003, Gert van der Knokke wrote:
+> Rickard Olsson wrote:
+> > John> If you had just a simple concatenation of all the disks, then
+> > you are
+> > John> toast.  How do you expect LVM to restore the missing 60gb if
+> > there's
+> > John> no parity information or mirrored blocks?  It's impossible!
+>
+> I didn't expect lvm to restore the missing data, I guessed it would just
+> let me access the rest of the data.
 
-I'm not sure it has something to do with it, but I tried 2.6.0-test9 +
-2.6.0-t6-mm1-dm2 for 5 minutes and went back to 2.4.23-pre8.
+To elaborate a bit, there are three cases to consider:
 
-I'm now having that kind of errors:
-kernel: attempt to access beyond end of device
-kernel: fe:00: rw=0, want=1898713640, limit=183500800
-kernel: attempt to access beyond end of device
-kernel: fe:00: rw=0, want=1543813092, limit=183500800
-kernel: attempt to access beyond end of device
-kernel: fe:00: rw=0, want=214402632, limit=183500800
+o  An LV with no extents stored on the failed drive.  This LV is intact
+   and LVM should be able to provide it as if nothing had happened,
+   because nothing *has* happened to this LV.
 
-fsck complains about a file system with errors.
-(illegal block #### (######) in inode ####)
-I did not let it correct them.
+o  An LV all of whose extents were stored on the failed drive.  This LV's
+   content is entirely lost and may only be recovered from other media.
 
-How can I correct that ?
-What informations do you need ?
+o  An LV, some but not all of whose extents were stored on the failed
+   drive.  Once the lost storage has been replaced, LVM *could* present
+   this LV, which would contain a damaged filesystem.  'fsck' might be
+   able to repair the filesystem enough to recover files which were stored
+   in the undamaged extents, or a filesystem debugger might be available
+   to facilitate manual recovery.  Some of the content is lost and may
+   only be recovered from other media, but other content is undamaged.
 
-vgdisplay -v
-    Finding all volume groups
-    Finding volume group "data"
-  --- Volume group ---
-  VG Name               data
-  System ID             fozzy1051979424
-  Format                lvm1
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                256
-  Cur LV                1
-  Open LV               1
-  Max PV                256
-  Cur PV                2
-  Act PV                2
-  VG Size               175.00 GB
-  PE Size               32.00 MB
-  Total PE              5600
-  Alloc PE / Size       5600 / 175.00 GB
-  Free  PE / Size       0 / 0   
-  VG UUID               06g3cd-Jd4B-bYvU-xLhA-pYMX-OZSH-LVShS4
-   
-  --- Logical volume ---
-  LV Name                /dev/data/data
-  VG Name                data
-  LV UUID                000000-0000-0000-0000-0000-0000-000000
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                175.00 GB
-  Current LE             5600
-  Segments               2
-  Allocation             next free
-  Read ahead sectors     1024
-  Block device           254:0
-   
-  --- Physical volumes ---
-  PV Name               /dev/hdc1     
-  PV UUID               7Ny8DG-mLrZ-3wkK-aXEI-LPfA-NGx4-vMVoha
-  PV Status             allocatable
-  Total PE / Free PE    3680 / 0
-   
-  PV Name               /dev/hda9     
-  PV UUID               XVbt8d-RFx0-z6Db-yfC3-lN32-P7Dt-mdH84j
-  PV Status             allocatable
-  Total PE / Free PE    1920 / 0
+   I don't yet know LVM well enough to say whether it *does* handle this
+   case, but it can in theory and I would expect it to be written to do
+   so.  Others' comments suggest that this is so.
 
-pvdisplay -v
-    Scanning for physical volume names
-  Physical volume "/dev/hdc1" of volume group "data" is exported
-  --- Physical volume ---
-  PV Name               /dev/hdc1
-  VG Name               data (exported)
-  PV Size               115.04 GB / not usable 36.90 MB
-  Allocatable           yes (but full)
-  PE Size (KByte)       32768
-  Total PE              3680
-  Free PE               0
-  Allocated PE          3680
-  PV UUID               7Ny8DG-mLrZ-3wkK-aXEI-LPfA-NGx4-vMVoha
-   
-  Physical volume "/dev/hda9" of volume group "data" is exported
-  --- Physical volume ---
-  PV Name               /dev/hda9
-  VG Name               data (exported)
-  PV Size               60.06 GB / not usable 63.72 MB
-  Allocatable           yes (but full)
-  PE Size (KByte)       32768
-  Total PE              1920
-  Free PE               0
-  Allocated PE          1920
-  PV UUID               XVbt8d-RFx0-z6Db-yfC3-lN32-P7Dt-mdH84j
+BTW I've used various logical-volume schemes for years on top of hardware
+RAID.  It's a combination that works well.  I don't understand why some
+people want to put (soft) RAID on top of LVM rather than underneath it.
 
-Any help would be greatly appreciated.
+- -- 
+Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
+MS Windows *is* user-friendly, but only for certain values of "user".
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2 (GNU/Linux)
+Comment: pgpenvelope 2.10.2 - http://pgpenvelope.sourceforge.net/
 
--- 
-Laurent
+iD8DBQE/nn9/s/NR4JuTKG8RArSyAJ93Bdog6U2fNrbpF/dAJ6BZOVlMyQCeKhmU
+fEB18by5nkGWlKt/Ge35olE=
+=8ETo
+-----END PGP SIGNATURE-----
