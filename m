@@ -1,10 +1,13 @@
-From: Austin Gonyou <austin@coremetrics.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="=-oc38M7WmpvCoaaZfxGlU"
-Message-Id: <1012459640.17154.13.camel@UberGeek>
+Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementation
+    ready for beta testing
+Message-Id: <20020130230150.C7763@fib011235813.fsnet.co.uk>
+References: <20020130202254.A7364@fib011235813.fsnet.co.uk>
+    <20020130145408.I763@lynx.adilger.int> <1012428221.1750.253.camel@lapcat>
 MIME-Version: 1.0
-Subject: [linux-lvm] [OT] Request for assistance. Reply off-list.
+Content-Disposition: inline
+In-Reply-To: <1012428221.1750.253.camel@lapcat>; from Jim@mcdee.net on Wed,
+    Jan 30, 2002 at 10:03:40PM +0000
+From: Joe Thornber <thornber@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,68 +18,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 31 00:48:01 2002
+Date: Thu Jan 31 03:00:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Jim McDonald <Jim@mcdee.net>
+Cc: Andreas Dilger <adilger@turbolabs.com>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, lvm-devel@sistina.com
 
---=-oc38M7WmpvCoaaZfxGlU
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 30, 2002 at 10:03:40PM +0000, Jim McDonald wrote:
+> Also, does/where does this fit in with EVMS?
 
-I've got a major Oracle problem and I'm not sure what to do. I can't
-figure it out and I need some ideas on how to go about trouble
-shooting/fixing this problem. If you've got oracle+linux+XFS experience,
-I can REALLY use your help.=20
+EVMS differs from us in that they seem to be trying to move the whole
+application into the kernel, whereas we've taken the opposite route
+and stripped down the kernel side to just provide services.
 
-Problem: sqlplus segfaults when trying to compile packages. (stored
-procedures)
+This is fine, I think there's room for both projects.  But it is worth
+noting that EVMS could be changed to use device-mapper for it's low
+level functionality.  That way they could take advantage of the cool
+work we're doing with snapshots and pvmove, and we could take
+advantage of having more eyes on the core driver.
 
-Linux Distro: RH 7.1/7.2 SGI XFS installed
-Kernels: 2.4.10 ->2.4.17
-Glibc 2.2.2-10 -> 2.2.5 compiled
-gcc 2.96-81 -> 3.0.3 compiled.=20
+LVM2 may not seem that exciting initially, since the first release is
+just concentrating on reproducing LVM1 functionality.  But a lot of
+the reason for this rewrite is to enable us to add in the new features
+that we want (such as a transaction based disk format).  It's on this
+new feature list that we'll be mainly competing with EVMS.
 
-I've got several systems that work without much issue.=20
-They are dual PIII 550. 2GB ram. 45GB hdd(9+36)
-
-The server I'm trying to get going is a Dell 6450 8GB RAM, 4P 700Mhz
-Xeon. 204GB Disk space 8x36.=20
-
-the re-linked binaries on the target platform are larger than on the
-servers that are currently working and don't display the issue.=20
-
-I've tried to use gdb and strace to figure out what's going on, but
-there is never any descriptive info when this occurrs. Core files are
-found, but do not yeild any information as there are no symbols and the
-segfault I get  is a "generic error".=20
-
-There's been info about eval.c:36 in relation to the dumps, but that's
-usually about it.=20
-
-Thanks for you time and sorry for the bother. This project is VERY
-important, and I'm getting short on time. Yes, we've opened a TAR with
-Oracle already, but they're not very quick to respond.=20
---=20
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-698-7250
-email: austin@coremetrics.com
-
-"It is the part of a good shepherd to shear his flock, not to skin it."
-Latin Proverb
-
---=-oc38M7WmpvCoaaZfxGlU
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQA8WOh494g6ZVmFMoIRAth+AJ9ylSf2s7mPvjd62DZEbtuG0f8bIgCg5K1c
-PvfuqAaR8C0Cavrkvff/kIs=
-=fG7a
------END PGP SIGNATURE-----
-
---=-oc38M7WmpvCoaaZfxGlU--
+- Joe
