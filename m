@@ -1,11 +1,11 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Wed, 29 Nov 2000 21:57:37 +0000
+Date: Wed, 29 Nov 2000 21:59:50 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
 Subject: Re: [linux-lvm] Old problem cropping up again with 0.9 lvm tools?
-Message-ID: <20001129215737.A26839@srv.t-online.de>
-References: <20001129174952.A26362@colombina.comedia.it> <200011291849.eATInOJ22818@webber.adilger.net>
+Message-ID: <20001129215950.B26839@srv.t-online.de>
+References: <3A247D53.E3B78F60@cup.hp.com> <20001129174952.A26362@colombina.comedia.it>
 Mime-Version: 1.0
-In-Reply-To: <200011291849.eATInOJ22818@webber.adilger.net>; from adilger@turbolinux.com on Wed, Nov 29, 2000 at 11:49:23AM -0700
+In-Reply-To: <20001129174952.A26362@colombina.comedia.it>; from bluca@comedia.it on Wed, Nov 29, 2000 at 05:49:52PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,23 +13,64 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: mge@sistina.com
 
-On Wed, Nov 29, 2000 at 11:49:23AM -0700, Andreas Dilger wrote:
-> Luca writes:
-> > you should apply the attached patch
+On Wed, Nov 29, 2000 at 05:49:52PM +0100, Luca Berra wrote:
+> On Tue, Nov 28, 2000 at 07:51:47PM -0800, John DeFranco wrote:
+> > Hi,
+> > 
+> > I'm having a problem doing a pvcreate on a raid
+> > device. It fails with:
+> you should apply the attached patch
+> but thre is another problem:
+> vgscan will fail in pv_read
+> since pv_read.c contains a line which makes it fail if the device is an
+> me device.
+
+It's used to distinguish in a higher library layer between MD and other devices.
+
 > 
-> Heinz, I believe this patch was also included in my 0.8 patchset, but
-> was dropped from 0.8.1...
+> 0.8.1 has the same line, but pvread s not calle d by vgscan :)
 
-Sorry?
-
-Already reintegrated it for 0.8.2.
-
+It gets called indirectly from from vgscan by calling vg_read_with_pv_and_lv().
 
 > 
-> Cheers, Andreas
-> ===========================================================================
+> heinz is there any reason for the code in pv-read.c to exist?
+> 
+> L.
+> 
+> -- 
+> Luca Berra -- bluca@comedia.it
+>     Communication Media & Services S.r.l.
+
+> Return-Path: <bluca@vodka.it>
+> Delivered-To: bluca@comedia.it
+> Received: from Moskowskaya.vodka.it (Moskowskaya.vodka.it [213.246.0.200])
+> 	by colombina.comedia.it (Postfix) with ESMTP id D04DB506D
+> 	for <bluca@comedia.it>; Sun, 26 Nov 2000 10:04:12 +0000 ()
+> Received: by Moskowskaya.vodka.it (Postfix, from userid 500)
+> 	id 575EDCB15; Sun, 26 Nov 2000 11:04:04 +0100 (CET)
+> Date: Sun, 26 Nov 2000 11:04:04 +0100
+> From: Luca Berra <bluca@vodka.it>
+> To: bluca@comedia.it
+> Subject: LVM09
+> Message-ID: <20001126110404.A11052@Moskowskaya.vodka.it>
+> Reply-To: bluca@vodka.it
+> Mime-Version: 1.0
+> Content-Type: multipart/mixed; boundary="u3/rZRmxL6MmkK24"
+> Content-Disposition: inline
+> User-Agent: Mutt/1.2.5i
+> X-Operating-System: Linux Moskowskaya 2.4.0-test8 i586
+> Return-Receipt-To: bluca@vodka.it
+> 
+> 
+> -- 
+> Luca Berra -- bluca@vodka.it
+>     PGP/GPG Public keys available via keyservers
+>       DSA: DA24 D16D 05FE A144 7762  BAF8 9307 A167 64C6 3A61
+>       ElG: 0429 0E81 F546 A3F5 726A  4789 802B 3464 48DF A653
+>       RSA: 6E 85 91 CA 4D 3B 36 2D  7F DB B1 39 D8 99 CC E6
+> 
+
 > --- lib/pv_get_size.c.bluca	Mon Nov 13 01:20:11 2000
 > +++ lib/pv_get_size.c	Sun Nov 26 10:53:09 2000
 > @@ -87,6 +87,7 @@
@@ -59,14 +100,8 @@ Already reintegrated it for 0.8.2.
 >  
 >     first = 1;
 >     if ( ( pv_handle = open ( disk_dev_name, O_RDONLY)) == -1) {
-> -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+
 
 -- 
 
