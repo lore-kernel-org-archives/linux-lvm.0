@@ -1,11 +1,12 @@
-Return-Path: <mbp@valinux.com>
-Date: Tue, 3 Jul 2001 23:04:25 +1000
-From: Martin Pool <mbp@valinux.com>
-Subject: Re: [linux-lvm] Parted not making partitions
-Message-ID: <20010703230424.K24350@valinux.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.A32.4.21.0107031806220.54566-100000@prlfs.prl.ernet.in>
+Return-Path: <heartboy@nycap.rr.com>
+From: Joe Morris <heartboy@nycap.rr.com>
+Subject: Re: [linux-lvm] vgcreate
+Date: Tue, 3 Jul 2001 09:38:22 -0400
+References: <85063BBE668FD411944400D0B744267A481B89@AUSMAIL>
+In-Reply-To: <85063BBE668FD411944400D0B744267A481B89@AUSMAIL>
+MIME-Version: 1.0
+Message-Id: <01070309382200.01132@alb-66-66-254-86>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,33 +19,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On  3 Jul 2001, RAGHVENDRA SHUKLA <rshukla@prl.ernet.in> wrote:
-> 
-> Hello ,
->        My lINUX RED HAT 7.1 HAS THE disk partitions ( as given by parted
-> -print ) are as follows :
-> 
->     1 	0.031	23.532		ext2	boot
->     2	23.533	28623.625	extended
->     5   23.563	1357.053	logical	ext2
->     6 	28027.494	28529.494	logical	linux-swap
-> 
-> 
->     Now i know that there is space between the 1357.053 - 28027.494 ,
-> ( as i have reduced this partition by myself and this is root )
-> whenever i give the command --> mkpart primary ext2 1357.054 28027.493
-> then it says that the partition overlaps . This is not clear to me .
+On Monday 02 July 2001 10:14 pm, you wrote:
+> Can you run vgcreate -v volname /dev/hde11, and give more verbose output?
+> also, some disks, after setting the type, you may actually need to reboot
+> so the kernel recognizes it properly. It could also be that it's an logical
+> drive on an extended partition too.
 
-The problem is that the space you refer to is within extended
-partition 2 and therefore cannot be allocated to a primary partition.
-You can, however, use this space for a new logical partition.  
-
-If this remains unclear, you should search for a good explanation of
-the crippled PC partitioning scheme.
-
--- 
-Martin 
-VA Linux Systems
+Well, while experimenting last night, I was able to create a volume group 
+with and earlier version lvm (I think beta2), so I believe it is a bug in 
+beta7.  Oh, and one more thing, last night I created a volume group of 10 
+gigs.  I made 2 logical volumes of around 5 gigs apiece formatted with 
+reiserfs.  I then reduced the second volume by 500M and extended the first 
+one by 500M.  But when I ran resize_reiserfs on the first one, I got and 
+error that the first one was too small.  What is going on?  Thanks!
+Joe
