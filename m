@@ -1,30 +1,75 @@
-Message-Id: <199908190204.EAA08578@e35.msede.com>
-Subject: Re: [linux-lvm] kernel 2.3.13 lvm patch
-Date: Thu, 19 Aug 99 4:04:21 MESZ
-In-Reply-To: <199908182124.AA15660@mailgate1b.telekom.de>; from "Heinz Mauelshagen" at Aug 18, 99 11:23 pm
-From: Michael Marxmeier <mike@msede.com>
+From: pamvdam@ramoth.xs4all.nl
+Date: Fri, 20 Aug 1999 18:39:24 +0200
+Subject: [linux-lvm] 2.3.14/LVM 0.7 - Bad lvmmap ptr ...
+Message-ID: <19990820183924.A21910@ladystrange.bluehorizon.nl>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: mikem@ccs.neu.edu, mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-> > Just tried out the 2.3.13 lvm patch along with the 0.7 tools
-> > When I run any tool it gives an invalid io-protocol error.
-> > If I look in my kernel log I see lvm loaded reporting version 0.8! 
-> 
-> Oops, my fault.
-> Will push a 0.7 kernel patch to the WEB soon.
+Hi!
 
-The corrected patch against the 2.3.13 kernel is available now.
+During the installation of an Oracle instance (doing lots of
+inserts) I get the following errors. I'm currently using kernel 2.3.14,
+a revised LVM 2.3.13 patch and lvm 0.7 tools.
 
-Michael
+I saw this earlier with 2.3.13 and LVM 0.7.
 
---
-Michael Marxmeier           Marxmeier Software GmbH
-E-Mail: mike@msede.com      Besenbruckstrasse 9
-Voice : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+Any ideas?
+
+Best regards,
+
+	Pascal
+
+syslog--------------------------------------------------------------
+
+
+Aug 20 18:13:21 dot kernel: Bad lvm_map in ll_rw_block
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780486, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780525, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780552, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780638, limit=0
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780718, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780723, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780801, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780805, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2780911, limit=4205429
+Aug 20 18:13:21 dot kernel: lvm - lvm_map *rsector: 5562048 + size: 2 too large for 01:10
+Aug 20 18:13:21 dot kernel: Bad lvm_map in ll_rw_block
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2781279, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2781872, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=14153, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=14158, limit=0
+Aug 20 18:13:21 dot kernel: lvm -- oops, got lvm request?
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2781928, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2781945, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2781949, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2781966, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=2782274, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=14634, limit=4205429
+Aug 20 18:13:21 dot kernel: attempt to access beyond end of device
+Aug 20 18:13:21 dot kernel: 08:21: rw=1, want=14878, limit=4205429
+Aug 20 18:13:41 dot kernel: lvm - lvm_map *rsector: 5740392 + size: 2 too large for 01:10
+Aug 20 18:13:41 dot kernel: Bad lvm_map in ll_rw_block
