@@ -1,9 +1,12 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Long-term snapshots possible?
-Message-ID: <20030312132546.B1259@sistina.com>
-References: <200303112228.39201.jhs@openenterprise.biz> <BD3FEC2C-5409-11D7-959E-0003937830E4@mac.com>
-Mime-Version: 1.0
-In-Reply-To: <BD3FEC2C-5409-11D7-959E-0003937830E4@mac.com>; from dalestephenson@mac.com on Tue, Mar 11, 2003 at 04:38:03PM -0500
+From: "B. J. Zolp" <bjzolp@wisc.edu>
+Subject: Re: [linux-lvm] restoration of LVM setup?
+In-reply-to: <20030312132252.A1259@sistina.com>
+Message-id: <200303120924.23057.bjzolp@wisc.edu>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Content-disposition: inline
+References: <200303111936.24376.novafire@novafett.com>
+ <20030312132252.A1259@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,59 +17,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 06:27:00 2003
+Date: Wed Mar 12 09:27:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Mar 11, 2003 at 04:38:03PM -0500, Dale J. Stephenson wrote:
-> 
-> On Tuesday, March 11, 2003, at 10:28  AM, Jason Smith wrote:
+I am currently using Mandrake 9.0, sso if I ever installed 9.0+ I should be 
+able to see the VG with little problems.  BTW, is the metadata stored on each 
+one of the partitions in the VG?  What if one of the drives in the VG died?  
+Is the VG easially recoverable and will it still run? (minus the data lost on 
+the down drive of course)..
+
+Thanks for the help
+
+bjz
+
+
+On Wednesday 12 March 2003 06:22, Heinz J . Mauelshagen wrote:
+> On Tue, Mar 11, 2003 at 07:36:24PM -0600, Nova FIre wrote:
+> > 	I am thinking about setting up LVM on my file server and would like to
+> > know how easy it is to re-setup a LVM layout if I install a new distro.  
+> > A few times I have had one of the OS drives fail on me which required a
+> > fresh install of linux on a new drive.  But since all my file storage
+> > drives were just single ext3 partitions I could mount them and the file
+> > server was back up in no time with no loss of important data.
 > >
-> > My problem is, this does not currently look possible without a severe
-> > performance hit.  If a volume has, for example, five active snapshots,
-> > then the deltas seem to get written five times, once per snapshot 
-> > volume.
+> > 	How easy is it to do the same thing with a LVM setup?
+>
+> Presumably the new distro has LVM in, it is a question of
+> scanning in the LVM metadata (vgscan) and activating the VG(s) (vgchange
+> -ay).
+>
+> Depending on the distro's upgrade support that works for basic filesystems
+> on LVs (/usr, /opt, ...) as well.
+>
+> > bjz
 > >
-> I posted a patch (in January?) to implement chained snapshots with 
-> LVM1, ensuring that a delta is only copied once, at most.  The downside 
-> is that the snapshots are no longer independent, and you can't remove a 
-> recent snapshot without invalidating all the older snapshots.  But it 
-> is more efficient.
-> 
-> I didn't keep the message, but I believe chained snapshots will be 
-> implemented in LVM2 sometime this year.
-
-Yes they will show up in LVM2 later.
-
-FYI: LVM1 is in feature freeze since last year.
-
-> 
-> Dale J. Stephenson
-> dalestephenson@mac.com
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
