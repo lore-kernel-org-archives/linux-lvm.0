@@ -1,22 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBLLrDr28541
-	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 16:53:13 -0500
-Received: from dcs.nac.uci.edu (root@dcs.nac.uci.edu [128.200.34.32])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBLLr7WN002393
-	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 16:53:07 -0500
-Subject: Re: [linux-lvm] Can't mount after crash
-From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
-In-Reply-To: <20041221211015.GS26670@agk.surrey.redhat.com>
-References: <41BB808E.60108@danielroth.se> <41BFC24F.6060207@danielroth.se>
-	<41C1D30A.6030201@danielroth.se>
-	<1103222964.31909.224.camel@tesuji.nac.uci.edu>
-	<20041221211015.GS26670@agk.surrey.redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-9Ft+k2ylAfFVzCRojKtM"
-Date: Tue, 21 Dec 2004 13:53:04 -0800
-Message-Id: <1103665984.11479.45.camel@tesuji.nac.uci.edu>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBM1vlr14190
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 20:57:47 -0500
+Received: from smtp2.prod2.securaserv.com (203-96-158-55.paradise.net.nz
+	[203.96.158.55])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBM1veZM010020
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 20:57:41 -0500
+Message-ID: <41C8D48C.6090908@vilain.net>
+Date: Wed, 22 Dec 2004 14:57:32 +1300
+From: Sam Vilain <sam@vilain.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] PVs that are reused / reformatted as filesystems
+References: <41C650A3.2090302@vilain.net>
+	<20041221181601.GJ26670@agk.surrey.redhat.com>
+In-Reply-To: <20041221181601.GJ26670@agk.surrey.redhat.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,69 +24,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Alasdair G Kergon wrote:
+>>Could someone please give me a fish (tell me how to un-jam my LVM) and
+>>maybe even teach the LVM drivers/utilities to fish as well?
+> Use pvscan / pvs -v to work out which devices you want to see and which you don't
+> then change the filter in /etc/lvm/lvm.conf so you only see the right ones.
 
---=-9Ft+k2ylAfFVzCRojKtM
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Thanks Alasdair.
 
-On Tue, 2004-12-21 at 21:10 +0000, Alasdair G Kergon wrote:
-> On Thu, Dec 16, 2004 at 10:49:24AM -0800, Dan Stromberg wrote:
-> > ext3 users list,=20
->=20
-> But you tried to mount it as ext2?
->=20
-> Is it meant to be ext2 or ext3?
+It looks like my problem is actually deeper than I originally thought;
 
-It's ext3, but ext2 tools are supposed to often work on ext3 -
-especially if you're applying them to a -copy- of your data.  :)
+# vgdisplay -v foobar
+[snip]
+   --- Physical volumes ---
+   PV Name               /dev/hda2
+   PV UUID               weM5FG-L0Li-Ir7y-0B2z-MJoq-tvAg-C2Q19E
+   PV Status             allocatable
+   Total PE / Free PE    16672 / 0
 
-> > and don't seem to be getting satisfaction.
->=20
-> Probably because you're not giving people all the information they need
-> to help you; and maybe even some of the things you've tried have made
-> the problem worse - I don't understand yet why you did the pvcreates,
-> for example, and are you certain the lvm2 backup file you used was=20
-> completely up-to-date? =20
+   PV Name               /dev/hda1
+   PV UUID               85M9M7-QsLh-dVKf-xfU3-ua4h-Ks4h-QGrMhu
+   PV Status             allocatable
+   Total PE / Free PE    3578 / 26
 
-I have my data back now. As a reminder, what I did was:
+   PV Name               unknown device
+   PV UUID               PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE
+   PV Status             allocatable
+   Total PE / Free PE    4535 / 4535
 
-On FC3's rescue disk...
+Hmm, now how can I use vgreduce on an read-only VG to remove an unknown
+PV?
 
-1) Do startup network interfaces
-2) Don't try to automatically mount the filesystems - not even readonly
-3) lvm vgchange --ignorelockingfailure -P -a y
-4) fdisk -l, and guess which partition is which based on size: the small
-one was /boot, and the large one was /
-5) mkdir /mnt/boot
-6) mount /dev/hda1 /mnt/boot
-7) Look up the device node for the root filesystem
-in /mnt/boot/grub/grub.conf
-8) A first tentative step, to see if things are working: fsck -
-n /dev/VolGroup00/LogVol00
-9) Dive in: fsck -f -y /dev/VolGroup00/LogVol00
-10) Wait a while...  Be patient.  Don't interrupt it
-11) Reboot
+# vgreduce --removemissing foobar
 
-> Have you a kept a complete log (i.e. shell history) of every command=20
-> you ran on the system while trying to recover things?
+Gone.
 
-Nope, but all seems fine now.
-
-Thanks!
-
-
---=-9Ft+k2ylAfFVzCRojKtM
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-
-iD8DBQBByJtAo0feVm00f/8RAjAPAJ9qw1Jyu7xc11qfN7osmdR9ojqVawCgmdz6
-g+sNNd2oIJHV0F/sPfICrp4=
-=IRIi
------END PGP SIGNATURE-----
-
---=-9Ft+k2ylAfFVzCRojKtM--
+-- 
+Sam Vilain, sam /\T vilain |><>T net, PGP key ID: 0x05B52F13
+(include my PGP key ID in personal replies to avoid spam filtering)
