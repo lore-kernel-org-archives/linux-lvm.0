@@ -1,11 +1,11 @@
-Return-Path: <mark@theleistners.org>
-Message-ID: <000e01c08235$bc65a730$3b027eaa@leistnermnt>
-From: "Mark D. Leistner" <mark@theleistners.org>
-Date: Fri, 19 Jan 2001 11:34:46 -0500
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_000B_01C0820B.D2EAACA0"
-Subject: [linux-lvm] LVM with loopback
+Return-Path: <joe@66bassett.freeserve.co.uk>
+Date: Fri, 19 Jan 2001 16:37:58 +0000
+From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] Kernel panic while snapshotting.
+Message-ID: <20010119163758.B1874@66bassett.freeserve.co.uk>
+References: <Pine.LNX.4.30.0101190750570.27286-100000@beefcake.hdqt.valinux.com>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.30.0101190750570.27286-100000@beefcake.hdqt.valinux.com>; from jweber@valinux.com on Fri, Jan 19, 2001 at 07:56:26AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,42 +17,93 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Hi Jay,
 
-------=_NextPart_000_000B_01C0820B.D2EAACA0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Drat.  I'm really sorry about this.
 
-Can someone please give me, or point me to some help using LVM with =
-loopback filesystems.  I would like to test it out some before I use it =
-on my systems, and I haven't been able to get it to work right.  Thanks!
+Can you try reversing this patch please ?  It should fix it.
 
-Mark
+Let me know if you're still having trouble afterwards.
 
-------=_NextPart_000_000B_01C0820B.D2EAACA0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+- Joe
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Diso-8859-1" =
-http-equiv=3DContent-Type>
-<META content=3D"MSHTML 5.00.3103.1000" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Can someone please give me, or point me =
-to some=20
-help using LVM with loopback filesystems.&nbsp; I would like to test it =
-out some=20
-before I use it on my systems, and I haven't been able to get it to work =
+diff -u -r1.2.2.6 -r1.2.2.7
+--- LVM/kernel/lvm-snap.c	2001/01/12 16:08:12	1.2.2.6
++++ LVM/kernel/lvm-snap.c	2001/01/17 15:20:27	1.2.2.7
+@@ -45,10 +45,6 @@
+ 
+ static char *lvm_snap_version __attribute__ ((unused)) = "LVM 0.9 snapshot code (13/11/2000)\n";
+ 
+-#ifndef LockPage
+-#define LockPage(map) set_bit(PG_locked, &(map)->flags)
+-#endif
+-
+ extern const char *const lvm_name;
+ extern int lvm_blocksizes[];
+ 
+@@ -492,7 +488,7 @@
+ 		goto out;
+ 
+ 	err = -ENOMEM;
+-	iobuf->locked = 1;
++	iobuf->locked = 0;
+ 	iobuf->nr_pages = 0;
+ 	for (i = 0; i < nr_pages; i++)
+ 	{
+@@ -513,9 +509,6 @@
+ #endif
+ 
+ 		iobuf->maplist[i] = page;
+-		/* the only point to lock the page here is to be allowed
+-		   to share unmap_kiobuf() in the fail-path */
+-		LockPage(page);
+ 		iobuf->nr_pages++;
+ 	}
+ 	iobuf->offset = 0;
 
-right.&nbsp; Thanks!</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Mark</FONT></DIV></BODY></HTML>
 
-------=_NextPart_000_000B_01C0820B.D2EAACA0--
+On Fri, Jan 19, 2001 at 07:56:26AM -0800, Jay Weber wrote:
+> Hi,
+> 
+> I just got a kernel panic while snapshotting with 0.9.1beta2.  I wonder if
+> anybody has seen any similar issues or I possibly fubar'd the patch on my
+> end?
+> 
+> Panic was:
+> 
+> 	Kernel panic: brw_kiovec: iobuf not locked for I/O
+> 
+> This occured while simultanously copying 20 tarballs back and forth
+> between two dirs on the source volume and performing a snapshot at that
+> time.  It appears to have hung my lvcreate (snapshot) command shell.
+> Oh, this was also using loop device for the source volume on my laptop in
+> this case.  Hmm, actually could this panic be related to the following
+> change in lvm.c?  It did work prior in 0.9.1beta1.
+> 
+> @@ -492,7 +488,7 @@
+>                 goto out;
+> 
+>         err = -ENOMEM;
+> -       iobuf->locked = 1;
+> +       iobuf->locked = 0;
+>         iobuf->nr_pages = 0;
+>         for (i = 0; i < nr_pages; i++)
+>         {
+> 
+> 
+> I haven't seen this one before myself, but in testing on our bigger scsi
+> based boxes in the back while snapshots are active and heavy IO is
+> performed on the source volume, the box tends to hang.  I gather this is
+> related to having to journal all source volume changes to the snapshot and
+> when you throw massive IO at it, things get slow. Any thoughts on this one
+> as well?
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 
