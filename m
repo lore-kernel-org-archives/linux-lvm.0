@@ -1,8 +1,10 @@
-Message-ID: <002e01c161d6$7fa8a960$0a5c010a@ultra>
-From: "Klaus Pedersen" <ultra@mailme.dk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: After power outtage my vg is gone
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] Re: After power outtage my vg is gone
+Message-ID: <20011030235208.F800@lynx.no>
+References: <002e01c161d6$7fa8a960$0a5c010a@ultra>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <002e01c161d6$7fa8a960$0a5c010a@ultra>; from ultra@mailme.dk on Wed, Oct 31, 2001 at 07:37:23AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,76 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 31 00:35:02 2001
+Date: Wed Oct 31 00:51:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi again,
-I really need help on this - sorry to send another request for help.
-Does anybody have a clue ? anything that can help me remount my vg without
-dataloss if possible ?
-Can anybody point me to documentation in saving a vg ? or a newsgroup on
-usenet I can try ?
+On Oct 31, 2001  07:37 +0100, Klaus Pedersen wrote:
+> I really need help on this - sorry to send another request for help.
+> Does anybody have a clue ? anything that can help me remount my vg without
+> dataloss if possible ?
+> Can anybody point me to documentation in saving a vg ? or a newsgroup on
+> usenet I can try ?
 
-To say it another way - _any_ help would be appreciated !
+Try "vgcfgrestore".
 
-Thanks in advance
-
-/Klaus Pedersen
-
------ Original Message -----
-From: "Klaus Pedersen" <ultra@mailme.dk>
-To: <linux-lvm@sistina.com>
-Sent: Sunday, October 28, 2001 7:09 PM
-Subject: After power outtage my vg is gone
-
-
-> I'm using Debian Linux on 2.4.6 (and whatever version of LVM that comes
-with
-> it).
-> After accidentaly pushing the power switch on my Linux server and starting
-> it up again, I have problems mounting my vg again.
->
-> This is what happens :
->
-> Vault:/home/ultra# mount /glftpd/site
-> mount: /dev/site_vg/lvol1 is not a valid block device
-> Vault:/home/ultra# vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "site_vg"
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "site_vg" from physical volume(s)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-> "/etc/lvmtab" and "/etc/lvmtab.d"
->
-> Vault:/home/ultra#
->
->
-> I read through the archive of the list because I am absolutely sure I am
-not
-> the first who had this problem. I read some stuff about using the
-uuid_fixer
-> tool, bit as far as I was able to read, the problem that fixes only shows
-up
-> after extending the VG (Which I did a week or so, ago), and only for
-kernels
-> up to 2.4.5.
-> Is this true ?
->
-> Vault:~/uuid_fixer# ./uuid_fixer /dev/hda8 /dev/hdb1
->
-> UUIDs discovered:
-> W9tkR7eq026WBMCBrUCdebI32vRyFuLn
-> u5vBzCHwu5mjAt5yN0lS4Ecrto1jI9NZ
->
-> I tried running it anyway, and after that I ran vgscan - and the same
-> problems showed up.
->
-> What do I do to recoved my data ?
->
->
-> Any help is greatly appreciated
->
-> /Klaus
->
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
