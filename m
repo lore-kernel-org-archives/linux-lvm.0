@@ -1,10 +1,9 @@
-Return-Path: <Ron.Vissers@qtiworld.com>
-Message-ID: <139803A793E0D311AFF60050DA2BC5400302109A@qtiexch1.qgraph.com>
-From: "Vissers, Ron" <Ron.Vissers@qtiworld.com>
-Subject: RE: [linux-lvm] debian 2.4.2 / LVM .91beta6 / pvcreate device doe
-	sn't exist ???
-Date: Mon, 9 Apr 2001 08:03:15 -0500 
+Return-Path: <terjekv@ifi.uio.no>
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 10 Apr 2001 01:43:31 +0200
+Message-ID: <wxxhezxskpo.fsf@fjorir.ifi.uio.no>
 MIME-Version: 1.0
+Subject: [linux-lvm] perl modules dealing with LVM, and a small request.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,56 +17,79 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
-
-Hi,
-
-Many Thanks for the reply!  Works now!
-
-Slight neuron breakdown.  I had too many /dev/hdc's flying around and added
-that "1" in there.
-
-Ron
-
------Original Message-----
-From: Patrick Caulfield [mailto:caulfield@sistina.com]
-Sent: Monday, April 09, 2001 3:42 AM
 To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] debian 2.4.2 / LVM .91beta6 / pvcreate device
-doesn't exist ???
 
+  hi. :)
 
-On Sat, Apr 07, 2001 at 03:43:42PM -0500, Vissers, Ron wrote:
-> ---
-> 
-> Disk /dev/hdc1: 255 heads, 63 sectors, 1826 cylinders
-> Units = cylinders of 16065 * 512 bytes
->  
->      Device Boot    Start       End    Blocks   Id  System
-> /dev/hdc1p1             1      1826  14667313+  8e  Unknown
-> 
-> -----
-> 
+  I'm currently writing a set of perl modules to interact with LVM.
+  the basic difference from what has been done earlier is that these
+  modules are purely a library. they're not at all dedicated to a GUI
+  or any such thing. the hope is that these modules might some day be
+  useful in several different contexts, all sharing the same modules
+  and the same codebase. the code will be (is) GPL, but it's currently
+  not really able to do anything, except read data from /proc and
+  extend LV's. 
 
-You have partitioned a partition ! 
+  the structure so far is rather simple, this example code shows the
+  use of the main module, which is all the caller ever sees.
 
-You should run fdisk on /dev/hdc rather than /dev/hdc1 and set the partition
-type of hdc1 to 8e. Then LVM should recognise it. I am assuming here that
-hdc1
-is the partition you want to use for LVM.
+,----[ sample usage of LVM.pm ]
+| use LVM;
+| 
+| print "Module version: $LVM::VERSION\n";
+| 
+| my $lvm = new LVM; # defaults to reading /proc/lvm/globals
+| 
+| print <<"EOT";
+| version: $lvm->{'version'} from $lvm->{'date'} (IOP $lvm->{'iop'})
+| 
+| size: $lvm->{'size'}
+| active: $lvm->{'time'}
+| 
+| VGs: $lvm->{'vgcount'}. PVs: $lvm->{'pvcount'}.
+| LVs: $lvm->{'lvcount'}. (open LVs: $lvm->{'lvopencount'})
+| 
+| EOT
+| 
+| for my $vg (@{$lvm->{'vglist'}}) { # each scalar in the vglist is a LVM::VG object.
+|     printf "  \"$vg->{'name'}\": %s total space, %s free.\n",
+|            $vg->{'totalkb'},
+|            $vg->{'freekb'};
+|     
+|     print "\n  LVs:\n";
+|
+|     for my $lv (@{$vg->{'lvlist'}}) { # each scalar in the lvlist is LVM::LV object
+|         printf "   %10s: %s (%d)\n", $lv->{'name'}, $lv->{'totalkb'},$lv->{'totalpe'};
+| 
+|         if ($lv->{'name'} eq 'logs') { # let's resize the 'logs' LV
+|             $lv->resize(24, 'pe');     # to 24 PE's. kb / mb etc are also valid units
+|         }
+| 
+|     }
+|     $vg->store(); # not implicit store of changes, must be called explicitly
+| }
+`----
 
-Be careful with fdisk - you can do a lot of damage if you don't know what
-you
-are doing.
+  (I'm guessing people will find it rather straightforward what this
+  does and what its output is...)
 
-patrick
+  $vg->store() (or even $lvm->store()) propagates the store()-call to
+  all objects, you could also call $lv->store() manually, if you'd
+  like. only objects that are changed from their original settings are
+  altered.
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
+  there are no real reasons for not calling store() implicitly, it's
+  just that I (at least currently :) like to test the modules before
+  saying "ok". besides, you can always say: "$lv->resize(25, 'pe');
+  $lv->store();" which will make the change happen there and then.
 
+  anyhow, for the request. I'd like a few /proc/lvm/globals to see
+  what it looks like with a lot of different VG's and such. I
+  currently have limited possibilities in making major changes to my
+  LVM-structure. :/
 
-------------------------------------------------------------------------
+  if people want to see the early stuff, I'll make it available upon
+  request. 
 
-This message has been scanned for viruses with Trend Micro's Interscan VirusWall.
+-- 
+Terje
