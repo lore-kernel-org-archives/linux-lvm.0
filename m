@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: LVM over linux on root disk support!
-Message-ID: <20020628184926.A25482@sistina.com>
-References: <12BB8DBFEF43BF49AC351D6C266E9031B1E5ED@xpa04.mayfield.hp.com>
-Mime-Version: 1.0
-In-Reply-To: <12BB8DBFEF43BF49AC351D6C266E9031B1E5ED@xpa04.mayfield.hp.com>; from jeffrey_fisher@hp.com on Fri, Jun 28, 2002 at 09:22:57AM -0700
+From: Hee So <h.so@ieee.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20020801014624.5F3855F22C@dell103.hee.net>
+Subject: [linux-lvm] Growing the size of the lv
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,64 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 28 11:57:01 2002
+Date: Wed Jul 31 20:42:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jeff,
+Hi,
 
-Linux LVM will support mirroring in is LVM2 code base later this year.
+  I read and tried to no avail. I need some assistance. The
+documentation is a little vague on this point. I am trying to 
+grow a LV (which originally had two PVs, and adding a third PV). 
+I run through the vgextend and did one other thing to eventually 
+have my lvdisplay recognize the diskspace of all 3 PVs. Originally
+the VG recognized all the 3 PVs, but the LV Size was the original.
+After some twittling around, the LV Size was that of all 3 PVs.
+when I run df -kh, I still get the size of the original diskspace
+while I had two PVs and can't use this new diskspace.
 
-If you want mirroring now, you need to combine MD and LVM by setting up mirrored
-MD devices (or RAID 5 if you like) and using them as LVM Physical Volumes.
+I pvcreated the third PV.  I tried mounting and unmounting. 
 
-Have a look at the raidtools starting with raidstart(8).
-
-On Fri, Jun 28, 2002 at 09:22:57AM -0700, FISHER,JEFFREY (HP-USA,ex3) wrote:
-> To whom it may concern;
->  
-> Does LVM now support mirroring under Linux? If so, how many copies, what
-> versions of the kernel, what distro
-> of Linux (mainly RedHat) and where can I go to obtain more information?
->  
-> Thanks in advance,
-> 
->   _____  
-> 
-> 
->  <http://www.hp.com/>  
-> 
-> Jeff Fisher
-> ASE
-> Hewlett-Packard Company
-> 
-> 650 694-3367 Phone
-> 831 626-2877 Fax
-> 
-> jeffrey_fisher@hp.com <mailto:jeffrey_fisher@hp.com>  	
-> 
->   _____  
-> 
->  
-
-
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Any help is appreciated,
+/hee
+h.so@ieee.org
