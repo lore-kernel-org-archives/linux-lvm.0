@@ -1,11 +1,12 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Tue, 14 Aug 2001 15:33:13 +0200
+Date: Tue, 14 Aug 2001 15:36:24 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010814153313.A24212@sistina.com>
-References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com> <20010812221650.A6589@vestdata.no> <20010813100858.C362@btconnect.com> <20010814103112.K295821@wobbly.melbourne.sgi.com>
+Message-ID: <20010814153624.B24212@sistina.com>
+References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com> <20010812221650.A6589@vestdata.no> <20010813100858.C362@btconnect.com> <20010814014951.H26064@vestdata.no>
 Mime-Version: 1.0
-In-Reply-To: <20010814103112.K295821@wobbly.melbourne.sgi.com>; from nathans@sgi.com on Tue, Aug 14, 2001 at 10:31:12AM +1000
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20010814014951.H26064@vestdata.no>; from lvm@ragnark.vestdata.no on Tue, Aug 14, 2001 at 01:49:51AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,105 +18,72 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Tue, Aug 14, 2001 at 10:31:12AM +1000, Nathan Scott wrote:
-> hi,
-> 
+On Tue, Aug 14, 2001 at 01:49:51AM +0200, Ragnar Kj=EF=BF=BDrstad wrote:
 > On Mon, Aug 13, 2001 at 10:08:58AM +0100, Joe Thornber wrote:
-> > On Sun, Aug 12, 2001 at 10:16:50PM +0200, Ragnar Kj?rstad wrote:
-> > > On Sun, Aug 12, 2001 at 08:07:02PM +0100, Joe Thornber wrote:
-> > > > I would much rather see people wrapping the tools than using liblvm, in fact
-> > > > liblvm will probably disappear in the future.
-> > > 
 > > > Why will liblvm disappear? To me using a library interface seems much
 > > > nicer than wrapping applications.
-> > 
+> >=20
 > > Because it's means there's yet another interface (along with the
 > > command line tools, and ioctl's) to constrain any implementation
 > > changes.  Command line tool interface will not change.  liblvm (if it
 > > still existed as a shared library) will change drastically between 1.0
 > > and 2.0 - not least because it in turn reflects the driver ioctl
 > > interface.
-> > 
+>=20
+> I'm not complaining if it's changing, but if it's going away, that's bad
+> :(
+>=20
 > > The experimental branch has a single lvm tool, with liblvm statically
 > > linked into it.  There's no need for the outside world to know about
 > > liblvm.
-> > 
-> 
-> Just as another data point - the XFS mkfs program uses liblvm to
-> figure out the stripe width and stripe size of the underlying
-> volume, and then uses that knowledge to improve the layout of the
-> various ondisk data structures for the filesystem, if its sitting
-> on top of a striped LVM volume.
+> >=20
+> > It may be a good idea for Sistina to produce a tiny 'wrap the tools'
+> > library for use by gui implementors.
+>=20
+> yach! An uncomplete list of uglyness:
+> * Errorhandling
 
-Nathan,
+Not much of a difference to the existing library error handling anyway.
 
-as Joe et al. stated the liblvm API is subject to major changes in the future.
-The command line interface is *not*.
+> * fork/exec
 
-Could you therefore please change mkfs to wrap lvdisplay(8) in order to
-retrieve the onformation?
-
-> 
-> As a reference, the code in the XFS cvs tree on oss.sgi.com in
-> cmd/xfsprogs/libdisk/lvm.c contains this logic.
-> 
-> The equivalent md code (in that same directory) uses an ioctl for
-> this function and is much cleaner - I wouldn't mind liblvm going
-> away provided this information can be extracted just as easily as
-> the md case.
-> 
-> If you do decide to make liblvm go away, please make sure you let
-> us know the correct way to extract this information without using
-> liblvm.  My personal preference would be an ioctl interface like
-> the md code provides.
-
-As stated before: please don't use the ioctl interface directly because
-it is subject to change!
-
-We'll make sure, that the CLI stays compatible.
+Well, that's what the UNIX tool box is all about.
+No mass fork/execs necessary.
 
 
-WRT the way how to retrieve the information using the CLI you could
-go with a tiny perl script, check the exit code to be zero and scanf(3)
-stdout (#stripes stripesize) in mkfs:
+> * having to format input arguments as strings (and quote them)
 
-#!/usr/bin/perl
-scalar @ARGV != 1 && exit 1;
-open ( PIPE, "lvdisplay $ARGV[0] |") || exit 2;
-$stripes=0;
-foreach (<PIPE>) {
-   if (/^Stripes\s+(\d+)/i) {$stripes=$1;}
-   if (/^Stripe\s+size\s+\(KByte\)\s+(\d+)/i) {$stripesize=$1; last;}
-}
-close PIPE;
-$stripes == 0 && exit 3;
-print "$stripes $stripesize\n";
-exit 0;
+printf doesn't seem to hard to use ;-)
 
+> * having to parse output data from strings=20
 
-Regards,
-Heinz    -- The LVM Guy --
+No big deal with for eg. perl.
 
-
-> 
-> cheers.
-> 
-> -- 
-> Nathan
+>=20
+>=20
+> --=20
+> Ragnar Kjorstad
+> Big Storage
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
+--=20
+
+Regards,
+Heinz    -- The LVM Guy --
+
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -123,4 +91,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
