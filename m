@@ -1,11 +1,11 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Wed, 15 Aug 2001 10:56:23 +0200
+Date: Wed, 15 Aug 2001 10:57:22 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Adding a mirror after-the-fact
-Message-ID: <20010815105623.A29693@sistina.com>
-References: <20010814171159.B28266@linux.com>
+Subject: Re: [linux-lvm] Renumbered drives hosed VG.
+Message-ID: <20010815105722.B29693@sistina.com>
+References: <B51F0C636E578A4E832D3958690CD73E0130BFC0@es04snlnt>
 Mime-Version: 1.0
-In-Reply-To: <20010814171159.B28266@linux.com>; from tack@linux.com on Tue, Aug 14, 2001 at 05:11:59PM -0400
+In-Reply-To: <B51F0C636E578A4E832D3958690CD73E0130BFC0@es04snlnt>; from jdiehl@sandia.gov on Tue, Aug 14, 2001 at 02:52:17PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,42 +21,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Aug 14, 2001 at 05:11:59PM -0400, Jason Tackaberry wrote:
-> I know this isn't strictly an LVM question, but ...
+On Tue, Aug 14, 2001 at 02:52:17PM -0600, Diehl, Jeffrey wrote:
+> Hi all,
 > 
-> Suppose I have a volume group with 1 physical volume, say a 9GB disk.
-> Now, after some time, I decide I want to mirror this VG with another 9GB
-> disk.  What options do I have?  AFAICS, the only way to do this would be
-> to start from scratch?  This is a pretty simple and presumably common
-> thing to want to do, so I hope I'm wrong.  :)
+> I recently upgraded from a modular kernel to a monolithic kernel, which
+> renumbered all of my drives.  sda became sdb, sdb became sdc and adc became
+> sda, etc.  Now one of my VG's is hosed.  How do I recover from this?
 
-Yes, you are (with 2.4 kernels) ;-)
-
-You could either mirror the whole disk using MD *without* persistent superblocks
-
-*or*
-
-use MD and mirror all logical volumes.
-
-The later needs an additional VG on the second disk with logical volumes of the
-same size of those in the first VG you already have.
-
-Say you have a volume group named "vg". Then you could create a volume group
-"vg_mirror" on the other disk, create logical volumes named after the ones
-you already have in "vg" and set up an /etc/raidtab file with mirrors for
-all the logical volumes.
-
-
-Pro of first approach is, that you don't need to worry about new logical volumes
-which will be mirrored automatically because you mirror the whole underlying
-device.
-
-With the second approach, you need to create a mirror logical volume, extend
-your raidtab and activate mirrors for every new logical volume.
+A vgscan run should excatly address this.
+Did it take place after the changes and *before* "vgchange -ay"?
 
 > 
-> Cheers,
-> Jason.
+> Thanx,
+> Mike Diehl,
+> Network Monitoring Tool Devl.
+> 284-3137
+> jdiehl@sandia.gov
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
