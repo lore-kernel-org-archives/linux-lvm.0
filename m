@@ -1,10 +1,11 @@
-Message-ID: <3B95195F.9040108@st-peter.stw.uni-erlangen.de>
-Date: Tue, 04 Sep 2001 20:11:43 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
+Date: Tue, 4 Sep 2001 20:22:57 +0100
 Subject: Re: [linux-lvm] rh kernel patches
+Message-ID: <20010904202257.A980@btconnect.com>
 References: <20010904175605.40186.qmail@web13402.mail.yahoo.com>
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010904175605.40186.qmail@web13402.mail.yahoo.com>; from plamb_98@yahoo.com on Tue, Sep 04, 2001 at 10:56:05AM -0700
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Red Hat uses Alan Cox kernel, i think you can not aply the patches from 
-1.0.1rc1 and rc2 to -ac kernel
-at least it didn't worked for me with 2.4.9-ac5  but i think you should 
-be able to aply the lvm-1.0 release
-it worked for me
-Pierre Lamb wrote:
+On Tue, Sep 04, 2001 at 10:56:05AM -0700, Pierre Lamb wrote:
+> Is there a correct way to patch RH kernels. I have
+> tried using the "final path" to update 2.4.7 rh kernel
 
->Is there a correct way to patch RH kernels. I have
->tried using the "final path" to update 2.4.7 rh kernel
->but just get errors. Is there a work around for this
->problem.
->
->Pierre
->
->__________________________________________________
->Do You Yahoo!?
->Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
->http://im.yahoo.com
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+What's the "final path" ?
+
+> but just get errors. Is there a work around for this
+> problem.
+
+You built the patch correctly using LVM/PATCHES/Makefile ?
+
+If so what were the errors ?
+
+- Joe
