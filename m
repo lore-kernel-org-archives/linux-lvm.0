@@ -1,45 +1,38 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
+Date: Tue, 22 Feb 2000 12:11:57 -0600 (CST)
+From: "Dominic J. Eidson" <sauron@the-infinite.org>
+Subject: [linux-lvm] LVM Petition (Or, page-to-show-our-interest-for-LVM-in-the-Kernel
+ :)
+In-Reply-To: <20000222002342.A7687@gruyere.muc.suse.de>
+Message-ID: <Pine.LNX.4.10.10002221207070.21065-100000@morannon.kdi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <14514.52338.134386.993962@dukat.scot.redhat.com>
-Date: Tue, 22 Feb 2000 17:50:42 +0000 (GMT)
-Subject: Re: [linux-lvm] Can we make char files not blocked for the volumes
-In-Reply-To: <38B1BFF2.769DED19@alwan.com>
-References: <200002191235.NAA27590@u9etz.164.27.16.48>
-	<38AE95CD.915AC596@alwan.com>
-	<14513.48287.977291.125248@dukat.scot.redhat.com>
-	<38B1BFF2.769DED19@alwan.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Chris Anderson <chris@alwan.com>
-Cc: "Stephen C. Tweedie" <sct@redhat.com>, "linux-lvm@msede.com" <linux-lvm@msede.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM <linux-lvm@msede.com>
 
-Hi,
+On Tue, 22 Feb 2000, Andi Kleen wrote:
 
-On Mon, 21 Feb 2000 16:45:06 -0600, Chris Anderson <chris@alwan.com>
-said:
+> LVM is in 2.3.47.
 
->  It is odd how it is used.  I had to hack it into 2.2.14, but go it working.
-> I think the "raw" command is odd, also it needs to be run every time you
-> reboot.  
+This is I'm sure a great day for us all - I noticed this, went to add it
+to the "news" section on the petition page (I've been told "petition" was
+a poor word choice, but at the time I couldn't think of anything better -
+and the name (as taken from the subject) would sound a little funny... ;)
+- I also updated all the links to point to the correct posts (apologies
+for not noticing it before - the archives changed, and all links to the
+posts changed with it..) - anyways, I just thought I'd post my 2 cents
+worth of trivial information before I go back to lurking...
 
-Indeed --- the raw interfaces need to be bound to specific devices just
-as eth* network interface names need to be bound to addresses.
 
-> Also who is the owner of this code. How does it find its way into
-> the standard 2.3 and lvm has not yet?  That is odd too.
+Dominic
 
-lvm just took a little longer --- they are both in 2.3 now.
+P.S> Finally got to play with LVM on a SuSE box here at work... Aah, feels
+good to be back in good old LVM-land again... :)
 
-> My test with Informix IDS 7.3 for linux showed that the raw io is twice as
-> slow.  A 17 mins load under block device using lvm but took 31mins for the
-> raw linked version.  I will be testing the Informix 9.2 version
-> tonight. 
-
-Raw IO does not do any caching in the O/S.  Specifically, it doesn't
-perform any readahead or writebehind.  If the application was using
-that implicit caching then raw IO will necessarily be slower.
-
---Stephen
+-- 
+Dominic J. Eidson
+                                         "Baruk Khazad! Khazad ai-menu!" - Gimli
+--------------------------------------------------------------------------------
+http://www.the-infinite.org/               http://www.the-infinite.org/~dominic/
