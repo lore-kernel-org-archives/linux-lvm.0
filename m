@@ -1,12 +1,10 @@
-Return-Path: <tack@orion.dok.org>
-Date: Wed, 15 Aug 2001 18:23:10 -0400
-From: Jason Tackaberry <tack@linux.com>
-Subject: Re: [linux-lvm] Help with redhat install
-Message-ID: <20010815182310.B31554@linux.com>
-References: <3B7AC356.A2FD65A3@xapnet.com> <Pine.LNX.4.33.0108151744300.28178-100000@leopard.dorfam.ca> <20010815181959.A31554@linux.com>
+Return-Path: <fauxpas@trellisinc.com>
+Date: Wed, 15 Aug 2001 19:50:08 -0400
+From: Faux Pas III <fauxpas@trellisinc.com>
+Message-ID: <20010815195008.A9648@trellisinc.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010815181959.A31554@linux.com>; from tack@linux.com on Wed, Aug 15, 2001 at 06:19:59PM -0400
+Subject: [linux-lvm] Problem using lvreduce
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,17 +20,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-* Jason Tackaberry (tack@linux.com) [010815 18:21]:
-> > Although 2.4.2-2 has lvm support built in I don't believe it is enabled in
-> > the default kernel.  I think you have to recompile the kernel and enable
-> > it.
-> 
-> If you have to recompile the kernel to get LVM support and download the
-> userland lvm tools (since I don't see an lvm rpm), I don't think that
-> quite qualifies as "built in."
+I have been having a problem removing a drive from a running 
+volume group.  I repeat this by creating a volume group from
+/dev/sda, /dev/sdb (each 18gb), /dev/hde, and /dev/hdg (each
+30gb).  I create an LV that spans all physical extents in 
+this group.  I then try to use lvreduce to take 4400 PE's out
+of the group (slightly more than occupy either of the two 
+scsi drives).
 
-Nevermind.  I guess I would have been right if you were talking about
-RedHat, and not the kernel that comes with it. :)
+Gryphon:~# lvreduce -l -4400 /dev/test_vg/test_lv 
+lvreduce -- WARNING: reducing active logical volume to 72.62 GB
+lvreduce -- THIS MAY DESTROY YOUR DATA (filesystem etc.)
+lvreduce -- do you really want to reduce "/dev/test_vg/test_lv"? [y/n]: y
+lvreduce -- ERROR "pv_check_consistency_all_pv(): PE" volume group "test_vg" is inconsistent
+lvreduce -- WARNING: you don't have an automatic backup of "test_vg"
+lvreduce -- logical volume "/dev/test_vg/test_lv" successfully reduced
 
-Sorry,
-Jason.
+After this, all manner of badness ensues, including:
+
+Gryphon:~# vgdisplay
+vgdisplay -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
+
+In any event, I'm not able to pvmove or vgreduce to get the drive out of
+the volume group as I would expect.   This is on 2.4.8 + LVM 1.0, and also
+manifests on 2.4.7 + LVM 0.9.1beta8.  I can provide any other diagnostic
+info that would be helpful, as I can reproduce this problem easily.
+
+-- 
+Josh Litherland (fauxpas@trellisinc.com)
+ It is by caffeine alone that I set my mind in motion.
+  It is by the juice of Mtn Dew that thoughts acquire speed.
