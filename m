@@ -1,9 +1,7 @@
-Message-ID: <3D57FD4A.9773B28B@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
+From: Danilo Godec <danci@agenda.si>
+Message-ID: <Pine.LNX.4.30.0208130910260.5532-100000@duplo.agenda.si>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] applications not working with lvm
-References: <3D57F98C.9040408@jumpline.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] IBM's LVM?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,24 +12,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 12 13:25:02 2002
+Date: Tue Aug 13 02:25:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ben Snyder wrote:
+Hi!
 
-> I've got an application that simply wont work (sorry, dont want to give
-> too many details).  It creates very large quantities of hard links,
-> binds a local directory to /proc, creates local files to represent block
-> devices and FIFO files.  All of this is in order to create a virtual
-> server for users.  I've tried to do many of these operations manually,
-> with perfect success, although I'm not trying to perform them on the
-> same scale at the same speed as the hosting software.
+There seems to be a new(?) Linux LVM implementation by IBM
+(http://evms.sourceforge.net/).
 
-This sound like a linux vserver. I'm running my vserver on a LVM, though
-i dont use hardlinks at all.
+Is this a really different implementation or is it just the tools, GUIs
+and stuff around the current kernel LVM?
 
+Thanks,
 
-
-JonB
+   D.
