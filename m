@@ -1,11 +1,7 @@
-Subject: Re: [linux-lvm] strange behavior with 1.0.5 on Linux 2.4.19?
-Message-ID: <20021101150659.GA5289@weissel.dyndns.org>
-References: <20021004105057.B8575@sistina.com> <1034107599.28928.105.camel@pslgregory> <20021009133650.E23965@sistina.com> <1035782975.3398.128.camel@gopher> <20021028101739.F16452@sistina.com> <1035866273.9074.74.camel@gopher> <20021029101033.A22193@sistina.com> <1035921224.1276.24.camel@gopher> <20021031134804.A491@sistina.com> <1036104859.21418.104.camel@pslgregory>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1036104859.21418.104.camel@pslgregory>
-From: Wolfgang Weisselberg <weissel@netcologne.de>
+Message-ID: <20021101201601.61173.qmail@web14005.mail.yahoo.com>
+From: Gayatri Prabhu <gayatri_prabhu@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] vgchange -- ERROR "parameter error"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,19 +12,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  1 09:07:02 2002
+Date: Fri Nov  1 14:16:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Gregory Ade (gkade@bigbrother.net) wrote 60 lines:
+Hi,
 
-> support and attempt the snapshot creation?  Unfortunately, the way the
-> system was assembled, the smallest I can physically reduce the RAM to is
-> 4GB (two DIMMS on each memory carrier is the minimum required for the
-> system to boot, and they shipped it to us with 8 1GB DIMMS.)
+I read a few emails on this mailing list with the same
+problem. I'm using LVM version 1.0.1-rc4, kernel
+2.4.7, Redhat 7.2. I've been unable to activate a VG
+since yesterday. I've been trying to recover data from
+the VG using  the "pvcreate, vgcfgrestore, vgscan,
+vgchange" procedure given as a solution to this
+problem. I still get the following error:
+vgchange -- ERROR "parameter error" setting up
+snapshot copy on write exception table for
+"/dev/vgtest/snap.02"
 
-There should be no problem with "mem=3D1023M" as boot parameter,=20
-as long as at least 1023 MB are actually physically available.
+I've tried using all the old config files for this VG
+in /etc/lvmconf, but even the oldest file has the
+"messy" snapshot since the snapshot creation was being
+done as part of an hourly cron job. 
 
--Wolfgang
+I would appreciate it if you could let me know whether
+there is any other way to still recover the data on
+the disk ? Also, is there a later version of LVM in
+which this problem has been fixed ?
+
+Thanks,
+Gayatri
+
+
+__________________________________________________
+Do you Yahoo!?
+HotJobs - Search new jobs daily now
+http://hotjobs.yahoo.com/
