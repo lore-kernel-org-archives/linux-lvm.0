@@ -1,8 +1,7 @@
-Subject: Re: [linux-lvm] OnetoOne
-References: <E17rrky-00085M-00@hermes.sistina.com>
-In-Reply-To: <E17rrky-00085M-00@hermes.sistina.com>
-From: Postmaster <postmaster@microdata-pos.de>
-Message-Id: <20020919032308.EEEB177D1F@imail.microdata-pos.de>
+Message-ID: <2D0AFEFEE711D611923E009027D39F2B0106615C@nasexs1.meridian-data.com>
+From: System Attendant <NASEXS1-SA@meridian-data.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] ScanMail Message: To Recipient virus found and action taken.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,34 +12,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 18 22:24:26 2002
+Date: Wed Sep 18 22:25:22 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Diese von Ihnen gesendete Nachricht (Betreff:  [linux-lvm] OnetoOne ) enth�lt eine
-ausf�hrbare Komponente.
-Aus Sicherheitsgr�nden wurde diese Nachricht vom Mailserver zur�ck-
-gewiesen.
+ScanMail for Microsoft Exchange has detected virus-infected attachment(s).
 
-Sollten Sie diese Nachricht nicht gesendet haben, besteht die 
-M�glichkeit das Ihr System virenverseucht ist.
+Sender = abread-cq
+Recipient(s) = linux-lvm@sistina.com
+Subject = [linux-lvm] OnetoOne
+Scanning Time = 09/18/2002 20:24:13
 
----------
+Action on virus found:
+The attachment OnetoOne.jpg
+.scr matched file blocking settings. ScanMail has Deleted it. 
 
-We receive a mail (subject:  [linux-lvm] OnetoOne) from you, witch contain a executeable 
-component.
-Our securitypolicy does not allow incoming mail with this attachments.
-Your mail was deleted by the mailserver.
-
-If you have not sent a message with this attachment, ist is possible that
-your system has a virus problem.
-
-
--- 
-microdata Software GmbH, Am Wellbach 4, D 33609 Bielefeld
-Telefon +49/0 521 97 22 6-0
-Fax     +49/0 521 97 22 6-30
-postmaster@microdata-pos.de
+Warning to recipient. ScanMail has detected a virus.
