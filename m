@@ -1,10 +1,9 @@
-From: Nathan Scott <nathans@sgi.com>
-Subject: Re: [linux-lvm] RE: [ADMIN] [PERFORM] backup/restore - another ar ea.
-Message-ID: <20031030221221.GA1162@frodo>
-References: <FDF162266E09D81193350008C7E6346425091C@pinemail1>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <FDF162266E09D81193350008C7E6346425091C@pinemail1>
+Subject: RE: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm 1.0.7
+Message-Id: <e7d62867eb7a3e4884f9d62d0780ec8e@10.3.11.254>
+In-Reply-To: <20031031112821.B1850@sistina.com>
+MIME-Version: 1.0
+From: "Krisztian Gyoerffy" <krisztian.gyoerffy@selecktra.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,19 +14,175 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 31 06:55:02 2003
+Date: Fri Oct 31 06:55:05 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+
+Hello Heinz,
+
+
+Yes I did.
+And so as far as I understood, it is not possible with the Suse release
+of the 2.4.18 kernel and the LVM 1.0.7 patch to get it compiled. Is that
+right?
+
+
+Krisztian
+
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of Heinz J . Mauelshagen
+Sent: Freitag, 31. Oktober 2003 11:28
 To: linux-lvm@sistina.com
-Cc: tgl@sss.pgh.pa.us, threshar@torgo.978.org, josh@agliodbs.com, markw@osdl.org, pgsql-performance@postgresql.org, pgsql-admin@postgresql.org
+Subject: Re: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm
+1.0.7
 
-On Thu, Oct 30, 2003 at 10:28:10AM -0700, CLeon@phs.org wrote:
-> Does xfs_freeze work on red hat 7.3?
 
-It works on any kernel with XFS (it talks directly to XFS).
+Krisztian,
 
-cheers.
+you said you used the SuSE 2.4.18 source ?
+Get a mainline source and retry patching/compiling.
 
--- 
-Nathan
+Regards,
+Heinz    -- The LVM Guy --
+
+
+On Thu, Oct 30, 2003 at 11:59:34AM +0100, Krisztian Gyoerffy wrote:
+> Hello Heinz,
+> 
+> 
+> no I haven't, because till now I ever patched my kernels with any of
+the
+> LVM versions I chose to compile the kernel by myself. And it was ok.
+> This is the first time that I get a compilation error like this.
+> 
+> Can we fix the problem somehow, that I can compile then kernel with
+the
+> LVM patch 1.0.7?
+> 
+> Because to tell the truth I don't really rely on that rpm from suse,
+> since I had big troubles with an apache rpm, and finaly it turned out
+> that there was a failure in it, and when I compiled apache from the
+> source it was ok.
+> 
+> 
+> Thanks a lot
+> 
+> Krisztian
+> 
+> -----Original Message-----
+> From: linux-lvm-admin@sistina.com
+[mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Heinz J . Mauelshagen
+> Sent: Donnerstag, 30. Oktober 2003 11:24
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm
+> 1.0.7
+> 
+> 
+> 
+> Krisztian,
+> 
+> running the SuSE LVM rpm with the SuSE kernel should work fine.
+> Have you tried that yet ?
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> 
+> On Wed, Oct 29, 2003 at 01:19:26PM +0100, Krisztian Gyoerffy wrote:
+> > Hi LVM friends,
+> > 
+> > 
+> > I have problems with the following scenario:
+> > 
+> > - I use SuSE linux 7.1 (I know, this might be a bit old, but I
+follow
+> > the rule "never touch a running system") with kernel 2.4.16 and lvm
+> > 1.0.7
+> > 
+> > - Since SuSE rolled out the latest kernel for 7.1 and I would like
+to
+> > keep my OS up to date I installed the 2.4.18 kernel source from SuSE
+> on
+> > my machine
+> > 
+> > - I tried to patch the kernel with the LVM 1.0.7, so I executed
+> exactly
+> > the steps written in INSTALL and PATCH/README. Everything was ok
+> > 
+> > - Then I configured the rest of the kernel and tried to compile. But
+> > after a while, when it was compiling the LVM stuff, it stopped
+> compiling
+> > with the following message:
+> > 
+> > gcc -D__KERNEL__ -I/usr/src/linux-2.4.18.SuSE/include -Wall
+> > -Wstrict-prototypes -Wno-trigraphs -O2 -fno-strict-aliasing
+> -fno-common
+> > -fomit-frame-pointer -pipe -mpreferred-stack-boundary=3D2 -march=3Di686
+> > -DKBUILD_BASENAME=3Dlvm  -c -o lvm.o lvm.c
+> > gcc -D__KERNEL__ -I/usr/src/linux-2.4.18.SuSE/include -Wall
+> > -Wstrict-prototypes -Wno-trigraphs -O2 -fno-strict-aliasing
+> -fno-common
+> > -fomit-frame-pointer -pipe -mpreferred-stack-boundary=3D2 -march=3Di686
+> > -DKBUILD_BASENAME=3Dlvm_snap  -c -o lvm-snap.o lvm-snap.c
+> > lvm-snap.c: In function `lvm_snapshot_COW':
+> > lvm-snap.c:365: structure has no member named `blocks'
+> > make[3]: *** [lvm-snap.o] Error 1
+> > make[3]: Leaving directory 
+> > `/usr/src/linux-2.4.18.SuSE/drivers/md'
+> > make[2]: *** [first_rule] Error 2
+> > make[2]: Leaving directory 
+> > `/usr/src/linux-2.4.18.SuSE/drivers/md'
+> > make[1]: *** [_subdir_md] Error 2
+> > make[1]: Leaving directory 
+> > `/usr/src/linux-2.4.18.SuSE/drivers'
+> > make: *** [_dir_drivers] Error 2
+> > 
+> > Afterwards I looked into the patch file, and into the lvm-snap.c at
+> the
+> > given position, line 365. There is the reference to the "blocks"
+> > variable of the iobuf structure. This iobuf structure is defined in
+> the
+> > /usr/src/linux/include/linux/iobuf.h header file. But this header
+file
+> > is completly different in the source of the 2.4.18 kernel than in
+the
+> > source of the 2.4.16 kernel, where the patch and compiling were ok.
+> > 
+> > Do you have any idea what can I do to get it compiled?
+> > 
+> > I attach the lvm patch file generated by make and the iobuf.h file
+for
+> > both versions 2.4.16 and 2.4.18.
+> > 
+> > 
+> > Hope to hear from you soon, and thanks in advance
+> > 
+> > 
+> > Krisztian
+> > 
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+=3D-=3D-=3D-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+=3D-=3D-=3D-
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
