@@ -1,9 +1,11 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Fri, 15 Jun 2001 12:12:09 +0200 (CEST)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Message-ID: <Pine.LNX.4.33.0106151209260.29617-100000@falka.mfa.kfki.hu>
-MIME-Version: 1.0
-Subject: [linux-lvm] $(DESTDIR) inclusion into Makefile.in files
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 15 Jun 2001 12:29:37 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] expanding physical disks
+Message-ID: <20010615122937.B3318@sistina.com>
+References: <200106130710.f5D7AhaX005430@webber.adilger.int> <m3ofrsguqf.fsf@multivac.cwru.edu>
+Mime-Version: 1.0
+In-Reply-To: <m3ofrsguqf.fsf@multivac.cwru.edu>; from prj@po.cwru.edu on Wed, Jun 13, 2001 at 01:22:26PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,90 +17,66 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+On Wed, Jun 13, 2001 at 01:22:26PM -0400, Paul Jarc wrote:
+> Andreas Dilger <adilger@turbolinux.com> writes:
+> > Brian Murrell writes:
+> >> How does LVM deal with physical disks that can get bigger or smaller,
+> >> such as a hardware RAID device?
+> > 
+> > Doesn't work at this time.  LVM will only see what was originally there
+> > at the time pvcreate was run (or possibly vgcreate/vgextend).
+> 
+> But it won't do any harm either, right?
+> 
+> > If the new PEs don't all fit into the padding space (it may happen if
+> > your starting PV size is just a couple hundred kB over n * PE size),
+> > then you will need to pvmove PE0 from its current location to somewhere
+> > else in the VG, and then renumber all of the PEs on that PV as (PE# - 1).
+> > That couble be ugly because I believe the PE number is stored in the
+> > snapshot tables and such.
+> 
+> Since this is a case of making the PV bigger, all the PEs could simply
+> be shifted by one; there is, after all, more room at the end now.
+> That would still be ugly, though.
 
-It would be probably a good idea to insert a $(DESTDIR) in front of all
-installation targets. This would make packagers life easyer.
+Yes, it would :-(
 
-The following patch does this.
+Typical HW storage subsystems anable you to create additional IDs (for eg.
+SCSI LUNs) to addrees the gained storage once you insert additional drives.
 
-Thanks,
-Gergely
+Do you have constraints to create those and just use the as new PVs or
+is the maximum of 8 LUNs in the SCSI case insufficient for you?
 
-diff -ur 0.9.1_beta7-orig/tools/Makefile.in 0.9.1_beta7/tools/Makefile.in
---- 0.9.1_beta7-orig/tools/Makefile.in	Wed Feb 14 19:28:06 2001
-+++ 0.9.1_beta7/tools/Makefile.in	Wed Jun 13 12:40:40 2001
-@@ -72,18 +72,18 @@
- l:	list
+That's the way we did it quite happily for multiple years in my previous job 
+on HP, SUN and other platforms :-)
 
- install-bin:	$(ALL_TARGETS) $(ALL_SCRIPTS)
--	@echo "*** Installing $(ALL_TARGETS) $(ALL_SCRIPTS) in ${sbindir} ***"
-+	@echo "*** Installing $(ALL_TARGETS) $(ALL_SCRIPTS) in $(DESTDIR)${sbindir} ***"
- 	@for f in $(ALL_TARGETS); \
- 	do \
--  	   rm -f ${sbindir}/$$f; \
--	   @INSTALL@ -d ${sbindir}; \
--	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 -s $$f ${sbindir}/$$f; \
-+  	   rm -f $(DESTDIR)${sbindir}/$$f; \
-+	   @INSTALL@ -d $(DESTDIR)${sbindir}; \
-+	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 -s $$f $(DESTDIR)${sbindir}/$$f; \
- 	done
- 	@for f in $(ALL_SCRIPTS); \
- 	do \
--	   rm -f ${sbindir}/$$f; \
--	   @INSTALL@ -d ${sbindir}; \
--	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 $$f ${sbindir}/$$f; \
-+	   rm -f $(DESTDIR)${sbindir}/$$f; \
-+	   @INSTALL@ -d $(DESTDIR)${sbindir}; \
-+	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 $$f $(DESTDIR)${sbindir}/$$f; \
- 	done
+> 
+> 
+> paul
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
- remove-bin:	$(ALL_TARGETS) $(ALL_SCRIPTS)
-diff -ur 0.9.1_beta7-orig/tools/lib/Makefile.in 0.9.1_beta7/tools/lib/Makefile.in
---- 0.9.1_beta7-orig/tools/lib/Makefile.in	Fri Mar  2 17:34:03 2001
-+++ 0.9.1_beta7/tools/lib/Makefile.in	Wed Jun 13 12:41:37 2001
-@@ -44,14 +44,14 @@
- 	@echo ""
+-- 
 
- install_this:
--	@echo "*** Installing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
--	@rm -f ${libdir}/${SO} ${libdir}/${SOV} ${libdir}/${SOM} ${libdir}/$(ARCHIVE);
--	@INSTALL@ -d ${libdir}
--	@INSTALL@ -o ${OWNER} -g ${GROUP} $(ARCHIVE) $(SOV) ${libdir}
--	chmod 444 ${libdir}/$(ARCHIVE)
--	chmod 555 ${libdir}/$(SOV)
--	ln -s $(SOV) ${libdir}/${SO}
--	ln -s $(SOV) ${libdir}/${SOM}
-+	@echo "*** Installing $(ARCHIVE) and $(SO) in $(DESTDIR)${prefix}/lib ***"
-+	@rm -f $(DESTDIR)${libdir}/${SO} $(DESTDIR)${libdir}/${SOV} $(DESTDIR)${libdir}/${SOM} $(DESTDIR)${libdir}/$(ARCHIVE);
-+	@INSTALL@ -d $(DESTDIR)${libdir}
-+	@INSTALL@ -o ${OWNER} -g ${GROUP} $(ARCHIVE) $(SOV) $(DESTDIR)${libdir}
-+	chmod 444 $(DESTDIR)${libdir}/$(ARCHIVE)
-+	chmod 555 $(DESTDIR)${libdir}/$(SOV)
-+	ln -s $(SOV) $(DESTDIR)${libdir}/${SO}
-+	ln -s $(SOV) $(DESTDIR)${libdir}/${SOM}
+Regards,
+Heinz    -- The LVM Guy --
 
- remove_this:
- 	@echo "*** Removing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
-diff -ur 0.9.1_beta7-orig/tools/man8/Makefile.in 0.9.1_beta7/tools/man8/Makefile.in
---- 0.9.1_beta7-orig/tools/man8/Makefile.in	Wed Feb 14 19:28:07 2001
-+++ 0.9.1_beta7/tools/man8/Makefile.in	Wed Jun 13 12:41:59 2001
-@@ -36,11 +36,11 @@
- 	@true
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
- install-man8:
--	@echo "*** Installing $(ALL_MANUALS) in $(MAN8DIR) ***"
-+	@echo "*** Installing $(ALL_MANUALS) in $(DESTDIR)$(MAN8DIR) ***"
- 	@for f in $(ALL_MANUALS); \
- 	do \
--	   rm -f $(MAN8DIR)/$$f; \
--	   @INSTALL@ -D -o ${OWNER} -g ${GROUP} -m 444 $$f $(MAN8DIR)/$$f; \
-+	   rm -f $(DESTDIR)$(MAN8DIR)/$$f; \
-+	   @INSTALL@ -D -o ${OWNER} -g ${GROUP} -m 444 $$f $(DESTDIR)$(MAN8DIR)/$$f; \
- 	done
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
- remove-man8:
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
