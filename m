@@ -1,10 +1,9 @@
-From: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
-Subject: RE: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
-Date: Thu, 4 Oct 2001 10:23:40 -0400
-Message-ID: <009801c14ce0$2a667eb0$836788cf@industry>
+From: "yves.alloyer" <Yves.ALLOYER@slpinfoware.com>
+Date: Thu, 4 Oct 2001 16:51:59 +0200
+Message-Id: <NEBBLHFAEINCLDICDLOAEENBCHAA.yves.alloyer@slpinfoware.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <009701c14cdd$06877ab0$836788cf@industry>
+Subject: [linux-lvm] Root + Software RAID 1 in partition + LVM + Reiserfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,134 +18,53 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hmm, 1.0.1-rc2 segfaults aswell :/  Perhaps it's something else.  I'm
-using the stock compiler from 7.1.  Not too sure what it is or how to
-find it.
+Hi there,
+I just set up an SMP i686 box with 2 SCSI drives (adaptec_7xxx) which is:
+- 2.4.9 kernel
+- lilo 22.0-1 with (slightly tweaked) lilo-21.7.5-lvm.patch (from Andreas
+Dilger)
+- 100% reiserfs (3.x.0j-2)
+- 100% LVM (1.0.1-rc2)  (excepted swap) on top of MD on top of two
+partitions
+- two drives on adaptec_7xxx
 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com 
-> [mailto:linux-lvm-admin@sistina.com] On Behalf Of Jason A. Lixfeld
-> Sent: October 4, 2001 10:01 AM
-> To: linux-lvm@sistina.com
-> Subject: RE: [linux-lvm] lvcreate segfault in 
-> vg_setup_pointers_for_snapshots
-> 
-> 
-> 
-> 
-> Since I'm having trouble with rc-4 can I use another version 
-> that is still compatible with everything and won't segfault!? :)
-> 
-> > -----Original Message-----
-> > From: linux-lvm-admin@sistina.com
-> > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Jason A. Lixfeld
-> > Sent: October 4, 2001 7:39 AM
-> > To: linux-lvm@sistina.com
-> > Subject: RE: [linux-lvm] lvcreate segfault in 
-> > vg_setup_pointers_for_snapshots
-> > 
-> > 
-> > 
-> > 
-> > Ok, done...
-> > 
-> > http://www.andromedas.com/lvm/session.log
-> > 
-> > It's 35MB and I'm only on a 3MB DSL connection so it's gonna
-> > take a while to load! :)
-> > 
-> > > -----Original Message-----
-> > > From: linux-lvm-admin@sistina.com 
-> > > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Andreas Dilger
-> > > Sent: October 4, 2001 2:05 AM
-> > > To: linux-lvm@sistina.com
-> > > Subject: Re: [linux-lvm] lvcreate segfault in
-> > > vg_setup_pointers_for_snapshots
-> > > 
-> > > 
-> > > 
-> > > On Oct 03, 2001  23:46 -0400, Jason A. Lixfeld wrote:
-> > > > Wow!  Lots and LOTS of stuff!!  Didn't think it was 
-> ever going to 
-> > > > end!!
-> > > 
-> > > Some of it is even useful.  Maybe you can include some of 
-> the stuff 
-> > > at the end, or put it on a web page somewhere.
-> > > 
-> > > > Here's what yer looking for:
-> > > > 
-> > > > #0  lv_create (vg=0x8, lv=0xbffffb74, 
-> > > >     lv_name=0xbffffb98
-> > > > 
-> > > 
-> > 
-> "????????????????????????????????\002???!???,???<???D???T???b???s???\2
-> > > > 01
-> > > > ???\214???\227???????")
-> > > >     at lv_create_remove.c:42
-> > > > #1  0x0804b03d in strcpy () at ../sysdeps/generic/strcpy.c:31
-> > > 
-> > > So it is dereferencing an uninitialized string (or so it 
-> appears).  
-> > > It may be that the string is corrupted elsewhere, however.  I'm 
-> > > surprised that
-> > > lv_check_name() in lv_create_remove() didn't catch this.
-> > > However, this may also be a red herring, since sometimes GDB 
-> > > shows junk.
-> > > 
-> > > It is also suspicious because the lv and lv_name pointers 
-> are 0x24 
-> > > apart, which shouldn't be the case since lv_name is the 
-> first item 
-> > > in lv_t.
-> > > 
-> > > > #2  0x4006c177 in __libc_start_main (main=0x8049390 
-> <strcpy+384>, 
-> > > > argc=8, ubp_av=0xbffffb74, init=0x8048e88 <_init>,
-> > > >     fini=0x804b4d0 <_fini>, rtld_fini=0x4000e184 <_dl_fini>,
-> > > > stack_end=0xbffffb6c) at ../sysdeps/generic/libc-start.c:129
-> > > 
-> > > If you try running with "export MALLOC_CHECK_=2 gdb 
-> > > <path>/lvcreate", it may give more indication as to where 
-> the actual 
-> > > corruption is happening.
-> > > 
-> > > I just recompiled the tools, and did not have any problems with 
-> > > lvcreate, so it must be something strange.
-> > > 
-> > > Cheers, Andreas
-> > > --
-> > > Andreas Dilger  \ "If a man ate a pound of pasta and a pound of 
-> > > antipasto,
-> > >                  \  would they cancel out, leaving him
-> > still hungry?"
-> > > http://www-mddsp.enel.ucalgary.ca/People/adilger/             
-> > >   -- Dogbert
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com 
-> > > http://lists.sistina.com/mailman/listinfo/linu> x-lvm read the
-> > > LVM HOW-TO at 
-> > > http://www.sistina.com/lvm/Pages/howto.html
-> > > 
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com 
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com 
-> http://lists.sistina.com/mailman/listinfo/linu> x-lvm
-> read the 
-> LVM HOW-TO at 
-> http://www.sistina.com/lvm/Pages/howto.html
-> 
+I am somewhat used to HP LVM which allows me to define some LVs as RAID 1
+some as RAID 0 or lets LVM lay them out as it sees fit.
+I wanted that, because I wanted to mirror my most precious filesystems. Then
+again I did not want to waste that space for swap /tmp and other not so
+vital stuff.
+
+The interesting(/insane?) thing about this configuration is that since I
+have two hard drives I could not just make a software RAID 1 device out of
+them... I did so with a partition on each device.
+-	/dev/md1 uses /dev/sda1 and /dev/sdb1
+-	swap is on /dev/sda2 and /dev/sdb2
+
+pvcreate /dev/md1 complained about using a Linux SWAP partition
+I tweaked lvm_check_partitioned_device to have it return FALSE for MD
+devices. This would probably prevent me from partitioning any MD device. But
+I won't anyway... that's what I use LVM for.
+This time it worked.
+I was able to create my future root VG, my LVs, create my reiserfs
+filesystems, copy my original filesystems etc.
+The box came up with:
+/dev/vgroot/lvroot on / type reiserfs (rw)
+none on /proc type proc (rw)
+usbdevfs on /proc/bus/usb type usbdevfs (rw)
+/dev/vgroot/lvusr on /usr type reiserfs (rw)
+/dev/vgroot/lvvar on /var type reiserfs (rw)
+/dev/vgroot/lvopt on /opt type reiserfs (rw)
+/dev/vgroot/lvtmp on /tmp type reiserfs (rw)
+/dev/vgroot/lvusr-local on /usr/local type reiserfs (rw)
+none on /dev/pts type devpts (rw,gid=5,mode=620)
+
+This allowed me to trash my old filesystems and consolidate their partitions
+into /dev/sda3 and /dev/sdb3.
+My current root VG now comprises /dev/md1 /dev/sda3 and /dev/sdb3
+
+This allows me to do LVM with mirroring and striping on just two disks.
+
+Has anyone experience with that kind of layout? Is it just plain insane?
+
+Thanks,
+Yves
