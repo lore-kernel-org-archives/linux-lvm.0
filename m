@@ -1,9 +1,9 @@
-Message-ID: <20010904204402.63949.qmail@web13408.mail.yahoo.com>
-Date: Tue, 4 Sep 2001 13:44:02 -0700 (PDT)
-From: Pierre Lamb <plamb_98@yahoo.com>
-Subject: Re: [linux-lvm] rh kernel patches
-In-Reply-To: <20010904205350.A1097@btconnect.com>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BFF8@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Subject: RE: [linux-lvm] My VG is gone...
+Date: Tue, 4 Sep 2001 14:51:16 -0600
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,40 +16,99 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Yes I am I thought the "lvm-0.8..." could be applied
-with the patch command to the kernel, I gues I am
-incorrect.
+I'm having a very similar problem.  When I run vgscan, I get:
 
-Pierre
---- Joe Thornber <thornber@btconnect.com> wrote:
-> On Tue, Sep 04, 2001 at 12:25:13PM -0700, Pierre
-> Lamb wrote:
-> > I quess I don't understand the whole picture. From
-> the
-> > /PATCHES/readme file I was lead to believe all I
-> need
-> > to to id use the patch file labeled
-> > "lvm-0.8final-2.4.0.patch" and apply it to the rh
-> > kernel 2.4.7.  Am I mistaken???? PLease provide
-> > guidance..
+[root@filmore jdiehl]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "Database2"
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of
+ volume group "Database2" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lv
+mtab" and "/etc/lvmtab.d" 
+
+Any ideas about how to recover without losing my data.  I need to get going
+soon, so if I haven't fixed it by late this week, I'm going to reformat....
+And lose several Gb of data.
+
+Thanx,
+Mike Diehl,
+Network Monitoring Tool Devl.
+Sandia National Laboratories.
+(505) 284-3137
+jdiehl@sandia.gov
+
+> -----Original Message-----
+> From: AJ Lewis [mailto:lewis@sistina.com]
+> Sent: September 04, 2001 6:43 AM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] My VG is gone...
 > 
-> Which release of the tools are you looking at ? 
-> 1.0.1-rc2 I hope ?
 > 
-> - Joe
+> On Sun, Sep 02, 2001 at 08:07:15PM +0200, Rasmus Wiman wrote:
+> > Joe Thornber <thornber@btconnect.com> skrev:
+> > > You're right sdb1 appears to have been added twice with seperate
+> > > UUID's.  I'm at a loss to explain this at the moment.  Did you run
+> > > pvcreate more than once on sdb1 ? (I want to know where that extra
+> > > uuid came from).
+> > 
+> > Well here's the full story:
+> > I added the new disk, made a new LVM partition, ran 
+> pvcreate on it. Did a
+> > vgextend vg1 /dev/sdb1. Rebooted. No vg:s found, Panic: 
+> root not found.
+> > Spent a bunch of hours hackaing a Slackware 8 boot floppy 
+> with LVM 1.0
+> > support. It found the vg. Next idea: Maybe it's because of 
+> devfs. I hacked
+> > the disk a bit further yo use devfs, and now it didn't find 
+> the VG:s. I
+> > started looking for any LVM list archive, found something 
+> about small
+> > initrd:s so I put an 8 MB initrd image on the root floppy, 
+> and wow, the VG
+> > was there. Tried to put a larger initrd on the boot 
+> partition and re-ran
+> > lilo. Rebooted, no success. Later I realised that a 
+> initrd_size=8912k
+> > might have done the trick. Booted from the floppy again and 
+> did a vgreduce
+> > vg1 /dev/sdb1. Now it would boot. Here I should really have 
+> backed up
+> > everything to a non LVM partition, but instead I did a 
+> vgextend vg1 sdb1.
+> > Re-ran lvmcreate_initrd, re-ran lilo and rebooted. That's 
+> where I am now.
+> > Two SDB1:s with separate UUID's. Can this be fixed or 
+> should I format and
+> > reinstall? It would really feel bad because I've never had 
+> to format and
+> > reinstall a Linux system except for the occasional hardware failure.
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://www.sistina.com/lvm/Pages/howto.html
-
-
-__________________________________________________
-Do You Yahoo!?
-Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
-http://im.yahoo.com
+> Did you try the uuid_fixer program at 
+> ftp://ftp.sistina.com/pub/LVM/contrib
+> 
+> That may fix your problem, but it would be nice to get as 
+> much info out of
+> your system as possible before you use it to figure out what 
+> went wrong...
+> 
+> -- 
+> AJ Lewis
+> Sistina Software Inc.                  Voice:  612-638-0500
+> 1313 5th St SE, Suite 111              Fax:    612-638-0500
+> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+> http://www.sistina.com
+> 
+> Current GPG fingerprint = 3CD1 25EE DBE3 1B69 F3C7  A1FB 2A81 
+> D686 34A2 2E9E
+> 
+> -----Begin Obligatory Humorous 
+> Quote----------------------------------------
+> Life's short and hard, kind of like a bodybuilding elf
+> -----End Obligatory Humorous 
+> Quote------------------------------------------
+> 
