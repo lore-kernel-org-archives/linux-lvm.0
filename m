@@ -1,10 +1,8 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-ID: <725128953.20030424204116@tnonline.net>
-Subject: Re: [linux-lvm] BadBlocks. Need assistance.
-In-Reply-To: <3EA82C3C.6060707@beep.mine.nu>
-References: <3EA82C3C.6060707@beep.mine.nu>
+From: Stefan Feeser <stefan.feeser@felino.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <200304242049.36751.stefan.feeser@felino.de>
+Subject: [linux-lvm] Lilo and LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,86 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 24 13:41:01 2003
+Date: Thu Apr 24 13:49:14 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Beppe <lvm@beep.mine.nu>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-> Hi all,
+Hi all,
 
-> I have run in to trouble.
-> I have 4 disks 3*76.34GB and 1*31.87GB setup as one vg(/dev/vg_pub/pub) 
-> with ext3.
+meanwhile I have created a VG and some LV's during the installation process of 
+a debian system. My system, which I have prepared for the normal boot process 
+looks like that in the RAM disk:
 
-> One day, the performance went down radically, so i check the log seeing..
-> Apr 13 13:59:56 fukke kernel: hdb: dma_intr: status=0x51 { DriveReady 
-> SeekComplete Error }
-> Apr 13 13:59:56 fukke kernel: hdb: dma_intr: error=0x40 { 
-> UncorrectableError }, LBAsect=33063360, sector=33063360
-> Apr 13 13:59:56 fukke kernel: end_request: I/O error, dev 03:40 (hdb), 
-> sector 33063360
-> Apr 13 13:59:58 fukke kernel: hdb: dma_intr: status=0x51 { DriveReady 
-> SeekComplete Error }
-> Apr 13 13:59:58 fukke kernel: hdb: dma_intr: error=0x40 { 
-> UncorrectableError }, LBAsect=33063360, sector=33063360
-> Apr 13 13:59:58 fukke kernel: end_request: I/O error, dev 03:40 (hdb), 
-> sector 33063360
+/dev/rootvg		/target
+/dev/hda1		/target/boot
+/dev/rootvg/varlv	/target/var
+...
 
-> continuous......with different sectors....
+Now I have the problem that I could not create a correct bootable system.
 
-> I umount it and run fsck.ext3 -f -c -v /dev/vg_pub/pub
-> e2fsch reports:(e2fsck 1.32 (09-Nov-2002))
-> Pass 1: Checking inodes, blocks, and sizes
-> Group 64's block bitmap (2097152) is bad.  Relocate<y>? yes
+At the LVM-Howto I found that I have to create a LVM start script. So I create 
+that. In the same documentation I found that I have to run the following 
+command
 
-> Bad block 0 used as bad block indirect block?!?
+update-rc.d lvm start 26 S . stop 82 1 .
 
-> This inconsistency can not be fixed with e2fsck; to fix it, use
-> dumpe2fs -b to dump out the bad block list and e2fsck -L filename
-> to read it back in again.
-> Continue<y>?
+But  this don't run at my system (it runs at the RAM disk!!!). Further I found 
+that I have to run the lilo command after I configure my lilo.conf at 
+/target/etc/ with the following command.
 
-> doing as it says.
-> dumpe2fs -b /dev/vg_pub/pub > ./badblocks.txt
-> fsck.ext3 -f -c -v -L ./badblocks.txt /dev/vg_pub/pub
-> ending up with the same suggestion, do a dumpe2fs -b and e2fsck -L filename.
+lilo -r /target -F /etc/lilo.conf
 
-> What will happend if i move the extend with pvmove to a new disk.
-> e2fsck can't fix the disk AFAI tried or?
+After running that it seems that my configuration is correct becaus the system 
+start after a reboot. At the point where the volumes will be mounted the 
+system get a kernel panic because it seems that / can not mounted.
 
-  You should use dd_rescue to move the data to a new (tested) disk. Then
-  you  can  run  fsck  on  the  new disk safely. There is no need to run
-  pvmove etc...
+Have someone an idea what I should do???
 
-  Also,  test  all  your  drives with the IBM/Hitachi Drive Fitness Test
-  before continuing. It is available from:
+Thanks and Regards from a north bavarian village
 
-  http://www.hgst.com/hdd/support/download.htm
-
-  //Anders
-
-
-> Logical Volume Manager 1.0.7
-> kernal 2.4.20 with LVM patch.
-
-> grateful for help.
-
-> regards,
-> ::Beppe
-
-
-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-   
-
-
-
---------
-PGP public key: https://tnonline.net/secure/pgp_key.txt
+Stefan
+-- 
++++++++++++++++++++++++++++++++++++++++++++
+Dipl.-Ing. (FH) Forstwirtschaft
+Stefan Feeser
++++++++++++++++++++++++++++++++++++++++++++
+have a look to
+--
+http://www.felino.de
+http://www.lug-untermain.de
+http://www.project-ibex.org
