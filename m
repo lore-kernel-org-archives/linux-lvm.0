@@ -1,11 +1,10 @@
 From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] i got this error
-Message-ID: <20030117191551.GA3610@localhost>
-References: <000701c2be1a$4c8be960$820d2a3e@Desiportatil>
+Subject: Re: re[2]: [linux-lvm] [Q] LVM snapshot volume extendable?
+Message-ID: <20030117192650.GB3610@localhost>
+References: <20030113214928.NXIW20432.imf21bis.bellsouth.net@marsha> <002701c2bdb8$6cf51b70$c600a8c0@COMPAQ> <20030117100237.GC15042@gw.silicide.dk> <001601c2be1b$fd442050$c600a8c0@COMPAQ>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <000701c2be1a$4c8be960$820d2a3e@Desiportatil>
+In-Reply-To: <001601c2be1b$fd442050$c600a8c0@COMPAQ>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 17 13:15:01 2003
+Date: Fri Jan 17 13:26:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Friday, 17 January 2003, at 12:19:27 +0100,
-fnt wrote:
+On Friday, 17 January 2003, at 20:31:34 +0900,
+Sean Oh wrote:
 
->  mount /dev/vg/vol1 /glftpd/site
-> mount: /dev/vg/vol1 no es un dispositivo de bloques v=C3=A1lido
-> thanx on advice
->=20
-For those on the list with no knowledge of the spanish language, a
-translation of the error follows:
-mount /dev/vg/vol1 /glftpd/site
-mount: /dev/vg/vol1 is not a valid block device
+> Yes, I specified the ro option in ext3 snapshots. But it is still not
+> mountable, giving the error 'Cant write to read-only device' and 'EXT3-FS:
+> write access unavailable, cannot proceed'
+> 
+Did you try to mount the ext3 snapshot not only in read-only mode, but
+_also_ without replaying the journal (option -o noload). I can't verify
+this, because my kernel is compiled without the required "vfs-lock patch".
 
-Just guessing, but maybe your VG is not active. Try "vgchange -a y vg"
-and try again. In any case, the more information you provide, the easier
-to give your helpful advice.
-
-Hope it helps.
-
---=20
+-- 
 Jose Luis Domingo Lopez
 Linux Registered User #189436     Debian Linux Sid (Linux 2.4.20-xfs)
