@@ -1,9 +1,14 @@
-Message-ID: <3D7DE10F.733BFCE6@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
-MIME-Version: 1.0
+Message-ID: <1585.24.46.54.254.1031665189.squirrel@mail.scottsavarese.com>
 Subject: Re: [linux-lvm] software mirroring
-References: <4808.24.46.54.254.1031320260.squirrel@mail.scottsavarese.com> <20020906201136.GB5094@localhost> <3256.24.46.54.254.1031409280.squirrel@mail.scottsavarese.com> <20020907204200.GA3481@localhost>
-Content-Transfer-Encoding: quoted-printable
+From: "Scott Savarese" <scott@scottsavarese.com>
+In-Reply-To: <3D7DE10F.733BFCE6@silicide.dk>
+References: <4808.24.46.54.254.1031320260.squirrel@mail.scottsavarese.com>
+        <20020906201136.GB5094@localhost>
+        <3256.24.46.54.254.1031409280.squirrel@mail.scottsavarese.com>
+        <20020907204200.GA3481@localhost>
+        <3D7DE10F.733BFCE6@silicide.dk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,40 +19,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 10 07:10:02 2002
+Date: Tue Sep 10 08:40:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+Cc: jon+lvm@silicide.dk
 
-Jos=E9 Luis Domingo L=F3pez wrote:
-> =
+Jon Bendtsen said:
+> I have tried it, and it works fine.
 
-> On Saturday, 07 September 2002, at 10:34:40 -0400,
-> Scott Savarese wrote:
+OK...I need massive help... I have 2 drives hda and hdc. hda contains 1
+partition, the original installation. hdc has two partitions. One for
+/boot and one for / (and all subdirectories). I then created to raid1's
+with hdc as the primary drive and hda as a "failed-disk". This way I can
+always boot off of hda in case it doesn't work. /dev/md0 sits on hdc1 and
+contains /boot and /dev/md1 sits on hdc2.
 
-> There shouldn't be any problems at all, except for bootup: it can be
-> tricky (complex, prone to error or simply impossible, I don't know ;)
-> to get a box boot off a LV on top of a software RAID1. But technically,=
+I then pvcreated /dev/md1 and created a root LV and then copied my
+installation. I modified lilo.conf and fstab and ran lilo (I'll include my
+lilo.conf at the end).
 
-> it should be as simple as creating a partition on each disk, creating
-> the RAID1 from them, initialize /dev/md0 as a PV for use with LVM,
-> create a VG consisting of just this PV, and finally create as many LV a=
-s
-> you need (size permitting).
+My theory is that I can change my BIOS setting to boot off /dev/hdc and
+then once I am sure it works, change hda entries in my raiddtab to
+"raid-disk" and hot add them. Rerun lilo and then I should be able to boot
+off of hda.In theory.
 
-Thats the way to do it.
+I can run lilo. It understands my raid disks (lilo is version 22.2, my
+kernel 2.4.18 and I am using lvm 1.0.5). However once I reboot and switch
+the BIOS, I now get L 80 80 80...when I try and boot of /dev/hdc. It still
+works fine booting off of hda.
 
- =
+Can you help?
+Thanks,
+Scott
 
-> I have not had the chance to try it by myself, due to lack of hardware,=
+HERE is my lilo.conf for the raid
 
-> but should work. Maybe the hard part is to do it at install time and ge=
-t
-> the system to boot from a LV created this way.
-
-I have tried it, and it works fine.
-
-
-
-
-JonB
+boot = /dev/md0
+delay = 50
+vga = normal
+lba32
+image = /boot/vmlinuz
+  root = /dev/rootvg/root
+  label = linux
+  initrd = /boot/initrd-lvm-2.4.18.gz
+  ramdisk = 8192
+  read-only
