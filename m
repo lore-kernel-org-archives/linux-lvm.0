@@ -1,11 +1,11 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] what happes to VG when disks are added/removed?
-Message-Id: <20020312143058.A18690@sistina.com>
-References: <200203120704.g2C740v00414@mailgate5.cinetic.de>
+Subject: Re: [linux-lvm] Removing PV with disk errors from VG
+Message-Id: <20020312143404.B18690@sistina.com>
+References: <20020311163211.D13418@sistina.com>
+    <Pine.LNX.4.44.0203111559500.10883-100000@pzat.meep.org>
 MIME-Version: 1.0
-In-Reply-To: <200203120704.g2C740v00414@mailgate5.cinetic.de>;
-    from gunther.kuhlmann@web.de on Tue, Mar 12, 2002 at 08:04:01AM +0100
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Pine.LNX.4.44.0203111559500.10883-100000@pzat.meep.org>;
+    from oolon@ankh.org on Mon, Mar 11, 2002 at 04:22:56PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,100 +16,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar 12 07:32:02 2002
+Date: Tue Mar 12 07:35:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Mar 12, 2002 at 08:04:01AM +0100, gunther.kuhlmann@web.de wrote:
-> On Mon, Mar 11, 2002, Heinz J . Mauelshagen wrote:
-> =20
-> > > I had two hard disks, the first with three VG's, the second
-> > > with one VG (vg2). When the second hard disk started to fail, I
-> > > installed a third with VG vg4 and copied the data over. Then,
-> > > without deleting vg2, I unplugged hd 2. After reboot, the=20
-> volume
-> > > on vg2 mounted cleanly, although the disk was not available. It
-> > > correctly accessed the LV on vg4 on the new disk. Is that=20
-> correct?
-> > > Can I now use either of the two vg2/vg4 to access the LV on the
-> > > new disk? How do I get rid of one (and which) without risking=20
-> my
-> > > data? Can I just vgremove vg2 away?
+On Mon, Mar 11, 2002 at 04:22:56PM +0000, James Hawtin wrote:
+> 
+> 
+> On Mon, 11 Mar 2002, Heinz J . Mauelshagen wrote:
+> 
 > >
-> > Gunther,
+> > well that's a bug in 1.0.3 which will be fixed in 1.0.4.
+> > If you wnat to try it at your own risk, check out LVM1 CVS and
+> > try "pvmove -i" again.
 > >
-> > the result depends on *how* you copied vg2 over to your new hard=20
-> drive.
+> > 1.0.4 will hopefully be released this week :)
 > >
-> > If you used for eg. dd to do an image copy of the partitions,=20
-> which contained
-> > vg2 on the flaky drive or a whole disk copy keeping sizes,=20
-> you've got
-> +duplicated
-> > content and can unplug the flaky device.
-> > If you ran vgscan, you saw your 'old' vg2 in the new drive,=20
-> which is
-> > perfectly fine.
-> =20
-> No, I used pvcreate, vgcreate, lvcreate to create vg4 and a LV on=20
-> it. And than
-> rsync to copy the data. That is why I am a bit confused by this=20
-> behaviour.
-> Should I reconnect hd2, then delete vg2 and disconnect hd2 again?
+> > Regards,
+> > Heinz    -- The LVM Guy --
+> >
+> >
+> 
+> Hmmm, I had a problem with pv move over the weekend as well.. I was
+> replacing a hard disk for more space. and when I tried pvmove it worked
+> for 2 small partitions, but for a larger data area it failed to move
+> (because of a read error). Interestingly I had not got any error messages
+> in dmsg about bad seeks.
+> 
+> Not knowing about pvmove -i I feel back to my old system for using tar in
+> a pipe to move data, not quick not pretty but it works ;-)
+> 
+> So fortunately it looks like it was a virgin sector.
+> 
+> My question is.... This pvmove bug does it make "read error" problems in
+> which  case the disk might be ok, or does it just not handle read errors
+> gracefully?
 
-No need to.
-You still have /dev/vg2/ device nodes and the new vg4 got the same
-internal number so that you can access it through /dev/vg2/*.
-
-Either rename inactive vg4 to vg2 if you want to keep it by
-"rm -r /dev/vg2;vgrename vg4 vg2"
-
-or change your fstab to use the /dev/vg4 nodes and remove /dev/vg2/.
-
-/dev/vg2/* is left over, because you didn't remove vg2.
+It displays "read errors" because the bug lead to llseek errors which
+where handed backup to an internal read function call.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-> =20
-> > BTW: your configuration is a little bit extraordinary in terms=20
-> of how to use
-> > drives as PVs. Typically you shouldn't have multiple VG's on a=20
-> single drive
-> > as you seem to have it.
-> > Much rather you should have multiple drives in one VG.
->=20
-> Yes, I have one HD with two VG's. It might be unusual, but I can't=20
-> see anything
-> wrong with it. I do not intend to span a VG over more than one=20
-> physical disk,
-> because I don't want to have _part_ of a VG to fail. That's when=20
-> it gets messy.
-> I'm not saying it's impossible to recover, I just don't want to=20
-> try.
-> Besides, my HD size is large compared to my LV sizes, that's why I=20
-> needn't
-> bother.
-> =20
-> Gunther
-> =20
-> --=20
-> Dipl.-Ing. Gunther Kuhlmann
-> gunther_kuhlmann@mentorg.com
-> gunther-kuhlmann@easy-call.net
-> Tel.: +49 (0)40 / 75 11 84 40
-> PGP: E6 BC 78 6B E6 09 C7 16  AB 5D 9A 9A D7 1C 01 FB
-> --=20
->=20
->=20
-> _______________________________________________________________________=
-_______
-> Ohne Risiko spielend zum B=F6rsenguru werden. Haben Sie schon eine
-> Strategie? Spekulieren und tolle Preis gewinnen http://boersenspiel.web=
-.de
->=20
->=20
+> 
+> Yes I was using 1.0.3.
+> 
+> The Disk was an 46G IBM (From the ICL (newer glass platter C**p)) so I am
+> willing to beleive it was a disk problem (I have space on the shelf so
+> it can sit with its friends) it which case I will not use the disk agian.
+> 
+> I already lost 2 IBM disks from the older range and have another one
+> which when I have the money I will be swapping out... Agh! I hate IBM. Yup
+> i know I can RMA it, but whats the point if the new one might have
+> problems too, my data is worth more than that.
+> 
+> Does make for fun at computer fairs though,
+> 
+> Me:   I need a new harddisk...
+> Them: IBM make the best ones.
+> (The specs are great and are dead fast)
+> Me:   IBM disks live fast and die fast, what do you have in a non IBM
+>       disk.
+> 
+> PS anyone else know of other brands I should avoid buying?
+> 
+> James
+> 
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
@@ -119,9 +95,7 @@ _______
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -129,6 +103,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
