@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012302036.eBUKaMZ04514@webber.adilger.net>
-Subject: Re: [linux-lvm] OK to backup physical volume to tape?
-In-Reply-To: <3A4D0C25.A4BB534B@xenotrope.com> "from Mits Yanagihashi at Dec
- 29, 2000 05:11:49 pm"
-Date: Sat, 30 Dec 2000 13:36:22 -0700 (MST)
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3A4E4F6A.8AE39C23@wrkhors.com>
+Date: Sat, 30 Dec 2000 15:11:06 -0600
+From: Steven Lembark <lembark@wrkhors.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] 0.8 to 0.9 problems, odd vg corruption
+References: <20001227165905.A24456@kevorkian.evcom.net> <20001230190420.B6496@jensbenecke.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,46 +18,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Mits writes:
-> I have one tape drive that can store 33 GB (uncompressed).  I want to
-> backup 130 GB over a 5 day week.  I want my users to see two directories
-> "/dir1" and "/dir2", but my tape cannot fit a full dump of either one
-> directory.
+> After about half an hour of fiddling with the LVM tools and reading the
+> FAQ, I found out that I could access the LV if and ONLY IF I did EXACTLY
+> this:
 > 
-> This is what I want to do:
+>         vgcfgrestore -n data /dev/hd[ac]1
+>         pvscan
+>         vgchange -a y
+>         mount /dev/data/archive
 > 
-> 1. Divide /dev/sda into 5 partitions of 26 GB each.  Make each partition
-> a physical volume.  
+> Any call to vgscan brings me back to the beginning ("unknown VG").
 > 
-> 2. Make one volume group.  Add two logical volumes (that together use
-> the 5 physical volumes) to the volume group.
-> 
-> 3. My users can use the two logical volumes (dir1 and /dir2, which may
-> be 52 and 78 GB respectively).  Each night a full backup of one physical
-> volume, and incrementals of the other four physical volumes are written
-> to tape.  One tape can store 26 GB, and still have space for incremental
-> backups of the other physical volumes.
-> 
-> My question is, is it safe to backup the physical volume (i.e. dump
-> /dev/sda1 to tape)?  Or are there complications with file system
-> state/meta information?
+> The problem however is this: Since then, even when booting cleanly vgscan
+> doesn't detect any VGs any more. Before, it worked. I have compiled LVM
+> into the kernel (no module) and attached the Debian startup script which I
+> have modified slightly to accommodate for the no-module situation.
 
-I would definitely NOT back up individual PVs if they are part of a
-single filesystem.  There is no way to restore this properly if they
-are corrupted, and no way to do incremental backups of the other raw
-partitions.
 
-You could use "dump" to do incremental backups of the whole filesystem.
-You would need to start with a FULL (level 0) backup at some time. Then
-only do incremental backups (level 1) until it fills a whole tape. To
-restore, you need to restore the full backup, and the most recent level 1
-incremental tape.
+try:
 
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+	vgexport /dev/vgname;
+	vgimport /dev/vgname /devices/in/the/vg;
+
+should save you the problems.  
+
+-- 
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
