@@ -1,12 +1,11 @@
 From: "B. J. Zolp" <bjzolp@wisc.edu>
 Subject: Re: [linux-lvm] Drive failure
-In-reply-to: <20030515055917.GB19045@www.13thfloor.at>
-Message-id: <200305150909.17331.bjzolp@wisc.edu>
+In-reply-to: <20030515081450.ADEF6AE4F5@basilica.la.naos.co.nz>
+Message-id: <200305150917.21504.bjzolp@wisc.edu>
 MIME-version: 1.0
 Content-transfer-encoding: 7BIT
 Content-disposition: inline
-References: <200305141041.37355.bjzolp@wisc.edu>
- <20030515055917.GB19045@www.13thfloor.at>
+References: <20030515081450.ADEF6AE4F5@basilica.la.naos.co.nz>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,55 +16,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 15 09:09:02 2003
+Date: Thu May 15 09:17:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Thursday 15 May 2003 00:59, Herbert Poetzl wrote:
-> On Wed, May 14, 2003 at 10:41:37AM -0500, B. J. Zolp wrote:
-> > One of the drives in my volume group is developing bad sectors on it. 
-> > When I mount the logical volume spanning that drive my entire machine
-> > locks up. Should I be able to dd (without reading the bad sectors) the
-> > failing drive (assuming it spins up and reads all the good sectors) to
-> > the replacement drive, then run fsck on the unmounted volume and then
-> > mount the volume with minimal data loss?
+On Thursday 15 May 2003 03:14, Ewen McNeill wrote:
+> In message <20030515055917.GB19045@www.13thfloor.at>, Herbert Poetzl writes:
+> >On Wed, May 14, 2003 at 10:41:37AM -0500, B. J. Zolp wrote:
+> >> Should I be able to dd (without reading the bad sectors) the failing
+> >> drive (assuming it spins up and reads all the good sectors) to the
+> >> replacement drive, then run fsck on the unmounted volume and then mount
+> >> the volume with minimal data loss?
+> >
+> >I guess, this should work ... but make sure, that
+> >you do the copy operation on another system, otherwise
+> >the LVM stuff could/will be irritated by two diffent
+> >disks with the same signature (after copying over)
 >
-> I guess, this should work ... but make sure, that
-> you do the copy operation on another system, otherwise
-> the LVM stuff could/will be irritated by two diffent
-> disks with the same signature (after copying over)
+> Other things to consider:
+>
+> - make sure you do the dd with an option to replace unreadable sectors
+>   with blank sectors (otherwise nothing will be written out for the
+>   unreadable sectors, causing everything to be "out of alignment" after
+>   the first bad block)
 >
 
-What if the LVM is down?  Then when the copy is complete I replace the bad 
-drive with the replacement and bring the LVM back up.  That seems like it 
-should work.
+I plan on using the noerror switch for dd, what else would I need to use to 
+make sure it replaces with blank sectors.  I could not find anything in info 
+dd or man dd.
 
-> > The other option I can think of is remove that drive from the volume and
-> > then remount it, but that would mean a loss of everything that is one the
-> > failing drive, plus I am not sure how reiserfs works with large chunks of
-> > its file system removed like that.
+> - do the copy in single user mode, preferable booted in such a way that
+>   the LVM isn't active (or on another system as suggested above)
 >
-> I wouldn't do that, neither with reiserfs nor with
-> any other unix filesystem ... only as last escape
-> if you disk is completely unreadable ...
+> - it'll take longer but consider copying in sector-by-sector chunks, as
+>   it'll reduce the amount skipped  (eg, bs=512)
 >
-> anyway, if possible make a copy of ALL disks involved
-> before you do any fscking so you can go back and
-> try any other approach ...
+
+great idea
+
+> - you may want to map which logical volumes, and which files on those
+>   volumes, are affected by the bad sectors before you start, so you know
+>   which files you'll lose  (you could use something like "badblocks" --
+>   in _read_only_ mode!! -- to identify the affected blocks)
 >
-> best,
-> Herbert
+> But aside from that, given an identical sized replacement disk and/or
+> replacement partition, I'd guess it should, in theory, work.  I've seen
+> similar things done with other systems with logical volume managers
+> (eg, HP/UX 10.20) reasonably successfully (we ended up restoring much
+> of the data from backup anyway to get a consistent database snapshot,
+> but it did save a bunch of volume reconstruction time, etc).
 >
-> > thanks
-> >
-> > bjz
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Ewen
 >
 > _______________________________________________
 > linux-lvm mailing list
