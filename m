@@ -1,7 +1,14 @@
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to
+    coexist happily
+Message-Id: <20020111093859.B30751@colombina.comedia.it>
+References: <200201020451.g024pPg00867@oss.sgi.com>
+    <200201050212.TAA16774@cthulhu.turbolabs.com>
+    <20020105142527.I12868@lynx.no> <E16Oh1M-0003UB-00@hermes.sistina.com>
 MIME-Version: 1.0
-From: Piete Brooks <Piete.Brooks@cl.cam.ac.uk>
-Message-Id: <E16Ovq8-0007VV-00@whittlesey.cl.cam.ac.uk>
-Subject: [linux-lvm] Could vgscan read a file of "preferred" LV name -> minor device id ?
+Content-Disposition: inline
+In-Reply-To: <E16Oh1M-0003UB-00@hermes.sistina.com>; from
+    ahead@bigpond.net.au on Fri, Jan 11, 2002 at 01:21:26AM +1000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,30 +19,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 11 01:11:01 2002
+Date: Fri Jan 11 02:40:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
-Cc: Piete.Brooks@cl.cam.ac.uk
+To: linux-lvm@sistina.com
 
-I'm getting complaints from NFS users that when servers reboot, they often 
-find that their mounts have the wrong data.  I've never really worked out 
-which end hold what in NFS FHs, but the basic idea is that a client identifies 
-a FH which encodes (major dev id,minor dev id,inode number,version).
-This appears to break down when a new LV is created ane the server rebooted.
-As the /dev/<vg>/<lv> nodes are numbered strictly in the order that they are 
-discovered, all LV minor device IDs on subsequent VGs are renumbered, so any 
-remote caching of FHs breaks (( as with SCSI )).
+On Fri, Jan 11, 2002 at 01:21:26AM +1000, Adrian Head wrote:
+> The problem now is that when I try to mount a ext3 snapshot using:
+> mount /dev/HDA/SNAP /mnt/snapshot
+> The kernel mounts the snapshot as ext2.  Is was not happening before the 
+> patch and I was wondering if anyone thinks this is a problem.  As ext3 is 
+> backward compatible with ext2 there doesn't seem to be any problems during my 
+> testing with respect to standard file operations.  I can mount the snapshot 
+> as ext3 if I use:
+> mount -t ext3 /dev/HDA/SNAP /mnt/snapshot
+this depends on the order the mount porgram tries to autodetect a filesystem
+if the luser does not specify it. I don't have mount sources at hand
+but AFAIR it reads /etc/filesystems, /proc/filesystems and then tries
+an hardcoded list. you can modify /etc/filesystems to change the probe
+order.
+[you already got answers to the other issues]
 
-Is that about right ?
+L.
 
-Would it be possible for vgscan to read a "hints" file consisting of <vg>/<lv> 
-and minor device number pairs ?
 
-As each <vg>/<lv> is found, if it's in the file, the nominated minor device id 
-is used; if it's not found, then the next minor device id which is not listed 
-in the file is used.
-
-[[ I use devfs, so using existing data in /dev/ would not help -- but I think 
-it would do no harm to use that data by default ]]
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
