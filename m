@@ -1,12 +1,12 @@
-Date: Thu, 1 Apr 2004 10:21:33 -0800
-From: Dave Olien <dmo@osdl.org>
-Subject: Re: [linux-lvm] character device creation
-Message-ID: <20040401182133.GA25669@osdl.org>
-References: <BAY16-DAV26wjCGSzHV0000c6da@hotmail.com>
-	<20040401085223.GC29222@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040401085223.GC29222@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i31IOFj27704
+	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 13:24:15 -0500
+Message-ID: <OF12DEDDF3.CC314224-ON00256E65.005D8012-00256E65.00647CD5@svunta.os.is>
+From: Kjartan Reynir Hauksson <krh@os.is>
+Date: Sun, 28 Mar 2004 18:17:35 +0000
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Migrate to kernel 2.6 and lvm2 with root fs on lvm1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,52 +17,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@sistina.com
 
 
-If I'm not mistaken, the raw(8) character device in 2.6 is
-considered obsolete.  The same semantics can be gotten by
-doing an open(2) on the block special file with the O_DIRECT
-flag set.
 
-On Thu, Apr 01, 2004 at 10:52:23AM +0200, Heinz Mauelshagen wrote:
-> On Thu, Apr 01, 2004 at 12:26:39PM -0800, sachin wrote:
-> > Hi
-> > Can i Create a character device for a logical volume of lvm
-> > If yes how to create and how lvm driver manage it or supports it
-> 
-> Yes. Have a look at 'man raw'.
-> 
-> > Thanks ,
-> > Sachin
-> 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> -- 
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Red Hat GmbH
-> Consulting Development Engineer                   Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@RedHat.com                            +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+I've written earlier on the same subject but never got it resolved so I'm
+going to give it another go since my desktop constantly stalls on me with
+my 2.4 kernel.  I'm now running MDK 10.0 with
+kernel24-tmp-2.4.25-2.tmp.1mdk rpm package from Thomas Backlund.  This
+kernel seems to get me a bit further then my previous attempts since it
+boots a dm enabled kernel (I don't know which lvm I'm running 1 or 2
+though, I'm assuming 1 because it tells me it shuts down lvm1 when i halt
+my system). Now according to the LVM2 faq I am supposed to edit the lvm
+start sequence in my startup script. I assume that the startup script being
+reffered to is /etc/rc.sysinit and currently looks like this:
+
+# LVM initialization
+if [ -f /etc/lvm/lvm.conf -a -x /sbin/lvm2 ]; then
+    grep -q -s 'device-mapper' /proc/devices /proc/misc || modprobe dm-mod
+>/dev/null 2>&1
+
+    if grep -q -s 'device-mapper' /proc/devices /proc/misc; then
+        if [ -c /dev/.devfsd ]; then
+            _vgscan_cmd=/bin/true
+        else
+            _vgscan_cmd="/sbin/lvm2 vgmknodes"
+        fi
+        _vgchange_cmd="/sbin/lvm2 vgchange -a y"
+    fi
+fi
+
+if [ -z "${_vgscan_cmd}" -a -f /etc/lvmtab ] ; then
+    [ -e /proc/lvm ] || modprobe lvm-mod >/dev/null 2>&1
+
+    if [ -e /proc/lvm -a -x /sbin/lvm1-vgchange ]; then
+        _vgscan_cmd="/sbin/lvm1-vgscan"
+        _vgchange_cmd="/sbin/lvm1-vgchange -a y"
+    elif [ -e /proc/lvm -a -x /sbin/vgchange ]; then
+        _vgscan_cmd="/sbin/vgscan"              will read
+'_vgscan_cmd="/sbin/devmap_mknod.sh; /sbin/vgscan" after edit.
+        _vgchange_cmd="/sbin/vgchange -a y"
+    fi
+fi
+
+if [ -n "${_vgscan_cmd}" ]; then
+    action "Setting up Logical Volume Management:" ${_vgscan_cmd} &&
+${_vgchange_cmd}
+fi
+
+Let me know if the edit is correct so I don't hose my system.
+
+Now after this I reboot the system and should be running lvm2 and can then
+reboot into Backlund's kernel-tmp-2.6.4-1.tmb.5.mdk-1-1mdk right ?
+Do I have to create a new initrd image ?
+Do I understand the process correctly or am I about to mess everything up ?
+Please let me know.
+
+Regards
+-Kjartan Reynir Hauksson
+
+---------------------------------------------------------------------------------------------------
+
+Kjartan Reynir Hauksson
+Kerfisstj�ri
+Orkustofnun
+S�mi: 569-6027/863-5912
+e-mail: krh@os.is
+--------------------------------------------------------------------------------------------------
+
+
+http://www.os.is/disclaimer.html
