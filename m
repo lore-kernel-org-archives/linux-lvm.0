@@ -1,8 +1,10 @@
-Message-ID: <5E34D857F6BB704CA3369B7553233A81651A91@ntsviemxs0152.connect.at-work.ent>
-From: "Csuk, Ferenc" <Ferenc.Csuk@one.at>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Kernel panic during booting using root with LVM on top of RAID
+From: AJ Lewis <lewis@sistina.com>
+Message-ID: <20011126203223.A81635@antimony.sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
+Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,158 +15,118 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 26 14:19:02 2001
+Date: Mon Nov 26 20:30:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-Hi LVM experts,
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I need your help again, becuase I got an error message during booting =
-and I
-couldn=B4t find out the reason. I went through several times on the =
-archives
-but there is not exactly the answer I need. To make your help easier =
-and
-included lilo.conf, fstab, raidtab file, and df -k result, too.=20
-First of all the error message at boot time is:=20
+Hello all,
 
-VFS: Cannot open root device "3a00" or 3a:00
-Please append a correct "root=3D" boot option
-Kernel  Panic: Unable to mount root fs on 3a:00
-My intention is to mirror every device using Linux software RAID, plus =
-use
-LVM on top of them. This is the point where we couldn=B4t find exact
-documentation in either the Software RAID HowTO, or the LVM How-To.=20
-We have the following configuration, including a brief summary about =
-the
-steps which we preformed.
-I've got a system with four SCSI disks and I use Adaptec SCSI adapter. =
-I use
-LILO as the bootloader. We installed Suse 7.1 with Kernel 2.4.0 (LVM =
-and
-RAID support in the kernel not as module) using the lvm 1.0.1-rc4 =
-patches
-and lvm tools on /dev/sdd. Right now, we partitioned /dev/sda1 and =
-/dev/sdb1
-with 50MB each, and we built out of them /dev/md0 with software RAID-1. =
-This
-we would like to use as /boot. The rest of the system on /dev/sda and
-/dev/sdb we partitioned in one huge partition each and we built out of =
-them
-/dev/md1 with Software RAID-1 and we created vg00 with lvm on top of =
-it.
-Then we put a new root logical volume on /dev/vg00/lvol1. We mounted on =
-/mnt
-and copied / over to it just fine, then edited /mnt/etc/fstab to put =
-root on
-/dev/vg00/lvol1. (The rest of the file systems we left temporary still =
-on
-/dev/sdd like /usr, /var, etc.) We created the new filesystems for =
-/boot, /
-with mke2fs.
-We used lvmcreate_initrd to make /boot/initrd-lvm-2.4.3.gz, and can =
-boot
-lilo with initrd. At boot time, it boots the kernel, loads the ram =
-disk,
-runs /linuxrc and when it tries to mount the root file system we get =
-the
-error message, see above.=20
+I'm sending this out in Heinz's stead, since he's at the 'Linuxkongress'
+conference this week
 
-We think this is just a configuration issue, please check the files =
-below
-and give us some advice how to get the system up and running.
-We would like to check the possibility if there is a way to elliminate =
-this
-small 50M partition for /boot and integrate that also into the big one =
-under
-LVM.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~
 
-Thank you in advance.
+Hi all,
 
-Best Regards,
-Ferenc Csuk=20
+LVM 1.0.1 supports both version 1 and 2 of the metadata.
 
+There's *no* need to run any metadata update tools.
 
------------------------  config files  --------------------------
+A tarball is available now at
+  =20
+   <http://www.sistina.com/>
+=20
+for download (Follow the "LVM 1.0.1" link).
 
-Content of /etc/lilo.conf:
+Changelog since 1.0 follows:
 
-boot    =3D /dev/sda
-vga     =3D normal
-read-only
-menu-scheme =3D Wg:kw:Wg:Wg
-lba32
-prompt
-timeout =3D 80
-message =3D /boot/message
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
 
-  image  =3D /boot/vmlinuz
-  label  =3D linux
-  root   =3D /dev/sdd1
-  initrd =3D /boot/initrd
+LVM
+---
 
-  image  =3D /boot/vmlinuz
-  label  =3D linux_lvm
-  root   =3D /dev/vg00/lvol1
-  initrd =3D /boot/initrd-lvm-2.4.0.gz
-  append =3D "ramdisk_size=3D8192"
-  optional
+LVM now supports both version 1 and version 2 data formats.  No need to
+upgrade !
 
-  image  =3D /boot/vmlinuz_24
-  label  =3D linux_2.4
-  root   =3D /dev/sdd1
-  initrd =3D /boot/initrd_24
-  optional
+Driver
+------
 
-  image  =3D /boot/vmlinuz.suse
-  label  =3D suse
-  root   =3D /dev/sdd1
-  initrd =3D /boot/initrd.suse
-  optional
+o now works with 2.4.16
 
-  image  =3D /boot/memtest.bin
-  label  =3D memtest86
+Tools
+-----
+
+o support for version 1 and 2 data formats
+
+o Now stores new and changed PVs in version 1 data format!
+
+o zero pv and lv arrays in vg_cfgrestore
+
+o removing of PVs from VGs with snapshot now works
+  (changes in pv_read_all_pv_of_vg(), pv_read_all_pe_of_vg(),
+   vg_setup_for_merge(), vg_setup_for_extend(), vg_setup_for_reduce(),=20
+   vg_setup_for_split() and liblvm.h)
+
+o persistent LV and PV numbers
+
+o lvmcreate_initd now supports devfs
+
+o support for non-partitioned MDs
+
+o SPARC compilation fixes
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
 
 
-Content of /etc/raidtab:
+Feed back LVM related information to <linux-lvm@sistina.com>.
 
-raiddev /dev/md0                         =20
-        raid-level              1        =20
-        nr-raid-disks           2        =20
-        nr-spare-disks          0        =20
-        chunk-size              4        =20
-        persistent-superblock   1        =20
-        device                  /dev/sda1=20
-        raid-disk               0        =20
-        device                  /dev/sdb1=20
-        raid-disk               1        =20
-                                         =20
-raiddev /dev/md1                         =20
-        raid-level              1        =20
-        nr-raid-disks           2        =20
-        nr-spare-disks          0        =20
-        chunk-size              4        =20
-        persistent-superblock   1        =20
-        device                  /dev/sda2=20
-        raid-disk               0        =20
-        device                  /dev/sdb2=20
-        raid-disk               1        =20
+Thanks a lot for your support of LVM.
 
-Content of /mnt/etc/fstab:
 
-#/dev/sdd1      /       ext2    defaults 1 1 =20
-#/dev/sdd2      /boot   ext2    defaults 1 2 =20
-/dev/cdrom      /cdrom  auto    ro,noauto,user,exec 0 0             =20
-devpts  /dev/pts        devpts  defaults 0 0                        =20
-/dev/fd0        /floppy auto    noauto,user 0 0                     =20
-/dev/sdd8       /home   ext2    defaults 1 2                        =20
-/dev/sdd7       /opt    ext2    defaults 1 2                        =20
-proc    /proc   proc    defaults 0 0                                =20
-/dev/sdd9       /tmp    ext2    defaults 1 2                        =20
-/dev/sdd5       /usr    ext2    defaults 1 2                        =20
-/dev/sdd6       /var    ext2    defaults 1 2                        =20
-/dev/sdd3       swap    swap    defaults 0 2                        =20
-#                                                                   =20
-/dev/vg00/lvol1         /       ext2            defaults 1 1        =20
-/dev/md0                /boot   ext2            defaults 1 2        =20
+Regards,
+Heinz    -- The LVM Guy --
+
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+
+--
+AJ Lewis <lewis@sistina.com>
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (FreeBSD)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8Avs3b2fpvETN3pURAo5RAJwOjJZSDa2WU6D/L08nkzNHpaW1WgCghbE6
+PWjf0fz8zb1nLQREL3uUc8I=
+=eLvc
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
