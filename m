@@ -1,53 +1,25 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <199912161718.SAA29517@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Kernel-patches for LVM 0.8 ?
-In-Reply-To: <385917DF.58022E11@mainz.ibm.com> from Udo Weber at "Dec 16, 1999  5:48:31 pm"
-Date: Thu, 16 Dec 1999 18:18:49 +0100 (MET)
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Thu, 16 Dec 1999 22:53:07 -0500 (EST)
+From: Terry Hardie <terryh@orcas.net>
+Subject: [linux-lvm] 0.7 Conflict with MD in 2.3.31
+Message-ID: <Pine.LNX.4.21.9912162250390.24493-100000@orcas.net>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Udo Weber <udo.weber@mainz.ibm.com>
-Cc: linux-lvm@msede.com, mge@ez-darmstadt.telekom.de
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux LVM <linux-lvm@msede.com>
 
-> Hi LVM-folks,
-> 
-> I scaning if possible each day the LVM-homepage but I can't found any
-> informations about LVM 0.8/0.8i
-> This version was included in SuSE 6.3 (with a creation time Oct/02/99)
-> It works well with the original SuSE - installation but where can I find
-> the kernel-patches belongs to 0.8* (if I want use another/higher
-> kernel-level as provided by SuSE) ?
+I applied the 0.7 LVM patch to a 2.3.31 kernel. I'm moving from a number 
+raid0 md devices to LVM, but if I have LVM in the kernel, and try to
+activate any of the MD devices, I get a kernel oops (Doesn't die, just
+kills the md program attempting to change the md array)
 
-Because of these kinds of requests, we are just thinking of releasing
-this version to the public too.
-Please wait till next week...
+Is this a known incompatibility, and if not, should I post the oops with
+symbols?
 
-> 
-> When I try to use the patches available for LVM 0.7, I always got some
-> errors during vgscan and it was not possible to access th VG's.
-> So I think the LVM 0.8* and VG's created with SuSE 6.3 are not
-> compatible with the old 0.7 stuff.
-> 
-
-Yep.
-The i/o protocoll has changed.
-
-Regards,
-Heinz
-
--- 
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+---
+Terry Hardie					terry@gxc.com
+Founder and Chief Technology officer		ICQ#: 977679
+Convergence Equipment Co, Manassas, VA, USA	V: +1-703-361-5566
+"Home of the BOB Class 4 convergence switch"
