@@ -1,10 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Error in LVM Installation
-Message-Id: <20020306105555.B21935@sistina.com>
-References: <20020306051331.7466.qmail@web13603.mail.yahoo.com>
+Subject: Re: [linux-lvm] vgscan errors with 1.0.3
+Message-Id: <20020306105859.C21935@sistina.com>
+References: <20020306062354.D9090@progsoc.uts.edu.au>
 MIME-Version: 1.0
-In-Reply-To: <20020306051331.7466.qmail@web13603.mail.yahoo.com>;
-    from ashishgupta01@yahoo.com on Tue, Mar 05, 2002 at 09:13:31PM -0800
+In-Reply-To: <20020306062354.D9090@progsoc.uts.edu.au>; from
+    wildfire@progsoc.uts.edu.au on Wed, Mar 06, 2002 at 06:23:55AM +1100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,60 +15,133 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 03:58:02 2002
+Date: Wed Mar  6 04:01:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ashish,
+http://www.progsoc.org/~wildfire/lvm/
+Access to the requested resource is denied. 
 
-I guess you didn't start with a clean vanilla kernel patching
-the LVM driver in, as described in the LVM distro in files INSTALL and
-PATCHES/README.
+Please tell us, when it is accessable.
 
-If so, use a clean vanilla kernel and retry.
+Regards,
+Heinz    -- The LVM Guy --
 
 
-On Tue, Mar 05, 2002 at 09:13:31PM -0800, Ashish Gupta wrote:
-> Hi,
+On Wed, Mar 06, 2002 at 06:23:55AM +1100, Anand Kumria wrote:
+> Hi there,
 > 
-> I'm facing lots of problem during installation of LVM
-> in Linux Red Hat version 7.2.
+> I recently add a metadevice to my existing LVM setup. Basically I
+> copied the data (use tar) from one LV to another and removed the
+> original LV (and associated PV).
 > 
-> I tried installing both the version of LVM 1.0.2 and
-> 1.0.3 with Red Hat Linux 7.2(kernel version 2.4.7-10)
-> and with Red Hat Linux 7.1(kernel version 2.4.2).
+> A few reboots later (where things were working) and I decided to
+> do an lvrename. Upon rebooting vgscan complains that it "can't
+> get data of volume group 'caliban' from physical volumes".
 > 
-> Once LVM is installed on the system.And when I reboot
-> the system it shows some file system error and kernel
-> panic occurs.I do not whats the reason for that.
+> This is somewhat disturbing.
 > 
-> Pls guide me to install LVM on my system.Pls guide
-> which LVM version is most suitable against which Linux
-> Kernel Version.
+> I have checked the archives and have also attached an lvmdiskscan
+> and confirmed I have some free space in / (only 2.4M, but still).
 > 
-> Thanx,
-> Ashish
+> I would have attached the output from 'pvdata -a /dev/md0' and
+> 'vgscan -d -d' however they are large files, instead I've made it 
+> available at <URL: http://www.progsoc.org/~wildfire/lvm/> along 
+> with my other files.
 > 
-> =====
-> -Ashish Gupta
+> I am using Linux 2.4.16 and LVM tools 1.0.3 (all the work was done
+> using this version of the tools). Here is some of the output:
 > 
-> __________________________________________________
-> Do You Yahoo!?
-> Try FREE Yahoo! Mail - the world's greatest free email!
-> http://mail.yahoo.com/
+> Script started on Wed Mar  6 05:31:49 2002
+> (none):~# cat /proc/sys/kernel/tainted
+> 0
+> (none):~# uname -a
+> Linux (none) 2.4.16 #4 SMP Tue Feb 26 00:15:49 EST 2002 i686 unknown
+> (none):~# pvscan --version
+> pvscan: Logical Volume Manager 1.0.3
+> Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+> (none):~# pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/md0"  is associated to unknown VG "caliban" (run vgscan)
+> pvscan -- WARNING: physical volume "/dev/hdg" belongs to a meta device
+> pvscan -- WARNING: physical volume "/dev/hde" belongs to a meta device
+> pvscan -- total: 3 [111.80 GB] / in use: 3 [111.80 GB] / in no VG: 0 [0]
+> 
+> (none):~# vgscan --version
+> vgscan: unrecognized option `--version'
+> Logical Volume Manager 1.0.3
+> Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+> 
+> vgscan -- scan for available volume groups for use by LVM
+> 
+> vgscan [-d|--debug] 
+> 	[-f/--force_numbers]
+> 	[-h/--help]
+> 	[-r/--remove_snapshots [VgNameToRemoveSnapshotsFrom]]
+> 	[-v/--verbose]
+> 
+> (none):~# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "caliban" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+> 
+> (none):~# pvdisplay /dev/md0
+> --- Physical volume ---
+> PV Name               /dev/md0
+> VG Name               caliban
+> PV Size               111.80 GB [234462464 secs] / NOT usable 3.62 MB [LVM: 232 KB]
+> PV#                   4
+> PV Status             available
+> Allocatable           yes
+> Cur LV                2
+> PE Size (KByte)       4096
+> Total PE              28620
+> Free PE               9576
+> Allocated PE          19044
+> PV UUID               Wmmzbe-bxjy-auNC-ViiX-mQfW-4srb-Y3kMFy
+> 
+> (none):~# lvmdiskscan
+> lvmdiskscan -- reading all disks / partitions (this may take a while...)
+> lvmdiskscan -- /dev/md0   [     111.80 GB] free meta device
+> lvmdiskscan -- /dev/hdg   [      55.90 GB] free whole disk
+> lvmdiskscan -- /dev/hde   [      55.90 GB] free whole disk
+> lvmdiskscan -- /dev/hdf   [      55.90 GB] free whole disk
+> lvmdiskscan -- /dev/hda1  [       1.91 GB] Primary  LINUX native partition [0x83]
+> lvmdiskscan -- /dev/hda2  [     122.06 MB] Primary   [0x82]
+> lvmdiskscan -- /dev/hda3  [       5.72 GB] Primary  LINUX native partition [0x83]
+> lvmdiskscan -- /dev/hda4  [       4.38 GB] Primary  LINUX native partition [0x83]
+> lvmdiskscan -- 4 disks
+> lvmdiskscan -- 3 whole disks
+> lvmdiskscan -- 0 loop devices
+> lvmdiskscan -- 1 multiple device
+> lvmdiskscan -- 0 network block devices
+> lvmdiskscan -- 4 partitions
+> lvmdiskscan -- 0 LVM physical volume partitions
+> 
+> (none):~# exit
+> 
+> Script done on Wed Mar  6 05:32:39 2002
+> 
+> What concerns me about this output is that it thinks that /dev/md0 is *free*
+> whereas pvdisplay knows it is not. If you have any suggestions, please let
+> me know.
+> 
+> Thanks,
+> Anand
+> 
+> -- 
+>  `` We are shaped by our thoughts, we become what we think.
+>  When the mind is pure, joy follows like a shadow that never
+>  leaves. '' -- Buddha, The Dhammapada
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
