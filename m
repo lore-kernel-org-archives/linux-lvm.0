@@ -1,10 +1,12 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgcreate looks at devices it shouldn't
-Message-Id: <20020224113252.B4183@sistina.com>
-References: <200202231207.NAA34732@numa1.igpm.rwth-aachen.de>
+From: Erkki Seppala <flux-lvm@inside.org>
+Subject: Re: [linux-lvm] bug: raid1 sub-devices are scanned too
+Message-Id: <20020224221642.GA31890@xulfad.ton.tut.fi>
+References: <20020223015504.GA828@xulfad.ton.tut.fi>
+    <20020223114712.A695@sistina.com> <20020223115529.A744@sistina.com>
 MIME-Version: 1.0
-In-Reply-To: <200202231207.NAA34732@numa1.igpm.rwth-aachen.de>;
-    from jarausch@igpm.rwth-aachen.de on Sat, Feb 23, 2002 at 01:07:35PM +0100
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20020223115529.A744@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,114 +17,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Feb 24 04:32:02 2002
+Date: Sun Feb 24 16:17:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Sat, Feb 23, 2002 at 01:07:35PM +0100, jarausch@igpm.rwth-aachen.de wrote:
-> Hi,
-> 
-> on the second machine where I would like to create LVM volumes
-> I have the following problem
-> 
-> The ZIP drive and the CDROM drive are mapped to
-> hdd (hdc resp.)  BUT due to a kernel parameter
-> hdc=ide-scsi hdd=ide-scsi
-> these are no more accessible as  /dev/hdd /dev/hdc
-> 
-> Now pvcreate /dev/sdb1 works fine but
-> vgcreate home /dev/sdb1
-> produces error messages like
-> ide-scsi: hdd unsupported command in request queue (0)
->   ....
-> and after some such messages
-> vgcreate -- ERROR "pv_read(): read" reading physical volumes.
-> 
-> AND the desired volume group on my  scsi drive /dev/sdb1
-> is NOT created.
-> 
-> What can one do about this. How to tell the utilities
-> to never look at /dev/hd?
+Hello, thanks for the reply. 
 
-The supported devices in LVM1 are hard coded :-(
+The problem seems to have disappeared after a reboot, or then I've
+tried the vgscan -f -stuff - vgscan now just seemed to work OK. I
+could've sworn I tried that vgscan -f before without too much success,
+but, all in all, I imagine it's not worth hunting a bug before one can
+find an easily repeatible situation.
 
-Easy way would be to have a wrapper "myvgcreate" like:
+On Sat, Feb 23, 2002 at 11:55:29AM +0100, Heinz J . Mauelshagen wrote:
 
-#!/bin/sh
-DEVDIR=/dev
-SAVDIR=/dev/.SAV
-DEVS="hdc hdd"
-cmd=$(basename $0)
+> > this is a bug in 1.0.3 with exported VGs.
+> > 
+> > If you import your VG "mirror" again, you should be fine.
+> > Rather than imprting, "vgscan -f" should work as well.
 
-errcheck () {
-   if [ $2 -ne 0 ]; then
-      echo -en "$cmd -- $1\n\n" >&2
-      exit $2
-   fi
-}
+In the original situation vgscan -f was of no help, only the
+export/import-trick (and a reboot) allowed me to access the mirror-vg.
 
-[ ! -d $SAVDIR ] && mkdir $SAVDIR
-cd $SAVDIR >/dev/null 2>&1
-errcheck "Can't chdir to $SAVDIR" $?
-cd $DEVDIR >/dev/null 2>&1
-errcheck "Can't chdir to $DEVDIR" $?
-mv $DEVS $SAVDIR
-errcheck "Can't move $DEVS form $DEVDIR to $SAVDIR" $?
-vgcreate $*
-cd $SAVDIR >/dev/null 2>&1
-errcheck "Can't chdir to $SAVDIR" $?
-mv $DEVS $DEVDIR
-errcheck "Can't move $DEVS from $SAVDIR to $DEVDIR" $?
-rmdir $SAVDIR >/dev/null 2>&1
-errcheck "Can't remove $SAVDIR" $?
-exit 0
-
+> Are /dev/ide/host0/bus1/target1/lun0/part1 and
+> /dev/ide/host0/bus0/target1/lun0/part1 really the ones making up /dev/md/1 ?
 > 
-> I am using lvm-1.0.2
-> 
-> Does this problem vanish with 2.0 ?
+> Regards,
+> Heinz    -- The LVM Guy --
 
-Yes.
-LVM 2 Beta 1 provides a configurable device filter which enables
-you to exclude device nodes using regular exporessions.
-
-THIS IS BETA SOFTWARE NOT MEANT TO BE USED ON PRODUCTION MACHINES!
-
-Unless you try it on test or otherwise not critical systems,
-stay with the above work around.
-
-> 
-> Many thanks for a hint,
-> 
-> Helmut Jarausch
-> 
-> Lehrstuhl fuer Numerische Mathematik
-> Institute of Technology, RWTH Aachen
-> D 52056 Aachen, Germany
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Yes:
+md1 : active raid1 ide/host0/bus1/target1/lun0/part1[1] ide/host0/bus0/target1/lun0/part1[0]
+      58633216 blocks [2/2] [UU]
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  _____________________________________________________________________
+     / __// /__ ____  __                              Erkki Sepp�l�\   \
+    / /_ / // // /\ \/ //ircnet                           Modeemi Ry\  /
+   /_/  /_/ \___/ /_/\_\@modeemi.fi        http://www.modeemi.fi/~flux/
