@@ -1,10 +1,8 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
-Message-ID: <20030314002507.GE22003@auctionwatch.com>
-References: <20030312195217.GC18876@auctionwatch.com> <20030312221320.GA15196@gw.silicide.dk> <20030312234520.GA19335@auctionwatch.com> <3E704492.DF386E61@silicide.dk>
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re[4]: [linux-lvm] Core questions from a LVM neophyte...    [OT]
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3E704492.DF386E61@silicide.dk>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20030314004933.LWHV7626.imf56bis.bellsouth.net@tiger2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,58 +13,190 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar 13 18:25:02 2003
+Date: Thu Mar 13 18:55:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>
 
-On Thu, Mar 13, 2003 at 09:42:58AM +0100, Jon Bendtsen wrote:
-> Petro wrote:
-> [cut]
-> >     The production data we gathered showed the opposite--at least for the
-> >     3ware cards in our environment (we had about 5-8% more overhead
-> >     running the 3ware cards RAID0 than we did running either raw disk
-> >     (cheap IDE cards) or having the 3ware card pretend to be a jbod.
-> you mean the cpu was more used ?
+Chris,
 
-    No, meaning we got better overall performance out of Mysql. Fewer
-    running threads, threads connected and disconnected better etc. 
+GFS can do a block level export to Win2K such that Win2K presents the Virtual =
+Disk as a local disk?
 
-  
-> >     Unfortunately I'll probably not get a chance to redo these.
-> a shame, because if you dont need snapshots, LVM is a overhead.
+i.e.
+create a tiered environment of=20
+              Win2K servers  <=3D=3D>  GFS Server  <=3D=3D>  FC array.
 
-    It may come to that. 
-  
-> > > > Since I need the disk write rate of all 6 drives, I'm *REALLY* hoping
-> > > > that it's interleaved.
-> > > sorry... it is not interleaved.
-> > > JonB
-> > > ps: how big a partition do you need stripping for? Do you need the
-> > > advanced LVM stuff, like resize, snapshot...
-> >     I need slightly over 1T of formatted disk space on each system.
-> >     Which means i really need to find a way to send an <alt-3> through
-> >     an ssh session to a telnet window.
-> may i suggest
-> http://www.realweasel.com/intro.html
-> It's a pci GFX<->serial card.
-> I dont have one, but i want 3. If you buy one... do tell us how it
-> works.
+With the end result that Win2K sees the drives as local, and the only SAN =
+infrastructure is between the GFS server and the array.
+=20
+I find that hard to believe, but if so, I really would like to know about that.
 
-    That won't solve the problem. 
+Like Steve, I have some Win2K apps I have to support that require local drives, =
+and putting every Win2K box on a SAN is very expensive.
 
-    See, my servers are 55 miles down the road. I ssh to a machine that
-    connects to a private network, on which are a bunch of portmasters
-    and APCs. I then telnet to the Portmaster ports, which hook to cua0. 
+And yes that is exactly what HPs VR product does:
 
-    It looks basically like I call he "smart hands" at the Colo and talk
-    them through redoing the RAID volumes. 
+             Win2K servers  <=3D Ethernet =3D>  VR Server  <=3D SAN =3D>  FC =
+array =20
 
-   
+Greg
 
--- 
-"On two occasions, I have been asked [by members of Parliament], 'Pray, 
-Mr. Babbage, if you put into the machine wrong figures, will the right 
-answers come out?' I am not able to rightly apprehend the kind of confusion 
-of ideas that could provoke such a question." -- Charles Babbage 
+ >>  Sistina's GFS will do this as well. We employ it here with good results.
+ >>  GFS can live happily in LV2.
+
+ >>  --
+ >>  Christopher Barry
+ >>  Manager of Information Systems
+ >>  InfiniCon Systems
+ >>  http://www.infiniconsys.com
+
+ >>  -----Original Message-----
+ >>  From: Greg Freemyer [mailto:freemyer@NorcrossGroup.com]
+ >>  Sent: Wednesday, March 12, 2003 6:56 PM
+ >>  To: LVM Mailing list
+ >>  Subject: re[2]: [linux-lvm] Core questions from a LVM neophyte...
+
+
+ >>  Just to re-iterate, HPs Virtual Replicator does this.  (IIRC $10K)
+
+ >>  They like you to put a MSA-1000 FC Array behind your VR server (IIRC $15K
+ >>  entry), but it supports/exports any FC array or local disk solution.
+
+ >>  It does not provide any RAID aspects.
+
+ >>  If you want to know more, e-mail me off-list.
+
+ >>  Greg
+ >>  (HP certified SAN architect)
+
+
+ >>  >>  I'm interested in a block level export.  The exported space will be
+ >>  used
+ >>  >>  as the disk part of an Hierarchical Storage Manager that is backed up
+ >>  by
+ >>  >>  qualstar tape libraries.  We have several such systems and I would
+ >>  like
+ >>  >>  to try to consolidate the disk portions of each into a "SAN" like
+ >>  >>  environment.  At the same time, we are also looking at more customer
+ >>  >>  disk based storage.  I have several storage servers (hopefully
+ >>  running
+ >>  >>  Linux soon but running W2K now) that need access to large areas of
+ >>  >>  storage.  I would like to carve and export virtualized chunks for
+ >>  this
+ >>  >>  as well. =20
+
+ >>  >>  The main reason for the block level export is that the software we
+ >>  use
+ >>  >>  does not support "NAS" type network disks.  They only support
+ >>  "locally
+ >>  >>  attached" drives.  iSCSI would at least appear as a local SCSI disk.
+
+ >>  >>  For management purposes, I would like to have a single way to export
+ >>  >>  everything.  This may or may not be feasible at present.
+
+ >>  >>  - Steve
+
+ >>  >>  > Stephen,
+ >>  >>  >     What do you want it for - backups? Why not samba over GigE?
+ >>  >>  >=20
+ >>  >>  > --
+ >>  >>  > Christopher Barry
+ >>  >>  > Manager of Information Systems
+ >>  >>  > InfiniCon Systems
+ >>  >>  > http://www.infiniconsys.com
+ >>  >>  >=20
+ >>  >>  > -----Original Message-----
+ >>  >>  > From: Stephen Perkins [mailto:perkins@netmass.com]
+ >>  >>  > Sent: Monday, March 10, 2003 4:14 PM
+ >>  >>  > To: linux-lvm@sistina.com
+ >>  >>  > Subject: RE: [linux-lvm] Core questions from a LVM neophyte...
+ >>  >>  >=20
+ >>  >>  >=20
+ >>  >>  > Hi all,
+ >>  >>  > =20
+ >>  >>  > >     I have built a very cool NAS box, and want to use LVM2=20
+ >>  >>  > > on it. My machine is as follows:
+ >>  >>  > >=20
+ >>  >>  > > Tyan Thunder i7500 w/ 2-2.4GHz XEON processors.
+ >>  >>  > > 2GB RAM
+ >>  >>  > > 3ware Escalade 7500-12 IDE RAID controller
+ >>  >>  > > 12-160GB Maxtor IDE HDs
+ >>  >>  > > System on a separate 20GB Maxtor HD
+ >>  >>  > > Floppy, slimline CDROM, and a DVDRW drive.
+ >>  >>  > > All in a 12-bay chassis from=20
+ >>  >>  > > http://www.rackmountpro.com/productpage.cfm?> prodid=3D1460
+ >>  >>  > >=20
+ >>  >>  > > This=20
+ >>  >>  > > config gives me 1.8TB of RAID 5 for under=20
+ >>  >>  > > $8K - not too shabby.
+ >>  >>  >=20
+ >>  >>  > This is a superb value and I'm very interested in your=20
+ >>  >>  > proposed "how-to"
+ >>  >>  > site.
+ >>  >>  >=20
+ >>  >>  > I am wanting to deploy some larger virtualized storage in a mixed
+ >>  >>  > Linux/W2K environment.    Is anybody out there exporting
+ >>  virtualized
+ >>  >>  > volumes to Win2K boxes?  If so, how?  I checked HyperSCSI and they
+ >>  do
+ >>  >>  > not appear to have a Win2K client (although a beta is supposed to
+ >>  be
+ >>  >>  > coming soon).  I have not yet found target information for Linux
+ >>  along
+ >>  >>  > with a known interoperable Win2K initiator.  Anybody doing it?
+ >>  >>  >=20
+ >>  >>  > Disk performance is not so much an issue for me since the disk
+ >>  arrays
+ >>  >>  > will be replacing large tape libraries.  Even with pathetic=20
+ >>  >>  > performance,
+ >>  >>  > they should behave much faster than large AIT libraries. =20
+ >>  >>  >=20
+ >>  >>  > Question 1:  Is it possible today to:
+ >>  >>  >=20
+ >>  >>  > Have a large IDE RAID5 array that is virtualized through LVM and
+ >>  then
+ >>  >>  > exported to a Dynamic Disk on Win2K over a LAN (not necessarily
+ >>  WAN)?
+ >>  >>  >=20
+ >>  >>  > I believe iSCSI and HyperSCSI would both work... However I have not
+ >>  >>  > found the approporiate interoperable software drivers.
+ >>  >>  >=20
+ >>  >>  > Question 2: The system that is described above is a linux system
+ >>  with
+ >>  >>  > direct attached storage.  It is a SPOF.  Any inexpensive=20
+ >>  >>  > solutions that
+ >>  >>  > would allow the Linux portion to be clustered for active/pasive
+ >>  >>  > failover?  Is FC the only alternative here?
+ >>  >>  >=20
+ >>  >>  > TIA,
+ >>  >>  >=20
+ >>  >>  > - Steve
+ >>  >>  >=20
+ >>  >>  >=20
+ >>  >>  >=20
+ >>  >>  >=20
+ >>  >>  > _______________________________________________
+ >>  >>  > linux-lvm mailing list
+ >>  >>  > linux-lvm@sistina.com
+ >>  >>  > http://lists.sistina.com/mailman/listinfo/linux-lvm
+ >>  >>  > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+ >>  >>  >=20
+
+
+
+ >>  >>  -- NextPart --
+ >>  >>  Attached File: c:\program
+ >>  files\goldmine\MailBox\Attach\gaf\smime(2).p7s
+
+ >>  _______________________________________________
+ >>  linux-lvm mailing list
+ >>  linux-lvm@sistina.com
+ >>  http://lists.sistina.com/mailman/listinfo/linux-lvm
+ >>  read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+ >>  _______________________________________________
+ >>  linux-lvm mailing list
+ >>  linux-lvm@sistina.com
+ >>  http://lists.sistina.com/mailman/listinfo/linux-lvm
+ >>  read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
