@@ -1,10 +1,14 @@
-Return-Path: <penguin_master_2000@yahoo.com>
-Message-ID: <20010212114306.8793.qmail@web10901.mail.yahoo.com>
-Date: Mon, 12 Feb 2001 03:43:06 -0800 (PST)
-From: "Mr. Penguin" <penguin_master_2000@yahoo.com>
-Subject: Re: [linux-lvm] lv nodes in /dev ??
-In-Reply-To: <20010212114109.14372.qmail@web10909.mail.yahoo.com>
-MIME-Version: 1.0
+Return-Path: <lewis@sistina.com>
+Date: Mon, 12 Feb 2001 09:09:56 -0600
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] 0.9.1-beta4 install bug
+Message-ID: <20010212090956.B7307@sistina.com>
+References: <3A85CE89.67D252D7@wrkhors.com> <17316403266.20010211154237@lopez.at> <20010211193524.B5840@colombina.comedia.it>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
+Content-Disposition: inline
+In-Reply-To: <20010211193524.B5840@colombina.comedia.it>; from bluca@comedia.it on Sun, Feb 11, 2001 at 07:35:24PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,44 +20,72 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Forgot to mention - I am using devfs
+--WYTEVAkct0FjGQmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Feb 11, 2001 at 07:35:24PM +0100, Luca Berra wrote:
+> On Sun, Feb 11, 2001 at 03:42:37PM +0100, Adalbert Michelic wrote:
+> > Hi,
+> >=20
+> > * On Sunday, February 11, 2001 at 00:28, Steven Lembark wrote:
+> > >         ./configure --prefix=3D/opt/lvm/0.9.1
+> >=20
+> > > leaves only the man pages in the prefix dir, exec's still go
+> > > to /sbin.  this is bad news since it will blow off the entire
+> > > LVM installation the next time i test an install. =20
+> [...]
+> > > so, prefix should set eprefix & friends which should leave the
+> > > binaries in /opt/lvm/0.9.1/sbin, etc.
+> >=20
+> > You have to set --exec-prefix either - --prefix does _not_ modify
+> > --exec-prefix as far as i can see.
+>=20
+> if you want to change the behaviour do this
+> and rerun autoconf
+> (NOTE exec_prefix should be set to "", not "/", because it is used as in
+> sbindir=3D${exec_prefix}/sbin )
 
---- "Mr. Penguin" <penguin_master_2000@yahoo.com>
-wrote:
-> Hi people
-> 
-> Just noticed that all my LVs have nodes not only in
-> /dev/vg00/ but also /dev !
-> 
-> So I have /dev/vg00/lvol1 and also /dev/lvol1 with
-> the
-> same major and minor numbers. I don't like to think
-> what will happen if I create a new VG called vg01
-> also
-> with an lvol1...
-> 
-> This seems to be occuring in beta3 and beta4. I'm
-> using 2.4.1 / reiserfs (root on LVM)
-> 
-> James
-> 
-> __________________________________________________
-> Do You Yahoo!?
-> Get personalized email addresses from Yahoo! Mail -
-> only $35 
-> a year!  http://personal.mail.yahoo.com/
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+Hmm...does it matter?  It never has for me...
 
+Anywho, thanks for that patch; it's exactly what I was thinking would fix
+Steven's problem.
 
-__________________________________________________
-Do You Yahoo!?
-Get personalized email addresses from Yahoo! Mail - only $35 
-a year!  http://personal.mail.yahoo.com/
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+THE LESSER-KNOWN PROGRAMMING LANGUAGES #16:
+C- This language was named for the grade received by its creator when he
+submitted it as a class project in a graduate programming class.  C- is
+best described as a "low-level" programming language.  In fact, the
+language generally requires more C- statements than machine-code statements
+to execute a given task.  In this respect, it is very similar to COBOL.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--WYTEVAkct0FjGQmd
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6h/zEpE6/iGtdjLERAihOAJ0bKRXxNnuCUadZhE8Br1CP77MGzACgjw8j
+FZzWTSt0GeDjfI/02RKYMD8=
+=7LB1
+-----END PGP SIGNATURE-----
+
+--WYTEVAkct0FjGQmd--
