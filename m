@@ -1,10 +1,9 @@
-Message-ID: <3BA2B7B2.9090105@st-peter.stw.uni-erlangen.de>
-Date: Sat, 15 Sep 2001 04:06:42 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Lock Patch
-References: <NBBBJHKIOKPKOGOEPEDPGEFMDNAA.stuart@bh90210.net>
-Content-Transfer-Encoding: 7bit
+From: Jesse Sipprell <jss@evcom.net>
+Date: Fri, 14 Sep 2001 23:55:17 -0400
+Message-ID: <20010914235517.A31653@kevorkian.evcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] dac960+2.2.19 issue with 1.0.1-rc2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,64 +15,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-well it's suposed to be known,
-almost every program( or every exept the comercial) for linux goes this way
-./configure make make install , and when you are instaling binaries from 
-rpm they are configured for the most common PC and then compiled with " 
-make " installing the rpm = make install
-and smth of the kind should be mentioned somewhere , probably in README 
-or INSTALL in the lvm dir
- 
-IT3 Stuart B. Tener, USNR-R wrote:
+It appears that rc2 consults /proc/devices when determining the block type of
+a device in lvm_get_device_type().  The device_names[] array in this function
+indicates that the device name for a mylex dac960 array controller should be 
+"dac960", however under 2.2.19, /proc/devices indicates that the "name" for 
+major device 48 is "rd" and not "dac960". 
 
->Svetljo:
->
->	Ah, that is wonderful to hear. Is there some reason why this is not noted in the How-To? Can we amend the How-To in order to document this information for first time implementers of this product?
->
->
->Very Respectfully, 
->
->Stuart Blake Tener, IT3, USNR-R, N3GWG 
->Beverly Hills, California
->VTU 1904G (Volunteer Training Unit) 
->stuart@bh90210.net 
->west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
->east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
->
->Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
->
->JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
->
->Friday, September 14, 2001 5:23 PM
->
->-----Original Message-----
->From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of svetljo
->Sent: Friday, September 14, 2001 3:13 PM
->To: linux-lvm@sistina.com
->Subject: Re: [linux-lvm] Lock Patch
->
->i've forgoten
->
->>you saying that typing, "make" in the "PATCHES" directory will cause a patch to be generated specifically for my kernel?
->>
->thats actually the work of ./configure it trys to find out what you
->have, and what you need
->in PATCHES it chooses from all the patches the ones your kernel need ,
->and " make " put them together in one patch for your kernel
->
->>What name will it be given?
->>       The documentation says to add a dash dash kernel-dir= or something or other after the "./configure" command, are you saying it is better to use "./configure" absent that appended statement?
->>        Where do I untar the LVM source? Does it matter where I do so? May I do it in /tmp?
->>
->1
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+I'm assuming that the code was based on a 2.4 kernel, however I don't have a 
+2.4 box handy that has dac960 support compiled in, so I cannot verify this.
+
+The end result is that PV operations cannot be performed on a dac960 device; 
+tools typically emit "invalid physical volume name".
+
+The following patch addresses the issue although, as should be obvious from
+above, I have in no way verified this under kernels > 2.2.19.
+
+--- LVM/1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c.orig	Fri Sep 14 23:43:56 2001
++++ LVM/1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c	Fri Sep 14 23:45:54 2001
+@@ -134,7 +134,11 @@
+ 	"md",			/* Multiple Disk driver (SoftRAID)   */
+ 	"loop",			/* Loop device              */
+ 	"dasd",			/* DASD disk (IBM S/390, zSeries)      */
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 3, 0)
++	"rd",
++#else  /* kernel > 2.2.x */
+ 	"dac960",		/* DAC960              */
++#endif 
+ 	"nbd",			/* Network Block Device              */
+ 	"ida",			/* Compaq SMART2              */
+ 	"cciss",		/* Compaq CCISS array              */
+
+
+-- 
+Jesse Sipprell
+Technical Operations Director
+Evolution Communications, Inc.
+800.496.4736
+
+* Finger jss@evcom.net for my PGP Public Key *
