@@ -1,21 +1,19 @@
-Date: Sat, 4 Nov 2000 12:09:25 -0500
-From: Peter Green <pcg@gospelcom.net>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200011042047.eA4KlPv22945@webber.adilger.net>
 Subject: Re: [linux-lvm] New 2.2 patches/sources released
-Message-ID: <20001104120925.C1656@gospelcom.net>
-References: <200010311627.JAA02534@lynx.turbolabs.com> <Pine.LNX.4.21.0011040849350.25705-100000@freak.distro.conectiva>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0011040849350.25705-100000@freak.distro.conectiva>; from marcelo@conectiva.com.br on Sat, Nov 04, 2000 at 08:49:52AM -0200
+In-Reply-To: <Pine.LNX.4.21.0011040849350.25705-100000@freak.distro.conectiva>
+ "from Marcelo Tosatti at Nov 4, 2000 08:49:52 am"
+Date: Sat, 4 Nov 2000 13:47:25 -0700 (MST)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@msede.com>
+To: Marcelo Tosatti <marcelo@conectiva.com.br>
+Cc: Andreas Dilger <adilger@turbolinux.com>, Linux LVM mailing list <linux-lvm@msede.com>
 
-also sprach marcelo:
-> On Tue, 31 Oct 2000, Andreas Dilger wrote:
-> > Hello all,
+Marcelo Tosatti writes:
 > > I've updated my 2.2 patch set.  It is now available as an i386 binary, SRPM,
 > > patched .tgz, and standalone patch.  I have also made a 2.4 kernel patch
 > > available to allow include/linux/lvm.h be used from user and kernel sources.
@@ -32,12 +30,15 @@ also sprach marcelo:
 > 
 > URL? :)
 
+
+Sorry.  It's the same as my previous postings, and I forgot to add it:
+
 ftp://ftp.stelias.com/pub/adilger/
 
-/pg
+There is a README which describes the various files in that directory.
+
+Cheers, Andreas
 -- 
-Peter Green : Gospel Communications Network, SysAdmin : pcg@gospelcom.net
----
-For mad scientists who keep brains in jars, here's a tip: why not add a slice 
-of lemon to each jar, for freshness?
- (Jack Handey)
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
