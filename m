@@ -1,10 +1,9 @@
-Return-Path: <Evan.Day@SUMMITSITE.COM>
-Message-ID: <DC5B1A21E9E7D211B0020090273AD628242BD0@summit15.corvallis.summit>
-From: "Day, Evan" <Evan.Day@SUMMITSITE.COM>
-Subject: RE: [linux-lvm] Problems compiling 2.4.4
-Date: Wed, 2 May 2001 16:54:07 -0700 
+Return-Path: <darren_young@yahoo.com>
+Message-ID: <20010503004851.897.qmail@web10803.mail.yahoo.com>
+Date: Wed, 2 May 2001 17:48:51 -0700 (PDT)
+From: Darren Young <darren_young@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] LVM Questions
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,106 +15,86 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
-
-No, RAID isn't broken.  The mddev.o file contains object files for all =
-RAID
-and LVM source files.  The offending code is in drivers/md/lvm.c =
-(IIRC), and
-will only show up if LVM is activated in the configuration.
-
------Original Message-----
-From: Glenn Shannon [mailto:glenn@gecpalau.com]
-Sent: Wednesday, May 02, 2001 4:30 PM
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] Problems compiling 2.4.4
 
+I have only recently discovered and played with LVM.
+If anyone can answer some general questions, it would
+be most appreciated.
 
-Lionel COTTIN wrote:
+What I would like to have is a system where I can add
+space via new disks and expand file systems at will. I
+have used volume managers on HP and Solaris for
+precisely these purposes (HP and Veritas). Too many
+times I have been called by a customer or a customer
+of a friend with the "I underestimated the space
+needed for my Oracle databases and I need space,
+now!". Adding disks and placing db's on alternate
+filesystems gets the job done, but an LVM would be a
+great method to move them to.
 
-> Hi,
->
-> it seems you have activated the md driver (raid 0...5), which is not =
-LVM
-> related....
-> try to de-activate it if possible, then try again.
->
-> I have compiled the 2.4.4 kernel with LVM 0.9.1beta7 today without =
-any
-> problem.
->
-> Good luck ;)
->
-> Lionel
->
-> -----Message d'origine-----
-> De : linux-lvm-admin@sistina.com =
-[mailto:linux-lvm-admin@sistina.com]De
-> la part de Emanuel Quass
-> Envoy=E9 : mercredi 2 mai 2001 18:28
-> =C0 : linux-lvm@sistina.com
-> Objet : [linux-lvm] Problems compiling 2.4.4
->
-> Hi,
->
-> I compiled a kernel(2.4.4) with your lvm patch (0.9.1_beta7).
-> At the end of make bzImage an error occours:
->
-> ld -m elf_i386 -T /mnt/kernel/linux/arch/i386/vmlinux.lds -e \
->  stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o \
->  init/main.o init/version.o \
->         --start-group \
->         arch/i386/kernel/kernel.o arch/i386/mm/mm.o \
-> kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
->         drivers/block/block.o drivers/char/char.o \
-> drivers/misc/misc.o drivers/net/net.o drivers/media/media.o \
-> drivers/ide/idedriver.o drivers/scsi/scsidrv.o \
-> drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o \
-> drivers/md/mddev.o \
->         net/network.o \
->         /mnt/kernel/linux/arch/i386/lib/lib.a \
-> /mnt/kernel/linux/lib/lib.a /mnt/kernel/linux/arch/i386/lib/lib.a \
->         --end-group \
->         -o vmlinux \
-> drivers/md/mddev.o: In function `__update_hardblocksize':
-> drivers/md/mddev.o(.text+0x2316): undefined reference to
-`get_hardblocksize'
-> drivers/md/mddev.o(.text+0x2352): undefined reference to
-`get_hardblocksize'
-> make: *** [vmlinux] Error 1
->
-> Does anybody knwo where this comes from!
->
-> Thanks in advance
->
->         Emanuel
->
-> P.S. Please CC me because I am not in the list.
->
-> --
->
-> ++++++++++++++++++++++++++++++++
-> Emanuel Quass
-> email :  emanuel.quass@temic.com
->
-> In a world without fences and walls,
-> who needs Windows and Gates?
-> ++++++++++++++++++++++++++++++++
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+First, does LVM do RAID or do I need to employ the md
+driver to accomplish this? It seems to me (as a
+sysadmin) that LVM is great for adding space when
+needed, but having RAID capabilities in conjunction
+with this would be required to produce a highly
+available system.
 
-So does this mean that raid is broken in 2.4.4?
+What ext2 resize utility is the ideal choice for LVM
+to use. parted seems to be quite functional, but
+having to down the machine to single is a but
+annoying. Has anyone successfully used the ext2online
+utility on RedHat? It seems as though the version of
+e2fsprogs that includes this code is part of RH 7.1
+anyways. At least from what I can tell. The online
+resizing would definitely be required for a highly
+available system as well.
 
-Glenn
+I started with RedHat 7.1 with the 2.4.2 kernel and
+patched it. What kernel is ideal to use with LVM? This
+one seems to work, but I read a reference in the list
+archive that certain components are in 2.4. Is this
+the case?
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
+The howto mentions to add a couple of commands to the
+RH start script, but a scan of them reveals that RH
+7.1 already has them. If they are correct, perhaps the
+howto needs to reflect this. Does anyone know if they
+are correct?
+
+I picked up on an older thread about the mailing list
+rejecting certain email and just had to dump in my .02
+worth. I don't want to start a war, but the list
+should be completely open. I remember the FreeSWAN
+list having wars over open vs closed and open won. The
+maintainers are of the opinion (from what I read) that
+filtering spam is up to the user and cleaning of any
+type of a list is censoring. I had to get that out
+since I will most likely be using this product
+somewhere down the road.
+
+I also read an older thread on an X11 GUI as well as
+some replies to it. The GUI that comes with Veritas is
+completely useless and the command line tools are
+completely over-engineered. While it would be nice for
+a small company trying to save money not to call in a
+specialist to create VG's, it certainly wouldn't be a
+requirement. Get everything stable, reliable and
+consistent than someone will probably have the time to
+create the GUI. I'd dedicate time to that type of
+project, but why bother when the code isn't quite
+there yet. There's no reason.
+
+Guess that's a total of .04 cents...
+
+Thanks in advance,
+
+Darren Young
+Senior UNIX Administrator
+GSX.com
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
