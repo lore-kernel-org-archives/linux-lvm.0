@@ -1,9 +1,10 @@
-Message-ID: <000b01c36ca9$7bc29b50$c5000a0a@TTHENRIC2>
-From: "Henric Andersson" <ha@thedudes.nu>
-References: <000e01c36bf9$e5f82720$6402000a@gasaraki> <20030827115857.GE23955@www.13thfloor.at> <001001c36c93$9336a490$c5000a0a@TTHENRIC2> <20030827121655.GB26817@www.13thfloor.at>
-Subject: Re: [linux-lvm] Poor performance with LVM 1.0.7
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Herbert =?iso-8859-1?Q?P=F6tzl?= <herbert@13thfloor.at>
+Message-ID: <20030827153352.GC7896@www.13thfloor.at>
+References: <20030827144240.GB4737@www.13thfloor.at> <20030827145743.GR473@fib011235813.fsnet.co.uk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20030827145743.GR473@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] Re: devmapper-ioctl 2.4.21 ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,54 +15,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug 27 10:58:06 2003
+Date: Wed Aug 27 10:58:11 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Joe Thornber <thornber@sistina.com>
+Cc: linux-lvm@sistina.com
 
-> I asked this, because I reported several times that
-> lvm does have some I/O bottleneck/issue ...
->
-> I had a similar problem with RAID5 where I could
-> get 16Mb/s from each disk and about 30Mb/s from
-> the RAID5 (4 disks) but only 18Mb/s from the lvm
-> ontop of that raid ...
+On Wed, Aug 27, 2003 at 03:57:43PM +0100, Joe Thornber wrote:
+> On Wed, Aug 27, 2003 at 04:42:40PM +0200, Herbert P?tzl wrote:
+> > 
+> > Hi!
+> > 
+> > stumbled over the following code:
+> > 
+> > +	/* Don't update times for block devices using O_DIRECT */
+> > +	if (!(file->f_flags & O_DIRECT) || !S_ISBLK(inode->i_mode)) {
+> > +		inode->i_ctime = inode->i_mtime = CURRENT_TIME;
+> > +		mark_inode_dirty_sync(inode);
+> > +	}
+> > 
+> > but [A:] S_ISBLK() should be true if the inode is a block device
+> > [B:] (file->f_flags & O_DIRECT) should be true if O_DIRECT is requested
+> > 
+> > !(A || !B)  ==  (!A && B) (De Morgan)
+> 
+> but it's actually
+> (!A ||!B)
+> 
 
-I've seen some evidence of that too on the net, but noone seems to have any answer.
+*argl*, okay, simply didn't see it ... sorry for the noise ...
 
-Did a test now with bonnie on the LV setup with a 512MB file, and this is the result:
+thanks for the quick response ...
 
--------Sequential Output--------
-Char: 17159K/s (97% CPU)
-Block: 21966K/s (7% CPU)
-Rewrite: 21052K/s (8% CPU)
+ahh, by the way, updated the devmapper-ioctl for 2.4.22 final,
+are you interrested in the rediff?
 
----Sequential Input--
-Char: 10879K/s (54% CPU)
-Block: 18166K/s (2% CPU)
+best,
+Herbert
 
-So, clearly, this should be enough to feed samba the 9.5MB/s that all the other non-lvm disks can do.
-But apparently not. Is there perhaps some strange configuration of samba with LVM that actually makes
-it slower? (Due to buffers, and read sizes?)
-
-> > Even tried doing:
-> >
-> > time cat "somefile on the LV set" > /dev/null
-> >
-> > Which performed equally bad (ie, about 4-5MB/s).
-> > Doing the same on the /dev/hda1 drive gives ALOT
-> > better performance (more in the line of what hdparm -Tt reports)
->
-> this was, on one of my systems, the reason why
-> I removed the lvm and used the plain disk ...
-
-No good in my case, I need to be able to extend the filesystem and thus, I need LVM.
-
-> Heinz suggested to use the new LVM2 anyway, and maybe
-> this is an option for you, so you could try this too
-> (if you need patches for LVM2, hopefully they will be
-> available for 2.4.22 this evening ...)
-
-Isn't LVM2 just a new bunch of userland tools (+ a devicemapper) ? Or did I miss something?
-
-/Henric
+> - Joe
