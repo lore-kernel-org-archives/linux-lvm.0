@@ -1,12 +1,10 @@
-Return-Path: <lewis@sistina.com>
-Date: Fri, 9 Feb 2001 12:07:49 -0600
-From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20010209120749.E9249@sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
-Content-Disposition: inline
-Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta4 available at www.sistina.com
+Return-Path: <h@ns.engren.org>
+Date: Fri, 9 Feb 2001 22:21:44 +0100 (CET)
+From: Hans Engren <h@ns.engren.org>
+Subject: [linux-lvm] Weird corruption of volume group configuration with LVM.
+ (fwd)
+Message-ID: <Pine.LNX.4.20.0102092213070.401-100000@menswerk.cyclone.se>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,91 +16,202 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, lvm-devel@sistina.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc: declerck@sistina.com, okeefe@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
---imjhCm/Pyz7Rq5F2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi.
 
-The following message is from Heinz Mauelshagen, who unfortunately cannot
-send it out himself today.
+The problem I had here two days ago were almost fixed by the beta4
+release. I am still not quite aware of how to make sure this would work
+properly. See output below.
 
-Message follows ->
-----------------------------------------------------------------------------
+This behaviour is although different from what I saw using beta2, but the
+problem is still here. :(
 
-Hi all,
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sda"  is in no VG  [4 GB]
+pvscan -- inactive PV "/dev/sdb1"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdc"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sde"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdf"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdg"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdh"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdi"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdj"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdk"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdl"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdm"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdn"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdo"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdp"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdq"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdr"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sds"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdt"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdu"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdv"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdw"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/hdb1"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/hdc1"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/hdd1"  is associated to an unknown VG (run vgscan)
+pvscan -- total: 25 [186.3 GB] / in use: 24 [182.3 GB] / in no VG: 1 [4 GB]
 
-a tarball of the Linux Logical Volume Manager 0.9.1 beta4 is available now
-at
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+zsh: 687 segmentation fault  vgscan
 
-   <http://www.sistina.com/>
+# vgcfgrestore -f /etc/lvmconf/mw1.conf -n mw1 /dev/sdb1
 
-for download (Follow the "LVM download page" link).
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sda"  is in no VG  [4 GB]
+pvscan -- inactive PV "/dev/sdb1" of VG "mw1" [3.99 GB / 0 free]
+pvscan -- inactive PV "/dev/sdc"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sde"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdf"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdg"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdh"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdi"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdj"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdk"  of VG "mw1" [8.43 GB / 0 free]
+pvscan -- inactive PV "/dev/sdl"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdm"  of VG "mw1" [8.43 GB / 0 free]
+pvscan -- inactive PV "/dev/sdn"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdo"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdp"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdq"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdr"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sds"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdt"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdu"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdv"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdw"  of VG "mw1" [4 GB / 264 MB free]
+pvscan -- inactive PV "/dev/hdb1" of VG "mw1" [57.24 GB / 0 free]
+pvscan -- inactive PV "/dev/hdc1" of VG "mw1" [16.11 GB / 0 free]
+pvscan -- inactive PV "/dev/hdd1" of VG "mw1" [16.11 GB / 0 free]
+pvscan -- total: 25 [186.3 GB] / in use: 24 [182.3 GB] / in no VG: 1 [4 GB]
+
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+zsh: 712 segmentation fault  vgscan
+
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sda"  is in no VG  [4 GB]
+pvscan -- inactive PV "/dev/sdb1"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdc"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sde"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdf"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdg"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdh"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdi"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdj"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdk"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdl"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdm"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdn"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdo"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdp"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdq"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdr"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sds"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdt"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdu"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdv"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdw"   is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/hdb1"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/hdc1"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/hdd1"  is associated to an unknown VG (run vgscan)
+pvscan -- total: 25 [186.3 GB] / in use: 24 [182.3 GB] / in no VG: 1 [4 GB]
+
+ -- Hans.
+
+ /"\                                   o
+ \ /     ASCII RIBBON CAMPAIGN        /|\
+  X        AGAINST HTML MAIL           >>
+ / \                                   o
+
+---------- Forwarded message ----------
+Date: Wed, 7 Feb 2001 21:01:26 +0100 (CET)
+From: Hans Engren <h@ns.engren.org>
+Reply-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
+Subject: [linux-lvm] Weird corruption of volume group configuration with
+    LVM.
+Resent-Date: Thu, 8 Feb 2001 09:12:21 +0100 (CET)
+Resent-From: Hans Engren <hoe@engren.org>
+Resent-To: Hans Engren <hoe@engren.org>
+Resent-Subject: [linux-lvm] Weird corruption of volume group configuration
+ with LVM.
 
 
-This release fixes several bugs.
+Hi,
 
-See the CHANGELOG file contained in the tarball for further information.
+After rebooting my system a couple of days ago, I ran into a real strange
+problem with the volume group "mw1" I am using.
 
-Please help us to stabilize for 0.9.1 ASAP and test it like hell ;-)
-Feed back related information to <linux-lvm@sistina.com>.
+Doing a vgscan locates no volume groups what so ever.
+After doing a `vgcfgrestore -f /etc/lvmconf/mw1.conf -n mw1 /dev/<DISK>`,
+I am able to do a `vgchange -a y`, and actually mount /dev/mw1/ftpd.
 
-Thanks a lot for your support of LVM.
+Doing a vgscan at this point locates no volume groups either.
 
-- --
+This means that I can't mount the volume group automatically during
+bootup, neither can I use any of the vg* commands in the system. I am just
+able to use the volume group as it is, for data storage, without any
+possibility to use the LVM features.
 
-Regards,
-Heinz    -- The LVM Guy --
+I tried to reboot the system, used vgcfgrestore to re-add the
+configuration to the disks, and do a vgcfgbackup after that. It produces
+the following (with -v):
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+vgcfgbackup -- finding all volume groups
+vgcfgbackup -- volume group found: mw1 
+vgcfgbackup -- locking logical volume manager
+vgcfgbackup -- checking volume group name "mw1"
+vgcfgbackup -- checking existence of volume group "mw1"
+vgcfgbackup -- ERROR: volume group "mw1" has an invalid number of physical volumes
+vgcfgbackup -- ERROR "vg_cfgbackup(): vg_check_exist" backing up volume group "mw1"
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+Output from pvscan:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sda"  is in no VG  [4 GB]
+pvscan -- inactive PV "/dev/sdb1" of VG "mw1" [3.99 GB / 0 free]
+pvscan -- inactive PV "/dev/sdc"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sde"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdf"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdg"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdh"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdi"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdj"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdk"  of VG "mw1" [8.43 GB / 0 free]
+pvscan -- inactive PV "/dev/sdl"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdm"  of VG "mw1" [8.43 GB / 0 free]
+pvscan -- inactive PV "/dev/sdn"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdo"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdp"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdq"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdr"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sds"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdt"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdu"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdv"  of VG "mw1" [4 GB / 0 free]
+pvscan -- inactive PV "/dev/sdw"  of VG "mw1" [4 GB / 264 MB free]
+pvscan -- inactive PV "/dev/hdb1" of VG "mw1" [57.24 GB / 0 free]
+pvscan -- inactive PV "/dev/hdc1" of VG "mw1" [16.11 GB / 0 free]
+pvscan -- inactive PV "/dev/hdd1" of VG "mw1" [16.11 GB / 0 free]
+pvscan -- total: 25 [186.3 GB] / in use: 24 [182.3 GB] / in no VG: 1 [4 GB]
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+I hope you see what my problem is, otherwise, tell me what output that
+would be needed, and I'll provide it.
 
-------- End of Forwarded Message
+Thank you.
 
+ -- Hans.
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Programming graphics in X is like finding sqrt(pi) using Roman numerals.
------End Obligatory Humorous Quote------------------------------------------
-
---imjhCm/Pyz7Rq5F2
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6hDH1pE6/iGtdjLERApSQAJsEOvvw89w9L3Pu3ivzWG/4SwvTrgCeKLSn
-e4u+QGk8iiA0W2ZmAJ4TDaU=
-=wf8r
------END PGP SIGNATURE-----
-
---imjhCm/Pyz7Rq5F2--
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
