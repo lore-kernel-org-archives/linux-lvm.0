@@ -1,27 +1,12 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24AsjK07566
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 05:54:45 -0500
-Received: from lama.bgc-jena.mpg.de (lama.bgc-jena.mpg.de [195.37.229.21])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j24Ashfm007115
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 05:54:43 -0500
-Received: from riva.bgc-jena.mpg.de (riva.bgc-jena.mpg.de [141.5.16.47])
-	by lama.bgc-jena.mpg.de (GATE -B- / MPI BGC Mail System) with ESMTP id
-	8A7E8152B6
-	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 11:54:42 +0100 (CET)
-Received: from riva (localhost [127.0.0.1])
-	by sophos.bgc-jena.mpg.de (Postfix) with ESMTP id 654A39C0C5
-	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 11:54:42 +0100 (CET)
-Received: from [141.5.16.151] (sequoia.bgc-jena.mpg.de [141.5.16.151])
-	by riva.bgc-jena.mpg.de (Postfix) with ESMTP id D77EFEA173
-	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 11:54:37 +0100 (CET)
-Message-ID: <42283E6D.9060208@bgc-jena.mpg.de>
-Date: Fri, 04 Mar 2005 11:54:37 +0100
-From: "Dr.Peer-Joachim Koch" <pkoch@bgc-jena.mpg.de>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24CnZK01223
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 07:49:35 -0500
+Message-ID: <CEEE90D87043AA4487634844B31B03631141B17B@ukspkem01.corp.hds.com>
+From: Matthias Rudolph <Matthias.Rudolph@hds.com>
+Date: Fri, 4 Mar 2005 12:49:00 -0000 
 MIME-Version: 1.0
-References: <49849.129.33.49.251.1076733336.squirrel@www.fusion-hosting.net>
-In-Reply-To: <49849.129.33.49.251.1076733336.squirrel@www.fusion-hosting.net>
-Content-Type: multipart/mixed; boundary="------------070509050903070301000402"
-Subject: [linux-lvm] Some general questions ..
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] LVM Question
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,68 +17,137 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: Linux-LVM@Sistina.com
 
-This is a multi-part message in MIME format.
---------------070509050903070301000402
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Hello all,
+ 
+how can I force to activate a VG on a special device file?
+One FC Storage Disk is visible over two pathes (sda and sdb). We use our
+Path Management Software. It creates sddlmaa. After creating the VG the
+sddlmaa is ACTIVE - OK. But after deactivating and activating sdb is ACTIVE.
+This means: no pathfailover.
+ 
+Here a typescript:
+ 
+# fdisk -l /dev/sd*
+-> scannt nach neuen disks und zeigt sie an
 
-Hi,
+# fdisk /dev/sddlmaa
+-> Partition 1 anlegen �ber gesmten Bereich
+-> Partitions System ID von 83 (Linux) auf 8e (Linux LVM) �ndern
 
-we're currently planing to update our old HPUX (5 years old)file server.
-In the moment one machine is handling all 10TB of file systems.
-The storage is attached using a san (2 Brocades + 2 EMC Clarrion4700)
-Backupserver and the tape library are also within the san.
+[root@D-SRV-L-43 root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ERROR "pv_read(): read" reading physical volumes
 
-We are only using nfs and samba in the moment.
+[root@D-SRV-L-43 root]# pvcreate /dev/sddlmaa1
+pvcreate -- physical volume "/dev/sddlmaa1" successfully created
 
-I'm currently thinking about a setup where 3 linux machines
-are handling all lv. First breaking everything into three vg, each one
-attached to one node, but visible on all nodes.
+[root@D-SRV-L-43 root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sddlmaa1" is in no VG  [6.87 GB]
+pvscan -- inactive PV "/dev/sda1"     is in no VG  [6.87 GB]
+pvscan -- inactive PV "/dev/sdb1"     is in no VG  [6.87 GB]
+pvscan -- total: 3 [20.61 GB] / in use: 0 [0] / in no VG: 3 [20.61 GB]
 
-So would it be possible to import some dedicated devices
-(all luns from the vg), while other luns are localy active
-and others are active on the third node ?
+[root@D-SRV-L-43 root]# lvmdiskscan
+lvmdiskscan -- reading all disks / partitions (this may take a while...)
+lvmdiskscan -- /dev/sddlmaa1 [       6.87 GB] new LVM whole disk
+lvmdiskscan -- /dev/sda1     [       6.87 GB] new LVM whole disk
+lvmdiskscan -- /dev/sdb1     [       6.87 GB] new LVM whole disk
+lvmdiskscan -- /dev/hda1     [     103.33 MB] free whole disk
+lvmdiskscan -- 4 disks
+lvmdiskscan -- 4 whole disks
+lvmdiskscan -- 0 loop devices
+lvmdiskscan -- 0 multiple devices
+lvmdiskscan -- 0 network block devices
+lvmdiskscan -- 6 partitions
+lvmdiskscan -- 0 LVM physical volume partitions
 
-If just a pvscan is execute what is happening to "normaly"
-working vg's  ?
+[root@D-SRV-L-43 root]# vgcreate vg00 /dev/sddlmaa1
+vgcreate -- INFO: using default physical extent size 4 MB
+vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgcreate -- doing automatic backup of volume group "vg00"
+vgcreate -- volume group "vg00" successfully created and activate
 
-Is it planed to mirroring of lv onto other devices within
-th vg ?
+[root@D-SRV-L-43 root]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "vg00"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
 
-Who has a good concept for BIG file servers ?   ;)
-(Maybe we have to extend it to 50->100TB for a new linux cluster...)
+[root@D-SRV-L-43 root]# vgdisplay -v
+--- Volume group ---
+VG Name               vg00
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                0
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               6.87 GB
+PE Size               4 MB
+Total PE              1758
+Alloc PE / Size       0 / 0
+Free  PE / Size       1758 / 6.87 GB
+VG UUID               INPtDi-kBhS-USzo-WuCW-xQWZ-DFkq-NerC0u
 
-Thanks for your help !
---=20
-Bye,
-     Peer
-_________________________________________________________
-Max-Planck-Institut fuer Biogeochemie
-Dr. Peer-Joachim Koch
-Hans-Kn=EF=BF=BDll Str.10            Telefon: ++49 3641 57-6705
-D-07745 Jena                 Telefax: ++49 3641 57-7705
-
---------------070509050903070301000402
-Content-Type: text/x-vcard; charset=utf-8;
- name="pkoch.vcf"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="pkoch.vcf"
-
-begin:vcard
-fn:Peer-Joachim Koch
-n:Koch;Peer-Joachim
-org;quoted-printable:MPI f=C3=BCr Biogeochemie;DVA
-adr:;;Hans-Knoell-Str. 10;Jena;;07745;Germany
-email;internet:pkoch@bgc-jena.mpg.de
-title:Dr. 
-tel;work:+49 3641 576705
-tel;fax:+49 3641 577705
-x-mozilla-html:FALSE
-version:2.1
-end:vcard
+--- No logical volumes defined in "vg00" ---
 
 
---------------070509050903070301000402--
+--- Physical volumes ---
+PV Name (#)           /dev/sddlmaa1 (1)
+PV Status             available / allocatable
+Total PE / Free PE    1758 / 1758
+
+[root@D-SRV-L-43 root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sddlmaa1" of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- inactive PV "/dev/sda1"     of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- inactive PV "/dev/sdb1"     of VG "vg00" [6.87 GB / 6.87 GB free]
+
+[root@D-SRV-L-43 root]# vgchange -an vg00
+vgchange -- volume group "vg00" successfully deactivated
+
+[root@D-SRV-L-43 root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sddlmaa1" of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- inactive PV "/dev/sda1"     of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- inactive PV "/dev/sdb1"     of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- total: 3 [20.61 GB] / in use: 3 [20.61 GB] / in no VG: 0 [0]
+
+[root@D-SRV-L-43 root]# vgchange -ay vg00
+vgchange -- volume group "vg00" successfully activated
+
+[root@D-SRV-L-43 root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sddlmaa1" of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- inactive PV "/dev/sda1"     of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- ACTIVE   PV "/dev/sdb1"     of VG "vg00" [6.87 GB / 6.87 GB free]
+pvscan -- total: 3 [20.61 GB] / in use: 3 [20.61 GB] / in no VG: 0 [0]
+ 
+
+Best Regards
+
+Matthias Rudolph
+Country Software Specialist 
+
+HITACHI DATA SYSTEMS GmbH
+Im Steingrund 10
+D-63303 Dreieich-Buchschlag
+Tel:   +49 (0)6103 804 1208
+Mob: +49 (0)171 240 9326
+matthias.rudolph@hds.com <mailto:matthias.rudolph@hds.com>  
+
+
+This e-mail may contain confidential and/or privileged information. If you
+are not the intended recipient (or have received this e-mail in error)
+please notify the sender immediately and destroy this e-mail. Any
+unauthorised copying, disclosure or distribution of the material in this
+e-mail is strictly forbidden.
