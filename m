@@ -1,9 +1,8 @@
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@users.sourceforge.net>
-Message-ID: <yw1xy8vmfjq2.fsf@users.sourceforge.net>
-References: <20031015130801.49215.qmail@web41307.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: once again about 2.6 kernel
+MIME-Version: 1.0
+Message-ID: <OF063E84D5.82281F2C-ON87256DC0.00723076-86256DC0.00724B84@us.ibm.com>
+From: John Diana <jdiana@us.ibm.com>
+Content-Type: multipart/alternative; boundary="=_alternative 00724B7C86256DC0_="
+Subject: [linux-lvm] LVM question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,29 +13,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 15 13:19:02 2003
+Date: Wed Oct 15 15:56:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+To: Linux-LVM@sistina.com
 
-Valentine Kouznetsov <vkuznet@yahoo.com> writes:
+This is a multipart message in MIME format.
+--=_alternative 00724B7C86256DC0_=
+Content-Type: text/plain; charset="us-ascii"
 
-> I had a look at lvm mailing list about kernel 2.6
-> questions. So far I understood that in order to run
-> 2.6 kernel with LVM2 on a system which previously run
-> 2.4 kernel with LVM1 you need
-> 1) patch 2.4 kernel with device-mapper patch
-> 2) use new LVM2 tools (LVM2.2.00.07) which need to be
-> installed separetly on the system to allow
-> simulteneously use LVM1 and LVM2
+Heinz,
 
-LVM2 doesn't require any changes to the disks.  It will understand the
-LVM1 metadata.  You don't need to patch your 2.4 kernel to use
-device-mapper in 2.6, either.  They can both peacefully coexist, as
-long as your boot scripts run the right version of the tools.  A
-somewhat ugly solution is to run both version, since only one of them
-will do anything anyway.
+In this news article 
+http://lists.sistina.com/pipermail/linux-lvm/2001-June/007667.html  you 
+mentioned "BTW: future versions of the LVM will probably have uuid support 
+on the 
+command line like for eg. "vgchange -ay -u VolumeGroupUUID 
+VolumeGroupName".
 
--- 
-M�ns Rullg�rd
-mru@users.sf.net
+Does this exist yet? 
+I am in a situation where I have a storage subsystem which is capable of 
+making copies of disks completely by itself and it would be  handy for 
+smaller shops if the subsystem could make a copy of the underlying disks 
+of a VG and then those disks could be brought online on the same host as 
+another VG. I am at version 1.0.5-45
+
+I can do this with AIX and recreatevg command and I am thinking the above 
+would get me close to getting it done with Linux.
+
+Thanks,
+
+John W. Diana
+IBM San Integration Test
+jdiana@us.ibm.com
+512.838.1482
+Tieline 678-1482
+--=_alternative 00724B7C86256DC0_=
+Content-Type: text/html; charset="us-ascii"
+
+
+<br><font size=2 face="Courier New">Heinz,<br>
+<br>
+In this news article <br>
+http://lists.sistina.com/pipermail/linux-lvm/2001-June/007667.html &nbsp;you <br>
+mentioned &quot;BTW: future versions of the LVM will probably have uuid support on the <br>
+command line like for eg. &quot;vgchange -ay -u VolumeGroupUUID <br>
+VolumeGroupName&quot;.<br>
+<br>
+Does this exist yet? <br>
+I am in a situation where I have a storage subsystem which is capable of <br>
+making copies of disks completely by itself and it would be &nbsp;handy for <br>
+smaller shops if the subsystem could make a copy of the underlying disks <br>
+of a VG and then those disks could be brought online on the same host as <br>
+another VG. I am at version 1.0.5-45<br>
+<br>
+I can do this with AIX and recreatevg command and I am thinking the above <br>
+would get me close to getting it done with Linux.<br>
+<br>
+Thanks,</font><font size=2 face="sans-serif"><br>
+<br>
+John W. Diana<br>
+IBM San Integration Test<br>
+jdiana@us.ibm.com<br>
+512.838.1482<br>
+Tieline 678-1482</font>
+--=_alternative 00724B7C86256DC0_=--
