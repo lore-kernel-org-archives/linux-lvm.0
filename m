@@ -1,11 +1,11 @@
 From: FEJF <fejf@gmx.de>
 Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Date: Fri, 7 Sep 2001 13:36:16 +0200
-References: <E15f13v-0003bs-00@hermes.sistina.com> <E15f8l7-0008Di-00@hermes.sistina.com> <20010907114303.C19457@vestdata.no>
-In-Reply-To: <20010907114303.C19457@vestdata.no>
+Date: Fri, 7 Sep 2001 13:45:22 +0200
+References: <E15f13v-0003bs-00@hermes.sistina.com> <E15f8l7-0008Di-00@hermes.sistina.com> <20010907124649.B31313@sistina.com>
+In-Reply-To: <20010907124649.B31313@sistina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E15fJux-0005Kk-00@hermes.sistina.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <E15fK3i-0005bl-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +17,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-Ragnar Kj=EF=BF=BDrstad, on Freitag, 7. September 2001 11:43 wrote:
-> On Fri, Sep 07, 2001 at 01:41:22AM +0200, FEJF wrote:
-> > there are no io-errors... but as the hd makes really scary noise when
-> > pvmove tries to move the remaining bytes. so i think the hd is damaged.
-> > but all i want is to remove the damaged hd.
-> > but pvreduce says i have to use pvmove to get rid of the remaining data
-> > and pvmove gives the errors...
-> > so i can't remove it :/ - is there a way to get rid of the hd without
-> > destroying the rest of the data ? sth. like pvreduce --force ?
->
-> No, don't think so.
->
-> I have a patch, but I'm not so sure I can recommend that you use it.
->
-> I only wrote it to copy off a single block of a bad disk - I'm not sure
-> exactly how it will behave when moving multiple blocks (if the
-> non-corrupted blocks will end up in the right spot, or if it writes too
-> little data, so it will be some bytes off).
+Heinz J . Mauelshagen, on Freitag, 7. September 2001 12:46 wrote:
+[cut]
+> Well, assuming your disk has a flaw, the only way to work around your
+> problem is patching pv_move_pe() in order to ignore read errors (this takes
+> place around line 520 in LVM 1.0) which will cause a copy of the data to
+> some other device with probably flaky data in it.
 
-the only thing i fear at the moment is that the hd gets totaly damaged soon=
-er=20
-or later (if it runs serveral hours i can't access it...) and if it will i =
+search a bit through the file... but i actually don't know what to change 
+there... would a single 
+   ret:=1;
+just before
+   pe_moved += ret;
+help ? 
 
-will loose the whole lvm (about 360gigs) and so i say if there are some fil=
-ez=20
-corrupted it won't matter that much...
+> In case you've got some filesystem data in there, fsck will complain
+> accordingly and some file or metadata of the filesystem will be gone which
+> will cause more or less filesystem data loss.
+
+loose some bytes is nothing against the whole lvm... ;)
 fejf
 
-- --=20
+- -- 
 Backups are usefull. Most often when you don't have one ;)
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7mLEz7Xtp66ctWuIRAnNKAKDSYdnAEGSC9w+7SeVu5dWqFs8tVACbBsK9
-PS4wZR9k653HkL/YQzocYqQ=3D
-=3DXlFo
+iD8DBQE7mLNS7Xtp66ctWuIRAgRGAKDL9Us+S5NUHUhOhymfTidbzJYOTwCgg9ti
+WFlbMA5xs29zsHYyOLiA0EM=
+=uSq4
 -----END PGP SIGNATURE-----
