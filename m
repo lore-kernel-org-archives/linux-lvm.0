@@ -1,10 +1,10 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] One VG or many?
-Message-ID: <20020605221951.C21310@zealot.blacknet.de>
-References: <F888C30C3021D411B9DA00B0D0209BE8038F9522@cvo-exchange.cvo.roguewave.com> <20020605221509.B21310@zealot.blacknet.de>
+From: Shane Wegner <shane@cm.nu>
+Subject: Re: [linux-lvm] Recovering inconsistent vg
+Message-ID: <20020605223342.GA29203@continuum.cm.nu>
+References: <20020605003728.GA3783@continuum.cm.nu> <20020605123903.GH1061@tykepenguin.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020605221509.B21310@zealot.blacknet.de>; from bock@blacknet.de on Wed, Jun 05, 2002 at 10:15:09PM +0200
+In-Reply-To: <20020605123903.GH1061@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun  5 16:18:02 2002
+Date: Wed Jun  5 17:34:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Wed, Jun 05 '02 at 22:15, Goetz Bock wrote:
-> So unless I (belie I might) hit a fix PV/VG/LV size area I'd just go for
-> one VG.
-Too many typos in here:
-So unless I (believe I might) this a fix PV/VG/LV size barea I'd just go
-for one VG.
+On Wed, Jun 05, 2002 at 01:39:03PM +0100, Patrick Caulfield wrote:
+> On Tue, Jun 04, 2002 at 05:37:28PM -0700, Shane Wegner wrote:
+> > vgscan -- ERROR "lv_check_consistency(): LV status" volume
+> > group "vg0" is inconsistent
+> 
+> If this is a recent debian unstable upgrade then you should get
+> the latest 1:1.0.4-4 deb (uploaded this morning GMT) that fixes 
+> the problem.
 
-Cu,
-    Goetz.
+Yes, that was it.  Thank you for the help.
+
+Shane
