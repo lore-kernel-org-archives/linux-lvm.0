@@ -1,8 +1,6 @@
-Message-ID: <3D6BCA0E.15DFCCCC@storix.com>
-From: Anthony Johnson <anthony@storix.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Storix LVM Support
+From: pll+lvm@lanminds.com
+Message-Id: <20020827194652.24337F6C9@tater>
+Subject: [linux-lvm] EVMS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,30 +11,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 27 13:49:02 2002
+Date: Tue Aug 27 14:47:12 2002
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Storix Backup Adminsitrator Version 4.1.1 is available and provides full
-support for LVM1 and LVM2. With SBA you can do a complete system backup
-of a partition, LVM or RAID-based system and completely reconfigure the
-system to migrate from partitions to LVM, and change just about anything
-else needed to restore data to a completely different disk
-configuration.
+Hi all,
 
-The product is designed to encourage the use of LVM in place of
-partitions, so I'd like very much to get some feedback on the product
-from knowledgable LVM'ers. If you get a chance to review the software,
-you can download a copy from http://www.storix.com/download.html. To
-view the system installation guide with samples of the LVM configuration
-screens, see http://www.storix.com/download/sbalinuxinst.pdf.
+I stumbled across something from IBM called EVMS today and was 
+wondering if anyone had used it, and if so, what they thought of it?
+How does it differ from LVM?
 
-I look forward to any comments.
-Thanks,
-Anthony
+Here's the URL:
 
-----------------------------------------------
-Anthony Johnson         1-619-702-6500
-Storix Software         1-619-702-6501 (fax)
-anthony@storix.com      http://www.storix.com
+	http://oss.software.ibm.com/developerworks/opensource/evms
+
+It appears to be open source and is on Sourceforge as well.
+
+Thanks for any comments,
+-- 
+
+Seeya,
+Paul
+--
+	It may look like I'm just sitting here doing nothing,
+   but I'm really actively waiting for all my problems to go away.
+
+	 If you're not having fun, you're not doing it right!
