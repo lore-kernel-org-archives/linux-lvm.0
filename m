@@ -1,124 +1,120 @@
-Return-Path: <defranco@cup.hp.com>
-Message-ID: <3A255040.275AE009@cup.hp.com>
-Date: Wed, 29 Nov 2000 10:51:44 -0800
-From: John DeFranco <defranco@cup.hp.com>
-MIME-Version: 1.0
-References: <3A22A3BC.72EDA5AF@cup.hp.com> <20001128013518.K20735@srv.t-online.de>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: Installation Problems with 0.9
+Return-Path: <juergens@muon.de>
+Date: Wed, 29 Nov 2000 18:50:28 +0100
+From: Nils Juergens <nils@muon.de>
+Subject: Re: [linux-lvm] Problems with lvm 0.9
+Message-ID: <20001129185028.A361@dax.muon>
+References: <20001128234700.A925@dax.muon>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="OXfL5xGRrasGEqWY"
+In-Reply-To: <20001128234700.A925@dax.muon>; from nils@muon.de on Tue, Nov 28, 2000 at 11:47:00PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Mauelshagen@sistina.com, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Hi,
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
 
-Thanks Heinz, one other question then, if I install
-things in the following sequence:
+Uhm,
 
-2.2.17
-raid-2.2.17-A0
-linux-2.2.17-rawio.patch
-lvm-0.9-2.2.17-stock.patch
+it seem i forgot to append said vgdisplay output. Here it comes.
+(note the difference between the overall free PE and the PE free on both
+PV)
 
-I get two hunk failures (#3,4) in drivers/block/ll_rw_blk.c.
-Are these expected or is there some other problem? If I
-don't
-load the raid-2.2.17-A0 patch everything is ok, but then
-after I boot that kernel I cannot create any raid devices
-so I need the raid-2.2.17-A0 patch.
+thanks,
 
-Thanks.
-
-
-"Heinz J. Mauelshagen" wrote:
-> 
-> Please don't use the lvm-0.9-2.2.17-new_raid.patch file.
-> It has been deleted from our ftp site (it is still in the LVM tarball though).
-> 
-> Go with the lvm-0.9-2.2.17-stock.patch instead.
-> 
-> Sorry for the inconvenience.
-> 
-> --
-> 
-> Regards,
-> Heinz      -- The LVM guy --
-> 
-> On Mon, Nov 27, 2000 at 10:11:08AM -0800, John DeFranco wrote:
-> >
-> > Hi,
-> >
-> > Has anyone else had any problems install the
-> > lvm-0.9-2.2.17-new_raid.patch? I'm using the following
-> > procedure:
-> >
-> > # gunzip -dc linux-2.2.17.tar.gz | tar -xvf -
-> > # cd linux
-> > # patch -p1 <../raid-2.2.17-A0
-> > # patch -p1 <../linux-2.2.17-rawio.patch
-> > # patch -p1 <../lvm-0.9-2.2.17-new_raid.patch
-> > patching file `CREDITS'
-> > patching file `Documentation/Configure.help'
-> > Hunk #2 succeeded at 992 with fuzz 2 (offset 7 lines).
-> > Hunk #3 succeeded at 1070 with fuzz 2.
-> > patching file `Documentation/LVM-HOWTO'
-> > patching file `drivers/block/Config.in'
-> > Hunk #1 FAILED at 96.
-> > 1 out of 1 hunk FAILED -- saving rejects to
-> > drivers/block/Config.in.rej
-> > patching file `drivers/block/Makefile'
-> > Hunk #2 FAILED at 290.
-> > Hunk #3 succeeded at 353 (offset 18 lines).
-> > 1 out of 3 hunks FAILED -- saving rejects to
-> > drivers/block/Makefile.rej
-> > patching file `drivers/block/README.lvm'
-> > patching file `drivers/block/genhd.c'
-> > Reversed (or previously applied) patch detected!  Assume -R?
-> > [n]
-> > .
-> > .
-> > .
-> >
-> > There are about 5 files that have some problem. The end
-> > result is not being able to build a new kernel due to
-> > complication errors.
-> >
-> > If I don't install the raid-2.2.17-A0 patch and then
-> > install the lvm-0.9-2.2.17-stock.patch everything works
-> > ok from the kernel end, but if I try to build an md
-> > device I get the following:
-> > analyzing super-block
-> > disk 0: /dev/sdc1, 8883913kB, raid superblock at 8883840kB
-> > disk 1: /dev/sdd1, 8883913kB, raid superblock at 8883840kB
-> > mkraid: aborted, see the syslog and /proc/mdstat for
-> > potential clues.
-> > [root@ham linux]#
-> >
-> > If I have the raid-2.2.17-A0 patch then this works.
-> >
-> > Any clues?
-> >
-> > Thanks!
-> >
-> > --
-> > ==========
-> > Cheers
-> >    -jdf
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Bartningstr. 12
->                                                   64289 Darmstadt
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 6151 7103 86
->                                                        FAX 7103 96
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
+Nils
 -- 
-==========
-Cheers
-   -jdf
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >  If we all work hard, we can turn this company  <
+ >      around 360 degrees -- gruntbert(LOTD)      <
+
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=vgdisplay
+
+--- Volume group ---
+VG Name               volumes
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                3
+Open LV               3
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                11
+Act PV                11
+VG Size               1.6 GB
+PE Size               4 MB
+Total PE              409
+Alloc PE / Size       163 / 652 MB
+Free  PE / Size       246 / 984 MB
+VG UUID               txuQnX-aO3Q-1X0D-7Gh1-dD5v-1AsD-iOffDI
+
+--- Logical volume ---
+LV Name                /dev/volumes/usr
+VG Name                volumes
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                400 MB
+Current LE             100
+Allocated LE           100
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
+
+--- Logical volume ---
+LV Name                /dev/volumes/var
+VG Name                volumes
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 1
+LV Size                52 MB
+Current LE             13
+Allocated LE           13
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+--- Logical volume ---
+LV Name                /dev/volumes/tmp
+VG Name                volumes
+LV Write Access        read/write
+LV Status              available
+LV #                   3
+# open                 1
+LV Size                200 MB
+Current LE             50
+Allocated LE           50
+Allocation             next free
+Read ahead sectors     120
+Block device           58:2
+
+
+--- Physical volumes ---
+PV Name (#)           /dev/hda6 (2)
+PV Status             available / allocatable
+Total PE / Free PE    47 / 47
+
+PV Name (#)           /dev/hda9 (1)
+PV Status             available / allocatable
+Total PE / Free PE    409 / 246
+
+
+
+
+
+
+
+
+
+
+
+
+
+--OXfL5xGRrasGEqWY--
