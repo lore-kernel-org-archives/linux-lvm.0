@@ -1,9 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] mount point associated with a LV
-Message-ID: <20030711001636.E23240@sistina.com>
-References: <20030710182504.327AA20A544@mail.postmark.net>
+Subject: Re: [linux-lvm] pvmove and badsectors
+Message-ID: <20030711001930.F23240@sistina.com>
+References: <5.2.0.9.2.20030710233915.03308cf8@pop.tvnet.hu>
 Mime-Version: 1.0
-In-Reply-To: <20030710182504.327AA20A544@mail.postmark.net>; from perry@postmark.net on Thu, Jul 10, 2003 at 11:25:04AM -0700
+In-Reply-To: <5.2.0.9.2.20030710233915.03308cf8@pop.tvnet.hu>; from newsmail@satimex.tvnet.hu on Fri, Jul 11, 2003 at 12:08:57AM +0100
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,39 +15,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jul 10 17:19:02 2003
+Date: Thu Jul 10 17:21:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, Jul 10, 2003 at 11:25:04AM -0700, perry wrote:
-> How do you display a mount point associated with a Logical Volume.
-> 
-> lvdisplay -v /dev/Volume00/LogVol01 
-> 
-> gives me all sorts of info but not the mount point.  Is there another
-> command that will do this?  you can reply to email or the group. 
-> Thanks in advance,
+On Fri, Jul 11, 2003 at 12:08:57AM +0100, Newsmail wrote:
+> -i, --ignore_read_errors
+>         Ignore read errors while moving data. Usefull in case data is m=
+oved=20
+> away from a  broken  or  unac=AD
+>         cessable disk (area).
+> Hi everybody I would like to know, if pvmove finds an unreadable block =
+in a=20
+> PV, does it ignore the complete PV or just the bad area? I mean if a 32=
+MB=20
+> PV has a bad block, the complete 32 megs get ignored, or only the=20
+> problematic area?
 
-lvdisplay is not supposed to display the mount point, because it
-displays information about a block device, not a file system.
+pvmove moves data chunk by chunk (64kB).
 
-If you want to find the mount point, you might want to run:
+If such chunk read fails, it retries rereading the failed chunk sector
+by sector in order to retrieve as much data as possible.
 
-mount|grep "Volume00/LogVol01"
 
-> 
-> perry
-> 
-> 
+> thx in advance,
+> greg
+>=20
+>=20
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
--- 
+--=20
 
 Regards,
 Heinz    -- The LVM Guy --
@@ -54,7 +58,9 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -62,4 +68,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
