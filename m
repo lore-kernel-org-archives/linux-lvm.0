@@ -1,10 +1,10 @@
-Date: Sun, 9 Apr 2000 14:38:46 -0700
-From: "Peter C. Norton" <spacey@lenin.nu>
+Date: Mon, 10 Apr 2000 00:58:21 +0200
+From: bert hubert <ahu@ds9a.nl>
 Subject: Re: [linux-lvm] LVM Viewer / Manager app
-Message-ID: <20000409143846.F24686@lenin.nu>
-References: <20000404225012.A8198@home.ds9a.nl> <38EAE276.14363A36@osp.nl> <20000405205056.A1952@home.ds9a.nl> <38F07293.335F575F@osp.nl>
+Message-ID: <20000410005821.A19896@home.ds9a.nl>
+References: <20000404225012.A8198@home.ds9a.nl> <38EAE276.14363A36@osp.nl> <20000405205056.A1952@home.ds9a.nl> <38F07293.335F575F@osp.nl> <20000409143846.F24686@lenin.nu>
 Mime-Version: 1.0
-In-Reply-To: <38F07293.335F575F@osp.nl>; from josv@osp.nl on Sun, Apr 09, 2000 at 02:07:47PM +0200
+In-Reply-To: <20000409143846.F24686@lenin.nu>; from spacey@lenin.nu on Sun, Apr 09, 2000 at 02:38:46PM -0700
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
@@ -12,61 +12,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-I believe that the SEVM is a repackaging of the veritas volume manager,
-which is a GUI that is very difficult to use when a lot of physical disks or
-volumes are installed (> 30 or so).
+On Sun, Apr 09, 2000 at 02:38:46PM -0700, Peter C. Norton wrote:
+> I believe that the SEVM is a repackaging of the veritas volume manager,
+> which is a GUI that is very difficult to use when a lot of physical disks or
+> volumes are installed (> 30 or so).
 
--Peter
+I'll try to keep that in mind. The application is progressing rapidly by the
+way, I hope to release 0.2 somewhere tomorrow.
 
-On Sun, Apr 09, 2000 at 02:07:47PM +0200, Jos Visser wrote:
-> To get a complete view of what the SEVM user interface looks like, Check
-> out:
-> 
-> http://docs.sun.com:80/ab2/@LegacyTocView?toc=SUNWab_161_1%3A%2Fsafedir%2Fspace3%2Fcoll2%2FSUNW2sevm%2Ftoc%2FETPUG%3A1122%3Aclose;bt=Sun+Enterprise+2.5+Users+Guide&Ab2Lang=C&Ab2Enc=iso-8859-1
-> 
-> This rather lengthy URL points to the Sun Enterprise Volume Manager 2.5
-> User Guide on the SUN documentation web site. It contains various screen
-> and form dumps.
-> 
-> ++Jos
-> 
-> bert hubert wrote:
-> > 
-> > On Wed, Apr 05, 2000 at 08:51:34AM +0200, Jos Visser wrote:
-> > 
-> > > Regarding visual interfaces for volume managers, my all-time favorite is
-> > > the Veritas Visual Volume Administrator VXVA. I'll see if I can dig up a
-> > > few screenshots. Mind you, the new version of the volume administrator
-> > 
-> > Please do. I am currently reimplementing the tool in C (it used to be in
-> > perl).
-> > 
-> > Regards,
-> > 
-> > bert hubert.
-> > 
-> > --
-> >                        |              http://www.rent-a-nerd.nl
-> >                        |
-> >                        |                     - U N I X -
-> >                        |          Inspice et cautus eris - D11T'95
-> 
-> -- 
-> God gave us eyes so that we could watch and brains so we could see.
-> So use that grey mass and See!
->  
-> For instance see it at:
->  ____                     ____   ___   ___   ___  
-> / ___|  __ _ _ __   ___  |___ \ / _ \ / _ \ / _ \ 
-> \___ \ / _` | '_ \ / _ \   __) | | | | | | | | | |
->  ___) | (_| | | | |  __/  / __/| |_| | |_| | |_| |
-> |____/ \__,_|_| |_|\___| |_____|\___/ \___/ \___/ 
->              http://www.nluug.nl/sane
-> 
-> Public safety message: Dihydrogen Monoxide kills! 
-> Support a worldwide ban of Dihydrogen Monoxide. See http://www.dhmo.org
+New features are:
+
+	An 'unused physical volumes' node in the tree
+	Drag-and-drop of those volumes to volume groups
+	Dragging volumes away from volume groups
+	Incremental scanning - quick startup
+
+Regards,
+
+bert hubert.
 
 -- 
-The 5 year plan:
-In five years we'll make up another plan.
-Or just re-use this one.
+                       |              http://www.rent-a-nerd.nl
+                       |                     - U N I X -
+                       |          Inspice et cautus eris - D11T'95
