@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 2 May 2001 12:20:44 +0000
+Date: Wed, 2 May 2001 12:39:24 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] New details on VGScan crash on 2.4.4
-Message-ID: <20010502122044.D30791@sistina.com>
-References: <3AED170B.D5483465@gecpalau.com> <200104301544.JAA10700@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] vgcreate doesn't work for me
+Message-ID: <20010502123924.E30791@sistina.com>
+References: <20010430161149.K19810@sistina.com> <20010430165842.A6326@ikar.t17.ds.pwr.wroc.pl>
 Mime-Version: 1.0
-In-Reply-To: <200104301544.JAA10700@lynx.turbolabs.com>; from adilger@turbolinux.com on Mon, Apr 30, 2001 at 09:44:43AM -0600
+In-Reply-To: <20010430165842.A6326@ikar.t17.ds.pwr.wroc.pl>; from misiek@pld.ORG.PL on Mon, Apr 30, 2001 at 04:58:42PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,39 +21,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 30, 2001 at 09:44:43AM -0600, Andreas Dilger wrote:
-> Glenn writes:
-> > Well, after much deliberation as to how BADLY I needed a /usr partition
-> > under 2.4.4....
-> > 
-> > I booted it in single-user (blech) under 2.4.4 and ran vgscan and got:
-> > 
-> > segmentation fault
-> > 
-> > So I went about investigating as to whether I could get more info than
-> > that.....
-> > 
-> > vgscan -d >& vgscan.log generated the textfile vgscan1.txt I am
-> > attaching to this email...hopefully it sheds some light (?)
-> 
-> Looks like you have devfs configured but not mounted.  You really need to
-> mount devfs before running vgscan.  Also, you are far better off to not
-> use devfs and LVM at the same time.
-> 
-> Granted, this is no reason for vgscan to segfault, but it may fix your
-> problem.
+Arkadiusz,
 
-Yep ;-)
+the debug output shows, that LVM allocates 3 devfs device nodes.
 
-Did somebody find the reason why it segfaults already and has
-the finger pointing to the code location?
+Have you tried running:
 
+vgcreate test /dev/ide/host0/bus0/target0/lun0/part[1-3]
+
+instead of "vgcreate test /dev/hdd[1-3]".
+
+If that works, there's a flaw in vgcreate.
+
+On Mon, Apr 30, 2001 at 04:58:42PM +0200, Arkadiusz Miskiewicz wrote:
+> On/Dnia Mon, Apr 30, 2001 at 04:11:49PM +0000, Heinz J. Mauelshagen wrote/napisa?(a)
+> > $ fdisk -l /dev/hdd
+> [root@arm misiek]# fdisk -l /dev/hdd
 > 
-> Cheers, Andreas
+> Disk /dev/hdd: 32 heads, 63 sectors, 827 cylinders
+<SNIP>
+> <1> lvm_unlock -- CALLED
+> <1> lvm_unlock -- LEAVING with ret: 0
+> 
+> > Warning: if you create a VG containing PVs in multiple partitions of the
+> >          same disk, you will likely run into trouble if you want to
+> >          test striped LVs.
+> What kind of trouble?
+> 
+> > Heinz    -- The LVM Guy --
+> 
 > -- 
-> Andreas Dilger                               TurboLabs filesystem development
-> http://sourceforge.net/projects/ext2resize/
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> Arkadiusz Mi?kiewicz, AM2-6BONE    [ PLD GNU/Linux IPv6 ]
+> http://www.t17.ds.pwr.wroc.pl/~misiek/ipv6/   [ enabled ]
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
