@@ -1,23 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24J7nK12392
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 14:07:49 -0500
-Received: from anchor-post-31.mail.demon.net (anchor-post-31.mail.demon.net
-	[194.217.242.89])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j24J7h8Z015502
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 14:07:43 -0500
-Date: Fri, 4 Mar 2005 19:07:16 +0000
-From: Robin Green <greenrd@greenrd.org>
-Subject: Re: [linux-lvm] df doesn't display increased available disk space
-Message-ID: <20050304190716.GC9723@pob>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24JJcK16639
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 14:19:38 -0500
+Received: from server.echohome.org (s233-64-29-217.try.wideopenwest.com
+	[64.233.217.29])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j24JJKFW017299
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 14:19:32 -0500
+Message-ID: <38295.64.233.217.29.1109963910.squirrel@www.echohome.org>
+In-Reply-To: <38018.64.233.217.29.1109961640.squirrel@www.echohome.org>
 References: <1109885756.6400.16.camel@localhost.localdomain>
 	<20050303214732.GD4141@pob>
 	<1109961331.6079.7.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Content-Disposition: inline
-In-Reply-To: <1109961331.6079.7.camel@localhost.localdomain>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	<38018.64.233.217.29.1109961640.squirrel@www.echohome.org>
+Date: Fri, 4 Mar 2005 14:18:30 -0500 (EST)
+Subject: Re: [linux-lvm] df doesn't display increased available disk space
+From: "Erik Ohrnberger" <Erik@echohome.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Reply-To: Erik@echohome.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,36 +27,101 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: robert.buick@btconnect.com, LVM general discussion and development <linux-lvm@redhat.com>
 
+Robert,
+    You need to change one of the top most levels (filesystem).  Read this
+next part from the bottom up (Everyone: if I have something here
+wrong, let me know)
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Highest Level:  File System layer (files & directories)
+                LVM LV Layer (logical volumes)
+                LVM PV layer (physical volumes)
+                Partition table (special data on the hard disk)
+                LBA translation (in disk controller or drive circutry)
+Lowest Level:   Physical Hard disk (platter that spins & r/w heads)
 
-I think you are making a potentially very dangerous mistake!
+    OK, so like it sounds like you've added more space to the LVM PV
+layer.  So like you need to add it to the LVM LV layer, and then you
+need to change the file system size to take advantage of the increased
+LVM LV space that you've added.
 
-Type 8e is a partition type. You don't want to use resize2fs on the PARTITION,
-which is not an ext2 partition, but an lvm partition. You want
-to resize the filesystem on the logical VOLUME.
+   Clear as mud, right?
 
-And yes, resize2fs is appropriate for logical volumes. But resize the VOLUME
-(e.g. /dev/VolGroup00/LogVol00), not the partition or volume group.
-
-On Fri, Mar 04, 2005 at 06:35:31PM +0000, Robert Buick wrote:
-> I'm using type 8e, does anyone happen to know if resize2fs is
-> appropriate for this type; the man page only mentions type2.
-
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-
-iD8DBQFCKLHktPCt67UksSYRAuhlAJ4vPIPzUmco87UnDerR9Vr3zv/tlgCfVaK7
-7HVDGh1k7e/t+5VgKMcKu5U=
-=EN3x
------END PGP SIGNATURE-----
-
---/9DWx/yDrRhgMJTb--
+On Fri, March 4, 2005 13:40, Erik Ohrnberger said:
+> Robert,
+>     When you say type 8e, it makes me think of the partition table, not
+> the filesystem, which would be etx2 or etx3 or XFS or Reiserfs or ....
+>
+>     Now when a partition is marked as type 8e, it is an LVM partition.
+>
+>     Best of luck,
+>         Erik.
+>
+> On Fri, March 4, 2005 13:35, Robert Buick said:
+>> I'm using type 8e, does anyone happen to know if resize2fs is
+>> appropriate for this type; the man page only mentions type2.
+>>
+>>
+>> On Thu, 2005-03-03 at 21:47 +0000, Robin Green wrote:
+>>> On Thu, Mar 03, 2005 at 09:35:55PM +0000, Robert Buick wrote:
+>>> > I'm running Fedora Core 3 with LVM2, and have added /dev/hda4
+>>> (13.09GB)
+>>> > to the VG, however this increase is not reflected if I do a df -h.
+>>> Have
+>>> > I missed something?
+>>> >
+>>> >[root@stemme mapper]# lvscan
+>>> > ACTIVE            '/dev/VolGroup00/LogVol00' [34.53 GB] inherit
+>>> >  ACTIVE            '/dev/VolGroup00/LogVol01' [1.94 GB] inherit
+>>> > [root@stemme mapper]# pvscan
+>>> >  PV /dev/hda2   VG VolGroup00   lvm2 [23.41 GB / 32.00 MB free]
+>>> > PV /dev/hda4   VG VolGroup00   lvm2 [13.09 GB / 0    free]
+>>> > Total: 2 [36.50 GB] / in use: 2 [36.50 GB] / in no VG: 0 [0   ]
+>>> > [root@stemme mapper]# vgscan
+>>> >  Reading all physical volumes.  This may take a while...
+>>> >  Found volume group "VolGroup00" using metadata type lvm2
+>>> > [root@stemme mapper]# df -h
+>>> > Filesystem            Size  Used Avail Use% Mounted on
+>>> > /dev/mapper/VolGroup00-LogVol00
+>>> >                       22G  9.0G   12G  45% /
+>>> > /dev/hda1              99M   22M   73M  23% /boot
+>>> > none                  760M     0  760M   0% /dev/shm
+>>
+>>> Yes - you need to resize the filesystem as well.
+>>>
+>>> If you are using an ext2 or ext3 filesystem you could use resize2fs. If
+>>> you
+>>> are using reiserfs, you could use resize_reiserfs. I don't know about
+>>> resize
+>>> tools for other filesystems.
+>>>
+>>> Please note that resize2fs in Fedora Core 3 is buggy, and may corrupt
+>>> the
+>>> resize inode. To get a version that works better, I recommend you
+>>> download and build
+>>> from source e2fsprogs 1.36 from
+>>> http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-1.36.tar.gz
+>>>
+>>> (If you wanted to avoid using resize2fs altogether, you could of course
+>>> backup all your data in /, mke2fs the root filesystem, and copy all the
+>>> data
+>>> back again. But that would be much slower.)
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
