@@ -1,11 +1,12 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Thu, 11 Oct 2001 14:56:11 -0600
-Subject: Re: [linux-lvm] [PATCH] snapshots on unaligned lvs
-Message-ID: <20011011145611.H8382@turbolinux.com>
-References: <1383150000.1002824196@tiny>
-Mime-Version: 1.0
+Date: Thu, 11 Oct 2001 17:03:14 -0400
+From: Chris Mason <mason@suse.com>
+Subject: Re: [linux-lvm] [PATCH] fix oops when snapshots get full
+Message-ID: <1532480000.1002834194@tiny>
+In-Reply-To: <20011011135715.G8382@turbolinux.com>
+References: <1373740000.1002822576@tiny> <20011011135715.G8382@turbolinux.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <1383150000.1002824196@tiny>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,31 +19,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Oct 11, 2001  14:16 -0400, Chris Mason wrote:
-> @@ -360,8 +361,14 @@
->  
->  	iobuf = lv_snap->lv_iobuf;
->  
-> -	blksize_org = lvm_get_blksize(org_phys_dev);
-> -	blksize_snap = lvm_get_blksize(snap_phys_dev);
-> +	blksize_org = get_hardsect_size(org_phys_dev);
-> +	blksize_snap = get_hardsect_size(snap_phys_dev);
 
-FYI - there is now a helper function "lvm_sectsize()" which is defined
-appropriately for a given kernel version to call get_hardsect_size()
-or get_hardblock_size().  I originally put it directly in lvm.c because
-that was the only place we used it, but it should move to lvm-internal.h
-instead.
+On Thursday, October 11, 2001 01:57:15 PM -0600 Andreas Dilger <adilger@turbolabs.com> wrote:
 
-I won't check in this patch until I at least hear some Yea's as I can't
-do any testing on it myself right now.  Of course the Sistina folks are
-free to test/commit it as well.
 
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> I was looking at this, and thought the following:
+> 
+> 1) Shouldn't we just initialize r=1 in _remap_snapshot(), and then if
+>    lv->lv_block_exception is NULL we will not enter __remap_snapshot()
+>    at all?  That would remove the need to get the write semaphore for
+>    no reason.
+
+Good point.
+
+> 2) Initially, I thought we could just "optimize" the checking of
+>    lv->lv_block_exception, but I supposed there are race conditions
+>    in dropping the read lock and getting the write lock, so I guess
+>    we still need to check lv->lv_block_exception in __remap_snapshot()
+>    also?
+
+Yes, I think we do.
+
+> 3) The alternative would be to check lv->lv_block_exception inside
+>    lvm_snapshot_remap_block() instead of in the callers (returning "1"
+>    if it is NULL, and we don't want to do remap).  This would avoid any
+>    problems in the future if someone else calls lvm_snapshot_remap_block()
+>    without checking lv_block_exception first.  Untested patch below which
+>    should be equivalent to your previous patch.
+
+The only thing I don't like about this is that it makes it hides
+the fact that lvm_snapshot_COW and a few other calls depend on 
+block_exception being valid.  The code certainly looks right though,
+just a matter of style.
+
+thanks,
+Chris
