@@ -1,74 +1,49 @@
-Date: Sat, 11 Nov 2000 11:59:43 -0600
+Date: Sat, 11 Nov 2000 12:11:51 -0600
 From: Chewie <chewie@wookimus.net>
-Subject: Re: [linux-lvm] 2.2.17 Kernel patch + 0.8 user tools
-Message-ID: <20001111115943.A7541@wookimus.net>
-References: <C1256993.003852DD.00@icosdmz.icos.be>
+Subject: [linux-lvm] 0.9 next week?!  Cool!
+Message-ID: <20001111121151.B7541@wookimus.net>
+References: <C1256993.003852DD.00@icosdmz.icos.be> <20001111131348.F32147@srv.t-online.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+	protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
 Content-Disposition: inline
-In-Reply-To: <C1256993.003852DD.00@icosdmz.icos.be>; from dirk.derycke@icos.be on Fri, Nov 10, 2000 at 11:18:22AM +0100
+In-Reply-To: <20001111131348.F32147@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Sat, Nov 11, 2000 at 01:13:48PM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@msede.com
 
 
---cNdxnHkX5QqsyA0e
+--St7VIuEGZ6dlpu13
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 10, 2000 at 11:18:22AM +0100, dirk.derycke@icos.be wrote:
-> where can I find a 2.2.17 kernel patch (more specific a stock
-> kernel) for LVM to use with the 0.8 user tools (I use the latest
-> version from Andread Dilger) ???
+On Sat, Nov 11, 2000 at 01:13:48PM +0000, Heinz J. Mauelshagen wrote:
+> > How long will it take before 0.9 arrives?
+> I am planing for next monday :-)
 
-Did you read the README file at his FTP site?  If you had, you would
-know that you have at least two patches you need to apply.  You're
-lucky that I'm writing up the LVM Cheat Sheet as we speak. ;-)  I had
-to research this stuff.  OK, it's not that difficult to find this
-info, but it's not available on the LVM site for all to read.  This is
-what you must do:
+Woohoo!  Thankyou, Heinz, for your hard work! =20
 
-    Download the following files and patch the stock 2.2.17 kernel in
-    the order that you see them.
+I have a request for you.  *PLEASE* don't use odd version names like
+0.9final, or Linus' faux paux with the "-test10-pre8" horror. ;-)
+Have you considered using a kernel-like versioning rule, where the
+minor (second) number is odd for development branch and even for the
+stable branch.  Yes, 0.7.131 may seem quite boring, but when 0.8 rolls
+around, we'll know it's the first of the stable versions.  Any 0.8.x
+versions would obviously be patch fixes to the stable version. =20
 
-    1.  Ingo Molnar's RAID Patch
-        http://people.redhat.com/mingo/raid-patches/raid-2.2.17-A0
+Regardless, have you been holding out with 0.9 for so long because
+you'd like it to be "stable" from its release point?  With that in
+mind, would you consider releasing 0.9 as 0.10?
 
-    2.  Stephen Tweedie's RAWIO Patch
-        ftp://ftp.uk.linux.org/pub/linux/sct/fs/raw-io/raw-2.2.17.diff
-
-    3.  Andreas Dilger's LVM Patch
-        ftp://ftp.stelias.com/pub/adilger/lvm-0.8final-2.2.16TL.patch
-
-I don't believe there's anything distribution specific to Andrea's
-LVM kernel patch.  Download and compile the LVM tools from Andrea's
-SRPM or tarball.  Tom Lees also has a Debian package of the slightly
-older 0.8final tools.  You may want to download the source tarball
-from Andreas, then apply the Debian patch to build the *.deb.  Note:
-Tom's diff has all of the changes to use ext2resize (GPL) with the
-e2fsadm tool instead of the resize2fs (commercial) tool.  Otherwise,
-you have to edit these by hand.
-
-> Andreas Dilger has a patch for Turbo Linux 2.2.16 but it doesn't apply
-> nicely to a 2.2.17 stock kernel (lots of rejects)
-
-Actually, I didn't get any rejects.  Since the patches are context
-based, they do apply cleanly, if you do them in this order.  You will
-see some messages about offsets, but that's it.
-
-I'm compiling my test kernel as we speak, and I've got a full 9.1 GB
-HD to play with. ;-)  In three hours, I'll have to make like I know
-what I'm talking about, so I figured that I should successfully play
-with the tools I'm supposed to be talking about (yeah, right).
+Again, thanks!
 
 --=20
 Chad "^chewie, gunnarr" Walstrom <chewie@wookimus.net>
              http://www.wookimus.net/
 
---cNdxnHkX5QqsyA0e
+--St7VIuEGZ6dlpu13
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -76,9 +51,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE6DYkPDMcLGCBsWv0RArcMAJ0XCJaIW+PCgugBFJmsf8JJJ8/rqQCgjq/a
-x6lHX0nak2//kh2EDDGISr4=
-=Tf2D
+iD8DBQE6DYvnDMcLGCBsWv0RArrdAJ0X7UaJJ/RLhyA/XyYlRCbfH2OGvACcDpNU
+32wo+LJir5q6BgK6ZAUl+gA=
+=PAdS
 -----END PGP SIGNATURE-----
 
---cNdxnHkX5QqsyA0e--
+--St7VIuEGZ6dlpu13--
