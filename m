@@ -1,13 +1,9 @@
-Return-Path: <ragnark@stine.vestdata.no>
-Date: Thu, 28 Jun 2001 02:41:04 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] LVM metadata corruption?
-Message-ID: <20010628024104.D380@vestdata.no>
-References: <20010628022307.A380@vestdata.no>
+Return-Path: <rshukla@prl.ernet.in>
+Date: Thu, 28 Jun 2001 09:59:01 +0530 (IST)
+From: RAGHVENDRA SHUKLA <rshukla@prl.ernet.in>
+Message-Id: <Pine.A32.4.21.0106280955550.55417-100000@prlfs.prl.ernet.in>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: =?iso-8859-1?Q?=3C20010628022307=2EA380=40vestdata=2Eno=3E=3B_from_Ragna?=
- =?iso-8859-1?Q?r_Kj=F8rstad_on_Thu=2C_Jun_28=2C_2001_at_02:23:07AM_+0200?=
+Subject: [linux-lvm] Newbie Questin  - How to use LVM after INSTALLING IT !!!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,23 +15,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jun 28, 2001 at 02:23:07AM +0200, Ragnar Kj=EF=BF=BDrstad wrote:
-> Hi
->=20
-> We had a LVM problem that we believe was caused by corrupted
-> LVM-metadata. Can anyone confirm if this is a likely explanation?
+Hello ,
+        i have installed the LVM successfully , But as i am using the RED
+HAt 7.1 my df gives 
 
-Oh, I forgot to mention LVM-version ++.
-
-Used "lvm-0.9.1_beta7-2.4.5" patch, except one chunk that failed
-becaused it is also included in XFS-patch.
-
-Binary utilities, 0.9.1_beta7.
+Filesystem 1k-blocks Used Available Use% Mounted on 
+/dev/hda5 4870252 3271568 1351288 71% / 
+/dev/hda2 23333 2468 19661 11% /boot
+/dev/hda6  2624792   2124772    366684  85% /var   
 
 
---=20
-Ragnar Kjorstad
-Big Storage
+how can i use it to make my / , /boot , /var 
+dynamic ( in resize ) .
+
+Regards
+Rshukla
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------
+Name : Raghvendra Narain Shukla
+       ( Engineer - SC )                     Address:Computer Centre,
+Email: rshukla@prl.ernet.in ,                        Physical Research Laboratory 
+       raghvendra55@yahoo.com                        Ahmedabad 380 015  
+Phone: +91 79 630-2129  ext. 4036 (0)                INDIA  
+FAX  : +91 79 630-1502                                           
+--------------------------------------------------------------------------------------
