@@ -1,8 +1,11 @@
-From: Markus Schaub <markus.schaub@gmx.net>
-Message-Id: <20020227131803.A188@sparcie.schaub.loc>
+Message-Id: <5.0.0.25.2.20020227082608.00b418f8@frodriguez.mail.wesleyan.edu>
+From: Felix Rodriguez <frodriguez@mail.wesleyan.edu>
+Subject: Re: [linux-lvm] Problems mounting LVM volume as root
+In-Reply-To: <20020226173337.GF20233@colombina.comedia.it>
+References: <5.0.0.25.2.20020225083201.00b36cf0@frodriguez.mail.wesleyan.edu>
+    <wxxzo1yecqu.fsf@nommo.uio.no>
+    <5.0.0.25.2.20020225083201.00b36cf0@frodriguez.mail.wesleyan.edu>
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] "invalid i/o-protocol version" with e2fsadm (1.0.3) and 2.4.18
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,23 +16,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 06:18:01 2002
+Date: Wed Feb 27 07:30:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+Thank You Luca. That worked!!!!!
 
-I always get an "i/o protocol version" error when trying to resize a
-lv witch e2fsadm (statically linked, from lvm-1.0.3 with kernel
-2.4.18).
-Some time ago I got the same error with e2fsadm 1.0.1-rc4 on
-2.4.13-ac7. In this case e2fsadm resized the filesystem but could not
-resize the lv. Resizing the lv with lvreduce (same version) worked.
 
-I think with 1.0.3 it is the same, but I could not test is as I don't
-have a system to play around.
-So how can I get e2fsadm to work?
 
-Markus
+
+At 06:33 PM 2/26/2002 +0100, you wrote:
+>On Mon, Feb 25, 2002 at 08:39:20AM -0500, Felix Rodriguez wrote:
+> > fine /lib/modules/2.4.17lvm/net/unix.o module. I think it's because the
+>put Unix domain sockets (CONFIG_UNIX)
+>statically in the kernel, if you need it (ie it is not an embedded
+>system) you just need it so it is nonsense to build as a module
+>
+>L.
+>
+>
+>--
+>Luca Berra -- bluca@comedia.it
+>         Communication Media & Services S.r.l.
+>  /"\
+>  \ /     ASCII RIBBON CAMPAIGN
+>   X        AGAINST HTML MAIL
+>  / \
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+
+Felix Rodriguez
+Programmer Analyst
+Phone: 860-685-3984
+Email: frodriguez@mail.wesleyan.edu
+Web: http://frodriguez.web.wesleyan.edu
