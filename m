@@ -1,9 +1,8 @@
-Message-ID: <000701c2f58c$7b11dcf0$0400a8c0@venkat>
-From: "abbireddy venkatram reddy" <venkat@storageone.co.kr>
-References: <1048865232.7751.52.camel@mosix>
-Subject: Re: [linux-lvm] snapshots on shared fibre
+From: arjen@t-rex.pinguins.dyndns.org
+Message-Id: <200303290049.h2T0nh6m009903@t-rex.pinguins.dyndns.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vg_read_with_pv_and_lv problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +13,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 28 18:44:04 2003
+Date: Fri Mar 28 18:51:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I think it will not work?..by the way which is file system your using..?
------ Original Message ----- 
-From: "Matt Schillinger" <mschilli@vss.fsi.com>
-To: <linux-lvm@sistina.com>
-Sent: Saturday, March 29, 2003 12:27 AM
-Subject: [linux-lvm] snapshots on shared fibre
+Hi all,
 
+I upgraded from RH 7.3 to 8.0 and now one of my two lvm vg's is
+missing ... :-(
 
-> I have a Xiotech Magnitude raid, that uses fibre ports to connect to
-> multiple servers. 
-> 
-> We do NOT use a SAN filesystem. What I am wondering is, can I use
-> snapshots that are mounted on 1 machine, where the original filesystem
-> is mounted on another machine. both machines are connected to the raid
-> via fibre.
-> 
-> My hope is that, since it is a second filesystem, and is readonly, this
-> operation will not cause problems..
-> 
-> Is this correct?
-> 
-> 
-> -- 
-> Matt Schillinger
-> 
-> mschilli@vss.fsi.com
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+I've seen simular problems on this mailing list but didn't encounter
+an answer. The upgrade was from kernel 2.4.18 to 2.4.18-14
+using lvm version 1.0.1rc4 to 1.0.3.
+
+The error is:
+
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data
+of volume group "vg2" from physical volume(s).
+
+pvscan results in:
+
+pvscan -- inactive PV "/dev/hdc14" is associated to unknown VG "vg2" (run vgscan)
+for all partitions involved.
+
+What is curious is that in the function: pv_read_all_pv_of_vg.c
+it seems to find vg2, but finds to uuids in the available list
+(whatever that may mean) which effectively puts two NULL values
+in the pv_this.  One of those is cleaned up in a loop which seems
+to be intended for cleaning them all (but I am not sure as the code
+effectively only cleans up the first NULL value), but the np count
+later-on results in only one found pv.  This probably fails
+as the pv_cur has a much higher value later on.  Making the loop
+clean up all the NULL values still leaves me 2 pv's short as
+the number is now 9 and the pv_cur is 11. So it seems that
+no match should have been found in the uuid list.
+
+Any ideas, help, miracles are most welcome.
+
+Cheers
+
+    Arjen (arjen@pinguins.dyndns.org)
