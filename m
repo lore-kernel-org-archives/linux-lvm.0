@@ -1,10 +1,12 @@
-content-class: urn:content-classes:message
+Date: Tue, 18 Sep 2001 12:23:08 -0500
+From: lembark@wrkhors.com
+Subject: Re: [linux-lvm] Root on LV
+Message-ID: <26260000.1000833788@duke.wrkhors.com>
+In-Reply-To: <OFE0B97CD3.C5A33405-ON85256ACA.004E9D80@raleigh.ibm.com>
+References: <OFE0B97CD3.C5A33405-ON85256ACA.004E9D80@raleigh.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 18 Sep 2001 11:06:52 -0500
-Message-ID: <550C100A8350CE4BBD3DD2D7788FD0CA481FBD@fcmail1.FC.COM>
-From: "Brian Bailey" <bbailey@fcmail.org>
-Subject: [linux-lvm] Unresolved symbols in lvm-mod.o
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,17 +21,32 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-We're making progress in our LVM setup (Redhat 7.1, kernel 2.4.3-6, lvm
-1.0) and finally have a lvm-mod.o file in /md, however, when we run
-depmon -a we receive the "unresolved symbols in /md/lvm-mod-o" error.
 
-As far as we can tell, everything else in the various steps ran well.
-Suggestion?
+-- Steve Pratt <slpratt@us.ibm.com> on 09/17/01 09:26:12 -0500
 
-Thanks in advance!
+>>> > dobos_s@IBCnet.hu wrote:
+>>> > > My kernel has no modules.
+>>> > > Why should I create an ext2 partition for holding an initrd which is
+> not
+>>> > > doing any essential things except vgscan and vgchange -ay ?
+>>> 
+>>> You don't need vgscan at boot time unless the disks have moved around.
+>>> You DO need "vgchange -a y" in order to load the LVM data into the
+> kernel.
+> 
+>> If you are running EVMS you don't need that.
+> 
+>> But you need EVMS tools which are not available fo far :-(
+> 
+> Actually that is not entirely true.  All of the volume group and physical
+> volumes tools are done.  We have started on all of the logical volume
+> commands.  We have stand alone utilities which minic the LVM ones, as well
+> as a GUI which integrates LVM function with other volume management
+> functions such as partitioning.
 
-Brian Bailey
-Fellowship Church Technology
-www.fellowshipchurch.com=20
-bbailey@fcmail.org
-972.471.6612
+Q:  Why bother to put 64MB on an LVM?
+
+The root volume doesn't grow much (make it 128MB and it'll never need to
+grow).
+If you ever have a problem with LVM you'll end up with an unbootable
+system...
