@@ -1,10 +1,9 @@
-From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] ftp.sistina.com down? 
-Date: Mon, 10 Sep 2001 12:20:23 -0700
-Message-ID: <003001c13a2d$a3aa7080$0300000a@pacbell.net>
+Message-ID: <20010911011612.37371.qmail@web13407.mail.yahoo.com>
+Date: Mon, 10 Sep 2001 18:16:12 -0700 (PDT)
+From: Pierre Lamb <plamb_98@yahoo.com>
+Subject: Re: [linux-lvm] rc2 problems
+In-Reply-To: <20010910132133.F31313@sistina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <01Sep10.145314edt.230173@ugw.utcc.utoronto.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,52 +16,108 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Chris Siebenmann <cks@utcc.utoronto.ca>
-Cc: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-hmm... according to a message from Taher Haveliwala (see: [linux-lvm]
-installing lvm 1.0 on stock RedHat 7.1) it shouldn't be necessary for me to
-package the whole kernel, thus avoiding the whole issue of configuration
-files and patches...  I should, presumably, be able to just package the
-module and user tools and be done with it... Taher made it work for 7.1... I
-have a Guiness (7.0) box that I need to install LVM on so in the next few
-days I'm going to test that theory... if it works the same RPM should work
-for 7.1 systems as well...
+Here is what I did:
+  Built patch, then applied it I got this
+ it patched various file, next it said it detected a
+provious patch I said (y) then it wanted to remove a
+file not detected.
 
-- e r i c k
+Next I did a xconfig selecting LVM. did a make dep
+then a make clean did a make bzImage, then a make
+modules ( no errors), then make modules_install there
+at the en it gave an error :
 
------Original Message-----
-From:	Chris Siebenmann [mailto:cks@utcc.utoronto.ca]
-Sent:	Monday, September 10, 2001 11:53 AM
-To:	Erick Calder
-Subject:	Re: [linux-lvm] ftp.sistina.com down?
+Unsolved sysmbols in (path)lvm-mod.o
 
-| thx. putting together the piece that deals with the user tools is
-| probably not that difficult... the problem is that the spec files
-| for building RH kernels are very busy and I'm trying to figure out
-| what the differences are between all of them and how they need to be
-| modified for the 2.4.9 kernel...
+depmod  lvm_init_fs
+depmod  lvm_fs_remove.vg
+depmod  lvm_fin_fs
+depmod  lvm_fs_remove_lv
+depmod  lvm_fs_remove_pv
+depmod  lvm_fs_create_vg
+depmod  lvm_fs_create_lv
+depmod  lvm_fs_create_pv
 
- In my personal opinion, you really don't want to do this. The Red
-Hat kernels in their kernel RPMs are reasonably modified; integrating
-another patch in there and making sure it all works well afterwards is
-likely to be a very interesting challenge. Especially if repeated for
-anything except the current kernels.
+know what ???
 
- While you can supply RPMs for stock 2.4.9 plus the LVM patches, this
-may tempt people who are depending on Red Hat patches into upgrading
-to your kernel -- with the resulting small explosions in their systems.
+Pierre
 
- Thus I think it is safer to tell people to patch their kernel
-themselves. The most I would do in a RPM is include (in the the %doc
-stuff) 'sample' patches for one or more kernels (stock 2.4.9 and the
-current Red Hat kernel, likely). People could then apply them if they
-felt confidant.
 
-(The really time-consuming way would be to work out a self-contained
-system for including the stuff the LVM source tree uses to generate the
-kernel patch, and include *that* in the RPM. Then people could use the
-installed binary RPM to generate the source patches to whatever kernel
-they wanted, in the same way that building the source would do it.)
+--- "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+wrote:
+> On Fri, Sep 07, 2001 at 06:07:38AM -0700, Pierre
+> Lamb wrote:
+> > Well I got rh 2.4.7 made the rc2 patches and
+> patched
+> > the kernel. No errors, complied the kernel,
+> modules,
+> > and installed the modules. All with no errors.
+> Upon
+> > booting the lvm-mod modules doesn't load so I did
+> a
+> > insmod on lvm-mod and get errors about
+> non-resloved
+> > symbols,  What to do next????
+> 
+> Could you send what symbols are non resolved?
+> 
+> > 
+> > PIerre
+> > 
+> > __________________________________________________
+> > Do You Yahoo!?
+> > Get email alerts & NEW webcam video instant
+> messaging with Yahoo! Messenger
+> > http://im.yahoo.com
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> >
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at
+> http://www.sistina.com/lvm/Pages/howto.html
+> 
+> -- 
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to
+> solve them ***
+> 
+>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> 
+> Heinz Mauelshagen                                
+> Sistina Software Inc.
+> Senior Consultant/Developer                       Am
+> Sonnenhang 11
+>                                                  
+> 56242 Marienrachdorf
+>                                                  
+> Germany
+> Mauelshagen@Sistina.com                          
+> +49 2626 141200
+>                                                     
+>   FAX 924446
+>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at
+http://www.sistina.com/lvm/Pages/howto.html
 
-	- cks
+
+
+__________________________________________________
+Do You Yahoo!?
+Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
+http://im.yahoo.com
