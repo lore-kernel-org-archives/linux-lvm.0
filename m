@@ -1,7 +1,7 @@
-Message-ID: <25369470B6F0D41194820002B328BDD23000@ATLOPS>
+Message-ID: <25369470B6F0D41194820002B328BDD23002@ATLOPS>
 From: Arvind Jain <arvind_jain@ivivity.com>
 Subject: RE: [linux-lvm] RAID1 on TOP of LVM
-Date: Wed, 26 Sep 2001 09:51:25 -0400
+Date: Wed, 26 Sep 2001 10:04:04 -0400
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,8 +18,9 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Should'nt  failed-disk     0 be raid-disk 0? thx, arv.
-
+I had tried this with persistent-superblock 1. It had worked fine for me. I
+also agree with Luca Berra.  You should use LVM on top of RAID. Any
+particular reason you are using RAID on top on LVM? thx,arv.
 
 -----Original Message-----
 From: Uday Bhaskar Sarma Seetamraju [mailto:sarma@bellatlantic.net]
