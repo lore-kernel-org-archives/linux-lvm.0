@@ -1,12 +1,8 @@
-From: Max Kalika <max+lists.lvm-dev@lsit.ucsb.edu>
-Subject: Re: [linux-lvm] LVM2 strangeness.
-Message-ID: <1263569343.1054370235@[192.168.23.5]>
-In-Reply-To: <20030530075602.GB445@fib011235813.fsnet.co.uk>
-References: <17160000.1054244981@valkyrie.lsit.ucsb.edu>
- <20030530075602.GB445@fib011235813.fsnet.co.uk>
+Message-ID: <3F00F024.8050006@cablespeed.com>
+From: Howard Clifford <howardclifford@cablespeed.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Subject: [linux-lvm] performance writing to an lv with no file system
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,41 +13,77 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 31 10:34:02 2003
+Date: Mon Jun 30 21:22:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Quoting Joe Thornber <thornber@sistina.com>:
+Heinz,
 
-> On Thu, May 29, 2003 at 02:49:41PM -0700, Max Kalika wrote:
->>   May 29 14:14:15 butters invalidate: busy buffer
-> 
-> This is due to us trying to flush the LVM metadata writes to a device
-> that also contains a mounted filesystem, it should only happen when
-> you change your LVM configuration (eg, take another snapshot).  We're
-> using O_DIRECT in the next release, so they will go away soon.
+Thank you for the response.
 
-Quick followup and a correction to my previous statement.  I do in fact
-change an LVM config: When rsyncing some files to the backup box itself (as
-it is easier to have ALL the files in one place -- I know it's silly)  I
-create a snapshot of one of the partitions, mount it, rsync the snapshot,
-unmount, and remove the snapshot.  It seems that during this time is when I
-get all the busy buffer errors and sometimes worse.  Yesterday this caused
-the box to stop being able to write to ALL LVM partitions and the process
-list shows the following:
+My logical volume is striped - 7 ways.
 
-root         4     1  0 May30 ?        00:00:14 [kswapd] <defunct>
-root         5     1  0 May30 ?        00:00:00 [bdflush] <defunct>
+I am writing to the lv with a simple c program I wrote.
 
-I'm going to turn off snapshotting for now and see if things become more
-stable.
+Each write is 7*stripesize, which in this case is 28 blocks.
 
-Perhaps I also don't quite understand how snapshots are supposed to work.
-Is one supposed to stop all the daemons that are writing to a target volume
-before a snapshot can be created?  Are "online" snapshots not the intent of
-this system?
+Any thoughts on how I can get top speeds without mounting and unmounting 
+  the volume?
 
----max kalika
---max@lsit.ucsb.edu
--lsit systems administrator
+Thanks,
+Howie
+
+
+ > Howard,
+
+ > what's the LV layout (linear/striped ?).
+ > How do you write to the LV (dd or soemthing).
+ > What's the write pattern (sequential ? block size ?)
+
+ > 80MB/sec raw sounds like you use a striped LV.
+
+
+On Sun, Jun 29, 2003 at 12:08:34PM -0400, Howard Clifford wrote:
+ > I built a 7 disk vg and put 1 lv on it.  I do not want to mount a file
+ > system.
+ > I just want to write directly to the disk device, /dev/vg1/vol1.
+ >
+ > My write performance has an odd behavior.
+ > If after booting I write to the volume I get roughly 175MB/sec.
+ > If after booting I do a mke2fs on the volume, mount it, umount it, then
+ > write to the volume I get roughly 230 MB/sec.
+ >
+ > Any ideas?  How can I get top speed without first mounting then
+ > umounting the volume?
+ > By the way, I tried binding a raw device to the lv and got very bad
+ > performance; around 80 MB/sec.  Would that be expected?
+ >
+ > (I'm using redhat 9.0 -> lvm-1.0.3-12)
+ >
+ > Thanks...
+ >
+ >
+ > _______________________________________________
+ > linux-lvm mailing list
+ > linux-lvm@sistina.com
+ > http://lists.sistina.com/mailman/listinfo/linux-lvm
+ > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+     Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                   56242 Marienrachdorf
+                                                   Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                        FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
