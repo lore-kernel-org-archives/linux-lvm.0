@@ -1,11 +1,11 @@
 Return-Path: <russell@coker.com.au>
 From: Russell Coker <bofh@coker.com.au>
-Subject: Re: [linux-lvm] Debian packaging
-Date: Thu, 21 Dec 2000 08:53:29 +1100
-References: <XFMail.20001219212422.fionn@unix-ag.org>
-In-Reply-To: <XFMail.20001219212422.fionn@unix-ag.org>
+Subject: Re: [linux-lvm] '/etc/init.d/lvm' script in debian package
+Date: Thu, 21 Dec 2000 08:40:47 +1100
+References: <Pine.LNX.4.30.0012201012130.4495-100000@falka.mfa.kfki.hu>
+In-Reply-To: <Pine.LNX.4.30.0012201012130.4495-100000@falka.mfa.kfki.hu>
 MIME-Version: 1.0
-Message-Id: <0012210853290U.08762@lyta>
+Message-Id: <0012210840470T.08762@lyta>
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,25 +19,55 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Fionn Behrens <Fionn.Behrens@unix-ag.org>
+To: linux-lvm@sistina.com, Gergely Tamas <dice@mfa.kfki.hu>
 
-> > Think PATH - this is really easy, and shells already support it.  No =
-more
-> > work to be done, and it's not ugly.  The IOP version will probably ne=
-ver
-> > change within a boot (unless LVM is a module and it gets upgraded wit=
-hout
-> > upgrading the kernel - unlikely).
+On Wednesday 20 December 2000 20:29, Gergely Tamas wrote:
+> Hi!
 >
-> Shouldnt the debian alternatives mechanism (see "man 8
-> update-alternatives") be most appropriate for this task?
+> Some notes to the /etc/init.d/lvm script in the debian packages ...
+>
+> 1] --- it would be better to add '-a ! -d /proc/lvm' as shown bellow,
+>        becouse in in the newer versions '/proc/lvm' is a directory
+>        (but what if compiled without /proc/lvm info...)
+>
+> if [ ! -f /proc/lvm -a ! -d /proc/lvm ]; then
+>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ was: '[ ! -f /proc/lvm ]; then'
+>
+> =09if [ ! -f /lib/modules/`uname -r`/block/lvm.o -a ! -f /lib/modules/`=
+uname
+> -r`/block/lvm-mod.o ]; then exit 0
+> =09fi
+> fi
 
-Update-alternatives doesn't work when the file-system in question is moun=
-ted=20
-read-only.  Also it's not really designed to be run at every boot.
+Thanks for the suggestion about checking for a directory.  But how will I=
+=20
+determine what version of LVM if it's a directory?  Will there be=20
+/proc/lvm/version?
 
-PATH is a bad idea IMHO.  It is set in too many places and has too many=20
-possibilities to be stuffed up.
+As for the checking for the module file.  With the way module management =
+is=20
+being changed in recent kernels I'm not about to do such checking as it's=
+ too=20
+likely that things will get broken.
+
+I'll just assume that if the LVM module isn't loaded then the administrat=
+or=20
+doesn't want it to start.
+
+LVM isn't something that you want to be automatically loading on demand,=20
+either you need it or you don't.  If you need it then you will probably w=
+ant=20
+to compile it in or put it in /etc/modules for loading on boot.
+
+> 2] --- I still think that an init.d script should display a usage help =
+as
+>        default
+>
+> case "$1" in
+> =09start)
+>         ^^^^^^ was: 'start|"")'
+
+Done.
 
 --=20
 http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
