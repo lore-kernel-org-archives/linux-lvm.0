@@ -1,11 +1,8 @@
-From: Andrew Morton <akpm@digeo.com>
-Message-Id: <20030628222938.78c16450.akpm@digeo.com>
-In-Reply-To: <20030628115033.GA660@gmx.de>
-References: <20030627202130.066c183b.akpm@digeo.com>
-	<20030628115033.GA660@gmx.de>
-Mime-Version: 1.0
+From: "Howard Clifford" <howardclifford@cablespeed.com>
+Message-ID: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAnz/RyKJqskKn5C9pg0fEMsKAAAAQAAAA/K4H7eGabka4k3giSELtYgEAAAAA@cablespeed.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: 2.5.73-mm2
+Subject: [linux-lvm] (no subject)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,26 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jun 29 00:30:02 2003
+Date: Sun Jun 29 11:10:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Wiktor Wodecki <wodecki@gmx.de>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Wiktor Wodecki <wodecki@gmx.de> wrote:
->
-> On Fri, Jun 27, 2003 at 08:21:30PM -0700, Andrew Morton wrote:
->  > ftp://ftp.kernel.org/pub/linux/kernel/people/akpm/patches/2.5/2.5.73/2.5.73-mm2/
->  > 
->  > Just bits and pieces.
-> 
->  I have problems with lvm2 and the 2.5.73-mm2 patchset.
+I built a 7 disk vg and put 1 lv on it.  I do not want to mount a file
+system.
+I just want to write directly to the disk device, /dev/vg1/vol1.
 
-Could be because -mm uses a 64-bit dev_t.
+My write performance has an odd behavior.
+If after booting I write to the volume I get roughly 175MB/sec.
+If after booting I do a mke2fs on the volume, mount it, umount it, then
+write to the volume I get roughly 230 MB/sec.
 
-Could you please revert 
-ftp://ftp.kernel.org/pub/linux/kernel/people/akpm/patches/2.5/2.5.73/2.5.73-mm2/broken-out/64-bit-dev_t-kdev_t.patch
-and retest?
+Any ideas?  How can I get top speed without first mounting then
+umounting the volume?
+By the way, I tried binding a raw device to the lv and got very bad
+performance; around 80 MB/sec.  Would that be expected?
 
-I think there's a version of devicemapper userspace which works correctly
-with 64-bit dev_t.  Perhaps the Sistina team can shed some light.
+(I'm using redhat 9.0 -> lvm-1.0.3-12)
+
+Thanks...
