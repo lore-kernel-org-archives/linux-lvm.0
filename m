@@ -1,10 +1,12 @@
-Message-ID: <3E651551.6030904@stamppot.demon.nl>
-From: Sander Alberink <alberink@stamppot.demon.nl>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Severe problem: data lost while adding a partition
-References: <3E3C62E4.7030409@home.nl> <20030203113148.B8501@sistina.com> <3E42D82B.3070003@stamppot.demon.nl> <20030207152736.C27442@sistina.com> <3E515E16.8050209@stamppot.demon.nl> <264070000.1045520730@[192.168.200.4]> <3E5BF188.6000207@stamppot.demon.nl>
-In-Reply-To: <3E5BF188.6000207@stamppot.demon.nl>
-Content-Transfer-Encoding: 7bit
+From: Stephan Austermuehle <au@hcsd.de>
+Subject: Re: [linux-lvm] Max storage size per system
+Message-ID: <20030304144121.GB23975@hcsd.de>
+References: <20030304114851.GA22965@hcsd.de> <3E64B885.1AF49EDA@silicide.dk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+Content-Disposition: inline
+In-Reply-To: <3E64B885.1AF49EDA@silicide.dk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,74 +17,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar  4 15:07:02 2003
+Date: Wed Mar  5 07:52:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hello all,
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sorry to reply to myself, but I really am stuck on this one. Any 
-pointers would be much appreciated...
+On Tue, Mar 04, 2003 at 03:30:29PM +0100, Jon Bendtsen wrote:
 
-I have gotten the vgcreate to work (this was caused by me now using 
-devfs (so I need to supply DevFS filenames). I also executed an lvcreate 
--l 399 (which was the maximum number of PE's available) on the resulting 
-volume group. However, I cannot mount the resulting logical volume.
-It used to contain a reiserfs filesystem, a reiserfsck --check yields no 
-errors, but I am unable to mount the filesystem.
-I am getting rather lost now.....
+> So, this would mean 2TB pr. LV, but there can also be a number of LV's.
 
-Hope someone can help!
+Okay, so the LVM can manage really large disk storage. Does anybody know
+whether the number of mounted filesystem per Linux system is limited?
 
-Best regards,
+> How much space do you need anyway ?
 
-Sander
+100+ Terabytes
 
-Sander Alberink wrote:
+Kind regards,
 
-> Hi all,
->
-> Thanks for the reply. At the moment I have re-initialized the PV's via 
-> pvcreate -ff. However, trying to reconstruct a new volume group yields 
-> me the following output:
->
-> # vgcreate -v home /dev/hda[1,4,6,7]
-> vgcreate -- checking volume group name
-> vgcreate -- checking volume group directory existence
-> vgcreate -- locking logical volume manager
-> vgcreate -- checking volume group "home" existence
-> vgcreate -- counting all existing volume groups
-> vgcreate -- reading all physical volume data from disks
-> vgcreate -- checking if all given physical volumes in command line are 
-> new
-> vgcreate -- checking physical volumes name "/dev/hda1"
-> vgcreate -- checking physical volumes name "/dev/hda4"
-> vgcreate -- checking physical volumes name "/dev/hda6"
-> vgcreate -- checking physical volumes name "/dev/hda7"
-> vgcreate -- no valid physical volumes in command line
-> #
->
-> So apparently something is not OK. But what can that be? Any pointers 
-> would be appreciated!
->
->>> I really appreciate your help in this. However, I am rather 
->>> reluctant to
->>> dive in and be hasty in my commands. I really don't want to destroy my
->>> data.... As I understand it, pvcreate -ff would re-initialize the
->>> physical volume. As I understand it, I will have to add them to a 
->>> volume
->>> group again. But will the filesystem still be intact after that then?
->>>
->>> Sorry if this sound like a beginner question to you. It very well might
->>> be, but I'd rather be careful....
->>
->>
->>
->> Thing to understand is that LVM commands update a small
->> header on the phyiscal volume. You can munge the LVM
->> portion without touching your data at all. In this case
->> the data has no way of knowing that anything happend to
->> the LVM portion of life: they live in entirely different
->> parts of the disk drive. 
->
+Stephan
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+ZLsR+QMu5be4tHkRAlDZAJwO60jiPDJJTcgBb/9LKGaBaOaz8ACg7Ytr
+rVE79x88ayWdyPaY4/TWAJ0=
+=fGkC
+-----END PGP SIGNATURE-----
+
+--3uo+9/B/ebqu+fSQ--
