@@ -1,10 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103130059.f2D0xsJ01176@webber.adilger.int>
-Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-In-Reply-To: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org> from Daniel E Whicker
- at "Mar 12, 2001 06:16:49 pm"
-Date: Mon, 12 Mar 2001 17:59:54 -0700 (MST)
+Return-Path: <riel@conectiva.com.br>
+Date: Mon, 12 Mar 2001 21:59:30 -0300 (BRST)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [linux-lvm] File System Limitations?
+In-Reply-To: <F95YLqVpUOF9vJZTuG500007732@hotmail.com>
+Message-ID: <Pine.LNX.4.21.0103122159130.2102-100000@imladris.rielhome.conectiva>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +16,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Daniel Whiker writes:
-> Thanks for helping.  I did in fact have devfs compiled in and mounted to an
-> alternative path.
+On Mon, 12 Mar 2001, hail narcissus wrote:
 
-Currently devfs and LVM don't work well together, especially if it is not
-mounted on /dev.  My patch fixes a small part of this, but it is still
-safer to simply configure devfs out of the kernel when using LVM, until
-your system is working properly.
+> Just wondering if I could convert to EXT2 -> EXT3 FS.  I am guessing
+> it should work with no problem since the file system sits above LVM.  
+> But I wanted to know if anyone has tried this.
 
-> Beyond that, everything is pretty vanilla.  I'm rebuilding the OS on that
-> system at the moment, but as soon as I'm done, I'll get 2.4.2 with LVM
-> .9.1b5 and your patch installed and see how it goes from there.  In the
-> meantime, is there any way of restoring the "HM" magic to the PVs
-> nondestructively?
+Works great. I'm running ext3 over LVM on NL.linux.org ;)
 
-I think this may have been caused by the devfs strangeness.  Start out
-with devfs out of the kernel entirely, and go from there.  I don't think
-2.4.2 will help you.  You need to apply an LVM kernel patch anyways.
+Rik
+--
+Virtual memory is like a game you can't win;
+However, without VM there's truly nothing to lose...
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com.br/
