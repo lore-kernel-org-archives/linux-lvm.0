@@ -1,8 +1,9 @@
-From: James Hawtin <oolon@ankh.org>
+Message-Id: <006501c1e57a$3cf5ff50$6501a8c0@bomoon>
+From: "bo" <bo@sosnetwork.net>
+References: <Pine.LNX.4.44.0204161845320.27709-100000@pzat.meep.org>
 Subject: Re: [linux-lvm] LVM tool limitation on using whole disk
-In-Reply-To: <005201c1e56c$c6d39bf0$6501a8c0@bomoon>
-Message-Id: <Pine.LNX.4.44.0204161845320.27709-100000@pzat.meep.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,31 +14,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 16 13:51:01 2002
+Date: Tue Apr 16 14:09:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Tue, 16 Apr 2002, bo wrote:
+Thanks for your reply.
 
-> Is it still TRUE?
->
-> I am going to make several MDs on several whole disks, and then combine them
-> as a
-> volume. How could I avoid this problem?
->
-> Thanks,
->
-> Bo
->
->
+It should work if I make a LVM from HDD device, not using MD.
+However, using fdisk to make a big ONE partition for RAID then
+make it for MD.  Then I should not wife this partition block out.
 
-So wipe the partition table!
+I never try it yet but I think it is.
 
-dd if=/dev/zero of=/dev/discs/disc1/disc bs=1024 count=10
+Am I wrong?
 
-That would do it... make sure you change the of= bit to be the right
-device. Do it wrong and ... well thats your problem!
+Any other suggestions?
 
-James
+Bo
+----- Original Message -----
+From: "James Hawtin" <oolon@ankh.org>
+To: <linux-lvm@sistina.com>
+Sent: Tuesday, April 16, 2002 11:47 AM
+Subject: Re: [linux-lvm] LVM tool limitation on using whole disk
+
+
+> On Tue, 16 Apr 2002, bo wrote:
+>
+> > Is it still TRUE?
+> >
+> > I am going to make several MDs on several whole disks, and then combine
+them
+> > as a
+> > volume. How could I avoid this problem?
+> >
+> > Thanks,
+> >
+> > Bo
+> >
+> >
+>
+> So wipe the partition table!
+>
+> dd if=/dev/zero of=/dev/discs/disc1/disc bs=1024 count=10
+>
+> That would do it... make sure you change the of= bit to be the right
+> device. Do it wrong and ... well thats your problem!
+>
+> James
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
