@@ -1,10 +1,11 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Wed, 23 May 2001 19:28:09 -0300 (BRST)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] The Info You Requested
-In-Reply-To: <20010523165157.A5993@minime.sistina.com>
-Message-ID: <Pine.LNX.4.33.0105231924170.311-100000@duckman.distro.conectiva>
+Return-Path: <steve.wray@the.net.nz>
+From: "Steve Wray" <steve.wray@the.net.nz>
+Subject: RE: [linux-lvm] Converting my Root file system to LVM [lastquestion]
+Date: Thu, 24 May 2001 10:24:28 +1200
+Message-ID: <NBBBKLKHMJHIJLHOGAOJGENMIOAA.steve.wray@the.net.nz>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <990630164.1175.0.camel@localhost>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,46 +17,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Wed, 23 May 2001, Ben Lutgens wrote:
-> On Wed, May 23, 2001 at 04:29:26PM -0300, Rik van Riel wrote:
-> >
-> >No need to move the whole list to another domain.  All the
-> >anti-spam filtering rules from NL.linux.org are publicly
-> >available on a CVS tree.  For more info, see:
-> >
-> >http://spamfilter.nl.linux.org/
->
-> Thanks Rik, I'll have a look. I have some stuff in place now
-> that I am pretty sure will work. It's not proactive though, I'll
-> have to add rules as we get a spam but it's something.
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Rupert Heesom
+[snip]
+> What I'm finding now is that when I'm shutting the PC down, vgchange is
+> complaining that it can't close the VG down because there's an active
+> partition (something like that).  I've had a look at the halt script,
+> and I can't figure out exactly how umounting the LV & deactivating the
+> VG would work.
+> 
+> I put a tentative line right above the "/sbin/vgchange -an" saying
+> "umount /dev/vg/root".   However, if I'm unmounting root BEFORE
+> deactivating the VG, then the system won't find the /sbin/vgchange util
+> will it?  
+> 
+> I do have  /boot/initrd-lvm-2.4.3.gz which is used at boot time.  This
+> ramdisk does have /sbin/vgchange in it (which you probably know).  If
+> root is unmounted when /sbin/vgchange is called, will the system use the
+> ramdisk?   If so, how does it know to use it?   (I'm kinda new to
+> figuring out how ramdisks work, I just follow instructions and they
+> work!)
 
-Spamfilter CVS works the same; the difference is that the work is
-shared so once I add something to the list the mailboxes (and lists)
-of everybody using spamfilter are protected.  And, of course, when
-you add something to spamfilter my mailbox is protected ;)
+Hey thats a good point... maybe a halt-time ramdisk?
+:)
 
-> >(I just created this site to save me time explaining how
-> >spamfilter works, it may take a few hours to have its DNS
-> >entry percolate through)
->
-> Yeah, no since making everyone change thier procmail filters now.
 
-Spamfilter is structured in such a way that the anti-spam procmailrc
-files update themselves automatically when a CVS commit message
-comes in ;)
-
-regards,
-
-Rik
---
-Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
-
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
-
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com/
+[snip]
