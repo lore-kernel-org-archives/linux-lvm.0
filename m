@@ -1,10 +1,11 @@
-Message-ID: <3B934B19.1060308@st-peter.stw.uni-erlangen.de>
-Date: Mon, 03 Sep 2001 11:19:21 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Foreign HD with LVM-Partition, how to read Data?
-References: <006b01c13448$755ea0b0$0df1d981@piefke>
-Content-Transfer-Encoding: 7bit
+Date: Mon, 3 Sep 2001 13:49:22 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] LVM, defvs and initrd (for lvm rootfs)
+Message-ID: <20010903134922.A3006@colombina.comedia.it>
+References: <20010903000930.T3385@pc.ilinx> <002701c13436$3f5b2220$0b01a8c0@myplace.net> <20010903013954.V3385@pc.ilinx>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010903013954.V3385@pc.ilinx>; from lvm@interlinx.bc.ca on Mon, Sep 03, 2001 at 01:39:54AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,88 +17,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi i could't completly understand you
+I believe this issue was fixed in a later revision of the
+LVM tools, (i don't remember when precisely)
+try upgrading tools.
 
-is that true:
+L.
+On Mon, Sep 03, 2001 at 01:39:54AM -0400, Brian J. Murrell wrote:
+> On Mon, Sep 03, 2001 at 07:06:53AM +0200, Bas wrote:
+> > Hi,
+> > 
+> > Run vgscan (without parameters) at the end of rc.sysinit.
+> 
+> Should have mentioned... I have tried this.  vgscan tries to create
+> the /dev/<volume group/* nodes (with mknod(2)) but it fails,
+> presumably because devfs[d] does not allow it (the node creation with
+> mknod(2))?  I have not looked much into devfs[d] yet.
+> 
+> b.
+> 
+> -- 
+> Brian J. Murrell
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-you have instaled Redhat on a working sepatarate drive
-and you hace added a drive from a crashed system
-if this is the case i hope you can run
-
-vgscan -that will tell you the name of the volume group
-
-vgchange -ay volume group name --that activates the volume
-
-if you know the name of the logical volume you should be able to mount it
-or if you don't know the name of the logical volume you can find it out 
-from proc
-
-cat /proc/lvm/global
-
-you should see all VG'S PV's and LV's
-
-so mount      /dev/ "volume group" / "Logical Volume"    / " where you 
-want it" should work
-
-
-
-
-
-could you give a bit more information
-like fstab of the instaled RedHat
-
-
-
-
-Alexander Bruns wrote:
-
->Hi,
->
->I hot a HardDrive from a crashed System. The System-Harddrive is 
->not recoverable, but the Harddrive with the LVM-Partition on it, 
->is still "alive".
->
->There was only one Partition in the VolumeGroup, so all the Data 
->in the Logical Volume is on this single Partition.
->
->Is there a way in to get the data read out of the Partition? It 
->was formated with reiserfs on a RedHat Linux 7.1.
->
->I activated the Hardware in my System and have now the same Running:
->
->- RedHat 7.1 with all updates.
->- self-compiled Kernel 2.4.6 with patched lvm 0.9.1_beta7
->
->[root@holodeck lvmconf]# pvdisplay /dev/hda7
->pvdisplay
->--- Physical volume ---
->PV Name               /dev/hda7
->VG Name               lvm_volume_01
->PV Size               48.54 GB / NOT usable 1.06 MB [LVM: 169 KB]
->PV#                   1
->PV Status             available
->Allocatable           yes (but full)
->Cur LV                1
->PE Size (KByte)       4096
->Total PE              12425
->Free PE               0
->Allocated PE          12425
->PV UUID               cFFBJX-aqxr-P7kU-71OY-pgpX-rvtA-XxVpoc
->
->
->So is there a way to get the data read out of this partition?
->
->Greetings from Alex
->
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
