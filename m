@@ -1,142 +1,107 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB2HmBr08223
-	for <linux-lvm@redhat.com>; Thu, 2 Dec 2004 12:48:11 -0500
-Received: from ns.bj-ig.de (ns1.bj-ig.de [217.119.193.11])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB2Hm5AE029022
-	for <linux-lvm@redhat.com>; Thu, 2 Dec 2004 12:48:05 -0500
-Received: from tower.bj-ig.de (bjgate.bj-ig.de [194.127.182.253])
-	by ns.bj-ig.de (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
-	iB2Hm3iE026429
-	for <linux-lvm@redhat.com>; Thu, 2 Dec 2004 18:48:03 +0100
-Received: from ralf.bj-ig.de (ralf.bj-ig.de [194.127.182.13])
-	by tower.bj-ig.de (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
-	iB2Hm23E024159
-	for <linux-lvm@redhat.com>; Thu, 2 Dec 2004 18:48:02 +0100
-From: Ralf =?iso-8859-1?q?M=FCller?= <ralf@bj-ig.de>
-Date: Thu, 2 Dec 2004 18:47:55 +0100
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB32Ivr00478
+	for <linux-lvm@redhat.com>; Thu, 2 Dec 2004 21:18:57 -0500
+Received: from web54408.mail.yahoo.com (web54408.mail.yahoo.com
+	[68.142.225.164])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id iB32Iq9E017892
+	for <linux-lvm@redhat.com>; Thu, 2 Dec 2004 21:18:52 -0500
+Message-ID: <20041203021207.72667.qmail@web54408.mail.yahoo.com>
+Date: Thu, 2 Dec 2004 18:12:06 -0800 (PST)
+From: Gwen Morse <renniefan@yahoo.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	micalg=pgp-sha1; boundary="Boundary-02=_RV1rBdRruNZmvB1";
-	charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Message-Id: <200412021848.01813@bj-ig.de>
-Subject: [linux-lvm] Problem with pvmove of system installation volume
+Subject: [linux-lvm] Newbie questions about LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
-List-Archive: </archives/linux-lvm>
+List-Archive: <https://www.redhat.com/archives/linux-lvm>
 List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+I've been sent off by a supervisor to find information
+on LVM and determine if a particular form of machine
+update is possible. I know nothing about LVM's and I'm
+not the most technically adept of people. If I do a
+good job researching this process and get all the
+cogent information, then, I may be allowed to perform
+the update under supervision. If I come back and all I
+can say is "It can/can't be done", then, I'll get a
+pat on the head but the general consensus will be
+disappointment in my efforts.
 
---Boundary-02=_RV1rBdRruNZmvB1
-Content-Type: text/plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+I've read through the HOWTO and some other web
+references.
 
-Hi there,
+We want to update our mail server (which uses LVM
+1.0.8) on an old/slow disk-subsystem and mirror it
+(via software) to a newer/faster sub-system. The
+mirroring process would allow for a concurrent copy.
+We would then want to break the connection to the
+original disks and use the mirror as the new LVM
+system. My reading on LVM and raid arrays is a little
+unclear (to me -- which I suspect is a technical lack
+on my part).
 
-the day before I started to do my first tests with lvm on Linux. I=20
-installed a fresh SuSE 9.2 on a machine with two identical disks,=20
-created 3 RAID 1 partitions and created on top of all this my first=20
-logical volume on Linux. Actually I created this "root" volume first,=20
-and installed SuSE on it. No problems so far. I was able to increase=20
-the "root" volume, I was able to create another "test" volume and=20
-shrink it when it was not mounted ... cool stuff - really.
+In the HOWTO, there's a section specifically on
+migrating data:
+http://www.tldp.org/HOWTO/LVM-HOWTO/removeadisk.html
 
-The next thing I wanted to test was moving a logical volume from one=20
-physical volume to another. Usecase: replacement of an old/too=20
-small/for whatever reason unwanted disk by another. This was perfectly=20
-ok with the "test" volume - the one that I was able to shrink before.=20
-But when I tried the same with the "root" volume pvmove locked and I=20
-had to reset the machine. On the next boot the machine reported=20
-problems with the volume group on which the root volume is located and=20
-entered a recovery shell. There I had to call "lvm pvmove --abort" and=20
-after another restart the machine booted again. After this first=20
-experience I tried to upgrade the pached SuSE 2.6.8 kernel to a vanilla=20
-2.6.9 from kernel.org, I upgraded the lvm2 binaries from version 2.0.25=20
-to 2.0.29 - no changes. I googled around ... I found some reports about=20
-problems with pvmove - but nothing that matched my actual problem (as=20
-far as I can see it). So my hope is that someone here can help me a=20
-step further with this problem.
+However, that looks like it mostly deals with a single
+hard drive being copied to another single hard drive.
+We have a raid array, which looks like it's covered
+more under this:
+http://www.tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html
 
-There were no messages in syslog when the machine stopped. The visible=20
-output of "pvmove -vv -n Root /dev/md0 /dev/md2" was:
-      Setting global/locking_type to 1
-      Setting global/locking_dir to /var/lock/lvm
-      File-based locking enabled.
-      /dev/md0: lvm2 label detected
-      /dev/md0: lvm2 label detected
-      /dev/md0: lvm2 label detected
-      /dev/md1: lvm2 label detected
-      /dev/md2: lvm2 label detected
-      /dev/hda3: No label detected
-      /dev/hdc3: No label detected
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-    Finding volume group "system"
-      Locking /var/lock/lvm/V_system WB
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-    Archiving volume group "system" metadata.
-    Creating logical volume pvmove0
-      Getting target version for mirror
-      Moving /dev/md0:0-1023 of system/Root
-      Moving /dev/md0:1610-1737 of system/Root
-    Moving 1152 extents of logical volume system/Root
-      Finding volume group for uuid=20
-Qo3GHB44Twwv7MYsUjJtWUCuPH5P2vviIikXQlamoffNvHYy5DUCF66jqwCCepYC
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-    Found volume group "system"
-      Setting activation/missing_stripe_filler to /dev/ioerror
-    Updating volume group metadata
-    Creating volume group backup "/etc/lvm/backup/system"
-      Finding volume group for uuid=20
-Qo3GHB44Twwv7MYsUjJtWUCuPH5P2vviIikXQlamoffNvHYy5DUCF66jqwCCepYC
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-    Found volume group "system"
-      Locking memory
-      Suspending system-Root
-      Finding volume group for uuid=20
-Qo3GHB44Twwv7MYsUjJtWUCuPH5P2vviK1M7zT9n1b350JWv5oYIL2CJuiUVy1iz
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-      /dev/md0: lvm2 label detected
-      /dev/md2: lvm2 label detected
-    Found volume group "system"
-    Loading system-pvmove0
-      Setting activation/mirror_region_size to 512
+However in THAT case it seems like this is a
+workaround to copy without using a mirroring-type
+copy, but, simply taking one server down, starting the
+copy while the server is offline, and then putting the
+new server back online when the copy is over. This
+server needs to be up while the mirror is copying data
+over.
 
-=2D-=20
-Van Roy's Law: -------------------------------------------------------
-       An unbreakable toy is useful for breaking other toys.
+Then, things seem to be complicated (at least to me)
+by this warning (from the HOWTO):
 
---Boundary-02=_RV1rBdRruNZmvB1
-Content-Type: application/pgp-signature
-Content-Description: signature
+It is not currently possible to add a disk to a
+striped logical volume in LVM 1. Use LVM 2 with the
+lvm 2 format metadata if you wish to be able to do so
+able to do so.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
+I _think_ the above warning means that if I use RAID 2
+or higher to copy from one subsystem to another, it
+won't work, but, RAID 1 (mirroring/duplexing) will
+work?
 
-iD8DBQBBr1VRZcF+4X5mWz8RArU0AKDpcVLLMux7EwhgAu/g4ggKzPCJ2QCgnXPT
-5b92dKeCdlkIqgtyYwcGFJo=
-=dhjB
------END PGP SIGNATURE-----
+So, with all that information...
 
---Boundary-02=_RV1rBdRruNZmvB1--
+1) With what I've provided, is it 'possible' to set up
+a software-based mirror between these two RAID disks
+sub-systems, bring them both up to being concurrent
+while the mail server is still live, and then break
+the mirror to go back down to having the new RAID
+array online?
+
+2) If this is possible, is there a guide somewhere
+that explains this in at least some detail? I have
+directions on how to set up RAID 1 mirrors, but, I'm
+not sure what to do with LVM as part of the process. I
+have tried to do the majority of my research before
+asking these questions...I'm just having some trouble
+putting the peices I have "together".
+
+Gwen
+ 
+
+
+		
+__________________________________ 
+Do you Yahoo!? 
+The all-new My Yahoo! - What will yours do?
+http://my.yahoo.com 
