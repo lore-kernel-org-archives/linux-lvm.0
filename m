@@ -1,12 +1,17 @@
-Subject: Re: [linux-lvm] summary of what I need to do to mount snapshot on XFS
-From: Jeremy Hansen <jeremy@troubletext.com>
-In-Reply-To: <20020109130259.GC744@tykepenguin.com>
-References: <1010503449.28039.5.camel@cali.nesnahhouse.com>
-    <E16OHUh-0004tv-00@hermes.sistina.com>
-    <20020109130259.GC744@tykepenguin.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1010608661.15375.31.camel@jeremy-linux.intranet.qualys.com>
+Message-Id: <1010612597.3c3cb975632ae@www.snappymail.ca>
+From: IpSo <ipso@snappymail.ca>
+Subject: Re: [linux-lvm] A way to bypass LVM and extract the raw data off?
+References: <1010309724.3c381a5ce8cbe@www.snappymail.ca>
+    <1010343969.3c38a0214056f@www.snappymail.ca>
+    <20020106152433.Q12868@lynx.no>
+    <1010359883.3c38de4b3692f@www.snappymail.ca>
+    <1010543196.3c3baa5c40c49@www.snappymail.ca>
+    <20020109023404.GC1096@auctionwatch.com>
+    <1010545378.3c3bb2e2a4dec@www.snappymail.ca>
+    <20020109124025.O769@lynx.adilger.int>
+In-Reply-To: <20020109124025.O769@lynx.adilger.int>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,74 +22,96 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  9 14:51:01 2002
+Date: Wed Jan  9 15:44:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Andreas Dilger <adilger@turbolabs.com>
+Cc: linux-lvm@sistina.com
 
-Actually, now I am getting Oops
+Quoting Andreas Dilger <adilger@turbolabs.com>:
 
-Mounting filesystem "lvm(58,1)" in no-recovery mode.  Filesystem will be
-inconsi
-stent.
-lvm -- giving up to snapshot /dev/collector/collector_lv on
-/dev/collector/colle
-ctor_snapshot: out of space
-Unable to handle kernel paging request at virtual address 00006e60
- printing eip:
-f884898d
-*pde = 00000000
-Oops: 0000
-CPU:    0
-EIP:    0010:[<f884898d>]    Not tainted
-EFLAGS: 00010246
-eax: 00000dcc   ebx: 00006e60   ecx: c7612c00   edx: 00000000
-esi: 00000000   edi: 022ae678   ebp: 00000800   esp: e5149a9c
-ds: 0018   es: 0018   ss: 0018
-Process mhonarc (pid: 21751, stackpage=e5149000)
-Stack: 00000080 e5148000 00000027 00000000 c7612d70 c7612c00 022ae69f
-00000003 
-       f8845821 e5149af6 e5149aec 022ae178 c7612c00 00002202 c69e5360
-00000f67 
-       f7e90600 f785b000 022ae178 00011560 022ae69f 022ae69f 08000001
-c69e5360 
-Call Trace: [<f8845821>] [<c01b1ddf>] [<f884590f>] [<c0238f4f>]
-[<c01b1ddf>] 
-   [<c01b2007>] [<c01b24a0>] [<c01b211e>] [<c01b1e50>] [<c01f92e4>]
-[<c01f9a27>]
- 
-   [<c020551e>] [<c01f9157>] [<c01fafe8>] [<c01fb327>] [<c01f8b59>]
-[<c0204fd3>]
- 
-   [<c0217ffe>] [<c021a437>] [<c01cfa77>] [<c01f4044>] [<c020b2f3>]
-[<c0219cd1>]
- 
-   [<c0149b9c>] [<c0147496>] [<c0142025>] [<c014204b>] [<c013f01e>]
-[<c010712b>]
- 
-
-Code: 8b 0b eb 12 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90 90 8b 
-
-
-On Wed, 2002-01-09 at 05:02, Patrick Caulfield wrote:
-> On Wed, Jan 09, 2002 at 10:06:04PM +1000, Adrian Head wrote:
-> > The basic concept is you create a snapshot LV
-> > lvcreate -L1G -s -n snap /dev/vg/lv1
+> On Jan 08, 2002  19:02 -0800, IpSo wrote:
+> > Yup! I'm confident everything as far as the reiser filesystem is fine,
+> > just LVM is very confused. 
 > > 
-> > This will create a 1G snapshot logical volume called snap for the original 
-> > logical volume /dev/vg/lv1
+> >    Device Boot    Start       End    Blocks   Id  System
+> > /dev/hda1   *         1       507    255496+  82  Linux swap
+> > /dev/hda2           508     39813  19810224    5  Extended
+> > /dev/hda5           508      4633   2079472+  83  Linux
+> > /dev/hda6          4634     39813  17730688+  8e  Linux LVM
 > > 
-> > If this has completed successfully then you can mount it.
-> > 
-> > mount -t xfs -o nouuid /dev/vg/snap /mnt/snapshot
+> >  
+> > >     If you have the HD space, you could try dd if=/dev/hda6
+> of=/some/file
+> > > 
+> > >     Then mount -o loop /some/file /mnt/point -t reiserfs. 
+> > > 
+> > >     I don't think this would do any more damage. 
+> >
+> > I'll give it a shot I guess, won't this loopback file contain the extra
+> LVM
+> > information and cause problems when trying to mount it though? Does the
+> LVM
+> > information take up the first 2mb or something that I could set the offset
+> as,
+> > so it doesn't carry over to the loopback file?
 > 
-> You may also need -o norecovery too.
+> No, it uses a variable amount of space.
 > 
-> patrick
+> What you could do is try
 > 
+> od -Ad -a /dev/hda6 | grep "R   e   I   s   E   r   2   F   s"
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> and start your dd 65584 bytes before the address at the line this is
+> found on (it should align to an even block boundary).
+
+At the "line", I tried the command and I got about 1000+ lines that seem to
+match. I assume I just try from the first line minus 65584 (3276800) like you 
+said? 
+
+[root@ipso big]# od -Ad -a /dev/hda6 | grep "R   e   I   s   E   r   2   F   s"
+3342384  bs nul soh nul   R   e   I   s   E   r   2   F   s nul nul nul
+3383344 eot nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3424304 eot nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3498032 stx nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3547184 eot nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3616816 ack nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3706928  nl nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3825712  nl nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3842096 dc4 nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+3932208 dc4 nul soh nul   R   e   I   s   E   r   2   F   s nul nul nul
+3944496 dc4 nul soh nul   R   e   I   s   E   r   2   F   s nul nul nul
+3956784 dc4 nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+4001840 dc4 nul stx nul   R   e   I   s   E   r   2   F   s nul nul nul
+...
+
+
+
+dd if=/dev/hda6 bs=512 skip=3276800 of=/big/backup_hda6.bin
+
+-rw-r--r--    1 root     root     16478502912 Jan  9 12:50 backup_hda6.bin
+
+Still won't mount the file. :( Even after a --rebuild-sb.
+
+I also tried: (/dev/hda)
+
+dd if=/dev/hda bs=512 skip=3276800 of=/big/backup_hda6.bin
+
+-rw-r--r--    1 root     root     18870119424 Jan  9 13:41 backup_hda6.bin
+
+Still no go. 
+
+> 
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> 
+
+
+IpSo
+
+--------------------------------------------------------------------
+Never worry about viruses in your Email again.
+Get your FREE! virus scanned Email accounts at http://snappymail.ca
