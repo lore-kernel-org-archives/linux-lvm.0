@@ -1,7 +1,12 @@
-Message-Id: <20020307141913.34861.qmail@web13008.mail.yahoo.com>
-From: Prashant Kharche <pdkharche@yahoo.com>
+From: Tim <tim@connectlive.com>
+Subject: Re: re[2]: [linux-lvm] System Suggestions
+Message-Id: <20020307095732.A27082@connectlive.com>
+References: <auto-000020233424@front1.mail.megapathdsl.net>
+    <Pine.BSI.4.10.10203070728480.16043-100000@xs3.xs4all.nl>
 MIME-Version: 1.0
-Subject: [linux-lvm] NBD-2.4.26
+Content-Disposition: inline
+In-Reply-To: <Pine.BSI.4.10.10203070728480.16043-100000@xs3.xs4all.nl>;
+    from knuffie@xs4all.nl on Thu, Mar 07, 2002 at 07:32:29AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,28 +17,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar  7 08:19:02 2002
+Date: Thu Mar  7 08:57:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
-   I want to test LVM on a SAN.. But i dont have a
-SAN.. SO im trying to use Network Block Device -
-2.4.26 to export partitions to other client 
-machines.. if im wrong please correct me.. But when i
-mount the partitions on the client machine.. LVM
-version 1.0.2 is not able to recognize the VG already
-present on that partition.. what should i do now..
+> Don't use raid5. I always use a combination of raid 1 and 10 for a
+> database server. If you have a database that frequently updates records
+> you don't want the extra write overhead.
 
-Or is there any other way to emulate a SAN.. 
+Yeah, what he said.  However it is sometimes possible to get decent
+performance anyways from a hardware RAID5 device if the controller has
+enough cache (ie. a LOT).  Generally speaking the Oracle "suggested
+layouts" for disks consist of 17-22 spindles, mirrored, with logical
+splits among the write-ahead log, the data area, and the redo log...
 
-
-
+Boy do I ever Not Miss working with Oracle.
 
 
-__________________________________________________
-Do You Yahoo!?
-Try FREE Yahoo! Mail - the world's greatest free email!
-http://mail.yahoo.com/
+-- 
+     "To be suspended from the legal profession is the moral equivalent of 
+      being ostracized by child molesters."
+                                                           --Ian Rowan
