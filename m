@@ -1,9 +1,11 @@
-Message-ID: <3BF323F5.5E90F63B@divsol.com>
-From: Jim Cromie <jcromie@divsol.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM fails at bootup
-References: <20011112141948.P715@sonsofthunder.yi.org> <20011112123227.U1778@lynx.no>
-Content-Transfer-Encoding: 7bit
+From: Abu <abu@trabas.com>
+Subject: Re: [linux-lvm] vgscan -- LVM driver/module not loaded?
+Message-ID: <20011115100726.A18325@trabas.com>
+References: <20011114152558.H9398@trabas.com> <20011114075148.B343@btconnect.com> <20011114162617.I9398@trabas.com> <20011114094009.A406@btconnect.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20011114094009.A406@btconnect.com>; from thornber@btconnect.com on Wed, Nov 14, 2001 at 09:40:09AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +16,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 14 20:08:01 2001
+Date: Wed Nov 14 20:50:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Andreas Dilger wrote:
+Sorry, I am lvm newbie.
 
-> On Nov 12, 2001  14:19 -0500, Bradley M Alexander wrote:
-> > I added the vgscan and the vgchange commands to the end of the checkroot.sh
-> > script (which in Debian is different from the mountfs.sh script). When the
-> > vgscan runs, it generates about two pages of drive errors:
-> >
-> > hdb: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error }
-> > hdb: read_intr: error=0x04 { DriveStatusError }
->
-> Don't know about this - looks like hardware problems.
+Where is lvm-1.0.1-rc-2.4.9.patch?
 
-I got these errors by the pages when I pushed UDMA modes too far
-with hdparm trials, long b4 I upgraded to LVM.  Sounds like an IDE error.
+[abu@yusril] /tmp/LVM/1.0.1-rc4 > find ./ -iname lvm-1*
+nothing
 
-check this out.
+lvm filename only lvm-0.8final-2.4.0.patch
 
-[root@groucho 1.0.1-rc4]# hdparm -iTt /dev/hdc
+[abu@yusril] /tmp/LVM/1.0.1-rc4/PATCHES > ls
+fragments                          linux-2.4.1-VFS-lock.patch
+fragments-2.2.18                   linux-2.4.2-VFS-lock.patch
+fragments-2.4.0                    linux-2.4.4-VFS-lock.patch
+fragments-2.4.1                    linux-2.4.9-VFS-lock.patch
+fragments-2.4.7                    lvm-0.8final-2.4.0.patch
+linux-2.2.17-rawio.patch           Makefile
+linux-2.2.18-rawio.patch           Makefile.in
+linux-2.2.18-sparc64.patch         README
+linux-2.4.0-test10-VFS-lock.patch
 
-/dev/hdc:
 
- Model=WDC WD300BB-00AUA1, FwRev=18.20D18, SerialNo=WD-WMA6R2353241
- Config={ HardSect NotMFM HdSw>15uSec SpinMotCtl Fixed DTR>5Mbs FmtGapReq }
- RawCHS=16383/16/63, TrkSize=57600, SectSize=600, ECCbytes=40
- BuffType=DualPortCache, BuffSize=2048kB, MaxMultSect=16, MultSect=16
- CurCHS=16383/16/63, CurSects=-66060037, LBA=yes, LBAsects=58633344
- IORDY=on/off, tPIO={min:120,w/IORDY:120}, tDMA={min:120,rec:120}
- PIO modes: pio0 pio1 pio2 pio3 pio4
- DMA modes: mdma0 mdma1 mdma2 udma0 udma1 *udma2 udma3 udma4 udma5
- Timing buffer-cache reads:   128 MB in  1.67 seconds = 76.65 MB/sec
- Timing buffered disk reads:  64 MB in  4.17 seconds = 15.35 MB/sec
 
-IIRC,
+Joe Thornber(thornber@btconnect.com)@Wed, Nov 14, 2001 at 09:40:09AM +0000:
+> On Wed, Nov 14, 2001 at 04:26:17PM +0700, Abu @ Trabas Dot Com wrote:
+>=20
+> This is an extra patch that you only need if you're using reiserfs
+> with snapshots.  Read the README in PATCHES for instructions on how to
+> generate the real patch, which should be called something like
+> lvm-1.0.1-rc-2.4.9.patch
+>=20
+> - Joe
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-the *udma2 is current setting, beyond which my tired ol p2-233-mobo cannot
-tread.
+--=20
+   __  =20
+  (oo)  Open Solution Provider visit http://www.trabas.com
+ / \/ \ GnuPg public information         pub 1024/EBD26280=20
+ `V__V' A9A9 8F57 9E9D 14E3 05B4  3EDB C241 A313 EBD2 6280
+Don't relax!  It's only your tension that's holding you together.
