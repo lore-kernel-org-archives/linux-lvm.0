@@ -1,14 +1,9 @@
-From: Christophe Saout <christophe@saout.de>
-In-Reply-To: <20030924142145.GV12384@shell.blacknet.de>
-References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
-	 <1064343664.10276.3.camel@chtephan.cs.pocnet.net>
-	 <3F717F13.1050407@silicide.dk>
-	 <1064404776.5915.9.camel@chtephan.cs.pocnet.net>
-	 <20030924142145.GV12384@shell.blacknet.de>
-Message-Id: <1064506078.31091.15.camel@chtephan.cs.pocnet.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] RFC: DM encryption target?
+Content-Class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <82706A2FAC4D08468A1652B4B7DD0C44CB098F@mx1.bouvet.no>
+From: "Kjetil H. Paulsen" <kjetil.paulsen@bouvet.no>
+Subject: [linux-lvm] Disk crash - can't remove...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,74 +14,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 25 11:09:02 2003
+Date: Thu Sep 25 15:15:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Am Mi, den 24.09.2003 schrieb Goetz Bock um 16:21:
+Hi
 
-> > Another way to do a password change would be to not reencrypt the device
-> > but to store the symmetrical key somewhere else and encrypt it with a
-> > password hash and to just reencrypt that key with another password.
-> That would be nice, just use the first block for the key (giving you
-> 512byte keysize, and you can generate a realy strong key[*]).
-> 
-> Just in idea.
-> 
-> [*] yes, i know it's only as strong as the user's password. 
->     Security is only as good as it's weekest link, and in the end
->     that's always the user.
+One of the disks in my volume was destroyed, I really don't care about
+the data but now I can't remove my volume group.
+And I can't add the disks to other volumes either. Tried the UUID fixer,
+but no luck :(
+Any help appreciated... (using RH9 and LVM 1.0.3)
 
-I don't know, but couldn't the use of a one-sector block slow things
-down because of alignment issues? Perhaps using a 4k block would be more
-useful or storing the sector at the end of the device (like the linux
-raid info sector).
+Pvscan:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdg"  is associated to unknown VG
+"stuff_group" (run vgscan)
+pvscan -- inactive PV "/dev/hdh" is in no VG  [114.50 GB]
+pvscan -- inactive PV "/dev/hde"  is associated to unknown VG
+"stuff_group" (run vgscan)
+pvscan -- inactive PV "/dev/hdf"  is associated to unknown VG
+"stuff_group" (run vgscan)
+pvscan -- inactive PV "/dev/hda"  is associated to unknown VG
+"stuff_group" (run vgscan)
+pvscan -- inactive PV "/dev/hdb"  is associated to unknown VG
+"stuff_group" (run vgscan)
+pvscan -- total: 6 [296.77 GB] / in use: 5 [182.27 GB] / in no VG: 1
+[114.50 GB]
 
-I think that 512 bytes / 4096 bits should really be enough to store the
-keys.
+Vgscan:
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+volume group "stuff_group" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
 
-I could store the data in a simple text format, starting with a magic
-header. Something like:
+[root@theone root]# vgchange -a n stuff_group
+vgchange -- couldn't  open volume group "stuff_group" group special file
+vgchange -- try vgmknodes
 
-#CrYpT
-version = 1
-cipher = "aes"
-mode = "cbc"
-keysize = 256
-pwdsalt = "0e3a5b4c"
-pwdhash = "md5"
-pwdenc = "3des"
-key = "8e3eb...blabla..."
-hash = "23e4f"
-node = "/dev/mapper/crypt"
-offset = ...useful?
-size = ...useful?
+[root@theone root]# vgmnodes
+-bash: vgmnodes: command not found
+[root@theone root]# vgmknodes
+vgmknodes -- no volume groups found to create nodes for
 
-A userspace program (dmcryptsetup) could be called like
+[root@theone root]# vgmknodes stuff_group
+vgmknodes -- volume group "stuff_group" doesn't exist
 
-dmcryptsetup /dev/hda5
+[root@theone root]# vgremove stuff_group=20
+vgremove -- volume group "stuff_group" doesn't exist
 
-It would then detect this sector at the end of that device, reads it,
-asks the user for a password, combines it with the salt, hashes it (with
-the given algorithm) and uses the result to decrypt the key. Then it
-checks if the hash of the decrypted key matches the given one to be sure
-that the key is the correct one.
 
-Perhaps a public key encryption or something could also be useful (e.g.
-if you have a private key on some usb stick to mount your partition?)
-
-I'm really no crypto expert, but does this sound reasonable?
-
-Additional lightweight / compatibility options could be to use a hashed
-password directly as key, without this "key info sector" or to give the
-key directly to the setup program.
-
-Since the program would be userspace it would be linked to libcrypto
-(from openssl) to get additional needed digests/ciphers for key
-management. Does this sound ok?
-
---
-Christophe Saout <christophe@saout.de>
-Please avoid sending me Word or PowerPoint attachments.
-See http://www.fsf.org/philosophy/no-word-attachments.html
+/kjetilhp
