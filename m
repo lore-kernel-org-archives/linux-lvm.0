@@ -1,11 +1,8 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] File Corruption on LVM LV's in same VG
-Message-Id: <20020205114111.F2928@lynx.turbolabs.com>
-References: <1012932686.4859.2.camel@cider.execulink.net>
+From: =?iso-8859-1?Q?Alf_B_Lerv=E5g?= <alfborge@pvv.ntnu.no>
+Subject: [linux-lvm] Help recovering my volume groups
+Message-Id: <20020206030901.A64005@pvv.ntnu.no>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1012932686.4859.2.camel@cider.execulink.net>; from
-    zweers@execulink.com on Tue, Feb 05, 2002 at 01:11:26PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,72 +13,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb  5 12:41:02 2002
+Date: Tue Feb  5 20:09:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Erik Zweers <zweers@execulink.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Feb 05, 2002  13:11 -0500, Erik Zweers wrote:
-> The system was repaired and believed to be running properly, until
-> yesterday where we discovered that some of our ISO's were wrong,
-> consistently wrong in inconsistent locations.  I've pasted in a record
-> of the symptoms.  If anyone has any advice on what else to diagnose (if
-> your intrested in what is wrong) or how to repair It would be greatly
-> appreciated.
+Hi, I just had a stroke of panic since my lvm vg didn't come back up
+after I shut down my computer and removed a faulty disc.
 
-I would suspect RAM or IDE problems.  If LVM is broken, it will stay
-broken, and if it is working it will stay working in the absence of
-other problems.  The failure symptoms would not look like this.
+I searched the web, and found a thread on your mailinglist that matched
+my situation pretty well. Following the instructions in that thread, I
+managed to get my system back up and running.
 
-> I have not rebooted the machine yet, wanting to be sure that any
-> diagnoses that can be done is done.
+Here's a link to the thread I was talking about.
 
-Any output in dmesg?
+http://lists.sistina.com/pipermail/linux-lvm/2001-January/005948.html
 
-> [root@ike iso]# cmp -l enigma-i386-disc1.iso ~carl/enigma-i386-disc1.iso
-> 2549832  77  67
-> 13431928 177 167
-> 14489440 376 366
-> 27451404 177 173
-> 33149724 376 336
-> 86298228 177 167
-> 116907524 372 332
-> 119130964  77  67
-> 121124171 376 356
-> 
-> 
-> [root@ike iso]# cmp -l enigma-i386-disc1.iso ~carl/enigma-i386-disc1.iso
-> 2549832  77  67
-> 11455071 177 167
-> 13431928 177 167
-> 18043044 277 273
-> 24780964 277 273
-> 86298228 177 167
-> 94133044 370 330
-> 106966431 177 167
+I run linux 2.4.17 on an athlon 1.2G with 1G RAM.
 
-Looks exclusively like single-bit errors.  Either RAM or IDE cable/driver.
-If it was RAM you would also have oopses or errors elsewhere.  Try turning
-off UDMA on the drive, update the IDE driver, new cable, etc.
+I initially had 3 ide hd's, but one of them was behaving strangly, so I
+decided to get a new one on warranty. After taking backups of the data
+on that disc, I unmounted it, halted the system and removed it. Then I
+turned the system back up. I realize now that I might have saved abit of
+work if I ran some commands before I halted the system, but I don't know
+what commands those whould have been.
 
-> | wc -l     62
-> [root@ike iso]# ls -l enigma-i386-disc1.iso
-> -rw-r--r--    1 root     root     677961728 Feb  4 20:31
-> enigma-i386-disc1.iso
-> 
-> [root@ike iso]# fsck -n /dev/ide/iso
-> Parallelizing fsck version 1.23 (15-Aug-2001)
-> e2fsck 1.23, 15-Aug-2001 for EXT2 FS 0.5b, 95/08/09
-> Warning!  /dev/ide/iso is mounted.
-> /dev/ide/iso: clean, 24/1281696 files, 1351397/2560000 blocks
+I use one vg called idehd
 
-Given that you only have single-bit error rates in the order of 1/10^7,
-the chance of such an error happening in the ext2 metadata is unlikely.
+I had 3 pv's, /dev/hda2, /dev/hdb1 and /dev/hdc
+I removed /dev/hdc
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+When the system came back up, I ran vgscan, which reported that it
+didn't find any vg's. While the system was in this state, I ran
+dd if=/dev/hda2 of=hda2_pvdump.txt bs=1024 count=4
+dd if=/dev/hdb1 of=hdb1_pvdump.txt bs=1024 count=4
+pvdisplay -vvd /dev/hdb1 >& hdb1_pvdisplay.txt
+pvdisplay -vvd /dev/hda2 >& hda2_pvdisplay.txt
+If you are interested in these files, I'll be happy to provide them.
+
+I don't really know if this info is of any use to anyone, but I hope it
+might be. Other than this slight hickup I've had no problems with the
+lvm system. It makes life alot easier when it comes to hdpartitions and
+stuff like that.
+
+To get things up and running again, I ran
+vgcfgrestore -n idehd /dev/hda2
+vgcfgrestore -n idehd /dev/hdb1
+vgchange -ay
+
+-- 
+Alf
