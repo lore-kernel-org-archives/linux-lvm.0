@@ -1,10 +1,14 @@
-Return-Path: <jovi@unixag-zw.fh-kl.de>
-Date: Thu, 9 Aug 2001 11:00:56 +0200 (CEST)
-From: Oliver Jovic <jovi@unixag-zw.fh-kl.de>
-Subject: RE: [linux-lvm] Looking for recipe for LVM
-In-Reply-To: <009401c12069$9117de40$0300000a@pacbell.net>
-Message-ID: <Pine.LNX.4.30.0108091054560.1338-100000@diablo.unixag-zw.fh-kl.de>
-MIME-Version: 1.0
+Return-Path: <bg@blacknet.de>
+Date: Thu, 9 Aug 2001 12:46:46 +0200
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] Looking for recipe for LVM
+Message-ID: <20010809124646.B17398@dragon.blacknet.de>
+References: <20010807165556.C29254@dragon.blacknet.de> <009301c12068$bd4e2fb0$0300000a@pacbell.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
+Content-Disposition: inline
+In-Reply-To: <009301c12068$bd4e2fb0$0300000a@pacbell.net>; from e@arix.com on Wed, Aug 08, 2001 at 05:17:56PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,53 +20,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, 8 Aug 2001, Erick Calder wrote:
+--vGgW1X5XWziG23Ko
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Paul,
->
-> where do I find Alan Cox's software?  I've looked everywhere on the sistina
-> site but no mention... maybe I'm blind!
 
-Erick,
+On Wed, Aug 08 '01 at 17:17, Erick Calder wrote:
+> > and is someone gives me access to a dumpable redhat 7.1
+> > system I'll try to make my RPMs workable on redhat (But I've a lot of=
+=20
+> > work to do at the moment, so don't expect immidiat results)).
+> I'll jump at that chance!  I have a box I've been trying to build your RP=
+Ms
+> on for a while without success...  I can let you have at it.
+If you would mail me a login/pwd that is allowed to log in using ssh and
+sudo -s (and the boxes IP) I'll try to build my RPM on your box ...
+--=20
+Goetz Bock                                              IT Consultant
+Dipl.-Inf. Univ.
 
-you arent blind coz this files are not on sistina. They can be found on
-ftp.kernel.org/pub/linux/kernel/people/alan/2.4/ . There are thousand of
-mirrors from kernel.org. Check them out on www.kernel.org.
-I dunno if the beta7 and hardblocksize patches are included in Alan
-latest patch (ac9 afaik, from yesterday). Maybe somebody else know it.
+--vGgW1X5XWziG23Ko
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
->
-> - e
->
-> -----Original Message-----
-> From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-> Behalf Of Paul Jakma
-> Sent:	Tuesday, August 07, 2001 9:51 AM
-> To:	linux-lvm@sistina.com
-> Subject:	Re: [linux-lvm] Looking for recipe for LVM
->
-> On Tue, 7 Aug 2001, Goetz Bock wrote:
->
-> > I'll try to make my RPMs workable on redhat (But I've a lot of work to
->
-> To save you some work: Alan Cox's latest patches have a 'make rpm'
-> target.
->
-> --paulj
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7cmoWf5srOMkjkQoRAhevAJ9sFbg6CVsOYNIGDGHvgyST+Ak9RgCg2Ozr
+GoigWgax+w8cMaaxnBsnqiI=
+=3174
+-----END PGP SIGNATURE-----
+
+--vGgW1X5XWziG23Ko--
