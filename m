@@ -1,12 +1,11 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 19 Apr 2001 14:59:57 -0500
-From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20010419145957.M10345@sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DheUW4aQn8WJk6WR"
-Content-Disposition: inline
-Subject: [linux-lvm] test
+Return-Path: <alan@lxorguk.ukuu.org.uk>
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Date: Thu, 19 Apr 2001 21:03:24 +0100 (BST)
+In-Reply-To: <20010419145337.K10345@sistina.com> from "AJ Lewis" at Apr 19, 2001 02:53:37 PM
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <E14qKeF-0007wb-00@the-village.bc.nu>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,42 +17,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: AJ Lewis <lewis@sistina.com>
+Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
 
---DheUW4aQn8WJk6WR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> As far as getting patches into the stock kernel, we've been sending patches
+> to Linus for over a month now, and none of them have made it in.  Maybe
+> someone has some pointers on how we get our code past his filters.
 
-This should work...
+Has it occured to you that some of this might be because the code does stuff
+like hide flags in the low bits of addresses and do unchecked kmallocs ?
+Things people have tried to send patches for ..
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+The best way to get stuff to Linus is to feed him changes one at a time and
+make them all clean and clearly correct. When I have a big set of changes I
+normally start by feeding Linus all the 'fluff' - spelling checks and small
+warning fixes. After that its normally easy to pick out changes one at a time
+and feed them on.
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+Given 500 lines of mixed up diff it is very hard to verify the correctness of
+anything. 
 
------Begin Obligatory Humorous Quote----------------------------------------
-This message has been brought to you by the language C and the number F.
------End Obligatory Humorous Quote------------------------------------------
-
---DheUW4aQn8WJk6WR
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE630O9pE6/iGtdjLERAgquAJ9Nd83FZkajyv79ipqrzxoZ2hcjJQCeIetp
-TsOnmOqazeaLm3k2/ZFcPaw=
-=EON0
------END PGP SIGNATURE-----
-
---DheUW4aQn8WJk6WR--
+Alan
