@@ -1,10 +1,9 @@
-From: neuron <neuron@hollowtube.mine.nu>
-Subject: Re: [linux-lvm] Initialize disk on /dev/nda
-Message-Id: <20040119185105.1fe06371@souldaemon>
-In-Reply-To: <Pine.LNX.4.44.0401191838340.3041-100000@nymfe07.fi.muni.cz>
-References: <Pine.LNX.4.44.0401191838340.3041-100000@nymfe07.fi.muni.cz>
-Mime-Version: 1.0
+Message-ID: <400C5158.2000000@stevek.com>
+From: Steve Kann <stevek@stevek.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Cannot create snapshots with kernel 2.4.24, lvm 1.0.4: Cannor allocate
+ memory
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,46 +14,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 12:52:01 2004
+Date: Mon Jan 19 16:59:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-try /dev/nda/0
 
-same with loopback, cant create on /dev/loopX but can create on /dev/loop/X
+Hi,
 
-> Hello,
-> I have problem with pvcreate on network block device disk (/dev/nda). 
-> When I run
-> 
-> # pvcreate /dev/nda
->   /dev/nda: Couldn't find device.
-> 
-> Device /dev/nda is OK, because Iam able to create ext3 file system on it.
-> 
-> 
-> # mkfs.ext3 /dev/nda
-> mke2fs 1.27 (8-Mar-2002)
-> Filesystem label=
-> OS type: Linux
-> Block size=4096 (log=2)
-> Fragment size=4096 (log=2)
-> 4120704 inodes, 8232588 blocks
-> 411629 blocks (5.00%) reserved for the super user
-> ...
-> ...
-> 
-> I am running LVM2 on Debian with 2.4.22 kernel.
-> Have anyone know what I doing wrong?
-> Thank You, Marek Jan 
-> PS I am very sorry of my really BAD english :-).
-> MJ
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+    I've seen some others on this (and other lists) who are having this 
+problem, but I haven't been able to find a solution.
+
+    I have a new box that I'd like to use with LVM.  This will be a 
+production fileserver.  I've installed debian woody on it, and upgraded 
+to the latest debian kernel, 2.4.24.  I'm using the lvm 1.0.4 tools.
+
+    Naturally, I'm spending this time before this box is in use to play 
+with LVM so I know how to do what I need to quickly before the fires 
+hit.  So, I've been able to happily create, grow, shrink, and remove 
+lv's, as well as create and remove VGs and PVs.
+
+    However, I cannot create a snapshot volume.
+
+    This is pretty much why I wanted to use LVM in the first place 
+(backing up a 400G active filesystem would be pretty impossible otherwise).
+
+    The basic error I get is:
+
+  520  vgcreate -s 128M vg0 /dev/sda7
+  521  vgdisplay
+  522  lvcreate -L 256M  -nhome vg0
+
+u2:~# lvcreate -s -L128M -c 4k -nhomesnap /dev/vg0/home
+lvcreate -- WARNING: the snapshot will be automatically disabled once it 
+gets full
+lvcreate -- ERROR "Cannot allocate memory" creating VGDA for 
+"/dev/vg0/homesnap" in kernel
+
+Other snapshot creation attempts, all of which fail the same way:
+  525  lvcreate -s -L1M -nhomesnap /dev/vg0/home
+  526  lvcreate -s -L128M -c 1M -nhomesnap /dev/vg0/home
+
+
+    I've tried making a bunch of different volumes on which to base the 
+snapshot, as well as a number of different parameters for the snapshot 
+itself.  I thought that perhaps it couldn't handle snapshots that were 
+larger than a certain size, or snapshots of volumes that are beyond a 
+certain size, etc.
+
+    I should have plenty of memory:
+u2:~# free
+             total       used       free     shared    buffers     cached
+Mem:       4010744     111160    3899584          0      18444      58084
+-/+ buffers/cache:      34632    3976112
+Swap:      2097136          0    2097136
+
+If 3.8GB of Real, or 5.8 GB of virtual memory aren't actually enough to 
+create a 128MB snapshot of a 256Mb volume (I tried making it very 
+small!), then something must be very wrong!
+
+Any ideas?
