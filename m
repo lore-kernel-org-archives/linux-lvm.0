@@ -1,9 +1,10 @@
-Message-ID: <006901c22f5e$9eb1f810$6401a8c0@biko>
-From: "Matt Rickard" <mjr318@psu.edu>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0066_01C22F3D.175BADF0"
-Subject: [linux-lvm] Installing Slackware 8.1 on LVM
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] recovering a bad physical volume
+Message-ID: <20020722082919.GA1096@tykepenguin.com>
+References: <20020719064133.GA1184@tykepenguin.com> <Pine.SOL.4.44.0207191201590.3998-100000@yellow.csi.cam.ac.uk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.SOL.4.44.0207191201590.3998-100000@yellow.csi.cam.ac.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,59 +15,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 19 14:56:01 2002
+Date: Mon Jul 22 03:29:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+On Fri, Jul 19, 2002 at 12:10:30PM +0100, Matthew Johnson wrote:
+> On Fri, 19 Jul 2002, Patrick Caulfield wrote:
+> 
+> > Other than fdisk and parted I don't know of any other way of doing it. and parted
+> > works in MB/GB rather than cylinders so I doubt you'd get the control you need
+> > here.
+> >
+> > Don't worry about the partition numbers being the same, LVM doesn't care what the
+> > partitions are called, as long as it can find the PV metadata (which contains a
+> > UUID)and a complete PV somewhere it should be able to activate the VG. LVM is
+> > designed to cope with things like SCSI devices which rename themselves if you move
+> > them around of the SCSI chain so IDE partitions that do the same will be no
+> > problem.
+> 
+> It complained that /de/hde8 was not part of the volumegroup, so I just
+> made sure the partition numbers were correct.
+> 
+> Anyway, I still get the "vgcfgrestore -- size of physical volume /dev/hde6
+> differs from backup" [from vgcfgrestore -n lvm1 /dev/hde6]. So, heres a
+> few details - see if ou can see the
+> problem.
+> 
+> vgcfgrestore -n lvm1 -ll :
+> 
+> [cut lv & pv details]
+> --- Physical volume ---
+> PV Name               /dev/hde6
+> VG Name               lvm1
+> PV Size               2.96 GB [6204177 secs] / NOT usable 4.19 MB [LVM:
+> 130 KB]
+> PV#                   1
+> PV Status             available
+> Allocatable           yes (but full)
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              756
+> Free PE               0
+> Allocated PE          756
+> PV UUID               9F9nNV-cQS2-BSl6-Ex72-NV1J-9J2v-2wE04a
+> 
+> now, 4096*1024*756 = 3170893824
 
-------=_NextPart_000_0066_01C22F3D.175BADF0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Ah yes, but you should be using the PV size rather than the number of PEs to
+work out the partition size! The PV is greater than the aggregated size of the
+PEs because of the space needed for the LVM metadata.
 
-I'm having trouble coming up with a way to directly install Slackware
-8.1 on LVM. I already have the logical volumes from my old installation
-(Gentoo) on this machine, and now I just need to figure out how to get =
-these
-volumes mounted for the install.
-I have found plenty of information on how to convert a currently running
-system to LVM, but I haven't found anything on how to install a base =
-system
-onto LVM. I have a 100 meg partition (/dev/hda6) set aside for the root
-partition, with the other 10 gigs or so on LVM.
-Any ideas on how I can get these partitions recognized so I can do the
-install?
+So I make it that 6204177 sectors is 3176538624 bytes so you're still a little
+short.
 
-Thanks.
 
-------=_NextPart_000_0066_01C22F3D.175BADF0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2716.2200" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV>I'm having trouble coming up with a way to directly install=20
-Slackware<BR>8.1 on LVM. I already have the logical volumes from my old=20
-installation<BR>(Gentoo) on this machine, and now I just need to figure =
-out how=20
-to get these<BR>volumes mounted for the install.<BR>I have found plenty =
-of=20
-information on how to convert a currently running<BR>system to LVM, but =
-I=20
-haven't found anything on how to install a base system<BR>onto LVM. I =
-have a 100=20
-meg partition (/dev/hda6) set aside for the root<BR>partition, with the =
-other 10=20
-gigs or so on LVM.<BR>Any ideas on how I can get these partitions =
-recognized so=20
-I can do the<BR>install?<BR><BR>Thanks.</DIV></BODY></HTML>
-
-------=_NextPart_000_0066_01C22F3D.175BADF0--
+patrick
