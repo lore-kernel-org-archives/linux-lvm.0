@@ -1,10 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgscan problem
-Message-Id: <20020115152649.H11005@sistina.com>
-References: <Pine.LNX.4.33.0201062011010.681-100000@Prometheus.schaefer.nu>
+Subject: Re: [linux-lvm] bug or feature request
+Message-Id: <20020115154423.I11005@sistina.com>
+References: <200201051914.g05JER030894@mail1.bas-net.by>
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0201062011010.681-100000@Prometheus.schaefer.nu>;
-    from andrew@schaefer.nu on Sun, Jan 06, 2002 at 08:32:09PM -0500
+In-Reply-To: <200201051914.g05JER030894@mail1.bas-net.by>; from
+    home@ns2.bas-net.by on Sat, Jan 05, 2002 at 09:15:48PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,56 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 15 08:30:02 2002
+Date: Tue Jan 15 08:47:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andrew,
-
-so you did pvcreate the second PV and added (vgextend) it to your existing
-VG successfully?
-What exactly happened before vgscan complained?
-
-You should have a valid LVM metadata backup in /etc/lvmconf/big_space.conf
-(or an older copy named /etc/lvmconf/big_space.conf.#.old where # is a number
-from 1 up to 9).
-To figure out which one is ok you want to for eg. use
-
-vgcfgrestore -n big_space -f /etc/lvmconf/big_space.conf -ll
-
-
-To restore the metadata run:
-
-pvcreate -ff /dev/BothOfYourPVs
-vgcfgrestore -n big_space -f /etc/lvmconf/big_space.conf /dev/Your1stPV
-vgcfgrestore -n big_space -f /etc/lvmconf/big_space.conf /dev/Your2ndPV
-vgscan
-
-On Sun, Jan 06, 2002 at 08:32:09PM -0500, Andrew Schaefer wrote:
-> I just setup LVM with two disks in the volume group big_space.  I started
-> out with one disk and then extended it across the other.  It
-> formatted, fs extended, and mounted up fine.  I then rebooted, and now I
-> get this error from vgscan:
+On Sat, Jan 05, 2002 at 09:15:48PM +0200, Andrei V. Darashenka wrote:
+> Hello!
+> I use LVM in many places and very common problem is 
+> rejecting to find volumes on several devices which is attached after booting.
+> (properly, rejecting to add to the dir_cache becouse scan_partitions finds 
+> some devices and scan_devs even not called!)
 > 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "big_space"
-> vgscan -- ERROR "pv_read_pe(): read" can't get data of volume group
-> "big_space"
-> from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> group
+> Please change this behaviour becouse I need to patch LVM every time I need to 
+> use such devices (loop, md).
+
+Recently we've put in MD and LOOP releated patches.
+What are we still missing you need to patch in addition to current CVS?
+
 > 
-> Any ideas or suggestions?  Unfortunately I threw data onto the volume and
-> don't want to loose it.
+> -- 
 > 
-> Andrew Schaefer
-> andrew@schaefer.nu
-> http://www.schaefer.nu
-> 
-> 
+> Andrei.
 > 
 > _______________________________________________
 > linux-lvm mailing list
