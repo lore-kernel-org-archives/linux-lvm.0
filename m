@@ -1,11 +1,12 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 26 Jun 2001 01:09:29 +0200
+Date: Tue, 26 Jun 2001 01:13:08 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvcreate: possible problem near line 98 of lib/pv_get_size.c
-Message-ID: <20010626010929.A23215@sistina.com>
-References: <20010625100253.A2770@mallard.plaza.ds.adp.com>
+Subject: Re: [linux-lvm] Why vgscan not in kernel?
+Message-ID: <20010626011308.B23215@sistina.com>
+References: <353310000.993472523@dizzy> <3B3733F0.94A5F040@qis-systemhaus.de> <20010625145452.K592@gatekeeper.osp.nl>
 Mime-Version: 1.0
-In-Reply-To: <20010625100253.A2770@mallard.plaza.ds.adp.com>; from setha@plaza.ds.adp.com on Mon, Jun 25, 2001 at 10:02:53AM -0700
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20010625145452.K592@gatekeeper.osp.nl>; from josv@osp.nl on Mon, Jun 25, 2001 at 02:54:52PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,73 +18,95 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Seth,
+On Mon, Jun 25, 2001 at 02:54:52PM +0200, josv@osp.nl wrote:
+> If the VG scan process is in the kernel, that means that it
+> will *always* be executed (unless there is a kernel command
+> line option to disable it).
+>=20
+> The issue then is that the VGSCAN in the kernel should be
+> *completely* resistant against every possible data corruption
+> and should be able to recover from it gracefully. This is not
+> as easy as it looks.
 
-if you run LVM tools in a chroot environment without the necesarry /dev entries,
-the segfault can happen.
-I've put in a fix in order to avoid that segfault.
+Jos,
 
-Nevertheless you *need* block device nodes for the devices you want to
-use/access as physical volumes in /dev in order to run LVM tools successfully.
+that's true. We'll try to provide that kind of redundancy/resistancy in a
+post 1.0 release by having
+
+ - checksums on all VGDA structures
+ - two copies of the VGDA and
+ - transaction oriented updates to VGDA contents
+
+This should give us enough power to recover from a lot of potential cases.
+
+BTW: there's will be a flag to switch init time activation per VG on and of=
+f.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Mon, Jun 25, 2001 at 10:02:53AM -0700, Seth D. Alford wrote:
-> I'm trying to install RedHat 7.1 onto a system which has no existing partitions.
-> I want one of the filesystems to be an LVM volume.  I modified the RH 7.1
-> BOOT kernel to include an lvm-mod.o, and I managed to get the LVM binaries
-> included in the ramdisk itself.  When I try to run pvcreate, though, it
-> gets a segmentation fault.
-> 
-> The partitions which RedHat is trying to create are in /mnt/sysimage.
-> Part of my installation process runs chrooted in /mnt/sysimage.
-> 
-> The segfault is happening, I think, near line 98 of lib/pv_get_size.c.  I
-> isolated it there by running pvcreate with the debug flag, both chrooted to
-> /mnt/sysimage and not chrooted to /mnt/sysimage, while in ramdisk.  There's a
-> for loop just before line 98.  The for loop looks at an st_rdev (which I think
-> is a system call parameter) and tries to match it with a record in an array of
-> records.  At line 98, the code references the matching array element.  I'm
-> guessing, but in the non-chrooted environment, the for loop doesn't match any
-> of the members of the array.  The index variable, i, is one greater than the
-> size of the array.  The code proceeds to dereference with that value, anyway,
-> and causes the segmentation fault.
-> 
-> Here's the fragment from pv_get_size.c where I think the problem happens:
-> 
->          for ( i = 0; i < dir_cache_count; i++) {
->             if ( dir_cache[i].st_rdev == st_rdev)
->                break;
->          }
-> 	
-> 	 /* The above loop assumes that it exits with the break.
-> 	 If it doesn't exit with the break, then i is one more
-> 	 than the size of the array, which will cause a segmentation
-> 	 fault. */
->          strncpy ( disk_dev_name, dir_cache[i].dev_name,
->                    sizeof ( disk_dev_name) - 1);
-> 
-> This is in 0.9.1_beta6 of LVM.  I would send you a core file, but
-> the ramdisk environment doesn't allow for creation of core files.
-> 
-> --Seth
+>=20
+> With VG scan in a separate executable, it is easier to prevent
+> it from executing...
+>=20
+> ++Jos
+>=20
+>=20
+> And thus it came to pass that Dirk Heinrichs wrote:
+> (on Mon, Jun 25, 2001 at 02:52:00PM +0200 to be exact)
+>=20
+> > Steven Lembark wrote:
+> > >=20
+> > > >> upon boot, SCSI and IDE drivers check harddrives attached to the d=
+evice
+> > > >> for partitions. Wouldn't it be better to have similar functionality
+> > > >> (scanning for VG's) for LVM in the kernel, instead of using a user=
+land
+> > > >> command?
+> > >=20
+> > > It is rather dangerous unless you have a separate kernel w/o LVM or
+> > > a boot option (e.g., -lm) that allows booting with LVM turned off.
+> > > Otherwise you can easily end up unable to reboot with a corrupt LVM
+> > > system.
+> > I don't get the point here. Why is it dangerous to move the VG scan from
+> > vgscan into the kernel module? Why should this corrupt LVM? Can you
+> > explain this in more detail?
+> >=20
+> > Bye...
+> >=20
+> > 	Dirk
+> > --=20
+> > Dirk Heinrichs		| Tel:	+49 (0)241 413 260
+> > Configuration Manager	| Fax:	+49 (0)241 413 2640
+> > QIS Systemhaus GmbH	| Mail:	dheinrichs@qis-systemhaus.de
+> > J=EF=BF=BDlicher Str. 338b	| Web:	http://www.qis-systemhaus.de
+> > D-52070 Aachen		| ICQ#:	110037733
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>=20
+> --=20
+> With all the things you are losing,
+> You might as well resign yourself,
+> And try and make a change...
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -91,4 +114,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
