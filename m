@@ -1,8 +1,10 @@
-From: <jrelist@ntlworld.com>
-Subject: Re: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20030129102742.SWJJ900.mta05-svc.ntlworld.com@[10.137.100.64]>
+From: Harri Haataja <harri.haataja@smilehouse.com>
+Subject: Re: [linux-lvm] resize LV
+Message-ID: <20030129110758.GA19302@mail1.smilehouse.com>
+References: <00bd01c2c710$52576aa0$0a42a8c0@darkstar> <Pine.LNX.4.44.0301281505150.5767-100000@zeus.itg.uiuc.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44.0301281505150.5767-100000@zeus.itg.uiuc.edu>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,75 +15,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 04:31:01 2003
+Date: Wed Jan 29 05:08:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> 
-> From: "Peter A. Castro" <doctor@fruitbat.org>
-> Date: 2003/01/29 Wed AM 12:44:04 GMT
-> To: linux-lvm@sistina.com
-> Subject: Re: Re: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
-> 
-> On Tue, 28 Jan 2003, Patrick Caulfield wrote:
-> 
-> > On Tue, Jan 28, 2003 at 11:08:11AM +0000, jrelist@ntlworld.com wrote:
-> > > 
-> > > Peter
-> > > 
-> > > Still get the problem with kernel 2.4.9-38. I took your advice and checked out the System.map and got this:
-> > > 
-> > > 000315e8 T lock_kiovec               
-> > > 00031800 T unlock_kiovec             
-> > > 00050940 T brw_kiovec                
-> > > 00068688 T alloc_kiovec_sz           
-> > > 0006873c T free_kiovec_sz            
-> > > 001ca412 ? __kstrtab_alloc_kiovec_sz 
-> > > 001ca430 ? __kstrtab_free_kiovec_sz  
-> > > 001ca4a4 ? __kstrtab_lock_kiovec     
-> > > 001ca4be ? __kstrtab_unlock_kiovec   
-> > > 001ca4da ? __kstrtab_brw_kiovec      
-> > > 001d1d68 ? __ksymtab_alloc_kiovec_sz 
-> > > 001d1d70 ? __ksymtab_free_kiovec_sz  
-> > > 001d1d90 ? __ksymtab_lock_kiovec     
-> > > 001d1d98 ? __ksymtab_unlock_kiovec   
-> > > 001d1da0 ? __ksymtab_brw_kiovec      
-> > > 
-> > > Strikes me that it could be something (hopefully) as simple as amending labels in the appropriate lvm code - just got to suss out what needs changing now.
-> > > 
-> > > Thanks for the advice so far
-> > > 
-> > > John
-> > 
-> > This is quite an old problem (but then 2.4.9 is an old kernel I suppose!)
-> > See:
-> > http://www.uwsg.iu.edu/hypermail/linux/kernel/0111.1/0815.html
-> 
-> Excellent!  This looks like the problem.  John, you might just want to
-> punt and go grab a later 2.4 kernel source (2.4.19?) instead of hashing
-> with this old one as the later kernels have quite a few fixes in them.
-> Grab the later LVM source (1.0.6?) while you're at it and build fresh. 
-> 
-> Thanks Patrick for the link!
-> 
-> > patrick
-> 
-> -- 
-> Peter A. Castro <doctor@fruitbat.org> or <Peter.Castro@oracle.com>
-> 	"Cats are just autistic Dogs" -- Dr. Tony Attwood
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+On Tue, Jan 28, 2003 at 03:08:12PM -0600, Alexander Lazarevich wrote:
+> JFS can totally do it. I've been using AIX before we moved to Linux,
+> and I did it all the time.
+> There must be a way to do it on linux systems using ext3. Anyone?
 
-Thanks to both of you, I'll try this out. As far as getting a newer kernel is concerned, I'd like to, but from what I can see 2.4.9-38 is the latest Redhat s/390 production kernel, unless anyone can advise me differently. I might just have to request an evaluation version from Suse if I can't get this working !
+> On Tue, 28 Jan 2003, Thomas Kleffel wrote:
+> > > I know how to expand the LV while the LV is mounted, piece of cake
+> > > (lvextend -L+50GB /dev/homevg/userslv - expands userslv by 50GB).
+> > > But how do I expand the filesystem while it is mounted? I don't
+> > > want to umount the filesystem down to do this.
+> > >
+> > > The filesystem is an ext3 filesystem. Can I use resize2fs?
+> > No, afaik neither ext2 nor ext3 support resizing while being
+> > mounted.  And if I'm not wrong JFS and ReiserFS can't do this either
+> > but XFS can.
+> > I'm using XFS for this reason and it works fine for me.
 
-John
+FWIW
+On the kernels I've used (no JFS patches, notably), ext3, xfs, reiserfs
+resize on the fly and jfs (which requires a weird remount option) still
+doesn't. IIRC ICBW
 
-
-John
+And I'm absolutely sure that the reiserfs's I resize while mount every
+now and then do so and don't even require force switches anymore.
