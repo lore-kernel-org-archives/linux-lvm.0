@@ -1,12 +1,12 @@
-Return-Path: <jan@moria.gondor.com>
-Date: Sun, 7 Jan 2001 22:33:00 +0100
-From: Jan Niehusmann <list039@gondor.com>
-Subject: Re: [linux-lvm] vgcfgrestore bug followup
-Message-ID: <20010107223300.A6050@gondor.com>
-References: <0ada40824210711NYCSMTP2@nyc.rr.com>
+Return-Path: <a.michelic.list@aon.at>
+Date: Sun, 7 Jan 2001 19:03:11 +0100
+From: Adalbert Michelic <a.michelic.list@aon.at>
+Message-ID: <2531228233.20010107190311@lopez.at>
+Subject: Re: [linux-lvm] Release practice - was: Another strange setup by a newbie, but strange oops resulted while trying vgextend/vgmerge!
+In-reply-To: <20010105.23102087@dmitzlaff2.botschendv.de>
+References: <20010105.23102087@dmitzlaff2.botschendv.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0ada40824210711NYCSMTP2@nyc.rr.com>; from bcorsello@usa.net on Sun, Jan 07, 2001 at 04:23:50PM -0500
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,36 +18,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="utf-8"
+To: Daniel Mitzlaff <linux-lvm@sistina.com>
 
-On Sun, Jan 07, 2001 at 04:23:50PM -0500, Brad Corsello wrote:
-> (But then I pushed my luck and tried doing vgextends.  After adding three PVs,
-> vgscan started to throw up with a weird error:  vg_read_with_pv_and_lv():
-> allocated LE of LV" can't get data of volume group "vg1" from physical
-> volume(s).  I don't know if this is related to the vgcfgrestore problem or
-> not.)
+Hi,
 
-This one looks like a problem I had myself. For me, the following patch
-did help: (I already posted this patch, with a description, on Dec 23)
+* On Saturday, January 06, 2001 at 00:10, Daniel Mitzlaff wrote:
+[...]
+> Und nochmal ein paar gr�sse an unsere deutschen mitleser, ich bin echt
+> ver�gert, aber so kanns ja nu wirklich nicht gehen ... ;)
 
-Index: pv_read_all_pv_of_vg.c
-===================================================================
-RCS file: /data/cvs/LVM/tools/lib/pv_read_all_pv_of_vg.c,v
-retrieving revision 1.3
-diff -u -1 -b -p -r1.3 pv_read_all_pv_of_vg.c
---- pv_read_all_pv_of_vg.c	2000/11/20 02:47:20	1.3
-+++ pv_read_all_pv_of_vg.c	2000/12/22 23:27:00
-@@ -103,2 +103,3 @@ int pv_read_all_pv_of_vg ( char *vg_name
-             pv_this_sav = pv_this;
-+	    if(np<pv_tmp[p]->pv_number) np=pv_tmp[p]->pv_number;
-             if ( ( pv_this = realloc ( pv_this,
-@@ -111,5 +112,4 @@ int pv_read_all_pv_of_vg ( char *vg_name
-             }
--            pv_this[np] = pv_tmp[p];
--            pv_this[np+1] = NULL;
--            np++;
-+            pv_this[pv_tmp[p]->pv_number-1] = pv_tmp[p];
-+            //pv_this[np+1] = NULL; // XXX???
-          }
+Nanana - jetz komm mal von der Palme runter. Wer auf einem
+produktiven System spielt (mit was auch immer) oder testet, und
+Daten verliert ist selbst schuld. Und selbst wenn es ein Fehler in
+einer Software ist, von der wer anderer sagt, das sie in Ordnung
+ist. Zum Testen gibt's Testsysteme, da wird mal ordentlich getestet
+und gespielt, und wenn's funktioniert, dann kann man das Ding auf's
+Produktivsystem transportieren.
+
+Ist auf jeden Fall kein Grund, jemanden so anzumachen.
+
+
+Adalbert
