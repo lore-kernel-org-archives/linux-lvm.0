@@ -1,10 +1,8 @@
-From: Wiktor Wodecki <wodecki@gmx.de>
-Message-ID: <20030626201310.GA1042@gmx.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Content-Disposition: inline
-Subject: [linux-lvm] ioctl interface mismatch
+From: Mark <lvm@ruby.ridersoft.net>
+Message-Id: <200306270725.h5R7POMs018131@ruby.ridersoft.net>
+Subject: Re: [linux-lvm] vgscan and initrd
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="bound1056698724"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,44 +13,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 27 08:34:01 2003
+Date: Fri Jun 27 08:34:04 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is a multi-part message in MIME format.
 
-Hello,
+--bound1056698724
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-I am running 2.5.72 and use device-mapper to manage two vg's with
-several lv's. However at boot-time I see the following message:
+That's one of the solutions I had heard over at the Gentoo-LVM forums. 
 
-device-mapper: ioctl interface mismatch: kernel(1.0.6), user(3.0.0),
-cmd(0)
+I've tried adjusting my initrd, both to manualy load the pdc_new module (for my raid controller) and adjusting the size of the initial ramdisk to 4096. 
 
-1.0.6 could be an lvm release, however, I have lvm2 metadata and not
-lvm1. My system runs debian testing with the lvm2 utilities installed
-(1.95.15-1). I run x86.
+Didn't work. And still I don't get why vgscan wouldn't work while chroot'ed. 
 
-Any help would be appreciated.
+Also, the lvm root partition is only about 6 or 7 gb in size, would that constitute 'to big' ?
 
---=20
-Regards,
+What do you mean by
 
-Wiktor Wodecki
+> mount a tmpfs volume over /etc, and meanwhile I have been recreating the
+> initrd image leaving enough space to allow vgscan to run.
 
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+I can (and did I think) increase the size of the initrd, but how do i mount a tmpfs volume over /etc ??
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
+To be complete, I am running (on the new system anyways) a 2.4.21 kernel, and lvm 1.0.7. 
 
-iD8DBQE++1PW6SNaNRgsl4MRAi6GAJ0YRhGcoERuVJuRERh26RkLUntw0QCfdS/s
-NyBOMm17lc63AVxK6K3n6oI=
-=uNib
------END PGP SIGNATURE-----
+Booting into the system with any other kernel, such as gentoo-xfs-2.4.19 or Suse-Rescue-2.4.6 works like a charm. 
 
---uAKRQypu60I7Lcqm--
+Still confused, but gratefull for any help
+
+Mark
+
+--bound1056698724--
