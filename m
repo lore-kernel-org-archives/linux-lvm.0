@@ -1,9 +1,10 @@
-Return-Path: <chip.christian@storageapps.com>
-Message-ID: <23D04BDBA646D411BDDD00D0B774B539029638FD@SA-BWMAIL1>
-From: "Christian, Chip" <chip.christian@storageapps.com>
-Subject: RE: [linux-lvm] Does LVM support alternate links?
-Date: Tue, 24 Apr 2001 11:14:58 -0400
+Return-Path: <silva@athenea.ort.edu.uy>
+From: Ernesto Silva <silva@athenea.ort.edu.uy>
+Date: Tue, 24 Apr 2001 12:19:45 -0300
 MIME-Version: 1.0
+Message-Id: <01042412353404.07748@pc-silva>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,36 +17,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I haven't looked closely enough at what's in the stock kernel right now, but last week I noticed that the patched 2.4.2 in RedHat 7.1 contains a multipathing driver, using raid1.c as a starting point.
+Hi,
 
------Original Message-----
-From: Heinz J. Mauelshagen [mailto:Mauelshagen@sistina.com]
-Sent: Tuesday, April 24, 2001 10:00
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] Does LVM support alternate links?
+	In order to make things right I downloaded the 2.4.3 kernel and
+compiled it (i386).
 
+	With the new kernel running (lvm-mod load ok) I'm trying to compile lvm
+tools, but there are lots of warinigs, all the same thing, the first of them is:
+-----------------------------------------------------------
+gcc -c -pipe -g -O2 -Wall -DDEBUG -I ../../tools/lib -I ../../tools - debug.o
+debug.c
+In file included from ../../tools/lib/liblvm.h:97
+		from basename.c:34
+../../tools/lib/lvm_log.h:47:59: warning: nothing can be pasted after this token
+../../tools/lib/lvm_log.h:48:59: warning: nothing can be pasted after this token
+../../tools/lib/lvm_log.h:49:59: warning: nothing can be pasted after this token
+../../tools/lib/lvm_log.h:52:39: warning: nothing can be pasted after this token
+gasename.c:41:69: warning: pasting would not give a valid preprocessing token
+gasename.c:59:68: warning: pasting would not give a valid preprocessing token
+----------------------------------------------------------
+ This messages repeats several times.
 
-On Fri, Apr 20, 2001 at 07:00:10PM +0200, Jens Bruckmann wrote:
-> Hallo everybody,
-> 
-> I would like to know if the LVM supports alternate-links to the same
-> physical device over two fiber-channel links, so if one link fails, LVM
-> automatically uses the second link as it does under its "original" HP-UX.
-
-No, as someone else already answered.
-
-There's work queued though to enhance LVM to support multi-pathing.
-
-A brief description of our ideas includes that a path to a device has
-properties related to it like for eg. bandwidth or reliability of that
-particular path.
-These properties will be fed into the automatic decision taking process
-in the LVM driver to which path (if there's multiple available) a switch-over
-is going to take place.
-There'l be CLI and config file support to configure pathes/properties,
-keep that state and allow the user to witch over to different pathes manually.
-
-Time line for this is summer.
+Does anyone had a problem like this before???
