@@ -1,20 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5BJZw027627
-	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 15:35:58 -0400
-Received: from redline.d2.com (redline.d2.com [66.251.60.228])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i5BJZnXn002496
-	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 15:35:50 -0400
-Received: from hermes.d2.com (dmz.d2.com [66.251.60.230])
-	by redline.d2.com (8.12.9/8.12.9) with ESMTP id i5BJYt9D012459
-	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 12:34:55 -0700
-Received: from mallet-l (mallet-l [172.16.51.153])
-	by hermes.d2.com (8.12.2/8.12.2) with ESMTP id i5BJZhp5003997
-	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 12:35:43 -0700
-Date: Fri, 11 Jun 2004 12:35:43 -0700 (PDT)
-From: Sebastien Boving <seb@d2.com>
-Message-ID: <Pine.LNX.4.55.0406111220100.24071@mallet-l.d2.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5BK7P004808
+	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 16:07:25 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.132])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5BK7Oi5016607
+	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 16:07:24 -0400
+Received: from westrelay04.boulder.ibm.com (westrelay04.boulder.ibm.com
+	[9.17.193.32])
+	by e34.co.us.ibm.com (8.12.10/8.12.2) with ESMTP id i5BK7Ixp473176
+	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 16:07:18 -0400
+Received: from us.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by westrelay04.boulder.ibm.com (8.12.10/NCO/VER6.6) with ESMTP id
+	i5BK7DlF207860
+	for <linux-lvm@redhat.com>; Fri, 11 Jun 2004 14:07:17 -0600
+Message-ID: <40CA10AB.7040502@us.ibm.com>
+Date: Fri, 11 Jun 2004 13:06:03 -0700
+From: Mike Christie <mikenc@us.ibm.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] cluster questions
+Subject: Re: [linux-lvm] Multipath without round-robin?
+References: <20040610203309.GA18186@c9x.org>
+In-Reply-To: <20040610203309.GA18186@c9x.org>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,47 +30,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Jedi/Sector One wrote:
+>   Hello.
+>   
+>   I'm trying to get multipath working with LVM2 (2.6.7-rc2-udm2 kernel) with
+> an LSI storage array.
+> 
+>   The array has two FC controllers, HBAs are two identical Qlogic 2340.
+>   
+>   On the array, "preferred" controllers are assigned to each LUN.
+>   
+>   Unfortunately, it looks like dm-multipath always does round-robin load
+> balancing.
 
+path0 in group0, path1 in group1 etc. When path0 fails you use path1. 
+Are you using multipath-tools or settiing up the table by hand. For 
+mp-tools there is a failover setting. You still cannot so explciit 
+failover but that is in the works.
 
-I know LVM does not support clusters.  The HOWTO makes a good job in
-explaining how it is not, and how you could use it at your own risk, at:
-
-http://tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html
-
-I realize nothing protects an in-use LV to be mounted by another host,
-which can severely corrupt non-clustered filesystems.
-
-i still have a few questions in this regard though:
-
-
-1) What are my advantages of running LVM2 instead of LVM?
-
-LVM does all i need, i think, part from being cluster-enabled.  LVM2 is
-also not clustered enabled, though it is the basis of CLVM (which is on
-its way?).  Any advantages in this regard to already go to LVM2 now, even
-if only cause the upgrade to CLVM will go smoother?  The only reason i
-wouldn't go to LVM2 is cause my RHES3.0 supports LVM out of the box, not
-LVM2, and i rather stick to included software / kernel modules / ...
-unless i have a valid reason not to.
-
-Or should i really go to EVMS?
-
-
-2) Can snapshots safely be used by other nodes on the cluster?
-
-Say a 'master node' owns the LVM config of a particular node.  It mounts
-all (non-snapshot) LV's in there.  Can i have it create a snapshot on one
-of its LV's, mount this on another node to perform a backup (sparing the
-first node's cpu and network resources), then delete the snapshot on the
-master mode, all this while observing the 'Other Nodes' procedure on the
-above mentionned FAQ page?  Is this a 100% safe & supported way of doing
-things?
-
-
-
-thanks,
--seb.
+>   The result is that the array fills up the (SANtricity) error log with
+> messages like "LUN was accessed through the wrong controller".
+> 
+>   Is there any way to keep failover abilities without load balancing?
+>   
+>   Best regards,
+>   
+>        -Frank.
+>        
