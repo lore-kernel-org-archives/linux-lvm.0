@@ -1,10 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Directory becomes sticky socket?
-Message-Id: <20020205110759.C30823@sistina.com>
-References: <20020204154410.GA14373@wookimus.net>
+From: James Hawtin <oolon@ankh.org>
+Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementationre
+    ady for beta testing
+In-Reply-To: <20020201102439.B15135@sistina.com>
+Message-Id: <Pine.LNX.4.10.10202051326310.19683-100000@pzat.meep.org>
 MIME-Version: 1.0
-In-Reply-To: <20020204154410.GA14373@wookimus.net>; from
-    chewie@wookimus.net on Mon, Feb 04, 2002 at 09:44:10AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,63 +14,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb  5 04:08:02 2002
+Date: Tue Feb  5 08:04:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Chad,
 
-check for processes having the socket open, stop them and retry.
-An optional "chmod o-t /usr/share/doc/libldap2" may be necessary.
+On Fri, 1 Feb 2002, Heinz J . Mauelshagen wrote:
 
-On Mon, Feb 04, 2002 at 09:44:10AM -0600, Chad C. Walstrom wrote:
-> [Note: Please include me in the Cc: of your reply, for expediency's sake.]
 > 
-> I'm not sure how this came about, but I cannot remove the directory
-> /usr/share/doc/libldap2.   
+> It is quite intersting how many people don't take backups even though
+> almost everybody claims to know that backups are crucial and some of them
+> know that they are still, even though they might have RAID in place.
 > 
->     [09:36:47] chewie@skuld (505)$ ls -lad libldap2 
->     s-w--w---T  16806 236536206 1076048101 1084824775 Oct  1  2004 libldap2=
->     [09:36:52] chewie@skuld (506)$ file libldap2
->     libldap2: sticky socket
->     [09:36:58] chewie@skuld (507)$ sudo rm -rf /usr/share/doc/libldap2
->     rm: cannot unlink `/usr/share/doc/libldap2': Operation not permitted
-> 
-> System: Debian unstable (Sid)
-> Kernel: 2.4.17-k7
-> Filesystem: ext3 on an LVM logical volume (no extra patches to the
-> kernel, vanilla 2.4.17).
-> 
-> I've tried removing it while root as well with no success.  I've tried
-> using fsck.{ext2,ext3} with no avail.  I relize that I'm going to have
-> to do something fairly low-level to the FS to recover this problem.  Any
-> pointers or suggestions you may have would be quite welcome.
-> 
-> Thanks.
-> 
-> -- 
-> Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-> http://www.wookimus.net/                            | s.k.a. gunnarr
-> Get my public key, ICQ#, etc. $(mailx -s 'get info' chewie@wookimus.net)
 
+I think the reason most people don't do backups is because, hard disk
+drives are really big and really cheap. Tape drives are really expensive,
+media is also expensive and frankly tapes are very small for the cost.
+Effective backup can double the cost of a system and requires time to
+manage it.
 
+For the "home" market its just to much. The only system just about
+affordable is DAT tape, DLT blanks are about double the cost for the
+storage ammount. I bought a DDS4 drive for "home" use, 1 week after I got
+it I had my laptop stolen, so it justified its cost pretty fast :-) A 60
+gig hard disk, costing 100 pounds requires 2-3 DSS4 tapes to backup At 15
+pounds each, one round of backups cost 1/3 of the cost of the disk
+multiply that by the number of disks, add in the hassle factor of changing
+tapes. Auto changers are nice, but alot more! For "PC" based systems the
+backup costs are oftain higher than the price of the machine, and thats
+hard for people to justify.
 
--- 
+If anyone suggests they use "hard drives" to back up I will scream, cost
+that system just don't scale, and yup you have an old copy but do people
+ever update it? Yes... when they get another hard drive... however before
+that happens they have put the old on back into service because they
+needed a little more space ;-)
 
-Regards,
-Heinz    -- The LVM Guy --
+All in all, backup is expensive/slow, my sister/mom/dad ain't going to pay
+that kind of money for home... For Work its slow, fine if your a sysadmin
+and that your job... If you are a sysadmin you probably don't get to do
+bugets, your manager does, and they don't understand the cost and aways
+want to cut corners to keep costs down, XXX is a "developement" system so
+we don't need to back it up cos its not "production" etc etc. Store all
+your data on the network file server, (which is aways full with p0rn) and
+connected via a doggie network, taping 3 minutes to access the smallest
+file, so people store data on the local machine, and forget to copy it
+back to the network...
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+This why people don't have backups in my book.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Sorry I didn't mean this to become a rant, just got on a roll...
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+James
