@@ -1,10 +1,14 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103122319.f2CNJKP00753@webber.adilger.int>
-Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-In-Reply-To: <GIEGKMCLIJBKBNBCCHEAKEIGCAAA.heimdall@mail.org> from Daniel Whicker
- at "Mar 12, 2001 12:40:50 pm"
-Date: Mon, 12 Mar 2001 16:19:20 -0700 (MST)
+Return-Path: <lewis@sistina.com>
+Date: Mon, 12 Mar 2001 17:24:33 -0600
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] RE: emails
+Message-ID: <20010312172433.G31067@sistina.com>
+References: <20010312162713.A10492@omnifarious.mn.org> <200103122302.f2CN2GL00700@webber.adilger.int>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="t4apE7yKrX2dGgJC"
+Content-Disposition: inline
+In-Reply-To: <200103122302.f2CN2GL00700@webber.adilger.int>; from adilger@turbolinux.com on Mon, Mar 12, 2001 at 04:02:16PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,194 +20,70 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Daniel Whicker writes:
-[Attachment, skipping...]
+--t4apE7yKrX2dGgJC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Anyways,
-vgscan doesn't appear to be finding any of your PVs because they are missing
-the "HM" magic for the PV, or so err -268 tells me.  The only PV that appears
-intact is /dev/hdc, which ends up being discarded because it isn't in the dir
-cache.  You can see that nothing is found from pv_read_all_pv() - it reports
-"np: 0" at the end.
+On Mon, Mar 12, 2001 at 04:02:16PM -0700, Andreas Dilger wrote:
+> I don't have problems with AJ's emails (or any other PGP signed messages
+> for that matter), even though I currently don't actually do PGP myself.
+> However, the post in question just appeared as empty in my mailer (elm).
+> The entire body was in an attachment "smime.p7m" which I had to save to
+> disk to look at.  For that matter, it was poorly sent (IMHO) twice as
+> an uncompressed 25k line email.  Luckily I have a fast net connection.
+> I'm also not about to get a new email program...
 
-Are you running devfs, or even have it compiled into the kernel by any chance?
-It also appears you are not running the current CVS code (pretty much a must
-when tracking down problems) because you are going into lvm_add_dir_cache()
-multiple times.
+Ah...my bad...forgot about that one.  Sorry for going off.  Yeah, that's
+odd.  It basically appeared as a one-liner for me in mutt.  I could open it
+from mutt, but yeah, it was odd.  This is the first time I've seen this
+though...stupid M$ LookOUT!
 
-Here is a patch which fixes up lvm_dir_cache() to report about devices
-it is probing, to help track down these problems.  I've been using this
-for a while on my system, so it should be OK to add to CVS.  It also
-cleans up a bit of the good old LVM_DIR_PREFIX stuff at the same time.
+> Maybe we should put a size cap on emails sent to linux-lvm?  This will
+> encourage people to use bugzilla.  Also, most of the large patches go to
+> lvm-devel (mine at least).  If possible, the "rejection" email for large
+> emails should mention the bugzilla web page URL for convenience.
 
-Cheers, Andreas
-==========================================================================
-diff -u -u -r1.4.2.6 lvm_dir_cache.c
---- tools/lib/lvm_dir_cache.c	2001/02/20 15:00:08	1.4.2.6
-+++ tools/lib/lvm_dir_cache.c	2001/03/12 23:00:28
-@@ -45,9 +45,8 @@
- 
- #include <liblvm.h>
- 
--char *dirname = NULL;
- int  lvm_dir_cache_hit ( dir_cache_t*, int, dev_t);
--void lvm_add_dir_cache ( char*, char*);
-+int  lvm_add_dir_cache ( char *, char *);
- 
- static dir_cache_t *dir_cache = NULL;
- static int cache_size = 0;
-@@ -64,15 +64,15 @@
-    char minor[20] = { 0, };
-    char blocks[20] = { 0, };
-    char devname[30] = { 0, };
--   static char *devdir[] = {
--      "/dev/ida",
--      "/dev/ide/hd",
--      "/dev/loop",
--      "/dev/md",
--      "/dev/rd",
--      "/dev/sd",
--      "/dev/cciss",
--      "/dev",
-+   char *devsub[] = {
-+      "cciss/",
-+      "ida/",
-+      "ide/hd/",
-+      "loop/",
-+      "md/",
-+      "rd/",
-+      "sd/",
-+      "",
-       NULL
-    };
-    struct dirent **dirent = NULL;
-@@ -94,24 +94,24 @@
-                    " %s %s %s %s\n",
-                    major, minor, blocks, devname);
-           if ( atoi ( major) > 0 && atoi ( major) != LVM_BLK_MAJOR) {
--             lvm_add_dir_cache ( "/dev", devname);
-+             lvm_add_dir_cache(LVM_DIR_PREFIX, devname);
-           }
-       }   
-       fclose ( proc);
-    }
-    if ( cache_size == 0 && lvm_check_devfs() == FALSE) {
--      for ( d = 0; devdir[d] != NULL; d++) {
--         dirname = devdir[d];
--         debug ( "lvm_dir_cache -- calling scandir() with %s\n",
--                 dirname);
-+      for ( d = 0; devsub[d] != NULL; d++) {
-+         char dirname[NAME_LEN];
-+         sprintf(dirname, LVM_DIR_PREFIX "%s", devsub[d]);
-+         debug ( "lvm_dir_cache -- calling scandir() with %s\n", dirname);
-          if ( ( dirent_count = scandir ( dirname, &dirent,
-                                          NULL,
-                                          alphasort)) > 0) {
-             for ( n = 0; n < dirent_count; n++) {
-                lvm_add_dir_cache ( dirname, dirent[n]->d_name);
-+               free ( dirent[n]);
-             }
- 
--            for ( n = 0; n < dirent_count; n++) free ( dirent[n]);
-             free ( dirent);
-          }
-          debug ( "lvm_dir_cache -- AFTER calling scandir() "
-@@ -130,21 +132,23 @@
- }
- 
- 
--void lvm_add_dir_cache ( char *directory, char *devname) {
-+int lvm_add_dir_cache ( char *directory, char *devname)
-+{
-    char devpath[NAME_LEN] = { 0, };
-    dir_cache_t *dir_cache_sav = NULL;
-    struct stat stat_b;
-+   int ret = FALSE;
- 
--   debug_enter ( "lvm_add_dir_cache -- CALLED\n");
-+   debug_enter ( "lvm_add_dir_cache -- CALLED with %s%s\n", directory, devname);
- 
-    if ( directory != NULL && devname != NULL) {
--      sprintf ( devpath, "%s/%s%c", directory, devname, 0);
-+      sprintf ( devpath, "%s%s", directory, devname);
-       if ( stat ( devpath, &stat_b) == -1 ||
-            lvm_check_dev ( &stat_b, TRUE) == FALSE)
-          goto lvm_add_dir_cache_end;
-    
--      if ( lvm_dir_cache_hit ( dir_cache, cache_size,
--                               stat_b.st_rdev) == FALSE) {
-+      if ((ret = lvm_dir_cache_hit(dir_cache, cache_size,
-+                                   stat_b.st_rdev) == FALSE)) {
-          dir_cache_sav = dir_cache;
-          if ( ( dir_cache =
-                    realloc ( dir_cache,
-@@ -170,13 +176,13 @@
-          dir_cache[cache_size].st_rdev = stat_b.st_rdev;
-          dir_cache[cache_size].st_mode = stat_b.st_mode;
-          cache_size++;
-+         ret = TRUE;
-       }
-    }
- 
- lvm_add_dir_cache_end:
--
--   debug_leave ( "lvm_add_dir_cache -- LEAVING\n");
--   return;
-+   debug_leave ( "lvm_add_dir_cache -- LEAVING with ret: %d\n", ret);
-+   return ret;
- }
- 
- 
-@@ -185,9 +191,9 @@
-    int d = 0;
-    dir_cache_t *dir_cache = NULL, *ret = NULL;
- 
--   debug_enter ( "lvm_dir_cache_find -- CALLED\n");
-+   debug_enter ( "lvm_dir_cache_find -- CALLED with %s\n", dev_name);
- 
--   if ( dev_name != NULL && pv_check_name ( dev_name) == 0) {
-+   if ( dev_name != NULL) {
-       d = lvm_dir_cache ( &dir_cache);
-       for ( d--; d >= 0; d--) {
-          if ( strcmp ( dev_name, dir_cache[d].dev_name) == 0) {
-@@ -197,7 +203,7 @@
-       }
-    }
- 
--   debug_leave ( "lvm_dir_cache_find -- LEAVING\n");
-+   debug_leave ( "lvm_dir_cache_find -- LEAVING with entry: %d\n", ret ? d:-1);
-    return ret;
- }
- 
-@@ -223,7 +230,7 @@
- 
- int lvm_check_devfs ( void) {
-    int ret = FALSE;
--   char dummy[NAME_LEN];
-+   char dir[NAME_LEN];
-    char type[32];
-    FILE *mounts = NULL;
- 
-@@ -232,10 +239,9 @@
-    if ( ( mounts = fopen ( "/proc/mounts", "r")) != NULL) {
-       while ( !feof ( mounts)) {
-           fgets ( line, 127, mounts);
--          sscanf ( line,
--                   "%s %s %s %s\n",
--                   dummy, dummy, type, dummy);
--          if ( strcmp ( type, "devfs") == 0) {
-+          sscanf ( line, "%*s %s %s %*s", dir, type);
-+          if ( strcmp ( type, "devfs") == 0 &&
-+	       strncmp ( dir, LVM_DIR_PREFIX, sizeof(LVM_DIR_PREFIX) - 1)) {
-              ret = TRUE;
-              break;
-           }
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+That might make sense.  Can we assume everyone has access to a browser and
+will be willing to use if for bug reports?  I know it makes it a lot easier
+for us as developers to track the bugs if they are reported there, but I'm
+not sure that everyone is willing to do so.   Plus, many times people send
+bug reports from the console during the LVM install process, and so may not
+have easy access to a browser.  I know Heinz initially had some concern abo=
+ut
+limiting file size on the list, so we'll have to get his opinion on this.
+
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+I have yet to meet a C compiler that is more friendly and easier to use
+than eating soup with a knife.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--t4apE7yKrX2dGgJC
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6rVqxpE6/iGtdjLERAmvOAJ9CAZW0DjtMHRzkjKLv4yUmCRmW6ACeImTy
+aieSnz+oX0CEWW68Z5nEGlE=
+=ADUJ
+-----END PGP SIGNATURE-----
+
+--t4apE7yKrX2dGgJC--
