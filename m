@@ -1,10 +1,10 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm with gpt partitioning?
-Message-ID: <20021015072108.GA31465@percy.comedia.it>
-References: <20021014200329.GA4885@msmd.net>
+From: Jens Axboe <axboe@suse.de>
+Subject: Re: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submission
+Message-ID: <20021015082152.GA4827@suse.de>
+References: <1034453946.15067.22.camel@irongate.swansea.linux.org.uk> <1034614756.29775.5.camel@UberGeek.coremetrics.com> <20021014175608.GA14963@fib011235813.fsnet.co.uk>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20021014200329.GA4885@msmd.net>
+In-Reply-To: <20021014175608.GA14963@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +15,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 15 02:34:48 2002
+Date: Tue Oct 15 04:00:22 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Cc: Austin Gonyou <austin@coremetrics.com>, linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Mon, Oct 14, 2002 at 04:03:29PM -0400, Josh Duncan wrote:
->Hi all,
->the disk is labelled using an "EFI GPT" disk label/partitioning arrangement.  I
->currently have two partitions defined, the first is 2gb and the second is 16gb.
->I can do a pvcreate on the second, but not on the first.  I've attached output
->from parted, fdisk, and pvcreate below...
-looks like you have both a gpt partition and a compatibility dos-like
-one. i am missing some info (partition detection logs at boot) output of
-/proc/partition and lvmdiskscan. and i don't have an ia64 to play with
-any more. might try modifiyng the partition detection code in the kernel
-config
+On Mon, Oct 14 2002, Joe Thornber wrote:
+> 10.patch
+>   [Device-mapper]
+>   Add call to blk_queue_bounce() at the beginning of the request function.
 
-L.
+What on earth for? I also see that you are setting BLK_BOUNCE_HIGH as
+the bounce limit unconditionally for your queue. Puzzled.
+
+When does dm even have to touch the data in the bio?
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Jens Axboe
