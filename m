@@ -1,29 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8CDt4r09343
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 09:55:04 -0400
-Received: from office.labsysgrp.com (wsip-68-14-253-125.ph.ph.cox.net
-	[68.14.253.125])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8CDswWh010542
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 09:54:58 -0400
-Received: from [127.0.0.1] (helo=localhost)
-	by office.labsysgrp.com with esmtp (Exim 4.34) id 1C6Uoe-0000PD-Q4
-	for linux-lvm@redhat.com; Sun, 12 Sep 2004 06:54:52 -0700
-Received: from office.labsysgrp.com ([127.0.0.1])
-	by localhost (office.lsg.internal [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 01304-03 for <linux-lvm@redhat.com>;
-	Sun, 12 Sep 2004 06:54:51 -0700 (MST)
-Received: from jeeves.kpf.internal ([192.168.170.1] helo=jeeves.homelinux.org)
-	by office.labsysgrp.com with esmtp (Exim 4.34) id 1C6Uod-0000P7-SF
-	for linux-lvm@redhat.com; Sun, 12 Sep 2004 06:54:51 -0700
-Received: from [192.168.180.109] (helo=[192.168.180.109])
-	by jeeves.homelinux.org with esmtp (Exim 4.05) id 1C6Uoc-0002hH-00
-	for linux-lvm@redhat.com; Sun, 12 Sep 2004 06:54:50 -0700
-Message-ID: <4144552C.6020904@backtobasicsmgmt.com>
-Date: Sun, 12 Sep 2004 06:54:52 -0700
-From: "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM2 tools infinite loop if "sg" driver is loaded
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i8CFVwrI021619
+	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 16:31:58 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1C6WKc-0005Bq-1K
+	for linux-lvm@redhat.com; Sun, 12 Sep 2004 16:31:58 +0100
+Date: Sun, 12 Sep 2004 16:31:58 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] pvmove: ABORTING: Volume group metadata update failed.
+Message-ID: <20040912153157.GL1094@agk.surrey.redhat.com>
+References: <Pine.LNX.4.58.0409120340470.3989@philos.nvg.ntnu.no>
+	<20040912114514.GI1094@agk.surrey.redhat.com>
+	<1094990549l.5671l.0l@tangerine>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1094990549l.5671l.0l@tangerine>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,18 +24,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I just set up some new systems, and loaded both the "sd" and "sg" 
-drivers, so I can access their SCSI disks and the SCSI backplane (with 
-monitoring software).
+On Sun, Sep 12, 2004 at 12:02:22PM +0000, Jean-Luc Coulon (f5ibh) wrote:
+> Does running  "vgconvert -M2 vg00"  safe if vg00 is an active VG ?
+ 
+Normally should be OK: it should detect situations when LVs 
+mustn't be active (e.g. when they need renumbering) and gives 
+an error instead.
 
-However, I find that if the sg driver is loaded, the LVM2 tools 
-(LVM2.2.00.22) get stuck in an infinite loop scanning the /sys hierarchy 
-(witnessed using strace):
-
-/sys/block/sda/device/generic/device/generic/device...
-
-Removing the sg driver from the kernel is a workaround, but I'd like to 
-be able to add it back at some point.
+Alasdair
+-- 
+agk@redhat.com
