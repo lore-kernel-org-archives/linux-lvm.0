@@ -1,13 +1,13 @@
-Date: Thu, 30 Aug 2001 07:23:56 -0500
+Date: Thu, 30 Aug 2001 07:35:52 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Snapshot sizes
-Message-ID: <20010830072356.A19415@sistina.com>
-References: <20010829173123.A10331@sistina.com> <E15cFXf-0005aa-00@hermes.sistina.com>
+Subject: Re: [linux-lvm] extending striped lv
+Message-ID: <20010830073552.B19415@sistina.com>
+References: <20010823232349.9882.qmail@web20306.mail.yahoo.com> <20010824112859.A10992@dragon.blacknet.de> <20010827124212.C1308@sistina.com> <3B8B78AC.164BDA67@sap.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+	protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
 Content-Disposition: inline
-In-Reply-To: <E15cFXf-0005aa-00@hermes.sistina.com>; from gasht@neopets.com on Wed, Aug 29, 2001 at 05:19:10PM -0700
+In-Reply-To: <3B8B78AC.164BDA67@sap.com>; from Jan.Schreckenbach@sap.com on Tue, Aug 28, 2001 at 12:55:40PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,23 +21,32 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---+HP7ph2BbKc20aGI
+--0ntfKIWw70PvrIHh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 29, 2001 at 05:19:10PM -0700, Gashaw Teshome wrote:
-> I  think so.  So, if I create a LV of (let's say) 100M, take a snapshot a=
-nd=20
-> then do my backup, as long as no changes have occured in excess of that 1=
-00M
-> I'll be fine.  The total size of the files on the original LV doesn't mat=
-ter
-> as long as I allocate enough space for the snapshot LV.
->
-> Do I have it right?
+On Tue, Aug 28, 2001 at 12:55:40PM +0200, Jan Schreckenbach wrote:
+> does this mean I can initially build a striped LV from two smaller
+> disks, let me say sda and sdb and later move the LE from sda to sdc
+> and from sdb to sdd (where sdc and sdb a bigger than sda/sdb)?=20
 
-Yep.  Seems like it.
+Yes, that should work.  Then the LEs would be just on sdc and sdd, and sda
+and sdb would be empty.
+
+> It is to be said that the performance of md RAID0 is somewhat better
+> than from striped LV's but I would prefer LVM if I could extend
+> a striped LV without rebuilding RAID/restoring data.
+
+Well, like I said, if you used md RAID0 underneath LVM, you could stripe
+across, say, sda and sdb,  and then creat your LV on top of the md device,
+then when you wanted to extend it, create a striped md device across sdc and
+sdd and and extend the VG/LV to that md device.
+
+Anyway, it really depends upon your application.  If you're really concerned
+about speed, you'd probably go with hardware RAID0 anyway, but that's a who=
+le
+different discussion.
 
 Regards,
 --=20
@@ -53,10 +62,10 @@ Get my key at: http://people.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Mountain Dew... because breakfast is the most important meal of the day.
+Behind every good computer -- is a jumble of wires 'n stuff.
 -----End Obligatory Humorous Quote------------------------------------------
 
---+HP7ph2BbKc20aGI
+--0ntfKIWw70PvrIHh
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -64,9 +73,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7jjBcpE6/iGtdjLERAt3HAJ4wORm52y/x6aMvn+S2OZ/g6urHKACgimcQ
-jUICzqrCGie+JfrrFUw7gSY=
-=LtAU
+iD8DBQE7jjMopE6/iGtdjLERAjXiAJ43howNKnXSOP7l+F6IA5xH5OwREACbB7W9
+FQGEYZky2DGKzo88UEk/xH0=
+=5Tt/
 -----END PGP SIGNATURE-----
 
---+HP7ph2BbKc20aGI--
+--0ntfKIWw70PvrIHh--
