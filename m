@@ -1,11 +1,10 @@
+From: Herbert Poetzl <herbert@13thfloor.at>
 Subject: Re: [linux-lvm] Can not boot: unable to mount root fs:
-From: Jayson Garrell <kyi@kyi.sytes.net>
-In-Reply-To: <3F5626D7.3070405@redshift.com>
-References: <3F54CEFE.2080203@redshift.com>
-	 <20030902224216.GB9145@DUK2.13thfloor.at>  <3F5626D7.3070405@redshift.com>
-Message-Id: <1062616151.2988.9.camel@jayson.NTSERVER1>
+Message-ID: <20030903191745.GA3717@DUK2.13thfloor.at>
+References: <3F54CEFE.2080203@redshift.com> <20030902224216.GB9145@DUK2.13thfloor.at> <3F5626D7.3070405@redshift.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <3F5626D7.3070405@redshift.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,51 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep  3 14:16:02 2003
+Date: Wed Sep  3 14:18:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
-Cc: Herbert Poetzl <herbert@13thfloor.at>
+Content-Transfer-Encoding: 7bit
+To: "Samuel A. Rogers" <srogers@redshift.com>
+Cc: linux-lvm@sistina.com
 
-On Wed, 2003-09-03 at 10:37, Samuel A. Rogers wrote:
-> Herbert,
-> 
-> I could send you a boot log but there is no information in it (to this problem) because the system 
-> locks up before it mounts the root (or other) partitions. Sorry your right that I should have 
-> included the boot loader, as it is grub. I am not sure what your wanting here, if it is a file or 
-> for me to discribe what I selected in the configuration. If it is a file please let me know what 
-> directory it is in and I will be happy to include it. I did select LVM and ext3 in the configuration.
-> 
-> Thank you for your help,
-> 
-> 	Sam.
-> 
-> Herbert Poetzl wrote:
-> > On Tue, Sep 02, 2003 at 10:10:22AM -0700, Samuel A. Rogers wrote:
-> > 
-> >>So far I can not compile and boot any kernel from 2.4.19 - 2.4.21. I get 
-> >>the below error message:
-> >>
-> >>VFS: cannot open device 3a:00
-> >>kernel panic: VFS: unable to mount root fs 3a:00
-> > 
-> > 
-> > send some more information, like a complete
-> > bootup log, your boot loader and your kernel
-> > configuration ...
+On Wed, Sep 03, 2003 at 10:37:27AM -0700, Samuel A. Rogers wrote:
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.21 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.21.img
+> title Red Hat Linux (2.4.20-20.9)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-20.9 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-20.9.img
+> title Red Hat Linux (2.4.20-19.9)
 
-I have had nothing but problems trying to get grub to boot a lvm root
-fs. I use lilo and have no problems at all. Below is the section of my
-lilo.conf.
+aha, now we are getting closer, you are obsviously
+using some LVM (volume manager) for your devices, and
+especially for your root device ...
 
-image = /boot/bzImage
-        root = /dev/vg0/lv0
-        ramdisk = 8192
-        initrd = /boot/initrd-lvm-2.4.20-gaming-r5.gz
-        label = shadow
-        read-only
+have you (re) created the initrd for your new kernel?
+you'll probably need to do some vgscan/lvscan in the
+initial ram disk ... so this is important ...
 
-I don't know about grub but in lilo I always had to give the ramdisk
-size. 
-
-Jayson Garrell
+HTH,
+Herbert
