@@ -1,10 +1,8 @@
-From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20011126203223.A81635@antimony.sistina.com>
+From: Ben <kf4wbx@hamsnet.net>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1006830259.2791.23.camel@outback.key>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Content-Disposition: inline
-Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1 available at www.sistina.com
+Subject: [linux-lvm] Help!! VG Corrupted?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,118 +13,80 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 26 20:30:02 2001
+Date: Mon Nov 26 21:04:02 2001
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, lvm-devel@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
+Cc: ben.klang@transchannel.com
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hello all,
+I am running Mandrake 8.1 which installs Linux LVM 0.9.  I've read posts
+that mention that 0.9 is "bad for your health."  While I'm not totally
+sure why or how, it seems to be the case for me as well.
 
-I'm sending this out in Heinz's stead, since he's at the 'Linuxkongress'
-conference this week
+I installed the OS and ran find with one IDE HD partition dedicated
+(/dev/hda9, one VG on one PV) to LVM and two LV's (/usr and /var).
+Yesterday, I added another partition (/dev/hda7) and added its PEs to
+the VG.  I thhen added the newly added PE's to the /usr LV.  Everything
+was great.  Then I rebooted.  Upon reboot, I got:
+[root@cray]# vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- found inactive volume group "vg0"
+vgscan -- reading data of volume group "vg0" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg0" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lvmtab" and "/etc/lvmtab.d"
+[root@cray]#
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~
+I then tried the vgcfgrestore, which ran sucessfully.  Now I get vgscan
+reporting no volumes.  Found a reference on how to fix this (using dd
+and reading uuids from pv's, then writing them back to the disk).  That
+procedure brings me back to the starting point.
 
-Hi all,
+It seems the data is there because pvscan reports:
 
-LVM 1.0.1 supports both version 1 and 2 of the metadata.
+[root@cray]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/ide0/host0/bus0/target0/lun0/part7" is
+associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/ide0/host0/bus0/target0/lun0/part9" is
+associated to an unknown VG (run vgscan)
+pvscan -- total 2 [12.02 GB] / in use: 2 [12.02 GB] / in no VG: 0 [0]
+[root@cray]#
 
-There's *no* need to run any metadata update tools.
+One more note of interest:  My partitions on disk are out of order.
+hda7 occupies cylinders 2848-3736 and hda9 occupies cylinders 2168-2847.
 
-A tarball is available now at
-  =20
-   <http://www.sistina.com/>
-=20
-for download (Follow the "LVM 1.0.1" link).
+[root@cray]# fdisk /dev/hda
+Command (m for help): p
 
-Changelog since 1.0 follows:
+Disk /dev/hda: 255 heads, 63 sectors, 3763 cylinders
+Units = cylinders of 16065 * 512 bytes
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
+   Device Boot     Start       End      Blocks    Id  System
+/dev/hda1  *           1       934     7502323+    b  Win95 FAT32
+/dev/hda2            935      3736    22507065     5  Extended
+/dev/hda5  *         935      1874     7550518+    7  HPFS/NTFS
+/dev/hda6           1875      2135     2096451    83  Linux
+/dev/hda7           2848      3736     7140861    8e  Linux LVM
+/dev/hda8           2136      2167      256977    82  Linux swap
+/dev/hda9           2168      2847     5462037    8e  Linux LVM
 
-LVM
----
-
-LVM now supports both version 1 and version 2 data formats.  No need to
-upgrade !
-
-Driver
-------
-
-o now works with 2.4.16
-
-Tools
------
-
-o support for version 1 and 2 data formats
-
-o Now stores new and changed PVs in version 1 data format!
-
-o zero pv and lv arrays in vg_cfgrestore
-
-o removing of PVs from VGs with snapshot now works
-  (changes in pv_read_all_pv_of_vg(), pv_read_all_pe_of_vg(),
-   vg_setup_for_merge(), vg_setup_for_extend(), vg_setup_for_reduce(),=20
-   vg_setup_for_split() and liblvm.h)
-
-o persistent LV and PV numbers
-
-o lvmcreate_initd now supports devfs
-
-o support for non-partitioned MDs
-
-o SPARC compilation fixes
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
+Partition table entries are not in disk order
 
 
-Feed back LVM related information to <linux-lvm@sistina.com>.
-
-Thanks a lot for your support of LVM.
 
 
-Regards,
-Heinz    -- The LVM Guy --
+So, can anyone help me?  Would recreating the VG and adding the PV's to
+it restore access to my data?  Or would I just blow it all away in the
+attempt?
 
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
---
-AJ Lewis <lewis@sistina.com>
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (FreeBSD)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE8Avs3b2fpvETN3pURAo5RAJwOjJZSDa2WU6D/L08nkzNHpaW1WgCghbE6
-PWjf0fz8zb1nLQREL3uUc8I=
-=eLvc
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+Thanks for any help!
+-Ben K
+kf4wbx@hamsnet.net
