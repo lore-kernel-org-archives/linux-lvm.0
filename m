@@ -1,10 +1,10 @@
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] recreate metadata of an PV possible if vda-backup present?
-Message-ID: <20040122161830.GA1719@tykepenguin.com>
-References: <108049294.20040121235827@gmx.de> <20040122140727.GA992@tykepenguin.com> <9769820736.20040122170759@gmx.de>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] setting VG UUID
+Message-ID: <20040122214923.GH3060@percy.comedia.it>
+References: <20040107065801.A27995@cs.mcgill.ca>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <9769820736.20040122170759@gmx.de>
+In-Reply-To: <20040107065801.A27995@cs.mcgill.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,40 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 22 11:20:02 2004
+Date: Thu Jan 22 16:50:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: agk@redhat.com
+Cc: linux-lvm@sistina.com, Navindra Umanee <navindra@cs.mcgill.ca>
 
-On Thu, Jan 22, 2004 at 05:07:59PM +0100, Malte Woelky wrote:
-> Hallo,
-> 
-> Thursday, January 22, 2004, 3:07:27 PM, you wrote:
-> 
-> 
-> >> 
-> >> I would be very, very happy if someone could post some hints to try...
-> >> 
-> 
-> PC> # pvcreate /dev/hdc
-> PC> # vgcfgrestore -n vg01 /dev/hdc
-> PC> # vgscan
-> 
-> PC> should restore the VG for you.
-> 
-> Thanks - I thought pvcreate would destroy the data, but it seem only
-> to initialize the PV without overwriting data, right?
+On Wed, Jan 07, 2004 at 06:58:01AM -0500, Navindra Umanee wrote:
+>Hi!
+>
+>After figuring out that my all my PVs were lacking UUIDs, I used this
+>hack from Heinz to correct the situation:
+>
+>http://lists.sistina.com/pipermail/linux-lvm/2002-January/010521.html
+>
+>(Alasdair also kindly provided a patch to handle the situation in LVM2.)
 
-Yes, pvcreate only overwrites the PV metadata area of the disk. Any actual data
-is left intact (assuming it wasn't erased by something else!)
- 
-> 
-> It's pity that I can't check this out, because I already recreated a
-> new LV this morning because of time preasure ;-( Too bad for me...
-
-Ah well, keep this email for next time :^)
+is it possible to have a copy of this patch?
+L.
 
 -- 
-
-patrick
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
