@@ -1,11 +1,11 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i183cja25256
-	for <linux-lvm@redhat.com>; Sat, 7 Feb 2004 22:38:45 -0500
-From: "David Rohrer" <rohredd@hotmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="----=_NextPart_000_0005_01C3EDCB.079C65A0"
-Message-ID: <BAY2-DAV58T0apMHi0S00001227@hotmail.com>
-Subject: [linux-lvm]LVM Problems
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i189PPa26669
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2004 04:25:25 -0500
+From: Jeff Layton <jtlayton@poochiereds.net>
+Content-Type: multipart/mixed; boundary="=-WII3Oc+26CB9sY4JLPNh"
+Message-Id: <1076232287.2237.7.camel@localhost>
+Mime-Version: 1.0
+Subject: [linux-lvm]lvm2create_initrd
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -17,58 +17,146 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Sun Feb  8 17:50:18 2004
+Date: Sun Feb  8 17:52:09 2004
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format...
+--=-WII3Oc+26CB9sY4JLPNh
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-------=_NextPart_000_0005_01C3EDCB.079C65A0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Here's a first pass at a lvm2create_initrd script. I basically modified
+the LVM1 version of the script, using the initrd image created by
+Christophe Saout as a model, and especially borrowing his linuxrc
+script.
 
-I had set up a Red Hat 9.0 Box with no xwindows on it just mainly the basic=
- install.
-The /boot, / , and swap are all on HDA....then on HDG and HDH I set up a LV=
-M during the install.
+It has some caveats that are detailed in the README. Like the prior
+script, it's released under the GPLv2.
 
-After I filled the drives in the LVM with data I tried to add to more drive=
-s to it they were HDC and HDD.
- I'm not the best at this, so I was reading how on the interent...I first t=
-ried to just do vgextend and it would error, so i done a pvcreate for each =
-drive and then done a vgextend then I rebooted, I never did a change. so no=
-w when it boots it errors out trying to mount the volume and I would have t=
-o go into maintenance and edit the fstab and comment out the volume so it w=
-ill boot
+It also supports a 'lvmrescue' mode that runs a shell at the end of the
+linuxrc script. Very helpful for fixing problems with your root volume
+group or root filesystem.
 
-This is what I get when I do a pvscan:
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG "Volume00" (=
-run vgscan)
-pvscan -- inactive PV "/dev/hdh1"  is associated to unknown VG "Volume00" (=
-run vgscan)
-pvscan -- total: 2 [38.03 GB] / in use: 2 [38.03 GB] / in no VG: 0 [0]
+Patches are gratefully accepted!
 
-And this is what I get from a vgscan:
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG "Volume00" (=
-run vgscan)
-pvscan -- inactive PV "/dev/hdh1"  is associated to unknown VG "Volume00" (=
-run vgscan)
-pvscan -- total: 2 [38.03 GB] / in use: 2 [38.03 GB] / in no VG: 0 [0]
+-- 
+Jeff Layton <jtlayton@poochiereds.net>
 
+--=-WII3Oc+26CB9sY4JLPNh
+Content-Disposition: attachment; filename=lvm2create_initrd.tar.gz
+Content-Type: application/x-compressed-tar; name=lvm2create_initrd.tar.gz
+Content-Transfer-Encoding: base64
 
-I can send you a vgscan -d if you like but it is quite long, I have data on=
- the volume and would like to fix it, is there a way to fallback to how it =
-was before I tried to add the other 2 hard drives? And if so how do I add t=
-he new ones properly?
+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
+w6sVHDwj/vewfPhguZZruf7l+gVyaeU1AFAAAA==
 
-Thank You
-Dio
-There are 3 types of people in the world
-Those who can count
-and thos who can't
-
-------=_NextPart_000_0005_01C3EDCB.079C65A0--
+--=-WII3Oc+26CB9sY4JLPNh--
