@@ -1,14 +1,11 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 19 Apr 2001 14:40:15 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-Message-ID: <20010419144014.H10345@sistina.com>
-References: <d37l0gvkuf.fsf@lxplus015.cern.ch> <20010419132927.D10345@sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TKYYegg/GYAC5JIZ"
-Content-Disposition: inline
-In-Reply-To: <20010419132927.D10345@sistina.com>; from lewis@sistina.com on Thu, Apr 19, 2001 at 01:29:27PM -0500
+Return-Path: <jes@lxplus015.cern.ch>
+References: <d37l0gvkuf.fsf@lxplus015.cern.ch> <20010419132927.D10345@sistina.com> <d3lmowu2ba.fsf@lxplus015.cern.ch> <20010419142615.F10345@sistina.com>
+From: Jes Sorensen <jes@linuxcare.com>
+Date: 19 Apr 2001 21:40:13 +0200
+In-Reply-To: AJ Lewis's message of "Thu, 19 Apr 2001 14:26:15 -0500"
+Message-ID: <d366g0u19e.fsf@lxplus015.cern.ch>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,120 +17,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: Jes Sorensen <jes@linuxcare.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: AJ Lewis <lewis@sistina.com>
 Cc: linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
 
---TKYYegg/GYAC5JIZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>>> "AJ" == AJ Lewis <lewis@sistina.com> writes:
 
-The list is now open.  I've talked to our admin and he's opening it up.
-Send me e-mail if it doesn't work, 'cause something else is broken.
+AJ> On Thu, Apr 19, 2001 at 09:17:29PM +0200, Jes Sorensen wrote:
+>> This was tried, trust me. We didn't create this list because
+>> someone forgot to respond to a single posting. As we wrote in the
+>> announcement there has been too many incidents: At least two people
+>> got kicked off the old lvm list for posting comments about the
+>> latest release using lower bits in pointers to store data. Other
+>> people have posted patches for serious bugs like NULL pointer
+>> dereferences and the postings were denied. Another person
+>> complained about the behavior and got no response.
 
-All it would have taken was a request and a good reason for doing so, but
-I guess this is one way to do it.  Just don't complain about spam.  :)
+AJ> What are you talking about???  Got kicked off?  If so, it was not
+AJ> intentional, I can assure you.  That would just be stupid.  As far
+AJ> as patches being rejected, refer to the e-mail I just sent.
 
-Regards,
-AJ Lewis
+mkp@mkp.net got unsubscribed when he posted the complaint about
+storing data in lower bits of pointers. Riel got bumped when he
+followed up on the same topic.
 
-On Thu, Apr 19, 2001 at 01:29:27PM -0500, AJ Lewis wrote:
-> It is unfortunate that this could not have been resolved in a more mature
-> manner.  Saying "I don't like the way somebody is doing something.  I won=
-'t
-> bother to talk to them about it, I'll just flame them and try to undermine
-> their work." is not acceptable.  It would have been nice if you'd actually
-> tried to work this out instead of handling it this way.
->=20
-> Regards,
-> AJ Lewis
->=20
-> On Thu, Apr 19, 2001 at 07:51:52PM +0200, Jes Sorensen wrote:
-> > Hi
-> >=20
-> > I would like to announce the creation of the openlvm mailing list for
-> > discussion about maintenance and further development of the Linux
-> > Logical Volume Manager (LVM).
-> >=20
-> > The new mailing list is named linux-openlvm and hosted at
-> > nl.linux.org, you can subscribe to the list by posting to
-> > majordomo@nl.linux.org and postings should go to
-> > linux-openlvm@nl.linux.org. The list is unmoderated and open to
-> > postings from individuals who are not subscribed to the list as it is
-> > good practice for all open development lists.
-> >=20
-> > We have found it necessary to create the new list as the current LVM
-> > development proces is closed and does not take input from the
-> > community. We have experienced numerous incidents of postings to the
-> > old mailing list with patches, on topic questions and comments about
-> > the LVM code that have been rejected by the list moderator. We find
-> > this completely unacceptable just as it is hindering development that
-> > a development mailing list is being so mismoderated.
-> >=20
-> > Please welcome the new list and join in on the development and
-> > discussions.
-> >=20
-> > Sincerly,
-> > Jens Axboe
-> > Arjan van de Ven
-> > Martin Petersen
-> > Rik van Riel
-> > Jes Sorensen
-> > -
-> > Linux-openlvm: open list for LVM on Linux
-> > Archive:       http://mail.nl.linux.org/linux-openlvm/
-> >=20
->=20
->=20
-> --=20
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-379-3951
-> 1313 5th St SE, Suite 111              Fax:    612-379-3952
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
->=20
-> Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029=
- 2648
-> Get my key at: http://www.sistina.com/~lewis/gpgkey
->  (Unfortunately, the PKS-type keyservers do not work with multiple sub-ke=
-ys)
->=20
-> -----Begin Obligatory Humorous Quote-------------------------------------=
----
-> Error: Keyboard not attached. Press F1 to continue.
-> -----End Obligatory Humorous Quote---------------------------------------=
----
+Jens just told me he has at least one denied reponse from the
+moderator (just got the below from him):
 
+"Your request to the linux-lvm mailing list
+ Posting of your message titled "Re: 2.4.3-ac{6,7} LVM hang"
+ has been rejected by the list moderator."
 
+>> For modules included in the Linux kernel, an open development forum
+>> is a minimum requirement.
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+AJ> Who asked for this?  Who did you talk to?  I haven't seen anything
+AJ> to this effect for months.
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+A moderated list is not an open environment. Had this been for a
+Sistina only product I wouldn't have any problem with it, but this is
+for an integrated part of the Linux kernel.
 
------Begin Obligatory Humorous Quote----------------------------------------
-Your mouse has moved. Windows NT must be restarted for the change to take
-effect. Reboot now? [ OK ]
------End Obligatory Humorous Quote------------------------------------------
-
---TKYYegg/GYAC5JIZ
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE63z8epE6/iGtdjLERAudSAJ42nSzF28wOLuMAK/ur0jtwNOC1xQCeJ39W
-ng2HEaCXWIbgBqLrSMTalfY=
-=kLcz
------END PGP SIGNATURE-----
-
---TKYYegg/GYAC5JIZ--
+Jes
