@@ -1,12 +1,11 @@
-Return-Path: <thornber@btconnect.com>
-Date: Wed, 23 May 2001 09:08:06 +0100
-Subject: Re: [linux-lvm] LVM Snapshots & journal recovery
-Message-ID: <20010523090805.A540@66bassett.freeserve.co.uk>
-References: <Pine.LNX.4.33.0105221531320.2330-100000@lustre.us.mvd>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0105221531320.2330-100000@lustre.us.mvd>; from braam@mountainviewdata.com on Tue, May 22, 2001 at 03:32:19PM -0600
-From: Joe Thornber <thornber@btconnect.com>
+Return-Path: <hmilz@linux-magazin.de>
+From: Harald Milz <hmilz@linux-magazin.de>
+Subject: Re: [linux-lvm] XFS and LVM
+References: <wxxu22dtsgq.fsf@gjallarhorn.ifi.uio.no> <NBBBKLKHMJHIJLHOGAOJOEMGIOAA.steve.wray@the.net.nz> <20010523010640.C2933@vestdata.no>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 May 2001 10:34:30 +0200 (CEST)
+Message-Id: <20010523083432.3601F15CB5@mail.linux-new-media.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +17,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
-Cc: braam@mountainviewdata.com
 
-On Tue, May 22, 2001 at 03:32:19PM -0600, Peter J. Braam wrote:
-<snip>
-> 
-> But during recovery, LVM cannot possibly know if the whole process of
-> copying out the data from the current to the snapshot area completed
-> during the previous run. Yes, LVM updates the redirection table first and
-> then copies, but, still, you don't know _where exactly_ the writes stopped
-> happening and in particular you don't know if the block was copied already
-> or not.
->
+In article <20010523010640.C2933@vestdata.no>, Ragnar Kj=F8rstad <lvm@ragn=
+ark.vestdata.no> wrote:
+>>=20
+>> It wouldn't mount afterward... It was only on /usr/local
+>> whuch was backed up.
 
-The snapshot metadata (redirection table) is written *after* the copy.
-Data will not hit the origin device until after the copy on write has
-completed successfully.
+> Did you report it to reiserfs-list@namesys.com?
 
-- Joe
+That doesn't always help. I once had a ~1 meg file in the reiserfs root
+filesystem which wouldn't delete but I laways got a nice oops. I reported
+it to Hans and got a reply that someone would look at it bit that never
+actually happened (at least got no feedback).
+
+But that was just once. I still have everything on reiserfs on LVM on my
+machines, and just started to experiment with XFS. The fact that it is not
+shrinkable is a bit annoying though. Like AIX JFS. ...=20
+
+--=20
+Harald Milz           |     hm@linux-magazin.de     | If one studies too
+Linux Magazin         | phone  +49 (0) 89 993411-20 | zealously, one easil=
+y
+Stefan-George-Ring 24 | fax    +49 (0) 89 993411-99 | loses his pants. --
+D-81929 Muenchen      | http://www.linux-magazin.de | A. Einstein.
