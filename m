@@ -1,12 +1,7 @@
-From: "Anthony W. Marino" <anthony@AWMObjects.com>
-Subject: Re: [linux-lvm] System Suggestions
-References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
-    <20020307034009.GJ32504@auctionwatch.com>
-    <20020306234746.B26236@connectlive.com>
-In-Reply-To: <20020306234746.B26236@connectlive.com>
+Message-Id: <20020307141913.34861.qmail@web13008.mail.yahoo.com>
+From: Prashant Kharche <pdkharche@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <auto-000021556028@front2.mail.megapathdsl.net>
+Subject: [linux-lvm] NBD-2.4.26
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,19 +12,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar  7 04:26:02 2002
+Date: Thu Mar  7 08:19:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Tim <tim@connectlive.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Wednesday 06 March 2002 11:47 pm, Tim wrote:
-> >     We're also having some problems with Mysql that people keep pointing
-> >     fingers at LVM for, but at this time we're point right back and
-> >     saying "No!" in a firm voice...
->
-> MySQL is weak under real read/write concurrent loads.  PostgreSQL is
-> terrific for that.  On the other hand, MySQL buries psql for keeping up
-> with my IDS alerts.  Gotta use the right tool for the job...
+Hi!
+   I want to test LVM on a SAN.. But i dont have a
+SAN.. SO im trying to use Network Block Device -
+2.4.26 to export partitions to other client 
+machines.. if im wrong please correct me.. But when i
+mount the partitions on the client machine.. LVM
+version 1.0.2 is not able to recognize the VG already
+present on that partition.. what should i do now..
 
-Tim, what about read/write concurrent loads with InnoDb tables?
-Anthony
+Or is there any other way to emulate a SAN.. 
+
+
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Try FREE Yahoo! Mail - the world's greatest free email!
+http://mail.yahoo.com/
