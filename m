@@ -1,9 +1,11 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problems with LVM
-Message-ID: <20030713121151.H23240@sistina.com>
-References: <20030711192842.10c78393.mcm262@psu.edu> <20030712000127.GE15461@corp.vendio.com>
-Mime-Version: 1.0
-In-Reply-To: <20030712000127.GE15461@corp.vendio.com>; from petro@corp.vendio.com on Fri, Jul 11, 2003 at 05:01:27PM -0700
+From: Melinda Taylor <melinda@phys.unsw.edu.au>
+Subject: Re: [linux-lvm] LVM disk died
+In-reply-to: <3F111240.5080807@xs4all.nl>
+Message-id: <1058094066.1241.9.camel@neko>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+References: <5.1.1.6.0.20030712160456.02b2e398@imap.phys.unsw.edu.au>
+ <3F111240.5080807@xs4all.nl>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,128 +16,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 13 05:14:04 2003
+Date: Sun Jul 13 06:06:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Petro,
+On Sun, 2003-07-13 at 18:03, Gert van der Knokke wrote:
+> Melinda Taylor wrote:
+> 
+> > can someone direct me to the faq that shows me how to recover from a 
+> > dead drive.
+> >
+> > I had LVM spanning 4 HDDs and one will no longer spin up. 
+> 
+> Hi Melinda,
+> 
+> Sometimes a 'dead' drive can be brought back to (temporary) live again 
+> by giving it a hard knock or better: a sharp twist, as the heads tend to 
+> stick to the surface of the platters. Mind though that such a drive is 
+> not trustworthy anymore but if it does spin up you might be able to get 
+> the data off it.
+> 
+> Best way to this is to take the drive out of the PC and  hold it flat in 
+> your hand and give it a sharp twist in the horizontal direction. This  
+> helped me  a few times with such 'sticky' drives. After that, mount it 
+> back in the PC and try it.
 
-what's the lvcreate command line ?
+Hi Gert,
 
-(highmem may cause problems if you use the snapsho9t, creation should
-work fine)
+I'll try what you suggest tomorrow. It is all very strange since my last
+email another of the 4 disks now has the same error. I am that unlucky
+that 2 disks fail? 
 
-Regards,
-Heinz    -- The LVM Guy --
+When the machine boots the SCSI bios says:
 
-On Fri, Jul 11, 2003 at 05:01:27PM -0700, Petro wrote:
-> Hello again. 
-> 
-> I'm having a problem with LVM, and I'm really, really hoping you won't
-> tell me it's because of:
-> 
-> # CONFIG_NOHIGHMEM is not set
-> CONFIG_HIGHMEM4G=y
-> # CONFIG_HIGHMEM64G is not set
-> CONFIG_HIGHMEM=y
-> CONFIG_HIGHIO=y
-> 
-> (linux kernel 2.4.21, lvm 1.0.7 stuff installed)  
-> 
-> I've got 8 boxes with 4 gig of memory, and 6 200 gig drives in a raid 0 
-> setup, and I need to use LVM+Snapshots. 
-> 
-> I can setup and create a 1.09T logical volume, but when I go to create a
-> snaphot, I get: 
-> 
-> lvcreate -- INFO: using default snapshot chunk size of 64 KB for "/dev/vg0/test"
-> lvcreate -- ERROR "Cannot allocate memory" creating VGDA for "/dev/vg0/test" in kernel
-> 
-> Now, in reading past posts there is some talk of how having "high
-> memory" turned on will cause problems with snapshots. 
-> 
-> The problem is that on these machines I *need* 4 gig of memory, and I
-> *need* snapshots. 
-> 
-> Help? 
-> 
-> 
-> --- Physical volume ---
-> PV Name               /dev/sda
-> VG Name               vg0
-> PV Size               1.09 TB [2344319232 secs] / NOT usable 32.31 MB [LVM: 267 KB]
-> PV#                   1
-> PV Status             available
-> Allocatable           yes
-> Cur LV                1
-> PE Size (KByte)       32768
-> Total PE              35770
-> Free PE               570
-> Allocated PE          35200
-> PV UUID               LyEPH1-pq2I-D022-v5c9-98rp-n7Ff-4LnNKL
-> 
-> --- Volume group ---
-> VG Name               vg0
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                1
-> Open LV               1
-> MAX LV Size           2 TB
-> Max PV                256
-> Cur PV                1
-> Act PV                1
-> VG Size               1.09 TB
-> PE Size               32 MB
-> Total PE              35770
-> Alloc PE / Size       36032 / 1.10 TB
-> Free  PE / Size       4294967034 / 131071.99 TB
-> VG UUID               KciSkB-xbr8-22RM-zmke-6A69-6BEM-xLWMzv
-> 
-> --- Logical volume ---
-> LV Name                /dev/vg0/lv0
-> VG Name                vg0
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                1.07 TB
-> Current LE             35200
-> Allocated LE           35200
-> Allocation             next free
-> Read ahead sectors     1024
-> Block device           58:0
-> 
-> 
->    procs                      memory    swap          io     system         cpu
->  r  b  w   swpd   free   buff  cache  si  so    bi    bo   in    cs  us  sy  id
->  0  0  0      0 3949704   1648  26104   0   0     3     2   27     5   0   0 100
-> 
-> 
-> -- 
-> "On two occasions, I have been asked [by members of Parliament], 'Pray, 
-> Mr. Babbage, if you put into the machine wrong figures, will the right 
-> answers come out?' I am not able to rightly apprehend the kind of confusion 
-> of ideas that could provoke such a question." -- Charles Babbage 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+ASYN start unit request failed
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+It does seem to be spinning.I can hear it and if I rotate it I can feel
+the centrifugal force from the disks spinning inside.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+If i boot with my linux boot disk it sees the drives sda sdb and the two
+partitions on each but it says 
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+"sda spinning up disk....................." 
+
+and ultimately fails It can also identify the vendor and model number on
+the linux boot.
+
+I'll take this to another list but its just interesting so I thought I
+would post (I'd still like some advice for my original question though
+regarding rebuilding from what is now 2 disks of 4 in my LVM)
+
+Thanks,
+
+Melinda
