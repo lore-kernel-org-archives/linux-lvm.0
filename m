@@ -1,7 +1,11 @@
-Message-Id: <200312100027.hBA0RHZ13777@mail.osdl.org>
-From: markw@osdl.org
+From: Aras <aras@fan.lt>
+Message-ID: <190188816968.20031210134139@fan.lt>
+Subject: Re[2]: [linux-lvm] lvm and windows shares
+In-Reply-To: <828946327.20031209150601@tnonline.net>
+References: <67110306296.20031209155309@fan.lt>
+ <828946327.20031209150601@tnonline.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] DBT-2 running against PostgreSQL and LVM2
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,36 +16,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  9 18:28:02 2003
+Date: Wed Dec 10 05:43:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, pgsql-hackers@postgresql.org
-Cc: osdldbt-general@lists.sourceforge.net, stp-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="us-ascii"
+To: Spam <linux-lvm@sistina.com>
 
-I just wanted to share that we're on the brink of having an automated
-test on our Scalable Test Platform (http://www.osdl.org/stp/) that
-features our DBT-2 workload, a fair use implementation of the TPC-C,
-that uses PostgreSQL 7.4 and LVM2 on Linux on our 8-processor systems.
 
-Currently the test only works with a scale factor of 1 warehouse, which
-amounts to about a 500MB of raw data.  You can request tests at this
-scale factor at the above link and typing "-w 1" in the "Optional Script
-Parameters" field.
+I see, I guess I'll stay on samba mounted directories. Thanks for
+answering.
+ 
 
-We're working through some Linux kernel related issues so we can run
-more interesting workloads against larger databases.  I'm planning to
-allow an option for either a 100 and 200 warehouse database to be built.
+>> Hi,
 
-I wanted to let people know early for feedback on the kind of data that
-is reported from the test.  You can see a sample of a test report here:
-	http://khack.osdl.org/stp/284353/
+>>    Can I create LV from windows shares?
+>>    EGZ. I have 5 windows shares of 30 GB, so I need one directory that
+>>    would be 150GB size
 
-Thanks!
+S>      Sounds  rather  "different"  to do. But yes, you can create files
+S>      and  use  those  to  run LVM in. But given the stability of SMB I
+S>      would  not.  It  is better if you can do it with NFS or move some
+S>      disks around.
+
+>>    Just tell me if it posible to to.
+
+>>    Thanks.
+
+
+
+
+
+
+
+S> _______________________________________________
+S> linux-lvm mailing list
+S> linux-lvm@sistina.com
+S> http://lists.sistina.com/mailman/listinfo/linux-lvm
+S> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
 -- 
-Mark Wong - - markw@osdl.org
-Open Source Development Lab Inc - A non-profit corporation
-12725 SW Millikan Way - Suite 400 - Beaverton, OR 97005
-(503) 626-2455 x 32 (office)
-(503) 626-2436      (fax)
-http://developer.osdl.org/markw/
+Best regards,
+ Aras                            mailto:aras@fan.lt
+ WWW: http://www.fan.lt
