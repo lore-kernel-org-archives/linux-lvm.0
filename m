@@ -1,11 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Wed, 12 Sep 2001 17:26:12 -0600
-Subject: Re: [linux-lvm] LVM
-Message-ID: <20010912172612.C1541@turbolinux.com>
-References: <3B9F66BE.DFE69112@carolina.rr.com> <NBBBJHKIOKPKOGOEPEDPCEEADNAA.stuart@bh90210.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <NBBBJHKIOKPKOGOEPEDPCEEADNAA.stuart@bh90210.net>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM
+Date: Wed, 12 Sep 2001 16:30:09 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPIEECDNAA.stuart@bh90210.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+In-reply-to: <20010912172102.B1541@turbolinux.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,31 +17,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sep 12, 2001  15:47 -0700, IT3 Stuart B. Tener, USNR-R wrote:
-> Prior to using LVM, it did not matter that my single Linux partition
-> (the root "/") was located beyond the 1024 cylinder. Why does LVM
-> move me backwards in making it requisite to again have this limitation
-> present? Perhaps I ought to wait until LVM becomes more mature then.
-
-I doubt that this is necessary.  LILO doesn't understand anything but
-BIOS-accessible disk blocks, whether it is LVM + ext2/ext3/reiserfs/other.
-If you can use your partition beyond cylinder 1024 before, you can continue
-to do so later.
-
-That said, there are reasons for NOT putting all of your eggs in one
-basket (e.g. LVM).  If there is any problem with LVM, you will not be
-able to boot your system.  On my systems I have /boot in a regular
-partition (about 70MB) which has my kernels/initrd in it, along with
-enough tools from /bin and /sbin, and libs from /lib in order to have
-a rescue boot partition in case of trouble.  Once I have tested the
-booting from that partition, I don't touch it anymore (it has a
-separate "rescue" kernel, modules, etc).
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+TFZNIExpc3RtZW1iZXJzOg0KDQoJVGhlIGhvdy10byBpcyBub3QgY2xlYXIgb24gY2VydGFpbiBp
+c3N1ZXM6DQoNCihhKSBzaG91bGQgUmVpc2VyRlMgc3VwcG9ydCBiZSBjb21waWxlZCBpbnRvIHRo
+ZSBrZXJuZWwgb3IgYmUgYSBtb2R1bGU/DQooYikgU2hvdWxkIExWTSBzdXBwb3J0IGJlIGNvbXBp
+bGVkIGludG8gdGhlIGtlcm5lbCBvciBiZSBhIG1vZHVsZT8NCihjKSBJZiB5b3UgdXNlIExWTSBz
+dXBwb3J0IGFzIGEgbW9kdWxlIG9yIGluIHRoZSBrZXJuZWwgaG93IGRvZXMgdGhpcyBlZmZlY3Qg
+dGhlIG5lZWQgb3IgY29uZmlndXJhdGlvbiBvZiB0aGUgaW5pdHJkPyBTb21lb25lIHRvbGQgbWUg
+SSBkb24ndCBuZWVkIGluaXRyZCwgaWYgaXRzIGJ1aWx0IGluIHRoZSBrZXJuZWwsIG5vPw0KDQoN
+ClZlcnkgUmVzcGVjdGZ1bGx5LCANCg0KU3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwg
+TjNHV0cgDQpCZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUgMTkwNEcgKFZvbHVudGVlciBU
+cmFpbmluZyBVbml0KSANCnN0dWFydEBiaDkwMjEwLm5ldCANCndlc3QgY29hc3Q6ICgzMTApLTM1
+OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzIA0KZWFz
+dCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEg
+MTkxNDktNTg1OSANCg0KVGVsZWNvcGllcjogKDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdh
+dGV3YXkgdmlhIHd3dy5lZmF4LmNvbSAoaXQncyBmcmVlISkgDQoNCkpPSU4gVEhFIFVTIE5BVlkg
+UkVTRVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4gDQoN
+CldlZG5lc2RheSwgU2VwdGVtYmVyIDEyLCAyMDAxIDQ6MjYgUE0NCg0KLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxp
+bnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1PbiBCZWhhbGYgT2YgQW5kcmVhcyBEaWxnZXINClNl
+bnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDEyLCAyMDAxIDQ6MjEgUE0NClRvOiBsaW51eC1sdm1A
+c2lzdGluYS5jb20NClN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBMVk0NCg0KT24gU2VwIDEyLCAy
+MDAxICAxNTo0MSAtMDcwMCwgSVQzIFN0dWFydCBCLiBUZW5lciwgVVNOUi1SIHdyb3RlOg0KPiAg
+ICAgICBJIGFtIGN1cmlvdXMgd2hhdCB2ZXJzaW9uIG9mIGxpbG8gaW4gZmFjdCBzdXBwb3J0cyBS
+ZWlzZXJGUyB0YWlscy4gSSBhbSBydW5uaW5nIE1hbmRyYWtlIDguMCwgYW5kIHVzaW5nIHRoZSBs
+aWxvIHN1cHBsaWVkIHRoZXJld2l0aCwgYW5kIGhhdmUgYmVlbiBib290aW5nIGEgLyBwYXJ0aXRp
+b24gYXMgUmVpc2VyRlMgKHdpdGggdGFpbHMgSSBiZWxpZXZlLCBob3cgZG8gSSBjaGVjaz8pLg0K
+DQpBdCBsZWFzdCB2ZXJzaW9uIDIxLjYrIHN1cHBvcnQgcmVpc2VyZnMgdGFpbHMgKG1heWJlIGVh
+cmxpZXIsIEkgZG9uJ3Qga25vdykuDQpZb3Ugc2hvdWxkIGJlIGFibGUgdG8gdmVyaWZ5IHdpdGgg
+InN0cmluZ3MgL3NiaW4vbGlsbyB8IGdyZXAgLWkgcmVpc2VyZnMiLg0KV2hhdCBpdCBkb2VzIGlz
+IHVucGFjayB0aGUgdGFpbCBvbiBhbnkga2VybmVsL2luaXRyZCBmaWxlcyBzbyB0aGF0IExJTE8N
+CmNhbiBtYXAgdGhlIGJsb2NrcyBkaXJlY3RseS4gIEluIGEgd2F5LCBpdCBpcyBzdHJhbmdlIHRo
+YXQgdGhpcyBpcyBuZWVkZWQsDQpzaW5jZSBJIHRob3VnaHQgdGFpbHMgb25seSBhcHBsaWVkIHRv
+IGZpbGVzIDwgNjRrQiBvciBzaW1pbGFyLi4uDQoNCkNoZWVycywgQW5kcmVhcw0KLS0NCkFuZHJl
+YXMgRGlsZ2VyICBcICJJZiBhIG1hbiBhdGUgYSBwb3VuZCBvZiBwYXN0YSBhbmQgYSBwb3VuZCBv
+ZiBhbnRpcGFzdG8sDQogICAgICAgICAgICAgICAgIFwgIHdvdWxkIHRoZXkgY2FuY2VsIG91dCwg
+bGVhdmluZyBoaW0gc3RpbGwgaHVuZ3J5PyINCmh0dHA6Ly93d3ctbWRkc3AuZW5lbC51Y2FsZ2Fy
+eS5jYS9QZW9wbGUvYWRpbGdlci8gICAgICAgICAgICAgICAtLSBEb2diZXJ0DQoNCg0KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LWx2bSBtYWls
+aW5nIGxpc3QNCmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KaHR0cDovL2xpc3RzLnNpc3RpbmEuY29t
+L21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtDQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6
+Ly93d3cuc2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3RvLmh0bWwNCg==
