@@ -1,8 +1,8 @@
-Message-ID: <3E920F5A.E26EC943@ezinc.com>
-From: Miwako Nakai <nakai@ezinc.com>
+Message-ID: <3E95220A.ABEF64D5@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problems
-References: <029601c2f79d$83ff2da0$64451c0a@dokho>
+Subject: Re: [linux-lvm] extending LVM for school project
+References: <001301c2fe5c$95d38970$02fea8c0@nimiak>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,43 +14,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 10 00:41:01 2003
+Date: Thu Apr 10 02:49:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I think you would be better to set PE size upto 8MB.
-Probably, you are using old version. 1.0.6 or later, PE size is
-16MB at default.
-
-And I also think you would be better not to use HTML mail.
-
-> Gaetan wrote:
+Kai-Min Sung wrote:
 > 
-> --- Volume group ---
-> VG Name               FILER
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                2
-> Open LV               1
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                4
-> Act PV                4
-> VG Size               453.63 GB
-> PE Size               4 MB
-> Total PE              116129
-> Alloc PE / Size       58893 / 230.05 GB
-> Free  PE / Size       57236 / 223.58 GB
-> VG UUID               ExxNF9-89PZ-wHbC-LtKX-R3GL-Hp00-EVfvJt
-> 
-> I would like to increase my MAX LV SIZE
-> 
-> ZanZiBar:~# lvextend -L +300G /dev/FILER/MIRROR2
-> lvextend -- size 555745280 KB is larger than maximum VGDA kernel size
-> of 268427264 KB
-> Help !! :(
+> Hey everyone,
+>         I'm a masters student taking a distributed systems project class
+> and would like to work on extending LVM. My initial idea was to modify
+> LVM and allow it to create physical volumes using disks on remote nodes.
+> But then I read posts about using ENBD to achieve this. Do people on
+> this list have suggestions or ideas for a fun/interesting project that
+> could be accomplished within 10 weeks?
 
-Nakai ezcom
+I have the same plans, though it is a linuxkernel course. My plan was to
+make a combination of LVM2 and PPDD (encryption). The idea was to make 
+LVM support encrypted LV's that would need to be unlocked before usage,
+in order to make blockencryption easier. 
+
+LVM ontop of loopback encryption wont work, as i then need to encrypt
+the
+hole LVM, and some files are not sensitive.
+
+loopback encryption ontop of LVM wont work, as the live snapshot feature
+then doesnt work.
+
+I had the idea to make it possible to encrypt the LE (Logical Extends)
+so
+that the LV was encrypted, because it would seem the most aprociate
+place.
+(i havent actualy read the LVM code yet, just the documentation and just
+for LVM1.)
+
+
+
+JonB
