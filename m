@@ -1,11 +1,9 @@
-From: Mike Williams <mike@gaima.co.uk>
-Subject: Re: [linux-lvm] inconsistent metadata
-References: <200310092100.11002.mike@gaima.co.uk> <20031010194212.J6588@uk.sistina.com>
-In-Reply-To: <20031010194212.J6588@uk.sistina.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200310111215.53927.mike@gaima.co.uk>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] flascopy lvm
+Message-ID: <20031013102159.G25676@sistina.com>
+References: <E6FD503F6B73D31192DB0008C7E6346407E1AF13@pinemail1.phs.org>
+Mime-Version: 1.0
+In-Reply-To: <E6FD503F6B73D31192DB0008C7E6346407E1AF13@pinemail1.phs.org>; from CLeon@phs.org on Fri, Oct 10, 2003 at 07:08:02AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +14,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 11 06:17:01 2003
+Date: Mon Oct 13 03:36:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-=2D----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Cynthia,
 
-On Friday 10 October 2003 19:42, Alasdair G Kergon wrote:
+with any kind of block level copies you get an identical copy
+of your existing volume group(s), therefore doubling the VG(s) if
+attached to the same system.
 
-> You can look at the metadata history in /etc/lvm/archive to try to
-> work out the sequence of events and at what point things started
-> going wrong.  [If you'd like me to take a look, send me a tarball
-> of /etc/lvm.]
+A way to get the copy online is to temprarily rename the source VG using
+vgrename (any mounted/opened logical volumes will stay in place unless you
+reboot), attach the LUNs with the copy, run vgscan and activate the copy,
+use vgrename to give the copy a new name and rename the source VG back.
 
-OK, I've look through the archive files and can't really see anything odd, =
-but=20
-I'm no expert.
-I will send /etc/lvm to you separately, any help you could offer will be=20
-gratefully received.
+Regards,
+Heinz    -- The LVM Guy --
 
-> Filters in the config file can be used to hide the 2 devices that say
-> they're exported while you rename the real VG.
 
-Excuse my ignorance, but I don't understand :)
-I assume this is a reference to the 2 PV's which pvscan is saying are expor=
-ted=20
-in a VG, while the other 2 don't?
 
-=2D --=20
-Mike Williams
-=2D----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
+On Fri, Oct 10, 2003 at 07:08:02AM -0600, CLeon@phs.org wrote:
+> We have our SAN disk attached to our Linux Red Hat 7.3 server and we are
+> using LVM.  We are using a flashcopy utility to flash the drives.  After we
+> flash the drives, we attach the flashed luns to the host.  When we do this,
+> the logical volume has the flashed drive in it's volume list (vgdisplay -v).
+> How can I prevent the this from happening?  I would like to mount the
+> flashed volume as a different logical volume name.
+> 
+> Thanks,
+> Cynthia Leon
+> 
+> ==============================================================================
+> --- PRESBYTERIAN HEALTHCARE SERVICES DISCLAIMER ---
+> 
+> This message originates from Presbyterian Healthcare Services or one of its
+> affiliated organizations. It contains information, which may be confidential
+> or privileged, and is intended only for the individual or entity named above.
+> It is prohibited for anyone else to disclose, copy, distribute or use the
+> contents of this message. All personal messages express views solely of the
+> sender, which are not to be attributed to Presbyterian Healthcare Services or
+> any of its affiliated organizations, and may not be distributed without this
+> disclaimer. If you received this message in error, please notify us
+> immediately at postmaster@phs.org. 
+> ==============================================================================
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-iD8DBQE/h+ZpInuLMrk7bIwRAk4YAJwJV/hIEksCzvcScYtbCVmUVGiwdACggMbF
-ope9x3trhJLux4XpQNdA7WA=3D
-=3DNuZ8
-=2D----END PGP SIGNATURE-----
+-- 
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
