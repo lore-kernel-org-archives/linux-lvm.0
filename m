@@ -1,16 +1,30 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i57IYk007042
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:34:46 -0400
-Received: from exch-calgary.int.pason.com (hemlock.pason.com [208.38.1.1])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i57IYeXn007137
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:34:40 -0400
-Date: Mon, 7 Jun 2004 12:34:34 -0600
-From: "Donald Murray P.Eng." <donald.murray@pason.com>
-Subject: Re: [linux-lvm] LVM snapshot sizes.
-Message-Id: <20040607123434.2256e2ab.donald.murray@pason.com>
-In-Reply-To: <40C4B1E5.8040801@staff.theuseful.com>
-References: <40C4B1E5.8040801@staff.theuseful.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i57IjY010625
+	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:45:34 -0400
+Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i57IjXi5009913
+	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:45:33 -0400
+Received: from localhost (lucy.ukfsn.org [127.0.0.1])
+	by mail.ukfsn.org (Postfix) with ESMTP id 801ADE6D40
+	for <linux-lvm@redhat.com>; Mon,  7 Jun 2004 19:43:41 +0100 (BST)
+Received: from mail.ukfsn.org ([127.0.0.1])
+	by localhost (lucy.ukfsn.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 17792-11 for <linux-lvm@redhat.com>;
+	Mon,  7 Jun 2004 19:43:41 +0100 (BST)
+Received: from oak.dgreaves.com (modem-298.parera.dialup.pol.co.uk
+	[81.78.177.42]) by mail.ukfsn.org (Postfix) with ESMTP id DB470E6D3F
+	for <linux-lvm@redhat.com>; Mon,  7 Jun 2004 19:43:40 +0100 (BST)
+Received: from ash.dgreaves.com ([10.0.0.105])
+	by oak.dgreaves.com with esmtp (Exim 4.20) id 1BXP9E-00036J-5L
+	for linux-lvm@redhat.com; Mon, 07 Jun 2004 19:47:04 +0100
+Message-ID: <40C4B7C4.4090306@dgreaves.com>
+Date: Mon, 07 Jun 2004 19:45:24 +0100
+From: David Greaves <david@dgreaves.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] software raid or lvm?
+References: <40C48905.80608@blocked.name>	<20040607162858.GA5220@synapse.neuralscape.com>
+	<40C4B1BA.7070006@blocked.name>
+In-Reply-To: <40C4B1BA.7070006@blocked.name>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,47 +36,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Is your MySQL slave logging to the database partition? Replication
-binary logs can grow pretty quickly, which might be the reason your
-snapshot overflows.
+philip wrote:
 
-You could try making your snapshot volumes larger.
-
-
-On Mon, 07 Jun 2004 14:20:21 -0400
-Yaroslav Klyukin <yklyukin@staff.theuseful.com> wrote:
-
-> 
-> I have created an LVM logical volume of the size arount 60G and 
-> formatted it with reiserfs. After that I put MySQL database onto this 
-> partition and made it a replicating slave.
-> Using this configuration I took several LVM snapshots, 1G each.
-> It did not take long for these snapshots to overflow.
-> 
-> So here is the question:
-> Why would it take so fast to overflow an LVM snapshot?
-> In other words, what are the parameters, which affect snapshot fillups?
-> Is it possible, that journaling filesystem can contribute to the size of 
-> changing data on the logical volume, and would LVM2 be more efficient?
-> 
-> Thank you!
-> 
-> -- 
-> Systems Administrator, NiuTech.
-> Cellular: (561) 843-1552
-> AIM: infiniteparticle
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> hello,
+>
+> Karen Shaeffer wrote:
+>
+>> You can find Sil311x support in the 2.6.6 kernel. I've run it with the
+>> Sil3114 controller.
+>
+>
+> so far i know (i didn't watch that for few last months) there is 
+> driver for sil3112 in 2.6 kernel (sata_sil) but the raid driver didn't 
+> work. also it didn't work well for everyone. so any good news?
+> thank you
+> philip
 
 
- ------------------------------------------ 
- Donald Murray, P.Eng.
- Senior Software Engineer
- Pason Systems Corp.
- Direct: (403) 301-3473
+Jeff Garzik said on the 10th May in the linux-ide list:
+
+Serial ATA (SATA) for Linux
+status report
+May 10, 2004
+
+
+Silicon Image 3112/3114
+-----------------------
+Summary: No TCQ. Looks like a PATA controller, but with full SATA
+control including hotplug and PM.
+
+libata driver status: Beta.
+
+drivers/ide driver status: Production, but see issue #4.
+
+Issue #4: Need to have the most recent fixes posted to lkml, for stable
+operation and full performance (where possible).
+
+
+
+
+HTH
+
+David
