@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 16 May 2001 11:19:03 +0000
+Date: Wed, 16 May 2001 11:23:52 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] LVM 1.0 release decision
-Message-ID: <20010516111903.E11984@sistina.com>
-References: <3AFC42EB.2910DAAE@wrkhors.com> <Pine.LNX.4.21.0105132046150.5468-100000@imladris.rielhome.conectiva>
+Message-ID: <20010516112352.G11984@sistina.com>
+References: <20010511155311.A17689@sistina.com> <20010511161329.E21433@pclab.ifg.uni-kiel.de>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.21.0105132046150.5468-100000@imladris.rielhome.conectiva>; from riel@conectiva.com.br on Sun, May 13, 2001 at 08:48:19PM -0300
+In-Reply-To: <20010511161329.E21433@pclab.ifg.uni-kiel.de>; from torsten@pclab.ifg.uni-kiel.de on Fri, May 11, 2001 at 04:13:29PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,67 +20,38 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: linux-kernel@vger.kernel.org
 
-On Sun, May 13, 2001 at 08:48:19PM -0300, Rik van Riel wrote:
-> On Fri, 11 May 2001, Steven Lembark wrote:
+On Fri, May 11, 2001 at 04:13:29PM +0200, Torsten Landschoff wrote:
+> On Fri, May 11, 2001 at 03:53:11PM +0000, Heinz J. Mauelshagen wrote:
+> > In regard to this situation we'ld like to know about your oppinion on the
+> > following request:
+> > is it acceptable to release 1.0 soon *before* all patches to reach the 1.0
+> > code status are in vanilla (presumed that we provide them with our release as
+> > we always did before)?
 > 
-> > for my part running the system i'd rather have the "production"
-> > LVM and kernel releases in sync and not have to worry about it.
-> > if i need a beta/inter-version release then i'll deal with the
-> > extra issues.
+> My stance would be to do a pre-release of the to-be-1.0 code. Reasons:
 > 
-> Agreed.  If the in-kernel LVM cannot be trusted, I really
-> don't see why Sistina would ever want to associate its name
-> with something broken?
+> - as you said, it would be good for the user base
 
-Rik, that's not an issue at all and sorry, it doesn't help either!
+Yep.
 
-With the help of community contributors we *do* provide the most recent
-code with as few bugs as possible at www.sistina.com/lvm as we always did.
+> - OTOH I would expect the lvm code in the kernel to become a bit 
+>   different from what you have now as a matter of the code review.
 
-Everybody could and can get it from there and established LVM users continue
-to do it this way.
-
-OTOH we need a lot of time now to get smaller patches into vanilla.
-
-Therefore we kindly asked for community oppinions to help the situation.
-
-
-Unless a bigger LVM patch to vanilla is accepted, we need to spend a lot of work
-on providing those smaller chunks of patches which distracts us a lot from
-other work.
-
-Don't tell me that this is all our fault; 
-this wouldn't *help* to fasten the process either!
-
-A little trust to accept a bigger patch *and* to sort pending issues
-out with the help of the community afterwards is a valid approach IMO to
-get faster to the point of an updated vanilla LVM driver than with the
-tiny patches approach.
-
-Linus, Alan et al.: maybe you could think about it again and
-                    accept one larger LVM patch. Thanks.
+We are very much interested in your specific requirements here.
+Do you have particular recommendations/patches?
 
 > 
-> I think it would be better for everyone (users, Sistina's
-> corporate image and Linux) to get something stable into the
-> kernel before sending out the press release ;)
+> > Thanks for your support!
 > 
-> (after all, a version number change is just a one-liner patch
-> away ;))
+> Thanks for LVM :-)
+
+You're welcome :-)
+
 > 
-> regards,
+> Greetings
 > 
-> Rik
-> --
-> Virtual memory is like a game you can't win;
-> However, without VM there's truly nothing to lose...
-> 
-> http://www.surriel.com/		http://distro.conectiva.com/
-> 
-> Send all your spam to aardvark@nl.linux.org (spam digging piggy)
-> 
+> 	Torsten
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
