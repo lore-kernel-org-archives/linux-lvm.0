@@ -1,12 +1,12 @@
-Return-Path: <josv@osp.nl>
-Date: Fri, 1 Jun 2001 11:04:12 +0200
-From: Jos Visser <josv@osp.nl>
-Subject: Re: [linux-lvm] changing SCSI IDs ?
-Message-ID: <20010601110412.H620@jadzia.josv.com>
-References: <m2bso894wn.fsf@isnogud.escape.de>
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 1 Jun 2001 13:47:54 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Some questions!
+Message-ID: <20010601134754.A9156@sistina.com>
+References: <005501c0ea41$c4096de0$d37e85c8@cefetal.br>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m2bso894wn.fsf@isnogud.escape.de>; from urs@isnogud.escape.de on Fri, Jun 01, 2001 at 06:54:00AM +0200
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <005501c0ea41$c4096de0$d37e85c8@cefetal.br>; from leandro@cefet-al.br on Thu, May 31, 2001 at 11:22:51PM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,64 +18,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-A vgscan will scan all drives and correlate the information correctly.
-The actual disk device names (SCSI id's) do not matter. The LVM header
-of each PV contains volume group identification information (name and a
-unique identifier) that allows it to gather all disks of a VG together.
-The header does *not* contain the actual device file names, only which
-VG the disk belongs to and what its sequence number within the VG is...
+On Thu, May 31, 2001 at 11:22:51PM -0300, Leandro Sales wrote:
+> Hi folks...
+>   If I built the 2.4.4 Kernel, Do I need to patch anyway to use LVM? I have a SCSI and a IDE disk, when I install LVM, Am I going to
+> have boot problems 'cause of LVM?
 
-++Jos
+You should do it in order to get rid of a couple of flaws.
 
-And thus it came to pass that Urs Thuermann wrote:
-(on Fri, Jun 01, 2001 at 06:54:00AM +0200 to be exact)
+Get the LVM 0.9.1 software from top of CVS at www.sistina.com/lvm and follow
+the instruction in the INSTALL and PATCHES/README files in order to patch
+your kernel and build/install it and the tools/library.
 
-> Will my LVs continue to work, if the device names and minor device
-> numbers of my SCSI disks change?
+
 > 
-> I have installed a new 9GB SCSI drive which will eventually replace
-> two of my older 4.3GB drives.  I want to make the new drive a single
-> PV.  This is roughly what I plan to do:
+>                           Leandro Melo de Sales.
+> CEFET/AL - Centro Federal de Educa��o Tecnol�gica de Alagoas
+>             GTI - Ger�ncia de Tecnologia da Informa��o
 > 
->     pvcreate /dev/sdd1
->     vgcreate vg0 /dev/sdd1
->     lvcreate -n 0 vg0
->     lvcreate -n 1 vg0
->     ...
->     
->     mount /dev/vg0/0 /mnt
->     tar clS -C / -f - . | tar xp -C /mnt -f -
->     umount /dev/vg0/0
->     
->     mount /dev/vg0/1 /mnt
->     tar clS -C /usr -f - . | tar xp -C /mnt -f -
->     umount /dev/vg0/1
->     ...
->     
->     vi /etc/fstab	# change device names from /dev/sd... to /dev/vg0/...
->     shutdown -h now
-> 
->     remove /dev/sda and /dev/sdb, change SCSI IDs, so that
->     the former sdd becomes sda and
->     the former sdc becomes sdb.
-> 
-> 
-> Will this work?  Or will vgscan find a VG which uses the PV on
-> /dev/sdd1 as created with vgcreate?  This wouldn't work since
-> /dev/sdd1 is now /dev/sda1.
-> 
-> 
-> urs
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
--- 
-If you do what you've always done,
-You get what you've always gotten...
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
