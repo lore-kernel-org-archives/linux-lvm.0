@@ -1,7 +1,7 @@
-Message-ID: <20030910132902.61517.qmail@web42001.mail.yahoo.com>
-From: Gene <starrygene@yahoo.com>
-Subject: Re: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced Server 2.1 Please help.
-In-Reply-To: <20030910131406.GB10632@percy.comedia.it>
+Message-ID: <90D12689EF7A0543AB11426D75D6ABC508C5CFE0@oa4-server.oa.oclc.org>
+From: "Fought,Tom" <foughtt@oclc.org>
+Subject: RE: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced Server
+	 2.1 Please help.
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -13,11 +13,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 10 08:30:02 2003
+Date: Wed Sep 10 08:36:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+I have tried them all with AS 2.1, including patches.
+I won't say definitively that LVM and AS 2.1 are impossible
+to make work.. but I couldn't do it.
+
+Taroon/AS3 comes with 1.0.3 installed. Redhat is currently not
+going to move to a higher release of LVM from what I have found
+on lists.
+
+Tom
+
+-----Original Message-----
+From: Gene [mailto:starrygene@yahoo.com]
+Sent: Wednesday, September 10, 2003 9:29 AM
 To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced
+Server 2.1 Please help.
+
 
 Thanks Luca, have you tried installing LVM2 on a RH AS
 2.1 server?
@@ -74,3 +92,9 @@ __________________________________
 Do you Yahoo!?
 Yahoo! SiteBuilder - Free, easy-to-use web site design software
 http://sitebuilder.yahoo.com
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
