@@ -1,10 +1,8 @@
-Message-Id: <3255.200.158.98.53.1018997206.squirrel@www.dokbua.com>
-Subject: Re: [linux-lvm] kernel: invalidate: busy buffer
-From: "Rene @ Webscorpion.com" <rene.madsen@webscorpion.com>
-In-Reply-To: <20020416163659.GA19531@balu.kawo2.rwth-aachen.de>
-References: <20020416163659.GA19531@balu.kawo2.rwth-aachen.de>
+From: "Jason A. Fager" <jafager@jafager.com>
+Message-Id: <20020417075302.GB26644@codegate.jafager.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+Subject: [linux-lvm] vgscan fails to find volume groups
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +13,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 16 17:45:02 2002
+Date: Wed Apr 17 02:38:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@sistina.com
 
-Hm. This is getting interesting:
+I have been attempting to get LVM set up on a freshly-installed
+Slackware 8.0 system (custom 2.4.18 monolithic kernel, LVM 1.0.3,
+no kernel patches).  It works fine in multi-user mode, it works
+fine in single-user mode, however I set up the single-user init
+script like this:
 
-I installed the 1.1rc1 tools, skipped the patching, and guess what:
+(/ is mounted read only at this point)
+mount -o remount,rw /
+vgscan
+vgchange -a y
+mount -o remount,ro /
+(stock Slackware fsck and mount bits)
 
-Seems to work perfectly.
+The only volume group I have contains one physical volume
+(/dev/sdb, on an Adaptec 7xxx controller).  For some reason,
+vgscan doesn't pick up the volume group.  The exit code is 0,
+and looking at the debug output it hits /dev/sdb and spits out
+the same messages as when it hits all the other devices.
 
-Not a single error, not a core dump .... I'm just a little worried about
-the "beta quality software" sticker on it.  Any experiences with this
-version? Should I take a chance and use it anyway?
+As an experiment I put a call to sulogin before the vgscan and
+tried running it by hand; same thing happened.  I tried running
+pvcreate (on the whole disk, and after creating an LVM partition
+/dev/sdb1) and it failed with error code 7.
 
+As another experiment, I tried setting up a loopback filesystem
+on a file in the root directory.  That worked perfectly; vgscan
+picked it up, vgchange activated it, and the rest of the init
+script ran fsck and mounted it.  Other than setting up the
+loopback file the only thing I did was add a call to losetup
+before the vgscan.
 
-> On Tue, Apr 16, 2002 at 01:02:40PM -0300, Rene @ Webscorpion.com wrote:
->>
->> LVM tools are 1.0.3 - but as I said, I was unable to run the patch
->> against my kernel source -- and I need and -AC kernel to keep aquote
->> happy.
->
-> At least there's a non-AC-Patch for quota 2 (i guess that's what you
-> mean with "aquote"). I'm using it here on a Redhat System with a custom
-> kernel.
->
-> ftp://ftp.suse.com/pub/people/mason/patches/reiserfs/
->
-> There are patches for adding Quota to ReiserFS which also need Quota 2
-> to work, so the V2 Quota patch is included.
->
-> Regards, Markus
->
-> --
-> Kostenloses MySQL Datenbank-Hosting:
-> http://www.google.com/search?q=welcome+to+phpmyadmin
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Not sure if this is a problem with the kernel (i.e. SCSI driver)
+or a problem with LVM, or some boneheaded thing I'm doing wrong.
+Any advice you can give would be appreciated -- let me know if
+I can provide more information.
+
+thanks,
+jafager
