@@ -1,9 +1,7 @@
-From: Spam <spam@tnonline.net>
-Message-ID: <5211632953.20031103044044@tnonline.net>
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="----------D01D79D3ACEAEF7"
-Subject: [linux-lvm] vgreduce fails
+Message-Id: <5.2.0.9.0.20031103225927.01cbecb0@mail.mame.net>
+From: Karl Stenerud <kstenerud@mame.net>
+Mime-Version: 1.0
+Subject: [linux-lvm] LVM inaccessible after OS reinstall
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,123 +12,102 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  3 07:46:03 2003
+Date: Mon Nov  3 08:25:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-------------D01D79D3ACEAEF7
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+I recently installed Mandrake 9.2 when I discovered my current linux 
+install would not support my serial ATA card and drive.
+
+After installing it, I decided to try out LVM.  I created a group using 4 
+harddrives (using entire disk, no partitioning), set up a volume, and 
+formatted it with reiserfs.
+Actually I started with 1 volume on the empty drive, moved the data from a 
+full drive over, prepped and added that drive etc.
+
+Unfortunately, Mandrake sucks so bad that it fragged the menus on all 
+desktops when I tried to run the system update, leaving me with no shell 
+access and such.
+I did the ctrl-alt-f8 to get to a console shell and copied my /etc 
+directory to another drive, then proceeded to reinstall the OS 
+(approximately 40 times before I figured out the magical incantations 
+necessary to make it not blow up in my face).
+Note that the OS iteself was not on an LVM (hda is a normal, partitioned 
+disk). The LVM group is on hde, hdi, hdj, and hdk.
+
+Now that I have Mandrake behaving itself (sort of), I want to mount the LVM 
+group again.  Unfortunately I can't seem to get Linux to mount it without 
+complaining about not being able to reach a certain sector =(
+
+I activated the group, did a vgscan and pvscan which created the /dev 
+entries and some /etc entries, but if I try to mount it (/dev/group1/vol1), 
+it sits there and does nothing (I waited 40 minutes before giving up).
+If I run fsck.reiserfs on it, it sits busy for about 5-10 minutes and then 
+complains about not being able to reach a sector (along with a suggestion 
+that my disk has an error on it).
 
 
-  I am trying to reduce a physical volume from my VG "Server" but
-  when I get to the step "vgreduce" it fails with this error:
+[root@localhost etc]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/ide/host4/bus1/target0/lun0/disc" of VG 
+"group1" [74.47 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/ide/host4/bus0/target0/lun0/disc" of VG 
+"group1" [93.28 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/ide/host4/bus0/target1/lun0/disc" of VG 
+"group1" [149 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/ide/host2/bus0/target0/lun0/disc" of VG 
+"group1" [149 GB / 0 free]
+pvscan -- total: 4 [465.95 GB] / in use: 4 [465.95 GB] / in no VG: 0 [0]
 
-  vgreduce -- ERROR "parameter error" reducing volume group "Server" by physical volume "/dev/ide/host2/bus0/target0/lun0/part1" in kernel
-  
-  There is a logfile and debug output on http://tnonline.net/lvm.txt
-  (also attached as lvm.zip).
+[root@localhost etc]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "group1"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
 
-  I am using Gentoo Linux, but tried with vanilla kernel 2.4.22 and
-  lvm tools 1.0.7.
-------------D01D79D3ACEAEF7
-Content-Type: application/x-zip-compressed; name="lvm.zip"
-Content-transfer-encoding: base64
-Content-Disposition: attachment; filename="lvm.zip"
+[root@localhost etc]# fsck.reiserfs /dev/group1/vol1
+reiserfsck 3.6.10 (2003 www.namesys.com)
 
-UEsDBBQAAgAIAFEeYy9wZtntThMAADM8AQAHAAAAbHZtLnR4dO2dW3ObSBqG713l/0B5bzIX
-LfM1ByHX1lT5FI8nJ8dJnFOlVFhCstZIaDgocS7y27cBW7ZkwEC/8jg2mq3aJKKb7uahQTzN
-9/36lf9ZX3t/NgoU8T8vCqdRqAx8b6y4s6BnT7bW134VFl1fSzdUGFO2d98fnuwrNz4bm31n
-tvnO8WeOv/n8/dGx54Ubyte2pbZMUznY+XazOCmuNxz1bFeZeW40dgLl+yg8U+YbK6EXii9H
-E7FluoUy9L1ouliH3QtHM2e5qrih8X+/Ko/DbFhyHNIN40b4jt0fTYaK7brK9OwiWOjTszDe
-ydi+UEL73FFs5fvZyHVardYfN6sYeNGkf9WXm51VNtLR3Li59camE/Y23dk4tE83FFuUvPkv
-rf6GEkS9nhMEg8h1L5SeaGDo9G/W8HH7+PXh64MtJRmCqe8NfXus9D3R4IkXij+Ihp4c7G0r
-p3bvXLTCGygXXuQvHYe6Yzwty9p0Jj3G09u4Hp1cgjrqO5tnXhDyzdMooM3Q9odOqG660UTd
-nNp+SBtxx08O5gdBoEwtQ4vh3FRMXXm1IzrkON9q7IYKd0MGb5k83Y/RUpM9Vt2TWqpDRrvF
-r3Z09ce6e6KVDZ1a/ggZRsuyELu5ozdmi0vtRl3Zbianm+qGUvgpGDS15C6o4i6I9JauV9sH
-r9ENvfpoafDdJJeuLYVI+WrpWqsTn1bfxObiYhYFTvYXE0/sZUuMzVf1WzqzMlHT0eJkJypn
-62ui8a9t8ZfFT7k5bX1N9CWjdNq7pO53o5/L38YnbyfuspiaVNJMvdNWAqcXxG1//ea96JV9
-6jqKxlvUiUfk68uTV6KbGldexFf9o5P/ZIwrT/cW2mEULHxhz+yRG1e4vrbtul7PDpParz8X
-8SV+V1yQXp4sVyo6eLSfduHZi52L0Pnj8guNt01LXJCSu4qj/aWmcKuzvvZcHMdbX8XNvGyF
-01/4VhRqJ1348OFwb6nQ0bDf7mhsxzyz2eho9pn9Yx712NHB/oz9GH422Pu3w89v3fW1dxdB
-6IyVw/5C6SA5GKSqlm60uamlPFzzJY5pGF8O+2JkxM2Dv3xNLH/lSS7I544/cVwgcCQNXHIF
-TG4Dv2pcJaOjiWtTCeJ0rYi49sMhTrcsPY84MimPOb3NtTzmXv1v5I6GbNCe/WQftncCNtZe
-HDJz1PnC6K9jmx1ODyx1eJ/MZd+DYJlTYZNcfAPUTic5gZxKVjtzkqNOPKvNpzgqAk5fBXBq
-LeDI0igXuOS7bOLUPNz4KzOI9pimfZmytn1wzjovfp6z08F2xEYDfY99/qx97Pzzb+BG94Ab
-PcxrqvWIr6mz4Pmxu8107d0b9mU82WUvPps77JMfqcw2/j5hpxeaSsf3BFzBTxIYcCr2Jk7c
-tyY3nPHNuBgB0+RGKeDUIuA6Dwc4altWZeBEITMPuPZR+4I+se3Q/s7+so599tZsW8z4cvye
-/TX5EbK95/7M3v03gKN7AA4ww5ktTU+BM8UwmLpZDrjCezjzAc1wuk7VZzhd6+QBd3Y+G77h
-7OV4SOxt+Mlg4YfTU6Z+PHjFBi/23rO/P+mTsXmfwKn3AJz6sIEjesTEfbL2D8T18/gf/TU7
-P6cp29POf7C2QQE7HO5OWegPd//RV0xc+sRKGqq4mgd0ZdRksFGencaPyyPX/eP+LpJqwUXS
-yiNosDve+XvMvp/3D9jnd+fnbM9Q3zLae/uJvTDfWmz/VW86jFZPEGEIqvu8gvSWoSYIcV0l
-TmbJqccqnHoeJEKaOD8qI5QWyrnPetf7GAyZOvuks17vk8Y+UvCGjZ9PfjL1nauy4d7HF+NX
-q0eIYxDi9SchdT4JaaTpgEnIeFC35+06t+dG7vMubbTtztjoQ/iGvTSf91nHaE/Y3oXxhdHI
-+pv5Fzvua2P12GgYbLQHhA2pj5ibbaP//X8/2U93pDHPO3rNjOnuHts+CCL27ui5L1hSw+lh
-XW4w7ufXnZ+89Qu+0496Aji7PytXTfrff+lPxZ2NuwL77sibdkUfg5GX9Gh3++XL/T2xCefp
-Nr0zp3feDaZObySOV6ktXu5vnxy+Pijcz/bz9/vHysjrha7iO+FWfDEp2PyyynTZSLJ9TO31
-ADBFgHEen8KLq0OUsT2xh/EJdVV5vN3KOnpV+e3mLrU2qSpu7sICkEk8H1yvAolrnQ0vd5t8
-N29VWnPM0dWEsdTK3pntB8vbx3Vs3dxBTpnM5me2pmZH537V+TES592k51yPoZhjuvP9JN8v
-d0N8m9mT8mOlaVr1wcorlD1amQ3K3/Sq5/Hil0z4bn6ZUY2SXLu2FEvVd/i2+GsgZt6tWILN
-WzIQhyUIPd9ZqD/pVfmR08Wn+tDllsoekOw2ldm2502ClKiLhV6mDSjfTSP+VO9nfrHsxuc0
-q0ZPC4pMZ6UGZ75Z1uDc+OVVdXRKliwaoFtNqzSav9VBXu6w873wUKVf1zj498LL3YvuasEk
-WW1D2uMjLXmqWHdmUhtenvTMpK5mZlKbmakhLX3UWHdm4g0vT3Vmyl8CIDUz1ay2Ie2J3J3T
-au7OG9Ia0ooWbuLuthrSGtKKVmzirp7Nff0Tv6/Xat/Xaw0vT3pmUldzX99cA39f0txypLlF
-pIkvb7KxFJyhFl9V6sju3eX25QExk091QgrKVWtZESPu0zkpCrEsVpSBE0bT7tQbTULHD7oD
-z+8GE3sanHlhkGmf7ypwvdIi14J246Z0xZlnT/pdd1akf/NOsceFajVVvDTH3RxY23XFuBaO
-VN6IXnW0/JC200/1MS0qmN3l3MaVOwalhvWy0J33EVdtqWDhK45U6bLFg1XyruAxHfjbXV+6
-P8jboBYS98ZRKY1eBzLpihsCnwaBV+695kymNhw1HJXW7tIzmdrMZA2Bd1j+mjMZbzhqOCqt
-6WVmstoVNwQ+4V8FtKpfBQ2BDYG1VgvA7uYaAhsCa60igF2Fm98TDYF5qwtq/p7QGo4ajkov
-D5CeyZpr6SMhsJQELKXHl4veFLJiRNifYsux/WNL4YZZtnRa7Kv6LX7N2TT391Xl8jhlLFW4
-acdLnk9yayvqnEXVaske+HmJ8ieBdfmpfhYUlqzavuLzwH16U8AdwEqceJenDn1LQgWkPXs2
-ScNFVaqBS9egSdegS9dgSNdgStfQlq7Bkq6hI10DqfJVyFNJ8liSPJckDybJk0nyaJI8myQP
-J8nTyeXp5IA5U55OLk8nl6eTy9PJ5enk8nRyeTq5PJ2aPJ2aPJ0a4JIuT6cmT6cmT6cmT6cm
-T6cmT6cmT6cuT6cuT6cuT6cOuOOUp1OXp1OXp1OXp1OXp1OXp9OQp9OQp9OQp9OQp9MA/CCS
-p9OQp9OQp9OQp9OQp9OUp9OUp9OUp9OUp9OUp9ME/F6Xp9OUp9OUp9OUp7MtT2dbns62PJ1t
-eTrb8nS25elsAx4nydPZlqezLU+nJU+nJU+nJU+nJU+nJU+nJU+nJU+nBXjaKU+nJU9nR57O
-jjydHXk6O/J0duTp7MjT2ZGnsyNPZwfwMB7xNB7wOF4FPI9XAQ/kVcATeRXwSF4FPJNXAQ/l
-VcBTeRXwWF4FcArRRgBOEeIIYY4Q6gjhjhDyCGGPEPoI4I8IIJCII/wmgFOAQyKARCKARSKA
-RiKARyKASCKASSKASiKASyINIeIBnAJ0EgF8EgGEEgGMEgGUEgGcEgGkEgGsEgG0EumIFSMA
-TgFmiQBqiQBuiQByiQB2iQB6iQB+iQCCiQCGiQzE0iYApwDJRADLRADNRADPRADRRADTRADV
-RADXRADZRCZiDR6AU4BvIoBwIoBxIoByIoBzIoB0IoB1IoB2IoB3ojZisSiAU4B6IoB7IoB8
-IoB9IoB+IoB/IoCAIoCBIoCCIguxqhnAKcBCEUBDEcBDEUBEEcBEEUBFEcBFEUBGEcBGUQex
-/B6x/h6wAB/gozjAR3GAj+IAH8UBPooDfBQH+CgO8FEc4KM4IV4UAXAK8FEc4KM4wEdxgI/i
-AB/FAT6KA3wUR7zPhHihCfJGE4BTxDtNiJeaEG81IV5rQrzXhHixCeCjOMBHcYCP4hri1TsA
-pwAfxQE+igN8FAf4KA7wURzgozjAR3GAj+IAH8V1xDuiAE4BPooDfBQH+CgO8FEc4KM4wEdx
-gI/iAB/FAT6KG4iXmSU4LU5/UiY3SXYNnKcVDIa+E4SeXxAshNI4JKF92p3v0vkhdhgXOXUG
-ceHZsBUH84l8Jfk+rWH+j1sKkZJE+/GiSRj/7boFA99xFoLkLP27EydqGU2GytGJ4nretGCL
-l3lb1OjX7SKizTMxWP2ol9SZbB/vdea50dhRhr4XTedBXBS7F45mo/Ai3c+8/uSfi6PGXB2Z
-cjFmLnPnVIsvk1eoGJUScWUuNw1CO4yCu9tdvptX50q1fuaWKnNWVexpLmMZx/5OuHzH7sds
-9e3QVrxBDmMD3xsr/VFw/iz44xbPcRW5mYriRqWj9ZiwW5zMbqV++l1Ry53sizJP/b6JwKql
-PcIn26TayTabFIhNanNsGmDepAFuSFtMQ1RrZlIbXp70zKSuZmZSm5mpIW2eVqjWzMQbXp50
-gnJaTYJyahKUN6SVywQEujtvSGtIuyPjD+huqyGtIe2OzD6gq2dzX//E7+u12vf1WsPLk56Z
-1NXc1zfXwN+XNLccaXLJcarzVaWOwmwq5QG5zjxTjZCCctVaVirBy+M/KQqxLFaUgRNG0+7U
-G8WLT4LuwPO7wcSeBmdeGGTa57sKXO6u4uKePP2bd4o9LlSrqeJSOcdyR+qunF6PKC1UtWFd
-TVJKkkhK2aQEbJJSltfosBTjTXrdhsA8a19zJlMbjhqOSmt3WKr6ZiZrCMyz/DVnMt5w1HBU
-WtNLJwqnJlF4Q6DMqgDYr4KGwIbAWqsFYHdzDYENgbVWEcCuws3viYbAvNUFNX9PaA1HDUel
-lwdIz2TNtfSREFhKApbS49nxGubvV8ehH7pj+8eWwg2zYsSIOAaHpZptq2NdRY3IWKpw046X
-PJ/k1lbUOYuq1ZI98PMS5U8C6/JT/SwoLFm1fcXngfv0poA7gJU48a6CicqHa5GuAZAGXj63
-tHz+X/kcrfJ5NOVzHQLS0AEyhAGSNwHy6gBSngCyUQASBQBiuAPCawMiHwOC0gLihQJCOQKi
-7AECoAFidclXAYgoBwgoB4gnJ08nIDonIDgnIDYnIDQnIDInIDAnIC4nICwnIConICgnICYn
-ICQnICInICAnIB4nIBwnIBonIBgnIBYnIBQnIBInIBAnIA4nIAwnIAonICkcICccICUcICMc
-ICEcIB8cIB0cIBscIBkcIBccIBUcIBMcIBEcIA8cIA0cIAscIAkcIAccIAUcIAMcIAEcIP8b
-IP0bIPsbIPkbIPcbIPUbIPMbIPEbIO8bIO0bIOsbIOkbIOcbIOUbIOMbIOEbIN8bIN0bINsb
-INkbINcbINUbINNbB/E0HvA4HpDojQCJ3giQ6I0Aid4IkOiNAIneCJDojQCJ3giQ6I0g2gjA
-KUIcIcwRQh0h3BFCHiHsEUIfAfwRAQQScYTfBHAKcEgEkEgEsEgE0EgE8EgEEEkEMEkEUEkE
-cEmkIUQ8gFOATiKATyKAUCKAUSKAUiKAUyKAVCKAVSKAViIdsWIEwCnALBFALRHALRFALhHA
-LhFALxHALxFAMBHAMJGBWNoE4BQgmQhgmQigmQjgmQggmghgmgigmgjgmgggm8hErMEDcArw
-TQQQTgQwTgRQTgRwTgSQTgSwTgTQTgTwTtRGLBYFcApQTwRwTwSQTwSwTwTQTwTwTwQQUAQw
-UARQUGQhVjUDOAVYKAJoKAJ4KAKIKAKYKAKoKAK4KALIKALYKOoglt8j1t8DFuADfBQH+CgO
-8FEc4KM4wEdxgI/iAB/FAT6KA3wUJ8SLIgBOAT6KA3wUB/goDvBRHOCjOMBHcYCP4oj3mRAv
-NEHeaAJwininCfFSE+KtJsRrTYj3mhAvNgF8FAf4KA7wUVxDvHoH4BTgozjAR3GAj+IAH8UB
-PooDfBQH+CgO8FEc4KO4jnhHFMApwEdxgI/iAB/FAT6KA3wUB/goDvBRHOCjOMBHcQPxMrME
-p8XpT8rkJsmugfO0gsHQd4LQ8wuChVAahyS0T7uihO/Y/bJ7mYnK+1EvqTv502gyVGaeG40d
-Zeh70XQe9EQ5vVCmZxfBqGe7V1uUj4yduZ+Tg71tJQj9qBdGoo+KN8jZddrFeW6YOCXMdXXz
-2D3xgKEihF8mvMFGB8+rNP/4l4x9lT8487Eu10plNLkOjpNfa9KmuFbxz4prB+EtMkQ9C4ey
-RKW3u0ZLgGbD8X3kusqpk3bV6cec0nJ71teuz5K+Nwm7SXIhP5qGCwTlbjHPOZTJ8dLOgrj3
-Cdvi/88df+K48447P8Qk0M+jt3zgogp8Xgctqs5fyWBFC6jmhdZazIYmeX5ezczYEzS31jL5
-3Upk0Cp/fKv07/oA12l/lQxgufHoMr+tzkoJEEtm+cq9/BblAvt9U7OVT0TFNJ2qjWluHTkz
-Wsb2nc715ComVXHRWByyvE1uViVGVJynYijEtKwkWyzdVuwfH785vr3RCm9rluf3uO3RxPV6
-51lXletvMg7k/wFQSwECFAAUAAIACABRHmMvcGbZ7U4TAAAzPAEABwAAAAAAAAABACAAgIEA
-AAAAbHZtLnR4dFBLBQYAAAAAAQABADUAAABzEwAAAAA=
+*************************************************************
+** If you are using the latest reiserfsprogs and  it fails **
+** please  email bug reports to reiserfs-list@namesys.com, **
+** providing  as  much  information  as  possible --  your **
+** hardware,  kernel,  patches,  settings,  all reiserfsck **
+** messages  (including version),  the reiserfsck logfile, **
+** check  the  syslog file  for  any  related information. **
+** If you would like advice on using this program, support **
+** is available  for $25 at  www.namesys.com/support.html. **
+*************************************************************
 
-------------D01D79D3ACEAEF7--
+Will read-only check consistency of the filesystem on /dev/group1/vol1
+Will put log info to 'stdout'
+
+Do you want to run this program?[N/Yes] (note need to type Yes if you do):Yes
+###########
+reiserfsck --check started at Mon Nov  3 09:17:04 2003
+###########
+Replaying journal..
+0 transactions replayed
+
+The problem has occurred looks like a hardware problem.
+If you have bad blocks, we advise you to get a new hard
+drive, because once you get one bad block that the disk
+drive internals cannot hide from your sight, the chances
+of getting more are generally said to become much higher
+(precise statistics are unknown to us), and this disk drive
+is probably not expensive enough for you to risk your time
+and data on it. If you don't want to follow that advice,
+then if you have just a few bad blocks, try writing to the
+bad blocks and see if the drive remaps the bad blocks (that
+means it takes a block it has in reserve and allocates it
+for use for requests of that block number).  If it cannot
+remap the block, this could be quite bad, as it may mean
+that so many blocks have gone bad that none remain in
+reserve to allocate.
+
+bread: Cannot read the block (44171264): (Input/output error).
+
+Aborted (core dumped)
+[root@localhost etc]# 
