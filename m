@@ -1,10 +1,10 @@
-Message-ID: <3E0DA7BB.703C7A9B@libertysurf.fr>
-From: Philippe Lefevre <ph.l@libertysurf.fr>
+Message-ID: <3E0D9F03.8010704@wanadoo.fr>
+From: Francis SOUYRI <francis.souyri@wanadoo.fr>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Merry Christmas
-References: <20021224125721.A21501@sistina.com>
-Content-Type: multipart/alternative;
- boundary="------------C4A93798E4FAD95CE8378C00"
+Subject: Re: [linux-lvm] Problems mounting LVM root volume
+References: <1041074125.3e0d87cdaaece@ogd.nl>
+In-Reply-To: <1041074125.3e0d87cdaaece@ogd.nl>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,102 +15,111 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec 28 05:35:02 2002
+Date: Sat Dec 28 06:55:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
---------------C4A93798E4FAD95CE8378C00
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hello Patrick,
 
-Many thanks for your wishes,
-have a great new year and I hope your projects will go
-in the way you want.
-Thanks too for all the job you've made on LVM
-PhiL
+There is not enough space ("vgscan -- ERROR 28" check the file 
+"/usr/include/asm/errno.h") in the ramdisk to create the file 
+"/etc/lvmtab.d/vg3.tmp"
+
+What files did you copy to your ramdisk ?
+
+Best regards.
+
+Francis
 
 
-"Heinz J . Mauelshagen" a =E9crit :
+Patrick van den Berg wrote:
 
-> Merry Christmas to you all :-)
+>Hello everybody, 
 >
-> Enjoy a great, peaceful time with your families and friends.
+>I'm new at using LVM and I ran into trouble using it. I've got problems 
+>mounting an LVM volume as root on my system running Gentoo Linux 1.4. My 
+>configuration is as follows (skip to the bottom of the text for the actual 
+>error message): 
 >
-> Warm regards,
-> Heinz    -- The LVM Guy --
+>Gigabyte mainboard with onboard Promise RAID. I've got 2 80GB discs attached 
+>(same model) and configured as RAID1. I installed via the Gentoo RC1 Stage 1 
+>CDROM. During boot of the CD I had to abort and add the "IDE0=0x9400,0x9802 
+>IDE2=0x9c00,0xa002" parameters to be able to load the pdcraid module. 
 >
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-
+>My fstab looks as follows: 
+> 
+>/dev/ataraid/disc0/part1  /boot       ext3      noauto,noatime  1  1 
+>/dev/vg3/rootlv           /           reiserfs  noatime         0  0 
+>/dev/ataraid/disc0/part2  none        swap      sw              0  0 
+>/dev/cdroms/cdrom0        /mnt/cdrom  iso9660   noauto,ro       0  0 
+>proc                      /proc       proc      defaults        0  0 
+>tmpfs                     /dev/shm    tmpfs     defaults        0  0 
 >
-> Heinz Mauelshagen                                 Sistina Software Inc.=
-
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-
+>I also compiled my kernel using the gentoo-sources, and with the following 
+>options enabled: 
 >
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---
-------------------------------------------------------------------------
-Gnu-Linux     | Philippe Lefevre    E-mail: ph.l@libertysurf.fr |  =3D=B0=
-)
-              |                                                 |  /\\
-------------------------------------------------------------------_\_V--
-
-
-
---------------C4A93798E4FAD95CE8378C00
-Content-Type: text/html; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
-<html>
-Many thanks for your wishes,
-<br>have a great new year and I hope your projects will go
-<br>in the way you want.
-<br>Thanks too for all the job you've made on LVM
-<br>PhiL
-<br>&nbsp;
-<p>"Heinz J . Mauelshagen" a &eacute;crit :
-<blockquote TYPE=CITE>Merry Christmas to you all :-)
-<p>Enjoy a great, peaceful time with your families and friends.
-<p>Warm regards,
-<br>Heinz&nbsp;&nbsp;&nbsp; -- The LVM Guy --
-<p>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-<p>Heinz Mauelshagen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Sistina Software Inc.
-<br>Senior Consultant/Developer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Am Sonnenhang 11
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-56242 Marienrachdorf
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Germany
-<br>Mauelshagen@Sistina.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-+49 2626 141200
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-FAX 924446
-<br>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-<p>_______________________________________________
-<br>linux-lvm mailing list
-<br>linux-lvm@sistina.com
-<br><a href="http://lists.sistina.com/mailman/listinfo/linux-lvm">http://lists.sistina.com/mailman/listinfo/linux-lvm</a>
-<br>read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></blockquote>
-
-<pre>--&nbsp;
-------------------------------------------------------------------------
-Gnu-Linux&nbsp;&nbsp;&nbsp;&nbsp; | Philippe Lefevre&nbsp;&nbsp;&nbsp; E-mail: ph.l@libertysurf.fr |&nbsp; =&deg;)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; /\\&nbsp;&nbsp;
-------------------------------------------------------------------_\_V--</pre>
-&nbsp;</html>
-
---------------C4A93798E4FAD95CE8378C00--
+>- LVM support 
+>- Built-in RAM disk support with initrd 
+>- DEV fs support 
+>- mount DEV filesystem at boot
+>- ReiserFS support 
+>
+>I also ran lvmcreate_initrd with the -M option, because everything is compiled 
+>in the kernel. Also, when I run lvmceate_initrd without the -M options, it 
+>returns errors and the lvm image is not created. 
+>
+>My grub,conf (linked to menu.lst) looks as follows: 
+> 
+>default 0 
+>timeout 30 
+>splashimage=(hd0,0)/boot/grub/splash.xpm.gz 
+>
+>title=Gentoo 1.4 GNU/Linux on Antigone 
+>root (hd0,0) 
+>kernel /boot/bzImage root=/dev/vg3/rootlv ide0=0x9400,0x9802 ide2=0x9c00,0xa002 
+>initrd /boot/initrd-lvm.gz 
+>
+>
+>When I boot the system grub starts correctly, but when grub wants to boot my 
+>system the following messages appear: 
+>
+>Code: 
+>RAMDISK: Compressed image found at block 0 
+>Freeing initrd memory: 994k freed. 
+>VFS: Mounted root (ext2 filesystem). 
+>Mounted devfs on /dev 
+>vgscan -- found inactive volume group "vg3" 
+>vgscan -- ERROR 28 writing volumegroup backup file /etc/lvmtab.d/vg3.tmp in 
+>vg_cfgbackup.c [line273] 
+>vgscan -- ERROR: "lvm_tab_vg_remove(): unlink" removing volume group "vg3" 
+>from "/etc/lvmtab.d" 
+>vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" succesfully created 
+>vgscan -- WARNING: This program does not do a VGDA backup of your volume group 
+>
+>vgchange -- no volume groups found 
+>
+>VFS: Cannot open root device "vg3/rootlv" or 00:00 
+>Please append a correct "root=" boot option 
+>Kernel panic: VFS: Unable to mount rootfs on 00:00 
+>
+>
+>Now, the strange thing is, when I boot via the CD and do vgscan and
+>vgchange -ay by hand, I can mount /dev/vg3/rootlv normally! 
+>
+>Does anybody got any ideas? I've run out of them  
+>
+>Thanks for any help in advance. When you need any more info, just say so. 
+>
+>Regards, 
+>Patrick
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>  
+>
