@@ -1,10 +1,7 @@
-From: Jens Axboe <axboe@suse.de>
-Message-ID: <20011129115400.B10601@suse.de>
-References: <20011129104936.66773.qmail@web13604.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011129104936.66773.qmail@web13604.mail.yahoo.com>
-Subject: [linux-lvm] Re: lvm.c compilation errors with 2.5.1-pre2 and pre3
+From: Sarwer Zafiruddin <sarwer.zafiruddin@rune.org>
+Message-ID: <Pine.LNX.4.21.0111290858230.435-100000@sol.rune.org>
+MIME-Version: 1.0
+Subject: [linux-lvm] Mandrake 8.1 and LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,19 +12,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 29 04:52:01 2001
+Date: Thu Nov 29 07:58:06 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Todd Roy <todd_m_roy@yahoo.com>
-Cc: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Thu, Nov 29 2001, Todd Roy wrote:
-> Hi all, I got these errors trying to
-> compile 2.5.1-pre2 and pre3:
+For those Mandrake 8.1 users out there.  Does anyone know if you can setup
+the Linux Logical Volume Manager (LVM) during the install?  Ideally, I
+would like to put my /,/var,/usr,/tmp filesystems under LVM control, so I
+have the ability to expand the filesystems if it every gets full.
 
-LVM is currently not in a working state, even though you remove the
-BIO_HASHED bug test.
+Thanks,
+Sarwer
 
--- 
-Jens Axboe
+--
+--------------------------
+System Administrator
+Rune Information Services
+http://www.rune.org
+e-mail:  sarwer@rune.org
+--------------------------
