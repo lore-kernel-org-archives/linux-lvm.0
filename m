@@ -1,9 +1,8 @@
-From: Holger Rauch <Holger.Rauch@heitec.de>
-Subject: Re: [linux-lvm] Updated patch VFS-lock for 2.4.18+ XFS enabled
-    kernels
-In-Reply-To: <20020403095008.1FD14B8206@christel.heitec.net>
-Message-Id: <Pine.LNX.4.21.0204031731490.30983-100000@miami.datech2.er.heitec.net>
+From: Christophe Zwecker <doc@zwecker.de>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1017872898.18631.8.camel@dumbo.zwecker.de>
 MIME-Version: 1.0
+Subject: [linux-lvm] XFS crash on lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,51 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  3 09:40:03 2002
+Date: Wed Apr  3 16:28:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Adrian Head <ahead@bigpond.net.au>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-Hi Adrian!
+Hi,
 
-Thanks a lot for your reply! I was able to fix my problem by substituting
-DQUOT_SYNC by DQUOT_SYNC_DEV in include/linux/quotaops.h and
-fs/buffer.c. I simply did a
+I use 2.4.18-xfs with lvm-tools-1.0.1rc4_iop10-fr2
+lvm-base-1.2-fr1
 
-find . -name "*.[ch]" | xargs grep -n DQUOT_SYNC
+I havw a 200GB lv. I had 2.4.16 running after fiddling with usb the
+whole machine crashed, reboot, the fs was corrupt. I had to zerosize the
+journal log, xfs_repair, everything in lost+found.
 
-starting from /usr/src/linux. (I think somebody else mailed this already). 
+Reformating the fs didnt do the trick (ext3 or xfs) I got told when
+mounting the empty fs, the superblock was not found. Ok I did another
+xfs_repair, after I could reformat again and mount the empty xfs fs.
 
-On Wed, 3 Apr 2002, Adrian Head wrote:
+Put some data, after 10 hours I got this in kernel log:
 
-> I'm sorry to hear that your having problems.  It appears that your 2.4.18-xfs 
-> kernel doesn't have the new Quota code.
+Apr  2 18:07:33 dumbo Corruption of in-memory data detected.  Shutting
+down filesystem: lvm(58,1)
+Apr  2 18:07:33 dumbo Please umount the filesystem, and rectify the
+problem(s)
 
-Indeed, it doesn't. I was overlooking that your patch is only for kernels
-with the new quota code in your previous mail. Sorry.
+again the fs is corrupt. I searched google for this error and found
+somthing in sgi's mailinglist archive. Too bad oss.sgi.com is down since
+about 2 days :-(
 
-> Where did you get your 2.4.18-xfs kernel from?  Is it from SGI XFS CVS? or 
-> from the official split patches? or another source?
+thats why I ask here, anyone has an idea whats wrong here ? sofar I had
+only the best experience with lvm and xfs! all my other volumes seem
+intact....
 
-It is the 2.4.18 kernel coming with Debian testing (Woody) with the
-included xfs and evms patches applied.
+Anyone got an Idea what I should do ?
 
-> If is is from the official split patches did you include the 
-> xfs-2.4.18-split-quota32 patch?  It appears that oss.sgi.com is down at the 
-> moment so I cannot check the current file name.
+sofar im waiting for oss.sgi.com to come back online to check what I can
+find about this error my kernel throws...
 
-You don't have to, but thanks anyway for your help.
+thx alot for any help.
 
-> [..] 
-> Nathan Scott has advised me that I should change the name of the patch anyway 
-> as it relates to any kernel that has the new Quota code not just the XFS 
-> kernel.
+regards,
 
-If it for any kernel having the new quota code, then this is probably a
-good idea.
+Christophe
+-- 
+Christophe Zwecker                     mail: doc@zwecker.de
+Hamburg, Germany                        fon: +49 179 3994867
+http://www.zwecker.de
 
-Greetings,
-
-	Holger
+"Who is General Failure ?  And why is he reading my disk ??"
