@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] read-only media in a LVM? 
-Message-ID: <C42D120999B1CC4C886B6BB2832F356019BF8D@hermes.genomatica.com>
-From: "Sean P. Kane" <spkane@genomatica.com>
+Subject: Re: [linux-lvm] read-only media in a LVM?
+Message-ID: <3926-58764@sneakemail.com>
+References: <C42D120999B1CC4C886B6BB2832F356019BF8D@hermes.genomatica.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <C42D120999B1CC4C886B6BB2832F356019BF8D@hermes.genomatica.com>
+From: "Wolfgang Weisselberg" <uzx87lvfmukwc001@sneakemail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,38 +15,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 23 12:51:02 2003
+Date: Mon Jun 23 16:23:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Does a snapshot create a copy of all the files in memory? Just the files
-that changed? Or just the file blocks or contents (i.e. diffs) that have
-changed? So, would the snapshot have to be the same size as the cdrom or
-could it be smaller?
+Sean P. Kane wrote 36 lines:
 
-Thanks,
-Sean
+> Does a snapshot create a copy of all the files in memory?
 
+Nope.  And not in memory either.
 
-------------------------------------------------------------------------
-Sean P. Kane
-spkane@genomatica.com
-Lead Infrastructure Architect
-Genomatica, Inc.
-------------------------------------------------------------------------
-"When we destroy something man has created we call it vandalism......
- When we destroy something that Gaia has created we call it progress."
+> Just the files that changed?
 
+Nope, LVM is filesystem-agnostic, and that would have to change
+that.  More code, more errors, less usability.
 
------Original Message-----
-On Fri, Jun 13, 2003 at 04:55:40PM -0700, Sean P. Kane wrote:
-> I saw this email below and was wondering if this is supported in both
-dm
-> and the LVM2 tools now.
+Additionally, what would you do with metadata, like used
+filesystem blocks and timestamps and filenames?
 
-The tools still don't support this, so you'll have to use dmsetup to
-create a writeable snapshot of the CD.  Also be aware that you'll need
-to have a suitable fs on the CD, most CD filesystems are read only.
+Or with a 1 TB file where just 1 bit was changed?
 
-- Joe
+> Or just the file blocks or contents (i.e. diffs) that have
+> changed?
+
+Blocks of (default) 32Kb of raw disk.  They are written to the
+snapshot.  However, the tables of which blocks were written are
+kept in RAM, so a read request on the snapshot redirects only the
+unchanged blocks to the original (HD/CD) and gets the changed
+blocks out of the snapshot storage.
+
+> So, would the snapshot have to be the same size as the cdrom or
+> could it be smaller?
+
+MUCH smaller. Unless you insist on changing something in every
+32KB block of the CDrom.
+
+-Wolfgang
