@@ -1,9 +1,9 @@
-From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] read_intr errors
-Message-ID: <011101c15ded$a59767c0$0300000a@pacbell.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20011024101331.A2271@tykepenguin.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] More information on my LV with bad read performance..
+Message-ID: <20011026101055.A32377@sistina.com>
+References: <Pine.LNX.4.33.0110260000350.23688-100000@ping.us.dell.com> <20011026010656.H23590@turbolinux.com>
+Mime-Version: 1.0
+In-Reply-To: <20011026010656.H23590@turbolinux.com>; from adilger@turbolabs.com on Fri, Oct 26, 2001 at 01:06:56AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,131 +14,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 26 02:13:04 2001
+Date: Fri Oct 26 03:13:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Patrick,
+On Fri, Oct 26, 2001 at 01:06:56AM -0600, Andreas Dilger wrote:
+> On Oct 26, 2001  00:03 -0500, Robert Macaulay wrote:
+> > I realized I didn't include a lvdisplay -v of my volume. Here it is.
+> > The disks are spread out over 4 scsi busses. 
+> > 
+> > --- Logical volume ---
+> > LV Name                /dev/vgOracle/foo
+> > VG Name                vgOracle
+> > LV Write Access        read/write
+> > LV Status              available
+> > LV #                   52
+> > # open                 0
+> > LV Size                9.04 GB
+> > Current LE             2314
+> > Allocated LE           2314
+> > Stripes                26
+> > Stripe size (KByte)    64
+> > Allocation             next free
+> > Read ahead sectors     120
+> > Block device           58:51
+> 
+> Well, there was a patch in 2.4.13 to the LVM code to change the readahead
+> code.
 
-looking over the man page on lvreduce it states:
+Andreas,
+to what patch are your reffering to.
+Still see the per major read_ahead code in 2.4.13 which is partially
+usefull in the best case.
 
-> lvreduce allows you to reduce the size of a  logical  volume.
-> Be  careful  when reducing a logical volume's size,
-> because data in the reduced part is lost!!!
+Heinz
 
-the above warning is not conclusive as to whether data loss occurs only when
-the LV is full i.e. it has no choice but to lose data, of if data loss may
-occur regardless i.e. there's no smarts in lvreduce to move data around...
+> First off, it makes the default readahead 1024 sectors (512kB)
+> which may be the maximum SCSI request size (don't know the details
+> exactly).  It also sets a global read_ahead array, so this may impact
+> it also.  See above, you have a "read ahead" that is smaller than a
+> single stripe, so it isn't really doing you much good.
+> 
+> However, it is also possible that striping across 26 disks is kind of
+> pointless, especially for Oracle.  You are far better off to do some
+> intelligent allocation of the disks depending on known usage patterns
+> (e.g. put tables and their indexes on separate disks, put rollback
+> files on separate disks, put heavily used tables on their own disks,
+> put temporary tablespaces on their own disks).
+> 
+> With LVM, you can easily monitor which PVs/PEs are busiest, and even out
+> the I/O load by moving LVs/PEs with pvmove (although you CANNOT do this
+> while the database is active).
+> 
+> Make sure you keep backups of your LVM metadata (both vgcfgbackup, and
+> also save the text output of "pvdata -avP" and "lvdisplay -v").
+> 
+> Cheers, Andreas
+> --
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-can you clarify this point and perhaps reword the above for a next release
-of that man page?
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-anyhow, I understand what you're suggesting... however it's not clear to me
-what "a little" means... would 1K do? 1M?
-
-here's what I've got:
-
-# lvdisplay /dev/LVM/mp3z
---- Logical volume ---
-LV Name                /dev/LVM/mp3z
-VG Name                LVM
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 1
-LV Size                28.62 GB
-Current LE             7327
-Allocated LE           7327
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
-
-# pvdisplay /dev/hdc
---- Physical volume ---
-PV Name               /dev/hdc
-VG Name               LVM
-PV Size               28.63 GB / NOT usable 6.69 MB [LVM: 152.00 KB]
-PV#                   1
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              7327
-Free PE               0
-Allocated PE          7327
-PV UUID               vY9apM-RXf6-DtiS-m4LI-u7qT-iNjm-9SYnMz
-
-with the above, would I do:
-
-# lvreduce -l -1 /dev/LVM/mp3z
-
-to test this theory?
-
-1k thx - e
-
------Original Message-----
-From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-Behalf Of Patrick Caulfield
-Sent:	Wednesday, October 24, 2001 2:14 AM
-To:	linux-lvm@sistina.com
-Subject:	Re: [linux-lvm] read_intr errors
-
-On Tue, Oct 23, 2001 at 09:18:44PM -0700, Erick Calder wrote:
-> Patrick,
->
-> sorry for the delay, it takes 12 hours to back up this guy and another 12
-to
-> verify... and I had problems so I had to do it several times.
->
-> so if I get you correctly, I should be able to do badblock check (instead
-of
-> a mke2fs with -c option as has been suggested) and get an evaluation for
-> whether this drive has problems equally well, no?
->
-> here's what I did:
->
-> # df -k
-> Filesystem           1k-blocks      Used Available Use% Mounted on
-> /dev/hda1             38456308   2670876  33831932   8% /
-> /dev/LVM/mp3z         29540436  13308716  14731152  48% /var/mp3z
->
-> # umount /dev/LVM/mp3z
-> # vgchange -a n
-> vgchange -- volume group "LVM" successfully deactivated
->
-> root@beowulf:/root # badblocks -s /dev/hdc 29540436
-> Checking for bad blocks (read-only test): done
-
-Well that looks OK
-
-> as you can see, no errors.  Now, having said that, I've come to realise
-that
-> the errors I get happen when accessing my tape drive (which is scsi) - at
-> least I think that's what's happening... weird.  do you then think this is
-> related to the problems others have had? and if so, was there a fix?
-
-The thread about SCSI errors just stopped so I don't know what happened
-there.
-There was some thought that maybe LVM was trying to access beyond the end of
-the
-disk so you could check to see if the LV is using all the space on /dev/hdc
-and
-back it off a little so see if that helps. It may also be worth upgrading to
-LVM 1.0.1rc4.
-
-If it is the SCSI tape drive interfering then that's really odd because SCSI
-shouldnot interfere with IDE unles you have some interrupt clashes or
-perhaps
-bad cabling causing signal noise.
-
-Not very conclusive I'm afraid, but I did say I wasn't an IDE expert!
-
-patrick
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
