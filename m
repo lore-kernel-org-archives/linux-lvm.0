@@ -1,49 +1,28 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200003221725.SAA21066@u9etz.ez-darmstadt.telekom.de>
+Message-ID: <38D9054C.A53AB6AB@heider.de>
+Date: Wed, 22 Mar 2000 18:39:24 +0100
+From: "Richard Heider jr." <rhj@heider.de>
+Reply-To: richard@heider.de
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] snapshots not stable with 2.3.99pre2
-Date: Wed, 22 Mar 2000 18:25:17 +0100 (MET)
-Mime-Version: 1.0
+References: <20000322145124.A6838@gondor.com>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
-Cc: mge@ez-darmstadt.telekom.de
+To: "linux-lvm@msede.com" <linux-lvm@msede.com>
+
+Jan Niehusmann schrieb:
 
 > While testing lvm with linux 2.3.99pre2 I had 2 crashes while trying out snapshots.
 > Without snapshots lvm seems to be stable.
 
-Investigating in the area of trouble with 2.3.99pr2 kio support...
+When snapshots were mentioned the other week, I tried finding something in the docs,
+but I couldn't.
+Could someone please give me a reference on what snapshots are and how they work - or
+is it "RTF..Source" ?-)
 
-> 
-> Another problem is (probably) a missing check in lvextend: I tried to extend a
-> striped lv, and while I had enough space available, nearly all this space was on
-> one pv, so it was not possible to create a correctly striped volume with the 
-> extended size. But I didn't get the error message I expected: lvextend told me
-> everything is ok, but when I tried to ext2resize the filesystem, I got a 
-> segmentation fault.
-> 
-> 
-
-Could you provide more configuration information by "vgdisplay -v" on the
-involved VG, a "lvextend -d" stdout/stderr and an "strace ext2resize" of your
-try, please.
-
-Do you get any segfaults when you just read/write to the extended part
-of the Logical Volume with dd?
-
-Heinz
--- 
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+cu
+Richard
+--
+Richard Heider jr.                            http://www.heider.de/
