@@ -1,14 +1,10 @@
-From: "Martin Mosny, PosTel a.s." <mmosny@postel.sk>
-Message-ID: <135106662292.20020809152009@postel.sk>
-Subject: Re[2]: [linux-lvm] kernel panic - converting root fs to lvm
-In-Reply-To: <OE183IR6t6c6oghBePr00001338@hotmail.com>
-References: <OE50LHN0t0oY6k8zpHy0000da29@hotmail.com>
- <20020808172939.GA18645@colombina.comedia.it>
- <OE30LU028EGcAJ4e7jX0000ec6f@hotmail.com>
- <20020809061302.GA22782@colombina.comedia.it>
- <OE183IR6t6c6oghBePr00001338@hotmail.com>
+Message-ID: <47415.80.67.170.17.1028899844.squirrel@rezo.net>
+Subject: Re: [linux-lvm] Re: can't mount ext3 snapshot => needs_recovery flag always set on mounted ext3 partitions
+From: "Antoine" <antoine@rezo.net>
+In-Reply-To: <20020809125201.GA3009@fib011235813.fsnet.co.uk>
+References: <20020809125201.GA3009@fib011235813.fsnet.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,64 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug  9 08:19:01 2002
+Date: Fri Aug  9 08:30:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Jorge Melhado <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hello Jorge,
+> Try LVM2, it supports writeable snapshots.
 
-check this out!
+Well, I'm not sure it's stable enough. Is it ?
 
-/etc/fstab:
-something like this if you have ext3 or change to ext2.
+> The point of the VFS patch you mentioned in an earlier email was to
+> ensure that the journals are flushed correctly before the snapshot is
+> taken.
 
-/dev/lvm_disk/root      /                       ext3    defaults        1 1
-/dev/hda1               /boot                   ext2    defaults        1 2
+!! Ooops... My fault ;) I had just applied the patch issued by 'make' in
+the PATCHES directory. I thought it would include the VFS patch ; after
+checking the kernel files it seems it does not (and the README doesn't
+say anything about applying the VFS patch separately...).
 
-check  that  the  lvm  partition have devices in /dev/ == /dev/lvm_disk/root (like
-your).
+Ok, now the VFS patch is really there, it works ;) Sorry, the doc files
+weren't very clear....
 
+Thanks,
 
-check the /etc/lilo.conf:
-
-image=/boot/vmlinuz-2.4.18
-        label=lvm-18
-        read-only
-        root=/dev/lvm_disk/root
-        initrd=/boot/initrd-lvm-2.4.18.img.gz
-
-check  that  linuxrc  in  the ramdisk initrd-lvm-xxxxx.img.gz contains
-something like this:
-
-echo "Loading jbd module"
-insmod /lib/jbd.o
-echo "Loading ext3 module"
-insmod /lib/ext3.o
-echo "Loading lvm-mod module"
-insmod /lib/lvm-mod.o
-echo "Mounting /proc filesystem"
-mount -t proc /proc /proc
-echo "Running vgscan"
-vgscan
-echo "Running vgchange -a y"
-vgchange -a y
-echo Creating root device
-mkrootdev /dev/root
-echo 0x0100 > /proc/sys/kernel/real-root-dev
-echo Mounting root filesystem
-mount --ro -t ext3 /dev/root /sysroot
-umount /proc
-pivot_root /sysroot /sysroot/initrd
-
-You  need  to  have  equivalent  modules in the /lib of the initrd-lvm
-disk.
-
-and  dont  forget  check  dir  /initrd  in the /dev/lvm_disk/root root
-partition!
-
-have more fun! ;)
-
-Best regards
-
-Martin
+Antoine.
