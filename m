@@ -1,12 +1,12 @@
-Return-Path: <andrea@suse.de>
-Date: Wed, 15 Aug 2001 23:19:32 +0200
-From: Andrea Arcangeli <andrea@suse.de>
-Subject: Re: [lvm-devel] Re: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 1.0 available at www.sistina.com
-Message-ID: <20010815231932.C27003@athlon.random>
-References: <20010815175659.A29749@sistina.com> <20010815182548.U3941@gum01m.etpnet.phys.tue.nl> <20010815185005.A32239@sistina.com> <20010815190428.A11146@athlon.random> <20010815210622.A1221@btconnect.com> <20010815221623.C11146@athlon.random> <20010815222030.A23962@caldera.de>
+Return-Path: <bluca@comedia.it>
+Date: Wed, 15 Aug 2001 23:30:04 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Adding a mirror after-the-fact
+Message-ID: <20010815233003.A2260@colombina.comedia.it>
+References: <20010814171159.B28266@linux.com> <20010815105623.A29693@sistina.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010815222030.A23962@caldera.de>; from hch@ns.caldera.de on Wed, Aug 15, 2001 at 10:20:30PM +0200
+In-Reply-To: <20010815105623.A29693@sistina.com>; from mauelshagen@sistina.com on Wed, Aug 15, 2001 at 10:56:23AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,14 +20,31 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Christoph Hellwig <hch@suse.de>, lvm-devel@sistina.com, Joe Thornber <thornber@btconnect.com>, Kurt Garloff <garloff@suse.de>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-On Wed, Aug 15, 2001 at 10:20:30PM +0200, Christoph Hellwig wrote:
-> In principle yes, but beta7 is the wrong target, the one that needs to
-> be converted easily is the old (=0.9) format, people using betas should
-> really know what they are doing while a seamless upgrade from the latest
-> release version is a must.
+On Wed, Aug 15, 2001 at 10:56:23AM +0200, Heinz J . Mauelshagen wrote:
+> On Tue, Aug 14, 2001 at 05:11:59PM -0400, Jason Tackaberry wrote:
+> > I know this isn't strictly an LVM question, but ...
+> > 
+> > Suppose I have a volume group with 1 physical volume, say a 9GB disk.
+> > Now, after some time, I decide I want to mirror this VG with another 9GB
+> > disk.  What options do I have?  AFAICS, the only way to do this would be
+> > to start from scratch?  This is a pretty simple and presumably common
+> > thing to want to do, so I hope I'm wrong.  :)
+> 
+> Yes, you are (with 2.4 kernels) ;-)
+> 
+> You could either mirror the whole disk using MD *without* persistent superblocks
+> 
+raid superblock is at end of disk, so you could also
+create an lv with only the last PE of the PV and NEVER USE it
 
-fine with me, beta7 or 0.9 doesn't matter in this respect.
+L.
 
-Andrea
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
