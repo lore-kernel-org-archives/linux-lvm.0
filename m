@@ -1,11 +1,11 @@
-Return-Path: <John.Forrer@comsat.com>
-Mime-Version: 1.0
-Date: Mon, 6 Aug 2001 08:54:11 -0400
-Message-ID: <0024EE45.C22219@comsat.com>
-From: John.Forrer@comsat.com
-Content-Transfer-Encoding: 7bit
-Content-Description: cc:Mail note part
-Subject: [linux-lvm] Looking for recipe for LVM
+Return-Path: <defranco@cup.hp.com>
+Message-ID: <3B6ECD70.8445A213@cup.hp.com>
+Date: Mon, 06 Aug 2001 10:01:36 -0700
+From: John DeFranco <defranco@cup.hp.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM with multi-path disks?
+References: <3B6B30C4.B4427F3D@cup.hp.com> <20010804174049.B564@colombina.comedia.it> <20010805022800.A26419@vestdata.no> <20010805091201.A4490@colombina.comedia.it> <20010805003257.A2728@glines.org> <20010805095811.A4626@colombina.comedia.it> <3B6D85EB.4AFF6D2D@cup.hp.com> <20010805202558.A13863@colombina.comedia.it> <20010805234715.A30768@vestdata.no>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,16 +17,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
- I have found lots of mail from people jumping hurdles to get various aspects of
-lvm working, but have yet to find a recipe that I can understand for getting lvm
-installed/loaded/...  into Redhat 7.1.  from scratch.  I have a Dell computer
-with 4 scsi drives of 36G each that need to be mounted as a single drive.  Any
-suggestions about where I can find/buy such a recipe and/or a canned solution?  
+Ragnar Kj=EF=BF=BDrstad wrote:
+>=20
+> On Sun, Aug 05, 2001 at 08:25:58PM +0200, Luca Berra wrote:
+> > in *redhat* kernels there is a patch that adds multipath support
+> > to the md driver, you configure it as a raid-1 array, but it is
+> > actually a multipath configuration.
+>=20
+> If I remember correctly, you configure as "multipath" not "raid1".
+>=20
+Do you know where the above is defined? I cannot find
+anything in the raid documentation that talks about=20
+multipath?
 
-Thanks for your help.
+> > it is the only way i know of doing what you want.
+> Another alternative is the linux-driver for the SUN T3. I haven't tried
+> it myself, but supposedly one can use the same driver for other
+> dual-path RAIDs as well.
+And I'm using something similiar to this driver, which
+is what is giving me problems.
 
-John Forrer
-LMGT
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Cheers
+   -jdf
