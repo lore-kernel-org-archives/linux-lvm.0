@@ -1,12 +1,12 @@
-Return-Path: <pwk.linuxfan@gmx.de>
-From: Peter Kirk <pwk.linuxfan@gmx.de>
-Subject: Re: System goes very slow (was: Re: [linux-lvm] Test of LVM)
-Date: Sun, 27 May 2001 15:33:32 +0200
-References: <01052614354500.00527@notch> <01052704562400.02599@notch> <3B10B023.E140C22E@loria.fr>
-In-Reply-To: <3B10B023.E140C22E@loria.fr>
-MIME-Version: 1.0
-Message-Id: <01052715333200.00595@notch>
-Content-Transfer-Encoding: 8bit
+Return-Path: <michael@visi.com>
+Date: Sun, 27 May 2001 12:01:29 -0500
+From: idsfa@visi.com
+Subject: Re: [linux-lvm] LVM and *bad* performance (counterexample)
+Message-ID: <20010527120129.A4460@mitethe.eudyptes>
+References: <m2ofsguzp5.fsf@isnogud.escape.de> <200105270747.f4R7lIYa005098@webber.adilger.int>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200105270747.f4R7lIYa005098@webber.adilger.int>; from adilger@turbolinux.com on Sun, May 27, 2001 at 01:47:18AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,38 +19,65 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Am Sonntag, 27. Mai 2001 09:43 schrieben Sie:
-> > root@notch:/home/pwk > bonnie -s 1024MB
-> > Bonnie 1.2: File './Bonnie.2815', size: 1073741824, volumes: 1
-> > Writing with putc()...          done:   3270 kB/s  35.4 %CPU
-> > Rewriting...                    done:   1505 kB/s  19.3 %CPU
-> > Writing intelligently...        done:   4682 kB/s  11.4 %CPU
-> > [I stopped bonnie here, do you need more output ?]
->
-> Is DMA set on your harddrive ? (hdparm)
->
-> DL
-Yes I thought it was enabled, until I checked. hda had it enabled, and hdb 
-had not :-(
-Here is the new bonnie
+On Sun, May 27, 2001 at 01:47:18AM -0600, Andreas Dilger wrote:
 
-root@notch:/home/pwk > bonnie -s 512
-Bonnie 1.2: File './Bonnie.651', size: 536870912, volumes: 1
-Writing with putc()...         	done:  13874 kB/s  98.1 %CPU
-Rewriting...                   	done:  10629 kB/s   6.0 %CPU
-Writing intelligently...       	done: 107497 kB/s  93.1 %CPU
-Reading with getc()...         	done:  11554 kB/s  75.6 %CPU
-Reading intelligently...       	done:  52766 kB/s  24.3 %CPU
-Seeker 1...Seeker 2...Seeker 3...start 'em...done...done...done...
-              ---Sequential Output (nosync)--- ---Sequential Input-- --Rnd 
-Seek-              -Per Char- --Block--- -Rewrite-- -Per Char- --Block--- 
---04k (03)-Machine    MB K/sec %CPU K/sec %CPU K/sec %CPU K/sec %CPU K/sec 
-%CPU   /sec %CPUnotch  1* 512 13874 98.1107497 93.1 10629  6.0 11554 75.6 
-52766 24.3  279.6  1.0
+> I'm not sure if it is an SMP or SCSI issue, or what.  Urs, do you also
+> have an SMP system?  Maybe there are locking slowdowns under SMP and
+> not under UP?
 
-So... is this appropriate for two fast disks ? 10MB/sec are much better, but 
-I was thing of 40 or 50 MB/sec. Am I doing anything wrong ?
+I haven't got a UP kernel to test right now to confirm, but my SMP
+purely IDE system (specs follow) shows rough parity at 512 byte
+reads and 2x FASTER on the LV at 4096 byte blocks.  When I switch
+to a striped LV I see parity at both sizes, with the LV being
+slightly faster.  For giggles, I also checked out a RAID-1 (mirror)
+set as well, which smoked everything, as it should.
 
-pwk.linuxfan
+Device                 Block     Real          User          Sys
+/dev/md0                512     2.080s        0.110s        0.660s
+/dev/hda1               512     5.079s        0.140s        2.040s
+/dev/mitethe/nostripe   512     4.795s        0.300s        2.380s
+/dev/mitethe/stripe     512     4.350s        0.090s        2.530s
+
+/dev/md0                4096   16.482s        0.060s        6.090s
+/dev/mitethe/nostripe   4096   26.278s        0.010s        7.270s
+/dev/mitethe/stripe     4096   32.803s        0.170s       12.020s
+/dev/hda1               4096   40.947s        0.180s       13.590s
+
+
+Now comes the part where I admit we're comparing apples to oranges:
+
+Linux 2.4.3
+LVM   0.9.1_beta7
+2x Pentium III 600MHz
+Tyan Tiger 133 Mobo (running at 133 FSB)
+
+Maxtor 53073U6		30GB ATA/66    hda
+WDC WD300AB-00BVA0	30GB ATA/66    hdc
+
+/dev/hda:
+ multcount    = 16 (on)
+ I/O support  =  1 (32-bit)
+ unmaskirq    =  1 (on)
+ using_dma    =  1 (on)
+ keepsettings =  0 (off)
+ nowerr       =  0 (off)
+ readonly     =  0 (off)
+ readahead    =  8 (on)
+ geometry     = 59554/16/63, sectors = 60030432, start = 0
+
+/dev/hdc:
+ multcount    = 16 (on)
+ I/O support  =  1 (32-bit)
+ unmaskirq    =  1 (on)
+ using_dma    =  1 (on)
+ keepsettings =  0 (off)
+ nowerr       =  0 (off)
+ readonly     =  0 (off)
+ readahead    =  8 (on)
+ geometry     = 58168/16/63, sectors = 58633344, start = 0
+
+-- 
+$ fortune -m Kellen
