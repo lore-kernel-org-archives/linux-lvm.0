@@ -1,10 +1,11 @@
-Return-Path: <michael_e_brown@dell.com>
-Date: Wed, 28 Mar 2001 10:46:50 -0600 (CST)
-From: Michael E Brown <michael_e_brown@dell.com>
-In-Reply-To: <200103281340.f2SDe0D25856@smtp6.us.dell.com>
-Message-ID: <Pine.LNX.4.30.0103281010350.10643-100000@blap.linuxdev.us.dell.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: alternate pathing with lvm?
+Return-Path: <markv@wave.co.nz>
+Date: Thu, 29 Mar 2001 16:38:16 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] safe to ru-run vgscan after mounting LV root?
+Message-ID: <20010329163815.A30619@mail.wave.co.nz>
+References: <20010327161517.G993@tykepenguin.com> <Pine.LNX.4.30.0103271059250.25693-100000@bongo.fms.indiana.edu>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.30.0103271059250.25693-100000@bongo.fms.indiana.edu>; from Jay Sissom on Tue, Mar 27, 2001 at 11:01:50AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,23 +17,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: josv@osp.nl, Stephan.Hendl@lds.brandenburg.de
 
-Check out the latest redhat rawhide kernel.
-ftp://ftp.redhat.com/pub/rawhide/SRPMS/SRPMS/kernel-2.4.2*
+On Tue, 27 Mar 2001, Patrick Caulfield wrote:
+> You can run vgscan as many times as you like. The main reason you wouldn't is
+> the time it can take. But even that is small compared to the initialisation time
 
-The version that is there now is kernel-2.4.2-0.1.28.src.rpm. Install that
-RPM and look in /usr/src/redhat/SOURCES for linux-2.4.2-multipath*
+Thanks for the feedback.  That's what I figured, but ...
 
-This is an 'md' layer enhancement to do multipath (alternate pathing).
+On Tue, Mar 27, 2001 at 11:01:50AM -0500, Jay Sissom wrote:
+> Just a warning.  When I run vgscan on my system, it deletes my LV.  I
+> still don't know why.  There seems to be a terrible bug in vgscan.
 
-This version has some known bugs. Watch for kernel-2.4.2-0.1.x where
-x>=40, for a version with fixes.
+... this worries me.
 
---
-Michael Brown
-Linux Systems Group
-Dell Computer Corp
+Could anyone else comment on this, please?  Is Jay's problem bizzare
+and irreproducable, or is there possibly a problem with replacing the
+lvmtab files from beneath the noses of the other tools?
+
+Thanks,
+
+Mark.
