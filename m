@@ -1,8 +1,6 @@
-From: Frode Ulsund <frode@gangstah.net>
-MIME-Version: 1.0
-Message-Id: <01111412324803.02444@nerds>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Vgchange : error code -22
+From: MAILER-DAEMON@softhome.net
+Message-Id: <E163bmH-00053Y-00@hermes.sistina.com>
+Subject: [linux-lvm] failure notice
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,10 +11,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 13 05:30:02 2001
+Date: Tue Nov 13 05:31:02 2001
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+
+Hi. This is the qmail-send program at softhome.net.
+I'm afraid I wasn't able to deliver your message to the following addresses.
+This is a permanent error; I've given up. Sorry it didn't work out.
+
+<jldomingo@softhome.net>:
+Recipient's mailbox is full, message returned to sender. (#5.2.2)
+
+--- Below this line is a copy of the message.
+
+Return-Path: <linux-lvm@sistina.com>
+Received: (qmail 25970 invoked by uid 417); 13 Nov 2001 11:24:57 -0000
+Received: from unknown (HELO aseara.com) (216.121.96.120)
+  by 192.168.0.5 with SMTP; 13 Nov 2001 11:24:57 -0000
+Received: (from bin@localhost)
+	by aseara.com (8.9.3/8.9.3) id NAA31732
+	for jldomingo@softhome.net; Tue, 13 Nov 2001 13:25:05 +0200
+Received: from hermes.sistina.com (hermes.sistina.com [208.210.145.141])
+	by aseara.com (8.9.3/8.9.3) with ESMTP id NAA31648
+	for <jdomingo@internautas.org>; Tue, 13 Nov 2001 13:25:03 +0200
+Received: from localhost ([127.0.0.1] helo=hermes.sistina.com)
+	by hermes.sistina.com with esmtp (Exim 3.32 #6)
+	id 163blU-000503-00; Tue, 13 Nov 2001 05:30:04 -0600
+Received: from ti200710a080-0591.bb.online.no ([146.172.108.79] helo=nerds.die.ms)
+	by hermes.sistina.com with esmtp (Exim 3.32 #6)
+	id 163blF-0004zn-00
+	for linux-lvm@sistina.com; Tue, 13 Nov 2001 05:29:50 -0600
+Received: from localhost (localhost [[UNIX: localhost]])
+	by nerds.die.ms (8.11.4/8.11.4) id fAEBXAV02475
+	for linux-lvm@sistina.com; Wed, 14 Nov 2001 12:33:10 +0100
+Content-Type: text/plain;
+  charset="iso-8859-1"
+From: Frode Ulsund <frode@gangstah.net>
+To: linux-lvm@sistina.com
+X-Mailer: KMail [version 1.2]
+MIME-Version: 1.0
+Message-Id: <01111412324803.02444@nerds>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Vgchange : error code -22
+Sender: linux-lvm-admin@sistina.com
+Errors-To: linux-lvm-admin@sistina.com
+X-BeenThere: linux-lvm@sistina.com
+X-Mailman-Version: 2.0.6
+Precedence: bulk
+Reply-To: linux-lvm@sistina.com
+List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
+List-Post: <mailto:linux-lvm@sistina.com>
+List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
+List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
+List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
+List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
+X-Original-Date: Wed, 14 Nov 2001 12:33:10 +0100
+Date: Wed, 14 Nov 2001 12:33:10 +0100
 
 Hi there!
 
@@ -56,3 +111,9 @@ vgchange -- unlocking logical volume manager
 <1> lvm_unlock -- LEAVING with ret: 0
 <1> lvm_unlock -- CALLED
 <1> lvm_unlock -- LEAVING with ret: -104
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
