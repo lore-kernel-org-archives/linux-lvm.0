@@ -1,14 +1,9 @@
-Return-Path: <hopper@omnifarious.mn.org>
-Date: Fri, 27 Jul 2001 15:32:31 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.org>
-Subject: Re: [linux-lvm] AJ's postings
-Message-ID: <20010727153231.B31096@omnifarious.org>
-References: <Pine.LNX.4.33.0107271727460.16916-100000@greebo.foobarhouse.com> <20010727125542.B14486@sistina.com> <20010727125750.M5363@unirez.com> <20010727132910.A20153@sistina.com> <3B61CE2B.F8B4BE1@divsol.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Content-Disposition: inline
-In-Reply-To: <3B61CE2B.F8B4BE1@divsol.com>; from jcromie@divsol.com on Fri, Jul 27, 2001 at 02:25:15PM -0600
+Return-Path: <jamesp@foobarhouse.com>
+Date: Sat, 28 Jul 2001 15:14:23 +0100 (BST)
+From: James Pattinson <jamesp@foobarhouse.com>
+Message-ID: <Pine.LNX.4.33.0107281511250.5058-100000@greebo.foobarhouse.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] more snapshot probs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,55 +15,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi
 
-On Fri, Jul 27, 2001 at 02:25:15PM -0600, Jim Cromie wrote:
->=20
-> all your recent postings (that I still have, back to last thurs)  are all=
- in
-> attachements - no body.
-> I cant get netscape messenger to actually do inline-format, at least for =
-your
-> text/plain attachment.
->=20
-> I can read it either by;
-> a- replying-to  ( seems to inline properly )
-> b-  grab attachement pane, right-click attachment, select open
->=20
-> its probably just me, but if theres some attachment options at your dispo=
-sal,
-> Id appreciate it.
+I've applied the recommended patches to 2.4.7 - beta8, VFS lock, and patch
+in previous emails.
 
-	It's because he's using multipart/signed and cryptographically
-signing all of his messages.  Many mailers do brain damaged things with
-multipart/signed.  Some support it, and for those ones, it's really the
-only way to go for signed messages.
+Now, when I create a snapshot LV:
 
-Have fun (if at all possible),
---=20
-"It does me no injury for my neighbor to say there are twenty gods or no Go=
-d.
-It neither picks my pocket nor breaks my leg."  --- Thomas Jefferson
-"Go to Heaven for the climate, Hell for the company."  -- Mark Twain
--- Eric Hopper (hopper@omnifarious.org  http://www.omnifarious.org/~hopper)=
- --
+lvcreate -s -L500 -nsnap /dev/vg00/lvol6
+(where /dev/vg00/lvol6 is 3GB striped across 2 PVs)
 
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+I get these 2 messages in my logs a few seconds later:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Jul 28 15:10:05 greebo kernel: lvm -- _pv_get_number failed for rdev = 0
+Jul 28 15:10:05 greebo kernel: lvm -- giving up to snapshot
+/dev/vg00/lvol6 on /dev/vg00/snap: couldn't prepare kiovec blocks (start
+probably isn't block aligned)
 
-iD8DBQE7Yc/fG4QeWBeRdS8RAktNAKCKraoJP1iRd6TWioROFG0rG7SldQCfZoRL
-IIyp+pgdZAXm9Yb7HSkBlnE=
-=O8E+
------END PGP SIGNATURE-----
+THen when I try to mount:
 
---dDRMvlgZJXvWKvBx--
+[root@greebo /root]# mount /dev/vg00/snap /mnt/homesnap/
+/dev/vg00/snap: Input/output error
+mount: permission denied
+
+And in the log:
+
+Jul 28 15:13:28 greebo kernel: lvm - lvm_map: ll_rw_blk for inactive LV
+/dev/vg00/snap
+
+Any ideas?
+
+Cheers!
+
+James
