@@ -1,13 +1,10 @@
-Return-Path: <misiek@pld.ORG.PL>
-Subject: Re: [linux-lvm] problems with gcc 3.0 & lvm tools
-References: <Pine.LNX.4.33.0106262221410.7216-100000@moon.dice.hu>
-	<3B38F9ED.29BA245A@tls.msk.ru>
-From: Arkadiusz Miskiewicz <misiek@pld.ORG.PL>
-Date: 26 Jun 2001 23:28:50 +0200
-In-Reply-To: <3B38F9ED.29BA245A@tls.msk.ru>
-Message-ID: <877kxzkk19.fsf@arm.t19.ds.pwr.wroc.pl>
+Return-Path: <jdiehl@sandia.gov>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BF4D@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Date: Tue, 26 Jun 2001 15:47:49 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Help removing a PV to find stability problem.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,35 +16,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Michael Tokarev <mjt@tls.msk.ru> writes:
+Hi all,
 
-> Gergely Tamas wrote:
-> > 
-> > GCC 3.0 implements ``printf'' as a macro.
-> 
-> Why *gcc* *implements* printf at all???  It is in
-> C library, not in compiler, or always was that.
+I'm having sever filesystem instability problems and am trying to figure out
+what is causing it.  I'm running kernel 2.2.18.smp with LVM 0.91.b7 and the
+ReiserFS 3.5.31.
 
-glibc defines printf() as fprintf(stdout, ...) macro when it detects
-compiler >= 2.97 (because gcc can optimize fprintf()), so it's not gcc
-problem.
+If anyone knows a reason why this combination won't play well together,
+please let me know.  Otherwise....
 
-> But wait: *if* this *is* an issue, then TONS of other programs
-> will break the same way.  And gcc people should just not do so,
-> is is a bug (serious) in gcc in this case and should be fixed
-> in a first place.
+I have resized my filesystem and shortened it by about 60G.  Now I need to
+figure out how to remove a physical volume from the volume group.  
 
-http://sources.redhat.com/ml/libc-alpha/2001-01/msg00187.html
-http://sources.redhat.com/ml/libc-alpha/2001-01/msg00214.html
-and whole thread
-http://sources.redhat.com/ml/libc-alpha/2001-01/msg00186.html
+My intent is to then put an ext2 fs on it and beat on the drive. If the
+machine is still stable, my RAID driver is ok.  Then I will put a reiserfs
+on it and beat on it again.  If it is still ok, then the the reiserfs is
+ok....
 
->  Michael.
+I just need to know how to remove a selected PV from a VG.
 
--- 
- Arkadiusz Mi�kiewicz, AM2-6BONE, 1024/3DB19BBD
- IPv6 ready PLD Linux at http://www.pld.org.pl/
-My jsme Borg. Odpor je marn�, budete asimilov�ni
+Thanx in advance,
+Mike Diehl,
+Network Monitoring Tool Devl.
+Sandia National Laboratories.
+(505) 284-3137
+jdiehl@sandia.gov
