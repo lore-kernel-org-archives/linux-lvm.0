@@ -1,8 +1,8 @@
-Message-ID: <38A1CE1E.49BCA063@tkg.com>
-Date: Wed, 09 Feb 2000 15:29:18 -0500
+Message-ID: <38A1E06D.732A9B0@tkg.com>
+Date: Wed, 09 Feb 2000 16:47:25 -0500
 From: Christopher Shaulis <shaulis@tkg.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] AIX JFS dual-mount
+Subject: [linux-lvm] Configuring boot partition with LVM (fwd)
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -10,16 +10,26 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: "linux-lvm@msede.com" <linux-lvm@msede.com>
 
-There is something called clvm (concurrent logical volume manager) for
-AIX which ships as part of HACMP (high availability clustering
-software). Its a combination of a kernel module and a user-mode locking
-deamon. It allows multiple systems to access the same volume groups in
-a twintail SCSI or multi-initiator SSA configuration. The lock managers
-on each machine communicate over TCP/IP. 
+As of AIX 4.3.3, you can't boot off of a striped logical volume, 
+although you can have your boot partition mirrored on multiple physical
+volumes. All of the physical volumes with a copy of the boot lv must be
+in the boot list. Thats new as of AIX 4.2.0, although you need a couple
+APARs to have it work right at that version.
 
-According to the HACMP training class, clvm is seldom used and is
-reported to be slow. Most developers (ie Oracle) choose instead to roll
-their own locking solutions. I've never actually seen anyone use it
-myself -- outside of an exercise in the HACMP class that is. ;)
+I can't remember exactly how they explained it, but IBM has a good
+reason for not allowing mirrored dump devices. I think the idea is that
+in order to catch the system dumping in the LVM code itself, you have to
+write the dump without the aid of the LVM. I think the way that works is
+that it precomputes a list of offset:extent lists for the device when it
+is brought online. If anyone really wants to know what goes on behind
+the scenes let me know -- I've got a couple colleagues that do AIX
+kernel development at IBM. You are allowed to have a secondary dump
+device but that only gets used if writing to the first device fails.
 
 Christopher
+
+From: Jens-Uwe Mager <jum@anubis.han.de>
+> At least the IBM people with the AIX LVM are able to make that 
+> work. The only thing that they were not able for a long time is to
+> make system dumps work in such a configuration. But I believe that 
+> even that works under AIX 4.3.x now.
