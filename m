@@ -1,7 +1,7 @@
 From: "DJ TweeQ" <djtweeq@hotmail.com>
 Mime-Version: 1.0
-Message-ID: <F117BHa3ney2KMH9Nev0003882b@hotmail.com>
-Subject: [linux-lvm] Re: Sharing LVM's via NFS on Redhat 8.0 Part2 - SAMBA?
+Message-ID: <F168Oc0Ne0PaLI9mK6P00001454@hotmail.com>
+Subject: [linux-lvm] Sharing LVM's via NFS on Redhat 8.0 Part2 - SAMBA?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,7 +12,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 17 18:32:02 2003
+Date: Mon Feb 17 18:32:04 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -28,5 +28,5 @@ tricks required? :)
 
 
 _________________________________________________________________
-STOP MORE SPAM with the new MSN 8 and get 2 months FREE*   
-http://join.msn.com/?page=features/junkmail
+MSN 8 helps eliminate e-mail viruses. Get 2 months FREE*.  
+http://join.msn.com/?page=features/virus
