@@ -1,10 +1,8 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Message-ID: <20030327174440.A2111@uk.sistina.com>
-References: <20030327102520.GA13565@fib011235813.fsnet.co.uk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030327102520.GA13565@fib011235813.fsnet.co.uk>; from joe@fib011235813.fsnet.co.uk on Thu, Mar 27, 2003 at 10:25:20AM +0000
-Subject: [linux-lvm] Re: Patchset 2.4.20-dm-10
+Message-ID: <2933.10.10.184.36.1048810470.squirrel@webmail.mcc.edu>
+From: <rschapel@edtech.mcc.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] A little Cluster/Newbie help pls!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +13,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar 27 11:45:02 2003
+Date: Thu Mar 27 18:28:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: dm-devel@sistina.com
-Cc: linux-lvm@sistina.com, lvm-devel@sistina.com
+To: linux-lvm@sistina.com
 
-On Thu, Mar 27, 2003 at 10:25:20AM +0000, Joe Thornber wrote:
-> http://people.sistina.com/~thornber/patches/2.4-stable/2.4.20/2.4.20-dm-10.tar.bz2
- 
-I've uploaded a new device-mapper tarball corresponding to this:
+Ok, well I have been pouring over the archives for a little while now, and
+just haven't found what I was looking for so be prepared for some newbie
+ness.  (Also went through the FAQ)
 
-  ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper.0.96.08.tgz
+Currently I have a goal to setup a nice little active-active fail-over
+cluster. We are going to be using this cluster for samba file service to a
+semi large group of users. I don't intend to use a GFS file system to
+actually access the same data at the same time (GFS is $$ correct?) so I
+was going to create separate partitions on a shared external scsi box (I
+am using a couple of Dell 2650's (with PERC 3/DC's Raid cards) and a PV
+220 with number 73 gig drives) I was going to setup two separate raid
+sets, and just fail over a raid set in case of problems. But during my
+quest of finding out info, it seems like these cards can actually can
+share the same raid set at the same time (anybody else ever do this? am I
+off my rocker?). This leads me to think that LVM would be perfect for this
+scenario. That is if LVM can handle be accessed by the cluster. I was
+thinking this might be possible since I would be making separate LV's. Am
+right in thinking that this will save me a disk (one) from having do
+parity, and give me the option to move space around. Of course this could
+just ranting all around. =) Is this possible? Is it a horrible Idea? I
+realize there is going to be the possibility for the "split brain"
+problem, is there ways to guard against this? I was thinking of using some
+well timed external powerswitch boxes to help avoid this issue. Is it just
+not worth the risk?  I am hoping some you people have had more experience
+with this might be able to send some wisdom!
 
-The tarball contains up-to-date combined patches for 2.4.20,
-incorporating a few minor bug fixes and a little restructuring.
-(NB The 2.4.19 patches in the tarball have *not* been updated.)
 
-The userspace library has been updated to prepare for a device-mapper
-API fix planned for the next release.
-
-  The fix is to a few field definitions in the dm_ioctl structure and
-  the change itself is not backwards-compatible.  But, as of this release,
-  if the userspace library is *compiled against* a kernel tree that uses
-  the *new* dm_ioctl definition, then the library will, if necessary,
-  automatically fall back at *runtime* to using the old definition.
-  In other words, provided this libdevmapper is compiled against the
-  new definition, kernels/modules using the different definitions can 
-  be interchanged without having to interchange libdevmapper.so.
-  'configure --disable-compat' turns off this behaviour.
-
-Alasdair
--- 
-agk@uk.sistina.com
+--Randy Schapel
+Educational Systems
+Mott Community College
