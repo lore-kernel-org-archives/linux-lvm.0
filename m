@@ -1,8 +1,11 @@
+From: Mike Williams <mike@gaima.co.uk>
+Subject: Re: [linux-lvm] RAID 1 on Device Mapper - best practices?
+References: <16272.19483.577313.115811@gargle.gargle.HOWL>
+In-Reply-To: <16272.19483.577313.115811@gargle.gargle.HOWL>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <16272.19483.577313.115811@gargle.gargle.HOWL>
-From: "John Stoffel" <stoffel@lucent.com>
-Subject: [linux-lvm] RAID 1 on Device Mapper - best practices?
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200310172128.10259.mike@gaima.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,45 +16,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 17 15:10:02 2003
+Date: Fri Oct 17 15:29:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi All,
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I've just recently upgrade my home system to a fresh install of Debian
-3.0/Unstable, and moved my data to a pair of 120gb disks.  My goal is
-to mirror the disks so I don't have to worry as much about device
-failures losing all my data (files and MPs, and junk).  Of course I'll
-be doing backups, but this is more the first step.
+On Friday 17 October 2003 21:07, John Stoffel wrote:
 
-Anyway, what I'd like to do is setup the disks using Device Mapper so
-that I can grow and shrink volumes at need, along with the filesystems
-mounted on top of those volumes.  So I now have it working, except
-that reboots don't detect the RAID volumes on top of the Device Mapper
-LVs properly on reboot.  
+> Anyway, what I'd like to do is setup the disks using Device Mapper so
+> that I can grow and shrink volumes at need, along with the filesystems
+> mounted on top of those volumes.  So I now have it working, except
+> that reboots don't detect the RAID volumes on top of the Device Mapper
+> LVs properly on reboot.
 
-But first some background:
+> Nor do I think I'm really doing this in the proper way.  Currently I
+> have one volume group per disk, left_vg and right_vg.  Each has a pair
+> of LVs on then, [left,right]_lv_[home,local] for a total of four LVs.
+>
+> Then I assemble these into MD volumes using mdadm, with each volume
+> having an LV from each of the VGs.
+>
+> Do I really need to use MD here, or can I build a mirrored LV to do
+> what I want?
 
-    Kernel:		2.4.22 (or .21)
-    Device Mapper:      2.4.22-dm-1
-    lvdisplay --version
-	LVM version:     2.00.06 (2003-08-20)
-	Library version: 1.00.05-ioctl-cvs (2003-09-01)
-	Driver version:  4.0.1
+Wouldn't it be more sensible to mirror the disks, then stick your LVs on to=
+p=20
+of that? This is what I have done with a software RAID5 array.
 
-Nor do I think I'm really doing this in the proper way.  Currently I
-have one volume group per disk, left_vg and right_vg.  Each has a pair
-of LVs on then, [left,right]_lv_[home,local] for a total of four LVs.  
+At first this didn't work, as the startup scripts Gentoo provide initialise=
+=20
+LVM before MD, but that was easily changed.
 
-Then I assemble these into MD volumes using mdadm, with each volume
-having an LV from each of the VGs.  
+=2D --=20
+Mike Williams
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
 
-Do I really need to use MD here, or can I build a mirrored LV to do
-what I want?
-
-Thanks,
-John
-   John Stoffel - Senior Unix Systems Administrator - Lucent Technologies
-	 stoffel@lucent.com - http://www.lucent.com - 978-952-7548
+iD8DBQE/kFDaInuLMrk7bIwRAlVKAKCL7QcheuL6uw7vgX9y2+bT6FA/AQCgjAZZ
+Koz9o0FWAHHzz6gSfFBBMF0=3D
+=3DvntA
+=2D----END PGP SIGNATURE-----
