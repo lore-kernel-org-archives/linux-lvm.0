@@ -1,12 +1,12 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-References: <1010427293.29260.3.camel@UberGeek>
-    <m3666ej5t2.fsf@shakti.rupa.com>
-In-Reply-To: <m3666ej5t2.fsf@shakti.rupa.com>
+From: "=?iso-8859-1?Q?J=FCrgen?= Vollmer" <juergen@informatik-vollmer.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16NkOK-0006og-00@hermes.sistina.com>
-Subject: [linux-lvm] Re: GRUB + LVM + XFS?
+Content-Type: multipart/signed;
+    boundary="==_Exmh_1796785677P";
+    micalg=pgp-sha1;
+    protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Message-Id: <4575.1010476487@joergli.cocolab.de>
+Subject: [linux-lvm] SuSe 7.3 snapshot / reiserfs /
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,56 +17,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan  7 18:46:02 2002
+Date: Tue Jan  8 01:53:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: Rupa Schomaker <rupa-list@rupa.com>, linux-xfs@oss.sgi.com
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+--==_Exmh_1796785677P
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 8 Jan 2002 05:54, Rupa Schomaker wrote:
-> I'm having toubles with the current CVS version of the XFS kernel.  I
-> haven't had time to look at it completely, but... it could be:
->
-> 1) mismatch between userspace and kernel (what LVM is in the XFS
->    kernel?  I'm using the debian lvm10 userspace).
->
-> 2) bad config
->
-> 3) ???
->
-> A quick "bt" at boot in kdb shows that devfs is in the call path.  No,
-> I haven't had time to write everything down. :(  Man, I wish there was
-> an easy to dump the kdb info or an OOPs to disk...
 
-Well all I do is for getting kdb output is to use a serial console and 
-another computer - then cut and past then send  ;-).
+Hi everybody,
 
-It is very interesting that devfs is referenced - there was a LVM memory 
-corruption problem and a patch for LVM/devfs - it can be found here:
-http://marc.theaimsgroup.com/?l=linux-xfs&m=101031443221058&w=2
+I follow this list a little, and have read that I have to apply some patc=
+hes to
+the kernel in order to create snapshots with a reiserfs.
 
-- From my experience it seems that LVM 1.0.1rc4(ish) is way more robust than 
-the updated LVM 1.0.1 or even CVS LVM 1.0.1 yesterday.  However, not 
-everything works as expected with either. You can find a results table for a 
-few tests I have conducted here: (of course YMMV)
-http://marc.theaimsgroup.com/?l=linux-lvm&m=100994364215110&w=2
+Now my question:
 
-I think you would be very interested in the discussions and activity that has 
-been occuring on the linux-xfs & linux-lvm lists at the moment regarding XFS 
-and LVM.  If you are seeing problems I would be very interested in finding 
-out how your problems differ from mine.
+Could somebody send me some kind of HOWTO to update my kernel as as given=
+ by
+SuSe 7.3 (they always apply some patches to the kernel).  Since I have ap=
+plied
+kernel patches in earlier times (kernel 0.9x) and compilation quite often=
+, I do
+not need a kernel-compilation HOWTO, but one which specifies which patche=
+s do I
+need (for a SuSe 7.3-SMP-kernel!), in which order should they applied, wh=
+ere do
+I get them etc.
 
-- -- 
-Adrian Head
+Thanks in advance, and sorry for asking for a HOWTO, reading the list mor=
+e
+closely whould help too (I think) but my business (as a freelance) is to =
+write
+compilers, parsers etc....
 
-(Public Key available on request.)
+With best regards
+
+J=FCrgen
+
+
+-- =
+
+Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
+Tel: +49(721) 9204871 Fax: +49(721) 24874
+juergen@informatik-vollmer.de,vollmer@cocolab.de,Juergen.Vollmer@acm.org
+www.informatik-vollmer.de
+
+
+
+--==_Exmh_1796785677P
+Content-Type: application/pgp-signature
+
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Comment: Exmh version 2.3.1 01/18/2001
 
-iD8DBQE8OkHO8ZJI8OvSkAcRAsHkAJ9OlEWOQMxiXXsJ0OzsllI7icT8pQCeLfM2
-95t821X+y25nYdf3WCDRg9k=
-=rjIv
+iD8DBQE8OqXGn1Xi7IT+kG0RAopIAJ9KPXAmmZ4X5Vf1aABXAEfODk2tQgCfUMcd
+Ag1Md7LTjpalK/0yyJBGqKg=
+=rqbS
 -----END PGP SIGNATURE-----
+
+--==_Exmh_1796785677P--
