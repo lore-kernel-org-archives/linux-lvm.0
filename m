@@ -1,15 +1,15 @@
 Received: from o.ww.redhat.com (vpnuser2.stuttgart.redhat.com [172.16.4.2])
 	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i5K8n9qd020800
-	for <linux-lvm@redhat.com>; Sun, 20 Jun 2004 10:49:09 +0200
-Date: Sun, 20 Jun 2004 10:49:10 +0200
+	i5K8oaqd020862
+	for <linux-lvm@redhat.com>; Sun, 20 Jun 2004 10:50:37 +0200
+Date: Sun, 20 Jun 2004 10:50:37 +0200
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] lvm2 & e2fsadm (or safe scripted resizing)
-Message-ID: <20040620084910.GC3519@redhat.com>
-References: <54553.192.168.1.12.1087519164.squirrel@192.168.1.12>
+Subject: Re: [linux-lvm] How to extend a root LVM volume?
+Message-ID: <20040620085037.GD3519@redhat.com>
+References: <40D1CF06.7030202@miksis.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <54553.192.168.1.12.1087519164.squirrel@192.168.1.12>
+In-Reply-To: <40D1CF06.7030202@miksis.com>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,33 +26,37 @@ Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-(e2)fsadm code for LVM2 is in the development pipe for integration.
-Will take a bit of time still... 
+I am guessing that rescue CD has a restrictive filter setup
+which prevents vgscan from seeing the drives.
 
-On Thu, Jun 17, 2004 at 07:39:24PM -0500, Nick Bartos wrote:
-> >From what I can see, there is no e2fsadm util for lvm2.
+
+On Thu, Jun 17, 2004 at 10:04:06AM -0700, Mark Miksis wrote:
+> I'm trying to extend a root LVM.  I'm using LVM2 on FC2.  Here is what 
+> I've tried:
 > 
-> I want to script parition resizes, but without that tool I cringe a
-> little.  I need to write a script that automates this in a distro, so it
-> needs to be completely scripted and very reliably reproduceable.  I am
-> using e2fsadm now which works very well since I can just tell it how much
-> to shrink/grow the partition, without getting the size first.
+> I ran lvextend when the system was booted normally and the volumes were 
+> mounted.  This worked as expected and lvdisplay properly shows the new 
+> larger size.
 > 
-> I don't mind doing this manually, but I want to make damn sure that I
-> calculate everything right.  I don't want to miss something by a byte here
-> or there.
+> Then I booted into the FC2 rescue CD and instructed it to NOT search for 
+> and mount Fedora installations.  I then ran:
+> # resize2fs /dev/Volume00/LogVol00
+> I don't have the specific error, but it basically says that the 
+> specified volume doesn't exist.  Indeed if I look in /dev, my volume 
+> group and volumes are nowhere to be found.
 > 
-> If someone could contribute a good script or some directions on exactly
-> how I get the right numbers, I would appreciate it.  I could just start
-> doing it myself, but I am afraid that I would make it work, but then miss
-> something where in some case of rounding I would mess up the partition.
+> At that point I tried:
+> # lvm
+> lvm> vgscan
+> After only about 1 second, it responds that no volumes are found.
 > 
-> I was also looking at the reiserfs utility, it looks like that works
-> nicely as far as I can tell, there wouldn't seem to be any need to
-> calculate anything.  Possibly I will consider upgrading the ext3 paritions
-> to reiserfs as well.
+> I also tried rebooting from the CD and letting it mount my 
+> installations.  In this case, the volume and volume groups are properly 
+> discovered and mounted.  However, if I try to unmount the volume, it 
+> always responds with "device busy".
 > 
-> 
+> Is this a problem with how the FC2 rescue disk scans for volumes?  Any 
+> help would be appreciated.
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
