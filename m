@@ -1,9 +1,10 @@
-From: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
-Date: Wed, 10 Oct 2001 07:48:31 -0400
-Message-ID: <000001c15181$7c3b32d0$836788cf@industry>
+Content-Class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Downgrading
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] More strangeness
+Date: Wed, 10 Oct 2001 14:37:03 +0200
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FF07@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,17 +19,13 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-As I have recently discovered, there isn't yet an official patch for
-EXT3 on 2.4.10.  If that is the case, I suppose I should downgrade in
-order to achieve stability.  Right now, I'm running 2.4.10
-kernel/1.0.1rc4 LVM tools and kernel patch.  Can anyone recommend a good
-kernel rev that properly (and officially, if there is such a thing yet)
-supports EXT3 and LVM.  Also, I need to be sure that the LVMs I have
-currently built under 2.4.10 kernel /1.0.1rc4 tools and kernel patch
-will still work on whatever downgrades I do.  Finally, I want to find
-some version of LVM that doesn't force me to make all these crazy
-changes in order to migrate to newer versions later on in the future.
+> No official patch for ext3 and 2.4.10?!  Can I run an older=20
+> kernel version?  2.4.8 or 9 maybe?  Will that run ext3 and=20
+> lvmtools 1.0.1rc4?
 
-Can anyone make any suggestions?
+I use 2.4.9 from RedHat 7.2 (rawhide) that already have ext3.
+I patched LVM 1.0.1rc{2,4} and all is fine.
 
-Thanx!
+-jec
+
+PS: Take the sources of the kernel from SRPMS of rawhide.
