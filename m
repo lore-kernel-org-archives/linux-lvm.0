@@ -1,9 +1,10 @@
-Return-Path: <james@fr.clara.net>
-Date: Wed, 7 Feb 2001 10:25:25 +0100 (CET)
-From: James <james@fr.clara.net>
-Message-ID: <Pine.LNX.4.21.0102071013170.15807-100000@munster.noc.fr.clara.net>
+Return-Path: <h.jettingstad@wineasy.se>
+Message-ID: <61DA682E8A5CD4119CD80050DA4E318BCAC39E@josef.wineasy.se>
+From: =?iso-8859-1?Q?H=E5kan_Jettingstad?= <h.jettingstad@wineasy.se>
+Date: Wed, 7 Feb 2001 10:41:25 +0100 
 MIME-Version: 1.0
-Subject: [linux-lvm] lvm with raid
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Re: with 2.4.1, should I use beta2 or beta3 lvm-tools?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,41 +16,60 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+Hello!
+
+When I try to apply the patch that LVM 0.9.1beta3 creates with:=20
+
+./configure --with-kernel_dir=3D/usr/src/linux-2.4.1 creates, on my
+/usr/src/linux-2.4.1 directory like this:
+
+hostname:/usr/src/linux-2.4.1# cat
+/usr/src/LVM/0.9.1_beta3/PATCHES/lvm-0.9.1_beta3-2.4.1.patch | patch =
+-p1
+patching file include/linux/lvm.h
+patching file drivers/md/lvm.c
+patching file drivers/md/lvm-snap.c
+patching file drivers/md/Config.in
+Reversed (or previously applied) patch detected!  Assume -R? [n]=20
+Apply anyway? [n] n
+
+I get the above error, should it apply cleanly or can I just ignore =
+this and
+answer y to apply anyway?
+
+Thank you a lot in advance,
+
+H=E5kan Jettingstad
+
+
+-----Original Message-----
+From: Joe Thornber [mailto:joe@66bassett.freeserve.co.uk]
+Sent: den 2 februari 2001 11:31
 To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] with 2.4.1, should I use beta2 or beta3
+lvm-tools?
 
-Hello
 
-I am trying to use lvm with a /dev/md0 partition which I believe is
-possible. But I miust be missing something. 
+On Fri, Feb 02, 2001 at 11:15:25AM +0100, H=E5kan Jettingstad wrote:
+> Hello!
+>=20
+> Just a quick question, kernel 2.4.1 contains lvm 0.9.1beta2, so I'm
+> wondering do I have to use the beta2 lvm-tools or can I use the beta3
+> lvm-tools with that kernel, or do I have to wait for a beta3 patch =
+for the
+> 2.4.1 kernel?
 
-Using lvm_0.9, kernel 2.4.0 under debian Linux
+Please use the latest code if you can.  The LVM tar balls will build a
+patch for your kernel.  If you don't want to patch your kernel
+yourself then use the latest tools with 2.4.1, but you should probably
+refrain from using snapshots.  We hope to make another release at the
+beginning of next week (probably beta4).
 
-I created /dev/md0 (raid autodetect)
-Did a pvcreate /dev/md0
-lvcreate'd partitions /usr /home /var
-
-copied and remounted everything.
-This all goes surprisingly well, until I decided to test with a reboot.
-
-vgscan and vgchange don't find a thing !
-
-test:/home/james# vgscan 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- no volume groups found
-
-test:/home/james# vgchange -a y
-vgchange -- no volume groups found
-
-but if I try to recreate a PV 
-
-test:/home/james# pvcreate /dev/md0
-pvcreate -- ERROR: can't initialize physical volume "/dev/md0" of volume
-group "devlvm" without -ff
- 
-Everything is still there apparantly.
-
-I must be missing something fundamental. Thanks fot any help in advance.
-
-James
+- Joe
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
