@@ -1,11 +1,10 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3B38F9ED.29BA245A@tls.msk.ru>
-Date: Wed, 27 Jun 2001 01:09:01 +0400
-From: Michael Tokarev <mjt@tls.msk.ru>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] problems with gcc 3.0 & lvm tools
-References: <Pine.LNX.4.33.0106262221410.7216-100000@moon.dice.hu>
-Content-Transfer-Encoding: 7bit
+Return-Path: <mauelshagen@sistina.com>
+Date: Tue, 26 Jun 2001 16:19:47 -0500
+From: Heinz Mauelshagen <mauelshagen@sistina.com>
+Message-ID: <20010626161947.A11918@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Request for misalignment tests
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,86 +17,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Gergely Tamas wrote:
-> 
-> Hi!
-> 
-> GCC 3.0 implements ``printf'' as a macro.
+All,
 
-Why *gcc* *implements* printf at all???  It is in
-C library, not in compiler, or always was that.
-
-[]
-> --- LVM-orig/tools/lvchange.c   Tue Apr 24 16:29:20 2001
-> +++ LVM/tools/lvchange.c        Tue Jun 26 21:51:17 2001
-> @@ -168,9 +168,11 @@
->                       "\t[-A/--autobackup y/n]\n"
->                       "\t[-a/--available y/n]\n"
->                       "\t[-C/--contiguous y/n]\n"
-> -#ifdef DEBUG
-> -                     "\t[-d/--debug]\n"
-> -#endif
-> +/*
-> + * #ifdef DEBUG
-> + *                   "\t[-d/--debug]\n"
-> + * #endif
-> + */
->                       "\t[-h/-?/--help]\n"
->                       "\t[-p/--permission r/rw]\n"
->                       "\t[-r/--readahead ReadAheadSectors]\n"
-
-Better fix for this issue, if it *is* an issue, will be
-
-in main header:
- #ifdef DEBUG
- # define DEBUG_OPT "\t[-d/--debug]\n"
- #else
- # define DEBUG_OPT
- #endif
-
-And in every place:
-
-                       "\t[-A/--autobackup y/n]\n"
-                       "\t[-a/--available y/n]\n"
-                       "\t[-C/--contiguous y/n]\n"
- -#ifdef DEBUG
- -                     "\t[-d/--debug]\n"
- -#endif
- +                     DEBUG_OPT
-                       "\t[-h/-?/--help]\n"
-                       "\t[-p/--permission r/rw]\n"
-                       "\t[-r/--readahead ReadAheadSectors]\n"
-
-Or, another variant, that may look better (in other places too):
+we need your help in regard to the misalignment problems we are trying
+to fix right now in order to get facts concerning how many people are actually 
+suffering from it.
 
 
-in main header:
- #ifdef DEBUG
- # define IFDEBUG(arg) arg
- #else
- # define IFDEBUG(arg)
- #endif
+In case you created VGs or extended them with LVM 0.9.1 Beta 6 or 7,
+we'd appreciate if you could send us the output (if any) of
 
-And in every place:
+   pvdisplay -v /dev/YourPVname | grep "^ *00000"
 
-                       "\t[-A/--autobackup y/n]\n"
-                       "\t[-a/--available y/n]\n"
-                       "\t[-C/--contiguous y/n]\n"
- -#ifdef DEBUG
- -                     "\t[-d/--debug]\n"
- -#endif
- +                     IFDEBUG("\t[-d/--debug]\n")
-                       "\t[-h/-?/--help]\n"
-                       "\t[-p/--permission r/rw]\n"
-                       "\t[-r/--readahead ReadAheadSectors]\n"
+if the sector offset in the last column is odd.
 
+If so, please add a "pvdisplay /dev/YourPVname" as well.
 
-But wait: *if* this *is* an issue, then TONS of other programs
-will break the same way.  And gcc people should just not do so,
-is is a bug (serious) in gcc in this case and should be fixed
-in a first place.
+We appreciate your help!
 
 Regards,
- Michael.
+Heinz      -- The LVM guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
