@@ -1,8 +1,8 @@
-From: =?iso-8859-1?Q?Alf_B_Lerv=E5g?= <alfborge@pvv.ntnu.no>
-Subject: [linux-lvm] Help recovering my volume groups
-Message-Id: <20020206030901.A64005@pvv.ntnu.no>
+From: Abhas Abhinav <abhas@deeproot.co.in>
+In-Reply-To: <20011221084531.A22947@lsc.hu>
+Message-Id: <Pine.LNX.4.43.0202060830060.24753-100000@anubhav.lan.deeproot.co.in>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: [linux-lvm] error in mounitng snapshot LVs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,54 +13,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb  5 20:09:02 2002
+Date: Tue Feb  5 21:09:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-Hi, I just had a stroke of panic since my lvm vg didn't come back up
-after I shut down my computer and removed a faulty disc.
+Hi..
 
-I searched the web, and found a thread on your mailinglist that matched
-my situation pretty well. Following the instructions in that thread, I
-managed to get my system back up and running.
+I've been using LVM for an year now... and have had almost no problems
+with it...
 
-Here's a link to the thread I was talking about.
+Lately, i decided to start using snapshots to backup some data. I
+created snapshot volumes as per the lvcreate man page and the
+LVM-HOWTO on the sistina web site... however, i get stuck everytime i
+try to moung the snapshot...
 
-http://lists.sistina.com/pipermail/linux-lvm/2001-January/005948.html
+mount gives the following error:
 
-I run linux 2.4.17 on an athlon 1.2G with 1G RAM.
+-------
+anubhav:~# mount /dev/data/snap_work /mnt
+mount: block device /dev/data/snap_work is write-protected, mounting read-only
+mount: wrong fs type, bad option, bad superblock on /dev/data/snap_work,
+       or too many mounted file systems
+-------
 
-I initially had 3 ide hd's, but one of them was behaving strangly, so I
-decided to get a new one on warranty. After taking backups of the data
-on that disc, I unmounted it, halted the system and removed it. Then I
-turned the system back up. I realize now that I might have saved abit of
-work if I ran some commands before I halted the system, but I don't know
-what commands those whould have been.
+lvdisplay output is as follows:
 
-I use one vg called idehd
+-------
+anubhav:~# lvdisplay /dev/data/snap_work
+--- Logical volume ---
+LV Name                /dev/data/snap_work
+VG Name                data
+LV Write Access        read only
+LV snapshot status     active destination for /dev/data/work
+LV Status              available
+LV #                   5
+# open                 0
+LV Size                2.50 GB
+Current LE             640
+Allocated LE           640
+snapshot chunk size    64.00 KB
+Allocated to snapshot  0.00% [0/590.62 MB]
+Allocated to COW-table 9.38 MB
+Allocation             next free
+Read ahead sectors     10000
+Block device           58:8
+-------
 
-I had 3 pv's, /dev/hda2, /dev/hdb1 and /dev/hdc
-I removed /dev/hdc
+I'm attaching the output of vgdisplay -v /dev/data in a gzipped file...
+so as not to clutter this email...
 
-When the system came back up, I ran vgscan, which reported that it
-didn't find any vg's. While the system was in this state, I ran
-dd if=/dev/hda2 of=hda2_pvdump.txt bs=1024 count=4
-dd if=/dev/hdb1 of=hdb1_pvdump.txt bs=1024 count=4
-pvdisplay -vvd /dev/hdb1 >& hdb1_pvdisplay.txt
-pvdisplay -vvd /dev/hda2 >& hda2_pvdisplay.txt
-If you are interested in these files, I'll be happy to provide them.
+I am using kernel version 2.4.17 with LVM version 1.0.2. I've applied
+all the kernel patches correctly. And i'm using ReiserFS as the
+filesystem. The mount version that i am using is: mount-2.11n
 
-I don't really know if this info is of any use to anyone, but I hope it
-might be. Other than this slight hickup I've had no problems with the
-lvm system. It makes life alot easier when it comes to hdpartitions and
-stuff like that.
+can anyone guide me as to where i am going wrong...??
 
-To get things up and running again, I ran
-vgcfgrestore -n idehd /dev/hda2
-vgcfgrestore -n idehd /dev/hdb1
-vgchange -ay
+thanks,
+
+abhas.
 
 -- 
-Alf
+-------------------------------------------------------------------
+Abhas Abhinav		   | Free Software at its product-ive best.
+CEO, DeepRoot Linux
+http://www.deeproot.co.in	   	   ---- Server Appliances ----
+Ph: +91 (80) 856 5624	       ---- Linux Support and Services ----
+-------------------------------------------------------------------
