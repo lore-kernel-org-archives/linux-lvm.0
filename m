@@ -1,9 +1,10 @@
-Message-Id: <007901c1e58c$f7884690$6501a8c0@bomoon>
-From: "bo" <bo@sosnetwork.net>
-References: <Pine.LNX.4.44.0204161951550.28284-100000@pzat.meep.org>
-Subject: Re: [linux-lvm] LVM tool limitation on using whole disk
+Message-Id: <3255.200.158.98.53.1018997206.squirrel@www.dokbua.com>
+Subject: Re: [linux-lvm] kernel: invalidate: busy buffer
+From: "Rene @ Webscorpion.com" <rene.madsen@webscorpion.com>
+In-Reply-To: <20020416163659.GA19531@balu.kawo2.rwth-aachen.de>
+References: <20020416163659.GA19531@balu.kawo2.rwth-aachen.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,67 +15,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 16 16:23:02 2002
+Date: Tue Apr 16 17:45:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I support RAID1 & 5.
-On the top of these RAID 1 or 5 MD device I will use LVM for flexibility.
-I read the WARNING I mentioned on my previous email from some LVM document
-such as
+Hm. This is getting interesting:
 
-"There is one important "limitation" when using whole disk. The LVM tools
-used to setup  LVM will recognize a whole disk as possible device for LVM
-ONLY if it has NO partition table! If the disk already has one, even an
-empty
-one, LVM will refuse to use it."
+I installed the 1.1rc1 tools, skipped the patching, and guess what:
 
-This was my question, "is this still TRUE or not?"
+Seems to work perfectly.
 
-Thanks,
-
-Bo
------ Original Message -----
-From: "James Hawtin" <oolon@ankh.org>
-To: <linux-lvm@sistina.com>
-Sent: Tuesday, April 16, 2002 12:57 PM
-Subject: Re: [linux-lvm] LVM tool limitation on using whole disk
+Not a single error, not a core dump .... I'm just a little worried about
+the "beta quality software" sticker on it.  Any experiences with this
+version? Should I take a chance and use it anyway?
 
 
-> On Tue, 16 Apr 2002, Dustin Cooper wrote:
+> On Tue, Apr 16, 2002 at 01:02:40PM -0300, Rene @ Webscorpion.com wrote:
+>>
+>> LVM tools are 1.0.3 - but as I said, I was unable to run the patch
+>> against my kernel source -- and I need and -AC kernel to keep aquote
+>> happy.
 >
-> > You can make MD devices out of entire disks, but they won't be
-> > autodetected by the kernel.  For MD autodetection to work you have to
-have
-> > partitions of type 0xfd on your disks.
-> >
-> > If you still want to use whole disks, make sure /etc/raidtab is up to
-date
-> > and use raidstart before vgscan.
-> >
+> At least there's a non-AC-Patch for quota 2 (i guess that's what you
+> mean with "aquote"). I'm using it here on a Redhat System with a custom
+> kernel.
 >
-> In that case i recon you should use a partition table just for simplity.
-> A partition table only wastes one disk block at the end of the day, you
-> going to lose much more space with lvm and the raid in rounding. I have to
-> admit I aways use a partition table even when a whole disk has been used
-> for lvm.
+> ftp://ftp.suse.com/pub/people/mason/patches/reiserfs/
 >
-> What kind of raid you going to use? Lvm does do striping and
-> Concatination on PEs. (forget what "numbers" those are called ;-)
+> There are patches for adding Quota to ReiserFS which also need Quota 2
+> to work, so the V2 Quota patch is included.
 >
-> Mirroring or raid 5 your going to have to use the the linux raid to make
-> those devices.
+> Regards, Markus
 >
-> James
->
->
->
->
+> --
+> Kostenloses MySQL Datenbank-Hosting:
+> http://www.google.com/search?q=welcome+to+phpmyadmin
 >
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
