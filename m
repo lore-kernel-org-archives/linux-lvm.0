@@ -1,11 +1,11 @@
-Return-Path: <boutilpj@ednet.ns.ca>
-Message-ID: <3B543BDD.5040008@ednet.ns.ca>
-Date: Tue, 17 Jul 2001 10:21:33 -0300
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Weird UUIDs
-References: <3B542E3B.9050202@ednet.ns.ca> <20010717145454.A17967@sistina.com>
-Content-Transfer-Encoding: 7bit
+Return-Path: <root@srv.sistina.com>
+Date: Tue, 17 Jul 2001 15:25:35 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] vgscan can't find vg after system crash
+Message-ID: <20010717152535.A18152@sistina.com>
+References: <87117853BCEBD4118E9F0000D11E22E208D410@MRAGVS23.DPMA.DE>
+Mime-Version: 1.0
+In-Reply-To: <87117853BCEBD4118E9F0000D11E22E208D410@MRAGVS23.DPMA.DE>; from Volker.Jahns@dpma.de on Tue, Jul 17, 2001 at 02:49:43PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,71 +17,151 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Heinz,
+On Tue, Jul 17, 2001 at 02:49:43PM +0200, Jahns Volker Dr. wrote:
+> vgscan will not find any volume groups after system crash, where one pv was
+> lost.
+> 
+> 
+> pvdisplay reports
+> 	--- Physical volume ---
+> PV Name               /dev/hdb3
+> VG Name               vg01
+> PV Size               5.86 GB / NOT usable 264 KB [LVM: 235 KB]
+> PV#                   1
+> PV Status             NOT available
+> Allocatable           yes (but full)
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              1500
+> Free PE               0
+> Allocated PE          1500
+> PV UUID               /dev/h-db3
+> 
+> Other than vgscan I have tried to restore by using the vgcfgrestore tool
+> 
+> cp /etc/lvmconf/vg01.conf /etc/lvmtab.d/vg01
+> echo -ne 'vg01\0' >/etc/lvmtab
+> 
+> vgcfgrestore -n vg01 exits w/ error message:
+> 
+> vgcfgrestore -- ERROR: different structure size stored in
+> "/etc/lvmconf/vg01.conf" than expected in file vg_cfgrestore.c [line 120]
+> vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "vg01"
 
-I created and them removed a small LV and now the UUIDs look more 
-familiar. :-) Thanks.
+You seem to have upgraded the LVM software and didn't take metadata backups
+afterwards. Sorry, in order to use that old backup, you need to downgrade 
+the software again :-(
 
+> 
+> 
+> Otherwise, pvdata reports
+> --- Physical volume ---
+> PV Name               
+> VG Name               vg01
+> PV Size               5.86 GB / NOT usable 264 KB [LVM: 235 KB]
+> PV#                   1
+> PV Status             NOT available
+> Allocatable           yes (but full)
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              1500
+> Free PE               0
+> Allocated PE          1500
+> PV UUID               /dev/h-db3
+> 
+> --- Volume group ---
+> VG Name               
+> VG Access             read/write
+> VG Status             NOT available/resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                1
+> Open LV               0
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                2
+> Act PV                2
+> VG Size               7.18 GB
+> PE Size               4 MB
+> Total PE              1838
+> Alloc PE / Size       1838 / 7.18 GB
+> Free  PE / Size       0 / 0
+> VG UUID               vg01
+> 
+> --- List of logical volumes ---
+> 
+> pvdata -- logical volume "/dev/vg01/lvol1" at offset   0
+> pvdata -- logical volume struct at offset   1 is empty
+> pvdata -- logical volume struct at offset   2 is empty
+> pvdata -- logical volume struct at offset   3 is empty
+> pvdata -- logical volume struct at offset   4 is empty
+> pvdata -- logical volume struct at offset   5 is empty
+> pvdata -- logical volume struct at offset   6 is empty
+> ...
+> 
+> --- List of physical extents ---
+> 
+> PE: 00000  LV: 001  LE: 00000
+> PE: 00001  LV: 001  LE: 00001
+> PE: 00002  LV: 001  LE: 00002
+> PE: 00003  LV: 001  LE: 00003
+> PE: 00004  LV: 001  LE: 00004
+> PE: 00005  LV: 001  LE: 00005
+> PE: 00006  LV: 001  LE: 00006
+> ...
+> LE
+> 
+> pvdata exits w/ error message:
+> pvdata -- ERROR "pv_read_uuidlist(): open" reading physical volume uuid list
+> from physical volume "/dev/hdb3"
+> 
+> How come that pvdata doesn't show the PV resp. VG name? 
+> Is it possible to change the PV status to available and how would I do so?
 
-pvdata /dev/sda7
+As mentioned: you need to have actual metadata backups which you can only
+get in your case, if you downgrade, replace the broken PV, vgcfgrestore
+the metadata from the old backup and upgrade the LVM software again.
+Maybe you still have the old LVM version you used before on some recovery media?
 
---- Physical volume ---
-PV Name               /dev/sda7
-VG Name               data_vg
-PV Size               133.36 GB / NOT usable 321 KB [LVM: 255 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                6
-PE Size (KByte)       4096
-Total PE              34140
-Free PE               7015
-Allocated PE          27125
-PV UUID               C4Txkv-FIqY-RKJ4-OEoo-cTWc-LqZb-wFDBH0
+After the upgrade, you should create a dummy LV
+with 1 LE size and remove it, which will create the UUIDs in the VGDA.
 
---- Volume group ---
-VG Name
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                6
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               133.36 GB
-PE Size               4 MB
-Total PE              34140
-Alloc PE / Size       27125 / 105.96 GB
-Free  PE / Size       7015 / 27.4 GB
-VG UUID               XXUlZt-SdDC-3who-JMDC-13P1-adqU-MKgQrv
+Please remember to take backups of /etc/lvmconf!
 
+> 
+> Is there anything I can do to restore the data present on the harddrive?
+> That would be really great.
 
-.......
+See above.
 
+> 
+> 
+> --
+> Volker Jahns, Volker.Jahns@dpma.de
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Heinz J. Mauelshagen wrote:
+-- 
 
->On Tue, Jul 17, 2001 at 09:23:23AM -0300, Patrick Boutilier wrote:
->
->>I tried running pvdata -U on one of my LVM servers and it segfaulted 
->>(LVM driver version 0.9.1_beta6). Check out the UUIDs.
->>
->
->Output just tells you, that no UUIDs have been created dynamically so far.
->If you create/remove a dummy LV, they should be there...
->
->>Everything is 
->>working OK but I wonder if this is a serious problem or not?
->>
->
->No, it is not. Just try the lvcreate/lvremove pair on a small (-l 1) dummy LV.
->
->Regards,
->Heinz    -- The LVM Guy --
->
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
