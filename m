@@ -1,11 +1,11 @@
 Return-Path: <thornber@btconnect.com>
-Date: Tue, 24 Apr 2001 08:48:33 +0100
-Subject: Re: [linux-lvm] Split patch sets for beta[345]
-Message-ID: <20010424084832.A730@66bassett.freeserve.co.uk>
-References: <20010423150140.B1492@66bassett.freeserve.co.uk> <200104232126.f3NLQk43002106@webber.adilger.int>
+Date: Tue, 24 Apr 2001 08:56:25 +0100
+Subject: Re: [linux-lvm] LVM version of 2.4.2 kernel?
+Message-ID: <20010424085625.B730@66bassett.freeserve.co.uk>
+References: <20010423171726.A1837@66bassett.freeserve.co.uk> <Pine.LNX.4.33.0104231933220.17635-100000@duckman.distro.conectiva>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200104232126.f3NLQk43002106@webber.adilger.int>; from adilger@turbolinux.com on Mon, Apr 23, 2001 at 03:26:46PM -0600
+In-Reply-To: <Pine.LNX.4.33.0104231933220.17635-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Mon, Apr 23, 2001 at 07:34:21PM -0300
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -22,31 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 23, 2001 at 03:26:46PM -0600, Andreas Dilger wrote:
-> Joe, you write:
-> > Please change the name of this function to _flush_io or something.  It
-> > doesn't need the bh passed in, since it knows to use _pe_requests, I
-> > want only _queue_io/(_dequeue_io|_flush_io) to use this variable.
+On Mon, Apr 23, 2001 at 07:34:21PM -0300, Rik van Riel wrote:
+> On Mon, 23 Apr 2001, Joe Thornber wrote:
+> > On Mon, Apr 23, 2001 at 04:13:32PM +0200, David Vidal Rodriguez wrote:
+> > > Hi!
+> > > I want to know what version of LVM (beta_x etc.) is included within
+> > > Kernel 2.4.2 and if I can use the fresh compiled beta7 tools with it.
+> >
+> > Beta2 is in the 2.4.2 kernel.  You are advised to upgrade both the
+> > kernel and the userland tools to beta7.
 > 
-> I was going to do as you ask, but then I saw that we either need to
-> call _dequeue_io from UNLOCK_PE with the _pe_lock held (because we are
-> modifying _pe_requests), or have a race that a new PE has been locked and
-> a new write I/O from this PE has already been queued before we re-get
-> _pe_lock, so we can't safely flush the whole queue without the lock
-> (which is what I intended here - we don't want lock contention while
-> flushing the old queue and queueing new requests at the same time).  The
-> other alternative is to move the whole handling of pe_lock_req from
-> UNLOCK_PE into "_flush_io", but this is less clear, IMHO.
+> Ummm ?
+> 
+> Weren't you people saying that the Linus tree would be the
+> main LVM repository from now on?
 
-I went through a similar thought process, which is why the locking
-around an individual queue items went back in.  Does locking and
-unlocking this semaphore really give that much of a performance hit ?
-Remember that this isn't a main path for IO, in fact performance is
-going to be sucky at this point because we're doing a pvmove (until we
-put code in to throttle pvmoves).
+Yes, we did.  I am working on it, as you would know if you read my
+posts to the mailing list (I cross posted to your mailing list as
+well).  It's going to take time to merge the patches together into a
+form that is suitable for Alan and Linus, I'm sorry I'm not going fast
+enough for you.  Work in progress is available for people to comment on.
 
-I really do want how the queuing is done abstracted away behind
-_queue_io/_dequeue_io, so all references to _pe_requests must stay in
-these.
+The fact remains however that 2.4.3 contains equivalent code to Beta
+level 2 (+ a couple of tidy ups from Andrea Arcangeli), and beta7 is
+the version of the code that I would recommend people use - this
+includes the user land tools, for which we will continue to use CVS as
+the main repository.
+
+> Would it be possible to get at least the important bugfixes
+> merged in Linus' kernel ?
+
+Of course, I hope to send a patch set to Alan at the end of Wednesday.
 
 - Joe
