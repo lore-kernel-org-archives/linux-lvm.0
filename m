@@ -1,8 +1,7 @@
-Message-ID: <400AC31B.50507@ITWM.fhg.de>
-From: Martin Vogt <vogt@itwm.fhg.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] bug in lvm-1.0.7-105 ?
+From: Jason Parker-Burlingham <jasonp@panix.com>
+Message-ID: <871xpynzwy.fsf@freezer.burling>
+Mime-Version: 1.0
+Subject: [linux-lvm] unknown ioctl problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,65 +12,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 12:11:07 2004
+Date: Mon Jan 19 12:11:11 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+I'm running LVM (version 1 with 1.0.7 tools) on a 2.4 system
+(2.4.24-pre1, recently upgraded to 2.4.25-pre4).  When the initrd
+boots (/ is an LVM filesystem, /boot is a standard block device) I see 
 
-Hello,
+   lvm -- lvm_blk_ioctl: unknown cmd 0x5310
 
-I think I found a bug in the
+which I guess is something to do with mounting the ramdisk.
 
-/etc/init.d/boot.lvm
+But at other times I have noticed that the machine will lock up; I'm
+not sure if it's a hardware problem but lately it seems to be related
+to disk activity.  I turned off screen blanking before the most recent
+crash and saw no kernel oops, but a couple of repetitions of
 
-script. (SuSE 9.0)
+   lvm -- lvm_blk_ioctl: unknown cmd 0x801c6d02
 
-The Script mounts the root filesystem read/write to write
-the information from vgscan to /etc/lvmtab.d/.
+Is it possible that this is some sort of reasonable ioctl?  Is it
+possible that this is what's crashing the machine?  How can I find out
+what the system is trying do (and maybe even why)?  I don't see any
+reports of exactly this problem through google, so I'm pretty lost.
 
-After that it tries to remount the root filesystem again with:
-
-mount -n -o remount,ro /
-
-This fails, which lead to a error message when
-
-/etc/init.d/boot.localfs
-
-is run.
-
-This is the fix for /etc/init.d/boot.lvm:
-
-            [...............]
-               else
-                echo "Remounting root file system (/) read/write for 
-vgscan..."
-                mount -n -o remount,rw /
-                test $FSCK_RETURN -gt 0 && touch /fsck_corrected_errors
-                echo "Scanning for LVM volume groups..."
-                /sbin/vgscan
-
-                # NEW [START]
-                z=0
-                mount -n -o remount,ro /
-                while [ ! $? = 0 ] ; do
-                      echo "ro mount failed: $z"
-                      sleep 1
-                      let "z=$z+1"
-                      if [ $z -gt 10 ] ; then
-                          break;
-                      fi
-                      mount -n -o remount,ro /                 
-                done
-                # NEW [END]
-            [...............]
-
-
-After usually 5 seconds the readonly mount succeeds.
-(Is this some internal buffer flush time in the kernel ?)
-The root filesystem is reiser.
-
-regards,
-
-
-Martin
+jason
+-- 
+http://panix.com/~jasonp?BabyPictures
