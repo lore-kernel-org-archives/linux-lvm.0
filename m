@@ -1,7 +1,9 @@
-From: Donald Thompson <dlt@lunanet.biz>
-Message-ID: <Pine.LNX.4.44.0211060108110.8692-100000@junior.lunanet.biz>
+Message-ID: <3DC8DE98.FBFF5B8@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Subject: [linux-lvm] LV Fragmentation determination
+Subject: Re: [linux-lvm] LV Fragmentation determination
+References: <Pine.LNX.4.44.0211060108110.8692-100000@junior.lunanet.biz>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,29 +14,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov  6 02:24:01 2002
+Date: Wed Nov  6 03:20:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-First off, can LV's become fragmented across a PV/VG? If yes then...
+Donald Thompson wrote:
+> 
+> First off, can LV's become fragmented across a PV/VG? If yes then...
 
-I'm looking for an easy way to determine how fragmented an LV might been
-inside the VG. Is there any command I can run that'll give me nice
-estimate on this?
+yes they can. But that depends on how you made it. The default is to
+use the next free PE, but you can specify the PE's.
 
-Assuming theres no such command, can I determine this by looking at the
-PE's displayed from an 'lvdisplay -v' command? I'm guessing it'd be pretty
-easy to write a script that analyzes the PE numbers and looks for skips in
-the sequence to give myself an idea of the amount of fragmention for the
-LV. Or am I competely wrong thinking you can use PE's to make such a
-determination?
+ 
+> I'm looking for an easy way to determine how fragmented an LV might been
+> inside the VG. Is there any command I can run that'll give me nice
+> estimate on this?
 
-I do shrinks and enlarges for different LV's sometimes on an almost daily
-basis, and my VG's are getting to be very old. So I'm curious to see how
-fragmentated my LVs have become.
+i dont know, but cant you use lvdisplay, pvdisplay, or the other
+display commands to see the PE numbers ?
 
-TIA for any clues.
+ 
+> Assuming theres no such command, can I determine this by looking at the
+> PE's displayed from an 'lvdisplay -v' command? I'm guessing it'd be pretty
+> easy to write a script that analyzes the PE numbers and looks for skips in
+> the sequence to give myself an idea of the amount of fragmention for the
+> LV. Or am I competely wrong thinking you can use PE's to make such a
+> determination?
 
--Don
+i think you can
+
+ 
+> I do shrinks and enlarges for different LV's sometimes on an almost daily
+> basis, and my VG's are getting to be very old. So I'm curious to see how
+> fragmentated my LVs have become.
+
+Properly much, but is that bad ? I mean, sure you have to move the head
+every PE size, but how big are your PE size ? The default is 4MB.
+
+
+
+
+JonB
