@@ -1,10 +1,9 @@
-Return-Path: <hackbyte@gmx.de>
-From: Daniel Mitzlaff <hackbyte@gmx.de>
-Date: Thu, 25 Jan 2001 19:17:14 GMT
-Message-ID: <20010125.19171415@dmitzlaff.botschendv.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] OT; any -vollquottels- here?
+Return-Path: <root@srv.sistina.com>
+Date: Thu, 25 Jan 2001 23:17:51 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010125231751.A5854@srv.sistina.com>
+Mime-Version: 1.0
+Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta3 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,46 +16,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, lvm-devel@sistina.com, linux-kernel@sistina.com
+Cc: declerck@sistina.com, okeefe@sistina.com
 
-This is higly OffTopic but....
+Hi all,
 
-Is it possible, that someone here never really has learned, how to cut=20=
+a tarball of the Linux Logical Volume Manager 0.9.1 beta3 is available now at
 
-quotings to the essential information needed to understand the answer w/=
-o=20
-looking back in old Mails?
+   <http://www.sistina.com/>
 
-I mean, quotes are good, you can directly see what the writer is talking=
-=20
-about and you don't really have to remember your entire mail..
-
-But ... in case of a ML, there are archives, so even peoples who don't=20=
-
-know the originating mail can acces the full thread.
-
-What the heck need people in a complete quoting, splitting his mail into=
-=20
-a answer, a full quote and a signature part?
+for download (Follow the "LVM download page" link).
 
 
-(imho - we should send around a lot of (in german we say) "Netiquette" t=
-o=20
-everyone who doesn't know them;)
+This release fixes several bugs including the snapshot related
+page lock bug introduced in 0.9.1 beta2.
 
+See the CHANGELOG file contained in the tarball for further information.
 
-BTW, TOFU is a cool acronym for this - rotfl;)
+Please test and feed back related information to <linux-lvm@sistina.com>.
 
-hacky
+Thanks a lot for your support of LVM.
 
-P.s.: Is LVM9.x worth to be tried on a backup-less 62GB nirvana?
-My last try wasn't really a nice jorney, so does it now work?;)
-(NO i DON't use CVS, even w/o backups;)
+-- 
 
---
-hackbyte@gmx.de / me@hackbyte.de aka Daniel Mitzlaf (in rl only please;)=
+Regards,
+Heinz    -- The LVM Guy --
 
-IRCNet; hackbyte/hacky_wrk @ #linux.de, +linux.de, #linuxger and=20
-#*hamburg
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-"Schnell mal eben, geht schnell daneben!" ;)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
