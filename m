@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Newbie to snapshot
-Message-ID: <20030520092734.A9086@sistina.com>
-References: <001501c31d2a$0ea25f20$6c7745cb@codevel> <3EC788E9.9020701@adelphia.net> <002001c31d4d$eebf5630$6c7745cb@codevel>
+Subject: Re: [linux-lvm] Ensuring a LV does not move to a new PV?
+Message-ID: <20030520093130.B9086@sistina.com>
+References: <20030516183147.OJLZ24149.imf23bis.bellsouth.net@tiger2>
 Mime-Version: 1.0
-In-Reply-To: <002001c31d4d$eebf5630$6c7745cb@codevel>; from armani@codevel.com on Sun, May 18, 2003 at 10:58:23PM +0800
+In-Reply-To: <20030516183147.OJLZ24149.imf23bis.bellsouth.net@tiger2>; from freemyer@NorcrossGroup.com on Fri, May 16, 2003 at 02:36:15PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,61 +14,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 20 02:36:01 2003
+Date: Tue May 20 02:40:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, May 18, 2003 at 10:58:23PM +0800, armani wrote:
-> Thanks for toby's explainations!
-> ==
-> Eventually I create a new snapshot of my LV partition.
-> But I have another problem with the snapshot of LV.
-> That is how much snapshot I could create for my LV partition ?
-> As I know some commercial software could create 254 snapshots for one LV
-> such as IBM.
+On Fri, May 16, 2003 at 02:36:15PM -0400, Greg Freemyer wrote:
 > 
-> So I try to create another snapshot for LV by issuing the following command:
+> I had a single hardware mirrored PV I have been using with 3 LVs on it.
 > 
-> This is my first snapshot for /dev/Vol1/LV1
+> I just added a JBOD PV to the VG for use with snapshot LVs.
 > 
-> [root@met root]# lvcreate --size 100M -s -nsnapshot /dev/Vol1/LV1
-> lvcreate -- WARNING: the snapshot will be automatically disabled once it
-> gets full
-> lvcreate -- INFO: using default snapshot chunk size of 64 KB for
-> "/dev/Vol1/snapshot"
-> lvcreate -- doing automatic backup of "Vol1"
-> lvcreate -- logical volume "/dev/Vol1/snapshot" successfully created
-> 
-> I tried to create another snapshot for /dev/Vol1/LV1
-> 
-> [root@met root]# lvcreate --size 100M -s -nsnapshot1 /dev/Vol1/LV1
-> lvcreate -- WARNING: the snapshot will be automatically disabled once it
-> gets full
-> lvcreate -- INFO: using default snapshot chunk size of 64 KB for
-> "/dev/Vol1/snapshot1"
-> lvcreate -- doing automatic backup of "Vol1"
-> lvcreate -- logical volume "/dev/Vol1/snapshot1" successfully created
-> 
-> And how can I estimate the sizes and counts for them ?
+> Is there anything I need to do to ensure that the main LVs never add any PEs from the new PV?
 
-lvdisplay /dev/Vol1/snapsh*
+lvextend -L+SomeAmount /dev/VG/OneMainLV /dev/mirroredPV
 
-> Is there any rules or principles to formalize the procedures ?
-
-There's no tool in the LVM distro for that so far.
-You can write a script (Shell, Perl, ...) around lvdisplay to
-create alerts when a snapshot runs out of space or extend it automatically.
+IOW: limit allocation to the HW-mirrored PV.
 
 > 
+> i.e.
+> Are the existing LVs sparse?
+
+No.
+
 > 
-> > A snapshot will only capture what you have in the fs at the moment you
-> -- snip --
-> > -toby
+> And do new PEs get allocated as data is written to the LV?
+
+No, they are all preallocated.
+
 > 
-> -- Armani Liao
+> If so, I can easily see PEs coming from the wrong PV.
 > 
+> Thanks
+> Greg
+> -- 
+> Greg Freemyer
+>   
 > 
 > _______________________________________________
 > linux-lvm mailing list
