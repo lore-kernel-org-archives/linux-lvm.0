@@ -1,9 +1,10 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Thu, 19 Apr 2001 23:02:26 -0300 (BRST)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] 2.4.3-ac{6,7} LVM hang
-In-Reply-To: <m3n19cxtxc.fsf@otr.mynet.cygnus.com>
-Message-ID: <Pine.LNX.4.21.0104192301410.1685-100000@imladris.rielhome.conectiva>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104200547.f3K5l9Kp017136@webber.adilger.int>
+Subject: Re: [linux-lvm] Kernel 2.4  -- invalid i/o protocol version
+In-Reply-To: <01041918224302.03328@pc-silva> "from Ernesto Silva at Apr 19, 2001
+ 06:12:43 pm"
+Date: Thu, 19 Apr 2001 23:47:09 -0600 (MDT)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,30 +17,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Ulrich Drepper <drepper@cygnus.com>
-Cc: Jens Axboe <axboe@suse.de>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
+To: linux-lvm@sistina.com
 
-On 19 Apr 2001, Ulrich Drepper wrote:
-> Jens Axboe <axboe@suse.de> writes:
+Ernesto Silva writes:
+> 	I've recently installed  a new server, runing RedHat 7.0. I have also
+> installed 2.4 kernel with LM support.
 > 
-> > Does attached patch fix it?
-> 
-> Yes.
+> 	Then I  have downloaded lvm-0.8final from the sistina ftp site, then
+> I compiled it (I also included the patch) and I installed it. (well, no
+> eveything was so smoothly, but it's installed now).
 
-Jens, I guess we should submit these patches to Alan and Linus
-now. This way we'll get a working LVM again.
+You need to have 0.9 version tools to run with the 2.4 kernel.
 
-Waiting for the next official LVM release (and the next set of
-bugs) doesn't seem like a very productive way to me ;)
+> I only have one scsi disk of 18GB, but I will add at least another 2 in the
+> next month, so I need it working. Do you think this will work?? I'm almost
+> betting my job on it.
 
-regards,
+Never good to bet your job on things you have not tested.  That way
+leads to a new job.  LVM has been _fairly_ reliable, but there have
+also been some problems as well - most have been fixable with a bit of
+debugging, but...  It is always worthwhile to do testing before putting
+a system into production.  Note that you have a far smaller chance of
+having serious problems if you ensure you make backups of your data,
+and make as few changes to your LVM configuration as possible.
 
-Rik
---
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
+I have never had problems with LVM that I didn't cause myself from
+working on the code.  But then again, none of the data I have under
+LVM is critical (mostly MP3s and test filesystems), and I have full
+backups of everything.
 
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com.br/
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
