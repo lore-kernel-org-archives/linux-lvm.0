@@ -1,8 +1,8 @@
-Message-ID: <1034830214.3dae418604fe5@mail.dornquast.com>
-From: Nathan Dornquast <Nathan@Aberon.Net>
+From: Stefan Weigel <sw@global-linxs.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM on ATA-Raid Working - but Poorly
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200210170859.03682.sw@global-linxs.de>
+Subject: [linux-lvm] Re: problem with lvm on root-fs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,78 +13,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 16 23:57:22 2002
+Date: Thu Oct 17 02:01:42 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi all,
+Hi erveryone!
+I'm a little bit closer now. I've create an initrd with lvmcreate_initrd.
+In this initrd there was no module for my mylex-raid-controller. I've fix=
+ed=20
+that problem, e.g. put the kernel module in it and changed linuxrc.
+After rebooting there's another kernel panic, but on this time the system=
+=20
+finds my volume groups. Output:
 
-First, Thx to Heinz for not only writing great code, but taking the time to 
-document and respond to inquires.
+kernel panic: no init found. Try passing init=3D to...
 
-I have read the white paper and many, many mailings on this list, but I haven't 
-seen anything addressing my problem.
+This is a little bit strange. I checked the initrd another time and in th=
+e=20
+ramdisk-bin-dir there's the bash and sh.
+A little help would be nice!
 
-Problem:
-After creating LVM Vol Group (VG1) and single Log. Vol (lvol1) on ataraid 
-mirrored drives (/dev/ataraid/d0p3) only one drives seems to get used.
+Greetings
 
-I have repeated this process several times - 
+Stefan Weigel
 
-1. Set up pvcreate - pvcreate /dev/ataraid/d0p1 - success
+P.S.: I'm using SLES7.2 with the standard-packages.
 
-2. Run pvscan:  Reports
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/ataraid/d0p3" is in no VG  [109.32 GB]
-pvscan -- inactive PV "/dev/hdc3"         is in no VG  [109.32 GB]
-pvscan -- inactive PV "/dev/hda3"         is in no VG  [109.32 GB]
-pvscan -- total: 2 [327.96 GB] / in use: 0 [0] / in no VG: 2 [327.96 GB]
-
-3. Run vgcreate -s 64 VG1 /dev/ataraid/d0p3 - success
-
-4. Run pvscan: Reports
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE PV "/dev/ataraid/d0p3" is in no VG  [109.32 GB]
-pvscan -- inactive PV "/dev/hdc3"         is in no VG  [109.32 GB]
-pvscan -- inactive PV "/dev/hda3"         is in no VG  [109.32 GB]
-pvscan -- total: 3 [327.96 GB] / in use: 3 [327.96 GB] / in no VG: 0 [0] 
-
-5. Create Logical Volume goes ok.. Format with ReiserFS - reports 109 GBs or so 
-on mounting.  Life is good, right?  Until I reboot.
-
-6. Reboot
-
-7. Run pvscan: Reports
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/ataraid/d0p3" is in no VG  [109.32 GB]
-pvscan -- inactive PV "/dev/hdc3"         is in no VG  [109.32 GB]
-pvscan -- ACTIVE PV "/dev/hda3"         is in no VG  [109.32 GB]
-pvscan -- total: 3 [327.96 GB] / in use: 3 [327.96 GB] / in no VG: 0 [0] 
-
-Hda3 becomes the active.. member?..    Drive activity seems to only occur on 
-the first drive (which is what made me dig into this in the first place. I 
-can't seem to make /dev/ataraid/d0p3 become active.  I've tried unsucessfully 
-tor remove with pvchange -x y option for hda3 and hdc3, also tried vgremove.  
-Doesn't seem to work.
-
-If I make it a simple ReiserFS partition /dev/ataraid/d0p3 and mount it 
-normally, both drives are active -- sharing writes and striping reads.
-
-ATARaid support is in the kernel (no drives installed) and otherwise seems to 
-work very well - booting off it and running well on several machines.
-
-Some Specifics:
-Debian 3.0, Kernel 2.4.19, Promise built in ata raid, LVM 1.0.4, 2x WD 120 GB 
-drives.
-
-
-
-..........
-Nathan Dornquast
-Aberon Technologies, Inc.
-2205 California St NE - Suite 003
-Minneapolis, MN 55418
-w.612.789.9446
-c.612.386.6519
-..........
+> Hi!
+> I'm trying to get lvm on my root-fs working. But there's is an kernel-p=
+anic=20
+> error. Some details:
+>
+>
+> - system with Mylex RAID-controller (DAC960). It's included in the init=
+rd.
+>
+>
+> - root-partition is /dev/rd/c0d0p1
+>
+>
+> I used the HowTo from sistina.com, copied the files from /dev/rd/c0d0p1=
+ to=20
+> /dev/sysvg/rootlv, edited the /etc/fstab pointing to the new partition=20
+> /dev/sysvg/rootlv.
+> I made a reboot and everything worked fine. But in /etc/lilo.conf there=
+'s=20
+> the=20
+> entry root=3D/dev/rd/c0d0p1. I changed this entry to /dev/sysvg/rootlv.=
+ Then I=20
+> run lilo. After another reboot I got the kernel panic.
+> The initrd is IMO working. But when I change the "root=3D" entry in=20
+> /etc/lilo.conf a kernel panic occurs.
+> Can anybody help me ??
+>
+>
+> Best regards=20
+>=20
+>
+> Stefan Weigel
