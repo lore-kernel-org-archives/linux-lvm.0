@@ -1,10 +1,8 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] root fs on a LVM cause kernel panic
-Message-ID: <20011114230449.B5739@lynx.no>
-References: <01111500471301.02493@dirac.cids.ca>
+From: Bradley M Alexander <storm@tux.org>
+Message-ID: <20011115020138.J1585@sonsofthunder.yi.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <01111500471301.02493@dirac.cids.ca>; from dsavard@videotron.ca on Thu, Nov 15, 2001 at 12:41:28AM -0500
+Subject: [linux-lvm] Restricted partitions?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 15 00:03:01 2001
+Date: Thu Nov 15 01:00:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Daniel Savard <dsavard@videotron.ca>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Nov 15, 2001  00:41 -0500, Daniel Savard wrote:
-> I read the lvmcreate_initrd man page and followed the instructions to create
-> the kernel image with LVM support. However, I am unsuccessful to make it
-> working properly. The system boot and is showing its messages, including the
-> message about LVM support in the kernel and while it is trying to mount the
-> root filesystem, I am getting a kernel panic message saying the "root=" stanza
-> should be provided with a valid device for the root filesystem.
-> 
-> What am I doing wrong? Is there anything missing? Any way to get extra
-> debugging messages?
+Hello all,
 
-Did you add the initrd image to the kernel stanza in lilo.conf and re-run
-lilo?  It sounds like your kernel is booting, but the VGs are not active.
+Are there any partitions/filesystems that should not be used without an
+initrd besides /? Here is my partition list:
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+/dev/hda3              1542188   1056676    485512  69% /
+/dev/hda1                 7746      3499      3847  48% /boot
+/dev/hda5              1517920    724696    762384  49% /var
+/dev/hda6               155545        41    147474   1% /tmp
+/dev/hda7              1028092    876116    151976  86% /home
+/dev/hda8              1542156    967744    574412  63% /usr/local
+/dev/hda9               514028    286816    227212  56% /opt
+/dev/hda10             8192832   7117692   1075140  87% /mirror
+/dev/hda11            15213032  13261916   1951116  88% /archive
+
+As you can see, /home, /mirror and /archive are starting to get close to
+having a problem, which I why I wanted to implement lvm. I have two 30GB
+drives, the secomd of which is empty, so I was going to put /var, /tmp,
+/home, /usr/local, /opt, /mirror and /archive on a volgroup on the second
+drive, then once it stabilized, create a second volgroup on /dev/hda from
+the partitions that are now on the volgroup on hdb.
+
+I went in, using 1.0.1rc4 and kernel 2.4.13 and created the partitions on
+the volume group on hdb. Ran lilo and changed fstab. Rebooted and it could
+not mount the volumes, and gave me a "Can't locate module /dev/vg01" and
+for each partition, it tries to load them as modules. The LVM code is
+compiled into the kernel.
+
+At this point, I have two prime suspects. Either one of the partitions I am
+trying to mount on the volume group should not be without an initrd (/tmp
+or /var?) or its a problematic interaction with devfs. Can anyone point me
+to a solution?
+
+Regards,
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm@debian.org
+                                         |   storm@tux.org
+============================================================================
+No, just _a_ Zaphod Beeblebrox. Didn't you hear? I come in six-packs."
