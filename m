@@ -1,12 +1,8 @@
-From: Theo Van Dinter <felicity@kluge.net>
-Subject: Re: [linux-lvm] vgchange -ay at boot?
-Message-ID: <20021206185238.GC11389@kluge.net>
-References: <Pine.A41.4.43.0212061232410.36766-100000@hera.itg.uiuc.edu>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
-Content-Disposition: inline
-In-Reply-To: <Pine.A41.4.43.0212061232410.36766-100000@hera.itg.uiuc.edu>
+From: Markus Weiss <mweiss@grenoble.cnrs.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <200212062032.11584.mweiss@grenoble.cnrs.fr>
+Subject: [linux-lvm] / on LVM2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,44 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec  6 12:52:02 2002
+Date: Fri Dec  6 13:32:05 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---xo44VMWPx7vlQ2+2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello everbody,
 
-On Fri, Dec 06, 2002 at 12:36:06PM -0600, Alexander Lazarevich wrote:
-> complains about trying to mount an unknown device. obviously it cant see
-> the device im trying to mount because the volume group is not activated.
-> so, i put vgchange -ay homevg in my /etc/rc.local file, but apparently
-> that happens after the mounting on bootup, because it still complains
-> about non-existant device.
->=20
-> how do i turn on the volume group before it mounts the devices on bootup?
+I ran into a problem testing LVM2 on my system.
+I have / on LVM, and booting into kernel 2.5.50 (with dm compiled in,
+libdevmapper and LVM2-tools installed) fails, because the kernel cannot mount 
+the root fs. I have tried building an initrd using SuSE's mk_initrd and 
+lvmcreate_initrd, but I get the same problem.
 
-7.3 has two vgchange commands in rc.sysinit.  It does it once, then
-enables MD devices, and does it again.  I mount LVs via fstab all the
-time without any issue.
+Do these scripts have to be modified in any way to work with LVM2 ?
+(something like calling devmap_mknod.sh at some point ?)
 
---=20
-Randomly Generated Tagline:
-"If God didn't want us to eat animals, He wouldn't have made them from
- meat." - Neill Carter
+Thanks for any advice,
 
---xo44VMWPx7vlQ2+2
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Markus
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE98PH2AuOQUeWAs2MRAg/jAKCHSpsjXHFxXnNkhQgOWh8oo6rhWQCgt6hl
-SdAEnCrey6Wl91nW8yj01aA=
-=oMl5
------END PGP SIGNATURE-----
-
---xo44VMWPx7vlQ2+2--
+PS:
+Please cc me, as I'm not subscribed
