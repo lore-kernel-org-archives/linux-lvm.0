@@ -1,13 +1,9 @@
-Date: Mon, 27 Aug 2001 09:40:55 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Installed the lvm on the Red Hat 7.1 then what to do
-Message-ID: <20010827094055.A12574@sistina.com>
-References: <994015538.6465.5.camel@detrius>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Content-Disposition: inline
-In-Reply-To: <994015538.6465.5.camel@detrius>; from erik@bagfors.nu on Sun, Jul 01, 2001 at 09:25:38PM +0200
+Message-ID: <20010827150751.14611.qmail@web14405.mail.yahoo.com>
+Date: Mon, 27 Aug 2001 08:07:51 -0700 (PDT)
+From: Aman Shahi <shahi_aman@yahoo.com>
+In-Reply-To: <E15bMBF-0002FJ-00@hermes.sistina.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Problem mounting snapshot with reiserfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,56 +15,62 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: =?iso-8859-1?Q?Erik_B=E5gfors?= <erik@bagfors.nu>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-n Sun, Jul 01, 2001 at 09:25:38PM +0200, Erik B=E5gfors wrote:
->     hda1   hdc1      (PV:s on partitions or whole disks)
->        \   /
->         \ /
->        diskvg        (VG)
->        /  |  \
->       /   |   \
->   usrlv rootlv varlv (resizeable LV:s, think of them as resizeable virtua=
-l partitions)
->     |      |     |
->  ext2  reiserfs  xfs (filesystems)
+I am having problem in mounting snapshot with
+reiserfs.
 
-I hope you don't mind, but I've stuck this diagram in the LVM howto.  Is
-that ok, or should i pull it out?
+I am using linux kernel 2.4.8 and lvm 1.0. Here
+is the sequence of steps I did. Same steps with
+ext2 I did not have nay problem. But with reiserfs
+I am not able to do the mounting.
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+using fdisk I change the type of /dev/sdb2 to "8e".
+capacity of /dev/sdb2 is around 30G
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+# pvcreate  /dev/sdb2
+# vgcreate  vg1  /dev/sdb2
+# lvcreate -L10G  -n  lv1  vg1
+# mkfs -t reiserfs  /dev/vg1/lv1
+# mount -t reiserfs  /dev/vg1/lv1  /lv1
 
------Begin Obligatory Humorous Quote----------------------------------------
-Programming graphics in X is like finding sqrt(pi) using Roman numerals.
------End Obligatory Humorous Quote------------------------------------------
+I copy some data(60M) to /lv1
 
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+# lvcreate -L2G  -s  -n back1  /dev/vg1/lv1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+# mount -t reiserfs  /dev/vg1/back1  /back1
+mount: block device /dev/vg1/back1 is write-protected,
+mounting read-only
+reiserfs: checking transaction log (device 3a:01) ...
+clm-2076: device is readonly, unable to replay log
+Replay Failure, unable to mount
+reiserfs_read_super: unable to initialize journal
+space
+mount: wrong fs type, bad option, bad superblock on
+/dev/vg1/back1,
+       or too many mounted file systems
 
-iD8DBQE7ilv3pE6/iGtdjLERAnkjAJ91PCrnZlv3SUM5aSwBUOuykuW85wCeKSvO
-RjwcmuOaEk7jaza3F1GIWcc=
-=7unp
------END PGP SIGNATURE-----
+# mount  /dev/vg1/back1  /back1
+mount: block device /dev/vg1/back1 is write-protected,
+mounting read-only
+FAT: bogus logical sector size 0
+VFS: Can't find a valid FAT filesystem on dev 3a:01.
+mount: you must specify the filesystem type
 
---vkogqOf2sHV7VnPd--
+
+I had read a similar problem in the mailing list. But
+I
+think the reiserfs and vfs patches are not required in
+linux kernel 2.4.8 and lvm 1.0.  Or am I missing
+something or doing something wrong.
+
+Aman Shahi.
+
+__________________________________________________
+Do You Yahoo!?
+Make international calls for as low as $.04/minute with Yahoo! Messenger
+http://phonecard.yahoo.com/
