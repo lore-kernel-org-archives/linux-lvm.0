@@ -1,9 +1,14 @@
-Return-Path: <austin@coremetrics.com>
-Message-ID: <85063BBE668FD411944400D0B744267A64352A@AUSMAIL>
-From: "Gonyou, Austin" <austin@coremetrics.com>
-Subject: RE: [linux-lvm] Upgrade to 0.9.1b8 went ok but....
-Date: Thu, 26 Jul 2001 14:28:53 -0500
-MIME-Version: 1.0
+Return-Path: <lewis@sistina.com>
+Date: Thu, 26 Jul 2001 14:47:42 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] lvm help
+Message-ID: <20010726144742.A28365@sistina.com>
+References: <20010726185522.52160.qmail@web13407.mail.yahoo.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Disposition: inline
+In-Reply-To: <20010726185522.52160.qmail@web13407.mail.yahoo.com>; from plamb_98@yahoo.com on Thu, Jul 26, 2001 at 11:55:22AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,60 +20,54 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
+Cc: Pierre Lamb <plamb_98@yahoo.com>
 
-This would make some sense since I just blew my fs away and recreated them.
-Then they mounted fine. 
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com 
+On Thu, Jul 26, 2001 at 11:55:22AM -0700, Pierre Lamb wrote:
+> help=20
+> I placed the 2 required commands in rc.sysinit (rh71)
+> before hte section "Mounting other file"
+> gave vgscan the -d option and left vgchange -ay.
+> During the boot process I see where vscan uodated
+> lvmtab and lvmtab.d and it say successfull but when I
+> look into lvmd.d it is empty. after I log in then do
+> the vgscan the correct entries are made. Ant help
+> would be appreciated.
 
-> -----Original Message-----
-> From: Joe Thornber [mailto:thornber@btconnect.com]
-> Sent: Thursday, July 26, 2001 7:43 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Upgrade to 0.9.1b8 went ok but....
-> 
-> 
-> On Thu, Jul 26, 2001 at 08:16:33AM -0400, Dave Alden wrote:
-> > Hi,
-> > 
-> >   Are you aware that the XFS folks modified LVM to work 
-> with XFS (something
-> > about a new ioctl or such)?  They state that if you install 
-> the latest
-> > patches, you'll back out the XFS-specific changes which can 
-> cause you to
-> > lose your XFS filesystem.  For more info, see the thread 
-> with a subject
-> > of "When LVM-0.9.1beta7 will be merged to XFS cvs tree?" from:
-> > 
-> > http://oss.sgi.com/projects/xfs/mail_archive/0107/threads.html#00127
-> > 
-> > My understanding is that this applies to any LVM patches 
-> (including the beta8
-> > patches).
-> 
-> No I wasn't aware of this, though Patrick may be since he uses XFS.
-> 
-> from http://oss.sgi.com/projects/xfs/mail_archive/0107/msg00132.html:
-> 
-> > All block devices in a XFS kernel need a special patch to 
-> add an ioctl
-> > to set the logical block size. The original poster probably 
-> didn't add
-> > that ioctl to his new hacked in LVM; which will cause all kinds of 
-> > problems with xfs user tools and also probably file system 
-> corruption.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+We got it...we're thinking...please hold...
+
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+There are two ways to write error-free programs. Only the third one works.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7YHPepE6/iGtdjLERAmIfAJ0diUP+taEI2RIBQoWmwuHPdDypTgCfS0bq
+16EPFDLjYzFOKzHUz5+eLdM=
+=O5dJ
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
