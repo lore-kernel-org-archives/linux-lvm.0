@@ -1,20 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0FE3SO19893
-	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 09:03:28 -0500
-Received: from lug-owl.de (lug-owl.de [195.71.106.12])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0FE3M6t023456
-	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 09:03:22 -0500
-Date: Sat, 15 Jan 2005 15:03:14 +0100
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Subject: Re: [linux-lvm] devmapper
-Message-ID: <20050115140314.GH28037@lug-owl.de>
-References: <41E6B060.3030400@berbee.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AqCDj3hiknadvR6t"
-Content-Disposition: inline
-In-Reply-To: <41E6B060.3030400@berbee.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0FF5NO27770
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 10:05:23 -0500
+Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0FF5ElZ031153
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 10:05:14 -0500
+Received: from scorpion (unknown [82.227.230.101])
+	by postfix3-1.free.fr (Postfix) with ESMTP id 584C61734C5
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 16:05:14 +0100 (CET)
+Date: Sat, 15 Jan 2005 16:05:22 +0100
+From: Stephane Dupuis <hoper@free.fr>
+Message-ID: <87991128.20050115160522@free.fr>
+Subject: Re[2]: [linux-lvm] understanding large LVM volumes
+In-Reply-To: <415694421.20050115033804@e-liberty.pl>
+References: <41E80382.1000403@svs.gsfc.nasa.gov>
+	<1266458715.20050114224006@free.fr>
+	<415694421.20050115033804@e-liberty.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Reply-To: hoper@free.fr,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,46 +28,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
---AqCDj3hiknadvR6t
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi again,
 
-On Thu, 2005-01-13 11:31:12 -0600, Alan Jurgensen <jurgensen@berbee.com>
-wrote in message <41E6B060.3030400@berbee.com>:
-> I love LVM and device mapper functionality...
-> I dont like how 'df' spills over many lines now with the=20
-> /dev/mapper/myvg-mylv syntax...
-> any idea how I can shorten the device path? how about /dev/dm/myvg-mylv
+> Unfortunatly man pages R not 100% compilant with latest of LVM.
+> Buy hey, they are not right about limits, so we should be happy ;]
 
-Maybe you want to try posix-correct output, requested by -P ?
+So, you were saying that there is really no limit with lvm2 ??!
+I'm really impress because lot's of non free operating systems still
+have lot's of limitations ! (just look at AIX..)
 
-MfG, JBG
+So can you confirm this :
 
---=20
-Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481             =
-_ O _
-"Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur | Gegen Krieg  =
-_ _ O
- fuer einen Freien Staat voll Freier B=C3=BCrger" | im Internet! |   im Ira=
-k!   O O O
-ret =3D do_actions((curr | FREE_SPEECH) & ~(NEW_COPYRIGHT_LAW | DRM | TCPA)=
-);
+* No limit for the number of PE in a LV (You already said yes)
+* No limit for the number of PV in a VG ?
+* No limit for the number of LV in ONE VG ?
+* No limit for the number of LV (all VG included) ? (256 before ?)
 
---AqCDj3hiknadvR6t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+Thanks a lot.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.5 (GNU/Linux)
-
-iD8DBQFB6SKhHb1edYOZ4bsRAncYAJ9VSkwy14hv2jFB2G8tq9JTIt+hwACfZ2mB
-1SdKcZXeoNRZHfWtqJhkSFI=
-=NfkO
------END PGP SIGNATURE-----
-
---AqCDj3hiknadvR6t--
+BTW, I also think that theses informations are quite important,
+I guess that a chart with all limits and differences between LVM1
+and LVM2 can help lot's of people...
+I would be glad to make theses documents but I don't have the
+knowledge :(
