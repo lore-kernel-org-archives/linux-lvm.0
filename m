@@ -1,42 +1,47 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200010231749.e9NHn8s21427@webber.adilger.net>
-Subject: Re: [linux-lvm] 2.4.0-test10-pre4 oops with LVM
-In-Reply-To: <Pine.LNX.4.21.0010191857290.20436-200000@uyema.net>
- "from Myles Uyema at Oct 19, 2000 07:07:52 pm"
-Date: Mon, 23 Oct 2000 11:49:08 -0600 (MDT)
+Message-Id: <200010231800.e9NI01U21435@webber.adilger.net>
+Subject: [linux-lvm] Re: more LVM 0.8 patches
+In-Reply-To: <20001022162253.C24630@colombina.comedia.it> "from Luca Berra at
+ Oct 22, 2000 04:22:53 pm"
+Date: Mon, 23 Oct 2000 12:00:01 -0600 (MDT)
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Myles Uyema <myles@puck.nether.net>
-Cc: linux-kernel@vger.kernel.org, linux-lvm@msede.com
+To: bluca@comedia.it
+Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
 
-Myles Uyema writes:
-> This kernel panic occurred when I attempted to dump my ext2 filesystem
-> /home onto /mnt/ide/backup.  My exact dump command was:
-> 
-> dump -0 -u -M -f /mnt/ide/backup/home -B 2096128 /home
-> 
-> I believe dump managed to start reading directories before the oops
-> occurred...Haven't been able to duplicate the oops on 2.4.0-test9.
+Luca Berra writes:
+> hello here are more lvm patches.
+> they apply over patches in lvm-0.8final-3.3.src.rpm
+> 1st chunk is needed to compile on my system
 
-I suppose it is worth asking if this was a regular LV, or a snapshot LV?
-If it is a regular LV, then it is very unlikely that it is a LVM
-problem, since mostly LVM is just remapping the block number and device.
-It is not a very complicated code path.
+Actually, this is a bit of a problem.  In my 2.2 kernel patch, I include an
+lvm.h that can be used for both user and kernel compiles, so that you are
+sure you have the same IOP version, struct sizes, etc.  However, this lvm.h
+doesn't exist on 2.4.
 
-It appears that the OOPS happened in the VM subsystem and not the LVM
-code.  While this may still indicate a problem in LVM, it is more likely
-that it is one of the ongoing series of VM bugs that are being fixed.
-I would suggest posting your oops report to the linux-kernel and/or
-linux-mm lists to see if they can find more about it.  It may already
-have been fixed.
+I have never tried using my 2.2 lvm.h header to compile the 2.4 kernel.  It
+is mosly correct (I preserved _most_ of the 2.4 definitions and such), but
+that wasn't my real goal (I was interested in a 2.2 header) so I doubt it
+has everything.
 
-One other thing to check is if this was the first oops, or if there was
-an earlier one.  It is usually the first oops that is the real problem,
-and later ones do not really help much.
+If you are interested to do a bit of work, it would be good to take my 2.2
+lvm.h and add the few missing "#if kernel 2.2 use this, #else use that"
+checks and I will add it into my lvm.h so it can be used by everyone.
+
+> 2nd chunk is nice for devfs
+> 3rd chunk is NEEDED for lvm over raid
+
+These look OK.  I will add them into my patch.
+
+> I am still missing something on the vgchange front, the binary version i
+> saved before trashing my whole system this summer works, the one built from
+> these sources doesn't.
+
+What sort of symptoms are you having (sorry if you already posted them)?
 
 Cheers, Andreas
 -- 
