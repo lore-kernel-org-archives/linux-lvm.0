@@ -1,10 +1,8 @@
-From: Spam <spam@tnonline.net>
-Message-ID: <212842093.20031101062735@tnonline.net>
-Subject: Re: [linux-lvm] LVM and Network Block Device (problem sollution)
-In-Reply-To: <1419914140.20031101053847@tnonline.net>
-References: <1419914140.20031101053847@tnonline.net>
-MIME-Version: 1.0
+From: Rich Turner <rich@storix.com>
+Message-Id: <1065050019.1267.20.camel@rich>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] create vg with same name as exported vg
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +13,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 31 23:28:01 2003
+Date: Wed Oct  1 18:15:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-  The sollution to the problem was simple. The lvm tools are hardcoded
-  (from  lvm_dir_cache.c)  to  only look for specific directories when
-  scaning  for  lvm disks. For network block devices lvm looks only in
-  /dev/nb/*, while my Gentoo kernel created /dev/nbd/*.
+i have run into a situation where lvm2 does not behave the same as lvm1.
+basically i want to be able to create a vg with the same name as an
+exported vg.
 
-  A  simple  fix was to make a link /dev/nb->/dev/nbd and it worked. I
-  did not find anything about this in the howto or man-pages.
+in lvm1 (v1.0.3) is was able to export the vg and create a vg with the
+same name on a different pv. the original "vgturner4" was on /dev/hda6.
+# vgchange -a n vgturner4
+# vgexport vgturner4
+# pvcreate -ff /dev/hda7
+# vgcreate vgturner4 /dev/hda7
 
-  //Anders
+in lvm2 (v2.00.07) it complained that there was already a vg with that
+name. the original vg was on /dev/sdc.
+# vgchange -a n vg1
+# vgexport vg1
+# pvcreate -ff /dev/sda
+# vgcreate vg1 /dev/sda
+  A volume group called 'vg1' already exists.
 
->   Hello,
+a "vgscan" in lvm1 returns:
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "vg0"
+vgscan -- found active volume group "vgturner4"
+vgscan -- found active volume group "vg0m"
+vgscan -- found exported volume group "vgturner4PV_EXP"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+groups
 
->   How can I make lvm to recognize my network block devices? They are
->   listed in /dev/nbd/* and I can access them fine with fdisk or dd.
+a "vgscan" in lvm2 returns:
+# vgscan
+Reading all physical volumes.  This may take a while...
+  Found exported volume group "vg1" using metadata type lvm2
 
->   But when I try pvdisplay /dev/nbd/0 I get the following error:
+i notice that the exported vg in lvm1 is actually renamed but in lvm2 it
+retains its original name. any ideas on how to accomplish what i want to
+do in lvm2?
 
->   pvdisplay - ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID
->               physical volume "/dev/nbd/0"
-
->   I get no errors in the logs either so I am not sure where to start.
-
->   From what I see lvmdiskscan etc looks in /proc/partitions and never
->   scans /dev/ for valid blockdevices?
-  
->   Thanks for any input,
->   Anders
+rich turner
