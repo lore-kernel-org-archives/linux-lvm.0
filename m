@@ -1,8 +1,8 @@
 From: James Hawtin <oolon@ankh.org>
-Subject: Re: [linux-lvm] extending a logical volume
-In-Reply-To: <20020121224817.B10434@tolppa.smilehouse.com>
-Message-Id: <Pine.LNX.4.10.10201220023310.20722-100000@pzat.meep.org>
+In-Reply-To: <26540000.1011646741@duke.wrkhors.com>
+Message-Id: <Pine.LNX.4.10.10201220040080.20722-100000@pzat.meep.org>
 MIME-Version: 1.0
+Subject: [linux-lvm] Whats wrong with this picture?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,39 +13,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 21 18:27:01 2002
+Date: Mon Jan 21 18:47:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+--- Physical volume ---
+PV Name               /dev/ide/host2/bus1/target0/lun0/part4
+VG Name               sunset_vg
+PV Size               11.24 GB / NOT usable 51.50 MB [LVM: 125.00 KB]
+PV#                   2
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                4
+PE Size (KByte)       32768
+Total PE              358
+Free PE               0
+Allocated PE          358
+PV UUID               0jqg8y-LkA2-vZ1w-jHpv-cSY6-t7sh-BcmDS6
 
-On Mon, 21 Jan 2002, Harri Haataja wrote:
+My PE size 32M yet my unusable space is > 32M 
 
-> On Mon, Jan 21, 2002 at 12:13:14PM -0800, Brad Langhorst wrote:
-> > --- lembark@wrkhors.com wrote:
-> > > -- Pierrick PONS <ppons@cvf.fr> on 01/21/02 19:09:31
-> > > +0100
-> > > 
-> > > > I've read the extending logical volume section and
-> > > I can't believe this.
-> > > > According to the doc, it would be impossible to
-> > > extend a logical volume 
-> > 
-> > um - i think i just did this...
-> > 
-> > lvextend -L +10G /dev/vg1/data 
-> > followed by 
-> > resize-reiserfs
-> > 
-> > no corruption (at least not that I've noticed)
-> 
-> I do this all the time with XFS, Reiser and even ext3.
-> At least reiser also shrinks, I think.
-> 
+I tested this with different PE sizes and found that the unusable space
+reported is aways in the range >= 1PE and < 2PE
 
-I had a resize reiserfs go really bad on 2.4.9 + patches, noticed it
-after a couple of days. Personally i don't trust it, but thats just
-probably me, I aways try to rebuild filesystems. 
+I would have expected it in the range >=0PE and <1PE
+
+Why is this not so?
 
 James
