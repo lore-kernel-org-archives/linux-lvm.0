@@ -1,10 +1,10 @@
-Return-Path: <andy@redeye.com>
-From: Andy Cowling <andy@redeye.com>
-Date: 07 Feb 2001 15:30:45 +0000
-In-Reply-To: Patrick Caulfield's message of "Wed, 7 Feb 2001 14:28:18 +0000"
-Message-ID: <m21ytase6y.fsf_-_@andy.off.redeye.com>
+Return-Path: <james@fr.clara.net>
+Date: Wed, 7 Feb 2001 17:31:30 +0100 (CET)
+From: James <james@fr.clara.net>
+Subject: RE: [linux-lvm] lvm with raid
+In-Reply-To: <Pine.LNX.4.21.0102071441390.16192-100000@munster.noc.fr.clara.net>
+Message-ID: <Pine.LNX.4.21.0102071730500.16192-100000@munster.noc.fr.clara.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] the curious case of the semi-created Logical Volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,63 +16,81 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-SuSE 7.0 with 4 x 8Gb SCSI disks. All filesystems are ext2.
+Seems to work a treat :-) (upgraded to 0.9.1 beta1)
 
-I have created PV's, VG's and 2 LV's each of 8Gb and created ext2
-filesystems on them and mounted them successfully.
+Thanks
 
-Now I want to extend 'lv02' to 16Gb but lvextend claims the LV is not
-active. Similarly lvdisplay only lists the LV using '-d'.
+On Wed, 7 Feb 2001, James wrote:
 
-I created this setup using Yast (not the command-line).
-
-Is there any way to retrieve the situation ? I am not at all familiar
-with LVM configuration files and this is a live system   :-(
-
-Thanks, as always, for any help.
--- 
-Andy Cowling
-RedEye International
-
-#  lvextend -L +3920M  /dev/pv01/lv01 /dev/sdb1
-lvextend -- logical volume "/dev/pv01/lv01" isn't active
-#  lvscan
-lvscan -- ACTIVE   "/dev/pv02/lv02" [7.81 GB]
-lvscan -- ACTIVE   "/dev/pv01/lv01" [7.84 GB]
-lvscan -- 2 logical volumes with 15.65 GB total in 2 volume groups
-lvscan -- 2 active logical volumes
-#  vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "pv01"
-vgscan -- found active volume group "pv02"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: you may not have an actual backup of your volume groups
-#  pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sdb1" of VG "pv01" [3.83 GB / 3.83 GB free]
-pvscan -- inactive PV "/dev/sdb2" of VG "pv01" [3.83 GB / 0 free]
-pvscan -- inactive PV "/dev/sdc2" of VG "pv02" [4.39 GB / 0 free]
-pvscan -- inactive PV "/dev/sdc3" of VG "pv01" [4.01 GB / 0 free]
-pvscan -- inactive PV "/dev/sdd2" of VG "pv02" [4.39 GB / 1000 MB free]
-pvscan -- inactive PV "/dev/sdd3" of VG "pv01" [4.01 GB / 4.01 GB free]
-pvscan -- total: 6 [24.48 GB] / in use: 6 [24.48 GB] / in no VG: 0 [0]
-#  lvdisplay /dev/pv01/lv01
-lvdisplay -- logical volume "/dev/pv01/lv01" is not active; try -D
-#  lvdisplay -D /dev/pv01/lv01
---- Logical volume ---
-LV Name               /dev/pv01/lv01
-VG Name               pv01
-LV Write Access       read/write
-LV Status             available
-LV #                  1
-# open                0
-LV Size               7.84 GB
-Current LE            2007
-Allocated LE          2007
-Allocation            next free
-Read ahead sectors    128
-Block device          58:0
+> 
+> Apparantly I need the latest beta, I will give a go and let you know
+> 
+> On Wed, 7 Feb 2001, Jean-Eric Cuendet wrote:
+> 
+> > 
+> > > I created /dev/md0 (raid autodetect)
+> > > Did a pvcreate /dev/md0
+> > > lvcreate'd partitions /usr /home /var
+> > 
+> > I think it's because of NO "LVM linux" partition ID.
+> > Your md0 partition is "RAID Auto detect" and that's normal.
+> > I'm not a guru of LVM, so I have no idea of what to do, but anyone out
+> > there?
+> > I'm interested too in this thing.
+> > It works for me to have RAID partitions in LVM because I have a mix of hda1
+> > + hda2 + md0 + md1, so vgscan and vgchange works because of the "Linux LVM"
+> > IDs on hda1 and hda2
+> > Thanks for the GURU response.
+> > 
+> > -jec
+> > 
+> > 
+> > > 
+> > > copied and remounted everything.
+> > > This all goes surprisingly well, until I decided to test with 
+> > > a reboot.
+> > > 
+> > > vgscan and vgchange don't find a thing !
+> > > 
+> > > test:/home/james# vgscan 
+> > > vgscan -- reading all physical volumes (this may take a while...)
+> > > vgscan -- no volume groups found
+> > > 
+> > > test:/home/james# vgchange -a y
+> > > vgchange -- no volume groups found
+> > > 
+> > > but if I try to recreate a PV 
+> > > 
+> > > test:/home/james# pvcreate /dev/md0
+> > > pvcreate -- ERROR: can't initialize physical volume 
+> > > "/dev/md0" of volume
+> > > group "devlvm" without -ff
+> > >  
+> > > Everything is still there apparantly.
+> > > 
+> > > I must be missing something fundamental. Thanks fot any help 
+> > > in advance.
+> > > 
+> > > James
+> > > 
+> > > 
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 
