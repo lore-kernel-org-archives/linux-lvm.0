@@ -1,11 +1,10 @@
-Return-Path: <jspies@maties.sun.ac.za>
-Subject: Re: [linux-lvm] Problem installing lvm
-References: <E15FdV8-00028p-00@maties1.sun.ac.za>
-From: Johann Spies <jspies@maties.sun.ac.za>
-Date: 29 Jun 2001 10:27:52 +0000
-In-Reply-To: AJ Lewis's message of "Thu, 28 Jun 2001 17:11:05 +0200"
-Message-ID: <87ae2rshqv.fsf@#maties.sun.ac.za>
+Return-Path: <glengenc@yahoo.com>
+Message-ID: <20010629185133.39761.qmail@web12003.mail.yahoo.com>
+Date: Fri, 29 Jun 2001 11:51:33 -0700 (PDT)
+From: glen 2001 <glengenc@yahoo.com>
+In-Reply-To: <87ae2rshqv.fsf@#maties.sun.ac.za>
 MIME-Version: 1.0
+Subject: [linux-lvm] remove
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,24 +20,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-AJ Lewis <lewis@sistina.com> writes:
-
-> Goto the LVM FTP site: ftp.sistina.com
-> and get to the directory that you grabbed the tarball from:
-> /pub/LVM/0.9.1_beta
+--- Johann Spies <jspies@maties.sun.ac.za> wrote:
+> AJ Lewis <lewis@sistina.com> writes:
 > 
-> Grab the file: lvm_0.9.1_beta7-get_hardblocksize.patch
+> > Goto the LVM FTP site: ftp.sistina.com
+> > and get to the directory that you grabbed the
+> tarball from:
+> > /pub/LVM/0.9.1_beta
+> > 
+> > Grab the file:
+> lvm_0.9.1_beta7-get_hardblocksize.patch
+> 
+> Thanks.  it is working now.
+> 
+> Johann
+> -- 
+> Johann Spies
+> Informasietegnologie
+> Universiteit van Stellenbosch
+> 
+>      "One thing have I desired of the LORD, that
+> will I seek
+>       after; that I may dwell in the house of the
+> LORD all
+>       the days of my life, to behold the beauty of
+> the LORD,
+>       and to inquire in his temple."            
+>                                Psalms 27:4       
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at
+http://www.sistina.com/lvm/Pages/howto.html
 
-Thanks.  it is working now.
 
-Johann
--- 
-Johann Spies
-Informasietegnologie
-Universiteit van Stellenbosch
-
-     "One thing have I desired of the LORD, that will I seek
-      after; that I may dwell in the house of the LORD all
-      the days of my life, to behold the beauty of the LORD,
-      and to inquire in his temple."            
-                               Psalms 27:4       
+__________________________________________________
+Do You Yahoo!?
+Get personalized email addresses from Yahoo! Mail
+http://personal.mail.yahoo.com/
