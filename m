@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Lost partition table, how can I find the start of
-	the PV?
-From: qv6 <sundiatah1@comcast.net>
-In-Reply-To: <1069736195.28598.76.camel@pc>
-References: <1069736195.28598.76.camel@pc>
-Message-Id: <1069773294.12078.3.camel@localhost>
-Mime-Version: 1.0
+Message-ID: <000201c3b3a4$75bdb040$100119ac@hydro>
+From: "<hYdRo>" <hydro@blueyonder.co.uk>
+References: <014d01c3b2f8$be15a930$100119ac@hydro>
+Subject: Re: [linux-lvm] LVM2 on 2.4.22. (Fedora core 1 with nptl) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,27 +14,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 25 10:15:02 2003
+Date: Tue Nov 25 16:37:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Mon, 2003-11-24 at 23:56, Brian J. Murrell wrote:
-> Yes, in a most stupid error, I trashed my partition table, but I know
- 
-> 
-> I am hoping somebody can suggest a tool/operation to try to recover at
-> least enough of a partition table to try to get /dev/hda3 (and hda1 and
-> hda2 if possible. bit hda3 is most important) back in order, get the VG
-> up and get the data off it.
-> 
-> Any ideas at all on how to proceed?  Just for reference in versions of
-> filesystems, LVM, etc. this was a Debian Woody system.
-> 
-> b.
+I've got a ~56K bz2 diff from after getting LVM2 working against the fedora
+2.4.22-1.2115.nptl kernel sources (after make mrproper, which I always have
+to do to get redhat kernel's to compile).
 
-How about booting from the installation cd that you used to build the
-system. I've done something similar on Gentoo.BTW, what about the rescue
-disk that you created or should have created after the install?
+Here the definition of working is compiles + system rebooted with kernel
+(LVM2 devmapper is a module).  Module loaded and used pvcreate, vgextend,
+pvmove, on test data and all *seem* ok.
 
-Qv6 
+Can I mail a 56K attachment to the list, or is there somewhere else I can
+put it?
+
+<hYdRo> wrote:
+> tugg <tugg@dial.pipex.com> writes:
+>
+>> Trying to install LVM2 on 2.4.22. (Fedora core 1 with nptl)
+>>
+>
+> Please post notes back to here if you managed to work out the patches
+> that are needed.  I'd like to stick with the fedora kernel instead of
+> grabbing a clean 2.4.22 as I need some of the other patching that
+> Fedora have done.
+>
+>> device/dev-io.c: In function `dev_get_size':
+>> device/dev-io.c:215: error: `BLKGETSIZE64' undeclared (first use in
+>> this
+> function)
+>
+> The BLKGETSIZE64 error is due to it not being in the "userspace"
+> <linux/fs.h> for Fedora (glibc-kernel-headers package).
+> Just add the #define line from /usr/src/linux/include/linux/fs.h (or
+> compile against that fs.h as other parts of LVM2 seem to want to
+> compile against kernel private headers from the warnings thrown
+> during compile).
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
