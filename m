@@ -1,37 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24FWKK22443
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 10:32:20 -0500
-Received: from smtp9.wanadoo.fr (smtp9.wanadoo.fr [193.252.22.22])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j24FWEWh003112
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 10:32:14 -0500
-Received: from me-wanadoo.net (localhost [127.0.0.1])
-	by mwinf0909.wanadoo.fr (SMTP Server) with ESMTP id 80A0E2400117
-	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 16:32:03 +0100 (CET)
-Received: from tangerine.coulon.evette
-	(ADijon-151-1-31-175.w83-194.abo.wanadoo.fr [83.194.126.175])
-	by mwinf0909.wanadoo.fr (SMTP Server) with ESMTP id 031C72400127
-	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 16:32:03 +0100 (CET)
-Received: from localhost ([127.0.0.1])
-	by tangerine.coulon.evette with esmtp (Exim 4.50) id 1D7EmX-0002bn-3n
-	for linux-lvm@redhat.com; Fri, 04 Mar 2005 16:32:01 +0100
-Received: from tangerine.coulon.evette ([127.0.0.1])
-	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 09098-10 for <linux-lvm@redhat.com>;
-	Fri, 4 Mar 2005 16:31:52 +0100 (CET)
-Received: from localhost ([127.0.0.1] helo=tangerine)
-	by tangerine.coulon.evette with esmtp (Exim 4.50) id 1D7EmN-0002bS-VP
-	for linux-lvm@redhat.com; Fri, 04 Mar 2005 16:31:51 +0100
-Date: Fri, 04 Mar 2005 15:31:51 +0000
-From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
-Subject: Re: [linux-lvm] mirroring in LVM2
-References: <200503020821.NAA11008@WS0005.indiatimes.com>
-In-Reply-To: <200503020821.NAA11008@WS0005.indiatimes.com> (from
-	pritambhavsar@indiatimes.com on Wed Mar  2 09:49:17 2005)
-Message-Id: <1109950311l.10385l.1l@tangerine>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j24FpoK30039
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 10:51:50 -0500
+Received: from server.echohome.org (s233-64-29-217.try.wideopenwest.com
+	[64.233.217.29])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j24Fph8t007592
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 10:51:43 -0500
+Received: from www.echohome.org (localhost.localdomain [127.0.0.1])
+	by server.echohome.org (8.12.8/8.12.8) with ESMTP id j24FpDhS015418
+	for <linux-lvm@redhat.com>; Fri, 4 Mar 2005 10:51:32 -0500
+Message-ID: <36940.64.233.217.29.1109951492.squirrel@www.echohome.org>
+In-Reply-To: <000301c51ef6$9541e940$32dcdc0a@vanish>
+References: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAAjSM60k4xEkucgZ6Kc849MwEAAAAA@echohome.org>
+	<000301c51ef6$9541e940$32dcdc0a@vanish>
+Date: Fri, 4 Mar 2005 10:51:32 -0500 (EST)
+Subject: Re: [linux-lvm] LVM home server (more in depth info & analysis)
+From: "Erik Ohrnberger" <Erik@echohome.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
-	protocol="application/pgp-signature"; boundary="=-7vtS6BpyTjApWG2NkapJ"
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Reply-To: Erik@echohome.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -41,41 +28,275 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---=-7vtS6BpyTjApWG2NkapJ
-Content-Type: text/plain; charset=iso-8859-1; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ron,
+    No offense taken.  You feedback was very succinct and well reasoned.
 
-Le 02.03.2005 09:49:17, pritambhavsar a =E9crit=A0:
-> Hello to all
->=20
->=20
-> I am new to  LVM2 and trying do the mirroring, please tell me how to
-> do that.
+    I've given up on a SW RAID5 solution (for obvious reasons), and am
+thinking that I could create an LVM across all 4 disks (will be adding
+another 40GB drive pretty soon), keeping a 200 GB drive spare to
+backup to using compressed afio archives on a cron schedule.
 
-As mirroring is not yet available in lvm, you have to install a lvm =20
-over a raid1.
+    All things considered, I've not had a drive failure in a long time. 
+I'm running the smartmontools every night via cron and promptly take
+care of any issues that they uncover.  The machine is running on a
+good UPS, so alot of power problems have already been eliminated.  Now
+it's just a matter of handling the serious events that occur
+occasionally, like when RH8 went crazy and wiped out all of the
+partition tables of all the hard disks (good thing I had the old
+server as a cold backup).  I don't think that even RAID5 would have
+saved me there!
 
->=20
->=20
-> I have Fedora Core 2 with LVM2 2.00.25.
->=20
->=20
-> -Pritam
+    All this is eventually going to be in support of a MythTV or two, and
+I'm thinking that if the two MythTV's share their programs on a file
+server, that they could easily play programs from the library (such as
+it it).  Or something like that.  Even if it's a manual copy of
+programs to/from a MythTV, this storage would still be useful.
 
-Jean-Luc
+    So if the TV programs all got blown away, it's not really that
+important I guess.  So your point of what the data is WORTH, is a very
+important one to consider.
 
---=-7vtS6BpyTjApWG2NkapJ
-Content-Type: application/pgp-signature
+    Unfortunately, I've got a lot of other stuff on that same file system
+that I'd want to save, like all the program patches that I've
+downloaded, the install set for SuSE 9.0, 9.1, and 9.2 (9.2 is pretty
+worthless IMHO - Novell's hand in action?).  All my Music files, and
+all my video files (other than the MythTV stuff wink - wink, nudge -
+nudge), well you get the idea.  So I'll probably not be backup
+everything from the LVM and an XFS file system.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.0 (GNU/Linux)
+And I've decided to use the evmsgui as my main administration tool.  I
+figure with evms native volume, that Id have the most flexibility (just
+playing around with it now).
 
-iD8DBQBCKH9nUdGGXzzGnNARAodwAJ9q9zqZ76uD+BLFOEFNELPx46ZuWgCeJ0wt
-t/gciHetUfbQ4aXhaB5Bvvc=
-=0YNg
------END PGP SIGNATURE-----
-
---=-7vtS6BpyTjApWG2NkapJ--
+On Wed, March 2, 2005 2:08, Ron Watkins said:
+> Unfortunately, RAID5 just isn't very flexible.   In exchange, you get to
+> use
+> most of your purchased drive space, you don't have to spend a mountain of
+> money, and you get pretty reasonable speed.  (slow on writes, quite fast
+> on
+> reads).  RAID-10 is faster, and can often take more drives failing (small
+> chance of up to half), but costs you 50% of your storage space.
+>
+> It's a bit suboptimal, but you can, using LVM, expand a RAID-5, by adding
+> more discrete RAID-5 PVs.  Each individual RAID array should be made from
+> similar drives, but you can stripe across multiple physical RAIDs that
+> way.
+> This is, however, less reliable.  Whenever you stripe across multiple
+> volumes, if any of the volumes fail, you lose everything.  RAID5 volumes
+> are
+> less likely to fail, but whatever that risk is, you're taking multiples of
+> that risk by striping across multiple volumes.
+>
+> I'm sorry I was so annoyed-sounding, I don't normally flame too much.
+> That
+> last question I asked was actually somewhat serious... what is your data
+> WORTH?  If it's just stuff you can easily recreate, like video files off
+> Usenet, then you may not need a RAID at all.  Just join all your existing
+> disks together.  You have a high chance of failure that way, but if you
+> don't care about the data, big deal.  A failure just costs you some
+> rebuilding time.
+>
+> If you do care about the data, and it sounds like you do, think about how
+> much it would cost you to replace, and budget accordingly.  My pointed
+> words
+> were coming from a background of 'data loss is a catastrophe!'.  If it's
+> not
+> unique/irreplaceable, maybe just burning it to CD every once in awhile
+> would
+> be enough.
+>
+> If you really do want the data protection of a RAID, your design won't get
+> you there. Do it right... spend enough money to do a good job.  Otherwise,
+> just back up stuff you care about.
+>
+> You can often save money by being clever, but RAID itself is already
+> exceedingly clever.  No matter how much thinking time you do, you're not
+> likely to improve on it much.
+>
+> ----- Original Message -----
+> From: "Erik Ohrnberger" <erik@echohome.org>
+> To: "'LVM general discussion and development'" <linux-lvm@redhat.com>
+> Sent: Tuesday, March 01, 2005 11:27 PM
+> Subject: RE: [linux-lvm] Building up a RAID5 LVM home server (long)
+>
+>
+>> Ron,
+>>    Well, there is no mistaking this feedback  ;-)
+>>
+>>    Thanks for the direct, succinct feedback.  I think you are right in
+>> your
+>> points.
+>>
+>>    The search goes on to balance flexibility, cost, and benefits, as
+>> always.
+>>
+>>    Erik.
+>>
+>>> -----Original Message-----
+>>> From: linux-lvm-bounces@redhat.com
+>>> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Ron Watkins
+>>> Sent: Tuesday, March 01, 2005 11:10 PM
+>>> To: Erik@echohome.org; LVM general discussion and development
+>>> Subject: Re: [linux-lvm] Building up a RAID5 LVM home server (long)
+>>>
+>>>
+>>> This is absolutely insane.   It is among the dumbest designs
+>>> I've ever seen.
+>>> You are using HDA as a component in MD0 and MD1, and then
+>>> using HDA AGAIN as
+>>> part of MD2 directly, while using it indirectly via MD0 and
+>>> MD1.   You're
+>>> going to A) bottleneck on HDA, B) you're going to beat that
+>>> drive to death,
+>>> and C) if that drive goes, you are HOSED.  Plus, you are just
+>>> begging for
+>>> problems with potential bugs in the RAID driver code.  This
+>>> whole setup is
+>>> an INCREDIBLY bad idea.  You're trying to 'be clever' to save
+>>> yourself some
+>>> money, and all you're doing is buying trouble.
+>>>
+>>> The way RAID5 is meant to work is with disks of approximately
+>>> the same size.
+>>> RAID5 is not expandable, unless you have a very expensive hardware
+>>> controller.  There are algorithms that will let you expand
+>>> the size of a
+>>> RAID5 volume, but they have not, to my knowledge, been
+>>> implemented in open
+>>> source.   You CANNOT do what you want to do, cheaply.  You
+>>> can spend a great
+>>> deal of money to satisfy most of your design parameters, but
+>>> NOT cheaply.
+>>> If you want it cheap, use fixed drives of about the same
+>>> size, and don't
+>>> think about expansion.  When you're ready to expand, hook up
+>>> another, bigger
+>>> RAID and copy your data.   In NO case can you use that
+>>> hodgepodge of junk
+>>> drives you've collected.
+>>>
+>>> Most of your drives are obsolete.  Keep the biggest one, buy
+>>> at least two
+>>> more of the same size, and set up a RAID5 using that.  All
+>>> this monkeying
+>>> around to try to extract some last value from drives totally
+>>> ill-suited for
+>>> the purpose is going to cost you far, far more than new
+>>> drives ever could.
+>>>
+>>> Hell, keep the smaller ones around, put them into a concatenated LVM2
+>>> volume, and use them as a backup.  It's not the best backup
+>>> in the world,
+>>> but it's better than nothing.
+>>>
+>>> Do it right.  This is your data you're trying to save.  You
+>>> can get very
+>>> nice 250-gig PATA Western Digital drives for $165 from
+>>> www.newegg.com.  They
+>>> are specifically designed for RAID.  Buy 4 and save yourself
+>>> this massive
+>>> headache.  If you don't need that much space, buy smaller drives.
+>>>
+>>> Or, you can persist in trying to be clever, but it's a
+>>> virtual *certainty*
+>>> you're going to lose data if you go this route.  Pay now, or
+>>> pay later.
+>>> What's your data worth?
+>>>
+>>> <<RON>>
+>>>
+>>> ----- Original Message -----
+>>> From: "Erik Ohrnberger" <erik@echohome.org>
+>>> To: "'LVM general discussion and development'" <linux-lvm@redhat.com>
+>>> Sent: Tuesday, March 01, 2005 10:27 PM
+>>> Subject: RE: [linux-lvm] Building up a RAID5 LVM home server (long)
+>>>
+>>>
+>>> >
+>>> > ... SNIP ...
+>>> >> >What if the I broke everything into 10 GB pieces, and
+>>> >> created multiple
+>>> >> >raid5 sets?  Then I could LVM2 them together and have a large
+>>> >> >filesystem that way.
+>>> >> >
+>>> >> >a=20GB, b=30GB, c=40GB
+>>> >> >
+>>> >> >a-1 + b-1 + c-1 = md0 (approx 30 GB storage)
+>>> >> >a-2 + b-2 + c-2 = md1 (approx 30 GB storage)
+>>> >> >      b-3 + c-3 = md2 (waiting for one more drive)
+>>> >> >            c-4 = md3 (waiting for two more drives)
+>>> >> >
+>>> >> >
+>>> >> This is sorta what I do.  But in my opinion the gain of
+>>> having RAID5
+>>> >> (over RAID1) is when you get over 3 disks...  at 3 disks you are
+>>> >> burning 33% for redudnacy... 25% or 20% or  17% sounds
+>>> better to me.
+>>> >> I guess if
+>>> >> you go too far it costs in calculating the parity.
+>>> >
+>>> > Overhead: Yea, OK. Nothing is without a price.
+>>> > I fooled around with various ideas, and came up with this for my
+>>> > particulars:
+>>> > (Note, rounded to nearest GB)
+>>> >
+>>> > 80 GB /dev/hda 60 GB /dev/hdb 40 GB /dev/hdc 45 GB
+>>> > /dev/hdd
+>>> >
+>>> > GB /dev/md0 (RAID0)
+>>> > 40 /dev/hdc
+>>> > 15 /dev/hda1
+>>> > 55
+>>> >
+>>> > /dev/md1 (RAID0)
+>>> > 45 /dev/hdd
+>>> > 10 /dev/hda2
+>>> > 55
+>>> >
+>>> > /dev/md2 (RAID5)
+>>> > 55 /dev/md0
+>>> > 55 /dev/md1
+>>> > 55 /dev/hda3
+>>> > 55 /dev/hdb
+>>> > 220
+>>> >
+>>> > Yea, OK, so like the 220 is a bit optimistic, but should get pretty
+>>> > close
+>>> > to
+>>> > that.
+>>> >
+>>> > What do you think?
+>>> >
+>>> >
+>>> > _______________________________________________
+>>> > linux-lvm mailing list
+>>> > linux-lvm@redhat.com
+>>> https://www.redhat.com/mailman/listinfo/linux-> lvm
+>>> > read the
+>>> LVM HOW-TO at
+>>> http://tldp.org/HOWTO/LVM-HOWTO/
+>>> >
+>>>
+>>> _______________________________________________
+>>> linux-lvm mailing list
+>>> linux-lvm@redhat.com https://www.redhat.com/mailman/listinfo/linux-lvm
+>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>>
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
