@@ -1,10 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: mkfs - cannot set blocksize
-Message-ID: <20020609212842.A8082@sistina.com>
-References: <OF73D30ECA.36498F9C-ONC1256BD0.004E5691@kancelar.seznam.cz> <200206061435.g56EZpl28164@mail.pronto.tv> <20020606232137.GB479@frodo> <20020607080539.GA1320@fib011235813.fsnet.co.uk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020607080539.GA1320@fib011235813.fsnet.co.uk>; from joe@fib011235813.fsnet.co.uk on Fri, Jun 07, 2002 at 09:05:39AM +0100
+Message-ID: <F47B5C16711BEC4BBB0651C75F724809D5C6@qntsv14.quant.com>
+From: =?iso-8859-1?Q?Gesine_Sch=E4fer-Reimers?=
+	 <G.SchaeferReimers@quant-forum.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] URgent - please Help - our main system is corrupt, no one can wor
+ k!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,52 +15,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jun  9 14:29:01 2002
+Date: Mon Jun 10 08:15:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Fri, Jun 07, 2002 at 09:05:39AM +0100, Joe Thornber wrote:
-> Nathan,
-> 
-> On Fri, Jun 07, 2002 at 09:21:37AM +1000, Nathan Scott wrote:
-> > We need to contact the LVM folks and ask them to implement the
-> > BLKBSZSET ioctl (and while I'm at it, I'll mention that ENOTTY
-> > should be returned instead of EINVAL for unrecognised ioctls,
-> > apparently).
-> 
-> I put this ioctl into device-mapper (LVM2 driver) recently, and will
-> suggest Heinz does the same for LVM1.  You're correct about ENOTTY,
-> thanks for pointing it out.
+Dear Sirs,
 
-ENOTTY is in CVS.
-Will change to using blk_ioctl once I am back from my trip.
+this is the second mail. I tried it this noon but got no answer so far, =
+but
+our whole=20
+production is down and I really have to fix it.
 
+We use SUSE 7.3 with LVM. I have got /var and /tmp and /opt  an /home =
+and
+many=20
+Partitions without a filesystem for our database on a logical volume =
+group
+named quant.
 
-> 
-> - Joe
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+The system was up and running. I added (with YAST2) one more logical =
+volume
+to the=20
+volume group, applied an restarted. The restart ist "strange", since =
+only
+parts of the=20
+systems come up.
 
--- 
+For instance the /var directory claims to be mounted but is empty and =
+cannot
+be=20
+mounted, for they are not mounted !! In /procs/ not filesystem is shown =
+as
+mountet.
+The / filesystem, which is out of the VM is in a read only state, some =
+files
+are there=20
+others are gone.
+When I do vgdisplay the VM is shown as available, when I do vgdisplay =
+-D it
+is shown=20
+as unavailable.
 
-Regards,
-Heinz    -- The LVM Guy --
+I cannot afford any tests, since I do not have a backup of the database =
+data
+from today.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+It looks for me as if the addition of the new logical volume wrote some
+information in a=20
+place where it does not belong. Can I recover the old state without =
+loosing
+information?
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+With best regards
+Gesine Sch=E4fer-Reimers
+quant GmbH
+++49/40/254078-70
