@@ -1,12 +1,10 @@
-From: Spam <spam@tnonline.net>
-Message-ID: <1694936487.20031208171542@tnonline.net>
-Subject: Re: [linux-lvm] EXT3 vs Reiserfs
-In-Reply-To: <1070899120.9011.41.camel@hotbox>
-References: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com>
- <1070897481.9011.38.camel@hotbox>  <1070854294.1569.23.camel@avalon>
- <1070899120.9011.41.camel@hotbox>
+Message-ID: <3FD4A42E.3070609@stercomm.com>
+From: Chris Cox <chris_cox@stercomm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] EXT3 vs Reiserfs
+References: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com>
+In-Reply-To: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,35 +15,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  8 10:16:02 2003
+Date: Mon Dec  8 10:19:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Matt <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
->> > So, if your drive gets bad blocks, you can very quickly be rebuilding
->> > your entire filesystem ( I lost a TB on a RAID where one drive develop=
-ed
->> > some bad blocks.)
->>=20
->> You must have been running RAID0, otherwise one drive wouldn't matter.
->>=20
->> > Just keep in mind stability.
->>=20
->> I'm removing harddrives with bad blocks immediately - and running RAID5.
->>=20
->> I'm definitively not missing that feature ;-)
+Yanick Quirion wrote:
+> Hi all,
+> 
+> Could you please tell what is the best filesystem for linux between ext3 and reiserfs?
+> 
+> I know that ext3 can handle ACLs and not online fs extend, and reiserfs do not seems to support ACLs (I found some patches for kernel 2.4.21, but there are errors when I apply them to the kernel sources), but can be extend while it's online.
+> 
+> I'm just asking for your personal opinion and knowledge with them.
+> 
 
+If you are using SUSE, then use reiserfs.  It has ACLs and is mostly patched.
 
-> I was running RAID5.
+If you are using RH, then use ext3.  RH in the past has been known to have
+a broken reiserfs (not known for keeping it patched).
 
-Then  a  bad drive should not matter or you have done something wrong.
-RAID5  has  redundancy for one drive so you should not loose any data.
-But  agreed.  Bad  blocks  management  is  a  needed  feature  of  any
-filesystem. Just as defragment support utils.
+In my performance benchmarks, I found reiserfs to be somewhere between jfs and ext3, where
+ext3 was the fastest, but reiserfs doing exceptionally well on random file creates
+and deletes.  Thought ext3 beats reiserfs in many of our tests, it was not by
+an overwhelming margin.  We were very surprised by the lack of performance of JFS.. though
+it did have the lowest CPU utilization of the 3.
 
-From=20what I understood is Reiser4 going to improve on all areas.
+We run SUSE primarily... therefore we use reiserfs (mostly with LVMs).
+RH is sorta new to the LVM thing... so although we use ext3 on our RH systems,
+most of them do not use LVM.  We have over 7TB of data that uses LVM with
+reiserfs... we're quite pleased with the performance and capability.
 
-Performance wise no FS should be very slow on big files? Or what did I
-miss?
-
-> Matt sChillinger
+We love the ability to do resize_reiserfs while the filesystem is mounted.
+Constantly amazes the "Unix" purists.
