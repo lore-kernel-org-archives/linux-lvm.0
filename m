@@ -1,8 +1,12 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re: [linux-lvm] expanding on LVM2
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030314010050.PZRK15396.imf33bis.bellsouth.net@tiger2>
+Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
+References: <20030312195217.GC18876@auctionwatch.com>
+	<20030312221320.GA15196@gw.silicide.dk>
+	<20030312234520.GA19335@auctionwatch.com> <3E704492.DF386E61@silicide.dk>
+	<20030314002507.GE22003@auctionwatch.com>
+From: Adrian Phillips <a.phillips@met.no>
+In-Reply-To: <20030314002507.GE22003@auctionwatch.com>
+Message-ID: <87llzixsbm.fsf@freeze.oslo.dnmi.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,35 +17,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar 13 18:59:01 2003
+Date: Fri Mar 14 02:32:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-I think there is a libdevmapper.c  and .h
+>>>>> "Petro" == Petro  <petro@auctionwatch.com> writes:
 
-I have not used it, so I don't know if link in the file, or if a shared lib or =
-standard lib or whatever gets created.
+    >> need to find a way to send an <alt-3> through > an ssh session
+    >> to a telnet window.  may i suggest
+    >> http://www.realweasel.com/intro.html It's a pci GFX<->serial
+    >> card.  I dont have one, but i want 3. If you buy one... do tell
+    >> us how it works.
 
-Greg
- >>  <P>hi all,</P>
- >>  <P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I have successfully installed LVM2
- >>  on linux 2.4.19. </P>
- >>  <P>I want to do some further work on that, and am not sure if that is
- >>  already available, so could someone please elaborate on the availability
- >>  of a kernel API / library in the userland, i.e What are the library
- >>  exposed or the kernel APIs available for an lvm consumer who wants to add
- >>  new functionalities or write customised LVM customised LVM administrative
- >>  tool.</P> Warm regards <BR>Sharad <BR>
- >>  <hr><font face=3D"Arial" size=3D"2"><b>Get Your Private, Free E-mail from
- >>  Indiatimes at  </font><a href=3D"http://email.indiatimes.com"><font
- >>  face=3D"Arial" size=3D"2">http://email.indiatimes.com</a></b><br>Buy the =
-best
- >>  in Movies at <A
- >>  =
-href=3D"http://www.videos.indiatimes.com">http://www.videos.indiatimes.com<
- >>  /A><br>Bid for <b>Air Tickets @ Re.1</b> on Air Sahara Flights. Just log
- >>  on to <a
- >>  =
-href=3D"http://airsahara.indiatimes.com">http://airsahara.indiatimes.com</a
- >>  > and Bid Now !</font>
+    Petro>     That won't solve the problem.
+
+    Petro>     See, my servers are 55 miles down the road. I ssh to a
+    Petro> machine that connects to a private network, on which are a
+    Petro> bunch of portmasters and APCs. I then telnet to the
+    Petro> Portmaster ports, which hook to cua0.
+
+    Petro>     It looks basically like I call he "smart hands" at the
+    Petro> Colo and talk them through redoing the RAID volumes.
+
+Um, sorry if I misunderstood, but using expect, either tcl or perl
+versions, might solve this but then again it might not.
+
+Sincerely,
+
+Adrian Phillips
+
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
