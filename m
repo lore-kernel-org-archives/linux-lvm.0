@@ -1,8 +1,8 @@
-From: Jan =?iso-8859-2?Q?=A9vec?= <svecj@fzu.cz>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1066307106.1480.59.camel@pc112b.fzu.cz>
-Mime-Version: 1.0
-Subject: [linux-lvm] LVM2 compilation problem
+From: Jeff <threshar@torgo.978.org>
+In-Reply-To: <200310142218.h9EMIWo27040@mail.osdl.org>
+Message-ID: <Pine.BSF.4.44.0310160740510.5719-100000@torgo.978.org>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: [PERFORM] backup/restore - another area.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,70 +13,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 16 07:26:01 2003
+Date: Thu Oct 16 07:56:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "markw@osdl.org" <markw@osdl.org>
+Cc: "pgsql-performance@postgresql.org" <pgsql-performance@postgresql.org>, "linux-lvm@sistina.com" <linux-lvm@sistina.com>, pgsql-admin@postgresql.org
 
-Hi,
+On Tue, 14 Oct 2003, markw@osdl.org wrote:
 
-I'm having trouble compiling the LVM2 ver. 2.2.00.07. During make
-install I receive this error:
+> I'm curious to what kind of testing you've done with LVM.  I'm not
+> currently trying any backup/restore stuff, but I'm running our DBT-2
+> workload using LVM.  I've started collecting vmstat, iostat, and
+> readprofile data, initially running disktest to gauge the performance.
+>
+[added -admin to this, since this is very relevant there]
 
-device/dev-io.c: In function `dev_get_size':
-device/dev-io.c:215: `BLKGETSIZE64' undeclared (first use in this
-function)
-device/dev-io.c:215: (Each undeclared identifier is reported only once
-device/dev-io.c:215: for each function it appears in.)
-make[1]: *** [device/dev-io.o] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make[1]: Leaving directory `/root/LVM2.2.00.07/lib'
-make: *** [lib] Error 2
+I was going to post this data yesterday, but I had severe inet issues.
 
-The kernel is 2.6.0 test6. I also tried to make the link
-/usr/src/linux-2.6.0-test6/include/linux -> /usr/include/linux, but then
-I receive another error message:
+So, I tried this out with lvm2 on 2.4.21 on a 2xp2-450 with 2 disks.
+(I just looked at your 14 and 52 disk data. drool.)
 
-gcc -c -I. -I../include -DLVM1_INTERNAL -DREADLINE_SUPPORT
--DDEVMAPPER_SUPPORT -DHAVE_LIBDL -DHAVE_GETOPTLONG -DHAVE_RL_COMPLET
-ION_MATCHES -fPIC -Wall -Wundef -Wshadow -Wcast-align -Wwrite-strings
--Wmissing-prototypes -Wmissing-declarations -Wnested-exte
-rns -Winline -O2 device/dev-io.c -o device/dev-io.o
-In file included from /usr/include/linux/fs.h:10,
-                 from device/dev-io.c:24:
-/usr/include/linux/linkage.h:5:25: asm/linkage.h: No such file or
-directory
-In file included from /usr/include/linux/fs.h:16,
-                 from device/dev-io.c:24:
-/usr/include/linux/list.h:563:2: warning: #warning "don't include kernel
-headers in userspace"
-In file included from /usr/include/linux/fs.h:20,
-                 from device/dev-io.c:24:
-/usr/include/linux/radix-tree.h: In function `radix_tree_preload_end':
-/usr/include/linux/radix-tree.h:54: invalid type argument of `->'
-/usr/include/linux/radix-tree.h:54: `TIF_NEED_RESCHED' undeclared (first
-use in this function)
-/usr/include/linux/radix-tree.h:54: (Each undeclared identifier is
-reported only once
-/usr/include/linux/radix-tree.h:54: for each function it appears in.)
-In file included from /usr/include/linux/fs.h:22,
-                 from device/dev-io.c:24:
-/usr/include/asm/atomic.h:40:2: warning: #warning Using kernel header in
-userland program. BAD!
-make[1]: *** [device/dev-io.o] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make[1]: Leaving directory `/root/LVM2.2.00.07/lib'
-make: *** [lib] Error 2
+So I have a db which is about 3.2GB on disk.
+All backups were done to an nfs mount, but I ran a network monitor to
+check bandwidth usage. I note where things were io bound.
 
-Anyone have any idea how to solve this problem ?
+backing up:
 
-Thanks,
-Jan
+pg_dump: 18m             [cpu bound]
+pg_dump | gzip -1: 18m   [cpu bound]
 
--- 
-----------------------------------------------------------------------
-Jan Svec                                 Institute of Physics 
-e-mail: svecj@fzu.cz                     Academy of Sciences of the CR
-Phone : +420 2 6605 2145                 Na Slovance 2, 182 21 Praha 8
-Fax   : +420 2 8658 5443                 Czech Republic
-----------------------------------------------------------------------
+snapshot, then tar: 4m         [io bound]
+snapshot, then tar | gzip: 21m [cpu bound]
+
+The times for a compressed backup are a bit slower for snapshots, but this
+is where the snapshot method wins tacos - restore.
+
+restore:
+
+psql:      158m
+snapshot:    8m
+
+Yes folks, 8m.
+When I started PG back up it checked the WAL and got itself back online.
+
+The benefits of the pg_dump backup afaict are that the data is in a format
+readable to anything and is [mostly] cross-pg compatible. The downside is
+it seems to be quite slow and restoring it can be long and tiresome.
+
+The benefits of the snapshot are that backups are very, very quick and
+restore is very, very quick (It won't need to re-enable foriegn keys, no
+need to rebuild indexes, no need to re-vacuum analyze). The downside is
+this method will only work on that specific version of PG and it isn't the
+"cleanest" thing in the world since you are essentially simulating a power
+failure to PG. Luckly the WAL works like a champ. Also, these backups can
+be much larger since it has to include the indexes as well. but this is a
+price you have to pay.
+
+I did have some initial problems with snapshots & corruption but it turned
+out to be user-error on my part.
+
+COOL HUH?
+
+--
+Jeff Trout <jeff@jefftrout.com>
+http://www.jefftrout.com/
+http://www.stuarthamm.net/
