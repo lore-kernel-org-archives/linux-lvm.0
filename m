@@ -1,10 +1,8 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] LVM2 and whole disk booting
-Message-ID: <20031124234610.Q16901@uk.sistina.com>
-References: <000d01c3b159$0e603e60$100119ac@hydro>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <000d01c3b159$0e603e60$100119ac@hydro>; from hydro@blueyonder.co.uk on Sun, Nov 23, 2003 at 12:30:54AM -0000
+Message-ID: <014d01c3b2f8$be15a930$100119ac@hydro>
+From: "<hYdRo>" <hydro@blueyonder.co.uk>
+Subject: Re: [linux-lvm] LVM2 on 2.4.22. (Fedora core 1 with nptl) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 24 17:47:01 2003
+Date: Mon Nov 24 20:08:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Nov 23, 2003 at 12:30:54AM -0000, <hYdRo> wrote:
-> I've noticed LVM2 PVs in a partition don't use the first sector, does
-> this mean you can now put lilo in the first sector of a whole disk PV
-> and boot from it?
+tugg <tugg@dial.pipex.com> writes:
 
-New-style LVM2 PVs indeed store the LVM2 label in the second sector (1)
-by default.  The sector used can be specified in the range 0-3 using
-pvcreate --labelsector.  (The tools scan the first 4 sectors of
-each device for an LVM2 label.)
+> Trying to install LVM2 on 2.4.22. (Fedora core 1 with nptl)
+>
 
-So by default the first sector (0) is free for other uses such as booting.
+Please post notes back to here if you managed to work out the patches that
+are needed.  I'd like to stick with the fedora kernel instead of grabbing a
+clean 2.4.22 as I need some of the other patching that Fedora have done.
 
-Alasdair
--- 
-agk@uk.sistina.com
+>device/dev-io.c: In function `dev_get_size':
+>device/dev-io.c:215: error: `BLKGETSIZE64' undeclared (first use in this
+function)
+
+The BLKGETSIZE64 error is due to it not being in the "userspace"
+<linux/fs.h> for Fedora (glibc-kernel-headers package).
+Just add the #define line from /usr/src/linux/include/linux/fs.h (or compile
+against that fs.h as other parts of LVM2 seem to want to compile against
+kernel private headers from the warnings thrown during compile).
