@@ -1,31 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5L9u5000464
-	for <linux-lvm@redhat.com>; Mon, 21 Jun 2004 05:56:05 -0400
-Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5L9u3e1021500
-	for <linux-lvm@redhat.com>; Mon, 21 Jun 2004 05:56:03 -0400
-Received: from localhost (lucy.ukfsn.org [127.0.0.1])
-	by mail.ukfsn.org (Postfix) with ESMTP id 74B54E6D3E
-	for <linux-lvm@redhat.com>; Mon, 21 Jun 2004 10:55:15 +0100 (BST)
-Received: from mail.ukfsn.org ([127.0.0.1])
-	by localhost (lucy.ukfsn.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 21878-19 for <linux-lvm@redhat.com>;
-	Mon, 21 Jun 2004 10:55:15 +0100 (BST)
-Received: from oak.dgreaves.com (modem-2777.putangitangi.dialup.pol.co.uk
-	[81.78.202.217]) by mail.ukfsn.org (Postfix) with ESMTP id C5214E6A97
-	for <linux-lvm@redhat.com>; Mon, 21 Jun 2004 10:55:14 +0100 (BST)
-Received: from ash.dgreaves.com ([10.0.0.66])
-	by oak.dgreaves.com with esmtp (Exim 4.20) id 1BcLYx-0001HL-EJ
-	for linux-lvm@redhat.com; Mon, 21 Jun 2004 10:58:03 +0100
-Message-ID: <40D6B0AA.4030700@dgreaves.com>
-Date: Mon, 21 Jun 2004 10:55:54 +0100
-From: David Greaves <david@dgreaves.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM2 seems to chop performance by 33%
-References: <40C86F52.4090500@dgreaves.com>	<200406101105.47606.StuartHarper@tampabay.rr.com>	<40C87F8A.7080304@dgreaves.com>	<1086885029.13087.15.camel@localhost>	<40D5D4D6.9020307@dgreaves.com>
-	<20040620195316.GT6302@agk.surrey.redhat.com>
-In-Reply-To: <20040620195316.GT6302@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 7bit
+Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5L9xSj2032686
+	for <linux-lvm@redhat.com>; Mon, 21 Jun 2004 10:59:28 +0100
+Received: from patrick by fentible.pjc.net with local (Exim 4.34)
+	id 1BcLaL-0004fU-KC
+	for linux-lvm@redhat.com; Mon, 21 Jun 2004 10:59:29 +0100
+Date: Mon, 21 Jun 2004 10:59:29 +0100
+From: Patrick Caulfield <pcaulfie@redhat.com>
+Subject: Re: [linux-lvm] lvm2 install problem
+Message-ID: <20040621095929.GF12027@tykepenguin.com>
+References: <freemail.20040521100005.60543@fm7.freemail.hu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <freemail.20040521100005.60543@fm7.freemail.hu>
+Sender: Patrick <patrick@tykepenguin.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,33 +23,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Alasdair G Kergon wrote:
+On Mon, Jun 21, 2004 at 10:00:05AM +0200, Moha Snipa1 wrote:
+> hello,
+> 
+> i have a problem when I try to install the LVM2!
+> well, I use a 2.6.7 kernel with device mapper support...
+> I have installed device-mapper.1.00.07 and now i try to install LVM2.2.
+> 00.16 but I get this error message!
+> 
+> 
+> gcc -c -I. -I../include -DLVM1_INTERNAL -DSNAPSHOT_INTERNAL 
+> -DMIRRORED_INTERNAL -DDEVMAPPER_SUPPORT -DO_DIRECT_SUPPORT 
+> -DHAVE_LIBDL -DHAVE_GETOPTLONG -fPIC -Wall -Wundef -Wshadow 
+> -Wcast-align -Wwrite-strings -Wmissing-prototypes 
+> -Wmissing-declarations -Wnested-externs -Winline -O2 cache/lvmcache.
+> c -o cache/lvmcache.o
+> activate/activate.c: In function `target_present':
+> activate/activate.c:302: `DM_DEVICE_LIST_VERSIONS' undeclared (first 
+> use in this function)
+> activate/activate.c:302: (Each undeclared identifier is reported only once
+> activate/activate.c:302: for each function it appears in.)
 
->On Sun, Jun 20, 2004 at 07:17:58PM +0100, David Greaves wrote:
->  
->
->>No-one ever replied as to why blockdev --setra / --getra is not the same 
->>as that displayed in lvdisplay
->>And it's not documented that I can find. There's a comment: "Not used by 
->>device-mapper." And that means.....?
->>    
->>
->
->Any LVM read ahead setting is ignored by LVM2 i.e. not passed to the kernel.
->
->If it's demonstrated to be useful it could still be implemented, but
->the current development priorities are still correctness and new features 
->rather than performance.
->
->Alasdair
->  
->
-Thanks Alasdair
+Sounds like a missing or out-of-date device-mapper.
 
-It would be good to modify the docs to be clearer and maybe say "use 
-blockdev --setra"
-
-David
+patrick
