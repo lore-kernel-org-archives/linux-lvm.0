@@ -1,9 +1,9 @@
-Message-ID: <3B94FB57.9080709@st-peter.stw.uni-erlangen.de>
-Date: Tue, 04 Sep 2001 18:03:35 +0200
+Message-ID: <3B94FC0D.1080205@st-peter.stw.uni-erlangen.de>
+Date: Tue, 04 Sep 2001 18:06:37 +0200
 From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] SoftRaid and LVM
-References: <B45465FD9C23D21193E90000F8D0F3DF0178FD71@mailsrv.linkvest.com> <3B94FA24.4020108@st-peter.stw.uni-erlangen.de>
+Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1-rc2 available at www.sistina.com
+References: <20010830154448.A28281@sistina.com> <20010830210309.0D0B01225@oscar.casa.dyndns.org> <20010904110411.B1028@sistina.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,108 +19,24 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-and could we leave this subject to mr Thorsten
-i'm sorry that i used it get your attention
+for me it worked  with 2.4.10 pre2  
+but i had problems patching  2.4.9-ac5 with 1.0.1rc1 and rc2
 
-but i'm really desperate
+AJ Lewis wrote:
 
-sorry
-
-svetljo wrote:
-
-> what do you mean that my problem is off topic
+>On Thu, Aug 30, 2001 at 05:03:08PM -0400, Ed Tomlinson wrote:
 >
-> and could you possible didn't noticed that all the post come from me
->
-> i've got only 2 or 3 replies and i realy need help
->
-> Jean-Eric Cuendet wrote:
->
->> I don't understand what you mean!
->> Your request is offtopic. You ask for help on a thread not related to
->> you...
->> But on the thread there :
->> <http://lists.sistina.com/pipermail/linux-lvm/2001-September/008611.html
+>>On August 30, 2001 04:44 pm, you wrote:
 >>
->>> you already got help from many!
+>>>We have a new 1.0.1 Release Candidate!  The major difference between rc1
+>>>and rc2 is that rc2 uses PV version 1 metadata on all new PVs and PVs
+>>>modified with the rc2 tools.
 >>>
->>
->> What do you mean and want exactly???
->> -jec
->>
->>> -----Original Message-----
->>> From: svetljo [mailto:galia@st-peter.stw.uni-erlangen.de] Sent: 
->>> mardi, 4. septembre 2001 17:03
->>> To: linux-lvm@sistina.com
->>> Subject: Re: [linux-lvm] SoftRaid and LVM
->>>
->>>
->>> Hei why does nobody try to help me
->>>
->>> [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 
->>> reiserfs?) 
->>> <http://lists.sistina.com/pipermail/linux-lvm/2001-September/0
->>>
->> 08611.html>
->>
->> i've done pretty much trys and almost nobody seems to wont to help me am
->> i invisable
->>
->> svetljo
->>
->> Ray Miller wrote:
->>
->>> On Tue, Sep 04, 2001 at 04:35:40PM +0200, Jean-Eric Cuendet wrote:
->>>
->>>> Hi,
->>>> It seems that you use a fresh 2.4.9 kernel. In kernel 2.4.9, the 
->>>> version of LVM is 0.9.0-beta2, which is what you get with dmesg or cat
->>>>
->>
->>>> /proc/lvm Then you installed tools from 1.0.1rc2. You must upgrade 
->>>> your kernel with LVM 1.0.1rc2 if you want all that to be consistent 
->>>> (or use beta2 tools, which is not the good way IMHO).
->>>>
->>>> Recompile 2.4.9 with LVM-1.0.1rc2 and you'll be OK.
->>>>
->>> I applied the 1.0.1-rc2 patch to a clean 2.4.9 kernel tree and was able
->>>
->>
->>> to create a logical volume on top of s/w RAID 1 without any trouble. 
->>> However, a bonnie++ run on an ext2 (or ext3) filesystem on the 
->>> logical volume caused the system to lock up, with kswapd going 
->>> uninterruptible.
->>>
->>
->>> I suspect a VM (rather than LVM) problem, as a similar lock-up occurred
->>>
->>
->>> on another system with 2.4.8 kernel and no LVM. We've reverted to 
->>> kernel 2.4.7 on both systems and had no problems since.
->>>
->>
->>
->>
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@sistina.com
->> http://lists.sistina.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@sistina.com
->> http://lists.sistina.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>Does the patch generator in rc2 handle 2.4.10pre<x> correctly?
 >>
 >
+>It *should*.  We fixed that before the release I believe.  If it does not,
+>please let us know.
 >
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>Regards,
 >
