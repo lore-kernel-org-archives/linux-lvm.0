@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Volume group not found on restart [resent]
-Message-ID: <20020522202056.A10845@sistina.com>
-References: <E631530D51ABD411B823009027855C5B0278BE@THOR>
-Mime-Version: 1.0
-In-Reply-To: <E631530D51ABD411B823009027855C5B0278BE@THOR>; from Murthy.Kambhampaty@goeci.com on Wed, May 22, 2002 at 01:58:22PM -0400
+Message-ID: <E631530D51ABD411B823009027855C5B0278BF@THOR>
+From: Murthy Kambhampaty <Murthy.Kambhampaty@goeci.com>
+Subject: RE: [linux-lvm] Volume group not found on restart [resent]
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,115 +12,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 22 13:25:02 2002
+Date: Wed May 22 14:05:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Wed, May 22, 2002 at 01:58:22PM -0400, Murthy Kambhampaty wrote:
-> Heinz, the "gone one" has been gone for a long while. It was a single SCSI
-> disk (/dev/sda) which I added to the VG to use for snapshotting db_dir (for
-> backup) and would immediately lvremove (see the SnapBach.sh script below;
-> not too sophisticated, just faithfully replicates the necessary keytrokes). 
-
-As my tiny little helper scripts typically look as well ;-)
+Heinz, 
 
 > 
-> However, the snapshot strategy did not work out for me (it was for backing
-> up my production databases; I decided to get MySQL to hotcopy the databases,
-> and then do a [xfs]dump of the filesystem containing the hotcopy). So, I did
-> a vgreduce /dev/sda, but pvscan kept telling me it was still in VG "db_vol",
+> Well, that shouldn't have happened in case "vgreduce db_vol 
+> /dev/sda" went ok
+> back then.
+> Do you have any memory of failure messages for that one?
+There weren't really any failure messages. I was just trying to go through
+the steps of removing the PV from the VG, then "remove the PV", then
+reformat the drive/yank it. I had a similar problem on another box, where
+I'd set up a VG create an LV, use if for a while then try to scrap the
+system because I needed to redeploy my HDDs. Once the vgreduce/vgremove step
+was completed, I'd do a PV scan and it would still list the removed PV as
+belonging to the VG or list the size of the VG at the old size. I'd reboot
+and do a pvscan, and it would give the correct list of PVs/VG
+membership/size of VGs; so I never thought anything of it (I have a couple
+of disks to play with, once I get the data I take care of db_vol, and I will
+try to replicate my experience).
 
-Well, that shouldn't have happened in case "vgreduce db_vol /dev/sda" went ok
-back then.
-Do you have any memory of failure messages for that one?
-
-> so I did an lvmchange -R to see if I could "reset" the information, but that
-> didn't work, so I rebooted and then pvscan only gave /dev/rd/c0d0p6 in
-> "db_vol". NOTE: I was/am still learning to deal with LVM; I think I figured
-> out that all I needed to do was a vgscan, which is what the reboot did; too
-> much exposure to MS Windows, I guess ;(.
-> 
-> So, the preferred course here is to "to change the metadata in order to get
-> rid of the gone physical volume", and all will be well. 
-
-So there's cons vs. (temporarly) trying 1.1-rc to quorum activate db_vol
-in order to retrieve the data?
-
-Regards,
-Heinz    -- The LVM Guy --
-
-> 
-> Thanks for your continuing assistance. Its really great that you got on top
-> of this issue so quickly.
-> 
-> I look forward to your advice on the steps necessary for changing the
-> metadata,
-> 	Murthy
-> 
-> 
-> Begin script SnapBack.sh:
-> #!/bin/bash
-> # FN: SnapBack.sh
-> # AB: Archives /home/db to a daily backup file on compa5
-> # DT: 20020321
-> # AU: Murthy Kambhampaty
-> 
-> SnapDir=/dev/db_vol/db_dir
-> SnapLVName=snap_db
-> SnapLVPath=/dev/db_vol/snap_db
-> SnapMount=/mnt/dbsnap
-> 
-> /sbin/lvcreate -s -l 4999 -n $SnapLVName $SnapDir ; \
->         mount -v -t xfs -o ro,nouuid,norecovery $SnapLVPath $SnapMount  ; \
->         cd $SnapMount ; \
->         /opt/schily/bin/star -czl \
->                 f=/mnt/dbback/$(date +%A)_snap.tar . ; \
->         cd / ; \
->         umount -v $SnapMount ; \
->         /sbin/lvremove -f $SnapLVPath
-> End SnapBack.sh script.
-> 
-> > -----Original Message-----
-> > From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
-> > Sent: Wednesday, May 22, 2002 13:21
-> > To: linux-lvm@sistina.com
-> > Subject: Re: [linux-lvm] Volume group not found on restart [resent]
 > > 
-> > 
-> > 
-> > Murthy,
-> > 
-> > the metadata you sent to me directly shows, that 2 physical 
-> > volumes belong
-> > to your volume group db_vol but only one can be found on 
-> > /dev/rd/c0d0p6.
-> > 
-> ...
-> > 
-> > If you can't get the physical volume back, there's hope to change the
-> > metadata in order to get rid of the gone physical volume.
-> > That could be possible, because logical volume "db_dir" seems 
-> > to be allocated
-> > on /dev/rd/c0d0p6 only and "snap_db" on the gone physical volume.
-> > 
+> > So, the preferred course here is to "to change the metadata 
+> in order to get
+> > rid of the gone physical volume", and all will be well. 
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> So there's cons vs. (temporarly) trying 1.1-rc to quorum 
+> activate db_vol
+> in order to retrieve the data?
+> 
+Only to the extent that your message indicated that LVM 1.1-rc2 was unstable
+(BTW, do I only install the userspace tools and retain my LVM 1.0.1rc4
+kernel code (or do I have to patch the XFS cvs kernel with the LVM 1.1-rc2
+kernel code to implement this alternative?)
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks,
+	Murthy
