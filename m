@@ -1,8 +1,7 @@
-Message-ID: <3DB97752.EBA18F0F@splentec.com>
-From: Luben Tuikov <luben@splentec.com>
+Message-ID: <2D92FEBFD3BE1346A6C397223A8DD3FC092055@THOR.goeci.com>
+From: Murthy Kambhampaty <murthy.kambhampaty@goeci.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Recent dissections
+Subject: [linux-lvm] RE: Recent dissections
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,10 +12,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 25 11:55:01 2002
+Date: Fri Oct 25 12:36:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-xfs <linux-xfs@oss.sgi.com>, linux-lvm <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: 'Luben Tuikov' <luben@splentec.com>, linux-xfs <linux-xfs@oss.sgi.com>, linux-lvm <linux-lvm@sistina.com>
+
+BTW, is this with LVM from the kernel (1.0.3 in 2.4.19, and XFS CVS) or some
+other? Does the problem(s) appear when using LVM 1.0.3 and LVM tools
+1.0.[345] ?
+
+Thanks,
+	Murthy
+
+-----Original Message-----
+From: Luben Tuikov [mailto:luben@splentec.com]
+Sent: Friday, October 25, 2002 12:55
+To: linux-xfs; linux-lvm
+Subject: Recent dissections
+
 
 As the folks on linux-xfs know, I've recently tried to
 get xfs on top of lvm on top of raid5 on top of some
