@@ -1,9 +1,10 @@
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
-Message-ID: <yw1xu14jtio7.fsf@kth.se>
-References: <Pine.LNX.4.44.0312020510230.4857-100000@localhost.localdomain>
+From: "Bill Rugolsky Jr." <brugolsky@telemetry-investments.com>
+Subject: Re: [linux-lvm] fedora core 1 and LVM2
+Message-ID: <20031202142250.GA21584@ti19.telemetry-investments.com>
+References: <Pine.LNX.4.44.0312011923470.2017-100000@localhost.localdomain>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: still need to install device mapper with 2.6 kernel?
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44.0312011923470.2017-100000@localhost.localdomain>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,28 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  2 08:11:02 2003
+Date: Tue Dec  2 08:24:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: "Robert P. J. Day" <rpjday@mindspring.com>
 
-"Robert P. J. Day" <rpjday@mindspring.com> writes:
+On Mon, Dec 01, 2003 at 07:31:10PM -0500, Robert P. J. Day wrote:
+>   this week sometime, i'm interested in configuring a system with the
+> following properties:
+> 
+>   1) fresh install of fedora core 1 (FC1), with LVM1
+>   2) upgrade to 2.6 (test) kernel
+>   3) upgrade to LVM2
+ 
+You've got (2) and (3) backwards.  The 2.6 kernel doesn't have
+LVM1, so you won't be able to boot your system.  You need to install
+the 2.4 kernel, get DM+LVM2 working, and then move up to 2.6.
 
->   i think i'm confused about the support for device mapper in the 
-> 2.6 kernel.  i'm aware that i need to install device-mapper for
-> LVM2, and i know where to get the device-mapper tarball.
->
->   but, in the configuration process for the 2.6 kernel, you can 
-> select device mapper support, so i did and built it into the
-> kernel.  i assumed (perhaps unwisely) that device mapper was now
-> part of the 2.6 kernel source tree, and i now had it since i'd
-> selected it as part of the configuration in the kernel build for
-> my 2.6.0-test11 kernel.  therefore, i didn't need to explicitly 
-> install device-mapper anymore.
+Regards,
 
-Linux 2.6 includes device-mapper, but (obviously) only the kernel side
-of it.  You still need to install the user space library.
-
--- 
-M�ns Rullg�rd
-mru@kth.se
+	Bill Rugolsky
