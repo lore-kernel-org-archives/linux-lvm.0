@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LV only detected when using "lvscan -D" on amd64 kernel
-Message-ID: <20031027120104.K848@sistina.com>
-References: <3F994F88.8030908@elitedvb.net> <20031025091006.I848@sistina.com> <3F9C0AC9.6050805@elitedvb.net>
-Mime-Version: 1.0
-In-Reply-To: <3F9C0AC9.6050805@elitedvb.net>; from tmbinc@elitedvb.net on Sun, Oct 26, 2003 at 06:56:25PM +0100
+Message-ID: <001d01c39b4a$0c19abc0$0b01a8c0@lancelot>
+From: "Wojtek" <wojciech@btclick.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_001A_01C39B52.6DBC8200"
+Subject: [linux-lvm] Can't build  devmapper for LVM2 on Red Hat 9 - kernel 2.4.20-8
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,64 +14,106 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 27 05:00:02 2003
+Date: Mon Oct 27 06:18:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Oct 26, 2003 at 06:56:25PM +0100, Felix Domke wrote:
-> Heinz J . Mauelshagen wrote:
-> 
-> >Felix,
-> >
-> >this definitely looks like a 64bit ioctl related problem.
-> >I don't have the equipment to test here so help (is external access to
-> >your machine possible ?) is needed.
-> >  
-> >
-> Hi,
-> 
-> i could setup external access to the machine, but be aware that it 
-> consists of a chroot'ed 64bit hacked-together debian, so compiling 
-> something with 64bit isn't any fun at all. The 32bit userspace however 
-> is fine.
-> 
-> I tried to compile the lvmtools as 64bit, but the result didn't change. 
-> are there any points where i can put some debug printfs/printks in the 
-> sources to work out where it fails? I never looked at the LVM internals, 
-> so i don't know what happens where. Does the kernel space reads and 
-> parses the metadata? Or does the userspace parses it and passes it to 
-> the kernel?
+This is a multi-part message in MIME format.
 
-User space parses and passes it via ioctls to the kernel.
-Please look at lvm.h for the ioctls defined and the structures involved.
-Grep the LVM1 library source in tools/lib/ for "ioctl" to get you started.
+------=_NextPart_000_001A_01C39B52.6DBC8200
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Felix
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I tried it few times using sketchy instructions in INSTALL file; it's =
+not clear how to apply patches=20
 
--- 
+Do I apply them first from patches/common then from patches?
+I tried make apply-patches it did only two from patches (devmapper & =
+vfat) after changing Makefile (didn't like '-8' on my kernel dir)
+It didn't seem to touch those in common.
+Then I tried doing them one by one according to README in common ie:
 
-Regards,
-Heinz    -- The LVM Guy --
+patch -d /usr/src/linux-2.4.20-8 -p1 -i /....../......patch
+It spitted out various messages about patch applied ..... -R (n):=20
+I tried replying yes it sort of worked=20
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+So I went to make menuconfig and was able to see devmapper and mirroring =
+option
+Next make dep
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+I'm getting no rule to make target mempool.c
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+I tried other permutations where I get further along by hacking Makefile =
+in /root/devmapper-1.00.05/kernel directory but the whole process seems =
+to be really messy.=20
+I realize that it could be due to my inexperience but was wondering if =
+somebody has gone thru' with that install (incl LVM2) and can share =
+his/her experience with me.
+
+I appreciate any help you can provide
+Wojtek
+------=_NextPart_000_001A_01C39B52.6DBC8200
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2800.1106" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>I tried it few times using sketchy =
+instructions in=20
+INSTALL file; it's not clear how to apply patches </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Do I apply them first from =
+patches/common then from=20
+patches?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I tried make apply-patches it did only =
+two from=20
+patches (devmapper &amp; vfat) after changing Makefile (didn't like '-8' =
+on my=20
+kernel dir)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>It didn't seem to touch those in=20
+common.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Then I tried doing them one by one =
+according to=20
+README in common ie:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>patch -d /usr/src/linux-2.4.20-8 -p1 -i =
+
+/....../......patch</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>It spitted out various messages about =
+patch applied=20
+..... -R (n): </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I tried replying yes it sort of worked=20
+</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>So I went to make menuconfig and was =
+able to see=20
+devmapper and mirroring option</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Next make dep</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I'm getting no rule to make target=20
+mempool.c</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I tried other permutations where I get =
+further=20
+along by hacking Makefile in /root/devmapper-1.00.05/kernel directory =
+but the=20
+whole process seems to be really messy. </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I realize that it could be due to my =
+inexperience=20
+but was wondering if somebody has gone thru' with that install (incl =
+LVM2) and=20
+can share his/her experience with me.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I appreciate any help you can =
+provide</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Wojtek</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_001A_01C39B52.6DBC8200--
