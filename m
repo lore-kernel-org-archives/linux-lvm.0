@@ -4,7 +4,7 @@ In-Reply-To: <20021031232551.GG23959@clusterfs.com>
 References: <1036105045.10397.68.camel@theory.jpl.nasa.gov> 
 	<20021031232551.GG23959@clusterfs.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1036109272.10398.82.camel@theory.jpl.nasa.gov>
+Message-Id: <1036112887.10402.88.camel@theory.jpl.nasa.gov>
 Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,7 +16,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 31 18:08:02 2002
+Date: Thu Oct 31 19:09:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
@@ -26,7 +26,13 @@ On Thu, 2002-10-31 at 15:25, Andreas Dilger wrote:
 > actually change being written to the snapshot LV) - no need to change
 > the filesystem size at all.  All you need to change is the LV size.
 
-Thanks -- that makes a lot of sense!
+OK -- so using lvextend I can extend it. But once it's extended, I can
+no longer mount it. I get:
+
+  mount: wrong fs type, bad option, bad superblock on
+    /dev/data1/.mer_dev.hourly.3, or too many mounted file systems
+
+Is there something I'm missing here? (ok -- obviously yes...)
 
 
 -- 
