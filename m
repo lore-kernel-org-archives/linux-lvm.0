@@ -1,12 +1,14 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Mon, 5 Feb 2001 17:17:24 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvm-0.9.1beta3 & kernel-2.4.1: vgrename: 'Segmentation fault'
-Message-ID: <20010205171724.H525@tykepenguin.com>
-References: <A4A5E4C468B5D11190220001FA6835DD04DD8801@EPIXCH003>
+Return-Path: <lewis@sistina.com>
+Date: Mon, 5 Feb 2001 11:41:40 -0600
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] reopen bugs
+Message-ID: <20010205114139.A4082@sistina.com>
+References: <Pine.LNX.4.21.0102051508380.1311-100000@duckman.distro.conectiva>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
 Content-Disposition: inline
-In-Reply-To: <A4A5E4C468B5D11190220001FA6835DD04DD8801@EPIXCH003>; from JSO@EUROPAY.COM on Mon, Feb 05, 2001 at 09:25:41AM +0100
+In-Reply-To: <Pine.LNX.4.21.0102051508380.1311-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Mon, Feb 05, 2001 at 03:09:28PM -0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,42 +20,54 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Feb 05, 2001 at 09:25:41AM +0100, SOETE Jo?l wrote:
-> Hi all,
-> 
-> Having "LVM-0.9 Trouble in pvcreate"
-> (http://lists.sistina.com/pipermail/linux-lvm/2000-December/005654.html) and
-> learning that kernel-2.4.1and lvm-0.9.1beta3 was released I install it on my
-> linux box (Intel PIII, 128Mb ram, 15Gb disk).
-> 
-> I test successfully LVM-HOWTO with a small slice of 16Mb (so I adapt size of
-> extend to 16K) excepted point 9 (vgrename) and 10.
-> 
-> Point 10 was not tested because resize for ext2 was not yet installed.
-> 
-> Point 9 vgrename failed : 'Segmentation fault' (sorry I could not log more.
-> redirection 2>&1 does not work?).
-> 
-> I reboot my system to be sure and accidentally I forget to "vgchange -an
-> test_vg" then "vgrename test_vg vg_test" works?
-> 
-> Well, summary:
-> 	# vgchange -an test_vg
-> 	# vgrename test_vg vg_test 
-> 	Segmentation fault
-> 
-> 	# vgchange -ay test_vg
-> 	# vgrename test_vg vg_test 
-> -> success
-> 
-> Sorry, I have not enough knowledge to hack this problem.
+--VbJkn9YxBvnuCH5J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've fixed this in CVS.
+On Mon, Feb 05, 2001 at 03:09:28PM -0200, Rik van Riel wrote:
+> I was wondering how to reopen bugreports. Since I
+> submitted a bug, it was closed and marked fixed,
+> but since things have only gotten worse I added
+> a comment ... but the bug remains closed.
+>=20
+> http://bugzilla.sistina.com/show_bug.cgi?id=3D153
 
-Thanks for the bug report. 
+I reopened it.  There's a radio button that allows one to reopen a bug.  You
+need to make sure you click that before you submit your comments.  Let me
+know if you can't see this option for some reason.
 
-patrick
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+Over and over I find being redundant is key to success
+in the art of redundancy - Jay Armstrong
+-----End Obligatory Humorous Quote------------------------------------------
+
+--VbJkn9YxBvnuCH5J
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6fuXTpE6/iGtdjLERAqfeAJ9pfa7gXnqjGe7tFIlYDjBgYflqMQCfUglB
+I0sMx2QatOOmtbuELvpnXNY=
+=A8eV
+-----END PGP SIGNATURE-----
+
+--VbJkn9YxBvnuCH5J--
