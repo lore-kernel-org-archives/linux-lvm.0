@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Max storage size per system
-Message-ID: <20030304183848.A20669@sistina.com>
-References: <20030304114851.GA22965@hcsd.de>
-Mime-Version: 1.0
-In-Reply-To: <20030304114851.GA22965@hcsd.de>; from au@hcsd.de on Tue, Mar 04, 2003 at 12:48:52PM +0100
+Message-ID: <3E651551.6030904@stamppot.demon.nl>
+From: Sander Alberink <alberink@stamppot.demon.nl>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Severe problem: data lost while adding a partition
+References: <3E3C62E4.7030409@home.nl> <20030203113148.B8501@sistina.com> <3E42D82B.3070003@stamppot.demon.nl> <20030207152736.C27442@sistina.com> <3E515E16.8050209@stamppot.demon.nl> <264070000.1045520730@[192.168.200.4]> <3E5BF188.6000207@stamppot.demon.nl>
+In-Reply-To: <3E5BF188.6000207@stamppot.demon.nl>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,40 +15,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar  4 11:45:02 2003
+Date: Tue Mar  4 15:07:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Maximum of 256 LVs * 2TB in stock 2.4 = 512TB.
+Hello all,
 
-On Tue, Mar 04, 2003 at 12:48:52PM +0100, Stephan Austermuehle wrote:
-> Hello,
-> 
-> what is the absolut maximum storage capacity that can be managed on a
-> single Linux 2.4 system with LVM?
-> 
-> Kind regards,
-> 
-> Stephan
+Sorry to reply to myself, but I really am stuck on this one. Any 
+pointers would be much appreciated...
 
+I have gotten the vgcreate to work (this was caused by me now using 
+devfs (so I need to supply DevFS filenames). I also executed an lvcreate 
+-l 399 (which was the maximum number of PE's available) on the resulting 
+volume group. However, I cannot mount the resulting logical volume.
+It used to contain a reiserfs filesystem, a reiserfsck --check yields no 
+errors, but I am unable to mount the filesystem.
+I am getting rather lost now.....
 
+Hope someone can help!
 
--- 
+Best regards,
 
-Regards,
-Heinz    -- The LVM Guy --
+Sander
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Sander Alberink wrote:
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> Hi all,
+>
+> Thanks for the reply. At the moment I have re-initialized the PV's via 
+> pvcreate -ff. However, trying to reconstruct a new volume group yields 
+> me the following output:
+>
+> # vgcreate -v home /dev/hda[1,4,6,7]
+> vgcreate -- checking volume group name
+> vgcreate -- checking volume group directory existence
+> vgcreate -- locking logical volume manager
+> vgcreate -- checking volume group "home" existence
+> vgcreate -- counting all existing volume groups
+> vgcreate -- reading all physical volume data from disks
+> vgcreate -- checking if all given physical volumes in command line are 
+> new
+> vgcreate -- checking physical volumes name "/dev/hda1"
+> vgcreate -- checking physical volumes name "/dev/hda4"
+> vgcreate -- checking physical volumes name "/dev/hda6"
+> vgcreate -- checking physical volumes name "/dev/hda7"
+> vgcreate -- no valid physical volumes in command line
+> #
+>
+> So apparently something is not OK. But what can that be? Any pointers 
+> would be appreciated!
+>
+>>> I really appreciate your help in this. However, I am rather 
+>>> reluctant to
+>>> dive in and be hasty in my commands. I really don't want to destroy my
+>>> data.... As I understand it, pvcreate -ff would re-initialize the
+>>> physical volume. As I understand it, I will have to add them to a 
+>>> volume
+>>> group again. But will the filesystem still be intact after that then?
+>>>
+>>> Sorry if this sound like a beginner question to you. It very well might
+>>> be, but I'd rather be careful....
+>>
+>>
+>>
+>> Thing to understand is that LVM commands update a small
+>> header on the phyiscal volume. You can munge the LVM
+>> portion without touching your data at all. In this case
+>> the data has no way of knowing that anything happend to
+>> the LVM portion of life: they live in entirely different
+>> parts of the disk drive. 
+>
