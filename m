@@ -1,10 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Keep snapshots active for 24 hours?
-Message-ID: <20011214233254.F855@lynx.no>
-References: <20011214073506.A12990@math.ohio-state.edu> <20011214113804.I940@lynx.no> <wxxn10lcn70.fsf@nommo.uio.no>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
+Subject: Re: [linux-lvm] catch-22
+Message-ID: <20011216203341.E26924@tiger.bigcats.invalid>
+References: <NBBBKLKHMJHIJLHOGAOJKELJJCAA.steve.wray@the.net.nz> <00a401c18504$33a10ac0$0300000a@pacbell.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <wxxn10lcn70.fsf@nommo.uio.no>; from terjekv@math.uio.no on Sat, Dec 15, 2001 at 02:00:03AM +0100
+In-Reply-To: <00a401c18504$33a10ac0$0300000a@pacbell.net>; from e@arix.com on Fri, Dec 14, 2001 at 05:02:43PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,43 +15,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec 15 00:31:02 2001
+Date: Sun Dec 16 13:36:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Dec 15, 2001  02:00 +0100, Terje Kvernes wrote:
-> * Andreas Dilger
-> > If you were really clever, you could write a script which checked
-> > the free space in the snapshots every minute, and if they had less
-> > than X PEs free, you extend the snapshot LV to have more free space.
-> > If you run out of free PEs, you delete the oldest snapshot.
-> 
->   heh. I was thinking of trying to get a snapshot taken every three
->   hours or so, and storing it until the next one came about. but of
->   course, you're right, I should check how much free space I have, and
->   keep a backlog until I _need_ the space. 
-> 
->   come to think of it, it doesn't take that complicated a shell-script
->   to get this working. hm... :)
+Hi, Erick!
 
-In fact, the LVM snapshots have a facility where you can have it wake a
-process when the snapshot is more than X percent full.  You probably
-couldn't do it with a shell script (it is an ioctl), but you could
-either write a simple executable (e.g. lvmsnapwait 95 /dev/vgtest/lvtest),
-or do it with Perl (there is a Perl ioctl module, whose name I have
-forgotten).
+Erick Calder (e@arix.com) wrote 43 lines:
 
-This avoids polling for lots of snapshots of lots of LVs, and also prevents
-you from over-committing PEs to snapshots.
+> a drive part of a volume crashed on me... I've looked through the man pages
+> and HOWTO but find no happiness... help!
 
-Note that there is a system-wide hard limit of 255 LVs (ABS_MAX_LV).  The
-problem is that LVM only has a single block major number, with 256 minor
-numers, so you might have to do some kernel/tool hackery to exceed that.
+> # vgextend LVM /dev/hdc
+> vgextend -- volume group "LVM" doesn't exist
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> # vgcreate LVM /dev/hdc
+> vgcreate -- volume group directory or file already exists
+> vgcreate -- please choose a different name
+
+> what is the correct procedure to follow? shall I just blow away the /dev/LVM
+> directory and do a "pvcreate -ff /dev/hda3"?
+
+I am no expert.  I don't even try to guarantee that you'll
+not blow up your data (and the whole planet, too).  But AFAICT
+/dev/LVM is created as needed with vgscan.  You did run vgscan
+after the HW-change?
+
+You did a vgcfgrestore on the new/replaced /dev/hdc PV?
+
+-Wolfgang
+
+PS: I'd still advise a current, working backup. :-)
