@@ -1,10 +1,10 @@
-Return-Path: <jdiehl@sandia.gov>
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BFC4@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Subject: RE: [linux-lvm] Renumbered drives hosed VG.
-Date: Wed, 15 Aug 2001 15:47:22 -0600
+Return-Path: <gerry@dorfam.ca>
+Date: Wed, 15 Aug 2001 17:47:18 -0400 (EDT)
+From: <gerry@dorfam.ca>
+Subject: Re: [linux-lvm] Help with redhat install
+In-Reply-To: <3B7AC356.A2FD65A3@xapnet.com>
+Message-ID: <Pine.LNX.4.33.0108151744300.28178-100000@leopard.dorfam.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,100 +16,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Well, if I do a vgscan, it should find all of the VG's, right?  The log
-below indicates that this isn't happening.  All I want to do is create a
-large volume, move the data from the Database VG onto that new volume, then
-incorporate the space used by Database into the new volume and resize my
-filesystem.  This should not take 2 days!
+Although 2.4.2-2 has lvm support built in I don't believe it is enabled in
+the default kernel.  I think you have to recompile the kernel and enable
+it.
 
-Any help would be most appreciated.
+I forget what version is in the kernel.  With lvm 1.0 just released you
+may wish to patch the kernel source to the latest level so it will work
+with lvm 1.0 and then recompile.
 
+Gerry
 
+On Wed, 15 Aug 2001, Chris Bourne wrote:
 
-Script started on Wed Aug 15 08:29:02 2001
-
-[root@filmore jdiehl]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "Database"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: you may not have an actual VGDA backup of your volume
-group
-
-
-[root@filmore jdiehl]# vgcreate Database2 -s 8M /dev/sdc6
-vgcreate -- "/dev/sdc6" is no new physical volume
-vgcreate -- physical volume "/dev/sdc6" already belongs to volume group
-"Database2"
-
-[root@filmore jdiehl]# 
-[root@filmore jdiehl]# exit
-
-Mike Diehl,
-Network Monitoring Tool Devl.
-Sandia National Laboratories.
-(505) 284-3137
-jdiehl@sandia.gov
-
-
-> -----Original Message-----
-> From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
-> Sent: August 15, 2001 2:57 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Renumbered drives hosed VG.
-> 
-> 
-> On Tue, Aug 14, 2001 at 02:52:17PM -0600, Diehl, Jeffrey wrote:
-> > Hi all,
-> > 
-> > I recently upgraded from a modular kernel to a monolithic 
-> kernel, which
-> > renumbered all of my drives.  sda became sdb, sdb became 
-> sdc and adc became
-> > sda, etc.  Now one of my VG's is hosed.  How do I recover from this?
-> 
-> A vgscan run should excatly address this.
-> Did it take place after the changes and *before* "vgchange -ay"?
-> 
-> > 
-> > Thanx,
-> > Mike Diehl,
-> > Network Monitoring Tool Devl.
-> > 284-3137
-> > jdiehl@sandia.gov
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> -- 
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> =-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina 
-> Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> =-=-=-=-=-=-=-=-
+> Hello!!
+>          I am trying to get lvm working on redhat 7.1 with kernel
+> 2.4.2-2. I down loaded the source rpm's 1)
+> lvm-iop-0.9.1_beta6-1.src.rpm   2)
+> lvm-iop-patchgen-0.9.1_beta6-1.src.rpm  and the base rpm 3)
+> lvm-base-1.1-1.i386.rpm. I did a rpm --rebuild and ran the rpm command
+> and all seemed to install well with no problems. The problem I did
+> discover is that there is no lvm dir. in /proc and the lvm-mod is
+> nowhere to be found. I was under the impression that kernel 2.4 has lvm
+> already built in. I did a insmod lvm-mod and modprobe lvm-mod and nada.
+> I cannot figure out what I am doing wrong or if I should not be using
+> this version of lvm and use lvm 1.0 instaed (will it work on redhat?).
+> Thanks, Chris.
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+>
+
+Gerry
+-- 
+"The lyfe so short, the craft so long to learne"  Geoffrey Chaucer
