@@ -1,17 +1,28 @@
-Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	iA8HXFGX026479
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 18:33:15 +0100
-Date: Mon, 8 Nov 2004 18:33:15 +0100
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Backup/Recovery Strategies
-Message-ID: <20041108173315.GA21451@redhat.com>
-References: <20041106221645.0AFFA97930@snark.apl.washington.edu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20041106221645.0AFFA97930@snark.apl.washington.edu>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA8K7Kr10833
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 15:07:20 -0500
+Received: from mta.hosting-seguridad.com (mta.hosting-seguridad.com
+	[207.150.162.14])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA8K7IGO019438
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 15:07:18 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by mta.hosting-seguridad.com (Postfix) with ESMTP id 7241560057
+	for <linux-lvm@redhat.com>; Mon,  8 Nov 2004 21:07:17 +0100 (CET)
+Received: from skorpio (unknown [80.103.237.103])
+	by mta.hosting-seguridad.com (Postfix) with ESMTP id A463660053
+	for <linux-lvm@redhat.com>; Mon,  8 Nov 2004 21:07:14 +0100 (CET)
+From: Roman Medina-Heigl Hernandez <roman@rs-labs.com>
+Subject: Re: [linux-lvm] Creating PV over a /dev/mapper device
+Date: Mon, 08 Nov 2004 21:09:02 +0100
+Message-ID: <e5kvo0tad7ubm03ffp22b022u301lddis2@4ax.com>
+References: <tk9so0di0jsl44dagc1dl8at6e9ld4r1be@4ax.com>
+	<20041107192450.GF2717@agk.surrey.redhat.com>
+	<3e4to0lgsvjoe6mqijohlh8558vbbb9uhj@4ax.com>
+	<20041108142811.GH2717@agk.surrey.redhat.com>
+In-Reply-To: <20041108142811.GH2717@agk.surrey.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,72 +33,55 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Nov 06, 2004 at 02:16:46PM -0800, Axel Schweiger wrote:
-> Can anyon  suggest backup/recovery strategies for filesystems under LVM.
-> (Version 1 and 2)
->  
-> 1) If I loose the data in the /etc/lvm directory (or lvm.d) do I loose the
-> filesystems controlled by lvm?
+On Mon, 8 Nov 2004 14:28:11 +0000, you wrote:
 
-No, those are work files which can be recreated running vgscan
-for LVM1. LVM1 keeps metadata archive files in /etc/lvmconf/ which
-needs to be covered by your backup.
-
-By default, /etc/lvm/ contains subdirectory for metadata archive in
-the case of LVM2.
-
-Best practice therefore is to backup /etc/lvm*
-
-> 2) How do I recover from a loss or corrpution of the LVM data.
-
-vgcfgrestore the recent metadata archive (from /etc/lvmconf/ for LVM1
-or from /etc/lvm/backup/ for LVM2.
-
-> 3) What happens if the LVM filesystems have changed since the last backup of
-> the metadata?
-
-You are refering to VGs and LVs here.
-
-If you don't have an actual backup of /etc/lvm* *and*
-corrupt your LVM metadata on the defices after a change, you can
-restore the most recent archive from your last /etc/lvmconf/ backup (LVM1)
-or from /etc/lvm/backup/ (LVM2) which might be ok still or not, depending
-on your changes.
-
->  
-> Sorry if this shows a profound lack of understanding of LVM but I''m new to
-> this and haven't been able to find any recipes for doing 
-> backups?
-
-The only LVM related backup is about its metadata archives and covered
-in 'man lvm'.
-Of course all data stored in LVs should be subject to regular backups
-as with any block devices.
-
+>On Sun, Nov 07, 2004 at 10:35:57PM +0100, Roman Medina-Heigl Hernandez wrote:
+>> First, thanks for your fast answer. I added the "device-mapper" type
+>> but it is still not working. Example:
 > 
-> Thanks much
-> Axel
+>    # List of pairs of additional acceptable block device types found 
+>    # in /proc/devices with maximum (non-zero) number of partitions.
+>    # types = [ "fd", "device-mapper", 16 ]
+>
+>Firstly the line is commented out;
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Oh my God... :-) Sorry for the tremendous lapsus.
 
--- 
+>secondly make it:
+>  types = [ "device-mapper", 16 ]
 
-Regards,
-Heinz    -- The LVM Guy --
+Now it is working. Thanks.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>You can run 'lvm dumpconfig' to check what settings have actually 
+>been read in from the config files.
 
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+jupiter:/etc/lvm# lvm dumpconfig
+  No such command.  Try 'help'.
+
+But don't worry. It appears I'm using an old version of lvm (I
+downgraded to solve the "Internal error: unknown device-mapper task
+16" problem).
+
+jupiter:/etc/lvm# lvm version
+  LVM version:     2.00.06 (2003-08-20)
+  Library version: 1.00.05-ioctl-cvs (2003-09-01)
+  Driver version:  4.1.0
+jupiter:/etc/lvm# 
+
+>> I've set-up lvm1 mode ('cause I read that it is more stable than lvm2)
+>
+>Don't know where you read that but I'd strongly dispute it.
+
+I don't remember either... well, I'll trust you and I'll use lvm2 ;-)
+
+Thanks for your help.
+
+ Saludos,
+ --Roman
+
+--
+PGP Fingerprint:
+09BB EFCD 21ED 4E79 25FB  29E1 E47F 8A7D EAD5 6742
+[Key ID: 0xEAD56742. Available at KeyServ]
