@@ -1,22 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7D6AAa27005
-	for <linux-lvm@redhat.com>; Fri, 13 Aug 2004 02:10:10 -0400
-Received: from chaos.ao.net (root@chaos.ao.net [208.5.40.6])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i7D6A5e1011035
-	for <linux-lvm@redhat.com>; Fri, 13 Aug 2004 02:10:10 -0400
-Received: from chaos.ao.net (harik@localhost [127.0.0.1])
-	by chaos.ao.net (8.12.9/8.12.9/Debian-5) with ESMTP id i7D69wGK025805
-	for <linux-lvm@redhat.com>; Fri, 13 Aug 2004 02:09:58 -0400
-Received: (from harik@localhost)
-	by chaos.ao.net (8.12.9/8.12.9/Debian-5) id i7D69wDV025804
-	for linux-lvm@redhat.com; Fri, 13 Aug 2004 02:09:58 -0400
-Date: Fri, 13 Aug 2004 02:09:58 -0400
-From: Dan Merillat <dmerillat@sequiam.com>
-Message-ID: <20040813060957.GA2920@chaos.ao.net>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7F499a10513
+	for <linux-lvm@redhat.com>; Sun, 15 Aug 2004 00:09:09 -0400
+Received: from rwcrmhc13.comcast.net (rwcrmhc13.comcast.net [204.127.198.39])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i7F48xXn001188
+	for <linux-lvm@redhat.com>; Sun, 15 Aug 2004 00:08:59 -0400
+From: Stephen Nesbitt <stephen_nesbitt@alumni.mckenna.edu>
+Date: Sat, 14 Aug 2004 21:08:52 -0700
+MIME-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] LVM2 + dm-mirror
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <200408142108.52705.stephen_nesbitt@alumni.mckenna.edu>
+Subject: [linux-lvm] Problem creating logical volumes
+Reply-To: stephen_nesbitt@alumni.mckenna.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,23 +23,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Now that the snapshot and mirror targets are in the stock kernel, is it
-possible to use LVM tools to setup a LVM-based RAID1?  I know how to do
-it via dmsetup, but that's just not very clean.
+All:
 
-I'd prefer to have the LV mirrored on multiple PVs, as it lets me scale
-the mirrored slice as large as I want, rather then making a fixed RAID1
-and putting the PV+LV on top of it.
+Configuration is Fedora Core 2. When trying to create a logical volume I get a 
+message of the form :
+  device-mapper ioctl cmd 9 failed: Invalid argument
+  Couldn't load device 'vg01-jukebox''.
+  Failed to activate new LV.
 
-This will also be nice to have when dm-raid[456] get added to the
-kernel.  Imagine adding 2 drives, then doing a pmove to turn a
-single-drive setup into a raid5.  That's the kind of thing that's 
-handled very-well userspace: create a 'missing disk' raid-5, begin
-writing to it, once you read enough out, start remapping the beginning
-sectors to an optimal raid-5 config, with the mirror target making sure
-any writes to the block device end up in the appropriate place.
+The LVM considers it present but there is no device entry.
 
---Dan
+I have seen a couple of posts asking for help regarding this problem
+but no solutions. Anyone?
+
+Thanks!
+
+-steve
