@@ -1,24 +1,26 @@
-Date: Tue, 16 Nov 1999 10:23:14 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvcreate_initrd & redhat 6.1
-Message-ID: <19991116102313.A24250@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <8525682A.0078290B.00@fund-dc2.txfund.com>
-Mime-Version: 1.0
-In-Reply-To: <8525682A.0078290B.00@fund-dc2.txfund.com>
+From: "Stefan Monnier" <monnier+lists/linux/lvm/news/@tequila.cs.yale.edu>
+Subject: Re: [linux-lvm] Actual status of LVM in stock kernel
+References: <Pine.LNX.3.96.991113121751.20649A-100000@zeke.goatskin.org> <199911151119.AA19603@mailgate1b.telekom.de> <4.2.2.19991115093542.00a81bd0@mail.msy.bellsouth.net>
+Date: 16 Nov 1999 14:23:25 -0500
+Message-ID: <5lso266y1e.fsf@tequila.cs.yale.edu>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-On Mon, Nov 15, 1999 at 04:53:07PM -0600, Jonathan S. Polacheck wrote:
-> Also, any suggestions as to where to put the "vgscan" and "vgchange -a y"
-> on this system.  It uses the "Sys V" rc.d setup (no /sbin/init.d/boot
-> file).
-/etc/rc.d/rc.sysinit
+>>>>> "Daniel" == Daniel Whicker <heimdall@mail.org> writes:
+> I don't know about *good*, but perhaps bringing it up in the kernel mailing 
+> lists might spurn some interest.  I know that Linus & Alan both frequent 
+> it, as well as other major players.  We may be able to light a spark into 
+> someone Linus talks with daily.
 
--- 
-Luca Berra -- bluca@comedia.it
-    Communications Media & Services S.r.l.
+I'd recommend to be very visible:
+try to follow kernel releases and for each new release send a post
+to linux-kernel, linux-fsdevel and to linus pointing to the updated
+patch.
+
+
+	Stefan
