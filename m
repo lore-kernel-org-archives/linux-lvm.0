@@ -1,12 +1,10 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Chicken and egg problem..
-Message-ID: <46460000.1006374706@dizzy>
-In-Reply-To: <20011121144408.GI9907@pc.ilinx>
-References: <1006347197.3bfba3bd23d95@imp.free.fr>
- <7510000.1006331425@dizzy> <20011121144408.GI9907@pc.ilinx>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Message-ID: <20011122041320.A1447@sky.net>
+Mime-Version: 1.0
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] lvm problem ... =?iso-8859-1?Q?can=B4?=
+ =?iso-8859-1?Q?t?= describe it shortely
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,69 +15,109 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 21 20:32:02 2001
+Date: Wed Nov 21 21:09:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
+Hello,
+I am using 2.4.14 with lvm and xfs patched.
 
--- "Brian J. Murrell" <724b581f59b221086926026402b50126@interlinx.bc.ca>
+I used
+/dev/hda2 [20GB]
+/dev/hdb1 [8.5GB]
+/dev/hdd1 [10,5GB]
+/dev/sdb1 [9GB]
+/dev/sdc1 [4,5GB]
 
-> On Wed, Nov 21, 2001 at 02:30:25AM -0600, Steven Lembark wrote:
->>
->> The kernel panic is extactly why you probably wouldn't
->> want to use only LVM on the system.
->
-> I do it.  Only my boot partition is a regular ol' partition.  I won't
-> say I haven't had problems that I had to recover from in the past with
-> an LVM root, but luckily enough my distro vendor's LVM support is
-> decent and their BOOT kernel/media has an LVM module built for it.
+In a volume group vg01 with 3 lv=B4s.
 
-Luck has a rather nasty way of running out just when
-you need the system. I've spent way too much time
-helping extricate people from LVM problems to run
-my root file system on it. The "all LVM" systems
-from HP and Sun depend on a non-braindead boot ROM
-and the ability to fake out the file system with
-sequentail LV's that look to the boot loader like
-partitions. On HP's this lets you boot -lm, fix
-things and reboot. Lacking this option on Intel
-systems, I'd make a point of leaving the main boot
-area on a native hardware format.
+Now I added another SCSI disk as /dev/sdd5 to my system, created the
+partition with 8e type, did a "pvcreate /dev/sdd5", "vgextend vg01
+/dev/sdd5", "pvmove /dev/sdc1 /dev/sdd5", "vgreduce vg01 /dev/sdc1".
+Same procedure with /dev/hdb1.
 
->
->> Leaving the root
->> volume (a.k.a., '/'), primary swap and probably /var on
->> the first three partitions of the boot device will make
->> your life enormously simpler in the long run.
->
-> I completely disagree.  Eventually you will get to a point where an
-> upgrade of your system will require more space in / or /usr and even
-> just normal usage will want more space in /var.  Being able to expand
-> these easily with LVM is awesome!
+Then I shutdown my PC, removed the 2 disks and added a new IDE HD as
+/dev/hda2 [80GB]
+/dev/hdb2 [the old /dev/hda2]
+/dev/hdd1=20
+/dev/sdb1
+/dev/sdc5 [the new SCSI disk instead of the old one, was /dev/sdd5]
 
-Who said anything about not having /usr on LVM? If the root
-(basically /etc, /lib and a wholelotta mount points) is a
-partition and your primary swap is also then you can boot just
-as easily without LVM as with it. I've been running with / on
-a 128MB partition for years and never pushed it past 50%. Same
-for /var: adding a few choice mount points can reduce the need
-for expanding the main storage enormously. If /var/log, for
-example, is on a partition it makes life easier trying to
-diagnose any problems.
+I rebooted and created a new pv with my new HD (/dev/hda3), created a
+new vg called store and a new lv called data. Then I copied all my data
+stored on a non-lvm volume (/dev/hdc1) to the new lvm drive
+(/dev/store/data), created a new pv (pvcreate /dev/hdc1), extended the
+vg store and extended the lv.
 
+Now I want to activate my old vg01 and vgscan only finds the new volume
+group store.
 
-> Just use a good boot disk.  You are even luckier if your distro
-> vendor's stock kernel and/or media support LVM.
+I used uuid_fixer on every device
+" uuid_fixer /dev/hdd1 /dev/hdb2 /dev/sdb1 /dev/sdc5 /dev/sdb1 - Success"
 
-Even luckier than that if they're patched to exactly the
-same level you are and can read your LVM system. This only
-has to blow up once before you get to spend a weekend [or
-worse] fixing the problem.
+$# pvscan   =20
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdc1" of VG "store" [57.25 GB / 0 free]     #co=
+rrect
+pvscan -- inactive PV "/dev/hdd1"  is associated to an unknown VG (run vgsc=
+an)
+pvscan -- inactive PV "/dev/hda3" of VG "store" [76.07 GB / 0 free]     #co=
+rrect
+pvscan -- inactive PV "/dev/hdb2"  is associated to an unknown VG (run vgsc=
+an)
+pvscan -- inactive PV "/dev/sdb1" is in no VG  [8.51 GB]                #
+pvscan -- inactive PV "/dev/sdc5"  is associated to an unknown VG (run vgsc=
+an)
+pvscan -- total: 6 [187.49 GB] / in use: 5 [178.98 GB] / in no VG: 1
+[8.51 GB]
 
 
+vgscan still only finds the vg store, so I tryed to use vgcfgrestore to
+get my vg01 back:
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+$# vgcfgrestore -n vg01 -l
+--- Volume group ---
+VG Name               vg01
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                3
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                4
+Act PV                4
+VG Size               53.51 GB
+PE Size               4.00 MB
+Total PE              13698
+Alloc PE / Size       12583 / 49.15 GB
+Free  PE / Size       1115 / 4.36 GB
+VG UUID               p8KJS0-eei7-s10H-61hT-7uJS-Euiq-bXhlNs
+
+
+This seems to be correct for me.
+So I tryed the restore:
+
+$# vgcfgrestore -f /etc/lvmconf/vg01.conf -n vg01 /dev/sdc5
+vgcfgrestore -- physical volume "/dev/sdc5" doesn't belong to volume
+group "vg01"
+
+$# vgcfgrestore -f /etc/lvmconf/vg01.conf -n vg01 /dev/sdb1
+vgcfgrestore -- physical volume "/dev/sdb1" doesn't belong to volume
+group "vg01"
+
+$# vgcfgrestore -f /etc/lvmconf/vg01.conf -n vg01 /dev/hdb2
+vgcfgrestore -- physical volume "/dev/hdb2" doesn't belong to volume
+group "vg01"
+
+$# vgcfgrestore -f /etc/lvmconf/vg01.conf -n vg01 /dev/hdd1
+vgcfgrestore -- ERROR "vg_write(): open" storing VGDA of "vg01" on disks
+
+
+Do you have any ideas what I can do?
+Uli
+
+--=20
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
