@@ -1,14 +1,10 @@
-From: Steven Lembark <lembark@wrkhors.com>
+From: Patrick Caulfield <caulfield@sistina.com>
 Subject: Re: [linux-lvm] disk naming
-Message-ID: <1031830000.1041621627@[192.168.200.4]>
-In-Reply-To: <1041620373.20036.52.camel@mosix>
-References: <1041610095.19844.45.camel@mosix>
- 	<20030103174618.Z9539@zealot.blacknet.de>
- <1041613503.20036.49.camel@mosix>	 <20030103170356.GH18613@tykepenguin.com>
- <1041620373.20036.52.camel@mosix>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20030103192045.GI18613@tykepenguin.com>
+References: <1041610095.19844.45.camel@mosix> <20030103174618.Z9539@zealot.blacknet.de> <1041613503.20036.49.camel@mosix> <1023440000.1041619125@[192.168.200.4]>
+Mime-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1023440000.1041619125@[192.168.200.4]>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,33 +15,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  3 13:12:01 2003
+Date: Fri Jan  3 13:20:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Fri, Jan 03, 2003 at 12:38:45PM -0600, Steven Lembark wrote:
+> 
+> 
+> -- Matt Schillinger <mschilli@vss.fsi.com>
+> 
+> >If i'm NOT using devfs, can i reliably (assuming that disks are on the
+> >same scsi id/lun/host channel) use lvm?
+> >
+> >Scenario:
+> >
+> >LV is created with device /dev/sdd, which is on host channel 2
+> >
+> >Machine is shutdown, and a new raid is connected on host channel 1, with
+> >one disk.
+> >
+> >Machine is restarted, and the 1 disk on the host channel 1 raid takes
+> >/dev/sdd. The original disk is now /dev/sde.
+> >
+> >Will LVM find the correct disk?
+> 
+> Nope. Main issue there is that the first disk device
+> encountered by the kernel will be /dev/sda. Period.
+ 
 
--- Matt Schillinger <mschilli@vss.fsi.com>
+NOPE, NOPE, NOPE.
 
-> Patrick,
->
-> I was wondering if you could explain a little bit of how lvm finds a
-> device that no longer corresponds to the same 'dev/sd*' name. does it
-> use some kind of device id or serial number? I just want to be doubly
-> sure, as Steven Lembark claimed that it WOULDN't work..
+LVM writes a UUID to each disk and uses that as the PV identifier. it does NOT
+matter what it is called to the kernel. (as long as the device actually visible 
+to the code).*
 
-LVM is going to look for, say, /dev/sda1. If the device
-at that location in your disk chain is not a PV then you
-will have problems. The "sda1" string say to access the
-first scsi drive that was put on line. Depending on
-controller issues you may get into situations where the
-SCSI initiators come on line in a random order and you
-have no way of knowing what "sda1" really means. The
-fix there is to install one of them as a module and only
-bring on line the controller with your boot drive on it
-at first.
+I regularly plug and unplug disks around LVM systems and it works just fine.
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 8773 252 1080
+patrick
+
+* by which I mean it's a "known device" and not some new device that hasn't been
+coded for in LVM (eg i2o block devs). This particular restriction is lifted in LVM2.
