@@ -1,8 +1,8 @@
-From: Geert Jansen <geertj@boskant.nl>
-Message-ID: <20021024202158.GA28065@vader.boskant.nl>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 and reiserfsck
+Message-ID: <008a01c27ba7$81ad2c40$6a01a8c0@bmoon>
+From: "bmoon" <bo@anthologysolutions.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] any helpful document for lvm driver and tool
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,31 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 24 15:22:01 2002
+Date: Thu Oct 24 16:53:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: mauelshagen@sistina.com
 
-Dear LVM developers,
+LVM gurus,
 
-there seems to be a problems with LVM2 and reiserfsck. I use the following
-software:
+Are there any documents which can help me to understand the source codes for
+lvm driver, and
+LVM tool?
 
-* Linux 2.5.44-ac2 with device-mapper support
-* reiserfsprogs 3.6.3 (latest)
-* current device-mapper software
-* current LVM2 tools
+There are tqo nice documents related with LVM such as
 
-During start-up, reiserfsck fails to run on any reiserfs that resides on an LVM
-managed volume. It fails with the following error message:
+- The logical Volume manager white paper from SUSE
+- Volume managers in Linux - David Teigland & Heinz Mauelshagen.
 
-  bread: cannot read some block #2
+These helped me to understand the concept of LVM, but they do not cover
+any design concepts or data structure or implementation details.
 
-Mounting the fs goes work just fine, it is only the fsck that gives trouble.
+Yes, I could find some information on each source codes.
 
-Does anybody know what is causing this problem and if there exists a patch?
-I'd be happy to provide more data or try a patch.
+Any more?
 
 Regards,
-Geert Jansen
+
+Bo
