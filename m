@@ -1,8 +1,8 @@
-From: Alexander Lazarevich <alazarev@itg.uiuc.edu>
-Subject: Re: [linux-lvm] lvm config on disk?
-In-Reply-To: <20030919123232.O2618@sistina.com>
-Message-ID: <Pine.LNX.4.44.0309221338290.27648-100000@zeus.itg.uiuc.edu>
-MIME-Version: 1.0
+From: Eddahbi Karim <non.tu.ne.me.connais.pas.spavrai@ifrance.com>
+Message-Id: <1063981811.1127.1.camel@super.gamux.chezmoi>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Mirroring with LVM...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,33 +13,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 22 13:48:01 2003
+Date: Mon Sep 22 15:49:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Fri, 19 Sep 2003, Heinz J . Mauelshagen wrote:
-> On Thu, Sep 18, 2003 at 03:22:51PM -0500, Alexander Lazarevich wrote:
-> > Hi,
-> > 
-> > We have lvm-1.0.3-4 running on RH Linux 7.3 (2.4.20-20.7smp). Hardware 
-> > is a Dell PE4600 with a PERC3 RAID controller. This is our department 
-> > fileserver. We want to move to RH Enterprise ES Basic, but I have some 
-> > questions first:
-> > 
-> > 1) Which lvm is built into the Enterprise kernel? lvm1 or lvm2?
-> 
-> LVM1 will be in AS 3.
+Hi,
 
-When does Redhat Enterprise AS 3 come out? I tried a searching redhat and 
-google but got zipo.
+I heard there was a system to do mirroring with LVM.
+So one LE points to 2 differents PE.
 
-Thanks,
+Is it really possible ?
 
-Alex
----                                                               ---
-   Alex Lazarevich | Systems Administrator | Imaging Technology Group
-            Beckman Institute - University of Illinois
-       alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
----                                                               ---
+Thanks
+
+-- 
+The_TemPLaR
+
+_____________________________________________________________________
+Envie de discuter en "live" avec vos amis ? T�l�charger MSN Messenger
+http://www.ifrance.com/_reloc/m la 1�re messagerie instantan�e de France
