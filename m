@@ -1,13 +1,8 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Is is possible to have "boot" and "/" in LVM on top
- of SW RAID5?
-Message-ID: <355870000.1037863997@[192.168.200.4]>
-In-Reply-To: <20021121072209.GA20206@percy.comedia.it>
-References: <200211210441.48883.Dieter.Nuetzel@hamburg.de>
- <20021121072209.GA20206@percy.comedia.it>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20021121101101.GA2725@reti>
+Mime-Version: 1.0
 Content-Disposition: inline
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] New stable dm patches for 2.4.19
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,28 +13,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 21 01:28:01 2002
+Date: Thu Nov 21 04:11:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
+New stable device-mapper patches for 2.4.19 are available:
 
--- Luca Berra <bluca@comedia.it>
+http://people.sistina.com/~thornber/patches/2.4-stable/
 
-> you cannot have /boot on top of sw raid 5. fullstop.
-> create a 4-way mirror + spare at the beginning of each device
-> and use the rest for raid5+spare use the first raid1 for /boot and the
-> rest for lvm.
-> i have been using this setup without any problem for about 2 years.
+Changes
+-------
 
-I use a similar setup, with separate copies of the root
-volume (which includes /boot). Only advantage to this is
-having /lvm, /etc, and /bin available if there are problems.
-The root volume can be small -- 80 MB works in most cases
-since /usr, /home & /var will be mount points.
+Revision 1:
+  2.5 backport
 
+Revision 2:
+  The locking when leaving __request was broken.
+  
+  Split off __deferring()
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+Revision 3:
+  s->table wasn't being set in the snapshot contructor
+
+Revision 4:
+  I don't know why dm-ioctl.c was including <linux/compatmac.h>
+  rather than <asm/uaccess.h>
+
+Revision 5:
+  Four constants:
+     DM_DIR,
+     DM_MAX_TYPE_NAME,
+     DM_NAME_LEN,
+     DM_UUID_LEN
+  
+  Were being declared in device-mapper.h, these are all specific to 
+  the ioctl interface, so they've been moved to dm-ioctl.h.  Nobody
+  in userland should ever include <linux/device-mapper.h> so remove 
+  ifdef __KERNEL guards.
+
+Revision 6:
+  No need to validate the parameters if we are doing a
+  REMOVE_ALL command.
+
+Revision 7:
+  Fluff
+
+Revision 8:
+  Mempool version by Christoph Hellwig that holds the free objects
+  in an array rather than a list.  This prevents the objects getting
+  dirtied, eg, people maybe expecting them to come out of a slab with
+  a particular state.
+
+Revision 9:
+  Return -ENOTBLK if lookup_device() finds the inode, but it
+  is not a block device. [Cristoph Hellwig]
+
+Revision 10:
+  get_kdev() was locking _minor_lock rather than
+  &_minor_lock. [Heinz Mauelshagen]
