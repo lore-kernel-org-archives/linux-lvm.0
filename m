@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] Is there a LVM(2?) patch for 2.5.x yet?
-Message-ID: <1033466506.3d99728a72c39@secure.st-peter.stw.uni-erlangen.de>
-From: Svetoslav Slavtchev <galia@st-peter.stw.uni-erlangen.de>
-References: <20020930221930.GA15549@localhost> <1033424879.30743.2.camel@UberGeek.coremetrics.com>
-In-Reply-To: <1033424879.30743.2.camel@UberGeek.coremetrics.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Pvresize: only in 1.1-rc2 or can it be used on 1.0.5 ?
+Message-ID: <20021001121706.A31305@sistina.com>
+References: <20020927102805.553A3279E1@giant.koningspage.nl>
+Mime-Version: 1.0
+In-Reply-To: <20020927102805.553A3279E1@giant.koningspage.nl>; from m.vd.brink@worldonline.nl on Fri, Sep 27, 2002 at 12:28:04PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,56 +14,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct  1 05:02:08 2002
+Date: Tue Oct  1 05:17:07 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Quoting Austin Gonyou <austin@coremetrics.com>:
+Melis,
 
-> On Mon, 2002-09-30 at 17:19, Jos� Luis Domingo L�pez wrote:
-> > On Monday, 30 September 2002, at 12:05:13 -0500,
-> > Austin Gonyou wrote:
-> > 
-> > > I really need to test 2.5.x and I can't ATM because of LVM patch
-> > > problems. Can someone tell me what's going on with LVM and 2.5?
-> > > 
-> > In the course of a long thread on linux-kernel mailing list (thread
-> > called "Re: v2.6 vs. v3.0") someone said that lack of a working LVM
-> in
-> > 2.5.x was keeping away a lot of potential kernel testers.
-> > 
-> 
-> Thanks much for replying. I actually wrote Heinz directly as well, but
-> it appears those mails  bounced, he's got too much in his in-box. 
-> 
-> > Someone said there have been seen patches to update LVM1 in 2.5.x to
-> a
-> > working state, but the consensus seem to be that 2.5.x will include
-> > LVM2
-> > instead. Someone on the list offered to check for the availability
-> of
-> > current LVM2 patches against 2.5.x and begin the "transition". This
-> > person is also subscribed to this list, IIRC.
-> 
-> As was my understanding from just a few months ago when the kernel
-> feature list was created.
-> 
-> > So in the following days someone should say something specific in
-> that
-> > respect (at least, many people hope so, Halloween feature freeze is
-> > jsuta a month away :)
-> 
-> 
-> Yes..I know..and now it's time to start testing for functionality Lo
-> and
-> behold, LVM doesn't work on 2.5.39. Last time it did, Rik estimated,
-> around 2.5.7 or so. :(
-actually there were some patches floating for 2.5.18 and there were some 
-patches in -dj as well but i've not tried -dj since 2.5.25 i think
-you can find the patch for 2.5.18 on linuxhq's unofficial patches for 2.5
+1.1 is an interim development branch which we discontinued to work on
+because of LVM2.
 
-and may be evms is getting in shape so we can use it in order to have access to 
-our lvm volumes 
+But yes, you can generate 1.1 in addition to your installed 1.0.5.
+Don't install it if you want to keep your LVM 1.0.5 installed,
+just run "tools/lvm pvresize YourPV". Your VG containing the PV must be inactive
+to run pvresize.
 
-svetljo
+On Fri, Sep 27, 2002 at 12:28:04PM +0200, Melis van den Brink wrote:
+> Hi,
+> 
+> I'm using LVM 1.0.5 on a 2.4.18 kernel (with preemptive patch). I was looking 
+> for the pvresize command but saw that it only existed in 1.1(-rc2).
+> Is it possible (I haven't tried compiling pvresize against 1.0.5) to use 
+> pvresize in a 1.0.5 environment or are there restrictions or preconditions 
+> that only 1.1 can fulfill ?
+> Another question: what's the status of 1.1 ? Will it ever be the successor of 
+> 1.0.x or is it best to wait for 2.0 ?
+> -- 
+> Regards,
+> 
+> Melis van den Brink
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
