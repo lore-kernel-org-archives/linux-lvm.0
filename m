@@ -1,11 +1,13 @@
-Return-Path: <jgarzik@mandrakesoft.com>
-Message-ID: <3ADFEC4E.BBB210DF@mandrakesoft.com>
-Date: Fri, 20 Apr 2001 03:59:10 -0400
-From: Jeff Garzik <jgarzik@mandrakesoft.com>
+Return-Path: <doug@wireboard.com>
+References: <20010419132927.D10345@sistina.com>
+	<E14qJhd-0007oR-00@the-village.bc.nu>
+	<20010419142400.E10345@sistina.com> <3ADF4BA3.1080606@megapathdsl.net>
+From: Doug McNaught <doug@wireboard.com>
+Date: 20 Apr 2001 08:36:37 -0400
+In-Reply-To: Miles Lane's message of "Thu, 19 Apr 2001 13:33:39 -0700"
+Message-ID: <m3wv8fych6.fsf@belphigor.mcnaught.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-References: <20010420093751.D12971@colombina.comedia.it>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,39 +20,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: bluca@comedia.it
-Cc: linux-lvm@sistina.com, linux-openlvm@nl.linux.org, AJ Lewis <lewis@sistina.com>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, Andreas Dilger <adilger@turbolinux.com>, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, Alan Cox <alan@lxorguk.ukuu.org.uk>
+Content-Transfer-Encoding: 7bit
+To: Miles Lane <miles@megapathdsl.net>
+Cc: AJ Lewis <lewis@sistina.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
 
-Luca Berra wrote:
-> we have some serous problems here.
-[...]
-> a better lvm (still buggy according to many kernel hackers, but better still),
-> which does not get into the kernel for communication reasons. (Alan can you help?
-> there is a lot of stuff that goes in -ac before going to mainstream)
+Miles Lane <miles@megapathdsl.net> writes:
 
-I do not think this is a communication problem at all, but a clear lack
-of understanding (perhaps willful) on the part of the "LVM maintainers"
-about how to get things into the kernel.
+> Gosh, this seems like a bit of a red herring, IMHO.  Do you think the
+> LKML gets a "lot" of spam?  Or, how about the linux-usb-devel or
+> linux-hotplug-devel lists?  None of these lists are moderated and the
+> occasional spam gets sent to them, but I haven't noticed there being
+> enough spam to hinder the usefulness of these lists.
 
-linux/Documentation/SubmittingPatches exist to bonk people on the head
-if they are screwing up, and it sounds like such is occurring now.
+That's partly because davem and Matti are rabid anti-spam weasels and
+very good at it.  ;)  There are all kinds of filters (including
+content-based ones) on l-k, otherwise we'd be inundated in processed
+pork... 
 
-Quite simply,
-
-1) Split up your patches.  How many times does it have to be said? 
-Think ONE CHANGE, ONE PATCH.  Big patches full of tons of disparate
-changes are impossible to review.
-
-2) (parroting Linus)  Open source is about lack of control, not hoarding
-code and lording over it.  That's why Linus will take a patch from Jens
-or another knowledgeable person who says "this LVM code is broken,
--here- is a fix." -- regardless of who the "official" maintainer of the
-code is listed as...
-
-[Luca, this is not directed at you, I just used this message as an
-opportunity to spout :)]
-
+-Doug
 -- 
-Jeff Garzik       | "The universe is like a safe to which there is a
-Building 1024     |  combination -- but the combination is locked up
-MandrakeSoft      |  in the safe."    -- Peter DeVries
+The rain man gave me two cures; he said jump right in,
+The first was Texas medicine--the second was just railroad gin,
+And like a fool I mixed them, and it strangled up my mind,
+Now people just get uglier, and I got no sense of time...          --Dylan
