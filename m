@@ -1,12 +1,10 @@
-Return-Path: <lembark@wrkhors.com>
-From: lembark@wrkhors.com
-Date: Wed, 18 Jul 2001 17:22:59 -0500
-Subject: Re: [linux-lvm] HUGE LVM log file...
-Message-ID: <66750000.995494979@duke.wrkhors.com>
-In-Reply-To: <20010718212300.E26849@vestdata.no>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <florin@iucha.net>
+Date: Wed, 18 Jul 2001 18:21:11 -0500
+Message-ID: <20010718182111.B25657@beaver.iucha.org>
+From: "Florin Iucha" <florin@iucha.net>
+Mime-Version: 1.0
 Content-Disposition: inline
+Subject: [linux-lvm] LVM from CVS + 2.4.7-pre7 crash at boot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,32 +16,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+Hello,
 
--- Ragnar Kj=F8rstad <lvm@ragnark.vestdata.no> on 07/18/01 21:23:01 +0200
+I have got today's cvs version of LVM and applied it on top of 2.4.7-pre7.
 
-> On Wed, Jul 18, 2001 at 10:33:21AM +0100, Joe Thornber wrote:
->> This comment is interesting:
->> =
->> "Seagate uses horizontal mapping with this drive, so that it reaches
->> maximum performance at the beginning of the medium, decreasing at the
->> end of the medium."
->> =
->> So obviously this varies from drive to drive.
-> =
-> You can use zcav from the bonnie++ package
-> (http://www.coker.com.au/bonnie++) to find the transfer-rates for your
-> drive. I believe finding seek times is a little more tricky since it
-> depends on where you're seeking from and that will depend on your
-> application.
+At boot I get an oops.
 
-It is particularly tricky on SCSI's since they remap
-bad blocks internally.  You can end up with a butterfly
-read due to bad blocks without knowig it.  SCSI's and
-the controllers can also silently do scatter/gather on
-I/O which helps performance but can cause serious pain =
-for benchmarks.
+The macnine works fine with kernel 2.4.6 and the LVM from that day :)
 
-:-)
+Another problem is that the screen is flooded with "modprobe block-major-xyz
+not found".
+
+florin
+
+-- 
+
+"If it's not broken, is because you are not fixing it enough."
+
+41A9 2BDE 8E11 F1C5 87A6  03EE 34B3 E075 3B90 DFE4
