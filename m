@@ -1,9 +1,9 @@
-Subject: Re: [linux-lvm] applications not working with lvm
-Message-ID: <20020813075835.GA1048@fib011235813.fsnet.co.uk>
-References: <3D57F98C.9040408@jumpline.com>
+Subject: Re: [linux-lvm] IBM's LVM?
+Message-ID: <20020813080434.GB1048@fib011235813.fsnet.co.uk>
+References: <Pine.LNX.4.30.0208130910260.5532-100000@duplo.agenda.si>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3D57F98C.9040408@jumpline.com>
+In-Reply-To: <Pine.LNX.4.30.0208130910260.5532-100000@duplo.agenda.si>
 From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,26 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 13 02:59:02 2002
+Date: Tue Aug 13 03:05:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 12, 2002 at 02:08:12PM -0400, Ben Snyder wrote:
-> Has anyone had any problems with any applications working on a 
-> filesystem, where that filesystem was on a logical volume?
+On Tue, Aug 13, 2002 at 09:24:11AM +0200, Danilo Godec wrote:
+> Hi!
 > 
-> I've got an application that simply wont work (sorry, dont want to give 
-> too many details).  It creates very large quantities of hard links, 
-> binds a local directory to /proc
+> There seems to be a new(?) Linux LVM implementation by IBM
+> (http://evms.sourceforge.net/).
+> 
+> Is this a really different implementation or is it just the tools, GUIs
+> and stuff around the current kernel LVM?
 
-/proc could be tripping you up.  strace the LVM1 tools and see which
-files in /proc it is trying to read, then check you have faked them
-correctly.
-
-> creates local files to represent block devices and FIFO files.
-
-Search this mailing list for ways to get loop devices working with LVM1.
+This isn't that new, though I think it only hit version 1.0 in the
+last 6 months.  It is a totally different implementation, with some
+features that LVM1 doesn't have.  LVM2 has a somewhat different
+design philosophy from them, trying to minimise kernel code.
 
 - Joe
