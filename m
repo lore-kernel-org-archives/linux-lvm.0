@@ -1,13 +1,12 @@
-Return-Path: <doug@wireboard.com>
-References: <20010419132927.D10345@sistina.com>
-	<E14qJhd-0007oR-00@the-village.bc.nu>
-	<20010419142400.E10345@sistina.com> <3ADF4BA3.1080606@megapathdsl.net>
-From: Doug McNaught <doug@wireboard.com>
-Date: 20 Apr 2001 08:36:37 -0400
-In-Reply-To: Miles Lane's message of "Thu, 19 Apr 2001 13:33:39 -0700"
-Message-ID: <m3wv8fych6.fsf@belphigor.mcnaught.org>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Return-Path: <blutgens@minime.sistina.com>
+Date: Sat, 21 Apr 2001 12:03:46 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Message-ID: <20010421120346.A26453@minime.nexgen-systems.com>
+References: <20010420093751.D12971@colombina.comedia.it>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010420093751.D12971@colombina.comedia.it>; from bluca@comedia.it on Fri, Apr 20, 2001 at 09:37:51AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,25 +20,18 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Miles Lane <miles@megapathdsl.net>
-Cc: AJ Lewis <lewis@sistina.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Miles Lane <miles@megapathdsl.net> writes:
+On Fri, Apr 20, 2001 at 09:37:51AM +0200, Luca Berra wrote:
+>Fuck!  I hate these things early in the morning.
 
-> Gosh, this seems like a bit of a red herring, IMHO.  Do you think the
-> LKML gets a "lot" of spam?  Or, how about the linux-usb-devel or
-> linux-hotplug-devel lists?  None of these lists are moderated and the
-> occasional spam gets sent to them, but I haven't noticed there being
-> enough spam to hinder the usefulness of these lists.
+Me too!:-)
 
-That's partly because davem and Matti are rabid anti-spam weasels and
-very good at it.  ;)  There are all kinds of filters (including
-content-based ones) on l-k, otherwise we'd be inundated in processed
-pork... 
+>now what i propose is (some has already been said):
+>lets's vote for which mailing list we want to keep (and everybody accept the result)
 
--Doug
--- 
-The rain man gave me two cures; he said jump right in,
-The first was Texas medicine--the second was just railroad gin,
-And like a fool I mixed them, and it strangled up my mind,
-Now people just get uglier, and I got no sense of time...          --Dylan
+
+In an attempt to get myself out of the mailing list fiasco, I'd be more than
+happy to turn over list-maintainer duties to anyone on the list who would like
+to be the list maintainer. ALl I have to do is add thier email address to list
+of admins.
