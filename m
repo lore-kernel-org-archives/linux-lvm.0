@@ -1,14 +1,7 @@
-Subject: Re: [linux-lvm] xfs quota on lvm
-From: Christophe Zwecker <doc@zwecker.de>
-In-Reply-To: <20020117093305.A32819@wobbly.melbourne.sgi.com>
-References: <1011111148.3294.8.camel@fry.sysctl-office.de>
-    <20020116181545.E30220@wobbly.melbourne.sgi.com>
-    <1011175583.3295.18.camel@fry.sysctl-office.de>
-    <20020116213756.A31578@wobbly.melbourne.sgi.com>
-    <1011182440.3294.30.camel@fry.sysctl-office.de>
-    <20020117093305.A32819@wobbly.melbourne.sgi.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1011222273.31800.11.camel@dumbo.zwecker.de>
+From: lvm@xbits.de
+Subject: Re: [linux-lvm] Again (still?): File size limit exceeded
+In-Reply-To: <20020116104338.C775@lynx.adilger.int>
+Message-Id: <Pine.LNX.4.21.0201170118120.2118-100000@yaq.axel.ma>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,31 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 16 17:05:02 2002
+Date: Wed Jan 16 18:22:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Andreas Dilger <adilger@turbolabs.com>
+Cc: linux-lvm@sistina.com
 
-On Wed, 2002-01-16 at 23:33, Nathan Scott wrote:
+On Wed, 16 Jan 2002, Andreas Dilger wrote:
 
-> > ...
-> > quotactl(0x5805 /* Q_??? */|USRQUOTA, "/dev/bender/test", 0, {33060, 1, 0, 0, 0, 0, 134479872, 0}) = -1 EINVAL (Invalid argument)
-> > ...
-> > quotactl(Q_GETQUOTA|USRQUOTA, "/dev/bender/test", 0, {1075089596, 1075131920, 1075131924, 1073747802, 3221222856, 1075089406, 134571809, 3}) = -1 ESRCH (No such process)
+> On Jan 16, 2002  14:36 +0100, Axel Hinrichs wrote:
+> > I'm using Kernel 2.4.17, LVM 1.0.1 and everything was fine. The biggest
+> > used LV is 1.5GB and I used to have an 8GB standby LV (I was able to
+> > create and format without problems). Now I just deleted and recreated this
+> > 8GB LV and when I now try to format - reiserfs or ext2 - it I get the
+> > error "File size limit exceeded". I read the thread about this last month
+> > and checked my ulimits (even if they said this issue is fixed since
+> > 2.4.17-pre-something):
+> > 
+> > # ulimit -H -a
+> > core file size (blocks)     unlimited
+> > data seg size (kbytes)      unlimited
+> > file size (blocks)          unlimited
+> > max locked memory (kbytes)  unlimited
+> > max memory size (kbytes)    unlimited
+> > open files                  1024
+> > pipe size (512 bytes)       8
+> > stack size (kbytes)         unlimited
+> > cpu time (seconds)          unlimited
+> > max user processes          unlimited
+> > virtual memory (kbytes)     unlimited
+> > 
+> > Further tests leaded to the following: I'm able to format an 2GB
+> > LV, but 2GB+1PE gives the above error.
+> > 
+> > Does anyone know why and how to correct?
 > 
+> Kernel + libc bug.  You need to log in directly as root (no "su",
+> no "sudo") and you must not have any ulimits set.  Even if you try
+> to set your ulimit to "unlimited" (and even if it shows "unlimited")
+> it is really 2GB.
 > 
-> ... these failing syscalls look like the root cause of your problems.
-> You could try putting some printk() calls in sys_quotactl() in the
-> kernel to figure out exactly where the error comes from.  I would
-> guess it is to do with the handling of the "special" parameter, ie.
-> "/dev/bender/test" above, since this is the only part where the LVM
-> device file comes into the picture.
+> You can also upgrade to 2.4.18-pre2+ or glibc-2.2 to fix this.
 
-damn - dunno , got a hint where to put what you are talking about ?
-because I dont :-)
--- 
-Christophe Zwecker                     mail: doc@zwecker.de
-Hamburg, Germany                        fon: +49 179 3994867
-http://www.zwecker.de
+Thanks for your helpful reply. Just one last short question: Until I can
+upgrade my libc or my kernel, if I created this 2GB+ LV's on the console,
+can I use them or should they generally be at most 2GB?
 
-"Who is General Failure ?  And why is he reading my disk ??"
+Many thanks in advance,
+Axel
