@@ -1,14 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB67c9r12980
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2004 02:38:09 -0500
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C4DB64.939CD10F"
-Date: Mon, 6 Dec 2004 12:54:08 +0530
-Message-ID: <009917BCC3B63543BA9BCD212F9D1774FA9416@bgeexc01.asiapacific.cpqcorp.net>
-From: "Devanathan, Ramkumar (OpenView)" <ramd@hp.com>
-Subject: [linux-lvm] Regarding lvm and vgdisplay output
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB6HVFr26674
+	for <linux-lvm@redhat.com>; Mon, 6 Dec 2004 12:31:15 -0500
+Received: from delirium.voip.primustel.com ([209.227.165.143])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iB6HVD1O000816
+	for <linux-lvm@redhat.com>; Mon, 6 Dec 2004 12:31:13 -0500
+Received: from male.ia.us.primus (male.cv.telegroup.com [10.40.40.244])
+	by delirium.voip.primustel.com (Postfix) with ESMTP id 59021EEA3
+	for <linux-lvm@redhat.com>; Mon,  6 Dec 2004 16:30:55 +0000 (UTC)
+Received: from benway.cv.telegroup.com (benway.cv.telegroup.com [10.40.41.175])
+	by male.ia.us.primus (8.12.10/8.12.10) with ESMTP id iB6GSGxl027162
+	for <linux-lvm@redhat.com>; Mon, 6 Dec 2004 10:28:17 -0600
+From: Aran Cox <acox@ia.primustel.com>
+Date: Mon, 06 Dec 2004 10:28:16 -0600
+Message-Id: <1102350496.3579.49.camel@benway>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Huge memory allocation...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,185 +26,192 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+I upgraded from FC1 to FC3 yesterday and had some LVM issues.
+Basically, vgscan would exit with an error and thus vgchange wouldn't
+get run at all.  I upgraded to the latest lvm2 utilities and although
+the error messages are the same the utilities don't exit with an error
+any more.  Still, I think something is wrong with my volume group.  One
+of the disks used to be in another system with LVM.  I now use a
+partition on that disk, possibly instead of the whole disk, I don't
+really recall how I had it set up.  Could there be metadata lurking on
+that disk that confuses the utilities?  Below is the output from
+vgdisplay.  It's correct when it says VG desire doesn't exist.  I've
+tried removing it anyway but can't seem to get rid of the phantom VG
+desire.  
 
-------_=_NextPart_001_01C4DB64.939CD10F
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+Aran
 
-Hi,
-=20
-I work in HP OpenView, and am interested in knowing about changes in
-vgdisplay output between lvm versions 1.0.1 and later versions.
-=20
-This is important to me since in our management product we ship a 'Free
-Physical extents in volume group' monitor script, which relies on the
-output of vgdisplay to find the no. of free pe's in a volume group.
-=20
-Kindly request you to help me out in this regard.
-=20
-What i need to know is how the output of vgdisplay has changed in linux
-lvm versions 1.0.1 and later.
-=20
-Also, it would be good to know the current lvm versions supported, as
-well as future roadmap for lvm.
-=20
-If this is already documented elsewhere, kindly request you to point me
-to the location. Sorry for the bother in that case.
-=20
-Thank you.
-=20
-________________________________________________________________________
-________
+Password:
+    Finding all volume groups
+    Finding volume group "desire"
+  Huge memory allocation (size 2628255764) rejected - metadata
+corruption?
+  Out of memory.  Requested 2628255764 bytes.
+  Failed to read extents from /dev/hdb
+  Huge memory allocation (size 2628255764) rejected - metadata
+corruption?
+  Out of memory.  Requested 2628255764 bytes.
+  Failed to read extents from /dev/hdb
+  Volume group "desire" doesn't exist
+    Finding volume group "main2"
+  --- Volume group ---
+  VG Name               main2
+  System ID             cain1067664603
+  Format                lvm2
+  Metadata Areas        4
+  Metadata Sequence No  6
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                256
+  Cur LV                8
+  Open LV               8
+  Max PV                256
+  Cur PV                4
+  Act PV                4
+  VG Size               265.77 GB
+  PE Size               16.00 MB
+  Total PE              17009
+  Alloc PE / Size       16978 / 265.28 GB
+  Free  PE / Size       31 / 496.00 MB
+  VG UUID               qfgWQt-1Ke3-0N30-JZfc-dUkv-PXTP-t0t6Y4
 
-Ramkumar Devanathan
+  --- Logical volume ---
+  LV Name                /dev/main2/swap
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000000
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                2.00 GB
+  Current LE             128
+  Segments               1
+  Allocation             normal
+  Read ahead sectors     1024
+  Block device           253:0
 
-Software Technology Labs, STSD
+  --- Logical volume ---
+  LV Name                /dev/main2/home
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000001
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                10.61 GB
+  Current LE             679
+  Segments               1
+  Allocation             normal
+  Read ahead sectors     1024
+  Block device           253:1
 
-Hewlett Packard India Software Operations
+  --- Logical volume ---
+  LV Name                /dev/main2/usr
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000002
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                4.94 GB
+  Current LE             316
+  Segments               3
+  Allocation             normal
+  Read ahead sectors     1024
+  Block device           253:2
 
-Bangalore
+  --- Logical volume ---
+  LV Name                /dev/main2/var
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000003
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                1.00 GB
+  Current LE             64
+  Segments               2
+  Allocation             normal
+  Read ahead sectors     1024
+  Block device           253:3
 
-PHONE: (91)-080-2205-2219
+  --- Logical volume ---
+  LV Name                /dev/main2/log
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000004
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                512.00 MB
+  Current LE             32
+  Segments               1
+  Allocation             normal
+  Read ahead sectors     1024
+  Block device           253:4
 
-Ecard: http://www.ecardfile.com/id/ramkumardevanathan
+  --- Logical volume ---
+  LV Name                /dev/main2/imap
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000006
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                3.17 GB
+  Current LE             203
+  Segments               4
+  Allocation             normal
+  Read ahead sectors     1024
+  Block device           253:5
 
-________________________________________________________________________
-________
+  --- Logical volume ---
+  LV Name                /dev/main2/video2
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000007
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                239.06 GB
+  Current LE             15300
+  Segments               8
+  Allocation             normal
+  Read ahead sectors     0
+  Block device           253:6
 
-Find out what is happening in the ITRC and BSD Forums at
-http://forums.itrc.hp.com <http://forums.itrc.hp.com/>  and
-http://bizforums.itrc.hp.com <http://bizforums.itrc.hp.com/> =20
+  --- Logical volume ---
+  LV Name                /dev/main2/squid
+  VG Name                main2
+  LV UUID                000000-0000-0000-0000-0000-0000-000009
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                4.00 GB
+  Current LE             256
+  Segments               2
+  Allocation             normal
+  Read ahead sectors     1024
+  Block device           253:7
 
-=20
+  --- Physical volumes ---
+  PV Name               /dev/hdc1
+  PV UUID               58ZN9k-K75s-zVIN-pwlJ-1FGN-Wtps-qlo6Ok
+  PV Status             allocatable
+  Total PE / Free PE    2452 / 0
 
-------_=_NextPart_001_01C4DB64.939CD10F
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+  PV Name               /dev/hda3
+  PV UUID               q3c32q-CeGr-EVR3-bo5k-kh6x-Jvkg-BkzFVy
+  PV Status             allocatable
+  Total PE / Free PE    2324 / 0
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Dus-ascii">
-<META content=3D"MSHTML 6.00.2800.1476" name=3DGENERATOR></HEAD>
-<BODY>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2>Hi,</FONT></SPAN></DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma size=3D2>I =
-work in HP=20
-OpenView, and am interested in knowing about changes in vgdisplay output =
-between=20
-lvm versions 1.0.1 and later versions.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma size=3D2>This =
-is important=20
-to me since in our management product we ship a 'Free Physical extents =
-in volume=20
-group' monitor script, which relies on the output of vgdisplay to find =
-the no.=20
-of free pe's in a volume group.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma =
-size=3D2>Kindly request you=20
-to help me out in this regard.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma size=3D2>What =
-i need to know=20
-is how the output of vgdisplay has changed in linux lvm versions 1.0.1 =
-and=20
-later.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma size=3D2>Also, =
-it would be=20
-good to know the current lvm versions supported, as well as future =
-roadmap for=20
-lvm.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma size=3D2>If =
-this is already=20
-documented elsewhere, kindly request you to point me to the location. =
-Sorry for=20
-the bother in that case.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D832585306-06122004><FONT face=3DTahoma size=3D2>Thank =
+  PV Name               /dev/hda4
+  PV UUID               3jnAEZ-fFNz-cY0Y-53Cy-KMQJ-HJgK-7XQamL
+  PV Status             allocatable
+  Total PE / Free PE    4872 / 0
 
-you.</FONT></SPAN></DIV>
-<DIV><FONT face=3DTahoma size=3D2></FONT>&nbsp;</DIV>
-<DIV align=3Dleft><FONT face=3DTahoma size=3D2>
-<P style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt; =
-mso-outline-level: 1"=20
-align=3Dleft><SPAN style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: =
-Georgia"><SPAN=20
-style=3D"FONT-SIZE: 10pt"><FONT=20
-face=3DTahoma>___________________________________________________________=
-_____________________<?xml:namespace=20
-prefix =3D o ns =3D "urn:schemas-microsoft-com:office:office"=20
-/><o:p></o:p></FONT></SPAN></SPAN></P>
-<P=20
-style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt; =
-mso-outline-level: 1"><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: Georgia">Ramkumar =
-Devanathan</SPAN></P>
-<P=20
-style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt; =
-mso-outline-level: 1"><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: Georgia">Software Technology =
-Labs,=20
-STSD</SPAN></P>
-<P style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt"><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: Georgia">Hewlett Packard=20
-</SPAN><?xml:namespace prefix =3D st1 ns =3D=20
-"urn:schemas-microsoft-com:office:smarttags"=20
-/><st1:country-region><st1:place><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: =
-Georgia">India</SPAN></st1:place></st1:country-region><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: Georgia"> Software =
-Operations</SPAN></P>
-<P=20
-style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: =
-6.0pt"><st1:City><st1:place><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: =
-Georgia">Bangalore</SPAN></st1:place></st1:City><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: Georgia"><o:p></o:p></SPAN></P>
-<P style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt"><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: Georgia">PHONE:=20
-(91)-080-2205-2219</SPAN></P>
-<P style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt"><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: Georgia">Ecard: <A=20
-href=3D"http://www.ecardfile.com/id/ramkumardevanathan">http://www.ecardf=
-ile.com/id/ramkumardevanathan</A></SPAN></P>
-<P style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt"><SPAN=20
-style=3D"FONT-SIZE: =
-10pt">___________________________________________________________________=
-_____________<o:p></o:p></SPAN></P>
-<P style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt">
-<P style=3D"MARGIN: 0in 0in 0pt; mso-line-height-alt: 6.0pt"><SPAN=20
-style=3D"FONT-SIZE: 10pt"></SPAN></P><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: t">Find out what is happening in =
-the ITRC=20
-and BSD Forums at </SPAN><SPAN style=3D"FONT-SIZE: 10pt"><A=20
-href=3D"http://forums.itrc.hp.com/"><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: =
-t">http://forums.itrc.hp.com</SPAN></A></SPAN><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: t"> and </SPAN><SPAN=20
-style=3D"FONT-SIZE: 10pt"><A =
-href=3D"http://bizforums.itrc.hp.com/"><SPAN=20
-style=3D"FONT-SIZE: 7.5pt; FONT-FAMILY: =
-t">http://bizforums.itrc.hp.com</SPAN></A></SPAN>=20
+  PV Name               /dev/hdb1
+  PV UUID               GILY4s-NXCh-p72w-3mqI-795b-VJiM-zCHdLy
+  PV Status             allocatable
+  Total PE / Free PE    7361 / 31
 
-<P></P></FONT></DIV>
-<DIV>&nbsp;</DIV></BODY></HTML>
 
-------_=_NextPart_001_01C4DB64.939CD10F--
+-- 
+Aran Cox <acox@ia.primustel.com>
