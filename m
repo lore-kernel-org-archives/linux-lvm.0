@@ -1,11 +1,11 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Sun, 3 Dec 2000 14:25:54 +0000
+Date: Sun, 3 Dec 2000 14:29:01 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] kernel hang
-Message-ID: <20001203142554.G3984@srv.t-online.de>
-References: <20001201020029.A1073@gondor.com>
+Subject: Re: [linux-lvm] lvm
+Message-ID: <20001203142901.H3984@srv.t-online.de>
+References: <000d01c05b69$6b5ca020$3f06fea9@licht1>
 Mime-Version: 1.0
-In-Reply-To: <20001201020029.A1073@gondor.com>; from jan@gondor.com on Fri, Dec 01, 2000 at 02:00:29AM +0100
+In-Reply-To: <000d01c05b69$6b5ca020$3f06fea9@licht1>; from ABehler@t-online.de on Fri, Dec 01, 2000 at 08:36:28AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,39 +20,26 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: mge@sistina.com
 
-On Fri, Dec 01, 2000 at 02:00:29AM +0100, Jan Niehusmann wrote:
+On Fri, Dec 01, 2000 at 08:36:28AM +0100, andreas wrote:
+> hi guys,
 > 
-> Is there something wrong with doing 
-> while true; do dd if=/dev/zero of=/dev/vg1/test; done
-> and
-> lvextend -L+90M /dev/vg1/test
-> 
-> at the same time?
+> after a hdisc crash i got only data (various logical volumes) on one of three physical volumes.
+> could someone tell me, if there is a way to use this physical volume and it's logical volumes in my new created volume group without having
+> any backup of my old one.
 
-No.
-The extension of the LV is done in an atomic way.
+There's no way to use it in a new created VG.
+But you can restore the VG metadata (VGDA) of the disapeared disk(s)
+using vgcfgrestore(8) in order to make use of the available data.
 
-> 
-> It caused a system hang (no messages, no log) on linux-2.4.0-test12-pre3
-> (with ext2 online resize patches, but there obviously was no filesystem 
-> on the volume)
-
-Did you experience other heavy load hangs in general?
+Please remember that in case you had eg. filesystem data in LVs on the dead
+disk(s), you can't make use of it any longer.
 
 > 
-> Jan
 > 
+> thank you guys for your support,
 > 
-> PS: Andreas, perhaps the errors I saw were not ext2 related. Maybe the 
-> kernel doesn't like writing to the device and resizing it at the same time?
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>     andreas behler
 
 -- 
 
