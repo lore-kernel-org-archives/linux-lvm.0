@@ -1,12 +1,11 @@
-Return-Path: <peter@bartosch.net>
-Date: Sun, 10 Jun 2001 22:27:19 +0200
-From: Peter Bartosch <peter@bartosch.net>
-Message-ID: <20010610222719.B21955@mind.bartosch.net>
-References: <20010610222138.A21955@mind.bartosch.net>
+Return-Path: <markv@wave.co.nz>
+Date: Mon, 11 Jun 2001 12:04:59 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
+Message-ID: <20010611120459.A26558@mail.wave.co.nz>
+References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com> <3B1FED48.DB80BF00@tls.msk.ru> <20010608153036.G21909@jensbenecke.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010610222138.A21955@mind.bartosch.net>; from peter@bartosch.net on Sun, Jun 10, 2001 at 10:21:38PM +0200
-Subject: [linux-lvm] Re: [reiserfs-list] Reiserfs fragments my MP3
+In-Reply-To: <20010608153036.G21909@jensbenecke.de>; from Jens Benecke on Fri, Jun 08, 2001 at 03:30:36PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,70 +19,21 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Reiserfs List <reiserfs-list@namesys.com>
-Cc: Linux LVM List <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hi!
+On Fri, Jun 08, 2001 at 03:30:36PM +0200, Jens Benecke wrote:
+> On Fri, Jun 08, 2001 at 01:08:24AM +0400, Michael Tokarev wrote:
+> > Another thing to consider if you run 2.4 kernel -- mount tmpfs on /tmp
+> > (and give some reasonable size restrictions).   This way, /tmp works much
+> > faster, does not need to be cleaned on boot, and will not eat root's
+> > space.  You should have reasonable swap space it you plan to use it
+> > heavily.  Works very well here.
+> 
+> tmpfs? I thought that existed only on Solaris, and the primary reason for
+> tmpfs is that Solaris's UFS is so ssllooww compared to other FS (e.g.
+> ext2, reiser, etc.)
 
+It's in Linux 2.4 also.  It has the same unfortunate problem as on Solaris,
+that once someone fills /tmp, you run out swap and daemons start dying.
 
-> hello,
-> 
-> 
-> i just noticed that my new reiserfs on an LVM fragments my MP3
-> 
-> 
-> mpg123 -t shows me:
-> 
-> mpg123: Can't rewind stream by 95 bits!
-> Frame#    89 [ 8156], Time: 00:01.35 [03:34.02], [  171520] mpg123:
-> Can't rewind stream by 337 bits!
-> Frame#   122 [ 8123], Time: 00:02.66 [03:32.71], [   91904] mpg123:
-> Can't rewind stream by 89 bits!
-> Frame#   134 [ 8111], Time: 00:02.69 [03:32.68], [  142592] mpg123:
-> Can't rewind stream by 410 bits!
-> Frame#   142 [ 8103], Time: 00:02.71 [03:32.66], [  174848] mpg123:
-> Can't rewind stream by 165 bits!
-> Frame#   234 [ 8011], Time: 00:05.34 [03:30.03], [  135424] mpg123:
-> Can't rewind stream by 56 bits!
-> Frame#   251 [ 7994], Time: 00:05.35 [03:30.02], [  211456] mpg123:
-> Can't rewind stream by 19 bits!
-> Frame#   254 [ 7991], Time: 00:05.37 [03:30.00], [  222976] mpg123:
-> Can't rewind stream by 2 bits!
-> Frame#   262 [ 7983], Time: 00:05.39 [03:29.98], [  255232] mpg123:
-> Can't rewind stream by 38 bits!
-> Frame#   273 [ 7972], Time: 00:06.72 [03:28.65], [   71936] mpg123:
-> Can't rewind stream by 66 bits!
-> Frame#   274 [ 7971], Time: 00:06.74 [03:28.62], [   71936] mpg123:
-> Can't rewind stream by 165 bits!
-> Frame#   275 [ 7970], Time: 00:06.77 [03:28.60], [   71936] mpg123:
-> Can't rewind stream by 15 bits!
-> 
-> 
-> this file was ok before i copied it to this volume
-> 
-> 
-> my kernel is 2.4.5 with the LVM parts of -AA2
-> 
-> hmm, i haven't this with an "normal" partition
-
-i just tested it with a normal partition - that works -- so i think i
-had to adress this to linux-lvm ...
-
-> 
-> :wq - until next mail B-), l8r
-> 
-> Peter
-> -- 
->    :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
->    :          student of technical computer science           :
->    :     university of applied sciences krefeld (germany)     :
->     ~~~~~~~~~~~~~~~~~~~~~~ gpg: 40c9053e ~~~~~~~~~~~~~~~~~~~~~
-
-:wq - until next mail B-), l8r
-
-Peter
--- 
-   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
-   :          student of technical computer science           :
-   :     university of applied sciences krefeld (germany)     :
-    ~~~~~~~~~~~~~~~~~~~~~~ gpg: 40c9053e ~~~~~~~~~~~~~~~~~~~~~
+Mark.
