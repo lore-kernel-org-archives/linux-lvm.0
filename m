@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] LVM 2
-Message-ID: <20020530151804.GA1179@fib011235813.fsnet.co.uk>
-References: <15347980890.20020529141644@tnonline.net> <20020529141823.GC4655@fib011235813.fsnet.co.uk> <2169056421.20020529200758@tnonline.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2169056421.20020529200758@tnonline.net>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: me@vger.org
+In-Reply-To: <Pine.LNX.4.21.0205301458230.20123-100000@kenny.worldonline.se>
+Message-ID: <Pine.LNX.4.21.0205301649250.20123-100000@kenny.worldonline.se>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: Strange RAID2 behavier...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,54 +13,131 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 09:23:01 2002
+Date: Thu May 30 09:24:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
+Cc: Lionel Bouton <Lionel.Bouton@inet6.fr>, linux-kernel@vger.kernel.org, Neil Brown <neilb@cse.unsw.edu.au>
 
-On Wed, May 29, 2002 at 08:07:58PM +0200, Anders Widman wrote:
-> > On Wed, May 29, 2002 at 02:16:44PM +0200, Anders Widman wrote:
-> What exactly shown in those diagrams? :)
+No worry linux-kernel, this seams to be a lvm problem.
 
-It's trying to answer the question 'how does io to a volume slow down
-if I take a snapshot'.  The *overhead* is plotted on the vertical scale,
-in terms of the time taken to do the operation with no snapshot.
+Hi linux-lvm,
 
-So if I use a chunk size of 16k we see that LVM2 has an overhead of
-0.23, ie. the 'dbench 2' operation on a freshly snapshotted origin
-will take 1.23 times as long compared to the snapshot not being
-present.  EVMS on the other hand takes 7.84 times as long.  
+In short, I got 4 md devices (md0-4) that I make one device with using
+lvm. When I'm going to shutdown this device it seams that lvm locks md2-3.
 
-If you find the numbers confusing just look at the raw results in the
-first table.  If you use 8k chunk sizes with EVMS expect 'dbench 2' to
-take ~227 seconds compared to LVM2's ~15.
+Booting linux without lvm there is no problem what so ever to start and
+stop the raid mds.
 
-> > LVM2 by default uses the same metadata format as LVM1, so there really
-> > isn't any conversion procedure.  So try LVM2 for a bit, if you don't
-> > like it (unlikely) revert to LVM1.  Please note that metadata backups
-> > and archives are held in a very different form.
+Also as you read the futher down, the reason I could stop md3 was because
+I hadnt used lvm yet that time and hadnt made any VGs or LVs or mounted
+them. Also, the way i stop lvm is as described in the documents "umount,
+vgchange -an".
+
+Im using lvm-1.1rc-2, 2.4.19-pre9 and debian testing dist.
+
+Im going to try running lvm as module and unloading the module after
+stopping the lvm VGs and see if it still locks the mds.
+
+If you need more info, please send a mail.
+
+
+On Thu, 30 May 2002 me@vger.org wrote:
+
+> On Thu, 30 May 2002, Lionel Bouton wrote:
 > 
-> So I can just install LVM2 and continue as usual, and switch back if I
-> get  into  trouble?
-
-Yes.
-
-> And, what if I get into trouble? I can not backup
-> all data. There is not enough space for that.
-
-What happens if you get in trouble with LVM1 ?  If that data is
-important you should really back it up, all drives fail eventually.
-
-> >>    Also,  is  it  possible to convert (with and LVM version) a spanded
-> >>    volume to a striped volume?
+> > On jeu, mai 30, 2002 at 02:37:53 +0200, me@vger.org wrote:
+> > > I made the md2 a linear raid of one drive, now I can stop the md3.
+> > > This means that for example making md0 and md3 will make md3 unstoppable,
+> > > has this bug already been reported?
+> > 
+> > This could be a bug/constraint in raidtools as said in mad raidtab:
+> > "the  parsing  code  isn't  overly bright".
+> > 
+> > I've had small glitches when using comments in raidtab. Try removing all
+> > your commented /dev/md2 related lines instead of building a dumb array.
+> > 
 > 
-> > Not until we get the new pvmove infrastructure.
+> Ok, i tought id fixed the problem (parsing problem) but it doesnt seam to
+> be that.
 > 
-> So,   when newer pvmove tools develops it would be possible to convert
-> a spanned volume to a sriped (RAID0 or 5?) volume without loosing data?
-
-RAID5 is probably 6 months away, but I would hope to be able to remap
-a linear volume to a striped volume in the next month or so.
-
-- Joe
+> The md's ive got I later make a linear lvm partition from, may have
+> something to do with that.
+> 
+> I can start the raid, get lvm running, mount the lvm partition.
+> And then I umount the lvm partition and do vgchange -an to deactivate all
+> lvms. Now i can stop md0-1 but not md2-3.
+> 
+> --- strace raidstop ---
+> # strace raidstop /dev/md3
+> execve("/sbin/raidstop", ["raidstop", "/dev/md3"], [/* 14 vars */]) = 0
+> uname({sys="Linux", node="odd", ...})   = 0
+> brk(0)                                  = 0x804fd50
+> open("/etc/ld.so.preload", O_RDONLY)    = -1 ENOENT (No such file or
+> directory)
+> open("/etc/ld.so.cache", O_RDONLY)      = 3
+> fstat64(3, {st_mode=S_IFREG|0644, st_size=9361, ...}) = 0
+> old_mmap(NULL, 9361, PROT_READ, MAP_PRIVATE, 3, 0) = 0x40014000
+> close(3)                                = 0
+> open("/lib/libpopt.so.0", O_RDONLY)     = 3
+> read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0`\21\0\000"...,
+> 1024) = 1024
+> fstat64(3, {st_mode=S_IFREG|0644, st_size=20704, ...}) = 0
+> old_mmap(NULL, 23828, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x40017000
+> mprotect(0x4001c000, 3348, PROT_NONE)   = 0
+> old_mmap(0x4001c000, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED, 3,
+> 0x4000) = 0x4001c000
+> close(3)                                = 0
+> open("/lib/libc.so.6", O_RDONLY)        = 3
+> read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0\30\222"...,
+> 1024) = 1024
+> fstat64(3, {st_mode=S_IFREG|0755, st_size=1153784, ...}) = 0
+> old_mmap(NULL, 1166560, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) =
+> 0x4001d000
+> mprotect(0x40130000, 40160, PROT_NONE)  = 0
+> old_mmap(0x40130000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED,
+> 3, 0x113000) = 0x40130000
+> old_mmap(0x40136000, 15584, PROT_READ|PROT_WRITE,
+> MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x40136000
+> close(3)                                = 0
+> old_mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1,
+> 0) = 0x4013a000
+> munmap(0x40014000, 9361)                = 0
+> brk(0)                                  = 0x804fd50
+> brk(0x804fef8)                          = 0x804fef8
+> brk(0x8050000)                          = 0x8050000
+> brk(0x8051000)                          = 0x8051000
+> open("/etc/raidtab", O_RDONLY)          = 3
+> open("/dev/md0", O_RDONLY)              = 4
+> ioctl(4, 0x800c0910, 0x804fd3c)         = 0
+> close(4)                                = 0
+> open("/dev/md3", O_RDWR)                = 4
+> fstat64(4, {st_mode=S_IFBLK|0660, st_rdev=makedev(9, 3), ...}) = 0
+> ioctl(4, 0x932, 0)                      = -1 EBUSY (Device or resource
+> busy)
+> dup(2)                                  = 5
+> fcntl64(5, F_GETFL)                     = 0x8002 (flags
+> O_RDWR|O_LARGEFILE)
+> fstat64(5, {st_mode=S_IFCHR|0600, st_rdev=makedev(136, 0), ...}) = 0
+> old_mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1,
+> 0) = 0x40014000
+> _llseek(5, 0, 0xbffff964, SEEK_CUR)     = -1 ESPIPE (Illegal seek)
+> write(5, "/dev/md3: Device or resource bus"..., 34/dev/md3: Device or
+> resource busy
+> ) = 34
+> close(5)                                = 0
+> munmap(0x40014000, 4096)                = 0
+> _exit(1)                                = ?
+> ------------------
+> 
+> Can this be a version problem with raidtool2 ? Im using debian testing
+> dist.
+> 
+> Any way i can check why/who has that device? lsof shows no md3.
+> 
+> Im clueless right now, sure the raid work even if md2 md3 are in use under
+> reboot but this not correct.
+> 
+> 
+> 
