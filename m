@@ -1,8 +1,9 @@
-From: jeff <jeff@gage.org>
-Message-ID: <20030602143500.GC15252@gage.org>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] help needed
+Message-ID: <20030602170318.A6678@sistina.com>
+References: <23233866A70C32479532C8D0B8AE7B96032AAC92@i2km07-ukbr.domain1.systemhost.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Incorrect metadata area header checksum
+In-Reply-To: <23233866A70C32479532C8D0B8AE7B96032AAC92@i2km07-ukbr.domain1.systemhost.net>; from narsimha.kulkarni@bt.com on Mon, Jun 02, 2003 at 02:04:25PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,66 +14,159 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  2 09:34:01 2003
+Date: Mon Jun  2 10:13:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-hi-
+On Mon, Jun 02, 2003 at 02:04:25PM +0100, narsimha.kulkarni@bt.com wrote:
+> but Heinz is there anyway I can restore a vol group whose .conf file has
+> been deleted
 
-what does this error mean, and how do i rectify it? i have existing lvm
-volumes on this box, but creating this big one (~350gb) on my new
-software-raid5 array is giving me grief. i can mke2fs /dev/md2 just
-fine, but when i try to install lvm2..:
+Heh! ;)
 
-root@cerulean:~# pvscan
-  PV /dev/md1   VG raid1   lvm1 [15.65 GB / 0    free]
-  Total: 1 [0   ] / in use: 1 [0   ] / in no VG: 0 [0   ]
+You don't want to tell me that the metadata backup files weren't included
+in your regular backup ?
 
-root@cerulean:~# pvcreate /dev/md2
-  Failed to read label on physical volume /dev/md2
-  Physical volume "/dev/md2" successfully created
+> 
+> -----Original Message-----
+> From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
+> Sent: 02 June 2003 10:34
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] help needed
+> 
+> 
+> On Fri, May 30, 2003 at 09:42:00AM +0530, Sameer Halgatti wrote:
+> > hi narsimha,
+> > If u want to completely remove ur PV (i.e. if u want to lose ur data) then
+> > there is a very simple way to get rid of this problem. Just do
+> following....
+> > dd of=/dev/hda3                  ......hda3 becuse ur PV resides on that
+> > <enter approx 50 chars>
+> > <press cntrl+d>
+> > 
+> 
+> This avoids that you type something LVM might consider to be valid metadata
+> ;)
+> 
+> dd if=/dev/zero of=/dev/hda3 bs=512
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> 
+> > Of course it not the recommend solution, but it will solve ur problem :-)
+> > Actually ur VGDA data on the disk may be corrupted, that's why u r getting
+> > this error message.
+> > When u create a PV/VG, some data is written on the disk (on some initial
+> > disk blocks). So if u erase that by doing 'dd', then u can create fresh
+> > PV/VG using that disk.
+> > 
+> > 
+> > ----- Original Message -----
+> > From: <narsimha.kulkarni@bt.com>
+> > To: <linux-lvm@sistina.com>
+> > Sent: Thursday, May 29, 2003 8:03 PM
+> > Subject: [linux-lvm] help needed
+> > 
+> > 
+> > > hi following is the log of the commands....
+> > > i want to remove the volume group completely....
+> > > or i want to restore it....
+> > >
+> > > how do i do it
+> > >
+> > > vgscan -- reading all physical volumes (this may take a while...)
+> > > vgscan -- found active volume group "helena_vg"
+> > > vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of
+> volume
+> > > group)
+> > > vgscan -- found active volume group "volg"
+> > > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> > > vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> > > groups
+> > >
+> > > vgremove -- ERROR: can't remove active volume group "helena_vg"
+> > >
+> > >
+> > > vgcfgrestore -- locking logical volume manager
+> > > vgcfgrestore -- restoring volume group "helena_vg" from
+> > > "/etc/lvmconf/helena_vg.conf"
+> > > vgcfgrestore -- checking existence of "/etc/lvmconf/helena_vg.conf"
+> > > vgcfgrestore -- "/etc/lvmconf/helena_vg.conf" doesn't exist
+> > > vgcfgrestore -- a backup for volume group helena_vg is not available
+> > >
+> > >
+> > > pvscan -- reading all physical volumes (this may take a while...)
+> > > pvscan -- inactive PV "/dev/hda3"  is associated to an unknown VG (run
+> > > vgscan)
+> > > pvscan -- ACTIVE   PV "/dev/hdb1" of VG "volg"      [31.48 GB / 31.48 GB
+> > > free]
+> > > pvscan -- total: 2 [39.08 GB] / in use: 2 [39.08 GB] / in no VG: 0 [0]
+> > >
+> > > pvchange -- locking logical volume manager
+> > > pvchange -- reading physical volume data /dev/hda3 from disk
+> > > pvchange -- checking physical volume "/dev/hda3" consistency
+> > > pvchange -- finding volume group of physical volume "/dev/hda3"
+> > > pvchange -- unable to find volume group of "/dev/hda3" (VG not active?)
+> > > pvchange -- unlocking logical volume manager
+> > > pvchange -- 0 physical volumes changed / 0 physical volumes already o.k.
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+> 
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-
+> 
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-root@cerulean:~# vgcreate raid5 /dev/md2
-  Incorrect metadata area header checksum
-  Incorrect metadata area header checksum
-  Volume group "raid5" successfully created
+-- 
 
-root@cerulean:~# vgdisplay raid5
-  Incorrect metadata area header checksum
-  Incorrect metadata area header checksum
-  Volume group "raid5" doesn't exist
+Regards,
+Heinz    -- The LVM Guy --
 
-more info:
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-root@cerulean:~# uname -a
-Linux cerulean 2.4.21-rc2-ac2 #1 Sun May 18 12:08:13 PDT 2003 i686 GNU/Linux
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-root@cerulean:~# egrep 'DEV_DM|DEV_LVM' /boot/config-2.4.21-rc2-ac2 
-# CONFIG_BLK_DEV_LVM is not set
-CONFIG_BLK_DEV_DM=y
-
-root@cerulean:~# dpkg -s lvm2 | grep Version
-Version: 1.95.15-1
-
-root@cerulean:~# dpkg -s raidtools2 | grep Version
-Version: 1.00.3-2
-
-root@cerulean:~# cat /proc/mdstat 
-Personalities : [raid1] [raid5] 
-read_ahead 1024 sectors
-md0 : active raid1 sdb1[1] sda1[0]
-      976768 blocks [2/2] [UU]
-      
-md1 : active raid1 sdb3[1] sda3[0]
-      16418752 blocks [2/2] [UU]
-      
-md2 : active raid5 sdd1[3] sdc1[2] hdc1[1] hda1[0]
-      351654528 blocks level 5, 64k chunk, algorithm 2 [4/4] [UUUU]
-      
-unused devices: <none>
-
-thanks,
-
-jeff
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
