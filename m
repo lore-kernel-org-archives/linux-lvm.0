@@ -1,36 +1,52 @@
-From: "Michelic Adalbert" <a.michelic.suse@aon.at>
-Subject: Re: [linux-lvm] New LVM user, couple of problems
-Date: Wed, 12 Jul 2000 22:29:09 +0200
-Message-ID: <NDBBLPMOHKFCMNGCEHDOCEPFDNAA.a.michelic.suse@aon.at>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <Pine.SOL.4.10.10007121311030.5718-100000@basm.cerias.purdue.edu>
+Date: Thu, 13 Jul 2000 09:43:44 -0400
+From: Peter Green <pcg@gospelcom.net>
+Subject: [linux-lvm] LVM ready for primetime?
+Message-ID: <20000713094344.M3489@gospelcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Hi,
+I am looking to set up a ``poor-mans'' NetApp for our company. Basically,
+here's what I'm looking at:
 
-Brian Poole wrote:
->
-> The first issue I hit upon is with lv[extend,reduce]. Essentially I will
-> change the size of the lv (eg lvreduce /dev/vg00/lvol1 -L 200m) however
-> when I mount lvol1 the size shown is the same as it was before, according
-> to df. lvdisplay shows the correct size of 200m, but the system seems to
-> disagree saying the lv is still 6.7g which was the original size. Curious
-> I decided to test what would happen if I attempted to write more than 200m
-> of data to the mounted lv, so I did dd if=/dev/zero of=/lvol1/bigfile
-> bs=1024k count=500 which resulted in a looping scroll of lvm_map errors (I
-> don't have them at the moment, but I can get them if it is needed|desired)
-> after it passed the 200m mark. This obviously is a bad thing, if diskspace
-> is exceeded it should just say no more diskspace, or similar, not go into
-> a loop that I can't get out of except by reboot ;). Not sure if I missed
-> some essential step to 'sync' between what lvdisplay thinks is there and
-> what df, etc do? What I did appears very similar to the LVM-HOWTO.
+* Hardware RAID 1+0 (Mylex or something)
+* ~150-300GB storage (all 18GB and 36GB SCSI disks)
+* Logical Volume Manager (LVM)
+* ReiserFS
+* NFS or Coda
+* Redhat Linux
 
-You have to resize your filesystem - take a look at
-http://linux.msede.com/ext2/
+Here are some of the applications we'd like to use this for:
 
--Adalbert
+* Web pages
+* qmail Maildirs
+* RealMedia files
+* Possibly some MySQL/Sybase databases
+* Approx. 20-50 full-time client machines
+
+My question is this: is LVM ready for prime-time? The setup above seems like
+a good idea in comparison with a NetApp (though I don't expect to get near
+the same performance), but if it doesn't work, the comparison is moot.
+
+Anyone have any thoughts on this? (Also, I welcome your recommendations for
+changes to the hw/sw I've laid out above. However, it might be prudent to
+e-mail these comments directly, and not the list.)
+
+Thanks!
+
+/pg
+-- 
+Peter Green : Gospel Communications Network, SysAdmin : pcg@gospelcom.net
+---
+At first I thought, if I were Superman, a perfect secret identity would be 
+'Clark Kent, Dentist,' because you could save money on tooth X-rays. But then 
+I thought, if a patient said: How's my back tooth? and you just looked at it 
+with your X-ray vision and said: Oh it's okay, then the patient would probably 
+say: Aren't you going to take an X-ray, stupid? and you'd say: Aw &*$# you, 
+get outta here, and then he probably wouldn't even pay his bill.
+ (Jack Handey)
