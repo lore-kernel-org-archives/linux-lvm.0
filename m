@@ -1,12 +1,9 @@
-From: Theo Van Dinter <felicity@kluge.net>
+Message-ID: <3D8F5DB3.9080806@comedia.it>
+From: Luca Berra <bluca@comedia.it>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] raid1+lvm
-Message-ID: <20020923152349.GA22130@kluge.net>
-References: <20020923102557.B74653-100000@true.fiberpimp.net> <3D8F2DD0.3050008@mindmatics.de> <20020923151459.GG1358@tykepenguin.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
-Content-Disposition: inline
-In-Reply-To: <20020923151459.GG1358@tykepenguin.com>
+References: <20020923102557.B74653-100000@true.fiberpimp.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +14,113 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 23 10:28:02 2002
+Date: Mon Sep 23 13:31:53 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+galt wrote:
+> perhaps I'm missing something.
+> 
+> Luca,
+> So it is or is not possible to boot a root filesystem thats inside an lvm
+> without a separate /boot that is either raid1 or normal? From what you
+> said I'd like to interpret it as you need a initrd inside the root lv...is
+> that the case?  If so, could I see the root= and boot= lines from your
+> lilo.conf? (Assuming you have this configuration)
 
-On Mon, Sep 23, 2002 at 04:14:59PM +0100, Patrick Caulfield wrote:
-> I have two boxes that swap onto LVM2 volumes and have seen no problems. L=
-VM1
-> should be OK too.
+This config is far from perfect, was done in a hurry and since i was not 
+able to batter lilo into perfection i had to use boot=/dev/sda and do a
+dd if=/dev/sda of=/dev/sdb bs=512 count=1
+after running lilo
 
-I've swapped on a LVM1 setup before.  The only "issue" was that swap
-gets enabled before the volumes are brought online, but apparently is
-then attempted again after the volumes are up.  (RedHat 7.2?)
+This config was tested and i was able to boot it removing the first drive.
 
-I've since taken to keeping /boot, /, and swap out of LVM since they
-normally don't need to be resized, and makes the system easier to recover
-in case of problems. :)
+# lilo -V
+LILO version 22.3.2
 
---=20
-Randomly Generated Tagline:
-"Well my mother was Irish...  and your father? ... wasn't ..." - The Ref
+# cat /etc/lilo.conf
+boot=/dev/sda
+map=/boot/map
+vga=normal
+default=linux
+keytable=/boot/us.klt
+lba32
+prompt
+nowarn
+timeout=100
+message=/boot/message
+menu-scheme=wb:bw:wb:bw
+ignore-table
+password="XXXXXXX"
 
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+image=/boot/vmlinuz
+         restricted
+         label=linux
+         root=/dev/vg00/lvol3
+         initrd=/boot/initrd.img
+         append="devfs=mount console=ttyS1,9600 console=tty0"
+         read-only
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+# df
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/vg00/lvol3        3096336   1070072   1868980  37% /
+/dev/vg00/lvol1         126931      8277    112101   7% /boot
+/dev/vg00/lvol4        4128448   2632024   1286712  68% /home
+/dev/vg00/lvol5        2064208    240884   1718468  13% /var
 
-iD8DBQE9jzIFAuOQUeWAs2MRAhweAJ9vKXXoCNZ88IUUKYQ1vtqyCzdlzACdETgU
-IZPT3O/IZRsZfIfi6jaZaJ4=
-=4oXw
------END PGP SIGNATURE-----
+# swapon -s
+Filename                        Type            Size    Used    Priority
+/dev/vg00/lvol2                 partition       1048568 26640   -1
 
---gBBFr7Ir9EOA20Yy--
+# cat /proc/lvm/global
+LVM module LVM version 1.0.3(19/02/2002)
+
+# fdisk -l
+
+Disk /dev/scsi/host0/bus0/target0/lun0/disc: 255 heads, 63 sectors, 2213 
+cylinders
+Units = cylinders of 16065 * 512 bytes
+
+                                  Device Boot    Start       End 
+Blocks   Id  System
+/dev/scsi/host0/bus0/target0/lun0/part1   *         1         7 
+56196    6  FAT16
+/dev/scsi/host0/bus0/target0/lun0/part2             8      2213 
+17719695   fd  Linux raid autodetect
+
+Disk /dev/scsi/host0/bus0/target1/lun0/disc: 255 heads, 63 sectors, 2213 
+cylinders
+Units = cylinders of 16065 * 512 bytes
+
+                                  Device Boot    Start       End 
+Blocks   Id  System
+/dev/scsi/host0/bus0/target1/lun0/part1   *         1         7 
+56196    6  FAT16
+/dev/scsi/host0/bus0/target1/lun0/part2             8      2213 
+17719695   fd  Linux raid autodetect
+
+# cat /etc/raidtab
+raiddev /dev/md0
+   raid-level 1
+   nr-raid-disks 2
+   nr-spare-disks 0
+   device /dev/scsi/host0/bus0/target0/lun0/part2
+   raid-disk 0
+   device /dev/scsi/host0/bus0/target1/lun0/part2
+   raid-disk 1
+
+
+I was not able to boot from an LVM 2 since lilo does not grok 
+device-mapper devices, btw lilo seems to need HDIO_GETGEO
+syscall that is (was?) not available with device-mapper.
+
+L.
+
+P.S. in case yoo wonder sd?1 is the server diagnostic partition
+
+-- 
+Luca Berra -- bluca@comedia.it
+	Service Delivery Manager
+	Communication Media & Services S.r.l.
+	Via A. Modigliani 1 - MILANO
