@@ -1,8 +1,8 @@
-From: Andres Salomon <dilinger@mp3revolution.net>
-Message-ID: <20020611200040.GA21603@chunk.voxel.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LV resizing problems
+Message-Id: <200206112132.XAA00187@little-m.com>
+From: linux-lvm@little-m.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] software raid?  - LVM? - and how to put it all together ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,55 +13,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun 12 06:35:02 2002
+Date: Wed Jun 12 06:35:05 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@lists.sistina.com
+To: linux-lvm@sistina.com
 
-This VG in general has been giving me problems; I had to vgcfgrestore
-last night.  I added a 160 gig drive; pvcreated, vgextended..  I then
-tried to lvextend and resize2fs, but resize2fs thought that it was
-already at max size.  After removing and readding the partition from the
-VG, I tried e2fsadm, and got:
+Oke,
 
+I have read the docs, and again, and I am still not 
+sure if I need LVM (although i can see the benefits etc 
+etc)
 
-[dilinger@incandescent dilinger]$ sudo e2fsadm -l 28208 /dev/site/lvol1
- e2fsck 1.27 (8-Mar-2002)
- Pass 1: Checking inodes, blocks, and sizes
- Pass 2: Checking directory structure
- Pass 3: Checking directory connectivity
- Pass 4: Checking reference counts
- Pass 5: Checking group summary information
-/dev/site/lvol1: 21960/37765120 files (5.0% non-contiguous), 70450278/75526144 blocks
- lvextend -- extending logical volume "/dev/site/lvol1" to 440.75 GB
- lvextend -- doing automatic backup of volume group "site"
- lvextend -- logical volume "/dev/site/lvol1" successfully extended
- resize2fs 1.27 (8-Mar-2002)
- The containing partition (or device) is only 75526144 blocks.
- You requested a new size of 115539968 blocks.
+I am working on setting up my own WEB/MAIL/IMAP etc 
+server that will manage the mail for several domains 
+that I have.
 
-The LV remains at the old size (284 gigs) when mounted; lvdisplay shows:
+I got a nice 2nd hand HP Kayak dual P2 server with 2 
+identical 4.5Gb SCSI disks.
 
---- Logical volume ---
-LV Name                /dev/site/lvol1
-VG Name                site
-LV Write Access        read/write
-LV Status              available
-LV #                   2
-# open                 1
-LV Size                440.75 GB
-Current LE             28208
-Allocated LE           28208
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
+Because this server will hold mail that I do not want 
+to loose, I have arranged a backup to a friends server 
+on the other side of the atlantic (that is the US for 
+me) so off-side backup is taken care-off.
 
+But ... how to set it up. Ofcourse Raid 1 comes to mind 
+(certainly with 2 identical disks) but should I run LVM 
+on top of that? What do I use to boot? (can not find a 
+good doc about booting from software raid 1) and than 
+LVM gets into play as well ...
 
-Has anyone seen/solved this problem?
+Sometimes if feels like one big Chicken and Egg problem.
 
--- 
-<dilinger> people fear what they don't understand
-<zinx> that is not true
-<zinx> most people fear what they don't understand, and the rest get killed
-	by those people
+Can this lists give me some suggestions, point me to a 
+looked over handy and clear document that can show me 
+how to continue and set things up.
+
+The main boot+root+raid+lilo document is almost 2 years 
+old, so I think there must be some changes in this 
+procedure. (does GRUB understand software raid? and how 
+does it deal with LVM?)
+
+Also a bit confusing is the LVM wants the whole disk, 
+but software raid is using partions on disks to create 
+a MD device (that LVM than can completly use)
+
+As far as I can tell, you can not boot from LVM (right?)
+without having something that hold the /boot that is 
+not part of LVM.
+
+Most likely I should write all my adventures down as a 
+HOW-TO so that other people can benefit from my 
+findings.
+
+Thanks,
+
+Kees Duvekot
+
+(btw, I know how to setup Linux and SMTP/IMAP/APACHE 
+etc etc so that is taken care off)
