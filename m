@@ -1,11 +1,10 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-Id: <11679047703.20020306222539@tnonline.net>
-Subject: Re: [linux-lvm] System Suggestions
-In-Reply-To: <20020306161130.D855@kluge.net>
+Subject: Re: re[2]: [linux-lvm] System Suggestions
+From: Steven Critchfield <critch@dtsam.com>
+In-Reply-To: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
 References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
-    <20020306161130.D855@kluge.net>
-MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Message-Id: <1015450169.3240.80.camel@Steven>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,27 +15,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 15:25:02 2002
+Date: Wed Mar  6 15:30:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm-admin@sistina.com, Theo Van Dinter <felicity@kluge.net>
-Cc: linux-lvm@sistina.com, "Anthony W. Marino" <anthony@AWMObjects.com>, Petro <petro@auctionwatch.com>, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
+To: linux-lvm@sistina.com
 
-> On Wed, Mar 06, 2002 at 03:59:50PM -0500, Greg Freemyer wrote:
->> If you do get the 3Ware IDE RAID controller to work with XFS, please let me know.
+On Wed, 2002-03-06 at 14:59, Greg Freemyer wrote:
+> Anthony,
+> 
+> I'd be careful with the IDE Raid controller.
+> 
+> We just built a lab machine with a Promise IDE Raid controller and the assumption that we could get it and XFS to co-exist.
+> 
+> I'm not doing the work, but the engineer that is tells me that the Promise Patch Kit only works with a very limited number of stock Redhat Kernels, and that we are NOT free to add the XFS patch.  Even worse, promise does not supply their patch in source, so we are not free to tweak it ourselves.
+> 
+> I'm not sure I really believe that, but that is what I'm told.
+> 
+> If you do get the 3Ware IDE RAID controller to work with XFS, please let me know.
 
-> Works beautifully.  Have RH7.2, XFS, LVM, and a 3Ware 7410 running the
-> box that I'm sending this from. :)
+Although my first thought is to write RH and remind them how much we
+hate it when they build things in a non standard way and therefore cause
+other standard systems to break. I have several peices of hardware that
+are only supported with a RH kernel. I may be braver than some in the
+fact that I have removed the RH kernel and used in to build other
+distros with it. RH should provide a source version of the kernel in
+which you can attempt to put XFS into, then compile, and should still be
+able to load the promise driver into that new kernel. It will take some
+effort, but should be usable. Of course you could return it as
+essentially broken and buy the 3ware card that has better support.
 
-> The Promise RAID cards are cute but crappy from what I've heard.
-> The 3ware cards seem to be excellent quality so far, and the driver (as
-> far as I can tell) was GPLed and is standard in the 2.4 kernel series
-> (well, it's in 2.4.9 anyway...)
-
-I have a Promise FastTrak 100 card and it is very fast and stable. I
-think that Toms Hardware had a review of it a while ago (placed the
-Promise card as winner).
-
-Anyway. Linux Kernel now days has support for FastTrack cards too.
-
-//Anders
+Steven
