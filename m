@@ -1,42 +1,49 @@
-Date: Tue, 24 Oct 2000 00:49:53 +0200
-From: Ingo Oeser <ingo.oeser@informatik.tu-chemnitz.de>
-Subject: Re: [linux-lvm] 2.4.0-test10-pre4 oops with LVM
-Message-ID: <20001024004953.H727@nightmaster.csn.tu-chemnitz.de>
-References: <Pine.LNX.4.21.0010191857290.20436-200000@uyema.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0010191857290.20436-200000@uyema.net>; from myles@puck.nether.net on Thu, Oct 19, 2000 at 07:07:52PM -0700
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200010232337.e9NNbSg23447@webber.adilger.net>
+Subject: Re: [linux-lvm] Is LVM dead ?
+In-Reply-To: <20001021112147.A1131@gondor.com> "from Jan Niehusmann at Oct 21,
+ 2000 11:21:47 am"
+Date: Mon, 23 Oct 2000 17:37:28 -0600 (MDT)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Myles Uyema <myles@puck.nether.net>
-Cc: linux-kernel@vger.kernel.org, linux-lvm@msede.com
+To: Jan Niehusmann <jan@gondor.com>
+Cc: Andi Kleen <ak@suse.de>, Heinz Mauelshagen <mauelshagen@sistina.com>, Michael Tokarev <mjt@tls.msk.ru>, linux-lvm@msede.com
 
-On Thu, Oct 19, 2000 at 07:07:52PM -0700, Myles Uyema wrote:
-> This kernel panic occurred when I attempted to dump my ext2 filesystem
-> /home onto /mnt/ide/backup.  My exact dump command was:
+Jan Niehusmann writes:
+> On Sat, Oct 21, 2000 at 05:49:24AM +0200, Andi Kleen wrote:
+> > Perhaps it would be useful if you could do an interim 0.8 mainteance
+> > release, with e.g. all the simple bugfixes Andreas Dilger has collected
+> > (segfaults etc.) There are unfortunately a few annoying bugs in the stock 
+> > 0.8 userland, which people rediscover and rereport all the time.
 > 
-> dump -0 -u -M -f /mnt/ide/backup/home -B 2096128 /home
-> 
-> I believe dump managed to start reading directories before the oops
-> occurred...Haven't been able to duplicate the oops on 2.4.0-test9.
+> Actually I think Andreas could do the interim releases (if he wants to).
+> There is nothing wrong with having one maintainer for the development tree
+> and one for the stable tree. Andreas already has a .rpm with all the known
+> bugfixes, all we need now, is a tarball of that stuff.
 
-Content-Description: 2.4.0-test10pre4 oops log
-> Oct 19 17:58:13 uyema kernel: kernel BUG at vmscan.c:102!
+If you don't have the rpm tool (which can also be installed on a Debian
+system), you could also use alien to get the .tgz out of the .rpm file.
+If Heinz agrees to link my archives from the LVM site, then I will even
+make a separate patched .tgz available along with the .rpm.
 
-Remove lines 101-104 in mm/vmscan.c of linux-2.4.0-test10-pre4.
+> And the 0.8 userlevel tools will be important: The 0.9 kernel changes are 
+> probably fairly huge, so Linus may not include them in 2.4. That means we
+> need stable 0.8 tools for 2.4.
 
-Someone was a bit too paranoid in MM handling ;-)
+The one thing that needs to happen for my userland tools to work is to
+patch the 2.4 kernel lvm.h to allow being used from kernel and user space.
+I doubt that Linus would accept a patch from me on this, so it would need
+to go through Heinz.  The total number of real changes is very small compared
+to the 2.4 kernel header, but there are a lot of variable types that change
+to be compatible with both user and kernel includes, and a bunch of format
+changes.
 
-MM guys and even Linus would tell you the same[1].
-
-Regards
-
-Ingo Oeser
-
-[1] As they did already for other people facing this problem.
+Cheers, Andreas
 -- 
-Feel the power of the penguin - run linux@your.pc
-<esc>:x
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
