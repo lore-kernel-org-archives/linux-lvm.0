@@ -1,7 +1,7 @@
-Message-ID: <20021202121825.88238.qmail@web20421.mail.yahoo.com>
-From: Ioannis Lekakis <ilekakis@yahoo.com>
+Message-ID: <C65F89D1AC0BB54B865127151A24DA780BAD64DA@nbexchm2.aliant.icn>
+From: "Shaw, Marco" <Marco.Shaw@aliant.ca>
+Subject: RE: [linux-lvm] Is LVM supported in the REDHAT 2.1 cluster?
 MIME-Version: 1.0
-Subject: [linux-lvm] Is LVM supported in the REDHAT 2.1 cluster?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,11 +12,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  2 06:18:02 2002
+Date: Mon Dec  2 06:28:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+RedHat has only begun to bundle LVM in their products with RedHat 8.0 released at the end of September.  That being said, the RHAS release cycle is something like 6-12 months, which probably means that RedHat Q&A will typically bang/hack away at a product for almost as long before they deem it "enterprise ready" according to their own standards.  Once the product passes Q&A, they'll bundle it with RHAS.
+
+I would expect to see some kind of LVM in RHAS 2.2 or 3.0...
+
+Marco
+
+-----Original Message-----
+From: Ioannis Lekakis [mailto:ilekakis@yahoo.com] 
+Sent: Monday, December 02, 2002 8:18 AM
 To: linux-lvm@sistina.com
+Subject: [linux-lvm] Is LVM supported in the REDHAT 2.1 cluster?
+
 
 Hello all,
 
@@ -34,5 +47,9 @@ Ioannis Lekakis
 
 __________________________________________________
 Do you Yahoo!?
-Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
-http://mailplus.yahoo.com
+Yahoo! Mail Plus - Powerful. Affordable. Sign up now. http://mailplus.yahoo.com
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
