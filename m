@@ -1,8 +1,10 @@
-Message-Id: <3C551D0D.DF331C04@coventive.com>
-From: Mozo Hu <mozo@coventive.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] vgchange -a y /dev/System fails
+Message-Id: <20020128104258.A24830@sistina.com>
+References: <20020125233533.GK26045@merlins.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Dose LVM really work with NBD/ENBD ?
+In-Reply-To: <20020125233533.GK26045@merlins.org>; from
+    marc_lvm@merlins.org on Fri, Jan 25, 2002 at 03:35:33PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,71 +15,77 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 28 03:42:01 2002
+Date: Mon Jan 28 03:47:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+Marc,
 
-I've tried for several days to make LVM work
+I am afraid you need to figure out the last metadata backup in /etc/lvmconf/
+which *doesn't* contain the flaky snapshot(s).
 
-with NBD, but didn't get the expected result.
+You didn't mention the name of you VG so let's say it was 'A'.
 
-The old posts said LVM actually support NBD
+You can do that with "vgcfgrestore -f /etc/lvmconf/A.conf.1.old -n A -ll".
+Replace the '1' in the metadata backup filename above with 2, 3 and so on
+(you should have a default of up to 9).
+After you found one (say #3), remember all you PVs belonging to that VG and run
 
-before "0.8final", and does it still now?
+pvcreate -yff /dev/AllYourPVsBelongingToA
+for pv in /dev/AllYourPVsBelongingToA
+do
+   vgcfgrestore -f /etc/lvmconf/A.conf.3.old -n A $pv
+done
+vgscan
+vgchange -ay A
 
-Thanks.
+That should be it (crossing fingers ;-)
 
---------- some messages from lvcreate -d
 
-....
+On Fri, Jan 25, 2002 at 03:35:33PM -0800, Marc MERLIN wrote:
+> It fails and says:
+> parameter error setting up snapshot copy on write exception
+> 
+> So yes, I have  snapshots in there, but I can't delete  the snapshots if the
+> volume isn't active, and I can't activate the volume because of a snapshot.
+> 
+> To make things worse, /dev/System contains /usr and /var.
+> 
+> The snapshots were created with 1.0.1rc4 on 2.4.14 and I now run 2.4.17 with
+> 1.0.1rc4-ish
+> 
+> What's the magic override I need to use to make the volume active again?
+> 
+> Thanks
+> Marc
+> -- 
+> Microsoft is to operating systems & security ....
+>                                       .... what McDonalds is to gourmet cooking
+>   
+> Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-<55555> lvm_get_device_type called
-<55555> lvm_get_device_type leaving with 6
-<4444> lvm_check_partitioned_dev -- LEAVING with ret: FALSE
-<333> lvm_check_dev -- LEAVING with ret: 1
-<333> lvm_dir_cache -- CALLED
-<333> lvm_dir_cache -- LEAVING with ret: 30
-<22> pv_create_name_from_kdev_t -- LEAVING with dev_name: (null)
+-- 
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-<1> pv_read -- LEAVING with ret: -278
-<1> pv_check_active -- CALLED
-<22> pv_status -- CALLED with VG , PV: "/dev/nda1"
-<333> vg_check_name -- CALLED with VG:
-<4444> lvm_check_chars -- CALLED with name: ""
-<4444> lvm_check_chars -- LEAVING with ret: 0
-<333> vg_check_name -- LEAVING with ret: 0
-<333> pv_check_name -- CALLED with "/dev/nda1"
-<4444> lvm_check_chars -- CALLED with name: "/dev/nda1"
-<4444> lvm_check_chars -- LEAVING with ret: 0
+Regards,
+Heinz    -- The LVM Guy --
 
-....
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-<55555> lvm_get_device_type leaving with 6
-<4444> lvm_check_partitioned_dev -- LEAVING with ret: FALSE
-<333> lvm_check_dev -- LEAVING with ret: 1
-<333> pv_check_new -- CALLED
-<333> pv_check_new -- LEAVING with ret: 1
-<22> pv_check_consistency -- LEAVING with ret: 0
-<22> lvm_check_uuid -- CALLED with uuidstr: "CClwdbfh6e0PdP92plh2qoZIUasJxFvJ"
-<22> lvm_check_uuid -- LEAVING with ret: 0
-<22> pv_copy_to_disk -- CALLED
-<22> pv_copy_to_disk -- LEAVING
-<1> pv_write -- LEAVING with ret: 0
-pvcreate -- physical volume "/dev/nda1" successfully created
-<1> lvm_interrupt -- CALLED
-<1> lvm_interrupt -- LEAVING
-<1> lvm_interrupt -- CALLED
-<1> lvm_interrupt -- LEAVING
-<1> lvm_unlock -- CALLED
-<1> lvm_unlock -- LEAVING with ret: 0
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-<1> lvm_unlock -- CALLED
-<1> lvm_unlock -- LEAVING with ret: -104
-
--- One cannot think beyond his vocabulary. --
-Chung-Hsien Hu <mozo@coventive.com>
-Assistant Manager R&D Div. at Coventive Technologies. <www.coventive.com>
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
