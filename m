@@ -1,10 +1,9 @@
-Message-ID: <3EF8129A.1060604@sina.com>
-From: more <more0401@sina.com>
+Subject: RE: [linux-lvm] read-only media in a LVM?
+Message-ID: <C42D120999B1CC4C886B6BB2832F356019BF91@hermes.genomatica.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] problem of snapshot on XFS
-References: <3EF69479.7060709@sina.com>
-In-Reply-To: <3EF69479.7060709@sina.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Class: urn:content-classes:message
+From: "Sean P. Kane" <spkane@genomatica.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,53 +14,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun 24 03:59:02 2003
+Date: Tue Jun 24 11:27:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,  friends,
+Thanks for all the useful thoughts and pointers. I'll give them a try
+and see what I can manage to pull together.
 
-I forgot to send the information for the system configuration:
-LVM1.0.3 and XFS1.2 and 2.4.19 kernel.
+Sean
 
-Thanks for your feeding.
+------------------------------------------------------------------------
+Sean P. Kane
+spkane@genomatica.com
+Lead Infrastructure Architect
+Genomatica, Inc.
+------------------------------------------------------------------------
+"When we destroy something man has created we call it vandalism......
+ When we destroy something that Gaia has created we call it progress."
 
 
-Regards,
-more
+-----Original Message-----
+From: Wolfgang Weisselberg [mailto:uzx87lvfmukwc001@sneakemail.com]=20
+Sent: Monday, June 23, 2003 17:35
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] read-only media in a LVM?
 
 
-more wrote:
+Sean P. Kane wrote 78 lines:
 
-> Hi,
->
-> I am using XFS on LVM1 now.
->
-> I build snapshot LV using xfs_freeze and not using norecovery mount 
-> option. This is commended in lvm-howto.
-> But in my test, if I reboot the system in the progress of file writing 
-> on a LV that has snapshot,  the next time mounting snapshot will 
-> report XFS error and the system wants to repair the snapshot. So I 
-> will have to use norecovery option now.
->
-> I feel puzzled that why XFS repairing is needed on snapshot, I am now 
-> building an enterprise network file server, the robust is very 
-> important for us.
->
-> Very thanks for any feeding, by the way, it is not possible for me to 
-> use LVM2 in current.
->
->
-> Regards,
-> more
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
+> I'd love to have a unionfs, but my understanding is that no such beast
+
+> exists for Linux 2.4 currently
+
+Try looking at=20
+    http://plasticfs.sourceforge.net/plasticfs.html
+
+Plasticfs-viewpath is basically a unionof all filesystems in the
+viewpath, changes happen on the first one and a .whiteout remembers what
+you deleted.  It does *not* work for root (security!!!  You do not want
+root to see /tmp/login instead of /bin/login!).  Remember to set the
+environment variables, e.g.
+
+    LD_PRELOAD=3D/usr/local/lib/libplasticfs.so
+    PLASTICFS=3D"viewpath /ramdisk /cdrom1 /cdrom2"
+    /bin/bash   # or whatever program you want.
+
+Since Plasticfs works on file-level, you should be able to mix and match
+filesystems as you like.  Note however that --- since we just overload
+common FS access methods --- some things might not work.
+
+I have it in production use (for Aegis, not for cdroms).
+
+-Wolfgang
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
