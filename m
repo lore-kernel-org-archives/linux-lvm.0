@@ -1,9 +1,11 @@
-Return-Path: <grothe@mathematik.tu-darmstadt.de>
-From: Holger Grothe <grothe@mathematik.tu-darmstadt.de>
-Message-Id: <200102021209.AA293705760@fb0442.mathematik.tu-darmstadt.de>
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 2 Feb 2001 13:53:16 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] startup stuff
-Date: Fri, 02 Feb 2001 13:09:20 MEZ
-In-Reply-To: <Pine.LNX.4.21.0102021159530.399-100000@munster.noc.fr.clara.net>; from "JAmes" at Feb 2, 101 12:19 (noon)
+Message-ID: <20010202135316.A1353@srv.sistina.com>
+References: <20010202114635.A1039@srv.sistina.com> <Pine.LNX.4.21.0102021159530.399-100000@munster.noc.fr.clara.net>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.21.0102021159530.399-100000@munster.noc.fr.clara.net>; from james@fr.clara.net on Fri, Feb 02, 2001 at 12:02:00PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,62 +17,69 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+Please have a look at Holger Grothe's related comment and check,
+if Symlink etc. is set up correctly.
+
+Heinz
+
+On Fri, Feb 02, 2001 at 12:02:00PM +0100, JAmes wrote:
+> 
+> Hello
 > 
 > I did what you suggested but nothing happens attall! I may be wrong but I
 > have the impression that on a normal restart on rc2.d is 'looked' at.
 > 
-Don't know what you mean by "normal restart". On a Debian Potato 
-(stable Version) one have in rcS.d
-
-S05keymaps.sh
-S10checkroot.sh
-[...]
-S20modutils
-S30checkfs.sh
-[...]
-
-So the lvm-stuff (vgchange -ay) should be done before checkfs.sh :-)
-
 > > You surely mean "vgchange -ay".
 > 
 > yep :-)
 > 
 > help :-)
+> 
+> On Fri, 2 Feb 2001, Heinz J. Mauelshagen wrote:
+> 
+> > On Fri, Feb 02, 2001 at 10:02:17AM +0100, JAmes wrote:
+> > > 
+> > > Hello
+> > > 
+> > > I am using debian Linux, and have farely successfully installed LVM. I
+> > > have just to do the lvcreate -ay at startup. I assume that thi smust go in
+> > 
+> > You surely mean "vgchange -ay".
+> > 
+> > > 
+> > > /etc/rc2.d 
+> > > 
+> > > but using what S??
+> > 
+> > It must run after boot in order to activate VGs before any accesses to
+> > LVs (for eg. containing filesystems) take place and after modules were loaded.
+> > 
+> > Use one of the /etc/init.d/ scripts as a template to create
+> > /etc/init.d/lvm containing "vgscan;vgchange -ay".
+> > 
+> > Create a symlink /etc/rcS.d/S25lvm pointing to this file please.
+> > 
+> > > 
+> > > Any help extremely apreciated...
+> > > 
+> > > James
+> > > 
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > 
 
-A very simple version of the lvm startup script (Debian: /etc/init.d/lvm) 
-may look like
--------------------------------------------------------------------------
-#! /bin/sh
-case "$1" in
-        start|"")
-                if [ -x /sbin/vgchange ]
-                then
-                        /sbin/vgchange -a y
-                fi
-                ;;
-        stop)
-                if [ -r /etc/lvmtab -a -x /sbin/vgchange ]
-                then
-                        /sbin/vgchange -a n
-                fi
-                ;;
-        *)
-                echo "Usage: $0 {start|stop}"
-                exit 1
-esac
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-exit 0
-------------------------------------------------------------------------
-
-Don't forget the x-bit.
-
-Holger
---
-Holger Grothe  (Email: grothe@mathematik.tu-darmstadt.de)
-Fachbereich Mathematik, TU Darmstadt
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
