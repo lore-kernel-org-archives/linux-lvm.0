@@ -1,41 +1,67 @@
-Message-ID: <37C0F433.1A361B6F@ep-ag.com>
-Date: Mon, 23 Aug 1999 09:11:47 +0200
-From: Klaus Strebel <stb@ep-ag.com>
-MIME-Version: 1.0
+Message-Id: <199908230752.AA06046@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] LVM in stock kernel!?
-References: <199908212041.AA13662@mailgate1b.telekom.de>
-Content-Transfer-Encoding: 7bit
+Date: Mon, 23 Aug 1999 9:50:18 METDST
+In-Reply-To: <19990822170713.A18493@ladystrange.bluehorizon.nl>; from "pamvdam@ramoth.xs4all.nl" at Aug 22, 99 5:07 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: torvalds@transmeta.com
-Cc: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: pamvdam@ramoth.xs4all.nl
+Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-Hi Linus,
 
-Heinz Mauelshagen wrote:
-> Dirk Hohndel told me last week, that Linus wants to wait before putting LVM
-> into the stock kernel to see if enough people are interested to have this.
-So, you wanna hear from people who're using LVM on Linux? 
+Hi Pascal and all 8*)
 
-Here, we are! Let's get rid of that damned partitioning fuzz. With LVM i
-actually only need three 'partitions' on my boot-drive: root, swap and
-my physical volume of lvm. I can create, increase, shrink and drop now
-logical volumes just to test new filesystems (is there any gfs guy on
-the list? I use Antimatter Ant with patch 3 on a lv and it works great
-now!) or other new software. Another evident thing for me is, that i can
-use Oracle8's autoextension without fear to fill my root!
+> 
+> On Sun, Aug 22, 1999 at 01:14:36PM +0000, Heinz Mauelshagen wrote:
+> > 
+> > Hi Pascal,
+> > 
+> > saw your mail today concerned with writes beyond the end of the device,
+> > Have seen this a couple of times before 8*(
+> > 
+> > It was a kernel problem in the block i/o layer these days not forced
+> > by the LVM but brougt to the surface by the heavy i/o load LVM striped 
+> > LVs pushed to the system.
+> 
+> It was a problem.... Mmmm. In 2.3.14 it still is.
+> 
+> > 
+> > Do you see the same trouble with LVM 0.7 in older kernel releases?
+> 
+> 2.3.13 and the 2.3.14-pre release gave the same problem. I don't
+> know about earlier releases.
 
-So, give everybody his LVM !
+Oops, should have been more precise 8*)
 
-Thanks for your great work
+I ment earlier versions because i've observed the 'beyond end of device'
+behaviour with 2.3.13 by myself.
 
-Ciao
-Klaus
--- 
-Klaus Strebel
-stb@ep-ag.com
-EIGNER + PARTNER AG   - The Engineering Warehouse Company -
-<http://www.ep-ag.com>
------------------------------------------------------------------------
+> Shall we bring this up to the linux kernel list?
+
+Yes please.
+Do it.
+
+> The MD users should
+> have noticed it too. Indeed there was VERY heavy I/O
+> on the stripes.
+> 
+> BTW: 2.3.14 needed a little extra patch wrt the 2.3.13 LVM patch. Some-
+> body will have ported it too, if not say so, and I'll mail you the diff.
+> 
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
