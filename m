@@ -1,10 +1,10 @@
 From: "Steven Stillaway" <steve@stillaway.net>
-Subject: Re: [linux-lvm] Re: device-mapper transition
-Message-ID: <20021011090446.GA5506@sparcbox.net>
-References: <1034276879.2396.11.camel@mars.goatskin.org> <20021011075220.GA1153@fib011235813.fsnet.co.uk>
+Message-ID: <20021011092455.GA5529@sparcbox.net>
+References: <1034276879.2396.11.camel@mars.goatskin.org> <20021011075220.GA1153@fib011235813.fsnet.co.uk> <20021011090446.GA5506@sparcbox.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20021011075220.GA1153@fib011235813.fsnet.co.uk>
+In-Reply-To: <20021011090446.GA5506@sparcbox.net>
+Subject: [linux-lvm] device-mapper & proc
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 11 04:05:11 2002
+Date: Fri Oct 11 04:25:12 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Oct 11, 2002 at 08:52:21AM +0100, Joe Thornber wrote:
- 
-> If you do try 2.5 feedback would be appreciated.
-> 
-> - Joe
-> 
+LVM has /proc/lvm, DM does not seem to have anything
+equivalent.
 
-After much time mostly spend trying to figure out how
-bitkeeper works I have managed to get DM compiled and 
-working with 2.5.41
+Is there a reason for this?
 
-There were no problems compiling and it seems to be
-working fine so far.
+Is this likely to change?
 
-The only really tricky bit has been the fact that the
-lvm tools (in particular vgscan) are completely
-different between the two version.  Actually LVM 2 just
-seems to have one tool with a lot of symlinks.
+I ask because my start scripts look for /proc/lvm --
+if I could have them check for /pro/lvm or /proc/dm
+and run the appropriate command that would be useful.
 
-So when I switch from 2.4.19 w/ LVM 1 to 2.5.41 w/
-LVM2 I have to make sure to switch from one vgscan to
-the other.
+Also I imagine a /proc/dm could be usefull for other
+things.
 
-The obviously solution is to upgrade my 2.4.19 to 
-LVM2, but not tonight -- it is late.
 
-If I notice anything I will let you know.  If you
-have any questions or want some data from my test
-box please let me know.
-
-Off to bed now -- later
-
---
-
+-- 
 Steven Stillaway
 steve@stillaway.net
