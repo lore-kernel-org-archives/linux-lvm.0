@@ -1,61 +1,36 @@
-Return-Path: <andrea@suse.de>
-Date: Thu, 30 Nov 2000 23:17:16 +0100
-From: Andrea Arcangeli <andrea@suse.de>
-Message-ID: <20001130231716.H18804@athlon.random>
-References: <20001130214121.D18804@athlon.random> <200011302154.eAULsJZ02315@webber.adilger.net>
+Return-Path: <bluca@comedia.it>
+Date: Fri, 1 Dec 2000 14:17:10 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Old problem cropping up again with 0.9 lvm tools?
+Message-ID: <20001201141710.A508@colombina.comedia.it>
+References: <3A247D53.E3B78F60@cup.hp.com> <20001129174952.A26362@colombina.comedia.it> <20001129215950.B26839@srv.t-online.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200011302154.eAULsJZ02315@webber.adilger.net>; from adilger@turbolinux.com on Thu, Nov 30, 2000 at 02:54:19PM -0700
-Subject: [linux-lvm] Re: [PATCH] Re: [bug] infinite loop in generic_make_request()
+In-Reply-To: <20001129215950.B26839@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Wed, Nov 29, 2000 at 09:59:50PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
-List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
-List-Post: <mailto:linux-lvm@sistina.com>
-List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
-List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: Neil Brown <neilb@cse.unsw.edu.au>, Linus Torvalds <torvalds@transmeta.com>, V Ganesh <ganesh@veritas.com>, linux-kernel@vger.kernel.org, linux-LVM@sistina.com, mingo@redhat.com
+To: linux-lvm@sistina.com
 
-On Thu, Nov 30, 2000 at 02:54:19PM -0700, Andreas Dilger wrote:
-> Andrea writes:
-> > On Thu, Nov 30, 2000 at 01:05:53PM -0700, Andreas Dilger wrote:
-> > > the RAID and LVM make_request functions should be changed to do that
-> > > instead (i.e. 0 on success, -ve on error, and maybe "1" if they do their
-> > > own recursion to break the loop)?
-> > 
-> > We preferred to let the lowlevel drivers to handle error themselfs to
-> > simplify the interface. The lowlevel driver needs to call buffer_IO_error
-> > before returning in case of error.
+On Wed, Nov 29, 2000 at 09:59:50PM +0000, Heinz J. Mauelshagen wrote:
+> > vgscan will fail in pv_read
+> > since pv_read.c contains a line which makes it fail if the device is an
+> > me device.
 > 
-> Even if the lowlevel driver handles the error case, it would still
-> make more sense to stick with the normal kernel practise of -ERROR,
-> and 0 for success.  Then, if in the future we can do something with the
-> error codes, at least we don't have to change the interface yet again.
+> It's used to distinguish in a higher library layer between MD and other devices.
+> 
+> > 
+> > 0.8.1 has the same line, but pvread s not calle d by vgscan :)
+> 
+> It gets called indirectly from from vgscan by calling vg_read_with_pv_and_lv().
+ok, but 0.8.1 vgscan works with md devices, 0.9 does not,
+should i try to patch it at an higher layer then pv_read.c then?
 
-You shouldn't see the fact that a storage management driver returns 0 as an
-error. It has a different semantic, it only means: "the make_request callback
-completed the request, it wasn't a remap". That's all. As said the highlevel
-layer doesn't know anything about errors anymore, it only need to know when the
-request is completed.
+L.
 
-Of course if there's an error during a remap you can't continue so you have to
-say "this request is completed" and to tell this you currently have to return
-0. But 0 from the point of view of the highlevel layer doesn't mean "error".
-
-I'd suggest to take a third way that is to define only two retvals:
-
-	BLKDEV_IO_REQ_COMPLETED
-	BLKDEV_IO_REQ_REMAPPED
-
-Then it doesn't matter anymore what number they're defined to.
-generic_make_request simply keeps looping as far as it gets
-BLKDEV_IO_REQ_REMAPPED as retval.
-
-Andrea
+-- 
+Luca Berra -- bluca@comedia.it
+    Communication Media & Services S.r.l.
