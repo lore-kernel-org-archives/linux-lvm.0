@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvm-1.0.1 patch causes kernel compile errors on SPARC64
-Message-ID: <20011203164340.M1022@tykepenguin.com>
-References: <20011203083555.A1022@tykepenguin.com> <Pine.GSO.4.21.0112030934420.17154-100000@devmail.dev.tivoli.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.GSO.4.21.0112030934420.17154-100000@devmail.dev.tivoli.com>
+Message-ID: <5E34D857F6BB704CA3369B7553233A8165204A@ntsviemxs0152.connect.at-work.ent>
+From: "Csuk, Ferenc" <Ferenc.Csuk@one.at>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] FW: Error while compiling 2.4.10 kernel for Suse 7.3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  3 10:42:01 2001
+Date: Mon Dec  3 11:04:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Mon, Dec 03, 2001 at 09:36:04AM -0600, Rich Scheller wrote:
-> This patch fixed the kernel build break.  Thanks!
-> 
-
-If that actually works (and I can think of no reason why it would not) can you
-let me know and I'll send the patch to Dave Miller for inclusion in the stock
-kernel.
-
-Thanks,
-
-patrick
+> Hi All,
+>=20
+> I have just installed Suse 7.3 and I=B4d like to patch it with LVM
+> 1.0.1-rc4.patch, but when I compile the new kernel using make dep =
+clean
+> bzImage I get an error:
+.......
+> /drivers/md/mddev.o ........ undefined referenc to =
+=B4lvm_fs_create_lv=B4
+> make xxx [vmlinux] Error 1.
+>=20
+> Do you have any ideas?
+>=20
+> Thanks in advance.
+>=20
+> Regards,
+> Ferenc
+>=20
