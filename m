@@ -1,10 +1,8 @@
-Message-Id: <se146955.093@thpmail.tyndale.com>
-From: "Cameron Thorne" <CLT@tyndale.com>
-Subject: Re: [linux-lvm] LVM-HOWTO
+From: Matt Schillinger <mschilli@vss.fsi.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1041610095.19844.45.camel@mosix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Subject: [linux-lvm] disk naming
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  2 16:31:02 2003
+Date: Fri Jan  3 10:02:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Try here: http://www.ibiblio.org/pub/Linux/docs/HOWTO/other-formats/pdf/LVM=
--HOWTO.pdf
+this should be a simple question, but I can't find a direct discussion
+in the lvm documentation. I believe that i have found that LVM will find
+appropriate PV's regardless of their name (sda,sdb).. Is this true? Do i
+need devfs to ensure that i always have the same disk naming, or will
+LVM handle this for me?  I am currently using scsidev for naming
+purposes, but have found that vgcreate will not work with scsidev device
+names (/dev/scsi/sdh0-0c0i4l2p1)
+/dev/scsi/sd(host=0,scsiid=4,LUN=2,partition #=1)
 
--- Cameron
+..
 
->>> "Ma, Thanh(IndSys, GE Interlogix)" <Thanh.Ma@ge.com> 01/02/03 04:22PM >=
->>
-Is there a LVM-HOWTO in pdf format or all in one page so that I can print i=
-t out ?
-
-Newbee woud like to learn.
 
 Thanks,
-Thanh
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com=20
-http://lists.sistina.com/mailman/listinfo/linux-lvm=20
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+Matt Schillinger
+mschilli@vss.fsi.com
