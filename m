@@ -1,14 +1,13 @@
-Return-Path: <garloff@garloff.de>
-Date: Thu, 19 Apr 2001 23:25:36 +0200
-From: Kurt Garloff <garloff@suse.de>
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-Message-ID: <20010419232535.M22869@garloff.etpnet.phys.tue.nl>
-References: <d37l0gvkuf.fsf@lxplus015.cern.ch> <20010419132927.D10345@sistina.com> <20010419144014.H10345@sistina.com>
+Return-Path: <axboe@brick.kernel.dk>
+Date: Thu, 19 Apr 2001 23:51:07 +0200
+From: Jens Axboe <axboe@suse.de>
+Subject: Re: [linux-lvm] 2.4.3-ac{6,7} LVM hang
+Message-ID: <20010419235107.G750@suse.de>
+References: <Pine.LNX.4.21.0104161653140.14442-100000@imladris.rielhome.conectiva> <Pine.LNX.4.31.0104192311080.1048-100000@sjoerd.sjoerdnet>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3loezlmesXOUD0D5"
+Content-Type: multipart/mixed; boundary="9jxsPFA5p3P2qPhR"
 Content-Disposition: inline
-In-Reply-To: <20010419144014.H10345@sistina.com>; from lewis@sistina.com on Thu, Apr 19, 2001 at 02:40:15PM -0500
+In-Reply-To: <Pine.LNX.4.31.0104192311080.1048-100000@sjoerd.sjoerdnet>; from iafilius@xs4all.nl on Thu, Apr 19, 2001 at 11:13:49PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,56 +19,47 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: AJ Lewis <lewis@sistina.com>
-Cc: Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+To: Arjan Filius <iafilius@xs4all.nl>
+Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
 
---3loezlmesXOUD0D5
+--9jxsPFA5p3P2qPhR
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi AJ,
+On Thu, Apr 19 2001, Arjan Filius wrote:
+> Hello,
+> 
+> Same here as reported.
+> restoring lvm.c from 2.4.3 into 2.4.4-pre? "fixes" this. (tested not ac's
+> kernel)
 
-On Thu, Apr 19, 2001 at 02:40:15PM -0500, AJ Lewis wrote:
-> The list is now open.  I've talked to our admin and he's opening it up.
-> Send me e-mail if it doesn't work, 'cause something else is broken.
+Does attached patch fix it?
 
-to me it looks like your reactions are too late.
+-- 
+Jens Axboe
 
-I suggest you Sistina people accept the fact the there is an open list
-(better) managed by somebody else now and you all move there and use this as
-a forum for your discussions from now on. Just send the new list admin a
-list with your people to be subscribed ... and I can not imagine they will
-refuse to help you. (Otherwise they would be as closed-minded as you were.)
 
-Maintaining a project which got integrated into the kernel and forms a
-critical part of it (if there are bugs) is not an easy thing to do, and you
-should expect controversary discussions. On the one hand you want to fix
-things and introduce small and large improvements, on the other hand you
-don't want to take risks. Just get used to it.
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=lvm-244p4-1
 
-You'll always have a newer version to test than the one in the kernel.
-However, it works best if you try to submit your changes as often as
-possible. Of course I know, this is close to impossible when you have to
-redesign stuff and have to wait for stabilization ...
+--- /opt/kernel/linux-2.4.4-pre4/drivers/md/lvm.c	Wed Apr 18 14:37:34 2001
++++ drivers/md/lvm.c	Thu Apr 19 23:40:39 2001
+@@ -1674,10 +1674,11 @@
+ 			       int rw,
+ 			       struct buffer_head *bh)
+ {
+-	int ret = lvm_map(bh, rw);
+-	if (ret < 0)
+-		buffer_IO_error(bh);
+-	return ret;
++	if (lvm_map(bh, rw) >= 0)
++		return 1;
++
++	buffer_IO_error(bh);
++	return 0;
+ }
+ 
+ 
 
-Good luck!
---=20
-Kurt Garloff  <garloff@suse.de>                          Eindhoven, NL
-GPG key: See mail header, key servers         Linux kernel development
-SuSE GmbH, Nuernberg, FRG                               SCSI, Security
-
---3loezlmesXOUD0D5
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4g (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE631fPxmLh6hyYd04RAmh9AKCW/TfxVZzSZ4+40jyJ7jpnabkXcACgvkPz
-4QyzSU7Bk7O5RGoWh4KmEXg=
-=achL
------END PGP SIGNATURE-----
-
---3loezlmesXOUD0D5--
+--9jxsPFA5p3P2qPhR--
