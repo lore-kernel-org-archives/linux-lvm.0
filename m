@@ -1,10 +1,11 @@
-From: jon+lvm@silicide.dk
-Subject: Re: re[2]: [linux-lvm] [Q] LVM snapshot volume extendable?
-Message-ID: <20030117182557.GA15272@gw.silicide.dk>
-References: <20030113214928.NXIW20432.imf21bis.bellsouth.net@marsha> <002701c2bdb8$6cf51b70$c600a8c0@COMPAQ> <20030117100237.GC15042@gw.silicide.dk> <001601c2be1b$fd442050$c600a8c0@COMPAQ>
+From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] i got this error
+Message-ID: <20030117191551.GA3610@localhost>
+References: <000701c2be1a$4c8be960$820d2a3e@Desiportatil>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <001601c2be1b$fd442050$c600a8c0@COMPAQ>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <000701c2be1a$4c8be960$820d2a3e@Desiportatil>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +16,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 17 12:25:02 2003
+Date: Fri Jan 17 13:15:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Fri, Jan 17, 2003 at 08:31:34PM +0900, Sean Oh wrote:
-> 
-> ----- Original Message -----
-> From: <jon+lvm@silicide.dk>
-> To: <linux-lvm@sistina.com>
-> Sent: Friday, January 17, 2003 7:02 PM
-> Subject: Re: re[2]: [linux-lvm] [Q] LVM snapshot volume extendable?
-> > >
-> > > Very strange, since LVM snapshot does not hold FS. Am I right?
-> >
-> > i have successfully extented a ext3 snapshot. I did have to specify the
-> > mount as READONLY. You did do that too, didnt you ?
-> >
-> 
-> Yes, I specified the ro option in ext3 snapshots. But it is still not
-> mountable, giving the error 'Cant write to read-only device' and 'EXT3-FS:
-> write access unavailable, cannot proceed'
+On Friday, 17 January 2003, at 12:19:27 +0100,
+fnt wrote:
 
-strange.
+>  mount /dev/vg/vol1 /glftpd/site
+> mount: /dev/vg/vol1 no es un dispositivo de bloques v=C3=A1lido
+> thanx on advice
+>=20
+For those on the list with no knowledge of the spanish language, a
+translation of the error follows:
+mount /dev/vg/vol1 /glftpd/site
+mount: /dev/vg/vol1 is not a valid block device
 
+Just guessing, but maybe your VG is not active. Try "vgchange -a y vg"
+and try again. In any case, the more information you provide, the easier
+to give your helpful advice.
 
+Hope it helps.
 
-JonB
+--=20
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Sid (Linux 2.4.20-xfs)
