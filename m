@@ -1,5 +1,5 @@
-Message-ID: <134904905.1002552431606.JavaMail.root@boots>
-Date: 08 Oct 2001 10:46:56 -0000
+Message-ID: <134902074.1002552720175.JavaMail.root@boots>
+Date: 08 Oct 2001 10:51:42 -0000
 From: "Karl" <rmvzj001@sneakemail.com>
 Subject: Re: [linux-lvm] LVM seems to be causing SCSI errors.
 Mime-Version: 1.0
@@ -18,16 +18,23 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> did you check the filesystem.
-> Ages ago there was a couple of problems like this caused by filesystem
-> corruptions being fixable by the checker.
+> IIRC you said, that your test LVs spanned physical drives.
+> Another known problem is flaky SCSI subsystem behaviour when LVM causes
+> more load in configurations like this.
 >
-> Please report, if this helped.
+> Can you trigger the problem, if you've got just one LV being allocated
+> on one PV?
 
-Since I see this problem while creating the filesystem with mke2fs -c, 
-I don't think that is the problem. I first has the problem right after
-creating the file system when coping files to it. That time, I did not do the 
-bad block checking on the file system.
+The problem is still there when the LVM is only on a single SCSI volume.
+In fact, changing the volume from one drive to the other shows SCSI
+errors on the new drive and the old drive used on a non LVM file system
+stops having errors.
+
+> What did the file system consistency check I mentioned in my other mail say?
+
+When I ran an fsck on the file system with the errors (I did not re-do
+this experiment recently) it found bad blocks on the files system, but
+no inconsistencies on the file system itself.
 
 
 -----------------------------------------------------
