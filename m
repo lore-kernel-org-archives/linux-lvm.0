@@ -1,11 +1,10 @@
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] LVM
-Date: Wed, 12 Sep 2001 12:07:41 -0400
-References: <NBBBJHKIOKPKOGOEPEDPKEDNDNAA.stuart@bh90210.net> <3B9F4B72.9050801@st-peter.stw.uni-erlangen.de> <3B9F66BE.DFE69112@carolina.rr.com>
-In-Reply-To: <3B9F66BE.DFE69112@carolina.rr.com>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM
+Date: Wed, 12 Sep 2001 15:41:34 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPMEDPDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20010912160743.5D20E4326@oscar.casa.dyndns.org>
+Content-Transfer-Encoding: base64
+In-reply-to: <20010912160743.5D20E4326@oscar.casa.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,19 +19,35 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com, Jason Edgecombe <jedgecombe@carolina.rr.com>
 
-On September 12, 2001 09:44 am, Jason Edgecombe wrote:
-> hi,
->
->   I must ask what filesystem /boot is using. If you're using reiserfs,
-> then you MUST mount with the "notail" option for /boot. If you're using
-> ext2 of reiserfs with "notail" then I would recommend the you move /boot
-> to before the 1024th cylinder. (I like to always put /boot at the
-> beginning of the drive.)
->
-> Sincerely,
-> Jason Edgecombe
-
-This used to be true.  Recient versions of lilo understand reiserfs tails, so you 
-can mount with tails IF you have an up to date LILO.
-
-Ed Tomlinson
+TXIuIFRvbWxpbnNvbjoNCg0KCUkgYW0gY3VyaW91cyB3aGF0IHZlcnNpb24gb2YgbGlsbyBpbiBm
+YWN0IHN1cHBvcnRzIFJlaXNlckZTIHRhaWxzLiBJIGFtIHJ1bm5pbmcgTWFuZHJha2UgOC4wLCBh
+bmQgdXNpbmcgdGhlIGxpbG8gc3VwcGxpZWQgdGhlcmV3aXRoLCBhbmQgaGF2ZSBiZWVuIGJvb3Rp
+bmcgYSAvIHBhcnRpdGlvbiBhcyBSZWlzZXJGUyAod2l0aCB0YWlscyBJIGJlbGlldmUsIGhvdyBk
+byBJIGNoZWNrPykuDQoNCg0KVmVyeSBSZXNwZWN0ZnVsbHksIA0KDQpTdHVhcnQgQmxha2UgVGVu
+ZXIsIElUMywgVVNOUi1SLCBOM0dXRyANCkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENClZUVSAx
+OTA0RyAoVm9sdW50ZWVyIFRyYWluaW5nIFVuaXQpIA0Kc3R1YXJ0QGJoOTAyMTAubmV0IA0Kd2Vz
+dCBjb2FzdDogKDMxMCktMzU4LTAyMDIgUC5PLiBCb3ggMTYwNDMsIEJldmVybHkgSGlsbHMsIENB
+IDkwMjA5LTIwNDMgDQplYXN0IGNvYXN0OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0NTg1OSwg
+UGhpbGFkZWxwaGlhLCBQQSAxOTE0OS01ODU5IA0KDQpUZWxlY29waWVyOiAoNDE5KS03MTUtNjA3
+MyBmYXggdG8gZW1haWwgZ2F0ZXdheSB2aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUhKSANCg0K
+Sk9JTiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklU
+IEZST00gSVQgQUxMLiANCg0KV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTIsIDIwMDEgMzozOCBQTQ0K
+DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogbGludXgtbHZtLWFkbWluQHNpc3Rp
+bmEuY29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBPZiBF
+ZCBUb21saW5zb24NClNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDEyLCAyMDAxIDk6MDggQU0N
+ClRvOiBsaW51eC1sdm1Ac2lzdGluYS5jb207IEphc29uIEVkZ2Vjb21iZQ0KU3ViamVjdDogUmU6
+IFtsaW51eC1sdm1dIExWTQ0KDQpPbiBTZXB0ZW1iZXIgMTIsIDIwMDEgMDk6NDQgYW0sIEphc29u
+IEVkZ2Vjb21iZSB3cm90ZToNCj4gaGksDQo+DQo+ICAgSSBtdXN0IGFzayB3aGF0IGZpbGVzeXN0
+ZW0gL2Jvb3QgaXMgdXNpbmcuIElmIHlvdSdyZSB1c2luZyByZWlzZXJmcywNCj4gdGhlbiB5b3Ug
+TVVTVCBtb3VudCB3aXRoIHRoZSAibm90YWlsIiBvcHRpb24gZm9yIC9ib290LiBJZiB5b3UncmUg
+dXNpbmcNCj4gZXh0MiBvZiByZWlzZXJmcyB3aXRoICJub3RhaWwiIHRoZW4gSSB3b3VsZCByZWNv
+bW1lbmQgdGhlIHlvdSBtb3ZlIC9ib290DQo+IHRvIGJlZm9yZSB0aGUgMTAyNHRoIGN5bGluZGVy
+LiAoSSBsaWtlIHRvIGFsd2F5cyBwdXQgL2Jvb3QgYXQgdGhlDQo+IGJlZ2lubmluZyBvZiB0aGUg
+ZHJpdmUuKQ0KPg0KPiBTaW5jZXJlbHksDQo+IEphc29uIEVkZ2Vjb21iZQ0KDQpUaGlzIHVzZWQg
+dG8gYmUgdHJ1ZS4gIFJlY2llbnQgdmVyc2lvbnMgb2YgbGlsbyB1bmRlcnN0YW5kIHJlaXNlcmZz
+IHRhaWxzLCBzbyB5b3UNCmNhbiBtb3VudCB3aXRoIHRhaWxzIElGIHlvdSBoYXZlIGFuIHVwIHRv
+IGRhdGUgTElMTy4NCg0KRWQgVG9tbGluc29uDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fDQpsaW51eC1sdm0gbWFpbGluZyBsaXN0DQpsaW51eC1sdm1A
+c2lzdGluYS5jb20NCmh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWx2bQ0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNpc3RpbmEuY29tL2x2
+bS9QYWdlcy9ob3d0by5odG1sDQo=
