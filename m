@@ -1,74 +1,48 @@
-Message-Id: <s7d518f4.037@dhfs.state.wi.us>
-Date: Tue, 07 Sep 1999 13:53:35 -0500
-From: "Joseph Olson" <OLSONJA@dhfs.state.wi.us>
-Subject: Re: AW: [linux-lvm] GUI-Frontend (Gnome) availiable/planed?
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+From: CHUCK_MUNRO@HP-Canada-om1.om.hp.com
+Date: Tue, 7 Sep 1999 19:20:48 -0400
+Message-Id: <H00000fa0c3ec832@MHS>
+Subject: RE: [linux-lvm] GUI-Frontend (Gnome) available/planned?
+MIME-Version: 1.0
+Content-Disposition: inline; filename="BDY.TXT"
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; name="BDY.TXT"
 To: linux-lvm@msede.com
 
-Another suggestion for GUI-Frontend for linux-lvm.
 
-Instead of a GUI how about using OpenLDAP for control/configuration(LVM<---=
->LDAP). This would be part of kernel.  Then have a another standalone =
-program talk to the LDAP(LDAP<--->GUI). Security issues handled by the =
-security features already part of LDAP. And if you are really ambituous =
-modify LinuxConfig, AutoConfig(configuration tool from Red Hat), Coda,Cola(=
-configuration tool from Caldera) for LDAP.
+I agree with this suggestion.
 
+I have been using HP-UX "SAM" (System Admin Manager) for configuring LVM for 
+several years.  This tool has both a GUI and a curses-based terminal interface, 
+which is very helpful when operating from a text terminal or a telnet session.  
+Those readers who have administered HP-UX systems have no doubt seen that this 
+method is very helpful in a non-GUI environment (certainly nicer than using 
+command-line stuff).
 
->>> "Daniel Whicker" <heimdall@bellsouth.net> 09/07/99 01:06PM >>>
+Two of my Linux servers do not have X11 installed (for security and 
+simplicity), so a text forms-based LVM tool would be most welcome.
 
-There may be some issues with using a web interface like SWAT for LVM.  =
-First, you'd need to ensure that the security is rock solid.  Unlike SWAT, =
-an LVM web server  would actually have the ability to be quite destructive,=
- as oposed to a denial of service.  Also, if you were to create a web =
-based LVM GUI, you'd want to take advantage of graphics to represent your =
-PVs, VGs, LVs, which might preclude using Lynx.  While the LVM commands =
-might be a bit obscure to the average user, would a forms menu be much =
-less obsure without some graphical representation of what you're really =
-doing?  This isn't to say a forms based menu wouldn't be useful, but =
-rather that it may not be what's needed to introduce people to the concept =
-of an LVM.
+My 2 cents worth, anyway.
 
---Daniel
+ChuckM
 
-At Tue, 7 Sep 1999 15:16:46 +0200 (MEST), you wrote:
->
->M.Ritzert@CENIT.DE writes:
->
->> > i wonder if someone is working on an GUI-Interface for the LVM? =20
->> > Maybe for Gnome?  If not, i like to do the work..=20
->> Good idea, but please keep it as GUI-Framework independent as
->> possible ---- some LVM users might prefer KDE or WindowMaker/GNUStep
->> ..
->
->> > I have some ideas how such a tool could look like.
->> Why not a web based tool in analogy to swat? If done right, this
->> could be used even on the system console (under lynx).
->This is a very good idea!  It should be much easier to make too.  And
->i like the idea to use it on a system console (so you can use it on a
->telnet-session).
->
->carsten
->
->--=20
->Sent through Global Message Exchange - http://www.gmx.net=20
->
->
->
->
+-----Original Message-----
+From: heimdall@bellsouth.net [mailto:heimdall@bellsouth.net]
+Sent: Tuesday, September 07, 1999 11:06 AM
+To: linux-lvm@msede.com
+Cc: heimdall@bellsouth.net
+Subject: Re: AW: [linux-lvm] GUI-Frontend (Gnome) availiable/planed?
 
 
-
----------------------------------------------------------------------------=
--
-Access your e-mail anywhere, at any time.
-Get your FREE BellSouth Web Mail account today!
-http://webmail.bellsouth.net=20
----------------------------------------------------------------------------=
--
+There may be some issues with using a web interface like SWAT for LVM.  First, 
+you'd need to ensure that the security is rock solid.  Unlike SWAT, an LVM web 
+server  would actually have the ability to be quite destructive, as oposed to a 
+denial of service.  Also, if you were to create a web based LVM GUI, you'd want 
+to take advantage of graphics to represent your PVs, VGs, LVs, which might 
+preclude using Lynx.  While the LVM commands might be a bit obscure to the 
+average user, would a forms menu be much less obsure without some graphical 
+representation of what you're really doing?  This isn't to say a forms based 
+menu wouldn't be useful, but rather that it may not be what's needed to 
+introduce people to the concept of an LVM.
