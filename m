@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 25 Apr 2001 21:12:14 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgscan does not found my VG, but pvscan does...
-Message-ID: <20010425211214.A7135@sistina.com>
-References: <000901c0cd36$a80064a0$7d80a8c0@dyndns.org> <01042510065800.15131@workstation> <20010425114759.A4514@sistina.com> <3AE6C0AB.CA50ACD8@suse.de>
-Mime-Version: 1.0
-In-Reply-To: <3AE6C0AB.CA50ACD8@suse.de>; from Fabian.Herschel@suse.de on Wed, Apr 25, 2001 at 02:18:51PM +0200
+Return-Path: <russell@coker.com.au>
+From: Russell Coker <russell@coker.com.au>
+Subject: Re: [linux-lvm] badblocks handling with LVM
+Date: Wed, 25 Apr 2001 19:59:48 +0200
+References: <200104231008.f3NA8Gkx001134@webber.adilger.int>
+In-Reply-To: <200104231008.f3NA8Gkx001134@webber.adilger.int>
+MIME-Version: 1.0
+Message-Id: <01042519594802.31687@lyta>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,60 +19,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, Andreas Dilger <adilger@turbolinux.com>
 
-On Wed, Apr 25, 2001 at 02:18:51PM +0200, Fabian.Herschel@suse.de wrote:
-> "Heinz J. Mauelshagen" wrote:
-> 
-> > > I'm hopeful we will find a solution.
-> > 
-> > These "vgscan can't find my..." errors still show up on a too regular base :-(
-> > They absolutely need to be fixed before the 1.0 release.
-> > 
-> > Could you please send your two VGDAs compressed email attached to mee in order
-> > to be able to investigate more.
-> > 
-> > Add the "vgscan -d" output for the fail case as well, please.
-> 
-> Are the first 5000 blocks of each PV enought? 
+On Monday 23 April 2001 12:08, Andreas Dilger wrote:
+> Laurent writes:
+> > I have blocks marked bad on a ext2 filesystem.  The device has bad
+> > blocks. I'm wondering how bad blocks are handled with lvm.  I would l=
+ike
+> > to create a phycal volume on this device and use reiserfs on it.
+> > Could you give me some informations ?
+>
+> As long as the bad blocks are not in the first ~250kB of the partition/=
+disk
+> then LVM doesn't care about it.  However, reiserfs doesn't yet support =
+bad
+> blocks in the filesystem (this is currently under development AFAIK), s=
+o
+> this will not help you.
 
-That's ok.
+The problem is that when you move LV's around and make snapshots the bad=20
+blocks on the underlieing media will move.  Therefore I think that manage=
+ment=20
+of bad blocks possibly should be done in the LVM.
 
-> Is the complete VGDA stored in this area?
+Or should we just assume that LVM runs over RAID arrays of ATA/SCSI disks=
+=20
+that have sector-sparing so that bad blocks are not an issue?
 
-Typically yes, because the VGDA is smaller than a PE which is 4MB in size
-by default.
-
-> 
-> Fabian
-> 
-> 
-> 
-> -- 
-> Fabian Herschel                                 SuSE Linux Solutions AG
-> Tel:    +49-6196-50951-23                       Mergenthalerallee 45-47
-> Fax:    +49-6196-409-607                        D-65760 Eschborn
-> mailto: Fabian.Herschel@suse.de                 http://www.suse.de
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--=20
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
