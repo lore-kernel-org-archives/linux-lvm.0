@@ -1,75 +1,78 @@
-Message-ID: <383AB288.465073E1@mchp.siemens.de>
-Date: Tue, 23 Nov 1999 16:28:08 +0100
-From: Gerhard Fuernkranz <gerhard.fuernkranz@mchp.siemens.de>
+Date: Tue, 23 Nov 1999 11:47:28 -0500 (EST)
+From: Rusty Wickell <twickell@clio.dlib.indiana.edu>
+Subject: Re: [linux-lvm] kernel oops. 
+Message-ID: <Pine.A41.4.20.9911231147080.59896-100000@clio.dlib.indiana.edu>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Q: active/inactive/imported/exported group ?
-References: <199911231356.OAA06052@u9etz.ez-darmstadt.telekom.de>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: mauelsha@u9etz.ez-darmstadt.telekom.de
-Cc: mge@u9etz.ez-darmstadt.telekom.de, linux-lvm@msede.com
-
-mauelsha@u9etz.ez-darmstadt.telekom.de wrote:
-
-> If you don't change your IO configuration vgscan will not produce
-> different LV minors anyway.
-
-see below.
-
-> > Any comments?
-> 
-> This is an option.
-> 
-> I'ld rather prefer to let vgscan deal with 'sticky' minors based
-> on existing lvmtab entries and let it only use free minors for new VGs.
-
-The problem is again the cluster. Additionally to shared volumes I
-also may have local volumes on each host. Each host will usually
-see the same set of shared volumes, but the sets of each host's
-local volumes may differ. But I also want, that a shared volume
-gets the same minor number on every host in the cluster in order
-that NFS server failover from one host to another one works.
-
-So if I add new (shared) volumes on host A, then it is not guaranteed,
-that the new minor number host A assigns to the volume is not already
-in use on host B. With my sticky volume table I'd use the following
-procedure to create a new shared volume:
-
-1. find a free minor number (manually)
-2. enter it to the table on every host in the cluster (manually)
-3. then craete the volume: vgcreate on 1st host / vgscan on all
-   other hosts - vgcreate/vgscan will assign the number from the
-   sticky table.
-
-Of course my sticky table can also be integrated in lvmtab.
-
-A different approach could be:
-
-- I've seen in the pvdata output, that the volume descriptor
-  already contains a major/minor number.
-
-- So the desired minor number could reside in the volume descriptor
-  on the disk together with a sticky flag for the volume.
-
-- such a sticky voulume could e.g. be created with
-  "lvcreate ... --sticky=<minor> ...",
-  (which only succeeds if the minor number is not already in use -
-  either by a currently active volume or another sticky volume).
-
-- vgscan will
-  1. go through the currently active volumes
-  2. through the sticky volumes and try to assign exactly
-     the sticky minor number
-  3. all other volumes and assign a free minor number
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
 
-> If you garanty that you must already have a cluster manager... 8*)
+I am unsure which driver redhat 6.1 is using for ips. I guess I'll just
+have to 1.0  and see if I notice a difference. I'm glad somebody got this
+working with the same configuration, it gives me hope. :)
 
-Yes.
-
+It acts like it is a version before the they patched a kernel oops bug
+that is noted in the ips.c file.
 
 Thanks,
-Gerhard
+Rusty
+
+
+On Fri, 19 Nov 1999, Matthias G. Eckermann wrote:
+
+> Hi all out there,
+> 
+> On Fri, Nov 19, 1999 at 04:35:25PM -0500, Rusty Wickell wrote:
+> > 
+> > I am installing lvm on a netfinity 5000 using the IBM ServeRAID card.
+> 
+> What release of IPS-driver do You use? 1.0? (this is fine).
+> We are running LVM 0.7 on a NetFinitiy 5000-20 with ServeRAID 
+> for about 6 weeks without any problems.
+> 
+> > I have set up a logical paritition with hardware RAID5 that is seen by linux
+> > as /dev/sdb . I was able to pvcreate,vgcreate fine.
+> 
+> Mh, hopefully You set up real partitions before using pvcreate!?
+> That means: the PV should be on /dev/sdb1, not on /dev/sdb!
+> If not, you do have a real problem :-(#)
+> 
+> > But when I went to lvcreate -L5000 -nreallv realvg. It gave the kernel
+> > ooops. 'Got lvm request?' and just hung there. 
+> 
+> The LVM-kernel driver says:
+> 
+> /*
+>  * this one never should be called...
+>  */
+> static void lvm_dummy_device_request(void)
+> {
+>         printk(KERN_EMERG
+>                "%s -- oops, got lvm request?\n", lvm_name);
+>         return;
+> }
+> 
+> 
+> Well, I did not check, but I think, switches and parameters
+> should be separated by space, i.e.:
+> 	lvcreate -L 5000 -n reallv realvg
+>  
+> > Is there something I should know about putting this on top of a hardware
+> > raid5 device. I don't think it should matter since this is hidden from the
+> > os, the os only sees the sdb1 device for use with lvm. 
+> 
+> Hope, these hints are helpful
+> 
+> best regards
+> 		Matthias Eckermann
+> 
+> -- 
+> Matthias Eckermann <mge@suse.de>  mobile +49-179-2949448   |  errare
+> SuSE Muenchen GmbH, Stahlgruberring 28, D-81829 Muenchen   |  humanum
+> http://www.suse.de/                 http://www.suse.com/   |  est
+> 
+> 
