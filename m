@@ -1,11 +1,11 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Sun, 3 Dec 2000 13:54:42 +0000
+Date: Sun, 3 Dec 2000 13:56:17 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] Old problem cropping up again with 0.9 lvm tools?
-Message-ID: <20001203135442.B3922@srv.t-online.de>
-References: <3A247D53.E3B78F60@cup.hp.com>
+Subject: Re: [linux-lvm] /sbin/vgchange -a y core dumped
+Message-ID: <20001203135617.C3922@srv.t-online.de>
+References: <20001129094025.A1206@underley.eu.org>
 Mime-Version: 1.0
-In-Reply-To: <3A247D53.E3B78F60@cup.hp.com>; from defranco@cup.hp.com on Tue, Nov 28, 2000 at 07:51:47PM -0800
+In-Reply-To: <20001129094025.A1206@underley.eu.org>; from underley@underley.eu.org on Wed, Nov 29, 2000 at 09:40:25AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,36 +21,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Looks like the 0.8.1 works with MD, 0.9 doesn't.
-I asked Luca Bera to help narrowing this one down.
-
-On Tue, Nov 28, 2000 at 07:51:47PM -0800, John DeFranco wrote:
+On Wed, Nov 29, 2000 at 09:40:25AM +0100, Daniel Podlejski wrote:
 > Hi,
 > 
-> I'm having a problem doing a pvcreate on a raid
-> device. It fails with:
+> I got core dumped after /sbin/vgchange -a y, but
+> diskgroup is visible. kernel 2.4.0-test11,
+> LVM - yesterday checkout from CVS.
+
+Please provide a "vgchange -a y -d" output to enable us to drill that one down.
+
 > 
-> [root@ham 0.9]# pvcreate -v /dev/md0
-> pvcreate -- locking logical volume manager
-> pvcreate -- checking physical volume name "/dev/md0"
-> pvcreate -- getting physical volume size
-> pvcreate -- checking partition type
-> pvcreate -- invalid partition type 0x83 for "/dev/md0" (must
-> be 0x8e)
-> 
-> I had this problem with the 0.8final but was pointed to
-> a suse lvm user tools rpm (lvm-0.8-70-i386.rpm) that worked
-> great. 
-> 
-> Now with the 0.9 tools the issue is here again. Is there
-> a fix for this (since I don't think I should use the
-> 0.8 suse tools with 0.9 lvm)?
-> 
-> Thanks.
 > -- 
-> ==========
-> Cheers
->    -jdf
+> Daniel Podlejski <underley@underley.eu.org>
+>    ... It's enough to make you stay
+>    It's enough to make you go away ...
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
