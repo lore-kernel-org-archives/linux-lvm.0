@@ -1,11 +1,11 @@
-Return-Path: <cognac@toppoint.de>
-Date: Sun, 15 Jul 2001 14:56:47 +0200
-From: Andreas Czerniak <cognac@toppoint.de>
-Message-ID: <16210000.995201807@czerny>
+Return-Path: <kenhirsch@myself.com>
+Message-ID: <005501c10d30$54e0e260$7c853dd0@hppav>
+From: "Ken Hirsch" <kenhirsch@myself.com>
+References: <Pine.LNX.4.20.0107142304010.17541-100000@otter.mbay.net> <20010715180752.B7993@weta.f00f.org>
+Date: Sun, 15 Jul 2001 09:16:09 -0400
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] q: lvm with kernel 2.4.4-suse and 2.4.6
+Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +17,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Chris Wedgwood <cw@f00f.org>, John Alvord <jalvo@mbay.net>
+Cc: Daniel Phillips <phillips@bonn-fries.net>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Andrew Morton <andrewm@uow.edu.au>, Andreas Dilger <adilger@turbolinux.com>, "Albert D. Cahalan" <acahalan@cs.uml.edu>, Ben LaHaise <bcrl@redhat.com>, Ragnar Kjxrstad <kernel@ragnark.vestdata.no>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
 
-Dear,
+Chris Wedgwood <cw@f00f.org> wrote:
+> On Sat, Jul 14, 2001 at 11:05:36PM -0700, John Alvord wrote:
+>
+>     In the IBM solution to this (1977-78, VM/CMS) the critical data was
+>     written at the begining and the end of the block. If the two data
+items
+>     didn't match then the block was rejected.
+>
+> Neat.
+>
+>
+> Simple and effective.  Presumably you can also checksum the block, and
+> check that.
 
-i use a suse 2.4.4-suse (4GB) kernel with lvm-0.9.1_beta7 on a i386.
+The first technique is not sufficient with modern disk controllers, which
+may reorder sector writes within a block.  A checksum, especially a robust
+CRC32, is sufficient, but rather expensive.
 
-I update the kernel to 2.4.6 with included lvm-0.9.1_beta2. I download the 
-latest version beta7 and patch the kernel (beta7 and get_hardsect_size 
-patch). The lvm is compiled in the kernel and now, when i boot the new 
-kernel, lvm can't find any of lvm-partitions.
+Mohan has a clever technique that is computationally trivial and only uses
+one bit per sector: http://www.almaden.ibm.com/u/mohan/ICDE95.pdf
 
-under 2.4.4-suse i have:
-lvscan -- 6 active logical volumes
+Unfortunately, it's also patented:
+http://www.delphion.com/details?pn=US05418940__
 
-Is there a way to verbose/debug the lvm disk scan during the boottime ?
-
-Regards,
-			Andreas.
----------------------------------------------------------------------------
-Andreas Czerniak                                         cognac@toppoint.de
-Kiel - FRG            May the source be with you.       Fax: +49-431-678454
-PGPkey: http://wwwkeys.nl.pgp.net:11371/pks/lookup?op=get&search=0xEDB224EC
+Perhaps IBM will clarify their position with respect to free software and
+patents in the upcoming conference.
