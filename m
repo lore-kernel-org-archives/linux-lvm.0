@@ -1,22 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j11BrkO07338
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 06:53:46 -0500
-Received: from imail02.cis.cat.com (imail02.cis.cat.com [12.2.142.8])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j11Brjni011021
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 06:53:45 -0500
-Received: from sting.cis.cat.com (sting.cis.cat.com [165.26.152.184])
-	by imail02.cis.cat.com (8.13.1/8.13.1) with SMTP id j11BreIs018168
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 05:53:40 -0600
-Received: from CAT-Clavin.cis.cat.com (notessmtp02.cis.cat.com [165.26.153.79])
-	by intramail2.cis.cat.com (8.13.1/8.12.10) with ESMTP id j11BreLT015987
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 05:53:40 -0600
-MIME-Version: 1.0
-Message-ID: <OFF68A4A6E.CB0EB5AC-ON80256F9B.003D8F55-80256F9B.0041559D@notes.cat.com>
-From: Steve M Blackwell <BLACKWELL_STEVE_M@cat.com>
-Date: Tue, 1 Feb 2005 11:54:47 +0000
-Content-Type: multipart/alternative;
-	boundary="=_alternative 0041558F80256F9B_="
-Subject: [linux-lvm] Problem mounting logical volumes after system rebuild.
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j11H0OS9017498
+	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 17:00:24 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1Cw1O4-0005Nc-De
+	for linux-lvm@redhat.com; Tue, 01 Feb 2005 17:00:24 +0000
+Date: Tue, 1 Feb 2005 17:00:24 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Problem mounting logical volumes after system rebuild.
+Message-ID: <20050201170024.GN14093@agk.surrey.redhat.com>
+References: <OFF68A4A6E.CB0EB5AC-ON80256F9B.003D8F55-80256F9B.0041559D@notes.cat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <OFF68A4A6E.CB0EB5AC-ON80256F9B.003D8F55-80256F9B.0041559D@notes.cat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,32 +22,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multipart message in MIME format.
---=_alternative 0041558F80256F9B_=
-Content-Type: text/plain; charset="US-ASCII"
+On Tue, Feb 01, 2005 at 11:54:47AM +0000, Steve M Blackwell wrote:
+> Does anyone know how to create a LVM1 volume group and logical volumes 
+> with LVM2 tools. The reason I ask is because the tools on my rescue CD 
+> have LVM2 on it and I am trying to rebuild my RHEL 3 server which uses 
+> LVM1. I think the main problem is the metadata being create in the wrong 
+> version and I am not sure how to change it.
+ 
+Add -M1 to commands.
+Or have lvm.conf: global { format = "lvm1" }
 
-Does anyone know how to create a LVM1 volume group and logical volumes 
-with LVM2 tools. The reason I ask is because the tools on my rescue CD 
-have LVM2 on it and I am trying to rebuild my RHEL 3 server which uses 
-LVM1. I think the main problem is the metadata being create in the wrong 
-version and I am not sure how to change it.
-
-Cheers
-
-Steve B.
---=_alternative 0041558F80256F9B_=
-Content-Type: text/html; charset="US-ASCII"
-
-
-<br><font size=2 face="sans-serif">Does anyone know how to create a LVM1
-volume group and logical volumes with LVM2 tools. The reason I ask is because
-the tools on my rescue CD have LVM2 on it and I am trying to rebuild my
-RHEL 3 server which uses LVM1. I think the main problem is the metadata
-being create in the wrong version and I am not sure how to change it.</font>
-<br>
-<br><font size=2 face="sans-serif">Cheers</font>
-<br>
-<br><font size=2 face="sans-serif">Steve B.</font>
---=_alternative 0041558F80256F9B_=--
+Alasdair
+-- 
+agk@redhat.com
