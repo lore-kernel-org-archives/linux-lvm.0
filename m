@@ -1,11 +1,13 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] LE discussion
-References: <20020103040855.55629.qmail@web14605.mail.yahoo.com>
-In-Reply-To: <20020103040855.55629.qmail@web14605.mail.yahoo.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] Unable to get XFS, ext3, reiserfs & LVM to
+    coexist happily
+Message-Id: <20020103095435.U12868@lynx.no>
+References: <E16LcO0-0006VI-00@hermes.sistina.com>
+    <20020102110538.K12868@lynx.no> <E16Lwsc-0000Oy-00@hermes.sistina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16LzRS-0003eG-00@hermes.sistina.com>
+Content-Disposition: inline
+In-Reply-To: <E16Lwsc-0000Oy-00@hermes.sistina.com>; from
+    ahead@bigpond.net.au on Thu, Jan 03, 2002 at 11:44:21AM +1000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,42 +18,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  2 22:26:02 2002
+Date: Thu Jan  3 10:52:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, Adrian Noland <anoland@yahoo.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Adrian Head <ahead@bigpond.net.au>
+Cc: linux-xfs@oss.sgi.com, linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Jan 03, 2002  11:44 +1000, Adrian Head wrote:
+> On Thu, 3 Jan 2002 04:05, Andreas Dilger wrote:
+> > You should try ext3 from 2.4.18, or get it from the ext3 CVS (at
+> > cvs.gkernel.sourceforge.net:/cvsroot/gkernel ext3).  It has fixes
+> > for a number of problems caused by error conditions while running.
+> > If there is still a problem with ext3 oopsing with a full snapshot
+> > (which is essentially an oops because of an I/O error on the disk)
+> > then please file a separate bug report to the ext3 developers
+> > (ext2-devel@lists.sourceforge.net).
+> 
+> Let me see if I understand this correctly:
+> The problem of the kernel Oops when a snapshot overflows is actually a 
+> filesystem maintainer's/developer's problem because.  The reason is that when 
+> a snapshot overflows it generates a disk full and it is up to the filesystem 
+> to deal with that and pass that error up the stack?
 
-The only mention I have seen about this topic is in the mail archives:
-http://marc.theaimsgroup.com/?l=linux-lvm&m=99965651611876&w=2
+Close.  When a snapshot overflows, it actually generates an "I/O error" (i.e.
+read or write error, just like if the disk had a bad sector on it) and if
+the filesystem doesn't handle that properly then it will oops.
 
-On Thu, 3 Jan 2002 14:08, Adrian Noland wrote:
-> Thought I would qualify a little bit more.... I'm planning on using
-> this box as an all-purpose server HTTP/PHP/DNS/SMTP/SQL etc... So, my
-> question is in this context. Thanks again.
->
-> --- Adrian Noland <anoland@yahoo.com> wrote:
-> > Hello,
-> > I'm starting to use LVM, and I would like to know the pros & cons of
-> > using a different LE size other than the 4mb default. What kind of
-> > performance issues are there with different size LE's? I saw a *very*
-> > brief discussion in one of the docs (not the HOWTO), but cant find
-> > the
-> > reference now.
-> > Thanks,
-> > Adrian
-> >
+> Therefore, if there was an Oops on an:
+> * ext3 snapshot I would have to tell the ext3 developer's/maintainer's
+> * resierfs snapshot I would have to tell the resierfs developer's/maintainer's
+> * xfs snapshot I would have to tell the xfs developer's/maintainer's
 
-- -- 
-Adrian Head
+Probably - you have to see where the oops is happening, but generally it will
+be the filesystem that is having problems with the I/O error.  It may be in
+some cases that the oops is "on purpose" because it is catching some situation
+that was never expected to happen, and it is safer to "blow up" than to write
+garbage onto the disk, and potentially corrupt data there.
 
-(Public Key available on request.)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+> All I'm trying to do here is understand this a little more so that I can 
+> follow up with the correct people about these problems.
 
-iD8DBQE8M93p8ZJI8OvSkAcRAnDeAKChLqh0aLveEbnR99c9a04YoK5rAQCfc3r4
-XQa4dUatd7GbDLubk0mC/ps=
-=39IF
------END PGP SIGNATURE-----
+Note that you also need to send "real" oops messages for them to be useful
+to the developers, so they can find exactly what is going wrong.
+
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
