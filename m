@@ -1,12 +1,12 @@
-Return-Path: <mason@suse.com>
-Date: Sun, 29 Apr 2001 21:53:58 -0400
-From: Chris Mason <mason@suse.com>
-Message-ID: <691520000.988595638@tiny>
-In-Reply-To: <01042810385300.12469@oscar>
+Return-Path: <tomlins@cam.org>
+From: Ed Tomlinson <tomlins@cam.org>
+Date: Mon, 30 Apr 2001 00:23:14 -0400
+References: <688980000.988595283@tiny>
+In-Reply-To: <688980000.988595283@tiny>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] Re: VFS locking patch fails on 2.4.4
+Message-Id: <01043000231400.00694@oscar>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: [reiserfs-list] mounting reiserfs snapshot fails
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,133 +19,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Ed Tomlinson <tomlins@cam.org>, linux-lvm@sistina.com
+To: Chris Mason <mason@suse.com>, reiserfs-list@namesys.com
+Cc: linux-lvm@sistina.com
 
-The only rejects were in fs.h, but here is a new patch against 2.4.4
+On Sunday 29 April 2001 21:48, Chris Mason wrote:
+> On Friday, April 13, 2001 01:29:58 PM -0400 Ed Tomlinson <tomlins@cam.org>
+>
+> wrote:
+> > Hi,
+> >
+> > Using debian sid, 2.4.3-ac5, lvm 0.91 beta7, with the vfs locking
+> > patch applied I get:
+> >
+> > oscar# mount /dev/lv/snap /snap -t reiserfs -oro
+> > mount: wrong fs type, bad option, bad superblock on /dev/lv/snap,
+> >        or too many mounted file systems
+> >
+> > When trying to mount the snap shot.  It was created with:
+> > lvcreate -L 1G -s -n snap /dev/lv/root /dev/hdg1
+> > without problems
+>
+> I'm not sure what you're doing that I wasn't, but I've tried a bunch of
+> times to reproduce this over the last few weeks.  Tonight I finally did ;-)
+>
+> The bug is that reiserfs needs to try harder to wait for the current
+> transaction to end.  A slight change in the semantics there didn't get
+> carried into the reiserfs write_super_lockfs call (reiserfs_block_writes
+> used to be enough on its own).
+>
+> But, it only hits when LVM can create the snapshot faster than the next
+> reiserfs writer can commit the transaction, which doesn't happen often for
+> me.
+>
+> Anyway, here's a patch (VFS locking patch for 2.4.4 will follow in a sec).
 
-diff -Nru a/drivers/md/lvm.c b/drivers/md/lvm.c
---- a/drivers/md/lvm.c	Sun Apr 29 20:48:50 2001
-+++ b/drivers/md/lvm.c	Sun Apr 29 20:48:50 2001
-@@ -207,7 +207,7 @@
- #define LOCAL_END_REQUEST
- 
- /* lvm_do_lv_create calls fsync_dev_lockfs()/unlockfs() */
--/* #define	LVM_VFS_ENHANCEMENT */
-+#define	LVM_VFS_ENHANCEMENT
- 
- #include <linux/config.h>
- #include <linux/module.h>
-diff -Nru a/fs/buffer.c b/fs/buffer.c
---- a/fs/buffer.c	Sun Apr 29 20:48:50 2001
-+++ b/fs/buffer.c	Sun Apr 29 20:48:50 2001
-@@ -331,6 +331,28 @@
- 	return sync_buffers(dev, 1);
- }
- 
-+int fsync_dev_lockfs(kdev_t dev)
-+{
-+	sync_buffers(dev, 0);
-+
-+	lock_kernel();
-+	sync_supers(dev);
-+	/* note, the FS might need to start transactions to 
-+	** sync the inodes, or the quota, no locking until
-+	** after these are done
-+	*/
-+	sync_inodes(dev);
-+	DQUOT_SYNC(dev);
-+	/* if inodes or quotas could be dirtied during the
-+	** sync_supers_lockfs call, the FS is responsible for getting
-+	** them on disk, without deadlocking against the lock
-+	*/
-+	sync_supers_lockfs(dev) ;
-+	unlock_kernel();
-+
-+	return sync_buffers(dev, 1) ;
-+}
-+
- asmlinkage long sys_sync(void)
- {
- 	fsync_dev(0);
-diff -Nru a/fs/super.c b/fs/super.c
---- a/fs/super.c	Sun Apr 29 20:48:49 2001
-+++ b/fs/super.c	Sun Apr 29 20:48:49 2001
-@@ -630,6 +630,46 @@
- 	}
- }
- 
-+/*
-+ * Note: don't check the dirty flag before waiting, we want the lock
-+ * to happen every time this is called.
-+ */
-+void sync_supers_lockfs(kdev_t dev)
-+{
-+	struct super_block * sb;
-+
-+	for (sb = sb_entry(super_blocks.next);
-+	     sb != sb_entry(&super_blocks); 
-+	     sb = sb_entry(sb->s_list.next)) {
-+		if (!sb->s_dev)
-+			continue;
-+		if (dev && sb->s_dev != dev)
-+			continue;
-+		lock_super(sb);
-+		if (sb->s_dev && (!dev || dev == sb->s_dev))
-+			if (sb->s_op && sb->s_op->write_super_lockfs)
-+				sb->s_op->write_super_lockfs(sb);
-+		unlock_super(sb);
-+	}
-+}
-+
-+void unlockfs(kdev_t dev)
-+{
-+	struct super_block * sb;
-+
-+	for (sb = sb_entry(super_blocks.next);
-+	     sb != sb_entry(&super_blocks); 
-+	     sb = sb_entry(sb->s_list.next)) {
-+		if (!sb->s_dev)
-+			continue;
-+		if (dev && sb->s_dev != dev)
-+			continue;
-+		if (sb->s_dev && (!dev || dev == sb->s_dev))
-+			if (sb->s_op && sb->s_op->unlockfs)
-+				sb->s_op->unlockfs(sb);
-+	}
-+}
-+
- /**
-  *	get_super	-	get the superblock of a device
-  *	@dev: device to get the superblock for
-diff -Nru a/include/linux/fs.h b/include/linux/fs.h
---- a/include/linux/fs.h	Sun Apr 29 20:48:50 2001
-+++ b/include/linux/fs.h	Sun Apr 29 20:48:50 2001
-@@ -1107,6 +1107,7 @@
- extern void write_inode_now(struct inode *, int);
- extern void sync_dev(kdev_t);
- extern int fsync_dev(kdev_t);
-+extern int fsync_dev_lockfs(kdev_t);
- extern int fsync_super(struct super_block *);
- extern void sync_inodes_sb(struct super_block *);
- extern int osync_inode_buffers(struct inode *);
-@@ -1117,6 +1118,8 @@
- extern void filemap_fdatasync(struct address_space *);
- extern void filemap_fdatawait(struct address_space *);
- extern void sync_supers(kdev_t);
-+extern void sync_supers_lockfs(kdev_t);
-+extern void unlockfs(kdev_t);
- extern int bmap(struct inode *, int);
- extern int notify_change(struct dentry *, struct iattr *);
- extern int permission(struct inode *, int);
-diff -Nru a/kernel/ksyms.c b/kernel/ksyms.c
---- a/kernel/ksyms.c	Sun Apr 29 20:48:50 2001
-+++ b/kernel/ksyms.c	Sun Apr 29 20:48:50 2001
-@@ -179,6 +179,8 @@
- EXPORT_SYMBOL(invalidate_inode_pages);
- EXPORT_SYMBOL(truncate_inode_pages);
- EXPORT_SYMBOL(fsync_dev);
-+EXPORT_SYMBOL(fsync_dev_lockfs);
-+EXPORT_SYMBOL(unlockfs);
- EXPORT_SYMBOL(permission);
- EXPORT_SYMBOL(vfs_permission);
- EXPORT_SYMBOL(inode_setattr);
+Chris,
+
+This is not fixing the problem here.  What else do you need to figure this
+one out?  I did verify that I built from souce with both the fix VFS locking
+the the reiserfs fix applied.  Symptoms remain the same, debugreiserfs is 
+still finding a null block where it expects the sb.
+
+Ed
