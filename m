@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] Keep snapshots active for 24 hours?
-References: <20011214073506.A12990@math.ohio-state.edu>
-	<20011214113804.I940@lynx.no>
-From: Terje Kvernes <terjekv@math.uio.no>
-In-Reply-To: <20011214113804.I940@lynx.no>
-Message-ID: <wxxn10lcn70.fsf@nommo.uio.no>
+From: "Erick Calder" <e@arix.com>
+Message-ID: <00a401c18504$33a10ac0$0300000a@pacbell.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <NBBBKLKHMJHIJLHOGAOJKELJJCAA.steve.wray@the.net.nz>
+Subject: [linux-lvm] catch-22
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,56 +14,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 14 18:58:01 2001
+Date: Fri Dec 14 19:03:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-* Dave Alden
+a drive part of a volume crashed on me... I've looked through the man pages
+and HOWTO but find no happiness... help!
 
-> I'm in the process of evaluating LVM (with XFS) for our ~500G RAID
-> NFS server. I'm using hardware RAID, so I'm only using LVM is for
-> snapshots. My original plan was to take a snapshot around midnight
-> everyday, run the backup, then remove the snapshot (just as the FAQ
-> says to :-). However, I'd like to offer my users the ability to have
-> access to the previous days snapshot (so they can easily restore an
-> accidentally deleted file). I don't need all 500G (we're currently
-> using only ~60G), so I was thinking of either 50G or 100G for the
-> snapshot (although I only expect ~5G/day to be changed). I was
-> wondering what kind of performance hit would I take if I kept the
-> snapshot for 24 hours?
+the volume used to be called LVM (/dev/LVM) and had /dev/hda3 and
+/dev/hdc... hdc crashed and I've replaced it with an identical drive.  I did
+a "pvcreate /dev/hdc" after installation but cannot seem to add it to the
+volume:
 
-* Andreas Dilger
+# vgextend LVM /dev/hdc
+vgextend -- volume group "LVM" doesn't exist
 
-> Well, it will basically mean [read-]write-write for all data going
-> to the disk. Generally, this will not matter a huge amount unless
-> you are doing tons of I/O. You could start with a large snapshot
-> size, and then get an idea of how much data really changes each day.
+and if I try to create it:
 
-  this is something I'm hoping to get done -- eventually. the idea of
-  having at least a snapshot taken an hour ago will be very nice for
-  our dearest tape-robot-backup-thingy. not to mention the network. :)
+# vgcreate LVM /dev/hdc
+vgcreate -- volume group directory or file already exists
+vgcreate -- please choose a different name
 
-> You could then actually keep multiple snapshots if you had the
-> space. 
+I look in:
 
-  hm. this will add one extra write for every currently open snapshot,
-  right? 
+# ls /dev/LVM
+total 104
+dr-xr-xr-x    2 root     root         4096 Oct 26 12:54 ./
+drwxr-xr-x   14 root     root        98304 Dec 13 17:46 ../
+crw-r-----    1 root     disk     109,   0 Oct 26 12:54 group
+brw-rw----    1 root     disk      58,   0 Oct 26 12:54 mp3z
 
-> If you were really clever, you could write a script which checked
-> the free space in the snapshots every minute, and if they had less
-> than X PEs free, you extend the snapshot LV to have more free space.
-> If you run out of free PEs, you delete the oldest snapshot.
+# ls /proc/lvm/VGs
+total 0
+dr-xr-xr-x    2 root     root            0 Dec 14 17:52 ./
+dr-xr-xr-x    3 root     root            0 Dec 14 17:52 ../
 
-  heh. I was thinking of trying to get a snapshot taken every three
-  hours or so, and storing it until the next one came about. but of
-  course, you're right, I should check how much free space I have, and
-  keep a backlog until I _need_ the space. 
+what is the correct procedure to follow? shall I just blow away the /dev/LVM
+directory and do a "pvcreate -ff /dev/hda3"?
 
-  come to think of it, it doesn't take that complicated a shell-script
-  to get this working. hm... :)
-
--- 
-Terje - who finally gets to be with his girlfriend again, after 4
-        months and 10 days... *yay*!
+1k thx - e
