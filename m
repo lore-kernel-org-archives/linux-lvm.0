@@ -1,41 +1,58 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009052050.OAA19872@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] LVM patch for kernel 2.2.17?
-Date: Tue, 5 Sep 2000 14:50:29 -0600 (MDT)
-In-Reply-To: <31A612FE6020D2119F6400A0C9B67EBB0381B301@FTHW901E> from "Franken Klaus" at Sep 05, 2000 08:34:14 PM
+Message-ID: <39B68DB7.313C9669@marxmeier.com>
+Date: Wed, 06 Sep 2000 20:32:23 +0200
+From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] LVM and I2O (fwd)
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Franken Klaus <Klaus.Franken@fth2.siemens.de>
-Cc: "'daniel@mehrmann.ping-net.de'" <daniel@mehrmann.ping-net.de>, linux-lvm@msede.com
+To: linux-lvm@marxmeier.com
 
-Franken Klaus, you write:
-> > Any plans for a lvm-patch for kernel 2.2.17 ??
-> > 
-> > My lvm patch for 2.2.16 works at 2.2.17 too but it's version 0.8i.
-> >  
-> > Should we use a newer version ? For example 0.8 final ?
-> > Should i do that ?
-> 
-> Yes, you should.  Thanks!!
+Forwarded message from Jan Strohbehn ...
 
-I have already made a version of LVM 0.8final available for Linux 2.2.16 +
-2.2.17-pre patches, which _should_ work for 2.2.17 as well, although the
-snapshot feature depends on some 2.4 code which is only available for 2.2
-as a patch.
+-------- Original Message --------
+Subject: Posting to the LVM Mailing List
+Date: Thu, 07 Sep 2000 01:17:17 +0200
+From: Jan Strohbehn <j.strohbehn@artstor.de>
+Organization: ArtStor AG
 
-It is available online at ftp://ftp.stelias.com/pub/adilger/
+Hello, 
 
-I even worked a bit on it last week and #ifdef'd out code for the snapshot
-feature (which doesn't work with journalled filesystems anyways, AFAIK),
-so it should be able to work with a stock 2.2.16 kernel, but I haven't
-tested that yet, and this code isn't available yet...
+I'm trying to get the newest lvm working on I2O-devices, but it seems
+that the LVM-tools aren't able to recognize them. Has anyone a hint
+are
+an idea why this problem appears ???
+Are there any workarounds ???
 
-Yes, it _would_ be nice if Heinz made an "official" release of 0.8final
-for 2.2, but he hasn't done it any of the previous times someone asked
-in the past few months, so I don't expect he will do it now either.
 
-Cheers, Andreas
+Thank you very much,
+Jan Strohbehn
+
+
+
+
+
+------------------------------------------------------------------
+Today's Fortune:
+
+God rest ye CS students now,
+Let nothing you dismay.
+The VAX is down and won't be up,
+Until the first of May.
+The program that was due this morn,
+Won't be postponed, they say.
+
+	Oh, tidings of comfort and joy,
+	Comfort and joy,
+	Oh, tidings of comfort and joy.
+
+The bearings on the drum are gone,
+The disk is wobbling, too.
+We've found a bug in Lisp, and Algol
+Can't tell false from true.
+And now we find that we can't get
+At Berkeley's 4.2.
+
+	(chorus)
