@@ -1,16 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAGGP6r28967
-	for <linux-lvm@redhat.com>; Tue, 16 Nov 2004 11:25:06 -0500
-Received: from www.austinlogistics.com (mail.austinlogistics.com
-	[69.150.203.234])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAGGOxFp010727
-	for <linux-lvm@redhat.com>; Tue, 16 Nov 2004 11:24:59 -0500
-In-Reply-To: <20041116155839.GJ24229@agk.surrey.redhat.com>
-Subject: Re: [linux-lvm] Expanding a PV on a hardware RAID
-Message-ID: <OF21EA6AE8.44EC5B87-ON86256F4E.0058D71B-86256F4E.005A2AAB@austinlogistics.com>
-From: Jetkins@austinlogistics.com
-Date: Tue, 16 Nov 2004 10:24:52 -0600
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAH0U4r10852
+	for <linux-lvm@redhat.com>; Tue, 16 Nov 2004 19:30:04 -0500
+Received: from sydney.aussiehosts.com ([202.60.70.115])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAH0TvMg014161
+	for <linux-lvm@redhat.com>; Tue, 16 Nov 2004 19:29:57 -0500
+Message-ID: <1100647794.419a8d72734bb@webmail.slackguy.net>
+Date: Wed, 17 Nov 2004 09:29:54 +1000
+From: adam@slackguy.net
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Software RAID 5 Resizing and LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,48 +21,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
+I've been playing around with adding disks to a software RAID 5 array, and it
+works fine.  However, i have LVM running over the top of that and i can't
+figure out how to enlarge the Phisical Volume to encompass the newly added
+capacity on the raid device.  Has anyone achieved this at all?
 
-linux-lvm-bounces@redhat.com wrote on 11/16/2004 09:58:39 AM:
+Am I barking up the wrong tree here? If so, how would you go about adding drives
+to a software RAID 5 device, and actually adding the new space to the filesystem
+inside the RAID device?
 
-> On Mon, Nov 15, 2004 at 12:47:28PM -0600, Jetkins@austinlogistics.com
-wrote:
-> > any way to expand a PV, and therein lies my problem.  It seems that
-without
-> > a pvexpand or pvresize command, I have no way of utilizing the
-additional
-> > space.
->
-> LVM1 or LVM2?
+Thanks in advance
 
-lvm-1.0.8-5, as supplied with RH ES3/AS
+Adam
 
-> Using LVM2 tools you can pvexpand (offline) by backing up the metadata,
-> editing the PV size in it (pe_count), then restoring it.
->   new pe_count =
->     floor((new_disk_size_in_512_byte_sectors - pe_start) / extent_size)
-
-By inference, there's no way with LVM1?
-
-> > 2)  Would I have been better off creating a partition table and
-> > pvcreate'ing on /dev/sdb1instead of pvcreate'ing the entire /dev/sdb
-disk
-> > initially, given that I could now have created a new partition on the
-extra
-> > space and pvreate'd a new PV alongside the old?
->
-> That's the supported way.
-
-Bummer that the HOWTO at tldp.org makes no mention of the full-volume
-method being unsupported, or even of a preference for one method over the
-other. :(
-
-Thanks.  I guess I'll start pulling these drives out of the array; my users
-are screaming for the extra space.
-
-
-Jon Etkins
-IT Administration & Support
-Austin Logistics, Inc
+----------------------------------------------------------------
+This message was sent using IMP, the Internet Messaging Program.
