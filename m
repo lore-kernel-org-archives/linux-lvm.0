@@ -1,10 +1,10 @@
-Date: Fri, 24 Aug 2001 08:45:47 +0100
-Subject: Re: [linux-lvm] Pvmove question
-Message-ID: <20010824084547.C293@btconnect.com>
-References: <B45465FD9C23D21193E90000F8D0F3DF0178FD13@mailsrv.linkvest.com>
+Date: Fri, 24 Aug 2001 08:46:49 +0100
+Subject: Re: [linux-lvm] extending striped lv
+Message-ID: <20010824084649.D293@btconnect.com>
+References: <20010823232349.9882.qmail@web20306.mail.yahoo.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF0178FD13@mailsrv.linkvest.com>; from Jean-Eric.Cuendet@linkvest.com on Fri, Aug 24, 2001 at 12:31:18AM +0200
+In-Reply-To: <20010823232349.9882.qmail@web20306.mail.yahoo.com>; from bwlang@yahoo.com on Thu, Aug 23, 2001 at 04:23:49PM -0700
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,25 +21,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Aug 24, 2001 at 12:31:18AM +0200, Jean-Eric Cuendet wrote:
-> 
-> Hi,
-> I have a pvmove question:
-> In the man page, it's said to be careful with pvmove if you use it while
-> LVM is in use.
-> I don't really understand what is dangerous and what is safe...
+On Thu, Aug 23, 2001 at 04:23:49PM -0700, Brad Langhorst wrote:
+> I read in the Howto that it is not possible to add a
+> disk to a striped LV.  I assume this is being worked
+> on - is that correct? 
 
-pvmove on a mounted (or otherwise in use) LV might cause curruption of
-your data.
-
-> 
-> Could you give me details? Is it safe to do if no LV is mounted?
-
-y
-
- Or if
-> vgchange -an is run?
-
-y
+Not actively ATM.
 
 - Joe
