@@ -1,12 +1,7 @@
-Subject: Re: [linux-lvm] Logical Volume max-size?
-References: <20011117223754.B12510@auctionwatch.com>
-	<003801c16ffd$757c3d50$fc00a8c0@xp>
-	<20011117231120.C12510@auctionwatch.com>
-	<20011118071414.GA20041@befunk.com>
-From: Jason L Tibbitts III <tibbs@math.uh.edu>
-In-Reply-To: Benjamin Reed's message of "Sun, 18 Nov 2001 02:14:14 -0500"
-Message-ID: <ufawv0noqdv.fsf@epithumia.math.uh.edu>
+Message-ID: <20011119032207.97984.qmail@web12306.mail.yahoo.com>
+From: Lars Kellogg-Stedman <thelars@yahoo.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] Recovering a volume after OS upgrade (lost /etc/lvm*)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,17 +12,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 18 12:59:02 2001
+Date: Sun Nov 18 21:20:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "BR" == Benjamin Reed <ranger@befunk.com> writes:
+I just upgraded a system to RedHat 7.2 (+ XFS from SGI) (lvm-1.0.1RC4),
+and I'm trying to mount a LVM-based logical volume created using LVM
+0.9mumble.  The volume group consisted of a single PV on opt of a
+software RAID5 device.
 
-BR> Yup, love mine.  Too bad they've stopped supporting them.  :(
+pvscan says:
 
-This is untrue.  They never intended to stop supporting them, and
-recently they have reversed their decision to stop selling them.
+  pvscan -- reading all physical volumes (this may take a while...)
+  pvscan -- WARNING: physical volume "/dev/sda" belongs to a meta
+device
+  pvscan -- inactive PV "/dev/md0"  is associated to an unknown VG (run
+vgscan)
+  pvscan -- total: 2 [8.48 GB] / in use: 2 [8.48 GB] / in no VG: 0 [0]
 
- - J<
+And pvdisplay says:
+
+  --- Physical volume ---
+  PV Name               /dev/md0
+  VG Name               vg0
+  PV Size               8.48 GB / NOT usable 2.75 MB [LVM: 129.00 KB]
+  PV#                   1
+  PV Status             NOT available
+  Allocatable           yes (but full)
+  Cur LV                1
+  PE Size (KByte)       4096
+  Total PE              2169
+  Free PE               0
+  Allocated PE          2169
+  PV UUID               HHv1Tm-79Hx-uk4m-caqb-QUA5-8WGF-0yUe4Q
+
+Which looks great.  But I can't for the life of me figure out how to
+turn this back into a valid volume group.  Vgscan doesn't pick up this
+device:
+
+  vgscan -- reading all physical volumes (this may take a while...)
+  vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+  vgscan -- WARNING: This program does not do a VGDA backup of your
+volume group
+
+How do I recover this volume?
+
+Thanks,
+
+-- Lars
+
+
+=====
+lars@larsshack.org
+
+__________________________________________________
+Do You Yahoo!?
+Find the one for you at Yahoo! Personals
+http://personals.yahoo.com
