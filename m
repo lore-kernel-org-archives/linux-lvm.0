@@ -1,12 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.3 available at
-    www.sistina.com
-Message-Id: <20020220010739.A4923@sistina.com>
-References: <20020219205054.A3751@sistina.com>
-    <20020219121453.B3786@connectlive.com>
+From: "Steve Wray" <steve.wray@paradise.net.nz>
+Message-Id: <NBBBKLKHMJHIJLHOGAOJKEOOJEAA.steve.wray@paradise.net.nz>
 MIME-Version: 1.0
-In-Reply-To: <20020219121453.B3786@connectlive.com>; from
-    tim@connectlive.com on Tue, Feb 19, 2002 at 12:14:53PM -0800
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20020219205054.A3751@sistina.com>
+Subject: [linux-lvm] lvm and 'poor mans raid' on heterogenous hard drives!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,97 +15,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 19 18:11:03 2002
+Date: Tue Feb 19 20:54:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Feb 19, 2002 at 12:14:53PM -0800, tim@connectlive.com wrote:
-> 
-> Awesome!  The new vgchange behavior is precisely what I needed to save
-> my ass from the apocalyptic corruption problems between bad-VM and
-> snapshots.. very happy to see this in release.
+Hmmmm,
+Ok so I have 4 hard drives of very varying capacity
+(20G,12G,5G,4G)
+I have an off-board IDE controller (Promise 66)
 
-Happy to hear that it helps someone in these hard VM days ;-)
+I think 'maybe I can take advantage of the IDE
+system and put a drive on each master and stripe them.'
+A hardware RAID card would be suboptimal because
+(as I understand it) the striped volume could
+only be as big as the smallest drive.
 
-Kind reagrds,
-Heinz    -- The LVM Guy --
+So, I set up the drives as;
+hda = 20G
+	hda1 = 64M and is /boot
+	hda2 = 1G
+hdc = 12G
+	hdc1 = 1G
+hde = 5G
+	hde1 = 1G
+hdg = 4G
+	hdg1 = 1G
 
-> 
-> 
-> Quoth Heinz J . Mauelshagen:
-> > 
-> > *** ANNOUNCEMENT *** LVM 1.0.3 available at www.sistina.com
-> > 
-> > Hi all,
-> > 
-> > LVM 1.0.3 supports both version 1 and 2 of the metadata.
-> > 
-> > There's *no* need to run any metadata update tools.
-> > 
-> > A tarball is available now at
-> > 
-> >    <http://www.sistina.com/>
-> > 
-> > for download (Follow the "LVM 1.0" link).
-> > 
-> > 
-> > Changes to LVM 1.0.2 include:
-> > 
-> > o vgcfgrestore supports restores to different sized physical volumes;
-> >   useful in cases where a replacement disk is a little bit to large or
-> >   for test purposes; option enhancements; physical volume UUID restore fix
-> > 
-> > o vgchange removes failed snapshots and activates the volume group rather
-> >   than failing on it. Optionally forces device number changes in cases
-> >   where it finds clashes so that the volume group can be activated
-> > 
-> > o vgexport exports volume groups not showing up in /etc/lvmtab*
-> > 
-> > o vgscan can drop all snapshots or those in a particular volume group now
-> > 
-> > o "pvmove -i" ignores read errors while moving and supports moves in
-> >   inactive volume groups
-> > 
-> > o > 1 TB fixes for physical and logical volumes (2 TB limitation
-> >   on 2.4 persists)
-> > 
-> > o more...
-> > 
-> > 
-> > See the CHANGELOG file contained in the tarball for further information.
-> > 
-> > Feed back LVM related information to <linux-lvm@sistina.com>.
-> > 
-> > Thanks a lot for your support of LVM.
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> -- 
->      Don't hate me because I'm beautiful.
->      Hate me because I run your IT department.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+The other partitions are set up for various other volume
+groups and non LVM system partitions.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+hda2, hdc1, hde1, hdg1 are added to a VG 'fast'
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+The other LVM partitions on hdc-g are in a volume group that
+doesn't see much traffic, just storage.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+I make logical volumes on fast striped across 4 drives.
+So thats 4 partitions at the beginning of the drives,
+with volumes striped across them.
+
+I expected some performance improvements.
+
+So I get the iozone benchmark and start running it on the system.
+I compare performance of striped volumes with performance of a volume
+purely on hda.
+
+Interestingly, the performance improvement is not dramatic,
+I expected better. The main improvement seems to be that the
+striped volumes do better with larger file sizes and as file size
+increases the striped volume keeps its performance up better.
+
+I'm a newbie at this benchmarking lark, so if anyone wants
+the excel spreadsheets generated from iozone just ask,
+I'd like a second opinion! There are some strange things,
+like when file size gets above 16M performance drops dramatically
+regardless of striped or linear volumes... Maybe its something
+to do with extents?
