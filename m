@@ -1,11 +1,8 @@
-From: Andrew Morton <akpm@osdl.org>
-Message-Id: <20031230034239.27950054.akpm@osdl.org>
-In-Reply-To: <20031229130055.GA30647@cistron.nl>
-References: <20031229130055.GA30647@cistron.nl>
+From: Jake Roersma <jacob.roersma@priority-health.com>
+Message-Id: <1072728458.1600.14.camel@phobos.internal.priority-heatlh.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: System hangs after echo value >
- /sys/block/dm-0/queue/nr_requests
+Subject: [linux-lvm] Interesting LVM1 to LVM2 migration issues.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,42 +13,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 30 09:32:20 2003
+Date: Tue Dec 30 09:33:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Miquel van Smoorenburg <miquels@cistron.nl>
-Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, Nick Piggin <piggin@cyberone.com.au>, Jens Axboe <axboe@suse.de>
+To: linux-lvm@sistina.com
 
-Miquel van Smoorenburg <miquels@cistron.nl> wrote:
->
-> If you echo a value (any value; for example the default 128) to
-> /sys/block/dm-0/queue/nr_requests the shell you are in hangs.
-> After about 5 seconds, the whole system hangs 100%.
+I ran into an interesting problem after I upgraded from LVM1 to LVM2
+that I would like to share.  My setup when running LVM1 with linux
+kernel 2.4.20 consisted of 6 logical volumes (lv_home, lv_opt, lv_use,
+lv_var, lv_var_snap, lv_var_copy) all in the same volume group called
+lvm00.  lv_var_snap was a test LV that I setup to snapshot lv_var, and
+lv_var_copy was a seperate LV that I used to copy lv_var with, all of
+which were the same size.  
 
-hm, nice.  It does the same thing for /sys/block/md0/queue/nr-requests.
+After I migrated to LVM2 I found that with device mapper it was seeing
+the original LV lv_var as lv_var-real, which is only the begining of my
+troubles. After fixing fstab to point to the new naming of my lv_var, I
+decided since I was not using lv_var_snap and lv_var_copy that I should
+removed them.  After removing lv_var_snap I noticed that the device file
+for lv_var-real was gone, both in /dev/mapper and in /dev/lvm00. 
+Interestingly enough /var was still mounted and operational.  I ran
+vgscan and vgchange -a y, and that found all of my LV's but now my
+lv_var-real was renamed back to its original lv_var.  Luck for me I
+noticed this and was able to update fstab before I rebooted.
 
-With CONFIG_DEBUG_SPINLOCK enabled we go BUG in __wake_up():
+My question is, why does LVM2 feel the need to change the names of the
+logical volumes that I have created?  I feel perfectly confident in my
+naming abilities :)..  Also, why after deleting a snapshot of an LV, was
+the original LV device file (although with its new name) removed with
+it?  And, after I ran vgscan and vgchange -a y, why did LVM2 feel the
+need to change the name of my LV back to its original name? Thanks for
+the help.
 
-Program received signal SIGTRAP, Trace/breakpoint trap.
-__wake_up (q=0xcf299e90, mode=3, nr_exclusive=1) at include/asm/spinlock.h:137
-137                     BUG();
-(gdb) bt
-#0  __wake_up (q=0xcf299e90, mode=3, nr_exclusive=1) at include/asm/spinlock.h:137
-#1  0xc02cc847 in queue_requests_store (q=0xcf299df8, page=0xe <Address 0xe out of bounds>, count=14)
-    at drivers/block/ll_rw_blk.c:2843
-#2  0xc02cc907 in queue_attr_store (kobj=0xcf299f68, attr=0xe, page=0xe <Address 0xe out of bounds>, 
-    length=14) at drivers/block/ll_rw_blk.c:2892
-#3  0xc01aa84f in flush_write_buffer (file=0xe, buffer=0xc0456100, count=14) at fs/sysfs/file.c:205
-#4  0xc01aa8ac in sysfs_write_file (file=0xc0493550, buf=0xe <Address 0xe out of bounds>, count=2, 
-    ppos=0xc851cf84) at fs/sysfs/file.c:233
-#5  0xc016f458 in vfs_write (file=0xc0493550, buf=0x80b2d00 "128\n", count=4, pos=0xc851cf84)
-    at fs/read_write.c:257
-#6  0xc016f55e in sys_write (fd=14, buf=0xe <Address 0xe out of bounds>, count=14) at fs/read_write.c:293
+- Jake
 
 
-Where queue_requests_store() does wake_up(&rl->wait[READ]);
 
-It looks like nobody has called blk_init_queue() for this queue and the
-waitqueue head is uninitialised.
 
-No md was in use on this machine: it was simply enabled in kernel config.
+
+
+** ** **  PRIVILEGED AND CONFIDENTIAL  ** ** **
+This email transmission contains privileged and confidential information 
+intended only for the use of the individual or entity named above.  Any 
+unauthorized review, use, disclosure or distribution is prohibited and 
+may be a violation of law.  If you are not the intended recipient or a 
+person responsible for delivering this message to an intended recipient, 
+please delete the email and immediately notify the sender via the email 
+return address or mailto:postmaster@priority-health.com.  Thank you.
