@@ -1,10 +1,8 @@
-Date: Thu, 20 Sep 2001 18:53:03 -0400 (EDT)
-From: Chris Harwell <charwell@digitalpulp.com>
-Subject: upgrade success :> , Re: [linux-lvm] *** ANNOUNCEMENT *** LVM
- 1.0.1-rc2 available at www.sistina.com
-In-Reply-To: <20010830154448.A28281@sistina.com>
-Message-ID: <Pine.LNX.4.33.0109201850100.8960-100000@clapper.digitalpulp.com>
-MIME-Version: 1.0
+Date: Thu, 20 Sep 2001 23:06:15 -0400
+Message-Id: <200109202306.AA1743978726@netcentricnj.com>
+Mime-Version: 1.0
+From: "tim" <tdwebste@netcentricnj.com>
+Subject: [linux-lvm] volume group not found????
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,20 +14,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-hi,
+It seems I have a similar problem to poor Alexander Bruns.
+This whole this is giving me big head heack.
 
-lvm is great! :>
+Luckily I only have /usr and /var as logical volumes. So I am still able to boot.
 
-i just upgraded from lvm-0.9.1_beta2-1 Linux 2.4.0 on Redhat 7.0
- to lvm-1_0_1rc2-1 and Linux 2.4.9 and all the data is still there :>
+I created logical volume partitions /dev/sda4 /dev/sdb5
+Then created stripped lvm's lv_usr and lv_var
 
-thanks guys!
+Reboot several times and everything worked well.
+
+I see /dev/system/lv_usr, /dev/system/lv_var, /etc/lvmconf/sytem.conf
+
+However vgchange fails
+vgchange -a y 
+vgchange -- no volume groups found
 
 
--- 
-chris
-charwell@digitalpulp.com
+/proc/lvm/VGs/
+no logical volumes
+
+How can I recover?
+
+
+-tim.
