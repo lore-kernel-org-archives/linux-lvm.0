@@ -1,32 +1,64 @@
-Date: Fri, 27 Oct 2000 15:30:07 +0200
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] Size limits and kernel versions
-Message-ID: <20001027153007.A712@guldukat.muon>
-References: <OLEAJMNOEMOMMNEIMMINEEEBCBAA.pswartz@digitalrom.com>
-Mime-Version: 1.0
-In-Reply-To: <OLEAJMNOEMOMMNEIMMINEEEBCBAA.pswartz@digitalrom.com>; from pswartz@digitalrom.com on Thu, Oct 26, 2000 at 02:04:39PM -0500
+Message-ID: <39F9ADBB.B938E21A@imim.es>
+Date: Fri, 27 Oct 2000 18:30:51 +0200
+From: Xavi Fustero <xfustero@imim.es>
+MIME-Version: 1.0
+Subject: [linux-lvm] Problems compiling LVM
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: LVM group <linux-lvm@msede.com>
 
-On Thu, 26.10.00, Patrick Swartz <pswartz@digitalrom.com> wrote:
-> 
-> Will I loose the data that is on both? just one?
-> 
+I have Red Hat 6.2 with kernel 2.2.17 patched with mosix. I downloaded:
+lvm_0.8-pre02.10.1999.tar.gz  and  patch-2.2.13-LVM-0.8i.gz
 
-I'd say you have to wipe one array, create a physical volume and add it
-to a volume group. Then you might want to create logical volumes and
-copy your data from the other array to these LV's, wipe the second array
-and add it to your volume group.
+I patched the kernel and it went right. Mosix still works properly and I
+can load lvm modules.
+However, I can not compile the LVM application. I try to understand and
+modify the makefile but I did not success. I report my error messages to
+see if anybody can help me because I do not see the light !!!!
 
-good luck,
+>make
 
-Nils
+make[1]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools'
+make[2]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
+make[3]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
+cc -c -pipe -Wall -I/root/src/LVM/0.8-pre02.10.1999 /tools
+-I/root/src/LVM/0.8-pre02.10.1999 /tools/lib
+-I/root/src/LVM/0.8-pre02.10.1999 /kernel -D__KERNEL__ -O2 -DDEBUG -o
+basename.o basename.c
+cc: cannot specify -o with -c or -S and multiple compilations
+make[3]: *** [basename.o] Error 1
+make[3]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
+make[2]: *** [all] Error 2
+make[2]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/lib'
+make[2]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
 
--- 
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >  If we all work hard, we can turn this company  <
- >      around 360 degrees -- gruntbert(LOTD)      <
+make[3]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
+
+make[3]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
+make[2]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools/man8'
+make[2]: Entering directory `/root/src/LVM/0.8-pre02.10.1999/tools'
+cc -c -pipe -Wall -I/root/src/LVM/0.8-pre02.10.1999 /tools
+-I/root/src/LVM/0.8-pre02.10.1999 /tools/lib
+-I/root/src/LVM/0.8-pre02.10.1999 /kernel -D__KERNEL__ -O2 -DDEBUG -o
+e2fsadm.o e2fsadm.c
+cc: cannot specify -o with -c or -S and multiple compilations
+make[2]: *** [e2fsadm.o] Error 1
+make[2]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools'
+make[1]: *** [all] Error 2
+make[1]: Leaving directory `/root/src/LVM/0.8-pre02.10.1999/tools'
+make: *** [all] Error 2
+
+I do not see how to fix it !!!!! If anybody can help me I would
+appreciate his/her help so much.
+Thanks in advance,
+yours sincerely,
+Xavi !
+
+--
+Xavi Fustero Benavent
+Institut Municipal d'Investigacio Medica (IMIM)
+Departament Genome Informatics
+Tel.: +34-93-221 10 09    Ext: 2016
