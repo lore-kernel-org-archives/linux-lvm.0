@@ -1,90 +1,97 @@
-From: Steve_J_Brueggeman@notes.seagate.com
-Message-ID: <88256731.00531D96.00@sv-gw1.stsv.seagate.com>
-Date: Thu, 11 Mar 1999 09:08:49 -0600
+Message-Id: <199903111527.QAA08350@e35.msede.com>
+Date: Thu, 11 Mar 1999 10:27:02 -0500
+From: "Verloove, Olivier" <olivier_verloove@merck.com>
 Subject: RE: [linux-lvm] Bonehead problem
-Mime-Version: 1.0
-Content-Disposition: inline
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
+Yes... indeed, creating the device file solved the problem.
 
-It sounds to me like you've got old modules hanging around as left-overs.
-Did you build LVM 0.5 with the same kernel version? (2.2.2 presumably).  If
-so, did you clear out your old modules directory before you rebuilt the
-kernel with LVM 0.6?  Are you using modversions when you build the
-kernel/modules?
+Now, I ran vgscan and it hanged the system :-(
+Here's what I found in the syslog:
 
-I've also noticed that vgscan will cause the kernel will complain about not
-being able to find some block devices that I have not compiled into
-modules, or the kernel.  This doesn't sound like your problem though.
+Mar 11 16:07:17 cobalt modprobe: can't locate module char-major-109
+Mar 11 16:07:20 cobalt kernel: LVM version 0.6  by Heinz Mauelshagen
+(26/02/199
+9)
+Mar 11 16:07:20 cobalt kernel: lvm -- Module successfully initialized
+Mar 11 16:07:24 cobalt kernel: cdrom: open failed.
+Mar 11 16:07:24 cobalt modprobe: can't locate module block-major-22
+Mar 11 16:07:24 cobalt last message repeated 5 times
+Mar 11 16:07:24 cobalt modprobe: can't locate module block-major-33
+Mar 11 16:07:24 cobalt last message repeated 5 times
+Mar 11 16:07:24 cobalt modprobe: can't locate module block-major-34
+Mar 11 16:07:24 cobalt last message repeated 5 times
+Mar 11 16:07:24 cobalt kernel: VFS: grow_buffers: size = 16
+Mar 11 16:07:25 cobalt last message repeated 2613 times
+Mar 11 16:07:25 cobalt kernel: Kernel panic: Free list corrupted Mar 11
+16:07:17 cobalt modprobe: can't locate module char-major-109
+Mar 11 16:07:20 cobalt kernel: LVM version 0.6  by Heinz Mauelshagen
+(26/02/199
+9)
+Mar 11 16:07:20 cobalt kernel: lvm -- Module successfully initialized
+Mar 11 16:07:24 cobalt kernel: cdrom: open failed.
+Mar 11 16:07:24 cobalt modprobe: can't locate module block-major-22
+Mar 11 16:07:24 cobalt last message repeated 5 times
+Mar 11 16:07:24 cobalt modprobe: can't locate module block-major-33
+Mar 11 16:07:24 cobalt last message repeated 5 times
+Mar 11 16:07:24 cobalt modprobe: can't locate module block-major-34
+Mar 11 16:07:24 cobalt last message repeated 5 times
+Mar 11 16:07:24 cobalt kernel: VFS: grow_buffers: size = 16
+Mar 11 16:07:25 cobalt last message repeated 2613 times
+Mar 11 16:07:25 cobalt kernel: Kernel panic: Free list corrupted 
 
-I've also had a problem when vgscan ran, because of a bug in the md driver.
-I run RedHat 5.2, and the default installation created /dev/md0 through
-/dev/md15, but the default md driver is compiled to handle only 4 md
-devices (#define MAX_MD_DEV  4), and because of a bug in the md_open()
-(uses [minor] without checking minor is less than MAX_MD_DEV), my kernel
-would crash when vgscan tried to check /dev/md6 or so.  I just rm'd
-/dev/md[4-9] /dev/md1[0-5] to not cause the problem.   I don't think this
-is your problem either, but thought you might like to know.
+I had a look in major.h and 22, 33, 34 corresponds to IDE1_MAJOR, IDE2_MAJOR
+and IDE3_MAJOR ?
 
-Steve Brueggeman
-(All opinions are my own, and in no way reflect those of my employer).
-(<--legal-crud)
+Any idea.
 
-
-
-
-
-"Verloove, Olivier" <olivier_verloove@merck.com> on 03/11/99 07:40:42 AM
-
-To:   linux-lvm@msede.com
-cc:    (bcc: Steve J Brueggeman)
-Subject:  RE: [linux-lvm] Bonehead problem
-
-
-
-
-I have the same problem (Linux 2.2.2 + LVM 0.6).
-With or without lvm module loaded, I get:
-     vgscan -- invalid i/o protocol version
-
-Is there another module which should be loaded at the same time ?
-lsmod gives me:
-     lvm  26960     0  (unused)
+To summarize, this is a new install (no VG created) of Linux 2.2.2 (without
+devfs) + LVM 0.6.
+I have MD compiled in the kernel ... but no MD device created.
 
 Thanks.
-Olivier Verloove
 
+Olivier
 > ----------
-> From:
-> ishamael@erroneous.demon.co.uk[SMTP:ishamael@erroneous.demon.co.uk]
-> Sent:   Thursday, 11 Mar, 1999 1:25
-> To:     linux-lvm@msede.com
-> Subject:     Re: [linux-lvm] Bonehead problem
->
-> Shawn Leas wrote:
-> >When I upgraded to v0.6 from v0.5alpha, I end up having
-> >to keep the old v0.5 version of vgscan around.
-> >
-> >Reason? Well, this is WEIRD... v0.6 vgscan always errs out
-> >with 96, or, invalid IO/protocol version. Then, I use v0.5
-> >vgscan, and the same happens. Then, I use v0.6 vgscan again,
-> >and IT WORKED!
-> >
-> >What the hell is going on?
->
-> Did you build lvm as a module? _insmod lvm_ worked for me, after several
-> hours
-> of profound confusion.
->
-> -michael
-> --
-> St michael (mainly) Erroneous   http://www.erroneous.demon.co.uk/
-> "It's ok to be bitter and twisted,
->  Provided you don't mind leaving a nasty taste in your own mouth."
->
->
+> From: 	Klaus Strebel[SMTP:stb@ep-ag.com]
+> Reply To: 	antivirus@ep-ag.com
+> Sent: 	Thursday, 11 Mar, 1999 15:56
+> To: 	Verloove, Olivier
+> Cc: 	linux-lvm@msede.com
+> Subject: 	Re: [linux-lvm] Bonehead problem
+> 
+> Hi Olivier,
+> 
+> "Verloove, Olivier" wrote:
+> > 
+> > I have the same problem (Linux 2.2.2 + LVM 0.6).
+> > With or without lvm module loaded, I get:
+> >         vgscan -- invalid i/o protocol version
+> > 
+> > Is there another module which should be loaded at the same time ?
+> > lsmod gives me:
+> >         lvm     26960   0  (unused)
+> Do you have the char-device /dev/lvm (Major 109, Minor 0) ? The LVM-0.5
+> module
+> seems to create this device, if it doesn't exist. The LVM-0.6 seems not to
+> do
+> this, i use devfs and i have to create the device each time before i load
+> the
+> module.
+> 
+> Cheers
+> Klaus
+> -- 
+> Klaus Strebel
+> stb@ep-ag.com
+> EIGNER + PARTNER AG   - The Engineering Warehouse Company -
+> <http://www.ep-ag.com>
+> -----------------------------------------------------------------------
+> In Heaven there will be no DOS, no Intel, and above all, no Bill Gates.
+> 
