@@ -1,11 +1,12 @@
-Return-Path: <vidalrod@informatik.tu-muenchen.de>
-Message-ID: <3AE6BA27.1FC18A3C@in.tum.de>
-Date: Wed, 25 Apr 2001 13:51:03 +0200
-From: David Vidal Rodriguez <vidalrod@informatik.tu-muenchen.de>
+Return-Path: <silva@athenea.ort.edu.uy>
+From: Ernesto Silva <silva@athenea.ort.edu.uy>
+Subject: RE: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
+Date: Wed, 25 Apr 2001 10:11:10 -0300
+References: <1D15D20781EB404E9EA6129359E0243909784E@sp1email.optiglobe.com.br> <01042415450706.07748@pc-silva>
+In-Reply-To: <01042415450706.07748@pc-silva>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
-References: <200104022100.f32L0jL13101@webber.adilger.int> <01040307345000.00915@darkvader>
-Content-Transfer-Encoding: 7bit
+Message-Id: <01042510300407.07748@pc-silva>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,57 +18,128 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Oh yes, this procedure has helped me too! I had the same problem and now I can
-use my VG  with no single byte being lost. But from now on I'll start making
-backups of my data... :) Thanks!
+Well, things seems to be in the right way, I let it compile with all the
+warning messages and it finished. I ran vgscan, pvcreate, etc. etc. and mad=
+e a
+ext2 file system, it's working fine.
 
-> > OK, I have figured out why vgcfgrestore doesn't work properly with broken
-> > UUIDs.  It is because vgcfgrestore only restores the backup VGDA data to
-> > each disk separately.  This means it is not possible to have consistent
-> > UUIDs generated for all PVs in a VG when vgcfgrestore is run.
-> >
-> > You can try the following (experimental) procedure to fix the UUIDs:
-> >
-> > Check each PV with "pvdata -PP /dev/hdX" to ensure it has a valid
-> > UUID assigned.  Also get the PV numbers (starting with 1) for each of
-> > the PVs.  Finally, check the pv_uuidlist_on_disk.base for each PV.
-> > It will normally be 6144, but it does not have to be.
-> >
-> > for each PV (in PV# order)
-> >     dd if=/dev/hdX bs=1 skip=44 count=128 >> /tmp/uuids
-> >
-> > This should create a file /tmp/uuids which has all of the PV UUIDs in it.
-> > Make sure there are as many UUIDs in the file ("od -a /tmp/uuids" is good)
-> > as you have PVs (8 in your case).
-> >
-> > Now, we want to write the UUID list back to the PVs so vgscan is happy:
-> >
-> > for each PV (in any order)
-> >     dd if=/tmp/uuids of=/dev/hdX bs=1 seek=<pv_uuidlist_on_disk.base for
-> > hdX>
->
-> Unfortunately this doesn't work. I get on of=/dev/hda2 an invalid argument.
-> Can you write to a partition with dd ? Or has it to be a disk such as
-> /dev/hda ?
->
-> >
-> > example:
-> >     dd if=/tmp/uuids of=/dev/hda2 bs=1 seek=6144
-> >
-> > Now vgscan should be able to detect all of the disks and work properly.
-> >
-> > Cheers, Andreas
->
+Late last night I recompile the kernel for other reasons (2.4.3) and I saw a
+lot of similar warning, the first of it I believe it was in fd.c or cdrom.c,
+but the kernel is working fine.
+
+in short:
+	Kernel 2.4.3 (the last I found in www.kernel.org)
+	lvm 0.9.1 beta 7 (tarball)
+	gcc version 2.96
+	Distribution: RedHat 7.0 (I prefer SuSE but my boss doesn't)
+	Compiling: lots of warnings but everythig is working.
+
+Lewis or Michael
+	you was right, there's a typo in my writing, it is "-o debug.o"
+
+Next:
+	I'll test it in the following days, I'm waiting for 2 new scsi disks
+which I'm going to add and extend the vg or make a new one. I'll let you kn=
+ow
+the results.
+
+Thanks to you all ppl, I think discussion lists are the best way to get sup=
+port
+on any thing, it's the only way you can learn something while you fix it.
+
+On Tue, 24 Apr 2001, you wrote:
+> Sorry HugZ,
+> 	I just did it but I'm still getting the same garbage.....
+>=20
+> 	Does anyone have another idea????
+>=20
+> 	WOUUW, I let it compile, with all the warnings and it worked, I just
+> run vgscan and it found something.
+> 	I'll let you know what happends next......
+>=20
+> Ernesto.
+>=20
+>=20
+> On Tue, 24 Apr 2001, Paulo Fessel wrote:
+> >=20
+> > I've run into problems trying to compile 2.4.3 on Mandrake 7.2 with 2.4=
+.3
+> > (Linus) and 2.4.3-8mdk (Mandrake customized kernel). So I've copied the
+> > files from lvm "kernel" directory to their proper places and everything
+> > worked out smoothly. Try to do the same thing...
+> >=20
+> > HugZ
+> >=20
+> > Paulo Afonso Graner Fessel
+> > Suporte de Sistemas
+> > OptiGlobe Telecom, Ltda. - The Internet Lives Here
+> > R.Bento Branco de Andrade Filho, 621
+> > S=EF=BF=BDo Paulo, SP, 04757-000
+> > Brasil
+> > http://www.optiglobe.com.br
+> >=20
+> > Tel.:+55 11 3365-4478
+> > Fax:+55 11 3365-4445
+> > Cel.:+55 11 9198-9985
+> > E-mail: paulo_fessel@optiglobe.com.br
+> >=20
+> >=20
+> >=20
+> > > -----Original Message-----
+> > > From: Ernesto Silva [mailto:silva@athenea.ort.edu.uy]
+> > > Sent: Tuesday, April 24, 2001 12:20 PM
+> > > To: linux-lvm@sistina.com
+> > > Subject: [linux-lvm] K=3D2.4.3 - LVM0.9.1.B7 compiling problem.
+> > >=20
+> > >=20
+> > > Hi,
+> > >=20
+> > > 	In order to make things right I downloaded the 2.4.3 kernel and
+> > > compiled it (i386).
+> > >=20
+> > > 	With the new kernel running (lvm-mod load ok) I'm=20
+> > > trying to compile lvm
+> > > tools, but there are lots of warinigs, all the same thing,=20
+> > > the first of them is:
+> > > -----------------------------------------------------------
+> > > gcc -c -pipe -g -O2 -Wall -DDEBUG -I ../../tools/lib -I=20
+> > > ../../tools - debug.o
+> > > debug.c
+> > > In file included from ../../tools/lib/liblvm.h:97
+> > > 		from basename.c:34
+> > > ../../tools/lib/lvm_log.h:47:59: warning: nothing can be=20
+> > > pasted after this token
+> > > ../../tools/lib/lvm_log.h:48:59: warning: nothing can be=20
+> > > pasted after this token
+> > > ../../tools/lib/lvm_log.h:49:59: warning: nothing can be=20
+> > > pasted after this token
+> > > ../../tools/lib/lvm_log.h:52:39: warning: nothing can be=20
+> > > pasted after this token
+> > > gasename.c:41:69: warning: pasting would not give a valid=20
+> > > preprocessing token
+> > > gasename.c:59:68: warning: pasting would not give a valid=20
+> > > preprocessing token
+> > > ----------------------------------------------------------
+> > >  This messages repeats several times.
+> > >=20
+> > > Does anyone had a problem like this before???
+> > >=20
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > >=20
+> >=20
+>=20
+> ----------------------------------------
+> Content-Type: text/html; name=3D"unnamed"
+> Content-Transfer-Encoding: quoted-printable
+> Content-Description:=20
+> ----------------------------------------
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
---
-  ------------------------------------------------------------------------
- David Vidal R. (vidalrod@in.tum.de)
- http://dvr.ismad.com
- "Ein Computer ohne Windows ist wie ein Fisch ohne Fahrrad."
