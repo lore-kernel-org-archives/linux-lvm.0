@@ -1,9 +1,10 @@
-Message-Id: <200112121228.fBCCSGC18255@mailgate5.cinetic.de>
+Message-Id: <200112121346.fBCDkNQ18525@lewis.abi.tconline.net>
+From: Lewis Bergman <lbergman@abi.tconline.net>
+Subject: Re: [linux-lvm] reinstall, import, export question
+References: <NBBBKLKHMJHIJLHOGAOJKEKDJCAA.steve.wray@the.net.nz>
+In-Reply-To: <NBBBKLKHMJHIJLHOGAOJKEKDJCAA.steve.wray@the.net.nz>
 MIME-Version: 1.0
-From: <gunther.kuhlmann@web.de>
-Subject: Re: [linux-lvm] pvmove killed vg
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,166 +15,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 12 06:26:07 2001
+Date: Wed Dec 12 07:46:02 2001
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-linux-lvm@sistina.com schrieb am 12.12.01:
+> I want to be able to simply reinstall the system
+> and carry the physical volumes, and the VG's and
+> LV's they hold over to the rebuilt system.
+I just finished doing this.
+I installed a new python version from source which torched all my printing in 
+RH7. So instead of reinstalling the RPM I decided to wipe the OS and do a 
+fresh install. Here is my setup.
 
-Heinz,
+OLD:
+hda 	held "/" on ext2
+hdb	held /home, /usr, /root, /var on LVM with reiserfs
 
-thank you for your answer! I've done the pvcreate -ff on all
-pv. One came up with ...volume group "<somegarbage>" where it
-should have said volume group "vg0". So that fixed something,
-I presume.
+NEW:
+hda	holds "/" on ext3
+hdb	holds /home, /usr, /root, /var on LVM with reiserfs
 
-But how do I run the vgcfgrestore on =5Fall=5F PV=3F When I specify
-one PV, it complains it can't restore part of active volume=20
-group. When I specify all PV's, it complains please enter
-physical volume name. How do I do this=3F Does this work with
-lvm 1.0.1=3F=20
+I might miss a step but will try not to.
 
-Commands like vgdisplay complain the VG does not exist.
+1. Back up all /etc/lvm* files and dirs. (I don't think this is neccessary 
+since vgscan rebuilds them I think but I did it anyway)
+2. Install fresh OS or upgrade.
+3. Download latest kernel (I used 2.4.16). Of course you could use theirs but 
+if you are going to build a kernel get the latest stable one there is.
+4. Enable proper kernel options (in my case LVM, ext3, reiserfs)
+5. make dep clean bzImage modules modules_install
+6. Make sure you have boot disk  of old kernel.
+7. make changes to grub or lilo for new kernel
+8. reboot
+9. make dirs to mount LVM on and copy back the /etc/lvm* stuff from backup. 
+(again, may not be neccessary)
+10. Get and install the lvm utilities from Sistina
+11. run pvscan to see if the "inactive" pv is recognized
+12. run vgscan, then vgchange -a y
+13. run lvscan to make sure all went as expected
+14. mount all to the dirs you created. In my case something like:
+	mount -t reiserfs /dev/main/lvhome /mnt/lvhome
+15. scan them and read/write them to make sure you get no fs errors
+16. make sure vgscan, vgchange -a y is in startup and vgchange -a n is in 
+shutdown
+17. make changes to fstab to mount the dirs to the correct places
+18. double check above
+19. reboot
 
-As to your second suggestion: I have vg0.conf and vg0.<digit>.old
-in /etc/lvmconf. I assume you mean the first=3F
+Of course You know most all of that I am sure but it is easier for me to lay 
+it out that way. If you don't have a "dedicated" LVM disk as I do That will 
+most surely complicate things if the OS doesn't support an upgrade or install 
+of LVM. I know RH and deb don't. (the two I use) I have seen on the list that 
+suse and another do. This worked for me at least.
 
-Thanks for your input!
-
-Regards,
-
-Gunther
-
-> you need to run vgcfgrestore on *all* PVs which where in your=20
-vg0 *after*
-> running "pvcreate -ff" on them. YOu can find out which these=20
-where by
-> "vgcfgrestore -ll -n vg0 -f=20
-/etc/lvmconf/WhateverYourRecentBackupFileIs".
->=20
-> If that doesn't work a hack to activate it anyway without=20
-running vgscan is
-> to copy /etc/lvmconf/WhateverYourRecentBackupFileIs (I assume
-> /etc/lvmconf/vg0.conf.cd in your case) to /etc/lvmtab.d/vg0,
-> "echo -en 'vg0\0vg1\0' > /etc/lvmtab" and "vgchange -ay".
-> Create a dummy LV with 1 PE afterwards and your=20
-> metadata on all PVs of the VG should be ok again.
->=20
-> Remember to back /etc/lvmconf/ regularly when you change your=20
-LVM configuration!
->=20
-> Regards,
-> Heinz    -- The LVM Guy --
->=20
->=20
-> We recommend to upgrade to LVM 1.0.1 because a couple of bugs=20
-(some related to
-> pvmove) have been fixed.
-> On Tue, Dec 11, 2001 at 10:34:24PM +0100,=20
-gunther.kuhlmann@web.de wrote:
-> > Hi,
-> >=20
-> > I've got a broken lvm vg as a result of an unsuccessful pvmove
-> > command. My system is a SuSE 7.0 with kernel 2.4.4 and
-> > lvm-0.9.1=5Fbeta7-10.=20
-> >=20
-> > The vg spans several partitions on one disks, one of which I=20
-> > wanted to evacuate. I used the pvmove command with chunks of=20
-> > 32 PE (=3D 1 GB); 10 GB total. The first 8 chunks worked okay,
-> > but the 9th (pvmove -v /dev/hda8:256-287 /dev/hda10) fell over
-> > with error code 23 while moving the fifth PE. So I checked=20
-using
-> > pvdisplay that the four PE had indeed been moved. A further
-> > attempt with pvmove -v /dev/hda8:260-287 /dev/hda10 fell over=20
-as
-> > well, again error code 23. (That's error moving physical
-> > extent(s)).=20
-> >=20
-> > I then rebooted the machine which killed the complete volume
-> > group. Which in turn did not quite impress me. :-((
-> >=20
-> > During my attempts at recovering I think I did a vgscan, which
-> > found the vg "vg1" on /dev/hdb, but not the vg "vg0" on=20
-/dev/hda.
-> >=20
-> > I tried the following commands unsuccessfully:
-> > - vgcfgrestore -v -n vg0: please enter physical volume name=20
-(the
-> >   synopsys of vgcfgrestore did not state it as a mandatory=20
-> > parameter)
-> > - vgcfgrestore -v -n vg0 /dev/hda10: can't restore part of=20
-active
-> > volume grout vg0
-> > - vgcfgrestore -v -n vg0 /dev/hda{6,7,8,10}: please enter=20
-physical
-> > volume name
-> > - vgchange -a n vg0: volume group vg0 does not exist
-> > - vgchange -a y vg0: volume group vg0 does not exist
-> >=20
-> > I still have the file /etc/lvmconf/vg0.conf.cd as well as the
-> > devices /dev/vg0/lv0{0,1,2,3} and /dev/vg0/group. (And
-> > /dev/vg1/..., but that is working.)
-> >=20
-> > Any suggestions on how I can recover the data would be highly
-> > appreciated. I found a reference to a program called
-> > uuid=5Ffixer/uuid=5Feditor, but usage was discouraged. Do I have=20
-to=20
-> > try it
-> > or is there a better way=3F Does upgrading to a newer version of=20
-lvm
-> > help=3F Or do I have to update the kernel as well then=3F And I=20
-> > definately
-> > do =5Fnot=5F want to kill my other vg as well.
-> >=20
-> > Regards,
-> >=20
-> > Gunther
-> >=20
-> >=20
-> >=20
-> >=20
-> >=20
-=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
-=5F=5F=5F=5F
-> > Die sch=F6nsten Ski-Regionen der Alpen - jetzt bei Ferienklick.de
-> > http://ferienklick.de/ski/=3FPP=3D2-5-100-105-38
-> >=20
-> >=20
-> > =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at=20
-http://www.sistina.com/lvm/Pages/howto.html
->=20
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
->=20
->=20
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
->=20
-> Heinz Mauelshagen                                 Sistina=20
-Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang=20
-11
->                                                   56242=20
-Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
->=20
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
->=20
-> =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at=20
-http://www.sistina.com/lvm/Pages/howto.html=20
-
-
-=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
-Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr!=20
-Beim WEB.DE Lottoservice: http://tippen2.web.de/=3Fx=3D13
+Hope I didn't forget anything major.
+-- 
+Lewis Bergman
+Texas Communications
+4309 Maple St.
+Abilene, TX 79602-8044
+915-695-6962 ext 115
