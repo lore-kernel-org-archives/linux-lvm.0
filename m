@@ -1,11 +1,14 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104301816.MAA19335@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
-Date: Mon, 30 Apr 2001 12:16:56 -0600 (MDT)
-In-Reply-To: <20010427104702.A16169@sistina.com> from "Heinz J. Mauelshagen" at Apr 27, 2001 10:47:02 AM
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Return-Path: <blutgens@sistina.com>
+Date: Mon, 30 Apr 2001 14:17:04 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Subject: Re: [linux-lvm] Removal of PV
+Message-ID: <20010430141704.A6743@minime.sistina.com>
+References: <F29e4wk2UfxhUIBSIeS000025b8@hotmail.com> <20010420112923.A569@tykepenguin.com> <988635570.19613.10.camel@NAV-111.DSL.NAVPOINT.COM>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+In-Reply-To: <988635570.19613.10.camel@NAV-111.DSL.NAVPOINT.COM>; from raheesom@navpoint.com on Mon, Apr 30, 2001 at 08:59:30AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,25 +20,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Heinz writes:
-> I am about to implement a vgscan option in order to support the recreation
-> of the "invalid PV UUID list problem" in case a VG can't be found by vgscan
-> any more.
-> 
-> What's your opinion (Andreas?) about it?
-> 
-> Do we have too many people which can't do the lvcreate/lvremove trick
-> so that this work makes sense?
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It is surely a fix for some of the problems.  Of course, the need for the
-fix will be reduced as time goes on, so maybe a comment/#ifdef on the code
-so that it will be removed at a later date.
+On Mon, Apr 30, 2001 at 08:59:30AM -0400, Rupert Heesom wrote:
+>I'm new to LVM, and trying to get used to how to use it.
+>You mentioned taking the volume offline.  How is that done?
+>=20
 
-Cheers, Andreas
--- 
-Andreas Dilger                               Turbolinux filesystem development
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+http://www.sistina.com/lvm/doc/lvm_howto/index.html
+
+--=20
+Ben Lutgens		cell: XXX.XXX.XXXX
+Sistina Software Inc.	work: XXX.XXX.XXXX
+Mailing list admin / Punching Bag (and sorta sysadmin guy)
+http://www.sistina.com/	<--- great software=20
+http://www.gentoo.org/  <--- great distro
+Kernel panic: I have no root and I want to scream <--- perfect error message
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE67bowLxkxGgLdGQgRAhdmAKDJ0sbyIFiBdQZVWkh67cRs0E7xAACfQcyC
+edN0FTW5YNSZA3f7EFRz2hU=
+=Zh0K
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
