@@ -1,17 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j09L4Zr14456
-	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 16:04:35 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j09L4OdH002192
-	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 16:04:29 -0500
-Date: Sun, 9 Jan 2005 22:04:24 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Problem Upgrading from LVM1 to LVM2
-Message-ID: <20050109210423.GB24979@percy.comedia.it>
-References: <Pine.LNX.4.44.0501091156580.19284-100000@mars.geneseo.edu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0501091156580.19284-100000@mars.geneseo.edu>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j09LpOr21908
+	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 16:51:24 -0500
+Received: from anubis.medic.chalmers.se (anubis.medic.chalmers.se
+	[129.16.30.218])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j09LpIhR007698
+	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 16:51:19 -0500
+Received: from [193.11.254.225] (myrium.csbnet.se [193.11.254.225])
+	by anubis.medic.chalmers.se (Postfix) with ESMTP id 164FBD8B3
+	for <linux-lvm@redhat.com>; Sun,  9 Jan 2005 22:51:18 +0100 (CET)
+Message-ID: <41E1A755.6070305@dtek.chalmers.se>
+Date: Sun, 09 Jan 2005 22:51:17 +0100
+From: Daniel Roth <d00roth@dtek.chalmers.se>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Can't mount after crash
+References: <41BB808E.60108@danielroth.se>
+	<41BFC24F.6060207@danielroth.se>	<41C1D30A.6030201@danielroth.se>	<1103222964.31909.224.camel@tesuji.nac.uci.edu>	<20041221211015.GS26670@agk.surrey.redhat.com>
+	<1103665984.11479.45.camel@tesuji.nac.uci.edu>
+In-Reply-To: <1103665984.11479.45.camel@tesuji.nac.uci.edu>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,28 +29,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Jan 09, 2005 at 01:51:17PM -0500, Mark T. Valites wrote:
->I'd like to upgrade my LVM1 based machine to LVM2. I recently compiled a
->new 2.4.28 kernel and patched in the
->linux-2.4.26-rc1-devmapper-ioctl.patch patch from;
->
->ftp://sources.redhat.com/pub/dm/patches/2.4-stable/2.4.26/linux-2.4.26-rc1-devmapper-ioctl.patch
->
->A copy of my kernel config is available here:
->
->http://www.geneseo.edu/~valites/config-2.4.28-x86_mythtv-dev_mapper
->
-use only one of lvm1 or device-mapper.
 
-L.
+>I have my data back now. As a reminder, what I did was:
+>
+>On FC3's rescue disk...
+>
+>1) Do startup network interfaces
+>2) Don't try to automatically mount the filesystems - not even readonly
+>3) lvm vgchange --ignorelockingfailure -P -a y
+>4) fdisk -l, and guess which partition is which based on size: the small
+>one was /boot, and the large one was /
+>5) mkdir /mnt/boot
+>6) mount /dev/hda1 /mnt/boot
+>7) Look up the device node for the root filesystem
+>in /mnt/boot/grub/grub.conf
+>8) A first tentative step, to see if things are working: fsck -
+>n /dev/VolGroup00/LogVol00
+>9) Dive in: fsck -f -y /dev/VolGroup00/LogVol00
+>10) Wait a while...  Be patient.  Don't interrupt it
+>11) Reboot
+>  
+>
+Thanks Dan! This also restored all my data. Thanks!
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Daniel
