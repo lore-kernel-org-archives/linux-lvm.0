@@ -1,12 +1,12 @@
-Date: Thu, 23 Aug 2001 20:49:05 +0000
+Date: Thu, 23 Aug 2001 20:50:47 +0000
 From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
-Subject: Re: [linux-lvm] LVM, rawio, ext2?
-Message-ID: <20010823204905.B920@dardhal.mired.net>
-References: <20010823014012.A32700@greenhydrant.com>
+Subject: Re: [linux-lvm] Snapshot on xfs filesystem
+Message-ID: <20010823205047.C920@dardhal.mired.net>
+References: <3B84D252.692DA667@tronicplanet.de>
 Mime-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010823014012.A32700@greenhydrant.com>
+In-Reply-To: <3B84D252.692DA667@tronicplanet.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,21 +20,18 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
-Cc: David Rees <dbr@greenhydrant.com>
 
-On Thursday, 23 August 2001, at 01:40:12 -0700,
-David Rees wrote:
+On Thursday, 23 August 2001, at 11:52:18 +0200,
+Knollmueller Stefan wrote:
 
-> Hi,
+> hi,
 > 
-> I'd like to create an ext2 filesystem over a raw io device, is this even
-> possible?  (If not, skip the rest of this message! ;-)
+> when trying the same on an ext2 fs the machine keeps on running and
+> nothing special happens even if there is traffic via nfs.
+> seems to be a problem with xfs...
 > 
-Maybe I'm completely wrong (as usual :), but as far as I know you can
-either create a filesystem over any block device (e.g. partition, md, LV,
-etc.) and use it as usual, or bind a raw device to an existing block
-device, and let the application (e.g. Oracle) manage space on the device
-as it wants.
+If I recall correctly from the Changelog, XFS snapshots appeared with
+version 1.0.1 of the filesystem.
 
 Greetings,
 
