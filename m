@@ -1,9 +1,8 @@
-Message-ID: <003401c20c0f$23a7afb0$0300000a@STATION>
-From: "Aslak Sommerfelt Skretting" <aslak@skretting.org>
-References: <000001c20c0c$e4b7b220$0201a8c0@fosi>
-Subject: Re: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Shane Wegner <shane@cm.nu>
+Message-ID: <20020605003728.GA3783@continuum.cm.nu>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Recovering inconsistent vg
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +13,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun  4 16:29:02 2002
+Date: Tue Jun  4 19:38:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This journal=data you talk about, is this an option to be used with the
-'mount' command?
+Hi all,
 
------ Original Message -----
-From: "Steve Wray" <steve.wray@paradise.net.nz>
-To: <linux-lvm@sistina.com>
-Sent: Tuesday, June 04, 2002 11:15 PM
-Subject: RE: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
+I'm not sure how this happened but after rebooting, I am
+getting the following from vgscan.
+continuum:~# vgscan
+vgscan -- reading all physical volumes (this may take a
+while...)
+vgscan -- found inactive volume group "vg0"
+vgscan -- ERROR "lv_check_consistency(): LV status" volume
+group "vg0" is inconsistent
+vgscan -- ERROR: unable to do a backup of volume group
+"vg0"
+vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing
+volume group "vg0" from "/etc/lvmtab"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully
+created
+vgscan -- WARNING: This program does not do a VGDA backup
+of your volume group
 
+I have no idea what this means, what I can do to recover
+and am hoping someone could help me out.  A pvscan yeilds:
 
-> > From: linux-lvm-admin@sistina.com
-> > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Aslak
-> >
-> > Hi again, and thanks for your quick reply!
-> >
-> > >----- Original Message -----
-> > >From: "Ben Lutgens" <blutgens@sistina.com>
-> [big snip]
-> > >Don't presume that because it's EXT3 that fscks are no longer
-> > >necessary. Only thing the journal guarantees is that your metadata
-> > >won't become corrupt (i think journal=data mount option fixes this
-> but
-> > >will affect performance and not neccessarily badly). If your
-> filesystem
-> > >has been shutdown cleanly many many times you could still has some
-> > >loss. A fsck should take care of that.
->
-> Yup journal=data is fantastic; I wouldn't be without it
-> on the volume that holds the home directories!
-> I tend to allocate filesystems based on functionality;
-> tmp gets ext2 cos its fast,
-> places like /var/spool get XFS cos it can be grown
-> in a pinch.
->
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
+continuum:~# pvscan
+pvscan -- reading all physical volumes (this may take a
+while...)
+pvscan -- inactive PV "/dev/hdi1"  is associated to unknown
+VG "vg0" (run vgscan)
+pvscan -- inactive PV "/dev/hde1"  is associated to unknown
+VG "vg0" (run vgscan)
+pvscan -- inactive PV "/dev/hda1"  is associated to unknown
+VG "vg0" (run vgscan)
+pvscan -- total: 3 [215.74 GB] / in use: 3 [215.74 GB] / in
+no VG: 0 [0]
+
+Looks right to me.  vg0 is hda1, hde1, and hdi1.
+
+Thanks in advance,
+Shane
