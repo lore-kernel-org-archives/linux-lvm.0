@@ -1,17 +1,15 @@
-Received: from reti (vpn50-41.rdu.redhat.com [172.16.50.41])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2IAgsJh018573
-	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 10:42:54 GMT
-Received: from joe by reti with local (Exim 4.30) id 1B3v1D-0000eI-J5
-	for linux-lvm@redhat.com; Thu, 18 Mar 2004 10:44:55 +0000
-Date: Thu, 18 Mar 2004 10:44:55 +0000
-From: Joe Thornber <thornber@redhat.com>
-Subject: Re: [linux-lvm] quiescing physical volumes
-Message-ID: <20040318104455.GA628@reti>
-References: <OF8332408E.0F643C1C-ONC1256E5B.00364305-C1256E5B.003A0263@provinzial.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF8332408E.0F643C1C-ONC1256E5B.00364305-C1256E5B.003A0263@provinzial.de>
-Sender: Joe Thornber <thornber@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2IDjbj00817
+	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 08:45:37 -0500
+Received: from sccimhc02.asp.att.net (sccimhc02.asp.att.net [63.240.76.164])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2IDja4b002122
+	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 08:45:36 -0500
+Message-ID: <4059A7FA.6060603@mchsi.com>
+Date: Thu, 18 Mar 2004 07:45:30 -0600
+From: Pete Flugstad <peteflugstad@mchsi.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] using DM/LVM to provide "chunked" view of devic
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,15 +20,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Thu, Mar 18, 2004 at 11:33:36AM +0100, m.klaeschen@provinzial.de wrote:
-> features. Background is that we have quite a couple of disk which we do not
-> want to double to have a snapshot device.
+Hello!
 
-The snapshot devices are generally much smaller than the origin
-devices since they only store blocks that have changed.
+I'm wondering if I can use LVM (or rather Device Mapper) to provide a
+"chunked" or "split" view of a device (such as a block device or partition).
 
-- Joe
+Specifically if I have a block device (i.e. /dev/hde1) that is 60GB, and
+I want to view it in 1GB chunks, say /dev/hde1.000 to /dev/hde1.059 or
+something like that.  That way I could, for example, setup a FTP or HTTP
+server to view these and download them over the network (of course I'd
+need to modify the server to be able to read from a block device),
+rather than having to download the entire 60 GB block device.
+
+Is it possible to use DM/LVM to provide a view of the device like this?
+I am using Linux 2.6.X.
+
+Thanks,
+Pete
