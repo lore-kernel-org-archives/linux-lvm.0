@@ -1,27 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j178sLO10572
-	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 03:54:21 -0500
-Received: from pcsspz.PATNI.COM (pcsbom.patni.com [203.124.139.208] (may be
-	forged))
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j178sBPu008207
-	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 03:54:14 -0500
-Received: from rakshak.patni.com (rakshak.patni.com [203.124.139.211])
-	by pcsspz.PATNI.COM (8.12.8/8.12.8) with SMTP id j178r57Q013601
-	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 14:23:44 +0530
-Received: from spzha1.patni.com ([192.168.0.6])
-	by rakshak.patni.com (SMSSMTP 4.0.0.59) with SMTP id
-	M2005020714240526519
-	for <linux-lvm@redhat.com>; Mon, 07 Feb 2005 14:24:05 +0530
-Received: from pcp42078 ([172.26.5.124]) (authenticated bits=0)
-	by spzha1.patni.com (8.12.11/8.12.9) with ESMTP id j178sE6E028934
-	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 14:24:19 +0530
-From: "Tayyeb Hagalwadi\(Patni\)" <tayyeb.hagalwadi@patni.com>
-Message-ID: <021301c51de4$4deeece0$7c051aac@pcp42078>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="----------=_1107766459-17983-8"
-Subject: [linux-lvm] Regarding info about Device mapper.
-Reply-To: tayyeb.hagalwadi@patni.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j17FBqO22795
+	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 10:11:52 -0500
+Received: from host1.appws.com ([216.136.72.3])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j17FBkJO006675
+	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 10:11:46 -0500
+Received: from grandmother.littlebald.com (localhost.localdomain [127.0.0.1])
+	by grandmother.littlebald.com (8.12.8/8.12.8) with ESMTP id
+	j17EBYZ1030804
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 7 Feb 2005 09:11:34 -0500
+Received: (from david@localhost)
+	by grandmother.littlebald.com (8.12.8/8.12.8/Submit) id j17EBYcF030802
+	for linux-lvm@redhat.com; Mon, 7 Feb 2005 09:11:34 -0500
+Subject: RE: [linux-lvm] LVM + SAN Behavior
+From: David Johnston <david@littlebald.com>
+In-Reply-To: <1107395761.22389.86.camel@voxan.mystro.mystrotv.com>
+References: <1107395761.22389.86.camel@voxan.mystro.mystrotv.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1107785493.30272.10.camel@grandmother.littlebald.com>
+Mime-Version: 1.0
+Date: Mon, 07 Feb 2005 09:11:34 -0500
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,42 +29,35 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Mon, 07 Feb 2005 08:54:23 -0000
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format...
+On Wed, 2005-02-02 at 20:56, Kreig DuBose wrote:
+> Hello-
+> 
+> I too am sharing the same issue regarding SAN file systems and Linux
+> LVM.  I have a device presented via FC on RHEL 3 update 3.  
+> 
+> I started with a simple raid 5 configuration with 3 disks
+> 
+> When I created the file systems I did so as such:
+> 
+> pvcreate /dev/sdc
+> vgcreate <volgrp_name> /dev/sdc
+> lvcreate -L +45G -n <lv_name> <volgrp_name>
+> mkfs -j  /dev/<volgrp_name>/<lv_name>
+> 
+> So far so good.  Partitions mount up and work fine.  My problem is now
+> that I've added in another disk  I cannot grow the vg:
+> 
+> # vgextend <volgrp_name> /dev/sdc
+> ______________________________________________________________________
+Perhaps it's just a typo in your email, but this is the same pv you used
+when you first created the vg.  I think you meant:
+# vgextend <volgrp_name> /dev/sdd
 
-------------=_1107766459-17983-8
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
-Hi,
-  This is regarding the information about Device mapper. Could you please
-provide documents, white papers or  related URL regarding the Device mapper
-for LVM2. And could u explain, what are the feature of device mapper in LVM
-1, and what extra feature are we going to achieve  in LVM2.
-Regards,
-Tayyeb.
-
-
-
-http://www.patni.com
-World-Wide Partnerships. World-Class Solutions.
-_____________________________________________________________________
-
-This e-mail message may contain proprietary, confidential or legally
-privileged information for the sole use of the person or entity to
-whom this message was originally addressed. Any review, e-transmission
-dissemination or other use of or taking of any action in reliance upon
-this information by persons or entities other than the intended
-recipient is prohibited. If you have received this e-mail in error
-kindly delete  this e-mail from your records. If it appears that this
-mail has been forwarded to you without proper authority, please notify
-us immediately at netadmin@patni.com and delete this mail. 
-_____________________________________________________________________
-
-------------=_1107766459-17983-8--
+That would add sdd to your vg, which already has sda, sdb, and sdc.
+-- 
+David Johnston <david@littlebald.com>
+Little Bald Consulting, LLC
