@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 22 May 2001 16:01:31 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Return-Path: <thornber@btconnect.com>
+Date: Tue, 22 May 2001 14:54:17 +0100
 Subject: Re: [linux-lvm] Dumb (well known I hope) symbol problem
-Message-ID: <20010522160131.A16787@sistina.com>
+Message-ID: <20010522145417.A973@66bassett.freeserve.co.uk>
 References: <3B0A6E1B.2CA74065@in.tum.de>
 Mime-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <3B0A6E1B.2CA74065@in.tum.de>; from vidalrod@informatik.tu-muenchen.de on Tue, May 22, 2001 at 03:48:11PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,18 +22,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-David,
-this looks like a missing LVM kernel patch.
+It looks like the patch didn't build correctly.  Did you specify the 
+location of your source code with 'configure --with-kernel_dir=DIR' ?
 
-Did you follow the instructions contained in the INSTALL
-and PATCHES/README files in order to update the LVM kernel code?
+If not make distclean in the LVM dir and start again.
 
-We are working on updating vanilla to the recent LVM code, but up to 2.4.4
-you still need to apply a patch which comes with the LVM distribution.
-
-Regards,
-Heinz    -- The LVM Guy --
-
+- Joe
 
 On Tue, May 22, 2001 at 03:48:11PM +0200, David Vidal Rodriguez wrote:
 > Hi folks,
@@ -79,16 +74,3 @@ On Tue, May 22, 2001 at 03:48:11PM +0200, David Vidal Rodriguez wrote:
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
