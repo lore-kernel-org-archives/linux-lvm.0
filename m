@@ -1,29 +1,36 @@
-Date: Fri, 1 Sep 2000 13:47:08 +0200
+Date: Fri, 1 Sep 2000 14:33:09 +0200
 From: Jan Niehusmann <jan@gondor.com>
-Subject: [linux-lvm] Re: lvm.h kernel/userspace differences
-Message-ID: <20000901134708.A6408@gondor.com>
-References: <20000829203239.A1030@gondor.com> <200009010540.XAA04818@lynx.turbolabs.com> <20000901132936.A3526@gondor.com>
+Subject: Re: [linux-lvm] LVM and sw RAID1
+Message-ID: <20000901143309.A7745@gondor.com>
+References: <20000823162957.B8398@gospelcom.net> <20000825203944.E5159@gospelcom.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20000901132936.A3526@gondor.com>; from jan@gondor.com on Fri, Sep 01, 2000 at 01:29:36PM +0200
+In-Reply-To: <20000825203944.E5159@gospelcom.net>; from pcg@gospelcom.net on Fri, Aug 25, 2000 at 08:39:44PM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
+To: Peter Green <pcg@gospelcom.net>
 Cc: linux-lvm@msede.com
 
-> - kernel's lv_v2_t has an additional field "uint8_t __unused;" _in the middle_
->   of the struct. Huh. What's that?
+On Fri, Aug 25, 2000 at 08:39:44PM -0400, Peter Green wrote:
+> Just as a followup, with the exact same system BUT using the SuSE lvm tools
+> (lvm-0.8-70; see rpmfind.net), everything seems to work. (The Mandrake RPM
+> at rpmfind did *not* work.)
 
-Additional information:
+could you please try it again with lvm-0.8final-0.2mdk.i586.rpm? It's available
+from http://www.hitnet.rwth-aachen.de/~jan/lvm/lvm-0.8final-0.2mdk.i586.rpm
 
-It's been included in linux-2.3.99-pre9 or -pre10. The patch was proposed by
-Andrea Arcangeli in a mail to linux-kernel on Apr 5. He writes:
+I added some fixes to version -0.1mdk, and IIRC one of them had something
+to do with md scanning. (As I don't use RAID myself, it am not so sure...)
 
-> o       inserts a pad in the lv_t structure to avoid breaking the
->         binary tools interface. I think everybody prefers to lose
->         32 bit per logical volume in the system than having to
->         change binary tools while switching between 2.2.x and 2.3.x
->         to make snapshotting to work :).
+Note that it's not an official mandrake rpm.
+
+> I would be interested in seeing what SuSE has done to the source for the
+> tools. I'm sure the developers here ought to be as well. :)
+
+The source is here:
+http://www.hitnet.rwth-aachen.de/~jan/lvm/lvm-0.8final-0.2mdk.src.rpm
+
+Jan
