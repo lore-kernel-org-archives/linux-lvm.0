@@ -1,9 +1,9 @@
-From: Anselm Kruis <A.Kruis@science-computing.de>
-Subject: Re: [linux-lvm] [PATCH] writeable snapshots
-In-Reply-To: <Pine.LNX.4.02.10111191450430.23844-100000@murnau.science-computing.de>
-Message-Id: <Pine.LNX.4.02.10201012219020.15767-100000@murnau.science-computing.de>
+Content-Type: text/plain; charset="us-ascii"
+From: Adrian Head <ahead@bigpond.net.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
+Message-Id: <E16LcO0-0006VI-00@hermes.sistina.com>
+Subject: [linux-lvm] Unable to get XFS, ext3, reiserfs & LVM to coexist happily
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,416 +14,223 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  1 15:22:01 2002
+Date: Tue Jan  1 21:49:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+To: Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
 
-Hi,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-the old patch didn't work very well (deadlocks with writeable snapshots).
-I made a better one. It includes tow ioctls required for xfs.
+Hope everyone had a happy new year  :-)
 
-On Mon, 19 Nov 2001, Anselm Kruis wrote:
+I'm starting to play around with LVM with the goal of having XFS, ext3, 
+reiserfs and LVM coexist nicely together.  
 
-> Hi,
->=20
-> I have made a new writeable snapshot patch against latest cvs. It consist=
-s
-> of a kernel patch and a patch for lvchange. The patch is based on previou=
-s=20
-> work from Dale J. Stephenson <steph@connex.com>.
->=20
-> If you create a snapshot, the snapshot is still read-only at first. You
-> can now use lvchange, to make the snapshot writeable. Use it i.e. to
-> repair file systems on the snapshot.=20
->=20
-> lvcreate -s -n snap ...
-> lvchange -p rw /dev/vg00/snap
-> e2fsck # or something similar
-> sync
-> lvchange -p r /dev/vg00/snap
-> mount -o ro /dev/vg00/snap ....
->=20
-> The kernel patch consists mainly of two parts:
-> - the actual COW remapping for the snapshot
-> - an ioctl to let the user space tools detect the presence of the
-> writeable snapshot support in the kernel.
->=20
-> The later ist required, because current kernels have no protection agains=
-t=20
-> making a snapshot-LV writeable. The protection is in lvchange. If you
-> make a snapshot-LV writeable, the writes end on the original volume.
-> Bad bad bad. :-(
-> Therefore lvchange needs a way to detect the presence of writeable
-> snapshot support in the kernel.
->=20
-> I decided to add a new ioctl on the /dev/lvm device: LVM_GET_FEATURE_BITS=
-=2E
-> The ioctl returns a bit field. Every set bit indicates the presence of a
-> feature. If the ioctl is not present, no features are present. For now th=
-e
-> only feature defined is: LVM_FEATURE_WRITEABLE_SNAPSHOTS.
->=20
-> Known Problems:
-> ---------------
->=20
-> - If a writeable snapshot runs out of space, all processes writing to the
-> snapshot hang.=20
-fixed
+Has anyone been able to get , ext3, reiserfs, XFS and LVM running nicely 
+together?  
 
->=20
-> - Needs more testing.
->=20
-> Comments and criticism are very much appreciated.
->=20
-> Anselm Kruis
-> Software Engineer
->=20
->=20
-The diff is against the current cvs version of LVM as of Jan 01 2002
+A week ago I posted a problem I was having with XFS and LVM in that the 
+machine would Oops if the snapshot ever overflowed:
+Original post:
+http://marc.theaimsgroup.com/?l=linux-lvm&m=100942205812492&w=2
+My followup:
+http://marc.theaimsgroup.com/?l=linux-lvm&m=100946566202294&w=2
 
-diff -c -r -b -B -N -x CVS LVM.vanilla/PATCHES/linux-2.4.15-writeable-snaps=
-hots.patch LVM/PATCHES/linux-2.4.15-writeable-snapshots.patch
-*** LVM.vanilla/PATCHES/linux-2.4.15-writeable-snapshots.patch=09Thu Jan  1=
- 01:00:00 1970
---- LVM/PATCHES/linux-2.4.15-writeable-snapshots.patch=09Sun Nov 18 11:05:1=
-4 2001
-***************
-*** 0 ****
---- 1,27 ----
-+ diff -u --recursive --new-file linux-2.4.15pre4.vanilla/Documentation/Con=
-figure.help linux/Documentation/Configure.help
-+ --- linux-2.4.15pre4.vanilla/Documentation/Configure.help=09Sun Nov 18 10=
-:46:17 2001
-+ +++ linux/Documentation/Configure.help=09Sat Nov 17 22:55:13 2001
-+ @@ -1693,6 +1693,13 @@
-+    want), say M here and read <file:Documentation/modules.txt>.  The
-+    module will be called lvm-mod.o.
-+ =20
-+ +Support for writeable snapshots
-+ +CONFIG_LVM_WRITEABLE_SNAPSHOTS
-+ +  The LVM driver allows you to make snapshots of a logocal volume.
-+ +  Usually these snapshots are read-only. This options add support for
-+ +  writeable snapshots. You can use a writeable snapshot to run a
-+ +  filesystem check on the snapshot prior to mounting it.
-+ +
-+  Multiple devices driver support (RAID and LVM)
-+  CONFIG_MD
-+    Support multiple physical spindles through a single logical device.
-+ diff -u --recursive --new-file linux-2.4.15pre4.vanilla/drivers/md/Config=
-=2Ein linux/drivers/md/Config.in
-+ --- linux-2.4.15pre4.vanilla/drivers/md/Config.in=09Fri Sep 14 23:22:18 2=
-001
-+ +++ linux/drivers/md/Config.in=09Sat Nov 17 22:41:02 2001
-+ @@ -14,5 +14,6 @@
-+  dep_tristate '  Multipath I/O support' CONFIG_MD_MULTIPATH $CONFIG_BLK_D=
-EV_MD
-+ =20
-+  dep_tristate ' Logical volume manager (LVM) support' CONFIG_BLK_DEV_LVM =
-$CONFIG_MD
-+ +dep_mbool     '  Support for writeable snapshots' CONFIG_LVM_WRITEABLE_S=
-NAPSHOTS $CONFIG_BLK_DEV_LVM $CONFIG_EXPERIMENTAL
-+ =20
-+  endmenu
-diff -c -r -b -B -N -x CVS LVM.vanilla/kernel/lvm.c LVM/kernel/lvm.c
-*** LVM.vanilla/kernel/lvm.c=09Tue Jan  1 21:49:48 2002
---- LVM/kernel/lvm.c=09Tue Jan  1 22:04:01 2002
-***************
-*** 214,219 ****
---- 214,220 ----
-   *                 in the LV each time.  [AED]
-   *    12/10/2001 - Use add/del_gendisk() routines in 2.4.10+
-   *    01/11/2001 - Backport read_ahead change from Linus kernel [AED]
-+  *    01/01/2002 - Support for writeable snapshots [A.Kruis@science-compu=
-ting.de]
-   *
-   */
- =20
-***************
-*** 374,379 ****
---- 375,385 ----
-  ushort lvm_iop_version =3D LVM_DRIVER_IOP_VERSION;
-  int loadtime =3D 0;
-  const char *const lvm_name =3D LVM_NAME;
-+ ushort lvm_feature_bits =3D
-+ #ifdef CONFIG_LVM_WRITEABLE_SNAPSHOTS
-+         LVM_FEATURE_WRITEABLE_SNAPSHOTS |
-+ #endif
-+ 0;
- =20
- =20
-  /* volume group descriptor area pointers */
-***************
-*** 717,722 ****
---- 723,735 ----
- =20
-  =09/* Main command switch */
-  =09switch (command) {
-+ =09case LVM_GET_FEATURE_BITS:
-+ =09=09/* return a the feature bits. These bits indicate particular
-+ =09=09   features supported by this kernel. */
-+ =09=09if (copy_to_user(arg, &lvm_feature_bits, sizeof(ushort)) !=3D 0)
-+ =09=09=09return -EFAULT;
-+ =09=09return 0;
-+=20
-  =09case LVM_LOCK_LVM:
-  =09=09/* lock the LVM */
-  =09=09return lvm_do_lock_lvm();
-***************
-*** 1063,1068 ****
---- 1076,1084 ----
-  =09=09=09return -EFAULT;
-  =09=09break;
- =20
-+ =09case BLKBSZGET:
-+ =09case BLKBSZSET:
-+ =09=09return blk_ioctl (inode->i_rdev, command, a);
- =20
-  =09case HDIO_GETGEO:
-  =09=09/* get disk geometry */
-***************
-*** 1293,1298 ****
---- 1309,1315 ----
-  =09lv_t *lv =3D vg_this->lv[LV_BLK(minor)];
- =20
- =20
-+  restart:
-  =09down_read(&lv->lv_lock);
-  =09if (!(lv->lv_status & LV_ACTIVE)) {
-  =09=09printk(KERN_ALERT
-***************
-*** 1381,1389 ****
-  =09=09goto out;
- =20
-  =09if (lv->lv_access & LV_SNAPSHOT) { /* remap snapshot */
-! =09=09if (lvm_snapshot_remap_block(&rdev_map, &rsector_map,
-! =09=09=09=09=09     pe_start, lv) < 0)
-  =09=09=09goto bad;
- =20
-  =09} else if (rw =3D=3D WRITE || rw =3D=3D WRITEA) { /* snapshot origin *=
-/
-  =09=09lv_t *snap;
---- 1398,1425 ----
-  =09=09goto out;
- =20
-  =09if (lv->lv_access & LV_SNAPSHOT) { /* remap snapshot */
-! =09=09int ret;
-! =09=09ret =3D lvm_snapshot_remap_block(&rdev_map, &rsector_map,
-! =09=09=09=09=09=09pe_start, lv);
-! =09=09if (ret < 0)=20
-  =09=09=09goto bad;
-+ =09=09if (ret > 0 || !(rw =3D=3D WRITE || rw =3D=3D WRITEA))
-+ =09=09=09goto out; /* already remapped or read access */
-+=20
-+ #ifdef CONFIG_LVM_WRITEABLE_SNAPSHOTS
-+ =09=09/* remap the block */
-+=20
-+ =09=09/* Serializes the COW with the accesses to the
-+ =09=09   snapshot device.
-+=20
-+ =09=09   __remap_snapshot acquires the write lock. */
-+ =09=09up_read(&lv->lv_lock);
-+ =09=09__remap_snapshot(rdev_map, rsector_map,
-+ =09=09=09=09 pe_start, lv, vg_this);
-+ =09=09goto restart;
-+ #else
-+ =09=09goto bad;
-+ #endif
- =20
-  =09} else if (rw =3D=3D WRITE || rw =3D=3D WRITEA) { /* snapshot origin *=
-/
-  =09=09lv_t *snap;
-diff -c -r -b -B -N -x CVS LVM.vanilla/kernel/lvm.h LVM/kernel/lvm.h
-*** LVM.vanilla/kernel/lvm.h=09Tue Jan  1 21:49:48 2002
---- LVM/kernel/lvm.h=09Thu Nov 29 22:06:46 2001
-***************
-*** 72,77 ****
---- 72,78 ----
-   *    22/06/2001 - added Andreas Dilger's PE on 4k boundary alignment enh=
-ancements
-   *    19/07/2001 - added rwsem compatibility macros for 2.2 kernels
-   *    13/11/2001 - reduced userspace inclusion of kernel headers to a min=
-imum
-+  *    18/11/2001 - added defines for LVM_GET_FEATURE_BITS ioctl [A.Kruis]
-   *
-   */
- =20
-***************
-*** 368,374 ****
---- 369,384 ----
-  /* This is actually the same as _IO ( 0xff, 0x00), oops.  Remove for IOP =
-12+ */
-  #define=09LVM_LOCK_LVM            _IO ( 0xfe, 0x100)
-  #endif
-+ /* get lvm feature bits */
-+ #define LVM_GET_FEATURE_BITS    _IOR ( 0xfe, 0x9b, 1)
-  /* END ioctls */
-+=20
-+=20
-+ /*
-+  * Feature Bits
-+  */
-+ /* makeing a snapshot witeable is save */
-+ #define LVM_FEATURE_WRITEABLE_SNAPSHOTS 0x01
- =20
- =20
-  /*
-diff -c -r -b -B -N -x CVS LVM.vanilla/tools/lib/liblvm.h LVM/tools/lib/lib=
-lvm.h
-*** LVM.vanilla/tools/lib/liblvm.h=09Tue Jan  1 21:49:48 2002
---- LVM/tools/lib/liblvm.h=09Thu Nov 29 22:06:46 2001
-***************
-*** 409,414 ****
---- 409,415 ----
-  void   lvm_dont_interrupt ( int);
-  int    lvm_get_col_numbers ( char *, long **);
-  int    lvm_get_iop_version ( void);
-+ int    lvm_get_feature_bits ( void);
-  void   lvm_init(int argc, char **argv);
-  void   lvm_interrupt ( void);
-  int    lvm_lock ( void);
-diff -c -r -b -B -N -x CVS LVM.vanilla/tools/lib/lvm_get_feature_bits.c LVM=
-/tools/lib/lvm_get_feature_bits.c
-*** LVM.vanilla/tools/lib/lvm_get_feature_bits.c=09Thu Jan  1 01:00:00 1970
---- LVM/tools/lib/lvm_get_feature_bits.c=09Mon Nov 19 19:49:11 2001
-***************
-*** 0 ****
---- 1,60 ----
-+ /*
-+  * tools/lib/lvm_get_iop_version.c
-+  *
-+  * Copyright (C) 2001 Anselm Kruis
-+  *
-+  * November 2001
-+  *
-+  *
-+  * This LVM library is free software; you can redistribute it and/or
-+  * modify it under the terms of the GNU Library General Public
-+  * License as published by the Free Software Foundation; either
-+  * version 2 of the License, or (at your option) any later version.
-+  *
-+  * This LVM library is distributed in the hope that it will be useful,
-+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+  * Library General Public License for more details.
-+  *
-+  * You should have received a copy of the GNU Library General Public
-+  * License along with this LVM library; if not, write to the Free
-+  * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-+  * MA 02111-1307, USA
-+  *
-+  */
-+=20
-+ /*
-+  * Changelog
-+  *
-+  *    18/11/2001 - created
-+  *
-+  */
-+=20
-+ #include <liblvm.h>
-+=20
-+ int lvm_get_feature_bits ( void) {
-+    int group =3D -1;
-+    int ret =3D 0;
-+    ushort lvm_feature_bits =3D 0;
-+=20
-+    debug_enter ( "lvm_get_feature_bits -- CALLED\n");
-+=20
-+    /* just to ensure existance of /dev/lvm interface special */
-+    lvm_check_special ();
-+=20
-+    if ( ( group =3D open ( LVM_DEV, O_RDONLY)) =3D=3D -1)
-+       ret =3D -LVM_ELVM_IOP_VERSION_OPEN;
-+    else if ( ( ret =3D ioctl ( group, LVM_GET_FEATURE_BITS,
-+                              &lvm_feature_bits)) =3D=3D -1) ret =3D -errn=
-o;
-+    debug ( "lvm_get_feature_bits -- AFTER ioctl ret: %d\n", ret);
-+    if ( group !=3D -1) close ( group);
-+    /* older kernels didn't have this IOCTL */
-+    if ( -ret =3D=3D EINVAL ) {
-+      ret =3D 0;
-+      lvm_feature_bits =3D 0; /* no special features */
-+    }
-+    if ( ret =3D=3D 0) ret =3D lvm_feature_bits;
-+=20
-+    debug_leave ( "lvm_get_feature_bits -- LEAVING with ret: %d\n", ret);
-+    return ret;
-+ }
-diff -c -r -b -B -N -x CVS LVM.vanilla/tools/lvchange.c LVM/tools/lvchange.=
-c
-*** LVM.vanilla/tools/lvchange.c=09Wed Jul 25 16:52:19 2001
---- LVM/tools/lvchange.c=09Mon Nov 19 19:46:12 2001
-***************
-*** 323,334 ****
-           continue;
-        }
-    =20
-!       if ( lv->lv_access & LV_SNAPSHOT) {
-           fprintf ( stderr, "%s -- change on snapshot logical "
-                             "volume \"%s\" not allowed\n", cmd, lv_name);
-           continue;
-        }
- =20
-        if ( lv->lv_access & LV_SNAPSHOT_ORG) {
-           fprintf ( stderr, "%s -- change on logical volume \"%s\" under "
-                             "snapshot not allowed\n", cmd, lv_name);
---- 323,345 ----
-           continue;
-        }
-    =20
-!       if ( ( lv->lv_access & LV_SNAPSHOT) &&
-!            ( (opt_C) || (opt_a) || (opt_r))) {
-           fprintf ( stderr, "%s -- change on snapshot logical "
-                             "volume \"%s\" not allowed\n", cmd, lv_name);
-           continue;
-        }
- =20
-+       if ( ( lv->lv_access & LV_SNAPSHOT) && (opt_p)) {
-+ =09 int feature_bits =3D lvm_get_feature_bits();
-+ =09 if ( feature_bits < 0 || !(feature_bits & LVM_FEATURE_WRITEABLE_SNAPS=
-HOTS)) {
-+ =09   fprintf ( stderr, "%s -- change on snapshot logical "
-+ =09=09     "volume \"%s\" not allowed\n", cmd, lv_name);
-+ =09   continue;
-+ =09 }
-+       }
-+      =20
-+       /* fixme: opt_p should be save */
-        if ( lv->lv_access & LV_SNAPSHOT_ORG) {
-           fprintf ( stderr, "%s -- change on logical volume \"%s\" under "
-                             "snapshot not allowed\n", cmd, lv_name);
-***************
-*** 364,370 ****
-    =20
-           if ( doit > 0) {
-              doit_sum++;
-!             lv->lv_access =3D lv_access;
-              if ( opt_v > 0) printf ( "%s -- changing access permissions "
-                                       "of logical volume \"%s\"\n",
-                                       cmd, lv_name);
---- 375,383 ----
-    =20
-           if ( doit > 0) {
-              doit_sum++;
-!             /* don't clear access flags except for LV_WRITE and LV_READ *=
-/
-!             lv->lv_access &=3D ~( LV_READ | LV_WRITE ) | lv_access;
-!             lv->lv_access |=3D lv_access;
-              if ( opt_v > 0) printf ( "%s -- changing access permissions "
-                                       "of logical volume \"%s\"\n",
-                                       cmd, lv_name);
+At the time I thought I had solved the problem but upon further tests I found 
+that the problems had just moved elsewhere.
+
+What I did was to run a series of tests using the SGI, CVS kernel (for XFS) 
+as the base and added the appropriate LVM patches.  The LVM patches were the 
+VFS-lock patch and the lvm-1.0.1 upgrade patch.  I ran various tests like 
+creating snapshots and attempting to mount them, and then if that was 
+successful would then overflow the snapshot to see if there were any 
+problems. (I have not attempting to test pvmove or any of the others yet.)  
+Attached below is the summary from the tests.
+
+After running all the tests I have found that there is not one case where 
+ext3, reiserfs and xfs successfully coexist.  Does anyone have any 
+suggestions? as I'm completely stumped at the moment.
+
+The SGI CVS kernel is from the 26th Dec 2001 and is a 2.4.17 kernel.
+The LVM source is directly from the LVM download site.
+The system is based on RH7.2 with the default gcc compiler.
+There were no changes of the default kernel or LVM compile flags.
+
+If I have left out any important info please let me know.
+
+Any ideas or suggestions would be appreciated.
+
+Adrian
+
+NOTE: The back traces were done in kdb and are written here in shorthand only 
+for the moment.  
+NOTE: The LVM_VFS_ENHANCEMENT in lvm.c seems to disappear when using the 
+lvm-1.0.1 upgrade patch.
+
+CVS XFS kernel & lvm Test results
+============================
+
+2.4.17-xfs
+While source volume mounted:
+* Can create ext3 snapshot?			| yes
+* Can mount a ext3 snapshot?			| no:
+	EXT3-fs: INFO: recovery required on readonly filesystem.
+	EXT3-fs: write access unavailable, cannot proceed.
+* Can create resierfs snapshot?			| yes
+* Can mount a resierfs snapshot?		| yes
+* Can create xfs snapshot?			| yes
+* Can mount a xfs snapshot?			| yes
+NOTE: For some reason kernel thinks xfs is resierfs when mounted without -t 
+xfs!
+When source & snapshot mounted:
+* Cause oops when snapshot overflows?	|
+ - ext3						| Cannot test
+ - resierfs					| OK - Stable
+ - xfs						| Oops
+ btp 1207 (cp)
+ lvm_snapshot_remap_block
+ lvm_map
+ md_make_request
+ generic_makw_request
+ [pagebuf]_pagebuf_page
+ [pagebuf]_page_buf_page_apply
+ [xfs]xlog_sync
+ [xfs]xlog_state_release_iclog
+ [xfs]xlog_write
+ [xfs]xfs_log_write
+ [xfs]xfs_trans_commit
+ [xfs]xfs_create
+ [xfslinvfs_common_cr
+ [xfs]linvfs_create
+ lookup_hash
+Running process (cp)
+
+2.4.17-xfs
+ + VFS-lock
+While source volume mounted:
+* Can create ext3 snapshot?			| yes
+* Can mount a ext3 snapshot?			| yes
+* Can create resierfs snapshot?			| yes
+* Can mount a resierfs snapshot?		| yes
+* Can create xfs snapshot?			| yes
+* Can mount a xfs snapshot?			| yes
+When source & snapshot mounted:
+* Cause oops when snapshot overflows?	|
+ - ext3						| Oops
+ btp 5 (bdflush)
+ lvm_snapshot_remap_block
+ lvm_map
+ lvm_make_request
+ submit_bh
+ write_locked_buffers
+ write_some_buffers
+ bdflush
+ kernel_thread
+Running processes (bdflush, kjournald, klogd, cp)
+ - resierfs					| Oops
+ btp 6 (kupdated)
+ lvm_snapshot_remap_block
+ lvm_map
+ lvm_make_request
+ generic_make_request
+ submit_bh
+ write_locked_buffers
+ write_some_buffers
+ balance_dirty
+ sync_supers
+ sync_old_buffers
+ kupdated
+ kernel_thread
+Running processes (kupdated, kreiserfsd, klogd)
+ - xfs						| OK - Stable
+
+2.4.17-xfs
+ + lvm-1.0.1 upgrade
+ (without LVM_VFS_ENHANCEMENT)
+While source volume mounted:
+* Can create ext3 snapshot?			| yes
+* Can mount a ext3 snapshot?			| no
+	EXT3-fs: INFO: recovery required on readonly filesystem.
+	EXT3-fs: write access unavailable, cannot proceed.
+* Can create resierfs snapshot?			| yes
+* Can mount a resierfs snapshot?		| no
+	resierfs: checking trasaction log (device 3a:04) ...
+	clm-2076: device is readonly, unable to replay log
+	Replay Failure, unable to mount
+	resierfs_read_super: unable to initialize journal space
+* Can create xfs snapshot?			| yes
+* Can mount a xfs snapshot?			| yes
+When source & snapshot mounted:
+* Cause oops when snapshot overflows?	|
+ - ext3						| Cannot test
+ - resierfs					| Cannot test
+ - xfs						| OK - Stable
+
+2.4.17-xfs
+ + lvm-1.0.1 upgrade
+ (with LVM_VFS_ENHANCEMENT)
+While source volume mounted:
+* Can create ext3 snapshot?			| Cannot test
+* Can mount a ext3 snapshot?			| Cannot test
+* Can create resierfs snapshot?			| Cannot test
+* Can mount a resierfs snapshot?		| Cannot test
+* Can create xfs snapshot?			| Cannot test
+* Can mount a xfs snapshot?			| Cannot test
+When source & snapshot mounted:
+* Cause oops when snapshot overflows?	|
+ - ext3						| Cannot test
+ - resierfs					| Cannot test
+ - xfs						| Cannot test
+Note: Kernel compile dies with:
+undefined reference to `fsync_dev_lockfs'
+undefined reference to `unlockfs'
+
+2.4.17-xfs
+While source volume mounted:
+ + VFS-lock
+ + lvm-1.0.1 upgrade
+ (VFS-lock patch removes LVM_VFS_ENHANCEMENT)
+* Can create ext3 snapshot?			| yes
+* Can mount a ext3 snapshot?			| yes
+* Can create resierfs snapshot?			| yes
+* Can mount a resierfs snapshot?		| yes
+* Can create xfs snapshot?			| no - Oops
+ btp 1356 (lvcreate)
+ journal_start
+ ext3_dirty_inode
+ __mark_inode_dirty
+ update_atime
+ do_generic_file_read
+ generic_file_read
+ sys_read
+ system_call
+Running processes (lvcreate)
+* Can mount a xfs snapshot?			| Cannot test
+When source & snapshot mounted:
+* Cause oops when snapshot overflows?	|
+ - ext3						| OK - Stable
+ - resierfs					| OK - Stable
+ - xfs						| Cannot test
+Cannot complete boot sequence (RH scripts) after attempting to create xfs
+snapshot because of Oops - need to do full recovery!
+ btp 154 (mount)
+ send_signal
+ deliver_signal
+ send_sig_info
+ error_code
+Running processes (none)
 
 
----
- Anselm Kruis                                 Tel. +49 (0)89-356386-74
- science + computing ag=09=09              FAX  +49 (0)89-356386-37
- Ingolst=E4dter Str. 22             mailto: A.Kruis@science-computing.de
- D-80807 M=FCnchen                 WWW: http://www.science-computing.de/
+- -- 
+Adrian Head
 
-**********************************************************************
-***     CeBIT 2002                                                 ***
-***     Besuchen Sie uns auf der CeBIT vom 13.-20.03.2002          ***
-***     auf dem Messegel=E4nde in Hannover, Halle 11                 ***
-**********************************************************************
+(Public Key available on request.)
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8MoOq8ZJI8OvSkAcRArVHAJ0UkaOT2/agPlr667k/d+UAT0i2igCfedA7
+3EDNqrrDDvRL7GWoBuglytk=
+=GwyP
+-----END PGP SIGNATURE-----
