@@ -1,10 +1,12 @@
-Return-Path: <ahiam@hotmail.com>
-From: "Arindam Haldar" <ahiam@hotmail.com>
-Date: Tue, 17 Jul 2001 06:20:34 +0530
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <OE52FqgyThYTrRviCij00004c76@hotmail.com>
-Subject: [linux-lvm] Strtup probs !
+Return-Path: <thornber@btconnect.com>
+Date: Mon, 16 Jul 2001 15:58:38 +0100
+Subject: Re: [linux-lvm] Upgrade path
+Message-ID: <20010716155838.A882@btconnect.com>
+References: <3B4EE8F2.5050506@ednet.ns.ca> <20010716132959.C11625@sistina.com> <20010716140313.H8175@cistron.nl> <20010716162517.A12520@sistina.com> <20010716164253.P8175@cistron.nl>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010716164253.P8175@cistron.nl>; from wichert@cistron.nl on Mon, Jul 16, 2001 at 04:42:53PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,29 +19,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-hi all,
+On Mon, Jul 16, 2001 at 04:42:53PM +0200, Wichert Akkerman wrote:
+> Previously Heinz J. Mauelshagen wrote:
+> > I announced the holdup caused by the misalignment bugs we found.
+> > We'll need to release another Beta ASAP to get test feedback on that.
+> 
+> I saw that, but there seems to have been a consensus on a fix
+> for that for over a week now already.
 
-i need help with the following probs 'm facing.....
-my system is--->  512MB, 500Mhz, 3 scsi, Compaq server with 7.0 Slackware
-upgradded packages with latest from Slackware & kernel 2.4.6 ( with LVM as
-module)
-1) could not start LVM with /etc/fstab entries !   ;-(
-    i have created initrd.gz & have done exactly as stated in HOW-TO to
-start LVM at startup ( i'm doing it only on my /home ).
-    if i dont put entries on my /etc/fstab ( for home & LVM) then it works
-ok, but sooner i put it there on boot there is an error of  something swap
-disk which takes me to administrative mode !!!!.. my /etc/fstab enrty is
-/dev/VGmail/LVmail    /home    ext2    defaults    1    1
+Fixing it isn't the problem, ensuring people with existing VG's can
+use the new driver/tools *is* the problem.  The pe positions weren't
+being stored in the metadata before beta8 :( So we have to upgrade
+peoples VG's.  I understand that Heinz has written the upgrade tool,
+but I'm not sure how much testing he wants before we release.
 
-2) can quota be implimented with LVM  for eg on my /home .. ??
-
-3) how to have root partion on LVM.
-    i tried to do that too like in the HOW-TO & did dd on an empty partion.
-but when i tried to convert root partion to LVM  i got errors.. so can
-anyone tell me the actual steps pls !
-
-pls excuse me for my english
-thanxs in advance...
-arindam haldar
+- Joe
