@@ -1,10 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102221716.f1MHGN204028@webber.adilger.net>
-Subject: Re: [linux-lvm] online resize of ext2
-In-Reply-To: <Pine.LNX.4.21.0102221422190.3832-100000@munster.noc.fr.clara.net>
- from James at "Feb 22, 2001 02:23:12 pm"
-Date: Thu, 22 Feb 2001 10:16:23 -0700 (MST)
+Return-Path: <hopper@omnifarious.mn.org>
+Date: Thu, 22 Feb 2001 13:40:43 -0600
+From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Message-ID: <20010222134043.B5285@omnifarious.mn.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
+Content-Disposition: inline
+Subject: [linux-lvm] Upgrading...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +18,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-James Tapping writes [re online resizing]:
-> What are the version necessary for this?
-> 
-> kernel = ??
-> package version = ??
-> 
-> command used = ??
+--CUfgB8w4ZwR/yMy5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Go to
+	I have on _old_ version of LVM (0.8i).  I don't do anything
+fancy with it.  Only a few logical volumes and one volume group and
+striping across a couple of disks.  Standard 4M block size.  No
+mirroring, no snapshots.  I do use reiserfs.
 
-http://sourceforge.net/projects/ext2resize/
+	This is under the 2.2.16 kernel.
 
-and download ext2resize-1.1.16.  It has the appropriate kernel patch
-for 2.2.18 and 2.4.0, along with the user tools.  Once you have patched,
-recompiled, and installed your kernel, you can resize mounted filesystems
-either via lvextend + ext2online, or preferrably e2fsadm (from beta5).
+	What problems, if any, should I expect if I upgrade to 2.4.2?
+:-)
 
-Note that there are some limits to online resizing, so read the ext2online
-and ext2prepare man pages.
+*grin*  Thanks,
+--=20
+The best we can hope for concerning the people at large is that they
+be properly armed.  -- Alexander Hamilton
+-- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
+r) --
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+--CUfgB8w4ZwR/yMy5
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.2 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6lWs7G4QeWBeRdS8RAgR3AJ9cuLYfVV+aaRZHE4yoPfLXDF+WowCg6JPa
+x6Ny4AHfIwe4mLKxtZh3K7o=
+=cQBq
+-----END PGP SIGNATURE-----
+
+--CUfgB8w4ZwR/yMy5--
