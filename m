@@ -1,10 +1,10 @@
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] mac-fdisk and 0x8e partitions for LVM
-Message-ID: <20040115092056.GA2170@tykepenguin.com>
-References: <1074115853.3983.24.camel@telecentro2>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] lvm and scsidev
+Message-ID: <20040115122342.GA3703@percy.comedia.it>
+References: <40064F10.8080509@cineca.it>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1074115853.3983.24.camel@telecentro2>
+In-Reply-To: <40064F10.8080509@cineca.it>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 15 04:21:01 2004
+Date: Thu Jan 15 07:25:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jan 14, 2004 at 07:30:53PM -0200, Leandro Guimar?es Faria Corcete Dutra wrote:
-> 	mac-fdisk won't allow me to create a 0x8e partition, thus precluding
-> LVM usage... any solutions in view?  Would pmac-fdisk or parted do the
-> job?
+On Thu, Jan 15, 2004 at 09:28:00AM +0100, Tommaso Cecchi wrote:
+>What I guess is that devices created by scsidev are not visible under 
+>/proc/partitions
+>but I'm not sure about that.
+this is the right guess, lvm1 only works with device names defined in
+proc partitions, you will find this issue discussed multiple times in
+this list, mostly concerning devfs issues.
 
+Regards,
+L.
 
-If it's not using a PC partition table; and I suspect it isn't, being a mac,
-then it doesn't matter what partition type you use.
-
-LVM2 doesn't even check the partition type - it's only for information.
 -- 
-
-patrick
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
