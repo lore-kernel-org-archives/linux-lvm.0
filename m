@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 20 Jun 2001 21:36:22 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Mandrake 8.0 with LVM and mount
-Message-ID: <20010620213622.A26817@sistina.com>
-References: <200106201846.OAA08500@interlock2.lexmark.com>
+Return-Path: <jdomingo@crosswinds.net>
+Date: Wed, 20 Jun 2001 22:51:53 +0000
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Subject: Re: [linux-lvm] LVM 1.0 release schedule
+Message-ID: <20010620225153.D1776@dardhal.mired.net>
 Mime-Version: 1.0
-In-Reply-To: <200106201846.OAA08500@interlock2.lexmark.com>; from mowrer@lexmark.com on Wed, Jun 20, 2001 at 02:45:33PM -0400
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20010620172013.A25559@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +18,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-Jim,
+On Wednesday, 20 June 2001, at 17:20:13 +0200,
+Heinz J. Mauelshagen wrote:
 
-where do you activate your VG(s)?
-This must happen before local filesystems are mounted and it looks like
-"vgchange -ay" runs after that during startup.
-
-
-On Wed, Jun 20, 2001 at 02:45:33PM -0400, mowrer@lexmark.com wrote:
 > 
+> Because we are investigating a snapshot allocation offset bug,
+> we are planning to release LVM 1.0 on Friday.
 > 
-> Running LVM on Mandrake 8.0.  Have all working well, but upon reboot, my FS on
-> this LV does not mount without putting a mount in S99local.
-> 
-> Where should this happen..  I suppose /etc/fstab wont work! or should it..
-> Thanks Jim
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Will this 1.0 release be integrated into the mainstream Linux kernel
+(2.4.6 I suppose) ?. Or will it be necessary to continue applying patches
+for a while ?
 
--- 
+Greetings, and good job !
 
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--
+Jos� Luis Domingo L�pez
+Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+ 
+jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+jdomingo AT internautas DOT   org  => Spam at your own risk
