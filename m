@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm raid levels
-Message-ID: <20031017182211.A848@sistina.com>
-References: <200310170939.00640.3dnerd@bellsouth.net>
-Mime-Version: 1.0
-In-Reply-To: <200310170939.00640.3dnerd@bellsouth.net>; from 3dnerd@bellsouth.net on Fri, Oct 17, 2003 at 09:39:00AM -0400
+Message-ID: <3F903230.9070608@siue.edu>
+From: anthony mayes <anmayes@siue.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM ext3 support
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,56 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 17 11:20:02 2003
+Date: Fri Oct 17 13:19:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Fri, Oct 17, 2003 at 09:39:00AM -0400, Dave wrote:
-> Heinz,
-> 
-> I have searched through the man pages, as well as quite a few documents and 
-> message boards looking for a way to see the raid level after a volume has 
-> been created.
-> 
-> ex.  Joe NewAdmin takes over duties after Joe OldAdmin goes to lunch and never 
-> returns.  Joe NewAdmin needs to know if a volume is a stripe or if it's 
-> simply concatenated (the equivilent of veritas' vxprint and vxinfo).
+I am running Redhat 9 with kernel 2.4.20-20.9.  I am getting the 
+following errors when trying to mount an LVM snapshot:
 
-Dave,
+EXT3-fs: INFO: recovery required on readonly filesystem.
+EXT3-fs: write access unavailable, cannot proceed.
 
-make Joe NewAdmin use lvdisplay on the logical volumes, which shows if
-they are striped or linear.
+I saw a thread on redhat.com that said a kernel patch is needed.  My 
+question is where can I get the patch for this kernel, how do I install 
+it, and why isn't this built into the kernel in the first place?  Any 
+other suggestions are welcome.
 
-
-> 
-> Is there a way to do this currently?
-> 
-> Thank you for your time and assistance in this matter,
-> 
-> Dave Catrett
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks in advance.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Anthony Mayes
+UNIX Server Administration
+Southern Illinois University Edwardsville
+anmayes@siue.edu
