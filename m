@@ -1,7 +1,9 @@
-From: Dirk Heinrichs <heini@qis-systemhaus.de>
 Subject: Re: [linux-lvm] upgrade RH with lvm
-In-Reply-To: <1010772299.7571.14.camel@dumbo.zwecker.de>
-Message-Id: <Pine.GSO.4.05.10201140845360.28453-100000@cyrano.olymp.qis>
+From: Christophe Zwecker <doc@zwecker.de>
+In-Reply-To: <Pine.GSO.4.05.10201140845360.28453-100000@cyrano.olymp.qis>
+References: <Pine.GSO.4.05.10201140845360.28453-100000@cyrano.olymp.qis>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1011011962.7572.21.camel@dumbo.zwecker.de>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -13,32 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 14 01:51:02 2002
+Date: Mon Jan 14 06:41:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On 11 Jan 2002, Christophe Zwecker wrote:
+On Mon, 2002-01-14 at 08:48, Dirk Heinrichs wrote:
+> On 11 Jan 2002, Christophe Zwecker wrote:
 
-> hi,
-> 
-> 
-> RH7.2 doesnt seem to be able to read lvm partitions when upgrading from
-> 7.1, neither does the SGI iso (guess they didnt look into that).
-> 
-> I wonder if any of you got the same problem if he solved it and how ?
-You don't need to boot the installer to upgrade some RPM's. Use rpm
-directly on the running system (after going single user with telinit 1, if
-you
-like).
+> You don't need to boot the installer to upgrade some RPM's. Use rpm
+> directly on the running system (after going single user with telinit 1, if
 
-Bye...
+yeah , I was gonna test that, but i was afraid to mess up something
+sofar, I gues rpm -F  should do the trick...
 
-	Dirk
+Youve upgraded that way before ?
+
+Christophe
 -- 
-Dirk Heinrichs          | Tel:  +49 (0)241 413 260
-Configuration Manager   | Fax:  +49 (0)241 413 2640
-QIS Systemhaus GmbH     | Mail: dheinrichs@qis-systemhaus.de
-Juelicher Str. 338      | Web:  http://www.qis-systemhaus.de
-D-52070 Aachen          | ICQ#: 110037733
+Christophe Zwecker                     mail: doc@zwecker.de
+Hamburg, Germany                        fon: +49 179 3994867
+http://www.zwecker.de
+
+"Who is General Failure ?  And why is he reading my disk ??"
