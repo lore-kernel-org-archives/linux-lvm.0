@@ -1,10 +1,8 @@
-From: Luca Berra <bluca@comedia.it>
+From: Dirk Heinrichs <heinrichs@qis-systemhaus.de>
 Subject: Re: [linux-lvm] Red Hat upgrade over existing LVM
-Message-Id: <20020407102856.GB12349@colombina.comedia.it>
-References: <3CAE9F23.3C58CB1E@vtc.edu.hk>
-MIME-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <3CAE9F23.3C58CB1E@vtc.edu.hk>
+Message-Id: <Pine.LNX.4.44.0204080856110.21508-100000@momo.office.qis>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,41 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Apr  7 05:28:02 2002
+Date: Mon Apr  8 02:07:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM <linux-lvm@sistina.com>
 
-to various points in the thread
-upgrading by hand might be a choice
-	rpm -Fvh /mnt/cdrom/RedHat/RPMS/*.rpm
-	note the missing dependencies
-	rpm -Uvh /all/the/dependencies/you/found.rpm
-	rpm -Fvh /mnt/cdrom/RedHat/RPMS/*.rpm
+On Sat, 6 Apr 2002, Nick Urbanik wrote:
 
-i was able to upgrade from rh6.1 to 6.2 once upon a time by fiddling with up2date
+> Dear team,
+>
+> We have a number of servers with /usr and /var on LVM.  The difficulty
+> arises when upgrading from one version of Red Hat to another; the
+> installation disks do not recognise the logical volumes.
+>
+> Do any of you have any reasonable approach to solving this?  Do I need
+> to create a new network installation boot disk with a small kernel with
+> support for LVM and scripts to turn on LVM groups?
+Why do all people think they need to reboot the maschine to upgrade
+software? This is not NT :-)
 
-mandrake has good lvm support, albeit they stubbornly refused to add lvm-root support
-to 8.2
+Switch to runlevel 1 (may be optional), mount the CD and use rpm -F (or
+-U).
 
-redhat has lvm support in rawhide, it also has lvm-root support with mkinitrd, dunno
-about the installer
+Bye...
 
-mandrake cd1 is a nice rescue disk it has support for about every filesystem on earth
-(even if i would have liked ntfs r/w support).
-It does not support raid or LVM, on 8.1 it also had the tendencxy to mount one of the mirrors
-of your root partition, instead of the whole mirror
-i found easier to recover from problems with raid/lvm by booting the mandrake cd in install
-mode and switching to a shell as soon as possible.
-
-regards
-L.
-
+	Dirk
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Dirk Heinrichs          | Tel:  +49 (0)241 413 260
+Configuration Manager   | Fax:  +49 (0)241 413 2640
+QIS Systemhaus GmbH     | Mail: dheinrichs@qis-systemhaus.de
+Juelicher Str. 338      | Web:  http://www.qis-systemhaus.de
+D-52070 Aachen          | ICQ#: 110037733
