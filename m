@@ -1,17 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0JMEpO02000
-	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 17:14:51 -0500
-Received: from host01.ipowerweb.com (host01.ipowerweb.com [66.235.217.101])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0JMEoB6015054
-	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 17:14:51 -0500
-Message-ID: <1106172883.41eedbd386498@www.eiler.net>
-Date: Wed, 19 Jan 2005 14:14:43 -0800
-From: joe@eiler.net
-Subject: Re: [linux-lvm] Data corruption on large, multi-device filesystem
-References: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
-In-Reply-To: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0K6QuO05711
+	for <linux-lvm@redhat.com>; Thu, 20 Jan 2005 01:26:56 -0500
+Received: from smtp.restena.lu (legolas.restena.lu [158.64.1.34])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0K6QnAw011670
+	for <linux-lvm@redhat.com>; Thu, 20 Jan 2005 01:26:50 -0500
+Received: from smtp.restena.lu (localhost [127.0.0.1])
+	by smtp.restena.lu (8.12.11/8.12.11) with ESMTP id j0K6QpSD021051
+	for <linux-lvm@redhat.com>; Thu, 20 Jan 2005 07:26:51 +0100
+In-Reply-To: <s1ee8563.047@kumc-smtpout.kumc.edu>
+Subject: Re: [linux-lvm] LVM + SAN Behavior
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <OFF2B16D91.6DB8D9FD-ONC1256F8F.0021A89D-C1256F8F.00235D23@restena.lu>
+From: gilles.massen@restena.lu
+Date: Thu, 20 Jan 2005 07:26:46 +0100
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,80 +24,116 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Jens Beyer <jbe@webde-ag.de>
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I have recently run into this problem also.  I have seen it happen on SuSe 9.2,
-Fedora Core 2 and 3, and vanilla kernels 2.6.8.1, 2.6.9, and 2.6.10.
-All of my tests were using xfs.
+Hello Dustin,
 
-It happens whenever 2 or more devices are striped together with a total volume
-size greater than 2TB.  I have played with a single 4TB raid (12x 400GB RAID5)
-and did not see any corruption (but I did not fill the disk either).
+I feel somewhat relieved that I'm not the only one going to this sort of 
+surprises :). I played around with our SAN, Linux, LVM, MD... only to 
+discover quite some limitations in Linux.
 
-I initially saw the problem running video files over samba. But have recreated
-the problem by simply copying some large (5GB+) files and then checking
-md5sums.
+Concerning the enlargement of partitions: from what I saw, the kernel does 
+not re-read the partition table easily. Short of rebooting, this can be 
+achieved by starting fdisk (which should reread the partition table on its 
+own) and writing it to the disk. This makes the kernel reread the 
+partition table IF there is no activity on the disk (i.e. no mounted 
+partition or active volume-group). From that point you can then create a 
+150GB partition, make it a PV and add it to your volume group. 
 
-I don't see any corruption on the files unless I specify the -i option to
-lvcreate.  I usually see data corruption within an hour using my current tests.
+You could make the partition larger, but the only way I found was to 
+delete the partition, and recreate it with another last sector (this is 
+not for weak hearts) and even then I'm not sure that you can resize your 
+PV easily.
 
-Let me know if I can be of any assistance.
-Joe
+Erm...sorry...I reread your posting: it seems you made the whole disk, not 
+a partition, a PV? The you would need 'pvresize'. However when running it, 
+it says: "command not implemented yet" (LVM2, latest release)
+
+Gilles
 
 
-Quoting Jens Beyer <jbe@webde-ag.de>:
+--
+RESTENA - DNS-LU
+6, rue Coudenhove-Kalergi
+L-1359 Luxembourg
+tel: (+352) 424409
+fax: (+352) 422473
 
->
-> Hi,
->
-> I get severe data corruption using an logical volume larger
-> then 2 TB. Finally I was able to track down device mappper or
-> lvm as last suspects.
->
-> My first guess where problems with filesystems but recently
-> I tried using md / RAID0 - and didnt have any errors of any
-> kind. I would prefer using LVM since we want to use snapshots
-> to simplify backup, but I have no clue how to further debug.
->
-> On a system with 3 devices each larger then 1 TB and a logical
-> volume striped over all devices some data gets corrupted while
-> written (or read ?) from disk. This shows up as md5 or crc sums
-> changes on sequenced reads of files if filecache is not involved
-> (by reading a lot data).
-> On ext2fs there are error while writing data (kernel: EXT2-fs error
-> (device dm-0): ext2_new_block: Allocating block in system zone -
->  block = 722239884), on other filesystems successive fsck/repairs
-> shows corrupted metadata.
->
-> The system setup is
-> - Three 29160B Adaptec scsi-controller each with one
->   ATA-Disk Raid sized 1240 GB, (dual PIII, HP DL360 G2, 2 GB Ram)
-> - Volume group over all three devices, logical volume stripped
->   full size (3.7 TB)
-> - Filesystem either ext2fs/ext3fs (1.34), reiserfs (3.6.13) or
->   xfs (2.6.25)
->
-> - host:~ # lvm version
->   LVM version:     2.00.33 (2005-01-07)
->   Library version: 1.00.21-ioctl (2005-01-07)
->   Driver version:  4.3.0
-> - 2.6.10 vanilla + 2.6.10-udm1 patches
->
-> The problems where initially discovered on 2.6.8, tracked on 2.6.9-udm
-> and also occurs if only 2 devices (sum 2.4 TB) are used.
->
-> For a limited time I will be able to further debug the system though
-> it takes some time to generate more then 2 TB of data
-> (max seq read/write rate is ~80 MB/s).
->
-> Jens
->
-> --
-> Nur tote Fische schwimmen mit dem Strom
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+
+
+
+"Dustin Decker" <ddecker@kumc.edu>
+Sent by: linux-lvm-bounces@redhat.com
+19/01/2005 23:05
+Please respond to LVM general discussion and development
+ 
+        To:     <linux-lvm@redhat.com>
+        cc: 
+        Subject:        [linux-lvm] LVM + SAN Behavior
+
+
+Greetings/Salutations,
+I have an interesting situation, and am hoping a few extra eyeballs may
+help out.  The background:
+ 
+SuSE Linux Enterprise Server 9.0 - fully patched
+Root and swap partitions are "local", while we have a SAN which
+provides additional storage over fiber.  For all intents and purposes,
+the server sees this as a "local" disk as well.
+ 
+Originally a single physical volume (/dev/sda which = 850GB SAN
+allotment) was made part of a Logical Volume.  Now I am in need of
+extending the logical volume to a full terabyte, which I expected to be
+quite easy.  Our SAN administrator happily enlarged the volume we have
+on the SAN by an additional 150GB, to equal a full terabyte.  The
+server, even post reboot (M$ mentality, agreed), doesn't appear to know
+about the additional 150GB.
+ 
+What I am finding is that I cannot simply enlarge a physical partition.
+ (Kinda felt like a "duh" moment.)  The real killer in this instance is
+that our SAN supports expanding a SAN allotment, but not necessarily
+reducing one.  Having asked my SAN admin to make this allotment larger,
+I've pretty well made 150GB of disk space out there un-usable, as the
+Linux system cannot (to my knowledge thus far) "see" it, and until such
+time as the SAN allotment is deleted/recreated, the extra space is in
+limbo.  (I.E. if I perform a pvcreate on /dev/sda, I expect now I would
+get a full terabyte physical volume, but destroy the 850GB +/- 1% of
+data currently there.)
+ 
+I recognize that had the SAN provided us _another_ drive, vice
+extending the size of what we had, I could have created a new PV and
+extended our logical volume to include that.  Short term, we're hoping
+an additional 1TB of space is available on the SAN so we can perform a
+snapshot to it, destroy the current logical volume, and run with the
+new, etc.
+ 
+Is anyone aware of alternative methods I can use to reclaim this 150GB?
+ Or perhaps you may have a better option for cleanup?  Granted, I could
+just blow the whole thing away and restore from tape - but that would
+take FOREVER.  Not an option on this system, it's already in
+production.
+ 
+Many thanks,
+ 
+Dustin
+
+
+--
+Dustin Decker - Project Manager
+Department of Information Resources
+University of Kansas Medical Center
+3901 Rainbow Blvd.
+MS3030 - 3030 Taylor
+Kansas City, KS 66160
+
+phone: 913.588.0479
+pager: 913.917.0212
+fax: 913.588.2579
+email: ddecker@kumc.edu
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
