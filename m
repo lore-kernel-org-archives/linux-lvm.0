@@ -1,9 +1,10 @@
-Date: Tue, 2 Oct 2001 20:37:09 +0200
-From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
-Message-ID: <20011002203709.A25072@balu.kawo2.rwth-aachen.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] linux2.4.10/lvm1.0.1rc3 does not compile
+Date: Tue, 2 Oct 2001 19:42:13 +0100 (BST)
+In-Reply-To: <20011002202934.G14582@wiggy.net> from "Wichert Akkerman" at Oct 02, 2001 08:29:34 PM
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <E15oUUf-0005Xw-00@the-village.bc.nu>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: [linux-lvm] Re: partition table read incorrectly
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Wichert Akkerman <wichert@cistron.nl>
+Cc: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-Hi,
+> I seem to run into a weird problem. LVM refused to work properly,
+> after a "vgscan" command "vgchange -a y" would still complain
+> that things weren't consistent and I got a messages about an
+> I/O error on 08:11.
 
-LVM 1.0.1rc3 does not compile (link) with Linux 2.4.10 on my system.
-This is the error message i get:
+Does it complain about wrong block sizes ?
 
+> Interestingly my sdb does not have any partitions since it's one
+> big PV, and fdisk agrees with me on that. However the kernel
+> seems to thing I do have a partition there and as a result LVM
+> seems to get somewhat confused.
 
-ld -m elf_i386 -T /usr/src/linux-2.4.10/arch/i386/vmlinux.lds -e stext
-arch/i386/kernel/head.o arch/i386/kernel/init_task.o init/main.o
-init/version.o \
-        --start-group \
-        arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o
-mm/mm.o fs/fs.o ipc/ipc.o \
-         drivers/char/char.o drivers/block/block.o drivers/misc/misc.o
-drivers/net/net.o drivers/media/media.o drivers/ide/idedriver.o
-drivers/scsi/scsidrv.o drivers/cdrom/driver.o drivers/pci/driver.o
-drivers/video/video.o drivers/md/mddev.o \
-        net/network.o \
-        /usr/src/linux-2.4.10/arch/i386/lib/lib.a
-/usr/src/linux-2.4.10/lib/lib.a
-/usr/src/linux-2.4.10/arch/i386/lib/lib.a \
-        --end-group \
-        -o vmlinux
-drivers/md/mddev.o: In function `lvm_do_le_remap':
-drivers/md/mddev.o(.text+0x1bc5): undefined reference to `__update_hardsectsize'
-drivers/md/mddev.o: In function `lvm_do_lv_create':
-drivers/md/mddev.o(.text+0x3193): undefined reference to `__update_hardsectsize'
-drivers/md/mddev.o: In function `lvm_do_lv_extend_reduce':
-drivers/md/mddev.o(.text+0x3c9a): undefined reference to `__update_hardsectsize'
-drivers/md/mddev.o(.text+0x3cbf): undefined reference to `__update_hardsectsize'
-make: *** [vmlinux] Error 1
+The partition code will look for tables. That bit is fine
 
-
-Does anyone know what went wrong?
-
-Regards, Markus
+The exact error would be good too
