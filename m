@@ -1,12 +1,11 @@
-Return-Path: <michael@visi.com>
-Date: Sun, 17 Jun 2001 23:07:54 -0500
-From: idsfa@visi.com
-Subject: Re: [linux-lvm] What is a good stripe size?
-Message-ID: <20010617230754.A2559@mitethe.eudyptes>
-References: <134933704.992803570667.JavaMail.root@boots> <20010617233627.B18539@tiger.bigcats.invalid>
+Return-Path: <root@srv.sistina.com>
+Date: Mon, 18 Jun 2001 11:52:58 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] multiple vg using the same name
+Message-ID: <20010618115258.B14110@sistina.com>
+References: <20010617141127.E10287@schlund.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010617233627.B18539@tiger.bigcats.invalid>; from weissel@netcologne.de on Sun, Jun 17, 2001 at 11:36:27PM +0200
+In-Reply-To: <20010617141127.E10287@schlund.de>; from anders@schlund.de on Sun, Jun 17, 2001 at 02:11:27PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,59 +21,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Jun 17, 2001 at 11:36:27PM +0200, Wolfgang Weisselberg wrote:
-> For a single file you may gain reading speed (writing is less
-> critical as it is buffered); however with a stripe size below
-> file size you will need to move the heads of both (or even
-> more) disks, increasing latency[1], effectively slowing down
-> reads unless you have fairly large files.
+On Sun, Jun 17, 2001 at 02:11:27PM +0200, Anders Henke wrote:
+> Hi,
+> 
+> I'm currently thinking about clustering our storage arrays into a san structure
+> and how to organize usually identical systems with lvm. I'd like to avoid 
+> giving each host a different name for its VG in order to have an identical
+> /etc/fstab on every machine (you don't want to alter a mount-option for a
+> single mountpoint on hundreds of machines by hand or by sed).
 
-True, but I was assuming 'typical' use, which means < 2G of small files
-(everything having to do with the OS) with the majority of the hard
-drive space being used for files in the megabyte+ range (multimedia,
-databases and so forth).  I can agree with your logical argument that
-larger stripes are better for small files, but I would further argue
-that striping a partition of small files is the wrong way to go.  If
-you are looking for a performance increase on reads for small files,
-you want to look@RAID1 (mirroring) or RAID 5 (if you have enough
-disk controllers) or a filesystem which optimises access to small
-files.
+Changing /etc/fstab by sed is actually quite simple IMHO.
+Put something along the lines of this into your startup script chain before
+the local mounts after running vgscan.
 
-{ I neglected to mention in my example that I do not stripe my OS 
-  partitions, but mirror them instead.  I stripe my /home (where I
-  do graphics and sound work) and /games. }
+#!/bin/sh
+F=/etc/fstab T=/tmp/fstab.$$
+sed "s?\(dev/vg_\)[^/]*/?\1${HOSTNAME}/?" $F > $T
+cp $T $F; rm -f $T; unset F T
 
-> In conclusion (IMHO): 
-> - small stripes increase the latency even for small reads,
->   hurting throughput (and slowing the reads even when looking
->   at a single file).
+> 
+> I've x machines with x local LVM installations. Each machine uses e.g. 
+> /dev/vg/spool as a LV. These local LVs have been installed the usual way
+> (pvcreate, vgcreate, lvcreate), so each VG has its own UUID and the LVM
+> should use the suitable UUIDs to gather the PVs to the suitable VG.
+> 
+> Our idea is to take these PVs via a FC-SAN into one structure, the individual
+> hosts can only see 'their' storage, but failover-nodes can see every PV in 
+> the SAN so they can completely take a failed node offline (kick the big, red
+> power button), remount its LV and perform a full take-over.
+> 
+> What happens if the physical volumes of one machine becomes additionaly
+> available to a second machine, so that the second machine has to see
+> e.g. 2, 4 or 8 logical volumes with originally the same name (/dev/vg/spool)? 
+> 
+> -lvm completely crashes 
 
-I'd have to change that to "increase the latency for small reads".
-For files >> stripe size, you will see no increase in latency.
-This was stated in your [1] endnote, as well.
+No (hopefully not ;-)
 
+> -only one vg shows up
 
-> - sufficiently large stripes allow both parallel reads of
->   small[2] files or accelerated reads (at the cost of
->   extra -- in this case insignificant[3] -- seek time) of
->   single large[2] files.
+That's how pv_read_all_pv_of_vg(), the library function which reads the metadata
+in from the physical volumes behaves today. The PV uuid list is read from
+the first physical volume found, which has the requested VG name in its
+metadata. The second VG with the same name will be ignored :-(
 
-Not argued.  I was assuming large files.  The answer to "how do I
-configure X" is almost always, "what do you want to do with it?"
+BTW: future versions of the LVM will probably have uuid support on the
+command line like for eg. "vgchange -ay -u VolumeGroupUUID VolumeGroupName".
 
-> - With lvm you could pmove the most accessed blocks so that
->   they are spread over all disks, probably you could even
->   split those disks in 2 parts: the fast 'begin' (outer
->   edge) of the platter and most of the (slower) inner parts.
->   This would have much the same effect of stripes, but would
->   need more attention (you need to run a program, probably
->   even inactivating the LV) and probably have finer granularity.
+> -the VGs or LVs are temporarily being renamed when doing 'vgscan -a'
 
-Something which would balance PEs within a VG based on their usage
-would be a lovely system tool to add to lvm.  I can hardly wait for
-your program  ;-)
+No
 
-Thanks for pointing out where I was making unspoken assumptions!
+> -the VGs or LVs are permanently being renamed when doing 'vgscan -a'
+
+No. I think renaming the LVs is not needed anyway in case we had support
+to rename the VG which would give us unique path names again.
+
+> 
+> What happens if one machine failes, doesn't perform a umount/'vgchange -a n'?
+> Does the failover-node have a chance to use this VG/LV?
+
+With the existing code only in case the VG names differ.
+
+> 
+> I now that somehow I have to figure a way out which VG belongs to which machine,
+> but this may be solved via a map of each machines VG UUID, although just
+> offering a /dev/vg_${hostname}/spool and 'seeing' the VG might be also cool :-)
+
+That could be configurable with the existing LVM software and would cover
+the take over quite happily, because the volume group names would be unique.
+
+See above mentioned script.
+
+> 
+> 
+> Anders
+> -- 
+> Schlund + Partner AG              Systemadministration and Security
+> Erbprinzenstrasse 4-12            v://49.721.91374.50
+> D-76133 Karlsruhe                 f://49.721.91374.212
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 -- 
-$ fortune -m Kellen
+
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
