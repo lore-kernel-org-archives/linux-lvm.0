@@ -1,11 +1,10 @@
-Subject: Re: [linux-lvm] kernel: invalidate: busy buffer
-Message-Id: <20020417014553.J27907@progsoc.uts.edu.au>
-References: <3621.200.184.103.3.1018883627.squirrel@www.dokbua.com>
+Message-Id: <4186.200.184.103.3.1018972960.squirrel@www.dokbua.com>
+Subject: RE: [linux-lvm] kernel: invalidate: busy buffer
+From: "Rene @ Webscorpion.com" <rene.madsen@webscorpion.com>
+In-Reply-To: <2D0AFEFEE711D611923E009027D39F2B02F124@cdserv.meridian-data.com>
+References: <2D0AFEFEE711D611923E009027D39F2B02F124@cdserv.meridian-data.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3621.200.184.103.3.1018883627.squirrel@www.dokbua.com>;
-    from rene.madsen@webscorpion.com on Mon, Apr 15, 2002 at 12:13:47PM -0300
-From: Anand Kumria <wildfire@progsoc.uts.edu.au>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,45 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 16 10:50:02 2002
+Date: Tue Apr 16 11:01:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 15, 2002 at 12:13:47PM -0300, Rene @ Webscorpion.com wrote:
-> 
-> I notice in my /var/log/messages that I get MILLIONS (really) of errors:
-> kernel: invalidate: busy buffer
+Thanks for the many replies. I was feeling a little lonely there for a
+moment.
 
-Apparently later kernel versions in 2.4.x output that message when
-invalidate_buffers() is called too many times. I would get a few of
-them on startup (2.4.16).
+> I also don't know why your lvcreate dumps core.  How recent are your
+> LVM tools?  Try using the -d option to lvcreate to see how far it gets,
+> or run lvcreate from within gdb.
 
-> What am I doing wrong? Is this error related to the missing kernel
-> patching?
 
-No, just the tools are calling this function too often as far as the
-kernel is concerned. I'm not sure if it causes any specific harm though.
+LVM tools are 1.0.3 - but as I said, I was unable to run the patch against
+my kernel source -- and I need and -AC kernel to keep aquote happy.
 
-> How can I patch a standard kernel for both -ac and LVM ? As I understand
-> it they both require a "clean" kernel to apply good?
+I know there is a LVM 1.1-rc1 release available, however, call me chicken
+but I don't dare installing software that comes with a note
+like "Disclaimer: This release is not meant to be run on production
+systems."
 
-Grab the clean kernel; apply LVM patches; apply redhat patches. Stephen
-Tweddie was on here pointing out a patch that Redhat have done to the
-kernel does buffer locking if you do pvmove -- so not all of the Redhat
-patches may apply cleanly.
+Will try -d option later (no access to server from where I am now).
 
-> Sorry for the perhaps stupid quiestions, but I am not a kernel guru - I
-> only know just enough to get myself into trouble :-)  I *did* read the FAQ
-> and I *did* search google (usenet) - didnt' find the answers tho...
-
-I searched google for 'busy buffer linux' and the first hit is on the 
-linux-lvm list from 2001
-
-Anand
-
--- 
- `` We are shaped by our thoughts, we become what we think.
- When the mind is pure, joy follows like a shadow that never
- leaves. '' -- Buddha, The Dhammapada
+How would I go about running lvcreate from within gdb? Sorry I'm not a
+programmer :-)
