@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LV only detected when using "lvscan -D" on amd64 kernel
-Message-ID: <20031025091006.I848@sistina.com>
-References: <3F994F88.8030908@elitedvb.net>
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Message-ID: <20031026123054.GG1569@tangerine.coulon.evette>
 Mime-Version: 1.0
-In-Reply-To: <3F994F88.8030908@elitedvb.net>; from tmbinc@elitedvb.net on Fri, Oct 24, 2003 at 06:12:56PM +0200
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Warning message with lilo about /proc/partitions
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,139 +14,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 25 02:09:01 2003
+Date: Sun Oct 26 06:31:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format="Flowed"; delsp="Yes"; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Felix,
+Hi,
 
-this definitely looks like a 64bit ioctl related problem.
-I don't have the equipment to test here so help (is external access to
-your machine possible ?) is needed.
+When I start lilo, I've the following warning mesage:
 
-Regards,
-Heinz    -- The LVM Guy --
+Reading boot sector from /dev/hda
+Warning: '/proc/partitions' does not match '/dev' directory structure.
+    Name change: '/dev/lvma' -> '/dev/vg00/root_lv'
+    Name change: '/dev/lvmb' -> '/dev/vg00/var_lv'
+    Name change: '/dev/lvmc' -> '/dev/vg00/usr_lv'
+    Name change: '/dev/lvmd' -> '/dev/vg00/home_lv'
+    Name change: '/dev/lvme' -> '/dev/vg00/opt_lv'
 
 
-On Fri, Oct 24, 2003 at 06:12:56PM +0200, Felix Domke wrote:
-> Hi,
-> 
-> i have an amd64-based machine, upgraded from a normal one. I'm using 
-> debian, right now still the 32bit version (except for compiling the kernel).
-> 
-> I'm using
-> Linux opt 2.4.22-bk38 #4 SMP Wed Oct 22 06:44:13 UTC 2003 x86_64 GNU/Linux
-> 
-> using
-> # dmesg  | grep "LVM"
-> LVM version 1.0.7(28/03/2003)
-> 
-> The LVM consists of 4 disks, two 40GB, one 20GB and one 120GB, gives a 
-> total of roughly 220GB. All disks seem to work properly,
-> pvscan gives
-> # pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- ACTIVE   PV "/dev/hdg" of VG "fast" [115.03 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hdf" of VG "fast" [19.16 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hdc" of VG "fast" [38.16 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hdd" of VG "fast" [38.16 GB / 0 free]
-> pvscan -- total: 4 [210.54 GB] / in use: 4 [210.54 GB] / in no VG: 0 [0]
-> 
-> vgscan gives
-> # vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "fast"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-> group
-> 
-> so everything looks fine. The logical volume worked fine with the old 
-> kernel (2.4.20 or something like this, for ia32.).
-> 
-> but
-> # lvscan
-> lvscan -- no logical volumes found
-> 
-> and
-> # vgdisplay
-> --- Volume group ---
-> VG Name               fast
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                0
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                4
-> Act PV                4
-> VG Size               210.52 GB
-> PE Size               4 MB
-> Total PE              53893
-> Alloc PE / Size       0 / 0
-> Free  PE / Size       53893 / 210.52 GB
-> VG UUID               NiBxzC-W5zF-Mb37-5ajN-ljE9-5k53-Fzc26O
-> 
-> So the logical volume seems to be gone :/
-> 
-> HOWEVER,
-> 
-> # lvscan -D
-> lvscan -- reading all physical volumes (this may take a while...)
-> lvscan -- inactive          "/dev/fast/lvol1" [210.52 GB]
-> lvscan -- 1 logical volumes with 210.52 GB total in 1 volume group
-> lvscan -- 1 inactive logical volumes
-> 
-> and
-> 
-> # vgdisplay -D
-> --- Volume group ---
-> VG Name               fast
-> VG Access             read/write
-> VG Status             NOT available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                1
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                4
-> Act PV                4
-> VG Size               210.52 GB
-> PE Size               4 MB
-> Total PE              53893
-> Alloc PE / Size       53893 / 210.52 GB
-> Free  PE / Size       0 / 0
-> VG UUID               NiBxzC-W5zF-Mb37-5ajN-ljE9-5k53-Fzc26O
-> 
-> so i think there must be still some hope. Looks like the kernel LVM 
-> stuff is somehow broken. Can this be a 64bit issue? Is there anything  i 
-> could test/upgrade/whatever? Do you need more outputs?
-> Or did i simply forget to do anything?
-> 
-> 
-> thanks,
-> Felix
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+The /proc/partitions is:
+major minor  #blocks  name
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+  58     0    1048576 lvma
+  58     1    1572864 lvmb
+  58     2   10485760 lvmc
+  58     3    3145728 lvmd
+  58     4    1572864 lvme
+   3     0   30029328 hda
+   3     1      16033 hda1
+   3     2   28057522 hda2
+   3     3    1951897 hda3
+   3    64   29316672 hdb
+   3    65    4883728 hdb1
+   3    66   17583142 hdb2
+   3    67    1951897 hdb3
+   3    68    4891792 hdb4
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+This seems to be harmless. What does /proc/partitions does not reflect  
+the real ones?
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--
+Regards
+		- Jean-Luc
