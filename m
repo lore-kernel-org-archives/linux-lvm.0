@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3I9Dcj11319
-	for <linux-lvm@redhat.com>; Sun, 18 Apr 2004 05:13:38 -0400
-Received: from mail016.syd.optusnet.com.au (mail016.syd.optusnet.com.au
-	[211.29.132.167])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i3I9DZJW003927
-	for <linux-lvm@redhat.com>; Sun, 18 Apr 2004 05:13:36 -0400
-Received: from webmail02.syd.optusnet.com.au (webmail02.syd.optusnet.com.au
-	[211.29.132.236])
-	by mail016.syd.optusnet.com.au (8.11.6p2/8.11.6) with ESMTP id
-	i3I9DTw23484
-	for <linux-lvm@redhat.com>; Sun, 18 Apr 2004 19:13:29 +1000
-Message-Id: <200404180913.i3I9DTw23484@mail016.syd.optusnet.com.au>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3IIN6j14334
+	for <linux-lvm@redhat.com>; Sun, 18 Apr 2004 14:23:06 -0400
+Received: from anor.ics.muni.cz (root@anor.ics.muni.cz [147.251.4.35])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i3IIN587030929
+	for <linux-lvm@redhat.com>; Sun, 18 Apr 2004 14:23:05 -0400
+Received: from anxur.fi.muni.cz (IDENT:0@anxur.fi.muni.cz [147.251.48.3])
+	by anor.ics.muni.cz (8.12.1/8.12.1) with ESMTP id i3IIN4na015074
+	for <linux-lvm@redhat.com>; Sun, 18 Apr 2004 20:23:04 +0200
+Received: from anxur.fi.muni.cz (IDENT:11561@localhost [127.0.0.1])
+	by anxur.fi.muni.cz (8.12.10/8.12.8) with ESMTP id i3IIN3uw014939
+	for <linux-lvm@redhat.com>; Sun, 18 Apr 2004 20:23:03 +0200 (MEST)
+Received: (from kas@localhost)
+	by anxur.fi.muni.cz (8.12.10/8.12.8/Submit) id i3IIN3Z0014938
+	for linux-lvm@redhat.com; Sun, 18 Apr 2004 20:23:03 +0200 (MEST)
+Date: Sun, 18 Apr 2004 20:23:03 +0200
+From: Jan Kasprzak <kas@informatics.muni.cz>
+Message-ID: <20040418182303.GD21069@fi.muni.cz>
+Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: binary
-MIME-Version: 1.0
-From: drsmithy@optusnet.com.au
-Date: Sun, 18 Apr 2004 19:13:28 +1000
-Subject: [linux-lvm] Lost a VG - please help
+Subject: [linux-lvm] lvextend fails on v2 metadata
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,100 +30,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I have just upgraded a machine running Redhat
-9 to Whitebox Linux 3.  Unfortunately, it
-appears to have killed/destructively
-reconfigured my LVM setup.
+	Hello, all!
 
-The original config consisted of:
+	I have probably found a bug in lvextend when using v2 metadata.
+The description of the problem is quite long, I am sorry.
 
-/dev/hda1	
-	- Regular ext3 Linux partition mounted as /boot
-/dev/hda2	
-	- LVM partition containing:
-	vg_system
-		- VG with several LVs containing the OS.
+- The system is Fedora Core 1 on x86_64.
+- LVM utils lvm2-2.00.08-5 RPM from the FC2 beta, recompiled from src.rpm
+- Kernel is 2.6.5
 
-A RAID5 md device, /dev/md0, consisting of:
-	/dev/hdc1
-	/dev/hde1
-	/dev/hdg1
-	/dev/hdi1
-	/dev/hdk1
+	I have two RAID-5 volumes - /dev/md5 is about 300GB, and /dev/md6
+is about 480GB. I want to join them to a single logical volume, but not
+just an ordinary concatenated one, but I want to achieve at leaset some
+level of interleaving. So I have ran pvcreate on both volumes, then
+vgcreate data_vg /dev/md5 /dev/md6 (128MB extent size, so md5 has 2266
+extents and md6 has 3725 extents), and then
+lvcreate -l1 /dev/data_vg/test_lv (i.e. test_lv has only one extent).
+Then I have written a simple Perl script to lvextend the test_lv volume
+by 1 extent from either md5 or md6, depending on which one has the higher
+fraction of free extents. This way I will get as perfect interleaving as I
+can get on the PVs of different size.
 
-/dev/md0 was configured as a single VG,
-vg_data.  This VG had about 5 LVs.
+	The problem is that the lvextend failed when test_lv had
+1999 PEs from md5 and 3286 PEs from md6, i.e. when I was trying to
+add 2000th extent from md5 to test_lv. From this point on, I could
+add extents from md6 to test_lv, but not from md5.
 
-Before installing the new system, I
-'vgexport'ed vg_data as indicated in the LVM
-HOWTO
-(http://www.tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html):
+	I have repeated this twice, and it failed on the same 2000th PE
+from md5. Then I have tried the same using version 1 format of metadata,
+and I have successfuly created the interleaved LV from all extents of md5
+and md6. I am now running a live system on this LV, so I cannot test it
+further. Hope this description helps you to find where the problem is.
 
-(Unmount all relevant filesystems)
+	Thanks,
 
-'vgchange -an vg_data'
-          
-'vgexport vg_data'
+-Yenya
 
-
-I "upgraded" by replacing /dev/hda with a new
-drive and installing WBL straight onto the
-new drive.  The LVM config I used for the new
-drive was:
-
-/dev/hda1
-	- Regular ext3 Linux partition mounted as /boot
-/dev/hda2	
-	- LVM partition containing:
-	vg_wbl
-		- VG with a single LV containg the OS
-
-Unfortunately, the VG that was on /dev/md0 -
-vg_data - appears to have disappeared and
-/dev/md0 appears to have been "merged" into
-vg_wbl.  The commands for importing the old
-VG do not give the results I was expecting:
-
-[root@terminus root]# pvscan
-pvscan -- reading all physical volumes (this
-may take a while...)
-pvscan -- ACTIVE   PV "/dev/md0"  of VG
-"vg_wbl" [447.14 GB / 447.14 GB free]
-pvscan -- WARNING: physical volume
-"/dev/hde1" belongs to a meta device
-pvscan -- WARNING: physical volume
-"/dev/hdc1" belongs to a meta device
-pvscan -- ACTIVE   PV "/dev/hda2" of VG
-"vg_wbl" [37.16 GB / 25.40 GB free]
-pvscan -- total: 4 [484.32 GB] / in use: 4
-[484.32 GB] / in no VG: 0 [0]
-
-[root@terminus root]#
-
-I do not think /dev/md0 should be a PV of
-vg_wbl....
-
-Unsurprisingly, the next step of the import
-didn't work:
-
-[root@terminus root]# vgimport vg_data /dev/md0
-vgimport -- ERROR "pv_read(): multiple
-device" reading physical volume "/dev/md0"
-
-[root@terminus root]#
-
-
-I'd appreciate any help people can offer
-recovering my data.  It would appear the
-470Gb VG that was on /dev/md0 has disappeared
-in a puff of electrons and /dev/md0 has
-somehow been "sucked in" to the new vg_wbl VG
-I created while installing the OS.  I'm sure
-I'll need to provide more info, but I'm
-unsure as to what it is - please don't
-hesistate to ask.
-
-Regards,
-CS
+-- 
+| Jan "Yenya" Kasprzak  <kas@{fi.muni.cz - work | yenya.net - private}> |
+| GPG: ID 1024/D3498839      Fingerprint 0D99A7FB206605D7 8B35FCDE05B18A5E |
+| http://www.fi.muni.cz/~kas/   Czech Linux Homepage: http://www.linux.cz/ |
+ Any compiler or language that likes to hide things like memory allocations
+ behind your back just isn't a good choice for a kernel.   --Linus Torvalds
