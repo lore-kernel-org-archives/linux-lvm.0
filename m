@@ -1,9 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Fri, 11 May 2001 15:53:11 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010511155311.A17689@sistina.com>
-Mime-Version: 1.0
-Subject: [linux-lvm] LVM 1.0 release decision
+Return-Path: <terjekv@ifi.uio.no>
+Subject: Re: [linux-lvm] Graphical tool for LVM?
+References: <3AF91E23.163C9119@in.tum.de> <wxxzocl2vqo.fsf@gjallarhorn.ifi.uio.no> <20010510152849.B559@tykepenguin.com>
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 11 May 2001 16:02:21 +0200
+In-Reply-To: Patrick Caulfield's message of "Thu, 10 May 2001 15:28:49 +0100"
+Message-ID: <wxxwv7o56he.fsf@fjorir.ifi.uio.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,46 +19,36 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, linux-kernel@sistina.com
-Cc: mge@sistina.com
+To: linux-lvm@sistina.com
 
-As most of you probably know, we've got criticism a couple of weeks ago about
-our Linux kernel patch policy causing the LVM vanilla kernel code to differ
-from the one we release directly.
+Patrick Caulfield <caulfield@sistina.com> writes:
 
-In order to avoid this difference we provide smaller patches more often now.
-We have started already with a subset of about 50 necessary patches.
+> On Thu, May 10, 2001 at 03:12:47PM +0200, Terje Kvernes wrote:
+>
+> > <rant>
+> > but I'm still annoyed at the PV-names in /proc/lvm/globals.
+> > </rant>
+> 
+> OK, fixed it, you can shut up now :-)
 
-Even though we get kind support from Alan Cox to get those QAed and integrated,
-the pure amount of patches will take at least a couple of weeks to make it in.
+  why thank you! :)
 
-This leads to the dilemma, that trying to avoid further differences between
-our LVM releases and the stock kernel code would force us into postponing
-the pending LVM 1.0 release accordingly which OTOH is incovenient for the LVM
-user base.
+,----[ caulfield    2001/05/10 09:23:14 CDT ]
+| Modified files:
+|     kernel               lvm-fs.c 
+|   Log:
+|   Show much more of the PV name in /proc/lvm/global. In other words, this now
+|   works with devfs: rather than just showing "disc"*(sic) or "part1" it shows the
+|   whole name but without "dev".
+|   
+|   * I'm English and I still think that's wrong!
+|   
+|   Revision  Changes    Path
+|   1.3       +2 -1      LVM/kernel/lvm-fs.c
+`----
 
-In regard to this situation we'ld like to know about your oppinion on
-the following request:
-is it acceptable to release 1.0 soon *before* all patches to reach the 1.0 code
-status are in vanilla (presumed that we provide them with our release as we
-always did before)?
-
-We'll gather your answers for some days and will send the conclusion
-to the lists.
-
-Thanks for your support!
+  that means it's time for me to rebuild again... awe... uptime vs.
+  features. I want hot-swappable kernels now!
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Terje
