@@ -1,57 +1,48 @@
-Date: Wed, 31 May 2000 10:40:12 +0200
+Date: Wed, 31 May 2000 11:01:28 +0200
 From: "Andi Kleen" <ak@suse.de>
 Subject: Re: [linux-lvm] SuSE/LVM boot problem
-Message-ID: <20000531104012.A22383@gruyere.muc.suse.de>
-References: <20000502052139.AAA12301@quartz.nbnet.nb.ca@Lxxxx.nbtel.nb.ca> <200005020951.LAA07870@e35.marxmeier.com> <20000502114113.C1608@archimedes.suse.com> <20000502232221.A20803@gondor.com>
+Message-ID: <20000531110128.A22796@gruyere.muc.suse.de>
+References: <390FD771.DB59EECB@msede.com> <20000503095326.A4439@archimedes.suse.com>
 Mime-Version: 1.0
-In-Reply-To: <20000502232221.A20803@gondor.com>; from list039@gondor.com on Tue, May 02, 2000 at 11:22:21PM +0200
+In-Reply-To: <20000503095326.A4439@archimedes.suse.com>; from dgould@suse.com on Wed, May 03, 2000 at 09:53:26AM -0700
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jan Niehusmann <list039@gondor.com>
-Cc: dgould@suse.com, linux-lvm@msede.com
+To: dgould@suse.com
+Cc: adilger@turbolabs.com, linux-lvm@msede.com
 
-On Tue, May 02, 2000 at 11:22:21PM +0200, Jan Niehusmann wrote:
-> > On this topic, what is needed to make lvm work for both / and /boot with
-> > full lilo support? I think it somewhat limits the utility of lvm not to
-> > be able to make a fully lvm system, and might be tempted to do some of
-> > the heavy lifting if it is not too gruesome.
+On Wed, May 03, 2000 at 09:53:26AM -0700, dgould@suse.com wrote:
+> If I have understood this, we need the following to make this
+> work (some of this may already exist):
 > 
-> As lilo doesn't parse filesystems, it has to know the sector numbers of
-> the disk blocks that contain the kernel (and the second stage boot loader).
-> 
-> I can imagine two ways to make lilo work with lvm:
-> 
-> 1) at install time (when you run /sbin/lilo), lilo maps the logical (lvm)
-> locations to physical locations and writes these to the boot block. The boot
-> code doesn't need to be changed.
+>  - lvm needs to provide an way for other programs to translate logical
+>    blocks to physical
 
-That's not very hard to do. You just need a FIPHYSBMAP ioctl. 
+A physical equivalent to FIBMAP. Not too hard to implement I think.  
 
 > 
-> 2) lilo writes logical locations to the boot block (trivial). The boot
-> code needs to understand lvm. 
-> 
-> Option 2 is probably very difficult to do, as it requires to implement 
-> lvm handling in 16 bit code. Only read-only access is needed, but still,
-> it's probably a major project.
-> 
-> Option 1 is way easier to implement, but has one big disadvantage: Whenever
-> you move physical extents, you have to re-run lilo.
-> 
-> 
-> Both ways, you may end up with the kernel (or parts of it) moved to
-> a drive that's not accessible by lilo.  (while the 1024-cylinder-limit
-> is gone, there are still drives that are accessible by linux but not by
-> the bios, for example scsi drives on a controller without bios)
+>  - lvm needs to have a way of tracking/enforcing/satisfying the constraint
+>    that specified lvs need to be in the bios bootable physical area
 
-I would just add a ``bootable''/``non bootable'' attribute to a PV and a LV. 
-When lilo runs it sets a ``bootable'' attribute on the LV, and when you try
-to move a bootable LV onto a non bootable PV it complains. Not 100% bulletproof,
-because it requires some user action to tag the PVs correctly, but better
-than nothing.
+That's pretty much impossible. How would e.g. LVM find out that the scsi
+controller of disk X does not have a boot rom? You have to trust the user there.
+
+> 
+>  - lilo needs to understand about lvm and use the lvm provided ways to
+>    get physical mappings.
+
+That's complicated. Someone did a similar hack for RAID0, but LVM is more
+complicated than MD RAID0. Better just supply the real block numbers to lilo
+and rerun it as needed (LVM could warn about it) 
+
+> 
+>  - the kernel needs to be able to reconstruct enough of the lvm
+>    descriptors to mount / at boot time.
+
+That's handled in the initrd (lilo loads kernel + initrd, initrd contains
+LVM tools) 
 
 
 -Andi
