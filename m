@@ -1,10 +1,8 @@
-Message-ID: <3BA70838.8060902@st-peter.stw.uni-erlangen.de>
-Date: Tue, 18 Sep 2001 10:39:20 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+Date: Tue, 18 Sep 2001 05:09:36 -0400 (EDT)
+From: "G'abor Luk'acs" <lukacs@mathstat.yorku.ca>
+Message-ID: <Pine.A41.4.31.0109180504240.109452-100000@pascal.math.yorku.ca>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] RAWIO Patch with 2.4?
-References: <NBBBJHKIOKPKOGOEPEDPOEGKDNAA.stuart@bh90210.net>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvreduce
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,77 +14,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@Sistina.com
 
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-on the bottom there is a part for subscribers
+Hi,
 
-go edit your profile
 
-IT3 Stuart B. Tener, USNR-R wrote:
+I am in the process of installin Linux 8.0, and I have downloaded and
+compiled lvm version 1.0, I patched the kernel, compiled it, etc. So
+everything semes to work, except for one thing: lvreduce somehow damages
+the whole volume group in a way that it becomes inconsistent.
 
->List members:
->
->	How do I leave the mailing list and unsubscribe?
->
->
->Very Respectfully, 
->
->Stuart Blake Tener, IT3, USNR-R, N3GWG 
->Beverly Hills, California
->VTU 1904G (Volunteer Training Unit) 
->stuart@bh90210.net 
->west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
->east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
->
->Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
->
->JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
->
->Tuesday, September 18, 2001 1:28 AM
->
->-----Original Message-----
->From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Patrick Caulfield
->Sent: Tuesday, September 18, 2001 12:53 AM
->To: linux-lvm@sistina.com
->Subject: Re: [linux-lvm] RAWIO Patch with 2.4?
->
->On Mon, Sep 17, 2001 at 04:51:11PM -0500, Brian Bailey wrote:
->
->>When attempting to run make to create the 1.0 patch for my server, I
->>continually receive the message that I haven't applied the rawio patch.
->>However, this is a 2.4.3-6 kernel via Redhat 7.1.  My understanding is
->>rawio is built-in to the kernel post-2.4.
->>
->>In a failed attempt, I actually applied the patch and was still
->>unsuccessful.  Any suggestions?
->>
->
->I would guess that the configure script didn't find your kernel correctly and
->thinks you still have 2.2. Make sure you point it at the right sources using
->eg:
->
->./configure --with-kernel_dir=/usr/src/mykernel
->
->(watch for the hyphen and underscore!)
->
->Then re-run make in the PATCHES directory.
->
->You can check that configure has found the right kernel by examining the
->Makefile in the PATCHES directory - it should have the following three variables
->set:
->
->KERNEL_DIR=
->LVM_VERSION=
->KERNEL_VERSION=
->
->patrick
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Everything else seems to work fine, so I really cannot understand why it
+is happening. The whole message of lvreduce seems to be strange a bit:
+
+when I am redicing an LV when it is enabled then it askes for
+confirmation, but when I disabled it just to see what happens, it wrote me
+that since it is not active I cannot reduce it.
+
+I am completely aware to the fact that first I have to resize the FS
+inside, but it is not the question, as resize2fs seems to work pefectly
+well.
+
+Somehow my feeling is that something is wroking with the consistency
+checking mechanism.
+
+I would really apprecaite if you could advise me about it.
+
+
+I am looking forward to hearing from you.
+
+
+Thanks in advance,
+
+Gabor Lukacs
