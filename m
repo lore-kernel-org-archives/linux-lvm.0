@@ -1,10 +1,7 @@
-Message-Id: <200207300739.g6U7dQU28837@zeus.dtts.co.jp>
-From: Young Ui Park <youngui@dtts.co.jp>
-Subject: RE:[linux-lvm] How to install lvm in Redhat 7.1
-In-Reply-To: <20020729054718.6310.qmail@webmail6.rediffmail.com>
-References: <20020729054718.6310.qmail@webmail6.rediffmail.com>
+Message-ID: <E04CF3F88ACBD5119EFE00508BBB212103B7EA2F@exch-01.noida.hcltech.com>
+From: "Amit  Agrawal, Noida" <amitag@noida.hcltech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] RE:
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,54 +12,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 30 02:39:01 2002
+Date: Tue Jul 30 13:19:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---Shuvodeep  Ghosh<shuvodeep_ghosh@rediffmail.com> wrote:
->Hello lvm'rs,
->              I am new to Linux and i want install lvm on my OS 
->release 2.4.2-2.I was trying to do it with the .rpms available on 
->Susi, but i am stuck after the make dep and make modules 
->procedures.can someone suggest me whether that tar will allow me 
->to install lvm on my redhat release 7.1 or i would need a 
->different tar file for that??
-Hi
+	Hi,
 
-I patched "LVM 1.0.5" against kernel 2.4.9-34 for RH7.2 as follows;
+		Sorry to bother you.
 
-1.Replace files 
-"KERNEL_DIR/drivers/md/lvm.c,lvm-fs.c,lvm-internal.h,lvm-snap.c;
-KERNEL_DIR/include/linux/lvm.h".
+			Would you please help by suggesting the changes
+required in LVM internal data structures to make LV's greater than 2TB on 32
+bit machine for 2.4.18 kernel. As far as kernel limitations are there we
+have removed them all and want lv's greater than 2TB also.
 
-with these files in lvm_1.0.5.tar.gz
-"LVM/1.0.5/kernel/lvm.c,lvm-fs.c,lvm-internal.h,lvm-snap.c,lvm.h"
+			Hoping to have your invaluable help .
 
-2.Modify lvm-snap.c as following;
-Add 
-"int nbhs = KIO_MAX_SECTORS;"
-in the begining of both functions
-"lvm_snapshot_alloc()" and "lvm_snapshot_release()"
-
-then changes
-	alloc_kiovec(1, &lv_snap->lv_iobuf),
-	free_kiovec(1, &lv_snap->lv_COW_table_iobuf)
-to
-	alloc_kiovec_sz(1, &lv_snap->lv_iobuf, &nbhs),
-	free_kiovec_sz(1, &lv_snap->lv_COW_table_iobuf, &nbhs) .
-
-3. Apply LVM/1.0.5/PATCHES/linux-2.4.9-VFS-lock.patch like this;
-
-cd KERNEL_DIR/
-patch -p1 < LVM_DIR/LVM/1.0.5/PATCHES/linux-2.4.9-VFS-lock.patch
-
-
-4. Add in KERNEL_DIR/fs/super.c
-"static DECLARE_MUTEX(mount_sem);"
-
-5. Make KERNEL
-
-It seems to me that patch applied well and LVM worked.
-----
-Young Ui Park
+			Best Regards
+			Amit Agrawal
+			Member Technical Staff,
+			HCL Technologies Ltd,
+			A-11,Sector-16
+			Noida-201301
+			Phone: +91-120-4510701/702/813 Extns. - 3157
+			Email: amitag@noida.hcltech.com 
+			_________________________________________________
+			"Humor is a rubber sword - it allows you to make a
+point without drawing blood. " - Mary Hirsch
+			Disclaimer:
+			
+			This document is intended for transmission to the
+named recipient only.  If you are not that person, you should note that
+legal rights reside in this document and you are not authorized to access,
+read, disclose, copy, use or otherwise deal with it and any such actions are
+prohibited and may be unlawful. The views expressed in this document are not
+necessarily those of HCL Technologies Ltd. Notice is hereby given that no
+representation, contract or other binding obligation shall be created by
+this e-mail, which must be interpreted accordingly. Any representations,
+contractual rights or obligations shall be separately communicated in
+writing and signed in the original by a duly authorized officer of the
+relevant company.
