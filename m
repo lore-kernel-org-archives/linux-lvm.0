@@ -1,10 +1,8 @@
-From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
-Subject: Re: re[2]: [linux-lvm] [Q] LVM snapshot volume extendable?
-Message-ID: <20030117192650.GB3610@localhost>
-References: <20030113214928.NXIW20432.imf21bis.bellsouth.net@marsha> <002701c2bdb8$6cf51b70$c600a8c0@COMPAQ> <20030117100237.GC15042@gw.silicide.dk> <001601c2be1b$fd442050$c600a8c0@COMPAQ>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <001601c2be1b$fd442050$c600a8c0@COMPAQ>
+From: Yuliy Minchev <yuliy@mobiltel.bg>
+In-Reply-To: <20030117192650.GB3610@localhost>
+Message-ID: <Pine.LNX.4.44.0301172310100.24491-100000@keoma.mobiltel.bg>
+MIME-Version: 1.0
+Subject: [linux-lvm] Kernel PANIC after partition change on RedHat 8.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +13,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 17 13:26:01 2003
+Date: Fri Jan 17 15:19:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Friday, 17 January 2003, at 20:31:34 +0900,
-Sean Oh wrote:
+Hi!
 
-> Yes, I specified the ro option in ext3 snapshots. But it is still not
-> mountable, giving the error 'Cant write to read-only device' and 'EXT3-FS:
-> write access unavailable, cannot proceed'
-> 
-Did you try to mount the ext3 snapshot not only in read-only mode, but
-_also_ without replaying the journal (option -o noload). I can't verify
-this, because my kernel is compiled without the required "vfs-lock patch".
+I have installed Red Hat Linux 8.0. I've made volume group (rootvg)
+from /dev/md1 (which is raid1). I've put my /boot on /dev/md0.
+
+As you already have noticed - I have two disks.
+After installation I'm making new partiotion /dev/sdb5 i.e.
+And if I change its to type to 8e after reboot kernel panics.
+If I change type of this partition to something different - the system 
+boots fine.
+
+I cannot understand where can be the problem.
+I have to say that I made the same configuration on this machine and 
+everything was ok. But now I cannot see any difference.
+
+Any ideas?
+
+TIA
+
+yuliy
 
 -- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Sid (Linux 2.4.20-xfs)
+  Yuliy Minchev, 
+  UNIX Administrator
