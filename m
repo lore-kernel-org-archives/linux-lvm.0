@@ -1,10 +1,10 @@
-Date: Tue, 9 Oct 2001 08:42:52 +0100
-Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
-Message-ID: <20011009084252.A398@btconnect.com>
-References: <20011008120338.B18314@sistina.com> <Pine.LNX.4.33.0110090123200.11852-100000@fogarty.jakma.org>
+Date: Tue, 9 Oct 2001 08:47:17 +0100
+Subject: Re: [linux-lvm] LVM metsdata
+Message-ID: <20011009084717.B398@btconnect.com>
+References: <20011008204254.19061.qmail@web20201.mail.yahoo.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0110090123200.11852-100000@fogarty.jakma.org>; from paul@clubi.ie on Tue, Oct 09, 2001 at 01:25:47AM +0100
+In-Reply-To: <20011008204254.19061.qmail@web20201.mail.yahoo.com>; from leegotze@yahoo.com on Mon, Oct 08, 2001 at 01:42:54PM -0700
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,18 +21,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Oct 09, 2001 at 01:25:47AM +0100, Paul Jakma wrote:
-> On Mon, 8 Oct 2001, Heinz J . Mauelshagen wrote:
-> 
-> > Well, our impression is that optimizing under gcc > 2.95.2 doesn't seem
-> > to be a good idea.
-> 
-> have you pinned it down to a specific bug in gcc, or is it based on 
-> "doesn't happen with -O0"?
+On Mon, Oct 08, 2001 at 01:42:54PM -0700, Lee Go-Tze wrote:
+> I have a novice question.  How does the LVM 
+> protect its metadata.  I mean does it do some 
+> sort of metadata check when machine comes up 
+> (notices the system did not shutdown properly)?
+> Or maybe it uses journaling? I imagine the 
+> updates to lv/vg/pv structures have to be 
+> transactional.
 
-It appears to be a bug in just the redhat 7.1 version of gcc
-(2.96-85), which I'm told was not an official release of gcc.  There
-are a couple of places where LVM has one line wrapper functions; these
-are being optimised incorrectly.
+Transactional updates will go into LVM after mid November.  Checksums
+for the metadata will also go in at this point.  ATM problems are
+spotted by consistency checks (the is a lot of duplication between the
+pv's).  If a problem is spotted the administrator can restore from the
+automatic metadata backups.
 
 - Joe
