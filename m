@@ -1,11 +1,9 @@
-Date: Thu, 18 Oct 2001 11:53:18 +0200
-From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
-Subject: Re: [linux-lvm] replace bad hard disc
-Message-ID: <20011018115318.A2771@balu.kawo2.rwth-aachen.de>
-References: <110278234233.20011015163039@difi.de> <20011016105533.A4318@sistina.com> <55520025253.20011018113954@difi.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <55520025253.20011018113954@difi.de>; from Stefan.Onken@difi.de on Thu, Oct 18, 2001 at 11:39:54AM +0200
+Message-Id: <200110180957.f9I9v8a04929@lap1.mtg.at>
+From: Andreas Kostyrka <andreas@mtg.co.at>
+Date: Thu, 18 Oct 2001 11:57:03 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] lvchange and stripes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +15,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, Oct 18, 2001 at 11:39:54AM +0200, Stefan Onken wrote:
-> 
-> > pvcreate /dev/sde1
-> > vgextend Stonki2 /dev/sde1
-> > pvmove /dev/sdd1 /dev/sde1
-> > vgreduce Stonki2 /dev/sdd1
-> 
-> stupid question: what about resizing the reiserfs file system ?
-> Is it not necessary ?
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Not for moving things around. These steps do not resize any logical
-volume, they just move the data from one pv to another. So you don't
-need to resize the file system here either.
+Hi!
 
-Regards, Markus
+I've got a problem that seems to striping related: I cannot extend dev lv=
+,=20
+probably because LVM insists upon splitting the LV to 3 discs.
 
--- 
-Spiegel-Leser wissen mehr. Fuer ein Semester-Abo!
-http://www.kawo2.rwth-aachen.de/~mdobel/semesterabo.html
+Now my problem is, that I haven't found a way to change the stripe=20
+configuration of a LV. :(
+
+Andreas
+- --=20
+Andreas Kostyrka; Raiffeisenstr. 16/9; 2320 Zw=F6lfaxing
+Tel: +43/676/4091256; Fax: +43/1/7065299
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.5 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7zqdyHJdudm4KnO0RAmPKAKDdrbjbANL3H/pDJ42V0W0lmnHnPACfWeSD
+p+qdfw4bzCXGHGxRj0iz6Ow=3D
+=3Dw8fI
+-----END PGP SIGNATURE-----
