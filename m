@@ -1,12 +1,12 @@
 Return-Path: <weissel@netcologne.de>
 From: Wolfgang Weisselberg <weissel@netcologne.de>
-Date: Mon, 18 Jun 2001 12:33:18 +0200
+Date: Mon, 18 Jun 2001 13:19:19 +0200
 Subject: Re: [linux-lvm] What is a good stripe size?
-Message-ID: <20010618123318.A31606@tiger.bigcats.invalid>
-References: <134718885.992837796416.JavaMail.root@boots>
+Message-ID: <20010618131919.B31606@tiger.bigcats.invalid>
+References: <134782415.992819826651.JavaMail.root@boots>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <134718885.992837796416.JavaMail.root@boots>; from ticket_668pps1in9d9754992837754108@sneakemail.com on Sun, Jun 17, 2001 at 11:07:54PM -0500
+In-Reply-To: <134782415.992819826651.JavaMail.root@boots>; from ticket_ak0dezql38fr43g992819821002@sneakemail.com on Sun, Jun 17, 2001 at 06:13:51PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,98 +22,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, idsfa!
+Hi, Steven!
 
-idsfa@visi.com wrote 63 lines:
+Steven Lembark wrote 81 lines:
 
-> On Sun, Jun 17, 2001 at 11:36:27PM +0200, Wolfgang Weisselberg wrote:
 > > For a single file you may gain reading speed (writing is less
 > > critical as it is buffered); however with a stripe size below
 > > file size you will need to move the heads of both (or even
 > > more) disks, increasing latency[1], effectively slowing down
 > > reads unless you have fairly large files.
 
-> True, but I was assuming 'typical' use, which means < 2G of small files
-> (everything having to do with the OS) with the majority of the hard
-> drive space being used for files in the megabyte+ range (multimedia,
-> databases and so forth).
+> Assumes that the stripe blocks are not adjacent on their
+> respective disk drives.  The smaller stripe may have no
+> penalty if the logical blocks are adjacent on the disk.
 
-Databases can be special cases here, they often only read small
-parts of their storage files (retriving a 3-char fields e.g.).
-But then many Databases want raw access and probably will do
-striping themselves, too.
+Actually, this assumes that the stripe blocks are not adjacent
+-- which they are not, they are on different disks with
+independent head movements. :-)
 
-A maildir or MH-style central mail spool (e.g. qmail) will
-contain lots and lots of small to medium files -- one file
-per email.
+But even if all of the following data requires no further
+seeks you still need 2 initial seeks, instead of one.  Which
+is longer on the average.
 
-Further, reiserfs is pretty good with many many files, this will
-(over some development time) lead to smaller overall file size
-as applications will be more often programmed not to aggregate
-data into bigger files.  But this is something which will not
-trouble us much now.
+> One of the main resons for using LVM at all is to avoid
+> having to worry about any of this.
 
-> I can agree with your logical argument that
-> larger stripes are better for small files, but I would further argue
-> that striping a partition of small files is the wrong way to go.
+LVM is about not having to worry over partition sizes and disk
+sizes other than the complete pool size.
 
-Again, this depends.  If you need parallel access to small
-files, use stripes or even RAID10/15 (mirrored stripes/mirrored
-RAID5).  This would be the case of a maildir imap server, for
-example.  If this is no bottleneck -- let it be.
+> If raw speed is a major
+> consideration then use hardware RAID5 w/ strip size ==
+> I/O block size (e.g., 4 disks w/ 1K chunk and 4K filesystem
+> block on linux).  This avoids the "extra read" penalty and
+> gives nice, distributed reads.
 
-> > In conclusion (IMHO): 
-> > - small stripes increase the latency even for small reads,
-> >   hurting throughput (and slowing the reads even when looking
-> >   at a single file).
+You get the extra read penalty even with RAID5 and small
+strip sizes, as the kernel does read-ahead, for example.
+Actually, it gets worse (approaching 2/3 seek time, I
+*guess*, on the average) with more disks.
 
-> I'd have to change that to "increase the latency for small reads".
-> For files >> stripe size, you will see no increase in latency.
+And then you should definitively test if a HW raid controller
+(which *is* the easiest thing) is as fast as software raid,
+especially in degraded mode and during writes.  If you are
+having a write-heavy partition, this can turn into a
+bottleneck.  Also remember that with ext2 you get meta-data
+every 8M, so if you find one disk doing overtime, tune that
+value during the ext2 creation.
 
-You will with small stripe sizes[5], but it's usually neglectable,
-since you finish earlier than with one disk.
+> > [1] Your seek time rises -- on the average -- the more heads
+> >     are in use.  With one head you get 1/3 full-seek time for
+> >     a random head and file locations.  With two heads you need
+> >     to move both heads, chances are that one of them has a
+> >     longer way than the other.
 
-> Something which would balance PEs within a VG based on their usage
-> would be a lovely system tool to add to lvm.  I can hardly wait for
-> your program  ;-)
+> One advantage of striping is that the seek latency of one
+> drive can be used for data I/O on another drive.
 
-First, we need a fool^Wcrashproof, completely interruptible
-pvmove for active, being currently read from and written
-to LVs.  Once this is there, we need to have a pvmove which
-can be told the physical place to move to, else we can only
-spread the most accessed PEs over the PVs.
+True, but latency still increases.  And it's also true for
+larger strip sizes -- with less increase in latency for
+each file.
 
-And at the moment pvmove can only partially move non-striped
-LVs.
+> If the LVM
+> system does any sort of double-buffering then the striped
+> system can negate/reduce the seek time.
 
-Then the rest is simply ripping a balancing algorithm from
-somewhere and slap it into a wrapper.  Data aquisition is
-already done via lvmsadc/lvmsar.
+Only if there is enough to be read.  
+At 17.5 MB/s and 8.9 ms average seek time, you can read just
+under 160 Kb in the time of one seek.
+
+> This also leaves out the issue of journaled file systems, which
+> may have data (or just meta-data) spread out all over the
+> place -- leaveing you with fragmented reads even in the case
+> of a small file.
+
+Meta-data is usually cached -- and it does not help if you
+need 2 seeks (or even 1.2 seeks on the average) instead of
+one for each meta-data fragment.
+
+> Net result is that depending on CPU, bus, controller and
+> disk hardware and their interactins with the file systems
+> and particular type of I/O being performned the answer
+> becomes "It Depends" :-)
+
+Well, ain't it good noone told this Donald E. Knuth before he
+did write many highly mathematical things and thoughts about
+it in 'The Art of Computer Programming'?  :-)
+
+> In 15 years the only method I've found that works consistently
+> is to try however many of the recommendations you can before
+> comitting to any one of them.
+
+True, that method usually works, if your trials are really
+realistic.
+
+> >     do not like loosing spots all over the place.  But then you
+> >     do backup religiously, test your backups and have recovery
+> >     plans in place, yes?
+
+> Ah, but it's so much more fun to fiture out how it all works at
+> 3 in the morning with 20 users breathing fire down your back!
+
+For some values of 'fun' approaching microsoftian proportions?
+Maybe.  Bungie jumping with piano wire as rope tends to be
+more enjoyable, I have been told.
 
 -Wolfgang
-
-[5] Assume: 
-    - 1st head closer to data than second head (about 50% of
-        the time)
-    - small strip size (e.g. 4k)
-    - no bad fragmentation (normal case)
-    - idle I/O
-    You request the first 15k:
-    - head 1 seeks to stripe, so does head 2.
-    - head 1 arrives; the platter turns until the begin of the
-      data; head 1 starts deliver data -- the whole strip (4k)
-      and internal caching of the following strips begins.
-    - head 2 should now deliver the second 4k, 
-          *but is still seeking.*  
-      This is the added latency.
-    - head 2 finishes seeking, the platter turns until the
-      begin of the data; head 2 delivers the second 4k.
-    - from here on the data is put out at 'double rate' from
-      both disks.
-
-    With larger strip sizes the added latency occurs less often,
-    as up to the whole strip size is read and can be delivered
-    giving the other head more time to finish seeking.
-
-    With non-idle I/O the latency for gets worse, of course,
-    even when reads are reordered to minimize the impact.
