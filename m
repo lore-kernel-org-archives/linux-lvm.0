@@ -1,11 +1,10 @@
-Return-Path: <axboe@brick.kernel.dk>
-Date: Thu, 19 Apr 2001 21:33:35 +0200
-From: Jens Axboe <axboe@suse.de>
-Message-ID: <20010419213335.E30135@suse.de>
+Return-Path: <jes@lxplus015.cern.ch>
 References: <20010419132927.D10345@sistina.com> <E14qJhd-0007oR-00@the-village.bc.nu> <20010419142400.E10345@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010419142400.E10345@sistina.com>; from lewis@sistina.com on Thu, Apr 19, 2001 at 02:24:00PM -0500
+From: Jes Sorensen <jes@linuxcare.com>
+Date: 19 Apr 2001 21:35:51 +0200
+In-Reply-To: AJ Lewis's message of "Thu, 19 Apr 2001 14:24:00 -0500"
+Message-ID: <d3d7a8u1go.fsf@lxplus015.cern.ch>
+MIME-Version: 1.0
 Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,26 +20,37 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: AJ Lewis <lewis@sistina.com>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, linux-lvm@sistina.com
 
-On Thu, Apr 19 2001, AJ Lewis wrote:
-> Did anyone bother to e-mail the list admins?  Perhaps it was too difficult
-> to figure out who to mail about this, but I know for a fact that Rik van
-> Riel and Jens Axboe could post to linux-lvm@sistina.com.  It would have been
-> nice if they had mentioned something to us.
+>>>>> ">" == AJ Lewis <lewis@sistina.com> writes:
 
-First one gets a mail saying that the mail sent is queued for moderator
-approval, since I'm not on the list. Then later a second mail arrives,
-saying the mail has been rejected by the moderator.
+>> Hmm...i guess there is a communication issue here.  It sounds like
+>> the message that our ML server was sending was misleading.  We were
+>> not rejecting mail because of content.  The ML server was rejecting
+>> it because the address was not subscribed.  Our idea was that we
+>> don't want spam.  If it's completely unmoderated, then we will get
+>> a *lot* of spam.
 
-I then reply to the admin mail listed, in not-so-kind words (yes I was
-pissed off). Haven't heard anything.
+The mail states it's been forwarded to the moderator, yes I just got
+one. Thats another issue here, Cc'ing a closed mailing list when
+posting to an open list like linux-kernel is rude (but thats just a
+minor issue in this discussion).
 
-> > The openlvm list is open to existing LVM hackers too..
-> 
-> True, but it seems silly to duplicate the load if it's not necessary.
+>> Did anyone bother to e-mail the list admins?  Perhaps it was too
+>> difficult to figure out who to mail about this, but I know for a
+>> fact that Rik van Riel and Jens Axboe could post to
+>> linux-lvm@sistina.com.  It would have been nice if they had
+>> mentioned something to us.
 
-It's necessary in that we need an open list.
+I know that Jens posted to linux-lvm-admin two days ago and didn't get
+a response.
 
--- 
-Jens Axboe
+>> The openlvm list is open to existing LVM hackers too..
+
+>> True, but it seems silly to duplicate the load if it's not
+>> necessary.
+
+Right now there is no load because the postings aren't getting
+through at all.
+
+Jes
