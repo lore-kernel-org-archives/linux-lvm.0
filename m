@@ -1,7 +1,8 @@
-From: WIND-UP YOUR MATES <linux-lvm@sistina.com>
-Mime-Version: 1.0
-Message-Id: <E195wIX-0004gc-00@hermes.sistina.com>
-Subject: [linux-lvm] Fwd: WIND-UP YOUR MATES
+Message-ID: <3E9EA132.3020902@bull.net>
+From: Michel Seyller <michel.seyller@bull.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Unable to mount snapshot LV when fs=ext3 on Linux kernel 2.4.20
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,33 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 16 18:27:01 2003
+Date: Thu Apr 17 07:42:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-=====TELPHONE JOKES=====
+Hi,
+
+Linux Red Hat 9.0 kernel 2.4.20-8
+I have created a ext3 fs on a LVM logical volume : OK.
+create a snapshot on it, trying to mount it :
+
+[root@linux05 proc]# mount /dev/volume01/snap01 /SNAP
+mount: block device /dev/volume01/snap01 is write-protected, mounting 
+read-only
+mount: wrong fs type, bad option, bad superblock on /dev/volume01/snap01,
+        or too many mounted file systems
 
 
-How to use this service:
+No problem with an ext2 file system.
 
-1 Dial 0906 664 1902
-2 Select the prank [Eg: Inland Revenue, STD Clinic +  many more].
-3 Enter your victims telephone number.
-4 Listen to their reaction as the computer dials out to them!
+Any explanation ? a bug ? a bad patch for VFS locking in the kernel ?
 
-
-==Now includes these features==
-
-# Voice recognition.
-# Calls back victim if they hang up..
-# Listen in as your victim is wound up.
-# A total of 17 different pranks to play on your mates.
-
-
-
-
-Data ticket:6321. Calls to 0906 664 1902 cost one pound and fifty pence per minute. Service provider: TPX 0871 872 3731. To unsubscribe call 0871 872 3731. Promotion code: baecg
-
-beabpwmroyhcdvhudu
+-- 
+           Michel SEYLLER
+    http://www.bullfreeware.com
