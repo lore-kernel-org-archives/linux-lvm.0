@@ -1,8 +1,10 @@
-From: <david@lownoisefloor.com>
-Message-Id: <200401172124.BAF89817@ms7.verisignmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Subject: [linux-lvm] System Lock up with message - "VFS: Disk quotas vdquot_6.5.1"
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] LVM2 migration on 2.4.24 troubles - prepare for 2.6
+Message-ID: <20040119171824.S18942@uk.sistina.com>
+References: <6154.1074373571@bongo.freakout.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <6154.1074373571@bongo.freakout.de>; from lvm@freakout.de on Sat, Jan 17, 2004 at 10:06:11PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,51 +15,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 12:12:05 2004
+Date: Mon Jan 19 12:19:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-UGxlYXNlIEhlbHAsDQogIA0KICAgSSBoYXZlIGhhZCBhIGJvb3QgbG9ja3VwIHByb2JsZW0g
-Zm9yIHNvbWUgdGltZSBub3cuDQpJIHRob3VnaHQgaXQgd2FzIHRoZSAiVkZTIGxvY2siIGlz
-c3VlIGJ1dCBpdCBpcyBub3QuDQpDYW4gc29tZW9uZSBsb29rIGF0IHRoZSBmb2xsb3dpbmcg
-ZXhjZXJwIGFuZCBzZWUgaWYgdGhleQ0Ka25vdyB3aGF0IGlzIGhhcHBlbmluZz8/DQoNClN5
-c3RlbSBjb25maWd1cmF0aW9uIGlzOg0KU3VwZXJtaWNybyBYNURQOCB3aXRoIER1YWwgMi44
-IEdIeiBYRU9Ocw0KMkdCIFJBTSAoMTAyNE1CIGFsbG9jYXRlZCB0byBzeXN0ZW0pDQpSdW5u
-aW5nIFJlZGhhdCA5LjAgU3RvY2sga2VybmVsDQoxNCB4IDE0N0dpZ2FieXRlIEhhcmRkaXNr
-cyBzZXR1cCBmb3IgUkFJRCAwIHdpdGgNCkxWTS4NCg0KU3ltcHRvbXM6DQoxLiBUaGlzIGJv
-b3QgbG9ja3VwIG9ubHkgb2NjdXJzIG9uY2UgaW4gYSB3aGlsZS4NCiAgIEJ1dCB3aGVuIGl0
-IGRvZXMgaXQgcmVxdWlyZXMgc29tZW9uZSB0byBwdXNoIHRoZQ0KICAgcmVzZXQgYnV0dG9u
-IG9uIHRoZSBmcm9udCBvZiB0aGUgdW5pdC4gIFRoaXMNCiAgIHJlYWxseSBoaW5kZXJzIHJl
-bW90ZSBvcGVyYXRpb24uDQoyLiBUaGUgIlZGUzogRGlzayBxdW90YXMgdmRxdW90XzYuNS4x
-IiBsb2NrdXAgb25seQ0KICAgb2NjdXJzIGNvbmluY2lkZW50IHdpdGggYSAiYm9vdC1wYXVz
-ZSIgYW5kIHRoZQ0KICAgaW1tZWRpYXRlbHkgYWZ0ZXIgb24gb2YgdGhlIA0KICAgIkJvb3Rp
-bmcgcHJvY2Vzc29yIDEvMSBlaXAgMjAwMCINCiAgIGxpbmVzLiAgSSBoYXZlIHRyaWVkIHR1
-cm5pbmcgb2ZmIGh5cGVydGhyZWFkaW5nDQogICBhbmQgaXQgZG9lcyBub3QgaGVscC4NCiAg
-IElmIHlvdSBub3RpY2UgYSBwYXVzZSBhZnRlciB0aGUgDQogICAiQm9vdGluZyBwcm9jZXNz
-b3IgMS8xIGVpcCAyMDAwIg0KICAgbGluZSB0aGVuIHRoZSBzeXN0ZW0gd2lsbCBkaWZpbml0
-ZWx5IGxvY2t1cA0KICAgd2hlbiB0aGUgZm9ybGxvd2luZyBsaW5lIGFwcGVhcnMuDQogICAi
-VkZTOiBEaXNrIHF1b3RhcyB2ZHF1b3RfNi41LjEiDQoNCg0KSEVMUC4uLi4uLg0KDQotRGF2
-ZQ0KDQpCb290IGxvZyBjb3BpZWQgZnJvbSBzY3JlZW46Ojo6Og0KLS0tLS0tLS0tLS0tLS0t
-LVN0YXJ0IGhlcmUgLS0tLS0tLS0tLS0tLS0tLS0tLQ0KUENJOiBJZ25vcmluZyBCQVIwLTMg
-b2YgSURFIGNvbnRyb2xsZXIgMDA6MWYuMSANClRyYW5zcGFyZW50IGJyaWRnZSDigJMgSW50
-ZWwgQ29ycC4gODI4MDFCQS9DQS9EQiBQQ0kgQnJpZGdlIA0KUENJOiBEaXNjb3ZlcmVkIHBy
-aW1hcnkgcGVlciBidXMgMTAgW0lSUV0gDQpQQ0k6IERpc2NvdmVyZWQgcHJpbWFyeSBwZWVy
-IGJ1cyAxMSBbSVJRXSANClBDSTogRGlzY292ZXJlZCBwcmltYXJ5IHBlZXIgYnVzIDEyIFtJ
-UlFdIA0KUENJOiBVc2luZyBJUlEgcm91dGVyIFBJSVggWzgwODYvMjQ4MF0gYXQgMDA6MWYu
-MCANClBDSS0+QVBJQyBJUlEgdHJhbnNmb3JtOiAoQjAsSTI5LFAwKSAtPiAxNiANClBDSS0+
-QVBJQyBJUlEgdHJhbnNmb3JtOiAoQjAsSTI5LFAxKSAtPiAxOSANClBDSS0+QVBJQyBJUlEg
-dHJhbnNmb3JtOiAoQjAsSTI5LFAyKSAtPiAxOCANClBDSS0+QVBJQyBJUlEgdHJhbnNmb3Jt
-OiAoQjMsSTIsUDApIC0+IDI4IA0KUENJLT5BUElDIElSUSB0cmFuc2Zvcm06IChCMyxJMixQ
-MSkgLT4gMjkgDQpQQ0ktPkFQSUMgSVJRIHRyYW5zZm9ybTogKEI2LEkyLFAwKSAtPiA3NiAN
-ClBDSS0+QVBJQyBJUlEgdHJhbnNmb3JtOiAoQjYsSTEsUDEpIC0+IDc3IA0KUENJLT5BUElD
-IElSUSB0cmFuc2Zvcm06IChCNyxJMSxQMCkgLT4gMTYgDQppc2FwbnA6IFNjYW5uaW5nIGZv
-ciBQblAgY2FyZHMgDQppc2FwbnA6IE5vIFBsdWcgJiBQbGF5IGRldmljZSBmb3VuZCANCkxp
-bnV4IE5FVDQuMCBmb3IgTGludXggMi40IA0KQmFzZWQgdXAgU3dhbnNlYSBVbml2ZXJzaXR5
-IENvbXB1dGVyIFNvY2lldHkgTkVUMy4wMzkgDQpJbml0aWFsaXppbmcgUlQgbmV0bGluayBz
-b2NrZXQgDQphcG06IEJJT1MgdmVyc2lvbiAxLjIgRmxhZ3MgMHgwMyAoRHJpdmVyIHZlcnNp
-b24gMS4xNikgDQphcG06IGRpc2FibGVkIOKAkyBBUE0gaXMgbm90IFNNUCBzYWZlIA0KU3Rh
-cnRpbmcga3N3YXBkIA0KYWxsb2NhdGVkIDMyIHBhZ2VzIGFuZCAzMiBiaHMgcmVzZXJ2ZWQg
-Zm9yIHRoZSBoaWdobWVtIA0KYm91bmNlcyANClZGUzogRGlzayBxdW90YXMgdmRxdW90XzYu
-NS4xIA0KTG93Tm9pc2VGbG9vciwgTExDDQo3MDMtNTk0LTM0NDcgVm9pY2UNCjcwMy01OTQt
-MjU4MyBGYXgNCg==
+On Sat, Jan 17, 2004 at 10:06:11PM +0100, Axel Reinhold wrote:
+> Are there incompatibilities regarding snapshots with LVM1/2?
+
+Yes - snapshots are implemented differently: the on-disk data
+is different.
+
+Always drop snapshots before switching between LVM1 / LVM2.
+
+Alasdair
+-- 
+agk@uk.sistina.com
