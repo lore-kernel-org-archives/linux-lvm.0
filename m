@@ -1,58 +1,49 @@
-From: pamvdam@ramoth.xs4all.nl
-Date: Sun, 3 Oct 1999 07:56:44 +0200
-Subject: Re: [linux-lvm] LVM, raw-io, devfs
-Message-ID: <19991003075644.A5224@ladystrange.bluehorizon.nl>
-References: <006201bf0bb7$6eae4a60$030116ac@fd1> <14324.58266.920834.895229@dukat.scot.redhat.com> <002e01bf0cf8$b4667720$030116ac@fd1>
-Mime-Version: 1.0
-In-Reply-To: <002e01bf0cf8$b4667720$030116ac@fd1>; from Fernando Dammous on Sat, Oct 02, 1999 at 02:08:09PM -0300
+Date: Sun, 3 Oct 1999 13:00:11 +0500
+From: foiserw <taubeu49@clnotesszc1.computerland.pl>
+Subject: [linux-lvm] find your unreached... internet--leads
+Message-Id: <199910032464RAA266@deosie.samtel.ru>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Fernando Dammous <ferdam@internetcom.com.br>
-Cc: "Stephen C. Tweedie" <sct@redhat.com>, Linux LVM msede <linux-lvm@msede.com>
-
-On Sat, Oct 02, 1999 at 02:08:09PM -0300, Fernando Dammous wrote:
-<stuff deleted>
-
-> I prefer to update my kernel (to 2.3.18 or even to wait for the 2.4), before
-> and then to use RAW-IO.
-> I just hope I can simply alter Oracle to use RAW-IO instead of having
-> reinstall it.
-> Using Oracle with LVM is already very good, with RAW-IO it will be better (I
-> believe).
-
-I do question that. Sybase somehow needs (or better prefers) RAW-IO to ensure
-it's structural integrity. If the buffer cache is between the data transfer
-of the LOG and the physical device it is possible that not all of the log
-that should be written out is written out, however Sybase thinks it has been
-written to disk. RAW-IO/direct IO ensures that the LOG that has been ordered
-to be written on disk will be written to disk. I would like to emphasize
-that not using RAW-IO will not impose corrupting your database. It imposes
-that there's a risk of loosing your data in case of a failure.
-
-Oracle has always been using filesystems for it's datastorage. Only for
-the parrallel server configuration they demand RAW IO. Like Sybase 11.9.x
-under Linux it probably uses some O_SYNC flag to write to log, so the
-write call only returns when the data has been really written to the
-physical device. I don't think you'll see a performance enhancement when
-using Oracle and RAW/IO. There's even a chance, due to the fact you mis
-the buffer cache optimisations, that you'll see a performance degradation.
-
-This is a common misunderstanding.
-
-Best regards,
-
-	Pascal van Dam
+To: taubeu49@clnotesszc1.computerland.pl
 
 
+ IS YOUR MARKET BEING REACHED OR LIMITED BY:
 
-> In any way, I thank in advance for your interest (and of all people of here)
-> in helping me in this case.
-> 
-> Thank you very much
-> 
-> Fernando
-> 
-> 
+   * Geographic boundaries or location
+   * lack of NEW leads
+   * lack of NEW exposure
+
+ There are over 60 million Internet users with thousands
+ joining each day. Have you reached them?
+
+ DO YOU BELIEVE YOU HAVE A VIABLE PRODUCT OR SERVICE ?
+
+ Did you know that there is a method of marketing that costs pennies
+ but have the same effect as direct postal mail? This can be made 
+ possible through recent Internet technology breakthroughs. You can 
+ now compete with the big boys, with exposure in MASSIVE NUMBERS,
+ without expensive investments such as those associated with
+ television commercials, radio advertising, direct postal mail, or 
+ telemarketing.
+
+ THE SOLUTION - Direct E-mail Marketing
+
+ Direct E-mail marketing is a proven method to reach a global market
+ with a small investment. It is more advantageous than conventional
+ marketing and the risk is minimal. The prospects are millions and can
+ be reached for much less than conventional methods. We specialize in
+ Direct E-mail and can send your Ad to thousands or millions of
+ GENERAL or TARGETED leads, nationwide or worldwide.
+
+ For details send a fax to  781..240..7780
+
+ ** inlcude your   -name  -tel#   -email
+ ** inlcude your   -name  -tel#   -email
+
+ Reach em before competition does.......
+        
+nKesszc1
