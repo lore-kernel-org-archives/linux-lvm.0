@@ -1,7 +1,8 @@
-Message-ID: <C9B993D4214AD511BC010002A537DFE30A8B96@acsexchweb.corp.acsalaska.com>
-From: "Nay, Shawn" <snay@acsalaska.com>
+From: "James Kelty" <jamesk@ashlandagency.com>
+Message-ID: <JLEILPHBKFODIOEDIAKMGEKLCHAA.jamesk@ashlandagency.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] vgscan / vgimport problems
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM and 2.4.13
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,52 +13,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 30 12:37:02 2001
+Date: Tue Oct 30 13:30:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I am an LVM newbie but did manage to get it up and running on a non-system
-disk.
-I rebuild my system with the same version of Linux (Redhat 7.2), the same
-kernel (2.4.9-7, which I recompiled for LVM), and the same version of LVM
-(0.9.1_beta7).  By the way...I am using an old release of LVM due to my
-inability to patch this kernel with 1.0.1-rc4.  The problem is that I am
-unable to import my old vg.  This disk has remained untouched since my
-previous install.
+Ok,
 
-pvscan output:
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdd"  is associated to an unknown VG (run
-vgscan)
-pvscan -- total: 1 [31.08 MB] / in use: 1 [31.08 MB] / in no VG: 0 [0]
+I created a new kernel using the latest patch from lvm 1.0.1-rc4.  I
+compiled it into the kernel, and it loads pretty well.
 
-vgscan output:
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found inactive volume group "sundogvg"
-vgscan -- only found 0 of 5120 LEs for LV /dev/sundogvg/datalv (0)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-data of volume group "sundogvg" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-"/etc/lvmtab" and "/etc/lvmtab.d"
+I have a new 100GB drive that I carved into 4 slices w/ 8e as the type, did
+the pvcreate w/o any problems,
+created the vg00 volume group. But! When I try to create the logical volume,
+I get a Seg Fault and core dump.
 
-vgimport output:
-vgimport -- ERROR: physical volume "/dev/hdd" doesn't belong to an exported
-volume group
-
-Any help would be greatly appreciated.
-
-Shawn
+What's the deal?
 
 
+--- Volume group ---
+VG Name               vg00
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                255
+Cur LV                0
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                255
+Cur PV                3
+Act PV                3
+VG Size               73.24 GB
+PE Size               4.00 MB
+Total PE              18750
+Alloc PE / Size       0 / 0
+Free  PE / Size       18750 / 73.24 GB
+VG UUID               5d6C0e-zgYC-jWju-6Vx1-mzlo-AY0n-kAlDPd
+
+root@warbaby: ~ >> lvcreate -L73.24G vg00
+lvcreate -- rounding up size to physical extent boundary "73.24 GB"
+Segmentation fault (core dumped)
+root@warbaby: ~ >> lvcreate -L73.00G vg00
+Segmentation fault (core dumped)
+root@warbaby: ~ >>
 
 
-This transmittal may contain confidential information intended solely for
-the addressee. If you are not the intended recipient, you are hereby
-notified that you have received this transmittal in error; any review,
-dissemination, distribution or copying of this transmittal is strictly
-prohibited. If you have received this communication in error, please notify
-us immediately by reply or by telephone (collect at 907-564-1000) and ask to
-speak with the message sender. In addition, please immediately delete this
-message and all attachments. Thank you.
+
+
+
+-James
+
+--
+James Kelty
+Sr. Unix Systems Administrator
+The Ashland Agency
+541.488.0801
+jamesk@ashlandagency.com
