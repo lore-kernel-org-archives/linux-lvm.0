@@ -1,22 +1,43 @@
-Date: Thu, 10 Feb 2000 21:27:28 +0000 (GMT)
-From: James Pattinson <jamesp@subdimension.com>
-Subject: [linux-lvm] LVM tools build probs?
-In-Reply-To: <200002101715.SAA00762@u9etz.ez-darmstadt.telekom.de>
-Message-ID: <Pine.LNX.4.10.10002102125050.10902-100000@greebo.jj.net>
+Message-ID: <38A338A3.13861967@moose.net>
+Date: Thu, 10 Feb 2000 17:16:03 -0500
+From: Brian Kress <kressb@moose.net>
 MIME-Version: 1.0
+Subject: [linux-lvm] Patch to 2.3.40
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Hi - sorry if this is a FAQ but half the time I can't get LVM 0.8 to
-compile - there are an awful lot of redefinitions and the compile fails
-very quickly. I can compile with CC=i386-glibc20-linux-gcc but not all my
-systems have this compiler. Is there a patch available like there was for
-0.7?
+Hi all,
+	
+	I'm curious.  Why does the 2.3.40 patch to 
+Configure.help for LVM mess with sound drivers?
 
-Cheers
+-Generic OPL2/OPL3 FM synthesizer support
+-CONFIG_SOUND_ADLIB
+-  Answer Y if your card has a FM chip made by Yamaha (OPL2/OPL3/OPL4).
+-  Answering Y is usually a safe and recommended choice, however some
+-  cards may have software (TSR) FM emulation. Enabling FM support with
+-  these cards may cause trouble (I don't currently know of any such
+-  cards, however).
+-
+-  Please read the file Documentation/sound/OPL3 if your card has an
+-  OPL3 chip.
+-
+-  If unsure, say Y.
+-
+-
 
-James
+-  Answer Y here, unless you know you will not need the option.
++  Answer Y if your card has a FM chip made by Yamaha (OPL2/OPL3/OPL4).
++  Answering Y is usually a safe and recommended choice, however some
++  cards may have software (TSR) FM emulation. Enabling FM support with
++  these cards may cause trouble (I don't currently know of any such
++  cards, however).
++  Please read the file Documentation/sound/OPL3 if your card has an
++  OPL3 chip.
+
++  If unsure, say Y.
++
