@@ -1,16 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAO4nXr12830
-	for <linux-lvm@redhat.com>; Tue, 23 Nov 2004 23:49:33 -0500
-Received: from erc-server.ercwc.org (www.ercwc.org [198.85.167.1])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id iAO4nGtj015129
-	for <linux-lvm@redhat.com>; Tue, 23 Nov 2004 23:49:26 -0500
-Message-ID: <41A412BC.3050409@ercwc.org>
-Date: Tue, 23 Nov 2004 23:49:00 -0500
-From: "Frank J. Buchholz" <frankb@ercwc.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------060201060601080000050206"
-Subject: [linux-lvm] XFS device-mapper problem
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	iAOEQZMY030872
+	for <linux-lvm@redhat.com>; Wed, 24 Nov 2004 15:26:36 +0100
+Date: Wed, 24 Nov 2004 15:26:33 +0100
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Message-ID: <20041124142633.GA16696@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] *** Announcement: dmraid 1.0.0-rc5f ***
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -20,89 +19,157 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------060201060601080000050206
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hello,
+               *** Announcement: dmraid 1.0.0-rc5f ***
 
-Recently I attemped to 'lvextend' a logical volume.  My fatal error was 
-that I had a typo in my prior 'vgextend' command in which I added 
-/dev/sda to a volume that already held /dev/sda1. One the device for the 
-disk (sda) and the other being the device for the only partition on the 
-disk (sda1). Oh no!
+dmraid 1.0.0-rc5f is available at
+http://people.redhat.com:/heinzm/sw/dmraid/ in source, source rpm and i386 rpm.
 
-I recieved the following error during the 'lvextend' command...
-lvm> lvextend -L+1G /dev/Volume00/LogVol00
-  Extending logical volume LogVol00 to 2.93 TB
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'Volume00-LogVol00'.
-  Problem reactivating LogVol00
+dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
+properties of software RAID sets (i.e. ATARAID) and contained DOS
+partitions using the device-mapper runtime of the 2.6 kernel.
 
-I have since 'lvreduce'd the logical volume back to its original size 
-and 'vgreduce'd the volume by removing /dev/sda from the volume.  Both 
-of these commands ran well without any noticable errors.
+The following ATARAID types are supported on Linux 2.6:
 
-However my problem is that I believe I have corrupted the block device 
-located at /dev/mapper.  The block device in that directory is 
-Volume00-LogVol00.  The filesystem is XFS.  When I run xfs_check on the 
-filesystem I recieve the following error:
-xfs_check /dev/Volume00/LogVol00
-xfs_check: /dev/Volume00/LogVol00 is invalid (cannot read first 512 bytes)
+Highpoint HPT37X
+Highpoint HPT45X
+Intel Software RAID
+NVidia NForce		*** NEW ***
+Promise FastTrack
+Silicon Image Medley
 
-When I run:
-# hexdump -C Volume00-LogVol00
-#
-It simply returns nothing except a prompt.
+This ATARAID type is only basically supported in this version (I need
+better metadata format specs; please help):
 
-The directory listing looks like:
-# pwd
-/dev/mapper
-#ls -l
-crw-------  1 root root  10, 63 Nov 22 12:05 control
-brw-------  1 root root 253,  1 Jun 17  2003 Volume00-LogVol00
-brw-------  1 root root 253,  0 Nov 22 10:03 Volume01-LogVol00
+LSI Logic MegaRAID
 
-Volume01 is a working block device while Volume00 seems to have stopped 
-working. 
+Please provide insight to support those metadata formats completely.
 
-I can 'hexdump' /dev/sda1, the physical volume device in Volume00, and 
-it shows me the content of the filesystem (phew, still there).
-
-How do I fix LVM and device-mapper to make this work again?
-
-Thanks,
-Frank
-
--- 
-Frank J. Buchholz
+Thanks.
 
 
+See files README and CHANGELOG, which come with the source tarball for
+prerequisites to run this software, further instructions on installing
+and using dmraid!
+
+CHANGELOG is contained below for your convenience as well.
 
 
---------------060201060601080000050206
-Content-Type: text/x-vcard; charset=utf8;
- name="frankb.vcf"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="frankb.vcf"
+Call for testers:
+-----------------
 
-begin:vcard
-fn:Frank J. Buchholz
-n:Buchholz;Frank J.
-org:Education & Research Services
-adr;dom:Suite 170;;151 Patton Ave;Asheville;NC;28801
-email;internet:frankb@ercwc.org
-title:Director, High Performance Computing
-tel;work:828.350.2421
-tel;fax:828.350.2008
-tel;cell:828.606.2105
-url:http://www.erswc.org
-version:2.1
-end:vcard
+I need testers with the above ATARAID types, to check that the mapping
+created by this tool is correct (see options "-t -ay") and access to the
+ATARAID data is proper.
+
+In case you have a different ATARAID solution from those listed above,
+please feel free to contact me about supporting it in dmraid.
+
+You can activate your ATARAID sets without danger of overwriting
+your metadata, because dmraid accesses it read-only unless you use
+option -E together with -r in order to erase ATARAID metadata
+(see 'man dmraid')!
+
+This is a release candidate version so you want to have backups of your valuable
+data *and* you want to test accessing your data read-only first in order to
+make sure that the mapping is correct before you go for read-write access.
 
 
---------------060201060601080000050206--
+Contacts:
+---------
+
+The author is reachable at <Mauelshagen@RedHat.com>.
+
+For test results, mapping information, discussions, questions, patches,
+enhancement requests and the like, please subscribe and mail to
+<ataraid-list@redhat.com>.
+
+--
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+CHANGELOG:
+---------
+
+FIXES:
+------
+o make suffix in hpt45x set names numeric
+o HPT37x metadata format handler RAID10 grouping logic
+o HPT37x/HPT45x avoid devision by zero bug
+  in case ->raid_disks is zero for spares
+o avoid devision by zero bug in case of stride = 0
+o SIL device names / checksums
+o calc_total_sectors() on unsymmetric mirrors
+o Partition name suffix to make GRUB happy
+o perform() could return an error without releasing a lock
+
+
+FEATURES:
+---------
+o added NVidia metadata format handler
+o quorate SIL metadata copies
+o sorting order of stacked subset enhanced
+  (RAID10; hpt37x, hpt45x, lsi, nvidia and sil)
+o started event methods implementation in metadata format handlers
+o output linefeed to .offset files for better readability (-r -D)
+o use /sys/block/*/removable to avoid acessing removable devices
+o display of spare devices with -r -c{0,2}
+o enhanced spare device handling
+o '-h' option doesn't need to stand alone any more
+o -s displays top level sets only. "-s -s" shows subsets as well.
+o -f allows partial qualification of format names now
+  (eg, "dmraid -f hpt -r" will search for hpt37x and hpt45x formats)
+
+
+MISCELANIOUS:
+------------
+o HPT37X shows subset name suffixes with -r
+o streamlined display.c
+o added lib_context* argument to alloc_disk_info() in order
+  to be able to display an error message on failure
+o factored basic RAID set allocation code out of
+  all metadata format handler into find_or_alloc_set()
+o factored RAID superset allocation code out of metadata format
+  handlers into join_superset()
+o streamlined endianess code using CVT* macros
+o streamlined free_set() code
+o check option enum valid
+o introduced various metadata extraction macros to streamline
+  related code (eg, RD(), RS())
+o optimized format handler pre-registration checks
+o avoid format handler type() method altogether by introducing
+  a RAID device type member
+o generalized list_add_sorted() which can be used to sort any
+  "struct list_head*" which voided list_add_dev_sorted()
+o find_set() modified to avoid global searches for stacked sets
+o converted get_scsi_serial to fallback using SG_IO,
+  SCSI_IOCTL_SEND_COMMAND and ATA identify
+o introduced p_fmt() for formated string pushs in order to
+  streamline activate.c; value return code of p_fmt()
+o moved some paths + filenames to lib_context
+o introduced RAID set flag for metadata format handlers 
+  which decide to maximize capacity in unsymetric RAID0 sets
+o factored out device information allocation of scan.c into metadata.c
+o introduced RAID device list to library context in order to remove
+  pointer from device info and be able to handle remaining RAID device
+  structures better on library cleanup
+o streamlined commands.c
+o changed column output delimiter to ':'
+o introduced various enums replacing integers
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
