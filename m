@@ -1,10 +1,14 @@
-Return-Path: <jdiehl@sandia.gov>
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BF36@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Subject: RE: [linux-lvm] logical volumes extending beyond 1 machine
-Date: Thu, 7 Jun 2001 11:11:10 -0600
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <jackmc-linux-lvm@lorentz.com>
+From: "Jack McKinney" <jackmc-linux-lvm@lorentz.com>
+Date: Thu, 7 Jun 2001 14:18:34 -0500
+Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
+Message-ID: <20010607141834.A1499@stocks.pillory.com>
+References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com> <20010607104301.A29848@stocks.pillory.com> <20010607182636.H3232@jensbenecke.de> <20010607113207.A30712@stocks.pillory.com> <20010607191649.R3232@jensbenecke.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Content-Disposition: inline
+In-Reply-To: <20010607191649.R3232@jensbenecke.de>; from lvm@jensbenecke.de on Thu, Jun 07, 2001 at 07:16:49PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,68 +20,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-10Tb!  I'm working on a database that is 369Gb and I'm having to fight =
-a few
-performance issues.  What database manager are you using?
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanx,
-Mike Diehl,
-Network Monitoring Tool Devl.
-Sandia National Laboratories.
-(505) 284-3137
-jdiehl@sandia.gov
+Big Brother tells me that Jens Benecke wrote:
+> On Thu, Jun 07, 2001 at 11:32:07AM -0500, Jack McKinney wrote:
+> =20
+> >     Hmmm... I run Debian, and /var/tmp is certainly world-writable:
+>=20
+> OK. sue me. This was a proposal in a "enhancing Debian security" paper th=
+at
+> I found on the net (and implemented partially here). It seems not to be t=
+he
+> default on new Debian installs.
+>=20
+> Sorry.
 
-> -----Original Message-----
-> From: Damon Fasching [mailto:fasching@design.lbl.gov]
-> Sent: June 07, 2001 10:47 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] logical volumes extending beyond 1 machine
->=20
->=20
-> On Thu, 7 Jun 2001, Jens Benecke wrote:
->=20
-> > On Wed, Jun 06, 2001 at 05:08:47PM -0700, Damon Fasching wrote:
-> > >=20
-> > > Is it possible using LVM define a logical volume which=20
-> includes disks from
-> > > more than 1 machine?
-> >=20
-> > I don't think so. You want NFS for that, or the Mosix GFS=20
-> (global file
-> > system). Look at www.mosix.org
->=20
-> Ah, thanks.  I guess what I was wondering was whether or not an NSF
-> mounted disk can be included in a logical volume defined by LVM.  I =
-am
-> working with a large database, 10 TB, and am curious as to=20
-> whether I will
-> need to break it up into more than 1 database file.
->=20
-> >=20
-> > --=20
-> > Jens Benecke     No Linux user has a 'Microsoft free=20
-> system'. 'make config'
-> >                  in the kernel configuration was originally=20
-> written by a MS
-> > 		 employee.
-> > http://www.hitchhikers.de/ - Die kostenlose Mitfahrzentrale=20
-> f=FCr ganz Europa
-> >=20
->=20
->     ________________________   ____________________
->    / Damon Fasching         \ /                    \
->   |  University of Wisconsin |  LBNL/MS 50A-6134    |
->   |  phone: (510)486-5230    |  1 Cyclotron Road    |
->   |  fax:   (510)486-5977    |  Berkeley, CA 94720  |
->    \________________________/ \____________________/
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->=20
+    I'll have my lawyers contact your lawyers.   In the meantime, you can
+help with the discovery procedures by tracking down that paper for us...
+8-).
+
+--
+"I heard it was a lone gunman"                    Jack McKinney
+   -X, The X Files                                jackmc@lorentz.com
+1024D/D68F2C07 4096g/38AEF076  http://www.lorentz.com
+
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iEYEARECAAYFAjsf04oACgkQimeon9aPLAd9EACeOkHt1oVOZjtW++NlNLLrKQyA
+yS8AnRpCa2sQXbsfoTFsNzK92b6BwtFk
+=Wy2i
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
