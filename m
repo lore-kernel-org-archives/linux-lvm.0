@@ -1,8 +1,12 @@
-From: Gerald Catling <geraldcc@optusnet.com.au>
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] LVM on Raid 5 Performance?
+Message-ID: <58750000.1053839527@[192.168.200.4]>
+In-Reply-To: <200305182148.27901.jason@oes.co.th>
+References: <92091C60D5E2B74CB77C1FDB84F5FA76F079@s99mail02.okdhs.org>
+ <200305182148.27901.jason@oes.co.th>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200305241444.35851.geraldcc@optusnet.com.au>
-Subject: [linux-lvm] SuSE 8.1 and LVM
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,54 +17,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 23 23:45:02 2003
+Date: Sat May 24 19:11:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi once again from oz
 
-Date: Wed, 14 May 2003 09:04:56 +0100
-From: Joe Thornber <thornber@sistina.com>
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] LVM resizing
-Reply-To: linux-lvm@sistina.com
+-- "Jason H. Smith" <jason@oes.co.th>
 
-On Wed, May 14, 2003 at 08:13:46AM +0000, Gerald Catling wrote:
-> Istallation went well.
-> However resizing goes verry badly and the article implies it is possibl=
-e to=20
-> grow and shrink  --- usr,home and data partitions.
+> I don't know if this answers your question, but maybe search the archives
+> for my posts a few months ago.  On 2.4, there's a misfeature when using
+> LVM with RAID5.  Basically, the two will cause your system not to cache
+> any data, and to sync to disk immediately, once you create a snapshot
+> volume.  Apparently, this will be addressed in 2.6.
+>
+> So if you want RAID5 and LVM, consider hardware acceleration.
 
-You will have to resize the filesystem as well.
+I'm having perfectly good luck with a DAC960 and 4 x IBM
+160MB devices. The LVM issues pretty much drop out since
+the drives are grouped into one "device" at the hardware
+level. Striping the filesystem (ext2) helps (see the stride
+option of mkfs.ext2), so does turning on write caching.
 
-For shrinking:
 
-i) shrink the fs
-ii) lvreduce
 
-For growing:
-
-i) lvextend
-ii) grow the fs
-
-- Joe
-
-Thank you Joe, but you info did not work.
-
-All i can get is a non-booting system as a result of trying to resize=20
-partitions.
-
-The article in LINUXPRO  May 2003 page 15 implies that /home /var /usr an=
-d /=20
-can be resized. Is this just wishful thinking?
-
-My system replies to such resizing attempts by saying I need to unmount t=
-he=20
-partitions first.
-
-FAT chance of that. Anyone tried to umnount / recently?
-
-Once again any info will be tried and greatfully received.
-
-Gerald
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 888 359 3508
