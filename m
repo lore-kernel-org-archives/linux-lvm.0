@@ -1,22 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i36Gjlj29496
-	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 12:45:47 -0400
-Received: from magic.alttech.com ([207.13.196.227])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i36Gjj5D012897
-	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 12:45:45 -0400
-Received: from dogberry.ossmann.com (magic.alttech.com [64.140.60.35])
-	by magic.alttech.com (Postfix) with ESMTP id 210F92FE98
-	for <linux-lvm@redhat.com>; Tue,  6 Apr 2004 10:46:56 -0600 (MDT)
-Date: Tue, 6 Apr 2004 10:45:40 -0600
-From: Michael Ossmann <mike@ossmann.com>
-Subject: Re: [linux-lvm] Converting the root filesystem to ReiserFS on LVM...
-Message-ID: <20040406164540.GB17338@ossmann.com>
-References: <40717062.6050401@alteeve.com>
-	<1081259282.14982.2.camel@grandmother.littlebald.com>
-	<4072BB82.4020706@alteeve.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4072BB82.4020706@alteeve.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i37HcLj13986
+	for <linux-lvm@redhat.com>; Wed, 7 Apr 2004 13:38:21 -0400
+Received: from smtp01.mrf.mail.rcn.net (smtp01.mrf.mail.rcn.net [207.172.4.60])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i37HcJWB016780
+	for <linux-lvm@redhat.com>; Wed, 7 Apr 2004 13:38:19 -0400
+Received: from 209-6-22-202.c3-0.smr-ubr1.sbo-smr.ma.cable.rcn.com
+	([209.6.22.202] helo=oddbit.com)
+	by smtp01.mrf.mail.rcn.net with esmtp (Exim 3.35 #7)
+	id 1BBH0F-0007NC-00
+	for linux-lvm@redhat.com; Wed, 07 Apr 2004 13:38:19 -0400
+Message-ID: <40743C87.4080805@oddbit.com>
+Date: Wed, 07 Apr 2004 13:38:15 -0400
+From: Lars Kellogg-Stedman <lars@oddbit.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshots failing w/ kernel 2.6.4
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,18 +25,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Tue, Apr 06, 2004 at 10:15:30AM -0400, Madison Kelly wrote:
-> 
-> I am trying now to figure out how to properly use 'chroot /mnt/sysimage' 
-> followed by 'lvcreate_initrd' to write a new boot loaded but despit 
-> double checking that the file name was right Grub still fails to find 
-> the file...
+Howdy all,
 
-Can you post your grub.conf and an ls of your boot
-filesystem?
+I'm running Fedora Core 2 test 1 + updates, which means:
 
-mossmann
+	kernel-2.6.4-1.305
+	lvm2-2.00.08-5
+	device-mapper-1.00.07-3.1
+
+When I try to create a snapshot of a 50g LV named 'home':
+
+	# lvm lvcreate -s -L 5g -n home.snap0 /dev/vg0/home
+
+I receive the following error:
+
+	device-mapper ioctl cmd 9 failed: Invalid argument
+	Couldn't load device 'vg0-home.snap0'.
+	Problem reactivating origin home
+
+This also results in some bogus entries in both the list of LVs and the 
+device-mapper.  Manually removing the dm entry (dmsetup remove ...) and 
+then removing the LV seems to work.
+
+Is this a known problem?
+
+Thanks,
+
+-- Lars
