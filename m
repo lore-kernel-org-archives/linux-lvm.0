@@ -1,9 +1,11 @@
-Return-Path: <elim@nutrot.ern-e.org>
-Date: Tue, 21 Aug 2001 05:53:48 -0400 (EDT)
-From: elim <elim@nutrot.ern-e.org>
-Message-ID: <Pine.LNX.4.21.0108210453440.15709-100000@nutrot.ern-e.org>
+Return-Path: <grobe@gmx.net>
+Date: Tue, 21 Aug 2001 12:40:10 +0200 (MEST)
+From: Lars Grobe <grobe@gmx.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] Ow.. not again
+Message-ID: <4755.998390410@www44.gmx.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] restoring lvm cinfiguration
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hiya
+Hi!
 
-After a lengthy period of uptime, my Linux box was rebooted today and this
-is what it spewed out on bootup:
+This is somehow a followup to my message describing the (my) resize-error.
 
-vgscan -- found inactive volume group "vg01"
-vgscan -- reading data of volume group "vg01" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-data of volume group "vg01" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-"/etc/lvmtab" and "/etc/lvmtab.d"
+I took a look at vgcfgrestore, and it seams to be the right tool for me now
+;-) But before I apply this to the ruins of our filesystem.... Am I right if
+I suppose the /etc/lvmconf/vgname.conf to be the current configuration (so,
+the wrong one after my lv-shrinking)? So that vgname.conf.1 is the previous
+one, that I should restore? I need lvm to allocate the same space on the pvs as
+it did before, so that I can rebuild my reiserfs with fsck.
 
+Thank You, CU, Lars.
 
-I tried the vgcfgrestore but then I ended up with "No volume groups
-found" error. I then tried dd'ing the vg info onto the pv's as per a
-previous post which basically got me back to the "ERROR
-"vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-data of volume group "vg01" from physical volume(s)" error. 
-
-Basically Im going in circles. I even tried the uuid_fixer but it seems it
-does the same thing as the dd trick.
-
-I've scoured the faq's and read one too many list messages... can somebody
-please help??? Having my fs's back would be really convenient right now :)
-
-Kernel is 2.2.19aa1 and Iam using 0.9beta4 of lvm and the tools. The vg
-on disk was created pre 0.6.. i cant remember exactly.
-
-Thanks.
-Ernie
+-- 
+GMX - Die Kommunikationsplattform im Internet.
+http://www.gmx.net
