@@ -1,160 +1,42 @@
-From: Peter.Wuestefeld@resnova.de
+Date: Thu, 24 Aug 2000 12:46:14 +0200
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] LVM and sw RAID1
-Message-ID: <OFBD402CC0.EADC9B6D-ONC1256945.00396FA2@resnova.de>
-Date: Thu, 24 Aug 2000 12:37:43 +0200
-MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="=_alternative 0039A33DC1256945_="
+Message-ID: <20000824124613.B19952@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+References: <20000823162957.B8398@gospelcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20000823162957.B8398@gospelcom.net>; from pcg@gospelcom.net on Wed, Aug 23, 2000 at 04:29:57PM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: linux-lvm@msede.com, owner-linux-lvm@msede.com, Peter Green <pcg@gospelcom.net>
-
-This is a multipart message in MIME format.
---=_alternative 0039A33DC1256945_=
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-Hi,
+On Wed, Aug 23, 2000 at 04:29:57PM -0400, Peter Green wrote:
+> I am having a really difficult time being able to get LVM to recognize my
+> /dev/md[012] arrays. The system:
 
-I think you are trying to cure the wrong disease ;-)
+hello you have stumbled upon a (nother) nice bug in lvm
+i asked for help twice on this list, none helped even bothered to answer,
+anyway i found the bug, well there is more than one preventing you to use
+raid and LVM, fixed that and pvmoved everything onto my lvm+raid5 (fixing another bug
+in the process).
+Well, i discovered that reiserfs + LVM + raid DOES NOT WORK, it actually filled
+95% of my files with zeroes :)
 
-> [root@dmna /root]# pvcreate -f /dev/md0
-> pvcreate -- invalid partition type 0x83 for "/dev/md0" (must be 0x8e)
+(*use the tape luke*)
 
-shows what is wrong:
+unluckyli the patch to fix lvm+raid was not on tape, so i will post it as soon
+i manage to rewrite it from memory,  hold your breath and mail me personally if
+i forget :)
 
-try to set the partition id to 0x8e with fdisk/sfdisk/cfdisk - that should 
-solve the problem.
+BTW i am back with ext2 and it works
 
-HTH,
+Regards.
+L.
 
-Peter
-
-Mit freundlichem Gruss/Best Regards
-
-Peter Wuestefeld
-IBM Certified System Administrator AIX 4.3
-IBM Certified Support Professional AIX 4.3
-==================================
-res nova Unternehmensberatung GmbH
-                   ...aktiv in AIX
-MAIL:  Ruppmannstrasse 41
-       D-70565 Stuttgart, Germany
-FON:   +49 711 78888 0
-FAX:   +49 711 78888 99
-WWW:   http://www.resnova.de
-SMTP: mailto: Peter.Wuestefeld@resnova.de
-
-Computers are useless. They can only give you answers.
-        -- Pablo Picasso
-
-
-
-
-Andreas Dilger <adilger@turbolinux.com>
-Sent by: owner-linux-lvm@msede.com
-24.08.00 02:02
-
- 
-        To:     Peter Green <pcg@gospelcom.net>
-        cc:     Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
-        Subject:        Re: [linux-lvm] LVM and sw RAID1
-
-Peter writes:
-> [root@dmna /root]# pvcreate /dev/md0
-> pvcreate -- invalid partition type 0x83 for "/dev/md0" (must be 0x8e)
-> 
-> [root@dmna /root]# pvcreate -f /dev/md0
-> pvcreate -- invalid partition type 0x83 for "/dev/md0" (must be 0x8e)
-> 
-> [root@dmna /root]# pvcreate -ff /dev/md0
-> pvcreate -- invalid partition type 0x83 for "/dev/md0" (must be 0x8e)
-
-Have you tried running "pvcreate -v -d /dev/md0"?  It may be that you
-get some more clues with this.  Maybe even strace of the above.  It
-looks like pvcreate is not getting the correct "dev" or "rdev" from the
-inode...
-
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-
-
-
---=_alternative 0039A33DC1256945_=
-Content-Type: text/html; charset="us-ascii"
-
-
-<br><font size=2 face="sans-serif">Hi,</font>
-<br>
-<br><font size=2 face="sans-serif">I think you are trying to cure the wrong disease ;-)</font>
-<br>
-<br><font size=2 face="Courier New">&gt; [root@dmna /root]# pvcreate -f /dev/md0<br>
-&gt; pvcreate -- invalid partition type 0x83 for &quot;/dev/md0&quot; (must be 0x8e)</font>
-<br>
-<br><font size=2 face="sans-serif">shows what is wrong:</font>
-<br>
-<br><font size=2 face="sans-serif">try to set the partition id to 0x8e with fdisk/sfdisk/cfdisk - that should solve the problem.</font>
-<br>
-<br><font size=2 face="sans-serif">HTH,</font>
-<br>
-<br><font size=2 face="sans-serif">Peter</font>
-<br><font size=2 face="sans-serif"><br>
-Mit freundlichem Gruss/Best Regards</font>
-<br>
-<br><font size=2 face="sans-serif">Peter Wuestefeld<br>
-IBM Certified System Administrator AIX 4.3<br>
-IBM Certified Support Professional AIX 4.3<br>
-==================================<br>
-res nova Unternehmensberatung GmbH<br>
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...aktiv in AIX<br>
-MAIL: &nbsp;Ruppmannstrasse 41<br>
- &nbsp; &nbsp; &nbsp; D-70565 Stuttgart, Germany<br>
-FON: &nbsp; +49 711 78888 0<br>
-FAX: &nbsp; +49 711 78888 99<br>
-WWW: &nbsp; http://www.resnova.de<br>
-SMTP: mailto: Peter.Wuestefeld@resnova.de</font>
-<br>
-<br><font size=2 face="sans-serif">Computers are useless. They can only give you answers.<br>
- &nbsp; &nbsp; &nbsp; &nbsp;-- Pablo Picasso</font>
-<br>
-<br>
-<br>
-<table width=100%>
-<tr valign=top>
-<td>
-<td><font size=1 face="sans-serif"><b>Andreas Dilger &lt;adilger@turbolinux.com&gt;</b></font>
-<br><font size=1 face="sans-serif">Sent by: owner-linux-lvm@msede.com</font>
-<p><font size=1 face="sans-serif">24.08.00 02:02</font>
-<br>
-<td><font size=1 face="Arial">&nbsp; &nbsp; &nbsp; &nbsp; </font>
-<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; To: &nbsp; &nbsp; &nbsp; &nbsp;Peter Green &lt;pcg@gospelcom.net&gt;</font>
-<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; cc: &nbsp; &nbsp; &nbsp; &nbsp;Andreas Dilger &lt;adilger@turbolinux.com&gt;, linux-lvm@msede.com</font>
-<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; Subject: &nbsp; &nbsp; &nbsp; &nbsp;Re: [linux-lvm] LVM and sw RAID1</font></table>
-<br>
-<br><font size=2 face="Courier New">Peter writes:<br>
-&gt; [root@dmna /root]# pvcreate /dev/md0<br>
-&gt; pvcreate -- invalid partition type 0x83 for &quot;/dev/md0&quot; (must be 0x8e)<br>
-&gt; <br>
-&gt; [root@dmna /root]# pvcreate -f /dev/md0<br>
-&gt; pvcreate -- invalid partition type 0x83 for &quot;/dev/md0&quot; (must be 0x8e)<br>
-&gt; <br>
-&gt; [root@dmna /root]# pvcreate -ff /dev/md0<br>
-&gt; pvcreate -- invalid partition type 0x83 for &quot;/dev/md0&quot; (must be 0x8e)<br>
-<br>
-Have you tried running &quot;pvcreate -v -d /dev/md0&quot;? &nbsp;It may be that you<br>
-get some more clues with this. &nbsp;Maybe even strace of the above. &nbsp;It<br>
-looks like pvcreate is not getting the correct &quot;dev&quot; or &quot;rdev&quot; from the<br>
-inode...<br>
-<br>
-Cheers, Andreas<br>
--- <br>
-Andreas Dilger &nbsp;\ &quot;If a man ate a pound of pasta and a pound of antipasto,<br>
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; \ &nbsp;would they cancel out, leaving him still hungry?&quot;<br>
-http://www-mddsp.enel.ucalgary.ca/People/adilger/ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- Dogbert<br>
-</font>
-<br>
-<br>
---=_alternative 0039A33DC1256945_=--
+Luca Berra -- bluca@comedia.it
+    Communication Media & Services S.r.l.
