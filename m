@@ -1,55 +1,69 @@
-Date: Mon, 19 Apr 1999 14:01:55 +0100 (BST)
-From: Tony Rogers <tony@racsys.demon.co.uk>
-Reply-To: Tony Rogers <tony@racsys.demon.co.uk>
-Subject: Re: [linux-lvm] System locks solid under LVM
-Message-ID: <Pine.LNX.3.96.990419134407.8939A-100000@websrv.afsuk.gecfs>
-MIME-Version: 1.0
+Message-Id: <199904202237.AA04089@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] Swap/DB devices
+Date: Wed, 21 Apr 1999 0:34:51 METDST
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: stb@ep-ag.com
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Hi there Klaus,
 
-Many thanks for your comments.
+On Sat, 17 Apr 1999 21:03:50 +0100 (BST), Stephen Tweedie
+<sct@redhat.com> said:
 
-I am a little confused. If I do 'gcc -v' on my work box (I am at work
-now) it gives me:
-[rogers@websrv rogers]$ gcc -v                                                  
-Reading specs from /usr/lib/gcc-lib/i386-redhat-linux/2.7.2.3/specs             
-gcc version 2.7.2.3 
+> 
+> On Sat, 17 Apr 1999 13:22:29 METDST, Heinz Mauelshagen
+> <mauelsha@ez-darmstadt.telekom.de> said:
+> 
+> > The LVM lib creates the device special nodes dynamically if a logical volume
+> > is created by lvcreate(8) or found by vgscan(8)/vgimport(8).
+> 
+> > LVM function lv_create_node() has to be extended to create the raw
+> > device too.  The LVM driver can then be accessed by that raw device
+> > node _without_ modification.
+> 
+> No, it doesn't work that way.  The major/minor numbers for the raw
+> devices are 100% meaningless.  Creating a raw device inode is all very
+> well, but it won't do anything AT ALL until you have done a raw ioctl to
+> bind it to a block device.
 
-which is the version which you say gave you problems. If I do a 'man' on
-egcs, it takes me to the gcc page.
+O.k., o.k ;*)
 
-Is there a difference between egcs and gcc these days?
+Didn't see your recent major raw-io rewrite which avoids
+the problems of the earlier implementaion.
 
-I am reluctant to believe that the compiler is totally at fault, as the
-rest of the system seems to be fine, and my 'work' box was left on soak
-test over the weekend, and it was still rattling away this morning - very
-satisfying.
+But my argument basically stays the same.
 
-Following a question from the list, I reconfigured my system so that I had
-two VGs, each containing 1 PV. The interesting thing is that they are now 
-on different disks. One is quite reliable, the other is very unreliable.
+If i want to have raw i/o specials for the LVM, i'ld prefer to
+extend the LVM library and the tools to do the job.
+The user does have the option to create and bind them 'by hand' anyway.
 
-Ordinarily I would say that this is hardware, but Win95 and non-LVM Linux
-has no problem with this disk, which is heavily used.
+> 
+> As long as you can create the LVM block devices either in some known
+> location or with some known block device number, you can then bind a raw
+> device on top without any changes to the driver underneath.
+> 
 
-It is looking more and more like LVM stresses the system just a little too
-far, and that the base system is not quite right.
+Yes.
+Let the LVM lib/tools do it for the user.
 
-It might be interrupts - I don't know. It might be time to strip out all
-the other cards (again!).
+Regards,
+Heinz
 
-Unfortunately this does not help me much, as when LVM pushes it over the
-edge, it locks totally, and I can't poke around to figure out what went
-wrong.
 
-Anyway, thanks again. I'm still plugging away.
+--
 
-Tony Rogers
-===========
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
