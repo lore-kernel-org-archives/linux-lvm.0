@@ -1,9 +1,9 @@
-From: pfeffer2@gmx.de
-MIME-Version: 1.0
-Message-ID: <3EEBABA6.3099.AB911F@localhost>
-Content-transfer-encoding: 7BIT
-Content-description: Mail message body
-Subject: [linux-lvm] Lost one disk from VG
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] snapshots+highmem+'md raid5'
+Message-ID: <20030616113249.C24004@sistina.com>
+References: <3560BA143F45D5118E670000E82459214C2084@ssk.schneiderkenzingen.de> <20030612235501.GA15452@www.13thfloor.at> <20030614002027.GA26078@corp.vendio.com> <20030614003726.GA27245@www.13thfloor.at> <1055594711.3eeb18d7b67a4@secure.st-peter.stw.uni-erlangen.de> <20030614200754.GB16650@www.13thfloor.at>
+Mime-Version: 1.0
+In-Reply-To: <20030614200754.GB16650@www.13thfloor.at>; from herbert@13thfloor.at on Sat, Jun 14, 2003 at 10:07:54PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,95 +14,112 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jun 14 16:11:04 2003
+Date: Mon Jun 16 04:46:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Herbert Poetzl <herbert@13thfloor.at>
+Cc: linux-lvm@sistina.com, Svetoslav Slavtchev <galia@st-peter.stw.uni-erlangen.de>, "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 
-Hello,
+On Sat, Jun 14, 2003 at 10:07:54PM +0200, Herbert Poetzl wrote:
+> On Sat, Jun 14, 2003 at 02:45:11PM +0200, Svetoslav Slavtchev wrote:
+> > Quoting Herbert Poetzl <herbert@13thfloor.at>:
+> > 
+> > > didn't say that this would be bad, only that
+> > > it live-locked my system at high load ...
+> > > the tenor on the list was: "highmem is bad"
+> > > so I turned it off, and, voila the system was
+> > > stable again ...
+> > 
+> > snapshots + md + highmem is very bad
+> > if you don't use snapshots its perfectly OK
+> 
+> I have to disagree, live-lock under high load is
+> not perfectly OK, at least not for me ... 8-)
+> 
+> > > another, yet unexplained issue, is that on
+> > > another system, 4 SCSI discs, form a RAID 5
+> > > array (software) which gives about 35MB
+> > > throughput, but lvm 1.0.7 ontop of that md
+> > > only has about 18MB throughput ...
+> > 
+> > I've a bit defferent figures from a onboard HPT374 4 ide chanels with
+> > 4 IBM deskstars 80Gb, but i still lose 8-15Mb/s compared to plain md :
+> > 
+> > /dev/hda:
+> >  Timing buffer-cache reads:   128 MB in  0.41 seconds =308.43 MB/sec
+> >  Timing buffered disk reads:  64 MB in  1.42 seconds = 45.07 MB/sec
+> > [root@svetljo root]# hdparm -tT /dev/md13
+> > 
+> > /dev/md13:
+> >  Timing buffer-cache reads:   128 MB in  0.41 seconds =316.05 MB/sec
+> >  Timing buffered disk reads:  64 MB in  1.08 seconds = 59.26 MB/sec
+> > [root@svetljo root]# hdparm -tT /dev/data
+> > data   data2
+> > [root@svetljo root]# hdparm -tT /dev/data2/Movies
+> > 
+> > /dev/data2/Movies:
+> >  Timing buffer-cache reads:   128 MB in  0.41 seconds =316.05 MB/sec
+> >  Timing buffered disk reads:  64 MB in  1.32 seconds = 48.30 MB/sec
+> 
+> I posted my results a month ago, but I digged them
+> out again, because together with your results, it
+> sheds new light on that issue ...
+> 
+> mine          	raw disc    md(raid5)   lvm on md
+> -----------------------------------------------------
+> hdparm          14694.40    34129.92    18667.52
+> dd 1024k        14988.22    34732.56    18647.98
+> dd 32k          15516.06    33945.48    18862.67
+> 
+> yours          	raw disc    md(raid5)   lvm on md
+> -----------------------------------------------------
+> hdparm          46151.68    60682.24    49459.20 
+> 
+> in both cases the lvm lies about 3MB over the raw
+> disc throughput, regardless of the md values ...
 
-I've got a big problem. I lost one disk of my vg. The VG spans over 
-hda4, hdb1 and hdd1. I use Logical Volume Manager 0.9.1_beta7.
-I've replaced it with the same disk and tried to do a vgcfgrestore -vv -n 
-vg00 -o /dev/hdd1 /dev/hdc1 but ist says:
+The reason probably is LVMs read ahead.
 
-vgcfgrestore -- locking logical volume manager
-vgcfgrestore -- restoring volume group "vg00" from 
-"/etc/lvmconf/vg00.conf"
-vgcfgrestore -- checking existence of "/etc/lvmconf/vg00.conf"
-vgcfgrestore -- reading volume group data for "vg00" from 
-"/etc/lvmconf/vg00.conf"
-vgcfgrestore -- reading physical volume data for "vg00" from 
-"/etc/lvmconf/vg00.conf"
-vgcfgrestore -- reading logical volume data for "vg00" from 
-"/etc/lvmconf/vg00.conf"
-vgcfgrestore -- checking volume group consistency of "vg00"
-vgcfgrestore -- checking volume group consistency of "vg00"
-vgcfgrestore -- reading physical volume "/dev/hdc1"
-vgcfgrestore -- checking for new physical volume "/dev/hdc1"
-vgcfgrestore -- size of physical volume /dev/hdc1 differs from backup
+> 
+> maybe this could lead to some explanation of this
+> issue ... unfortunately there was no reply to my
+> posting over the last month *sigh*
+> 
+> best,
+> Herbert
+> 
+> > time dd if=/dev/zero of=/mnt/Movies/BigFile.tm bs=1M count=4000
+> > 4000+0 records in
+> > 4000+0 records out
+> > 0.02user 15.57system 1:37.10elapsed 16%CPU (0avgtext+0avgdata 0maxresident)k
+> > 0inputs+0outputs (148major+40minor)pagefaults 0swaps
+> > 
+> > best,
+> > 
+> > Svetljo
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-The next thing that makes me woder ist the output of pvdata -PP:
+-- 
 
-PV Name               /dev/hda4
-VG Name               vg00
-PV Size               34.89 GB / NOT usable 2.66 MB [LVM: 155 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                3
-PE Size (KByte)       4096
-Total PE              8930
-Free PE               0
-Allocated PE          8930
-PV UUID               QdcPBs-QIwO-LdVf-KU4Q-2VtZ-YIpy-TjMsUV
-pv_dev                   0:3
-system_id                (none)1007200862
-pv_on_disk.base          0
-pv_on_disk.size          1024
-vg_on_disk.base          1024
-vg_on_disk.size          4608
-pv_uuidlist_on_disk.base 6144
-pv_uuidlist_on_disk.size 32896
-lv_on_disk.base          39424
-lv_on_disk.size          84296
-pe_on_disk.base          123904
-pe_on_disk.size          2666496
+Regards,
+Heinz    -- The LVM Guy --
 
-PV Name               /dev/hdb1
-VG Name               vg00
-PV Size               37.31 GB / NOT usable 1.41 MB [LVM: 158 KB]
-PV#                   2
-PV Status             available
-Allocatable           yes
-Cur LV                3
-PE Size (KByte)       4096
-Total PE              9550
-Free PE               3361
-Allocated PE          6189
-PV UUID               xLkHYY-DbeL-mdOr-do4F-QbOA-x710-RdLuYb
-pv_dev                   0:3
-system_id                k6ii5001007291048
-pv_on_disk.base          0
-pv_on_disk.size          1024
-vg_on_disk.base          1024
-vg_on_disk.size          4608
-pv_uuidlist_on_disk.base 6144
-pv_uuidlist_on_disk.size 32896
-lv_on_disk.base          39424
-lv_on_disk.size          84296
-pe_on_disk.base          123904
-pe_on_disk.size          1354240
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Should the system_id not be the same? How could I change the 
-system_id?
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-vgscan dosen't find any volume groups.
-
-How can I get the data from hda4 and hdb1?
-
-Best regards
-
-Stephan Pfeffer
-
-P.S.: please excuse that my English is bad - I'm not a nativ speaker 
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
