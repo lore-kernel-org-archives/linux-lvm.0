@@ -1,10 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 12 Apr 2001 18:28:56 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Lost harddrive space
-Message-ID: <20010412182856.A26530@sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <no.id>; from erik@rigtorp.com on Thu, Apr 12, 2001 at 05:51:30PM +0200
+Return-Path: <jkirby@storagecraft.com>
+From: "Jamey Kirby" <jkirby@storagecraft.com>
+Subject: RE: [linux-lvm] Lost harddrive space
+Date: Thu, 12 Apr 2001 10:24:42 -0700
+Message-ID: <009301c0c375$75d90240$827ba8c0@CPQ1800>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <200104121553.IAA30370@nebulus.tfb.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,46 +18,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Apr 12, 2001 at 05:51:30PM +0200, Erik Rigtorp wrote:
+Is the driver using CHS or LBA? THis may cause the loss of sectors.
+
+> -----Original Message-----
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Erik Rigtorp
+> Sent: Thursday, April 12, 2001 8:52 AM
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] Lost harddrive space
+>
+>
 > Hi!
-> 
-> I have a 60999.46 MB linux lvm partition. But when I pvcreate it and 
-> pvdisplay /dev/hda2 it says the physical volume is only 56.8GB and 1.03MB 
-> not used. Where are those lost Gigs? I use the lvm that comes with the 
+>
+> I have a 60999.46 MB linux lvm partition. But when I pvcreate it and
+> pvdisplay /dev/hda2 it says the physical volume is only 56.8GB and 1.03MB
+> not used. Where are those lost Gigs? I use the lvm that comes with the
 > 2.4.3 kernel.
-
-Could you provide "pvdisplay /dev/hda2" and "fdisk -l /dev/hda" please?
-
-It is likely caused by the math:
-
- 1 GB = 2^30 Byte
-
-> 
+>
 > /Erik
-> 
-> 
+>
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
