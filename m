@@ -1,7 +1,8 @@
-From: thuck@vip1.net
-MIME-Version: 1.0
-Message-Id: <E19YcnO-0003vX-00@hermes.sistina.com>
-Subject: [linux-lvm] Search Engine TOP submission.          }9WAOzAE9l_PgPW
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Message-ID: <20030706021224.A19265@uk.sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Updated LVM2 tools for testing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,21 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul  4 21:30:02 2003
+Date: Sat Jul  5 20:13:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain;; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hey,
+I've put updated versions of the LVM2 tools from CVS onto the FTP site
+so more people can test them.  The kernel driver has been improved.
 
-We place Upto 3 Keyword under Top 5 positions in Google, the placements are guaratnee!.
+dmsetup + libdevmapper + replacement kernel patches for 2.4.20 & 2.4.21:
+  ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper-testing-new-version4-interface.tgz
 
-Let us know your business name and keywords you want to place on google.com.
+Updated LVM2 tools to work with the above:
+  ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.0-testing.tgz
 
-We just charge $780 for placing keywords and then $100 from the next month.
+If the new tools detect the old version 1 driver, they try to fall back
+and use the old API, so you shouldn't need to keep two sets of tools
+around if you're regularly swapping kernels.  [But this hasn't been
+thoroughly tested.]
 
-Steven shah
-gsubmission@inbox.com.pk
-Thanks
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vs?9L-)=\e>tDbN
+Alasdair
+-- 
+agk@uk.sistina.com
