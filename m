@@ -1,13 +1,9 @@
-Date: Fri, 31 Aug 2001 14:29:13 +0200
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] Why aren't the linux-sources up to date?
-Message-ID: <20010831142913.A21933@dragon.blacknet.de>
-References: <OF41C775E9.837668B1-ONC1256AB9.002E0C80@gillette.com>
+Date: Fri, 31 Aug 2001 08:40:53 -0400
+From: Rob Latham <rlatham@plogic.com>
+Message-ID: <20010831084053.A24948@otto.plogic.internal>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
 Content-Disposition: inline
-In-Reply-To: <OF41C775E9.837668B1-ONC1256AB9.002E0C80@gillette.com>; from Daniel_Schroeter@gillette.com on Fri, Aug 31, 2001 at 10:31:07AM +0200
+Subject: [linux-lvm] LVM and SPL
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,35 +15,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+sistina this week switched the license for the GFS tools from the GPL
+to the SPL 
 
+http://www.sistina.com/Sistina%20Public%20License%201.0.pdf 
 
-On Fri, Aug 31 '01 at 10:31, Daniel_Schroeter@gillette.com wrote:
-> Why don't have the sources from the linux-kernel the current LVM version?
-The sistina folks are still in the process of submitting the patches to
-Linus. While they have already been able to get close to 0.9.1beta8
-(IIRC) they were not able to get the kernel's version of LVM up to
-1.0.1(rc2). But I'm positive that they will get there. =20
---=20
-Goetz Bock                                              IT Consultant
-Dipl.-Inf. Univ.
+I'm worried now that Sistina will switch the license for LVM.
+However, considering there was almost a fork of the project (mostly)
+because of something as "simple" as mailing list policy, i guess
+openLVM would pop up again pretty quickly in that case...   Is it
+concievable that the kernel patches will stay GPL'ed but a more
+restrictive license applied to the userspace tools ?
 
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+==rob
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7j4MYf5srOMkjkQoRAt1AAJkB3+SaZhBzdKBFh2h1HHJoMIJPQwCfbtEw
-0UnBMVJ5WPF2pypn3KdyCAo=
-=bndC
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+-- 
+[ Rob Latham <rlatham@plogic.com>         Developer, Admin, Alchemist ]
+[ Paralogic Inc. - www.plogic.com                                     ]
+[                                                                     ]
+[ EAE8 DE90 85BB 526F 3181                   1FCF 51C4 B6CB 08CC 0897 ]
