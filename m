@@ -1,10 +1,7 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] pvmove doesnt work with LVM2?
-Message-ID: <20031223203431.O21022@uk.sistina.com>
-References: <20031223110817.735D01A34A2@kogut.o2.pl>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Message-ID: <20031224140945.K18657@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031223110817.735D01A34A2@kogut.o2.pl>; from irq@go2.pl on Tue, Dec 23, 2003 at 12:08:19PM +0100
+Subject: [linux-lvm] Merry Christmas
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,15 +12,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 23 14:36:01 2003
+Date: Wed Dec 24 07:16:04 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-devel@sistina.com, dm-devel@sistina.com
+Cc: mge@sistina.com
 
-On Tue, Dec 23, 2003 at 12:08:19PM +0100, Ireneusz Kupiec wrote:
-> when i try to extend my current old volume pvmove gives me an error:
+All,
 
-Linus's 2.6 kernel does not yet include pvmove support.
+the LVM team is taking off arround Christmas till the new year.
 
-Alasdair
+So don't expect reactions from us before January 5
+unless there's _real_ good reasons ;-)
+
+A merry Christmas and a happy new year to all of you and
+thanks a lot for your support of the LVM.
+
+
+Warm regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
