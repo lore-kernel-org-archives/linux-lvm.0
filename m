@@ -1,13 +1,8 @@
-Return-Path: <tack@linux.com>
-Subject: Re: [linux-lvm] Nasty bug in lvm and/or md and/or reiserfs
-From: Jason Tackaberry <tack@linux.com>
-In-Reply-To: <20010726232453.A1209@btconnect.com>
-References: <20010726131928.D1779@linux.com> 
-	<20010726232453.A1209@btconnect.com>
-Content-Transfer-Encoding: 7bit
-Date: 26 Jul 2001 17:44:35 -0400
-Message-Id: <996183877.5581.3.camel@andromeda>
-Mime-Version: 1.0
+Return-Path: <evan.day@home.com>
+From: evan.day@home.com
+Message-Id: <20010727032755.E8509DA7@spock.banal.collective>
+Date: Thu, 26 Jul 2001 20:27:55 -0700 (PDT)
+Subject: [linux-lvm] LVM 0.9.1beta8 upgrade okay?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,25 +14,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> This was a stupid thing to do; and yes we should probably check to see
+After a few reboots and fiddling with the RAID (to make sure I always
+had at least one disk that wasn't upgraded and still bootable, since I
+do have my root fs on LVM :), everything seems to be okay at beta 8.  
 
-Indeed.  I didn't realize the partition was still mounted (I had left
-the system and come back to it some time later).  Of course it should
-fail, but not that bad. :)
+However, at boot time, I get the following:
 
-> pvcreate would have stamped it's own metadata over md's metadata, so
-> I'm not surprised md had trouble.  This is not a bug in md or
-> reiserfs, just user error that LVM should have caught.
+Jul 26 18:43:14 spock kernel: lvm -- lvm_blk_ioctl: unknown command
+0x5310
 
-With respect to the problem I had with /etc/mtab: the root partition is
-not handled by LVM at all.  It is strictly a md device.  I assume
-/etc/mtab got hosed when umount segfaulted (because of the ReiserFS
-bug).  But the root partition (and /etc on the root partition) is
-md/raid1 with ext2.  This seems to me to be a real md bug.  What do you
-think?
+Everything comes up okay, though, and pvversion says I have version 2:
 
-Thanks,
-Jason.
+spock:~/LVM/0.9.1_beta8/tools# ./pvversion -version /dev/md1
+pvversion -- physical volume "/dev/md1" has version: 2 / data_location:
+6144
+
+Kernel is definitely upgraded, it reports LVM 0.9.1beta8 during boot.  I
+rebuilt the initial ramdisk and it is at beta 8, so I'm not sure about
+that lvm_blk_ioctl error.
