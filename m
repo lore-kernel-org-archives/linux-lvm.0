@@ -1,11 +1,9 @@
-From: Mike Williams <mike@gaima.co.uk>
-Subject: Re: [linux-lvm] EXT3 vs Reiserfs
-References: <9BBB7C9EFEF1874BAC4DC204E867EFAF02560D49@s99mail06> <1070853946.1558.17.camel@avalon> <20031208162615.GJ2015@zaurak.cedar.Buffalo.EDU>
-In-Reply-To: <20031208162615.GJ2015@zaurak.cedar.Buffalo.EDU>
+Content-Class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <200312082008.05785.mike@gaima.co.uk>
+Subject: RE: [linux-lvm] EXT3 vs Reiserfs
+Message-ID: <CEADF0D83077F7458B763904E47AA709BD63@exchange.neokimia.com>
+From: "Yanick Quirion" <yanick.quirion@neokimia.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,30 +14,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  8 14:09:01 2003
+Date: Mon Dec  8 15:22:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-=2D----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
 
-On Monday 08 December 2003 16:26, Ajay Shekhawat wrote:
-> Since noone has mentioned XFS, let me throw in my recommendation for XFS.
+> -----Original Message-----
+> From: Ajay Shekhawat [mailto:ajay@cedar.Buffalo.EDU]
+> Sent: 8 December, 2003 11:26
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] EXT3 vs Reiserfs
+>=20
+> On Mon, Dec 08, 2003 at 04:25:47AM +0100, Markus Schiltknecht wrote:
+> > why is that? thought reiser was faster than ext3 while ext3 would be
+> > considered more stable (in general).
+>=20
+> Reiser has this "tail packing" option, as well as some other
+optimizations
+> that benefit sites with lots of small files (best example: Usenet
+feeds).
+> However, this can come at a price for really LARGE files (as a DB
+would
+> need).
+>=20
+> > Before getting ways off topic: where can I find a good comparison /
+> > discussion on different filesystems?
+>=20
+> Checkout
+> 	http://oregonstate.edu/~kveton/fs/
+>=20
+> Since noone has mentioned XFS, let me throw in my recommendation for
+XFS.
 > XFS (like, probably, IBM's JFS) is a top-notch filesystem.
 > Try it out in your scenario, you might like it.
 
-XFS filesystems can't be shrunk, which I see as a *major* "flaw".
-I agree that it's a very nice filesystem, but not being to resize it as I n=
-eed=20
-rules it out entirely.
 
-=2D --=20
-Mike Williams
-=2D----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
+I'm currently testing XFS. It seems to be better than reiserfs, because
+it supports ACLs and online resizing (I applied all patches with
+success). But is XFS supports shrink? With reiserfs it possible to
+shrink a filesystem, but this function doesn't seems to be available
+with XFS.
 
-iD8DBQE/1NolInuLMrk7bIwRAu7MAJ9vlxw2T8YMc7ad4t8zNBsALDgx5gCeNED6
-kmCwkAEMPpC8cbLFAs5UDVc=3D
-=3DzqwS
-=2D----END PGP SIGNATURE-----
+Thanks
+
+Yanick
