@@ -1,13 +1,8 @@
-From: Chris Mason <mason@suse.com>
-Subject: Re: [linux-lvm] SuSe 7.3 snapshot / reiserfs /
-Message-ID: <1866960000.1010517803@tiny>
-In-Reply-To: <20020108193403.A21018@fb0442.mathematik.tu-darmstadt.de>
-References: <1770390000.1010501317@tiny>
- <23601.1010510215@joergli.cocolab.de>
- <20020108193403.A21018@fb0442.mathematik.tu-darmstadt.de>
+From: <mitch@mdmiller.com>
+Subject: Re: [linux-lvm] NEED HELP ON VGDA!!
+In-Reply-To: <20020108174903.23381.qmail@web13003.mail.yahoo.com>
+Message-ID: <Pine.LNX.4.33.0201081343410.2001-100000@lx1.daboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,35 +13,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  8 13:24:02 2002
+Date: Tue Jan  8 13:37:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+Seems like the last person that needed similar information was refered to
+the LVM source ... his response, later on, was "That's exactly I was
+looking for."
 
-On Tuesday, January 08, 2002 07:34:03 PM +0100 Holger Grothe
-<grothe@mathematik.tu-darmstadt.de> wrote:
+-- Mitch
 
-> On Tue, Jan 08, 2002 at 06:16:55PM +0100, J=FCrgen Vollmer wrote:
->> > I'd advise grabbing the suse kernel update, as it fixes a few security
->> > problems and updates things to 2.4.16 (+ most patches in 2.4.17).
->>=20
->>=20
->> (may be a silly question) where do I find that kernel sources??
->>=20
-> ftp://ftp.suse.com:/pub/suse/i386/update/7.3/kernel/
 
-[ Holger probably knows this, just a general reply ;-) ]
+On Tue, 8 Jan 2002, Prashant Kharche wrote:
 
-This gives you the latest update kernel for the 7.3 distro.  It has been
-through many tests, and is considered an official release.  This is the one
-to download if you want something stable.
-
-> or
-> ftp://ftp.suse.com:/pub/people/mantel/next/
-
-This gives you the latest beta kernel.  These tend to track the pre
-releases closely, and are not as well tested as the update kernels.  This
-is the one to download if you want the bleeding edge.
-
--chris
+> Hi !!
+>          Im working on the LVM.. I want to know the
+> VGDA structure.. and how it is stored on the PVs. If
+> anyone has the documentation of the VGDA please
+> forward it to me..
+>
+>
+>
+> __________________________________________________
+> Do You Yahoo!?
+> Send FREE video emails in Yahoo! Mail!
+> http://promo.yahoo.com/videomail/
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
