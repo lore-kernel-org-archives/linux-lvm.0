@@ -1,10 +1,9 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm with gpt partitioning?
-Message-ID: <20021016072254.GB9931@percy.comedia.it>
-References: <20021014200329.GA4885@msmd.net> <20021015072108.GA31465@percy.comedia.it> <20021015151425.GA18971@msmd.net>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] performance comparison soft-hardware RAID + LVM: bad
+Message-ID: <20021016100622.A11693@sistina.com>
+References: <3DAC940D.7010903@netland.nl>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021015151425.GA18971@msmd.net>
+In-Reply-To: <3DAC940D.7010903@netland.nl>; from raarts@netland.nl on Wed, Oct 16, 2002 at 12:17:49AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,133 +14,110 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 16 02:39:23 2002
+Date: Wed Oct 16 03:28:47 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Oct 15, 2002 at 11:14:25AM -0400, Josh Duncan wrote:
->Hi Luca,
->
->this may sound stupid, but if there is a dos-compatibility partition, why
->doesn't it show up in fdisk or parted?
->
-in fdisk it does show:
-/dev/sda1             1      4428  35566479+  ee  EFI GPT
-parted supports GPT labels and prefers those, so it shows correct
-info...
+On Wed, Oct 16, 2002 at 12:17:49AM +0200, Ron Arts wrote:
+> Hello,
+> 
+> I am interested in performance for hardware/software RAID
+> in combination with LVM
+> 
+> So I took a server (Dual Xeon 2.4GHz, 1Gb RAM), a RAID adapter,
+> some identical SCSI disks and configured it with several of these
+> options (using RH 8.0) and ran a few bonnie++ benchmarks.
+> 
+> Results are below. Anyone care to comment? Especially LVM performance
+> disappointed here.
+> 
+> LVM machine setup:
+> 
+> 2 18Gb disks. I created 3 partitions on both disks, 128Mb, 512Mb and 17Gb
+> Equal partitions were combined into RAID-1 devices (md driver).
+> First md device mounted on /boot, second for swapfile, and third
+> as basis for LVM
+> 
+> Out of the volume group four LV were created and mounted as follows:
+> 
+> [root@nbs-126 root]# df
+> Filesystem           1K-blocks      Used Available Use% Mounted on
+> /dev/vg0/root          4225092   1293064   2717400  33% /
+> /dev/md0                124323     11517    106387  10% /boot
+> /dev/vg0/home          4225092     32828   3977636   1% /home
+> none                    514996         0    514996   0% /dev/shm
+> /dev/vg0/var           4225092     51720   3958744   2% /var
+> /dev/vg0/mysql        16513960     32828  15642272   1% /var/lib/mysql
 
-i should have said MBR-compatibility partition, but i prefer referring
-to DOS, just to show the idiocy of still having this kind of junk in
-A.D. 2002.
+Ron, I don't get your configuration by this df output :(
 
-kernel does also get GPT info, the problem as heinz pointed out in his
-message is in LVM tools (i believe in pv_get_size_ll function), which
-does not handle GPT paartitions at all.
-[ note i believe we can try putting 0 in part.sys_ind for efi parts or
-change pvcreate and every other place this info is used ]
-but probably Heinz suggestion of zeroing the damned PC MBR is sound,
-I believe the EFI firmware looks for an efi label not for a PC MBR to
-find the blasted first vfat partition.
+You've got 3 mirrored MDs on 2 disks (1st: 128Mb, 2nd: 512Mb, 3rd: 17Gb)
 
-Anyway, if your final desired result is having everithing on lvm on md,
-you probably ought to mirror the first vfat partition as well, or at
-least copy it on the second device, to be able to boot in case of disk
-failure.
-so you will end up with
-/dev/sda:
-MBR PART
-        /dev/sda1             1      4428  35566479+  ee  EFI GPT
-GPT PART
-1          0.017   1000.016  FAT                               boot, lba
-2       1000.017  34732.874  LVM??                             lba, raid
+3rd is used as the one and only physical volume (say /dev/md2)
+for volume group "vg0", right?
 
-and same thing for sdb
+How comes that the grand total of /dev/vg0/{root, home, var, mysql}
+is ~27.84Gb when the volume group only holds the 17Gb of /dev/md2?
 
-this will fool LVM1, since you'll never try to use as PV the first
-partirion.
+> 
+> Is there a reason for the performance degradation I saw with LVM?
+
+If my above thoughts are correct, the logical volume(s) used could well be
+suffering from bad mapping onto disk(s). You can check the mapping with
+either "pvdisplay -v /dev/md2" or for eg. "lvdisplay -v /dev/vg00/root".
+I don't feel sure about your MD configuration either.
+
+Hope that spots some light on those numbers which differ from mine
+(typically LVM gives a performamce enhancement for sequential input).
+The mapping overhead of the LVM1 driver is in the sub percent order.
 
 Regards,
-L.
+Heinz    -- The LVM Guy --
 
->I've included the info you mentioned below, as well as the info for sda...
->--Josh
->
->> looks like you have both a gpt partition and a compatibility dos-like
->> one. i am missing some info (partition detection logs at boot) output of
->> /proc/partition and lvmdiskscan. and i don't have an ia64 to play with
->> any more. might try modifiyng the partition detection code in the kernel
->> config
->
->[root@one sbin]# dmesg|grep sd
->Attached scsi disk sdb at scsi0, channel 0, id 1, lun 0
->SCSI device sda: 71132960 512-byte hdwr sectors (36420 MB)
-> sda: sda1 sda2 sda3 sda4
->Attached scsi disk sdb at scsi0, channel 0, id 1, lun 0
->SCSI device sdb: 71132960 512-byte hdwr sectors (36420 MB)
-> sdb: sdb1 sdb2
->
->/proc/partitions:
->major minor  #blocks  name rio rmerge rsect ruse wio wmerge wsect wuse running use aveq
->   8     0   35566480 sda 22661 39173 355842 99578 84426 763195 6796456 1992657 0 508375 2093808
->   8     1    1024000 sda1 506 17244 17830 1303 14 26 40 3178 0 1183 4482
->   8     2   17086318 sda2 4662 463 39842 22586 1604 5020 53800 1135352 0 35906 1158022
->   8     3   15360000 sda3 17426 19290 293722 67802 82808 758149 6742616 854132 0 480061 923424
->   8     4    2096128 sda4 3 0 96 23 0 0 0 0 0 23 23
->   8    16   35566480 sdb 285 8353 17020 25452 11 201 424 114 0 25533 25566
->   8    17    2096111 sdb1 9 135 288 6 0 0 0 0 0 6 6
->   8    18   17086464 sdb2 25 165 380 12 7 137 288 35 0 47 47
->
->[root@one sbin]# lvmdiskscan
->lvmdiskscan -- reading all disks / partitions (this may take a while...)
->lvmdiskscan -- /dev/sda1  [      33.92 GB] Primary   [0xEE]
->lvmdiskscan -- /dev/sda2  [      16.29 GB] free whole disk
->lvmdiskscan -- /dev/sdb1  [      33.92 GB] Primary   [0xEE]
->lvmdiskscan -- /dev/sdb2  [      16.29 GB] USED LVM whole disk
->lvmdiskscan -- 2 disks
->lvmdiskscan -- 2 whole disks
->lvmdiskscan -- 0 loop devices
->lvmdiskscan -- 0 multiple devices
->lvmdiskscan -- 0 network block devices
->lvmdiskscan -- 6 partitions
->lvmdiskscan -- 0 LVM physical volume partitions
->
->[root@one sbin]# fdisk -l /dev/sda
->
->Disk /dev/sda: 255 heads, 63 sectors, 4427 cylinders
->Units = cylinders of 16065 * 512 bytes
->
->   Device Boot    Start       End    Blocks   Id  System
->/dev/sda1             1      4428  35566479+  ee  EFI GPT
->
->[root@one sbin]# parted /dev/sda print
->Disk geometry for /dev/sda: 0.000-34732.890 megabytes
->Disk label type: GPT
->Minor    Start       End     Filesystem  Name                  Flags
->1          0.017   1000.016  FAT                               boot, lba
->2       1000.017  17685.874  ext3                              lba
->3      17685.875  32685.874  ext3                              lba
->4      32685.875  34732.874  linux-swap                        lba
->
->[root@one sbin]# df -k
->Filesystem           1k-blocks      Used Available Use% Mounted on
->/dev/sda3             15118728   3718600  10632128  26% /
->/dev/sda1              1023728     10720   1013008   2% /boot/efi
->/dev/sda2             16817896   5019860  10943724  32% /home
->none                    505568         0    505568   0% /dev/shm
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> Regards,
+> Ron Arts
+> 
+> 
+> Version  1.02c      ------Sequential Output------ --Sequential Input- --Random-
+>                      -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+> Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
+> nbs-126.offic 2008M 24005  99 66015  49 16148   7 27430  98 86915  15 369.0   1  single disk
+> nbs-126.offic    2G 23422  99 70919  58 23800  11 25289  86 101485 17 433.4   1  s/w RAID-1
+> nbs-126.offic    2G  8152  99 49897  94 23092  27  9122  92 78056  38 331.1   2  s/w RAID-1 + LVM
+> nbs-126.offic 4032M 19695  99 44056  42 14179   9 21526  94 86450  16 344.3   1  h/w RAID-1
+> nbs-126.offic 4032M 19916  99 24033  22 13343   9 22794  99 111662 30 388.5   1  h/w RAID-5
+>                      ------Sequential Create------ --------Random Create--------
+>                      -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
+> files:max:min        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
+> nbs-126.office.n 16  2481  99 +++++ +++ +++++ +++  2424  99 +++++ +++  5508  98  single disk
+> nbs-126.office.n 16  2530  99 +++++ +++ +++++ +++  2437  99 +++++ +++  6062 100  s/w RAID-1 soft
+> nbs-126.office.n 16   800  99 +++++ +++ 12848  98   807  99 +++++ +++  2591  99  s/w RAID-1 + LVM
+> nbs-126.office.n 16  2138  98 +++++ +++ 31126  98  2200  99 +++++ +++  5322  98  h/w RAID-1
+> nbs-126.office.n 16  2182  99 +++++ +++ 27238  86  2172  98 +++++ +++  5261  97  h/w RAID-5
+> 
+> 
+> Notes:
+> 
+> The last two are with hardware RAID (GDT 4513RZ), and 2Gb RAM instead of 1, but I adjusted
+> the -s parameter for bonnie++ accordingly.
+> 
+> commandline:
+> # ./bonnie++ -d /tmp -s 2048 -x2 -uroot
+> Results shown are for the second run. Machines were otherwise inactive, and carried a
+> minimum install.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
