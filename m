@@ -1,49 +1,86 @@
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <199912311946.UAA16976@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] lvextend
-Date: Fri, 31 Dec 1999 20:46:02 +0100 (MET)
+Message-Id: <200001011744.SAA26924@u9etz.ez-darmstadt.telekom.de>
+Subject: [linux-lvm] Re: vgcreate 0.8-pre02.10.1999 segfault
+In-Reply-To: <Pine.LNX.3.96.991227224159.11416C-100000@thelma.ing.umu.se> from Niklas Edmundsson at "Dec 27, 1999 11:10:55 pm"
+Date: Sat, 1 Jan 2000 18:44:41 +0100 (MET)
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
-Cc: mge@ez-darmstadt.telekom.de
+To: Niklas Edmundsson <nikke@ing.umu.se>
+Cc: linux-lvm@msede.com
 
 
-Another problem could be, that you have 3 stripes and not enough space
-on a physical volume to hold the soize of one or more extended stripes.
+Hi Nikke and a happy new year.
 
+Please try replacing the end of tools/lib/lvm_tab_vg_check_exist_all_vg.c
+starting from line 94 by:
+
+   if ( ret < 0 || size < 2) {
+      if ( data != NULL) {
+         free ( data);
+         data = NULL;
+      }
+      if ( vg_name_ptr     != NULL)      free ( vg_name_ptr);
+      else if ( vg_name_ptr_sav != NULL) free ( vg_name_ptr_sav);
+   }
+
+   return vg_name_ptr;
+}
+
+and retry.
+
+Regards,
 Heinz
 
 
-> Adam Crews <acrews@cisco.com> wrote:
 > 
-> > Yes I do want one big lv.  I used lvm so that as I add disks I can just
-> > grow the fs without needing to re-do md devices or things like that.
+> Tools: LVM-0.8-pre02.10.1999
+> Kernel: patch-2.2.13-LVM-0.8i.gz (running on 2.2.13).
 > 
-> > What I figured out is that you cannot extend a striped lv.  even if I have
-> > 2 partitions to add to a lv that has 2 stripes, I still cant extend the
-> > volume.
+> Compiled as a module (I couldn't get it to compile directly into the
+> kernel, some silly linker-error pertaining to lvm_init).
 > 
-> Are you using 0.7 ? There is a bug that avoids extending striped lvs under
-> some circumstances. Update to 0.8i or apply the following diff
+> The machine had existing PV/VG/LV:s from the 0.7-version, but since it
+> is a test-machine I decided to try 0.8 on it.
 > 
-> --- pv_move.c.orig	Thu Dec 30 22:10:44 1999
-> +++ pv_move.c	Thu Dec 30 22:11:25 1999
-> @@ -254,7 +254,7 @@
->  
->        for ( pe = 0; pe < pe_to_move; pe++) {
->           if ( lv_check_on_pv ( vg->pv[dst_pv_index],
-> -                               pe_src[pe].lv_num - 1) == TRUE &&
-> +                               pe_src[pe].lv_num) == TRUE &&
->                vg->lv[pe_src[pe].lv_num-1]->lv_stripes > 1) break;
->           if ( ( vg->lv[pe_src[pe].lv_num-1]->lv_allocation & LV_CONTIGUOUS) &&
->                pv_check_free_contiguous ( vg->pv[dst_pv_index],
+> It detected the existing config and all was nice. Then i removed all
+> existing LV/VG:s and tried to create a new VG, giving me:
+> 
+> # vgcreate -d disk_lv /dev/hda5
+> vg_check_name -- CALLED
+> vg_check_name -- vg_name: "disk_lv"
+> lvm_check_chars -- CALLED
+> lvm_check_chars -- LEAVING
+> vg_check_name -- LEAVING with ret: 0
+> lvm_get_iop_version -- CALLED
+> lvm_get_iop_version -- AFTER ioctl ret: 0
+> lvm_get_iop_version -- LEAVING with ret: 0
+> lvm_tab_vg_check_exist -- CALLED with vg_name: "disk_lv"
+> vg_check_name -- CALLED
+> vg_check_name -- vg_name: "disk_lv"
+> lvm_check_chars -- CALLED
+> lvm_check_chars -- LEAVING
+> vg_check_name -- LEAVING with ret: 0
+> lvm_tab_read -- CALLED
+> lvm_tab_read -- LEAVING with ret: 0  data: 804CC28  size: 1
+> lvm_tab_vg_check_exist -- LEAVING with ret: 0
+> lvm_tab_vg_check_exist_all_vg -- CALLED
+> Segmentation fault (core dumped)
+> 
+> I then remade the PV (pvcreate forced me to change the ID of hda5 to
+> 0x8e in the process). Results are the same...
+> 
+> Have I stumbled into some stupid bug that makes it impossible to
+> create a vg if you don't have one or ... ??
 > 
 > 
-> Torsten
+> Please get in touch if you need more information than I have given
+> here, I guess you'll be needing that if you can't reproduce it
+> easily...
+> 
 > 
 
 -- 
