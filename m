@@ -1,8 +1,12 @@
-From: Petro <petro@auctionwatch.com>
-Message-ID: <20030312195217.GC18876@auctionwatch.com>
+Subject: Re: [linux-lvm] Long-term snapshots possible?
+Message-ID: <20030311211448.GB29034@pc.ilinx>
+References: <200303112228.39201.jhs@openenterprise.biz> <20030311204616.GB14278@gw.silicide.dk>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
 Content-Disposition: inline
-Subject: [linux-lvm] Problems and questions with LVM on a large raid system.
+In-Reply-To: <20030311204616.GB14278@gw.silicide.dk>
+From: lvm@interlinx.bc.ca
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,39 +17,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 13:53:01 2003
+Date: Wed Mar 12 15:02:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've got a couple of brand new boxes I'm trying to get LVM set up
-properly on. 
+--gatW/ieO32f1wygP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-These machines have 6 200GiB drives attached to a 3ware controller card,
-for a total of 1,200,000,000,000 bytes of storage. 
+On Tue, Mar 11, 2003 at 09:46:16PM +0100, jon+lvm@silicide.dk wrote:
+>=20
+> How would you not do that ? You have to store the snapshots some how.
 
-I'm running kernel 2.4.18, with LVM version 1.0.3, and the lvmtools
-version 1.0.1rc3-1 (long story, but upgrading is a path-of-last-resort).
+Right you do have to store them.  But if the block references were in
+the reverse direction than they are currently then the disk penalty
+for snapshots would not increase linearly with the number of
+snapshots.
 
-Initially I had the drives set up as a single raid0 device, but doing a
-pvcreate on it failed with a message that said something about "can't
-get size". 
+As I understand it, the way LVM works currently is that if a block
+that is in one or more snapshots is going to be altered, the contents
+of the block, prior to commiting the new contents, is copied to all of
+the snapshots, one copy per snapshot, hence the linear penalty to
+keeping multiple snapshots.
 
-So I set up 2 3 disk RAID0 devices, and did a vgcreate /dev/sda /dev/sdb.
+However if the updating of a block that was in one or more snapshots
+were done such that the existing block was not overwritten but instead
+a new block was allocated for the "live" (non-snapshot) device to
+write the new contents, there would be a constant cost (the cost of
+writing one block and accounting for it in the "live" device) rather
+than a linearly increasing cost no matter how many snapshots there
+were.
 
-Now, one question I have is: 
+This is not likely possible the way LVM works currently (or it would
+work this way :-) however.
 
-    Does this concatenate the devices, or does it interleave the
-    devices? IE do I have a stripe of stripes, or two stripes? 
+This is one of the advantages filesytem level snapshots have over
+block level snapshots.  Filesystems can change block pointers easily
+enough that it can make one constant cost change per overwritten block
+no matter how many snapshots are referencing the old block still.
 
-Since I need the disk write rate of all 6 drives, I'm *REALLY* hoping
-that it's interleaved. 
+b.
 
+--=20
+Brian J. Murrell
 
+--gatW/ieO32f1wygP
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
--- 
-"On two occasions, I have been asked [by members of Parliament], 'Pray, 
-Mr. Babbage, if you put into the machine wrong figures, will the right 
-answers come out?' I am not able to rightly apprehend the kind of confusion 
-of ideas that could provoke such a question." -- Charles Babbage 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+blHIl3EQlGLyuXARAm2iAJ4lTc1byl7oofwyDbFLVb2njjhoWACgs68k
+k8her1xwKhLK/5W5rfT0qJ4=
+=Fgxo
+-----END PGP SIGNATURE-----
+
+--gatW/ieO32f1wygP--
