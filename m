@@ -1,32 +1,57 @@
-Message-ID: <386720E2.B77BA2FD@twc.de>
-Date: Mon, 27 Dec 1999 09:18:42 +0100
-From: Ulf Bartelt <ulf@twc.de>
+Date: Tue, 28 Dec 1999 11:09:14 -0800 (PST)
+From: Adam Crews <acrews@cisco.com>
+Subject: [linux-lvm] lvextend
+Message-ID: <Pine.LNX.4.10.9912281058520.1394-100000@scooby.cisco.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] booting w/o initrd
-References: <199912221602.JAA22165@webber.adilger.net> <3861DC7B.7ECF442C@twc.de> <3863961B.B067C1D1@tls.msk.ru>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-"Michael Ju. Tokarev" wrote:
-> []
-> > And even if it is not needed today, somewhen LVM might be changed in a
-> > way that stopping it cleanly on shutdown will become a must.
-> []
-> What is about power failure for example?  Or kernel panic?  Or hardware error?
-> Does it mean that there will be no ability to bring lvm up again in such a
-> cases!?  But clean filesystem umount is a must, but there is a fsck here
-> that is started (automatically) if that "must" didn't satisfied....
+Hello,
 
-For now, cleanly deactivating LVM before shutdown is not neccessary.
-Otherwise bringing up LVM from an initial ram disk and switching the
-root would bring the systems in trouble as there are no actions like
-switching back to a ram disk on shutdown, unmount the "real" root, stop
-LVM and stop the system...
+I am having problems trying to extend a lv.
 
-Filesystems must be unmounted before shutdown. But if something crashes,
-a fsck inspects the filesystem on the next system startup. I expect LVM
-to behave similar if bringing LVM down before shutdown will be required.
+[root@scooby /root]# lvextend -v -l+6514 /dev/mirror_vg/mirror_lv 
+lvextend -- checking for valid logical volume path 
+lvextend -- locking logical volume manager 
+lvextend -- checking existence of logical volume "/dev/mirror_vg/mirror_lv" 
+lvextend -- checking for active logical volume "/dev/mirror_vg/mirror_lv" 
+lvextend -- reading volume group data of volume group "mirror_vg" from disk(s) 
+lvextend -- getting index of logical volume "/dev/mirror_vg/mirror_lv" in volume group "mirror_vg" 
+lvextend -- extending logical volume "/dev/mirror_vg/mirror_lv" to 76.16 GB 
+lvextend -- setting up logical volume "/dev/mirror_vg/mirror_lv" for extend
+lvextend -- not enough free/allocatable physical extents to extend logical volume "/dev/mirror_vg/mirror_lv"
+[root@scooby /root]# 
+
+
+Looing at the vg I see that there is enough free space
+
+
+[root@scooby /root]# vgdisplay 
+--- Volume group --- 
+VG Name 		mirror_vg 
+VG Access 		read/write 
+VG Status 		available/resizable 
+VG # 			0 
+MAX LV 			256 
+Cur LV 			1
+Open LV 		0 
+MAX LV Size 		255.99 GB 
+Max PV 			256 
+Cur PV 			3 
+Act PV 			3 
+VG Size 		76.16 GB 
+PE Size 		4 MB 
+Total PE 		19496 
+Alloc PE / Size 	12982 / 50.71 GB 
+Free  PE / Size 	6514 / 25.45 GB 
+
+
+[root@scooby /root]#
+
+What am I doing wrong?
+
+-Adam
