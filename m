@@ -1,21 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0KNDIO14618
-	for <linux-lvm@redhat.com>; Thu, 20 Jan 2005 18:13:18 -0500
-Received: from neuralscape.com (synapse.neuralscape.com [198.144.200.82])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0KNDCZ1030019
-	for <linux-lvm@redhat.com>; Thu, 20 Jan 2005 18:13:12 -0500
-Received: from shaeffer by neuralscape.com with local (Exim 4.12)
-	id 1CrlRK-0003X8-00
-	for linux-lvm@redhat.com; Thu, 20 Jan 2005 15:10:10 -0800
-Date: Thu, 20 Jan 2005 15:10:10 -0800
-From: Karen Shaeffer <shaeffer@neuralscape.com>
-Subject: Re: [linux-lvm] LVM + SAN Behavior
-Message-ID: <20050120231010.GA13560@synapse.neuralscape.com>
-References: <s1ee8563.047@kumc-smtpout.kumc.edu>
-	<OFF2B16D91.6DB8D9FD-ONC1256F8F.0021A89D-C1256F8F.00235D23@restena.lu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OFF2B16D91.6DB8D9FD-ONC1256F8F.0021A89D-C1256F8F.00235D23@restena.lu>
+Message-ID: <1106275121.41f06b3135b75@www.eiler.net>
+Date: Thu, 20 Jan 2005 18:38:41 -0800
+From: joe@eiler.net
+Subject: Re: [linux-lvm] Data corruption on large, multi-device filesystem
+References: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
+	<1106172883.41eedbd386498@www.eiler.net>
+	<20050120165317.GA14093@agk.surrey.redhat.com>
+In-Reply-To: <20050120165317.GA14093@agk.surrey.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,27 +19,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Alasdair G Kergon <agk@redhat.com>
 
-On Thu, Jan 20, 2005 at 07:26:46AM +0100, gilles.massen@restena.lu wrote:
-> 
-> Concerning the enlargement of partitions: from what I saw, the kernel does 
-> not re-read the partition table easily. Short of rebooting, this can be 
-> achieved by starting fdisk (which should reread the partition table on its 
-> own) and writing it to the disk.
+Thanks, I'll give it(the patch you sent) a try and let you know what I see.
 
+When you say "chunk size" what lvcreate arg does that map to? the stripe
+size(-I) or the chunk size(-c) that goes along with snapshots?
 
-Hello,
+Joe
 
-Have you tried running:
+Quoting Alasdair G Kergon <agk@redhat.com>:
 
-blockdev --rereadpt <device>
-
-
-Thanks,
-Karen
--- 
- Karen Shaeffer
- Neuralscape, Palo Alto, Ca. 94306
- shaeffer@neuralscape.com  http://www.neuralscape.com
+> On Wed, Jan 19, 2005 at 02:14:43PM -0800, joe@eiler.net wrote:
+> > I don't see any corruption on the files unless I specify the -i option to
+> > lvcreate.
+>
+> That's a useful observation: different code gets run when -i is used, and
+> I've taken a look and there are two 32-bit limits in that code.
+>
+> One appears to be intentional for performance reasons and can be worked
+> around by increasing the chunk size (default 64K), though it really should
+> detect when the limit is exceeded and tell you!
+>
+> The other unintentional limit (which is the one affecting you I think)
+> leads to wrap-around at striped device offsets beyond ~2^32 sectors
+> i.e. 2^39 bytes into a PV, or ~2^40 bytes (2TB) into an LV in your
+> case of 2 stripes.  The fix for that is a basic exercise in C.
+> [Ref.  stripe_map() in drivers/md/dm-stripe.c]
+>
+> Alasdair
+> --
+> agk@redhat.com
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
