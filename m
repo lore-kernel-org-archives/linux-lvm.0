@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Some suggestions about lvminitrd_create
-Message-ID: <20020516162341.A25098@sistina.com>
-References: <E177uaF-0000ja-00@jelly.buzzard.org.uk>
+Subject: Re: [linux-lvm] Volume group not found on restart
+Message-ID: <20020516162527.B25098@sistina.com>
+References: <E631530D51ABD411B823009027855C5B0278A5@THOR>
 Mime-Version: 1.0
-In-Reply-To: <E177uaF-0000ja-00@jelly.buzzard.org.uk>; from jonathan@buzzard.org.uk on Wed, May 15, 2002 at 09:56:31AM +0100
+In-Reply-To: <E631530D51ABD411B823009027855C5B0278A5@THOR>; from Murthy.Kambhampaty@goeci.com on Tue, May 14, 2002 at 02:14:33PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,47 +14,204 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 16 09:27:02 2002
+Date: Thu May 16 09:28:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 15, 2002 at 09:56:31AM +0100, Jonathan Buzzard wrote:
-> 
-> Just a couple of suggestions firstly it would be nice if it checked
-> for /boot/System.map-'uname -r' rather than for just /boot/System.map.
-> When you have more than one kernel floating about this is handy.
+Murthy,
 
-Yep, that's what the "-F" option aims to support.
+did you try 'vgscan' before 'vgchange -ay' before 'mount'?
 
-> 
-> Second suggestion it would be nice if a -t option existed to allow a
-> choice in the type of filesystem the initrd is created in. Not everyone
-> is using ext2 these days :)
+Regards,
+Heinz    -- The LVM Guy --
 
-Well, why do you want to use a different filesystem on a relatively tiny
-and little populated ram disk?
-
+On Tue, May 14, 2002 at 02:14:33PM -0400, Murthy Kambhampaty wrote:
+> Indeed, yes. Output with -d option attached:
 > 
-> JAB.
+> # /sbin/vgchange -a y -d
+> <1> lvm_get_iop_version -- CALLED
+> <22> lvm_check_special -- CALLED
+> <22> lvm_check_special -- LEAVING
+> <1> lvm_get_iop_version -- AFTER ioctl ret: 0
+> <1> lvm_get_iop_version -- LEAVING with ret: 10
+> <1> lvm_lock -- CALLED
+> <22> lvm_check_special -- CALLED
+> <22> lvm_check_special -- LEAVING
+> <1> lvm_lock -- LEAVING with ret: 0
+> <1> lvm_tab_vg_check_exist_all_vg -- CALLED
+> <22> lvm_tab_read -- CALLED
+> <22> lvm_tab_read -- LEAVING with ret: 0  data: 804D460  size: 1
+> <1> lvm_tab_vg_check_exist_all_vg -- LEAVING with ret: 0
+> vgchange -- no volume groups found
 > 
-> -- 
-> Jonathan A. Buzzard                 Email: jonathan@buzzard.org.uk
-> Northumberland, United Kingdom.       Tel: +44(0)1661-832195
+> <1> lvm_unlock -- CALLED
+> <1> lvm_unlock -- LEAVING with ret: 0
 > 
+> This is what let me to check the VGDA backups in /etc/lvmconf, and the
+> output from "/sbin/vgcfgrestore -t -d -n db_vol  -ll" is reported in my
+> original message (see copy below).
 > 
+> Thanks for the help,
+> 	Murthy
+> 
+> > -----Original Message-----
+> > From: John Moser [mailto:jmoser@erc.wisc.edu]
+> > Sent: Tuesday, May 14, 2002 14:10
+> > To: Murthy Kambhampaty
+> > Cc: 'linux-lvm@sistina.com'
+> > Subject: Re: [linux-lvm] Volume group not found on restart
+> > 
+> > 
+> > Just a quick glance over your problem (I'm not too familiar 
+> > with the rest
+> > of your problem).  But the most common reason for that 
+> > particular error
+> > (not a valid block device), is because the volume group isn't active.
+> > Have you tried:
+> > 
+> > vgchange -a y
+> > 
+> > first, and then try to mount your filesystem?
+> > 
+> > -John
+> > 
+> > 
+> > On Tue, 14 May 2002, Murthy Kambhampaty wrote:
+> > 
+> > > I have an unexpected error reading an LV:
+> > >
+> > > # mount -a
+> > > mount: /dev/db_vol/db_dir is not a valid block device
+> > >
+> > > I'd like help recovering the data on the partition. 
+> > Information about the
+> > > circumstance under which I first got the error, and some 
+> > addtional info are
+> > > attached below. The system is a RH7.2 system installed with 
+> > the XFS1.0.2a
+> > > installer and updated to the XFS CVS kernel from April 4. 
+> > (LVM version in
+> > > kernel with LVM tools from lvm-tools-1.0.1rc4-2 rpm).
+> > >
+> > > Thanks for the help,
+> > > 	Murthy
+> > >
+> > > Addtional information follows:
+> > >
+> > > I have a VG called "db_vol" and an LV within called 
+> > "db_dir" on a hardware
+> > > RAID-5 volume hanging off a Mylex Acceleraid 352 raid 
+> > controller (linux
+> > > DAC960 driver). This volume has been up and functional, with an XFS
+> > > filesystem for a while (the last VGDA backup is from March 
+> > 21). Yesterday, I
+> > > added a new RAID set and did a test on the new volume 
+> > (defined a single
+> > > (linux native) primaly partition and XFS filesystem on the 
+> > partition then
+> > > mounted the partition to /mnt/tempmnt) with "time dd=/dev/zero
+> > > of=/mnt/tempmnt/mungie.txt bs=512k count=10000". This led 
+> > to my system
+> > > slowing down and at logout I got an error message saying 
+> > init was spawning
+> > > ttys too fast. I power-cycled my machine after a short 
+> > wait, with gritted
+> > > teeth, and on the XFS check message, I chose "yes" to 
+> > recheck the integrity
+> > > of the XFS filesystems. The unexpected error message has 
+> > been produced since
+> > > then.
+> > >
+> > > vgdisplay output for the volume is:
+> > >
+> > > # /sbin/vgdisplay -d db_vol
+> > > <1> lvm_check_kernel_lvmtab_consistency -- CALLED
+> > > <22> vg_check_active_all_vg -- CALLED
+> > > <333> vg_status_get_count -- CALLED
+> > > <333> vg_status_get_count -- LEAVING with ret: 0
+> > > <22> vg_check_active_all_vg -- LEAVING with ret: -331  ptr: (null)
+> > > <22> lvm_tab_vg_check_exist_all_vg -- CALLED
+> > > <333> lvm_tab_read -- CALLED
+> > > <333> lvm_tab_read -- LEAVING with ret: 0  data: 804B4A0  size: 1
+> > > <22> lvm_tab_vg_check_exist_all_vg -- LEAVING with ret: 0
+> > > <1> lvm_check_kernel_lvmtab_consistency -- LEAVING with ret: 1
+> > > <1> lvm_get_iop_version -- CALLED
+> > > <22> lvm_check_special -- CALLED
+> > > <22> lvm_check_special -- LEAVING
+> > > <1> lvm_get_iop_version -- AFTER ioctl ret: 0
+> > > <1> lvm_get_iop_version -- LEAVING with ret: 10
+> > > <1> vg_check_name -- CALLED with VG: db_vol
+> > > <22> lvm_check_chars -- CALLED with name: "db_vol"
+> > > <22> lvm_check_chars -- LEAVING with ret: 0
+> > > <1> vg_check_name -- LEAVING with ret: 0
+> > > <1> lvm_tab_vg_check_exist -- CALLED with vg_name: "db_vol"
+> > > <22> vg_check_name -- CALLED with VG: db_vol
+> > > <333> lvm_check_chars -- CALLED with name: "db_vol"
+> > > <333> lvm_check_chars -- LEAVING with ret: 0
+> > > <22> vg_check_name -- LEAVING with ret: 0
+> > > <22> lvm_tab_read -- CALLED
+> > > <22> lvm_tab_read -- LEAVING with ret: 0  data: 804B4A0  size: 1
+> > > <1> lvm_tab_vg_check_exist -- LEAVING with ret: 0
+> > > vgdisplay -- volume group "db_vol" not found
+> > >
+> > >
+> > > When I check the db_vol.conf file in /etc/lvmconf, I get  
+> > "vgcfgrestore --
+> > > ERROR: different structure size stored in 
+> > "/etc/lvmconf/db_vol.conf" than
+> > > expected in file vg_cfgrestore.c [line 120]" (full command 
+> > output below).
+> > >
+> > > /sbin/vgcfgrestore -t -d -n db_vol  -ll
+> > > <1> vg_check_name -- CALLED with VG: db_vol
+> > > <22> lvm_check_chars -- CALLED with name: "db_vol"
+> > > <22> lvm_check_chars -- LEAVING with ret: 0
+> > > <1> vg_check_name -- LEAVING with ret: 0
+> > > <1> lvm_get_iop_version -- CALLED
+> > > <22> lvm_check_special -- CALLED
+> > > <22> lvm_check_special -- LEAVING
+> > > <1> lvm_get_iop_version -- AFTER ioctl ret: 0
+> > > <1> lvm_get_iop_version -- LEAVING with ret: 10
+> > > <1> lvm_lock -- CALLED
+> > > <22> lvm_check_special -- CALLED
+> > > <22> lvm_check_special -- LEAVING
+> > > <1> lvm_lock -- LEAVING with ret: 0
+> > > <1> lvm_dont_interrupt -- CALLED
+> > > <1> lvm_dont_interrupt -- LEAVING
+> > > <1> vg_cfgrestore -- CALLED
+> > > <22> vg_check_name -- CALLED with VG: db_vol
+> > > <333> lvm_check_chars -- CALLED with name: "db_vol"
+> > > <333> lvm_check_chars -- LEAVING with ret: 0
+> > > <22> vg_check_name -- LEAVING with ret: 0
+> > > vgcfgrestore -- ERROR: different structure size stored in
+> > > "/etc/lvmconf/db_vol.conf" than expected in file 
+> > vg_cfgrestore.c [line 120]
+> > > <1> vg_cfgrestore -- LEAVING with ret: -328
+> > > <1> lvm_error -- CALLED with: -328
+> > > <1> lvm_error -- LEAVING with: "vg_cfgrestore(): read"
+> > > vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group
+> > > "db_vol"
+> > >
+> > > <1> lvm_unlock -- CALLED
+> > > <1> lvm_unlock -- LEAVING with ret: 0
+> > >
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > >
+> > 
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
