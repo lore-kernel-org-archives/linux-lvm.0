@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvscan problem
-Message-ID: <20020909125030.A15934@sistina.com>
-References: <Pine.LNX.4.44.0209071706070.5919-100000@server.piarista-kkt.sulinet.hu>
+Subject: Re: [linux-lvm] How to upgrade old LVM version.
+Message-ID: <20020909125357.B15934@sistina.com>
+References: <3D790636.5010603@lingbrae.com>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44.0209071706070.5919-100000@server.piarista-kkt.sulinet.hu>; from nagyz@piarista-kkt.sulinet.hu on Sat, Sep 07, 2002 at 05:08:24PM +0200
+In-Reply-To: <3D790636.5010603@lingbrae.com>; from dick@lingbrae.com on Fri, Sep 06, 2002 at 08:47:02PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,33 +14,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep  9 06:10:27 2002
+Date: Mon Sep  9 06:24:54 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-There's no pvremove so far. LVM2 will have one later though.
-
-Just "dd if=/dev/zero of=/dev/WhateverPV count=1 bs=1k" to all the PVs
-you want to get rid of.
-
-If you can stand to see them pvscan'ed as new PVs,
-run "pvcreate -ff /dev/WhateverPV" instead.
-
-On Sat, Sep 07, 2002 at 05:08:24PM +0200, NagyZ wrote:
-> Hi!
+On Fri, Sep 06, 2002 at 08:47:02PM +0100, Dick Middleton wrote:
+> Hi,
 > 
-> after i reinstalled my system, pvscan still shows old hdd's as inactive 
-> PVs.. how can i remove that? the hdds have been completely repartitioned, 
-> so i dont know why is that..
-> is there any way to "unmark" a partition which have been marked with 
-> pvcreate?
+>     I'm currently running LVM 0.9.1_beta6 on Debian 2.2 with kernel 
+> 2.2.19 and have been trying
+> for some time to upgrade to something more recent.
 > 
-> Regards,
+> Whenever I try this I find that vgscan from any newer version of LVM 
+> hangs (without
+> error messages) - I'm forced to reboot.  The only evidence I can find is 
+> if I run pvscan.  
+> This reports "different structure size".
+
+vgscan coming with a newer LVM version should scan your disks fine.
+Tha fact that it hangs could refer to an empty CDROM or the like scanned
+and a large timeout involved.
+
+Running "vgscan -d" should find the relevant 'candidate'.
+If so, temporarily inserting a valid CD or removing the /dev/ entry
+could help it.
+
 > 
-> NagyZ
->  
+> I currently have all my filesystem including root running on LVM on top 
+> of software RAID so
+> it's a fairly delicate business mucking about with this.  I'm looking 
+> for  a way to fix the problem
+> other than decanting everything to tape and starting from scratch again.
+> 
+> I do have a separate bootable disc with 2.4 kernel and LVM 1.0 which I 
+> can use as a stepping
+> stone but so far this too hangs as soon as vgscan is run.
+> 
+> Any advice would be appreciated.
+> 
+> Dick
+> 
+> 
 > 
 > 
 > _______________________________________________
