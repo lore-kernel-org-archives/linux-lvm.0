@@ -1,9 +1,9 @@
 From: "William Blunn" <bill+f.9sfuw6uo@tao-group.com>
 Subject: Re: [linux-lvm] lvm and md
-Message-ID: <BDEMIPDEGABMNEFIHCPDKEODEJAA.bill+f.9sfuw6uo@tao-group.com>
+Message-ID: <BDEMIPDEGABMNEFIHCPDMEOFEJAA.bill+f.9sfuw6uo@tao-group.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3E6BEB8B.4040802@exavio.com.cn>
+In-Reply-To: <BDEMIPDEGABMNEFIHCPDKEODEJAA.bill+f.9sfuw6uo@tao-group.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,48 +14,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar 10 03:05:02 2003
+Date: Mon Mar 10 03:29:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Peter Yao <peter@exavio.com.cn> wrote:
-> I am using some hot-plugging disks and their device number may change=20
-> after reboot. For example, if i build md with /dev/sda and /dev/sdb,=20
-> after reboot md may cannot start because the two disks' device name=20
-> change to /dev/sdc and /dev/sdd. If i build md on top of lvm this=20
-> problem is avoided. Can you give me some advice for this issue?
+> I don't think it would be a good idea to put MD on top of LVM for
+> reasons of performance. Ideally you want as few layers as possible on
+> top of the disk.
 
-I don't think it would be a good idea to put MD on top of LVM for
-reasons of performance. Ideally you want as few layers as possible on
-top of the disk.
+Putting MD on top of LVM puts in one extra layer.
 
-As an alternative to Luca Berra's suggestion to use mdadm,
-it might be possible to do what you want using devfs.
+This layer will have to be traversed for every single access to the
+disk.
 
-I'm not saying it's a better approach, just a possible alternative. The
-best approach will depend on your particular situation.
+Actually having a layer is unnecessary.
 
-(The mdadm approach looks like a good technical solution to your
-situation. However, for example, you may already have devfs installed,
-in which case it might be easier to set up and "good enough" to be going
-on with.)
+All that is necessary is to connect the MD to the right disk device
+at the beginning when the MD is being started.
 
-I have never used devfs myself, by from what I can tell it gives logical
-names to SCSI devices, which are invariant of devices being added to
-or removed from a SCSI bus.
+The MD is then connected to the disk with no intervening layers.
 
-So your HDDs would appear as something like:
+> As an alternative to Luca Berra's suggestion to use mdadm,
+> it might be possible to do what you want using devfs.
 
-  /dev/scsi/host0/bus0/target5/lun0/disc
-  /dev/scsi/host0/bus0/target6/lun0/disc
-
-You mention that /dev/sda and /dev/sdb are sometimes displaced to
-/dev/sdc and /dev/sdd.
-
-What are the two devices which are displacing /dev/sdc and /dev/sdd ?
-
-Regards,
+Both of these suggestions address the problem of getting the MD
+connected to the right disk at the beginning, without adding an
+intervening layer.
 
 Bill
 
