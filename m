@@ -1,11 +1,9 @@
-Date: Mon, 3 Sep 2001 13:49:22 +0200
+Date: Mon, 3 Sep 2001 13:51:04 +0200
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM, defvs and initrd (for lvm rootfs)
-Message-ID: <20010903134922.A3006@colombina.comedia.it>
-References: <20010903000930.T3385@pc.ilinx> <002701c13436$3f5b2220$0b01a8c0@myplace.net> <20010903013954.V3385@pc.ilinx>
+Message-ID: <20010903135104.B3006@colombina.comedia.it>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010903013954.V3385@pc.ilinx>; from lvm@interlinx.bc.ca on Mon, Sep 03, 2001 at 01:39:54AM -0400
+Subject: [linux-lvm] [bluca@comedia.it: [lvm-devel] VFS lock and 2.4.9ac]
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,32 +19,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I believe this issue was fixed in a later revision of the
-LVM tools, (i don't remember when precisely)
-try upgrading tools.
+has someone looked into this?
 
 L.
-On Mon, Sep 03, 2001 at 01:39:54AM -0400, Brian J. Murrell wrote:
-> On Mon, Sep 03, 2001 at 07:06:53AM +0200, Bas wrote:
-> > Hi,
-> > 
-> > Run vgscan (without parameters) at the end of rc.sysinit.
-> 
-> Should have mentioned... I have tried this.  vgscan tries to create
-> the /dev/<volume group/* nodes (with mknod(2)) but it fails,
-> presumably because devfs[d] does not allow it (the node creation with
-> mknod(2))?  I have not looked much into devfs[d] yet.
-> 
-> b.
-> 
-> -- 
-> Brian J. Murrell
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+----- Forwarded message from Luca Berra <bluca@comedia.it> -----
+
+From: Luca Berra <bluca@comedia.it>
+To: lvm-devel@sistina.com
+Cc: linux-kernel@vger.kernel.org
+Subject: [lvm-devel] VFS lock and 2.4.9ac
+Sender: lvm-devel-admin@sistina.com
+Date: Wed, 29 Aug 2001 20:22:19 +0200
+
+hello, i saw that patch 2.3.9ac moves mount_sem from fs/super.c to
+fs/namespace.c (it is devlared static), this has problems
+with VFS lock patch that is needed fro LVM snapshots and journaled fs
+which uses mount_sem in unlockfs()
+I believe the best way to fix this is moving unlockfs()
+to fs/namespace.c, but i am not 100% positive
+what would you suggest?
+
+L.
+(btw i am not on l-k, so please cc replies)
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
+
+_______________________________________________
+lvm-devel mailing list
+lvm-devel@sistina.com
+http://lists.sistina.com/mailman/listinfo/lvm-devel
+
+----- End forwarded message -----
 
 -- 
 Luca Berra -- bluca@comedia.it
