@@ -1,8 +1,8 @@
-From: Christophe Zwecker <doc@zwecker.de>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1010772299.7571.14.camel@dumbo.zwecker.de>
+Subject: Re: [linux-lvm] read is blocking if reading snapshots with 16k
+    blocks on mp systems
+Message-Id: <OFEAA786E7.AD8AE8DE-ONC1256B3E.0057581D@de.ibm.com>
+From: "Martin Petermann" <martin.petermann@de.ibm.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] upgrade RH with lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +13,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 11 12:06:01 2002
+Date: Fri Jan 11 12:20:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-hi,
 
+> On Thu, Jan 10, 2002 at 07:58:37PM +0100, Martin Petermann wrote:
+> > Hi all,
+> >
+> > I had some performance problems, than I wrote a small program to see
+where
+> > it was hanging:
+> >
+> > -my configuration:
+> >
+> > I'm using a SuSE 7.1 and SuSE 7.2 mp system (two processors).
+> I've created a snapshot in the following way:
+>
+>
+> > The maximum time read was hanging was 40 seconds. I detected similar
+> > problems reading 3*4096 bytes.
+>
+> Can you tell us more about your system - I can't get this to over 3
+seconds even
+> on a dog slow IDE system with next-to no memory.
 
-RH7.2 doesnt seem to be able to read lvm partitions when upgrading from
-7.1, neither does the SGI iso (guess they didnt look into that).
+Hi Patrick,
 
-I wonder if any of you got the same problem if he solved it and how ?
+this system has the following configuration:
 
-thx for any hints,
+- two pentium III processors (933 MHz), 256 KB cache
+- 500 MB RAM
+- the physical volumes reside on a hardware RAID (IBM ServRAID, RAID level
+5)
+- FC connected disks
 
-Best regards,
+I'll have to do some more investigations. I first thought multiprocessing
+was the cause for this problem. But even in single processor mode(boot:
+linux maxcpus=0 noapic) the problem exists. If people find out a problem on
+such a configuration it's not easy to find out why.
 
-Christophe
--- 
-Christophe Zwecker                     mail: doc@zwecker.de
-Hamburg, Germany                        fon: +49 179 3994867
-http://www.zwecker.de
-
-"Who is General Failure ?  And why is he reading my disk ??"
+Regards
+   Martin
