@@ -1,8 +1,8 @@
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200305251135.32996.>
-Subject: [linux-lvm] vgscan -f created duplicate block devices
+From: =?ISO-8859-1?Q?Bj=F6rn?= Medin <b.medin@telia.com>
+Message-Id: <1053855014.15745.10.camel@crux>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] PV and disk recovery
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,37 +13,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun May 25 02:56:02 2003
+Date: Sun May 25 04:29:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hallo,
+Hello,
 
-How do you fix an incorrect Block Device assignment?
+I had a VG with two full disks in two PV:s (/dev/hda1 and /dev/hdb1).
+The second drive, a new IBM 120GB disk fried after some weeks and
+was totally inacessable (not even recognised by BIOS).
 
-When I hooked the harddrive from an old computer into my newer one (both had 
-lvm partitions), I got the message that certain IDs were duplicated.  So I 
-ran vgscan -f to assign new IDs.  However, vgscan -f duplicated the Block 
-Device on two of the logical volumes.  The outcome is that when I mount the 
-first one, I only get access to the second one. :(
+To my understanding the first PV on /dev/hda1 is OK
 
-I would show the output of lvdisplay & friends, but I can't get an internet 
-connection from that computer anymore because of this. *grin*  Basically:
+Can I recover and get back access to my old data that was on
+/dev/hda1? I have tried various things suggested in HOWTO:s and
+this list.
 
-/dev/toro1/home, block device 58:5
-/dev/toro1/var, block device 58:6
-/dev/toro1/projekte, block device 58:7
-/dev/toro1/usr, block device 58:8
-/dev/toro1/local, block device 58:9
-/dev/toro1/fileserver, block device 58:5
+If I do vgscan I get:
 
-Either the drive I added had 5 lv's, and so vgscan didn't reassign the 6th on 
-the first drive (i.e., /dev/toro1/fileserver), or it cycled back around after 
-58:9 for some reason.
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+volume group "Volume00" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
 
-Can anyone tell me how to get my home back??? ;)
+Any command like vgchange -a y only gets: vgchange -- no volume groups
+found
 
-Many thanks in advance!
-Ellis Whitehead
- 
+I have tried create a new VG: vgcreate extra /dev/hda1
+
+but I then get:
+vgcreate -- "/dev/hda1" is not a new physical volume
+vgcreate -- physical volume "/dev/hda1" already belongs to volume group
+"Volume00"
+
+-----------
+
+Seems like I dont have any config data for Volume00 left but still I am
+not allowed to use/change Volume00 or the PV.
+
+What can I do? Is there any way to reclaim possible intact data on my
+old /dev/hda1????
+
+Thanks!
+
+/Bj=C3=B6rn
