@@ -1,9 +1,7 @@
-Message-ID: <1046196255.3e5bb01f900cd@lola.Pin.LU>
-From: Christian Limpach <chris@pin.lu>
-Subject: RE: [linux-lvm] Recovering from a hard crash
-References: <8075D5C3061B9441944E1373776451180F06F7@cinshrexc03.shermfin.com>
-In-Reply-To: <8075D5C3061B9441944E1373776451180F06F7@cinshrexc03.shermfin.com>
+Message-ID: <3E5BB3CE.3040707@conterra.de>
+From: Dieter Stueken <stueken@conterra.de>
 MIME-Version: 1.0
+Subject: RE: [linux-lvm] pv_move failed 
 Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,39 +13,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 25 11:58:08 2003
+Date: Tue Feb 25 12:20:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: linux-lvm@sistina.com
 
-Quoting "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>:
+Heinz J . Mauelshagen wrote:
 
-> Would I then use LVM striping across md[0-9] to get the same effect?
-> The reason that this box is configured in such a way is because we want
-> the redundancing of RAID1 and the speed of RAID0 (hence RAID10).  Will
-> LVM striping give the same performance lift as using Linux RAID0?
+ >the first write to hda2 fails.
+ >Could be a hardware installation problem with your new drive.
 
-I would think that performance will be the same.  I think you'll get better 
-performance if you keep some disks apart for your snapshots.  Interesting 
-actually...  Which is better:  all striped with md which puts the snapshot 
-striped over all the disks or striping with LVM which will put the snapshot 
-unstriped on dedicated disks or a combination of these two...
+no indication. I had my VG on two 120G + 75G disks before.
+The 120G disk could be moved completely, whereas moving
+the 75G disk failed after 896 LE moved.
 
-> Also, will the device mapper and LVM2 patches work against a Red Hat
-> kernel and are they stable enough to run in a production environment?
+ >Have you tested if you can access hda2 fine without LVM ?
 
-device-mapper and LVM2 seem stable, I'm still using LVM1.  The device-mapper 
-code is definitely top-notch.  I don't know about Red Hat kernels.
+I run badblocks with no errors.
 
-> Also, can anyone see any harm in me modifying the source for vgscan to
-> skip /dev/md0 since it will never actually be used in a volume group
-> outside of the RAID0 stripe on top of it?  Would I have to modify any
-> other commands to make sure that I don't run into any trouble?
+I just "strace" pvmove and get:
 
-I think vgscan is all you need to modify, pvscan and lvmdiskscan just display 
-data.  Removing/renaming /dev/md0 is just as good, nothing needs it anyway as 
-far as I can tell...
+write(5, ..., 65536) = -1 ENOSPC (No space left on device)
 
+seems pvmove gets a unexpected ENOSPC. OK, I got it:
+
+fdisk -l /dev/hda   reports:
+
+Disk /dev/hda: 255 heads, 63 sectors, 30515 cylinders
+Units = cylinders of 16065 * 512 bytes
+
+    Device Boot    Start       End    Blocks   Id  System
+/dev/hda1             1       262   2104483+  83  Linux
+/dev/hda2           263     22526 178835580   8e  Linux LVM
+
+The 2nd partition does not span to the end of the disk,
+where as pvdisplay shows up with 231.75 GB. I'll remove all
+data from hda2 again and try to find out, how this discrepancy
+came about....
+
+Dieter.
 -- 
-Christian Limpach <chris@pin.lu>
+Dieter St�ken, con terra GmbH, M�nster
+     stueken@conterra.de
+     http://www.conterra.de/
+     (0)251-7474-501
