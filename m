@@ -1,50 +1,22 @@
-Date: Sun, 20 Jun 1999 11:03:24 +0200
-From: Rainer Clasen <bj@ncc.cicely.de>
+From: "Stefan Monnier" <monnier+lists/linux/lvm/news/@tequila.cs.yale.edu>
 Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9 and devfs-patch-v99.2
-Message-ID: <19990620110324.D3830@ncc.cicely.de>
-References: <m10umJP-0000YbC@duffy1.franken.de> <199906180656.AA25684@mailgate1b.telekom.de>
-Mime-Version: 1.0
-In-Reply-To: <199906180656.AA25684@mailgate1b.telekom.de>; from Heinz Mauelshagen on Fri, Jun 18, 1999 at 08:56:16AM +0000
+References: <Pine.LNX.4.10.9906201228040.9163-100000@hibernia.spin.ie> <m10vk14-0000YbC@duffy1.franken.de>
+Date: 20 Jun 1999 18:37:41 -0400
+Message-ID: <5lbtea33d6.fsf@tequila.cs.yale.edu>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-On Fri, Jun 18, 1999 at 08:56:16AM +0000, Heinz Mauelshagen wrote:
-> > What would be nice as the next step is a resizable file system.
-> > Is there any ?
-> > 
-> 
-> AFAIK we only have Ted Tso's resize2fs which is able to resize
-> unmonted ext2fses.
-> 
-> It will be available under GPL next year.
+>>>>> "Rolf" == Rolf Jakob <rjakob@duffy1.franken.de> writes:
+> I managed to resize a mounted file system and several times it was possible
+> to copy more files on it after the resize. But from time to time I got an
 
-This was in Jun 15ths' freshmeat letter:
-
----
-  subject: ext2resize 990615
- added by: Lennert Buytenhek on Jun 15th 1999, 07:41
-  license: GPL
- category: Console/Filesystems
-      
- homepage: http://www.dsv.nl/~buytenh/ext2resize/
- download: http://www.dsv.nl/~buytenh/ext2resize/ext2resize-990615.tar.bz2      
-       
-description:
-ext2resize is a program capable of resizing (shrinking and growing)
-ext2 filesystems. Currently it is in alpha stage until it is tested some
-more.
----
-
-I' haven't checked it out, but it might be of interrest for you.
+Is it supposed to work on mounted filesystems ?
+The webpage doesn't seem to mention such a feature.
 
 
-
-
-Rainer
-
--- 
-KeyID=58341901 fingerprint=A5 57 04 B3 69 88 A1 FB  78 1D B5 64 E0 BF 72 EB
+	Stefan
