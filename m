@@ -1,12 +1,15 @@
-Return-Path: <wichert@cistron.nl>
-Date: Mon, 16 Jul 2001 16:42:53 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] Upgrade path
-Message-ID: <20010716164253.P8175@cistron.nl>
-References: <3B4EE8F2.5050506@ednet.ns.ca> <20010716132959.C11625@sistina.com> <20010716140313.H8175@cistron.nl> <20010716162517.A12520@sistina.com>
-Mime-Version: 1.0
+Return-Path: <lembark@wrkhors.com>
+Date: Mon, 16 Jul 2001 10:08:02 -0500
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] Newbie question
+Message-ID: <235800000.995296082@dizzy>
+In-Reply-To: <20010716133321.E11625@sistina.com>
+References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com>   <20010712094638.B418@btconnect.com>  
+ <200107121612.MAA13656@burns.luca.2y.net>   <20010713131200.C32198@sistina.com>   <200107131652.MAA15766@burns.luca.2y.net>
+ <20010716133321.E11625@sistina.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20010716162517.A12520@sistina.com>; from Mauelshagen@sistina.com on Mon, Jul 16, 2001 at 04:25:17PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,20 +22,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Previously Heinz J. Mauelshagen wrote:
-> I announced the holdup caused by the misalignment bugs we found.
-> We'll need to release another Beta ASAP to get test feedback on that.
+>> Now I have a question. I read the HOWTO migrate the old root partition to a
+>> LV
 
-I saw that, but there seems to have been a consensus on a fix
-for that for over a week now already.
+Think really, really hard before trying this.  Linux on an X86 doesn't have
+an LVM aware bios and you cannot boot w/o LVM (e.g., HP's "-lm").  This
+means that if you have any error at all in LVM you cannot boot.
 
-Wichert.
+A safer approach -- especially if you havn't used LVM before -- is to use
+the first 2-3 partitions for /, swap and /var.  This allows you to boot even if
+LVM is down and fix most LVM problems.  None of these partitions needs
+to be large (e.g., 80, 64 & 320MB) and the remaining partition can be used
+as a PV.
 
--- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+sl
