@@ -1,23 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA8Enlr08300
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 09:49:47 -0500
-Received: from mail.fhbb.ch (smtp.fhbb.ch [193.222.241.18] (may be forged))
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA8EnfN1020331
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 09:49:42 -0500
-Date: Mon, 8 Nov 2004 15:49:07 +0100
-From: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>
-Message-ID: <1535323208.20041108154907@stud.fhbb.ch>
-Subject: Re: [linux-lvm] VGs not detected at startup
-In-Reply-To: <20041108135339.GA5797@dragonhold.org>
-References: <88707567.20041108091624@stud.fhbb.ch>
-	<20041108094008.GA26201@goldfinger.local>
-	<1489446547.20041108144631@stud.fhbb.ch>
-	<20041108135339.GA5797@dragonhold.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA8Faur28347
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 10:36:56 -0500
+Received: from e-liberty.pl (yh226.internetdsl.tpnet.pl [80.55.241.226])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA8Fat47007175
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 10:36:55 -0500
+Received: from [10.0.0.193] (aji238.internetdsl.tpnet.pl [83.16.242.238])
+	by e-liberty.pl (Postfix) with ESMTP id 4A70442F7E
+	for <linux-lvm@redhat.com>; Mon,  8 Nov 2004 15:59:22 +0100 (CET)
+Message-ID: <418F831B.5030500@e-liberty.pl>
+Date: Mon, 08 Nov 2004 15:30:51 +0100
+From: Piw <piw@e-liberty.pl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	micalg="pgp-sha1"; boundary="----------C61B315131C087B2"
-Reply-To: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] xfs freeze nad snapshot problem
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,62 +23,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@spam.dragonhold.org
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-------------C61B315131C087B2
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: quoted-printable
+Hello
 
-llsdo> On Mon, Nov 08, 2004 at 02:46:31PM +0100, Markus Wiedmer - FHBB wrot=
-e:
->> I now found a work-around that seems to work so far. In the
->> LVM-Start-Script I just put "mount /dev/sda5 || true" before the vgscan.=
- it
->> looks like after a mount-command the system suddenly finds the VG.
->> strange...
+I got following problem:
+Trying to make snapshot of lv with xfs filesystem:
+# xfs_freeze -f /data
+# lvcreate -L20G --snapshot --name snap /dev/VG/LV
 
-llsdo> Apologies if this is something that's already been
-llsdo> discussed (if so I missed it), and also
-llsdo> for saying something that you've almost definitely covered but......
+and system lock...
 
-llsdo> Check to see if there's any autoloading of modules, or
-llsdo> anything, going on as a result of the
-llsdo> mount/fdisk?
+(kill -9 doesnt work)
 
-llsdo> Also (instead of the mount) does a 'dd' work?  E.g. dd
-llsdo> if=3D/dev/sda of=3D/dev/null bs=3D512
-llsdo> count=3D1?
+I have to create another session and remowe lockup with:
+# xfs_freeze -u /data
 
-llsdo> That's going to be faster & probably less intrusive.
+If I try to create snapshot without freezeng xfs, it works (bo no 
+cohesion is guaranteed).
 
-llsdo> Graham
+kernel: 2.6.9
+lvm:	2.00.25
+dm:	1.00.19
 
-thanks a lot for your hint. it really was a module (sd_mod) that was
-not loaded at boottime. everything works now like a charm
+Anyone can help?
+TIA
 
-thanks
-
-markus
-
-
-
---=20
-Mit freundlichen Gr=FCssen
-Markus Wiedmer - FHBB
-mailto:markus.wiedmer@stud.fhbb.ch
-
-
-------------C61B315131C087B2
-Content-Type: application/pgp-signature
-
------BEGIN PGP MESSAGE-----
-Version: PGP SDK 3.0.4
-Comment: ""
-
-iQA/AwUBQY+HY59eUGiOXF3kEQJwfACfaLfdOs2I2cmtS3SDYL791bNS3nAAoNhh
-XcASckrm/q+L72T4XiAaXUKs
-=8CrP
------END PGP MESSAGE-----
-
-------------C61B315131C087B2--
+PS.
+This problem is mentioned in:
+http://www.netsys.com/suse-linux-e/2002/08/msg01933.html
+but no sloution
+--
+Piw
