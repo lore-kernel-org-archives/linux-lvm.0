@@ -1,9 +1,20 @@
-Subject: Re: re[2]: [linux-lvm] Re: Re: Sharing LVM's via NFS on Redhat 8.0 Part2 - SAMBA?
-References: <20030219162140.DBFH1290.imf33bis.bellsouth.net@tiger2>
-From: Adrian Phillips <a.phillips@met.no>
-In-Reply-To: <20030219162140.DBFH1290.imf33bis.bellsouth.net@tiger2>
-Message-ID: <87lm0bsd2c.fsf@freeze.oslo.dnmi.no>
+Message-ID: <3E55201B.919C8D41@conterra.de>
+From: Dieter Stueken <stueken@conterra.de>
 MIME-Version: 1.0
+Subject: [linux-lvm] Re: How to handle Bad Block relocation with LVM? 
+ 	I actually quite agree.  Here are a few points:
+ 	
+ 	o A PE is typically less than 0.01% of my total disk space.
+ 	
+ 	o Corruption on a drive tends to spread, especially if sectors near the
+ 	corruption are accessed frequently, so it's best to avoid a whole
+ 	section of a drive around a bad spot.
+ 	
+ 	o In general, I would want to throw away a drive that had so many bad
+ 	sectors that it's firmware relocation software could no longer handle
+ 	them.  So, my main purpose in relocating the PE is to recover as much
+ 	data from it as I can before junking the drive.
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,25 +25,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 20 00:26:02 2003
+Date: Thu Feb 20 12:36:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
->>>>> "Greg" == Greg Freemyer <freemyer@NorcrossGroup.com> writes:
+Eric M. Hopper wrote:
 
-    Greg> The not yet released NFS 4.0 is supposed to resolve the
-    Greg> cache coherency issue, but I'm no expert.
+>I actually quite agree.  Here are a few points:
+>
+>o A PE is typically less than 0.01% of my total disk space.
 
-Um, I'm not so sure but anyone who wishes to know can check a recent
-thread on the linux-nfs mailing list about just this problem.
+I just have the same problem on a 300GB volume and some bad sectors.
+The relative amount of a lost PE might be small, but it is still 64Mb,
+which are 131072 lost sectors for each (512byte) bad one :(-
 
-Sincerely,
+Up to now, I could solve the problem by running the IBM-DFT tool to
+replace bad sectors.(http://www.hgst.com/hdd/support/download.htm)
+If this succeed, the secor was blank, but readable. After running
+an fsck I even may verify if any file content was damaged by asking
+debugfs.
 
-Adrian Phillips
+Unfortunately the "sector-repair" failed this time :-(
 
+What I need instead would be a hack that simply turns a bad sector into
+an empty sector. This could best be implemented at lowest level when
+reading single sectors, before buildings blocks (=> 4K == 8 sectors
+affected).
+This could be something like a hdparm option. But still reporting such
+events to syslog could be helpful.
+
+>o Corruption on a drive tends to spread, especially if sectors near the
+>corruption are accessed frequently, so it's best to avoid a whole
+>section of a drive around a bad spot.
+
+Therefore it would be good, if the system will not retry to read a
+broken
+sector again and again and again, as done by now 8 times for each 4k
+block
+plus n times by all the read-ahed attempts.
+
+Dieter.
 -- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Dieter St�ken, con terra GmbH, M�nster
+    stueken@conterra.de        
+    http://www.conterra.de/   
+    (0)251-7474-501
