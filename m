@@ -1,15 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3235gj12451
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 22:05:42 -0500
-Received: from hotmail.com (bay16-dav23.bay16.hotmail.com [65.54.186.203])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3235ejj016186
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 22:05:41 -0500
-From: "sachin" <sachindurge@hotmail.com>
-Date: Fri, 2 Apr 2004 08:41:53 -0800
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <BAY16-DAV23dDHgb4Kb0000dc77@hotmail.com>
-Subject: [linux-lvm] character device creation
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i32COlj21208
+	for <linux-lvm@redhat.com>; Fri, 2 Apr 2004 07:24:47 -0500
+Date: Fri, 2 Apr 2004 14:24:22 +0200
+From: Dumas Patrice <dumas@centre-cired.fr>
+Message-ID: <20040402122422.GA17971@hermes.centre-cired.fr>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] depmod in lvmcreate_initrd erro rmessages with
+	different kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,32 +19,32 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
 
-Thanks Shaun
-I am quite new to linux
-Can you tell  me how to identify the raw device that it is actually bind to
-a logical volume
-And what extra things that i needed to do if i wan to use raw devices like
-driver or any thing else
- or lvm driver supports that
-Thanks ,
-Sachin.
+Hi,
 
-Previous message :
-Date: Thu, 1 Apr 2004 10:52:23 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] character device creation
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Message-ID: <20040401085223.GC29222@redhat.com>
-Content-Type: text/plain; charset=us-ascii
+I am trying to use lvmcreate_initrd to make an initrd for a kernel different
+than the one which is running (to be more precise, I have a running redhat 9
+and I am doing lvmcreate_initrd chrooted in a gentoo). Thus I run 
+$ lvmcreate_initrd 2.4.24
+When lvmcreate_initrd runs depmod, it runs
+$ depmod -a 2.4.24
+depmod echoes a lot of errors message because there are a lot of unresolved 
+symbols (because the running kernel isn't the kernel I run depmod for). The 
+exit status is 0, though and the initrd is created.
+The right depmod invocation should (if I'm not wrong) be:
+$ depmod -a 2.4.24 -F /usr/src/linux-2.4.24/System.map
 
-On Thu, Apr 01, 2004 at 12:26:39PM -0800, sachin wrote:
-> Hi
-> Can i Create a character device for a logical volume of lvm
-> If yes how to create and how lvm driver manage it or supports it
+Is this a problem (depmod having unresolved symbols) ? (there is a comment in 
+the lvmcreate_initrd code which seems to imply that it is not a problem, but I 
+am not sure)
 
-Yes. Have a look at 'man raw'.
+If yes, I think a new option should be added to lvmcreate_initrd, for the
+System.map location.
 
-> Thanks ,
-> Sachin
+If no, this should be stated in the man page.
+
+I can do diffs if you want.
+
+Pat
