@@ -1,18 +1,25 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2MKvLj25470
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 15:57:21 -0500
-Received: from ms-smtp-01.rdc-kc.rr.com (ms-smtp-01.rdc-kc.rr.com
-	[24.94.166.115])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2MKvKWA004475
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 15:57:20 -0500
-Date: Mon, 22 Mar 2004 14:57:17 -0600
-Message-Id: <200403222057.i2MKvHc05444@ecstasy1.winternet.com>
-From: Ken Fuchs <kfuchs@winternet.com>
-In-reply-to: <1079984217.4449.6.camel@albert.localnet> (message from Craig
-	Ringer on Tue, 23 Mar 2004 03:36:57 +0800)
-Subject: Re: [linux-lvm] lvm or lvm2?
-References: <20040322192910.GA10671@oddprocess.org>
-	<1079984217.4449.6.camel@albert.localnet>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2MLIbj32341
+	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 16:18:37 -0500
+Received: from mtagate7.uk.ibm.com (mtagate7.uk.ibm.com [195.212.29.140])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2MLIZWA012389
+	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 16:18:36 -0500
+Received: from d06nrmr1307.portsmouth.uk.ibm.com
+	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
+	by mtagate7.uk.ibm.com (8.12.10/8.12.10) with ESMTP id i2MLITvl082540
+	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 21:18:29 GMT
+Received: from d06ml064.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+	[9.149.37.228])
+	by d06nrmr1307.portsmouth.uk.ibm.com (8.12.10/NCO/VER6.6) with ESMTP id
+	i2MLITU1211944
+	for <linux-lvm@redhat.com>; Mon, 22 Mar 2004 21:18:29 GMT
+MIME-Version: 1.0
+Message-ID: <OFC9B66D58.B69B5271-ON80256E5F.0074B1AD-80256E5F.0074DA8B@uk.ibm.com>
+From: Chris Laycock <LAYCOCKC@uk.ibm.com>
+Date: Mon, 22 Mar 2004 21:19:52 +0000
+Content-Type: multipart/alternative;
+	boundary="=_alternative 0074DA8980256E5F_="
+Subject: [linux-lvm] Oops
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,44 +30,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
->On Tue, 2004-03-23 at 03:29, Matthew Daubenspeck wrote:
+This is a multipart message in MIME format.
+--=_alternative 0074DA8980256E5F_=
+Content-Type: text/plain; charset="US-ASCII"
 
->> Do you think using LVM is a reliable method of sharing home directories?
->> I have been reading the lists, and I notice that in a lot of cases, if
->> one drive dies, you usually lose a lot of information.
+Sorry for the double post. I was having email problems and have 
+inadvertently posted the same problem twice.
 
-Craig Ringer wrote:
+Sorry,
 
->That's why you should really only use it on top of redundant storage
->like RAID 1 or RAID 5, or in situations where you can afford the risk of
->data loss (scratch volumes, hot archives, etc). 
+Chris.
 
-I agree that RAID 5 is a great idea for important data and is the
-appropriate layer under LVM for the redundancy that large numbers of
-home directories demand.
+-------------------
+Chris Laycock
+IT Specialist 
+IBM Global Services (IDO)
 
->I guess that by its self, LVM could be seen as having many of the same
->issues as RAID-0 in terms of data safety - but you're more likely to be
->able to do partial recovery with LVM.
+LITS, Stevenage
+Mail point: K3 STEV UK
+Email: LaycockC@uk.ibm.com
+Tel : (01438) 76-9460  (internal: 44-9460)
 
-This probably assumes multiple disks in a single volume group.  
 
-The following would be appropriate to a single person workstation:
+--=_alternative 0074DA8980256E5F_=
+Content-Type: text/html; charset="US-ASCII"
 
-Although it reduces the flexibility of LVM, creating a volume group per
-disk has the advantage that a disk becoming bad loses only the logical
-volumes that were on that disk.
 
-I find that this works great for Sun workstations which have two
-internal SCA drives.  A single SCA drive can be swapped between
-machines easily since each drive "is" its own volume group.
-Of course I allocate only a single large partition to a volume group.
-
-Sincerely,
-
-Ken Fuchs <kfuchs@winternet.com>
+<br><font size=2 face="sans-serif">Sorry for the double post. I was having
+email problems and have inadvertently posted the same problem twice.</font>
+<br>
+<br><font size=2 face="sans-serif">Sorry,<br>
+<br>
+Chris.<br>
+<br>
+-------------------<br>
+Chris Laycock<br>
+IT Specialist <br>
+IBM Global Services (IDO)<br>
+<br>
+LITS, Stevenage<br>
+Mail point: K3 STEV UK<br>
+Email: LaycockC@uk.ibm.com<br>
+Tel : (01438) 76-9460 &nbsp;(internal: 44-9460)<br>
+<br>
+</font>
+--=_alternative 0074DA8980256E5F_=--
