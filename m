@@ -1,10 +1,10 @@
 Return-Path: <lembark@wrkhors.com>
-Message-ID: <3B02ABEB.9A548CA3@wrkhors.com>
-Date: Wed, 16 May 2001 11:33:47 -0500
+Message-ID: <3B02AC65.E6387069@wrkhors.com>
+Date: Wed, 16 May 2001 11:35:49 -0500
 From: Steven Lembark <lembark@wrkhors.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVM 1.0 release decision
-References: <3AFC42EB.2910DAAE@wrkhors.com> <Pine.LNX.4.21.0105132046150.5468-100000@imladris.rielhome.conectiva> <20010516111903.E11984@sistina.com>
+References: <Pine.LNX.4.21.0105161241370.4671-100000@imladris.rielhome.conectiva>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,16 +20,14 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> OTOH we need a lot of time now to get smaller patches into vanilla.
-> 
-> Therefore we kindly asked for community oppinions to help the situation.
-> 
-> Unless a bigger LVM patch to vanilla is accepted, we need to spend a lot of work
-> on providing those smaller chunks of patches which distracts us a lot from
-> other work.
+> I'm all for it right now. I'm running LVM on practically all my
+> machines and would really like to have the latest bugfixes in
+> my kernel ;)
 
-unless the smaller patches really break something then let the
-vanilla system fall behind.  
+then grab the patches and apply them.  the main issue seems to 
+be the rate at which LVM patches migrate into the stock distribution.
+if you are running that much LVM it's likely that you already know
+how to patch things to handle LVM in the first place.
 
 -- 
  Steven Lembark                                   2930 W. Palmer St.
