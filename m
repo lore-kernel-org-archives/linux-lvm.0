@@ -1,12 +1,10 @@
-Return-Path: <blutgens@sistina.com>
-Date: Thu, 11 Jan 2001 16:02:05 -0600
-From: Ben Lutgens <blutgens@sistina.com>
-Message-ID: <20010111160205.A4049@minime.sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Content-Disposition: inline
-Subject: [linux-lvm] unsubscribed posts
+Return-Path: <paul@clubi.ie>
+Date: Fri, 12 Jan 2001 00:49:33 +0000 (GMT)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] Oops in 2.4.0 (@ LVM)
+In-Reply-To: <20010111164504.C15726@srv.t-online.de>
+Message-ID: <Pine.LNX.4.31.0101112141150.27729-100000@fogarty.jakma.org>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,42 +16,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, lvm-devel@sistina.com, gfs-users@sistina.com, gfs-devel@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 11 Jan 2001, Heinz J. Mauelshagen wrote:
 
-All, I am having to manually "approve" alot of legitimate mails to the all =
-of
-our lists. I intentionally do not allow unsubscribed posts to limit spam.
-There is on average 15 mails per list per day that are legitimate but are h=
-eld
-due to the posts comming from unsubscribed addresses. In order to fix this
-please see http://lists.sistina.com/mailman/listinfo and then select your
-appropriate list and subscribe the additional addresses as "nomail" It's qu=
-ite
-simple and will ensure your posts are never held for me to moderate.
+> It is updated continously.
+>
 
-Thanks, and sorry for the bother.
+aye, i know it is.. but not in Linus' tree, and that's the problem.
 
---=20
-Ben Lutgens		cell: 612.670.4789
-Sistina Software Inc.	work: 612.379.5941
-Code Monkey Support (A.K.A. System Administrator)
+Linus was given 0.9 by Andrea a good while ago. It has problems. CVS
+has had many updates.. but these are not fed to Linus. Not good.
+Either keep Linus LVM relatively closely in-sync by feeding to him
+frequently, or else feed him /stable/ updates less frequently.
 
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+In the former case, users can rely on stock LVM being up to date. In
+the latter case users can choose to stick with stock or use CVS. The
+current half-way house case means you never really know where you
+stand.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (FreeBSD)
-Comment: For info see http://www.gnupg.org
+I'm sorry for complaining, and please read all my 'complain' emails
+with an implicit #include "thanks-for-lvm.txt", but....
 
-iD8DBQE6Xi1cLxkxGgLdGQgRAhLvAJ43EI1S4LgSieI9Yfa2onZjRJB03ACfUCxL
-/xTTooyOZ0+8DWtWrhLHo14=
-=dB/k
------END PGP SIGNATURE-----
+The release practices of the LVM developers has, to date, /sucked/
+(witness pre 0.8.1). I guess you guys (understandably) prefer
+spending time on the code over spending time on organising
+releases/updates, but the current situation makes life difficult for
+users.
 
---OgqxwSJOaUobr8KG--
+Perhaps a solution could be that you (Heinz et al) could delegate to
+someone with the technical competance to understand the fixes who
+could undertake 'watching' the developers and feeding the fixes on to
+Linus? Eg, Andreas did a really good job of maintaining 0.8 fixes (to
+tools) until 0.8.1 came out. *cough*
+
+regards,
+-- 
+Paul Jakma	paul@clubi.ie	paul@jakma.org
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+A Fortran compiler is the hobgoblin of little minis.
