@@ -1,9 +1,7 @@
-From: <big@boss.com>
+Message-ID: <20030113192832.32624.qmail@web14402.mail.yahoo.com>
+From: grenoml <grenoml@yahoo.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="CSmtpMsgPart123X456_000_1386819D"
-Message-Id: <E18Y9Gz-0005j3-00@hermes.sistina.com>
-Subject: [linux-lvm] Re: Here is that sample
+Subject: [linux-lvm] Bare Metal Recovery/Restore
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,16 +12,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 13 12:26:02 2003
+Date: Mon Jan 13 13:28:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multipart message in MIME format
+Can someone point me to a HOW-TO for doing a full bare-metal recovery
+for a Linux system (RedHat 8.0) that is using LVM that suffered
+complete hard drive failure.  I have a full set of Amanda backup tapes
+that can be network mounted from tape drive on another server.  
 
---CSmtpMsgPart123X456_000_1386819D
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Thanks,
+Gerry Reno
 
-Attached file:
---CSmtpMsgPart123X456_000_1386819D--
+
+__________________________________________________
+Do you Yahoo!?
+Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
+http://mailplus.yahoo.com
