@@ -1,7 +1,10 @@
-From: "tester7 A." <benew666@hotmail.com>
-Mime-Version: 1.0
-Message-ID: <F80oe73FqS0XrPoqxBJ00008bbe@hotmail.com>
-Subject: [linux-lvm] BMT-LVM performance with snapshots
+Message-ID: <3E37F596.40303@liquidweb.com>
+From: "Ross S." <ross@liquidweb.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] ANTHONY THABO   ( Urgent and Confidential )
+References: <E18dtxa-0000xm-00@hermes.sistina.com>
+In-Reply-To: <E18dtxa-0000xm-00@hermes.sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,49 +15,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 09:31:02 2003
+Date: Wed Jan 29 09:32:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Kernel: 2.4.20
-LVM: 1.0.6 with kernel patched(VFS-lock and lvm-1.0.6)
-CPU: PIII 1.4
-RAM: 512M
+Spam - the cockroach of the internet
 
-This is the output from bonnie++ with lv only and with lv + snapshot
+- Ross
 
-Version  1.03      ------Sequential Output------ --Sequential Input- 
---Random-
-                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- 
---Seeks--
-Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec 
-%CP
-lv_wo_snap 2G           78505  32 41745  27           151742  41 435.4   1
-lv_wo_snap 2G           75501  31 40277  25           150466  42 436.8   1
-lv_wo_snap 2G           73933  29 41213  26           150052  41 433.4   1
-lv_wo_snap 2G           76434  30 40980  26           147544  41 399.0   0
-lv_with_sn 2G            1367   0 10196   6           128362  35 437.4   1
-                    ------Sequential Create------ --------Random 
-Create--------
-                    -Create-- --Read--- -Delete-- -Create-- --Read--- 
--Delete--
-files:max:min        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec 
-%CP
-lv_wo_snap 16  1669  17 +++++ +++  2532  23  1464  17 +++++ +++   475   5
-lv_wo_snap 16  1572  17 +++++ +++  2265  24  1431  14 +++++ +++   457   5
-lv_wo_snap 16  1481  17 +++++ +++  2100  22  1405  15 +++++ +++   478   6
-lv_wo_snap 16  1536  16 +++++ +++  2286  23  1513  17 +++++ +++   458   5
-lv_with_sn 16   625   8 +++++ +++  2333  26  1174  12 +++++ +++   460   5
+ANTHONY THABO wrote:
 
-
-After making snapshots for a LV, the write performance goes down from 75M/s 
-to 1.3M/s.
-
-Something must be wrong in LVM.
-
-
-_________________________________________________________________
-The new MSN 8: smart spam protection and 2 months FREE*  
-http://join.msn.com/?page=features/junkmail
+>Dear Sir / Madam,
+>
+>                                                STRICTLY CONFIDENTIAL.
+>
+>I am pleased to introduce myself  to you.My name is Mr. Anthony  Thabo  a native of South Africa and a senior employee of mines and natura resources department currently on a trainning course in Holland for few months. 
+>
+>I  am writing this letter to request your assistance in order to
+>redeem an
+>investment with the South African mining Corporation.The said
+>investment,
+>now valued at  ( US$15.750 million dollars) Fifteen million,seven
+>hundred
+>and fifty thousand dollars only was purchased by ( Lucio
+>Harper ) and contracted out to the South  African Mining Corporation
+>in 1977
+>now recognised as mines and natural resources department.This
+>redeemable
+>investment interest,has now matured since March last year.
+>
+>Since March last year, several attempts have been made to contact
+>Lucio Harper without success and there is no way to contact any
+>of his close relatives in whose favour the investment cash value
+>can be paid.
+>
+>Since we have access to all Lucio Harper's information,we can claim this money with the help of my partners with the South African Mines and natural resources department.All we have to do is to file claim using you as Lucio Harper's relative. I will like to assure you that there is absolutely nothing to worry about,because it is perfectly safe with no risk involved.Please
+>ensure to keep this matter strictly confidential.My partner will file a claim for this money on your behalf from the South African mining Corporation.When the claim is approved,you as the beneficiary will be paid (35%) of the total amouth.
+>
+>Since this money can be paid directly into any bank account of your choice,you have responsibility to ensure that my partner and I receive(60%)of the total amouth.While the balance (5%) will be set aside for any unforseen expenses in the cause of transfering this money. I will appreciate if you can give your assurance and guarantee that our share will
+>be well secured.Please for the sake of confidentiality,reach me on my e-mail address:  anthonythabo@netscape.net      Let me know if this proposal is acceptable to you.And kindly reach me immediately with any of the stated contact addresses so that better clearifications
+>relating to the transaction will be explained to you.Thank you and God bless.
+>
+>
+>Truly yours,
+>Anthony  Thabo.  
+>  
+>
