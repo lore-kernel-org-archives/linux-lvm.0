@@ -1,11 +1,9 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 31 May 2001 14:34:57 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] How do I find out if my logic volume is striped or not?
-Message-ID: <20010531143457.A4310@sistina.com>
-References: <20010530191028.9476.MRLIST@activestate.com>
-Mime-Version: 1.0
-In-Reply-To: <20010530191028.9476.MRLIST@activestate.com>; from mrlist@ActiveState.com on Wed, May 30, 2001 at 07:11:36PM -0700
+Return-Path: <dice@mfa.kfki.hu>
+Date: Thu, 31 May 2001 16:16:45 +0200 (CEST)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Subject: Re: [linux-lvm] Severe bug in kernel-2.4.4 lvm
+Message-ID: <Pine.LNX.4.32.0105311616080.3682-100000@falka.mfa.kfki.hu>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +15,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Eric,
+Hi!
 
-lvdisplay shows lines beginning with "Stripes" and "Stripe size (KByte)"
-in case you use it on a striped LV and /proc/lvm/global displays 
-information as well.
+ > Don't always belive collegues...  LVM 0.91 beta7
+ > and 2.4.5 here.  You need ONE trival patch to fix
+ > things.  Read the archives of the list.
 
-On Wed, May 30, 2001 at 07:11:36PM -0700, Eric Wang wrote:
-> Hi all,
-> 
-> How do I find out if my logic volume is striped or not?
-> lvdisplay seems not produce this information.
-> 
-> Thanks 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Which trivial patch are you talking about ? The get_hardblocksize ->
+get_hardsect_size change ?!
 
--- 
+Gergely
 
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ps: just ask because Andrea has a patch with the comment
+    'it has some other tons of fixes' for lvm 0.9.1b7 on the
+    ftp.kernel.org.
