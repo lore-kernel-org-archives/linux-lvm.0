@@ -1,10 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102201045.f1KAj3C10942@webber.adilger.net>
-Subject: Re: [linux-lvm] vgscan creation of device nodes for volume groups.
-In-Reply-To: <Pine.LNX.4.30.0102172218260.8781-100000@beefcake.hdqt.valinux.com>
- from Jay Weber at "Feb 17, 2001 10:24:38 pm"
-Date: Tue, 20 Feb 2001 03:45:03 -0700 (MST)
+Return-Path: <jeffrey.b.layton@lmco.com>
+Date: Tue, 20 Feb 2001 09:45:16 -0500
+From: Jeffrey B Layton <jeffrey.b.layton@lmco.com>
+Message-id: <3A9282FC.104A2BFF@lmco.com>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Subject: [linux-lvm] Startup Script trouble in RH6.2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,52 +16,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jay Weber writes:
-> [snip]
-> Next, I turn all the volumes off and essentially turn off lvm.  I remove
-> one of the devices (loop devices in this case to test this out).  I'm
-> removing /dev/loop1 which is the device for /dev/vol1.  I then rerun
-> vgscan and activate my volumes.  Below are the new /dev entries for the
-> volumes.
-> [snip]
-> Note the duplicate device nodes numbers for vol1 and vol2.  This makes
-> sense in that the prior /dev entry for a volume is left around after
-> volumes are disable (rather than cleaned up).  Now, the problem I'm having
-> with this situation is that obviously any entries in /etc/fstab based on
-> the device node entries may not be proper, I could end up with the wrong
-> devices mounted on the wrong mount points. ;(
+Hello,
 
-One of the problems of the current LVM is that it deletes and re-creates
-the device nodes each time you run vgscan.  IMHO, we should keep devices
-around until we do a vgexport or vgremove.  Maybe the tools can be made
-so that we do not advocate the use of vgscan except in extreme failure
-cases.
+   OK, the newbie did a little reading and a little experimentation :)
+The old FAQ I had didn't mention anything about startup scripts
+for RH, but the "new" one does. So, that's where I started.
+   I've got a generic RH6.2 box except for a 2.2.18 kernel with
+LVM patches installed (and a few other patches). For
+experimenting purposes, I've got one volume group (vg1) and
+one logical volume (home_vg1). I created the lvm script and
+the symlinks as indicated in the FAQ (a symlink from
+/etc/rc.d/rc3.d/S20lvm to /etc/rc.d/init.d/lvm). I've also put a
+line in my fstab that looks like:
 
-Otherwise, we have problems as yours, problems with NFS servers that crash,
-etc.  Having non-static device numbers makes it impossible to set up NFS
-server failover and other things that export device numbers from the server.
+/dev/vg1/home_vg1   /home   ext2   noauto,defaults   1 1
 
-> I gather one possible way around this would be to use a filesystem label
-> on the filesystem on above devices and mount via that.  But last I check,
-> mount via fslabel didn't work with LVM devices.
+   In RH, before entering run level 3, in the rc.sysinit script,
+it scans for filesystems that can be checked (fsck). However,
+since it hasn't reached rc3.d, lvm has not activated the VGs
+nor the LVs. What I did to get around this was to modify
+rc.sysinit. I'd rather not do this. Does anyone have any
+suggestions how to get around this? (I'd rather not manually
+mount the filesystems in rc.local or something like that).
+However, if the suggested alternative is to modify rc.sysinit,
+where in the script should I put the lvm startyp? Should it be
+after loading the modules, but before adding the RAID devices?
 
-I'm surprised that mount-by-label doesn't work.  I use this on most of my
-systems, but maybe not in conjunction with LVM.  I would think the right
-thing to do (rather than rely on device names) is to use device numbers
-for LVM.  It may need a bit of hacking to mount, but I was actually going
-to do this anyways - I want to make a "UUID and LABEL" library, because
-this code is common to mount, fsck, and others.  We may want to add it to
-the kernel as well (I have a patch to mount root by LABEL or UUID).  Also,
-when the reiserfs folks get around to adding LABEL and/or UUID support to
-their superblock, it makes sense to only need to add this to one place.
+TIA,
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Jeff Layton
