@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] 2.4 LVM1 devfs  -> 2.6.0 LVM2 devfs
-Message-ID: <20031222080856.GA1957@tykepenguin.com>
-References: <1071837164.7460.37.camel@Chimay.bugfactory.org> <20031219132513.GA1197@tykepenguin.com> <3FE42022.6060301@wanadoo.fr> <20031220155700.GB21133@tykepenguin.com> <3FE68CE7.2030408@wanadoo.fr>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] ERROR vg_read
+Message-ID: <20031222145410.F18654@sistina.com>
+References: <E1AXXUt-0004RA-ES@adult.hosthr.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3FE68CE7.2030408@wanadoo.fr>
+In-Reply-To: <E1AXXUt-0004RA-ES@adult.hosthr.net>; from zex@zex.biz on Sat, Dec 20, 2003 at 04:08:49AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +14,87 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 22 02:09:01 2003
+Date: Mon Dec 22 08:00:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Dec 22, 2003 at 07:19:19AM +0100, Francis SOUYRI wrote:
-> Hi Patrick
+Could you send me the the metadata on /dev/hd[b-d]1 for further
+anylysis, please ? (dd the 1st 4MB off each of those, tar the 4 files
+up, bzip2 the tar-archive and send it to mge@sistina.com)
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+On Sat, Dec 20, 2003 at 04:08:49AM +0100, Dzevad Hadzic wrote:
+>  
 > 
-> Thank yo, I'll try to implement the same installation on my system (no 
-> Debian).
+>  
+> 
+> Hello I have this problem, after the main disk in server wich was not part
+> of LVM crashed I put new disk
+> 
+> and reinstall Debian 3.0 r2. I got error ERROR "vg_read_with_pv_and_lv():
+> current PV" can't get data of volume group "ata" from physical volume(s)
+> 
+> vgscan and pvscan  say's this:
+> 
+>  
+> 
+> vgscan
+> 
+> vgscan -- reading all physical volumes (this may take a while...)
+> 
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+> volume group "ata" from physical volume(s)
+> 
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> 
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> group
+> 
+>  
+> 
+> pvscan
+> 
+> pvscan -- reading all physical volumes (this may take a while...)
+> 
+> pvscan -- inactive PV "/dev/hde1"  is associated to unknown VG "ata" (run
+> vgscan)
+> 
+> pvscan -- inactive PV "/dev/hdc1"  is associated to unknown VG "ata" (run
+> vgscan)
+> 
+> pvscan -- inactive PV "/dev/hdd1"  is associated to unknown VG "ata" (run
+> vgscan)
+> 
+> pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG "ata" (run
+> vgscan)
+> 
+> pvscan -- total: 4 [414.41 GB] / in use: 4 [414.41 GB] / in no VG: 0 [0]
+> 
+>  
+> 
+> pvscan -d and vgscan -d are avaliable on request.
+> 
+>  
+> 
+> I'm very grateful for any help on this issue.
+> 
+>  
+> 
 
-Ah, sorry I thought I saw a mention of Debian on one of your emails. Feel free
-to download the source for the Debian lvm-common package and build it for your
-system - it could take a lot of the effort out of determining which LVM is
-available for you. !
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
--- 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-patrick
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
