@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 8 May 2001 09:45:49 +0000
+Date: Tue, 8 May 2001 09:49:48 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM questions & problems.
-Message-ID: <20010508094549.B31443@sistina.com>
-References: <989197513.8109.6.camel@localhost> <20010507102844.B25752@sistina.com> <989251023.1153.5.camel@localhost>
+Subject: Re: [linux-lvm] Removing a disk from the system
+Message-ID: <20010508094948.D31443@sistina.com>
+References: <20010430160732.I19810@sistina.com> <20010507140256.B1469@pclab.ifg.uni-kiel.de>
 Mime-Version: 1.0
-In-Reply-To: <989251023.1153.5.camel@localhost>; from raheesom@navpoint.com on Mon, May 07, 2001 at 11:57:03AM -0400
+In-Reply-To: <20010507140256.B1469@pclab.ifg.uni-kiel.de>; from torsten@pclab.ifg.uni-kiel.de on Mon, May 07, 2001 at 02:02:56PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,75 +21,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, May 07, 2001 at 11:57:03AM -0400, Rupert Heesom wrote:
-> On 07 May 2001 10:28:44 +0000, Heinz J. Mauelshagen wrote:
-> > On Sun, May 06, 2001 at 09:05:13PM -0400, Rupert Heesom wrote:
-> > > I'm practicing doing some LVM commands, and am coming up with some
-> > > problems -
-> > > 
-> > > Most disconcerting is that when I try to create a directory in the LV, I
-> > > get the following error - (this does not happen all the time, but almost
-> > > all the time 99%) -
-> > > 
-> > > [root@localhost Tmp]# mkdir test1
-> > > mkdir: cannot create directory `test1': Input/output error
+On Mon, May 07, 2001 at 02:02:56PM +0200, Torsten Landschoff wrote:
+> On Mon, Apr 30, 2001 at 04:07:32PM +0000, Heinz J. Mauelshagen wrote:
+> > > Seems like I should have used vgexport/import in the first time.
 > > 
-> > You didn't metion, if the filesystem is still in a sane state.
+> > Actually not.
+> > vgscan *should* have cut it.
+> 
+> Thanks, so I did not do anything wrong. Of course given that the data is
+> still there it seems I was at least careful enough ;)
+> 
+> > It would be rather helpful, if you could provide the VGDA of the problematic
+> > configuration and the vgscan output with option "-d" in order to investigate
+> > searching for any bugs better.
 > > 
-> > Did you check your syslog for "accessess beyond the end of the device"
-> > which indicate fs related problems?
+> > In case you are able to reproduce the situation, where vgscan just finds
+> > one but not both of the VGs, please send that data to me.
 > 
-> Well, looking at my syslog after mounting my lvol, I saw the following
-> msg -
-> 
-> "May  7 11:51:26 localhost kernel: EXT2-fs warning: mounting fs with
-> errors, running e2fsck is recommended"
-> 
-> I also saw previous errors which you asked about (lots of them) -
-> 
-> "itmap: Cannot read inode bitmap - block_group = 3, inode_bitmap = 98307
-> May  6 14:44:13 localhost kernel: attempt to access beyond end of
-> device...."
-> 
-> I have realised what my base problem is.... I have reduced the LV size,
-> but not reduced the Ext2 filesystem.  For some reason I thought that
-> resizing the LV was sufficient.
+> Of course that system is again running production and I guess to reproduce
+> the problem I had to switch disks once again. I guess the real problem
+> was that /dev/hdb1 became /dev/hda1 after removing the old disk. 
 
-It likely will be at some point in time in the future.
-Triggering the fs resize when a LN gets resized is a TODO item :-)
-
-> Looking further at the HOWTO, and other
-> web docs has enlightened me further.
-> 
-> It seems I will try to learn how to use teh e2fsadm util.  BTW one of
-> the utils seems to be commercial from Powerquest.  I have the v4 of
-> Partition Magic already.  I know it resizes ext2 filesystems, but as far
-> as I know needs to be run from within windows (it's been a long time
-> since I've used it last).  Are the utils such as e2fsadm sufficient /
-> good enough without the commercial PM util?
-
-You need to get the resize2fs tool (by Ted Ts'o and Powerquest) in order
-to run e2fsadm.
-
-e2fsadm basically is a wrapper which runs either
-
-   e2fsck;lvextend;resize2fs
-
-or
-
-   e2fsck;resize2fs;lvreduce
-
-
-resize2fs might already be contained in your distribution.
-
-If not so, use for eg. ftpsearch.lycos.com to figure piles of spaces
-where to get it.
+Configuration changes in io pathes is a major thing vgscan addresses.
+I'm very much interested in every bug in this area.
 
 > 
-> -- 
-> regs
-> rupert
+> I'll try to reproduce the problem at my home machine but I can't promise 
+> anything.
+
+Ok.
+Thank you.
+
 > 
+> Greetings
+> 
+> 	Torsten
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
