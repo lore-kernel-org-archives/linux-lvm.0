@@ -1,10 +1,11 @@
-Return-Path: <austin@coremetrics.com>
-Message-ID: <85063BBE668FD411944400D0B744267A6433B5@AUSMAIL>
-From: "Gonyou, Austin" <austin@coremetrics.com>
-Subject: RE: [linux-lvm] Mounting LVM volume with set UID and GID? (REPOST
-	 )
-Date: Thu, 12 Jul 2001 14:20:37 -0500
+Return-Path: <thomasko321d@gmx.at>
+Message-ID: <0ac701c10b0a$85e4d6f0$0301a8c0@none56n4x0fcnq>
+From: "Thomas Kotzian" <thomasko321d@gmx.at>
+References: <85063BBE668FD411944400D0B744267A6433B5@AUSMAIL>
+Date: Thu, 12 Jul 2001 21:40:22 +0200
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Misbehavior LVM - RAID
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,46 +18,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-To clarify this, When I try mounting with the options uid=xxx,gid=xxx,rw
-I cannot mount the volume. I get a mount error. Nothing out of the ordinary,
-just that it can't "read supberblock", but if I mount it without those
-options, it's just fine. 
+I've set up a server with a software-Raid 5 under linux. (6x80GB IDE). Raid5
+(autodetect) works without any problems ... - but when i want to put the
+raid into a pv the problems begin .... - everything works - creating a pv,
+vg, lv but when i try to shutdown - the system stops (HARD FREEZE) when the
+drives are unmounted .... - sometimes they can be unmounted - but then the
+system freezes at the halt/reboot - command at the end of the halt-script
+...
 
--- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com 
+Are there any interactions between raid autodetect and lvm known???
 
-> -----Original Message-----
-> From: Gonyou, Austin [mailto:austin@coremetrics.com]
-> Sent: Thursday, July 12, 2001 2:17 PM
-> To: 'linux-lvm@sistina.com'
-> Subject: RE: [linux-lvm] Mounting LVM volume with set UID and GID?
-> (REPOST )
-> 
-> 
-> > I'm using an XFS LVM volume of about 18GB, and it will be 
-> > available for HTTP
-> > and FTP. So, I want my ownership, and reading/writing files, 
-> > to be as such:
-> > ls -ld /somedirectory
-> > drwxr-xr-x 	6 	web	ftp	4	somedirectory	
-> > 
-> > But mounted that way, not just owned that way. 
-> > -- 
-> > Austin Gonyou
-> > Systems Architect, CCNA
-> > Coremetrics, Inc.
-> > Phone: 512-796-9023
-> > email: austin@coremetrics.com 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+Base Distro is: SuSE 7.1 and SuSE 7.2 on intel ...
+Kernel from suse or original - linus-release ones - tested: 2.4.6-pre3,
+2.4.6-pre5/6, 2.4.7-pre3, 2.4.7-pre6 - tested with the version 0.9.7_beta2
+and patched with 0.9.7_beta7
+
+Both show the same behaviour ....
+
+Please help!!
+
+Thomas K.
