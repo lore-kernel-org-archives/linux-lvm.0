@@ -1,29 +1,38 @@
-Message-ID: <004801c02728$6dd16b30$0600a8c0@tron>
-Reply-To: "Daniel Mehrmann" <daniel@futuregate.ping-net.de>
-From: "Daniel Mehrmann" <mailinglist.mehrmann@ping-net.de>
-Subject: [linux-lvm] internet-server area51.ping-net.de: new hostname futuregate.ping-net.de  
-Date: Mon, 25 Sep 2000 21:40:15 +0200
+Message-ID: <39CFB8EA.7890B91D@cup.hp.com>
+Date: Mon, 25 Sep 2000 13:43:22 -0700
+From: John DeFranco <defranco@cup.hp.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] LVM on 2.2.17 (again)
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
-Cc: jammet@lionking.org
 
-Hello !
+Hi,
 
-The hostname of my internet server area51.ping-net.de change to
-futuregate.ping-net.de !
-The old hostname doesn't exist now !
+I've checked the LVM email archives so I know there has
+been lots of discussions on how to get LVM to work on
+2.2.17, but unfortunately I'm having problems just
+building the kernel. I started with Turbolinux Server
+6.0.2 (which is 2.2.14) and then added the 2.2.15-2.2.17
+patches. When I build I get:
 
-Sorry about this one, but i resived many root and dns attacks from
-internet. My last option was to changed my hostname and ip-adress.
+lvm-snap.c:28: linux/iobuf.h: No such file or directory
+lvm-snap.c: In function `lvm_snapshot_COW':
+lvm-snap.c:253: dereferencing pointer to incomplete type
+lvm-snap.c:257: warning: implicit declaration of function
+`brw_kiovec'
+lvm-snap.c: In function `lvm_snapshot_alloc_iobuf_pages':
+lvm-snap.c:308: warning: implicit declaration of function
+`expand_kiobuf'
 
-At this time my webserver is down, because i must rewrite all webpages.
-FTP - server is online :-)  You can download e.g. lvm - pachtes.
+Any ideas?
 
-Have a lot of fun
-
-Daniel Mehrmann
+Thanks!
+-- 
+==========
+John DeFranco          (defranco@cup.hp.com)
+Hewlett Packard
+408-447-7543
