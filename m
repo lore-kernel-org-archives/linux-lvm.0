@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] LVM snap size weirdness...
-Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B582@mercury.infiniconsys.com>
-From: "Barry, Christopher" <cbarry@infiniconsys.com>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] LVM snap size weirdness...
+Message-ID: <20030321175040.E13822@uk.sistina.com>
+References: <08628CA53C6CBA4ABAFB9E808A5214CB0142B582@mercury.infiniconsys.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <08628CA53C6CBA4ABAFB9E808A5214CB0142B582@mercury.infiniconsys.com>; from cbarry@infiniconsys.com on Fri, Mar 21, 2003 at 12:19:34PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,64 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 21 11:20:01 2003
+Date: Fri Mar 21 11:51:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ok. Cool. Thanks very much for the knowledge. I have so much more to =
-learn about LVM.
+On Fri, Mar 21, 2003 at 12:19:34PM -0500, Barry, Christopher wrote:
+> So, by quiesce, would you suggest then, that I stop samba, nfs, apache - 
+> take a snapshot and immediately restart them? Then, fire off my backups? 
 
-So, by quiesce, would you suggest then, that I stop samba, nfs, apache - =
-take a snapshot and immediately restart them? Then, fire off my backups? =
-Stopping/starting nfs can really wreak havoc on connections (e.g. 'stale =
-file handles' and all).=20
+The answer is going to be different for each application!
 
-For my clarification, and possibly others as well, what happens if, =
-during a snapshot, someone is writing a file to the server via nfs? Is =
-this file snapshotted is an unstable state? Is it skipped? Should I =
-issue a sync immediately prior to snapshotting? How does snapshotting =
-handle this case?=20
+In general for an application that modifies files, yes, stop it, 
+take the snapshot, then restart it.  
 
-Regards and thanks,
---
-Christopher Barry
-Manager of Information Systems
-InfiniCon Systems
-http://www.infiniconsys.com
+But, for example, if the application only reads the data, or only 
+appends to files, or has its own internal checkpointing you shouldn't
+need to.
 
------Original Message-----
-From: Alasdair G Kergon [mailto:agk@uk.sistina.com]
-Sent: Friday, March 21, 2003 10:25 AM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] LVM snap size weirdness...
+It's not really NFS that needs stopping: it's any applications 
+on your remote machines that are writing to the NFS-mounted volumes.
 
-
-You're quite right - you must *always* worry about applications=20
-changing the filesystem when taking a backup.
-
-Backing up from a filesystem snapshot means your backup will at
-least contain the complete filesystem as it looked at the moment in
-time when the snapshot was created.
-(Consider instead if you were to run 'tar' on a changing filesystem:
-if a process was moving directories at the same time, your tar
-backup might completely miss them e.g. if they were moved from a=20
-place 'tar' hadn't backed up yet into a place it already had.
-If you backup from a snapshot, that problem disappears.)
-
-If you backup from a snapshot, you want to ensure that your
-on-disk application data is consistent (i.e. checkpointed)
-at the time you create the snapshot.  So you have to worry
-about applications that are running at the point at which=20
-you take the snapshot: e.g. quiesce them, take the snapshot,
-then set them off again.
+It's good that you're thinking about this: many people don't, and 
+subsequently discover when they restore data from their backups
+that their applications think it's corrupt.
 
 Alasdair
---=20
-agk@uk.sistina.com
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
