@@ -1,10 +1,11 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvmove killed vg
-Message-ID: <20011217123030.E28720@sistina.com>
-References: <200112121228.fBCCSGC18255@mailgate5.cinetic.de>
-Mime-Version: 1.0
-In-Reply-To: <200112121228.fBCCSGC18255@mailgate5.cinetic.de>; from gunther.kuhlmann@web.de on Wed, Dec 12, 2001 at 01:28:16PM +0100
+Subject: Re: [linux-lvm] Urgent, Please help LVM-krash
+From: Erik =?ISO-8859-1?Q?B=E5gfors?= <erik@bagfors.nu>
+In-Reply-To: <20011217122223.A28720@sistina.com>
+References: <1008250625.4350.5.camel@detrius> 
+	<20011217122223.A28720@sistina.com>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <1008589296.18947.4.camel@detrius>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,187 +16,95 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 05:30:02 2001
+Date: Mon Dec 17 05:40:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+To: Linux LVM Mailinglist <linux-lvm@sistina.com>
 
-On Wed, Dec 12, 2001 at 01:28:16PM +0100, gunther.kuhlmann@web.de wrote:
-> linux-lvm@sistina.com schrieb am 12.12.01:
->=20
-> Heinz,
->=20
-> thank you for your answer! I've done the pvcreate -ff on all
-> pv. One came up with ...volume group "<somegarbage>" where it
-> should have said volume group "vg0". So that fixed something,
-> I presume.
->=20
-> But how do I run the vgcfgrestore on _all_ PV? When I specify
-> one PV, it complains it can't restore part of active volume=20
-> group.
-
-Looks like the kernel still knows about the VG.
-Check /proc/lvm/global if the VG is really still active.
-
-In that case you need to reboot to get rid of it.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-> When I specify all PV's, it complains please enter
-> physical volume name. How do I do this? Does this work with
-> lvm 1.0.1?=20
->=20
-> Commands like vgdisplay complain the VG does not exist.
->=20
-> As to your second suggestion: I have vg0.conf and vg0.<digit>.old
-> in /etc/lvmconf. I assume you mean the first?
->=20
-> Thanks for your input!
->=20
-> Regards,
->=20
-> Gunther
->=20
-> > you need to run vgcfgrestore on *all* PVs which where in your=20
-> vg0 *after*
-> > running "pvcreate -ff" on them. YOu can find out which these=20
-> where by
-> > "vgcfgrestore -ll -n vg0 -f=20
-> /etc/lvmconf/WhateverYourRecentBackupFileIs".
+m=E5n 2001-12-17 klockan 12.22 skrev Heinz J . Mauelshagen:
+> On Thu, Dec 13, 2001 at 02:37:04PM +0100, Erik B=E5gfors wrote:
+> > Hi all!
 > >=20
-> > If that doesn't work a hack to activate it anyway without=20
-> running vgscan is
-> > to copy /etc/lvmconf/WhateverYourRecentBackupFileIs (I assume
-> > /etc/lvmconf/vg0.conf.cd in your case) to /etc/lvmtab.d/vg0,
-> > "echo -en 'vg0\0vg1\0' > /etc/lvmtab" and "vgchange -ay".
-> > Create a dummy LV with 1 PE afterwards and your=20
-> > metadata on all PVs of the VG should be ok again.
+> > Yesterday I krashed my lvm.  This is the first time I'm having real
+> > problems with it.
 > >=20
-> > Remember to back /etc/lvmconf/ regularly when you change your=20
-> LVM configuration!
+> > This is what happened.
 > >=20
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> >=20
-> >=20
-> > We recommend to upgrade to LVM 1.0.1 because a couple of bugs=20
-> (some related to
-> > pvmove) have been fixed.
-> > On Tue, Dec 11, 2001 at 10:34:24PM +0100,=20
-> gunther.kuhlmann@web.de wrote:
-> > > Hi,
-> > >=20
-> > > I've got a broken lvm vg as a result of an unsuccessful pvmove
-> > > command. My system is a SuSE 7.0 with kernel 2.4.4 and
-> > > lvm-0.9.1_beta7-10.=20
-> > >=20
-> > > The vg spans several partitions on one disks, one of which I=20
-> > > wanted to evacuate. I used the pvmove command with chunks of=20
-> > > 32 PE (=3D 1 GB); 10 GB total. The first 8 chunks worked okay,
-> > > but the 9th (pvmove -v /dev/hda8:256-287 /dev/hda10) fell over
-> > > with error code 23 while moving the fifth PE. So I checked=20
-> using
-> > > pvdisplay that the four PE had indeed been moved. A further
-> > > attempt with pvmove -v /dev/hda8:260-287 /dev/hda10 fell over=20
-> as
-> > > well, again error code 23. (That's error moving physical
-> > > extent(s)).=20
-> > >=20
-> > > I then rebooted the machine which killed the complete volume
-> > > group. Which in turn did not quite impress me. :-((
-> > >=20
-> > > During my attempts at recovering I think I did a vgscan, which
-> > > found the vg "vg1" on /dev/hdb, but not the vg "vg0" on=20
-> /dev/hda.
-> > >=20
-> > > I tried the following commands unsuccessfully:
-> > > - vgcfgrestore -v -n vg0: please enter physical volume name=20
-> (the
-> > >   synopsys of vgcfgrestore did not state it as a mandatory=20
-> > > parameter)
-> > > - vgcfgrestore -v -n vg0 /dev/hda10: can't restore part of=20
-> active
-> > > volume grout vg0
-> > > - vgcfgrestore -v -n vg0 /dev/hda{6,7,8,10}: please enter=20
-> physical
-> > > volume name
-> > > - vgchange -a n vg0: volume group vg0 does not exist
-> > > - vgchange -a y vg0: volume group vg0 does not exist
-> > >=20
-> > > I still have the file /etc/lvmconf/vg0.conf.cd as well as the
-> > > devices /dev/vg0/lv0{0,1,2,3} and /dev/vg0/group. (And
-> > > /dev/vg1/..., but that is working.)
-> > >=20
-> > > Any suggestions on how I can recover the data would be highly
-> > > appreciated. I found a reference to a program called
-> > > uuid_fixer/uuid_editor, but usage was discouraged. Do I have=20
-> to=20
-> > > try it
-> > > or is there a better way? Does upgrading to a newer version of=20
-> lvm
-> > > help? Or do I have to update the kernel as well then? And I=20
-> > > definately
-> > > do _not_ want to kill my other vg as well.
-> > >=20
-> > > Regards,
-> > >=20
-> > > Gunther
-> > >=20
-> > >=20
-> > >=20
-> > >=20
-> > >=20
-> _______________________________________________________________________=
-_______
-> > > Die sch=F6nsten Ski-Regionen der Alpen - jetzt bei Ferienklick.de
-> > > http://ferienklick.de/ski/?PP=3D2-5-100-105-38
-> > >=20
-> > >=20
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at=20
-> http://www.sistina.com/lvm/Pages/howto.html
-> >=20
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to solve them ***
-> >=20
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at=20
-> http://www.sistina.com/lvm/Pages/howto.html=20
+> > I was going to add a new lv and used the lvcreate-command as usual.=20
+> > This time I forgot the -n switch and when I realized that I hit ctrl-c.=
+.
+> > BAD idea!
 >=20
+> Erik,
 >=20
-> ________________________________________________________________
-> Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr!=20
-> Beim WEB.DE Lottoservice: http://tippen2.web.de/?x=3D13
->=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> that's actually starneg, because the tools intercept ctrl-c and the like =
+:-(
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Hmm.. well .. it did break the program for me..  Maybe it's an old
+version with mandrake 8.1??
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+I know that the kernel lvm-stuff is NOT the latest version.  Is it ok to
+run an old version or do I risk damage to the system??
+=20
+> > Now my vg is gone.  I can't get it back whatever I try.  Any help would
+> > be VERY appreciated.
+> >=20
+> > A vgscan just sais "no volume groups found" or something like that.=20
+> > doing a pvdisplay on the pv's in my vg gives me that they should be in
+> > "diskvg" (which is correct).  I've tried doing vgcfgrestore from the
+> > backups in /etc/lvmconf but that doesn't help.  vgscan still doesn't
+> > find it.
+>=20
+> Did you run "pvcreate -ff" on all of your PVs belonging to diskvg *before=
+*
+> you run vgcfgrestore on all of them?  vgscan afetrwards.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+At first I didn't, but I tried that later.  Same thing.
+=20
+> >=20
+> > I looked at the HOWTO and found a program named uuid_fixer that looked
+> > like it could solve the problem but it died with an "illegal
+> > instruction" regardless of if I used the precompiled version or compile=
+d
+> > it myself.
+> >=20
+> > This is on a mandrake 8.1-box with lvm, xfs, reiserfs and devfs so ther=
+e
+> > are alot of things to think about.
+> >=20
+> > When doing stuff I did the following first:
+> >  reboot into single user, remount / rw, mount /proc, restore some
+> > standar-stuff into /dev, and start devfsd
+> >=20
+> > After that I tried vgcfgrestore, vgscan, uuid_fixer and just about
+> > everything I could think or.
+>=20
+> I think it was just the lack of pvcreate before vgcfgrestore.
+
+Perhaps.
+
+But I think there was another problem. I've had a few small problems
+with xfs under mandrake 8.1.  Sometimes I've lost some files.  I really
+don't know why but the data in them have been corrupted or they were 0
+bytes in size.  I have been really mean to the computer and killing the
+power on it while it was running and so on. But that was never a problem
+under reiserfs so I'm back with 100% reiserfs now.  I think the files in
+/etc/lvmconf were strange.
+=20
+> >=20
+> > Please please please help me.  Can anyone solve this.  There are over 6=
+0
+> > GB of stuff on this computer and it needs to work TODAY :(
+> >
+
+Like I said I needed that computer back the same day.  I ended up
+reinstalling the box.  Loosing the data I had on it.  Luckily most data
+was either not important or could be restored from backup. The only
+thing I really lost was the system with all it's services and the like.=20
+So I guess I need to resetup samba/appleshare/web/nfs/dns and so on. =20
+
+/Erik
+--=20
+Erik B=E5gfors               | erik@bagfors.nu
+Supporter of free software | GSM +46 733 279 273
+fingerprint: 6666 A85B 95D3 D26B 296B 6C60 4F32 2C0B 693D 6E32
