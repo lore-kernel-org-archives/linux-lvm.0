@@ -1,7 +1,7 @@
-From: bviper001@erols.com
+From: bneverforever@email.com
 Mime-Version: 1.0
-Message-Id: <E19lKHK-00012v-00@hermes.sistina.com>
-Subject: [linux-lvm] Re: what up
+Message-Id: <E19lMOq-000337-00@hermes.sistina.com>
+Subject: [linux-lvm] Outlook
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,26 +12,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug  8 22:21:01 2003
+Date: Sat Aug  9 00:37:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi friend, you should see this! i saved a bomb..
+I saw you online and thought you might like to take a look at this
 
-its a godsend, I have saved a fortune
+Don't pass up this amazing opportunity to change your life!
 
-simply put, your matched with the cheapest possible mortgage available for your loan.
-
->-----------
-
-http://r.aol.com/cgi/redir-complex?url=http://mortgagechoices@onlinesaleew.com/index.asp?RefID=198478
+are you prepared for lower mortgage repayments?
 
 >-----------
 
+http://r.aol.com/cgi/redir-complex?url=http://homeloans@onlinesaleew.com/index.asp?RefID=198478
+
+>-----------
 
 
 
 
-stop more of these http://btrack.iwon.com/r.pl?redir=http://mar@onlinesaleew.com/auto/index.htm
+
+dont want any more? http://btrack.iwon.com/r.pl?redir=http://rem@onlinesaleew.com/auto/index.htm
