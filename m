@@ -1,9 +1,14 @@
-Return-Path: <corryk@us.ibm.com>
-Subject: Re: [linux-lvm] Problem deleteing PV's
-Message-ID: <OFD6F650E6.4F2A1D36-ON85256A56.004C77FE@raleigh.ibm.com>
-From: "Kevin M Corry" <corryk@us.ibm.com>
-Date: Thu, 24 May 2001 09:13:41 -0500
-MIME-Version: 1.0
+Return-Path: <lewis@sistina.com>
+Date: Thu, 24 May 2001 09:22:25 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM [lastquestion]
+Message-ID: <20010524092225.A6632@sistina.com>
+References: <NBBBKLKHMJHIJLHOGAOJGENMIOAA.steve.wray@the.net.nz> <200105240641.f4O6fIrW031893@webber.adilger.int>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Disposition: inline
+In-Reply-To: <200105240641.f4O6fIrW031893@webber.adilger.int>; from adilger@turbolinux.com on Thu, May 24, 2001 at 12:41:18AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,71 +20,54 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: jbooth@ccbill.com
 
-Justin,
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Do you have any active volumes using any space on /dev/sdb or /dev/sdc?
-(You said below that you are trying to get rid of those entries to start
-over)? When you tried recreating the partition table for those disks,
-did you create everything with the same size/location? If so, then the
-LVM metadata will still be in the same place that pvscan and vgscan
-expect to find it. So, if you don't have any data on those disks to
-worry about, you should be able to just clear out the metadata sectors.
+On Thu, May 24, 2001 at 12:41:18AM -0600, Andreas Dilger wrote:
+> Actually, I posted a similar question to linux-kernel, but I think it was
+> lost in the noise.  Basically, it _is_ possible to have a "finitrd" for
+> just this situation (at least on 2.4).  You unmount all but root, set up
+> a ramfs, and pivot_root into the ramfs.  You can then unmount root (not
+> just a read-only remount), and properly shutdown LVM/RAID/etc.  Haven't
+> tried it myself, but it should work.
 
-dd if=/dev/zero of=/dev/sdb1 bs=1k count=10
-dd if=/dev/zero of=/dev/sdc1 bs=1k count=10
-dd if=/dev/zero of=/dev/sdb bs=1k count=10
-dd if=/dev/zero of=/dev/sdc bs=1k count=10
+I keep seeing this pivot_root thing.  Is it actually implemented in 2.4, and
+if so, how does one go about doing it?
 
-There are actually 240+ sectors of metadata at the beginning of each
-PV, but these commands should wipe away the information about the PVs
-and VGs. After this you should repartition the disks again, run
-pvcreate on the appropriate partitions, and run pvscan and vgscan.
+Thanks,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-I hope I've understood your problem correctly. If you do in fact have
-data on those disks, and vgscan/pvscan isn't finding the volumes, then
-obviously don't run the above commands. :)
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-Kevin
+-----Begin Obligatory Humorous Quote----------------------------------------
+"Memory is like gasoline. You use it up when you are running. Of
+course you get it all back when you reboot..."; Actual explanation
+obtained from the Micro help desk.
+-----End Obligatory Humorous Quote------------------------------------------
 
-> vgscan seems to only update /etc/lvmtab and /etc/lvmtagb.d
-> a pvchange -x n /dev/sdxx
-> results in a
-> pvchange -- unable to find volume group "/dev/xxxx" (VG not active?)
-> pvchange -- 0 physical volumes changed / 0 physical volumes already o.k.
->
-> on all PV's
->
-> > Have you tried a vgscan to see if there are VG's that you don't need?
-What
-> > about pvchange -x n /dev/sdxx?
-> >
-> >
-> > > Hello,
-> > >
-> > >  I have a problem deleteing 4 PV's that I managed to create None of
-the
-> > > PV's are in a VG, and I can't figure out how to get rid of them
-> > >
-> > > when I do a pvscan It returns something like this:
-> > >
-> > > pvscan -- reading all physical volumes (this may take a while)
-> > > pvscan -- inactive PV "/dev/sdb" is in no VG [12.16] MB
-> > > pvscan -- inactive PV "/dev/sdb1" is in no VG [8.54] GB
-> > > pvscan -- inactive PV "/dev/sdc" is in no VG [12.16] MB
-> > > pvscan -- inactive PV "/dev/sdc1" is in no VG [8.54] GB
-> > > pvscan -- total: 4 [17.11 GB] / in use 0 [0] / in no VG:  4 [17.11
-GB]
-> > >
-> > >
-> > > How do I get rid of these entries to start over again?
-> > > I've tried deleteing the partition table and recreating them but a
-> > > subsequent vgscan always brings them back into pvscan
-> > >
-> > >
-> > >  Thanks much,
-> > >       Justin Booth
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7DRkhpE6/iGtdjLERAiV9AJ972wNKMaBWIy1pwaZks4rVmLPGJQCfa3ZQ
+yG/z8CK7824vTp0NrQeo8nA=
+=2QQo
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
