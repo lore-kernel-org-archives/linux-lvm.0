@@ -1,10 +1,7 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Message-Id: <20020103173819.J12868@lynx.no>
+Message-Id: <25E4CA13D679FF48BC307694202209710164DE2E@nd1-clusa.local.bunnings.com.au>
+From: Colin Coe <CCoe@bunnings.com.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200201040015.RAA00441@cthulhu.turbolabs.com>; from
-    ahead@bigpond.net.au on Fri, Jan 04, 2002 at 10:15:34AM +1000
-Subject: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to coexist happily
+Subject: [linux-lvm] lvchange problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +12,104 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  3 18:36:01 2002
+Date: Fri Jan  4 00:22:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Adrian Head <ahead@bigpond.net.au>
-Cc: Steve Lord <lord@sgi.com>, Linux XFS <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Jan 04, 2002  10:15 +1000, Adrian Head wrote:
-> Note: becareful when mounting an XFS snaphot without using "mount -t xfs" 
-> otherwise i have found it will mount the snapshot as resierfs.
-> See http://marc.theaimsgroup.com/?l=linux-xfs&m=100994490716530&w=2 for more 
-> info on this.
+Hi all
 
-This is because the reiserfs superblock is 64kB into the filesystem, and it
-appears that the mkfs.xfs does not overwrite this part of the disk.  I have
-heard of another person with this same problem.  It would probably behoove
-the XFS folks to zero the first and last 128kB of a partition when doing
-mkfs.xfs to avoid this sort of problem.
+I have come across a problem with lvchange.  When I change the availability
+of an LV from active to inactive, and then try and change it back I get the
+error "Operation not permitted".  I can only get the LV back by rebooting.
 
-For mkfs.ext2, it will zero the first 4kB, overwrite the next tens of kB,
-and also zero the last 128kB.  I should probably make sure that it will
-_always_ overwrite at least the first 68kB, but with the default parameters
-it will at least do so except on the smallest of filesystems (i.e. floppies).
+A search of Google turned up something similar but there were no responses
+to that post.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+System details are: 
+Pentium II-400
+2 x 20GB Quantum drives
+256MB RAM
+2.4.14 with XFS
+lvm-tools              1.0.1rc4-2
+Gnu C                  2.96
+Gnu make               3.79.1
+binutils               2.11.90.0.8
+util-linux             2.11f
+mount                  2.11g
+modutils               2.4.6
+e2fsprogs              1.23
+reiserfsprogs          3.x.0j
+Linux C Library        2.2.4
+Dynamic linker (ldd)   2.2.4
+Procps                 2.0.7
+Net-tools              1.60
+Console-tools          0.3.3
+Sh-utils               2.0.11
+
+
+Any ideas?
+
+CC
+
+
+[root@linux-lvm root]# df -k
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/md0               2042880   1335560    707320  66% /
+/dev/md1                 59328      5292     54036   9% /boot
+none                    127472         0    127472   0% /dev/shm
+/dev/rootvg/bbs          60736        80     60656   1% /bbs
+/dev/rootvg/bbsdata    2026816       144   2026672   1% /bbs/data
+
+[root@linux-lvm root]# umount /bbs/data
+
+[root@linux-lvm root]# lvchange -an /dev/rootvg/bbsdata
+lvchange -- logical volume "/dev/rootvg/bbsdata" changed
+lvchange -- doing automatic backup of volume group "rootvg"
+lvchange -- no difference to old backup in "/etc/lvmconf/rootvg.conf"
+
+[root@linux-lvm root]# df -k
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/md0               2042880   1335580    707300  66% /
+/dev/md1                 59328      5292     54036   9% /boot
+none                    127472         0    127472   0% /dev/shm
+/dev/rootvg/bbs          60736        80     60656   1% /bbs
+
+[root@linux-lvm root]# lvchange -ay /dev/rootvg/bbsdata
+lvchange -- ERROR "Operation not permitted" couldn't open logical volume
+"/dev/rootvg/bbsdata"
+
+And the same again in verbose mode.
+
+[root@linux-lvm root]# lvchange -ay -v /dev/rootvg/bbsdata
+lvchange -- locking logical volume manager
+lvchange -- checking logical volume name
+lvchange -- checking volume group existence
+lvchange -- checking for active volume group "rootvg"
+lvchange -- reading volume group data of "rootvg" from disk(s)
+lvchange -- checking consistency of "rootvg"
+lvchange -- checking logical volume "/dev/rootvg/bbsdata" existence
+lvchange -- getting index of logical volume "/dev/rootvg/bbsdata" in volume
+group "rootvg"
+lvchange -- getting status of "/dev/rootvg/bbsdata" from VGDA in kernel
+lvchange -- changing logical volume "/dev/rootvg/bbsdata" in VGDA of kernel
+lvchange -- ERROR "Operation not permitted" couldn't open logical volume
+"/dev/rootvg/bbsdata"
+
+
+**************************************************************************
+Bunnings Legal Disclaimer: 
+
+1) 	This document is confidential and may contain legally privileged 
+	information. If you are not the intended recipient you must not 
+	read, copy, distribute or act in reliance on it.
+	If you have received this document in error, please telephone
+	us immediately on (08) 9365-1555. 
+
+2)	All e-mails sent to and sent from Bunnings Building Supplies are
+	scanned for content. Any material deemed to contain inappropriate
+	subject matter will be reported to the e-mail administrator of
+	all parties concerned.
+
+**************************************************************************
