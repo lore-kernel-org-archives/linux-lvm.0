@@ -1,10 +1,8 @@
-Message-ID: <3E6FC1C0.9040204@cox.net>
-From: "Kevin P. Fleming" <kpfleming@cox.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
-References: <20030312195217.GC18876@auctionwatch.com> <20030312221320.GA15196@gw.silicide.dk> <3E6FB34E.30003@cox.net> <20030312224940.GA15229@gw.silicide.dk> <3E6FBBED.1000101@cox.net> <20030312231627.GA15246@gw.silicide.dk>
-In-Reply-To: <20030312231627.GA15246@gw.silicide.dk>
-Content-Transfer-Encoding: 7bit
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re[4]: [linux-lvm] Core questions from a LVM neophyte...
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20030312232735.PPIX5543.imf43bis.bellsouth.net@tiger2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +13,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 17:25:01 2003
+Date: Wed Mar 12 17:34:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>
 
-jon+lvm@silicide.dk wrote:
-> On Wed, Mar 12, 2003 at 03:59:57PM -0700, Kevin P. Fleming wrote:
-> 
->>jon+lvm@silicide.dk wrote:
->>
->>>you're talking about raid0. You dont rebuild raid0. Not in hardware, not
->>>in software.
->>
->>OK, I missed that extremely important and very obvious point :-)
-> 
-> 
-> thought so. Anyway, why would it take longer time to rebuild the
-> array using software rather than hardware raid? It's still the
-> same ammount of data needed to be copied.
-> 
+ >>  >>  Question 1:  Is it possible today to:
+ >>  >>  Have a large IDE RAID5 array that is virtualized through=20
+ >>  >>  LVM and then exported to a Dynamic Disk on Win2K over a
+ >>  >>  LAN (not necessarily WAN)?
+ >>  >>=20
+ >>  >>  I believe iSCSI and HyperSCSI would both work... However=20
+ >>  >>  I have not found the approporiate interoperable software
+ >>  >> drivers.
+ >>  >=20
+ >>  > I tried them also.  No luck yet.  Let us know if you get it working.
 
-Right, but a kernel oops doesn't cause an array rebuild to be necessary if 
-you're using a 3ware or similar RAID card. The only thing that would cause a 
-rebuild would be a drive failure or a power failure (which is of course easy to 
-protect against).
+ >>  What was your setup and how did it fail?  No connection?  Such bad
+ >>  performance that it didn't work?
 
-The software code (which I've been using for quite a while) needs to rebuild any 
-time the array is not shut down cleanly, which can happen for a number of reasons.
+Nothing at all for Win2k HyperSCSI.
+
+For iSCSI I tried the initiators I could find:  Cisco and IBM.
+
+Both are specifically designed to work with their hardware targets and use =
+older revs. of the spec.  (rel. 0.8 ??)
+
+I was trying to use the Intel target.
+
+As I recall, the IBM initiator did not connect at all.
+
+The Cisco attempted, but failed in the parameter negotiation that takes place =
+at the start of a iSCSI session.
+
+Since iSCSI was just approved a few weeks ago, I'm hoping that Microsoft will =
+come out with a Win2K driver shortly.
+
+If they do, I expect that someone will come out with a Linux target that =
+supports it.
+
+BTW: Have you tried Window UNIX Services 3.0
+
+http://www.microsoft.com/windows2000/techinfo/howitworks/security/encrypt.asp
+
+I haven't, but I'm hopeful that it will create "local" drives somehow.  (I very =
+much doubt it, but I'm hopeful).
+
+BTW2: In a pure Windows environment, HPs Storage Replicator does exactly what =
+you want, but it is pricey (IIRC $10K)
+
+http://h18000.www1.hp.com/products/sanworks/vr/description.html
+
+Greg
+--=20
+Greg Freemyer
