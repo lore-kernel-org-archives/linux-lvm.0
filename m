@@ -1,9 +1,11 @@
-Message-ID: <3BBAFE63.1A5D0631@promofinarsa.es>
-Date: Wed, 03 Oct 2001 14:02:43 +0200
-From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Problem compiling LVM on 2.2.19
+Date: Wed, 3 Oct 2001 14:26:33 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] Re: partition table read incorrectly
+Message-ID: <20011003142633.A16089@cistron.nl>
+References: <20011002202934.G14582@wiggy.net> <E15oUUf-0005Xw-00@the-village.bc.nu> <20011002220053.H14582@wiggy.net> <20011002150820.N8954@turbolinux.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011002150820.N8954@turbolinux.com>; from adilger@turbolabs.com on Tue, Oct 02, 2001 at 03:08:20PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,64 +17,77 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-Hi, list:
+Previously Andreas Dilger wrote:
+> What does the first 512 bytes of the disk show (od -Ax -tx1 /dev/)?
 
-This is my first post, but I didn't see nothing regarding this issue at
-the list digests, so I send here:
-ENVIRONMENT:
-Red Hat 6.2
-Kernel 2.2.19 (stock, directly downloaded from linuxkernel.org)
-LVM 1.0.1-rc3
+See below.
 
-I applied the LVM included patch for raw-io: linux-2.2.18-rawio.patch
-(as suggested for 2.2.19 somewhere else)
-	command I used to patch was `patch -s -p1 < linux-2.2.18-rawio.patch`
-	It seemed to apply cleanly.
-Then I run `./configure` from base directory for LVM 1.0.1-rc3, and
-seemed to run properly (LVM 1.0.1-rc2 had an error on some keywork
-substitution)
-Then I run `make` from the PATCHES directory, and there appeared the
-"lvm-1.0.1-rc3-2.2.19-LVM-Nav01.patch", which I applied to linux sources
-the same way than the previous one.
-I configured then the kernel, marking LVM support as a module (support
-for /proc filesystem was already added to the kernel; the same goes with
-linnear support).
-Then I run:
-make dep
-make clean
-make bzImage
-This seemed to go all well and good
-Then, when `make modules`, the compilation stops.  This seems to be the
-relevant part:
+> Maybe there is still "0xaa55" on the disk at 0x1fe and the kernel
+> thinks it is a DOS partition?
 
-lvm.c: In function `lvm_do_lv_create':
-lvm.c:2192: structure has no member named `de'
-lvm.c: In function `lvm_do_lv_remove':
-lvm.c:2277: structure has no member named `de'
-lvm.c: At top level:
-lvm.c:326: warning: `__update_hardsectsize' declared `static' but never
-defined
-lvm.c:1891: warning: `__update_hardblocksize' defined but not used
-make[2]: *** [lvm.o] Error 1
-make[2]: Leaving directory `/usr/src/linux-2.2.19/drivers/block'
-make[1]: *** [_modsubdir_block] Error 2
-make[1]: Leaving directory `/usr/src/linux-2.2.19/drivers'
-make: *** [_mod_drivers] Error 2
+Hmm, there does seem to be a 0xaa55 there..
 
-That line 2192, is this one:
+> Hmm, this is sda11, so you would need both a primary and extended
+> partition table to get that.  What does /proc/partitions show?
 
-lvm_gendisk.part[MINOR(lv_ptr->lv_dev)].de =3D lvm_fs_create_lv(vg_ptr,
-lv_ptr);
+It's not sda11, that output is in hex. At any rate /proc/partitions
+contents is also below.
 
-So, it seems, lvm_gendisk.part structure array lacks of that member "de"
-Any hints? Is this a known bug?
-TIA
---=20
-SALUD,
-Jes=EF=BF=BDs
-***
-jesus_navarro@promofinarsa.es
-***
+Wichert.
+
+cloud:/home/wichert# od -Ax -tx1 /dev/discs/disc0/disc  | head -32
+000000 fa ea 80 00 c0 07 4c 49 4c 4f 01 00 15 07 b5 00
+000010 24 00 00 00 15 ce b5 3b e2 20 b0 00 00 e3 20 b0
+000020 00 00 e1 20 b0 00 00 01 00 00 00 00 00 00 00 e5
+000030 20 b0 00 00 16 0b b0 00 00 17 0b b0 00 00 18 0b
+000040 b0 00 00 19 0b b0 00 00 1a 0b b0 00 00 1b 0b b0
+000050 00 00 1c 0b b0 00 00 1d 0b b0 00 00 1e 0b b0 00
+000060 00 1f 0b b0 00 00 20 0b b0 00 00 00 00 00 00 00
+000070 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+000080 8c c8 8e d0 bc 80 00 52 53 06 56 bc 00 08 fb 8e
+000090 d8 b0 0d e8 6d 00 b0 0a e8 68 00 b0 4c e8 63 00
+0000a0 be 34 00 cd 12 c1 e0 06 2d 60 02 50 07 31 db ad
+0000b0 91 ac a8 60 75 0f 4e ad 89 c2 09 c8 74 1b ac b4
+0000c0 02 cd 13 eb 0d 92 ad f6 c2 20 75 02 30 e4 97 e8
+0000d0 3a 00 72 0e 80 c7 02 eb d6 b0 49 e8 25 00 06 6a
+0000e0 00 cb b0 20 e8 1c 00 e8 06 00 31 c0 cd 13 eb b0
+0000f0 c1 c0 04 e8 03 00 c1 c0 04 24 0f 04 30 3c 3a 72
+000100 02 04 07 50 30 ff b4 0e cd 10 58 c3 56 51 53 88
+000110 d3 80 e2 8f f6 c3 40 75 33 bb aa 55 b8 00 41 cd
+000120 13 72 29 81 fb 55 aa 75 23 f6 c1 01 74 1e 5b 59
+000130 1e 31 f6 56 56 57 51 06 53 6a 01 6a 10 89 e6 16
+000140 1f b8 00 42 cd 13 8d 64 10 1f eb 44 5b 59 53 52
+000150 57 51 06 b4 08 cd 13 07 72 38 51 c0 e9 06 86 e9
+000160 89 cf 59 88 f0 fe c0 80 e1 3f f6 e1 96 58 5a 39
+000170 f2 73 23 f7 f6 39 f8 77 1d c0 e4 06 86 e0 92 f6
+000180 f1 fe c4 00 e2 89 d1 5a 5b 86 f0 b8 01 02 cd 13
+000190 eb 09 59 5f eb 02 b4 40 5a 5b f9 5e c3 00 00 00
+0001a0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0001b0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01
+0001c0 01 00 83 fe 3f 03 3f 00 00 00 c5 fa 00 00 00 00
+0001d0 01 04 83 fe 3f 04 04 fb 00 00 c1 3e 00 00 00 00
+0001e0 01 05 8e fe ff ff c5 39 01 00 42 96 25 02 00 00
+0001f0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 55 aa
+
+major minor  #blocks  name
+
+  58     0     524288 lvma
+   8     0   18051360 scsi/host0/bus0/target0/lun0/disc
+   8     1      32098 scsi/host0/bus0/target0/lun0/part1
+   8     2       8032 scsi/host0/bus0/target0/lun0/part2
+   8     3   18008865 scsi/host0/bus0/target0/lun0/part3
+   8    16   17942584 scsi/host0/bus0/target1/lun0/disc
+   8    17    4194304 scsi/host0/bus0/target1/lun0/part1
+   8    32    8969493 scsi/host0/bus0/target2/lun0/disc
+   8    48    8969493 scsi/host0/bus0/target3/lun0/disc
+
+
+-- 
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
