@@ -1,14 +1,14 @@
-Return-Path: <hopper@omnifarious.mn.org>
-Date: Fri, 16 Mar 2001 14:04:49 -0600
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Return-Path: <lewis@sistina.com>
+Date: Fri, 16 Mar 2001 14:22:44 -0600
+From: AJ Lewis <lewis@sistina.com>
 Subject: Re: [linux-lvm] LVM 0.9.1 Beta6 RPMS
-Message-ID: <20010316140449.A21854@omnifarious.mn.org>
-References: <20010316131523.A21757@omnifarious.mn.org> <200103161944.f2GJi6d17583@webber.adilger.int>
+Message-ID: <20010316142244.A5505@sistina.com>
+References: <20010316124446.B1478@sistina.com> <20010316131523.A21757@omnifarious.mn.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
 Content-Disposition: inline
-In-Reply-To: <200103161944.f2GJi6d17583@webber.adilger.int>; from adilger@turbolinux.com on Fri, Mar 16, 2001 at 12:44:05PM -0700
+In-Reply-To: <20010316131523.A21757@omnifarious.mn.org>; from hopper@omnifarious.mn.org on Fri, Mar 16, 2001 at 01:15:23PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,64 +22,58 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---azLHFNyN32YCQGCU
+--yrj/dFKFPuw6o+aM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 16, 2001 at 12:44:05PM -0700, Andreas Dilger wrote:
-> Eric Hopper writes:
-> > On Fri, Mar 16, 2001 at 12:44:46PM -0600, AJ Lewis wrote:
-> > > LVM 0.9.1 Beta6 RPMS are up on the Sistina FTP site:
-> > > ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/binaries/redhat
+On Fri, Mar 16, 2001 at 01:15:23PM -0600, Eric M. Hopper wrote:
+> On Fri, Mar 16, 2001 at 12:44:46PM -0600, AJ Lewis wrote:
+> > LVM 0.9.1 Beta6 RPMS are up on the Sistina FTP site:
+> > ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/binaries/redhat
 > >=20
-> > 	Would you consider releasing kernel patches against the 2.4.x
-> > series kernels?
-> >=20
-> > 	I want to upgrade to 2.4.x someday soon.  I currently use LVM on
-> > my system, but my confusion over exactly what patches I need to apply
-> > prevents me from upgrading to 2.4.x.
+> > These are based on the Connectiva LVM packages, but were created on a
+> > Redhat 6.2 system.  (I think they will work on any RPM based system
+> > though...) They use a modified version of the wrapper script (it uses
+> > sed instead of basename and the libary name has changed).  You need to
+> > grab at a minimum, the lvm-base, lvm-iop10, and lvm-iop10-lib
+> > packages.
 >=20
-> Actually, the LVM CVS (and I assume tarball as well) is fairly well
-> set up to handle this.  Since it is a lot of work to maintain patches
-> against every kernel (consider each pre, ac kernel also).  They rather
-> ship the whole lvm*.[ch].  If you are compiling as a module, you shuld
-> be able to compile directly in LVM/kernel (pending a patch that was
-> posted today).
+> 	Would you consider releasing kernel patches against the 2.4.x
+> series kernels?
 
-	OK.  That makes sense.  Trying to decide if that's a good way to
-do it or not.  I guess its easier for brand new users, and so that's a
-good thing.  I'm expecting different because of how reiserfs does things
-and previous experience with LVM.  :-)
+This is what the lvm-iop10-patchgen package is for.  It contains a tarball
+with the patch generation code in it.  Read the README in the main source
+tree when you untar it and follow the instructions to generate a patch.  Let
+me know if you have any questions about how it works.
 
-> Generally, the current LVM kernel code will work properly with the
-> current tools.  On occasion, the current tools will not work with an
-> older kernel (or vice versa).  It is my opinion that we should treat
-> that as a bug to be fixed, until such a time we really need to
-> increase the IOP version, at which point the kernel/tools will refuse
-> to work with older code.
-
-	It seems to me like newer versions of the tools should work with
-older kernel code up to a certain number of versions back.
-
-Thanks,
 --=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
---azLHFNyN32YCQGCU
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+Sleep: A completely inadequate substitute for caffeine
+-----End Obligatory Humorous Quote------------------------------------------
+
+--yrj/dFKFPuw6o+aM
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
+Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE6snHhG4QeWBeRdS8RAmOPAJ40bKwyFIaOSsU28LEVkGuivuRzmQCgr3ax
-6FnCYzj7dokuFBLas18NxIY=
-=QttX
+iD8DBQE6snYUpE6/iGtdjLERAoWWAJ9EcOubSbIr8tc1/HDUJpMKTUMDjQCfXxuE
+6XqFzP/6X6Rk7mgrtwyTwLI=
+=Nd42
 -----END PGP SIGNATURE-----
 
---azLHFNyN32YCQGCU--
+--yrj/dFKFPuw6o+aM--
