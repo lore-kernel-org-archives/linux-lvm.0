@@ -1,10 +1,10 @@
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] JFS or XFS
-Message-ID: <20040116110810.GD2837@redhat.com>
-References: <20040115231819.49123.qmail@web41506.mail.yahoo.com> <20040116002908.11514.qmail@web41504.mail.yahoo.com>
+Subject: Re: [linux-lvm] Problems with booting after changing certain volumes
+Message-ID: <20040116110502.GC2837@redhat.com>
+References: <20040115230502.22365.27437.Mailman@hermes.sistina.com> <OFD32F6C3A.281F6118-ONC1256E1D.002ADACC-C1256E1D.002BA837@ch.ibm.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040116002908.11514.qmail@web41504.mail.yahoo.com>
+In-Reply-To: <OFD32F6C3A.281F6118-ONC1256E1D.002ADACC-C1256E1D.002BA837@ch.ibm.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,59 +15,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 16 08:57:15 2004
+Date: Fri Jan 16 08:57:20 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 15, 2004 at 07:29:08PM -0500, Rajesh Saxena wrote:
-> Thank you all for the replies regarding ReiserFS....... I will have to
-> do more research into this matter because originally I did not consider
-> reiser for the server. It is always good to get other peoples opinions
-> on topics like this. I have one small request if you don't mind. The
-> mail server will run cyrus imapd and while reading the documentation I
-> saw the following note which is attached below after my email. The
-> author of this document also notes that XFS includes a program called
-> xfs_freeze which will freeze a filesystem from new changes so a more
-> reliable snapshot can be created. Again people here with more
-> experience with LVM and reiserfs might know of a better way to do the
-> snapshot for backups. Any opinions?
-> Thank you all for your insight. Please keep posting if you have
-> different opinionss.
-> 
-> Please scroll all the way to the bottom:
-> http://acs-wiki.andrew.cmu.edu/twiki/bin/view/Cyrus/Backup
-> 
-> One issue you may run into: if you're using ReiserFS, at least on Linux
-> 2.4 with LVM1, then snapshots may occasionally fail. The snapshot will
-> be created fine, but the ReiserFS fileystem on it will not be mountable
-> if it has incomplete transactions. The ReiserFS code tries to replay
-> the transactions, fails because the snapshot is read-only, and fails to
-> mount the FS. I've found that syncing the disks before taking the
-> snapshot reduces the chances of this happening dramatically:
+Frank,
 
-Rajesh,
+The size of the VG backups depends on the amount of metadata which
+depends on the amount of PVs and their size and LVs in a VG.
 
-you need to apply the VFS-Lock patch from our web site to avoid your
-following 'trick'. That enables LVM to 'flush' all pending fs io
-before activating the snapshot.
+Typically in the range of 100 - 500KB.
 
-Another option is to try out LVM2/device-mapper which
-supports writable snapshots :)
+If you boot with an initrd (SuSE 8 uses one to boot) and vgscan runs
+with that as root before the switch to the real root (the one you tried
+resizing to solve the problem) happens, that initrd is likely to
+run out of space.
+
+Create a larger initrd to cope with that.
+
 
 Regards,
 Heinz    -- The LVM Guy --
 
+
+
+On Fri, Jan 16, 2004 at 08:56:50AM +0100, Frank Bagehorn wrote:
+> Recently I had problems on a SuSE SLES 8 install.
+> When I created two more logical volumes in the rootvg, the machine would 
+> hang during boot stating
+>         ERROR 2 - writing volume group backup file 
+> /etc/lvmtab.d/rootvg.tmp in vg_cfgbackup
+>         unable to do a backup of volume group "rootvg"
+>         removing volume group "rootvg" from /etc/lvmtab
+> I tried to increase the root file system from 512MB to 1GB but that didn't 
+> help.
+> So I removed the two lvs (and assumed I run into a strange bug that allow 
+> not more than 7 lvs..)
+> Instead I increased one of the other lvs and put the data in those.
+> Now I rebooted again (first time since I increased the lv) and get the 
+> same error.
 > 
-> sync && sleep 1 && sync && sleep 1 && sync # try to make sure FS will
-> be clean
-> nice -n -19 lvcreate -s -L 1G -n var_s /dev/OS/var >&/dev/null || \
->   ( echo "Error creating snapshot of /var: $?" && exit 1 )
+> Question:
+> How much space is necessary to do the volume group backup ?
+> Shall I increase the rootlv even further (e.g. to 2GB) ?
+> Or is the problem more than just not enough space ?
+> The lv in question is about 60GB. I have another lv in a second volume 
+> group that is the same size.
+> (i.e. a copy of the same data is held on an external disk.) And that 
+> doesn't seem to make a problem.
 > 
-> 
-> ______________________________________________________________________ 
-> Post your free ad now! http://personals.yahoo.ca
+> ----------------------------------------------------------------------
+> Dr. Frank Bagehorn
+> IBM Zurich Research Lab.
+> Saeumerstr. 4
+> CH-8803 Rueschlikon 
+> Switzerland
+> ----------------------------------------------------------------------
+> SMTP: fba@zurich.ibm.com
+> Notes: Frank Bagehorn/Zurich/IBM@IBMCH
+> phone: ++41 (01) 724 83 23  fax: ++41 (01) 724 89 59
 > 
 > _______________________________________________
 > linux-lvm mailing list
