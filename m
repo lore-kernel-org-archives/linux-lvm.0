@@ -1,8 +1,8 @@
-From: Scott Mcdermott <smcdermott@questra.com>
-Message-ID: <20030702073723.GC30882@questra.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] snapshots on RAID5 blow up machine ("switching cache buffer size")
+Message-ID: <1195.192.168.1.26.1057151067.squirrel@www.asociacionser.org>
+Subject: Re: [linux-lvm] LVM 1.0.7, kernel 2.4.21 and snapshots over ext3 filesystem
+From: "Alberto Picon Couselo" <albertopicon@asociacion-ser.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,64 +13,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul  2 02:38:02 2003
+Date: Wed Jul  2 08:05:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Today my NFS-mounted mail spool slowed to a crawl in my mail
-agent; I logged into the server and noticed the load average
-over 20.  I saw that a developer had a build going on (from
-another machine) off one of the NFS exports (LVM on RAID5).
-This particular LV was snapshotted at the time and
-presumably the build caused lots of snapshot activity, but a
-load over 20 is obviously abnormal.
+Wolfgang, thank you very, very much for your advice.
 
-I saw these in the logs:
+As you told me, I've downloaded "fresh" copies of Linux 2.4.21 kernel, LV=
+M
+1.0.7 and linux-2.4.21-VFS-lock.patch (at
+http://evms.sourceforge.net/patches/1.2.1/2.4.21/).
 
-    kernel: raid5: switching cache buffer size, 4096 --> 1024
-    kernel: raid5: switching cache buffer size, 1024 --> 4096
-    kernel: raid5: switching cache buffer size, 4096 --> 1024
-    kernel: raid5: switching cache buffer size, 0 --> 1024
-    last message repeated 3 times
-    kernel: raid5: switching cache buffer size, 1024 --> 4096
-    kernel: raid5: switching cache buffer size, 0 --> 1024
-    kernel: raid5: switching cache buffer size, 0 --> 4096
-    last message repeated 2 times
-    kernel: raid5: switching cache buffer size, 4096 --> 1024
+Following your instructions, I generated and patched the kernel using
+lvm-1.0.7-2.4.21.patch. After that, I tried to patch the kernel using
+linux-2.4.21-VFS-lock.patch and I received an error message from patch
+program requiring me a file path to patch evms.c source file. I do not
+have installed evms package, so I decided to skip that patch, and continu=
+e
+patching lvm module and I recompiled the whole kernel using my custom
+configuration (make menuconfig; Load configuration option...).
 
-mostly the transitions were 512 to 4k, then back again,
-hundreds of times per second.
+Now, I'm able to create a snapshot and mount it, but I receive a strange
+warning message (even if I mount it readonly):
 
-I've searched the archives and see that this is related to
-the filesystem using 4k blocks whereas snapshot IO uses 1k
-blocks, so RAID5 code gets confused, but I don't understand
-the internals of the filesystem to be able to say this is
-expected behavior.
+$~# mount -t ext3 -r /dev/storage/snap /mnt/temporal/
+Can't write to read-only device 3a:04
+kjournald starting.  Commit interval 5 seconds
+Can't write to read-only device 3a:04
+EXT3-fs: mounted filesystem with ordered data mode.
 
-My questions are these:
+Anyway, the snapshot is mounted and it's visible... So, it seems to
+work... What's your opinion about this?
 
-    - Is this a RAID5 problem or an LVM problem, or both?
-      I'm using an SMP kernel 2.4.22-pre2.  In other words,
-      am I asking the wrong list about this problem because
-      it's a perfectly fair use of the backing store by the
-      LVM subsystem?
+Thanks a lot for you help and advice,
+Alberto Picon
 
-    - Is this problem nonexistent on RAID1 backed or
-      RAID10 backed VGs (especially the latter since I am
-      contemplating a switch thereto)?
-
-    - Is the problem dependent on the snapshot extents
-      residing on the same PV as the snapshotted LVs? In
-      this case how to force snapshot extents to use
-      particular PVs if not all extents in the PV which
-      contains the LVs in question are allocated already?
-
-I am planning to make extensive use of snapshots for backup
-purposes (I plan to keep the last seven days of data online
-as daily exported snapshots, to let users easily retrieve
-things without going to tape), so I need to try to
-understand this problem better.
-
-Thanks for any comments.
+--=20
+Alberto Picon Couselo
+Depto. Telecomunicaciones e Informatica
+Asociacion SER
