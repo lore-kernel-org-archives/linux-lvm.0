@@ -1,41 +1,48 @@
-Date: Tue, 31 Oct 2000 08:36:26 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: [linux-lvm] Re: more LVM 0.8 patches
-Message-ID: <20001031083626.C12775@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <20001022162253.C24630@colombina.comedia.it> <200010231800.e9NI01U21435@webber.adilger.net>
+Date: Tue, 31 Oct 2000 08:39:29 +0000
+From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
+Subject: Re: [linux-lvm] LVM Partition Dependency
+Message-ID: <20001031083929.A27865@srv.t-online.de>
+Reply-To: Mauelshagen@sistina.com
+References: <OFF2FCF487.B6859C5B-ON86256988.00627B8E@imation.com> <20001030225211.A26323@srv.t-online.de> <20001031083019.B12775@colombina.comedia.it>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200010231800.e9NI01U21435@webber.adilger.net>; from adilger@turbolinux.com on Mon, Oct 23, 2000 at 12:00:01PM -0600
+In-Reply-To: <20001031083019.B12775@colombina.comedia.it>; from bluca@comedia.it on Tue, Oct 31, 2000 at 08:30:19AM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
+To: Luca Berra <bluca@comedia.it>
 Cc: linux-lvm@msede.com
 
-On Mon, Oct 23, 2000 at 12:00:01PM -0600, Andreas Dilger wrote:
-> If you are interested to do a bit of work, it would be good to take my 2.2
-> lvm.h and add the few missing "#if kernel 2.2 use this, #else use that"
-> checks and I will add it into my lvm.h so it can be used by everyone.
-
-I will check into this eventually,
-the problem is i don't work on linux full-time
-so i hack into lvm whenever i have some spare time, or i am forced to do it.
-
-> > I am still missing something on the vgchange front, the binary version i
-> > saved before trashing my whole system this summer works, the one built from
-> > these sources doesn't.
+On Tue, Oct 31, 2000 at 08:30:19AM +0100, Luca Berra wrote:
+> On Mon, Oct 30, 2000 at 10:52:11PM +0000, Heinz J. Mauelshagen wrote:
+> > > 
+> > > I'm not having any luck with pvcreate tool shipped with SuSE 6.4 and
+> > > 
+> > > LVM 0.8final.
+> > 
+> > It should work in 6.4 with NBD and major 43.
+> > Did you run a "pvcreate -d" to figure the reason out?
 > 
-> What sort of symptoms are you having (sorry if you already posted them)?
+> allow me to guess :))))
+> since nbd is not a partitionable device, the dir_cache entry
+> is screwed by a bug in pv_get_size.c,
+> i posted a patch to this list earlier, andreas should have
+> updated his RPM.
 
-just does not work, at the moment i have a single vg, and the machine
-boots from it, so it is very difficult to debug. I should put gdb into my
-initrd :)
-
-L.
+...and I have it in the 0.9 alpha source :))))
 
 -- 
-Luca Berra -- bluca@comedia.it
-    Communication Media & Services S.r.l.
+
+Regards,
+Heinz      -- The LVM guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
