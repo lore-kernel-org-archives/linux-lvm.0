@@ -1,25 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAHGoPr10848
-	for <linux-lvm@redhat.com>; Wed, 17 Nov 2004 11:50:25 -0500
-Received: from ms-smtp-05-eri0.texas.rr.com (ms-smtp-05.texas.rr.com
-	[24.93.47.44])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAHGoJuR010401
-	for <linux-lvm@redhat.com>; Wed, 17 Nov 2004 11:50:19 -0500
-Received: from tor.tx.mcbf.net (cs68203212-84.rgv.rr.com [68.203.212.84])
-	by ms-smtp-05-eri0.texas.rr.com (8.12.10/8.12.7) with ESMTP id
-	iAHGoGPa009404
-	for <linux-lvm@redhat.com>; Wed, 17 Nov 2004 10:50:16 -0600 (CST)
-Received: from adler.tx.mcbf.net ([10.10.10.11])
-	by tor.tx.mcbf.net with esmtp (Exim 4.34) id 1CUT0Z-0004s7-Tv
-	for linux-lvm@redhat.com; Wed, 17 Nov 2004 10:50:15 -0600
-Subject: Re: [linux-lvm] Software RAID 5 Resizing and LVM
-From: David Mohr <damailings@mcbf.net>
-In-Reply-To: <1100647794.419a8d72734bb@webmail.slackguy.net>
-References: <1100647794.419a8d72734bb@webmail.slackguy.net>
-Date: Wed, 17 Nov 2004 10:49:50 -0600
-Message-Id: <1100710190.311.44.camel@adler>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAHLt2r26183
+	for <linux-lvm@redhat.com>; Wed, 17 Nov 2004 16:55:02 -0500
+Received: from grabki.3c.pl (mail@as254.internetdsl.tpnet.pl [80.53.176.254])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAHLsmA8010112
+	for <linux-lvm@redhat.com>; Wed, 17 Nov 2004 16:54:55 -0500
+Received: from angel ([192.168.1.2])
+	by grabki.3c.pl with esmtp (Exim 3.35 #1 (Debian))
+	id 1CUXmN-0001NS-00
+	for <linux-lvm@redhat.com>; Wed, 17 Nov 2004 22:55:55 +0100
+From: "Krzysztof" <kris@grabki.3c.pl>
+Date: Wed, 17 Nov 2004 22:54:26 +0100
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+In-Reply-To: <20041108173315.GA21451@redhat.com>
+Message-Id: <E1CUXmN-0001NS-00@grabki.3c.pl>
+Subject: [linux-lvm] LVM Config Files
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,22 +26,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Hi,
+Hi.
 
-On Wed, 2004-11-17 at 09:29 +1000, adam@slackguy.net wrote:
-> I've been playing around with adding disks to a software RAID 5 array, and it
-> works fine.  However, i have LVM running over the top of that and i can't
-> figure out how to enlarge the Phisical Volume to encompass the newly added
-> capacity on the raid device.  Has anyone achieved this at all?
-Please look through the archive, just a couple of days ago there was a
-thread started about this topic (expanding a PV on a hardware raid).
+One small question. I have googled, but don't find any news about configs in
+lvm.
+I understand that they are locate in /etc/lvm*, but is there any options in
+lvm to specify another
+location of configs like /home/jail/etc/lvm* ? for example. Or i just need
+recompile lvm1 from 
+source and play with location of configs files ? (i don't want do this). :\
 
-> Am I barking up the wrong tree here? If so, how would you go about adding drives
-> to a software RAID 5 device, and actually adding the new space to the filesystem
-> inside the RAID device?
-Resizing the filesystem is completely LVM unrelated and depends on the
-actual filesystem used (resize2fs, resize_reiserfs, ...)
 
-~David
+I have lvm1 on my debian ;)
+- (lvm-common v1.5.5)
+- (lvm10 v1.0.4-5woody1)
+
+
+Another question is about disk in lvm.
+
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/hdg1"  of VG "lvm" [20.22 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hde1"  of VG "lvm" [60.77 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/hdb1" of VG "lvm" [82.73 GB / 0 free]
+
+I created one big ;) volumegroup and then i create another one big logical
+volume. Now i have problem.
+One of disk (hdb1) is showing errors, and smart show me that it will die. Is
+there any chance to free _exacly_ all pe from hdb1, and only from this disk
+?
+.it seems that lvm free pv from volume in strage order. Can i tell lvm that
+i want free only this disk ?
+
+
+Kris.
+
+Ps. I know. My english isn't perfect. Sorry for that.
