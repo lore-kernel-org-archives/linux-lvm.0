@@ -1,11 +1,9 @@
-Return-Path: <root@srv.sistina.com>
-Date: Mon, 18 Jun 2001 17:40:43 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problems with 0.9.1b7 and 2.2.20-2
-Message-ID: <20010618174043.B15676@sistina.com>
-References: <20010605092436.B856@jaquet.dk> <20010605123417.A23541@sistina.com> <20010605154656.A1384@jaquet.dk> <20010605210248.A843@jaquet.dk>
-Mime-Version: 1.0
-In-Reply-To: <20010605210248.A843@jaquet.dk>; from rasmus@jaquet.dk on Tue, Jun 05, 2001 at 09:02:48PM +0200
+Return-Path: <dice@mfa.kfki.hu>
+Date: Mon, 18 Jun 2001 18:09:25 +0200 (CEST)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Message-ID: <Pine.LNX.4.33.0106181808530.27064-100000@falka.mfa.kfki.hu>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: another nice feature for packagers ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,50 +15,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jun 05, 2001 at 09:02:48PM +0200, Rasmus Andersen wrote:
-> On Tue, Jun 05, 2001 at 03:46:57PM +0200, Rasmus Andersen wrote:
-> [...]
-> > > Did you *really* run "dd if=/dev/vg1/lvol4 of=/dev/null" and got that error
-> > > in the log? Never have seen that before.
-> > 
-> > I will try to reproduce. But trying to get as much as the (used) 
-> [...]
-> 
-> To finish this off: I cannot reproduce it after my reboot.
+Hi!
 
-Oops. Bad luck then.
-In case you are able again, please provide the configuration information and
-log here.
+ > No problem, I'm still trying to decide if we should move ${DESTDIR} into the
+ > individual 'install' targets or not...
 
-> -- 
->         Rasmus(rasmus@jaquet.dk)
-> 
-> We're going to turn this team around 360 degrees.
-> -Jason Kidd, upon his drafting to the Dallas Mavericks
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Thats a good question. :) I tried your version, and it worked well. The
+location of the configuration files is defived in a header file, so this
+is not a problem. The static links worked also well...
 
--- 
+ > Hmm...I think it should be the other way around.
 
-Regards,
-Heinz    -- The LVM Guy --
+Yes, I thought about this version too... It doesn't metter which one you
+choose, as long as there are separate definitions for static and shared
+libraries, I think. So they have not to be moved manually...
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+ > Just FYI, the entire build system is going to get an overhaul after the 1.0
+ > release, so I will definitely be making sure these detail are kept in mind
+ > for that.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Which will be released this wednesday as I can remember, right?
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks,
+Gergely
