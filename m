@@ -1,27 +1,33 @@
-Date: Mon, 30 Aug 1999 00:46:38 +0200
-From: Daniel Roesen <droesen@home.ivm.de>
-Subject: Re: [linux-lvm] xfs [OT]
-Message-ID: <19990830004638.A2452@helios.home.ivm.de>
-References: <37C82891.987EDB34@geotec.net> <Pine.LNX.3.96.990829002728.23961J-100000@aristotle.phaedo. <4.2.0.58.19990829120123.010d5d90@204.151.72.2> <19990829232620.A27460@josefine.ben.tuwien.ac.at>
-Mime-Version: 1.0
-In-Reply-To: <19990829232620.A27460@josefine.ben.tuwien.ac.at>; from Markus Fischer on Sun, Aug 29, 1999 at 11:26:20PM +0200
+Date: Tue, 31 Aug 1999 13:47:53 -0400 (EDT)
+From: Shane Shrybman <shane@zeke.yi.org>
+Reply-To: Shane Shrybman <shane@zeke.yi.org>
+Subject: Re: [linux-lvm] Revised petition WAS: LVM in stock kernel!?
+In-Reply-To: <19990827111855.E25840@colombina.comedia.it>
+Message-ID: <Pine.LNX.3.96.990831133711.31731A-100000@zeke.sympatico.ca>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
-
-> Just curious .. everyone talks about xfs being relesed,
-> but .. where is the source?
-
-http://oss.sgi.com/projects/xfs/
-
-especially:
-
-http://oss.sgi.com/projects/xfs/download/
+To: linux-lvm mailing list <linux-lvm@msede.com>
 
 
+Hello People,
 
-Best regards,
-Daniel
+On Fri, 27 Aug 1999, Luca Berra wrote:
+
+> i think that when wee agrre on the petition contents, we can
+> put it on the web and mebbe have slashdot/lwn/freshmeat link
+> the page.
+
+Are we agreed on the petition contents?
+
+Should we post to slashdot/lwn/freshmeat?
+
+My only concern right now is time. It was a few weeks ago now that Linus
+said that a "feature freeze" in 2.3 was coming. I think we need to get as
+many supporters on our petition as possible and bring it to Linus' 
+attention soon.
+
+Shane
