@@ -1,11 +1,8 @@
-From: Eric Sandeen <sandeen@sgi.com>
-In-Reply-To: <1010615039.17321.2.camel@stout.americas.sgi.com>
-References: <200201020451.g024pPg00867@oss.sgi.com>
-    <1010615039.17321.2.camel@stout.americas.sgi.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1010615976.17321.5.camel@stout.americas.sgi.com>
+From: Daniel Sully <daniel@electricrain.com>
+Message-Id: <20020109224112.GG30764@electricrain.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to coexist happily
+Content-Disposition: inline
+Subject: [linux-lvm] lvm snapshot fails
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +13,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  9 16:40:01 2002
+Date: Wed Jan  9 16:42:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Eric Sandeen <sandeen@sgi.com>
-Cc: Adrian Head <ahead@bigpond.net.au>, Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Wed, 2002-01-09 at 16:23, Eric Sandeen wrote:
+I'm attempting to create a snapshot volume for a 50GB partition, however
+the lvcreate fails with the following error:
 
-> I tested snapshot creation & overflow with ext2, ext3, reiser, and xfs. 
-> I have not looked closely enough to see why xfs breaks w/o this patch,
-> and why it works with it, but... give it a shot.
+$ lvcreate -L1G -s -n wwwsnap /dev/vg00/www
+lvcreate -- WARNING: the snapshot will be automatically disabled once it gets full
+lvcreate -- INFO: using default snapshot chunk size of 64.00 KB for "/dev/vg00/wwwsnap"
+File size limit exceeded
 
-Ah, ok.  Steve pointed out that in the stock LVM version,
+strace shows it's getting a EFBIG error -
 
-unsigned long blocks[KIO_MAX_SECTORS];
+open("/dev/sdc1", O_WRONLY)             = 4
+_llseek(4, 214756169728, [214756169728], SEEK_SET) = 0
+write(4, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 512) = -1 EFBIG (File too large)
+--- SIGXFSZ (File size limit exceeded) ---
++++ killed by SIGXFSZ +++
 
-plops 4k down on the stack; xfs's stack must be a bit bigger than other
-filesystems, and it overflows... that's why xfs was failing with that
-code, and other filesystems survived.
+This is with 2.4.17, patched with 1.0.1 and 1.0.1 userland tools.
 
--Eric
+Here's my pvscan:
 
--- 
-Eric Sandeen      XFS for Linux     http://oss.sgi.com/projects/xfs
-sandeen@sgi.com   SGI, Inc.
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sdc1" of VG "vg00" [457.98 GB / 257.98 GB free]
+pvscan -- total: 1 [457.99 GB] / in use: 1 [457.99 GB] / in no VG: 0 [0]
+
+Is there a special 64bit flag I need to set somewhere to allow the
+lvmtools to deal with a device that large?
+
+-D
+--
+When Hell freezes over, I'll snowboard there too.
