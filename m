@@ -1,10 +1,11 @@
-From: "yves.alloyer" <Yves.ALLOYER@slpinfoware.com>
-Subject: RE: [linux-lvm] pvcreate fails on a software RAID metadisk
-Date: Fri, 5 Oct 2001 11:13:35 +0200
-Message-Id: <NEBBLHFAEINCLDICDLOAIENJCHAA.yves.alloyer@slpinfoware.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <3BBC8B5B.1A484028@legis.state.ak.us>
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Fri, 5 Oct 2001 03:31:59 -0600
+Subject: Re: [linux-lvm] pvcreate fails on a software RAID metadisk
+Message-ID: <20011005033158.J31725@turbolinux.com>
+References: <3BBC8B5B.1A484028@legis.state.ak.us> <3BBCBF87.5520C8F9@legis.state.ak.us> <20011004144643.B31725@turbolinux.com> <20011005103053.A2938@colombina.comedia.it>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011005103053.A2938@colombina.comedia.it>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,88 +18,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I experienced something similar with 1.0.1-rc2 (see the [linux-lvm] Root +
-Software RAID 1 in partition + LVM + Reiserfs) thread.
-From the code in pv_check_partitioned_dev it seems to me you run into
-exactly the same problem.
+On Oct 05, 2001  10:30 +0200, Luca Berra wrote:
+> On Thu, Oct 04, 2001 at 02:46:43PM -0600, Andreas Dilger wrote:
+> > On Oct 04, 2001  11:59 -0800, Bill Ellis wrote:
+> > > <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> > 
+> > This is a problem - MD devices are not partitioned.  Have a look at
+> > this function to see why it thinks so.
+> 
+> no this should be normal
+> i believe the problem lies somewhere else in the damned cache
+> i tested it on one of my systems, i have 4 disks and 4 md devices there
+> md/0 is not detected
+> md/1 to md/3 are
 
-I did a quick and dirty patch which fixed it for me.
-Please be aware: I am new to this list, new to linux LVM...
-I know the patch will prevent you from using any partitioned MD device in
-LVM. I have no idea of further implications.
-------------------------------------------------------------
-diff -ru 1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c
-slp-1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c
---- 1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c	Mon Aug 20 17:17:56 2001
-+++ slp-1.0.1-rc2/tools/lib/lvm_check_partitioned_dev.c	Thu Oct  4 14:47:37
-2001
-@@ -55,6 +55,8 @@
- 	switch (lvm_get_device_type(st_rdev)) {
- 	case LVM_DEVICE_TYPE_INVALID:
- 	    break;
-+	case 2:	/* YAL: MD device on partition. Won't partition it. */
-+		break;
- 	default:
- 	    ret = TRUE;
- 	}
-------------------------------------------------------------
+Well, a quick look into lvm_check_partitioned_dev.c makes me think the
+whole thing is broken.  lvm_check_partitioned_dev() is only checking
+if this is a block device (via lvm_get_device_type()).  If you look at
+pv_get_size(), it is depending on this to return FALSE if it is not a
+partitioned device type (which it never does now).
 
-Please wait until more experienced people comment this patch before using
-it.
+Running "cvs annotate tools/lib/lvm_check_partitioned_dev.c" shows that
+"akergon" is in the hot seat now (having re-written 90% of this file).
+What is probably needed is to move the unpartitioned devices code out
+from lvm_check_dev() into another helper function, which can be called
+from lvm_check_dev(), lvm_check_partitioned_dev(), lvm_partition_count(),
+and lvm_check_whole_disk_dev().
 
-Yves
+Then lvm_check_partitioned_dev() can return FALSE if it is a whole disk
+device, lvm_check_whole_disk_dev() will return TRUE, lvm_partition_count()
+should probably return 1 for a whole disk device.
 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Bill Ellis
-> Sent: Thursday, October 04, 2001 6:16 PM
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] pvcreate fails on a software RAID metadisk
->
->
-> Hi,
->
-> I'm trying to set up lvm 1.01rc4 under a 2.4.10 kernel.  I'm getting an
-> error when I try to use pvcreate on a software RAID metadisk.  From the
-> '-v' output of pvcreate, it appears that pvcreate thinks my metadisk is
-> zero-length.
->
-> Here's an example:
->
-> root@tik-tok:~# pvcreate /dev/md7
-> pvcreate -- ERROR "parameter error" setting up  physical volume "/dev/md7"
->
-> root@tik-tok:~# pvcreate -v /dev/md7
-> pvcreate -- locking logical volume manager
-> pvcreate -- checking physical volume name "/dev/md7"
-> pvcreate -- getting physical volume size
-> pvcreate -- checking partition type
-> pvcreate -- creating new physical volume
-> pvcreate -- setting up physical volume for /dev/md7 with 0 sectors
-> pvcreate -- ERROR "parameter error" setting up  physical volume "/dev/md7"
->
-> root@tik-tok:~# pvcreate --version
-> pvcreate: Logical Volume Manager 1.0.1-rc4
-> Heinz Mauelshagen, Sistina Software  03/10/2001 (IOP 10)
-> root@tik-tok:~# cat /proc/mdstat | grep -A2 md7
-> md7 : active raid5 sde7[4] sdd7[3] sdc7[2] sdb7[1] sda7[0]
->       24575488 blocks level 5, 128k chunk, algorithm 0 [5/5] [UUUUU]
->
-> root@tik-tok:~# grep md7 /proc/partitions
->    9     7   24575488 md7
->
-> Any tips on what might be going on here would be appreciated...
->
-> Thanks,
-> Bill Ellis
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
