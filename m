@@ -1,9 +1,11 @@
-Return-Path: <michael_e_brown@dell.com>
-Date: Thu, 21 Dec 2000 09:02:52 -0600 (CST)
-From: Michael E Brown <michael_e_brown@dell.com>
-Subject: Re: [linux-lvm] vgextend segfaults (lvm 0.9, kernel test10)
-In-Reply-To: <20001220172301.A6448@sistina.com>
-Message-ID: <Pine.LNX.4.30.0012210901450.19797-100000@carthage.michaels-house.net>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200012212206.eBLM6qi00832@webber.adilger.net>
+Subject: Re: [linux-lvm] IOP selection scripts (was: '/etc/init.d/lvm' script
+ in debian package)
+In-Reply-To: <Pine.LNX.4.21.0012210820170.569-100000@scuzzlebutt.helllabs>
+ "from Claudio Matsuoka at Dec 21, 2000 08:28:26 am"
+Date: Thu, 21 Dec 2000 15:06:52 -0700 (MST)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,16 +18,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Gergely Tamas <dice@mfa.kfki.hu>
 
->
-> Do you have an eepro100 NIC?  If so, 2.2.17+ really doesn't work very well
-> with it.  I've been having no end of problems with that card, and in fact
-> replaced it today.
->
-Have you tried the e100 drivers from Intel? You might have different luck
-with them.
---
-Michael Brown
+Claudio writes:
+> On Wed, 20 Dec 2000, Andreas Dilger wrote:
+> > Is there ever a reason why you would want to install this program as
+> > "lvm-wrapper" anywhere?
+> 
+> I'm installing it as /sbin/lvm-wrapper and symlinking all utilities to it
+> (seems better than using one wrapper per tool).
+
+Why not simply install it as one of the commands (e.g. vgscan) and make
+hard links to it.  Hard links don't even take up inodes - only directory
+entries.
+
+> Regarding lvmiopversion, is it supposed to be statically linked? Otherwise,
+> it wouldn't know what liblvm link to, assuming that we have liblvm-iopX.so.
+
+Yes.  Basically, it is only a single ioctl call, so it is not dependent
+on the LVM version at all.  Compiled in tools as:
+
+gcc -I . -I lib -o lvmiopversion lvmiopversion.c lib/lvm_get_iop_version.c
+	lib/lvm_check_special.c
+
+and stripped it is only 4408 bytes on my system.
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
