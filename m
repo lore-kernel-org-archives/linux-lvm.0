@@ -1,27 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0GB8KO24002
-	for <linux-lvm@redhat.com>; Sun, 16 Jan 2005 06:08:20 -0500
-Received: from main.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0GB8EkJ021424
-	for <linux-lvm@redhat.com>; Sun, 16 Jan 2005 06:08:14 -0500
-Received: from list by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1Cq8GG-0005TP-00
-	for <linux-lvm@redhat.com>; Sun, 16 Jan 2005 12:08:08 +0100
-Received: from 195.25.40.253 ([195.25.40.253])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 16 Jan 2005 12:08:00 +0100
-Received: from bonfils by 195.25.40.253 with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 16 Jan 2005 12:08:00 +0100
-From: Bruno Bonfils <bonfils@fimasys.fr>
-Date: Sun, 16 Jan 2005 11:30:29 +0100
-Message-ID: <87wtudbr96.fsf@mononoke.fimasys.fr>
-References: <20050115132055.GA18967@hcsd.de>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: Kernel bug with snapshots
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0I1ZZO07099
+	for <linux-lvm@redhat.com>; Mon, 17 Jan 2005 20:35:35 -0500
+Received: from ramjet.cs.umd.edu (ramjet.cs.umd.edu [128.8.129.57])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0I1ZT5j029189
+	for <linux-lvm@redhat.com>; Mon, 17 Jan 2005 20:35:29 -0500
+Message-ID: <63588.141.156.32.224.1106012124.squirrel@intranet.cs.umd.edu>
+Date: Mon, 17 Jan 2005 20:35:24 -0500 (EST)
+From: george@cs.umd.edu
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] couldn't find device with uuid ...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,27 +20,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Stephan Austerm=EF=BF=BDhle <au@hcsd.de> writes:
 
-> Hi,
-> in the last days I played around with Kernel 2.6.9, LVM2, and multiple
-> snapshots of the Logical Volume leading to some system freezes. The
-> Volume Group is setup on top of a mirrored device (md). I decided to
-> switch to kernel 2.6.11-rc1 with Device Mapper patches 2.6.10-udm1
-> (without patch 29) and test again.
+Hi,
 
-I had exactly the same bug with 2.6.10 + dm patch (without the first
-ones and the 29th)
+I have removed a logical volume from VolGroup00, and then added another
+physical volume, from another disk, to that same VolGroup00. After reboot,
+I can't use VolGroup00 anymore. No matter what I try to do, it says:
 
-Create a 50G volume, a first 10G snapshot, a second one few hours
-after. When i tried to lvremove the first snapshot, my kernel crash.
+Couldn't find device with uuid 'wx....' and VolGroup00 is unusable.
 
-> The lvremove instruction terminated with
-> 	Segmentation fault
+I removed the physical volume that i last added, but i still get:
 
---=20
-Bruno Bonfils
-Fimasys
+For example:
+> pvscan
+Couldn't find device with uuid '.....'
+  PV /dev/hda4      VG  VolGroup00   lvm2  [60.28GB/50.31GB free]
+  PV unknown device VG  VolGroup00   lvm2  [37.25GB/37.25GB free]
+  Total: 2 [97.53GB] / in use: 2 [97.53GB] / in no VG: 0 [0 ]
+
+I might have modified/removed a partition that was part of VolGroup00, but
+I am sure it didn't have any data on it. /dev/hda4 was holding all my
+data. Is there any chance that I can get VolGroup00 to work again?
+
+I am using:
+
+LVM version:     2.00.25 (2004-09-29)
+Library version: 1.00.19 (2004-07-03)
+Driver version:  4.1.2
+
+Thank you,
+
+George
