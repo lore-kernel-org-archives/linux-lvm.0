@@ -1,10 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Kernel v2.5
-Message-Id: <20011220210649.B17214@sistina.com>
-References: <20011220102704.A18963@lsc.hu>
+From: Friedrich Lobenstock <fl@fl.priv.at>
+Subject: Re: [linux-lvm] lvm in SuSE 7.3
+In-Reply-To: <20011220190739.GA8881@auctionwatch.com>
+Message-Id: <Pine.LNX.4.33.0112202109470.17095-100000@www.scotty.co.at>
 MIME-Version: 1.0
-In-Reply-To: <20011220102704.A18963@lsc.hu>; from gcs@lsc.hu on Thu,
-    Dec 20, 2001 at 10:27:04AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +13,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 20 14:07:02 2001
+Date: Thu Dec 20 14:13:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Dec 20, 2001 at 10:27:04AM +0100, GCS wrote:
-> Hi!
-> Anyone is working on the LVM support in 2.5.x? Everything is built fine,
-> except the LVM support in 2.5.1 (at least for me).
+On Thu, 20 Dec 2001 11:07, Petro wrote:
 
-Somebody on l-k claimed to take care of it.
-Will check..,
+> On Thu, Dec 20, 2001 at 10:12:21AM +0100, r.kahrl@web.de wrote:
+> >
+> > If i restart my system, LVM reports no volume group was found and
+> > starts vgchange. How can i remove this problem?
+>
+>     It's not really a "problem", but if the SUSE kernel loads everything
+>     modularly, then you could check your modules.conf file and see if
+>     it's loading LVM. If so get rid of that line.
 
-> Cheers, GCS
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+No that has nothing to do with modules. Look at this line from
+/etc/init.d/boot (this is from SuSE 7.1 but should apply 1:1 to 7.3)
+#
+# Find and activate volume groups (HM 1/1/1999)
+#
+if test -d /etc/lvmtab.d/ -a -x /sbin/vgscan -a -x /sbin/vgchange ; then
+    echo "Run file system check on root for LVM activation"
+    while read des fs type rest; do
+        case "$fs" in
+
+So if he get's rid of the /etc/lvmtab.d/, created by the lvm tools then
+the system will not try to activate LVM on boot.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+MfG / Regards
+Friedrich Lobenstock
