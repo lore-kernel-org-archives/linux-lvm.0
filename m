@@ -1,5 +1,5 @@
-Message-ID: <3B8FF12F.7050808@st-peter.stw.uni-erlangen.de>
-Date: Fri, 31 Aug 2001 22:18:55 +0200
+Message-ID: <3B900E92.7060607@st-peter.stw.uni-erlangen.de>
+Date: Sat, 01 Sep 2001 00:24:18 +0200
 From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] PBs with LVM over software RAID
@@ -19,9 +19,46 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-do you think i schould also try a kernel upgrade and/or LVm
-the XFS cvs tree should be till 2.4.10pre2 and sistina released lvm-1.0.1rc2
-and i'm with XFS cvs kernel-2.4.9 and lvm-1.0.1rc1 
+hi
+it works with IMB's JFS
+when i try mkfs -t reiserfs -f /dev/myData/SRC it segfaults :
+
+[root@svetljo mnt]# mkfs -t reiserfs -f /dev/myData/SRC
+mkreiserfs, 2001 - reiserfsprogs 3.x.0j
+===================================================================
+LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
+-------------------------------------------------------------------------------
+|###|type|ilen|f/sp| loc|fmt|fsck|                   
+key                      |
+|   |    |    |e/cn|    |   
+|need|                                            |
+-------------------------------------------------------------------------------
+Segmentation fault
+
+isn't that a bit strange that reiserfs and xfs doesn't handle it, but 
+jfs does
+
+and the one with ext2 :
+
+[root@svetljo mnt]# mkfs -t ext2 /dev/myData/SRC
+mke2fs 1.22, 22-Jun-2001 for EXT2 FS 0.5b, 95/08/09
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+786432 inodes, 1572864 blocks
+78643 blocks (5.00%) reserved for the super user
+First data block=0
+48 block groups
+32768 blocks per group, 32768 fragments per group
+16384 inodes per group
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912, 819200, 884736
+ 
+Writing inode tables: Segmentation fault
+
+i realy don't like that
+
 Andreas Dilger wrote:
 
 >On Aug 31, 2001  20:37 +0200, svetljo wrote:
