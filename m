@@ -1,11 +1,8 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] vgchange -a y /dev/System fails
-References: <20020125233533.GK26045@merlins.org>
-In-Reply-To: <20020125233533.GK26045@merlins.org>
+Message-Id: <3C5750DE.1BB0E94C@us.ibm.com>
+From: Mingming cao <cmm@us.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16ViXz-0001vP-00@hermes.sistina.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Failed to build 2.5.3-pre6 kernel---undefined lvm_get_blksize()
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,39 +13,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 29 18:25:01 2002
+Date: Tue Jan 29 19:50:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com, mge@sistina.de
 
-A little while ago I had the same problems - the only way i could get around 
-it  was using 2.4.16-xfs.  I was using 2.4.17-xfs+lvm (1.0.1) and when a 
-snapshot failed I couldn't remove it and when I rebooted the system would 
-hang.  By having a 2.4.16-xfs kernel with lvm-1.0.1rc4(ish) it would fix the 
-problems on the fly during bootup and all was happy.  YMMV  At the time I did 
-ask the mailling list why 2.4.16-xfs was more robust than 2.4.17-xfs+lvm; 
-however, I never recieved an answer.
+Hello, Heinz,
 
-Heady
+While I am trying to build the 2.5.3-pre6 kernel,  I met this error:
+......
 
-On Sat, 26 Jan 2002 09:35, you wrote:
-> It fails and says:
-> parameter error setting up snapshot copy on write exception
->
-> So yes, I have  snapshots in there, but I can't delete  the snapshots if
-> the volume isn't active, and I can't activate the volume because of a
-> snapshot.
->
-> To make things worse, /dev/System contains /usr and /var.
->
-> The snapshots were created with 1.0.1rc4 on 2.4.14 and I now run 2.4.17
-> with 1.0.1rc4-ish
->
-> What's the magic override I need to use to make the volume active again?
->
-> Thanks
-> Marc
+         drivers/base/base.o drivers/char/char.o drivers/block/block.o
+drivers/misc/misc.o drivers/net/net.o drivers/media/media.o
+drivers/char/agp/agp.o drivers/char/drm/drm.o drivers/ide/idedriver.o
+drivers/scsi/scsidrv.o drivers/cdrom/driver.o
+drivers/sound/sounddrivers.o drivers/pci/driver.o
+drivers/pcmcia/pcmcia.o drivers/net/pcmcia/pcmcia_net.o
+drivers/pnp/pnp.o drivers/video/video.o drivers/usb/usbdrv.o
+drivers/md/mddev.o \
+        net/network.o \
+        --end-group \
+        -o vmlinux
+drivers/md/mddev.o: In function `lvm_user_bmap':
+drivers/md/mddev.o(.text+0x1182): undefined reference to
+`lvm_get_blksize'
+make: *** [vmlinux] Error 1
+......
 
+
+I could not found the body of function lvm_get_blksize() in the source
+code. This also happened in 2.5.2.
+
+Thanks,
 -- 
-Adrian Head
-
-(Public Key available on request.)
+Mingming Cao
+IBM Linux Technology Center
+503-578-5024  IBM T/L: 775-5024
+cmm@us.ibm.com
+http://www.ibm.com/linux/ltc
