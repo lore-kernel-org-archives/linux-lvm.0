@@ -1,8 +1,8 @@
-Message-ID: <015901c24ab8$f9c04340$162ea8c0@pike>
-From: "Davide Di Luzio" <davide@umts-news.it>
+Message-ID: <01ef01c24ac6$86fc58e0$162ea8c0@pike>
+From: "Davide Di Luzio" <davide@connettendo.it>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0156_01C24AC9.BCDE1C70"
+	boundary="----=_NextPart_000_01EC_01C24AD7.4A4057B0"
 Subject: [linux-lvm] pvmove failed
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,13 +14,13 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 23 10:23:02 2002
+Date: Fri Aug 23 12:00:02 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0156_01C24AC9.BCDE1C70
+------=_NextPart_000_01EC_01C24AD7.4A4057B0
 Content-Type: text/plain;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -304,7 +304,7 @@ ALICOM Group     Tel: +39-085-4406901     Fax: +39-085-4406927
 
 
 
-------=_NextPart_000_0156_01C24AC9.BCDE1C70
+------=_NextPart_000_01EC_01C24AD7.4A4057B0
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -317,6 +317,7 @@ charset=3Diso-8859-1">
 <STYLE></STYLE>
 </HEAD>
 <BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>
 <DIV><FONT face=3DArial size=3D2>
 <DIV><FONT face=3DArial size=3D2>Hello,</FONT></DIV>
 <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
@@ -839,6 +840,7 @@ device; how can i do this ?<BR></DIV>
 <DIV>&nbsp;</DIV>
 <DIV>&nbsp;</DIV>
 <DIV>&nbsp;</DIV>
-<DIV>&nbsp;</DIV></FONT></DIV></FONT></FONT></DIV></BODY></HTML>
+<DIV>&nbsp;</DIV></FONT></DIV></FONT></FONT></DIV></FONT></DIV></BODY></H=
+TML>
 
-------=_NextPart_000_0156_01C24AC9.BCDE1C70--
+------=_NextPart_000_01EC_01C24AD7.4A4057B0--
