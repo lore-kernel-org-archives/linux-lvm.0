@@ -1,20 +1,22 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i8R0Ugin023444
-	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 01:30:42 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1CBjPe-000427-8T
-	for linux-lvm@redhat.com; Mon, 27 Sep 2004 01:30:42 +0100
-Date: Mon, 27 Sep 2004 01:30:42 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] which files, which physical volumes?
-Message-ID: <20040927003042.GO11810@agk.surrey.redhat.com>
-References: <41538691.2040807@myself.gen.nz>
-	<20040924061754.GD13943@percy.comedia.it>
-	<4153BF33.6030008@myself.gen.nz>
-	<20040926202757.GG32455@omnifarious.org>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8RAMxr13659
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 06:22:59 -0400
+Received: from gateway.unetix.nl (a213-84-10-61.adsl.xs4all.nl [213.84.10.61])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8RAMu6D000926
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 06:22:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by gateway.unetix.nl (Postfix) with ESMTP id C53801F8FC2
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 12:22:50 +0200 (CEST)
+Received: from [192.168.253.129] (unknown [192.168.253.129])
+	by gateway.unetix.nl (Postfix) with ESMTP id B490A1F8FC2
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 12:22:50 +0200 (CEST)
+From: Wim Bakker <wim@unetix.nl>
+Date: Mon, 27 Sep 2004 12:22:55 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20040926202757.GG32455@omnifarious.org>
+Message-Id: <200409271222.55865.wim@unetix.nl>
+Subject: [linux-lvm] Devive mapper compile error
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,40 +28,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Sun, Sep 26, 2004 at 01:27:57PM -0700, Eric Hopper wrote:
-> But, since pvmove doesn't seem to work yet, I
+System is slackware 10, gcc 3.4.0
+compiling device-mapper (both 1.00.18 and 1.00.19) give the following error:
+--------------------------------------------------------------
+ioctl/libdm-iface.c: In function `_flatten':
+ioctl/libdm-iface.c:924: error: invalid application of `sizeof' to an 
+incomplete type
+ioctl/libdm-iface.c:982: error: dereferencing pointer to incomplete type
+ioctl/libdm-iface.c:983: error: dereferencing pointer to incomplete type
+make[1]: *** [ioctl/libdm-iface.o] Error 1
+---------------------------------------------------------------
 
-pvmove does work, but I am aware of the following restrictions 
-if you want to avoid the risk of freezing:
+What might be causing this?
 
-  You must not disable o_direct when configuring;
-    [I've heard some distributions/architectures may do this]
-  You must not set log activation to 1 in the config file;
-    [That settings's only needed for a particular sort of debugging]
-  You must not pvmove a filesystem that lvm itself uses directly;
-    [For 2.6.8 kernels, version 2.00.24 (if compiled against up-to-date 
-    headers that define O_NOATIME correctly) is reported to improve 
-    things substantially in this case; for 2.4 a kernel patch
-    doing something similar gets applied by default.]
-  Don't try to mix snapshots with pvmove [untested].
-  I have also not tested with udev, nor with md underneath PVs.
 
-Also:
-  The allocation algorithm is as yet unable to break up contiguous 
-  space: you still have to break it up yourself if it doesn't find 
-  enough contiguous space. [e.g. pvmove /dev/hda:100-199]
-
-  Test mode works a different way in LVM2 - it's designed for testing
-  and simply disables all writes at the lowest level of the code 
-  (to guarantee safety) - but reports success to the calling function.  
-  Many code paths don't yet say 'stop here if this is test mode' so
-  they stop instead with an error when they find an inconsistency
-  because they thought they changed something, but it got read back
-  unchanged.
-
-Alasdair
--- 
-agk@redhat.com
+TIA
+Wim Bakker
