@@ -1,9 +1,7 @@
-From: "SI Reasoning" <si@si.homelinux.org>
-Subject: Re: [linux-lvm] raid and lvm
-Message-ID: <20030128.rVq.68055000@dl380.home.network>
+From: Alexander Lazarevich <alazarev@itg.uiuc.edu>
+Message-ID: <Pine.LNX.4.44.0301281418370.5767-100000@zeus.itg.uiuc.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
+Subject: [linux-lvm] resize LV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,60 +12,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 28 12:55:02 2003
+Date: Tue Jan 28 14:44:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux LVM Sistina <linux-lvm@sistina.com>
 
-maybe I am misunderstanding. I was looking to do software raid (off of a non-raid
-SCSI controller.)
-The main reason I wanted raid5 was as a failsafe measure since it would appear
-that things can get tricky if a harddrive fails in lvm. Is there another way to
-create a failsafe through lvm without needing to implement software raid?
+I've got a RedHat linux 7.3 system, running LVM 1.03 (or whatever comes 
+with the 7.3 distribution). This system is our fileserver. It is patched 
+and uses the 2.4.18-19.7.xsmp kernel. I've got one volume group (homevg), 
+with 2 LV's in that group (/dev/homevg/stafflv and /dev/homevg/userslv). 
+The filesystem on /dev/homevg/userslv need to be expanded by 50GB. There 
+are plenty of free PE's left in homevg, more than 126GB.
 
-Christophe Saout (christophe@saout.de) wrote*:
->
->Am Die, 2003-01-28 um 18.34 schrieb SI Reasoning:
->
->> I was following an old list and at that time they felt that it would be
->> more efficient to merge either lvm into raid or vice-versa.
->
->Yes. I've looked into the DM code in the kernel and I have to say it's a
->very clean architecture. Since LVM2 needs some kind of Raid 0 (a
->transparent mirror in the background) to implement pvmove it would be a
->code duplication.
->
->Also since DM has a nice plugin architecture and already has generic bio
->splitting code, it would even save some memory when the raid drivers
->would be reimplemented as DM plugins. (so the bloat argument doesn't
->count)
->
->Also you don't need the extra meta data the raid code actually has (ok,
->raid autodetection won't work anymore but as far I understand the kernel
->developers, that's depracted anyway). I've had problems with the raid
->metadata code that could have been solved with things like vgexport and
->vgimport.
->
->But I think that's going to be adressed via the new in-kernel
->initramdisk anyway.
->
->And I think that the performance is better when raid is implemented in
->DM than to run one device mapper over another one.
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I know how to expand the LV while the LV is mounted, piece of cake 
+(lvextend -L+50GB /dev/homevg/userslv - expands userslv by 50GB). But how 
+do I expand the filesystem while it is mounted? I don't want to 
+umount the filesystem down to do this.
 
---
-SI Reasoning
-si@mindspring.com
-gpg public key ftp://ftp.p-p-i.com/pub/si-mindspring-pubkey.asc
+The filesystem is an ext3 filesystem. Can I use resize2fs? The man pages 
+for resize2fs say nothing about doing it while the filesystem is mounted, 
+so I'm assuming I can't. If not, is there some other command that does it 
+while the filesystem is online?
 
-The significant problems we face cannot be solved by
-the same level of thinking that created them.
--Albert Einstein
+If I need a kernel patch/recomplile while will allow me to perform 
+filesystem resizes while that filesystem is up thats fine, please let me 
+know what the patch is. I need it big time, and I should have figured it 
+out before I brought the system online! ack!
+
+Thanks in advance!
+
+Alex
+---                                                        ---
+   Alex Lazarevich | Systems | Imaging Technology Group
+   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
+---                                                        ---
