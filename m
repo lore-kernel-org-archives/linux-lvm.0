@@ -1,25 +1,46 @@
-Date: Thu, 13 Apr 2000 00:35:11 +0200
-From: bert hubert <ahu@ds9a.nl>
-Subject: Re: [linux-lvm] Re: converting a filesystem to a logic volume
-Message-ID: <20000413003511.B7222@home.ds9a.nl>
-References: <20000412211453.C21004@vestdata.no>
-Mime-Version: 1.0
+Date: Wed, 12 Apr 2000 23:46:56 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] LVM viewer / manager APP
+In-Reply-To: <20000412205600.B21004@vestdata.no>
+Message-ID: <Pine.LNX.4.21.0004122343370.4400-100000@fogarty.spin.ie>
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20000412211453.C21004@vestdata.no>; from lvm@ragnark.vestdata.no on Wed, Apr 12, 2000 at 09:14:53PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
+To: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Cc: linux-lvm@msede.com
 
-On Wed, Apr 12, 2000 at 09:14:53PM +0200, Ragnar Kj=EF=BF=BDrstad wrote:
+Is this the Veritas LVM/Veritas vxfs GUI thingy?
 
-> This will only work assuming that LVM does not have to store any
-> metadata on every PV. Does it?
+To whoever is writing the linux LVM gui:
 
-AFAIK it does..
+Please please look very carefully at those screenshots. Then make
+sure yours looks nothing like it. The Veritas GUI (as i've
+experienced it in Unixware 7) is the worst POS ever.
+
+I had a course in Unixware and even the instructor couldn't get it to
+work. (and he knew his stuff).
+
+yuk.. please avoid it like the plague.
+
+
+On Wed, 12 Apr 2000, Ragnar Kj=EF=BF=BDrstad wrote:
+
+  Hi
+ =20
+  I made some screenshots of vxva available at
+  http://www.stud.ntnu.no/~ragnarkj/download/vxva
+ =20
+ =20
+ =20
 
 --=20
-                       |              http://www.rent-a-nerd.nl
-                       |                     - U N I X -
-                       |          Inspice et cautus eris - D11T'95
+Paul Jakma	paul@clubi.ie
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+In Pierre Trudeau, Canada has finally produced a Prime Minister worthy of
+assassination.
+		-- John Diefenbaker
