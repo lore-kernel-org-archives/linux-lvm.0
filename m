@@ -1,11 +1,11 @@
-Date: Thu, 6 Sep 2001 13:15:58 -0400
-From: Wayne Topa <wtopa@dmcom.net>
-Subject: Re: [linux-lvm] Debian apt-get link problem
-Message-ID: <20010906131558.A723@dmcom.net>
-References: <20010827114957.A23458@dmcom.net> <20010830141259.E22755@dmcom.net> <20010901003241.B1210@wookimus.net> <20010901095643.A7188@dmcom.net> <20010904110319.A1028@sistina.com>
+Date: Thu, 6 Sep 2001 19:52:51 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Root on LV
+Message-ID: <20010906195251.A20643@colombina.comedia.it>
+References: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu> <3B978B57.8000208@st-peter.stw.uni-erlangen.de> <20010906093729.R32553@turbolinux.com> <3B97A5DB.8000203@st-peter.stw.uni-erlangen.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010904110319.A1028@sistina.com>
+In-Reply-To: <3B97A5DB.8000203@st-peter.stw.uni-erlangen.de>; from galia@st-peter.stw.uni-erlangen.de on Thu, Sep 06, 2001 at 06:35:39PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,34 +21,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-AJ Lewis(lewis@sistina.com) is reported to have said:
-> On Sat, Sep 01, 2001 at 09:56:43AM -0400, Wayne Topa wrote:
-> > ^chewie(chewie@wookimus.net) is reported to have said:
-> > > On Thu, Aug 30, 2001 at 02:12:59PM -0400, Wayne Topa wrote:
-> > > > >   I just tried the link 
-> > > > > ( deb ftp://ftp.sistina.com/pub/LVM/binaries/debian unstable main )
-> > > 
-> > > I hate to state the obvious, but apt does not Debian make.  Try
-> > > manually downloading the *.deb files and installing them manually with
-> > > dpkg -i <pkg.deb>.
-> > 
-> > Thanks.  Yes that is what I did do, but when both the docs had the
-> > apt-get sources address, which didn't work, I thought I was doing
-> > something wrong.  I don't rely on .deb files, just use apt-get when
-> > there are files available.
-> 
-> I've removed the info about using apt-get from the README.Debian on the ftp
-> site.  The HowTo no longer contains this information.  Sorry for the
-> confusion.  :(
+On Thu, Sep 06, 2001 at 06:35:39PM +0200, svetljo wrote:
+> Andreas Dilger wrote:
+> >Yes, you are wrong.  LILO+patch can get a kernel from a logical volume.
+> does this mean that i can have my kernel on LV of any type ( can i have 
+> it on striped one)
+> i think i have read some time ago that lilo can boot from linear RAID or 
+> RAID1 but not from RAID-0
+NO!!!!
+lilo uses your pc bios to boot, it cannot do anything fancy,
+it just reads from a disk into memory then jumps there.
 
-Thanks for the reply. 
+in order to boot kernel lilo needs to store a mapfile on
+the /boot fs, the disk offset of this file is stored in
+lilo 1-st stage loader a 512 byte program, and you cannot read
+a striped lv from a 512 byte proggie yet.
 
-Good Idea to remove the link, I think.
+L.
 
-BTW, that a great HowTo!
-
-Wayne
 -- 
-For any problem there is a solution that is simple, quick, and
-ultimately worse than the problem.
-_______________________________________________________
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
