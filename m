@@ -1,74 +1,60 @@
-Date: Sat, 11 Nov 2000 13:12:41 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] How to change physical extent size
-Message-ID: <20001111131241.E32147@srv.t-online.de>
-Reply-To: Mauelshagen@sistina.com
-References: <3A0BEA91.EA8FF865@topo.ucl.ac.be>
+From: Jesse Sipprell <jss@evcom.net>
+Date: Sat, 11 Nov 2000 08:46:02 -0500
+Subject: [linux-lvm] LVM in shared parallel SCSI environment
+Message-ID: <20001111084602.B26544@kevorkian.evcom.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3A0BEA91.EA8FF865@topo.ucl.ac.be>; from sibomana@topo.ucl.ac.be on Fri, Nov 10, 2000 at 01:31:13PM +0100
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Merence Sibomana <sibomana@topo.ucl.ac.be>
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
+Hi all,
 
-Hi M�rence.
+I'm currently in the process of planning a large(ish)-scale Linux deployment.
+As part of the planning process, I am considering using LVM in a shared SCSI
+environment; potentially with GFS as the file system in the future, but
+starting with ext2.
 
-On Fri, Nov 10, 2000 at 01:31:13PM +0100, Merence Sibomana wrote:
-> I'am new to this mail list and sorry if the question has already been
-> answered.
-> 
-> In the FAQs, I find this :
-> 	10. Why are my logical volumes limited to 256 GB in size? 
->  
-> 	This is NO absolute limit but it depends on the physical extent size
-> you configured at
-> 	volume group creation time. 
-> 	Please use option -s of the vgcreate command to give a larger physical
-> extent size.
-> 	For example with a physical extent size of 524288 KB (512 MB) you are
-> able to map a logical
-> 	volume of 32 Terabyte. Remember that current Linux kernels are limited
-> to 1 Terabyte.
-> 
-> I have created a VG without -s. vgcreate doesn't accept an existing VG
-> as argument. 
-> How can I delete it and recreate with -s?
+To that end I have a test "cluster" set up.  It consists of:
 
+One Winchester Systems OpenRAID chassis with 100GB total storage, running in
+RAID5.  The OpenRAID is a SCSI-to-SCSI solution, with four host SCSI channels.
+The hardware can be configured so that the channels can share physical storage
+space.
 
-The following steps are necessary:
+Four test Linux boxes, each with a small (9GB) boot/root/swap/emergency SCSI
+disk.  Obviously, the four boxes are connected to the four host channels on
+the OpenRAID.
 
-- remove all Logical Volumes of the Volume Group in question with lvremove(8).
-- do a vgreduce(8) on that VG.
-- "vgchage -an" on that VG
-- vgremove that VG
-- setup the VG with large PE size (vgcreate -s PE_SIZE)
+The OpenRAID is configured such that all available disk space is visable
+identically to the servers.  Obviously, because the initial test uses ext2
+instead of a filesystem that supports shared media (i.e. GFS), we won't be
+actually sharing filesystems between boxes.  However, LVM seemed like a pretty
+good potential in this situation because it allows for relatively dynamic
+allocation of storage from a large shared "pool."  The catch, as with all
+shared SCSI solutions, is that each participating host must maintain a
+consistant view of LVM metadata.
 
-A more "brutal" approach is:
-- "vgchange -a n" on the VG
-- "pvcreate -ff" on all its PVs
-- setup the VG with large PE size (vgcreate -s PE_SIZE)
+So far, it's been fairly successful.  Once the vg and lvs are created, and each
+host has meta in core, all is well.  The only problem I am seeing is when an
+lv (for example) is extended or reduced, the other systems are unaware of the
+change in LVM metadata.  This makes sense of course, because each host is
+operating with it's own "notion" of the LVM in core.  The solution is rather
+awkward; one has to unmount all LVM filesystems on each host, vgchange the vg
+to inactive, vgchange it back to active and then remount the filesystems.
 
-
-> ___
-> M�rence Sibomana
-> PET laboratory, UCL
-> Phone : +32 10 473096
-
--- 
+My question is this:  Is there any way to "refresh" the in-core metadata from
+disk?  If not, does anyone think this might be a good idea for the future?
 
 Regards,
-Heinz      -- The LVM guy --
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+Jesse Sipprell
+Technical Operations Director
+Evolution Communications, Inc.
+800.496.4736
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+* Finger jss@evcom.net for my PGP Public Key *
