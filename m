@@ -1,11 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Mon, 21 May 2001 14:58:02 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Working together
-Message-ID: <20010521145802.B10599@sistina.com>
-References: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com> <20010518162704.A26391@sistina.com> <20010519224406.A18152@ultraviolet.org>
-Mime-Version: 1.0
-In-Reply-To: <20010519224406.A18152@ultraviolet.org>; from treed@ultraviolet.org on Sat, May 19, 2001 at 10:44:06PM -0700
+Return-Path: <tmdg@uksr.hp.com>
+Message-ID: <3B09204F.DEBB31E@uksr.hp.com>
+Date: Mon, 21 May 2001 14:03:59 +0000
+From: Tom Dawes-Gamble <tmdg@uksr.hp.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Problems: reiserfs lvm as /
+References: <01051916333601.00791@mama> <3B082B2E.A0EB9C96@tls.msk.ru> <01052113223000.01413@mama>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,42 +18,61 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, May 19, 2001 at 10:44:06PM -0700, Tracy R Reed wrote:
-> On Fri, May 18, 2001 at 04:27:04PM +0000, Heinz J. Mauelshagen wrote:
-> > We are discussing your points internally and will answer in detail ASAP.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+
+Peter Kirk wrote:
 > 
-> Why not discuss it publically?
-
-That will happen soon anyway.
-Thanks in advance for your patience.
-
-Regards,
-Heinz    -- The LVM Guy --
-
+> I have put my .config on the end, maybe some of you know what is
+> misconfigured.
 > 
-> I must say that I am quite impressed with IBM actually putting their code
-> where their mouth is. I would really hate to see two more competing
-> factions in the Linux community.
+> Thanks in advance
 > 
-> -- 
-> Tracy Reed      http://www.ultraviolet.org
-> Hacker's reply to Shared Source: "Well, that sounds like a pretty good deal.
-> But I think I may have a better one. How about, I give you the finger... and
-> you give me my GPL?"
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+========= Snip lots os stuff ==============
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> # CONFIG_BLK_DEV_DAC960 is not set
+> CONFIG_BLK_DEV_LOOP=m
+> # CONFIG_BLK_DEV_NBD is not set
+> # CONFIG_BLK_DEV_RAM is not set
+> # CONFIG_BLK_DEV_INITRD is not set
+> 
+> #
+> # Multi-device support (RAID and LVM)
+> #
+> CONFIG_MD=y
+> # CONFIG_BLK_DEV_MD is not set
+> # CONFIG_MD_LINEAR is not set
+> # CONFIG_MD_RAID0 is not set
+> # CONFIG_MD_RAID1 is not set
+> # CONFIG_MD_RAID5 is not set
+> CONFIG_BLK_DEV_LVM=m
+> 
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+============= Snip even more =============================
+
+
+It looks to me like youhave not configured any RAM disk stuff.
+
+CONFIG_BLK_DEV_RAM=y
+CONFIG_BLK_DEV_INITRD=y
+
+Is what I have in my config
+
+Tom.
+
+- -- 
+char  *t,*n,*i="%.9s%.7s%.7s\n";extern void exit(int);extern int printf(const 
+char  *,...);int main(){int v=*i,g,e=*(i-~(v/=v))%*(i+v);g=*i+~e--; 
+t=n="  DISPLAY'tmdg@uksr';,,;'.hp.com'*>"+g;v=g-e;  e-=printf(i,n- v,e+n,t);
+t=n="  DISPLAY'http://www.itrc.hp.com/' *>"-~g;exit(g+~printf(i,n+~v,e+n,t));}
+
+-----BEGIN PGP SIGNATURE-----
+Version: PGP 6.5.1i
+
+iQA/AwUBOwkgTgbfKggmajr3EQLVAACfRFYkdfNE0ZCi71UCJMCL6Njg9GgAoJjS
+u/JE/sEL49bwcmr7Oej2oO4b
+=zv1q
+-----END PGP SIGNATURE-----
