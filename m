@@ -2,7 +2,7 @@ content-class: urn:content-classes:message
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Subject: RE: [linux-lvm] Recovering from a hard crash
-Message-ID: <8075D5C3061B9441944E137377645118012E6C@cinshrexc03.shermfin.com>
+Message-ID: <8075D5C3061B9441944E1373776451180F06F7@cinshrexc03.shermfin.com>
 From: "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,20 +14,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 24 13:16:01 2003
+Date: Mon Feb 24 14:14:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: Christian Limpach <chris@pin.lu>, linux-lvm@sistina.com
 
-Would I then use LVM striping across md[0-9] to get the same effect?
-The reason that this box is configured in such a way is because we want
-the redundancing of RAID1 and the speed of RAID0 (hence RAID10).  Will
-LVM striping give the same performance lift as using Linux RAID0?
+Also, can anyone see any harm in me modifying the source for vgscan to
+skip /dev/md0 since it will never actually be used in a volume group
+outside of the RAID0 stripe on top of it?  Would I have to modify any
+other commands to make sure that I don't run into any trouble?
 
-Also, will the device mapper and LVM2 patches work against a Red Hat
-kernel and are they stable enough to run in a production environment?
-
-Thanks for your help,
+Thanks,
 Andy.
 
 -----Original Message-----
