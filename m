@@ -1,10 +1,10 @@
-Date: Fri, 5 Oct 2001 09:05:22 +0200
+Date: Fri, 5 Oct 2001 09:08:10 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] What have I done!?
-Message-ID: <20011005090522.A1245@sistina.com>
-References: <009401c14cc3$c63106c0$836788cf@industry> <009501c14cc7$2f5cd360$836788cf@industry> <20011004113309.E31061@turbolinux.com> <30980000.1002218241@dizzy>
+Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
+Message-ID: <20011005090810.B1245@sistina.com>
+References: <20011004223343.A868@balu.kawo2.rwth-aachen.de>
 Mime-Version: 1.0
-In-Reply-To: <30980000.1002218241@dizzy>; from lembark@wrkhors.com on Thu, Oct 04, 2001 at 12:57:21PM -0500
+In-Reply-To: <20011004223343.A868@balu.kawo2.rwth-aachen.de>; from mdobel@kawo2.rwth-aachen.de on Thu, Oct 04, 2001 at 10:33:43PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,38 +20,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Oct 04, 2001 at 12:57:21PM -0500, Steven Lembark wrote:
-> 
-> 
-> -- Andreas Dilger <adilger@turbolabs.com>
-> 
-> >> Is there a way that I can blow the whole thing away and start over?  I
-> >> think I've screwed things up too badly to try to resurrect them.  I'd
-> >> really like to blow it all away and start over and see if this stuff
-> >> happens again, but again I can't use the lv* tools to remove the
-> >> configurations because of the errors I mention in my initial post so I
-> >> need a manual way to blow away the entire LVM configuration and start
-> >> from scratch again.
-> >
-> > "pvcreate -ff" I think
-> 
-> If you really want to wipe things clean:
-> 
->     (1) vgexport /dev/vgname; # avoids collisions w/ stale config info.
->     (2) for disk in your disks here; do pvcreate -ff $disk; done;
-> 
-> The export isn't strictly necessar:  rm -rf and a vgscan should do the
-> same basic thing with a few nastygrams added in.  Personally, I get
-> enough nastygrams to prefer avoiding a few more :-)
+Markus,
 
-I'm curious: which ones are thouse?
+go without optimization "-O0" rather than "-O2" in LVMs configure stript
+*or* with gcc 2.95.2.
 
+On Thu, Oct 04, 2001 at 10:33:43PM +0200, Markus Dobel wrote:
+> Hi,
+> 
+> vgextend, vgreduce and lvextend segfaulted for me today, too. I'm using 
+> 
+>   gcc version 2.96 20000731 (Red Hat Linux 7.1 2.96-95)
+> 
+> which I guess is the reason for those problems.
+> 
+> For vgextend/vgreduce gdb told me, that in vg_extend_reduce "vg_name"
+> pointed to 0x1. So i did a little debugging and therefore also
+> inserting the line:
+> 
+> int vg_extend ( char *vg_name, pv_t *pv, vg_t *vg) {
+>    printf("VG Name is %s\n",vg_name ); // this one
+>    return vg_extend_reduce ( vg_name, pv, vg, VG_EXTEND);
+> }
+> 
+> in vg_extend_reduce.c, the same in vg_reduce(). Without changing
+> anything else, vgextend and vgreduce work for me now.
 > 
 > 
-> --
-> Steven Lembark                                               2930 W. Palmer
-> Workhorse Computing                                       Chicago, IL 60647
->                                                             +1 800 762 1582
+> Similar in lv_extend_reduce.c:
+> 
+> int lv_extend ( vg_t *vg, lv_t *lv, char *lv_name) {
+>    printf("Extending %s\n", lv_name); // added this line.
+>    return lv_extend_reduce ( vg, lv, lv_name, LV_EXTEND);
+> }
+> 
+> I don't speak C too fluently, and I don't know if printf() does some
+> implicit casting or something or if it's gcc 2.96, but maybe this
+> information helps a bit in finding the mistake.
+> 
+> Regards, Markus
+> 
+> -- 
+> Spiegel-Leser wissen mehr. Fuer ein Semester-Abo!
+> http://www.kawo2.rwth-aachen.de/~mdobel/semesterabo.html
 > 
 > _______________________________________________
 > linux-lvm mailing list
