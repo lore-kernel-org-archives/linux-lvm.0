@@ -1,14 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4VMXK026176
-	for <linux-lvm@redhat.com>; Mon, 31 May 2004 18:33:20 -0400
-Date: Tue, 1 Jun 2004 00:33:09 +0200
-From: Michel Wilson <michel@crondor.net>
-Message-ID: <20040531223309.GA7657@aeon.hgd.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 + pvmove + no warning
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i51GaI001457
+	for <linux-lvm@redhat.com>; Tue, 1 Jun 2004 12:36:18 -0400
+Received: from mail.shadowconnect.com ([213.239.201.226])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i51GaGi5007944
+	for <linux-lvm@redhat.com>; Tue, 1 Jun 2004 12:36:17 -0400
+Received: from pd9e0a27b.dip.t-dialin.net ([217.224.162.123]
+	helo=[192.168.1.52])
+	by mail.shadowconnect.com with asmtp (TLSv1:AES256-SHA:256)
+	(Exim 4.34) id 1BVCFH-0002Gy-Qp
+	for linux-lvm@redhat.com; Tue, 01 Jun 2004 18:36:12 +0200
+Message-ID: <40BCB207.7090404@shadowconnect.com>
+Date: Tue, 01 Jun 2004 18:42:47 +0200
+From: Markus Lidel <Markus.Lidel@shadowconnect.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="------------050900030703020200080905"
+Subject: [linux-lvm] [PATCH] to create a PV on a I2O RAID array
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,56 +25,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+To: linux-lvm@redhat.com
 
-
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is a multi-part message in MIME format.
+--------------050900030703020200080905
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
 
 Hello,
 
-I just tried to move some volume group of mine from one harddisk to
-another, using pvmove, just like I did before when using LVM1, only to
-discover that pvmove is actually not supported.
-The very big problem I have with this is that pvmove did not tell me
-*ANYTHING* at all about it not being supported. It happily started
-creating a snapshot on the first lv in the vg (being my /home partition
-of all things), spewed a boatload of errors about ioctl cmd 9 not being
-supported and b0rked out leaving the complete volume group inaccessible.
-After a hard reset the volume group did not even mount, and the vg
-appeared to be somewhat borked as well. Luckily, I was able to recover
-all the data on the volume group.
-But, what bugs me very much after this episode: I discovered posts on a
-mailing list dated as far back as 11/02 stating that pvmove was 'not yet
-implemented' in LVM2. But, why is there not a *SINGLE* warning included
-in the pvmove tool about this?? Especially as I do not seem to be the
-first one who got caught with this! It seems to me that, at the very
-least, a warning should be included. An even better solution would be to
-just not enable and/or install pvmove by default, because it isn't even
-supported.
+attached is a patch, which makes it possible to create a PV on a I2O 
+RAID array.
 
-Kind regards,
+For further questions feel free to contact me.
 
-Michel Wilson.
 
-(please cc any replies directly to me, as I'm not subscribed to the
-list)
---=20
-Michel Wilson     michel@crondor.net
-PGP key ID        0xD2CB4B7E
+Best regards,
 
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature
-Content-Disposition: inline
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
+Markus Lidel
+------------------------------------------
+Markus Lidel (Senior IT Consultant)
 
-iD8DBQFAu7KlL2ru+9LLS34RAt9WAJ4xpyhYb25paxo1qgNQFD504slr/ACgmAhK
-csv5RtErOyKWGMUTiZkmbos=
-=S5ZN
------END PGP SIGNATURE-----
+Shadow Connect GmbH
+Carl-Reisch-Weg 12
+D-86381 Krumbach
+Germany
 
---Kj7319i9nmIyA2yE--
+Phone:  +49 82 82/99 51-0
+Fax:    +49 82 82/99 51-11
+
+E-Mail: Markus.Lidel@shadowconnect.com
+URL:    http://www.shadowconnect.com
+
+
+--------------050900030703020200080905
+Content-Type: text/x-patch;
+ name="lvm2-i2o.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="lvm2-i2o.patch"
+
+diff -ur LVM2.2.00.15/lib/filters/filter.c LVM2.2.00.15.new/lib/filters/filter.c
+--- LVM2.2.00.15/lib/filters/filter.c	2004-04-14 19:33:51.000000000 +0200
++++ LVM2.2.00.15.new/lib/filters/filter.c	2004-05-07 04:13:01.534026664 +0200
+@@ -54,6 +54,7 @@
+ 	{"ataraid", 16},	/* ATA Raid */
+ 	{"drbd", 16},		/* Distributed Replicated Block Device */
+ 	{"power2", 16},		/* EMC Powerpath */
++	{"i2o_block", 16},	/* I2O block disk */
+ 	{NULL, 0}
+ };
+ 
+
+--------------050900030703020200080905--
