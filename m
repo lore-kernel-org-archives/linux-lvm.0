@@ -1,13 +1,10 @@
-Return-Path: <lda@winux.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <14995.16871.694699.166774@nv.winux.com>
-Date: Tue, 20 Feb 2001 23:19:51 -0500
-From: lvm@winux.com
-In-Reply-To: <20010220224907.D21281@srv.sistina.com>
-References: <20010220224907.D21281@srv.sistina.com>
-From: lvm@winux.com
-Subject: [linux-lvm] snapshot of Reiserfs
+Return-Path: <josv@osp.nl>
+Date: Tue, 20 Feb 2001 13:03:03 -0800
+From: Jos Visser <josv@osp.nl>
+Message-ID: <20010220130303.A505@jadzia>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Stripe size of 2K allowed?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,20 +17,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Heinz J. Mauelshagen writes:
-> ... Linux Logical Volume Manager 0.9.1 Beta 5 is available now ...
-> ...
-> Please help us to stabilize for 0.9.1 ASAP and test is as much as possible!
+Hi,
 
-I am using LVM 0.9.1 beta 5 on Linux 2.4.1 with Reiserfs.
-I have applied both of the following patches:
+I was trying to create a striped lvol with a stripe size of 2K. This
+failed due to an illegal parameter:
 
-0.9.1_beta5/PATCHES/lvm-0.9.1_beta5-2.4.1.patch
-0.9.1_beta5/PATCHES/linux-2.4.1-VFS-lock.patch
+# lvcreate -i 2 -I 2 -L 100 vg01
+lvcreate -- invalid stripe size 2
 
-Snapshots created when the filesystem is active cannot be mounted.
-If I `umount' the filesystem before creating the snapshot, all is well.
+It seems that stripe sizes of 1K and 2K are not allowed, although the
+lvcreate manual page says that the stripe size is 2^n with 0<=n<=7.
 
-Larry
+Duh?
+
+++Jos
+
+
+-- 
+I have no need for a spirituality which can not encompass my humanness.
