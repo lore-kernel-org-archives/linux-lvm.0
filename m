@@ -1,17 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6LGZ2a05852
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 12:35:02 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6LGYtXn025408
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 12:34:56 -0400
-Date: Wed, 21 Jul 2004 18:34:53 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] How to rename a VG that contains the root?
-Message-ID: <20040721163453.GA10046@percy.comedia.it>
-References: <Pine.LNX.4.44.0407211150390.12142-100000@gpu.utcc>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6LIEAa03833
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 14:14:10 -0400
+Received: from mail.ncsa.uiuc.edu (mail.ncsa.uiuc.edu [141.142.2.28])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i6LIE9e1025467
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 14:14:09 -0400
+Received: from gship4.ncsa.uiuc.edu (gship4.ncsa.uiuc.edu [141.142.98.127])
+	by mail.ncsa.uiuc.edu (8.11.7/8.11.7) with ESMTP id i6LIDLc21225
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 13:13:21 -0500
+Message-Id: <5.1.0.14.2.20040721131110.038d67d8@pop.ncsa.uiuc.edu>
+Date: Wed, 21 Jul 2004 13:13:25 -0500
+From: Guochun Shi <gshi@ncsa.uiuc.edu>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0407211150390.12142-100000@gpu.utcc>
+Content-Type: text/plain; charset="us-ascii"
+Subject: [linux-lvm] "__you_cannot_kmalloc_that_much" undefined
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,23 +23,16 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Wed, Jul 21, 2004 at 12:08:59PM -0400, d3yuen@artsmail.uwaterloo.ca wrote:
->What should i keep in mind if i needed to change the name of a volume
->group that contains root?
+hi,
 
-you will probably need to recreate an initrd
-which distro are you using?
-most have a mkinitrd command.....
+I got a warning when compiling the patched 2.6.7 kernel:
 
-L.
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+*** Warning: "__you_cannot_kmalloc_that_much" [fs/gfs_locking/lock_gulm/lock_gulm.ko] undefined!
+
+not a big issue since I can use dlm, but still want to know how I can remove this warning. 
+
+thanks
+-Guochun
