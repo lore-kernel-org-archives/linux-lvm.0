@@ -1,36 +1,29 @@
-Message-ID: <01C02682.D1860880.smdenton@bellsouth.net>
-From: "S. Michael Denton" <smdenton@bellsouth.net>
-Reply-To: "smdenton@bellsouth.net" <smdenton@bellsouth.net>
-Subject: [linux-lvm] ext2online + LVM on 2.2.x
-Date: Sun, 24 Sep 2000 23:54:45 -0400
+Message-ID: <004801c02728$6dd16b30$0600a8c0@tron>
+Reply-To: "Daniel Mehrmann" <daniel@futuregate.ping-net.de>
+From: "Daniel Mehrmann" <mailinglist.mehrmann@ping-net.de>
+Subject: [linux-lvm] internet-server area51.ping-net.de: new hostname futuregate.ping-net.de  
+Date: Mon, 25 Sep 2000 21:40:15 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@msede.com
+Cc: jammet@lionking.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hello !
 
-Looks like I was either using the 1.1.13 ver of ext2online or i was
-applying them improperly.  Thanks again and wish me luck.
+The hostname of my internet server area51.ping-net.de change to
+futuregate.ping-net.de !
+The old hostname doesn't exist now !
 
-Applying ext2online + LVM patches to 2.2.13 kernel... hoping to be
-able to resize all lvm'd fs's online from here on out... and yes i
-have a good backup :)
+Sorry about this one, but i resived many root and dns attacks from
+internet. My last option was to changed my hostname and ip-adress.
 
-Scott Denton
-smdenton@bellsouth.net
-EFnet Handle: SteelWyng
-ICQ UIN: 24149258
-AIM Screen Name: SteelWyng
+At this time my webserver is down, because i must rewrite all webpages.
+FTP - server is online :-)  You can download e.g. lvm - pachtes.
 
------BEGIN PGP SIGNATURE-----
-Version: PGPfreeware 6.5.3 for non-commercial use <http://www.pgp.com>
+Have a lot of fun
 
-iQA/AwUBOc7MhXC+DNfF0nVpEQLc+wCcDDcZx04r/dj6KRvHSeD1ZPUdkaYAn3J3
-HH/cAx6aZxFUHwdMBLPPka/2
-=1Z5L
------END PGP SIGNATURE-----
+Daniel Mehrmann
