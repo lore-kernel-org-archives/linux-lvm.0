@@ -1,11 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105151708.f4FH8NaR019248@webber.adilger.int>
-Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
-In-Reply-To: <m2n18eygvs.fsf@isnogud.escape.de> "from Urs Thuermann at May 15,
- 2001 01:46:15 pm"
-Date: Tue, 15 May 2001 11:08:22 -0600 (MDT)
+Return-Path: <fox@theendoftime.net>
+Date: Tue, 15 May 2001 11:56:18 -0600 (MDT)
+From: <fox@theendoftime.net>
+Message-ID: <Pine.LNX.4.31L2.0105151152590.25751-100000@theendoftime.net>
 MIME-Version: 1.0
+Subject: [linux-lvm] Problems adding pv to new volume group
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,37 +15,60 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Urs writes:
-> Sorry, I hadn't time to test your patch earlier.  I wanted to try it
-> yesterday but lvm-0.9.1-beta7 with your patch applied doesn't compile.
+Hi all;
 
-Sorry, I must have missed some parts of the patch for the user-space
-tools.  Even so, I don't think the patch will help.
+Having problems adding a new pv into a vg.  Here is the output.  I've done
+this with another 3 disks in the machine (all scsi) and had no problems.
+This is the only IDE drive in the machine.  Any suggestions?  I did a
+search through the mailing list, but didn't notice anything.  I am running
+kernel revision 2.4.2 (clean Linus) with the ReiserFS patches and the LVM
+patches (LVM 0.9.1-Beta7 with supporting tools)
 
-> I also did some tests with another hard disk drive.  My previous tests
-> were with a IBM DCAS-34330W SCSI-U2W.  I now did some tests with a NEC
-> DSE2100S SCSI2 drive.  Again, LVM is much slower with the standard
-> 512 byte block size:
+If any more details are needed, please let me know.
 
-One other person had a similar problem.  It was because they were
-using PIO mode instead of DMA mode on their (IDE) drive.  However,
-I see you are using a SCSI disk, so I don't know what to suggest...
+Thanks,
 
-What SCSI controller are you using?
+Tren.
 
-> And am I really the only one who sees this?  I would really be
-> interested to hear from some more people about performance for their
-> LVM.
+=-= Start =-=
 
-I have never seen more than a few percent difference between LVM and
-non-LVM performance.
+[root@web /root]# fdisk /dev/hda
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+The number of cylinders for this disk is set to 2491.
+There is nothing wrong with that, but this is larger than 1024,
+and could in certain setups cause problems with:
+1) software that runs at boot time (e.g., old versions of LILO)
+2) booting and partitioning software from other OSs
+   (e.g., DOS FDISK, OS/2 FDISK)
+
+Command (m for help): p
+
+Disk /dev/hda: 255 heads, 63 sectors, 2491 cylinders
+Units = cylinders of 16065 * 512 bytes
+
+   Device Boot    Start       End    Blocks   Id  System
+/dev/hda1             1       128   1028128+  83  Linux
+/dev/hda2           129       145    136552+  82  Linux swap
+/dev/hda3           146       540   3172837+  83  Linux
+/dev/hda4           541      2491  15671407+  8e  Linux LVM
+
+Command (m for help): q
+
+[root@web /root]# pvcreate /dev/hda4
+pvcreate -- physical volume "/dev/hda4" successfully created
+
+[root@web /root]# vgcreate apps /dev/hda4
+vgcreate -- INFO: using default physical extent size 4 MB
+vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgcreate -- ERROR "vg_write(): write" storing data of volume group "apps"
+on disk(s)
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+- Tren Blackburn - Owner                mailto:fox@theendoftime.net  =
+= End of Time Networks                  http://www.theendoftime.net  -
+- (403) 269-2122                                                     =
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
