@@ -1,8 +1,10 @@
-From: "Thien Vu" <thien_vu@hotmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <BAY2-DAV22tTyHMktV100016cfa@hotmail.com>
-Subject: [linux-lvm] Recovering from a disk failure
+From: jon+lvm@silicide.dk
+Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
+Message-ID: <20030315223607.GA16976@gw.silicide.dk>
+References: <20030312195217.GC18876@auctionwatch.com> <20030312221320.GA15196@gw.silicide.dk> <20030312234520.GA19335@auctionwatch.com> <3E704492.DF386E61@silicide.dk> <140770000.1047758399@[192.168.200.4]>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <140770000.1047758399@[192.168.200.4]>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,88 +15,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Mar 15 15:30:02 2003
+Date: Sat Mar 15 16:37:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+On Sat, Mar 15, 2003 at 01:59:59PM -0600, Steven Lembark wrote:
+> 
+> 
+> -- Jon Bendtsen <jon+lvm@silicide.dk>
+> 
+> >>> that depends. You can stripe the lvm, but then you cant resize it.
+> >>> if you made a LV, then it would proberly just allokate all on one
+> >>> "disk", aka sda, and then on sdb.
+> >>
+> >>    I'm using 100% of the VG for the same LV.
+> >>
+> >>    I'm fine with not being able to resize it. Do I need the MD stuff to
+> >>    stripe it?
+> >
+> >No. You can stripe using the LV system. But i would think that
+> >if you can shutdown the LV, then you might as well stop the VG,
+> >and do it on the raw device. (except this isnt as future proof
+> >as a LVM system is).
+> 
+> Nor as flexable: with LVM you can easily grow the LV's, with
+> out LVM you are stuck with fixed partitions.
 
-I was preparing to move data residing on a LV to a RAID5 array when the
-cruel hand of irony slapped me, and one of the drives in my LV died. I have
-not migrated any data off of the LV.
+that would be included in being future proof ;-D
+Besides, he wants to stripe it, and you cant extend a stripped
+LV (as far as i know).
 
-Here is my setup:
-* Linear lvm: 80GB, 80GB, 40GB ( I think in this order also, but I"m not
-100percent sure
-* The 40GB died: doesn't power on, isn't detected by BIOS.
 
-I've searched the archives, and there seems to be 2 solutions:
-* Bottom up solution- get a replacement drive, do pvcreate, restore the vg
-data onto the drive, run vgscan and hope
 
-I tried this, but I can't find the UUID for the missing drive (because I
-can't read off of it) so there's no way for me to assign the replacement
-drive the correct UUID. I've tried using vgcfgbackup/restore (from LVM2
-with -P flag) but it doesn't record the UUID for the missing drive.
-
-* Top down solution -get device-mapper and LVM2, vgscan, vgchange -ay -P,
-mount the filesystem and hope
-
-I tried this, but the filesystem on the LV is reiserfs and it won't allow me
-to mount the LV. I would try reiserfsck and other tools, but the VG is
-incomplete and is only accessible read-only.
-
-Below is the output of vgdisplay -v -P (from LVM2):
-
-Thanks for any assistance,
-
-Thien
-
--------------------------
-  Partial mode. Incomplete volume groups will be activated read-only.
-    Finding all volume groups
-    Finding volume group "vg_home"
-  2 PV(s) found for VG vg_home: expected 3
-  Logical volume (lv_home) contains an incomplete mapping table.
-  --- Volume group ---
-  VG Name               vg_home
-  System ID             lisa1026448546
-  Format                lvm1
-  VG Access             read
-  VG Status             resizable
-  MAX LV                256
-  Cur LV                1
-  Open LV               0
-  Max PV                256
-  Cur PV                2
-  Act PV                2
-  VG Size               188.12 GB
-  PE Size               4.00 MB
-  Total PE              48160
-  Alloc PE / Size       48160 / 188.12 GB
-  Free  PE / Size       0 / 0
-  VG UUID               BHXFw1-6juI-h8jW-fxBQ-H7EW-ng14-6iGQX2
-
-  --- Logical volume ---
-  LV Name                /dev/vg_home/lv_home
-  VG Name                vg_home
-  LV UUID                000000-0000-0000-0000-0000-0000-000000
-  LV Write Access        read/write
-  LV Status              NOT available
-  LV Size                188.12 GB
-  Current LE             48160
-  Segments               9544
-  Allocation             next free
-  Read ahead sectors     1024
-
-  --- Physical volumes ---
-  PV Name               /dev/discs/disc1/disc
-  PV UUID               OUcSLF-p0XM-5Qhc-qViC-hhZG-ALcl-pkdc00
-  PV Status             allocatable
-  Total PE / Free PE    19540 / 0
-
-  PV Name               /dev/discs/disc2/disc
-  PV UUID               24IIKM-aegb-RuxL-27ro-AMLZ-bU9K-XFsHGS
-  PV Status             allocatable
-  Total PE / Free PE    19078 / 0
+JonB
