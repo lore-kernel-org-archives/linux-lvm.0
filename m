@@ -1,10 +1,10 @@
-Date: Mon, 10 Sep 2001 13:31:17 +0200
+Date: Mon, 10 Sep 2001 13:35:33 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Root on LV
-Message-ID: <20010910133117.I31313@sistina.com>
-References: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu> <20010906161011.B10735@gatekeeper.osp.nl>
+Subject: Re: [linux-lvm] ftp.sistina.com down?
+Message-ID: <20010910133533.J31313@sistina.com>
+References: <Pine.LNX.4.33.0109061806460.28151-100000@dunlop.dub.ie.alphyra.com> <001101c136f8$38bbb6e0$0300000a@pacbell.net>
 Mime-Version: 1.0
-In-Reply-To: <20010906161011.B10735@gatekeeper.osp.nl>; from josv@osp.nl on Thu, Sep 06, 2001 at 04:10:11PM +0200
+In-Reply-To: <001101c136f8$38bbb6e0$0300000a@pacbell.net>; from e@arix.com on Thu, Sep 06, 2001 at 10:20:26AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,57 +20,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Sep 06, 2001 at 04:10:11PM +0200, josv@osp.nl wrote:
-> vgscan and vgchange -a y *ARE* quite essential.
-> It is currently *not* possible to perform these two essential
-> commands in the kernel.
+On Thu, Sep 06, 2001 at 10:20:26AM -0700, Erick Calder wrote:
+> Paul,
 > 
-> AFAIK that is...
+> I'm putting an RPM together... struggling with the changes between the 2.4.9
+> configuration file and the 10+ configuration files that come with RH's 2.4.7
+> .src... if you've built RPMs before help is welcome (we can take this
+> off-list), otherwise I'll let you know when I've managed to put it
+> together... I too have production boxes I don't want to build the tarball
+> on.
 
-That's true. We will have in kernel LVM metadata read support in a
-post 1.0 version of LVM which will avoid to run userspace tools to activate
-choosen VGs at all.
+Erick,
+
+if you have put it together, we'ld be happy to put it onto our ftp server
+for everybodies convenience.
+Thanks.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 > 
-> ++Jos
+> - erick
 > 
-> And thus it came to pass that dobos_s@IBCnet.hu wrote:
-> (on Thu, Sep 06, 2001 at 04:03:49PM +0200 to be exact)
+> -----Original Message-----
+> From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
+> Behalf Of Paul Jakma
+> Sent:	Thursday, September 06, 2001 10:08 AM
+> To:	linux-lvm@sistina.com
+> Subject:	Re: [linux-lvm] ftp.sistina.com down?
 > 
-> > Hi!
-> > 
-> > I cannot understand something.
-> > My kernel has no modules.
-> > Why should I create an ext2 partition for holding an initrd which is not
-> > doing any essential things except vgscan and vgchange -ay ?
-> > Why cant these things built into the kernel?
-> > 
-> > Maybe I didnt understand something...
-> > 
-> > 
-> > Please CC to me, because I am not member on list...
-> > 
-> > Thanks
-> > 
-> > 
-> > Dobos Sandor
-> > IBCnet Hungary Ltd.
-> > 
-> > 
-> > 
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> On Wed, 5 Sep 2001, AJ Lewis wrote:
 > 
-> -- 
-> Klingon coding rule #12: "Specifications are for the weak and timid!"
+> > It should be up again.  Thanks for letting us know.
+> 
+> excellent...
+> 
+> > > also, are there any RPMS for 1.0.1?
+> >
+> > Nope.  Either grabbing the source tarball or talking to your distro is the
+> > best option at this point.  The source is not difficult to build and
+> install
+> > IMHO, so that's probably your best bet for now.
+> 
+> ok.. i've no technical problems with source, but from experience i
+> don't like installing from source onto production systems that use
+> package management - bad idea for long term maintainability of the
+> machine.
+> 
+> anyway.. thanks AJ!
+> 
+> > Regards,
+> 
+> --paulj
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
