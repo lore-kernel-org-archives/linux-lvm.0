@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Does LVM2 support RAID?
-Message-ID: <20030205185056.A18933@sistina.com>
-References: <000701c2caba$18106290$0101a8c0@youriwyju5dfsf>
-Mime-Version: 1.0
-In-Reply-To: <000701c2caba$18106290$0101a8c0@youriwyju5dfsf>; from gozila@ms20.url.com.tw on Sun, Feb 02, 2003 at 08:53:32PM +0800
+Message-ID: <5F2C72E5CC01D511BE3D0008C75B9AD8039A2D91@RDGEXH03>
+From: Jon Lacey <Jon.Lacey@exprogroup.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C2CC2B.DBA26BF0"
+Subject: [linux-lvm] Help configuring LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,88 +14,189 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  5 11:54:01 2003
+Date: Wed Feb  5 12:05:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Sun, Feb 02, 2003 at 08:53:32PM +0800, Rocky Lee wrote:
-> 
-> 
-> 
->  Hi
-> 
-> 
->  Thank you Mr. Heinz   : - D
-> 
->  I'm interesting in differents between  LVM1 and LVM2,
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-Some highlights IRT LVM2/device-mapper
-(see www.sistina.com for download information):
+------_=_NextPart_001_01C2CC2B.DBA26BF0
+Content-Type: text/plain
 
-- device-mapper has been accepted as the future generic mapping driver
-  for the 2.5 kernel
+Hi, I have looked at the HOWTO's and FAQ's and cannot seem to solve my
+problem, maybe it's me.
 
-- tools are LVM1 ondisk metadata compatible
+ 
 
-- atomic updates on ondisk metadata and multiple metadata copies for
-  extended resilience
+I do not seem, while installing Slackware 8, to be able to build LVM into
+the install, so I was hoping to be able to do a minimal install and then add
+a logical volume and move me data.
 
-- config file support for device name filters, logging levels and more
+ 
 
-- LVM shell to avoid overhead on mass changes reloading the tools on
-  every change
+I have installed Slackware (a very basic setup) as:
 
-- generic device mapping with a much smaller driver (aka device-mapper)
+/dev/hda1 100 MB mounted as /boot
 
-- arbitrary mapping modules can be added at runtime
+/dev/hda2 200 MB as Swap
 
-- RAID0 LVs can beextended beyond physical volume limits
+/dev/hda3 800MB mounted as /
+
+ 
+
+I have three more drives, all 1 GIG drives. /dev/hdb1 /dev/hdc1 /dev/hdd1 
+
+What I would like to do is to amalgamate them all into one large volume,
+include /dev/hda3 as part of the volume and have it all mounted as /
+
+ 
+
+So I hope to end up with a volume group, say vg1, consisting of a single
+volume, say vol1, copy data over from /dev/hda3 and then mount vol1 as /
+
+ 
+
+Is there anywhere I can go to see an example of doing this/ or can someone
+help.
+
+ 
+
+ 
+
+Thanks
+
+Jon L.
 
 
->  I like LVM, it's very simple but powerful tool to maintain volumes.
-> 
-> 
-> > > > If I use LVM2 will be better than use LVM1 + MD?
-> >
-> > > You still need to combine LVM2 with MD in order to have RAID > 0 (RAID0
-> is
-> > > supported natively as it is in LVM1).
-> > > Because LVM2 offers various enhancements you migth still want to give it
-> > > a try :-)
-> >
-> 
-> Does LVM2 will support bad block reallocation?
->  It'll be great to use with MD.
-> 
->  Have a nice day ^_^
-> 
->  Rocky Lee
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+----------------------------------------------------------------------
+Important Notice: 
+The information in this email is confidential and may be legally-privileged.  
+If you have reason to believe you are not the intended recipient, any disclosure, 
+copying, distribution or any action taken or omitted to be taken in reliance on 
+it is prohibited and may be unlawful and you are requested to contact the sender 
+urgently and dispose of this email 
+-----------------------------------------------------------exp.
 
--- 
+------_=_NextPart_001_01C2CC2B.DBA26BF0
+Content-Type: text/html
 
-Regards,
-Heinz    -- The LVM Guy --
+<html>
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=us-ascii">
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+<meta name=Generator content="Microsoft Word 10 (filtered)">
+
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:Tahoma;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{font-family:Tahoma;
+	color:windowtext;
+	font-weight:normal;
+	font-style:normal;
+	text-decoration:none none;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 42.55pt 72.0pt 42.55pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=Section1>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>Hi, I have looked at the HOWTO's and FAQ's and cannot seem
+to solve my problem, maybe it's me.</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>I do not seem, while installing Slackware 8, to be able to build LVM
+into the install, so I was hoping to be able to do a minimal install and then
+add a logical volume and move me data.</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>I have installed Slackware (a very basic setup) as:</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>/dev/hda1 100 MB mounted as /boot</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>/dev/hda2 200 MB as Swap</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>/dev/hda3 800MB mounted as /</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>I have three more drives, all 1 GIG drives. /dev/hdb1 /dev/hdc1
+/dev/hdd1 </span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>What I would like to do is to amalgamate them all into one large volume,
+include /dev/hda3 as part of the volume and have it all mounted as /</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>So I hope to end up with a volume group, say vg1, consisting of a single
+volume, say vol1, copy data over from /dev/hda3 and then mount vol1 as /</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>Is there anywhere I can go to see an example of doing this/ or can
+someone help.</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>Thanks</span></font></p>
+
+<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
+10.0pt'>Jon L.</span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C2CC2B.DBA26BF0--
+
+ 
