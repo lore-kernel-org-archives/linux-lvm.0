@@ -1,8 +1,14 @@
-From: Austin Gonyou <austin@coremetrics.com>
+Message-ID: <3DB264D3.A994B237@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
+References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
+		<3DAFB7D4.B88B6737@silicide.dk>
+		<ufaelanvnav.fsf@epithumia.math.uh.edu>
+		<3DB02DD6.B8B4B48E@silicide.dk>
+		<ufa65vzviuo.fsf@epithumia.math.uh.edu>
+		<3DB0348D.42FFC0A4@silicide.dk> <ufawuoftw8h.fsf@epithumia.math.uh.edu>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1035087242.1512.4.camel@localhost.localdomain>
-Mime-Version: 1.0
-Subject: [linux-lvm] I broke my PVs!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +19,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 19 23:14:01 2002
+Date: Sun Oct 20 03:10:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I have 3 disks, one 9GB and two 18GB scsi disks. I just re-installed my
-system with RH 8.0, and it didn't like that the two 18's weren't
-initialized, I guess I screwed up, cause I didn't think I was
-initializing them(since I told the installer not to), and instead ran
-fdisk and then saved without making partitions. 
+Jason L Tibbitts III wrote:
+> 
+> >>>>> "JB" == Jon Bendtsen <jon+lvm@silicide.dk> writes:
+> 
+> JB> True true, but then your boot device is software raid ??
+> 
+> Yes, but not on LVM.  /boot and / were mirrored (all eight ways, which
+> I know is overkill).
+> 
+> JB> And lilo ??
+> 
+> It didn't have any problem; it wrote identical boot blocks to all
+> eight disks, and would boot with the first disk in the system
+> disconnected.  This was the first such server I built and I did it
+> some time ago so I haven't tried with anything more modern like Grub.
 
-I can see my data still on the disks if I do strings /dev/sdb or
-dev/sdc. I have another system that also has 3 scsi disks using two of
-them with LVM. 
+Well, grub doesnt matter i use lilo myself.
+How did you get lilo to write it to all 8 bootblocks ?
 
-I was curious, if I could take say the first 512 bytes, or whatever
-space is required to write the pv information on a disk, from those
-disks, and then write them to the first 512 bytes, or whatever, to the
-disks on my system, then do pv scan and see if they get activated, or
-found to be in a vg that the other disks were in.
 
-I've got about 30GB of data on this VG, and I am really hoping I don't
-have to lose it. A lot of email there, etc. Please advise. 
 
-Austin
+JonB
