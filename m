@@ -1,11 +1,11 @@
-Date: Thu, 18 Oct 2001 16:38:13 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] LVM 1.0.1_rc4 with 2.4.12-ac3?
-Message-ID: <20011018163813.J564@tykepenguin.com>
-References: <ufazo6pq8yr.fsf@epithumia.math.uh.edu>
+Date: Thu, 18 Oct 2001 17:48:18 +0100
+Subject: Re: [linux-lvm] SnapRestore software on NetApp
+Message-ID: <20011018174818.C849@btconnect.com>
+References: <0110181646580Y.24876@in-cadcae4>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ufazo6pq8yr.fsf@epithumia.math.uh.edu>; from tibbs@math.uh.edu on Thu, Oct 18, 2001 at 10:11:24AM -0500
+In-Reply-To: <0110181646580Y.24876@in-cadcae4>; from emanuel.quass@temic.com on Thu, Oct 18, 2001 at 04:46:58PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,14 +21,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Oct 18, 2001 at 10:11:24AM -0500, Jason L Tibbitts III wrote:
+On Thu, Oct 18, 2001 at 04:46:58PM +0200, Emanuel Quass wrote:
+> Hi,
+> 
+> 
+> first of all I want to thank the developers for the work they have done up to 
+> now!
+> 
+> But to come to business, I have to write a comparison between Linux  and 
+> NetApp Filers. (Is there anything already somewhere available?)
+> 
+> I saw something about a "SnapRestore software" which means that it is 
+> possible to revert a snapshot back to the filesystem in some minutes!
+> My question: Is this possible with LVM and reiserfs too?
 
-See 
+I'm not sure what you mean by 'reverting a snapshot back to the
+filesystem', but dropping a snapshot takes very little time (seconds).
 
-http://lists.sistina.com/pipermail/linux-lvm/2001-October/009252.html
-
-The gendisk change is currently in CVS but the kiovec isn't because there's no
-way to make it generic for both Linux and AC patches :-(
-
-
-patrick
+- Joe
