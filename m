@@ -1,34 +1,39 @@
-Reply-To: <jphollan@earthlink.net>
-From: "Jason Holland" <jphollan@earthlink.net>
-Subject: RE: [linux-lvm] User Space Tools
-Date: Wed, 20 Sep 2000 06:46:04 -0500
-Message-ID: <NDBBKPLIMKJCOCFNKHBLCEEGDIAA.jphollan@earthlink.net>
+Message-ID: <01C022D8.286A2860.smdenton@bellsouth.net>
+From: "S. Michael Denton" <smdenton@bellsouth.net>
+Reply-To: "smdenton@bellsouth.net" <smdenton@bellsouth.net>
+Subject: RE: [linux-lvm] LVM + online resizing e2fs patches
+Date: Wed, 20 Sep 2000 07:55:32 -0400
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <004d01c022e7$896f5ae0$0101a8c0@ecosse>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: david@procom.fsbusiness.co.uk, linux-lvm@msede.com
+To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
 
-The user space tools for 2.4 are the same for 2.2, 0.8 final.  I believe the
-ftp site is ftp://linux.msede.com/lvm/v0.8final.  There are quite a few
-patches to fix various things.  Anyone have word on when a new release will
-come out, with all the patches applied?
+On Wednesday, 20 September 2000 03:24, Andreas Dilger [SMTP:adilger@turbolinux.com] wrote:
+> Scott Denton writes:
+> > Has anyone used the kernel patches for LVM 0.8i with the online
+> > resizing patch for e2fs successfully?  I cannot seem to get them to
+> > reconcile properly, complains about bad hunks (usually where LVM has
+> > changed block IO code).
+> 
+> Actually, I don't _think_ the ext2online and LVM patches should conflict
+> at all.  The ext2online patch only changes files in fs/ext2, while LVM
+> changes files in drivers/block.  I have both working on my systems
+> (using my LVM 0.8final patch, and my own ext2online patch), so if you
+> want these instead, let me know...
+> 
+> Cheers, Andreas
+> -- 
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 
-Jason
+Would they work with 2.2.13?  Or would I have to upgrade my kernel?
 
->
-> Can anyone tell me where to get the LVM user space tools for the 2.4.0
-> kernel?
->
-> make xconfig help tells you that you need to read Documentation/Changes to
-> find the user space tools; it directs you to http://linux.msede.com/lvm.
-> I've looked around on this site but I can't find a tools download
-> for 2.4.0.
->
-> Thanks
-> David.
->
->
+Scott Denton
+smdenton@bellsouth.net
+EFnet Handle: SteelWyng
+ICQ UIN: 24149258
+AIM Screen Name: SteelWyng
