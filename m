@@ -1,9 +1,9 @@
-From: "Joost van der Locht" <mailinglists@e-cube.nl>
-Subject: RE: [linux-lvm] root fs on a LVM cause kernel panic
-Message-ID: <NEBBKOJLIGMCKNCJJACPKEPGGIAA.mailinglists@e-cube.nl>
+From: "yves.alloyer" <Yves.ALLOYER@slpinfoware.com>
+Subject: RE: [linux-lvm] Setup for RAID1 with LVM
+Message-Id: <NEBBLHFAEINCLDICDLOAAEGMCIAA.yves.alloyer@slpinfoware.com>
 MIME-Version: 1.0
-In-Reply-To: <01111700053800.01209@dirac.cids.ca>
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5E34D857F6BB704CA3369B7553233A81651A7E@ntsviemxs0152.connect.at-work.ent>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,117 +14,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 02:53:02 2001
+Date: Mon Nov 19 03:37:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: Ferenc.Csuk@one.at
 
-Does Lilo support JFS? I use XFS instead of EXT2 but for that I needed to
-patch lilo with XFS support.
+Sorry for the late answer, I was off line for some time. Sorry if you get
+this one twice Ferenc.
+I ran into a very similar issue some time ago using stock 1.0.1rc4 (not
+CVS).
+I tried zeroing the first block of the MD device... it didn't help.
+This was discussed and solved in the "[linux-lvm] pvcreate fails on a
+software RAID metadisk" thread.
+The patch that was generated at that time and which made it into CVS was:
+--- tools/lib/lvm_check_partitioned_dev.c.bluca	Thu Aug 23 07:51:53 2001
++++ tools/lib/lvm_check_partitioned_dev.c	Fri Oct  5 21:18:51 2001
+@@ -55,6 +55,8 @@
+ 	switch (lvm_get_device_type(st_rdev)) {
+ 	case LVM_DEVICE_TYPE_INVALID:
+ 	    break;
++	case LVM_DEVICE_TYPE_MD:
++	    break;
+ 	default:
+ 	    ret =3D TRUE;
+ 	}
 
+--
 
-Joost van der Locht
-Technisch Directeur
-
-E*Cube BV
-Toernooiveld 214 - 6525 EC Nijmegen
-T: 024-3500437 - F: 024-3500613
-http://www.e-cube.nl
-e-mail: joost@e-cube.nl             ICQ UIN: 494145
-
-> -----Oorspronkelijk bericht-----
-> Van: linux-lvm-admin@sistina.com
-> [mailto:linux-lvm-admin@sistina.com]Namens Daniel Savard
-> Verzonden: zaterdag 17 november 2001 5:10
-> Aan: Andreas Dilger
-> CC: linux-lvm@sistina.com
-> Onderwerp: Re: [linux-lvm] root fs on a LVM cause kernel panic
+Yves
+> -----Original Message-----
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Csuk, Ferenc
+> Sent: Thursday, November 15, 2001 4:58 PM
+> To: 'Mauelshagen@Sistina.com'
+> Cc: 'linux-lvm@sistina.com'; 'jens.bruckmann@suse.de'
+> Subject: [linux-lvm] Setup for RAID1 with LVM
 >
 >
-> Number 2 can be dropped. I re-ran lilo after changing the configuration.
+> Dear Heinz,
 >
-> I just tested number 1, this time I am getting an error while
-> trying to access
-> /dev/ram0 which doesn't exist at this time in the execution sequence.
+> I have read your archive discussion on this topic and your suggested
+> solution for it, see below. Now we would like to do it as well,
+> but when we
+> start pvcreate /dev/md0 we get the following error: invalid partition type
+> 0x83 for /dev/md0" (must be 0x8e). Unfortunatelly we can=EF=BF=BDt change=
+ it using
+> fdisk.
 >
-> The error message was as follow:
+> What was the solution for it in your case?
 >
-> NET4: Unix domain sockets 1.0/SMP for Linux NET4.0
-> ds: no socket drivers loaded!
-> request_module [block-major-1]: Root fs not mounted
-> VFS: Cannot open root device "100" or 01:00
-> Please append a correct "root=3D" boot option
-> Kernel panic: VFS: Unable to mount root fs on 01:00
+> Thank you in advance.
 >
-> >From this, I decided to check my kernel setup and discovered
-> (silly me) I made
-> a newbie error. The initrd support at boot time was not enabled
-> in my kernel.
+> Regards,
+> Ferenc
 >
-> So, thanks for help to everyone and particularily to roadrunner on the =
-IRC
-> channel who give much time on-line to help me and Andreas Dilger.
 >
-> My system is not fully functionnal yet, however, the LVM problem
-> is solved.
 >
-> My target configuration is a Linux From Scratch system, mostly
-> based on V 3.0
-> instructions. But, instead of gcc 2.95.3 it is based on gcc 3.0.2
-> and glibc
-> 2.2.4 with kernel 2.4.13. My remaining errors are with the initializati=
-on
-> scripts for the LFS, this is off topic on this dist list.
->
-> So, if I can help in the future with testing. Let me know.
->
->  --
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> Daniel Savard
-> Internet: dsavard@videotron.ca
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
->
-> Le ven, 16 nov 2001, Andreas Dilger a =E9crit :
-> > On Nov 16, 2001  17:19 -0500, Daniel Savard wrote:
-> > > While booting I am ending with a kernel panic message. The
-> few last lines of
-> > > the boot message are as follow:
-> > >
-> > > VFS: Cannot open root device "3a01" or 3a:01
-> > > Please append a correct "root=3D" boot option
-> > > Kernel panic: VFS: Unable to mount root fs on 3a:01
-> >
-> > Hmm, you only get that message when the initial boot is done, so two
-> > possibilities (I'm not an initrd guru, mind you):
-> >
-> > 1) you need to change the root=3D line in your lilo.conf to say
-> "root=3D/dev/ram0"
-> >    so that it will boot into the initrd.  Then do the
-> real-root-dev trick
-> >    (or try pivot_root if running a 2.4 kernel) after configuring the =
-LVM
-> >    stuff via vgscan; vgchange -a y.
-> >
-> > 2) You didn't re-run lilo after changing lilo.conf (yes, you
-> probably did,
-> >    but you can never tell from here, and always safe to ask).
-> >
-> > > I also tested with ramdisk_size=3DX, where X is the size returned b=
-y the
-> > > lvmcreate_initrd script for the ramdisk.
-> >
-> > As long as this is larger than the size of the uncompressed ramdisk, =
-you
-> > should be OK.
-> >
-> > Cheers, Andreas
-> > --
-> > Andreas Dilger
-> > http://sourceforge.net/projects/ext2resize/
-> > http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> > - create a md0 RAID1 device with your 2 disks (mirror, no use of LVM)
+> >   - set the parttion ID to RAID autodetect (0xfd)
+> >   - edit /etc/raidtab (see RAID Howto)
+> >   - mkraid /dev/md0
+> > - install LVM utilities (0.9.1beta3)
+> > - pvcreate /dev/md0
+> > - vgcreate -n BGNAME /dev/md0
+> > - lvcreate <some logical volume>
 >
 >
 > _______________________________________________
