@@ -1,8 +1,8 @@
-Message-ID: <3D9D4C5B.F4352F4E@silicide.dk>
+Message-ID: <3D9D4F63.75700F39@silicide.dk>
 From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] mounting reiserfs snaphost fails
-References: <3D6DD029.1010905@dotcom.pl> <20020829130219.A32269@sistina.com>
+References: <3D6DD029.1010905@dotcom.pl> <20020829130219.A32269@sistina.com> <3D9D4C5B.F4352F4E@silicide.dk>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,20 +14,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct  4 03:09:50 2002
+Date: Fri Oct  4 03:46:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-"Heinz J . Mauelshagen" wrote:
+Jon Bendtsen wrote:
 > 
-> Did you put the VFS lock patch in?
-> You need that to be able to mount snapshots of *journaled* filesystems.
+> "Heinz J . Mauelshagen" wrote:
+> >
+> > Did you put the VFS lock patch in?
+> > You need that to be able to mount snapshots of *journaled* filesystems.
+> 
+> Where do i find that patch ?
+> Does 2.4.19 contain it ? does the latest kernel, if 2.4.19 isnt the
+> latest ?
 
-Where do i find that patch ?
-Does 2.4.19 contain it ? does the latest kernel, if 2.4.19 isnt the
-latest ?
+never mind, i did a cvs checkout, and made a patch for the linux kernel.
+i believe it included the VFS-LOCK.patch (did a make in the PATCHES
+subdir)
 
+Do i need to update the LVM tools, or can i use default debian woody
+tools
+and still get this effect ?
 
 
 
