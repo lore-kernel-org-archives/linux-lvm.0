@@ -1,4 +1,4 @@
-Message-ID: <3BF8F795.1342741@LTUtech.com>
+Message-ID: <3BF8F8BF.3FE1491C@LTUtech.com>
 From: Igor Dumaire <Igor.Dumaire@LTUtech.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] vgcfgrestore error !
@@ -14,7 +14,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 06:12:01 2001
+Date: Mon Nov 19 06:17:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
@@ -22,11 +22,33 @@ To: linux-lvm@sistina.com
 > you need to figure out, which Physical Volumes (PVs) belong to your VG lvm1
 > by running 'vgcfgrestore -ll -n lvm1'. Please check for the PV list at
 > the end of the output.
-> 
 
-the PV list it' OK. (hde1, hdf1 and hdc1)
 
-# vgcfgrestore -ll -n lvm1
+> Then restore the LVM metadata by running 'vgcfgrestore -n lvm1 /dev/hdWhatever`
+> on every of those.
+# vgcfgrestore -n lvm1 /dev/hde1
+vgcfgrestore -- can't restore part of active volume group "lvm1"
+vgcfgrestore [-d|--debug] [-f|--file VGConfPath] [-l[l]|--list [--list]]
+        [-n|--name VolumeGroupName] [-h|--help]
+        [-o|--oldpath OldPhysicalVolumePath] [-t|--test] [-v|--verbose]
+        [--version] [PhysicalVolumePath]
+# vgcfgrestore -n lvm1 /dev/hdf1
+vgcfgrestore -- can't restore part of active volume group "lvm1"
+vgcfgrestore [-d|--debug] [-f|--file VGConfPath] [-l[l]|--list [--list]]
+        [-n|--name VolumeGroupName] [-h|--help]
+        [-o|--oldpath OldPhysicalVolumePath] [-t|--test] [-v|--verbose]
+        [--version] [PhysicalVolumePath]
+# vgcfgrestore -n lvm1 /dev/hdc1
+vgcfgrestore -- can't restore part of active volume group "lvm1"
+vgcfgrestore [-d|--debug] [-f|--file VGConfPath] [-l[l]|--list [--list]]
+        [-n|--name VolumeGroupName] [-h|--help]
+        [-o|--oldpath OldPhysicalVolumePath] [-t|--test] [-v|--verbose]
+        [--version] [PhysicalVolumePath]
+
+
+What's about "PV Status             NOT available" in vgcfgrestore -ll -n lvm1
+message ?!
+
 --- Volume group ---
 VG Name               lvm1
 VG Access             read/write
@@ -103,15 +125,6 @@ Free PE               201
 Allocated PE          14458
 PV UUID               BFvA7F-ccvF-e5r1-3QH7-02JG-dH4r-AOYF64
 
-> What error happend in the first place causing lvm1 to disapear?
-I don't known.
-
-> Do you use recent LVM software?
-LVM version 1.0.1-rc4(03/10/2001) 
-vgcreate: Logical Volume Manager 1.0.1-rc4
-Heinz Mauelshagen, Sistina Software  03/10/2001 (IOP 10)
-
-Regards,
 
 -- 
 Igor Dumaire
