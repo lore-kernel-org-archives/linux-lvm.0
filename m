@@ -1,10 +1,11 @@
-Subject: Re: [linux-lvm] Root on LV
-References: <OFB98B66D9.BF1F5CB9-ON85256ACC.0066E63E@raleigh.ibm.com>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 20 Sep 2001 07:15:10 +0200
-In-Reply-To: <OFB98B66D9.BF1F5CB9-ON85256ACC.0066E63E@raleigh.ibm.com>
-Message-ID: <wvn13q5tpd.fsf@freeze.oslo.dnmi.no>
-MIME-Version: 1.0
+Date: Thu, 20 Sep 2001 08:31:16 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Unresolved symbols in lvm-mod.o
+Message-ID: <20010920083116.C551@tykepenguin.com>
+References: <550C100A8350CE4BBD3DD2D7788FD0CA481FBD@fcmail1.FC.COM>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <550C100A8350CE4BBD3DD2D7788FD0CA481FBD@fcmail1.FC.COM>; from bbailey@fcmail.org on Tue, Sep 18, 2001 at 11:06:52AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,47 +21,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Steve" == Steve Pratt <slpratt@us.ibm.com> writes:
+On Tue, Sep 18, 2001 at 11:06:52AM -0500, Brian Bailey wrote:
+> We're making progress in our LVM setup (Redhat 7.1, kernel 2.4.3-6, lvm
+> 1.0) and finally have a lvm-mod.o file in /md, however, when we run
+> depmon -a we receive the "unresolved symbols in /md/lvm-mod-o" error.
+> 
+> As far as we can tell, everything else in the various steps ran well.
+> Suggestion?
 
-    >> .Q: Why bother to put 64MB on an LVM?  The root volume doesn't
-    >> grow much (make it 128MB and it'll never need to grow).
+Which symbols are undefined ?
 
-    Steve> Sure, you could always do this.
-
-    >> If you ever have a problem with LVM you'll end up with an
-    >> unbootable system...
-
-    Steve> Right, which is why volume managers need to be really
-    Steve> stable and robust.  Bottom line is that if this is the
-    Steve> confidence level you have in your volume manager (whether
-    Steve> it is LVM or EVMS), I would question putting any data on
-    Steve> it.
-
-Well, I disagree with what you seem to be implying (that if you can't
-trust to have the whole disk with LVM then it isn't robust). As
-somebody whos been running RS6000 with AIX (a highly robust OS IMO)
-for several years I can say that you can never guarantee that a new
-(ie. bugfix version) doesn't screw something up. At least with Linux
-one has a nice fast, neat option of booting from a non LVM root
-partition to fix any problems. Try waiting 10 minutes for a tape to
-boot the operating system enough times to realise that having this
-(root partition) option is very useful. And yes, I know, one can in
-theory have a diskette or even CD with a version of the OS and all the
-tools on (although using floppy these days is becoming more difficult
-due to the size of everything), but a non LVM root of 128MB on a many
-GB disks seems little to pay for the possiblities it gives (for
-example, remote fixing of problems without having to burn a new CD for
-each new machine).
-
-On the other hand AIX was very easy to recover when an upgrade did
-screw up, just roll back the upgrade. This is one thing I miss with
-Linux (Debian at least) so far.
-
-Sincerely,
-
-Adrian Phillips
-
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+patrick
