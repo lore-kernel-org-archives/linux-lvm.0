@@ -1,12 +1,12 @@
 Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Mon, 19 Mar 2001 13:30:55 +0000
+Date: Mon, 19 Mar 2001 13:33:52 +0000
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Kernel 2.4.x with LVM beta 6 on Sun E450?
-Message-ID: <20010319133055.B569@tykepenguin.com>
-References: <20010318125600.A24084@mercury.mercury.multiweb.nl> <3AB51A73.8D931205@wrkhors.com> <20010318222501.A30232@mercury.mercury.multiweb.nl> <3AB528E0.D6BA04C8@wrkhors.com> <20010318232831.A30928@mercury.mercury.multiweb.nl>
+Subject: Re: [linux-lvm] LVM 0.9.1 Beta 6, lockup during pvmove
+Message-ID: <20010319133352.D569@tykepenguin.com>
+References: <20010317183125.A12980@guldukat.muon>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010318232831.A30928@mercury.mercury.multiweb.nl>; from dave@xs4all.nl on Sun, Mar 18, 2001 at 11:28:31PM +0100
+In-Reply-To: <20010317183125.A12980@guldukat.muon>; from nils@muon.de on Sat, Mar 17, 2001 at 06:31:25PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,31 +22,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Mar 18, 2001 at 11:28:31PM +0100, Dave Wapstra wrote:
-> On 18 March, 2001 at 15:30:08 -0600, Steven Lembark <lembark@wrkhors.com> wrote:
-> > 
-> > > Thanks, but this is a non-X box. It is probably worth trying to use the
-> > > .config of -pre3 with 2.4.2 and use the beta6 plus ioctl patches to try
-> > > and get this thing to compile correctly.
-> > > 
-> > > I'll just give that a try...
-> > 
-> > or just "make config".  takes a while but doesn't depend on any
-> > fancy display system.
+On Sat, Mar 17, 2001 at 06:31:25PM +0100, Nils Juergens wrote:
 > 
-> Did that indeed. I copied the .config from -pre3 and used the good old
-> "make config" and the enter key ;)
+> Using strace on cp, i find that it locks up during another read (
+> the last thing strace prints is "read(3,", where 3 was opened readonly
+> on the NFS mount), so this may be independent of lvm, but i was unable
+> to lock my box up without lvm.
 > 
-> I got the ioctl32 patch once again via the web mail-archive and did a
-> "s/       /^V<tab>/g" to get a correct format.
+> I would really like to track this down, but my knowledge is rather
+> limited so any help is appreciated.
 
-You can get the file from Dave Miller's CVS tree at  
-:pserver:cvs@vger.samba.org:/vger
+It doesn't seem to be NFS related, I can reproduce it with purely local I/O. It
+looks to be the new locking that went in to beta6 to fix some races.
 
-Or I'll post the whole file here if anyone really needs it - it doesn't change
-much!
-
-That patch was created against Dave's tree (so he could integrate it) rather
-than the Linus kernels - that might have made a difference but I don't think so.
 
 patrick
