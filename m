@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+From: lvm@interlinx.bc.ca
 Subject: Re: [linux-lvm] moving single LVM disk from one system to another
-Message-ID: <20020819102427.A24314@sistina.com>
-References: <20020817070901.GA5022@linux.interlinx.bc.ca>
+Message-ID: <20020819090226.GA13367@linux.interlinx.bc.ca>
+References: <20020817070901.GA5022@linux.interlinx.bc.ca> <20020819102427.A24314@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <20020817070901.GA5022@linux.interlinx.bc.ca>; from lvm@interlinx.bc.ca on Sat, Aug 17, 2002 at 03:09:02AM -0400
+Content-Disposition: inline
+In-Reply-To: <20020819102427.A24314@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,77 +15,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 19 03:39:02 2002
+Date: Mon Aug 19 04:03:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Is that with our without devfs?
-Have you checked, that device nodes are in your initrd for vgscan to be able
-to access them fine?
-Does vgscan fail finding your VG our is it just wrong entries in /etc/fstab
-failing your root mount?
+On Mon, Aug 19, 2002 at 10:24:27AM +0200, Heinz J . Mauelshagen wrote:
+> 
+> Is that with our without devfs?
 
-On Sat, Aug 17, 2002 at 03:09:02AM -0400, lvm@interlinx.bc.ca wrote:
-> My workstation died (the MB, not the disk).  :-(
-> 
-> In it I have a single ATA disk with three fdisk type partitions:
-> 
-> hd?1 Linux boot
-> hd?2 Windows ~hangs head in shame~ (it's for testing only :-)
-> hd?3 LVM
-> 
-> Inside the LVM partition is the root, swap and a couple of other
-> filesystems.  On the ext3 /boot partition there is an initrd with all
-> the magic in it to get LVM and ext3 up and running.
-> 
-> On the dead machine, where the disk was built and last running, the
-> disk was device /dev/hde on a Promise ATA100 bus.  I want to move it
-> to another (working) machine on the primary ATA bus so it will be
-> /dev/hda.
-> 
-> When I boot the system, the initrd fires up and runs a vgscan but it
-> does not find the rootvol volume group.  So I boot on my Linux
-> distro's boot CD in rescue mode, install the LVM module, run vgscan
-> (the vendor was nice enough to put the lvm tools on the boot/rescue
-> cd) and it finds it fine.  I run "vgchange -a y" and whammo, the
-> volume group is active and I can mount my rootfs.  Great.  So I chroot
-> the HD (LVM) rootfs and mount /boot and run vgscan again so that it
-> updates the /etc/lvm* stuff and also build a new initrd, hoping that
-> the new configuration information will make it into the initrd.
-> 
-> I reboot again and still vgscan finds no volume groups.  What am I
-> missing here?  Why can the rescue mode of the boot CD find the volume
-> group no problem with a vgscan and my initrd's vgscan cannot?
-> 
-> Thanx in advance for any enlightment.
-> 
-> b.
-> 
-> -- 
-> Brian J. Murrell
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Interesting you should ask.  :-)
+
+> Have you checked, that device nodes are in your initrd for vgscan to be able
+> to access them fine?
+
+I am/was (for the past hour or two) just hunting this possibility
+down.  I have the system currently booting from a tftp server (via an
+etherboot diskette) so that I can shorten the cycle of "modify initrd
+with more debugging and re-test".  I am just about to put some
+debugging into the native hard disk booting initrd to see what disk
+nodes are there and such.
+
+The kernel is being booted with "devfs=mount", so they should be
+there.  I should know in a few more minutes what is going on.
+
+> Does vgscan fail finding your VG our is it just wrong entries in /etc/fstab
+> failing your root mount?
+
+vgscan fails to find the VG.  I am sure this is going to turn out to
+be missing device nodes, but will have figure out why that is if devfs
+is being mounted.
+
+Will keep ya posted.
+
+b.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Brian J. Murrell
