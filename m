@@ -1,15 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8LFlAr06274
-	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 11:47:10 -0400
-Received: from mail.cisko.org (zibbe@as1-1-6.b.bonet.se [194.236.143.15])
-	by mx3.redhat.com (8.12.11/8.12.10) with SMTP id i8LFl3W7006508
-	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 11:47:03 -0400
-Message-ID: <41504CEF.8090508@cisko.org>
-Date: Tue, 21 Sep 2004 17:46:55 +0200
-From: Sebastian Hyrwall <zibbe@cisko.org>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8LG1Yr13510
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 12:01:34 -0400
+Received: from www.dhs.state.ok.us (s99eagle01.okdhs.org [204.87.68.21])
+	by mx1.redhat.com (8.12.11/8.12.10) with SMTP id i8LG1SC5004854
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 12:01:33 -0400
+Message-ID: <15DCB059E3814E448A1CFFF04F78F7A703917163@s99mail08>
+From: "Little, Chris" <Chris.Little@okdhs.org>
+Subject: RE: [linux-lvm] LVM
+Date: Tue, 21 Sep 2004 11:03:34 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Hello. About a bug in lvm2
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C49FF4.76E24656"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,28 +21,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Hey.
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-Im not sure but i may have found a bug in the lvm2 userspace-tools. Im 
-using gentoo right now and right now
-lvm2 cant "see" some harddrives.
+------_=_NextPart_001_01C49FF4.76E24656
+Content-Type: text/plain;
+	charset="utf-8"
 
-I first discovered the problem when i changed from 2.4 -> 2.6. In 2.6 it 
-didnt find all my discs. Later on i saw that when i did
-"pvcreate /dev/hdd1" (tried the devfs-link also /dev/ide/....) it 
-reported that the device couldnt be found.
-There isnt anything wrong with the hd or anything. It shows up in 
-cfdisk/fdisk and i can use it as a normal hd (not in an lvm).
+I'm not a redhat user, but I would guess that is LVM1.  execute any of the
+lvm commands with --version.
 
-This occurs for 2 of my disks. hde and hdd. I cant find any difference 
-between them and the other drives. They are all the same size.
-
-
-Unfortunently i cant provide any more information because i didnt think 
-about mailing this to you until after i went back to 2.4.
+-----Original Message-----
+From: Johan.SEGERS@cec.eu.int [mailto:Johan.SEGERS@cec.eu.int]
+Sent: Tuesday, September 21, 2004 8:47 AM
+To: Linux-LVM@Sistina.com
+Subject: [linux-lvm] LVM
 
 
-Sincerely, Sebastian Hyrwall
+
+Hi, 
+
+How can i know if my Linux uses LVM1 or LVM2. I run Red hat Linux 9 (kernel
+2.4.9-e.3).. 
+
+Best regards, Johan 
+
+
+------_=_NextPart_001_01C49FF4.76E24656
+Content-Type: text/html;
+	charset="utf-8"
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<TITLE>LVM</TITLE>
+
+<META content="MSHTML 5.50.4937.800" name=GENERATOR></HEAD>
+<BODY>
+<DIV><SPAN class=843480016-21092004><FONT face=Arial color=#0000ff size=2>I'm 
+not a redhat user, but I would guess that is LVM1.&nbsp; execute any of the lvm 
+commands with --version.</FONT></SPAN></DIV>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+  <DIV class=OutlookMessageHeader dir=ltr align=left><FONT face=Tahoma 
+  size=2>-----Original Message-----<BR><B>From:</B> Johan.SEGERS@cec.eu.int 
+  [mailto:Johan.SEGERS@cec.eu.int]<BR><B>Sent:</B> Tuesday, September 21, 2004 
+  8:47 AM<BR><B>To:</B> Linux-LVM@Sistina.com<BR><B>Subject:</B> [linux-lvm] 
+  LVM<BR><BR></FONT></DIV>
+  <P><FONT face=Arial size=2>Hi,</FONT> </P>
+  <P><FONT face=Arial size=2>How can i know if my Linux uses LVM1 or LVM2. I run 
+  Red hat Linux 9 (kernel 2.4.9-e.3)..</FONT> </P>
+  <P><FONT face=Arial size=2>Best regards, Johan 
+</FONT></P></BLOCKQUOTE></BODY></HTML>
+
+------_=_NextPart_001_01C49FF4.76E24656--
