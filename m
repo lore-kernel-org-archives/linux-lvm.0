@@ -1,35 +1,23 @@
-Message-Id: <m10tenl-0000YbC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9 and devfs-patch-v99.2
-In-Reply-To: <199906132233.AA06526@mailgate1b.telekom.de> from Heinz Mauelshagen at "Jun 14, 1999  0:30:30 am"
-Date: Tue, 15 Jun 1999 00:01:56 +0200 (MET DST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <19990616193406.A5249@kotnet.org>
+Date: Wed, 16 Jun 1999 19:34:06 +0200
+From: Ulrik De Bie <winmute-lvm@kotnet.org>
+Subject: [linux-lvm] lvm in 2.3.*-ac
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-> > 
-> > Hi,
-> > 
-> > Is lvm-0.6 (patched with lvm_0.6-patch-15031999a.gz) supposed to
-> > work with Linux 2.2.9 and devfs-patch-v99-2 ?
-> > 
-> 
-> No, not yet 8*(
-> 
+Hello,
 
-Just found out : devfs-patch-v99 (mind the missing -2) is working,
-hmm, well, at least the compiling didn't stop. No time yet to check
-it out, but I don't suspect any difficulties from that.
-I used a patch-v92 (IIRC) and didn't encounter problems (beside
-non-devfs-aware applications of course :-).
+I talked to Alan Cox today, and he told me had found time
+to look at lvm, and did some indenting clean up and
+alike and that it will appear soon in the ac patches now.
+Some adjustements in the feature will be needed as soon as
+Ingo is ready with the new RAID framework, but that's
+still pending on Ingo who hasn't finished his job yet.
 
-The next step is building dtfs, but I couldn't compile it.
-
-Rolf
--- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+Kind regards,
+Wintermute
