@@ -1,8 +1,8 @@
-From: GCS <gcs@lsc.hu>
-Message-ID: <20011020111357.A13288@lsc.hu>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Kernel 2.4.12 bug?
+From: Stonki <stonki@gmx.de>
+Message-ID: <55159047260.20011020155124@gmx.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvmove with Bad bocks
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,17 +13,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 20 04:01:02 2001
+Date: Sat Oct 20 08:52:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+Hello list, Hello Heinz,
 
-Is there any known issues with kernel 2.4.12? My Debian Woody is complaining
-about lvm during startup, and drops an oops when swapp is turned off, and lvm
-is going to be deactivated. It is a paging error, eip seems to be trashed to
-0x5a5a5a5a.
+on Tuesday you explained me the function of moving data from one
+hard disc to another.
+Well, regarding to Murphies Law... pvmove complains about read errors
+and stops before moving all data.
 
-GCS
+Error reading input physical volume /dev/hdf1 still 393216 bytes to
+read).
+
+What now ? Thanks anyway...
+
+cu
+stonki
