@@ -1,18 +1,25 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAJJXVr03457
-	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 14:33:31 -0500
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAJJXP3d005403
-	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 14:33:25 -0500
-Received: from mail (unknown [192.168.2.18])
-	by conterra.de (-) with ESMTP id C9A913C8036
-	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 20:33:19 +0100 (CET)
-Message-ID: <419E4A7F.9000802@conterra.de>
-Date: Fri, 19 Nov 2004 20:33:19 +0100
-From: Dieter Stueken <stueken@conterra.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] device mapper Q
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAJJk5r08668
+	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 14:46:05 -0500
+Received: from nile.gs.washington.edu (nile.gs.washington.edu [128.95.231.71])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAJJjxuO008687
+	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 14:45:59 -0500
+Received: from nile.gs.washington.edu (localhost [127.0.0.1])
+	by nile.gs.washington.edu (8.12.11/8.12.11) with ESMTP id
+	iAJJjwwO011141
+	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 11:45:58 -0800
+Received: (from dgs@localhost)
+	by nile.gs.washington.edu (8.12.11/8.12.11/Submit) id iAJJjwHg011140
+	for linux-lvm@redhat.com; Fri, 19 Nov 2004 11:45:58 -0800
+Date: Fri, 19 Nov 2004 11:45:58 -0800
+From: "David S." <dgs@gs.washington.edu>
+Subject: Re: [linux-lvm] HA Fileserver configuration recommendation sought.
+Message-ID: <20041119194558.GC10969@nile.gs.washington.edu>
+References: <1100857645.13422.99.camel@grma-lap>
+	<1100885267.19894.217.camel@rct07.cadence.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1100885267.19894.217.camel@rct07.cadence.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,35 +30,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-maybe this is more dm related than LVM2, but I could not
-finger out where to find more info/help....
 
-after I turned to LVM2, I noticed, that the VG-specific
-subdirectory below /dev/<VG>/<LV> now contains symlinks
-to /dev/mapper/<VG>-<LV> devices.
+> I use the ATABoy 2x (dual active/active FC) with great success.  I use
+> md to create a failover path (see mdadm) on newer kernels (2.6.9) and I
+> have multiple 3.2T LUNS (multiple ataboys).  I use LVM2 to partition
+> some of the LUNs with great success.
 
-Those devices also appear as /dev/dm-<N> again.
+I tried using LVM2 on a 2.6.9 kernel to stripe together four 1T LUNs
+from two 3 Ware 9000 SATA raid controllers to make ~4T file system,
+but experienced file corruption under heavy I/O loads.  In copying 
+large directories into the file system (via tar+rsh/ssh or rsync+rsh/ssh),
+I'd get files that seemed to have blocks exchanged with a different file.
+I saw this using XFS, Reiserfs, and EXT3 as the file system in the LVM2
+stripe.  Some tests I made of a similar configuration using 'md' instead
+of LVM2 were more successful, but I didn't put quite the I/O load on
+that configuration.
 
-Q: who creates those links? For any reason I'm missing
-one of these link. Should I create it by hand?
+David S.
 
-If mounting an LV, which path should I prefer?
-
-I used to use EXT2 labels and entered the LVs to
-the /etc/fstab using LABEL=<NAME>. With LVM2/DM the
-kernel now locates them as /dev/dm_<N> instead of
-/dev/<VG>/<LV>. Does it matter?
-
-Is there any more DM background information around besides
-http://sources.redhat.com/dm/, or do I have to analyze
-the C-code to learn more about it?
-
-Dieter.
--- 
-Dieter St�ken, con terra GmbH, M�nster
-     stueken@conterra.de
-     http://www.conterra.de/
-     (0)251-7474-501
+> 
