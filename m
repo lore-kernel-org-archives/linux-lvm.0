@@ -1,19 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9BEedr15201
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2004 10:40:39 -0400
-Received: from kopparhuset.net (tp2internet.comun.org [212.75.75.26] (may be
-	forged))
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i9BEeRBf030024
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2004 10:40:33 -0400
-Message-ID: <416A9B4F.4010709@webhackande.se>
-Date: Mon, 11 Oct 2004 16:40:15 +0200
-From: Rickard Olsson <richie@webhackande.se>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] How to extend the file system online?
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9BHVBr14304
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2004 13:31:11 -0400
+Received: from pm-mx2.noos.fr (pm-mx2.mgn.net [195.46.220.221])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i9BHVAhd005082
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2004 13:31:10 -0400
+Received: from [192.168.1.100] (d147.dhcp212-198-206.noos.fr [212.198.206.147])
+	by pm-mx2.noos.fr (Postfix) with ESMTP id C8AC62717D
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2004 19:31:01 +0200 (MEST)
+Date: Mon, 11 Oct 2004 19:32:37 +0200 (CEST)
+From: Laurent Bloch <lbloch@noos.fr>
+In-Reply-To: <416A9B4F.4010709@webhackande.se>
+Message-ID: <Pine.LNX.4.60.0410111927570.24979@diotime.noos.fr>
 References: <i1958990824043.04841@send4.inner-21cn.com>
-	<416A90FE.5010504@m-cam.com>
-In-Reply-To: <416A90FE.5010504@m-cam.com>
-Content-Transfer-Encoding: 7bit
+	<416A90FE.5010504@m-cam.com> <416A9B4F.4010709@webhackande.se>
+MIME-Version: 1.0
+Subject: [linux-lvm] [Debian/Knoppix] LVM2 at boot time
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,34 +25,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Arshavir Grigorian wrote:
+Hi,
 
-> You can try ReiserFS, which does allow to be resized while mounted. 
+My system is Knoppix 3.6 with 2.6.7 kernel and LVM2. My /home
+and /usr/local file systems are on logical volumes. The lvm
+script is in /etc/init.d, with a link in /etc/rcS.d, S26lvm
+(mountall has a greater number). dm-mod is in /etc/modules
 
-Additional comments:
+At boot time, everything stops; I have to type "modprobe dm-mod", 
+<Ctrl-D>, and everything is OK. What's wrong with my boot config.?
+Any hint appreciated.
 
-ReiserFS 3 can be enlarged while mounted, but shrunk only when unmounted.
-
-ReiserFS 4 can not yet be resized at all.
-
-EXT2/3 can be enlarged online with a kernel patch and utils from
-http://ext2resize.sourceforge.net/
-
-XFS must be mounted while enlarging but can AFAIK not be shrunk, even 
-off-line.
-
-JFS must be mounted while enlarging but can not be shrunk, same as XFS.
-
-
-Some more info is in the HOW-TO:
-http://linux.co.uk/howtos/LVM-HOWTO/extendlv.html
-
-and on Newsforge:
-http://www.newsforge.com/os/03/10/07/2028234.shtml?tid=2&tid=82&tid=94
-
-    / Rickard Olsson,IT-Konsult/
-   / Telefon: +46 70 635 01 42/
-  / http://www.webhackande.se/
+-- 
+Laurent Bloch -- lbloch@noos.fr -- http://laurent-bloch.org
