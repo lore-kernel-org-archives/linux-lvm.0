@@ -1,10 +1,10 @@
 From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] file system larger than lv
-Message-ID: <20021116025942.U17827@vestdata.no>
-References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com> <20021115122708.GK8377@pc.ilinx> <20021115135424.A12164@sistina.com> <20021115134816.GL8377@pc.ilinx>
+Subject: Re: [linux-lvm] PostgreSQL and file system level backup
+Message-ID: <20021116031032.V17827@vestdata.no>
+References: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20021115134816.GL8377@pc.ilinx>; from lvm@interlinx.bc.ca on Fri, Nov 15, 2002 at 08:48:20AM -0500
+In-Reply-To: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>; from murthy.kambhampaty@goeci.com on Fri, Nov 15, 2002 at 04:25:49PM -0500
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,29 +16,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 20:00:02 2002
+Date: Fri Nov 15 20:11:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: Postgres Admin List <pgsql-admin@postgresql.org>, "Linux-Xfs (E-mail)" <linux-xfs@oss.sgi.com>
 
-> > Putting additional overloading block/filesystem layer services not ne=
-cessarily
-> > needed there into the kernel is unlikely to be accepted either IMO.
+On Fri, Nov 15, 2002 at 04:25:49PM -0500, Murthy Kambhampaty wrote:
+> "Unless the postmaster is shut down meanwhile, you'll probably end up w=
+ith a
+> corrupt database.  The problem is that xfsdump does not give you an
+> instantaneous snapshot of the filesystem state, so you will probably co=
+llect
+> inconsistent contents of the various files that make up the database."
 >=20
-> No.  No.  Not in the kernel.  I mean the user space tools can simply
-> check what data is on the block device (i.e. look for a known
-> signature of given filesystems) and see if it can determine if it is
-> indeed a filesystem.
+> Which gives rise to my present question: given that LVM DOES give an
+> instantaneous snapshot of the filesystem, would an xfsdump of an LVM
+> snapshot of an XFS filesystem give usable backups?
 
-First of all it's not possible to detect if the device includes a valid
-filesystem. You can only check for know filesystems and I don't think it
-would be a good idea for lvm to include a list of filesystem-signatures.
+Yes, it should.
 
-Second, reducing the size of a device is just as dangerous if there is
-something else (say a datbase) on that device.
+Allthough, some of the postgresql-developers use the term "corrupt
+database" of a database where the table-files are inconsistant. That's
+generally _always_ the case when the server is running, as the latest
+updates are only available in the database-log. That's also the case for
+the LVM-snapshot.
 
-So, if anything, I think lvreduce should always warn the user that this
-is a dangerous operation.
+This "inconsistancy" will be fixed by log-replay when you start the serve=
+r
+(after restore).
+
+If you want to avoid it, you can:
+- shut down databasee
+- take snapshot
+- start database
+- backup from snapshot
+
+
+
+There was a long thread on this subject on the postgresql-list a month
+or two ago.
+
 
 
 
