@@ -1,11 +1,15 @@
-Message-ID: <3F51BF42.6070403@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
+Subject: Re: [linux-lvm] Re: LVM 2.0/Device-Mapper 1.0 update
+References: <20030821000539.P29420@uk.sistina.com>
+	<20030820231726.GM5431@electricrain.com>
+	<wxxptim4xup.fsf@nommo.uio.no>
+	<yw1xvfse23h3.fsf@users.sourceforge.net>
+From: Terje Kvernes <terjekv@math.uio.no>
+In-Reply-To: <yw1xvfse23h3.fsf@users.sourceforge.net>
+ =?iso-8859-1?q?(M=E5ns_Rullg=E5rd's?= message of "Sun, 31 Aug 2003
+ 00:19:20 +0200")
+Message-ID: <wxxhe3yymid.fsf@nommo.uio.no>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] How to migrate data from one Hard Drive to a new
- one
-References: <1062272914.11039.103.camel@candido>
-In-Reply-To: <1062272914.11039.103.camel@candido>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +20,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Aug 31 04:27:01 2003
+Date: Sun Aug 31 08:40:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: lvm-devel@sistina.com
 
-Luca Da Col wrote:
+mru@users.sourceforge.net (M=E5ns Rullg=E5rd) writes:
 
-[cut]
+> Terje Kvernes <terjekv@math.uio.no> writes:
+>=20
+> > does this translate to my issues with LVM under test2 and later to
+> > be known issues?  on -test4 I now get a message from vgscan
+> > telling me that lvm-mod isn't loaded.
+>=20
+> I'm typing this on a machine running 2.6.0-test4 and LVM2.  I've had
+> no problems so far.
 
-> I finally decided to upgrade my old 6.5G HD to a new 120G HD; is the procedure described in
-> http://www.tldp.org/HOWTO/LVM-HOWTO/removeadisk.html  a safe way to migrate all my data 
-> from the former to the 120G? I mean, my case is slightly different from the one described 
-> because of /boot partition and LILO in the MBR...
+  okay, I reinstalled LVM2.2.00.06 and LVM started working.  heaven
+  knows why.  now I just have to fix alsa.  *weee*
 
-yes, but if you are worried, you can do it like this:
-mount the new "partition" (real or LV) to /mnt
-cd /the_source, eg. /usr /var /home ...
-find -xdev | cpio -pm /mnt
-umount /mnt
-repeat for the next source.
-
-The process is described in the software raid howto.
-Remember to edit the new /etc/fstab and new /etc/lilo.conf,
-and run lilo with lilo -r /mnt
-
-
-
-JonB
+--=20
+Terje
