@@ -1,21 +1,20 @@
-Message-Id: <199903160847.JAA23298@e35.msede.com>
-Date: Tue, 16 Mar 1999 03:47:27 -0500
-From: "Verloove, Olivier" <olivier_verloove@merck.com>
-Subject: [linux-lvm] LVM on loopback device ?
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
+Message-ID: <36EE473E.BCE4BA8D@post10.tele.dk>
+Date: Tue, 16 Mar 1999 12:57:50 +0100
+From: Peter MN <pmn@post10.tele.dk>
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm_0.6-patch-15031999a.gz
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Hi,
+Hi  folks
 
-Sorry if this is a stupid question but is it possible to test LVM on
-standard files instead of "hard" devices using the loopback device ? (We can
-mount a file system contained in a file like that).
+Can anyone help to find the correct way to impl. the new patch (
+lvm_0.6-patch-15031999a.gz)  for lvm.
 
-Thanks in advance.
+Regards.
 
-Olivier
+Peter Michael Nielsen
