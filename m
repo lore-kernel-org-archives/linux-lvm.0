@@ -1,8 +1,11 @@
-Message-ID: <44660.80.67.170.17.1028814831.squirrel@rezo.net>
-From: "Antoine" <antoine@rezo.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] can't mount ext3 snapshot (cont'd)
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] kernel panic - converting root fs to lvm
+Message-ID: <20020808172939.GA18645@colombina.comedia.it>
+References: <OE50LHN0t0oY6k8zpHy0000da29@hotmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <OE50LHN0t0oY6k8zpHy0000da29@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,40 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug  8 08:53:01 2002
+Date: Thu Aug  8 12:29:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hi,
+On Wed, Aug 07, 2002 at 11:26:03AM -0300, Jorge Melhado wrote:
+>=20
+>    Hello.
+>   =20
+>   =20
+>   =20
+>    Please, help me.
+>   =20
+>   =20
+>   =20
+>    I installed RedHat 7.3 (kernel 2.4.18-3) and I=EF=BF=BDm trying to con=
+vert my
+>    root filesystem to LVM (lvm-1.0.3-4).
+>   =20
+use th mkinitrd tool shipped with redhat instead of lvmcreate_initrd
 
-Having problems with mounting a snapshot, I applied the following advice :
+L.
 
-"You need to apply the VFS lock patch included in the source distribution.
-
-note: the VFS lock patch is 1.0.4 is rather broken so use the one from 1.0.5
-- it'll be fine with a 1.0.4 kernel."
-
-However, after applying the patch, recompiling the kernel, and then
-rebooting, I still have the same problem :
-
-# mount -v /dev/vgdata/backup /backup/
-mount: you didn't specify a filesystem type for /dev/vgdata/backup
-       I will try type ext3,ext2
-mount: block device /dev/vgdata/backup is write-protected, mounting read-only
-mount: wrong fs type, bad option, bad superblock on /dev/vgdata/backup,
-       or too many mounted file systems
-
-Furthermore, there is another error message on the console :
-
-EXT2-fs: lvm(58,1): couldn't mount because of unsupported optional
-features (4).
-Please note : the original LV the snapshot is taken on has the option
-"noatime" set. Could the problems come from this one ?
-
-(NB : kernel 2.4.18 SMP from kernel.org, LVM 1.0.5)
-
-
-Regards
-
-Antoine.
+--=20
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
