@@ -1,10 +1,10 @@
-From: wim@unetix.nl
-Subject: Re: [linux-lvm] How to create a device mapper patch?
-References: <200310231626.53632.wim@unetix.nl> <20031023190424.GB1497@DUK2.13thfloor.at>
-In-Reply-To: <20031023190424.GB1497@DUK2.13thfloor.at>
+Message-ID: <3F9D327C.6020102@elitedvb.net>
+From: Felix Domke <tmbinc@elitedvb.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200310240936.30411.wim@unetix.nl>
+Subject: Re: [linux-lvm] LV only detected when using "lvscan -D" on amd64
+ kernel
+References: <3F994F88.8030908@elitedvb.net> <20031025091006.I848@sistina.com> <3F9C0AC9.6050805@elitedvb.net> <20031027120104.K848@sistina.com>
+In-Reply-To: <20031027120104.K848@sistina.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,31 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 27 08:32:02 2003
+Date: Mon Oct 27 08:55:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On Thursday 23 October 2003 21:04, you wrote:
-> On Thu, Oct 23, 2003 at 04:26:53PM +0200, wim@unetix.nl wrote:
+Hi,
 
-> > for the kernel. The patches directory only contains patches
-> > for 2.4.20 en 21 so, how do I generate a patch for 2.4.22?
-> > Device mapper is version 1.00.05
+>User space parses and passes it via ioctls to the kernel.
+>Please look at lvm.h for the ioctls defined and the structures involved.
+>Grep the LVM1 library source in tools/lib/ for "ioctl" to get you started.
+>  
 >
-> http://evms.sourceforge.net/install/kernel.html#dm-patches
->
-> HTH,
-> Herbert
->
-Ye, thanks , the following link is allso good :
-http://people.sistina.com/~thornber/patches/
-Would be good to add this link in the README
-or INSTALL files in the standard device-mapper
-package for people searching for patches.
+Where exactly is the LV information passed to the kernel? is it 
+"LV_CREATE"?
 
-Thanks
-Wim Bakker
+The kernel seems to don't know the LV, the LV_STATUS_BYINDEX on the 
+"/dev/fast/group" returns "No such device or address" (ENXIO) for each 
+index, including 0, which should be the LV in question.
+
+It looks as "lvm_do_lv_status_byindex" in the kernel returns -ENXIO 
+because vg_ptr->lv[lv_status_byindex_req.lv_index] is zero. Where is the 
+point where this array is written? I only found LV_CREATE, but that's 
+only called in vgimport, vgmerge and lvcreate, so it looks as there is 
+another place.
 
 
-This e-mail was scanned by RAV Antivirus!
+Can you point me in the direction?
+
+
+Felix
