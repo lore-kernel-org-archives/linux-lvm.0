@@ -1,8 +1,12 @@
-Message-ID: <3F903230.9070608@siue.edu>
-From: anthony mayes <anmayes@siue.edu>
-MIME-Version: 1.0
+Subject: Re: [linux-lvm] help on pvcreate usage
+From: SystemError <system.error@gmx.net>
+In-Reply-To: 
+	<3397328CD915D711BE07000802B083C20236507B@bwga522a.ts.siemens.de>
+References: 
+	<3397328CD915D711BE07000802B083C20236507B@bwga522a.ts.siemens.de>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM ext3 support
+Message-Id: <1066414771.1200.10.camel@carthage>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,26 +17,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 17 13:19:01 2003
+Date: Fri Oct 17 13:20:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Cc: Balasubramaniyan.Sathiamoorthy.ext_TCS@ts.siemens.de
 
-I am running Redhat 9 with kernel 2.4.20-20.9.  I am getting the 
-following errors when trying to mount an LVM snapshot:
+Bala Sat,
 
-EXT3-fs: INFO: recovery required on readonly filesystem.
-EXT3-fs: write access unavailable, cannot proceed.
+the command <<pvcreate /dev/sdb4>> will "only" destroy all data on the
+partition <</dev/sdb4>> all other partitions on <</dev/sdb>> should
+remain unaffected.
 
-I saw a thread on redhat.com that said a kernel patch is needed.  My 
-question is where can I get the patch for this kernel, how do I install 
-it, and why isn't this built into the kernel in the first place?  Any 
-other suggestions are welcome.
+Of course backups are always handy when doing things like that...
 
-Thanks in advance.
+Bye
+Lutz Reinegger
 
--- 
-Anthony Mayes
-UNIX Server Administration
-Southern Illinois University Edwardsville
-anmayes@siue.edu
+Am Don, 2003-10-16 um 16.18 schrieb Sathiamoorthy Balasubramaniyan
+(ext_TCS):
+> Hi all,
+> I have 2 external disks connected to my suse 7.0 box :
+> sdb 80GB (has 4 partitions)
+> sdc  8GB (has 3 partitions)
+> I need to increase the size of the 3rd partition, i.e sdc3, of the disk sdc
+> by borrowing some space from one of the free partitions,ie, sdb4 of the disk
+> sdb.
+> 
+>  Iam not sure whether i can do this by LVM. My question is:
+>  Can i use the command pvcreate /dev/sdb4 without disturbing the data on
+> other partitions in the disk sdb ?
+> 
+> Thanks in Advance,
+> Bala Sath
+> SIEMENS Transportation Systems
+> TS RA D OC
+> Tel  +49 531 226-6154
+> Fax +49 531 226-4477
+> mailto:Balasubramaniyan.Sathiamoorthy.ext_TCS@ts.siemens.de
+> 
+> Note: This e-mail may contain privileged, undisclosed or otherwise
+> confidential information. 
+> If you have received this e-mail in error, you are hereby notified that any
+> review, copying or distribution 
+> of it is strictly prohibited. Please inform the sender immediately and
+> destroy the original transmittal.
+> Thank you for your understanding
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
