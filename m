@@ -1,12 +1,12 @@
-From: Marc MERLIN <marc_lvm@merlins.org>
-Subject: Re: [linux-lvm] Can't mke2fs lv
-Message-Id: <20020211202503.GA22401@merlins.org>
-References: <20020211173404.GB23@merlins.org>
-    <20020211190928.A31248@sistina.com> <20020211183020.GP21505@merlins.org>
-    <20020211130701.J9826@lynx.turbolabs.com>
+From: Erkki Seppala <flux-lvm@inside.org>
+Subject: Re: [linux-lvm] rescuing a VG with one missing PV
+Message-Id: <20020211205325.GA25253@xulfad.ton.tut.fi>
+References: <20020209142411.GA10226@xulfad.ton.tut.fi>
+    <20020209150956.GA11057@xulfad.ton.tut.fi>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020211130701.J9826@lynx.turbolabs.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20020209150956.GA11057@xulfad.ton.tut.fi>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,51 +17,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 11 14:25:01 2002
+Date: Mon Feb 11 14:53:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Mon, Feb 11, 2002 at 01:07:01PM -0700, Andreas Dilger wrote:
-> > Unfortunately, that's  not it,  the machine  doens't have  any users,  and I
-> > ssh'ed in as root
-> 
-> It could still be that the ssh process inherits the ulimit from its parent.
-> The real problem with this bug is that "ulimit -f" returns "unlimited", but
-> in fact it is really 2GB.  The user tools think 2GB is unlimited, but the
-> kernel thinks 4GB is unlimited.  This assumes you don't have a ulimit set
-> at some value less than 2GB.
- 
-Well, I didn't set the ulimit, but sure enough, something did.
-After upgrading from bash 2.04 to bash 2.05 and from ssh 2.5.x to 3.0.x, I
-got:
-gargamel:~# ulimit -f
-2097151
+The drive I got was two gigabytes smaller than the original, and thus:
 
-I  am  not setting  this  in  /etc/security/limits.conf, so  something  else
-probably is.
+[21:42] lectric(pts/8):~# vgcfgrestore -n archive /dev/ide/host0/bus0/target1/lun0/part1
+vgcfgrestore -- size of physical volume /dev/ide/host0/bus0/target1/lun0/part1 differs from backup
 
-Either way, after
-gargamel:~# ulimit -f unlimited
-it works like a charm
- 
-> I _thought_ that glibc-2.2 was not affected by this problem, but it
-> could be that if you have an old shell which uses the old getrlimit
-> syscall it will still break your system.
+The original disc was:
 
-I don't know if  bash 2.05 is considered old or not, but  it's true that the
-ulimit could be set by anything along the chain.
+  PVs: [AN] ide/host0/bus0/target1/lun0/part1 60030976 /3664    
+		21331968 /1302    38699008/2362  
 
-I haven't  upgraded e2fsprogs  yet, but  if it tries  to reset  the filesize
-limit to unlimited, it would definitely fix the problem I had.
+and it now is 58633312 blocks according to fdisk.
 
-Anyway, it's all working now.
-
-Thanks a lot,
-Marc
+Is there a way to still restore the remaining VG?-o Sounds like the
+backup would need to be modified. The physical extents that were in
+the dead device would need to be either removed from the VG or
+allocated from another device?
 -- 
-Microsoft is to operating systems & security ....
-                                      .... what McDonalds is to gourmet cooking
-  
-Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
+  _____________________________________________________________________
+     / __// /__ ____  __                              Erkki Sepp�l�\   \
+    / /_ / // // /\ \/ //ircnet                           Modeemi Ry\  /
+   /_/  /_/ \___/ /_/\_\@modeemi.fi        http://www.modeemi.fi/~flux/
