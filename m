@@ -1,17 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i55FxV031202
-	for <linux-lvm@redhat.com>; Sat, 5 Jun 2004 11:59:31 -0400
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i55HMY017012
+	for <linux-lvm@redhat.com>; Sat, 5 Jun 2004 13:22:34 -0400
 Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i55FxPXn011483
-	for <linux-lvm@redhat.com>; Sat, 5 Jun 2004 11:59:25 -0400
-Subject: Re: [linux-lvm] Directories turned to sockets
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i55HMXi5026863
+	for <linux-lvm@redhat.com>; Sat, 5 Jun 2004 13:22:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by salusa.poochiereds.net (Postfix) with ESMTP id D4D3ECE43
+	for <linux-lvm@redhat.com>; Sat,  5 Jun 2004 13:22:23 -0400 (EDT)
+Received: from salusa.poochiereds.net ([127.0.0.1])
+	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 25931-01 for <linux-lvm@redhat.com>;
+	Sat, 5 Jun 2004 13:22:23 -0400 (EDT)
+Received: from localhost (tleilax.poochiereds.net [192.168.1.3])
+	by salusa.poochiereds.net (Postfix) with ESMTP id E94B9AA51
+	for <linux-lvm@redhat.com>; Sat,  5 Jun 2004 13:22:22 -0400 (EDT)
 From: Jeff Layton <jtlayton@poochiereds.net>
-In-Reply-To: <OF3823B246.F4B7B594-ON00256EA9.006F70FC-00256EA9.00706378@svunta.os.is>
-References: <OF3823B246.F4B7B594-ON00256EA9.006F70FC-00256EA9.00706378@svunta.os.is>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1086451154.2412.5.camel@localhost>
+Message-Id: <1086456141.30408.3.camel@localhost>
 Mime-Version: 1.0
-Date: Sat, 05 Jun 2004 11:59:14 -0400
+Date: Sat, 05 Jun 2004 13:22:21 -0400
+Subject: [linux-lvm] New lvm2create_initrd version
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,23 +32,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: linux-lvm@sistina.com
 
-On Fri, 2004-06-04 at 16:27, Kjartan Reynir Hauksson wrote:
-> This afternoon I discovered that a 141 directories had turned into
-> socets on one of my lvm volume, that is a folder previously listed
-> with the attributes drwxrwxr-x now has srwxrwxr-x.  I don't know if
-> this is an lvm problem or not but something has defanately gone wrong
-> with my filesystem and I'd like to know if anyone could tell me what
-> might be going on.  I'm running mandrake 10 with ext3 filesystems on
-> lvm2 volumes (allthough it says it's using lvm1 metadata??).
+I've just comitted a new version of the lvm2create_initrd script to my
+SVN repository:
 
-This doesn't sound like a problem with LVM2. LVM2 just presents block
-devices, and doesn't really have any concept of things at the filesystem
-level. I may be incorrect, but I'd look more for something at the
-filesystem level (unmount the filesystem and fsck it perhaps), or
-perhaps a rogue process or cron job that has done this change on your
-machine.
+http://poochiereds.net/svn/lvm2
 
+This version adds support for different MAKEDEV invocations, settable
+via a command-line switch (and env var too). I've also added a manpage
+for the script with some usage notes as well.
+
+I'm particularly interested in having someone with a RedHat or Fedora
+machine test this out, as I don't have one to test this on. Also I'd be
+happy to add support for other versions of MAKEDEV as well, if other
+distribs programs take different options.
+
+Thanks!
 -- 
 Jeff Layton <jtlayton@poochiereds.net>
