@@ -1,10 +1,8 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] cache buffer size
-Message-ID: <20021108081141.GA32671@percy.comedia.it>
-References: <OF442EBFE4.3A4EDB03-ON85256C69.005AF60C@pok.ibm.com> <20021107175801.A8382@sistina.com>
+Message-ID: <20021108120250.GA3810@reti>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20021107175801.A8382@sistina.com>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] 2.4 backport of the 2.5 changes to dm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +13,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  8 02:12:01 2002
+Date: Fri Nov  8 06:03:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-On Thu, Nov 07, 2002 at 05:58:01PM +0100, Heinz J . Mauelshagen wrote:
->On Wed, Nov 06, 2002 at 11:17:05AM -0600, Steve Best wrote:
->Indeed snapshot exception table ios go by blocks of 1k.
->
->Puting the snapshot store on the same device as the original is not
->recommended in general for performance reasons.
->
->In case 1k blocks are possible with JFS:
->
->if snapshots are used regularly and there's no seperate PV to put the
->snapshot onto, you might want to create a 1k blocked jfs and try if
->that performs better than the RAID 5 stripe cache flush penalty with the 4k
->blocked filesystem.
+A new *beta* version of dm for 2.4 is available here:
 
-hello,
-is there any chance of having snapshots with 4k blocks for the exception
-table (configurable), i want to use snapshot for backing up my root vg
-but i also have swap there and it is locked to do page-sized io (4k on
-ix86).
+http://people.sistina.com/~thornber/patches/2.4-unstable/2.4.19-dm-backport-1.patch.bz2
 
-L.
+This contains a backport of all the code changes that were made in the
+2.5 version of dm.  It would be really cool if people could give this
+some testing before the proper release next week.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+- Joe
