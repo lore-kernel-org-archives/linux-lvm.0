@@ -1,33 +1,41 @@
-Date: Wed, 26 Jan 2000 20:54:53 +0100
-From: "Andi Kleen" <ak@suse.de>
-Subject: Re: [linux-lvm] 0.8i pvcreate doesn't recognise Mylex RAID
-Message-ID: <20000126205453.A4734@gruyere.muc.suse.de>
-References: <15AD5D7936F8D21198240000F831776E3E8165@dboexc1.dbo.cpqcorp.net>
-Mime-Version: 1.0
-In-Reply-To: <15AD5D7936F8D21198240000F831776E3E8165@dboexc1.dbo.cpqcorp.net>; from Paul.Jakma@compaq.com on Wed, Jan 26, 2000 at 06:18:00PM -0000
+Date: Thu, 27 Jan 2000 17:45:29 +0100 (MET)
+From: Joerg Fraune <fraune@muenster.com>
+Subject: [linux-lvm] ReiserFS & LVM?
+Message-ID: <Pine.LNX.4.10.10001271743500.3114-100000@moses.muenster.com>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Jakma, Paul" <Paul.Jakma@compaq.com>
-Cc: 'Heinz Mauelshagen' <mauelsha@ez-darmstadt.telekom.de>, mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Wed, Jan 26, 2000 at 06:18:00PM -0000, Jakma, Paul wrote:
-> > Yep.
-> > That's why a change to use /proc/partitions is
-> > in the current developement code.
-> > 
-> 
-> eeekk... /proc.. no, no no. I've had too much crap with changes in format of
-> /proc files breaking userland tools, i hate the same to happen to LVM. I
-> think it would be much mroe hassle-free to just take the performance hit and
-> scan /dev. 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Near all /proc reading programs that broke over time were due to very poorly
-writen parsers. I'm sure Heinz is able to write a proper /proc parser :-)
-(that checks the column titles first and uses them to find the right
-column numbers, thus deals properly with added fields, not just the usual
-fscanf hack) 
 
--Andi
+ Hi,
+
+ the reiserfs documentation says that reiserfs is incompatible with
+software raid due to conflicts in buffer page usage; is this also
+true for reiserfs & LVM?
+
+ Joerg
+
+- -------------------------------------------------------------
+| Joerg Fraune               | netServe GmbH & Co KG        |
+| Malvenweg 108              | Fresnostrasse 10a            |
+| 48163 Muenster             | 48159 Muenster               |
+|                            | http://www.muenster.com/     |
+| Tel: 02501/987929          | Tel: 0251/98725-11           |
+| Tel: 0179/4910257          | FAX: 0251/866977             |
+| EMail: joerg@fraune.de     | EMail: netserve@muenster.com |
+- -------------------------------------------------------------
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE4kHYtY+4EMdURX1wRAixIAKCWK9v+c/CunldoBJSRZCXIkxdk3QCeMy3e
+rjPli3jfpvMx2z0ajkqwnp4=
+=/riG
+-----END PGP SIGNATURE-----
