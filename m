@@ -1,8 +1,10 @@
-From: Maximo Ramos <maximo@violadores.org>
-Message-ID: <20030125204853.GA12203@sputnik.violadores.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 for kernels 2.4.20
+Message-ID: <3E342978.9020708@gallati.net>
+From: Rene Gallati <lvm@gallati.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] disaster recovery
+References: <3E3151C1.7070409@gallati.net>
+In-Reply-To: <3E3151C1.7070409@gallati.net>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,67 +15,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 26 10:53:01 2003
+Date: Sun Jan 26 12:32:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi!
+Rene Gallati wrote:
+> I'm wondering if I have all the tools required to attemp to recover the=20
+> remaining data from the good drive?
+[..]
 
-sorry to bother you but I am trying to use LVM2 in my 2.4.20 kernel ...
+Having recieved no answer I just stepped ahead and tried it in another=20
+system I set up only for the recovery process. First I tried to patch a=20
+stock SuSE 8.1 kernel (2.4.19-4GB) which failed as expected. Then I went=20
+and fetched a vanilla 2.4.20 from my local kernel.org mirror - and that=20
+failed miserably too !
 
-the current device-mapper doesn't have a path for 2.4.20 so ...
+Looked into device-mapper's directory structure and decieded to fetch a=20
+2.4.19 vanilla which finally succeeded. You really might want to add=20
+that information to device-mapper's README or INSTALL - especially since=20
+  people who have hosed LV's are probably going to use LVM2 the most.
 
-I've got 2.4.20-dm-7.tar.bz2 but that's a lot of patch files with no README
-in it ...
+So out of the 4LVs that were in the VG, I could get out the data from=20
+two smaller ones that were completely within the first still good disk.=20
+However the other two I couldn't mount. One I did expect but the other=20
+not. One out of those two LVs was spanning the disks, and the latter=20
+disk is now gone for good. Anyone knows a nice trick to get reiserfs=20
+allowing me to mount that LV anyway and get out what's left ?
 
-I patch my kernel with those files, one-by-one (there are 40) but after the 
-modules building, I've got:
+Or am I completely lost there?
 
-[~]$modprobe dm-mod
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol mempool_destroy_Raf572a67
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol path_release_R8193b2f1
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol vmalloc_to_page_Raa214b41
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol bdput_Ra57a35a2
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol bdget_Rc89d026a
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol path_walk_Ra2e7eba5
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol vcalloc_R5c2c7068
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol blk_dev_Rffc56eca
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol blkdev_get_Ra638f186
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol mempool_free_slab_R8a99a016
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol set_bh_page_R294227b0
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol blkdev_put_Rccb77982
-/lib/modules/2.4.20/kernel/drivers/md/dm-mod.o: unresolved symbol _alloc_pages_R86a3f582
+Thanks for all answers in advance.
 
-and more ... and some modules I've alread had, got some errors too:
+CU
 
-[~]$depmod -a
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/block/floppy.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/block/loop.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/cdrom/cdrom.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/char/agp/agpgart.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/char/busmouse.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/char/drm/mga.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/char/rtc.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/char/serial.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/md/dm-mod.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/net/ppp_async.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/net/ppp_generic.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/scsi/ide-scsi.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/scsi/scsi_mod.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/scsi/sd_mod.o
-depmod: *** Unresolved symbols in /lib/modules/2.4.20/kernel/drivers/scsi/sg.o
+Ren=EF=BF=BD
 
-more more more of this .....
-
-now, what went wrong? :( 
-
-please help!!
-
--- 
-.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-Maximo Ramos           Lost in The Land of The Morning Calm
-
-    "I am free of prejudices. I hate everyone equally."
-.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+btw. recovering from hd failure is really cool when they turn off your=20
+net connectivity because of some MS-SQL worm... :-/
