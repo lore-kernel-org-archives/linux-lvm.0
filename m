@@ -1,8 +1,10 @@
-Date: Sat, 22 Sep 2001 19:11:14 -0400 (EDT)
-From: Shane Shrybman <shane@zeke.yi.org>
-Message-ID: <Pine.LNX.4.21.0109221900090.23118-100000@zeke.goatskin.org>
+From: "Jonathan DeHaan" <jdehaan@home.com>
+Subject: RE: [linux-lvm] Boot managers and LVM
+Date: Sat, 22 Sep 2001 21:54:37 -0400
+Message-ID: <000001c143d2$b3a03a20$0400a8c0@ci696011a.lxintn1.ky.home.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] e2fsck probs with LVM and 2.4.9-ac9+
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <Pine.LNX.4.30.0109211107470.20703-100000@duplo.agenda.si>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,31 +16,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-Hello,
+You'll need a separate /boot partition that is not MD or LVM, but otherwise,
+it should be fine. I've been doing it that way for at least six months with
+no problems.
 
-When I attempted to upgrade to 2.4.9-ac9 and ac14 from 2.4.9-ac6 I ran
-into a problem.
+Jonathan DeHaan
+jdehaan@home.com
 
-With either of these kernels (I didn't try any others between ac6 and
-ac14) the kernel boots fine and lvm-mod gets loaded ok but when the first
-filesystem that is on an lv gets mounted e2fsck complains and drops me to
-admin prompt. The error message is something like this:
-
-The filesystem size (according to the superblock) is 524288 blocks
-the physical size of the device is 57344
-...
-
-When I reboot back into 2.4.9-ac6 everything is fine after e2fsck.
-
-I have e2fsprogs version 1.19, do I need a more recent version?
-
-Regards,
-
-Shane
-
-
--- 
+> -----Original Message-----
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Danilo Godec
+> Sent: Friday, September 21, 2001 5:10 AM
+> To: linux-lvm@sistina.com
+> Cc: bug-grub@gnu.org
+> Subject: [linux-lvm] Boot managers and LVM
+>
+>
+> Hi!
+>
+> I'm planning to use LVM with MD devices and I wonder if GRUB is somehow
+> able to boot using LVM on / or will I have to go back to Lilo?
+>
+> Thanks, D.
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
