@@ -1,17 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8OJ19r01146
-	for <linux-lvm@redhat.com>; Fri, 24 Sep 2004 15:01:09 -0400
-Received: from hoemail1.lucent.com (hoemail1.lucent.com [192.11.226.161])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8OJ13TF010456
-	for <linux-lvm@redhat.com>; Fri, 24 Sep 2004 15:01:03 -0400
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8PDJhr31793
+	for <linux-lvm@redhat.com>; Sat, 25 Sep 2004 09:19:43 -0400
+Received: from mwinf0907.wanadoo.fr (smtp9.wanadoo.fr [193.252.22.22])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8PDJWxV002044
+	for <linux-lvm@redhat.com>; Sat, 25 Sep 2004 09:19:38 -0400
+Received: from me-wanadoo.net (localhost [127.0.0.1])
+	by mwinf0907.wanadoo.fr (SMTP Server) with SMTP id 445B518000FD
+	for <linux-lvm@redhat.com>; Sat, 25 Sep 2004 15:19:25 +0200 (CEST)
+Received: from [192.168.0.35] (AVelizy-151-1-39-70.w82-120.abo.wanadoo.fr
+	[82.120.21.70])
+	by mwinf0907.wanadoo.fr (SMTP Server) with ESMTP id DD1211800082
+	for <linux-lvm@redhat.com>; Sat, 25 Sep 2004 15:19:24 +0200 (CEST)
+From: Pascal Garcia dld <dld.pascal.garcia@wanadoo.fr>
+Message-Id: <1096118366.3170.64.camel@localhost>
+Mime-Version: 1.0
+Date: Sat, 25 Sep 2004 15:19:26 +0200
 Content-Transfer-Encoding: 7bit
-Message-ID: <16724.28393.548757.225220@gargle.gargle.HOWL>
-Date: Fri, 24 Sep 2004 15:00:57 -0400
-From: "John Stoffel" <stoffel@lucent.com>
-Subject: Re: [linux-lvm] which files, which physical volumes?
-In-Reply-To: <41538691.2040807@myself.gen.nz>
-References: <41538691.2040807@myself.gen.nz>
+Subject: [linux-lvm] Problem at boot time with Mandrake 10.1 community
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,27 +28,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Steve Wray <steve.wray@paradise.net.nz>, LVM general discussion and development <linux-lvm@redhat.com>
+To: lvm-linux <linux-lvm@redhat.com>
 
->>>>> "Steve" == Steve Wray <steve@myself.gen.nz> writes:
+Hello,
+here is my problem :
+I installed on a test disk the new version of Mandrake, kernel
+2.6.8.1mdk.
+I have one partition, unique element of a VG named rootvg.
+On the vg I created 2 reiserfs partitions one for / and one for /home,
+and a swap partition.
 
-Steve> Or maybe pvmove is *still* broken, in which case I need to find
-Steve> the files which occupy that physical volume, move them to a
-Steve> different logical volume altogether and then forcibly remove
-Steve> that physical volume without regard to the files that are no
-Steve> longer on it... and hopefuly this won't cause corruption on the
-Steve> filesystem on that logical volume.
+No problem with the installation as long as I create the vg or use an
+existing vg. (In an other mail, I will detail the problem entcountered
+when freeing a vg during installation process).
 
-You will destroy that filesystem, no ifs, ands or buts about it, if
-you just remove the phyiscal volume.  Don't even think of doing it.
-Think about it for a seond, maybe in terms of layers.
+When booting, I can select the kernel I want with lilo and then, in the
+list of messages 2 concerning the vg, saying approximately :
+- The lv is not available
+- The lv is not complete and mounted read only.
 
-You've got the physical disks on the bottom layer, with an LV on top
-of that, and a filesystem on top of that.  If you remove any lower
-layer, you will immediately impact and probably corrupt the upper
-layers, unless you have the proper redundancy in the lower layer.
+Then a kernel panic occurs.
 
-Sorry I can't help with the pmove stuff though, I haven't tried it
-yet.
+An install without LVM works. The same configuration works fine with
+Mandrake 10.0 and kernel 2.6.3.16mdk. I think the problem is related to
+the LVM, but do not know what to do.
 
-John
+
+Help
+
+Thanks
+
+Pascal Garcia
