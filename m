@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Thu, 21 Jun 2001 10:58:09 +0200
+Date: Thu, 21 Jun 2001 11:05:40 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] LVM problems
-Message-ID: <20010621105809.B28374@sistina.com>
-References: <20010619161930.A15720@sistina.com> <Pine.LNX.4.33.0106200212360.21696-100000@fogarty.jakma.org>
+Message-ID: <20010621110540.C28374@sistina.com>
+References: <20010620155023.B25048@sistina.com> <Pine.LNX.4.33.0106210143280.996-100000@fogarty.jakma.org>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0106200212360.21696-100000@fogarty.jakma.org>; from paul@clubi.ie on Wed, Jun 20, 2001 at 02:15:30AM +0100
+In-Reply-To: <Pine.LNX.4.33.0106210143280.996-100000@fogarty.jakma.org>; from paul@clubi.ie on Thu, Jun 21, 2001 at 01:58:32AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,36 +21,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 20, 2001 at 02:15:30AM +0100, Paul Jakma wrote:
-> On Tue, 19 Jun 2001, AJ Lewis wrote:
+On Thu, Jun 21, 2001 at 01:58:32AM +0100, Paul Jakma wrote:
+> On Wed, 20 Jun 2001, Heinz J. Mauelshagen wrote:
 > 
-> > or you can use the CVS repository.  I really don't know what else you expect
-> > us to do.
+> > Ed,
 > 
-> make releases on a more timely basis?
+> > Linus *never* answered when we send hom patches even though I've
+> > send them multiple times.
+> 
+> and linus has said many many times on l-k: he gets loads and loads of
+> mail, he reads it with his finger on the D key, if you hear nothing
+> from him, keep sending.
 
-Please calm down folks!
+Yes, we kept sending (sigh).
+Thanks to Alan, we'll hopefully make it soon into vanilla.
 
-If you had followed the thread here you had seen that people recommended
-to wait with 1.0 till vanilla is updated.
+> 
+> also, you can almost take it as given that he won't look at anything
+> but emails that contain an inline diff (unified format) that tackles
+> one specific problem/update. URL or mime attachment -> deleted.
 
-We plan to release 1.0 on Friday when at least -ac will hopefully be up to date.
+We never have send attachements.
 
-Thanks Alan! :-)
+> 
+> > We are working together with Alan Cox since weeks to get his -ac
+> > tree updated.
+> >
+> > Once he has it in he will push it to Linus.  Hopefully small
+> > changes in the future will make it in easier (sigh).
+> 
+> hopefully so and look forward to it.
+
+We too.
 
 > 
 > >
 > > Regards,
-> >
+> > Heinz    -- The LVM Guy --
 > 
+> again, just like Ed, i have to say that i'm not bitching.. i think
+> LVM is just about the best thing since sliced bread - truly my
+> favourite linux kernel feature.
+
+Thanks :-)
+
+> so all i want to point out is that
+> LVM'd be just that -> <- much better if you guys kept LVM closely
+> in-sync with Linus. and best of all, for everyone ultimately, if
+> you'd ditch your private CVS tree altogether and just sync through
+> Linus very regularly..
+
+That's exactly what we want to conform to.
+It just takes a hole lot of time (several weeks now) to feed it into -ac.
+
+And believe me, Alan is *very* helpful here but he can't work on just LVM
+integration for sure.
+
+Once we've got -ac updated, we'll try setting up a cron job to feed in the
+small patches we are going to send to Alan/Linus ;-))
+
+> 
+> (we don't care if sometimes you introduce bugs by sending patches
+> very frequently to Linus, cause we'll know that you just as regularly
+> send fixes.  but don't accumulate bug-fixes over many months in a cvs
+> tree and sit on them.)
+
+Accepted.
+
+> 
+> but i do love LVM.
+
+We too ;-)
+
+> 
+> regards,
 > -- 
 > Paul Jakma	paul@clubi.ie	paul@jakma.org
 > PGP5 key: http://www.clubi.ie/jakma/publickey.txt
 > -------------------------------------------
 > Fortune:
-> He:	Let's end it all, bequeathin' our brains to science.
-> She:	What?!?  Science got enough trouble with their OWN brains.
-> 		-- Walt Kelly
+> That government is best which governs least.
+> 		-- Henry David Thoreau, "Civil Disobedience"
 > 
 > _______________________________________________
 > linux-lvm mailing list
