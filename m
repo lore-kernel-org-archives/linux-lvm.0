@@ -1,51 +1,41 @@
-Date: Wed, 21 Jul 1999 22:22:57 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
+Date: Thu, 22 Jul 1999 09:48:45 +0200
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] RAID and LVM?
-In-Reply-To: <19990721224923.C29742@colombina.comedia.it>
-Message-ID: <Pine.LNX.4.10.9907212218320.2202-100000@hibernia.spin.ie>
-MIME-Version: 1.0
+Message-ID: <19990722094845.A529@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+References: <19990721224923.C29742@colombina.comedia.it> <Pine.LNX.4.10.9907212218320.2202-100000@hibernia.spin.ie>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.10.9907212218320.2202-100000@hibernia.spin.ie>; from Paul Jakma on Wed, Jul 21, 1999 at 10:22:57PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Luca Berra <bluca@comedia.it>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Wed, 21 Jul 1999, Luca Berra wrote:
+On Wed, Jul 21, 1999 at 10:22:57PM +0100, Paul Jakma wrote:
+> On Wed, 21 Jul 1999, Luca Berra wrote:
+>   > raid0145-19990421-2.2.6 (which I've been using for quite a while),
+>   which is a very BAD idea, (hasn't crashed yet? hope it doesn't)
+>   UPGRADE your raid patches YESTERDAY
+> 
+> the bug you're reffering to won't crash your system, it just means
+> that resyncs will never finish. 
+i know, i meant that if your system crashes you'll have troubles
 
-  On Tue, Jul 20, 1999 at 10:40:02PM +0100, Paul Jakma wrote:
-  > Ok..
-  > 
-  > I've got 2.2.11pre1, patched with Ingo Molnar's
-  > raid0145-19990421-2.2.6 (which I've been using for quite a while),
-  which is a very BAD idea, (hasn't crashed yet? hope it doesn't)
-  UPGRADE your raid patches YESTERDAY
+> i corrected the current->priority bug manually. 
+you dinna say that! (so i switched into auto-warn mode)
 
-the bug you're reffering to won't crash your system, it just means
-that resyncs will never finish. 
+> Anyway, back to the RAID+LVM saga.
+i was in an hurry yesterday evening, anyway i'll do this kind of work
+with the latest raid patches, they are more likely to be those that
+end up in 2.2.x
+> So this has to be fixed soon anyway, and i'd love to be the guinea
+> pig. :)
+me too, i'll try something this weekend.
 
-i corrected the current->priority bug manually. 
+L.
 
-Anyway, back to the RAID+LVM saga.
-
-OK, so i changed bh->b_dev to bh->b_rdev at the top of
-md_make_request in md.c.
-
-The resultant kernel didn't boot. It hung after detecting all my scsi
-drives, damm.
-
-Any ideas? Ingo's RAID patches are due to go in to 2.2.11 or 2.2.12.
-So this has to be fixed soon anyway, and i'd love to be the guinea
-pig. :)
-
-regards,
 -- 
-Paul Jakma
-paul@clubi.ie	http://hibernia.clubi.ie
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-You should never wear your best trousers when you go out to fight for
-freedom and liberty.
-		-- Henrik Ibsen
+Luca Berra -- bluca@comedia.it
+    Communications Media & Services S.r.l.
