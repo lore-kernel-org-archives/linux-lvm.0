@@ -1,11 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105240641.f4O6fIrW031893@webber.adilger.int>
-Subject: Re: [linux-lvm] Converting my Root file system to LVM [lastquestion]
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJGENMIOAA.steve.wray@the.net.nz>
- "from Steve Wray at May 24, 2001 10:24:28 am"
-Date: Thu, 24 May 2001 00:41:18 -0600 (MDT)
-MIME-Version: 1.0
+Return-Path: <shanu@exocore.com>
+Date: Thu, 24 May 2001 12:21:43 +0530
+From: Shanker Balan <shanu@exocore.com>
+Subject: Re: [linux-lvm] LVM and multiple distributions
+Message-ID: <20010524122143.D2372@monster.exocore.com>
+References: <20010521112841.A28340@monster.exocore.com> <20010521145304.A10599@sistina.com> <20010522103459.A6179@monster.exocore.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010522103459.A6179@monster.exocore.com>; from shanu@exocore.com on Tue, May 22, 2001 at 10:34:59AM +0530
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,26 +22,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Steve Wray writes:
-> > If root is unmounted when /sbin/vgchange is called, will the system
-> > use the ramdisk?   If so, how does it know to use it?   (I'm kinda
-> > new to figuring out how ramdisks work, I just follow instructions
-> > and they work!)
-> 
-> Hey thats a good point... maybe a halt-time ramdisk? :)
+Hello:
 
-Actually, I posted a similar question to linux-kernel, but I think it was
-lost in the noise.  Basically, it _is_ possible to have a "finitrd" for
-just this situation (at least on 2.4).  You unmount all but root, set up
-a ramfs, and pivot_root into the ramfs.  You can then unmount root (not
-just a read-only remount), and properly shutdown LVM/RAID/etc.  Haven't
-tried it myself, but it should work.
+Sucks, tried everything in the book and still no LVM. I am gonna
+recreate the LVM partitions from scratch.
 
-Note that LVM doesn't actually write anything to disk with "vgchange -an",
-so there is no real need to do this.  
+Thanx for your time.
 
-Cheers, Andreas
+-- Shanu
+
+Shanker Balan wrote,
+> Yes i did, but does not look like it found something. It does not seem
+> to scan for LVM metadata /dev/hda.
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+
+ -   -   -   -   -   -   -   -   -   -  - ( Shanu )  -  -
+ Shanker Balan							shanu@exocore.com
