@@ -1,11 +1,12 @@
-Return-Path: <randomx@storix.com>
-Message-ID: <3B7D7D7A.9F1B6FC2@storix.com>
-Date: Fri, 17 Aug 2001 13:24:26 -0700
-From: Devin Broce <randomx@storix.com>
-MIME-Version: 1.0
-References: <200108161601.tno9lh.ijc.37kbpol@augustus>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: linux-lvm digest, Vol 1 #291 - 15 msgs
+Return-Path: <lewis@sistina.com>
+Date: Fri, 17 Aug 2001 16:48:06 -0500
+From: AJ Lewis <lewis@sistina.com>
+Message-ID: <20010817164806.A22710@sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Content-Disposition: inline
+Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1-rc1 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,41 +18,64 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-> Gerry,
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I messed with patching RedHat's 7.1 kernel for few days before I just went out and
-got the latest stable clean source from kernel.org.  Patched, compiled and installed  the first time out.  Much nicer all
-around...
+Hi all (Heinz is offline, so I'm announcing ;),
+                                                                           =
+  =20
+Due to feedback on the upgrade process to LVM 1.0 from previous versions,
+the LVM team is releasing LVM 1.0.1-rc1.
 
-Devin
+A tarball is available now at
 
->
->
-> > Hello!!
-> >          I am trying to get lvm working on redhat 7.1 with kernel
-> > 2.4.2-2. I down loaded the source rpm's 1)
-> > lvm-iop-0.9.1_beta6-1.src.rpm   2)
-> > lvm-iop-patchgen-0.9.1_beta6-1.src.rpm  and the base rpm 3)
-> > lvm-base-1.1-1.i386.rpm. I did a rpm --rebuild and ran the rpm command
-> > and all seemed to install well with no problems. The problem I did
-> > discover is that there is no lvm dir. in /proc and the lvm-mod is
-> > nowhere to be found. I was under the impression that kernel 2.4 has lvm
-> > already built in. I did a insmod lvm-mod and modprobe lvm-mod and nada.
-> > I cannot figure out what I am doing wrong or if I should not be using
-> > this version of lvm and use lvm 1.0 instaed (will it work on redhat?).
-> > Thanks, Chris.
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
->
-> Gerry
-> --
-> "The lyfe so short, the craft so long to learne"  Geoffrey Chaucer
->
+   <http://www.sistina.com/>
+
+for download (Follow the "download" link in the announcement on that page).
+
+This release candidate should allow you to continue to use the old data
+format (version 1) which was used by beta7 tools and below, as well as the
+new format (version 2) which was used by beta8 and 1.0.  There is no longer
+a need to undertake the upgrade process which was described in the 0.9.1
+beta8 and LVM 1.0 release notes.  It also adds support for linux-2.4.9 as
+well as a couple of minor bug fixes.  If you have already upgraded to
+LVM 1.0, there is no need to update to LVM 1.0.1-rc1.
+
+Being a release candidate this has not received as much testing as our
+normal releases.  It will become LVM 1.0.1 provided no problems are
+discovered.
+
+Feed back LVM related information to <linux-lvm@sistina.com>.
+
+Thanks a lot for your support of LVM.
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7fZEWlB4SYQApJkgRAmWfAJ9zZlBAnJiH0ruP+jXMfWseOBW+mQCbBYB0
+s7sHQQIMiQcvAVjKxfrliEE=
+=xVY7
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
