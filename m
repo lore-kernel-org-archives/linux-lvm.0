@@ -1,14 +1,10 @@
-Return-Path: <lewis@sistina.com>
-Date: Wed, 7 Feb 2001 09:17:14 -0600
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Re: with 2.4.1, should I use beta2 or beta3 lvm-tools?
-Message-ID: <20010207091714.A22166@sistina.com>
-References: <61DA682E8A5CD4119CD80050DA4E318BCAC39E@josef.wineasy.se>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Content-Disposition: inline
-In-Reply-To: <61DA682E8A5CD4119CD80050DA4E318BCAC39E@josef.wineasy.se>; from h.jettingstad@wineasy.se on Wed, Feb 07, 2001 at 10:41:25AM +0100
+Return-Path: <andy@redeye.com>
+From: Andy Cowling <andy@redeye.com>
+Date: 07 Feb 2001 15:30:45 +0000
+In-Reply-To: Patrick Caulfield's message of "Wed, 7 Feb 2001 14:28:18 +0000"
+Message-ID: <m21ytase6y.fsf_-_@andy.off.redeye.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] the curious case of the semi-created Logical Volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,65 +16,63 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+SuSE 7.0 with 4 x 8Gb SCSI disks. All filesystems are ext2.
 
-On Wed, Feb 07, 2001 at 10:41:25AM +0100, H?kan Jettingstad wrote:
-> When I try to apply the patch that LVM 0.9.1beta3 creates with:=20
->=20
-> ./configure --with-kernel_dir=3D/usr/src/linux-2.4.1 creates, on my
-> /usr/src/linux-2.4.1 directory like this:
->=20
-> hostname:/usr/src/linux-2.4.1# cat
-> /usr/src/LVM/0.9.1_beta3/PATCHES/lvm-0.9.1_beta3-2.4.1.patch | patch -p1
-> patching file include/linux/lvm.h
-> patching file drivers/md/lvm.c
-> patching file drivers/md/lvm-snap.c
-> patching file drivers/md/Config.in
-> Reversed (or previously applied) patch detected!  Assume -R? [n]=20
-> Apply anyway? [n] n
->=20
-> I get the above error, should it apply cleanly or can I just ignore this =
-and
-> answer y to apply anyway?
+I have created PV's, VG's and 2 LV's each of 8Gb and created ext2
+filesystems on them and mounted them successfully.
 
-The problem is that Linux 2.4.1 was not out when we released LVM 0.9.1
-Beta3, so we don't have a fragments file for it.  If you create an empty
-file in the PATCHES/ directory called 'fragments-2.4.1' and rerun configure
-and make in the PATCHES directory, you should get a valid patch for 2.4.1
+Now I want to extend 'lv02' to 16Gb but lvextend claims the LV is not
+active. Similarly lvdisplay only lists the LV using '-d'.
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+I created this setup using Yast (not the command-line).
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+Is there any way to retrieve the situation ? I am not at all familiar
+with LVM configuration files and this is a live system   :-(
 
------Begin Obligatory Humorous Quote----------------------------------------
-File not found. Should I fake it? (Y/N)
------End Obligatory Humorous Quote------------------------------------------
+Thanks, as always, for any help.
+-- 
+Andy Cowling
+RedEye International
 
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6gWb6pE6/iGtdjLERAn57AJ9qhqxrYqYLYdAsg92C5I+cTmfH7wCfeOTB
-syzsjtlPBGLOzFdtrO7wkr0=
-=Zqey
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
+#  lvextend -L +3920M  /dev/pv01/lv01 /dev/sdb1
+lvextend -- logical volume "/dev/pv01/lv01" isn't active
+#  lvscan
+lvscan -- ACTIVE   "/dev/pv02/lv02" [7.81 GB]
+lvscan -- ACTIVE   "/dev/pv01/lv01" [7.84 GB]
+lvscan -- 2 logical volumes with 15.65 GB total in 2 volume groups
+lvscan -- 2 active logical volumes
+#  vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "pv01"
+vgscan -- found active volume group "pv02"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: you may not have an actual backup of your volume groups
+#  pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sdb1" of VG "pv01" [3.83 GB / 3.83 GB free]
+pvscan -- inactive PV "/dev/sdb2" of VG "pv01" [3.83 GB / 0 free]
+pvscan -- inactive PV "/dev/sdc2" of VG "pv02" [4.39 GB / 0 free]
+pvscan -- inactive PV "/dev/sdc3" of VG "pv01" [4.01 GB / 0 free]
+pvscan -- inactive PV "/dev/sdd2" of VG "pv02" [4.39 GB / 1000 MB free]
+pvscan -- inactive PV "/dev/sdd3" of VG "pv01" [4.01 GB / 4.01 GB free]
+pvscan -- total: 6 [24.48 GB] / in use: 6 [24.48 GB] / in no VG: 0 [0]
+#  lvdisplay /dev/pv01/lv01
+lvdisplay -- logical volume "/dev/pv01/lv01" is not active; try -D
+#  lvdisplay -D /dev/pv01/lv01
+--- Logical volume ---
+LV Name               /dev/pv01/lv01
+VG Name               pv01
+LV Write Access       read/write
+LV Status             available
+LV #                  1
+# open                0
+LV Size               7.84 GB
+Current LE            2007
+Allocated LE          2007
+Allocation            next free
+Read ahead sectors    128
+Block device          58:0
