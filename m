@@ -1,9 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 20 Jun 2001 17:20:13 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010620172013.A25559@sistina.com>
+Return-Path: <mowrer@lexmark.com>
+Message-Id: <200106201846.OAA08500@interlock2.lexmark.com>
+From: mowrer@lexmark.com
+Date: Wed, 20 Jun 2001 14:45:33 -0400
 Mime-Version: 1.0
-Subject: [linux-lvm] LVM 1.0 release schedule
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Subject: [linux-lvm] Mandrake 8.0 with LVM and mount
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +17,12 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Because we are investigating a snapshot allocation offset bug,
-we are planning to release LVM 1.0 on Friday.
 
-Regards,
-Heinz    -- The LVM Guy --
+Running LVM on Mandrake 8.0.  Have all working well, but upon reboot, my FS on
+this LV does not mount without putting a mount in S99local.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Where should this happen..  I suppose /etc/fstab wont work! or should it..
+Thanks Jim
