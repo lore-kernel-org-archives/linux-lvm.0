@@ -1,11 +1,15 @@
 From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Re: lvm 1.0.3, kernel 2.4.17 and the libs...
-Message-Id: <20020226155618.C12832@lynx.adilger.int>
-References: <1014762518.12325.76.camel@dirac.cids.ca>
+Subject: Re: [linux-lvm] snapshots of busy ext2 file system corrupt
+Message-Id: <20020226162123.D12832@lynx.adilger.int>
+References: <m28z9guz53.fsf@isnogud.escape.de>
+    <20020226095919.F12832@lynx.adilger.int> <2412370000.1014745130@tiny>
+    <m2bsecdouv.fsf@isnogud.escape.de> <2621690000.1014757084@tiny>
+    <20020226142731.X12832@lynx.adilger.int>
+    <20020226223230.GE5066@merlins.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1014762518.12325.76.camel@dirac.cids.ca>; from
-    dsavard@cids.ca on Tue, Feb 26, 2002 at 05:28:38PM -0500
+In-Reply-To: <20020226223230.GE5066@merlins.org>; from
+    marc_lvm@merlins.org on Tue, Feb 26, 2002 at 02:32:30PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,26 +20,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 26 16:56:02 2002
+Date: Tue Feb 26 17:21:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Daniel Savard <dsavard@cids.ca>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Feb 26, 2002  17:28 -0500, Daniel Savard wrote:
-> I did mkfs.ext2 on /dev/sda8 !!! However, this was still pointing to my
-> LVM partition even if fdisk was not showing this.
+On Feb 26, 2002  14:32 -0800, Marc MERLIN wrote:
+> On Tue, Feb 26, 2002 at 02:27:31PM -0700, Andreas Dilger wrote:
+> > Well, in many cases, data=ordered is actually faster than data=writeback
+> > because you get all of your journal I/O finished before you start writing
+> > to the FS.  In some cases (e.g. mail spool, NFS) it is faster to have
+> > data=journal for the same reason (because sync I/O is very fast when it
+> > is written to the journal).
 > 
-> The big question: Is it still possible to recover some data from the LVM
-> partition which was the only partition in my VG?
+> I had heard about data=journal on mail spools, but does anyone have a
+> pointer with more performance comparisons between all 3?
 
-Well, mke2fs writes a LOT of data into the partition, being especially
-careful to overwrite everything at the start of the disk.  It might be
-possible to recover this with "vgcfgrestore", but even then you have the
-problem of overwriting the rest of the data on the disk.  If the primary
-ext2 superblock is overwritten on an LV inside this disk, you can use
-"e2fsck -b 32768" or so to try and recover.
+There was some discussion about it on one of (linux-kernel, ext3-users,
+ext2-devel), but since I read all of them, I don't know which one for
+sure.
+
+I found:
+
+http://bruce-guenter.dyndns.org/benchmarking/
+http://www-106.ibm.com/developerworks/linux/library/l-fs8.html?dwzone=linux
 
 Cheers, Andreas
 --
