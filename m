@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] device-mapper & proc
-Message-ID: <20021011094521.GA2093@fib011235813.fsnet.co.uk>
-References: <1034276879.2396.11.camel@mars.goatskin.org> <20021011075220.GA1153@fib011235813.fsnet.co.uk> <20021011090446.GA5506@sparcbox.net> <20021011092455.GA5529@sparcbox.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021011092455.GA5529@sparcbox.net>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: Luca Lavorante <luca@dedalus.com.br>
+Message-id: <3DA6B710.6060304@dedalus.com.br>
+MIME-version: 1.0
+Content-transfer-encoding: QUOTED-PRINTABLE
+Subject: [linux-lvm] question about LVM kernel module - mirroring
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,34 +13,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 11 04:48:00 2002
+Date: Fri Oct 11 06:33:13 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Fri, Oct 11, 2002 at 02:24:55AM -0700, Steven Stillaway wrote:
-> LVM has /proc/lvm, DM does not seem to have anything
-> equivalent.
-> 
-> Is there a reason for this?
+Hi everybody, I am new to the list and hope you will excuse my (perha=
+ps)=20
+silly questions.
 
-Yes, device-mapper is a much lower level driver, it is not specific to
-LVM (eg, it knows nothing about volume groups).  The information
-simply isn't present in the kernel to be published in a /proc file.
+1) I have seen in the LVM documentation that the program is divided i=
+nto:
 
-> Is this likely to change?
+   - A kernel module
+   - a set o binaries (commands etc.)
 
-No.
+I=B4d like to know whether it is possible to use LVM WITHOUT a kernel=
+=20
+module. I mean a deamon process. I=B4m asking that because sometimes =
+I am=20
+not allowed to recompile the kernel on production machines.
 
-> I ask because my start scripts look for /proc/lvm --
-> if I could have them check for /pro/lvm or /proc/dm
-> and run the appropriate command that would be useful.
+2) How can I perform mirroring using LVM? I know the kernel can do th=
+at=20
+on local disks. Is it possible for the kernel of  two clustered machi=
+nes=20
+to mirror two disks on an external storage?
+I am working on a HA cluster.
 
-I'm not sure what you mean by 'appropriate command', what information
-are you getting from /proc/lvm that you can't get from the userland
-tools ?  If you just want to see if device-mapper is present:
+Thanks for your attention
 
-grep device-mapper /proc/devices
-
-- Joe
+        Luca Lavorante
