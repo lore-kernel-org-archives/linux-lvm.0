@@ -1,6 +1,10 @@
-From: lvm@freakout.de
-Message-Id: <200401111044.i0BAiV48002620@bongo.freakout.de>
-Subject: [linux-lvm] LVM2 migration on 2.4.24 - prepare for 2.6
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] failed a disk of LVM
+Message-ID: <20040110111719.GD11076@shell.blacknet.de>
+References: <1073644416.2536.14.camel@heppc23>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1073644416.2536.14.camel@heppc23>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,27 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 11 05:59:01 2004
+Date: Sun Jan 11 05:59:04 2004
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: linux-lvm@sistina.com
 
-Hello,
+On Fri, Jan 09 '04 at 11:33, Juan Jos? Pardo Navarro wrote:
+> I have a logical volume (LV) with four physical volumnes (PV):
+> hda1, hdb1, hdc1, hdd1.
+> Yesterday a PV failed. (hdc1).
+> 
+> could I recover the information?
+Plane A: Take it from an up to date backup. (If you don't have one, try
+         to get one next time)
+Plane B: get a disk the same size (or better 4 disks the same size as
+         hda, hdb, hdc and hdd) and ddrescue hdc to the new disks.
+         Than try to reactivate your backup version.
+Plane C: force LVM to work without the broken drive (might work if you
+         had no data on hdc1)
 
-i tried to migrate my system to LVM2 on 2.4 before migration to 2.6
-to avoid troubles with LVM. I got the newest device-mapper/LVM2 tools
-and installed them alongside with a patched kernel and dm-mod.
-
-When i try to "vgchange -ay" with device-mapper/LVM2 i get all of my lv's
-except one! All my snapshots are also corrupt (I use snapshots intensively).
-
-Back to LVM1 was no problem - everything running and Ok. On another
-machine without snapshots moving to dm/LVM2 on 2.4.24 was no problem.
-
-Are there incompatibilities regarding snapshots with LVM1/2?
-Details, logs, config can be sent on interest.
-
-Regards
-Axel Reinhold
+Than make a full backup (plane B and C only), replace hdc, make a RAID5
+and restore the backup.
+-- 
+/"\ Goetz Bock at blacknet dot de  --  secure mobile Linux everNETting
+\ /                     (c) 2003 as GNU FDL 1.1
+ X   [ 1. Use descriptive subjects - 2. Edit a reply for brevity -  ]
+/ \  [ 3. Reply to the list - 4. Read the archive *before* you post ]
