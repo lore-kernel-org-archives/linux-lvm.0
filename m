@@ -1,11 +1,12 @@
-From: tim@connectlive.com
+From: Andreas Dilger <adilger@turbolabs.com>
 Subject: Re: [linux-lvm] Cluster LVM
-Message-Id: <20020227063421.A15647@connectlive.com>
-References: <OE259ql2RkeS8YkdavN00018e1a@hotmail.com>
+Message-Id: <20020227101949.M12832@lynx.adilger.int>
+References: <3C7CC4F3.9DA76FC9@lmco.com>
+    <200202271145.MAA11838@mailgate.sara.nl>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <OE259ql2RkeS8YkdavN00018e1a@hotmail.com>; from
-    gitansh@hotmail.com on Wed, Feb 27, 2002 at 05:35:26PM +0530
+In-Reply-To: <200202271145.MAA11838@mailgate.sara.nl>; from r.post@sara.nl
+    on Wed, Feb 27, 2002 at 12:45:05PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +17,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 08:34:02 2002
+Date: Wed Feb 27 11:19:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Quoth Gitansh Chadha:
-> hi....
-> well i am an undergraduate student from Pune ,India and we implementing a cluster LVM as our final year project.
-> we are manipulating   vg_status in vg_t structure to determine the status the of a volume group.basically playing with the bits in it.so we can have a shared and exclusive locked volume group.
-> we also have a administrator which communicates with all nodes in the cluster and basically to maintain the consistency of the LVMTAB.
-> any suggestions?
+On Feb 27, 2002  12:45 +0100, Remco Post wrote:
+> clusters all have one major problem to solve: split brain. Make sure that the 
+> node manipulating the LV/VG does indeed have the right to do so, and doesn't 
+> screw up everything for everybody. Maybe introduce a (LV/VG) master concept 
+> into the VG, so as long as that is set, no other node in the cluster will 
+> manipulate anything in the vg. (just some random rant, ignore if I'm talking 
+> nonsense ;)
 
-Have you looked at IBM's old Distributed Lock Manager?  I believe it was
-used in DFS/DCE for pretty much the same type of thing.  If not, you may
-be able to get some good algorithms out of it. 
+Having a single master is a _terrible_ idea, since this would mean that
+if that node is down you are unable to change the VG until/if it is back
+working again.
 
-http://www-124.ibm.com/developerworks/projects/dlm
+Rather use a DLM (as the other poster suggested) and a client needs to
+get a lock on the VG in order to change anything.  You can start with
+a lock per VG and one per shared PV not in a VG, and then go more fine
+grained if you want (e.g. write lock on VG and specific LV being changed,
+which does not block users of other LVs).  In the end, because you are
+not changing a VG configuration very often, and it doesn't take very long
+when you do (excluding pvmove), the big lock is probably enough.
 
-The reason I would consider implementing code that's already been
-tested is that subtle bugs in your implementation would almost certainly
-hose any VG that had two "owners" at a point in time.  Al Bazinet at IBM
-always seemed to be finding new possibilities for this in DFS.  Likewise
-I have become a bit gun-shy about kernelspace changes since hosing my
-installation's "live" storage for 30 minutes (recovery & failover went
-fine, but apocalyptic unscheduled downtime always sucks, doesn't it?).
-I was using a much more primitive mirroring-the-LVMTAB method with
-non-shared drives in a Heartbeat cluster, and the outage was due to VM
-corruption within the kernel affecting a snapshot vgchange (see 1.0.3).
-The old saw, "if you're going to re-invent the wheel, at least make it
-round" applies here as ever.  Very clever idea you have come up with,
-I'd just suggest borrowing tested code to shorten the "beta" period.
-
--- 
-  "What I feel for her isn't simple hate. It is an all-encompassing 
-   repulsion not unlike what you might feel if you woke up to discover
-   a four-pound cockroach using your toothbrush."
-      --Eric Umansky, in a Washington Post piece on Alanis Morrissette
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
