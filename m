@@ -1,14 +1,14 @@
-Return-Path: <lewis@sistina.com>
-Date: Tue, 5 Jun 2001 12:38:05 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] How can I change my disk type to 0x8e? -> OK! But How Can I change
-Message-ID: <20010605123805.C5617@sistina.com>
-References: <991759810.3b1d0dc2b24c1@www.etfal.g12.br> <3B1D12D1.1C292229@ednet.ns.ca> <991761092.3b1d12c44e338@www.etfal.g12.br>
+Return-Path: <bg@blacknet.de>
+Date: Tue, 5 Jun 2001 19:45:56 +0200
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] How can I my disk type to 0x8e?
+Message-ID: <20010605194556.A4266@dragon.blacknet.de>
+References: <991759497.3b1d0c8930e80@www.etfal.g12.br>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="Izn7cH1Com+I3R9J"
+	protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
 Content-Disposition: inline
-In-Reply-To: <991761092.3b1d12c44e338@www.etfal.g12.br>; from leandrosales@cefet-al.br on Tue, Jun 05, 2001 at 02:11:32PM -0300
+In-Reply-To: <991759497.3b1d0c8930e80@www.etfal.g12.br>; from leandrosales@cefet-al.br on Tue, Jun 05, 2001 at 01:44:57PM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,42 +22,42 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---Izn7cH1Com+I3R9J
-Content-Type: text/plain; charset=us-ascii
+--wac7ysb48OaltWcw
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-It might help to read the LVM How-To:
-http://sistina.com/lvm/doc/lvm_howto/index.html
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+On Tue, Jun 05 '01 at 13:44, Leandro Sales - Estagi=E1rio GTI wrote:
+> I'm a new user and I compiled LVM recently. I'd like to know I can I
+> change my disk type to 0x8e... What does 0x8e type mean?
+You must use fdisk to change the "type" of your partition, try=20
+"man fdisk" for a start.
+0x8e is the partitiontype reserved for Linux LVM (it's a "magic" number
+between 0x01 and 0xff, that indecates how a partition on a disk should
+be used, e.g. the file system type or the oprtation system using this
+partition).
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+> If I change to 0x8e, will I have lost data? Please, help me ok?
+No, but if you than do a pvcreate /dev/[hs]d?, the pysical volume header
+will be written to the partition, this will, most likely, make any file
+system that used to by on this partition (if any), VERY unhappy and you
+most likely WILL lose everything, make a backup first.
+Or better practise on a toy box with no (critical) data on it.
 
------Begin Obligatory Humorous Quote----------------------------------------
-Life's short and hard, kind of like a bodybuilding elf
------End Obligatory Humorous Quote------------------------------------------
+    Goetz.
 
---Izn7cH1Com+I3R9J
+--wac7ysb48OaltWcw
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
+Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7HRj9pE6/iGtdjLERAt78AKCbzR5y6RPBi024sGSYRYjfI7RqkgCfU4gD
-mVB2fGxHnJLs1+LWp7fwcjw=
-=wreB
+iD8DBQE7HRrUf5srOMkjkQoRApbuAJ99rIRZv/Hch/CdqJMeKvIqf0uVwACgy5A6
+ywvVk4+F2n08G4rc6SUNBq4=
+=Oznu
 -----END PGP SIGNATURE-----
 
---Izn7cH1Com+I3R9J--
+--wac7ysb48OaltWcw--
