@@ -1,11 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 10 May 2001 19:02:53 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Max logical volume size 1TB or 2TB?
-Message-ID: <20010510190253.A12955@sistina.com>
-References: <200105100013.f4A0DWs31127@lvadp.fc.hp.com> <200105100633.f4A6XbAr021289@webber.adilger.int>
+Return-Path: <dave@galilean.d2g.com>
+Date: Thu, 10 May 2001 22:30:37 +0200
+From: Dave Wapstra <dave@xs4all.nl>
+Subject: Re: [linux-lvm] SCSI/LVM problems after power outage
+Message-ID: <20010510223037.A32588@mercury.mercury.multiweb.nl>
+References: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit> <20010509093510.B4918@sistina.com> <20010509201416.A20867@mercury.mercury.multiweb.nl> <20010509212629.A8512@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <200105100633.f4A6XbAr021289@webber.adilger.int>; from adilger@turbolinux.com on Thu, May 10, 2001 at 12:33:37AM -0600
+In-Reply-To: <20010509212629.A8512@sistina.com>; from Mauelshagen@sistina.com on Wed, May 09, 2001 at 09:26:29PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,72 +21,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Wasn't able do diff out Andrews factor of 2 in his mail.
-
-Anyway: Andreas is right, because the pv_size member is type
-        defined unsigned int.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Thu, May 10, 2001 at 12:33:37AM -0600, Andreas Dilger wrote:
-> Andrew Patterson writes:
-> > I patched LVM 0.9.1_beta7 lvm.h source a little to get past the system
-> > defined limits.
+On 09 May, 2001 at 21:26:29 +0000, Heinz J. Mauelshagen <Mauelshagen@sistina.com> wrote:
+> On Wed, May 09, 2001 at 08:14:16PM +0200, Dave Wapstra wrote:
+> > On 09 May, 2001 at 09:35:10 +0000, Heinz J. Mauelshagen <Mauelshagen@sistina.com> wrote:
+> > > 
+> > > Steps needed (crossing your fingers that the flaky drive can still stand this):
+> > > 
+> > > - install or use an additional drive of at least the size of the flaky one
+> > > - pvcreate that drive
+> > > - vgextend the VG by it
+> > > - pvmove /dev/FlakyDrive
+> > > - wait until pvmove is done
+> > > - vgreduce VG /dev/FlakyDrive
 > > 
-> > These are the changes I made:
+> > I'm trying to backup the data that is still available (backup was a
+> > thing that was still in progress... :) ) 
 > > 
-> > #define LVM_LV_SIZE_MAX(a)      ( ( long long) LVM_PE_T_MAX * (a)->pe_size > ( 
-> > long long) 1024*1024/SECTOR_SIZE*1024*1024*2 ? ( long long) 
-> > 1024*1024/SECTOR_SIZE*1024*1024*2 : ( long long) LVM_PE_T_MAX * (a)->pe_size)
-> >
-> > #define LVM_MAX_SIZE            ( 1024LU * 1024 / SECTOR_SIZE * 1024 * 1024*2)
+> > pvmove is not really happy with the current situation.
 > 
-> I presume the originals should not have the *2 on them?
-> 
-> > goes to:
+> I don't understand you here.
+> Did you try the above steps and something failed?
+
+Yes, the pvmove command didn't finish succesfully.  Unfortunately, I
+haven't saved the output, so I cannot show you what the exact messages were.
+
+> > Can I just do "vgreduce ftp /dev/sdc" after I finished rescueing most of the data?
 > > 
-> > #define LVM_LV_SIZE_MAX(a)      ( ( long long) LVM_PE_T_MAX * (a)->pe_size > ( 
-> > long long) 1024*1024/SECTOR_SIZE*1024*1024*2 ? ( long long) 
-> > 1024*1024/SECTOR_SIZE*1024*1024*2 : ( long long) LVM_PE_T_MAX * (a)->pe_size)
-> > 
-> > #define LVM_MAX_SIZE            ( 1024LU * 1024 / SECTOR_SIZE * 1024 * 1024*2)
 > 
-> You probably want to go to something like (i.e. slightly less than 2GB):
+> Sure.
+> In case you've got a backup, you could remove or reduce LVs so that *no*
+> PEs are allocated on /dev/sdc.
+> You can check with "pvdisplay -v /dev/sdc" which LV(s) have PEs allocated
+> on that PV and run lvremove/lvreduce in order to free that PV.
 > 
-> #define LVM_LV_SIZE_MAX(a)      ( ( long long) LVM_PE_T_MAX * (a)->pe_size > ( 
-> long long) 1024*1024/SECTOR_SIZE*1024*2047 ? ( long long) 
-> 1024*1024/SECTOR_SIZE*1024*2047 : ( long long) LVM_PE_T_MAX * (a)->pe_size)
-> 
-> #define LVM_MAX_SIZE            ( 1024LU * 1024 / SECTOR_SIZE * 1024 * 2047)
-> 
-> The reason is that since we are talking about 512-byte sectors here, your
-> original values are exactly 2^32, so this is probably overflowing a 32-bit
-> value somewhere.  Since the Linux block layer limits you to 2TB anyways,
-> it is not a real issue for the LVM limit to be slightly less than 2TB.
-> How much less depends on how many more disks you have...  Probably any
-> value <= 2^32-1 should be OK.
-> 
-> Cheers, Andreas
-> -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Once pvdisplay tells you that no PEs are allocated (Allocated PE 0) you
+> can run "vgreduce VGName /dev/sdc".
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Actually, my colleage already removed the complete volume configuration
+and started from scratch.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+The thing is, I've had this problem before.  It seemed that a power
+failure caused us some troubles. However, after re-initialising the
+disks (pv/vg/lv), creating a new filesystem and restoring the backup,
+everything is fine again.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Even /dev/sdc is not complaining at all.
+
+# pvdisplay /dev/sdc
+--- Physical volume ---
+PV Name               /dev/sdc
+VG Name               ftp
+PV Size               8.43 GB / NOT usable 1.34 MB [LVM: 129 KB]
+PV#                   2
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              2159
+Free PE               0
+Allocated PE          2159
+PV UUID               none
+
+Seems the disk is full, and no SCSI messages in the log files (?)
+
+After the new filesystem has been created, the system was powered down
+(switched off) twice to check if this is trigerring anything. In both
+cases fsck successfully restored any errors.
+
+I'm not sure if this is a hardware problem or not. The disk seems to
+work fine, however in some situations SCSI errors occur.
+
+Any suggestions on testing the disk for hardware problems are appreciated.
+(dd if=/dev/sdc of=/dev/null ?)
+
+
+-Dave
+
+-- 
+Dave Wapstra
+dave@xs4all.nl
