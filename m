@@ -1,4 +1,4 @@
-Message-Id: <200112121919.fBCJJxC29757@mailgate5.cinetic.de>
+Message-Id: <200112121919.fBCJJxC29750@mailgate5.cinetic.de>
 MIME-Version: 1.0
 From: "Gunther Kuhlmann" <gunther.kuhlmann@web.de>
 Subject: Re: [linux-lvm] pvmove killed vg
@@ -14,7 +14,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 12 13:18:01 2001
+Date: Wed Dec 12 13:18:04 2001
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
