@@ -1,9 +1,12 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] file system larger than lv
-Message-ID: <20021115135424.A12164@sistina.com>
-References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com> <20021115122708.GK8377@pc.ilinx>
+Message-ID: <20021115134816.GL8377@pc.ilinx>
+References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com> <20021115122708.GK8377@pc.ilinx> <20021115135424.A12164@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <20021115122708.GK8377@pc.ilinx>; from lvm@interlinx.bc.ca on Fri, Nov 15, 2002 at 07:27:08AM -0500
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KQSGybwJm5+gcNx6"
+Content-Disposition: inline
+In-Reply-To: <20021115135424.A12164@sistina.com>
+From: lvm@interlinx.bc.ca
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,79 +17,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 07:00:02 2002
+Date: Fri Nov 15 07:50:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Brian,
+--KQSGybwJm5+gcNx6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-yes, at the end of the day you can't prevent people with the necessary
-credentials from shooting themselves in the foot anyways.
-That occasionally includes me.
-At least at ~4pm in the morning ;)
+On Fri, Nov 15, 2002 at 01:54:24PM +0100, Heinz J . Mauelshagen wrote:
+>=20
+> Brian,
 
-Because LVM is a block layer service transparent to filesystems or any other
-arbitrary block device user, it should just cover the necessary block device
-functionality.
+Hi Heinz.
 
-Putting additional overloading block/filesystem layer services not necessarily
-needed there into the kernel is unlikely to be accepted either IMO.
+> yes, at the end of the day you can't prevent people with the necessary
+> credentials from shooting themselves in the foot anyways.
+> That occasionally includes me.
+> At least at ~4pm in the morning ;)
 
-Controlling LVM block device and filesystem changes in userspace with an
-(e2)fsadm tool is a "helping hand" for the unexperienced, not limiting
-the experienced user.
-This is our prefered way to go.
+I hear ya.  Me too.  :-)
 
+> Because LVM is a block layer service transparent to filesystems or any ot=
+her
+> arbitrary block device user, it should just cover the necessary block dev=
+ice
+> functionality.
 
-On Fri, Nov 15, 2002 at 07:27:08AM -0500, lvm@interlinx.bc.ca wrote:
-> On Fri, Nov 15, 2002 at 11:58:31AM +0100, Heinz J . Mauelshagen wrote:
-> > 
-> 
-> Heinz,
-> 
-> > LVM1 contains the e2fsadm tool which prevents
-> > you form doing things like that.
-> 
-> I know we are never going to be able to stop everybody who _really_
-> wants to shoot themselves in the foot from doing so, but I wonder,
-> perhaps if there should be "something extra" that needs to be done to
-> manipulate the size of volumes with filesystems on them (i.e. probe
-> the lv to see what's on it) directly (i.e.  lvreduce, lvexpand).  This
-> would of course be used to encourage the use of the convenience tools
-> like e2fsadm.
-> 
-> Perhaps an environment variable or an "expert switch" on the command
-> line or something.  Not using the switch or setting the env. variable
-> would cause a probe of the lv and if there was found to be a
-> filesystem on it, it would prompt the user to use a convenience tool
-> (for that filesystem type) to perform his task, or set the
-> switch/variable, if he really wanted to go ahead.
-> 
-> Or maybe this is all just too much handholding.
-> 
-> b.
-> 
-> -- 
-> Brian J. Murrell
+I don't disagree with that.
 
+> Putting additional overloading block/filesystem layer services not necess=
+arily
+> needed there into the kernel is unlikely to be accepted either IMO.
 
+No.  No.  Not in the kernel.  I mean the user space tools can simply
+check what data is on the block device (i.e. look for a known
+signature of given filesystems) and see if it can determine if it is
+indeed a filesystem.
 
--- 
+> Controlling LVM block device and filesystem changes in userspace with an
+> (e2)fsadm tool is a "helping hand" for the unexperienced, not limiting
+> the experienced user.
+> This is our prefered way to go.
 
-Regards,
-Heinz    -- The LVM Guy --
+That is fair enough.  And I don't care that strongly about this issue,
+but just thought of how many tools (in their "interactive mode"
+anyway) stop and ask a user before they are about to do something
+potentially disasterous.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+b.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--=20
+Brian J. Murrell
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--KQSGybwJm5+gcNx6
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE91Psbl3EQlGLyuXARAvZNAKC3yofruNgR06pusr0JsNUhtG2l+QCfQHiJ
+DJa+MomrHo0beZbm/8LyyWE=
+=k2bk
+-----END PGP SIGNATURE-----
+
+--KQSGybwJm5+gcNx6--
+--KQSGybwJm5+gcNx6--
