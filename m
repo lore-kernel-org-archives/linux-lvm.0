@@ -1,10 +1,8 @@
-From: Todd Troxell <ttroxell@debian.org>
-Subject: Re: [linux-lvm] pvscan fails
-Message-ID: <20020827082015.GA2854@caffeine.rapidpacket.com>
-References: <20020826052131.GA5267@caffeine.rapidpacket.com> <20020826120352.A18054@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020826120352.A18054@sistina.com>
+From: Donald Thompson <dlt@lunanet.biz>
+Subject: Re: [linux-lvm] 2.4.20-pre4 and lvm-1.0.5
+In-Reply-To: <20020827091844.B20836@sistina.com>
+Message-ID: <Pine.LNX.4.44.0208271022040.20666-100000@junior.lunanet.biz>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +13,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 27 11:23:01 2002
+Date: Tue Aug 27 11:27:39 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 26, 2002 at 12:03:52PM +0200, Heinz J . Mauelshagen wrote:
-> 
-> Todd,
-> have you temporarily removed /dev/hdc and retried to prove this right?
-> 
+On Tue, 27 Aug 2002, Heinz J . Mauelshagen wrote:
 
-Verified this just now.
+> On Mon, Aug 26, 2002 at 12:21:52PM -0600, Donald Thompson wrote:
+> >
+> > That is correct. I boot, vgscan fails (I'm assuming it segfaults but I
+> > really can't tell during the normal boot process what actually happened)
+> > to detect my VGs, my system goes into a maintenance mode situation since
+> > my /usr is on an LV, I login and run lsmod and absolutely no modules
+> > appear in the list. I try vgscan and/or pvscan and they fail with a
+> > segmentation fault. So yeah, if no module tree exists system boots fine,
+> > if module tree exists vgscan fails regardless of whether modules are
+> > loaded. Yes it defies logic, but I swear thats how it worked:)
+>
+> I wonder if there might be a single user case disabling lsmod to list?
 
-> 
-> You should give LVM2 a try (please follow download instructions at
-> www.sistina.com in that case) which has fully configurable devices
-> based on regular expressions.
-> 
-> 
+Well I doubt that. Originally rtc.o was being loaded and was listed by
+lsmod, so I figured maybe that was the problem. rtc.o gets loaded I think
+automatically when my system is setting the software clock from the
+hardware. But removing rtc.o from the module tree, running depmod -a, and
+rebooting, I got the same result where vgscan segfaults.
 
-Will try it, thanks!
-
--Todd
+-Don
