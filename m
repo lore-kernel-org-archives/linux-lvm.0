@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] Snapshot creating problem
-Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B4A5@mercury.infiniconsys.com>
-From: "Barry, Christopher" <cbarry@infiniconsys.com>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Snapshot creating problem
+Message-ID: <20030317184624.A15374@uk.sistina.com>
+References: <08628CA53C6CBA4ABAFB9E808A5214CB0142B4A2@mercury.infiniconsys.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <08628CA53C6CBA4ABAFB9E808A5214CB0142B4A2@mercury.infiniconsys.com>; from cbarry@infiniconsys.com on Mon, Mar 17, 2003 at 01:20:55PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,65 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar 17 12:38:01 2003
+Date: Mon Mar 17 12:47:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Oh - sorry for the omission:
+On Mon, Mar 17, 2003 at 01:20:55PM -0500, Barry, Christopher wrote:
+> Any ideas of what I'm doing wrong? An lvs shows it there, but it does not seem to appear in /dev/vg0/ and I cannot mount it.
 
-LVM version: 1.95.15
-Library version 0.96.07-ioctl-cvs
-driver version: 1.0.8
+You don't say what version you are using: see if you can reproduce
+the problem using the current CVS LVM2 version.
 
---
-Christopher Barry
-Manager of Information Systems
-InfiniCon Systems
-http://www.infiniconsys.com
+Look in kernel message log for a (slightly) better error message.
 
+Turn on debugging output (log to file) and see if the last set(s) 
+of 'Adding target' lines before you got the error make sense.  
 
------Original Message-----
-From: Barry, Christopher=20
-Sent: Monday, March 17, 2003 1:21 PM
-To: Lvm (E-mail)
-Subject: [linux-lvm] Snapshot creating problem
+Assuming the problem is still present in CVS, if you'd like me
+to look into it, I need a copy of the complete debugging output
+and to know exactly which device-mapper patches you applied to 
+your kernel.
 
-
-Hi all,
-	I'm experimenting with lvm2 on a patched 2.4.20 kernel with xfs =
-filesystem volumes on a dual 2.4GHz Xeon box.
-
-I built a pv on a 1.8TB RAID 5 array, (/dev/sda), created a volume group =
-(vg0), and created several logical volumes:
-data 200G xfs
-home 200G xfs
-backup 600G xfs
-installs 200G xfs
-
-I dd'd from /dev/zero a 500MB file onto the data lv.
-
-I then used lvcreate -s -n snaptest -c 1M -L 200G /dev/vg0/data
-
-The command returned with the following error:
-device-mapper ioctl cmd 2 failed: Invalid argument
-couldn't load device 'vg0-snaptest'
-logical volume snaptest created
-
-Any ideas of what I'm doing wrong? An lvs shows it there, but it does =
-not seem to appear in /dev/vg0/ and I cannot mount it.
-
-
-Thanks,
-
---
-Christopher Barry
-Manager of Information Systems
-InfiniCon Systems
-http://www.infiniconsys.com
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Alasdair
+-- 
+agk@uk.sistina.com
