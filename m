@@ -1,9 +1,8 @@
-Message-ID: <001601c16ff9$622f6e60$fc00a8c0@xp>
-From: "Sean Oh" <oh@linuxsecurity.co.kr>
-References: <007201c16f91$a8d49650$fc00a8c0@xp> <20011117152233.R1308@lynx.no>
-Subject: Re: [linux-lvm] [Q]XFS + LVM Snapshot?
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+From: Petro <petro@auctionwatch.com>
+Message-ID: <20011117223754.B12510@auctionwatch.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Logical Volume max-size?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,35 +13,14 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 18 00:21:02 2001
+Date: Sun Nov 18 00:36:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-U29ycnksIGJ1dCB3aGVyZSBjYW4gSSBmaW5kIHRoYXQgcGF0Y2g/DQoNClRoYW5rcyBhZ2FpbiBm
-b3IgeW91ciByZXBseS4NCg0KLS0tLS0gT3JpZ2luYWwgTWVzc2FnZSAtLS0tLSANCkZyb206ICJB
-bmRyZWFzIERpbGdlciIgPGFkaWxnZXJAdHVyYm9sYWJzLmNvbT4NClRvOiAiU2VhbiBPaCIgPG9o
-QGxpbnV4c2VjdXJpdHkuY28ua3I+DQpDYzogPGxpbnV4LWx2bUBzaXN0aW5hLmNvbT4NClNlbnQ6
-IFN1bmRheSwgTm92ZW1iZXIgMTgsIDIwMDEgNzoyMiBBTQ0KU3ViamVjdDogUmU6IFtsaW51eC1s
-dm1dIFtRXVhGUyArIExWTSBTbmFwc2hvdD8NCg0KDQo+IE9uIE5vdiAxOCwgMjAwMSAgMDI6NTkg
-KzA5MDAsIFNlYW4gT2ggd3JvdGU6DQo+ID4gS2VybmVsOiAyLjQuMTUtcHJlNCB3aXRoIFhGUyBw
-YXRjaCAoIGxpbnV4LTIuNC14ZnMgQ1ZTIHRyZWUgZnJvbSBTR0kgc2l0ZSkNCj4gPiBMVk06IGN1
-cnJlbnQgLSBMVk0gQ1ZTDQo+ID4gDQo+ID4gUGF0Y2hlcyBhcHBsaWVkOiBsaW51eC0yLjQuMTEt
-VkZTLWxvY2sucGF0Y2ggZnJvbSBMVk0gQ1ZTDQo+ID4gDQo+ID4gKkkgY2FuIG5vdCBtb3VudCB0
-aGUgb3JpZ2luYWwgRlMgYW5kIHNuYXBzaG90IEZTIGF0IHRoZSBzYW1lIHRpbWUuIElmDQo+ID4g
-SSB1bm1vdW50IHRoZSBvcmlnaWFuYWwgWEZTIEZTIGFuZCB0aGVuIG1vdW50IHRoZSBzbmFwc2hv
-dCBGUywgaXQgd29ya3MsDQo+ID4gdG91Z2guDQo+IA0KPiBZZXMsIHlvdSBuZWVkIGFuIFhGUyBw
-YXRjaCB3aGljaCBkb2VzIHNvbWV0aGluZyB3aXRoIHRoZSBmaWxlc3lzdGVtIFVVSUQNCj4gaW4g
-dGhlIHNuYXBzaG90LiAgWEZTIGhhcyBhIGZlYXR1cmUgd2hpY2ggcHJldmVudHMgdGhlIHNhbWUg
-ZmlsZXN5c3RlbQ0KPiBmcm9tIGJlaW5nIG1vdW50ZWQgbW9yZSB0aGFuIG9uY2UuDQo+IA0KPiBX
-aGF0IHRoZXkgZG8gdG8gZml4IHRoaXMgaXMgdG8gY3JlYXRlIHdyaXRhYmxlIHNuYXBzaG90cy4g
-IFdoYXQgSSB3b3VsZA0KPiByYXRoZXIgdGhleSBkbyBpcyBpbiB0aGUgImR1cGxpY2F0ZSBVVUlE
-IGRldGVjdGlvbiIgY29kZSwgYWxsb3cgbW91bnRpbmcNCj4gb2YgZGV2aWNlcyB3aGljaCBhcmUg
-b24gcmVhZC1vbmx5IG1lZGlhIChlLmcuIGEgc25hcHNob3QpLg0KPiANCj4gQ2hlZXJzLCBBbmRy
-ZWFzDQo+IC0tDQo+IEFuZHJlYXMgRGlsZ2VyDQo+IGh0dHA6Ly9zb3VyY2Vmb3JnZS5uZXQvcHJv
-amVjdHMvZXh0MnJlc2l6ZS8NCj4gaHR0cDovL3d3dy1tZGRzcC5lbmVsLnVjYWxnYXJ5LmNhL1Bl
-b3BsZS9hZGlsZ2VyLw0KPiANCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fDQo+IGxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCj4gbGludXgtbHZtQHNp
-c3RpbmEuY29tDQo+IGh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWx2bQ0KPiByZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20v
-bHZtL1BhZ2VzL2hvd3RvLmh0bWwNCj4gDQo=
+Is the 255.99 Gigabyte limit for a logical volume still in place, or
+does that go away/get bigger with the later (post 0.91) versions? 
+
+-- 
+Share and Enjoy. 
