@@ -1,22 +1,12 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9R9lMr30391
-	for <linux-lvm@redhat.com>; Wed, 27 Oct 2004 05:47:22 -0400
-Received: from smtp3.libero.it (smtp3.libero.it [193.70.192.127])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id i9R9lK7r019042
-	for <linux-lvm@redhat.com>; Wed, 27 Oct 2004 05:47:20 -0400
-Received: from localhost (172.16.1.84) by smtp3.libero.it (7.0.027-DD01)
-	id 4178F14A000FD1F3 for linux-lvm@redhat.com;
-	Wed, 27 Oct 2004 11:47:14 +0200
-Received: from [192.168.0.2] (151.41.144.63) by smtp3.libero.it (7.0.027-DD01)
-	id 4178F0D300278127 for linux-lvm@redhat.com;
-	Wed, 27 Oct 2004 11:47:14 +0200
-From: "\"KieZz\"" <kiezz@libero.it>
-Date: Wed, 27 Oct 2004 11:44:43 +0200
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9Q0Orr23158
+	for <linux-lvm@redhat.com>; Mon, 25 Oct 2004 20:24:53 -0400
+Message-Id: <200410260024.i9Q0OkYL030617@mx3.redhat.com>
+From: "THORSTEN TOVACOVSKY" <THORSTEN.TOVACOVSKY@KARLSRUHER.DE>
+Date: 26 Oct 2004 01:28:00 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200410271144.43706.kiezz@libero.it>
-Subject: [linux-lvm] LVM DISK CRASH AND PVREMOVE -ff
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvm und raid0 auf z/linux
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,58 +17,115 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: LINUX-LVM@sistina.com
 
-Hi
-(sorry for poor english)
-i have a lvm2 whit 4 disk, each 200 gb, yesterday one die (badblocks give me 
-30 entries).
-PV /dev/hdb   VG orange_vg   lvm2 [189.92 GB / 0    free]
-PV /dev/hdc   VG orange_vg   lvm2 [189.92 GB / 0    free]
-PV /dev/hde   VG orange_vg   lvm2 [189.92 GB / 0    free]
-PV /dev/hdf   VG orange_vg   lvm2 [189.92 GB / 1.84 GB free] <----- diskdead
+--- Erhalten von  A12.TOVACO 0721/353-4569                   26.10.04 01.28
 
-First i've tried to reduce reiserfs, lv and vg but this was unpossible because 
-reiserfs can't be managed whit this disk error:
+  -> LINUX-LVM@SISTINA.COM
 
-root@Orange:~# mount /dev/orange_vg/orange_lv
-mount: wrong fs type, bad option, bad superblock on /dev/orange_vg/orange_lv,
-       or too many mounted file systems
+Hallo Heinz,
 
-(also resize_reiserfs was unable to detect reiser partition)
+meine Mail damals ging scheinbar in das Diskussionsforum zum LVM. Ich bekam nie
+Antwort...Durch Zufall bin ich nun doch �ber die Antwort im WEB gestolpert.
 
-from dmesg:
-ReiserFS: dm-1: found reiserfs format "3.6" with standard journal
-hdf: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-hdf: dma_intr: error=0x01 { AddrMarkNotFound }, LBAsect=364347782, high=21, 
-low=12026246, sector=364347776
-hdf: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-hdf: dma_intr: error=0x40 { UncorrectableError }, LBAsect=364347782, high=21, 
-low=12026246, sector=364347776
-end_request: I/O error, dev hdf, sector 364347776
-[..]
+Zu deiner Antwort:
+Ich wei�, da� ich Stripes per lvcreate definieren kann, aber was ist, wenn ich
+zus�tzliche Platten in die VG h�ngen will ?
 
-So i've tried to add 200 gb, but i had no more 200G disk so i've plugged in a 
-120 + 80 .
-The pvmove tell me there is not enough PE, i think pvmove (but is not write 
-anywhere) need a disk egual or bigger than disk to remove (this is a question 
-to for expert too).
-I was sure the 200 gb was inside the lv but whitout important data for me, so 
-i've tried to pvremove -ff /dev/hdf.
-This was a big mistake, the vg was unconsistent  and give me several error.
-I've restored the vg doing pvcreate -u oldid /dev/hdf , and now the vg seams 
-ok, but i'm@the initial point and  the metada are now inconsistent, i see 
-i have now this error also:
+raid0 im lvm kann ja nicht erweitert werden, oder ?
 
-ReiserFS: dm-1: warning: sh-2029: reiserfs read_bitmaps: bitmap block 
-(#194904064) reading failed
-ReiserFS: dm-1: warning: jmacd-8: reiserfs_fill_super: unable to read bitmap
+gr��e
+thorsten
 
-At this point what i can do? Is there a way to save the data from disks, in 
-particular hdb and hdc ? 
-I know there is dd and dd_rescue but i don't know exactly how can i use this 2 
-tools and if they can save my data.
-Sorry, i'm a lvm newbie but an explenation can be usefull for understand how 
-manage a disk crash on lvm (i've not found a good howto about that).
-Thanks
+--------------------------------------------------------------
+On Fri, Sep 26, 2003 at 04:46:00PM +0200, THORSTEN TOVACOVSKY wrote:
+> --- Erhalten von  A12.TOVACO 0721/353-4569                   26.09.03 15.46
+>
+>   -> LINUX-LVM(A)SISTINA.COM
+>
+> Hallo Herr Mauelshagen,
+>
+> wir nutzen Suse SLS8 31Bit auf einer z900 (2C1) unter z/VM (64Bit).
+>
+> Wir versuchen den LVM mit Raid0 - Devices arbeiten zu lassen.
+
+Hallo Herr Tovacovsky,
+
+LVM unterst�tzt RAID0 direkt. Eine Kombination mit MD ist nich erforderlich
+(siehe "lvcreate -i n -I n ...").
+
+>
+> Des �fteren kommt bei diversen Commands der LVM scheinbar durcheinander und
+> zeigt pl�tzlich das 1.Devices unterm Raid0-Device an.
+>
+> Beispiel:
+> VG mit 6 PVs
+> per pvmove eines dieser PVs freigeschaufelt,
+> dann per vgreduce dieses aus der VG versucht zu entfernen.
+>
+> ein pvscan bringt dann pl�tzlich sowohl das md-dev als auch die 1.device im md
+> als inaktiv.
+
+Sollte im Prinzip funktionieren. Ich vermute, das SuSE noch eine �ltere
+LVM Tool Version ausliefert.
+
+Aber wie oben gesagt: Sie k�nnen RAID0 LVs komplett ohne MD direkt
+mit LVM erzeugen.
+
+>
+> Da ist also sowieso schon was schiefgegangen. Leider sind diese beiden dann
+per
+> pvchange -xn /dev/xxx nicht als PVs entfernbar. Siehe Meldung:
+>
+>  > pvchange -- unable to find volume group of "/dev/dasdk1" (VG not active?) <
+>
+> Scheints mu� die VG doch noch aktiv sein, doch dann bekomm ich die PVs ja auch
+> nicht raus, dann dann folgende Meldung kommt:
+>
+>  > pvchange -- physical volume "/dev/md0" is unallocatable <
+>
+>
+> Und nun ?
+> Haben Sie�nen Tipp f�r uns ?
+> K�nnen Wir sie bei einer eventuellen Fehlersuche unterst�tzen ?
+>
+> Gr��e
+> Thorsten
+> (Karlsruher Lebensversicherung AG)
+> ###########################################################
+>
+> This e-mail message has been scanned for Viruses
+> by a Content Security Software.
+>
+> KARLSRUHER Lebensversicherung AG, 2003
+>
+> ###########################################################
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm sistina com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--
+
+Gru�,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen Sistina com                           +49 2626 141200
+                                                       FAX 924446
+###########################################################
+
+This e-mail message has been scanned for Viruses 
+by a Content Security Software. 
+
+KARLSRUHER Lebensversicherung AG, 2004
+
+###########################################################
