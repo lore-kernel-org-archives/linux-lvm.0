@@ -1,12 +1,10 @@
-Return-Path: <dablake@speakeasy.net>
-From: Hcd <dablake@speakeasy.net>
-Subject: Re: [linux-lvm] vgcfgrestore fails.
-Date: Mon, 30 Apr 2001 12:34:17 -0500
-References: <20010430160431.H19810@sistina.com> <01043007034800.04719@vidar>
-In-Reply-To: <01043007034800.04719@vidar>
+Return-Path: <clausen@gnu.org>
+Message-ID: <3AEDEFDB.6EB1AF8@gnu.org>
+Date: Tue, 01 May 2001 09:06:03 +1000
+From: Andrew Clausen <clausen@gnu.org>
 MIME-Version: 1.0
-Message-Id: <01043012341701.04719@vidar>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] some comments on the LVM source
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,123 +19,140 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Ok,  I have my volumes back.  
-It was messy but it worked.
+Hi,
 
-l simply removed the lvm 9.4 and reinstalled lvm 8.0
-I then did the vgcfgrestore and opt and export came back.
-thanks for your help. 
+I'm mainly looking at the userspace stuff here, because
+that's what I'm interested in ;-)
 
-On Monday 30 April 2001 07:03, you wrote:
-> No joy on this on this method.
-> If you need I can supply more inforamation.
-> BTW I am running on an Athlon..
-> thor:/etc # cp /etc/lvmconf/export.conf /etc/lvmtab.d/export
-> thor:/etc # cp /etc/lvmconf/opt.conf /etc/lvmtab.d/opt
-> thor:/etc # echo -ne "export\0" > /etc/lvmtab
-> thor:/etc # echo -ne "opt\0" >> /etc/lvmtab
-> thor:/etc # vgchange -ay
-> vgchange -- ERROR: different structure size stored in
-> "/etc/lvmtab.d/export" than expected in file vg_cfgrestore.c [line 122]
-> vgchange -- volume group "export" does not exist
-> vgchange -- ERROR: different structure size stored in "/etc/lvmtab.d/opt"
-> than expected in file vg_cfgrestore.c [line 122]
-> vgchange -- volume group "opt" does not exist
->
-> On Monday 30 April 2001 11:04, you wrote:
-> > On Sat, Apr 28, 2001 at 12:33:58PM -0500, root wrote:
-> > > I am running SuSe 7.1
-> > > 2.4.0 kernel
-> > > 512M Ram
-> > > AhA2940U2W
-> > > suse lvm
-> > >
-> > > I had three volume groups and a week ago the volume group that
-> > > contained user had a drive crash.  I was unable to save usr but now I
-> > > can not mount any of my other volume groups and vgcfgrestore fails.  Is
-> > > their any thing I can do to get my data?
-> > > thor:~ # pvdisplay /dev/sdd2
-> > > --- Physical volume ---
-> > > PV Name               /dev/sdd2
-> > > VG Name               export
-> > > PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-> > > PV#                   2
-> > > PV Status             available
-> > > Allocatable           yes (but full)
-> > > Cur LV                1
-> > > PE Size (KByte)       4096
-> > > Total PE              2123
-> > > Free PE               0
-> > > Allocated PE          2123
-> > > PV UUID               ruLId0-1JoY-34Ja-oLW0-FmzV-Q5ZN-NQaZw9
-> > > thor:~ # pvdisplay /dev/sdc2
-> > > --- Physical volume ---
-> > > PV Name               /dev/sdc2
-> > > VG Name               export
-> > > PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-> > > PV#                   1
-> > > PV Status             available
-> > > Allocatable           yes (but full)
-> > > Cur LV                1
-> > > PE Size (KByte)       4096
-> > > Total PE              2123
-> > > Free PE               0
-> > > Allocated PE          2123
-> > > PV UUID               ynnKCX-mjlT-jeNe-9MHY-tnP2-XCIC-nbKrmq
-> > >
-> > > thor:~ # vgcfgrestore -n export /dev/sdd2
-> > > vgcfgrestore -- ERROR: different structure size stored in
-> > > "/etc/lvmconf/export.conf" than expected in file vg_cfgrestore.c [line
-> > > 122]
-> > > vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group
-> > > "export"
-> >
-> > You are using a newer LVM versions which has different metadata
-> > definitions that the one which created those backups.
-> >
-> > My guess is, that you are using LVM > 0.9.1 Beta 3 *now* but created the
-> > backups with a lower LVM 0.9 version and you suffer from a PV uuid
-> > related bug preventing vgscan to find your VG.
-> >
-> >
-> > One way to address the situation (pressuming no VGs are active) is:
-> >
-> > - create /etc/lvmtab.d/ in case it doesn't exist
-> >
-> > - copy /etc/lvmconf/export.conf to /etc/lvmtab.d/export
-> >
-> > - echo -ne 'export\0' > /etc/lvmtab
-> >
-> > - vgchange -ay
-> >
-> > If the VG named "export" comes back to life this way (assuming that the
-> > user LV belongs to it) do:
-> >
-> > - lvreduce -l1 /dev/export/user
-> > - lvrextend -l1 /dev/export/user
-> >
-> > replace "user" with a valid LV name in case I assumed wrong.
-> >
-> > The purpose of that NULL operation in the end is, that your PV uuid list
-> > gets recreated by LVM >= 0.9.1 Beta 4 which should make vgscan happy
-> > again ;-)
-> >
-> > The last 2 commands just shrink user by 1 LE and grow it again which
-> > is necessary, because your export VG is *full*. This will not harm the
-> > user LV in the end, because the allocator has the only option to use the
-> > very same PE for growing which was freed before by the shrinking of user.
-> >
-> > If your VG had at least 1 free PE a lvcreate/lvremove cycle for a dummy
-> > LV with just 1 LE had done it as well.
-> >
-> > Please tell us if this helps you or we need to go for another solution.
-> >
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+Comments:
+* liblvm.h is one monster file.  It would be nice to separate
+it up into smaller pieces.  Say, one (or more!) files for
+VG stuff, etc.
+
+* the .c files are in one directory.  They should be split
+into subdirectories... makes it easier to find stuff
+
+* lots of monster functions.  Monster functions are harder to
+understand and maintain.
+
+I'll have a look at one function for you, so I can go a bit
+more in depth:
+
+lvm_add_dir_cache() in LVM/0.9.1_beta7/tools/lib/lvm_dir_cache.c
+
+The function is about 50 lines, which is on the large side.
+
+It is doing things on two layers of abstraction:
+	* high layer: calling high level things like 
+	lvm_dir_cache_hit(),
+	* lower layer: reallocating memory for the cache,
+	updating lower level variables, etc.
+It is usually a bad thing to do things.  The fact that the
+function is also fairly large should have lead to a decision
+to split it up, by putting the lower level stuff into (static)
+helper functions.
+
+The 4 layers of nesting also gives you a hint that you're
+handling too many levels of abstraction ;-)
+
+IMHO, the function should be roughly 10 lines, and the
+lower level code taken out into helper functions.
+
+Also, you have an inconsistent interface to lvm_dir_cache().
+Most of the functions related to the lvm_dir_cache() are
+named lvm_dir_cache_XXX(), but you have lvm_add_dir_cache().
+
+Also, some functions ask for a "dircache" parameter, and others
+just use the global variable (since there is exactly one
+cache anyway).
+
+Make up your mind!  In my example "cleaned version", I
+chose to use the global variables.  I guess it doesn't
+make a big difference (some ppl would argue global
+variables evil blah blah blah...)
+
+So, something along the lines of:
+
+static int _dir_cache_init_entry (dir_cache_t *entry,
+				  char *dev_name) {
+	struct stat stat_b;
+
+	if (stat (dev_name, &stat_b) == -1)
+		return FALSE;
+	if (lvm_check_dev (&stat_b, TRUE) == FALSE)
+		return FALSE;
+
+	entry->dev_name = strdup (dev_name);
+	if (!entry->dev_name) {
+		fprintf (stderr, "malloc error in %s [line %d]\n",
+                         __FILE__, __LINE__);
+		return FALSE;
+	}
+	entry->st_rdev = stat_b.st_rdev;
+	entry->st_mode = stat_b.st_mode;
+	return TRUE;
+}
+
+static int _dir_cache_set_size (int size) {
+	dir_cache_t	*dir_cache_sav = dir_cache;
+
+	dir_cache = realloc (dir_cache,
+			     size * sizeof (dir_cache_t));
+	if (dir_cache) {
+		cache_size = size;
+		return TRUE;
+	} else {
+		fprintf (stderr, "realloc error in %s [line %d]\n",
+                         __FILE__, __LINE__);
+		return FALSE;
+	}
+}
+
+static int _dir_cache_set_entry (int num, dir_cache_t *entry) {
+	memcpy (&dir_cache [num], entry, sizeof (dir_cache_t));
+	return TRUE;
+}
+
+static int _dir_cache_append (dir_cache_t *entry) {
+	if (_dir_cache_set_size (cache_size + 1) == FALSE)
+		return FALSE;
+	return _dir_cache_set_entry (cache_size - 1, entry);
+}
+
+int lvm_dir_cache_add (char *dev_name) {
+	dir_cache_t	entry;
+
+	if (_dir_cache_init_entry (&entry, dev_name) == FALSE)
+		return FALSE;
+	if (lvm_dir_cache_hit (entry.st_rdev) == FALSE)
+		return _dir_cache_append (&entry);
+	return TRUE;
+}
+
+/* below: need to change the lvm_dir_cache_hit() interface */
+
+Obviously, a lot of this is personal preference.  But, I think
+the code here is much easier to understand, because each function
+operates on exactly one level of abstraction, and the style
+is consistent (we never pass around the dir_cache and cache_size
+variables... they are global).
+
+Further things to improve;
+* more error handling could be added (why does stat fail?
+etc.)
+* common error handling - you probably want to have a more
+convienient how to report errors than fprintf (stderr, ...).
+You might be interested in the exception system in libparted
+(it's very very small ;-)
+* function entry / exit messages could be done with macros:
+
+#define ENTER_FUNCTION \
+	debug_enter (__FUNCTION__ "() -- ENTERING\n");
+#define LEAVE_FUNCTION(ret) \
+	do {	\
+		debug_leave (__FUNCTION__	\
+			     "() -- LEAVING with ret: %d\n", ret); \
+		return ret;	\
+	} while (0);
+
+/dev/clausen
