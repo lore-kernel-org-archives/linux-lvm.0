@@ -1,8 +1,11 @@
-From: Seth Mos <knuffie@xs4all.nl>
-Subject: Re: re[2]: [linux-lvm] System Suggestions
-In-Reply-To: <auto-000020233424@front1.mail.megapathdsl.net>
-Message-Id: <Pine.BSI.4.10.10203070728480.16043-100000@xs3.xs4all.nl>
+From: "Anthony W. Marino" <anthony@AWMObjects.com>
+Subject: Re: [linux-lvm] System Suggestions
+References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
+    <20020306161130.D855@kluge.net> <20020307034009.GJ32504@auctionwatch.com>
+In-Reply-To: <20020307034009.GJ32504@auctionwatch.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <auto-000020280462@front1.mail.megapathdsl.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,34 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar  7 00:32:02 2002
+Date: Thu Mar  7 04:05:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Anthony W. Marino" <anthony@AWMObjects.com>
-Cc: Greg Freemyer <freemyer@NorcrossGroup.com>, Petro <petro@auctionwatch.com>, linux-lvm@sistina.com, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
+Content-Type: text/plain; charset="us-ascii"
+To: Petro <petro@auctionwatch.com>, Theo Van Dinter <felicity@kluge.net>
+Cc: linux-lvm@sistina.com, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
 
-On Wed, 6 Mar 2002, Anthony W. Marino wrote:
+>
+>     We have 10 of the 3ware cards, and while the drive is GPLd and in
+>     the kernel, we have not been satisfied with the stability of the
+>     system
 
-> >
-> > If you are looking into using the 3Ware controllers watch the following:
-> > The 64xx controllers are underpowered and should better not be used in
-> > raid 5 mode.
-> > The 74xx controllers seem to be good and should be fine with raid5 but
-> > note that raid5 will always have slow write speeds.
-> >
-> Is there a way to minimize the write penalty using both XFS and LVM with RAID 
-> 5?
+Is there anything that I can avoid while still using the card (ie; specific 
+RAID config)?
 
-Don't use raid5. I always use a combination of raid 1 and 10 for a
-database server. If you have a database that frequently updates records
-you don't want the extra write overhead.
 
-Software raid 1 or 10 will do fine in that case.
-If you have 4 disks you make 2 raid 1 arrays and then stripe those in a
-raid 0. You then have optimum speed at the lowest possible overhead.
+>
+>     We haven't had a chance yet to qual the latest firmware, etc., but
+>     we went with dumb IDE expansion cards (we're only using 4 ide drives
+>     per system) and we're getting better speed (RAID0 or 1+0 depending)
+>     than we were off the 3ware card.
+>
+>     We are not using XFS, so no comments there.
+>
+>     We're also having some problems with Mysql that people keep pointing
+>     fingers at LVM for, but at this time we're point right back and
+>     saying "No!" in a firm voice...
 
-Generally that is what you want for a database server.
-
-Cheers
-Seth
+What kind of problems with MySQL, if you don't mind to summarize?
+Thank You,
+Anthony
