@@ -1,8 +1,8 @@
-From: Rodrigo de Salazar <rodrigo@es.ehas.org>
-Message-ID: <20030312170112.GA19864@es.ehas.org>
+From: Petro <petro@auctionwatch.com>
+Message-ID: <20030312195217.GC18876@auctionwatch.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Lost a full volume group!
+Subject: [linux-lvm] Problems and questions with LVM on a large raid system.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,29 +13,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 11:02:01 2003
+Date: Wed Mar 12 13:53:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi there, I hope someone can help me with this. I had a VG with a single
-PV (/dev/hda4), with several LVs in it (including the ones I use as /var, /var/www and
-/tmp). I changed /etc/fstab, after resizing and adding a 
-LV to the other VG I have (on another hdd). Reboot, and I find out that
-I had not written fstab correctly, no big deal, just correct it in
-single user mode and reboot again. Weird thing comes now: the first VG
-(called vg1) has dissapeared. The /dev/vg1 directory and everything
-inside have just vanished, vgscan says:
+I've got a couple of brand new boxes I'm trying to get LVM set up
+properly on. 
 
-	vgscan -- found inactive volume group "vg1"
+These machines have 6 200GiB drives attached to a 3ware controller card,
+for a total of 1,200,000,000,000 bytes of storage. 
 
-and any attempt to vgchange -a y /dev/vg1 results in:
+I'm running kernel 2.4.18, with LVM version 1.0.3, and the lvmtools
+version 1.0.1rc3-1 (long story, but upgrading is a path-of-last-resort).
 
-	vgchange -- ERROR "Bad address" activating volume group "vg1"
+Initially I had the drives set up as a single raid0 device, but doing a
+pvcreate on it failed with a message that said something about "can't
+get size". 
 
-So, is there a way to recover this VG and all the LVs in it, or will I
-have to restore the system by another method (I lost /var...)?
-Also, is this very unusual, or LVM is just not so stable?
-I am running Debian GNU/Linux, kernel 2.4.20, and lvm 1.0.4.
-Thanks in advance.
+So I set up 2 3 disk RAID0 devices, and did a vgcreate /dev/sda /dev/sdb.
+
+Now, one question I have is: 
+
+    Does this concatenate the devices, or does it interleave the
+    devices? IE do I have a stripe of stripes, or two stripes? 
+
+Since I need the disk write rate of all 6 drives, I'm *REALLY* hoping
+that it's interleaved. 
+
+
+
+-- 
+"On two occasions, I have been asked [by members of Parliament], 'Pray, 
+Mr. Babbage, if you put into the machine wrong figures, will the right 
+answers come out?' I am not able to rightly apprehend the kind of confusion 
+of ideas that could provoke such a question." -- Charles Babbage 
