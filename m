@@ -1,10 +1,9 @@
-From: Andreas Dilger <adilger@clusterfs.com>
-Subject: Re: [linux-lvm] ext2online and 2.4.18
-Message-ID: <20020620163420.GN22427@clusterfs.com>
-References: <1024512969.1862.6.camel@hiro.prowell.org.bogus> <20020619195508.GA22427@clusterfs.com> <1024521044.1861.6.camel@hiro.prowell.org.bogus> <20020619214731.GB22427@clusterfs.com> <1024525638.1861.54.camel@hiro.prowell.org.bogus> <1024572480.3d11bc400c205@webmail3.wanadoo.nl>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] kernel: lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
+Message-ID: <20020621111048.A506@sistina.com>
+References: <875362812.20020619224421@tnonline.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1024572480.3d11bc400c205@webmail3.wanadoo.nl>
+In-Reply-To: <875362812.20020619224421@tnonline.net>; from andewid@tnonline.net on Wed, Jun 19, 2002 at 10:44:21PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,25 +14,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 20 11:36:01 2002
+Date: Fri Jun 21 04:17:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: sander@sanderscorner.com
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Jun 20, 2002  13:28 +0200, sander@sanderscorner.com wrote:
-> I applied your patch to 2.4.18 kernel. It applied cleanly. Compiled the new
-> kernel and no problems doing that but... ext2online still fails while in the
-> kernel.
+Some program does an unsoported ioctl call to the LVM driver.
+Ignore those.
 
-Could you be more specific?  Do you get any messages in syslog or from
-dmesg?  Does the command just lock up and never return?  If you mount
-the filesystem with "-o debug,check" you get a few extra messages that
-may help narrow down the problem.
+On Wed, Jun 19, 2002 at 10:44:21PM +0200, Anders Widman wrote:
+> 
+>    Hello everyone!
+> 
+>    I get these types of messages in the kernel log. What does it mean?
+>    Jun 19 22:32:49 server kernel: lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
+>    Jun 19 22:32:50 server modprobe: modprobe: Can't locate module block-major-43
+> 
+>    //Anders
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Cheers, Andreas
---
-Andreas Dilger
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
-http://sourceforge.net/projects/ext2resize/
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
