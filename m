@@ -1,10 +1,10 @@
-Date: Fri, 12 Oct 2001 08:49:05 +0100
-Subject: Re: [linux-lvm] Patch for lvm-1.0.1-rc4 to work under linux-2.4.10-ac4 (Re-edition)
-Message-ID: <20011012084905.A2710@btconnect.com>
-References: <200110032244.TAA06029@inter.lojasrenner.com.br> <20011012172043.A21539@mail.wave.co.nz>
+Date: Fri, 12 Oct 2001 08:53:23 +0100
+Subject: Re: [linux-lvm] [PATCH] fix oops when snapshots get full
+Message-ID: <20011012085323.C2710@btconnect.com>
+References: <1373740000.1002822576@tiny> <20011011135715.G8382@turbolinux.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011012172043.A21539@mail.wave.co.nz>; from markv@wave.co.nz on Fri, Oct 12, 2001 at 05:20:43PM +1300
+In-Reply-To: <20011011135715.G8382@turbolinux.com>; from adilger@turbolabs.com on Thu, Oct 11, 2001 at 01:57:15PM -0600
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,9 +21,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Oct 12, 2001 at 05:20:43PM +1300, Mark van Walraven wrote:
-> Developers, is there much progress in feeding LVM 1.0.x to Alan?
+Andreas,
 
-Alan has all patches to bring him up to about -rc2.
+Can you check this in please if you think it's correct.
 
 - Joe
