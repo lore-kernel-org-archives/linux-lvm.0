@@ -1,57 +1,39 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200010312105.e9VL5XY11520@webber.adilger.net>
-Subject: Re: [linux-lvm] Exporting VG
-In-Reply-To: <20001031203559.A8120@gondor.com> "from Jan Niehusmann at Oct 31,
- 2000 08:35:59 pm"
-Date: Tue, 31 Oct 2000 14:05:33 -0700 (MST)
-MIME-Version: 1.0
-Sender: owner-linux-lvm
-Errors-To: owner-linux-lvm
+Return-Path: <blutgens@sistina.com>
+Date: Fri, 17 Nov 2000 16:04:04 -0600
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20001117160404.B1200@titanium.sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
+Subject: [Linux-lvm] testing
+Sender: linux-lvm-admin@mlists.sistina.com
+Errors-To: linux-lvm-admin@mlists.sistina.com
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jan Niehusmann <jan@gondor.com>
-Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
+To: linux-lvm@mlists.sistina.com
 
-Jan writes:
-> > When you do vgexport, this does not do anything like NFS export (does NOT
-> > allow network access to the VG).  It allows you to physically move the
-> > disks to another machine.
-> 
-> Is vgexport/vgimport doing something important? I just moved a harddisk with
-> a vg to another computer without vgexport/vgimport and didnot notice any 
-> problems. Or is it only needed if I add a vg to an already running system?
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think the only thing that vgexport does is mark on disk that the VG
-is "exported" and not shown on vgscan or imported when a "vgchange -a"
-is done.  On AIX, there is no difference on disk for imported and exported
-VGs, the VG state is stored in a config file.
+greetings list users
 
-IMHO, we should not store this state in the VG, nor advocate running
-"vgscan" on each boot.  From what I have read in the past on this mailing
-list, running vgscan on boot is likely to delete important info from
-/etc/lvmtab if there is a minor problem, that has to later be restored
-(if possible).
+--=20
+Ben Lutgens
+Sistina Software Inc.
 
-It would be a lot safer to keep the state of LVM in /etc/lvmtab, and
-only add or remove VGs with administrator actions (explicit vgimport,
-vgexport, vgscan (for a new system or major problems).  This at least
-lets you know at boot time that a VG has a problem, rather than vgscan
-simply deleting it from lvmtab.
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-What will make this a lot more likely is the work that Heinz is doing
-on PVIDs, so that you only store the VGID + vgname in /etc/lvmtab
-and then only the PVIDs in the VGDA.  You don't have to worry about
-device names changing if disks are added/moved/removed, because you
-never depend on the device name.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-PVIDs will also make vgimport much easier (like AIX) so you only specify
-a single device and the VGDA knows all of the PVIDs that belong to that
-volume group.  Using VG names is dangerous if you are moving VGs between
-systems in case the two systems have identical VG names.
+iD8DBQE6FatULxkxGgLdGQgRAm0MAJ9wDwYq8ekU2vZwgUtxQyfcVFPF/ACePowS
+XLbqH4SFm4EIFssJqf7Q5OU=
+=E7EN
+-----END PGP SIGNATURE-----
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+--oLBj+sq0vYjzfsbl--
