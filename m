@@ -1,19 +1,9 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i35Egsj16045
-	for <linux-lvm@redhat.com>; Mon, 5 Apr 2004 10:42:54 -0400
-Received: from srv1.alteeve.com (thelinuxexperience.com [209.167.86.38])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i35Ego5D002438
-	for <linux-lvm@redhat.com>; Mon, 5 Apr 2004 10:42:50 -0400
-Received: from alteeve.com (nabiki.thelinuxexperience.com [209.167.86.34])
-	(authenticated bits=0)
-	by srv1.alteeve.com (8.12.10/8.12.10) with ESMTP id i35EeYYe017778
-	for <linux-lvm@redhat.com>; Mon, 5 Apr 2004 10:40:34 -0400
-Message-ID: <40717062.6050401@alteeve.com>
-Date: Mon, 05 Apr 2004 10:42:42 -0400
-From: Madison Kelly <linux@alteeve.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Converting the root filesystem to ReiserFS on LVM...
+Date: Mon, 5 Apr 2004 14:29:19 -0700
+From: Dave Olien <dmo@osdl.org>
+Message-ID: <20040405212919.GA12443@osdl.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 stripe performance
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,35 +14,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: thornber@redhat.com
+Cc: linux-lvm@redhat.com
 
-Hi all,
 
-   I am officially stumped... I have tried two rescue discs (SysRescCD 
-and PLD Rescue) as well and my Fedora Core 1 install disk using 'linux 
-rescue' in an attempt to backup the FC1 root partition so that I can 
-reformat it as ReiserFS and then restore it.
+I'm running tiobench on an LVM2 striped logical volume.  I'm  comparing
+the LVM2 striping performance with a similar striping configuration
+using a hardware RAID controller.
 
-   When I use the FC1 cd I can't unmount '/mnt/sysimage' which is seen 
-as the LVM device '/dev/VG00/LV00', it keeps saying the device or 
-resource is busy (despite being out of the directory and running off the 
-CD). When I try to boot off either rescue CD 'root' isn't mounted but 
-then I can't find the darn LVM partitions (and yes I made sure that the 
-rescue CDs supported LVM and ReiserFS).
+With hardware RAID, I'm able to get about 66 megabytes per second on
+sequential writes, and 52 megabytes per second with random writes.
 
-   Under Fedora the devices I need to mount are on:
+With LVM2, I can get only 23 megabytes per second with either random
+or sequential writes.
 
-/dev/VG00/LV00 = '/' (currently ext3)
-/dev/VG00/LV01 = '/backup' (reiserfs)
-/dev/VG00/LV02 = '/snapshot' (reiserfs)
+Read performance on LVM is about 10% less than with hardware RAID.
+e.g. with 48 threads, hardware RAID sequental reads are 105 megabytes
+per second, LVM2 RAID sequential reads are 95 megabytes per second.
 
-   Under the two rescue CDs though there is no '/dev/VG00...'. Where 
-would I find those partitions? I tried looking under '/dev/' but the 
-only thing relevant I could find was '/dev/ide/host0/bus0/target0/lun0/' 
-and there was no sign of the LVM partitions (nor under variants like 
-'bus1', etc.).
+This is using an ext2 file system, mounted with noatime.
 
-   Any help would be greatly appreciated!
+I think I recall seeing email with similar problems to this on this
+mail list.  If I recall, the cause had to do with ordering of requests
+submitted to disk.
 
-Madison
+Has there been any work to address this?
+
+Thanks!
+
+Dave Olien
