@@ -1,12 +1,12 @@
 Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Mon, 12 Feb 2001 16:01:05 +0000
+Date: Mon, 12 Feb 2001 16:12:12 +0000
 From: Patrick Caulfield <caulfield@sistina.com>
 Subject: Re: [linux-lvm] lv nodes in /dev ??
-Message-ID: <20010212160105.I522@tykepenguin.com>
-References: <20010212114109.14372.qmail@web10909.mail.yahoo.com> <20010212114306.8793.qmail@web10901.mail.yahoo.com>
+Message-ID: <20010212161212.J522@tykepenguin.com>
+References: <200102071815.f17IFtN14302@webber.adilger.net> <20010212114109.14372.qmail@web10909.mail.yahoo.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010212114306.8793.qmail@web10901.mail.yahoo.com>; from penguin_master_2000@yahoo.com on Mon, Feb 12, 2001 at 03:43:06AM -0800
+In-Reply-To: <20010212114109.14372.qmail@web10909.mail.yahoo.com>; from penguin_master_2000@yahoo.com on Mon, Feb 12, 2001 at 03:41:09AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,22 +22,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Feb 12, 2001 at 03:43:06AM -0800, Mr. Penguin wrote:
-> > Hi people
-> > 
-> > Just noticed that all my LVs have nodes not only in
-> > /dev/vg00/ but also /dev !
-> > 
-> > So I have /dev/vg00/lvol1 and also /dev/lvol1 with
-> > the
-> > same major and minor numbers. I don't like to think
-> > what will happen if I create a new VG called vg01
-> > also
-> > with an lvol1...
-> > 
-> > This seems to be occuring in beta3 and beta4. I'm
-> > using 2.4.1 / reiserfs (root on LVM)
+On Mon, Feb 12, 2001 at 03:41:09AM -0800, Mr. Penguin wrote:
+> Hi people
+> 
+> Just noticed that all my LVs have nodes not only in
+> /dev/vg00/ but also /dev !
 
-Argh! You're right!
+try this patch - it seems to work for me.
 
 patrick
+
+Index: kernel/lvm.c
+===================================================================
+RCS file: /home/cvs/LVM/kernel/lvm.c,v
+retrieving revision 1.7.2.41
+diff -u -r1.7.2.41 lvm.c
+--- kernel/lvm.c        2001/02/09 13:09:31     1.7.2.41
++++ kernel/lvm.c        2001/02/12 16:11:14
+@@ -1984,6 +1984,10 @@
+        }
+        memset(snap_lv_ptr, 0, size);
+ 
++#if LINUX_VERSION_CODE > KERNEL_VERSION ( 2, 3, 46)
++       lvm_do_create_devfs_entry_of_vg ( vg_ptr);
++#endif
++
+        /* get the logical volume structures */
+        vg_ptr->lv_cur = 0;
+        for (l = 0; l < vg_ptr->lv_max; l++) {
+@@ -2007,10 +2011,6 @@
+                        }
+                }
+        }
+-
+-#if LINUX_VERSION_CODE > KERNEL_VERSION ( 2, 3, 46)
+-       lvm_do_create_devfs_entry_of_vg ( vg_ptr);
+-#endif
+ 
+        /* Second path to correct snapshot logical volumes which are not
+           in place during first path above */
