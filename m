@@ -1,49 +1,83 @@
-Date: Thu, 18 Feb 1999 02:10:44 -0600 (CST)
-From: Shawn Leas <sleas@ixion.honeywell.com>
+Message-Id: <199902180900.AA26287@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] Problems on compile
-In-Reply-To: <Pine.GSO.3.96.990218002100.11391B-100000@eesnop1.ews.uiuc.edu>
-Message-Id: <Pine.GHP.4.05.9902180207500.11349-100000@ixion.honeywell.com>
-Mime-Version: 1.0
+Date: Thu, 18 Feb 1999 10:00:51 MET
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Chris Stamborski <cstambor@uiuc.edu>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Ok, it seems it is fixed by re-arranging liblvm.h a little. Heinz sent me
-this a while back.
 
-I suspect this was your problem as well.
+> 
+> Ok, it seems it is fixed by re-arranging liblvm.h a little. Heinz sent me
+> this a while back.
+> 
+> I suspect this was your problem as well.
+> 
+> --- 0.5alpha/tools/lib/liblvm.h Sat Jan 30 13:46:35 1999
+> +++ 0.6alpha/tools/lib/liblvm.h Mon Feb  1 00:54:29 1999
+> @@ -46,10 +46,6 @@
+>  #  endif
+>  #endif
+> 
+> -#include <sys/ioctl.h>
+> -#include <linux/genhd.h>
+> -#include <linux/major.h>
+> -
+>  #if __GLIBC__ > 1
+>  #  ifndef uint8_t
+>  #    define uint8_t    u_int8_t
+> @@ -97,6 +93,10 @@
+>  #  include <malloc.h>
+>  #  include <stdio.h>
+>  #endif /* __GLIBC__ > 1 */
+> +
+> +#include <sys/ioctl.h>
+> +#include <linux/genhd.h>
+> +#include <linux/major.h>
+> 
+>  #include <lvm.h>
+> 
 
---- 0.5alpha/tools/lib/liblvm.h Sat Jan 30 13:46:35 1999
-+++ 0.6alpha/tools/lib/liblvm.h Mon Feb  1 00:54:29 1999
-@@ -46,10 +46,6 @@
- #  endif
- #endif
+Thank you Shawn.
 
--#include <sys/ioctl.h>
--#include <linux/genhd.h>
--#include <linux/major.h>
--
- #if __GLIBC__ > 1
- #  ifndef uint8_t
- #    define uint8_t    u_int8_t
-@@ -97,6 +93,10 @@
- #  include <malloc.h>
- #  include <stdio.h>
- #endif /* __GLIBC__ > 1 */
-+
-+#include <sys/ioctl.h>
-+#include <linux/genhd.h>
-+#include <linux/major.h>
+It's concerned with BSD disk label support.
+I never choosed that config option ;*)
 
- #include <lvm.h>
+It will be in 0.6alpha anyway.
 
--Shawn
-<=========== America Held Hostage ===========>
-   Day 2220 for the poor and the middle class. 
-   Day 2239 for the rich and the dead.
-   702 days remaining in the Raw Deal.
-<============================================> 
+BTW: hope to bring out 0.6alpha including some features and
+     bug fixes before march.
+
+Heinz
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
