@@ -1,12 +1,12 @@
-Return-Path: <heartboy@nycap.rr.com>
-From: Joe Morris <heartboy@nycap.rr.com>
-Subject: Re: [linux-lvm] vgcreate
-Date: Tue, 3 Jul 2001 09:38:22 -0400
-References: <85063BBE668FD411944400D0B744267A481B89@AUSMAIL>
-In-Reply-To: <85063BBE668FD411944400D0B744267A481B89@AUSMAIL>
+Return-Path: <tomlins@cam.org>
+From: Ed Tomlinson <tomlins@cam.org>
+Subject: Re: [linux-lvm] Request for misalignment tests
+Date: Tue, 3 Jul 2001 09:52:36 -0400
+References: <20010626161947.A11918@sistina.com> <15168.33453.645650.476763@rigel.oswf.de> <20010703120138.C22955@sistina.com>
+In-Reply-To: <20010703120138.C22955@sistina.com>
 MIME-Version: 1.0
-Message-Id: <01070309382200.01132@alb-66-66-254-86>
 Content-Transfer-Encoding: 8bit
+Message-Id: <20010703135238.CBD9A42109@oscar.casa.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,19 +19,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
 
-On Monday 02 July 2001 10:14 pm, you wrote:
-> Can you run vgcreate -v volname /dev/hde11, and give more verbose output?
-> also, some disks, after setting the type, you may actually need to reboot
-> so the kernel recognizes it properly. It could also be that it's an logical
-> drive on an extended partition too.
+On July 3, 2001 06:01 am, Heinz J. Mauelshagen wrote:
+> On Mon, Jul 02, 2001 at 04:18:21PM +0200, Werner John wrote:
+> > Dear Heinz
+> >
+> > Heinz J. Mauelshagen writes:
+> > > Jorg,
+> > >
+> > > please avoid recent CVS and if possible don't create PVs with
+> > > LVM versions > 0.9.1 Beta 5.
+> >
+> > What if we have already done this some month ago?
+>
+> It can only have hapend after 0.9.1 Beta 6 came out in March.
+> My provided one liner test shows you if it is the case then.
+>
+> > pvmove until everything is fixed?
+>
+> After it is fixed and your installation is update to the next LVM release
+> yuu should be able to pvmove PEs to other (temporary) PVs which are created
+> with new tools and correct alignment.
+>
+> > Will there be a tool to fix bad PVs in
+> > use?
+>
+> Unlikely :-(
 
-Well, while experimenting last night, I was able to create a volume group 
-with and earlier version lvm (I think beta2), so I believe it is a bug in 
-beta7.  Oh, and one more thing, last night I created a volume group of 10 
-gigs.  I made 2 logical volumes of around 5 gigs apiece formatted with 
-reiserfs.  I then reduced the second volume by 500M and extended the first 
-one by 500M.  But when I ran resize_reiserfs on the first one, I got and 
-error that the first one was too small.  What is going on?  Thanks!
-Joe
+
+This is going to be a _major_ PITA here.  March to July is a long period.  I could live
+with a tolleration mode.   Everything on my system is in LVM (excepting a small recovery
+partition).  My largest PV is corrupted...
+
+Hopefully something can be done to make this beta error a little less painfull - Please.
+
+TIA,
+
+Ed Tomlinson
