@@ -1,9 +1,9 @@
-Message-ID: <4017FDB8.2030905@gene.concordia.ca>
+Message-ID: <401807B2.6060900@gene.concordia.ca>
 From: Chris Beck <cbeck@gene.concordia.ca>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] mounting snapshot errors
-References: <9BBB7C9EFEF1874BAC4DC204E867EFAF02560F62@s99mail06>	 <1075274923.337.23.camel@ws.rdb.linux-help.org> <1075311258.29632.56.camel@david.internal.NorcrossGroup.com>
-In-Reply-To: <1075311258.29632.56.camel@david.internal.NorcrossGroup.com>
+Subject: Re: [linux-lvm] LVM Snapshots for remote archiving.
+References: <4016EE45.1050300@gene.concordia.ca>	 <1075246162.25365.16.camel@david.internal.NorcrossGroup.com>	 <4017E699.5020703@gene.concordia.ca> <1075310348.25365.43.camel@david.internal.NorcrossGroup.com>
+In-Reply-To: <1075310348.25365.43.camel@david.internal.NorcrossGroup.com>
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,88 +15,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 28 13:23:07 2004
+Date: Wed Jan 28 14:06:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@sistina.com
 
-Yah, I saw some stuff about this in the LVM-HOWTO:
-
-http://tldp.org/HOWTO/LVM-HOWTO/snapshots_backup.html
-
-| If the snapshot is of an XFS filesystem, the xfs_freeze command should=20
-be used to quiesce the filesystem before creating the snapshot. (if the=20
-filesystem is mounted) |
-
-|# xfs_freeze -f /mnt/point; lvcreate -L592M -s -n dbbackup /dev/ops/data=
-bases; xfs_freeze -u /mnt/point=20
-
-If you are using XFS as the filesystem you will need to add the nouuid op=
-tion to the mount command:
-
-# mount /dev/ops/dbbackup /mnt/ops/dbbackup -onouuid,ro
-              =20
-Previously, the norecovery option was suggested to allow the mounting of =
-XFS snapshots.
-It has been recommended not to use this option, but to instead use xfs_fr=
-eeze to quiesce the filesystem before creating the snapshot.
-
-|
-
-cheers,
-chris
-
-
 It is whispered that Greg Freemyer was heard, on or about 1/28/2004=20
-12:34 PM to say:
+12:19 PM to say:
 
->On Wed, 2004-01-28 at 02:28, R Dicaire wrote:
+>A snapshot is based on copy on write technology.  I guess you could use
+>it to create the transaction log you are talking about, but it is not
+>what it is designed to do, and I believe significant effort would be
+>involved.
+>
+>Basically with a snapshot, a blank disk volume is created with a flag
+>table with one entry per block of master volume data.  All of the flag
+>entries are initialized as "unmodified".
+>
+>When a write is performed to the master volume, the flag table is
+>checked.  If the flag for that particular block is set to "unmodified",
+>then a copy of the unmodified block is made to the snapshot area prior
+>to the write being performed.  The flag is then set to modified.
+>
+>Future writes to that specific block will have no effect on the flag
+>table, nor on the snapshot volume.
 > =20
 >
->>On Tue, 2004-01-27 at 21:53, Little, Chris wrote:
->>   =20
->>
->>>is the filesystem you are snapshotting still mounted when you execute =
-the
->>>snapshot?  They need to be offline before the snapshot takes place.
->>>     =20
->>>
->>Yes, they are still mounted when I take a snapshot, I must have missed =
-that
->>in the docs, that in itself poses a problem as I then cant umount the v=
-olumes
->>without killing services. I'd understood the snapshotting process as be=
-ing
->>able to snapshot a live filesystem, and then mount the snapshot to perf=
-orm
->>backups from it instead of the live filesystem. Whats the purpose of th=
-e
->>--size arg to lvcreate when taking a snapshot, I thought it was a buffe=
-r
->>to hold data that'd normally be written to disk but cant when the
->>snapshot exists? I'm confused.
->>
->>   =20
->>
->I snapshot live mounted volumes every day.  (LVM 1.x, kernel 2.4.21)
+Oh well, I guess I was thinking that it was the reverse:  changes were=20
+written to the new volume, which was then merged into the old one once=20
+the snapshot was finished.
+
+>For your transaction log, the flag table is significant, but the actual
+>snapshot volume is not.  It is just the old unmodified content.
 >
->It works.
+>To get a true set of differences over a 24-hour period, you would have
+>to create a snapshot at time T, and another at time T+24.  (Easily done
+>I think).
 >
->I use xfs.
+>Then have code that went thru the flag table for snapshot T and
+>retrieved the blocks from snapshot T+24 that were marked as modified.=20
+>(LVM will automatically get the block from the appropriate source: T+24
+>or Master volume)
 >
->For LVM snapshot to work with mounted filesystems you either have to
->have the vfs-lock patch applied or invoke a filesystem freeze from user
->space prior to creating the snapshot.
+>Once done, the snapshot T would be deleted, and snapshot T+24 would be
+>maintained.  At the 48 hour mark, snapshot T+48 would be created and the
+>process repeated.
 >
->With xfs, I use the xfs_freeze command from userspace.
->
->Then on the xfs mount, I have to use the "-o ro,nouuid" flag to mount
->the snapshot because the master volume and the  snapshot have the same
->uuid.
->
->Greg
+>I don't think that is a trivial issue, and I think the code would have
+>to implemented in the kernel.
 > =20
 >
+Why the kernel? ... surely reading the flag tables could be done in user=20
+space?  I think you have the necessary logic spot on.
+
+>New code would also have to be developed to apply the above blocks.
+> =20
+>
+Hmmm.  I can mess around in perl and java as well as the next guy, but=20
+my c-fu is weak, very weak.  How much would it cost to sponsor someone=20
+to do this do you think?
 
 --=20
 Chris Beck / Y.A.B.A. / Fungal Genomics
