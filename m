@@ -1,17 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9T9Xor17455
-	for <linux-lvm@redhat.com>; Fri, 29 Oct 2004 05:33:50 -0400
-Received: from it-ep1-exch.ocsdom.ko.local (it-ep1-exch.krollontrack.com
-	[204.73.176.253])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id i9T9Xn1F015469
-	for <linux-lvm@redhat.com>; Fri, 29 Oct 2004 05:33:49 -0400
-Message-ID: <2E9DA7DCA1129B4DA2DCA703100F387D7C7CCF@deexch.ontrack.com>
-From: hengelland@krollontrack.de
-Date: Fri, 29 Oct 2004 04:32:57 -0500
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C4BD9A.4632DEEE"
-Subject: [linux-lvm] Datarecovery on LVM volumes
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9UHRnr20259
+	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 13:27:49 -0400
+Received: from eclectic.kluge.net (eclectic.kluge.net [66.92.69.221])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id i9UHRilE029352
+	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 13:27:49 -0400
+Date: Sat, 30 Oct 2004 13:27:38 -0400
+From: Theo Van Dinter <felicity@kluge.net>
+Subject: Re: [linux-lvm] Software raid on top of lvm logical volume
+Message-ID: <20041030172738.GF13737@kluge.net>
+References: <41801ADE.6030308@monjoin.net> <20041028011738.GD13737@kluge.net>
+	<41814060.4040400@mikebabcock.ca>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xpm60Y6NLyZIvZnU"
+Content-Disposition: inline
+In-Reply-To: <41814060.4040400@mikebabcock.ca>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,64 +25,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
-
-------_=_NextPart_001_01C4BD9A.4632DEEE
-Content-Type: text/plain;
-	charset="iso-8859-1"
-
-We got a couple of drives with the partiton identifier "0x8E". They are all
-part of an LVM with kind of EXT2 structures.
-The EXT2 structures do not look like they usually do ... superblocks are way
-different.
-I would like to ask if somebody could provide me with some Offset
-information how
-physical volumes, volume groups and logical volumes work together on a
-sector table basis ...
- 
-Many thanks
- 
-Holger Engelland
-DataRecovery Supervisor
-Kroll Ontrack Germany  
-
-------_=_NextPart_001_01C4BD9A.4632DEEE
-Content-Type: text/html;
-	charset="iso-8859-1"
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-<META content="MSHTML 6.00.2800.1476" name=GENERATOR></HEAD>
-<BODY>
-<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>We got a couple of 
-drives with the partiton identifier "0x8E". They are all part of an LVM with 
-kind of EXT2 structures.</FONT></SPAN></DIV>
-<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>The EXT2 structures 
-do not look like they usually do ... superblocks are way 
-different.</FONT></SPAN></DIV>
-<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>I would like to ask 
-if somebody could provide me with some Offset information 
-how</FONT></SPAN></DIV>
-<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>physical volumes, 
-volume groups and logical volumes work together on a sector table basis 
-...</FONT></SPAN></DIV>
-<DIV><SPAN class=718561809-29102004><FONT face=Arial 
-size=2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=718561809-29102004><FONT face=Arial size=2>Many 
-thanks</FONT></SPAN></DIV>
-<DIV><SPAN class=718561809-29102004><FONT face=Arial 
-size=2></FONT></SPAN>&nbsp;</DIV>
-<DIV><B><I><FONT face="Arial Black" color=#000080 size=2>Holger 
-Engelland</FONT><BR></I><FONT face="Arial Narrow" color=#808080 
-size=2>DataRecovery Supervisor</FONT></B><FONT face=Arial><BR></FONT><B><FONT 
-face="Arial Narrow"><FONT size=2><FONT color=#808080>Kroll Ontrack&nbsp;<SPAN 
-class=718561809-29102004><FONT color=#000000>Germany</FONT></SPAN></FONT><FONT 
-color=#000080>&nbsp;</FONT></FONT></FONT><U> </U></B></DIV></BODY></HTML>
+--xpm60Y6NLyZIvZnU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-------_=_NextPart_001_01C4BD9A.4632DEEE--
+On Thu, Oct 28, 2004 at 02:54:24PM -0400, Michael T. Babcock wrote:
+> >You'd usually want to make your raid devices first, then put LVM on
+> >top of it.  I can't really think of any benefits of doing it the other
+> >way around.
+>=20
+> I've thought about this numerous times -- there is the distinct resizing=
+=20
+> advantage.  Namely, if I create a software RAID partition, I can't=20
+> resize it afterward without destroying it.  I have for example, on=20
+
+There's no resizing advantage at all -- if you add another disk to the LVM,
+you can just as easily add it to a RAID array instead.
+
+Never mind the fact that if you lose any disk in the LVM, your RAID groups =
+are
+dead (unless you split up your LVM disk, but that's what RAID does ...)
+
+LVM gives you flexibility in your disk layout, RAID gives you performance
++ reliability.  LVM builds on RAID's features, but the other way around,
+RAID is undercut by LVM.
+
+> I understand this may not be optimal in some situations, but some of us=
+=20
+> don't have thousands of dollars for SCSI HW RAID controllers.
+
+Neither do I, but this is irrelevent to the conversation.
+
+--=20
+Randomly Generated Tagline:
+"A bride must be carried over this, but a vampire must be invited into
+ it."                                            - Jeopardy Answer
+ "What is a Supermarket Spacer, Alex?"           - Theo's Response
+
+--xpm60Y6NLyZIvZnU
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQFBg88K7tgKAJaXVyoRAtCeAKCSn1PcYWPurtoXGT5bKlI8l+q8kgCfYrQm
+p6AyWCz73sL2HBEV5wiHsLg=
+=bp2N
+-----END PGP SIGNATURE-----
+
+--xpm60Y6NLyZIvZnU--
