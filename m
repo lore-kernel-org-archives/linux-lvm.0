@@ -1,10 +1,9 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Tue, 13 Mar 2001 23:17:23 -0300 (BRST)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-In-Reply-To: <20010313232626.A31056@cistron.nl>
-Message-ID: <Pine.LNX.4.21.0103132316220.2056-100000@imladris.rielhome.conectiva>
+Return-Path: <JSO@europay.com>
+Message-ID: <A4A5E4C468B5D11190220001FA6835DD04DD8884@EPIXCH003>
+From: =?iso-8859-1?Q?SOETE_Jo=EBl?= <JSO@EUROPAY.COM>
+Date: Wed, 14 Mar 2001 14:09:59 +0100
 MIME-Version: 1.0
+Subject: [linux-lvm] linux lvm iop version?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +15,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, 13 Mar 2001, Wichert Akkerman wrote:
-> Previously Andreas Dilger wrote:
-> > Wichert writes:
-> > > I figured that out by now. I think I'll add the LVM10 ioctls to 
-> > > strace 4.4 actually :)
-> > 
-> > That would be nice.
-> 
-> Turns out this is impossible: LVM made the same mistake some of the
-> OSS sound drivers did and used ioctl numbers that the kernel already
-> uses for other purposes. This is not a problem for the kernel itself,
-> but means a tool like strace can't decode syscalls.
+Hello all,
 
-Good thing this can be fixed with IOP-11 in 2.5 ;)
+In my present position, I am in use to manage HP-UX server with LVM.
+Also I would like to implement a woody Debian on "full" LVM spare disk.
 
-(at least, I can't really see a large base of user
-programs becoming dependant on the LVM ABI...)
+But it seems that it is not absolutely possible because we need at least a
+small slice (partition) for /boot fs. Am I right?
 
-regards,
+Then I have a look into 'lvmcreate_initrd' and found the option '-i'
+specifying LVM IOP version.
+I do not found any explanation on what IOP is.
+Is someone can advise me about this (is it for special material? what are
+its advantage?...) or where can I found those information (I already have a
+look into LVM HOWTO maintained by AJ Lewis but there is not mention of IOP)?
 
-Rik
---
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
+Thanks in advance for information,
+	Joel
 
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com.br/
+
+**********************************************************************
+This e-mail and any attachments to it may contain confidential information which is strictly intended for the use of the authorised recipient.  If you have received this e-mail in error, please delete it and notify the sender by replying to this e-mail.
+Thank you for your co-operation.
+**********************************************************************
