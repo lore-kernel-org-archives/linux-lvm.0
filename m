@@ -1,11 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Addiing new hdd to pv group
-Message-Id: <20020430154018.B4879@sistina.com>
-References: <B98126A4-5B7D-11D6-A7F7-000393452E7E@jvm.de>
+Subject: Re: [linux-lvm] How to confuse lvm using devfs
+Message-Id: <20020430154332.C4879@sistina.com>
+References: <20020429112254.A19395@kzdoos.xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <B98126A4-5B7D-11D6-A7F7-000393452E7E@jvm.de>; from
-    stephan.budach@jvm.de on Mon, Apr 29, 2002 at 04:30:59PM +0200
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20020429112254.A19395@kzdoos.xs4all.nl>; from
+    koos@kzdoos.xs4all.nl on Mon, Apr 29, 2002 at 11:22:54AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,57 +15,91 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 30 08:42:02 2002
+Date: Tue Apr 30 08:46:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Stephan,
+Koos,
 
-recent LVM versions have a pvresize command, which can add the space of
-a grown partition/device to a physical volume stored in that partition.
+that's a know constraint in LVM1.
 
-You can't combine seperate devices (like 2 different disks) this way.
+In recent LVM1 versions, there's support for environment variable LVM_DEV_REFIX.
+Still needs some work to anable arbitrary devfs mount points though.
 
-If hdd is a free disk, just run pvcreate on it and use vgextend to add it
-to one of your existing volume groups.
+LVM2 is fully configurable already ITR.
 
-On Mon, Apr 29, 2002 at 04:30:59PM +0200, Stephan Budach wrote:
-> Hi,
->=20
-> is it possible to expand an existing pv with an additional hdd, without=
-=20
-> loosing data, of course?
->=20
-> Thanks,
-> Stephan
-> --
-> Stephan Budach
->=20
-> Jung von Matt/Services
->=20
-> Glash=FCttenstrasse 38   			20357 Hamburg
-> Telefon: +49-40-4321-1353    		Fax: +49-40-4321-1114
-> eMail: stephan.budach@jvm.de	Internet: http://www.jvm.de
->=20
->=20
+Regards,
+Heinz    -- The LVM Guy --
+
+
+On Mon, Apr 29, 2002 at 11:22:54AM +0200, Koos van den Hout wrote:
+> 
+> It seems the lvm tools get confused when there is devfs compiled into the
+> kernel but it's not mounted at /dev. Twice I had
+> 
+> lvcreate -l 1024 vghm -n home
+> 
+> fail on me with an error about /dev/vghm/home being inacessible. That's
+> simply because it was not there.
+> 
+> When I created /dev/vghm/home with the same data as /devices/vghm/home
+> it wasn't available right away (according to vgdisplay, the extents
+> were allocated, but lvdisplay did not show the logical volume). When I reran
+> vgscan (and maybe rebooted in the process, I have rebooted lots of times)
+> it showed up and worked. The device is formatted with reiserfs now and
+> mounted.
+> 
+> Now, when I try to display the volume info:
+> 
+> root@NEWgosper:~# lvdisplay /devices/vghm/home 
+> lvdisplay -- invalid logical volume name "/devices/vghm/home"
+> 
+> 
+> root@NEWgosper:~# lvdisplay /dev/vghm/home 
+> --- Logical volume ---
+> LV Name                /dev/vghm/home
+> VG Name                vghm
+> LV Write Access        read/write
+> LV Status              available
+> LV #                   1
+> # open                 1
+> LV Size                4.00 GB
+> Current LE             1024
+> Allocated LE           1024
+> Allocation             next free
+> Read ahead sectors     120
+> Block device           58:1
+> 
+> root@NEWgosper:~# ls -l /dev/vghm/home /devices/vghm/home
+> brw-r-----    1 root     root      58,   1 Apr 29 01:23 /dev/vghm/home
+> brw-r-----    1 root     root      58,   1 Jan  1  1970 /devices/vghm/home
+> 
+> Kernel 2.4.18, devfs compiled in but mounted on /devices and not on /dev
+> (just testing with devfs).
+> 
+> Logical Volume Manager 1.0
+> Heinz Mauelshagen, Sistina Software  14/08/2001 (IOP 10)
+> 
+>                                      Koos van den Hout
+> 
+> -- 
+> Koos van den Hout,           PGP keyid RSA/1024 0xCA845CB5 via keyservers
+> koos@kzdoos.xs4all.nl        or DSS/1024 0xF0D7C263                        -?)
+> Fax +31-30-2817051               Visit my site about books with reviews    /\\
+> http://idefix.net/~koos/                http://www.virtualbookcase.com/   _\_V
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
---=20
-
-Regards,
-Heinz    -- The LVM Guy --
-
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -74,6 +107,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
