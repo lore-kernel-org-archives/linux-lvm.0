@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 7 May 2001 10:28:44 +0000
+Date: Mon, 7 May 2001 10:34:57 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM questions & problems.
-Message-ID: <20010507102844.B25752@sistina.com>
-References: <989197513.8109.6.camel@localhost>
+Subject: Re: [linux-lvm] typo in CVS: LVM/kernel/lvm.c
+Message-ID: <20010507103457.C25752@sistina.com>
+References: <Pine.LNX.4.32.0105052321020.24489-100000@falka.mfa.kfki.hu> <20010506101133.A642@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <989197513.8109.6.camel@localhost>; from raheesom@navpoint.com on Sun, May 06, 2001 at 09:05:13PM -0400
+In-Reply-To: <20010506101133.A642@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Sun, May 06, 2001 at 10:11:33AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,154 +21,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, May 06, 2001 at 09:05:13PM -0400, Rupert Heesom wrote:
-> I'm practicing doing some LVM commands, and am coming up with some
-> problems -
+On Sun, May 06, 2001 at 10:11:33AM +0100, Joe Thornber wrote:
+> On Sat, May 05, 2001 at 11:24:43PM +0200, Gergely Tamas wrote:
+> > Hi!
+> > 
+> > There is a typo in CVS:LVM/kernel/lvm.c
+> > 
+> > Gergely
 > 
-> Most disconcerting is that when I try to create a directory in the LV, I
-> get the following error - (this does not happen all the time, but almost
-> all the time 99%) -
+> Yes, I just looked at cvs, you're right.  Thanks.
 > 
-> [root@localhost Tmp]# mkdir test1
-> mkdir: cannot create directory `test1': Input/output error
-
-You didn't metion, if the filesystem is still in a sane state.
-
-Did you check your syslog for "accessess beyond the end of the device"
-which indicate fs related problems?
-
-If so: did you run fsck to fix those and did you retest?
-
+> Heinz & Patrick what are you playing at !?
 > 
-> Creating normal files on the LV is not a problem.
+> lvm.c revision 1.10
+> -------------------
 > 
-> Also, the figures in the following outputs don't seem to make sense to
-> me -
+> o why did you feel the need to change the name of __update_hardblocksize ?
 > 
-> 287Mb of space taken on my LV lvol1 (shown using du -h).
 
-du is a filesystem tool which tells you how much space is used
-from the fs perspective.
-The LV tools provide information from the underlying block device being
-exposed by the LVM to the filesytem or other users (like databases etc.).
+Just to adopt the new naming in > 2.4.3
 
-> 
-> LV lvol1 - shows all 75 logical extends taken, I'm assuming filling up
-> the 300Mb LV size.
-> 
-> LV Size                300 MB
-> Current LE             75
-> Allocated LE           75
-
-O.k.
-That shows, that you have a 300M logical volume, which you said above.
-
-vgdisplay on your volume group gives you (beside other information)
-the size of the physical extents (PEs) which is 4M by default.
-
-You can change that in order to address bigger configurations with
-"vgcreate -s". Please see "man vgcreate" for further details.
-
-> 
-> 
-> PV shows too many physical extends used for the proportion of disk space
-> used. -
-> 
-> Total PE              76
-> Free PE               1
-
-That's ok because you allocated 75PEs which are 300M based on
-4M PE size.
-
-> 
-> PVdisplay shows too many physical extents used again
-> 
-> Total PE              76
-> Free PE               1
-> Allocated PE          75
+> o why change the name of the max_hardblocksize variable.
 
 Same as above.
 
+> 
+> o you've duplicated ~10 lines of code instead of putting them into a seperate 
+>   function such as:
 
-Please have a look at the LVM howto at www.sistina.com/lvm
-for further hints on LVM usage.
-
-
-Regards,
-Heinz    -- The LVM Guy --
-
+No, just added the (wrong) version check and function call.
 
 > 
+>   static inline ulong _get_hard_block_size(kdev_t dev) {
+>       etc.
+>   }
+
+I don't mind.
+
 > 
-> ----------------------------------------
+> o The code has a typo 'get_hardbsect_size' from which we can conclude that it
+>   was *never* compiled for a kernel < 2.4.4
+
+Oops, my fault ;-)
+
 > 
-> LVM command outputs
+> o The version check itself is wrong.
+> 
+> It looks to me like a botched search and replace without subsequent
+> testing, or even a cvs diff before checkin.
+
+May be... ;-)
+
+> 
+> lvm.c revision 1.11
 > -------------------
 > 
-> [root@localhost Tmp]# lvdisplay /dev/vg/lvol1
-> lvdisplay
-> --- Logical volume ---
-> LV Name                /dev/vg/lvol1
-> VG Name                vg
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                300 MB
-> Current LE             75
-> Allocated LE           75
-> Allocation             next free
-> Read ahead sectors     120
-> Block device           58:0
+> o typo still there, it can't have been tested.
+> 
+> lvm.c revision 1.12
+> -------------------
+> 
+> Patrick, you correctly fix most of the remaining mistakes apart from
+> the version number.  But what are all the other code changes that have
+> slipped in ?  They aren't mentioned in the checkin message, are they
+> meant to be there ?
+> 
+> - Joe
 > 
 > 
-> [root@localhost Tmp]# pvdisplay /dev/sdb1
-> pvdisplay
-> --- Physical volume ---
-> PV Name               /dev/sdb1
-> VG Name               vg
-> PV Size               305.89 MB / NOT usable 1.89 MB [LVM: 121 KB]
-> PV#                   1
-> PV Status             available
-> Allocatable           yes
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              76
-> Free PE               1
-> Allocated PE          75
-> PV UUID               wm3nGp-pEem-0byC-3JOs-OFs4-3kv2-EkPxaK
 > 
-> 
-> [root@localhost Tmp]# vgdisplay
-> vgdisplay
-> --- Volume group ---
-> VG Name               vg
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                1
-> Open LV               1
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                1
-> Act PV                1
-> VG Size               304 MB
-> PE Size               4 MB
-> Total PE              76
-> Alloc PE / Size       75 / 300 MB
-> Free  PE / Size       1 / 4 MB
-> VG UUID               0ZyZNT-53L9-tAFJ-GCa4-1Zr5-nZli-IFIbIP
-> 
-> 
-> -- 
-> regs
-> rupert
-> 
+> > 
+> > --- LVM/kernel/lvm.c.orig	Thu May  3 15:37:19 2001
+> > +++ LVM/kernel/lvm.c	Sat May  5 23:01:22 2001
+> > @@ -1879,7 +1879,7 @@
+> >  	int max_hardsectsize = 0, hardsectsize;
+> > 
+> >  	for (le = 0; le < lv->lv_allocated_le; le++) {
+> > -#if LINUX_VERSION_CODE <= KERNEL_VERSION ( 2, 4, 4)
+> > +#if LINUX_VERSION_CODE <= KERNEL_VERSION ( 2, 4, 3)
+> >  		hardsectsize = get_hardblocksize(lv->lv_current_pe[le].dev);
+> >  #else
+> >  		hardsectsize = get_hardsect_size(lv->lv_current_pe[le].dev);
+> > @@ -1892,7 +1892,7 @@
+> > 
+> >  	if (lv->lv_access & LV_SNAPSHOT) {
+> >  		for (e = 0; e < lv->lv_remap_end; e++) {
+> > -#if LINUX_VERSION_CODE <= KERNEL_VERSION ( 2, 4, 4)
+> > +#if LINUX_VERSION_CODE <= KERNEL_VERSION ( 2, 4, 3)
+> >  			hardsectsize = get_hardblocksize( lv->lv_block_exception[e].rdev_new);
+> >  #else
+> >  			hardsectsize = get_hardsect_size( lv->lv_block_exception[e].rdev_new);
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
