@@ -1,9 +1,8 @@
-From: "Steve Wray" <steve.wray@paradise.net.nz>
-Subject: RE: [linux-lvm] LVM System
-Message-Id: <NBBBKLKHMJHIJLHOGAOJIEFNJFAA.steve.wray@paradise.net.nz>
+From: Dimitris Zilaskos <dzila@tassadar.physics.auth.gr>
+Subject: Re: [linux-lvm] filesystem errors
+In-Reply-To: <20020304112801.D10007@sistina.com>
+Message-Id: <Pine.LNX.4.44.0203050139150.25453-100000@tassadar.physics.auth.gr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <auto-000021223409@front2.mail.megapathdsl.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,51 +13,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  4 17:39:02 2002
+Date: Mon Mar  4 17:48:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'd recommend ext3 with data journalling for sensitive
-filesystems. Its slower than XFS but (seems to) scale better with
-striping and large files. XFS performance (seems to) fall off
-very rapidly as file size exceeds buffer size.
+> Because you mention *huge* transfers the usual suspect is the VM subsystem IMO.
+> Did you try 2.4.<10 which didn't have the faulty VM subsystem?
 
-XFS only journals metadata. So on event of a crash,
-the filesystem structure will (likely) be sound, but theres
-no guarantee that the data blocks will be uncorrupted!!!
+ I havent used this kind of setup before kernel 2.4.16 . Nevertheless , I
+did some more extensive tests on non-lvmed loopback filesystems and
+errors occur there too , so you propably have a point . However, going
+back to 2.4.<10 might have other implications in my setup :) . I will try
+it on a spare box though .
 
-XFS is very nice tho, in that volumes and filesystems can
-be grown with no downtime at all (without even unmounting).
-
-You might want to do some benchmarking before committing
-to a build (thats recently saved my butt actually).
+Kind regards ,
 
 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Anthony W. Marino
-> Sent: Tuesday, 5 March 2002 10:39 a.m.
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] LVM System
->
->
-> Any thoughts or articles that would be usefull in determining the quality
-> on the following combination would be greatly appreciated:
->
-> LVM 1.x
-> 3Ware 7800 Raid Controller
-> Maxtor 40GB harddrives
-> XFS Journalling FS
-> SuSE 2.4.18+ Linux
->
->
-> Thank You,
-> Anthony
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+=============================================================================
+
+Dimitris Zilaskos
+
+Department of Physics @ Aristotle Univercity of Thessaloniki , Greece
+=============================================================================
