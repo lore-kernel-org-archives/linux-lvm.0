@@ -1,13 +1,8 @@
-Date: Thu, 30 Aug 2001 07:35:52 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] extending striped lv
-Message-ID: <20010830073552.B19415@sistina.com>
-References: <20010823232349.9882.qmail@web20306.mail.yahoo.com> <20010824112859.A10992@dragon.blacknet.de> <20010827124212.C1308@sistina.com> <3B8B78AC.164BDA67@sap.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
-Content-Disposition: inline
-In-Reply-To: <3B8B78AC.164BDA67@sap.com>; from Jan.Schreckenbach@sap.com on Tue, Aug 28, 2001 at 12:55:40PM +0200
+Message-ID: <20010830134914.13181.qmail@web14401.mail.yahoo.com>
+Date: Thu, 30 Aug 2001 06:49:14 -0700 (PDT)
+From: Aman Shahi <shahi_aman@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Problem with Snapshot or something else ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,63 +14,88 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---0ntfKIWw70PvrIHh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >>Chris Mason posted a new VFA lock patch for 2.4.8+
+> >>heer:
+>
+>>http://lists.sistina.com/pipermail/lvm-devel/2001-August/000612.html
 
-On Tue, Aug 28, 2001 at 12:55:40PM +0200, Jan Schreckenbach wrote:
-> does this mean I can initially build a striped LV from two smaller
-> disks, let me say sda and sdb and later move the LE from sda to sdc
-> and from sdb to sdd (where sdc and sdb a bigger than sda/sdb)?=20
+I have linux kernel 2.4.8-ac8 and applied the VFS lock
+patch. I am having a problem when having snapshots.
 
-Yes, that should work.  Then the LEs would be just on sdc and sdd, and sda
-and sdb would be empty.
+1. I create a VG over three disk partitions
+sda2,sdb2,sdc2 ( total size being around 90G)
+2. I then create a LV of size 10G. 
+3. I create a reiser file system over this LV and
+mount it.
+4. I copy around 1.2G of data to this LV.
+5. I take a snapshot of this LV.
+6. I leave the snapshot and try copying another 1.2G
+of data to the LVM. I am doing the I/O using cp
+command. The cp command gives segmentation fault and I
+get a kernel message...
 
-> It is to be said that the performance of md RAID0 is somewhat better
-> than from striped LV's but I would prefer LVM if I could extend
-> a striped LV without rebuilding RAID/restoring data.
+Code: 8b 0b eb 12 eb 0d 90 90 90 90 90 90 90 90 90 90
+90 90 90 8b
+ <1>Unable to handle kernel paging request at virtual
+address 0001d108
+ printing eip:
+c01c65cd
+*pde = 00000000
+Oops: 0000
+CPU:    0
+EIP:    0010:[<c01c65cd>]
+EFLAGS: 00010246
+eax: 00003a21   ebx: 0001d108   ecx: c0da5800   edx:
+00000000
+esi: 00000000   edi: 007919f8   ebp: 00000812   esp:
+cc911d34
+ds: 0018   es: 0018   ss: 0018
+Process cp (pid: 1341, stackpage=cc911000)
+Stack: 00000080 cc910000 00000040 00000000 c0da5970
+c0da5800 00790178 00000001
+       c01c3580 cc911d8e cc911d84 00790178 c0da5800
+000000ff 00000080 00000000
+       cd073400 ccee0000 00790178 00003c70 00791a38
+00791a38 08120000 00000000
+Call Trace: [<c01c3580>] [<c01695e2>] [<c01c366f>]
+[<c0192c92>] [<c015b5c7>]
+   [<c01323b1>] [<c0192cec>] [<c0192f17>] [<c0111f42>]
+[<c0134118>] [<c0132fb6>]
+   [<c01334e3>] [<c015e9a5>] [<c0133491>] [<c012631a>]
+[<c01244f0>] [<c01305c6>]
+   [<c0106ebb>]
 
-Well, like I said, if you used md RAID0 underneath LVM, you could stripe
-across, say, sda and sdb,  and then creat your LV on top of the md device,
-then when you wanted to extend it, create a striped md device across sdc and
-sdd and and extend the VG/LV to that md device.
+Code: 8b 0b eb 12 eb 0d 90 90 90 90 90 90 90 90 90 90
+90 90 90 8b
 
-Anyway, it really depends upon your application.  If you're really concerned
-about speed, you'd probably go with hardware RAID0 anyway, but that's a who=
-le
-different discussion.
+When I do not have any snapshot, I am able to copy any
+amount of data to the LV. But I am consistently
+getting this error when I have sometimes one, or more
+than snapshot in the system. 
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Am I doing something wrong ??
+I am not sure whether this is a problem with snapshot
+or some other problem. But as I see it only when I
+have snapshots in the system, I am reporting it here.
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://people.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+I would also like to know how do I get the latest VFS
+lock patch ? I mean with normal source code we get
+linux-2.4.4-VFS-lock.patch. I found that it was
+different from the one mentioned above(start of this
+mail), which is supposed to be for 2.4.8-ac8. But when
+I tried this(2.4.8-ac8) with kernel 2.4.8-ac9 it
+failed. So which patch do I use for generic purpose ?
 
------Begin Obligatory Humorous Quote----------------------------------------
-Behind every good computer -- is a jumble of wires 'n stuff.
------End Obligatory Humorous Quote------------------------------------------
+regards,
+Aman Shahi.
 
---0ntfKIWw70PvrIHh
-Content-Type: application/pgp-signature
-Content-Disposition: inline
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
 
-iD8DBQE7jjMopE6/iGtdjLERAjXiAJ43howNKnXSOP7l+F6IA5xH5OwREACbB7W9
-FQGEYZky2DGKzo88UEk/xH0=
-=5Tt/
------END PGP SIGNATURE-----
-
---0ntfKIWw70PvrIHh--
+__________________________________________________
+Do You Yahoo!?
+Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
+http://im.yahoo.com
