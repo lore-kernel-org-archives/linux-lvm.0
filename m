@@ -1,11 +1,9 @@
-Return-Path: <mike@marxmeier.com>
-Message-ID: <615A249B783CD41192F400D0B747AC8601A001EB@hesse.bbn.hp.com>
-From: "ZECHA,HOLGER (HP-Germany,ex1)" <holger_zecha@hp.com>
-Date: Fri, 19 Jan 2001 16:19:54 +0100
+Return-Path: <jweber@valinux.com>
+Date: Fri, 19 Jan 2001 07:56:26 -0800 (PST)
+From: Jay Weber <jweber@valinux.com>
+Message-ID: <Pine.LNX.4.30.0101190750570.27286-100000@beefcake.hdqt.valinux.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----_=_NextPart_000_01C0822B.46955410"
-Subject: [linux-lvm] Patch for Kernel 2.2.16
+Subject: [linux-lvm] Kernel panic while snapshotting.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,67 +15,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+Hi,
 
-------_=_NextPart_000_01C0822B.46955410
-Content-Type: text/plain;
-	charset="iso-8859-1"
+I just got a kernel panic while snapshotting with 0.9.1beta2.  I wonder if
+anybody has seen any similar issues or I possibly fubar'd the patch on my
+end?
 
-Hello,
- 
-is there a lvm patch for kernel 2.2.16 available ?
- 
-Regards 
- 
-Holger Zecha
- 
+Panic was:
 
-------_=_NextPart_000_01C0822B.46955410
-Content-Type: application/ms-tnef
-Content-Transfer-Encoding: base64
+	Kernel panic: brw_kiovec: iobuf not locked for I/O
 
-eJ8+IjoPAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEIgAcAGAAAAElQTS5NaWNy
-b3NvZnQgTWFpbC5Ob3RlADEIAQWAAwAOAAAA0QcBABMAEAATADYABQBKAQEggAMADgAAANEHAQAT
-ABAAEwA2AAUASgEBCYABACEAAAA0NkU4QkNENkUwRURENDExQjdDNDAwMTBBNEZCMEY1NgBNBwEE
-gAEAGAAAAFBhdGNoIGZvciBLZXJuZWwgMi4yLjE2AB8HAQ2ABAACAAAAAgACAAEDkAYA4AcAACwA
-AAALAAIAAQAAAEAAOQAQVJVGK4LAAR4AcAABAAAAGAAAAFBhdGNoIGZvciBLZXJuZWwgMi4yLjE2
-AAIBcQABAAAAFgAAAAHAgitEOta86Eft4BHUt8QAEKT7D1YAAB4AMUABAAAACAAAAEVVLTgwNDEA
-AwAaQAAAAAAeADBAAQAAAAgAAABFVS04MDQxAAMAGUAAAAAAAgEJEAEAAADaAwAA1gMAAAMQAABM
-WkZ15T0zzgMACgByY3BnMTI1gjIDQ2h0bWwxAzA/AQMB9wqAAqQD4wIAY2jBCsBzZXQwIAcTAoD/
-EAMAUARWCFUHshHVDlEDAd0Q1zIGAAbDEdUzBEYQ2W8S6xHjCO8J9zsYzw4wNTsR0gxgYwBQCwkB
-ZDM2kxFgC6U0IBACKlwOsgUBkGcdcDMgPCFEAE9DVFlQRSBIAFRNTCBQVUJMAElDICItLy9XRDND
-IDBEVEQfRDSSLhFgVHIAcnRpAiDDB0AgMEVOIj4R4x3n5x6QCqMinDE5HqAfUiKO4x2AJPBFQUQi
-jQ7xI68LJ58kdDYO8DxNRVQcQSAFoAIwCfB0PSIDBeAfUzUuNTAuNAEOQDIuMTgwMCImICIAB4A9
-RyJQRVJQQVRPUiKNNCphLz8mfx5RKQ8eQSwAHqBCTxxEWSKNHPEwb2c5NnEeoERJViKAHfMAISDP
-AAA05RFgHck2NDTPNdKFHas4JkFTUEFOKtBDC2AEED0zMTAqQTn4MTUtJMA6EAHQOhA0vxM37w4Q
-NDgeoEZPTthUIGYA0C0QIhLpLMDrCqMAkHotEDI7GxXQA7JHAdADMDWHSGVsGGAs9SP8NTRRLz2S
-Oxk7Jzgd/jkU8C7gOUJDnzXOAcA7J+8KokRICoAj/DAmQSCQNJv/RE8yjzOfNK9HXzbPTH847/85
-/zsPUo89Lz4/P09AX1bPP0LfS89E/0YPXq9TVyZuGGJzcAKAVedcJ2H/AUBQP0g/SU9KX0tvYa9N
-j/9On1YPUL9s32H/U+9U/27/f1cfWC9ZN1ofWy9tsgQAIMR0aASQZSBhHZwdgKFq9Gx2bSAKsHQQ
-8Nt1sAWxawSRQdAgLGAsYXlsMGF2C3ALYAJgecA//1x/XY9pX1+vf09kr2W/Zs//Z9+CP2n/aw9s
-H20vbj9zj/9wX3Fvcn+Nv3Sfda9Zj3d//1uvfg9/H5evgT+Z32IPYx//ZC+Dr4S/hc+G350fiP+K
-D/+Rf4wvqE+lb49fkG+qb6t/j5Ofdj+WD0DOUmVnCxH/BCB6D6a/mO+kv5sPnB+pH/+hH6Ivoz+6
-/7lPpm+nf67v/6mfxF+rv6zPrd/Gf6//sQ//lO+y37Pvts+338DPuf/Sn//Tr55/n4+8b71/vo+/
-n9Xf/8G/ws/D39kPxf/eL8gfyS//yj/kP8xfsZ/Oz8/fQZIG8O5nEzG1f9+yWgWQEQDRH//SL93/
-1E/xj9lP2l/bb9x///R/3p/fr+C/4c/i3+gv1u//1//+L/Yv9z/4T/lfAH8xcO3p4S8xzx5RNy7S
-JR8jZwJ9DSAAAAMA3j+vbwAAAwACWQAAFgADAAlZAgAAAAMAAW4AAAAACwAEgAggBgAAAAAAwAAA
-AAAAAEYAAAAAA4UAAAAAAAADAAaACCAGAAAAAADAAAAAAAAARgAAAAAQhQAAAAAAAAMAA4AIIAYA
-AAAAAMAAAAAAAABGAAAAAAGFAAAAAAAAAwAAgAggBgAAAAAAwAAAAAAAAEYAAAAAUoUAAD9xAQAe
-AAGACCAGAAAAAADAAAAAAAAARgAAAABUhQAAAQAAAAQAAAA5LjAACwACgAggBgAAAAAAwAAAAAAA
-AEYAAAAABoUAAAAAAAALAAWACCAGAAAAAADAAAAAAAAARgAAAAAOhQAAAAAAAAMAB4AIIAYAAAAA
-AMAAAAAAAABGAAAAABGFAAAAAAAAAwAIgAggBgAAAAAAwAAAAAAAAEYAAAAAGIUAAAAAAAAeABWA
-CCAGAAAAAADAAAAAAAAARgAAAACDhQAAAQAAABMAAAAzMTAxNjE5MTUtMTkwMTIwMDEAAAMA8T8J
-BAAAAwD9P+QEAAADACYAAAAAAAMANgAAAAAAAwCAEP////8CAUcAAQAAACkAAABjPVVTO2E9IDtw
-PWhwO2w9SEVTU0UtMDEwMTE5MTUxOTU0Wi00NDA2AAAAAB4AOEABAAAACAAAAEVVLTgwNDEAHgA5
-QAEAAAAIAAAARVUtODA0MQBAAAcw5BOTRiuCwAFAAAgwTjy6RiuCwAEeAD0AAQAAAAEAAAAAAAAA
-HgAdDgEAAAAYAAAAUGF0Y2ggZm9yIEtlcm5lbCAyLjIuMTYAHgA1EAEAAAA8AAAAPDYxNUEyNDlC
-NzgzQ0Q0MTE5MkY0MDBEMEI3NDdBQzg2MDFBMDAxRUJAaGVzc2UuYmJuLmhwLmNvbT4ACwApAAAA
-AAALACMAAAAAAAMABhCqHN81AwAHED8AAAADABAQAAAAAAMAERAAAAAAHgAIEAEAAABAAAAASEVM
-TE8sSVNUSEVSRUFMVk1QQVRDSEZPUktFUk5FTDIyMTZBVkFJTEFCTEU/UkVHQVJEU0hPTEdFUlpF
-Q0hBAAIBfwABAAAAPAAAADw2MTVBMjQ5Qjc4M0NENDExOTJGNDAwRDBCNzQ3QUM4NjAxQTAwMUVC
-QGhlc3NlLmJibi5ocC5jb20+ADAm
+This occured while simultanously copying 20 tarballs back and forth
+between two dirs on the source volume and performing a snapshot at that
+time.  It appears to have hung my lvcreate (snapshot) command shell.
+Oh, this was also using loop device for the source volume on my laptop in
+this case.  Hmm, actually could this panic be related to the following
+change in lvm.c?  It did work prior in 0.9.1beta1.
 
-------_=_NextPart_000_01C0822B.46955410--
+@@ -492,7 +488,7 @@
+                goto out;
+
+        err = -ENOMEM;
+-       iobuf->locked = 1;
++       iobuf->locked = 0;
+        iobuf->nr_pages = 0;
+        for (i = 0; i < nr_pages; i++)
+        {
+
+
+I haven't seen this one before myself, but in testing on our bigger scsi
+based boxes in the back while snapshots are active and heavy IO is
+performed on the source volume, the box tends to hang.  I gather this is
+related to having to journal all source volume changes to the snapshot and
+when you throw massive IO@it, things get slow. Any thoughts on this one
+as well?
