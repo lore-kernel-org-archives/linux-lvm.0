@@ -1,14 +1,11 @@
-From: Chris Mason <mason@suse.com>
-Subject: Re: [linux-lvm] kernel: zam-7001: io error in reiserfs_find_entry
-Message-Id: <51880000.1010759924@tiny>
-In-Reply-To: <20020111110146.GE1274@tykepenguin.com>
-References: <22543.1010745017@joergli.cocolab.de>
-    <20020111103718.GA1274@tykepenguin.com>
-    <20020111114737.A22576@codingtechnologies.de>
-    <20020111110146.GE1274@tykepenguin.com>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] read is blocking if reading snapshots with 16k
+    blocks on mp systems
+Message-Id: <20020111154408.GF1274@tykepenguin.com>
+References: <OFF21038E8.8E1F7C47-ONC1256B3D.006602E0@de.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
+In-Reply-To: <OFF21038E8.8E1F7C47-ONC1256B3D.006602E0@de.ibm.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,23 +16,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 11 08:39:02 2002
+Date: Fri Jan 11 09:45:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Thu, Jan 10, 2002 at 07:58:37PM +0100, Martin Petermann wrote:
+> Hi all,
+> 
+> I had some performance problems, than I wrote a small program to see where
+> it was hanging:
+> 
+> -my configuration:
+> 
+> I'm using a SuSE 7.1 and SuSE 7.2 mp system (two processors).
+> I've created a snapshot in the following way:
 
-On Friday, January 11, 2002 11:01:46 AM +0000 Patrick Caulfield
-<caulfield@sistina.com> wrote:
+ 
+> The maximum time read was hanging was 40 seconds. I detected similar
+> problems reading 3*4096 bytes.
 
-> On Fri, Jan 11, 2002 at 11:47:37AM +0100, Thomas Ziegler wrote:
->> 
->> Some Questions to LVM and snapshots:
->> 
->> - Do other filesystems cope in a better way with a full snapshot than
->> reiserfs? 
+Can you tell us more about your system - I can't get this to over 3 seconds even
+on a dog slow IDE system with next-to no memory. 
 
-I've started cleaning these and a few other io related errors up, this
-won't be an open issue much longer.
-
--chris
+patrick
