@@ -1,10 +1,11 @@
-Return-Path: <milang@tal.org>
-Message-ID: <006d01c09269$79b4fe60$56dc10c3@tal.org>
-From: "Kaj-Michael Lang" <milang@tal.org>
-Date: Fri, 9 Feb 2001 09:25:25 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vgscan ?
+Return-Path: <hch@ns.caldera.de>
+Date: Fri, 9 Feb 2001 09:34:05 +0100
+From: Christoph Hellwig <hch@caldera.de>
+Subject: Re: [linux-lvm] questions
+Message-ID: <20010209093404.B21158@caldera.de>
+References: <20010209003003.B29707@vestdata.no> <200102090005.f1905bc08799@webber.adilger.net>
+Mime-Version: 1.0
+In-Reply-To: <200102090005.f1905bc08799@webber.adilger.net>; from adilger@turbolinux.com on Thu, Feb 08, 2001 at 05:05:36PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,13 +18,16 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Everytime I run vgscan I get this:
-vgscan -- WARNING: you may not have an actual VGDA backup of your volume
-groups
+On Thu, Feb 08, 2001 at 05:05:36PM -0700, Andreas Dilger wrote:
+> Change all of the code paths in the kernel that assume block size is 512
+> bytes...
 
-Everything works ok, but is that important ?
+IIRC some S/390 devices already use 4K block size.
 
-Kaj-Michael Lang
-milang@tal.org
+	Christoph
+
+-- 
+Of course it doesn't work. We've performed a software upgrade.
