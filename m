@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] After power outtage my vg is gone
-Message-ID: <20011105125157.A25559@sistina.com>
-References: <00aa01c15fdb$be77bfc0$0a5c010a@ultra>
+Subject: Re: [linux-lvm] vgscan / vgimport problems
+Message-ID: <20011105125510.B25559@sistina.com>
+References: <C9B993D4214AD511BC010002A537DFE30A8B96@acsexchweb.corp.acsalaska.com>
 Mime-Version: 1.0
-In-Reply-To: <00aa01c15fdb$be77bfc0$0a5c010a@ultra>; from ultra@mailme.dk on Sun, Oct 28, 2001 at 07:09:35PM +0100
+In-Reply-To: <C9B993D4214AD511BC010002A537DFE30A8B96@acsexchweb.corp.acsalaska.com>; from snay@acsalaska.com on Tue, Oct 30, 2001 at 09:38:43AM -0900
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,73 +14,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  5 05:55:01 2001
+Date: Mon Nov  5 05:58:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Klaus,
+Shawn,
 
-you probably need to update to LVM 1.0.1 rc4 to address this then
-(You can get the LVM code from CVS at www.sistina.com).
+you need to get the actual LVM version running in order to solve your
+problem.
+If there's no constraints to stay with the Redhat patched kernel, you should
+follow the patch instructions in the LVMs distro contained files INSTALL
+and PATHCE/README (guess that you probably know those already from the
+things you say below ;-), build+install the kernel and the LVM lib and tools.
 
-I am not sure if you need to update the kernel part of LVM in Debian though.
-
-Just compile the library and tools as described in LVMs INSTALL file and try.
-If that finds your VG (which I hope ;-) and you still see other problems,
-please either get the recent Alan Cox kernel (which is up to date IRT LVM)
-*or* patch Linus kernel following the instructions in LVMs INSTALL and
-PATCHES/README files.
+vgscan should find your VG then (crossing fingers ;-)
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Sun, Oct 28, 2001 at 07:09:35PM +0100, Klaus Pedersen wrote:
-> I'm using Debian Linux on 2.4.6 (and whatever version of LVM that comes with
-> it).
-> After accidentaly pushing the power switch on my Linux server and starting
-> it up again, I have problems mounting my vg again.
+On Tue, Oct 30, 2001 at 09:38:43AM -0900, Nay, Shawn wrote:
+> I am an LVM newbie but did manage to get it up and running on a non-system
+> disk.
+> I rebuild my system with the same version of Linux (Redhat 7.2), the same
+> kernel (2.4.9-7, which I recompiled for LVM), and the same version of LVM
+> (0.9.1_beta7).  By the way...I am using an old release of LVM due to my
+> inability to patch this kernel with 1.0.1-rc4.  The problem is that I am
+> unable to import my old vg.  This disk has remained untouched since my
+> previous install.
 > 
-> This is what happens :
+> pvscan output:
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdd"  is associated to an unknown VG (run
+> vgscan)
+> pvscan -- total: 1 [31.08 MB] / in use: 1 [31.08 MB] / in no VG: 0 [0]
 > 
-> Vault:/home/ultra# mount /glftpd/site
-> mount: /dev/site_vg/lvol1 is not a valid block device
-> Vault:/home/ultra# vgscan
+> vgscan output:
 > vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "site_vg"
+> vgscan -- found inactive volume group "sundogvg"
+> vgscan -- only found 0 of 5120 LEs for LV /dev/sundogvg/datalv (0)
 > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "site_vg" from physical volume(s)
+> data of volume group "sundogvg" from physical volume(s)
 > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
 > "/etc/lvmtab" and "/etc/lvmtab.d"
 > 
-> Vault:/home/ultra#
+> vgimport output:
+> vgimport -- ERROR: physical volume "/dev/hdd" doesn't belong to an exported
+> volume group
+> 
+> Any help would be greatly appreciated.
+> 
+> Shawn
 > 
 > 
-> I read through the archive of the list because I am absolutely sure I am not
-> the first who had this problem. I read some stuff about using the uuid_fixer
-> tool, bit as far as I was able to read, the problem that fixes only shows up
-> after extending the VG (Which I did a week or so, ago), and only for kernels
-> up to 2.4.5.
-> Is this true ?
-> 
-> Vault:~/uuid_fixer# ./uuid_fixer /dev/hda8 /dev/hdb1
-> 
-> UUIDs discovered:
-> W9tkR7eq026WBMCBrUCdebI32vRyFuLn
-> u5vBzCHwu5mjAt5yN0lS4Ecrto1jI9NZ
-> 
-> I tried running it anyway, and after that I ran vgscan - and the same
-> problems showed up.
-> 
-> What do I do to recoved my data ?
 > 
 > 
-> Any help is greatly appreciated
-> 
-> /Klaus
-> 
+> This transmittal may contain confidential information intended solely for
+> the addressee. If you are not the intended recipient, you are hereby
+> notified that you have received this transmittal in error; any review,
+> dissemination, distribution or copying of this transmittal is strictly
+> prohibited. If you have received this communication in error, please notify
+> us immediately by reply or by telephone (collect at 907-564-1000) and ask to
+> speak with the message sender. In addition, please immediately delete this
+> message and all attachments. Thank you.
 > 
 > _______________________________________________
 > linux-lvm mailing list
