@@ -1,35 +1,141 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
-MIME-Version: 1.0
+From: mauelsha@u9etz.ez-darmstadt.telekom.de
+Message-Id: <199911231356.OAA06052@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] Q: active/inactive/imported/exported group ?
+In-Reply-To: <38398B9C.85D2E779@mchp.siemens.de> from Gerhard Fuernkranz at "Nov 22, 1999  7:29:48 pm"
+Date: Tue, 23 Nov 1999 14:56:38 +0100 (MET)
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-ID: <14394.29028.265009.35804@dukat.scot.redhat.com>
-Date: Tue, 23 Nov 1999 10:50:11 +0000 (GMT)
-Subject: Re: [linux-lvm] Actual status of LVM in stock kernel
-In-Reply-To: <199911152100.AA06159@mailgate1b.telekom.de>
-References: <4.2.2.19991115093542.00a81bd0@mail.msy.bellsouth.net>
-	<199911152100.AA06159@mailgate1b.telekom.de>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: heimdall@mail.org, mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: Gerhard Fuernkranz <gerhard.fuernkranz@mchp.siemens.de>
+Cc: mge@u9etz.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-Hi,
+> mauelsha@u9etz.ez-darmstadt.telekom.de wrote:
+> 
+> > > Assume I have a group g1 with volume v1 and a group g2 with
+> > > volume v2. Now I turn off the machine, remove g1's physical
+> > > disks and power on the machine again. Does this mean, that
+> > > vgscan may assign a *different* minor number to v2 after the
+> > > reboot?
+> > 
+> > Yes.
+> > But that's only a local resource for sure.
+> 
+> That's what I was afraid of.
+> The problem is the following:
+> The NFS server identifies files by a file handle,
+> which also contains the major/minor number of the
+> disk, where the exported filesystem resides.
+> Assume there is a NFS server, which exports a filesystem
+> residing on a LVM volume. There also exist NFS clients,
+> which have hard-mounted this filesystem.
+> If the NFS server crashes and reboots, then the clients
+> should hang on NFS calls while the server is down, but
+> should resume normal operation once the server is back
+> (w/o umounting and re-mounting the FS!). But this only
+> works, if the volumes get the same minor device number
+> after the reboot in order that the old filehandle still
+> references the same file on the same device.
+> 
+> So I think there's also the reqirement for a "sticky"
+> minor device number for volumes (or at least for a specific
+> subset of volumes). VxVM also has recognized this and
+> provides a method to assign minor device numbers to volumes.
 
-On Mon, 15 Nov 1999 21:56:34 MET, Heinz Mauelshagen
-<mauelsha@ez-darmstadt.telekom.de> said:
+If you don't change your IO configuration vgscan will not produce
+different LV minors anyway.
 
->> I don't know about *good*, but perhaps bringing it up in the kernel mailing 
->> lists might spurn some interest.  I know that Linus & Alan both frequent 
->> it, as well as other major players.  We may be able to light a spark into 
->> someone Linus talks with daily.
+> 
+> Do you have an idea, how I could integrate such a
+> feature into LVM? My 1st idea was the following:
+> 
+> - I have a table e.g. /etc/lvm_minors, which contains
+>   {volume_name, minor_number} pairs for all sticky
+>   volumes
+> 
+> - Change vgscan to do the following:
+>      ...
+>      for (all volumes of the group) {
+>         ...
+>         if (entry for volume exists in /etc/lvm_minors) {
+>             if (minor number from lvm_minors already in use
+>                 for a different volume)
+>             {
+>                 fail, print an error message and skip this volume
+>             }
+>             else {
+>                assign the minor number from /etc/lvm_minors
+>                to the volume
+>             }
+>         }
+>         else {
+>             assign a free minor number to this volume
+>             similar as it currently does
+>         }
+>         ...
+>      }
+> 
+> Any comments?
 
-> Stephen Tweedie is interested but no other contacts to RedHat or
-> activities from their side so far...
+This is an option.
 
-It's not a matter of support --- it's a matter of somebody taking up the
-issues with Linus until we find out what the position is.  And yes, if
-he is preoccupied with other stuff, that can take a good deal of
-persistance. :)
+I'ld rather prefer to let vgscan deal with 'sticky' minors based
+on existing lvmtab entries and let it only use free minors for new VGs.
 
---Stephen
+> 
+> 
+> > I want to achive this by keeping a UUID of the VG owning sytem in the VGDA.
+> 
+> The question is: What is the "owning" system?
+> Is it the system which has imported the group?
+> Or the system which has activated the group at last?
+> 
+> > IMO we would need a cluster manager to take care of mastership of
+> > shared resources.
+> 
+> I currently don't want to use "real" shared resources, which
+> are configured at more than one host at the same time.
+> 
+> I'll guarantee, that only one host at a time will activate
+> a specific group. If a host crashes, I'll guarantee, that the
+> crashed host is actually down and stays down (of course it
+> may reboot, but it won't re-activate the volume after the reboot
+> automatically).
+> 
+
+If you garanty that you must already have a cluster manager... 8*)
+
+> ...
+> > But in this case a crashing host is not able to release the VG anyway.
+> > So there must be a --force option to gain ownership of such a VG
+> > _and_ the sure knowlegde that the crashed system is down _and_ stays down.
+> > If not so there could be tricky races where the original 'owner' system
+> > of our VG would try to regain ownership.
+> 
+> Currently I won't care very much about such race conditions as I'll
+> only bring the group online on one host at a time automatically.
+> I'd rather see the ownership only as additional security feature in
+> order that the sysadmin cannot accidently activate the same
+> group at the same time on a different host.
+> 
+
+O.k., UUIDs are future anway.
+
+Heinz
+
+
+-- 
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
