@@ -1,14 +1,14 @@
 Return-Path: <lewis@sistina.com>
-Date: Tue, 6 Feb 2001 13:22:40 -0600
+Date: Tue, 6 Feb 2001 13:31:07 -0600
 From: AJ Lewis <lewis@sistina.com>
 Subject: Re: [linux-lvm] Help! Problems finding VG after reboot.
-Message-ID: <20010206132240.E3376@sistina.com>
-References: <20010206183505.7773.qmail@fraggle.cs.uit.no> <Pine.LNX.4.21.0102061656090.1535-100000@duckman.distro.conectiva>
+Message-ID: <20010206133107.F3376@sistina.com>
+References: <20010206183505.7773.qmail@fraggle.cs.uit.no> <Pine.LNX.4.21.0102061656090.1535-100000@duckman.distro.conectiva> <20010206132240.E3376@sistina.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="47eKBCiAZYFK5l32"
+	protocol="application/pgp-signature"; boundary="cz6wLo+OExbGG7q/"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0102061656090.1535-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Tue, Feb 06, 2001 at 04:58:22PM -0200
+In-Reply-To: <20010206132240.E3376@sistina.com>; from lewis@sistina.com on Tue, Feb 06, 2001 at 01:22:40PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,47 +22,43 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---47eKBCiAZYFK5l32
+--cz6wLo+OExbGG7q/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 06, 2001 at 04:58:22PM -0200, Rik van Riel wrote:
-> On Tue, 6 Feb 2001 gobo@gimle.nu wrote:
->=20
-> > Running vgscan I got the following message:
+On Tue, Feb 06, 2001 at 01:22:40PM -0600, AJ Lewis wrote:
+> On Tue, Feb 06, 2001 at 04:58:22PM -0200, Rik van Riel wrote:
+> > On Tue, 6 Feb 2001 gobo@gimle.nu wrote:
 > >=20
-> > # vgscan
-> > vgscan -- reading all physical volumes (this may take a while...)
-> > vgscan -- found inactive volume group "widow"
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't ge=
-t=20
-> > data of volume group "widow" from physical volume(s)
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating=
-=20
-> > "/etc/lvmtab" and "/etc/lvmtab.d"
+> > > Running vgscan I got the following message:
+> > >=20
+> > > # vgscan
+> > > vgscan -- reading all physical volumes (this may take a while...)
+> > > vgscan -- found inactive volume group "widow"
+> > > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't =
+get=20
+> > > data of volume group "widow" from physical volume(s)
+> > > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creati=
+ng=20
+> > > "/etc/lvmtab" and "/etc/lvmtab.d"
+> >=20
+> > I am running into the same bug, with the very latest LVM
+> > utilities and kernel 2.4.1.
+> >=20
+> > I have posted a bugreport in the LVM bugzilla, but I haven't
+> > heard anything from the LVM developers. Lets just hope they're
+> > not ignoring us...
 >=20
-> I am running into the same bug, with the very latest LVM
-> utilities and kernel 2.4.1.
->=20
-> I have posted a bugreport in the LVM bugzilla, but I haven't
-> heard anything from the LVM developers. Lets just hope they're
-> not ignoring us...
+> The problem with your bug report on Bugzilla is that it is confusing.  You
+> added to a bug that complained about vgscan seg-faulting.  That bug is
+> obviously fixed.  The problem now is that vgscan no longer finds proper d=
+ata
+> in the volume group.  This should be posted as a separate bug report, not
+> tacked onto the end of the old one. =20
 
-The problem with your bug report on Bugzilla is that it is confusing.  You
-added to a bug that complained about vgscan seg-faulting.  That bug is
-obviously fixed.  The problem now is that vgscan no longer finds proper data
-in the volume group.  This should be posted as a separate bug report, not
-tacked onto the end of the old one. =20
+This is now bug #193 (http://bugzilla.sistina.com/show_bug.cgi?id=3D193)
 
-BTW, just because you haven't gotten an immediate reply does not mean the
-problem is not being worked on.  We are a distributed development team,
-with varying schedules.  Please give us a little credit that we are actually
-reading the MLs and working on these problems instead of impatiently
-complaining that nobody on the LVM team is doing anything all the time.  It
-is rather tiring to see yet another post from you complaining that we don't=
- do
-anything.
 
 --=20
 AJ Lewis
@@ -77,10 +73,10 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1...
+FATAL ERROR! SYSTEM HALTED! - Press any key to do nothing...
 -----End Obligatory Humorous Quote------------------------------------------
 
---47eKBCiAZYFK5l32
+--cz6wLo+OExbGG7q/
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -88,9 +84,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE6gE8ApE6/iGtdjLERAvVMAJ46akJmd5zho7NX6+BVheVVGPiKPwCfTlOB
-A1tVf8JWwkwJlj+qXJtAh8k=
-=b4xx
+iD8DBQE6gFD7pE6/iGtdjLERAmJBAJ9jtAK7A4PxVgTXIUOkgpwnqyxe4wCfS2vp
+RfBIEA5OzdW4AHWtF/cufj4=
+=MrsA
 -----END PGP SIGNATURE-----
 
---47eKBCiAZYFK5l32--
+--cz6wLo+OExbGG7q/--
