@@ -1,12 +1,12 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBDH5Xr18292
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 12:05:33 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBDJj8r00998
+	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 14:45:08 -0500
 Received: from dcs.nac.uci.edu (root@dcs.nac.uci.edu [128.200.34.32])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBDH5R8p029440
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 12:05:27 -0500
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBDJj3Ow026388
+	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 14:45:03 -0500
 From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
-Date: Mon, 13 Dec 2004 09:05:23 -0800
-Message-Id: <1102957523.3784.183.camel@tesuji.nac.uci.edu>
+Date: Mon, 13 Dec 2004 11:44:52 -0800
+Message-Id: <1102967092.3784.192.camel@tesuji.nac.uci.edu>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: [linux-lvm] Fedora Core 3 system with lvm2 won't boot
@@ -22,6 +22,7 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
+
 
 
 Copied from https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=142737
