@@ -1,18 +1,21 @@
-Received: from fentible.pjc.net (vpnuser3.stuttgart.redhat.com [172.16.4.3])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j0AFwa0a019810
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 15:58:37 GMT
-Received: from patrick by fentible.pjc.net with local (Exim 4.34)
-	id 1Co1wD-0005Jq-Ab
-	for linux-lvm@redhat.com; Mon, 10 Jan 2005 15:58:37 +0000
-Date: Mon, 10 Jan 2005 15:58:37 +0000
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] Problem Upgrading from LVM1 to LVM2
-Message-ID: <20050110155837.GA20309@tykepenguin.com>
-References: <20050110140452.GS26670@agk.surrey.redhat.com>
-	<Pine.LNX.4.44.0501100946370.855-100000@mars.geneseo.edu>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0AFwmr20866
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 10:58:48 -0500
+Received: from zippy.toger.us (zippy.toger.us [65.19.178.247])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0AFwg3c000648
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 10:58:42 -0500
+Date: Mon, 10 Jan 2005 07:58:35 -0800
+Subject: Re: [linux-lvm] she-bang doesn't work - bad interpreter: Permission
+	denied
+Message-ID: <20050110155835.GU1816@zippy.toger.us>
+References: <20050109202833.GT1816@zippy.toger.us>
+	<20050110125840.55588.qmail@web52707.mail.yahoo.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YgseLHR9uOh11QTZ"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0501100946370.855-100000@mars.geneseo.edu>
+In-Reply-To: <20050110125840.55588.qmail@web52707.mail.yahoo.com>
+From: Jason Martin <jhmartin@toger.us>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,18 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Jan 10, 2005 at 10:07:25AM -0500, Mark T. Valites wrote:
-> 
-> I see 2.00.33 is the most current. I'm using the 2.00.24-1 package
-> provided in Debian testing - is it worth compiling the latest?
-> 
 
-2.00.32 is in Debian unstable.
+--YgseLHR9uOh11QTZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
+On Mon, Jan 10, 2005 at 04:58:40AM -0800, Patrick Bartkus wrote:
+> Jason,
+> [Very embarrassed sheepish grin]
+> Well, as a matter of fact, it was...
+> Thanks! That fixed everything.
+I've always thought that the error message generated in that
+situation wasn't very helpful. I've hit that a lot with things
+stored in /tmp, whomever sees it always goes off on a wild goose
+chase checking why perl or sh isn't working.
 
-patrick
+-Jason Martin
+--=20
+This message is PGP/MIME signed.
+
+--YgseLHR9uOh11QTZ
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.6 (GNU/Linux)
+Comment: --no-verbose
+
+iD8DBQFB4qYrl2ODWuqVSBMRAtbsAJ47hxEh//ni5oR8CzWw3P9WDeDWfgCeLu/Y
+fXFlRiRsJkBw+CkEXu1VrqI=
+=ABVe
+-----END PGP SIGNATURE-----
+
+--YgseLHR9uOh11QTZ--
