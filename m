@@ -1,8 +1,10 @@
-Return-Path: <scott@dixie.dyndns.org>
-Date: Tue, 2 Jan 2001 10:18:55 -0500
-Message-Id: <200101021518.f02FItB03895@dixie.dyndns.org>
-From: "S. Michael Denton" <scott@dixie.dyndns.org>
-Subject: Re: Re: [linux-lvm] 0.8 to 0.9 problems, odd vg corruption
+Return-Path: <cworley@liberate.com>
+Message-ID: <3A522AE9.8070500@liberate.com>
+Date: Tue, 02 Jan 2001 12:24:25 -0700
+From: Chris Worley <cworley@liberate.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Sanity check: newbie wants strange LVM configuration
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,72 +16,65 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-jss@evcom.net wrote:
-> On Sat, Dec 30, 2000 at 03:11:06PM -0600, Steven Lembark wrote:
-> > 
-> > > After about half an hour of fiddling with the LVM tools and reading
-the
-> > > FAQ, I found out that I could access the LV if and ONLY IF I did
-EXACTLY
-> > > this:
-> > > 
-> > >	      vgcfgrestore -n data /dev/hd[ac]1
-> > >	      pvscan
-> > >	      vgchange -a y
-> > >	      mount /dev/data/archive
-> > > 
-> > > Any call to vgscan brings me back to the beginning ("unknown VG").
-> > > 
-> > > The problem however is this: Since then, even when booting cleanly
-vgscan
-> > > doesn't detect any VGs any more. Before, it worked. I have compiled
-LVM
-> > > into the kernel (no module) and attached the Debian startup script
-which I
-> > > have modified slightly to accommodate for the no-module situation.
-> > 
-> > 
-> > try:
-> > 
-> >	vgexport /dev/vgname;
-> >	vgimport /dev/vgname /devices/in/the/vg;
-> > 
-> > should save you the problems.  
-> 
-> I should have tried that, however I did "fix" the problem by copying the
-data
-> elsewhere (it's on a large external RAID device, so I just created a new
-> temporary vg/lv), deleting the original VG, re-creating and copying back.
- All
-> appears to be well.
+I've got two disk drives, 12 & 16 GB IDE.  I'm adding a third 40GB 
+drive.  Time to start using LVM...
 
-I had the same problem not too long ago when I tried to go from 0.8i (IOP
-5) to 0.9x (IOP 10), it was able to recognize that the vgs were exported
-but could not import them; there appears to be an on-disk structure change
-between IOP 5 and IOP 10 that makes it unable to import an IOP 5 exported
-vg... I eventually just backrev'd to 0.8i so I could use my vg's again (not
-enough temp space to do a total vg conversion).
+I want to get better performance, so, I'll put the 40GB drive on one 
+IDE controller, the other two drives on the second controller.  I'll 
+make two partitions on the 40GB drive that match the disk sizes of the 
+existing drives, and stripe each with it's match on the 40GB drive, 
+creating two raid0 arrays (one 12+12, and the other 16+16).  By 
+placing the dual-partitioned 40GB drive stand-alone on one IDE 
+controller, each striped with a partition/drive on the other 
+controller, any given file will only be striped across one partition 
+on each controller, so I should see the performance benefit of 
+striping (on IDE).
 
-> -- 
-> Jesse Sipprell
-> Technical Operations Director
-> Evolution Communications, Inc.
-> 800.496.4736
-> 
-> * Finger jss@evcom.net for my PGP Public Key *
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
-> 
+Should I use LVM or MD to do the striping (they both can do it, I was 
+just wondering which would be a better choice)?
 
---------------------------------------------------------------------------
-Scott Denton
-smdenton@bellsouth.net
-EFNet Handle: SteelWyng
+Even if I use MD to stripe, I'd use LVM to append the two drives together.
+
+Before appending the drives, I'd make a temporary partition on the 
+40GB drive, and copy the current contents of the 16GB (/home) drive to 
+the temporary partition.  Then, I'd make the 16+16 raid0 a logical 
+volume, create a reiserfs on it, and copy the information back from 
+the temporary partition, to the new reiserfs.
+
+Since the 12GB drive is the current root partition, it's a bit 
+trickier to copy.  I'd copy it's contents to a temporary partition on 
+the 40GB drive, boot from that temporary partition, then create the 
+second 12+12 raid0, and add it to the first logical volume, then 
+expand the reiserfs to cover both, copy the root file system from the 
+temporary partition to the new logical volume, and setup a reiserfs 
+root and boot.
+
+Is this the correct approach for upgrading?
+
+Finally, I'll have ~10GB unallocated on the 40GB drive.  I was 
+thinking of adding this to the end of the current logical volume (and, 
+again, expand the reiserfs to cover the additional space).
+
+Since any file system looses performance when more than 90% full, this 
+final non-striped partition would be in a position where performance 
+would degrade anyway, and keep the raid0's in a position for full 
+performance.
+
+Is that correct?
+
+Sort of off-topic (not LVM related)...
+
+I've got an IDE CDROM drive that I want to put on the same controller 
+as the 40GB drive.  I've been told that new UDMA drives do not have 
+the PIO performance hit associated with CDROM drives, so I should be 
+able to get full performance from my 40GB drive, even with a CDROM on 
+the same IDE controller.
+
+Is that correct (or should I junk the IDE CDROM)?
+
+Thanks,
+
+Chris
