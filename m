@@ -1,13 +1,11 @@
-Return-Path: <bagfors@bagfors.nu>
-Message-Id: <200103281247.OAA02364@detrius.engohol.se>
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3AC1E80D.E3A1C0BF@wrkhors.com>
+Date: Wed, 28 Mar 2001 07:33:01 -0600
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] lvmgui 0.2 release
-From: Erik =?ISO-8859-1?Q?B=E5gfors?= <erik@bagfors.nu>
-In-Reply-To: <01032807340800.03757@oscar>
-References: <3ABDD38D.A841FFD3@ida.xs4all.nl>
-	<wxxofumyd8q.fsf@fjorir.ifi.uio.no>
-	<200103280726.JAA02025@detrius.engohol.se>  <01032807340800.03757@oscar>
-Date: 28 Mar 2001 14:47:20 +0200
-Mime-Version: 1.0
+References: <3ABDD38D.A841FFD3@ida.xs4all.nl> <wxx1yrkklzx.fsf@fjorir.ifi.uio.no> <20010327122311.A25656@d3.front>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,35 +17,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
 
-On 28 Mar 2001 07:34:08 -0500, Ed Tomlinson wrote:
-> On Wednesday 28 March 2001 02:26, you wrote:
->=20
-> I take a different view than most people here.  Java is fine.
-> I do not mind a java gui.  If the program is stuctured right,
-> the same code would allow me to administer a linux lvm from
-> almost any box (linux or not) all with the same code, without
-> any recompiles.
->=20
-> Java works.  Your gui will be a nice addition.  Please write it
-> in what even lang you want too.
->=20
+> > > + New Features / Enhancements / Bug Fixes
+> > >
+> > > - added images for LV and PV.
+> > > - extend/reduce a VG
+> > > - extend/reduce a LV
+> > > - added vgscan in menu
+> > > - changed File->Rescan to File->Refresh
+> >
+> >   sounds cute. I was actually thinking of writing something like this
+> >   myself, but can't really decide on what language to do it in. :)
+> 
+> How about Tcl/Tk?  Quick and easy to learn (a bit C, and Perl combined).
+> I picked it up quick by hacking allready made scripts, and I didn't know
+> any perl, but I know some C.  And you've got a good one allready made,
+> "/usr/src/linux/scripts/kconfig.tk" (might have to do "make xconfig" to
+> create it though).  Not as pretty as java, or C, but much faster than C
+> to create, and will run on most systems.
 
+the perl for this would look pretty much like the C.  you could
+use Perl/Tk to make the programming easier (i.e., modular w/
+reasonable exeption handling).
 
-No no no.. languages are religion.  If you're not with us you're against
-us :)
-
-No.. just kidding.. I agree.. use the whatever is the right tool for you
-to get the job done.  However, talking about tools is never wrong..
-
-/Erik - will leave this OT stuff now :)
-
---=20
-Erik B=EF=BF=BDgfors               | http://erik.bagfors.nu/   =20
-erik@bagfors.nu            | Erik.Bagfors@engohol.se
-Supporter of free software | GSM +46 733 279 273
-fingerprint: 6666 A85B 95D3 D26B 296B 6C60 4F32 2C0B 693D 6E32
+-- 
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
