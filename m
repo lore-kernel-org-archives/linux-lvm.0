@@ -1,13 +1,10 @@
-Return-Path: <zoo1@corecomm.net>
-Date: Mon, 5 Feb 2001 21:39:17 -0500
-From: zoo1@corecomm.net
-Subject: Re: [linux-lvm] startup stuff an dnew question :-)
-Message-ID: <20010205213917.C29990@bar.nowhere>
-References: <Pine.LNX.4.21.0102021438490.380-100000@munster.noc.fr.clara.net> <3A7E61D7.D417A879@twc.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
-In-Reply-To: <3A7E61D7.D417A879@twc.de>; from ulf@twc.de on Mon, Feb 05, 2001 at 09:18:31AM +0100
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102060630.f166UYM32021@webber.adilger.net>
+Subject: Re: [linux-lvm] 0.9.1 vgscan doesn't detect upgraded vg's
+In-Reply-To: <3A7F6413.A80D1803@twisted.net> from Michael McLinn at "Feb 5, 2001
+ 09:40:19 pm"
+Date: Mon, 5 Feb 2001 23:30:34 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,42 +16,64 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
+Michael McLinn writes:
+> I was running some large vg's with 0.8final, and upgraded
+> to 0.9.1_beta3 w/ kernel 2.4.1-ac2.  
+> 
+> After the upgrade, vgscan does not find any volume groups.
+> 
+> Reverting to prior tools + kernel does not work as the on disk
+> vg structures have been altered (presumably upgraded to the v2 
+> format). 
+> 
+> I have no suitably recent vgcfg backups, so restoring is not an
+> option.  
+> 
+> I look at the output of pvdata -U on a physical volume. 
+> I see 3 UUID slots, which matches the number of pv's in the vg.
+> However, on the first pv in the vg, only the first one is filled.
+> On the second pv in the vg, the first two are filled.  On the 
+> third pv of the vg, all three are filled. 
+> 
+> Within pv_read_all_pv_of_vg.c, there is a call to 
+> pv_read_uuidlist(), this routine is scanning the first pv, 
+> and thus only returns one uuid.
+> 
+> Later the result is only the first pv is returned from
+> pv_read_all_pv_of_vg().  
+> 
+> My theory is each pv is supposed to have the the UUID's of 
+> itself, and all other pv's in it's vg within it's UUID 
+> datastructure.  Is this so?
 
-On Mon, Feb 05, 2001 at 09:18:31AM +0100, Ulf Bartelt wrote:
+Correct.  There was another user who reported the same bug, but after
+they were playing with the system a bit, it started to work (i.e. the
+UUIDs were filled in) so it was not looked at further.
 
->This is how I did it on my router/mailserver:
+> If this is the case, it seems it would be possible to write the 
+> correct UUID's to the datastructure on disk, and potentially 
+> improve (maybe even fix) my situation.
 
-[...]
+Yes, this is the case.  To confirm that the UUIDs are causing the problem,
+you can put printf() in pv_read_all_pv_of_vg() where it is checking
+disks against UUIDs, whenever a disk is being discarded.  If this is
+really the problem, simply comment out this UUID check for now.  It is
+only an extra safety check for duplicate VG names or old PVs at this point.
+This should allow you to load the VG again.
 
->But the tricky part is: hda2 and hda1 are LVs too...
->I just faked partition map entries for them and I use them only by this
->"partition aliases", so I can boot a system living totally in LVs using
->conventional things like lilo...
+> One more note that might be of interest, these volume groups were
+> created with a much earlier version of lvm, 0.6 or 0.7 I believe.
 
-erm... just what does this gain you, then? if you resize or move those
-LVs, wouldn't you have to manually change the fake partition map
-entries, sort of negating the entire point of using LVM...?
+I don't know what the situation was with the other person who had
+this same bug, but it is good to know anyways.
 
---
-   PGP/GnuPG key (ID 1024D/BFE0D6D0) available from keyservers everywhere
-
-       "Everything I am today, I owe to people whom it is now too late
-                                   to punish."
-
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6f2PVNfZCE7/g1tARAp1HAJ0cctqFQtHuTYcgd02LVvjBkWiCqACfZoLO
-e/hIOM6PorHN5gwrFkqy1Qw=
-=zyJr
------END PGP SIGNATURE-----
-
---qlTNgmc+xy1dBmNv--
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
