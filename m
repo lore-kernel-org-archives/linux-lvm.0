@@ -1,10 +1,11 @@
-Message-ID: <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de>
-Date: Fri, 05 Oct 2001 10:15:19 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
-References: <20011004223343.A868@balu.kawo2.rwth-aachen.de> <20011005090810.B1245@sistina.com> <3BBD6084.70106@st-peter.stw.uni-erlangen.de> <20011005095737.A1460@sistina.com>
-Content-Transfer-Encoding: 7bit
+Date: Fri, 5 Oct 2001 10:30:53 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] pvcreate fails on a software RAID metadisk
+Message-ID: <20011005103053.A2938@colombina.comedia.it>
+References: <3BBC8B5B.1A484028@legis.state.ak.us> <3BBCBF87.5520C8F9@legis.state.ak.us> <20011004144643.B31725@turbolinux.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011004144643.B31725@turbolinux.com>; from adilger@turbolabs.com on Thu, Oct 04, 2001 at 02:46:43PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,88 +17,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Thu, Oct 04, 2001 at 02:46:43PM -0600, Andreas Dilger wrote:
+> On Oct 04, 2001  11:59 -0800, Bill Ellis wrote:
+> > <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> 
+> This is a problem - MD devices are not partitioned.  Have a look at
+> this function to see why it thinks so.
 
-Heinz J . Mauelshagen wrote:
+no this should be normal
+i believe the problem lies somewhere else in the damned cache
+i tested it on one of my systems, i have 4 disks and 4 md devices there
+md/0 is not detected
+md/1 to md/3 are
+and lvmdiskscan says i have 5 disks and 3 md devices.
 
->On Fri, Oct 05, 2001 at 09:25:56AM +0200, svetljo wrote:
->
->>is gcc-3.0.1 safe, or i should also use "-o0"
->>
->
->Don't have a report for this :-(
->Please try it.
->
-it's seems to work
+look in http://www.comedia.it/bluca/lvm/
+you will find lvmdiskscan output for
+md0 (not working)
+md1 (working)
+and a diff file between the two that may help debugging
+basically pv_read is called for md/1 and not for md/0
 
-xxscan xxdiplay lvcreate lvremove lvrename lvextend lvreduce work without pb
-but i tried yesterday to install 2.4.11-pre2-xfs-cvs lvm-cvs
-and vgscan from the initrd segfaults , i can not boot to my LV's with it
-probbably it's some other trouble, i'll try with 2.4.11-pre3-xfs
-i think it's not relevant but all my VG's are over softRAIDs
+(i was using current cvs)
 
->>
->>Heinz J . Mauelshagen wrote:
->>
->>>Markus,
->>>
->>>go without optimization "-O0" rather than "-O2" in LVMs configure stript
->>>*or* with gcc 2.95.2.
->>>
->>>On Thu, Oct 04, 2001 at 10:33:43PM +0200, Markus Dobel wrote:
->>>
->>>>Hi,
->>>>
->>>>vgextend, vgreduce and lvextend segfaulted for me today, too. I'm using 
->>>>
->>>> gcc version 2.96 20000731 (Red Hat Linux 7.1 2.96-95)
->>>>
->>>>which I guess is the reason for those problems.
->>>>
->>>>For vgextend/vgreduce gdb told me, that in vg_extend_reduce "vg_name"
->>>>pointed to 0x1. So i did a little debugging and therefore also
->>>>inserting the line:
->>>>
->>>>int vg_extend ( char *vg_name, pv_t *pv, vg_t *vg) {
->>>>  printf("VG Name is %s\n",vg_name ); // this one
->>>>  return vg_extend_reduce ( vg_name, pv, vg, VG_EXTEND);
->>>>}
->>>>
->>>>in vg_extend_reduce.c, the same in vg_reduce(). Without changing
->>>>anything else, vgextend and vgreduce work for me now.
->>>>
->>>>
->>>>Similar in lv_extend_reduce.c:
->>>>
->>>>int lv_extend ( vg_t *vg, lv_t *lv, char *lv_name) {
->>>>  printf("Extending %s\n", lv_name); // added this line.
->>>>  return lv_extend_reduce ( vg, lv, lv_name, LV_EXTEND);
->>>>}
->>>>
->>>>I don't speak C too fluently, and I don't know if printf() does some
->>>>implicit casting or something or if it's gcc 2.96, but maybe this
->>>>information helps a bit in finding the mistake.
->>>>
->>>>Regards, Markus
->>>>
->>>>-- 
->>>>Spiegel-Leser wissen mehr. Fuer ein Semester-Abo!
->>>>http://www.kawo2.rwth-aachen.de/~mdobel/semesterabo.html
->>>>
->>>>_______________________________________________
->>>>linux-lvm mailing list
->>>>linux-lvm@sistina.com
->>>>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>>>
->>
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>
->
+i will look further into this problem since i have to build a new lvm over md
+but if someone else looks in it the better.
+
+
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
