@@ -1,10 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102061734.f16HY8A30556@webber.adilger.net>
+Return-Path: <hch@ns.caldera.de>
+Date: Tue, 6 Feb 2001 19:21:15 +0100
+From: Christoph Hellwig <hch@caldera.de>
 Subject: Re: [linux-lvm] startup stuff an dnew question :-)
-In-Reply-To: <3A7FAB7A.29CFB419@twc.de> from Ulf Bartelt at "Feb 6, 2001 08:44:58
- am"
-Date: Tue, 6 Feb 2001 10:34:07 -0700 (MST)
+Message-ID: <20010206192115.A24668@caldera.de>
+References: <Pine.LNX.4.21.0102021438490.380-100000@munster.noc.fr.clara.net> <3A7E61D7.D417A879@twc.de> <20010205213917.C29990@bar.nowhere> <3A7FAB7A.29CFB419@twc.de>
+Mime-Version: 1.0
+In-Reply-To: <3A7FAB7A.29CFB419@twc.de>; from ulf@twc.de on Tue, Feb 06, 2001 at 08:44:58AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +17,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ulf Bartelt writes:
-> > >I just faked partition map entries for them and I use them only by this
-> > >"partition aliases", so I can boot a system living totally in LVs using
-> > >conventional things like lilo...
-> > 
-> > erm... just what does this gain you, then? if you resize or move those
-> > LVs, wouldn't you have to manually change the fake partition map
-> > entries, sort of negating the entire point of using LVM...?
-> 
+On Tue, Feb 06, 2001 at 08:44:58AM +0100, Ulf Bartelt wrote:
 > ...but for now I never needed to resize /boot or /, only the other
 > LVs...
 
-With the recent changes that went into LVM-0.9.1-beta3, and some patches
-to LILO, it _should_ be possible to use LILO on a /boot LV.  Unfortunately,
-I was distracted from completing the testing, but the LVM fixes are there.
+With my grub patch (ftp.openlinux.org:/pub/people/hch/lvm) you should
+be able to boot a kernel on a LV.
 
-Cheers, Andreas
+I havn't looked at it for about half a year, so it might not apply against
+grub-current anymore.
+
+For / there is initrd, my autoscan code is pretty dead now, sorry.
+
+	Christoph
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Of course it doesn't work. We've performed a software upgrade.
