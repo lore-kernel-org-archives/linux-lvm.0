@@ -1,8 +1,8 @@
-Date: Sat, 14 Oct 2000 16:29:19 +0930 (CST)
+Date: Sun, 15 Oct 2000 07:42:05 +0930 (CST)
 From: Mark Phillips <mark@ist.flinders.edu.au>
 Subject: [linux-lvm] Re: vgcreate -- ERROR "lvm_tab_read(): size" inserting...
 In-Reply-To: <Pine.GSO.4.10.10010141425320.10567-100000@kurango>
-Message-ID: <Pine.GSO.4.10.10010141624510.12772-100000@kurango>
+Message-ID: <Pine.GSO.4.10.10010150739240.21204-100000@kurango>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -12,26 +12,16 @@ Content-Transfer-Encoding: 7bit
 To: Mark Phillips <mark@ist.flinders.edu.au>
 Cc: linux-lvm@msede.com
 
-The other thing I thought of doing is sending the output of
 
-  vgcreate -vd main_vg /dev/hda2
+Just writing to say that I have overcome the problem.
 
-but first I would need to delete the main_vg that is already there, but I
-can't because of the error:
+The way I did it was to delete /etc/lvmtab and then run vgscan which
+seemed to fix things up.
 
-# vgremove main_vg
-vgremove -- ERROR: can't remove active volume group "main_vg"
+I still don't know what caused the initial error though.  I still think it
+might be a bug.
 
-I can't even display info:
-
-# vgdisplay
-vgdisplay -- "/etc/lvmtab.d/main_vg" doesn't exist
-vgdisplay -- volume group "main_vg" not found
-
-Any help on this would be most appreciated.  Even just to get rid of
-main_vg so I can try again!
-
-Thanks,
+Cheers,
 
 Mark.
 
