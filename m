@@ -1,205 +1,131 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200004072157.XAA32301@u9etz.ez-darmstadt.telekom.de>
+Message-ID: <38EF1365.F5F75620@ednet.ns.ca>
+Date: Sat, 08 Apr 2000 08:09:25 -0300
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Vgscan problem
-In-Reply-To: <38EE298D.8661D248@ednet.ns.ca> from Patrick Boutilier at "Apr 7, 2000  3:31:41 pm"
-Date: Fri, 7 Apr 2000 23:57:35 +0200 (MEST)
-Mime-Version: 1.0
+References: <200004072157.XAA32301@u9etz.ez-darmstadt.telekom.de>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Patrick Boutilier <boutilpj@ednet.ns.ca>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Cc: macleajb@ednet.ns.ca, linux-lvm@msede.com
+
+Heinz,
+
+I think I may know how I caused my problem. Do you think this may be the cause of
+the problem?
+
+I have /dev/data_vg shown below:
+
+--- Volume group ---
+VG Name               data_vg
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                6
+Open LV               5
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               133.36 GB
+PE Size               4 MB
+Total PE              34140
+Alloc PE / Size       27125 / 105.96 GB
+Free  PE / Size       7015 / 27.4 GB
+
+Here is the info for the PV:
+
+--- Physical volume ---
+PV Name               /dev/sda7
+VG Name               data_vg
+PV Size               133.36 GB / NOT usable 321 KB [LVM: 255 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                6
+PE Size (KByte)       4096
+Total PE              34140
+Free PE               7015
+Allocated PE          27125
 
 
-Hi Patrick,
+/dev/sda is actually a RAID 5 array of 5 x 36 Gig drives on a Dell Perc2/SC (AMI
+Megatrends).
 
-the error number tells you that the amount of logical extents found in
-the mapping tables for e specific logical volumes differs from the
-amount expected -> metedata inconsistency.
+The 6 LVs are /dev/data_vg/home_lv, /dev/data_vg/var_lv,  /dev/data_vg/usr_lv,
+/dev/data_vg/news_lv, /dev/data_vg/its_lv, and /dev/data_vg/test_lv   All LV are
+19.53 Gig in size except test_lv which is 3.42 Gig
 
-Could you provide a complete "vgscan -d" output to better anaylze this?
+I think my problem arose on April 3rd when I created /dev/data_vg/its_lv and
+mounted it as /usr/local/its  The problem here is that /dev/data_vg/usr_lv is
+mounted as /usr   I then moved/rsynced /usr/local/vmware/* (on usr_lv) to
+/usr/local/its/vmware/* (on its_lv)
 
-In the meantime please save your /etc/lvmconf/ VGDA backup files to
-enable you to restore a consistent state of your VGDAs to the PVs.
-Please read vgcfgrestore(8) for this issue.
-
-Heinz
-
-
-> I am getting the following EROR -364 when running vgscan. The volume
-> group and logical volumes are actually in use and reiser filesystems
-> mounted on them.
-> 
-> Should I be able to run vgscan when the vg is active? If so what could
-> the problem be? The machine was rebooted 15 days agao with 2.2.15pre17
-> and vgscan worked fine then. I ran accross the problem today when I was
-> trying to run lvm-viewer which runs vgscan when it starts.
-> 
-> Thanks.
-> 
-> 
-> vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- scanning for all active volume group(s) first
-> vgscan -- found active volume group "data_vg"
-> vgscan -- reading data of volume group "data_vg" from physical volume(s)
-> 
-> vgscan -- ERROR -364: can't get data of volume group "data_vg" from
-> physical volume(s)
-> vgscan -- ERROR -364 creating "/etc/lvmtab" and "/etc/lvmtab.d"
-> 
-> 
-> 
-> --- Volume group ---
-> VG Name               data_vg
-> VG Access             read/write
-> VG Status             NOT available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                6
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                1
-> Act PV                1
-> VG Size               133.36 GB
-> PE Size               4 MB
-> Total PE              34140
-> Alloc PE / Size       27125 / 105.96 GB
-> Free  PE / Size       7015 / 27.4 GB
-> vg_show -- LEAVING
-> pv_read_all_pv_of_vg -- CALLED with vg_name: "data_vg"
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> pv_read_all_pv_of_vg -- LEAVING with ret: 0
-> vg_read_with_pv_and_lv -- AFTER pv_read_all_pv_of_vg
-> pv_read_all_pe_of_vg -- CALLED
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> pv_read_all_pv_of_vg -- CALLED with vg_name: "data_vg"
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> pv_read_all_pv_of_vg -- LEAVING with ret: 0
-> pv_read_all_pe_of_vg -- pv_count: 1
-> pv_read_pe -- CALLED with /dev/sda7 and 34140
-> pv_check_name -- CALLED
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> pv_check_name -- CALLED  pv_name: "/dev/sda7"
-> pv_check_name -- LEAVING with ret: 0
-> pe_copy_from_disk -- CALLED
-> pe_copy_from_disk -- LEAVING
-> pv_read_pe -- ret: 0
-> pv_read_pe -- LEAVING with ret: 0
-> pv_read_all_pe_of_vg -- /dev/sda7 with 34140 PE at address 8071258
-> pv_check_number -- CALLED
-> pv_check_number -- LEAVING with ret: 0
-> pv_read_all_pe_of_vg -- AFTER LOOP of pv_read_pe
-> pv_read_all_pe_of_vg -- /dev/sda7 with 34140 PE at address 40151008 for
-> PV #0
-> pv_read_all_pe_of_vg -- LEAVING with ret: 0
-> vg_read_with_pv_and_lv -- AFTER pv_read_all_pe_of_vg
-> lv_read_all_lv_of_vg -- CALLED
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> vg_read -- CALLED
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> pv_read_all_pv_of_vg -- CALLED with vg_name: "data_vg"
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> pv_read_all_pv_of_vg -- LEAVING with ret: 0
-> vg_read -- pv[0]->pv_name: "/dev/sda7"
-> vg_copy_from_disk -- CALLED
-> vg_copy_from_disk -- LEAVING
-> vg_read -- LEAVING with ret: 0
-> lv_read_all_lv_of_vg -- lv_max: 256
-> lv_read_all_lv_of_vg -- BEFORE pv_read_all_pv_of_vg
-> pv_read_all_pv_of_vg -- CALLED with vg_name: "data_vg"
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> pv_read_all_pv_of_vg -- LEAVING with ret: 0
-> lv_copy_from_disk -- CALLED
-> lv_copy_from_disk -- LEAVING
-> lv_copy_from_disk -- CALLED
-> lv_copy_from_disk -- LEAVING
-> lv_copy_from_disk -- CALLED
-> lv_copy_from_disk -- LEAVING
-> lv_copy_from_disk -- CALLED
-> lv_copy_from_disk -- LEAVING
-> lv_copy_from_disk -- CALLED
-> lv_copy_from_disk -- LEAVING
-> lv_copy_from_disk -- CALLED
-> lv_copy_from_disk -- LEAVING
-> lv_read_all_lv_of_vg -- l: 256  nl: 6  vg_this->lv_cur: 6
-> lv_read_all_lv_of_vg -- LEAVING with ret: 0
-> vg_read_with_pv_and_lv -- AFTER lv_read_all_lv_of_vg; vg_this->pv_cur:
-> 1  vg_this->pv_max: 256  ret: 0
-> vg_read_with_pv_and_lv -- BEFORE for PE
-> vg_read_with_pv_and_lv -- AFTER for PE
-> vg_read_with_pv_and_lv -- BEFORE for LV
-> vg_read_with_pv_and_lv -- vg_this->lv[0]->lv_allocated_le: 5000
-> vg_read_with_pv_and_lv -- vg_this->lv[1]->lv_allocated_le: 5000
-> vg_read_with_pv_and_lv -- vg_this->lv[2]->lv_allocated_le: 6250
-> vg_read_with_pv_and_lv -- vg_this->lv[3]->lv_allocated_le: 5000
-> vg_read_with_pv_and_lv -- vg_this->lv[4]->lv_allocated_le: 875
-> vg_read_with_pv_and_lv -- vg_this->lv[5]->lv_allocated_le: 1
-> vg_check_active -- CALLED
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> vg_status -- CALLED
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "data_vg"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> vg_status -- LEAVING
-> vg_check_active -- LEAVING
-> 
-> 
-> 
-> 
-> 
+So I am thinking that mounting a LV inside another LV and moving data is probably
+what messed me up. Does this make any sense?
 
 
--- 
+To get out of this mess I am thinking of using this scenario. I now have
+/dev/data_vg/its_lv mounted as /data of the / which is not part of any LV. I have
+this file from /etc/lvmconf which is the latest file before April 3rd when I made
+the changes.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+579300 Feb 23 15:36 data_vg.conf.4.old
 
-S_ystemmanagement TS                              T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+vgcfgrestore -t -f /etc/lvmconf/data_vg.conf.4.old -n data_vg -l      shows this:
+
+-- Volume group ---
+VG Name               data_vg
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                5
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               133.36 GB
+PE Size               4 MB
+Total PE              34140
+Alloc PE / Size       22125 / 86.43 GB
+Free  PE / Size       12015 / 46.93 GB
+
+
+That would give me the 5 LVs without /dev/data_vg/its_lv
+
+I would then backup the data on /dev/data_vg/its_lv and then use this command to
+restore the VGDA?
+
+vgcfgrestore -f /etc/lvmconf/data_vg.conf.4.old -n data_vg
+
+If so would I need to delete the /dev/data_vg/its_lv before running the previous
+command or would it matter?
+
+Thanks for your help.
+
+
+Heinz Mauelshagen wrote:
+
+> Hi Patrick,
+>
+> the error number tells you that the amount of logical extents found in
+> the mapping tables for e specific logical volumes differs from the
+> amount expected -> metedata inconsistency.
+>
+> Could you provide a complete "vgscan -d" output to better anaylze this?
+>
+> In the meantime please save your /etc/lvmconf/ VGDA backup files to
+> enable you to restore a consistent state of your VGDAs to the PVs.
+> Please read vgcfgrestore(8) for this issue.
+>
+> Heinz
+>
+> > I am getting the following EROR -364 when running vgscan. The volume
+> > group and logical volumes are actually in use and reiser filesystems
+> > mounted on them.
