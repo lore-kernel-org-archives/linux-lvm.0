@@ -1,17 +1,25 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j11H0OS9017498
-	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 17:00:24 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1Cw1O4-0005Nc-De
-	for linux-lvm@redhat.com; Tue, 01 Feb 2005 17:00:24 +0000
-Date: Tue, 1 Feb 2005 17:00:24 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Problem mounting logical volumes after system rebuild.
-Message-ID: <20050201170024.GN14093@agk.surrey.redhat.com>
-References: <OFF68A4A6E.CB0EB5AC-ON80256F9B.003D8F55-80256F9B.0041559D@notes.cat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OFF68A4A6E.CB0EB5AC-ON80256F9B.003D8F55-80256F9B.0041559D@notes.cat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j120HeO07962
+	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 19:17:40 -0500
+Received: from mail2.m-cam.com ([63.124.102.77])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j120Hcxq002539
+	for <linux-lvm@redhat.com>; Tue, 1 Feb 2005 19:17:38 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail2.m-cam.com (Postfix) with ESMTP id 113F23E8F1
+	for <linux-lvm@redhat.com>; Tue,  1 Feb 2005 18:24:55 -0500 (EST)
+Received: from mail2.m-cam.com ([127.0.0.1])
+	by localhost (mail2.m-cam.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 05526-02 for <linux-lvm@redhat.com>;
+	Tue,  1 Feb 2005 18:24:52 -0500 (EST)
+Received: from [192.168.1.21] (unknown [192.168.1.21])
+	by mail2.m-cam.com (Postfix) with ESMTP id 7099C3E8F0
+	for <linux-lvm@redhat.com>; Tue,  1 Feb 2005 18:24:52 -0500 (EST)
+Message-ID: <42000F5E.7020400@m-cam.com>
+Date: Tue, 01 Feb 2005 18:23:10 -0500
+From: Arshavir Grigorian <ag@m-cam.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] reducing lv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,20 +30,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Tue, Feb 01, 2005 at 11:54:47AM +0000, Steve M Blackwell wrote:
-> Does anyone know how to create a LVM1 volume group and logical volumes 
-> with LVM2 tools. The reason I ask is because the tools on my rescue CD 
-> have LVM2 on it and I am trying to rebuild my RHEL 3 server which uses 
-> LVM1. I think the main problem is the metadata being create in the wrong 
-> version and I am not sure how to change it.
- 
-Add -M1 to commands.
-Or have lvm.conf: global { format = "lvm1" }
+Hi,
 
-Alasdair
--- 
-agk@redhat.com
+I have a very large LV across 4 pv-s (2 disks - /dev/hdb, /dev/hdd + 2 
+partitions on different sisks - /dev/hda2, /dev/hdc2).
+Is there any way to determine how the data on the lv is stored and 
+whether it would be possible to consolidate the data on 1 disk + 2 
+partitions (/dev/hdb, /dev/hda2, /dev/hdc2) and replace the other disk 
+(/dev/hdd).
+I am running Reiserfs.
+
+Thanks for any pointer on how to do this.
+
+
+
+Arshavir
