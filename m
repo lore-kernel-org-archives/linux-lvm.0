@@ -1,14 +1,9 @@
-Return-Path: <blutgens@sistina.com>
-Date: Wed, 23 May 2001 09:57:04 -0500
-From: Ben Lutgens <blutgens@sistina.com>
-Subject: Re: [linux-lvm] Returned mail: Service unavailable
-Message-ID: <20010523095704.A2883@minime.sistina.com>
-References: <20010523141109.A967@pclab.ifg.uni-kiel.de> <Pine.LNX.4.21.0105231622120.5897-100000@tolppa.kotisivupalvelu.fi>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0105231622120.5897-100000@tolppa.kotisivupalvelu.fi>; from harri@smilehouse.com on Wed, May 23, 2001 at 04:22:38PM +0300
+Return-Path: <peloquin@us.ibm.com>
+Subject: Re: [linux-lvm] Working together
+Message-ID: <OF4A139A00.E0157449-ON85256A55.0051A6E3@raleigh.ibm.com>
+From: "Mark Peloquin" <peloquin@us.ibm.com>
+Date: Wed, 23 May 2001 10:33:46 -0500
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,45 +15,62 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, evms@dwoss.lotus.com, evms-devel@lists.sourceforge.net
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello Heinz,
 
-On Wed, May 23, 2001 at 04:22:38PM +0300, Harri Haataja wrote:
+Thank you very much for your reply. The EVMS team can understand
+the Linux LVM team's position. Our invitation remains open should
+your position change in the future.
+
+The EVMS team.
+
+On Wed, 23 May 2001 09:51:42 +0000, Heinz J. Mauelshagen wrote:
+> Mark,
 >
->Shouldn't a list drop all postmaster messages in the first place?
+> we thank you for your invitation to join you with work on the EVMS
+> project.  Obviously we are interested in the work you are doing and
+> support it whole heartedly.
+>
+> We will be happy to help you with any technical assistance you may need
+> with regard to the Linux LVM system.  However we do not feel able to
+commit a
+> developer to work full time on your project for various reasons:
+>
+> o The LVM team is very small, consisting of three main developers, we
+>   really do not have much spare man power.
+>
+> o EVMS, though heading in a direction that we like, is a long way from
+>   going into production.  Our priority must be with the existing LVM
+>   system, especially now 0.9 is approaching production level.
+>
+> o Our new development for the 1.2/2.0 branches has cluster support as
+>   it's main goal.  This does not seem to be anywhere on your roadmap.
+>
+> On a more positive note components of our work, such as the standalone
+> snapshot driver, will undoubtedly benefit both projects.  We will take
+> the time to ensure that your requirements are taken into consideration
+> when writing these.
+>
+> Regards,
+> Heinz    -- The LVM Guy --
 >
 
-One would think huh? Well, looks like I've got at least some rudimentary st=
-uff
-in place now. I added a bunch of stuff to the KNOWN_SPAMMERS array in
-SpamDetect.py and recompiled it, but it seemed to hold all the mail with
-qrunner errors.
-
-So it's back to the drawing board.
-
---=20
-Ben Lutgens	=09
-Sistina Software Inc.=09
-MIS Geek
-http://www.sistina.com/	<--- great software=20
-http://www.gentoo.org/  <--- great distro
-Kernel panic: I have no root and I want to scream <--- perfect error message
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7C8/ALxkxGgLdGQgRAiQRAKC6/Fr1HxQNUniQBdUDUp81xRXpAwCgyQkh
-xkfIyPDbbvsWI4BEPcWGPIM=
-=pLHr
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+> On Fri, May 18, 2001 at 09:01:49AM -0500, Mark Peloquin wrote:
+> > Hello everyone,
+> >
+> > On behalf of the EVMS project (http://sourceforge.net/projects/evms or
+> > http://oss.software.ibm.com/developerworks/opensource/evms) team, we
+> > would like to invite the Linux LVM project to join/collaborate with our
+> > project.  The goal of this collaboration is to offer a complimentary
+set of
+> <SNIP>
+> >
+> > We hope you will join us as we look forward to working with you.
+> >
+> > Thanks.
+> >
+> > The EVMS Team
+> >
