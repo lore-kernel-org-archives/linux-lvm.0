@@ -1,11 +1,11 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Tue, 2 Oct 2001 15:08:20 -0600
-Message-ID: <20011002150820.N8954@turbolinux.com>
-References: <20011002202934.G14582@wiggy.net> <E15oUUf-0005Xw-00@the-village.bc.nu> <20011002220053.H14582@wiggy.net>
+Date: Tue, 2 Oct 2001 23:15:24 +0200
+From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
+Subject: Re: [linux-lvm] Re: linux2.4.10/lvm1.0.1rc3 does not compile
+Message-ID: <20011002231524.A1020@balu.kawo2.rwth-aachen.de>
+References: <20011002200722.18323.qmail@web14404.mail.yahoo.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011002220053.H14582@wiggy.net>
-Subject: [linux-lvm] Re: partition table read incorrectly
+In-Reply-To: <20011002200722.18323.qmail@web14404.mail.yahoo.com>; from shahi_aman@yahoo.com on Tue, Oct 02, 2001 at 01:07:22PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,31 +19,24 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Oct 02, 2001  22:00 +0200, Wichert Akkerman wrote:
-> Previously Alan Cox wrote:
-> > Does it complain about wrong block sizes ?
+On Tue, Oct 02, 2001 at 01:07:22PM -0700, Aman Shahi wrote:
 > 
-> No
->  
-> > The partition code will look for tables. That bit is fine
-> 
-> If that bit is fine then how can it differ in opinion from fdisk?
+> so changing __update_hardblocksize(lv_t *lv)
+> in ~/LVM/1.0.1-rc3/kernel/lvm.c and
+> ~linux-2.4.10/drivers/md/lvm.c 
+> to  __update_hardsectsize(lv_t *lv)
+> should resolve this compilation problem.
 
-What does the first 512 bytes of the disk show (od -Ax -tx1 /dev/)?
-Maybe there is still "0xaa55" on the disk at 0x1fe and the kernel
-thinks it is a DOS partition?
+Thanks, that did the trick for me. 
 
-> > The exact error would be good too
-> 
->  I/O error: dev 08:11, sector 0
+After that vgscan did not find any Volume Groups in 2.4.10, while it
+did in 2.4.7 (with LVM 1.0). Interesting: using "vgrename" on 2.4.7
+helped here at last (After trying lots of other non-destructive changes
+to the VG/underlying PVs) . I just renamed the Group vg1 to vg0 and now
+vgscan detects it on 2.4.10, too.
 
-Hmm, this is sda11, so you would need both a primary and extended
-partition table to get that.  What does /proc/partitions show?
+This incident leaves a bitter taste somehow...
 
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Regards, Markus
