@@ -1,9 +1,10 @@
-Message-ID: <3DAFB7D4.B88B6737@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
+From: Stefan Weigel <sw@global-linxs.de>
+Subject: Re: [linux-lvm] Re: problem with lvm on root-fs
+References: <200210170859.03682.sw@global-linxs.de> <200210170935.12777.sw@global-linxs.de> <3DAF1DE5.3060203@comedia.it>
+In-Reply-To: <3DAF1DE5.3060203@comedia.it>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
-References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200210181013.56689.sw@global-linxs.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,39 +15,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 18 02:28:02 2002
+Date: Fri Oct 18 03:12:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Nathan Dornquast wrote:
-> 
-> Thx, Goetz.
+Am Donnerstag, 17. Oktober 2002 22:30 schrieb Luca Berra:
+> Stefan Weigel wrote:
+> >>>kernel panic: no init found. Try passing init=3D to...
+> >>
+> >>this usually means it couldn't mount your root fs, or got it wrong
+> >>
+> >>L.
+> >
+> > Hi,
+> > that's right, but where's my problem ? I've used the howto from
+> > sistina.com to
+>
+> do you have any hint printed above this?
+>
+> L.
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-[snip]
+Hi!
+I don't know exactly what you guess. I've used this one:=20
+http://tldp.org/HOWTO/LVM-HOWTO/upgraderoottolvm.html
 
-> 3ware 7500-4 is on order. ;)  Sadly it adds $260 to box.
-> 
-> Goetz, I am interested to hear your MD RAID 1/5 - particularly how it handles
-> powering off a drive while operating.  Does your box spit, sputter and puke, or
-> can you hotswap?  How about with the 3ware card?  Which 3ware card are you
-> working with?
+After the command lvmcreate_initrd I've mounted the initrd and added the=20
+module for my raid-controller and changed linuxrc. But I mentioned that.
+Sorry if I misunderstand you.
 
-i've got 3 3ware cards, and i've tried 3 different kinds.
-I've got 2 7410, and one 7810, and i've tried a 7450 (better raid5
-performance)
-You can hot swap, i've removed drives, i put them back in. You do have
-to tell
-the controller trough the diskmanagement tool, to use the "new" disk.
-But it
-works. I've benchmarked all of them vs. software for various raid
-devices.
-(mirror, stripped, raid10, and raid5)
+Best regards
 
-
-Unfortunately i forgot to test it with lvm ontop :/
-
-
-
-
-JonB
+Stefan
