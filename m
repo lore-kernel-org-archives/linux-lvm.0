@@ -1,9 +1,7 @@
+From: Dirk Heinrichs <heini@qis-systemhaus.de>
 Subject: Re: [linux-lvm] upgrade RH with lvm
-From: Christophe Zwecker <doc@zwecker.de>
-In-Reply-To: <Pine.GSO.4.05.10201140845360.28453-100000@cyrano.olymp.qis>
-References: <Pine.GSO.4.05.10201140845360.28453-100000@cyrano.olymp.qis>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1011011962.7572.21.camel@dumbo.zwecker.de>
+In-Reply-To: <1011011962.7572.21.camel@dumbo.zwecker.de>
+Message-Id: <Pine.GSO.4.05.10201141351020.28453-100000@cyrano.olymp.qis>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,26 +13,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 14 06:41:02 2002
+Date: Mon Jan 14 07:00:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, 2002-01-14 at 08:48, Dirk Heinrichs wrote:
-> On 11 Jan 2002, Christophe Zwecker wrote:
+On 14 Jan 2002, Christophe Zwecker wrote:
 
-> You don't need to boot the installer to upgrade some RPM's. Use rpm
-> directly on the running system (after going single user with telinit 1, if
+> yeah , I was gonna test that, but i was afraid to mess up something
+> sofar, I gues rpm -F  should do the trick...
+This is why I would go single user.
 
-yeah , I was gonna test that, but i was afraid to mess up something
-sofar, I gues rpm -F  should do the trick...
+> Youve upgraded that way before ?
+Yep, did it once when the installer kept crashing on me, worked fine.
+There is nearly no need to reboot a Linux system to upgrade software
+(except for the kernel).
 
-Youve upgraded that way before ?
+Bye...
 
-Christophe
+	Dirk
 -- 
-Christophe Zwecker                     mail: doc@zwecker.de
-Hamburg, Germany                        fon: +49 179 3994867
-http://www.zwecker.de
-
-"Who is General Failure ?  And why is he reading my disk ??"
+Dirk Heinrichs          | Tel:  +49 (0)241 413 260
+Configuration Manager   | Fax:  +49 (0)241 413 2640
+QIS Systemhaus GmbH     | Mail: dheinrichs@qis-systemhaus.de
+Juelicher Str. 338      | Web:  http://www.qis-systemhaus.de
+D-52070 Aachen          | ICQ#: 110037733
