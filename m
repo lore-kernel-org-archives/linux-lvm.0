@@ -1,8 +1,10 @@
-Message-ID: <3F2A4A76.9070003@conterra.de>
-From: Dieter Stueken <stueken@conterra.de>
+Message-ID: <3F2B1A3E.7060906@opendreams.net>
+From: Jesse Molina <jesse@opendreams.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] pvmove and badsectors
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Performance question
+References: <BD9F7FC07AAE534CAFF3DCC5DD395D6E046D85C0@uspto-is-111.uspto.gov>
+In-Reply-To: <BD9F7FC07AAE534CAFF3DCC5DD395D6E046D85C0@uspto-is-111.uspto.gov>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,42 +15,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug  1 06:11:01 2003
+Date: Fri Aug  1 20:57:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Heinz J . Mauelshagen wrote:
-> pvmove moves data chunk by chunk (64kB).
+Hi!
+
+With what you are doing;  probably not.
+
+Why are you using LVM in the first place?  Sticking something between 
+your data and the physical device is probably only going to slow stuff 
+down.  You are already stripping with your RAID 0 controller.  Having 
+LVM strip is not going to do anything because LVM sees only one device.
+
+This is like an analogy of making my car faster by putting a spoiler on 
+it.  LVM = features, not speed.  If you don't need LVMs features, get 
+rid of it!
+
+If you want more speed, try solid state drives, tuning your controller 
+to stripe efficiently, adding controller cache, configuring Oracle to 
+use the raw storage device instead of an underlaying filesystem, or add 
+more drives to your array.
+
+The obvious is the answer.
+
+Remember that you can't fix it if you don't know what to fix.  If you 
+don't know exactly where your bottleneck is, you can't resolve it.
+
+I really hope that data isn't important since you don't seem to have any 
+redundancy there.
+
+Do some Bonnie++ on there and let us know how it goes if you try your 
+solution.
+
+Have fun!  Good luck in your project.
+
+
+
+Griffin, Michael (PEC) wrote:
+
+> I have a Dell 4600 with a PERC quad channel raid controller attached to
+> an external disk array (14 disks).  I am running Oracle 9i on Red Hat
+> Linux.  I am running an import from an Oracle 8i database and
+> normalizing the data.  My 3 import files are between 2-4GB each
+> compressed, but grow to between 25-40GB each uncompressed.  It takes
+> approximately 10 hours to import these into my database.  I currently
+> have three disk arrays set up in RAID 0 to achieve as much speed as
+> possible (so far).  
 > 
-> If such chunk read fails, it retries rereading the failed chunk sector
-> by sector in order to retrieve as much data as possible.
+> My question is, would it help my performance if I were to turn off RAID
+> on the controller(s) and use LVM?  Any suggested configs would be
+> helpful.
+> 
+> Thank you,
+> 
+> Michael
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-I'm about to try it. But afterwards I like to analyze which files
-are affected using "debugfs". As far as I understand the code, any
-unreadable sector is zeroed. The printf reports about the unreadable
-sector, but only prints the # of the sector from the input device.
-Instead I'm interested on where the zeroed sector ends up on the
-destionation device, to locate it later on. Questions:
-
-the printed sector number counts 512 byte sectors?
-If I run pvmove -v, it reports the PE# and LE# of the
-PE currently copying. I hope I can calculate this way:
-
-Get sector# modulo PE size to get the relative position
-of the broken sector within the PE, and using the destionation
-LE# + the offset to get the sector # on the LV after the
-move. Right?
-
-Suggestion:
-write such informations to syslog to be sure this is
-saved somewhere. If this is printed on screen olny, I may loose
-this information easily and won't have any change to locate the
-broken sector later on.
-
-Dieter.
 -- 
-Dieter St�ken, con terra GmbH, M�nster
-     stueken@conterra.de
-     http://www.conterra.de/
-     (0)251-7474-501
+# Jesse Molina
+# Mail = jesse@opendreams.net
+# Page = page-jesse@opendreams.net
+# Cell = 1.407.970.0280
+# Web  = http://www.opendreams.net/jesse/
