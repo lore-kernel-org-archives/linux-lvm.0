@@ -1,69 +1,104 @@
-Message-ID: <39879448.8414ED6@inet.net.nz>
-Date: Wed, 02 Aug 2000 15:23:52 +1200
-From: Dale Kemp <dale@inet.net.nz>
+Message-ID: <34BE27FD7F4BD111B9C600805F15B7DC016E7D99@info-akh.linz.at>
+From: Michelic Adalbert <adalbert.michelic@akh.linz.at>
+Subject: [linux-lvm] Cannot access VG due to "hd error"
+Date: Wed, 2 Aug 2000 11:30:40 +0200 
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Generic resize tool
-References: <200008011842.e71IgcS27484@webber.adilger.net>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux LVM <linux-lvm@msede.com>
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
 
-Andreas Dilger wrote:
+Hello,
 
-> Hello,
-> I'm wondering if people are interested in having a more generic resize tool
-> than the current e2fsadm.  I've updated e2fsadm to have support for the
-> GNU ext2resize tools (ext2resize and ext2online) in addition to resize2fs,
-> but I was wondering about adding support for reiserfs resizing as well.
-> At this point e2fsadm isn't a very good name for it anymore.
->
-> I was thinking if renaming it to "chfs" the same as AIX LVM tool which
-> handles both LV and FS resizing, among other things, and does not sound
-> fs-specific.
->
-> Cheers, Andreas
+I have the following problem:
 
-Earlier in discusions I suggested some common ground between volume
-managers and filesystems, so that we can move forward in this area.
+I had the following disks in my machine:
+  hda: several partionions; hda6 is a PV
+  hdc: hdc is a PV
+  hde: temporary disk; hde1 was ReiserFS
 
-For the resize situation I suggest a simular way to mkfs which simply adds
-a dot extension for each program, ie.
+On my hdc-disk I had a ext2-filesystem and i wanted to move this
+to a ReiserFS on a LVM-volume, so i put in the hde-disk; copied
+everything to hde, then i did the following:
+  pvcreate /dev/hdc
+  vgextend vg01 /dev/hdc
+a cat /proc/lvm told me, that there are 1007 LE on /dev/hdc
+  lvcreate -l 1007 -n mp3z vg01 /dev/hdc
+(I wanted the mp3z-volume to completly reside on the hdc-disk, so
+i could turn it off, since it is very rarely used).
 
-mkfs -t ext2    calls mkfs.ext2
-mkfs -t minux calls mkfs.minux
+everything okay; then i created the filesystem on /dev/vg01/mp3z
+and copied all files from /dev/hde1 to /dev/vg01/mp3z, changed
+the mountpoint in /etc/fstab and mounted it. /dev/hde was now
+not in use anymore.
 
-I suggest we simply have:
+Now i have shutdown my machine, removed /dev/hde and rebooted.
 
-resizefs -t ext2    calls resizefs.ext2
-resizefs -t jfs calls resizefs.jfs
+Now vgscan gave me errors like the following:
+hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+  Error }    <-- one line
+hdc: read_intr: error=0x04 { DriveStatusError }
 
-(Note resizefs.jfs can have its own unique options just like mkfs.<X> has,
-all thats needed are some common elements)
+I thought the disk is defect and have re-inserted /dev/hde and
+moved the whole /dev/hdc to /dev/hde (dd id=/dev/hdc of=/dev/hde
+bs=1k), then I inserted the new hde-disk as secondary master (hdc).
 
-Here we need a common set of options for resizing across all filesystems,
-eg. --size [+|-]X[G|M|k]
+Copying was okay; the new hde disk is (tested!) 100% okay; it is not
+physically defect.
 
-eg.
+After rebooting I got still the same errors, so I thought the
+controller might be defect and tried inserting it is /dev/hde.
 
-resizefs -t ext2  --size +50M <partiton>
+But the errors are still the same - with the disk inserted as
+/dev/hde I get the following output from vgscan:
 
-However we need volumes not just partitions.
+<vgscan>
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  ide2: reset success
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  ide2: reset success
+  hde: read_intr: status=0x59 { DriveReady SeekComplete DataRequest \
+     Error }
+  hde: read_intr: error=0x04 { DriveStatusError }
+  end_request: I/O error, dev 21:01 (hde), sector 0
+  vgscan -- found inactive voulme group "vg01"
+  vgscan -- error -154: can't get data of volume group "vg01" from \
+     physical volume(s)
+  vgscan -- error -154: creating /etc/lvmtab and /etc/lvmtab.d
+</>
 
-resizevol -l lvm -t ext2 --size +50M /dev/lvm/lvol1
+I'm using lvm version 0.8e with Kernel 2.2.14 (this is the Kernel that
+is shipped with SuSE 6.4).
 
-or,
+This messages sound like a hardware problem, but I think this is a
+problem with the LVM, because the occur always - I have tried to use
+another disk (which is completely new), I have to user another IDE-
+cable (a new U-DMA/66 cable), i tried another controller.
 
-resizevol -l ibmlvms -t jfs --size +50M lvol4
+Has anyone an idea, what this could be?
 
-Exactly how this is implemented I haven't given too much thought,
-but I would like IBM, SGI and LVM team get together on this but maybe
-I'm dreaming again... Are you listening IBM? Lets get it tidy now not
-later. I'm not asking IBM to give up there JFS/LVMS port (which is a very
-good idea) I'm asking them to help work towards a better solution for
-linux in general. If "chfs" is generic enough then we can make that the
-"linux standard".
 
--- Dale.
+Please excuse my bad english,
+
+Rgds, Adalbert
