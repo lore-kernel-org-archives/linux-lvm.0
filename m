@@ -1,8 +1,10 @@
-From: bscott@ntisys.com
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] Problem compiling LVM 1.0.5
-In-Reply-To: <1611908674.20020731133430@postel.sk>
-Message-ID: <Pine.LNX.4.44.0207311140520.29658-100000@dragon.inside.ntisys.com>
-MIME-Version: 1.0
+Message-ID: <20020731170853.GA1061@colombina.comedia.it>
+References: <549012796.20020731132606@tnonline.net> <20020731123348.A21340@uk.sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020731123348.A21340@uk.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,30 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 31 10:59:01 2002
+Date: Wed Jul 31 12:08:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Anders Widman <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Wed, 31 Jul 2002, at 1:34pm, Martin Mosny, PosTel a.s. wrote:
-> in the new RH, glibc-devel and the INCLUDE policy/tactics is to DO NOT
-> INCLUDE kernel header files to user space program.
+On Wed, Jul 31, 2002 at 12:33:48PM +0100, Alasdair G Kergon wrote:
+> On Wed, Jul 31, 2002 at 01:26:06PM +0200, Anders Widman wrote:
+> > /usr/include/linux/autoconf.h:1:2: #error Invalid kernel header
+> > included in userspace
+> 
+> Try removing the line in tools/lib/liblvm.h that includes
+> <linux/autoconf.h>.
+> 
+why don't you just do this in CVS?
+it has been discussed before, see the list archives.
 
-  Linus has been trying to get people to do this for years.
-
-  Basically, the Linus policy is that userland programs should *NEVER*
-directly include kernel headers.  That includes the C library itself.  
-Kernel headers are decreed to be Not For Userland Consumption.  The kernel
-provides a binary interface.  If you want to use said binary interface, you
-are supposed to write your own headers, either from scratch, or via
-cut-and-paste from the kernel headers.
-
-  Whether or not this is the Right Thing to do is immaterial; this is what
-the kernel hackers expect you to do.
+L.
 
 -- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do not |
-| necessarily represent the views or policy of any other person, entity or  |
-| organization.  All information is provided without warranty of any kind.  |
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
