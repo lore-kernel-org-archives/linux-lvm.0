@@ -1,7 +1,14 @@
-Message-Id: <25E4CA13D679FF48BC307694202209710164DE2E@nd1-clusa.local.bunnings.com.au>
-From: Colin Coe <CCoe@bunnings.com.au>
+Content-Type: text/plain; charset="us-ascii"
+From: Adrian Head <ahead@bigpond.net.au>
+Subject: Re: [linux-lvm] Unable to get XFS, ext3, reiserfs & LVM to
+    coexist happily
+References: <E16LcO0-0006VI-00@hermes.sistina.com>
+    <200201030315.UAA21279@cthulhu.turbolabs.com>
+    <20020103100030.V12868@lynx.no>
+In-Reply-To: <20020103100030.V12868@lynx.no>
 MIME-Version: 1.0
-Subject: [linux-lvm] lvchange problem
+Content-Transfer-Encoding: 8bit
+Message-Id: <E16MP72-0002co-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,104 +19,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  4 00:22:02 2002
+Date: Fri Jan  4 01:51:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: Andreas Dilger <adilger@turbolabs.com>
+Cc: linux-xfs@oss.sgi.com, linux-lvm@sistina.com
 
-Hi all
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I have come across a problem with lvchange.  When I change the availability
-of an LV from active to inactive, and then try and change it back I get the
-error "Operation not permitted".  I can only get the LV back by rebooting.
+On Fri, 4 Jan 2002 03:00, Andreas Dilger wrote:
+> Maybe yes.  This is very strange.  Are you testing all of these filesystems
+> on the same LV in order?  Can you try just doing XFS by itself on a clean
+> reboot?  I assume that you are rebooting after every oops, because if you
+> don't there is junk in the kernel memory that will screw up further tests.
 
-A search of Google turned up something similar but there were no responses
-to that post.
+Each test is done on its own LV and there is always a reboot and recovery 
+before every test after an Oops. More information about the vg's and lv's as 
+well as the test procedure can be found halfway down:
+http://marc.theaimsgroup.com/?l=linux-xfs&m=101010337524477&w=2
 
-System details are: 
-Pentium II-400
-2 x 20GB Quantum drives
-256MB RAM
-2.4.14 with XFS
-lvm-tools              1.0.1rc4-2
-Gnu C                  2.96
-Gnu make               3.79.1
-binutils               2.11.90.0.8
-util-linux             2.11f
-mount                  2.11g
-modutils               2.4.6
-e2fsprogs              1.23
-reiserfsprogs          3.x.0j
-Linux C Library        2.2.4
-Dynamic linker (ldd)   2.2.4
-Procps                 2.0.7
-Net-tools              1.60
-Console-tools          0.3.3
-Sh-utils               2.0.11
+>
+> > * Can create xfs snapshot?			| Oops
+> >  btp 1234 (lvcreate)
+> >  journal_start
+> >  ext3_dirty_inode
+>
+>    ^^^^^^^^^^^^^^^^ yes, very strange.
+>
+> >  __mark_inode_dirty
+> >  update_atime
+> >  do_generic_file_read
+> >  generic_file_read
+> >  sys_read
+> >  system_call
 
+I have been thinking - the VFS-lock patch tries to get all (not sure - at 
+least ext3 & resierfs) to flush everything to disk.  Maybe its actually an 
+interaction problem between ext3 and LVM? but why XFS?  I'm only guessing 
+here at the moment.
 
-Any ideas?
+>
+> Note that it appears most of the ext3 fixes went into 2.4.17, so this may
+> be a new bug.  As I said, let's try first with XFS snapshots only, and if
+> that doesn't have a problem, try to re-create the above problem and send
+> a full oops report to ext2-devel.
 
-CC
-
-
-[root@linux-lvm root]# df -k
-Filesystem           1k-blocks      Used Available Use% Mounted on
-/dev/md0               2042880   1335560    707320  66% /
-/dev/md1                 59328      5292     54036   9% /boot
-none                    127472         0    127472   0% /dev/shm
-/dev/rootvg/bbs          60736        80     60656   1% /bbs
-/dev/rootvg/bbsdata    2026816       144   2026672   1% /bbs/data
-
-[root@linux-lvm root]# umount /bbs/data
-
-[root@linux-lvm root]# lvchange -an /dev/rootvg/bbsdata
-lvchange -- logical volume "/dev/rootvg/bbsdata" changed
-lvchange -- doing automatic backup of volume group "rootvg"
-lvchange -- no difference to old backup in "/etc/lvmconf/rootvg.conf"
-
-[root@linux-lvm root]# df -k
-Filesystem           1k-blocks      Used Available Use% Mounted on
-/dev/md0               2042880   1335580    707300  66% /
-/dev/md1                 59328      5292     54036   9% /boot
-none                    127472         0    127472   0% /dev/shm
-/dev/rootvg/bbs          60736        80     60656   1% /bbs
-
-[root@linux-lvm root]# lvchange -ay /dev/rootvg/bbsdata
-lvchange -- ERROR "Operation not permitted" couldn't open logical volume
-"/dev/rootvg/bbsdata"
-
-And the same again in verbose mode.
-
-[root@linux-lvm root]# lvchange -ay -v /dev/rootvg/bbsdata
-lvchange -- locking logical volume manager
-lvchange -- checking logical volume name
-lvchange -- checking volume group existence
-lvchange -- checking for active volume group "rootvg"
-lvchange -- reading volume group data of "rootvg" from disk(s)
-lvchange -- checking consistency of "rootvg"
-lvchange -- checking logical volume "/dev/rootvg/bbsdata" existence
-lvchange -- getting index of logical volume "/dev/rootvg/bbsdata" in volume
-group "rootvg"
-lvchange -- getting status of "/dev/rootvg/bbsdata" from VGDA in kernel
-lvchange -- changing logical volume "/dev/rootvg/bbsdata" in VGDA of kernel
-lvchange -- ERROR "Operation not permitted" couldn't open logical volume
-"/dev/rootvg/bbsdata"
+This is what I'm having trouble with at the moment.  When the kernel Oops 
+occurs it drops me into kdb (kernel debugger).  From here I can look at 
+current process status, do back traces on anything thats running etc.. but it 
+never shows me the full Kernel Oops and there is no record of it in the logs 
+either.  I expect that a couple of backtraces, list of processes, register 
+values would be equivalent to a Kernel Oops report?
 
 
-**************************************************************************
-Bunnings Legal Disclaimer: 
+- -- 
+Adrian Head
 
-1) 	This document is confidential and may contain legally privileged 
-	information. If you are not the intended recipient you must not 
-	read, copy, distribute or act in reliance on it.
-	If you have received this document in error, please telephone
-	us immediately on (08) 9365-1555. 
+(Public Key available on request.)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-2)	All e-mails sent to and sent from Bunnings Building Supplies are
-	scanned for content. Any material deemed to contain inappropriate
-	subject matter will be reported to the e-mail administrator of
-	all parties concerned.
-
-**************************************************************************
+iD8DBQE8NV9k8ZJI8OvSkAcRArjiAJ9aID1RCLX1ePuHYEYtsrYuxfAMOQCeKepa
+iobc03+nCMZhPdUQ0Yg6E/U=
+=RAuQ
+-----END PGP SIGNATURE-----
