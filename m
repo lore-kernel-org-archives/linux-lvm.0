@@ -1,12 +1,12 @@
-Return-Path: <thornber@btconnect.com>
-Date: Tue, 8 May 2001 10:43:18 +0100
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 8 May 2001 11:52:26 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
 Subject: Re: [linux-lvm] typo in CVS: LVM/kernel/lvm.c
-Message-ID: <20010508104318.A1047@66bassett.freeserve.co.uk>
+Message-ID: <20010508115226.J508@tykepenguin.com>
 References: <Pine.LNX.4.32.0105052321020.24489-100000@falka.mfa.kfki.hu> <20010506101133.A642@66bassett.freeserve.co.uk> <20010508101023.F508@tykepenguin.com>
 Mime-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <20010508101023.F508@tykepenguin.com>; from caulfield@sistina.com on Tue, May 08, 2001 at 10:10:23AM +0100
-From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -23,27 +23,19 @@ Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
 On Tue, May 08, 2001 at 10:10:23AM +0100, Patrick Caulfield wrote:
-> On Sun, May 06, 2001 at 10:11:33AM +0100, Joe Thornber wrote:
-> > 
-> > lvm.c revision 1.12
-> > -------------------
-> > 
-> > Patrick, you correctly fix most of the remaining mistakes apart from
-> > the version number.  But what are all the other code changes that have
-> > slipped in ?  They aren't mentioned in the checkin message, are they
-> > meant to be there ?
-> 
-> Ah, looked at this properly now I'm "at work" again. This is the fix for the
-> reading of userspace pointers reported by the S/390 guy from IBM. It's not the
-> patch he posted but IMHO a slightly neater one.
 > 
 > To be quite honest it wasn't meant to go in yet (I asked on the list for him to
 > test it but have had no reply), that was an oversight. But now it is in it's
 > probably not worth removing unless we hear from anyone that it still doesn't
 > work on S/390. It certainly works fine on my intel (well, it would really) 
 > and SPARC machines.
+> 
 
+Speaking of S/390 I see you can now run S/390 Linux under emulation on Intel
+Linux (IYSWIM!):
 
-Cool, could you update the commit message then please ?
+http://penguinvm.princeton.edu/hercules/index.html
 
-- Joe
+Heinz, can you get me a SuSE S/390 CD set ???!
+
+patrick
