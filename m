@@ -1,11 +1,9 @@
-Return-Path: <e@arix.com>
-From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] Looking for recipe for LVM
-Date: Thu, 9 Aug 2001 13:22:28 -0700
-Message-ID: <003101c12111$02e8dae0$0300000a@pacbell.net>
+Return-Path: <xiliu@ncsa.uiuc.edu>
+Date: Fri, 10 Aug 2001 13:58:04 -0500 (CDT)
+From: Xiaoxiang Liu <xiliu@ncsa.uiuc.edu>
+Message-ID: <Pine.SOL.3.95.1010810115414.25220A-100000@pecos.ncsa.uiuc.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20010809124646.B17398@dragon.blacknet.de>
+Subject: [linux-lvm] Why can't I get more bandwidth by adding more disks?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,32 +15,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Xiaoxiang Liu <xiliu@ncsa.uiuc.edu>
 
-do you have a public key that I can use to encrypt this information? or are
-you up on ICQ or YM that I can give it to you that way?
+I have tried to upgrade LVM to beta8 on kernel 2.4.7 and it
+works well. Then I am trying to do some raw io test to see
+how much bandwidth I can get. My machine is HP kayak and connected
+with a MTI RAID by fiber channel.
 
-- e r i c k
+If I do sequence rawio on one scsi disk in MTI, the bandwidth is 14MB/s.
+Then I create a LV on two disks with striping size 4k, the bandwidth
+becomes 28MB/s and I really feel excited for this result. :)
+But when I create LV on more disks (3,4,5 or 8 disks), the bandwidth
+can't increase any more. I always get 28MB/s or less. I do 1G-byte sequence 
+rawio and my buffer size is 32k. The maximum bandwidth of fiber channel is
+100MB/s and we could actually get 75MB/s in other tests.
+ 
+I don't know what's the bottleneck here? If I create LV on 4 disks with
+striping size 4K and do 32k rawio, does and how LVM do parallel io on
+those 4 disks? Why can't I increase the bandwidth by 4 times? 
+Please help me! Your suggestions will be highly appreciated!
 
------Original Message-----
-From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-Behalf Of Goetz Bock
-Sent:	Thursday, August 09, 2001 3:47 AM
-To:	linux-lvm@sistina.com
-Subject:	Re: [linux-lvm] Looking for recipe for LVM
 
- << File: ATT00043.dat >>
-On Wed, Aug 08 '01 at 17:17, Erick Calder wrote:
-> > and is someone gives me access to a dumpable redhat 7.1
-> > system I'll try to make my RPMs workable on redhat (But I've a lot of
-> > work to do at the moment, so don't expect immidiat results)).
-> I'll jump at that chance!  I have a box I've been trying to build your
-RPMs
-> on for a while without success...  I can let you have at it.
-
-If you would mail me a login/pwd that is allowed to log in using ssh and
-sudo -s (and the boxes IP) I'll try to build my RPM on your box ...
---
-Goetz Bock                                              IT Consultant
-Dipl.-Inf. Univ.
+Xiang
