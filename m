@@ -1,8 +1,9 @@
-Message-ID: <39D093AC.54E9D40A@rds.ro>
-Date: Tue, 26 Sep 2000 15:16:44 +0300
-From: Florin Andrei <fandrei@rds.ro>
+Message-ID: <39D098F3.F1F0B328@hananet.net>
+Date: Tue, 26 Sep 2000 21:39:15 +0900
+From: nalabi <nalabi@hananet.net>
+Reply-To: nalabi@hananet.net
 MIME-Version: 1.0
-Subject: [linux-lvm] lvm and fibre channel
+Subject: [linux-lvm] HI,
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -10,20 +11,25 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
+Hi,
 
-	We have a big Web project, involving several disk arrays (over 3 TB total
-storage space) and around 24 Linux servers.
-	On the disk arrays, we need to create aprox. 2600 partitions, which may be
-mounted by the Linux servers (but no server can mount more than 16 partitions
-at any given moment).
-	So here is the problem: the Fibre Channel devices are seen as SCSI devices,
-but Linux doesn't support more than 2048 partitions on SCSI disks (max 128
-disks, max 16 partitions each).
+initrd.gz make not create.
 
-	Does LVM works over Fibre Channel?
-	Does it solves our problem?
+How can make initrd.gz
 
--- 
-Florin Andrei
-mailto:florin@linuxstart.com	http://members.linuxstart.com/~florin/
-tel: +40-93-261162
+
+------------->
+
+nalabi:/home/nalabi/lvm-0.8i# lvmcreate_initrd
+
+Logical Volume Manager 0.8 by Heinz Mauelshagen  06/08/1999
+
+lvmcreate_initrd -- this script creates a LVM initial ram disk in
+/boot/initrd.gz
+
+lvmcreate_initrd -- making ram filesystem
+umount: /dev/ram1: not mounted
+/sbin/lvmcreate_initrd: freeramdisk: command not found
+Bye bye...
+
+lvmcreate_initrd -- ERROR making ram disk filesystem
