@@ -1,10 +1,8 @@
-Message-ID: <3FC5AE3A.9080906@webhackande.se>
-From: Rickard Olsson <richie@webhackande.se>
+Message-ID: <3FC5F552.A494A0AA@in.ibm.com>
+From: Sachin Sant <sachinp@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM across network
-References: <Pine.LNX.4.44.0311261511490.21217-100000@nymfe06.fi.muni.cz> <11659189187.20031126163948@tnonline.net> <20031126165649.1fd1c51b.neuron@hollowtube.mine.nu> <199870551.20031126190959@tnonline.net>
-In-Reply-To: <199870551.20031126190959@tnonline.net>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvchange -r 256 lv-name does not work
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +13,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 27 01:58:02 2003
+Date: Thu Nov 27 07:48:05 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Spam wrote:
+Hi , i came across a problem with lvchange command.
 
->   I  doubt  any  network  filesystem  will  allow  you to disconnect a
->   machine  and still be able to operate.
+I have a VG with 3 pv and a lv created using command 
 
-I have been eyeing Coda for a while now and it looks like it does 
-exactly that. I'm not sure about the storage requirements, though. It 
-appears it may need two full mirrors worth for the replication, but they 
-can be spread out over a WAN if need be.
+lvcreate -i3 -I32 -l98 -nmy_lv my_vg
+lvdisplay shows 1024 as the value for Read Ahead Sectors.
 
-http://www.coda.cs.cmu.edu/index.html
+When i use the command lvchange to change the value of read ahead
+sector with value more that or equal to 256 i get following error..
 
+linux# lvchange -r 340 /dev/my_vg/my_lv
+lvchange -- ERROR "Invalid Argument" read ahead sector change
+linux#
+linux#
 
+After debugging i found that in drivers/block/blkpg.c file blk_ioctl( )
 
-iSCSI RAID, anyone?
+Case BLKRASET :
 
-http://www.simplesan.com/products/iscsiarrays.htm
+	if (arg > 0xff )
+		return -EINVAL;
 
-    / Rickard Olsson,IT-Konsult/
-   / Telefon: +46 70 635 01 42/
-  / http://www.webhackande.se/
+Effectively this does not allow value greater that 255 for read ahead.
+Is there a limitation that the read ahead sectors can't have value more
+than 255 ? If yes then why lvdisplay shows 1024 as the default value for
+read ahead sectors.
+
+Thanks
+-Sachin
