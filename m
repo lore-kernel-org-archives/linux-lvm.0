@@ -1,19 +1,103 @@
-Message-ID: <376E4C78.341E42B6@mainz.ibm.de>
-Date: Mon, 21 Jun 1999 16:30:16 +0200
-From: Udo Weber <udo.weber@mainz.ibm.de>
-MIME-Version: 1.0
-Subject: [linux-lvm] pvcreate once more
-Content-Type: multipart/mixed;
- boundary="------------3075473DDB8F6A5AD5D7BAB1"
+From: Steve_J_Brueggeman@notes.seagate.com
+Message-ID: <88256797.005B400D.00@sv-gw1.stsv.seagate.com>
+Date: Mon, 21 Jun 1999 11:32:31 -0500
+Subject: Re: [linux-lvm] pvcreate once more
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-This is a multi-part message in MIME format.
---------------3075473DDB8F6A5AD5D7BAB1
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+
+Oops, I forgot to copy the list.
+---------------------- Forwarded by Steve J Brueggeman on 06/21/99 11:34 AM
+---------------------------
+
+
+Steve J Brueggeman
+06/21/99 11:30 AM
+
+To:   Udo Weber <udo.weber@mainz.ibm.de> @ INTERNET
+cc:
+
+Subject:  Re: [linux-lvm] pvcreate once more  (Document link not converted)
+
+
+Yep, you've found a bug.  The problem is that you've got a Win-98 extended
+partition, (ID=0x0f).
+
+When LVM goes through to determine the validity of the partition you
+specified, it does not recognize that  you have any extended partitions,
+thusly, does not scan for any logical partions on an extended partition.
+
+Try this patch.  (WARNING!! I have not tried this patch, so use at your own
+risk!!!))
+To apply this patch, cut-it-out of your E-Mail, and type the following
+cd {your-lvm-source-tree}; patch -p1 <{win98-patch-filename}
+
+Where {your-lvm-source-tree} is the name of the directory you untared the
+LVM sources, and {win98-patch-filename} is the directory/filename of the
+patch file listed below.  (don't type the braces in the command line above)
+
+
+Steve Brueggeman
+
+-------------Cut here--------------
+diff -Naur 0.6.new.b/tools/lib/pv_get_size.c
+0.6.new.c/tools/lib/pv_get_size.c
+--- 0.6.new.b/tools/lib/pv_get_size.c    Thu Feb 25 18:46:28 1999
++++ 0.6.new.c/tools/lib/pv_get_size.c    Mon Jun 21 11:19:39 1999
+@@ -111,10 +111,11 @@
+                  i, part[i].sys_ind, i, part[i].nr_sects);
+ #endif
+          /* is it a welcome extended partition? */
+-         if ( part[i].sys_ind == DOS_EXTENDED_PARTITION ||
++         if ( part[i].sys_ind == DOS_EXTENDED_PARTITION   ||
++          part[i].sys_ind == WIN98_EXTENDED_PARTITION ||
+               part[i].sys_ind == LINUX_EXTENDED_PARTITION) {
+ #ifdef DEBUG
+-            debug ( "pv_get_size -- DOS/LINUX_EXTENDED_PARTITION\n");
++            debug ( "pv_get_size --
+DOS/LINUX/WIN98_EXTENDED_PARTITION\n");
+ #endif
+             extended_flag = 1;
+             offset = extended_offset + part[i].start_sect;
+diff -Naur 0.6.new.b/tools/pvcreate.c 0.6.new.c/tools/pvcreate.c
+--- 0.6.new.b/tools/pvcreate.c     Thu Feb 25 18:46:29 1999
++++ 0.6.new.c/tools/pvcreate.c     Mon Jun 21 11:22:55 1999
+@@ -199,6 +199,11 @@
+                               "\"%s\"\n",
+                               cmd, pv_name);
+             continue;
++         } else if ( part.sys_ind == WIN98_EXTENDED_PARTITION) {
++            fprintf ( stderr, "%s -- can't use Win-98 extended partition "
++                              "\"%s\"\n",
++                              cmd, pv_name);
++            continue;
+          } else if ( part.sys_ind != LVM_PARTITION) {
+             fprintf ( stderr, "%s -- invalid partition type 0x%x for
+\"%s\""
+                               " (must be 0x%x)\n", cmd, part.sys_ind,
+-------------Cut here--------------
+
+
+
+
+
+
+
+Udo Weber <udo.weber@mainz.ibm.de> on 06/21/99 09:30:16 AM
+
+To:   linux-lvm@msede.com
+cc:    (bcc: Steve J Brueggeman)
+
+Subject:  [linux-lvm] pvcreate once more
+
+
+
 
 Hi,
 sorry for the last mail, I don't know why but something was left of this
@@ -24,44 +108,7 @@ attachment:
 ******************************************************************
 Hi LVM-specialists,
 
-I'm new here the Linux-LVM-array. This means I was downloading all
-needed software+patches, compiled successfull and also installed without
-
-erors on my IBM-Thinkpad (300 MHz PII, 128 MB RAM, 8GByte HD).
-I have all my LINUX-stuff on several extended partitions.
-
-Now at first some generally questions (I don't  found an answer for this
-
-in the docu):
-Is it possible to create a PV on a extended partion or do I need only
-primary partions ?
-I think pvcreate writes something at the top of the physical volume (
-whole PV or partion).
-Do that works well with other OS-formated parts of the same hdisk ?
-
-If the first question is no, forget the rest of this mail!
-If it should works please help. Here are all infos related to my
-problem:
-
-################################################################
-
-Welcome to SuSE Linux 6.1 (i386) - Kernel 2.2.10 (tty4).
-
-mumpel:~ # vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: you may not have an actual backup of your volume
-group
-
-mumpel:~ # vgchange -a y
-vgchange -- no volume groups found
-
-mumpel:~ # cat /proc/lvm
-LVM module version 0.6  (26/02/1999)
-
-Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
-Global: 139 bytes vmalloced   IOP version: 4   0:21:47 active
-
+<Snippage>
 mumpel:~ # fdisk -l
 
 Disk /dev/hda: 240 heads, 63 sectors, 1058 cylinders
@@ -80,46 +127,6 @@ Units = cylinders of 15120 * 512 bytes
 mumpel:~ # pvcreate /dev/hda10
 pvcreate -- extended partition "/dev/hda10" doesn't exist
 
-mumpel:~ # uname -a
-Linux mumpel 2.2.10 #1 Sun Jun 20 02:03:14 MEST 1999 i686 unknown
-
-mumpel:~ # lsmod
-Module                  Size  Used by
-lvm                    29472   0  (autoclean)
-sd_mod                 15856   0  (autoclean) (unused)
-dummy0                   684   1  (autoclean)
-nls_iso8859-1           2020   3  (autoclean)
-nls_cp437               3548   3  (autoclean)
-vfat                   11292   3  (autoclean)
-fat                    25600   3  (autoclean) [vfat]
-
-mumpel:~ # ls -l /dev/hda* /dev/lvm
-brw-rw----   1 root     disk       3,   0 May  1 00:50 /dev/hda
-brw-rw----   1 root     disk       3,   1 May  1 00:50 /dev/hda1
-brw-rw----   1 root     disk       3,  10 May  1 00:50 /dev/hda10
-brw-rw----   1 root     disk       3,  11 May  1 00:50 /dev/hda11
-brw-rw----   1 root     disk       3,  12 May  1 00:50 /dev/hda12
-brw-rw----   1 root     disk       3,  13 May  1 00:50 /dev/hda13
-brw-rw----   1 root     disk       3,  14 May  1 00:50 /dev/hda14
-brw-rw----   1 root     disk       3,  15 May  1 00:50 /dev/hda15
-brw-rw----   1 root     disk       3,   2 May  1 00:50 /dev/hda2
-brw-rw----   1 root     disk       3,   3 May  1 00:50 /dev/hda3
-brw-rw----   1 root     disk       3,   4 May  1 00:50 /dev/hda4
-brw-rw----   1 root     disk       3,   5 May  1 00:50 /dev/hda5
-brw-rw----   1 root     disk       3,   6 May  1 00:50 /dev/hda6
-brw-rw----   1 root     disk       3,   7 May  1 00:50 /dev/hda7
-brw-rw----   1 root     disk       3,   8 May  1 00:50 /dev/hda8
-brw-rw----   1 root     disk       3,   9 May  1 00:50 /dev/hda9
-crw-r-----   1 root     root     109,   0 Jun 20 02:47 /dev/lvm
-
-mumpel:~ # mount
-/dev/hda9 on / type ext2 (rw)
-proc on /proc type proc (rw)
-/dev/hda1 on /C type vfat (rw)
-/dev/hda5 on /D type vfat (rw)
-/dev/hda6 on /E type vfat (rw)
-/dev/hda8 on /REDHAT type ext2 (rw)
-none on /dev/pts type devpts (rw)
 
 and here now the debug-info from pvcreate:
 mumpel:~ # pvcreate -d /dev/hda10
@@ -196,12 +203,6 @@ Thanks,
 Udo
 
 
---------------3075473DDB8F6A5AD5D7BAB1
-Content-Type: text/plain; charset=us-ascii;
- name="Lvm.txt"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="Lvm.txt"
+
 
 Welcome to SuSE Linux 6.1 (i386) - Kernel 2.2.10 (tty4).
---------------3075473DDB8F6A5AD5D7BAB1--
