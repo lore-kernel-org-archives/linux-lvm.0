@@ -1,10 +1,8 @@
-From: Thomas Bader <thomasb@trash.net>
-Subject: Re: [linux-lvm] LV not available
-Message-ID: <20021227221750.GA20706@trash.net>
-References: <20021227135657.GB13292@trash.net> <Pine.LNX.4.44.0212271404030.23297-100000@junior.lunanet.biz> <20021227212753.GA16624@trash.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021227212753.GA16624@trash.net>
+Message-ID: <1041074125.3e0d87cdaaece@ogd.nl>
+From: Patrick van den Berg <P.van.den.Berg@ogd.nl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Problems mounting LVM root volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,56 +13,86 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 27 16:17:02 2002
+Date: Sat Dec 28 05:15:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-* Thomas Bader <thomasb@trash.net> [021227 22:27]:
-> fullmoon:~# pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/md/0"  is associated to unknown VG "vg00" (run vgscan)
-> pvscan -- inactive PV "/dev/md/2"  is associated to unknown VG "vg00" (run vgscan)
-> pvscan -- inactive PV "/dev/md/3"  is associated to unknown VG "vg00" (run vgscan)
-> pvscan -- inactive PV "/dev/md/4"  is associated to unknown VG "vg00" (run vgscan)
-> pvscan -- total: 4 [185.36 GB] / in use: 4 [185.36 GB] / in no VG: 0 [0]
+Hello everybody, 
 
-Ouups.... I just saw quite a big error.  /dev/md/0 shouldn't
-be part of a VG:
+I'm new at using LVM and I ran into trouble using it. I've got problems 
+mounting an LVM volume as root on my system running Gentoo Linux 1.4. My 
+configuration is as follows (skip to the bottom of the text for the actual 
+error message): 
 
--->-->-->--
-fullmoon:~# pvdisplay /dev/md/0
---- Physical volume ---
-PV Name               /dev/md/0
-VG Name               vg00
-PV Size               38.17 GB [80043008 secs] / NOT usable 4.18 MB [LVM: 162 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                2
-PE Size (KByte)       4096
-Total PE              9769
-Free PE               0
-Allocated PE          9769
-PV UUID               55g4wS-tvR6-cu7V-FwnH-JfR7-14ij-HtVqYf
-fullmoon:~# df -h
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/md/0             5.3G  1.5G  3.5G  30% /
---<--<--<--
+Gigabyte mainboard with onboard Promise RAID. I've got 2 80GB discs attached 
+(same model) and configured as RAID1. I installed via the Gentoo RC1 Stage 1 
+CDROM. During boot of the CD I had to abort and add the "IDE0=0x9400,0x9802 
+IDE2=0x9c00,0xa002" parameters to be able to load the pdcraid module. 
 
-There's something really strange with my system.  I never
-have done a pvcreate on /dev/md/0... please also note the
-different sizes, /dev/md/0 has with pvdisplay and df.
+My fstab looks as follows: 
+ 
+/dev/ataraid/disc0/part1  /boot       ext3      noauto,noatime  1  1 
+/dev/vg3/rootlv           /           reiserfs  noatime         0  0 
+/dev/ataraid/disc0/part2  none        swap      sw              0  0 
+/dev/cdroms/cdrom0        /mnt/cdrom  iso9660   noauto,ro       0  0 
+proc                      /proc       proc      defaults        0  0 
+tmpfs                     /dev/shm    tmpfs     defaults        0  0 
 
-I have uploaded the output of 'pvscan -d', 'vgscan -d',
-'vgchange -day' and 'vgcfgrestore -ll' to
+I also compiled my kernel using the gentoo-sources, and with the following 
+options enabled: 
 
-  http://trash.net/~thomasb/files/ptmp/lvm/
+- LVM support 
+- Built-in RAM disk support with initrd 
+- DEV fs support 
+- mount DEV filesystem at boot
+- ReiserFS support 
 
-Maybe, someone can help me...
+I also ran lvmcreate_initrd with the -M option, because everything is compiled 
+in the kernel. Also, when I run lvmceate_initrd without the -M options, it 
+returns errors and the lvm image is not created. 
 
--- 
-<https://trash.net/~thomasb/>   PGP and OpenPGP encrypted mail preferred.
-"We can't buy more time, 'cause time won't accept our money."
-		-- Bad Religion
+My grub,conf (linked to menu.lst) looks as follows: 
+ 
+default 0 
+timeout 30 
+splashimage=(hd0,0)/boot/grub/splash.xpm.gz 
+
+title=Gentoo 1.4 GNU/Linux on Antigone 
+root (hd0,0) 
+kernel /boot/bzImage root=/dev/vg3/rootlv ide0=0x9400,0x9802 ide2=0x9c00,0xa002 
+initrd /boot/initrd-lvm.gz 
+
+
+When I boot the system grub starts correctly, but when grub wants to boot my 
+system the following messages appear: 
+
+Code: 
+RAMDISK: Compressed image found at block 0 
+Freeing initrd memory: 994k freed. 
+VFS: Mounted root (ext2 filesystem). 
+Mounted devfs on /dev 
+vgscan -- found inactive volume group "vg3" 
+vgscan -- ERROR 28 writing volumegroup backup file /etc/lvmtab.d/vg3.tmp in 
+vg_cfgbackup.c [line273] 
+vgscan -- ERROR: "lvm_tab_vg_remove(): unlink" removing volume group "vg3" 
+from "/etc/lvmtab.d" 
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" succesfully created 
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group 
+
+vgchange -- no volume groups found 
+
+VFS: Cannot open root device "vg3/rootlv" or 00:00 
+Please append a correct "root=" boot option 
+Kernel panic: VFS: Unable to mount rootfs on 00:00 
+
+
+Now, the strange thing is, when I boot via the CD and do vgscan and
+vgchange -ay by hand, I can mount /dev/vg3/rootlv normally! 
+
+Does anybody got any ideas? I've run out of them  
+
+Thanks for any help in advance. When you need any more info, just say so. 
+
+Regards, 
+Patrick
