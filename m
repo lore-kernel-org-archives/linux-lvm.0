@@ -1,56 +1,36 @@
-Date: Sat, 17 Jun 2000 11:03:28 +0200
+Date: Sat, 17 Jun 2000 17:58:54 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@Sistina.com>
-Subject: Re: [linux-lvm] LVM patch for linux-xfs-2.4
-Message-ID: <20000617110328.A6436@hmsysv.t-online.de>
+Subject: Re: [linux-lvm] vgscan fails to find vg
+Message-ID: <20000617175854.A7641@hmsysv.t-online.de>
 Reply-To: Mauelshagen@Sistina.com
-References: <20000617024951.A15926@ladystrange.bluehorizon.nl>
+References: <20000613072910.A9094@bar.nowhere>
 Mime-Version: 1.0
-In-Reply-To: <20000617024951.A15926@ladystrange.bluehorizon.nl>; from pamvdam@ramoth.xs4all.nl on Sat, Jun 17, 2000 at 02:49:51AM +0200
+In-Reply-To: <20000613072910.A9094@bar.nowhere>; from zoo1@corecomm.net on Tue, Jun 13, 2000 at 07:29:10AM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: pamvdam@ramoth.xs4all.nl
+To: zoo1@corecomm.net
 Cc: linux-lvm@msede.com
 
+On Tue, Jun 13, 2000 at 07:29:10AM -0400, zoo1@corecomm.net wrote:
+> On Tue, Jun 13, 2000 at 12:07:12PM +0200, Heinz J. Mauelshagen wrote:
+> >On Mon, Jun 12, 2000 at 07:08:24PM -0400, zoo1@corecomm.net wrote:
+> 
+> >> i've got a 32KB debug output file of vgscan failing; what would be
+> >> the best way of submitting it to whom?
+> 
+> >Send it to the list please.
+> 
+> okay, here it comes... the vg is on /dev/hda11 with no other pv's on the
+> disk.
+> 
 
-Thanks Pascal,
+<SNIP vgscan utput>
 
-i've applied it.
-
-On Sat, Jun 17, 2000 at 02:49:51AM +0200, pamvdam@ramoth.xs4all.nl wrote:
-> 
-> Hi!
-> 
-> I'm currenlty hacking the latest XFS tree from SGI which is based on
-> linux kernel 2.4test1 with LVM. Except for the XFS addition this
-> kernel has more customizations. One of them, stops the LVM tools from working.
-> 
-> Symptoms: vgscan, pvscan, pvcreate and friends aren't able to recogneize
-> 	  any PV's or disks/partitions any more.
-> 
-> The SGI xfs-2.4test1 tree has also an addition which adds some extra fields
-> to /proc/partitions.
-> 
-> [/proc/partitions]
-> ------------------
-> 
-> shadylady:~# cat /proc/partitions
-> major minor  #blocks  name     rio rmerge rsect ruse wio wmerge wsect wuse running use aveq
-> 
-> ------------------
-> 
-> The file lvm_dir_cache.c contains routines to parse only 4 fields of this file
-> and rapidly goes out of sync.
-> 
-> The attached patch solves the problem for all future /proc/partitions additions
-> unless the format of the first 4 would be changed.
-> 
-> Best regards,
-> 
-> 	Pascal van Dam
-> 
+The output shows, that the Volume Group is exported.
+Have you tried to import it again with for eg. "vgimport vg /dev/hda11"?
 
 -- 
 
