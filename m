@@ -1,8 +1,15 @@
-Message-Id: <20020201112226.A3975@nshhvrnbk013.netshare.ag>
-From: "STEFANG(GMX)" <sgiessler@gmx.net>
-Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementationre
-    ady for beta testing
+Message-Id: <20020131133552.A9076@fib011235813.fsnet.co.uk>
+References: <OFBCE93B66.F7B9C14E-ON85256B52.006B8AB3@raleigh.ibm.com>
+    <20020131125211.A8934@fib011235813.fsnet.co.uk>
+    <20020201045518.A10893@devserv.devel.redhat.com>
+    <20020131130913.A8997@fib011235813.fsnet.co.uk>
+    <20020201051251.B10893@devserv.devel.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020201051251.B10893@devserv.devel.redhat.com>;
+    from arjanv@redhat.com on Fri, Feb 01, 2002 at 05:12:51AM -0500
+From: Joe Thornber <thornber@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] Re: [ANNOUNCE] LVM reimplementation ready for beta testing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,37 +20,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 04:26:02 2002
+Date: Fri Feb  1 04:31:03 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Arjan van de Ven <arjanv@redhat.com>
+Cc: Joe Thornber <thornber@fib011235813.fsnet.co.uk>, lvm-devel@sistina.com, Jim McDonald <Jim@mcdee.net>, Andreas Dilger <adilger@turbolabs.com>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, evms-devel@lists.sourceforge.net
 
-Hallo list,
-
-on Fre, 01 Feb 2002, Heinz J . Mauelshagen (mauelshagen@sistina.com) wrote:
-
-> > > It is quite intersting how many people don't take backups even though
-> > > almost everybody claims to know that backups are crucial and some of
-them
-> > > know that they are still, even though they might have RAID in place.
+On Fri, Feb 01, 2002 at 05:12:51AM -0500, Arjan van de Ven wrote:
+> On Thu, Jan 31, 2002 at 01:09:13PM +0000, Joe Thornber wrote:
 > > 
-> > You cannot replace Backups with a RAID system...
+> > Now our hero decides to PV move PV2 to PV4:
+> > 
+> > 1. Suspend our LV (254:3), this starts queueing all io, and flushes
+> >    all pending io. 
 > 
-> Which is exactly my point above ;-)
+> But "flushes all pending io" is *far* from trivial. there's no current
+> kernel functionality for this, so you'll have to do "weird shit" that will
+> break easy and often.
 
-So I got you wrong, sorry ;-)
+Here's the weird shit.  If you can see how to break it, I'd like to
+know.
 
-> RAID DOES NOT REPLACE BACKUPS!
+Whenever the dm driver maps a buffer_head, I increment a 'pending'
+counter for that device, and hook the bh->b_end_io, bh->b_private
+function so that this counter is decremented when the io completes.
+This doesn't work with ext3 on 2.4 kernels since ext3 believes the
+b_private pointer is for general filesystem use rather than just
+b_end_io, however Stephen Tweedie and I have been discussing ways to
+get round this.  On 2.5 this works fine since the bio->bi_private
+isn't abused in this way.
 
-Full ACK.
+> Also "suspending" is rather dangerous because it can deadlock the machine
+> (think about the VM needing to write back dirty data on this LV in order to
+>  make memory available for your move)...
 
-CU,
-   Stefan
--- 
-Stefan Giessler                                       e-mail:
-sgiessler@gmx.net
+You are correct, this is the main flaw IMO with the LVM1 version of
+pvmove (which was userland with locking on a per extent basis).
 
-LET Jesus be YOUR anchor!
+However for LVM2 the device will only be suspended while a table
+is loaded, *not* while the move takes place.  I will however allocate
+the struct deferred_io objects from a mempool in 2.5.
 
-So when Satan rocks your boat, THROW Jesus overboard!
+- Joe
