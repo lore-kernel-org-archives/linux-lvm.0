@@ -1,11 +1,9 @@
-Date: Fri, 12 Oct 2001 23:43:18 -0600
-From: Andreas Dilger <adilger@turbolabs.com>
+Date: Sat, 13 Oct 2001 02:20:01 -0600
 Subject: Re: [linux-lvm] pv recovery after trashing partition table.
-Message-ID: <20011012234318.F27981@turbolinux.com>
-References: <20011012.204509.-448365.0.james.cromie@juno.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011012.204509.-448365.0.james.cromie@juno.com>
+Message-ID: <20011013.022001.-448365.3.james.cromie@juno.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary=--__JNP_000_3c9a.5eff.0b20
+From: Jim Cromie <james.cromie@juno.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,62 +15,74 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jim N Cromie <james.cromie@juno.com>
+To: adilger@turbolabs.com
 Cc: linux-lvm@sistina.com
 
-On Oct 12, 2001  20:45 -0600, Jim N Cromie wrote:
-> so following your suggestions,,
-> 
-> gpart.linux is telling me unexpected results:
-> 
-> hda1 data matches, allowing for the -1 offset of cylinder numbers, wrt fdisk.
-> hda2 is reported as 94Mb DOS, not  Linux swap.
-> hda3-4 are un-recognized. (reported as zeros)
+This message is in MIME format.  Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-Yeah, I tried gpart once as well, and it was less-than-stellar at finding
-LVM stuff (possibly because of the fact that the ext2 superblock wasn't
-aligned properly for a normal partition table).
+----__JNP_000_3c9a.5eff.0b20
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-> dumpe2fs /dev/hda3 shows
-> Block-ct = 8032, Block-size = 1024
-> 
-> fdisk shows same partition having 16065 512 byte blocks, ie different by
-> 1 block.
+again, thanks Andreas,
 
-Well, since the block size is 1kB, the last 512-byte chunk is ignored by
-ext2, so 16065 is probably correct.  Also, it is hard to specify "1 block"
-with a partition table (usually it must be aligned on a cylinder start
-or something like that).
+Having read to the end of `man gpart`, I encountered the useful -
 
-> fsck -V /dev/hda3 works, but doesnt really seem to check much.  No errors
-> reported, and if the earlier partition table was correct, then this is
-> silently wrong, but...
+gpart -vdg /boot/boot.bak
 
-Well, unless you use "-f" it is only looking at the superblock "status"
-flag and not much else.  It does still verify that the device size is
-big enough for the filesystem, however.
+which I had lying around (good luck again).  The output(s) confirm 
+that my manually fdisk'd partition matches the original.
 
-> Separately, is there an LVM PV super-block pattern that I could look for?
+So somehow I managed to corrupt hda4 at about the same time that
+I blanked the MBR.  I dont know how, but Ill accept that theyre
+causally (not casually) related.
 
-Yes, it will be "HM\001\000" (in hex 48 4d 01 00), unless you did the
-"LVM upgrade dance" with version 1.0, in which case it may be "HM\002\000".
-This would be at byte 0 of your missing partition.
+I looked a bit at gpart's partition-type-guessing code, it shouldnt
+be too hard to work out which bytes are failing gpart's guesser.
+Getting LVM to accept my hacks may be much harder.
 
-> I believe I caould take a representative od -x output fragment, replace
-> varying fields with periods, and use it as a perl regular-expression to
-> test against my own od-x output.  If this works, then the block offset
-> should be evident from the matching addresses.
+So how big is an LVM super-block ?
 
-If you download the e2fsprogs source (http://sf.net/projects/e2fsprogs)
-there is a program "findsuper" which will look for ext2 superblock
-signatures.  They will be some arbitrary distance from the start of the
-partition because of LVM stuff, but at least you will have an idea if
-the filesystem is still there.
+I always have the (probably 1-way) fallback - a partion type change, 
+then an fsck to see what it finds.
+----__JNP_000_3c9a.5eff.0b20
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3Dcontent-type content=3Dtext/html;charset=3Dus-ascii>
+<META content=3D"MSHTML 6.00.2600.0" name=3DGENERATOR></HEAD>
+<BODY bottomMargin=3D0 leftMargin=3D3 topMargin=3D0 rightMargin=3D3>
+<DIV></DIV>
+<DIV>again, thanks Andreas,</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Having read to the end of `man gpart`, I encountered the useful -</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>gpart -vdg /boot/boot.bak</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>which I had lying around (good luck again).&nbsp; The output(s) =
+confirm=20
+</DIV>
+<DIV>that my manually fdisk'd partition matches the original.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>So somehow I managed to corrupt hda4 at about&nbsp;the same time that<=
+/DIV>
+<DIV>I blanked the MBR.&nbsp; I dont know how, but Ill accept that theyre</=
+DIV>
+<DIV>causally (not casually)&nbsp;related.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>I looked a bit at gpart's partition-type-guessing&nbsp;code, it=20
+shouldnt</DIV>
+<DIV>be too hard to work out which bytes are&nbsp;failing&nbsp;gpart's=20
+guesser.</DIV>
+<DIV>Getting LVM to accept my hacks may be much harder.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>So how big is an LVM super-block ?</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>I always have the (probably 1-way) fallback - a partion type change, <=
+/DIV>
+<DIV>then an fsck to see what it finds.</DIV></BODY></HTML>
+
+----__JNP_000_3c9a.5eff.0b20--
