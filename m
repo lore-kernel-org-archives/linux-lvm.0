@@ -1,9 +1,8 @@
-Message-Id: <3C67A0D3.9060803@eigner.com>
-From: Klaus Strebel <klaus.strebel@eigner.com>
+From: Marc MERLIN <marc_lvm@merlins.org>
+Message-Id: <20020211173404.GB23@merlins.org>
 MIME-Version: 1.0
-References: <2D0AFEFEE711D611923E009027D39F2B02F08F@cdserv.meridian-data.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: Oops unmounting snapshot of xfs filesystem
+Content-Disposition: inline
+Subject: [linux-lvm] Can't mke2fs lv
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,72 +13,138 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 11 04:46:01 2002
+Date: Mon Feb 11 11:34:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: "Stephenson, Dale" <dstephenson@snapserver.com>
-Cc: "'linux-xfs@oss.sgi.com'" <linux-xfs@oss.sgi.com>, "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Stephenson, Dale wrote:
-> I have been running into an oops when umounting the snapshot of an xfs
-> filesystem, or following the umount.  For instance, a umount followed by an
-> lvremove will oops in the lvremove, while a mount/umount/mount/umount
-> sequence will oops on the second or third umount.
-> 
-> What does seem consistent is the error message logged on each umount.  Here
-> are the messages from a mount/umount sequence:
-> 
-> <4> Feb  7 11:20:00 kernel: Mounting filesystem "lvm(58,1)" in no-recovery
-> mode.  Filesystem will be inconsistent. 
-> <2> Feb  7 11:20:02 kernel: lvm - lvm_map: ll_rw_blk write for readonly LV
-> /dev/volgr0/lvol1 
-> <2> Feb  7 11:20:02 kernel: lvm - lvm_map: ll_rw_blk write for readonly LV
-> /dev/volgr0/lvol1 
-> <4> Feb  7 11:20:02 kernel: I/O error in filesystem ("lvm(58,1)") meta-data
-> dev 0x3a01 block 0xa00020 
-> <4> Feb  7 11:20:02 kernel:        ("xlog_iodone") error 5 buf count 1024 
-> <4> Feb  7 11:20:02 kernel: xfs_force_shutdown(lvm(58,1),0x2) called from
-> line 939 of file xfs_log.c.  Return address = 0xc01b3cbc 
-> <4> Feb  7 11:20:02 kernel: Log I/O Error Detected.  Shutting down
-> filesystem: lvm(58,1) 
-> <4> Feb  7 11:20:02 kernel: Please umount the filesystem, and rectify the
-> problem(s) 
-> 
-> I've attached the oops (run through ksymoops) from this particular umount.
-> The snapshot is mounted ro,nouuid,norecovery.  The source of the snapshot
-> contains an unmounted xfs filesystem, which was unmounted at the time of
-> snapshot creation.  There has been no intentional I/O activity to the
-> snapshot, either.
-> 
-> It looks to me like xfs is trying to flush something to disk on the umount,
-> even though the filesystem is read only and no recovery.  I would not have
-> expected this.  Is it correct behavior?
-> 
-> I made the snapshot writeable, but kept the mount options the same.  I was
-> able to mount/umount many times without oops, I/O errors, or
-> xfs_force_shutdown.
-> 
-> I did notice similar behavior when a full snapshot returns an I/O error --
-> xfs_force_shutdown, with an oops following soon thereafter.
-> 
-> System details:
-> Celeron with 512 MB of RAM and WD 45GB harddrives.
-> 128 MB swap, one vg consisting of a one-drive RAID 0.
-> Kernel 2.4.16 with 12/14/01 xfs CVS.
-> LVM CVS of 1/21/02 (functionally identical to 1.0.2, I believe).
-> LVM's linux-2.4.11-VFS-lock.patch.
-> xfs_fs_freeze() patch posted by Eric Sandeen.
-> Anselm Kruis' writable snapshot patch.
+I've never had this problem before, it's on a 2.4.14 kernel with lvm
+1.0.1rc4:
 
-Had the same, disappeared when compiled the kernel with gcc-2.91.66 ! 
-Seems to be a compiler issue.
+gargamel:~# lvscan 
+lvscan -- ACTIVE            "/dev/BootMylexLVM/usr" [1.50 GB]
+lvscan -- ACTIVE            "/dev/BootMylexLVM/var" [2.00 GB]
+lvscan -- ACTIVE            "/dev/BootMylexLVM/home" [115.00 GB]
+lvscan -- 3 logical volumes with 118.50 GB total in 1 volume group
+lvscan -- 3 active logical volume
 
-Ciao
-Klaus
+I was able to mke2fs /dev/BootMylexLVM/usr just fine.
+However, doing var and home fails like this:
 
+gargamel:~# mke2fs  /dev/BootMylexLVM/var 
+mke2fs 1.25 (20-Sep-2001)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+262144 inodes, 524288 blocks
+26214 blocks (5.00%) reserved for the super user
+First data block=0
+16 block groups
+32768 blocks per group, 32768 fragments per group
+16384 inodes per group
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912
+
+mke2fs: Attempt to write block from filesystem resulted in short write zeroing block 524280 at end of filesystem
+gargamel:~# mke2fs  /dev/BootMylexLVM/home
+mke2fs 1.25 (20-Sep-2001)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+15073280 inodes, 30146560 blocks
+1507328 blocks (5.00%) reserved for the super user
+First data block=0
+920 block groups
+32768 blocks per group, 32768 fragments per group
+16384 inodes per group
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+        4096000, 7962624, 11239424, 20480000, 23887872
+
+File size limit exceeded
+
+
+Did I do something stupid, or do I need to upgrade?
+(I did do a quick search on this kind of failure, but didn't find anything)
+
+
+Details on the VG:
+gargamel:~# vgdisplay  -v
+--- Volume group ---
+VG Name               BootMylexLVM
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                255
+Cur LV                3
+Open LV               0
+MAX LV Size           1023.97 GB
+Max PV                255
+Cur PV                1
+Act PV                1
+VG Size               135.94 GB
+PE Size               16.00 MB
+Total PE              8700
+Alloc PE / Size       7584 / 118.50 GB
+Free  PE / Size       1116 / 17.44 GB
+VG UUID               opNV4o-2l8K-Vdtg-aUBK-c2uT-FbA7-BZFvJx
+
+--- Logical volume ---
+LV Name                /dev/BootMylexLVM/usr
+VG Name                BootMylexLVM
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                1.50 GB
+Current LE             96
+Allocated LE           96
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
+
+--- Logical volume ---
+LV Name                /dev/BootMylexLVM/var
+VG Name                BootMylexLVM
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 0
+LV Size                2.00 GB
+Current LE             128
+Allocated LE           128
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+--- Logical volume ---
+LV Name                /dev/BootMylexLVM/home
+VG Name                BootMylexLVM
+LV Write Access        read/write
+LV Status              available
+LV #                   3
+# open                 0
+LV Size                115.00 GB
+Current LE             7360
+Allocated LE           7360
+Allocation             next free
+Read ahead sectors     120
+Block device           58:2
+
+
+--- Physical volumes ---
+PV Name (#)           /dev/rd/disc0/part5 (1)
+PV Status             available / allocatable
+Total PE / Free PE    8700 / 1116
+
+
+Thanks,
+Marc
 -- 
-Klaus Strebel
-UNIX-Engineer
-klaus.strebel@eigner.com
-EIGNER - Precision Lifecycle Management -
-<http://www.eigner.com>
+Microsoft is to operating systems & security ....
+                                      .... what McDonalds is to gourmet cooking
+  
+Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
