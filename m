@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105152124.f4FLOmis021456@webber.adilger.int>
-Subject: Re: [linux-lvm] Software RAID and LVM hangs
-In-Reply-To: <Pine.LNX.4.31.0105151507530.2334-100000@dgently.hh.suse.de>
- "from Jens Bruckmann at May 15, 2001 03:20:51 pm"
-Date: Tue, 15 May 2001 15:24:46 -0600 (MDT)
+Return-Path: <totake66@home.com>
+Message-ID: <3B01AF42.C171FE86@home.com>
+Date: Tue, 15 May 2001 17:35:46 -0500
+From: Tom Otake <totake66@home.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
+References: <3B005823.33AEE05D@home.com> <20010515094004.B468@66bassett.freeserve.co.uk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,34 +18,79 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jens Bruckmann writes:
-> I have problems using software-RAID and LVM. We have connected two HP
-> XP256 via two fiber channel controllers and want to mirror from one
-> storage-box to the other. So I set up a RAID1-device /dev/md0 which
-> mirrors from one LUN of the 1st box to another LUN in the 2nd box. After
-> that, I set up a VG on that device with one LV.
-> 
-> So far, all works fine.
-> 
-> Then we tested, what happens, if one link to one of the two boxes fails
-> and we saw, that the software raid does not continue working if one link
-> is down. As I understand, the RAID1 should go on working on the second
-> copy and do a resync after the failed connection returns (that's what I
-> know from HP-UX with MirrorDisk/UX).
-> 
-> In /proc/mdstat you cannot see any hint, that one link is broken.
-> 
-> Do you have any solutions for this behaviour. Otherwise it would not make
-> any sense to use the software-raid in a high-availability environment.
+Yes, I've been able to recreate the second hang scenario, though I have to
+admit it wasn't exactly the same.  I started the copy of the data, created a
+new LV, which worked.  I ran mkreiserfs on the new LV, it worked.  I removed
+the new LV, also worked, then ran pvscan.  That's when the system hung.  All
+the while, the copy from CD to disk was going on.
 
-This should probably be sent to the RAID list, and not the LVM list.  It
-does not really have anything to do with LVM.
+I apologize if I sound like an idiot but I've never taken a stack trace for
+the linux kernel.  I assume this will require enabling magic sysrq.  I looked
+through the sysrq.txt but it didn't offer too much help, especially on how to
+save stack traces, etc.  Would it be possible to get a quick rundown on what
+commands/keys I need to use to get the data you need?
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Thanks
+
+Joe Thornber wrote:
+
+> On Mon, May 14, 2001 at 05:11:47PM -0500, Tom Otake wrote:
+> > I'm not sure if this has been brought up yet.  Over the weekend, my
+> > Linux hung up on me twice.  Considering that this never happened before
+> > and only two things have recently changed (LVM and ReiserFS) , I did
+> > some reading and came across the bug report for LVM on sistina's website
+> > about LVM deadlocking Linux.
+>
+> All the deadlocking issues have been due to either running snapshots
+> on 2.2 kernels or doing a 'pvmove' on 2.2 or 2.4.  It doesn't sound
+> like you were doing either.
+>
+> >
+> > I'm running kernle 2.4.3 with LVM compiled into the kernel.  LVM is
+> > 0.9.1_beta7, reiser is 3.x.0j.  All essential fs (/, /usr, /var, /tmp)
+> > are still using ext2 and linux partitions, non essential fs (/home
+> > amongst others) are all on  reiserfs with LVM, excluding /usr/local,
+> > which is still on ext2 and Linux partition.
+> >
+> > The first occurance:
+> > Running vmware (not on lvm/reiser) while browsing the web using netscape
+> > and running seti@home.  The system hung on me when I tried to access a
+> > web page that appeared to be task intensive, wether servlets,
+> > javascript, flash, or something else, I don't know.
+>
+> I used to get deadlocks from vmware without using LVM.
+>
+> > The second occurance:
+> > I was copying a large amount of data from a CDROM to my home dir (on
+> > lvm).  While the copy was in progress, I created a new LV.  This
+> > worked.  The system hung when I ran mkreiserfs on the new LV.
+>
+> This sounds more serious.  Can you reproduce it ?  If you can the
+> quickest way for us to find the problem is for you to build the kernel
+> with kdb and get stack traces for the relevent threads.
+>
+> > As I said, I'm not sure if the system hang was caused by the deadlock,
+> > since the system was dead.  If this is related to the deadlock issue,
+> > are there any possible workarounds, besides being mindful of the system
+> > load?
+>
+> I am not aware of any deadlock issues in beta7.  Has anyone else
+> experienced problems ?
+>
+> - Joe
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+--
+_______________
+Love cannot be much younger than the lust for murder.
+                -- Sigmund Freud
+
+-- Tom Otake
+-- totake66_nospam@home.com
+-- Remove _nospam
+-- #550
