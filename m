@@ -1,55 +1,60 @@
-Message-Id: <199902171032.AA25705@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-ID: <36CAA354.649CFB49@msede.com>
+Date: Wed, 17 Feb 1999 12:09:08 +0100
+From: Michael Marxmeier <mike@msede.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] root filesystem in lvm
-Date: Wed, 17 Feb 1999 11:30:07 MET
-In-Reply-To: <003401be5a59$6a3c04a0$6630aec1@trpc.dkfz-heidelberg.de>; from "Tobias Reber" at Feb 17, 99 10:39 am
+References: <003401be5a59$6a3c04a0$6630aec1@trpc.dkfz-heidelberg.de>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: tobias.reber@dkfz-heidelberg.de, linux-lvm@msede.com
-Cc: mge@u9ete.ez-darmstadt.telekom.de
+To: Tobias Reber <tobias.reber@dkfz-heidelberg.de>
+Cc: linux-lvm@msede.com
 
-> 
-> On a test system I have put the root filesystem into lvm. Everything works
-> fine, however during shutdown I cannot vgchange -a n to the volumegroup,
-> where the root filesystem sits. Does that any harm?
+Tobias Reber wrote:
+> On a test system I have put the root filesystem into lvm. 
 
-No it doesn't because "vgchange -an" does not write anything back to the
-physical volumes these days.
-The only cause for documenting this is to go the "clean" way to stop subsystems
-before halt/reboot.
+I assume you are using initrd?
 
-BTW: would you mind sending your solution to the list?
-     Tried an hour or so by myself but run into trouble doing
-     the switch from the boot partion to real-root-dev in a LV 8*(
+> Everything works fine, however during shutdown I cannot 
+> vgchange -a n to the volumegroup, where the root filesystem sits. 
+> Does that any harm?
 
-> Also did anybody out there look into lilo in order to make the kernel
-> bootable from an lvm volume?
+I don't think so. All vgchange -an is supposed to do is unregister 
+the volume group with the kernel. Since you are going to boot anyway 
+it does not make a difference.
+I had a short look at the source and it seems to be a nop anyway.
 
-Not that i'm aware of.
+> Also did anybody out there look into lilo in order to make the 
+> kernel bootable from an lvm volume? IMHO lvm looks very keen 
+> especially if you have large disks, where you still have only
+> 8 partitions. I prefer having my filesystem spread out into 
+> several partitions for /, /usr and so forth.
+
+While this should not be too hard i'm not sure if this makes sense. 
+Why not designate a small boot area on the disk (/boot) which holds
+the kernel image and a minimal recovery system and use a initrd?
+
+However it should be possible to use LILO. As far as i understand 
+LILO uses partition relative block numbers to load the kernel image. 
+We just need to make sure that they are relative to the dos style 
+partition. If included statically in the kernel the lvm driver could 
+execute the equivalent of a vgchange -ay and we should be able to 
+mount the root file system.
+However this will lead to some kernel bloat as some of the code which
+currently resides un user space in lvmlib and vgchange must also be 
+present in the kernel.
+ 
+For now i would suggest to make a small boot area and use initrd 
+to switch to lvm. This will also nicely avoid any stupid BIOS
+limitations.
 
 
-> IMHO lvm looks very keen especially if you have
-> large disks, where you still have only 8 partitions. I prefer having my
-> filesystem spread out into several partitions for /, /usr and so forth.
+Michael
 
-Yep.
-
-
-Heinz
---
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+Michael Marxmeier           Marxmeier Software GmbH
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Voice : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
