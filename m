@@ -1,14 +1,14 @@
-Return-Path: <au@hcsd.de>
-Date: Sun, 22 Apr 2001 23:50:28 +0200
-From: Stephan Austermuehle <au@hcsd.de>
-Message-ID: <20010422235028.A13358@babbage.hcsd.de>
-References: <20010422202214.A20864@babbage.hcsd.de> <20010422205547.C1984@dragon.blacknet.de>
+Return-Path: <bg@blacknet.de>
+Date: Mon, 23 Apr 2001 01:40:01 +0200
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] Kernel 2.2.19, RawIO, LVM, RAID -- who has it running?
+Message-ID: <20010423014001.D1984@dragon.blacknet.de>
+References: <20010422202214.A20864@babbage.hcsd.de> <20010422205547.C1984@dragon.blacknet.de> <20010422212248.A11432@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+	protocol="application/pgp-signature"; boundary="oFbHfjnMgUMsrGjO"
 Content-Disposition: inline
-In-Reply-To: <20010422205547.C1984@dragon.blacknet.de>; from bock@blacknet.de on Sun, Apr 22, 2001 at 08:55:47PM +0200
-Subject: [linux-lvm] Re: Kernel 2.2.19, RawIO, LVM, RAID -- who has it running?
+In-Reply-To: <20010422212248.A11432@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Sun, Apr 22, 2001 at 09:22:48PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,35 +22,39 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---UugvWAfsgieZRqgk
+--oFbHfjnMgUMsrGjO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-
-Hi Goetz!
-
-On Sun, Apr 22, 2001 at 08:55:47PM +0200, Goetz Bock wrote:
-
-> This actualle workes out of the box (see Patches/README). Get the latest
-
-Thanks for your hints, now I compiled the kernel with all the patches
-successfully. The only problem now is that the new kernel doesn't boot
-correctly: it hangs while initializing. I'm just trying to figure out
-why...
-
-Stephan
+Content-Transfer-Encoding: quoted-printable
 
 
---UugvWAfsgieZRqgk
+Joe,
+
+> > > LVM, and RAID patch 2.2.19-A1? Applying all these patches seems to be
+> > > inpossible.
+> > This actualle workes out of the box (see Patches/README).=20
+> I'm glad to see you've got this working. =20
+I'm sorry, but I'm not using it, I've just patched the kernel. My
+"production" systems only use LVM with out RAID (well, on a hardware
+raid actually)
+
+But I might know a person who is actually using LVM over soft raid (only
+version 0.9.1beta6), but I'll ask him.
+
+Cu,
+    Goetz.
+
+--oFbHfjnMgUMsrGjO
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1e-SuSE (GNU/Linux)
+Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE641IjH7C4M3wBLWYRAvmxAJ9Z31m1U8wSpzFKC7qSkfYWpsSijgCfY3dD
-sz3Mqux85MsK/S6aiqa6nMI=
-=ecsp
+iD8DBQE642vRf5srOMkjkQoRAi9xAKDyzO7vZC2w28UYKKloAX52B7p33QCg7Un/
+pn9xAud8mPf4UO98iH7YVXs=
+=Dady
 -----END PGP SIGNATURE-----
 
---UugvWAfsgieZRqgk--
+--oFbHfjnMgUMsrGjO--
