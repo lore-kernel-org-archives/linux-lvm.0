@@ -1,8 +1,8 @@
-MIME-Version: 1.0 (Apple Message framework v481)
-From: Stephan Budach <stephan.budach@jvm.de>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B98126A4-5B7D-11D6-A7F7-000393452E7E@jvm.de>
-Subject: [linux-lvm] Addiing new hdd to pv group
+From: Jims <theman@chaj.com>
+In-Reply-To: <E1727MA-0007Nd-00@hermes.sistina.com>
+Message-Id: <Pine.LNX.4.33.0204300048050.24127-100000@x.firesites.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: LVM Woes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,24 +13,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr 29 09:29:02 2002
+Date: Mon Apr 29 23:51:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+Still doesn't work. Getting the same error. Will send you the debug
+output. Any ideas?
 
-is it possible to expand an existing pv with an additional hdd, without=20=
+On Fri, Apr 26, 2002 at 12:24:16PM -0400, Jims wrote:
+>
+> Thanks for the suggestion. When I try it, here is what I get...
+>
+> /sbin/vgcfgrestore -n world -o /dev/sdd1 /dev/hda2
+> vgcfgrestore -- ERROR "vg_write(): open" storing VGDA of "world" on
+disks
+>
+> Am I supposed to do something to the new disk other than creating an LVM
+> partition on it ?
 
-loosing data, of course?
+You need to run pvcreate on it before vgcfgrestore.
 
-Thanks,
-Stephan
---
-Stephan Budach
-
-Jung von Matt/Services
-
-Glash=FCttenstrasse 38   			20357 Hamburg
-Telefon: +49-40-4321-1353    		Fax: +49-40-4321-1114
-eMail: stephan.budach@jvm.de	Internet: http://www.jvm.de
+Regards,
+Heinz    -- The LVM Guy --
