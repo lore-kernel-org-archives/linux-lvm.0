@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LV size increase
-Message-ID: <20020816120104.A12990@sistina.com>
-References: <000a01c2448e$cadcfbc0$ed9d70d5@o3games.com>
+Subject: Re: [linux-lvm] /proc/partition problem
+Message-ID: <20020816120315.B12990@sistina.com>
+References: <20020815084944kaoru@rifu.bsd.tnes.nec.co.jp>
 Mime-Version: 1.0
-In-Reply-To: <000a01c2448e$cadcfbc0$ed9d70d5@o3games.com>; from jesava@mail.com on Thu, Aug 15, 2002 at 09:05:59PM +0200
+In-Reply-To: <20020815084944kaoru@rifu.bsd.tnes.nec.co.jp>; from kaoru@bsd.tnes.nec.co.jp on Thu, Aug 15, 2002 at 08:49:44AM +0900
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,32 +14,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 16 05:15:02 2002
+Date: Fri Aug 16 05:18:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Aug 15, 2002 at 09:05:59PM +0200, Josef Chlapowski wrote:
+Well, we had support for correct logical volume names ages ago already.
+Hasn't been accepted by kernel folks :(
+
+We need to live with 'nasty' names in /proc/partitions, sorry.
+
+On Thu, Aug 15, 2002 at 08:49:44AM +0900, kaoru@bsd.tnes.nec.co.jp wrote:
 > Hi,
 > 
-> I just got more drives and want to add them to my volume but the max lv size of that volume is 1TB and the current size is like 900GB already so I can not add the new ones because of the size limit.
-
-Even though LVs are limited to 1TB in your configuration, you can still add
-new PVs to that VG making it larger than 1TB.
-In that case you can have multiple LVs up to 1TB in size.
-
-> Is it possible to change the max LV size without loosing any data?
-
-No :-(
-
-That's why you need to plan for your maximum LV size
-requirements at VG creation.
-
+> I reffered to /proc/partitions, a strange character code went 
+> into a name sequence when I created 26 or more volume of LV(s) 
+> on 2.4.19 with LVM-1.0.5. 
 > 
-> Thanks i.A
+> $ cat /proc/partitions
+> major minor  #blocks  name
 > 
-> - Josef
+>   58     0    3145728 lvma
+>   58     1    3145728 lvmb
+>   58     2     512000 lvmc
+>   58     3     204800 lvmd
+> .........
+>   58    24      53248 lvmy
+>   58    25      53248 lvmz
+>   58    26      53248 lvm{
+>   58    27      53248 lvm|
+>   58    28      53248 lvm}
+>   58    29      53248 lvm~
+>   58    30      53248 lvm
+>   58    31      53248 lvm
+>   58    32      53248 lvm
+>   58    33      53248 lvm
+>   58    34      53248 lvm
+> 
+> I think that this problem is depended on illegal codes of 
+> a disk_name function(fs/partitions/check.c). 
+> 
+> According to fs/partitions/check.c:
+> 
+> char *disk_name (struct gendisk *hd, int minor, char *buf)
+> {
+> .................
+> 
+>         if (part)
+>                 sprintf(buf, "%s%c%d", maj, unit+'a', part);
+>         else
+>                 sprintf(buf, "%s%c", maj, unit+'a');
+>         return buf;
+> 
+> }
+> 
+> I think it is better that the LVM staff discuss the fault of 
+> this code with Linux Kernel code maintainer.
+> 
+> --------
+> Kaoru
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 -- 
 
