@@ -1,13 +1,12 @@
-Date: Thu, 06 Sep 2001 18:14:12 -0500
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Feature : Merge two LV
-Message-ID: <12570000.999818052@dizzy>
-In-Reply-To: <20010906220553.Z32553@turbolinux.com>
-References: <Pine.LNX.4.30.0109062137150.11080-100000@x14.informatik.uni-brem
- en.de> <20010906220553.Z32553@turbolinux.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Fri, 7 Sep 2001 11:43:03 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] pv_move_pe() error again :/
+Message-ID: <20010907114303.C19457@vestdata.no>
+References: <E15f13v-0003bs-00@hermes.sistina.com> <20010906220514.A1537@vestdata.no> <E15f8l7-0008Di-00@hermes.sistina.com>
+Mime-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <E15f8l7-0008Di-00@hermes.sistina.com>; from fejf@gmx.de on Fri, Sep 07, 2001 at 01:41:22AM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,45 +18,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
+On Fri, Sep 07, 2001 at 01:41:22AM +0200, FEJF wrote:
+> there are no io-errors... but as the hd makes really scary noise when p=
+vmove=20
+> tries to move the remaining bytes. so i think the hd is damaged.
+> but all i want is to remove the damaged hd.
+> but pvreduce says i have to use pvmove to get rid of the remaining data=
+ and=20
+> pvmove gives the errors...
+> so i can't remove it :/ - is there a way to get rid of the hd without=20
+> destroying the rest of the data ? sth. like pvreduce --force ?
 
--- Andreas Dilger <adilger@turbolabs.com>
+No, don't think so.
 
-> On Sep 06, 2001  21:51 +0200, Henk Birkholz wrote:
->> It would have been easier (without moving the date manually) if some kind
->> of lvmerge would exist, which would merge the lv and thier fs
->> automatically. Maybe there is ia wayto do it, i simply don't know.
->> In that case i would be glad to know that way from you. (and be added to
->> you FAQ).
->
-> What you ask for is very complex.  It is not so much an issue of LVM
-> (which could do such a thing relatively easily), but a filesystem issue
-> (which is _very_ hard to do.  Even with a tree-based filesystem like
-> reiserfs or XFS, there are all sorts of duplicate identifiers stored in
-> the filesystem, like block numbers, inode numbers, etc, which would make
-> it complex to resolve.
+I have a patch, but I'm not so sure I can recommend that you use it.
+
+I only wrote it to copy off a single block of a bad disk - I'm not sure
+exactly how it will behave when moving multiple blocks (if the
+non-corrupted blocks will end up in the right spot, or if it writes too
+little data, so it will be some bytes off).
 
 
-	lvcreate -l somesize vgXX;
-	mkfs.ext2 -b4096 -i10240 /dev/vgXX/lvolY;
-	mount /dev/vgXX/lvolY /mnt;
-	find /lvolA/mount/point /lvolB/mount/point -xdev | cpio -pd --dot /mnt;
-	vi /etc/fstab;
-	<remove lvolA and lvolB, add in lvolY>
-	umount /mnt;
-	mount -a;
 
-If at this point you have what you want then lvremove lvolA & lvolB.
-Nice thing about it is that nothing gets removed until the new file
-system looks clean.
-
-If you're tight on space create a smaller volume, archive onto it
-instead of tape w/ bzip2 -9 (i.e., seriously squish the data), blow
-off the lvol's and recover from disk.
-
---
-Steven Lembark                                               2930 W. Palmer
-Workhorse Computing                                       Chicago, IL 60647
-                                                            +1 800 762 1582
+--=20
+Ragnar Kj=F8rstad
+Big Storage
