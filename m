@@ -1,13 +1,10 @@
-Return-Path: <jan@gondor.com>
-Date: Thu, 1 Mar 2001 22:23:33 +0100
-From: Jan Niehusmann <list039@gondor.com>
-Subject: Re: [linux-lvm] online resize of ext2
-Message-ID: <20010301222333.A2800@gondor.com>
-References: <B45465FD9C23D21193E90000F8D0F3DF68399D@mailsrv.linkvest.com> <200102211725.f1LHPPv31859@webber.adilger.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <200102211725.f1LHPPv31859@webber.adilger.net>; from adilger@turbolinux.com on Wed, Feb 21, 2001 at 10:25:24AM -0700
+Return-Path: <urs@isnogud.escape.de>
+Subject: Re: [linux-lvm] NFS
+References: <200102271700.f1RH0iE27053@webber.adilger.net>
+From: Urs Thuermann <urs@isnogud.escape.de>
+Date: 02 Mar 2001 10:56:15 +0100
+In-Reply-To: <200102271700.f1RH0iE27053@webber.adilger.net>; from Andreas Dilger on Tue, 27 Feb 2001 10:00:44 -0700 (MST)
+Message-ID: <m2ofvko5og.fsf@isnogud.escape.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,22 +16,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Feb 21, 2001 at 10:25:24AM -0700, Andreas Dilger wrote:
-> Any other ext2online users out there?
+Andreas Dilger <adilger@turbolinux.com> writes:
 
-Yes, I've been using it for some time without problems. (I had some 
-problems in 2.3.x, but they were probably caused by an unrelated bug
-that got triggered by the online-resize)
+> No, I've been doing it a long time.  LVM is a block device like a disk,
+> while NFS is a filesystem interface.  As long as the filesystem can
+> support NFS you are OK.
 
-I actually did things like resizing a fs while copying to it or compiling
-things on it, because I realised that the partition was to small to 
-complete the job without resizing.
+??  Has a file system to be written so that it supports NFS?  I
+thought all file systems beneath the VFS provide the same interface to
+the NFS server and can be exported via NFS.
 
-Jan
+> This limits you pretty much to ext2 or ext3 only, unless you have
+> reiserfs with up-to-date patches.
 
--- 
-OpenPGP-signierte bzw. -verschl�sselte Mail erw�nscht
-EMail-Key: 1024D/F12DA065 (=> Keyserver oder auf Anfrage)
+I have also exported iso9660 and msdos file systems on local block
+devices via NFS.
+
+
+urs
