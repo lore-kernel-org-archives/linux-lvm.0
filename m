@@ -1,50 +1,32 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Message-Id: <200006270213.e5R2DIb06983@webber.adilger.net>
-Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
-In-Reply-To: <3957E4B8.99CC906C@inet.net.nz> "from Dale Kemp at Jun 27, 2000
- 11:18:16 am"
-Date: Mon, 26 Jun 2000 20:13:18 -0600 (MDT)
+Message-ID: <39580FFF.42AD815D@inet.net.nz>
+Date: Tue, 27 Jun 2000 14:22:55 +1200
+From: Dale Kemp <dale@inet.net.nz>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
+References: <299BF5F5EF5ED31196760008C7D9AE5D03AFCA1F@STLABCEXG022> <3957E4B8.99CC906C@inet.net.nz> <20000627040212.A11246@gruyere.muc.suse.de>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Dale Kemp <dale@inet.net.nz>
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
+To: Andi Kleen <ak@suse.de>
+Cc: Linux LVM <linux-lvm@msede.com>
 
-Dale writes:
-> Looking at the Linux VFS (Virtual FileSystem) seems to show up some
-> problems, for example I was more than surprised to find a big union
-> with all the inode types from every kind of filesystem in Linux.
-> And yet there is still a call to register a filesystem with VFS.
-> Linux VFS should know nothing about other filesystems until its told
-> about them, for example when you insert a filesystem module into the kernel.
+> The generic VFS code just never looks into the union,it is certainly
+> abstractly used. Putting it into the union is just an performance optimization
+> to make it use one allocation less in critical paths. File systems that
+> do not want to change the source files are free to use the generic_ip
+> pointer instead and let it point to a private structure.
+>
+> -Andi (who prefers Linux VFS over ``8.3 macro hell'' Sun/BSD derived VFS)
 
-This is a well-known issue with non-kernel linux filesystem development,
-but it is not really fatal if your filesystem doesn't need a huge amount
-of fs-specific data.  As long as your fs-specific data is smaller than
-the largest fs-specific data (ext2), you can simply use the "generic"
-pointer and overload it with your own data struct.
+Yes, I see its abstractly used I guess OO programmers don't like the
+whole concept of the union data structure, but for kernel programming,
+device drivers etc it can make things go a bit quicker, and save space.
 
-It was done this way originally so that inodes would be a fixed size
-(so they can be re-used between filesystems) without requiring an
-extra malloc for each inode, and not require an extra memory reference.
-However, it would be just as easy these days to have the fs-specific
-data in a slab cache and have only an pointer in the inode itself.
-This would actually make some of the stacked filesystems I work with
-much simpler, since you could simply keep a pointer to the underlying
-fs inode data struct in your own inode data struct.
+I hear from Andreas that design work is currently going on for VFS for
+kernels 2.5/2.6. That's one of those things about Linux if it doesn't
+exist, or needs improving, it's probably already being worked on -
+relentless improvement.
 
-See also the current thread "Re: VFS not completely factored, and more"
-in the linux-fsdevel mailing list for ideas on how to change this for 2.5.
-Not only does it make the VFS more abstract, it also improves kernel
-compilation because any change to ext2_fs.h will no longer cause the
-recompilation of every file which includes fs.h directly or indirectly
-(which seems like 50% of the kernel).
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+-- Dale.
