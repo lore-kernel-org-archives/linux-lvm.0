@@ -1,14 +1,11 @@
-Return-Path: <blutgens@sistina.com>
-Date: Wed, 23 May 2001 16:51:57 -0500
-From: Ben Lutgens <blutgens@sistina.com>
-Subject: Re: [linux-lvm] The Info You Requested
-Message-ID: <20010523165157.A5993@minime.sistina.com>
-References: <Pine.A41.4.21.0105221126200.26750-100000@gigue.dlib.indiana.edu> <Pine.LNX.4.33.0105231548140.311-100000@duckman.distro.conectiva>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0105231548140.311-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Wed, May 23, 2001 at 04:29:26PM -0300
+Return-Path: <hne@inetnow.net>
+Message-ID: <3B0C3371.80909@inetnow.net>
+Date: Thu, 24 May 2001 07:02:25 +0900
+From: Keith Hopkins <hne@inetnow.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] unsubscribe
+References: <006801c0e3eb$5c7efde0$2100000a@intranet.zeropiu.it>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,72 +17,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
+Cc: christianv@zeropiu.it
 
---SUOF0GtieIMvvwua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Christian Verdelli wrote:
 
-On Wed, May 23, 2001 at 04:29:26PM -0300, Rik van Riel wrote:
->
->No need to move the whole list to another domain.  All the
->anti-spam filtering rules from NL.linux.org are publicly
->available on a CVS tree.  For more info, see:
->
->http://spamfilter.nl.linux.org/
+> Help,
+> 
+> I don't see any link to unsunscribe from this list!!
+> 
 
-Thanks Rik, I'll have a look. I have some stuff in place now that I am pret=
-ty
-sure will work. It's not proactive though, I'll have to add rules as we get=
- a
-spam but it's something.
+See this pretty link at the bottom of every list distributed message?  (What?  Can't see it?  Quit using HTML in your e-mail.  It's in the last MIME section that is hidden by your mail reader.  Use the VIEW SOURCE option of your mail reader if you doubt me.)
 
->
->(I just created this site to save me time explaining how
->spamfilter works, it may take a few hours to have its DNS
->entry percolate through)
+http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-Yeah, no since making everyone change thier procmail filters now.
+Click on it.
 
->regards,
->
->Rik
->--
->Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
->
->Virtual memory is like a game you can't win;
->However, without VM there's truly nothing to lose...
->
->		http://www.surriel.com/
->http://www.conectiva.com/	http://distro.conectiva.com/
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Now READ the page.  See the section titled "linux-lvm Subscribers", that's us.
+Turn on that selective filtering part of your brain and ignore the part about the "list administrator", because that is NOT you.  You see the last BUTTON is EDIT OPTIONS.  Enter you e-mail address and click the pretty button.
 
---=20
-Ben Lutgens	=09
-Sistina Software Inc.=09
-MIS Geek
-http://www.sistina.com/	<--- great software=20
-http://www.gentoo.org/  <--- great distro
-Kernel panic: I have no root and I want to scream <--- perfect error message
+    linux-lvm Subscribers
+[ignoring admin options]
 
---SUOF0GtieIMvvwua
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+To change your subscription (set options like digest and delivery modes, get a reminder of your password, or unsubscribe from linux-lvm), enter your subscription email address:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+{new page is displayed}
+1st option:  Unsubscribing from linux-lvm
+   Enter you list password, and click the pretty button.
 
-iD8DBQE7DDD9LxkxGgLdGQgRAiTXAJsFmyOOLdAnTFroQSuE4yOCpdiERQCfR+8k
-J0ezdJaWyXFBfsl1QuGdWuY=
-=YNse
------END PGP SIGNATURE-----
+If you have forgotten your password, see the next section.
+   Click: Email My Password To Me.
 
---SUOF0GtieIMvvwua--
+Glad to have helped!
