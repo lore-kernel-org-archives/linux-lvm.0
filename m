@@ -1,12 +1,11 @@
-Return-Path: <thornber@btconnect.com>
-Date: Thu, 21 Jun 2001 09:46:45 +0100
-Subject: Re: [linux-lvm] What is a good stripe size?
-Message-ID: <20010621094645.A300@gambit>
-References: <134718885.992837796416.JavaMail.root@boots> <20010618123318.A31606@tiger.bigcats.invalid>
+Return-Path: <root@srv.sistina.com>
+Date: Thu, 21 Jun 2001 10:58:09 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LVM problems
+Message-ID: <20010621105809.B28374@sistina.com>
+References: <20010619161930.A15720@sistina.com> <Pine.LNX.4.33.0106200212360.21696-100000@fogarty.jakma.org>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010618123318.A31606@tiger.bigcats.invalid>; from weissel@netcologne.de on Mon, Jun 18, 2001 at 12:33:18PM +0200
-From: Joe Thornber <thornber@btconnect.com>
+In-Reply-To: <Pine.LNX.4.33.0106200212360.21696-100000@fogarty.jakma.org>; from paul@clubi.ie on Wed, Jun 20, 2001 at 02:15:30AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,30 +21,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jun 18, 2001 at 12:33:18PM +0200, Wolfgang Weisselberg wrote:
-...
+On Wed, Jun 20, 2001 at 02:15:30AM +0100, Paul Jakma wrote:
+> On Tue, 19 Jun 2001, AJ Lewis wrote:
+> 
+> > or you can use the CVS repository.  I really don't know what else you expect
+> > us to do.
+> 
+> make releases on a more timely basis?
 
-> First, we need a fool^Wcrashproof, completely interruptible
-> pvmove for active, being currently read from and written
-> to LVs.
+Please calm down folks!
 
-I hope this is already there.  Do your experiences suggest it isn't
-working for active pv's ?
+If you had followed the thread here you had seen that people recommended
+to wait with 1.0 till vanilla is updated.
 
->  Once this is there, we need to have a pvmove which
-> can be told the physical place to move to, else we can only
-> spread the most accessed PEs over the PVs.
+We plan to release 1.0 on Friday when at least -ac will hopefully be up to date.
 
-This is exactly what we're planning for the next version of LVM.  The
-moving of extents will be performed by the kernel rather than in user
-space, the ioctl interface will allow the user to specify a list of pe
-movements.
+Thanks Alan! :-)
 
-> Then the rest is simply ripping a balancing algorithm from
-> somewhere and slap it into a wrapper.  Data aquisition is
-> already done via lvmsadc/lvmsar.
+> 
+> >
+> > Regards,
+> >
+> 
+> -- 
+> Paul Jakma	paul@clubi.ie	paul@jakma.org
+> PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+> -------------------------------------------
+> Fortune:
+> He:	Let's end it all, bequeathin' our brains to science.
+> She:	What?!?  Science got enough trouble with their OWN brains.
+> 		-- Walt Kelly
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Yes, a little Perl script to process the usage stats and then create a
-new map.
+Regards,
+Heinz    -- The LVM Guy --
 
-- Joe
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
