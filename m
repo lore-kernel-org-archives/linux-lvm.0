@@ -1,8 +1,11 @@
-Message-ID: <20010905175331.97946.qmail@web13403.mail.yahoo.com>
-Date: Wed, 5 Sep 2001 10:53:31 -0700 (PDT)
-From: Pierre Lamb <plamb_98@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] lvm kernel version
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Wed, 5 Sep 2001 12:05:49 -0600
+Subject: Re: what i need is a little attention-RE [linux-lvm] SoftRaid and LVM   Jean-Eric Cuendet
+Message-ID: <20010905120549.H32553@turbolinux.com>
+References: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com> <3B95E36E.6070703@st-peter.stw.uni-erlangen.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3B95E36E.6070703@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,12 +21,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Is there an easy way to find out what version of "LVM"
-is currently in a kernel ie "rh" release. 
+On Sep 05, 2001  10:33 +0200, svetljo wrote:
+> some ideas whom should i write to and what else should i try
+> i've already written to the developers of e2fsprogs and to Hans Reiser
+> but i still don't have a reply( it was 2-3 days ago) and mr Hans Reiser 
+> wonts $25 for looking at a problem
 
-Pierre
+I don't think it has anything to do with e2fsprogs or reiserfs.  The
+problem is clearly in LVM, MD, or the block layer.  Thousands of people
+are using both e2fsprogs and reiserfsprogs, and if they had such problems
+more people would know about it.
 
-__________________________________________________
-Do You Yahoo!?
-Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
-http://im.yahoo.com
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
