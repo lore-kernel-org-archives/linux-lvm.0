@@ -1,21 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j149nRO13637
-	for <linux-lvm@redhat.com>; Fri, 4 Feb 2005 04:49:27 -0500
-Received: from mail.upcore.net (postfix@upcore.net [195.84.97.50])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j149nLAA018501
-	for <linux-lvm@redhat.com>; Fri, 4 Feb 2005 04:49:21 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by mail.upcore.net (Postfix) with ESMTP id 920C4131FD
-	for <linux-lvm@redhat.com>; Fri,  4 Feb 2005 10:49:19 +0100 (CET)
-Received: from sauron.int.tixit.se (b118.broadband.quicknet.se [217.78.17.118])
-	by mail.upcore.net (Postfix) with ESMTP id 03629128EC
-	for <linux-lvm@redhat.com>; Fri,  4 Feb 2005 10:49:09 +0100 (CET)
-From: Magnus Nilsson <magnus@upcore.net>
-Date: Fri, 04 Feb 2005 10:49:15 +0100
-Message-Id: <1107510555.14978.30.camel@sauron.int.tixit.se>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j14E65S9032413
+	for <linux-lvm@redhat.com>; Fri, 4 Feb 2005 14:06:05 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1Cx461-0008HG-RK
+	for linux-lvm@redhat.com; Fri, 04 Feb 2005 14:06:05 +0000
+Date: Fri, 4 Feb 2005 14:06:05 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Removing faulty disk from LVM2
+Message-ID: <20050204140605.GB14093@agk.surrey.redhat.com>
+References: <1107510555.14978.30.camel@sauron.int.tixit.se>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Removing faulty disk from LVM2
+Content-Disposition: inline
+In-Reply-To: <1107510555.14978.30.camel@sauron.int.tixit.se>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,38 +23,30 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Fri, Feb 04, 2005 at 10:49:15AM +0100, Magnus Nilsson wrote:
+> Through pvmove'ing parts of the PV I've narrowed it down to PE #14858 of
+> 38154 4MB PE's. 
 
-I've got an 8 disk VG where one PV is dying.
+> Is there any way of just skipping that last PE and let me repair the
+> filesystem afterwards? Perhaps by vgcfgrestore'ing an edited backup,
+> excluding the broken PV?
 
-Through pvmove'ing parts of the PV I've narrowed it down to PE #14858 of
-38154 4MB PE's. All the other PE's on that PV have been moved.
-The machine hard-locks every time that PE is accessed, so I can't
-activate the VG with 'vgchange -ay vg00'. It also seems that I have an
-unfinished pvmove of that last PE that I can't abort since I can't
-activate the VG.
 
-According to the lvm manpage I've tried using 'vgchange -P -ay vg00'
-after creating /dev/ioerror using dmsetup. That lets me activate the VG
-without having the faulty PV plugged in, but it still doesn't let me
-mount the LV's complaining that it can't find the superblock.
-I did 'echo "0 99999999999 error" >/foo && dmsetup ioerror /foo && ln
--s /dev/mapper/ioerror /dev/ioerror'
+Firstly, pvmove --abort abandons a pvmove cleanly.
 
-Nevertheless, the manpage says that activating with -P will only let me
-read, but I don't have the required ~1TB of space to do a backup.
+Two ideas:
+  Use dmsetup directly to hide the problematic PE.
+e.g. dmsetup table vg1-lvol1 to display the table,
+  Work out which sector(s) are the problem and replace them with
+  an 'error' line
 
-Is there any way of just skipping that last PE and let me repair the
-filesystem afterwards? Perhaps by vgcfgrestore'ing an edited backup,
-excluding the broken PV?
-Alternatively I could remove another PV from the VG, create a new VG and
-copy data over in chunks (I've added a new disk so I have free space in
-the VG).
 
-Sadly I can't provide any command output since both /usr and /var is on
-the VG. I'm using Linux 2.6.10 with device-mapper 1.00.21 and LVM
-2.00.33.
+  Edit a (current) VG backup file to 'move' 1 extent elsewhere.
+e.g. 1 segment containing the problematic extent turns into 3 segments
 
-//Magnus
+Alasdair
+-- 
+agk@redhat.com
