@@ -1,10 +1,10 @@
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] Help : pvmove -- not enough free/allocatable physical extents
-Message-ID: <20030722192109.GA605@trip.muon.local>
-References: <BAY1-F141ddbQYaBzkg00020a7c@hotmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <BAY1-F141ddbQYaBzkg00020a7c@hotmail.com>
+Message-ID: <1058913244.3f1dbbdca4242@webmail.phys.unsw.edu.au>
+From: Melinda Taylor <melinda@phys.unsw.edu.au>
+Subject: Re: [linux-lvm] LVM1 problem, exported volumegroup with one dead drive (fwd)
+References: <Pine.LNX.4.56.0307221242540.30328@gumpie.wea.se>
+In-Reply-To: <Pine.LNX.4.56.0307221242540.30328@gumpie.wea.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,48 +15,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 22 12:22:01 2003
+Date: Tue Jul 22 17:35:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, ratler@lunar-linux.org
 
-On Tue, 22.07.03, kiran dalvi <kiran_bd@hotmail.com> wrote:
+Hi Stefan,
 
-> I haved created volume group using 3 partitions on my machine
-> (/dev/hda7,/dev/hda8,/dev/hda9).All the partions are of same size 200 
-> MB.Then
-> I have created stripped logical volume on 3 partitions using following 
-> command.
-> 
-> #lvcreate -i3 -I4 -l24 -nmy_stripped_lv1 my_volume_group
-> 
-> I have also tried extending logical volume and shrinking logical volume. All
-> this worked fine for me.
-> 
-> Now I tried pvmove command.
-> 
->        #pvmove /dev/hda9
-> 
-> But it will be giving following error message
+I am working through the exact same scenario so you may like to look thro=
+ugh my
+posts and peoples advice in the LVM archive (july):=20
 
-[snipped]
+http://lists.sistina.com/pipermail/linux-lvm/2003-July/subject.html
 
-My guess is that lvm wont move your pe's to one of the other partitions
-because the lv is striped across three different partitions and pvmoving one
-of the stripes to a partition with another stripe already on it would defy
-the purpose of multi-striped lvs.
+Basically I had 2 disks fail which were part of my VG. I now have 2 of 4 =
+LV's
+left and am trying to retrieve the data. As suggested the only way to rec=
+over
+data from a partial VG is to upgrade to LVM2.=20
 
-So the error message is a bit missleading but still correct. Lvm has nowhere
-to move the pe's from /dev/hda9 to, because it tries to keep the lv across
-three different partitions.
+I have done that and LVM2 can now activate my partial VG - but I haven't =
+quite
+retrieved the data from it yet.
 
-cya,
+Hope that helps,
 
-Nils
+Melinda
 
 
--- 
-Nils Juergens  | nils@muon.de | icq 7090774
-Having problems sending big files over the net?
-Try out Efisto (http://efisto.rnbhq.org).
+Quoting ratler@lunar-linux.org:
+
+> Hi,
+>=20
+> I think I have tried all solutions google could give me without any luc=
+k
+> restoring any data.
+>=20
+> The problem is the following:
+>=20
+> 1. I had to reinstall a server to where this volumegroup belonged
+> 2. I umounted all LVs. And deactivated the VG. And then I did a vgexpor=
+t
+> of the VG
+> 3. After the reinstall of the linux server it was time to import the VG
+> that had 2 harddrives. I ran a pvscan and it only detected one drive! I
+> started some investigation and i noticed the second drive was totaly de=
+ad!
+>=20
+>=20
+> And of course since this was a server at my home I didnt have any backu=
+ps
+> of this VG. And since one drive is missing it's impossible to import th=
+e
+> part of the VG I have left. I know that most of all PEs for my /home
+> are on the drive that is still working.
+>=20
+> Now I wonder how on earth can I restore any of the data that is still o=
+n
+> my working drive? I had 4 years of mail and some source code I would di=
+e
+> for to get back. Since I only have metadata from the only drive working=
+ I
+> think I have a little problem ;)
+> All I want is to get as much of the data out from datavg/homelv.
+>=20
+> I attached a log file with the output from pvscan and pvdata.
+>=20
+> Sincerely
+> Stefan Wold
