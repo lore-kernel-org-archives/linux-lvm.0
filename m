@@ -1,72 +1,45 @@
-From: stk@rmi.de
-Message-Id: <200006161826.UAA28163@musashi.stan.de>
-Date: Fri, 16 Jun 2000 20:26:04 +0200 (CEST)
-Subject: Re: [linux-lvm] Problems activating VG (2.4.0-test1 / raid 0.9)]
-In-Reply-To: <20000616143813.B2560@hmsysv.t-online.de>
-MIME-Version: 1.0
+From: benr@us.ibm.com
+Message-ID: <85256900.006F9EE2.00@d54mta02.raleigh.ibm.com>
+Date: Fri, 16 Jun 2000 16:19:10 -0400
+Subject: Re: [linux-lvm] IBM to release LVM Technology to the Linux
+	 Community
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mauelshagen@Sistina.com
-Cc: linux-lvm@msede.com
-
-Hi Heinz,
-
-looks good.
-The patch worked, vgchage behaves now as it should.
-
-thanks and
-best regards
-
-Stefan
+To: Andi Kleen <ak@suse.de>
+Cc: linux-lvm@msede.com, sbest@us.ibm.com, andrea@suse.de
 
 
 
-On 16 Jun, Heinz J. Mauelshagen wrote:
-> 
-> Hi Stefan,
-> 
-> please change vgchange.c line 346 to line 354 that they looks like:
-> 
->             if ( ( ret = vg_check_online_all_pv ( vg, &pv_offl, &pv_incons)) < 0
->                  &&  ret != -LVM_EPV_READ_MD_DEVICE) {
->                if ( ret == -LVM_EPV_READ_PV_CREATE_NAME_FROM_KDEV_T) {
->                      fprintf ( stderr, "%s -- ERROR: can't get name(s) of "
->                                        "physical volumes\n"
->                                        "%s -- Please check, if /proc "
->                                        "is mounted\n",
->                                        cmd, cmd);
->                } else {
-> 
-> and test again.
-> 
-> Regards,
-> Heinz
-> 
-> On Fri, Jun 16, 2000 at 07:31:34AM +0200, stk@rmi.de wrote:
->> On 16 Jun, Heinz J. Mauelshagen wrote:
->> > 
->> > Please provide the stdout/stderr of "vgscan -d" and "vgchange -day" to the list.
->> > 
->> > Regards,
->> > Heinz
->> > 
->> > On Thu, Jun 15, 2000 at 09:23:49PM +0200, stk@rmi.de wrote:
->> >> Hello everyone,
->> >> 
->> >> at the moment im experimenting with lvm on top of raid1 (v0.9)
->> >> but ran into a problem with the pv and vg activation. That is
->> 
->> attached are first the output vgscan -d and after that vgchange -day
->> 
->> regards
->> Stefan
->> 
->> 
-> <SNIP output>
+Andi,
 
--- 
- Stefan K                                       email:     stk@rmi.de
- Aix-la-Chapelle                                fax/data: +49-241-533353
+Thanks for reading the white paper, and thanks for your comments and
+questions!
+
+>The stacking of multiple block translation modules seems to be already
+>implemented in 2.4-latest, although it is a bit of a hack and SMP
+>unfriendly.
+
+My understanding of what is in 2.4-latest is that you do indeed have the
+stacking of multiple block translation modules, but the implementation of
+this is not as flexible or integrated as what we have described in the
+white paper.   Please correct me if I am wrong!
+
+>The white paper talks about software RAID. Do you plan to release an
+>own software RAID implementation or just a port of the existing MD  ?
+
+The Linux Community has not yet had a chance to evaluate IBM's vision of
+what an LVMS should be, much less the technology that we are releasing in
+support of that vision.  However, should things progress to the point where
+the Linux Community has expressed an interest in this technology and IBM is
+releasing code (under the GPL, of course) in support of this technology,
+then I doubt that IBM would release another software RAID.  It would be far
+more productive to have the existing software RAID adapted to run as a
+"Feature Plug-in" than to develop or port another software RAID
+implementation.
+
+Ben
