@@ -1,58 +1,32 @@
-Message-Id: <199909240841.AA16898@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: [linux-lvm] Re: lvmsar
-Date: Fri, 24 Sep 1999 10:40:31 METDST
-In-Reply-To: <m11UDbF-000D4UC@londo.rhein-main.de>; from "Torsten Neumann" at Sep 23, 99 8:28 pm
+Date: Fri, 24 Sep 1999 16:29:24 +0200 (CEST)
+From: Andreas Kostyrka <andreas@mtg.co.at>
+Subject: [linux-lvm] Linux LVM & Software RAID.
+Message-ID: <Pine.LNX.4.10.9909241623500.1163-100000@gatekeeper.zwax.mtg.co.at>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Torsten Neumann <torsten@londo.rhein-main.de>
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: Linux LVM Mailinglist <linux-lvm@msede.com>
+Cc: linux-raid@vger.rutgers.edu
 
+Hi!
 
-Moin, moin.
+Just been wondering if somebody does have a working 2.2.12 system that
+does include these features:
+-) LVM 0.7
+-) md-raid0145
 
-> 
-> Moin,
-> 
-> I think the programs lvmsadc and lvmsar could be really useful for system
-> administrators, because the output could show bottlenecks, ...
-> 
-> But IMHO the output from lvmsar isn't really readable by humans. Therefor I
-> wrote a small perl script (using gnuplot) that produces gif-graphics from
-> the lvmsadc logfiles.
+Actually, I've tried to do this, but there is a small conflict in
+ll_rw_blk.c. Obviously I didn't solve it correctly, because after mkraid
+on /dev/md0 (RAID5 on 5 SCSI discs), my mke2fs crashed.
 
-Great.
-Thak you.
+So did anybody solve this conflict, or am I on my own?
 
-> 
-> Is there a contrib directory for LVM-Stuff where I can put this script ?
-
-Please send it to me.
-I'll check and push it to our ftp site.
-
-> 
-> My script is still alpha-software, and not really good coded. But it might
-> be useful for someone.
-> 
-
-8*)
-
-Heinz
-
+Andreas
 --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Andreas Kostyrka                     | andreas@mtg.co.at
+phone: +43/1/7070750                 | phone: +43/676/4091256   
+MTG Handelsges.m.b.H.                | fax:   +43/1/7065299
+Raiffeisenstr. 16/9                  | 2320 Zwoelfaxing AUSTRIA        
