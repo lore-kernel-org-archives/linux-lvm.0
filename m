@@ -1,8 +1,9 @@
-From: "Mr Wylie Taylor" <wylietaylor@mailsurf.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E19g3K3-0003EB-00@hermes.sistina.com>
-Subject: [linux-lvm] HOW  ARE YOU
+Subject: Re: [linux-lvm] not enough free/allocatable physical extents to extend logical vo lume
+Mime-Version: 1.0 (Apple Message framework v552)
+From: AJ Lewis <lewis@sistina.com>
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <C6B0A1AF05B7A04E9D8E784173AE3D2016300B@ausx2kmpc104.aus.amer.dell.com>
+Message-Id: <49658C34-BEAC-11D7-A0A0-000393DC1896@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,41 +14,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 25 09:14:02 2003
+Date: Fri Jul 25 09:29:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Good Day!
+I'm guessing you're trying to extend by too large a size.  Use 
+pvdisplay on /dev/sde1 and note the number of physical extents free.  
+Then try passing that to e2fsadm with the '-l' flag instead of passing 
+33.91G with the '-L' flag.  This is just a guess though.  It's pretty 
+hard to tell without all the commands you ran and the output they gave 
+you.
 
-It is with hope that I write to seek your help in this context=2E Firstly=2Clet me start by introducing myself properly to you=2E My name  is Wylie Taylor=2C the first son  of President Charles Taylor of Liberia=2E I got your email address from network directory=2E I   apologize if I have infringed  on your privacy=2E
+On Thursday, Jul 24, 2003, at 23:14 US/Central, 
+Taylor_Carpenter@Dell.com wrote:
 
- You maybe aware=2C that my father President Charles Taylor has been embattled by  rebel forces in my country=2C couple with his recent indictment by U=2EN backed tribunal=2E These issues=2C have made world headlines=2E Visit=2C  www=2Eliberianews=2Ecom 
+> I am trying to add a 4th disk to an existing lv.  I am following the
+> directions in
+>
+> http://tldp.org/HOWTO/LVM-HOWTO/x802.html
+>
+> but It is complaing about free physical extents when trying to extend 
+> during
+> the e2fsadm portion.
+>
+>
+> root]# pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- ACTIVE   PV "/dev/sdb1" of VG "Scratch" [33.91 GB / 240 MB 
+> free]
+> pvscan -- ACTIVE   PV "/dev/sdc1" of VG "Scratch" [33.91 GB / 240 MB 
+> free]
+> pvscan -- ACTIVE   PV "/dev/sdd1" of VG "Scratch" [33.91 GB / 240 MB 
+> free]
+> pvscan -- ACTIVE   PV "/dev/sde1" of VG "Scratch" [33.91 GB / 33.91 GB 
+> free]
+> pvscan -- total: 4 [135.65 GB] / in use: 4 [135.65 GB] / in no VG: 0 
+> [0]
+>
+>
+>
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+--
+AJ Lewis
+Sistina Software Inc.             http://www.sistina.com
+720 Washington Ave, Suite 200     Voice:  612-638-0500
+Minneapolis, MN 55414             E-Mail: 
+lewis_NOSPAM_(AT)sistina(DOT)com
 
- 
-Now  my father has accepted to quit power and  leave Liberia on the arrival of peacekeeping force which might be headed by American troops=2E But the delay in deploying peace keeping force=2C has worsen situation in the country=2E In spite of this=2C My country Liberia=2C is like a herd of cattle without shepherd=2E Rebels Groups are still fighting to oust my father and assume office as leaders=2E The rebel who see my family  as a threat to their ambitions=2C   are planning to kill every one of us when capture=2E 
+Current GPG fingerprint = D638 9C01 D08F 29A4 5D50  D064 F6A6 0ED6 E386 
+E6EB
+Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
+many keyservers out there...
 
- 
-However=2C I am a young man who has ambitions and I am not in any   way interested in wars=2C this is why I secretly left Liberia for South Africa  to seek asylum=2E
-
- Besides=2C I am using this correspondence to   seek and request your assistance and cooperation in a sensitive but highly beneficial   financial arrangement=2E 
-
- Prior to the Wars and embattlement of my father=2C himself and I deposited a huge amount of money in a  security company=92s vault overseas on my name=2E The funds were arranged into a consignment before deposited with the security company But=2C the security company did not know that the consignment contains money=2E Because=2C The consignment was declared to contain family treasure and valuables=2E
-
- 
-The fact that the war persist and we  continue to accumulate huge debts daily as long as the consignment remains in the security company=92s vault=2C made me  decided to get  someone reliable to proceed as soon as possible to receive these funds for investment purpose=2E As a young man=2C I plan to use this money to safeguard my future=2E
-
- It is very essential   that you understand  the kind of trust and confidence I want  to put in you=2E This is an act of desperation on my part=2C in order not to loose this money incase of any eventuality=2E
-
- For your reliable assistance=2C if willing=2C I will reward you with 25% of the money=2E
-
-As soon as you declare your willingness to assist=2C  i shall furnish you with the details and information you will need to accomplish this task=2E Please=2C be rest assured that this arrangement is absolutely risk free And cannot implicate you in any way=2E However=2C I implore you to handle this matter with urgency=2C utmost secrecy and confidentiality for security and safety reasons=2C even if you do not intend to execute the project=2E 
-
-Thank you in  anticipation for your assistance in enabling me achieve this goal=2E Please contact me whether or not you are interested in assisting me=2E This will enable me scout for another perosn in the event of non-interest on your part=2E
-
- 
-Your=92s  sincerely=2C
-
-Mr Wylie  Taylor 
-
- 
+A program is a device used to convert data into error messages.
