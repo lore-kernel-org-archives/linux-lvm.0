@@ -1,11 +1,8 @@
-From: lembark@wrkhors.com
+From: bscott@ntisys.com
 Subject: Re: [linux-lvm] LVM newbie question.
-Message-ID: <6290000.1027433167@duke>
 In-Reply-To: <Pine.OSF.4.33.0207231638100.7125-100000@newt.phys.unsw.edu.au>
-References: <Pine.OSF.4.33.0207231638100.7125-100000@newt.phys.unsw.edu.au>
+Message-ID: <Pine.LNX.4.44.0207231011280.24962-100000@dragon.inside.ntisys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,77 +13,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 23 09:09:02 2002
+Date: Tue Jul 23 09:49:04 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Have you read the FAQ?
-
+On Tue, 23 Jul 2002, at 4:49pm, Melinda Taylor wrote:
 > When I do a pvcreate on say /dev/sda1 does that destroy all the existing
 > data on that partition?
 
-Why would you run pvcreate on a non-empty partition? The
-only thing you'd do after that would be creating LV's 
-which will overwrite any data on the partition.
+  Yes.
 
-> Which is better for pvcreate to be used on a whole disk (pvcreate
-> /dev/sda) and destroy all the underlying data or for me to merge all my
-> existing paritions over to PV to combine in a volume group? Is there any
-> advantage over either?
+> Is there any advantage over [creating a PV on a partition vs a whole
+> disk]?
 
-Depends on how many disks you have. If have only a 
-single disk then you're better off w/ a root partition
-and some swap outside LVM in case you have to recover
-from a situation in which LVM has problems. At that 
-point you can parition a disk with, say, 120MB, 64MB,
-2GB, <the rest> w/ types 83, 82, 83, and 8e. This 
-allows you to install the system w/ the 3rd partition
-as /usr if your distribution doesn't support LVM out of
-the box or use it for scratch space. If /usr is a mount
-point then the root can comfortably be 128MB.
+  Not really.  Do whatever makes the most sense for your situation.
 
-> I've read the LVM how-to and am stilll alittle confused having never done
-> it in practice. One part of the how-to said converting a root system to
-> LVM is not recommended. SHould your OS directories /var / /boot
-> etc all not be included in the LVM? That was the main idea behind me
-> implementing LVM so that specific partitions (say var) could be resized at
-> a later date if needed.
+> One part of the how-to said converting a root system to LVM is not
+> recommended.  SHould your OS directories /var / /boot etc all not be
+> included in the LVM?
 
-If /usr is a mount point then having /boot as a separate
-mount is extraneous. If the machine isn't a 7x24 server
-you can probably get by with /var on LVM; for a hard-core
-system having /var on a partition is useful in case LVM
-fries. Make /var 320MB and use a separate /scratch partition
-for building new code, &c, and the only thing you'll need
-on /var is spooling and logs, which will be unlikely to 
-outrun a 320MB partition.
+  Basically, to keep things simple, it is recommended that the boot and root
+partition(s) not be placed on LVM.  This is because many boot/rescue/install
+environments do not support LVM, making recovery from a boot failure
+difficult to impossible.
+
+  By placing / and /boot outside of LVM, you can repair them from just about
+any boot/rescue/install set, and/or boot without LVM working.  Once you're
+booted from the HDD in single-user mode, you can use the LVM utilities (in
+/sbin) to get the rest of the system (on LVM) working.
+
+> That was the main idea behind me implementing LVM so that specific
+> partitions (say var) could be resized at a later date if needed.
+
+  The system will typically boot with / mounted read-only.  Nothing else is
+mounted, so if /var or /tmp or /usr or whatever are separate filesystem(s),
+that is fine.  The system boot scripts (e.g., rc.sysinit) should start the
+LVM and mount any needed filesystems.
 
 > Will I have any trouble restoring my system (which I backed up using dd
-> with a BS of 1024k) Do I have to make the LV the same size as my original
-> partition were for this to work?
+> with a BS of 1024k)
 
-You cannot perform backups with dirty dump (dd). Use dump or
-cpio to back the system up before touching LVM. At the 
-simplest:
+  Using "dd" for backups is a bad idea.  Use a backup tool, such as "dump",
+"cpio", or GNU "tar".
 
-    find / |
-    egrep -v '/(proc|tmp|cache)/' |
-    cpio -ov -Hcrc --io-size=$((80*1024*1024)) --file=$TAPE 2>&1 |
-    tee /var/log/backup.log;
-
-would give a full system backup to the tape device.
-
-For a full backup using cpio -it --io-size=$((1024*1024*80)) --file=$TAPE
-to check the archive is highly recommended.
-
-Pick up a copy of Frisch, Essential System Administration, (3rd ed,
-O'Reilly Press, 2002) for recommendations on this; Nemeth, et al, 
-Unix System Administrator's Handook (3rd ed) is also an excellent
-read.
-
-
---
-Steven Lembark                              2930 W. Palmer
-Workhorse Computing                      Chicago, IL 60647
-                                           +1 800 762 1582
+-- 
+Ben Scott <bscott@ntisys.com>
+| The opinions expressed in this message are those of the author and do not |
+| necessarily represent the views or policy of any other person, entity or  |
+| organization.  All information is provided without warranty of any kind.  |
