@@ -1,8 +1,8 @@
-From: Stefan Fent <sf@suse.de>
-Message-ID: <Pine.LNX.4.32.0110221243510.27769-100000@omega.suse.de>
+Message-ID: <3BD40062.2D93A980@ti.com>
+From: christian e <cej@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Subject: [linux-lvm] LVM on IA64
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] which kernel would you recommend ??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,58 +13,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 22 06:00:02 2001
+Date: Mon Oct 22 06:16:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
-To: Linux-LVM@Sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux lvm <linux-lvm@sistina.com>
 
-Hi,
+Hi,all
 
-On IA64 lvcreate segfaults when 'lv_allocated_le'
-is bigger than 1 (mostly 125).
-I need information about where this value is created, and what it is good
-for, as this seem to happen randomly.
-
-It segfaults in vg_cfgrestore() at:
-
-if ( ( vg->lv[l]->lv_current_pe =3D
-                   malloc ( vg->lv[l]->lv_allocated_le * \
-                            sizeof ( pe_t))) =3D=3D NULL) {
+I've been trying for some days now to get lvm installed on a 2.4
+kernel..Has not been very successful to say the least.What kernel would
+you recommend for a production file-server ?? Should I go back to 2.2.19
+again ?? I upgraded to 2.4 due to NFS and ext3 mainly.It also has the
+latest drivers for my megaraid controllers.But now I can't get lvm
+compiled ..Is 2.4 even stable enough to use in production ? Can't allow
+this server to be down as it's our primary fil-server..
 
 
-where vg->lv[l]->lv_allocated_le=3D=3D125
-gdb backtrace:
+best regards
 
-Program received signal SIGSEGV, Segmentation fault.
-0x20000000001a0fd1 in chunk_alloc () from /lib/libc.so.6.1
-(gdb) bt
-#0  0x20000000001a0fd1 in chunk_alloc () from /lib/libc.so.6.1
-#1  0x200000000019f720 in malloc () from /lib/libc.so.6.1
-#2  0x200000000007af10 in vg_cfgrestore (vg_name=3D0x80000fffffffb9d4
-"volg02",
-    vg_backup_path=3D0x80000fffffffa870 "/etc/lvmtab.d/volg02", opt_v=3D0,
-vg=3D0x20000000000aab30)
-    at vg_cfgrestore.c:177
-#3  0x2000000000067540 in lvm_tab_vg_read_with_pv_and_lv
-(vg_name=3D0x80000fffffffb9d4 "volg02",
-    vg=3D0x80000fffffffae38) at lvm_tab_vg_read_with_pv_and_lv.c:60
-#4  0x4000000000008420 in main (argc=3D3, argv=3D0x80000fffffffb728) at
-libio.h:633
-(gdb)
-
-any help appreciated.
-
-Kernel is 2.4.7 with LVM-drivers 0.9.1_beta7
-lvm is 1.0.1-rc2
-
-Mit freundlichen Gr=FCssen / With kind regards,
-
-        Stefan Fent
-
---=20
-SuSE GmbH,             Tel:   +49-911-7405331
-Schanzaeckerstr. 10,   Fax:   +49-911-3206727
-90443 Nuernberg,       Email: sf@suse.de
-Germany                WWW:   http://www.suse.de
-
- warning: declaration does not declare anything
+Christian
+-- 
+Christian Ejstrup, IT Admin / RF Development Engineer
+Texas Instruments A/S, Denmark ,Sofiendalsvej 93,DK-9200 Aalborg
+SV,Denmark
+Phone:+45 96346868, Phone(direct):+45 96346860, GSM:+45 22234304
