@@ -1,11 +1,8 @@
-From: Andre Bonhote <andre@bonhote.com>
-Message-ID: <20030110073438.GA31870@coffee.noc.ch.colt.net>
-References: <EHEDIKGDCNFCNANFPGCDAENOCAAA.andre@bonhote.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <EHEDIKGDCNFCNANFPGCDAENOCAAA.andre@bonhote.com>
-Subject: [linux-lvm] Re: LVM Recovery - mostly solved
+From: nik-da-3'9'' <nik39@gmx.net>
+Message-ID: <3051931894.20030110143835@gmx.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Volume Group with 4 HDs- one crashed
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,68 +13,84 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 10 01:35:01 2003
+Date: Fri Jan 10 07:38:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Linux-LVM@Sistina.com
-Cc: mauelshagen@Sistina.com, beat@rubis.ch
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-Good morning!
+Hello ,
 
-Well, this is quite embarassing to me. Bear with me please.
+I'm having a hard time with LVM, in my PC I have setup a VG with 4
+harddisks, and one of the HDs crashed. Well, I know I should have
+backed up the data,
+which I did, but the backup is far too old. You know how hard it is to backup
+big big HDs/partitions w/o having bunches of backup media. Anyway, I have
+consulted Heinz, who was so kind pointing to LVM2, with its help it should have
+been possible to mount the VG partially. What I did was:
 
-On Wed, Jan 08, 2003 at 03:35:35PM +0100, Andre Bonhote wrote:
-=20
-...
->  - 1 IDE drive, 80 GB
+1. upgrade my kernel, so I could use the device-mapper, which is important
+for LVM2
+2. installed LVM2
+3. tried "vgchange -P -ay", which gave me following output:
 
-...=20
-> /dev/hdc
->  fdisk -l shows no output. There's no partitioning. I did pvcreate /dev/h=
-dc.
+> -----
+>   3 logical volume(s) in volume group "data" now active
+>     Finding volume group "mpeg"
+>   3 PV(s) found for VG mpeg: expected 4
+>   Logical volume (mp3) contains an incomplete mapping table.
+>     2 logical volume(s) in volume group "mpeg" already active
+>   3 PV(s) found for VG mpeg: expected 4
+>   Logical volume (mp3) contains an incomplete mapping table.
+>     Found volume group "mpeg"
+>   3 PV(s) found for VG mpeg: expected 4
+>   Logical volume (mp3) contains an incomplete mapping table.
+>     Found volume group "mpeg"
+>   3 PV(s) found for VG mpeg: expected 4
+>   Logical volume (mp3) contains an incomplete mapping table.
+>     Found volume group "mpeg"
+>   3 PV(s) found for VG mpeg: expected 4
+>   Logical volume (mp3) contains an incomplete mapping table.
+>     Found volume group "mpeg"
+>     Activated logical volumes in volume group "mpeg"
+>   2 logical volume(s) in volume group "mpeg" now active
+> ----
+> 
+> vgdisplay :
+>    Finding volume group "mpeg"
+>  3 PV(s) found for VG mpeg: expected 4
+> Volume group "mpeg" doesn't exist
+> 
+> ----
 
-Here we go! That's the point. fdisk -l shows no output because there's
-no disk. Between the (doubtless incredibly dumb, but harmless) changes
-and the reboot, I have tried to find a place for a spare harddrive in my
-chassis. Doing that, the one and only IDE cable loosened. Result:
-/dev/hdc was gone.
+even vgscan did not help:
 
-My focus at that time was of course elsewhere. I always have disabled
-IDE scanning in the BIOS, otherwise I would have noticed it immediately
-- the system hangs in the BIOS. Linux just says: There's no IDE drive.
-And Linux is right.
+: # LVM2.1.95.12/tools/lvm vgscan -v
+    Wiping cache of LVM-capable devices
+    Wiping internal cache
+  Reading all physical volumes.  This may take a while...
+    Finding all volume groups
+    Finding volume group "data"
+  Found volume group "data" using metadata type lvm1
+    Finding volume group "mpeg"
+  3 PV(s) found for VG mpeg: expected 4
+  Volume group "mpeg" not found
 
->  mount: error 2 mounting ext3
->  pivotroot: pivot_root(/sysroot,/sysroot/initrd) failed: 2
->  umount /initrd/proc failed: 2
+: # mount -a
+mount: special device /dev/mpeg/mp3 does not exist
+mount: special device /dev/mpeg/movie does not exist
 
-This comes clear to me now, too. I have to change Grub and/or the
-initrd, I guess. I will take a closer look at this this WE.
-=20
-> no (which?) config files have been updated. Could this be a bug?=20
+VG "data" is a VG on different SCSI-HDs (which is backed up on a reg
+basis... anyway this VG was never touched, as it didnt crash).
 
-Of course NOT!
+I also remove the devnodes left by LVM 1 (/dev/mpeg/mp3 /dev/mpeg/mpvie),
+but still I cant access the VG's.
 
-> ...
-> reading data of volume group "CaradhrasVG" from physical volume(s)
-> ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume
-> group "CaradhrasVG" from physical volumes
-> ...
+What to do next? Any help is really appreciated, as there is still lots of
+important data on the VGs.
 
-It was trying to read /dev/hdc, but it didn't succeed. How should it?
+Thanks
 
-Well, anyway. I managed to pull down the important data.
-
-List readers/posters: A double sorry to you for wasting your precious
-bandwith and for holding you up. I am going to read ALL the docs I can
-find on sistina.com about backing up metadata, I promise. And I will
-think more than twice next time before posting to this list, and have a
-loooong nap before, too.
-
-Thanks to all & a really nice day!
-
-Andr=EF=BF=BD
-=20
---=20
-Real programmers do "cp /dev/audio a.out" and whistle into the mike.
-                                                (Randal L. Schwartz)
+-- 
+Regards,
+ nik-da-3'9''
+ mailto:nik39.at.gmx.dot.net@check.this.mailadress.com
