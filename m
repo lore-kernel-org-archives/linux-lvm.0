@@ -1,9 +1,9 @@
-Message-ID: <3BDF1851.2030803@gadreau.net>
-From: Jean-Noel GADREAU <cathjn@gadreau.net>
+From: "James Kelty" <jamesk@ashlandagency.com>
+Subject: RE: [linux-lvm] LVM and 2.4.13
+Message-ID: <JLEILPHBKFODIOEDIAKMIELCCHAA.jamesk@ashlandagency.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Segmentation Fault with vgextend and LVM 1.0.1rc4
-References: <3BDE0947.7090203@gadreau.net> <20011030101059.A1138@guldukat.muon.local>
 Content-Transfer-Encoding: 7bit
+In-Reply-To: <000601c1617b$96dfde10$0101a8c0@mdmiller.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,53 +14,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 30 15:13:02 2001
+Date: Tue Oct 30 15:25:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Nils Juergens wrote:
+Thanks to everyone!  The optimization changes worked perfectly.
 
->On Mon, 29.10.01, Jean-Noel GADREAU <cathjn@gadreau.net> wrote:
->
->[snip]
->
->>vgextend -- extending volume group "vg01" by physical volume "/dev/hde1" 
->>in kernel
->>Segmentation fault (core dumped)
->>
->>I am using RedHat 7.1 with a custom kernel to have LVM (2.4.9-6). I have 
->>2 drives on this IDE controller (a Promise UltraDMA100DX2) and both work 
->>fine with linux. My secondary drive (/dev/hdf is already part of vg01).
->>
->[snip]
->
->The stock linux kernel comes with an old version of lvm. Please grab
->the latest version and make sure to patch your kernel (see
->PATCHES/README in the lvm distribution). You should also upgrade your
->userspace tools (lvcreate, vgextend and the like).
->
->On a further note, check which compiler you are using. gcc-2.96 should
->be used without optimization (-O0) and make sure you do not use
->gcc-3.0.x (it produces broken code on some occasions, this happened to
->me with the lvm tools).
->
->good luck,
->
->Nils
->
-Thanks for your quick reply. I rebuilt the kernel but it did not work. 
-However, recompiling without -O2 did it for me.
+-James
 
-What I did (for those who might run into the same problem):
 
-#cd LVM/1.0.1rc4
-#./configure
- >>> here, edit make.tmpl to change CFLAGS=.... -O2 .... to CFLAGS=... 
--O0 ... <<<
-#make
-#make install
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of Mitch Miller
+Sent: Tuesday, October 30, 2001 11:47 AM
+To: linux-lvm@sistina.com
+Subject: RE: [linux-lvm] LVM and 2.4.13
 
-Thanks again for your time and quick answer.
-Regards,
-Jean-Noel
+
+James,
+
+> When I try to create the logical volume,
+> I get a Seg Fault and core dump.
+
+Take a look at Sistina's web page, and search Bugzilla for core dump.  There
+is a documented issue with the version of GCC you are using, which is
+happening because of broken compiler optimizations.  As I recall, there are
+two workarounds.  First, you can edit your make file, and change -O2 to -O
+or you can edit the source and add a printf() statement inside the function
+which the compiler is to optimize by making it an inline function.
+
+I chose the 2nd fix so I didn't have to get rid of all optimizations, but
+that fix has to be applied in a number of places to make sure that all
+command line tools get fixed appropriately.  The first fix has the benefit
+of being changed in one place, and the entire works after recompilation, at
+the cost of compiler optimization.
+
+-- Mitch
+
+P.S.  Seems like there is also another version of GCC which you can use, but
+I don't know which one.
+
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
