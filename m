@@ -1,13 +1,8 @@
-From: Frank Benkstein <benkstein@math.tu-dresden.de>
-Subject: Re: [linux-lvm] umount returns device is busy
-Message-Id: <20031223102441.0f8e6f46.benkstein@math.tu-dresden.de>
-In-Reply-To: <1226895046.20031223010608@tnonline.net>
-References: <000701c3c8b7$3190a800$c3507580@atdsputnik>
-	<3FE76BD3.13937AA5@uiuc.edu>
-	<20031222231520.GA31471@MAIL.13thfloor.at>
-	<1226895046.20031223010608@tnonline.net>
-Mime-Version: 1.0
+From: "Ireneusz Kupiec" <irq@go2.pl>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Message-Id: <20031223110817.735D01A34A2@kogut.o2.pl>
+Subject: [linux-lvm] pvmove doesnt work with LVM2?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,69 +13,123 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 23 03:25:02 2003
+Date: Tue Dec 23 05:10:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Tue, 23 Dec 2003 01:06:08 +0100
-Spam <spam@tnonline.net> wrote:
 
-> 
-> 
-> > On Mon, Dec 22, 2003 at 04:10:27PM -0600, P. Larry Nelson wrote:
-> >> I've been using LVM now since sometime this past summer and
-> >> everything has worked great and as advertised, until I tried
-> >> to unmount a logical volume.  And this happens on both RedHat
-> >> 9 and ES_3.
-> >> 
-> >> I had occasion the other day to unmount one of the mounted raid 
-> >> arrays in order to upgrade some firmware.  When I tried to do an
-> >> unmount command, I got "device is busy".  Ok, I'm cd'd there
-> >> from one of my windows or something, so I make sure all open
-> >> terminal windows are *not* cd'd there.  Redo the umount command
-> >> with same result.  Weird, something's got a file open. So, I did
-> >> an lsof command and grep for the device (/dev/VG1/LV1).  Nothing.
-> >> I try greping for the mount name (/scratch/cdf).  Nothing.
-> >> It will not let me unmount the logical volume.
-> >> 
-> >> The system in question is running RedHat 9 w/kernel 2.4.20-24.9smp
-> >> with RedHat's lvm-1.0.3-12.  I just so happened to have built 
-> >> another system using RedHat's ES_3 w/kernel 2.4.21-4.0.1.ELsmp and
-> >> their lvm-1.0.3-15, so I thought I'd try it there.  Built an
-> >identical> logical volume, mounted it, tested it (works fine), tried
-> >to umount> the filesystem with identical results: device is busy. 
-> >Checked> again using lsof.  Nothing open on the mounted filesystem.
-> >> 
-> >> I went checking back thru about 4 months of this list and saw
-> >> (apparently) that no one else has this problem.  At this point
-> >> I'm a bit baffled why the umount command isn't working.  I've
-> >> also seen nothing that might address this in the LVM-HOWTO.
-> >> Then again, I could have missed it.
-> >> 
-> >> Ideas?
-> 
-> > maybe some kernel service is holding a reference
-> > to that device, nfs or samba server comes to mind, 
-> > just try to disable them one after the other and
-> > see if umount will work ...
-> 
->   In  my opinion this is a severe mis-feature (aka: bug) in the Linux
->   kernels.  In  some occasions it is impossible to kill an application
->   when  unmounting  a filesystem. This leads to problems with shutting
->   down  the  system  cleanly.  For  example  a  device might have been
->   temporary  offline  when  samba tried to access it. The samba thread
->   locks  indefinitely  and  it  is impossible to kill it and thus also
->   impossible to unmount the filesystem.
-> 
->   Not  sure  if LVM guys can do anything about this though. =) Perhaps
->   you  can  push  kernel  developers to make it easier to recover from
->   these kinds of problems?
-> 
+Hi.
 
-Have you tried "fuser -v -m" (see fuser(1)). I think "umount -l" already
-serves the your case of unmounting a filesystem where kernel thinks it's
-busy but it isn't.
+I was using LVM1 for long time - about 3 years i think. yesterday i wanted to
+change to kernel 2.6.0 which has support for dev-mapper and LVM2 (at least I
+thaught so).
 
-Bye
-Frank Benkstein.
+I've downloaded newest stable lvm2-tools, and dev-mapper, compiled, and
+installed.
+all seems to work ok.
+
+but i have few questions, and 1 big problem.
+
+problem:
+
+when i try to extend my current old volume pvmove gives me an error:
+
+rn:~# pvmove /dev/hde1
+  device-mapper ioctl cmd 9 failed: Invalid argument
+  Couldn't load device 'hyp-pvmove0'.
+  ABORTING: Temporary mirror activation failed.
+  device-mapper ioctl cmd 9 failed: Invalid argument
+  Couldn't load device 'hyp-rn'.
+
+this is what i did:
+i have volume group:
+
+rn:~# vgdisplay
+  --- Volume group ---
+  VG Name               hyp
+  System ID             rn1037982351
+  Format                lvm2
+  Metadata Areas        9
+  Metadata Sequence No  30
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                2048
+  Cur LV                2
+  Open LV               0
+  Max PV                24
+  Cur PV                9
+  Act PV                9
+  VG Size               989.19 GB
+  PE Size               16.00 MB
+  Total PE              63308
+  Alloc PE / Size       53232 / 831.75 GB
+  Free  PE / Size       10076 / 157.44 GB
+  VG UUID               46QFpN-LocC-JvQw-PDlc-5be6-x7pu-burVMz
+
+ive formated, and pvcreate /dev/hdk1
+
+rn:~# pvdisplay /dev/hdk1
+  --- Physical volume ---
+  PV Name               /dev/hdk1
+  VG Name               hyp
+  PV Size               233.73 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       16384
+  Total PE              14959
+  Free PE               10076
+  Allocated PE          4883
+  PV UUID               Yu16JP-A65t-pbC0-93FR-kI3B-3Jv4-duKJMT
+
+it shows that i have enough free space to move hde1 to hdk1.
+
+rn:~# pvdisplay /dev/hde1
+  --- Physical volume ---
+  PV Name               /dev/hde1
+  VG Name               hyp
+  PV Size               76.30 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       16384
+  Total PE              4883
+  Free PE               0
+  Allocated PE          4883
+  PV UUID               GSRC0l-keb2-0BN2-Kgi5-8Hou-KVwE-ZtNPKS
+
+
+now I dont know what i do wrong. i always used to do this things with lvm1, but
+here is smth wrong.
+and my additional question is, why vgdisplay shows only MAX LV  256 when ive
+just turned to kernel 2.6.0 & dev-mapper & lvm2? it was supposed to be at least
+1024, or 2048 (like it is now, coz ive edited some files - dont know if i did
+smth bad).
+
+
+how to fix my problem?
+
+i want to remove hde1 and hdg1. i got enough space on hdk.
+rn:~# pvs
+PV         VG       Fmt  Attr PSize   PFree
+/dev/hda2  hyp     lvm2 a-   110.58G      0
+/dev/hdb1  hyp     lvm2 a-   114.47G      0
+/dev/hdc1  hyp     lvm2 a-   111.77G      0
+/dev/hdd1  hyp     lvm2 a-   114.47G      0
+/dev/hde1  hyp     lvm2 a-    76.30G      0
+/dev/hdf1  hyp     lvm2 a-    76.67G      0
+/dev/hdg1  hyp    lvm2 a-    74.53G      0
+/dev/hdh1  hyp    lvm2 a-    76.67G      0
+/dev/hdk1           lvm2 --   233.73G 233.73G
+
+and is there any good manual (like for veriosn lvm1, step-by-step configuring
+lvm2, and converting lvm1->lvm2?)
+
+and on dmesg i got this:
+device-mapper: error adding target to table
+device-mapper: device 254:001 too small for target
+device-mapper: dm-linear: Device lookup failed
+device-mapper: error adding target to table
+device-mapper: error adding target to table
+device-mapper: device 254:001 too small for target
+device-mapper: dm-linear: Device lookup failed
+device-mapper: error adding target to table
+
+I searched a lot on mailing list, but there is no solution for me.
