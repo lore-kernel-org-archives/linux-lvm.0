@@ -1,11 +1,8 @@
-From: Marc Cousin <cousinmarc@free.fr>
-Subject: Re: [linux-lvm] lvm2 + linux 2.6.0-test2 + nptl
-References: <200307311721.24805.cousinmarc@free.fr> <1059665440.4658.1.camel@chtephan.cs.pocnet.net>
-In-Reply-To: <1059665440.4658.1.camel@chtephan.cs.pocnet.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Dmitriy Samovskiy <dima@somic.org>
+Message-ID: <20030731155430.A21290@somic.org>
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200307311803.30572.cousinmarc@free.fr>
+Subject: [linux-lvm] [bug report] SIGSEGV when /dev/lvm doesn't exist
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,46 +13,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jul 31 11:04:01 2003
+Date: Thu Jul 31 15:55:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-hardly, as I don't have strace without /usr ... I'll try that as soon as I can 
-...
-i'm with gentoo too, did you use the latest glibc 2.3.2-r3 or the latest 
-unmasked glibc 2.3.2-r1 ?
-I had to edit my 2.3.2-r3 ebuild to make it work with my current compiler 
-(gcc3.2, not 3.3)
+Hi,
 
-I'll try to reproduce it and get an strace
+LVM userland tools (such as pvcreate, vgscan and so on) would crash with
+SIGSEGV if /dev/lvm file does not exist. Plese find details below.
 
-On Thursday 31 July 2003 17:30, Christophe Saout wrote:
-> Am Do, 2003-07-31 um 17.21 schrieb Marc Cousin:
-> > What information can I provide ?
-> > kernel is 2.6.0-test2
-> > lvm tools are LVM2.2.00.05
-> > glibc is 2.3.2, with NPTL 0.55
-> >
-> > Is it a know problem ?
->
-> Exactly the same configuration here (glibc/nptl from the latest Gentoo
-> Linux ebuild), I don't see any problems.
->
-> Can you strace vgscan?
->
-> --
-> Christophe Saout <christophe@saout.de>
-> Please avoid sending me Word or PowerPoint attachments.
-> See http://www.fsf.org/philosophy/no-word-attachments.html
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+After I created /dev/lvm, everything is fine.
+It's not actually a bug - just a minor inconvenience.
+
+==============================
+[15:37:18 1.0.7]# pvscan -h
+Logical Volume Manager 1.0.7
+Heinz Mauelshagen, Sistina Software  28/03/2003 (IOP 10)
+
+pvscan --  scan for physical volumes
+
+pvscan [-d|--debug] {-e|--exported | -n/--novolumegroup} [-h|--help]
+	[-s|--short] [-u|--uuid] [-v[v]|--verbose [--verbose]] [--version]
+===============================
+[15:39:03 1.0.7]# cat /proc/lvm/global 
+LVM driver LVM version 1.0.5+(22/07/2002)
+
+Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
+Global: 153 bytes malloced   IOP version: 10   44 days 21:07:45 active
+===============================
+[15:39:07 1.0.7]# uname -a
+Linux home.somic.org 2.4.21 #1 Mon Jun 16 22:40:39 CDT 2003 i686 unknown
+===============================
 
 -- 
-   Hobbes : Shouldn't we read the instructions?  
-   Calvin : Do I look like a sissy?
+  Dmitriy Samovskiy
+  dsamovskiy@yahoo.com    dima@somic.org
+  http://www.somic.org
+  PGP (GnuPG) public key: http://www.somic.org/dima.gpg.asc
