@@ -1,19 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2TMfDj24000
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 17:41:13 -0500
-Received: from email02.aon.at (WARSL402PIP7.highway.telekom.at [195.3.96.94])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2TMfB1X031061
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 17:41:11 -0500
-From: Manfred Koizar <mkoi-pg@aon.at>
-Date: Tue, 30 Mar 2004 00:42:54 +0200
-Message-ID: <5r5h60pus29i6hf4eftka319gmqlrd6ies@email.aon.at>
-References: <06sb60hni6h5cok941gqnuo4ld1b0v1rgi@email.aon.at>
-	<200403291650.i2TGop212446@mail.osdl.org>
-In-Reply-To: <200403291650.i2TGop212446@mail.osdl.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: [HACKERS] PostgreSQL block size vs. LVM2 stripe
-	width
+Date: Tue, 30 Mar 2004 15:19:12 -0800
+From: Dave Olien <dmo@osdl.org>
+Subject: Re: [linux-lvm] LVM2 scalability within volume group
+Message-ID: <20040330231912.GA20397@osdl.org>
+References: <20040317173637.GA2126@osdl.org>
+	<20040317120005.C31599@homer.msp.redhat.com>
+	<20040322224145.GA26571@osdl.org>
+	<20040326163403.F17377@homer.msp.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20040326163403.F17377@homer.msp.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,49 +20,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: markw@osdl.org
-Cc: linux-lvm@redhat.com, linux-ia64@vger.kernel.org, pgsql-hackers@postgresql.org
+Content-Transfer-Encoding: 7bit
+To: agk@redhat.com
+Cc: linux-lvm@redhat.com
 
-On Mon, 29 Mar 2004 08:50:42 -0800 (PST), markw@osdl.org wrote:
->In this case, I've only done 1 per each combination.  I've found the
->results for this test to be reproduceable.
 
-Pardon?
+Thanks for the feedback.  I'll be experimenting more with this over the
+next few weeks.  I'd love to try changes as they come available.
 
->>>                        Linux-2.6.3, LVM2 Stripe Width
->>>BLCKSZ
->>>(going down)    16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
->>>2 KB            2617    2656    2652    2664    2667    2642
->>>4 KB            4393    4486    4577    4557    4511    4448
->>>8 KB            4337    4423    4471    4576    4111    3642
->>>16 KB           4412    4495    4532    4536    2985    2312
->>>32 KB           3705    3784    3886    3925    2936    2362
+Dave Olien
 
->> Does this mean that you first ran all test with 8 KB, then with 4, 2, 16
->> and 32 KB BLCKSZ?  If so, I suspect that you are measuring the effects
->> of something different.
->
->Yes, that's correct, but why do you suspect that?
-
-Gut feelings, hard to put into words.  Let me try:
-
-Nobody really knows what the "optimal" BLCKSZ is.  Most probably it
-depends on the application, OS, hardware, and other factors.  8 KB is
-believed to be a good general purpose BLCKSZ.
-
-I wouldn't be surprised if 8 KB turns out to be suboptimal in one or the
-other case (or even in most cases).  But if so, I would expect it to be
-either too small or too large.
-
-In your tests, however, there are three configurations where 8 KB is
-slower than both 4 KB and 16 KB.  Absent any explanation for this
-interesting effect, it is easier to mistrust your numbers.
-
-If you run your tests in the opposite order, on the same hardware, in
-the same freshly formatted partitions, and you get the same results,
-that would be an argument in favour of their accurancy.
-
-Maybe we find out that those 1.5% are just noise.
-
-Servus
- Manfred
+On Fri, Mar 26, 2004 at 04:34:03PM -0600, Alasdair G Kergon wrote:
+> On Mon, Mar 22, 2004 at 02:41:45PM -0800, Dave Olien wrote:
+> > Can these user-level commands be made smarter in this regard?
+> 
+> Yes.  
+>   (a) Additional internal state can be written to the cache file.
+>       [The index of which PVs are in which VGs; the index of which
+>        UUIDs were found on which devices.]
+>   (b) Some disk reads are still duplicated and can be cached safely.
+> 
+> > Is this something that using the lvm(8) shell would help?  
+> 
+> Yes, this is equivalent to point (a).
+> Either pipe the commands through it, or try linking against
+> the library I checked into CVS today.  
+> (configure --enable-cmdlib;  brief docn in lvm2cmd.h)
+> 
+> Quick example prog below.
+> 
+> 
+> #include "lvm2cmd.h"
+>  
+> /* All output gets passed to this function line-by-line */
+> void test_log_fn(int level, const char *file, int line, const char *format)
+> {
+> 	/* Extract and process output here instead of printing it */
+> 
+>         if (level != 4)
+>                 return;
+>  
+>         printf("%s\n", format);
+>         return;
+> }
+>  
+> int main(int argc, char **argv)
+> {
+>         void *handle;
+>         int r;
+>  
+>         lvm2_log_fn(test_log_fn);
+>  
+>         handle = lvm2_init();
+>  
+>         lvm2_log_level(handle, 1);
+>         r = lvm2_run(handle, "vgs --noheadings vg1");
+> 
+> 	/* More commands here */
+>  
+>         lvm2_exit(handle);
+>  
+>         return r;
+> }
+>  
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
