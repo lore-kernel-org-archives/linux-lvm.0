@@ -1,10 +1,9 @@
-From: "Bill Rugolsky Jr." <brugolsky@telemetry-investments.com>
-Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
-Message-ID: <20040102202206.GA28007@ti19.telemetry-investments.com>
-References: <OF1304E5DE.20B1794B-ON00256E0F.006B2F94-00256E0F.006B2FA0@svunta.os.is> <20040102201045.GK26275@percy.comedia.it>
+From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
+Message-ID: <yw1x7k0a5837.fsf@kth.se>
+References: <1073071423.16760.10.camel@tesla.mmt.bellhowell.com> <20040102193442.GJ26275@percy.comedia.it>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040102201045.GK26275@percy.comedia.it>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: Swap on LVM2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +14,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  2 14:24:02 2004
+Date: Fri Jan  2 15:56:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Fri, Jan 02, 2004 at 09:10:46PM +0100, Luca Berra wrote:
-> On Fri, Jan 02, 2004 at 07:30:45PM +0000, Kjartan Reynir Hauksson wrote:
-> >>work.  You have to use the --lvm-version=2 option to mkinitrd.
-> >
-> >kernel panic, this time VFS: Cannot open root device "3a00" or 3a:00
-> 
-> ouch that should never happen, do you have anything printed above the 
-> kernel panic?
+Luca Berra <bluca@comedia.it> writes:
 
-0x3a == 58 == lvm1 major device number.  So it looks like the initrd
-is still incorrect.
+> On Fri, Jan 02, 2004 at 02:23:44PM -0500, Jeffrey Layton wrote:
+>>I'm working on a HowTo on setting up a machine with / on LVM2, on
+>>RAID-1, and hit a question. Is it safe to swap to a LVM2 volume?
+>
+> it should.
 
-Regards,
+I've done it, and didn't notice any problems.  That doesn't mean they
+can't exist, of course.
 
-	Bill Rugolsky
+-- 
+M�ns Rullg�rd
+mru@kth.se
