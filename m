@@ -1,9 +1,7 @@
-From: "more" <more0401@sina.com>
-Subject: RE: [linux-lvm] LVM or LVM2?
-Message-ID: <JPEFKGGHAMLCEEAJKMNIGEEMCAAA.more0401@sina.com>
+Message-ID: <20031207011848.16285.qmail@web21005.mail.yahoo.com>
+From: John Cheng <john_cheng71@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1070653985.2686.2.camel@gecko.indygecko.com>
+Subject: [linux-lvm] lvdisplay
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,85 +12,91 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  8 07:24:01 2003
+Date: Mon Dec  8 07:24:04 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I have tried LVM1, LVM2 and EVMS, and I think LVM2 is the better choice.
+hi all guru:
 
-Since from Linux kernel 2.6.0, the kernel only supports device-mapper =
-(LVM2). So LVM2 is better than LVM1.
-Actually for the user friendly interfaces, EVMS is better for user =
-friendly. But for the robust and maintenance, LVM2 is better obviously.
-I think robust and maintenance is most important for a storage server of =
-course.
+  Just writing a script now and confused by the output from different option.
+first LVM is striped over 2 PV, lvdisplay -v report a size of 500M and -c option
+report 1032192 kb. and second LVM is a linear LVM, while -v report size of 300M
+and -c report 614400 kb. read through MAN page a few rounds and google over the net,
+did not get too much detail of the formula for the computation. seek help from any
+one here. thanks
+
+-------------------first lvm output
+-v option
+--- Logical volume ---
+LV Name                /dev/vg01/lvol1
+VG Name                vg01
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                504 MB
+Current LE             126
+Allocated LE           126
+Stripes                2
+Stripe size (KByte)    4
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
+
+   --- Distribution of logical volume on 2 physical volumes  ---
+   PV Name                  PE on PV     reads      writes
+   /dev/hdb1                63           0          2
+   /dev/hdb2                63           0          0
+
+   --- logical volume i/o statistic ---
+   0 reads  2 writes
+
+   --- Logical extents ---
+   LE    PV                        PE     reads      writes
+   00000 /dev/hdb1                 00000  0          2
+   00001 /dev/hdb1                 00001  0          0
+   00002 /dev/hdb1                 00002  0          0
+   .....................................
+  
+-c option
+/dev/vg01/lvol1:vg01:3:1:0:0:1032192:126:126:0:1024:58:0
+
+---------------------------second LVM
+--- Logical volume ---
+LV Name                /dev/vg45/lv45
+VG Name                vg45
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                300 MB
+Current LE             75
+Allocated LE           75
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:1
+
+   --- Distribution of logical volume on 1 physical volume  ---
+   PV Name                  PE on PV     reads      writes
+   /dev/hdb4                75           0          2
+
+   --- logical volume i/o statistic ---
+   0 reads  2 writes
+
+   --- Logical extents ---
+   LE    PV                        PE     reads      writes
+   00000 /dev/hdb4                 00000  0          2
+   00001 /dev/hdb4                 00001  0          0
+   00002 /dev/hdb4                 00002  0          0
+   00003 /dev/hdb4                 00003  0          0
+...................................................
+-c option output
+/dev/vg45/lv45:vg45:3:1:0:0:614400:75:75:0:1024:58:1
 
 
-more
-
-
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Jord Tanner
-Sent: 2003=E5=B9=B412=E6=9C=886=E6=97=A5 3:53
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] LVM or LVM2?
-
-
-I know this is the LVM list, and I may be shot for saying this, but I
-have found EVMS to be fabulous. The curses based interface is good, and
-the X interface is fantastic. Others will certainly have other opinions,
-and as always YMMV.
-
-Jord Tanner
-
-On Fri, 2003-12-05 at 06:56, Yanick Quirion wrote:
-> Hi all,
-> =20
-> I want to implement LVM on a new system. The server will be a Fedora =
-Core 1 and this distribution comes with utilities of LVM version 1.0.x. =
-I also read some stuff about LVM2, but I can't figure out which one is =
-the best solution. On a old system I use LVM 1.1RC2, but this version =
-seems now to be unavailable.
-> =20
-> So for my new server I just want to make the good decision. Which one, =
-between the two, is the best solution for now and the future?
-> =20
-> Thanks for your suggestion.
-> =20
-> Best regards,
->=20
->=20
-> -----------
-> Yanick Quirion
-> Administrateur R=C3=A9seau/Network Manager
-> NEOKIMIA INC.
-> Institut de Pharmacologie de Sherbrooke
-> 3e =C3=A9tage (=C3=A9difice Z5)
-> 3001 12e avenue Nord
-> Sherbrooke, Qu=C3=A9bec
-> CANADA
-> J1H 5N4
-> =20
-> T=C3=A9l.:    +1 819 820-6040
-> Direct:  +1 819 820-6855
-> Fax.:    +1 819 820-6841
-> =20
-> email: Yanick.Quirion@neokimia.com
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---=20
-Jord Tanner <jord@indygecko.com>
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+__________________________________
+Do you Yahoo!?
+New Yahoo! Photos - easier uploading and sharing.
+http://photos.yahoo.com/
