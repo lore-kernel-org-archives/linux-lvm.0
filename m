@@ -1,11 +1,10 @@
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] lvm/devfs bug?
-From: rich turner <rich@storix.com>
-In-Reply-To: <20030408203324.A13056@uk.sistina.com>
-References: <1049829705.2312.16.camel@rich> 
-	<20030408203324.A13056@uk.sistina.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1049832381.1028.17.camel@rich-laptop>
+Message-ID: <20030408204334.GD22951@percy.comedia.it>
+References: <1049829705.2312.16.camel@rich>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1049829705.2312.16.camel@rich>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr  8 15:06:01 2003
+Date: Tue Apr  8 15:43:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-sorry, my mistake. i copied it from many different attempt sources. all
-references should be sda not sda1 because the pv will be located on the
-entire disk not a partition
+On Tue, Apr 08, 2003 at 12:21:45PM -0700, Rich Turner wrote:
+>i am able to confirm that /proc/partitions does not have a partition
+>entry for the disk but pvcreate still fails. i am using a devfs kernel
+>so i thought there might be some strange behavior between lvm and devfs.
+>is there a fix or known issues regarding lvm and devfs?
+>
+if you have devfs you should use the devfs long mane to reference your pv
+eg: /dev/scsi/host0/bus0/target0/lun0/disc
+as to why the error message is misleading i would not say, lvm1 tools are
+very buggy wrt the handling of device names.
 
-On Tue, 2003-04-08 at 12:33, Alasdair G Kergon wrote:
-> On Tue, Apr 08, 2003 at 12:21:45PM -0700, Rich Turner wrote:
-> > the entire disk /dev/sda1
-> > # pvcreate -ff -v /dev/sda1
-> > pvcreate --device "/dev/sda" has a partition table
-> > # dd if=/dev/zero of=/dev/sda bs=1024 count=10
-> > # blockdev --rereadpt /dev/sda
-> > # sfdisk -R /dev/sda1
->  
-> Confusion between
->   /dev/sda  and
->   /dev/sda1 ?
-> 
-> Alasdair
-> -- 
-> agk@uk.sistina.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
