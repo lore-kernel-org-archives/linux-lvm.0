@@ -1,11 +1,10 @@
-Return-Path: <list@showme.wox.org>
-Message-ID: <00a301c0ad10$f9b5d820$0f01a8c0@myplace.net>
-From: "Bas" <list@showme.wox.org>
-References: <005801c0ac4b$a781cc00$0f01a8c0@myplace.net> <200103132137.f2DLb6o05452@webber.adilger.int> <20010314163701.F14172@sistina.com> <004701c0ad06$0ba5d400$0f01a8c0@myplace.net> <20010314204739.B15040@sistina.com>
-Subject: Re: [linux-lvm] Changing device numbers.
-Date: Wed, 14 Mar 2001 21:29:58 -0800
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Return-Path: <Michael.Greulich@eplus.de>
+From: Michael.Greulich@eplus.de
+Message-ID: <41256A10.00419B0F.00@S1008351.eplus.de>
+Date: Thu, 15 Mar 2001 13:02:01 +0100
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Update to SuSE 7.1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> s/LE/LV/ -> yes.
->
-> 1st LV in 1st VG -> 58,0
-> 2nd LV in 1st VG -> 58,1
-> 1st LV in 2nd VG -> 58,2
->
-> and so on.
->
+Hi folks,
 
-Ok, that's what I found out with that changing root device number. But what
-makes 58,0 device 58,0 ? What I mean is: my old LV root was the first LV I
-made. I didn't have 2 disks, now I do, and I wanted everything striped. I
-removed the 1st LV, created a new (striped) one, and copied all the data
-from old root to new root. I removed old root, and renamed templv to root,
-thus giving it a device number. Then rebooted, to use the new root, and
-created a LV.
-That caused a shift in device numbers, and I wonder why. It makes me think
-that the first LE on a disk that is used to create an LV, makes than device
-58,0. Right ?
+I just tried to update my PC running SuSE 6.3 (Kernel 2.2.16) and a LVM 0.8e to
+SuSE 7.1 Kernel 2.4 and LVM 0.9. The update worked fine. I just had to activate
+my vg manually and then the lvs were visible to yast2 and it happiely updated my
+installation. After this it had to reboot. After the reboot I'm not able to
+access my vg anymore! vgscan (version 0.9) just mentions "no vgs found".
+vgcfgrestore 0.9 complains about "wrong structure" of the backup files.
+Additionally the old vgscan (version 0.8e) now complains about an invalid i/o
+protocol version 6. So I'm not able to access my vg anymore....
+
+Anybody any ideas???
+
+TIA
+.\\ichael
