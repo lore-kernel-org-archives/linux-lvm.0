@@ -1,16 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2V0TkO23521
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2005 19:29:46 -0500
-Received: from whirlwind.atmosp.physics.utoronto.ca
-	(whirlwind.atmosp.physics.utoronto.ca [128.100.80.80])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2V0Tj1k004194
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2005 19:29:46 -0500
-Message-ID: <424B4459.5050207@utoronto.ca>
-Date: Wed, 30 Mar 2005 19:29:13 -0500
-From: Guido Vettoretti <g.vettoretti@utoronto.ca>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] large logical volumes
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2V7cJO16642
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2005 02:38:19 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2V7cIqs004922
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2005 02:38:19 -0500
+Date: Thu, 31 Mar 2005 09:38:17 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Re: putting lvm autodetect into the kernel ala md
+Message-ID: <20050331073816.GD3879@percy.comedia.it>
+References: <mailman.11694.1112144246.19557.linux-lvm@redhat.com>
+	<c23be1c305032917022b076064@mail.gmail.com>
+	<20050330065236.GA18365@percy.comedia.it>
+	<c23be1c30503300738690039d8@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <c23be1c30503300738690039d8@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,126 +26,70 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+On Wed, Mar 30, 2005 at 11:38:16PM +0800, Andy Sy wrote:
+>Luca Berra wrote:
+>
+>> >Just like the kernel is now able to autodetect and
+>> >autoenable md RAID arrays, are there plans to make
+>
+>> kernel autodetection of md arrays is almost always a 
+>> bad idea, it is far better to use mdadm in user space for that.
+>
+>Why is this necessarily so?   RAID autodetect seems to 
+>avoid a lot of configuration hassles especially when your 
+>root partition is involved.  Any horror stories to tell?
 
-I'm trying to set up a large logical volume (13.1 TB) on a RHEL 4.0 
-server. I have 8 scsi devices of 1.8Tb each.
+yes, read the linux-raid mailing list for those, i am tired of beating
+the same dead horse.
 
-When I try to do a 'mkfs' and set up a large disk I get limited to 4Tbytes.
-This command creates a smaller filesystem then
-[root@cyclone ~]# lvcreate -l 1287525 -i 3 -n lvol0 vol0
-this one.
-[root@cyclone ~]# lvcreate -l 1000000 -i 3 -n lvol0 vol0
+>> >lvm do the same?  (i.e integrate the functionality
+>> >of vgscan / vgchange -ay,-an into the kernel)
+>
+>> no, it is an user space task, there is no reason to
+>> burden the kernel with this.
+>
+>People have recommended against using an LVM
+>volume for your root partition citing the hassle of
+>a rescue disk as being the main reason.  If lvm volume
+this is just ridicolous fud.
+in what cases you would need a rescue disk?
+are those really different from the cases you'd need a rescue disk for a
+normal partition-table based system.
+besides, every live distro on earth now supports lvm and can be used as
+a recovery tool.
 
-It seems that there is a limit on the number of  block groups of 32768 
-and blocks per group of 32768.
-My block size is 4096
-so I can only get an LV of 4096*32768*32768 = 4TB.
+>autodetect and enabling were in the kernel, then
+>this would no longer be the case.
+why?
 
-I tried modifying the PE size on the volume group, but I'm still having 
-problems.
+>I have a good reason for wanting my root partition
+>to be a logical volume: this is because I can
+i have been using my root partition as a logical volume for several
+years now.
 
-Can anyone help please?
+>Unless lvm detect/enable functionality were built into
+>the kernel though, you will always have to live with a 
+>physical partition holding /boot - the case today
+>with LVM and RAID0, but not RAID1 (from which it is
+>possible to boot directly off of).
+i don't have a separate partition for /boot on my lvm systems.
+the only reason i needed a separate boot partition was when i had a
+system using raid5, so i had to have a separate raid1 partition for
+booting.
+Reading your arguments it appeare you are mis-informed and make a lot of
+confusion between a boot loader (which is the only limitation we have in
+loading a kernel/initrd/initramfs) and what the kernel can do.
 
-Thanks
-Guido
----------------
-[root@cyclone ~]# mkfs -t ext3 /dev/vol0/lvol0
-mke2fs 1.35 (28-Feb-2004)
-max_blocks 4294967295, rsv_groups = 0, rsv_gdb = 1024
-Filesystem label=
-OS type: Linux
-Block size=4096 (log=2)
-Fragment size=4096 (log=2)
-512016384 inodes, 1024002048 blocks
-8250429 blocks (0.81%) reserved for the super user
-First data block=0
-Maximum filesystem blocks=1027604480
-31251 block groups
-32768 blocks per group, 32768 fragments per group
-16384 inodes per group
-Superblock backups stored on blocks:
-        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 
-2654208,
-        4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-        102400000, 214990848, 512000000, 550731776, 644972544
+Regards,
+Luca
 
-
-Here is the entire process I typed:
-------------------------------------------------------------------------------
-
-[root@cyclone ~]# pvcreate /dev/sdc1 /dev/sdd1 /dev/sde1
-  Physical volume "/dev/sdc1" successfully created
-  Physical volume "/dev/sdd1" successfully created
-  Physical volume "/dev/sde1" successfully created
-[root@cyclone ~]# pvscan
-  /dev/cdrom: open failed: No medium found
-  PV /dev/sda2   VG VolGroup00   lvm2 [34.06 GB / 0    free]
-  PV /dev/sdb1   VG VolGroup00   lvm2 [34.16 GB / 0    free]
-  PV /dev/sdc1                   lvm2 [1.64 TB]
-  PV /dev/sdd1                   lvm2 [1.64 TB]
-  PV /dev/sde1                   lvm2 [1.64 TB]
-  Total: 5 [4.98 TB] / in use: 2 [68.22 GB] / in no VG: 3 [4.91 TB]
-[root@cyclone ~]# vgcreate vol0 /dev/sd[c-e]1
-  Volume group "vol0" successfully created
-[root@cyclone ~]# vgdisplay
-  --- Volume group ---
-  VG Name               vol0
-  System ID            
-  Format                lvm2
-  Metadata Areas        3
-  Metadata Sequence No  1
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                0
-  Open LV               0
-  Max PV                0
-  Cur PV                3
-  Act PV                3
-  VG Size               4.91 TB
-  PE Size               4.00 MB
-  Total PE              1287525
-  Alloc PE / Size       0 / 0  
-  Free  PE / Size       1287525 / 4.91 TB
-  VG UUID               fQ7cKh-FVnl-NglQ-jimv-RsZK-dU5j-zYKIcG
-
-[root@cyclone ~]# lvcreate -l 1287525 -i 3 -n lvol0 vol0
-  Using default stripesize 64KB
-  Logical volume "lvol0" created
-[root@cyclone ~]# lvdisplay
-  --- Logical volume ---
-  LV Name                /dev/vol0/lvol0
-  VG Name                vol0
-  LV UUID                c2MADb-BoAO-lhl3-3ukj-XfyQ-K8L0-cxcIlw
-  LV Write Access        read/write
-  LV Status              available
-  # open                 0
-  LV Size                4.91 TB
-  Current LE             1287525
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           253:2
-  
-[root@cyclone ~]# mkfs -t ext3 /dev/vol0/lvol0
-mke2fs 1.35 (28-Feb-2004)
-max_blocks 4294967295, rsv_groups = 0, rsv_gdb = 1024
-Filesystem label=
-OS type: Linux
-Block size=4096 (log=2)
-Fragment size=4096 (log=2)
-122355712 inodes, 244683776 blocks
-12234188 blocks (5.00%) reserved for the super user
-First data block=0
-Maximum filesystem blocks=247463936
-7468 block groups
-32768 blocks per group, 32768 fragments per group
-16384 inodes per group
-Superblock backups stored on blocks:
-        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 
-2654208,
-        4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-        102400000, 214990848
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
