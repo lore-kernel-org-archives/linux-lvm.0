@@ -1,20 +1,7 @@
-Message-ID: <3E55201B.919C8D41@conterra.de>
-From: Dieter Stueken <stueken@conterra.de>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: How to handle Bad Block relocation with LVM? 
- 	I actually quite agree.  Here are a few points:
- 	
- 	o A PE is typically less than 0.01% of my total disk space.
- 	
- 	o Corruption on a drive tends to spread, especially if sectors near the
- 	corruption are accessed frequently, so it's best to avoid a whole
- 	section of a drive around a bad spot.
- 	
- 	o In general, I would want to throw away a drive that had so many bad
- 	sectors that it's firmware relocation software could no longer handle
- 	them.  So, my main purpose in relocating the PE is to recover as much
- 	data from it as I can before junking the drive.
-Content-Transfer-Encoding: 8bit
+From: "DJ TweeQ" <djtweeq@hotmail.com>
+Mime-Version: 1.0
+Message-ID: <F66Jmn8eeGbdBmM9SJL000066dc@hotmail.com>
+Subject: [linux-lvm] Sharing LVM's via NFS on Redhat 8.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -25,49 +12,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 20 12:36:01 2003
+Date: Thu Feb 20 13:44:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Eric M. Hopper wrote:
+Phone rings and i forget to complete my previous post :)
 
->I actually quite agree.  Here are a few points:
->
->o A PE is typically less than 0.01% of my total disk space.
+Regarding Sharing LVM LV's via NFS on Redhat 8.0...ie. mounting an LV from 
+another machine while already having a LV on the same machine. Is it ok or 
+not ok? I was talking to a buddy and he doesn't think it's a problem or an 
+issue but...
 
-I just have the same problem on a 300GB volume and some bad sectors.
-The relative amount of a lost PE might be small, but it is still 64Mb,
-which are 131072 lost sectors for each (512byte) bad one :(-
+the current documentation on Sistina's site states that sharing LV's is 
+dangerous unless it's a SCSI or Fibre Storage Device?...and not only that 
+...adminisitration can only be done on one node? (is it really possible to 
+create/resize lv's from one node/machine to another (that has an LV or was 
+it meant to mean that it's only possible on cluster aware network storage 
+devices)??? ....
 
-Up to now, I could solve the problem by running the IBM-DFT tool to
-replace bad sectors.(http://www.hgst.com/hdd/support/download.htm)
-If this succeed, the secor was blank, but readable. After running
-an fsck I even may verify if any file content was damaged by asking
-debugfs.
+http://tldp.org/HOWTO/LVM-HOWTO/x1232.html
+under "Dangerous Operations - Sharing Logical LVM Volumes"
 
-Unfortunately the "sector-repair" failed this time :-(
+ie.
 
-What I need instead would be a hack that simply turns a bad sector into
-an empty sector. This could best be implemented at lowest level when
-reading single sectors, before buildings blocks (=> 4K == 8 sectors
-affected).
-This could be something like a hdparm option. But still reporting such
-events to syslog could be helpful.
+>If you need to do any changes to the LVM metadata (regardless of >whether 
+>it affects volumes mounted on other nodes) you must go through >the 
+>following sequence. In the steps below ``admin node'' is any >arbirarily 
+>chosen node in the cluster. Admin node                   >Other nodes
+>----------                   -----------
+>                             Close all Logical volumes (umount)
+>                             vgchange -an
+><make changes, eg lvextend>
+>                             vgscan
+>                             vgchange -ay
 
->o Corruption on a drive tends to spread, especially if sectors near the
->corruption are accessed frequently, so it's best to avoid a whole
->section of a drive around a bad spot.
+I'm thinking that it might not be a good idea to try to do maintenance on a 
+LV that is mounted on another system...but i think it makes a whole heck of 
+alot of sense to create/resize/mount an LV on a system before trying to 
+mount it via an NFS share. :)
 
-Therefore it would be good, if the system will not retry to read a
-broken
-sector again and again and again, as done by now 8 times for each 4k
-block
-plus n times by all the read-ahed attempts.
+Any comments? I personally don't think it would be an issue either (to mount 
+an LV on another box/system via an NFS mount) but i'd rather not take the 
+chance of messing up any of the data on those LV's cuz their stuffed :)
 
-Dieter.
--- 
-Dieter St�ken, con terra GmbH, M�nster
-    stueken@conterra.de        
-    http://www.conterra.de/   
-    (0)251-7474-501
+Oh one other thing...if it has been proven that a Redhat 8.0 2.4-24?.x 
+kernel can be patched to LVM 1.0.6+ ....will the data on those LV's be 
+affected in any way or will it all be ok? :)
+
+
+
+
+
+
+
+_________________________________________________________________
+MSN 8 with e-mail virus protection service: 2 months FREE*  
+http://join.msn.com/?page=features/virus
