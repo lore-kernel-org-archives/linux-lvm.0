@@ -1,13 +1,13 @@
-Date: Mon, 27 Aug 2001 09:20:49 -0500
+Date: Mon, 27 Aug 2001 09:29:03 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Problems compiling lvm 1.0 and 2.4.x kernel
-Message-ID: <20010827092049.A12065@sistina.com>
-References: <Pine.A41.3.96.1010827154540.15862G-100000@hadron.tp2.ruhr-uni-bochum.de>
+Subject: Re: [linux-lvm] troubled Guiness
+Message-ID: <20010827092903.A12257@sistina.com>
+References: <Pine.LNX.4.33.0108260910540.1071-100000@leopard.dorfam.ca> <000e01c12e77$3382ca80$0300000a@pacbell.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
 Content-Disposition: inline
-In-Reply-To: <Pine.A41.3.96.1010827154540.15862G-100000@hadron.tp2.ruhr-uni-bochum.de>; from peterd@tp2.ruhr-uni-bochum.de on Mon, Aug 27, 2001 at 03:51:00PM +0200
+In-Reply-To: <000e01c12e77$3382ca80$0300000a@pacbell.net>; from e@arix.com on Sun, Aug 26, 2001 at 02:36:44PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,49 +20,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
-Cc: Peter Druck <Peter.Druck@tp2.ruhr-uni-bochum.de>
 
---G4iJoqBmSsgzjUCe
+--5mCyUwZo2JvN/JJP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 27, 2001 at 03:51:00PM +0200, Peter Druck wrote:
-> Hallo,
-> I want to update my lvm from 0.9xx to 1.0. I've downloaded a
-> new kernel 2.4.9 (but I also tried it with 2.4.4). After I've
-> applied the patch and compile the kernel I get the following
-> error. Any idears what goes wrong?
+On Sun, Aug 26, 2001 at 02:36:44PM -0700, Erick Calder wrote:
+> I'm running RH 7.0 (Guiness) with the 2.2.16-22 kernel and gcc-2.96-85 and
+> have downloaded the Linus 2.4.9 stock kernel which I'm trying to make... I
+> built the patch and applied it with no apparent problem but when I try to
+> build the kernel I get the errors in the log below.
+>=20
+> has anyone been here before?
 
-Yep, basically what happened is Linus and some other guy decided to change
-min and max to have three arguments instead of two, and did so without
-telling anyone in 2.4.9.  Pretty nice, huh?  Anyway, Alan Cox has refused to
-incorporate the changes 'cause it breaks almost every driver out there. See
-the thread starting at
-http://uwsg.iu.edu/hypermail/linux/kernel/0108.2/0117.html on the linux
-kernel mailing list for more details.
+I just responded to Peter Druck about this same problem.  See the thread
+with subject "Problems compiling lvm 1.0 and 2.4.x kernel" on this list.
 
-This problem is fixed in the CVS and in 1.0.1-rc1.
-
-> Here is what make says:
-> lvm.c:2329: macro `min' used with only 2 args
-> lvm.c:2343: macro `min' used with only 2 args
-> lvm.c: In function `__extend_reduce':
-> lvm.c:2329: parse error before `__x'
-> lvm.c:2329: `__x' undeclared (first use in this function)
-> lvm.c:2329: (Each undeclared identifier is reported only once
-> lvm.c:2329: for each function it appears in.)
-> lvm.c:2329: `__y' undeclared (first use in this function)
-> lvm.c:2343: `old_stripe_size' undeclared (first use in this function)
-> lvm.c:2343: parse error before `__x'
-> lvm.c:2280: warning: `end' might be used uninitialized in this function
-> lvm.c:2339: warning: `end' might be used uninitialized in this function
-> make[3]: *** [lvm.o] Error 1
-> make[2]: *** [first_rule] Error 2
-> make[1]: *** [_subdir_md] Error 2
-> make: *** [_dir_drivers] Error 2
-
-Regards,
 --=20
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-638-0500
@@ -76,12 +50,10 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-"Memory is like gasoline. You use it up when you are running. Of
-course you get it all back when you reboot..."; Actual explanation
-obtained from the Micro help desk.
+This message has been brought to you by the language C and the number F.
 -----End Obligatory Humorous Quote------------------------------------------
 
---G4iJoqBmSsgzjUCe
+--5mCyUwZo2JvN/JJP
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -89,9 +61,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7ildBpE6/iGtdjLERAgs9AJ0Z8Z3Y7844BQ+ufrKu2C3r9hlf3ACfU3/K
-cNVDJt3n9dtxkDld0n9M/rI=
-=lfEH
+iD8DBQE7ilkvpE6/iGtdjLERAsbRAJwMtDc/gFeKKiVmr1vI2vzA9CmBFQCfRiDt
+Q1KX6B2LsfzQ00eKaFVyMI4=
+=/Jk4
 -----END PGP SIGNATURE-----
 
---G4iJoqBmSsgzjUCe--
+--5mCyUwZo2JvN/JJP--
