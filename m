@@ -1,10 +1,11 @@
-Message-Id: <200204080755.JAA28548@mailgate.sara.nl>
-From: Remco Post <r.post@sara.nl>
+From: Eduard Bloch <edi@gmx.de>
 Subject: Re: [linux-lvm] Red Hat upgrade over existing LVM
-In-Reply-To: Your message of
-    "07 Apr 2002 05:27:32 +0200."
-    <wxx4rio5gt7.fsf@nommo.uio.no>
+Message-Id: <20020408082048.GA1902@zombie.inka.de>
+References: <3CAFCF97.A199C7B2@vtc.edu.hk>
+    <000001c1ddf7$52437de0$0201a8c0@fosi>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <000001c1ddf7$52437de0$0201a8c0@fosi>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +16,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr  8 02:54:01 2002
+Date: Mon Apr  8 04:04:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> 
->   as far as I know LVM hasn't passed RedHat's testing grounds yet
->   (I've muttered complaints about this a few times to them).  on the
->   other hand, if you want a neat distro that has LVM support I'd have
->   a peek at Gentoo.
-> 
-I use lvm (verion 0.9 something) that comes with mandrake linux and am very happy with it. I guess the new 8.2 distro will come with a mode up-to-date lvm, and Mandrake does support a wide range of filesystems as well...
+#include <hallo.h>
+Steve Wray wrote on Sun Apr 07, 2002 um 05:44:39PM:
+> The mandrake cd1 is the best rescue disk environment
+> that I've yet found.
 
+Try KNOPPIX to change your mind.
+http://download.linuxtag.org/knoppix/KNOPPIX_V2.2-BETA-08-04-2002-EN.iso
 
+Gruss/Regards,
+Eduard.
 -- 
-Met vriendelijke groeten,
-
-Remco Post
-
-SARA - Stichting Academisch Rekencentrum Amsterdam    http://www.sara.nl
-High Performance Computing  Tel. +31 20 592 8008    Fax. +31 20 668 3167
-
-"I really didn't foresee the Internet. But then, neither did the computer
-industry. Not that that tells us very much of course - the computer industry
-didn't even foresee that the century was going to end." -- Douglas Adams
+   If Bill Gates had a dime for every time a Windows box crashed...
+                ...Oh, wait a minute, he already does.
