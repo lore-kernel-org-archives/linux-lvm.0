@@ -1,9 +1,10 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Sat, 28 Apr 2001 11:26:01 +0200 (CEST)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Message-ID: <Pine.LNX.4.32.0104281123560.21920-100000@falka.mfa.kfki.hu>
+Return-Path: <milang@tal.org>
+Message-ID: <002501c0cfc5$e5ab7560$56dc10c3@tal.org>
+From: "Kaj-Michael Lang" <milang@tal.org>
+Date: Sat, 28 Apr 2001 12:30:36 +0300
 MIME-Version: 1.0
-Subject: [linux-lvm] get_hardblocksize and kernel 2.4.4
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM 0.9.1beta7 and 2.4.4 (get_hardblocksize removed)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +16,16 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi!
+Looks like the function:
+get_hardblocksize(kdev_t dev)
 
-Kernel 2.4.4 changed the get_hardblocksize function into
-get_hardsect_size. LVM 0.9.1b7(lvm.c) uses get_hardblocksize so the kernel
-can't be compiled.
+has been removed in 2.4.4. And LVM uses it in two places. 
+Can someone fix it ?
 
-The following patch solves this problem ...
-
-Gergely
-
---- lvm.c.orig	Sat Apr 28 10:48:37 2001
-+++ lvm.c	Sat Apr 28 11:07:07 2001
-@@ -1791,7 +1791,7 @@
- 	int max_hardblocksize = 0, hardblocksize;
-
- 	for (le = 0; le < lv->lv_allocated_le; le++) {
--		hardblocksize = get_hardblocksize(lv->lv_current_pe[le].dev);
-+		hardblocksize = get_hardsect_size(lv->lv_current_pe[le].dev);
- 		if (hardblocksize == 0)
- 			hardblocksize = 512;
- 		if (hardblocksize > max_hardblocksize)
-@@ -1801,7 +1801,7 @@
- 	if (lv->lv_access & LV_SNAPSHOT) {
- 		for (e = 0; e < lv->lv_remap_end; e++) {
- 			hardblocksize =
--				get_hardblocksize(
-+				get_hardsect_size(
- 					lv->lv_block_exception[e].rdev_new);
- 			if (hardblocksize == 0)
- 				hardblocksize = 512;
+--
+Kaj-Michael Lang
+milang@tal.org
+Java? I've heard of it, it is what I drink while hacking PHP! 
