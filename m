@@ -1,18 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K0Uii04284
-	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 19:30:44 -0500
-Received: from mailgate1.mailhost2.kornet.net (mailgate1.kornet.net [211.48.62.217])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1K0Ugb16745
-	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 19:30:43 -0500
-Received: from iris ([218.153.76.250]) by mailgate1.mailhost2.kornet.net
-          with ESMTP id <20040220002427.KXVX1018.mailgate1@iris>
-          for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 09:24:27 +0900
-Message-ID: <006e01c3f748$dfd91e00$9700a8c0@iris>
-From: =?ks_c_5601-1987?B?v8DAzLbz?= <ohyira@gluesys.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K1GHi19064
+	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 20:16:17 -0500
+Message-ID: <40355F03.9030207@cyberone.com.au>
+From: Nick Piggin <piggin@cyberone.com.au>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_006B_01C3F794.49FB1CC0"
-Subject: [linux-lvm] vgcreate -- ERROR 2 writing volume group backup file /etc/lvmtab.d/new.tmp in vg_cfgbackup.c [line 257]
+References: <20040216133047.GA9330@suse.de> <20040217145716.GE30438@traveler.cistron.net> <20040218235243.GA30621@drinkel.cistron.nl> <20040218172622.52914567.akpm@osdl.org> <20040219021159.GE30621@drinkel.cistron.nl> <20040218182628.7eb63d57.akpm@osdl.org> <20040219101519.GG30621@drinkel.cistron.nl> <20040219101915.GJ27190@suse.de> <20040219205907.GE32263@drinkel.cistron.nl> <40353E30.6000105@cyberone.com.au> <20040219235303.GI32263@drinkel.cistron.nl>
+In-Reply-To: <20040219235303.GI32263@drinkel.cistron.nl>
+Content-Type: multipart/mixed;
+ boundary="------------040509070901040301010909"
+Subject: [linux-lvm] [PATCH] per process request limits (was Re: IO scheduler, queue depth,
+ nr_requests)
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -24,90 +21,296 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Feb 19 19:29:02 2004
+Date: Thu Feb 19 20:16:04 2004
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: Miquel van Smoorenburg <miquels@cistron.nl>
+Cc: Jens Axboe <axboe@suse.de>, Andrew Morton <akpm@osdl.org>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, thornber@redhat.com
 
 This is a multi-part message in MIME format.
+--------------040509070901040301010909
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
 
-------=_NextPart_000_006B_01C3F794.49FB1CC0
+Hi Miquel,
+Can you see if this patch helps you?
+
+Even with this patch, it might still be a good idea to allow
+pdflush to disregard the limits...
+
+Nick
+
+
+--------------040509070901040301010909
 Content-Type: text/plain;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
+ name="blk-per-process-rqlim.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="blk-per-process-rqlim.patch"
 
-SSdtIGx2bSBiZWdpbm5lciBeXg0KTm93IEkgbWFkZSBhIHBoeXNpY2FsIHZvbHVtZS4oI3B2Y3Jl
-YXRlIC1mZiAvZGV2L3NkYzEpDQpidXQgZm9sbG93aW5nIHByb2JsZW0gb2NjdXJlZC4uDQoNCkkg
-ZG9uJ3Qga25vdyB3aHkNCkhlbHAgbWUsIHBsZWFzZS4uDQoNCg0KI3ZnY3JlYXRlIG5ldyAvZGV2
-L3NkYzEgDQp2Z2NyZWF0ZSAtLSBJTkZPOiB1c2luZyBkZWZhdWx0IHBoeXNpY2FsIGV4dGVudCBz
-aXplIDQgTUINCnZnY3JlYXRlIC0tIElORk86IG1heGltdW0gbG9naWNhbCB2b2x1bWUgc2l6ZSBp
-cyAyNTUuOTkgR2lnYWJ5dGUNCnZnY3JlYXRlIC0tIEVSUk9SIDIgd3JpdGluZyB2b2x1bWUgZ3Jv
-dXAgYmFja3VwIGZpbGUgL2V0Yy9sdm10YWIuZC9uZXcudG1wIGluIHZnX2NmZ2JhY2t1cC5jIFts
-aW5lIDI1N10NCnZnY3JlYXRlIC0tIEVSUk9SICJ2Z19jZmdiYWNrdXAoKTogd3JpdGUiIHdyaXRp
-bmcgIi9ldGMvbHZtdGFiIg0KDQojdmdjaGFuZ2UgLWEgbiBuZXcNCnZnY2hhbmdlIC0tIEVSUk9S
-OiBWR0RBIGluIGtlcm5lbCBhbmQgbHZtdGFiIGFyZSBOT1QgY29uc2lzdGVudDsgcGxlYXNlIHJ1
-biB2Z3NjYW4NCg0KI3Znc2Nhbg0KdmdzY2FuIC0tIHJlYWRpbmcgYWxsIHBoeXNpY2FsIHZvbHVt
-ZXMgKHRoaXMgbWF5IHRha2UgYSB3aGlsZS4uLikNCnZnc2NhbiAtLSBmb3VuZCBhY3RpdmUgdm9s
-dW1lIGdyb3VwICJuZXciDQp2Z3NjYW4gLS0gRVJST1IgMiB3cml0aW5nIHZvbHVtZSBncm91cCBi
-YWNrdXAgZmlsZSAvZXRjL2x2bXRhYi5kL25ldy50bXAgaW4gdmdfY2ZnYmFja3VwLmMgW2xpbmUg
-MjU3XQ0KdmdzY2FuIC0tIEVSUk9SOiB1bmFibGUgdG8gZG8gYSBiYWNrdXAgb2Ygdm9sdW1lIGdy
-b3VwICJuZXciDQp2Z3NjYW4gLS0gRVJST1IgImx2bV90YWJfdmdfcmVtb3ZlKCk6IHVubGluayIg
-cmVtb3Zpbmcgdm9sdW1lIGdyb3VwICJuZXciIGZyb20gIi9ldGMvbHZtdGFiIg0KdmdzY2FuIC0t
-ICIvZXRjL2x2bXRhYiIgYW5kICIvZXRjL2x2bXRhYi5kIiBzdWNjZXNzZnVsbHkgY3JlYXRlZA0K
-dmdzY2FuIC0tIFdBUk5JTkc6IFRoaXMgcHJvZ3JhbSBkb2VzIG5vdCBkbyBhIFZHREEgYmFja3Vw
-IG9mIHlvdXIgdm9sdW1lIGdyb3VwDQoNCg0KZmRpc2sgLWwNCg0KRGlzayAvZGV2L3NkYzogNjQg
-aGVhZHMsIDMyIHNlY3RvcnMsIDE0MzYyMDggY3lsaW5kZXJzDQpVbml0cyA9IGN5bGluZGVycyBv
-ZiAyMDQ4ICogNTEyIGJ5dGVzDQoNCiAgIERldmljZSBCb290ICAgIFN0YXJ0ICAgICAgIEVuZCAg
-ICBCbG9ja3MgICBJZCAgU3lzdGVtDQovZGV2L3NkYzEgICAgICAgICAgICAgMSAgIDE0MzYyMDgg
-MTQ3MDY3Njk3NiAgIDhlICBMaW51eCBMVk0=
+ linux-2.6-npiggin/drivers/block/ll_rw_blk.c |  113 ++++++++--------------------
+ linux-2.6-npiggin/include/linux/blkdev.h    |    8 -
+ 2 files changed, 36 insertions(+), 85 deletions(-)
 
-------=_NextPart_000_006B_01C3F794.49FB1CC0
-Content-Type: text/html;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
+diff -puN include/linux/blkdev.h~blk-per-process-rqlim include/linux/blkdev.h
+--- linux-2.6/include/linux/blkdev.h~blk-per-process-rqlim	2004-02-20 09:53:22.000000000 +1100
++++ linux-2.6-npiggin/include/linux/blkdev.h	2004-02-20 10:12:04.000000000 +1100
+@@ -25,6 +25,7 @@ struct request_pm_state;
+ 
+ #define BLKDEV_MIN_RQ	4
+ #define BLKDEV_MAX_RQ	128	/* Default maximum */
++#define BLKDEV_MIN_PROC_RQ	64
+ 
+ /*
+  * This is the per-process anticipatory I/O scheduler state.
+@@ -61,11 +62,7 @@ struct io_context {
+ 	atomic_t refcount;
+ 	pid_t pid;
+ 
+-	/*
+-	 * For request batching
+-	 */
+-	unsigned long last_waited; /* Time last woken after wait for request */
+-	int nr_batch_requests;     /* Number of requests left in the batch */
++	unsigned int nr_requests;	/* Outstanding requests */
+ 
+ 	struct as_io_context *aic;
+ };
+@@ -141,6 +138,7 @@ struct request {
+ 	int ref_count;
+ 	request_queue_t *q;
+ 	struct request_list *rl;
++	struct io_context *ioc;
+ 
+ 	struct completion *waiting;
+ 	void *special;
+diff -puN drivers/block/ll_rw_blk.c~blk-per-process-rqlim drivers/block/ll_rw_blk.c
+--- linux-2.6/drivers/block/ll_rw_blk.c~blk-per-process-rqlim	2004-02-20 09:53:25.000000000 +1100
++++ linux-2.6-npiggin/drivers/block/ll_rw_blk.c	2004-02-20 10:40:43.000000000 +1100
+@@ -55,12 +55,6 @@ unsigned long blk_max_low_pfn, blk_max_p
+ EXPORT_SYMBOL(blk_max_low_pfn);
+ EXPORT_SYMBOL(blk_max_pfn);
+ 
+-/* Amount of time in which a process may batch requests */
+-#define BLK_BATCH_TIME	(HZ/50UL)
+-
+-/* Number of requests a "batching" process may submit */
+-#define BLK_BATCH_REQ	32
+-
+ /*
+  * Return the threshold (number of used requests) at which the queue is
+  * considered to be congested.  It include a little hysteresis to keep the
+@@ -1495,57 +1489,27 @@ static inline struct request *blk_alloc_
+ }
+ 
+ /*
+- * ioc_batching returns true if the ioc is a valid batching request and
+- * should be given priority access to a request.
+- */
+-static inline int ioc_batching(struct io_context *ioc)
+-{
+-	if (!ioc)
+-		return 0;
+-
+-	/*
+-	 * Make sure the process is able to allocate at least 1 request
+-	 * even if the batch times out, otherwise we could theoretically
+-	 * lose wakeups.
+-	 */
+-	return ioc->nr_batch_requests == BLK_BATCH_REQ ||
+-		(ioc->nr_batch_requests > 0
+-		&& time_before(jiffies, ioc->last_waited + BLK_BATCH_TIME));
+-}
+-
+-/*
+- * ioc_set_batching sets ioc to be a new "batcher" if it is not one. This
+- * will cause the process to be a "batcher" on all queues in the system. This
+- * is the behaviour we want though - once it gets a wakeup it should be given
+- * a nice run.
+- */
+-void ioc_set_batching(struct io_context *ioc)
+-{
+-	if (!ioc || ioc_batching(ioc))
+-		return;
+-
+-	ioc->nr_batch_requests = BLK_BATCH_REQ;
+-	ioc->last_waited = jiffies;
+-}
+-
+-/*
+  * A request has just been released.  Account for it, update the full and
+  * congestion status, wake up any waiters.   Called under q->queue_lock.
+  */
+-static void freed_request(request_queue_t *q, int rw)
++static void freed_request(request_queue_t *q, struct io_context *ioc, int rw)
+ {
+ 	struct request_list *rl = &q->rq;
+ 
++	ioc->nr_requests--;
+ 	rl->count[rw]--;
+ 	if (rl->count[rw] < queue_congestion_off_threshold(q))
+ 		clear_queue_congested(q, rw);
+ 	if (rl->count[rw]+1 <= q->nr_requests) {
+-		smp_mb();
+-		if (waitqueue_active(&rl->wait[rw]))
+-			wake_up(&rl->wait[rw]);
+ 		if (!waitqueue_active(&rl->wait[rw]))
+ 			blk_clear_queue_full(q, rw);
+ 	}
++
++	if (rl->count[rw]-31 <= q->nr_requests
++			|| ioc->nr_requests <= BLKDEV_MIN_PROC_RQ - 32) {
++		if (waitqueue_active(&rl->wait[rw]))
++			wake_up(&rl->wait[rw]);
++	}
+ }
+ 
+ #define blkdev_free_rq(list) list_entry((list)->next, struct request, queuelist)
+@@ -1556,32 +1520,34 @@ static struct request *get_request(reque
+ {
+ 	struct request *rq = NULL;
+ 	struct request_list *rl = &q->rq;
+-	struct io_context *ioc = get_io_context(gfp_mask);
++	struct io_context *ioc;
+ 
+ 	spin_lock_irq(q->queue_lock);
+ 	if (rl->count[rw]+1 >= q->nr_requests) {
+ 		/*
+ 		 * The queue will fill after this allocation, so set it as
+-		 * full, and mark this process as "batching". This process
+-		 * will be allowed to complete a batch of requests, others
+-		 * will be blocked.
++		 * full.
+ 		 */
+-		if (!blk_queue_full(q, rw)) {
+-			ioc_set_batching(ioc);
++		if (!blk_queue_full(q, rw))
+ 			blk_set_queue_full(q, rw);
+-		}
+ 	}
+ 
++	ioc = get_io_context(gfp_mask);
++	if (unlikely(ioc == NULL))
++		goto out;
++
+ 	if (blk_queue_full(q, rw)
+-			&& !ioc_batching(ioc) && !elv_may_queue(q, rw)) {
++			&& ioc->nr_requests >= BLKDEV_MIN_PROC_RQ
++			&& !elv_may_queue(q, rw)) {
+ 		/*
+-		 * The queue is full and the allocating process is not a
+-		 * "batcher", and not exempted by the IO scheduler
++		 * The queue is full and the allocating process is over
++		 * it's limit, and not exempted by the IO scheduler
+ 		 */
+ 		spin_unlock_irq(q->queue_lock);
+-		goto out;
++		goto out_ioc;
+ 	}
+ 
++	ioc->nr_requests++;
+ 	rl->count[rw]++;
+ 	if (rl->count[rw] >= queue_congestion_on_threshold(q))
+ 		set_queue_congested(q, rw);
+@@ -1597,14 +1563,11 @@ static struct request *get_request(reque
+ 		 * wait queue, but this is pretty rare.
+ 		 */
+ 		spin_lock_irq(q->queue_lock);
+-		freed_request(q, rw);
++		freed_request(q, ioc, rw);
+ 		spin_unlock_irq(q->queue_lock);
+-		goto out;
++		goto out_ioc;
+ 	}
+ 
+-	if (ioc_batching(ioc))
+-		ioc->nr_batch_requests--;
+-	
+ 	INIT_LIST_HEAD(&rq->queuelist);
+ 
+ 	/*
+@@ -1620,13 +1583,15 @@ static struct request *get_request(reque
+ 	rq->ref_count = 1;
+ 	rq->q = q;
+ 	rq->rl = rl;
++	rq->ioc = ioc;
+ 	rq->waiting = NULL;
+ 	rq->special = NULL;
+ 	rq->data = NULL;
+ 	rq->sense = NULL;
+ 
+-out:
++out_ioc:
+ 	put_io_context(ioc);
++out:
+ 	return rq;
+ }
+ 
+@@ -1644,25 +1609,12 @@ static struct request *get_request_wait(
+ 		struct request_list *rl = &q->rq;
+ 
+ 		prepare_to_wait_exclusive(&rl->wait[rw], &wait,
+-				TASK_UNINTERRUPTIBLE);
++						TASK_UNINTERRUPTIBLE);
+ 
+ 		rq = get_request(q, rw, GFP_NOIO);
+-
+-		if (!rq) {
+-			struct io_context *ioc;
+-
++		if (!rq)
+ 			io_schedule();
+ 
+-			/*
+-			 * After sleeping, we become a "batching" process and
+-			 * will be able to allocate at least one request, and
+-			 * up to a big batch of them for a small period time.
+-			 * See ioc_batching, ioc_set_batching
+-			 */
+-			ioc = get_io_context(GFP_NOIO);
+-			ioc_set_batching(ioc);
+-			put_io_context(ioc);
+-		}
+ 		finish_wait(&rl->wait[rw], &wait);
+ 	} while (!rq);
+ 
+@@ -1854,6 +1806,7 @@ void __blk_put_request(request_queue_t *
+ 	 * it didn't come out of our reserved rq pools
+ 	 */
+ 	if (rl) {
++		struct io_context *ioc = req->ioc;
+ 		int rw = rq_data_dir(req);
+ 
+ 		elv_completed_request(q, req);
+@@ -1861,7 +1814,8 @@ void __blk_put_request(request_queue_t *
+ 		BUG_ON(!list_empty(&req->queuelist));
+ 
+ 		blk_free_request(q, req);
+-		freed_request(q, rw);
++		freed_request(q, ioc, rw);
++		put_io_context(ioc);
+ 	}
+ }
+ 
+@@ -2721,7 +2675,7 @@ int __init blk_dev_init(void)
+  */
+ void put_io_context(struct io_context *ioc)
+ {
+-	if (ioc == NULL)
++	if (unlikely(ioc == NULL))
+ 		return;
+ 
+ 	BUG_ON(atomic_read(&ioc->refcount) == 0);
+@@ -2772,8 +2726,7 @@ struct io_context *get_io_context(int gf
+ 		if (ret) {
+ 			atomic_set(&ret->refcount, 1);
+ 			ret->pid = tsk->pid;
+-			ret->last_waited = jiffies; /* doesn't matter... */
+-			ret->nr_batch_requests = 0; /* because this is 0 */
++			ret->nr_requests = 0;
+ 			ret->aic = NULL;
+ 			tsk->io_context = ret;
+ 		}
 
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
-SFRNTCA2LjAwLjI4MDAuMTQwMCIgbmFtZT1HRU5FUkFUT1I+DQo8U1RZTEU+PC9TVFlMRT4NCjwv
-SEVBRD4NCjxCT0RZIGJnQ29sb3I9I2ZmZmZmZj4NCjxESVY+PEZPTlQgc2l6ZT0yPkknbSBsdm0g
-YmVnaW5uZXImbmJzcDteXjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPk5vdyBJIG1h
-ZGUgYSBwaHlzaWNhbCB2b2x1bWUuKCNwdmNyZWF0ZSAtZmYgDQovZGV2L3NkYzEpPC9GT05UPjwv
-RElWPg0KPERJVj48Rk9OVCBzaXplPTI+YnV0IGZvbGxvd2luZyBwcm9ibGVtIG9jY3VyZWQuLjwv
-Rk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+
-PEZPTlQgc2l6ZT0yPkkgZG9uJ3Qga25vdyB3aHk8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIHNp
-emU9Mj5IZWxwIG1lLCBwbGVhc2UuLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwv
-Rk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4N
-CjxESVY+PEZPTlQgc2l6ZT0yPiN2Z2NyZWF0ZSBuZXcgL2Rldi9zZGMxIDxCUj52Z2NyZWF0ZSAt
-LSBJTkZPOiB1c2luZyBkZWZhdWx0IA0KcGh5c2ljYWwgZXh0ZW50IHNpemUgNCBNQjxCUj52Z2Ny
-ZWF0ZSAtLSBJTkZPOiBtYXhpbXVtIGxvZ2ljYWwgdm9sdW1lIHNpemUgaXMgDQoyNTUuOTkgR2ln
-YWJ5dGU8QlI+dmdjcmVhdGUgLS0gRVJST1IgMiB3cml0aW5nIHZvbHVtZSBncm91cCBiYWNrdXAg
-ZmlsZSANCi9ldGMvbHZtdGFiLmQvbmV3LnRtcCBpbiB2Z19jZmdiYWNrdXAuYyBbbGluZSAyNTdd
-PEJSPnZnY3JlYXRlIC0tIEVSUk9SIA0KInZnX2NmZ2JhY2t1cCgpOiB3cml0ZSIgd3JpdGluZyAi
-L2V0Yy9sdm10YWIiPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+PC9GT05UPiZuYnNw
-OzwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+I3ZnY2hhbmdlIC1hIG4gbmV3PEJSPnZnY2hhbmdl
-IC0tIEVSUk9SOiBWR0RBIGluIGtlcm5lbCBhbmQgDQpsdm10YWIgYXJlIE5PVCBjb25zaXN0ZW50
-OyBwbGVhc2UgcnVuIHZnc2NhbjxCUj48L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIHNpemU9Mj4j
-dmdzY2FuPEJSPnZnc2NhbiAtLSByZWFkaW5nIGFsbCBwaHlzaWNhbCB2b2x1bWVzICh0aGlzIG1h
-eSANCnRha2UgYSB3aGlsZS4uLik8QlI+dmdzY2FuIC0tIGZvdW5kIGFjdGl2ZSB2b2x1bWUgZ3Jv
-dXAgIm5ldyI8QlI+dmdzY2FuIC0tIEVSUk9SIA0KMiB3cml0aW5nIHZvbHVtZSBncm91cCBiYWNr
-dXAgZmlsZSAvZXRjL2x2bXRhYi5kL25ldy50bXAgaW4gdmdfY2ZnYmFja3VwLmMgW2xpbmUgDQoy
-NTddPEJSPnZnc2NhbiAtLSBFUlJPUjogdW5hYmxlIHRvIGRvIGEgYmFja3VwIG9mIHZvbHVtZSBn
-cm91cCAibmV3IjxCUj52Z3NjYW4gDQotLSBFUlJPUiAibHZtX3RhYl92Z19yZW1vdmUoKTogdW5s
-aW5rIiByZW1vdmluZyB2b2x1bWUgZ3JvdXAgIm5ldyIgZnJvbSANCiIvZXRjL2x2bXRhYiI8QlI+
-dmdzY2FuIC0tICIvZXRjL2x2bXRhYiIgYW5kICIvZXRjL2x2bXRhYi5kIiBzdWNjZXNzZnVsbHkg
-DQpjcmVhdGVkPEJSPnZnc2NhbiAtLSBXQVJOSU5HOiBUaGlzIHByb2dyYW0gZG9lcyBub3QgZG8g
-YSBWR0RBIGJhY2t1cCBvZiB5b3VyIA0Kdm9sdW1lIGdyb3VwPC9GT05UPjwvRElWPg0KPERJVj48
-Rk9OVCBzaXplPTI+PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+PC9GT05U
-PiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+ZmRpc2sgLWw8L0ZPTlQ+PC9ESVY+DQo8
-RElWPjxGT05UIHNpemU9Mj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIHNpemU9Mj5E
-aXNrIC9kZXYvc2RjOiA2NCBoZWFkcywgMzIgc2VjdG9ycywgMTQzNjIwOCANCmN5bGluZGVyczxC
-Uj5Vbml0cyA9IGN5bGluZGVycyBvZiAyMDQ4ICogNTEyIGJ5dGVzPC9GT05UPjwvRElWPg0KPERJ
-Vj4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPiZuYnNwOyZuYnNwOyBEZXZpY2UgQm9v
-dCZuYnNwOyZuYnNwOyZuYnNwOyANClN0YXJ0Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7IEVuZCZuYnNwOyZuYnNwOyZuYnNwOyANCkJsb2NrcyZuYnNwOyZuYnNwOyBJZCZuYnNw
-OyANClN5c3RlbTxCUj4vZGV2L3NkYzEmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgDQoxJm5ic3A7Jm5ic3A7IDE0
-MzYyMDggMTQ3MDY3Njk3NiZuYnNwOyZuYnNwOyA4ZSZuYnNwOyBMaW51eCANCkxWTTwvRk9OVD48
-L0RJVj48L0JPRFk+PC9IVE1MPg0K
+_
 
-------=_NextPart_000_006B_01C3F794.49FB1CC0--
+--------------040509070901040301010909--
