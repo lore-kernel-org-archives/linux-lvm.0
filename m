@@ -1,10 +1,10 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Sat, 16 Dec 2000 08:19:26 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Subject: Re: [linux-lvm] Debian packaging
-In-Reply-To: <20001215231042.D25445@vestdata.no>
-Message-ID: <Pine.LNX.4.30.0012160817280.25428-100000@falka.mfa.kfki.hu>
-MIME-Version: 1.0
+Return-Path: <bcorsello@usa.net>
+Message-ID: <20001216075237.21034.qmail@nwcst282.netaddress.usa.net>
+Date: 16 Dec 00 02:52:37 EST
+From: Brad Corsello <bcorsello@usa.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] vgextend segfaults (lvm 0.9, kernel test10)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,14 +16,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Cc: linux-lvm@sistina.com, HIBINO Kei <ex8k-hbn@asahi-net.or.jp>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-Hi!
+The vgextend command segfaults (without core dump) every time, in lvm 0.9=
+ on
+kernel 2.4.0-test10.  Is there an official patch to fix this?
 
-> If lvm was compiled into the kernel /proc/lvm will exist, right?
-Yes, e.g. this could be used to detect compiled-in lvm.
+Typical output is as follows:
 
-Gergely
+[root@nimrod /root]# vgextend vg1 /dev/hda2
+vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+Segmentation fault
+
+and that's it.
+
+____________________________________________________________________
+Get free email and a permanent address at http://www.netaddress.com/?N=3D=
+1
