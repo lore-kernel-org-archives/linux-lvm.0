@@ -1,10 +1,14 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <russell@coker.com.au>
-Date: Sat, 16 Dec 2000 19:51:42 +0100
-MIME-Version: 1.0
-Message-Id: <00121619514201.00774@lyta>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Patches for 0.8.1
+Return-Path: <rmurray@cyberhqz.com>
+From: Ryan Murray <rmurray@cyberhqz.com>
+Date: Sat, 16 Dec 2000 17:11:11 -0800
+Subject: Re: [linux-lvm] BIG DATA DESTROYING BUG FOUND!
+Message-ID: <20001216171111.A23062@cyberhqz.com>
+References: <20001215161043.F18179@jensbenecke.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+Content-Disposition: inline
+In-Reply-To: <20001215161043.F18179@jensbenecke.de>; from jens@jensbenecke.de on Fri, Dec 15, 2000 at 04:10:43PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,94 +20,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This one removes an unnecessary library check (which doesn't work) and ad=
-ds=20
-version data to the config file (this is so handy).
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---- lvm-0.8.orig/configure.in   Sun Nov 12 19:52:12 2000
-+++ lvm-0.8.1/configure.in      Sat Dec 16 16:02:54 2000
-@@ -31,10 +31,6 @@
- AC_PROG_LN_S
- AC_PROG_MAKE_SET
-=20
--dnl Checks for libraries.
--dnl Replace `main' with a function in -llvm:
--AC_CHECK_LIB(lvm, main)
--
- dnl Checks for header files.
- AC_HEADER_DIRENT
- AC_HEADER_STDC
-@@ -58,6 +54,9 @@
- AC_CHECK_FUNCS(mkdir rmdir uname)
-=20
- AC_SUBST(JOBS)
-+
-+AC_SUBST(VERSION)
-+VERSION=3D0.8final
-=20
- dnl First and last lines should not contain files to generate in order t=
-o
- dnl keep utility scripts running properly
+On Fri, Dec 15, 2000 at 04:10:43PM +0100, Jens Benecke wrote:
+> or screen output for _hours_. I'd really like something like "Moving block
+> %d of total %d" or whatever status message so you at least know that it's
+> doing anything, short of firing up "top" on another console to see the CPU
+> useage.=20
 
-The following makes it the library compile as a versioned shared object=20
-(allowing multiple versions to be on the machine at the same time).
-Later I'll submit a patch that adds this and a ./configure option to sele=
-ct=20
-shared object or static linking.
-
-diff -ru lvm-0.8.orig/tools/lib/Makefile.in lvm-0.8.1/tools/lib/Makefile.=
-in
---- lvm-0.8.orig/tools/lib/Makefile.in  Sun Nov 12 19:52:12 2000
-+++ lvm-0.8.1/tools/lib/Makefile.in     Sat Dec 16 16:12:08 2000
-@@ -30,11 +30,14 @@
-=20
- include ../../make.tmpl
- include ../tools_and_lib.make.tmpl
-+CFLAGS +=3D -fPIC
-=20
-+VERSION=3D@VERSION@
- ARCHIVE =3D liblvm.a
--SO =3D liblvm.so
-+BASESO =3D liblvm.so
-+SO =3D ${BASESO}.${VERSION}
-=20
--ALL_RM =3D $(ALL_OBJECTS) $(ARCHIVE) $(SO)
-+ALL_RM =3D $(ALL_OBJECTS) $(ARCHIVE) $(SO) ${BASESO}
-=20
- all_this: $(ARCHIVE) $(SO) Makefile
-        @echo ""
-@@ -45,9 +48,10 @@
-        @echo "*** Installing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
-        @rm -f ${libdir}/${SO} ${libdir}/$(ARCHIVE);
-        @INSTALL@ -d ${libdir}
--       @INSTALL@ $(ARCHIVE) $(SO) ${libdir}
--       chmod 444 ${libdir}/$(ARCHIVE)
-+       @INSTALL@ $(SO) ${libdir}
-        chmod 555 ${libdir}/$(SO)
-+#      @INSTALL@ $(ARCHIVE) ${libdir}
-+#      chmod 444 ${libdir}/$(ARCHIVE)
-=20
- remove_this:
-        @echo "*** Removing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
-@@ -64,7 +68,8 @@
-        ranlib $@
-=20
- $(SO): $(ALL_OBJECTS)
--       ld -shared -o $(SO) $(ALL_OBJECTS)
-+       ld -shared -soname=3D${SO} -o $(SO) $(ALL_OBJECTS)
-+       ln -sf ${SO} ${BASESO}
-=20
- clean_this:
-        rm -f $(ALL_RM)
-
-
-
+-v for verbose gives you exactly what you are looking for.
 
 --=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+Ryan Murray, (rmurray@cyberhqz.com, rmurray@debian.org, rmurray@stormix.com)
+Projects Manager, Stormix Technologies Inc., Debian Developer
+The opinions expressed here are my own.
+
+--+QahgC5+KEYLbs62
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6PBKvN2Dbz/1mRasRAvn2AKCkFVW4hb2tGJioIV83X5iLl66oPwCghFLM
+V/vhob391FAWWWbl5izR2Z0=
+=Lv7a
+-----END PGP SIGNATURE-----
+
+--+QahgC5+KEYLbs62--
