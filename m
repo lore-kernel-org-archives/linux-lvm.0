@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm2, extending a physical volume
-Message-ID: <20030709100320.A17130@sistina.com>
-References: <3F0A9604.5000101@portrix.net>
+From: Peter Samek <samek@upc.uniba.sk>
+Message-ID: <20030709130201.GA19698@pec.upc.uniba.sk>
 Mime-Version: 1.0
-In-Reply-To: <3F0A9604.5000101@portrix.net>; from j.dittmer@portrix.net on Tue, Jul 08, 2003 at 11:59:32AM +0200
+Content-Disposition: inline
+Subject: [linux-lvm] pvmove problem: Inappropriate ioctl for device
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,96 +13,73 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul  9 03:05:02 2003
+Date: Wed Jul  9 09:34:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jan,
+Hello.
 
-you didn't overlook something. There's a bug in the
+I have a RedHat 7.3 system with a 2.4.20 kernel and lvm version 1.0.3.
 
-pvcreate -yff -u wZQg66-cWrF-VDi5-GcRN-aYVg-RQQ3-PPm5K5 /dev/md0
-vgcfgrestore myraid
+===
+[root@noe root]# pvmove --version
+pvmove: Logical Volume Manager 1.0.3
+Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+===
 
-trick we'll fix ASAP (vgcfgrestore should keep the new size which it doesn't).
+The machine has two 80GB disks and there are three RAID arrays.
 
-We're thinking about a pvresize command to make this smoother.
+===
+[root@noe root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/md/1" of VG "mirror" [20 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/md/2" of VG "strip"  [97.65 GB / 2.50 GB free]
+pvscan -- ACTIVE   PV "/dev/md/3" of VG "strip"  [13.34 GB / 12.34 GB free]
+pvscan -- total: 3 [131.01 GB] / in use: 3 [131.01 GB] / in no VG: 0 [0]
+===
 
-Regards,
-Heinz    -- The LVM Guy --
+/dev/md/1 is a raid1, /dev/md/2 and /dev/md/3 are raid0s.
 
+I'm trying to move all PE from /dev/md/3 to /dev/md/2, so I could remove
+/dev/md/3. But "pvmove -v /dev/md/3" spits out this error message:
 
-On Tue, Jul 08, 2003 at 11:59:32AM +0200, Jan Dittmer wrote:
-> Hi,
-> 
-> I posted this a while ago on lvm-devel, but received no answer.
-> I'm using kernel 2.5(.74-mm2) with LVM2 and have a RAID5 to which I 
-> added a new disk with raidreconf. This worked fine, but lvm doesn't 
-> recognize the extra disk space:
-> 
-> # pvdisplay
->    --- Physical volume ---
->    PV Name               /dev/md0
->    VG Name               myraid
->    PV Size               335.36 GB / not usable 0
->    Allocatable           yes (but full)
->    PE Size (KByte)       4096
->    Total PE              85853
->    Free PE               0
->    Allocated PE          85853
->    PV UUID               wZQg66-cWrF-VDi5-GcRN-aYVg-RQQ3-PPm5K5
-> 
-> but:
-> 
-> # cat /proc/mdstat
-> Personalities : [linear] [raid0] [raid1] [raid5] [multipath]
-> 
-> md0 : active raid5 hdc1[4] hdh1[3] hdf1[2] hdg1[1] hde1[0]
->        468872704 blocks level 5, 4k chunk, algorithm 2 [5/5] [UUUUU]
-> 
-> which translates to ~480 GB (5x 120GB)
-> 
-> Somewhere I found a post, that with vgcfgbackup / vgcfgrestore one is 
-> able to resize the volume. But simply backing up and restoring the 
-> descriptor just gets me to the same situation.
-> As I've another partition (which isn't that important) I tried to change 
-> the backup manually, ie. I changed pe_count in the backup file and 
-> restored it. This works fine - but how do I figure the correct PE count 
-> for this bigger disk? I just don't want to poke around until it says, 
-> 'hey, too big, trashing your data'. There has to be a simple way, I 
-> guess, which I totally overlook. It isn't that big of a change.
-> pvresize tells me it isn't implemented.
-> 
-> Thanks for any insight,
-> 
-> Jan
-> 
-> # vgdisplay --version
->    LVM version:     1.95.15 (2003-01-10)
->    Library version: 0.96.08-ioctl (2003-03-27)
->    Driver version:  1.0.6
-> 
-> -- 
-> Linux rubicon 2.5.74-mm2-jd4 #1 SMP Sun Jul 6 09:55:20 CEST 2003 i686
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+===
+[root@noe root]# pvmove -vv /dev/md/3
+pvmove -- checking name of source physical volume "/dev/md/3"
+pvmove -- locking logical volume manager
+pvmove -- reading data of source physical volume from "/dev/md/3"
+pvmove -- checking volume group existence
+pvmove -- reading data of volume group "strip" from lvmtab
+pvmove -- checking volume group consistency of "strip"
+pvmove -- searching for source physical volume "/dev/md/3" in volume group "strip"
+pvmove -- building list of possible destination physical volumes
+pvmove -- checking volume group activity
+pvmove -- moving physical extents in active volume group "strip"
+pvmove -- WARNING: if you lose power during the move you may need
+        to restore your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- starting to move extents away from physical volume "/dev/md/3"
+pvmove -- checking for enough free physical extents in "strip"
+lv: /dev/strip/usr[1]  old_dev: 09:03  new_dev: 09:02  old_pe_sector: 14688640  new_pe_sector: 8397312
+pvmove -- opening output physical volume "/dev/md/2"
+pvmove -- llseeking input physical volume "/dev/md/3"
+pvmove -- llseeking output physical volume "/dev/md/2"
+pvmove -- /dev/md/3 [PE 1792 [usr [LE 1024]] -> /dev/md/2 [PE 1024] [1/256]
+pvmove -- copying extent from /dev/md/3::/dev/strip/usr(0x0903):14688640 to /dev/md/2(0x0902):8397312 on disk
+/dev/strip/group::/dev/strip/usr: 0903 14688640, 0902 8397312
+pvmove -- ERROR "Inappropriate ioctl for device" copying extent from "/dev/md/3"
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+pvmove -- ERROR "Inappropriate ioctl for device" moving physical extents
+===
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Is there something I am missing or is it a known bug in this version?
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks for any help.
+
+Peter
+-- 
+ Peter Samek
+ samek@upc.uniba.sk
+ jabber: chaeldi@jabber.sk / icq: 81758305
