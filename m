@@ -1,7 +1,7 @@
 From: Turbo Fredriksson <turbo@bayour.com>
-Message-ID: <871yitvgjb.fsf@papadoc.bayour.com>
+Message-ID: <87wv0lu1rw.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] LAZY MODE: non-LVM 2 LVM - Destroys data?
+Subject: [linux-lvm] LAZY MODE: Exchanging a LVM'ed disk
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,20 +12,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 05:20:02 2001
+Date: Tue Nov 20 05:24:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I currently have my /home as a 'ordinary' device (ie, non LVM'ed). It's
-slowly running out of disks pace...
+I currently have a disk in my LVM set which is only 1Gb. It's also quite old,
+so I'd like to replace that with a newer/bigger one..
 
-Do I _have_ to copy all the info to a empty disk, then create the lv (pvcreate et al)?
+How would I go about doing this?
 
+        1. Add the new disk at the end of the LVM
+        2. Extend the filesystem
+        3. Move the data from the old disk to the new
+        4. Remove the old disk
 
-(LAZY MODE: It might be in the HOWTO/FAQ, but i couldn't find it with a quick look,
-so I sent it here instead :)
+Is this about right? Or is there a simpler/faster way?
+
+Bare in mind that all the SCSI id's will change when i remove the old disk,
+will that complicate issues?
 
 -- 
  Turbo     __ _     Debian GNU     Unix _IS_ user friendly - it's just 
@@ -34,6 +40,6 @@ so I sent it here instead :)
   _ /// / /__| | | | | |_| |>  <  Turbo Fredriksson   turbo@bayour.com
   \\\/  \____/_|_| |_|\__,_/_/\_\         Gothenburg/Sweden
 
-NSA radar Semtex pits counter-intelligence Marxist Soviet Honduras
-Treasury ammonium nitrate KGB Ft. Bragg iodine killed
+domestic disruption ammonium Cocaine FSF quiche 747 FBI terrorist
+Serbian smuggle Noriega Panama Treasury Qaddafi kibo
 [See http://www.aclu.org/echelonwatch/index.html for more about this]
