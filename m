@@ -1,25 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7SLYX324852
-	for <linux-lvm@redhat.com>; Sat, 28 Aug 2004 17:34:33 -0400
-Received: from grassmarket.ucs.ed.ac.uk (grassmarket.ucs.ed.ac.uk
-	[129.215.166.64])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i7SLYQ93025937
-	for <linux-lvm@redhat.com>; Sat, 28 Aug 2004 17:34:26 -0400
-Received: from grassmarket.ucs.ed.ac.uk (localhost [127.0.0.1])
-	by grassmarket.ucs.ed.ac.uk (8.12.10/8.12.10) with ESMTP id
-	i7SLYPcn016233
-	for <linux-lvm@redhat.com>; Sat, 28 Aug 2004 22:34:25 +0100 (BST)
-Received: (from nobody@localhost)
-	by grassmarket.ucs.ed.ac.uk (8.12.10/8.12.9/Submit) id i7SLYPAH016231
-	for linux-lvm@redhat.com; Sat, 28 Aug 2004 22:34:25 +0100 (BST)
-Message-ID: <1093728865.4130fa61689cf@sms.ed.ac.uk>
-Date: Sat, 28 Aug 2004 22:34:25 +0100
-From: Rupert Hair <rupert.hair@ntlworld.com>
-Subject: Re: [linux-lvm] pvmove wont work
-References: <4130F495.90806@home.se>
-In-Reply-To: <4130F495.90806@home.se>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7T8bI306025
+	for <linux-lvm@redhat.com>; Sun, 29 Aug 2004 04:37:18 -0400
+Received: from kidushin.jct.ac.il (kidushin.jct.ac.il [147.161.1.19])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i7T8bDS1021410
+	for <linux-lvm@redhat.com>; Sun, 29 Aug 2004 04:37:16 -0400
+Message-ID: <413195B2.3050103@jct.ac.il>
+Date: Sun, 29 Aug 2004 11:37:06 +0300
+From: Yedidia Klein <yedidia@jct.ac.il>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Suggested Kernel and LVM version for production storage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,27 +20,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: unixstaff@jct.ac.il
 
-Quoting Andreas Dahlgren <andreas.dahlgren@home.se>:
+Hello,
 
-> Just upgraded to 2.6.8.1 and got much less errors but pvmove still wont
-> work.
-> # pvmove -t /dev/hdc
->   Test mode: Metadata will NOT be updated.
->   mirror: Required device-mapper target(s) not detected in your kernel
->
-> anyone knows why this wont work?
-Hi Andreas,
+I'm using LVM2 on a FC2 based linux w/ the following versions:
+Kernel (patched to LVM2 w/ snapshots) :     2.4.23
+LVM version:                                                 2.00.15 
+(2004-04-19)
+Library version:                                             
+1.00.14-ioctl (2004-04-06)
+Driver version:                                               4.0.5
 
-I think I posted exactly the same quiestion to the list some time ago.  The
-answer is that you need the Device Mapper Mirror Target compiled into (or as a
-module in) your kernel.  You will need to get the "unstable" patches from the
-following URL:
+Sometimes I'm getting the following errors, and get all my LVM 
+FileSystem Blocked .. (mean I can't access the files on these partitions 
+and have to reboot for getting access again)
 
-http://sources.redhat.com/dm/patches.html
+    -----------------------------------------------------
+    Aug 26 01:00:02 nazir kernel: device-mapper: 
+                          Unable to allocate hash table space 
+    -----------------------------------------------------
+    Aug 26 01:00:02 nazir kernel: device-mapper:
+                          error adding target to table 
+    -----------------------------------------------------
+    Aug 26 10:50:47 nazir kernel: device-mapper:
+                          4.0.5-ioctl (2003-11-18) initialised:
+                          dm@uk.sistina.com 
+    -----------------------------------------------------
 
-Feel free to mail me if you need any more info on this.
 
-Rupert
+Any suggestion for a kernel/LVM version ?
+Is anyone running a production system w/ LVM2 and snapshot ? if yes 
+which versions ?
+
+thanks,
+
+--Yedidia
