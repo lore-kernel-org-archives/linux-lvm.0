@@ -1,91 +1,91 @@
-Date: Mon, 13 Nov 2000 18:30:49 -0500 (EST)
-From: Rob Foehl <rob@loonybin.net>
-Subject: Re: [linux-lvm] Removing a PV
-In-Reply-To: <200011132237.eADMbH729119@webber.adilger.net>
-Message-ID: <Pine.BSO.4.21.0011131828570.14526-100000@loonybin.loonybin.net>
-MIME-Version: 1.0
+Date: Tue, 14 Nov 2000 07:44:25 +0100
+From: Jos Visser <josv@osp.nl>
+Subject: Re: [linux-lvm] LVM in shared parallel SCSI environment
+Message-ID: <20001114074425.Z370@jadzia.josv.com>
+References: <20001111084602.B26544@kevorkian.evcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20001111084602.B26544@kevorkian.evcom.net>; from jss@evcom.net on Sat, Nov 11, 2000 at 08:46:02AM -0500
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
+To: Jesse Sipprell <jss@evcom.net>
 Cc: linux-lvm@msede.com
 
-Ok, that's kind of what I was expecting..
+Hi Jesse,
 
-The drive being removed is going to get wiped anyway, I'm not trying to
-move any data with it, I just need space in another system and we're well
-below capacity on the current one.. The only thing I want to keep intact
-is the data on the existing filesystem.
+Let's see if I get this right: You have an LVM configuration on a shared
+SCSI disk set. I understand from your description that you have some
+VG's active on more than one node at a time. Is this right? If so, I
+wonder if it's supported (others are better equiped to determine this
+than I am). However, most volume managers on other Unix platforms do not
+allow this. 
 
-Thanks for the info.. I'll give it a try in the morning.
+As far as I know the vgchange inactive/active bounce is the only thing
+that will refresh the metadata. 
 
-On Mon, 13 Nov 2000, Andreas Dilger wrote:
+However, if you have the VG truly active on more than one node (if
+that's possible), you have a recipe for disaster! What if you by mistake
+change the VG (e.g. adding an LV) from one node, and then perform a
+similar action from another node? I would not be surprised if there
+would be corruptions, oopses and panics all over the place.
 
-> Rob Foehl writes:
-> > I'd assumed that was the correct command sequence, but does lvreduce
-> > ensure that the filesystem won't be damaged? Ie. does it only remove LE's
-> > from the end of the LV, or what?
+++Jos
+
+And thus it came to pass that Jesse Sipprell wrote:
+(on Sat, Nov 11, 2000 at 08:46:02AM -0500 to be exact)
+
+> Hi all,
 > 
-> Yes, the LEs are logically numbered, so they are always added to and removed
-> from the end of the device.  That makes it much easier on the filesystem
-> because it doesn't need to ever deal with the blocks at the start of the
-> filesystem changing.  However, since they are "logical" blocks, they
-> can be physically moved between disks without affecting the filesystem.
+> I'm currently in the process of planning a large(ish)-scale Linux deployment.
+> As part of the planning process, I am considering using LVM in a shared SCSI
+> environment; potentially with GFS as the file system in the future, but
+> starting with ext2.
 > 
-> As for removing a disk with a filesystem from an existing VG - you have
-> to realize that there is still LVM information at the start of the disk
-> even if you remove it from the VG, so you will not be able to use it as-is
-> on another system.
+> To that end I have a test "cluster" set up.  It consists of:
 > 
-> Rather than doing an lvreduce/pvmove/vgreduce (as previously suggested),
-> you should do a pvmove to move all of the LEs from the desired filesystem
-> into a single PV (it may already be this way) and also move all of the
-> undesired LEs from this PV onto other PVs in the VG (use pvdisplay -v and
-> lvdisplay -v to find out the layout).  Then use vgsplit to create two
-> new VGs - the new one being the single filesystem/disk you want to move.
-> You can then export the VG from the current system and import it to the
-> new system.
+> One Winchester Systems OpenRAID chassis with 100GB total storage, running in
+> RAID5.  The OpenRAID is a SCSI-to-SCSI solution, with four host SCSI channels.
+> The hardware can be configured so that the channels can share physical storage
+> space.
 > 
-> If you are not going to use LVM on the new system, then simply pvmove all
-> of the LEs from one of your disks and vgreduce this PV from the VG.  Then
-> use fdisk to make a new partition on the disk, and dd to copy from the
-> old LV to the new partition.  This way you will also have a backup of the
-> data should anything go wrong (which you should probably have on tape as
-> well).
+> Four test Linux boxes, each with a small (9GB) boot/root/swap/emergency SCSI
+> disk.  Obviously, the four boxes are connected to the four host channels on
+> the OpenRAID.
 > 
-> Cheers, Andreas
+> The OpenRAID is configured such that all available disk space is visable
+> identically to the servers.  Obviously, because the initial test uses ext2
+> instead of a filesystem that supports shared media (i.e. GFS), we won't be
+> actually sharing filesystems between boxes.  However, LVM seemed like a pretty
+> good potential in this situation because it allows for relatively dynamic
+> allocation of storage from a large shared "pool."  The catch, as with all
+> shared SCSI solutions, is that each participating host must maintain a
+> consistant view of LVM metadata.
 > 
+> So far, it's been fairly successful.  Once the vg and lvs are created, and each
+> host has meta in core, all is well.  The only problem I am seeing is when an
+> lv (for example) is extended or reduced, the other systems are unaware of the
+> change in LVM metadata.  This makes sense of course, because each host is
+> operating with it's own "notion" of the LVM in core.  The solution is rather
+> awkward; one has to unmount all LVM filesystems on each host, vgchange the vg
+> to inactive, vgchange it back to active and then remount the filesystems.
 > 
-> > On Mon, 13 Nov 2000, Luca Berra wrote:
-> > 
-> > > On Mon, Nov 13, 2000 at 01:12:23PM -0500, Rob Foehl wrote:
-> > > > If I want to completely pull a drive that belongs to a VG with an ext2
-> > > > formatted LV in it, what's the correct procedure to avoid mangling the
-> > > > filesystem? I currently have a 130 gig partition spread over six
-> > > > drives.. about 74 gigs is in use, and I wanted to remove a single 20 gig
-> > > > drive from the volume.. I'm assuming I should shrink the filesystem by
-> > > > around 30 gigs or so (to be safe), then somehow also shrink the LV and
-> > > > move any used PEs on the 20 gig drive in question onto freed space on
-> > > > other drives.. Any suggestions would be greatly appreciated.
-> > > 
-> > > ext2resize/resize2fs
-> > > lvreduce
-> > > pvmove
-> > > vgreduce
-> > > 
-> > > 
-> > > -- 
-> > > Luca Berra -- bluca@comedia.it
-> > >     Communication Media & Services S.r.l.
-> > > 
-> > 
-> > 
+> My question is this:  Is there any way to "refresh" the in-core metadata from
+> disk?  If not, does anyone think this might be a good idea for the future?
 > 
+> Regards,
 > 
 > -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> Jesse Sipprell
+> Technical Operations Director
+> Evolution Communications, Inc.
+> 800.496.4736
 > 
+> * Finger jss@evcom.net for my PGP Public Key *
+
+-- 
+Success and happiness can not be pursued; it must ensue as the 
+unintended side-effect of one's personal dedication to a course greater 
+than oneself.
