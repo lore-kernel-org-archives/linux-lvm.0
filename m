@@ -1,31 +1,30 @@
-Message-Id: <199910021137.AA20639@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: [linux-lvm] Out of reach
-Date: Sat, 02 Oct 1999 13:34:06 METDST
+From: "Stephen C. Tweedie" <sct@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <14326.7775.34828.234038@dukat.scot.redhat.com>
+Date: Sat, 2 Oct 1999 16:01:51 +0100 (BST)
+Subject: Re: [linux-lvm] LVM, raw-io, devfs
+In-Reply-To: <37F4FFCD.6AE2EC3E@mainland.ab.ca>
+References: <006201bf0bb7$6eae4a60$030116ac@fd1>
+	<14324.58266.920834.895229@dukat.scot.redhat.com>
+	<37F4FFCD.6AE2EC3E@mainland.ab.ca>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
-Cc: mge@ts1.ez-darmstadt.telekom.de
+To: Drew Smith <drew@winterland.mainland.ab.ca>
+Cc: "Stephen C. Tweedie" <sct@redhat.com>, linux-lvm@msede.com
 
+Hi,
 
-FYI: i'll be away for a week without access to my mailbox.
+On Fri, 01 Oct 1999 12:39:09 -0600, Drew Smith
+<drew@winterland.mainland.ab.ca> said:
 
-Regards,
-Heinz
---
+> 	Now, I've just got to find a Linux-HSM(**) project to control my
+> optical jukebox. :)  Any ideas whether this exists?
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Not yet, but XFS has all of the support necessary for us to do a
+kernel DMAPI implementation, which would open up all sorts of HSM
+possibilities. 
 
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--Stephen
