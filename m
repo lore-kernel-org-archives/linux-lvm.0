@@ -1,11 +1,10 @@
-Return-Path: <Dominique.Larchey-Wendling@loria.fr>
-Message-ID: <3AEF2F97.E70A8CA7@loria.fr>
-Date: Tue, 01 May 2001 23:50:15 +0200
-From: Dominique LARCHEY-WENDLING <Dominique.Larchey-Wendling@loria.fr>
+Return-Path: <todd@staff.nm.org>
+Date: 1 May 2001 16:36:16 -0600
+Date: Tue, 1 May 2001 16:36:16 -0600 (MDT)
+From: Todd Underwood <todd@osogrande.com>
+Message-ID: <Pine.LNX.4.10.10105011628100.21405-100000@staff>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM & high system load
-References: <200105011618.KAA01133@lynx.turbolabs.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] odd problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,55 +16,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andreas Dilger wrote:
+folx,
 
-> There is one other person that has reported very slow LVM performance.
-> However, there is no obvious reason why they have performance issues,
-> and others are unable to reproduce this problem.
-> 
-> Can you please try the following and report results:
-> 
-> time dd if=/dev/mmedia/music of=/dev/null bs=512
-> time dd if=/dev/mmedia/music of=/dev/null bs=65536
-> time dd if=/dev/hda1 of=/dev/null bs=512
-> time dd if=/dev/hda1 of=/dev/null bs=65536
+i have 2.4.3 with beta-7 patches installed and beta-7 userland tools.  i'm
+using lvm-initrd with a boot partition on /dev/hda2 and LVM root and other
+filesystems on a few scsi disks.  all was working well but recently i
+needed to reboot (i was unable to increase the size of my / with the
+online ext2 tools and it was full--not sure what the error was there, or
+whether that is relevant).
 
-Here are the tests I have done ...  I use the command line
+in any case, now i reboot and i get
+lvm -- lvm_chr_ioctl:  unknown command 4004fe0a
+vgchange -- volume group "rootvg" successfully activated
 
-dd if=/dev/sda of=/dev/null bs=1k count=500k
+VGS: Mounted root (ext2 filesystem) readonly.
+change_root: old root has d_count=3
+Trying to unmount old root ... <7>uhci.c: suspect_hd
+okay
 
-to fill up the buffer cache before any timing measure.
-I point out that /dev/mmedia/music resides on /dev/hda5
+a bunch of other stuff
 
-time dd if=/dev/mmedia/music of=/dev/null bs=512
-count=200000               0m37.113s
-time dd if=/dev/hda5 of=/dev/null bs=512
-count=200000                       0m35.437s
+then:
 
-Ok I am ridiculous ... this has nothing to do with LVM.
-It has to do with DMA set off by default by linux 2.4.
-This is the reason of poor IO perf. and CPU eating.
-(as you might have understood, I usually do not use IDE drives)
+Activating swap partitions swapon: /dev/rootvg/swap: Invalid argument
+Setting hostname zapata.staff.osogrande.net execvp: No such file or
+directory
 
-After DMA is set on,
+/etc/rc.d/rc.sysinit:  domainname: command not found
 
-time dd if=/dev/mmedia/music of=/dev/null bs=512
-count=200000               0m12.934s
-time dd if=/dev/hda5 of=/dev/null bs=512
-count=200000                       0m12.110s
+and so on.  looks like nothing's mounted.  the same kernel boots fine with
+an older root fs on a 'real' partition.
 
-Sorry for anoying you with my stupidity ...
+any suggestions?
 
-Perhaps poor perf. for the other person is also DMA related ?-)
-
-Thanks anyway
-
-DL
-
--- 
-Dominique Larchey
-LORIA, Nancy, France
-Tel. (Work) +33 (0) 3 83 59 20 13
+todd underwood
+chief technology officer
+oso grande technologies, inc.
+todd@osogrande.com
