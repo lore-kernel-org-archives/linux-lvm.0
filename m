@@ -1,12 +1,10 @@
-Return-Path: <mea@zmailer.org>
-Date: Sat, 21 Apr 2001 01:55:55 +0300
-From: Matti Aarnio <matti.aarnio@zmailer.org>
-Message-ID: <20010421015555.L805@mea-ext.zmailer.org>
-References: <20010419132927.D10345@sistina.com> <E14qJhd-0007oR-00@the-village.bc.nu> <20010419142400.E10345@sistina.com> <3ADF4BA3.1080606@megapathdsl.net> <m3wv8fych6.fsf@belphigor.mcnaught.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m3wv8fych6.fsf@belphigor.mcnaught.org>; from doug@wireboard.com on Fri, Apr 20, 2001 at 08:36:37AM -0400
-Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Return-Path: <tomlins@cam.org>
+From: Ed Tomlinson <tomlins@cam.org>
+Date: Sat, 21 Apr 2001 10:00:22 -0400
+MIME-Version: 1.0
+Message-Id: <01042110002200.00707@oscar>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] [BUG] lvm beta7 and ac11 problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,40 +17,17 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Doug McNaught <doug@wireboard.com>
-Cc: Miles Lane <miles@megapathdsl.net>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, linux-lvm@sistina.com
+To: linux-kernel@vger.kernel.org
+Cc: linux-openlvm@nl.linux.org, linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>
 
-On Fri, Apr 20, 2001 at 08:36:37AM -0400, Doug McNaught wrote:
- [ not much at all spams at linux-kernel ... ]
->
-> That's partly because davem and Matti are rabid anti-spam weasels and
-> very good at it.  ;)  There are all kinds of filters (including
-> content-based ones) on l-k, otherwise we'd be inundated in processed
-> pork... 
->
+Hi,
 
-  I would say it is SOLELY because we are quite good at it.
-  Some insidious small surprises get thru every now and then,
-  and we really can't block them all without endangering the
-  freedom of dogfight (in between on-topic things) at the list.
+building a kernel with 2.4.3-ac11 and lvm beta7 + vfs_locking_patch-2.4.2 yields:
 
-  If you are PERL speaker (or can at least comprehend perl's
-  m(atch) expressions), here is URL to info about it, plus
-  the actual live running filter-set:
+oscar# depmod -ae 2.4.3-ac11 
+depmod: *** Unresolved symbols in /lib/modules/2.4.3-ac11/kernel/drivers/md/lvm-mod.o
+depmod:         get_hardblocksize
 
-    http://vger.kernel.org/majordomo-info.html
+ideas?
 
-  Go to the end of the page, and you see link for the actual
-  filter code used at the VGER's Majordomo.
-
-
-  I can only hope that when a legitimate posting goes to list-owner
-  approval, the list-owner would either approve the thing, or inform
-  the message originator that they had used tabooed expressions, and
-  should avoid it in the future to get thru.
-  (I get a lot of junk,  linux-kernel-owner gets A LOT MORE ...)
-
-> -Doug
-
-/Matti Aarnio
+Ed Tomlinson
