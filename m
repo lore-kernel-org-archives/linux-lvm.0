@@ -1,16 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBK4VQr03350
-	for <linux-lvm@redhat.com>; Sun, 19 Dec 2004 23:31:26 -0500
-Received: from smtp2.prod2.securaserv.com (203-96-158-55.paradise.net.nz
-	[203.96.158.55])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBK4VKrT022860
-	for <linux-lvm@redhat.com>; Sun, 19 Dec 2004 23:31:20 -0500
-Message-ID: <41C650A3.2090302@vilain.net>
-Date: Mon, 20 Dec 2004 17:10:11 +1300
-From: Sam Vilain <sam@vilain.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] PVs that are reused / reformatted as filesystems
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBKBfmr13751
+	for <linux-lvm@redhat.com>; Mon, 20 Dec 2004 06:41:48 -0500
+Received: from Cantor.suse.de (mail-ex.suse.de [195.135.220.2])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBKBfgJE023730
+	for <linux-lvm@redhat.com>; Mon, 20 Dec 2004 06:41:42 -0500
+Received: from hermes.suse.de (hermes-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher EDH-RSA-DES-CBC3-SHA (168/168 bits))
+	(No client certificate requested)
+	by Cantor.suse.de (Postfix) with ESMTP id 60A60121C6ED
+	for <linux-lvm@redhat.com>; Mon, 20 Dec 2004 12:41:36 +0100 (CET)
+Date: Mon, 20 Dec 2004 12:41:35 +0100
+From: Arvin Schnell <arvin@suse.de>
+Subject: Re: [linux-lvm] patch for separator option
+Message-ID: <20041220114135.GA8861@suse.de>
+References: <20041214093850.GA16922@suse.de> <20041216110052.GA4410@suse.de>
+	<20041218203208.GN26670@agk.surrey.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20041218203208.GN26670@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,80 +28,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi there,
+On Sat, Dec 18, 2004 at 08:32:08PM +0000, Alasdair G Kergon wrote:
+> > > I realized that the -s/--short option for vgdisplay doesn't work
+> > > in lvm 2.2.00.31 (but also older versions).  That's because the
+> > > option --separator also gets the short option 's' in args.h.
+> 
+> > It the patch ok and will it be included in lvm2?
+>  
+> Not in that precise form:
+> Need to check for all other existing conflicts, if any, and
+> find a generic way to resolve them so 'vgs -s,' for
+> example can hopefully still work.
 
-I have a system on which a partition that was once a PV was recycled as
-a filesystem.  Now, it has a valid ext3 filesystem on it, but also the
-PV signature appears to be there.  So I can't start things up without
-liberal use of -P, and I can't seem to get anything except read-only
-operation.
+Checking for conflicts is a good idea.
 
-IMHO The utilities should probably never try to treat any in-use kernel
-object as candidate for any kind of scanning or new use.  ie, the
-userland equivalent of checking dev->kobj.kref.refcount == 0
+'-s' is never documented as a shortcut for '--separator', neither
+in the help text nor in the man pages.  So 'vgs -s' does not have
+to work.  I also don't think it's user-friendly if an option
+e.g. '--separator' can be abbreviated by '-s' in only some lvm
+tools.
 
-Could someone please give me a fish (tell me how to un-jam my LVM) and
-maybe even teach the LVM drivers/utilities to fish as well?
-
-Here's the command output;
-
-samv:~# lvmdiskscan -v
-   /dev/hda1 [       13.98 GB] LVM physical volume
-   /dev/hda2 [       65.13 GB] LVM physical volume
-   /dev/hda3 [       13.97 GB] LVM physical volume
-   /dev/hda4 [        1.00 KB]
-   /dev/hda5 [     1004.03 MB]
-   /dev/hda6 [       17.72 GB] LVM physical volume
-   0 disks
-   2 partitions
-   0 LVM physical volume whole disks
-   4 LVM physical volumes
-samv:~# mount | grep hda
-/dev/hda3 on / type ext2 (rw,errors=remount-ro)
-samv:~# vgchange -ay
-   Failed to read VG data from PV (/dev/hda3)
-   Failed to read VG data from PV (/dev/hda3)
-   Unable to find volume group "Mirror"
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find all physical volumes for volume group samv.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find all physical volumes for volume group samv.
-   Unable to find volume group "samv"
-samv:~# vgscan -P
-   Partial mode. Incomplete volume groups will be activated read-only.
-   Reading all physical volumes.  This may take a while...
-   Failed to read VG data from PV (/dev/hda3)
-   Failed to read VG data from PV (/dev/hda3)
-   Volume group "Mirror" not found
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Found volume group "samv" using metadata type lvm2
-samv:~# vgchange -ay -P
-   Partial mode. Incomplete volume groups will be activated read-only.
-   Failed to read VG data from PV (/dev/hda3)
-   Failed to read VG data from PV (/dev/hda3)
-   Unable to find volume group "Mirror"
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   Couldn't find device with uuid 'PtbIxo-EmRo-ML7J-yhqx-gglD-ZayH-X6tuWE'.
-   5 logical volume(s) in volume group "samv" now active
-samv:~# mount /export/media
-mount: block device /dev/mapper/samv-media is write-protected, mounting 
-read-only
-samv:~#
-
--- 
-Sam Vilain, sam /\T vilain |><>T net, PGP key ID: 0x05B52F13
-(include my PGP key ID in personal replies to avoid spam filtering)
+ciao Arvin
