@@ -1,9 +1,9 @@
-Message-ID: <002801c32e8f$141de390$0d0a0a0a@spectrum.local>
-From: "Atanas Prejdarov" <prejdarov@home.bg>
+Message-ID: <3EE4AEA3.8020304@gmx.net>
+From: Andreas Piesk <a.piesk@gmx.net>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0025_01C32EA8.395EE690"
-Subject: [linux-lvm] lvm2 + XFS
+Subject: Re: [linux-lvm] lvm2 + XFS
+References: <002801c32e8f$141de390$0d0a0a0a@spectrum.local>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,40 +14,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  9 09:32:10 2003
+Date: Mon Jun  9 11:00:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Atanas Prejdarov schrieb:
+> Hi, is there any way for running device-mapper + xfs in one kernel :))))
 
-------=_NextPart_000_0025_01C32EA8.395EE690
-Content-Type: text/plain;
-	charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+*raise hand*
 
-Hi, is there any way for running device-mapper + xfs in one kernel :)))) =
+i'm running 2.4.20 with lvm1 and devmapper and xfs.
 
+-ap
 
-BR
-Atanas Prejdarov
-------=_NextPart_000_0025_01C32EA8.395EE690
-Content-Type: text/html;
-	charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dkoi8-r">
-<META content=3D"MSHTML 6.00.2800.1170" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hi, is there any way for running =
-device-mapper +=20
-xfs in one kernel :)))) </FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>BR</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Atanas =
-Prejdarov</FONT></DIV></BODY></HTML>
-
-------=_NextPart_000_0025_01C32EA8.395EE690--
+-- 
+Andreas Piesk <a.piesk@gmx.net>
+PGP-Fingerprint: 23CB A7E2 2E53 373C  DBCD 8EFC 7777 61C1
