@@ -1,7 +1,7 @@
-From: bkmnzhatrjvh@msn.com
-Mime-Version: 1.0
-Message-Id: <E19mUNb-0002VF-00@hermes.sistina.com>
-Subject: [linux-lvm] Settle your debt without taking out another loan!
+Message-ID: <BD9F7FC07AAE534CAFF3DCC5DD395D6E046D8607@uspto-is-111.uspto.gov>
+From: Michael.Griffin@USPTO.GOV
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm and Red Hat AS 2.1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,41 +12,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 12 03:20:02 2003
+Date: Tue Aug 12 06:25:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hey There!
+Does Red Hat AS 2.1 have lvm support by default or do I need to compile it
+as a module.  I can't seem to find where it does or doesn't have lvm support
+on Red Hat's Web site.
 
-Are you in debt? Having trouble paying it off?     ...
-We blast your debt and give you a fresh start!
-
-- Save you a lot of money by eliminating late fees
-- Settle your accounts for a substantially reduced amount
-- Stop creditors calling you on the phone
-- Avoid bankruptcy
-
-... and more!
-
-Why keep dealing with the stress, and headaches?
-
-Combine your debt into a low interest repayment and
-get on with your life today!!
-
-Come here and take a look at how we can help.
-
-http://srd.yahoo.com/drst/9786876/*http://www.slashmonthlypayments.com/index.php?N=g
-
-
-
-
-
-
-
-
-
-
-dont want any more?
-http://srd.yahoo.com/drst/97576/*http://www.slashmonthlypayments.com/r.php
+Michael E. Griffin
+Red Hat Linux Systems Administrator
+PEC Solutions
+12750 Fair Lakes Circle
+Fairfax, VA 22033
+703.306.3094
+Michael.Griffin@pec.com 
