@@ -1,19 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j02G1gr30107
-	for <linux-lvm@redhat.com>; Sun, 2 Jan 2005 11:01:42 -0500
-Received: from ratbert.donck.com (ratbert.donck.com [212.204.192.81])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j02G1aPj002208
-	for <linux-lvm@redhat.com>; Sun, 2 Jan 2005 11:01:36 -0500
-Date: Sun, 2 Jan 2005 17:01:34 +0100
-From: Fred Donck <fred@donck.com>
-Subject: Re: [linux-lvm] LVM2 strange behaviour
-Message-ID: <20050102160134.GV326@dogbert>
-References: <20050102121805.GT326@dogbert>
-	<200501021430.15011.erik.wasser@iquer.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j032ocr19478
+	for <linux-lvm@redhat.com>; Sun, 2 Jan 2005 21:50:38 -0500
+Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.195])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j032oXh5014412
+	for <linux-lvm@redhat.com>; Sun, 2 Jan 2005 21:50:33 -0500
+Received: by rproxy.gmail.com with SMTP id 1so404578rny
+	for <linux-lvm@redhat.com>; Sun, 02 Jan 2005 18:50:32 -0800 (PST)
+Message-ID: <e5146c2a050102185078e20c7b@mail.gmail.com>
+Date: Sun, 2 Jan 2005 21:50:32 -0500
+From: Sasha Z <kleptophobiac@gmail.com>
+Subject: Re: [linux-lvm] Rebuilding physical volume metadata
+In-Reply-To: <20041231152235.GY26670@agk.surrey.redhat.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200501021430.15011.erik.wasser@iquer.net>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+References: <e5146c2a04123020236f018fdb@mail.gmail.com>
+	<20041231152235.GY26670@agk.surrey.redhat.com>
+Reply-To: Sasha Z <kleptophobiac@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,57 +27,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+I have managed to restore the volume group, but I can't mount it as a
+filesystem, I can't format the logical volume, I can't do anything
+with lvextend, etc.
 
-Erik Wasser <erik.wasser@iquer.net>
-   wrote at Sun, Jan 02, 2005 at 02:30:14PM +0100:
+Here's a basic operation that fails:
 
-> On Sunday 02 January 2005 13:18, Fred Donck wrote:
-> 
-> > $> lvm version
-> >   LVM version:     2.00.08 (2003-11-14)
-> >   Library version: 1.00.17-ioctl (2004-04-19)
-> >   Driver version:  4.3.0
-> > $>
-> 
-> Very funny, I made the same mistake like you. Please upgrade your LVM2 
-> to the newest version. B-)
+[root@fileserver mapper]# lvextend -L+5G /dev/vg0/lv0
+  Extending logical volume lv0 to 525.70 GB
+  device-mapper ioctl cmd 9 failed: Invalid argument
+  Couldn't load device 'vg0-lv0'.
+  Problem reactivating lv0
 
-$> ACCEPT_KEYWORDS="~x86" emerge lvm2
-
-<snip all compiles>
-
-$> lvm version
-  LVM version:     2.00.25 (2004-09-29)
-  Library version: 1.00.17-ioctl (2004-04-19)
-  Driver version:  4.3.0
-$> 
-
-
-> 
-> Read the thread 'Very long startup times of the lv*-tools'[1][2] for 
-> further details.
-> 
-> [1]https://www.redhat.com/archives/linux-lvm/2004-December/msg00124.html
-> [2]https://www.redhat.com/archives/linux-lvm/2004-December/msg00126.html
-> 
-> -- 
-> So long... Fuzz
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---- End of erik.wasser@iquer.net's quote ---
-
-After reboot all looks wel.
-vgscan doesnt segfault anymore
-
-cheers,
--- 
-
-Fred
+After doing that, lvdisplay says the logical volume is suspended.
+What's wrong? /dev/vg0/lv0 is a symlink to /dev/mapper/vg0-lv0
