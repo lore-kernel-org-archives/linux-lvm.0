@@ -1,10 +1,13 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
-Subject: Re: [linux-lvm] Re: What really works?
-Message-ID: <20011102153732.A5007@redhat.com>
-References: <E15vISM-0005YX-00.2001-10-21-14-15-58@mail5.svr.pol.co.uk> <002501c15a66$34f8d010$836788cf@industry> <20011022230524.B4212@redhat.com> <20011023104359.B385@btconnect.com>
+Message-Id: <3.0.6.32.20011102104459.008053f0@mail.doorpi.net>
+From: Brent Harding <bharding@doorpi.net>
+Subject: Re: [linux-lvm] pvmove root filesystem?
+In-Reply-To: <20011101235041.B746@lynx.no>
+References: <20011102003346.Q21136@pc.ilinx>
+ <20011101233119.P21136@pc.ilinx>
+ <20011101221529.W16554@lynx.no>
+ <20011102003346.Q21136@pc.ilinx>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011023104359.B385@btconnect.com>; from thornber@btconnect.com on Tue, Oct 23, 2001 at 10:43:59AM +0100
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +18,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  2 09:40:02 2001
+Date: Fri Nov  2 10:41:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Stephen Tweedie <sct@redhat.com>, Joe Thornber <thornber@btconnect.com>
 
-Hi,
-
-On Tue, Oct 23, 2001 at 10:43:59AM +0100, Joe Thornber wrote:
- 
-> You're not missing anything.  The correct thing to do (as pointed out
-> by Andrea Arc.) is to hook b_end_io such that we can keep track of all
-> 'in flight' io's, and only start moving once these have completed.
-
-Precisely.
-
-> This is implemented in the new device-mapper driver that we are
-> switching to shortly.  I consider 'live' pvmove broken in the current
-> LVM.
-
-Just while we're on the subject, does anyone have a timescale for
-fixing this?
-
-Cheers,
- Stephen
+Is redhat 7.1 using ext3 already automatically? How does one upgrade from
+ext2 to ext3?
+At 11:50 PM 11/1/01 -0700, you wrote:
+>On Nov 02, 2001  00:33 -0500, Brian J. Murrell wrote:
+>> > Brian, the "pvmove" mechanism is not yet 100% safe for mounted
+filesystems.
+>> 
+>> Ugh.  I was hoping to not hear something like this.  Has it gotten any
+>> better recently?  What I mean is my LVM identifies itself as:
+>> 
+>> LVM version LVM 0.9.1_beta7(ish)  by Heinz Mauelshagen  (20 June 2001)
+>> lvm -- Module successfully initialized
+>
+>Well, there have been a lot of changes to the pvmove locking code and
+>such since then.  Whether it actually makes a difference is hard to
+>tell.
+>
+>> Am I going to run into even more problems with this verion of LVM vs.
+>> the latest or has the "live" pvmove stuff not changed much between the
+>> version I am running and current.
+>
+>Nobody has really done any good testing on it.
+>
+>> > There may be a problem with the ext3 journal, it is
+>> > hard to say (there was a report on the ext3 mailing list, but I never got
+>> > enough details to sort it out.
+>> 
+>> Hrm.  I am running ext3 on my filesystems as well.
+>
+>That's why I mentioned it.  You could read the thread in the ext3-users
+>archive at RedHat.
+>
+>> I just don't want this to turn into a "restore my system from tape"
+>> type of operation, especially if the system is operating (i.e.
+>> processing mail, etc.) while it all goes down the sh*tter.  Maybe I
+>> will contemplate it based on your thoughts of how much worse the
+>> operation could be based on my version of LVM installed.
+>
+>Well, if you are worried about mail, turn it off, back up your mail
+>spool, and then do the move.
+>
+>Alternately, if you have some time to kill, do a "safe" test first.
+>Create a PV/VG/LV on your new disk, get some process writing into it
+>while it is mounted, and try a pvmove to another disk.  Bonus marks if
+>you use something that can be verified afterwards (e.g. a tar file).
+>
+>"Obviously", there is only a danger at the "crossover" point of the
+>tar extraction and the pvmove (i.e. only while writing to the PE that
+>is being moved).  In theory, the buffers being written by tar will be
+>locked when they are being written into the PE that is being moved.
+>Once the pvmove is done, if e2fsck and "diff -ru" tell you that all
+>is well, I think you are safe.
+>
+>If you are paranoid, run something really heavy like bonnie++ during the
+>pvmove (only the file creation/read/deletion part) and it will complain
+>if any of the files suddenly go missing or unreadable, but it doesn't
+>(currently) check the file contents.  That would probably be a good
+>hack - write synthetic data into each file that can easily be verified
+>as correct later.
+>
+>Cheers, Andreas
+>--
+>Andreas Dilger
+>http://sourceforge.net/projects/ext2resize/
+>http://www-mddsp.enel.ucalgary.ca/People/adilger/
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+>
