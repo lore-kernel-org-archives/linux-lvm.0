@@ -1,12 +1,10 @@
-Return-Path: <fauxpas@trellisinc.com>
-Date: Fri, 17 Aug 2001 11:41:43 -0400
-From: Faux Pas III <fauxpas@trellisinc.com>
-Subject: Re: [linux-lvm] Problem using lvreduce
-Message-ID: <20010817114143.A16214@trellisinc.com>
-References: <051DFF3BBA73D3119A5800A0C95BD021C03C32@barracuda.alpha-processor.com> <20010817114344.D450@btconnect.com> <20010817114344.D450@btconnect.com> <20010817163831.A11977@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010817163831.A11977@sistina.com>; from mauelshagen@sistina.com on Fri, Aug 17, 2001 at 04:38:31PM +0200
+Return-Path: <root@lewis.abi.tconline.net>
+From: Lewis Bergman <lbergman@abi.tconline.net>
+Date: Fri, 17 Aug 2001 10:46:38 -0500
+MIME-Version: 1.0
+Message-Id: <01081710463803.03972@lewis.abi.tconline.net>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] 1.0 tar.gz
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,18 +17,17 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Aug 17, 2001 at 04:38:31PM +0200, Heinz J . Mauelshagen wrote:
- 
-> Yes, a pe index in the range of 0 to n.
-> With the patch that will well result in -1 to n-1, wich is wrong.
-
-Since it seems settled that this patch is the Wrong Way, is there a 
-proper patch that addresses the problem that I can grab ?
+I don't know if anybody else has seen this but the 1.0 tar.gz reports an 
+invalid crc. I downloaded it twice a few minutes ago and got the same error 
+both times. It looks like everything unpacked OK but I am not exactly sure 
+what all is supposed to be in there.
+Just in case someone over there wants to look at it.
 
 -- 
-Josh Litherland (fauxpas@trellisinc.com)
- It is by caffeine alone that I set my mind in motion.
-  It is by the juice of Mtn Dew that thoughts acquire speed.
+Lewis Bergman
+Texas Communications
+4309 Maple St.
+Abilene, TX 79602-8044
+915-695-6962
