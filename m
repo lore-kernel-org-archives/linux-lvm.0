@@ -1,12 +1,11 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <russell@coker.com.au>
-Subject: Re: [linux-lvm] any way to locate vg's on, say, /etc?
-Date: Wed, 10 Jan 2001 01:39:13 +1100
-References: <3A57B052.FA0DFBB2@wrkhors.com> <0101090031381K.05036@lyta> <3A5AAF8C.305C862D@wrkhors.com>
-In-Reply-To: <3A5AAF8C.305C862D@wrkhors.com>
+Return-Path: <cworley@liberate.com>
+Message-ID: <3A5B3CD2.4070801@liberate.com>
+Date: Tue, 09 Jan 2001 09:31:14 -0700
+From: Chris Worley <cworley@liberate.com>
 MIME-Version: 1.0
-Message-Id: <01011001391323.05036@lyta>
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Sanity check: newbie wants strange LVM configuration
+References: <3A52B71A.6944E0C5@symbionsys.com> <20010103093327.A619@66bassett.freeserve.co.uk> <3A5355EF.2060207@liberate.com> <20010103183937.A2027@66bassett.freeserve.co.uk> <3A537FB6.4090408@liberate.com> <20010104094004.A386@66bassett.freeserve.co.uk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,114 +17,95 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Steven Lembark <lembark@wrkhors.com>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Joe Thornber <joe@66bassett.freeserve.co.uk>, lvm <linux-lvm@sistina.com>
 
-On Tuesday 09 January 2001 17:28, you wrote:
-> > Why is it impossible for make LVM configuration something that gets
-> > started automatically at boot when it's possible to make RAID start a=
-t
-> > boot?
->
-> see above:  if you store enough data to vgimport the
-> volumes at boot time (however it is done) then you
-> don't need to store the volume group inodes in any
-> persistent storage.
->
-> catch is that storing all of the data used to recover the
-> media on the media to be recovered makes recovery more
-> difficult when the media fries [not if].
+Joe,
 
-For serious systems hard disk failure modes should be considered as discr=
-ete=20
-events.  A hard drive is either working perfectly (all data written is re=
-ad=20
-back correctly) or it is failed (it has returned an error so we put it=20
-offline and replace it with a hot spare or send an emergency alert to the=
-=20
-administrator).
-All data should be mirrored.  Hard drives are cheap.  I recently bought=20
-myself two 46G hard drives for less than I once paid for a single 70M dri=
-ve,=20
-and less than I later paid for a 330M drive.
-My "gut feeling" is that drives are more susceptible to damage now.  I kn=
-ow=20
-of cases of older 3600rpm drives being dropped, being hit by a car while=20
-operating (car entered building through the wall of the computer room), a=
-nd=20
-suffering numerous other mechanically damaging events without data loss. =
- I=20
-belive that modern 10K rpm drives are not as solid.
-Also drives are more susceptible to heat problems.  3600rpm drives could=20
-operate with all their air-holes blocked and while surrounded by other ha=
-rd=20
-drives without problems.  You can't stack two new 10K rpm drives without =
-good=20
-fans.
+"2 Day air" took a week to deliver... but I have my 40GB HD and have 
+started the crossover.
 
-If things are correctly setup then you can lose a single drive at any tim=
-e=20
-without data loss.  If LVM on-disk data structures can be recovered with =
-a=20
-drive dead (which is the case if LVM is running on top of RAID 1) then th=
-ere=20
-shouldn't be a problem.
+The first thing I missed was that fdisk only sees up to 64K cylinders 
+(and this disk has 77K), so it said I only had 12K... and it wasn't 
+until I created the first lv that I realized the problem.  I was able 
+to back-out the LV with lvreduce.  vgreduce was not as kind: it 
+wouldn't let me remove the last PV from the VG.  So, I repartitioned 
+using cfdisk (which could see more than 64K cylinders), and every 
+lv/vg command from that point on would say that the configuration file 
+and the kernel representation were out of sync, and to run vgscan to 
+get them to jibe.  But, vgscan wouldn't correct the problem: I had to 
+reboot.  I still can't create a new VG with the same name as that 
+first one I created (so I created one with a different name).  Is 
+deleting the VG as simple as just deleting the device file with the 
+name of the VG?
 
-IMHO if you run LVM across multiple disks without RAID-1 backing then you=
-=20
-probably don't care much for your data.  Probability of no-failure of the=
-=20
-system is obtained by multiplying the probability of no-failure of each p=
-art.
+Anyway, I made my first temporary 12GB Reiserfs from an LV, and have 
+copied the data from my system drive (this is the first step in 
+converting the current system over to LVM: copy the system drive to a 
+temporary LV... next, I'll boot from the temporary LV and make the old 
+system drive part of the LV, copy the data back, and boot from the new 
+LV).
 
-So if during a time period there is a 10% chance that a hard drive will f=
-ail=20
-then the probability of no-failure is 0.9.  Therefore the probability of =
-two=20
-drives in an LVM set not failing is 0.81 over the same time period.
+I used bonnie++ to test the different disk's speed: they're all about 
+the same: 1.6MB/sec character I/O, 5MB/sec block I/O (the file I/O was 
+significantly faster with the new disk running the reiserfs -- I 
+figured this was the reiserfs and not the disk).  I thought hanging 
+the new disk on the same controller as the cdrom would effect it, 
+since my IDE controller doesn't do UDMA.  No effect.  I bought the 
+cheapest disks, they're as expected: slow.  Time for software to speed 
+them up.
 
-> > One thing that I plan to do is create LVM, devfs, and RAID rescue dis=
-ks
-> > for Debian.  So far I have not had time.  :(
->
-> if your software RAID gets blown you're in pretty deep
-> water.  HP's trick of forcing the boot, primbary swap
+Now that I've got the system backed up, and am ready to try booting 
+from the lv (as per the booting from lv root instructions), I do have 
+another question: the lv, which is basically on hdc3, is about to move 
+to hda3 (the new bootable partition is on this 40GB drive).  "pvmove" 
+doesn't seem to be the right way to do this, since I don't want to 
+copy data from one disk to another.  Will vgscan automagically figure 
+out the cabling change at boot?
 
-RAID rescue disks does not inherantly mean rescue from RAID problems.  It=
-=20
-also means that if (for example) you have a non-autodetect RAID setup and=
- you=20
-want to fix config files on that file system that prevent booting (eg a=20
-corrupted /etc/fstab) then you can do it.  Also you need RAID enabled res=
-cue=20
-disks to install onto RAID in the first place, or to make a non-RAID root=
-=20
-file partition into a RAID partition.
+Joe Thornber wrote:
 
-> and root voumes to be on contiguous storage from cyl0
-> makes recovering LVM a snap:  just boot without it,
+> ...
+> LVM is a bit more flexible in it's striping than MD.  You will create
+> physical volumes, each physical volume will be split into physical
+> extents (4M by default), it's only when you come to create a logical
+> volume that you tell it whether you want to stripe or not.  At this
+> point the extent allocator trys to allocate extents from different
+> PV's.  So there is no need to create a 24G striped volume for only 12G
+> of data. 
 
-If I did that then I'd only have one other file system left on most of my=
-=20
-machines and thus would not be able to achieve much benefit from LVM!
+So, in the end I'll have 3 PV's (40GB, 16GB, and 12GB) in a 2-way 
+striped LV.  Does lvm automagically know to stripe the 12GB and 16GB 
+with the 40GB, and not with each other (I'll be cabling my IDE 
+controllers for this configuration)?  With MD, I'd specify which disks 
+are striped together, in lvm, I don't see a way to do this.
 
-> q:  what is there to recover from a damaged devfs?  i
-> though the entire file system was virtual (a la /proc).
+Furthermore, I want the last 12GB of the 40GB drive (that has no 
+matching disk to be striped with) to be linearly appended to the end 
+of the resulting lv.  MD's can be made of other MD's -- so I could 
+specify two raid0's (comprised of: the 12GB drive + 12GB from the 40GB 
+drive and: the 16GB drive + 16GB from the 40GB drive) then linearly 
+append them together in a third MD with the leftover 12GB (unstriped) 
+from the 40GB drive at the end.
 
-Correct, Devfs can't get damaged in any way that a reboot won't fix
-(rm -rf /dev/* will be hard to fix without a reboot).
+But, VG's can't be comprised of other VG's -- and LV's are either 
+striped or not.
 
-But if you use devfs for /etc/fstab, /etc/lilo.conf, etc then using rescu=
-e=20
-disks that don't support devfs will be painful for you.  Also once you st=
-art=20
-using devfs everywhere you get used to the device names and don't want to=
-=20
-stop using them (having to remember two names for everything is painful).
+How does LVM accomplish this same task?  What am I not understanding 
+about LVM?
 
---=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+> 
+> Let me know how you get on, writing a decent HOWTO is on my todo list so
+> these sort of problems are useful to me.
+
+You wanted the strange questions.  I got 'em ;)
+
+Chris
+
+P.S. I'm having a hard time sending email from this address to the LVM 
+list server... I'm on the mailing list from another address, and when 
+I send from this address I get a reply that the admin will review my 
+email before posting, but it never happens.  Feel free to post your 
+reply (and copy my stuff) to the list server.  I don't mean for this 
+to be a private post, but I don't want to subscribe to the list for 
+every email address I use.
