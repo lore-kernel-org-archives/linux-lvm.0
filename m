@@ -1,10 +1,7 @@
-From: Austin Gonyou <austin@coremetrics.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="=-yO7oXUDjvT5EenA0T/k5"
-Message-Id: <1010707968.14015.1.camel@UberGeek>
 MIME-Version: 1.0
-Subject: [linux-lvm] [OT] FAKE, HA Tools, LVM, and Oracle.
+From: Piete Brooks <Piete.Brooks@cl.cam.ac.uk>
+Message-Id: <E16Ovq8-0007VV-00@whittlesey.cl.cam.ac.uk>
+Subject: [linux-lvm] Could vgscan read a file of "preferred" LV name -> minor device id ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,40 +12,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 10 18:21:11 2002
+Date: Fri Jan 11 01:11:01 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
+Cc: Piete.Brooks@cl.cam.ac.uk
 
---=-yO7oXUDjvT5EenA0T/k5
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+I'm getting complaints from NFS users that when servers reboot, they often 
+find that their mounts have the wrong data.  I've never really worked out 
+which end hold what in NFS FHs, but the basic idea is that a client identifies 
+a FH which encodes (major dev id,minor dev id,inode number,version).
+This appears to break down when a new LV is created ane the server rebooted.
+As the /dev/<vg>/<lv> nodes are numbered strictly in the order that they are 
+discovered, all LV minor device IDs on subsequent VGs are renumbered, so any 
+remote caching of FHs breaks (( as with SCSI )).
 
-I'm looking for a way to do active/passive failover with Oracle on XFS +
-LVM. I think FAKE and HA tools would be the best bet, does anyone have
-any other suggestions? I'd sure appreciate them. BTW, connecting by
-fibre to EMC 3630.=20
-Thanks.
---=20
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-698-7250
-email: austin@coremetrics.com
+Is that about right ?
 
-"It is the part of a good shepherd to shear his flock, not to skin it."
-Latin Proverb
+Would it be possible for vgscan to read a "hints" file consisting of <vg>/<lv> 
+and minor device number pairs ?
 
---=-yO7oXUDjvT5EenA0T/k5
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+As each <vg>/<lv> is found, if it's in the file, the nominated minor device id 
+is used; if it's not found, then the next minor device id which is not listed 
+in the file is used.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQA8Pi4A94g6ZVmFMoIRAi9LAKDm3i7SmpILU/SGQdjGCQ5fUsoyvACgnndK
-rSDl3bo5W/ieDglNH70IAFM=
-=2/is
------END PGP SIGNATURE-----
-
---=-yO7oXUDjvT5EenA0T/k5--
+[[ I use devfs, so using existing data in /dev/ would not help -- but I think 
+it would do no harm to use that data by default ]]
