@@ -1,8 +1,10 @@
-From: "Bharavi Oak" <Bharavi.Oak@patni.com>
-Message-ID: <000101c2a035$27dd2370$c1bba5cc@patni.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Linux LVM: Device type for pseudo device
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Error with 2.5.50-dm-2; vanilla OK
+Message-ID: <20021210125142.A27380@uk.sistina.com>
+References: <3DF587F2.5060609@starhub.net.sg> <20021210093827.GB1479@reti>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20021210093827.GB1479@reti>; from joe@fib011235813.fsnet.co.uk on Tue, Dec 10, 2002 at 09:38:27AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,24 +15,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 10 04:05:02 2002
+Date: Tue Dec 10 06:51:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Tue, Dec 10, 2002 at 09:38:27AM +0000, Joe Thornber wrote:
+> Can you mail me (rather than the list) the complete lvm2 log after
+> trying your vgchange -ay.  
+e.g. run 'vgchange -ay -vvv' and send the full output;
+  or edit the log section config file to capture the debug output
+  (see doc/example.conf):
+    level = 7
+    overwrite = 1
+    file = "/tmp/lvmlog"
 
-I am writing a pseudo (filter) driver over SCSI disk driver (sd). There
-would be corresponding pseudo devices created. These devices would in turn
-access SCSI disk (thorugh sd) with some added functionality.
-I want to use these pseudo device withe Linux LVM. But when I tried pvcreate
-on such a device, the reponse was "invalid physical volume". Tracing the
-source code showed that lvm_get_device_type does not recognize the pseudo
-device as of a valid device type. In fact, valid device types have been
-specified in a structure defined inside the function itself.
-I used LVM version 1.0.3 as my platform is Red Hat Linux 7.x. Wanted to know
-which LVM version recognizes such pseudo devices. Need some help to make my
-pseudo driver work with LVM.
-
-Thanks and Regards,
-Bharavi Oak.
+Alasdair
+-- 
+agk@uk.sistina.com
