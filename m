@@ -1,29 +1,29 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200010112229.QAA01048@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] Compaq diskarray problems
-Date: Wed, 11 Oct 2000 16:29:05 -0600 (MDT)
-In-Reply-To: <39E3008D.A969BC89@winqvist.net> from "=?iso-8859-1?Q?J=F6rgen?= Winqvist" at Oct 10, 2000 01:42:05 PM
+Message-Id: <200010121644.MAA03016@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] Very tricky new install of Linux (using LVM and Kernel 2.4)
+Date: Thu, 12 Oct 2000 12:44:57 -0400 (EDT)
+In-Reply-To: <20001012160136.E413@destiny.ist.flinders.edu.au> from "Mark Phillips" at Oct 12, 2000 04:01:36 PM
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: =?iso-8859-1?Q?J=F6rgen?= Winqvist <jorgen@winqvist.net>
+To: Mark Phillips <mark@ist.flinders.edu.au>
 Cc: linux-lvm@msede.com
 
-Jorgen Winqvist, you write:
-> I can't pvcreate LUN's on a Compaq raid controller. This LUN is 10 Gb.
-> I've compiled 8.0final.
-> (I had to comment #include "gnu/types.h" out  in liblvm.h).
-> 
-> Greateful for any help.
+Mark Phillips, you write:
+> I want to install it on logical partitions using LVM.  This introduces
+> a number of problems.  Firstly I need kernel 2.4 to use LVM.  I've
+> compiled my own 2.4-test9 kernel and it runs fine on my old disk
+> (using debian).  But the debian installation disk uses an older
+> kernel, nor will it probably know how to cope with LVM.
 
-Try the updated lvm tools (SRPM) at:
+I have made a kernel patch for 0.8 final on 2.2.  You will also need the
+rawio kernel patch (or a vendor kernel which already includes this patch).
 
-ftp://ftp.stelias.com/pub/adilger/
+You can get the 2.2 LVM patch (along with bug-fixed 0.8 final user tools) at:
 
-This includes a number of patches to the 0.8 final tools that were posted
-on this list, but are not in the "official" tools.
+ftp://ftp.stelias.com/pub/adilger
 
 Cheers, Andreas
