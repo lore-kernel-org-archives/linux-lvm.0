@@ -1,10 +1,7 @@
-From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
-Message-ID: <20040101110941.GA13503@percy.comedia.it>
-References: <OF2A36FAD2.4372439D-ON00256E0E.00034E31-00256E0E.00034E39@svunta.os.is>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF2A36FAD2.4372439D-ON00256E0E.00034E31-00256E0E.00034E39@svunta.os.is>
+MIME-Version: 1.0
+From: Kjartan Reynir Hauksson <krh@os.is>
+Message-ID: <OF35F32634.21E2585F-ON00256E0E.005C46E1-00256E0E.005C46ED@svunta.os.is>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,16 +12,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  1 05:11:01 2004
+Date: Thu Jan  1 10:58:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 01, 2004 at 12:36:06AM +0000, Kjartan Reynir Hauksson wrote:
->>are you running a particular distro? if so telling which one it is could
->>be useful in gifing you the right hints.
->
+
+
+
+
+hmmmmm..... I'm getting a different kernel panic, this time it tells me to
+try and pass the init= option but I saw it managed to load the device
+mapper.  Any gotchas you know of that I might be missing ?
+
 >I using Mandrake 9.2 with mkinitrd 3.5.15.1 and a patched lilo 22.5.8
 3.5.15.1?, you mean _MY_ mkinitrd and _MY_ patched lilo?
 http://www.comedia.it/~bluca/cooker/lvm2
@@ -61,10 +62,16 @@ for lvm is (lvm1 or lvm2) but you might, so check and change it with the
 note2: if you want a mandrake patched kernel with support for lvm2
 included go to: http://www.netikka.net/tmb/Cooker
 
--- 
+--
 Luca Berra -- bluca@comedia.it
         Communication Media & Services S.r.l.
  /"\
  \ /     ASCII RIBBON CAMPAIGN
   X        AGAINST HTML MAIL
  / \
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+ read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
