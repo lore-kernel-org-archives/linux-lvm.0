@@ -1,11 +1,11 @@
-Date: Thu, 6 Sep 2001 18:10:04 -0700
-From: Ralph Jennings <ralph@oro.net>
-Subject: Re: [linux-lvm] Will LVM stay GPL?
-Message-ID: <20010906181004.A10569@d3.front>
-References: <200109061207.f86C79N7021746@pcrz175.HRZ.Uni-Marburg.DE> <20010906135502.B638@btconnect.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Thu, 6 Sep 2001 22:05:53 -0600
+Subject: Re: [linux-lvm] Feature : Merge two LV
+Message-ID: <20010906220553.Z32553@turbolinux.com>
+References: <Pine.LNX.4.30.0109062137150.11080-100000@x14.informatik.uni-bremen.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010906135502.B638@btconnect.com>
+In-Reply-To: <Pine.LNX.4.30.0109062137150.11080-100000@x14.informatik.uni-bremen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,27 +21,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Sep 06, 2001 at 01:55:02PM +0100, Joe Thornber wrote:
-> Mike Declerck has already addressed this issue on the mailing list,
-> but I'll reiterate.  The LVM kernel driver is GPL, the LVM userland
-> tools are GPL.  We have no intention to change this, and even if we
-> wanted to we couldn't since lots of people outside Sistina have
-> contributed.
-> 
-> If it makes people feel happier I will accept patches that add their
-> names to the copyright notices (assuming they've made significant
-> contributions).
+On Sep 06, 2001  21:51 +0200, Henk Birkholz wrote:
+> It would have been easier (without moving the date manually) if some kind
+> of lvmerge would exist, which would merge the lv and thier fs
+> automatically. Maybe there is ia wayto do it, i simply don't know.
+> In that case i would be glad to know that way from you. (and be added to
+> you FAQ).
 
-Besides, if they *do* decide to switch the licensing, all we have
-to do is go back one revision and branch a new LVM project from the
-GPL'd code.  So lets wait till that happens, then branch off an
-OpenLVM project from the latest GPL released LVM code.  But untill
-that happens who cares, they can't pull the carpet out from under
-our feet untill they change the license, and untill they decide to
-do that (if they decide to), all work is GPL'd, and they're doing a
-great job of it.
+What you ask for is very complex.  It is not so much an issue of LVM (which
+could do such a thing relatively easily), but a filesystem issue (which is
+_very_ hard to do.  Even with a tree-based filesystem like reiserfs or XFS,
+there are all sorts of duplicate identifiers stored in the filesystem, like
+block numbers, inode numbers, etc, which would make it complex to resolve.
 
-IANAL of course, but I've been told that you can't make a license
-change from GPL to anything else retroactive?!?!?
+You are far better off just to do (assuming you collapse /usr/local into /usr):
 
-  -Ralph
+umount /usr/local
+e2fsadm -L -(free space) /dev/vg/lvusrlocal	# if needed, assuming ext2/ext3
+e2fsadm -L +(needed space) /dev/vg/lvusr	# if needed, assuming ext2/ext3
+mount /dev/vg/lvusrlocal /mnt/tmp
+tar cf - -C /mnt/tmp . | tar xf - -C /usr/local
+umount /mnt/tmp
+lvremove /dev/vg/lvusrlocal
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
