@@ -1,10 +1,10 @@
-Date: Mon, 24 Sep 2001 13:17:09 +0200
+Date: Mon, 24 Sep 2001 13:18:40 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] e2fsck probs with LVM and 2.4.9-ac9+
-Message-ID: <20010924131709.A30558@sistina.com>
-References: <Pine.LNX.4.21.0109221900090.23118-100000@zeke.goatskin.org>
+Subject: Re: [linux-lvm] Volume group not found????
+Message-ID: <20010924131840.B30558@sistina.com>
+References: <200109202358.AA1744437478@netcentricnj.com>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.21.0109221900090.23118-100000@zeke.goatskin.org>; from shane@zeke.yi.org on Sat, Sep 22, 2001 at 07:11:14PM -0400
+In-Reply-To: <200109202358.AA1744437478@netcentricnj.com>; from tdwebste@netcentricnj.com on Thu, Sep 20, 2001 at 11:58:01PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,38 +20,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Shane,
+Tim,
 
--ac9 has the LVM 1.0 code in it.
-You should give the LVM 1.0.1-rc2 user space code a try in order to address
-your problem.
+does vgscan find your volume group?
+Which LVM version do you use?
 
-On Sat, Sep 22, 2001 at 07:11:14PM -0400, Shane Shrybman wrote:
-> Hello,
+On Thu, Sep 20, 2001 at 11:58:01PM -0400, tim wrote:
+> It seems I have a similar problem to poor Alexander Bruns.
+> This whole this is giving me big head heack.
 > 
-> When I attempted to upgrade to 2.4.9-ac9 and ac14 from 2.4.9-ac6 I ran
-> into a problem.
+> Luckily I only have /usr and /var as logical volumes. So I am still able to boot.
 > 
-> With either of these kernels (I didn't try any others between ac6 and
-> ac14) the kernel boots fine and lvm-mod gets loaded ok but when the first
-> filesystem that is on an lv gets mounted e2fsck complains and drops me to
-> admin prompt. The error message is something like this:
+> I created logical volume partitions /dev/sda4 /dev/sdb5
+> Then created stripped lvm's lv_usr and lv_var
 > 
-> The filesystem size (according to the superblock) is 524288 blocks
-> the physical size of the device is 57344
-> ...
+> Reboot several times and everything worked well.
 > 
-> When I reboot back into 2.4.9-ac6 everything is fine after e2fsck.
+> I see /dev/system/lv_usr, /dev/system/lv_var, /etc/lvmconf/sytem.conf
 > 
-> I have e2fsprogs version 1.19, do I need a more recent version?
-> 
-> Regards,
-> 
-> Shane
+> However vgchange fails
+> vgchange -a y
+> vgchange -- no volume groups found
 > 
 > 
-> -- 
+> /proc/lvm/VGs/
+> no logical volumes
 > 
+> How can I recover?
+> 
+> 
+> -tim. 
 > 
 > _______________________________________________
 > linux-lvm mailing list
