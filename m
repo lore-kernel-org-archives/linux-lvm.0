@@ -1,10 +1,9 @@
-Message-ID: <61451.64.34.222.41.1003932808.squirrel@webmail.tekmd.com>
-Subject: Re: [linux-lvm] badiane: problem with LVM
-From: <gdurand@tekmd.com>
-In-Reply-To: <20011024092841.B19037@sistina.com>
-References: <20011024092841.B19037@sistina.com>
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] Kernel 2.4.12 bug?
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FF87@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,14 +14,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 24 09:10:01 2001
+Date: Wed Oct 24 10:30:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-All the my machines have the same sources.list so the have the same
-packages.
+> > The tainted flag is set because the
+> > vfat module I think. Kernel says: no license, will taint=20
+> the kernel (or
+> > similar to this).
+>=20
+> Aha, I'd heard there were a few of those :-(
 
-I don't think that's a problem for the time being.
-
-Badiane
+Could you please explain in more details what are those license things
+and taint things?
+Thanks
+-jec
