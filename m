@@ -1,19 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i749Usa01751
-	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 05:30:54 -0400
-Received: from edmi.com.au (203-173-42-55.perm.iinet.net.au [203.173.42.55])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i749Uoe1032653
-	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 05:30:52 -0400
-Received: from christianh by edmi.com.au (MDaemon.PRO.v7.1.2.R)
-	with ESMTP id md50000058215.msg
-	for <linux-lvm@redhat.com>; Wed, 04 Aug 2004 19:30:39 +1000
-From: "Christian Hack" <christianh@edmi.com.au>
-Subject: RE: [linux-lvm] RE: Linux LVM pvmove -i trouble
-Date: Wed, 4 Aug 2004 19:30:34 +1000
-Message-ID: <00d501c47a05$b1abd4b0$1c01010a@christianh>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i74Exva28533
+	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 10:59:57 -0400
+Received: from hoemail1.lucent.com (hoemail1.lucent.com [192.11.226.161])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i74Exve1014425
+	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 10:59:57 -0400
+Received: from alpo.inse.lucent.com (h152-148-10-6.lucent.com [152.148.10.6])
+	by hoemail1.lucent.com (8.12.11/8.12.11) with ESMTP id i74ExtD5017796
+	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 09:59:55 -0500 (CDT)
+Received: from sekrit.inse.lucent.com (sekrit.inse.lucent.com [152.148.90.85])
+	by alpo.inse.lucent.com (8.9.1a/8.9.1) with ESMTP id KAA11968
+	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 10:59:54 -0400 (EDT)
 MIME-Version: 1.0
-In-Reply-To: <019f01c479c8$bdd353e0$1c01010a@christianh>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-ID: <16656.63977.881573.707810@gargle.gargle.HOWL>
+Date: Wed, 4 Aug 2004 10:59:53 -0400
+From: "John Stoffel" <stoffel@lucent.com>
+Subject: [linux-lvm] Problem adding disk back into an array
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,160 +27,86 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> 
-> I emailed Heinz directly since I couldn't subscribe to the 
-> list. First hit
-> in Google for "LVM mailing list" returns 
-> http://linux.msede.com/lvm_mlist/
-> which looks all fine and dandy, has up to date archives and 
-> instructions to
-> subscribe which are obviously wrong. Perhaps the owner could point
-> subscribers to the correct page below.
-> 
-> He replied directly also, so I'm moving this to the mailing list for
-> posterity.
-> 
-> > > I dug your email out of the archives since the linux-lvm 
-> > list seems totally
-> > > screwed up right now. I can't subscribe to the mailing list due to
-> > > majordomo@msede.com not working properly and pretending to be
-> > > majordomo@marxmeier.com. 
-> > 
-> > You hit a very old URL ther.
-> > Use http://www.redhat.com/mailman/listinfo/linux-lvm please.
-> > 
-> > > Anyway I have a dying drive with one PE that is bad on it. 
-> > I am trying to
-> > > remove this last PE so I can remove the PV from the VG. I 
-> > used pvmove to get
-> > > all but this bad PE off it with no troubles. "pvmove -i" 
-> > keeps bailing out
-> > > with this error: 
-> > > 
-> > > [root@mythtv tools]# ./pvmove -i /dev/hdd
-> > > pvmove -- moving physical extents in active volume group 
-> > "myth_volume_group"
-> > > pvmove -- WARNING: if you lose power during the move you may need
-> > >         to restore your LVM metadata from backup!
-> > > pvmove -- do you want to continue? [y/n] y
-> > > 
-> > /dev/myth_volume_group/group::/dev/myth_volume_group/myth_logi
-> > cal_volume:
-> > > 1640 174981504, 0343 195035520
-> > > pvmove -- ERROR "Input/output error" copying extent from 
-> "/dev/hdd"
-> > > 
-> > > pvmove -- ERROR "Input/output error" moving physical extents
-> > > 
-> > > I have tried all combinations of pvmove, -i , 
-> > --ignore_read_errors etc but
-> > > it seems to simply ignore this option. I upgraded to 1.0.8 
-> > with the same
-> > > result. I see in the 1.0.8 notes it mentions:
-> > > 
-> > > "If you run 'pvmove' and run into device errors, you must 
-> > first run 'vgscan'
-> > > before attempting 'pvmove -i'"
-> > 
-> > '-i' ignores read errors and tries to read as much data off 
-> the source
-> > device it can.
-> > *But* it can't ignore a write error to the destination device 
-> > of course.
-> > Maybe that's your problem here ?
-> > 
-> > > 
-> > > I did this with no success. I'm not even sure how vgscan 
-> > would achieve this
-> > > anyway.
-> > 
-> > It scans the changed metadata in and creates /etc/lvmtab* 
-> in order to
-> > have the cached copy in sync with the ondosk copies for 
-> > proper tool runs.
-> > 
-> > > 
-> > > FYI I'm getting these sorts of errors in the logs
-> > > 
-> > > Aug  3 17:26:22 mythtv kernel: hdd: dma_intr: error=0x40 {
-> > > UncorrectableError }, LBAsect=175022778, high=10, low=7250618,
-> > > sector=175022721
-> > > Aug  3 17:26:22 mythtv kernel: end_request: I/O error, dev 
-> > 16:40 (hdd),
-> > > sector 175022721
-> > > Aug  3 17:26:25 mythtv kernel: hdd: dma_intr: status=0x51 { 
-> > DriveReady
-> > > SeekComplete Error }
-> > > Aug  3 17:26:25 mythtv kernel: hdd: dma_intr: error=0x40 {
-> > > UncorrectableError }, LBAsect=175022778, high=10, 
-> > low=7250618, sector=1750
-> > 
-> > Hrm, no write io error on the destination device.
-> > Try running pvmove woth option v to see waht happens.
-> 
-> pvmove -i -vv /dev/hdd gives me this:
-> 
-> [root@mythtv mnt]# pvmove -i -vv /dev/hdd
-> pvmove -- checking name of source physical volume "/dev/hdd"
-> pvmove -- locking logical volume manager
-> pvmove -- reading data of source physical volume from "/dev/hdd"
-> pvmove -- checking volume group existence
-> pvmove -- reading data of volume group "myth_volume_group" from lvmtab
-> pvmove -- checking volume group consistency of "myth_volume_group"
-> pvmove -- searching for source physical volume "/dev/hdd" in 
-> volume group
-> "myth_volume_group"
-> pvmove -- building list of possible destination physical volumes
-> pvmove -- checking volume group activity
-> pvmove -- moving physical extents in active volume group 
-> "myth_volume_group"
-> pvmove -- WARNING: if you lose power during the move you may need
->         to restore your LVM metadata from backup!
-> pvmove -- do you want to continue? [y/n] y
-> pvmove -- starting to move extents away from physical volume 
-> "/dev/hdd"
-> pvmove -- checking for enough free physical extents in 
-> "myth_volume_group"
-> lv: /dev/myth_volume_group/myth_logical_volume[1]  old_dev: 
-> 22:64  new_dev:
-> 03:67  old_pe_sector: 174981504  new_pe_sector: 222953856
-> pvmove -- opening output physical volume "/dev/hdb3"
-> pvmove -- llseeking input physical volume "/dev/hdd"
-> pvmove -- llseeking output physical volume "/dev/hdb3"
-> pvmove -- /dev/hdd [PE 1334 [myth_logical_volume [LE 3121]] 
-> -> /dev/hdb3 [PE
-> 1700] [1/1]
-> pvmove -- copying extent from
-> /dev/hdd::/dev/myth_volume_group/myth_logical_volume(0x1640):1
-> 74981504 to
-> /dev/hdb3(0x0343):222953856 on disk
-> /dev/myth_volume_group/group::/dev/myth_volume_group/myth_logi
-> cal_volume:
-> 1640 174981504, 0343 222953856
-> pvmove -- ERROR "Input/output error" copying extent from "/dev/hdd"
-> 
-> pvmove -- ERROR "Input/output error" moving physical extents
-> 
-> > > How can I remove this PE. I don't care about the data 
-> > that's on it. I just
-> > > want to get the failing drive out of the VG.
-> > 
-> > In case pvmove fails, only with surgery on the metadata -or- using
-> > the LVM2 tools which are capable to handle partital VGs and 
-> > remove invalid PVs.
-> > The later is the preferred way for obvious reasons.
-> 
-> Anyone else have suggestions before I go and get the LVM2 
-> tools since pvmove
-> -i should be working for me?
-> 
 
-Fixed my problem. It seems that my system was still using the old lvm
-runtime library that it was initially installed with (RH8 = LVM 1.0.3). Once
-I made sure the old libraries were replaced with with 1.0.8 libraries
-matching the binaries, pvmove -i successfully ignored the bad sectors (and
-told me so too) and I was able to remove the PV from the VG.
+Hi all,
 
-CH
+I'm running a Debian system with linux kernel 2.6.8-rc2-mm2, which is
+pretty bleeding edge.  I've been playing around getting a
+USB2.0/IEEE1394 enclosure working with a 120gb drive.  This matches
+the pair of 120gb drives I'm using to hold my /home and /local
+volumes.  They're /dev/hde and /dev/hdg respectively.
+
+The system is setup so that both drives have a single partition which
+is an LVM type.  So both disks are completely mirrored to each other.
+On top of that, I have several LVM volumes.
+
+While mucking around on the system this morning, I noticed that one of
+the disks on the array was gone.  I've been trying to get it back and
+it's not working at all.  I've rebooted multiple times, re-partitioned
+the bad disk, etc.  Nothing.  Here's some info:
+
+   # cat /proc/mdstat
+   Personalities : [linear] [raid0] [raid1] [raid5]
+   md0 : active raid1 hde1[0]
+	 117218176 blocks [2/1] [U_]
+
+   unused devices: <none>
+
+   # mdadm /dev/md0 -a /dev/hdg1
+   mdadm: hot add failed for /dev/hdg1: Invalid argument
+
+And in /var/log/messages, I see the following two lines:
+
+   Aug  4 10:54:02 jfsnew kernel: md: trying to hot-add unknown-block(34,1) to md0 ...
+   Aug  4 10:54:02 jfsnew kernel: md: error, md_import_device() returned -16
+
+
+The entries in /dev/hd* look like this:
+
+   # ls -l /dev/hd*
+   brw-rw----  1 root cdrom  3, 0 Aug  4 10:52 /dev/hda
+   brw-rw----  1 root disk  33, 0 Aug  4 10:52 /dev/hde
+   brw-rw----  1 root disk  33, 1 Aug  4 10:52 /dev/hde1
+   brw-rw----  1 root disk  34, 0 Aug  4 10:52 /dev/hdg
+   brw-rw----  1 root disk  34, 1 Aug  4 10:52 /dev/hdg1
+
+Here's a list of partitions on the system as well:
+
+    # cat /proc/partitions 
+    major minor  #blocks  name
+
+      33     0  117220824 hde
+      33     1  117218241 hde1
+      34     0  117220824 hdg
+      34     1  117218241 hdg1
+       8     0   17783000 sda
+       8     1     248976 sda1
+       8     2    4000185 sda2
+       8     3     996030 sda3
+       8     4          1 sda4
+       8     5    4000153 sda5
+       8     6    8000338 sda6
+       8    16   17782540 sdb
+       8    17     248976 sdb1
+       8    18     996030 sdb2
+       8    19   16530885 sdb3
+       9     0  117218176 md0
+       8    32  117220824 sdc
+       8    33   58593496 sdc1
+       8    34   48828024 sdc2
+     253     0   53477376 dm-0
+     253     1   36700160 dm-1
+     253     2  117218241 dm-2
+     253     3     248976 dm-3
+     253     4     996030 dm-4
+     253     5   16530885 dm-5
+     253     6   58593496 dm-6
+     253     7   48828024 dm-7
+
+
+Anyone have any ideas what I'm doing wrong here?
+
+Thanks,
+John
