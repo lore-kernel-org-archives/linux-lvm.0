@@ -1,10 +1,7 @@
-Message-ID: <3F678DA8.9010203@gbrmpa.gov.au>
-From: Glen Harris <glen@gbrmpa.gov.au>
+Message-ID: <34774.213.39.188.204.1063753077.squirrel@www.somesite.de>
+From: "Florian Hinzmann" <f.hinzmann@hamburg.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Single snapshots do weird things?
-References: <3F663873.6070008@gbrmpa.gov.au> <20030915233257.E2155@uk.sistina.com> <3F66474F.9070106@gbrmpa.gov.au> <20030916131154.G2155@uk.sistina.com>
-In-Reply-To: <20030916131154.G2155@uk.sistina.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Using VG with one disk missing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,59 +12,73 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 16 17:26:01 2003
+Date: Tue Sep 16 17:58:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Alasdair G Kergon wrote:
- > On Tue, Sep 16, 2003 at 09:12:15AM +1000, Glen Harris wrote:
- >
- >>Is it mandatory to sync the filesystem before taking a snapshot?
- >
- >
- > If you want the snapshot to be consistent: that's what the VFS lock patch
- > attempts to do automatically whenever you take a snapshot: presumably you
- > haven't applied that patch?
- >
- > Alasdair
+Hello!
 
-Yes, I applied linux-2.4.21-VFS-lock.patch as well as the devmapper patch.
-The behaviour is reproducable, I just did it again:
+Kind of FAQ possibly, but I read several mails from the
+list archives, but did not make it yet.
 
-lvm:~# mount /dev/vg0/lv0 fs
-[Several files/dirs exist, but not device-mapper.1.00.05.tgz]
 
-lvm:~# lvcreate -s -L 8m --n snap0 /dev/vg0/lv0
-lvm:~# mount /dev/vg0/snap0 snap/0
-[Not there yet!]
+Situation:
+- machine with four harddisks, running "Debian testing"
+- conventional root partition - all other partitions LVs
+- one VG, several LVs inside  (/usr, /var, /home, ...)
+- PVs, VGs and LVs have been created, changed, expanded
+  and used with LVM v1.0.x
+- machine running with kernel 2.4.21 (LVM compiled in)
+  normally
 
-lvm:~# cp /usr/src/device-mapper.1.00.05.tgz fs
-lvm:~# lvcreate -s -L 8m --n snap1 /dev/vg0/lv0
-lvm:~# mount /dev/vg0/snap1 snap/1
-[Does *not* exist in the mounted snapshot filesystem]
+Some days ago one harddisk died, afterwards I did
+the following:
+- installed Linux onto empty harddisk (lets call it "rescue hd"
+  ("Debian unstable" including LVM 2.0)
+- Removed broken harddisk from machine, installed
+  rescue harddisk with newly installed Linux instead to
+  boot from it.
+- LVM2 finds volume group and reports one disk missing.
 
-lvm:~# sync
-lvm:~# lvcreate -s -L 8m --n snap2 /dev/vg0/lv0
-lvm:~# mount /dev/vg0/snap2 snap/2
-[Ahhh! Now it exists in *this* mounted snapshot filesystem!]
 
-Oh, and after the file appears in the final snapshot, it doesn't magically
-appear in the previous one.
+I do have an backup, but I'd like to save some recent
+files like my mail inbox.
 
-glen.
+Therefore I'd like to activate the volume group with
+one disk missing. Manual pages and mailing list seem
+to say this should be possible.
+I will have an replacement disk tomorrow or the day
+after. If that is the only way I'll have to wait. But
+I would like to start without it.
 
--- 
-| Nine megs for the secretaries fair,      | One disk to rule them all,     |
-| Seven megs for the hackers scarce,       | One disk to bind them,         |
-| Five megs for the grads in smoky lairs,  | One disk to hold the files     |
-| Three megs for system source;            | And in the darkness grind 'em. |
------------------------------------------------------------------------------
-| Glen Harris | glen@gbrmpa.gov.au | 07 47500893 | http://www.gbrmpa.gov.au |
------------------------------------------------------------------------------
+I tried just activating with "vgchange -P -ay", but I
+get some working and some missing LVs after that
+(that is: only some device files get created
+within /dev/<vgname>/).
+dmsetup prints information for the corresponding mappings.
+Device files for all LVs get created in /dev/mapper/, but
+dmsetup prints information only for the working LVs,
+not for the missing ones.
 
-=============================================================================
-If you have received this transmission in error please notify us immediately
-by return email and delete all copies. Any unauthorised use, disclosure or
-distribution of this email is prohibited.
-=============================================================================
+Reading the manual page for lvm about -P option
+I've learned I should use dmsetup to initialize
+/dev/ioerror.
+
+Some answers would help me making my next guesses and
+tries more aimed:
+
+- Do I have to setup /dev/ioerror manually before
+  using LVM commands like "vgchange -P -ay"?
+- If yes: How do I do it?
+  "dmsetup create /dev/ioerror <tablefile>" complained
+  about device does not exist or something like this.
+- Is there a way to find out which LV used the broken
+  disk and how much PEs one LV had on the broken disk?
+- Is there a way to activate the VG (read only is enough)
+  before inserting a new harddisk?
+
+
+    Thanks
+       Florian
