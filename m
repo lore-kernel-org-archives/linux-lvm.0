@@ -1,11 +1,10 @@
-Date: Sun, 7 Oct 2001 12:02:26 +0200
-From: Christoph Hellwig <hch@ns.caldera.de>
-Subject: Re: [linux-lvm] Removing direct access to gendisk_head
-Message-ID: <20011007120226.A15080@caldera.de>
-References: <20011006130147.C31614@lug-owl.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011006130147.C31614@lug-owl.de>; from jbglaw@lug-owl.de on Sat, Oct 06, 2001 at 01:01:47PM +0200
+Message-ID: <3BC04AD9.9080300@st-peter.stw.uni-erlangen.de>
+Date: Sun, 07 Oct 2001 14:30:17 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
+References: <20011004223343.A868@balu.kawo2.rwth-aachen.de> <20011005090810.B1245@sistina.com> <3BBD6084.70106@st-peter.stw.uni-erlangen.de> <20011005095737.A1460@sistina.com> <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,28 +16,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Sat, Oct 06, 2001 at 01:01:47PM +0200, Jan-Benedict Glaw wrote:
-> Hi!
-> 
-> I'm currently looking over kernel code (for cleaning-up purposes)
-> and removed EXPORT_SYMBOL(gendisk_head) which was a no-no for
-> current LVM kernel code. Please think about picking up this patch
-> 
-> 	- Named struct initializers
-> 	- Removing direct use of gendisk_head
-> 
-> There's an open Q: Do we need to nullify ->real_devices and ->next?
-> I don't think so (but I am unsure) so please remove these two lines
-> upon your oppinion:-)
-
-lvm_gendisk is in bss so it's ok to nullify it - see what I did to
-the inkernel LVM :)
-
-	Christoph
-
--- 
-Of course it doesn't work. We've performed a software upgrade.
+>
+> Heinz J . Mauelshagen wrote:
+>
+>> On Fri, Oct 05, 2001 at 09:25:56AM +0200, svetljo wrote:
+>>
+>>> is gcc-3.0.1 safe, or i should also use "-o0"
+>>>
+>>
+>> Don't have a report for this :-(
+>> Please try it.
+>>
+> it's seems to work
+>
+> xxscan xxdiplay lvcreate lvremove lvrename lvextend lvreduce work 
+> without pb
+> but i tried yesterday to install 2.4.11-pre2-xfs-cvs lvm-cvs
+> and vgscan from the initrd segfaults , i can not boot to my LV's with it
+> probbably it's some other trouble, i'll try with 2.4.11-pre3-xfs
+> i think it's not relevant but all my VG's are over softRAIDs
+>
+it works with 2.4.11-pre4-xfs-cvs and lvm-cvs from today
+i couldn't test vgcreate and vgremove .. ( because i have no spare PV's)
+but the other tools work without complaining
