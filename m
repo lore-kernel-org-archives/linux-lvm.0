@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] FWD: Re: Draft Snapshot Regression Test
-Message-ID: <20020829151752.GA4391@fib011235813.fsnet.co.uk>
-References: <20020829150824.WQMQ2113.imf22bis.bellsouth.net@TAZ2>
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re[2]: [linux-lvm] Draft Snapshot Regression Test
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020829150824.WQMQ2113.imf22bis.bellsouth.net@TAZ2>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20020829152401.LOFW15640.imf00bis.bellsouth.net@TAZ2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +13,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 29 10:18:01 2002
+Date: Thu Aug 29 10:23:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>linux-lvm@sistina.com
 
-On Thu, Aug 29, 2002 at 11:07:12AM -0400, Greg Freemyer wrote:
-> On the xfs regression test I posted yesterday, there is concern that my check for lvm being present in the kernel is not general enough to check LVM 1 and LVM 2, or even EVMS.
+ >>  On Wed, 2002-08-28 at 18:28, Greg Freemyer wrote:
+ >>  > All,
+ >>  >=20
+ >>  > I just sent the below snapshot regression test to the XFS mailing list
+ >>  >=20
+ >>  > It is designed to run from the XFS test harness, but that it should be
+ >>  easy to convert to be simply run by hand.
+ >>  >=20
+ >>  > I have only tried it on a LVM 1.0.3 / xfs 1.1 / 2.4.19pre4-aa kernel and
+ >>  it fails within 10 iterations every time.
+ >>  >=20
 
-For LVM2 kernel side:
+ >>  Greg, I have been running your test here on a 2.4.19-xfs kernel from our
+ >>  CVS tree, using the LVM which is in the kernel. So far it is chugging
+ >>  along quite happily without failure. Can you try this kernel?
 
-grep device-mapper /proc/devices
+ >>  Steve
 
+Steve,
 
-For LVM2 tools:
+Thanks for running it. =20
 
-lvm vgdisplay --version
+I was afraid I would get that question.
 
-and look for a > 1.9x version number, eg,
+I have never compiled a kernel, and I was specifically avoiding it until I got =
+at least one "it works with cvs" message.  I guess I have that now.
 
-LVM version:     1.95.10-cvs (2002-05-31)
-Library version: 0.96.03-ioctl-cvs (2002-06-27)
-Driver version:  1.0.3
+It might take a day or two to get it done, but I will try to do so.
 
-
-- Joe
+Greg Freemyer
+Internet Engineer
+Deployment and Integration Specialist
+Compaq ASE - Tru64 v4, v5
+Compaq Master ASE - SAN Architect
+The Norcross Group
+www.NorcrossGroup.com
