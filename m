@@ -1,42 +1,59 @@
-Date: Tue, 24 Aug 1999 15:28:45 -0500 (CDT)
-From: "Jonny B." <brassow@lcse.umn.edu>
+Message-Id: <199908242323.AA06321@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] LVM in stock kernel!?
-In-Reply-To: <Pine.LNX.3.96.990824152444.6534C-100000@zeke.sympatico.ca>
-Message-ID: <Pine.SGI.3.91.990824152657.19705A-100000@nile.lcse.umn.edu>
-MIME-Version: 1.0
+Date: Wed, 25 Aug 1999 1:20:37 METDST
+In-Reply-To: <Pine.LNX.3.96.990824152444.6534C-100000@zeke.sympatico.ca>; from "Shane Shrybman" at Aug 24, 99 3:32 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Shane Shrybman <shane@zeke.yi.org>
-Cc: linux-lvm mailing list <linux-lvm@msede.com>
-
-Sorry if you think this is dumb, but if I were Linus, I would like one 
-note with a couple of reasons why LVM should be in the kernel and then a 
-list of names of the people who support that position.  (Kinda like a 
-petition.)
-
- brassow
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-There are more than 1,000 chemicals in coffee; of those, 26 have
-been tested, of the 26, 1/2 cause cancer in laboratory rats.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-On Tue, 24 Aug 1999, Shane Shrybman wrote:
+Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
 > 
 > Hi,
 > 
 > Has there been any further discussion or a resolution on how to "cast our
 > votes" for lvm to be included in 2.[34] ?
+
+I'm sorry, it has not.
+
+But i'ld appreciate any ideas how to push LVM into the stock kernel.
+
 > 
 > Should I send a message to Linus asking him to include it ? 
+
+As far as i understood Alan Cox, Linus wants to know, if many people
+like to have the LVM in the stock kernel.
+
+My idea just was: "let's send him mails to tell him 8*)"
+
+
+Maybe there are much better ways.
+I'm open to them.
+
 > 
 > Should I get everyone I know who uses or wants use lvm with linux to also
 > send Linus a note ?
 > 
-> Shane
-> 
+
+Yes, please!
+
+Kind regards,
+Heinz
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
