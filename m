@@ -1,42 +1,70 @@
-Message-Id: <m12LGs8-0000cIC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: [linux-lvm] migration to lvm
-Date: Thu, 17 Feb 2000 03:40:52 +0100 (MET)
-MIME-Version: 1.0
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-Id: <200002180712.IAA21315@u9etz.ez-darmstadt.telekom.de>
+Subject: [linux-lvm] __ll_rw_block(): more generalized q->make_request_fn()
+Date: Fri, 18 Feb 2000 08:12:29 +0100 (MET)
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: torvalds@transmeta.com, mingo@redhat.com, linux-kernel@vger.rutgers.edu
+Cc: mge@ez-darmstadt.telekom.de, andrea@suse.de, linux-lvm@msede.com
 
-Hello,
 
-as I'm currently try to migrate to lvm, I'm searching for the least
-destructive way.
-What may work is :
-Assume you have one or more partitions in use for Linux and at least
-one free to use. You add the free one to a volume group and create
-a limited system on it or just copy your existing depending on the
-available space. With the help of initrd you can start the system out of
-the volume group (this is the stage where I am currently). As soon as
-you are sure you do not need your old partition(s), you add it to the
-volume group and move your logical volume to the new physical volume.
-Then you remove the cronological first, physical last partition from the
-volume group. Now the critical thing : If it is possible to change the
-first partition so that it spans also the space of the second you finally
-have one partition to use in the vg and can create more lv to your liking.
-The partition change should be possible without data loss, as there
-is no filesystem size change to take care of. Would parted do that ?
-Or even fdisk alone ?
-This procedure would allow the migration without the need of another server
-to hold your data or a second hard disk and reinstalling the machine
-in question. (Of course only if there is space enough to do that.)
+Hi Linus and Ingo,
 
-Only a dream or possible ?
+heading for  a more generalized make_request_fn()/generic_make_request()
+calling convention in __ll_rw_block(), which helps us to avoid to implement
+stacking support in each volume driver (like MD, LVM and POOL), i propose
+the following changes to 2.3.46 ll_rw_blk.c.
 
-Thanks for any comments,
-Rolf
+Ingo: can MD deal with that as well?
+Linus: comments?
+
+
+--- linux-2.3.46.orig/drivers/block/ll_rw_blk.c	Thu Feb 17 23:10:39 2000
++++ linux-2.3.46/drivers/block/ll_rw_blk.c	Fri Feb 18 01:13:20 2000
+@@ -1029,14 +1031,16 @@
+ 		}
+ 		set_bit(BH_Req, &bh[i]->b_state);
+ 
+-		if (q->make_request_fn)
++ 		/* loop thru all make request functions until we don't
++		   hit a volume driver any longer */
++	        q = blk_get_queue(bh[i]->b_dev);
++		bh[i]->b_rdev = bh[i]->b_dev;
++		bh[i]->b_rsector = bh[i]->b_blocknr*(bh[i]->b_size>>9);
++		while ( q->make_request_fn) {
+ 			q->make_request_fn(rw, bh[i]);
+-		else {
+-			bh[i]->b_rdev = bh[i]->b_dev;
+-			bh[i]->b_rsector = bh[i]->b_blocknr*(bh[i]->b_size>>9);
+-
+-			generic_make_request(rw, bh[i]);
+-		}
++			q = blk_get_queue(bh[i]->b_rdev);
++		}
++		generic_make_request(rw, bh[i]);
+	}
+ 
+	return;
+
+BTW: I have deleted cosmetic changes i needed to avoid compile stoppers in
+     other places i made.
+
+
+Heinz
 -- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@EZ-Darmstadt.Telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
