@@ -1,12 +1,9 @@
-From: Jason Smith <jhs@openenterprise.biz>
-References: <20030206.kbn.38328100@si.homelinux.org> <200302071226.49241.jhs@openenterprise.biz> <200302062156.59889.jkeating@pogolinux.com>
-In-Reply-To: <200302062156.59889.jkeating@pogolinux.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: clearsigned data
-Content-Disposition: inline
-Message-Id: <200302071358.25966.jhs@openenterprise.biz>
-Subject: [linux-lvm] Re: RAID5 bug? [was: Re: raid and lvm]
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LVM 1.0.1 to LVM2 upgrade path
+Message-ID: <20030207152340.A27442@sistina.com>
+References: <20030207042425.GF22795@panoptic.com>
+Mime-Version: 1.0
+In-Reply-To: <20030207042425.GF22795@panoptic.com>; from dossy@panoptic.com on Thu, Feb 06, 2003 at 11:24:25PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,34 +14,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  7 01:14:01 2003
+Date: Fri Feb  7 08:27:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
-To: linux-lvm@lists.sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-=2D----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Thu, Feb 06, 2003 at 11:24:25PM -0500, Dossy wrote:
+> Everyone,
+> 
+> I'm currently running on Linux 2.4.20 with LVM 1.0.1 26/11/2001 ... yes,
+> it's outdated, but this is a production system and LVM has been
+> (seemingly) stable without any issues.
+> 
+> I'm figuring I should consider upgrading to LVM2, but I don't want to
+> just go "trying it" -- is there a specific upgrade path I have to take?
+> Is LVM2 backward compatible with LVM1?  Are there any "gotchas" and are
+> they documented somewhere?
 
-On Friday 07 February 2003 12:56 pm, Jesse Keating wrote:
-> I have a few clients that use LVM on large hardware (3-ware) raid5 arrays=
-=2E=20
-> I don't think they've seen (they might not have looked) these types of
-> errors when the array is in degraded mode.
->
-> Does this effect only software raid?
+If this is production, you want to upgrade to LVM 1.0.6 because LVM2
+is in beta still.
 
-My guess is yes.  I don't know about HW implementations, but I'm seeing it=
-=20
-with lvm2 on top of software raid5.
+You should give LVM2 a try on some test system please.
 
-=2D --=20
-Jason Smith
-Open Enterprise Systems
-Bangkok, Thailand
-=2D----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
+It supports the LVM1 metadata (IOW: you can install it and use your
+volume groups created with LVM1). The only major feature missing in LVM2 is
+'pvmove' which we are working on right now.
 
-iD8DBQE+Q1kQm5qEoSbpT3kRAtdLAJ43Wecy0zZMwAa3rUHw+x6/0SvmEQCeNwUx
-gFYMypZhMuCWt9AX5AjJehw=3D
-=3DQ3My
-=2D----END PGP SIGNATURE-----
+> 
+> Any pointers to documentation would be appreciated.  Meanwhile, I'm busy
+> Googling ...
+
+LVM2 is command line compatible with LVM1. The new features are (mostly)
+in the man pages comming with the LVN2 source distro. You need to get
+device-mapper from our website as well (see the usual README/INSTALL files).
+
+> 
+> -- Dossy
+> 
+> -- 
+> Dossy Shiobara                       mail: dossy@panoptic.com 
+> Panoptic Computer Network             web: http://www.panoptic.com/ 
+>   "He realized the fastest way to change is to laugh at your own
+>     folly -- then you can let go and quickly move on." (p. 70)
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
