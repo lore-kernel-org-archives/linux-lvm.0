@@ -1,11 +1,10 @@
-From: Kevin Corry <kevcorry@us.ibm.com>
 Subject: Re: [linux-lvm] DM encryption target?
-References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
+From: Christophe Saout <christophe@saout.de>
 In-Reply-To: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
-MIME-Version: 1.0
+References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
+Message-Id: <1064343664.10276.3.camel@chtephan.cs.pocnet.net>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200309231112.38681.kevcorry@us.ibm.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,26 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 23 12:08:14 2003
+Date: Tue Sep 23 14:02:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Greg Freemyer <freemyer-ml@NorcrossGroup.com>
+To: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
+Cc: linux-lvm@sistina.com
 
-On Tuesday 23 September 2003 10:51, Greg Freemyer wrote:
+Am Di, 2003-09-23 um 17.51 schrieb Greg Freemyer:
+
 > There was talk about creating a DM encrypting target a while ago.
->
+> 
 > Did this ever proceed?
->
-> Greg
 
-You can read through the discussions about dm-crypt in the dm-devel archives, 
-starting at:
-http://lists.sistina.com/pipermail/dm-devel/2003-July/thread.html
+Yes, as Kevin already pointed out, I've written a working implementation
+some time ago. It currently seems to be more stable than the cryptoloop
+implementation in the 2.6-test kernels.
 
-Christophe Saout has a dm-crypt module available at:
-http://www.saout.de/misc/
+You can find my original announcement with some how-to-use details at
+http://lwn.net/Articles/42000/ . Don't use that patch, I've got a newer
+one one my homepage http://www.saout.de/misc/dm-crypt.diff .
 
--- 
-Kevin Corry
-kevcorry@us.ibm.com
-http://evms.sourceforge.net/
+--
+Christophe Saout <christophe@saout.de>
+Please avoid sending me Word or PowerPoint attachments.
+See http://www.fsf.org/philosophy/no-word-attachments.html
