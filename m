@@ -1,81 +1,25 @@
-Date: Tue, 1 Feb 2000 17:55:46 +0100
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Subject: Re: [linux-lvm] Patch 0.8i to 2.3.40: error during make
-Message-ID: <20000201175546.C25005@ev-stift-gymn.guetersloh.de>
-Reply-To: jbglaw@lug-owl.de
-References: <Pine.LNX.4.20.0001301910280.5714-100000@claudius.mgmt-inc.com> <20000131033652.A19554@ev-stift-gymn.guetersloh.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="bAmEntskrkuBymla"
-In-Reply-To: <20000131033652.A19554@ev-stift-gymn.guetersloh.de>; from jbglaw@lug-owl.de on Mon, Jan 31, 2000 at 03:36:52AM +0100
+Message-ID: <38973588.72586401@msede.com>
+Date: Tue, 01 Feb 2000 20:35:36 +0100
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: kthomas@gfn.org
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM on RedHat 6.1 (2.2.12-20)
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
+Forwarded message ...
 
---bAmEntskrkuBymla
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+-------- Original Message --------
+Date: Tue, 1 Feb 2000 10:22:06 -0500 (EST)
+From: Kenny Thomas <kthomas@gfn.org>
+Subject: LVM on RedHat 6.1 (2.2.12-20)
+In-Reply-To: <3895A6A4.345BA093@msede.com>
+Message-ID: <Pine.LNX.4.21.0002011020360.29327-100000@gfn3.gfn.org>
 
-On Mon, Jan 31, 2000 at 03:36:52AM +0100, Jan-Benedict Glaw wrote:
-> On Sun, Jan 30, 2000 at 07:11:04PM -0500, Jim Cain wrote:
-> > All,
-> >=20
-> > After applying the patch and running make config and make dep, make sho=
-ws
-> > the following:
-> >=20
-> > make[2]: Entering directory `/usr/src/linux-2.3.40-lvm/kernel'
-> > gcc -D__KERNEL__ -I/usr/src/linux-2.3.40-lvm/include -D__SMP__ -Wall -W=
-strict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-=
-strength-reduce  -DCPU=3D686 -march=3Di686   -DEXPORT_SYMTAB -c ksyms.c
-> > ksyms.c:258: `block_fsync' undeclared here (not in a function)
-> > ksyms.c:258: initializer element for `__ksymtab_block_fsync.value' is n=
-ot constant
-> > ksyms.c:269: `blkdev_close' undeclared here (not in a function)
-> > ksyms.c:269: initializer element for `__ksymtab_blkdev_close.value' is =
-not constant
-> > make[2]: *** [ksyms.o] Error 1
-> >=20
-> > Has anyone else had a similar problem with this patch?
->=20
-> Yes, /me... I've got no unmodified file handy and I'm working on a very s=
-low
-> machine so try this:
->=20
-> - edit ./include/linux/fs.h
-> - locate line 775
-> - add the following two lines:
->=20
-> extern int blkdev_close(struct inode *, struct file *);
-> extern int block_fsync(struct file *, struct dentry *);
->=20
-> --> That's all. It's simply a problem of two missing declarations;(
-
-Well, that's *nearly* all. You need to remove the "static" keywords from
-both blkdev_close and block_fsync in ./fs/block_dev.c, too.
-
-But that's really all;)
-
-MfG, JBG
-
---=20
-Fehler eingestehen, Gr=F6=DFe zeigen: Nehmt die Rechtschreibreform zur=FCck=
-!!!
-keyID=3D0x8399E1BB fingerprint=3D250D 3BCF 7127 0D8C A444 A961 1DBD 5E75 83=
-99 E1BB
-
---bAmEntskrkuBymla
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iEYEAREBAAYFAjiXEBEACgkQHb1edYOZ4bvlYwCeKCqXkqlW2tG3RVzZ3r2dqt/2
-6joAn1nMbHHj916aE11gGzYRMvHhz8F7
-=jU0N
------END PGP SIGNATURE-----
-
---bAmEntskrkuBymla--
+Has anyone made a successfull kernel patch of lvm onto 2.2.12-20? If
+so
+where can I get it? TIA.
