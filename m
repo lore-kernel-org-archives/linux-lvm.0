@@ -1,12 +1,11 @@
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] LVM ext3 support
-Message-ID: <20031017184443.GA7317@antimony.eng>
-References: <3F903230.9070608@siue.edu>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Content-Disposition: inline
-In-Reply-To: <3F903230.9070608@siue.edu>
+Message-ID: <3F90395D.5000500@siue.edu>
+From: anthony mayes <anmayes@siue.edu>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: LVM ext3 support
+References: <3F903230.9070608@siue.edu> <yw1xptgvk92l.fsf@users.sourceforge.net>
+In-Reply-To: <yw1xptgvk92l.fsf@users.sourceforge.net>
+Content-Type: multipart/alternative;
+ boundary="------------050908020709020003050200"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,55 +16,92 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 17 15:02:10 2003
+Date: Fri Oct 17 15:02:13 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is a multi-part message in MIME format.
+--------------050908020709020003050200
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-MIME-Autoconverted: from 8bit to quoted-printable by mail.isg.siue.edu id NAA13026
 
-On Fri, Oct 17, 2003 at 01:17:20PM -0500, anthony mayes wrote:
-> I am running Redhat 9 with kernel 2.4.20-20.9.  I am getting the=20
-> following errors when trying to mount an LVM snapshot:
->=20
-> EXT3-fs: INFO: recovery required on readonly filesystem.
-> EXT3-fs: write access unavailable, cannot proceed.
->=20
-> I saw a thread on redhat.com that said a kernel patch is needed.  My=20
-> question is where can I get the patch for this kernel, how do I install=
-=20
-> it, and why isn't this built into the kernel in the first place?  Any=20
-> other suggestions are welcome.
+How would you suggest making it writable?
 
-Looks like you don't have the VFS-lock patch installed. something like
-linux-2.4.20-VFS-lock.patch, but i don't know what it would be for
-Redhat's patched kernels.
+--=20
+Anthony Mayes
+UNIX Server Administration
+Southern Illinois University Edwardsville
+anmayes@siue.edu
 
-Regards,
---
-AJ Lewis
-Sistina Software Inc.             http://www.sistina.com
-720 Washington Ave, Suite 200     Voice:  612-638-0500
-Minneapolis, MN 55414             E-Mail: lewis_NOSPAM_(AT)sistina(DOT)com
+M=E5ns Rullg=E5rd wrote:
 
-Current GPG fingerprint =3D B8F8 CEC8 9B0B B169 C5E2  8589 867E 54C8 4984 3=
-813
-Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
-many keyservers out there...
+>anthony mayes <anmayes@siue.edu> writes:
+>
+> =20
+>
+>>I am running Redhat 9 with kernel 2.4.20-20.9.  I am getting the
+>>following errors when trying to mount an LVM snapshot:
+>>
+>>EXT3-fs: INFO: recovery required on readonly filesystem.
+>>EXT3-fs: write access unavailable, cannot proceed.
+>>
+>>I saw a thread on redhat.com that said a kernel patch is needed.  My
+>>   =20
+>>
+>
+>BS.  You are trying to mount a non-clean filesystem on a read-only
+>LV.  I don't know why your LV is read-only.  You should find out why
+>it is, make it writable, and run fsck on it.  After that, you should
+>be able to mount it.
+>
+> =20
+>
 
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+--------------050908020709020003050200
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+  <title></title>
+</head>
+<body text="#000000" bgcolor="#ffffff">
+How would you suggest making it writable?<br>
+<br>
+<pre class="moz-signature" cols="72">-- 
+Anthony Mayes
+UNIX Server Administration
+Southern Illinois University Edwardsville
+<a class="moz-txt-link-abbreviated" href="mailto:anmayes@siue.edu">anmayes@siue.edu</a></pre>
+M&aring;ns Rullg&aring;rd wrote:<br>
+<blockquote type="cite" cite="midyw1xptgvk92l.fsf@users.sourceforge.net">
+  <pre wrap="">anthony mayes <a class="moz-txt-link-rfc2396E" href="mailto:anmayes@siue.edu">&lt;anmayes@siue.edu&gt;</a> writes:
 
-iD8DBQE/kDibhn5UyEmEOBMRAuFWAJwPRhhJH8F13CqlIagTmYzHCSaNOQCeJ/9Y
-meR6m1TL5NoPJJlRSPtzk+8=
-=9S7l
------END PGP SIGNATURE-----
+  </pre>
+  <blockquote type="cite">
+    <pre wrap="">I am running Redhat 9 with kernel 2.4.20-20.9.  I am getting the
+following errors when trying to mount an LVM snapshot:
 
---r5Pyd7+fXNt84Ff3--
+EXT3-fs: INFO: recovery required on readonly filesystem.
+EXT3-fs: write access unavailable, cannot proceed.
+
+I saw a thread on redhat.com that said a kernel patch is needed.  My
+    </pre>
+  </blockquote>
+  <pre wrap=""><!---->
+BS.  You are trying to mount a non-clean filesystem on a read-only
+LV.  I don't know why your LV is read-only.  You should find out why
+it is, make it writable, and run fsck on it.  After that, you should
+be able to mount it.
+
+  </pre>
+</blockquote>
+<br>
+</body>
+</html>
+
+--------------050908020709020003050200--
