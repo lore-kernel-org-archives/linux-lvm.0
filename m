@@ -1,8 +1,9 @@
-Message-ID: <25369470B6F0D41194820002B328BDD23002@ATLOPS>
-From: Arvind Jain <arvind_jain@ivivity.com>
-Subject: RE: [linux-lvm] RAID1 on TOP of LVM
-Date: Wed, 26 Sep 2001 10:04:04 -0400
+Message-ID: <3BAB1F01001185CA@mail.fibertel.com.ar> (added by postmaster@fibertel.com.ar)
+Date: Wed, 26 Sep 2001 12:40:29 -0300 (ART)
+From: Leandro Lucarella <luca@lucarella.com.ar>
 MIME-Version: 1.0
+Content-Disposition: INLINE
+Subject: [linux-lvm] Problems compiling kernel 2.4.10 with  LVM-1.0.1rc2 patch
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,92 +15,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm <linux-lvm@sistina.com>
 
-I had tried this with persistent-superblock 1. It had worked fine for me. I
-also agree with Luca Berra.  You should use LVM on top of RAID. Any
-particular reason you are using RAID on top on LVM? thx,arv.
+Here's the error message:
 
------Original Message-----
-From: Uday Bhaskar Sarma Seetamraju [mailto:sarma@bellatlantic.net]
-Sent: Tuesday, September 25, 2001 11:32 PM
-To: linux-lvm@sistina.com
-Subject: [linux-lvm] RAID1 on TOP of LVM
+make -C md modules
+make[2]: Entering directory `/usr/src/linux-2.4.10/drivers/md'
+gcc -D__KERNEL__ -I/usr/src/linux-2.4.10/include -Wall -Wstrict-prototypes -Wno-trigraphs -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common -pipe -mpreferred-stack-boundary=2 -march=i686 -malign-functions=4  -DMODULE -DMODVERSIONS -include /usr/src/linux-2.4.10/include/linux/modversions.h   -c -o lvm.o lvm.c
+lvm.c:2329: macro `min' used with too many (3) args
+lvm.c:2343: macro `min' used with too many (3) args
+lvm.c: In function `__extend_reduce':
+lvm.c:2329: parse error before `;'
+lvm.c:2329: `_y' undeclared (first use in this function)
+lvm.c:2329: (Each undeclared identifier is reported only once
+lvm.c:2329: for each function it appears in.)
+lvm.c:2343: parse error before `;'
+lvm.c:2280: warning: `end' might be used uninitialized in this function
+lvm.c:2339: warning: `end' might be used uninitialized in this function
+make[2]: *** [lvm.o] Error 1
+make[2]: Leaving directory `/usr/src/linux-2.4.10/drivers/md'
+make[1]: *** [_modsubdir_md] Error 2
+make[1]: Leaving directory `/usr/src/linux-2.4.10/drivers'
+make: *** [_mod_drivers] Error 2
 
+Any ideas?
 
-
-Hi,
-
-I have had LVM for a little while now.
-I have even successfully extended an LV.  Moved PVs.
-And better yet.  Destroyed and recreated an LV containing Data :-)
-The final step, RAID1.  But I stumbled.
-Can someone help?
-
-========= /etc/raidtab file =========
-raiddev /dev/md0
-        raid-level      1
-        nr-raid-disks   2
-        nr-spare-disks  0
-        chunk-size      4
-        persistent-superblock 0
-        device          /dev/MKP/1
-        failed-disk     0
-        device          /dev/MKP.1/1
-        raid-disk       1
-
-========= output of mkraid in single user mode =========
-
-    # mkraid /dev/md0
-    Hadling MD device /dev/md0
-    analyzing super-block
-    disk 0: /dev/MKP/1, failed
-
-returned a status of 0.
-
-    # mkraid --version
-    mkraid version 0.90.0
-    # uname -a
-    Linux linux1.localdomain 2.4.3-20mdk #1 Sun Apr 15 23:03:10 CEST 2001
-i686 unknown
-            (Mandrake 8.0 distribution downloaded from web site).
-
-========= the LVM info =========
-
-Logical Volume Manager 0.9
-Heinz Mauelshagen, Sistina Software  13/11/2000  (IOP 10)
-
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "MKP"
-vgscan -- found active volume group "MKP.1"
-vgscan -- found active volume group "MGA"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: you may not have an actual VGDA backup of your volume
-groups
-
-
-lvscan -- ACTIVE           "/dev/MKP/1" [3.99 GB]
-lvscan -- ACTIVE           "/dev/MGA/1" [2 GB]
-lvscan -- ACTIVE           "/dev/MKP.1/1" [4 GB]
-lvscan -- 3 logical volumes with 9.99 GB total in 3 volume groups
-lvscan -- 3 active logical volumes
-
-
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/hda6"  of VG "MKP"   [2 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hda10" of VG "MKP"   [2 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdc6"  of VG "MKP.1" [2.04 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdc10" of VG "MKP.1" [2.04 GB / 88 MB free]
-pvscan -- ACTIVE   PV "/dev/hda7"  of VG "MGA"    [2 GB / 0 free]
-pvscan -- total: 5 [10.09 GB] / in use: 5 [10.09 GB] / in no VG: 0 [0]
-
-[EoInfo]
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--
+LUCA - Leandro Lucarella
+------------------------
+luca@lucarella.com.ar
+http://www.luca.2y.net
+LICQ UIN: 2847576
+------------------------
+Usando Debian GNU/Linux
