@@ -1,8 +1,9 @@
-Message-ID: <1007662439.3c0fb5679a6f5@webmail.tiscalinet.be>
-From: joel.soete@freebel.net
+Message-ID: <000801c17ecf$39db7be0$8d19fea9@tin.it>
+From: "Peter Thalmann" <peterth@gmx.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Fwd: invalidate: busy buffer also on hppa
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0005_01C17ED7.9B3B2EA0"
+Subject: [linux-lvm] LVM/RAID or viceversa?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,40 +14,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec  6 12:12:02 2001
+Date: Thu Dec  6 21:26:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Sorry I do send it to the wrong mailing list!
+This is a multi-part message in MIME format.
 
-Joel
+------=_NextPart_000_0005_01C17ED7.9B3B2EA0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
------ Forwarded message from joel.soete@freebel.net -----
-Date: Thu, 06 Dec 2001 17:47:22 +0100 (CET)
-From: joel.soete@freebel.net
-Reply-To: joel.soete@freebel.net
-Subject: invalidate: busy buffer also on hppa
-To: lvm-bugs@sistina.com
+Hallo,=20
+I catched you on the ml, discussing on lvm and raid,so please explain me =
+the difference between raid on top of lvm and lvm on top of raid. Is it =
+first setting up the disk using raid tools and then configuring the lvm =
+(lvm on top of raid) or first setting up the drives using lvm and then =
+setting up the raid (raid on top of lvm) wich makes actually no sense to =
+me because of confusing the layers and making managemnet quite =
+difficult. Am I wrong ?
 
-Hi all,
+Thanks, Peter
 
-I just try lvm-1.0.1 with the last linux kernel cvs for hppa (2.4.16-pa16).
+"a nice little guy from italy"
 
-Kernel boot well and vgscan now works (-O0 at compile time id fine for gcc-3.0)
-but  message "invalidate: busy buffer" appear on system console.
+------=_NextPart_000_0005_01C17ED7.9B3B2EA0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-In your mailing list I read well some mail mentioning the problem but no final
-conclusion about the impact on LVM structure.
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2600.0" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hallo, </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I catched you on the ml, discussing on =
+lvm and=20
+raid,so </FONT><FONT face=3DArial size=3D2>please explain me the =
+difference between=20
+raid on top of lvm and lvm on top of raid. Is it first setting up the =
+disk using=20
+raid tools and then configuring the lvm (lvm on top of raid) or first =
+setting up=20
+the drives using lvm and then setting up the raid (raid on top of lvm) =
+wich=20
+makes actually no sense to me because of confusing the layers and making =
 
-Thanks in advance for advises,
-        Joel
+managemnet quite difficult. Am I wrong ?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Thanks, Peter</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>"a nice little guy from=20
+italy"</FONT></DIV></BODY></HTML>
 
--------------------------------------------------
-This mail sent through Tiscalinet Webmail (http://webmail.tiscali.be)
-
------ End forwarded message -----
-
-
--------------------------------------------------
-This mail sent through Tiscalinet Webmail (http://webmail.tiscali.be)
+------=_NextPart_000_0005_01C17ED7.9B3B2EA0--
