@@ -1,10 +1,10 @@
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] help with quota and LVM
-Message-ID: <20020808225943.GA22974@localhost>
-References: <3D52C578.5030807@jumpline.com>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] kernel panic - converting root fs to lvm
+Message-ID: <20020809061302.GA22782@colombina.comedia.it>
+References: <OE50LHN0t0oY6k8zpHy0000da29@hotmail.com> <20020808172939.GA18645@colombina.comedia.it> <OE30LU028EGcAJ4e7jX0000ec6f@hotmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3D52C578.5030807@jumpline.com>
+In-Reply-To: <OE30LU028EGcAJ4e7jX0000ec6f@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +15,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug  8 17:59:01 2002
+Date: Fri Aug  9 01:12:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Jorge Melhado <jrgmelhado@hotmail.com>
+Cc: linux-lvm@sistina.com
 
-On Thursday, 08 August 2002, at 15:24:40 -0400,
-Ben Snyder wrote:
-
-> I'm running RedHat6.2 with kernel 2.2.19 and LVM 1.0.4 on ext2 file systems
-> I'm having problems with quota and LVM.
+On Thu, Aug 08, 2002 at 03:35:14PM -0300, Jorge Melhado wrote:
+> Luca,
 > 
-As far as I know filesystem quotas have only something to do with
-filesystem: it is independent of the underlaying block device (hard disk
-partition, or a LVM LV in your setup).
+> I generated another RAM with mkinitrd, changed the /etc/lilo.conf and reran
+> lilo.
+> After reboot, I note start up proceeds a bit more than before.
+> Now I see this message:
+> 
+> Mounting root filesystem
+> mount: error 6 mounting ext3
+> pivoroot: pivot_root (/sysroot, /sysroot/initrd) failed: 2
+> Freeing unused kernel memory: 280k freed
+> Kernel panic:  No init found. Try passing init= option to kernel
 
-I remember having set up a LV (LVM version 1.0.4 if I recall correctly), 
-built an ext3 filesystem on it, configured quotas as usual and it worked.
-Kernel version is 2.4.19-pre7aa2, with no other patches applied.
+mmmm
+mumble....
 
-I have just tried to setup ext2 quotas over a LVM version 1.0.3 Logical
-Volume, and is working as expected. Kernel version here is
-2.4.19-pre6aa1, and quota package is version 3.04-1. The procedure to
-set quotas is exactly as done with filesystems on normal disk
-partitions. In fact, the greatest problem for me has been a quota format
-mismatch between "quotacheck", "quotaon" and compiled kernel.
+can you provide the output of your mkinitrd command with -v option,
+but first get rid of the junk LABEL= things in /etc/fstab
 
-Hope it helps.
+mkinitrd looks at the device file in fstab to see if you have lvm root
+and probably LABEL= confuses it.
+
+L.
 
 -- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Woody (Linux 2.4.19-pre6aa1)
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
