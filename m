@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Message-ID: <64B9CD73757E544DA94024F7984B35843588D8@KOLEX1004.internett.mil.no>
-From: "Aleksander Olsen" <alekolsen@mil.no>
-Subject: [linux-lvm] lvm + slow deleting problem
+Subject: Re: [linux-lvm] One PV destroyed - now the whole VG isn't working anymore
+Message-ID: <20031105141644.GB11363@planungsteam-eb.de>
+References: <20031101142538.34423cb0.sebastian@beneke-it.de> <20031103110555.E1850@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20031103110555.E1850@sistina.com>
+From: Holger Parplies <wopp@planungsteam-eb.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,21 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov  5 08:00:06 2003
+Date: Wed Nov  5 08:18:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-SGVsbG8sDQooU29ycnkgaWYgaXRzIGh0bWwgZm9ybWF0ZWQpDQoNCkltIG5ldyB0byB0aGUgbHZt
-IGFuZCBrbm93IG9ubHkgdGhlIGJhc2ljcyBhbmQgYWZ0ZXIgYnJvd3NpbmcgdGhydWdoIHRoZSBh
-cmNoaXZlcyBoZXJlLi4uIGkgbmVlZCBzb20gaGVscC4NCg0KSSBnb3QgNCBXRDEyMGdiIDhNQiBk
-aXNrcyBwdXQgdG9nZXRoZXIgb24gYSBzbGFja3dhcmUgOC4xIGJveCBhbmQgcnVubmluZyBsdm0g
-dGhhdCBjYW1lIHdpdGggMi40LjIwLg0KDQpEb250IGhhdmUgYWNjZXNzIHRvIHRoZSBiZW5jaG1h
-cmsgaW5mbyBub3csIGJ1dCBsZXRzIGp1c3Qgc2F5IHRoYXQgSSBnZXQgZ29vZCB3cml0ZSBwZXJm
-b3JtYW5jZSBhbmQgZ29vZCByZWFkIHBlcmZvcm1hbmNlIGZyb20gdGhlIHZvbHVtZS4gVGhlIG9u
-ZSBwcm9ibGVtIGkga25vdyBvZiBub3cgaXMgd2hlbiBpIGRlbGV0ZSBmaWxlcyBmcm9tIHRoZSB2
-b2x1bWUuDQoNCjcwMCBtYiAgKGlzb2ZpbGUpIGdldCBkZWxldGVkIGluIDIgbWludXRlcy4gQWxs
-IGRpc2tzIGFyZSBoZHBhcm0nZCBhbmQgdGhpcyB3YXMgbm90IGEgcHJvYmxlbSBvbiBhbnkgb2Yg
-dGhlbSBiZWZvcmUgdGhlIGx2bSBtZXJnZS4NCg0KDQpBbnlvbmUga25vdyB3aGF0IGltIGdldHRp
-bmcgYXQgPyBTZWVuIHRoZSBwcm9ibGVtIGJlZm9yZT8NCg0KVGhhbmtzIGZvciBhbGwgaGVscCA6
-KQ0KDQpBbGVrc2FuZGVyIE9sc2VuDQoNCg==
+> On Sat, Nov 01, 2003 at 02:25:38PM +0100, Sebastian Beneke wrote:
+> > Now /dev/hde
+> > was destroyed by"dd if=/dev/zero of=/dev/diskname bs=1k count=1"
+
+Do I understand correctly that only the first 1K of the disk was
+overwritten? Of the PV, of the disk (/dev/hde), of something else ... ?
+
+If it's the first 1K of /dev/hde, you've probably only lost the
+partition table, which you could re-create with fdisk, presuming you
+remember exactly how your disk was partitioned (i.e. where your PV was).
+Remember to set the type of the partition correctly (8e - Linux LVM).
+
+I'm not sure what the beginning of a PV contains and whether there's a
+simple way to restore that ...
+
+Hope that helps,
+
+Holger
