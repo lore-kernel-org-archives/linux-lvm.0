@@ -1,10 +1,8 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Instability with 2.6, recovering (meta)data?
-Message-ID: <20031114000432.R16901@uk.sistina.com>
-References: <20031109213821.GA4425@amphibian.dyndns.org> <20031110174615.GE20777@amphibian.dyndns.org> <20031110175529.GA1844@amphibian.dyndns.org> <20031110230857.L16901@uk.sistina.com>
+From: neuron <neuron@hollowtube.mine.nu>
+Message-Id: <20031114132620.5e261cc3.neuron@hollowtube.mine.nu>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031110230857.L16901@uk.sistina.com>; from agk@uk.sistina.com on Mon, Nov 10, 2003 at 11:08:57PM +0000
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Performance problem.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,25 +13,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 13 18:06:02 2003
+Date: Fri Nov 14 06:28:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Toad <toad@amphibian.dyndns.org>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Mon, Nov 10, 2003 at 11:08:57PM +0000, Alasdair Kergon wrote:
-> On Mon, Nov 10, 2003 at 05:55:29PM +0000, Toad wrote:
-> >   invalid lv in extent map
+I've had lvm running on my server for quite a while now, not sure if this problem has always been there, or if it just occured.
 
-Fix is in CVS now.  
-I'll release a fresh tarball shortly including this.
+If I through smb listen to music, and then on the server rm a file about 500mb in size, the music will stop.  Now this is just an example, it's like the entire filesystem stops while removing the file.  Running reiserfs ontop of lvm.  Also, when copying through ftp/smb from the server, I max on about 6mb/sec, which is far from the 12.1mb/sec avrange I've gotten out of that network card before (on a slower computer).
 
-The space used by deleted LVs wasn't getting cleared correctly in VGs
-with lots of LVs when LVM2 wrote the LVM1-formatted metadata back to
-disk.
+Any suggestions on how to improve performance?
 
-vgmknodes (which makes / on an LV easier) is also in CVS.
+(I realize more information is probably preferable, so just tell me what info you would need, as I'm not really skilled with lvm (= I also don't have anything fancy like a fake raid running)).
 
-Alasdair
--- 
-agk@uk.sistina.com
+neuron
