@@ -1,10 +1,8 @@
-From: Ronny Adsetts <ronny.adsetts@amazinginternet.com>
-Message-ID: <bnr101$6qv$1@sea.gmane.org>
-References: <2D92FEBFD3BE1346A6C397223A8DD3FC092442@THOR.goeci.com>	 <3F9FE42D.6070306@amazinginternet.com> <1067475054.17678.32.camel@david.internal.NorcrossGroup.com>
+From: Stephen C Woods <scw@seas.ucla.edu>
+Subject: [petro@corp.vendio.com: Re: [linux-lvm] Drive gone bad, now what?]
+Message-ID: <20031030155700.GA24842@seas.ucla.edu>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <1067475054.17678.32.camel@david.internal.NorcrossGroup.com>
-Subject: [linux-lvm] Re: Error on unmounting XFS LVM snapshot
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 30 08:00:09 2003
+Date: Thu Oct 30 09:59:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Greg Freemyer said the following on 30/10/03 00:50:
+On Tue, Oct 28, 2003 at 01:41:21PM -0800, Brian J. Murrell wrote:
+>> On Tue, 2003-10-28 at 16:05, John Stoffel wrote:
+>> > But moving that much data in a short amount of time isn't always easy.
+>> Never underestimate the bandwidth of a station wagon full of tapes
+>> hurtling down the highway.
+>>                                          Andrew Tannenbaum
 
->>I did see this this today which appears to be the same issue:
->>
->>http://www.kerneltraffic.org/kernel-traffic/kt20031027_238.html#4
->>
->> From Marcelo Tosatti[1]: "It seems its not safe to create snapshots of 
->>journalled fs'es without this patch[2]."
->>
->>Looks like the patch will show up in mainline in the 2.4.24-pre series.
->>
->>[1] http://marc.theaimsgroup.com/?l=linux-kernel&m=106642797513724&w=2
->>[2] http://marc.theaimsgroup.com/?l=linux-kernel&m=106623350522639&q=p3
->>
-> 
-> Is the above talking about the VFS_LOCK patch, or is there another patch
-> that should be applied?
+>    Yes, but it takes *DAYS* to write that many tapes. 
+    
 
-It appears to be the VFS lock patch, but I'm no kernel guru...
+   The context of the station-wagon remark is from the infancy of the 
+internet (56Kbps lines linking hubs) and a discussion of thebest way 
+to move data from one data center to another.  Remember back in those
+days you had somewhere between 5 and 50 tape drives in your data center.
+  <scw> been there done that
 
-Regards,
-Ronny
+-- 
+-----
+Stephen C. Woods; UCLA SEASnet; 2567 Boelter hall; LA CA 90095; (310)-825-8614
+Unless otherwise noted these statements are my own, Not those of the 
+University of California.                      Internet mail:scw@seas.ucla.edu
