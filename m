@@ -1,10 +1,10 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] errors compiling on redhat 7.3
-Message-ID: <20020528133742.A26572@uk.sistina.com>
-References: <200205280843.AA111477202@mail.one.it>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] unmapped dependency - RedHat rpm lvm-103
+Message-ID: <20020528124833.GA21161@colombina.comedia.it>
+References: <3CF27C73.3073.1A7BC5F@localhost>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200205280843.AA111477202@mail.one.it>; from pierluigi.godi@mail.one.it on Tue, May 28, 2002 at 08:43:55AM +0200
+In-Reply-To: <3CF27C73.3073.1A7BC5F@localhost>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 28 10:26:43 2002
+Date: Tue May 28 10:26:46 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 28, 2002 at 08:43:55AM +0200, Pierluigi Godi wrote:
-> /usr/include/linux/autoconf.h:1:2: #error Invalid kernel header
-> included in userspace
+On Mon, May 27, 2002 at 06:35:31PM -0400, James B. Byrne  wrote:
+> The lvmcreate_initrd script in the lvm-103.rpm requires the "strip" 
+> command from binutils but binutils is not listed as a dependency.  I 
+> don't know if this is your responsibility or redhat's but I am sending it 
+> here as lvm is your package.
+redhat uses it's own mkinitrd script that replaces
+lvmcreate_initrd.
+so maybe they should remove lvmcreate_initrd from their packages.
+open a bug request do rh if you feel like it.
 
-Try removing the line in tools/lib/liblvm.h that includes
-<linux/autoconf.h>.
+L.
 
-Alasdair
 -- 
-agk@uk.sistina.com
-
-
---- LVM-borken/tools/lib/liblvm.h	Wed May 22 23:00:43 2002
-+++ LVM/tools/lib/liblvm.h	Tue May 28 13:28:19 2002
-@@ -60,5 +60,4 @@
- 
- #include <features.h>
--#include <linux/autoconf.h>
- 
- #ifndef LINUX_VERSION_CODE
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
