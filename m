@@ -1,60 +1,50 @@
-Date: Tue, 10 Aug 1999 14:39:41 -0500 (CDT)
-From: David Teigland <teigland@lcse.umn.edu>
-Subject: [linux-lvm] Re: PATCH: volume drivers in ll_rw_block
-In-Reply-To: <37AFFA45.FAF773E@ep-ag.com>
-Message-ID: <Pine.LNX.4.10.9908101134520.14241-100000@orinoco.lcse.umn.edu>
-MIME-Version: 1.0
+Date: Tue, 10 Aug 1999 22:59:55 -0700
+From: Ryan Murray <rmurray@cyberhqz.com>
+Subject: Re: [linux-lvm] bug in liblvm 0.7 [added on 11/15/1998]
+Message-ID: <19990810225955.A14275@cyberhqz.com>
+References: <19990731135859.C30729@cyberhqz.com> <199908020957.AA21641@mailgate1b.telekom.de>
+Mime-Version: 1.0
+In-Reply-To: <199908020957.AA21641@mailgate1b.telekom.de>; from Heinz Mauelshagen on Mon, Aug 02, 1999 at 11:57:11AM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Klaus Strebel <stb@ep-ag.com>
-Cc: linux-raid@vger.rutgers.edu, linux-lvm@msede.com, gfs-devel@lcse.umn.edu
+To: linux-lvm@msede.com
 
-> the lvm_map-0.7 lacks one thing in ll_rw_blk.c, i show below in
-> generic_map-2.2.10-raid what and where.
+On Mon, Aug 02, 1999 at 11:57:11AM +0000, Heinz Mauelshagen wrote:
 
-> -#if defined CONFIG_BLK_DEV_LVM || defined CONFIG_BLK_DEV_LVM_MODULE
-> -                major = MAJOR(bh[i]->b_dev);
-> -                if ( major == LVM_BLK_MAJOR) {
-> -                   int ret;
-> -
-> -                   if ( lvm_map_ptr == NULL) {
-> -                              printk ( KERN_ERR
-> -                               "Bad lvm_map_ptr in ll_rw_block\n");
-> -                      goto sorry;
-> -                   }
-> -                   if ( ( ret = ( lvm_map_ptr) ( MINOR ( bh[i]->b_dev),
-> -                                                 &bh[i]->b_rdev,
-> -                                                 &bh[i]->b_rsector,
-> -                                                 bh[i]->b_size >> 9,
-> -                                                 rw)) != 0) {
-> -                      printk ( KERN_ERR
-> -                               "Bad lvm_map in ll_rw_block\n");
-> -                      goto sorry;
-> -                   }
-> -                   /* remap major too ... */
-> -                   major = MAJOR(bh[i]->b_rdev);
-> -               }
-> -#endif
+> the simple idea behind this was to avoid not neccessary accesses in case of
+> a regular /dev layout (no trouble in case of devfs anyway).
 
+"regular" seems to vary from distribution to distribution,
+unfortunately.
 
-Correct.  This chunk is no longer needed.  In the lvm_map-0.7 patch I
-wasn't trying to fix everything from patch-2.2.10-LVM, only lvm.c.
+> If we put to much effort into holding up this concept i'ld rather say
+> "let's throw it away and open all existing device special nodes in turn".
 
-To adhere with the generic mapping, patch-2.2.10-LVM should change in the
-following ways:
+That may be the best bet.  Although it would be nice if it was smart
+enough to throw away what it's already done.  If /dev/hda doesn't exist,
+don't do any /dev/hda's.  And if /dev/hda is a full LVM drive, you may
+as well not check partitions.  At this point, it's caused more problems
+than majorly noted speed improvements, for me.
 
- - remove all modifications to the function ll_rw_block()
- - remove all references to lvm_map from ll_rw_blk.c
- - lvm.c should include the changes in lvm_map-0.7
+For now, I've created fifteen md and loop devices, even though I use 0.  I
+suppose I could just remove them all...
 
-In other words, when using the generic mapping, the LVM stuff shouldn't
-affect ll_rw_blk.c at all except the insertion of lvm_init at the very
-end.  This simplifies the LVM patch.
+> 
+> Any opinions?
 
-Thanks for pointing that out.  I'm not sure if this addresses your fsck
-problem or not.
+It's either got to be ripped out, or made *really* smart.  At this
+point, I think it's why vgscan is failing.  Which brings me to my next
+point, it would be nice if vgscan would say something on partial volume
+groups, ie: "only 9/20 drives found for volume group "vg00", leaving
+offline"
 
-David Teigland
+I think this code is what caused vgscan to fail for me.  Going to try it
+now that I've added all the device files...
+
+-- 
+Ryan Murray (rmurray@cyberhqz.com, rmurray@glenayre.com)
+Software Designer, Glenayre Technologies Inc.
+The opinions expressed here are my own.
