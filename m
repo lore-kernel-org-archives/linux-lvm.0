@@ -1,19 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3FK9lj30182
-	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 16:09:47 -0400
-Received: from mwinf0401.wanadoo.fr (smtp4.wanadoo.fr [193.252.22.27])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3FK9jJW024601
-	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 16:09:45 -0400
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3FK9oj30202
+	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 16:09:50 -0400
+Received: from mwinf0601.wanadoo.fr (smtp6.wanadoo.fr [193.252.22.25])
+	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i3FK9n87029967
+	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 16:09:50 -0400
 Received: from 192.168.0.35 (AVelizy-117-1-11-4.w81-251.abo.wanadoo.fr
 	[81.251.9.4])
-	by mwinf0401.wanadoo.fr (SMTP Server) with ESMTP id 797B258000AE
-	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 22:09:39 +0200 (CEST)
+	by mwinf0601.wanadoo.fr (SMTP Server) with ESMTP id 6EF463400398
+	for <linux-lvm@redhat.com>; Thu, 15 Apr 2004 22:09:43 +0200 (CEST)
+Subject: Re: [linux-lvm] root on lvm
 From: Pascal Garcia dld <dld.pascal.garcia@wanadoo.fr>
-Message-Id: <1082034167.3394.9.camel@localhost.localdomain>
+In-Reply-To: <1080945751.2422.9.camel@pascal>
+References: <1079478024.2432.9.camel@rich>
+	<1079705946.29353.6.camel@tesla.mmt.bellhowell.com>
+	<1079729272.2126.12.camel@pascal> <1079922026.2361.7.camel@localhost>
+	<20040323192451.GE24728@percy.comedia.it>
+	<1080073262.2189.16.camel@pascal> <1080945751.2422.9.camel@pascal>
+Message-Id: <1082033765.3300.5.camel@localhost.localdomain>
 Mime-Version: 1.0
-Date: Thu, 15 Apr 2004 22:09:37 +0200
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Backup procedure
+Date: Thu, 15 Apr 2004 22:09:40 +0200
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,14 +30,110 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: lvm-linux <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello
-Is there a documented procedure (or a script) available somewhere to
-backup all what's needed to recover a vg for lvm1 and I hope soon for
-lvm2 ?
+Can somebody tell me ifthe problem I have encountered have been solved
+with new Mandrake 10.0 ?
+ie : 
+1/ Unable to intall the / partition on a vg
+2/ Resizing life of a reiserfs partition not functioning.
 
-regards
+Thanks 
 
 Pascal Garcia
+
+
+Le sam 03/04/2004 � 00:42, Garcia Pascal a �crit :
+> Here is the test I have been doing. Sory but I have to translate the
+> french message then they will bot be exact.
+> Installing Mandrake,
+> When partitionning I ask for personal, then for expert.
+> - hda1 : LVM for linuw.
+> - Add to vg rootvg
+> In root vg
+> - 1rst partition / 3000 mb reiserfs
+> - 2nd partition swap 1500 mb
+> - 3rd partition 15000 mb
+> 
+> rest of the vg unaffected.
+> 
+> All installation went well until stage : installation of boot manager.
+> Then a window came saying 
+> =================================
+> L'installation du programme d'amor�age a �chou�
+> pour la raison suivante
+> : Fatal: Sorry, don't know how to handle device 0xfe00
+> =================================
+> 
+> That means : The installation of the boot loader failed because of the
+> following reason : Fatal ...
+> 
+> And of corse the system is not able to boot!
+> 
+> Regards
+> 
+> Pascal Garcia
+> 
+> Le mar 23/03/2004 � 21:21, Garcia Pascal a �crit :
+> > Hello
+> > I do not know what the problem is.
+> > May be the problem has nothing to see with lvm!
+> > I reinstalled0 the system two times with the same problem. In fact there
+> > is a warning when configuration lilo at installation time.
+> > 
+> > As I did not have that much time to analyse and solve the problem (if I
+> > would have been able to), I just made a / reisefs partition, and the
+> > problem went away.
+> > 
+> > I have a remark on that, / partition in a logical volume without
+> > reiserfs (or a fs that can be resized without unmounting) is non sense
+> > for me, because one can not unmount / partition, and one of the interest
+> > of the lvm is to adapt the size of a partition when needed.
+> > 
+> > I have a spare disk and when I have some time and my General let me do
+> > it, I reinstall the system and write all the problems. May be this
+> > week-end.
+> > 
+> > regards
+> > Pascal garcia
+> > 
+> > 
+> > Le mar 23/03/2004 � 20:24, Luca Berra a �crit :
+> > > On Sun, Mar 21, 2004 at 09:20:26PM -0500, Jeff Layton wrote:
+> > > >My solution for this (so far) is to make a non-LVM2 /boot partition and
+> > > >store a kernel and initrd in that. You can then build everything else as
+> > > >a LVM partition. Perhaps when the available bootloaders become LVM2
+> > > >aware we'll be able to do away with a seperate /boot, but for now it
+> > > >seems to be the best way to deal with it.
+> > > >Cheers,
+> > > >-- Jeff
+> > > >
+> > > >
+> > > >On Fri, 2004-03-19 at 15:47, Garcia Pascal wrote:
+> > > >> Hello,
+> > > >> I experienced also difficulties with / and lvm2.
+> > > >> configuration: 
+> > > >>    MANDRAKE 10.0, 
+> > > >>    kernel 2.6.3, 
+> > > >>    lilo 22.5.8, 
+> > > >>    reiserfs 3.6.11 ?
+> > > >>    lvm 2.00.08
+> > > 
+> > > lilo on mandrake 10.0 is lvm2 aware.
+> > > i don't know if there are reiserfs related problems that affect Pascal
+> > > configuration.
+> > > 
+> > > L.
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
