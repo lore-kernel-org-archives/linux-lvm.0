@@ -1,11 +1,8 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-In-Reply-To: <1034453126.15067.20.camel@irongate.swansea.linux.org.uk>
-References: <20021009181259.GA25050@fib011235813.fsnet.co.uk> 
-	<1034453126.15067.20.camel@irongate.swansea.linux.org.uk>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1034453946.15067.22.camel@irongate.swansea.linux.org.uk>
-Mime-Version: 1.0
-Subject: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submission
+From: Frank Van Damme <frank.vandamme@student.kuleuven.ac.be>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <200210131526.48573.frank.vandamme@student.kuleuven.ac.be>
+Subject: [linux-lvm] [newbie] name changes in physial volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,22 +13,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 12 15:09:34 2002
+Date: Sun Oct 13 08:31:15 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Joe Thornber <joe@fib011235813.fsnet.co.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Sat, 2002-10-12 at 21:05, Alan Cox wrote:
-> On Wed, 2002-10-09 at 19:12, Joe Thornber wrote:
-> > The 2.5 port of device-mapper is available from:
-> > 
-> >    bk://device-mapper.bkbits.net/2.5-stable
-> > 
-> > There are 6 changesets in here that are summarised at the end of this
-> > email.
-> 
-> Until I get it in patch form I can't merge it...
+Hello,
 
-(Please ignore. I sent an old postponed mail. I dont want to be mailed
-lots of copies of the patches 8))
+I'm experimenting with lvm on a small (40 GB) home system, and I wish to know 
+the following: suppose you have a lot of partitions in a volume group, and 
+suppose besides this, there is also a windows partition. Suppose that the 
+windows partition needs more space for some reason, so you make one of the 
+logical volumes smaller and you remove the physical volume (the lvm partition 
+next to the windows partition) to increase the size of the windows partition 
+(with parted eg). That means there will be 1 less partition on that disk, 
+hance, their names will change (hda8 becomes hda7 and so on). 
+
+What happens to the lvm setup? It will be confused because it won't find the 
+PV's where they were supposed to be. Will the kernel panic, will you simply 
+lose all the data, or will lvm figure it out for itself? 
+
+P.S. please CC me!
+
+-- 
+Frank Van Damme
+homepage:       www.student.kuleuven.ac.be/~m9917684
+jabber (=IM):   yalu@jabber.com
