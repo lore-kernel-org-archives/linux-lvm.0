@@ -1,10 +1,10 @@
 Return-Path: <penguin_master_2000@yahoo.com>
-Message-ID: <20010212114109.14372.qmail@web10909.mail.yahoo.com>
-Date: Mon, 12 Feb 2001 03:41:09 -0800 (PST)
+Message-ID: <20010212114306.8793.qmail@web10901.mail.yahoo.com>
+Date: Mon, 12 Feb 2001 03:43:06 -0800 (PST)
 From: "Mr. Penguin" <penguin_master_2000@yahoo.com>
-In-Reply-To: <200102071815.f17IFtN14302@webber.adilger.net>
+Subject: Re: [linux-lvm] lv nodes in /dev ??
+In-Reply-To: <20010212114109.14372.qmail@web10909.mail.yahoo.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] lv nodes in /dev ??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,20 +20,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi people
+Forgot to mention - I am using devfs
 
-Just noticed that all my LVs have nodes not only in
-/dev/vg00/ but also /dev !
 
-So I have /dev/vg00/lvol1 and also /dev/lvol1 with the
-same major and minor numbers. I don't like to think
-what will happen if I create a new VG called vg01 also
-with an lvol1...
+--- "Mr. Penguin" <penguin_master_2000@yahoo.com>
+wrote:
+> Hi people
+> 
+> Just noticed that all my LVs have nodes not only in
+> /dev/vg00/ but also /dev !
+> 
+> So I have /dev/vg00/lvol1 and also /dev/lvol1 with
+> the
+> same major and minor numbers. I don't like to think
+> what will happen if I create a new VG called vg01
+> also
+> with an lvol1...
+> 
+> This seems to be occuring in beta3 and beta4. I'm
+> using 2.4.1 / reiserfs (root on LVM)
+> 
+> James
+> 
+> __________________________________________________
+> Do You Yahoo!?
+> Get personalized email addresses from Yahoo! Mail -
+> only $35 
+> a year!  http://personal.mail.yahoo.com/
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-This seems to be occuring in beta3 and beta4. I'm
-using 2.4.1 / reiserfs (root on LVM)
-
-James
 
 __________________________________________________
 Do You Yahoo!?
