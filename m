@@ -1,9 +1,10 @@
-Return-Path: <jamesp@foobarhouse.com>
-Date: Fri, 27 Jul 2001 17:31:38 +0100 (BST)
-From: James Pattinson <jamesp@foobarhouse.com>
-Message-ID: <Pine.LNX.4.33.0107271727460.16916-100000@greebo.foobarhouse.com>
+Return-Path: <Steph@Connex.com>
+Message-ID: <B14BF8753E65D211ABCA00104B301EF501C02C87@cairn-gorm.cragtech.com>
+From: Dale Stephenson <Steph@Connex.com>
+Subject: RE: [linux-lvm] Some ideas regarding snapshots (was: Reiserfs, 2.
+	4.7, snapshots w/ 0.9)
+Date: Fri, 27 Jul 2001 10:22:06 -0700
 MIME-Version: 1.0
-Subject: [linux-lvm] snapshots & reiserfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +16,110 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hi
+Joe Thornber wrote:
+> Writeable snapshot's are easy to implement, I believe someone has
+> already made a patch for the current LVM series (search the list).  I
+> certainly intend putting it into the experimental LVM branch soon.
+> 
+> - Joe
 
-Im sure this is a FAQ but I can't find it.
+I haven't tried to apply it with beta8, but this is the writeable snapshot
+patch I used for beta7:
+(All I've used it for is replays and UUID changes, so YMMV.) 
 
-I want to be able to use snapshots on my beta8 / reiserfs (stock 2.5.7)
-system. I can create a snapshot OK, but when I try to mount it I get an
-error saying we can't replay the logs since we are mounted read only.
+--- linux/drivers/md/lvm.c.orig	Fri May 18 19:04:30 2001
++++ linux/drivers/md/lvm.c	Fri May 18 19:30:44 2001
+@@ -1120,8 +1120,8 @@
+ 	ulong pe_start;
+ 	ulong size = bh->b_size >> 9;
+ 	ulong rsector_org = bh->b_rsector;
+-	ulong rsector_map;
+-	kdev_t rdev_map;
++	ulong rsector_map, rsector_sav;
++	kdev_t rdev_map, rdev_sav;
+ 	vg_t *vg_this = vg[VG_BLK(minor)];
+ 	lv_t *lv = vg_this->lv[LV_BLK(minor)];
+ 
+@@ -1228,12 +1228,42 @@
+ 		goto out;
+ 
+ 	if (lv->lv_access & LV_SNAPSHOT) { /* remap snapshot */
+-		if (lv->lv_block_exception)
++	  if (lv->lv_block_exception) {
++		  if (rw == WRITE || rw == WRITEA) {
++ 		    /* Start of writeable snapshot portion */
++ 		    rdev_sav = rdev_map;
++ 		    rsector_sav = rsector_map;
++ 
++ 		    if (!lvm_snapshot_remap_block(&rdev_map,
++						  &rsector_map,
++						  pe_start,
++						  lv)) {
++		      /* create a new mapping */
++		      if (lvm_snapshot_COW(rdev_map,
++					   rsector_map,
++					   pe_start,
++					   rsector_sav,
++					   vg_this,lv)) {
++			goto bad;
++		      }
++		      lvm_write_COW_table_block(vg_this,lv);
++		      rdev_map = rdev_sav;
++		      rsector_map = rsector_sav;
++		      if (!lvm_snapshot_remap_block(&rdev_map,
++						    &rsector_map,
++						    pe_start,
++						    lv)) {
++			goto bad;
++		      }
++		    }
++		    /* End of writable snapshot portion */
++		  }
++		  else
+ 			lvm_snapshot_remap_block(&rdev_map, &rsector_map,
+ 						 pe_start, lv);
+-		else
++	  }
++	  else
+ 			goto bad;
+-
+ 	} else if(rw == WRITE || rw == WRITEA) { /* snapshot origin */
+ 		lv_t *snap;
+ 
 
-Also, i've just noticed this in my dmesg:
+Note that snapshots are created read-only, so you need to change lvchange to
+let you make it read-write:
 
-lvm -- _pv_get_number failed for rdev = 0
-lvm -- giving up to snapshot /dev/vg00/lvol6 on /dev/vg00/greebo_snap:
-couldn't prepare kiovec blocks (start probably isn't block aligned)
-lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
-lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
-read_super_block: unable to read superblock on dev 3a:0f
-read_old_super_block: try to find super block in old location
-lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
-read_old_super_block: unable to read superblock on dev 3a:0f
-lvm - lvm_map: ll_rw_blk for inactive LV /dev/vg00/greebo_snap
-FAT bread failed
+--- LVM_0_9/tools/lvchange.c.orig	Thu Dec 14 11:29:30 2000
++++ LVM_0_9/tools/lvchange.c	Thu Dec 14 11:36:16 2000
+@@ -329,7 +330,8 @@
+          continue;
+       }
+    
+-      if ( lv->lv_access & LV_SNAPSHOT) {
++      if ( ( lv->lv_access & LV_SNAPSHOT) &&
++           ( (opt_C) || (opt_a) || (opt_r))) {
+          fprintf ( stderr, "%s -- change on snapshot logical "
+                            "volume \"%s\" not allowed\n", cmd, lv_name);
+          continue;
+@@ -370,7 +372,12 @@
+    
+          if ( doit > 0) {
+             doit_sum++;
+-            lv->lv_access = lv_access;
++            /* don't clear access flags except for LV_WRITE and LV_READ */
++            if (lv->lv_access & LV_WRITE)
++               lv->lv_access -= LV_WRITE;
++            if (lv->lv_access & LV_READ)
++               lv->lv_access -= LV_READ;
++            lv->lv_access |= lv_access;
+             if ( opt_v > 0) printf ( "%s -- changing access permissions "
+                                      "of logical volume \"%s\"\n",
+                                      cmd, lv_name);
 
-Any ideas? snapshots seem really cool, and i want to play :)
-
-James
+Dale J. Stephenson
+steph@connex.com
