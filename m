@@ -1,10 +1,8 @@
-Message-ID: <3B9600A4.6040606@st-peter.stw.uni-erlangen.de>
-Date: Wed, 05 Sep 2001 12:38:28 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+Date: Wed, 5 Sep 2001 18:02:15 +0100 (IST)
+From: Paul Jakma <paulj@alphyra.ie>
+Message-ID: <Pine.LNX.4.33.0109051801140.27557-100000@dunlop.dub.ie.alphyra.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LV size maximum
-References: <20010905113307.A19406@lug-owl.de> <3B95F629.1050909@st-peter.stw.uni-erlangen.de> <20010905120941.B19406@lug-owl.de>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] ftp.sistina.com down?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,14 +14,13 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux LVM <linux-lvm@sistina.com>
 
->
->
->
->FAQ:		2TB on 32bit machines and 512 bytes block size
->
->(Where do you read of 1TB???)
->
-http://tech.sistina.com/cgi-bin/lvm-faqprocessor.cgi?q=Why%20are%20my%20logical%20volumes%20limited%20to%20256%20GB%20in%20size%3F
+ftp.sistina.com has been down for the last few days. box is pingable
+but ftp is shutoff.
+
+also, are there any RPMS for 1.0.1?
+
+--paulj
