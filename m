@@ -1,19 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1Q4NBK23532
-	for <linux-lvm@redhat.com>; Fri, 25 Feb 2005 23:23:11 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.194])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1Q4N5kU021574
-	for <linux-lvm@redhat.com>; Fri, 25 Feb 2005 23:23:05 -0500
-Received: by wproxy.gmail.com with SMTP id 36so456229wri
-	for <linux-lvm@redhat.com>; Fri, 25 Feb 2005 20:23:00 -0800 (PST)
-Message-ID: <45ae9037050225202249decf7a@mail.gmail.com>
-Date: Fri, 25 Feb 2005 23:22:59 -0500
-From: Jeff Macdonald <macfisherman@gmail.com>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1QKUMK04838
+	for <linux-lvm@redhat.com>; Sat, 26 Feb 2005 15:30:22 -0500
+Received: from mail02.malor.com (host.malor.com [69.93.140.74] (may be forged))
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1QKUG5Y010414
+	for <linux-lvm@redhat.com>; Sat, 26 Feb 2005 15:30:16 -0500
+Received: from vanish (mail02.malor.com [127.0.0.1])
+	by mail02.malor.com (Postfix) with SMTP id F16EE49FD7
+	for <linux-lvm@redhat.com>; Sat, 26 Feb 2005 14:30:58 -0600 (CST)
+Message-ID: <002101c51c41$f6bcfdc0$32dcdc0a@vanish>
+From: "Ron Watkins" <linux-lvm@malor.com>
+Date: Sat, 26 Feb 2005 15:30:08 -0500
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Adding a disk to a VG gone bad - need help
-Reply-To: Jeff Macdonald <macfisherman@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Having duplicate PV problems,
+	think there's a bug in LVM2 md component detection
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,64 +24,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
 To: linux-lvm@redhat.com
 
-Hi,
-I have one volume group and that is used as such:
-[root@jeff ~]# /usr/sbin/lvscan
- ACTIVE            '/dev/VolGroup00/Root' [9.78 GB] inherit
- ACTIVE            '/dev/VolGroup00/Home' [231.31 GB] inherit
- ACTIVE            '/dev/VolGroup00/Swap' [320.00 MB] inherit
+I'm sorry if this is a FAQ or if I'm being stupid.  I saw some mentions to 
+this problem on the old mailing list, but it didn't seem to quite cover what 
+I'm seeing, and I don't see an archive for this list yet.  (and what on 
+earth happened to the old list, anyway?)
 
-I added a whole disk to VolGroup00 like so:
-[root@jeff ~]# dd if=/dev/zero of=/dev/hde bs=512 count=1
-1+0 records in
-1+0 records out
+My problem is this:  I'm setting up a software RAID5 across 5 IDE drives. 
+I'm running Debian Unstable, using kernel 2.6.8-2-k7.   I HAVE set 
+md_component_detection to 1 in lvm.conf, and I wiped the drives after 
+changing this setting.
 
-created the physical volume:
-[root@jeff ~]# /usr/sbin/pvcreate /dev/hde
+I originally set it up as a four-drive RAID, via a 3Ware controller, so my 
+original devices were sdb, sdc, sdd, and sde. (the machine also has a 
+hardware raid on an ICP Vortex SCSI controller: this is sda.)    In this 
+mode, it set up and built perfectly.  LVM worked exactly as I expected it 
+to.  I had a test volume running.  All the queries and volume management 
+worked exactly correctly.  All was well.
 
-added it to the volume group:
-[root@jeff ~]# /usr/sbin/vgextend VolGroup00 /dev/hde
+So then I tried to add one more drive via the motherboard IDE controller, on 
+/dev/hda.  (note that I stopped the array, wiped the first and last 100 megs 
+on the drives, and rebuilt. ).  That's when the problems started.  The RAID 
+itself seems to build and work just fine, although I haven't waited for the 
+entire 6 or so hours it will take to completely finish.  Build speed is 
+good, everything seems normal.  But LVM blows up badly in this 
+configuration.
 
-added 100G from the 150G drive to Home:
-[root@jeff ~]# /usr/sbin/lvextend -L+100G /dev/VolGroup00/Home
- Extending logical volume Home to 331.31 GB
- Logical volume Home successfully resized
+When I do a pvcreate on /dev/md0, it succeeds... but if I do a pvdisplay I 
+get a bunch of complaints:
 
-At this point the docs suggest umounting the logical volume in order
-to resize the file system. So I decided I was going to reboot the
-computer and start it into single user mode. When doing that I'm
-greated with:
+jeeves:/etc/lvm# pvdisplay
+  Found duplicate PV y8pYTtAg0W703Sc8Wiy79mcWU3gHmCFc: using /dev/sde not 
+/dev/hda
+  Found duplicate PV y8pYTtAg0W703Sc8Wiy79mcWU3gHmCFc: using /dev/sde not 
+/dev/hda
+  --- NEW Physical volume ---
+  PV Name               /dev/hda
+  VG Name
+  PV Size               931.54 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               y8pYTt-Ag0W-703S-c8Wi-y79m-cWU3-gHmCFc
 
-lvm exited abnormally!
-Couldn't find device with uuid <uuid>
-Couldn't find all physical volumes for volume group VolGroup00
+It seems to think that /dev/hda is where the PV is, rather than /dev/md0.
 
-So it seems that it can't find the new physical volume that I just
-added.  LVM is totally new to me, so any pointers would be great.
-Booting from CD into rescue mode I wasn't unable to get very far. I
-was able to run lvm and pvscan shows this interesting line:
+(Note, again, I *HAVE* turned the md_component_detection to 1 in lvm.conf!!)
 
-PV /dev/hdf1 VG VolGroup00 lvm2 [ X GB / X GB free]
-PV /dev/hdg2 VG VolGroup00 lvm2 [ Y GB / Y GB free]
-PV unknown device VG VolGroup00 lvm2 [ Z GB / Z GB free]
-Total: 3 [ X GB ] / in use 3
+I have erased, using dd, the first and last 100 megs or so on every drive, 
+and I get exactly the same results every time... even with all RAID and LVM 
+blocks erased, if I use this list of drives:
 
-It seems to be that vgreduce is what I want in order to start over,
-but running this in test mode with -t and --removemissing I see this
-worrying line:
-Removing LV Home from VG
+/dev/hda
+/dev/sdb
+/dev/sdc
+/dev/sdd
+/dev/sde
 
-and the line I want
-Removing PV with UUID {correct UUID}
+with the linux MD driver, LVM does not seem to work properly.  I think the 
+component detection is at least a little buggy.  This is what my 
+/proc/mdstat looks like:
 
-Am I on the right track?
+jeeves:/etc/lvm# cat /proc/mdstat
+Personalities : [raid5]
+md0 : active raid5 sde[5] sdd[3] sdc[2] sdb[1] hda[0]
+      976793600 blocks level 5, 128k chunk, algorithm 2 [5/4] [UUUU_]
+      [=>...................]  recovery =  6.2% (15208576/244198400) 
+finish=283.7min speed=13448K/sec
+unused devices: <none>
 
-TIA
+I realize that using both IDE and SCSI drives in the same array is 
+unusual... but I'm not really using SCSI drives, they just look like that 
+because of the 3Ware controller.
 
+Again, this works FINE as long as I just use the (fake) SCSI devices.. it 
+doesn't wonk out until I add in /dev/hda.
 
--- 
-Jeff Macdonald
-Ayer, MA
+Any suggestions?  Is this a bug?
