@@ -1,58 +1,47 @@
-Message-ID: <81BB5D677B55D311BF4700508B0901582948EA@NTSERVER1>
-From: Sarath Chandra M <sarath@uaeexcent.co.ae>
-Date: Thu, 31 Aug 2000 11:27:05 +0400
+Date: Thu, 31 Aug 2000 15:15:16 -0300 (BRT)
+From: Marcelo Tosatti <marcelo@conectiva.com.br>
+Subject: Re: [linux-lvm] Dazed & Confused
+In-Reply-To: <200008291622.KAA02929@lynx.turbolabs.com>
+Message-ID: <Pine.LNX.4.21.0008311508270.898-100000@freak.distro.conectiva>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C0131C.DE278C80"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@msede.com
-
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
-
-------_=_NextPart_001_01C0131C.DE278C80
-Content-Type: text/plain;
-	charset="iso-8859-1"
-
-Hi,
-    Is there anyway to configure LVM on redhat 2.2.14-12smp on an i686 ?
- 
-TIA
-Sarath Chandra M
-UAE Exchange Centre
-PO Box 170, SH. Hamdan Street
-Abu Dhabi, UAE
-Tel : +971-2-6322166, 6394342
-Fax : +971-2-6211447, 6340713
-GSM : +971-50-4450417
-
- 
-
-------_=_NextPart_001_01C0131C.DE278C80
-Content-Type: text/html;
-	charset="iso-8859-1"
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: linux-lvm@msede.com
 
 
-<META content="MSHTML 5.50.4134.600" name=GENERATOR></HEAD>
-<BODY bgColor=#b8b8b8>
-<DIV><SPAN class=890532607-31082000><FONT face=Tahoma color=#0000ff 
-size=2>Hi,</FONT></SPAN></DIV>
-<DIV><SPAN class=890532607-31082000>&nbsp;&nbsp;&nbsp; <FONT face=Tahoma 
-color=#0000ff size=2>Is there anyway to configure LVM on redhat 2.2.14-12smp on 
-an i686 ?</FONT></SPAN></DIV>
-<DIV><SPAN class=890532607-31082000></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=890532607-31082000><FONT face=Tahoma color=#0000ff 
-size=2>TIA</FONT></SPAN></DIV>
-<DIV><FONT color=#ff0000 size=2><EM>Sarath Chandra M</EM></FONT><BR><FONT 
-color=#0000ff size=2>UAE Exchange Centre<BR>PO Box 170, SH. Hamdan Street<BR>Abu 
-Dhabi, UAE<BR>Tel : +971-2-6322166, 6394342<BR>Fax : +971-2-6211447, 
-6340713<BR>GSM : +971-50-4450417</FONT><BR></DIV>
-<DIV><FONT face=Tahoma color=#0000ff size=2></FONT>&nbsp;</DIV></BODY></HTML>
+On Tue, 29 Aug 2000, Andreas Dilger wrote:
 
-------_=_NextPart_001_01C0131C.DE278C80--
+> Ulf Bartelt writes:
+> > /dev/vgkira/ftp on /home/ftp type ext2 (ro,errors=remount-ro)
+> > /dev/vgkira/ftp2 on /home/ftp2 type ext2 (rw,errors=remount-ro)
+> > 
+> > (root@kira:/0)~# e2fsadm -L+1G /dev/vgkira/ftp
+> > e2fsadm -- ERROR: "/dev/vgkira/ftp" is mounted on "/home/ftp2"
+> > e2fsadm -- please umount it to resize
+> 
+> This is a bug in how e2fsadm checks to see if a filesystem is mounted.
+> I have fixed this in my version of e2fsadm, as well as adding support
+> for ext2resize and ext2online, so you don't even need to unmount the
+> filesystem to resize it (if you have the ext2online kernel patch).
+> 
+> See ftp.lustre.org:/pub/adilger for an SRPM which has a patch to fix
+> all known LVM user-tools bugs, as well as a kernel patch for 0.8final
+> on 2.2.16.  I was told by Les Hazelton that my LVM kernel patch will
+> apply cleanly to kernel-source-2.2.17-0.16mdk.i586.rpm, from the
+> mandrake cooker section on rpmfind.net.
+
+While looking at your patch I found something which seems to be wrong. 
+
+The function lvm_snapshot_COW returns 1 on success. lvm_map() returns  
+lvm_snapshot_COW() return code. ll_rw_block calls lvm_map_ptr() (which is
+lvm_map()) and expects 0 on success: 
+
++                       if ((lvm_map_ptr) (bh[i], rw) != 0) {
++                               printk(KERN_ERR
++                                      "Bad lvm_map in ll_rw_block\n");
++                               goto sorry;
++                       }
