@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
+Message-ID: <3FF97FF7.9FC8D09D@groupe-ips.com>
+From: Jean Marie =?iso-8859-1?Q?Ari=E8s?= <jeanmarie.aries@groupe-ips.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] resize LV online
-Message-ID: <20040105134102.GA1243@tykepenguin.com>
 References: <200401051531.58176.gangwang@redflag-linux.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200401051531.58176.gangwang@redflag-linux.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +14,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan  5 07:42:02 2004
+Date: Mon Jan  5 09:19:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Mon, Jan 05, 2004 at 03:31:58PM +0800, wanggang wrote:
-> does anyone know any safe way to resize(enlarge/reduce) a mounted(online) LV 
+Hi,
+
+I think it's impossible with EXT2 :o)
+
+have a nice day :o)
+
+wanggang a �crit :
+
+> does anyone know any safe way to resize(enlarge/reduce) a mounted(online) LV
 > besides ext2online?
-> 
+>
+>               thanks in advance
+>                                                                     gang wang
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Not for ext2/3. Try using a different filesystem that allows online resizing
-(such as reiserfs or XFS)
+--
+Sinc�rement,
 
--- 
-
-patrick
+Jean Marie Ari�s
+Imprimeries IPS
+Responsable Syst�mes/R�seaux
