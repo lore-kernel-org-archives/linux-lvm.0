@@ -1,8 +1,11 @@
-Message-ID: <3E5BB3CE.3040707@conterra.de>
-From: Dieter Stueken <stueken@conterra.de>
+From: Jason Smith <jhs@openenterprise.biz>
+References: <200302251751.19856.jhs@openenterprise.biz> <20030225145733.GB3207@fib011235813.fsnet.co.uk>
+In-Reply-To: <20030225145733.GB3207@fib011235813.fsnet.co.uk>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] pv_move failed 
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200302260152.07244.jhs@openenterprise.biz>
+Subject: [linux-lvm] Re: RAID5 + LVM stillborn
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,47 +16,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 25 12:20:02 2003
+Date: Tue Feb 25 13:28:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Heinz J . Mauelshagen wrote:
+On Tuesday 25 February 2003 09:57 pm, Joe Thornber wrote:
+> As far as I'm aware the only reason LVM doesn't have raid5 is that
+> nobody has written it.  What is the serialisation problem ?
 
- >the first write to hda2 fails.
- >Could be a hardware installation problem with your new drive.
+Software RAID in 2.4 maintains a stripe cache that must be the same size as 
+the incoming reads and writes.  Usually this is 4k for standard filesystem 
+io.  But e.g. if you do a mkfs, then it can change.  When md gets a request 
+for a different sized read or write, it flushes the cache and rebuilds for 
+the new size.
 
-no indication. I had my VG on two 120G + 75G disks before.
-The 120G disk could be moved completely, whereas moving
-the 75G disk failed after 896 LE moved.
+That's a bad feature in LVM's case, because once you make a snapshot, you get 
+a barrage of requests coming in at different sizes: filesystem (4096), 
+snapshots (512) and I think syncs (0), so in effect there is no cache since 
+it's syncing several times per second.
 
- >Have you tested if you can access hda2 fine without LVM ?
+Like I said, the perfomance is very bad.  I oopsed a machine today by 
+snapshotting an incoming FTP directory.  Sorry, I sort of threw up my hands 
+earlier.  But tomorrow morning I'm going to see how repeatable it is and post 
+to -dev.
 
-I run badblocks with no errors.
+Thanks.
 
-I just "strace" pvmove and get:
-
-write(5, ..., 65536) = -1 ENOSPC (No space left on device)
-
-seems pvmove gets a unexpected ENOSPC. OK, I got it:
-
-fdisk -l /dev/hda   reports:
-
-Disk /dev/hda: 255 heads, 63 sectors, 30515 cylinders
-Units = cylinders of 16065 * 512 bytes
-
-    Device Boot    Start       End    Blocks   Id  System
-/dev/hda1             1       262   2104483+  83  Linux
-/dev/hda2           263     22526 178835580   8e  Linux LVM
-
-The 2nd partition does not span to the end of the disk,
-where as pvdisplay shows up with 231.75 GB. I'll remove all
-data from hda2 again and try to find out, how this discrepancy
-came about....
-
-Dieter.
 -- 
-Dieter St�ken, con terra GmbH, M�nster
-     stueken@conterra.de
-     http://www.conterra.de/
-     (0)251-7474-501
+Jason Smith
+Open Enterprise Systems
+Bangkok, Thailand
