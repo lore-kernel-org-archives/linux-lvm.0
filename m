@@ -1,10 +1,11 @@
 From: lvm@interlinx.bc.ca
 Subject: Re: [linux-lvm] moving single LVM disk from one system to another
-Message-ID: <20020819090226.GA13367@linux.interlinx.bc.ca>
-References: <20020817070901.GA5022@linux.interlinx.bc.ca> <20020819102427.A24314@sistina.com>
+Message-ID: <20020819100456.GB13367@linux.interlinx.bc.ca>
+References: <20020817070901.GA5022@linux.interlinx.bc.ca> <20020819102427.A24314@sistina.com> <20020819090226.GA13367@linux.interlinx.bc.ca>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020819102427.A24314@sistina.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20020819090226.GA13367@linux.interlinx.bc.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,41 +16,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 19 04:03:01 2002
+Date: Mon Aug 19 05:05:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 19, 2002 at 10:24:27AM +0200, Heinz J . Mauelshagen wrote:
-> 
-> Is that with our without devfs?
+OK.  To update:  it would seem that for whatever reason, devfs _is_
+being mounted (cat /proc/mounts shows devfs on /dev and .devfsd is in
+/dev) but there are no device nodes under
+/dev/ide/host0/bus[01]/target0/.  Strange.  But that explains why
+vgscan could not find the VG.
 
-Interesting you should ask.  :-)
+The ide devices are seen by the kernel.  /proc/ide/hd?/model shows the
+disk and CD R/W devices.  /proc/partitions is empty however.  Very
+strange.  I will have to dig in and figure out why this is.  All and
+any theories are welcome.  :-)
 
-> Have you checked, that device nodes are in your initrd for vgscan to be able
-> to access them fine?
-
-I am/was (for the past hour or two) just hunting this possibility
-down.  I have the system currently booting from a tftp server (via an
-etherboot diskette) so that I can shorten the cycle of "modify initrd
-with more debugging and re-test".  I am just about to put some
-debugging into the native hard disk booting initrd to see what disk
-nodes are there and such.
-
-The kernel is being booted with "devfs=mount", so they should be
-there.  I should know in a few more minutes what is going on.
-
-> Does vgscan fail finding your VG our is it just wrong entries in /etc/fstab
-> failing your root mount?
-
-vgscan fails to find the VG.  I am sure this is going to turn out to
-be missing device nodes, but will have figure out why that is if devfs
-is being mounted.
-
-Will keep ya posted.
+But the long and short of my problem is that it's not an LVM problem.
+Not directly anyway.
 
 b.
 
--- 
+--=20
 Brian J. Murrell
