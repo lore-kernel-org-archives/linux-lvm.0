@@ -1,10 +1,8 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] questions
-Message-ID: <20011111205626.D3781@tiger.bigcats.invalid>
-References: <20011106000923.B3409@bunuel.tii.matav.hu> <20011108021452.B5485@tiger.bigcats.invalid> <20011108091932.A12401@sistina.com>
+From: Bradley M Alexander <storm@tux.org>
+Message-ID: <20011111194145.A715@sonsofthunder.yi.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011108091932.A12401@sistina.com>; from mauelshagen@sistina.com on Thu, Nov 08, 2001 at 09:19:32AM +0100
+Subject: [linux-lvm] Can't locate module /dev/<volgrp>/<volume> -- Help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,132 +13,80 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 11 14:28:02 2001
+Date: Sun Nov 11 18:40:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Heinz!
+Hi all,
 
-Heinz J . Mauelshagen (mauelshagen@sistina.com) wrote 75 lines:
+I am just trying out LVM for a space allocation problem that I am running
+into, and I am having problems with getting the machine to boot with the
+new configuration.
 
-> On Thu, Nov 08, 2001 at 02:14:52AM +0100, Wolfgang Weisselberg wrote:
-> > Magosanyi Arpad (mag@bunuel.tii.matav.hu) wrote 14 lines:
+The machine is an i386 (Athlon with a Maxtor30 GB IDE HD on hda and a Quantum
+30 GB IDE HD on hdb). It is running Debian/GNU Linux (unstable/sid) with a
+2.4.13 kernel which was custom compiled. It is also running devfs.
 
-> > > What would you check on disk related to snapshots? 
+I am using (or attempting to use) lvm 1.0.1rc4 compiled directly into the
+kernel.
 
-> > There shall be no snapshot of a snapshot.  (Yes, I have that
-> > right here on my disk.  Can't remove the snapshot-of-snapshot
-> > (segfault), can't remove the snapshot (under snapshot)).
+I compiled the tools, patched the kernel, booted onto the patched kernel. I
+was able to create the pv on /dev/hdb after figuring out that I had to give
+the full path to the drive, and then was able to create the volgroup (vg01)
+and the logical volumes fine. They mounted fine manually, but after
+changing fstab and copying the files on to the logical volume, I rebooted.
+Thats when my problems began.
 
-> Wolfgang,
+I added the vgscan and the vgchange commands to the end of the checkroot.sh
+script (which in Debian is different from the mountfs.sh script). When the
+vgscan runs, it generates about two pages of drive errors:
 
-> with which LVM version do you have trouble removing snapshots?
+hdb: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error }
+hdb: read_intr: error=0x04 { DriveStatusError }
 
-As far as I can see/remember, all from 1.0 up to the current
-(2001-11-11) CVS.  Specially at least:
-lvm-1.0
-lvm-1.0.1_rc4_2001_10_14        (CVS)
-lvm-1.0.1_rc4_2001_10_23        (CVS)
-lvm-1.0.1_rc4_2001_10_30        (CVS)
-lvm-1.0.1_rc4_2001_11_11        (CVS)
+followed by two
 
-> Which compiler did you use to compile LVM? With or without optimization?
+modprobe: Can't locate module /dev/vg01
 
-SuSE's gcc-2.95.2-98 for their 7.0:
-$ gcc -v
-Reading specs from /usr/lib/gcc-lib/i486-suse-linux/2.95.2/specs
-gcc version 2.95.2 19991024 (release)
+then vgscan finds the volume, followed by vgchange activating it. After this,
+I get a series of "Can't locate module /dev/vg01/<logical volume> errors.
+After several iterations of this, the machine hangs trying to start
+syslogging.
 
-Optimization is as the CVS says, i.e. off for newer ones.
+The filesystems I am trying to lvm are
 
-The LVs were created over the time, but mostly before 0.9;
-the system was converted to IOP11 as part of the upgrade to 1.0.
+/var
+/tmp
+/home
+/usr/local
+/opt
+/backup (backup images of filesystems on machines in my network)
+/archive (cd images, mp3s etc)
 
-lvscan says something very... interesting:
+Once I get this booting on the lvm'ed filesystems, I plan to free up the
+partitions that these occupy and create a second volgroup on /dev/hda, then
+splitting up the above filesystems between the two volgrps.
 
-|$ lvscan
-|lvscan -- ACTIVE   Original "/dev/main_vg/amanda_holding_disk" [6.00 GB]
-|lvscan -- ACTIVE            "/dev/main_vg/usr_src_packages" [1.22 GB]
-|lvscan -- ACTIVE   Original "/dev/main_vg/usr" [3.00 GB]
-|lvscan -- ACTIVE            "/dev/main_vg/home" [1.00 GB]
-|[... snip a couple OK ones ...]
-|lvscan -- ACTIVE            "/dev/main_vg/usr_local_games_Heroes3" [392.00 MB]
-|lvscan -- inactive Original "/dev/main_vg/SCHROTT2" [51.19 MB] of /dev/main_vg/amanda_holding_disk
-|lvscan -- ACTIVE   Original "/dev/main_vg/SCHROTT4" [51.19 MB] of /dev/main_vg/amanda_holding_disk
-|lvscan -- ACTIVE   Original "/dev/main_vg/var_lib_amanda" [300.00 MB]
-|lvscan -- inactive Snapshot "/dev/main_vg/SCHROTT1" [19.69 MB] of /dev/main_vg/SCHROTT2
-|lvscan -- ACTIVE   Snapshot "/dev/main_vg/SCHROTT3" [287.44 MB] of /dev/main_vg/SCHROTT4
-|lvscan -- 23 logical volumes with 23.82 GB total in 1 volume group
-|lvscan -- 21 active / 2 inactive logical volumes
+Note that once I reverted the system back to the old fstab (effectively
+using the old partitions, I tried mounting the lvm filesystems. They
+mounted just fine, and in fact, hdb does not give the drive errors when I
+do a vgscan (nor has it ever given me drive errors, and a Debian mirror
+used to live there).
 
-The /dev/main_vg/SCHROTT[1-4] are the failed snapshots.
-At least one of them was against /dev/main_vg/usr, but they
-became snapped against /dev/main_vg/amanda_holding_disk.
+Is it the partition selections I made? I checked and devfs is initialized
+even before / is checked, S01devfsd versus S10checkroot.sh. Why am I unable
+to mount my LVM partitions when I boot straight, but it mounts when I boot
+the system and do the steps manually? Did I miss something major?
 
-SCHROTT[13] segfault on lvremove:
-|lvremove -- do you really want to remove "/dev/main_vg/SCHROTT1"? [y/n]: y
-|<1> lv_release -- CALLED with /dev/main_vg/SCHROTT1
-|<22> lv_check_name -- CALLED with lv_name: "/dev/main_vg/SCHROTT1"
-|<333> lvm_check_chars -- CALLED with name: "/dev/main_vg/SCHROTT1"
-|<333> lvm_check_chars -- LEAVING with ret: 0
-|<333> vg_check_name -- CALLED with VG: main_vg
-|<4444> lvm_check_chars -- CALLED with name: "main_vg"
-|<4444> lvm_check_chars -- LEAVING with ret: 0
-|<333> vg_check_name -- LEAVING with ret: 0
-|<22> lv_check_name -- LEAVING with ret: 0
-|<1> lv_release -- after search for /dev/main_vg/SCHROTT1
-|<1> lv_release -- /dev/main_vg/SCHROTT1 found
-|Segmentation fault
-
-and SCHROTT[24] won't allow to be removed.
-
-At the moment it's even worse: 
-lvm-1.0.1_rc4_2001_11_11's vgscan is unable to scan the VGs
-completely, it sees about 1/3, then segfaults, but the (old)
-1.0 executable (same library!) works.  Funny enough, once the
-system is up & running, it works...
-
-> > Does the snapshot point to the correct device?  (Happened to
-> > me, too.  Usually after an (unrelated?) crash.  No idea how
-> > to check -- but all Devices Under Snapshot shall have at
-> > least 1 snapshot.)
-
-> Do you mean, that a snapshot didn't refer to the correct device after
-> a crash any longer?
-
-Bingo.  Exactly that.
-Then I was able to rename them, but not able to remove them.
-Sometimes (seldom) I could, but that was not repeatable.
-
-Note that these crashes were most likely *not* the fault of lvm,
-and did not occur while an lvm-operation was running.
-
-Do you need a dump/dd/whatever?  Just tell me, I'll try my
-best to provide you with the data.
-
-> > Does the persistent snapshot-map look like it could work on
-> > that device claims to be against? (bigger than the device
-> > in question?)
-
-> ?
-
-Assume you have a snapshot of 1GB.  Assume the claimed original
-is 400M.  Since you cannot produce a snapshot larger than the
-original, this looks like an invalid snapshot, doesn't it?
-
-> > Ability to turn persistent snapshots into non-persistent ones
-> > (cleaned up after reboot) -- so that rogue ones can be
-> > removed during a reboot.
-
-> Well, this wouldn't make a difference because just the copy on write
-> exception tables would be removed but the rest of the snapshots metadata
-> where still in place making it most likely still impossible to remove it
-> in case we have a real bug related here.
-
-True enough.  Probably we need an interface to the metadata,
-so the user can (at his own risk!) change them.  Sorta like
-fdisk or debugfs.
-
--Wolfgang
+Thanks in advance,
+--
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm@debian.org
+                                         |   storm@tux.org
+============================================================================
+Why are cigarettes sold at gas stations when smoking is prohibited?
