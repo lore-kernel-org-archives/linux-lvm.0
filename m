@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Reiser & snapshots
-Message-ID: <20020709071916.GG842@tykepenguin.com>
-References: <Pine.LNX.4.21.0207081527110.7706-100000@enterprise.sd73.bc.ca>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0207081527110.7706-100000@enterprise.sd73.bc.ca>
+Message-ID: <3D2C3003.3090307@jumpline.com>
+From: Ben Snyder <ben@jumpline.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] resizing logical volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,42 +13,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul  9 02:19:01 2002
+Date: Wed Jul 10 08:09:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Mon, Jul 08, 2002 at 03:31:32PM -0700, John_Cuzzola wrote:
-> 
-> Hello everyone,
->  I'm new to this list and I was hoping someone could answer the following
-> question. My setup:
-> 
-> 
-> LVM-1.0.4
-> Kernel: 2.4.17
-> FileSystem: Reiser
-> 
-> 
-> When I take a snapshot of a mounted reiser volume the resulting snapshot
-> is corrupt. If the volume is unmounted then I take the snapshot it seems
-> to be fine. I've searched the web and found that this is a known problem
-> however the fix was to apply a VFS patch. The patch was for 2.4.11 and I
-> couldn't find one for 2.4.17. Is snapshots of mounted reiser volumes still
-> a problem? Will upgrading to 2.4.18 kernel fix it?
+OK, I asked a question here the other day that ended up being a 
+filesystems question, sorry, but thanks for removing my head from my 
+arse on that one (I knew that, really I did).
 
-You could try the VFS lock patch for 2.4.11 on 2.4.17. If you upgrade to 2.4.18
-then get the VFS lock patch from
+While I was asking that question, I also asked about adding existing 
+partitions on other devices to a logical volume/volume group.
 
-http://tech.sistina.com/cgi-bin/cvsweb.cgi/~checkout~/LVM/PATCHES/linux-2.4.18-VFS-lock.patch?rev=1.1
+The reply I got was this:
 
-rather than the 1.0.4 release.
-
-However, I think 2.4.19rc1 might be a better kernel (it's what I'm running - I
-went from 2.4.17), the VFS lock patch for that kernel is at
-
-http://tech.sistina.com/cgi-bin/cvsweb.cgi/~checkout~/LVM/PATCHES/Attic/linux-2.4.19-VFS-lock.patch?rev=1.1.2.1
+pvcreate /dev/device
+vgextend VolGroupName /dev/device
+lvextend --size +60G LogicalVolumePath
 
 
-patrick
+This all seemed to work just fine, in fact when I do a lvdisplay and 
+vgdisplay, it says 120G (which is what I expected it to be).  However, 
+when I try to perform the e2fsadm, I get the following (and I'm not an 
+idiot, I'm using/seeing the actual paths here):
+
+e2fsadm --size +20G LogicalVolumePath
+e2fsadm -- new size too large for "LogicalVolumePath"
+e2fsadm -- size of "LogicalVolumePath" would  be invalid
+
+I thought to myself, 'Maybe I did this already.'  I was, afterall, just 
+starting me 1st cup of coffee.  Whenever I mount the filesystem and do a 
+df -h, it still reports 59G, which is what I started at.  
+
+While this might still be a FS issue, I still can find nowhere else to 
+turn for assistance.
+
+Thanks in advance...
