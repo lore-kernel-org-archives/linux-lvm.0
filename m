@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Volume group not found on restart [resent]
-Message-ID: <20020524103259.A15896@sistina.com>
-References: <E631530D51ABD411B823009027855C5B0278C2@THOR>
+Subject: Re: [linux-lvm] Error on vgscan & lvremove
+Message-ID: <20020524105744.B15896@sistina.com>
+References: <004d01c20110$f2b8ff70$6501a8c0@bomoon> <20020522144651.F9107@sistina.com> <009601c20204$81710e30$6501a8c0@bomoon> <20020523190023.A13788@sistina.com> <017301c202d0$c77c2410$6501a8c0@bomoon>
 Mime-Version: 1.0
-In-Reply-To: <E631530D51ABD411B823009027855C5B0278C2@THOR>; from Murthy.Kambhampaty@goeci.com on Thu, May 23, 2002 at 03:09:12PM -0400
+In-Reply-To: <017301c202d0$c77c2410$6501a8c0@bomoon>; from bo@sosnetwork.net on Thu, May 23, 2002 at 08:12:04PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,86 +14,118 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 24 03:37:02 2002
+Date: Fri May 24 04:01:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, May 23, 2002 at 03:09:12PM -0400, Murthy Kambhampaty wrote:
-> Heinz, thanks for the response.
+On Thu, May 23, 2002 at 08:12:04PM -0700, bo wrote:
+> Heinz,
 > 
-> > Strange.
-> > If you were able to "lvremove /dev/db_vol/snap_db" it shouldn't be 
-> > visible in the metadata I got from you.
-> > 
-> > But it still is in there and has extents allocated on the 
-> > physical volume
-> > you wanted to remove from the volumegroup "db_vol". Unless 
-> > there was no
-> > extents allocated on physical volume /dev/sda, running 
-> > "vgreduce db_vol /dev/sda" was impossible.
-> > 
-> > The steps needed would have been:
-> > 
-> > - close /dev/db_vol/db_snap by unmounting it
-> > - successfully removing the LV with "lvremove /dev/db_vol_snap"
-> > - reducing the volume group successfully with "vgreduce 
-> > db_vol /dev/sda"
-> > 
-> > To check it:
-> > - vgdisplay -v db_vol # just showing 1 PV in VG "db_vol"
-> > - pvscan              # showing /dev/sda to be an unused PV
-> > 
-> I'm pretty sure I went throught the sequence you describe above, and the
-> pvscan at the end said /dev/sda was in "db_vol. I'll replicate the setup (I
-> have two volumes that are now tmp volumes with filesystems on disk, which
-> I'll convert to two different PVs and go through building up and tearing
-> down the setup I had before) and let you know if I get the same behavior.
+> > A 'workaround' for non-devfs configurations is
+> >
+> > ls /dev/*/group | sed 's!/group!!' | xargs rm -r ; vgmknodes
+> >
+> 
+> ??Something wrong on "sed 's!/group!!' ", it did not work.
 
-Ok.
-In case you are able to replicate it, I'ld be very interested to find out
-why it happens in order to come up with a fix.
+Works fine here. Maybe your sed doesn't like the delimiter?
+
+Try '/' rather than '!' with sed like "sed 's/\/group//'".
 
 > 
-> > 
-> > > 
-> > > > > 
-> > > > > So, the preferred course here is to "to change the metadata 
-> > > > in order to get
-> > > > > rid of the gone physical volume", and all will be well. 
-> > > > 
-> > > > So there's cons vs. (temporarly) trying 1.1-rc to quorum 
-> > > > activate db_vol
-> > > > in order to retrieve the data?
-> > > > 
-> > > Only to the extent that your message indicated that LVM 
-> > 1.1-rc2 was unstable
-> > > (BTW, do I only install the userspace tools and retain my 
-> > LVM 1.0.1rc4
-> > > kernel code (or do I have to patch the XFS cvs kernel with 
-> > the LVM 1.1-rc2
-> > > kernel code to implement this alternative?)
-> > 
-> > You can go with just the tools in a temporary location.
-> I tried it (download 1.1-rc2, built the kernel and tools, installed the
-> tools (about which time I got your message), then ran "vgscan; vgchange -qn
-> -ay "db_vol") and got the error message "vgchange -- driver doesn't support
-> volume group quorum!"
+> >
+> > link the single executable statically by running
+> > "./configure --enable-static_link" (which doesn't use the shared libs).
+> >
+> 
+> It did not work. I rebuilt LINUX kernel & LVM after
+> "./configure --enable-static_link".
+> I got the same result.
 
-Sorry, my fault :(
-Forgot to mention.
+Did you start with a fresh source tree or run "make distclean"
+before "./configure --enable-static_link"?
 
 > 
-> I'll install the patched kernel, and try it. Once I recover the data, I can
-> go back to the stock 2.4.18-xfs kernel, installing the lvm-tools rpm
-> supplied with RH 7.2.
+> Another big issues came as follow;
 > 
-> I'll let you know how it goes ... ;)
+> I tried to go back to LVM1.0.3, but getting a big trouble.
+> 
+> Q1:  Is it backward compatible from LVM1.1-rc2 to LVM1.0.3 or not?
+> 
+>         I already built the volume from LVM1.1-rc2 then I went back to
+> LVM1.0.3.
+>         All of LVM tools are not working as shown in the following console
+> output.
+> 
+> Q2: How could I remove this volume and rebuild? I do not care about the
+> data.
 
-Thanks.
+No LV status flags have been changed at all in 1.1-rc.
+lv_check_consistency() checks for the 2 possible user land states in lv_status
+which are either 0 or LV_ACTIVE.
 
-> 	Murthy
+For fast progress it should be ok to remove the lv_status checks from 
+lv_check_consistency().
+
+For further investigation of a possible 1.1-rc flaw ITR, could you send
+me (mge@sistina.com) the output files created with
+
+for d in All_volRaid0_PVs
+do
+	dd if=/dev/YOurPV of=`basename $d`.vgda bs=1k count=4
+done
+
+packed into a compressed tar archive?
+
+Thanks,
+Heinz    -- The LVM Guy --
+
+
+> 
+> During boot or after the boot, I have the following errors;
+> 
+> [root@localhost /]# vgscan -f
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found inactive volume group "volRaid0"
+> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volRaid0"
+> is inconsistent
+> vgscan -- ERROR: unable to do a backup of volume group "volRaid0"
+> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
+> "volRaid0" from "/etc/lvmtab"
+> vgscan -- found inactive volume group "volRaid5"
+> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volRaid5"
+> is inconsistent
+> vgscan -- ERROR: unable to do a backup of volume group "volRaid5"
+> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
+> "volRaid5" from "/etc/lvmtab"
+> vgscan -- found inactive volume group "volDisk"
+> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volDisk"
+> is inconsistent
+> vgscan -- ERROR: unable to do a backup of volume group "volDisk"
+> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
+> "volDisk" from "/etc/lvmtab"
+> vgscan -- found inactive volume group "volDisk2"
+> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volDisk2"
+> is inconsistent
+> vgscan -- ERROR: unable to do a backup of volume group "volDisk2"
+> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
+> "volDisk2" from "/etc/lvmtab"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> groups
+> 
+> [root@localhost /root]# ls /dev/*/group
+> ls: /dev/*/group: No such file or directory
+> [root@localhost /root]# vgmknodes
+> vgmknodes -- no volume groups found to create nodes for
+> 
+> 
+> Thanks for your help,
+> 
+> Bo
+> 
 > 
 > 
 > 
@@ -102,11 +134,6 @@ Thanks.
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
