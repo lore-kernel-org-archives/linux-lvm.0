@@ -1,8 +1,9 @@
+Message-ID: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>
+From: "Rocky Lee" <gozila@ms20.url.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <E18dzcw-0003aS-00@gw.pe1mhp.ampr.org>
-From: "Jan H. van Gils" <janvg@vgnet.nl>
-Subject: [linux-lvm] LVM rootfs and cramfs as ramdisk
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_006F_01C2C858.161C5CF0"
+Subject: [linux-lvm] Does LVM2 support RAID?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,51 +14,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 15:21:01 2003
+Date: Wed Jan 29 22:08:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-	Hi,
+This is a multi-part message in MIME format.
 
-First some thinks I found out.
+------=_NextPart_000_006F_01C2C858.161C5CF0
+Content-Type: text/plain;
+	charset="big5"
+Content-Transfer-Encoding: quoted-printable
 
-When you create with lvmcreate_initrd the /boot/initrd-lvm-<kernel> file
-the file is an ext2 filesystem. On a debian distro that wil give you problems
-because the kernel expects a cramfs as ramdisk file.
+Hello all=20
 
-Here is a work around I found :
+Happy Chinese New Year to you!
+and thanks for reading my issues.
 
-mount the /boot/initrd-lvm-<kernel> file
-mount -t ext2 -o loop /boot/initrd-lvm-<kernel> /mnt
+Here's my question about LVM1 and LVM2
 
-copy the file to temporary working directory
-cd /mnt; find . -print | cpio -udmp /var/tmp/lvm
+LVM1+ MD is good methd to support backup and data recovery of data.
+I found some documents said that LVM2 already can support disk =
+protection and data recovery.
+does it mean that LVM2 including various raid algorithms ? or other =
+features?
 
-dismount the /mnt file system and mount the kernel original
-mount -t cramfs -o loop /boot/initrd.img-<kernel>
-cd /mnt; find . -print | cpio -udmp /var/tmp/lvm
+How they work?
 
-now create the new cramfs initrd file
-cd /var/tmp; mkcramfs lvm/ initrd.cramfs
-make sure the owner and group member are root <chown -R root:root initrd.cramfs)
+If I use LVM2 will be better than use LVM1 + MD?
 
-To be sure you can check the initrd.cramfs with cramfsck -v initrd.cramfs.
+Thank you
+Have a nice day
+                            Rocky Lee
 
-Now I am wondering about one thing ? cramfs is a readonly filesystem
-when the system boot it executes a vgscan and that creates a
-"/etc/lvmtab" and "/etc/lvmtab.d" successfully created".
+------=_NextPart_000_006F_01C2C858.161C5CF0
+Content-Type: text/html;
+	charset="big5"
+Content-Transfer-Encoding: quoted-printable
 
-But because the cramfs is readonly, wil this not be an impossibility,
-and is the cramfs ramdisk file not possible@all !!
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dbig5">
+<META content=3D"MSHTML 6.00.2800.1106" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT size=3D2>Hello all </FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>Happy Chinese New Year to you!</FONT></DIV>
+<DIV><FONT size=3D2>and thanks for reading my issues.</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>Here's my question about LVM1 and LVM2</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>LVM1+ MD is good methd to support backup and data =
+recovery of=20
+data.</FONT></DIV>
+<DIV><FONT size=3D2>I found some documents said that LVM2 already can =
+support disk=20
+protection and data recovery.</FONT></DIV>
+<DIV><FONT size=3D2>does it mean&nbsp;that LVM2&nbsp;including various=20
+raid&nbsp;algorithms ? or other features?</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>How they work?</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>If I use LVM2 will be better than use LVM1 + =
+MD?</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>Thank you</FONT></DIV>
+<DIV><FONT size=3D2>Have a nice day</FONT></DIV>
+<DIV><FONT size=3D2>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; =
+&nbsp;&nbsp;&nbsp;=20
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; =
+&nbsp;&nbsp;&nbsp;=20
+Rocky Lee</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
 
-Please responce on this subject.
-
-Greetz, Jan
-
-
--- 
-With regards Jan H. van Gils
-Internet web-page http://www.VGNet.NL/
-Internet e-mail address JanVG@VGNet.NL
-RIPE Whois JHG5-RIPE, 6BONE Whois JHG1-6BONE
+------=_NextPart_000_006F_01C2C858.161C5CF0--
