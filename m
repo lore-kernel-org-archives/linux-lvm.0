@@ -1,31 +1,26 @@
-Message-Id: <200001192124.WAA14827@e35.marxmeier.com>
-Subject: RE: [linux-lvm] pvcreate doesn't work with /dev/rd (Mylex RAID)
-Date: Wed, 19 Jan 2000 22:24:27 MEZ
-In-Reply-To: <15AD5D7936F8D21198240000F831776E3E813B@dboexc1.dbo.cpqcorp.net>; from "Jakma, Paul" at Jan 19, 100 4:00 pm
-From: Michael Marxmeier <mike@msede.com>
+Date: Fri, 21 Jan 2000 01:15:12 +0000 (GMT)
+From: James Pattinson <jamesp@aethos.co.uk>
+Subject: [linux-lvm] extending a striped LV
+Message-ID: <Pine.LNX.4.10.10001210110090.2815-100000@fuse.aethos.co.uk>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Paul.Jakma@compaq.com
-Cc: ak@suse.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-> where do i add the DAC960 major number? or is 0.8i already stable enough for
-> production use?
+Hi...
 
-Version 0.8i should be fine. There are three minor known problems
-which are documented along with fixes. 
+Just ran into a problem trying to extend /opt on my system. /opt is
+/dev/vg00/lvol5 (yeah I work with HPUX!! :) ) and it's currently striped
+across 2 disks on my system that has 4 disks total (8GB 4GB 4GB 6GB).
 
-http://linux.msede.com/lvm/doc/BUGS
+When I tried to extend it from 512MB to 640MB, the command failed because
+one of the discs that /opt resides on is full. However there is over 10GB
+free in the entire VG so is it possible to tell lvextend to use a
+different disk, or can it only be extended on the same two disks?
 
+Cheers
 
-Hope this helps
-Michael
-
---
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+James
