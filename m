@@ -1,9 +1,9 @@
-Message-ID: <3D87AC21.7060708@jumpline.com>
-From: Ben Snyder <ben@jumpline.com>
+Message-ID: <20020918090159.97518.qmail@web20511.mail.yahoo.com>
+From: Kelvin Tan <kelvintanpk@yahoo.com>
+In-Reply-To: <20020917161706.A22952@sistina.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] cannot mount logical volume on boot
-References: <Pine.LNX.4.44.0209171641110.21807-100000@dragon.inside.ntisys.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; boundary="0-411336774-1032339719=:97355"
+Subject: [linux-lvm] Please help!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,27 +14,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 17 17:27:12 2002
+Date: Wed Sep 18 04:02:11 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-bscott@ntisys.com wrote:
+--0-411336774-1032339719=:97355
+Content-Type: text/plain; charset=us-ascii
 
->  It sounds like the LVM is not up and running properly with the LV
->available when the filesystem check is run, causing the fsck to fail,
->causing the initscripts to drop you into the emergency "your system is
->really hosed" shell at boot.
->  
->
-Yeah, just trying to figure out why, excatly.
 
->
->  Instead of a hardlink, try a symlink.  I suspect the hardlink is causing
->the device node magic in the LVM userland programs to get all borked up.
->
->  
->
+Hi,
 
-After reading your suggestion I thought I'd give that a shot...what I 
-get is a message telling me  /dev/sdz1 is not a valid block device.
+I am running redhat 7.3 with LVM release 1.1-rc4.
+
+System uses only one 6GB ide harddisk.
+
+I have the following error when booting the new compiled kernel and initrd ram file.
+
+attempt to access beyond end of device 01:00 rw=0 want:4683, limit=4096
+
+kmod: failed to exec /sbin/modprobe -s -k block-major-58,errno=2
+
+and the system stalled.
+
+Please advise.
+
+Kelvin Tan
+
+(Singapore)
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+---------------------------------
+Do you Yahoo!?
+Yahoo! News - Today's headlines
+--0-411336774-1032339719=:97355
+Content-Type: text/html; charset=us-ascii
+
+<P>Hi,</P>
+<P>I am running redhat 7.3 with LVM release 1.1-rc4.</P>
+<P>System uses only one 6GB ide harddisk.</P>
+<P>I have the following error when booting the new compiled kernel and initrd ram file.</P>
+<P>attempt to access beyond end of device 01:00 rw=0 want:4683, limit=4096</P>
+<P>kmod: failed to exec /sbin/modprobe -s -k block-major-58,errno=2</P>
+<P>and the system stalled.</P>
+<P>Please advise.</P>
+<P>Kelvin Tan</P>
+<P>(Singapore)</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P><p><br><hr size=1>Do you Yahoo!?<br>
+<b><a href="http://news.yahoo.com/">Yahoo! News</a></b> - Today's headlines
+--0-411336774-1032339719=:97355--
