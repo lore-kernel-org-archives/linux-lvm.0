@@ -1,8 +1,10 @@
-Message-ID: <3DC1EFFC.A0EEBAFD@be.mbn.or.jp>
-From: Miwako Nakai <nickey@be.mbn.or.jp>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] cache buffer size
+From: Andreas Dilger <adilger@clusterfs.com>
+Subject: Re: [linux-lvm] e2fsadm and snapshots?
+Message-ID: <20021101044736.GB554@clusterfs.com>
+References: <1036105045.10397.68.camel@theory.jpl.nasa.gov> <20021031232551.GG23959@clusterfs.com> <1036112887.10402.88.camel@theory.jpl.nasa.gov>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1036112887.10402.88.camel@theory.jpl.nasa.gov>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 31 21:11:02 2002
+Date: Thu Oct 31 22:51:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: lvm <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: Jim King <jrk@mipl.jpl.nasa.gov>
+Cc: linux-lvm@sistina.com
 
-I'm using jfs on lvm/raid5 with snapshot.
+On Oct 31, 2002  17:08 -0800, Jim King wrote:
+> On Thu, 2002-10-31 at 15:25, Andreas Dilger wrote:
+> > The LVM snapshot is the whole filesystem (with only the parts that
+> > actually change being written to the snapshot LV) - no need to change
+> > the filesystem size at all.  All you need to change is the LV size.
+> 
+> OK -- so using lvextend I can extend it. But once it's extended, I can
+> no longer mount it. I get:
+> 
+>   mount: wrong fs type, bad option, bad superblock on
+>     /dev/data1/.mer_dev.hourly.3, or too many mounted file systems
+> 
+> Is there something I'm missing here? (ok -- obviously yes...)
 
-When I copy file, it happens frequently
-'raid5: switching cache buffer size XXX -> XXX'.
-This message appears to syslog. It caused speed down to access disks.
-So, I cut this message. It's seemed ok.
+You must have gotten some sort of error in the syslog after this
+(dmesg will show you).
 
-But it's still going to switch cache buffer size. I think it cost
-some cpu time. When switching buffer cache size, it always happen
-reflushing memories.
-
-I want to fix buffer size. What shall I do?
-I asked JFS group. But they do nothing about cache buffer.
-
-kernel 2.4.20-pre10-ac2
-lvm    1.0.5
-jfs    1.0.23
-
+Cheers, Andreas
 --
-nakai@ezinc.com
+Andreas Dilger
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
+http://sourceforge.net/projects/ext2resize/
