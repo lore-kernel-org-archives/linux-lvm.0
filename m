@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 24 Apr 2001 13:48:16 +0000
+Date: Tue, 24 Apr 2001 13:50:37 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM version of 2.4.2 kernel?
-Message-ID: <20010424134816.A31988@sistina.com>
-References: <Pine.LNX.4.33.0104231933220.17635-100000@duckman.distro.conectiva> <Pine.LNX.4.33.0104231810270.13970-100000@chasqui.LaRed.net.pe>
+Subject: Re: [linux-lvm] What have snapshots got to do with LVM ?
+Message-ID: <20010424135037.B31988@sistina.com>
+References: <20010422130924.A10390@66bassett.freeserve.co.uk> <20010423102145.C27367@sistina.com> <20010423093818.B739@66bassett.freeserve.co.uk> <20010423120521.A27695@sistina.com> <20010423112638.B1060@66bassett.freeserve.co.uk> <20010423152748.A28301@sistina.com> <20010423150556.C1492@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0104231810270.13970-100000@chasqui.LaRed.net.pe>; from carenas@chasqui.lared.net.pe on Mon, Apr 23, 2001 at 06:22:56PM -0500
+In-Reply-To: <20010423150556.C1492@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Mon, Apr 23, 2001 at 03:05:56PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,83 +21,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 23, 2001 at 06:22:56PM -0500, Carlo Marcelo Arenas Belon wrote:
-> > On Mon, 23 Apr 2001, Joe Thornber wrote:
-> > > On Mon, Apr 23, 2001 at 04:13:32PM +0200, David Vidal Rodriguez wrote:
-> > > > Hi!
-> > > > I want to know what version of LVM (beta_x etc.) is included within
-> > > > Kernel 2.4.2 and if I can use the fresh compiled beta7 tools with it.
-> > >
-> > > Beta2 is in the 2.4.2 kernel.  You are advised to upgrade both the
-> > > kernel and the userland tools to beta7.
-> >
-> > Ummm ?
+On Mon, Apr 23, 2001 at 03:05:56PM +0100, Joe Thornber wrote:
+> On Mon, Apr 23, 2001 at 03:27:48PM +0000, Heinz J. Mauelshagen wrote:
+> > You said it already above: the general concept still needs to deal with chunks 
+> > which could eventually map to LVM PEs in case we run LV snapshots carying
+> > metadata (COW table sections) and data.
+> > The abstraction therefore will be one in notion basically
+> > (chunk rather than PE).
 > 
-> :(, not again please, i am a noname lvm user and i really found this kind
-> of misunderstanding really frustating.
+> I'm certain this is the way to go for 1.2, having thought about it for
+> a day.  Snapshot's would still be part of the LVM suit, but just
+> implemented in a seperate driver.
 > 
-> but there is a time when "clearing the air" is needed and i am pretty sure
-> that you all (developers) love much to code than to argue.
-> 
-> please, take my words as they come, from a linux user and developer
-> wannabe that loves the way opensource is getting into the world.
+> The only problem is the per device hook.  Has anyone else implemented
+> something similar ?
 
-Thanks for your comment here.
-We hope to be on the right track to "clear the air" now.
+Didn't see something in public so far :(
+
+> or shall I just have a bash and upset the gurus.
+
+Yes!
+The typical "we need to suffer in order to make things better" thing.
 
 > 
-> > Weren't you people saying that the Linus tree would be the
-> > main LVM repository from now on?
-> 
-> sure we all hope it is, but if you take a look to the currently released
-> linus kernel (2.4.3 and for sure the olders), it is obvious than a broken
-> lvm was in place there.
-
-Please recall again that it was not us pushing that to Linus back then!
-
-Even though it was good will by the guy who did it back then, and we seem to
-get blamed for everything these days (maybe even for TANSTAAFL ;-) it wasn't
-us.
-We wanted to fix several things before integrating it.
-
-Anyway: as Joe Thornber stated in the other email; work is in progress
-        to change that anoying situation and to update the vanilla kernel.
-
-> 
-> and for sure taking the beta7 userland tools with that module is going to
-> piss anyone.
-
-Yep and sorry: that's why we recommend to get LVM 0.9.1 Beta 7 from
-www.sistina.com, patch the kernel and build the tools/library.
-
-> 
-> > Would it be possible to get at least the important bugfixes
-> > merged in Linus' kernel ?
-> 
-> i'll bet they (sistina) are working on that as they explained before, BTW
-> i just found it on 2.4.4-pre6
-
-Yes, we are.
-Alan Cox and others already kindfully offered their help to check the patches
-and likely will ease the path to Linus and the vanilla kernel integration
-as well.
-
-> 
-> + *    05/04/2001 - lvm_map bugs: don't use b_blocknr/b_dev in lvm_map, it
-> + *                destroys stacking devices. call b_end_io on failed maps.
-> + *                (Jens Axboe)
-> 
-> and i am pretty sure that there are more to come (Alan, Heinz, your turn
-> with the ball)
-
-This one and others will be covered.
-Let us continue the open source game, folks ;-)
-
-> 
-> best regards,
-> 
-> Carlo
-> 
+> - Joe Thornber
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
