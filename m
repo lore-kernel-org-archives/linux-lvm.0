@@ -1,12 +1,9 @@
-Return-Path: <wichert@cistron.nl>
-Date: Tue, 13 Mar 2001 01:23:14 +0100
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-Message-ID: <20010313012313.A3042@cistron.nl>
-References: <200103122319.f2CNJKP00753@webber.adilger.int> <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org>
+Return-Path: <root@srv.sistina.com>
+Date: Tue, 13 Mar 2001 01:21:36 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010313012136.A10157@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org>; from heimdall@mail.org on Mon, Mar 12, 2001 at 06:16:49PM -0600
+Subject: [linux-lvm] *** ANNOUNCEMENT ***  LVM 0.9.1 Beta 6  available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,20 +17,48 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Daniel E Whicker <heimdall@mail.org>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 
-Previously Daniel E Whicker wrote:
-> system at the moment, but as soon as I'm done, I'll get 2.4.2 with LVM
-> .9.1b5 and your patch installed and see how it goes from there.
+Hi all,
 
-It seems 0.9.1b6 is out there as well, although it's not mentioned on
-all the webpages and not on any mirrors..
+a tarball of the Linux Logical Volume Manager 0.9.1 Beta 6 is available now at
 
-Wichert (browsing the patch to figure out why IOP reverted to 10).
+   <http://www.sistina.com/>
+
+for download (Follow the "LVM 0.9.1-Beta6" link).
+
+
+This release fixes several bugs.
+See the CHANGELOG file contained in the tarball for further information.
+
+
+The LVM 0.9.1 Beta 6 release delay was mainly caused by some snapshot LV bugs.
+We would appreciate snapshot LV test feedback on Linus 2.2 and 2.4.
+
+
+**IMPORTANT** IOP version has moved back to 10, make sure tools and
+kernel driver are both upgraded to beta6, if you are running beta5.
+
+
+Please help us to stabilize for LVM 1.0 ASAP and provide your test results,
+bug fixes and advice.
+
+
+Feed back related information to <linux-lvm@sistina.com>.
+
+Thanks a lot for your support of LVM.
 
 -- 
-   ________________________________________________________________
- / Generally uninteresting signature - ignore at your convenience  \
-| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
