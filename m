@@ -1,10 +1,10 @@
-From: Bradley M Alexander <storm@tux.org>
-Subject: Re: [linux-lvm] LVM fails at bootup
-Message-ID: <20011112162310.A9389@sonsofthunder.yi.org>
-References: <20011112153013.Q715@sonsofthunder.yi.org> <Pine.LNX.4.33.0111121541140.13347-100000@dragon.inside.ntisys.com>
+From: Petro <petro@auctionwatch.com>
+Subject: Re: [linux-lvm] LVM, Reiserfs, and snapshots.
+Message-ID: <20011112132657.A9753@auctionwatch.com>
+References: <20011111212427.B4199@auctionwatch.com> <20011112085858.D624@tykepenguin.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0111121541140.13347-100000@dragon.inside.ntisys.com>
+In-Reply-To: <20011112085858.D624@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,34 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 12 15:22:02 2001
+Date: Mon Nov 12 15:25:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Nov 12, 2001 at 03:42:10PM -0500, Benjamin Scott wrote:
-> On Mon, 12 Nov 2001, Bradley M Alexander wrote:
-> >> Don't know about this - looks like hardware problems.
-> >
-> > I thought so too, but the fact that it only happens when I try to enable
-> > LVM at bootup makes me think its not.  I had a Debian mirror on this
-> > drive prior to this, and it never gave me errors, and if I boot without
-> > LVM and enable it after boot by hand, I don't get these errors.
-> 
->   Is there anything in your bootscripts which adjusts the IDE driver to use
-> more conservative settings (usually via "hdparm")?
+On Mon, Nov 12, 2001 at 08:58:58AM +0000, Patrick Caulfield wrote:
+> On Sun, Nov 11, 2001 at 09:24:27PM -0800, Petro wrote:
+> >     Im having a bit of trouble here, and I'm hoping that someone on this 
+> >     list can assist me. 
+> > Nov 11 21:15:23 dbgsh01 kernel: reiserfs:warning: CONFIG_REISERFS_CHECK is set ON
+> > Nov 11 21:15:23 dbgsh01 kernel: reiserfs:warning: - it is slow mode for debugging.
+> > Nov 11 21:15:23 dbgsh01 kernel: reiserfs: checking transaction log (device 3a:01) ...
+> > Nov 11 21:15:23 dbgsh01 kernel: journal-1153: found in header: first_unflushed_offset 7026, last_flushed_trans_id 11094
+> > Nov 11 21:15:23 dbgsh01 kernel: journal-1006: found valid transaction start offs et 7026, len 3 id 11095
+> > Nov 11 21:15:23 dbgsh01 kernel: clm-2076: device is readonly, unable to replay log
+> > Nov 11 21:15:23 dbgsh01 kernel: Replay Failure, unable to mount
+> > Nov 11 21:15:23 dbgsh01 kernel: reiserfs_read_super: unable to initialize journal space
+> You need to apply the VFS lock patch in the LVM PATCHES directory to make
+> reiserfs snapshots work.
 
-Not that I can find. The only call to hdparm in the startup files turns off
-write caching on all of the IDE hard drives at shutdown, and thats in
-S40umountfs...No other calls to hdparm that I can find.
+    Are/were these part of the -ac patchset? 
+
+    I ask because I have it working with 2.4.8-ac8. 
 
 -- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm@debian.org
-                                         |   storm@tux.org
-============================================================================
-It's lonely at the top, but you eat better.
+Share and Enjoy. 
