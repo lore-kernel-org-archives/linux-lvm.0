@@ -1,8 +1,12 @@
-Message-ID: <3E293C00.30406@informatik.uni-erlangen.de>
-From: Rainer.Lay@informatik.uni-erlangen.de
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] cannot extend lv
+Subject: Re: [linux-lvm] cannot extend lv
+Message-ID: <20030118165806.GA13554@mitethe.eudyptes>
+References: <3E293C00.30406@informatik.uni-erlangen.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+Content-Disposition: inline
+In-Reply-To: <3E293C00.30406@informatik.uni-erlangen.de>
+From: idsfa@visi.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,85 +17,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan 18 04:36:02 2003
+Date: Sat Jan 18 10:57:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I have a vg (data) with four drives /dev/sd[b-e]1
-I created a 2 stripes lv (data1) with sd[bc]1
-Now I want to add the remaining two drives to the lv, but lvextend 
-complains about missing pes! I tried also with a very small number of 
-pes - without success:
+--+HP7ph2BbKc20aGI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-lvextend -l +400 /dev/data/data1 /dev/sde1 /dev/sdd1
-lvextend -- extending logical volume "/dev/data/data1" to 35.45 GB
-lvextend -- not enough free/allocatable physical extents to extend 
-logical volume "/dev/data/data1"
+On Sat, Jan 18, 2003 at 11:35:28AM +0000,
+Rainer.Lay@informatik.uni-erlangen.de wrote:
 
-It returns error code 12:
-12 error setting up VGDA for logical volume extension
-which is not very useful in this case.
+> I have a vg (data) with four drives /dev/sd[b-e]1
+> I created a 2 stripes lv (data1) with sd[bc]1
+                ^^^^^^^
 
-Any idea?
+You cannot extend striped lvs onto new pvs. Even on the
+same physical hardware.  Once you have striped it, you are
+tied to the pvs used.
 
+If you think about it, this makes sense, as otherwise you
+have some stripes containing more data than others.  In fact,
+as soon as the smallest pv is full, you will not be able to
+extend the lv, even if there is room in the other pvs.
 
-kind regards,
+If you want to have the filesystem striped over all the disks, you
+will need to create a new lv which is striped across them all,
+transfer the data to it, delete the old lv and then extend the
+new one.
 
-Rainer
+Backups highly recommended.
 
+Michael
 
-here comes a vgdisplay:
-vgdisplay -v
---- Volume group ---
-VG Name               data
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               1
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                4
-Act PV                4
-VG Size               50.83 GB
-PE Size               4 MB
-Total PE              13012
-Alloc PE / Size       8676 / 33.89 GB
-Free  PE / Size       4336 / 16.94 GB
-VG UUID               sIKhBA-LMrL-e0h0-5NEt-mVSZ-3SrM-2KB7XS
+--=20
+Think Locally, Act Globally: =20
+"It's cold in here ... I'd better release a few million tons of CFCs!"
 
---- Logical volume ---
-LV Name                /dev/data/data1
-VG Name                data
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 2
-LV Size                33.89 GB
-Current LE             8676
-Allocated LE           8676
-Stripes                2
-Stripe size (KByte)    16
-Allocation             next free
-Read ahead sectors     1024
-Block device           58:0
+--+HP7ph2BbKc20aGI
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
 
---- Physical volumes ---
-PV Name (#)           /dev/sdb1 (3)
-PV Status             available / allocatable
-Total PE / Free PE    4338 / 0
+iD8DBQE+KYedzCEwIKHWl1kRAiiqAJ9YGnQCAomRKFzjo8eskq/J/QOskQCggOD2
+diNfrUHGOL3RQK4aWodQbXQ=
+=bcGO
+-----END PGP SIGNATURE-----
 
-PV Name (#)           /dev/sdc1 (2)
-PV Status             available / allocatable
-Total PE / Free PE    4338 / 0
-
-PV Name (#)           /dev/sdd1 (1)
-PV Status             available / allocatable
-Total PE / Free PE    2167 / 2167
-
-PV Name (#)           /dev/sde1 (4)
-PV Status             available / allocatable
-Total PE / Free PE    2169 / 2169
+--+HP7ph2BbKc20aGI--
