@@ -1,9 +1,9 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] partition representation
-Message-ID: <689F43A6CF84E541A721C5C3FD5ADECC1A1E83@blr-m3-msg.wipro.com>
-From: "Sharad Tiwari" <sharad.tiwari@wipro.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Thank you...
+Message-ID: <20030414112914.B27553@sistina.com>
+References: <200304102047.h3AKlVOq015150@disgustapated.emc.usi.net>
+Mime-Version: 1.0
+In-Reply-To: <200304102047.h3AKlVOq015150@disgustapated.emc.usi.net>; from travis@usi.net on Thu, Apr 10, 2003 at 04:47:31PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,69 +14,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 11 08:14:01 2003
+Date: Mon Apr 14 04:34:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+On Thu, Apr 10, 2003 at 04:47:31PM -0400, travis@usi.net wrote:
+> Hello All,
+> 
+> 	Just wanted to give a special thanks to Anders Widman
+> and Heinz Mauelshagen for their help in resolving the error
+> condition I was receiving with my disk devices while trying to
+> run vgexport.  It was, in fact, duplicate PV entries in the
+> directory /etc/lvmconf  Apparently, the devices were used
+> previously as part of another volume group and the entries were
+> never cleaned up!  I am back up and running now so thanks!
+> 
+> 	I have a quick question on the ability of LVM with 
+> respect to redudant paths.  With my HP servers we are able
+> to run vgextend after vgcreate has created a volume group to
+> indicate an alternate path.  Like so:
+> 
+> 	# pvcreate /dev/rdsk/c2t0d1
+> 	# pvcreate /dev/rdsk/c2t1d1
+> 	# mkdir /dev/vgoradata
+> 	# mknod <truncated>
+> 	# vgcreate /dev/vgoradata /dev/dsk/c2t0d1
+> 	<Now, here is what I would like to do with 
+> 	LVM on Linux>
+> 	# vgextend /dev/vgoradata /dev/dsk/c2t1d1
+> 	# lvcreate -l 4000 -n oradata /dev/vgoradata
+> 	# lvextend -m 1 /dev/vgoradata/oradata
+> 
+> Now, I am using 1.0.3 and before I tear my current setup down
+> I was wondering if there is a way to do the same thing with
+> LVM for Linux (maybe 2.0 supports this???).  Okay, again, thank
+> you for your time!!!
 
-	I have applied the patches required for device mapper from
-device-mapper-latest.tgz, and then went on to use to ioctl interface ( I
-ran devmap_mknod.sh script) ...
+Travis,
 
-I could not make out as to what the difference will be if I use the
-devfs ...
+IBM Germany coded a multipath extension for LVM1 which got included
+in the SuSE distribution (not supported by Sistina).
+You should be able to get patches from them.
 
-But the change I can see if this :
+Because Sistina offers LVM2/device-mapper (L)GPLed which gets all new
+features added, we discontinued to add any new features to LVM1 about
+a year ago. We _do_ support LVM1 (bug fixes, user support).
 
-Earlier my partitions were being represented as /dev/hda1, /dev/hda2 ...
-and /dev/hdb1, /dev/hdb2 ....
+We are close to the LVM2.0 release which will be LVM1 feature compatible.
 
-The current representation is like this :
+Multipathing (or redundant paths) is a planned 2.2 feature.
 
-[root@volts root]# /dev/discs/disc
-disc0  disc1
-[root@volts root]# ls /dev/discs/disc0/
-disc  part1  part2  part3  part4  part5  part6  part7
-[root@volts root]# ls /dev/discs/disc1/
-disc   part1  part2  part5  part6  part7  part8
-[root@volts root]# ls /dev/discs/disc1/
-disc  part1  part2  part5  part6  part7  part8
-[root@volts root]#
+> 
+> Cheers,
+> Travis
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-and there is no entry for /dev/hda or /dev/hdb ... as is evident in the
-following lines :
+-- 
 
-[root@volts root]# fdisk /dev/hda
+Regards,
+Heinz    -- The LVM Guy --
 
-Unable to open /dev/hda
-[root@volts root]# fdisk /dev/hdb
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Unable to open /dev/hdb
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-[root@volts root]# cat /proc/partitions
-major minor  #blocks  name
-
-   3     0    4226040 ide/host0/bus0/target0/lun0/disc
-   3     1    2048256 ide/host0/bus0/target0/lun0/part1
-   3     2     819315 ide/host0/bus0/target0/lun0/part2
-   3     3     265072 ide/host0/bus0/target0/lun0/part3
-   3     4          1 ide/host0/bus0/target0/lun0/part4
-   3     5     208813 ide/host0/bus0/target0/lun0/part5
-   3     6     208813 ide/host0/bus0/target0/lun0/part6
-   3     7     208813 ide/host0/bus0/target0/lun0/part7
-   3    64   10002825 ide/host0/bus0/target1/lun0/disc
-   3    65     208813 ide/host0/bus0/target1/lun0/part1
-   3    66          1 ide/host0/bus0/target1/lun0/part2
-   3    69     208813 ide/host0/bus0/target1/lun0/part5
-   3    70     514048 ide/host0/bus0/target1/lun0/part6
-   3    71     514048 ide/host0/bus0/target1/lun0/part7
-   3    72     514048 ide/host0/bus0/target1/lun0/part8
-
-
-I cannot make out what exactly is happening, any suggestions or=20
-can someone please point me to the right place to look for.
-
-Thanks for the help,
-Sharad.
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
