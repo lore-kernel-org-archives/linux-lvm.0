@@ -1,41 +1,42 @@
-Message-ID: <XFMail.000429123820.daniel.etter@etter.ch>
-Content-Transfer-Encoding: 8bit
+From: harrie@descent.penguinpowered.com
+Date: Sun, 30 Apr 2000 19:45:06 +0200 (CEST)
+Subject: [linux-lvm] invalid i/o protocol version
+Message-ID: <Pine.LNX.4.10.10004301928550.13661-100000@tiger.private>
 MIME-Version: 1.0
-In-Reply-To: <3905652C.5B5CF85C@ednet.ns.ca>
-Date: Sat, 29 Apr 2000 12:38:20 +0200 (MEST)
-From: Daniel Etter <daniel.etter@etter.ch>
-Subject: Re: [linux-lvm] mounting lv's from fstab
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Patrick Boutilier <boutilpj@ednet.ns.ca>
-Cc: "linux-lvm@msede.com" <linux-lvm@msede.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
+Hi there,
 
-Am 25-Apr-00 toeggelte Patrick Boutilier:
-> I just put the vgchange command in /etc/rc.d/rc.sysinit just before
-> the
-> RAID part.
-> 
-> .......
-># Load modules (for backward compatibility with VARs)
-> if [ -f /etc/rc.d/rc.modules ]; then
->         /etc/rc.d/rc.modules
-> fi
-> 
-># LVM
-> /sbin/vgscan
+I get this error while running vgscan:
 
-I dont use vgscan, because I don't boot neither with intrd nor with
-devfs, so for me vgscan would be just waisting time during boot.
+# vgscan -vd
+lvm_get_iop_version -- CALLED
+lvm_get_iop_version -- AFTER ioctl ret: 0
+lvm_get_iop_version -- LEAVING with ret: 0
+vgscan -- invalid i/o protocol version
 
-> /sbin/vgchange -a y
-> 
-># Add raid devices
-> if [ -f /proc/mdstat -a -f /etc/raidtab ]; then
->         echo -n "Starting up RAID devices: "
------------------------------------------------------------------------
-Daniel Etter   | http://www.etter.ch/~daniel  | Tel. : +41 1  884 75 01
-Ringstrasse 2  |                              | Fax  : +41 1  884 62 50
-8107 Buchs ZH  | mailto:Daniel.Etter@etter.ch | Natel: +41 79 354 93 75
+As a saw in the mail archives, it could be a missing /dev/lvm, but it is there:
+
+# ls -l /dev/lvm
+crw-r-----   1 root     root     109,   0 Apr 29 03:35 /dev/lvm
+
+I tried a few kernels to see if that was the problem, but still haven't found what is wrong.
+
+Is it the lvm-0.8-11.rpm that I use? For some reason I can't compile the tools in tar files (tried different version, all the same errors on "function basename").
+
+# dmesg | grep -i lvm
+LVM version 0.8final  by Heinz Mauelshagen  (15/02/2000)
+lvm -- Driver successfully initialized
+
+Is the rpm file compatible with this version (it installed without problems)?
+
+At the moment I use Redhat 6.0 with upgraded kernel 2.3.99-pre6.
+
+Hope somebody can help me.
+
+Harrie
