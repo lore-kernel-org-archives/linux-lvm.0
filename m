@@ -1,11 +1,12 @@
-Return-Path: <bs@infologic.fr>
-Message-ID: <3A55C216.D16CF05C@infologic.fr>
-Date: Fri, 05 Jan 2001 13:46:14 +0100
-From: Benoit SERRA <bs@infologic.fr>
-MIME-Version: 1.0
-References: <20010104173400.A2606@minime.sistina.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Linux LVM Newbie
+Return-Path: <jan@moria.gondor.com>
+Date: Fri, 5 Jan 2001 14:06:33 +0100
+From: Jan Niehusmann <list039@gondor.com>
+Subject: Re: [linux-lvm] Linux LVM Newbie
+Message-ID: <20010105140633.A7101@gondor.com>
+References: <20010104173400.A2606@minime.sistina.com> <3A55C216.D16CF05C@infologic.fr>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3A55C216.D16CF05C@infologic.fr>; from bs@infologic.fr on Fri, Jan 05, 2001 at 01:46:14PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,22 +19,13 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Benoit SERRA <bs@infologic.fr>
 
-Sorry to distrub you, but i've currently implementing a test server with
-LVM and i've got a question
+On Fri, Jan 05, 2001 at 01:46:14PM +0100, Benoit SERRA wrote:
+> Is there any way to make this with Linux LVM ?
 
-My LVM version is 0.9. My kernel is 2.2.16, patched for LVM and online
-ext2 resizing.
+Look for 'stripe' in 'man lvcreate'.
 
-All this stuff work fine.
-
-I'm an AIX user for about 2 years. In AIX, we have an option to spread
-PE accros several disks, to boost performances. I explain :
-
-	I create a (very small) LV with 6 PE.
-	My VG containt 2 disks.
-	I want the PE number 1, 3 and 5 on the disk 1, and the others on the
-disk 2.
-
-Is there any way to make this with Linux LVM ?
+Jan
