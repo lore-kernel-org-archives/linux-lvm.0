@@ -1,8 +1,9 @@
-From: Alexander Lazarevich <alazarev@itg.uiuc.edu>
-Subject: re[2]: [linux-lvm] resize LV
-In-Reply-To: <20030128213855.TEPP16014.imf25bis.bellsouth.net@marsha>
-Message-ID: <Pine.LNX.4.44.0301281541550.7780-100000@zeus.itg.uiuc.edu>
+From: "Tren Blackburn" <tren@eotnetworks.com>
+Subject: RE: [linux-lvm] resize LV
+Message-ID: <PLEIKKCJENNELKBAKJPMGEACCAAA.tren@eotnetworks.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <00bd01c2c710$52576aa0$0a42a8c0@darkstar>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,47 +14,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 28 15:43:01 2003
+Date: Tue Jan 28 16:14:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-awesome links, thanks.
+Yes, you can resize a reiserfs filesystem while mounted.
 
-any word on if the 2.6 kernel will also add support for resizing ext3 
-mounted filesystems? all it talks about on the site is ext2. but ext3 is 
-just ext2 with a journal, right? so it should work for ext3 as well, 
-right?
+Regards,
 
-alex
+Tren
 
-On Tue, 28 Jan 2003, Greg Freemyer wrote:
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of Thomas Kleffel
+Sent: Tuesday, January 28, 2003 2:01 PM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] resize LV
 
->  >>  JFS can totally do it. I've been using AIX before we moved to Linux, and I
->  >>  
->  >>  did it all the time.
-> 
->  >>  There must be a way to do it on linux systems using ext3. Anyone?
-> 
->  >>  Alex
->  >>  ---                                                        ---
->  >>  Alex Lazarevich | Systems | Imaging Technology Group
->  >>  alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
->  >>  ---    
->                                                     ---
-> There is a project just for ext2 online resizing: http://sourceforge.net/projects/ext2resize/
-> 
-> The actual patches are at http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/ext2resize/ext2resize/patches/
-> 
-> And it is on the todo list for the pre-2.6.0 kernel release, so as at some point it will be in the vanilla kernel. http://kernelnewbies.org/status/latest.html
-> 
-> Greg Freemyer
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+
+Hi!
+
+> I know how to expand the LV while the LV is mounted, piece of cake
+> (lvextend -L+50GB /dev/homevg/userslv - expands userslv by 50GB). But how
+> do I expand the filesystem while it is mounted? I don't want to
+> umount the filesystem down to do this.
+>
+> The filesystem is an ext3 filesystem. Can I use resize2fs?
+
+No, afaik neither ext2 nor ext3 support resizing while being mounted.
+And if I'm not wrong JFS and ReiserFS can't do this either but XFS can.
+
+I'm using XFS for this reason and it works fine for me.
+
+Bye,
+
+Tommy
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
