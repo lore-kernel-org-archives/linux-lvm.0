@@ -1,14 +1,10 @@
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Paralell IO performance with LVM and XFS
-Message-Id: <20020118150514.GK1684@tykepenguin.com>
-References: <200201171229.g0HCTVe10111@localhost.localdomain>
-    <20020117125640.35CF032FDE6@lyta.coker.com.au>
-    <20020117152130.GG1066@tykepenguin.com>
-    <20020117173959.5BF1F35FA9E@lyta.coker.com.au>
-    <20020117175832.GL1066@tykepenguin.com>
+Subject: Re: [linux-lvm] lvcreate, vgscan problem!
+Message-Id: <20020118154628.GL1684@tykepenguin.com>
+References: <20020118141431.32744.qmail@web13005.mail.yahoo.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020117175832.GL1066@tykepenguin.com>
+In-Reply-To: <20020118141431.32744.qmail@web13005.mail.yahoo.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,19 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 09:06:01 2002
+Date: Fri Jan 18 09:47:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 17, 2002 at 05:58:32PM +0000, Patrick Caulfield wrote:
-> On Thu, Jan 17, 2002 at 06:39:58PM +0100, Russell Coker wrote:
-> > 
-> > Why are you so certain that it's the FC interface at fault?  The FC interface 
-> > should be able to do more than 60MB/s.
+On Fri, Jan 18, 2002 at 06:14:31AM -0800, Prashant Kharche wrote:
+> Hi! 
+>     I have LVM 1.0.4.rc4 package and linux kernel
+> 2.4.17. Following commands are giving me errors :
+> 
+> vgscan - > gives error message as 
+> " Invalidate :Busy Buffer ..."
+> pvcreate, vgcreate commands are working properly.. and
+> also manages to create to volume groups.. 
+> my sequence of commands is -
+> 1.vgscan 
+> 2.pvcreate
+> 3.vgcreate
+> 4.lvcreate : gives me error ..
+> 
 
-Just for the record, I can't get more tham 60M/s out of it using MD striping
-either.
+If it's a segfault and you're using RedHat then edit make.tmpl and change
+-O2 to -O0 or ... better still... download the released 1.0.1 which already 
+has this change in it.
 
 patrick
