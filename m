@@ -1,8 +1,14 @@
-Message-Id: <HLRXGO$F48953D21BD94F0D02EB1849B2098430@terra.com.br>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-From: "=?iso-8859-1?Q?Eduardo_Dias?=" <edugdias@terra.com.br>
-Subject: [linux-lvm] =?iso-8859-1?Q?Re:_[linux-lvm]_LVM_-_Multipath_/_Failover?=
+From: Christophe Saout <christophe@saout.de>
+In-Reply-To: <20030924142145.GV12384@shell.blacknet.de>
+References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
+	 <1064343664.10276.3.camel@chtephan.cs.pocnet.net>
+	 <3F717F13.1050407@silicide.dk>
+	 <1064404776.5915.9.camel@chtephan.cs.pocnet.net>
+	 <20030924142145.GV12384@shell.blacknet.de>
+Message-Id: <1064506078.31091.15.camel@chtephan.cs.pocnet.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] RFC: DM encryption target?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,39 +19,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 25 09:28:01 2003
+Date: Thu Sep 25 11:09:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: =?iso-8859-1?Q?Mauelshagen?= <Mauelshagen@Sistina.com>
-Cc: =?iso-8859-1?Q?linux-lvm?= <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-=0D=0AHi Heinz,=0D=0A=0D=0Athanks for the information.=0D=0A=0D=0AI will =
-be checking for new updates.=0D=0A=0D=0ABest regards,=0D=0A=0D=0AEduardo =
-dias=0D=0A=0D=0A  =0D=0A=0D=0A> =0D=0A> We've got a device-mapper multipa=
-th target in development and will=0D=0A> add tool support for multipathin=
-g to LVM 2.2 later this year.=0D=0A> =0D=0A> Regards,=0D=0A> Heinz -- The=
- LVM Guy --=0D=0A> =0D=0A> On Thu, Sep 25, 2003 at 08:59:05AM -0300, Edua=
-rdo Dias wrote:=0D=0A> > Hi all,=0D=0A> > =0D=0A> > I am looking for any =
-information about LVM with multipathing for failover and/or load balance,=
- but I just found information using LVM and RAID.=0D=0A> > I would like t=
-o know if is possible to configure a VG with 2 paths to access the same d=
-isk device without using RAID?=0D=0A> > I have a RH 7.3 (2.4.18) and AS 2=
-.1 (2.4.x).=0D=0A> > The sorage has been connected on a SAN enviroment.=0D=
-=0A> > =0D=0A> > Thanks a lot.=0D=0A> > =0D=0A> > Best regards,=0D=0A> > =
-=0D=0A> > Eduardo Dias=0D=0A> > =0D=0A> > =0D=0A> > _____________________=
-__________________________=0D=0A> > linux-lvm mailing list=0D=0A> > linux=
--lvm@sistina.com=0D=0A> > http://lists.sistina.com/mailman/listinfo/linux=
--lvm=0D=0A> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/=0D=0A=
-> =0D=0A> *** Software bugs are stupid.=0D=0A> Nevertheless it needs not =
-so stupid people to solve them ***=0D=0A> =0D=0A> =3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=0D=0A> =0D=0A=
-> Heinz Mauelshagen Sistina Software Inc.=0D=0A> Senior Consultant/Develo=
-per Am Sonnenhang 11=0D=0A> 56242 Marienrachdorf=0D=0A> Germany=0D=0A> Ma=
-uelshagen@Sistina.com +49 2626 141200=0D=0A> FAX 924446=0D=0A> =3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=0D=
-=0A> =0D=0A> _______________________________________________=0D=0A> linux=
--lvm mailing list=0D=0A> linux-lvm@sistina.com=0D=0A> http://lists.sistin=
-a.com/mailman/listinfo/linux-lvm=0D=0A> read the LVM HOW-TO at http://tld=
-p.org/HOWTO/LVM-HOWTO/=0D=0A> =0D=0A> 
+Am Mi, den 24.09.2003 schrieb Goetz Bock um 16:21:
+
+> > Another way to do a password change would be to not reencrypt the device
+> > but to store the symmetrical key somewhere else and encrypt it with a
+> > password hash and to just reencrypt that key with another password.
+> That would be nice, just use the first block for the key (giving you
+> 512byte keysize, and you can generate a realy strong key[*]).
+> 
+> Just in idea.
+> 
+> [*] yes, i know it's only as strong as the user's password. 
+>     Security is only as good as it's weekest link, and in the end
+>     that's always the user.
+
+I don't know, but couldn't the use of a one-sector block slow things
+down because of alignment issues? Perhaps using a 4k block would be more
+useful or storing the sector at the end of the device (like the linux
+raid info sector).
+
+I think that 512 bytes / 4096 bits should really be enough to store the
+keys.
+
+I could store the data in a simple text format, starting with a magic
+header. Something like:
+
+#CrYpT
+version = 1
+cipher = "aes"
+mode = "cbc"
+keysize = 256
+pwdsalt = "0e3a5b4c"
+pwdhash = "md5"
+pwdenc = "3des"
+key = "8e3eb...blabla..."
+hash = "23e4f"
+node = "/dev/mapper/crypt"
+offset = ...useful?
+size = ...useful?
+
+A userspace program (dmcryptsetup) could be called like
+
+dmcryptsetup /dev/hda5
+
+It would then detect this sector at the end of that device, reads it,
+asks the user for a password, combines it with the salt, hashes it (with
+the given algorithm) and uses the result to decrypt the key. Then it
+checks if the hash of the decrypted key matches the given one to be sure
+that the key is the correct one.
+
+Perhaps a public key encryption or something could also be useful (e.g.
+if you have a private key on some usb stick to mount your partition?)
+
+I'm really no crypto expert, but does this sound reasonable?
+
+Additional lightweight / compatibility options could be to use a hashed
+password directly as key, without this "key info sector" or to give the
+key directly to the setup program.
+
+Since the program would be userspace it would be linked to libcrypto
+(from openssl) to get additional needed digests/ciphers for key
+management. Does this sound ok?
+
+--
+Christophe Saout <christophe@saout.de>
+Please avoid sending me Word or PowerPoint attachments.
+See http://www.fsf.org/philosophy/no-word-attachments.html
