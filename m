@@ -1,10 +1,10 @@
 From: Tim <tim@connectlive.com>
-Subject: Re: [linux-lvm] has anyone used LVM in a HA cluster?
-Message-ID: <20020513073337.A31182@connectlive.com>
-References: <20020510072608.GA1001@tykepenguin.com> <1021071171.17474.44.camel@UberGeek> <671160000.1021077884@[192.168.200.4]> <20020511192728.GB3125@colombina.comedia.it> <3CDF8482.7010109@lausch.at>
+Subject: Re: [linux-lvm] offtopic but ...
+Message-ID: <20020513073733.B31182@connectlive.com>
+References: <064b01c1f69a$71b9c100$070414ac@Home.PIN.LU> <94260000.1020868034@[192.168.200.4]> <20020513123901.D12633@azrael.smilehouse.com> <20020513094350.GB864@tykepenguin.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3CDF8482.7010109@lausch.at>; from mla@lausch.at on Mon, May 13, 2002 at 11:16:50AM +0200
+In-Reply-To: <20020513094350.GB864@tykepenguin.com>; from caulfield@sistina.com on Mon, May 13, 2002 at 10:43:50AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 13 07:33:01 2002
+Date: Mon May 13 07:37:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> And make sure the daemons are running in the real time scheduler class.
-> There exists a state, commomly refered to as "split brain", where the 
-> nodes of a cluster "think" the other one is down, which is not the fact. 
-> Reason for this may be that the load is so high, that the heartbeat 
-> daemon is not scheduled in time to answer the requests (it happened to 
-> me with a commercial product). then both nodes mount the filesystem. 
-> Usually the inital fsck (or log replay or whatever) is enough to destroy 
-> the filesystem beyond repair. But all these things are in no way LVM 
-> specific, so it works.
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > and remember: RAID is no substitute for backups
 
-Or don't, and buy a power supply that you can control from serial, and
-do so -- STONITH, it's called -- Shoot The Other Node In The Head.  Once
-the power is off, there is no danger of fsck'ing...
+Sounds good to me... when I contacted Sistina about commercial support
+for LVM, Mr. Heinz seemed genuinely surprised that I took proper
+backups.  "But that's my job!"  Perhaps that's why I have such a job...
 
-It's a rather elegant way to solve that problem, IMHO.
+My father had his laptop stolen recently and the hard drive that was
+supposed to have been ordered for its docking station, was line-item
+vetoed by a member of the IT staff at his hospital.  Needless to say,
+said IT guy is now looking for work, and I would not hire him :-)
 
-We're going that route.
+Incremental backups are orthogonal to true high availability, but you're
+guaranteed to have low availability if you have no disaster recovery
+plans.  I wish there were a more succinct way to express that!
+
 
 -- 
     "The most valuable piece of equipment in the darkroom
