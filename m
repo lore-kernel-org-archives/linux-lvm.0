@@ -1,30 +1,31 @@
-Return-Path: <greck@unpunk.com>
-From: Greck Cannon <greck@unpunk.com>
-Date: Wed, 29 Nov 2000 16:13:26 -0500
-Message-ID: <20001129161326.A3120@unpunk.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] availability of 0.8.2, or, where to start?
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3A25CE05.4A4E0B54@wrkhors.com>
+Date: Wed, 29 Nov 2000 21:48:21 -0600
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvm 0.9 kernel build problems
+References: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com> <20001129211909.C26635@srv.t-online.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-There have been a lot of patches to 0.9 flying around, and although
-there are rawio patches for 2.2.17 in 0.8.1 there's no actual lvm patch,
-and the 2.2.16 one bails pretty badly.
+> I guess that this could be a nasty gcc flaw showing up here.
+> 
+> Anybody else who tried to patch/compile LVM 0.9 with linux-2.4.0-test10
+> on RH 7.0 who is able to help?
+> <snip>
 
-I've got several boxes I'm just now installing lvm on (to prove it works,
-both to myself and others--there are a few real applications I'd like to
-deploy it under) and having run into the same kernel oops with 0.9 that
-Tomas did (and losing the volumes, which I'm attributing to my naivete),
-I'm wondering what set of materials I should be starting with.
+tried, failed, gave up...
 
---greck
+if anyone who knows more about what problems to expect wants
+to take a shot at it i can put a copy of the 7.0 respin *
+& 0.9 on a machine here and give you a login to try it out.
 
 -- 
-to be bored, just click <a href="http://unpunk.com/~greck/">here</a>.
----------------------------
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
