@@ -1,12 +1,13 @@
-Return-Path: <thornber@btconnect.com>
-Date: Fri, 20 Jul 2001 16:34:30 +0100
-Subject: Re: [linux-lvm] 2 LVM questions
-Message-ID: <20010720163430.B538@btconnect.com>
-References: <200107201334.QAA26563@easymail.hol.gr>
+Return-Path: <allanwind@mediaone.net>
+Date: Fri, 20 Jul 2001 21:13:56 -0400
+Subject: Re: [linux-lvm] I/O error: dev 08:11, sector 0
+Message-ID: <20010720211356.A932@digit-safe.dyndns.org>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
 Content-Disposition: inline
-In-Reply-To: <200107201334.QAA26563@easymail.hol.gr>; from moka@hol.gr on Fri, Jul 20, 2001 at 04:34:15PM +0300
-From: Joe Thornber <thornber@btconnect.com>
+In-Reply-To: <20010719105215.A18915@digit-safe.dyndns.org>
+From: Allan M. Wind <allanwind@mediaone.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,43 +19,58 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jul 20, 2001 at 04:34:15PM +0300, moka@hol.gr wrote:
-> 
-> Hi there, new to LVM, so I would appreciate if you can 
-> point me to answers to these questions:
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First off, if you're new to LVM do not be tempted to try and run root
-off an LV.
+On 2001-07-19 10:52:15, Allan M. Wind wrote:
 
-> 1) I have a system with 3 hard disks, and only one of 
-> them is presently used. This contains boot, root and 
-> swap plus a logical  partition(not LVM) containing
-> /var and /home.
-> 
-> I have big database tables, so I would like
->  to create one volume group consisting of the 2
->  unused disks plus the /var. Is this possible
->  without losing what is in /var?
+> The drive started complaining before any changes were made, I suppose the=
+ cable
+> could have gone bad (length, termination, power etc should be ok), but...
 
-I suggest you create a volume group from the 2 spare disks.
+Replaced the scsi cable per suggestion and it appears to make no
+difference in that 'I/O error: dev 08:11, sector 0' is logged when
+running vgck.  No "scsi:" errors were reported with this drive.
 
-create an lv big enough for var
+> When does lvm create /dev/sdb1 (I only used /dev/sdb)?
 
-format it and copy var into it and adjust /etc/fstab accordingly
+Still curios about this one as I did not create it and cfdisk does not
+seem to recognize the partition (just reports free space).  How is
+this partition locatated in relation to the disc device?  I get the
+above error if dd if=3Dsdb1 but I would think the sector would be
+reachable via the the disc device also... perhaps there is something
+wrong with the device partition?
 
-at this point the old var can be added to the vg with vgextend,
-however I would keep it around for a while until you are sure you have
-set things up correctly.
+Does lvm use the first sector?  If not, could it just be bad data that
+is somehow read and therefor complained about and could be wiped?
+Should I create a partition and feed that to pvcreate instead of
+giving it the raw disk?
 
-> 2) The reason I need  a lot of space is that mysql
->   which I am using stores the database tables in /var.
->  Can I somehow "name" the volume group /var
->   so that mysql will not be confused?
+Any input is greatly appreciated...
 
-mount the logical volume on /var
 
-- Joe
+/Allan
+--=20
+Allan M. Wind			email: allanwind@mediaone.net
+P.O. Box 2022			finger: awind@digit-safe.dyndns.org (GPG/PGP)
+Woburn, MA 01888-0022
+USA
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7WNdTerJrYp1ydncRAmA0AJ48bUGboQc1Uiq/V9AeFvzooSBHvACfaRZ1
+UOkU9iZmIV0TVa3/mqfOSfk=
+=U4sS
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
