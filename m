@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] restoration of LVM setup?
-Message-ID: <20030312132252.A1259@sistina.com>
-References: <200303111936.24376.novafire@novafett.com>
+Subject: Re: [linux-lvm] Long-term snapshots possible?
+Message-ID: <20030312132546.B1259@sistina.com>
+References: <200303112228.39201.jhs@openenterprise.biz> <BD3FEC2C-5409-11D7-959E-0003937830E4@mac.com>
 Mime-Version: 1.0
-In-Reply-To: <200303111936.24376.novafire@novafett.com>; from novafire@novafett.com on Tue, Mar 11, 2003 at 07:36:24PM -0600
+In-Reply-To: <BD3FEC2C-5409-11D7-959E-0003937830E4@mac.com>; from dalestephenson@mac.com on Tue, Mar 11, 2003 at 04:38:03PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,31 +14,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 06:24:01 2003
+Date: Wed Mar 12 06:27:00 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Mar 11, 2003 at 07:36:24PM -0600, Nova FIre wrote:
-> 	I am thinking about setting up LVM on my file server and would like to know 
-> how easy it is to re-setup a LVM layout if I install a new distro.   A few 
-> times I have had one of the OS drives fail on me which required a fresh 
-> install of linux on a new drive.  But since all my file storage drives were 
-> just single ext3 partitions I could mount them and the file server was back 
-> up in no time with no loss of important data.  
+On Tue, Mar 11, 2003 at 04:38:03PM -0500, Dale J. Stephenson wrote:
 > 
-> 	How easy is it to do the same thing with a LVM setup?  
+> On Tuesday, March 11, 2003, at 10:28  AM, Jason Smith wrote:
+> >
+> > My problem is, this does not currently look possible without a severe
+> > performance hit.  If a volume has, for example, five active snapshots,
+> > then the deltas seem to get written five times, once per snapshot 
+> > volume.
+> >
+> I posted a patch (in January?) to implement chained snapshots with 
+> LVM1, ensuring that a delta is only copied once, at most.  The downside 
+> is that the snapshots are no longer independent, and you can't remove a 
+> recent snapshot without invalidating all the older snapshots.  But it 
+> is more efficient.
+> 
+> I didn't keep the message, but I believe chained snapshots will be 
+> implemented in LVM2 sometime this year.
 
-Presumably the new distro has LVM in, it is a question of
-scanning in the LVM metadata (vgscan) and activating the VG(s) (vgchange -ay).
+Yes they will show up in LVM2 later.
 
-Depending on the distro's upgrade support that works for basic filesystems
-on LVs (/usr, /opt, ...) as well.
+FYI: LVM1 is in feature freeze since last year.
 
 > 
+> Dale J. Stephenson
+> dalestephenson@mac.com
 > 
-> bjz
 > 
 > _______________________________________________
 > linux-lvm mailing list
