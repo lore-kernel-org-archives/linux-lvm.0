@@ -1,8 +1,7 @@
-From: Chris Harwell <charwell@digitalpulp.com>
-Subject: Re: [linux-lvm] Removing PV with disk errors from VG
-In-Reply-To: <Pine.LNX.4.44.0203131217580.31623-100000@clapper.digitalpulp.com>
-Message-Id: <Pine.LNX.4.44.0203131434210.31623-100000@clapper.digitalpulp.com>
+Message-Id: <5.1.0.14.2.20020313224659.0353c8a0@.>
+From: Ed Jackson <ej_external@bigfoot.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] help with redhat install
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,65 +12,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 13 13:37:01 2002
+Date: Wed Mar 13 22:04:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-well, simply applying the cast patch to the usertools did not work. i 
-don't need to repatch the kernel, do i? 
+I'm trying to install and use LVM on my redhat - but I'm having 
+difficulties getting started.
 
-i'm left with the same problem. when attempting a pvmove:
+I've tried to download and use the binaries at ftp.msede.com:
 
-a --test works, but the real thing fails:
+ftp://linux.msede.com/lvm/binaries/redhat/base/lvm-base-1.1-1.i386.rpm
+ftp://linux.msede.com/lvm/binaries/redhat/base/lvm-base-1.1-1.src.rpm
 
-[root@totally80s /root]# pvmove --verbose /dev/hda14 
-pvmove -- checking name of source physical volume "/dev/hda14"
-pvmove -- locking logical volume manager
-pvmove -- reading data of source physical volume from "/dev/hda14"
-pvmove -- checking volume group existence
-pvmove -- reading data of volume group "vg0" from lvmtab
-pvmove -- checking volume group consistency of "vg0"
-pvmove -- searching for source physical volume "/dev/hda14" in volume 
-group "vg0"
-pvmove -- building list of possible destination physical volumes
-pvmove -- checking volume group activity
-pvmove -- moving physical extents in active volume group "vg0"
-pvmove -- WARNING: if you lose power during the move you may need
-        to restore your LVM metadata from backup!
-pvmove -- do you want to continue? [y/n] y
-pvmove -- starting to move extents away from physical volume "/dev/hda14"
-pvmove -- checking for enough free physical extents in "vg0"
-pvmove -- /dev/hda14 [PE 0 [lvol1 [LE 310]] -> /dev/hdd9 [PE 16182] 
-[1/1202]
-pvmove -- ERROR "Invalid argument" remapping
-pvmove -- ERROR "pv_move(): LE of LV remap" moving physical extents
+and also all of the following files in:
 
-unless i need to rescan something?
+ftp://linux.msede.com//lvm/0.9.1_beta/binaries/redhat/
 
-i'd like to try the 1.0.4.-pre1.tar.bz2 version mentioned in this email
-1652 Mar  8 Denie Andriessen             (4572) Re: [linux-lvm] PV-Move fails, now at 127 Pe's...
-
-but, i can't find it....
-
-could some one kindly point me in that direction?
-
-thanks :>
-
--- 
-chris
-charwell@digitalpulp.com
+lvm-iop10-0.9.1_beta7-1.i386.rpm
+lvm-iop10-lib-0.9.1_beta7-1.i386.rpm
+lvm-iop10-man-0.9.1_beta7-1.i386.rpm
+lvm-iop10-patchgen-0.9.1_beta7-1.i386.rpm
 
 
-On Wed, 13 Mar 2002, Chris Harwell wrote:
-> 
-> i have not, but i will try it. 
-> 
-> i should try the patch mentioned here, right?
->  
-> 1478 Feb 20 Heinz J . Mauelshagen        (4355) [linux-lvm] pvmove bug with large PE numbers
-> 
-> thanks,
-> 
-> 
+When I install all of those RPMs with gnorpm, and try to run the wrapped 
+shell scripts for anything to do with LVM (like pvcreate) I get an error 
+message stating:
+
+-------------- sample message --------------
+vgcreate
+lvmiopversion -- LVM driver/module not loaded?
+
+vgcreate: /lib/lvm-iop not found.  Is lvm-iop installed?
+-----------------------------------------------
+
+And when I search the current filesystem for anything named *lvm-iop* I get 
+nothing.
+
+I have added the following to /etc/modules.conf
+
+alias block-major-58 lvm-mod
+alias char-major-109 lvm-mod
+
+
+
+
+Since that didn't seem to work - I removed those RPMs and tried to download 
+the latest from ftp://ftp.sistina.com/pub/LVM/1.0/ and unpacked all 
+files.  When I follow the instructions in the lvm-howto doc.. I run 
+LVM/1.0.1-rc4/configure script, which seems to complete fine.
+
+I then cd into PATCHES and try to run 'make' and get the following error:
+
+-------------
+make
+You haven't applied the rawio patch, please see the README
+make: *** [check_rawio] Error 1
+---------------
+
+The README file only discusses the raw_io patch if I'm using a 2.2 
+kernel.  But i'm currently using 2.4.9-31
+
+
+Can anyone please help me out with this?  I'd like to just use the RPMs if 
+possible - and the source code next if the RPMs don't work out.
+
+
+Thanks, Ed
