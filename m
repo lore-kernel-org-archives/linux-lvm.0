@@ -1,11 +1,10 @@
-Return-Path: <glenn@gecpalau.com>
-Message-ID: <3AF0986A.B913EC6E@gecpalau.com>
-Date: Thu, 03 May 2001 08:29:46 +0900
-From: Glenn Shannon <glenn@gecpalau.com>
+Return-Path: <Evan.Day@SUMMITSITE.COM>
+Message-ID: <DC5B1A21E9E7D211B0020090273AD628242BD0@summit15.corvallis.summit>
+From: "Day, Evan" <Evan.Day@SUMMITSITE.COM>
+Subject: RE: [linux-lvm] Problems compiling 2.4.4
+Date: Wed, 2 May 2001 16:54:07 -0700 
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problems compiling 2.4.4
-References: <25B9BEF7071AD511ADF000D0B74753B0018DAE@MAIL>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,18 +16,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="iso-8859-1"
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+No, RAID isn't broken.  The mddev.o file contains object files for all =
+RAID
+and LVM source files.  The offending code is in drivers/md/lvm.c =
+(IIRC), and
+will only show up if LVM is activated in the configuration.
+
+-----Original Message-----
+From: Glenn Shannon [mailto:glenn@gecpalau.com]
+Sent: Wednesday, May 02, 2001 4:30 PM
 To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] Problems compiling 2.4.4
+
 
 Lionel COTTIN wrote:
 
 > Hi,
 >
-> it seems you have activated the md driver (raid 0...5), which is not LVM
+> it seems you have activated the md driver (raid 0...5), which is not =
+LVM
 > related....
 > try to de-activate it if possible, then try again.
 >
-> I have compiled the 2.4.4 kernel with LVM 0.9.1beta7 today without any
+> I have compiled the 2.4.4 kernel with LVM 0.9.1beta7 today without =
+any
 > problem.
 >
 > Good luck ;)
@@ -36,10 +50,11 @@ Lionel COTTIN wrote:
 > Lionel
 >
 > -----Message d'origine-----
-> De : linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]De
+> De : linux-lvm-admin@sistina.com =
+[mailto:linux-lvm-admin@sistina.com]De
 > la part de Emanuel Quass
-> Envoy� : mercredi 2 mai 2001 18:28
-> � : linux-lvm@sistina.com
+> Envoy=E9 : mercredi 2 mai 2001 18:28
+> =C0 : linux-lvm@sistina.com
 > Objet : [linux-lvm] Problems compiling 2.4.4
 >
 > Hi,
@@ -64,8 +79,10 @@ Lionel COTTIN wrote:
 >         --end-group \
 >         -o vmlinux \
 > drivers/md/mddev.o: In function `__update_hardblocksize':
-> drivers/md/mddev.o(.text+0x2316): undefined reference to `get_hardblocksize'
-> drivers/md/mddev.o(.text+0x2352): undefined reference to `get_hardblocksize'
+> drivers/md/mddev.o(.text+0x2316): undefined reference to
+`get_hardblocksize'
+> drivers/md/mddev.o(.text+0x2352): undefined reference to
+`get_hardblocksize'
 > make: *** [vmlinux] Error 1
 >
 > Does anybody knwo where this comes from!
@@ -97,3 +114,8 @@ Lionel COTTIN wrote:
 So does this mean that raid is broken in 2.4.4?
 
 Glenn
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
