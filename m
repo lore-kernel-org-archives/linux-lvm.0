@@ -1,8 +1,12 @@
-Message-ID: <2902.64.34.222.41.1006072992.squirrel@webmail.tekmd.com>
-From: <gdurand@tekmd.com>
+Subject: Re: [linux-lvm] Logical Volume max-size?
+References: <20011117223754.B12510@auctionwatch.com>
+	<003801c16ffd$757c3d50$fc00a8c0@xp>
+	<20011117231120.C12510@auctionwatch.com>
+	<20011118071414.GA20041@befunk.com>
+From: Jason L Tibbitts III <tibbs@math.uh.edu>
+In-Reply-To: Benjamin Reed's message of "Sun, 18 Nov 2001 02:14:14 -0500"
+Message-ID: <ufawv0noqdv.fsf@epithumia.math.uh.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] badiane:  ERROR: can't remove volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,40 +17,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 18 02:40:02 2001
+Date: Sun Nov 18 12:59:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-group "Usrlocal" with 1 logical volume.
+>>>>> "BR" == Benjamin Reed <ranger@befunk.com> writes:
 
-I was mounting this device on a mount point and it froze.  There was no way
-for me to kill it. When I rebooted the system I recieve this error and there
-was also an interminable column of invalidate: busy buffer.
+BR> Yup, love mine.  Too bad they've stopped supporting them.  :(
 
-Here is the vgdisplay for that group:
-[03:34:13] damballah:~# vgdisplay -D Usrlocal
---- Volume group ---
-VG Name               Usrlocal
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  8
-MAX LV                255
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                255
-Cur PV                1
-Act PV                1
-VG Size               1.11 GB
-PE Size               4.00 MB
-Total PE              285
-Alloc PE / Size       150 / 600.00 MB
-Free  PE / Size       135 / 540.00 MB
-VG UUID               Lrp1LZ-tEqX-IoUu-Eysp-N7GR-A8ZL-rKf37v
+This is untrue.  They never intended to stop supporting them, and
+recently they have reversed their decision to stop selling them.
 
-I'm using 1.0.1-rc4.  There were not problems with compilation or anything.
-
-So any and all help would be appreciated.
-
-Badiane
+ - J<
