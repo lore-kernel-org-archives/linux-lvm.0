@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 25 Apr 2001 16:07:22 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
-Message-ID: <20010425160722.H1711@tykepenguin.com>
-References: <01042412353404.07748@pc-silva> <20010424104505.F9882@sistina.com> <01042413111705.07748@pc-silva> <20010425153007.G1711@tykepenguin.com> <20010425154413.A1805@66bassett.freeserve.co.uk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010425154413.A1805@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Wed, Apr 25, 2001 at 03:44:13PM +0100
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104251553.f3PFr1j7031199@webber.adilger.int>
+Subject: Re: [linux-lvm] vgscan does not found my VG, but pvscan does...
+In-Reply-To: <01042510065800.15131@workstation> "from fabian herschel at Apr
+ 25, 2001 10:06:58 am"
+Date: Wed, 25 Apr 2001 09:53:01 -0600 (MDT)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,27 +21,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Apr 25, 2001 at 03:44:13PM +0100, Joe Thornber wrote:
-> >  
-> >  #define lvm_fatal(x...) do {\
-> >    plog(LOG_FATAL, __FILE__, __LINE__, "(FATAL) " ## x); \
-> > 
+Fabian Herschel writes:
+> I tried some things last night... 
+>   - First I have saved the heder blocks (VGDA) with dd (dd if=/dev/sda1   \
+>      of=/root/HEAD_sda1 count=4596 bs=512) 
+>   - Then I called a vgcfgrestore -n sysvg /dev/sda1.
+>   - Now pvscan tells me both PVs are in the VG sysvg. 
+>   - "vgchange -ay sysvg" activated the VG and the LVs could me mounted 
 > 
-> If this is the right fix (time for me to download gcc 3.0) why haven't you
-> changed lvm_fatal and plog ?  Does this still do the right thing under older
-> versions of gcc ?
+> BUT
+>   - vgscan does NOT find the sysvg!!!
+>   - After a reboot the sysvg is not available.
+>   - Every time I have to call a vgcfgrestore :((
 
-lvm_fatal I missed! plog should not be changed because the ## is needed to get
-rid of the trailing comma in the instance that there is nothing in a.
+Can you post "pvdata -PPU <dev>" for each PV in the VG?  Also, can you
+look through "vgscan -v -d" output to see why it is not finding all of
+the PVs it wants?  This sounds like the old UUID problem.
 
-It is the right fix, it only worked on older gcc because it was lenient about
-the problem. ## gets rid of whitespace characters so what was happening was that
-the two quoted strings were abutted eg
-
-"error:""there was an error" - not legal C
-"error:" "there was an error" - is legal C
-
-I'll fix lvm_fatal; the only reason it fell through was that it does not get
-used!
-
-patrick
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
