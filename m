@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 16 Jul 2001 13:26:50 +0200
+Date: Mon, 16 Jul 2001 13:27:55 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] im getting: ERROR "vg_read_with_pv_and_lv()
-Message-ID: <20010716132650.A11625@sistina.com>
-References: <01071516130400.01262@athlon>
+Subject: Re: [linux-lvm] q: lvm with kernel 2.4.4-suse and 2.4.6
+Message-ID: <20010716132755.B11625@sistina.com>
+References: <16210000.995201807@czerny>
 Mime-Version: 1.0
-In-Reply-To: <01071516130400.01262@athlon>; from logix@t-online.de on Sun, Jul 15, 2001 at 04:13:04PM +0200
+In-Reply-To: <16210000.995201807@czerny>; from cognac@toppoint.de on Sun, Jul 15, 2001 at 02:56:47PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,42 +21,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Robin,
-
-what was you old distro/kernel version?
-What's your new distro/kernel version?
-
-On Sun, Jul 15, 2001 at 04:13:04PM +0200, Robin Wenninger wrote:
-> hi all,
-> i have a problem with my lvm. i have changed my root distribution, after 
-> doing this, my lvm doesen't work anymore. i left the lvm-partitions 
-> untouched, and after installing the kernel-patch and the lvm-tools for me new 
-> distribution, i tried a vgscan to create a new lvmtab and a lvmtab.d. but i 
-> get a errormessage:
+On Sun, Jul 15, 2001 at 02:56:47PM +0200, Andreas Czerniak wrote:
+> Dear,
 > 
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data 
-> of volume group "vg01" from physical volume(s)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating 
-> "/etc/lvmtab" and "/etc/lvmtab.d"
->  
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "vg01"
+> i use a suse 2.4.4-suse (4GB) kernel with lvm-0.9.1_beta7 on a i386.
 > 
-> i dont know what do to
+> I update the kernel to 2.4.6 with included lvm-0.9.1_beta2. I download the 
+> latest version beta7 and patch the kernel (beta7 and get_hardsect_size 
+> patch). The lvm is compiled in the kernel and now, when i boot the new 
+> kernel, lvm can't find any of lvm-partitions.
+
+In order to run Beta 7 tools you need to update your kernel as well.
+
+Please follow INSTALL and PATCHES/README instructions.
+
 > 
-> please help me
+> under 2.4.4-suse i have:
+> lvscan -- 6 active logical volumes
 > 
-> cu all
+> Is there a way to verbose/debug the lvm disk scan during the boottime ?
 > 
-> p.s. i created my lvm with the v0.8 from the lvm tools, now i try to vgscan 
-> with the v0.9, can this be the problem?
-
-It shouldn't but it likely is :-(
-
-Could you send the "dd if=/dev/X ibs=1k count=500 of=PV_N" outputs
-of all your PVs of vg01 attached compressed to me directly, please?
-
-
+> Regards,
+> 			Andreas.
+> ---------------------------------------------------------------------------
+> Andreas Czerniak                                         cognac@toppoint.de
+> Kiel - FRG            May the source be with you.       Fax: +49-431-678454
+> PGPkey: http://wwwkeys.nl.pgp.net:11371/pks/lookup?op=get&search=0xEDB224EC
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
