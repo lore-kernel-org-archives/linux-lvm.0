@@ -1,10 +1,8 @@
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Newbie VFS-lock question
-References: <20020819214738.LPNS1621.imf03bis.bellsouth.net@TAZ2>
-In-Reply-To: <20020819214738.LPNS1621.imf03bis.bellsouth.net@TAZ2>
+Message-ID: <3D6226F9.8080906@mindmatics.de>
+From: Andreas Baier <andreas.baier@mindmatics.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E17gybK-00042E-00@hermes.sistina.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Strange behaviour on a SuSE8.0 with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,77 +13,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 19 21:19:02 2002
+Date: Tue Aug 20 06:25:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Greg Freemyer <freemyer@NorcrossGroup.com>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: linux-lvm@sistina.com
 
-Gday Greg,
+Hi all,
 
-On Tue, 20 Aug 2002 07:44, Greg Freemyer wrote:
-> Hello all,
->
-> I'm new to LVM, but I want to be able to use the snapshot feature with a
-> XFS filesystem.
->
-> I tried
->
->   xfs_freeze -f
->   lvcreate --snapshot
->   xfs_freeze -u
->
-> but it was not a reliable solution, and lvcreate would often lock up until
-> I executed a xfs_freeze -u on another ssh session.
->
-> Adrian Head recommended I use the VFS-lock patch instead of xfs_freeze to
-> accomplish my goal of reliable snapshots.
->
-> Since I'm new to LVM, I'm not sure what I need to do.
->
-> I'm running SuSE 8.0 with there 2.4.18-231 kernel.  This is based on the
-> 2.4.19pre1aa1 kernel with some extra patches.  They also have a test kernel
-> based on 2.4.19aa1.
+I am posting this error since I don=B4t know what is going wrong and how =
 
-First is to issue a "lvm version" and please let me know of the results.
+severe this condition is.
 
-> Both have some level of LVM in them, but I don't know which specific
-> version.
->
-> Would either of these have the VFS-lock patch already included, or do I
-> need to get the SRPM for one of the above, get the VFS-lock patch from
-> somewhere and apply the patch?
+This is from my syslog and the message repeats a thousand times
 
-Not sure - we'll have to work it out.  The easiest way is to comment out the 
-xfs_freeze above and still run the script - if you are able to mount the 
-resulting snapshot then you most likely have the VFS-lock patch.
 
-> If so, where do I get the patch?
+  20 13:20:10 cruise kernel: lvm -- lvm_blk_ioctl: unknown command x24b
 
-From either the tarballs or from CVS.
 
-> Also, once I get an appropriate kernel, do I need to do anything to invoke
-> this feature prior to creating a snapshot, or is it automatic?
+One Filesystem on this volume was severly ruined, I had to reinstall=20
+from a backup.
 
-The VFS-lock is automatic - it deals with the writing out of pending I/O 
-before the snapshot is writen.
->
->
-> Greg Freemyer
-> Internet Engineer
-> Deployment and Integration Specialist
-> Compaq ASE - Tru64 v4, v5
-> Compaq Master ASE - SAN Architect
-> The Norcross Group
-> www.NorcrossGroup.com
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+My system is a SuSE8-0 professional with the SuSE-Kernel
+2.4.18-4GB #1 Wed Mar 27 13:57:05 UTC 2002 i686 unknown
 
--- 
-Adrian Head
+My LVM-utils are Version
+backup1:~ # vgdisplay --version
+vgdisplay: Logical Volume Manager 1.0.3
+Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
 
-(Public Key available on request.)
+
+
+--=20
+Andreas Baier
+MindMatics AG			fon:      +49 (0)89 322986-0 =09
+Frankfurter Ring 193a		fax:      +49 (0)89 9227 9897
+80807 Munich			internet: www.mindmatics.de
+Germany=20
+
+-------------------------------------------------------------------
+Besuchen Sie uns vom 1.-3.09.2002 auf der DIMA (Halle 4 Stand A24)
+und melden Sie sich schon jetzt f=FCr den Messe SMS Service an unter:
+http://www.mindmatics.de Wir freuen uns auf Ihren Besuch!
