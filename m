@@ -1,10 +1,9 @@
-From: Stephan Austermuehle <au@hcsd.de>
-Subject: Re: [linux-lvm] One VG or many?
-Message-ID: <20020606095152.A18311@babbage.hcsd.de>
-References: <F888C30C3021D411B9DA00B0D0209BE8038F9522@cvo-exchange.cvo.roguewave.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Management Tools Version.
+Message-ID: <20020606102714.A24029@sistina.com>
+References: <20020605113543.C8251@yukon.drivingbeat.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <F888C30C3021D411B9DA00B0D0209BE8038F9522@cvo-exchange.cvo.roguewave.com>; from petersp@roguewave.com on Wed, Jun 05, 2002 at 12:33:23PM -0700
+In-Reply-To: <20020605113543.C8251@yukon.drivingbeat.com>; from jleach@mail.ocis.net on Wed, Jun 05, 2002 at 11:35:43AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +14,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun  6 02:52:01 2002
+Date: Thu Jun  6 03:32:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 05, 2002 at 12:33:23PM -0700, Poul Petersen wrote:
+On Wed, Jun 05, 2002 at 11:35:43AM -0700, Jason C. Leach wrote:
+> hi,
+> 
+> If I am using Linux Kernel 2.4.18 with the 1.0.1 LVM module, do I need to be using
+> v1.0.1 of the lvm managment tools, or can I run v1.0.4?
 
-> Let me ask a slightly different question - what is the advantage to
-> creating a VG for every logical business/application unit? Or
+You can run stock kernel + 1.0.4 tools.
 
-When I setup a system I try to separate data that doesn't belong
-together as far as possible to get maximum protection from software
-and/or hardware faults. Multiple VGs increase chances to let other
-applications in different VGs continue to work if a PV in one VG
-fails. Of course if a system only has one application or if it doesn't
-make sense to split up the disks into multiple VGs then create a
-single VG only. So maybe having multiple VGs is useful on large
-servers only.
+> 
+> Thanks,
+> j.
+> 
+> 
+> 
+> -- 
+> ......................
+> ..... Jason C. Leach
+> .. 
+> 
+> Current PGP/GPG Key ID: 43AD2024 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Stephan
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
