@@ -1,10 +1,9 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Instability with 2.6, recovering (meta)data?
-Message-ID: <20031110230857.L16901@uk.sistina.com>
-References: <20031109213821.GA4425@amphibian.dyndns.org> <20031110174615.GE20777@amphibian.dyndns.org> <20031110175529.GA1844@amphibian.dyndns.org>
-Mime-Version: 1.0
+From: Benoit <benoit.peccatte@enst-bretagne.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20031110175529.GA1844@amphibian.dyndns.org>; from toad@amphibian.dyndns.org on Mon, Nov 10, 2003 at 05:55:29PM +0000
+Message-Id: <200311111144.36636.benoit.peccatte@enst-bretagne.fr>
+Subject: [linux-lvm] lvm metadata
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +14,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 10 17:10:02 2003
+Date: Tue Nov 11 07:58:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Toad <toad@amphibian.dyndns.org>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Mon, Nov 10, 2003 at 05:55:29PM +0000, Toad wrote:
->   invalid lv in extent map
+Hello,
 
-Thanks for sending me a copy of the metadata.
+I'm wondering why lvm metadata isn't stored directly into physical volumes. It 
+would then be possible to read it without having acces to any filesystem. 
+You may ask why. Then is my second question, why aren't vgscan and vgchange 
+implemented in kernel and called at boot time ? This would make us be able to 
+consider logical volumes as standard partitions and mount them easily, even 
+as /
 
-I've reproduced the problem and found the bug when LVM2
-writes out LVM1-formatted VG metadata after an LV
-has been deleted.  Working on a fix...
+Thank you,
+Benoit.
 
-Alasdair
+PS: Please cc-me with the anser as I'm not subscribed to the list.
