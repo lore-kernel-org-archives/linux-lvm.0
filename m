@@ -1,17 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA7GrBr11184
-	for <linux-lvm@redhat.com>; Sun, 7 Nov 2004 11:53:11 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA7Gr9ZW022845
-	for <linux-lvm@redhat.com>; Sun, 7 Nov 2004 11:53:09 -0500
-Date: Sun, 7 Nov 2004 17:52:58 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] 'vgscan' at boot-up
-Message-ID: <20041107165258.GG23551@percy.comedia.it>
-References: <20041106011259.GB11112@nile.gs.washington.edu>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iA7JDNbM002705
+	for <linux-lvm@redhat.com>; Sun, 7 Nov 2004 19:13:23 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CQsTb-0005QS-Sx
+	for linux-lvm@redhat.com; Sun, 07 Nov 2004 19:13:23 +0000
+Date: Sun, 7 Nov 2004 19:13:23 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Creating PV over a /dev/mapper device /
+Message-ID: <20041107191323.GE2717@agk.surrey.redhat.com>
+References: <tk9so0di0jsl44dagc1dl8at6e9ld4r1be@4ax.com>
+	<mhcso057hatf6psfl54vqqe0qtqpgrj7p8@4ax.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20041106011259.GB11112@nile.gs.washington.edu>
+In-Reply-To: <mhcso057hatf6psfl54vqqe0qtqpgrj7p8@4ax.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,34 +23,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Nov 05, 2004 at 05:12:59PM -0800, David S. wrote:
->
->I'm using lvm2-2.00.15 and device-mapper-1.00.17 on a Slackware (x86)
->system, with a 2.6.9 kernel and udev-026.  I've created a volume
->group and a logical volume without any trouble, but the file system
->I built on the volume won't mount at boot-up.  That's apparently
->because the 'vgscan' program run from the system initialization
->script does not find an volume groups.  After the system boots,
->'vgscan' works fine.  I can get the file system mounted by putting
-...
->in 'rc.local'.  Does anyone have a idea why 'vgscan' would fail
->in the sytem initialization script, but succeed in 'rc.local'?
->
-wild guess,
-udev has not yet created the block device file you require,
-try putting udevstart in the system initialization script before vgscan
+On Sun, Nov 07, 2004 at 03:36:54PM +0100, Roman Medina-Heigl Hernandez wrote:
+>   Internal error: unknown device-mapper task 16
 
-Regards,
-L.
+Suggests that your 'lvm' binary is newer than your device-mapper
+library.  If that's pure Debian, it suggests there's a package
+version dependency missing.  I'll see about changing that out-dated 
+error message.
 
+(It should be harmless though and still work OK, skipping the
+new checks.)
+
+Alasdair
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+agk@redhat.com
