@@ -1,307 +1,144 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200011291018.eATAI6K21538@webber.adilger.net>
-Subject: Re: [linux-lvm] LVM 0.9 snapshot and ext3
-In-Reply-To: <200011290701.eAT71p902650@webber.adilger.net> "from Andreas Dilger
- at Nov 29, 2000 00:01:51 am"
-Date: Wed, 29 Nov 2000 03:18:06 -0700 (MST)
-MIME-Version: 1.0
+Return-Path: <stric@ing.umu.se>
+Date: Wed, 29 Nov 2000 12:15:55 +0100
+From: Tomas Ogren <stric@ing.umu.se>
+Message-ID: <20001129121555.A20113@thelma.ing.umu.se>
+References: <20001127171113.B9485@thelma.ing.umu.se> <20001128012356.H20735@srv.t-online.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20001128012356.H20735@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Tue, Nov 28, 2000 at 01:23:56AM +0000
+Subject: [linux-lvm] Re: Some brokenness in LVM 0.9 (on 2.2.18pre23) [long mail w/ oopses and patch]
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: jweber@valinux.com, "Stephen C. Tweedie" <sct@redhat.com>, "Heinz J. Mauelshagen" <mauelshagen@sistina.com>
+Content-Type: text/plain; charset="utf-8"
+To: "Heinz J. Mauelshagen" <Heinz.Mauelshagen@t-online.de>
+Cc: mge@sistina.com, linux-lvm@sistina.com
 
-I previously wrote:
-> Basically, the oops is from an assertion (debugging check) in the ext3
-> journal code testing for a condition that _shouldn't_ happen.  In this case
-> "!buffer_locked(bh_in)", so it is getting a locked buffer (in the middle of
-> I/O) when it doesn't expect it.  The ext3 0.0.5b code (which you are using)
-> should have been able to handle basic I/O failures and such, but this
-> looks a bit unusual.
+On 28 November, 2000 - Heinz J. Mauelshagen sent me these 8.4K bytes:
+
+> > Over to LVM...
+> > 
+> > I have found some various bugs in LVM 0.9 applied to a 2.2.18pre23
+> > kernel (2.2.17 + pre23 + ide patches + rawio + lvm 0.9).
+> > We know that 2.2.18pre might not be supported, but the code we've looked
+> > at is visually broken (the code snip below) even in CVS.
+[..]
+> > With that fixed, I can add a pv into an existing vg.. but other things
+> > breaks too which I have been unable to find (but I have Oops +
+> > ksymoops).
+> > 
+> > After adding a 41G and 8G disk into one vg I tried creating an lv at 40G
+> > (lvcreate -L40G -n leklv homevg) which resulted in the following oops:
+> > 
+> <SNIP>
 > 
-> Maybe LVM isn't cleaning up the buffer properly when it runs out of space
-> in the snapshot...
+> This looks like a BUG in lvm_do_create_proc_entry_of_pv tampering with
+> the pv_name within the pv.
+> 
+> Could you try the following patch and tell me if it fixes the problem.
 
-Judging by the assertion (the buffer is still locked), and the fact that
-this flag BH_Lock is what's set when a buffer is being written, and
-cleared by wait_on_buffer(), LVM may need to be waiting on it's snapshot
-I/Os to complete if it will later destroy the snapshot...
+It only fixes the problem I fixed myself..
 
-Looking at lvm_snapshot_COW(), there are a few places it may need to wait -
-after the kiovec READ before we start the WRITE (so that the data in the
-blocks is correct)...  Since the WRITE is to blocks _outside_ where ext3
-is writing them, it may well be that the READ is still going on for the
-blocks in the ext3 (original) LV (and are locked) at the time the snapshot
-LV is full, and hence ext3 oops (speculation here).
+Disk /dev/sdb: 255 heads, 63 sectors, 1106 cylinders
+Units = cylinders of 16065 * 512 bytes
 
-> Also, I haven't really dug into LVM snapshots much,
-> but shouldn't all the remapping be done on the read-only copy?  Do LVM
-> snapshots store the modified blocks in the original LV, and the old (frozen)
-> blocks in the snapshot LV, or vice versa?  If ext3 is writing to the
-> original LV, it should never run out of space.  At most, the read-only
-> copy (which will not be ext3) should disappear - I'm not sure what LVM
-> does in this case.
+   Device Boot    Start       End    Blocks   Id  System
+/dev/sdb1             1      1106   8883913+  8e  Unknown
 
-As an aside, I had trouble reading the lvm_map() function because of the
-many nested if cases and the many uses of {rsector,rdev}_tmp, so I have
-re-done it and attached a patch.  It _should_ be 100% identical to the
-existing code operation (mostly reversing tests and early exits).  We
-now have:
+Disk /dev/hde: 16 heads, 63 sectors, 23819 cylinders
+Units = cylinders of 1008 * 512 bytes
 
-{rsector,rdev}_org = original values
-{rsector,rdev}_map = mapped values
-{rsector,rdev}_tmp = junk values only used to see if chunk already mapped
+   Device Boot    Start       End    Blocks   Id  System
+/dev/hde1             1     89355  45034888+  8e  Unknown
+tekla-ng:~# pvcreate /dev/sdb1
+pvcreate -- physical volume "/dev/sdb1" successfully created
 
-Some questionalble areas:
-- the old code saves {rsector,rdev}_tmp before lvm_snapshot_remap_block(),
-  but these are only changed if the blocks are already mapped (ret = 1, a
-  case we don't care about), so no need to keep these for anything, right?
-- calling lvm_snapshot_COW() you pass rsector_tmp and rsector_sav for the
-  org_phys_sector and org_virt_sector, yet they should always be identical
-  if we get this far (per above), since lvm_snapshot_remap_block() will not
-  have changed rsector_tmp (org_sector) if ret=0
+tekla-ng:~# pvcreate /dev/hde1
+pvcreate -- physical volume "/dev/hde1" successfully created
 
-Cheers, Andreas
-===========================================================================
+tekla-ng:~# vgcreate -s 32M homevg /dev/sdb1
+vgcreate -- INFO: maximum logical volume size is 1 Terabyte
+vgcreate -- doing automatic backup of volume group "homevg"
+vgcreate -- volume group "homevg" successfully created and activated
 
---- lvm.c.orig	Sun Nov 19 20:35:44 2000
-+++ lvm.c	Wed Nov 29 02:30:06 2000
-@@ -1601,10 +1601,10 @@
- 	ulong index;
- 	ulong pe_start;
- 	ulong size = bh->b_size >> 9;
--	ulong rsector_tmp = bh->b_blocknr * size;
--	ulong rsector_sav;
--	kdev_t rdev_tmp = bh->b_dev;
--	kdev_t rdev_sav;
-+	ulong rsector_org = bh->b_blocknr * size;
-+	ulong rsector_map;
-+	kdev_t rdev_org = bh->b_dev;
-+	kdev_t rdev_map;
- 	vg_t *vg_this = vg[VG_BLK(minor)];
- 	lv_t *lv = vg_this->lv[LV_BLK(minor)];
- 
-@@ -1619,91 +1619,66 @@
- 	if ((rw == WRITE || rw == WRITEA) &&
- 	    !(lv->lv_access & LV_WRITE)) {
- 		printk(KERN_CRIT
--		    "%s - lvm_map: ll_rw_blk write for readonly LV %s\n",
-+		       "%s - lvm_map: ll_rw_blk write for readonly LV %s\n",
- 		       lvm_name, lv->lv_name);
- 		return -1;
- 	}
- #ifdef DEBUG_MAP
- 	printk(KERN_DEBUG
--	       "%s - lvm_map minor:%d  *rdev: %02d:%02d  *rsector: %lu  "
--	       "size:%lu\n",
--	       lvm_name, minor,
--	       MAJOR(rdev_tmp),
--	       MINOR(rdev_tmp),
--	       rsector_tmp, size);
-+	       "%s - lvm_map minor:%d  *rdev: %s  *rsector: %lu  size:%lu\n",
-+	       lvm_name, minor, kdevname(rdev_org), rsector_org, size);
- #endif
- 
--	if (rsector_tmp + size > lv->lv_size) {
-+	if (rsector_org + size > lv->lv_size) {
- 		printk(KERN_ALERT
--		       "%s - lvm_map access beyond end of device; *rsector: "
--                       "%lu or size: %lu wrong for minor: %2d\n",
--                       lvm_name, rsector_tmp, size, minor);
-+		       "%s - lvm_map access beyond end of device; *rsector: %lu"
-+		       " or lv_size: %lu wrong for minor: %2d\n",
-+		       lvm_name, rsector_org, size, minor);
- 		return -1;
- 	}
--	rsector_sav = rsector_tmp;
--	rdev_sav = rdev_tmp;
- 
- lvm_second_remap:
--	/* linear mapping */
--	if (lv->lv_stripes < 2) {
-+	if (lv->lv_stripes < 2) {	/* linear mapping */
- 		/* get the index */
--		index = rsector_tmp / vg_this->pe_size;
-+		index = rsector_org / vg_this->pe_size;
- 		pe_start = lv->lv_current_pe[index].pe;
--		rsector_tmp = lv->lv_current_pe[index].pe +
--		    (rsector_tmp % vg_this->pe_size);
--		rdev_tmp = lv->lv_current_pe[index].dev;
-+		rsector_map = lv->lv_current_pe[index].pe +
-+		    (rsector_org % vg_this->pe_size);
-+		rdev_map = lv->lv_current_pe[index].dev;
- 
--#ifdef DEBUG_MAP
--		printk(KERN_DEBUG
--		       "lv_current_pe[%ld].pe: %ld  rdev: %02d:%02d  rsector:%ld\n",
--		       index,
--		       lv->lv_current_pe[index].pe,
--		       MAJOR(rdev_tmp),
--		       MINOR(rdev_tmp),
--		       rsector_tmp);
--#endif
--
--		/* striped mapping */
--	} else {
-+	} else {			/* striped mapping */
- 		ulong stripe_index;
- 		ulong stripe_length;
- 
- 		stripe_length = vg_this->pe_size * lv->lv_stripes;
--		stripe_index = (rsector_tmp % stripe_length) / lv->lv_stripesize;
--		index = rsector_tmp / stripe_length +
-+		stripe_index = (rsector_org % stripe_length) /lv->lv_stripesize;
-+		index = rsector_org / stripe_length +
- 		    (stripe_index % lv->lv_stripes) *
- 		    (lv->lv_allocated_le / lv->lv_stripes);
- 		pe_start = lv->lv_current_pe[index].pe;
--		rsector_tmp = lv->lv_current_pe[index].pe +
--		    (rsector_tmp % stripe_length) -
-+		rsector_map = lv->lv_current_pe[index].pe +
-+		    (rsector_org % stripe_length) -
- 		    (stripe_index % lv->lv_stripes) * lv->lv_stripesize -
- 		    stripe_index / lv->lv_stripes *
- 		    (lv->lv_stripes - 1) * lv->lv_stripesize;
--		rdev_tmp = lv->lv_current_pe[index].dev;
-+		rdev_map = lv->lv_current_pe[index].dev;
- 	}
- 
- #ifdef DEBUG_MAP
- 	printk(KERN_DEBUG
--	     "lv_current_pe[%ld].pe: %ld  rdev: %02d:%02d  rsector:%ld\n"
-+	       "lv_current_pe[%ld].pe: %ld  rdev: %s  rsector:%ld\n"
- 	       "stripe_length: %ld  stripe_index: %ld\n",
--	       index,
--	       lv->lv_current_pe[index].pe,
--	       MAJOR(rdev_tmp),
--	       MINOR(rdev_tmp),
--	       rsector_tmp,
--	       stripe_length,
--	       stripe_index);
-+	       index, lv->lv_current_pe[index].pe, kdevname(rdev_map),
-+	       rsector_map, stripe_length, stripe_index);
- #endif
- 
- 	/* handle physical extents on the move */
- 	if (pe_lock_req.lock == LOCK_PE) {
--		if (rdev_tmp == pe_lock_req.data.pv_dev &&
--		    rsector_tmp >= pe_lock_req.data.pv_offset &&
--		    rsector_tmp < (pe_lock_req.data.pv_offset +
-+		if (rdev_map == pe_lock_req.data.pv_dev &&
-+		    rsector_map >= pe_lock_req.data.pv_offset &&
-+		    rsector_map < (pe_lock_req.data.pv_offset +
- 				   vg_this->pe_size)) {
- 			sleep_on(&lvm_map_wait);
--			rsector_tmp = rsector_sav;
--			rdev_tmp = rdev_sav;
- 			goto lvm_second_remap;
- 		}
- 	}
-@@ -1713,54 +1688,53 @@
- 	else
- 		lv->lv_current_pe[index].reads++;
- 
--	/* snapshot volume exception handling on physical device address base */
--	if (lv->lv_access & (LV_SNAPSHOT|LV_SNAPSHOT_ORG)) {
--		/* original logical volume */
--		if (lv->lv_access & LV_SNAPSHOT_ORG) {
--			if (rw == WRITE || rw == WRITEA)
--			{
--				lv_t *lv_ptr;
--
--				/* start with first snapshot and loop thrugh all of them */
--				for (lv_ptr = lv->lv_snapshot_next;
--				     lv_ptr != NULL;
--				     lv_ptr = lv_ptr->lv_snapshot_next) {
--					/* Check for inactive snapshot */
--					if (!(lv_ptr->lv_status & LV_ACTIVE)) continue;
--					down(&lv->lv_snapshot_org->lv_snapshot_sem);
--					/* do we still have exception storage for this snapshot free? */
--					if (lv_ptr->lv_block_exception != NULL) {
--						rdev_sav = rdev_tmp;
--						rsector_sav = rsector_tmp;
--						if (!lvm_snapshot_remap_block(&rdev_tmp,
--									      &rsector_tmp,
--									      pe_start,
--									      lv_ptr)) {
--							/* create a new mapping */
--							if (!(ret = lvm_snapshot_COW(rdev_tmp,
--									       	     rsector_tmp,
--									             pe_start,
--									             rsector_sav,
--									             lv_ptr)))
--								ret = lvm_write_COW_table_block(vg_this,
--												lv_ptr);
--						}
--						rdev_tmp = rdev_sav;
--						rsector_tmp = rsector_sav;
--					}
--					up(&lv->lv_snapshot_org->lv_snapshot_sem);
--				}
--			}
--		} else {
--			/* remap snapshot logical volume */
--			down(&lv->lv_snapshot_sem);
--			if (lv->lv_block_exception != NULL)
--				lvm_snapshot_remap_block(&rdev_tmp, &rsector_tmp, pe_start, lv);
--			up(&lv->lv_snapshot_sem);
-+	/* if not a snapshot volume, no need to do any more remapping */
-+	if (!(lv->lv_access & (LV_SNAPSHOT|LV_SNAPSHOT_ORG)))
-+		goto done;
-+
-+	if (lv->lv_access & LV_SNAPSHOT_ORG) { /* original logical volume */
-+		lv_t *lv_ptr;
-+
-+		/* we don't need remapping if we aren't changing the block */
-+		if (rw != WRITE && rw != WRITEA)
-+			goto done;
-+
-+		/* start with first snapshot, loop through them all */
-+		down(&lv->lv_snapshot_org->lv_snapshot_sem);
-+		for (lv_ptr = lv->lv_snapshot_next; lv_ptr != NULL;
-+		     lv_ptr = lv_ptr->lv_snapshot_next) {
-+			unsigned long rsector_tmp = rsector_map;
-+			kdev_t rdev_tmp = rdev_map;
-+			/* is this snapshot inactive? */
-+			if (!(lv_ptr->lv_status & LV_ACTIVE))
-+				continue;
-+			/* are we out of space for this snapshot? */
-+			if (lv_ptr->lv_block_exception == NULL)
-+				continue;
-+			/* is this chunk already mapped in this snapshot? */
-+			if (lvm_snapshot_remap_block(&rdev_tmp, &rsector_tmp,
-+						     pe_start, lv_ptr))
-+				continue;
-+			/* create a new mapping for this chunk */
-+			if (!(ret = lvm_snapshot_COW(rdev_map, rsector_map,
-+						     pe_start, rsector_map,
-+						     lv_ptr)))
-+				ret = lvm_write_COW_table_block(vg_this,lv_ptr);
- 		}
-+		up(&lv->lv_snapshot_org->lv_snapshot_sem);
-+	} else {	/* snapshot logical volume */
-+		/* remap to snapshot logical volume if a copy of this chunk
-+		 * exists in the snapshot, otherwise use original chunk */
-+		down(&lv->lv_snapshot_sem);
-+		if (lv->lv_block_exception != NULL)
-+			lvm_snapshot_remap_block(&rdev_map, &rsector_map,
-+						 pe_start, lv);
-+		up(&lv->lv_snapshot_sem);
- 	}
--	bh->b_rdev = rdev_tmp;
--	bh->b_rsector = rsector_tmp;
-+
-+done:
-+	bh->b_rdev = rdev_map;
-+	bh->b_rsector = rsector_map;
- 
- 	return ret;
- } /* lvm_map() */
+tekla-ng:~# vgextend homevg /dev/hde1
+vgextend -- INFO: maximum logical volume size is 1 Terabyte
+vgextend -- doing automatic backup of volume group "homevg"
+vgextend -- volume group "homevg" successfully extended
+
+tekla-ng:~# lvcreate -L 40G -n leklv homevg
+Segmentation fault
+tekla-ng:~# vgdisplay 
+--- Volume group ---
+VG Name               homevg
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                0
+Open LV               0
+MAX LV Size           1 TB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               51.41 GB
+PE Size               32 MB
+Total PE              1645
+Alloc PE / Size       1 / 32 MB
+Free  PE / Size       1644 / 51.38 GB
+VG UUID               WCjf6F-gg8H-cNTM-695r-eTwF-cqEi-3E7Vad
+
+
+Oops as follows:
+
+Unable to handle kernel NULL pointer dereference at virtual address 000001ac
+current->tss.cr3 = 08f22000, %cr3 = 08f22000
+*pde = 00000000
+Oops: 0000
+CPU:    0
+EIP:    0010:[<c01b1331>]
+Using defaults from ksymoops -t elf32-i386 -a i386
+EFLAGS: 00010202
+eax: ca830811   ebx: c9242200   ecx: 00000002   edx: 00000000
+esi: 00000000   edi: 00000000   ebp: 00000000   esp: c8f21da4
+ds: 0018   es: 0018   ss: 0018
+Process lvcreate (pid: 232, process nr: 33, stackpage=c8f21000)
+Stack: 00000000 bfffefd8 00000000 c9242200 c922a000 00000000 00000001 c01ae7e0 
+       00000000 c0261bb8 c8f21dfc c90116c0 ffffffe7 4004fe20 bfffefd8 c8f21dfc 
+       c8f20000 c8f20000 c922a000 00000400 00000000 00000801 7665642f 6d6f682f 
+Call Trace: [<c01ae7e0>] [<c012c898>] [<c01ae24c>] [<c0107a9c>] [<c010002b>] 
+Code: 66 39 82 ac 01 00 00 75 06 ff 82 cc 01 00 00 41 8b 5c 24 18 
+
+>>EIP; c01b1331 <lvm_do_lv_create+319/794>   <=====
+Trace; c01ae7e0 <lvm_chr_ioctl+594/72c>
+Trace; c012c898 <sys_ioctl+1b0/1c8>
+Trace; c01ae24c <lvm_chr_ioctl+0/72c>
+Trace; c0107a9c <system_call+34/38>
+Trace; c010002b <startup_32+2b/11d>
+Code;  c01b1331 <lvm_do_lv_create+319/794>
+00000000 <_EIP>:
+Code;  c01b1331 <lvm_do_lv_create+319/794>   <=====
+   0:   66 39 82 ac 01 00 00      cmp    %ax,0x1ac(%edx)   <=====
+Code;  c01b1338 <lvm_do_lv_create+320/794>
+   7:   75 06                     jne    f <_EIP+0xf> c01b1340 <lvm_do_lv_create+328/794>
+Code;  c01b133a <lvm_do_lv_create+322/794>
+   9:   ff 82 cc 01 00 00         incl   0x1cc(%edx)
+Code;  c01b1340 <lvm_do_lv_create+328/794>
+   f:   41                        inc    %ecx
+Code;  c01b1341 <lvm_do_lv_create+329/794>
+  10:   8b 5c 24 18               mov    0x18(%esp,1),%ebx
+
+
+And it oopses just like in my last mail when I try to run vgchange -a n
+at >>EIP; c01b1951 <lvm_do_lv_remove+1a5/24c>   <=====
+
+The pointer 0x1ac seems to be popping up all the time.. I doubt it comes
+from a good source..
+
+/Tomas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Tomas �gren, stric@ing.umu.se, http://www.ing.umu.se/~stric/
+|- Student at Computing Science, University of Ume�
+`- Sysadmin@{cs,ing,acc}.umu.se
