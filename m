@@ -1,21 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6JGSBa14577
-	for <linux-lvm@redhat.com>; Mon, 19 Jul 2004 12:28:11 -0400
-Received: from mail.net4all.be (mxrelay.net4all.be [81.89.102.60])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6JGS5Xn002579
-	for <linux-lvm@redhat.com>; Mon, 19 Jul 2004 12:28:05 -0400
-Received: from 84-118.a2f.dsl.net4all.net (84-118.a2f.dsl.net4all.net
-	[81.89.118.84]) by mail.net4all.be (GMS
-	9.02.3180/NT8786.00.c190c459) with ESMTP id efwgycaa for
-	linux-lvm@redhat.com; Mon, 19 Jul 2004 18:27:55 +0200
-Date: Mon, 19 Jul 2004 18:26:16 +0200
-From: Pieter Jelle <lvm@statik.be>
-Message-ID: <83101265.20040719182616@mooo.be>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6JJ5Ka31878
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2004 15:05:20 -0400
+Received: from mail-new.rz.uni-ulm.de (mail-new.rz.uni-ulm.de [134.60.1.1])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i6JJ5Je1027083
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2004 15:05:19 -0400
+Received: from uiuc.edu (phyha9.physics.uiuc.edu [130.126.11.189])
+	by mail.uni-ulm.de (8.12.11/8.12.11) with ESMTP id i6JJ5Hke017645
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2004 21:05:17 +0200 (MEST)
+Message-ID: <40FC1B6C.7060302@uiuc.edu>
+Date: Mon, 19 Jul 2004 14:05:16 -0500
+From: Stephanus Fengler <fengler@uiuc.edu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] recover data after crash?
-Reply-To: Pieter Jelle <lvm@statik.be>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] lvm 1.0.3 kernel panic
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,48 +23,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi all
+Hi experts,
 
-I'm running Debian Sarge (kernel 2.4.26, i686) with 4 HD's, each 160GB,
-and I'm using the LVM.
-The first HD has a root partition, swap partition and contains the first 
-partition of the only logical volume in the LVM, while the other 3 drives 
-make up for the rest of the logical volume, like this:
+I added a new hard disk to my system and created it entirely as a new 
+logical volume. Mounting unmounting everything worked until reboot. It 
+stops now with kerel panic and lines like:
 
-/dev/hda1       root
-/dev/hda5       swap
-/dev/hda6       lvm 1
-/dev/hdc1       lvm 2
-/dev/hde1       lvm 3
-/dev/hdf1       lvm 4
+(null) -- ERROR 2 writing volume group backup file /etc/lvmtab.d/vg01.tmp
+       vg_cfgbackup.c [line271]
 
-All of these are ext3.
+vgscan -- ERROR: unable to do a backup of volume group vg01
+vgscan -- ERROR: lvm_tab_vg_remove(): unlink" removing volume group 
+"vg01"  from  "/etc/lvmtab"
 
-During a recent reboot, the machine started doing an fsck on all drives,
-and while checking the disks, the power went down. When I booted the machine
-again, it would mount both the root and swap partition, but it didn't want
-to mount the logical volume, as it seemed that /dev/hda6 was damaged. I got
-the following error in the syslog:
+...
 
-LVM version 1.0.8(17/11/2003) module loaded
-hda: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-hda: dma_intr: error=0x40 { UncorrectableError }, LBAsect=7356687,
-high=0, low=7356687, sector=7356624
-end_request; I/O error, dev 03:01 (hda), sector 7356624
+Activating volume groups
+    vgchange - no volume groups found
 
-Since that moment, I haven't succeeded in remounting the logical volume. Every
-possible vg* command gives me the same error as above, so I can't vgck or
-vgcfgrestore, or remove  physical volumes from the logical volume (hdc, hde and 
-hdf are most likely to be without errors).
+I understand the kernel panic if lvm is unable to find the volume group 
+vg01 because that's my root system. But I don't get the first error.
+I rebooted with my Redhat Installation disk: linux rescue
+and can activate the volume group by hand and mount the file systems. So 
+it looks to me everything is consistent in the filesystem.
 
-Most of the data on these disks has been backed up, but there's still a lot that
-is really quite important to me and I'd like to recover. Since the last 3 HD's have
-not been affected, the data on at least these drives should be recoverable I suppose.
-Has anyone got an idea on how to go about or who I should turn to to get my data back?
+So since I am pretty new to lvm, which output do you additional need to 
+help me?
 
-Thanks a lot in advance for any help!
+Thanks in advance,
+Stephanus
 
-Pieter Jelle
+lvmdiskscan:
+lvmdiskscan -- reading all disks / partitions (this may take a while...)
+lvmdiskscan -- /dev/hdc   [     232.89 GB] USED LVM whole disk
+lvmdiskscan -- /dev/hda1  [       2.50 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hda2  [     101.97 MB] Primary  LINUX native 
+partition [0x83]
+lvmdiskscan -- /dev/hda3  [      33.67 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hda4  [    1019.75 MB] Primary  Windows98 extended 
+partition [0x0F]
+lvmdiskscan -- /dev/hda5  [    1019.72 MB] Extended LINUX swap partition 
+[0x82]
+lvmdiskscan -- /dev/hdb   [     232.89 GB] USED LVM whole disk
+lvmdiskscan -- /dev/loop0 [      59.08 MB] free loop device
+lvmdiskscan -- 3 disks
+lvmdiskscan -- 2 whole disks
+lvmdiskscan -- 1 loop device
+lvmdiskscan -- 0 multiple devices
+lvmdiskscan -- 0 network block devices
+lvmdiskscan -- 5 partitions
+lvmdiskscan -- 2 LVM physical volume partitions
+
+pvscan:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdc"  of VG "vg01" [232.88 GB / 0 free]
+pvscan -- inactive PV "/dev/hda1" of VG "vg01" [2.50 GB / 0 free]
+pvscan -- inactive PV "/dev/hda3" of VG "vg01" [33.66 GB / 0 free]
+pvscan -- inactive PV "/dev/hdb"  of VG "vg01" [232.88 GB / 0 free]
+pvscan -- total: 4 [501.94 GB] / in use: 4 [501.94 GB] / in no VG: 0 [0]
