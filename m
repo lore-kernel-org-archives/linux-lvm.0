@@ -1,20 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3LJvYp15357
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 15:57:34 -0400
-Received: from sutr101.sanderscorner.com (sanderscorner.demon.nl
-	[212.238.245.37])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i3LJvWFe025236
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 15:57:32 -0400
-Received: from localhost (wutr101.sanderscorner.com [192.168.13.50])
-	by sutr101.sanderscorner.com (Postfix) with ESMTP id 2DFA92CFA
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 21:57:26 +0200 (CEST)
-Date: Wed, 21 Apr 2004 21:57:25 +0200
-From: Sander <mlist@sanderscorner.com>
-Message-ID: <1935187734.20040421215725@sanderscorner.com>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3LKRkp26445
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 16:27:46 -0400
+Received: from imf25aec.mail.bellsouth.net (imf25aec.mail.bellsouth.net
+	[205.152.59.73])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i3LKRjMc022482
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 16:27:46 -0400
+Received: from david.internal.NorcrossGroup.com ([68.213.19.251])
+	by imf25aec.mail.bellsouth.net
+	(InterMail vM.5.01.06.08 201-253-122-130-108-20031117) with ESMTP id
+	<20040421202740.CFUM1818.imf25aec.mail.bellsouth.net@david.internal.NorcrossGroup.com>
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 16:27:40 -0400
+Subject: Re: [linux-lvm] About Extending LVM size with Hardware Raid
+From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
+In-Reply-To: <200404211741.i3LHfNcJ001319@smtp.doruk.net.tr>
+References: <200404211741.i3LHfNcJ001319@smtp.doruk.net.tr>
+Message-Id: <1082579089.15133.3.camel@david.internal.NorcrossGroup.com>
+Mime-Version: 1.0
+Date: Wed, 21 Apr 2004 16:24:49 -0400
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] SuSe 8 Enterprise version, LVM and Oracle
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: freemyer-ml@NorcrossGroup.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,13 +30,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi,
+On Wed, 2004-04-21 at 13:38, Vahric MUHTARYAN wrote:
+> Hi Everybody ?! 
+> 
+> 	Maybe everybody know Raid5 can extend easily. I'm using hardware
+> raid and I wonder What extend utulity I have to use for system . resize or
+> LVM .. 
+> Because with hardware raid system looks all disks like a one logical disk at
+> this moment How can I intorduce extended array to system ... 
+> 
+> 
+> Thanks  
+In that case you may not want to be using LVM.
 
-For a client I intend to install SuSe 8 and Oracle with LVM. Are there
-any known issues with LVM in this combination?
+Most of the Linux filesystems have an extend capability, so that is not
+a problem.
 
-Thanks in advance.
+I don't know how to get the kernel itself to rescan the hardware for
+capacity changes.  Obviously you can reboot, but there must be a better
+way.
 
-Sander de Boer
+I would look for SAN documentation that describes the resize process. 
+The commands will likely be exactly the same from the Linux perspective.
+
+Greg
+-- 
+Greg Freemyer
