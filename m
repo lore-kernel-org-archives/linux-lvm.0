@@ -1,9 +1,9 @@
-From: Austin Gonyou <austin@coremetrics.com>
-Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-encrypted";
-	boundary="=-olY/gCTqH7KOg8cE8LQZ"
-Message-Id: <1023224082.9106.17.camel@UberGeek>
-Mime-Version: 1.0
-Subject: [linux-lvm] LVM 1.1rc2 compile error
+Message-ID: <002401c20c0b$a68dce40$0300000a@STATION>
+From: "Aslak Sommerfelt Skretting" <aslak@skretting.org>
+References: <006001c20c05$0a41cf10$0300000a@STATION> <20020604203127.GE3857@rtfm.sistina.com>
+Subject: Re: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,48 +14,91 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun  4 15:55:01 2002
+Date: Tue Jun  4 16:04:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---=-olY/gCTqH7KOg8cE8LQZ
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi again, and thanks for your quick reply!
 
-kernel 2.4.19-pre9-aa2
-LVM 1.1rc2 source, patch created applies cleanly.=20
+>----- Original Message -----
+>From: "Ben Lutgens" <blutgens@sistina.com>
+>To: <linux-lvm@sistina.com>
+>Sent: Tuesday, June 04, 2002 10:31 PM
+>Subject: Re: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
+>
+>>As far as i can understand a simple:
+>>
+>>tune2fs -j /dev/storage/space
+>
+>Yup. I've done this many times with no problems.
 
-lvm-snap.c:364: structure has no member named `blocks'
-lvm-snap.c:369: structure has no member named `blocks'
+Good, odds are in my favour :)
+
+>>
+>>would create a new journal file, and convert the filesystem to ext3. and
+a:
+>>
+>>tune2fs -i 0 /dev/storage/space
+>>
+>>would disable the fsck's that occur now and then (and takes an insane
+amount
+>>of time on a 650gb filesystem), and are no longer necessary since the
+>>filesystem is EXT3.
+>
+>Don't presume that because it's EXT3 that fscks are no longer necessary.
+>Only thing the journal guarantees is that your metadata won't become
+>corrupt (i think journal=data mount option fixes this but will affect
+>performance and not neccessarily badly). If your filesystem has been
+>shutdown cleanly many many times you could still has some loss. A fsck
+>should take care of that.
+
+So i skip this tune2fs -i 0 /dev/... option? and let the system fsck the
+discs when it wants to?
+
+If so, do i have to change any other settings anywhere to tell fsck that
+this is an ext3 filesystem now, or is that first command all I need?
+
+>
+>>and then everything would be ok? or is there more that need to be done?
+>
+>take backups.
+>take backups.
+>take backups.
+>take backups.
+
+Im a poor student, so 650gb x 2 is a little bit out of my league right now.
+But yes: point taken.
+
+>
+>:-)
+>
+>>
+>>Is this a complicated process that i might just as well avoid in order not
+>>to damage my data? Or is this pretty straightforward?
+>
+>It's pretty straight forward. Did I mention to make sure you have backups?
+>Oh and the other concern is that you want to make sure you backup before
+>you get carried away ;-)
+>
+>Can you tell my tape drive has saved my life and my job once or twice ;-)
+
+Im starting to see the picture ;) Im fortunate in the way that so far, i am
+the only one using these data :)
+
+>
+>--
+>Ben Lutgens     | http://people.sistina.com/~blutgens/
+>System Administrator  | http://www.sistina.com/
+>Sistina Software Inc. |
+>
+>"I got a wife and kids too but you don't see me out here stealing Imperial
+>Droids now do ya?"
+
+No sir, I certainly dont. :)
 
 
-The struct being used is indeed named blocks..but seems undefined or
-inaccessible. Should it be something else?
+Regards
 
---=20
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-698-7250
-email: austin@coremetrics.com
-
-"One ought never to turn one's back on a threatened danger and=20
-try to run away from it. If you do that, you will double the danger.=20
-But if you meet it promptly and without flinching, you will=20
-reduce the danger by half."
-Sir Winston Churchill
-
---=-olY/gCTqH7KOg8cE8LQZ
-Content-Type: application/pgp-encrypted; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQA8/SkS94g6ZVmFMoIRAsTeAKDxrTukS7EqultTh1wCkx0i5rE/yQCfcD9k
-M7YSZwONktt7A6lVG6eyMgs=
-=s6mu
------END PGP SIGNATURE-----
-
---=-olY/gCTqH7KOg8cE8LQZ--
+Aslak Sommerfelt Skretting
+aslak@skretting.org
