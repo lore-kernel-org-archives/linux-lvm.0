@@ -1,10 +1,8 @@
-From: "Jonathan DeHaan" <jdehaan@home.com>
-Subject: RE: [linux-lvm] PBs with LVM over linear software RAID ( and XFS ? ext2 reiserfs?)-2.4.7-2.4.4-2.4.5
-Date: Sat, 8 Sep 2001 15:13:47 -0400
-Message-ID: <000b01c1389a$62777700$0400a8c0@ci696011a.lxintn1.ky.home.com>
+Message-ID: <85063BBE668FD411944400D0B744267A888558@AUSMAIL>
+From: "Gonyou, Austin" <austin@coremetrics.com>
+Subject: RE: [linux-lvm] Will LVM stay GPL?
+Date: Sat, 8 Sep 2001 14:22:07 -0500 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <3B9A02B3.1090006@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,55 +15,57 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-I've tried my setup with linear RAID and had no problems.
-Can you send me your .config file, and I will try to build a kernel for you?
-Perhaps it is a compiler problem.
+All, 
+  LVM is currently part of Linus tree. So, while you are correct on the
+branching bit, it may in-fact not be necessary. GFS is NOT already in Linus
+tree, so that could lend some foreshadowing. I agree with all of the points
+made below though.
 
-Jonathan DeHaan
-jdehaan@home.com
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com 
 
 > -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of svetljo
-> Sent: Saturday, September 08, 2001 7:36 AM
+> From: Ralph Jennings [mailto:ralph@oro.net]
+> Sent: Thursday, September 06, 2001 8:10 PM
 > To: linux-lvm@sistina.com
-> Subject: [linux-lvm] PBs with LVM over linear software RAID ( and XFS ?
-> ext2 reiserfs?)-2.4.7-2.4.4-2.4.5
->
->
-> Hi again the mail-server in the student residence was down for 2
-> days,but here are the results
->
-> vanila 2.4.4 lvm-1.0 and vanila 2.4.5 lvm-1.0
-> ----------------------------------------------------------
-> mke2fs and mkreiserfs segfaults , nothing in 'demsg | ksymoops'
->
-> vanila 2.4.4 lvm-1.0 and vanila 2.4.5 lvm-1.0 with JFS-patch aplied
-> ------------------------------------------------------------------
-> ----------------------
-> mke2fs and mkreiserfs segfaults, nothing in 'demsg | ksymoops'
-> jfs seems to work
->
-> any ideas
->
-> probably from the beginning the name of the thread was wrong
-> it had to be more accurate
->
-> and i'm wondering whether there is smbd with working LVM over _linear
-> software RAID_
->
-> i'm going to checkout the XFS-tree and the LVM-tree
-> ( there are raid fixes from Neil Brown in 2.4.10pre5 )
-> and try again
-> and run the benchmarks over the weekend
->
->
->
+> Subject: Re: [linux-lvm] Will LVM stay GPL?
+> 
+> 
+> On Thu, Sep 06, 2001 at 01:55:02PM +0100, Joe Thornber wrote:
+> > Mike Declerck has already addressed this issue on the mailing list,
+> > but I'll reiterate.  The LVM kernel driver is GPL, the LVM userland
+> > tools are GPL.  We have no intention to change this, and even if we
+> > wanted to we couldn't since lots of people outside Sistina have
+> > contributed.
+> > 
+> > If it makes people feel happier I will accept patches that add their
+> > names to the copyright notices (assuming they've made significant
+> > contributions).
+> 
+> Besides, if they *do* decide to switch the licensing, all we have
+> to do is go back one revision and branch a new LVM project from the
+> GPL'd code.  So lets wait till that happens, then branch off an
+> OpenLVM project from the latest GPL released LVM code.  But untill
+> that happens who cares, they can't pull the carpet out from under
+> our feet untill they change the license, and untill they decide to
+> do that (if they decide to), all work is GPL'd, and they're doing a
+> great job of it.
+> 
+> IANAL of course, but I've been told that you can't make a license
+> change from GPL to anything else retroactive?!?!?
+> 
+>   -Ralph
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+> 
