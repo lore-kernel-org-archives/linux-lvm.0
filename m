@@ -1,9 +1,10 @@
-Message-ID: <001301c3d0bb$a75abfb0$0a03a8c0@brane>
-From: "Branko" <brankob@avtomatika.com>
-References: <OF35F32634.21E2585F-ON00256E0E.005C46E1-00256E0E.005C46ED@svunta.os.is> <20040101184805.GA10139@percy.comedia.it>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM2 on boot partition...
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
+Message-ID: <20040101233902.GG21031@percy.comedia.it>
+References: <OF35F32634.21E2585F-ON00256E0E.005C46E1-00256E0E.005C46ED@svunta.os.is> <20040101184805.GA10139@percy.comedia.it> <1072993242.6220.12.camel@leto.cs.pocnet.net> <20040101224529.GD21031@percy.comedia.it> <1072998611.5199.21.camel@leto.cs.pocnet.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1072998611.5199.21.camel@leto.cs.pocnet.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,53 +15,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  1 17:05:01 2004
+Date: Thu Jan  1 17:40:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: Christophe Saout <christophe@saout.de>
+Cc: linux-lvm@sistina.com
 
-I have been following this for a while, especially after my initial fiasco
-with booting off the LVM2 partition, and I still don't understand the fuss
-about the devfs system. I have noticed that one needs /proc system in order
-to be able to execute (some) programs etc, so I know I have to mount it
-while in initrd.
+On Fri, Jan 02, 2004 at 12:10:11AM +0100, Christophe Saout wrote:
+>I thought you were talking about the lvmcreate_initrd script that came
+i actually never used lvmcreate_initrd that came with LVM1,
 
-But I don't understand all the fuss with /dev . Up until now, I thought that
-it plays an interface between userland and kernel as a simulation of
-filesystem node. "device" in /dev is seen as a simple node, but accessing it
-reroutes data to device driver instead to a file.
+>Yes, I've seen redhat doing this. I personally prefer being able to
+>override it at the command line though. Having something hardcoded in
+>the initrd sounds strange to me.
+i agree with your concern, i'll try to get it from the command line
 
-So, while relevant nodes in /dev exists, everything should be fine, right ?
-I mean, regardles to how those nodes got there  ? (e.g. made manually- with
-right device major&minor numbers ofcourse). Why should it matter if kernel
-has devfs compiled in or not ? This is just an arrangement for a second or
-two in order to mount  initial LV, not a lasting arrangement, so why should
-I care about rest of the nodes and the whole devfs mechanism ?
+>I have attached the script. I parse /proc/cmdline, try to remove root=
+>using a shell function and if it actually removed something I know that
+>the rest has to be a device name. :)
+uhm, you should be wary of the case when a root= is in lilo.conf and
+luser wants to override it from cmdline. you stop a t the first
+occurrence.
 
-If,  for example, I have my initial LVM2 partition on /dev/sda3, which gets
-recognised by device mapper (vgscan) and activated, all that is needed is
-that /dev
- has to contain nodes /dev/sda3 and /dev/_my_VG_/_my_LV , right ?
+>Wasn't ash the one from busybox?
+no busybox is a dietlibc compiled shell that already has most command
+compiled in, so a single executable, and smaller than glibc.
 
-I have used devfs mechanism in initrd and manually created nodes with exact
-same outcome- kernel rebooting at the moment it dropped from initrd
-environment to "normal" root of the filesystem- if that root was on the VG.
-If I changed the root partition to "normal" partition, everything was O.K.
-...
+>With udev I just created /dev/console and some others. Doing everything
+>from the script seems unnecessary.
+i have to, because of tmpfs dev
 
-Is there some higher reason for the need for VG activation ? Couldn' this be
-done automatically by the kernel module ? Maybe one could even make
-provision for compiling-in the partition name at the "make menuconfig" time
-?
+>> My initrd detects if the root VG is on a md (softraid) device and
+>> starts it before trying to activate the VG.
+>Doesn't the kernel start them automatically? You mean, if it isn't
+>activated in the kernel? Probably a good idea.
+I strongly believe that raid autodetection should be done in user space,
+possibly with mdadm. There is a big advantage in being able to control
+what gets activated and when, besides distribution kernels use modular
+scsi drive modules, so probably autodetection won't work anyway.
+I also don't have the faintest idea if the kernel deals with stacked
+raid devices
 
-This arrangfemet sucks BIG time. It is utterly crappy explained in
-documentation and its plain awkward. Since this is not something one
-wouldn't really need, but one of the chief requirements, one would expect it
-to be thoroughly explained, not just mentioned (with a non-working example
-BTW).
+>Yes, that's also possible. But I don't really like it being readonly
+>because, as you say, mounting something on /etc or /dev is unnecessary.
+>What's the problem with ext2? The wasted memory?
+wasted memory and disk space, being able to fit kernel+initrd on a
+single floppy is a good reason
 
+>I would love making the initrd an initramfs. But that doesn't currently
+i think initramfs is not mature yet.
+L.
 
-TIA,
-
-
-Branko
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
