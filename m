@@ -1,59 +1,46 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009072329.RAA21600@lynx.turbolabs.com>
+Message-Id: <200009072344.RAA21636@lynx.turbolabs.com>
 Subject: Re: [linux-lvm] LVM support for LILO
-Date: Thu, 7 Sep 2000 17:29:17 -0600 (MDT)
-In-Reply-To: <20000908000253.A23165@srv.t-online.de> from "Heinz J. Mauelshagen" at Sep 08, 2000 12:02:53 AM
+Date: Thu, 7 Sep 2000 17:44:03 -0600 (MDT)
+In-Reply-To: <20000908004640.A24191@gruyere.muc.suse.de> from "Andi Kleen" at Sep 08, 2000 12:46:40 AM
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Mauelshagen@sistina.com
-Cc: mge@sistina.com, linux-lvm@msede.com
+To: Andi Kleen <ak@suse.de>
+Cc: Linux LVM mailing list <linux-lvm@msede.com>, isdfa@visi.com
 
-Heinz J. Mauelshagen, you write:
-> > Michael Kellen and I have been working to add LILO support for booting
-> > from a LV (i.e. have /boot be an LV, and then not have ANY DOS partitions).
-> 
-> THX, that's good news :-{)
+Andi Kleen, you write:
+> I hacked lilo, but I never tested them really because I didn't have a spare
+> HD to experiment with the changed PV format at that time (I noticed the
+> problem with the PV format only after I did that work :-()  You can have
+> the untested patches if you want.  From visual inspection the translated
+> blocks looked ok.
 
-Please see instead Andi Kleen's way of doing this (posted today).  It is
-much simpler.  Can you add his patch to 0.9?
+Yes, please send me a copy...
 
-> 	int l = int lv_get_index_by_kdev_t(vg_t * vg, kdev_t dev);
+> A full solution requires more work, e.g. at least a LV flag so that
+> LVM can urge the user to rerun lilo after a *move. Support in lilo for LVs
+> spread over multiple devices would also be nice (I just cheated by requiring
+> it all on a single device) 
 
-This will only work if you already have the vg_t.  If you only know dev, it
-is not possible to find which VG is is a part of without doing crazy things.
+Yes, this was discussed a bit in the past, but like all things Linux, it
+is better to have something now instead of later.  However, I don't even
+know if it would be possible to boot from multiple devices, since I think
+this may even be a BIOS thing to load the blocks, otherwise we would never
+be restricted to BIOS devices for boot...
 
-> Please use  int vg_status_with_pv_and_lv(char * vg_name, vg_t ** vg);
+> It just does not make much sense then, because with a DOS partition table
+> you can as well have a partition based /boot
 
-Again, it only works if you know something about the VG in advance.  I
-think these functions may be useful even if we don't need them for LILO,
-and they only take a few lines in the kernel...
-
-> So if i got you right and the use of the above mentioned library functions
-> serves your needs, the only change to the existing LVM software would be
-> in the driver to support an ioctl which returns a dev_t and block on a
-> PV given the LV dev_t and the relative block number.
-
-Andi Kleen's patch to make a fake buffer_head, and just call lvm_map() is
-even easier.
-
-> Question: how do you want to ensure that all kernel image blocks really
->           are BIOS addressable? They could for eg. live on a MD or could
->           be out of the BIOS addressable range of blocks.
-
-LILO already handles many of these issues, or at least warns about them.
-None of them are specific to LVM, so people are aware of them already
-(although LVM may hide a few of the details).  It would be documented
-that the /boot LV can reside only on 1 disk, and that it must reside on
-a BIOS addressible disk.  Most systems create /boot on the first disk
-when they are installed, and even with the number of kernels on my system
-it is only a few MB (1 or 2 PEs is enough).
-
-LILO only supports RAID1 MD devices, so the kernel will only have blocks
-on 1 device in the end, or LILO will fail.  This is easily verified by
-checking that dev is the same for all of the LV mapped blocks.
+It's still not good to have a partition-based /boot, because you can't
+migrate it, enlarge it, etc (carefully, mind you).  There are still some
+limitations for LVM based /boot, but if you have /dev/hda1 that is all
+in LVM, you are free to manage it any way you want.  The partition table
+is only a few kB...  You can make all your other disks full LVM disks
+and save a few more kB, if you are TOTALLY SURE you will never want to
+boot from any of them...
 
 Cheers, Andreas
