@@ -1,8 +1,10 @@
-From: Benjamin Scott <bscott@ntisys.com>
-Subject: Re: [linux-lvm] VG is not found !
-In-Reply-To: <3BF40960.8A037CF5@LTUtech.com>
-Message-ID: <Pine.LNX.4.33.0111152011520.24310-100000@dragon.inside.ntisys.com>
-MIME-Version: 1.0
+From: Bradley M Alexander <storm@tux.org>
+Subject: Re: [linux-lvm] LVM fails at bootup
+Message-ID: <20011116001859.D13162@sonsofthunder.yi.org>
+References: <20011112141948.P715@sonsofthunder.yi.org> <20011112123227.U1778@lynx.no> <3BF323F5.5E90F63B@divsol.com> <20011115081208.B363@btconnect.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011115081208.B363@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,30 +15,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 15 19:10:02 2001
+Date: Thu Nov 15 23:17:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: list LVM <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Thu, 15 Nov 2001, Igor Dumaire wrote:
-> I had created 2 VG and worked sometime with its. I have stopped the
-> server and at the reboot the first VG have disappeared ! The second it's
-> OK !!
+On Thu, Nov 15, 2001 at 08:12:08AM +0000, Joe Thornber wrote:
+> On Wed, Nov 14, 2001 at 07:09:57PM -0700, Jim Cromie wrote:
+> > Andreas Dilger wrote:
+> > 
+> > > On Nov 12, 2001  14:19 -0500, Bradley M Alexander wrote:
+> > > > I added the vgscan and the vgchange commands to the end of the checkroot.sh
+> > > > script (which in Debian is different from the mountfs.sh script). When the
+> > > > vgscan runs, it generates about two pages of drive errors:
+> > > >
+> > > > hdb: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error }
+> > > > hdb: read_intr: error=0x04 { DriveStatusError }
+> 
+> I've also seen this error when the kernel mistakenly thought there was
+> a partition on an IDE disk that I was using as a PV.  The vgscan command
+> then trys to look at this bogus partition and causes all these errors.
 
-  Start with these commands:
+Hmmm...The thing is that the only thing _on_ this hard drive is a PV. I
+gave the entire disk to LVM, by creating a PV on it:
 
-	lvmdiskscan
-	vgscan
-	vgdisplay
-	vgchange -ay
+pvcreate /dev/hdb
 
-  Do not just blindly try the commands if you are not familiar with them;
-read the manual pages first.  Try the '--verbose' switch with each for more
-info.
+But now that I think about it, since the lvcreate required the absolute
+path through devfs (/dev/ide/host0/bus0/target1/lun0/disc), perhaps the
+pvcreate should have been done this way as well...But why would it work
+manually and not at boot? 
 
+Let me try recreating it and try it again...
+
+Thanks Joe,
 -- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do not |
-| necessarily represent the views or policy of any other person, entity or  |
-| organization.  All information is provided without warranty of any kind.  |
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm@debian.org
+                                         |   storm@tux.org
+============================================================================
+Stay out of clouds. The silver lining everyone keeps talking
+about might be another airplane going in the opposite direction.
+Reliable sources also report that mountains have been known to hide
+out in clouds.
+					--Rules of the Air, #13
