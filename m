@@ -1,10 +1,11 @@
-Return-Path: <alec@shadowstar.net>
-Message-Id: <5.0.2.1.2.20010318030921.00a677d0@bugs.home.shadowstar.net>
-Date: Sun, 18 Mar 2001 03:22:35 -0500
-From: Alec Smith <alec@shadowstar.net>
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3AB47740.13F03E87@wrkhors.com>
+Date: Sun, 18 Mar 2001 02:52:16 -0600
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Getting LVM to startup on RedHat
-In-Reply-To: <F3871yEXUIEAOeIiGXi00001997@hotmail.com>
-Mime-Version: 1.0
+References: <5.0.2.1.2.20010318030921.00a677d0@bugs.home.shadowstar.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,72 +17,64 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Where are the LVM patches for 2.2.18? Or, will I have to run 0.9.1beta6 for 
-this? As the server I'm working with is half a continent away and will cost 
-me $100/hr for local administration, I'd like to stick with well-tested and 
-stable versions of kernel patches.
+> to touch NT with a 10' pole as a server.
 
-Personally I prefer Debian over RedHat because of the init script setup. 
-Other than RedHat, my only other options were FreeBSD or WinNT. I've never 
-quite understood FreeBSD (limited tinkering time on a test box) and refuse 
-to touch NT with a 10' pole as a server.
+closer than i'd get :-)
 
-To get LVM working, I ended up specifying noauto in the fstab. vgscan and 
-vgchange -ay don't seem to work when placed before mounting of filesystems 
-as directed in the HowTO, but will work if placed at the end of rc.sysinit. 
-On the downside, I had to hardcode the mount of the LVM filesystem.
+> To get LVM working, I ended up specifying noauto in the fstab. vgscan and
+> vgchange -ay don't seem to work when placed before mounting of filesystems
+> as directed in the HowTO, but will work if placed at the end of rc.sysinit.
+> On the downside, I had to hardcode the mount of the LVM filesystem.
 
-Alec
+bit of a hack but:
 
+	/etc/fstab has noauto for all of the lvm file systems, your
+	volume groups all have "/vg" in them (e.g., /dev/vg00) [sue
+	me, i've spent 10+ years running HP systems].
 
-At 03:59 PM 3/17/01 -0800, you wrote:
+allows:
 
->I put mine in rc.3 or whatever runlevel you boot at.  I just created a 
->small script that kicks it off and it works fine.  Maybe that would do the 
->trick for ya.
->
->And if you are compiling why not just jump up to 2.2.18.
->
->>From: Alec Smith <alec@shadowstar.net>
->>Reply-To: linux-lvm@sistina.com
->>To: <linux-lvm@sistina.com>
->>Subject: [linux-lvm] Getting LVM to startup on RedHat
->>Date: Sat, 17 Mar 2001 18:19:22 -0500 (EST)
->>
->>I've compiled kernel 2.2.17+LVM-0.9 patches on a RedHat 6.2 machine. If I
->>run
->>
->>vgscan
->>vgchange -ay
->>mount /dev/malepages/data /data
->>
->>at a command prompt, all works well. However, if I include
->>
->>/usr/sbin/vgscan
->>/usr/sbin/vgchange -ay
->>
->>(exactly as above) in my /etc/rc.d/rc.sysinit the commands don't seem to
->>be run at reboot. After the reboot, I can run the vgchange and mount
->>commands without first doing a vgscan without incident.
->>
->>Any ideas what could be going on?
->>
->>Thanks,
->>Alec
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->
->_________________________________________________________________
->Get your FREE download of MSN Explorer at http://explorer.msn.com
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
+	/usr/bin/perl -n -a -e 'print STDERR qx(mount $F[0]) if m{/vg}'
+/etc/fstab;
+
+i.e., reading every line in /etc/fstab with out printing it (-n) 
+and splitting all the fields on whitespace (-a) print the result
+of "mount" for the first autosplit field ($F[0]) tp stderr if the
+line we just read contains "/vg" (m{/vg}) for all the lines in
+/etc/fstab.
+
+add:
+
+	BEGIN{$|=1; print qx(/sbin/vgchange -a -y)} 
+
+i.e., flush lines on output and run the vgchange beforehand,
+and you get a one-liner to activate LVM and mount the volumes.
+
+which looks like:
+
+/usr/bin/perl -n -a \
+-e '
+	BEGIN
+	{
+		$| = 1;
+		print qx( /sbin/vgchange -a -y );
+	}
+
+	print qx( mount $F[0] if m{/vg} )
+' /dev/fstab;
+
+if you want it prettified.
+
+cute thing is that you can re-run this as useful since both
+the vgchange and mount will fail harmlessly for already active
+or mounted systems.
+
+enjoi.
+
+-- 
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
