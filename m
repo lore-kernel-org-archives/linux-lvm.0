@@ -1,10 +1,10 @@
-From: jon+lvm@silicide.dk
-Subject: Re: [linux-lvm] DM encryption target?
-Message-ID: <20030924145220.GA848@gw.silicide.dk>
-References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com> <1064343664.10276.3.camel@chtephan.cs.pocnet.net> <3F717F13.1050407@silicide.dk> <1064404776.5915.9.camel@chtephan.cs.pocnet.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1064404776.5915.9.camel@chtephan.cs.pocnet.net>
+From: Gingia <gingiabios@email.it>
+Subject: Re: [linux-lvm] vgcfgrestore and bootstrap
+References: <200309231754.20420.gingiabios@email.it> <200309241414.47229.gingiabios@email.it> <20030924144818.D2618@sistina.com>
+In-Reply-To: <20030924144818.D2618@sistina.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200309251127.33318.gingiabios@email.it>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 24 09:53:01 2003
+Date: Thu Sep 25 04:36:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Wed, Sep 24, 2003 at 01:59:36PM +0200, Christophe Saout wrote:
-> Am Mi, 2003-09-24 um 13.25 schrieb Jon Bendtsen:
+Alle 14:48, mercoled=EC 24 settembre 2003, Heinz J . Mauelshagen ha scrit=
+to:
+> > vgscan -- "/etc/lvmtab" and  "7etc/lvmtab.d" successfully created
+> > vgscan -- WARNING: this programm doe not do a VGDA backup of your gro=
+up
+>
+> Can you send the "vgscan -d" output of this case to me directly, please
+> (mge@sistina.com) ?
+> Probably some i2o devices scanning flaw.
+I tried to make a backup with=20
+vgcfgbackup command but it failed and the output was :
+vgcfgbackup -- ERROR: VGDA in kernel and lvmtab are NOT consistent; pleas=
+e run=20
+vgscan
 
-[cut]
- 
-> Another way to do a password change would be to not reencrypt the device
-> but to store the symmetrical key somewhere else and encrypt it with a
-> password hash and to just reencrypt that key with another password.
-
-this is what we use in our approach. But it's not quite ready
-yet. Hint... store the key atleast 2 places...
-
-
-
-JonB
+Can i solve this?
+How i can solve the problem of bootstrap? If possible?
