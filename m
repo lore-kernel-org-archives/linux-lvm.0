@@ -1,15 +1,11 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3668Pj14033
-	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 02:08:25 -0400
-Received: from hotmail.com (bay16-dav33.bay16.hotmail.com [65.54.186.213])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3668N5D022712
-	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 02:08:23 -0400
-From: "sachin" <sachindurge@hotmail.com>
-Date: Tue, 6 Apr 2004 11:44:14 -0700
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <BAY16-DAV33hotjCjWE00010d11@hotmail.com>
-Subject: [linux-lvm] LV no of reads and writes
+Date: Tue, 6 Apr 2004 08:07:35 +0100
+From: thornber@redhat.com
+Message-ID: <20040406070735.GA25046@nimzo>
+References: <20040405212919.GA12443@osdl.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20040405212919.GA12443@osdl.org>
+Subject: [linux-lvm] Re: LVM2 stripe performance
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,18 +17,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Dave Olien <dmo@osdl.org>
+Cc: thornber@redhat.com, linux-lvm@redhat.com
 
-hi
-I have  tried one lvm command  I want some clarification  
-lvdisplay  -v  /dev/vg/lv1
-It dispalys the information along with reads and writes
-What that actually means
-1. Is it  no read operations ,I think is not
-2 Is it no of blocks read  
-3 Is it data read in terms of sector
+On Mon, Apr 05, 2004 at 02:29:19PM -0700, Dave Olien wrote:
+> 
+> I'm running tiobench on an LVM2 striped logical volume.  I'm  comparing
+> the LVM2 striping performance with a similar striping configuration
+> using a hardware RAID controller.
+> 
+> With hardware RAID, I'm able to get about 66 megabytes per second on
+> sequential writes, and 52 megabytes per second with random writes.
+> 
+> With LVM2, I can get only 23 megabytes per second with either random
+> or sequential writes.
+> 
+> Read performance on LVM is about 10% less than with hardware RAID.
+> e.g. with 48 threads, hardware RAID sequental reads are 105 megabytes
+> per second, LVM2 RAID sequential reads are 95 megabytes per second.
+> 
+> This is using an ext2 file system, mounted with noatime.
+> 
+> I think I recall seeing email with similar problems to this on this
+> mail list.  If I recall, the cause had to do with ordering of requests
+> submitted to disk.
+> 
+> Has there been any work to address this?
 
-Is it possible to get the no of io operations on the logical volume 
-I am using LVM1
-Thanks
-Sachin.
+Try the latest -mm kernel
+
+- Joe
