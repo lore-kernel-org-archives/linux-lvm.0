@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] cant mount LV via partition/filesystem labels
-Message-ID: <20021107181852.D8382@sistina.com>
+From: "Kirby C. Bohling" <kbohling@birddog.com>
+In-Reply-To: <3DCA84BB.9050404@jumpline.com>
 References: <3DCA84BB.9050404@jumpline.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1036691083.13804.59.camel@hawk.birddog.com>
 Mime-Version: 1.0
-In-Reply-To: <3DCA84BB.9050404@jumpline.com>; from ben@jumpline.com on Thu, Nov 07, 2002 at 10:20:27AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,13 +15,13 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  7 11:24:01 2002
+Date: Thu Nov  7 11:57:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: ben@jumpline.com
 
-On Thu, Nov 07, 2002 at 10:20:27AM -0500, Ben Snyder wrote:
+On Thu, 2002-11-07 at 09:20, Ben Snyder wrote:
 > Here's what I've got:
 > 
 > RH7.2, kernel  2.4.9-34enterprise
@@ -48,20 +49,31 @@ On Thu, Nov 07, 2002 at 10:20:27AM -0500, Ben Snyder wrote:
 > filesystem characteristics/operations that I've missed because of 
 > cranius-up-rectus (head up a$$).
 > 
+
+I'm the guy sent in the patch to add LVM label support to mount and
+e2fsprogs.  I'm not sure RedHat 7.2 includes the proper version of those
+tools at all.  I've had problems were built by RedHat.
+
+The label stuff in mount and e2fsprogs reads /etc/partitions and
+searches all entries in that file for labels.  It doesn't search
+anything else.  LVM didn't (probably still doesn't) show up in etc
+partitions so label support fails.  It should search in the /proc files
+that have the LVM stuff to find them, and search for those.  That's what
+I added to the code, but I haven't seen it work since I sent in the
+patch.
+
+It's not hard to modify the code, I didn't bother figuring out why the
+redhat tools fails.  It wasn't terribly important to me.  If you want to
+look at it I will.  If nothing else I can send you a patch that you can
+use to rebuild your source RPM with.
+
+	Thanks,
+		Kirby
+
+
+
+
 > Thanks in advance for feedback/suggestions.
-
-Ben,
-say your logical volume path is /dev/vg00/lv01 and that LV
-holds your ext2 filesystem.
-
-tune2fs -L Whatever /dev/vg00/lv01 # labels it with volume name "Whatever"
-
-If you have an entry in /etc/fstab like:
-/dev/vg00/lv01	/mnt	ext2	defaults	1 1
-
-running "mount -L Whatever" should do the trick.
-Presumably /mnt exists and the volume group is active.
-
 > 
 > 
 > _______________________________________________
@@ -69,21 +81,6 @@ Presumably /mnt exists and the volume group is active.
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
+> 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Real Programmers view electronic multimedia files with a hex editor.
