@@ -1,9 +1,13 @@
-Return-Path: <root@srv.sistina.com>
-Date: Fri, 11 May 2001 16:30:21 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010511163021.C18341@sistina.com>
-Mime-Version: 1.0
-Subject: [linux-lvm] LVM 1.0 release decision #2
+Return-Path: <tandem@dnmi.no>
+Subject: Re: [linux-lvm] SCSI/LVM problems after power outage
+References: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit>
+	<20010509093510.B4918@sistina.com> <3AFB9CB4.DEFEC342@wrkhors.com>
+	<wveltwffhe.fsf@freeze.oslo.dnmi.no> <wxxsnic56bq.fsf@fjorir.ifi.uio.no>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 11 May 2001 16:48:20 +0200
+In-Reply-To: Terje Kvernes's message of "11 May 2001 16:05:45 +0200"
+Message-ID: <wvd79gdjrf.fsf@freeze.oslo.dnmi.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +22,21 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: mge@sistina.com
 
-Sorry folks, have messed the linux-kernel address in the CC :-(
-Please don't do group replies!
+>>>>> "Terje" == Terje Kvernes <terjekv@math.uio.no> writes:
 
-Have send my original mail to l-k now.
+    Terje> Adrian Phillips <a.phillips@dnmi.no> writes:
+    >> I might have misunderstood but : dd if=<lv> of=<tape>
+
+    Terje>   doesn't dd fail if it reaches a single back block?
+
+Oh, try dd if=<lv> of=<tape> conv=noerror
+
+Sincerely,
+
+Adrian Phillips
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
