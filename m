@@ -1,8 +1,7 @@
-Message-ID: <1038564713.3de73d693ed14@herzo.net>
-From: Sebastian Wormser <sibbi@sibbi.com>
+Message-ID: <C65F89D1AC0BB54B865127151A24DA780BAD64C4@nbexchm2.aliant.icn>
+From: "Shaw, Marco" <Marco.Shaw@aliant.ca>
+Subject: RE: [linux-lvm] Recovering from a disaster...
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM2 - pvmove timeframe
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +12,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 29 04:12:02 2002
+Date: Fri Nov 29 09:11:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hi,
+>> A typical scnerario could be LVM sitting on top of MD, and have to 
+>> recover from some kind of disaster.  I wonder if the RedHat 8.0 rescue 
+>> option has all the modules/tools to repair such a disaster.
 
-we are in the process of deploying two production servers with
-LVM managing SAN-devices and I am wondering whether to use
-LVM1 or LVM2.
+> They don't support LVM out of the box, so this is unlikely.
 
-I was reading on the list that the only feature missing from LVM2
-is pvmove. Do you have an ETA for this? Will LVM2 have multipathing/
-path failover capabilities?
+Actually, RH now supports LVM as of 8.0.  An lsmod when in 'rescue mode' also shows lvm_mod.
 
-TIA.
+The whole disaster with software RAID and LVM mixed in, isn't easy, but a friend and I figured it out yesterday.  Not knowing the system has a mix of both before troubleshooting could be (actually is) disastrous!
 
-cu,
-
-  Sebastian
--- 
-You can observe a lot by just watching.
+Marco
