@@ -1,8 +1,9 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009220424.e8M4O9x09461@webber.adilger.net>
-Subject: Re: [linux-lvm] what lvm shoudl I be using for 2.2.x?
-Date: Thu, 21 Sep 2000 22:24:08 -0600 (MDT)
-MIME-Version: 1.0
+Date: Sat, 23 Sep 2000 00:58:01 +0200
+From: Jan Niehusmann <jan@gondor.com>
+Subject: [linux-lvm] e2fsadm and fstab
+Message-ID: <20000923005801.A2164@gondor.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
@@ -10,31 +11,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Linux LVM mailing list <linux-lvm@msede.com>
 
-Jeremy, you write:
-> Ahh, only one thing I noticed is that lvm doesn't merge with Steven
-> Tweedie's sard patches which are available from:
-> 
-> ftp://ftp.uk.linux.org/pub/linux/sct/fs/profiling/
-> 
-> Has anyone gotten these patches to merge?
 
-I put up new patches (vs. my lvm patch and RAID 0.90) at:
+Is the following behaviour wanted?
 
-ftp://ftp.stelias.com/pub/adilger/sard-2.2.17lvm.diff
+If a filesystem is listed in /etc/fstab, but currently not mounted, e2fsadm
+checks for the availability of ext2online, and if it doesn't find it, it 
+aborts with an error message. The check is in e2fsadm.c, lines 275ff.
 
-Note that they really haven't been tested at all (just compiling now).
-Just the patch was updated to apply on a newer MD and added (basic)
-LVM support.
+IMHO it doesn't matter if a fs is mentioned in fstab. If it's not mounted,
+we can resize it without ext2online.
 
-It would probably good to fix the LVM support so that the accounting
-information for LVM also included the underlying PV, but the LVM
-tools already keep some of the same data as sard, on a per PP basis.
-Not the latency info though, only the number of I/Os.
-
-Let me know how it looks.
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Jan
