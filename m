@@ -1,11 +1,11 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Sun, 7 Jan 2001 19:47:53 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] any way to locate vg's on, say, /etc?
-Message-ID: <20010107194753.A749@66bassett.freeserve.co.uk>
-References: <3A57B052.FA0DFBB2@wrkhors.com>
-Mime-Version: 1.0
-In-Reply-To: <3A57B052.FA0DFBB2@wrkhors.com>; from lembark@wrkhors.com on Sat, Jan 06, 2001 at 05:54:58PM -0600
+Return-Path: <bcorsello@usa.net>
+Date: Sun, 07 Jan 2001 14:53:31 -0500
+From: Brad Corsello <bcorsello@usa.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Return-Path: bcorsello@usa.net
+Message-ID: <014b64953190711NYCSMTP1@nyc.rr.com>
+Subject: [linux-lvm] Possible bug in vgcfgrestore?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,11 +18,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-bugs@sistina.com
 
-> currently have a choice:  LVM or devfs.  since devfs essentially
+I am trying to restore the config of a volume group with two physical volumes.
+ I ran vgcfgrestore against each of the two PVs, which reported back that the
+VG had been restored successfully.  However, when I run a vgscan, it reports
+back that there are no volume groups.  Looking at the debug output of vgscan,
+it appears that the uuid-list on each of the PVs has only one uuid in it, and
+not two (as I think there should be?).  Specifically, the uuid-list on each PV
+contains its own uuid, and not the uuid of the other PV.  (I verified that
+fact by examining the first 10k of each of the PVs, and it's true -- after the
+restore, each PV has only its own uuid in the uuid-list.)
+Thus, vg_check_exist blows up with the following error:
+<22> vg_check_exist -- before vg->pv_cur check with vg->pv_cur: 2  pv_count: 1
+<22> vg_check_exist -- LEAVING with ret: -347 [LVM_EVG_CHECK_EXIST_PV_COUNT]
 
-LVM 0.9 supports devfs.
+The debug outputs are too voluminous to post to the list, so I'll just post
+links to the relevant files:
 
-- Joe
+Output of vgscan -d			 -> http://home.nyc.rr.com/bcorsello/lvm/vgscandebug
+Output of vgcfgrestore -d 	->
+http://home.nyc.rr.com/bcorsello/lvm/lvmrestoredebug
+Output of vgcfgrestore -ll	 ->  http://home.nyc.rr.com/bcorsello/lvm/vgconfig
+First 10k of /dev/hdb1 			-> http://home.nyc.rr.com/bcorsello/lvm/hdb1
+First 10k of /dev/hdb2			->  http://home.nyc.rr.com/bcorsello/lvm/hdb2
+
+Is there any way I can restore the VG config successfully?  Any help would be
+appreciated.
+
+(BTW, the patch I applied to lvm.c is the one Jan posted to fix the kernel
+oops on vgextend.  But the vgconfig file I'm trying to restore is from before
+I vgextended with the patched module, so I think it's not relevant to the
+present problem.)
