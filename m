@@ -1,10 +1,15 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] LVM on 2.4.17
-Message-Id: <20020118090008.GB1684@tykepenguin.com>
-References: <Pine.LNX.4.33.0201180011090.26948-100000@greebo.foobarhouse.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] (no subject)
+Message-Id: <20020118112816.A32516@sistina.com>
+References: <200201170225.g0H2P4805926@kebi.com>
+    <20020117115050.GD1066@tykepenguin.com>
+    <20020117151328.A26850@sistina.com>
+    <20020117151936.GF1066@tykepenguin.com>
+    <20020117180111.A27850@sistina.com>
+    <20020117172116.GJ1066@tykepenguin.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0201180011090.26948-100000@greebo.foobarhouse.com>
+In-Reply-To: <20020117172116.GJ1066@tykepenguin.com>; from
+    caulfield@sistina.com on Thu, Jan 17, 2002 at 05:21:16PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +20,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 03:01:01 2002
+Date: Fri Jan 18 04:31:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 18, 2002 at 12:12:54AM +0000, James Pattinson wrote:
-> Hi!
+On Thu, Jan 17, 2002 at 05:21:16PM +0000, Patrick Caulfield wrote:
+> On Thu, Jan 17, 2002 at 06:01:11PM +0100, Heinz J . Mauelshagen wrote:
+> > On Thu, Jan 17, 2002 at 03:19:36PM +0000, Patrick Caulfield wrote:
+> > > On Thu, Jan 17, 2002 at 03:13:28PM +0100, Heinz J . Mauelshagen wrote:
+> > > > 
+> > > > Patrick,
+> > > > 
+> > > > could you proove what Chris pointed out in this thread:
+> > > > 
+> > > > <begin chris input>
+> > > > All of the lvm10 utilities segfault on sparc. The root cause of the 
+> > > > problem is that the shared library is compiled with both -fPIC and -pg. On 
+> > > > sparc, this results in gcc outputting:
+> > > > 
+> > > > cc1: warning: -fPIC and profiling conflict: disabling -fPIC
+> > > > 
+> > > > This can be seen in the buildd logs:
+> > > > http://buildd.debian.org/fetch.php?&pkg=lvm10&ver=1.0.1release-1&arch=sparc&stamp=1007871077&file=log&as=raw
+> > > > 
+> > > > Removing the -pg from the CFLAGS definition on line 73 of make.tmpl fixed 
+> > > > the problem -- all LVM utilities worked fine.
+> > > > <end chris input>
+> > > 
+> > > I can confirm that this is true on my box.
+> > > 
+> > > I removed -pg from make.tmpl.in some time ago (probably in response to a
+> > > similar bug report!) but not early enough to reach 1.0.1.
+> > 
+> > Could you tweak configure for 1.0.2 then, please?
 > 
-> I've been neglecting my systems and LVM... currently trying to upgrade
-> from 2.4.16 to 2.4.17. 2.4.17 seems to include LVM 1.0.1-rc4 but it fails
-> when I compile:
+> It's already gone. I see no reason to generate profiling code on users machines. 
+
+True.
+
+Thanks,
+Heinz
+
 > 
-> lvm-snap.c: In function `lvm_snapshot_COW':
-> lvm-snap.c:380: `phys_start' undeclared (first use in this function)
-> lvm-snap.c:380: (Each undeclared identifier is reported only once
-> lvm-snap.c:380: for each function it appears in.)
+> patrick
 > 
-> Do I need to apply additional patches?
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-You shouldn't do, no. I've built several dozen 2.4.17 kernels (no, really!)
-without this error.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Check your kernel source is really clean. If you've patched it up from an
-earlier one then look out for failures. 2.4.17 builds cleanly either as it
-stands or with patches from LVM 1.0.1
-
-patrick
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
