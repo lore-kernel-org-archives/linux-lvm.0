@@ -1,48 +1,52 @@
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200002231030.LAA25224@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Linux2.3.47 problems
-In-Reply-To: <20000222212528.19158.qmail@www0l.netaddress.usa.net> from Eric Gandt at "Feb 22, 2000 10:27:53 pm"
-Date: Wed, 23 Feb 2000 11:30:07 +0100 (MET)
+Message-Id: <200002231218.NAA13040@u9etz.ez-darmstadt.telekom.de>
+Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.8final driver included in 2.3.47
+Date: Wed, 23 Feb 2000 13:18:53 +0100 (MET)
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Eric Gandt <egandt@netscape.net>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com, linux-kernel@vger.rutgers.edu, linux-fsdevel@vger.rutgers.edu
+Cc: mge@ez-darmstadt.telekom.de
 
 
-A couple of changes got lost during Linus's merge into the stock kernel.
+Logical Volume Driver 0.8final has been included in Linux 2.3.47.
 
-Will send him a patch today.
+Thanks to Linus and to hundreds on the Web who helped to achive this!
+
+
+Nevertheless some problems compiling 2.3.47 with LVM enabled arised
+because some parts of the patch got lost during inclusion 8.{(
+
+You'll find the necessary patch to fix this at
+<ftp://linux.msede.com/lvm/v0.8final/patch-2.3.47-lvm-2>.
+
+The version 0.8final of the user space library and tools can be found at
+<ftp://linux.msede.com/lvm/v0.8final/lvm_0.8final.tar.gz> as well.
+
+New features are:
+   - support for multiple snapshot logical volumes per original
+     logical volume to for eg. enable consistent online backups
+     or recovery in filesystems and database systems.
+
+   - sizes for eg. with lvcreate can be entered in fractions now
+
+   - all errors now in plain text rather than numeric
+
+   - variable VGDA backup history depth in /etc/lvmconf supported
+     by environment variable LVM_VG_MAX_BACKUPS (see vgcreate(8) and others)
+
+   - automatic backup can be suppressed by environment variable
+     LVM_AUTOBACKUP (see vgcreate(8) and others) during bulk creates.
+     (the possibility to use option "-A n" with all
+      changing commands still exists)
+
+   - enhanced debug tracing (Option -d of the tools) to show call depth
 
 
 Heinz
-
-
-> I can not get LVM to complie in 2.3.47, when I try I get:
-> 
-> lvm.c:313: `blkdev_close' undeclared here (not in a function)
-> lvm.c:313: initializer element for `lvm_blk_fops.release' is not constant
-> lvm.c:318: `block_fsync' undeclared here (not in a function)
-> lvm.c:318: initializer element for `lvm_blk_fops.fsync' is not constant
-> lvm.c:318: initializer element for `lvm_blk_fops' is not constant
-> lvm.c:318: initializer element for `lvm_blk_fops' is not constant
-> /usr/src/linux/include/linux/blk.h:454: warning: `end_request' defined but not
-> used
-> 
-> There does not look to be anything wrong with the code at first glance, has
-> anyone else encountered this problem? if so is there away around it?
-> 
-> ERIC
-> egandt@netscape.net
-> 
-> ____________________________________________________________________
-> Get your own FREE, personal Netscape WebMail account today at http://webmail.netscape.com.
-> 
-
-
 -- 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
