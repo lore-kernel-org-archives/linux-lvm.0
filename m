@@ -1,12 +1,11 @@
-Subject: Re: [linux-lvm] cannot extend lv
-Message-ID: <20030118165806.GA13554@mitethe.eudyptes>
-References: <3E293C00.30406@informatik.uni-erlangen.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] Kernel PANIC after partition change on RedHat 8.0
+Message-ID: <39470000.1042925295@[192.168.200.4]>
+In-Reply-To: <Pine.LNX.4.44.0301172310100.24491-100000@keoma.mobiltel.bg>
+References: <Pine.LNX.4.44.0301172310100.24491-100000@keoma.mobiltel.bg>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <3E293C00.30406@informatik.uni-erlangen.de>
-From: idsfa@visi.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,54 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan 18 10:57:01 2003
+Date: Sat Jan 18 15:20:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I have installed Red Hat Linux 8.0. I've made volume group (rootvg)
+> from /dev/md1 (which is raid1). I've put my /boot on /dev/md0.
+>
+> As you already have noticed - I have two disks.
+> After installation I'm making new partiotion /dev/sdb5 i.e.
+> And if I change its to type to 8e after reboot kernel panics.
+> If I change type of this partition to something different - the system
+> boots fine.
+>
+> I cannot understand where can be the problem.
+> I have to say that I made the same configuration on this machine and
+> everything was ok. But now I cannot see any difference.
 
-On Sat, Jan 18, 2003 at 11:35:28AM +0000,
-Rainer.Lay@informatik.uni-erlangen.de wrote:
+sdb5 => sub-partition. Are you accidentally carving out
+a piece of an existing PV? For example, if you had partitioned
+the disk into /dev/sdb[1234] when it was built with sdb4 taking
+up most of the device as 8e (i.e., for LVM), then adding sdb5
+w/in the area of sdb4 would certianly break things -- and scramble
+your LV's during pvcreate on the new partition.
 
-> I have a vg (data) with four drives /dev/sd[b-e]1
-> I created a 2 stripes lv (data1) with sd[bc]1
-                ^^^^^^^
 
-You cannot extend striped lvs onto new pvs. Even on the
-same physical hardware.  Once you have striped it, you are
-tied to the pvs used.
-
-If you think about it, this makes sense, as otherwise you
-have some stripes containing more data than others.  In fact,
-as soon as the smallest pv is full, you will not be able to
-extend the lv, even if there is room in the other pvs.
-
-If you want to have the filesystem striped over all the disks, you
-will need to create a new lv which is striped across them all,
-transfer the data to it, delete the old lv and then extend the
-new one.
-
-Backups highly recommended.
-
-Michael
-
---=20
-Think Locally, Act Globally: =20
-"It's cold in here ... I'd better release a few million tons of CFCs!"
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQE+KYedzCEwIKHWl1kRAiiqAJ9YGnQCAomRKFzjo8eskq/J/QOskQCggOD2
-diNfrUHGOL3RQK4aWodQbXQ=
-=bcGO
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 773 252 1080
