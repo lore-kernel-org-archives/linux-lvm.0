@@ -1,10 +1,8 @@
-Content-Class: urn:content-classes:message
+Message-ID: <3F79B046000182D2@mail-2.tiscali.it>
+From: "Giuseppe Bongiorni" <pbongiorni@tiscali.it>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_NextPartTM-000-13ea6f82-2eba-449b-88e1-d054c9b66e8a"
-Message-ID: <04A97E7F466FB943B678F01D98C443AC09B0AB@BRSERVER039.inet.tam.com.br>
-From: <higino.oliveira@tam.com.br>
-Subject: [linux-lvm] Re: LVM on Redhat 7.1
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] boot failure with LVM/SuSE 8.1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,84 +13,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 13 08:07:04 2003
+Date: Mon Oct 13 10:14:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Hi all
 
-------=_NextPartTM-000-13ea6f82-2eba-449b-88e1-d054c9b66e8a
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C38F57.4193015E"
+probably my is an older question, but I am not able to make working the
+following configuration.
 
-------_=_NextPart_001_01C38F57.4193015E
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
+I have 750 Mb of IDE HDD space and 2 primary partition already defined (f=
+or
+Windows ad Compaq diags). I have partitioned the above space as 
+follows:
 
 
-I would like if LVM can be install in Red Hat Linux release Advanced =
-Server 2.1AS/i686
+50 Mb for a Primary partition mounted as /boot and formatted with Ext2;
 
-I installed the package lvm-1.0.3-4.i386.rpm but when I input insmod
-the command return: lvm-mod: no module by that name found or when I =
-input modprobe lvm-mod the command return: modprobe: Can't locate module =
-lvm-mod
+700 Mb used for an Extended partition used as follows:
 
-Can you help me ?
+150 Mb for " swap "
+550 Mb dedicated to an LVM volume mounted as " / " and formatted with Rei=
+serFS.
 
-Thanks,
+The idea is to expand this LVM volume with a big external USB disk as a
+next step.
 
-Higino.
+The installation proceed until YAST2 try to write boot manager.
+At this point it receive an error that explain "LILO is not able to write=
+
+boot sector".
+The installation abends at this point.
+
+I have tried to use the "trick" described in the SuSE LVM whitepaper but
+without positive results.
+
+Can any of You help me to solve this problem?
+
+Thanks in advance
+
+Best regards
+
+Giuseppe BONGiORNI
+
+pbongiorni@tiscali.it
 
 
-------_=_NextPart_001_01C38F57.4193015E
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Diso-8859-1">
-<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
-6.0.6396.0">
-<TITLE>Re: LVM on Redhat 7.1</TITLE>
-</HEAD>
-<BODY>
-<!-- Converted from text/rtf format -->
-<BR>
-<BR>
 
-<P><FONT SIZE=3D2 FACE=3D"Arial">I would like if LVM can be install in =
-Red Hat Linux release Advanced Server 2.1AS/i686</FONT>
-</P>
 
-<P><FONT SIZE=3D2 FACE=3D"Arial">I installed the =
-package<B></B></FONT><B> <FONT SIZE=3D2 =
-FACE=3D"r_ansi">lvm-1.0.3-4.i386.rpm</FONT></B> <FONT SIZE=3D2 =
-FACE=3D"Arial">but when I input insmod</FONT>
 
-<BR><FONT SIZE=3D2 FACE=3D"Arial">the command return:</FONT><B> <FONT =
-SIZE=3D2 FACE=3D"Arial">lvm-mod: no module by that name found</FONT></B> =
-<FONT SIZE=3D2 FACE=3D"Arial">or when I input modprobe lvm-mod the =
-command return:</FONT> <FONT SIZE=3D2 FACE=3D"r_ansi">modprobe: Can't =
-locate module lvm-mod</FONT></P>
 
-<P><FONT SIZE=3D2 FACE=3D"Arial">Can you help me ?</FONT>
-</P>
 
-<P><FONT SIZE=3D2 FACE=3D"Arial">Thanks,</FONT>
-</P>
 
-<P><FONT SIZE=3D2 FACE=3D"Arial">Higino</FONT><FONT SIZE=3D2 =
-FACE=3D"r_ansi">.</FONT>
-</P>
 
-</BODY>
-</HTML>
-------_=_NextPart_001_01C38F57.4193015E--
 
-------=_NextPartTM-000-13ea6f82-2eba-449b-88e1-d054c9b66e8a--
+__________________________________________________________________
+Tiscali ADSL e' SENZA CANONE, paghi solo quello che consumi!
+Abbonati subito, Gratis per te un anno di Supermail e tanti servizi in pi=
+u'!
+http://point.tiscali.it/adsl/index.shtml
