@@ -1,9 +1,10 @@
-Message-ID: <3DA47C6E.5090901@free.fr>
-From: Emmanuel Varagnat <emmanuel.varagnat@free.fr>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Disk crash , LVM and ext2... (bis)
-References: <3D90EBDA.5070605@free.fr> <20020925071843.GI1291@tykepenguin.com> <3D91674F.3040601@free.fr> <20020925075113.GK1291@tykepenguin.com> <3D98D656.2070904@free.fr> <3D99B6CC.30102@free.fr> <20021004123352.A9010@sistina.com>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20021009184445.GA25733@fib011235813.fsnet.co.uk>
+References: <20021009181259.GA25050@fib011235813.fsnet.co.uk> <3DA47606.546A558E@digeo.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3DA47606.546A558E@digeo.com>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submission
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,27 +15,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct  9 13:59:22 2002
+Date: Wed Oct  9 14:23:22 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Andrew Morton <akpm@digeo.com>
+Cc: Linux Mailing List <linux-kernel@vger.kernel.org>, linux-lvm@sistina.com
 
-Heinz J . Mauelshagen wrote:
-> We don't support zeroing of the data in the error case so far and do return
-> an io error to the application. Later we plan to as an option.
+On Wed, Oct 09, 2002 at 11:31:34AM -0700, Andrew Morton wrote:
+> Joe Thornber wrote:
+> > 
+> > The 2.5 port of device-mapper is available from:
+> > 
+> >    bk://device-mapper.bkbits.net/2.5-stable
 > 
-> So today you get a read error if the block is not available and the data
-> is not zeroed in memory. No need to (ab)use LV_BMAP.
-> 
-> If your application needs to distinguish those cases anyways, you would want
-> to stay with 'io error returned'.
+> Is it available in a form which everyone can access?
 
-Ok it works as I expected.
-The error was coming from the fact that _I_ zeroed the partition to let 
-the LVM utilties think that the PV isn't here. So the data returned was 
-effectively coming from the partition.
-Instead I delete the partition, reboot and retest.
+http://people.sistina.com/~thornber/dm_2002-10-09.tar.bz2
 
-Thanks for taking time to answer.
+> What I really wanted to know is "are you still using kiobufs"?
 
--=( manu )=-
+What I just submitted doesn't include the snapshot target as yet, I
+want people to focus on the dm core rather than getting side tracked
+by one of the targets.
+
+> If so, what do we need to do to not do that?
+
+For the last few months all snapshot io has been going through kcopyd,
+*except* the snapshot metadata update (which did use a kiobuf).  I
+have a patch which sends the metadata through kcopyd in the works, so
+when I submit the snapshot target it will not use a kiobuf - I'm no
+fan of kiobufs.
+
+- Joe
