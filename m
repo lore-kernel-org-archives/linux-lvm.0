@@ -1,10 +1,10 @@
-From: Jeff Layton <jeffrey.b.layton@lmco.com>
-Subject: Re: [linux-lvm] shit on the ml [was: fwd: hey its me again]
-In-reply-to: <1060430558.8588.25.camel@pc>
-Message-id: <3F37843E.4030104@lmco.com>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-References: <1060430558.8588.25.camel@pc>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] actual vg size
+Message-ID: <20030811124214.GB3234@tykepenguin.com>
+References: <200308071036.h77AaSpu016477@ns1.globcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200308071036.h77AaSpu016477@ns1.globcom.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 11 07:42:01 2003
+Date: Mon Aug 11 07:43:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I third that motion!
+On Thu, Aug 07, 2003 at 01:36:28PM +0300, Mkn wrote:
+>    hi
+>    i intend to work with lvm10 (debian package) but one thing stops me.
+>    when i create a vg i get INFO:: maximum size is 255GB
+>    all my hdds exceed this. Does the next version of lvm have big vg size or
+>    i have to make 5 vg out of 7 disks ?
+>    thanks in advance
 
->On Sat, 2003-08-09 at 03:00, Steffen Koch wrote:
->  
->
->>On Sat, 9 Aug 2003 02:29:51 +0900, bpac-proj@erols.com wrote:
->>    
->>
->>>holy pork bun! - you have to see this crazy site, I saved $3000...
->>>      
->>>
->>can we now please close the ml for public posts???
->>PLEASE!!!
->>    
->>
->
->Just in case the hold-up on doing this is for consensus, I agree.  This
->list needs to be closed to subscribers only, ASAP.
->
->b.
->  
->
+That sounds like quite an old version of the package, the default PE size was
+increased some time ago.
 
+You can override this with "vgcreate -s 32M" which will allow up to 2TB in a VG.
 -- 
-Dr. Jeff Layton
-Chart Monkey - Aerodynamics and CFD
-Lockheed-Martin Aeronautical Company - Marietta
+
+patrick
