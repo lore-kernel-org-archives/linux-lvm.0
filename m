@@ -1,10 +1,10 @@
-Message-ID: <3BE42711.EA8A6D72@carolina.rr.com>
-From: Jason Edgecombe <jedgecombe@carolina.rr.com>
-MIME-Version: 1.0
-Subject: Re: [OT] List concerns and dieas (was Re: [linux-lvm] next step 
- ofrecovering from tha vgchange problem)
-References: <Pine.LNX.4.33.0111031253200.16058-100000@www.scotty.co.at>
-Content-Transfer-Encoding: 7bit
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [OT] List concerns and dieas (was Re: [linux-lvm] next step ofrecovering from tha vgchange problem)
+Message-ID: <20011103211628.A12727@uk.sistina.com>
+References: <Pine.LNX.4.33.0111031253200.16058-100000@www.scotty.co.at> <3BE42711.EA8A6D72@carolina.rr.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3BE42711.EA8A6D72@carolina.rr.com>; from jedgecombe@carolina.rr.com on Sat, Nov 03, 2001 at 12:19:13PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,16 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov  3 11:19:02 2001
+Date: Sat Nov  3 15:15:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> I strongly advocate reply-to munging on this list. Period
+From the messages in this thread, there is clearly no consensus 
+for changing this setting on this particular list.  
 
-as do I,
+End of discussion, please.
 
-  Replying to the list should be the default so that everyone can benfit
-from an answer t a question posted on the list.
+However, if someone who feels strongly about this has the time
+to get a patch into mailman that makes this configurable at user 
+level instead of list level, please go ahead!  
 
-Jason Edgecombe
+I think a lot of people would be grateful!
+
+Alasdair
+-- 
+agk@uk.sistina.com
