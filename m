@@ -1,8 +1,10 @@
-From: Jims <theman@chaj.com>
-In-Reply-To: <E1711Hq-00019X-00@hermes.sistina.com>
-Message-Id: <Pine.LNX.4.33.0204261221060.302-100000@x.firesites.com>
+From: Vincent AE Scott <linux.lvm@codex.net>
+Subject: Re: [linux-lvm] Howto Make LVM Work With NBD/ENBD?
+Message-Id: <20020426172506.GG28959@majestic.codex.net>
+References: <00e301c1e7b2$4f501d90$f42cb69d@cerc.wvu.edu>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: LVM Woes
+Content-Disposition: inline
+In-Reply-To: <00e301c1e7b2$4f501d90$f42cb69d@cerc.wvu.edu>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,55 +15,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 26 11:23:01 2002
+Date: Fri Apr 26 12:24:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: mauelshagen@sistina.com
 
-Thanks for the suggestion. When I try it, here is what I get...
+Ning Ye(nye@csee.wvu.edu)@Fri, Apr 19, 2002 at 10:55:45AM -0400:
+> Hi!,
+> 
+>     I want to make them work together, which makes me crazy these days.  
+> 
+>     I can initialize the disks and partitions exported by ENBD, but when trying to create a volume group on it, vgcreate fails.
+> # vgcreate my_volume /dev/ndb
+> vgcreate -- ERROR "pv_read(): read" reading physical volumes
+>     After examine the debug output, it looks to me lvm trying to enumerate all physical disks present to the system.  These disks include SCSI disks(sda...), IDE disks(hda...) and loops(loop0...).  However, the LVM will not recognize the exported disk as a physical one.
+> 
+>     Did any one ever make it work before?  I would like to know before I am trying to look into the code.  Combining these two great packages would be wonderful.  But how?  Help needed.  Thanks.
 
-/sbin/vgcfgrestore -n world -o /dev/sdd1 /dev/hda2
-vgcfgrestore -- ERROR "vg_write(): open" storing VGDA of "world" on disks
 
-Am I supposed to do something to the new disk other than creating an LVM
-partition on it ?
+hmm, YMMV, but have you tried using the long devfs names instead of the
+older/original short names?
 
-Jims
+i.e.
 
-On Fri, 26 Apr 2002 linux-lvm-request@sistina.com wrote:
+/dev/ide/host0/bus0/target0/lun0/part1
 
-> Date: Thu, 25 Apr 2002 12:05:18 +0200
-> From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Lvm woes
-> Reply-To: linux-lvm@sistina.com
->
->
-> Jims,
->
-> you hit one of the tradeofs of LVM1: binary metadata backup formats.
-> Therefore we have text formated ones in LVM2.
->
-> "Well, that doesn't help me", I hear you say.
->
-> So the help story goes:
->
-> - stay with your 0.9 version
->
-> - comment out the "if ( pv_get_size ( pv_name, NULL) != vg.pv[index]->pv_size) "
->   which should be starting arround line 321 in vgcfgrestore.c
->
-> - generate and install the LVM software
->
-> - retry to vgcfgrestore to hdd1 as you did before
->
-> - vgscan;vgchange -ay world
->
-> - upgrade to LVM 1.0.3 is recommended afterwards
->
-> Please tell me, how that goes.
->
-> Regards,
-> Heinz    -- The LVM Guy --
+instead of
+
+/dev/hda1
+
+this sounds like a problem i encountered recently...
+
+
+-- 
+PGP key:  http://codex.net/pgp/pgp.asc
+
+ Cannot find REALITY.SYS. Universe halted.
