@@ -1,8 +1,10 @@
-Message-ID: <1034915787.3daf8fcb66a42@mail.dornquast.com>
-From: Nathan Dornquast <Nathan@Aberon.Net>
+Message-ID: <3DAFB713.A2E7FAB3@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
+Subject: Re: [linux-lvm] creating a LVM ontop of a cryptated (ppdd) loop back 
+ device
+References: <3DAEDEE5.4540B954@silicide.dk> <20021017211217.GB4861@localhost>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,49 +15,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 23:36:01 2002
+Date: Fri Oct 18 02:24:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Thx, Goetz.
+Jos=E9 Luis Domingo L=F3pez wrote:
+> =
 
-Very good suggestions.  They mostly point out what I suspected, that I will not 
-have much luck getting the built in Promise RAID chips to work with LVM.
+> On Thursday, 17 October 2002, at 18:01:41 +0200,
+> Jon Bendtsen wrote:
+> =
 
-I am actually running without the PROMISE PDC202{46|62|65|67|68|69|70} 
-support.  Some of the How-to's I've come accross say to include it, but when I 
-do, I can not boot off the ATA-Raid.
+> > I'm trying to cryptate my filesystems, and be able to take snapshots =
+of
+> > them.
+> > I cannot get a snapshot of a cryptated LV to work (maybe because it i=
+s
+> > readonly)
+> >
+> I haven't tried, but wouldn't it be possible to just take a snapshots
+> from a LV containing an encrypted filesystem, and then loop-mount it
+> (assuming encrypted via the loop device), give the password, and then
+> backup ?
 
-I spent some time with the Promise drivers... they are released for RH 7.2/3, I 
-haven't been successful at getting them to install on my Debian 3.0 box.  
+maybe, but i cant losetup it, possibly because snapshots are readonly.
+Further more i would like noninteraktive backup's. So, i _WANT_ to put
+LVM ontop of a encrypted filesystem.
 
-I have tried other Promise Controllers (Fasttrak 100 & TX200) - but cannot get 
-them to post - disabling built in Promise PDC202675 RAID or switching it to 
-UDMA doesn't help.
+ =
 
-Tried the Highpoint 404 raid card - not impressed.  Plus, they do not have 
-RAID1 support in the kernel - 2.4.19 - only 0.
+> I think from the loop-aes type of filesystem encryption point of view.
+> But as I have said previously, I haven't tried if this works, although
+> if my understanding of all these things is OK, should work.
 
-3ware 7500-4 is on order. ;)  Sadly it adds $260 to box.  
+i havent tried with loop-aes either, but with loop-ppdd, and ppdd didnt
+work.
 
-Goetz, I am interested to hear your MD RAID 1/5 - particularly how it handles 
-powering off a drive while operating.  Does your box spit, sputter and puke, or 
-can you hotswap?  How about with the 3ware card?  Which 3ware card are you 
-working with?
 
-I know this RAID info is off-topic.  Feel free to email me directly @ 
-nathan@aberon.net.  
+> I will try to test this setup tomorrow when I get to work :-)
 
-Many thanks,
+cool, me too :)
 
--Nate
 
-..........
-Nathan Dornquast
-Aberon Technologies, Inc.
-2205 California St NE - Suite 003
-Minneapolis, MN 55418
-w.612.789.9446
-c.612.386.6519
-..........
+
+
+JonB
