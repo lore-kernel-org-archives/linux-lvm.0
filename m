@@ -1,9 +1,9 @@
-From: "Steve Wray" <steve.wray@the.net.nz>
-Subject: RE: [linux-lvm] LVM performance
-Message-ID: <NBBBKLKHMJHIJLHOGAOJIEADJCAA.steve.wray@the.net.nz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20011123002611.N5393@sonsofthunder.yi.org>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] vgcfgrestore error !
+Message-ID: <20011123143532.C4829@sistina.com>
+References: <3BF8E5DE.ABAEB618@LTUtech.com> <20011119125632.A12388@sistina.com> <3BF8F8BF.3FE1491C@LTUtech.com> <20011119151746.A13040@sistina.com> <3BF923C3.A2060FDD@LTUtech.com> <20011120121947.B18529@sistina.com> <3BFA4184.43FC7D35@LTUtech.com>
+Mime-Version: 1.0
+In-Reply-To: <3BFA4184.43FC7D35@LTUtech.com>; from Igor.Dumaire@LTUtech.com on Tue, Nov 20, 2001 at 12:41:56PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +14,207 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 23 06:33:02 2001
+Date: Fri Nov 23 07:41:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: mge@sistina.com
 
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Bradley M Alexander
-> On Fri, Nov 23, 2001 at 05:32:07PM +1300, Steve Wray wrote:
-> >
-> > thats dead right; ide can't simultaneously write to the master and slave
-> > on the same controller. Also, the pair of drives uses the controller
-> > circuitry
-> > of the master, so it always pays to make the master the most modern one.
->
-> Since both controllers have a drive master and a cd slave, this shouldn't
-> matter, per se.
+Igor,
 
-yeah but I thought I'd mention it, for completeness
-:)
+pvdata output looks fine.
+
+Could you send me the metadata for further investigation in private
+email, please?
+
+You can retrieve 3 files with the metadata of your PVs by "
+for d in /dev/hd[cef]1
+do
+   dd if=$d of=`basename $d`.lvm bs=1k count=512
+done
+
+Regards,
+Heinz    -- The LVM Guy --
 
 
-> > > Can anyone give me any ideas as to why the machine gets
-> beaten about so
-> > > much during IO operations and more importantly how can I minimize the
-> > > impact.
-> >
-> > Dunno, if it was because the fs is striped across those drives then
-> > splitting them across controllers would have made it go away.
->
-> Nothing should be striped across the drives. I have two PVs and made two
-> VGs, one on each drive. The way it works out, the data I am
-> mastering is on
+On Tue, Nov 20, 2001 at 12:41:56PM +0100, Igor Dumaire wrote:
+> 
+> > Strange.
+> > Please provide "vgdisplay -v;pvscan;lvmdiskscan" and "pvdata -PP" for all
+> > PVs belonging to the missing VG.
+> > 
+> # vgdisplay -v
+> --- Volume group ---
+> VG Name               lvm2
+> VG Access             read/write
+> VG Status             available/resizable
+> VG #                  0
+> MAX LV                255
+> Cur LV                1
+> Open LV               1
+> MAX LV Size           255.99 GB
+> Max PV                255
+> Cur PV                3
+> Act PV                3
+> VG Size               171.79 GB
+> PE Size               4.00 MB
+> Total PE              43977
+> Alloc PE / Size       43776 / 171.00 GB
+> Free  PE / Size       201 / 804.00 MB
+> VG UUID               Jp3gDv-ib7D-p5te-FFLZ-lNjI-5brK-fzjEM6
+> 
+> --- Logical volume ---
+> LV Name                /dev/lvm2/Backup
+> VG Name                lvm2
+> LV Write Access        read/write
+> LV Status              available
+> LV #                   1
+> # open                 1
+> LV Size                171.00 GB
+> Current LE             43776
+> Allocated LE           43776
+> Allocation             next free
+> Read ahead sectors     120
+> Block device           58:0
+> 
+> 
+> --- Physical volumes ---
+> PV Name (#)           /dev/hdd1 (3)
+> PV Status             available / allocatable
+> Total PE / Free PE    14659 / 201
+> 
+> PV Name (#)           /dev/hdg1 (1)
+> PV Status             available / allocatable
+> Total PE / Free PE    14659 / 0
+> 
+> PV Name (#)           /dev/hdh1 (2)
+> PV Status             available / allocatable
+> Total PE / Free PE    14659 / 0
+> 
+> 
+> 
+> # pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdc1"  is associated to an unknown VG (run vgscan)
+> pvscan -- ACTIVE   PV "/dev/hdd1" of VG "lvm2" [57.26 GB / 804.00 MB free]
+> pvscan -- inactive PV "/dev/hde1"  is associated to an unknown VG (run vgscan)
+> pvscan -- inactive PV "/dev/hdf1"  is associated to an unknown VG (run vgscan)
+> pvscan -- ACTIVE   PV "/dev/hdg1" of VG "lvm2" [57.26 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdh1" of VG "lvm2" [57.26 GB / 0 free]
+> pvscan -- total: 6 [343.62 GB] / in use: 6 [343.62 GB] / in no VG: 0 [0]
+> 
+> # man pvdata
+> # pvdata -PP /dev/hde1
+> --- Physical volume ---
+> PV Name               /dev/hde1
+> VG Name               lvm1
+> PV Size               57.27 GB / NOT usable 8.11 MB [LVM: 181.00 KB]
+> PV#                   1
+> PV Status             NOT available
+> Allocatable           yes (but full)
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              14659
+> Free PE               0
+> Allocated PE          14659
+> PV UUID               kbvz5r-hJlN-WU9Q-7xwj-alJ6-8UfO-jopMFc
+> pv_dev                   0:33
+> system_id                courcelles.ltutech.com1004974292
+> pv_on_disk.base          0
+> pv_on_disk.size          1024
+> vg_on_disk.base          4096
+> vg_on_disk.size          4096
+> pv_uuidlist_on_disk.base 8192
+> pv_uuidlist_on_disk.size 32768
+> lv_on_disk.base          40960
+> lv_on_disk.size          83968
+> pe_on_disk.base          126976
+> pe_on_disk.size          4259840
+> 
+> 
+> 
+> # pvdata -PP /dev/hdf1
+> --- Physical volume ---
+> PV Name               /dev/hdf1
+> VG Name               lvm1
+> PV Size               57.27 GB / NOT usable 8.11 MB [LVM: 181.00 KB]
+> PV#                   2
+> PV Status             NOT available
+> Allocatable           yes (but full)
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              14659
+> Free PE               0
+> Allocated PE          14659
+> PV UUID               weQY7t-7II0-7t74-hVI5-Dj8Y-CV0O-8CyGqh
+> pv_dev                   0:33
+> system_id                courcelles.ltutech.com1004974293
+> pv_on_disk.base          0
+> pv_on_disk.size          1024
+> vg_on_disk.base          4096
+> vg_on_disk.size          4096
+> pv_uuidlist_on_disk.base 8192
+> pv_uuidlist_on_disk.size 32768
+> lv_on_disk.base          40960
+> lv_on_disk.size          83968
+> pe_on_disk.base          126976
+> pe_on_disk.size          4259840
+>  
+>  
+>  
+> # pvdata -PP /dev/hdc1
+> --- Physical volume ---
+> PV Name               /dev/hdc1
+> VG Name               lvm1
+> PV Size               57.27 GB / NOT usable 8.11 MB [LVM: 181.00 KB]
+> PV#                   3
+> PV Status             available
+> Allocatable           yes
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              14659
+> Free PE               201
+> Allocated PE          14458
+> PV UUID               BFvA7F-ccvF-e5r1-3QH7-02JG-dH4r-AOYF64
+> pv_dev                   0:22
+> system_id                courcelles.ltutech.com1004974291
+> pv_on_disk.base          0
+> pv_on_disk.size          1024
+> vg_on_disk.base          4096
+> vg_on_disk.size          4096
+> pv_uuidlist_on_disk.base 8192
+> pv_uuidlist_on_disk.size 32768
+> lv_on_disk.base          40960
+> lv_on_disk.size          83968
+> pe_on_disk.base          126976
+> pe_on_disk.size          4259840
+> 
+> 
+> Thanks a lot for your help. I have lost (can't acces) a lot of data !
+> Best regards.
+> 
+> -- 
+> Igor Dumaire
+> 
+> www.LTUtech.com - Making Sense of Visual Content
+> ------------------------------------------------
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-yup you have to tell it to stripe, as I recall. Never used that feature
-tho.
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-> > I've seen no performance problems at all and really thrashed an LVM-root
-> > machine for test purposes while working on a movie. It took it well,
-> > performance-wise. (reliability is another issue; never go LVM-root...
-> > but thats just my 2 cents, YMMV).
->
-> Yeah, I wasn't brave enough to go all out...And with the problems I was
-> having, I'm glad I made that decision. :)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-I think the worst part is the lack of backward compatibility
-at some stages of LVM. With root on LVM it can be a bit dangerous
-to upgrade! Or at least it was...
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
