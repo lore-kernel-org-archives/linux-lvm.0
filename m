@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Fri, 27 Apr 2001 10:02:17 +0000
+Date: Fri, 27 Apr 2001 10:47:02 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010427100217.A15939@sistina.com>
-References: <Pine.LNX.4.21.0104261723430.32275-100000@oxygen.sistina.com>
+Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
+Message-ID: <20010427104702.A16169@sistina.com>
+References: <3AE6D919.1B3F4A3@in.tum.de> <200104251626.f3PGQf2M031290@webber.adilger.int>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.21.0104261723430.32275-100000@oxygen.sistina.com>; from harringt@sistina.com on Thu, Apr 26, 2001 at 05:24:13PM -0500
-Subject: [linux-lvm] Re: [lvm] Question (fwd)
+In-Reply-To: <200104251626.f3PGQf2M031290@webber.adilger.int>; from adilger@turbolinux.com on Wed, Apr 25, 2001 at 10:26:41AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,22 +19,44 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: vcheung@vspeednet.com
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-> ---------- Forwarded message ----------
-> Date: Thu, 26 Apr 2001 15:13:23 -0700
-> From: Victor Cheung <vcheung@vspeednet.com>
-> To: webmaster@sistina.com
-> Subject: Question
+On Wed, Apr 25, 2001 at 10:26:41AM -0600, Andreas Dilger wrote:
+> David Vidal writes:
+> > I'll send them tomorrow. You say that there are problems with VGs created
+> > with <beta4. My kernel is has beta2-lvm, and because of compiling errors
+> > in the newer beta6+-versions, I couldn't update the driver (tools are
+> > actually working). Is there a way to [sozusagen] update the on-disc
+> > structures in order to avoid conflicts with the new tools?
 > 
-> How stable is the LVM in Redhat Linux 6.2? 
+> It doesn't matter what version the kernel code is, as long as the tools
+> are newer than beta2 you are OK.  If the on-disk UUIDs are bad, then
+> all you need to do is some sort of simple change (add a 1 PE LV and
+> remove it), and the on-disk VGDA should be re-written with the correct
+> UUIDs.
+> 
+> You can check the on-disk UUIDs with "pvdata -U" for each PV.  They
+> should all match.
 
-You need to get the recent LVM 0.9.1 Beta 7 sofware from www.sistina.com
-in order to get a couple of bugs fixed.
-Please follow the LVM 0.9.1 Beta 7 link and the installation and kernel
-patch descriptions in the files LVM/INSTALL and LVM/PATCHES/README
-contained in the tarball you'll find there
+I am about to implement a vgscan option in order to support the recreation
+of the "invalid PV UUID list problem" in case a VG can't be found by vgscan
+any more.
+
+What's your opinion (Andreas?) about it?
+
+Do we have too many people which can't do the lvcreate/lvremove trick
+so that this work makes sense?
+
+> 
+> Cheers, Andreas
+> -- 
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
 
