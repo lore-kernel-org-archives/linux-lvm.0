@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Fri, 9 Feb 2001 11:21:55 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] questions
-Message-ID: <20010209112155.C21300@srv.sistina.com>
-References: <20010209003003.B29707@vestdata.no> <200102090005.f1905bc08799@webber.adilger.net> <20010209093404.B21158@caldera.de>
+Return-Path: <lewis@sistina.com>
+Date: Fri, 9 Feb 2001 12:07:49 -0600
+From: AJ Lewis <lewis@sistina.com>
+Message-ID: <20010209120749.E9249@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <20010209093404.B21158@caldera.de>; from hch@caldera.de on Fri, Feb 09, 2001 at 09:34:05AM +0100
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
+Content-Disposition: inline
+Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta4 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,39 +18,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-devel@sistina.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc: declerck@sistina.com, okeefe@sistina.com
 
-On Fri, Feb 09, 2001 at 09:34:05AM +0100, Christoph Hellwig wrote:
-> On Thu, Feb 08, 2001 at 05:05:36PM -0700, Andreas Dilger wrote:
-> > Change all of the code paths in the kernel that assume block size is 512
-> > bytes...
-> 
-> IIRC some S/390 devices already use 4K block size.
+--imjhCm/Pyz7Rq5F2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes. They have so called DASD drives which are 4K hard sectored.
+The following message is from Heinz Mauelshagen, who unfortunately cannot
+send it out himself today.
 
-Anyway. if you change the BLOCK_SIZE definition in lvm.h from 1 to 4k
-you can build LVs larger than 2TB (or even 4TB which is the default with the
-1k block size used by LVM today).
-You can't go beyond PAGE_SIZE though because a whole pile of code in
-the kernel doesn't support that.
-That means that you could even go to 8k block size on machines supporting
-that page size.
-Remember: you loose comapatibility with 4k page sized systems in this case.
+Message follows ->
+----------------------------------------------------------------------------
 
-> 
-> 	Christoph
-> 
-> -- 
-> Of course it doesn't work. We've performed a software upgrade.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+Hi all,
 
--- 
+a tarball of the Linux Logical Volume Manager 0.9.1 beta4 is available now
+at
+
+   <http://www.sistina.com/>
+
+for download (Follow the "LVM download page" link).
+
+
+This release fixes several bugs.
+
+See the CHANGELOG file contained in the tarball for further information.
+
+Please help us to stabilize for 0.9.1 ASAP and test it like hell ;-)
+Feed back related information to <linux-lvm@sistina.com>.
+
+Thanks a lot for your support of LVM.
+
+- --
 
 Regards,
 Heinz    -- The LVM Guy --
@@ -57,7 +59,9 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -65,4 +69,40 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+
+------- End of Forwarded Message
+
+
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+Programming graphics in X is like finding sqrt(pi) using Roman numerals.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--imjhCm/Pyz7Rq5F2
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6hDH1pE6/iGtdjLERApSQAJsEOvvw89w9L3Pu3ivzWG/4SwvTrgCeKLSn
+e4u+QGk8iiA0W2ZmAJ4TDaU=
+=wf8r
+-----END PGP SIGNATURE-----
+
+--imjhCm/Pyz7Rq5F2--
