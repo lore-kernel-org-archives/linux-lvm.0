@@ -1,9 +1,9 @@
-Message-ID: <3636.213.191.82.129.1000409919.squirrel@hactar.dnsalias.net>
-Date: Thu, 13 Sep 2001 21:38:39 +0200 (CEST)
-From: "Julian Glashoff" <helldog@gmx.net>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130C024@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Date: Thu, 13 Sep 2001 14:11:59 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] changing LE / PE table
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] 33% of my space is missing?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,18 +16,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hello,
+Hi all.
 
-As I already said, my volume group is not accessible because of a crash
-while trying to extend a logical volume. 'vgscan' says 'only found 768 of
-769 LEs for LV /dev/vg00/lvol1' and does not find my volume group.
-I have not been able to restore the backups with _any_ version of LVM.
-So now I am wondering if it is possible to change the 'LE' table while the
-volume group is offline.
-Is there?
+I seem to be missing 100Gb out of a possible 300Gb!  Check it out:
 
---
-Julian Glashoff
-<helldog@gmx.net>
+[root@filmore jdiehl]# fdisk -l | grep LVM
+/dev/sdb5           226      4402  33551721   8e  Linux LVM
+/dev/sdb6          4403      8579  33551721   8e  Linux LVM
+/dev/sdb7          8580     12756  33551721   8e  Linux LVM
+/dev/sdb8         12757     15030  18265873+  8e  Linux LVM
+/dev/sdc6          7015     14028  56339923+  8e  Linux LVM
+/dev/sdc7         14029     21042  56339923+  8e  Linux LVM
+/dev/sdc8         21043     28056  56339923+  8e  Linux LVM
+/dev/sdc9         28057     30945  23205861   8e  Linux LVM
+[root@filmore jdiehl]#
+
+Adding this space up, I get 311Gb.
+
+But:
+
+[root@filmore jdiehl]# lvdisplay /dev/Database2/data
+--- Logical volume ---
+LV Name                /dev/Database2/data
+VG Name                Database2
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                215.3 GB
+Current LE             27558
+Allocated LE           27558
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
+
+Here we see that I only have access to 215Gb. 
+
+Where is the rest of my space?
+
+Mike Diehl.
