@@ -1,89 +1,92 @@
-Date: Tue, 14 Nov 2000 07:44:25 +0100
+Date: Tue, 14 Nov 2000 07:59:10 +0100
 From: Jos Visser <josv@osp.nl>
-Subject: Re: [linux-lvm] LVM in shared parallel SCSI environment
-Message-ID: <20001114074425.Z370@jadzia.josv.com>
-References: <20001111084602.B26544@kevorkian.evcom.net>
+Subject: Re: [linux-lvm] Error -154 can't get data from VG
+Message-ID: <20001114075910.A370@jadzia.josv.com>
+References: <F2830mJWEsBk31TZ14e0000251d@hotmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20001111084602.B26544@kevorkian.evcom.net>; from jss@evcom.net on Sat, Nov 11, 2000 at 08:46:02AM -0500
+In-Reply-To: <F2830mJWEsBk31TZ14e0000251d@hotmail.com>; from brunokc@hotmail.com on Mon, Nov 13, 2000 at 02:27:57PM -0800
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jesse Sipprell <jss@evcom.net>
+To: Bruno Kraychete da Costa <brunokc@hotmail.com>
 Cc: linux-lvm@msede.com
 
-Hi Jesse,
+I guess that even when your / is in an LV, it still has to be (or most
+probably will be) contiguous on the disk? This would mean that you 
+could handforge a partition table entry that maps exactly the root file 
+system. The size does not even matter (make it the rest of the disk), 
+as long as the start sector is allright. Such a partition table entry 
+would allow you to mount the /, even though it is in an LV.
 
-Let's see if I get this right: You have an LVM configuration on a shared
-SCSI disk set. I understand from your description that you have some
-VG's active on more than one node at a time. Is this right? If so, I
-wonder if it's supported (others are better equiped to determine this
-than I am). However, most volume managers on other Unix platforms do not
-allow this. 
-
-As far as I know the vgchange inactive/active bounce is the only thing
-that will refresh the metadata. 
-
-However, if you have the VG truly active on more than one node (if
-that's possible), you have a recipe for disaster! What if you by mistake
-change the VG (e.g. adding an LV) from one node, and then perform a
-similar action from another node? I would not be surprised if there
-would be corruptions, oopses and panics all over the place.
+If you want a good set of recovery tools, download an ISO image of the
+LinuxCare bootable business card (http://www.linuxcare.com/bootable_cd)
+and burn it on a CD. You then have at least a serious amount of tools to
+help you in the repair.
 
 ++Jos
 
-And thus it came to pass that Jesse Sipprell wrote:
-(on Sat, Nov 11, 2000 at 08:46:02AM -0500 to be exact)
+And thus it came to pass that Bruno Kraychete da Costa wrote:
+(on Mon, Nov 13, 2000 at 02:27:57PM -0800 to be exact)
 
-> Hi all,
 > 
-> I'm currently in the process of planning a large(ish)-scale Linux deployment.
-> As part of the planning process, I am considering using LVM in a shared SCSI
-> environment; potentially with GFS as the file system in the future, but
-> starting with ext2.
+> Hi,
 > 
-> To that end I have a test "cluster" set up.  It consists of:
+> I'm writing from this hotmail account because my main machine is down. It 
+> has LVM, but after some problems, I cannot seem to get it up again. It's a 
+> SuSE 7.0 with kernel 2.4.0-test9. I was using LVM tools from suse 
+> distribution (lvm-0.8-131) and I'm not sure what patches they incorporated 
+> yet. I've got /dev/hda1 as my /boot (20MB) and all other partitions (/, 
+> home, var, tmp, swap) in the "rootvg" volume group.
 > 
-> One Winchester Systems OpenRAID chassis with 100GB total storage, running in
-> RAID5.  The OpenRAID is a SCSI-to-SCSI solution, with four host SCSI channels.
-> The hardware can be configured so that the channels can share physical storage
-> space.
+> Well, the history. I added a second HD to my machine and was planning to add 
+> it to my "rootvg". I actually made that far. I had this "data" LV and I was 
+> planning to make the new HD as my new "data". So I deactivated the current 
+> "data" LV, renamed it to "olddata" and created the new one in the new space 
+> coming from the new HD. Now, all I had to do was to copy the contents from 
+> "olddata" to "data". Whe I tried to mount /dev/rootvg/olddata, Linux froze. 
+> Tried SysReq, no go. Thinking a little, I remembered that I had forgotten to 
+> make that LV ("olddata") active again. Pushed reset button with my fingers 
+> crossed. The initrd failed to find my old /dev/rootvg/root LV. Crap! :(
 > 
-> Four test Linux boxes, each with a small (9GB) boot/root/swap/emergency SCSI
-> disk.  Obviously, the four boxes are connected to the four host channels on
-> the OpenRAID.
+> Using SuSE7 boot disk, I managed to get a shell with LVM tools available. 
+> Vgscan and vgchanged succeeded and I could find the reason why my initrd 
+> failed. /dev/rootvg/root was not the "3a:00" device anymore. It was now 
+> "3a:01". Changed my initrd, umounted /dev/rootvg/root and rebooted. Got the 
+> same error again. I must have changed the wrong thing. No problems ... let's 
+> do it again. Booted from SuSE7 floppy to the shell with LVM tools and ... 
+> vgscan is now failing!! I'm getting "error -154 can't get data from physical 
+> volumes" or something like that. I cannot restore my /etc/lvmtab because my 
+> /etc dir is inside /dev/rootvg/root :( When I first booted from the boot 
+> disk and got LVM to work, it created /etc/lvmtab*, but it did so in the 
+> ramdisk. Given that, I have the following questions:
 > 
-> The OpenRAID is configured such that all available disk space is visable
-> identically to the servers.  Obviously, because the initial test uses ext2
-> instead of a filesystem that supports shared media (i.e. GFS), we won't be
-> actually sharing filesystems between boxes.  However, LVM seemed like a pretty
-> good potential in this situation because it allows for relatively dynamic
-> allocation of storage from a large shared "pool."  The catch, as with all
-> shared SCSI solutions, is that each participating host must maintain a
-> consistant view of LVM metadata.
+> 1) Why my Linux box froze when I (accidently) tried to mount an inactive LV? 
+> Shouldn't it throw some error message or something?
 > 
-> So far, it's been fairly successful.  Once the vg and lvs are created, and each
-> host has meta in core, all is well.  The only problem I am seeing is when an
-> lv (for example) is extended or reduced, the other systems are unaware of the
-> change in LVM metadata.  This makes sense of course, because each host is
-> operating with it's own "notion" of the LVM in core.  The solution is rather
-> awkward; one has to unmount all LVM filesystems on each host, vgchange the vg
-> to inactive, vgchange it back to active and then remount the filesystems.
+> 2) Why LVM didn't get corrupted when my box froze, but then got corrupted 
+> when I simply rebooted my box? :(
 > 
-> My question is this:  Is there any way to "refresh" the in-core metadata from
-> disk?  If not, does anyone think this might be a good idea for the future?
+> 3) Since we have now some people that put their / in a volume group, isn't 
+> it a good idea to have LVM save VGDA backups outside a LVM volume group? 
+> (next time I can get my box to boot, I'll make a link from /etc/lvm* to 
+> /boot/lvm/lvm*, so VGDA data will be stored in /dev/hda1).
 > 
-> Regards,
+> So, from your experience, do you think it is possible to get my data back 
+> from LVM's current state in my machine? All I have available is this shell 
+> with LVM tools from SuSE7 boot disk. :(
 > 
-> -- 
-> Jesse Sipprell
-> Technical Operations Director
-> Evolution Communications, Inc.
-> 800.496.4736
+> Thank you for your help,
 > 
-> * Finger jss@evcom.net for my PGP Public Key *
+> Bruno.
+> 
+> _________________________________________________________________________
+> Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com.
+> 
+> Share information about yourself, create your own public profile at 
+> http://profiles.msn.com.
 
 -- 
 Success and happiness can not be pursued; it must ensue as the 
