@@ -1,10 +1,10 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] How to boot with LVM?
-Date: Thu, 13 Sep 2001 14:08:33 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPMEENDNAA.stuart@bh90210.net>
+Message-ID: <3BA12894.8080301@st-peter.stw.uni-erlangen.de>
+Date: Thu, 13 Sep 2001 23:43:48 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-Reply-To: <002b01c13c98$d3080be0$6601a8c0@foobarhouse.com>
+Subject: Re: [linux-lvm] LVM
+References: <NBBBJHKIOKPKOGOEPEDPKEELDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,114 +16,118 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-TXIuIE1hY3ZpY2FyOg0KDQoJQ2FuIHlvdSBwcm92aWRlIGluc3RydWN0aW9ucyBvbiBob3cgSSBt
-aWdodCBkbyB0aGF0Pw0KDQoNClZlcnkgUmVzcGVjdGZ1bGx5LCANCg0KU3R1YXJ0IEJsYWtlIFRl
-bmVyLCBJVDMsIFVTTlItUiwgTjNHV0cgDQpCZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUg
-MTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KSANCnN0dWFydEBiaDkwMjEwLm5ldCANCndl
-c3QgY29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBD
-QSA5MDIwOS0yMDQzIA0KZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTks
-IFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OSANCg0KVGVsZWNvcGllcjogKDQxOSktNzE1LTYw
-NzMgZmF4IHRvIGVtYWlsIGdhdGV3YXkgdmlhIHd3dy5lZmF4LmNvbSAoaXQncyBmcmVlISkgDQoN
-CkpPSU4gVEhFIFVTIE5BVlkgUkVTRVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJ
-VCBGUk9NIElUIEFMTC4gDQoNClRodXJzZGF5LCBTZXB0ZW1iZXIgMTMsIDIwMDEgMjowOCBQTQ0K
-DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogbGludXgtbHZtLWFkbWluQHNpc3Rp
-bmEuY29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBPZiBO
-ZWlsIE1hY3ZpY2FyDQpTZW50OiBUaHVyc2RheSwgU2VwdGVtYmVyIDEzLCAyMDAxIDI6MTMgUE0N
-ClRvOiBsaW51eC1sdm1Ac2lzdGluYS5jb20NClN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBIb3cg
-dG8gYm9vdCB3aXRoIExWTT8NCg0KQSBmZXcgbm90ZXMgSSBtaXNzZWQ6IFRoaXMgcmFtZGlzayBJ
-IG1hZGUgbXlzZWxmLiBZb3UgY2FuIG1vdW50IGl0IG9uDQpsb29wYmFjayBhZnRlciB1bnRhcnJp
-bmcgaXQgdG8gZXhhbWluZSBpdCdzIGNvbnRlbnRzLiBJdCdzIHNpemUgc291bGQgYmUgc2V0DQp0
-byA4MTkyLg0KDQpSZWdhcmRzLA0KLS1OZWlsLg0KDQotLS0tLSBPcmlnaW5hbCBNZXNzYWdlIC0t
-LS0tDQpGcm9tOiAiTmVpbCBNYWN2aWNhciIgPG5laWxtQGZvb2JhcmhvdXNlLmNvbT4NClRvOiA8
-bGludXgtbHZtQHNpc3RpbmEuY29tPg0KU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMywgMjAw
-MSAxOjE1IFBNDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gSG93IHRvIGJvb3Qgd2l0aCBMVk0/
-DQoNCg0KPiBJZiBpdCdzIGFueSBoZWxwLCBJIGhhdmUgcHV0IG15IGluaXRyZCBvbiBwdWJsaWMg
-ZnRwIGF0DQo+IGZydWl0cy5mb29iYXJob3VzZS5jb20gaW4gdGhlIExWTSBkaXJlY3RvcnkuIEl0
-J3Mgc2VydmVkIG1lIHdlbGwgZm9yIGFzDQpsb25nDQo+IGFzIEkndmUgYmVlbiB1c2luZyBMVk0n
-ZWQgcm9vdC4NCj4NCj4gSSdtIGN1cnJlbnRseSB1c2luZyBMVk0gMC45LjFiZXRhOC4NCj4NCj4g
-UmVnYXJkcywNCj4gLS1OZWlsLg0KPg0KPiAtLS0tLSBPcmlnaW5hbCBNZXNzYWdlIC0tLS0tDQo+
-IEZyb206ICJBLlIuIChUb20pIFBldGVycyIgPHRwZXRlcnNAeHM0YWxsLm5sPg0KPiBUbzogPGxp
-bnV4LWx2bUBzaXN0aW5hLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMywgMjAw
-MSA4OjE4IEFNDQo+IFN1YmplY3Q6IFtsaW51eC1sdm1dIEhvdyB0byBib290IHdpdGggTFZNPw0K
-Pg0KPg0KPiA+IEkgYm91Z2h0IGEgMzAgR0IgSEQsIGFuZCBkZWNpZGVkIHRvIHB1dCBpdCB1bmRl
-ciB0aGUgTFZNIGFuZCBwdXQNCj4gPiBSZWlzZXJGUyBvbiBpdC4gIEkgbWFuYWdlZCB0byBpbml0
-aWFsaXplIGl0IGZpbmUsIGFuZCBpdCBub3cgaGFzIGEgYmFzZQ0KPiA+IERlYmlhbiBpbnN0YWxs
-IG9uIGl0LCBidXQgSSBjYW5ub3QgbWFuYWdlIHRvIGJvb3QgZnJvbSBpdC4NCj4gPg0KPiA+IFlv
-dSBjYW5ub3QgYm9vdCBmcm9tIGEgTFY7IHRoZXJlZm9yZSBJIG1hZGUgYSBzbWFsbCAoMTYgTUIp
-IGV4dDINCj4gPiBwYXJ0aXRpb24gd2l0aCBhIGtlcm5lbCBhbmQgYW4gaW5pdHJkLiAgTXkgaW50
-ZW5kZWQgcm9vdCBGUyBpcyBvbiBhIExWLA0KPiA+IGFuZCB5b3UgbmVlZCB0byBqdW1wIHRocm91
-Z2ggc29tZSBob29wcyB0byBnZXQgdGhlIGtlcm5lbCBtb3VudCBpdCBvbiAvDQo+ID4gOiB0aGF0
-IGlzIGRvY3VtZW50ZWQgaW4gdGhlIExWTS1IT1dUTyBhbmQgRkFRIHRoYXQgY29tZXMgd2l0aCB0
-aGUgTFZNDQo+ID4gdG9vbHMuICBVc2Ugb2YgaW5pdHJkIGlzIGRvY3VtZW50ZWQgaW4NCj4gPiAv
-dXNyL3NyYy9saW51eC9Eb2N1bWVudHMvaW5pdHJkLnR4dCAuICBGaW5hbGx5LCB0aGUgQm9vdGRp
-c2stSE9XVE8NCj4gPiBoZWxwcy4NCj4gPg0KPiA+IEkgdXNlIExWTSB0b29scyAxLjAuMS1yYzIs
-IGFuZCBhIDIuNC4xMC1wcmU3IGtlcm5lbCwgcGF0Y2hlZCB3aXRoIHRoZQ0KPiA+IHBhdGNoZXMg
-b2YgdGhlIExWTSB0b29sczsgbm8gLnJlaiB0aGVyZS4gIEkgY29tcGlsZWQgdGhlIExWTSBiaW5h
-cmllcw0KPiA+IHdpdGggbGlibHZtLTEwIHN0YXRpY2FsbHkgbGlua2VkLCBiZWNhdXNlIG90aGVy
-d2lzZSB0aGUgZXhlY3V0YWJsZXMgaW4NCj4gPiB0aGUgaW5pdHJkIGhhZCBwcm9ibGVtcyB3aXRo
-IGZpbmRpbmcgdGhlIC5zbyAoSSB0aGluayBJIGtub3cgd2hhdCB3YXMNCj4gPiBnb2luZyBvbiwg
-YnV0IHdvbid0IGdvIGludG8gdGhhdCBub3cpLiAgVGhlcmVmb3JlIEkgaGF2ZSB0byBtYWtlIGEN
-Cj4gPiBSYW1kaXNrIG9mIDVNQiBpbnN0ZWFkIG9mIHRoZSBkZWZhdWx0IDQgTUIuDQo+ID4NCj4g
-PiBNeSBuZXcgSEQgaXMgL2Rldi9oZGQsIGFuZCBpcyB0aGUgM3JkIEhEIGluIHRoZSBzeXN0ZW06
-IHRoaXMgYWxsb3dzIG1lDQo+ID4gdG8gc3RpbGwgdXNlIG15IGNvbXB1dGVyIHRvIHJlYWQgZG9j
-cyBhbmQgc2VuZCB5b3UgdGhpcyBtZXNzYWdlLiAgU28gZm9yDQo+ID4gbm93IEkgZG8gbm90IHdh
-bnQgdG8gcHV0IGEgYm9vdGxvYWRlciBvbiB0aGUgZGlzayBiZWNhdXNlIHRoZSBoYXJkd2FyZQ0K
-PiA+IGNvbmZpZyBpcyBnb2luZyB0byBjaGFuZ2U6IGluc3RlYWQgSSB1c2UgYSBib290IGZsb3Bw
-eSB3aXRoIEdSVUIuDQo+ID4NCj4gPiBMVk0gaGFzIGEgdXRpbGl0eSBzY3JpcHQgbHZtY3JlYXRl
-X2luaXRyZCB0byBtYWtlIGFuIGluaXRyZCBzdWl0YWJsZSB0bw0KPiA+IHByZXBhcmUgZm9yIG1v
-dW50aW5nIGEgTFYgb24gLyAuDQo+ID4NCj4gPiBUaGUgc3lzdGVtIGJvb3RzIHdpdGggdGhlIGZs
-b3BweTsgdGhlIGNvcnJlY3Qga2VybmVsIGlzIGxvYWRlZCBmcm9tIHRoZQ0KPiA+IGV4dDIgcGFy
-dGl0aW9uLCBhcyB3ZWxsIGFzIHRoZSBpbml0cmQ7IHRoZSBMVk0gdG9vbHMgb24gdGhlIGluaXRy
-ZCBhcmUNCj4gPiBleGVjdXRlZCBhbmQgc2VlbSB0byB3b3JrIHByb3Blcmx5Lg0KPiA+DQo+ID4g
-UFJPQkxFTTogc3Vic2VxdWVudGx5IHRoZSBrZXJuZWwgcGFuaWNzIGJlY2F1c2UgaXQgc3RpbGwg
-Y2Fubm90IG1vdW50IGENCj4gPiByb290Lg0KPiA+DQo+ID4gSSBnb3QgYSBHUlVCIGJvb3RkaXNr
-IHRoYXQgd29ya3MuICAvZ3J1Yi9tZW51LmxzdCA6DQo+ID4gdGl0bGUgIExpbnV4MjQNCj4gPiBy
-b290IChoZDIsNCkNCj4gPiBrZXJuZWwgL3ZtbGludXotMi40LjEwLXByZTcgcm9vdD0vZGV2L1NZ
-U0RJU0svUm9vdCByYW1kaXNrX3NpemU9NTEyMA0KPiA+ICMgSWYgSSBzcGVjaWZ5IHJvb3Q9L2Rl
-di9yYW0wIHRoZW4gSSBnZXQgYSBzaGVsbCBvbiB0aGUgcnVkaW1lbnRhcnkNCj4gPiBpbml0cmQg
-c3lzdGVtLg0KPiA+IGluaXRyZCAvaW5pdHJkLWx2bS0yLjQuMTAtcHJlNy5neg0KPiA+DQo+ID4g
-T24gaW5pdHJkOg0KPiA+DQo+ID4gZXRjL2ZzdGFiOg0KPiA+IC9kZXYvcmFtICAgICAgICAvICAg
-ICAgICAgICAgICAgZXh0MiAgICBkZWZhdWx0cyAgICAgICAgMCAgIDANCj4gPiBwcm9jICAgICAg
-ICAgICAgL3Byb2MgICAgICAgICAgIHByb2MgICAgZGVmYXVsdHMgICAgICAgIDAgICAwDQo+ID4N
-Cj4gPiBsaW51eHJjOg0KPiA+ICMhL2Jpbi9zaA0KPiA+IC9iaW4vbW91bnQgL3Byb2MNCj4gPiAv
-c2Jpbi92Z3NjYW4NCj4gPiAvc2Jpbi92Z2NoYW5nZSAtYSB5DQo+ID4gL2Jpbi91bW91bnQgL3By
-b2MNCj4gPg0KPiA+IGRldmljZXM6DQo+ID4gIyBscyAtbCBkZXYvU1lTRElTSy8NCj4gPiB0b3Rh
-bCAwDQo+ID4gYnJ3LXJ3LS0tLSAgICAxIHJvb3QgICAgIGRpc2sgICAgICA1OCwgICAyIFNlcCAx
-MSAxOToyMyBPcHQNCj4gPiBicnctcnctLS0tICAgIDEgcm9vdCAgICAgZGlzayAgICAgIDU4LCAg
-IDAgU2VwIDExIDE5OjIzIFJvb3QNCj4gPiBicnctcnctLS0tICAgIDEgcm9vdCAgICAgZGlzayAg
-ICAgIDU4LCAgIDQgU2VwIDExIDE5OjIzIFNjcmF0Y2gNCj4gPiBicnctcnctLS0tICAgIDEgcm9v
-dCAgICAgZGlzayAgICAgIDU4LCAgIDEgU2VwIDExIDE5OjIzIFVzcg0KPiA+IGJydy1ydy0tLS0g
-ICAgMSByb290ICAgICBkaXNrICAgICAgNTgsICAgMyBTZXAgMTEgMTk6MjMgVmFyDQo+ID4gY3J3
-LXItLS0tLSAgICAxIHJvb3QgICAgIGRpc2sgICAgIDEwOSwgICAwIFNlcCAxMSAxOToyMyBncm91
-cA0KPiA+DQo+ID4gS2VybmVsOg0KPiA+ICMgcmRldiB2bWxpbnV6LTIuNC4xMC1wcmU3DQo+ID4g
-Um9vdCBkZXZpY2UgL2Rldi9yYW0wICAgIyBSb290IGRldmljZSAvZGV2L1NZU0RJU0svUm9vdA0K
-PiA+ICAgKC0+IDB4M2EwMCkgZG9lcyBub3QgbWFrZSBhIGRpZmZlcmVuY2UNCj4gPiAjIHJkZXYg
-LVIgdm1saW51ei0yLjQuMTAtcHJlNw0KPiA+IFJvb3QgZmxhZ3MgMCAgICAjIGkuZS4gbW91bnQg
-cm8NCj4gPiAjIHJkZXYgLXIgdm1saW51ei0yLjQuMTAtcHJlNw0KPiA+IFJhbXNpemUgNDkxNTIg
-ICAjIGkuZS4gb2Zmc2V0PTA7IGJpdDE0PTE6IGxvYWQgcmFtZGlzazsgYml0MTU9MToNCj4gPiAg
-ICAgICAgICAgICAgICAgIyAgIHByb21wdCBiZWZvcmUgbG9hZGluZyByb290ZnMgLSB0aGlzIG5l
-dmVyIGhhcHBlbnMhDQo+ID4NCj4gPiBXaGF0IGFtIEkgc3VwcG9zZWQgdG8gY2hhbmdlPyAgVGhl
-IGtlcm5lbCBpbml0cmQudHh0IGhhcyBhIGxvbmcgYW5kDQo+ID4gY29tcGxpY2F0ZWQgc3Rvcnkg
-b24gdXNpbmcgcGl2b3Rfcm9vdCB0byBzd2l0Y2ggcm9vdGZzLCBidXQgYXBwYXJlbnRseQ0KPiA+
-IHRoZSBMVk0gbGludXhyYyByZWxpZXMgb24gdGhlIGRlcHJlY2F0ZWQgbWV0aG9kIHRoYXQgZG9l
-cyB0aGlzDQo+ID4gYXV0b21hdGljYWxseS4NCj4gPg0KPiA+IEFueSBhZHZpY2Ugd2VsY29tZS4N
-Cj4gPg0KPiA+IC0tDQo+ID4NCj4NCiM+ISQhJShAXiUjJSooJigjQCMqJF5AXiQjIyojQCYoJSlA
-KiokISgmIV4oIygoIyYlISklKkApKCYkKCQkJShAIykmKiFeJCleQCoNCj4gXkApDQo+ID4NCj4g
-PiBUb20gInRocml2aW5nIG9uIGNoYW9zIiBQZXRlcnMNCj4gPiBOTC0xMDYyIEtEIG5yIDE0OSB0
-ZWwuICAgICszMS0yMDQwODAyMDQNCj4gPiAgIEFtc3RlcmRhbSBlLW1haWwgIHRwZXRlcnNAeHM0
-YWxsLm5sDQo+ID4NCj4gPg0KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fDQo+ID4gbGludXgtbHZtIG1haWxpbmcgbGlzdA0KPiA+IGxpbnV4LWx2bUBz
-aXN0aW5hLmNvbQ0KPiA+IGh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWx2bQ0KPiA+IHJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5h
-LmNvbS9sdm0vUGFnZXMvaG93dG8uaHRtbA0KPg0KPg0KPiBfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1sdm0gbWFpbGluZyBsaXN0DQo+IGxp
-bnV4LWx2bUBzaXN0aW5hLmNvbQ0KPiBodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1sdm0NCj4gcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNp
-c3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5odG1sDQoNCg0KX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCmxpbnV4
-LWx2bUBzaXN0aW5hLmNvbQ0KaHR0cDovL2xpc3RzLnNpc3RpbmEuY29tL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtbHZtDQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5j
-b20vbHZtL1BhZ2VzL2hvd3RvLmh0bWwNCg==
+Hi
+it should be working regarding the tools you are using
+can you send the error message
+and try
+ls /lib/modules
+it should give you list of kernel versions you have installed
+my case
+ls /lib/modules
+2.4.10-pre4-xfs 2.4.9-ac7 .....
+and lvmcreate_initrd -nomod 2.4.10-pre4-xfs
+
+
+i'm using linux-2.4.10-pre4-xfs and linux-2.4.9-ac7 with lvm-1.0.1 cvs 
+version
+but it should be working also with the old tools
+
+and there is no problem with the mandrake kernel and the new version of lvm
+
+IT3 Stuart B. Tener, USNR-R wrote:
+
+>Svetljo:
+>
+>	It does not work. It gives me some funky messages when I try it. However, I must point out I am using LVM V 0.9.2-whatever. Are you using a new version? I have been told that the newer 1.0.1 version does not or will not work properly with Mandrake for some reason of their policy about versions or something, got me.
+>
+>
+>Very Respectfully, 
+>
+>Stuart Blake Tener, IT3, USNR-R, N3GWG 
+>Beverly Hills, California
+>VTU 1904G (Volunteer Training Unit) 
+>stuart@bh90210.net 
+>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
+>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
+>
+>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
+>
+>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
+>
+>Thursday, September 13, 2001 1:29 PM
+>
+>-----Original Message-----
+>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of svetljo
+>Sent: Thursday, September 13, 2001 10:04 AM
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] LVM
+>
+>Hi
+>it should be
+>
+>lvmcreate_initrd --nomod 2.4.8-12mdk
+>and it should create /boot/initrd-lvm-2.4.8-12mdk.gz -- the lvm-initrd
+>
+>IT3 Stuart B. Tener, USNR-R wrote:
+>
+>>Mr. Edgecombe:
+>>
+>>      Ah, I understand. Yes, I am trying to LVMize my root partition.
+>>
+>>
+>>Very Respectfully,
+>>
+>>Stuart Blake Tener, IT3, USNR-R, N3GWG
+>>Beverly Hills, California
+>>VTU 1904G (Volunteer Training Unit)
+>>stuart@bh90210.net
+>>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
+>>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
+>>
+>>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!)
+>>
+>>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
+>>
+>>Thursday, September 13, 2001 9:49 AM
+>>
+>>-----Original Message-----
+>>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Jason Edgecombe
+>>Sent: Thursday, September 13, 2001 6:01 AM
+>>To: linux-lvm@sistina.com
+>>Subject: Re: [linux-lvm] LVM
+>>
+>>you MUST run lvmcreate_initrd and use the initrd it creates if you run
+>>an LVM root fs.
+>>
+>>It doesn't matter if LVM is in the kernel or as a module. If your root
+>>is not in LVM, then I don't think that you have to use initrd.
+>>
+>>Sincerely,
+>>Jason Edgecombe
+>>
+>>
+>>"IT3 Stuart B. Tener, USNR-R" wrote:
+>>
+>>>       So for LVM, you do need to use the lvmcreate_initrd program or not? I am still not clear on that.
+>>>
+>>>       If I need to make an lvmcreate_initrd, does not that mean it cannot be in the kernel?
+>>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>
+>
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
