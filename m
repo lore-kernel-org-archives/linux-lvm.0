@@ -1,35 +1,25 @@
-Date: Wed, 8 Nov 2000 14:44:24 +0100 (CET)
-From: Rik van Riel <riel@conectiva.com.br>
+Date: Wed, 8 Nov 2000 17:16:06 +0100
+From: Andrea Arcangeli <andrea@suse.de>
 Subject: Re: [linux-lvm] Re: LVM 2.2 snapshot bug
-In-Reply-To: <20001108015534.B15731@homer.sistina.com>
-Message-ID: <Pine.LNX.4.05.10011081442460.3666-100000@humbolt.nl.linux.org>
-MIME-Version: 1.0
+Message-ID: <20001108171606.A3650@inspiron.suse.de>
+References: <20001107205137.A7093@inspiron.suse.de> <200011072036.eA7Ka6s03317@webber.adilger.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200011072036.eA7Ka6s03317@webber.adilger.net>; from adilger@turbolinux.com on Tue, Nov 07, 2000 at 01:36:06PM -0700
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelshagen@sistina.com>
-Cc: linux-lvm@msede.com, sct@redhat.com
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: "Stephen C. Tweedie" <sct@redhat.com>, Rik van Riel <riel@conectiva.com.br>, linux-lvm@msede.com, marcelo@conectiva.com.br
 
-On Wed, 8 Nov 2000, Heinz Mauelshagen wrote:
+On Tue, Nov 07, 2000 at 01:36:06PM -0700, Andreas Dilger wrote:
+> The problem is that I/O errors during journal recovery would mean a
+> corrupt filesystem.  The ext3 recovery code (now) does the correct thing
+> and aborts the journal recovery [..]
 
-> Chris Mason and I came up with a VFS extension which flushes the Journal,
-> sets the FS to a clean state and locks it to enable LVM to activate the
-> snapshot and to unlock the filesystem again.
+ext3 oopses the kernel after getting I/O errors during the writes. I don't
+consider that the correct thing.
 
-Indeed, I know about this idea and like it a lot.
-
-However, I intend to install a 2.2 kernel with
-LVM 0.8 and ext3 for NL.linux.org this week, so
-I'm mainly looking for fixes that make stuff
-work _now_ :)
-
-regards,
-
-Rik
---
-The Internet is not a network of computers. It is a network
-of people. That is its real strength.
-
-http://www.conectiva.com/		http://www.surriel.com/
+Andrea
