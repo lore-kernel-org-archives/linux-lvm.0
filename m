@@ -1,8 +1,9 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re: [linux-lvm] invalid number of free physical extents
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20020827204539.YTUD10186.imf28bis.bellsouth.net@TAZ2>
+From: "Glenn Shannon" <warl0k@lvcm.com>
+Subject: RE: [linux-lvm] Cannot create an lvm.
+Message-ID: <003901c24e1b$a2c70270$3200a8c0@warl0k>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20020827091053.A20836@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,58 +14,120 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 27 15:50:17 2002
+Date: Tue Aug 27 17:49:55 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-My mistake,
+ 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I thought I had plenty of free space on the VG, put apparently, I was wrong.
+Actually your comment made me think.
 
-I have reduced the size of a couple of my test LVs and it is working now.
+I am running Sourcemage Linux(I am one of the developers) and we use
+devfs mounted on /devices with symlinks from /dev.
 
-Greg
- >>  All,
+After I created a symlink from /dev/mass (the vg) that pointed to
+/devices/mass (the actual device) all was well.
 
- >>  I have a VG which I have used extensively for snapshot testing.
+Thanks all!
 
- >>  Now everytime I try to get a snapshot, it fails with error code 13
-
- >>  Per the man entry:
-
- >>  13 invalid number of free physical extents
-
- >>  I don't want to rebuild this VG because some of the other LVs on it have
- >>  valid data.
-
- >>  Is there a lvm repair tool that might fix this for me.
-
- >>  Thanks,
- >>  Greg
- >>  =3D=3D=3D=3D=3D=3D
- >>  Greg Freemyer
- >>  Internet Engineer
- >>  Deployment and Integration Specialist
- >>  Compaq ASE - Tru64 v4, v5
- >>  Compaq Master ASE - SAN Architect
- >>  The Norcross Group
- >>  www.NorcrossGroup.com
-
- >>  _______________________________________________
- >>  linux-lvm mailing list
- >>  linux-lvm@sistina.com
- >>  http://lists.sistina.com/mailman/listinfo/linux-lvm
- >>  read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+- -----Original Message-----
+From: linux-lvm-admin@sistina.com
+[mailto:linux-lvm-admin@sistina.com] On Behalf Of Heinz J .
+Mauelshagen
+Sent: Tuesday, August 27, 2002 12:11 AM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] Cannot create an lvm.
 
 
+Glenn,
+
+I guess you are not using devfs and your /dev/ nodes for the
+LVM devices might be wrong.
+
+Please run "vgmknodes;vgchange -ay" and retry to create your LV in VG
+"mass".
+
+BTW: you should better try LVM2 (our new development code base)
+rather than
+     LVM1.1, which has been an interim development version. In case
+you need
+     to stick with version 1, please take the recent 1.0.5 production
+version.
+
+Regards,
+Heinz    -- The LVM Guy --
 
 
+On Mon, Aug 26, 2002 at 06:17:06PM -0700, Glenn Shannon wrote:
+>  
+> Hi all.
+> 
+> I am having a problem creating a new LVM on my system.
+> 
+> I currently have one on there, and am trying to replace it with a
+> bigger set of drives.
+> 
+> It is failing when I go to lvcreate a logical volume.
+> 
+> Vgdisplay reports:
+> 
+> root@warlock:~# vgdisplay
+> --- Volume group ---
+<SNIP>
+> VG UUID               NxrOxe-GXEF-Cslo-D3NH-oXBg-mlxu-jsqdMo
+> 
+> 
+> root@warlock:~# vgdisplay --version
+> vgdisplay: Logical Volume Manager 1.1-rc2
+> Heinz Mauelshagen, Sistina Software  23/04/2002 (IOP 10)
+> 
+> root@warlock:~#
+> 
+> root@warlock:~# dmesg|grep LVM
+> LVM version 1.1-rc2(23/04/2002)
+> root@warlock:~#
+> 
+> 
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Greg Freemyer
-Internet Engineer
-Deployment and Integration Specialist
-Compaq ASE - Tru64 v4, v5
-Compaq Master ASE - SAN Architect
-The Norcross Group
-www.NorcrossGroup.com
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software
+Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242
+Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-----BEGIN PGP SIGNATURE-----
+Version: PGPfreeware 7.0.3 for non-commercial use <http://www.pgp.com>
+
+iQA/AwUBPWwBVqhwBN5wZKACEQKsFwCeMXla3/QOOaGkjUIyp+PDWUooBJAAoIY0
+plwi7CERe1Yvb8czG+bqHFYe
+=kkCs
+-----END PGP SIGNATURE-----
