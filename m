@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <1DCD421BDE8C3C478E9A0A84B75702931165D6@srv-pae-ex01.rge-rs.com.br>
-From: "Ricardo Mattia" <rmattia@rge-rs.com.br>
-Subject: [linux-lvm] S.A.M.E methodology
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] S.A.M.E methodology
+Message-ID: <20040108120942.GA20374@percy.comedia.it>
+References: <1DCD421BDE8C3C478E9A0A84B75702931165D6@srv-pae-ex01.rge-rs.com.br>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1DCD421BDE8C3C478E9A0A84B75702931165D6@srv-pae-ex01.rge-rs.com.br>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,34 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  8 06:03:01 2004
+Date: Thu Jan  8 07:11:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hello.
+On Thu, Jan 08, 2004 at 09:01:13AM -0200, Ricardo Mattia wrote:
+>	So, my question is : Has anyone implemented this stuff using
+>Linux SUSE and LVM? If yes, is it work and could you give me some tips
+>about it? 
+>	
+i don't know with suse, but i'd use a system that has LVM2 if i wanted
+striping and the ability to extend a striped lv.
 
-	Today we have a host running Oracle 8.1.7 on AIX 4.3.3.
-	We decided to migrate this system from RISC to Intel and the
-choosed operating system was SUSE Linux.
-	Besides that, we are changing the way Oracle Datafile's are
-distributed. After some internet research, we got in touch with a
-methodology called S.A.M.E, which stands for Stripe and Mirror
-Everything.=20
-	Basicaly, we need to Stripe all the storage available using LVM
-(on operating system level) and mirror everything (on storage level). Of
-course we increase our risk of an entire system failure in case of just
-"one" RAID crash.
-	This methodology is explained on Juan Loaiza's whitepaper, from
-Oracle Corporation.
-
-	So, my question is : Has anyone implemented this stuff using
-Linux SUSE and LVM? If yes, is it work and could you give me some tips
-about it?=20
-=09
-Thanks in advance.
-
-Best Regards,
-Ricardo Mattia
-http://www.rge-rs.com.br
-51 3218-3168
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
