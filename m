@@ -1,16 +1,27 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBD8nvr20354
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 03:49:57 -0500
-Received: from web52503.mail.yahoo.com (web52503.mail.yahoo.com
-	[206.190.39.124])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id iBD8ntlb018864
-	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 03:49:55 -0500
-Message-ID: <20041213084935.61935.qmail@web52503.mail.yahoo.com>
-Date: Mon, 13 Dec 2004 00:49:35 -0800 (PST)
-From: johon Doe <johond@yahoo.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBDFP3r12790
+	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 10:25:04 -0500
+Received: from einhorn.in-berlin.de (root@einhorn.in-berlin.de [192.109.42.8])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iBDFP1nf019062
+	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 10:25:02 -0500
+Received: from x-berg.in-berlin.de (x-berg.in-berlin.de [192.109.21.10])
+	by einhorn.in-berlin.de (8.12.10/8.12.10/Debian-4) with ESMTP id
+	iBDFOob5015586
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=NOT)
+	for <linux-lvm@redhat.com>; Mon, 13 Dec 2004 16:24:50 +0100
+Received: from philipp by x-berg.in-berlin.de with local (Exim 4.34)
+	id 1Cds49-0000NV-U1
+	for linux-lvm@redhat.com; Mon, 13 Dec 2004 16:24:49 +0100
+Date: Mon, 13 Dec 2004 16:24:49 +0100
+From: Philipp Schmidt <philipp@ppc.in-berlin.de>
 Subject: Re: [linux-lvm] duplicate pv.
-In-Reply-To: <20041212173549.GC3853@ppc.in-berlin.de>
-MIME-Version: 1.0
+Message-ID: <20041213152449.GC21170@ppc.in-berlin.de>
+References: <20041212173549.GC3853@ppc.in-berlin.de>
+	<20041213084935.61935.qmail@web52503.mail.yahoo.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20041213084935.61935.qmail@web52503.mail.yahoo.com>
+Sender: Philipp Schmidt <philipp@x-berg.in-berlin.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,46 +36,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On 2004-12-13 00:49:35 -0800, johon Doe <johond@yahoo.com>
+wrote in <20041213084935.61935.qmail@web52503.mail.yahoo.com>:
+> hi Phils,
+> I have Debian and I changed the value from 0 to 1 and
+> viceversa, but I have the same problem.
+> Any other ideas ?
 
---- Philipp Schmidt <philipp@ppc.in-berlin.de> wrote:
+set remove all md components from your lv, set md_component_detection = 1,
+do a pvcreate on this device, run pvscan and then add them to yor vg, 
+doubleck twice (by using lvdisplay -v) the md-device has been added and
+not its components.
 
-> On 2004-12-12 17:12:30 +0000, Alasdair G Kergon
-> <agk@redhat.com>
-> wrote in
-> <20041212171230.GL11338@agk.surrey.redhat.com>:
-> > On Sat, Dec 11, 2004 at 10:38:56PM +0000, Alasdair
-> G Kergon wrote:
-> > > On Sat, Dec 11, 2004 at 02:18:29PM +0100,
-> Philipp Schmidt wrote:
-> > > > look t your /etc/lvm/lvm.conf, have you set
-> md_component_detection = 1?
-> > > > i wonder why this isn't set by default, who
-> needs to use md compnents as
-> > > > singel pv?
-> > > It *is* set to 1 by default i.e. if you don't
-> specify 
-> > > a different value for it in the conf file.
-> >  
-> > I believe the Debian distribution may have set it
-> to 0 at one point because
-> > of problems in certain configurations: these cases
-> should be fixed by 2.00.29.
-> 
-> ok, i use debian here and it had cost me one day to
-> find this bad default
-> config... 
-> 
+Worked for me
 
-hi Phils,
-I have Debian and I changed the value from 0 to 1 and
-viceversa, but I have the same problem.
-Any other ideas ?
-thx :)
+AVE!
+  phils...
 
-
-
-		
-__________________________________ 
-Do you Yahoo!? 
-The all-new My Yahoo! - What will yours do?
-http://my.yahoo.com 
+-- 
+   {phils}--->---(mail: philipp@ppc.in-berlin.de)-->--(ircnet: phils)--,
+    wenn w eine   aube ist dn      man au dran dre en                   |
+         o     Schr        an muss     hc         h   (Kurt Schwitters) |
+:wq!    <--(phone: +49-179-6737439)--<--(jabber: phils@jabber.ccc.de)--'
