@@ -1,7 +1,9 @@
-Message-ID: <F888C30C3021D411B9DA00B0D0209BE8038F94F7@cvo-exchange.cvo.roguewave.com>
-From: Poul Petersen <petersp@roguewave.com>
-Subject: RE: [linux-lvm] LVM 1.0.4 pvmove is broken
+Message-ID: <009601c20204$81710e30$6501a8c0@bomoon>
+From: "bo" <bo@sosnetwork.net>
+References: <004d01c20110$f2b8ff70$6501a8c0@bomoon> <20020522144651.F9107@sistina.com>
+Subject: Re: [linux-lvm] Error on lvcreate or lvremove!
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,86 +14,239 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 22 18:25:02 2002
+Date: Wed May 22 21:51:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-	I've done a lot of testing with pvmove and these are the results:
+Heinz,
 
-	1) The pvmove tool (versions 1.0.3, 1.0.4, 1.1-rc2) all fail on an
-active volume group when running a LVM-1.0.4 patched 2.4.18 kernel
+Thanks for your help, it worked.
+However, I do not understand why I had this problem and how your suggestion
+make
+it work. The logical volume number is managed by LVM functions.
 
-	2) If the volume group is inactive, pvmove works fine in all cases.
+Another question is
 
-	3) The LVM-1.0.3 and 1.1-rc2 patches against the 2.4.18 kernel also
-work fine with all versions of pvmove.
+I have the same problem as mentioned in "Poul Petesen's LVM1.04 pvmove is
+broken" email
+today as
+        4) The RedHat 7.2 call to vgscan in rc.sysinit happens before
+            mounting other file-systems, for example "/usr". This causes the
+1.1-rc2
+            vgscan to fail since libreadline is in /usr/lib.
+I did not have this problem on LVM1.0.x. Now, I need to enable LVM and mount
+all of these volumes after system boot manually.
 
-	4) The RedHat 7.2 call to vgscan in rc.sysinit happens before
-mounting other file-systems, for example "/usr". This causes the 1.1-rc2
-vgscan to fail since libreadline is in /usr/lib. 
-
-	By using the -vv option to pvmove, I can see that pvmove is hanging
-at lv_le_remap from tools/lib (see attached pvmove output) - this combined
-with the strace output I posted before suggests that the ioctl call in
-tools/lib/lv_le_remap.c is where it is dying. 
-
-	I've tested this on three different machines (RedHat 7.1, 7.2) with
-the same results, so I don't think I am doing anything wrong. There seems to
-be something amiss in the Makefile generated patch for lvm-1.0.4 with kernel
-2.4.18. I welcome any suggestions on how I can persue tracking this problem
-down. I would like to use 1.0.4 as it is the latest stable release and I
-intend to install it on a production machine, so I would like to avoid
-1.1-rc2.
+Any suggestion or fixes?
 
 Thanks,
 
--poul
+Bo
 
---- pvmove output 
+----- Original Message -----
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+To: <linux-lvm@sistina.com>
+Sent: Wednesday, May 22, 2002 5:46 AM
+Subject: Re: [linux-lvm] Error on lvcreate or lvremove!
 
-[root@nfs1node1 root]# pvmove -vv /dev/sdb1
-pvmove -- checking name of source physical volume "/dev/sdb1"
-pvmove -- locking logical volume manager
-pvmove -- reading data of source physical volume from "/dev/sdb1"
-pvmove -- checking volume group existence
-pvmove -- reading data of volume group "vg0" from lvmtab
-pvmove -- checking volume group consistency of "vg0"
-pvmove -- searching for source physical volume "/dev/sdb1" in volume group
-"vg0"
-pvmove -- building list of possible destination physical volumes
-pvmove -- checking volume group activity
-pvmove -- moving physical extents in active volume group "vg0"
-pvmove -- WARNING: if you lose power during the move you may need to restore
-your LVM metadata from backup!
-pvmove -- do you want to continue? [y/n] y
-pvmove -- starting to move extents away from physical volume "/dev/sdb1"
-pvmove -- checking for enough free physical extents in "vg0" lv:
-/dev/vg0/lv0[1]  old_dev: 08:17  new_dev: 08:18  old_pe_sector: 8576
-new_pe_sector: 8576
-pvmove -- opening output physical volume "/dev/sdb2"
-pvmove -- llseeking input physical volume "/dev/sdb1"
-pvmove -- llseeking output physical volume "/dev/sdb2"
-pvmove -- /dev/sdb1 [PE 0 [lv0 [LE 0]] -> /dev/sdb2 [PE 0] [1/25]
-pvmove -- locking physical extent 0 of "/dev/sdb1" in kernel
-pvmove -- about to read input physical volume "/dev/sdb1" and to write
-output physical volume "/dev/sdb2"
-pvmove -- remapping physical extent in VGDA of kernel
-pvmove -- unlocking physical extent
-pvmove -- changing source "/dev/sdb1" in VGDA of kernel
-pvmove -- changing destination "/dev/sdb2" in VGDA of kernel
-pvmove -- writing physical extent part of VGDA on source "/dev/sdb1"
-pvmove -- writing physical extent part of VGDA on destination "/dev/sdb2"
-lv: /dev/vg0/lv0[1]  old_dev: 08:17  new_dev: 08:18  old_pe_sector: 16768
-new_pe_sector: 16768
-pvmove -- opening output physical volume "/dev/sdb2"
-pvmove -- llseeking input physical volume "/dev/sdb1"
-pvmove -- llseeking output physical volume "/dev/sdb2"
-pvmove -- /dev/sdb1 [PE 1 [lv0 [LE 1]] -> /dev/sdb2 [PE 1] [2/25]
-pvmove -- locking physical extent 1 of "/dev/sdb1" in kernel
-pvmove -- about to read input physical volume "/dev/sdb1" and to write
-output physical volume "/dev/sdb2"
-pvmove -- remapping physical extent in VGDA of kernel
 
-*This is where it dies*
+> On Tue, May 21, 2002 at 02:46:22PM -0700, bo wrote:
+> > Hello,
+> >
+> > I did not have this kind of problem before but I installed LVM1.1-rc2,
+> > I am experiencing the following errors;
+> >
+> > Problem1) could not create an LV from RAID1 vol group
+> >     [root@localhost /]# lvcreate -l 496 -n lvraid1 volRaid1
+> >     lvcreate -- ERROR "Operation not permitted" opening logical volume
+"/dev/volRaid1/lvraid1"
+>
+> Looks like your logical volume numbers are invalid.
+>
+> Take a VGDA backup with vgcfgbackup(8) and store /etc/lvmconf/*
+> in a safe location.
+>
+> Run "vgscan -f" and retry.
+>
+> >
+> > Problem2) I could not remove it
+> >     [root@localhost /]# lvremove /dev/volRaid1/lvraid1
+> >     lvremove -- do you really want to remove "/dev/volRaid1/lvraid1"?
+[y/n]: y
+> >     lvremove -- ERROR "lv_release(): LV number" releasing logical volume
+"/dev/volRaid1/lvraid1"
+> >
+> > Problem3) I could not create a striped LV
+> >     [root@localhost /]# lvcreate -l200 -i2 -I4 -n lvjb2s volDisk2
+> >     lvcreate -- not enough allocatable/free physical volume space in
+"volDisk2"
+> >     lvcreate -- please check, if physical volumes are allocatable
+>
+> Could be caused by the assumed logical volume number problem but please
+> check that your physical volumes are allocatable with pvdisplay(8).
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+>
+> >
+> > Attched are more system information.
+> >
+> > Please provide me your help,
+> >
+> > Thanks,
+> >
+> > Bo
+> >
+> > [root@localhost /]# pvscan
+> > pvscan -- reading all physical volumes (this may take a while...)
+> > pvscan -- ACTIVE   PV "/dev/md0"   of VG "volRaid0" [1.95 GB / 1.95 GB
+free]
+> > pvscan -- ACTIVE   PV "/dev/md1"   of VG "volRaid0" [1.95 GB / 1.95 GB
+free]
+> > pvscan -- ACTIVE   PV "/dev/md2"   of VG "volRaid0" [1.95 GB / 1.95 GB
+free]
+> > pvscan -- ACTIVE   PV "/dev/md3"   of VG "volRaid1" [992 MB / 992 MB
+free]
+> > pvscan -- ACTIVE   PV "/dev/md4"   of VG "volRaid1" [992 MB / 992 MB
+free]
+> > pvscan -- ACTIVE   PV "/dev/md5"   of VG "volRaid5" [1.95 GB / 1.95 GB
+free]
+> > pvscan -- ACTIVE   PV "/dev/md6"   of VG "volRaid5" [1.95 GB / 1.95 GB
+free]
+> > pvscan -- ACTIVE   PV "/dev/hdc9"  of VG "volDisk"  [992 MB / 992 MB
+free]
+> > pvscan -- ACTIVE   PV "/dev/hdc10" of VG "volDisk2" [992 MB / 992 MB
+free]
+> > pvscan -- ACTIVE   PV "/dev/hdd9"  of VG "volDisk"  [992 MB / 992 MB
+free]
+> > pvscan -- ACTIVE   PV "/dev/hdd10" of VG "volDisk2" [992 MB / 992 MB
+free]
+> > pvscan -- ACTIVE   PV "/dev/hda15" of VG "volDisk"  [996 MB / 996 MB
+free]
+> > pvscan -- ACTIVE   PV "/dev/hda16" of VG "volDisk2" [996 MB / 996 MB
+free]
+> > pvscan -- total: 13 [17.59 GB] / in use: 13 [17.59 GB] / in no VG: 0 [0]
+> >
+> > [root@localhost /]# vgdisplay
+> > --- Volume group ---
+> > VG Name               volRaid0
+> > VG Access             read/write
+> > VG Status             available/resizable
+> > VG #                  2
+> > MAX LV                256
+> > Cur LV                0
+> > Open LV               0
+> > MAX LV Size           255.99 GB
+> > Max PV                256
+> > Cur PV                3
+> > Act PV                3
+> > VG Size               5.84 GB
+> > PE Size               4 MB
+> > Total PE              1496
+> > Alloc PE / Size       0 / 0
+> > Free  PE / Size       1496 / 5.84 GB
+> > VG UUID               89ZFBj-yaQ0-c26m-uKgF-YhvG-2lGR-C8cvWm
+> >
+> > --- Volume group ---
+> > VG Name               volRaid1
+> > VG Access             read/write
+> > VG Status             available/resizable
+> > VG #                  3
+> > MAX LV                256
+> > Cur LV                0
+> > Open LV               0
+> > MAX LV Size           255.99 GB
+> > Max PV                256
+> > Cur PV                2
+> > Act PV                2
+> > VG Size               1.94 GB
+> > PE Size               4 MB
+> > Total PE              496
+> > Alloc PE / Size       0 / 0
+> > Free  PE / Size       496 / 1.94 GB
+> > VG UUID               3keDZ8-jgky-uhKS-q1bi-d1Jf-qmsq-hw7GUs
+> >
+> > --- Volume group ---
+> > VG Name               volRaid5
+> > VG Access             read/write
+> > VG Status             available/resizable
+> > VG #                  4
+> > MAX LV                256
+> > Cur LV                0
+> > Open LV               0
+> > MAX LV Size           255.99 GB
+> > Max PV                256
+> > Cur PV                2
+> > Act PV                2
+> > VG Size               3.89 GB
+> > PE Size               4 MB
+> > Total PE              996
+> > Alloc PE / Size       0 / 0
+> > Free  PE / Size       996 / 3.89 GB
+> > VG UUID               U2l1OW-L3ha-r3kH-BPXw-IJP5-ksA7-77iRJB
+> >
+> > --- Volume group ---
+> > VG Name               volDisk
+> > VG Access             read/write
+> > VG Status             available/resizable
+> > VG #                  0
+> > MAX LV                256
+> > Cur LV                0
+> > Open LV               0
+> > MAX LV Size           255.99 GB
+> > Max PV                256
+> > Cur PV                3
+> > Act PV                3
+> > VG Size               2.91 GB
+> > PE Size               4 MB
+> > Total PE              745
+> > Alloc PE / Size       0 / 0
+> > Free  PE / Size       745 / 2.91 GB
+> > VG UUID               7RhXUS-Pw5B-EBYN-GKIM-PO1d-4uD7-4apSvp
+> >
+> > --- Volume group ---
+> > VG Name               volDisk2
+> > VG Access             read/write
+> > VG Status             available/resizable
+> > VG #                  1
+> > MAX LV                256
+> > Cur LV                0
+> > Open LV               0
+> > MAX LV Size           255.99 GB
+> > Max PV                256
+> > Cur PV                3
+> > Act PV                3
+> > VG Size               2.91 GB
+> > PE Size               4 MB
+> > Total PE              745
+> > Alloc PE / Size       0 / 0
+> > Free  PE / Size       745 / 2.91 GB
+> > VG UUID               VT6shD-P4lh-Rk2g-DUHi-T2ch-p14Q-kl3BuV
+> >
+> >
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+>
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
