@@ -1,11 +1,10 @@
-Date: Sat, 1 Sep 2001 09:56:43 -0400
-From: Wayne Topa <wtopa@dmcom.net>
-Subject: Re: [linux-lvm] Debian apt-get link problem
-Message-ID: <20010901095643.A7188@dmcom.net>
-References: <20010827114957.A23458@dmcom.net> <20010830141259.E22755@dmcom.net> <20010901003241.B1210@wookimus.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010901003241.B1210@wookimus.net>
+Message-ID: <3B90EEC8.3030402@st-peter.stw.uni-erlangen.de>
+Date: Sat, 01 Sep 2001 16:20:56 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
+References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de> <20010831110512.V541@turbolinux.com> <3B90C9A4.3080005@st-peter.stw.uni-erlangen.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +16,130 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com, linux-xfs@oss.sgi.com, akpm@zip.com.au, neilb@cse.unsw.edu.au
 
-^chewie(chewie@wookimus.net) is reported to have said:
-> On Thu, Aug 30, 2001 at 02:12:59PM -0400, Wayne Topa wrote:
-> > >   I just tried the link 
-> > > ( deb ftp://ftp.sistina.com/pub/LVM/binaries/debian unstable main )
-> 
-> I hate to state the obvious, but apt does not Debian make.  Try
-> manually downloading the *.deb files and installing them manually with
-> dpkg -i <pkg.deb>.
+and here are the results of mkfs
 
-Thanks.  Yes that is what I did do, but when both the docs had the
-apt-get sources address, which didn't work, I thought I was doing
-something wrong.  I don't rely on .deb files, just use apt-get when
-there are files available.
+###############################################################
+#########   linus-2.4.9 lvm-1.0.1rc1        ###################
+###############################################################
 
-Happily running the latest version of LVM, without having used
-apt-get.
+[root@svetljo root]# mkfs -t reiserfs -f /dev/myData/SRC
+mkreiserfs, 2001 - reiserfsprogs 3.x.0j
+===================================================================
+LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
+-------------------------------------------------------------------------------
+|###|type|ilen|f/sp| loc|fmt|fsck|                   key 
+       |
+|   |    |    |e/cn|    |   |need| 
+       |
+-------------------------------------------------------------------------------
+Segmentation fault
+[root@svetljo root]# mkfs -t ext2 -f /dev/myData/SRC
+mke2fs 1.22, 22-Jun-2001 for EXT2 FS 0.5b, 95/08/09
+mkfs.ext2: bad fragment size - /dev/myData/SRC
 
-egards
+################################################################
+###########  linux-2.4.9-ac5 lvm-1.0    ########################
+################################################################
 
-Wayne
--- 
-Don't hit the keys so hard, it hurts.
-_______________________________________________________
+[root@svetljo root]# mkfs -t reiserfs /dev/myData/SRC
+mkreiserfs, 2001 - reiserfsprogs 3.x.0j
+===================================================================
+LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
+-------------------------------------------------------------------------------
+|###|type|ilen|f/sp| loc|fmt|fsck|                   key 
+       |
+|   |    |    |e/cn|    |   |need| 
+       |
+-------------------------------------------------------------------------------
+Segmentation fault
+[root@svetljo root]# mkfs -t reiserfs -f /dev/myData/SRC
+mkreiserfs, 2001 - reiserfsprogs 3.x.0j
+===================================================================
+LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
+-------------------------------------------------------------------------------
+|###|type|ilen|f/sp| loc|fmt|fsck|                   key 
+       |
+|   |    |    |e/cn|    |   |need| 
+       |
+-------------------------------------------------------------------------------
+Segmentation fault
+[root@svetljo root]# mkfs -t ext2 -f /dev/myData/SRC
+mke2fs 1.22, 22-Jun-2001 for EXT2 FS 0.5b, 95/08/09
+mkfs.ext2: bad fragment size - /dev/myData/SRC
+[root@svetljo root]# mkfs -t ext2 /dev/myData/SRC
+mke2fs 1.22, 22-Jun-2001 for EXT2 FS 0.5b, 95/08/09
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+786432 inodes, 1572864 blocks
+78643 blocks (5.00%) reserved for the super user
+First data block=0
+48 block groups
+32768 blocks per group, 32768 fragments per group
+16384 inodes per group
+Superblock backups stored on blocks:
+         32768, 98304, 163840, 229376, 294912, 819200, 884736
+
+Writing inode tables: Segmentation fault
+
+#####################################################################
+###    and linux-2.4.10-pre2-xfs lvm-1.0.1rc2                 #######
+#####################################################################
+
+[root@svetljo root]# mkfs -t reiserfs /dev/myData/SRC
+mkreiserfs, 2001 - reiserfsprogs 3.x.0j
+===================================================================
+LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
+------------------------------------------------------------------------------- 
+|###|type|ilen|f/sp| loc|fmt|fsck|                   key 
+       | |   |    |    |e/cn|    |   |need| 
+                | 
+------------------------------------------------------------------------------- 
+Segmentation fault
+[root@svetljo root]# mkfs -t reiserfs -f /dev/myData/SRC
+mkreiserfs, 2001 - reiserfsprogs 3.x.0j
+===================================================================
+LEAF NODE (8211) contains level=1, nr_items=2, free_space=3932 rdkey
+------------------------------------------------------------------------------- 
+|###|type|ilen|f/sp| loc|fmt|fsck|                   key 
+       | |   |    |    |e/cn|    |   |need| 
+                | 
+------------------------------------------------------------------------------- 
+Segmentation fault
+[root@svetljo root]# mkfs -t ext2 /dev/myData/SRC
+mke2fs 1.22, 22-Jun-2001 for EXT2 FS 0.5b, 95/08/09
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+786432 inodes, 1572864 blocks
+78643 blocks (5.00%) reserved for the super user
+First data block=0
+48 block groups
+32768 blocks per group, 32768 fragments per group
+16384 inodes per group
+Superblock backups stored on blocks:
+         32768, 98304, 163840, 229376, 294912, 819200, 884736
+
+Writing inode tables: Segmentation fault
+[root@svetljo root]# mkfs -t ext2 -f /dev/myData/SRC
+mke2fs 1.22, 22-Jun-2001 for EXT2 FS 0.5b, 95/08/09
+mkfs.ext2: bad fragment size - /dev/myData/SRC
+[root@svetljo root]# mkfs -t xfs /dev/myData/SRC
+meta-data=/dev/myData/SRC        isize=256    agcount=8, agsize=196608 blks
+data     =                       bsize=4096   blocks=1572864, imaxpct=25
+          =                       sunit=0      swidth=0 blks, unwritten=0
+naming   =version 2              bsize=4096
+log      =internal log           bsize=4096   blocks=1200
+realtime =none                   extsz=65536  blocks=0, rtextents=0
+[root@svetljo root]# mkfs -t xfs -f /dev/myData/SRC
+meta-data=/dev/myData/SRC        isize=256    agcount=8, agsize=196608 blks
+data     =                       bsize=4096   blocks=1572864, imaxpct=25
+          =                       sunit=0      swidth=0 blks, unwritten=0
+naming   =version 2              bsize=4096
+log      =internal log           bsize=4096   blocks=1200
+realtime =none                   extsz=65536  blocks=0, rtextents=0
