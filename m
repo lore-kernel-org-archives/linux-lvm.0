@@ -1,44 +1,40 @@
-Date: Fri, 20 Oct 2000 16:23:58 +0200
-From: Jos Visser <josv@osp.nl>
-Subject: Re: [linux-lvm] using previously created lvm
-Message-ID: <20001020162358.I442@jadzia.josv.com>
-References: <000401c03a8e$4861a620$a200a8c0@babbage.siliconinfusion.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <000401c03a8e$4861a620$a200a8c0@babbage.siliconinfusion.com>; from frank_wray@siliconinfusion.com on Fri, Oct 20, 2000 at 01:07:12PM +0100
+From: "Frank Wray" <frank_wray@siliconinfusion.com>
+Subject: RE: [linux-lvm] using previously created lvm
+Date: Fri, 20 Oct 2000 15:19:06 +0100
+Message-ID: <000a01c03aa0$b57e3720$a200a8c0@babbage.siliconinfusion.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20001020154123.A10018@colombina.comedia.it>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Frank Wray <frank_wray@siliconinfusion.com>
+To: bluca@comedia.it
 Cc: linux-lvm@msede.com
 
-As far as I know, this will NOT work, because:
+> On Fri, Oct 20, 2000 at 01:07:12PM +0100, Frank Wray wrote:
+> > Hi All,
+> > 
+> > I would like to move a volume group from
+> > the HPUX 10.20 box that it was created on
+> > to a Linux box. The logical volumes are
+> > all of type HFS and currently on a single
+> > physical volume.
+> No way, the format of PV under HP-UX and linux are different,
+> besides Linux does not support HFS Filesystems.
+> you have to backup all data on the HP9000 then restore on
+> the linux.
+Apologies - I had confused the HFS support with what turns
+out to be Mac HFS support
 
-a) The HP-UX and Linux LVM disk layouts are different, so vgscan on
-   Linux will not recognise the disks.
-b) And even if vgscan would recognise it, Linux does not support the
-   HP-UX HFS.
+> Besides HP9000 mainly use scsi differential disks, which
+> do not work with Scsi single-ended controllers found on PCs
+We started out with older C-class machines that 
+had differential interfaces, then later machines
+had plain wide interfaces until the latest upgrade
+to a B-class machine which has LDV interfaces! How
+are you meant to keep up??? - Long live Linux:)
 
-++Jos
-
-And thus it came to pass that Frank Wray wrote:
-(on Fri, Oct 20, 2000 at 01:07:12PM +0100 to be exact)
-
-> Hi All,
-> 
-> I would like to move a volume group from
-> the HPUX 10.20 box that it was created on
-> to a Linux box. The logical volumes are
-> all of type HFS and currently on a single
-> physical volume.
-> 
-> Anybody have any experience in doing this?
-> Will vgscan recognise a HPUX vg?
-> 
-> Many thanks in advance
-> Frank
-
--- 
-Never underestimate the power of denial.
+A shame that a straight forward port was not possible, but
+many thanks for the help
+Frank
