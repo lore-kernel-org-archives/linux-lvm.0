@@ -1,15 +1,23 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1RNi9K27740
-	for <linux-lvm@redhat.com>; Sun, 27 Feb 2005 18:44:09 -0500
-Received: from Datawav.net ([63.228.244.4])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j1RNi7gK020198
-	for <linux-lvm@redhat.com>; Sun, 27 Feb 2005 18:44:08 -0500
-Message-ID: <4222541B.40206@theserrs.net>
-Date: Sun, 27 Feb 2005 16:13:31 -0700
-From: Scott Serr <serrs@theserrs.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1S2n9K23391
+	for <linux-lvm@redhat.com>; Sun, 27 Feb 2005 21:49:09 -0500
+Received: from pfepa.post.tele.dk (pfepa.post.tele.dk [195.41.46.235])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j1S2n824019448
+	for <linux-lvm@redhat.com>; Sun, 27 Feb 2005 21:49:08 -0500
+Received: from debian (0x50a44a50.arcnxx14.adsl-dhcp.tele.dk [80.164.74.80])
+	by pfepa.post.tele.dk (Postfix) with ESMTP id E9F1447FE34
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 03:49:05 +0100 (CET)
+Received: from [192.168.0.29] (helo=[192.168.0.29])
+	by debian with esmtp (Exim 3.35 #1 (Debian)) id 1D5ay0-0000sA-00
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 03:49:04 +0100
+Message-ID: <422286AB.3020705@gozar.dynu.com>
+Date: Mon, 28 Feb 2005 03:49:15 +0100
+From: Heine Laursen <maillist@gozar.dynu.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM1 Bad harddisk. How do I het data off the Volume?
+References: <421E3614.5010107@gozar.dynu.com>
+In-Reply-To: <421E3614.5010107@gozar.dynu.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm over raid5 - sizes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,33 +31,17 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I have alot of ideas going through my head.  Here is my situation:
+Heine Laursen wrote:
 
-I've had 5 IDEs with 4 partitions each.  Each partition is in a RAID5 
-md:stripped.
-md0 = hda5, hdb5, hdc5, hdd5, hde5
-md1 = hda6, hdb6, hdc6, hdd6, hde6
-md2 = hda7, hdb7, hdc7, hdd7
-md3 = hda8, hdb8, hdc8, hdd8
+Is there no one who had similar experincence?
+It's not like I'm going to hunt you down, if somthing goes wrong :-)
+I would really apriceate any sugestion's. Granted that any is given,
 
-md0-3 are in an LVM2 volume group.  This makes it really nice when 
-expanding or adding another disk because I just pull say md3 out of the 
-volume group... rebuild md3 bigger and then add it back. 
 
-I just upgraded, replacing hde with a bigger disk and while the pvmoves 
-are taking FOREVER...  I thought what is the right size for the RAID5 
-chunk-size?
 
-I have chunk-size = 128k right now.
 
-The pv extents size is (always?) 4MB.
+else I have to hunt you down :-)
 
-Am I just shooting myself in the foot by not making my RAID chunk size 
-atleast 1MB?  Can someone give me a reason to increase it?
-
-BTW, I'm using reiserfs with default sizes and my needs are mixed.  I 
-have many couple gig files, but also some "rsyncs" of client machines as 
-backups/archives.
-
-Thanks for any ideas,
-Scott
+-- 
+Sincerley
+Heine Laursen
