@@ -1,9 +1,12 @@
-Return-Path: <dick@britain.agilent.com>
-Date: Mon, 28 May 2001 13:44:34 +0100 (BST)
-From: Dick Middleton <dick@britain.agilent.com>
-Message-Id: <200105281244.NAA14609@queeg.britain.agilent.com>
-In-reply-to: "Heinz J. Mauelshagen"'s message of Mon, 28 May 2001 11:20:30 +0000 <20010528112030.H26710@sistina.com>
-Subject: [linux-lvm] Root on LVM and vgscan
+Return-Path: <hugo@carfax.nildram.co.uk>
+From: hugo@carfax.nildram.co.uk
+Date: Mon, 28 May 2001 14:40:43 +0100
+Subject: Re: [linux-lvm] Patching Linus' pre- kernels?
+Message-ID: <20010528144043.A544@carfax>
+References: <20010525162619.D24299@carfax> <20010528112224.I26710@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010528112224.I26710@sistina.com>; from Mauelshagen@sistina.com on 28 May 2001, 11:22:24 +0000 (+0000)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +18,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Thanks for your answers - as usual they provoke more questions...
+On 28 May 2001, 11:22:24 +0000 (+0000), Heinz J. Mauelshagen wrote:
 
->  On Fri, May 25, 2001 at 09:28:34AM +0100, Dick Middleton wrote:
->  > I have root running on lvm on sw raid partitions on linux 2.2.18.  It all
->  > works fine.  However I have had difficulty during booting after adding new
->  > LVs.  The symptom is that the initial mounts of LVs fails or the wrong
->  > partition is mounted.
->  > 
->  > What happens is that vgscan is run during the initrd phase and so the lvmtab
->  > is updated on the ram disk.  Once the root file system on the hard disk has
->  > been mounted the lvmtab on that comes into use.  That has not been updated by
->  > vgscan and so does not reflect the changes. 
->  > 
->  > Obviously it's possible to run vgscan again (between remounting root rw and
->  > checking the other discs) to update the lvmtab but it does beg a few
->  > questions.
+   Heinz - 
 
->  Yes, that's the option (forcing some overhead).
->  The other would be to get the actual /etc/lvmtab* from the initial ram disk :-)
+> - change get_hardblocksize to get_hardsect_size and recompile -or-
 
-Ah yes, I discovered that it lives in /initrd! Can I assume from this that
-it's safe to copy the lvmtab.  Is that a good solution?
+   Someone else (Gergely Tamas; thank you) sent me the same patch,
+which compiles with no problems. Thanks.
 
->  > 
->  > 1) why does mount use the data in lvmtab and not in /proc to find out about
->  >    active VGs?
+   I am pleased to report that LVM is now holding /var, /tmp and /usr
+on my system, without problems. I shall put /home under LVM as soon as
+I can pluck up the courage to trust my backups :) (I have little free
+space on this system -- moving things is a bit tight).
 
->  mount doesn't access /etc/lvmtab* at all.
+   Thank you for your help,
+   Hugo.
 
-Now you've got me.  Why/how does mount mount the wrong partition when lvmtab
-is out of date if it doesn't access lvmtab? Are /dev/<vg>/<lv> updated by
-vgscan as well? It looked to me as if they weren't. Do they need to be copied
-from /initrd too?
-
-What should I read to better understand how all this works?
-
-Dick
+-- 
+    ---- Hugo Mills --- The Creature from the Black Logon ----
+hugo@lug.org.uk     hugo@carfax.nildram.co.uk     hugo@soton.ac.uk
+     ---- "We did a risk management review. We concluded ----
+            that there was no risk of any management."
