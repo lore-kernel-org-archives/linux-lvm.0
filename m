@@ -1,9 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Can't find LVM partition
-Message-ID: <20020618123158.B26268@sistina.com>
-References: <C394073E4521D411ABF10006293838D604CA574F@cmh0401mai01.amr.stercomm.com>
+Subject: Re: [linux-lvm] pb with vgimport
+Message-ID: <20020618130736.C26268@sistina.com>
+References: <mnet3.1023803882.15501.sgallet@netcourrier.com>
 Mime-Version: 1.0
-In-Reply-To: <C394073E4521D411ABF10006293838D604CA574F@cmh0401mai01.amr.stercomm.com>; from Darryl_Stauffer@stercomm.com on Thu, Jun 13, 2002 at 11:36:38AM -0400
+In-Reply-To: <mnet3.1023803882.15501.sgallet@netcourrier.com>; from sgallet@netcourrier.com on Tue, Jun 11, 2002 at 03:58:03PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +15,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun 18 05:38:01 2002
+Date: Tue Jun 18 06:14:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-Darryl,
+"lvmvg1PV_EXPPV_EXPPV_EXP" looks very strange.
+The suffix PV_EXP should only be there once.
 
-as Patrick said, vgscan should find your LVM partition fine unless it got
-written over.
+Which LVM versions of the tools and driver did you use?
+Do you remmeber the steps which lead to this situation?
 
-In case just the LVM metadata at the beginning of that partition (~ < 1MB)
-got overwritten during install, backups of /etc/lvmconf/* and vgcfgrestore(8)
-are your friends as Sander metioned. If more is gone you probably wont't get
-back a whole lot of useful data.
+Please send a bzipped tasball which contains the output files retrieved w=
+ith
 
-Any progress so far?
+for d in /dev/hd[e-g]1 /dev/hdk
+do
+	dd if=3D$d of=3D`basename $d`.vgda bs=3D1k count=3D4k
+done
 
+to me directly <mge@sistina.com> to fix this.
 
-On Thu, Jun 13, 2002@11:36:38AM -0400, Stauffer, Darryl wrote:
+On Tue, Jun 11, 2002 at 03:58:03PM +0200, sgallet@netcourrier.com wrote:
 > Hello,
-> 
-> I just got done upgrading from Redhat 7.2 to Redhat 7.3.  My home directory
-> was setup on its own partition using LVM and reiserFS.  The upgrade was done
-> by formatting the original root partition and reinstalling OS which means
-> that all the LVM info is gone.  Is there any way to recover my LVM
-> partition?
-> 
-> Thanks,
-> Darryl
-> 
+> I have an error when i do=20
+> vgimport lvmvg1 /dev/hde1 /dev/hdf1 /dev/hdg1 /dev/hdk
+> vgimport -- ERROR: wrong number of physical volumes to import volume gr=
+oup "lvmvg1
+>=20
+> This is my pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdk"   is in EXPORTED VG "lvmvg1PV_EXPPV_EX=
+PPV_EXP" [76.69 GB / 0 free]
+> pvscan -- inactive PV "/dev/hdg1"  is in EXPORTED VG "lvmvg1PV_EXPPV_EX=
+PPV_EXP" [37.27 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdh1" of VG "lvmvg2"                       =
+  [74.52 GB / 55.89 GB free]
+> pvscan -- inactive PV "/dev/hde1"  is in EXPORTED VG "lvmvg1PV_EXPPV_EX=
+PPV_EXP" [38.34 GB / 0 free]
+> pvscan -- inactive PV "/dev/hdf1"  is in EXPORTED VG "lvmvg1PV_EXPPV_EX=
+PPV_EXP" [28.62 GB / 0 free]
+> pvscan -- total: 5 [255.47 GB] / in use: 5 [255.47 GB] / in no VG: 0 [0=
+]
+>=20
+> Help me please
+>=20
+> CONFIDENTIALITE :=20
+> Ce message et les =E9ventuelles pi=E8ces attach=E9es sont confidentiels=
+.=20
+> Si vous n'=EAtes pas dans la liste des destinataires, veuillez informer=
+ l'exp=E9diteur imm=E9diatement et ne pas divulguer le contenu =E0 une ti=
+erce personne, ne pas l'utiliser pour quelque raison que ce soit, ne pas =
+stocker ou copier l'information qu'il contient sur un quelconque support.
+>=20
+> -------------------------------------------------------------
+> NetCourrier, votre bureau virtuel sur Internet : Mail, Agenda, Clubs, T=
+oolbar...
+> Web/Wap : www.netcourrier.com
+> T=E9l=E9phone/Fax : 08 92 69 00 21 (0,34 =80 TTC/min)
+> Minitel: 3615 NETCOURRIER (0,15 =80 TTC/min)
+>=20
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
--- 
+--=20
 
 Regards,
 Heinz    -- The LVM Guy --
@@ -59,7 +90,9 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -67,4 +100,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
