@@ -1,62 +1,87 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200004191123.NAA05403@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Devfs and lvm problems
-In-Reply-To: <20000418160645.6431.qmail@servnix.lan.wronline.de> from Stefan Paletta at "Apr 18, 2000  6: 6:45 pm"
-Date: Wed, 19 Apr 2000 13:23:02 +0200 (MEST)
+Date: Wed, 19 Apr 2000 19:51:41 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: [linux-lvm] lvm-tools patches
+Message-ID: <20000419195141.K21935@vestdata.no>
 Mime-Version: 1.0
-Content-Transfer-Encoding: Quoted-Printable
+Content-Type: multipart/mixed; boundary=vkogqOf2sHV7VnPd
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+To: LVM Mailing List <linux-lvm@msede.com>
+
+
+--vkogqOf2sHV7VnPd
 Content-Type: text/plain; charset="iso-8859-1"
-To: Stefan Paletta <paletta@WRonline.de>
-Cc: linux-lvm@msede.com
+Content-Transfer-Encoding: quoted-printable
 
-> matthaes@pharos.hsp.de wrote/schrieb/scribsit:
-> > 1.) devfsd doesn=B4t create /dev/vg00/group etc files, so vgchange -ay
-> >     fails
-> >=20
-> > 2.) vgscan fails with=20
-> >=20
-> > vgscan -- found inactive volume group "vg00"
-> > vgscan -- ERROR "lvm_remouverecursive(): opendir" removing volume group=
- directory and special files
-> > vgscan -- ERROR "lvm_remouverecursive(): opendir" creating "/etc/lvmtab=
-" and "/etc/lvmtab.d"
->=20
-> The problem is that vgscan wants to recursively remove /dev/vg00 and
-> its contents but mishandles the case that /dev/vg00 does not even
-> exist anymore (since after a reboot a devfs is 'clean').
->=20
-> This is easy to fix, I'm attaching a patch.
-> Would the lvmtools maintainer consider this patch for inclusion into
-> the tree?
+Hi
 
-Sure, it will be included!
+I've attached a few small patches for lvm-tools (0.8final).
 
-Heinz
+* lvm-compile.patch changes gnu/types.h to sys/types.h - it would not
+  compile without this change. (On RH 6.2)
+* lvm-lvdisplay fixes a bug that made it impossible to use "-v -v".
+* lvm-pvmove removes the source-PV equals dest-PV test. I can't see any
+  reason for this - I want to be able to move my PEs around on the same=20
+  disk....
 
->=20
-> Stefan
-
-[Attachment, skipping...]
 
 
 --=20
+Ragnar Kj=EF=BF=BDrstad
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="lvm-compile.patch"
 
-Systemmanagement TS                              T-Nova
-                                                 Entwicklungszentrum Darmst=
-adt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-
+--- LVM/0.8final.orig/tools/lib/liblvm.h	Tue Feb 22 03:09:32 2000
++++ LVM/0.8final/tools/lib/liblvm.h	Wed Apr 19 19:12:11 2000
+@@ -47,7 +47,7 @@
+ #  include <linux/version.h>
+ #endif
+ 
+-#include <gnu/types.h>
++#include <sys/types.h>
+ 
+ #include <sys/stat.h>
+ 
+
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="lvm-lvdisplay.patch"
+
+--- LVM/0.8final.orig/tools/lvdisplay.c	Tue Feb 22 03:09:33 2000
++++ LVM/0.8final/tools/lvdisplay.c	Wed Apr 19 19:14:33 2000
+@@ -149,7 +149,7 @@
+       return LVM_ELVDISPLAY_LV_MISSING;
+    }
+ 
+-   if ( opt_c + opt_v > 1) {
++   if ( opt_c && opt_v ) {
+       fprintf ( stderr, "%s -- option v not allowed with option c\n\n", cmd);
+       return LVM_ELVDISPLAY_LV_MISSING;
+    }
+
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="lvm-pvmove.patch"
+
+--- LVM/0.8final.orig/tools/pvmove.c	Tue Feb 22 03:09:33 2000
++++ LVM/0.8final/tools/pvmove.c	Wed Apr 19 19:33:12 2000
+@@ -292,13 +292,6 @@
+       return LVM_EPVMOVE_VG_CHECK_CONSISTENCY;
+    }
+ 
+-   if ( vg->pv_cur == 1) {
+-      fprintf ( stderr, "%s -- volume group \"%s\" only has 1 "
+-                        "physical volume\n\n",
+-                        cmd, vg_name);
+-      return LVM_EPVMOVE_PV_CUR;
+-   }
+-
+    /* get index of source physical volume */
+    if ( opt_v > 0) printf ( "%s -- searching for source physical volume \"%s\" "
+                             "in volume group \"%s\"\n",
+
+--vkogqOf2sHV7VnPd--
