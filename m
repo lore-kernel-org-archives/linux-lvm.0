@@ -1,10 +1,11 @@
-Return-Path: <wim@comned.com>
-From: "wim bakker" <wim@comned.com>
-Date: Thu, 25 Jan 2001 01:37:58 +0100
-Message-ID: <web-8140650@comned.com>
+Return-Path: <mvasa@confluencenetworks.com>
+From: "Mayank Vasa" <mvasa@confluencenetworks.com>
+Subject: RE: [linux-lvm] Newbie questions
+Date: Wed, 24 Jan 2001 17:31:37 -0800
+Message-ID: <OGEIIBECLDEKAJGFBOGCKEDDCAAA.mvasa@confluencenetworks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgextend segfaults reprise
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20010124232733.A2053@srv.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,19 +20,87 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Thanks for the answers, yes I didn't apply patches to the
-2.4.0
-and 2.4.1-pre10 kernel, I hadn't read the README in the
-PATCHES directory because I thought lvm support in the
-kernel meant I didn't had to apply patches, but that was a
-mistake on my side
-All works very fine now, I have now a 174G gv consisting of
-4 pv's , all assigned to one lv (sounds cool) I made
-reiserfs on it when I had created the lv for the first time
-(only one pv in the vg) , made filesystem with reiserfs and
-one by one I added the other pv's using vgextend and
-lvextend and resize_reiserfs and it worked out great, no
-problems, great!!!
-wim bakker
-ComNed Netwerken BV
-31 20 4350025
+Michael/Heinz
+
+Thanks for the answers.
+
+Read a lil' more and have one more question. From a application point of
+view, would the resize utility (extonline) take care of application flushing
+or not?
+
+If it does, how? If not, wouldn't you need to take care of that?
+
+Thanks.
+-mayank.
+
+
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of Heinz J. Mauelshagen
+Sent: Wednesday, January 24, 2001 3:28 PM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] Newbie questions
+
+
+On Wed, Jan 24, 2001 at 02:21:20PM -0800, Mayank Vasa wrote:
+> Hi,
+>
+> I am new to LVM and have some basic questions:
+>
+> 1) From the documentation I have read, I think once you extend/reduce a LV
+> or VG you don't need to reboot the system. Correct?
+
+Correct.
+
+>
+> 2) Assuming 1 is correct, how is the filesystem made aware of the changes?
+> I'd like to understand the flow of this too.
+
+Its size needs to be changed in a seperate step.
+With ext2 there's Ted Tso's offline resizer and for eg. Andreas Dilger's
+online resizer.
+With reiserfs there's an online extender and offline shrinker available.
+
+>
+> 3) What are LVM snapshots?
+
+Another LV exposing a "frozen" image of a preexisting LV.
+
+IOW: you create another LV (the snapshot LV) which is "connected" to an
+     already exiting one (called original LV in this context).
+     The snapshot LV doesn't change its content while the original LV can
+     still be updated (changed).
+
+>
+> TIA.
+> -mayank.
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+--
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
