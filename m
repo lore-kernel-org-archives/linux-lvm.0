@@ -1,9 +1,12 @@
-Message-ID: <3DA1C82F.5080406@mvista.com>
-From: Steven Dake <sdake@mvista.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------030507010902030307090007"
-Subject: [linux-lvm] Broken compile scripts in LVM
+Subject: Re: [linux-lvm] strange behavior with 1.0.5 on Linux 2.4.19?
+From: Gregory Ade <gkade@bigbrother.net>
+In-Reply-To: <20021004105057.B8575@sistina.com>
+References: <1033579350.6468.61.camel@gopher> 
+	<20021004105057.B8575@sistina.com>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature";
+	boundary="=-I94/leUtgERd6McDb3Aw"
+Message-Id: <1034107599.28928.105.camel@pslgregory>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,108 +17,98 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct  7 13:31:46 2002
+Date: Tue Oct  8 15:07:01 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
---------------030507010902030307090007
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+--=-I94/leUtgERd6McDb3Aw
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Folks,
+On Fri, 2002-10-04 at 01:50, Heinz J . Mauelshagen wrote:
+>=20
+> Gregory,
+>=20
+> running "lvcreate --size 8G --snapshot --name db1_snap vg01" should give
+> a syntax error rather than "... doesn't exist".
+>=20
+> Did you eventually run
+> "lvcreate --size 8G --snapshot --name db1_snap /dev/vg01/db1"
+> instead?
 
-Some of the scripts use echo "string" > /dev/stderr when instead they 
-should be using echo "string" >&2.  I have attached a patch that fixes 
-this problem.  The result is that in automated builds, the stdout gets 
-stomped if you use the first technique (resulting in loss of logging data).
+according to the manpage and help for lvcreate, the syntax was correct.=20
+The problem was that vg01 really didn't exist. :)
 
-Thanks.
+That, however, is not the problem.
 
--steve
+> I guess the problem has disappeared after your reboot, right?
+> If so, are you able to repeat the problem?
 
---------------030507010902030307090007
-Content-Type: text/plain;
- name="lvm-echo-fix.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="lvm-echo-fix.patch"
+Kinda...
 
-diff -u3 lvm-1.0.5/scripts/iopver lvm-1.0.5-fixed/scripts/iopver
---- lvm-1.0.5/scripts/iopver	Tue Jan 22 06:54:13 2002
-+++ lvm-1.0.5-fixed/scripts/iopver	Thu Oct  3 19:46:40 2002
-@@ -48,21 +48,19 @@
- 	sed -e 's/.*LVM_LIB_IOP_VERSION[[:space:]]*\([[:digit:]]*\).*/\1/'`;
- 
- if [ -z "$ver1" ]; then
--	echo "Error: iopver can't determine the IOP version from $file1" > \
--		/dev/stderr;
-+	echo "Error: iopver can't determine the IOP version from $file1" >&2 ;
- 	exit -1;
- fi
- 
- if [ -z "$ver2" ]; then
--        echo "Error: iopver can't determine the IOP version from $file2" > \    
--		/dev/stderr;
-+        echo "Error: iopver can't determine the IOP version from $file2" >&2 ;
-         exit -2;
- fi
- 
- if [ "$ver1" != "$ver2" ]; then
--	echo -e "Error: iopver reading inconsistent IOP versions" > /dev/stderr
--	echo -e "IOP version $ver1 reported in $file1" > /dev/stderr
--	echo -e "IOP version $ver2 reported in $file2" > /dev/stderr
-+	echo -e "Error: iopver reading inconsistent IOP versions" >&2
-+	echo -e "IOP version $ver1 reported in $file1" >&2
-+	echo -e "IOP version $ver2 reported in $file2" >&2
- 	exit -3;
- fi	
- echo "$ver1"
-diff -u3 lvm-1.0.5/scripts/linuxver lvm-1.0.5-fixed/scripts/linuxver
---- lvm-1.0.5/scripts/linuxver	Tue Jan 22 06:54:13 2002
-+++ lvm-1.0.5-fixed/scripts/linuxver	Thu Oct  3 19:46:26 2002
-@@ -42,7 +42,7 @@
- file="${linux_src}/Makefile";
- 
- if [ ! -e $file ]; then
--	echo "linuxver - $file does not exist" > /dev/stderr;
-+	echo "linuxver - $file does not exist" >&2;
- 	exit -1;
- fi
- 
-@@ -69,7 +69,7 @@
- 		echo "${major}.${minor}.${sublvl}";
- 	fi;
- else
--	echo "linuxver: Unable to determine version of linux kernel in ${linux_src}" > /dev/stderr;
-+	echo "linuxver: Unable to determine version of linux kernel in ${linux_src}" >&2;
- 	exit -2;
- fi
- 
-diff -u3 lvm-1.0.5/scripts/lvmver lvm-1.0.5-fixed/scripts/lvmver
---- lvm-1.0.5/scripts/lvmver	Thu Aug 23 12:53:32 2001
-+++ lvm-1.0.5-fixed/scripts/lvmver	Thu Oct  3 19:46:12 2002
-@@ -46,8 +46,7 @@
- 	sed -e 's/\(#define[[:blank:]]LVM_RELEASE_NAME[[:blank:]]*"\)\([-.[:alnum:]^\n]*\)\(".*\)/\2/'`;
- 
- if [ -z "$ver" ]; then
--	echo "Error: iopver can't determine the IOP version from $file" > \
--		/dev/stderr;
-+	echo "Error: iopver can't determine the IOP version from $file" >&2;
- 	exit -1;
- fi
- 
-diff -u3 lvm-1.0.5/scripts/patch_fragment.sh lvm-1.0.5-fixed/scripts/patch_fragment.sh
---- lvm-1.0.5/scripts/patch_fragment.sh	Wed Aug 29 08:52:16 2001
-+++ lvm-1.0.5-fixed/scripts/patch_fragment.sh	Thu Oct  3 19:44:37 2002
-@@ -22,7 +22,7 @@
- relative=${orig:$((${#kernel_path} + 1))};
- 
- if ! [ -a $new ]; then
--	echo "$new not found" > /dev/stderr
-+	echo "$new not found" >&2
- 	exit 2;
- fi
- 
+I'm hesitant to do any serious poking at it just yet, as the machine
+having the problems is already in production and being heavily used.
 
---------------030507010902030307090007--
+Rebooting mostly clears up the problem.  After a reboot, I can use
+lvdisplay and vgdisplay to my heart's content.  I can lvcreate and
+lvremove lv's from the vg without problem.  vgscan and lvscan work as
+expected.
+
+It seems that the `vgchange -a n` in /etc/init.d/halt hangs, though.  On
+other systems, this is not the case, even with the same version kernel &
+LVM utilities (2.4.19 & 1.0.5, respectively).
+
+another point is that this system is configured with root (/) on LVM
+(/dev/vg00/root).  On other systems we have configured this way, we
+occasionally get an error message that vgchange was unable to deactivate
+the volume group because there were open volumes.  On this machine, it
+just hangs, requiring a power-cycle to do a reboot (why did they stop
+putting reset switches in Intel servers???)
+
+I haven't tried creating a snapshot yet, mainly because I'm gun shy
+right now, and I don't want to risk imposing brain damage on the system
+in the middle of the week.
+
+I'm also experiencing bizarre behavior with this system when doing any
+operations involving rapid traversal of the filesystems, which again
+does not happen on any of our other systems with identical software
+loaded.  The best example is to run:
+
+	find / > /dev/null
+
+On any other system, this just forces the system to read every directory
+on the filesystem.  not very useful, but it doesn't do much more than
+take 10%CPU on a P-III 800 for a little bit.  On this system (Quad
+1.6GHz Xeon, HyperThreading disabled, 8GB RAM, 8GB Swap, 100GB RAID-10),
+running that command will eventually choke up the machine, forcing find
+and kswapd to >40%CPU (according to top), and occasionally bringing
+kupdated into the mix.
+
+I'm currently trying to figure out if the problem is with LVM, if I need
+to double the swap space to 16GB, or if I need to find a new driver for
+the RAID card.  As it is, any intrusive testing on this system will have
+to wait until I'm physically at the location with this server, which
+will likely happen on or about Sat. Oct. 19, so i can have the machine
+to myself on a weekend.
+
+I'm starting to get desperate for a solution...
+
+--=20
+Gregory K. Ade <gkade@bigbrother.net>
+http://bigbrother.net/~gkade
+OpenPGP Key ID: EAF4844B  keyserver: pgpkeys.mit.edu
+
+--=-I94/leUtgERd6McDb3Aw
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA9ozrPeQUEYOr0hEsRAlzXAKC1wQ9FZE4amw4wwQyojrsm6JEC3QCeOxNw
+X/wj2yuKv/POGhGBSXLF9qo=
+=N+Gi
+-----END PGP SIGNATURE-----
+
+--=-I94/leUtgERd6McDb3Aw--
