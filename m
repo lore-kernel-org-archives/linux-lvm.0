@@ -1,14 +1,12 @@
-Return-Path: <rmurray@cyberhqz.com>
-From: Ryan Murray <rmurray@cyberhqz.com>
-Date: Sat, 16 Dec 2000 17:11:11 -0800
-Subject: Re: [linux-lvm] BIG DATA DESTROYING BUG FOUND!
-Message-ID: <20001216171111.A23062@cyberhqz.com>
-References: <20001215161043.F18179@jensbenecke.de>
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Sun, 17 Dec 2000 03:00:21 +0100
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] Debian packaging
+Message-ID: <20001217030021.A29319@vestdata.no>
+References: <Pine.LNX.4.30.0012141645040.17005-100000@falka.mfa.kfki.hu> <00121417221738.00826@lyta>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
-Content-Disposition: inline
-In-Reply-To: <20001215161043.F18179@jensbenecke.de>; from jens@jensbenecke.de on Fri, Dec 15, 2000 at 04:10:43PM +0100
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <00121417221738.00826@lyta>; from Russell Coker on Thu, Dec 14, 2000 at 05:22:17PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,37 +18,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: Tamas Gergely <dice@mfa.kfki.hu>
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 14, 2000 at 05:22:17PM +0100, Russell Coker wrote:
+> I was thinking that perhaps what I should do is have /sbin/lvm-ver and=20
+> /lib/lvm-ver directories where "ver" is the version of LVM in question.  =
+Then=20
+> at boot time there is a script that determines the version of LVM in the =
 
-On Fri, Dec 15, 2000 at 04:10:43PM +0100, Jens Benecke wrote:
-> or screen output for _hours_. I'd really like something like "Moving block
-> %d of total %d" or whatever status message so you at least know that it's
-> doing anything, short of firing up "top" on another console to see the CPU
-> useage.=20
+> kernel and creates sym-links from /sbin and /lib to the correct directori=
+es. =20
+> This is REALLY ugly, but it enables a user to cleanly have a machine that=
+ can=20
+> be booted on 2.2 or 2.4 kernel and just work each time you boot it.
+>=20
+> Any better suggestions?
 
--v for verbose gives you exactly what you are looking for.
+What about putting shell-scripts in /sbin, and have theese scripts
+execute the real programs?
+
+It adds a little more overhead to all lvm-commands, but you avoid the
+need for setting anything up at boot-time.
+
 
 --=20
-Ryan Murray, (rmurray@cyberhqz.com, rmurray@debian.org, rmurray@stormix.com)
-Projects Manager, Stormix Technologies Inc., Debian Developer
-The opinions expressed here are my own.
-
---+QahgC5+KEYLbs62
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6PBKvN2Dbz/1mRasRAvn2AKCkFVW4hb2tGJioIV83X5iLl66oPwCghFLM
-V/vhob391FAWWWbl5izR2Z0=
-=Lv7a
------END PGP SIGNATURE-----
-
---+QahgC5+KEYLbs62--
+Ragnar Kj=EF=BF=BDrstad
