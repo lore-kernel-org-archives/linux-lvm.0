@@ -1,11 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 21 Jun 2001 11:09:56 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] mount: bad address
-Message-ID: <20010621110956.D28374@sistina.com>
-References: <20010618220049.A652@g7iii.junglelink.co.uk> <20010620155329.A25139@sistina.com> <20010620222027.A1115@g7iii.junglelink.co.uk>
-Mime-Version: 1.0
-In-Reply-To: <20010620222027.A1115@g7iii.junglelink.co.uk>; from iain@g7iii.junglelink.co.uk on Wed, Jun 20, 2001 at 10:20:27PM +0100
+Return-Path: <oliver@wonderpixel.de>
+Message-ID: <003b01c0fa4a$342d93e0$97c18fc3@wonderpixel.de>
+From: "Oliver Zeyen" <oliver@wonderpixel.de>
+Date: Thu, 21 Jun 2001 14:03:37 +0200
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0038_01C0FA5A.F794D220"
+Subject: [linux-lvm] Help ! raidpatch doesn't work !
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +17,58 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 20, 2001 at 10:20:27PM +0100, Iain Young wrote:
-> Hi Heinz,
-> 
-> On Wed, Jun 20, 2001 at 03:53:29PM +0200, Heinz J. Mauelshagen wrote:
->  
-> > did you follow the instructions in INSTALL and PATCHES/README contained
-> > in the LVM distro to put necessary LVM patches into the kernel?
-> 
-> Yup, applied with no prons, compiled with no probs. module loads fine,
-> everything works, except for the mount.
+This is a multi-part message in MIME format.
 
-Hmmm...
+------=_NextPart_000_0038_01C0FA5A.F794D220
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Could you send the following output then (VGName as a placeholder):
+Hello !
+I have to patch my Kernel with raid0145-19990713-2.2.10.gz !
+BUT I can't decompress this file !
+Is there anybody who can tell me what's my Problem !
+Gunzip aways says "uexpected end of file " !
+My English is very bad , so sorry about this !
+Thanks ,Oliver !
 
-- vgdisplay -v VGName
-- lvscan -b
-- ls -l /dev/VGName
+p.s. I'm trying to setup a Raid1 System !
 
-Heinz
 
-> 
-> 
-> Iain
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+------=_NextPart_000_0038_01C0FA5A.F794D220
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 5.50.4134.100" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hello !</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I have to patch my Kernel with=20
+raid0145-19990713-2.2.10.gz !</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>BUT I can't decompress this file =
+!</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Is there anybody who can tell me what's =
+my Problem=20
+!</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Gunzip aways says "uexpected end of =
+file "=20
+!</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>My English is very bad , so sorry about =
+this=20
+!</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Thanks ,Oliver !</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>p.s. I'm trying to setup a Raid1 System =
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+!</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
+
+------=_NextPart_000_0038_01C0FA5A.F794D220--
