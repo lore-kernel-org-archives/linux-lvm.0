@@ -1,10 +1,11 @@
-Date: Mon, 7 Feb 2000 10:37:19 +0100
-From: Fabian.Herschel@suse.de
+Date: Mon, 7 Feb 2000 14:11:59 +0100
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] Configuring boot partition with LVM
-Message-ID: <20000207103719.A1170@suse.de>
-References: <Pine.LNX.4.20.0002041218580.416-100000@claudius.mgmt-inc.com>
+Message-ID: <20000207141159.A1222@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+References: <Pine.LNX.4.20.0002041218580.416-100000@claudius.mgmt-inc.com> <20000207103719.A1170@suse.de>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.20.0002041218580.416-100000@claudius.mgmt-inc.com>
+In-Reply-To: <20000207103719.A1170@suse.de>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
@@ -12,31 +13,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-On Fri, Feb 04, 2000 at 12:29:34PM -0500, Jim Cain wrote:
-> All,
-> 
-> Has anyone been successful in creating a completely LVM-managed system?
-> Specifically, I'm wondering about the problem with needing LVM-enabled
-> kernel on a boot floppy for installation purposes.
+On Mon, Feb 07, 2000 at 10:37:19AM +0100, Fabian.Herschel@suse.de wrote:
+> At this point of time lilo is not ready to boot a kernel fom a lv. Lilo
+actually you can, if you play tricks with your partition table :)
+but being real, you will need to move vgscan into kernel space.
 
-At this point of time lilo is not ready to boot a kernel fom a lv. Lilo
-should also learn how to boot a kernel fom a striped volume...
+> should also learn how to boot a kernel fom a striped volume...
+this seems impossible to me, unless you add a boot area
+to the VG structure.
+lilo is a multi stage boot process
+a small 512-byte loader is placed in the mbr
+this loader then loads lilo itself from the disk
+now if you want a striped vg for /boot
+you must also find somewere to store the second stage boot loader.
+and it must be possible to load it from a 512-byte program.
 
-Greetings
-Fabian
-
-
-
-> 
-> Or is this not a good idea? Is it better to have a non-LVM root partition
-> on a separate drive, and then use LVM for everything else?
-> 
-> Thanks for the input,
-> Jim
+L.
 
 -- 
------------------------------------------------------------------------
-Fabian Herschel                                 SuSE Rhein/Main AG     
-Tel:    +49-6196-50951-23                       Mergenthalerallee 45-47
-Fax:    +49-6196-409-607                        D-65760 Eschborn
-mailto: Fabian.Herschel@suse.de                 http://www.suse.de      
+Luca Berra -- bluca@comedia.it
+    Communication Media & Services S.r.l.
