@@ -1,10 +1,9 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] lvm on linux RAID5?
-Message-ID: <20021016192819.D2330@zealot.blacknet.de>
-References: <1034773372.1658.8.camel@frodo.xelin.se>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1034773372.1658.8.camel@frodo.xelin.se>; from anders.henriksson@xelin.se on Wed, Oct 16, 2002 at 03:02:52PM +0200
+From: "Arie Bant@mail.com" <abant@mail.com>
+Subject: Re: [linux-lvm] performance comparison soft-hardware RAID + LVM: bad
+Message-ID: <014f01c27563$478fe560$28bf18ac@abant.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20021016085753.20974.47952.Mailman@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +14,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 16 12:33:51 2002
+Date: Wed Oct 16 22:47:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: 'Jon Bendtsen' <jon+lvm@silicide.dk>
 
-On Wed, Oct 16 '02 at 15:02, Anders Henriksson wrote:
-> I want to run lvm over four linux raid5 devices, can I just treat the
-> raid devices as discs? i.e. run pvcreate on them directly and go on from
-> there.
-You've more than 12 discs in your box? No? Oh, if you ment you're trying
-to run LVM ontop of a 4disk RAID5 drive (using linux md drivers), than
-try:
 
-pvcreate /dev/md0
+ -----Original Message-----
+Date:	Wed, 16 Oct 2002 10:34:41 +0200
+From:	Jon Bendtsen <jon+lvm@silicide.dk>
+	Organization: Silicide A/S
+To:	linux-lvm@sistina.com
+Subject:	Re: [linux-lvm] performance comparison soft-hardware RAID + LVM:
+bad
+	Reply-To: linux-lvm@sistina.com
 
-vgcreate ... /dev/md0
+You dont have enough disks, 2 disks might be a widely used common setup, but
+other people use more disks, like 4, 8, ... especialy when using scsi, which
+for some reason doesnt seem to contain as much as IDE disks.
+Jon,
 
-lvcreate ... 
+Availability of large SCSI hard disks has nothing to do with it.
+Using more spindles is better for performance as a general rule (more
+spindles can lead to less head movement, if properly configured, head
+movement/rotational delay counts for most of the access time on hard disks.
+Also, via SCSI, seeks can be done simultaneously and in overlap with I/O on
+other hard disks and/or processor activity), hence you will find that in
+SCSI configurations more disks are used for performance reasons.
+For this reason only, I keep a stack of, now old, 1/2/4 GB drives to use as
+dedicated swap devices and /tmp file systems.
+Given the intrinsic limitations, all this is not possible when using IDE, so
+the capacity than has to come from large disks, the performance will suffer
+accordingly, especially in total system throughput.  One of a number of
+reasons why you should always go with SCSI when you want performance.
 
-I'm running LVM since v1.0.0 ontop of a 6 device RAID5 drive using 2.4.x
-MD driver.
+Regards,
 
-> I am running a linux 7.3 server almost out of the box.
-And what distribution are you using? But that should not matter.
--- 
-Goetz Bock       (c) 2002 as     blacknet.de - Munich - Germany   /"\
-IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
-                                                                   X
- ASCII Ribbon Campaign against HTML email & microsoft attachments / \
+Arie Bant.
