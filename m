@@ -1,8 +1,8 @@
-Date: Thu, 20 Sep 2001 23:06:15 -0400
-Message-Id: <200109202306.AA1743978726@netcentricnj.com>
+Date: Thu, 20 Sep 2001 23:58:01 -0400
+Message-Id: <200109202358.AA1744437478@netcentricnj.com>
 Mime-Version: 1.0
 From: "tim" <tdwebste@netcentricnj.com>
-Subject: [linux-lvm] volume group not found????
+Subject: [linux-lvm] Volume group not found????
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -31,7 +31,7 @@ Reboot several times and everything worked well.
 I see /dev/system/lv_usr, /dev/system/lv_var, /etc/lvmconf/sytem.conf
 
 However vgchange fails
-vgchange -a y 
+vgchange -a y
 vgchange -- no volume groups found
 
 
@@ -41,4 +41,4 @@ no logical volumes
 How can I recover?
 
 
--tim.
+-tim. 
