@@ -1,10 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Lvm woes
-Message-Id: <20020425120518.B16336@sistina.com>
-References: <Pine.LNX.4.33.0204240059210.19617-100000@x.firesites.com>
+Subject: Re: [linux-lvm] [PATCH] vg_check_name.c
+Message-Id: <20020425120846.C16336@sistina.com>
+References: <00f401c1eb12$4df44f80$d204a8c0@pepper>
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0204240059210.19617-100000@x.firesites.com>;
-    from theman@chaj.com on Wed, Apr 24, 2002 at 12:59:45AM -0400
+In-Reply-To: <00f401c1eb12$4df44f80$d204a8c0@pepper>; from
+    jim@transvirtual.com on Tue, Apr 23, 2002 at 03:00:36PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,78 +15,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 25 05:06:01 2002
+Date: Thu Apr 25 05:09:03 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jims,
+Jim,
 
-you hit one of the tradeofs of LVM1: binary metadata backup formats.
-Therefore we have text formated ones in LVM2.
+thanks for pointing this out.
 
-"Well, that doesn't help me", I hear you say.
+It is in LVM1 CVS now.
 
-So the help story goes:
-
-- stay with your 0.9 version
-
-- comment out the "if ( pv_get_size ( pv_name, NULL) != vg.pv[index]->pv_size) "
-  which should be starting arround line 321 in vgcfgrestore.c
-
-- generate and install the LVM software
-
-- retry to vgcfgrestore to hdd1 as you did before
-
-- vgscan;vgchange -ay world
-
-- upgrade to LVM 1.0.3 is recommended afterwards
-
-Please tell me, how that goes.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Wed, Apr 24, 2002 at 12:59:45AM -0400, Jims wrote:
+On Tue, Apr 23, 2002 at 03:00:36PM -0700, Jim Pick wrote:
+> This in regards to the following bug report I filed with Debian:
 > 
-> One of the drives in my volume group "world" has died. I'd like to restore
-> as much as possible, but am expecting to lose some data regardless since
-> the disk is PV#3 out of 7 in total. What I'm trying to do is use
-> vgcfgrestore (ver .9.1 beta) to at least build up a new PV in the
-> following manner:
 > 
-> vgcfgrestore -n world -o /dev/sdd1 -n /dev/hdd1
+> http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=140957&msg=4&repeatmerged=y
+> es
 > 
-> This comes back with errors about the size being different -
+> I did some more debugging to figure out what bit me, and it turns out that
+> my problem was that my volume group was named just "a", and there was a new
+> check added to 1.1rc1 in vg_check_name.c that matched it against "ataraid"
+> (defined in _devdir[] in lvm_dir_cache.c).  Very confusing.  I don't think
+> the check was intended to work that way, so here's a patch:
 > 
-> vgcfgrestore -- size of physical volume "/dev/hdd1" differs from backup
+> Index: vg_check_name.c
+> ===================================================================
+> RCS file: /data/cvs/LVM/tools/lib/vg_check_name.c,v
+> retrieving revision 1.7
+> diff -u -r1.7 vg_check_name.c
+> --- vg_check_name.c 2002/03/12 13:58:04 1.7
+> +++ vg_check_name.c 2002/04/23 21:40:15
+> @@ -84,7 +84,7 @@
+>              else
+>                 filter = _devdir[d];
 > 
-> This version doesn't have the -i (ignore size) ability. If I attempt the
-> same with the new 1.0.3 binary, it complains of the old
-> /etc/lvmconf/world.conf being incompatible -
+> -            if ( strncmp ( vg_name, filter, strlen ( vg_name)) == 0) {
+> +            if ( strncmp ( vg_name, filter, strlen ( filter)) == 0) {
+>                 ret = -LVM_EVG_CHECK_NAME;
+>                 break;
+>              }
 > 
-> vgcfgrestore -- INFO: using backup file "/etc/lvmconf/world.conf"
-> vgcfgrestore -- ERROR: different structure size stored in
-> "/etc/lvmconf/world.conf" than expected in file vg_cfgrestore.c [line 139]
-> vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group
-> "world"
+> This bit me on several machines, since I used the same naming convention.
+> :-(
 > 
-> probably because the file was created using an old ver.
+> Cheers,
 > 
-> How do I go about creating the exact same size of the old PV? Vgcfgrestore
-> -n world -ll reports that it was 4.25gb. I tried creating different file
-> sizes in fdisk based on this, and then pvcreate, but no go. Can I recreate
-> the old restore file to be compatible with the new version?
+>  - Jim
 > 
-> Running kernel 2.2.18 patched up with 1.0.3.
+> BTW, I don't believe that the Debian bug severity should have been
+> downgraded to just "important", as I almost lost all my data.
+
+Sorry to hear that :-(
+
 > 
-> Up a creek. Please assist!
 > 
-> If you could CC my personal mail as well, I'd be most appreciative.
-> 
-> Jims
 > 
 > 
 > _______________________________________________
@@ -94,6 +78,11 @@ On Wed, Apr 24, 2002 at 12:59:45AM -0400, Jims wrote:
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
