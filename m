@@ -1,11 +1,11 @@
-Date: Thu, 6 Sep 2001 08:46:36 -0400
-From: Rob Latham <rlatham@plogic.com>
+Date: Thu, 6 Sep 2001 13:55:02 +0100
 Subject: Re: [linux-lvm] Will LVM stay GPL?
-Message-ID: <20010906084636.C15933@otto.plogic.internal>
+Message-ID: <20010906135502.B638@btconnect.com>
 References: <200109061207.f86C79N7021746@pcrz175.HRZ.Uni-Marburg.DE>
 Mime-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <200109061207.f86C79N7021746@pcrz175.HRZ.Uni-Marburg.DE>; from gebhardt@HRZ.Uni-Marburg.DE on Thu, Sep 06, 2001 at 02:07:08PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -26,17 +26,19 @@ On Thu, Sep 06, 2001 at 02:07:08PM +0200, Thomas Gebhardt wrote:
 > 
 > after the GFS switch to the non-free SPL: can we hope/trust that
 > LVM will remain GPL'd ?
+> 
+> The SPL FAQ does not address this point. It however, mentions that 
+> there will be several closed source LVM related utilities this
+> fall. What about LVM itself?
 
-Thomas:
+Mike Declerck has already addressed this issue on the mailing list,
+but I'll reiterate.  The LVM kernel driver is GPL, the LVM userland
+tools are GPL.  We have no intention to change this, and even if we
+wanted to we couldn't since lots of people outside Sistina have
+contributed.
 
-I don't think you've been paying very close attention :>  
-I already asked this question a week ago, and started far too much
-discussion: end result, it'd be very hard to change LVM's license.
+If it makes people feel happier I will accept patches that add their
+names to the copyright notices (assuming they've made significant
+contributions).
 
-==rob
-
--- 
-[ Rob Latham <rlatham@plogic.com>         Developer, Admin, Alchemist ]
-[ Paralogic Inc. - www.plogic.com                                     ]
-[                                                                     ]
-[ EAE8 DE90 85BB 526F 3181                   1FCF 51C4 B6CB 08CC 0897 ]
+- Joe
