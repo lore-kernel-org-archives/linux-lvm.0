@@ -1,5 +1,5 @@
-Message-ID: <3E3C62E4.7030409@home.nl>
-From: Sander Alberink <s.alberink@home.nl>
+Message-ID: <3E3C62EE.5040107@stamppot.demon.nl>
+From: Sander Alberink <alberink@stamppot.demon.nl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: [linux-lvm] Severe problem: data lost while adding a partition
@@ -13,7 +13,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Feb  1 18:15:01 2003
+Date: Sat Feb  1 18:15:03 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
