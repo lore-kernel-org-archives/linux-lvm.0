@@ -1,10 +1,10 @@
-Date: Tue, 11 Sep 2001 16:18:32 +0200
+Date: Tue, 11 Sep 2001 16:20:52 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] missing vg after reboot
-Message-ID: <20010911161832.D20767@sistina.com>
-References: <20010910131203.C31313@sistina.com> <20010910154903.33297.qmail@web13902.mail.yahoo.com>
+Subject: Re: [linux-lvm] rc2 problems
+Message-ID: <20010911162052.E20767@sistina.com>
+References: <20010910132133.F31313@sistina.com> <20010911011612.37371.qmail@web13407.mail.yahoo.com>
 Mime-Version: 1.0
-In-Reply-To: <20010910154903.33297.qmail@web13902.mail.yahoo.com>; from m_holschbach@yahoo.com on Mon, Sep 10, 2001 at 08:49:03AM -0700
+In-Reply-To: <20010911011612.37371.qmail@web13407.mail.yahoo.com>; from plamb_98@yahoo.com on Mon, Sep 10, 2001 at 06:16:12PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,86 +20,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-vgcfgrestore only works on a new PV.
-Run "pvcreate -ff /dev/YourDevice" *before trying vgcfgrestore on it.
+On Mon, Sep 10, 2001 at 06:16:12PM -0700, Pierre Lamb wrote:
+> Here is what I did:
+>   Built patch, then applied it I got this
+>  it patched various file, next it said it detected a
+> provious patch I said (y) then it wanted to remove a
+> file not detected.
+> 
+> Next I did a xconfig selecting LVM. did a make dep
+> then a make clean did a make bzImage, then a make
+> modules ( no errors), then make modules_install there
+> at the en it gave an error :
+> 
+> Unsolved sysmbols in (path)lvm-mod.o
+> 
+> depmod  lvm_init_fs
+> depmod  lvm_fs_remove.vg
+> depmod  lvm_fin_fs
+> depmod  lvm_fs_remove_lv
+> depmod  lvm_fs_remove_pv
+> depmod  lvm_fs_create_vg
+> depmod  lvm_fs_create_lv
+> depmod  lvm_fs_create_pv
+> 
+> know what ???
+
+This looks like "make modules" didn't compile lvm-fs.c and didn't link it
+into lvm-mode.o.
+
+Could you check your "make modules" output in detail, if that's true
+and if you see a reason for this.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-On Mon, Sep 10, 2001 at 08:49:03AM -0700, Michael Holschbach wrote:
+
 > 
-> --- "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
+> Pierre
+> 
+> 
+> --- "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+> wrote:
+> > On Fri, Sep 07, 2001 at 06:07:38AM -0700, Pierre
+> > Lamb wrote:
+> > > Well I got rh 2.4.7 made the rc2 patches and
+> > patched
+> > > the kernel. No errors, complied the kernel,
+> > modules,
+> > > and installed the modules. All with no errors.
+> > Upon
+> > > booting the lvm-mod modules doesn't load so I did
+> > a
+> > > insmod on lvm-mod and get errors about
+> > non-resloved
+> > > symbols,  What to do next????
 > > 
-> > Michael,
+> > Could you send what symbols are non resolved?
 > > 
-> > the pvdata output below exposes a completely messy PV structure,
-> > which makes me think of 2 possible reasons:
-> > 
-> > a. /dev/hda2 is not the device you used to create a physical volume
-> > 
-> > b. something accidentially overwrote /dev/hda2 after the PV creation
-> > 
-> > 
-> > If b is true you might still have an actual VGDA backup in
-> > /etc/lvmconf/ which
-> > you can use to vgcfgrestore(8) it to /dev/hda2 presumed that
-> > /dev/hda2 is
-> > the right device.
-> > 
-> I already tried vgcfgrestore. All available backup files lead to the
-> same result:
->  
-> > > server1:~ # vgcfgrestore -v -n data /dev/hda2
-> > > vgcfgrestore -- locking logical volume manager
-> > > vgcfgrestore -- restoring volume group "data" from
-> > > "/etc/lvmconf/data.conf"
-> > > vgcfgrestore -- checking existence of
-> > > "/etc/lvmconf/data.conf"
-> > > vgcfgrestore -- reading volume group data for "data"
-> > > from "/etc/lvmconf/data.con
-> > > f"
-> > > vgcfgrestore -- reading physical volume data for
-> > > "data" from "/etc/lvmconf/data.
-> > > conf"
-> > > vgcfgrestore -- reading logical volume data for "data"
-> > > from "/etc/lvmconf/data.c
-> > > onf"
-> > > vgcfgrestore -- checking volume group consistency of
-> > > "data"
-> > > vgcfgrestore -- checking volume group consistency of
-> > > "data"
-> > > vgcfgrestore -- reading physical volume "/dev/hda2"
-> > > vgcfgrestore -- ERROR "pv_read(): PV identifier
-> > > invalid" reading physical volume
-> > >  "/dev/hda2"
 > > > 
-> My idea was to reset the values of /dev/hda2 according to the following
-> settings:
-> 
-> > > server1:~ # vgcfgrestore -v -ll -n data /dev/hda2
-> ...
-> > > --- Physical volume ---
-> > > PV Name               /dev/hda2
-> > > VG Name               data
-> > > PV Size               27.62 GB / NOT usable 2.48 MB
-> > > [LVM: 148 KB]
-> > > PV#                   2
-> > > PV Status             available
-> > > Allocatable           yes
-> > > Cur LV                6
-> > > PE Size (KByte)       4096
-> > > Total PE              7069
-> > > Free PE               669
-> > > Allocated PE          6400
-> > > PV UUID              
-> > > e7sX5R-XnTm-keX6-jShf-tTlw-DUP3-mzp4zW
+> > > PIerre
 > > > 
+> > > __________________________________________________
+> > > Do You Yahoo!?
+> > > Get email alerts & NEW webcam video instant
+> > messaging with Yahoo! Messenger
+> > > http://im.yahoo.com
+> > > 
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > >
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at
+> > http://www.sistina.com/lvm/Pages/howto.html
+> > 
+> > -- 
+> > 
+> > Regards,
+> > Heinz    -- The LVM Guy --
+> > 
+> > *** Software bugs are stupid.
+> >     Nevertheless it needs not so stupid people to
+> > solve them ***
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at
+> http://www.sistina.com/lvm/Pages/howto.html
 > 
-> These values seem plausible for me. Can i use them to manually edit the
-> PV /dev/hda2 to rescue some data? 
 > 
-> 
-> MfG Michael
 > 
 > __________________________________________________
 > Do You Yahoo!?
