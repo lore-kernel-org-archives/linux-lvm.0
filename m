@@ -1,42 +1,54 @@
-Message-ID: <31A612FE6020D2119F6400A0C9B67EBB0381B0EF@FTHW901E>
-From: Franken Klaus <Klaus.Franken@fth2.siemens.de>
-Subject: RE: [linux-lvm] 2.2.15 Kernel LVM 0.8 vgscan -- invalid i/o proto
-	col version
-Date: Thu, 11 May 2000 18:01:41 +0200
+From: Tom Dawes-Gamble <tmdg@avbrief.com>
+Message-Id: <200005111750.RAA15892@lindbergh.avbrief.com>
+Subject: Re: [linux-lvm] 2.2.15 Kernel LVM 0.8 vgscan -- invalid i/o proto
+Date: Thu, 11 May 2000 17:50:50 +0000 (UTC)
+In-Reply-To: <31A612FE6020D2119F6400A0C9B67EBB0381B0EF@FTHW901E> from "Franken Klaus" at May 11, 2000 06:01:41 PM
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Franken Klaus <Klaus.Franken@fth2.siemens.de>
+Cc: linux-lvm@msede.com
 
-> -----Original Message-----
-> From: Tom Dawes-Gamble [mailto:tmdg@avbrief.com]
-> Sent: Thursday, May 11, 2000 5:39 PM
-> To: linux-lvm@msede.com
-> Subject: [linux-lvm] 2.2.15 Kernel LVM 0.8 vgscan -- invalid i/o
-> protocol version
+On Thu May 11 16:01:41 2000 Franken Klaus wrote:-
 > 
-> [root@kingair /root]# vgscan  -vd
-> <1> lvm_get_iop_version -- CALLED
-> <22> lvm_check_special -- CALLED
-> <22> lvm_check_special -- LEAVING
-> <1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> <1> lvm_get_iop_version -- LEAVING with ret: 5
-> vgscan -- invalid i/o protocol version
+> > -----Original Message-----
+> > From: Tom Dawes-Gamble [mailto:tmdg@avbrief.com]
+> > Sent: Thursday, May 11, 2000 5:39 PM
+> > To: linux-lvm@msede.com
+> > Subject: [linux-lvm] 2.2.15 Kernel LVM 0.8 vgscan -- invalid i/o
+> > protocol version
+> > 
+> > So.  now I'm out of things to try I tought about using a 
+> > 2.3.X kernel but 
+> > I really don't want to use a beta kernel.
+> > 
+> > The distribution I'm using is RedHat 6.2 (Zoot).
+> > 
+> > So what should I try next.
+> 
+> You don't need a newer kernel. The format changed between <= 0.8 and 0.8final.
+> You have to re-create your physical volumes and to re-compile the new lvm-utils.
+> 
+	
+I did some more digging and found the 2.2.13 patch only gives you 
 
-> 
-> So.  now I'm out of things to try I tought about using a 
-> 2.3.X kernel but 
-> I really don't want to use a beta kernel.
-> 
-> The distribution I'm using is RedHat 6.2 (Zoot).
-> 
-> So what should I try next.
+#define LVM_DRIVER_IOP_VERSION          5      
 
-You don't need a newer kernel. The format changed between <= 0.8 and 0.8final.
-You have to re-create your physical volumes and to re-compile the new lvm-utils.
+The 0.8final requires
 
-Klaus.Franken@fth2.siemens.de    +49 911 978 3707
-Siemens Business Services IP 21F
+#define LVM_DRIVER_IOP_VERSION          6
+
+So I grabed lvm_0.8-pre02.10.1999.tar.gz
+
+That gave me the lvm tools that matched the kernel  :-)
+
+So now I have disk space to spare I will look at some of the 2.3.X patches 
+and see if they go on to the 2.2.15 kernel :-)
+
+Regards,
+Tom.
+-- 
+Tom Dawes-Gamble				Email: tmdg@avbrief.com
