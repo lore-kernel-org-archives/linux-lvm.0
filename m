@@ -1,8 +1,9 @@
 From: Steven Lembark <lembark@wrkhors.com>
 Subject: Re: [linux-lvm] disk naming
-Message-ID: <1022070000.1041618595@[192.168.200.4]>
-In-Reply-To: <1041610095.19844.45.camel@mosix>
+Message-ID: <1023440000.1041619125@[192.168.200.4]>
+In-Reply-To: <1041613503.20036.49.camel@mosix>
 References: <1041610095.19844.45.camel@mosix>
+ 	<20030103174618.Z9539@zealot.blacknet.de> <1041613503.20036.49.camel@mosix>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
@@ -16,7 +17,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  3 12:21:01 2003
+Date: Fri Jan  3 12:30:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
@@ -24,35 +25,44 @@ To: linux-lvm@sistina.com
 
 -- Matt Schillinger <mschilli@vss.fsi.com>
 
+> If i'm NOT using devfs, can i reliably (assuming that disks are on the
+> same scsi id/lun/host channel) use lvm?
 >
-> this should be a simple question, but I can't find a direct discussion
-> in the lvm documentation. I believe that i have found that LVM will find
-> appropriate PV's regardless of their name (sda,sdb).. Is this true? Do i
-> need devfs to ensure that i always have the same disk naming, or will
-> LVM handle this for me?  I am currently using scsidev for naming
-> purposes, but have found that vgcreate will not work with scsidev device
-> names (/dev/scsi/sdh0-0c0i4l2p1)
-> /dev/scsi/sd(host=0,scsiid=4,LUN=2,partition #=1)
+> Scenario:
+>
+> LV is created with device /dev/sdd, which is on host channel 2
+>
+> Machine is shutdown, and a new raid is connected on host channel 1, with
+> one disk.
+>
+> Machine is restarted, and the 1 disk on the host channel 1 raid takes
+> /dev/sdd. The original disk is now /dev/sde.
+>
+> Will LVM find the correct disk?
 
-sd[abcd] notation is based on the order which the kernel
-finds devices on the bus. Adding a SCSI card or removing
-disks will change the naming.
+Nope. Main issue there is that the first disk device
+encountered by the kernel will be /dev/sda. Period.
 
-devfs allows using /dev/scsi/.../busX/.../targetY/.../partZ,
-which will not change unless you shuffle the scsi cards :-)
+This is the same catagory of problem you get into
+with DOS when adding a new drive displaces the "D:"
+partition on your first drive.
 
-I use it mainly because I prefer to know what I'm pointing
-at -- memorizing the device letter conventions can be an
-exercise in futility.
+There are a few fixes for this:
 
-You can quickly convert from one naming convention to
-the other if your root volume isn't on LVM: boot single
-user, export the VG's and import them using the devfs
-naming convention.
+1. Install the non-root drives' controller as a
+   module and add /etc/rc.d/init.d/otherscsi
+   to install the extra controller's module. At
+   that point you are guaranteed not to find the
+   RAID before you want to.
+
+2. Devfs will solve this particular problem since
+   the /dev/type/bus/target/item list has not changed.
+   What will break devfs is adding a new controller
+   on the PCI bus in a way that displaces your
+   existing controler as, say, /dev/scsi/bus0.
 
 
--
-
+--
 Steven Lembark                               2930 W. Palmer
 Workhorse Computing                       Chicago, IL 60647
-                                            +1 773 252 1080
+                                            +1 8773 252 1080
