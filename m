@@ -1,6 +1,10 @@
-Message-Id: <200110250515.OAA15476@center01.shooting-star.ne.jp>
-From: appendix@hatsune.cc
-Subject: [linux-lvm] vgscanfailed"novolumegroupsfound"
+From: GCS <gcs@lsc.hu>
+Subject: Re: [linux-lvm] Kernel 2.4.12 bug?
+Message-ID: <20011025084333.C8281@lsc.hu>
+References: <B45465FD9C23D21193E90000F8D0F3DF0178FF82@mailsrv.linkvest.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF0178FF82@mailsrv.linkvest.com>; from Jean-Eric.Cuendet@linkvest.com on Wed, Oct 24, 2001 at 09:20:26AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,77 +15,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 25 00:14:02 2001
+Date: Thu Oct 25 01:29:02 2001
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+On Wed, Oct 24, 2001 at 09:20:26AM +0200, Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com> wrote:
+> I also have problems with 2.4.12 + LVM rc4. I have a kernel panic with a
+> "stack trace" in the kernel *before* it mounts ROOT.
+> Any idea? Everything works fine with 2.4.7 / 2.4.9
+ I am using rc2. Anyway, try with 2.4.13. Ooops are gone, only 'buffer is
+busy' remains, but as Patrik (?) wrote, this is harmless.
 
-I've a LVM one physical volume "vg0" that created on 9 RAID devices.
-It worked still the day.
-But one day, I have problem about vgscan reports that it can't find my VG. 
-And recovery data /etc/lvmconf/vg0.conf was broken by other cause.
-Please help me..... or give me hints to recover it.
-
-My VG structure is following
-
-/dev/md2,md3,md4,md5,md6,md7,md8,md9,md10 => vg0
-
-Kernel Linux melody.angelic.jp 2.4.5 #10 SMP
-
-The pvscan report is following
->pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/md2"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md3"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md4"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md5"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md6"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md7"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md8"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md9"   is associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/md10" of VG "vg1" [4.48 GB / 4.48 GB free]
-pvscan -- total: 9 [68.48 GB] / in use: 9 [68.48 GB] / in no VG: 0 [0]
-
-The pvdata report is following
->pvdata -U /dev/md2
-000: w1ozGmggQJ7LqDumRFhBWpxAcBuinvkV
-001: gyivka8v8Rs8N6UHW1mXO2A7pe3V2UtL
-002: N1rBqi3J4SXDpRwYCh65eXCtH98zrkYQ
-003: vy3JnFfm4b4j5t1kcnnmPBVnqvKE1454
-004: 3qwEJ6e08fnjyfEtYh2VUwNLSlAv7WHC
-005: bCf2F3RgkdCqz0qs605zpQiMDF738U7Q
-006: Ao8MnMZSLrDhk1pbTHatNA5KHiZXv5vG
-007: 3ztQ2cfoGMc15y1TTXQzSpSkTIBzLcas
-008: 9VW0My6FYEh4T1WnwBP3m0OSlMhdM7Gq
-009: BIxTWheupMeCfEjU8UuyW0LX8gAq4aoD
-
->pvdata -PP pvdata -PP /dev/md2
---- Physical volume ---
-PV Name               /dev/md2
-VG Name               vg0
-PV Size               8 GB / NOT usable 4 MB [LVM: 128 KB]
-PV#                   2
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              2047
-Free PE               0
-Allocated PE          2047
-PV UUID               gyivka-8v8R-s8N6-UHW1-mXO2-A7pe-3V2UtL
-pv_dev                   0:9
-system_id                melody.angelic.jp991380667
-pv_on_disk.base          0
-pv_on_disk.size          1024
-vg_on_disk.base          1024
-vg_on_disk.size          4608
-pv_uuidlist_on_disk.base 6144
-pv_uuidlist_on_disk.size 32896
-lv_on_disk.base          39424
-lv_on_disk.size          84296
-pe_on_disk.base          123904
-pe_on_disk.size          4070400
+GCS
