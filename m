@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] performance tests
-Message-ID: <20030425113824.D16006@sistina.com>
-References: <3EA6C508.9020702@roma2.infn.it>
-Mime-Version: 1.0
-In-Reply-To: <3EA6C508.9020702@roma2.infn.it>; from roberto.ammendola@roma2.infn.it on Wed, Apr 23, 2003 at 06:53:28PM +0200
+From: "Carey Jung" <carey@itfreedom.com>
+Subject: RE: [linux-lvm] pvmove errors
+Message-ID: <GNEAKGKKMNLLGBACDNBJAEDFCGAA.carey@itfreedom.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-reply-to: <20030425113525.C16006@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,65 +14,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 25 04:44:01 2003
+Date: Fri Apr 25 08:14:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Roberto,
+>
+> Carey,
+>
+> which LVM/kernel versions are you using ?
+> The error tells that the change for the mapping in the LVM driver fails.
 
-creating a striped logical volume with the stripe size equal to the block
-size of the filesystem should give you the best performamce presuming that
-you don't have some bus bottleneck.
+The latest RH rpm and smp kernel:
 
+# rpm -qa|grep lvm
+lvm-1.0.3-4
+# cat /proc/version
+Linux version 2.4.18-27.7.xsmp (bhcompile@stripples.devel.redhat.com) (gcc
+version 2.96 20000731 (Red Hat Linux 7.3 2.96-112)) #1 SMP Fri Mar 14
+05:52:30 EST 2003
 
-On Wed, Apr 23, 2003 at 06:53:28PM +0200, Roberto Ammendola wrote:
-> Hi list,
-> I would like to hear some opinions about a configuration: I have a dual 
-> Xeon with 2 RAID5 HW controllers, so that from the OS side I have two 
-> SCSI disks. I am trying different configurations to see which one has 
-> the best performances. The machine will be a file server for a bunch of 
-> people.
-> The question is: would you use LVM over a SW-RAID0 between the two SCSI 
-> disks? Is native LVM striping that better (in terms of performance I mean)?
-> Let me know, I'll run bonnie++ meanwhile, but I don't know if it 
-> highlights the differences: I should simulate a multiuser stress of the 
-> disks. Any advice?
-> 
-> ciao rob
-> 
-> -- 
-> ______________________________________________________________________
-> 
->       Roberto Ammendola    INFN - Roma II - APE group
->  tel: +39-0672594504  email: roberto.ammendola@roma2.infn.it   // \
->       ICQ: 152497874    MSN: ammendola_ro@hotmail.com          \\_/ //
-> __________________________________________   ''-.._.-''-.._.. -(||)(')
->                                                                '''
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> The mapping on disk (lvdisplay -Dv ...) doesn't get changed in that case.
+> Must be a flaw in the ioctl error return handling, because it obviously
+> got changed in the kernel as "lvdisplay -v " shows.
 
--- 
+That's Greek to me, but something was seriously messed up with the PE
+allocation or something, because I ended up trashing the LV after I sent
+this message.  I could read the entire partition just fine, so I thought I'd
+copy it to another LV and then delete the original LV.  So I created another
+LV -- in the same VG as the original -- and started a big rsync copy from
+source to destination LV.  Halfway through it, rsync started complaining
+that it couldn't find files that were on the source filesystem when it
+started.  When I snooped in the original LV, a bunch of directories had
+disappeared!  Bear in mind that I was just reading from this filesystem.
 
-Regards,
-Heinz    -- The LVM Guy --
+My guess is that the PE allocation/mapping to LVs was messed up, so that
+some PEs allocated to the new LV were actually mapped to the original LV, so
+as I started writing to the new one, the system was overwriting files, etc
+in the old LV.  Several directories seemed to have been effectively 'mv'-ed
+to the new LV.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+I then created yet another LV in a separate VG, rsync'ed both of the 1st two
+LVs to it, recovered what was missing from a backup, and then lvremove'd the
+first two.  I'm also in the process of copying all the other LVs in that VG
+to another VG, just because I'm not sure I can trust its integrity.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+By the way, is their some kind of tool one can run to do something analogous
+to 'fsck' for VGs?  Something that will walk through LVs and PEs and make
+sure the VG is internally consistent?
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks,
+Carey
