@@ -1,9 +1,9 @@
-Message-ID: <1B3885BC15C7024C845AAC78314766C55E4FDD@exch-01.noida.hcltech.com>
-From: "Salil Taneja, Noida" <salilt@noida.hcltech.com>
+Content-Class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C3BEED.03605F80"
-Subject: [linux-lvm] lvm2 device mapper
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] lvm2 device mapper
+Message-ID: <CEADF0D83077F7458B763904E47AA709BD67@exchange.neokimia.com>
+From: "Yanick Quirion" <yanick.quirion@neokimia.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,145 +14,122 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 10 07:58:04 2003
+Date: Wed Dec 10 08:39:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
-Cc: "Salil Taneja, Noida" <salilt@noida.hcltech.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+Hi,
 
-------_=_NextPart_001_01C3BEED.03605F80
-Content-Type: text/plain;
-	charset="iso-8859-1"
+Did you compile device mapper as a module or into the kernel?
+
+Here I have compile them into the kernel directly. You must add this =
+line into your /etc/modules.conf:
+
+post-install dm-mod /etc/rc.d/init.d/devmap_mknod.sh
+
+And the script /etc/rc.d/init.d/devmap_mknod.sh is next:
+
+#! /bin/sh
+
+# Startup script to create the device-mapper control device
+# on non-devfs systems.
+# Non-zero exit status indicates failure.
+
+# These must correspond to the definitions in device-mapper.h and dm.h
+DM_DIR=3D"mapper"
+DM_NAME=3D"device-mapper"
+
+set -e
+
+DIR=3D"/dev/$DM_DIR"
+CONTROL=3D"$DIR/control"
+
+# Check for devfs, procfs
+if test -e /dev/.devfsd ; then
+        echo "devfs detected: devmap_mknod.sh script not required."
+        exit
+fi
+
+if test ! -e /proc/devices ; then
+        echo "procfs not found: please create $CONTROL manually."
+        exit 1
+fi
+
+# Get major, minor, and mknod
+MAJOR=3D$(sed -n 's/^ *\([0-9]\+\) \+misc$/\1/p' /proc/devices)
+MINOR=3D$(sed -n "s/^ *\([0-9]\+\) \+$DM_NAME\$/\1/p" /proc/misc)
+
+if test -z "$MAJOR" -o -z "$MINOR" ; then
+        echo "$DM_NAME kernel module not loaded: can't create $CONTROL."
+        exit 1
+fi
+
+mkdir -p --mode=3D755 $DIR
+test -e $CONTROL && rm -f $CONTROL
+
+echo "Creating $CONTROL character device with major:$MAJOR =
+minor:$MINOR."
+mknod --mode=3D600 $CONTROL c $MAJOR $MINOR
+
+With that everything works fine. If you use them as a module, I'm not =
+sure, but I think that you will have to add it into your rc.local, or =
+create a startup script for devmap_mknod.sh, but I'm not really sure =
+about that.
+
+Hope this will help.
+
+Regards,
+
+Yanick Quirion
+
+
+-----Original Message-----
+From: Salil Taneja, Noida [mailto:salilt@noida.hcltech.com]=20
+Sent: 10 December, 2003 02:13
+To: 'linux-lvm@sistina.com'
+Cc: Salil Taneja, Noida
+Subject: [linux-lvm] lvm2 device mapper
 
 hi,
- 
-I am using LVM2 , version -2.00.07 with device mapper library -1.00.07 on
-2.6.0 test-9 kernel
- 
+=A0
+I am using LVM2 , version -2.00.07 with device mapper library -1.00.07 =
+on 2.6.0 test-9 kernel
+=A0
 i am facing these problems while doing so : -
- 
+=A0
 1.) i get a warning message
-    " /dev/mapper/control : open failed : No such file or directory .
-       Is device mapper mapped to kernel ? "
- 
-To overcome this problem I started using LVM2 commands   with --driverloaded
-n option .
- 
+=A0=A0=A0=A0"=A0/dev/mapper/control : open failed : No such file or =
+directory .
+=A0=A0=A0=A0=A0=A0=A0Is device mapper mapped to kernel ? "
+=A0
+To overcome this=A0problem I started using LVM2 commands =A0 with =
+--driverloaded n option .
+=A0
 now the commands execute but i face another problem :-
-2.) when using lvcreate or vgcreate, the command executes but no node entry
-is created  in the /dev/ directory
+2.) when using lvcreate or vgcreate, the command executes but no node =
+entry is created =A0in the /dev/ directory
 For eg :
- 
+=A0
 I used the following command :
-    lvcreate < options > -n lvm1 vg1 --driverloaded n
- 
-to verify this i used lvdisplay that gives the path of lvm1 as /dev/vg1/lvm1
-; but when i check in /dev/ directory there is no entry corresponding to vg1
-or lvm1 .
- 
-Why isnt there any node corresoponding to vg1 or lvm1 in /dev/ ?  any
+=A0=A0=A0 lvcreate < options > -n lvm1 vg1 --driverloaded n
+=A0
+to verify this i used lvdisplay that gives the path of lvm1 as =
+/dev/vg1/lvm1 ; but when i check in /dev/ directory there is no entry =
+corresponding to vg1 or lvm1 .
+=A0
+Why isnt there any node corresoponding to vg1 or lvm1 in /dev/ ?=A0 any =
 clues...?????
- 
- 
+=A0
+=A0
 Please suggest some nice solutions .
- 
-Thanks and Regards, 
-Salil Taneja 
-HCLT NetCentric Division, 
-A11, Sector 16, 
-Noida, India. 
-* office: +91-120-2510701 Ext 3155 
-* cell: +91-9810250247 
+=A0
+Thanks and Regards,=20
+Salil Taneja=20
+HCLT NetCentric Division,=20
+A11, Sector 16,=20
+Noida, India.=20
+  office: +91-120-2510701 Ext 3155=20
+  cell: +91-9810250247=20
 
- 
-
-------_=_NextPart_001_01C3BEED.03605F80
-Content-Type: text/html;
-	charset="iso-8859-1"
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-
-
-<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
-<BODY>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003>hi,</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>I am 
-using LVM2 , version -2.00.07 with device mapper library -1.00.07 on 2.6.0 
-test-9 kernel</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>i am 
-facing these problems while doing so : -</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>1.) i 
-get a warning message</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003>&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;/dev/mapper/control : 
-open failed : No such file or directory .</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Is device 
-mapper mapped to kernel ? "</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>To 
-overcome this&nbsp;problem I started using LVM2 commands &nbsp; with 
---driverloaded n option .</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>now 
-the commands execute but i face another problem :-</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>2.) 
-when using lvcreate or vgcreate, the command executes but no node entry is 
-created &nbsp;in the /dev/ directory</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT><FONT face=Arial color=#000080 
-size=2><SPAN class=676585806-10122003>For eg :</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>I used 
-the following command :</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003>&nbsp;&nbsp;&nbsp; lvcreate &lt; options &gt; -n lvm1 
-vg1 --driverloaded n</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>to 
-verify this i used lvdisplay that gives the path of lvm1 as /dev/vg1/lvm1 ; but 
-when i check in /dev/ directory there is no entry corresponding to vg1 or lvm1 
-.</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>Why 
-isnt there any node corresoponding to vg1 or lvm1 in /dev/ ?&nbsp; any 
-clues...?????</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT><FONT face=Arial color=#000080 
-size=2><SPAN class=676585806-10122003></SPAN></FONT><FONT face=Arial 
-color=#000080 size=2><SPAN class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN class=676585806-10122003>Please 
-suggest some nice solutions .</SPAN></FONT></DIV>
-<DIV><FONT face=Arial color=#000080 size=2><SPAN 
-class=676585806-10122003></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial><FONT size=2><SPAN class=676585806-10122003>Thanks and 
-</SPAN>Regards,</FONT></FONT> <BR><FONT face=Arial size=2>Salil Taneja</FONT> 
-<BR><FONT face=Arial size=2>HCLT NetCentric Division,</FONT> <BR><FONT 
-face=Arial size=2>A11, Sector 16,</FONT> <BR><FONT face=Arial size=2>Noida, 
-India.</FONT> <BR><FONT face=Wingdings color=#800080 size=2>(</FONT><FONT 
-face="Trebuchet MS" color=#993300 size=2> office</FONT><FONT face="Trebuchet MS" 
-color=#000000 size=2>: +91-120-2510701 Ext 3155</FONT> <BR><FONT face=Wingdings 
-color=#800080 size=2>(</FONT><FONT face="Trebuchet MS" color=#993300 
-size=2></FONT> <FONT face="Trebuchet MS" color=#000000 size=2>cell: 
-+91-9810250247</FONT> </DIV><BR>
-<DIV>&nbsp;</DIV></BODY></HTML>
-
-------_=_NextPart_001_01C3BEED.03605F80--
+=A0
