@@ -1,42 +1,41 @@
-Date: Thu, 24 Aug 2000 12:46:14 +0200
-From: Luca Berra <bluca@comedia.it>
+Date: Thu, 24 Aug 2000 07:57:25 -0400
+From: Peter Green <pcg@gospelcom.net>
 Subject: Re: [linux-lvm] LVM and sw RAID1
-Message-ID: <20000824124613.B19952@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <20000823162957.B8398@gospelcom.net>
+Message-ID: <20000824075725.B7996@gospelcom.net>
+References: <OFBD402CC0.EADC9B6D-ONC1256945.00396FA2@resnova.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20000823162957.B8398@gospelcom.net>; from pcg@gospelcom.net on Wed, Aug 23, 2000 at 04:29:57PM -0400
+In-Reply-To: <OFBD402CC0.EADC9B6D-ONC1256945.00396FA2@resnova.de>; from Peter.Wuestefeld@resnova.de on Thu, Aug 24, 2000 at 12:37:43PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Peter.Wuestefeld@resnova.de
+Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com, owner-linux-lvm@msede.com
 
-On Wed, Aug 23, 2000 at 04:29:57PM -0400, Peter Green wrote:
-> I am having a really difficult time being able to get LVM to recognize my
-> /dev/md[012] arrays. The system:
+Thanks for the response,
 
-hello you have stumbled upon a (nother) nice bug in lvm
-i asked for help twice on this list, none helped even bothered to answer,
-anyway i found the bug, well there is more than one preventing you to use
-raid and LVM, fixed that and pvmoved everything onto my lvm+raid5 (fixing another bug
-in the process).
-Well, i discovered that reiserfs + LVM + raid DOES NOT WORK, it actually filled
-95% of my files with zeroes :)
+also sprach Peter.Wuestefeld:
+> 
+>    Hi,
+>    I think you are trying to cure the wrong disease ;-)
+>    > [root@dmna /root]# pvcreate -f /dev/md0
+>    > pvcreate -- invalid partition type 0x83 for "/dev/md0" (must be
+>    0x8e)
+>    shows what is wrong:
+>    try to set the partition id to 0x8e with fdisk/sfdisk/cfdisk - that
+>    should solve the problem.
 
-(*use the tape luke*)
+There *aren't* any partitions on a /dev/md? device. Look at the strace I
+sent; it's trying to pvcreate /dev/sda, even though I specify /dev/md0 on
+the command line.
 
-unluckyli the patch to fix lvm+raid was not on tape, so i will post it as soon
-i manage to rewrite it from memory,  hold your breath and mail me personally if
-i forget :)
+Thanks for your help.
 
-BTW i am back with ext2 and it works
-
-Regards.
-L.
-
+/pg
 -- 
-Luca Berra -- bluca@comedia.it
-    Communication Media & Services S.r.l.
+Peter Green : Gospel Communications Network, SysAdmin : pcg@gospelcom.net
+---
+We come to bury DOS, not to praise it.
+(Paul Vojta, vojta@math.berkeley.edu, paraphrasing a quote of Shakespeare)
