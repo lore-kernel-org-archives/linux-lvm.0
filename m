@@ -1,13 +1,10 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Having trouble compiling CVS
-References: <E16qq4l-0005yF-00@hermes.sistina.com>
-    <E16qrQU-00076U-00@hermes.sistina.com>
-    <20020329202225.GA4903@tykepenguin.com>
-In-Reply-To: <20020329202225.GA4903@tykepenguin.com>
+From: Marco Krohn <marco.krohn@gmx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16r7WH-0005fO-00@hermes.sistina.com>
+References: <636740000.1017419834@dizzy.wrkhors.com>
+Subject: Re: [linux-lvm] VG lost, VG restorable without lvmconf? Need help!
+Message-Id: <17104.1017494046@www45.gmx.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,34 +15,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 29 19:20:01 2002
+Date: Sat Mar 30 07:13:02 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-Thanks - I'll wait until after Easter.
-
-BTW: LVM-1.1rc1 (tarball) seems more stable then LVM CVS did 5-7 weeks ago.  
-Well done and thanks.
-
-On Sat, 30 Mar 2002 06:22, you wrote:
-> On Fri, Mar 29, 2002 at 06:09:21PM +1000, Adrian Head wrote:
-> > I have been able to get the lvm-1.1rc1 tarball to compile correctly.  I
-> > have diff'ed the two directories lvm-1.1rc1 & lvm-1.1rc1-CVS and I cannot
-> > find any obvious reason why the CVS would not work.
-> >
-> > Anyone have any sugestions?
->
-> CVS doesn't compile ATM, Heinz has beendoing some changes and accidentally
-> left a file out.
->
-> You'll have to wait till after the Easter holidays for CVS to be workingn
-> again I'm afraid.
->
-> Sorry.
->
-> Patrick
+Hi again,   
+   
+> > This is a problem. Hmmmm...Try recreating your vol group config    
+> > by running "vgcreate" and "lvcreate" from command line.    
+> > Do not use yast , as this will call "vgscan" again   
+   
+Yast is more or less a interface for the LVM tools, it is just for    
+people (like me) who are too lazy too look up the correct parameters.   
+   
+> > Also try "vgcfgrestore" , but   assume it is broken too,    
+   
+As far as I understand vgcfgrestore, it is only useful if you have a   
+lvmtab resp. lvmtab.d which I do not have :-(   
+   
+> Remember that LVM doesn't effect the data on your disk, just   
+> the LVM headers. If you remember the approx. sizes of things   
+> you may be able to bring the LV back on line long enough to   
+> back it up, blow off LVM, re-create the thing from scratch,   
+> run the VG backups and restore the original data.   
+   
+Thanks for the information I wasn't sure if LVM can kill my data   
+(forever) if I exectute commands like vgcreate etc.    
+Unfortunately this doesn't help me since somehow the VG is there   
+and somehow it isn't:   
+   
+root@feynman:~ # vgcreate system2 /dev/hda6 /dev/hda7 /dev/hdb2   
+/dev/hdb5 /dev/hdb6 /dev/hdb7          [13:47]   
+vgcreate -- volume group directory or file already exists   
+vgcreate -- please choose a different name   
+   
+Also reducing the number of PV does not help, probably since every   
+PV contains still the information that it belongs to "system2". Also   
+changing the VG name does not help...   
+   
+root@feynman:~ # vgcreate system /dev/hda6 /dev/hda7 /dev/hdb2   
+/dev/hdb5 /dev/hdb6 /dev/hdb7           [13:47]   
+vgcreate -- "/dev/hda6" is not a new physical volume   
+vgcreate -- physical volume "/dev/hda6" already belongs to volume   
+group "system2"   
+   
+On the other hand "system2" does not "exist"...  
+  
+root@feynman:~ # vgchange -a y system2                                      
+                            
+[13:47]   
+vgchange -- volume group "system2" does not exist   
+   
+root@feynman:~ # lvcreate -L1000 -ntestlv system2                           
+                            
+[13:54]   
+lvcreate -- can't create logical volume: volume group "system2"   
+doesn't exist   
+   
+Mmh, seems I can't execute any standard operations on these PVs.  
+Perhaps one of the authors of the program could be so kind and tell 
+me if there is any chance to get my data (at least partially) back? 
+ 
+Happy Easter, 
+   Marco 
+ 
 
 -- 
-Adrian Head
-
-(Public Key available on request.)
+GMX - Die Kommunikationsplattform im Internet.
+http://www.gmx.net
