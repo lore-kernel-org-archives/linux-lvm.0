@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 17 Jan 2001 10:16:30 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at www.sistina.com
-Message-ID: <20010117101630.C511@tykepenguin.com>
-References: <20010113114507.D15915@linuxcare.com> <200101130143.f0D1hNF19829@webber.adilger.net> <20010113170616.B22699@caldera.de> <20010116085117.A696@tykepenguin.com> <20010116121046.E2709@mvista.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010116121046.E2709@mvista.com>; from cduffy@mvista.com on Tue, Jan 16, 2001 at 12:10:46PM -0800
+Return-Path: <gustavo@zacarias.com.ar>
+Message-ID: <3A65843E.9008F7C8@zacarias.com.ar>
+Date: Wed, 17 Jan 2001 08:38:38 -0300
+From: Gustavo Zacarias <gustavo@zacarias.com.ar>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] unable to import vg in 2.4.1pre7
+References: <3A656798.2090603@cs.auc.dk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,35 +18,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: god@cs.auc.dk
 
-On Tue, Jan 16, 2001 at 12:10:46PM -0800, Charles Duffy wrote:
-> On Tue, Jan 16, 2001 at 08:51:18AM +0000, Patrick Caulfield wrote:
-> > On Sat, Jan 13, 2001 at 05:06:16PM +0100, Christoph Hellwig wrote:
-> > > On Fri, Jan 12, 2001 at 06:43:23PM -0700, Andreas Dilger wrote:
-> > > > > Would it be possible to clean up the ioctl interface so we
-> > > > > dont need such large hacks for LVM support? I can do the work
-> > > > > but I want to be sure you guys will agree to it.
-> > 
-> > If you're prepared to do the work we'd be glad to accept the patch -
-> > please send it to me or the list so I can check over it before
-> > committing it. As we don't have an UltraSPARC available for testing
-> > it's probably better done by someone who does !
+Joakim Recht wrote:
+ 
+> I wanted to upgrade from 2.4.0pre13 to 2.4.1pre7, so I vgexported my vg,
+> rebooted, installed new tools and tried to vgimport the volume, but this
+> just gives me this error:
 > 
-> I have an Ultra-1 available, presently in use as a prototyping system.
-> It's not currently using LVM and there's no unpartitioned space on the
-> drive, but if one of the core developers (or otherwise someone I have
-> reason to trust) wants to try testing LVM over loopback (or something
-> of that sort), I can provide access.
+> vgimport -- ERROR: couldn't create VGDA for imported volume group
+> "volgroups" in kernel
+> 
+> I've used the 0.9.1beta1 tools from cvs and the patch 2.4.1pre7 patch
+> posted here earlier today. Any solution to this?
 
-I was hoping that Anton would volunteer as per his message in linux-kernel :-)
+Sorry Sorry Sorry!
+Actually the patch i made up, which is a total hack and shouldn't
+trust for more than testing, is based on 0.9 with fixes from cvs.
+Remember, it's NOT offical, and certainly NOT from the LVM people.
+Mea culpa: this happens when i lack caffeine during long periods
+of code tweaking...
 
-Having looked in (too much) depth at the code I decided I don't know enough
-about Ultra-SPARCs to be able to do this on some else's machine. 
-
-I've worked fairly extensively on Alphas (which are a pure 64 bit machine)
-but the sparc seems to have some bizarre 32 bit modes I know nothing about.
-
-
-patrick
+-- 
+Gustavo Zacarias - Yahoo! ID "qarnage"
+Yahoo! Argentina - http://www.yahoo.com.ar
+--
