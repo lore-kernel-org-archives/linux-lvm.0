@@ -1,10 +1,10 @@
-Message-ID: <3B949CC1.1030604@st-peter.stw.uni-erlangen.de>
-Date: Tue, 04 Sep 2001 11:20:01 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
-References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de> <20010831110512.V541@turbolinux.com> <3B90C9A4.3080005@st-peter.stw.uni-erlangen.de> <3B90EC90.4050606@st-peter.stw.uni-erlangen.de> <20010903215300.B32553@turbolinux.com>
-Content-Transfer-Encoding: 7bit
+Date: Tue, 04 Sep 2001 06:41:59 -0400
+From: Jeff Layton <jeffrey.b.layton@lmco.com>
+Subject: Re: [linux-lvm] LVM and SPL
+Message-id: <3B94AFF7.28AA4C43@lmco.com>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+References: <85063BBE668FD411944400D0B744267A88852C@AUSMAIL>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,36 +16,66 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-wich one should i try 2.4.5 2.4.6 2.4.7 2.4.8
-and should it be -ac
-should i try to patch the kerenel eith badram
+"Gonyou, Austin" wrote:
 
-i'm going to run memtest now
+> Yeah..there's no linking or anything. One is a hardware vendor, the other is
+> a software vendor.
 
-Andreas Dilger wrote:
+True. But when I look for something "like" a SAN for Linux, GFS
+would be one product I would consider. In fact, we were considering
+GFS and an EMC SAN for a project recently (until it got canned).
 
->On Sep 01, 2001  16:11 +0200, svetljo wrote:
+I guess I was thinking about this project when I made the comment.
+Sorry about that.
+
+Jeff Layton
+
+Lockheed-Martin
+
+
 >
->>clean Linus kernel-2.4.9  LVM-1.0.1rc1                    ext2 and 
->>reiserfs segfaults
->>clean            linux-2.4.9-ac5 LVM-1.0                        ext2 and 
->>reiserfs segfaults
->>                  | linux-2.4.10-pre2-xfs LVM-1.0.1rc2      ext2 and 
->>reiserfs segfaults, but xfs seems to work
->>                  | from SGI's cvs tree  linux-2.4-xfs taken today in 
->>the early morning
->>
 >
->Is it possible that you are having memory problems?  Did this work with
->earlier kernels and it now only fails with 2.4.9?  Have you tried running
->with memtest86 to check your RAM?  It seems like you are having too many
->problems with different filesystems.
+> --
+> Austin Gonyou
+> Systems Architect, CCNA
+> Coremetrics, Inc.
+> Phone: 512-796-9023
+> email: austin@coremetrics.com
 >
->Cheers, Andreas
+> > -----Original Message-----
+> > From: Chemolli Francesco (USI) [mailto:ChemolliF@GruppoCredit.it]
+> > Sent: Monday, September 03, 2001 3:43 AM
+> > To: 'linux-lvm@sistina.com'
+> > Subject: RE: [linux-lvm] LVM and SPL
+> >
+> >
+> > > I agree that Sistina may be in a very akward position and I
+> > > think it is
+> > > a very good thing for them to change the license on GFS. They have
+> > > to compete with the spector of EMC looming over them (I tried to
+> > > convince Lockheed to give up on EMC and a different route without
+> > > any luck. Their reason? "Because they're EMC!").
+> >
+> > Actually, EMC and GFS are different things AFAIK. EMC provides you
+> > with virtual disks over FC, you still have to use them.
+> > I don't see why you shouldn't be able to run GFS over an EMC-provided
+> > virtual disk.
+> >
+> > --
+> >       /kinkie
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
 >
-well i'm seeing a bit different  the realy journaling FS's doesn't have 
-problems
-and the others not
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
