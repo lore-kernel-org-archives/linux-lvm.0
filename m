@@ -1,44 +1,36 @@
-Date: Wed, 20 Oct 1999 08:10:05 -0700
-From: Ryan Murray <rmurray@cyberhqz.com>
+Date: Wed, 20 Oct 1999 17:57:29 +0200
+From: Adrien Farkas <freddy@redneck.sk.oracle.com>
 Subject: Re: [linux-lvm] how to remove PV from a VG?
-Message-ID: <19991020081005.A26564@cyberhqz.com>
-References: <19991019231507.A337@redneck.sk.oracle.com> <199910192313.AA15213@mailgate1b.telekom.de> <19991020123101.A305@redneck.sk.oracle.com>
+Message-ID: <19991020175729.A1301@redneck.sk.oracle.com>
+Reply-To: freddy@sk.oracle.com
+References: <199910201149.AA09133@mailgate1b.telekom.de> <E11dvS2-000687-00@chatteris.cl.cam.ac.uk>
 Mime-Version: 1.0
-In-Reply-To: <19991020123101.A305@redneck.sk.oracle.com>
+In-Reply-To: <E11dvS2-000687-00@chatteris.cl.cam.ac.uk>; from Piete.Brooks@cl.cam.ac.uk on Wed, Oct 20, 1999 at 02:06:41PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: freddy@sk.oracle.com
+To: Piete Brooks <Piete.Brooks@cl.cam.ac.uk>
 Cc: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, linux-lvm@msede.com
 
-On Wed, Oct 20, 1999 at 12:31:02PM +0200, Adrien Farkas wrote:
-> Heinz Mauelshagen (mauelsha@ez-darmstadt.telekom.de) wrote :
-> > > the subject says it (almost) all, I need to remove three PVs that were added to my VG by mistake (namely /dev/sdi, /dev/sdj and /dev/sdk), I guess you see where the error is. I can access data on previous PVs (yet), but don't know how to remove PVs, there is nothing linke 'pvremove'. I can assure you there is no data (perhaps except signature) on those disks.
-> > > 
-> > 
-> > vgreduce YourVG /dev/sd[i-k]
-> > 
-> > - or, if the 3 partitions hold the only empty PVs of YourVG -
-> > 
-> > vgreduce -a YourVG
+Piete Brooks (Piete.Brooks@cl.cam.ac.uk) wrote :
+
+> >> How do I really, physically remove the devices from the PV list?
+> > Set the partition type identifier to something different than 0xfe.
 > 
-> yes, helped quite enough, just the /dev/sd[ghi] devices are still in
-> list of valid PVs and when I run pvscan my partitions get destroyed
-> (I suppose because of rewriting LVM marker to the device).  How do I
-> really, physically remove the devices from the PV list?
+> What if the disks were to not have a `partition type', e.g. /dev/sdb or
+> /dev/md33 ?
+dd if=/dev/zero of=/dev/sdb count=8 bs=1024 does the trick
 
-or, if you aren't using partitions, write over the front of the drive
-with:
+thanks to all who responded (and subsequently helped).
 
-dd if=/dev/zero of=/dev/sdg bs=1024 count=5
-
-I'm not sure how much is actually needed to be overwritten, I normally
-just don't put a limit on it and hit ctrl-c after awhile.  (or let it
-run to the end of the drive...)
+regards,
 
 -- 
-Ryan Murray (rmurray@cyberhqz.com, rmurray@glenayre.com)
-Software Designer, Glenayre Technologies Inc.
-The opinions expressed here are my own.
+                                             freddy
+
+----==-- _                      Adrien "freddy" Farkas
+---==---(_)__  __ ____  __       freddy@sk.oracle.com
+--==---/ / _ \/ // /\ \/ /  We all know Linux is great... It
+-=====/_/_//_/\___/ /_/\_\  does infinite loops in 5 seconds
