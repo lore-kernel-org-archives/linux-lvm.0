@@ -1,18 +1,10 @@
-Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
-References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
-	<3DAFB7D4.B88B6737@silicide.dk>
-	<ufaelanvnav.fsf@epithumia.math.uh.edu>
-	<3DB02DD6.B8B4B48E@silicide.dk>
-	<ufa65vzviuo.fsf@epithumia.math.uh.edu>
-	<3DB0348D.42FFC0A4@silicide.dk>
-	<ufawuoftw8h.fsf@epithumia.math.uh.edu>
-	<3DB264D3.A994B237@silicide.dk>
-	<ufabs5oord6.fsf@epithumia.math.uh.edu>
-	<3DB30743.91439340@silicide.dk>
-From: Jason L Tibbitts III <tibbs@math.uh.edu>
-In-Reply-To: Jon Bendtsen's message of "Sun, 20 Oct 2002 21:42:59 +0200"
-Message-ID: <ufaheffvog3.fsf@epithumia.math.uh.edu>
-MIME-Version: 1.0
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
+Message-ID: <20021021151240.GG838@tykepenguin.com>
+References: <3DB3BDA4.75B552B6@silicide.dk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3DB3BDA4.75B552B6@silicide.dk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -23,37 +15,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 21 09:47:01 2002
+Date: Mon Oct 21 10:13:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "JB" == Jon Bendtsen <jon+lvm@silicide.dk> writes:
+On Mon, Oct 21, 2002 at 10:41:08AM +0200, Jon Bendtsen wrote:
+> Since i want to run with ext3 and use snapshots, i applied the 
+> 	linux-2.4.18-VFS-lock.patch
+> to my default 2.4.18 kernel. I just did that file since making
+> the patches, and applying that would fail during compilation.
+> (something about md driver ?, which i dont use)
+> 
+> So, after just getting the VFS-lock patch to work, i've tried
+> to use it on my debian woody, with 
+> 	lvm-common     1.5.5
+> 	lvm10          1.0.4-4
+> installed. But i get alot of errors :/
+> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
+> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
+> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
+> 	lvm -- lvm_chr_ioctl: unknown command 0x8004fe97
+> 
+> And sometimes vgscan cant find my VG, and i cant activate it with
+> 	vgchange -a y ...
+> 
+> 
+> It _MIGHT_ be because i'm running lvm ontop of a loop-AES, but it does
+> work most of the time.
+> 
+> 
+> 
+> JonB
+> ps: right now i'm starting all over with 
+> 	2.4.19
+> 	lvm_1.1-rc2.tar.gz
 
-JB> oh, whats in your lilo.conf then ?
+You really don't want to do that... 1.1 is well broken.
 
-I had to get the machine booting again; since the IBM disks die so
-regularly I can't use the machine for anything useful.  In any case:
+> and removing those debian packages.
 
-boot=/dev/md0
-map=/boot/map
-install=/boot/boot.b
-prompt
-timeout=50
-message=/boot/message
-linear
-default=l-2.4.12-ac5_lvm_uh_1
+The Debian packages should be fine. Plenty of other people are using them.
 
-image=/boot/vmlinuz-2.4.12-ac5_lvm_uh_1
-        label=l-2.4.12-ac5
-        password=XXX
-        restricted
-        initrd=/boot/initrd-2.4.12-ac5_lvm_uh_1.img
-        read-only
-        root=/dev/md1
+Can you tell which command is issued the illegal ioctl ? It could be that the
+LVM device has a wrong major/minor or something else has take the LVM
+major/minor device number, because those are /not/ LVM ioctl numbers.
 
-md0 is an eight-way mirror, mounted on /boot.  None of the system
-volumes are on LVM.
+If you can determine what command is issuing those odd ioctls then you're
+probably half-way to finding the culprit.
 
- - J<
+patrick
