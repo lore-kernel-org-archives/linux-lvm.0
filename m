@@ -1,86 +1,33 @@
-Message-Id: <199908221116.AA20083@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-ID: <19990822132428.C14876@atlantique.venturi.net>
+Date: Sun, 22 Aug 1999 13:24:28 +0200
+From: Ulrik De Bie <winmute@atlantique.venturi.net>
 Subject: Re: [linux-lvm] LVM in stock kernel!?
-Date: Sun, 22 Aug 1999 13:14:36 METDST
-In-Reply-To: <19990822081621.A13324@ladystrange.bluehorizon.nl>; from "pamvdam@ramoth.xs4all.nl" at Aug 22, 99 8:16 am
+References: <199908212041.AA13662@mailgate1b.telekom.de> <37BF176C.CE8D23CF@mail.isis.de>
+Mime-Version: 1.0
+In-Reply-To: <37BF176C.CE8D23CF@mail.isis.de>; from Marcus Ruehmann on Sat, Aug 21, 1999 at 11:17:32PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: pamvdam@ramoth.xs4all.nl
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com, torvalds@transmeta.com
 
-
-Hi Pascal,
-
-saw your mail today concerned with writes beyond the end of the device,
-Have seen this a couple of times before 8*(
-
-It was a kernel problem in the block i/o layer these days not forced
-by the LVM but brougt to the surface by the heavy i/o load LVM striped 
-LVs pushed to the system.
-
-Do you see the same trouble with LVM 0.7 in older kernel releases?
-
-Regards,
-Heinz
-
+> Hi Linus,
 > 
-> On Sat, Aug 21, 1999 at 10:39:30PM +0000, Heinz Mauelshagen wrote:
-> > 
-> > Hi everybody!
-> > 
-> > Dirk Hohndel told me last week, that Linus wants to wait before putting LVM
-> > into the stock kernel to see if enough people are interested to have this.
-> > 
-> > Because a feature freeze for 2.4 is already comming up, i hereby kindly ask 
-> > everybody to convince Linus to put the LVM into the stock kernel.
-> > 
-> > Send him mails please 8*)
+> please put the LVM into 2.4, it is really usefull and working fine.
+> People with need for lots of disk space (database people) are needing
+> it.
 > 
-> Will do so, but there might be still problems with LVM and the 2.3.14+
-> kernels. The bad_lvm_ptr and the Oops: lvm_request messages.
-> 
-> Now I'll bring my LVM wishes to Linus.
-> 
-> Best regards,
-> 
-> 	Pascal
-> 
-> 
-> > 
-> > Thanks in advance.
-> > 
-> > Kind regards,
-> > Heinz
-> > --
-> > 
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > 
-> > Systemmanagement CS-TS                           T-Nova
-> >                                                  Entwicklungszentrum Darmstadt
-> > Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-> > Senior Systems Engineer                          Postfach 10 05 41
-> >                                                  64205 Darmstadt
-> > mge@ez-darmstadt.telekom.de                      Germany
-> >                                                  +49 6151 886-425
-> >                                                           FAX-386
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
+> Features like this are strongly needed to make Linux ready for the
+> enterprise!
+Once, there was an idea called partitions. People never considered
+big hard disks, changing disk space needs etc. Now we still have
+this same system, while a lot of unices already are using lvm-like
+stuff.
 
+I think lvm is the only good long term solution for the diskspace
+problem, and a lot of people will be happy having it.
 
---
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Kind regards,
+Ulrik De Bie
+winmute@atlantique.venturi.net
