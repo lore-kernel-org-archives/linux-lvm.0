@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Recovery of a damaged striped volume
-Message-ID: <20011109101639.A19131@sistina.com>
-References: <001c01c168a3$9b172db0$0222a8c0@tux>
+Subject: Re: [linux-lvm] LVM and HD-crash
+Message-ID: <20011109102024.B19131@sistina.com>
+References: <200111081420.fA8EKcu06482@mailgate5.cinetic.de>
 Mime-Version: 1.0
-In-Reply-To: <001c01c168a3$9b172db0$0222a8c0@tux>; from plasma@pealpjpain.net on Thu, Nov 08, 2001 at 11:20:42PM +0100
+In-Reply-To: <200111081420.fA8EKcu06482@mailgate5.cinetic.de>; from mnospers@web.de on Thu, Nov 08, 2001 at 03:20:38PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,48 +14,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  9 03:20:02 2001
+Date: Fri Nov  9 03:24:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Philipp,
+Markus,
 
-presuming that just the first sectors have been wiped out, your option
-is to run vgcfgrestore(8) on the wiped disk, the vgscan + "vgchange -ay".
+you need to replace the failed drive, set up the same partition table
+you had on the gone one and vgcfgrestore(8) LVMs metadata to it.
+See the manual page of vgcfgrestore for details.
+vgscan + "vgchange -ay" should then bring your VG back to life.
 
-See the vgcfgrestore(8) manual page for details, please.
+Getting data back makes only sense, if you've got LVs, which *don't* have any
+extents allocated on the gone drive. Otherwise your filesystem
+stored in there will complain loudly cause of missing data and metadata.
+
+If you need more redundancy, please think of soft/hard RAID.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-
-
-On Thu, Nov 08, 2001 at 11:20:42PM +0100, Philipp wrote:
-> Hello Folks!
+On Thu, Nov 08, 2001 at 03:20:38PM +0100, mnospers@web.de wrote:
+> Hi
 > 
-> My system consists of two brand new IBM Deskstar HDs with 60 GB each,
-> connected to a Promise Ultra100 card, the rest of the system doesn't matter
-> so far ... these two discs are joined together in a striped volume group.
+> I've a little question... I know, it could be answered in the past,
+> but I didn't found it :( 
+> What about Crashes of Harddisks in a LVM ?
+> I have 3 HDs in it, and one seemes to be crashed.
+> All the 3 where together in one big LV.
+> Is there any possibilitie to get some of the data back ?
+> I mean, the data of the 2 working HDs ? 
+> Or doI have to accept, that all data on the 3 disks is lost?
 > 
-> I've got in some trouble: This week I wanted to reinstall the basic linux
-> system. During this process I noticed some mysterious behaviour of one of
-> the system discs, and so decided to check and clean that disc with the IBM
-> 'Drive Fitness Test' program. But the darn thing ignored my choice and
-> whiped out the first few sectors of one of the data discs.
+> thx
+> Markus
 > 
-> The question: is it possible to restore the striped volume? Or more
-> detailed: if I simply repeat the same steps I did when I build up the volume
-> (write partition table, create pv's and vg, ...) so that the data on the
-> discs is left untouched, will my ReiserFS on that volume be able to restore
-> itself? Or is all the data on the discs  when I initialize them as 'physical
-> volume'?
-> 
-> Many thanks in advance, and please someone help me out of that ... because
-> I've got no backups so far :-(
-> 
-> Greetings >>>> Philipp
+> ______________________________________________________________________________
+> Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr!
+> Beim WEB.DE Lottoservice: http://tippen2.web.de/?x=7
 > 
 > 
 > _______________________________________________
