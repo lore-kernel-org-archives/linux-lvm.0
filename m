@@ -1,19 +1,30 @@
-Message-ID: <C8FCA347E92DD211B4F200A0C9CC44F5E1D052@LKD02PC>
-From: "Schmitt, Erwin" <Erwin.Schmitt@Kurz.de>
-Subject: [linux-lvm] please unsubscribe
-Date: Fri, 25 Feb 2000 07:15:47 +0100
+Message-ID: <38B6446E.EF00892A@msede.com>
+Date: Fri, 25 Feb 2000 09:59:26 +0100
+From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Bug in modules (fwd)
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-9"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
+Forwarded message ...
 
+-------- Original Message --------
+Date: Thu, 24 Feb 2000 20:17:02 -0500
+From: Wakko Warner <wakko@animx.eu.org>
+Subject: Bug in modules
 
-Mit freundlichen Gr=FC=DFen
+I have a machine that boots from scsi and I have IDE compiled as
+modules.
 
-Erwin Schmitt
-Tel: 0911-7141587
-mailto:Erwin.Schmitt@kurz.de
+The use count for the IDE modules are always 0 even when writing to
+the
+ide drives.  I consider this a major bug if someone uses rmmod -a
+every so
+often.
+
+-- 
+ Lab tests show that use of micro$oft causes cancer in lab animals
