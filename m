@@ -1,12 +1,9 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Tue, 13 Feb 2001 16:09:22 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] LVM with devfs questions and patches
-Message-ID: <20010213160922.G556@tykepenguin.com>
-References: <20010212205229.A3375@trez42.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010212205229.A3375@trez42.net>; from ben@trez42.net on Mon, Feb 12, 2001 at 08:52:29PM +0100
+Return-Path: <Jean-Eric.Cuendet@linkvest.com>
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683953@mailsrv.linkvest.ch>
+From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+Date: Wed, 14 Feb 2001 11:15:53 +0100
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM don't work anymore (wrong version?)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,28 +19,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Feb 12, 2001 at 08:52:29PM +0100, Benoit Gaussen wrote:
-> Hi,
-> 
-> I'm running LVM 0.9.1_beta2 from kernel 2.4.1 with devfs and I had some little
-> troubles, all related to /dev entries and devfs registration :
-> 
-> - another trouble I had, and I saw some people here had the same, is the
->   'devfs_register(): device already registered: "group"' message while doing
->   vgchange.
->   I did not find an=y answer about the cause of it. So I looked at the code
->   of vgchange and discovered that the /dev/vg0 and /dev/vg0/group are created
->   by mkdir and mknod (in the function vg_create_dir_and_group() ).
->   So when the kernel code tries to register the group device, the devfs code
->   finds it, since it was already registered by doing the mknod.
->   I understand the group device must exist since the VG_CREATE ioctl uses its
->   minor to select the VG to create. But since the minor is based on
->   vg->vg_number, and the vg structure is passed as argument to the VG_CREATE
->   ioctl, why not using vg->vg_number to select the VG ?
->   So we could open /dev/lvm to do the VG_CREATE ioctl instead of using
->   /dev/vg0/group ?  
-> 
+Hi,
+I'm using LVM 0.9.1_beta3 since 2 weeks now without any problem.
+I'm having a problem now.
+I have one VG and one LV in it.
+I need to create another VG made of 3 PVs.
+I issue:
+[root@fatboy hosts]# pvcreate -f /dev/md7
+pvcreate -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run
+vgscan
+What's that?
 
-Thanks for those, I've reworked them a little but the effect should be the same.
+When running vgscan:
+[root@fatboy hosts]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
 
-patrick
+What can I do with that?
+Thanks
+-jec
+
+PS: I already tried to upgrade to beta4 (only the tools). If you want me to
+upgrade the kernel to beta4, wait this evening :-) (prod machine)
+
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Jean-Eric Cuendet
+Linkvest SA
+Av des Baumettes 19, 1020 Renens Switzerland
+Tel +41 21 632 9043  Fax +41 21 632 9090
+http://www.linkvest.com  E-mail: jean-eric.cuendet@linkvest.com
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
