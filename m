@@ -1,12 +1,13 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] mapping blocks to PVs?
-Message-Id: <20020225105050.A7948@sistina.com>
-References: <20020223214540.GA12317@mp3revolution.net>
-    <20020224000143.D12832@lynx.adilger.int>
-    <20020224225832.GA4123@mp3revolution.net>
+Subject: Re: [linux-lvm] bug: raid1 sub-devices are scanned too
+Message-Id: <20020225105242.B7948@sistina.com>
+References: <20020223015504.GA828@xulfad.ton.tut.fi>
+    <20020223114712.A695@sistina.com> <20020223115529.A744@sistina.com>
+    <20020224221642.GA31890@xulfad.ton.tut.fi>
 MIME-Version: 1.0
-In-Reply-To: <20020224225832.GA4123@mp3revolution.net>; from
-    dilinger@mp3revolution.net on Sun, Feb 24, 2002 at 05:58:32PM -0500
+In-Reply-To: <20020224221642.GA31890@xulfad.ton.tut.fi>; from
+    flux-lvm@inside.org on Mon, Feb 25, 2002 at 12:16:43AM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,76 +18,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 25 03:50:01 2002
+Date: Mon Feb 25 03:52:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Sun, Feb 24, 2002 at 05:58:32PM -0500, Andres Salomon wrote:
-> Ok, assuming the block/sector stuff is correct:
-> 
->    --- Physical extents ---
->    PE    LV                        LE      Disk sector
->    00000 /dev/site/lvol1           00000   33144
->    00001 /dev/site/lvol1           00001   65912
-> 
-> badblocks(2) is not picking up those blocks as being bad; this means I
-> need to manually remove the first LE from this LV.  I assume I can
-> do something similar to `pvmove -n /dev/site/lvol1:0 /dev/hdf1 /dev/hdb1`
+On Mon, Feb 25, 2002 at 12:16:43AM +0200, Erkki Seppala wrote:
+> Hello, thanks for the reply.=20
+>=20
+> The problem seems to have disappeared after a reboot, or then I've
+> tried the vgscan -f -stuff - vgscan now just seemed to work OK. I
+> could've sworn I tried that vgscan -f before without too much success,
+> but, all in all, I imagine it's not worth hunting a bug before one can
+> find an easily repeatible situation.
 
-Yes.
+Yes, that's true.
 
-> (hdf1 is the one causing problems, but I can't simply remove the PV from the
-> VG w/out deleting lots of stuff).  However, how do I lvreduce from the
-> beginning of the LV?  Is that possible?
-
-No, just from the end.
+In case you get it reproducable some day, I'ld really appreciate your
+VGDA and setup information to drill that one down.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-> 
-> On Sun, Feb 24, 2002 at 12:01:43AM -0700, Andreas Dilger wrote:
-> > 
-> > On Feb 23, 2002  16:45 -0500, Andres Salomon wrote:
-> > > I've got a LV that keeps corrupting, made up of several IDE disks.  I've
-> > > already discovered one of the drives to be flaking out, after various
-> > > read tests on the device gave BadCRC/IRQ timeout errors.  Read tests on
-> > > the other drives succeeded; however, I'm still getting stuff like:
-> > > 
-> > > journal_bmap: journal block not found at offset 7180 on lvm(58,0)
-> > > 
-> > > and
-> > > 
-> > > /dev/site/lvol1: recovering journal
-> > > JFS: bad block at offset 7182
-> > > 
-> > > How can I figure out which PV is holding block 7180 and 7182?  
-> > 
-> > I think "lvdisplay -v" or "pvdisplay -v" or similar will show the _sector_
-> > numbers for each PE.  Note that for ext3, the block numbers reported are
-> > 4kB blocks (usually, check with dumpe2fs -h), so you are probably looking
-> > for sectors 7180*8 and 7182*8.
-> > 
-> > Cheers, Andreas
-> > --
-> > Andreas Dilger
-> > http://sourceforge.net/projects/ext2resize/
-> > http://www-mddsp.enel.ucalgary.ca/People/adilger/
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> -- 
-> "I think a lot of the basis of the open source movement comes from
->   procrastinating students..."
-> 	-- Andrew Tridgell <http://www.linux-mag.com/2001-07/tridgell_04.html>
-> 
+>=20
+> On Sat, Feb 23, 2002 at 11:55:29AM +0100, Heinz J . Mauelshagen wrote:
+>=20
+> > > this is a bug in 1.0.3 with exported VGs.
+> > >=20
+> > > If you import your VG "mirror" again, you should be fine.
+> > > Rather than imprting, "vgscan -f" should work as well.
+>=20
+> In the original situation vgscan -f was of no help, only the
+> export/import-trick (and a reboot) allowed me to access the mirror-vg.
+>=20
+> > Are /dev/ide/host0/bus1/target1/lun0/part1 and
+> > /dev/ide/host0/bus0/target1/lun0/part1 really the ones making up /dev=
+/md/1 ?
+> >=20
+> > Regards,
+> > Heinz    -- The LVM Guy --
+>=20
+> Yes:
+> md1 : active raid1 ide/host0/bus1/target1/lun0/part1[1] ide/host0/bus0/=
+target1/lun0/part1[0]
+>       58633216 blocks [2/2] [UU]
+>=20
+> --=20
+>   _____________________________________________________________________
+>      / __// /__ ____  __                              Erkki Sepp=E4l=E4=
+\   \
+>     / /_ / // // /\ \/ //ircnet                           Modeemi Ry\  =
+/
+>    /_/  /_/ \___/ /_/\_\@modeemi.fi        http://www.modeemi.fi/~flux/
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
@@ -96,7 +80,9 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -104,4 +90,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
