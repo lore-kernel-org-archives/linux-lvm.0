@@ -1,23 +1,16 @@
-Received: from null.msp.redhat.com (null.msp.redhat.com [172.16.31.120])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i2QGGjj21268
-	for <linux-lvm@redhat.com>; Fri, 26 Mar 2004 11:16:45 -0500
-Received: from null.msp.redhat.com (localhost.localdomain [127.0.0.1])
-	by null.msp.redhat.com (8.12.11/8.12.11) with ESMTP id i2QGGj7c021162
-	for <linux-lvm@redhat.com>; Fri, 26 Mar 2004 10:16:45 -0600
-Received: (from alewis@localhost)
-	by null.msp.redhat.com (8.12.11/8.12.11/Submit) id i2QGGjQm021161
-	for linux-lvm@redhat.com; Fri, 26 Mar 2004 10:16:45 -0600
-Date: Fri, 26 Mar 2004 10:16:44 -0600
-From: AJ Lewis <alewis@redhat.com>
-Subject: Re: [linux-lvm] 2 TB limit
-Message-ID: <20040326161644.GF12948@null.msp.redhat.com>
-References: <005601c412af$748d71a0$1fa0a8c0@blec>
-	<200403261813.50041.krustev@krustev.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2QGihj29187
+	for <linux-lvm@redhat.com>; Fri, 26 Mar 2004 11:44:43 -0500
+Subject: Re: [linux-lvm] Somewhat offtopic: Strange umount problem ....
+From: David Johnston <david@littlebald.com>
+In-Reply-To: <200403260800.21301.krienke@uni-koblenz.de>
+References: <200403251534.47502.krienke@uni-koblenz.de>
+	<1080238182.5985.3.camel@grandmother.littlebald.com>
+	<200403260800.21301.krienke@uni-koblenz.de>
+Message-Id: <1080319473.16404.3.camel@grandmother.littlebald.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="byLs0wutDcxFdwtm"
-Content-Disposition: inline
-In-Reply-To: <200403261813.50041.krustev@krustev.net>
+Date: 26 Mar 2004 11:44:33 -0500
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,51 +21,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: Rainer Krienke <krienke@uni-koblenz.de>
+Cc: linux-lvm@sistina.com
 
-
---byLs0wutDcxFdwtm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Mar 26, 2004 at 06:13:50PM +0200, Delian Krustev wrote:
-> On Thursday 25 March 2004 23:23, Brad Vrabete wrote:
+On Fri, 2004-03-26 at 02:00, Rainer Krienke wrote:
+> On Donnerstag, 25. M=EF=BF=BDrz 2004 19:09, David Johnston wrote:
+> > On Thu, 2004-03-25 at 09:34, Rainer Krienke wrote:
+> > > I have a problem with 3 server machines
+> > > I am running 3 NFS and SMB servers which run perfectly stable but
+> > > the filesystems which contain user directories cannot be umounted
+> >
+> > Rainer,
+> > nfsd will do this.  Make sure all of your NFS servers are stopped before
+> > you try to umount your filesystems.
+> >
+> > Does that help?
 >=20
-> > Is there any was to create a logigal volume larger than 2TB? Can LVM2 do
-> > that?
->=20
-> I think it can. However tha maximum size for a block device in 2.4 kernels
-> is 2TB. You should try 2.6, and use large enough PE size.
+> Thanks for the hint, but nfsd has already been stopped
+> Here is a list of all processes still running in single user=20
 
-The PE size limitation isn't present in lvm2 (The version of lvm that works
-in 2.6) if you use the native lvm2 format.  So you should be able to create
-larger than 2TB LVs with LVM2.  Just FYI.
+Rainer,=20
+could it be your multipath daemon?  In single-user mode, I would expect
+multipathd and the migration_CPUx daemons to shut down.
 
 --=20
-AJ Lewis                                   Voice:  612-638-0500
-Red Hat Inc.                               E-Mail: alewis@redhat.com
-720 Washington Ave. SE, Suite 200
-Minneapolis, MN 55414
-
-Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
-A5A
-Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
-many keyservers out there...
------Begin Obligatory Humorous Quote----------------------------------------
-File not found. Should I fake it? (Y/N)
------End Obligatory Humorous Quote------------------------------------------
-
---byLs0wutDcxFdwtm
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
-
-iD8DBQFAZFds9QxUqFeMhxURAv51AJwNQ3yH3+kcNIH5qyeFKrycxMCXogCdExFx
-u/77LFh20W/KpzluxZeaP8Y=
-=8nfE
------END PGP SIGNATURE-----
-
---byLs0wutDcxFdwtm--
+David Johnston <david@littlebald.com>
+Little Bald Consulting, LLC
