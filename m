@@ -1,8 +1,9 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re[2]: [linux-lvm] Core questions from a LVM neophyte...
-Mime-Version: 1.0
+content-class: urn:content-classes:message
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030312234602.BKIB19534.imf41bis.bellsouth.net@tiger2>
+Subject: RE: re[2]: [linux-lvm] Core questions from a LVM neophyte...
+Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B3B6@mercury.infiniconsys.com>
+From: "Barry, Christopher" <cbarry@infiniconsys.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,15 +14,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 17:53:01 2003
+Date: Wed Mar 12 21:00:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
+
+Sistina's GFS will do this as well. We employ it here with good results. =
+GFS can live happily in LV2.
+
+--
+Christopher Barry
+Manager of Information Systems
+InfiniCon Systems
+http://www.infiniconsys.com
+
+-----Original Message-----
+From: Greg Freemyer [mailto:freemyer@NorcrossGroup.com]
+Sent: Wednesday, March 12, 2003 6:56 PM
+To: LVM Mailing list
+Subject: re[2]: [linux-lvm] Core questions from a LVM neophyte...
+
 
 Just to re-iterate, HPs Virtual Replicator does this.  (IIRC $10K)
 
-They like you to put a MSA-1000 FC Array behind your VR server (IIRC $15K =
-entry), but it supports/exports any FC array or local disk solution.
+They like you to put a MSA-1000 FC Array behind your VR server (IIRC =
+$15K entry), but it supports/exports any FC array or local disk =
+solution.
 
 It does not provide any RAID aspects.
 
@@ -31,21 +49,31 @@ Greg
   (HP certified SAN architect)
 
 
- >>  I'm interested in a block level export.  The exported space will be used
- >>  as the disk part of an Hierarchical Storage Manager that is backed up by
- >>  qualstar tape libraries.  We have several such systems and I would like
+ >>  I'm interested in a block level export.  The exported space will be =
+used
+ >>  as the disk part of an Hierarchical Storage Manager that is backed =
+up by
+ >>  qualstar tape libraries.  We have several such systems and I would =
+like
  >>  to try to consolidate the disk portions of each into a "SAN" like
- >>  environment.  At the same time, we are also looking at more customer
- >>  disk based storage.  I have several storage servers (hopefully running
+ >>  environment.  At the same time, we are also looking at more =
+customer
+ >>  disk based storage.  I have several storage servers (hopefully =
+running
  >>  Linux soon but running W2K now) that need access to large areas of
- >>  storage.  I would like to carve and export virtualized chunks for this
+ >>  storage.  I would like to carve and export virtualized chunks for =
+this
  >>  as well. =20
 
- >>  The main reason for the block level export is that the software we use
- >>  does not support "NAS" type network disks.  They only support "locally
- >>  attached" drives.  iSCSI would at least appear as a local SCSI disk.
+ >>  The main reason for the block level export is that the software we =
+use
+ >>  does not support "NAS" type network disks.  They only support =
+"locally
+ >>  attached" drives.  iSCSI would at least appear as a local SCSI =
+disk.
 
- >>  For management purposes, I would like to have a single way to export
+ >>  For management purposes, I would like to have a single way to =
+export
  >>  everything.  This may or may not be feasible at present.
 
  >>  - Steve
@@ -89,26 +117,35 @@ Greg
  >>  > site.
  >>  >=20
  >>  > I am wanting to deploy some larger virtualized storage in a mixed
- >>  > Linux/W2K environment.    Is anybody out there exporting virtualized
- >>  > volumes to Win2K boxes?  If so, how?  I checked HyperSCSI and they do
- >>  > not appear to have a Win2K client (although a beta is supposed to be
- >>  > coming soon).  I have not yet found target information for Linux along
+ >>  > Linux/W2K environment.    Is anybody out there exporting =
+virtualized
+ >>  > volumes to Win2K boxes?  If so, how?  I checked HyperSCSI and =
+they do
+ >>  > not appear to have a Win2K client (although a beta is supposed to =
+be
+ >>  > coming soon).  I have not yet found target information for Linux =
+along
  >>  > with a known interoperable Win2K initiator.  Anybody doing it?
  >>  >=20
- >>  > Disk performance is not so much an issue for me since the disk arrays
+ >>  > Disk performance is not so much an issue for me since the disk =
+arrays
  >>  > will be replacing large tape libraries.  Even with pathetic=20
  >>  > performance,
  >>  > they should behave much faster than large AIT libraries. =20
  >>  >=20
  >>  > Question 1:  Is it possible today to:
  >>  >=20
- >>  > Have a large IDE RAID5 array that is virtualized through LVM and then
- >>  > exported to a Dynamic Disk on Win2K over a LAN (not necessarily WAN)?
+ >>  > Have a large IDE RAID5 array that is virtualized through LVM and =
+then
+ >>  > exported to a Dynamic Disk on Win2K over a LAN (not necessarily =
+WAN)?
  >>  >=20
- >>  > I believe iSCSI and HyperSCSI would both work... However I have not
+ >>  > I believe iSCSI and HyperSCSI would both work... However I have =
+not
  >>  > found the approporiate interoperable software drivers.
  >>  >=20
- >>  > Question 2: The system that is described above is a linux system with
+ >>  > Question 2: The system that is described above is a linux system =
+with
  >>  > direct attached storage.  It is a SPOF.  Any inexpensive=20
  >>  > solutions that
  >>  > would allow the Linux portion to be clustered for active/pasive
@@ -131,4 +168,11 @@ Greg
 
 
  >>  -- NextPart --
- >>  Attached File: c:\program files\goldmine\MailBox\Attach\gaf\smime(2).p7s
+ >>  Attached File: c:\program =
+files\goldmine\MailBox\Attach\gaf\smime(2).p7s
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
