@@ -1,11 +1,11 @@
 Return-Path: <smdenton@bellsouth.net>
 From: "S. Michael Denton" <smdenton@bellsouth.net>
-Subject: RE: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
-Date: Tue, 24 Apr 2001 23:19:52 -0400
-Message-ID: <000801c0cd36$988428e0$7d80a8c0@dyndns.org>
+Subject: RE: [linux-lvm] vgscan does not found my VG, but pvscan does...
+Date: Tue, 24 Apr 2001 23:20:17 -0400
+Message-ID: <000901c0cd36$a80064a0$7d80a8c0@dyndns.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20010424104505.F9882@sistina.com>
+In-Reply-To: <01042419005900.11967@workstation>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -24,68 +24,65 @@ To: linux-lvm@sistina.com
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-On Tue, Apr 24, 2001 at 12:19:45PM -0300, Ernesto Silva wrote:
-> Hi,
->=20
-> 	In order to make things right I downloaded the 2.4.3 kernel and
-> compiled it (i386).
->=20
-> 	With the new kernel running (lvm-mod load ok) I'm trying to
-> compile lvm tools, but there are lots of warinigs, all the same
-> thing, the first of them is:
-> -----------------------------------------------------------
-> gcc -c -pipe -g -O2 -Wall -DDEBUG -I ../../tools/lib -I ../../tools
-> - debug.o debug.c
+Have you tried a vgimport?
 
-Am I reading this right, there's a " - " in between the include line
-and the object file?  That didn't seem to work all that well on my
-gcc (2.95.2).  You might want to see what's putting the dash in
-there... it probably wants to be a "-o"
+- -----Original Message-----
+From: linux-lvm-admin@sistina.com
+[mailto:linux-lvm-admin@sistina.com]On
+Behalf Of fabian herschel
+Sent: Tuesday, 24 April 2001 13:01
+To: linux-lvm@sistina.com
+Cc: fabian@suse.de
+Subject: [linux-lvm] vgscan does not found my VG, but pvscan does...
 
-> In file included from ../../tools/lib/liblvm.h:97
-> 		from basename.c:34
-> ../../tools/lib/lvm_log.h:47:59: warning: nothing can be pasted
-> after this token=20
- <...snip...>=20
-> Does anyone had a problem like this before???
 
-Hmm...I don't get that at all!  Which version of GCC are you using?=20
-Did you
-download the 0.9.1_beta7 tarball or grab something from the cvs?
+Hi *,
 
-Regards,
-- --=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+I have a strage problem on my Desktop. I have installed Kernel 2.2.18
+and lvm 0.9.
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261
-0029 2648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple
-sub-keys)
+All things have been fine till this morning. I have increased a
+logical volume
+(and the reiserfs which resides on that volume) from 1000M to 2000M
+(not 2GB).
 
-- -----Begin Obligatory Humorous
-Quote----------------------------------------
-THE LESSER-KNOWN PROGRAMMING LANGUAGES #16:
-C- This language was named for the grade received by its creator when
-he
-submitted it as a class project in a graduate programming class.  C-
-is
-best described as a "low-level" programming language.  In fact, the
-language generally requires more C- statements than machine-code
-statements
-to execute a given task.  In this respect, it is very similar to
-COBOL.
-- -----End Obligatory Humorous
-Quote------------------------------------------
+Some time later I had to reboot the machine (because I want to attach
+some=20
+devices to the SCSI bus). After the reboot vgscan does NOT find my VG
+any
+longer. It only says something like "no voulme group found".
+
+If I call pvscan it tells me that it found two physical disks (thats
+ok). But=20
+both  PVs are in an unknown VG. I should call vgscan (but see obove
+:-)
+
+Then I called pvdata to find out something out about whats going
+wrong here.
+
+pvdata -a /dev/sda1 ; pvdata -a /dev/sda2 ; are working fine , they
+also tell=20
+me that these PVs are members of sysvg.
+
+Does anybody have an idear how to get vgscan to read this info?
+pvdata finds members of a VG but vgscan does not :-((.
+
+I hope someone can help me!!
+(Yes I do have backup data, but I want to sleep well, if there are so
+many
+lvm installations out in the world).
+
+Best regards,
+Fabian Herschel
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -----BEGIN PGP SIGNATURE-----
 Version: PGP 7.0.1
 
-iQA/AwUBOuZCWHC+DNfF0nVpEQJMVQCfWDINzWztoSaj/ayyOQvE9IRIa6QAoLVw
-4/fh74fjjCMWQ4vRksVgKoEY
-=3DSzDr
+iQA/AwUBOuZCcXC+DNfF0nVpEQJxIQCgjl8vznkeomiBLbB6xO5GBN8EOqMAoJRH
++cW+M//7QOL0tJhHc3//KDGr
+=3D0uO4
 -----END PGP SIGNATURE-----
