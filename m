@@ -1,28 +1,41 @@
-Date: Sat, 21 Oct 2000 05:49:24 +0200
-From: Andi Kleen <ak@suse.de>
+Date: Sat, 21 Oct 2000 10:19:31 +0100 (IST)
+From: Paul Jakma <paulj@itg.ie>
 Subject: Re: [linux-lvm] Is LVM dead ?
-Message-ID: <20001021054924.A636@gruyere.muc.suse.de>
-References: <39F0B45C.6735D447@tls.msk.ru> <20001020220300.B22203@homer.sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20001020220300.B22203@homer.sistina.com>; from mauelshagen@sistina.com on Fri, Oct 20, 2000 at 10:03:00PM -0500
+In-Reply-To: <20001021054924.A636@gruyere.muc.suse.de>
+Message-ID: <Pine.LNX.4.21.0010211015170.21966-100000@rossi.itg.ie>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelshagen@sistina.com>
-Cc: Michael Tokarev <mjt@tls.msk.ru>, linux-lvm@msede.com
+To: Andi Kleen <ak@suse.de>
+Cc: Heinz Mauelshagen <mauelshagen@sistina.com>, Michael Tokarev <mjt@tls.msk.ru>, linux-lvm@msede.com
 
-On Fri, Oct 20, 2000 at 10:03:00PM -0500, Heinz Mauelshagen wrote:
-> > 
-> > What's happening? 
+On Sat, 21 Oct 2000, Andi Kleen wrote:
+
+> Perhaps it would be useful if you could do an interim 0.8
+> mainteance release, with e.g. all the simple bugfixes Andreas
+> Dilger has collected (segfaults etc.).
+
+i second this. possibly Heinz as the main developer is currently very
+deep into the cool new stuff of his upcoming v0.9, and so working on
+0.8 isn't very attractive to him.
+
+however, for users, 0.8 is what we have and it's become very difficult
+to keep track of all the different patches/fixes. (least it would be
+if it wasn't for andreas).
+
+> There are unfortunately a few annoying bugs in the stock 0.8
+> userland, which people rediscover and rereport all the time.
 > 
-> Code is beeing developed, features are beeing implemented etc.
 
-Perhaps it would be useful if you could do an interim 0.8 mainteance
-release, with e.g. all the simple bugfixes Andreas Dilger has collected
-(segfaults etc.) There are unfortunately a few annoying bugs in the stock 
-0.8 userland, which people rediscover and rereport all the time.
+also, there are people who'd love to try LVM out on bigger machines
+than home servers and laptops. but who need to convince a boss
+first. a clean install process makes that latter part a lot
+easier. 
 
--Andi
+> -Andi
+> 
+
+--paulj
