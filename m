@@ -1,13 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7V0G3301316
-	for <linux-lvm@redhat.com>; Mon, 30 Aug 2004 20:16:03 -0400
-From: Richard Mortimer <richm@oldelvet.org.uk>
-Message-Id: <1093911340.2116.55.camel@duncow>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i81FJW320950
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2004 11:19:32 -0400
+Received: from bluebottle-fe2.bluebottle.com (bluebottle-fe2.bluebottle.com
+	[209.223.237.199])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i81FJUS0028939
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2004 11:19:31 -0400
+Received: from localhost.localdomain (modem-4031.chimpanzee.dialup.pol.co.uk
+	[217.134.127.191]) (authenticated bits=0)
+	by bluebottle-fe2.bluebottle.com (8.12.11/8.12.11) with ESMTP id
+	i81FJPv9032067
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2004 10:19:27 -0500
+Date: Wed, 1 Sep 2004 16:22:34 +0100
+From: Robin Green <greenrd@greenrd.org>
+Subject: Re: [linux-lvm] LVM2 and Software RAID
+Message-ID: <20040901152234.GB4300@localhost.localdomain>
+References: <63BAEF7DCB973A469B1A60CBE113C1650872A631@cmss-mail.Tickets.com>
 Mime-Version: 1.0
-Date: Tue, 31 Aug 2004 01:15:40 +0100
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm problems on sparc64 - Trying to vfree() nonexistent
-	vm area
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
+Content-Disposition: inline
+In-Reply-To: <63BAEF7DCB973A469B1A60CBE113C1650872A631@cmss-mail.Tickets.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -18,80 +30,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: sparclinux@vger.kernel.org, debian-sparc@lists.debian.org
-Cc: richm@oldelvet.org.uk, linux-lvm@sistina.com
-
-All,
-
-I'm seeing problems with lvm on sparc64. I have a reproducible test case
-using snapshots where I can reliably reproduce an error similar to
-
-Trying to vfree() nonexistent vm area (0000000140072000)
-
-Under some circumstances I can get this to lead to a panic where the
-kernel reports that it is unable to handle a paging request for the same
-request (the address below is different because it comes from a
-different attempt to reproduce it)
-
-Unable to handle kernel paging request at virtual address
-000000014007a000
-
-First off the obligatory "what I'm using" statement.
-
-I've seen this with debian/testing on sparc using the stock 2.4.26
-kernel.
-Using lvm1.0.8
-
-pingu:~# apt-show-versions | grep lvm
-lvm10/testing uptodate 1:1.0.8-4
-lvm-common/testing uptodate 1.5.16
-
-kernel-image-2.4.26-sparc64/testing uptodate 39
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-I've done a fair amount of detective work and am now fairly confident
-that the problem is somewhere in the sparc64 ioctl32 glue code in
-arch/sparc64/kernel/ioctl32.c
+--v9Ux+11Zm5mwPlX6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Adding printk tracing into the kernel and using strace I can see that
-the problem occurs on a call to 
+On Tue, Aug 31, 2004 at 05:44:04PM -0700, Yang, Daniel wrote:
+> Finally, the combination does not support bad-block replacement mechanism=
+s.
 
-ioctl(4, LV_STATUS_BYNAME, 0xeffff9f8)  = 0
+Bad block replacement has been implemented in hardware for years so this
+is not an issue. If you get a huge number of bad blocks you should really
+consider replacing the drive concerned.
+--=20
+Robin
 
-The message only gets reported on second and subsequent calls to this
-ioctl. So I'm guessing that something gets freed wrongly during the
-first call.
+Weblog: http://lrp.greenrd.org/
 
-I added some tracing into do_lvm_ioctl() in ioctl32.c. From this I can
-see that the problem gets reported after calling the "real" ioctl
-routine whilst transferring the result data back into the 32 bit
-structures.
+--v9Ux+11Zm5mwPlX6
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Specifically the problem is occurring in put_lv_t(u.lv_req.lv) as called
-from the LV_CREATE/EXTEND/REDUCE case in the switch statement.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
 
-This means that the problem is related to the vfree of either
-l->lv_current_pe or l->lv_block_exception.
+iD8DBQFBNek6tPCt67UksSYRAmj8AKDQy+5HDw/YhFdf+9Zb2AnWNfNy+QCg2FsQ
+1Z+NS6mHLNB3YGr3zDod1v4=
+=7N6u
+-----END PGP SIGNATURE-----
 
-I cannot see anything obviously wrong there (and need some sleep!) so
-hopefully someone else will have some ideas as to what the problem is.
-
-Thanks
-
-Richard
-
-P.S.
-
-Forgot to mention. The steps to reproduct the problem are (assuming that
-you have a vg called test)
-
-lvcreate --size 128M --name fsone /dev/test
-lvcreate --size 128M --name fstwo /dev/test
-lvcreate --snapshot --size 128M --name bakone /dev/test/fsone
-lvremove /dev/test/bakone
-
-You get the problem even before you answer the y/n question in lvremove.
-
--- 
-richm@oldelvet.org.uk
+--v9Ux+11Zm5mwPlX6--
