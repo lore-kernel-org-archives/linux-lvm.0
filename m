@@ -1,14 +1,16 @@
-Date: Wed, 17 Mar 2004 15:34:13 +0100
-From: Heinz Mauelshagen <heinzm@redhat.com>
-Subject: Re: [linux-lvm] Hard disk failure, restore problem
-Message-ID: <20040317143413.GB14348@redhat.com>
-References: <40520E04.5090505@howest.be> <20040315124721.GB17078@redhat.com>
-	<40561772.5070302@howest.be>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <40561772.5070302@howest.be>
-Reply-To: heinzm@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2HMs6j16826
+	for <linux-lvm@redhat.com>; Wed, 17 Mar 2004 17:54:06 -0500
+Received: from mail.icon-labs.com ([216.161.118.235])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2HMs44b029996
+	for <linux-lvm@redhat.com>; Wed, 17 Mar 2004 17:54:05 -0500
+Message-ID: <4058D70C.3080001@icon-labs.com>
+Date: Wed, 17 Mar 2004 16:54:04 -0600
+From: Pete Flugstad <pete.flugstad@icon-labs.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] using DM/LVM to provide "chunked" view of device
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -18,113 +20,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Thomas Berton <thomas.berton@howest.be>
-Cc: hjm@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
+Hello!
 
-Thomas,
+I'm wondering if I can use LVM (or rather Device Mapper) to provide a 
+"chunked" or "split" view of a device (such as a block device or partition).
 
-don't run vgscan after the procedure below.
+Specifically if I have a block device (i.e. /dev/hde1) that is 60GB, and 
+I want to view it in 1GB chunks, say /dev/hde1.000 to /dev/hde1.059 or 
+something like that.  That way I could, for example, setup a FTP or HTTP 
+server to view these and download them over the network (of course I'd 
+need to modify the server to be able to read from a block device), 
+rather than having to download the entire 60 GB block device.
 
-Remember this is a workaround *just* to get you to the point to be able
-to backup your data and recreate your VG.
+Is it possible to use DM/LVM to provide a view of the device like this?
+I am using Linux 2.6.X.
 
-Run vgmknodes to create your device nodes in /dev/bigspace/
-after step "vgchange -ay" below.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Mon, Mar 15, 2004 at 09:52:02PM +0100, Thomas Berton wrote:
-> Hello,
-> 
-> I've done
-> 
-> > o identify your actual metadata backup (say, bigspace.conf)
-> >
-> > o mkdir /etc/lvmtab.d
-> >
-> > o cp bigspace.conf /etc/lvmtab.d/bigspace
-> >
-> > o echo -ne "bigspace\0" > /etc/lvmtab
-> >
-> > o vgchange -ay
-> 
-> 
-> after being sure to restore the metadata I have
-> 
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdg1" of VG "bigspace" [74.47 GB / 768 MB free]
-> pvscan -- inactive PV "/dev/hde1" of VG "bigspace" [149 GB / 0 free]
-> pvscan -- inactive PV "/dev/hdf1" of VG "bigspace" [149 GB / 139.16 GB free]
-> pvscan -- inactive PV "/dev/hdc1" of VG "bigspace" [111.75 GB / 0 free]
-> pvscan -- inactive PV "/dev/hdd1" of VG "bigspace" [74.47 GB / 0 free]
-> pvscan -- inactive PV "/dev/hda1" of VG "bigspace" [74.47 GB / 8.22 GB free]
-> pvscan -- inactive PV "/dev/hdb1" of VG "bigspace" [74.47 GB / 0 free]
-> pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
-> 
-> 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- only found 17904 of 17876 LEs for LV /dev/bigspace/bigspace1 (0)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "bigspace" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> group
-> 
-> => after the vgscan the echo -ne "bigspace\0" > /etc/lvmtab is gone gone
-> again....
-> 
-> [root@ment root]# lvscan
-> lvscan -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please
-> run vgscan
-> 
-> after doing the vgscan, I get
-> 
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG
-> "bigspace" (run vgscan)
-> pvscan -- inactive PV "/dev/hde1"  is associated to unknown VG
-> "bigspace" (run vgscan)
-> pvscan -- inactive PV "/dev/hdf1"  is associated to unknown VG
-> "bigspace" (run vgscan)
-> pvscan -- inactive PV "/dev/hdc1"  is associated to unknown VG
-> "bigspace" (run vgscan)
-> pvscan -- inactive PV "/dev/hdd1"  is associated to unknown VG
-> "bigspace" (run vgscan)
-> pvscan -- inactive PV "/dev/hda1"  is associated to unknown VG
-> "bigspace" (run vgscan)
-> pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG
-> "bigspace" (run vgscan)
-> pvscan -- total: 7 [708 GB] / in use: 7 [708 GB] / in no VG: 0 [0]
-> 
-> again.
-> 
-> 
-> the /dev/bigspace/bigspace1 doesn't exists, so I can't mount.
-> 
-> should I recreate bigspace and force an import ?
-> 
-> I 've alse rebooted once after the vgchange -ay, but he also didn't find
-> the bigspace.
-> 
-> thanx again for your help!!
-> 
-> kind regards,
-> Thomas.
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks,
+Pete
