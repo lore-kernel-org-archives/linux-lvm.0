@@ -1,9 +1,9 @@
-Message-ID: <3D9D923B.5899DB6A@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
+Message-ID: <009b01c26ba9$380f3140$5c02a8c0@yckim>
+From: "YongChul Kim" <yckim@linuxsecurity.co.kr>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] mounting reiserfs snaphost fails
-References: <Pine.LNX.4.44.0210041047310.21409-100000@gmmpc1.gmm.priv>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0098_01C26BF4.A7BFC3B0"
+Subject: [linux-lvm] Re: mounting reiserfs snaphost fails
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,54 +14,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct  4 08:14:34 2002
+Date: Fri Oct  4 08:33:39 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Xavier Montagutelli wrote:
-> 
-> On Fri, 4 Oct 2002, Jon Bendtsen wrote:
-> 
-> > "Heinz J . Mauelshagen" wrote:
-> > >
-> > > Did you put the VFS lock patch in?
-> > > You need that to be able to mount snapshots of *journaled* filesystems.
-> >
-> > Where do i find that patch ?
-> > Does 2.4.19 contain it ? does the latest kernel, if 2.4.19 isnt the
-> > latest ?
-> 
-> You will find it under PATCHES/linux-2.4.19-VFS-lock.patch in the LVM
-> source archive.
+This is a multi-part message in MIME format.
 
-Doing a cvs, i only found these 2 files (and others)
+------=_NextPart_000_0098_01C26BF4.A7BFC3B0
+Content-Type: text/plain;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-	linux-2.4.18+quota32-VFS-lock.patch
-	linux-2.4.18-VFS-lock.patch
+SWYgeW91ciBvcmlnaW5hbCByZWlzZXJmcyB2b2x1bWUgaGFzIHByb2JsZW0sDQp5b3UgY2FuIG5v
+dCBtb3VudCB5b3VyIHNuYXBzaG90IHZvbHVtZSwgYW55d2hlcmUuDQoNCkF0IHRoYXQgY2FzZSwg
+eW91IG11c3QgdW1vdW50IHlvdXIgcmVpc2VyZnMgdm9sdW1lLA0KYW5kIHJ1biAicmVpc2VyZnNj
+ayIuDQpJZiBpdCBpcyBPLksuLCB0aGVuIHlvdSBjYW4gbW91bnQgeW91ciByZWlzZXJmcyB2b2x1
+bWUsDQpyZS1jcmVhdGUgc25hcHNob3Qgdm9sdW1lIGZvciB0aGF0IHJlaXNlcmZzIG9yaWdpbmFs
+IHZvbHVtZS4NCk5vdyB5b3UgY2FuIG1vdW50IHlvdXIgc25hcHNob3Qgdm9sdW1lLg0KTWF5YmUg
+T0ssIEkgc3VjY2Vzc2VkLg0KDQpCVVQuLi4NCkkgaGF2ZSBwcm9ibGVtLg0KSSBkbyBub3Qgd2Fu
+dCB0byB1bm1vdW50IG9yaWdpbmFsIHJlaXNlcmZzIHZvbHVtZSwgYmVjYXVzZSBvZiBydW5uaW5n
+IGZpbGUgc3lzdGVtLg0KUmVpc2VyZnMgdm9sdW1lIGNhbiBub3QgcnVuICJyZWlzZXJmc2NrIiB3
+aXRoIHJlYWQvd3JpdGUgbW91bnRlZCBzdGF0ZSwgaW4gbXkga25vd2xlZGdlLg0KDQpDQU4gV0hP
+IGFkdmlzZSBob3cgY2FuIEkgcnVuIGZzY2sgZm9yIG1vdW50ZWQgcmVpc2VyZnMgdm9sdW1lIHdp
+dGggcmVhZC93cml0ZSBzdGF0ZSA/DQoNCllvbmdjaHVsIEtpbS4NCg0KDQoNCg==
 
-nothing for 2.4.19 :/   (whats the difference between those 2 files?)
+------=_NextPart_000_0098_01C26BF4.A7BFC3B0
+Content-Type: text/html;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-I did a ./configure in the LVM dir, and a make in the PATCHES dir, and
-tried to
-apply that patch to a 2.4.19, and a 2.4.18, stock from Linus. They
-applied fine
-but they did not compile :/
-"drivers/md/mddev.o: In function `_proc_read_global':
-drivers/md/mddev.o(.text+0x6e1a): undefined reference to `vg'
-drivers/md/mddev.o(.text+0x702e): undefined reference to `lvm_memory'
-drivers/md/mddev.o(.text+0x71a1): undefined reference to `vg'
-make[1]: *** [vmlinux] Error 1
-make[1]: Leaving directory `/usr/src/linux-2.4.18'
-make: *** [stamp-build] Error 2"
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
+SFRNTCA2LjAwLjI3MTkuMjIwMCIgbmFtZT1HRU5FUkFUT1I+DQo8U1RZTEU+PC9TVFlMRT4NCjwv
+SEVBRD4NCjxCT0RZIGJnQ29sb3I9I2ZmZmZmZj4NCjxESVY+PEZPTlQgZmFjZT1BcmlhbD5JZiB5
+b3VyIG9yaWdpbmFsIHJlaXNlcmZzIHZvbHVtZSBoYXMgcHJvYmxlbSw8L0ZPTlQ+PC9ESVY+DQo8
+RElWPjxGT05UIGZhY2U9QXJpYWw+eW91IGNhbiBub3QgbW91bnQgeW91ciBzbmFwc2hvdCB2b2x1
+bWUsIA0KYW55d2hlcmUuPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPUFyaWFsPjwvRk9O
+VD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT1BcmlhbD5BdCB0aGF0IGNhc2UsIHlvdSBt
+dXN0IHVtb3VudCB5b3VyIHJlaXNlcmZzIA0Kdm9sdW1lLDwvRk9OVD48L0RJVj4NCjxESVY+PEZP
+TlQgZmFjZT1BcmlhbD5hbmQgcnVuICJyZWlzZXJmc2NrIi48L0ZPTlQ+PC9ESVY+DQo8RElWPjxG
+T05UIGZhY2U9QXJpYWw+SWYgaXQgaXMgTy5LLiwgdGhlbiB5b3UgY2FuIG1vdW50IHlvdXIgcmVp
+c2VyZnMgDQp2b2x1bWUsPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPUFyaWFsPnJlLWNy
+ZWF0ZSBzbmFwc2hvdCB2b2x1bWUgZm9yIHRoYXQgcmVpc2VyZnMgb3JpZ2luYWwgDQp2b2x1bWUu
+PC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPUFyaWFsPk5vdyB5b3UgY2FuIG1vdW50IHlv
+dXIgc25hcHNob3Qgdm9sdW1lLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT1BcmlhbD5N
+YXliZSBPSywgSSBzdWNjZXNzZWQuPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPUFyaWFs
+PjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT1BcmlhbD5CVVQuLi48L0ZPTlQ+
+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9QXJpYWw+SSBoYXZlIHByb2JsZW0uPC9GT05UPjwvRElW
+Pg0KPERJVj48Rk9OVCBmYWNlPUFyaWFsPkkgZG8gbm90IHdhbnQgdG8gdW5tb3VudCBvcmlnaW5h
+bCByZWlzZXJmcyB2b2x1bWUsIGJlY2F1c2UgDQpvZiBydW5uaW5nIGZpbGUgc3lzdGVtLjwvRk9O
+VD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT1BcmlhbD5SZWlzZXJmcyB2b2x1bWUgY2FuIG5vdCBy
+dW4gInJlaXNlcmZzY2siIHdpdGggcmVhZC93cml0ZSANCm1vdW50ZWQgc3RhdGUsIGluIG15IGtu
+b3dsZWRnZS48L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9QXJpYWw+PC9GT05UPiZuYnNw
+OzwvRElWPg0KPERJVj48Rk9OVCBmYWNlPUFyaWFsPkNBTiBXSE8gYWR2aXNlIGhvdyBjYW4gSSBy
+dW4gZnNjayBmb3IgDQptb3VudGVkJm5ic3A7cmVpc2VyZnMgdm9sdW1lIHdpdGggcmVhZC93cml0
+ZSBzdGF0ZSA/PC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPUFyaWFsPjwvRk9OVD4mbmJz
+cDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT1BcmlhbD5Zb25nY2h1bCBLaW0uPC9GT05UPjwvRElW
+Pg0KPERJVj48Rk9OVCBmYWNlPUFyaWFsPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQg
+ZmFjZT2xvLiyw7wgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2x
+vLiyw7wgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj48L0JPRFk+PC9IVE1MPg0K
 
-
-
-So, right now i'm trying the same thing with only 
-	linux-2.4.18-VFS-lock.patch
-applied. 
-
-
-
-
-JonB
+------=_NextPart_000_0098_01C26BF4.A7BFC3B0--
