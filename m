@@ -1,7 +1,10 @@
-Message-Id: <200205280843.AA111477202@mail.one.it>
+Subject: Re: [linux-lvm] read-only media in a LVM?
+Message-ID: <20020528084610.GA1266@fib011235813.fsnet.co.uk>
+References: <81y9e5novm.fsf@zion.bpnetworks.com>
 Mime-Version: 1.0
-From: "Pierluigi Godi" <pierluigi.godi@mail.one.it>
-Subject: [linux-lvm] errors compiling on redhat 7.3
+Content-Disposition: inline
+In-Reply-To: <81y9e5novm.fsf@zion.bpnetworks.com>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,94 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 28 01:44:02 2002
+Date: Tue May 28 03:40:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux-LVM@sistina.com
+To: linux-lvm@sistina.com
 
-hi, 
-I'm only an end-user (not a programmer... so i can't help you a lot).
-this is the problem... when i try to install (configure, make, make install) the lvm 1.0.4/1.1 rc2 on my (out of the box) redhat 7.3, i receive an error...
+On Mon, May 27, 2002 at 04:37:49PM -0700, Ami Fischman wrote:
+> Hi there,
+> I am wondering whether it is possible to have a read-only fs (CDROM, image,
+> etc) as part of an LVM-managed volume.  I see references to COW
+> (copy-on-write, I'm hoping :)) in the kernel drivers/md/ files, but it's not
+> at all clear to me whether or not the current drivers can be used to
+> implement a "translucent" or "inheriting" file system (one where a base fs
+> is given, on r-o media, and changes to it get recorded on another device,
+> presumabely a r-w fs).  Please let me know whether this is currently
+> possible, being planned for the future, or if I'm making no sense above &
+> you want me to clarify :).  For a not-quite-mature example of what I'm
+> talking about, see translucency.sf.net.
 
-[root@unixguest 1.0.4]# ./configure
-loading cache ./config.cache
-checking for mawk... (cached) gawk
-checking for gcc... (cached) gcc
-checking whether the C compiler (gcc  ) works... yes
-checking whether the C compiler (gcc  ) is a cross-compiler... no
-checking whether we are using GNU C... (cached) yes
-checking whether gcc accepts -g... (cached) yes
-checking for a BSD compatible install... (cached) /usr/bin/install -c
-checking whether ln -s works... (cached) yes
-checking whether make sets ${MAKE}... (cached) yes
-checking for dirent.h that defines DIR... (cached) yes
-checking for opendir in -ldir... (cached) no
-checking how to run the C preprocessor... (cached) gcc -E
-checking for ANSI C header files... (cached) yes
-checking for fcntl.h... (cached) yes
-checking for malloc.h... (cached) yes
-checking for sys/ioctl.h... (cached) yes
-checking for unistd.h... (cached) yes
-checking for working const... (cached) yes
-checking for inline... (cached) inline
-checking for off_t... (cached) yes
-checking for pid_t... (cached) yes
-checking for size_t... (cached) yes
-checking for st_rdev in struct stat... (cached) yes
-checking whether time.h and sys/time.h may both be included... (cached) yes
-checking whether gcc needs -traditional... (cached) no
-checking return type of signal handlers... (cached) void
-checking for vprintf... (cached) yes
-checking for mkdir... (cached) yes
-checking for rmdir... (cached) yes
-checking for uname... (cached) yes
-creating ./config.status
-creating Makefile
-creating make.tmpl
-creating PATCHES/Makefile
-creating tools/Makefile
-creating tools/tools_and_lib.make.tmpl
-creating tools/lib/Makefile
-creating tools/man8/Makefile
-[root@unixguest 1.0.4]#
+LVM2 already contains writeable snapshots, and we are currently
+working on the other thing that you will need which is the ability to
+use disks as PVs without having any LVM metadata written to them.
+Check back at the end of June, we may have done it by then.
 
-
-[root@unixguest 1.0.4]# make
-make[1]: Entering directory `/opt/LVM/LVM/1.0.4/tools'
-make[2]: Entering directory `/opt/LVM/LVM/1.0.4/tools/lib'
-make[3]: Entering directory `/opt/LVM/LVM/1.0.4/tools/lib'
-gcc -c -pipe -g -O0 -Wall -DDEBUG -I../../tools/lib -I../../tools -I/opt/LVM/LVM/1.0.4/tools/lib -o basename.o basename.c
-In file included from ../../tools/lib/liblvm.h:59,
-                 from basename.c:34:
-/usr/include/linux/autoconf.h:1:2: #error Invalid kernel header included in userspace
-make[3]: *** [basename.o] Error 1
-make[3]: Leaving directory `/opt/LVM/LVM/1.0.4/tools/lib'
-make[2]: *** [all] Error 2
-make[2]: Leaving directory `/opt/LVM/LVM/1.0.4/tools/lib'
-make[2]: Entering directory `/opt/LVM/LVM/1.0.4/tools/man8'
-make[3]: Entering directory `/opt/LVM/LVM/1.0.4/tools/man8'
-make[3]: Leaving directory `/opt/LVM/LVM/1.0.4/tools/man8'
-make[2]: Leaving directory `/opt/LVM/LVM/1.0.4/tools/man8'
-make[2]: Entering directory `/opt/LVM/LVM/1.0.4/tools'
-gcc -c -pipe -g -O0 -Wall -DDEBUG -I../tools/lib -I../tools -I/opt/LVM/LVM/1.0.4/tools/lib -o e2fsadm.o e2fsadm.c
-In file included from ../tools/lib/liblvm.h:59,
-                 from ../tools/lvm_user.h:43,
-                 from e2fsadm.c:55:
-/usr/include/linux/autoconf.h:1:2: #error Invalid kernel header included in userspace
-make[2]: *** [e2fsadm.o] Error 1
-make[2]: Leaving directory `/opt/LVM/LVM/1.0.4/tools'
-make[1]: *** [all] Error 2
-make[1]: Leaving directory `/opt/LVM/LVM/1.0.4/tools'
-make[1]: Entering directory `/opt/LVM/LVM/1.0.4'
-
-**********************************
-There were errors in your compile.
-**********************************
-
-make[1]: *** [.touchbuilt] Error 1
-make[1]: Leaving directory `/opt/LVM/LVM/1.0.4'
-make: *** [all] Error 2
-[root@unixguest 1.0.4]#
-
-by
+- Joe
