@@ -1,10 +1,12 @@
-Return-Path: <jdehaan@home.com>
-From: "Jonathan DeHaan" <jdehaan@home.com>
-Date: Wed, 4 Apr 2001 10:42:14 -0400
-Message-ID: <005c01c0bd15$707ee0a0$0400a8c0@ci696011a.lxintn1.ky.home.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vgscan -- no volume groups found
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Wed, 4 Apr 2001 17:03:13 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] problem with vgcreate ...
+Message-ID: <20010404170313.F549@tykepenguin.com>
+References: <3ACAD385.9FE9BF6C@gazeta.pl> <200104040744.f347inj02400@webber.adilger.int>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200104040744.f347inj02400@webber.adilger.int>; from adilger@turbolinux.com on Wed, Apr 04, 2001 at 01:44:48AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +19,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Please forgive an LVM newbie who has not kept sufficient backups. If at all
-possible, I would like to keep my data intact.
+On Wed, Apr 04, 2001 at 01:44:48AM -0600, Andreas Dilger wrote:
+> Artur, you write:
+> > I have problem with LVM beta6.
+> > but when i started module and i want create lvm group
+> > (vgcreate lvmgrp /dev/sd?? /dev/sd??) I obtain:
+> > lvm -- lvm_chr_ioctl: unknown command 4004fe0a
+> > vgcreate -- ERROR "Invalid argument" creating VGDA for volume group
+> > "lvmgrp" in kernel.
+> 
+> The problem is that the kernel is running LVM beta2, and the user tools are
+> beta6.  I posted a patch to this list for vg_create_remove() which will fix
+> the problem.  You will still get the ioctl message, but vgcreate will work.
+> Let's hope it makes it into CVS soon.
 
-Having successfully installed LVM on /dev/md0 (sd[ab]1) including root on
-LVM, I was finally ready to kill my online backup on /dev/hda6. I pvcreated
-it, vgextended it, and lvextended an lv that needed more room. When I
-rebooted, however, vgscan cannot find my vg. I am using kernel 2.4.2 and
-0.9.1_beta5.
+I'll get onto it tomorrow.
 
-I downloaded beta6 tools and created a separate initrd on another machine
-that gives me a bash prompt, but vgscan now complains of invalid i/o
-protocol v. 11. I did try the UUID trick found in the mailing list archives,
-and I have verified that both my PV's have the correct list of UUIDs in
-order, but beta5 vgscan still complains of no volume groups found.
 
-Does anyone know how to build /etc/lvmtab and /etc/lvmtab.d/* manually, so
-that I can get back into my normal root volume? And how can I fix my VGDA so
-that vgscan can use it?
-
-Yours in Need,
-jdehaan@home.com
+patrick
