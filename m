@@ -1,12 +1,12 @@
+From: Spam <spam@tnonline.net>
+Message-ID: <1694936487.20031208171542@tnonline.net>
 Subject: Re: [linux-lvm] EXT3 vs Reiserfs
-From: Markus Schiltknecht <markus@bluegap.ch>
 In-Reply-To: <1070899120.9011.41.camel@hotbox>
 References: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com>
-	 <1070897481.9011.38.camel@hotbox>  <1070854294.1569.23.camel@avalon>
-	 <1070899120.9011.41.camel@hotbox>
-Message-Id: <1070899987.1559.30.camel@avalon>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+ <1070897481.9011.38.camel@hotbox>  <1070854294.1569.23.camel@avalon>
+ <1070899120.9011.41.camel@hotbox>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,17 +17,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  8 10:14:01 2003
+Date: Mon Dec  8 10:16:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Matt <linux-lvm@sistina.com>
+
+>> > So, if your drive gets bad blocks, you can very quickly be rebuilding
+>> > your entire filesystem ( I lost a TB on a RAID where one drive develop=
+ed
+>> > some bad blocks.)
+>>=20
+>> You must have been running RAID0, otherwise one drive wouldn't matter.
+>>=20
+>> > Just keep in mind stability.
+>>=20
+>> I'm removing harddrives with bad blocks immediately - and running RAID5.
+>>=20
+>> I'm definitively not missing that feature ;-)
+
 
 > I was running RAID5.
 
-How is that possible? I mean, even if one drive fails completely, your
-should still have all your data accessible.
+Then  a  bad drive should not matter or you have done something wrong.
+RAID5  has  redundancy for one drive so you should not loose any data.
+But  agreed.  Bad  blocks  management  is  a  needed  feature  of  any
+filesystem. Just as defragment support utils.
 
-I once managed to have two drives of a RAID5 failing on the exact same
-blocks. However, that seemd to have to do with the IDE Bus. Because only
-one drive really had bad blocks. I could easily acces the other drive
-after a reboot. (And had full access to all data again).
+From=20what I understood is Reiser4 going to improve on all areas.
+
+Performance wise no FS should be very slow on big files? Or what did I
+miss?
+
+> Matt sChillinger
