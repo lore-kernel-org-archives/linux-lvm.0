@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 24 Apr 2001 18:02:49 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Lost harddrive space
-Message-ID: <20010424180249.K31988@sistina.com>
-References: <20010412182856.A26530@sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <no.id>; from erik@rigtorp.com on Thu, Apr 12, 2001 at 08:19:34PM +0200
+Return-Path: <silva@athenea.ort.edu.uy>
+From: Ernesto Silva <silva@athenea.ort.edu.uy>
+Subject: Re: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
+Date: Tue, 24 Apr 2001 13:09:19 -0300
+References: <01042412353404.07748@pc-silva> <20010424104505.F9882@sistina.com>
+In-Reply-To: <20010424104505.F9882@sistina.com>
+MIME-Version: 1.0
+Message-Id: <01042413111705.07748@pc-silva>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,123 +19,57 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Apr 12, 2001 at 08:19:34PM +0200, Erik Rigtorp wrote:
-> My harddrive is 61.4GB i think. I think LVM is great software, it should 
-> be standard in all ditributions.
-> 
-> /Erik
-> 
-> #fdisk -l
-> 
-> Disk /dev/hda: 255 heads, 63 sectors, 7476 cylinders
-> Units = cylinders of 16065 * 512 bytes
-> 
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/hda1   *         1        61    489951   83  Linux
-> /dev/hda2            62      7476  59560987+  8e  Unknown
+I'm using gcc 2.96 from RedHat 7.0 and I downloaded the tarball.
+I also applied the patch from the tarball to the kernel.
 
-59560987 / 1024 / 1024 == 56.8.
+On Tue, 24 Apr 2001, you wrote:
+> 
+> On Tue, Apr 24, 2001 at 12:19:45PM -0300, Ernesto Silva wrote:
+> > Hi,
+> > 
+> > 	In order to make things right I downloaded the 2.4.3 kernel and
+> > compiled it (i386).
+> > 
+> > 	With the new kernel running (lvm-mod load ok) I'm trying to compile lvm
+> > tools, but there are lots of warinigs, all the same thing, the first of them is:
+> > -----------------------------------------------------------
+> > gcc -c -pipe -g -O2 -Wall -DDEBUG -I ../../tools/lib -I ../../tools - debug.o
+> > debug.c
+> > In file included from ../../tools/lib/liblvm.h:97
+> > 		from basename.c:34
+> > ../../tools/lib/lvm_log.h:47:59: warning: nothing can be pasted after this token
+>  <...snip...> 
+> > Does anyone had a problem like this before???
+> 
+> Hmm...I don't get that at all!  Which version of GCC are you using?  Did you
+> download the 0.9.1_beta7 tarball or grab something from the cvs?
+> 
+> Regards,
+> -- 
+> AJ Lewis
+> Sistina Software Inc.                  Voice:  612-379-3951
+> 1313 5th St SE, Suite 111              Fax:    612-379-3952
+> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+> http://www.sistina.com
+> 
+> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2648
+> Get my key at: http://www.sistina.com/~lewis/gpgkey
+>  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+> 
+> -----Begin Obligatory Humorous Quote----------------------------------------
+> THE LESSER-KNOWN PROGRAMMING LANGUAGES #16:
+> C- This language was named for the grade received by its creator when he
+> submitted it as a class project in a graduate programming class.  C- is
+> best described as a "low-level" programming language.  In fact, the
+> language generally requires more C- statements than machine-code statements
+> to execute a given task.  In this respect, it is very similar to COBOL.
+> -----End Obligatory Humorous Quote------------------------------------------
+> 
 
-No lost space whatshowever.
-
-> 
-> 
-> #pvdisplay /dev/hda2
-> 
-> --- Physical volume ---
-> PV Name               /dev/hda2
-> VG Name               erkki
-> PV Size               56.8 GB / NOT usable 1.03 MB [LVM: 177 KB]
-> PV#                   1
-> PV Status             available
-> Allocatable           yes
-> Cur LV                3
-> PE Size (KByte)       4096
-> Total PE              14541
-> Free PE               12237
-> Allocated PE          2304
-> PV UUID               IUz7yE-MP2i-QwJ2-23GW-70cu-P2Fw-7Jn0xA
-> 
-> 
-> 
-> -----Original Message-----
-> From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-> To: linux-lvm@sistina.com
-> Date: Thu, 12 Apr 2001 18:28:56 +0000
-> Subject: Re: [linux-lvm] Lost harddrive space
-> 
-> > On Thu, Apr 12, 2001 at 05:51:30PM +0200, Erik Rigtorp wrote:
-> > > Hi!
-> > > 
-> > > I have a 60999.46 MB linux lvm partition. But when I pvcreate it and 
-> > > pvdisplay /dev/hda2 it says the physical volume is only 56.8GB and
-> > 1.03MB 
-> > > not used. Where are those lost Gigs? I use the lvm that comes with
-> > the 
-> > > 2.4.3 kernel.
-> > 
-> > Could you provide "pvdisplay /dev/hda2" and "fdisk -l /dev/hda" please?
-> > 
-> > It is likely caused by the math:
-> > 
-> >  1 GB = 2^30 Byte
-> > 
-> > > 
-> > > /Erik
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > 
-> > -- 
-> > 
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> > 
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to solve them ***
-> > 
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-> > -=-=-=-
-> > 
-> > Heinz Mauelshagen                                 Sistina Software Inc.
-> > Senior Consultant/Developer                       Am Sonnenhang 11
-> >                                                   56242 Marienrachdorf
-> >                                                   Germany
-> > Mauelshagen@Sistina.com                           +49 2626 141200
-> >                                                        FAX 924446
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-> > -=-=-=-
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+----------------------------------------
+Content-Type: application/pgp-signature; name="unnamed"
+Content-Transfer-Encoding: 7bit
+Content-Description: 
+----------------------------------------
