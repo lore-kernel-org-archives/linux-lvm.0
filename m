@@ -1,12 +1,10 @@
-Return-Path: <ragnark@stine.vestdata.no>
-Date: Fri, 9 Feb 2001 00:30:03 +0100
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102090005.f1905bc08799@webber.adilger.net>
 Subject: Re: [linux-lvm] questions
-Message-ID: <20010209003003.B29707@vestdata.no>
-References: <20010208205551.C21949@vestdata.no> <200102082244.f18MiYt07465@webber.adilger.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <200102082244.f18MiYt07465@webber.adilger.net>; from Andreas Dilger on Thu, Feb 08, 2001 at 03:44:33PM -0700
+In-Reply-To: <20010209003003.B29707@vestdata.no> from =?UNKNOWN-8BIT?Q?Ragnar_Kj=F8rstad?=
+ at "Feb 9, 2001 00:30:03 am"
+Date: Thu, 8 Feb 2001 17:05:36 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,39 +16,47 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Feb 08, 2001 at 03:44:33PM -0700, Andreas Dilger wrote:
-> Ragnar Kj_rstad writes:
-> > Is there a limit for the maximum size of a LVM diskgroup?
-> > (internally in LVM-code, or because of other limits in the kernel)
-> > The 2TB (1 TB) maximum devicesize in the linux-kernel doesn't apply, do=
-es
-> > it?
->=20
-> Yes, even LVM has the 2TB limit at this point.  This is because LVM
-> presents itself to the rest of the kernel as a block device (just like
-> any other), so the kernel 2TB limit for block devices still holds.
+Ragnar Kj_rstad writes:
+> On Thu, Feb 08, 2001 at 03:44:33PM -0700, Andreas Dilger wrote:
+> > Yes, even LVM has the 2TB limit at this point.  This is because LVM
+> > presents itself to the rest of the kernel as a block device (just like
+> > any other), so the kernel 2TB limit for block devices still holds.
+> 
+> For the volume, but not for the diskgroup, right?
 
-For the volume, but not for the diskgroup, right?
+Yes, the 2TB limit is for a single LV.  You can have up to 255 LVs in
+total I think, so 512TB total usable space with LVM, assuming your
+configuration works in this way.  Probably the 255 LV limit will be
+a problem before the 512TB limit is...
 
-> Heinz talked about allowing LVM to have PAGE_SIZE (4k) blocks (unlike
-> the rest of the kernel, which uses 512 byte blocks) so it may be possible
-> to go up to 16TB with LVM without a huge amount of kernel redesign.
+> > Heinz talked about allowing LVM to have PAGE_SIZE (4k) blocks (unlike
+> > the rest of the kernel, which uses 512 byte blocks) so it may be possible
+> > to go up to 16TB with LVM without a huge amount of kernel redesign.
+> 
+> This sounds really interesting.  What exactly would be needed to do that?
 
-This sounds really interesting.=20
-What exactly would be needed to do that?
-I believe there have been issues with lvm block sizes and XFS (maybe
-other filesystems too). Would changing it to 4k create new issues?
-Would it be possible to increese it even futher? if the filesystem used
-more than 4k blocksize?
+Change all of the code paths in the kernel that assume block size is 512
+bytes...
 
+> I believe there have been issues with lvm block sizes and XFS (maybe
+> other filesystems too). Would changing it to 4k create new issues?
 
-Thanks.
+Yes, probably.
 
+> Would it be possible to increese it even futher? if the filesystem used
+> more than 4k blocksize?
 
+Probably not.  There will likely be lots of problems for block size >
+PAGE_SIZE.  Of course on ia64 and alpha PAGE_SIZE = 8kB, so you can go
+to 32TB I think, assuming the rest of the issues are fixed.
 
---=20
-Ragnar Kj=EF=BF=BDrstad
-BigStorage
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
