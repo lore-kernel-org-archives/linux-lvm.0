@@ -1,48 +1,28 @@
-Date: Tue, 31 Oct 2000 08:39:29 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] LVM Partition Dependency
-Message-ID: <20001031083929.A27865@srv.t-online.de>
-Reply-To: Mauelshagen@sistina.com
-References: <OFF2FCF487.B6859C5B-ON86256988.00627B8E@imation.com> <20001030225211.A26323@srv.t-online.de> <20001031083019.B12775@colombina.comedia.it>
-Mime-Version: 1.0
-In-Reply-To: <20001031083019.B12775@colombina.comedia.it>; from bluca@comedia.it on Tue, Oct 31, 2000 at 08:30:19AM +0100
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200010311627.JAA02534@lynx.turbolabs.com>
+Subject: [linux-lvm] New 2.2 patches/sources released
+Date: Tue, 31 Oct 2000 09:27:13 -0700 (MST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Luca Berra <bluca@comedia.it>
-Cc: linux-lvm@msede.com
+To: Linux LVM mailing list <linux-lvm@msede.com>
 
-On Tue, Oct 31, 2000 at 08:30:19AM +0100, Luca Berra wrote:
-> On Mon, Oct 30, 2000 at 10:52:11PM +0000, Heinz J. Mauelshagen wrote:
-> > > 
-> > > I'm not having any luck with pvcreate tool shipped with SuSE 6.4 and
-> > > 
-> > > LVM 0.8final.
-> > 
-> > It should work in 6.4 with NBD and major 43.
-> > Did you run a "pvcreate -d" to figure the reason out?
-> 
-> allow me to guess :))))
-> since nbd is not a partitionable device, the dir_cache entry
-> is screwed by a bug in pv_get_size.c,
-> i posted a patch to this list earlier, andreas should have
-> updated his RPM.
+Hello all,
+I've updated my 2.2 patch set.  It is now available as an i386 binary, SRPM,
+patched .tgz, and standalone patch.  I have also made a 2.4 kernel patch
+available to allow include/linux/lvm.h be used from user and kernel sources.
 
-...and I have it in the 0.9 alpha source :))))
+Changes include
+- fix for lvmcreate_initrd to allow passing modules/kernel version
+- add unpartitioned devices to the disk cache (from SuSE LVM)
+- unlink /etc/lvmtab before re-creating it (from SuSE LVM)
 
--- 
+Attached is the patch for the 2.4 kernel lvm.h, which also fixes a long
+known bug with using lv_t instead of lv_disk_t.  It is also required
+for compiling my LVM user tools, since I include <linux/lvm.h> and not
+<lib/lvm.h> in order to ensure the kernel and tools have same structs.
 
-Regards,
-Heinz      -- The LVM guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Cheers, Andreas
