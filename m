@@ -1,9 +1,9 @@
-Return-Path: <paul@jakma.org>
-Date: Fri, 20 Apr 2001 02:29:09 +0100 (IST)
-From: Paul Jakma <paul@jakma.org>
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-In-Reply-To: <200104191945.f3JJjKRn015661@webber.adilger.int>
-Message-ID: <Pine.LNX.4.33.0104200218460.1083-100000@fogarty.jakma.org>
+Return-Path: <riel@conectiva.com.br>
+Date: Thu, 19 Apr 2001 23:02:26 -0300 (BRST)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [linux-lvm] 2.4.3-ac{6,7} LVM hang
+In-Reply-To: <m3n19cxtxc.fsf@otr.mynet.cygnus.com>
+Message-ID: <Pine.LNX.4.21.0104192301410.1685-100000@imladris.rielhome.conectiva>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,39 +18,28 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
+To: Ulrich Drepper <drepper@cygnus.com>
+Cc: Jens Axboe <axboe@suse.de>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org
 
-On Thu, 19 Apr 2001, Andreas Dilger wrote:
+On 19 Apr 2001, Ulrich Drepper wrote:
+> Jens Axboe <axboe@suse.de> writes:
+> 
+> > Does attached patch fix it?
+> 
+> Yes.
 
-> went in, but not other stuff.  Also, it doesn't appear that any of the
-> LVM changes are making it into the stock kernel, which is basically a
-> recepie for disaster.
+Jens, I guess we should submit these patches to Alan and Linus
+now. This way we'll get a working LVM again.
 
-agreed... after the problematic inclusion of 0.9 into the kernel i
-asked on sistina LVM list whether they could try to be a bit more
-proactive about feeding patches on to linus, to make life easier for
-LVM users - they had fixes for the problems of 0.9 but never, and
-still to this day have not, fed the code on.
-
-Still to this day, nothing from them but announcements on l-k of
-various betas. AFAIK all the patches for LVM submitted to linus since
-0.8 went in have been from core linux developers (Andrea, Jens,
-etc.), not sistina.
-
-shame... their LVM is really nice to use. Just frustrating that they
-do want to feed the code on... more frustrating still when you
-consider the lobbying that went on to try persuade l-k that LVM
-should go in.
-
-> Cheers, Andreas
-
-obHiddenCode: lm-sensors... used to use this a long time ago.
+Waiting for the next official LVM release (and the next set of
+bugs) doesn't seem like a very productive way to me ;)
 
 regards,
--- 
-Paul Jakma	paul@clubi.ie	paul@jakma.org
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-Happiness is twin floppies.
+
+Rik
+--
+Virtual memory is like a game you can't win;
+However, without VM there's truly nothing to lose...
+
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com.br/
