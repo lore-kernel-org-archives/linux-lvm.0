@@ -1,13 +1,11 @@
-Date: Thu, 23 Aug 2001 19:54:02 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] segfault running vgscan
-Message-ID: <20010823195402.A23333@sistina.com>
-References: <20010823145432.A20622@sistina.com> <20010823225107.2238.qmail@web20301.mail.yahoo.com>
+Date: Fri, 24 Aug 2001 08:45:47 +0100
+Subject: Re: [linux-lvm] Pvmove question
+Message-ID: <20010824084547.C293@btconnect.com>
+References: <B45465FD9C23D21193E90000F8D0F3DF0178FD13@mailsrv.linkvest.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
 Content-Disposition: inline
-In-Reply-To: <20010823225107.2238.qmail@web20301.mail.yahoo.com>; from bwlang@yahoo.com on Thu, Aug 23, 2001 at 03:51:07PM -0700
+In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF0178FD13@mailsrv.linkvest.com>; from Jean-Eric.Cuendet@linkvest.com on Fri, Aug 24, 2001 at 12:31:18AM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,56 +17,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 24, 2001 at 12:31:18AM +0200, Jean-Eric Cuendet wrote:
+> 
+> Hi,
+> I have a pvmove question:
+> In the man page, it's said to be careful with pvmove if you use it while
+> LVM is in use.
+> I don't really understand what is dangerous and what is safe...
 
-On Thu, Aug 23, 2001 at 03:51:07PM -0700, Brad Langhorst wrote:
-> the static vs dynamic link bit gave me the idea to try
-> compiling lvm statically - seems to work now.
->=20
-> i can't upgrade glibc since its already at 2.2.4 which
-> is the most recent (as far as I can tell)
+pvmove on a mounted (or otherwise in use) LV might cause curruption of
+your data.
 
-Interesting that i have the exact opposite problem with version 2.2.3 of
-glibc...I think more research is required.  Has anyone else seen a problem
-like this?
+> 
+> Could you give me details? Is it safe to do if no LV is mounted?
 
-> lets hope it doesn't just appear to work...
+y
 
-Yes!
+ Or if
+> vgchange -an is run?
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+y
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-"Facts are useless!  You can use facts to prove almost anything that's even
-remotely true.  Facts schmacts."  --Homer Simpson
------End Obligatory Humorous Quote------------------------------------------
-
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7haWqpE6/iGtdjLERAiGwAJ9Bj9znGsuKeRfDOddG3yuj0dskXgCgj5Xz
-TBhqWjkckm08Ao+lbZtjjzw=
-=ECYg
------END PGP SIGNATURE-----
-
---fdj2RfSjLxBAspz7--
+- Joe
