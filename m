@@ -1,34 +1,29 @@
-Message-ID: <3892478F.A9F5D3CC@msede.com>
-Date: Sat, 29 Jan 2000 02:51:11 +0100
-From: Michael Marxmeier <mike@msede.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Subject: LVM and Debian (fwd)
-References: <389240C3.C11F5303@msede.com>
-Content-Transfer-Encoding: 7bit
+Date: Sat, 29 Jan 2000 03:19:44 +0100
+From: "Andi Kleen" <ak@suse.de>
+Subject: Re: [linux-lvm] ReiserFS & LVM?
+Message-ID: <20000129031944.A6770@gruyere.muc.suse.de>
+References: <Pine.LNX.4.10.10001271743500.3114-100000@moses.muenster.com>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.10.10001271743500.3114-100000@moses.muenster.com>; from fraune@muenster.com on Thu, Jan 27, 2000 at 05:45:29PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: abamrah@idirect.com
+Content-Transfer-Encoding: 7bit
+To: Joerg Fraune <fraune@muenster.com>
 Cc: linux-lvm@msede.com
 
-> From: Amrit Pal Singh <abamrah@idirect.com>
-> Subject: LVM and Debian
+On Thu, Jan 27, 2000 at 05:45:29PM +0100, Joerg Fraune wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
 > 
-> I am trying to install LVM v0.7 on my debian box. I have tried with
-> Kernel 2.2.13, 2.2.14, and 2.3.40 but nowhere I could find a
-> configuration option that I can select to enable support for LVM.
+> 
+>  Hi,
+> 
+>  the reiserfs documentation says that reiserfs is incompatible with
+> software raid due to conflicts in buffer page usage; is this also
+> true for reiserfs & LVM?
 
-You _did_ apply the kernel patch? The config new options are part 
-of the kernel patch.
-Otherwise you may have made a mistake in patching the kernel.
+No, it isn't. Reiserfs works fine with LVM.
 
-
-Hope this helps
-Michael
-
--- 
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+-Andi
