@@ -1,11 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 2 May 2001 12:45:04 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
-Message-ID: <20010502124504.G30791@sistina.com>
-References: <20010427104702.A16169@sistina.com> <200104301816.MAA19335@lynx.turbolabs.com>
-Mime-Version: 1.0
-In-Reply-To: <200104301816.MAA19335@lynx.turbolabs.com>; from adilger@turbolinux.com on Mon, Apr 30, 2001 at 12:16:56PM -0600
+Return-Path: <todd@staff.nm.org>
+Date: 2 May 2001 05:23:31 -0600
+Date: Wed, 2 May 2001 05:23:31 -0600 (MDT)
+From: Todd Underwood <todd@osogrande.com>
+Subject: Re: [linux-lvm] odd problem
+In-Reply-To: <200105012312.RAA27583@lynx.turbolabs.com>
+Message-ID: <Pine.LNX.4.10.10105020519060.4139-100000@staff>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,60 +17,53 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 30, 2001 at 12:16:56PM -0600, Andreas Dilger wrote:
-> Heinz writes:
-> > I am about to implement a vgscan option in order to support the recreation
-> > of the "invalid PV UUID list problem" in case a VG can't be found by vgscan
-> > any more.
-> > 
-> > What's your opinion (Andreas?) about it?
-> > 
-> > Do we have too many people which can't do the lvcreate/lvremove trick
-> > so that this work makes sense?
+andreas, folx,
+
+thanks for the replies and suggestions.  comments below...
+
+On Tue, 1 May 2001, Andreas Dilger wrote:
+
+> Todd Underwood writes:
+> > All was working well but recently i needed to reboot (i was unable to
+> > increase the size of my / with the online ext2 tools and it was full
+> > --not sure what the error was there, or whether that is relevant).
 > 
-> It is surely a fix for some of the problems.
+> Probably not relevant, but it is of interest to me what sort of problems
+> you had.  I assume you have patched the kernel with the online ext2
+> kernel patches and also enabled CONFIG_EXT2_RESIZE?  You should not have
+> any problems resizing root.
 
-Which other problems do you see and are you able to define?
+i am using the kernel patch and have CONFIG_EXT2_RESIZE.  i have had
+problems with resizing when i resize several filesystems repeatedly by
+small amounts (that is always my preference, rather than giving one big
+boost that may waste space).  at the time i had difficulties the root was
+full (except for space reserved for root), but i don't know if that is
+relevant.  unfortunately, i've got no specifics to report, but i'll try to
+reproduce it today.  
 
-> Of course, the need for the
-> fix will be reduced as time goes on,
-
-That's why I asked in the first place.
-
-Maybe the /etc/lvmconf/ to /etc/lvmtab.d/ copy and echo to /etc/lvmtab
-trick plus "vgchange -ay" and dummy change on VGs does it anyway?
-
-> so maybe a comment/#ifdef on the code
-> so that it will be removed at a later date.
+> > lvm -- lvm_chr_ioctl:  unknown command 4004fe0a
 > 
-> Cheers, Andreas
-> -- 
-> Andreas Dilger                               Turbolinux filesystem development
-> http://sourceforge.net/projects/ext2resize/
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Expected behaviour with new tools (compatibility reasons).  However, it
+> _does_ indicate that you do not have beta7 LVM kernel code.
+> 
 
--- 
+interesting.  i will recompile, recompile, re-lilo and try again.  this
+really *was* working with that kernel before. sigh.  this is helpful to
+know, though.
 
-Regards,
-Heinz    -- The LVM Guy --
+> Do you run "vgchange -a y" (and optionally vgscan) in startup scripts?
+> There is a "LVM root howto" somewhere on the Sistina site.
+> 
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+yes.  i put vgchange -a y and vgscan in /etc/rc.sysinit (it's a RH box)
+and that seems to be working well for now without the LVM root, but given
+the problems i've had with /etc, i will recheck the faq and try again.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+again, thanks for the help.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+todd
