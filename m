@@ -1,9 +1,9 @@
-Subject: Re: [linux-lvm] 2.4.17rc2
-References: <20011221022542.GH15643@auctionwatch.com>
+Subject: Re: [linux-lvm] question on lvextend
+References: <20011219154622.31527.qmail@web14403.mail.yahoo.com>
 From: Urs Thuermann <urs@isnogud.escape.de>
-In-Reply-To: <20011221022542.GH15643@auctionwatch.com>; from Petro on Thu,
-    20 Dec 2001 18:25:42 -0800
-Message-Id: <m2k7vfacfj.fsf@isnogud.escape.de>
+In-Reply-To: <20011219154622.31527.qmail@web14403.mail.yahoo.com>;
+    from Aman Shahi on Wed, 19 Dec 2001 07:46:22 -0800 (PST)
+Message-Id: <m2heqjabri.fsf@isnogud.escape.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,36 +14,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec 22 02:28:01 2001
+Date: Sat Dec 22 02:43:01 2001
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Petro <petro@auctionwatch.com> writes:
+Aman Shahi <shahi_aman@yahoo.com> writes:
 
-> Did a bunch of stuff get updated in the 2.4.17rc2 kernel? I ask because
-> I just applied that patch to 2.4.16, and at one point patch stated it
-> looked like a patch had already been applied. 
+> Can I extend a striped LV ?
 
-Yes, you probably mean the patch from patch-2.4.17
+Yes.  I've done so several times.
 
-    --- linux-2.4.16/drivers/md/lvm-snap.c  Mon Nov 12 17:34:20 2001
-    +++ linux/drivers/md/lvm-snap.c Fri Dec 21 16:40:32 2001
-    @@ -542,8 +542,6 @@
-     
-     void lvm_snapshot_release(lv_t * lv)
-     {
-    -       int     nbhs = KIO_MAX_SECTORS;
-    -
-    	    if (lv->lv_block_exception)
-    	    {
-    		    vfree(lv->lv_block_exception);
+> If so, does the data gets redistributed or what ?
 
-which seems already to be in LVM-1.0.1.  This patch in uncritical
-anyway since it does nothing, except cosmetic cleanup (removal of
-unused variable).
+No.  There no need to move data from the LV around.  The LV just gets
+a couple of new PEs assigned just as with non-striped LVs.  Only the
+mapping of already allocated LEs to PEs is modified, e.g.
+
+	before				after
+
+	LE	PV	   PE		LE	PV	   PE
+	00	/dev/sda1  00		00      /dev/sda1  00
+	01	/dev/sda1  01		01      /dev/sda1  01
+	02	/dev/sdb1  00		02      /dev/sda1  02
+	03	/dev/sdb1  01		03      /dev/sdb1  00
+					04      /dev/sdb1  01
+					05      /dev/sdb1  02
+
+Look at lvdisplay -v before and after running lvextend.
 
 
 urs
