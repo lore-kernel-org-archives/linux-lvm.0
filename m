@@ -1,11 +1,13 @@
-Message-ID: <3B967E63.3020302@st-peter.stw.uni-erlangen.de>
-Date: Wed, 05 Sep 2001 21:34:59 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] rh kernel patches
-References: <B45465FD9C23D21193E90000F8D0F3DF404FF4@mailsrv.linkvest.com>
-Content-Type: multipart/mixed;
- boundary="------------020206010705000900000808"
+Date: Wed, 5 Sep 2001 15:37:03 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] lvcreate segfaults
+Message-ID: <20010905153703.A5914@sistina.com>
+References: <20010905121129.I32553@turbolinux.com> <Pine.A41.4.21.0109051323340.22482-300000@gigue.dlib.indiana.edu>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Disposition: inline
+In-Reply-To: <Pine.A41.4.21.0109051323340.22482-300000@gigue.dlib.indiana.edu>; from jomarqua@indiana.edu on Wed, Sep 05, 2001 at 01:32:34PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,142 +21,236 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
---------------020206010705000900000808
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-hi tried adding the macros but it didn't work for me
+On Wed, Sep 05, 2001 at 01:32:34PM -0500, John Marquart wrote:
+> Good afternoon,
+> 	I am running LVM 1.0.1rc2 on  2.4.8 kernel ontop of a IBM
+> Serverraid 4Mx RAID5 filesystem.  I am trying to create a new lv using
+> "lvcreate -n foo -L 4M rootvg" - however that command insists on giving me
+> a segfault. =20
 
+Here is a patch that should fix this problem.  It has already been applied
+to the CVS.  just save this to a file and apply it to the 1.0.1-rc2 source
+with the -p0 flag after cd'ing to the 1.0.1-rc2 directory.
 
-Jean-Eric Cuendet wrote:
+Index: tools/lib/liblvm.h
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /var/cvs/LVM/tools/lib/liblvm.h,v
+retrieving revision 1.26
+retrieving revision 1.27
+diff -u -b -B -r1.26 -r1.27
+--- tools/lib/liblvm.h	2001/08/29 13:13:25	1.26
++++ tools/lib/liblvm.h	2001/09/03 08:14:05	1.27
+@@ -214,7 +214,7 @@
+ int  vg_create_dir_and_group ( vg_t *);
+ int  vg_create_dir_and_group_and_nodes ( vg_t *, int);
+ void vg_deactivate ( char *);
+-inline int vg_extend ( char *, pv_t *, vg_t *);
++int vg_extend ( char *, pv_t *, vg_t *);
+ int  vg_free ( vg_t *, int);
+ char *vg_name_of_lv ( char *);
+ int  vg_remove ( char *);
+@@ -222,7 +222,7 @@
+ int  vg_read ( char *, vg_t **);
+ int  vg_read_from_pv ( char *, vg_t **);
+ int  vg_read_with_pv_and_lv ( char *, vg_t **);
+-inline int vg_reduce ( char *, pv_t *, vg_t *);
++int vg_reduce ( char *, pv_t *, vg_t *);
+ int  vg_remove_dir_and_group_and_nodes ( char *);
+ int  vg_set_extendable ( char*);
+ void vg_setup_pointers_for_snapshots ( vg_t*);
+@@ -317,10 +317,10 @@
+ lv_t      *lv_copy_from_disk ( lv_disk_t *);
+ lv_disk_t *lv_copy_to_disk ( lv_t *);
+ int    lv_count_pe ( pv_t *, int);
+-inline int lv_create ( vg_t *, lv_t *, char *);
++int lv_create ( vg_t *, lv_t *, char *);
+ int    lv_create_name ( char *, char *, int);
+ int    lv_create_node ( lv_t *);
+-inline int lv_extend ( vg_t *, lv_t *, char *);
++int lv_extend ( vg_t *, lv_t *, char *);
+ int    lv_get_index_by_kdev_t ( vg_t *, kdev_t);
+ int    lv_get_index_by_minor ( vg_t *, int);
+ int    lv_get_index_by_name ( vg_t *, char *);
+@@ -335,9 +335,9 @@
+ int    lv_read_COW_table ( vg_t * vg, lv_t * lv);
+ int    lv_read_with_pe ( char *, char *, lv_t **);
+ int    lv_read_all_lv ( char *, lv_t ***, int);
+-inline int lv_reduce ( vg_t *, lv_t *, char *);
++int lv_reduce ( vg_t *, lv_t *, char *);
+ int    lv_release ( vg_t *, char *);
+-inline int lv_remove ( vg_t *, lv_t *, char *);
++int lv_remove ( vg_t *, lv_t *, char *);
+ int    lv_rename ( char *, lv_t *);
+ int    lv_setup_for_create ( char *, vg_t **, char *, int *,
+                              uint, uint, uint, uint, uint, uint, char **);
+Index: tools/lib/lv_create_remove.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /var/cvs/LVM/tools/lib/lv_create_remove.c,v
+retrieving revision 1.3
+retrieving revision 1.4
+diff -u -b -B -r1.3 -r1.4
+--- tools/lib/lv_create_remove.c	2001/04/24 14:29:21	1.3
++++ tools/lib/lv_create_remove.c	2001/09/03 08:14:05	1.4
+@@ -39,12 +39,12 @@
+ int lv_create_remove ( vg_t *, lv_t *, char *, int);
+=20
+=20
+-inline int lv_create ( vg_t *vg, lv_t *lv, char *lv_name) {
++int lv_create ( vg_t *vg, lv_t *lv, char *lv_name) {
+    return lv_create_remove ( vg, lv, lv_name, LV_CREATE);
+ }
+=20
+=20
+-inline int lv_remove ( vg_t *vg, lv_t *lv, char *lv_name) {
++int lv_remove ( vg_t *vg, lv_t *lv, char *lv_name) {
+    return lv_create_remove ( vg, lv, lv_name, LV_REMOVE);
+ }
+=20
+Index: tools/lib/lv_extend_reduce.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /var/cvs/LVM/tools/lib/lv_extend_reduce.c,v
+retrieving revision 1.3
+retrieving revision 1.4
+diff -u -b -B -r1.3 -r1.4
+--- tools/lib/lv_extend_reduce.c	2001/04/24 14:29:21	1.3
++++ tools/lib/lv_extend_reduce.c	2001/09/03 08:14:05	1.4
+@@ -36,15 +36,15 @@
+ #include <liblvm.h>
+=20
+ /* internal function */
+-inline int lv_extend_reduce ( vg_t *, lv_t *, char *, int);
++int lv_extend_reduce ( vg_t *, lv_t *, char *, int);
+=20
+=20
+-inline int lv_extend ( vg_t *vg, lv_t *lv, char *lv_name) {
++int lv_extend ( vg_t *vg, lv_t *lv, char *lv_name) {
+    return lv_extend_reduce ( vg, lv, lv_name, LV_EXTEND);
+ }
+=20
+=20
+-inline int lv_reduce ( vg_t *vg, lv_t *lv, char *lv_name) {
++int lv_reduce ( vg_t *vg, lv_t *lv, char *lv_name) {
+    return lv_extend_reduce ( vg, lv, lv_name, LV_REDUCE);
+ }
+=20
+Index: tools/lib/system_id.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /var/cvs/LVM/tools/lib/system_id.c,v
+retrieving revision 1.3
+retrieving revision 1.4
+diff -u -b -B -r1.3 -r1.4
+--- tools/lib/system_id.c	2001/04/24 14:29:21	1.3
++++ tools/lib/system_id.c	2001/09/03 08:14:05	1.4
+@@ -36,7 +36,7 @@
+ #include <liblvm.h>
+ #include <sys/utsname.h>
+=20
+-inline int system_id_set ( char *system_id) {
++int system_id_set ( char *system_id) {
+    int ret =3D 0;
+    struct utsname uts;
+=20
+@@ -52,7 +52,7 @@
+ }
+=20
+=20
+-inline int system_id_set_exported ( char *system_id) {
++int system_id_set_exported ( char *system_id) {
+    int ret =3D 0;
+    struct utsname uts;
+=20
+@@ -69,7 +69,7 @@
+ }
+=20
+=20
+-inline int system_id_set_imported ( char *system_id) {
++int system_id_set_imported ( char *system_id) {
+    int ret =3D 0;
+=20
+    debug_enter ( "system_id_set_imported -- CALLED\n");
+@@ -84,7 +84,7 @@
+ }
+=20
+=20
+-inline int system_id_check_exported ( char *system_id) {
++int system_id_check_exported ( char *system_id) {
+    int ret =3D UNDEF;
+=20
+    debug_enter ( "system_id_check_exported -- CALLED\n");
+@@ -101,7 +101,7 @@
+ }
+=20
+=20
+-inline int system_id_check_imported ( char *system_id) {
++int system_id_check_imported ( char *system_id) {
+    int ret =3D UNDEF;
+=20
+    debug_enter ( "system_id_check_imported -- CALLED\n");
+Index: tools/lib/vg_extend_reduce.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /var/cvs/LVM/tools/lib/vg_extend_reduce.c,v
+retrieving revision 1.3
+retrieving revision 1.4
+diff -u -b -B -r1.3 -r1.4
+--- tools/lib/vg_extend_reduce.c	2001/04/24 14:29:21	1.3
++++ tools/lib/vg_extend_reduce.c	2001/09/03 08:14:05	1.4
+@@ -39,12 +39,12 @@
+ int vg_extend_reduce ( char *, pv_t *, vg_t *, int);
+=20
+=20
+-inline int vg_extend ( char *vg_name, pv_t *pv, vg_t *vg) {
++int vg_extend ( char *vg_name, pv_t *pv, vg_t *vg) {
+    return vg_extend_reduce ( vg_name, pv, vg, VG_EXTEND);
+ }
+=20
+=20
+-inline int vg_reduce ( char *vg_name, pv_t *pv, vg_t *vg) {
++int vg_reduce ( char *vg_name, pv_t *pv, vg_t *vg) {
+    return vg_extend_reduce ( vg_name, pv, vg, VG_REDUCE);
+ }
+=20
 
->Hi,
->I have patched RH 2.4.7 kernel successfully. I understand what you want
->to do and must say that it's a *good* thing for 2 reasons:
->- having ext3 in the kernel
->- having quotas3 in the kernel
->
->To do so, get the redhat sources. Put them in <srcdir> (Ex:
->/tmp/linux-2.4.7-rh)
->Get the LVM 1.0.1rc2 (not another release) and uncompress them (Ex:
->/tmp/LVM/1.0.1rc2)
->Then, go in .../LVM/1.0.1-rc2 and run ./configure
->--with-kernel_dir=<srcdir>
->Then make, make install the tools (Note that kernel is not touch at this
->point). They yre mandatory to make your LVM system working.
->Then go in <srcdir>, and patch your kernel with a patch made by
->configure just for your kernel. It's in
->.../LVM/1.0.1rc2/PATCHES/lvm_1.0.1rc2-2.4.7.<snip>.patch. It was created
->by configure for the kernel you gave in <srcdir>
->Then patch it with:
->- cd <srcdir>
->- patch -p1 < .../LVM/1.0.1rc2/PATCHES/lvm.<snip>.patch
->
->And you are done. (quite...)
->Then make bzImage will compile it, except for a little thing: min/max
->functions. RH kernel is made from Alan Cox one. And Linus kernel changed
->min/max functions. LVM uses Linus min/max functions while -ac (RedHat)
->kernel uses old min/max functions.
->
->During the compilation, you'll get errors with files in drivers/md/.
->They are lvm.c, lvm-snap.c and perhaps a third I don't remember. To
->correct those, just copy the 2 macros in each fault file:
->#define min(a,b) (((a)<(b))?(a):(b))
->#define max(a,b) (((a)>(b))?(a):(b))
->At the beginning of the file (before anything else).
->
->And compile with work.
->
->But if you don't need ext3 nor quotas3, then go with a plain Linus
->kernel (available at www.kernel.org), you'll have less problems... :-)
->
->Ask for more help
->-jec
->
->>-----Original Message-----
->>From: Pierre Lamb [mailto:plamb_98@yahoo.com] 
->>Sent: mardi, 4. septembre 2001 19:56
->>To: linux-lvm@sistina.com
->>Subject: [linux-lvm] rh kernel patches
->>
->>
->>Is there a correct way to patch RH kernels. I have
->>tried using the "final path" to update 2.4.7 rh kernel
->>but just get errors. Is there a work around for this
->>problem.
->>
->>Pierre
->>
->>__________________________________________________
->>Do You Yahoo!?
->>Get email alerts & NEW webcam video instant messaging with 
->>Yahoo! Messenger http://im.yahoo.com
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com 
->>http://lists.sistina.com/mailman/listinfo/linu> x-lvm
->>read the 
->>LVM HOW-TO at 
->>http://www.sistina.com/lvm/Pages/howto.html
->>
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
+Current GPG fingerprint =3D 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD D=
+E95
 
---------------020206010705000900000808
-Content-Type: text/plain;
- name="lvm-1.0.1rc2-2.4.5"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="lvm-1.0.1rc2-2.4.5"
+-----Begin Obligatory Humorous Quote----------------------------------------
+File not found. Should I fake it? (Y/N)
+-----End Obligatory Humorous Quote------------------------------------------
 
-/usr/bin/kgcc -D__KERNEL__ -I/usr/src/linux-2.4.5/include -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe  -march=i686    -c -o lvm.o lvm.c
-lvm.c: In function `__extend_reduce':
-lvm.c:2329: warning: implicit declaration of function `min'
-lvm.c:2329: parse error before `uint'
-lvm.c:2343: parse error before `uint'
-lvm.c:2280: warning: `end' might be used uninitialized in this function
-lvm.c:2339: warning: `end' might be used uninitialized in this function
-make[3]: *** [lvm.o] Error 1
-make[3]: Leaving directory `/usr/src/linux-2.4.5/drivers/md'
-make[2]: *** [first_rule] Error 2
-make[2]: Leaving directory `/usr/src/linux-2.4.5/drivers/md'
-make[1]: *** [_subdir_md] Error 2
-make[1]: Leaving directory `/usr/src/linux-2.4.5/drivers'
-make: *** [_dir_drivers] Error 2
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-##########################################################################################################
-and after adding 
+iD8DBQE7lozvb2fpvETN3pURAp3VAJ4y0BawCjmAo7O7B2Zll4/WEEnQtQCgtZ9o
+kn8rCsb/o00hTb5S2z6EeUU=
+=u6oe
+-----END PGP SIGNATURE-----
 
-#define min(a,b) (((a)<(b))?(a):(b)) 
-#define max(a,b) (((a)>(b))?(a):(b)) 
-##########################################################################################################
-
-
-make[3]: Entering directory `/usr/src/linux-2.4.5/drivers/md'
-/usr/bin/kgcc -D__KERNEL__ -I/usr/src/linux-2.4.5/include -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe  -march=i686    -c -o lvm.o lvm.c
-lvm.c:2332: macro `min' used with too many (3) args
-lvm.c:2346: macro `min' used with too many (3) args
-lvm.c: In function `__extend_reduce':
-lvm.c:2332: parse error before `<'
-lvm.c:2332: parse error before `:'
-lvm.c:2346: parse error before `<'
-lvm.c:2346: parse error before `:'
-lvm.c:2283: warning: `end' might be used uninitialized in this function
-lvm.c:2342: warning: `end' might be used uninitialized in this function
-make[3]: *** [lvm.o] Error 1
-make[3]: Leaving directory `/usr/src/linux-2.4.5/drivers/md'
-make[2]: *** [first_rule] Error 2
-make[2]: Leaving directory `/usr/src/linux-2.4.5/drivers/md'
-make[1]: *** [_subdir_md] Error 2
-make[1]: Leaving directory `/usr/src/linux-2.4.5/drivers'
-make: *** [_dir_drivers] Error 2
---------------020206010705000900000808--
+--pWyiEgJYm5f9v55/--
