@@ -1,9 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200101130313.f0D3DwR20064@webber.adilger.net>
-Date: Fri, 12 Jan 2001 20:13:57 -0700 (MST)
+Return-Path: <seawolf@attglobal.net>
+Message-ID: <3A5FD0B2.89C1E815@attglobal.net>
+Date: Fri, 12 Jan 2001 22:51:14 -0500
+From: Les Hazelton <seawolf@attglobal.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] newer version of lvmcreateinitrd script
+Subject: Re: [linux-lvm] [lvm 0.8 final] lvmcreate_initrd fails for me
+References: <200101130054.f0D0s9C32510@webber.adilger.net>
+Content-Type: multipart/mixed;
+ boundary="------------EF8D620838D5454A034514EC"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +18,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
+
+This is a multi-part message in MIME format.
+--------------EF8D620838D5454A034514EC
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@sistina.com>
 
-Hello,
-here is yet a newer version of the lvmcreateinitrd script.  I realized
-after sending the old one that it is impossible to create > 8192 inodes
-on an 8MB ext2 filesystem with 1k blocks, so this is now taken care of
-by using a larger block size for the filesystem.
+Andreas Dilger wrote:
+ 
+> Is it possible you are running out of inodes on the ram disk?  You can
 
-Cheers, Andreas
-==========================================================================
+This is the obviously the reason for the problem.  I did a scan of /dev
+using [ls /dev | grep -c ""] which produced a number 6261. There are a
+huge number if ISDN related entries in /dev. I need to look at removing
+them since I don't use ISDN.
+
+> - call the ramdisk initrd-lvm-$VERSION.gz to allow multiple ramdisk 
+
+I really like the new name - saves me from changing it by hand ;-)
+
+> Cheers, Andreas
+
+The new lvmcreate_initrd you posted got me running - with a few changes.
+I had to shift to the mke2fs command with the -N parm as you suggested.
+
+Even with the -N parm I was still having problems so I rebooted the
+system with a 12288k ram disk size and adjusted the script accordingly.
+That got everything working. 
+
+I also made a change - for testing - so I could see the generated mke2fs
+command.  I have attached the script as I used it.  Thanks for the help.
+
+-- 
+
+Good Journey, longevity and prosperity to all
+
+Les Hazelton
+--------------EF8D620838D5454A034514EC
+Content-Type: text/plain; charset=us-ascii;
+ name="lvm-initrd"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="lvm-initrd"
+
 #!/bin/sh
 #
 #  Copyright (C) 1997 - 2000  Heinz Mauelshagen, Sistina Software
@@ -56,15 +91,13 @@ Cheers, Andreas
 # Changelog
 #
 #   16/11/1999 - corrected -N type with mke2fs
-#   19/12/1999 - use correct ramdisk size
-#                strip shared library to save space
+#   19/12/1999 - use correct ramdisk size, strip shared library to save space
 #   04/01/2000 - support /proc mount, because lvm_dir_cache now uses it
-#   01/12/2001 - always create enough inodes in ramdisk for dev files
+#   01/12/2001 - always create enough inodes in ramdisk for new files
 #   [AED]      - don't try to copy LVM module if LVM is compiled into kernel
 #              - check all INITRDFILES for library dependencies
 #              - make commands quiet and avoid redirecting errors to /dev/null
 #              - use cleanup function for all errors, interrupts, normal exit
-#              - allow creation of > 8192 inodes in case of large /dev
 #
 
 cmd=`basename $0`
@@ -72,7 +105,7 @@ VERSION=$1
 [ -z "$VERSION" ] && VERSION=`uname -r`
 DEVRAM=/tmp/initrd.$$
 INITRD=/boot/initrd-lvm-$VERSION.gz
-INITRDSIZE=8192
+INITRDSIZE=12288
 MODULES=/lib/modules/$VERSION
 INITRDFILES="/sbin/modprobe /sbin/vgchange /sbin/vgscan /bin/bash /bin/mount /bin/umount /bin/sh /bin/rm /sbin/insmod $MODULES/modules.dep"
 if [ -r $MODULES/kernel/drivers/md/lvm-mod.o ]; then
@@ -97,11 +130,10 @@ trap "
   cleanup 1
 " 1 2 3 15
 
-
 create_fstab () {
    cat << FSTAB > $TMPMNT/etc/fstab
-/dev/ram	/		ext2	defaults	0   0
-proc		/proc		proc	defaults	0   0
+/dev/ram        /               ext2    defaults        0   0
+proc            /proc           proc    defaults        0   0
 FSTAB
    chmod 644 $TMPMNT/etc/fstab
 }
@@ -126,33 +158,29 @@ echo -e "$cmd -- create an LVM initial ram disk $INITRD\n"
 
 # figure out which actual shared libraries we need in our initrd
 echo "$cmd -- figuring out shared libraries"
-SHLIBS=`ldd $INITRDFILES 2>/dev/null | awk '{if (/=>/) { print $3 }}' | sort -u`
+SHLIBS=`ldd $INITRDFILES 2>/dev/null | awk '{if (/=>/) { print $3 }}' |
+sort -u`
 if [ $? -ne 0 ]; then
    echo -e "$cmd -- ERROR figuring out needed shared libraries\n"
    exit 1
 fi
 
-#INITRDSIZE="`du -cLk /dev $SHLIBS $INITRDFILES | awk '/total/ { print $1 }'`"
-echo "$cmd -- making loopback file ($INITRDSIZE kB)"
+echo "$cmd -- making ram filesystem"
 dd if=/dev/zero of=$DEVRAM count=$INITRDSIZE bs=1024 >/dev/null 2>&1
 if [ $? -ne 0 ]; then
    echo -e "$cmd -- ERROR creating loopback file\n"
    cleanup 1
 fi
 
-# We can only have 8 * blocksize inodes per group, so for an 8MB filesystem
-# (1 group) with > 8192 inodes, we need to use a bigger block size.  Yuk.
-NUMINO="`find /dev /dev $SHLIBS $INITRDFILES | wc -w`"
-NUMINO=`expr $NUMINO + 64`
-if [ $NUMINO -gt `expr $INITRDSIZE \* 2` ]; then
-   INODE_OPT="-b 4096 -N $NUMINO"
-elif [ $NUMINO -gt $INITRDSIZE ]; then
-   INODE_OPT="-b 2048 -N $NUMINO"
-else
-   INODE_OPT="-i `expr $INITRDSIZE \* 1024 / $NUMINO`"
-fi
-echo "$cmd -- making ram disk filesystem ($NUMINO inodes)"
-mke2fs -q -F -m0 $INODE_OPT $DEVRAM $INITRDSIZE
+# We could use -N to specify the number of inodes, but this option only
+# appeared in mke2fs 1.14 (Jan 1999) so we will avoid it at least for now
+NUMINO="`find /dev $SHLIBS $INITRDFILES 2>/dev/null | wc -w`"
+#mke2fs -q -F -m0 -N `expr $NUMINO + 64` $DEVRAM $INITRDSIZE
+BYTES_PER_INODE=`expr $INITRDSIZE \* 1024 / \( $NUMINO + 64 \)`
+#rnCmd="mke2fs -q -F -m0 -i $BYTES_PER_INODE $DEVRAM $INITRDSIZE"
+rnCmd="mke2fs -q -F -m0 -N `expr $NUMINO + 64` $DEVRAM $INITRDSIZE"
+echo "$cmd -- mke2fs command ["$rnCmd"]"
+$rnCmd 
 if [ $? -ne 0 ]; then
    echo -e "$cmd -- ERROR making ram disk filesystem\n"
    cleanup 1
@@ -182,8 +210,8 @@ MODCONF=/etc/modules.conf
 echo "$cmd -- creating new $MODCONF"
 MAJ=0
 while [ $MAJ -lt 256 ]; do
-   echo "alias block-major-$MAJ	off"
-   echo "alias char-major-$MAJ	off"
+   echo "alias block-major-$MAJ off"
+   echo "alias char-major-$MAJ  off"
    MAJ=`expr $MAJ + 1`
 done > $TMPMNT/$MODCONF
 
@@ -204,17 +232,14 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "$cmd -- copying shared libraries to ram disk"
-for LIB in $SHLIBS; do
-   cp $LIB $TMPMNT$LIB
-   if [ $? -ne 0 ]; then
-      echo -e "$cmd -- ERROR copying shared library $LIB to ram disk\n"
-      cleanup 1
-   fi
-   strip $TMPMNT$LIB
-   if [ $? -ne 0 ]; then
-      echo -e "$cmd -- ERROR stripping shared library $LIB\n"
-      cleanup 1
-   fi
+find $SHLIBS|cpio -Lpdm --quiet $TMPMNT
+if [ $? -ne 0 ]; then
+   echo -e "$cmd -- ERROR copying needed shared libraries to ram disk\n"
+   cleanup 1
+fi
+for lib in $SHLIBS
+do
+   strip $TMPMNT$lib >/dev/null
 done
 
 echo "$cmd -- creating new /linuxrc"
@@ -239,7 +264,7 @@ if [ $? -ne 0 ]; then
    cleanup 1
 fi
 
-echo "$cmd -- creating compressed initrd $INITRD"
+echo "$cmd -- creating compressed initrd in $INITRD"
 dd if=$DEVRAM bs=1k count=$INITRDSIZE 2>/dev/null | gzip -9 > $INITRD
 if [ $? -ne 0 ]; then
    echo -e "$cmd -- ERROR creating $INITRD\n"
@@ -247,7 +272,5 @@ if [ $? -ne 0 ]; then
 fi
 
 cleanup 0
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+
+--------------EF8D620838D5454A034514EC--
