@@ -1,9 +1,7 @@
-Message-ID: <3CFB65F3.2030109@lausch.at>
-From: Michael Lausch <mla@lausch.at>
+Message-ID: <A11077E28200D51182EA00D0B7755253482045@xin02.india.hp.com>
+From: "LAKSHMIPATHY,ARUN (HP-India,ex2)" <arun_lakshmipathy@hp.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] SuSE Linux and EMC/XP/VA7100/VA7100
-References: <615A249B783CD41192F400D0B747AC8606045009@hesse.bbn.hp.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Availabality of LVM on IA64???
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +12,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  3 07:50:02 2002
+Date: Mon Jun  3 08:17:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-ZECHA,HOLGER (HP-Germany,ex1) wrote:
-> Hello,
-> 
-> has anyone detailed experience connecting a SuSE Linux to a
-> EMC,XP,VA7100,VA7400 using Emulex FC cards and configuring LVM ?
+Hi,
 
-if you mean with XP HP's XP256 or comparable, i found the following:
+Wanted to check out if 1.1-rc2 supports IA64 platform or not. When I try and
+build the lvm lib from the 1.1-rc2 sources i get a lot of integer to pointer
+type cast warnings, hence I have this doubt could not find any release
+notes/docs which mention anything about IA64 support.  Need  to know if IA64
+support is available on 1.1 or not, else is there any beta that I can try
+out?? 
 
-Setup
-HP lpr1000 1U server.
-QLogic FCal Card
-Brocade FCAL switches
-XP256 with 1,5 TByte in ~7 Gig slices.
+Also when i build 1.1-rc1 sources i get a shared lib as well as a arcghive
+lib whereas building 1.1-rc2 builds only an archive lib, i need a shared
+lib, am i missing something here?  
 
-the problems which prohibited us from using this setup in a production 
-environment:
-Linux could not scan all the LUNS and SCSI ID's without kernel modification.
-
-The mapping from LDEVs to SCSI-ID/LUN could not be performed in a 
-reliabel way on the linux box. Since the XP256 was shared between 
-different servers (Sun Solaris) this was the showstopper. We could never 
-be certain which ID/LUN corresponds to which LDEV (7 GByte Slice).
-
-
-
-
-> 
-> Thanks for your help
-> 
-> Holger Zecha                          H
-> 
-> SAP R/3 Project Services      
-> Operations Services Center 
-> Hewlett Packard GmbH                Telefon:    +49 7031/468 3423
-> Schickardstrasse 25                       Fax:         +49 7031/468 1349
-> D - 71034 Boeblingen                   e-mail:      Holger_Zecha@hp.com
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+Regards
+Arun
