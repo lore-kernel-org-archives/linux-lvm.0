@@ -1,10 +1,18 @@
-From: Stefan Weigel <sw@global-linxs.de>
-Subject: Re: [linux-lvm] root fs on lvm - kernel panic
-References: <Dt978977869982.28492@mail3>
-In-Reply-To: <Dt978977869982.28492@mail3>
+Message-ID: <3DB5372B.A3D1700C@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200210221018.28324.sw@global-linxs.de>
+Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
+References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
+		<3DAFB7D4.B88B6737@silicide.dk>
+		<ufaelanvnav.fsf@epithumia.math.uh.edu>
+		<3DB02DD6.B8B4B48E@silicide.dk>
+		<ufa65vzviuo.fsf@epithumia.math.uh.edu>
+		<3DB0348D.42FFC0A4@silicide.dk>
+		<ufawuoftw8h.fsf@epithumia.math.uh.edu>
+		<3DB264D3.A994B237@silicide.dk>
+		<ufabs5oord6.fsf@epithumia.math.uh.edu>
+		<3DB30743.91439340@silicide.dk> <ufaheffvog3.fsf@epithumia.math.uh.edu>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,57 +23,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 22 03:16:02 2002
+Date: Tue Oct 22 06:32:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-What message is outputed from the kernel/lvm-tools (lvchange) ??
+Jason L Tibbitts III wrote:
+> 
+> >>>>> "JB" == Jon Bendtsen <jon+lvm@silicide.dk> writes:
+> 
+> JB> oh, whats in your lilo.conf then ?
+> 
+> I had to get the machine booting again; since the IBM disks die so
+> regularly I can't use the machine for anything useful.  In any case:
+> 
+> boot=/dev/md0
 
-Am Dienstag, 22. Oktober 2002 07:00 schrieb jkcwong@mail.hongkong.com:
-> hi guys,
->
-> i need help.  thanks.
->
-> i have installed trustix on my pc (2 disks) then changed from ext2 to
-> reiserfs and booting ok.  this is the base system.  now i want to migra=
-te
-> to lvm.  the config is as below: trustix 1.5 (kernel 2.4.19 with lvm an=
-d
-> reiserfs compiled in)
-> /dev/hdb1, 100mb, /boot, reiserfs
-> /dev/hdb2, 4gb, /, reiserfs
-> /dev/hdb3, 256mb, swap
->
-> i have created the following on /dev/hda:
-> /dev/hda1, 100mb, /boot, reiserfs
-> /dev/hda2, 6gb, /dev/vg00
-> /dev/hda3, swap
->
-> under /dev/vg00 i have a lvol0 as the new root.
->
-> i have copied the files across from hdb to hda.  when i boot (from hdb)=
- i
-> can mount all the partitions (includings lvols).  when i try to boot fr=
-om
-> /dev/hda i will get a kernel panic error... i have created a ram disk u=
-sing
-> lvmcreate_initrd....
->
-> in my new lilo.conf, it has:
-> root=3D/dev/vg00/lvol0
->
-> what have i missed?
->
-> ----------------------------------------------
-> \305w\252\357\250\317\245\316 hongkon.com
-> \271q\244l\266l\245\363\250t\262\316 Thank you for using hongkong.com E=
-mail
-> system
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+[cut]
+
+> md0 is an eight-way mirror, mounted on /boot.  None of the system
+
+
+okay, thats how i do it too, i just wondered if you did something smart.
+
+
+
+JonB
