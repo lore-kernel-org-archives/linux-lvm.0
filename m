@@ -1,66 +1,29 @@
-Date: Thu, 28 Sep 2000 18:25:30 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] Hi, all
-Message-ID: <20000928182530.C24749@srv.t-online.de>
-Reply-To: Mauelshagen@Sistina.com
-References: <39D35753.33431713@hananet.net>
+Date: Thu, 28 Sep 2000 18:26:57 +0200
+From: Christoph Hellwig <hch@caldera.de>
+Subject: Re: [linux-lvm] current lvm function questions
+Message-ID: <20000928182657.A14386@ns.lst.de>
+References: <39D14B6C.4C9F6C26@us.oracle.com> <20000927122810.C31723@gruyere.muc.suse.de>
 Mime-Version: 1.0
-In-Reply-To: <39D35753.33431713@hananet.net>; from nalabi@hananet.net on Thu, Sep 28, 2000 at 11:36:03PM +0900
+In-Reply-To: <20000927122810.C31723@gruyere.muc.suse.de>; from ak@suse.de on Wed, Sep 27, 2000 at 12:28:10PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: nalabi <nalabi@hananet.net>
-Cc: linux-lvm@msede.com
+To: Andi Kleen <ak@suse.de>
+Cc: David Brower <dbrower@us.oracle.com>, linux-lvm@msede.com
 
+On Wed, Sep 27, 2000 at 12:28:10PM +0200, Andi Kleen wrote:
+> > disk when it does pvcreate.  What i'm not sure of is
+> > whether the label used is (a) globally unique and suitable
+> > for stable device naming, or (b) tied to the device it
+> > happened to be on at the time the pvcreate was issued.
+> 
+> LVM uses an UUID iirc.
 
-You need to activate ram disk _and_ initial ram disk in your kernel
-configuration as well.
+No, it does not (yet).
 
-On Thu, Sep 28, 2000 at 11:36:03PM +0900, nalabi wrote:
-> Hi, all
-> 
-> I can't make /boot/initrd.gz
-> 
-> I try to lvmcreate_initrd, But error...
-> 
-> -------------------->
-> # lvmcreate_initrd
-> 
-> Logical Volume Manager 0.8 by Heinz Mauelshagen  06/08/1999
-> 
-> lvmcreate_initrd -- this script creates a LVM initial ram disk in
-> /boot/initrd.gz
-> 
-> lvmcreate_initrd -- making ram filesystem
-> 
-> lvmcreate_initrd -- ERROR making ram disk filesystem
-> ------------------------>
-> 
-> kernel  : 2.4.0-test7
-> 
-> I try compile and use a kernel with initrd support.
-> 
-> I hope make initrd.gz..
-> 
-> You  have "lvmcreate_initrd" script ,  and I send to my email.
-> 
-> 
-> 
-> 
+	Christoph
 
 -- 
-
-Regards,
-Heinz      -- The LVM guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Always remember that you are unique.  Just like everyone else.
