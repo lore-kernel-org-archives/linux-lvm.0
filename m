@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgscan -f created duplicate block devices
-Message-ID: <20030523122730.A24103@sistina.com>
-References: <20030523003626.18233.h022.c007.wm@mail.ellisw.net.criticalpath.net>
+Subject: Re: [linux-lvm] Defect in vgchange
+Message-ID: <20030523123119.B24103@sistina.com>
+References: <000801c3205a$31d69dc0$ebbba5cc@patni.com>
 Mime-Version: 1.0
-In-Reply-To: <20030523003626.18233.h022.c007.wm@mail.ellisw.net.criticalpath.net>; from silleliam@ellisw.net on Fri, May 23, 2003 at 12:36:26AM -0700
+In-Reply-To: <000801c3205a$31d69dc0$ebbba5cc@patni.com>; from sachin.gupta@patni.com on Thu, May 22, 2003 at 05:33:15PM +0530
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +14,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 23 05:36:02 2003
+Date: Fri May 23 05:40:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ellis,
+Sachin,
 
-have you removed _all_ /dev/-Entries for LVs and retried "vgscan -f"
-without success so far ?
+have you tried to reproduce with LVM 1.0.7 already ?
 
-On Fri, May 23, 2003 at 12:36:26AM -0700, Ellis Whitehead wrote:
-> Hallo,
+LVM1 from Sistina doesn't support multi-pathing (you need to use MD
+multi-pathing additionally to LVM1).
+
+LVM2.2 later this year is planned to have it.
+
+
+On Thu, May 22, 2003 at 05:33:15PM +0530, Sachin (Patni) wrote:
+> hi 
 > 
-> How do you fix an incorrect Block Device assignment?
+> I am a software engineer working in the area of Storage Area Networks . 
 > 
-> When I hooked the harddrive from an old computer into my newer one (both had lvm
-> partitions), I got the message that certain IDs were duplicated.  So I ran vgscan
-> -f to assign new IDs.  However, vgscan -f duplicated the Block Device on two of
-> the logical volumes.  The has the outcome that when I mount the first one, I only
-> get access to the second one. :(
+> But whenever I give the following command
 > 
-> I would show the output of lvdisplay & friends, but I can't get an internet
-> connection from that computer anymore because of this. *grin*  Basically:
+> vgchange -l 128 test_vg 
 > 
-> /dev/toro1/home, block device 58:5
-> /dev/toro1/var, block device 58:6
-> /dev/toro1/projekte, block device 58:7
-> /dev/toro1/usr, block device 58:8
-> /dev/toro1/local, block device 58:9
-> /dev/toro1/fileserver, block device 58:5
+> test_vg being a volume group on physical volumes created on sd device partitions (type 8e) 
 > 
-> Either the drive I added had 5 lv's and so vgscan didn't reassign the 6th on the
-> first drive (i.e., /dev/toro1/fileserver), or it cycled back around after 58:9
-> for some reason.
+> It results in segmentation fault.  (I am working on a multi path system ;  lvm version : lvm-1.0.3-4 )
 > 
-> Can anyone tell me how to get my home back??? *grin*
+> Kindly give me the reason for this , whether this version is not suited for multi-path or this is a defect. 
+>  
 > 
-> Many thanks in advance!
-> Ellis Whitehead
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Thanks and regards 
+> 
+> 
+> Sachin Gupta
+> 
 
 -- 
 
