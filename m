@@ -1,13 +1,7 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Unable to get XFS, ext3, reiserfs & LVM to
-    coexist happily
-References: <E16LcO0-0006VI-00@hermes.sistina.com>
-    <20020102110538.K12868@lynx.no> <200201030244.g032iZg32176@oss.sgi.com>
-In-Reply-To: <200201030244.g032iZg32176@oss.sgi.com>
+Message-Id: <20020103034817.44722.qmail@web14601.mail.yahoo.com>
+From: Adrian Noland <anoland@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16LyI1-000217-00@hermes.sistina.com>
+Subject: [linux-lvm] LE discussion
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,109 +12,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  2 21:12:02 2002
+Date: Wed Jan  2 21:46:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: Andreas Dilger <adilger@turbolabs.com>
-Cc: linux-xfs@oss.sgi.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hello, 
+I'm starting to use LVM, and I would like to know the pros & cons of
+using a different LE size other than the 4mb default. What kind of
+performance issues are there with different size LE's? I saw a *very*
+brief discussion in one of the docs (not the HOWTO), but cant find the
+reference now.
+Thanks,
+Adrian
 
-Andreas,
+=====
+"Palm Pilots are the Pet Rocks of the portable computing world"-Dan East
 
-I have rerun my tests with the lvm patches applied in the correct order:
-1)	lvm-1.0.1 upgrade
-2)	VFS-lock
-
-With this case ext3 & resierfs are fine for creating snapshots, mounting 
-snapshots and being stable when snapshots overflow.  However, XFS dies during 
-snapshot creation.
-
-In this case where do you recommend I take this problem? LVM developers or 
-XFS developers?
-
-- From the backtrace it appears that it is ext3 that is actually dying - am I 
-reading this correctly?  In which case does this need to be CC'd to the ext3 
-developers as well?
-
-Do you think it is worth my while to upgrade ext3 and try again, considering 
-the problem is creating XFS snapshots?
-
-2.4.17-xfs
-While source volume mounted:
- + lvm-1.0.1 upgrade
- + VFS-lock
- (In that order)
-* Can create ext3 snapshot?			| yes
-* Can mount a ext3 snapshot?			| yes
-* Can create resierfs snapshot?			| yes
-* Can mount a resierfs snapshot?		| yes
-* Can create xfs snapshot?			| Oops
- btp 1234 (lvcreate)
- journal_start
- ext3_dirty_inode
- __mark_inode_dirty
- update_atime
- do_generic_file_read
- generic_file_read
- sys_read
- system_call
-Running processes (lvcreate)
-* Can mount a xfs snapshot?			| Cannot test
-When source & snapshot mounted:
-* Cause oops when snapshot overflows?	|
- - ext3						| OK - Stable
- - resierfs					| OK - Stable
- - xfs						| Cannot test
-
-
-On Thu, 3 Jan 2002 11:44, Adrian Head wrote:
-> On Thu, 3 Jan 2002 04:05, Andreas Dilger wrote:
-> > Note that you need to apply the VFS-lock patch AFTER the lvm-1.0.1
-> > upgrade patch, otherwise that patch will reverse the VFS-lock patch!
->
-> OK - thanks I will try this and rerun my tests.
->
-> What I have found though is that the LVM_VFS_ENHANCEMENT in lvm.c gets
-> removed with the lvm-1.0.1 upgrade patch.  Is this the way it is supose to
-> be? Isn't LVM_VFS_ENHANCEMENT needed anymore?
->
-> > You should try ext3 from 2.4.18, or get it from the ext3 CVS (at
-> > cvs.gkernel.sourceforge.net:/cvsroot/gkernel ext3).  It has fixes
-> > for a number of problems caused by error conditions while running.
-> > If there is still a problem with ext3 oopsing with a full snapshot
-> > (which is essentially an oops because of an I/O error on the disk)
-> > then please file a separate bug report to the ext3 developers
-> > (ext2-devel@lists.sourceforge.net).
-> >
-> > Cheers, Andreas
->
-> Let me see if I understand this correctly:
-> The problem of the kernel Oops when a snapshot overflows is actually a
-> filesystem maintainer's/developer's problem because.  The reason is that
-> when a snapshot overflows it generates a disk full and it is up to the
-> filesystem to deal with that and pass that error up the stack?
->
-> Therefore, if there was an Oops on an:
-> * ext3 snapshot I would have to tell the ext3 developer's/maintainer's
-> * resierfs snapshot I would have to tell the resierfs
-> developer's/maintainer's * xfs snapshot I would have to tell the xfs
-> developer's/maintainer's
->
-> All I'm trying to do here is understand this a little more so that I can
-> follow up with the correct people about these problems.
->
-> Thanks Andreas for your time.
-
-- -- 
-Adrian Head
-
-(Public Key available on request.)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE8M8yb8ZJI8OvSkAcRAjWvAJ4u1m2L2ECk23/zBuu/BEGXZ1EQnQCgmNHC
-WYtni02/ThZNBfKQ8LGH1qE=
-=CyfK
------END PGP SIGNATURE-----
+__________________________________________________
+Do You Yahoo!?
+Send your FREE holiday greetings online!
+http://greetings.yahoo.com
