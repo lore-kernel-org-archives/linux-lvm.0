@@ -1,12 +1,11 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <russell@coker.com.au>
-Subject: Re: [linux-lvm] mirroring boot and root
-Date: Sun, 3 Jun 2001 14:31:22 +0200
-References: <E156DD7-00078c-00@kirk.banal.collective>
-In-Reply-To: <E156DD7-00078c-00@kirk.banal.collective>
+Return-Path: <mjt@tls.msk.ru>
+Message-ID: <3B1A81A9.9D378419@tls.msk.ru>
+Date: Sun, 03 Jun 2001 22:27:53 +0400
+From: Michael Tokarev <mjt@tls.msk.ru>
 MIME-Version: 1.0
-Message-Id: <01060314312209.06022@lyta>
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Migrating to an LVM system (boot/root) disk
+References: <NBBBKLKHMJHIJLHOGAOJEEAMIPAA.steve.wray@the.net.nz>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,27 +18,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, evan.day@home.com
+To: linux-lvm@sistina.com
 
-On Saturday 02 June 2001 17:21, evan.day@home.com wrote:
-> LILO 21.7 contains support for placing a boot sector on RAID devices.  =
-I
-> used install-mbr to put a boot MBR on sda and sdb, then lilo to put a
-> LILO boot sector on /dev/md0, which is sda1 and sdb1.  The rest of my
-> system is built on PV /dev/md1, which is sda4 and sdb4.
+Steve Wray wrote:
+[]
+> > Perhaps just like LVM has a nice little script for creating the
+> > initrd, they can ship with a nice little script for creating root/boot
+> > diskettes.
+> 
+> Yes and I hope the mkinitrd (whatever its called...) is fixed so that
+> it copies sed to the ramdrive...
 
-I tried the booting from RAID-1 thing on one of my IDE systems.  It seems=
-=20
-impossible with the current LILO because it writes different boot data to=
-=20
-each drive, so if the first drive is removed the other drive becomes BIOS=
-=20
-device 0x80 and won't boot because LILO expects 0x81.
+Hey, sed should NOT be here.  Initrd exeists for exactly ONE version of
+kernel, so you know what IOP that kernel uses and what usertools should
+be placed to initrd BEFORE doing initrd, and sed can/should be used only
+at initrd creation stage.  Idea: why not put to initrd ALL modules for
+ALL kernels your system have, and update it each time you add a new
+kernel to your system? ;)
 
-The next version of LILO may address this...
-
---=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+Regards,
+ Michael.
