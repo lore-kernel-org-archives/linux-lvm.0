@@ -1,9 +1,14 @@
-Return-Path: <C.R.Ritson@ncl.ac.uk>
-Message-Id: <4.3.1.1.20010815163625.00b21460@popin.ncl.ac.uk>
-Date: Wed, 15 Aug 2001 16:57:36 +0100
-From: Chris Ritson <C.R.Ritson@ncl.ac.uk>
+Return-Path: <garloff@garloff.de>
+Date: Wed, 15 Aug 2001 18:25:48 +0200
+From: Kurt Garloff <garloff@suse.de>
+Message-ID: <20010815182548.U3941@gum01m.etpnet.phys.tue.nl>
+References: <20010815175659.A29749@sistina.com>
 Mime-Version: 1.0
-Subject: [linux-lvm] Duplicate minor device numbers
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rW45g2D1DgwV0HVw"
+Content-Disposition: inline
+In-Reply-To: <20010815175659.A29749@sistina.com>
+Subject: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 1.0 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,68 +20,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Cc: linux-lvm@sistina.com, lvm-devel@sistina.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, sistina@sistina.com, mge@sistina.com
 
-I have just ben upgrading too many things at once and have got into slight 
-problems. The upgrades were:-
+--rW45g2D1DgwV0HVw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	kernel 2.4.5 to 2.4.7
-	lvm 0.91_beta7 to 0.91_beta8
-	aic7xxx scsi driver 6.1.13 to 6.2.1
+On Wed, Aug 15, 2001 at 05:56:59PM +0200, Heinz J . Mauelshagen wrote:
+> with all the kind support of the community to stabilize the Linux Logical
+> Volume Manager, we are proud to announce the production level release 1.0.
+[...]
+> This release contains minor changes to 0.9.1 Beta 8.
+>=20
+> !!! YOU STILL NEED TO FOLLOW THE INSTRUCTIONS IN README.1ST !!!
+> See the CHANGELOG file contained in the tarball for further information.
+>=20
+> We are still working together with Alan Cox on the integration of the
+> actual driver into vanilla. *Sorry* folks, we couldn't wait any longer ;-)
 
-Prior to starting the lvm upgrade, I had problems with two volume groups, 
-which were of little importance. Somehow I seemed to have got a snapshot of 
-a snapshot of a logical volume. For these physical volumes, I destroyed the 
-header of the single physical extent involved with dd and did not attempt 
-pvversion. I was planning to re-run pvcreate and start again from scratch 
-when I brought the system up again. I did not delete anything in 
-/etc/pvmtab or /dev/<VG> which may turn out to have been a mistake.
+Is there finally a decent way to upgrade from 0.9.1b7?
+Or is it still required to have multiple versions of the utils installed
+just in order to be able to update from 0.9.1b7 to b8 (or 1.0)?
 
-The lvm upgrade went slightly wrong for me in that when I rebooted after 
-upgrading the lvm userland tools and THEN running the new pvversion (only 
-seen to be the wrong order afterwards) I found that ALL the superblocks for 
-my e2fs filesystems in the logical volumes were corrupt. Thankfully I had 
-backups for almost everything.
+If yes, then I'd vote for not updating the kernel until this is fixed!
 
-Having restored some logical volumes, I have now been stopped dead by 
-finding some duplicate minor device numbers:-
+Regards,
+--=20
+Kurt Garloff  <garloff@suse.de>                          Eindhoven, NL
+GPG key: See mail header, key servers         Linux kernel development
+SuSE GmbH, Nuernberg, DE                                SCSI, Security
 
-byerhope.ncl.ac.uk: ls -l /dev/vg*/* | sort +4n -5 +5n -6
-brw-rw----    1 root     disk      58,   0 Aug 15 14:18 /dev/vgd/pg
-brw-rw----    1 root     disk      58,   1 Aug 15 14:18 /dev/vgf/staff3
-brw-rw----    1 root     disk      58,   2 Aug 15 14:18 /dev/vgg/staff1
-brw-rw----    1 root     disk      58,   3 Aug 15 14:18 /dev/vgg/staff2
-brw-rw----    1 root     disk      58,   4 Aug 15 16:08 /dev/vgl/u00
-brw-rw----    1 root     disk      58,   5 Aug 15 16:08 /dev/vgl/local
-brw-rw----    1 root     disk      58,   6 Aug 15 14:03 /dev/vgc/vgc.scratch
-brw-rw----    1 root     disk      58,   6 Aug 15 16:08 /dev/vgk/u99
-brw-rw----    1 root     disk      58,   7 Aug 15 16:08 /dev/vgk/cs
-crw-r-----    1 root     disk     109,   0 Aug 15 16:08 /dev/vgb/group
-crw-r-----    1 root     disk     109,   1 Aug 15 13:54 /dev/vgc/group
-crw-r-----    1 root     disk     109,   1 Aug 15 14:18 /dev/vgd/group
-crw-r-----    1 root     disk     109,   1 Aug 15 16:08 /dev/vgj/group
-crw-r-----    1 root     disk     109,   2 Aug 15 14:18 /dev/vgf/group
-crw-r-----    1 root     disk     109,   3 Aug 15 14:18 /dev/vgg/group
-crw-r-----    1 root     disk     109,   6 Aug 15 16:08 /dev/vgk/group
-crw-r-----    1 root     disk     109,   6 Aug 15 16:08 /dev/vgl/group
+--rW45g2D1DgwV0HVw
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-lvmtab.d contains
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-byerhope.ncl.ac.uk: ls /etc/lvmtab.d
-vgb  vgj  vgk  vgl
+iD8DBQE7eqKLxmLh6hyYd04RAodsAJ915dfIefYcJY48IZcMXW2bxw+ePQCePYjU
+K10bVYGT3fNJMUCHJigNo5k=
+=IjOC
+-----END PGP SIGNATURE-----
 
-vgk should not yet exist, but vgd should -- these two have both ended up as 
-109,1. vgd contains a useful file system. Neither of the device 58,6 file 
-systems contain any useful data. How would you recommend recovering this 
-situation. Will it be sufficient to write nulls to the start of the 
-physical extents making up the volume groups that should not yet exist and 
-then to run vgscan? Advice, please.
-
-Chris Ritson
---
-EMAIL:	C.R.Ritson@newcastle.ac.uk	POST:	Chris Ritson,
-PHONE:	+44 191 222 8175			Department of Computing Science,
-FAX :	+44 191 222 8232				University of Newcastle upon Tyne,
-ROOM:	618 Claremont Bridge (the Mill)		United Kingdom NE1 7RU.
+--rW45g2D1DgwV0HVw--
