@@ -1,18 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBC8uxr03464
-	for <linux-lvm@redhat.com>; Sun, 12 Dec 2004 03:56:59 -0500
-Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBC8uqB7025593
-	for <linux-lvm@redhat.com>; Sun, 12 Dec 2004 03:56:53 -0500
-Message-ID: <41BC07C2.5020303@dgreaves.com>
-Date: Sun, 12 Dec 2004 08:56:34 +0000
-From: David Greaves <david@dgreaves.com>
-MIME-Version: 1.0
-References: <200412082241.iB8Mfo915469@www.watkins-home.com>
-In-Reply-To: <200412082241.iB8Mfo915469@www.watkins-home.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: Looking for the cause of poor I/O performance - a
-	test script
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBCHCVH6023058
+	for <linux-lvm@redhat.com>; Sun, 12 Dec 2004 17:12:31 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CdXGo-0002CZ-UG
+	for linux-lvm@redhat.com; Sun, 12 Dec 2004 17:12:30 +0000
+Date: Sun, 12 Dec 2004 17:12:30 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] duplicate pv.
+Message-ID: <20041212171230.GL11338@agk.surrey.redhat.com>
+References: <20041211114213.76916.qmail@web52508.mail.yahoo.com>
+	<20041211131829.GA10829@ppc.in-berlin.de>
+	<20041211223855.GJ11338@agk.surrey.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20041211223855.GJ11338@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,72 +24,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Guy <bugzilla@watkins-home.com>
-Cc: linux-raid@vger.kernel.org, 'Steven Ihde' <x-linux-raid@hamachi.dyndns.org>, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I hacked up a quick script to test permutations of readahead - it's not 
-exactly bonnie+++ but it may be useful.
-I wish I'd bothered with mdadm stripe sizes too - but the array is 
-pretty full now and I'll live with what it delivers.
+On Sat, Dec 11, 2004 at 10:38:56PM +0000, Alasdair G Kergon wrote:
+> On Sat, Dec 11, 2004 at 02:18:29PM +0100, Philipp Schmidt wrote:
+> > look t your /etc/lvm/lvm.conf, have you set md_component_detection = 1?
+> > i wonder why this isn't set by default, who needs to use md compnents as
+> > singel pv?
+> It *is* set to 1 by default i.e. if you don't specify 
+> a different value for it in the conf file.
+ 
+I believe the Debian distribution may have set it to 0 at one point because
+of problems in certain configurations: these cases should be fixed by 2.00.29.
 
-Essentially I found the best performance on *my* system with all low 
-level devices and the md device set to a 0 readahead and the lvm device 
-set to 4096.
-I'm only interested in video streaming big (1+Gb) files. Your needs (and 
-hence test) may differ.
 
-my system is 2.6.10-rc2, xfs, lvm2, raid5, sata disks.
+Another cause of problems could be if people created a whole-disk PV 
+on a device that actually held a partition table - i.e. they
+ignored the partition table, even though the kernel would still be using it.
 
-cc'ed the lvm group since this often seems to come up in conjunction 
-with you guys :)
+From 2.00.29, lvm2 tries to detect partitioned devices and stop you
+using them directly as PVs unless you remove the partition table first.
+(i.e. if it's partitioned, only the partitions can be PVs, not the whole
+disk device)
 
-For your entertainment...
-
-#!/bin/bash
-RAW_DEVS="/dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/hdb"
-MD_DEVS=/dev/md0
-LV_DEVS=/dev/huge_vg/huge_lv
-
-LV_RAS="0 128 256 1024 4096 8192"
-MD_RAS="0 128 256 1024 4096 8192"
-RAW_RAS="0 128 256 1024 4096 8192"
-
-function show_ra()
-{
-for i in $RAW_DEVS $MD_DEVS $LV_DEVS
- do echo -n "$i `blockdev --getra $i`  ::  "
-done
-echo
-}
-
-function set_ra()
-{
-  RA=$1
-  shift
-  for dev in $@
-  do
-    blockdev --setra $RA $dev
-  done
-}
-
-function show_performance()
-{
-  COUNT=4000000
-  dd if=/dev/huge_vg/huge_lv of=/dev/null count=$COUNT 2>&1 | grep seconds
-}
-
-for RAW_RA in $RAW_RAS
-  do
-  set_ra $RAW_RA $RAW_DEVS
-  for MD_RA in $MD_RAS
-    do
-    set_ra $MD_RA $MD_DEVS
-    for LV_RA in $LV_RAS
-      do
-      set_ra $LV_RA $LV_DEVS
-      show_ra
-      show_performance
-      done
-    done
-  done
+Alasdair
+-- 
+agk@redhat.com
