@@ -1,7 +1,7 @@
-From: "Fred Dinkler" <netbeast2001@hotmail.com>
-Mime-Version: 1.0
-Message-ID: <F118msINIyzaH8uOvtq00006fc6@hotmail.com>
-Subject: [linux-lvm] vgexport interupted
+Message-ID: <E04CF3F88ACBD5119EFE00508BBB212103AEBC2A@exch-01.noida.hcltech.com>
+From: "Amit  Agrawal, Noida" <amitag@noida.hcltech.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] (no subject)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,49 +12,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 26 22:26:02 2002
+Date: Sat Jul 27 01:03:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+Hi,
 
-     I have a 150 Gig LVM array. I was in the process of getting ready to 
-upgrade from Slack 8.0 to 8.1. I started vgexport on the vg "archive", but 
-before it finished, the power blinked and my UPS didnt catch it in time. The 
-server rebooted. All LVM tools, including uufix, now think that they are 2 
-diffrent incomplete VGs, one exported and one " associated to an unknown 
-VG". How do I remedy this? Following are the output of some LVM progs.
+	Would you please tell me the limits on LVM components on 64-bit
+machine.
 
-         I apreciate any help,
-          Fred Dinkler IV
-
-
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdk1"  is associated to an unknown VG (run 
-vgscan)
-pvscan -- inactive PV "/dev/hdl1"  is associated to an unknown VG (run 
-vgscan)
-pvscan -- inactive PV "/dev/hdi1"  is in EXPORTED VG "archive" [28.62 GB / 0 
-free]
-pvscan -- inactive PV "/dev/hdj1"  is in EXPORTED VG "archive" [37.29 GB / 0 
-free]
-pvscan -- inactive PV "/dev/hde1"  is associated to an unknown VG (run 
-vgscan)
-pvscan -- total: 5 [149.79 GB] / in use: 5 [149.79 GB] / in no VG: 0 [0]
-
-vgexport archive
-vgexport -- volume group "archive" doesn't exist
-
-vgimport archive /dev/hdk1 /dev/hdl1 /dev/hdi1 /dev/hdj1 /dev/hde1
-vgimport -- ERROR: physical volume "/dev/hdk1" doesn't belong to an exported 
-volume group
-
-./uuid_fixer /dev/hdk1 /dev/hdl1 /dev/hdi1 /dev/hdj1 /dev/hde1   Error: PV 
-/dev/hdi1 does not belong to /dev/hdk1's VG
+Best Regards
+Amit Agrawal
+Member Technical Staff,
+HCL Technologies Ltd,
+A-11,Sector-16
+Noida-201301
+Phone: +91-120-4510701/702/813 Extns. - 3157
+Email: amitag@noida.hcltech.com 
+_________________________________________________
+"Humor is a rubber sword - it allows you to make a point without drawing
+blood. " - Mary Hirsch
 
 
-_________________________________________________________________
-MSN Photos is the easiest way to share and print your photos: 
-http://photos.msn.com/support/worldwide.aspx
+
+		Disclaimer:
+		
+		This document is intended for transmission to the named
+recipient only.  If you are not that person, you should note that legal
+rights reside in this document and you are not authorized to access, read,
+disclose, copy, use or otherwise deal with it and any such actions are
+prohibited and may be unlawful. The views expressed in this document are not
+necessarily those of HCL Technologies Ltd. Notice is hereby given that no
+representation, contract or other binding obligation shall be created by
+this e-mail, which must be interpreted accordingly. Any representations,
+contractual rights or obligations shall be separately communicated in
+writing and signed in the original by a duly authorized officer of the
+relevant company.
