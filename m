@@ -1,36 +1,55 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200010241642.e9OGgOn31554@webber.adilger.net>
-Subject: Re: [linux-lvm] swap lv
-In-Reply-To: <20001024224017.E27491@ist.flinders.edu.au> "from Mark Phillips
- at Oct 24, 2000 10:40:17 pm"
-Date: Tue, 24 Oct 2000 10:42:24 -0600 (MDT)
+Message-Id: <200010241847.e9OIlNE31990@webber.adilger.net>
+Subject: Re: [linux-lvm] Re: more LVM 0.8 patches
+In-Reply-To: <20001024182502.A17195@caldera.de> "from Christoph Hellwig at Oct
+ 24, 2000 06:25:02 pm"
+Date: Tue, 24 Oct 2000 12:47:23 -0600 (MDT)
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mark Phillips <mark@ist.flinders.edu.au>
-Cc: Holger Rauch <Holger.Rauch@heitec.de>, linux-lvm@msede.com
+To: Christoph Hellwig <hch@ns.caldera.de>
+Cc: Andreas Dilger <adilger@turbolinux.com>, bluca@comedia.it, linux-lvm@msede.com
 
-Mark Phillips writes:
-> Holger Rauch [Holger.Rauch@heitec.de] wrote:
-> > Is it possible to have only one swap partition that resides on an LV? If
-> > so, how can this be achieved? Are swap LVs resizable?
+Christoph writes:
+> > Actually, this is a bit of a problem.  In my 2.2 kernel patch, I include an
+> > lvm.h that can be used for both user and kernel compiles, so that you are
+> > sure you have the same IOP version, struct sizes, etc.  However, this lvm.h
+> > doesn't exist on 2.4.
 > 
-> As for resizing a swap partition.  What I would do is as follows.
-> First unmount your swap partition so that you are not using it
-> anymore.  Then delete the partition.  Then create it again, making it
-> a different size.  Then run mkswap again and mount it again.
+> IMHO this is the wrong thing. Userlevel tools should not include kernel
+> headers. IOP version mismatches are detected at run time.
+> In my RPMs I keep including the userlevel header and it works fine for
+> Linux 2.2 and 2.4.
 
-Actually, it is probably better to make a new swap LV, activate it, and
-then deactivate the old one (assuming you have enough disk space to do
-so).  Otherwise, you may run out of memory if you don't have a swap
-partition.
+Actually, there IS a problem that isn't addressed by the IOP version,
+probably because someone changed the lvm.h file after Heinz added it
+to the kernel.  In the lv_v2 struct (in the 2.4 kernel sources) the
+"uint8 __unused" field was added after lv_block_exception_t, and this
+was not reflected in a IOP version change.  This field is NOT in the
+lvm.h lv_v2 included in the 0.8final user tools.
 
-The other alternative is to simply have 2 or more swap partitions.  If
-they are created with equal priority, then they will both be used.  There
-is no problem with having multiple swap partitions.
+That is why I chose to have a single lvm.h between user and kernel
+space.  I know that it is bad to include linux/*.h headers in user
+tools, but I wanted the tools to compile properly with the header
+in the current kernel.
+
+*** If we at least make the header include/linux/lvm.h and tools/lib/lvm.h
+    exactly the same, it will make tracking changes a lot easier.
+    Better would be to have per-struct version numbers, or make the ioctl
+    numbers reflect the struct sizes (which is already part of the ioctl
+    definitions) we can track changes a lot easier, and allow backwards
+    compatibility when struct sizes change because they will get unique
+    ioctl numbers for the old and new interface.
+
+Note that the user tools tarball that I have also includes the lvm.h
+under tools/lib, I just don't use it.  At most, you will need to change
+#include <linux/lvm.h> to #include <lib/lvm.h> in lvm_user.h and liblvm.h.
+
+If people agree that we should keep kernel and user headers totally
+separate, I will change this for my next release.
 
 Cheers, Andreas
 -- 
