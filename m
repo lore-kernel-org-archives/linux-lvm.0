@@ -1,9 +1,8 @@
-Subject: Re: [linux-lvm] understanding snapshot
-Mime-Version: 1.0 (Apple Message framework v553)
-From: "Dale J. Stephenson" <dalestephenson@mac.com>
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <1074199517.2443.27.camel@rich>
-Message-Id: <926E5FAA-47DF-11D8-AC51-0003937830E4@mac.com>
+In-Reply-To: <20040115230502.22365.27437.Mailman@hermes.sistina.com>
+MIME-Version: 1.0
+From: Frank Bagehorn <fba@zurich.ibm.com>
+Message-ID: <OFD32F6C3A.281F6118-ONC1256E1D.002ADACC-C1256E1D.002BA837@ch.ibm.com>
+Subject: [linux-lvm] Problems with booting after changing certain volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,31 +13,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 15 23:52:01 2004
+Date: Fri Jan 16 02:58:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thursday, January 15, 2004, at 03:45  PM, Rich Turner wrote:
-[...]
-> what will happen to the backup process (tar for example) of a snapshot
-> lv when it runs out of storage?
->
-Reads from the snapshot will return I/O errors.  The backup process 
-will likely fail.
+Recently I had problems on a SuSE SLES 8 install.
+When I created two more logical volumes in the rootvg, the machine would 
+hang during boot stating
+        ERROR 2 - writing volume group backup file 
+/etc/lvmtab.d/rootvg.tmp in vg_cfgbackup
+        unable to do a backup of volume group "rootvg"
+        removing volume group "rootvg" from /etc/lvmtab
+I tried to increase the root file system from 512MB to 1GB but that didn't 
+help.
+So I removed the two lvs (and assumed I run into a strange bug that allow 
+not more than 7 lvs..)
+Instead I increased one of the other lvs and put the data in those.
+Now I rebooted again (first time since I increased the lv) and get the 
+same error.
 
-> do chunks contain the metadata for the data in the original lv?
->
-If metadata is written to the original lv, then yes.
+Question:
+How much space is necessary to do the volume group backup ?
+Shall I increase the rootlv even further (e.g. to 2GB) ?
+Or is the problem more than just not enough space ?
+The lv in question is about 60GB. I have another lv in a second volume 
+group that is the same size.
+(i.e. a copy of the same data is held on an external disk.) And that 
+doesn't seem to make a problem.
 
-> what is the effect of increasing/reducing the chunk size?
->
-Depending on your write pattern, smaller chunk sizes may make the 
-snapshot use space more slowly.  (If you write even 1K to a 4 MB chunk, 
-the whole chunk will be copied.)  But it will also cause there to be 
-more physical chunks to exist in a snapshot volume of the same size.  
-Using LVM1 I ran into problems with snapshots eating up precious 
-vmalloc memory, so I tend to use a large snapshot chunk size.  YMMV.
-
-Dale J. Stephenson
-dalestephenson@mac.com
+----------------------------------------------------------------------
+Dr. Frank Bagehorn
+IBM Zurich Research Lab.
+Saeumerstr. 4
+CH-8803 Rueschlikon 
+Switzerland
+----------------------------------------------------------------------
+SMTP: fba@zurich.ibm.com
+Notes: Frank Bagehorn/Zurich/IBM@IBMCH
+phone: ++41 (01) 724 83 23  fax: ++41 (01) 724 89 59
