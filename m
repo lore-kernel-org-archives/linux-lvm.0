@@ -1,10 +1,10 @@
-Message-ID: <3BA06580.4040104@st-peter.stw.uni-erlangen.de>
-Date: Thu, 13 Sep 2001 09:51:28 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM
+Date: Thu, 13 Sep 2001 03:21:24 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPKEEIDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM
-References: <20010912160743.5D20E4326@oscar.casa.dyndns.org> <NBBBJHKIOKPKOGOEPEDPMEDPDNAA.stuart@bh90210.net> <20010912172102.B1541@turbolinux.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+In-reply-to: <3BA06580.4040104@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,23 +16,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Mandrake 8 use lilo 21.7 - it should be working
-
-Andreas Dilger wrote:
-
->On Sep 12, 2001  15:41 -0700, IT3 Stuart B. Tener, USNR-R wrote:
->
->>	I am curious what version of lilo in fact supports ReiserFS tails. I am running Mandrake 8.0, and using the lilo supplied therewith, and have been booting a / partition as ReiserFS (with tails I believe, how do I check?).
->>
->
->At least version 21.6+ support reiserfs tails (maybe earlier, I don't know).
->You should be able to verify with "strings /sbin/lilo | grep -i reiserfs".
->What it does is unpack the tail on any kernel/initrd files so that LILO
->can map the blocks directly.  In a way, it is strange that this is needed,
->since I thought tails only applied to files < 64kB or similar...
->
->Cheers, Andreas
->
+U3ZldGxqbzoNCg0KICAgICAgICBZZXMsIEkgZGlkIGRldGVybWluZSBJIGFtIGluIGZhY3QgdXNp
+bmcgbGlsbyAyMS43LCBhbmQgdGhhdCBkb2VzIHNob3cgd2h5IFJlaXNlckZTIHdhcyBib290YWJs
+ZSAoYWJzZW50IExWTSksIGhvd2V2ZXIsIHdpdGggTFZNIEkgaGF2ZSBuZXZlciBnb3R0ZW4gTGlu
+dXggdG8gYm9vdCB1cCB5ZXQuDQoNCg0KVmVyeSBSZXNwZWN0ZnVsbHksDQoNClN0dWFydCBCbGFr
+ZSBUZW5lciwgSVQzLCBVU05SLVIsIE4zR1dHDQpCZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQpW
+VFUgMTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KQ0Kc3R1YXJ0QGJoOTAyMTAubmV0DQp3
+ZXN0IGNvYXN0OiAoMzEwKS0zNTgtMDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywg
+Q0EgOTAyMDktMjA0Mw0KZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTks
+IFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OQ0KDQpUZWxlY29waWVyOiAoNDE5KS03MTUtNjA3
+MyBmYXggdG8gZW1haWwgZ2F0ZXdheSB2aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUhKQ0KDQpK
+T0lOIFRIRSBVUyBOQVZZIFJFU0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQg
+RlJPTSBJVCBBTEwuDQoNClRodXJzZGF5LCBTZXB0ZW1iZXIgMTMsIDIwMDEgMzoxNyBBTQ0KDQot
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogbGludXgtbHZtLWFkbWluQHNpc3RpbmEu
+Y29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBPZiBzdmV0
+bGpvDQpTZW50OiBUaHVyc2RheSwgU2VwdGVtYmVyIDEzLCAyMDAxIDEyOjUxIEFNDQpUbzogbGlu
+dXgtbHZtQHNpc3RpbmEuY29tDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTFZNDQoNCk1hbmRy
+YWtlIDggdXNlIGxpbG8gMjEuNyAtIGl0IHNob3VsZCBiZSB3b3JraW5nDQoNCkFuZHJlYXMgRGls
+Z2VyIHdyb3RlOg0KDQo+T24gU2VwIDEyLCAyMDAxICAxNTo0MSAtMDcwMCwgSVQzIFN0dWFydCBC
+LiBUZW5lciwgVVNOUi1SIHdyb3RlOg0KPg0KPj4gICAgICBJIGFtIGN1cmlvdXMgd2hhdCB2ZXJz
+aW9uIG9mIGxpbG8gaW4gZmFjdCBzdXBwb3J0cyBSZWlzZXJGUyB0YWlscy4gSSBhbSBydW5uaW5n
+IE1hbmRyYWtlIDguMCwgYW5kIHVzaW5nIHRoZSBsaWxvIHN1cHBsaWVkIHRoZXJld2l0aCwgYW5k
+IGhhdmUgYmVlbiBib290aW5nIGEgLyBwYXJ0aXRpb24gYXMgUmVpc2VyRlMgKHdpdGggdGFpbHMg
+SSBiZWxpZXZlLCBob3cgZG8gSSBjaGVjaz8pLg0KPj4NCj4NCj5BdCBsZWFzdCB2ZXJzaW9uIDIx
+LjYrIHN1cHBvcnQgcmVpc2VyZnMgdGFpbHMgKG1heWJlIGVhcmxpZXIsIEkgZG9uJ3Qga25vdyku
+DQo+WW91IHNob3VsZCBiZSBhYmxlIHRvIHZlcmlmeSB3aXRoICJzdHJpbmdzIC9zYmluL2xpbG8g
+fCBncmVwIC1pIHJlaXNlcmZzIi4NCj5XaGF0IGl0IGRvZXMgaXMgdW5wYWNrIHRoZSB0YWlsIG9u
+IGFueSBrZXJuZWwvaW5pdHJkIGZpbGVzIHNvIHRoYXQgTElMTw0KPmNhbiBtYXAgdGhlIGJsb2Nr
+cyBkaXJlY3RseS4gIEluIGEgd2F5LCBpdCBpcyBzdHJhbmdlIHRoYXQgdGhpcyBpcyBuZWVkZWQs
+DQo+c2luY2UgSSB0aG91Z2h0IHRhaWxzIG9ubHkgYXBwbGllZCB0byBmaWxlcyA8IDY0a0Igb3Ig
+c2ltaWxhci4uLg0KPg0KPkNoZWVycywgQW5kcmVhcw0KPg0KDQoNCg0KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QN
+CmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KaHR0cDovL2xpc3RzLnNpc3RpbmEuY29tL21haWxtYW4v
+bGlzdGluZm8vbGludXgtbHZtDQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lz
+dGluYS5jb20vbHZtL1BhZ2VzL2hvd3RvLmh0bWwNCg==
