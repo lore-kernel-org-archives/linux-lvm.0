@@ -1,17 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9UNogr20433
-	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 19:50:42 -0400
-Received: from marketresearchsite.net
-	(IDENT:U2FsdGVkX18cAzbkUjTp9+jrNVo6d5mynztdyRrEzr0@smtp-outbound.host.net
-	[64.135.6.3])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id i9UNoa4Y012415
-	for <linux-lvm@redhat.com>; Sat, 30 Oct 2004 19:50:36 -0400
-Message-ID: <418428C6.7070707@staff.theuseful.com>
-Date: Sat, 30 Oct 2004 19:50:30 -0400
-From: Yaroslav Klyukin <yklyukin@staff.theuseful.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9VGn8r16307
+	for <linux-lvm@redhat.com>; Sun, 31 Oct 2004 11:49:08 -0500
+Received: from server6.hostpoint.ch (server6.hostpoint.ch [217.26.52.16])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id i9VGn20C017293
+	for <linux-lvm@redhat.com>; Sun, 31 Oct 2004 11:49:03 -0500
+Received: from 217-119-145-4.sefanet.ch ([217.119.145.4] helo=[192.168.15.41])
+	by server6.hostpoint.ch with asmtp (Exim 4.34) id 1COIsx-0004x2-5V
+	for linux-lvm@redhat.com; Sun, 31 Oct 2004 17:48:55 +0100
+Message-ID: <41851771.4060203@markus.org>
+Date: Sun, 31 Oct 2004 17:48:49 +0100
+From: Markus Baertschi <markus@markus.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM Oops
+Subject: Re: [linux-lvm] Software raid on top of lvm logical volume
+References: <41801ADE.6030308@monjoin.net> <20041028011738.GD13737@kluge.net>
+	<41814060.4040400@mikebabcock.ca>
+In-Reply-To: <41814060.4040400@mikebabcock.ca>
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,93 +26,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Michael T. Babcock wrote:
 
+>
+> I've thought about this numerous times -- there is the distinct=20
+> resizing advantage.  Namely, if I create a software RAID partition, I=20
+> can't resize it afterward without destroying it.  I have for example,=20
+> on occasion, had three disks set up where 1/3 of each was devoted to a=20
+> RAID-0 very fast striping set for data transfers that had to be fast=20
+> but if they were lost it wasn't critical, and 2/3 was set up as RAID-5=20
+> for reliability of another set of data.
+>
+> I understand this may not be optimal in some situations, but some of=20
+> us don't have thousands of dollars for SCSI HW RAID controllers.
 
-Hello!
+You can make life easier by creating several raid arrays on the same=20
+disks and tie them together with LVM.
+For example split your three 160GB drives into 4 partitions each and=20
+create a raid over the three disks.
 
-Oops happened after several days of normal operation diring snapshot.
+sda -> sda1+sda2+sda3+sda4, etc.
+md0 =3D sda1+sdb1+sdc1, md1=3Dsda2+sdb2+sdc2, etc.
 
+Markus
 
-Linux backup-db2 2.4.27 #1 SMP Fri Oct 22 05:22:55 EST 2004 i686 unknown 
-unknown GNU/Linux
-
-Filesystem - reiserfs.
-
-Logical Volume Manager 1.0.8
-Heinz Mauelshagen, Sistina Software  17/11/2003 (IOP 10)
-
-
-Unable to handle kernel NULL pointer dereference at virtual address 00000004
-c02adbea
-*pde = 126d9001
-Oops: 0002
-CPU:    0
-EIP:    0010:[<c02adbea>]    Not tainted
-Using defaults from ksymoops -t elf32-i386 -a i386
-EFLAGS: 00010202
-eax: f8c3b4b0   ebx: fb20bde8   ecx: f89edc38   edx: 00000000
-esi: 33dbdf00   edi: 00000001   ebp: 00000803   esp: c5bc3dac
-ds: 0018   es: 0018   ss: 0018
-Process kupdated (pid: 9, stackpage=c5bc3000)
-Stack: 00000038 00000803 00000000 eae59400 f4ff7800 f4ff7970 00002000 
-c02aa5fa
-        c5bc3e00 c5bc3df8 33dbc580 f4ff7800 f73a9000 00000400 f77db240 
-eae59570
-        f73a9000 33dbc580 0002cdd0 33dbdf38 33dbdf38 08030803 00003a06 
-f2046d00
-Call Trace:    [<c02aa5fa>] [<c02aa727>] [<c022a4be>] [<c022a59e>] 
-[<c02b8d08>]
-   [<c013ebdc>] [<c013ece5>] [<c0142b48>] [<c0142e41>] [<c01072b6>] 
-[<c0142d50>]
-   [<c0105000>] [<c01057ae>] [<c0142d50>]
-Code: 89 42 04 8b 03 89 48 04 89 01 89 59 04 89 0b 89 ca 90 8d 74
-
-
- >>EIP; c02adbea <lvm_snapshot_remap_block+aa/100>   <=====
-
-Trace; c02aa5fa <lvm_map+36a/480>
-Trace; c02aa727 <lvm_make_request_fn+17/30>
-Trace; c022a4be <generic_make_request+be/140>
-Trace; c022a59e <submit_bh+5e/130>
-Trace; c02b8d08 <netif_receive_skb+188/1c0>
-Trace; c013ebdc <write_locked_buffers+2c/40>
-Trace; c013ece5 <write_some_buffers+f5/140>
-Trace; c0142b48 <sync_old_buffers+78/b0>
-Trace; c0142e41 <kupdate+f1/1c0>
-Trace; c01072b6 <ret_from_fork+6/20>
-Trace; c0142d50 <kupdate+0/1c0>
-Trace; c0105000 <_stext+0/0>
-Trace; c01057ae <arch_kernel_thread+2e/40>
-Trace; c0142d50 <kupdate+0/1c0>
-
-Code;  c02adbea <lvm_snapshot_remap_block+aa/100>
-00000000 <_EIP>:
-Code;  c02adbea <lvm_snapshot_remap_block+aa/100>   <=====
-    0:   89 42 04                  mov    %eax,0x4(%edx)   <=====
-Code;  c02adbed <lvm_snapshot_remap_block+ad/100>
-    3:   8b 03                     mov    (%ebx),%eax
-Code;  c02adbef <lvm_snapshot_remap_block+af/100>
-    5:   89 48 04                  mov    %ecx,0x4(%eax)
-Code;  c02adbf2 <lvm_snapshot_remap_block+b2/100>
-    8:   89 01                     mov    %eax,(%ecx)
-Code;  c02adbf4 <lvm_snapshot_remap_block+b4/100>
-    a:   89 59 04                  mov    %ebx,0x4(%ecx)
-Code;  c02adbf7 <lvm_snapshot_remap_block+b7/100>
-    d:   89 0b                     mov    %ecx,(%ebx)
-Code;  c02adbf9 <lvm_snapshot_remap_block+b9/100>
-    f:   89 ca                     mov    %ecx,%edx
-Code;  c02adbfb <lvm_snapshot_remap_block+bb/100>
-   11:   90                        nop
-Code;  c02adbfc <lvm_snapshot_remap_block+bc/100>
-   12:   8d 74 00 00               lea    0x0(%eax,%eax,1),%esi
-
-
-1 error issued.  Results may not be reliable.
-
--- 
-Senior Systems Administrator, NiuTech LLC.
-AIM: infiniteparticle
-Cellular: (561) 843-1552
+--=20
+  Markus Baertschi             Phone: ++41 (21) 807 1677
+  Bas du Ross=EF=BF=BD 14b             Fax  : ++41 (21) 807 1678
+  CH-1163, Etoy                Email: markus@markus.org
+  Switzerland                  Homepage: www.markus.org
