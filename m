@@ -1,9 +1,11 @@
-Return-Path: <raheesom@navpoint.com>
-Message-Id: <200104180021.f3I0L0f15604@west.navpoint.com>
-From: Rupert Heesom <raheesom@navpoint.com>
-Date: 17 Apr 2001 19:13:15 -0400
-Mime-Version: 1.0
-Subject: [linux-lvm] Seems LVM not properly installed - help!
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104180057.f3I0vbo5015874@webber.adilger.int>
+Subject: Re: [linux-lvm] Seems LVM not properly installed - help!
+In-Reply-To: <200104180021.f3I0L0f15604@west.navpoint.com> "from Rupert Heesom
+ at Apr 17, 2001 07:13:15 pm"
+Date: Tue, 17 Apr 2001 18:57:37 -0600 (MDT)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +19,56 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I've installed LVM using RPMs - the rpms listed belowl
+Rupert writes:
+> The iop10 libraries are under /lib/lvm-iop10.  (what IS "IOP10"
+> anyway??)
 
-lvm-iop10-0.9.1_beta6-1.i386.rpm
-lvm-iop10-lib-0.9.1_beta6-1.i386.rpm
-lvm-iop10-man-0.9.1_beta6-1.i386.rpm
-lvm-iop10-patchgen-0.9.1_beta6-1.i386.rpm
-lvm-base-1.1-1.i386.rpm
+IOP = Input/Output Protocol
 
-All the /sbin/<progs> are there (as far as I can tell).
-I'm loading the kernel support via a module (kernel 2.4.3).  I can tell
-the module is loaded by the LSMOD command which lists LVM-MOD as one of
-the modules loaded.  Also /proc/lvm is there.
+This is the version of LVM user tools and kernel that your system has,
+and the user tools IOP must match the kernel IOP.
 
-The iop10 libraries are under /lib/lvm-iop10.  (what IS "IOP10"
-anyway??)
+> However when I try to run any of the /sbin progs, the same msg keeps
+> appearing -
 
-However when I try to run any of the /sbin progs, the same msg keeps
-appearing -
+You can get the kernel IOP from "cat /proc/lvm/global".
+You should check that /dev/lvm exists, and is character device 109,0.
 
+>     vgcreate
+>     lvmiopversion -- LVM driver/module not loaded?
 
-    vgcreate
-    lvmiopversion -- LVM driver/module not loaded?
+This means that the lvmiopversion program can't get the kernel IOP
+via ioctl from /dev/lvm.  This is very unusual, because even if /dev/lvm
+is deleted or is totally bogus, it should be re-created for us.
 
-    vgcreate: /lib/lvm-iop not found.  Is lvm-iop installed?
+>     vgcreate: /lib/lvm-iop not found.  Is lvm-iop installed?
 
+This is a result of lvmiopversion failing.  The script _should_ report
 
-VGCREATE seems to be looking in the wrong place - "/lib/lvm-iop" instead
-of "/lib/lvm-iop10".
+vgcreate: /sbin/lvmiopversion not found or can't determine IOP version
 
-Have I installed LVM correctly here, does anyone know?   If so, where
-can I look for a solution?
+in this case.  I don't know what else it could be.
 
+> VGCREATE seems to be looking in the wrong place - "/lib/lvm-iop" instead
+> of "/lib/lvm-iop10".
+
+No, just a result of the wrapper script getting an empty string for IOP,
+yet strangely not empty enough to generate the above error.
+
+> Have I installed LVM correctly here, does anyone know?   If so, where
+> can I look for a solution?
+
+Try running both:
+
+echo "'`lvmiopversion`'"
+strace lvmiopversion
+
+and sending the output here (you only need send the last 20 lines of strace).
+
+Cheers, Andreas
 -- 
-regs
-rupert
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
