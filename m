@@ -1,10 +1,10 @@
 From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] ftp.sistina.com down?
-Date: Mon, 10 Sep 2001 09:25:29 -0700
-Message-ID: <001d01c13a15$34d8eb40$0300000a@pacbell.net>
+Subject: RE: [linux-lvm] ftp.sistina.com down? 
+Date: Mon, 10 Sep 2001 12:20:23 -0700
+Message-ID: <003001c13a2d$a3aa7080$0300000a@pacbell.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <20010910133533.J31313@sistina.com>
+In-Reply-To: <01Sep10.145314edt.230173@ugw.utcc.utoronto.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,105 +17,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Chris Siebenmann <cks@utcc.utoronto.ca>
+Cc: linux-lvm@sistina.com
 
-I'm embarrassed to say I haven't had the time to focus on it but now that
-you ask I will... give me 2 or 3 days and I'll get back to you with it.
+hmm... according to a message from Taher Haveliwala (see: [linux-lvm]
+installing lvm 1.0 on stock RedHat 7.1) it shouldn't be necessary for me to
+package the whole kernel, thus avoiding the whole issue of configuration
+files and patches...  I should, presumably, be able to just package the
+module and user tools and be done with it... Taher made it work for 7.1... I
+have a Guiness (7.0) box that I need to install LVM on so in the next few
+days I'm going to test that theory... if it works the same RPM should work
+for 7.1 systems as well...
+
+- e r i c k
 
 -----Original Message-----
-From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-Behalf Of Heinz J . Mauelshagen
-Sent:	Monday, September 10, 2001 4:36 AM
-To:	linux-lvm@sistina.com
+From:	Chris Siebenmann [mailto:cks@utcc.utoronto.ca]
+Sent:	Monday, September 10, 2001 11:53 AM
+To:	Erick Calder
 Subject:	Re: [linux-lvm] ftp.sistina.com down?
 
-On Thu, Sep 06, 2001 at 10:20:26AM -0700, Erick Calder wrote:
-> Paul,
->
-> I'm putting an RPM together... struggling with the changes between the
-2.4.9
-> configuration file and the 10+ configuration files that come with RH's
-2.4.7
-> .src... if you've built RPMs before help is welcome (we can take this
-> off-list), otherwise I'll let you know when I've managed to put it
-> together... I too have production boxes I don't want to build the tarball
-> on.
+| thx. putting together the piece that deals with the user tools is
+| probably not that difficult... the problem is that the spec files
+| for building RH kernels are very busy and I'm trying to figure out
+| what the differences are between all of them and how they need to be
+| modified for the 2.4.9 kernel...
 
-Erick,
+ In my personal opinion, you really don't want to do this. The Red
+Hat kernels in their kernel RPMs are reasonably modified; integrating
+another patch in there and making sure it all works well afterwards is
+likely to be a very interesting challenge. Especially if repeated for
+anything except the current kernels.
 
-if you have put it together, we'ld be happy to put it onto our ftp server
-for everybodies convenience.
-Thanks.
+ While you can supply RPMs for stock 2.4.9 plus the LVM patches, this
+may tempt people who are depending on Red Hat patches into upgrading
+to your kernel -- with the resulting small explosions in their systems.
 
-Regards,
-Heinz    -- The LVM Guy --
+ Thus I think it is safer to tell people to patch their kernel
+themselves. The most I would do in a RPM is include (in the the %doc
+stuff) 'sample' patches for one or more kernels (stock 2.4.9 and the
+current Red Hat kernel, likely). People could then apply them if they
+felt confidant.
 
->
-> - erick
->
-> -----Original Message-----
-> From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-> Behalf Of Paul Jakma
-> Sent:	Thursday, September 06, 2001 10:08 AM
-> To:	linux-lvm@sistina.com
-> Subject:	Re: [linux-lvm] ftp.sistina.com down?
->
-> On Wed, 5 Sep 2001, AJ Lewis wrote:
->
-> > It should be up again.  Thanks for letting us know.
->
-> excellent...
->
-> > > also, are there any RPMS for 1.0.1?
-> >
-> > Nope.  Either grabbing the source tarball or talking to your distro is
-the
-> > best option at this point.  The source is not difficult to build and
-> install
-> > IMHO, so that's probably your best bet for now.
->
-> ok.. i've no technical problems with source, but from experience i
-> don't like installing from source onto production systems that use
-> package management - bad idea for long term maintainability of the
-> machine.
->
-> anyway.. thanks AJ!
->
-> > Regards,
->
-> --paulj
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+(The really time-consuming way would be to work out a self-contained
+system for including the stuff the LVM source tree uses to generate the
+kernel patch, and include *that* in the RPM. Then people could use the
+installed binary RPM to generate the source patches to whatever kernel
+they wanted, in the same way that building the source would do it.)
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+	- cks
