@@ -1,147 +1,144 @@
-Date: Fri, 30 Jun 2000 22:53:56 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Date: Sat, 1 Jul 2000 01:05:23 +0200
+From: Jens Benecke <jens@pinguin.conetix.de>
 Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
-Message-ID: <20000630225356.C22746@vestdata.no>
-References: <8525690E.00706FDC.00@d54mta02.raleigh.ibm.com>
+Message-ID: <20000701010523.I28201@pinguin.conetix.de>
+References: <8525690E.006AEE2B.00@d54mta02.raleigh.ibm.com> <395D1159.634DF7EB@inet.net.nz>
 Mime-Version: 1.0
-In-Reply-To: <8525690E.00706FDC.00@d54mta02.raleigh.ibm.com>; from benr@us.ibm.com on Fri, Jun 30, 2000 at 03:28:04PM -0500
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="MGu/vTNewDGZ7tmp"
+In-Reply-To: <395D1159.634DF7EB@inet.net.nz>; from dale@inet.net.nz on Sat, Jul 01, 2000 at 09:30:01AM +1200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: benr@us.ibm.com
+To: Dale Kemp <dale@inet.net.nz>
 Cc: linux-lvm@msede.com
 
-On Fri, Jun 30, 2000 at 03:28:04PM -0500, benr@us.ibm.com wrote:
-> >Is it not possible to make an LVM-volume on an md device, and an md
-> >device on an LVM-volume? That's what you want, right?
-> 
-> If both volumes could exist and be used simultaneously, then this would be
-> a simple example of what we want.  However, I have been told that:
-> 
-> "What is definitely lacking is a generic API for this case; the current way
-> of letting remappers change a function pointer requires special support in
-> every single remapper and it is hard to remove or insert them on the fly;"
-> (Andi Kleen - from a post earlier this month on this thread)
 
-adding and removing remappers on the fly? How is that supposed to work?
-How do you add raid5 on the fly?
+--MGu/vTNewDGZ7tmp
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 
-I don't know anything about what is needed in the remappers, and which
-remappers support this and not - maybe someone more familiar with md and
-lvm care to comment?
+Hi,
 
-> >> >> The elimination of reboots after partitioning or volume changes
-> >> >Even for MS-DOS partitions?
-> >>
-> >> Yes.
-> >
-> >There was a suggestion on L-K (or maybe it was reiserfs) that the kernel
-> >should reread the partition-table, and compare it to the old one - if
-> >none of the mounted partitions changed the new partition-table would be
-> >accepted (and reboot avoided).
-> 
-> What constitutes a change to a mounted partition?  Currently, the creation
-> of a new partition (or the deletion of an existing one) can cause the
-> identifiers associated with existing partitions to change, even though the
-> existing partitions have not been changed themselves.  Thus, unless this is
-> changed, the proposed method does not eliminate reboots due to partitioning
-> changes.
-
-Yes, the suggestion didn't aim at eliminate all reboots, but it would
-eliminate need for reboot when just changing the partitions at the end
-of your disk.
-
-I see two possibilities for solving the problem with changing
-identifiers:
-* Change the data saved about stored partitions, to reflect the new
-  partition-names (and minor numbers)
-* Make the minor-numbers act dynamicly - so that they never change.
-  I supposed the "labels" in the partition-table can be used
-  to create names that don't depenod on minor-numbers.
-
-> >There are also utilities for resizing reiserfs - I believe they
-> >communicate with LVM to do this automaticly? Is the manpage outdated, or
-> >am I wrong here?
-> >
-> >The reason this don't work for other filesystems is of course that they
-> >can't be resized at all.
-> 
-> Other filesystems can be resized, it is just that a resize utility has not
-> be written for them yet! :-)
-And once they are written, LVM will be able to use them, right?
-
-> There is currently no true integration between the LVM and the filesystems.
-> The resize utilities that are available attempt to hide this by having the
-> utility communicate with both the LVM and the filesystem, but there is no
-> intrinsic communication between the filesystems and the LVM as there would
-> be in the LVMS.  As a result, lvreduce does not talk to the filesystems,
-> and bad things can happen!
-
-Why do bad things happed just because of this? Having the userspace
-utilities change sizes of both filesystem and volume makes much sence to
-me. Of course, resize-utilities have to have standardized names and
-command-line options, just like mkfs. (like someone proposed in another
-mail).
-
-> >The best way to handle this (IMHO) is to provide special utilities that
-> >ease the mounting, and do the checking. The operating-system shouldn't
-> >prevent mounting of the partitions directly, because it is sometimes
-> >desired.
-> 
-> Special utilities - this means more commands that a user must learn - a
-> more complicated user interface.  Our customers are already saying that the
-> existing user interface it too complicated and too hard to use.  Adding
-> more special utilities just makes the situation worse.
-
-No, you can write a utility that handles partitioning, creating
-md-devices, setting up LVM-modules and manipulating filesystems on them.
-If you really want to prevent your users to do stupid stuff, you can
-even remove the regular programs (fdisk, mount, mkfs and so on) from
-your installation.
-
-> >I don't like to "force" anything.... What's the problem with just
-> >modifying the utilities to check this - or give warnings?
-> 
-> 1.  Every utility would have to contain the appropriate set of checks.  If
-> you miss a check in a utility, then you have a data security hole.  It is
-> easier to have all of the checks in one place - the LVM.
-
-It should be handled in a userspace library that knows how to
-communicate with the different blockdevices and filesystems. Policy
-don't belong to kernel-space.
- 
-> 2.  The method you outlined before does not eliminate reboots.  You need a
-> major change to the way partitions are identified and accessed in order to
-> eliminate reboots.  If you go to the method used by other operating
-> systems, you kill several birds with one stone.  Otherwise, to eliminate
-> reboots, you need to devise a new method for identifying and communicating
-> with partitions that avoids the problems of the current one.
-
-Well, I'm all for a way to be able to change partitions on the fly. But
-unless it's backward compatible (that is, still accessible to all
-operating-systems, and not having to make it's own partition for
-metadata or anything like that), I can just use LVM.
-
-> >You still need to store some metadata, right? So where can you store it
-> >without affecting its contents?
-> 
-> There is a minimal amount of metadata required to do this.  This data can
-> be stored in either a centralized or distributed fashion.  In the
-> centralized approach, the metadata is stored in a database to which only
-> the LVM has both read and write access.  In the distributed method, the
-> metadata is stored on the disk itself.  Where it is stored depends upon the
-> partitioning scheme in use on the drive.  As an example, a partition could
-> be set aside for the use of the LVM.  In this partition, the LVM could
-> store whatever it wanted, including the metadata to turn a partition into a
-> volume.  Another method would be to store the metadata in an unused area of
-> the disk.  This method is actually used by OS/2 since the partitioning
-> scheme used by MS-DOS/Windows/OS2 always results in some unused sectors.
-> There are probably other methods as well.
-
-So how do you start using your LVM with an existing full disk? 
+this is going to be a tad longer. I have read this discussion for some time
+now and I thought I'd just throw in some of my thoughts.
 
 
--- 
-Ragnar Kjorstad
+On Sat, Jul 01, 2000 at 09:30:01AM +1200, Dale Kemp wrote:
+=20
+> I'm beginning to wonder why IBM is even on this list every suggestion is
+> for a pure LVMS solution. You say you care about LMS but everything shows
+> that IBM only wants there LVMS solution. I understand that LVMS has extra
+> functionality, I suspect it has many more years of development put into
+
+I think the reason why IBMs developers always point to their solution is
+partly
+
+	* because they know their solution works and has certain features,
+	  and they do NOT (yet) know about LVM/md/...
+
+	* because they have a (complete?) platform-independant API that
+	  works with their current machines, and they see that it works,
+	  and they want to introduce it to Linux,
+
+	* because they have customers that rely on them and their LVMS, and
+	  have neither nerves nor chances nor time to do any kind of
+	  experimentation. It would therefore be much easier for IBM just
+	  to port and clean up their LVMS than to integrate it with current
+	  implementations.  They do offer the merge though.
+
+
+I for one find it somewhat flattering that IBM donates the result of years
+of development into the gigantic mind share pool that created Linux.  The
+big boys are beginning to understand how the free software principle works:
+You can harvest all you want, but you will benefit most if you donate
+yourself.
+
+At the same time, though, IBM needs to understand that even in the free
+software community, development is partly politics, and there are several
+reasons why the IBM LVMS will problably not be accepted into the kernel, no
+matter how good it is:
+
+
+	* There is already a LVM that does "most of the important things".
+	  Of course, "important" is stretchable into infinity, but remember
+	  that most developers don't have multibillion dollar customers
+	  that need <special_feature> or have terabytes of storage. So they
+	  develop something that fits the needs of most people. Linux-LVM
+	  does this "well enough" (again, stretchable).
+
+	* Some people seem to be afraid that we are falling into some kind
+	  of dependance upon IBM when we accept their LVMS. This is a
+	  perfectly legitimate claim UP TO AND UNTIL IBM starts releasing
+	  complete compilable code, and does it under GPL or BSD licence.
+	  They have promised to do so, they haven't DONE anything to that
+	  effect already (or have I missed something?).
+
+	* It is completely understandable that now that IBM has entered the
+	  game, developers feel "overrun". They have devoted energy to
+	  their own LVM implementation and now comes the "big guy" and
+	  builds a big stone castle around their cosy cottage. (just a
+	  comparison)=20
+	 =20
+	  Of course, being "swallowed" this way works up emotions. We must
+	  find an agreement (e.g. the cottage takes care of providing food
+	  and meals to all the castle inhabitants. :)
+
+
+> Maybe IBM still doesn't get the working with the community idea here,
+
+I think they do, but only partly. Developers tend to be more easily
+convinced by working code, than by arguments. If IBM releases their code
+(GPL'ed, of course) and it is really easy to write plug-ins and there is
+good documentation, and it is cross-platform and so on, it will most
+probably be adopted.=20
+
+If they want the Linux community to accept it before they get the code out,
+however, IBM will probably have a hard time.
+
+Just for comparison: "Easy code" is partly why the KDE project exploded so
+quickly out of nowhere - they found a library (Qt) which was well
+documented and stable, and really easy (you could program a text editor in
+20 lines of code) -- and it was FUN.=20
+
+Programming must be FUN. That is one of the most important things in the
+free software community. And it is not at all childish: If you do something
+for free, you'll want to enjoy doing it.
+
+> See if you can answer without saying LVMS does this... And we can tell
+> users in the future "integration occurs in the LVMS instead of the user
+> interface".
+
+This could be hard, because they do have a working solution (at least, on
+other OS). But, until they actually release code, we cannot really argue
+what will integrate into what.
+
+So, IBM, please release the code and let the hackers digest it. Then, we
+can really determine if your LVMS is worth converting Linux-LVM into
+plug-in modules (or vice versa). From what you told us, it is.=20
+
+But without code, who knows?
+
+
+--=20
+"The PROPER way to handle HTML postings is to cancel the article, then hire
+a killer to kill the poster, his wife and kids, and fuck his dog and smash
+his computer into little bits. Anything more is just extremism." - ptomblin
+
+--MGu/vTNewDGZ7tmp
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iQEXAwUBOV0nsrhrARHySzvPFAH0QQP/TevDMn2uaKhc26gM7GLcZnKf/6h/WlVW
+KrccjzG52Z3yIhqbVR+GXQGCy6KI2ta2kRjXlLzV0oNXlje0uq7gDM7ZrHHa+lMi
+lFJZtD8Wun7O4qDXTP8nnyYg5uFlDd1yn4uY+0ER2WqdZ27rXaE2+shwQGtohkwr
+624PFvqKDeoEALhijYuVPYMywY0kmNgDnf8lVDhPjXg0wHNSU0l53FK+W+9Hlk+g
+yNTpu7rCRl38drrXeDM6UQkKFjygvnnsgrLKEtp9GIb0ys+1a6+wnIS0SwcCkA9b
+KTcuxp2B9iNg4OUAAR4GgoMVXfSIyj7kXbw3rwOAiBR6VCppO0h6T7is
+=puTv
+-----END PGP SIGNATURE-----
+
+--MGu/vTNewDGZ7tmp--
