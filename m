@@ -1,10 +1,10 @@
-From: Martin Mosny <mmosny@postel.sk>
-Message-ID: <15814003484.20031104150732@postel.sk>
-Subject: Re: [linux-lvm] LVM and RAID
-In-Reply-To: <21E8E34076807C41A646FDC666B15BDF087699@minna.combox.de>
-References: <21E8E34076807C41A646FDC666B15BDF087699@minna.combox.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Resent-Message-ID: <20031105021145.2994.qmail@tobias.wagener.nu>
+From: Tobias Wagener <tobias-lvm@tobias.wagener.nu>
+Message-ID: <20031105012047.A1152@wagener.nu>
+Mime-Version: 1.0
+Content-Disposition: inline
+Resent-To: linux-lvm@sistina.com
+Subject: [linux-lvm] dma_timer_expiry and pvmove problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +15,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov  4 08:06:08 2003
+Date: Tue Nov  4 20:12:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Tobias Gablunsky <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMQ0KDQpoaSBh
-bGwsDQoNCj4gSSBkaWRuJ3QgZmluZCBjbGVhciBpbmZvcm1hdGlvbiBhYm91dCBob3cgdG8g
-dXNlIExWTSBvbiBhbiAoU29mdHdhcmUpDQo+IFJBSUQtTWlycm9yIChvciBSQUlELTUpLiBB
-bGwgSSBmb3VuZCwgd2VyZSBwcm9ibGVtczogTFZNIHVzZXMgUGFydGl0aW9uIFR5cGUNCj4g
-MHg4RSBidXQgTGludXggU29mdC1SQUlEIHVzZXMgMHhGRCAtIHRoaXMgZG9zbid0IGxvb2sg
-dmVyeSBjb21wYXRpYmxlLi4uIEENCj4gc29sdXRpb24gd291bGQgYmUgdG8gdXNlIEhhcmR3
-YXJlLVJBSUQgb2YgY291cnNlLiBCdXQgSSdtIHdvbmRlcmluZyBpZiB0aGVyZQ0KPiBpcyBh
-IHdheSB0byB1c2UgU29mdHdhcmUtUkFJRCBhbmQgTFZNIHRvZ2V0aGVyIC0gSSBjYW5ub3Qg
-YmVsaWV2ZSB0aGF0IEkgYW0NCj4gdGhlIGZpcnN0IG9uZSB3aXRoIHRoaXMgcXVlc3Rpb24h
-IEFtIEk/DQoNCkFzIEdvZXR6IEJvY2sgc2F5IC0ganVzdCB1c2UgMHhGRCBmb3IgcmFpZA0K
-DQogICBEZXZpY2UgQm9vdCAgICBTdGFydCAgICAgICBFbmQgICAgQmxvY2tzICAgSWQgIFN5
-c3RlbQ0KL2Rldi9oZGEzICAgICAgICAgICAxMzggICAgICA5NzI5ICA3NzA0Nzc0MCAgIGZk
-ICBMaW51eCByYWlkIGF1dG9kZXRlY3QNCg0KbWFrZSBhbGwgdGhlIHJhaWQgc3R1ZmY6DQoN
-CnJhaWRkZXYgICAgICAgICAgICAgL2Rldi9tZDENCnJhaWQtbGV2ZWwgICAgICAgICAgICAg
-ICAgICAxDQpuci1yYWlkLWRpc2tzICAgICAgICAgICAgICAgMg0KY2h1bmstc2l6ZSAgICAg
-ICAgICAgICAgICAgIDY0aw0KcGVyc2lzdGVudC1zdXBlcmJsb2NrICAgICAgIDENCm5yLXNw
-YXJlLWRpc2tzICAgICAgICAgICAgICAwDQogICAgZGV2aWNlICAgICAgICAgIC9kZXYvaGRh
-Mw0KICAgIHJhaWQtZGlzayAgICAgMA0KICAgIGRldmljZSAgICAgICAgICAvZGV2L2hkYjMN
-CiAgICByYWlkLWRpc2sgICAgIDENCg0KYWZ0ZXIgdGhlbSBtYWtlIGFsbCB0aGUgbHZtIHN0
-dWZmDQoNCi0gLS0NCkJlc3QgcmVnYXJkcw0KICAgICBNYXJ0aW4gTW9zbnkNCg0KLS0tLS1C
-RUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0NClZlcnNpb246IFBHUCA2LjVpDQoNCmlRQS9Bd1VC
-UDZla21KZGd1QnlHOVE0YUVRSWpUZ0Nnc2cvSnR2QXBaOW4vK1VMMGFNeGF3OUVXbFA4QW9Q
-TkgNCllackNOMlVGTVFIaXlFT2ZuTDVmRW0zUA0KPWJOUGYNCi0tLS0tRU5EIFBHUCBTSUdO
-QVRVUkUtLS0tLQ0K
+Hi,
+
+every time I try to "unzip", "cp" or only "cat" one special file in my lvm
+the system freezes and I must reboot.
+
+The last messages in kernel-log are:
+   Nov  5 00:46:43 go kernel: hde: dma_timer_expiry: dma status == 0x61
+   Nov  5 00:46:53 go kernel: hde: error waiting for DMA
+   Nov  5 00:46:53 go kernel: hde: dma timeout retry: status=0x51 { DriveReady SeekComplete Error }
+   Nov  5 00:46:53 go kernel: hde: dma timeout retry: error=0x40 { UncorrectableError }, LBAsect=111599988, high=6, low=1093
+   Nov  5 00:46:53 go kernel: end_request: I/O error, dev 21:01 (hde), sector 111599922
+
+Some times ago somebody had the same problems and the answer was to
+"pvmove" the files of "hde" to another harddisk and remove the "hde"-drive.
+
+The question is (I don't try it, but I think this will happend): 
+"pvmove" read this special file also, and the system will freezes, too. Is there
+a way to tell pvmove to leave some sectors/inodes away? Because I think there is
+a defect sector on this harddrive and that is the reason for the fatal error.
+Or, does someone think, if I switch off the use of DMA, this problem will be fixed?
+I'm not that kind of expert, so please be patient with me ;)
+
+If this is not possible, another question: I think I can put some new harddisks 
+in my computer and copy (with "cp") the files (without the special one) to a new 
+lvm. Delete the old lvm and remove the defect drive. 
+My Question now is: The new lvm will be "/dev/hdg" and "/dev/hdh", but after this
+action I want that this lvm is build out of "hde" and "hdf". Is there a way to
+tell the lvm to use for an existing vg other partitions than the ones defined at
+build time?
+
+
+Please excuse my bad english, I hope you understand everything I want to tell you ;)
+
+Greetings Tobias
