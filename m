@@ -1,13 +1,11 @@
-Date: Mon, 10 Sep 2001 11:08:51 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] lvcreate segfaults
-Message-ID: <20010910110851.A18882@sistina.com>
-References: <20010906073254.A10735@sistina.com> <Pine.A41.4.21.0109071104190.38880-100000@gigue.dlib.indiana.edu>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Content-Disposition: inline
-In-Reply-To: <Pine.A41.4.21.0109071104190.38880-100000@gigue.dlib.indiana.edu>; from jomarqua@indiana.edu on Fri, Sep 07, 2001 at 11:05:34AM -0500
+From: FEJF <fejf@gmx.de>
+Subject: Re: [linux-lvm] pv_move_pe() error again :/
+Date: Mon, 10 Sep 2001 18:13:12 +0200
+References: <E15f13v-0003bs-00@hermes.sistina.com> <20010910132709.G31313@sistina.com> <20010910173851.A3751@vestdata.no>
+In-Reply-To: <20010910173851.A3751@vestdata.no>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E15gTfT-0007Q8-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,52 +17,47 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-On Fri, Sep 07, 2001 at 11:05:34AM -0500, John Marquart wrote:
-> Thanks AJ,
-> 	Me and my trusty ddd had figured out the same thing - that an
-> extra printf inserted into the function fixed it.  It is a darn weird bug
-> though.
-> 	Thanks for the link - made a much nicer cleaner patch then my
-> own. :)
+Ragnar Kj=EF=BF=BDrstad, on Montag, 10. September 2001 17:38 wrote:
+> On Mon, Sep 10, 2001 at 01:27:09PM +0200, Heinz J . Mauelshagen wrote:
+> > But I wonder, why in your case the locking of the PE failed. Are you ab=
+le
+> > to reporduce your case and provide the error code?
 
-Hmm...sounds like there must be a race condition in there somewhere...very
-odd.  That's the only thing I can think of that would make the difference,
-since the printf could serialize the code somewhat...and it was a dual-proc
-machine, so...
+[cut]
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+> Sep  6 18:15:51 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
+> Sep  6 18:15:55 argus last message repeated 213 times
+> Sep  6 18:15:55 argus kernel: hdd: read_intr: status=3D0x59 { DriveReady
+> SeekComplete DataRequest E rror } Sep  6 18:15:55 argus kernel: hdd:
+> read_intr: error=3D0x40 { UncorrectableError }, LBAsect=3D11801433 2,
+> sector=3D118014332 Sep  6 18:15:55 argus kernel: end_request: I/O error, =
+dev
+> 16:40 (hdd), sector 118014332
+>
+> The kernel is standard 2.4.8 without the LVM-patches. The usersspace
+> tools are version 1.0.1-rc2.
 
-Current GPG fingerprint =3D 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD D=
-E95
+i got similar errors - but in my box the damaged hd was slave... so i got t=
+he=20
+uncorrectable errors on the slave (hdh) and the dma "DriveReady=20
+SeekComplete"-Errors on the master-disk (hdg)
 
------Begin Obligatory Humorous Quote----------------------------------------
-"We succeed because our competitors are idiots" - anonymous
------End Obligatory Humorous Quote------------------------------------------
+kernel 2.4.7-ac7 without lvm-patches and lvm 0.9.1b7 tools
+fejf
 
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
+- --=20
+Backups are usefull. Most often when you don't have one ;)
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7nOWTb2fpvETN3pURAm5ZAKCGuFcF6Qn2hbDejLUA4C6BixAS3QCgmZGQ
-dSOnM7NVH7DTxdIGk8jfcqM=
-=ASlN
+iD8DBQE7nOaY7Xtp66ctWuIRAr/rAKDbwC5DMea+yksFvJWZ9ubIvrm7LQCfTHMa
++aAlDpsQ/RUoakNRe+iUyo8=3D
+=3D93ns
 -----END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
