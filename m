@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Chicken and egg problem..
-Message-ID: <20011121140758.GH9907@pc.ilinx>
-References: <1006347197.3bfba3bd23d95@imp.free.fr>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1006347197.3bfba3bd23d95@imp.free.fr>
-From: "Brian J. Murrell" <4fb38711a90b276be2ad0dff3761129b@interlinx.bc.ca>
+From: Eric Smith <eric@nutstreet.net>
+Subject: Re: [linux-lvm] Unsubscribe from the list??
+In-Reply-To: <20011121121834.A10723@uk.sistina.com>
+Message-ID: <Pine.LNX.4.33.0111211457530.13241-100000@willow.nutstreet.net>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 21 12:36:07 2001
+Date: Wed Nov 21 15:00:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Alasdair Kergon <agk@uk.sistina.com>
+Cc: linux-lvm@sistina.com
 
-On Wed, Nov 21, 2001 at 01:53:17PM +0100, Georges Giralt wrote:
+Wow.
+
+Sorry, everyone.  What an idiot I've been.  Please forgive me.
+At least I've provided some comic relief ... :)
+
+
+On Wed, 21 Nov 2001, Alasdair Kergon wrote:
+
+> On Tue, Nov 20, 2001 at 02:43:25PM -0600, Eric Smith wrote:
+> > Anyone know what to do or who to contact?
+> There's a big button on the web page saying "email my password to me".
+> I've clicked it for you.
 > 
-> As I've previously said, I plan to make my RedHat 7.1 (kernel 2.4.5) a pure LVM 
-> machine.
-> To do so, I've build the 1.0.4 version of LVM into the kernel (with the NCR SCSI 
-> driver). As to avoid an initrd. Simple is beautifull...
-
-Simple might be beautiful but compiling LVM into the kernel does not
-alleviate the need for an initrd if your root fs is on an LVM device.
-
-> In the sysinit rc script, Redhat has put a vg activation command, but....
-> My kernel panics, as it is unable to mount root, as the LVM activation commands 
-> are after the root fsck (and mount..)
+> Alasdair
 > 
-> If I put the LVM activation lines early, in the sysinit script, these commands 
-> complains beeing not able to access /etc/lvmtab....
-
-Now you know why you need an initrd.  :-)
-
-b.
-
--- 
-Brian J. Murrell
+> 
