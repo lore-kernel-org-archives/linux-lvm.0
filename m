@@ -1,14 +1,9 @@
-Subject: Re: [linux-lvm] "logical volume manager already locked"
-Message-Id: <20020319045416.GA8231@pawan.dyndns.org>
-References: <20020318001846.2dc378a7.orkim@kc.rr.com>
-    <Pine.LNX.4.44.0203181959380.603-100000@deedee>
+From: Chris Harwell <charwell@digitalpulp.com>
+Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.1-rc1 available at
+    www.sistina.com
+In-Reply-To: <20020315205256.GA743@antimony.sistina.com>
+Message-Id: <Pine.LNX.4.44.0203191159380.3608-100000@clapper.digitalpulp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="/9DWx/yDrRhgMJTb"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0203181959380.603-100000@deedee>
-From: Allan Wind <allanwind@attbi.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,50 +14,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar 18 22:53:01 2002
+Date: Tue Mar 19 11:06:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2002-03-18 20:11:15, Kenneth J Baker wrote:
-> Hi I've been using lvm on redhat 6.2 with kernel 2.4.5 for a long time.  I
-> just switched to debian with kernel 2.4.18.  Everything has been working
-> fine for a week or so.  Debian runs a cron job that runs lvmsadc every so
-> often.  Now lvmsadc now produces the following error:
-> deedee:/var# lvmsadc -v
-> 	lvmsadc -- finding all volume group(s)
-> 	lvmsadc -- checking for found volume groups
-> 	1016499384
-> 	lvmsadc -- locking logical volume manager
-> 	lvmsadc -- locking logical volume manager
-> 	lvmsadc -- logical volume manager already locked
-
-lvm10 was just upgraded to 1.1rc-1, try downgrade to version
-1.0.1release-1 (you probably want to hold that package for now).
+On Fri, 15 Mar 2002, AJ Lewis wrote:
+> LVM 1.1-rc1 release candidate supports both version 1 and 2 of the metadata.
 
 
-/Allan
---=20
-Allan M. Wind
-P.O. Box 2022
-Woburn, MA 01888-0022
-USA
 
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+thanks! this does fix the pvmove 2GB limit problem i ran into. 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+just a note, it seemed as if the --test feature had changed between the
+two pvmove versions. that is, before with 1.0.3 i was able to run multiple
+pvmove --test multiple times and it continued to work.  now with 1.1rc1 i
+had to run a vgscan in order to run pvmove --test again because i got this
+error on the second invocation:
 
-iD8DBQE8lsR4erJrYp1ydncRApWiAJwIbkTKhTm5ScL271yp4ZSPv6Ce6wCaA1NK
-47MHQ0MzbIzhYtLKouKf52o=
-=dkyt
------END PGP SIGNATURE-----
+pvmove --test /dev/hda14
+pvmove -- no logical volumes on empty source physical volume "/dev/hda14"
 
---/9DWx/yDrRhgMJTb--
+worked just fine after that vgscan though :>
+
+i'm not sure if i just needed to run vgscan since i was using a new 
+version of the lvm tools anyway or if that --test does actually change 
+something (like the info in /etc/lvm....?).
+
+at any rate, lvm is great and continues to power our mp3 player
+wonderfully - thanks LVM :>
+
+-- 
+chris
+charwell@digitalpulp.com
