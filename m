@@ -1,9 +1,12 @@
-Date: Tue, 11 Sep 2001 10:21:56 +0200
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20010911102155.B12843@colombina.comedia.it>
+Date: Tue, 11 Sep 2001 12:20:20 +0000
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Subject: Re: [linux-lvm] LVM
+Message-ID: <20010911122020.A1836@dardhal.mired.net>
+References: <20010910164739.A11436@dardhal.mired.net> <NBBBJHKIOKPKOGOEPEDPMEDEDNAA.stuart@bh90210.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] lvm-cvs.spec
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <NBBBJHKIOKPKOGOEPEDPMEDEDNAA.stuart@bh90210.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,74 +18,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-%define name lvm
-%define version 1.0.1
-%define release 1CVS
-Name: %{name}
-Version: %{version}
-Release: %{release}
-Summary: Heinz Mauelshagen's LVM (Logical Volume Manager) for Linux
-Group: System Environment/Base
-Copyright: GPL
-Source0: lvm-cvs.tar.bz2
-BuildRoot: /tmp/%{name}-%{version}-root
-Packager: Luca Berra <bluca@vodka.it>
-%description
-It includes all of the support for handling read/write operations on
-physical volumes (hard disks, RAID-Systems, magneto optical, etc. and
-even multiple devices (MD), see mdadd(8) etc.), creating volume groups
-from one or more physical volumes and creating one or more logical volumes
-in volume groups.
+On Monday, 10 September 2001, at 19:35:13 -0700,
+IT3 Stuart B. Tener, USNR-R wrote:
 
-#:r!date "+\%a \%b \%d \%Y"
-%changelog
+> Dear Sir:
+> 
+> 	I HAVE READ (and DID READ) PRIOR TO ASKING MY QUESTIONS, (when I noted I downloaded it, I figured everyone would realize I had read it as well!).
+> 
+> All those whom are telling me to read the How-To, PLEASE, GO READ IT YOURSELF! SPECIFICALLY: section 7.2, paragraph 2. There is no such directory located on the Sistina FTP server. Where is this patch?
+> 
+Your are right, links on the HOWTO don't point to the right location. To
+get current sources of LVM download:
+ftp://ftp.sistina.com/pub/LVM/1.0/lvm_1.0.1-rc2.tar.gz
 
-%prep
-%setup -q -n LVM
-%define _exec_prefix %{nil}
-%configure --with-user=`id -un` --with-group=`id -gn`
+It works for recent kernels (even 2.4.9) and the documentation included
+explains how to create a patch specifically suited for your current Linux
+source tree.
 
-%build
-
-%install
-rm -Rf $RPM_BUILD_ROOT
-%makeinstall
-ln -snf /lib/liblvm-10.so.CVS.CVS $RPM_BUILD_ROOT/usr/lib/liblvm-10.so
-ln -snf liblvm-10.so $RPM_BUILD_ROOT/usr/lib/liblvm.so
-ln -snf liblvm-10.a $RPM_BUILD_ROOT/usr/lib/liblvm.a
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
-
-%clean
-rm -Rf $RPM_BUILD_ROOT
-
-%files
-%defattr(-, root, root, 755)
-%doc ABSTRACT CHANGELOG CONTRIBUTORS FAQ
-%doc INSTALL KNOWN_BUGS LVM-HOWTO README TODO WHATSNEW
-%doc PATCHES
-/%{_libdir}/liblvm-10.so.CVS.CVS
-/%{_sbindir}/e2fsadm
-/%{_sbindir}/lv*
-/%{_sbindir}/pv*
-/%{_sbindir}/vg*
-/usr/lib/liblvm*.a
-/usr/lib/liblvm*.so
-/%{_mandir}/man8/e2fsadm.8*
-/%{_mandir}/man8/lv*.8*
-/%{_mandir}/man8/pv*.8*
-/%{_mandir}/man8/vg*.8*
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+--
+Jos� Luis Domingo L�pez
+Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+ 
+jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+jdomingo AT internautas DOT   org  => Spam at your own risk
