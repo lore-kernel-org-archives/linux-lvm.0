@@ -1,12 +1,11 @@
-Return-Path: <warl0k@lvcm.com>
-Message-ID: <001c01c129cd$b910b940$f04b7818@lvcm.com>
-From: "Glenn Shannon" <warl0k@lvcm.com>
-References: <20010820200942.82753.qmail@web13404.mail.yahoo.com>
-Subject: Re: [linux-lvm] no volume groups found
-Date: Mon, 20 Aug 2001 16:13:29 -0700
+Return-Path: <Jan.Schreckenbach@sap.com>
+Message-ID: <3B821AB8.1A324381@sap.com>
+Date: Tue, 21 Aug 2001 10:24:24 +0200
+From: Jan Schreckenbach <Jan.Schreckenbach@sap.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-Path: warl0k@lvcm.com
+Subject: Re: [linux-lvm] Problems with 1.0
+References: <BJEHIDHMNHMANMFJEKAPGEAGCAAA.tren@eotnetworks.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,194 +17,77 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Pierre,
+Tren Blackburn wrote:
+[snipp]
+> >> I had installed the 1.0 driver into my 2.4.8 kernel, and rebooted.
+> >> Everything came up fine, so I installed the user tools and forgot about
+> >> them...until I had to reboot this evening...Now the LVM tools are
+> >> dynamically linked (Looking for libgcc_s.so.1)?  Or so it seems.  I am
+> no
+> >> a C programmer and don't fully understand how linking works, but it
+> seems
+> >> to me that the beta 8 tools were statically linked as they didn't need
+> any
+> >> external libraries, but the 1.0 user tools are dynamically linked.
+> >>
+> >> Now this probably doesn't seem like a problem, but when your libraries
+> are
+> >> mounted on a LVM volume and you have no tools to activate your volume
+> >> with...well...you can probably guess  =)  Luckilly I had an identically
+> >> configured machine that I hadn't upgraded to 1.0 yet (same gcc 3.0
+> >> compiler, etc) so I just copied the tools across to the other machine
+> >> (beta 8 tools) and all is fine again.
+> >>
+> >> If I am completely off base as to what is happening here, please
+> correct
+> >> me, and please also let me know how to solve this problem.>
+> >
+> >Tren,
+> >that shouldn't be a problem because the default installation directory
+> for
+> >shared libraries is /lib which belongs to the root directory. LVM tools
+> just
+> >access any shread libraries from there unless you use the --libdir
+> configure
+> >option to chosse a different one.
+> >
+[snipp]
+> Also, to answer another persons question, no, I did *not* build the beta 8
+> tools with 2.9x.  Both beta8 and 1.0 were built with 3.0.  3.0 was built
+> with 2.9x and then 2.9x was uninstalled.  The libraries for 3.0 sit in
+> /usr/local/lib, not /lib.
+> 
+> So, the problem is with 1.0 tools, it needs access to a filesystem that is
+> *not* mounted to load in the library.
+> 
 
-It's not proper to yell at people like that. The guy is asking an honest
-question and you yelling at him will not get him any closer to a solution.
+Hi,
 
-I use debian unstable, but I have upgraded to lvm 1.0.
+you must not have a part of your base system on a partion
+other than /. If you compile programms that are part of your
+base system with gcc-3 you need to have the libraries in your
+root-partition. 
+The time you installed gcc-3 ist was a kind of add-on, because
+you did not need it for any part of your base system. Therefore
+it was OK to have it on /usr/local.
+Reinstall gcc-3 on / or compile LVM with gcc-2.9x. You may
+also do a ldd on every binary you need from LVM and copy
+the libraries over to /lib.
 
-My suggestion is to use lvm 1.0-rc1. Any other valid suggestions?
+cu,
+Jan
 
-Glenn
------ Original Message -----
-From: "Pierre Lamb" <plamb_98@yahoo.com>
-To: <linux-lvm@sistina.com>
-Sent: Monday, August 20, 2001 1:09 PM
-Subject: Re: [linux-lvm] no volume groups found
+--
+_______________________________________________________________________
 
+THE BEST RUN E-BUSINESSES RUN SAP
+_______________________________________________________________________
 
-> THATS WHY IT IS CALLED UNSTABLE!!!!!!!!!!!!!!!!!
-> --- Ulrich Wiederhold <U.Wiederhold@gmx.net> wrote:
-> > Hello,
-> > I use 2.4.9 with debian unstable and lvm version
-> > 0.9.1_beta6. I don�t
-> > use devfs and compiled lvm into the kernel.
-> > I created a vg nameed vg01 containing
-> > hda2,hdb1,hdd1,sdb1 and sdc1. Then
-> > I created some lv�s and made a mkfs.xfs.
-> > I could do a "vgscan -v && vgchange -a y" and mount
-> > my lv�s.
-> >
-> > After a reboot, /etc/rcS.d/S25lvm couldn�t find any
-> > vg�s. So I ran the
-> > script manually and it works.
-> >
-> > I had some other problems that need me to reboot and
-> > my PC crashed several
-> > times. Now, I can�t even run the script manually. I
-> > always get this:
-> >
-> > home:# vgscan -v
-> > vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-> > vgscan -- creating empty "/etc/lvmtab" and
-> > "/etc/lvmtab.d"
-> > vgscan -- reading all physical volumes (this may
-> > take a while...)
-> > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d"
-> > successfully created
-> > vgscan -- WARNING: This program does not do a VGDA
-> > backup of your volume
-> > group
-> >
-> > home:# vgchange -a y
-> > vgchange -- no volume groups found
-> >
-> > home:# vgdisplay
-> > vgdisplay -- no volume groups found
-> >
-> > Then I did "man vgcfgrestore" and tryed
-> > home:# vgcfgrestore -n vg01 -l
-> > vgcfgrestore -- ERROR: different structure size
-> > stored in
-> > "/etc/lvmconf/vg01.conf" than expected in file
-> > vg_cfgrestore.c [line
-> > 137]
-> > vgcfgrestore -- ERROR "vg_cfgrestore(): read"
-> > restoring volume group
-> > "vg01"
-> >
-> > and:
-> > home:# vgcfgrestore -f /etc/lvmconf/vg01.conf.1.old
-> > -n vg01 /dev/sdb1
-> > vgcfgrestore -- ERROR: different structure size
-> > stored in
-> > "/etc/lvmconf/vg01.conf.1.old" than expected in file
-> > vg_cfgrestore.c
-> > [line 137]
-> > vgcfgrestore -- ERROR "vg_cfgrestore(): read"
-> > restoring volume group
-> > "vg01"
-> >
-> > What "PhysicalVolumePath" should I use with it?
-> >
-> > Then I looked in the mail-archive and did a:
-> > home:/home/fzzgrr# vgcfgrestore -v -d -n vg01
-> > /dev/hda2
-> > <1> vg_check_name -- CALLED with VG: vg01
-> > <22> lvm_check_chars -- CALLED with name: "vg01"
-> > <22> lvm_check_chars -- LEAVING with ret: 0
-> > <1> vg_check_name -- LEAVING with ret: 0
-> > <1> pv_check_name -- CALLED with "/dev/hda2"
-> > <22> lvm_check_chars -- CALLED with name:
-> > "/dev/hda2"
-> > <22> lvm_check_chars -- LEAVING with ret: 0
-> > <22> lvm_check_dev -- CALLED
-> > <333> lvm_check_partitioned_dev -- CALLED
-> > <333> lvm_check_partitioned_dev -- LEAVING with ret:
-> > TRUE
-> > <22> lvm_check_dev -- LEAVING with ret: 1
-> > <1> pv_check_name -- LEAVING with ret: 0
-> > <1> vg_check_active -- CALLED with VG: vg01
-> > <22> vg_check_name -- CALLED with VG: vg01
-> > <333> lvm_check_chars -- CALLED with name: "vg01"
-> > <333> lvm_check_chars -- LEAVING with ret: 0
-> > <22> vg_check_name -- LEAVING with ret: 0
-> > <22> vg_status -- CALLED with VG: vg01
-> > <333> vg_check_name -- CALLED with VG: vg01
-> > <4444> lvm_check_chars -- CALLED with name: "vg01"
-> > <4444> lvm_check_chars -- LEAVING with ret: 0
-> > <333> vg_check_name -- LEAVING with ret: 0
-> > <22> vg_status -- LEAVING with ret: -6
-> > <1> vg_check_active -- LEAVING with ret: -6
-> > <1> lvm_get_iop_version -- CALLED
-> > <22> lvm_check_special -- CALLED
-> > <22> lvm_check_special -- LEAVING
-> > <1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> > <1> lvm_get_iop_version -- LEAVING with ret: 10
-> > vgcfgrestore -- locking logical volume manager
-> > <1> lvm_lock -- CALLED
-> > <22> lvm_check_special -- CALLED
-> > <22> lvm_check_special -- LEAVING
-> > <1> lvm_lock -- LEAVING with ret: 0
-> > <1> lvm_dont_interrupt -- CALLED
-> > <1> lvm_dont_interrupt -- LEAVING
-> > vgcfgrestore -- restoring volume group "vg01" from
-> > "/etc/lvmconf/vg01.conf"
-> > <1> vg_cfgrestore -- CALLED
-> > <22> vg_check_name -- CALLED with VG: vg01
-> > <333> lvm_check_chars -- CALLED with name: "vg01"
-> > <333> lvm_check_chars -- LEAVING with ret: 0
-> > <22> vg_check_name -- LEAVING with ret: 0
-> > vgcfgrestore -- checking existence of
-> > "/etc/lvmconf/vg01.conf"
-> > vgcfgrestore -- reading volume group data for "vg01"
-> > from
-> > "/etc/lvmconf/vg01.conf"
-> > <22> vg_check_consistency -- CALLED
-> > <333> vg_check_name -- CALLED with VG: vg01
-> > <4444> lvm_check_chars -- CALLED with name: "vg01"
-> > <4444> lvm_check_chars -- LEAVING with ret: 0
-> > <333> vg_check_name -- LEAVING with ret: 0
-> > <22> vg_check_consistency -- LEAVING with ret: 0
-> > vgcfgrestore -- reading physical volume data for
-> > "vg01" from
-> > "/etc/lvmconf/vg01.conf"
-> > vgcfgrestore -- ERROR: different structure size
-> > stored in
-> > "/etc/lvmconf/vg01.conf" than expected in file
-> > vg_cfgrestore.c [line
-> > 137]
-> > <1> vg_cfgrestore -- LEAVING with ret: -328
-> > <1> lvm_error -- CALLED with: -328
-> > <1> lvm_error -- LEAVING with: "vg_cfgrestore():
-> > read"
-> > vgcfgrestore -- ERROR "vg_cfgrestore(): read"
-> > restoring volume group
-> > "vg01"
-> >
-> > <1> lvm_unlock -- CALLED
-> > <1> lvm_unlock -- LEAVING with ret: 0
-> >
-> >
-> > So, what else can I do?
-> > I don�t want lose my data!
-> > :(
-> >
-> > Any hints?
-> > Thanks.
-> > Uli
-> >
-> > --
-> > 'The box said, 'Requires Windows 95 or better', so i
-> > installed Linux - TKK 5
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at
-> http://www.sistina.com/lvm/Pages/howto.html
->
->
-> __________________________________________________
-> Do You Yahoo!?
-> Make international calls for as low as $.04/minute with Yahoo! Messenger
-> http://phonecard.yahoo.com/
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Jan Schreckenbach                      email: Jan.Schreckenbach@sap.com
+SAP AG Walldorf/Baden, Germany         Phone: +49 6227  7-47474
+LinuxLab                               Fax  : +49 6227 78-31414
+
+SAP LinuxLab support address: linux@sap.com
