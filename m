@@ -1,10 +1,12 @@
-Return-Path: <jeffchua@silk.corp.fedex.com>
-Date: Mon, 23 Apr 2001 21:16:45 +0800 (SGT)
-From: Jeff Chua <jeffchua@silk.corp.fedex.com>
-In-Reply-To: <3AE3ED20.FD685CE@evision-ventures.com>
-Message-ID: <Pine.LNX.4.33.0104232109570.326-100000@boston.corp.fedex.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: [BUG] lvm beta7 and ac11 problems
+Return-Path: <thornber@btconnect.com>
+Date: Mon, 23 Apr 2001 14:19:36 +0100
+Subject: Re: [linux-lvm] Re: linux-lvm digest, Vol 1 #136 - 14 msgs
+Message-ID: <20010423141936.A1405@66bassett.freeserve.co.uk>
+References: <200104231048.f3NAm3715005@pigpen.bl.physik.uni-muenchen.de> <3AE41D86.9CC5363@Physik.Uni-Muenchen.DE>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3AE41D86.9CC5363@Physik.Uni-Muenchen.DE>; from Klaus.Steinberger@Physik.Uni-Muenchen.DE on Mon, Apr 23, 2001 at 02:18:14PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +18,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Martin Dalecki <dalecki@evision-ventures.com>
-Cc: Jens Axboe <axboe@suse.de>, Ed Tomlinson <tomlins@cam.org>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>
+To: linux-lvm@sistina.com
 
-On Mon, 23 Apr 2001, Martin Dalecki wrote:
+> There is one little change necessary, which is not obvious from the
+> patches:
+> 
+> In drivers/block/md.c:
+> 
+> int md_make_request (struct buffer_head * bh, int rw)
+> {
+>         int err;
+>         mddev_t *mddev = kdev_to_mddev(bh->b_dev);
+>                                            ^^^^^  Change this to b_rdev
 
-> > > depmod: *** Unresolved symbols in /lib/modules/2.4.3-ac11/kernel/drivers/md/lvm-mod.o
+This change to md.c is in my generic-map-raid-2.2.19-A1 patch, along
+with another which is certainly needed.
 
-
-try this (after you have applied the patch for lvm 0.9.1_beta7) ...
-
-Jeff
-[jchua@fedex.com]
-
---- /u2/src/linux/drivers/md/lvm.c.org  Mon Apr 23 21:11:32 2001
-+++ /u2/src/linux/drivers/md/lvm.c      Mon Apr 23 21:12:27 2001
-@@ -1791,7 +1791,7 @@
-        int max_hardblocksize = 0, hardblocksize;
-
-        for (le = 0; le < lv->lv_allocated_le; le++) {
--               hardblocksize =
-get_hardblocksize(lv->lv_current_pe[le].dev);
-+               hardblocksize =
-get_hardsect_size(lv->lv_current_pe[le].dev);
-                if (hardblocksize == 0)
-                        hardblocksize = 512;
-                if (hardblocksize > max_hardblocksize)
-@@ -1801,7 +1801,7 @@
-        if (lv->lv_access & LV_SNAPSHOT) {
-                for (e = 0; e < lv->lv_remap_end; e++) {
-                        hardblocksize =
--                               get_hardblocksize(
-+                               get_hardsect_size(
-
-lv->lv_block_exception[e].rdev_new);
-                        if (hardblocksize == 0)
-                                hardblocksize = 512;
+- Joe
