@@ -1,10 +1,10 @@
-Message-Id: <200109161731.NAA11318@erez.physics.lsa.umich.edu>
-From: dwchin@umich.edu
-In-reply-to: <20010916025223.1CA035E041@oscar.casa.dyndns.org> 
-References: <200109160203.WAA10814@erez.physics.lsa.umich.edu> <200109160207.WAA10835@erez.physics.lsa.umich.edu> <20010916025223.1CA035E041@oscar.casa.dyndns.org>
+Message-Id: <200109161956.PAA11662@erez.physics.lsa.umich.edu>
+From: David Chin <dwchin@umich.edu>
+In-reply-to: <200109161731.NAA11318@erez.physics.lsa.umich.edu> 
+References: <200109160203.WAA10814@erez.physics.lsa.umich.edu> <200109160207.WAA10835@erez.physics.lsa.umich.edu> <20010916025223.1CA035E041@oscar.casa.dyndns.org> <200109161731.NAA11318@erez.physics.lsa.umich.edu>
 Mime-Version: 1.0
-Date: Sun, 16 Sep 2001 13:31:44 -0400
-Subject: [linux-lvm] Re: pvcreate dumping core with 2.4.10-pre9
+Date: Sun, 16 Sep 2001 15:56:15 -0400
+Subject: [linux-lvm] Re: lvcreate dumping core with 2.4.10-pre9 (was pvcreate ...)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,26 +20,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-In message <20010916025223.1CA035E041@oscar.casa.dyndns.org>, Ed Tomlinson writ
-es:
-> On September 15, 2001 10:07 pm, dwchin@umich.edu wrote:
-> > Oh, a couple of details: I'm running RedHat 7.1 (except for the kernel
-> > update as mentioned in previous message).  And gdb says that lvcreate is
-> > getting a segmentation fault at lv_create_remove.c:42
-> >
-> > 42      inline int lv_create ( vg_t *vg, lv_t *lv, char *lv_name) {
-> 
-> 
-> The jist of the above it to look at the LVM patch generated for 2.4.10pre9 and
-> change and lines begining with "+" that contain "min(" or "max(" to "min_t(" 
-> or > "max_t(" respectivily.
-> 
+I just tried recompiled my kernel, and got the SCSI module loaded OK, so I have 
+my tape drive.
 
-I should have mentioned that I ran into this problem when compiling the module, 
-so I edited lvm.c and lvm-snap.c to use min_t() and max_t().
+With this new kernel, I again tried what I did in my first message.  No dice: 
+lvcreate dumps core.  Then, I deleted partitions on the disk and used ext2 
+primary partition instead of reiserfs.  Again, lvcreate dumps core.
 
-I also just started having problems with my aic7xxx module.  I'm thinking I may 
-have missed something in the kernel and/or module compilation.  Am trying 
-another pass at it.
+I've given up on LVM for now since the machine I'm playing with is in dire need.
 
 --Dave
