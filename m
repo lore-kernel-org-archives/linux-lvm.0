@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Error on vgscan & lvremove
-Message-ID: <20020524105744.B15896@sistina.com>
-References: <004d01c20110$f2b8ff70$6501a8c0@bomoon> <20020522144651.F9107@sistina.com> <009601c20204$81710e30$6501a8c0@bomoon> <20020523190023.A13788@sistina.com> <017301c202d0$c77c2410$6501a8c0@bomoon>
-Mime-Version: 1.0
-In-Reply-To: <017301c202d0$c77c2410$6501a8c0@bomoon>; from bo@sosnetwork.net on Thu, May 23, 2002 at 08:12:04PM -0700
+From: "William Blunn" <bill+f.20020524@tao-group.com>
+Subject: Re: [linux-lvm] getting started with LVM
+Message-ID: <NBBBKNGPDGBANKFPOHCNKEKJGHAA.bill+f.20020524@tao-group.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3CED5725.8070006@jumpline.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,136 +14,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 24 04:01:02 2002
+Date: Fri May 24 04:02:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, May 23, 2002 at 08:12:04PM -0700, bo wrote:
-> Heinz,
-> 
-> > A 'workaround' for non-devfs configurations is
-> >
-> > ls /dev/*/group | sed 's!/group!!' | xargs rm -r ; vgmknodes
-> >
-> 
-> ??Something wrong on "sed 's!/group!!' ", it did not work.
+> Something I probably should have mentioned....due to some software we=20
+> use to serve our customers, we have hard links - TONS of them.  We=20
+> looked at cpio, but cpio does not restore hardlinks correctly, dump=20
+> will.  We also looked at tar, 'star', dd, just about anything to take=20
+> the data from one device/filesystem to another.
 
-Works fine here. Maybe your sed doesn't like the delimiter?
+To copy data from one filesystem another, preserving hard links, I use:
 
-Try '/' rather than '!' with sed like "sed 's/\/group//'".
+  rsync  -avxSHW  /source-dir/  /target-dir
 
-> 
-> >
-> > link the single executable statically by running
-> > "./configure --enable-static_link" (which doesn't use the shared libs).
-> >
-> 
-> It did not work. I rebuilt LINUX kernel & LVM after
-> "./configure --enable-static_link".
-> I got the same result.
+  -a   same meaning as for "cp" i.e. recurse and copy metadata
+  -v   be verbose
+  -x   do not cross filesystem boundaries
+  -S   handle sparse files
+  -H   handle hard links
+  -W   only copy whole files
 
-Did you start with a fresh source tree or run "make distclean"
-before "./configure --enable-static_link"?
+  Trailing slash on source-dir makes it copy *contents* of directory
+  rather than directory itself.
 
-> 
-> Another big issues came as follow;
-> 
-> I tried to go back to LVM1.0.3, but getting a big trouble.
-> 
-> Q1:  Is it backward compatible from LVM1.1-rc2 to LVM1.0.3 or not?
-> 
->         I already built the volume from LVM1.1-rc2 then I went back to
-> LVM1.0.3.
->         All of LVM tools are not working as shown in the following console
-> output.
-> 
-> Q2: How could I remove this volume and rebuild? I do not care about the
-> data.
+It only copies changed changed files.
 
-No LV status flags have been changed at all in 1.1-rc.
-lv_check_consistency() checks for the 2 possible user land states in lv_status
-which are either 0 or LV_ACTIVE.
+Be sure to use version 2.5.2 or higher of rsync.
 
-For fast progress it should be ok to remove the lv_status checks from 
-lv_check_consistency().
+Bill
+--=20
+William H. Blunn - <bill+s.mq8r0gra@tao-group.com> - Developer Support
+Tao
+62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
+Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
 
-For further investigation of a possible 1.1-rc flaw ITR, could you send
-me (mge@sistina.com) the output files created with
+The contents of this e-mail and any attachments are confidential and may
+be legally privileged. If you have received this e-mail and you are not
+a named addressee, please inform us as soon as possible on
++44 118 901 2999 and then delete the e-mail from your system. If you are
+not a named addressee you must not copy, use, disclose, distribute,
+print or rely on this e-mail. Any views expressed in this e-mail or any
+attachments may not necessarily reflect those of Tao's management.
+Although we routinely screen for viruses, addressees should scan this
+e-mail and any attachments for viruses. Tao makes no representation or
+warranty as to the absence of viruses in this e-mail or any attachments.
+Please note that for the protection of our business, we may monitor and
+read e-mails sent to and from our server(s).
 
-for d in All_volRaid0_PVs
-do
-	dd if=/dev/YOurPV of=`basename $d`.vgda bs=1k count=4
-done
-
-packed into a compressed tar archive?
-
-Thanks,
-Heinz    -- The LVM Guy --
-
-
-> 
-> During boot or after the boot, I have the following errors;
-> 
-> [root@localhost /]# vgscan -f
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "volRaid0"
-> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volRaid0"
-> is inconsistent
-> vgscan -- ERROR: unable to do a backup of volume group "volRaid0"
-> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
-> "volRaid0" from "/etc/lvmtab"
-> vgscan -- found inactive volume group "volRaid5"
-> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volRaid5"
-> is inconsistent
-> vgscan -- ERROR: unable to do a backup of volume group "volRaid5"
-> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
-> "volRaid5" from "/etc/lvmtab"
-> vgscan -- found inactive volume group "volDisk"
-> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volDisk"
-> is inconsistent
-> vgscan -- ERROR: unable to do a backup of volume group "volDisk"
-> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
-> "volDisk" from "/etc/lvmtab"
-> vgscan -- found inactive volume group "volDisk2"
-> vgscan -- ERROR "lv_check_consistency(): LV status" volume group "volDisk2"
-> is inconsistent
-> vgscan -- ERROR: unable to do a backup of volume group "volDisk2"
-> vgscan -- ERROR "lvm_tab_vg_remove(): unlink" removing volume group
-> "volDisk2" from "/etc/lvmtab"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> groups
-> 
-> [root@localhost /root]# ls /dev/*/group
-> ls: /dev/*/group: No such file or directory
-> [root@localhost /root]# vgmknodes
-> vgmknodes -- no volume groups found to create nodes for
-> 
-> 
-> Thanks for your help,
-> 
-> Bo
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Visit our website at http://tao-group.com/
