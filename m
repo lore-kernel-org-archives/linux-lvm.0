@@ -1,25 +1,32 @@
-From: Andreas Dilger <adilger@home.com>
-Message-Id: <200004042010.e34KAMZ01651@webber.adilger.net>
-Subject: Re: [linux-lvm] Re: LVM 256 logical volume limit
-Date: Tue, 4 Apr 2000 14:10:21 -0600 (MDT)
-MIME-Version: 1.0
+Date: Tue, 4 Apr 2000 22:50:13 +0200
+From: bert hubert <ahu@ds9a.nl>
+Subject: [linux-lvm] LVM Viewer / Manager app
+Message-ID: <20000404225012.A8198@home.ds9a.nl>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Luca Berra writes:
-> sorry, nbd sucks.
-> it is far too unstable to use outside of a test environment.
+Hi everybody,
 
-I recall reading that someone fixed up NBD for another project - I think
-it was GFS.  If anyone is seriously considering VSD implementation,
-they could at least start somewhere...
+In the progress of working on my much-disputed HOWTO, I programmed a tiny
+tool which visually shows you your LVM configuration. A screenshot is
+available on http://ds9a.nl/lvm-howto/. Source will be released soon but
+its far too ugly now :-)
 
-Cheers, Andreas
+I'm currenly thinking about making this a full blown LVM manager, does
+anybody have ideas on what the best paradigm would be? Perhaps people here
+have worked with HP/UX SAM, and have ideas.
+
+Regards,
+
+bert hubert.
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+                       |              http://www.rent-a-nerd.nl
+                       |                  
+                       |                     - U N I X -
+                       |          Inspice et cautus eris - D11T'95
