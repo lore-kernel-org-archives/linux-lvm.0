@@ -1,11 +1,10 @@
-Return-Path: <dave@galilean.d2g.com>
-Date: Sat, 24 Mar 2001 19:08:08 +0100
-From: Dave Wapstra <dave@xs4all.nl>
-Subject: Re: [linux-lvm] LVM corruption with ext2resize on Ultrasparc
-Message-ID: <20010324190808.A28688@mercury.mercury.multiweb.nl>
-References: <20010323225559.A20479@mercury.mercury.multiweb.nl> <200103232311.f2NNBoG24415@webber.adilger.int>
-Mime-Version: 1.0
-In-Reply-To: <200103232311.f2NNBoG24415@webber.adilger.int>; from adilger@turbolinux.com on Fri, Mar 23, 2001 at 04:11:50PM -0700
+Return-Path: <jorg.de.jong@ida.xs4all.nl>
+Message-ID: <3ABDD38D.A841FFD3@ida.xs4all.nl>
+Date: Sun, 25 Mar 2001 13:16:29 +0200
+From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvmgui 0.2 release
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,19 +17,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On 23 March, 2001 at 16:11:50 -0700, Andreas Dilger <adilger@turbolinux.com> wrote:
-> I _really_ need to see what you did in between here that could cause the
-> problem.  Did you do an lvextend or something?  Any messages in the
-> syslog?  Basically, it is impossible that ext2resize caused any problems.
-> 
+Hi,
 
-I'll try and reproduce the problem pinpoint the exact order of commands that triggers the problem.
+I just released LVM Gui version 0.2. 
+You can download it at the projects website:
 
--Dave
+        http://www.xs4all.nl/~mmj/lvm
 
--- 
-Dave Wapstra
-dave@xs4all.nl
+In this release I have also include the source code,
+for those who are interested. 
+
+Although I did not get that match feedback on my 
+first release, I still hope people find the LVM Gui
+useful, despite the fact that it is written in java.
+
+Summary of the changes:
+* Version 0.2 first source release
+
++ New Features / Enhancements / Bug Fixes
+
+- added images for LV and PV. 
+- extend/reduce a VG
+- extend/reduce a LV
+- added vgscan in menu
+- changed File->Rescan to File->Refresh
+
+regards,
+
+Jorg de Jong
