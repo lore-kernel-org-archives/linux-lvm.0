@@ -1,10 +1,11 @@
-Date: Tue, 11 Sep 2001 16:20:52 +0200
+Date: Tue, 11 Sep 2001 16:31:20 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] rc2 problems
-Message-ID: <20010911162052.E20767@sistina.com>
-References: <20010910132133.F31313@sistina.com> <20010911011612.37371.qmail@web13407.mail.yahoo.com>
+Subject: Re: [linux-lvm] pv_move_pe() error again :/
+Message-ID: <20010911163120.F20767@sistina.com>
+References: <E15f13v-0003bs-00@hermes.sistina.com> <E15fJux-0005Kk-00@hermes.sistina.com> <20010910001643.A19424@vestdata.no> <E15gELn-0004OG-00@hermes.sistina.com> <20010910103952.B31660@vestdata.no> <20010910132709.G31313@sistina.com> <20010910173851.A3751@vestdata.no>
 Mime-Version: 1.0
-In-Reply-To: <20010911011612.37371.qmail@web13407.mail.yahoo.com>; from plamb_98@yahoo.com on Mon, Sep 10, 2001 at 06:16:12PM -0700
+In-Reply-To: <20010910173851.A3751@vestdata.no>; from lvm@ragnark.vestdata.no on Mon, Sep 10, 2001 at 05:38:51PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,107 +17,74 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Mon, Sep 10, 2001 at 06:16:12PM -0700, Pierre Lamb wrote:
-> Here is what I did:
->   Built patch, then applied it I got this
->  it patched various file, next it said it detected a
-> provious patch I said (y) then it wanted to remove a
-> file not detected.
-> 
-> Next I did a xconfig selecting LVM. did a make dep
-> then a make clean did a make bzImage, then a make
-> modules ( no errors), then make modules_install there
-> at the en it gave an error :
-> 
-> Unsolved sysmbols in (path)lvm-mod.o
-> 
-> depmod  lvm_init_fs
-> depmod  lvm_fs_remove.vg
-> depmod  lvm_fin_fs
-> depmod  lvm_fs_remove_lv
-> depmod  lvm_fs_remove_pv
-> depmod  lvm_fs_create_vg
-> depmod  lvm_fs_create_lv
-> depmod  lvm_fs_create_pv
-> 
-> know what ???
+On Mon, Sep 10, 2001 at 05:38:51PM +0200, Ragnar Kj=F8rstad wrote:
+> On Mon, Sep 10, 2001 at 01:27:09PM +0200, Heinz J . Mauelshagen wrote:
+> > But I wonder, why in your case the locking of the PE failed. Are you =
+able to=20
+> > reporduce your case and provide the error code?
+>=20
+> It was reproducable at the time - now the disk in question has been
+> replaced. If it's interesting enough, I can make a phone call and see i=
+f
+> I can get the broken disk back.
+>=20
+> The error_occured in the pe_lock() call at the beginning of the
+> move-operation - the one that I commented out in patch.
+>=20
+> This is the kernel-log from the time (well, I think it was from the tim=
+e
+> I ran pe_move):
+> Sep  6 18:10:01 argus kernel: hdd: dma_intr: status=3D0x51 { DriveReady=
+ SeekComplete Error }
+> Sep  6 18:10:01 argus kernel: hdd: dma_intr: error=3D0x10 { SectorIdNot=
+Found }, LBAsect=3D155058176, sector=3D0
+> Sep  6 18:10:01 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
+> Sep  6 18:10:01 argus kernel: hdd: dma_intr: status=3D0x51 { DriveReady=
+ SeekComplete Error }
+> Sep  6 18:10:01 argus kernel: hdd: dma_intr: error=3D0x10 { SectorIdNot=
+Found }, LBAsect=3D155058176, sector=3D0
+> Sep  6 18:10:01 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
+>=20
+> and:
+>=20
+> Sep  6 18:15:51 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
+> Sep  6 18:15:55 argus last message repeated 213 times
+> Sep  6 18:15:55 argus kernel: hdd: read_intr: status=3D0x59 { DriveRead=
+y SeekComplete DataRequest E rror }
+> Sep  6 18:15:55 argus kernel: hdd: read_intr: error=3D0x40 { Uncorrecta=
+bleError }, LBAsect=3D11801433 2, sector=3D118014332
+> Sep  6 18:15:55 argus kernel: end_request: I/O error, dev 16:40 (hdd), =
+sector 118014332
 
-This looks like "make modules" didn't compile lvm-fs.c and didn't link it
-into lvm-mode.o.
+Ragnar, the block ioctl error the lvm driver shows is not related to the =
+locking
+of a physical extent, because that is achived by the PE_LOCK_UNLOCK ioctl
+(0x50 BTW) using the character ioctl function.
+Wasn't able to find that ioctl grepping the kernel sources.
+Could it be some application checking devices regularly like a desktop
+CD-ROM tool or something?
 
-Could you check your "make modules" output in detail, if that's true
-and if you see a reason for this.
+I gues your problem was just the dying disk and therefore temporarily avo=
+iding
+the read() check in pv_move_pe() should have catched this one as well.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-
-> 
-> Pierre
-> 
-> 
-> --- "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-> wrote:
-> > On Fri, Sep 07, 2001 at 06:07:38AM -0700, Pierre
-> > Lamb wrote:
-> > > Well I got rh 2.4.7 made the rc2 patches and
-> > patched
-> > > the kernel. No errors, complied the kernel,
-> > modules,
-> > > and installed the modules. All with no errors.
-> > Upon
-> > > booting the lvm-mod modules doesn't load so I did
-> > a
-> > > insmod on lvm-mod and get errors about
-> > non-resloved
-> > > symbols,  What to do next????
-> > 
-> > Could you send what symbols are non resolved?
-> > 
-> > > 
-> > > PIerre
-> > > 
-> > > __________________________________________________
-> > > Do You Yahoo!?
-> > > Get email alerts & NEW webcam video instant
-> > messaging with Yahoo! Messenger
-> > > http://im.yahoo.com
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > >
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at
-> > http://www.sistina.com/lvm/Pages/howto.html
-> > 
-> > -- 
-> > 
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> > 
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to
-> > solve them ***
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at
-> http://www.sistina.com/lvm/Pages/howto.html
-> 
-> 
-> 
-> __________________________________________________
-> Do You Yahoo!?
-> Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
-> http://im.yahoo.com
-> 
+>=20
+> The kernel is standard 2.4.8 without the LVM-patches. The usersspace
+> tools are version 1.0.1-rc2.
+>=20
+>=20
+>=20
+>=20
+> --=20
+> Ragnar Kj=F8rstad
+> Big Storage
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
@@ -126,7 +94,9 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -134,4 +104,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
