@@ -1,9 +1,9 @@
-Message-ID: <38715858.5FBC6EB6@msede.com>
-Date: Tue, 04 Jan 2000 03:18:00 +0100
+Message-ID: <387158FF.F4EBEFB1@msede.com>
+Date: Tue, 04 Jan 2000 03:20:47 +0100
 From: Michael Marxmeier <mike@msede.com>
 Reply-To: jamesp@emporia.u-net.com
 MIME-Version: 1.0
-Subject: [linux-lvm] Swap (fwd)
+Subject: [linux-lvm] [3 Questions... (fwd)
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -13,27 +13,41 @@ To: linux-lvm@msede.com
 
 
 -------- Original Message --------
-Subject: Swap
-Date: Tue, 4 Jan 2000 01:48:30 +0000 (GMT)
+Subject: 3 Questions...
+Date: Tue, 4 Jan 2000 00:44:36 +0000 (GMT)
 From: James Pattinson <jamesp@emporia.u-net.com>
+X-Sender: jamesp@greebo.jj.net
 To: linux-lvm@msede.com
-Message-ID:
-<Pine.LNX.4.10.10001040146350.1544-100000@fuse.aethos.co.uk>
+Message-ID: <Pine.LNX.4.10.10001040025340.1128-100000@greebo.jj.net>
 
-Hi
+Hi,
 
-I'm using /dev/vg00/swapvol1 as my swap device - it all seems OK but I
-get
-this when I try to turn swap off...
+I have a few questions... well... I keep thinking of more :)
 
-[root@fuse /root]# swapoff -a -v
-swapoff on /dev/vg00/swapvol1
-swapoff: /dev/vg00/swapvol1: Invalid argument
+1. Raid / LVM
 
-I've done mkswap and everything, and swap is working.
+Does anyone have a patch against 2.2.13 that contains both the LVM
+patch
+and the super-raid patch (the one that uses MMX)? I want to get max
+performance by having a striped /dev/md0 as my PV. And are there any
+plans
+for coordination with the RAID team so there are no clashes?
 
-Any ideas?
+2. LVM 0.8i kernel compile fails
 
-Cheers
+I got an error yesterday while trying to compile the latest LVM patch
+- it
+failed with 'undefined reference to lvm_init' or something when
+linking
+the final kernel. The kernel config works fine with 0.7...
+
+3. LVM in The kernel
+
+Any idea if LVM will be in 2.4 / 3.0? I hope it is - I can't imagine
+life
+without LVM!
+
+OK that's it for now - please keep up the very good work Heinz and
+all...
 
 James
