@@ -1,8 +1,14 @@
-Message-Id: <200203050236.SAA07460@hpgssl.cup.hp.com>
-From: John DeFranco <defranco@cup.hp.com>
+From: Theo Van Dinter <felicity@kluge.net>
+Subject: Re: [linux-lvm] LVM System
+Message-Id: <20020304222144.C24876@kluge.net>
+References: <auto-000021223409@front2.mail.megapathdsl.net>
+    <auto-000019991746@front1.mail.megapathdsl.net>
+    <20020304172754.K18939@kluge.net>
+    <auto-000019995456@front1.mail.megapathdsl.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Problems building on RedHat 7.2 with 2.4.9-21 kernel
+Content-Disposition: inline
+In-Reply-To: <auto-000019995456@front1.mail.megapathdsl.net>;
+    from anthony@AWMObjects.com on Mon, Mar 04, 2002 at 05:39:09PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,74 +19,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  4 20:36:01 2002
+Date: Mon Mar  4 21:21:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
-Cc: defranco@cup.hp.com
+Content-Transfer-Encoding: 7bit
+To: "Anthony W. Marino" <anthony@AWMObjects.com>
+Cc: linux-lvm@sistina.com
 
-Hi,
+On Mon, Mar 04, 2002 at 05:39:09PM -0500, Anthony W. Marino wrote:
+> I don't understand.  Are you saying the all the software I need is contained 
+> within my kernel or do I still need to get a driver from 3Ware?
+> I'm running SuSE Mantel 2.4.18 which the changes text states it has 
+> 2.4.19-pre1 as well as XFS.
 
-I'm having some problems building lvm (1.0 or 1.0.3) on a redhat7.2 system 
-with kernel 2.4.9-21. I'm getting the following errors:
+When I installed the SGI 1.0.2 kernel on my machine (2.4.9), it already
+had the latest (1.02.00.008) 3w-xxxx module in place.  I doubt the SGI
+folks added it, so I'm assuming it's a standard module in the 2.4.x
+series kernels.
 
-drivers/md/mddev.o: In function `lvm_snapshot_alloc':
-drivers/md/mddev.o(.text+0xa881): undefined reference to `alloc_kiovec'
-drivers/md/mddev.o(.text+0xa8b4): undefined reference to `alloc_kiovec'
-drivers/md/mddev.o(.text+0xa8f3): undefined reference to `free_kiovec'
-drivers/md/mddev.o(.text+0xa91a): undefined reference to `free_kiovec'
-drivers/md/mddev.o: In function `lvm_snapshot_release':
-drivers/md/mddev.o(.text+0xa9b5): undefined reference to `free_kiovec'
-drivers/md/mddev.o(.text+0xa9ea): undefined reference to `free_kiovec'
-make[1]: *** [kallsyms] Error 1
-make[1]: Leaving directory `/usr/src/linux-2.4.9-21'
+If you want the "manager" software (which really just lets you see
+status/configuration), that's a seperate piece you can download.
 
-After doing some research it looks to me like the problem is in file 
-fs/iobuf.c which now uses alloc_kiovec_sz and free_kiovec_sz instead of the 
-above:
-
-/*
- * iobuf.c
- *
- * Keep track of the general-purpose IO-buffer structures used to track
- * abstract kernel-space io buffers.
- *
- * 07/20/01 Rohit Seth <rohit.seth@intel.com> Made the iobuf come from
- * kiobuf cache instead of vmalloc (that is a killer for most of archs.)  
-These
- * changes are specifically targeted for increasing raw IO performance.
- * Introducing the new *_sz functions that take the number of bhs actually
- * required by kiovec.
- */
-.
-.
-.
-void free_kiovec_sz(int nr, struct kiobuf **bufp, int *szp)
-{
-.
-.
-.
-int alloc_kiovec_sz(int nr, struct kiobuf **bufp, int *szp)
-{
-
-
-This file is different from what is in rh kernel 2.4.7-10 (which lvm builds 
-find on) and apparently in the vanilla kernels from kernels.org which don't 
-seem to have the problem either.
-
-I've seen emails on this list saying that lvm only really works/qualified on 
-vanilla kernel sources and not distro specific. I guess this is a good 
-example as to why. However there has to be some easy solution to this I would 
-think/hope. At this point I need to use the redhat 2.4.9-21 kernel and lvm 
-1.0 since the version that is in this kernel is 0.9_beta1. So I don't have 
-the option of going to 2.4.18 for example.
-
-Any thoughts?
-
-Thanks!
 -- 
-==========
-John DeFranco			Hewlett-Packard Company
-john_defranco@hp.com		Availability Clusters Solution Division
-phone: 408-447-7543		19111 Pruneridge Ave, M/S 4101
-fax: 408-447-0056		Cupertino, CA 95014 
+Randomly Generated Tagline:
+There's often more than one correct thing.
+ There's often more than one right thing.
+ There's often more than one obvious thing.
+              -- Larry Wall in <199806201726.KAA26569@wall.org>
