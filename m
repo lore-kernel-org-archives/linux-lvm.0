@@ -1,9 +1,7 @@
-From: Daniel Zeiss <daniel@kellnerweg.de>
+Message-ID: <OF2D2C72C3.FF752A0C-ON85256C7E.006C3E7E@wk.dcx.com>
+From: lg34@daimlerchrysler.com
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] undocumented strange LVM behaviour
-References: <E18GYnN-0005nz-00@mail.kellnerweg.de>
-Content-Transfer-Encoding: 7bit
-Message-Id: <E18H7Ca-0006IL-00@mail.kellnerweg.de>
+Subject: [linux-lvm] LVM  &  S/390 Question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +12,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 27 12:46:02 2002
+Date: Wed Nov 27 13:51:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: imb4@daimlerchrysler.com, nas@daimlerchrysler.com
 
-vgcfgrestore be an option to restore my lvm?
+We are in the process of installing LVM 1.0.6  on Linux S/390.
 
+We installed the patches and are in the process of rebuilding the Kernel.
+We were on our last step (make modules_install) and we came across the
+following error condition.
 
-Daniel Zeiss wrote:
+Please see below. Any assistance would be greatly appreciate.
+Respond to lg34@dcx.com.
+_____________________________________
 
- > Hello,
- >
- > my lvm (2 partitions on 2 discs /dev/hde4 /devhdg2) on a Debian Woody
- > Linux (2.4.18-686) shows some strange behaviour:
- >
- > After rebooting my computer, vgscan found an inactive "vg01" to be my
- > volume group but vgchange -a y said:
- >
- > vgchange -- ERROR: can't get name(s) of physical volumes
- > vgchange -- Please check, if /proc is mounted
- >
- > my /proc is mounted and in /proc/lvm /global is says:
- >
- > Total:  0 VGs   0 PVs   0 LVs  (LVs open)
- > Global: 152 bytes malloced  IOP version 10   0:05:06 active
- >
- > I do _not_ use devfs, /dev is complete and working.
- >
- > My lvm are just my home dirs, so uncomming them in /etc/fstabs and
- > rebooting brings my system up with kde now problem and root can log in
- > and work (which it shouldnt do with kde, just testing).
- >
- > My / is on /dev/hde3, so it isnt a disc failure.
- >
- > the output of
- >
- > vgchange -a y -d
- >
- > is attached.
- >
- > What can I do to get my LVM up running _without_ dataloss?
- >
- > Thank you
- >
- > Daniel
- >
- >
+cp ctc.o netiucv.o lcs.o
+/lib/modules/2.4.9-38custom/kernel/drivers/s390/net/
+make[2]: Leaving directory `/usr/src/linux-2.4.9-38/drivers/s390/net'
+make[1]: Leaving directory `/usr/src/linux-2.4.9-38/drivers/s390'
+make -C  arch/s390/math-emu modules_install
+make[1]: Entering directory `/usr/src/linux-2.4.9-38/arch/s390/math-emu'
+make[1]: Nothing to be done for `modules_install'.
+make[1]: Leaving directory `/usr/src/linux-2.4.9-38/arch/s390/math-emu'
+cd /lib/modules/2.4.9-38custom; \
+mkdir -p pcmcia; \
+find kernel -path '*/pcmcia/*' -name '*.o' | xargs -i -r ln -sf ../{}
+pcmcia
+if [ -r System.map ]; then /sbin/depmod -ae -F System.map  2.4.9-38custom;
+fi
+depmod: *** Unresolved symbols in
+/lib/modules/2.4.9-38custom/kernel/drivers/md/
+lvm-mod.o
+depmod:         alloc_kiovec
+depmod:         lvm_init_fs
+depmod:         lvm_fs_remove_vg
+depmod:         lvm_fin_fs
+depmod:         lvm_fs_remove_lv
+depmod:         lvm_fs_remove_pv
+depmod:         lvm_fs_create_vg
+depmod:         lvm_fs_create_lv
+depmod:         free_kiovec
+depmod:         lvm_fs_create_pv
+make: *** [_modinst_post] Error 1
+[root@lnxc0014 linux-2.4]#
+
+_________________________________
+
+Thank You,
+Larry C. Grillo
+DaimlerChrysler ITM
+SCM & Automation Technologies
+lg34@dcx.com
+(586) 274-7488
