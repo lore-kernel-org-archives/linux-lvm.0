@@ -1,11 +1,11 @@
-Date: Tue, 11 Sep 2001 11:30:54 +0000
-From: Tomas Edwardsson <tommi@tommi.org>
-Message-ID: <20010911113054.B16588@hp.is>
-References: <20010911112241.A16588@hp.is>
+Date: Tue, 11 Sep 2001 13:53:36 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LVM kernel patch request
+Message-ID: <20010911135336.A20767@sistina.com>
+References: <20010910154853.B15329@sistina.com> <NBBBJHKIOKPKOGOEPEDPCEDEDNAA.stuart@bh90210.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010911112241.A16588@hp.is>; from tommi@tommi.org on Tue, Sep 11, 2001 at 11:22:41AM +0000
-Subject: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <NBBBJHKIOKPKOGOEPEDPCEDEDNAA.stuart@bh90210.net>; from stuart@bh90210.net on Mon, Sep 10, 2001 at 07:26:00PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +17,130 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-I had already tried the vgcfgrestore, it didn't seem to help but I discovered
-that the UUID for one of my PVs was missing so I ran the uuid-fixer and now
-they all have UUIDs again (don't know if that is relevant). 
+On Mon, Sep 10, 2001 at 07:26:00PM -0700, IT3 Stuart B. Tener, USNR-R wrote:
+> Dear Sir:
+>=20
+> 	Silly me, I followed the instructions in the How-To (30 AUG 2001) which =
+notes there is a patch directory on the ftp site which obviously does not e=
+xist. Perhaps the maintainer of the How-To can correct this anomaly so I am=
+ able to follow correct instructions.
 
-I have run the pvdata on all my PVs although I think the right one is the
-following file run with pvdata -avP /dev/hdd1:
-  http://vefur.hp.is/lvm/pvdata-hdd1.txt
+Silly us ;-)
 
-I also documented a few more commands:
+Thanks for the hint. Will change that.
 
-  pvdata -avP /dev/hdb2,	http://vefur.hp.is/lvm/pvdata-hdb2.txt
-  pvdata -avP /dev/hdc2,	http://vefur.hp.is/lvm/pvdata-hdc2.txt
-  pvscan,			http://vefur.hp.is/lvm/pvscan.txt
-  vgscan,			http://vefur.hp.is/lvm/vgscan.txt
+Regards,
+Heinz    -- The LVM Guy --
 
-On Tue, Sep 11, 2001 at 11:22:41AM +0000, Tomas Edwardsson wrote:
-> On Sep 07, 2001  10:35 +0000, Tomas Edwardsson wrote:
-> > Hmm, anyone able to help with this? All my data is currently offline and
-> > I really need it back so if anyone could help please!
+
+>=20
+>=20
+> Very Respectfully,=20
+>=20
+> Stuart Blake Tener, IT3, USNR-R, N3GWG=20
+> Beverly Hills, California
+> VTU 1904G (Volunteer Training Unit)=20
+> stuart@bh90210.net=20
+> west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043=
+=20
+> east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859=20
+>=20
+> Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's fr=
+ee!)=20
+>=20
+> JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.=20
+>=20
+> Monday, September 10, 2001 7:23 PM
+>=20
+> -----Original Message-----
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On =
+Behalf Of Heinz J . Mauelshagen
+> Sent: Monday, September 10, 2001 6:49 AM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] LVM kernel patch request
+>=20
+> On Mon, Sep 10, 2001 at 06:35:25AM -0700, IT3 Stuart B. Tener, USNR-R wro=
+te:
+> > List members:
 > >
-> > - Tommi
+> >       I am running a Mandrake 8.0 2.4.8 (or 2.4.9) kernel and cannot fi=
+nd the patch files on the ftp site.
+>=20
+> Suart,
+>=20
+> patches are created automagically(TM) running make in the PATCHES/ subdir=
+ectory
+> of the LVM source distro. Please follow the instructions in the contained
+> INSTALL and PATCHES/README files in order to hear the full story.
+>=20
 > >
-> > On Thu, Sep 06, 2001 at 12:32:45PM +0000, Tomas Edwardsson wrote:
-> > > Here is what vgscan shows:
-> > >
-> > > vgscan -- reading all physical volumes (this may take a while...)
-> > > vgscan -- found inactive volume group "vg00"
-> > > vgscan -- only found 626 of 625 LEs for LV /dev/vg00/lvol1 (0)
-> > > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "vg00" from physical volume(s)
-> > > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
-> 
-> It looks like the PE table does not match what is in the LV table for
-> that LV (i.e. the PE table has 626 PEs that claim to be part of the LV,
-> but the LV says it has only 625 LEs allocated). Two possibilities: you recently added an LE to the LV and you had a crash
-> (or an LVM bug), or somehow you had an error writing to disk.  You can try
-> restoring a copy of the metadata with vgcfgrestore to see if it helps. Failing that, check pvdata -avP <disk> to see what is wrong. Cheers, Andreas
-> --
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> >       Has anyone thought to add the "FAQ" into the "How-To" or create a=
+ combined PDF version of the FAQ/How-To or a PDF version of the FAQ?
+>=20
+> I didn't think about this that way before, because both documents solve
+> different purposes.
+>=20
+> FAQ is ment to be a source of questions/answers for typical problems
+>=20
+> *but*
+>=20
+> HOWTO is a bunch of process descriptions for achiving arbitrary
+> goals with LVM correctly.
+>=20
+> If I missed your point, please provide some examples HOWTO ;-) integrate
+> FAQs and HOWTO.
+>=20
+> Regards,
+> Heinz    -- The LVM Guy --
+>=20
+>=20
+> >
+> >
+> > Very Respectfully,
+> >
+> > Stuart Blake Tener, IT3, USNR-R, N3GWG
+> > Beverly Hills, California
+> > VTU 1904G (Volunteer Training Unit)
+> > stuart@bh90210.net
+> > west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
+> > east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
+> >
+> > Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's =
+free!)
+> >
+> > JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
+> >
+> > Monday, September 10, 2001 6:31 AM
+> >
+> > =FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=
+=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=E5=8A{=B1=FE[=E6(tm)=A8=A5=8Ax%=8A=CBe=
+=8A{=B1=FE[=E6=FE=C8=AC=B6)=DA=FD=CA&=86=DBi=FF=FF=E5=8A=CBl=FE=C8=AC=B6)=
+=DA=FD=CA&=FEf=A2-f=A7=FEX=AC=B6)=DF=A3=F9b=9E=EC=FF-=F9"y=A7m...=E2=D50s-=
+=FD3=9A=B6=1Bm=FF=FF=FF=C3
+> =FF=B2+-=8Av=FFr=89=BF-=F9=BF=3D=A8-=B3=F8h=C2=DA=FF=86=D9=A5
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
