@@ -1,14 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i225UH824179
-	for <linux-lvm@redhat.com>; Tue, 2 Mar 2004 00:30:17 -0500
-Received: from hotmail.com (law11-oe50.law11.hotmail.com [64.4.16.22])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i225UHb15373
-	for <linux-lvm@redhat.com>; Tue, 2 Mar 2004 00:30:17 -0500
-From: "sachin" <sachindurge@hotmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <Law11-OE501GZ82RJu300010a53@hotmail.com>
-Subject: [linux-lvm] unique identification of lv
+Received: from reti (vpn50-6.rdu.redhat.com [172.16.50.6])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2298Suq014961
+	for <linux-lvm@redhat.com>; Tue, 2 Mar 2004 09:08:29 GMT
+Received: from joe by reti with local (Exim 4.30)
+	id 1Ay5to-00036Z-Up
+	for linux-lvm@redhat.com; Tue, 02 Mar 2004 09:09:12 +0000
+From: Joe Thornber <thornber@redhat.com>
+Subject: Re: [linux-lvm] snapshot failes with kcopyd error
+Message-ID: <20040302090912.GE662@reti>
+References: <200403010557.i215vC40023828@bongo.freakout.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200403010557.i215vC40023828@bongo.freakout.de>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -20,25 +22,32 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Tue Mar  2 00:28:06 2004
+Date: Tue Mar  2 04:07:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi Everyone
+On Mon, Mar 01, 2004 at 06:57:12AM +0100, Axel Reinhold wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+> 
+> Hello,
+> 
+> i'm working with Linux 2.4.25/device-mapper: 4.0.5-ioctl and from
+> time to time on creating snapshots i get:
+> 
+> device-mapper: Could not create kcopyd client
+> device-mapper: error adding target to table
+> 
+> after that the system sometimes hangs completely.
+> Is there any resource low? I use snapshots intensively
+> and let them stay for long times.
 
-Is there is any way  to idenntify the logical  volume like we have uuid for
-a vg .
-Can we use the lv creation time, lv no ,and vg uuid as a combination ,will
-it work
-if yes how to get the lv creation time .
-i am using LVM1
+Yes, this is a bit of a mess.  Snapshot creation can fail due to our
+use of PF_MEMALLOC, which can't be removed until the tools are updated
+to preload tables.  I also think the tools aren't backing out
+properly, resulting in your hang.  Your best bet for now is to try and
+use dmsetup to unpick the mess whenever it happens.  Sorry this sucks.
 
-Thanks .
-
-
- __   __   __       ___
-|  | |  | |  | |  |  |  |\   |
-|__  |__| |    |__|  |  | \  |
-   | |  | |    |  |  |  |  \ | *
-|__| |  | |__| |  | _|_ |   \|_*_
+- Joe
