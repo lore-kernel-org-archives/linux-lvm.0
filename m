@@ -1,10 +1,11 @@
-Message-ID: <3B966FA5.8080808@st-peter.stw.uni-erlangen.de>
-Date: Wed, 05 Sep 2001 20:32:05 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Wed, 5 Sep 2001 12:32:11 -0600
 Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
+Message-ID: <20010905123211.J32553@turbolinux.com>
 References: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com> <3B95E36E.6070703@st-peter.stw.uni-erlangen.de> <20010905120549.H32553@turbolinux.com> <3B966C63.7080309@st-peter.stw.uni-erlangen.de>
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3B966C63.7080309@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,48 +17,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-i'm building curently 2.4.10-pre4-xfs with the patches from Neil Brown
-and i'll try with a Mandrake-2.4.5 i'll have to update the LVM-code of 
-the is it necessary to be lvm-1.0.1rc2
-or i can do it with lvm-1.0 for the mandrake kernel (my internet 
-connection pretty slow currently)  
-
-svetljo wrote:
-
-> and what should i try now
-> i was writing to Nail Brown about the XFS mount problem  but i think 
-> he stop writing to me
-> after i couldn't recreate the problem
->
+On Sep 05, 2001  20:18 +0200, svetljo wrote:
+> i was writing to Nail Brown about the XFS mount problem  but i think he 
+> stop writing to me after i couldn't recreate the problem
+> 
 > which kernel should i test 2.4.5 2.4.6 2.4.7
->
-> Andreas Dilger wrote:
->
->> On Sep 05, 2001  10:33 +0200, svetljo wrote:
->>
->>> some ideas whom should i write to and what else should i try
->>> i've already written to the developers of e2fsprogs and to Hans Reiser
->>> but i still don't have a reply( it was 2-3 days ago) and mr Hans 
->>> Reiser wonts $25 for looking at a problem
->>>
->>
->> I don't think it has anything to do with e2fsprogs or reiserfs.  The
->> problem is clearly in LVM, MD, or the block layer.  Thousands of people
->> are using both e2fsprogs and reiserfsprogs, and if they had such 
->> problems
->> more people would know about it.
->>
->> Cheers, Andreas
->>
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+
+If you had one that previously worked, then start with that one and
+work forwards until it stops working (maybe dividing the kernel version
+numbers in half for each try to narrow it down quicker).
+
+If you have never had this working properly, try some early kernel like
+2.4.5 and see if it works.  If not then I suspect you have a RAM problem,
+and you may want to swap/remove SIMM/DIMMs to see if you can isolate it.
+
+There is a whole document in linux/Documentation/, like Oops-tracing.txt,
+BUG-HUNTING, etc.
+
+Nobody HAS to help you with this problem (and it seems the Sistina
+folks are quiet on this issue) because you are not paying them anything.
+That is one of the good/bad features of Linux - you can _usually_ get
+free support for a problem, but you may have to do it yourself too.
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
