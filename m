@@ -1,11 +1,10 @@
-Date: Fri, 14 Sep 2001 09:55:00 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Lock Patch
-Message-ID: <20010914095500.A813@tykepenguin.com>
-References: <NBBBJHKIOKPKOGOEPEDPIEFCDNAA.stuart@bh90210.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <NBBBJHKIOKPKOGOEPEDPIEFCDNAA.stuart@bh90210.net>; from stuart@bh90210.net on Thu, Sep 13, 2001 at 11:00:47PM -0700
+content-class: urn:content-classes:message
+Date: Fri, 14 Sep 2001 11:32:13 +0200
+Message-ID: <4C45858D148AD411A8B800A024B36E5009F4C994@granada.fhm.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: "Pawlowski Julian" <Julian.Pawlowski@szm.de>
+Subject: [linux-lvm] =?iso-8859-1?Q?Verst=E4ndnis_von_Stripes_bei_LVM?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,17 +16,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, Sep 13, 2001 at 11:00:47PM -0700, IT3 Stuart B. Tener, USNR-R wrote:
-> List members:
-> 
-> 	I am curious; if I am running 2.4.8-12mdk (Mandrake 8,0), which lock patch do I use the 2.4.4 version or the 2.4.9 version?
-> 
-> 
+Hallo Heinz!
 
-I would try the 2.4.4 one. If that doesn't apply then try the 2.4.9.
+ich habe eine Frage zur Funktion von Stripes beim LVM. Wof=FCr genau
+ben=F6tigt man diese Funktion? Wird damit das LV auf mehrere der reellen
+Partitionen zwecks Performancegewinn verteilt?
 
-patrick
+Hoffe auf eine Antwort... ;-)
+
+
+Gru=DF
+
+Julian
+--=20
+SZM Studios GmbH IT-Service . ProSiebenSat.1 Media AG
+Julian Pawlowski . mailto:Julian.Pawlowski@szm.de
+Gutenbergstra=DFe 3 . 85774 Unterf=F6hring
+http://www.szm.de/ . http://www.ProSiebenSat1.com/=20
