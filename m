@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] How big are PEs by default?
-Message-ID: <20030415130901.GG1250@tykepenguin.com>
-References: <689F43A6CF84E541A721C5C3FD5ADECC1A21EA@blr-m3-msg.wipro.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <689F43A6CF84E541A721C5C3FD5ADECC1A21EA@blr-m3-msg.wipro.com>
+From: "LAWRENCE MOMOH." <momohlaw@weedmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E195StQ-0004x8-00@hermes.sistina.com>
+Subject: [linux-lvm] Business Relationship.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 15 08:09:01 2003
+Date: Tue Apr 15 11:03:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Linux-LVM@sistina.com
 
-On Tue, Apr 15, 2003 at 10:47:18AM +0530, Sharad Tiwari wrote:
-> 4MB is what I know ..
+Dear sir 
 
-They were until 1.0.6
+I am Lawrence Momoh of the republic of sierra leone=3BMeanwhile I am on 
+exile in accra ghana =2EAftermuch atrocities =2Chuman right abuses and the 
+overthrow of the government of major general koroma years ago=2E
 
-Now they are 32MB
--- 
+I served the government as a presidential advisor on finance and mineral resources During our term in office we had various sum of cash and gold deposited in various secret vaults overseas=2EDue to the present gorvernment of 
+Ahmed Tejan Kabahand the ECOWAS EMBARGO ON former ministers of major johnny koromah's AFRC we could not travel out beyond west africa =2E Fortunately 
+for me =2C I manage to get access to one of the vaults in accra ghana=2Cthe 
+vaults contains $18=2E37m USD and some quantities of gold =2E
 
-patrick
+SUBJET MATTER=3B I need a foreign partner who can assist me claim this vault from the security company =2C hence I have rgistered that they belong to a valued 
+friend of mine who left sierra leone at the wake of the civil war for safe keeping =2E
+
+After the claim of the vaults you will help me to travel to your country where we will invest the sum and arrange the sale of the gold =2EKindly reply this message to enable us start the processing of the claims=2CYou are free to ask any questions with regard to this transaction=2E 
+
+Best Regards=2C 
+
+MR=2ELAWRENCE MOMOH=2E
