@@ -1,10 +1,12 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] encryption in LVM2
-Message-ID: <20030218014556.L14285@zealot.blacknet.de>
-References: <3E510115.C2FF3B83@silicide.dk> <20030217203406.GA6846@localhost>
-Mime-Version: 1.0
+From: Jason Smith <jhs@openenterprise.biz>
+References: <F117BHa3ney2KMH9Nev0003882b@hotmail.com>
+In-Reply-To: <F117BHa3ney2KMH9Nev0003882b@hotmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: clearsigned data
 Content-Disposition: inline
-In-Reply-To: <20030217203406.GA6846@localhost>; from linux-lvm@24x7linux.com on Mon, Feb 17, 2003 at 09:34:06PM +0100
+Message-Id: <200302180743.00560.jhs@openenterprise.biz>
+Subject: [linux-lvm] Re: Sharing LVM's via NFS on Redhat 8.0 Part2 - SAMBA?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +17,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 17 18:46:01 2003
+Date: Mon Feb 17 19:21:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Mon, Feb 17 '03 at 21:34, Jose Luis Domingo Lopez wrote:
-> I don't know of anyone working on block-based encryption for LVM2/DM,
-> but by now you can try one of the several filesystem-level encryption
-> solutions out there. I have personally used loop-aes
-hint: loop-aes is a block-based encryptor. It just happens to operate on
-blocks in files, due to the limitations of loop device driver.
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-writing a personality for lvm2 to do blocklevel encryption would be nice
+On Tuesday 18 February 2003 07:31 am, DJ TweeQ wrote:
+> If it is ok/proven that sharing LV's via NFS is possible (without data
+> corruption)...can they also be shared via SAMBA without data corruption?
+> And has anyone done this without any issues?, and if so are there any
+> special tricks required? :)
 
-OTOH a group aware filesystem level encryption would be realy cool.
--- 
-Goetz Bock       (c) 2003 as     blacknet.de - Munich - Germany   /"\
-IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
-                                                                   X
- ASCII Ribbon Campaign against HTML email & microsoft attachments / \
+I don't know what you mean exactly by "sharing LVs," but you may want to lo=
+ok=20
+into either network block devices (nbd or enbd) or iSCSI for that task. =20
+Presumably, they work with LVM block devices.
+
+=2D --=20
+Jason Smith
+Open Enterprise Systems
+Bangkok, Thailand
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+UYGUm5qEoSbpT3kRAtgQAKCekVp1E5dZ0hh+lG7IQ6EfeIqXwQCeNmkp
+Snz+xq0QYq82JYUh7ssS9R4=3D
+=3DLjm6
+=2D----END PGP SIGNATURE-----
