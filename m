@@ -1,10 +1,10 @@
-Date: Tue, 11 Sep 2001 16:32:25 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] ftp.sistina.com down?
-Message-ID: <20010911163225.G20767@sistina.com>
-References: <20010910133533.J31313@sistina.com> <001d01c13a15$34d8eb40$0300000a@pacbell.net>
-Mime-Version: 1.0
-In-Reply-To: <001d01c13a15$34d8eb40$0300000a@pacbell.net>; from e@arix.com on Mon, Sep 10, 2001 at 09:25:29AM -0700
+Message-ID: <3B9E2A5D.4010208@st-peter.stw.uni-erlangen.de>
+Date: Tue, 11 Sep 2001 17:14:37 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM
+References: <NBBBJHKIOKPKOGOEPEDPOEDKDNAA.stuart@bh90210.net> <3B9DFDC5.1020306@st-peter.stw.uni-erlangen.de> <20010911161654.C20767@sistina.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,123 +16,134 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Mon, Sep 10, 2001 at 09:25:29AM -0700, Erick Calder wrote:
-> I'm embarrassed to say I haven't had the time to focus on it
+does this mean that when you are creating PV's VG's LV's could be created
+ with some option in the old format
+or we have to use pvversion from lvm-1.0 to convert the PV's to the old 
+version
+is it neccesary to convert the VG's and LV's and are there any tools
+doesn't lvm-1.0.1rc2 defaults to the new version when you create PV's 
+VG's LV's
 
-No problem.
+the question is
+can we access VG's and LV's created with lvm-1.0.1rc2 with vanila kernel 
+with lvm-0.9.1beta2
+Heinz J . Mauelshagen wrote:
 
-> but now that
-> you ask I will... give me 2 or 3 days and I'll get back to you with it.
-
-Great, thanks a lot.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-> 
-> -----Original Message-----
-> From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-> Behalf Of Heinz J . Mauelshagen
-> Sent:	Monday, September 10, 2001 4:36 AM
-> To:	linux-lvm@sistina.com
-> Subject:	Re: [linux-lvm] ftp.sistina.com down?
-> 
-> On Thu, Sep 06, 2001 at 10:20:26AM -0700, Erick Calder wrote:
-> > Paul,
-> >
-> > I'm putting an RPM together... struggling with the changes between the
-> 2.4.9
-> > configuration file and the 10+ configuration files that come with RH's
-> 2.4.7
-> > .src... if you've built RPMs before help is welcome (we can take this
-> > off-list), otherwise I'll let you know when I've managed to put it
-> > together... I too have production boxes I don't want to build the tarball
-> > on.
-> 
-> Erick,
-> 
-> if you have put it together, we'ld be happy to put it onto our ftp server
-> for everybodies convenience.
-> Thanks.
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> >
-> > - erick
-> >
-> > -----Original Message-----
-> > From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-> > Behalf Of Paul Jakma
-> > Sent:	Thursday, September 06, 2001 10:08 AM
-> > To:	linux-lvm@sistina.com
-> > Subject:	Re: [linux-lvm] ftp.sistina.com down?
-> >
-> > On Wed, 5 Sep 2001, AJ Lewis wrote:
-> >
-> > > It should be up again.  Thanks for letting us know.
-> >
-> > excellent...
-> >
-> > > > also, are there any RPMS for 1.0.1?
-> > >
-> > > Nope.  Either grabbing the source tarball or talking to your distro is
-> the
-> > > best option at this point.  The source is not difficult to build and
-> > install
-> > > IMHO, so that's probably your best bet for now.
-> >
-> > ok.. i've no technical problems with source, but from experience i
-> > don't like installing from source onto production systems that use
-> > package management - bad idea for long term maintainability of the
-> > machine.
-> >
-> > anyway.. thanks AJ!
-> >
-> > > Regards,
-> >
-> > --paulj
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>Well,
+>
+>LVM 1.0.1-rc2 supports the old ondisk format and you can get it from
+>ftp.sistina.com.
+>
+>Regards,
+>Heinz    -- The LVM Guy --
+>
+>
+>On Tue, Sep 11, 2001 at 02:04:21PM +0200, svetljo wrote:
+>
+>>Hi
+>>
+>>>I am using version 2.4.8-12mdk (mandrake) of the kernel. Mandrake 8.1 is going to be coming soon, and when it does come forth, I plan to upgrade. Having LVM running will make the upgrade much less painful!
+>>>
+>>I think you can have troubles with upgrading to MDK-8.1 if you use 
+>> lvm-1.0.1 or anything after lvm-0.91beta8
+>>as far i know they are still using  the integrated in the kernel 
+>>lvm-0.91beta2 and they don't wont to upgrade to lvm-1.0 or 1.0.1  so 
+>>when you boot from the CD the kernel will not  see the exiting logical 
+>>volumes
+>>but i think i have read somewhere that lvm-1.0.1 supports both the old 
+>>and new phisical volumes
+>>
+>>my advice befor copying anything to the LV ( i mean all the partitions 
+>>you mean to upgrade : / , /usr  ...
+>>go through all the documentation and man pages and try to find out 
+>>whether it's posible to create VG and LV's in the old format ( pre 
+>>lvm-0.9.1beta8) but i think it's not possible
+>>
+>>or wait until MDK-8.1 come and then install lvm-1.0.1 
+>>
+>>>	As we speak, I am downloading this file. But, can you tell me, are there any major caveats to using this version in the link below?
+>>>
+>>>
+>>>Very Respectfully, 
+>>>
+>>>Stuart Blake Tener, IT3, USNR-R, N3GWG 
+>>>Beverly Hills, California
+>>>VTU 1904G (Volunteer Training Unit) 
+>>>stuart@bh90210.net 
+>>>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
+>>>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
+>>>
+>>>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
+>>>
+>>>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
+>>>
+>>>Tuesday, September 11, 2001 4:00 AM
+>>>
+>>>-----Original Message-----
+>>>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Jos� Luis Domingo L�pez
+>>>Sent: Tuesday, September 11, 2001 5:20 AM
+>>>To: linux-lvm@sistina.com
+>>>Subject: Re: [linux-lvm] LVM
+>>>
+>>>On Monday, 10 September 2001, at 19:35:13 -0700,
+>>>IT3 Stuart B. Tener, USNR-R wrote:
+>>>
+>>>>Dear Sir:
+>>>>
+>>>>     I HAVE READ (and DID READ) PRIOR TO ASKING MY QUESTIONS, (when I noted I downloaded it, I figured everyone would realize I had read it as well!).
+>>>>
+>>>>All those whom are telling me to read the How-To, PLEASE, GO READ IT YOURSELF! SPECIFICALLY: section 7.2, paragraph 2. There is no such directory located on the Sistina FTP server. Where is this patch?
+>>>>
+>>>Your are right, links on the HOWTO don't point to the right location. To
+>>>get current sources of LVM download:
+>>>ftp://ftp.sistina.com/pub/LVM/1.0/lvm_1.0.1-rc2.tar.gz
+>>>
+>>>It works for recent kernels (even 2.4.9) and the documentation included
+>>>explains how to create a patch specifically suited for your current Linux
+>>>source tree.
+>>>
+>>>--
+>>>Jos� Luis Domingo L�pez
+>>>Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+>>>
+>>>jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+>>>jdomingo AT internautas DOT   org  => Spam at your own risk
+>>>
+>>>
+>>>_______________________________________________
+>>>linux-lvm mailing list
+>>>linux-lvm@sistina.com
+>>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>>
+>>
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>
+>
+>*** Software bugs are stupid.
+>    Nevertheless it needs not so stupid people to solve them ***
+>
+>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+>Heinz Mauelshagen                                 Sistina Software Inc.
+>Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                  56242 Marienrachdorf
+>                                                  Germany
+>Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                       FAX 924446
+>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
