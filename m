@@ -1,12 +1,24 @@
-Date: Tue, 7 Sep 2004 10:44:13 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Resend: API for retrieving linux lvm information
-Message-ID: <20040907094413.GA6264@agk.surrey.redhat.com>
-References: <ce9f1f9e04090623046460fed8@mail.gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i87B3c324345
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 07:03:38 -0400
+Received: from server.klaube.net (root@www.klaube.net [195.190.148.2])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i87B3WS0028901
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 07:03:37 -0400
+Received: from server.klaube.net (localhost [127.0.0.1])
+	by server.klaube.net (8.12.3/8.12.2/SuSE Linux 0.6) with ESMTP id
+	i87B3UJO005369
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 13:03:30 +0200
+Received: (from t1@localhost)
+	by server.klaube.net (8.12.3/8.12.3/Submit) id i87B3Ukw005368
+	for linux-lvm@redhat.com; Tue, 7 Sep 2004 13:03:30 +0200
+Date: Tue, 7 Sep 2004 13:03:30 +0200
+From: Thomas Klaube <t.klaube@efm.de>
+Message-ID: <20040907110330.GE2689@server.klaube.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ce9f1f9e04090623046460fed8@mail.gmail.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] LVM2 snapshots on root fs
+Reply-To: Thomas Klaube <t.klaube@efm.de>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -18,42 +30,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Stanley Yue <stanley.yue@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-These answers are for LVM2.
+Hi,
 
-On Mon, Sep 06, 2004 at 11:04:09PM -0700, Stanley Yue wrote:
-> 1) Is there any api library for retrieve linux lvm configuration? I.e.
-> querying for all the vg(s), pv(s), lv(s) on the system?
- 
-The commands: lvs, pvs, vgs with numerous cmdline flags.
-See lib/report/columns.h for field names
+we are using lvm (lvm version 1) snapshots for backup purposes for some
+time without any problems. 
 
-Access to cmds via library interface: configure --enable-cmdlib
+Whenever I try to create a LVM (version 2) snapshot of the lvm
+containing the root fs my machine crashes. I am using SuSE 9.1 (kernel
+2.6.5, lvm2-2.00.15, device-mapper-1.00.09), but I also tried a unpatched 
+2.6.8.1 kernel with the redhat lvm2-2.00.21 and device-mapper-1.00.19
+rpms. Same result... I can't create snapshots of the lvm with the root
+fs, other lvm snapshots are ok.
 
-include lvm2cmd.h
+Is this a known lvm2 problem? If it is a kernel issue, are there any
+patches?
 
-Example usage: doc/example_cmdlib.c
-
-Recommend only manipulating one thing at once, so if it
-returns an error you don't have to work out which thing
-went wrong.
-
-[May yet add an optional argc/argv-style entry point.]
-
-> 2) If yes, what license is the library release under?
-The library API is intended to be LGPL.
-It's effectively a wrapper around the command-line interface,
-but more efficient because it's able to cache some internal 
-state between commands.
-[I shall correct the copyright notices: the library entry-point 
-got moved which messed up the original GPL/LGPL code split.]
-
-liblvm.a does *not* provide a supported API and will sometimes 
-change in subtle or incompatible ways without warning.  Don't be 
-tempted to link against it.  The only interface supported
-is the one based on the command-line.
-
-Alasdair
--- 
-agk@redhat.com
+Regards
+Thomas Klaube
