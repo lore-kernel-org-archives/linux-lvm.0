@@ -1,11 +1,10 @@
-Return-Path: <jweber@valinux.com>
-Date: Sun, 28 Jan 2001 11:10:42 -0800 (PST)
-From: Jay Weber <jweber@valinux.com>
-Subject: Re: [linux-lvm] Follow-up 2: Help: lvm 0.9.1_beta3 oops (can't get
- my data)
-In-Reply-To: <3A746B67.4FA4CD18@nortelnetworks.com>
-Message-ID: <Pine.LNX.4.30.0101281109100.7186-100000@beefcake.hdqt.valinux.com>
+Return-Path: <harvell@nortelnetworks.com>
+Message-ID: <3A746EC0.DDAC36B4@nortelnetworks.com>
+Date: Sun, 28 Jan 2001 13:10:56 -0600
+From: "Joe Harvell" <harvell@nortelnetworks.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] Follow-up 3: Help: lvm 0.9.1_beta3 oops (can't get my data)
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,32 +16,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This problem you're experiencing sounds similar to what I hit after I have
-a machine hang while playing about with snapshots.  Did you by chance do
-anything with snapshots on w0 volume?
+vgck seems to think the both volume groups are consistent
 
-I have machines from beta1, beta2 and beta3 with volumes that are stuck in
-the same state that you've run into that I haven't solved yet, granted I
-created the problem by messing with snapshots while heavy IO was involved.
+[root@btexi0c1 /root]# vgck -v w0 
+vgck -- locking logical volume manager
+vgck -- using volume group(s) on command line
+vgck -- checking volume group name "w0"
+vgck -- checking existence of volume group "w0"
+vgck -- reading volume group data for "w0" from lvmtab
+vgck -- checking volume group consistency  of "w0" in lvmtab
+vgck -- VGDA of "w0" in lvmtab is consistent
+vgck -- reading volume group data for "w0" from physical volume(s)
+vgck -- checking volume group consistency  of "w0" on physical volumes
+vgck -- VGDA of "w0" on physical volumes is consistent
+vgck -- unlocking logical volume manager
 
-On Sun, 28 Jan 2001, Joe Harvell wrote:
+[root@btexi0c1 /root]# vgck -v w1
+vgck -- locking logical volume manager
+vgck -- using volume group(s) on command line
+vgck -- checking volume group name "w1"
+vgck -- checking existence of volume group "w1"
+vgck -- reading volume group data for "w1" from lvmtab
+vgck -- checking volume group consistency  of "w1" in lvmtab
+vgck -- VGDA of "w1" in lvmtab is consistent
+vgck -- reading volume group data for "w1" from physical volume(s)
+vgck -- checking volume group consistency  of "w1" on physical volume
+vgck -- VGDA of "w1" on physical volume is consistent
+vgck -- unlocking logical volume manager
 
-> Date: Sun, 28 Jan 2001 12:56:39 -0600
-> From: Joe Harvell <harvell@nortelnetworks.com>
-> Reply-To: linux-lvm@sistina.com
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] Follow-up 2: Help: lvm 0.9.1_beta3 oops (can't get
->     my data)
->
-> When I do a 'vgdisplay -vD w0', I don't run into any problems.  Does this rule out the possibility of a vgcfgrestore helping?
->
-> I looked at the man pages for vcfgrestore, but I don't know which destination I should specify.  Is it /dev/w0, or is it 'dev/hda8' and '/dev/hdb3'?
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
->
+[root@btexi0c1 /root]#
