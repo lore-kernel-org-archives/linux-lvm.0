@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvmove errors
-Message-ID: <20030425113525.C16006@sistina.com>
-References: <GNEAKGKKMNLLGBACDNBJMECACGAA.carey@itfreedom.com>
+Subject: Re: [linux-lvm] performance tests
+Message-ID: <20030425113824.D16006@sistina.com>
+References: <3EA6C508.9020702@roma2.infn.it>
 Mime-Version: 1.0
-In-Reply-To: <GNEAKGKKMNLLGBACDNBJMECACGAA.carey@itfreedom.com>; from carey@itfreedom.com on Wed, Apr 23, 2003 at 07:48:59PM -0500
+In-Reply-To: <3EA6C508.9020702@roma2.infn.it>; from roberto.ammendola@roma2.infn.it on Wed, Apr 23, 2003 at 06:53:28PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,124 +14,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 25 04:41:01 2003
+Date: Fri Apr 25 04:44:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Carey,
+Roberto,
 
-which LVM/kernel versions are you using ?
-The error tells that the change for the mapping in the LVM driver fails.
-
-The mapping on disk (lvdisplay -Dv ...) doesn't get changed in that case.
-Must be a flaw in the ioctl error return handling, because it obviously
-got changed in the kernel as "lvdisplay -v " shows.
-
-Regards,
-Heinz    -- The LVM Guy --
+creating a striped logical volume with the stripe size equal to the block
+size of the filesystem should give you the best performamce presuming that
+you don't have some bus bottleneck.
 
 
-On Wed, Apr 23, 2003 at 07:48:59PM -0500, Carey Jung wrote:
-> Hi,
+On Wed, Apr 23, 2003 at 06:53:28PM +0200, Roberto Ammendola wrote:
+> Hi list,
+> I would like to hear some opinions about a configuration: I have a dual 
+> Xeon with 2 RAID5 HW controllers, so that from the OS side I have two 
+> SCSI disks. I am trying different configurations to see which one has 
+> the best performances. The machine will be a file server for a bunch of 
+> people.
+> The question is: would you use LVM over a SW-RAID0 between the two SCSI 
+> disks? Is native LVM striping that better (in terms of performance I mean)?
+> Let me know, I'll run bonnie++ meanwhile, but I don't know if it 
+> highlights the differences: I should simulate a multiuser stress of the 
+> disks. Any advice?
 > 
-> I'm getting errors from pvmove, similar to a problem reported in December (
-> http://lists.sistina.com/pipermail/linux-lvm/2002-December/012973.html),
-> though I'm not sure if it's exactly the same.  Here's the relevant pvmove
-> output:
+> ciao rob
 > 
-> # pvmove -v -n /dev/backups2/rje /dev/sdd1 /dev/sda6
-> ...
-> pvmove -- starting to move linear logical volume "/dev/backups2/rje"
-> pvmove -- checking for enough free physical extents in "backups2"
-> pvmove -- /dev/sdd1 [PE 0 [rje [LE 0]] -> /dev/sda6 [PE 2542] [1/6400]
-> /dev/backups2/group::/dev/backups2/rje: 0831 65920, 0806 166658560
-> pvmove -- ERROR "Invalid argument" copying extent from "/dev/sdd1"
+> -- 
+> ______________________________________________________________________
 > 
-> pvmove -- ERROR "Invalid argument" remapping
-> pvmove -- ERROR "pv_move(): LE of LV remap" moving physical extents
+>       Roberto Ammendola    INFN - Roma II - APE group
+>  tel: +39-0672594504  email: roberto.ammendola@roma2.infn.it   // \
+>       ICQ: 152497874    MSN: ammendola_ro@hotmail.com          \\_/ //
+> __________________________________________   ''-.._.-''-.._.. -(||)(')
+>                                                                '''
 > 
-> I believe this is telling me that pvmove is having a problem copying PE 0 on
-> /dev/sdd1 to PE 2542 on /dev/sda6....  Yet lvdisplay indicates that LE 0 is
-> already on /dev/sda6, PE 02542 -- if I understand it correctly:
-
-
-> 
-> # lvdisplay -v /dev/backups2/rje |head -25
-> --- Logical volume ---
-> LV Name                /dev/backups2/rje
-> VG Name                backups2
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                200 GB
-> Current LE             6400
-> Allocated LE           6400
-> Allocation             next free
-> Read ahead sectors     1024
-> Block device           58:2
-> 
->    --- Distribution of logical volume on 1 physical volume  ---
->    PV Name                  PE on PV     reads      writes
->    /dev/sdd1                6400         1849755    26252516
-> 
->    --- logical volume i/o statistic ---
->    1849755 reads  26252516 writes
-> 
->    --- Logical extents ---
->    LE    PV                        PE     reads      writes
->    00000 /dev/sda6                 02542  904        527167
->    00001 /dev/sda6                 02543  217        36574
-> 
-> pvdisplay confirms that PE 0 on /dev/sdd1 is free, and LE 0 is already on
-> /dev/sda6, PE 2542:
-> 
-> # pvdisplay -v /dev/sdd1|head -25
-> --- Physical volume ---
-> PV Name               /dev/sdd1
-> VG Name               backups2
-> PV Size               279.47 GB [586099332 secs] / NOT usable 32.19 MB [LVM:
-> 162 KB]
-> PV#                   1
-> PV Status             available
-> Allocatable           yes
-> Cur LV                1
-> PE Size (KByte)       32768
-> Total PE              8942
-> Free PE               2568
-> Allocated PE          6374
-> PV UUID               joJY49-jRXo-3CYM-rL3Q-qy16-CA6g-0AX9tY
-> 
->    --- Distribution of physical volume ---
->    LV Name                   LE of LV  PE for LV
->    /dev/backups2/rje         6400      6374
-> 
->    --- Physical extents ---
->    PE    LV                        LE      Disk sector
->    00000 free
->    .....
->    00025 free
->    00026 /dev/backups2/rje         00026   1769856
->    00027 /dev/backups2/rje         00027   1835392
-> 
-> # pvdisplay -v /dev/sda6
-> ...
->    02542 /dev/backups2/rje         00000   166658560
->    02543 /dev/backups2/rje         00001   166724096
->    02544 /dev/backups2/rje         00002   166789632
->    02545 /dev/backups2/rje         00003   166855168
->    02546 /dev/backups2/rje         00004   166920704
-> ...
-> 
-> Am I reading this correctly?  Any ideas what the problem is, or how to fix
-> it?  I've been moving several LVs from /dev/sdd1 to /dev/sda6; all completed
-> successfully.  This, the last one, is giving me an error.
-> 
-> Thanks in advance for any help....!
-> 
-> Carey Jung
 > 
 > 
 > _______________________________________________
@@ -139,6 +58,11 @@ On Wed, Apr 23, 2003 at 07:48:59PM -0500, Carey Jung wrote:
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
