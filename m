@@ -1,7 +1,11 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-Id: <CB8REB5YHGZWB9B6632XNMVQJH43VQ.3c452322@kadzuki>
+From: Nathan Scott <nathans@sgi.com>
+Subject: Re: [linux-lvm] xfs quota on lvm
+Message-Id: <20020116181545.E30220@wobbly.melbourne.sgi.com>
+References: <1011111148.3294.8.camel@fry.sysctl-office.de>
 MIME-Version: 1.0
-Subject: [linux-lvm] Pvmove fails... No free PE's
+Content-Disposition: inline
+In-Reply-To: <1011111148.3294.8.camel@fry.sysctl-office.de>;
+    from czwecker@sysctl.de on Tue, Jan 15, 2002 at 05:12:28PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,21 +16,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 16 00:53:01 2002
+Date: Wed Jan 16 01:16:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I have a bad disk (hdl1) that needs to be replaced. It is 40GB, or 1220 PE's. I have another disk which is about 120GB, but has 1221 free PE's. Both disks are in the same VG, Server and the same LV, 
-FTPRoot. When I try "pvmove -v /dev/hdl1" it failes (doesn't even start, really) and tells me I haven't any free PE's.
+On Tue, Jan 15, 2002 at 05:12:28PM +0100, Christophe Zwecker wrote:
+> Hi,
+> 
+> Ive got alle volumes on linux RH with xfs and all except /  "lvmed".
+> 
+> I got quota enabled in kernel, xfs quota support too. Quota is enabled
+> at mount. However when I do eduota -u user, I get only to change numbers
+> on the nonlvm partition.
+> 
+> Is quota nonfunctional on lvm partitions ?
+> 
 
-What can I have missed...
+Should work fine.  What does "repquota -vug /dev/XXX" give you
+on the LVM devices when the filesystems are mounted?  (this'll
+tell you whether quota is enabled at all on these devices).
+If they are indeed enabled ("Accounting: ON; Enforcement: ON"
+will be in the output) then try "strace setquota ..." to try
+to diagnose further (look for quotactl syscalls).  setquota is
+better than edquota for diagnosis because its not interactive,
+but it interacts with the kernel in much the same way.
 
-1) I shrick the filesystem first with about 60GB
-2) I use lvreduce to shrick the LV with about 59GB
-3) I tried "pvmove -v /dev/hdl" to move all PE's on this 40GB disk to the free ones on the other disks. This should have worked, shoudln't it?
+cheers.
 
-have I missed something critical?
-
-//Anders
+-- 
+Nathan
