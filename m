@@ -1,42 +1,35 @@
-Message-ID: <38B98326.1D291C28@msede.com>
-Date: Sun, 27 Feb 2000 21:03:50 +0100
-From: Michael Marxmeier <mike@msede.com>
+Message-ID: <31A612FE6020D2119F6400A0C9B67EBB116F14@fthw901e.as.fth.sbs.de>
+From: Franken Klaus <Klaus.Franken@fth2.siemens.de>
+Subject: RE: [linux-lvm] valid_majors
+Date: Sun, 27 Feb 2000 22:24:14 +0100
 MIME-Version: 1.0
-Subject: [linux-lvm] proposed change in lvm_dir_cache.c
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Heinz Mauelshagen <mge@ez-darmstadt.telekom.de>, linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-The patch below will work around a problem with the LVM scan code.
-If no valid block devices could be found using /proc/partitions 
-the LVM scan code will fallback to scan /dev.
+> -----Original Message-----
+> From: Heinz Mauelshagen [mailto:mauelsha@ez-darmstadt.telekom.de]
 
-This happened to me when compiling devfs in the kernel without
-mounting it in /dev (by using the devfs=nomount option).
-In this case /proc/partitions returns block device names
-relative to the devfs mount point.
+> > is there a way to give the list of valid majors at runtime 
 
-Michael
+> 
+> The actual 0.8final code uses /proc/partitions fastening the process
+> of scanning, if it exists and falls back to scan /dev if it doesn't.
 
---- 0.8final/tools/lib/lvm_dir_cache.c.orig     Sun Feb 27 20:46:41
-2000
-+++ 0.8final/tools/lib/lvm_dir_cache.c  Sun Feb 27 20:47:23 2000
-@@ -91,7 +91,8 @@
-              }
-          }   
-          fclose ( proc);
--      } else {
-+      }
-+      if(!cache_size) {
-          for ( d = 0; devdir[d] != NULL; d++) {
-             dirname = devdir[d];
- #ifdef DEBUG
+This sounds good! I will try it next week.
 
--- 
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+> > Problem: 'vgscan' needs circa 1 hours on a 486 test machine.
+> 
+> Oops.
+> 
+> SAP-linuxkernel on 486 ;-{)
+
+Thats my only test machine, really. ;-(
+
+
+
+Klaus.Franken@fth2.siemens.de    +49 911 978 3707
+Siemens Business Services IP 21F
