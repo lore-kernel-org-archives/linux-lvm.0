@@ -1,10 +1,11 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-ID: <18340267953.20030108211157@tnonline.net>
-Subject: Re: [linux-lvm] Graphical tool to configure LVM for RedHat 8
-In-Reply-To: <55939F05720D954E9602518B77F6127F8289CE@FTWMLVEM01.e2k.ad.ge.com>
-References: <55939F05720D954E9602518B77F6127F8289CE@FTWMLVEM01.e2k.ad.ge.com>
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] problem
+Message-ID: <33170000.1042057292@[192.168.200.4]>
+In-Reply-To: <1042049056.1433.29.camel@tux.its.uiowa.edu>
+References: <1042049056.1433.29.camel@tux.its.uiowa.edu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,25 +16,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  8 14:11:01 2003
+Date: Wed Jan  8 14:12:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Linux-LVM@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-> The command line tools are great but I just wonder if there is a graphical tool to do the same thing (for RedHat, BTW) ?
 
-I  know  RedHat  8  (graphical)  installation  has support for LVM and
-creating  of  LVM  arrays.  However,  I have no idea if such tools are
-included after the installation.
+-- Daniel Wittenberg <daniel-wittenberg@uiowa.edu>
 
-In  any case. I do no recommend using 3rd party tools to configure and
-manage your disks.
+> I had 2 drives in my machine, with a VG across both of them.  The only
+> thing on the second drive was part of /tmp, so when the second drive
+> died I didn't really lose anything.  But I have problems now because I
+> can't activate the VG because part of it is missing, but I can't remove
+> tmp, so it's a catch-22.  Is there anyway to remove an LV without
+> activating the VG?  Or another way I can tell it to ignore missing LV's?
 
-> Thanks,
-> Thanh
+vgexport + vgimport should do it for you if none of the
+other LV's stretched onto the dead drive.
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+If you don't want to spread data across drives that are
+not maintained with some sort of RAID then you are
+probably better off putting the drives in separate VG's
+so that data doesn't accidentally spill across the disks.
+
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 773 252 1080
