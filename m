@@ -1,8 +1,7 @@
-Message-ID: <3D4E6CE8.94FF79EE@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
+From: Kianusch Sayah Karadji <kianusch.sayah.karadji@sk-tech.net>
+Message-ID: <Pine.LNX.4.40.0208051637060.13454-100000@arthur>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] 2 FAQ questions? but i couldnt find any FAQ :/
+Subject: [linux-lvm] Is this a bug?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,30 +12,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug  5 07:17:01 2002
+Date: Mon Aug  5 09:39:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@sistina.com
 
-I've got a machine with 4 harddrives. 2*100GB and 2*120GB.
-Running hardware raid 1 on a 3ware. That part works.
+Hi!
 
-Until recently the first LVM appeared to be working, or, it does still
-work.
-How ever, when we added the new raid1, the 2*120GB drives, we didnt get
-the full +120GB space. Where is it ??
+My Kernel 2.4.19+LVM 1.0.5 (also 2.4.18+LVM 1.0.3) makes the following
+kern.log entry:
 
-The other question is:
-running pvdisplay on /dev/sda5 says it is available in the PV STATUS
-field,
-but for /dev/sdb1 it says NOT available. We did run a pvcreate on
-/dev/sdb1
-and then vgextend. using vgdisplay, it appears to have become 100GB
-larger,
-but if it is larger, why isnt it available ? We have tried to deactivate
-and activate the LVM ?
+ Aug 5 17:05:10 srfs01 kernel: lvm -- lvm_blk_ioctl: unknown command 0x24b
 
+When executing:
 
+ fsck -c /dev/datavg/ora_u02_lv
 
+The File-System used is ext3.  The Distribution is debian 2.2 - with
+kernel 2.4.x.
 
-JonB
+Regards
+  Kianusch
