@@ -1,8 +1,13 @@
-Message-Id: <3C4EDF1A.3000409@cgg.com>
-From: Guillaume Duquesnay <gduquesnay@cgg.com>
+Subject: Re: [linux-lvm] error mounting snapshot of ext3 filesystem
+From: Aran Cox <acox@ia.primustel.com>
+In-Reply-To: <E16TOej-0001qC-00@arwen.dev33.cvf>
+References: <1011729567.6638.40.camel@benway.cv.telegroup.com>
+    <E16TOej-0001qC-00@arwen.dev33.cvf>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-0RyFFCajHJhCSXWbCJRl"
+Message-Id: <1011803439.3357.5.camel@benway.cv.telegroup.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] VG lost, no lvmconf => Help !
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,172 +18,141 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 23 10:08:02 2002
+Date: Wed Jan 23 10:31:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Here's my startup config :
-on a single SCSI disk :
-- linux 2.4.17 was booting on an lvm partiton, VG main, with LV : root, 
-usr, boot, and  var.
-- an old linux system, 2.4.17 also, but classical ext2-based.
+--=-0RyFFCajHJhCSXWbCJRl
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-The LVM linux system was created by copying the root partitions of the 
-ext2 system (as described in the LVM doc). Everything was working great 
-with the LVM-based system, but i kept the old ext2 system as a rescue 
-linux. Then, I did a vgextend to a remaining PV to my VG, and it boot 
-and works already.
+Somehow I missed the final release of 1.0.1... I was trying to use the
+patch from 101rc4, for kernel 2.4.9.  I've been using the 101rc4 and
+earlier versions for a while now, and frankly the LVM system is superb.
+I have one server with LVM 0.9.1_beta7 which has been running for 210
+days now.  Thanks for the work on this... now if only the installers for
+popular distros would allow you to set up LVM at install time...=20
 
-Problems arrived when i tried to add a SCSI CD burner : lvm didn't find 
-the PVs, nor the VG, causing a kernel panic at boot time, and so did the 
-ext2 linux. I was unable to fix that problem (SCSI id checked, ...), i 
-removed that SCSI device, and then only the ext2 system did boot again. 
-My vg was no longer detected.
+Thanks,
+Aran
 
-So, here's where i am : under the ext2 system, i have no lvmtab for my 
-VG, neither a recent main.conf, and my vg is no more detected, so i 
-cannot recover my vg with vgcfgrestore. I did scan the 2 LVM PVs, and 
-they are ok.
-So my question is :
-is there a way to recover my VG with the datas contained in the PVs ?
+On Wed, 2002-01-23 at 08:45, Pierrick PONS wrote:
+> > Ok, I know that several discussions regarding snapshots have occurred i=
+n
+> > the last month or two and I've tried to read every post from those
+> > threads.  Nothing I read has helped me solve my problem.
+> >=20
+> > Essentially, I can create a snapshot LV but I cannot mount it.
+> >=20
+> > I have compiled 2.4.17 with the lvm101-rc4 patch created from the sourc=
+e
+> > archive.  (I specified -with-kernel_dir appropriately.)  I tried to
+> > apply to apply the VFS-lock patch but the kernel would not compile afte=
+r
+> > having done so.  (I wasn't sure if I needed this patch or not, but I
+> > tried applying it anyway.)  It fails like so:
+> >=20
+> >=20
+> > make[2]: Entering directory `/home/spin/src/linux/fs'
+> > gcc -D__KERNEL__ -I/home/spin/src/linux/include -Wall
+> > -Wstrict-prototypes -Wno-trigraphs -O2 -fomit-frame-pointer
+> > -fno-strict-aliasing -fno-common -pipe -mpreferred-stack-boundary=3D2
+> > -march=3Di686    -c -o super.o super.c
+> > super.c: In function `unlockfs':
+> > super.c:403: `mount_sem' undeclared (first use in this function)
+> > super.c:403: (Each undeclared identifier is reported only once
+> > super.c:403: for each function it appears in.)
+> > make[2]: *** [super.o] Error 1
+> >=20
+> >=20
+> > Anyway, continuing without VFS lock:
+> > I have three disks, an IDE disk /dev/hda, and two small SCSI disk,
+> > /dev/sda and /dev/sdb and one VG with /dev/hda4, and the entirety of
+> > both SCSI disks in it which is called main.=20
+> >=20
+> > /boot 	/dev/hda3
+> > / 	/dev/main/root  (entirely on hda4)
+> > /var	/dev/main/var	(entirely on hda4)
+> > /tmp	/dev/main/scratch (on both sda and sdb)
+> > /home	/dev/main/home  (spread out across all three PVs)
+> >=20
+> > There are some PVs left on sdb, otherwise it's all used.
+> > All of the filesystems are ext3, except /boot which is ext2.
+> >=20
+> > This is basically the sequence of events:
+> >=20
+> > [root@benway /]# lvcreate -s -n snaptest -L 200m /dev/main/root=20
+> > lvcreate -- WARNING: the snapshot will be automatically disabled once i=
+t
+> > gets full
+> > lvcreate -- INFO: using default snapshot chunk size of 64.00 KB for
+> > "/dev/main/snaptest"
+> > lvcreate -- doing automatic backup of "main"
+> > lvcreate -- logical volume "/dev/main/snaptest" successfully created
+> >=20
+> > [root@benway /]# mount /dev/main/snaptest /mnt
+> > mount: block device /dev/main/snaptest is write-protected, mounting
+> > read-only
+> > mount: wrong fs type, bad option, bad superblock on /dev/main/snaptest,
+> >        or too many mounted file systems
+> >=20
+> > Trying to mount it as ext2 doesn't change anything.  No matter which LV
+> > I create the snapshot of, I cannot mount it and it fails with the same
+> > error. =20
+> >=20
+> > Even if I create a small LV with ext3 filesystem entirely on sdb, and
+> > then create a snapshot of it, it still won't mount.  I can get this
+> > small-all-on-one LV/FS scenario to work if I create an ext2 fs on the
+> > LV. =20
+> >=20
+> > I know this is nearly exactly like the problems discussed in previous
+> > threads but I haven't seen a solution yet that seems like it applied to
+> > my situation. =20
+> >=20
+> > Thanks,
+> > Aran
+> >  =20
+> >=20
+> >=20
+>=20
+> I do have the same problem :
+>=20
+> mount /dev/testlvm/snap /mnt/snap=20
+> mount: block device /dev/testlvm/snap is write-protected, mounting read-o=
+nly
+> mount: wrong fs type, bad option, bad superblock on /dev/testlvm/snap,
+>        or too many mounted file systems
+>=20
+> I tried with -text2 or -text3 option and it's the same.=20
+> What is the type wanted  ?
+>=20
+> Is there a more documentated snapshot section where to found some more=20
+> explanation ?
+>=20
+> Thanks in advance.
+>=20
+>=20
+> Pierrick
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-info :
 
-The system is a Linux-2.4.17 based kernel, with lvm-1.0.1-1
+--=-0RyFFCajHJhCSXWbCJRl
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-Here's my log :
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-////////------pvscan-------
-# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sda1"  is associated to an unknown VG (run 
-vgscan)
-pvscan -- inactive PV "/dev/sda3"  is associated to an unknown VG (run 
-vgscan)
-pvscan -- total: 2 [5.39 GB] / in use: 2 [5.39 GB] / in no VG: 0 [0]
+iD8DBQA8TuUu6xBZrNGNWdIRAra4AKDKLn5T5w6JQRoHHOvnl4jrEvyNTgCgufFU
+2Vfu+xtP3pnw+KHR66jYd2E=
+=P0G1
+-----END PGP SIGNATURE-----
 
-///////------lvmdiskscan-------
--]# lvmdiskscan
-lvmdiskscan -- reading all disks / partitions (this may take a while...)
-lvmdiskscan -- /dev/sda1 [       3.99 GB] Primary  LVM partition [0x8E]
-lvmdiskscan -- /dev/sda2 [       2.60 GB] Primary  LINUX native 
-partition [0x83]lvmdiskscan -- /dev/sda3 [       1.39 GB] Primary  LVM 
-partition [0x8E]
-lvmdiskscan -- /dev/sda4 [     494.19 MB] Primary  LINUX swap partition 
-[0x82]
-lvmdiskscan -- 1 disk
-lvmdiskscan -- 0 whole disks
-lvmdiskscan -- 0 loop devices
-lvmdiskscan -- 0 multiple devices
-lvmdiskscan -- 0 network block devices
-lvmdiskscan -- 4 partitions
-lvmdiskscan -- 2 LVM physical volume partitions
-
-///////------vgscan--------
-]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-group
-
-///////------vgdisplay-----
-]# vgdisplay
-vgdisplay -- no volume groups found
-
-
-///////------pvdata-------
-]# pvdata -v -V -L /dev/sda1 | grep -v empty
---- Volume group ---
-VG Name
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                4
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                2
-Act PV                2
-VG Size               5.38 GB
-PE Size               4.00 MB
-Total PE              1376
-Alloc PE / Size       1277 / 4.99 GB
-Free  PE / Size       99 / 396.00 MB
-VG UUID               ML3C0g-bpt6-2He5-AK6f-5DNt-2LVV-bEm05U
-
---- List of logical volumes ---
-
---- Logical volume ---
-LV Name                /dev/main/boot
-VG Name                main
-LV Write Access        read/write
-LV Status              NOT available
-LV #                   1
-# open                 0
-LV Size                40.00 MB
-Current LE             10
-Allocated LE           10
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
-read_ahead: 120
-
---- Logical volume ---
-LV Name                /dev/main/root
-VG Name                main
-LV Write Access        read/write
-LV Status              NOT available
-LV #                   2
-# open                 0
-LV Size                1.00 GB
-Current LE             256
-Allocated LE           256
-Allocation             next free
-Read ahead sectors     120
-Block device           58:1
-read_ahead: 120
-
---- Logical volume ---
-LV Name                /dev/main/usr
-VG Name                main
-LV Write Access        read/write
-LV Status              NOT available
-LV #                   3
-# open                 0
-LV Size                3.00 GB
-Current LE             768
-Allocated LE           768
-Allocation             next free
-Read ahead sectors     120
-Block device           58:2
-read_ahead: 120
-
---- Logical volume ---
-LV Name                /dev/main/var
-VG Name                main
-LV Write Access        read/write
-LV Status              NOT available
-LV #                   4
-# open                 0
-LV Size                972.00 MB
-Current LE             243
-Allocated LE           243
-Allocation             next free
-Read ahead sectors     120
-Block device           58:3
-read_ahead: 120
-
-pvdata -- logical volume struct at offset   4 is empty
-....
-
-and i have the same for /dev/sda3
-
-///////////----------------
-
-So, how can i use this stuff to recreate a good VG info and make my 
-system back ?
-Many thanks,
-
-Guillaume
+--=-0RyFFCajHJhCSXWbCJRl--
