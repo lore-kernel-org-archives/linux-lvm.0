@@ -1,10 +1,8 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-ID: <1851096421.20030119165740@tnonline.net>
-Subject: Re: [linux-lvm] Getting 200GB ATA133 and Promise Ultra133 to work
-In-Reply-To: <001101c2bfd0$ac08b5f0$4201a8c0@eagle>
-References: <001101c2bfd0$ac08b5f0$4201a8c0@eagle>
+From: Dieter Franzke <lists@franzke-online.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200301191715.33238.lists@franzke-online.de>
+Subject: [linux-lvm] vgimport
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 19 09:57:01 2003
+Date: Sun Jan 19 10:12:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Bjorn <programmer@spk.cc>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-> Hello!
+Hi,
 
-> I have Slackware 8.1 and activated lvm on 4 200GB Maxtor ATA133 drives.
-> Only 130 GB became useable on each drive. Upgrading Linux kernel to 2.4.20
-> and downloading LVM2 and device mapper from sestina. Doing 2.4.19 patch on
-> 2.4.20. Still lvm thinks it is 130 GB drives.
-> What is the trick to use 200GB drives?
+I've got a problem importing an vg.
+I have done a vgexport of a VG with 4 PVs.
+The vgimport on another machine results in an errormessage:
+"wrong number of physical volumes to import volume group data".
 
-Do  you  have  a  IDE  controller  that  support  BIG Drive Technology
-(132GB+)?
+But when I do a pvscan, just the 4 pv were recognized as exportet.
 
-> Regards,
+who can help?
 
-> //Bjorn
+lvm 1.0.5
 
+ciao
 
+dieter
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--=20
+registered linuxuser 199810
+it's time to close windows....
