@@ -1,11 +1,12 @@
-Return-Path: <heimdall@mail.org>
-From: "Daniel E Whicker" <heimdall@mail.org>
-Subject: RE: [linux-lvm] Problem with vgscan/ vgcfgrestore
-Date: Mon, 12 Mar 2001 18:16:49 -0600
-Message-ID: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <200103122319.f2CNJKP00753@webber.adilger.int>
+Return-Path: <wichert@cistron.nl>
+Date: Tue, 13 Mar 2001 01:23:14 +0100
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
+Message-ID: <20010313012313.A3042@cistron.nl>
+References: <200103122319.f2CNJKP00753@webber.adilger.int> <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org>; from heimdall@mail.org on Mon, Mar 12, 2001 at 06:16:49PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,43 +19,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Daniel E Whicker <heimdall@mail.org>
+Cc: linux-lvm@sistina.com
 
-Andreas,
-	Thanks for helping.  I did in fact have devfs compiled in and mounted to an
-alternative path.  The only other oddness in the kernel was reiserfs.
-Beyond that, everything is pretty vanilla.  I'm rebuilding the OS on that
-system at the moment, but as soon as I'm done, I'll get 2.4.2 with LVM
-.9.1b5 and your patch installed and see how it goes from there.  In the
-meantime, is there any way of restoring the "HM" magic to the PVs
-nondestructively?
+Previously Daniel E Whicker wrote:
+> system at the moment, but as soon as I'm done, I'll get 2.4.2 with LVM
+> .9.1b5 and your patch installed and see how it goes from there.
 
-Gang,
-	Sorry for bomblasting ya'll with those earlier messages.  I'd failed to
-look at the file sizes before emailing that.  Won't happen again.  As far as
-the digital signatures preventing plaintext messaging:  baaaaad M$.  (Note:
-signatures have been removed)
+It seems 0.9.1b6 is out there as well, although it's not mentioned on
+all the webpages and not on any mirrors..
 
-Thanks for your patience and assistance.
+Wichert (browsing the patch to figure out why IOP reverted to 10).
 
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-Behalf Of Andreas Dilger
-Sent: Monday, March 12, 2001 5:19 PM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-
-Anyways,
-vgscan doesn't appear to be finding any of your PVs because they are missing
-the "HM" magic for the PV, or so err -268 tells me.  The only PV that
-appears
-intact is /dev/hdc, which ends up being discarded because it isn't in the
-dir
-cache.  You can see that nothing is found from pv_read_all_pv() - it reports
-"np: 0" at the end.
-
-Are you running devfs, or even have it compiled into the kernel by any
-chance?
-It also appears you are not running the current CVS code (pretty much a must
-when tracking down problems) because you are going into lvm_add_dir_cache()
-multiple times.
+-- 
+   ________________________________________________________________
+ / Generally uninteresting signature - ignore at your convenience  \
+| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
