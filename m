@@ -1,7 +1,10 @@
-From: "Robert P. J. Day" <rpjday@mindspring.com>
-Message-ID: <Pine.LNX.4.53.0307181659170.6115@localhost.localdomain>
-MIME-Version: 1.0
-Subject: [linux-lvm] problem building LVM2 for 2.6 kernel
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] problem building LVM2 for 2.6 kernel
+Message-ID: <20030719004618.J31325@uk.sistina.com>
+References: <Pine.LNX.4.53.0307181659170.6115@localhost.localdomain>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.53.0307181659170.6115@localhost.localdomain>; from rpjday@mindspring.com on Fri, Jul 18, 2003 at 05:02:29PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,39 +15,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 18 16:04:02 2003
+Date: Fri Jul 18 18:47:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-  in trying to set up LVM for the 2.6 kernel, i configured the
-2.6.0-test1-ac2 version and selected device mapper and v4 ioctl
-(this version of the kernel did not appear to need any patching),
-rebuilt, and rebooted with the new kernel, and that seemed to go
-smoothly.
+On Fri, Jul 18, 2003 at 05:02:29PM -0400, Robert P. J. Day wrote:
+> 2.6.0-test1-ac2 version and selected device mapper and v4 ioctl
 
-  i then built and installed libdevmapper (the latest version
-from today), and that again went smoothly.
+I've not tried this kernel, but assuming it contains BLKGETSIZE64
+you'll need to compile LVM2 against newer glibc kernel headers
+(e.g. update the package for your linux distribution or symlink 
+/usr/include/linux to include/linux in your -ac tree)
 
-  but when i tried to build the final LVM2 utilities, i ran
-
-  # ./configure --with-lvm1=none
-  # make
-
- which eventually produced:
-
-...
-
-device/dev-io.c: In function `dev_get_size':
-device/dev-io.c:215: `BLKGETSIZE64' undeclared (first use in this function)
-device/dev-io.c:215: (Each undeclared identifier is reported only once
-device/dev-io.c:215: for each function it appears in.)
-make[1]: *** [device/dev-io.o] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [lib] Error 2
-
-  is there something i did wrong?  a patch i forgot to install?
-thanks.
-
-rday
+Alasdair
+-- 
+agk@uk.sistina.com
