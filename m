@@ -1,12 +1,10 @@
-Subject: Re: [linux-lvm] DM encryption target?
-From: Christophe Saout <christophe@saout.de>
-In-Reply-To: <3F717F13.1050407@silicide.dk>
-References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com>
-	 <1064343664.10276.3.camel@chtephan.cs.pocnet.net>
-	 <3F717F13.1050407@silicide.dk>
-Message-Id: <1064404776.5915.9.camel@chtephan.cs.pocnet.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Gingia <gingiabios@email.it>
+Subject: Re: [linux-lvm] vgcfgrestore and bootstrap
+References: <200309231754.20420.gingiabios@email.it> <20030924103749.C2618@sistina.com>
+In-Reply-To: <20030924103749.C2618@sistina.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200309241414.47229.gingiabios@email.it>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,51 +15,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 24 07:00:01 2003
+Date: Wed Sep 24 07:23:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Am Mi, 2003-09-24 um 13.25 schrieb Jon Bendtsen:
+Alle 10:37, mercoled=EC 24 settembre 2003, Heinz J . Mauelshagen ha scrit=
+to:
+> Gingia,
+>
+> the normal procedure is "vgscan ; vgchange -ay ; mount -a"
+> rather than vgcfgrestore before vgchange.
+=2E..
+> Have you tried "vgscan ; vgchange -ay ; mount -a" before ?
+> (keep in mind, that vgscan needs space below /etc/ to store metadata
+> copies)
 
-> > Yes, as Kevin already pointed out, I've written a working implementation
-> > some time ago. It currently seems to be more stable than the cryptoloop
-> > implementation in the 2.6-test kernels.
-> > 
-> > You can find my original announcement with some how-to-use details at
-> > http://lwn.net/Articles/42000/ . Don't use that patch, I've got a newer
-> > one one my homepage http://www.saout.de/misc/dm-crypt.diff .
-> 
-> How far did you come? Can you change the password? What kind of 
-> encryption can be used? the hole cryptoapi range? just some?
+I controlled the script of bootstrap  to see if there is the apropiated e=
+ntry,=20
+and it seems is ok, i also re-started the server .
+I  tried "vgscan" and i have the output:
+invalidate :dirty buffer=20
+invalidate :busy buffer =20
+(any time)
+vgscan -- "/etc/lvmtab" and  "7etc/lvmtab.d" successfully created=20
+vgscan -- WARNING: this programm doe not do a VGDA backup of your group
 
-Every (symmetrical, well, there are only symmetrical ciphers in the
-kernel ATM) cipher can be used with every possible key size. At least in
-theory, I tried some combinations and everything worked as expected. The
-cryptoapi use is relatively independent of the cipher used.
+after i do :
+vgchange -ay=20
+and the output was:
+vgchange -- no volume group found=20
 
-The target has no in-place-conversion support (what I suppose you mean
-with password change?). If someone wants to do this you would probably
-do this offline or need another target for this (probably similar to the
-pvmove mechanism).
+so i made the restore:
+vgcfgrestore .........
+the ouptput was=20
+vgcfgrestore -- VGDA for "Volume1" successfully restored to phisical volu=
+me=20
+"/dev/i2o/hda3"=20
+vgcfgrestore  -- you may not have an actual backup of restored group "vol=
+ume1"
 
-I've thought of a way to do this completely in userspace. I've got a
-test program running, but when doing IO on the device while conversion
-is running it tends to lock up. I don't know why exactly, probably my
-idea is flawed (at least I think it's dangerous under low memory
-conditions). It was just an experiment anyway. If someone is interested
-in the source, please say so.
+then i can do  vgchange -ay  and go on=20
 
-Another way to do a password change would be to not reencrypt the device
-but to store the symmetrical key somewhere else and encrypt it with a
-password hash and to just reencrypt that key with another password.
+This is all , was it the matter?
 
-But this one could be done completely userspace. I've not written a
-special dmcryptsetup tool for this, where this should probably go (or be
-integrated into the lvm tools, whatever). You have to use dmsetup at the
-moment.
-
---
-Christophe Saout <christophe@saout.de>
-Please avoid sending me Word or PowerPoint attachments.
-See http://www.fsf.org/philosophy/no-word-attachments.html
+Thank you
