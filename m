@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] cannot mount snapshot volumes
-Message-ID: <20020925092633.GM1291@tykepenguin.com>
-References: <001201c263e0$584c1340$db64a8c0@marien> <20020925071719.GH1291@tykepenguin.com> <003001c26473$7a6a5200$db64a8c0@marien>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] drive-spindown
+Message-ID: <20020925112539.A29192@sistina.com>
+References: <200209251011.05774.michael@frotscher.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <003001c26473$7a6a5200$db64a8c0@marien>
+In-Reply-To: <200209251011.05774.michael@frotscher.net>; from michael@frotscher.net on Wed, Sep 25, 2002 at 10:11:05AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,36 +14,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 25 04:32:33 2002
+Date: Wed Sep 25 04:35:46 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Sep 25, 2002 at 11:11:04AM +0200, Marien Tielemans - Van Boxtel Software BV wrote:
-> Hello Patrick,
+Michael,
+
+that could be either some regular access to extents residing on hdb
+or a drive spin down flaw in the IDE driver in case "hdparm -S" went proper.
+
+On Wed, Sep 25, 2002 at 10:11:05AM +0200, Michael Frotscher wrote:
+> Hello, all
 > 
-> Redhat 7.3 uses kernel 2.4.18-3 .
-> I tryed to patch the kernel with : linux-2.4.18-VFS-lock.patch (located in
-> LVM/1.0.5/PATCHES )
+> I'd like to have the drives of my LVM-system (SuSE 8.0) to spin down 
+> when the volume is not used (it's a data-volume only, the system 
+> resides somewhere else). The volume consists of one partition of hda 
+> and drives hdb and hdc are completely dedicated to it.
 > 
-> In the README it is mentioned that kernels supplied with RedHat , Mandrake
-> etc are a little different from the kernels
-> supplied bij kernel.org .
-> Since the lvm-1.0.5-2.4.18-3custom.patch worked fine with the "RedHat "
-> kernel i thought the VFS-lock patch also should work.
-> What do you advise me to do ?
->  Thanks,
+> I tried to set a spindown-time in BIOS as well as hdparm -S, but 
+> strangely only hdc powers down (checked that with hdparm -C). I don't 
+> really expect hda to power down as the system resides on it, but hdb 
+> obviously should. Does anyone have an idea why it doesn't? 
+> -- 
+> cheers,
 > 
+> Michael
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-The LVM patches adapt themselves to the kernel you are patching so should apply
-to most kernels without trouble. the VFS lock patch is just a static patch
-against the named kernel.
+-- 
 
-Your options are:
+Regards,
+Heinz    -- The LVM Guy --
 
-1) build a 2.4.19 kernel from ftp.*.kernel.org
-2) apply the VFS lock patch to the redhat kernel and manually fix the rejects
-3) lean on redhat to include the patch
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-patrick
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
