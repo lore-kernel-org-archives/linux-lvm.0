@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvmove problem: Inappropriate ioctl for device
-Message-ID: <20030709165947.B23240@sistina.com>
-References: <20030709130201.GA19698@pec.upc.uniba.sk> <20030709164139.A23240@sistina.com> <20030709145450.GB31004@pec.upc.uniba.sk>
-Mime-Version: 1.0
-In-Reply-To: <20030709145450.GB31004@pec.upc.uniba.sk>; from samek@upc.uniba.sk on Wed, Jul 09, 2003 at 04:54:50PM +0200
+Message-ID: <3F0C9623.8070409@xs4all.nl>
+From: Gert van der Knokke <gertk@xs4all.nl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] trouble adding a disk to exisiting lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,57 +13,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul  9 10:01:05 2003
+Date: Wed Jul  9 17:25:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Wed, Jul 09, 2003 at 04:54:50PM +0200, Peter Samek wrote:
-> On Wed, Jul 09, 2003 at 04:41:39PM +0200, Heinz J . Mauelshagen wrote:
-> > 
-> > You're using a RedHat kernel which is pre-patched by RedHat IRT LVM.
-> > Please contact RedHat support.
-> > 
-> 
-> Sorry, may be I was not clear enough, I use RedHat but not a RedHat made
-> kernel. It is vanilla 2.4.20 + preempt patch and some VIA KT400 patches
-> (AGP).
+Hi,
 
-Ah :)
+Probably this is a known problem but anyway as I'm new to the subject of 
+LVM I give it a go.
 
-The pvmove should work with the RedHat kernel *and* the RedHat LVM tools.
+We set up on a server machine an initial LVM consisting of two 80 Gb 
+drives dangling on a Promise RAID controller (just using them as 
+/dev/hde and /dev/hdg, aka two separate IDE devices, no raid magic involved)
+This worked as a charm and the resulting LVM was setup with ext3 
+filesystem without a hitch. The LVM was filled with data from other IDE 
+devices (source) and when these were copied (they were FAT32 volumes) 
+these source drives were emptied and with fdisk the partition table was 
+emptied too.
 
-Or you should get 1.0.7 from our site, patch vanilla, generate kernel and
-1.0.7 tools.
+Pvcreate was done on the first drive to be added and after vgscan and 
+vgextend an fsck -f was done on the lvm volume before resize2fs was done.
+All this still went without problems, remounting the extended volume 
+gave no errors.
 
-> 
-> Peter
-> -- 
->  Peter Samek
->  samek@upc.uniba.sk
->  jabber: chaeldi@jabber.sk / icq: 81758305
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+The volume was unmounted and the next drive was to be added, same 
+procedure (partition table clear with fdisk, pvcreate, vgscan, vgextend)
+but then as fsck was run a huge pile of numbers came up with at the end 
+the question fix<y>?  And I aborted this by Ctrl-C to keep the 
+filesystem as it were.
 
--- 
+I guess the adding of the third drive issued this problem, did resize2fs 
+  foul up ? Is the whole volume at risk ?
 
 Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Gert
