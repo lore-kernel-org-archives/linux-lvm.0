@@ -1,10 +1,11 @@
-Message-ID: <3DC238D1.54E65AEC@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] e2fsadm and snapshots?
-References: <1036105045.10397.68.camel@theory.jpl.nasa.gov> 
-		<20021031232551.GG23959@clusterfs.com> <1036112887.10402.88.camel@theory.jpl.nasa.gov>
-Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] strange behavior with 1.0.5 on Linux 2.4.19?
+Message-ID: <20021101150659.GA5289@weissel.dyndns.org>
+References: <20021004105057.B8575@sistina.com> <1034107599.28928.105.camel@pslgregory> <20021009133650.E23965@sistina.com> <1035782975.3398.128.camel@gopher> <20021028101739.F16452@sistina.com> <1035866273.9074.74.camel@gopher> <20021029101033.A22193@sistina.com> <1035921224.1276.24.camel@gopher> <20021031134804.A491@sistina.com> <1036104859.21418.104.camel@pslgregory>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1036104859.21418.104.camel@pslgregory>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,41 +16,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  1 02:19:01 2002
+Date: Fri Nov  1 09:07:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Jim King wrote:
-> 
-> On Thu, 2002-10-31 at 15:25, Andreas Dilger wrote:
-> > The LVM snapshot is the whole filesystem (with only the parts that
-> > actually change being written to the snapshot LV) - no need to change
-> > the filesystem size at all.  All you need to change is the LV size.
-> 
-> OK -- so using lvextend I can extend it. But once it's extended, I can
-> no longer mount it. I get:
+Gregory Ade (gkade@bigbrother.net) wrote 60 lines:
 
-You dont need to unmount it to extend it.
-May i suggest mounting the filesystems as ext2, if you are running ext3?
+> support and attempt the snapshot creation?  Unfortunately, the way the
+> system was assembled, the smallest I can physically reduce the RAM to is
+> 4GB (two DIMMS on each memory carrier is the minimum required for the
+> system to boot, and they shipped it to us with 8 1GB DIMMS.)
 
+There should be no problem with "mem=3D1023M" as boot parameter,=20
+as long as at least 1023 MB are actually physically available.
 
-I run 5 scripts for the snapshots as well.
-One is run every minute, and checks if there is less than 512M left on
-the snapshot, then it extends it. (this is actualy 3 scripts, one using
-find to execute another script, this one is called by cron, the 2. does
-a lvdisplay on the snapshot, and pipes the data into a perl script, that
-does checking and resizing + email sysadm (me))
-The 4 other scripts are run every hour, every 8 hour, every day, and
-every
-sunday. They take a new snapshot, unmounts the old, mounts the new, and
-removes the old.
-
-Ontop of all this, i take backup using the day snapshot, and i'll soon
-(setting it up today) get another server, that i will use rsync to
-take a backup of the hourly snapshot to another server, which is
-identical.
-
-
-
-JonB
+-Wolfgang
