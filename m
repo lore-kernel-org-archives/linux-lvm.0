@@ -1,10 +1,11 @@
-Return-Path: <paulj@alphyra.ie>
-Date: Tue, 7 Aug 2001 17:50:35 +0100 (IST)
-From: Paul Jakma <paulj@alphyra.ie>
-Subject: Re: [linux-lvm] Looking for recipe for LVM
-In-Reply-To: <20010807165556.C29254@dragon.blacknet.de>
-Message-ID: <Pine.LNX.4.33.0108071749560.5978-100000@dunlop.itg.ie>
+Return-Path: <warl0k@lvcm.com>
+Message-ID: <001401c11f63$b69620c0$f04b7818@lvcm.com>
+From: "Glenn Shannon" <warl0k@lvcm.com>
+Date: Tue, 7 Aug 2001 10:09:26 -0700
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Return-Path: warl0k@lvcm.com
+Subject: [linux-lvm] Installing Linux on LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,15 +17,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Linux-LVM Mailing List <linux-lvm@sistina.com>
 
-On Tue, 7 Aug 2001, Goetz Bock wrote:
+Hi all!
 
-> I'll try to make my RPMs workable on redhat (But I've a lot of work to
+I was wanting to install Debian onto an LVM partition. Does anyone here know
+if this can be done or am I going to have to try and figure it out all by my
+lonesome? :)
 
-To save you some work: Alan Cox's latest patches have a 'make rpm'
-target.
+I have a bunch of experience in installing/patching LVM beta 7 and am
+planning on using beta 8.
 
---paulj
+Also, does anyone know of a bootloader that will recognize an LVM partition?
+It would be kind of wasteful if I installed linux only to have to boot from
+a floppy :)
+
+Thanks in advance for any replies!
+
+Glenn
