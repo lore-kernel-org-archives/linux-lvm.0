@@ -1,11 +1,10 @@
-Return-Path: <grothe@mathematik.tu-darmstadt.de>
-Date: Sat, 13 Jan 2001 19:30:13 +0100
-From: Holger Grothe <grothe@mathematik.tu-darmstadt.de>
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at www.sistina.com
-Message-Id: <20010113193013.A5900@fb0442.mathematik.tu-darmstadt.de>
-References: <20010113011532.B21587@srv.t-online.de> <20010113170408.A4296@gondor.com> <20010113190810.A5517@fb0442.mathematik.tu-darmstadt.de>
-Mime-Version: 1.0
-In-Reply-To: <20010113190810.A5517@fb0442.mathematik.tu-darmstadt.de>; from grothe@mathematik.tu-darmstadt.de on Sat, Jan 13, 2001 at 07:08:10PM +0100
+Return-Path: <lars.bensmann@epost.de>
+Message-ID: <3A5DBB0000001DCB@mail.epost.de>
+Date: Sat, 13 Jan 2001 21:41:32 +0100
+From: lars.bensmann@epost.de
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Help: ERROR -154
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,17 +17,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Jan 13, 2001 at 07:08:10PM +0100, Holger Grothe wrote:
-[...]
-> You can see the problem Jan mentioned very easily.
+Hello,
 
-I hate to followup myself but I forgot to mention:
-stock kernel 2.2.18 (+ reiserfs-Patch)
+when running vgscan I get the following error message:
 
-Holger
--- 
-Holger Grothe  (Email: grothe@mathematik.tu-darmstadt.de)
-Fachbereich Mathematik, TU Darmstadt
+vgscan -- ERROR -154: can't get data of volume group "part" from physical=
+
+volume(s)
+vgscan -- ERROR -154 creating "/etc/lvmtab" and "/etc/lvmtab.d"
+
+(I put a complete output of vgscan -d up for download under:
+http://homepage.ruhr-uni-bochum.de/Marc.O.Sandlus/vgscan_debug.gz)
+
+This happened after rebooting the computer a couple of days after 
+shrinking a LV, renaming it and then creating a new LV with the name
+of the old one. I don't know if this has anything to do with this,
+but I haven't messed around with LVM otherwise and it ran just fine
+for quite some time.
+
+For me it looks like the is some internal counter wrong. I think
+it triers to count the LVs and counts 8 somewhere and 9 somewhere
+else (9 is the right number).
+
+I'm using the latest Debian Package (0.8i) and I tried several
+different kernels (2.2.18, 2.2.17 and 2.2.14).
+And I tried it with 2.4.0-test12 and a self compiled 0.8final.
+
+I always get the same results.
+
+Looking forward to any help,
+Lars
