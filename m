@@ -1,10 +1,12 @@
-Return-Path: <urs@isnogud.escape.de>
-Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
-References: <200105270747.f4R7lIYa005098@webber.adilger.int>
-From: Urs Thuermann <urs@isnogud.escape.de>
-Date: 27 May 2001 11:47:30 +0200
-In-Reply-To: <200105270747.f4R7lIYa005098@webber.adilger.int>; from Andreas Dilger on Sun, 27 May 2001 01:47:18 -0600 (MDT)
-Message-ID: <m27kz39l8t.fsf@isnogud.escape.de>
+Return-Path: <pwk.linuxfan@gmx.de>
+From: Peter Kirk <pwk.linuxfan@gmx.de>
+Subject: Re: System goes very slow (was: Re: [linux-lvm] Test of LVM)
+Date: Sun, 27 May 2001 15:33:32 +0200
+References: <01052614354500.00527@notch> <01052704562400.02599@notch> <3B10B023.E140C22E@loria.fr>
+In-Reply-To: <3B10B023.E140C22E@loria.fr>
+MIME-Version: 1.0
+Message-Id: <01052715333200.00595@notch>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,54 +18,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andreas Dilger <adilger@turbolinux.com> writes:
+Am Sonntag, 27. Mai 2001 09:43 schrieben Sie:
+> > root@notch:/home/pwk > bonnie -s 1024MB
+> > Bonnie 1.2: File './Bonnie.2815', size: 1073741824, volumes: 1
+> > Writing with putc()...          done:   3270 kB/s  35.4 %CPU
+> > Rewriting...                    done:   1505 kB/s  19.3 %CPU
+> > Writing intelligently...        done:   4682 kB/s  11.4 %CPU
+> > [I stopped bonnie here, do you need more output ?]
+>
+> Is DMA set on your harddrive ? (hdparm)
+>
+> DL
+Yes I thought it was enabled, until I checked. hda had it enabled, and hdb 
+had not :-(
+Here is the new bonnie
 
-> /dev/vgtest/lvtest = real 66.909s user 0.440s sys 10.420 *** 5x as slow
-> /dev/vgtest/lvtest = real 70.135s user 0.520s sys 11.390 *** 5x as slow
-> 
-> /dev/vgtest3/lvtest = real 63.552s user 0.510s sys 10.290s *** 6x as slow
-> /dev/vgtest3/lvtest = real 62.354s user 0.610s sys 10.020s *** 6x as slow
+root@notch:/home/pwk > bonnie -s 512
+Bonnie 1.2: File './Bonnie.651', size: 536870912, volumes: 1
+Writing with putc()...         	done:  13874 kB/s  98.1 %CPU
+Rewriting...                   	done:  10629 kB/s   6.0 %CPU
+Writing intelligently...       	done: 107497 kB/s  93.1 %CPU
+Reading with getc()...         	done:  11554 kB/s  75.6 %CPU
+Reading intelligently...       	done:  52766 kB/s  24.3 %CPU
+Seeker 1...Seeker 2...Seeker 3...start 'em...done...done...done...
+              ---Sequential Output (nosync)--- ---Sequential Input-- --Rnd 
+Seek-              -Per Char- --Block--- -Rewrite-- -Per Char- --Block--- 
+--04k (03)-Machine    MB K/sec %CPU K/sec %CPU K/sec %CPU K/sec %CPU K/sec 
+%CPU   /sec %CPUnotch  1* 512 13874 98.1107497 93.1 10629  6.0 11554 75.6 
+52766 24.3  279.6  1.0
 
-This is similar to the worst case numbers I have measured.
+So... is this appropriate for two fast disks ? 10MB/sec are much better, but 
+I was thing of 40 or 50 MB/sec. Am I doing anything wrong ?
 
-> I'm not sure if it is an SMP or SCSI issue, or what.  Urs, do you also
-> have an SMP system?  Maybe there are locking slowdowns under SMP and
-> not under UP?
-
-No.  It's a single Pentium II, 333MHz, kernel 2.4.3 with lvm-0.9.1_beta7
-compiled without SMP support:
-
-    isnogud:urs$ grep SMP /usr/src/linux-2.4.3-ut/.config
-    # CONFIG_SMP is not set
-
-The SCSI controller is an Adaptec AIC 7880 on an ASUS P2L97-S
-mainboard (onboard).  The SCSI disks are
-
-    Host: scsi0 Channel: 00 Id: 00 Lun: 00
-      Vendor: IBM      Model: DCAS-34330W      Rev: S65A
-      Type:   Direct-Access                    ANSI SCSI revision: 02
-    Host: scsi0 Channel: 00 Id: 01 Lun: 00
-      Vendor: IBM      Model: DCAS-34330W      Rev: S65A
-      Type:   Direct-Access                    ANSI SCSI revision: 02
-    Host: scsi0 Channel: 00 Id: 02 Lun: 00
-      Vendor: NEC      Model: DSE2100S         Rev: 0306
-      Type:   Direct-Access                    ANSI SCSI revision: 02
-
-i.e. /dev/sda and /dev/sdb are UW-SCSI and /dev/sdc is a SCSI-2 disks.
-
-
-> The problem is definitely more noticable on the SCSI disks, but at least
-> on the IDE disk the increased wall-clock time is wholly accounted for
-> by increased system time.  On the SCSI disks, it would guess that "dd"
-> is waiting for I/O completions under LVM, and not on the raw disk???
-
-How could I check?  And do you have an idea, why a file system on top
-of such a slow LV is, if at all, only somewhat slower?
-
-
-urs
+pwk.linuxfan
