@@ -1,9 +1,9 @@
 Return-Path: <plamb_98@yahoo.com>
-Message-ID: <20010724014053.45142.qmail@web13402.mail.yahoo.com>
-Date: Mon, 23 Jul 2001 18:40:53 -0700 (PDT)
+Message-ID: <20010724015531.68405.qmail@web13407.mail.yahoo.com>
+Date: Mon, 23 Jul 2001 18:55:31 -0700 (PDT)
 From: Pierre Lamb <plamb_98@yahoo.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Question
+Subject: [linux-lvm] Question -- HELP
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
