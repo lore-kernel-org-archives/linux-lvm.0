@@ -1,9 +1,8 @@
-Return-Path: <jweber@valinux.com>
-Date: Tue, 15 May 2001 20:35:21 -0700 (PDT)
-From: Jay Weber <jweber@valinux.com>
-Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
-In-Reply-To: <Pine.LNX.4.30.0105151835220.25662-100000@shells.valinux.com>
-Message-ID: <Pine.LNX.4.30.0105152031360.28727-100000@shells.valinux.com>
+Return-Path: <Jean-Eric.Cuendet@linkvest.com>
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683CC1@mailsrv.linkvest.com>
+From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+Subject: RE: [linux-lvm] Lost filesystems on LVs (forgot the attachment)
+Date: Wed, 16 May 2001 07:48:39 +0200
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,147 +15,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: ext3-users@redhat.com
-Cc: linux-lvm@sistina.com, Joe Thornber <thornber@btconnect.com>, sct@redhat.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Nope, soon after I posted the email box died.  I'm still hitting Attempt
-to refile buffer which is caused by cleanup_transaction().  I reverted to
-use bh->b_jlist == BJ_None in my tests also.
+> > The superblock could not be read or does not describe a correct ext2
+> > filesystem.  If the device is valid and it really contains an ext2
+> > filesystem (and not swap or ufs or something else), then 
+> the superblock
+> > is corrupt, and you might try running e2fsck with an 
+> alternate superblock:
+> >     e2fsck -b 8193 <device>
+> >  
+> > [root@fatboy filesrv]#
+> > 
+> > e2fsck -b 8193 doesn't help...
+> 
+> Try e2fsck -b 32768 -B 4096
 
-Rereading Andrea's prior thread on this makes me think I'm heading down
-the same path he did prior also.  Bummer. :)
+Thanks for the tip, but... too late...
+I mke2fs the filesystem last evening. The data was not so important, so
+recreating it was ~30 minites. 
+But I'll be happy if someone could explain that, so it's not coming again!
 
-On Tue, 15 May 2001, Jay Weber wrote:
+Thanks for your help
+-jec
 
-> Date: Tue, 15 May 2001 18:50:44 -0700 (PDT)
-> From: Jay Weber <jweber@valinux.com>
-> Reply-To: ext3-users@redhat.com
-> To: linux-lvm@sistina.com
-> Cc: ext3-users@redhat.com, Joe Thornber <thornber@btconnect.com>,
->      sct@redhat.com
-> Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
->
-> I think I have this one solved, I hope.
->
-> I think what Andreas and I are running into are a few different
-> assertions.  One being the LVM lvm_do_pv_flush caused assertion which is
-> related directly to invalidate_buffers() being called which then triggers
-> refile_buffer() on a journaled buffer, which appears clean in all other
-> ways according to the checks in refile_buffer().
->
-> The following is what I've got in __invalidate_buffers() right now.
->
->                         if (!bh->b_count && !buffer_journaled(bh) &&
->                             (destroy_dirty_buffers || !buffer_dirty(bh)))
->                                 put_last_free(bh);
->                         if (slept)
->                                 goto again;
->
-> Stephen suggested something along the above a bit ago, except he uses
-> bh->b_jlist == BJ_None.  buffer_journaled() seems to be a function in fs.h
-> which seems a bit more appropriate.
->
-> Next, with the above we'd still see problems.  My next patch included a
-> suggestion from Heinz to add lock_kernel() and unlock_kernel() around the
-> fsync_dev() and invalidate_buffers() in lvm.c/lvm_do_pv_flush().
-> Currently I have this in my working kernel, I'm gonna try again without it
-> though, it seems that it shouldn't be necessary, the other block devices
-> I've looked at don't seem to lock the kernel.
->
-> Lastly, I was still getting an assertion generating the "Attempt to refile
-> free buffer", but this one was actually caused by an ext3 journaling
-> function calling refile_buffer(), not derived from invalidate_buffers().
->
-> In fs/jfs/checkpoint.c/cleanup_transaction(), you'll note it does some
-> buffer_head bit checks and then calls refile_buffer().  Mine currently
-> looks like the following:
->
->                 if (!buffer_dirty(bh) && !buffer_jdirty(bh) &&
->                     !buffer_journaled(bh) &&
->                     bh->b_list != BUF_CLEAN) {
->                         unlock_journal(journal);
->                         refile_buffer(bh);
->                         lock_journal(journal);
->                         return 1;
->                 }
->
-> Note the addition of the !buffer_journaled(bh) check.
->
-> Okay, so using all of the above, I have now been running multiple vgscan
-> loops and a pvscan loop while untarr'ing kernel, removing the kernel dir,
-> and then untarring again, and building the kernel with make -j4 (eating up
-> my memory and cpu) for nearly an hour with no assertions.
->
-> To me it appears that Stephen had it right all along (in prior thread on
-> this), he stated that the b_jlist == BJ_None may be necessary elsewhere
-> also, to insure that there are no journaled buffers out there before
-> handing back to refile_buffer().  I think that's what we were up against
-> and as far as I can tell (grepping for refile_buffer() in jfs/* code) I've
-> added the checks to all the appropriate cases.
->
-> Andreas can you give the above a try and see if it solves the problem on
-> your end also.  Stephen, does this look good as far as what I've changed?
->
-> Sorry, no diffs just yet, the changes are rather smallish though.
->
-> Thanks.
->
-> On Tue, 15 May 2001, Chris Mason wrote:
->
-> > Date: Tue, 15 May 2001 21:17:06 -0400
-> > From: Chris Mason <mason@suse.com>
-> > Reply-To: linux-lvm@sistina.com
-> > To: linux-lvm@sistina.com
-> > Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
-> >
-> >
-> >
-> > On Tuesday, May 15, 2001 06:32:24 PM -0600 Andreas Dilger
-> > <adilger@turbolinux.com> wrote:
-> >
-> > >> reiserfs should catch blocks that don't have the proper bits set when it
-> > >> starts i/o, and then it makes sure the block hasn't been relogged while
-> > >> the i/o was in progress.  It sends warnings not an oops though, check
-> > >> your log files.  If we were losing journal bits, and the log code didn't
-> > >> catch it, the result should be silent corruption.
-> > >>
-> > >> Since he is seeing deadlock, it seems more likely reiserfs is trying to
-> > >> lock a buffer for i/o, and that is hanging for some reason....
-> > >
-> > > But what does PV_FLUSH do?  Calls fsync_dev() to flush dirty buffers to
-> > > disk, and sync_supers() and waits for buffer I/O completion.  This is
-> > > unlikely to be the cause of a problem, because that happens on each
-> > > sync call.
-> > >
-> > > It then calls __invalidate_buffers(dev, 0), which destroys everything
-> > > but dirty buffers (on ALL buffer lru lists).
-> >
-> > Unless I'm reading it wrong (2.4.4), __invalidate_buffers destroys all
-> > buffers that are clean and have b_count == 0.  Reiserfs keeps b_count > 0
-> > for all metadata buffers that have been logged, while ext3 allows the count
-> > to be zero (but keeps them in the dirty list).
-> >
-> > __invalidate_buffers also waits on any locked buffers.  Any chance one of
-> > the other LVM ioctls grabs some lvm lock before calling PV_FLUSH?
-> >
-> > You're right though, pv_flush certainly doesn't look like it could cause
-> > any deadlocks.
-> >
-> > -chris
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >
->
->
->
->
+> -- 
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound 
+> of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/             
+>   -- Dogbert
 > _______________________________________________
-> Ext3-users mailing list
-> Ext3-users@redhat.com
-> https://listman.redhat.com/mailman/listinfo/ext3-users
->
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 
