@@ -1,11 +1,8 @@
-Subject: Re: [linux-lvm] Re: [PATCH] 2.4.25--pre4 VFS lvm_snapshots
-From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
-In-Reply-To: <20040107161251.A30329@infradead.org>
-References: <3FFC2B15.4000803@wanadoo.es>
-	 <20040107161251.A30329@infradead.org>
-Message-Id: <1073586677.19559.25.camel@david.internal.NorcrossGroup.com>
+From: neuron <neuron@hollowtube.mine.nu>
+Message-Id: <20040108203554.2d609d0f@hollowbox>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Moving to a new system.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  8 13:42:02 2004
+Date: Thu Jan  8 14:37:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Wed, 2004-01-07 at 11:12, Christoph Hellwig wrote:
-> On Wed, Jan 07, 2004 at 04:51:49PM +0100, Xose Vazquez Perez wrote:
-> > hi,
-> > 
-> > This patch is necessary to be able to mount snapshots of journalling
-> > filesystems. It was flying around lvm for long time, years!!.
-> > And LiNUX distributions bring it, Red Hat at least since 7.x.
-> > So, it should be sure.
-> 
-> The patch still doesn't get better by that.  And even if it was this
-> would clearly be a feature for 2.6, not 2.4.
-> 
-I have not started looking at 2.6 yet, but somehow I assumed it would
-already have the automatic freeze invocation logic in it.
+I'm moving my data from the old server, kernel 2.4 and lvm1.  To a new server, kernel 2.6 and lvm2.
+I thought I'd start by removing hdd1. It's 80gb and I have about 111gb free.
 
-Too bad that it doesn't, but with 2.4 and XFS I initiate the freeze from
-user space and don't depend on the patch being installed.  
+pvmove --test /dev/hdd1
+pvmove -- couldn't find source physical volume "/dev/hdd1" in volume group "vg_main"
 
-I assume all of the various filesystems have a way to invoke the freeze
-from userspace.  If so, this patch is a nicety, not a neccesity.
+I have /dev/vg_main/storagelv as the drive I wanna take the space from.
 
-Greg
--- 
-Greg Freemyer
+pvdisplay /dev/hdd1 works, total pe's 3575
+would the best way of doing this be:
+lvreduce -l-3575 /dev/vg_main/storagelv
+resize_reiserfs /dev/vg_main/storagelv (I think reiserfs can do online resizing?)
+then umount /mnt/storage
+pvmove /dev/hdd1
+vgreduce /dev/hdd1
+?
+
+I wanna make damn sure I get this right before I do it.
