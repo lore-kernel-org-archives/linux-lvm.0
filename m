@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] need VFS-lock patch
-Message-ID: <20011025164326.A4502@tykepenguin.com>
-References: <20011025145610.51617.qmail@web14406.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011025145610.51617.qmail@web14406.mail.yahoo.com>; from shahi_aman@yahoo.com on Thu, Oct 25, 2001 at 07:56:10AM -0700
+Message-ID: <3BD849C6.7060308@gmx.de>
+From: Jens Tkotz <jens.tkotz@gmx.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvm und promise fasttrack
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 25 10:43:02 2001
+Date: Thu Oct 25 12:19:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: Linux-LVM@Sistina.com
 
-On Thu, Oct 25, 2001 at 07:56:10AM -0700, Aman Shahi wrote:
-> 
-> Hi,
-> I was trying to build kernel-2.4.9-ac18 with LVM. How
-> do I get the VFS-Lock Patch for this kernel ? I tried
->  both linux-2.4.9-VFS-lock.patch and
-> 2.4.11-VFS-lock.patch. But kernel compilation failed
-> with both.
+Hallo Heinz,
 
-Not the reply you wanted but 2.4.12ac5 is OK with the 2.4.11 VFS-lock patch.
+ich hab schon wieder ein "Problem".
 
-Why do you particularly need 2.4.9ac18 ??
+Auf meinem Mainboard ist ein Promise Fasttrack 100 Controller.
+Die Festplatten kann ich �ber /dev/hd[e-h] ansprechen.
 
-patrick
+Es gibt aber auch die M�glichkeit das Hardware Raid anzuspechen �ber
+/dev/ataraid/d[0-2]px , mit x als Partitionsnummer.
+
+Beim Aufruf von vgcreate passiert folgendes :
+vgcreate gl_lvm /dev/ataraid/d0p1
+vgcreate -- physical volume name "/dev/ataraid/d0p1" is invalid
+
+Gr��e,
+
+Jens
