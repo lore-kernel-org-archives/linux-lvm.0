@@ -1,9 +1,9 @@
-Return-Path: <jweber@valinux.com>
-Date: Tue, 22 May 2001 12:10:06 -0700 (PDT)
-From: Jay Weber <jweber@valinux.com>
-Message-ID: <Pine.LNX.4.30.0105221204020.5395-100000@shells.valinux.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Snapshotting concatenated devices.
+Return-Path: <raheesom@navpoint.com>
+From: Rupert Heesom <raheesom@navpoint.com>
+Date: 22 May 2001 12:02:03 -0400
+Message-Id: <990547328.1133.1.camel@localhost>
+Mime-Version: 1.0
+Subject: [linux-lvm] Converting my Root file system to LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +15,92 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi folks,
+I've been practicing LVM techniques on a spare 2nd disk which I'm adding
+to my root file system using LVM.  I think I've got the hang of how LVs,
+PVs, and VGs work.
 
-Here's an odd one for you.  When using concatenated logical volumes (an
-LV that consists of multiple PVs in the VG) snapshots don't appears to be
-proper after they are taken.  It doesn't generate any errors when the
-snapshot is performed.  But, if you dumpe2fs or attempt to mount the
-snapshot it doesn't see the filesystem superblock, etc.
+I've followed the lvm-howto on how to create a root filesystem.
 
-To expand on this a bit further, the above isn't always true.  It only
-seems to occur when I use a larger volume which uses larger extent sizes.
-The larger volume in total consists of about 400G in the VG.  So, for
-example, I create an LV of 350G and leave myself 50G for snapshot
-purposes.
+I've created a partition on the 2nd disk (/dev/sdb1), converted it to a
+PV.
 
-It does work properly for me using my memorystick, which is a total of 16M
-and I use an extent size of 1M.
+I've created a VG (/dev/vg) & LV (/dev/vg/root) on that disk.
 
-In both cases I just make two partitions on the underlying device and
-concat them into the one VG.
+I've copied the contents of my non-LVM root partition over to the LV -
+(find / -xdev | cpio -pvmd /mnt/tmp)
 
-Lastly, in the case where snapshots aren't readable after being created,
-there is one step of events I can perform to make the snapshot usable
-again.  It consists of:
+I've moved /etc/lilo.conf to my /boot partition, and created a symlink
+to /boot/lilo.conf in /etc.
 
-	umount the LV
-	vgchange -an VG
-	vghcnage -ay VG
-	mount the snapshot of the LV first
-	then mount the LV
+I've created an initial RAMdisk on /boot -  (/boot/initrd-lvm-2.4.3.gz).
+I created one RAM disk initially to see how it worked, then ran the
+"lvmcreate_initrd" again once my LVol was created (and the files copied
+across).
 
-If I mount the LV first though, I end up with the unusable snapshot again.
-In the above example after the snapshot is mounted, it appears to look
-okay and appears to be functioning (COW, etc) properly.
+I've altered my lilo.conf to look like - .....
 
-Any ideas?
+[rupert@localhost rupert]$cat /etc/lilo.conf
+boot=/dev/sda
+map=/boot/map
+install=/boot/boot.b
+prompt
+timeout=50
+linear
+default=linux-2_4
+message=/boot/message
 
-I haven't seen this occur on non concattenated devices.  We also seem to
-have this issue when using striped devices.
+image=/boot/vmlinuz-2.2.16-22
+	label=linux-2_2
+	initrd=/boot/initrd-2.2.16-22.img
+	read-only
+	root=/dev/sda5
+	append="mem=384M"
+
+image=/boot/vmlinuz-2.4.3
+	label=linux-2_4
+	read-only
+	root=/dev/sda5
+	append="mem=384M"
+
+image=/boot/vmlinuz-2.4.3
+	initrd=/boot/initrd-lvm-2.4.3.gz
+	root=/dev/vg/root
+	label=lvm
+	append="mem=384M ramdisk_size=8192"
+
+#image=/usr/src/linux/arch/i386/boot/bzImage
+#	label=linux_test
+#	read-only
+#	root=/dev/sda5
+#	append="mem=384M"
+
+
+...... And I've run lilo of course.
+
+
+
+Now, when I boot up into the LVM partition, I get the following error
+msgs -
+
+lvm - Module successfully initialised.
+/sbin/vgscan: sed: command not found.
+/sbin/vgscan: /lib/lvm-iop10/: is a directory
+/sbin/vgscan: exec: /lib/lvm-iop10/: cannot execute:  permission denied.
+
+/sbin/vgchange:  <same msgs>
+
+Obviously the kernel can't find the LVM tools.  Would these not be
+included in the lvm initrd?  If they are, and the kernel still can't
+find them, what do I change so that the kernel CAN find the LVM tools?
+
+Tnx for any help.
+
+I'M NEARLY THERE!!
+
+-- 
+regs
+rupert
