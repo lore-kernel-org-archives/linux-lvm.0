@@ -1,12 +1,12 @@
-Return-Path: <frodet@nvg.org>
-From: Frode =?iso-8859-1?q?Tenneb=F8?= <frodet@nvg.org>
-Date: Thu, 2 Aug 2001 23:42:34 +0200
-References: <01080123240507.01440@leia>
-In-Reply-To: <01080123240507.01440@leia>
-MIME-Version: 1.0
-Message-Id: <01080223423400.05532@leia>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Re: Kernel Oops
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Fri, 3 Aug 2001 09:32:24 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Snapshot Info
+Message-ID: <20010803093224.B1549@tykepenguin.com>
+References: <Pine.LNX.4.33.0107311215030.6499-100000@greebo.foobarhouse.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0107311215030.6499-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Tue, Jul 31, 2001 at 12:20:02PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,50 +18,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wednesday 01 August 2001 23:24, Frode Tenneb=F8 wrote:
-> I have tested SGI's linux-2.4-xfs in it's 2.4.7 incarnation.
-> Compilled with gcc-2.96-81 on a Dell Latitude CPt400 with an Adaptec
-> 1460A PCMCIA SCSI adapter.
->
-> I can do whatever I want until I mount an LVM volume. After some time
-> or immediately it will panic with a dump like this:
+On Tue, Jul 31, 2001 at 12:20:02PM +0100, James Pattinson wrote:
+> Hi
+> 
+> OK, I've got snapshots working now that I've re-created my PVs with beta8
+> tools.
+> 
+> Where can I find some more info about how snapshots work? I'm a bit
+> confused as to how space is allocated. Here's an example of what I'm
+> seeing:
+> 
+> I have a 3GB LV called /dev/vg00/lvol6 that is about half full.
+> 
+> 1.	Created a 512MB snapshot LV for this LV
+> 2.	Copied 9MB worth of data to /dev/vg00/lvol6
+> 3.	Looked at lvdisplay /dev/vg00/snap_lvol6 and 18MB is used in the
+> snapshot.
+> 
+> Where does the figure 18MB come from? is the fact that it is 2 x 9MB
+> significant?
 
-It appeard that a filesystem error caused the panic when mounting one=20
-of the LVs. A fsck on a newly booted system cured that problem.
+That's a bit odd - I usually see the "right" amount allocated to the snapshot.
+Regardless of whether it's reiserfs or ext2 I'm using.
 
-> Aug  1 18:57:26 localhost kernel: Unable to handle kernel paging
-> request at virtual address c489c4f0
-> Aug  1 18:57:26 localhost kernel:  printing eip:
-> Aug  1 18:57:26 localhost kernel: c489c4f0
-> Aug  1 18:57:26 localhost kernel: *pde =3D 03bd1067
-> Aug  1 18:57:26 localhost kernel: *pte =3D 00000000
-> Aug  1 18:57:26 localhost kernel: Oops: 0000
-> Aug  1 18:57:26 localhost kernel: CPU:    0
-> Aug  1 18:57:26 localhost kernel: EIP:
-> 0010:[fat:__insmod_fat_S.bss_L2264+450160/60315488]
+Shot in the dark : you're not using ext3 with data journalling enabled are you?
+(OK just a thought!)
+ 
+> I'd quite like to know how big I should be making my snapshots.
 
-[snap]
+Normally the amount you would expect to put onto the original volume during the
+snapshot's lifetime plus a small amount (maybe 4meg) for overhead. I suppose it
+may depend on the filesystem you are using and possibly even the data (though i
+can't see why, offhand)
 
-> This also happens with 2.4.8-pre3-xfs. I'm not sure if this is a LVM
-> issue, a general kernel issue or an SGi/XFS issue, but I thought I'd
-> bring it up here before I talked to the XFS guys as this is directly
-> related to LVM (#define LVM_RELEASE_NAME "0.9.1_beta6" - perhaps a
-> known problem?)
-
-Furhtermore the oops happening after doing some work (eg. compiling)=20
-while the LV in question was mounted, but working on a different=20
-filesystem, also seems to have dissappeard. However, doing some work on=20
-the filesystem of the LV in question (from simple ls, to compilations)=20
-brings back the oops. I'm unable to umount the filesystem and=20
-eventually everything hangs.
-
-What could be wrong?
-
-Regards,
- -Frode
---=20
-^ Frode Tenneb=F8 | email: frodet@nvg.org | Frode@IRC  ^
-| with Standard.Disclaimer; use Standard.Disclaimer; |
+patrick
