@@ -1,8 +1,8 @@
-From: Daniel Ahlberg <aliz@telia.com>
+Message-ID: <3D4E6CE8.94FF79EE@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200208051249.58901.aliz@telia.com>
-Subject: [linux-lvm] Moving LVM data off a bad disk
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] 2 FAQ questions? but i couldnt find any FAQ :/
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,44 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug  5 05:49:02 2002
+Date: Mon Aug  5 07:17:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-Hi,
+I've got a machine with 4 harddrives. 2*100GB and 2*120GB.
+Running hardware raid 1 on a 3ware. That part works.
 
-Recently one of my harddisks began to develop bad sectors. I decided to a=
-dd a=20
-another disk to replace the disk and run pvmove -i to salvgage as much as=
-=20
-possible to the spare disk. But, the process takes seems to take ages. Fo=
-r=20
-every bad sector pvmove encounters it takes 5 seconds for the kernel to=20
-timeout and move on to the next sector. Some calculation would tell me th=
-at=20
-it would take approx 6 years to go through the rest of the disk.
+Until recently the first LVM appeared to be working, or, it does still
+work.
+How ever, when we added the new raid1, the 2*120GB drives, we didnt get
+the full +120GB space. Where is it ??
 
-So, is there any way to speed up this? I was thinking in the ways of redu=
-cing=20
-the 5 second timeout or having the disk driver simply skip the bad sector=
-s.
+The other question is:
+running pvdisplay on /dev/sda5 says it is available in the PV STATUS
+field,
+but for /dev/sdb1 it says NOT available. We did run a pvcreate on
+/dev/sdb1
+and then vgextend. using vgdisplay, it appears to have become 100GB
+larger,
+but if it is larger, why isnt it available ? We have tried to deactivate
+and activate the LVM ?
 
-These are the errors I get:
 
-Aug  4 00:01:31 springbird kernel: hdc: dma_intr: status=3D0x51 { DriveRe=
-ady=20
-SeekComplete Error }
-Aug  4 00:01:31 springbird kernel: hdc: dma_intr: error=3D0x40 {=20
-UncorrectableError }, LBAsect=3D34880281, sector=3D34880218
-Aug  4 00:01:31 springbird kernel: end_request: I/O error, dev 16:01 (hdc=
-),=20
-sector 34880218
-Aug  4 00:01:36 springbird kernel: hdc: dma_intr: status=3D0x51 { DriveRe=
-ady=20
-SeekComplete Error }
-Aug  4 00:01:36 springbird kernel: hdc: dma_intr: error=3D0x40 {=20
-UncorrectableError }, LBAsect=3D34880283, sector=3D34880220
-Aug  4 00:01:36 springbird kernel: end_request: I/O error, dev 16:01 (hdc=
-),=20
-sector 34880220
+
+
+JonB
