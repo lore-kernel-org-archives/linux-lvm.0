@@ -1,11 +1,8 @@
-Message-Id: <200108282153.f7SLr3b05929@foo-bar-baz.cc.vt.edu>
-From: Valdis.Kletnieks@vt.edu
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_245552422P";
-	 micalg=pgp-sha1; protocol="application/pgp-signature"
+From: "kaite3@bigfoot.de" <kaite3@bigfoot.de>
+Message-ID: <0999022471.0268982118@mail.bigfoot.com>
 Content-Transfer-Encoding: 7bit
-Date: Tue, 28 Aug 2001 17:53:02 -0400
-Subject: [linux-lvm] Very small but important whoops in lvmcreate_initrd in 1.0.1-rc1
+Date: Tue, 28 Aug 2001 18:52:37 -0500
+Subject: [linux-lvm] Start Accepting Credit Cards``
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,67 +14,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: LVM-Devel@sistina.com, Linux-LVM@sistina.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: "9249@ayna.com" <9249@ayna.com>
+Cc: linux-ipv6-request@inner.net, linux-ipv6@inner.net, linux-irda@list.uit.no, linux-kernel@netpathway.com, linux-kernel@progressive-comp.com, linux-l-request@mana.landofhaze.com, linux-l@lonewolf.soark.net, linux-l@mana.landofhaze.com, linux-list-request@ssc.com, linux-list@fylz.com, linux-list@ssc.com, linux-list@unix-ag.uni-kl.de, linux-ljfs@majordomo.ibasys.net, linux-lvm-approval@msede.com, linux-lvm@sistina.com
 
---==_Exmh_245552422P
-Content-Type: multipart/mixed ;
-	boundary="==_Exmh_2418536170"
+mvc9vc
+We help business owners accept credit cards!
 
-This is a multipart MIME message.
+Competitive Rates! Below Market Prices!
 
---==_Exmh_2418536170
-Content-Type: text/plain; charset=us-ascii
+Our approval process is quick and simple!
 
-There was a gratuitous 'shift' in the script, causing it to swallow the
-next parameter.  This wasn't very nice when I tried to call it with
-'--nodep 2.4.9' and watched it over-write my initrd-lvm-2.4.5.gz ;)
+We offer complete processing systems for your business:
 
-Patch attached.
+*Internet
+*Retail
+*Mail Order
+*Phone Order
 
--- 
-				Valdis Kletnieks
-				Operating Systems Analyst
-				Virginia Tech
+Free information request form:
+PLEASE VISIT
 
-
---==_Exmh_2418536170
-Content-Type: application/x-patch ; name="mkinitrd.patch"
-Content-Description: mkinitrd.patch
-Content-Disposition: attachment; filename="mkinitrd.patch"
-
-*** tools/lvmcreate_initrd	Fri Aug 17 14:58:24 2001
---- tools/lvmcreate_initrd.fixed	Tue Aug 28 17:44:41 2001
-***************
-*** 116,122 ****
-     case $1 in
-     -h|--help) usage; exit 0;;
-     -i|--iop) IOP=$2; shift;;
-!    -M|--nomod) USEMOD=""; shift;;
-     -V|--version) exit 0;;
-     -d|-v|--debug|--verbose) VERBOSE="y";;
-     [2-9].[0-9]*.[0-9]*) VERSION=$1;;
---- 116,122 ----
-     case $1 in
-     -h|--help) usage; exit 0;;
-     -i|--iop) IOP=$2; shift;;
-!    -M|--nomod) USEMOD="";;
-     -V|--version) exit 0;;
-     -d|-v|--debug|--verbose) VERBOSE="y";;
-     [2-9].[0-9]*.[0-9]*) VERSION=$1;;
-
---==_Exmh_2418536170--
+http://www.freewebdirect.net/merchantservices/
 
 
---==_Exmh_245552422P
-Content-Type: application/pgp-signature
+****************************************************************
+Since you have received this message you have either responded
+to one of our offers in the past or your address has been
+registered with us.  If you wish to be removed please reply to:
+mailto:morleads7@yahoo.com?subject=remove
+****************************************************************
 
------BEGIN PGP SIGNATURE-----
-Version: PGP 6.5.8
-Comment: Exmh version 2.5 07/09/2001
+mv9vc
 
-iQA/AwUBO4wSvnAt5Vm009ewEQKqsACgnE88qR8enk6SLIZqQVZeF7tIDd8AoJZz
-/KRR89JZpPHra6Na9n/pTySW
-=IhUl
------END PGP SIGNATURE-----
-
---==_Exmh_245552422P--
+*********
