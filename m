@@ -1,13 +1,10 @@
-Date: Tue, 4 Sep 2001 21:19:58 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.org>
-Subject: Re: [linux-lvm] defragging logical volumes
-Message-ID: <20010904211958.B20195@omnifarious.org>
-References: <3B9586AD.D38A9524@carolina.rr.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
-Content-Disposition: inline
-In-Reply-To: <3B9586AD.D38A9524@carolina.rr.com>; from jedgecombe@carolina.rr.com on Tue, Sep 04, 2001 at 09:58:05PM -0400
+Content-Class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] rh kernel patches
+Date: Wed, 5 Sep 2001 07:34:01 +0200
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF404FF4@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,58 +16,76 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---neYutvxvOLaeuPCA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
+I have patched RH 2.4.7 kernel successfully. I understand what you want
+to do and must say that it's a *good* thing for 2 reasons:
+- having ext3 in the kernel
+- having quotas3 in the kernel
 
-On Tue, Sep 04, 2001 at 09:58:05PM -0400, Jason Edgecombe wrote:
-> hi,
+To do so, get the redhat sources. Put them in <srcdir> (Ex:
+/tmp/linux-2.4.7-rh)
+Get the LVM 1.0.1rc2 (not another release) and uncompress them (Ex:
+/tmp/LVM/1.0.1rc2)
+Then, go in .../LVM/1.0.1-rc2 and run ./configure
+--with-kernel_dir=3D<srcdir>
+Then make, make install the tools (Note that kernel is not touch at this
+point). They yre mandatory to make your LVM system working.
+Then go in <srcdir>, and patch your kernel with a patch made by
+configure just for your kernel. It's in
+.../LVM/1.0.1rc2/PATCHES/lvm_1.0.1rc2-2.4.7.<snip>.patch. It was created
+by configure for the kernel you gave in <srcdir>
+Then patch it with:
+- cd <srcdir>
+- patch -p1 < .../LVM/1.0.1rc2/PATCHES/lvm.<snip>.patch
+
+And you are done. (quite...)
+Then make bzImage will compile it, except for a little thing: min/max
+functions. RH kernel is made from Alan Cox one. And Linus kernel changed
+min/max functions. LVM uses Linus min/max functions while -ac (RedHat)
+kernel uses old min/max functions.
+
+During the compilation, you'll get errors with files in drivers/md/.
+They are lvm.c, lvm-snap.c and perhaps a third I don't remember. To
+correct those, just copy the 2 macros in each fault file:
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+At the beginning of the file (before anything else).
+
+And compile with work.
+
+But if you don't need ext3 nor quotas3, then go with a plain Linus
+kernel (available at www.kernel.org), you'll have less problems... :-)
+
+Ask for more help
+-jec
+
+> -----Original Message-----
+> From: Pierre Lamb [mailto:plamb_98@yahoo.com]=20
+> Sent: mardi, 4. septembre 2001 19:56
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] rh kernel patches
 >=20
->   how can I rearrange logical volumes so that they are contiguous? does
-> it matter if the root LV isn't contiguous?
-
-	I've thought of this too, and I bet it matters some, but not
-very much.  The extents in question are 4M in size.  If you are
-concerned about it, you could try increasing the extent size to 32M and
-not lose much in the way of resize granularity.
-
-	The only time it matters is when a normally contiguous read
-crosses a logical extent boundary.  So, larger logical extents make this
-less likely.  Also, LVM tends to allocate things contiguously anyway.
-
-	Still, the pvmove mechanism provides a way to defragment if
-you're concerned about it.  I don't think such a utility exists, but,
-given the existence of pvmove, I doubt it would be too hard to write.
-'tsort' is your friend.  :-)
-
-	Of course, pvmoving things while the filesystem is still running
-is a little dangerous as LVM doesn't do any kind of journalling of
-metadata that I know of.  If the power goes out during a move..
-*shudder*
-
-Have fun (if at all possible),
---=20
-"It does me no injury for my neighbor to say there are twenty gods or no Go=
-d.
-It neither picks my pocket nor breaks my leg."  --- Thomas Jefferson
-"Go to Heaven for the climate, Hell for the company."  -- Mark Twain
--- Eric Hopper (hopper@omnifarious.org  http://www.omnifarious.org/~hopper)=
- --
-
---neYutvxvOLaeuPCA
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7lYvOjtsvlOwvazYRAmW4AJ45L9zlzBbUDSOgHHCWjVkXEbSTsgCgsuUU
-5COJ31bTkoR31MaHMfruI0Y=
-=VSAn
------END PGP SIGNATURE-----
-
---neYutvxvOLaeuPCA--
+>=20
+> Is there a correct way to patch RH kernels. I have
+> tried using the "final path" to update 2.4.7 rh kernel
+> but just get errors. Is there a work around for this
+> problem.
+>=20
+> Pierre
+>=20
+> __________________________________________________
+> Do You Yahoo!?
+> Get email alerts & NEW webcam video instant messaging with=20
+> Yahoo! Messenger http://im.yahoo.com
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com=20
+> http://lists.sistina.com/mailman/listinfo/linu> x-lvm
+> read the=20
+> LVM HOW-TO at=20
+> http://www.sistina.com/lvm/Pages/howto.html
+>=20
