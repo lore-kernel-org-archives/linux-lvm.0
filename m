@@ -1,8 +1,10 @@
-Message-Id: <200308181732.h7IHWjo05845@mail.osdl.org>
-From: markw@osdl.org
+From: Jan Niehusmann <list039@gondor.com>
 Subject: Re: [linux-lvm] lvcreate with a 52 drive volume
-In-Reply-To: <20030816175046.A25758@uk.sistina.com>
-MIME-Version: 1.0
+Message-ID: <20030818173819.GA19339@gondor.com>
+References: <20030816175046.A25758@uk.sistina.com> <200308181732.h7IHWjo05845@mail.osdl.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200308181732.h7IHWjo05845@mail.osdl.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,23 +15,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 18 12:33:01 2003
+Date: Mon Aug 18 12:39:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, agk@uk.sistina.com
+To: linux-lvm@sistina.com
 
-On 16 Aug, Alasdair G Kergon wrote:
-> Look at dm-table.c:498,
->   char *argv[32];
-> which suggests a hard-coded limit of 32 [tokens after "striped"?]
-> slipped into the code:-(
-> 
-> Try recompiling with a larger number there.
+On Mon, Aug 18, 2003 at 10:32:42AM -0700, markw@osdl.org wrote:
+> Hmmm, I changed the number, but when I do a 'make clean' and a 'make',
+> I don't see dm-table.c compiled anywhere in the device-mapper tree or
+> the LVM2 tools.  Am I neglecting something obvious?
 
-Hmmm, I changed the number, but when I do a 'make clean' and a 'make',
-I don't see dm-table.c compiled anywhere in the device-mapper tree or
-the LVM2 tools.  Am I neglecting something obvious?
+It should get compiled into dm-mod.o, if you compile dm as a module.
 
-Thanks,
-Mark
+Jan
