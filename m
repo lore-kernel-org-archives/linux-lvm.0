@@ -1,49 +1,50 @@
-Date: Wed, 3 May 2000 21:38:05 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
-Subject: Re: [linux-lvm] SuSE/LVM boot problem
-Message-ID: <20000503213805.A1803@omnifarious.mn.org>
-References: <200005032350.e43NowH30788@webber.adilger.net>
+Date: Wed, 3 May 2000 22:03:59 -0700
+From: Ryan Murray <rmurray@cyberhqz.com>
+Subject: [linux-lvm] bug in lvm tools 0.8i, 0.8final
+Message-ID: <20000503220359.A27090@cyberhqz.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
-In-Reply-To: <200005032350.e43NowH30788@webber.adilger.net>; from adilger@turbolabs.com on Wed, May 03, 2000 at 05:50:57PM -0600
+	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
 
---AhhlLboLdkugWU4S
+--vtzGhvizbBRQ85DL
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 03, 2000 at 05:50:57PM -0600, Andreas Dilger wrote:
->=20
-> Why do you say that?  You can resize it while it is mounted:
-> http://ext2resize.sourceforge.net/
+I've just come across a bug in lvm tools when not using /proc/partitions.
 
-	Thanks for pointing this out to me.  I had been illegally using
-Partition Magic's utility.  :-)  Although, I may very well buy a copy of
-that program because it's so useful.
+lvm_add_dir_cache adds an entry, but checks for duplicates with
+lvm_dir_cache_hit.  The problem is simple:
 
-Have fun (if at all possible),
+lrwxrwxrwx    1 root     root            9 May  8  1999 /dev/cdrom -> /dev/=
+hdd
+
+If you have that symbolic link around, it will show up in the cache as
+/dev/cdrom, so if you try to pvcreate /dev/hdd, /dev/hdd never makes it
+into the cache.
+
+Either the duplicate mechanism should be taken out, or ignore symlinks
+and have things that check the cache dereference the symlinks...
+
 --=20
-Its name is Public Opinion.  It is held in reverence. It settles everything.
-Some think it is the voice of God.  Loyalty to petrified opinion never yet
-broke a chain or freed a human soul.     ---Mark Twain
--- Eric Hopper (hopper@omnifarious.mn.org  http://omnifarious.mn.org/~hoppe=
-r) --
+Ryan Murray, (rmurray@cyberhqz.com, rmurray@stormix.com)
+Programmer, Stormix Technologies Inc.
+The opinions expressed here are my own.
 
---AhhlLboLdkugWU4S
+--vtzGhvizbBRQ85DL
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.0.1 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE5EOKNG4QeWBeRdS8RAtg8AJ9WhL5aw32E9DLJzZgZu+fmNgxOwACffhVw
-08d7oFZ125P9LZ6eMef1HMk=
-=+HCo
+iD8DBQE5EQS/N2Dbz/1mRasRAvg2AKD5MSjdnOneNhcc0jFos7NHRsoZHgCg7VhP
+vPQml4JSE5qn3R4sS4S8XaI=
+=Z84H
 -----END PGP SIGNATURE-----
 
---AhhlLboLdkugWU4S--
+--vtzGhvizbBRQ85DL--
