@@ -1,9 +1,11 @@
-From: "Kai-Min Sung" <k@kaisung.com>
-Subject: RE: [linux-lvm] lvm in linux SAN enviroment ?
-Message-ID: <002801c32697$75642380$3200a8c0@nimiak>
+From: Daniel Phillips <dphillips@sistina.com>
+Subject: Re: [linux-lvm] where do i find the device mapper/LVM2 documentation?
+References: <3ED32F3E.9000009@silicide.dk> <200305300054.07666.dphillips@sistina.com> <20030530072258.GA1550@gw.silicide.dk>
+In-Reply-To: <20030530072258.GA1550@gw.silicide.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <200305301109.44884.krienke@uni-koblenz.de>
+Content-Disposition: inline
+Message-Id: <200305301504.23863.dphillips@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,25 +16,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 30 05:36:01 2003
+Date: Fri May 30 08:03:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, jon+lvm@silicide.dk
 
->Can anyone please comment on this scenario? 
+On Friday 30 May 2003 09:22, jon+lvm@silicide.dk wrote:
+> On Fri, May 30, 2003 at 12:54:07AM +0200, Daniel Phillips wrote:
+> > On Friday 30 May 2003 00:02, jon+lvm@silicide.dk wrote:
+> > > i am planning to write my own targets as a graduate project.
+> > > My idea was encryption and possibly compression as well.
+> > > (is anyone else doing any of these targets?)
+> >
+> > Not as far as I know - it's considered good though.
+>
+> What is considered good ?
 
-I'm not sure I fully understand your configuration, however...
-
->If this setup is simply "wrong", how could I tell vgscan which might to
-my 
->knowledge be the problem, that it should not scan all physical devices
-it 
->finds to avoid trouble.
-
-...I know that with LVM2, you can define a filter (using regular
-expressions) in the lvm.conf file, which will restrict the devices in
-/dev that vgscan scans. There are several example filters in the
-docs/example.conf file included in the tarball.
+Implementing an encrypting or compressing block device as a device-mapper 
+target.  It's been discussed, but as far as I know, nobody has started on it.
 
 Regards,
--Kai 
+
+Daniel
