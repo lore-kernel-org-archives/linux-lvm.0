@@ -1,7 +1,10 @@
-From: "tester7 A." <benew666@hotmail.com>
-Mime-Version: 1.0
-Message-ID: <Sea2-F56SMXQebfaxI10000b3bf@hotmail.com>
-Subject: [linux-lvm] LVM2 in a cluster and lvchange.
+Message-ID: <3F694264.2080704@webhackande.se>
+From: Rickard Olsson <richie@webhackande.se>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] pvscan showing 0 free on all PV's.
+References: <3F676739.13431.C25AFD2@localhost> <3F675CDB.80002@tupshin.com> <20030916143432.H27659@copilotconsulting.com>
+In-Reply-To: <20030916143432.H27659@copilotconsulting.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,95 +15,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 17 19:40:01 2003
+Date: Thu Sep 18 00:29:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi,
+Tracy R Reed wrote:
 
-I would like to use the LVM in a 2-node cluster. I know that LVM is not 
-CLVM, which will be released next year or so, but I would like to use LVM2 
-for it.
+> Inherently dangerous? Nonsense. It should not be inherently dangerous if
+> the resize tool and LVM do their jobs properly. Resizing should be a
+> perfectly safe operation when done properly.
 
-What I did was follows:
+While I agree with you on principle, there is an additional element of 
+risk inherent in shrinking a filesystem - moving existing data off the 
+shrinking part. Interruptions during this phase may severely damage your 
+filesystem's structural integrity (and we can't just route more power to 
+the structural integrity field yet).
 
-node1:
-   pvcreate /dev/sdo
-   vgcreate vg10 /dev/sdo
-   lvcrete -n test -L20G vg10
-   mkreiserfs /dev/vg10/test
+Very early this morning, I even thought of a good, real-life example:
 
-Now, I tried to access the newly created LV from node2:
-node2# pvscan                            ---------------> is this necesarry?
-  PV /dev/sdo   VG vg10   lvm2 [68.36 GB / 48.36 GB free]
-  Total: 1 [48.36 GB] / in use: 1 [48.36 GB] / in no VG: 0 [0   ]
-node2# vgscan                           ---------------> is this necesarry?
-  Reading all physical volumes.  This may take a while...
-  Found volume group "vg10" using metadata type lvm2
-node2# lvscan                           ---------> it found the lv, but
-  inactive          '/dev/vg10/test' [20.00 GB] next free (default)
-node2# mount /dev/vg10/test /opt        ---> can not be accessable.
-mount: special device /dev/vg10/test does not exist
-node2# lvscan -D                                 ------> read from the disk,
-  inactive          '/dev/vg10/test' [20.00 GB] next free (default)
-node2# mount /dev/vg10/test /opt        ---> still not accessable.
-mount: special device /dev/vg10/test does not exist
-node2# lvscan -D -b        ---> same with -b option.
-  inactive          '/dev/vg10/test' [20.00 GB] next free (default)
-node2# mount /dev/vg10/test /opt
-mount: special device /dev/vg10/test does not exist
-node2# lvchange -ay /dev/vg10/test          ----> changing it to active 
-node. (it is active in node1)
-node2# mount /dev/vg10/test /opt        --------> now works.
+Imagine that the eastern seaboard of the continental US is your LV. Now, 
+along comes hurricane Isabel, hell bent on reducing your VG with a PV or 
+two. What do you do? You evacuate (lvreduce, pvmove and resize) the data 
+to safer ground. During this evacuation, panic and chaos lurks 
+underneath the surface at all times. Bits and bytes flee the still 
+unseen enemy. You get traffic jams and the buses are filled with ones 
+and zeroes. It's almost inevitable that an operation of this magnitude 
+may leave behind some dead and wounded, but the alternative is worse and 
+that's why we do it.
 
-Again, after extending the lv from node1, even tough lv size is shown 
-correctly in node2, it can not be accessable, unless 'doing lvchange -an 
-/dev/vg10/test ; lvchange -ay /dev/vg10/test'
+OK, it all sounded a lot better before I got my first cup of coffee, but 
+still. :-)
 
-node1# lvextend -L+10G /dev/vg10/test
-  Extending logical volume test to 30.00 GB
-  Logical volume test successfully resized
+A transaction-based pvmove and ditto resize_reiserfs (I don't know if it 
+already is or if it turns journalling off during a resize) would solve 
+this problem, but pvmove is already slow as it is... A pvmove with hooks 
+into Reiser4 so it could use R4s fast transactions might however be 
+ideal in this particular case. That almost brings me to my wish-list for 
+LVM/EVMS/md/R4, but that's a different story.
 
-node2:~ # lvdisplay
-  --- Logical volume ---
-  LV Name                /dev/vg10/test
-  VG Name                vg10
-  LV UUID                zUjDCv-L774-opXv-fZz8-zZpT-omKv-csr8JM
-  LV Write Access        read/write
-  LV Status              available
-  # open                 0
-  LV Size                30.00 GB
-  Current LE             7680
-  Segments               1
-  Allocation             next free (default)
-  Read ahead sectors     0
-  Block device           254:1
-node2:~ # resize_reiserfs /dev/vg10/test
-resize_reiserfs 3.6.2 (2002)
-/dev/vg10/test already is of the needed size. Nothing to be done     
---------> means that block devices tools did not see the extended size yet.
-
-node2:~ # lvchange -an /dev/vg10/test ; lvchange -ay /dev/vg10/test
-node2:~ # resize_reiserfs /dev/vg10/test
-resize_reiserfs 3.6.2 (2002)
-ReiserFS report:
-blocksize             4096
-block count           7864320 (5242880)
-free blocks           7855869 (5234509)
-bitmap block count    240 (160)
-
-Syncing..done             ------------------> now it sees the extended 
-size...
-
-My question is that 'doing lvchange -an /dev/vg10/test ; lvchage -ay 
-/dev/vg10/test' in the other node make the kernel recognize the lv changes. 
-Is there any better way or command, becase making inactive temporaryly does 
-not make me feel right.
-
-TIA
-
-_________________________________________________________________
-The new MSN 8: smart spam protection and 2 months FREE*  
-http://join.msn.com/?page=features/junkmail
+    / Rickard Olsson,IT-Konsult/
+   / Telefon: +46 70 635 01 42/
+  / http://www.webhackande.se/
