@@ -1,12 +1,19 @@
-Message-ID: <4137A15E.30208@m-cam.com>
-Date: Thu, 02 Sep 2004 18:40:30 -0400
-From: Arshavir Grigorian <ag@m-cam.com>
-MIME-Version: 1.0
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i83CnCJ0019373
+	for <linux-lvm@redhat.com>; Fri, 3 Sep 2004 13:49:12 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1C3DV7-0002AD-Ck
+	for linux-lvm@redhat.com; Fri, 03 Sep 2004 13:49:09 +0100
+Date: Fri, 3 Sep 2004 13:49:09 +0100
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] Re: partition strategy
+Message-ID: <20040903124909.GN6264@agk.surrey.redhat.com>
 References: <412CE781.9000409@m-cam.com> <41363AA0.5030107@m-cam.com>
 	<20040902174230.GG6264@agk.surrey.redhat.com>
-In-Reply-To: <20040902174230.GG6264@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 7bit
+	<4137A15E.30208@m-cam.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4137A15E.30208@m-cam.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,88 +24,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, agk@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Alasdair G Kergon wrote:
+> >>>Is it better to create 3 partitions 2 x230G + 1G 
+> >>>Is it better to create 2 paritions 230G and 231G, put both in a vg, 
 
->On Wed, Sep 01, 2004 at 05:09:52PM -0400, Arshavir Grigorian wrote:
->  
->
->>>Is it better to create 3 partitions 2 x230G + 1G 
->>>OR
->>>Is it better to create 2 paritions 230G and 231G, put both in a vg, 
->>>      
->>>
->
->The VG contains the same space in both cases so do the simplest
->ie the first option.  In both cases you'll need to run lvcreate for
->460G followed by lvextend for 1G.
->
->Alasdair
->  
->
+> >ie the first option.  
+I meant the second option:-)
 
-Thanks for the response.
-For some reason even the first option does not work.
-I created 3 partitions, added the 2 same sized ones to a vg, created a 
-striped lv, then extended the vg to include the third small partition. 
-After this I tried extending the lv to the new partition, but got the 
-error below. Could you, please tell me what I am doing wrong? TIA.
+> Could you, please tell me what I am doing wrong? TIA.
+ 
+> casals:~# lvextend -l +134 /dev/vg00/lvol0 /dev/hdc3
+>  Using stripesize of last segment 8KB
+>  Insufficient allocatable extents suitable for parallel use for logical 
+> volume lvol0: 118816 required
 
-Arshavir
+If you don't specify the stripe settings, lvextend uses whatever
+the last segment of the LV you're extending uses i.e. 2 stripes in 
+this case.  So you need to specify -i1 to add a new segment with
+just one stripe.
 
-casals:~# vgdisplay
-  --- Volume group ---
-  VG Name               vg00
-  System ID            
-  Format                lvm2
-  Metadata Areas        2
-  Metadata Sequence No  2
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                0
-  Open LV               0
-  Max PV                0
-  Cur PV                2
-  Act PV                2
-  VG Size               463.60 GB
-  PE Size               4.00 MB
-  Total PE              118682
-  Alloc PE / Size       0 / 0  
-  Free  PE / Size       118682 / 463.60 GB
-  VG UUID               PyRda0-g9mC-LxrH-txvE-CKb6-jP6T-Ou103y
-
-casals:~# lvcreate -i 2 -I 8 -l 118682 vg00
-
-casals:~# vgextend vg00 /dev/hdc3
-  Volume group "vg00" successfully extended
-
-casals:~# vgdisplay
-  --- Volume group ---
-  VG Name               vg00
-  System ID            
-  Format                lvm2
-  Metadata Areas        3
-  Metadata Sequence No  4
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                1
-  Open LV               0
-  Max PV                0
-  Cur PV                3
-  Act PV                3
-  VG Size               464.12 GB
-  PE Size               4.00 MB
-  Total PE              118816
-  Alloc PE / Size       118682 / 463.60 GB
-  Free  PE / Size       134 / 536.00 MB
-  VG UUID               PyRda0-g9mC-LxrH-txvE-CKb6-jP6T-Ou103y
-  
-casals:~# lvextend -l +134 /dev/vg00/lvol0 /dev/hdc3
-  Using stripesize of last segment 8KB
-  Extending logical volume lvol0 to 464.12 GB
-  Insufficient allocatable extents suitable for parallel use for logical 
-volume lvol0: 118816 required
+Alasdair
+-- 
+agk@redhat.com
