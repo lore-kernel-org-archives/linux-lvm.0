@@ -1,10 +1,10 @@
-Message-ID: <3BA280D6.5020604@st-peter.stw.uni-erlangen.de>
-Date: Sat, 15 Sep 2001 00:12:38 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] Lock Patch
+Date: Fri, 14 Sep 2001 17:27:07 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPGEFMDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Lock Patch
-References: <NBBBJHKIOKPKOGOEPEDPCEFKDNAA.stuart@bh90210.net>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+In-Reply-To: <3BA280D6.5020604@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,20 +16,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-i've forgoten
-
-> you saying that typing, "make" in the "PATCHES" directory will cause a patch to be generated specifically for my kernel? 
->
-thats actually the work of ./configure it trys to find out what you 
-have, and what you need
-in PATCHES it chooses from all the patches the ones your kernel need ,
-and " make " put them together in one patch for your kernel 
-
-> What name will it be given?
->        The documentation says to add a dash dash kernel-dir= or something or other after the "./configure" command, are you saying it is better to use "./configure" absent that appended statement?
->         Where do I untar the LVM source? Does it matter where I do so? May I do it in /tmp?
->
-1
+U3ZldGxqbzoNCg0KCUFoLCB0aGF0IGlzIHdvbmRlcmZ1bCB0byBoZWFyLiBJcyB0aGVyZSBzb21l
+IHJlYXNvbiB3aHkgdGhpcyBpcyBub3Qgbm90ZWQgaW4gdGhlIEhvdy1Ubz8gQ2FuIHdlIGFtZW5k
+IHRoZSBIb3ctVG8gaW4gb3JkZXIgdG8gZG9jdW1lbnQgdGhpcyBpbmZvcm1hdGlvbiBmb3IgZmly
+c3QgdGltZSBpbXBsZW1lbnRlcnMgb2YgdGhpcyBwcm9kdWN0Pw0KDQoNClZlcnkgUmVzcGVjdGZ1
+bGx5LCANCg0KU3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNHV0cgDQpCZXZlcmx5
+IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUgMTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KSAN
+CnN0dWFydEBiaDkwMjEwLm5ldCANCndlc3QgY29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94
+IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzIA0KZWFzdCBjb2FzdDogKDIxNSkt
+MzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OSANCg0K
+VGVsZWNvcGllcjogKDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdhdGV3YXkgdmlhIHd3dy5l
+ZmF4LmNvbSAoaXQncyBmcmVlISkgDQoNCkpPSU4gVEhFIFVTIE5BVlkgUkVTRVJWRSwgU0VSVkUg
+WU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4gDQoNCkZyaWRheSwgU2VwdGVt
+YmVyIDE0LCAyMDAxIDU6MjMgUE0NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206
+IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0
+aW5hLmNvbV1PbiBCZWhhbGYgT2Ygc3ZldGxqbw0KU2VudDogRnJpZGF5LCBTZXB0ZW1iZXIgMTQs
+IDIwMDEgMzoxMyBQTQ0KVG86IGxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KU3ViamVjdDogUmU6IFts
+aW51eC1sdm1dIExvY2sgUGF0Y2gNCg0KaSd2ZSBmb3Jnb3Rlbg0KDQo+IHlvdSBzYXlpbmcgdGhh
+dCB0eXBpbmcsICJtYWtlIiBpbiB0aGUgIlBBVENIRVMiIGRpcmVjdG9yeSB3aWxsIGNhdXNlIGEg
+cGF0Y2ggdG8gYmUgZ2VuZXJhdGVkIHNwZWNpZmljYWxseSBmb3IgbXkga2VybmVsPw0KPg0KdGhh
+dHMgYWN0dWFsbHkgdGhlIHdvcmsgb2YgLi9jb25maWd1cmUgaXQgdHJ5cyB0byBmaW5kIG91dCB3
+aGF0IHlvdQ0KaGF2ZSwgYW5kIHdoYXQgeW91IG5lZWQNCmluIFBBVENIRVMgaXQgY2hvb3NlcyBm
+cm9tIGFsbCB0aGUgcGF0Y2hlcyB0aGUgb25lcyB5b3VyIGtlcm5lbCBuZWVkICwNCmFuZCAiIG1h
+a2UgIiBwdXQgdGhlbSB0b2dldGhlciBpbiBvbmUgcGF0Y2ggZm9yIHlvdXIga2VybmVsDQoNCj4g
+V2hhdCBuYW1lIHdpbGwgaXQgYmUgZ2l2ZW4/DQo+ICAgICAgICBUaGUgZG9jdW1lbnRhdGlvbiBz
+YXlzIHRvIGFkZCBhIGRhc2ggZGFzaCBrZXJuZWwtZGlyPSBvciBzb21ldGhpbmcgb3Igb3RoZXIg
+YWZ0ZXIgdGhlICIuL2NvbmZpZ3VyZSIgY29tbWFuZCwgYXJlIHlvdSBzYXlpbmcgaXQgaXMgYmV0
+dGVyIHRvIHVzZSAiLi9jb25maWd1cmUiIGFic2VudCB0aGF0IGFwcGVuZGVkIHN0YXRlbWVudD8N
+Cj4gICAgICAgICBXaGVyZSBkbyBJIHVudGFyIHRoZSBMVk0gc291cmNlPyBEb2VzIGl0IG1hdHRl
+ciB3aGVyZSBJIGRvIHNvPyBNYXkgSSBkbyBpdCBpbiAvdG1wPw0KPg0KMQ0KDQoNCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQpsaW51eC1sdm0gbWFpbGlu
+ZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGluYS5jb20NCmh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8v
+d3d3LnNpc3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5odG1sDQo=
