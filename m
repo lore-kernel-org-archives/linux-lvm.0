@@ -1,9 +1,11 @@
-From: "Roger Eriksson" <roger.eriksson@grano.se>
-Message-ID: <000801c3dae7$ed845880$0201a8c0@kylie>
-MIME-Version: 1.0
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] Strange file system errors
+Message-ID: <20040114142444.GA2837@redhat.com>
+References: <20040114113509.GA745@glorybox.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20040114113509.GA745@glorybox.de>
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20040114214802.24043.55903.Mailman@hermes.sistina.com>
-Subject: [linux-lvm] First try, first fail with LVM.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,88 +16,94 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 14 16:47:02 2004
+Date: Wed Jan 14 18:22:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-I'm new at this list and new with linux lvm.
+On Wed, Jan 14, 2004 at 12:35:09PM +0100, Kai Weber wrote:
+> Hi,
+>=20
+> if I have to reboot my system without a clean shutdown the recovered
+> filesystems are corrupt. Files which I edited recently and maybe not ye=
+t
+> written to the buffer are recovered with no or corrupt contents.=20
+>=20
+> For example:
+>=20
+> $ ls -l config
+> -rw-------    1 bond     bond        19622 Jan 14 12:04 .config
+> $ stat config
+>   File: `config'
+>   Size: 19622           Blocks: 0          IO Block: 4096   regular fil=
+e
+> Device: fe01h/65025d    Inode: 20967432    Links: 1
+> Access: (0600/-rw-------)  Uid: ( 1000/    bond)   Gid: ( 1000/    bond=
+)
+> Access: 2004-01-14 12:27:01.000000000 +0100
+> Modify: 2004-01-14 12:04:16.000000000 +0100
+> Change: 2004-01-14 12:04:16.000000000 +0100
+> $ cat config
+> $ less config
+> "config" may be a binary file.  See it anyway?
+> ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@
+> [...]
+> $ strace -e write cat config
+> write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4=
+096) =3D 4096
+> write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4=
+096) =3D 4096
+> write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4=
+096) =3D 4096
+> write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4=
+096) =3D 4096
+> write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 3=
+238) =3D 3238
+>=20
+> I can force this error by pressing the reset button with an open file i=
+n my
+> text editor. It seems to have nothing to do with the underlying file
+> system. I have XFS and ext3 partitions. I would like to know, if it is =
+a
+> LVM problem.=20
 
-The story this far. I bought a new hard disk to my file server at home =
-and
-decided to reinstall the thing with a newer version of Linux (Red Hat =
-6.2
-before, now Mandrake 9.2). I decided to go with LVM and reiserfs, during =
-the
-setup of Mandrake 9.2.
+No.
 
-On the server I have two sets of disks. Three 4.6 Gb SCSI disks that I
-joined together using LVM and three larger IDE disks that I also joined
-together. Everything went well and I started to copy back the files that =
-I
-earlier copied to my Window and Linux desktop computers. No problems =
-with
-that and since it got late a set the computers to move the files back =
-and
-went to bed. The next morning when I checked the damn thing it had =
-rebooted
-and reiserfs said that it couldn't find a file system on the IDE set. =
-Now,
-after carefully examined the situation I think that it might have =
-something
-to do with LVM. It seems like one disk is missing from the vg.
+>=20
+> Kernel 2.6.1
+> LVM version:     2.00.08 (2003-11-14)
+> Library version: 1.00.07-ioctl (2003-11-21)
+> Driver version:  4.0.0
+>=20
+> --=20
+>   Kai Weber
+> =BB kai.weber@glorybox.de
+>   http://www.glorybox.de
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-This is the things I've done (from notes on paper, so it's not the real
-output from the screen):
+--=20
 
-> fdisk /dev/hda
+Regards,
+Heinz    -- The LVM Guy --
 
-Device	boot	start	end	blocks	id	system
-/dev/hda1	*	1	13	104391	03	Linux	=09
-/dev/hda2		14	2482	19832242	5	Extended
-/dev/hda3		14	2482	19832211	8e	Linux lvm
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-> fdisk /dev/hdb
-Device	boot	start	end	blocks	id	system
-/dev/hdb1	*	1	5005	40202631	8e	Linux lvm
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
-> fdisk /dev/hdc
-Device	boot	start	end	blocks	id	system
-/dev/hdc1	*	1	19929	160079661	8e	Linux lvm
-
-> vgscan
-vgscan -- found active volume group "SystemVolume"
-vgscan  -- ERROR "vg_read_with_pv_and_lv() : current PV" can't get data =
-of
-volume group "DataVolume" from physical volume(s)
-...
-
-> pvscan
--- active PV "/dev/scsi//host0/bus0/target8/lun0/part1" of VG =
-"SystemVolume"
-[4.22 GB/0 free]
--- active PV "/dev/scsi//host0/bus0/target9/lun0/part1" of VG =
-"SystemVolume"
-[4.22 GB/0 free]
--- active PV "/dev/scsi//host0/bus0/target10/lun0/part1" of VG
-"SystemVolume" [4.22 GB/0 free]
--- inactive PV "/dev/ide/host0/bus0/target0/lun0/part5" is associated to
-unknown VG "DataVolume" (run vgscan)
--- inactive PV "/dev/ide/host0/bus0/target1/lun0/part1" is associated to
-unknown VG "DataVolume" (run vgscan)
--- total : 5 [70.01 GB] / in use : 5 [70.01 GB] / in no VG : 0 [0]
-
-
-And, as I told you, this is my first try with linux lvm. Not sure what =
-to do
-now and I rather try to find some answers before I make a mess on my =
-own. I
-would like to save the files from the system if possible, but it's =
-nothing
-that I can't replace (what I can't replace I have on tapes also).
-
-Any suggestions how to solve this situation?
-
-Thank's for reading.
-
-/Roger E
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
