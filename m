@@ -1,37 +1,46 @@
-From: Harald Milz <hm@seneca.muc.de>
-Subject: Re: [linux-lvm] AIX JFS dual-mount
-References: <38A1CE1E.49BCA063@tkg.com>
-Reply-To: h.milz@seneca.muc.de
-Message-Id: <20000211071638.8EA2AE81E@seneca.muc.de>
-Date: Fri, 11 Feb 2000 08:16:38 +0100 (CET)
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-Id: <200002110945.KAA05966@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] LVM tools build probs?
+In-Reply-To: <Pine.LNX.4.10.10002102125050.10902-100000@greebo.jj.net> from James Pattinson at "Feb 10, 2000  9:27:28 pm"
+Date: Fri, 11 Feb 2000 10:45:11 +0100 (MET)
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: James Pattinson <jamesp@subdimension.com>
+Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-Christopher Shaulis <shaulis@tkg.com> wrote:
-> There is something called clvm (concurrent logical volume manager) for
-> AIX which ships as part of HACMP (high availability clustering
+> Hi - sorry if this is a FAQ but half the time I can't get LVM 0.8 to
+> compile - there are an awful lot of redefinitions and the compile fails
+> very quickly.
 
-Maybe the topic is a bit arbitrary here - but CLVM does _not_ support
-dual-mount configurations. Main reason: it has no interface to the two
-JFS's write caches... Its only intent was to facilitate multi-host access
-to raw devices, a la databases, but as you say... 
+Could you provide details like Linux version, compiler, output of the compile
+run, please.
 
-> reported to be slow. Most developers (ie Oracle) choose instead to roll
-> their own locking solutions. I've never actually seen anyone use it
+> I can compile with CC=i386-glibc20-linux-gcc but not all my
+> systems have this compiler. Is there a patch available like there was for
+> 0.7?
+> 
+> Cheers
+> 
+> James
+> 
 
-Exactly. 
+Heinz
 
-The only multi-mount filesystem on AIX so far is the GPFS (General purpose
-filesystem) running on top of the RVSD (Recoverable Virtual Storage Disk)
-which only runs on an SP. 
 
 -- 
-"What George Washington did for us was to throw out the British, so
-that we wouldn't have a fat, insensitive government running our
-country. Nice try anyway, George."
-		-- D.J. on KSFO/KYA
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@EZ-Darmstadt.Telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
