@@ -1,37 +1,24 @@
-Message-ID: <3861DE10.8448FCC1@twc.de>
-Date: Thu, 23 Dec 1999 09:32:16 +0100
-From: Ulf Bartelt <ulf@twc.de>
+Message-Id: <m121EZ1-000D4UC@londo.rhein-main.de>
+From: Torsten Neumann <torsten@londo.rhein-main.de>
+Subject: [linux-lvm] problems with mdutils(raid1) and lvm
+Date: Thu, 23 Dec 1999 21:10:19 +0100 (MET)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] booting w/o initrd
-References: <3860D151.21FD732B@twc.de> <19991222201127.C13180@colombina.comedia.it>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: lvm <linux-lvm@msede.com>
 
-Luca Berra wrote:
-> 
-> there are some good ideas here, i will only point the problems.
-> On Wed, Dec 22, 1999 at 02:25:37PM +0100, Ulf Bartelt wrote:
-> <snip>
-> 
-> > And when bringing the system down, LVM can be stopped cleanly because the
-> > root filesystem is only addressed via the partition alias.
-> 
-> add mirrored LV to the equation and you'll obtain a mess.
+Hi,
 
-The idea works for now. When I get in touch with mirrored LVs, I sure
-have to rethink a lot. 
+I managed to setup a system with lvm and raid1 on the root volume (using
+initrd , SuSE 6.3 )
+Now I think of what will happen in case of disk failures. With "normal" 
+raid1 (say /dev/md0 = /dev/sda1 /dev/sdb1 ) I am able to mount /dev/sda1 
+even if ckraid failed. With lvm : vgscan didn't find my vg00 if /dev/md0 is
+not present. Therefor I can't recover my system from the remaining disk(s).
+Is there a way to activate such a volume group ?
+Mirroring is useless if it requires that all disks are sane.
 
-> what's the problem with initrd, just look at it as a very big
-> __initfunc(), just easier to debug.
-
-I dont see the clean __exitfunc().
-
-Maybe I don't "see the forest because of too many trees" (we'd say in
-german...)...
-
-Bye!
-	Ulf.
+	Torsten
