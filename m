@@ -1,22 +1,30 @@
-Message-ID: <20000808083833.28744.qmail@abv.bg>
-From: "Rumen Ginev" <rumen@abv.bg>
-Date: Tue, 08 Aug 2000 08:38:33 +0200
-Subject: [linux-lvm] kernel 2.2.14
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Tue, 08 Aug 2000 14:39:53 -0700 (PDT)
+From: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
+Subject: [linux-lvm] kernel 2.2.13
+Message-id: <Pine.SOL.4.21.0008081058100.12762-100000@flora01.SLAC.Stanford.EDU>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 To: linux-lvm@msede.com
 
-I patched my kernel (2.2.14-15mdk) with patch-2.2.13-LVM-0.8i. Next I built a new kernel successfully and after reboot loaded LVM module with no problems.
-I managed to create physical and volume group, but when I tried to create a logical volume the system just hung.
 
-Is this patch the correct one for my kernel (I could not find patch-2.2.14-LVM-0.8i) or I have missed something?
+Hello,
+
+I patched my kernel 2.2.13 with patch-2.2.13-LVM-0.8i and installed
+LVM.08final when I tried to use the LVM utility I got
+
+vgscan -- invalid i/o protocol version
 
 
-----------------------------------------------------
-������� ����!   http://www.abv.bg   Send your mail!
-������ �� !   http://www.netinfo.bg   Get connected!
-������ !   http://gyuvetch.bg  Visit! 
+Thanks Cristina
+
+_____________________________________________________________________________
+
+       Cristina Bulfon              E-mail Cristina.Bulfon@slac.stanford.edu
+Stanford Linear Accelerator Center  Phone +1-650-926-5028
+PO Box 4349, M/S 88		    Fax   +1-650-926-3329
+Stanford, CA 94309, USA
+_____________________________________________________________________________
