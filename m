@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 16 Jul 2001 13:29:59 +0200
+Date: Mon, 16 Jul 2001 13:31:49 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Upgrade path
-Message-ID: <20010716132959.C11625@sistina.com>
-References: <3B4EE8F2.5050506@ednet.ns.ca>
+Subject: Re: [linux-lvm] Newbie question
+Message-ID: <20010716133149.D11625@sistina.com>
+References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com> <20010712094638.B418@btconnect.com> <200107121612.MAA13656@burns.luca.2y.net> <20010713131200.C32198@sistina.com> <200107131652.MAA15766@burns.luca.2y.net> <20010713184153.C4738@lucas.loria>
 Mime-Version: 1.0
-In-Reply-To: <3B4EE8F2.5050506@ednet.ns.ca>; from boutilpj@ednet.ns.ca on Fri, Jul 13, 2001 at 09:26:26AM -0300
+In-Reply-To: <20010713184153.C4738@lucas.loria>; from bernat@free.fr on Fri, Jul 13, 2001 at 06:41:53PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,28 +21,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jul 13, 2001 at 09:26:26AM -0300, Patrick Boutilier wrote:
-> Hello,
+On Fri, Jul 13, 2001 at 06:41:53PM +0200, Vincent Bernat wrote:
+> Le Fri Jul 13, 2001 at 12:33 -0300, 
+> Leandro Lucarella <luca@lucarella.com.ar> disait :
 > 
-> I am currently using LVM driver version 0.9.1_beta6 with a 2.2.19 
-> kernel. I am planning to upgrade to kernel version 2.4.6 or maybe 
-> 2.4.7-pre6. What LVM version should I compile into the kernel? Should I 
-> stay with 0.9.1_beta6 or jump up to 0.9.1_beta7?
-
-If you can wait for LVM 0.9.1 Beta 8, you should.
-We are just some days away from that release (hopefully ;-)
-
-FYI: LVM 0.9.1 Beta6/7 have a misalignment bug which causes errors when using
-     snapshots on such misaligned PVs.
-
-> I did extend a logical 
-> volume using 0.9.1_beta6 if that makes any difference.
-
-No, it doesn't.
-
+> > Now I have a question. I read the HOWTO migrate the old root partition to a
+> > LV, and the method is to make a LV on another HD (or the same if it's
+> > room), copy the root FS to this LV, delete the old partition and add it to
+> > the new LV. My question is. It's possible to make a VG without striping
+> > ('cause I have just 1 HD in the begining) and then, when I add the old
+> > partition to the VG, make this VG to do striping????
 > 
-> 
-> 
+> The FAQ seems to say it is not possible. You cannot add a PV to a
+> stripping LV. It may change in the future.
+
+True.
+
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
