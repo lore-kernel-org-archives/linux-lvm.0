@@ -1,17 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i31JcCj19771
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 14:38:12 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i31JcAjj007818
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 14:38:10 -0500
-Message-ID: <406C6F9E.4000400@comedia.it>
-Date: Thu, 01 Apr 2004 21:38:06 +0200
-From: Luca Berra <bluca@comedia.it>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3235gj12451
+	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 22:05:42 -0500
+Received: from hotmail.com (bay16-dav23.bay16.hotmail.com [65.54.186.203])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3235ejj016186
+	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 22:05:41 -0500
+From: "sachin" <sachindurge@hotmail.com>
+Date: Fri, 2 Apr 2004 08:41:53 -0800
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Migrate to kernel 2.6 and lvm2 with root fs on lvm1
-References: <OF12DEDDF3.CC314224-ON00256E65.005D8012-00256E65.00647CD5@svunta.os.is>
-In-Reply-To: <OF12DEDDF3.CC314224-ON00256E65.005D8012-00256E65.00647CD5@svunta.os.is>
 Content-Transfer-Encoding: 7bit
+Message-ID: <BAY16-DAV23dDHgb4Kb0000dc77@hotmail.com>
+Subject: [linux-lvm] character device creation
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,28 +20,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, krh@os.is
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Kjartan Reynir Hauksson wrote:
+Thanks Shaun
+I am quite new to linux
+Can you tell  me how to identify the raw device that it is actually bind to
+a logical volume
+And what extra things that i needed to do if i wan to use raw devices like
+driver or any thing else
+ or lvm driver supports that
+Thanks ,
+Sachin.
 
-> I've written earlier on the same subject but never got it resolved so I'm
-> going to give it another go since my desktop constantly stalls on me with
-> my 2.4 kernel.  I'm now running MDK 10.0 with
-> kernel24-tmp-2.4.25-2.tmp.1mdk rpm package from Thomas Backlund.  This
-Mdk 10 supports LVM1 and LVM2 seamlessly with kernel 2.4 and LVM2 with 
-kernel-2.6.
-you don't have to edit initscripts or do any other modifications by hand
-you only have to be sure you install the lvm2 package.
+Previous message :
+Date: Thu, 1 Apr 2004 10:52:23 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] character device creation
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <20040401085223.GC29222@redhat.com>
+Content-Type: text/plain; charset=us-ascii
 
-Then you either:
-- install kernel 2.6 and an initrd that supports lvm2 will be created
-- run /sbin/mkinitrd again against your 2.4 kernel telling it to use lvm2
+On Thu, Apr 01, 2004 at 12:26:39PM -0800, sachin wrote:
+> Hi
+> Can i Create a character device for a logical volume of lvm
+> If yes how to create and how lvm driver manage it or supports it
 
-you can remove the lvm1 package afterwards.
-(you can even switch between lvm1 and lvm2 if you want)
+Yes. Have a look at 'man raw'.
 
-Let me know if you have problems.
-
--- 
-Luca Berra -- bluca@comedia.it
+> Thanks ,
+> Sachin
