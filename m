@@ -1,18 +1,15 @@
 Received: from o.ww.redhat.com (vpn50-23.rdu.redhat.com [172.16.50.23])
 	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i3UApuNv028610
-	for <linux-lvm@redhat.com>; Fri, 30 Apr 2004 12:51:56 +0200
-Date: Fri, 30 Apr 2004 12:49:47 +0200
+	i3UAv0Nv028819
+	for <linux-lvm@redhat.com>; Fri, 30 Apr 2004 12:57:01 +0200
+Date: Fri, 30 Apr 2004 12:53:23 +0200
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] About extending partiton with lvm+ext3
-Message-ID: <20040430104947.GA15691@redhat.com>
-References: <200404261903.i3QJ3HTk030443@smtp.doruk.net.tr>
-	<20040426222921.GB16292@redhat.com>
-	<20040427121034.GG2990@tangerine.coulon.evette>
+Subject: Re: [linux-lvm] Help with my LVM
+Message-ID: <20040430105323.GB15691@redhat.com>
+References: <20040428162429.9978.qmail@qmail-local.click21.com.br>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20040427121034.GG2990@tangerine.coulon.evette>
+In-Reply-To: <20040428162429.9978.qmail@qmail-local.click21.com.br>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,66 +21,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Apr 27, 2004 at 02:10:34PM +0200, Jean-Luc Coulon (f5ibh) wrote:
-> Le 27.04.2004 00:29:21, Heinz Mauelshagen a �crit�:
-> >On Mon, Apr 26, 2004 at 09:59:54PM +0300, Vahric MUHTARYAN wrote:
-> >> Hi Everybody ,
-> >>
-> >> I'm reading lvm-how to and I wonder those any tools like e2fsadm ,
-> >> ext2resize ?!! in Redhat ... Because I want to exten ext3
-> >>
-> >> Does command for only ext2 ?!
-> >
-> >Yes.
-> 
-> You can resize an ext3 filesystem with the resize2fs command. Both  
-> enlarge or shrink it.
+On Wed, Apr 28, 2004 at 01:24:29PM -0300, Rodolfo Sikora de Melo 2 wrote:
+> Guys, I'm desperate needing help.
+> After a reboot one of lvm pv stopped do work.
 
-Well, of course. ext3 is identical metadata-wise.
+What *exactly* happened to your LVM PVs before the reboot ?
 
-> But : this is allowed only on an *offline* (umounted) filsystem,  
-> resize2fs doesnt take care of the underlaying partition, you have to  
-> enlarge the partition (logical volume) before an enlarge operation or  
-> shrink it after a shrink operation.
 > 
-> man 8 resize2fs
+> The scenario:
+> 10 disks: 
+> 5 disks in channel A Raid 5
+> 5 disks in channel B Raid 5
 > 
-> <<
-> RESIZE2FS(8)
+> the sda has sda1 sda2 sda3, where only sda3 is a physical volume and is working great.
 > 
-> NAME
->       resize2fs - ext2/ext3 file system resizer
+> the sda has sdb1 sdb2 sdb3, where only sdb3 is a physical volume and after a reboot stopped to work.
 > 
-> [ ... ]
-> >>
-> 
-> Do the operation as following:
-> -unmount the logical volume holding the filesystem you want to enlarge
-> -lvwextend to enlarge the partition
-> -resize2fs to enlarge the filesystem
-> -remount the logical volume
-> 
-> --
-> 		- Jean-Luc
-> >
-> >>
-> >> # export E2FSADM_RESIZE_CMD=ext2resize
-> >> # e2fsadm /dev/ops/batch -L+500M
-> >>
-> >> Thanks Everybody ...
-> >> Vahric
-> >
-> >--
-> >
-> >Regards,
-> >Heinz    -- The LVM Guy --
-> >
+> licor:~/uuid_fixer# pvdisplay /dev/sdb3
+> pvdisplay -- no physical volume identifier on "/dev/sdb3"
 
+Presumably your RAID is fully operational, some{one|thing} has written
+over the LVM metadata. At least partionally.
 
+> 
+> What I can do to fix this? I have 100Gb of important data inside this PV. 
 
+If just the LVM metatada and no data on /dev/sdb3 is gone *and* you've
+got /etc/lvmconf/ metadata backups, you want to run:
+
+# pvcreate -ff /dev/sdb3
+# vgcfgrestore -n VGName /dev/sdb3
+
+Before you do that or any other changes to your disks, let's make clear 
+what really happend first!
+
+> 
+> I can provide any information u need to help me!
+> Thank you very much.
+> 
+> 
+> 
+> 
+> ___________________________________________________________________________________
+> Acesse nosso portal www.click21.com.br
+> 
+> Porque internet gr?tis, nem a Embratel pode fazer mais barato. Mas pode fazer melhor.
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
