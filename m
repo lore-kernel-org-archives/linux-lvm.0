@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] help needed
-Message-ID: <20030602174554.A6902@sistina.com>
-References: <23233866A70C32479532C8D0B8AE7B96032AAC9B@i2km07-ukbr.domain1.systemhost.net>
-Mime-Version: 1.0
-In-Reply-To: <23233866A70C32479532C8D0B8AE7B96032AAC9B@i2km07-ukbr.domain1.systemhost.net>; from narsimha.kulkarni@bt.com on Mon, Jun 02, 2003 at 04:19:32PM +0100
+Message-ID: <20030619013.23748.qmail@bigresources.com>
+From: "Jason M. DesRoches" <jason@bigresources.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Daily news from www.boxedart.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,208 +12,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  2 10:56:02 2003
+Date: Tue Jun  3 14:12:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 To: linux-lvm@sistina.com
 
-Run
+Dear Sirs,=20
 
-pvcreate -ff ...
+We are continuing to provide you with the highest-quality graphics for the =
+lowest price anywhere on the web, our business model of offering thousands =
+of graphics without charging "per item fees=EF=BF=BD on www.boxedart.com.
 
-on all its PVs -or-
+If you are interested in helping us, there are several things that you can =
+do, which will help us keep our prices down and our inventory up:=20
 
-dd if=/dev/zero of=/dev/... bs=512 
+1. Refer us to your friends and colleagues who might also be interested in =
+joining our program. If you know anyone with a need for web design, you can=
+ help them and us by sending them over to the least expensive professional =
+web design resource on the web.=20
 
-in case you don't like having new PVs.
+2. Don't share your account with others! If you're letting your friends get=
+ free access to your account, or sharing our graphics with others, it can h=
+ave a big impact on our tier-1 bandwidth bill, as well as cost us revenue f=
+rom sales, and is, of course, something we absolutely prohibit.=20
 
-Regards,
-Heinz    -- The LVM Guy --
+3. Follow our licensing terms. If you are a web developer, please purchase =
+the required additional licenses for your clients if you do not plan on mak=
+ing significant modifications to our templates that you are delivering to t=
+hem, as stipulated is required in our online FAQ.=20
 
-On Mon, Jun 02, 2003 at 04:19:32PM +0100, narsimha.kulkarni@bt.com wrote:
-> no there is no backup of the metadata.
-> otherwise i could have restored it using vgcfgrestore and all.
-> that is the problem basically..... 
-> no backup and want to either isolate the physical volume from the inactive
-> volume group or restore and then delete the volume group....
-> is there any way to delete the volume group when there is no metadata
-> 
-> -----Original Message-----
-> From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
-> Sent: 02 June 2003 16:03
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] help needed
-> 
-> 
-> On Mon, Jun 02, 2003 at 02:04:25PM +0100, narsimha.kulkarni@bt.com wrote:
-> > but Heinz is there anyway I can restore a vol group whose .conf file has
-> > been deleted
-> 
-> Heh! ;)
-> 
-> You don't want to tell me that the metadata backup files weren't included
-> in your regular backup ?
-> 
-> > 
-> > -----Original Message-----
-> > From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
-> > Sent: 02 June 2003 10:34
-> > To: linux-lvm@sistina.com
-> > Subject: Re: [linux-lvm] help needed
-> > 
-> > 
-> > On Fri, May 30, 2003 at 09:42:00AM +0530, Sameer Halgatti wrote:
-> > > hi narsimha,
-> > > If u want to completely remove ur PV (i.e. if u want to lose ur data)
-> then
-> > > there is a very simple way to get rid of this problem. Just do
-> > following....
-> > > dd of=/dev/hda3                  ......hda3 becuse ur PV resides on that
-> > > <enter approx 50 chars>
-> > > <press cntrl+d>
-> > > 
-> > 
-> > This avoids that you type something LVM might consider to be valid
-> metadata
-> > ;)
-> > 
-> > dd if=/dev/zero of=/dev/hda3 bs=512
-> > 
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> > 
-> > 
-> > > Of course it not the recommend solution, but it will solve ur problem
-> :-)
-> > > Actually ur VGDA data on the disk may be corrupted, that's why u r
-> getting
-> > > this error message.
-> > > When u create a PV/VG, some data is written on the disk (on some initial
-> > > disk blocks). So if u erase that by doing 'dd', then u can create fresh
-> > > PV/VG using that disk.
-> > > 
-> > > 
-> > > ----- Original Message -----
-> > > From: <narsimha.kulkarni@bt.com>
-> > > To: <linux-lvm@sistina.com>
-> > > Sent: Thursday, May 29, 2003 8:03 PM
-> > > Subject: [linux-lvm] help needed
-> > > 
-> > > 
-> > > > hi following is the log of the commands....
-> > > > i want to remove the volume group completely....
-> > > > or i want to restore it....
-> > > >
-> > > > how do i do it
-> > > >
-> > > > vgscan -- reading all physical volumes (this may take a while...)
-> > > > vgscan -- found active volume group "helena_vg"
-> > > > vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of
-> > volume
-> > > > group)
-> > > > vgscan -- found active volume group "volg"
-> > > > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> > > > vgscan -- WARNING: This program does not do a VGDA backup of your
-> volume
-> > > > groups
-> > > >
-> > > > vgremove -- ERROR: can't remove active volume group "helena_vg"
-> > > >
-> > > >
-> > > > vgcfgrestore -- locking logical volume manager
-> > > > vgcfgrestore -- restoring volume group "helena_vg" from
-> > > > "/etc/lvmconf/helena_vg.conf"
-> > > > vgcfgrestore -- checking existence of "/etc/lvmconf/helena_vg.conf"
-> > > > vgcfgrestore -- "/etc/lvmconf/helena_vg.conf" doesn't exist
-> > > > vgcfgrestore -- a backup for volume group helena_vg is not available
-> > > >
-> > > >
-> > > > pvscan -- reading all physical volumes (this may take a while...)
-> > > > pvscan -- inactive PV "/dev/hda3"  is associated to an unknown VG (run
-> > > > vgscan)
-> > > > pvscan -- ACTIVE   PV "/dev/hdb1" of VG "volg"      [31.48 GB / 31.48
-> GB
-> > > > free]
-> > > > pvscan -- total: 2 [39.08 GB] / in use: 2 [39.08 GB] / in no VG: 0 [0]
-> > > >
-> > > > pvchange -- locking logical volume manager
-> > > > pvchange -- reading physical volume data /dev/hda3 from disk
-> > > > pvchange -- checking physical volume "/dev/hda3" consistency
-> > > > pvchange -- finding volume group of physical volume "/dev/hda3"
-> > > > pvchange -- unable to find volume group of "/dev/hda3" (VG not
-> active?)
-> > > > pvchange -- unlocking logical volume manager
-> > > > pvchange -- 0 physical volumes changed / 0 physical volumes already
-> o.k.
-> > > >
-> > > > _______________________________________________
-> > > > linux-lvm mailing list
-> > > > linux-lvm@sistina.com
-> > > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to solve them ***
-> > 
-> >
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > =-
-> > 
-> > Heinz Mauelshagen                                 Sistina Software Inc.
-> > Senior Consultant/Developer                       Am Sonnenhang 11
-> >                                                   56242 Marienrachdorf
-> >                                                   Germany
-> > Mauelshagen@Sistina.com                           +49 2626 141200
-> >                                                        FAX 924446
-> >
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > =-
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> -- 
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+4. Consider one of our limited edition items if you are looking for low dis=
+tribution graphics for yourself or for your clients. Also keep an eye peele=
+d for our upcoming and enhanced custom work area which will make purchasing=
+ customized work a snap!=20
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+5. Spread the word around everywhere, if you belong to a forum community, a=
+nd you see a related topic to our services, post about us. If you have a we=
+bsite, add a link, however please avoid just spamming our site across other=
+ communities, as it is usually against their policies.=20
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+6. Tell us your needs. If you are looking for specific design genres or sty=
+les, for the limited or members area, let us know about it through the feed=
+back link on our site, so that we may be the ones to fill your needs.=20
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Any assistance you could provide would be greatly appreciated by our entire=
+ staff.=20
+
+We hope you understand how committed we are to continuing to deliver this s=
+ervice to you, and will continue to expand and grow to meets your requests =
+and needs with not only our efforts, but your help as well. We trust you wi=
+ll continue to enjoy your BoxedArt membership, and we hope this information=
+ has help shed some light on the recent occurrences that have taken place o=
+n BoxedArt. We thank all of our loyal customers for their continued support=
+, and encourage you to contact us if we can be of any assistance.=20
+
+Sincerely,=20
+
+Jason M. DesRoches
+BigResources Inc. President/CEO
+jason@bigresources.com
+
+ICQ: 17947522
+
+If you want to unsubscribe - please click here=20
+www.boxedart.com/services/unsubscribe.php
