@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102121955.f1CJt0208596@webber.adilger.net>
-Subject: Re: [linux-lvm] lv nodes in /dev ??
-In-Reply-To: <20010212114306.8793.qmail@web10901.mail.yahoo.com> from "Mr. Penguin"
- at "Feb 12, 2001 03:43:06 am"
-Date: Mon, 12 Feb 2001 12:55:00 -0700 (MST)
+Message-Id: <200102122040.f1CKe6w08894@webber.adilger.net>
+Subject: Re: [linux-lvm] (no subject)
+In-Reply-To: <20010211191615.6223.qmail@web216.mail.yahoo.com> from Pete lamb
+ at "Feb 11, 2001 11:16:15 am"
+Date: Mon, 12 Feb 2001 13:40:06 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,22 +21,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-James (Mr. Penguin) writes:
-> Just noticed that all my LVs have nodes not only in
-> /dev/vg00/ but also /dev !
-> 
-> So I have /dev/vg00/lvol1 and also /dev/lvol1 with the
-> same major and minor numbers. I don't like to think
-> what will happen if I create a new VG called vg01 also
-> with an lvol1...
-> 
-> This seems to be occuring in beta3 and beta4. I'm
-> using 2.4.1 / reiserfs (root on LVM)
-> 
-> Forgot to mention - I am using devfs
+Pierre writes:
+> Is there a utility to convert an existing ext2fs to a
+> lvm or do I have to due a complete new install???
 
-Yes, this is a bug.  I fixed it in my local patches, which I will submit
-to the list today.
+It may be possible to use parted to do this.  I don't think it is 100%
+finished, but I _think_ it can do "move start of filesystem" kind of
+work.  It will NOT do the LVM creation, and you will need to manually
+figure out  how much space to put at the beggining of the PV for LVM
+metadata.  After that, you will also need to create an LV which is
+using exactly the correct PEs to hold the filesystem.
+
+I would make a backup first.
 
 Cheers, Andreas
 -- 
