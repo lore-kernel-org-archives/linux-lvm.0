@@ -1,9 +1,10 @@
-From: "William Blunn" <bill+f.9sfuw6uo@tao-group.com>
-Subject: Re: [linux-lvm] I'm confused
-Message-ID: <BDEMIPDEGABMNEFIHCPDEECAEEAA.bill+f.9sfuw6uo@tao-group.com>
-MIME-Version: 1.0
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] snapshot file zombies
+Message-ID: <20021209113719.A18845@sistina.com>
+References: <7344.1039265449@joergli.cocolab.de>
+Mime-Version: 1.0
+In-Reply-To: <7344.1039265449@joergli.cocolab.de>; from juergen@informatik-vollmer.de on Sat, Dec 07, 2002 at 01:50:49PM +0100
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <200212082343.49466.pantaleimon@home.no>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,63 +15,85 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 04:29:02 2002
+Date: Mon Dec  9 04:46:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-> I think hardisk manufacturers use base 10, rather than base 2,
-> when they speak of "mega" and "giga", ie. mega =3D 1000K and not
-> 1024K. That means that a 120G hardisk is only 114.4G.
+On Sat, Dec 07, 2002 at 01:50:49PM +0100, J=FCrgen Vollmer wrote:
+>=20
+> Hi dear list,
+>=20
+> I created a snapshot from my /home to do my usual backup with tar.
+> Then I got 15 messages of the kind
+>=20
+>   tar: lvm-snapshot/vollmer/Mail/inbox/,120:  can not stat, no permissi=
+on
+>       (or so it's translated from german to englich by me)
+>=20
+>=20
+> doing a
+>   find /lvm-snapshot/vollmer/Mail/inbox/ -name ",120"
+> rsults in
+>   /lvm-snapshot/vollmer/Mail/inbox/,120
+>=20
+> so the file exists, but:
+>   ls -l   /lvm-snapshot/vollmer/Mail/inbox/,120
+> results in
+>   ls: /lvm-snapshot/vollmer/Mail/inbox/,120: Permission denied
+>=20
+> get some infos via find:
+>   find /lvm-snapshot/vollmer/Mail/inbox/ -name ",120" -print "-A@"
+> results in:
+>   find: /lvm-snapshot/vollmer/Mail/inbox/,120: Permission denied
+>=20
+> The "original file" ~vollmer/Mail/inbox/,120 is ok and readable.
+>=20
+> Two weeks ago everything worked fine.
+>=20
+> So what's wrong with it? Is my corrupted? (tar --compare seems to compl=
+ain
+> only at those files).
 
-No.
+Can you find any nasty messages in your syslog related to the
+access fault or _before_ you weren't able to access it?
 
-You are right in that "mega =3D 1000K", but from your figure of 114.4, you
-still appear to have "K =3D 1024" and "G =3D 1024M", both of which are
-wrong.
+>=20
+> I use SuSe 8.1, Logical Volume Manager 1.0.5(mp-v6)
+>=20
+> With best regards
+>=20
+> J=FCrgen
+>=20
+> --=20
+> Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
+> Tel: +49(721) 9204871 Fax: +49(721) 24874
+> juergen@informatik-vollmer.de,vollmer@cocolab.de,Juergen.Vollmer@acm.or=
+g
+> www.informatik-vollmer.de
+>=20
+>=20
 
-Hard disk manufacturers use SI defined multipliers, i.e. they use a
-documented standard.
 
-  K =3D 10^3
-  M =3D 10^6
-  G =3D 10^9
 
-  120 GB =3D 120 000 000 000 B
-
-Computer people have traditionally abused these symbols to mean
-multipliers with similar values, but based on powers of two.
-
-Symbols have been defined for these multipliers, but some people still
-haven't caught up to them.
-
-  Ki =3D 2^10 =3D 1024
-  Mi =3D 2^20 =3D 1048576
-  Gi =3D 2^30 =3D 1073741824
-
-So
-
-  120 GB ~=3D 111.8 GiB
-
-Interestingly, LVM1's vgdisplay incorrectly uses "GB" in its output
-where it should say "GiB".
-
-Bill
 --=20
-William H. Blunn - <bill+s.9sfuw6uo@tao-group.com> - Developer Support
-Tao
-62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
-Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
 
-The contents of this e-mail and any attachments are confidential and may
-be legally privileged. If you have received this e-mail and you are not
-a named addressee, please inform us as soon as possible on
-+44 118 901 2999 and then delete the e-mail from your system. If you are
-not a named addressee you must not copy, use, disclose, distribute,
-print or rely on this e-mail. Any views expressed in this e-mail or any
-attachments may not necessarily reflect those of Tao's management.
-Although we routinely screen for viruses, addressees should scan this
-e-mail and any attachments for viruses. Tao makes no representation or
-warranty as to the absence of viruses in this e-mail or any attachments.
-Please note that for the protection of our business, we may monitor and
-read e-mails sent to and from our server(s).
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
