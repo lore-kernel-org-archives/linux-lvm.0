@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 25 Apr 2001 09:01:39 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
-Message-ID: <20010425090139.C1711@tykepenguin.com>
-References: <01042412353404.07748@pc-silva> <20010424104505.F9882@sistina.com>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 25 Apr 2001 11:47:59 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] vgscan does not found my VG, but pvscan does...
+Message-ID: <20010425114759.A4514@sistina.com>
+References: <000901c0cd36$a80064a0$7d80a8c0@dyndns.org> <01042510065800.15131@workstation>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010424104505.F9882@sistina.com>; from lewis@sistina.com on Tue, Apr 24, 2001 at 10:45:06AM -0500
+In-Reply-To: <01042510065800.15131@workstation>; from fabian.herschel@suse.de on Wed, Apr 25, 2001 at 10:06:58AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,36 +21,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Apr 24, 2001 at 10:45:06AM -0500, AJ Lewis wrote:
-> On Tue, Apr 24, 2001 at 12:19:45PM -0300, Ernesto Silva wrote:
-> > Hi,
-> > 
-> > 	In order to make things right I downloaded the 2.4.3 kernel and
-> > compiled it (i386).
-> > 
-> > 	With the new kernel running (lvm-mod load ok) I'm trying to compile lvm
-> > tools, but there are lots of warinigs, all the same thing, the first of them is:
-> > -----------------------------------------------------------
-> > gcc -c -pipe -g -O2 -Wall -DDEBUG -I ../../tools/lib -I ../../tools - debug.o
-> > debug.c
-> > In file included from ../../tools/lib/liblvm.h:97
-> > 		from basename.c:34
-> > ../../tools/lib/lvm_log.h:47:59: warning: nothing can be pasted after this token
->  <...snip...> 
-> > Does anyone had a problem like this before???
+On Wed, Apr 25, 2001 at 10:06:58AM +0200, fabian herschel wrote:
+> On Wednesday 25 April 2001 05:20, you wrote:
+> > -----BEGIN PGP SIGNED MESSAGE-----
+> > Hash: SHA1
+> >
+> > Have you tried a vgimport?
 > 
-> Hmm...I don't get that at all!  Which version of GCC are you using?  Did you
-> download the 0.9.1_beta7 tarball or grab something from the cvs?
+> Yes I did. vgimport does not want to import the VG, because it is not an 
+> exported one :((.
+> 
+> On an other machine I had the same problem and I tried to make a vgexport.
+> The _export_ went well (the VG was exported but I could not re-import it ).
+> 
+> I tried some things last night... 
+>   - First I have saved the heder blocks (VGDA) with dd (dd if=/dev/sda1   \
+>      of=/root/HEAD_sda1 count=4596 bs=512) 
+>   - Then I called a vgcfgrestore -n sysvg /dev/sda1.
+>   - Now pvscan tells me both PVs are in the VG sysvg. 
+>   - "vgchange -ay sysvg" activated the VG and the LVs could me mounted 
+> 
+> BUT
+>   - vgscan does NOT find the sysvg!!!
+>   - After a reboot the sysvg is not available.
+>   - Every time I have to call a vgcfgrestore :((
+> 
+> I have written a C-program which could retrieve all data from a LV, if pvdata 
+> -E reports correctly, but the LV could not be activated. But this is only a 
+> very bad work arround to retrieve my data. But I need a way to reactivate my 
+> VG, so it could be found by vgscan.
+> 
+> I'm hopeful we will find a solution.
 
-I get similar warnings with gcc 3.0 from CVS. The indicated line has changed but
-the actual error is the same I think:
+These "vgscan can't find my..." errors still show up on a too regular base :-(
+They absolutely need to be fixed before the 1.0 release.
 
-lvm_config.c:113:7: warning: pasting ""error: "" and ""error in config file: not in section at line %d"" does not give a valid preprocessing token
-lvm_config.c:117:7: warning: pasting ""error: "" and ""couldn't put %s:%s = %s into config"" does not give a valid preprocessing token
-lvm_config.c:162:9: warning: pasting ""warning: "" and ""unknown variable %s:%s in config file"" does not give a valid preprocessing token
-lvm_config.c:172:5: warning: pasting ""warning: "" and ""more than one value for %s:%s, using most recent"" does not give a valid preprocessing token
-lvm_config.c:186:5: warning: pasting ""warning: "" and ""more than one value for %s:%s, using most recent"" does not give a valid preprocessing token
-lvm_config.c:342:3: warning: pasting ""warning: "" and ""'%s' not a recognised boolean value, assuming false"" does not give a valid preprocessing token
+Could you please send your two VGDAs compressed email attached to mee in order
+to be able to investigate more.
 
+Add the "vgscan -d" output for the fail case as well, please.
 
-patrick
+> Fabian Herschel
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
