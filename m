@@ -1,11 +1,11 @@
 Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Fri, 19 Jan 2001 17:20:37 +0000
+Date: Fri, 19 Jan 2001 17:22:40 +0000
 From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] LVM with loopback
-Message-ID: <20010119172037.A2093@66bassett.freeserve.co.uk>
-References: <000e01c08235$bc65a730$3b027eaa@leistnermnt>
+Subject: Re: [linux-lvm] Patch for Kernel 2.2.16
+Message-ID: <20010119172240.B2093@66bassett.freeserve.co.uk>
+References: <615A249B783CD41192F400D0B747AC8601A001EB@hesse.bbn.hp.com> <20010119101757.K23203@sistina.com> <20010119104932.L23203@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <000e01c08235$bc65a730$3b027eaa@leistnermnt>; from mark@theleistners.org on Fri, Jan 19, 2001 at 11:34:46AM -0500
+In-Reply-To: <20010119104932.L23203@sistina.com>; from lewis@sistina.com on Fri, Jan 19, 2001 at 10:49:32AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,74 +21,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Mark,
+On Fri, Jan 19, 2001 at 10:49:32AM -0600, AJ Lewis wrote:
+> After testing a bit more, I have found a bug in the snapshot creation.
+> Under load, you can get a 
+> 'kernel panic: brw_kiovec: iobuf not locked for I/O'
+> 
+> Joe, is this the same as the problem you discussed in the 
+> "[linux-lvm] Kernel panic while snapshotting."
+> thread?
 
-This is the patch I use to get LVM working with the loopback like
-device in user mode linux.  It's possible you just need the last hunk.
-Please don't use this on a production system.
+Sounds like it.  Can you try reversing that patch as well please ?
 
 - Joe
-
-
-
-diff -ur LVM/tools/lib/lvm_check_dev.c LVM_um/tools/lib/lvm_check_dev.c
---- LVM/tools/lib/lvm_check_dev.c	Mon Nov 13 00:20:11 2000
-+++ LVM_um/tools/lib/lvm_check_dev.c	Wed Jan 10 10:55:06 2001
-@@ -121,6 +121,7 @@
- #ifdef	DASD_MAJOR
-       DASD_MAJOR,
- #endif
-+      98,			/* UBD device for user mode linux */
-       -1
-    };
- 
-diff -ur LVM/tools/lib/lvm_dir_cache.c LVM_um/tools/lib/lvm_dir_cache.c
---- LVM/tools/lib/lvm_dir_cache.c	Fri Jan  5 11:46:14 2001
-+++ LVM_um/tools/lib/lvm_dir_cache.c	Wed Jan 10 10:56:26 2001
-@@ -63,6 +63,7 @@
-    char blocks[20] = { 0, };
-    char devname[30] = { 0, };
-    static char *devdir[] = {
-+	   "/dev/ubd",
-       "/dev/ida",
-       "/dev/ide/hd",
-       "/dev/loop",
-@@ -83,7 +84,7 @@
-       ret = -LVM_EPARAM;
-       goto lvm_dir_cache_end;
-    }
--
-+#if 0
-    if ( ( proc = fopen ( "/proc/partitions", "r")) != NULL) {
-       while ( !feof ( proc)) {
-           fgets ( line, 511, proc);
-@@ -96,7 +97,8 @@
-       }   
-       fclose ( proc);
-    }
--   if ( cache_size == 0 && lvm_check_devfs() == FALSE) {
-+#endif
-+   if ( cache_size == 0) { /* && lvm_check_devfs() == FALSE) {*/
-       for ( d = 0; devdir[d] != NULL; d++) {
-          dirname = devdir[d];
- #ifdef DEBUG
-diff -ur LVM/tools/lib/pv_get_size.c LVM_um/tools/lib/pv_get_size.c
---- LVM/tools/lib/pv_get_size.c	Thu Dec 21 13:58:36 2000
-+++ LVM_um/tools/lib/pv_get_size.c	Wed Jan 10 10:56:59 2001
-@@ -48,7 +48,7 @@
- #include <liblvm.h>
- 
- 
--#ifndef __alpha__
-+#if 0
- int pv_get_size ( char *dev_name, struct partition *part_ptr) {
-    int i = 0;
-    int dir_cache_count = 0;
-
-
-
-
-On Fri, Jan 19, 2001 at 11:34:46AM -0500, Mark D. Leistner wrote:
-> Can someone please give me, or point me to some help using LVM with loopback filesystems.  I would like to test it out some before I use it on my systems, and I haven't been able to get it to work right.  Thanks!
-> 
-> Mark
