@@ -1,12 +1,10 @@
-From: "Chad C. Walstrom" <chewie@wookimus.net>
-Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-Message-ID: <20011130142015.F23836@wookimus.net>
-References: <20011130020118.C17482@wookimus.net> <NBBBKLKHMJHIJLHOGAOJOEDKJCAA.steve.wray@the.net.nz>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] only found 0 of 5120 LEs for LV
+Message-ID: <20011130140613.M15936@lynx.no>
+References: <C9B993D4214AD511BC010002A537DFE30A8BD2@acsexchweb.corp.acsalaska.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
 Content-Disposition: inline
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJOEDKJCAA.steve.wray@the.net.nz>
+In-Reply-To: <C9B993D4214AD511BC010002A537DFE30A8BD2@acsexchweb.corp.acsalaska.com>; from snay@acsalaska.com on Fri, Nov 30, 2001 at 09:20:15AM -0900
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,69 +15,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 30 14:18:01 2001
+Date: Fri Nov 30 15:04:02 2001
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "Nay, Shawn" <snay@acsalaska.com>
+Cc: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
---ZInfyf7laFu/Kiw7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Nov 30, 2001  09:20 -0900, Nay, Shawn wrote:
+> Still no go.
+> I am now running 2.4.16 (linux) with 1.0.1 lvm.  pvscan finds my disks,
+> vgscan finds the inactive volume group, but I still get the error:
+> 
+> vgscan output:
+> > vgscan -- reading all physical volumes (this may take a while...)
+> > vgscan -- found inactive volume group "sundogvg"
+> > vgscan -- only found 0 of 5120 LEs for LV /dev/sundogvg/datalv (0)
+> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+> > data of volume group "sundogvg" from physical volume(s)
+> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+> > "/etc/lvmtab" and "/etc/lvmtab.d
+> 
+> My previous email and the response to it are below.  Any help is still
+> appreciated.
 
-On Fri, Nov 30, 2001 at 09:41:21PM +1300, Steve Wray wrote:
-> > Reason #1:  Mount /usr as read-only.  There is only one reason why you
->=20
-> ONLY if you also have /usr/share (for one, there may be others) on writea=
-ble
-> partitions!!!
+Send the output of "pvdata -E /dev/whatever" for all the PVs, and we can
+see if your LV even exists anymore.  If it is overwritten, I'm wondering
+if this is the same bug as hit Lars.  Maybe related to the recent change
+to zero out unused parts of the VGDA.
 
-Why would you want/need to have /usr/share writeable?  FHS 2.2 states:
-
-        4.11  /usr/share : Architecture-independent data
-
-        4.11.1  Purpose
-
-        The /usr/share hierarchy is for all read-only architecture
-        independent data files. [25]
-
-        This hierarchy is intended to be shareable among all architecture
-        platforms of a given OS; thus, for example, a site with i386,
-        Alpha, and PPC platforms might maintain a single /usr/share
-        directory that is centrally-mounted.  Note, however, that
-        /usr/share is generally not intended to be shared by different
-        OSes or by different releases of the same OS.
-
-        Any program or package which contains or requires data that
-        doesn't need to be modified should store that data in /usr/share
-        (or /usr/local/share, if installed locally).  It is recommended
-        that a subdirectory be used in /usr/share for this purpose.
-
-        Game data stored in /usr/share/games must be purely static data.
-        Any modifiable files, such as score files, game play logs, and so
-        forth, should be placed in /var/games.
-
-        ...
-
-        Footnote:=20
-        25.  Much of this data originally lived in /usr  (man,  doc)  or
-        /usr/lib (dict, terminfo, zoneinfo).
-
---=20
-Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-http://www.wookimus.net/                            | s.k.a. gunnarr
-Get my public key, ICQ#, etc. $(mailx -s 'get info' chewie@wookimus.net)
-
---ZInfyf7laFu/Kiw7
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE8B+n/DMcLGCBsWv0RAtRiAKC5dm1s2qF3twfBS0vxpTRix+MrigCfcKsc
-5INgYBoXuZhqr7er+zssDb4=
-=+1hT
------END PGP SIGNATURE-----
-
---ZInfyf7laFu/Kiw7--
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
