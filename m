@@ -1,8 +1,8 @@
 Return-Path: <jdomingo@crosswinds.net>
-Date: Tue, 21 Aug 2001 00:33:47 +0000
+Date: Tue, 21 Aug 2001 00:36:18 +0000
 From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
 Subject: Re: [linux-lvm] LVM 1.0 performance
-Message-ID: <20010821003347.B2019@dardhal.mired.net>
+Message-ID: <20010821003618.A2036@dardhal.mired.net>
 References: <20010820190959.A827@dardhal.mired.net>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -27,16 +27,12 @@ Jos� Luis Domingo L�pez wrote:
 
 > Hello:
 > 
-> I had the opportunity to play with a new Athlon 1200 box with IDE disks
-> for a couple of hours, and trying to verify whether the infamous VIA
-> chipset on the moderboard is of the buggy ones, I made some test with
-> software RAID and LVM 1.0.
-> 
-I have found an interesting document on LVM from the boys at SuSE. On page
-9 there is some data about LVM performance, that is similar to the results
-I just posted on my previous email.
+Oops, I missed one important thing on my second post in thius thread: the
+URL of the mentioned SuSE document on LVM ;)
 
-Regards, 
+http://www.suse.com/en/support/oracle/docs/lvm_whitepaper.pdf
+
+Regards,
 
 --
 Jos� Luis Domingo L�pez
