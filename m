@@ -1,10 +1,9 @@
-From: GCS <gcs@lsc.hu>
+Message-ID: <3BEA838A.3D74D02C@in.tum.de>
+From: David Vidal Rodriguez <vidalrod@in.tum.de>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Unsubscribe from the list??
-Message-ID: <20011108141138.A3736@lsc.hu>
-References: <3BEA8029.7D464253@in.tum.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3BEA8029.7D464253@in.tum.de>; from vidalrod@in.tum.de on Thu, Nov 08, 2001 at 01:52:57PM +0100
+References: <3BEA8029.7D464253@in.tum.de> <20011108141138.A3736@lsc.hu>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,17 +14,14 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  8 06:55:02 2001
+Date: Thu Nov  8 07:06:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Nov 08, 2001 at 01:52:57PM +0100, David Vidal Rodriguez <vidalrod@in.tum.de> wrote:
-> After having listened to this mailing list for a long time, I want now
-> to unsubscribe. I remember I got a mail with the instructions, but
-> I can't find it any more. Can someone tell me how to do it?
- Read the mails header. As a good list, it includes the info in every mail:
-List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-		<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-Cheers, GCS
+Thanks! I've seen those lines so many times that I've just ignored them. You don't have to
+reply since this is the last message I'll post (till I have a serious problem with LVM :-).
+Cheers!
+--
+  ------------------------------------------------------------------------
+ David Vidal R. (vidalrod <at> in DOT tum DOT de)
