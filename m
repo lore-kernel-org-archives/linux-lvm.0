@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] disk naming
-Message-ID: <20030104195544.GB11424@tykepenguin.com>
-References: <1041610095.19844.45.camel@mosix> <20030103174618.Z9539@zealot.blacknet.de> <1041613503.20036.49.camel@mosix> <1023440000.1041619125@[192.168.200.4]> <20030103192045.GI18613@tykepenguin.com> <1121550000.1041664663@[192.168.200.4]> <20030104100014.GA11424@tykepenguin.com> <1216750000.1041705320@[192.168.200.4]>
+From: David B Harris <david@eelf.ddts.net>
+Message-Id: <20030105090400.1d4e61be.david@eelf.ddts.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1216750000.1041705320@[192.168.200.4]>
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="pgp-sha1"; boundary="=.qo9e.Hbb9Vj?Bc"
+Subject: [linux-lvm] Linux 2.4.20 devmapper + userland utilities issue
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +14,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan  4 13:55:02 2003
+Date: Sun Jan  5 08:03:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Jan 04, 2003 at 12:35:20PM -0600, Steven Lembark wrote:
-> 
-> 
-> 
-> Try this on a system with two scsi cards and you'll see what
-> I mean: without changing anything else, switch which of the
-> cards the two disk chains connect to (i.e., disks on bus0
-> are now on bus1). Reboot the machine and see if it will boot
-> successfully.
-> 
-> The UUID is bus specific.
+--=.qo9e.Hbb9Vj?Bc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+First, thanks for the work on devmapper, LVM, and whatnot. Can't say as
+I use it yet, but I hope to ;)
 
-No.
+Right, anyhoo. I'd like to sub-partition a Linux MD device. Obviously it
+can contain a partition table, but there's no way for me to reference
+its segments. Enter devmapper.
 
-LVM puts it's OWN UUID on the disk. nothing to do with anybody elses UUID. It
-travels with the disk and has nothing to do with where the disk is. Even if it's
-over an NBD connection to another machine, LVM will find it and it will work.
+Attached is the entire log, from creation of the MD device to the error
+I get with 'lvcreate'. In short, 'lvcreate -L400M -n src willow-1' works
+fine if it isn't "on top of" my Linux MD array; I get the following
+error:
 
-Patrick
+  Aborting. Failed to wipe snapshot exception store. Remove new LV and
+retry.
+
+Hopefully the log isn't too much. :) I ran the problem by Patrick
+Caulfield in #lvm on irc.openprojects.net, he and I went through some
+basic debugging (nothing I hadn't done, but just double-checking).
+Nothing obvious was apparent.
+
+Thanks again, and please feel free to ask for more information, if you
+need it.
+
+--=.qo9e.Hbb9Vj?Bc
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+GDtQuCQ/g7GxJcARAgzOAJ4pWeLkD5OHrD64mxBWsAgwlIg0ywCeJ+7C
+XkqisreoMbFOrP3FTkFgGpY=
+=myyp
+-----END PGP SIGNATURE-----
+
+--=.qo9e.Hbb9Vj?Bc--
