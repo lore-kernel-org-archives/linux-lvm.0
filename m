@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105251946.f4PJkXpg000560@webber.adilger.int>
-Subject: Re: [linux-lvm] Raid5 sync problem
-In-Reply-To: <001501c0e509$45251b60$56dc10c3@tal.org> "from Kaj-Michael Lang
- at May 25, 2001 01:55:52 pm"
-Date: Fri, 25 May 2001 13:46:33 -0600 (MDT)
+Return-Path: <jbooth@ccbill.com>
+Message-ID: <004901c0e56b$1e8d1e00$5300000a@cavecreek.net>
+From: "Justin Booth" <jbooth@ccbill.com>
+References: <200105251946.f4PJkXpg000560@webber.adilger.int>
+Date: Fri, 25 May 2001 15:36:19 -0700
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm_chr_ioctl
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,25 +18,15 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: linux-raid@vger.kernel.org
 
-Kai-Michael writes:
-> I *think* I've found out what happened (not sure, not tested), fsck was
-> trying to scan all of the LVs on the same raid5 at the same time. And as the
-> raid5 code had to calculate everything and trying to sync in the
-> background... instant high load. But I'm not sure.. and I really don't wan't
-> to test it..
+I seem to be getting some errors for
+lvm_chr_ioctl: unknown command 4004fe0a
 
-Yes, there was a bug in fsck where if it couldn't determine if two devices
-were on the same disk, it assumed they were NOT and did fsck in parallel.
-In the MOST recent fsck (i.e. 1 week old, CVS only), this has been fixed
-so that it will run the two fscks in serial.  Whether that was your problem
-or not, I'm not sure.
+When I do a vgcreate. I also noticed that if a partition is under heavy
+strain and I take a snapshot, the snapshot seg. faults, and all subseqent
+lvscans will also until I lvremove the volume and re-create it.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Should I be worried about the lvm_chr_ioctl???
+
+Thanks in advance, Justin Booth
