@@ -1,10 +1,12 @@
-Return-Path: <silva@athenea.ort.edu.uy>
-From: Ernesto Silva <silva@athenea.ort.edu.uy>
-Subject: AGAIN: [linux-lvm] Kernel 2.4 -- invalid i/o protocol version
-Date: Fri, 20 Apr 2001 10:48:46 -0300
-MIME-Version: 1.0
-Message-Id: <01042010515703.03328@pc-silva>
-Content-Transfer-Encoding: 8bit
+Return-Path: <wichert@cistron.nl>
+Date: Fri, 20 Apr 2001 15:57:39 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] LVM and DRDB
+Message-ID: <20010420155739.V13067@cistron.nl>
+References: <20010420111022.C6133@cistron.nl> <200104201031.f3KAVT05030575@webber.adilger.int> <20010420123624.F13067@cistron.nl> <d3y9svheu9.fsf@lxplus015.cern.ch> <20010420154246.R13067@cistron.nl> <20010420084546.A16558@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010420084546.A16558@sistina.com>; from lewis@sistina.com on Fri, Apr 20, 2001 at 08:45:46AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,32 +19,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, linux-openlvm@nl.linux.org
 
-Hi guys, I'm posting this again, if anyone has any idea, please let me know, I
-need make lvm work.
-Thanks
+Previously AJ Lewis wrote:
+> Might as well add GFS while you're at it. :)
 
-	I'm having some trouble trying to make LVM work.
+That was already on there. I might need to move my `change earth
+rotation to create 34 hour days' plan to the top though so I can
+get around to the rest. I bet that would be easier then the `build
+time machine' approach.
 
-	I've recently installed  a new server, runing RedHat 7.0. I have also
-installed 2.4 kernel with LM support.
+Wichert.
 
-	Then I  have downloaded lvm-0.8final from the sistina ftp site, then I
-compiled it (I also included the patch) and I installed it. (well, no eveything
-was so smoothly, but it's installed now).
-
-	I can load the lvm-module fine, but when I run vgscan or pvcreate (I
-also created a 0x8e type partition in my primary scsi disk) it complains saying
-that:  "vgscan -- invalid i/o protocol version"
-
-	Do you have any ideas how to fix it?
-
-I only have one scsi disk of 18GB, but I will add at least another 2 in the
-next month, so I need it working. Do you think this will work?? I'm almost
-betting my job on it.
-
-thanks
-Ernesto Silva
-ORT University of Uruguay.
-Webmaster.
+-- 
+   ________________________________________________________________
+ / Generally uninteresting signature - ignore at your convenience  \
+| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
