@@ -1,10 +1,10 @@
-Return-Path: <seawolf@attglobal.net>
-Message-ID: <3AA41583.36E1CDE2@attglobal.net>
-Date: Mon, 05 Mar 2001 17:38:59 -0500
-From: Les Hazelton <seawolf@attglobal.net>
+Return-Path: <kishore.sampathkumar@wipro.com>
+From: Kishore <kishore.sampathkumar@wipro.com>
+Message-Id: <200103060710.MAA08060@wipro.wipsys.sequent.com>
+Date: Tue, 6 Mar 2001 12:40:45 +0530 (IST)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] How to install/update on an existing system with reiserfs/lvm
+Subject: [linux-lvm] Where is the limit on Max VGs coming from?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,28 +17,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I am currently running Mandrake 7.2 with a 2.4.2 kernel and the
-lvm-0.9.1-beta5 patch. 
+Hi,
 
-The system has one vg and several lv each containing a reiserfs
-filesystem.  The only part of the system not reiserfs/lvm is /boot which
-is on a small primary partition using ext2fs.
+I wanted to know the reason for the limitation for Maximum number of
+VGs, which is 100 currently.
 
-The system is running quite well and I am very pleased with the current
-configuration. The problem I have, or will have, is related to a desire
-to migrate to Mandrake 8.0 when the final version is released.
+If it was based on bits in minor number, I was under the impression that
+it should have been 255 (where /dev/lvm occupies minor number 0 for the
+LVM Character device interface).
 
-I don't expect to be able to boot directly from the CD and have my
-filesystems recognized.  I think I will need to build an install/boot
-disk with a replaced kernel that has support for reiserfs/lvm.
+Can someone clarify?
 
-The problem is, I don't know how to build a boot disk with a replaced
-kernel.  Can anyone help me with this?  I would appreciate any pointers
-to how-to, web page or ... that explains the required steps.
--- 
-
-Good Journey, longevity and prosperity to all
-
-Les Hazelton
+Thanks,
+- Kishore
