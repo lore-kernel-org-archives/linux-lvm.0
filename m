@@ -1,12 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] GPG key?
-Message-Id: <20020311163432.E13418@sistina.com>
-References: <20020308041535.5139E128CF@phaea.onthe.net.au>
-    <20020308093048.A519@sistina.com>
-    <200203081244.g28Ci7619308@mail016.syd.optusnet.com.au>
+From: James Hawtin <oolon@ankh.org>
+Subject: Re: [linux-lvm] Removing PV with disk errors from VG
+In-Reply-To: <20020311163211.D13418@sistina.com>
+Message-Id: <Pine.LNX.4.44.0203111559500.10883-100000@pzat.meep.org>
 MIME-Version: 1.0
-In-Reply-To: <200203081244.g28Ci7619308@mail016.syd.optusnet.com.au>;
-    from melange@n12turbo.com on Fri, Mar 08, 2002 at 11:45:17PM +1100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,53 +13,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar 11 09:37:02 2002
+Date: Mon Mar 11 10:26:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Mar 08, 2002 at 11:45:17PM +1100, Tarragon Allen wrote:
-> On Fri, 8 Mar 2002 19:30, Heinz J . Mauelshagen wrote:
-> > ftp://ftp.sistina.com/pub/LVM/1.0/gpg-signature which is in the same
-> > directory as the source archives points to AJ Lewis' key he used at
-> > http://people.sistina.com/~lewis/gpgkey
-> 
-> Damn!  That seems so obvious in retrospect.  :)
-> 
-> Would be nice if it was mentioned on the download page, and maybe in the 
-> documentation or FAQ.
-> 
 
-Will put it into the README.
+On Mon, 11 Mar 2002, Heinz J . Mauelshagen wrote:
 
+>
+> well that's a bug in 1.0.3 which will be fixed in 1.0.4.
+> If you wnat to try it at your own risk, check out LVM1 CVS and
+> try "pvmove -i" again.
+>
+> 1.0.4 will hopefully be released this week :)
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+>
 
-> Thanks.
-> 
-> t
-> -- 
-> GPG : http://n12turbo.com/tarragon/public.key
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Hmmm, I had a problem with pv move over the weekend as well.. I was
+replacing a hard disk for more space. and when I tried pvmove it worked
+for 2 small partitions, but for a larger data area it failed to move
+(because of a read error). Interestingly I had not got any error messages
+in dmsg about bad seeks.
 
--- 
+Not knowing about pvmove -i I feel back to my old system for using tar in
+a pipe to move data, not quick not pretty but it works ;-)
 
-Regards,
-Heinz    -- The LVM Guy --
+So fortunately it looks like it was a virgin sector.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+My question is.... This pvmove bug does it make "read error" problems in
+which  case the disk might be ok, or does it just not handle read errors
+gracefully?
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Yes I was using 1.0.3.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+The Disk was an 46G IBM (From the ICL (newer glass platter C**p)) so I am
+willing to beleive it was a disk problem (I have space on the shelf so
+it can sit with its friends) it which case I will not use the disk agian.
+
+I already lost 2 IBM disks from the older range and have another one
+which when I have the money I will be swapping out... Agh! I hate IBM. Yup
+i know I can RMA it, but whats the point if the new one might have
+problems too, my data is worth more than that.
+
+Does make for fun at computer fairs though,
+
+Me:   I need a new harddisk...
+Them: IBM make the best ones.
+(The specs are great and are dead fast)
+Me:   IBM disks live fast and die fast, what do you have in a non IBM
+      disk.
+
+PS anyone else know of other brands I should avoid buying?
+
+James
