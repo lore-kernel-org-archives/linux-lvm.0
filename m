@@ -1,12 +1,12 @@
-Return-Path: <lars.bensmann@epost.de>
-Date: Sun, 14 Jan 2001 07:54:35 +0100
-From: Lars Bensmann <lars.bensmann@epost.de>
-Subject: Re: [linux-lvm] Help: ERROR -154
-Message-ID: <20010114075435.A7184@epost.de>
-References: <3A5DBB0000001DCB@mail.epost.de>
+Return-Path: <jan@moria.gondor.com>
+Date: Sun, 14 Jan 2001 14:29:13 +0100
+From: Jan Niehusmann <list039@gondor.com>
+Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at www.sistina.com
+Message-ID: <20010114142913.A4966@gondor.com>
+References: <20010113011532.B21587@srv.t-online.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3A5DBB0000001DCB@mail.epost.de>; from lars.bensmann@epost.de on Sat, Jan 13, 2001 at 09:41:32PM +0100
+In-Reply-To: <20010113011532.B21587@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Sat, Jan 13, 2001 at 01:15:32AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,25 +22,9 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello,
+On Sat, Jan 13, 2001 at 01:15:32AM +0000, Heinz J. Mauelshagen wrote:
+> a tarball of the Linux Logical Volume Manager 0.9.1 beta1 is available now at
 
-On Sat, Jan 13, 2001 at 09:41:32PM +0100, lars.bensmann@epost.de wrote:
-> when running vgscan I get the following error message:
-> 
-> vgscan -- ERROR -154: can't get data of volume group "part" from physical
-> volume(s)
-> vgscan -- ERROR -154 creating "/etc/lvmtab" and "/etc/lvmtab.d"
+Is it intentional that lvm 0.9.1 builds liblvm-0.9.0 ?
 
-sorry for posting to the list and then finding the answer in the archives.
-
-I tried to run vgcfgrestore before posting to the list, but I didn't know
-that "/etc/lvmtab" does not exist was not a feature, but a bug. After
-touching it and mkdir'ing /etc/lvmtab.d/ it worked OK, although it gave an
-error on the first run about not being able to insert the VG into
-/etc/lvmtab. But that went away on the second run.
-
-Thanks for LVM which worked perfectly for me (until now :-),
-Lars
-
--- 
-I consume, therefore I am
+Jan
