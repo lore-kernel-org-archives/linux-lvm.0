@@ -1,11 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104161759.f3GHxlID013967@webber.adilger.int>
-Subject: Re: [linux-lvm] What is the the maximum logical volume size?
-In-Reply-To: <200104161649.f3GGnOu02530@lvadp.fc.hp.com> "from Andrew Patterson
- at Apr 16, 2001 10:49:24 am"
-Date: Mon, 16 Apr 2001 11:59:47 -0600 (MDT)
+Return-Path: <stefan.helfert@mpi-hd.mpg.de>
+Message-ID: <3ADB3B2A.B28AC133@mpi-hd.mpg.de>
+Date: Mon, 16 Apr 2001 20:34:18 +0200
+From: Stefan Helfert <stefan.helfert@mpi-hd.mpg.de>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] disk add means trouble: vgscan -- invalid i/o protocol version 5
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,25 +17,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: andrew@lvadp.fc.hp.com
 
-Andrew writes:
-> > It may be 1 TB or it may be 2TB.  Depends on whether all of the code
-> > in use use uses unsigned longs for block numbers, or if some use signed
-> > longs.
-> > 
-> > Does it really matter?  This is PER LV, 
-> 
-> What does "PER" mean?
+Dear list,
 
-My Websters defines "per" as "for each [ 50 cents _per_ yard ]".  That
-means, you can have up to 1TB (or maybe 2TB) for _each_ LV.  This is NOT
-a 1TB limit for the total size of all the LVs in a single VG.
+I was running a stable configuration until yesterday:
+several SCSI disks with standard partitions, two IDE disks, only one IDE
+disk (Maxtor 40Gig /dev/hda) holding a LVM partition. LVM version that
+of 
+SuSE 7.0, that was lvm-0.8 Build 111 from SuSE.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+When I added a 60 GB Maxtor IDE as primary slave, I found that vgscan
+only
+throws an "invalid i/o protocol" error. Upgrading to a SuSE 7.0 update
+lvm did not help. Upgrading to the SuSE 7.1 lvm-0.9.1_beta-3 did not
+help
+except detailing the error "... protocol version 5".
+
+When detaching the 60 GB disk, everything works again. (The 60 Gig disk 
+is empty, it did not hold a partition table -- and it does not work with
+a
+partition table and some partition either.)
+
+Any ideas ? (The 40Gig disk is in dire need of replacement, and this
+configuration should be used over the weekend to move the data).
+
+Let me stress this:
+the configuration had been working flawlessly before, and I checked that
+/dev/lvm is around.
+
+
+Stefan
+
+bash-2.04# vgscan -d                                                   
+<1> lvm_get_iop_version -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_get_iop_version -- AFTER ioctl ret: 0 
+<1> lvm_get_iop_version -- LEAVING with ret: 5   
+vgscan -- invalid i/o protocol version 5
