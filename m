@@ -1,10 +1,10 @@
-From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
 Subject: Re: [linux-lvm] EXT3 vs Reiserfs
-Message-ID: <20031208150053.GA15642@localhost>
-References: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+From: Markus Schiltknecht <markus@bluegap.ch>
 In-Reply-To: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com>
+References: <CEADF0D83077F7458B763904E47AA709287BA7@exchange.neokimia.com>
+Message-Id: <1070851888.1552.14.camel@avalon>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  8 09:02:02 2003
+Date: Mon Dec  8 09:09:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Monday, 08 December 2003, at 09:39:38 -0500,
-Yanick Quirion wrote:
+Hi Yanick
 
-> Could you please tell what is the best filesystem for linux between ext3 and reiserfs?
-> 
-It is hardly to find something that is "best" by everyone standards of
-"best". Maybe ext3 is better suited for your particular setup, or maybe
-is reiserfs what fits best to your configuration. Just now the features
-of each filesystem, do some "real-world" usage or test on both, and
-decide for yourself.
+On Mon, 2003-12-08 at 15:39, Yanick Quirion wrote:
+> I'm just asking for your personal opinion and knowledge with them.
 
-> I know that ext3 can handle ACLs and not online fs extend, and reiserfs do not seems to support ACLs (I found some patches for kernel 2.4.21, but there are errors when I apply them to the kernel sources), but can be extend while it's online.
-> 
-You will have to take into account those existing and missing features
-of both filesystems and see if you absolutely need one of them that is
-not available in one of the two. Maybe it would be nice to have support
-for quotas and ACL on reiserfs, but if you don't need these features,
-why bother ?. Stick with what is best for _your_ needs.
+I'm using ReiserFS on my LVM volume, having already used the 'extend
+online' function. I don't really need ACLs currently.
 
-Greetings.
+Concerning stability: I've once had a crash due to a power loss. Then I
+must have done something wrong with LVM. Anyway, I've lost many files,
+but don't think that was ReiserFS's fault.
 
--- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Sid (Linux 2.6.0-test10-mm1)
+I'm also using ReiserFS on a (relatively) heavily used webserver (2x AMD
+2000+, 120GB HDD, ~100 GB Traffic / Month) and have never had problems
+(there w/o LVM, pure ReiserFS partitions).
+
+
+Markus
