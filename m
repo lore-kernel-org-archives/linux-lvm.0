@@ -1,11 +1,10 @@
-Date: Tue, 9 Oct 2001 16:13:25 +0100
-Subject: Re: [linux-lvm] Too many problems
-Message-ID: <20011009161325.D745@btconnect.com>
-References: <002901c150b3$9d330860$836788cf@industry>
-Mime-Version: 1.0
+Date: Tue, 09 Oct 2001 11:32:47 -0400
+From: Chris Mason <mason@suse.com>
+Message-ID: <387040000.1002641567@tiny>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <002901c150b3$9d330860$836788cf@industry>; from jlixfeld@andromedas.com on Tue, Oct 09, 2001 at 07:14:50AM -0400
-From: Joe Thornber <thornber@btconnect.com>
+Subject: [linux-lvm] rc4 can't take snaphots of 0.9.1_beta7 lvs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,20 +17,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Oct 09, 2001 at 07:14:50AM -0400, Jason A. Lixfeld wrote:
-> I just need to know what a stable release of LVM is for RedHat and what
-> compiler to use.  The stock RedHat 7.1 compiler is buggy, from what I
-> understand here.  I've had so many problems in the last week and I'm
-> getting really frustrated with all of this :(  I'm using kernel 2.4.10
-> but am more than willing go to down a couple revs for something stable.
-> 
-> Please let me know what's a stable LVM/Kernel/Compiler setup so I can
-> keep my systems up.
+Hello everyone,
 
-Get the latest CVS code - this has optimisation turned off so you
-should be ok with redhat.
+Looks like the compatibility code in rc4 doesn't properly snapshot beta7
+logical volumes (2.4.10 kernel).
 
-- Joe
+To reproduce, I did this:
+
+Install 0.9.1 beta7 tools
+
+pvcreate /dev/sdb2
+vgcreate big /dev/sdb2
+lvcreate --size 6G -n lv1 big
+vgchange -a n
+rmmod lvm-mod
+
+Install rc4 tools
+vgscan
+vchange -a y
+mkfs /dev/big/lv1
+mount /dev/big/lv1 /data
+lvcreate --size 1G -n snap --snapshot /dev/big/lv1
+(trigger COW to snapshot)
+
+And I get these messages:
+
+lvm -- _pv_get_number failed for rdev = 0
+lvm -- giving up to snapshot /dev/big/lv1 on /dev/big/snap: couldn't
+prepare kiovec blocks (start probably isn't block aligned).
+
+Now that I can reliably reproduce on stock kernels/tools, I'm trying to
+trace it further.  If anyone has ideas I'd love to hear them.
+
+-chris
