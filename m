@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 8 May 2001 09:49:48 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Removing a disk from the system
-Message-ID: <20010508094948.D31443@sistina.com>
-References: <20010430160732.I19810@sistina.com> <20010507140256.B1469@pclab.ifg.uni-kiel.de>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 8 May 2001 10:10:23 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] typo in CVS: LVM/kernel/lvm.c
+Message-ID: <20010508101023.F508@tykepenguin.com>
+References: <Pine.LNX.4.32.0105052321020.24489-100000@falka.mfa.kfki.hu> <20010506101133.A642@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <20010507140256.B1469@pclab.ifg.uni-kiel.de>; from torsten@pclab.ifg.uni-kiel.de on Mon, May 07, 2001 at 02:02:56PM +0200
+Content-Disposition: inline
+In-Reply-To: <20010506101133.A642@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Sun, May 06, 2001 at 10:11:33AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,60 +22,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, May 07, 2001 at 02:02:56PM +0200, Torsten Landschoff wrote:
-> On Mon, Apr 30, 2001 at 04:07:32PM +0000, Heinz J. Mauelshagen wrote:
-> > > Seems like I should have used vgexport/import in the first time.
-> > 
-> > Actually not.
-> > vgscan *should* have cut it.
+On Sun, May 06, 2001 at 10:11:33AM +0100, Joe Thornber wrote:
 > 
-> Thanks, so I did not do anything wrong. Of course given that the data is
-> still there it seems I was at least careful enough ;)
+> lvm.c revision 1.12
+> -------------------
 > 
-> > It would be rather helpful, if you could provide the VGDA of the problematic
-> > configuration and the vgscan output with option "-d" in order to investigate
-> > searching for any bugs better.
-> > 
-> > In case you are able to reproduce the situation, where vgscan just finds
-> > one but not both of the VGs, please send that data to me.
-> 
-> Of course that system is again running production and I guess to reproduce
-> the problem I had to switch disks once again. I guess the real problem
-> was that /dev/hdb1 became /dev/hda1 after removing the old disk. 
+> Patrick, you correctly fix most of the remaining mistakes apart from
+> the version number.  But what are all the other code changes that have
+> slipped in ?  They aren't mentioned in the checkin message, are they
+> meant to be there ?
 
-Configuration changes in io pathes is a major thing vgscan addresses.
-I'm very much interested in every bug in this area.
+Ah, looked at this properly now I'm "at work" again. This is the fix for the
+reading of userspace pointers reported by the S/390 guy from IBM. It's not the
+patch he posted but IMHO a slightly neater one.
 
-> 
-> I'll try to reproduce the problem at my home machine but I can't promise 
-> anything.
+To be quite honest it wasn't meant to go in yet (I asked on the list for him to
+test it but have had no reply), that was an oversight. But now it is in it's
+probably not worth removing unless we hear from anyone that it still doesn't
+work on S/390. It certainly works fine on my intel (well, it would really) 
+and SPARC machines.
 
-Ok.
-Thank you.
-
-> 
-> Greetings
-> 
-> 	Torsten
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+patrick
