@@ -1,7 +1,6 @@
-From: bjackson@gte.net
-Mime-Version: 1.0
-Message-Id: <E19lE5e-0001up-00@hermes.sistina.com>
-Subject: [linux-lvm] Fwd: Re: The place that saved me
+From: =?GB2312?B?z+O427mry77XorLhzfg=?= <info@register828.com>
+Message-Id: <E19lGFo-0004l6-00@hermes.sistina.com>
+Subject: [linux-lvm] =?GB2312?B?16Ky4bPJwaLP47jbuavLvqGizdjVubqjzeLStc7x?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,26 +11,66 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug  8 15:45:02 2003
+Date: Fri Aug  8 18:03:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 To: linux-lvm@sistina.com
 
-holy pork bun! - you have to see this crazy site, I saved $3000...
+ע�������۹�˾����չ����ҵ��
 
-not only that but you just owe it to yourself and your family,
+����!
 
-With the money you save, put it towards a new car!
+��۹�˾ע����
+רҵ�������ؿͻ������ע��Ǽ����޹�˾��
+�����ṩ�������׷���ʹ���ؿͻ���������
+��������ң�ط�ʽ���Ƽ�����һ�������ע
+��Ǽǵ����޹�˾��������չ����ҵ��
 
->-----------
+��������ֻ��۱�5200Ԫ / �����5600Ԫ
 
-http://r.aol.com/cgi/redir-complex?url=http://bestmortgage@onlinesaleew.com/index.asp?RefID=198478
+ע�������۹�˾�ĺô���
 
->-----------
+��Ӫ��Χ��������
+ע���ʽ���������
+��˾��������ѡ��
+�������л��ڡ������Ϸ���������
+ͨ���绰���С��������з���ң����������ʻ�
+˰�ʵͣ�ֻ��һ�걨˰һ�Σ��������Ӫҵ˰����ֵ˰��
+��������ɽ����ڡ���֣�������������֤
+����۹�˾����ע���̱ꡢר���������������硢������š������ڿ��ţ���������
 
+��רҵ��ʦ����
+�����򵥡����
+����ʱ��ֻ��12�������죨�������ʵ�ʱ�䣩
 
+���׷���ɰ�����   
+�ṩ��˾����
+�ṩ��˾ע���ַ
+�ṩ����������
+�ṩ�����绰��
+�������п���
+��������
+�����ʰ����ļ�
+��������ѯ
 
+������ֻ���ṩ�ⶨ��˾���ơ��ɶ�/��������������/����֤����
 
+��������ʣ�www.register828.com����۹�˾ע����
 
-not interested?  http://r.aol.com/cgi/redir-complex?url=http://be2e@onlinesaleew.com/auto/index.htm
+��ϵ���� :
+��۹�˾ע����
+��ַ:  �����и�����������·2�����Ŵ���3604��
+�绰:  (0755) 82092416 ����
+����:  (0755) 82092412				
+�ֻ�:��135 10362845	
+��ϵ��: ������
+����:  office@register828.com  mailto:office@register828.com 
+��ַ:��www.register828.com
+
+������������������
+��!
+  ������������������������
+��۹�˾ע����
+www.register828.com
