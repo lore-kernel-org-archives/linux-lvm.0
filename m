@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200101241801.f0OI1YH16207@webber.adilger.net>
-Subject: Re: [linux-lvm] Basic Questions on LVM
-In-Reply-To: <20010124104400.67358.qmail@web12008.mail.yahoo.com>
- "from sherlock holmes at Jan 24, 2001 02:44:00 am"
-Date: Wed, 24 Jan 2001 11:01:34 -0700 (MST)
-MIME-Version: 1.0
+Return-Path: <joe@66bassett.freeserve.co.uk>
+Date: Wed, 24 Jan 2001 18:13:24 +0000
+From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] Debugging help.
+Message-ID: <20010124181324.A7233@66bassett.freeserve.co.uk>
+References: <Pine.LNX.4.30.0101240945020.9779-100000@beefcake.hdqt.valinux.com>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.30.0101240945020.9779-100000@beefcake.hdqt.valinux.com>; from jweber@valinux.com on Wed, Jan 24, 2001 at 09:58:23AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,49 +21,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Sherlock writes:
-> 1.During initialisation y is it LVM is registered both
-> as a block and char device where as according to me it
-> is supposed to be a block device driver and when one
-> does the pvcreate,vgcreate..etc it calls the ioctls of
-> the char device of LVM.
+On Wed, Jan 24, 2001 at 09:58:23AM -0800, Jay Weber wrote:
+> Hi,
+> 
+> I'm focusing on trying to figure out why I get system hangs in LVM
+> when a snapshot is in use (or maybe it only triggers when it runs out of
+> space) while there is heavy IO (although I don't think 8 consecutive cp's
+> constitue heavy IO).
+> 
+> Any suggestions on what to turn on debugging wise?  I'm currently
+> utilizing SysRq and kdb v1.5 on stock 2.2.18 with LVM patches applied from
+> 0.9.1beta2 using the PATCHES/README instructions.  All I manage to get
+> after the system hangs, using SysRq's PrintPC or dropping into kdb
+> (manually) and doing a backtrace, is reference to cpu_idle and
+> init_task_union.  This leads me to believe the system is just sitting in
+> an indefinate idle loop state?
+> 
+> I've also initially tried enabling the debug code in lvm-snap.c but it's
+> not much help since the box hangs and the info that may be output from it
+> is stuck in buffer and SysRq Sync don't manage to drop it to disk for me
+> after hanging.
+> 
+> Any clues, suggestions, hints, pointers?
 
-The LVM char device is used to control the kernel LVM.  This is needed
-because there may not be any block devices (LVs) yet.  There is 1 char
-device per VG.
+I use user mode linux, if I get a hang I just hit control-C and look
+what the kernels doing in gdb.
 
-> 2.what is exactly the control flow when and read/write
-> request is given to a file residing on the LVM
-> partition...(ie where and how exactly the mapping
-> tables exist..?)
-
-The mapping tables are read from disk by the user tools, and sent to the
-kernel when a VG is activated.  The mapping tables are kept in RAM and
-are never changed by the kernel.  The block remapping is done inside
-ll_rw_block(), and is just a small amount of math.
-
-> 3.what is the importance of VGDA and vgscan?
-
-The VGDA is the Volume Group Descriptor Area, and it is where the above
-mapping tables are stored on disk, along with other PV, VG, LV info.
-The vgscan command reads the VGDA from the disk.
-
-> 4.during boot up time what are checks/modification
-> made by the kernel with respect to the LVM/logical
-> volumes?
-
-Almost nothing is done by the kernel, except the block remapping.  Most
-of the work is done by the user tools.
-
-> 5.moreover to what extent is KIOBUF supported on linux
-> 2.4. Can someone give me the workaround to check for
-> KIOBUF working..
-
-The KIOBUF code is only used for LVM snapshots.  The normal LVM block
-I/O code does not use KIOBUFs.
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+- Joe
