@@ -1,60 +1,84 @@
-From: Jesse Sipprell <jss@evcom.net>
-Date: Sat, 11 Nov 2000 08:46:02 -0500
-Subject: [linux-lvm] LVM in shared parallel SCSI environment
-Message-ID: <20001111084602.B26544@kevorkian.evcom.net>
+Date: Sat, 11 Nov 2000 11:59:43 -0600
+From: Chewie <chewie@wookimus.net>
+Subject: Re: [linux-lvm] 2.2.17 Kernel patch + 0.8 user tools
+Message-ID: <20001111115943.A7541@wookimus.net>
+References: <C1256993.003852DD.00@icosdmz.icos.be>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
 Content-Disposition: inline
+In-Reply-To: <C1256993.003852DD.00@icosdmz.icos.be>; from dirk.derycke@icos.be on Fri, Nov 10, 2000 at 11:18:22AM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Hi all,
 
-I'm currently in the process of planning a large(ish)-scale Linux deployment.
-As part of the planning process, I am considering using LVM in a shared SCSI
-environment; potentially with GFS as the file system in the future, but
-starting with ext2.
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To that end I have a test "cluster" set up.  It consists of:
+On Fri, Nov 10, 2000 at 11:18:22AM +0100, dirk.derycke@icos.be wrote:
+> where can I find a 2.2.17 kernel patch (more specific a stock
+> kernel) for LVM to use with the 0.8 user tools (I use the latest
+> version from Andread Dilger) ???
 
-One Winchester Systems OpenRAID chassis with 100GB total storage, running in
-RAID5.  The OpenRAID is a SCSI-to-SCSI solution, with four host SCSI channels.
-The hardware can be configured so that the channels can share physical storage
-space.
+Did you read the README file at his FTP site?  If you had, you would
+know that you have at least two patches you need to apply.  You're
+lucky that I'm writing up the LVM Cheat Sheet as we speak. ;-)  I had
+to research this stuff.  OK, it's not that difficult to find this
+info, but it's not available on the LVM site for all to read.  This is
+what you must do:
 
-Four test Linux boxes, each with a small (9GB) boot/root/swap/emergency SCSI
-disk.  Obviously, the four boxes are connected to the four host channels on
-the OpenRAID.
+    Download the following files and patch the stock 2.2.17 kernel in
+    the order that you see them.
 
-The OpenRAID is configured such that all available disk space is visable
-identically to the servers.  Obviously, because the initial test uses ext2
-instead of a filesystem that supports shared media (i.e. GFS), we won't be
-actually sharing filesystems between boxes.  However, LVM seemed like a pretty
-good potential in this situation because it allows for relatively dynamic
-allocation of storage from a large shared "pool."  The catch, as with all
-shared SCSI solutions, is that each participating host must maintain a
-consistant view of LVM metadata.
+    1.  Ingo Molnar's RAID Patch
+        http://people.redhat.com/mingo/raid-patches/raid-2.2.17-A0
 
-So far, it's been fairly successful.  Once the vg and lvs are created, and each
-host has meta in core, all is well.  The only problem I am seeing is when an
-lv (for example) is extended or reduced, the other systems are unaware of the
-change in LVM metadata.  This makes sense of course, because each host is
-operating with it's own "notion" of the LVM in core.  The solution is rather
-awkward; one has to unmount all LVM filesystems on each host, vgchange the vg
-to inactive, vgchange it back to active and then remount the filesystems.
+    2.  Stephen Tweedie's RAWIO Patch
+        ftp://ftp.uk.linux.org/pub/linux/sct/fs/raw-io/raw-2.2.17.diff
 
-My question is this:  Is there any way to "refresh" the in-core metadata from
-disk?  If not, does anyone think this might be a good idea for the future?
+    3.  Andreas Dilger's LVM Patch
+        ftp://ftp.stelias.com/pub/adilger/lvm-0.8final-2.2.16TL.patch
 
-Regards,
+I don't believe there's anything distribution specific to Andrea's
+LVM kernel patch.  Download and compile the LVM tools from Andrea's
+SRPM or tarball.  Tom Lees also has a Debian package of the slightly
+older 0.8final tools.  You may want to download the source tarball
+from Andreas, then apply the Debian patch to build the *.deb.  Note:
+Tom's diff has all of the changes to use ext2resize (GPL) with the
+e2fsadm tool instead of the resize2fs (commercial) tool.  Otherwise,
+you have to edit these by hand.
 
--- 
-Jesse Sipprell
-Technical Operations Director
-Evolution Communications, Inc.
-800.496.4736
+> Andreas Dilger has a patch for Turbo Linux 2.2.16 but it doesn't apply
+> nicely to a 2.2.17 stock kernel (lots of rejects)
 
-* Finger jss@evcom.net for my PGP Public Key *
+Actually, I didn't get any rejects.  Since the patches are context
+based, they do apply cleanly, if you do them in this order.  You will
+see some messages about offsets, but that's it.
+
+I'm compiling my test kernel as we speak, and I've got a full 9.1 GB
+HD to play with. ;-)  In three hours, I'll have to make like I know
+what I'm talking about, so I figured that I should successfully play
+with the tools I'm supposed to be talking about (yeah, right).
+
+--=20
+Chad "^chewie, gunnarr" Walstrom <chewie@wookimus.net>
+             http://www.wookimus.net/
+
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6DYkPDMcLGCBsWv0RArcMAJ0XCJaIW+PCgugBFJmsf8JJJ8/rqQCgjq/a
+x6lHX0nak2//kh2EDDGISr4=
+=Tf2D
+-----END PGP SIGNATURE-----
+
+--cNdxnHkX5QqsyA0e--
