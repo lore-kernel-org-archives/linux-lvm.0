@@ -1,10 +1,10 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----_=_NextPart_001_01C3B75A.00C9AA37"
-Subject: SV: [linux-lvm] Disk damaged
-Message-ID: <82706A2FAC4D08468A1652B4B7DD0C44CB0A41@mx1.bouvet.no>
-From: "Kjetil H. Paulsen" <kjetil.paulsen@bouvet.no>
+Subject: Re: [linux-lvm] LVM2: Problems with "lvextend" on device with mounted filesystem
+Message-ID: <13009-56014@sneakemail.com>
+References: <3FC757CA.2030205@daemons-point.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3FC757CA.2030205@daemons-point.com>
+From: "Wolfgang Weisselberg" <uzx87lvfmukwc001@sneakemail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,140 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 07:57:02 2003
+Date: Mon Dec  1 07:57:04 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Uli Heller wrote 90 lines:
 
-------_=_NextPart_001_01C3B75A.00C9AA37
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+[resorted, cut, mangled ...]
+> 1) Create a new logical volume:
+> 2) Display this new LV:
+> 2.5)     Create and mount a file system on the LV:
+> 3) Try to write right behind the end of the LV:
+> ~   --> This error message is OK
+> 4) Extend the LV:
+> 5) Repeat step 3
+[which generates an error]
 
-not doable to find the same disk, however, it doesn't seem like there =
-was any data on the damaged disk... I have a 240gb disk cluster and only =
-100gb was used, the damaged disk  is the last one and is a 60gb disk...
+> 3,4,5)   Like above **BUT** step 5 now produces the same
+> ~   error message as step 3! You have to "umount /mnt"
+> ~   in order to be able to access the enlarged portion
+> ~   of the LV.
 
-	-----Opprinnelig melding-----=20
-	Fra: Spam [mailto:spam@tnonline.net]=20
-	Sendt: su 30.11.2003 13:56=20
-	Til: Kjetil H. Paulsen=20
-	Kopi:=20
-	Emne: Re: [linux-lvm] Disk damaged
-=09
-=09
+You never told reiserfs that it's partition had increased.  AFAIK
+you can either remount it with the correct parameters or use some
+tool to alert it.
 
-
-	  The  first  thing  you should do is to find another disk of the same
-	  size  and  model  and  then  try dd_rescue to move whatever readable
-	  information you can.
-=09
-=09
-=09
-	> Hi
-=09
-	> It seems like one of my disks as gone down, fortunately the last
-	> disk in the volume (/dev/hdg). Can I get about this by doing:
-=09
-	> vgreduce vol_grp /dev/hdg
-	> umount /stuff
-	> e2fsadm -L-60G /dev/vol_grp/big
-=09
-	> _______________________________________________
-	> linux-lvm mailing list
-	> linux-lvm@sistina.com
-	> http://lists.sistina.com/mailman/listinfo/linux-lvm
-	> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-=09
-=09
-=09
-=09
-=09
-	_______________________________________________
-	linux-lvm mailing list
-	linux-lvm@sistina.com
-	http://lists.sistina.com/mailman/listinfo/linux-lvm
-	read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-=09
-
-
-------_=_NextPart_001_01C3B75A.00C9AA37
-Content-Type: application/ms-tnef;
-	name="winmail.dat"
-Content-Transfer-Encoding: base64
-
-eJ8+IjEPAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEIgAcAGAAAAElQTS5NaWNy
-b3NvZnQgTWFpbC5Ob3RlADEIAQ2ABAACAAAAAgACAAEEgAEAHQAAAFNWOiBbbGludXgtbHZtXSBE
-aXNrIGRhbWFnZWQA9QkBBYADAA4AAADTBwsAHgAQADQAMAAAAHcBASCAAwAOAAAA0wcLAB4AEAA0
-ADAAAAB3AQEJgAEAIQAAADY3NTZDODRCMzQzRUQ1NDFCQkU1NTdBMkY1RTk1NTg3ADUHAQOQBgAE
-DwAANgAAAAMANgAAAAAAQAA5ADeqyQBat8MBHgA9AAEAAAAFAAAAU1Y6IAAAAAACAUcAAQAAAC4A
-AABjPXVzO2E9IDtwPUJvdXZldCBBUztsPU1YMS0wMzExMzAxNTUyNDhaLTg5NDMAAAAeAEkAAQAA
-AB0AAABSZTogW2xpbnV4LWx2bV0gRGlzayBkYW1hZ2VkAAAAAEAATgAAHAdvQbfDAR4AWgABAAAA
-BQAAAFNwYW0AAAAAAgFbAAEAAAA0AAAAAAAAAIErH6S+oxAZnW4A3QEPVAIAAAAAU3BhbQBTTVRQ
-AHNwYW1AdG5vbmxpbmUubmV0AAIBXAABAAAAFwAAAFNNVFA6U1BBTUBUTk9OTElORS5ORVQAAB4A
-XQABAAAABQAAAFNwYW0AAAAAAgFeAAEAAAA0AAAAAAAAAIErH6S+oxAZnW4A3QEPVAIAAAAAU3Bh
-bQBTTVRQAHNwYW1AdG5vbmxpbmUubmV0AAIBXwABAAAAFwAAAFNNVFA6U1BBTUBUTk9OTElORS5O
-RVQAAB4AZgABAAAABQAAAFNNVFAAAAAAHgBnAAEAAAASAAAAc3BhbUB0bm9ubGluZS5uZXQAAAAe
-AGgAAQAAAAUAAABTTVRQAAAAAB4AaQABAAAAEgAAAHNwYW1AdG5vbmxpbmUubmV0AAAAHgBwAAEA
-AAAZAAAAW2xpbnV4LWx2bV0gRGlzayBkYW1hZ2VkAAAAAAIBcQABAAAAGwAAAAHDt0GaDqSxgrz2
-8E+ktJa0sshvuCcABe5FwQAeAHQAAQAAABIAAABLamV0aWwgSC4gUGF1bHNlbgAAAB4AGgwBAAAA
-EgAAAEtqZXRpbCBILiBQYXVsc2VuAAAAHgAdDgEAAAAZAAAAW2xpbnV4LWx2bV0gRGlzayBkYW1h
-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
-InjhuAUi0xxpf+ENy6Jmf/LbEHtIWVCARVJMSU5LIHh/53mPep97oH1908Hh4NsAwcwQXGNmMVzh
-0NQpf35ff2+Af8YPz2rGn7LaQf9yIHDvcf9zD3QfdS92P2f/R1zZATIvU0xWTRnwT/BXLVRPM+Ai
-0HaPd58lg4N04eBwLgpQZy/rk1GTkC+TES2W9Hu/fM//fd2Wb5d3gZ+Cr5rvl1iH3/+Hr40Pic+K
-34vvoo+k76X//6cPqB+pL6o/q0+sX61vrn//r4+wn7Gvsrdfb7dPX6+zj/+0n7KoZhiQD5EfJjVm
-xWm//7oPux9vj3CfwN/B741PlO//g2+Ef4WPl/+ZD33fyf/LD/+BD50vgy/QD9Efhl+hT8bP/6Nv
-xJ/Fr8a5koO8373vMjT/kt/HX8hvno+XH8zPzd+aT//k/5xv00/o75+f2O/uv9nPT9rf2+/c//D/
-MTXzcS/wRk9OVPPJ70/mwONiX/CI9Mjfc/TP3uY38hJQBfJuMOMRL0JMT0PAS1FVT1RF9v/7H55n
-79HfnwCv3xM1OP2yeE9EWfJt8hACLwSxN6HyIUhUTUzzwH0G4AAAAB4ANRABAAAANwAAADw4Mjcw
-NkEyRkFDNEQwODQ2OEExNjUyQjRCN0REMEM0NENCMEE0MUBteDEuYm91dmV0Lm5vPgAAHgBHEAEA
-AAAPAAAAbWVzc2FnZS9yZmM4MjIAAAsA8hABAAAAHwDzEAEAAABGAAAAUwBWACUAMwBBACAAWwBs
-AGkAbgB1AHgALQBsAHYAbQBdACAARABpAHMAawAgAGQAYQBtAGEAZwBlAGQALgBFAE0ATAAAAAAA
-CwD2EAAAAABAAAcwgr4hU1m3wwFAAAgwgzPTAFq3wwEDAN4/r28AAAMA8T8UCAAAHgD4PwEAAAAS
-AAAAS2pldGlsIEguIFBhdWxzZW4AAAACAfk/AQAAAGcAAAAAAAAA3KdAyMBCEBq0uQgAKy/hggEA
-AAAAAAAAL089Qk9VVkVUIEFTL09VPUZJUlNUIEFETUlOSVNUUkFUSVZFIEdST1VQL0NOPVJFQ0lQ
-SUVOVFMvQ049S0pFVElMLlBBVUxTRU4AAB4A+j8BAAAAFQAAAFN5c3RlbSBBZG1pbmlzdHJhdG9y
-AAAAAAIB+z8BAAAAHgAAAAAAAADcp0DIwEIQGrS5CAArL+GCAQAAAAAAAAAuAAAAAwD9P+QEAAAD
-ABlAAAAAAAMAGkAAAAAAAwAdQAAAAAADAB5AAAAAAB4AMEABAAAADwAAAEtKRVRJTC5QQVVMU0VO
-AAAeADFAAQAAAA8AAABLSkVUSUwuUEFVTFNFTgAAHgAyQAEAAAASAAAAc3BhbUB0bm9ubGluZS5u
-ZXQAAAAeADNAAQAAABIAAABzcGFtQHRub25saW5lLm5ldAAAAB4AOEABAAAADwAAAEtKRVRJTC5Q
-QVVMU0VOAAAeADlAAQAAAAIAAAAuAAAACwApAAAAAAALACMAAAAAAAMABhCBzQY8AwAHEFkDAAAD
-ABAQAAAAAAMAERAAAAAAHgAIEAEAAABlAAAATk9URE9BQkxFVE9GSU5EVEhFU0FNRURJU0ssSE9X
-RVZFUixJVERPRVNOVFNFRU1MSUtFVEhFUkVXQVNBTllEQVRBT05USEVEQU1BR0VERElTS0lIQVZF
-QTI0MEdCRElTS0NMVQAAAAACAX8AAQAAADcAAAA8ODI3MDZBMkZBQzREMDg0NjhBMTY1MkI0QjdE
-RDBDNDRDQjBBNDFAbXgxLmJvdXZldC5ubz4AAI/5
-
-------_=_NextPart_001_01C3B75A.00C9AA37--
+-Wolfgang
