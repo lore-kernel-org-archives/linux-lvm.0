@@ -1,18 +1,26 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i82AxE311936
-	for <linux-lvm@redhat.com>; Thu, 2 Sep 2004 06:59:14 -0400
-From: Richard Mortimer <richm@oldelvet.org.uk>
-In-Reply-To: <20040901183737.7bf17a39.davem@davemloft.net>
-References: <1093911340.2116.55.camel@duncow>
-	<20040830174015.10edb69b.davem@davemloft.net>
-	<1093989609.2124.139.camel@duncow>
-	<20040901183737.7bf17a39.davem@davemloft.net>
-Message-Id: <1094122692.2117.1704.camel@duncow>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i82DSC315795
+	for <linux-lvm@redhat.com>; Thu, 2 Sep 2004 09:28:12 -0400
+Received: from main.gmane.org (main.gmane.org [80.91.224.249])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i82DS2S0008274
+	for <linux-lvm@redhat.com>; Thu, 2 Sep 2004 09:28:11 -0400
+Received: from list by main.gmane.org with local (Exim 3.35 #1 (Debian))
+	id 1C2rdC-0007Ji-00
+	for <linux-lvm@redhat.com>; Thu, 02 Sep 2004 15:28:02 +0200
+Received: from adsl-214-28-210.asm.bellsouth.net ([68.214.28.210])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 02 Sep 2004 15:28:01 +0200
+Received: from ecashin by adsl-214-28-210.asm.bellsouth.net with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 02 Sep 2004 15:28:01 +0200
+From: Ed L Cashin <ecashin@coraid.com>
+Date: Thu, 02 Sep 2004 09:27:58 -0400
+Message-ID: <874qmghkbl.fsf@coraid.com>
+References: <87k6vdhf0p.fsf@coraid.com>
 Mime-Version: 1.0
-Date: Thu, 02 Sep 2004 11:58:12 +0100
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: [PATCH] Re: lvm problems on sparc64 - Trying to
-	vfree() nonexistent vm area
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] Re: LVM2 configure options for CLVM with GFS
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,57 +32,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org, debian-sparc@lists.debian.org, linux-lvm@sistina.com, richm@oldelvet.org.uk, marcelo.tosatti@cyclades.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On Thu, 2004-09-02 at 02:37, David S. Miller wrote:
-> On Tue, 31 Aug 2004 23:00:10 +0100
-> Richard Mortimer <richm@oldelvet.org.uk> wrote:
-> 
-> > How do they look
-> 
-> Please resend your patch without all the line breaks
-> created by your email client.  It looks fine otherwise
-> :)
+Ed L Cashin <ecashin@coraid.com> writes:
 
-Bah. Clients are just getting too clever these days. 
+...
+>   --with-pool=TYPE        GFS pool read-only support: internal/shared/none
+>                           TYPE=internal
+>   --with-cluster=TYPE     Cluster LVM locking support: internal/shared/none
+>                           TYPE=internal
+>   --with-snapshots=TYPE   Snapshot support: internal/shared/none
+>                           TYPE=internal
+>   --with-mirrors=TYPE     Mirror support: internal/shared/none
+>                           TYPE=internal
 
-Hopefully this should be ok.
+Alasdair pointed out to me in the IRC channel that these options do
+not configure LVM's ability to share state with other nodes in the
+cluster.  Rather, they simply choose how to link in the components of
+the LVM binaries -- shared or static.
 
-Richard
-
-
---- arch/sparc64/kernel/ioctl32.c.orig	2004-08-29 00:12:09.000000000 +0100
-+++ arch/sparc64/kernel/ioctl32.c	2004-08-31 22:06:23.000000000 +0100
-@@ -2949,7 +2949,7 @@
- 	case LV_REMOVE:
- 	case LV_RENAME:
- 	case LV_STATUS_BYNAME:
--	        err = copy_from_user(&u.pv_status, arg, sizeof(u.pv_status.pv_name));
-+	        err = copy_from_user(&u.lv_req, arg, sizeof(u.lv_req.lv_name));
- 		if (err)
- 			return -EFAULT;
- 		if (cmd != LV_REMOVE) {
-@@ -2992,7 +2992,7 @@
- 
- 	case PV_CHANGE:
- 	case PV_STATUS:
--		err = copy_from_user(&u.pv_status, arg, sizeof(u.lv_req.lv_name));
-+		err = copy_from_user(&u.pv_status, arg, sizeof(u.pv_status.pv_name));
- 		if (err)
- 			return -EFAULT;
- 		err = __get_user(ptr, &((pv_status_req32_t *)arg)->pv);
-@@ -3064,7 +3064,7 @@
- 	        if (u.lv_bydev.lv) {
- 			if (!err)
- 				err = copy_lv_t(ptr, u.lv_bydev.lv);
--			put_lv_t(u.lv_byindex.lv);
-+			put_lv_t(u.lv_bydev.lv);
- 	        }
- 	        break;
- 
-
-
+So it doesn't matter, and the example in GFS' usage.txt should work
+fine. 
 
 -- 
-richm@oldelvet.org.uk
+  Ed L Cashin <ecashin@coraid.com>
