@@ -1,10 +1,11 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Insufficient allocatable extents suitable for striping for logical volume
-Message-ID: <20031128095658.GA2263@tykepenguin.com>
-References: <34504.192.168.0.2.1069892769.squirrel@meuh.dyndns.org>
+Subject: Re: [linux-lvm] Lost partition table, how can I find the start of
+	the PV?
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+In-Reply-To: <3FC3637A.8070100@webhackande.se>
+References: <1069736195.28598.76.camel@pc> <3FC3637A.8070100@webhackande.se>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-U6QaZNz0p2gmN1hs9koc"
+Message-Id: <1069985665.10426.34.camel@pc>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <34504.192.168.0.2.1069892769.squirrel@meuh.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,71 +16,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 28 03:58:01 2003
+Date: Fri Nov 28 08:15:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Nov 27, 2003 at 01:26:09AM +0100, Nowicki Christophe wrote:
-> Hello,
-> 
-> I'am trying to setup a striped logical volume. But I am getting this error :
-> 
-> #lvcreate -i2 -I4 -L1G -n main/lv_usr
->   Insufficient allocatable extents suitable for striping for logical
-> volume lv_usr: 32 required
-> 
-> I don't understand this error. I did not find any anwser on google :(
-> 
-> Where is my system config :
-> Distro : Debian GNU/Linux "unstable"
-> System : Linux TuX 2.6.0-test9 #8 SMP Sun Nov 2 10:40:22 CET 2003 i686
-> GNU/Linux
-> LVM Version : 2.00.07-1
-> Hardware : 2x IDE Hard Disks Seagate ST340014A
->   hda: ST340014A, ATA DISK drive
->   hdb: ST340014A, ATA DISK drive
-> 
-> vgdisplay
->   --- Volume group ---
->   VG Name               main
->   System ID             PV_IMPTuX1061637595
->   Format                lvm1
->   VG Access             read/write
->   VG Status             resizable
->   MAX LV                256
->   Cur LV                3
->   Open LV               3
->   Max PV                256
->   Cur PV                2
->   Act PV                2
->   VG Size               49.41 GB
->   PE Size               32.00 MB
->   Total PE              1581
->   Alloc PE / Size       1256 / 39.25 GB
->   Free  PE / Size       325 / 10.16 GB
->   VG UUID               3PL6Zl-KtFh-pOqH-ntf5-C5td-SPxt-uUFZqJ
-> 
-> I have 10.16 Free GB. It's enough to setup a 1GB stripped logical volume,
-> isn't it?
-> 
-> #lvm pvscan
->   PV /dev/hda5    is in exported VG main [31.25 GB / 0    free]
->   PV /dev/hdb5    is in exported VG main [18.16 GB / 10.16 GB free]
->   Total: 2 [10.16 GB] / in use: 2 [10.16 GB] / in no VG: 0 [0   ]
-> 
-> May be the problem is here?
-> 
+--=-U6QaZNz0p2gmN1hs9koc
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Yes, one volume is full so the volume can't be extended and still remain striped
-- all the new extents would have to go onto hdb5. 
+Just wanted to give a big shout out to Rickard...
 
-This is a restriction with the LVM1 metadata format. You can convert the VG to
-the lvm2 format with vgconvert and then extend the LV but be aware that the
-extended part of it will not be striped like the rest.
+On Tue, 2003-11-25 at 09:13, Rickard Olsson wrote:
+> Brian J. Murrell wrote:
+>=20
+> > I am hoping somebody can suggest a tool/operation to try to recover at
+> > least enough of a partition table to try to get /dev/hda3 (and hda1 and
+> > hda2 if possible.
+>=20
+> You can try gpart: http://www.stud.uni-hannover.de/user/76201/gpart/
 
+This did the trick!  Got all my data back, system is back in running
+order and I am doing a backup as we speak.
 
--- 
+Always answer that little voice that nags you every now and then.  :-)
 
-patrick
+b.
+
+--=20
+My other computer is your Microsoft Windows server.
+
+Brian J. Murrell
+
+--=-U6QaZNz0p2gmN1hs9koc
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
+
+iD8DBQA/xq+Al3EQlGLyuXARAm26AJ4t7EGUarhjahKLSxYEu/fpWGHnvQCgiwgE
+nRpQfitrfXPXNDnc9PBD744=
+=D2iW
+-----END PGP SIGNATURE-----
+
+--=-U6QaZNz0p2gmN1hs9koc--
