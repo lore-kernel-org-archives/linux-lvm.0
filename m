@@ -1,8 +1,6 @@
-Message-Id: <200209200013.UAA31458@www23.ureach.com>
-From: Ali Zaidi <smaliz@ureach.com>
-Subject: Re: Re: [linux-lvm] vgscan not returning
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: "Sales Department" <smokesdirect@terra.es>
+Message-Id: <E17sDtt-0000lL-00@hermes.sistina.com>
+Subject: [linux-lvm] Discount Cigarettes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,129 +11,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 19 19:17:26 2002
+Date: Thu Sep 19 21:58:35 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
-To: James Hawtin <linux-lvm@sistina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-James:
-Thanks a lot for your help.
-Although i am still not having any luck. Here is what i did.
-I got rid of the many partitions and created a single LVM partition.
-Here is how it looks now
-================================================================
-   Device Boot    Start       End    Blocks   Id  System
-/dev/hda1   *         1      1020   8193118+  83  Linux
-/dev/hda2          1021      1148   1028160   82  Linux swap
-/dev/hda3          1149      2491  10787647+  8e  Linux LVM
-================================================================
+Dear Sir or Madam
 
-From that point here is a log of the commands i tried
+In the past you have requested information on discounted products. We hope that you find this of interest. If you are not a smoker, and find this email offensive, we sincerely apologise!  We will be only too happy to take you off our mailing list.
 
-================================================================
-[root@fixx /root]# dd if=/dev/zero of=/dev/hda3 bs=512 count=1
-1+0 records in
-1+0 records out
-[root@fixx /root]# pvcreate /dev/hda3
-pvcreate -- ERROR: "/etc/lvmtab" doesn't exist; please run vgscan
-[root@fixx /root]# dd if=/dev/zero of=/dev/hda3 bs=512 count=100
-100+0 records in
-100+0 records out
-[root@fixx /root]# pvcreate -v /dev/hda3
-pvcreate -- ERROR: "/etc/lvmtab" doesn't exist; please run vgscan
+If you are a smoker, however, and are fed up with paying high prices for your cigarettes and tobacco, take a look at what we have to offer  by clicking on this link.
+http://www.smokersassociation.co.uk/?S=15&ID=2
 
-[root@fixx /root]# vgscan -v
-vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
-vgscan -- reading all physical volumes (this may take a while...)
+We can send you, legally, by registered air mail, direct to your door, 4 cartons of cigarettes or 40 pouches of rolling tobacco (all brands are available) from only 170 Euros - about 105 pounds - fully inclusive of postage and packing.  Why pay more?
 
+To remove yourself from our mailing list, please click below
+mailto:smokersclub@terra.es
 
-================================================================
-So as you can see i am unable to run pvcreate as it complains about vgscan.
-And again it seems that vgscan is never going to return.
+Yours faithfully.
+Smokers Association
 
-Hoping for some pointers
-Thanks
-Ali
+http://www.smokersassociation.co.uk/?S=15&ID=2
 
-
-
----- On Thu, 19 Sep 2002, James Hawtin (oolon@ankh.org) wrote:
-
-> 
-> 
-> On Thu, 19 Sep 2002, Ali Zaidi wrote:
-> 
-> > Hi:
-> > I am a novice with LVM but after going through the man pages and howtos i 
-was
-> > unable to find a solution to my problem. I am hoping one of you might find 
-some
-> > time to point me in the right direction.
-> >
-> > I am trying to setup LVM on a RH box. I run vgscan before i can create the
-> > volumes but it never returns. Same thing happens with lvmdiskscan and 
-pvscan.
-> > Here is a -v and -d output of vgscan
-> 
-> Ok and now to try to answer your problem....
-> 
-> Did you do a pvcreate?
-> 
-> did the disk have existing data on it?
-> 
-> Try dd to write /dev/zero to the first bit of the partitions you want to
-> put into lvm. then do you vgscan which should then return with an error
-> saying it found nothing.... you can then use pvcreate on them
-> 
-> Of course your LAME disk layout could be confusing lvm in which case as a
-> work arround just have one lvm partion and use lvm to allocate the disk,
-> which is what you should be doing in the first place!
-> 
-> 
-> ------
-> 
-> And now a few quick questions and answers....
-> 
-> Q: I can allocate my disk better than LVM!
-> 
-> A: No you cannot! or rather you can allocate your disk when you
-> first get the machine to produce nice continuous partions. YOU CAN DO THIS
-> WITH LVM. If you have a brand new volume group and just add partions to
-> it they will be continuous with LVM as well.... Don't trust LVM.. you can
-> do a pvdisplay to show you this fact!
-> 
-> A2: Sure, but what happens if you want to remove 2 partions, that are not
-> next door to each other, and them make the one big partion... with fdisk
-> its a dd nigtmare... with LVM its easy.
-> 
-> Q: but how can I move my stuff onto another disk... I use DD!
-> 
-> A: SO? There is nothing special about lvm devices apart from the fact they
-> make things easer for you... You want to work that way, make your new
-> device using LVM or fdisk and do your dd! But you could save yourself time
-> by using pvmove!
-> 
-> Q: LVM adds a level of indirection to my disk.. surely its better to use
-> the real disk
-> A: Theoritically yes... but the translation to where on the disk is a
-> calculation done on your computer not on the disk the slowest part of the
-> operation is pulling stuff from your disk! Think about is a software raid
-> faster or slower? Its faster cos the slow part was the disk and now there
-> is more than one disk!
-> 
-> Q: I like to micromanage my disk...
-> A: You can do that with LVM if you like or you can let LVM do the best it
-> can for you and use your bonus time to go down the pub.
-> 
-> 
-> James
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> 
+xay5196041y
