@@ -1,10 +1,11 @@
-Subject: Re: [linux-lvm] what's different between LVM 2 and LVM 1
-Message-ID: <20020830085824.GA1090@fib011235813.fsnet.co.uk>
-References: <OF8EA0B97F.89DBA647-ON48256C25.0024512E@legend.com.cn>
+Subject: Re: [linux-lvm] what's different between LVM 2 and LVM 1 
+In-Reply-To: Your message of "Fri, 30 Aug 2002 09:58:24 BST."
+             <20020830085824.GA1090@fib011235813.fsnet.co.uk> 
+References: <OF8EA0B97F.89DBA647-ON48256C25.0024512E@legend.com.cn>  
+ <20020830085824.GA1090@fib011235813.fsnet.co.uk>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF8EA0B97F.89DBA647-ON48256C25.0024512E@legend.com.cn>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: Pierrick PONS <ppons@cvf.fr>
+Message-Id: <E17ki0Z-0007dJ-00@arwen.dev33.cvf>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +16,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 30 03:59:02 2002
+Date: Fri Aug 30 04:25:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Aug 30, 2002 at 02:50:03PM +0800, lilha@legend.com.cn wrote:
-> I am puzzled what's different between LVM 2 and LVM 1
-> and I can't find any doc or introduction about the LVM2.
+> On Fri, Aug 30, 2002 at 02:50:03PM +0800, lilha@legend.com.cn wrote:
+> > I am puzzled what's different between LVM 2 and LVM 1
+> > and I can't find any doc or introduction about the LVM2.
+> > 
+> > who is kind to tell me what is LVM2,
+> > and why i should use LVM2 replace of lvm1?
 > 
-> who is kind to tell me what is LVM2,
-> and why i should use LVM2 replace of lvm1?
+> LVM2 is the next version of LVM that has a couple of goals:
+> 
+> i) A simpler more extensible kernel driver.  This driver, called
+> device-mapper, is already in the -ac series of 2.4 kernels.  Hopefully
+> device-mapper will replace the LVM1 driver completely in 2.[56].
+> 
+> ii) Ability to more easily support the new features we want to put in.
+> ATM we're concentrating on reproducing the functionality of LVM1,
+> though a couple of new features (eg. writeable/fast snapshots) have
+> crept in.
+> 
 
-LVM2 is the next version of LVM that has a couple of goals:
+just a stupid question :
+Why does LVM2 was not a version of lvm so that we just had to upgrade LVM ?
 
-i) A simpler more extensible kernel driver.  This driver, called
-device-mapper, is already in the -ac series of 2.4 kernels.  Hopefully
-device-mapper will replace the LVM1 driver completely in 2.[56].
+If LVM2 is just an upgrade of LVM1, why couldn't you continue with lvm-xxxxx ?
 
-ii) Ability to more easily support the new features we want to put in.
-ATM we're concentrating on reproducing the functionality of LVM1,
-though a couple of new features (eg. writeable/fast snapshots) have
-crept in.
+It should have been less confusing and easier to upgrade. 
 
-> and what's the future of LVM1? LVM1 will be discarded?
+Sorry if it is abolutely stupid.
 
-LVM1.0.x is the stable branch and will continue to be maintained by
-Heinz for the foreseeable future (at least while people are using 2.4
-kernels).  No new features will be added.
+I'm using LVM1 and it works fine for me on a debian potato with a 2.4.18 
+kernel with hardware RAID5 . Thank you for your work.
 
-LVM1.1.x was an experimental/development branch, and will not be taken
-further.
 
-- Joe
+Pierrick
