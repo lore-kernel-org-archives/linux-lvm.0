@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Snapshot resizing memory leak
-Message-ID: <20030304125855.B19923@sistina.com>
-References: <3E63C91A.9030803@mac.com>
+Subject: Re: [linux-lvm] Snapshot resizing pe_allocated correction
+Message-ID: <20030304131239.A20001@sistina.com>
+References: <3E63CCA0.3000908@mac.com>
 Mime-Version: 1.0
-In-Reply-To: <3E63C91A.9030803@mac.com>; from dalestephenson@mac.com on Mon, Mar 03, 2003 at 01:28:58PM -0800
+In-Reply-To: <3E63CCA0.3000908@mac.com>; from dalestephenson@mac.com on Mon, Mar 03, 2003 at 01:44:00PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,37 +14,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar  4 06:05:02 2003
+Date: Tue Mar  4 06:19:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Dale,
+Accepted.
 
-thanks for finding this one.
-Could you please give the LVM version you patched in future posts ?
+Please send patches relative to the head of CVS.
 
-Regards,
+Thanks,
 Heinz    -- The LVM Guy --
 
-On Mon, Mar 03, 2003 at 01:28:58PM -0800, Dale J. Stephenson wrote:
-> It looks like the current lvm code still has the memory leak when 
-> resizing snapshots.  The lv_block_exception and lv_snapshot_hash_table 
-> fields are set to ones newly allocated for the new size, but the old 
-> ones are not freed.  The following patch should fix it:
+
+On Mon, Mar 03, 2003 at 01:44:00PM -0800, Dale J. Stephenson wrote:
+> Another slight fix.  When a snapshot is resized, the volume groups' 
+> pe_allocated field is not updated.  The following patch should fix this 
+> problem:
 > 
-> --- linux/drivers/md/lvm.c.orig	Thu Mar 14 08:21:16 2002
-> +++ linux/drivers/md/lvm.c	Thu Mar 14 08:23:07 2002
-> @@ -2489,6 +2489,8 @@
->  		memcpy(new_lv->lv_block_exception,
->  		       old_lv->lv_block_exception, size);
+> --- linux/drivers/md/lvm.c.orig	Mon Apr 29 08:50:41 2002
+> +++ linux/drivers/md/lvm.c	Mon Apr 29 12:41:29 2002
+> @@ -2280,6 +2280,9 @@
+>  		return -ENOMEM;
+>  	}
 >  
-> +		vfree(old_lv->lv_block_exception);
-> +		vfree(old_lv->lv_snapshot_hash_table);
->  		old_lv->lv_remap_end = new_lv->lv_remap_end;
->  		old_lv->lv_block_exception = new_lv->lv_block_exception;
->  		old_lv->lv_snapshot_hash_table =
+> +	vg_ptr->pe_allocated -= old_lv->lv_allocated_snapshot_le;
+> +	vg_ptr->pe_allocated += new_lv->lv_allocated_le;
+> +
+>  	return 0;
+>  }
+>  
 > 
 > 
 > 
