@@ -1,11 +1,8 @@
-From: Marc MERLIN <marc@merlins.org>
+From: Marc MERLIN <marc_lvm@merlins.org>
 Subject: Re: [linux-lvm] vgchange -a y /dev/System fails
-Message-Id: <20020129215738.GA8651@merlins.org>
-References: <20020125233533.GK26045@merlins.org>
-    <20020128104258.A24830@sistina.com>
+Message-Id: <20020129220125.GB7895@merlins.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020128104258.A24830@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,7 +13,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 29 15:58:02 2002
+Date: Tue Jan 29 16:02:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -70,6 +67,7 @@ Is there another way to recover from this?
 
 More importantly, is this a known bug? Can I give info to help fix it?
 
+Thanks,
 Marc
 -- 
 Microsoft is to operating systems & security ....
