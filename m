@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 28 May 2001 11:20:30 +0000
+Date: Mon, 28 May 2001 11:22:24 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Root on LVM and vgscan
-Message-ID: <20010528112030.H26710@sistina.com>
-References: <200105250828.JAA11414@queeg.britain.agilent.com>
+Subject: Re: [linux-lvm] Patching Linus' pre- kernels?
+Message-ID: <20010528112224.I26710@sistina.com>
+References: <20010525162619.D24299@carfax>
 Mime-Version: 1.0
-In-Reply-To: <200105250828.JAA11414@queeg.britain.agilent.com>; from dick@britain.agilent.com on Fri, May 25, 2001 at 09:28:34AM +0100
+In-Reply-To: <20010525162619.D24299@carfax>; from hugo@carfax.org.uk on Fri, May 25, 2001 at 04:26:19PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,69 +21,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 25, 2001 at 09:28:34AM +0100, Dick Middleton wrote:
-> I have root running on lvm on sw raid partitions on linux 2.2.18.  It all
-> works fine.  However I have had difficulty during booting after adding new
-> LVs.  The symptom is that the initial mounts of LVs fails or the wrong
-> partition is mounted.
+Hugo,
+
+there's 2 optional solutions:
+
+- change get_hardblocksize to get_hardsect_size and recompile -or-
+- get the recent LVM code from CVS at www.sistina.com
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+On Fri, May 25, 2001 at 04:26:19PM +0100, Hugo Mills wrote:
+>    Hi - 
 > 
-> What happens is that vgscan is run during the initrd phase and so the lvmtab
-> is updated on the ram disk.  Once the root file system on the hard disk has
-> been mounted the lvmtab on that comes into use.  That has not been updated by
-> vgscan and so does not reflect the changes. 
+>    I've just tried to patch a recent, but otherwise virgin, Linus
+> kernel, and had the kernel compile fail:
 > 
-> Obviously it's possible to run vgscan again (between remounting root rw and
-> checking the other discs) to update the lvmtab but it does beg a few
-> questions.
-
-Yes, that's the option (forcing some overhead).
-The other would be to get the actual /etc/lvmtab* from the initial ram disk :-)
-
+> make[2]: Leaving directory `/usr/src/linux-2.4.5-pre3/arch/i386/lib'
+> ld -m elf_i386 -T /usr/src/linux-2.4.5-pre3/arch/i386/vmlinux.lds -e stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o init/main.o init/version.o \
+>         --start-group \
+>         arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
+>         drivers/block/block.o drivers/char/char.o drivers/misc/misc.o drivers/net/net.o drivers/media/media.o  drivers/parport/driver.o drivers/char/agp/agp.o drivers/char/drm/drm.o drivers/ide/idedriver.o drivers/scsi/scsidrv.o drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o drivers/md/mddev.o \
+>         net/network.o \
+>         /usr/src/linux-2.4.5-pre3/arch/i386/lib/lib.a /usr/src/linux-2.4.5-pre3/lib/lib.a /usr/src/linux-2.4.5-pre3/arch/i386/lib/lib.a \
+>         --end-group \
+>         -o vmlinux
+> drivers/md/mddev.o: In function `__update_hardblocksize':
+> drivers/md/mddev.o(.text+0x22f1): undefined reference to `get_hardblocksize'
+> drivers/md/mddev.o(.text+0x2332): undefined reference to `get_hardblocksize'
+> make[1]: *** [vmlinux] Error 1
+> make[1]: Leaving directory `/usr/src/linux-2.4.5-pre3'
+> make: *** [stamp-build] Error 2
 > 
-> 1) why does mount use the data in lvmtab and not in /proc to find out about
->    active VGs?
-
-mount doesn't access /etc/lvmtab* at all.
-
-The problem is that minor numbers are not striktly related to logical volumes;
-they are associated at vgscan time.
-
+> I'm using:
+> Debian testing
+> Kernel 2.4.5-pre3
+> LVM 0.9.1-beta7
 > 
-> 2) if lvmtab is so essetial why is it not updated by vgcreate/lvcreate and
->    other utilities when changes are made?
-
-See above.
-
+>    Is the beta7 LVM expected to patch against Linus' pre- kernels? If
+> it is, what have I done wrong? If not, which kernels should I be able
+> to patch against?
 > 
-> 3) would it not be possible/better to update lvmtab from /proc without doing
->    a rescan.
-
-That could only be partially done, because /etc/lvmtab* contains the complete
-metadata whereas /proc doesn't.
-
+>    Also, are there any potential problems with running LVM and devfs
+> together?
 > 
-> I don't know the issues involved and reasoning behind the design of this
-> aspect of LVM but it does seem to me that there is something less than ideal
-> in the current scheme.
-
-The virtuall assignement of minor numbers to LVs causes the problem in the
-root on LVM (and NFS) case. That'l likly be changed anyway.
-
+>    Thanks,
+>    Hugo.
 > 
-> Dick
+> --
+>     ---- Hugo Mills --- The Creature from the Black Logon ----
+> hugo@lug.org.uk     hugo@carfax.nildram.co.uk     hugo@soton.ac.uk
+>      ---- "We did a risk management review. We concluded ----
+>             that there was no risk of any management."
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
