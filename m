@@ -1,14 +1,11 @@
-Return-Path: <lewis@sistina.com>
-From: lewis@sistina.com
-Date: Mon, 29 Jan 2001 09:51:54 -0600
-Subject: Re: [linux-lvm] Follow-up 2: Help: lvm 0.9.1_beta3 oops (can't get my data)
-Message-ID: <20010129095154.E20423@sistina.com>
-References: <3A746B67.4FA4CD18@nortelnetworks.com> <20010128200649.C17449@sistina.com>
+Return-Path: <root@srv.sistina.com>
+Date: Mon, 29 Jan 2001 16:55:41 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@Sistina.com>
+Subject: Re: [linux-lvm] configuration question
+Message-ID: <20010129165541.R8567@srv.sistina.com>
+References: <3A7235A2.C515ED1C@wrkhors.com> <20010129135716.B511@tykepenguin.com> <20010129154457.E8567@srv.sistina.com> <3A758856.1216A1D9@wrkhors.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3O1VwFp74L81IIeR"
-Content-Disposition: inline
-In-Reply-To: <20010128200649.C17449@sistina.com>; from lewis@sistina.com on Sun, Jan 28, 2001 at 08:06:49PM -0600
+In-Reply-To: <3A758856.1216A1D9@wrkhors.com>; from lembark@wrkhors.com on Mon, Jan 29, 2001 at 09:12:22AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,68 +17,77 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@Sistina.com
 
---3O1VwFp74L81IIeR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 29, 2001 at 09:12:22AM -0600, Steven Lembark wrote:
+> 
+> > > > trying to get vg's out of dev for now -- devfs issues.
+> > > >
+> > > > so i modify ./kernel/lvm.h replacing:
+> > > >
+> > > >     #define LVM_DIR_PREFIX  "/dev/"
+> > > >
+> > > > with
+> > > >     #define LVM_DIR_PREFIX  "/lvm/"
+> > > >
+> > > > then configure and compile the code.
+> > > >
+> > > > probem is that this doesn't seem to purge /dev/ from
+> > > > all of the code.  is there some other location where
+> > > > the lvm directory is defined or is this just a
+> > > > configuration bug [perhaps a known one at that]?
+> > >
+> > > It looks like there are few hardcoded /dev strings elsewhere
+> > > in the code. try a grep down the lib directory and change
+> > > those too. I'll fix this in CVS.
+> > 
+> > The only one I still found was in tools/lib/pv_check_name.c.
+> > Fixed that and checked it in.
+> > 
+> > The real constraint here is, that LVM stores the full pathname in the VGDA
+> > and that there's no tool available today to change that information on the fly.
+> > 
+> > I implemented LVM_DIR_PREFIX a while ago as a helper to ease namespace
+> > changes. But for sure there's still something to do (as it always will ;-)
+> 
+> i don't have any existing VG's -- problems with devfs trashed
+> them all.  main issue now is starting over w/ lvm & devfs in
+> separate namespaces until all of the kinks are worked out.
 
-On Sun, Jan 28, 2001 at 08:06:49PM -0600, lewis@sistina.com wrote:
-> On Sun, Jan 28, 2001 at 12:56:39PM -0600, Joe Harvell wrote:
-> > When I do a 'vgdisplay -vD w0', I don't run into any problems.  Does th=
-is rule out the possibility of a vgcfgrestore helping?
-> >=20
-> > I looked at the man pages for vcfgrestore, but I don't know which desti=
-nation I should specify.  Is it /dev/w0, or is it 'dev/hda8' and '/dev/hdb3=
-'?
->=20
-> I believe you want to do a 'vgcfgrestore -nw0 /dev/hda8; vgcfgrestore -nw0
-> /dev/hdb3'.  Let me know if that fixes things.  And remember, do *not* do=
- a
-> vgscan right after your vgcfgrestore because it will revert to the previo=
-us
-> state.  Simply run the vgcfgrestore command, and then try the 'vgchange -=
-ay'
-> to activate the volume group.
+All right.
+In this case you should give it a (not tested!) try with the recent change.
 
-I was told that this is incorrect information by Heinz and that you _should_
-run vgscan after running vgcfgrestore because it brings the /etc/lvmtab and
-/etc/lvmtab.d/ in sync with the newly restored VGDA.  Sorry about that.  I
-was mixed up.
+Please retrieve the software from the CVS repository by following the
+instructions on our WEB site <www.sistina.com>.
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Don't forget to apply the tag "LVM_0-9-patches" during checkout.
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+> 
+> -- 
+>  Steven Lembark                                   2930 W. Palmer St.
+>                                                  Chicago, IL  60647
+>  lembark@wrkhors.com                                   800-762-1582
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
------Begin Obligatory Humorous Quote----------------------------------------
-THE LESSER-KNOWN PROGRAMMING LANGUAGES #16:
-C- This language was named for the grade received by its creator when he
-submitted it as a class project in a graduate programming class.  C- is
-best described as a "low-level" programming language.  In fact, the
-language generally requires more C- statements than machine-code statements
-to execute a given task.  In this respect, it is very similar to COBOL.
------End Obligatory Humorous Quote------------------------------------------
+-- 
 
---3O1VwFp74L81IIeR
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Regards,
+Heinz    -- The LVM Guy --
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-iD8DBQE6dZGapE6/iGtdjLERAoJLAJsHJpnQ5/VOep61WJevxj6Gvoxw2wCfVCiq
-fFW7Fa/uc2azkZU9uugAo6I=
-=d8op
------END PGP SIGNATURE-----
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
---3O1VwFp74L81IIeR--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
