@@ -1,12 +1,10 @@
-Subject: Re: [linux-lvm] A tool to administrate LVM.
-In-Reply-To: <3DA6862E.3CEF0241@silicide.dk>
-References: <3DA679AD.B77ACC01@silicide.dk>
-	<20021011164755X.jyoshida@miraclelinux.com>
-	<3DA6862E.3CEF0241@silicide.dk>
+From: "Steven Stillaway" <steve@stillaway.net>
+Subject: Re: [linux-lvm] Re: device-mapper transition
+Message-ID: <20021011090446.GA5506@sparcbox.net>
+References: <1034276879.2396.11.camel@mars.goatskin.org> <20021011075220.GA1153@fib011235813.fsnet.co.uk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20021011174828O.jyoshida@miraclelinux.com>
-From: Jun YOSHIDA <jyoshida@miraclelinux.com>
+Content-Disposition: inline
+In-Reply-To: <20021011075220.GA1153@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,50 +15,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 11 03:49:09 2002
+Date: Fri Oct 11 04:05:11 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-on [Fri, 11 Oct 2002 10:05:02 +0200], 
-Jon Bendtsen <jon+lvm@silicide.dk> wrote on "Re: [linux-lvm] A tool to administrate LVM."
-> Jun YOSHIDA wrote:
-> > 
-> > on [Fri, 11 Oct 2002 09:11:41 +0200],
-> > Jon Bendtsen <jon+lvm@silicide.dk> wrote on "Re: [linux-lvm] A tool to administrate LVM."
-> > > Jun YOSHIDA wrote:
-> > > >
-> > > > Hello all,
-> > > >
-> > > > I am a developer working for MIRACLE LINUX which is one of the linux
-> > > > distributors in Japan.
-> > > >
-> > > > I made a tool to administrate LVM easily and named it LVMAdmin temporarily.
-> > > > It will help beginners to create PV/VG/LV easily.
-> > > >
-> > > > Small screenshot is put at:
-> > > >         http://www.miraclelinux.com/developer/lvmadmin.html
-> > >
-> > > It must be very small, because i cant see it :/
-> > 
-> > I put English manual temporarily.
-> > 
-> >         http://www.miraclelinux.com/developer/lvmadmin-doc-e.html
-> > 
-> > Please try to read it.
+On Fri, Oct 11, 2002 at 08:52:21AM +0100, Joe Thornber wrote:
+ 
+> If you do try 2.5 feedback would be appreciated.
 > 
-> It's much better, and it does appear as a usefull tool.
-> How ever, all my LVM's are ontop of a software raid1, 
-> what color are they ?
+> - Joe
+> 
 
-Oops! I have not considered about that. LVMAdmin will be unable to
-probe software raid.
+After much time mostly spend trying to figure out how
+bitkeeper works I have managed to get DM compiled and 
+working with 2.5.41
 
-I have a lots of things I have to implement. LVMAdmin won't work well
-with software raid and raw device and it might exit with some errors
-in such cases.
+There were no problems compiling and it seems to be
+working fine so far.
 
-I will enhance LVMAdmin as much as I can.
+The only really tricky bit has been the fact that the
+lvm tools (in particular vgscan) are completely
+different between the two version.  Actually LVM 2 just
+seems to have one tool with a lot of symlinks.
 
-Thank you,
--Jun
+So when I switch from 2.4.19 w/ LVM 1 to 2.5.41 w/
+LVM2 I have to make sure to switch from one vgscan to
+the other.
+
+The obviously solution is to upgrade my 2.4.19 to 
+LVM2, but not tonight -- it is late.
+
+If I notice anything I will let you know.  If you
+have any questions or want some data from my test
+box please let me know.
+
+Off to bed now -- later
+
+--
+
+Steven Stillaway
+steve@stillaway.net
