@@ -1,9 +1,9 @@
-From: "Gerald   Nwafor" <gerald_nwafor1@yahoo.co.uk>
+From: adepeters@av.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <E19AHXK-0008Pi-00@hermes.sistina.com>
-Subject: [linux-lvm] Gold  Assistance
+Message-Id: <E19ANK2-0005cv-00@hermes.sistina.com>
+Subject: [linux-lvm] I need  help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,27 +14,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr 28 17:56:02 2003
+Date: Tue Apr 29 00:07:02 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-Gerald Nwafor
+Hello=2C
 
-House B 35=2C Snit Quarters=2C
 
-Asylum  down=2C
-Accra Ghana=2E
+Sorry for bothering you=2C but I'm in big trouble and want to ask your help=2E
 
-Dear  Sir=2C 
+I started my own business 4 years ago=2E I worked day and night=2C helped everyone I could=2C paid plenty of taxes=2C and never cheated anybody=2E
 
-With due respect to your person I kindly wish to ask for your attention and consideration just for a while=2E
-My family and I are in dare  need of assistance=2E Our Late father=2C  Who was the  paramount ruler of our community and also  the crown king  of our region=2C left behind a great deal of wealth and treasure which most of our elder uncles and members of our  family have for the past months exploited upon without either of my younger sisters or  I  benefiting=2EThis has caused an untold hardship on us =2E But now=2C I am very happy and glad that our family attorney just informed me  in confidant that my  late father  confined in him about certain security deposit he made=2C which at the  moment is in the custody of a security company=2E
-As you may know my country is one of Africa's largest producers of  =22GOLD=22 and our community has a lot of this resources too=2E As a normal procedure=2C all the foreign mining company working in our community=2C are mandated by the law to give a percentage of whatever Gold they mind to the community as a hold as gratuity=2E Since my father was  the community head =2C he collects it on  behalf of the community and later shares it among the families concerned and keeps his=2E
-Out of the lot that he kept as his share during his last days on earth=2C he kept some quantity of these resources =22Gold dust=22 otherwise called alluvial concentrate in the custody of  a security company for safekeeping =2E Only for his untimely death=2E
-So this is the only opportunity for us to claim this treasure and hand it over to someone who will help us invest this treasure to enable us secure our feature=2E
-If you will or can help us invest this product Golg dust=2C 350KG=2E please urgently let us know =2C so that I can give you further details=2E
-I do not have a telephone at the moment =2C but hope to get one soon =2C so I would appreciate if you contact me via e-mail for the mean time=2C but I can call you if you want me to=2E 
-Awaiting your kind and anticipated consideration and co-operation=2E
+Then 2 years ago my wife got a severe kind of breast cancer=2E The bills for her medial treatment were huge=2C but we could pay it from my personal finances=2E
 
-Yours truly=2C
-Gerald Nwafor=2E                                                         =28For the family=29 
+Half a year ago=2C my partner in the business took all money from the accounts and disappeared=2E I guess he left the country=2E The police are trying to find him=2C but there is no trace=2E He left me with more then 100=2E000USD invoices still to pay for the company=2E I did everything not to go bankrupt=2C but I could not fulfil all the invoices I had to pay=2C and still pay for the treatment of my wife=2E All my personal finance went into the treatment for my wife and we had to sell our house and car=2E But still I'm in debt=2E As entrepreneur=2C there is no social security for situations like this=2E
+
+I now have a full time job=2E But to come again in a normal situation=2C I must still pay all debts open on the company =28still more then 25=2E000USD=29=2E For this I would like to ask your compassion=2E If enough people with good hart would send me a small amount of money=2C we could resume our lives=2E I don't know yet if my wife will survive her illness=2C but in the mean time=2C I want to be able to continue her treatment =28chemo-therapy for the third time=29=2E 
+
+If you could send me a small donation of money =28starting from 50USD is already enough=29=2C I promise to do all the possible to refund you within a year=2E
+
+You can sent your contribution to
+via western union money transfer
+olushola sanusi
+address lagos nigeria
+text question what purpose
+answer help=2E
+you can send me the mtcn number to my email=2E
+
+Please put in your remarks =22olushola sanusi=3A=22 because otherwise it will not be clear your donation is for me=2E
+
+Thanks a lot in advance for your help=2E
+olushola sanusi
