@@ -1,11 +1,8 @@
-From: Theo Van Dinter <felicity@kluge.net>
-Subject: Re: [linux-lvm] LVM System
-Message-Id: <20020304170002.J18939@kluge.net>
-References: <auto-000021223409@front2.mail.megapathdsl.net>
+From: Anders Widman <andewid@tnonline.net>
+Message-Id: <2712663015.20020304230010@tnonline.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <auto-000021223409@front2.mail.megapathdsl.net>;
-    from anthony@AWMObjects.com on Mon, Mar 04, 2002 at 04:39:10PM -0500
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Manegeability with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  4 16:00:02 2002
+Date: Mon Mar  4 16:00:05 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Mar 04, 2002 at 04:39:10PM -0500, Anthony W. Marino wrote:
-> Any thoughts or articles that would be usefull in determining the quality 
-> on the following combination would be greatly appreciated:
-> 
-> LVM 1.x
-> 3Ware 7800 Raid Controller
-> Maxtor 40GB harddrives
-> XFS Journalling FS
-> SuSE 2.4.18+ Linux
+Hello.
 
-My only comment is that my new setup (specs below) has worked nicely on a
-production machine for about a month now.
+I have a system with 14 disks of diffenrent sizes (40-120GB).
 
-LVM 1.0.1-rc4
-3Ware 7410 RAID Controller
-2x IBM 60GB hard drives
-XFS Filesystem
-RedHat 7.2
+As my need for diskspace increases all the time I was thinking of
+using LVM so I could make use of all diskspace and grow/shrink/replace
+drives as I need to.
 
--- 
-Randomly Generated Tagline:
-#define NULL 0           /* silly thing is, we don't even use this */
-              -- Larry Wall in perl.c from the perl source code
+The only downside to this is the possibility of massive dataloss if I
+loose any of the 14 disks (drive fails to spin etc...). Would it be
+possible to setup up a software redundancy like RAID5 with LVM so I
+can keep this manageability LVM gives me?
+
+I know this has been up in this list before, but I couldn't find a
+suitable answer.
+
+//Anders
