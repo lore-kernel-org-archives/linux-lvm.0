@@ -1,106 +1,99 @@
-From: TORSTEN.NEUMANN@DLH.DE
-Message-ID: <13FEA0BEF75ED31192D50000F6CCC5E92AE046@XNT-FRABASE-6>
-Subject: [linux-lvm] Installieren von LVM Systemen
-Date: Tue, 30 Nov 1999 07:49:48 +0100
+Message-ID: <38439688.BF040FC3@geotec.net>
+Date: Tue, 30 Nov 1999 03:19:04 -0600
+From: Eric Smith <seric@geotec.net>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Installieren von LVM Systemen
+References: <13FEA0BEF75ED31192D50000F6CCC5E92AE046@XNT-FRABASE-6>
+Content-Transfer-Encoding: base64
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: TORSTEN.NEUMANN@DLH.DE
+Cc: linux-lvm@msede.com
 
-Moin,
-
-Sorry for writing in german, but i was not able to translate this text.
-
-Ich bin derzeit etwas traege, daher frage ich mal hier ob jemand mit meinem
-Code potentiell etwas anfangen kann. Vielleich schaffe ich es dann eine
-Dokumentation zu schreiben.
-
-Ich hab meine eigene Linuxinstallations-CD erstellt (basierend auf SuSE 6.2)
-die es mir erlaubt 
-- LVM Systeme (inkl. initrd und / auf einem LV) direkt zu installieren.
-- Eine groessere Anzahl von Systemen gleichartig zu installieren.
-- Rechnerspezifische/Sitespezifische Anpassungen zu machen.
-
-Die Methode ist relativ simpel: Ich boote die CD. Mounte ueber NFS eine
-MASTER-Verzeichniss und lass dann ein Script laufen das ein paar Fragen
-stellt wie ich denn nun genau das System konfiguriert haben moechte. Und
-dann wird einfach eine grosse tar Datei ausgepackt.
-
-Die Konfigurationsdatei sieht etwa wie folgt aus:
-
-my %image1 = (
-			"image"		=>	"/install/images/ws.tar.gz",
-			"description"	=>	"normal Workstation",
-			"lvol"		=>	{
-							/	=>	[
-64, 48 ],
-							/usr	=>	[
-1024, 512 ],
-							/tmp	=>	[
-256, 0 ],
-							...
-						},
-			"selected"	=>	1,
-			"postinstall"	=>
-"/install/scripts/ws.postinstall.sh"
-		);
-
-Das meint : In der ASCII Oberflaeche kann ich ein Image ws.tar.gz
-auswaehlen. (welches mir in der Auswahl als "normal Workstation" angezeigt
-wird), dieses ist vorselektiert ("selected"=>1). Und die Groesse der lvols
-ist wie folgt /usr ist voreingestellt auf 1024MB und muss mindestens 512MB
-gross sein. /tmp soll 256MB gross werden und muss keine Minimalgroesse
-haben, ...
-Zum Schluss der Installation wird dann noch das Script ws.postinstall.sh
-aufgerufen.
-( Ich kann mehrere solcher Images in meiner Konfiguration angeben, und dann
-zwischen ihnen auswaehlen )
-Weiterkann ich dann noch zwischen verschiedenen Kernel waehlen ( IDE-System
-vs. SCSI Systeme vs. SMP Systeme )
-Und Rechnerabhaengig noch weitere Archive installieren. (z.B. vmware +
-vorinstalliertes NT *sigh*)
-Zu guter letzt ist es auch noch vorgesehen host-spezifische Dateien (
-XF86Config, ssh_host_key, ... ) automatisch zu restaurieren.
-
-Mit dieser Methode brauch ich fuer einen unserer typischen WWW-Server etwa
-10 Minuten vom ersten anschalten des Rechners bis ich ein lauffaehiges
-System hab (inklusive aller sitespezifischen Anpassungen) (Das dauert nur so
-lang weil ich im BIOS erstmal die Bootreihenfolge aendern muss und SCSI
-Systeme so lange am booten sind. Die reine Installation dauert weniger als 5
-Minuten).
-
-So nun zu den Vorraussetungen:
-- Es solte ein Rechner als NFS-Server dienen koennen (der braucht viel
-Plattenplatz), es sollte aber auch alles von CD gehen (not tested)
-  Ich habs nur mit NFS gemacht weil dann Aenderungen einfacher sind.
-- Es sollten schon einige Rechner ( > 20 ) vorhanden sein die gleichartig
-installiert werden sollen. Sonst lohnt sich der Aufwand eigentlich nicht.
-
-Vorteile des Systems:
-- Alle Rechner sind identisch konfiguriert, so dass sich der
-Administrationsaufwand minimiert.
-- Alle Rechner sind vollstaendig konfiguriert (z.B. die Druckerkonfig stimmt
-sofort)
-- Ich brauch kein Backup einzelner Rechner da ich schnell vom Master-Image
-eine Neuinstallation machen kann.
-
-Nachteile:
-- Der Aufwand ein sauberes Image zu erstellen ist nicht zu unterschaetzen.
-
-Wishlist:
-- RAID1 Support ( scheitert dadran das ich es bisher nicht geschafft hab ein
-RAID1 System mit initrd zum laufen zu kriegen )
-- stripping support ( sollte einfach gehen, mir fiel nur bisher kein
-user-interface ein. append-mode ist schon drin )
-- tunen der FS/LVM-Parameter, andere FS als ext2 (ReiserFS?)
-- ...
-
-Wer Interesse dadran hat sollte sich bei mir melden, ich denke dann schaffe
-ich es das ganze mal ordentlich zu dokumentieren und auf einen ftp-Server zu
-legen.
-
-Gruesse
-   Torsten
+T2theS4uLm5vdywgd2hhdCBkb2VzIHRoYXQgbWVhbiB0byB0aGUgcmVzdCBvZiB1cz8NCg0K
+DQoNCg0KVE9SU1RFTi5ORVVNQU5OQERMSC5ERSB3cm90ZToNCg0KPiBNb2luLA0KPg0KPiBT
+b3JyeSBmb3Igd3JpdGluZyBpbiBnZXJtYW4sIGJ1dCBpIHdhcyBub3QgYWJsZSB0byB0cmFu
+c2xhdGUgdGhpcyB0ZXh0Lg0KPg0KPiBJY2ggYmluIGRlcnplaXQgZXR3YXMgdHJhZWdlLCBk
+YWhlciBmcmFnZSBpY2ggbWFsIGhpZXIgb2IgamVtYW5kIG1pdCBtZWluZW0NCj4gQ29kZSBw
+b3RlbnRpZWxsIGV0d2FzIGFuZmFuZ2VuIGthbm4uIFZpZWxsZWljaCBzY2hhZmZlIGljaCBl
+cyBkYW5uIGVpbmUNCj4gRG9rdW1lbnRhdGlvbiB6dSBzY2hyZWliZW4uDQo+DQo+IEljaCBo
+YWIgbWVpbmUgZWlnZW5lIExpbnV4aW5zdGFsbGF0aW9ucy1DRCBlcnN0ZWxsdCAoYmFzaWVy
+ZW5kIGF1ZiBTdVNFIDYuMikNCj4gZGllIGVzIG1pciBlcmxhdWJ0DQo+IC0gTFZNIFN5c3Rl
+bWUgKGlua2wuIGluaXRyZCB1bmQgLyBhdWYgZWluZW0gTFYpIGRpcmVrdCB6dSBpbnN0YWxs
+aWVyZW4uDQo+IC0gRWluZSBncm9lc3NlcmUgQW56YWhsIHZvbiBTeXN0ZW1lbiBnbGVpY2hh
+cnRpZyB6dSBpbnN0YWxsaWVyZW4uDQo+IC0gUmVjaG5lcnNwZXppZmlzY2hlL1NpdGVzcGV6
+aWZpc2NoZSBBbnBhc3N1bmdlbiB6dSBtYWNoZW4uDQo+DQo+IERpZSBNZXRob2RlIGlzdCBy
+ZWxhdGl2IHNpbXBlbDogSWNoIGJvb3RlIGRpZSBDRC4gTW91bnRlIHVlYmVyIE5GUyBlaW5l
+DQo+IE1BU1RFUi1WZXJ6ZWljaG5pc3MgdW5kIGxhc3MgZGFubiBlaW4gU2NyaXB0IGxhdWZl
+biBkYXMgZWluIHBhYXIgRnJhZ2VuDQo+IHN0ZWxsdCB3aWUgaWNoIGRlbm4gbnVuIGdlbmF1
+IGRhcyBTeXN0ZW0ga29uZmlndXJpZXJ0IGhhYmVuIG1vZWNodGUuIFVuZA0KPiBkYW5uIHdp
+cmQgZWluZmFjaCBlaW5lIGdyb3NzZSB0YXIgRGF0ZWkgYXVzZ2VwYWNrdC4NCj4NCj4gRGll
+IEtvbmZpZ3VyYXRpb25zZGF0ZWkgc2llaHQgZXR3YSB3aWUgZm9sZ3QgYXVzOg0KPg0KPiBt
+eSAlaW1hZ2UxID0gKA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAiaW1hZ2UiICAgICAg
+ICAgPT4gICAgICAiL2luc3RhbGwvaW1hZ2VzL3dzLnRhci5neiIsDQo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICJkZXNjcmlwdGlvbiIgICA9PiAgICAgICJub3JtYWwgV29ya3N0YXRp
+b24iLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAibHZvbCIgICAgICAgICAgPT4gICAg
+ICB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgLyAgICAgICA9PiAgICAgIFsNCj4gNjQsIDQ4IF0sDQo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgL3VzciAgICA9
+PiAgICAgIFsNCj4gMTAyNCwgNTEyIF0sDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgL3RtcCAgICA9PiAgICAgIFsNCj4gMjU2
+LCAwIF0sDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgLi4uDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIH0sDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICJzZWxlY3RlZCIg
+ICAgICA9PiAgICAgIDEsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICJwb3N0aW5zdGFs
+bCIgICA9Pg0KPiAiL2luc3RhbGwvc2NyaXB0cy93cy5wb3N0aW5zdGFsbC5zaCINCj4gICAg
+ICAgICAgICAgICAgICk7DQo+DQo+IERhcyBtZWludCA6IEluIGRlciBBU0NJSSBPYmVyZmxh
+ZWNoZSBrYW5uIGljaCBlaW4gSW1hZ2Ugd3MudGFyLmd6DQo+IGF1c3dhZWhsZW4uICh3ZWxj
+aGVzIG1pciBpbiBkZXIgQXVzd2FobCBhbHMgIm5vcm1hbCBXb3Jrc3RhdGlvbiIgYW5nZXpl
+aWd0DQo+IHdpcmQpLCBkaWVzZXMgaXN0IHZvcnNlbGVrdGllcnQgKCJzZWxlY3RlZCI9PjEp
+LiBVbmQgZGllIEdyb2Vzc2UgZGVyIGx2b2xzDQo+IGlzdCB3aWUgZm9sZ3QgL3VzciBpc3Qg
+dm9yZWluZ2VzdGVsbHQgYXVmIDEwMjRNQiB1bmQgbXVzcyBtaW5kZXN0ZW5zIDUxMk1CDQo+
+IGdyb3NzIHNlaW4uIC90bXAgc29sbCAyNTZNQiBncm9zcyB3ZXJkZW4gdW5kIG11c3Mga2Vp
+bmUgTWluaW1hbGdyb2Vzc2UNCj4gaGFiZW4sIC4uLg0KPiBadW0gU2NobHVzcyBkZXIgSW5z
+dGFsbGF0aW9uIHdpcmQgZGFubiBub2NoIGRhcyBTY3JpcHQgd3MucG9zdGluc3RhbGwuc2gN
+Cj4gYXVmZ2VydWZlbi4NCj4gKCBJY2gga2FubiBtZWhyZXJlIHNvbGNoZXIgSW1hZ2VzIGlu
+IG1laW5lciBLb25maWd1cmF0aW9uIGFuZ2ViZW4sIHVuZCBkYW5uDQo+IHp3aXNjaGVuIGlo
+bmVuIGF1c3dhZWhsZW4gKQ0KPiBXZWl0ZXJrYW5uIGljaCBkYW5uIG5vY2ggendpc2NoZW4g
+dmVyc2NoaWVkZW5lbiBLZXJuZWwgd2FlaGxlbiAoIElERS1TeXN0ZW0NCj4gdnMuIFNDU0kg
+U3lzdGVtZSB2cy4gU01QIFN5c3RlbWUgKQ0KPiBVbmQgUmVjaG5lcmFiaGFlbmdpZyBub2No
+IHdlaXRlcmUgQXJjaGl2ZSBpbnN0YWxsaWVyZW4uICh6LkIuIHZtd2FyZSArDQo+IHZvcmlu
+c3RhbGxpZXJ0ZXMgTlQgKnNpZ2gqKQ0KPiBadSBndXRlciBsZXR6dCBpc3QgZXMgYXVjaCBu
+b2NoIHZvcmdlc2VoZW4gaG9zdC1zcGV6aWZpc2NoZSBEYXRlaWVuICgNCj4gWEY4NkNvbmZp
+Zywgc3NoX2hvc3Rfa2V5LCAuLi4gKSBhdXRvbWF0aXNjaCB6dSByZXN0YXVyaWVyZW4uDQo+
+DQo+IE1pdCBkaWVzZXIgTWV0aG9kZSBicmF1Y2ggaWNoIGZ1ZXIgZWluZW4gdW5zZXJlciB0
+eXBpc2NoZW4gV1dXLVNlcnZlciBldHdhDQo+IDEwIE1pbnV0ZW4gdm9tIGVyc3RlbiBhbnNj
+aGFsdGVuIGRlcyBSZWNobmVycyBiaXMgaWNoIGVpbiBsYXVmZmFlaGlnZXMNCj4gU3lzdGVt
+IGhhYiAoaW5rbHVzaXZlIGFsbGVyIHNpdGVzcGV6aWZpc2NoZW4gQW5wYXNzdW5nZW4pIChE
+YXMgZGF1ZXJ0IG51ciBzbw0KPiBsYW5nIHdlaWwgaWNoIGltIEJJT1MgZXJzdG1hbCBkaWUg
+Qm9vdHJlaWhlbmZvbGdlIGFlbmRlcm4gbXVzcyB1bmQgU0NTSQ0KPiBTeXN0ZW1lIHNvIGxh
+bmdlIGFtIGJvb3RlbiBzaW5kLiBEaWUgcmVpbmUgSW5zdGFsbGF0aW9uIGRhdWVydCB3ZW5p
+Z2VyIGFscyA1DQo+IE1pbnV0ZW4pLg0KPg0KPiBTbyBudW4genUgZGVuIFZvcnJhdXNzZXR1
+bmdlbjoNCj4gLSBFcyBzb2x0ZSBlaW4gUmVjaG5lciBhbHMgTkZTLVNlcnZlciBkaWVuZW4g
+a29lbm5lbiAoZGVyIGJyYXVjaHQgdmllbA0KPiBQbGF0dGVucGxhdHopLCBlcyBzb2xsdGUg
+YWJlciBhdWNoIGFsbGVzIHZvbiBDRCBnZWhlbiAobm90IHRlc3RlZCkNCj4gICBJY2ggaGFi
+cyBudXIgbWl0IE5GUyBnZW1hY2h0IHdlaWwgZGFubiBBZW5kZXJ1bmdlbiBlaW5mYWNoZXIg
+c2luZC4NCj4gLSBFcyBzb2xsdGVuIHNjaG9uIGVpbmlnZSBSZWNobmVyICggPiAyMCApIHZv
+cmhhbmRlbiBzZWluIGRpZSBnbGVpY2hhcnRpZw0KPiBpbnN0YWxsaWVydCB3ZXJkZW4gc29s
+bGVuLiBTb25zdCBsb2hudCBzaWNoIGRlciBBdWZ3YW5kIGVpZ2VudGxpY2ggbmljaHQuDQo+
+DQo+IFZvcnRlaWxlIGRlcyBTeXN0ZW1zOg0KPiAtIEFsbGUgUmVjaG5lciBzaW5kIGlkZW50
+aXNjaCBrb25maWd1cmllcnQsIHNvIGRhc3Mgc2ljaCBkZXINCj4gQWRtaW5pc3RyYXRpb25z
+YXVmd2FuZCBtaW5pbWllcnQuDQo+IC0gQWxsZSBSZWNobmVyIHNpbmQgdm9sbHN0YWVuZGln
+IGtvbmZpZ3VyaWVydCAoei5CLiBkaWUgRHJ1Y2tlcmtvbmZpZyBzdGltbXQNCj4gc29mb3J0
+KQ0KPiAtIEljaCBicmF1Y2gga2VpbiBCYWNrdXAgZWluemVsbmVyIFJlY2huZXIgZGEgaWNo
+IHNjaG5lbGwgdm9tIE1hc3Rlci1JbWFnZQ0KPiBlaW5lIE5ldWluc3RhbGxhdGlvbiBtYWNo
+ZW4ga2Fubi4NCj4NCj4gTmFjaHRlaWxlOg0KPiAtIERlciBBdWZ3YW5kIGVpbiBzYXViZXJl
+cyBJbWFnZSB6dSBlcnN0ZWxsZW4gaXN0IG5pY2h0IHp1IHVudGVyc2NoYWV0emVuLg0KPg0K
+PiBXaXNobGlzdDoNCj4gLSBSQUlEMSBTdXBwb3J0ICggc2NoZWl0ZXJ0IGRhZHJhbiBkYXMg
+aWNoIGVzIGJpc2hlciBuaWNodCBnZXNjaGFmZnQgaGFiIGVpbg0KPiBSQUlEMSBTeXN0ZW0g
+bWl0IGluaXRyZCB6dW0gbGF1ZmVuIHp1IGtyaWVnZW4gKQ0KPiAtIHN0cmlwcGluZyBzdXBw
+b3J0ICggc29sbHRlIGVpbmZhY2ggZ2VoZW4sIG1pciBmaWVsIG51ciBiaXNoZXIga2Vpbg0K
+PiB1c2VyLWludGVyZmFjZSBlaW4uIGFwcGVuZC1tb2RlIGlzdCBzY2hvbiBkcmluICkNCj4g
+LSB0dW5lbiBkZXIgRlMvTFZNLVBhcmFtZXRlciwgYW5kZXJlIEZTIGFscyBleHQyIChSZWlz
+ZXJGUz8pDQo+IC0gLi4uDQo+DQo+IFdlciBJbnRlcmVzc2UgZGFkcmFuIGhhdCBzb2xsdGUg
+c2ljaCBiZWkgbWlyIG1lbGRlbiwgaWNoIGRlbmtlIGRhbm4gc2NoYWZmZQ0KPiBpY2ggZXMg
+ZGFzIGdhbnplIG1hbCBvcmRlbnRsaWNoIHp1IGRva3VtZW50aWVyZW4gdW5kIGF1ZiBlaW5l
+biBmdHAtU2VydmVyIHp1DQo+IGxlZ2VuLg0KPg0KPiBHcnVlc3NlDQo+ICAgIFRvcnN0ZW4N
+Cg==
