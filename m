@@ -1,12 +1,10 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] Segfault at boot with vgscan and linux 2.4.4 kernel
-Date: Sun, 29 Apr 2001 19:31:56 -0400
-References: <3AEBF85F.8EC404@gecpalau.com> <01042909134900.18233@oscar> <3AEC9E45.B76C4996@gecpalau.com>
-In-Reply-To: <3AEC9E45.B76C4996@gecpalau.com>
+Return-Path: <totake66@home.com>
+Message-ID: <3AECAFD9.6727396A@home.com>
+Date: Sun, 29 Apr 2001 19:20:41 -0500
+From: Tom Otake <totake66@home.com>
 MIME-Version: 1.0
-Message-Id: <01042919315600.27358@oscar>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] VG does not activate at boot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,51 +19,30 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Sunday 29 April 2001 19:05, you wrote:
+Hi,
 
-I have 2.4.4 with lvm beta 7 in a module here.  Root is a reiserfs fs on a
-lv mounted via initrd.  I also have swap from an LV.  It works fine from
-a module here.
+I 'm having a slight problem/inconvenience with LVM and need some
+assistance.  Everytime I boot the system, the VG's do not come up active
+and subsequently, some fs don't mount.  The error I get  indicates the
+underlying device for the fs is not a valid device.  'vgdisplay' says
+the the VG is  not active, which running 'vgdisplay -D' confirms.
+Running 'vgchange -a y swvg' resolves the problem, activates the VG and
+I can mount the fs.  LVM support is compiled into the kernel.  I'm
+running kernel 2.4.3 and lvm_0.9.1_beta7.  Right now, I'm using it
+mainly for testing and no essential fs are using LVM so it is not a
+critical issue, still, I'd like to know how to resolv this.
 
-Ed 
+Thanks
 
-> Hi there!
->
-> LVM is compiled in to the kernel, not as a module.
->
-> I have hand-patched the lvm.c file with the patch that was on the list. My
-> kernel compiles fine.
->
-> Glenn
->
-> Ed Tomlinson wrote:
-> > On Sunday 29 April 2001 07:17, Glenn Shannon wrote:
-> > > Hi all (again!),
-> > >
-> > > Just got done compiling my new 2.4.4 kernel using the same options as
-> > > before and now at boot vgscan is segfaulting......
-> > >
-> > > Anyone else have this problem?
-> > >
-> > > Tried recompiling the lvm tools....no dice. Still segfaulting...
-> > >
-> > > Tried recompiling my kernel with pgcc and no dice (wont finish
-> > > compiling....complains a bunch and error 2s out on the make bzImage
-> > > phase...modules compile fine tho (wierd).
-> > >
-> > > Tried updating my binutils and recompiling....no luck there either
-> >
-> > is lvm built as a module?  If so what does depmod -ae show.  If you
-> > have undefined ref you need to apply the patch posted on this list on
-> > top of beta7.
-> >
-> > Ed
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+--
+_______________
+Anything that happens, happens.
+   Anything that, in happening, causes something else to happen, causes
+   something else to happen.
+   Anything that, in happening, causes itself to happen again, happens again
+   It doesn't necessarily do it in chronological order, though.
+         -- Douglas Adams
+
+-- Tom Otake
+-- totake66_nospam@home.com
+-- #550
