@@ -1,8 +1,8 @@
-Message-ID: <3D878E26.6050205@jumpline.com>
-From: Ben Snyder <ben@jumpline.com>
+From: bscott@ntisys.com
+Subject: Re: [linux-lvm] cannot mount logical volume on boot
+In-Reply-To: <3D878E26.6050205@jumpline.com>
+Message-ID: <Pine.LNX.4.44.0209171641110.21807-100000@dragon.inside.ntisys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] cannot mount logical volume on boot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,45 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 17 15:19:02 2002
+Date: Tue Sep 17 15:29:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-OK, this has me stumped.  My server isnt mounting the logical volume on 
-boot time, in fact booting fails.  I've had to hardlink /dev/vg/lv to 
-/dev/sdz1 because some of the software I use does some assinine tests of 
-the /etc/fstab and checks mount points etc and /dev/vg/lv is 'too long' 
-according to the vendor.  The software in question works fine with the 
-hardlink, but LVM is ticked at me for some reason.
+On Tue, 17 Sep 2002, at 4:18pm, ben@jumpline.com wrote:
+> If I uncomment that line and reboot, everything fails and I get to the
+> single-user mode root password prompt.
 
-In my /etc/rc.d/rc.sysinit, right before the script calls for a mount of 
-local file systems, there's segment like so:
-if [ -x /sbin/vgscan ]; then
-        action "Installing LVM module" /sbin/modprobe lvm-mod #this line 
-added by me
-        action "Initializing LVM" /sbin/vgscan
-        action "Activating volumn groups" /sbin/vgchange
-fi
+  It sounds like the LVM is not up and running properly with the LV
+available when the filesystem check is run, causing the fsck to fail,
+causing the initscripts to drop you into the emergency "your system is
+really hosed" shell at boot.
 
+> I've had to hardlink /dev/vg/lv to /dev/sdz1
 
-I added the modprobe, because I was seeing messages when vgscan ran like 
-'module not loaded?'.
+  Instead of a hardlink, try a symlink.  I suspect the hardlink is causing
+the device node magic in the LVM userland programs to get all borked up.
 
-OK, now on to the meat of my problem.  If I comment out the filesystem 
-in /etc/fstab, everything is fine (except my software).  I log in, the 
-lvm module is loaded, the volume group is active and ready for use and I 
-can mount it up no problem.  If I uncomment that line and reboot, 
-everything fails and I get to the single-user mode root password prompt. 
-  Enter root's passwd, comment the line in /etc/fstab, logout/reboot and 
-everything is fine (except the FS isnt mounted).
-
-I cant really put the mount in rc.local or anything like that, as the 
-above mentioned 3rd party software requires the filesystem to be mounted 
-when it tries to start (which is managed through standard start scripts).
-
-System details:
-RedHat 6.2 running kernel 2.2.19-6.2.16
-The LVM spans 2 7200RPM Seagate Cheetah SCSI drives(identical)
-
-Thanks in advance for answer/feedback.
+-- 
+Ben Scott <bscott@ntisys.com>
+| The opinions expressed in this message are those of the author and do not |
+| necessarily represent the views or policy of any other person, entity or  |
+| organization.  All information is provided without warranty of any kind.  |
