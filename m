@@ -1,87 +1,33 @@
-Message-ID: <39BA3D62.E21B13E1@gnu.org>
-Date: Sun, 10 Sep 2000 00:38:42 +1100
-From: Andrew Clausen <clausen@gnu.org>
+From: iafilius@xs4all.nl
+Date: Sun, 10 Sep 2000 15:55:46 +0200 (CEST)
+Reply-To: Arjan Filius <iafilius@xs4all.nl>
+Subject: [linux-lvm] 2.4.0-test8 LVM(vgscan) on SCSI problems (report)
+Message-ID: <Pine.LNX.4.21.0009101525490.1920-100000@sjoerd.sjoerdnet>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM, partitions, RAID, and the Grand Scheme of Things TM
-References: <200009070053.SAA05253@lynx.turbolabs.com>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: parted@gnu.org, linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-kernel@vger.kernel.org
+Cc: linux-lvm@msede.com
 
-Andreas Dilger wrote:
-> 
-> Andrew Clausen, you write:
-> > First, we think it would be useful for the LVM tools to be able to
-> > resize logical volumes, along with the file systems on it.  Perhaps
-> > a --filesystem parameter to lvreduce, lvextend and lvcreate?
-> 
-> The existing LVM user tools ship with something called "e2fsadm" which
-> does this for ext2 filesystems, first extending the LV and then the
-> filesystem.  I have updated e2fsadm to also handle online filesystem
-> resizing, but this is not in the official tools yet.
+Hello,
 
-I'm not sure I like this idea of file system specific programs
-doing LVM stuff.  What you describe here is better:
+With 2.4.0-test8 (test8-pre6 seems to be OK) vgscan (at
+boottime) "sees" al my volumegroups which are on IDE disk, but not those
+on SCSI disk.
+I had no problems mounting a "plain" ext2 scsi partition on same disk.
 
-> Yesterday, a tool
-> called lvmadm was announced which does this in a more generic way,
-> similar to fsck, by calling a fs-specific resizer depending on the fs
-> type.
 
-It would be trivial (i.e. a bit of beaurocracy) to write a front end
-to libparted, to do this (or even, a shell script wrapper of parted)
+After some "research" i found sd.c is patched, but not yet in test8-pre6.
 
-One thing: there is non-trivial interaction between the file system
-and partition table handling (not with LVM), when resizing the start
-of a partition.  Some resizers (including ext2resize, and reiserfs's
-resizer) can't resize the start, and use the partition as the
-address space.  When resizing the start, this doesn't make sense.
+vgscan version:
+sjoerd:~ # vgscan -h
+Logical Volume Manager 0.8 by Heinz Mauelshagen  04/11/1999  (IOP 6)
 
-So, while it's rather cute to do:
+lvm,scsi-disk compiled into the kernel, but mostly as modules.
 
-	# ext2resize /dev/hda3 [new-size]
 
-It generalizes to:
-
-	# ext2resize /dev/hda3 [new-start] [new-end]
-
-Doing this only makes sense if ext2resize (or whatever) updates the
-partition table (as Parted does).
-
-So, having /sbin/resize.* isn't as elegant as it looks.  Were
-you suggesting have resize.* deal with partition table stuff?
-
-> I think Heinz's stated direction is that LVM will stay layered on top
-> of MD/RAID rather than incorporating this functionality itself.
-
-OK.
-
-> > However, it doesn't look like partition tables will disappear anytime
-> > soon. Rather, it looks like LVM will have to cooperate with partition
-> > tables.  And, perhaps Microsoft's new system as well (?).
-> 
-> Personally, I would rather get all knowledge of partition tables out of
-> LVM and have the existing partition table support in the kernel handle
-> everything.  Having a library to do all the partition-table parsing and
-> writing would be a boon not only to parted, but also if it was added to
-> fdisk, cfdisk, grub, et-al.
-
-Yep.  OTOH, Parted already has lots of partition table parsing stuff
-already.  It could be separated into a different library.
-
-libparted's partition table API (version 1.3.x) is much cleaner than
-anything else I've seen.  It supports msdos, mac and pc98 so far.
-
-> You should read the LVM mailing list archive for June.  IBM has already
-> proposed such a system, called LVMS, which would be the glue layer between
-> LVM, partitions, filesystems, RAID, etc.  From the sounds of it, they will
-> try and leverage as much of the existing code from the kernel as possible.
-
-Looks like I have lots of reading to do!
-
-Thanks,
-Andrew Clausen
+Arjan Filius
+mailto:iafilius@xs4all.nl
