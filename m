@@ -1,9 +1,9 @@
-Message-ID: <002301c2c47e$b54fbb60$3200a8c0@COMPAQ>
-From: "Sean Oh" <oh@storageone.co.kr>
-References: <F59HdlQgdYXSVvR0Wss000091d0@hotmail.com> <20030124111515.O12662@schatzie.adilger.int>
-Subject: Re: [linux-lvm] syncing with snapshots takes forever?
+From: "Kai Iskratsch" <kai@stella.at>
+Subject: AW: [linux-lvm] Broken Harddisk in LVM
+Message-ID: <000601c2c48f$aa884560$0300a8c0@quaiky>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20030122121446.A25896@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,83 +14,80 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan 25 08:34:01 2003
+Date: Sat Jan 25 11:02:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
------ Original Message -----
-From: "Andreas Dilger" <adilger@clusterfs.com>
-To: <linux-lvm@sistina.com>
-Sent: Saturday, January 25, 2003 3:15 AM
-Subject: Re: [linux-lvm] syncing with snapshots takes forever?
+Now I have done this. The VG is working, the two LVs that are not on the
+broken hard disk are also ok. The only problem is the third LV that
+spanned to the broken hard disk. It has an ext3 FS and if I run e2fsck
+on it the e2fsck tries to recover the journal which I think is not
+working (it repeats the message: "/dev/Data/Daten: recovering journal")
+I also tried to deactivate the journal, but tun2fs will not delete it
+because it needs to be recovered.=20
 
-> The problem is that when you type "sync" you are actually writing (most
-of)
-> your file to disk 4 times - once for the initial LV (which was mostly
-still
-> in RAM I'm guessing), and once for each snapshot.
+Best regards
 
-I understand that it is writing from memory to disk 4 times.(Yes, the data
-is kept in memery until kernel dumps to disk, since the application I am
-using does _async_ operation)
+Kai
+  =20
 
-> Since you now have 4x
-> the write load and it is not streaming, but random I/O it causes your
-disks
-> to thrash badly.  Add to that the fact that you are writing to a RAID
-which
-> needs to seek _every_ disk for each write, and you are in really bad
-shape.
+-----Urspr=FCngliche Nachricht-----
+Von: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] Im
+Auftrag von Heinz J . Mauelshagen
+Gesendet: Mittwoch, 22. J=E4nner 2003 12:15
+An: linux-lvm@sistina.com
+Betreff: Re: [linux-lvm] Broken Harddisk in LVM
 
 
-I do not think the RAID is one of the significant factor for the slowdown
-here, since systems without RAID have the pretty much same problem.
+Install device-mapper + LVM2 tools _additionally_ in a seperate
+location and run "vgscan ; vgchange -a y -P".
 
-> I'm guessing that if you put each snapshot on its own physical disk (maybe
-> only keeping the original LV on the RAID device) you will see a lot of
-> improvement.
+That might still leave you with unusable LVs in case their beginning
+is gone with the failed disk.
 
-I did.. see below
+If you decide to do that get back to us in case you've got installation
+related questions.
 
-> Also, it would be interesting to know what the real performance
-> of even the single 1GB write is (i.e. write + sync) because I'm guessing
-> most of the data is still in memory.
+Regards,
+Heinz    -- The LVM Guy --
 
-Well, I have tested on the different system than my orignal posting. This
-system has 4GB of RAM  and FC external RAID5 system, composing 4 RAID5
-volumes with 5 FC disks each.
+On Tue, Jan 21, 2003 at 11:29:08PM +0100, Kai Iskratsch wrote:
+> One hard disk of my lvm System is completely broken, so that even the
+> controller cannot find it.
+> Is there a possibility to get the lvm running again without the data
+of
+> this disk.
+>=20
+> Kai Iskratsch=20
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-By doing 'sync ; time dd if=/dev/zero of=1G bs=1024k count=1000 ; time sync'
-.
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-The dd write + sync speed on LV without snapshots was about110MB/s.
-The dd write + sync speed on LV with 1 snapshots was about 5MB/s,too
-The dd write + sync speed on LV with 2 snapshots was about 3.5MB/s,too
-The dd write + sync speed on LV with 3 snapshots was about 3.2MB/s.
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+=3D-=3D-=3D-
 
-After putting the snapshot PVs on the different RAID volume:
-The dd write + sync speed on LV with 1 snapshots was about 12MB/s,too
-The dd write + sync speed on LV with 2 snapshots was about 9MB/s,too
-The dd write + sync speed on LV with 2 snapshots was about 7MB/s,too
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+=3D-=3D-=3D-
 
-When I test with NFS(async mode) and SAMBA,they go fast until let's say a
-few hundreds of MB is filled up in the memory, needed to be flushed and then
-the trasfer suffers, nearly _STOPPED_ responding, producing 0 to a few
-hundred _bytes_ for the transfer speed.
-
- > At, say, 50MB/s to disk you are still
-> talking 3 or 4 minutes to write out 1GB, so even an ideal LV snapshot case
-> would take 9-15 minutes to write out 4GB.
-
-
-> Cheers, Andreas
-
-Well, even with 1 snapshot, the throughput goes down to 1/10.
-
-For my purpose, I would like to have NFS and SAMBA to transfer data
-consistently with async mode. It seems to me that some logic in lvm snapshot
-or kernel is causing those apps to stoped for a few tens of minutes when
-memory is full and synced.
-Do you know any patches to kernel or lvm that does not block(?) the I/O
-operations while syncing or do something smarter for handling above issues?
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
