@@ -1,12 +1,11 @@
-Return-Path: <ragnark@stine.vestdata.no>
-Date: Wed, 28 Mar 2001 00:45:08 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] LVM and fault tolerance
-Message-ID: <20010328004508.K20535@vestdata.no>
-References: <Pine.LNX.4.30.0103211228450.8192-100000@flowers.house.larsshack.org> <3ABA91DE.29985185@tnonline.net> <0103262137020G.01456@lyta> <3AC10AC8.14A64F76@tnonline.net> <20010327235600.H20535@vestdata.no> <3AC1142D.C47A9C96@tnonline.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3AC1142D.C47A9C96@tnonline.net>; from Anders Widman on Wed, Mar 28, 2001 at 12:29:01AM +0200
+Return-Path: <terjekv@ifi.uio.no>
+Subject: Re: [linux-lvm] lvmgui 0.2 release
+References: <3ABDD38D.A841FFD3@ida.xs4all.nl> <wxx1yrkklzx.fsf@fjorir.ifi.uio.no> <20010327122311.A25656@d3.front> <20010327144538.A25796@omnifarious.mn.org>
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 28 Mar 2001 01:55:58 +0200
+In-Reply-To: "Eric M. Hopper"'s message of "Tue, 27 Mar 2001 14:45:38 -0600"
+Message-ID: <wxxsnjyydf5.fsf@fjorir.ifi.uio.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,27 +17,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Ralph Jennings <ralph@oro.net>
 
-On Wed, Mar 28, 2001 at 12:29:01AM +0200, Anders Widman wrote:
-> ok. great... so if I make say 20GB partitions on all disks and put them
-> in a RAID-5 array. Can I add extra disks and rebuild the array? I have
-> seen some expensive RAID cards that does that.
+"Eric M. Hopper" <hopper@omnifarious.mn.org> writes:
 
-I don't really understand your question....
+> Tcl/Tk has got to be the ickiest language I've ever had the
+> displeasure of writing a program in this side of BASIC. It combines
+> the obtuseness of lisp with the execution speed of Javascript.
 
-It usually doesn't make sense to split a disk in smaller partitions and
-RAID them togheter. If the whole disk dies, you loose two partitions and
-your whole RAID-array.
+  what? ick. Common Lisp is _very_ nice to work with thank you. that
+  Tcl is the ultimate masochist language even beyond befunge on the
+  other hand is true.
+ 
+> Might I humbly suggest Python. :-) Python is much cleaner than
+> Tcl/Tk. 
 
-The software raid implementation in linux doesn't allow you to add more
-disks to an existing array, but of course you can delete your array and
-create a new one with more disks. Some hardware raid implementations
-(and possible some software-raid implementations too) allow you to add
-more drives without redoing the array.
+  python is fair enough. 
 
+> You can even use Tcl/Tk from Python without having to write any Tcl
+> code. Or, you could use PyGTK or PyGNOME and have a nicer looking
+> interface. :-) It's also nearly as fast to develop in as Tcl/TK. It
+> has a command line interpreter and a very regular set of rules.
 
---=20
-Ragnar Kj=EF=BF=BDrstad
-Big Storage
+  I was locked in a few choices, I know perl very well, I know python
+  quite well. I know lisp enough to love it. 
+
+  the question is maintenance. and I wonder if I write perl so much
+  better than python that it would be a good idea. then again, I'm not
+  that happy producing code in either. 
+
+  and right now, I don't have time. :(
+ 
+> Have fun (if at all possible),
+
+  oh, we do try.
+
+-- 
+Terje
