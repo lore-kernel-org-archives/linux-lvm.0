@@ -1,11 +1,11 @@
-Subject: Re: [linux-lvm] Snapshot on xfs filesystem
-References: <3B84D252.692DA667@tronicplanet.de>
-	<20010823223921.A17378@sistina.com>
-From: "Martin K. Petersen" <mkp@linuxcare.com>
-Date: 23 Aug 2001 17:26:22 -0400
-In-Reply-To: <20010823223921.A17378@sistina.com>
-Message-ID: <yq1bsl65uyp.fsf@jcb.mkp.net>
+content-class: urn:content-classes:message
 MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----_=_NextPart_001_01C12C23.53B6230C"
+Date: Fri, 24 Aug 2001 00:31:18 +0200
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FD13@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
+Subject: [linux-lvm] Pvmove question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,21 +17,47 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Heinz" == Heinz J Mauelshagen <mauelshagen@sistina.com> writes:
+This is a multi-part message in MIME format.
 
->> when trying the same on an ext2 fs the machine keeps on running and
->> nothing special happens even if there is traffic via nfs.  seems to
->> be a problem with xfs...
+------_=_NextPart_001_01C12C23.53B6230C
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Heinz> Did you get in touch with the XFS guys on it?
 
-Well, I'm listening and it's on my list of things to look into.
+Hi,
+I have a pvmove question:
+In the man page, it's said to be careful with pvmove if you use it while
+LVM is in use.
+I don't really understand what is dangerous and what is safe...
 
--- 
-Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
-mkp@linuxcare.com, http://www.linuxcare.com/
-SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
+Could you give me details? Is it safe to do if no LV is mounted? Or if
+vgchange -an is run?
+
+Thanks for any help.
+-jec
+
+---------------------------------------------------
+Jean-Eric Cuendet
+Linkvest SA
+Av des Baumettes 19, 1020 Renens Switzerland
+Tel +41 21 632 9043  Fax +41 21 632 9090
+http://www.linkvest.com  E-mail: jean-eric.cuendet@linkvest.com
+---------------------------------------------------
+
+------_=_NextPart_001_01C12C23.53B6230C
+Content-Type: text/x-vcard;
+	name="Jean-Eric Cuendet.vcf"
+Content-Transfer-Encoding: base64
+Content-Description: Jean-Eric Cuendet.vcf
+Content-Disposition: attachment;
+	filename="Jean-Eric Cuendet.vcf"
+
+QkVHSU46VkNBUkQNClZFUlNJT046Mi4xDQpOOkN1ZW5kZXQ7SmVhbi1FcmljDQpGTjpKZWFuLUVy
+aWMgQ3VlbmRldA0KT1JHOkxpbmt2ZXN0IFMuQS47Q0NTUg0KRU1BSUw7UFJFRjtJTlRFUk5FVDpK
+ZWFuLUVyaWMuQ3VlbmRldEBsaW5rdmVzdC5jb20NClJFVjoyMDAxMDcyNFQxNDI0MTFaDQpFTkQ6
+VkNBUkQNCg==
+
+------_=_NextPart_001_01C12C23.53B6230C--
