@@ -1,11 +1,9 @@
-From: Arkadiusz Miskiewicz <arekm@pld-linux.org>
-Subject: Re: [linux-lvm] lvm on initrd
-References: <200401240137.35706.arekm@pld-linux.org> <20040124095810.GA6204@percy.comedia.it>
-In-Reply-To: <20040124095810.GA6204@percy.comedia.it>
-MIME-Version: 1.0
+From: Luca Berra <bluca@comedia.it>
+Message-ID: <20040125015538.GB17569@percy.comedia.it>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="IJpNTDwzlM2Ie8A6"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200401252110.07895.arekm@pld-linux.org>
+Subject: [linux-lvm] [patch] lvm2 and md component devices
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,58 +14,132 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 25 15:12:01 2004
+Date: Sun Jan 25 16:14:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
-Cc: Luca Berra <bluca@comedia.it>
 
-Dnia sob 24. stycznia 2004 10:58, Luca Berra napisa=B3:
-> On Sat, Jan 24, 2004 at 01:37:35AM +0100, Arkadiusz Miskiewicz wrote:
-> >Are there any plans to add makefile target which would produce very small
-> > + features stripped down lvm binary with only two commands:
-> >vgscan vgchange
-> >for usage on initrd images?
->
-> patches for lvm2 are:
-> http://www.comedia.it/~bluca/cooker/lvm2/lvm2-2.00.08-7mdk/LVM2.2.00.08-d=
-ie
->t.patch.bz2
-Thanks, I've modified these for my needs.
-http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/lvm2-initrd.patch?rev=3D1.1
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-Unfortunately this doesn't give any significant size drop:
-lvm staticly linked with uClibc and device-mapper lib with all features
-=2Drwxr-xr-x    1 misiek   users      555815 2004-01-25 21:05 initrd-lvm
-lvm staticly linked with uClibc and device-mapper lib using my patch above =
-(so=20
-only vgscan and vgchange functions available)
-=2Drwxr-xr-x    1 root     root       482428 2004-01-25 20:51 initrd-lvm
+At the moment lvm2 scans devices according to filters in lvm.conf
+There is also provisioning to ignore md component device if an md device
+is found with the same uuid.
 
-How these sizes look with dietlibc?
+This approach becomes a problem when the md device is not activated and
+the _unwary_ user did not set up a filter in lvm.conf.
 
-Also some problems with lvm way of checking what command user wants based o=
-n=20
-argv[0] came out:
-[root@arm misiek]# /sbin/initrd-lvm
-  No such command.  Try 'help'.
-[root@arm misiek]# ln -s /sbin/initrd-lvm lvm
-[root@arm misiek]# ./lvm
-  Please supply an LVM command.
-  Available lvm commands:
-  Use 'lvm help <command>' for more information
+The attached patch aims to fix this issue in a way that should be
+transparent to the user.
 
-  help            Display help for commands
-  vgchange        Change volume group attributes
-  vgscan          Search for all volume groups
-  version         Display software and driver version information
+It modifies _find_labeller in lib/label/label.c to look for md
+superblock signature in the component device and ignore the device if
+found.
 
-It would be much better if when argv[0] is not known internally for lvm the=
-n=20
-work as argv[0] =3D lvm.
+In order to achieve this i had to modify lib/device/dev-io.c to use
+lseek64 in place of lseek (i don't think there is any advantage in using
+_llseek).
 
-> L.
+It build and works as expected on my test system (mandrake cooker), but
+i would like some comments on it.
 
-=2D-=20
-Arkadiusz Mi=B6kiewicz     CS at FoE, Wroclaw University of Technology
-arekm.pld-linux.org, 1024/3DB19BBD, JID: arekm.jabber.org, PLD/Linux
+I did not remove yet the check for duplicate pv and md in
+lib/cache/lvmcache.c and lib/format1/disk-rep.c, but i believe it can be
+removed if my patch is ok.
+
+Forcing the user zero the md superblock (using mdadm) before using the
+device as a pv does not seem a bad side-effect.
+
+Regards,
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="lvm2-skipmd.patch"
+
+--- LVM2.2.00.08/lib/device/dev-io.c.skipmd	2004-01-24 19:11:29.000000000 +0100
++++ LVM2.2.00.08/lib/device/dev-io.c	2004-01-25 02:24:50.056433529 +0100
+@@ -41,11 +41,9 @@
+ #  endif
+ #endif
+ 
+-
+-/* FIXME Use _llseek for 64-bit
+-_syscall5(int,  _llseek,  uint,  fd, ulong, hi, ulong, lo, loff_t *, res, uint, wh);
+- if (_llseek((unsigned) fd, (ulong) (offset >> 32), (ulong) (offset & 0xFFFFFFFF), &pos, SEEK_SET) < 0) { 
+-*/
++#ifndef __dietlibc__
++extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
++#endif
+ 
+ static LIST_INIT(_open_devices);
+ 
+@@ -76,7 +74,7 @@
+ 		return 0;
+ 	}
+ 
+-	if (lseek(fd, (off_t) where->start, SEEK_SET) < 0) {
++	if (lseek64(fd, where->start, SEEK_SET) < 0LL) {
+ 		log_sys_error("lseek", dev_name(where->dev));
+ 		return 0;
+ 	}
+@@ -318,7 +316,7 @@
+ #endif
+ 
+ 	if ((flags & O_CREAT) && !(flags & O_TRUNC)) {
+-		dev->end = lseek(dev->fd, (off_t) 0, SEEK_END);
++		dev->end = lseek64(dev->fd, 0, SEEK_END);
+ 	}
+ 
+ 	list_add(&_open_devices, &dev->open_list);
+--- LVM2.2.00.08/lib/label/label.c.skipmd	2003-08-26 23:12:05.000000000 +0200
++++ LVM2.2.00.08/lib/label/label.c	2004-01-25 02:22:05.309194536 +0100
+@@ -98,6 +98,11 @@
+ 	return NULL;
+ }
+ 
++#define MD_SB_MAGIC     0xa92b4efc
++#define MD_RESERVED_BYTES       (64 * 1024)
++#define MD_RESERVED_SECTORS     (MD_RESERVED_BYTES / SECTOR_SIZE)
++#define MD_NEW_SIZE_SECTORS(x)      ((x & ~(MD_RESERVED_SECTORS - 1)) - MD_RESERVED_SECTORS)
++
+ static struct labeller *_find_labeller(struct device *dev, char *buf,
+ 				       uint64_t *label_sector)
+ {
+@@ -108,12 +113,26 @@
+ 	uint64_t sector;
+ 	int found = 0;
+ 	char readbuf[LABEL_SCAN_SIZE];
++	uint32_t md_magic;
+ 
+ 	if (!dev_open(dev)) {
+ 		stack;
+ 		return NULL;
+ 	}
+ 
++	/* check if it is an md component device */
++	dev_get_size(dev, &sector);
++	if (sector > MD_RESERVED_SECTORS*2) {
++		sector = MD_NEW_SIZE_SECTORS(sector);
++		sector *= SECTOR_SIZE; 
++		if (dev_read(dev, sector, sizeof(uint32_t), &md_magic)) {
++			if (md_magic == MD_SB_MAGIC) {
++				log_very_verbose("%s: Skipping md component device", dev_name(dev));
++				goto out;
++			}
++		}
++	}
++
+ 	if (!dev_read(dev, UINT64_C(0), LABEL_SCAN_SIZE, readbuf)) {
+ 		log_debug("%s: Failed to read label area", dev_name(dev));
+ 		goto out;
+
+--IJpNTDwzlM2Ie8A6--
