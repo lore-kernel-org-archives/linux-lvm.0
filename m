@@ -1,12 +1,9 @@
-Return-Path: <thornber@btconnect.com>
-Date: Tue, 17 Jul 2001 17:40:08 +0100
-Subject: Re: [linux-lvm] FW: LVM on Linux
-Message-ID: <20010717174008.A1000@btconnect.com>
-References: <85063BBE668FD411944400D0B744267A643418@AUSMAIL>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <85063BBE668FD411944400D0B744267A643418@AUSMAIL>; from austin@coremetrics.com on Mon, Jul 16, 2001 at 03:42:00PM -0500
-From: Joe Thornber <thornber@btconnect.com>
+Return-Path: <johannjh@iafrica.com>
+From: "Johann" <johannjh@iafrica.com>
+Subject: RE: [linux-lvm] Strtup probs !
+Date: Tue, 17 Jul 2001 19:36:08 +0200
+Message-ID: <FDEJIMPDHJAAPNLFKBMGEELJCEAA.johannjh@iafrica.com>
+In-reply-to: <0GGM00EWJ7ZIWI@smtp08.iafrica.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,219 +15,218 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, ahiam@hotmail.com
 
-This one keeps resurfacing so I had a look at it.
+As I promised....
 
-I had a look at Ben LaHaise's patch, it seems to be ensuring that all
-sector offsets are stored in a blkoff_t variable, which presumably is
-an unsigned 64 bit integer.  The rest of the patch goes through some
-of the block drivers (eg, loop) and ensures that no *, / or %
-operations are performed on blkoff_t's.  Good stuff.
+cd /etc/rc.d
+cp -a rc.S rc.S.old
+patch -p0 <rc.S.diff
 
-The email below mentions 3 problems with LVM:
+The cp part to make a backup in case.
 
-1) planned on supporting 64 bit offsets
+Theo
+----- snip snip file: rc.S.diff---------------
+--- rc.S.or	Tue Jul 17 18:11:20 2001
++++ rc.S	Tue Jul 17 17:57:36 2001
+@@ -4,6 +4,7 @@
+ #
+ # Mostly written by:  Patrick J. Volkerding, <volkerdi@slackware.com>
+ #
++# Added LVM support <tgs@iafrica.com>
 
-   o lvm_disk_data_t which describes the positions of the metadata
-     sections uses 32bit sectors - however these will always be in the
-     first Meg or so of the block device, so 32 bits is plenty
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
-   o lv_block_exception_t, used for the in core representation and
-     hence a part of the ioctl interface, holds 32 bit sectors.  This
-     will have to be changed.  But the ioctl interface is going to change
-     big time when we move to in kernel metadata io.
+@@ -28,19 +29,21 @@
+   READWRITE=yes
+ fi
 
-2) never used multiplication, division or modulus on block numbers
++
+ # Check the integrity of all filesystems
+ if [ ! $READWRITE = yes ]; then
+-  /sbin/fsck -A -a
++  /sbin/fsck -a /
++  # Check only the root fs first, but no others
+   # If there was a failure, drop into single-user mode.
+   if [ $? -gt 1 ] ; then
+     echo
+     echo
+-    echo "*******************************************************"
+-    echo "*** An error occurred during the file system check. ***"
+-    echo "*** You will now be given a chance to log into the  ***"
+-    echo "*** system in single-user mode to fix the problem.  ***"
+-    echo "*** Running 'e2fsck -v -y <partition>' might help.  ***"
+-    echo "*******************************************************"
++    echo "************************************************************"
++    echo "*** An error occurred during the root file system check. ***"
++    echo "*** You will now be given a chance to log into the       ***"
++    echo "*** system in single-user mode to fix the problem.       ***"
++    echo "*** Running 'e2fsck -v -y <partition>' might help.       ***"
++    echo "************************************************************"
+     echo
+     echo "Once you exit the single-user shell, the system will reboot."
+     echo
+@@ -82,6 +85,44 @@
+     echo -n "get into your machine and start looking for the problem. "
+     read junk;
+   fi
++  # okay / fs is clean, and mounted as rw
++  # This was an addition, limits vgscan to /proc thus
++  # speeding up the scan immensely.
++  /sbin/mount /proc
++
++  # Initialize Logical Volume Manager
++  /sbin/vgscan
++  /sbin/vgchange -ay
++
++  /sbin/fsck -A -a -R
++  #Check all the other filesystem, including the LVM's, excluding /
++
++  # If there was a failure, drop into single-user mode.
++  if [ $? -gt 1 ] ; then
++    echo
++    echo
++    echo "*******************************************************"
++    echo "*** An error occurred during the file system check. ***"
++    echo "*** You will now be given a chance to log into the  ***"
++    echo "*** system in single-user mode to fix the problem.  ***"
++    echo "*** Running 'e2fsck -v -y <partition>' might help.  ***"
++    echo "*** The root filesystem is ok and mounted readwrite ***"
++    echo "*******************************************************"
++    echo
++    echo "Once you exit the single-user shell, the system will reboot."
++    echo
++
++    PS1="(Repair filesystem) \#"; export PS1
++    sulogin
++
++    echo "Unmounting file systems."
++    umount -a -r
++    mount -n -o remount,ro /
++    echo "Rebooting system."
++    sleep 2
++    reboot
++  fi
++
+ else
+   echo "Testing filesystem status: read-write filesystem"
+   if cat /etc/fstab | grep ' / ' | grep umsdos 1> /dev/null 2> /dev/null ;
+then
+@@ -111,14 +152,16 @@
+     echo -n "Press ENTER to continue. "
+     read junk;
+   fi
++
+ fi
 
-   It's true that we do this at the moment, I just had a quick go at getting
-   rid of them, the no-stripe case is easy:
++
+ # remove /etc/mtab* so that mount will create it with a root entry
+ /bin/rm -f /etc/mtab* /etc/nologin /etc/shutdownpid
 
-   int inline map_single(blkoff_t sector, vg_t *vg, lv_t *lv, 
-		         blkoff_t *sector_map, kdev_t *dev_map)
-   {
-	pe_t *pe;
-	uint32_t pe_shift = vg->pe_shift;
-	uint32_t pe_mask = vg->pe_mask;
+ # mount file systems in fstab (and create an entry for /)
+ # but not NFS or SMB because TCP/IP is not yet configured
+-/sbin/mount -a -v -t nonfs,nosmbfs
++/sbin/mount -a -v -t nonfs,nosmbfs,proc
 
-	index = rsector_org >> pe_shift;
-	pe = lv->lv_current_pe + index;
-
-	*sector_map = pe.pe + (rsector_org & pe_mask);
-	*dev_map = pe.dev;
-   }
-
-   We just replace the / and % with shifts and masks.
-
-   The striped version is harder:
-
-   int inline map_multiple(blkoff_t sector, vg_t *vg, lv_t *lv,
-			   blkoff_t *sector_map, kdev_t *dev_map)
-   {
-	uint32_t pe_shift = vg->pe_shift;
-	uint32_t pe_mask = vg->pe_mask;
-	uint32_t stripes = lv->stripes;
-	uint32_t seg_size = vg->pe_size * stripes;
-	uint32_t index, chunk;
-	pe_t *pe;
-
-	index = sector >> pe_shift;  /* safely drop to 32 bits */
-        index -= index % stripes;    /* I'm sure there's a neater way */
-
-	/*!!! 64 bit % */
-	chunk = (sector % seg_size) >> chunk_shift;
-
-	index += chunk % stripes;
-	chunk = chunk / stripes;
-
-	pe = lv->lv_current_pe + index;
-
-	sector_map = pe.pe + (chunk << chunk_shift) + (sector & chunk_mask);
-	dev_map = pe.dev;
-   }
-
-   Here there's one % that we can't get rid of (we could also do chunk = 
-   sector - (pe_size * index)), for the simple fact that the number of
-   stripes is not a power of 2, so we can't replace with shifts and masks.
-
-   I just had a chat with one of the EVMS guys, EVMS *does* have this
-   exact same problem.
-
-   Should we restrict stripes sets to powers of 2 ?
+ # Clean up temporary files on the /var volume:
+ /bin/rm -f /var/run/utmp /var/run/*.pid /var/log/setup/tmp/*
+--snip snip snip end of file---------------
 
 
-3) don't allocate memory structures that are indexed by block numbers
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of tgs@iafrica.com
+Sent: 17 July 2001 01:27
+To: linux-lvm@sistina.com; ahiam@hotmail.com
+Cc: tgs@iafrica.com
+Subject: Re: [linux-lvm] Strtup probs !
 
-   o We don't, I think he's confusing PE's with blocks.
+
+I had the same experience. The lvm-how to needs to be updated (changes in
+the
+boot scripts for slackware). You going to have to change the rc.S file. I
+will
+prepare a patch for this tonight and post on the mail list, as well email it
+to
+you.
+
+In the mean time I can explain the problem to you. Currently the rc.S in
+slackware (I'm using version 8.0) does the following:
+1. Mount to root partition as ro (read-only).
+2. fsck all the filesystems in /etc/fstab. If one of them are a LVM
+partition
+fsck can't talk to that  then it can't fsck that filesystem and exits with
+an
+error - you then go into admin mode. In order for fsck to be able to check
+those filesystem you have to activate the volumes (i.e. vgchange -ay). To
+the
+problem is that you can only run vgchange -ya if the root partition is
+mounted
+rw. So you have a chicken-egg situation here.
+
+My solution is:
+1. mount the root partition as read-only.
+2. run fsck -a /
+3. remount the root partition as read-write
+4. run vgscan and vgchange -ay
+5. run fsck -A -a -R     (will check all the fs but not the root, because it
+is
+already been checked and mounted read-write)
 
 
-- Joe
+I havnn't converted my root partition on a LVM yet. I don't intent to do
+that
+not before I very sure that LVM 1.0 is released and stable.
+
+I'm sure quota should work. I might be under correction but quota will work
+for
+the filesystem, in your case /home is ext2 and should work.
+
+Theo
 
 
-On Mon, Jul 16, 2001@03:42:00PM -0500, Gonyou, Austin wrote:
-> I think ELVM at the bottom is EVMS. I wish I knew where the original article
-> was, cause I'd like to know what 64bit frame he's talking about. Currently
-> I'm using LVM for striping, and plan to use it with Fibre. From what I
-> understand on this list, is that others are using it on fibre already. So,
-> if they are using a 2.4 kernel, with fibre, wouldn't that mean that they'd
-> need to employ 64-bit access(if they use a 64-bit controller+driver?)
-> 
-> -- 
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-796-9023
-> email: austin@coremetrics.com 
-> 
-> > -----Original Message-----
-> > From: Gonyou, Austin [mailto:austin@coremetrics.com]
-> > Sent: Monday, July 16, 2001 3:36 PM
-> > To: 'linux-lvm@sistina.com'
-> > Subject: [linux-lvm] FW: LVM on Linux
-> > 
-> > 
-> > From the XFS list. 
-> > 
-> > -- 
-> > Austin Gonyou
-> > Systems Architect, CCNA
-> > Coremetrics, Inc.
-> > Phone: 512-796-9023
-> > email: austin@coremetrics.com 
-> > 
-> > > -----Original Message-----
-> > > From: Ric Tibbetts [mailto:ric@pipcws.ca.boeing.com]
-> > > Sent: Monday, July 16, 2001 3:09 PM
-> > > To: Linux XFS Mailing List; JFS Discussion List
-> > > Subject: LVM on Linux
-> > > 
-> > > 
-> > > For anyone considering using LVM on Linux. You might want to take a 
-> > > second to look at the following "short" article. It casts a 
-> > > questionalble light on the current state of the LVM code.
-> > > 
-> > > ================================================
-> > > 
-> > > 0 Jun - 5 Jul (8 posts) Archive Link: [RFC][PATCH] first cut 
-> > > 64 bit block
-> > > support
-> > >                   Summary by Zack Brown
-> > > 
-> > > Ben LaHaise posted a patch and announced, "Below is the first 
-> > > cut at making
-> > > the block size limit configurable to 64 bits on x86, as well 
-> > > as always 64
-> > > bits on 64 bit machines. The audit isn't complete yet, but a 
-> > > good chunk of
-> > > it is done." [..] "The following should be 64 bit clean now: 
-> > > nbd, loop,
-> > > raid0, raid1, raid5." He gave links to two homepages at
-> > > http://people.redhat.com/bcrl/lb/ and
-> > > http://www.kvack.org/~blah/lb/. He added, "Ugly bits: I had 
-> > > to add libgcc.a
-> > > to satisfy the need for 64 bit division. Yeah, it sucks, but 
-> > > RAID needs some
-> > > more massaging before I can remove the 64 bit division 
-> > > completely. This will
-> > > be fixed." Chris Wedgwood proposed some changes to libgcc.a 
-> > > to be less ugly,
-> > > and Ben replied, "I'm getting rid of the need for libgcc 
-> > > entirely. That's
-> > > what "This will be fixed" means. If you want to expedite the 
-> > > process, send a
-> > > patch. Until then, this is Good Enough for testing purposes."
-> > > 
-> > > Elsewhere, Ragnar Kjarstad was very happy about Ben's work, 
-> > > asking if LVM
-> > > was also 64-bit clean. Ben replied cryptically, "Errr, I'll 
-> > > refrain from
-> > > talking about LVM." Ragnar wanted some clarification, and Ben 
-> > > explained:
-> > > 
-> > > Fixing LVM is not on the radar of my priorities. The code is 
-> > > sorely in need
-> > > of a
-> > > rewrite and violates several of the basic planning tenents 
-> > > that any good
-> > > code in the block layer should follow. Namely, it should have 
-> > > 1) planned on
-> > > supporting 64 bit offsets, 2) never used multiplication, 
-> > > division or modulus
-> > > on block numbers, and 3) don't allocate memory structures 
-> > > that are indexed
-> > > by block numbers. LVM failed on all three of these -- and 
-> > > this si just what
-> > > I noticed in a quick 5 minute glance through the code. Sorry, 
-> > > but LVM is
-> > > obsolete by design. It will continue to work on 32 bit block 
-> > > devices, but if
-> > > you try to use it beyond that, it will fail. That said, we'll 
-> > > have to make
-> > > sure these failures are graceful and occur prior to the user 
-> > > having a chance
-> > > at loosing any data.
-> > > 
-> > > Now, thankfully there are alternatives like ELVM, which are 
-> > working on
-> > > getting the
-> > > details right from the lessons learned. Given that, I think 
-> > > we'll be in good
-> > > shape
-> > > during the 2.5 cycle.
-> > > 
-> > > End Of Thread (tm).
-> > > 
-> > > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > 
+> hi all,
+>
+> i need help with the following probs 'm facing.....
+> my system is--->  512MB, 500Mhz, 3 scsi, Compaq server with 7.0 Slackware
+> upgradded packages with latest from Slackware & kernel 2.4.6 ( with LVM as
+> module)
+> 1) could not start LVM with /etc/fstab entries !   ;-(
+>     i have created initrd.gz & have done exactly as stated in HOW-TO to
+> start LVM at startup ( i'm doing it only on my /home ).
+>     if i dont put entries on my /etc/fstab ( for home & LVM) then it works
+> ok, but sooner i put it there on boot there is an error of  something swap
+> disk which takes me to administrative mode !!!!.. my /etc/fstab enrty is
+> /dev/VGmail/LVmail    /home    ext2    defaults    1    1
+>
+> 2) can quota be implimented with LVM  for eg on my /home .. ??
+>
+> 3) how to have root partion on LVM.
+>     i tried to do that too like in the HOW-TO & did dd on an empty
+partion.
+> but when i tried to convert root partion to LVM  i got errors.. so can
+> anyone tell me the actual steps pls !
+>
+> pls excuse me for my english
+> thanxs in advance...
+> arindam haldar
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+
+---------------------------------------------
+This message was sent using M-Web Airmail.
+http://airmail.mweb.co.za/
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
