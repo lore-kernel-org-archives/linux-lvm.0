@@ -1,8 +1,8 @@
-From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
-Subject: re[2]: [linux-lvm] A little Cluster/Newbie help pls!
+From: Matt Schillinger <mschilli@vss.fsi.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1048865232.7751.52.camel@mosix>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030328151303.WDJJ21472.imf43bis.bellsouth.net@tiger2>
+Subject: [linux-lvm] snapshots on shared fibre
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,17 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 28 09:19:01 2003
+Date: Fri Mar 28 09:27:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
- >>  As a side note, there is OpenGFS ( i don't know where it is in
- >>  alpha/beta release, but it is open source).
+I have a Xiotech Magnitude raid, that uses fibre ports to connect to
+multiple servers. 
 
-Ignoring SPOF issues, I would say it is beta quality at best.
+We do NOT use a SAN filesystem. What I am wondering is, can I use
+snapshots that are mounted on 1 machine, where the original filesystem
+is mounted on another machine. both machines are connected to the raid
+via fibre.
 
-To handle the SPOFs:
-    You must use an external RAID controller.  ($$)
-    You have to setup a HA cluster to run the lockserver.  I don't know if =
-transparent failover can be achieved.
+My hope is that, since it is a second filesystem, and is readonly, this
+operation will not cause problems..
+
+Is this correct?
+
+
+-- 
+Matt Schillinger
+
+mschilli@vss.fsi.com
