@@ -1,9 +1,12 @@
-Message-ID: <5F2C72E5CC01D511BE3D0008C75B9AD8039A2D91@RDGEXH03>
-From: Jon Lacey <Jon.Lacey@exprogroup.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C2CC2B.DBA26BF0"
-Subject: [linux-lvm] Help configuring LVM
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] cvs anonymous update problem
+Message-ID: <20030204143328.GA10982@antimony.sistina.com>
+References: <3E35C33F00001C21@ocpmta3.freegates.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <3E35C33F00001C21@ocpmta3.freegates.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,189 +17,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  5 12:05:01 2003
+Date: Wed Feb  5 12:05:03 2003
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-------_=_NextPart_001_01C2CC2B.DBA26BF0
-Content-Type: text/plain
+Sorry 'bout that.  It should be all good again now.
 
-Hi, I have looked at the HOWTO's and FAQ's and cannot seem to solve my
-problem, maybe it's me.
+On Tue, Feb 04, 2003 at 11:54:41AM +0100, Joel Soete wrote:
+> Doing weekly a cvs update of your project, since this weekend I encounter
+> the following problem:
+>=20
+> cvs -d ":pserver:cvs@tech.sistina.com:/data/cvs" login
+> Fatal error, aborting.
+> cvs: no such user
+>=20
+> Is there some change in cvs config not yet reported to web page?
 
- 
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              E-Mail: lewis@sistina.com
+Minneapolis, MN 55414
+http://www.sistina.com
 
-I do not seem, while installing Slackware 8, to be able to build LVM into
-the install, so I was hoping to be able to do a minimal install and then add
-a logical volume and move me data.
+Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
+A5A
+Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
+many keyservers out there...
+-----Begin Obligatory Humorous Quote----------------------------------------
+A program is a device used to convert data into error messages.
+-----End Obligatory Humorous Quote------------------------------------------
 
- 
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-I have installed Slackware (a very basic setup) as:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.7 (GNU/Linux)
 
-/dev/hda1 100 MB mounted as /boot
+iD8DBQE+P884K/V1dClKqloRAllgAJ4kJLht3+q6oxhQWh3PdxJJtp1ENgCfRk0a
+jVN9/9yU5bBRPavT2HW9OEc=
+=52ol
+-----END PGP SIGNATURE-----
 
-/dev/hda2 200 MB as Swap
-
-/dev/hda3 800MB mounted as /
-
- 
-
-I have three more drives, all 1 GIG drives. /dev/hdb1 /dev/hdc1 /dev/hdd1 
-
-What I would like to do is to amalgamate them all into one large volume,
-include /dev/hda3 as part of the volume and have it all mounted as /
-
- 
-
-So I hope to end up with a volume group, say vg1, consisting of a single
-volume, say vol1, copy data over from /dev/hda3 and then mount vol1 as /
-
- 
-
-Is there anywhere I can go to see an example of doing this/ or can someone
-help.
-
- 
-
- 
-
-Thanks
-
-Jon L.
-
-
-----------------------------------------------------------------------
-Important Notice: 
-The information in this email is confidential and may be legally-privileged.  
-If you have reason to believe you are not the intended recipient, any disclosure, 
-copying, distribution or any action taken or omitted to be taken in reliance on 
-it is prohibited and may be unlawful and you are requested to contact the sender 
-urgently and dispose of this email 
------------------------------------------------------------exp.
-
-------_=_NextPart_001_01C2CC2B.DBA26BF0
-Content-Type: text/html
-
-<html>
-
-<head>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=us-ascii">
-
-
-<meta name=Generator content="Microsoft Word 10 (filtered)">
-
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:Tahoma;}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{font-family:Tahoma;
-	color:windowtext;
-	font-weight:normal;
-	font-style:normal;
-	text-decoration:none none;}
-@page Section1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 42.55pt 72.0pt 42.55pt;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-
-</head>
-
-<body lang=EN-US link=blue vlink=purple>
-
-<div class=Section1>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>Hi, I have looked at the HOWTO's and FAQ's and cannot seem
-to solve my problem, maybe it's me.</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>&nbsp;</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>I do not seem, while installing Slackware 8, to be able to build LVM
-into the install, so I was hoping to be able to do a minimal install and then
-add a logical volume and move me data.</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>&nbsp;</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>I have installed Slackware (a very basic setup) as:</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>/dev/hda1 100 MB mounted as /boot</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>/dev/hda2 200 MB as Swap</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>/dev/hda3 800MB mounted as /</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>&nbsp;</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>I have three more drives, all 1 GIG drives. /dev/hdb1 /dev/hdc1
-/dev/hdd1 </span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>What I would like to do is to amalgamate them all into one large volume,
-include /dev/hda3 as part of the volume and have it all mounted as /</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>&nbsp;</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>So I hope to end up with a volume group, say vg1, consisting of a single
-volume, say vol1, copy data over from /dev/hda3 and then mount vol1 as /</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>&nbsp;</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>Is there anywhere I can go to see an example of doing this/ or can
-someone help.</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>&nbsp;</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>&nbsp;</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>Thanks</span></font></p>
-
-<p class=MsoNormal><font size=2 face=Tahoma><span lang=EN-GB style='font-size:
-10.0pt'>Jon L.</span></font></p>
-
-</div>
-
-</body>
-
-</html>
-
-------_=_NextPart_001_01C2CC2B.DBA26BF0--
-
- 
+--ibTvN161/egqYuK8--
