@@ -1,11 +1,13 @@
-Return-Path: <root@srv.sistina.com>
-Date: Fri, 4 May 2001 09:38:09 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problems compiling 2.4.4
-Message-ID: <20010504093809.F4700@sistina.com>
-References: <20010502182804.A6768@in-cadcae4.ing.temic.de> <3AF092F1.4196DB9B@gecpalau.com>
-Mime-Version: 1.0
-In-Reply-To: <3AF092F1.4196DB9B@gecpalau.com>; from glenn@gecpalau.com on Thu, May 03, 2001 at 08:06:25AM +0900
+Return-Path: <tandem@dnmi.no>
+Subject: Re: [linux-lvm] LVM Questions
+References: <20010503004851.897.qmail@web10803.mail.yahoo.com>
+	<3AF0B857.74F16371@home.com> <wv4rv26hvj.fsf@freeze.oslo.dnmi.no>
+	<20010504093350.D4700@sistina.com>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 04 May 2001 09:45:24 +0200
+In-Reply-To: "Heinz J. Mauelshagen"'s message of "Fri, 4 May 2001 09:33:50 +0000"
+Message-ID: <wvlmod7e23.fsf@freeze.oslo.dnmi.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,85 +23,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Glenn is right.
-I've already applied support for the changed symbol (get_hardsect_size rather
-than get_hardblocksize) in recent LVM CVS.
+>>>>> "Heinz" == Heinz J Mauelshagen <Mauelshagen@sistina.com> writes:
 
-Regards,
-Heinz    -- The LVM Guy --
+<snip>
+    >>  I believe it is officially supported, ie. if it breaks then
+    >> its a bug, and have done it now several times, at least on
+    >> lightly loaded filesystems. Its not quite as convienient as
+    >> AIX's LVM, in that one resizes the filesystem and the logical
+    >> volume is automatically resized, but if I'm bothered I'll write
+    >> a wrapper script around lvextend/lvreduce for that.
+    >> 
+    >> A question for the developers if they notice. Why lvextend and
+    >> lvreduce, as they do the same things. Is it just for clarity ?
+    >> A lvresize with + or - or a fixed size to could the same ?
 
+    Heinz> The Linux LVM CLI is as close as possible to the HP/UX one
+    Heinz> which has those commands (and vgextend/vgreduce as well)
+    Heinz> seperate.  This makes at least me as a long term HP/UX LVM
+    Heinz> user happy ;-)
 
-On Thu, May 03, 2001 at 08:06:25AM +0900, Glenn Shannon wrote:
-> Emanuel Quass wrote:
-> 
-> > Hi,
-> >
-> > I compiled a kernel(2.4.4) with your lvm patch (0.9.1_beta7).
-> > At the end of make bzImage an error occours:
-> >
-> > ld -m elf_i386 -T /mnt/kernel/linux/arch/i386/vmlinux.lds -e \
-> >  stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o \
-> >  init/main.o init/version.o \
-> >         --start-group \
-> >         arch/i386/kernel/kernel.o arch/i386/mm/mm.o \
-> > kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
-> >         drivers/block/block.o drivers/char/char.o \
-> > drivers/misc/misc.o drivers/net/net.o drivers/media/media.o \
-> > drivers/ide/idedriver.o drivers/scsi/scsidrv.o \
-> > drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o \
-> > drivers/md/mddev.o \
-> >         net/network.o \
-> >         /mnt/kernel/linux/arch/i386/lib/lib.a \
-> > /mnt/kernel/linux/lib/lib.a /mnt/kernel/linux/arch/i386/lib/lib.a \
-> >         --end-group \
-> >         -o vmlinux \
-> > drivers/md/mddev.o: In function `__update_hardblocksize':
-> > drivers/md/mddev.o(.text+0x2316): undefined reference to `get_hardblocksize'
-> > drivers/md/mddev.o(.text+0x2352): undefined reference to `get_hardblocksize'
-> > make: *** [vmlinux] Error 1
-> > Does anybody knwo where this comes from!
-> >
-> > Thanks in advance
-> >
-> >         Emanuel
-> >
-> > P.S. Please CC me because I am not in the list.
-> >
-> > --
-> >
-> > ++++++++++++++++++++++++++++++++
-> > Emanuel Quass
-> > email :  emanuel.quass@temic.com
-> >
-> > In a world without fences and walls,
-> > who needs Windows and Gates?
-> > ++++++++++++++++++++++++++++++++
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
-> go to your /usr/src/linux directory.....go to drivers/md and edit lvm.c and
-> change the two entries of get_hardblocksize with get_hardsect_size
-> 
-> That should do the trick.
-> 
-> Glenn
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+HP/UX, how unfortunate :-) Thanks for the info. though.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+    Heinz> lvresize can easily be made as a convenence wrapper
+    Heinz> though...
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Patches accepted I presume :-)
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Sincerely,
+
+Adrian Phillips
+
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
