@@ -1,12 +1,12 @@
-Return-Path: <piete.brooks@cl.cam.ac.uk>
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 Beta 6 available@
- www.sistina.com
-In-reply-to: Your message of Tue, 13 Mar 2001 01:21:36 +0000.
-             <20010313012136.A10157@sistina.com> 
+Return-Path: <lewis@sistina.com>
+Date: Fri, 16 Mar 2001 12:44:46 -0600
+From: AJ Lewis <lewis@sistina.com>
+Message-ID: <20010316124446.B1478@sistina.com>
 Mime-Version: 1.0
-Date: Fri, 16 Mar 2001 13:45:07 +0000
-From: Piete Brooks <Piete.Brooks@cl.cam.ac.uk>
-Message-Id: <E14duXV-0006Vi-00@whittlesey.cl.cam.ac.uk>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Disposition: inline
+Subject: [linux-lvm] LVM 0.9.1 Beta6 RPMS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,31 +18,60 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Using devfs, I still get `part1' rather than ide/host0/bus0/target0/lun0/part1
-With multiple disks, this is somewhat unhelpful.
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[[Also, it's a shame that there are so many spaces, making lines > 80 chars]]
+LVM 0.9.1 Beta6 RPMS are up on the Sistina FTP site:
+ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/binaries/redhat
 
-[ Is there a version for easy parsing by perl scripts ? ]
+These are based on the Connectiva LVM packages, but were created on a Redhat
+6.2 system.  (I think they will work on any RPM based system though...) They
+use a modified version of the wrapper script (it uses sed instead of
+basename and the libary name has changed).  You need to grab at a minimum,
+the lvm-base, lvm-iop10, and lvm-iop10-lib packages.
 
-worsdell:~: cat /proc/lvm/global 
-LVM driver version 0.9.1_beta6 (12/03/2001)
+This should be considered a Beta version of the package as well as of LVM.
+Please don't go using these on your production system and then complain
+because they clobber your system.  I'm putting these out there for people to
+test so we have them right when we release a production version of LVM.
 
-Total:  1 VG  2 PVs  3 LVs (3 LVs open 3 times)
+Debian packages are next in line.  Hopefully I'll have those done by the end
+of Monday...
 
-Global: 7275 bytes malloced   IOP version: 10   0:03:02 active
+Go forth and test!
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-VG:  vg01  [2 PV, 3 LV/3 open]  PE Size: 4096 KB
-  Usage [KB/PE]: 1593344 /389 total  516096 /126 used  1077248 /263 free
-  PVs: [AA] part1                  1044480 /255       516096 /126       528384 
-/129
-       [AA] part6                   548864 /134            0 /0         548864 
-/134
-    LVs: [AWDL  ] tmp                         106496 /26       1x open
-         [AWDL  ] repl                        307200 /75       1x open
-         [AWDL  ] scratch                     102400 /25       1x open
-worsdell:~: 
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+"Memory is like gasoline. You use it up when you are running. Of
+course you get it all back when you reboot..."; Actual explanation
+obtained from the Micro help desk.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6sl8epE6/iGtdjLERAtY6AJ4m35kvYvWQrL7yIh4i9YE30ZvaCACdEq7n
+ColsMq0Pet0l6LezsfPH6jo=
+=6r5u
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
