@@ -1,19 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2QKoEj05271
-	for <linux-lvm@redhat.com>; Fri, 26 Mar 2004 15:50:14 -0500
-From: Rainer Krienke <rainer@krienke.org>
-Subject: Re: [linux-lvm] Somewhat offtopic: Strange umount problem ....
-Date: Fri, 26 Mar 2004 21:50:06 +0100
-References: <200403251534.47502.krienke@uni-koblenz.de>
-	<200403260800.21301.krienke@uni-koblenz.de>
-	<1080319473.16404.3.camel@grandmother.littlebald.com>
-In-Reply-To: <1080319473.16404.3.camel@grandmother.littlebald.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2RM1jj08850
+	for <linux-lvm@redhat.com>; Sat, 27 Mar 2004 17:01:45 -0500
+Received: from email02.aon.at (WARSL402PIP7.highway.telekom.at [195.3.96.94])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2RM1i1X029907
+	for <linux-lvm@redhat.com>; Sat, 27 Mar 2004 17:01:44 -0500
+From: Manfred Koizar <mkoi-pg@aon.at>
+Date: Sat, 27 Mar 2004 23:03:09 +0100
+Message-ID: <06sb60hni6h5cok941gqnuo4ld1b0v1rgi@email.aon.at>
+References: <200403262200.i2QM04223972@mail.osdl.org>
+In-Reply-To: <200403262200.i2QM04223972@mail.osdl.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	micalg=pgp-sha1; boundary="Boundary-02=_DeJZACsFo3Cun7C";
-	charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Message-Id: <200403262150.12149.rainer@krienke.org>
+Subject: [linux-lvm] Re: [HACKERS] PostgreSQL block size vs. LVM2 stripe
+	width
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,58 +23,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: markw@osdl.org
+Cc: linux-lvm@redhat.com, linux-ia64@vger.kernel.org, pgsql-hackers@postgresql.org
 
+Mark,
 
---Boundary-02=_DeJZACsFo3Cun7C
-Content-Type: text/plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+how often did you run your tests?  Are the results reproduceable?
 
-Am Freitag, 26. M=E4rz 2004 17:44 schrieb David Johnston:
-=2E..
-> > > Rainer,
-> > > nfsd will do this.  Make sure all of your NFS servers are stopped
-> > > before you try to umount your filesystems.
-> > >
-> > > Does that help?
-> >
-> > Thanks for the hint, but nfsd has already been stopped
-> > Here is a list of all processes still running in single user
->
-> Rainer,
-> could it be your multipath daemon?  In single-user mode, I would expect
-> multipathd and the migration_CPUx daemons to shut down.
+On Fri, 26 Mar 2004 14:00:01 -0800 (PST), markw@osdl.org wrote:
+>                        Linux-2.6.3, LVM2 Stripe Width
+>                        (going across)
+>PostgreSQL
+>BLCKSZ
+>(going down)    16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
+>2 KB            2617    2656    2652    2664    2667    2642
+>4 KB            4393    4486    4577    4557    4511    4448
+>8 KB            4337    4423    4471    4576    4111    3642
+>16 KB           4412    4495    4532    4536    2985    2312
+>32 KB           3705    3784    3886    3925    2936    2362
 
-No, this is allright since multipath and software Mirror are sitting "below=
-"=20
-the filesystem and have to be active at least as long as the filesystem is=
-=20
-active..=20
+Unless someone can present at least an idea of a theory why a BLCKSZ of
+8 KB is at a local minimum (1 or 2% below the neighbouring values) for
+stripe widths up to 64 KB I'm not sure whether we can trust these
+numbers.
 
-@Klaus
-nfsd does not run any longer. If you want to take a look, the processes sti=
-ll=20
-running are here:
+Before I hit the send button, I did a quick check of the link you
+provided.  The links in the table contain the following test numbers:
 
-http://www.uni-koblenz.de/~krienke/tmp/processes.txt
+        16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
+2 KB     72      71      70       69      66      65
+4 KB     64      63      62       61      60      58
+8 KB     54      53      52       51      50      49
+16 KB    79      78      77       76      75      74
+32 KB    86      85      84       83      82      80
 
-Nothing suspicious to me....
+Does this mean that you first ran all test with 8 KB, then with 4, 2, 16
+and 32 KB BLCKSZ?  If so, I suspect that you are measuring the effects
+of something different.
 
-Thanks
-Rainer
-
---Boundary-02=_DeJZACsFo3Cun7C
-Content-Type: application/pgp-signature
-Content-Description: signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.2 (GNU/Linux)
-
-iD8DBQBAZJeDaldtjc/KDEoRAjt2AJ9sztUBDXtsrOW718zPB7Mt8usryACgu1uQ
-1pxuTbB5VCb3c9NVo8XFdZw=
-=sqh1
------END PGP SIGNATURE-----
-
---Boundary-02=_DeJZACsFo3Cun7C--
+Servus
+ Manfred
