@@ -1,27 +1,47 @@
-Message-Id: <m13VJmq-0001bIC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: [linux-lvm] access beyond end of devive
-Date: Sat, 2 Sep 2000 22:21:11 +0200 (MEST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Sat, 2 Sep 2000 17:04:14 -0500
+From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Subject: [linux-lvm] Striping and pvmove
+Message-ID: <20000902170414.A21426@omnifarious.mn.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Hello,
 
-After using lvm fo rseveral months with a kernel 2.2.14, I thought I give the
-2.4.0test7 a try.
-I downloaded lvm-0.8final and created an initrd with the new tools.
-The volume group created with the 2.2.14 is found, but all I get is a
-"attempt to access beyond end of device". I've seen this on this mailing
-list before but not how to fix it.
-So I tried to apply every patch one by one I could find on this list without
-any success.
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rolf
--- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+	What happens when you do a pvmove to move striped LEs to PEs
+where striping can't be done?
+
+	In my case, I have two drives, and I'm using striping as a sort
+of poor man's RAID0.  If I wanted to remove one drive and replace it
+with a bigger one, what would I do?
+
+Thanks,
+--=20
+The best we can hope for concerning the people at large is that they
+be properly armed.  -- Alexander Hamilton
+-- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
+r) --
+
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE5sXleG4QeWBeRdS8RAtJOAKDoMraa7H1A964ur1wCyg/HqeSLOACdFDEl
+xn83m1FJIS99480gF9CIhCQ=
+=Iouf
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
