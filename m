@@ -1,60 +1,62 @@
-Date: Thu, 1 Jun 2000 02:01:31 -0700
-From: David Gould <dg@suse.com>
+Message-ID: <393653F6.2D1C57B9@twc.de>
+Date: Thu, 01 Jun 2000 14:15:50 +0200
+From: Ulf Bartelt <ulf@twc.de>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] SuSE/LVM boot problem
-Message-ID: <20000601020131.E17555@archimedes.suse.com>
-References: <390FD771.DB59EECB@msede.com> <20000503095326.A4439@archimedes.suse.com> <20000531110128.A22796@gruyere.muc.suse.de>
-Mime-Version: 1.0
-In-Reply-To: <20000531110128.A22796@gruyere.muc.suse.de>; from ak@suse.de on Wed, May 31, 2000 at 11:01:28AM +0200
+References: <390FD771.DB59EECB@msede.com> <20000503095326.A4439@archimedes.suse.com> <20000531110128.A22796@gruyere.muc.suse.de> <12xB7E-0izhAGC@fwd05.sul.t-online.de> <20000531181803.A30169@gruyere.muc.suse.de> <39355918.C2B6A94B@msede.com>
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andi Kleen <ak@suse.de>
-Cc: dgould@suse.com, adilger@turbolabs.com, linux-lvm@msede.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@msede.com
 
-On Wed, May 31, 2000 at 11:01:28AM +0200, Andi Kleen wrote:
-> On Wed, May 03, 2000 at 09:53:26AM -0700, dgould@suse.com wrote:
-> > If I have understood this, we need the following to make this
-> > work (some of this may already exist):
-> > 
-> >  - lvm needs to provide an way for other programs to translate logical
-> >    blocks to physical
-> 
-> A physical equivalent to FIBMAP. Not too hard to implement I think.  
+Michael Marxmeier wrote:
+> AFAIR someone already did something similar by hacking the partition
+> table  and creating an overlapping partition which just happened to
+> map to the root LV.
 
-Yes. That is what I meant. 
- 
-> >  - lvm needs to have a way of tracking/enforcing/satisfying the constraint
-> >    that specified lvs need to be in the bios bootable physical area
-> 
-> That's pretty much impossible. How would e.g. LVM find out that the scsi
-> controller of disk X does not have a boot rom? You have to trust the user there.
+someone == me.
 
-Fine. Trusting the user is ok, but I like the marked bootable idea to
-protect against arbitrary reconfigs.
+It�d work if the root were the only partition but I preferred to do this
+hack on /boot and /.
 
-> >  - lilo needs to understand about lvm and use the lvm provided ways to
-> >    get physical mappings.
-> 
-> That's complicated. Someone did a similar hack for RAID0, but LVM is more
-> complicated than MD RAID0. Better just supply the real block numbers to lilo
-> and rerun it as needed (LVM could warn about it) 
 
-I meant only that lilo needs to call the lvm flavored FIBMAP, to get the
-block numbers. That is, lilo will need a small patch.
+What do I gain?
 
-> >  - the kernel needs to be able to reconstruct enough of the lvm
-> >    descriptors to mount / at boot time.
-> 
-> That's handled in the initrd (lilo loads kernel + initrd, initrd contains
-> LVM tools) 
+I just refer /boot and / by the "partition aliases" in fstab and
+lilo.conf and my system boots strictly conventional.
 
-Ok.
+And when turning off lvm functionality becomes a must, the init.d-script
+can safely switch lvm off and I�m still able to access /boot and /.
 
--dg
+When the system crashes by eventually using wrong lvm tools, I still can
+get up the essential file systems and insert the right lvm tools from
+e.g. a floppy (I needed this once since 11-1999).
 
--- 
-David Gould                                                 dg@suse.com
-SuSE, Inc.,  580 2cd St. #210,  Oakland, CA 94607          510.628.3380
-C++ : an octopus made by nailing extra legs onto a dog
+
+What do I loose?
+
+/ and /boot appear as conventional partitions in all locations e.g. df
+output. I cannot switch from partition alias to lvm addressing after the
+system comes up. While not modifying the boot setup, /boot could be
+mounted using the lv device, but I see no reason why this would make
+sense...
+
+Both partitions are flagged to be contiguous and <strong>I</strong> have
+to remember, not to move them arround. I�d like to have a nonmoveable
+flag in lvm instead...
+
+If I�d resize or move /boot or /, I�d have to recalculate the faked
+partition entries.
+
+I have to tell the geometry of the boot drive to the kernel on booting
+("append=" in lilo.conf is enough) cause the kernel guesses arround and
+shows strange geometries if I do not...
+
+As long as lvm is not launched and brought down by some kernel code like
+the raid stuff, I thing this way is my favourite one...
+
+
+Bye!
+	Ulf.
