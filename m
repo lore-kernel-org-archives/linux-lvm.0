@@ -1,10 +1,10 @@
-From: "'Andreas Dilger'" <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] only found 0 of 5120 LEs for LV
-Message-ID: <20011130165739.D26775@lynx.no>
-References: <C9B993D4214AD511BC010002A537DFE30A8BD5@acsexchweb.corp.acsalaska.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <C9B993D4214AD511BC010002A537DFE30A8BD5@acsexchweb.corp.acsalaska.com>; from snay@acsalaska.com on Fri, Nov 30, 2001 at 01:29:24PM -0900
+From: Ed Tomlinson <tomlins@cam.org>
+Subject: Re: [linux-lvm] reiserfs panic
+References: <20011129164915.I1408@tykepenguin.com> <20011130102423.E1452@tykepenguin.com>
+In-Reply-To: <20011130102423.E1452@tykepenguin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <20011130124421.05D5F76F5@oscar.casa.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +15,119 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 30 17:56:07 2001
+Date: Fri Nov 30 17:59:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Nay, Shawn" <snay@acsalaska.com>
-Cc: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com, Patrick Caulfield <patrick@tykepenguin.com>
+Cc: Chris Mason <mason@suse.com>
 
-On Nov 30, 2001  13:29 -0900, Nay, Shawn wrote:
-> Well the pvdata -E output for my drives was empty, no LV's listed.
+Wonder if this is the result of something not getting into cvs?  Mid October
+Chris fixed a bunch of snapshot problems.  One was with full snapshots...
+He posted a fix here, some one else posted an alternate.  Bet neither has 
+been put into cvs.  Here is what I am using with 'rc4ish'.  Does it help?
 
-Well, it sounds like the same bug that Lars had - LV table and part
-of PE table were zero'd out.  In his case, there was a backup LV table
-that we could use, and rebuilding the PE table was obvious given the
-context.
+Ed Tomlinson
 
-Have you tried vgcfgrestore yet?  Do you get anything useful from
-"pvdata -avP <dev>"  on each device?
+------------------ (From Chris Mason)
+Hi guys,
 
-> This is kind of disappointing.  I have been using LVM under AIX for some
-> time and am familiar with the concepts and it's not that complicated.
+Here's a repost of the patch that fixes oopsen when snapshots
+get full.  Please comment and/or include ;-)
 
-Well, I was a long time AIX LVM user, and I agree that it was bullet-proof.
-The Linux LVM code isn't there yet.  Always have backups.
+Against 1.0.1rc4, the bug should affect all kernel versions.
 
-> -----Original Message-----
-> > From: Andreas Dilger [mailto:adilger@turbolabs.com]
-> > Send the output of "pvdata -E /dev/whatever" for all the PVs, and we can
-> > see if your LV even exists anymore.  If it is overwritten, I'm wondering
-> > if this is the same bug as hit Lars.  Maybe related to the recent change
-> > to zero out unused parts of the VGDA.
+-chris
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+--- 0.21/drivers/md/lvm.c Sun, 07 Oct 2001 22:15:54 -0400 
++++ 0.21(w)/drivers/md/lvm.c Mon, 08 Oct 2001 15:54:42 -0400 
+@@ -1142,7 +1142,8 @@
+ 
+ 	/* we must redo lvm_snapshot_remap_block in order to avoid a
+ 	   race condition in the gap where no lock was held */
+-	if (!lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv) &&
++	if (lv->lv_block_exception && 
++	    !lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv) &&
+ 	    !lvm_snapshot_COW(rdev, rsector, pe_start, rsector, vg, lv))
+ 		lvm_write_COW_table_block(vg, lv);
+ 
+@@ -1151,11 +1152,12 @@
+ 
+ static inline void _remap_snapshot(kdev_t rdev, ulong rsector,
+ 				   ulong pe_start, lv_t *lv, vg_t *vg) {
+-	int r;
++	int r = 0;
+ 
+ 	/* check to see if this chunk is already in the snapshot */
+ 	down_read(&lv->lv_lock);
+-	r = lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv);
++	if (lv->lv_block_exception)
++		r = lvm_snapshot_remap_block(&rdev, &rsector, pe_start, lv);
+ 	up_read(&lv->lv_lock);
+ 
+ 	if (!r)
+Index: 0.21/drivers/md/lvm-snap.c
+--- 0.21/drivers/md/lvm-snap.c Sat, 06 Oct 2001 00:07:22 -0400 root (linux/i/c/38_lvm-snap.c 1.1.2.1.2.1 644)
++++ 0.21(w)/drivers/md/lvm-snap.c Mon, 08 Oct 2001 15:13:10 -0400 root (linux/i/c/38_lvm-snap.c 1.1.2.1.2.1 644)
+@@ -140,6 +140,8 @@
+ 	unsigned long mask = lv->lv_snapshot_hash_mask;
+ 	int chunk_size = lv->lv_chunk_size;
+ 
++	if (!hash_table)
++		BUG() ;
+ 	hash_table = &hash_table[hashfn(org_dev, org_start, mask, chunk_size)];
+ 	list_add(&exception->hash, hash_table);
+ }
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+------------------
+
+On November 30, 2001 05:24 am, Patrick Caulfield wrote:
+> I'm posting this here partly because I hope Chris Mason is reading(!) and
+> partly because it may be of some use to others on the list.
+>
+> There seems to be a problem when reading from a deactivated snapshot of a
+> reiserfs volume that causes a panic.
+>
+> The problem is caused by the fact that when a snapshot becomes full, LVM
+> returns I/O errors for the volume and when reiserfs hits an I/O error it
+> panics.
+>
+> The solution is, of course, to make your snapshots large enough that this
+> never happens :-) but just in case this is not possible the following patch
+> may be of use:
+>
+>
+> diff -u fs/reiserfs/namei.c.orig fs/reiserfs/namei.c
+> --- fs/reiserfs/namei.c.orig    Thu Nov 29 16:13:28 2001
+> +++ fs/reiserfs/namei.c Thu Nov 29 16:34:49 2001
+> @@ -320,9 +320,10 @@
+>
+>      while (1) {
+>         retval = search_by_entry_key (dir->i_sb, &key_to_search,
+> path_to_entry, de); -       if (retval == IO_ERROR)
+> +       if (retval == IO_ERROR)
+> +           return NAME_NOT_FOUND;
+>             // FIXME: still has to be dealt with
+> -           reiserfs_panic (dir->i_sb, "zam-7001: io error in "
+> __FUNCTION__ "\n"); +           // reiserfs_panic (dir->i_sb, "zam-7001: io
+> error in " __FUNCTION__ "\n");
+>
+>         /* compare names for all entries having given hash value */
+>         retval = linear_search_in_dir_item (&key_to_search, de, name,
+> namelen);
+>
+>
+>
+> patrick
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
