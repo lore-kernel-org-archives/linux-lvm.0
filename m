@@ -1,11 +1,12 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Tue, 5 Dec 2000 01:09:36 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
+Return-Path: <jan@moria.gondor.com>
+Date: Tue, 5 Dec 2000 10:13:20 +0100
+From: Jan Niehusmann <list039@gondor.com>
 Subject: Re: [linux-lvm] kernel hang
-Message-ID: <20001205010936.B7725@srv.t-online.de>
-References: <20001201020029.A1073@gondor.com> <20001203142554.G3984@srv.t-online.de> <20001204213922.A1485@gondor.com>
+Message-ID: <20001205101320.A947@gondor.com>
+References: <20001201020029.A1073@gondor.com> <20001203142554.G3984@srv.t-online.de> <20001204213922.A1485@gondor.com> <20001205010936.B7725@srv.t-online.de>
 Mime-Version: 1.0
-In-Reply-To: <20001204213922.A1485@gondor.com>; from jan@gondor.com on Mon, Dec 04, 2000 at 09:39:22PM +0100
+Content-Disposition: inline
+In-Reply-To: <20001205010936.B7725@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Tue, Dec 05, 2000 at 01:09:36AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,33 +20,16 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jan Niehusmann <jan@gondor.com>
+To: Mauelshagen@sistina.com
 Cc: linux-lvm@sistina.com
 
-On Mon, Dec 04, 2000 at 09:39:22PM +0100, Jan Niehusmann wrote:
-> On Sun, Dec 03, 2000 at 02:25:54PM +0000, Heinz J. Mauelshagen wrote:
-> > Did you experience other heavy load hangs in general?
+On Tue, Dec 05, 2000 at 01:09:36AM +0000, Heinz J. Mauelshagen wrote:
+> On Mon, Dec 04, 2000 at 09:39:22PM +0100, Jan Niehusmann wrote:
+> > In fact, this was the first complete hangup for months. 
 > 
-> no, none. Neither processor nor i/o load like heavy swapping cause any
-> problems. 
-> In fact, this was the first complete hangup for months. 
+> Is it reproducable then?
 
-Is it reproducable then?
+I didn't try: There is some important data on the vg so I don't like the idea
+of linux crashing while changing the vg metadata.
 
-> 
-> Jan
-
--- 
-
-Regards,
-Heinz      -- The LVM guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Jan
