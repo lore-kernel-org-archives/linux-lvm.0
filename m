@@ -1,96 +1,74 @@
-Message-ID: <38752438.EB555FCA@osp.nl>
-Date: Fri, 07 Jan 2000 00:24:40 +0100
-From: Jos Visser <josv@osp.nl>
+Message-ID: <3875DB88.8CF6C807@msede.com>
+Date: Fri, 07 Jan 2000 13:26:48 +0100
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: manfreds@colorfullife.com
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] devfs...
-References: <Pine.LNX.4.10.10001052326530.1271-100000@fuse.aethos.co.uk>
+Subject: [linux-lvm] Fwd: Re: file system size limits
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: James Pattinson <jamesp@aethos.co.uk>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Hi,
+Forwarded to the list.
 
-Maybe I'm a bit silly, but can't vgscan recusively descend into the /dev
-directory and try to followup on all block devices it sees there with
-exception to the obvious to-be-left-outs?
+-------- Original Message --------
+Sender: manfreds@colorfullife.com
+Message-ID: <3875C6BD.77A307DD@colorfullife.com>
+Date: Fri, 07 Jan 2000 11:58:05 +0100
+Resent-Date: Fri, 07 Jan 2000 13:21:02 MEZ
+From: Manfred Spraul <manfreds@colorfullife.com>
+To: "Theodore Y. Ts'o" <tytso@MIT.EDU>, linux-LVM@msede.com
+CC: Andrea Arcangeli <andrea@suse.de>, Andi Kleen <ak@muc.de>,
+        linux-fsdevel@vger.rutgers.edu
+Subject: Re: file system size limits
 
-++Jos
+[I added linux-LVM to the cc list because it could be a LVM problem]
 
-James Pattinson wrote:
+"Theodore Y. Ts'o" wrote:
 > 
-> OK I've been looking around - and it seems that the latest devfs doesn't
-> have /dev/sd/*  - instead we have lots of weird things, like
-> /dev/discs/disc0/* /dev/discs/disc1/* etc ... I've fixed my vgscan but
-> adding
+>    From: "Manfred Spraul" <manfreds@colorfullife.com>
+>    Date:   Thu, 6 Jan 2000 20:08:59 +0100
 > 
->    static char *devdir[] = {
->       "/dev/ida",
->       "/dev/ide/hd",
->       "/dev/loop",
->       "/dev/md",
->       "/dev/rd",
->       "/dev/sd",
-> +     "/dev/discs/disc0",
-> +     "/dev/discs/disc1",
-> +     "/dev/discs/disc2",
-> +     "/dev/discs/disc3",
-> +     "/dev/discs/disc4",
->       "/dev",
->       NULL
+>    Ok, so the limits are even more complex:
+>    * on an Alpha, you could build a 4TB ext2 volume and use it.
+>    * if your Alpha crashes, and you connect your disks to an i386 box, then you
+>    could corrupt your file system unless someone has added safety checks.
 > 
-> to lvm_dir_cache.c and similar to pv_check_name.c.
+>    I'm merely try to verify that these safety checks exist:
+>    eg. ext2 on Alpha supports files > 2 GB, but linux-2.2 on i386 doesn't. If
+>    you try to mount the disk on i386, then ext2 refuses to perform invalid
+>    operations on these files.
 > 
-> It works for me but hopefully devfs will settle down and not keep changing
-> soon...
-> 
-> Thanks,
-> 
-> james
-> 
-> On Wed, 5 Jan 2000, Heinz Mauelshagen wrote:
-> 
-> > > Hi
-> > >
-> > > I'm sure this is a FAQ but I can't find the answer anywhere.
-> > >
-> > > I've am using LVM 0.8i on 2.2.14 with the latest devfs patch.
-> >
-> > Sorry, this combination is not yet supported.
-> > I still have to focus on devfs support 8*(
-> >
-> > > My root
-> > > filesystem in on an LV and I have an initrd that does a vgscan and a
-> > > vgchange. However now I'm using devfs, vgscan dooesn't find any of my
-> > > volume groups - maybe because vgscan doesn't know to look in /dev/scsi or
-> > > whatever. Is there a patch to fix this?
-> >
-> > vgscan (respectively the library routines involved) already
-> > take care of devfs naming conventions.
-> >
-> > Did you mount devfs in linuxrc before running vgscan?
-> >
-> > Regards,
-> > Heinz
-> >
-> > --
-> >
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >
-> > Systemmanagement CS-TS                           T-Nova
-> >                                                  Entwicklungszentrum Darmstadt
-> > Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-> > Senior Systems Engineer                          Postfach 10 05 41
-> >                                                  64205 Darmstadt
-> > mge@EZ-Darmstadt.Telekom.de                      Germany
-> >                                                  +49 6151 886-425
-> >                                                           FAX-386
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >
+> We're *way* ahead of you.
 
--- 
-"If anyone wants to be first, he must be the very last, and the servant
-of all"
+I knew that, but this only means that ext2 is safe.
+What about the other subsystems?
+eg it seems that lvm doesn't contain the checks for lvm's > 2 TB on
+32-bit platforms.
+
+* LVM can map up to 128 TB [I only checked the header file of
+LVM-0.8i]
+* This would work on 64-bit platforms.
+* If you attach these disks to a 32-bit platform, you'll corrupt your
+data. [but perhaps LVM will refuse to mount it, but I couldn't find
+such
+checks at first glance].
+
+> The on-disk format of the ext2 filesystem only allows 4 bytes for the
+> block number, and it's defined to be an unsigned value.  So if you're
+> using 4k blocks, the maximum theoretical filesize is 64 TB.  (i.e.,
+> 4*2^10*2^32 == 2^46)
+
+That's the ext2 limit. But the real-life limit is lowest value of
+(ext2-limit, ll_rw_blk limit, LVM limit, raid limit).
+
+I think we must check these limits, and ensure that everyone refuses
+to
+work with larger disks.
+ext2 is OK, but this doesn't mean that the complete chain
+syscall-to-disk will be OK.
+
+--
+	Manfred
