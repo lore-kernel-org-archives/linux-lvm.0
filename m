@@ -1,10 +1,11 @@
-Return-Path: <banal@home.com>
-Message-ID: <3AE91AEF.22ABDC51@home.com>
-Date: Fri, 27 Apr 2001 00:08:31 -0700
-From: Evan Day <banal@home.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM on root, Kernel panic: "I have no root and I must scream"
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 27 Apr 2001 10:02:17 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010427100217.A15939@sistina.com>
+References: <Pine.LNX.4.21.0104261723430.32275-100000@oxygen.sistina.com>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.21.0104261723430.32275-100000@oxygen.sistina.com>; from harringt@sistina.com on Thu, Apr 26, 2001 at 05:24:13PM -0500
+Subject: [linux-lvm] Re: [lvm] Question (fwd)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,48 +18,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: vcheung@vspeednet.com
+Cc: linux-lvm@sistina.com
 
-I thought I had everything set up right...
+> ---------- Forwarded message ----------
+> Date: Thu, 26 Apr 2001 15:13:23 -0700
+> From: Victor Cheung <vcheung@vspeednet.com>
+> To: webmaster@sistina.com
+> Subject: Question
+> 
+> How stable is the LVM in Redhat Linux 6.2? 
 
-I've got a system with two SCSI disks.  Currently the system is mostly
-installed on /dev/sda using a straight ext2 setup.  I'm using GRUB as the
-bootloader since LILO has been giving me problems.  Currently on kernel 2.4.3
-using the lvm 0.9.1beta7 patches and lvm tools.
+You need to get the recent LVM 0.9.1 Beta 7 sofware from www.sistina.com
+in order to get a couple of bugs fixed.
+Please follow the LVM 0.9.1 Beta 7 link and the installation and kernel
+patch descriptions in the files LVM/INSTALL and LVM/PATCHES/README
+contained in the tarball you'll find there
 
-My intention is to mirror the disks using Linux software RAID, with 
-/dev/sda1 and /dev/sdb1 as /dev/md0 (mounted as /boot) and /dev/sda4 and
-/dev/sdb4 as /dev/md1, which will be VG00 and have the rest of the system
-on it, with most everything using the reiserfs.
+-- 
 
-Right now, /dev/md0 is working as /boot (reiserfs), with the rest of the
-system on /dev/sda (/dev/sda2 is root).  I've created /dev/vg00 and 
-/dev/md1 (with /dev/sda4 failed) and built a new root logical volume on
-/dev/vg00/lvol1.  This works fine and I can mount it on /mnt and copy 
-/ over to it just fine, then edit /mnt/etc/fstab to put root on
-/dev/vg00/lvol1.
+Regards,
+Heinz    -- The LVM Guy --
 
-I used lvmcreate_initrd to make /boot/initrd-lvm-2.4.3.gz, and can boot grub
-with initrd just fine.  At boot time, it boots the kernel, loads the ram 
-disk, runs /linuxrc and successfully activates /dev/vg00.  I have LVM, 
-reiserfs, and, RAID-1 in the kernel (no modules).
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-After activating vg00 and umounting /proc (in initrd/linuxrc), the system 
-dies:
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Kernel panic: I have no root and I must scream!
-
-I thought it might be that having the LV on the RAID was too complex, and 
-tried creating a VG on a partition, but I still get the same result.  I've 
-edited the linuxrc on the initrd and both vgdisplay and lvdisplay show the 
-correct info.
-
-The line from /etc/fstab
-
-/dev/vg00/lvol1	/	reiserfs	defaults,errors=remount-ro 0 1
-(tried formatting ext2 and it still fails)
-
-Saw one other message on this dated April 9, 2001, but no apparent 
-resolution.
-
-HELP!
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
