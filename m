@@ -1,10 +1,10 @@
-From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20030213182503.GA19640@antimony.sistina.com>
+Subject: Re: [linux-lvm] Re: How to handle Bad Block relocation with LVM?
+Message-ID: <20030214172615.GA2438@fib011235813.fsnet.co.uk>
+References: <1045065586.477.16.camel@dev-ehopper.tiecommerce.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
 Content-Disposition: inline
-Subject: [linux-lvm] Anonymous CVS updated
+In-Reply-To: <1045065586.477.16.camel@dev-ehopper.tiecommerce.com>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,47 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb 14 08:52:16 2003
+Date: Fri Feb 14 11:27:01 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, lvm-devel@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Eric,
 
-Hey all,
+We would like to automate the process that you have described in LVM2
+at some point.  So if you get an error on an LV and new PE will be
+allocated, as much data as possible copied from the bad PE to the new
+PE, and then remap the LV so that it's using the new PE (very much
+like a small pvmove).
 
-There was a slight issue with the synchronization of the anonymous CVS
-repository.  It has now been fixed, so everything should be
-up-to-date for LVM, LVM2, and device-mapper.  Sorry for the hassle.=20
+The EVMS team are writing a bad block relocator target for device
+mapper, but I don't feel it's neccessary to add yet another device
+layer to the LVs.  If I have a bad block I don't mind loosing a whole
+PE (people may not agree with me on this ?)
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              E-Mail: lewis@sistina.com
-Minneapolis, MN 55414
-http://www.sistina.com
-
-Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
-A5A
-Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
-many keyservers out there...
------Begin Obligatory Humorous Quote----------------------------------------
-Choose a job you love, and you will never have to work a day in your life.
------End Obligatory Humorous Quote------------------------------------------
-
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.7 (GNU/Linux)
-
-iD8DBQE+S+L/K/V1dClKqloRAjKNAJ0eCA/8d2U13MlxGwKKI9mPEyq4UgCbBpac
-pQoIf8d+/BBzDWZNHrKZJCU=
-=w3x6
------END PGP SIGNATURE-----
-
---pf9I7BMVVzbSWLtt--
+- Joe
