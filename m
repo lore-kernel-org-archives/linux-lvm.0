@@ -1,11 +1,11 @@
-Date: Wed, 26 Sep 2001 08:46:24 +0200
+Date: Wed, 26 Sep 2001 08:50:37 +0200
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM help re:
-Message-ID: <20010926084624.B15158@colombina.comedia.it>
-References: <3BB14C7D.CDCD9F14@bellatlantic.net>
+Subject: Re: [linux-lvm] bug reports
+Message-ID: <20010926085037.C15158@colombina.comedia.it>
+References: <664039ABAA75D5119A9D00B0D0D033C9679F6B@srnamath.lss.emc.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3BB14C7D.CDCD9F14@bellatlantic.net>; from sarma@bellatlantic.net on Tue, Sep 25, 2001 at 11:33:17PM -0400
+In-Reply-To: <664039ABAA75D5119A9D00B0D0D033C9679F6B@srnamath.lss.emc.com>; from yap_joonjack@emc.com on Tue, Sep 25, 2001 at 01:54:22PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,24 +19,19 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'Linux-LVM@sistina.com'" <Linux-LVM@sistina.com>
 
-On Tue, Sep 25, 2001 at 11:33:17PM -0400, Uday Bhaskar Sarma Seetamraju wrote:
-> Hi,
-> 
-> pvscan tells me which PV belongs to which VG.
-> But I am wondering if the information as to
-> "which PVwas added to the VG in which order"
-> can also be determined.
-not sure if vgdisplay -v will
-> In case of a disaster, the first added PV would most likely contain
-> all the information that's has been around longer (and so more
-> important!)
-you can do lvdisplay -v of a LV and have the position of each LE on
-which PV.
+On Tue, Sep 25, 2001 at 01:54:22PM -0400, yap, joonjack wrote:
+> Hardware: Pentium III 700MHZ
+> Software: RedHat 7.1 with kernel 2.4.9
+you don't specify which version ov LVM are you running
+i suppose plain kernel.
+
+be sure to fetch the newest rpm 1.0.1rc2 from
+ftp://ftp.sistina.com/pub/LVM/
+then read the file PATCHES/README in the distribution.
 
 L.
-
 -- 
 Luca Berra -- bluca@comedia.it
         Communication Media & Services S.r.l.
