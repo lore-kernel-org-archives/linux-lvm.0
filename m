@@ -1,17 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6EJiO007049
-	for <linux-lvm@redhat.com>; Wed, 14 Jul 2004 15:44:24 -0400
-Received: from stl.rural.usda.gov ([199.159.138.244])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6EJiIXn031748
-	for <linux-lvm@redhat.com>; Wed, 14 Jul 2004 15:44:18 -0400
-Message-ID: <40F58CDF.3010100@charter.net>
-Date: Wed, 14 Jul 2004 14:43:27 -0500
-From: James <superfueld@charter.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] wrong data unit in lvdiskplay?
-References: <1089746889.2988.20.camel@Smeagol.geministorage.com>
-In-Reply-To: <1089746889.2988.20.camel@Smeagol.geministorage.com>
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6FChH014039
+	for <linux-lvm@redhat.com>; Thu, 15 Jul 2004 08:43:17 -0400
+Received: from meuh.csquad.org (ALagny-151-1-15-72.w82-121.abo.wanadoo.fr
+	[82.121.253.72])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6FChAXn030900
+	for <linux-lvm@redhat.com>; Thu, 15 Jul 2004 08:43:10 -0400
+Date: Thu, 15 Jul 2004 14:43:28 +0200
+From: Christophe Nowicki <cscm@meuh.dyndns.org>
+Message-ID: <20040715124328.GJ25352@meuh.dyndns.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OX7PPUk8qMPP4++R"
+Content-Disposition: inline
+Subject: [linux-lvm] vgscan can not find active volume group when i add a
+	cdrom
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,40 +24,167 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: mingz@ele.uri.edu, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I don't think this is your error. I'm seeing th same output on my systems and I don't like it. Thanks for pointing this out before I wrote some script to parse the INCORRECT output of lvdisplay -c.
 
-FYI: I checked the redhat bugzilla and couldn't find a mention of this, so I entered this as bug #127858.
+--OX7PPUk8qMPP4++R
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ming Zhang wrote:
-> I am not sure if this is a bug or my stupid error.
-> 
-> I am using lvm-1.0.3-13, which come from Fedora core 1. I created a
-> lvol1 with size -L 2000M. then
-> 
-> # lvdisplay /dev/vg1/lvol1
-> --- Logical volume ---
-> LV Name                /dev/vg1/lvol1
-> VG Name                vg1
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 0
-> LV Size                1.95 GB
-> Current LE             500
-> Allocated LE           500
-> Allocation             next free
-> Read ahead sectors     1024
-> Block device           58:0
-> 
-> # lvdisplay -c /dev/vg1/lvol1
-> /dev/vg1/lvol1:vg1:3:1:0:0:4096000:500:500:0:1024:58:0
->                                                                                            here i found that its size is 4096000. base on the document of lvdiskplay, this should be in KB unit. so two output from lvdisplay is mismatched. can anybody tell me why?
-> 
-> 
-> 
-> ming
-> 
-> 
+Hi all,
+
+I'am running Debian GNU/Linux "sarge" with Linux 2.4.26, LVM version=20
+1.0.8 (lib lvm-common 1.5.16).
+
+My server has 3 IDE hard drives when I plug a ide cdrom on /dev/hdd,
+vgscan can not find my active volume.
+
+Here is my dmesg output without the cdrom ide plug in :
+[...]
+ide: Assuming 33MHz system bus speed for PIO modes; override with
+idebus=3Dxx
+NET4: Unix domain sockets 1.0/SMP for Linux NET4.0.
+ide: late registration of driver.
+VP_IDE: IDE controller at PCI slot 00:07.1
+VP_IDE: chipset revision 6
+VP_IDE: not 100% native mode: will probe irqs later
+VP_IDE: VIA vt82c686b (rev 40) IDE UDMA100 controller on pci00:07.1
+    ide0: BM-DMA at 0xd000-0xd007, BIOS settings: hda:DMA, hdb:DMA
+    ide1: BM-DMA at 0xd008-0xd00f, BIOS settings: hdc:DMA, hdd:pio
+hda: ST3120026A, ATA DISK drive
+hdb: ST3120026A, ATA DISK drive
+blk: queue f0825120, I/O limit 4095Mb (mask 0xffffffff)
+blk: queue f082525c, I/O limit 4095Mb (mask 0xffffffff)
+hdc: ST3120022A, ATA DISK drive
+blk: queue f0825574, I/O limit 4095Mb (mask 0xffffffff)
+ide0 at 0x1f0-0x1f7,0x3f6 on irq 14
+ide1 at 0x170-0x177,0x376 on irq 15
+hda: attached ide-disk driver.
+hda: 234441648 sectors (120034 MB) w/8192KiB Cache, CHS=3D14593/255/63,
+UDMA(100)
+hdb: attached ide-disk driver.
+hdb: 234441648 sectors (120034 MB) w/8192KiB Cache, CHS=3D14593/255/63,
+UDMA(100)
+Partition check:
+ /dev/ide/host0/bus0/target0/lun0: p1 p2 < p5 p6 >
+ /dev/ide/host0/bus0/target1/lun0: p1
+Journalled Block Device driver loaded
+[..]
+
+Everything is ok, I can mount all disk and I see my 2 volume groupe :
+
+vgscan -v output :
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- found active volume group "vg_hda"
+vgscan -- reading data of volume group "vg_hda" from physical volume(s)
+vgscan -- inserting "vg_hda" into lvmtab
+vgscan -- backing up volume group "vg_hda"
+vgscan -- checking volume group name "vg_hda"
+vgscan -- checking volume group consistency of "vg_hda"
+vgscan -- checking existence of "/etc/lvmtab.d"
+vgscan -- storing volume group data of "vg_hda" in
+"/etc/lvmtab.d/vg_hda.tmp"
+vgscan -- storing physical volume data of "vg_hda" in
+"/etc/lvmtab.d/vg_hda.tmp"
+vgscan -- storing logical volume data of volume group "vg_hda" in
+"/etc/lvmtab.d/vg_hda.tmp"
+vgscan -- renaming "/etc/lvmtab.d/vg_hda.tmp" to "/etc/lvmtab.d/vg_hda"
+vgscan -- removing special files and directory for volume group "vg_hda"
+vgscan -- creating directory and group character special file for
+"vg_hda"
+vgscan -- creating block device special files for vg_hda
+vgscan -- found active volume group "vg_hdb"
+vgscan -- reading data of volume group "vg_hdb" from physical volume(s)
+vgscan -- inserting "vg_hdb" into lvmtab
+vgscan -- backing up volume group "vg_hdb"
+vgscan -- checking volume group name "vg_hdb"
+vgscan -- checking volume group consistency of "vg_hdb"
+vgscan -- checking existence of "/etc/lvmtab.d"
+vgscan -- storing volume group data of "vg_hdb" in
+"/etc/lvmtab.d/vg_hdb.tmp"
+vgscan -- storing physical volume data of "vg_hdb" in
+"/etc/lvmtab.d/vg_hdb.tmp"
+vgscan -- storing logical volume data of volume group "vg_hdb" in
+"/etc/lvmtab.d/vg_hdb.tmp"
+vgscan -- renaming "/etc/lvmtab.d/vg_hdb.tmp" to "/etc/lvmtab.d/vg_hdb"
+vgscan -- removing special files and directory for volume group "vg_hdb"
+vgscan -- creating directory and group character special file for
+"vg_hdb"
+vgscan -- creating block device special files for vg_hdb
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+groups
+
+When I plug the IDE cdrom drive nothing is working.
+
+Here is my dmesg output with the cdrom plug in :
+
+[...]
+VP_IDE: IDE controller at PCI slot 00:07.1
+VP_IDE: chipset revision 6
+VP_IDE: not 100% native mode: will probe irqs later
+ide: Assuming 33MHz system bus speed for PIO modes; override with
+idebus=3Dxx
+VP_IDE: VIA vt82c686b (rev 40) IDE UDMA100 controller on pci00:07.1
+    ide0: BM-DMA at 0xd000-0xd007, BIOS settings: hda:DMA, hdb:DMA
+    ide1: BM-DMA at 0xd008-0xd00f, BIOS settings: hdc:DMA, hdd:DMA
+hda: ST3120026A, ATA DISK drive
+hdb: ST3120026A, ATA DISK drive
+blk: queue f082a2c0, I/O limit 4095Mb (mask 0xffffffff)
+blk: queue f082a3fc, I/O limit 4095Mb (mask 0xffffffff)
+hdc: ST3120022A, ATA DISK drive
+hdd: Hewlett-Packard CD-Writer Plus 7500, ATAPI CD/DVD-ROM drive
+blk: queue f082a714, I/O limit 4095Mb (mask 0xffffffff)
+ide0 at 0x1f0-0x1f7,0x3f6 on irq 14
+ide1 at 0x170-0x177,0x376 on irq 15
+hda: attached ide-disk driver.
+hda: 234441648 sectors (120034 MB) w/8192KiB Cache, CHS=3D14593/255/63,
+UDMA(100)
+hdb: attached ide-disk driver.
+hdb: 234441648 sectors (120034 MB) w/8192KiB Cache, CHS=3D14593/255/63,
+UDMA(100)
+hdc: attached ide-disk driver.
+hdc: 234441648 sectors (120034 MB) w/2048KiB Cache, CHS=3D14593/255/63,
+UDMA(100)
+Partition check:
+ /dev/ide/host0/bus0/target0/lun0: p1 p2 < p5 p6 >
+ /dev/ide/host0/bus0/target1/lun0: p1
+ /dev/ide/host0/bus1/target0/lun0: p1
+Journalled Block Device driver loaded
+[...]
+As you can see /dev/hdd, the ide cdrom is detected by the linux kernel.
+But vgscan doesn't find my volume groups:
+
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
+
+Did I miss something? What's wrong with my setup?
+
+Best Regards,
+--=20
+Nowicki Christophe                                 =20
+EPITECH Promo 2006                                =20
+http://etudiant.epita.fr/~nowick_c/                =20
+
+--OX7PPUk8qMPP4++R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQFA9nvw3jtE0lRnlNoRAkDPAJ92yr3FHa18yKwuo2CUvk2l08ll/ACdGjEW
+mdMlgF4TIdxf6yDxLOlEBtQ=
+=jpgK
+-----END PGP SIGNATURE-----
+
+--OX7PPUk8qMPP4++R--
