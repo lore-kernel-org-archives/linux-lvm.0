@@ -1,12 +1,11 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] LVM problems
-Date: Tue, 19 Jun 2001 21:11:23 -0400
-References: <85063BBE668FD411944400D0B744267A481A88@AUSMAIL> <20010619161930.A15720@sistina.com>
-In-Reply-To: <20010619161930.A15720@sistina.com>
-MIME-Version: 1.0
-Message-Id: <01061921112300.12450@oscar>
-Content-Transfer-Encoding: 8bit
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 20 Jun 2001 15:45:15 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Problem if snapshot exists after crash or reboot
+Message-ID: <20010620154515.A25048@sistina.com>
+References: <4.3.1.1.20010619151359.00afa100@popin.ncl.ac.uk>
+Mime-Version: 1.0
+In-Reply-To: <4.3.1.1.20010619151359.00afa100@popin.ncl.ac.uk>; from C.R.Ritson@ncl.ac.uk on Tue, Jun 19, 2001 at 03:33:14PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,32 +18,98 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, AJ Lewis <lewis@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Tuesday 19 June 2001 17:19, AJ Lewis wrote:
-> On Tue, Jun 19, 2001 at 02:28:05PM -0500, Gonyou, Austin wrote:
-> > Why in the hell is this NOT in the source tree by default. This has
-> > really got be boggled. I've seen tons of others have this proble, I've
-> > had this problem, and still it doesn't seem to get itself into the tree.
-> > Is this because it is a temporary problem or something?
->
-> It *is* in the source tree by default.  It is in the CVS.  It is not in
-> LVM 0.9.1 Beta7 because LVM 0.9.1 Beta7 was released before linux 2.4.4,
-> which is when the problem surfaced.  We have not had a release since then,
-> so it is not in the latest release.
->
-> You can now grab the patch and apply it to beta7, which fixes the problem,
-> or you can use the CVS repository.  I really don't know what else you
-> expect us to do.
+On Tue, Jun 19, 2001 at 03:33:14PM +0100, Chris Ritson wrote:
+> I am using linux 2.4.5-ac6 (SMP) which includes lvm 0.91_beta7 as a file 
+> server.
 
-Actually getting the up-to-date lvm in the kernel would be nice.  Last time
-I asked 2.4.<x>-ac<y> was about half way there.  What is happening?  Have the cvs
-procedures been modified to enable producing Linus friendly patches?  When
-can we expect a kernel with a current lvm?
+2.4.5-ac6 doesn't include all necesarry code to run LVM 0.9.1 Beta 7 ok :-(
+which is probably the reason for the problems you are facing.
 
-Please read the above as just as a request for info.  LVM is working ok here.
-Its just a bit of a pita to have to patch everything every time I rebuild a
-tree...
+You still need to create a patch as instructed in INSTALL and PATCHES/README
 
-TIA,
-Ed Tomlinson <tomlins@cam.org>
+
+
+> I have done no further patching so far. I am hoping to use LVM 
+> snapshots for two things:-
+> 
+> a) To ensure a backup from a quiet filesystem
+> 
+> b) To offer the users the possibility of looking into yesterday's snapshot 
+> for the file that they have just corrupted or deleted. I think this would 
+> avoid 95% of all my restore requests.
+> 
+> I understand that snapshots are not (yet) persistent, but that shouldn't be 
+> a problem unless the system is rebooted.
+
+Actually they are already persistent since the 0.9 release :-)
+
+Warning: we are just fixing a snapshot allocation related bug which doesn't
+         show up in every case. 0.9.1 Beta 7 might work in this regard in
+         your configuration though.
+
+
+> 
+> The problem is that if a snapshot exists and the system is shutdown 
+> (running "vgchange -a n" on the way), then the "vgchange -a y" fails with 
+> error 9 on the way back up again.
+
+Strange.
+The LVM code doesn't produce this error dirrectly.
+
+Could you run "vgchange -ay -d" and provide the output, please?
+
+> I can avoid this if I lvremove the 
+> snapshots on the way down, but this would not help if the power failed or 
+> the system crashed.
+> I need something that can fix this as the system comes 
+> up.
+
+As mentioned:
+reason probably is, that you've got an unpatched kernel which
+still needs LVM updates in order to work correctly.
+
+> My current idea is to run vgscan to get a list of volume groups, and 
+> then to run vgcfgrestore on the first listed volume group that has failed 
+> to activate, repeating until all volume groups can be activated. This is 
+> messy and may be dangerous. It also requires knowlege of which physical 
+> device to use for each volume group. I don't think this is easily available 
+> other than by using some sort of consistant naming scheme.
+
+"vgcfgrestore -ll" lists all the PV pathes you were using.
+In case you didn't change your hardware configuration you can go with that
+information for the crash case.
+
+With a correctly patched kernel there's no need to do the trick you
+propose, because LVM should come up correctly with persistent snapshots.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+> 
+> Comments and advice would be welcome.
+> 
+> Chris Ritson
+> --
+> EMAIL:	C.R.Ritson@newcastle.ac.uk	POST:	Chris Ritson,
+> PHONE:	+44 191 222 8175			Department of Computing Science,
+> FAX :	+44 191 222 8232				University of Newcastle upon Tyne,
+> ROOM:	618 Claremont Bridge (the Mill)		United Kingdom NE1 7RU.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
