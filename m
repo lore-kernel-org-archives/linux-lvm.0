@@ -1,15 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2G1Nvj01236
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 20:23:57 -0500
-Received: from exch-calgary.int.pason.com (hemlock.pason.com [208.38.1.1])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2G1Nv07013169
-	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 20:23:57 -0500
-Date: Mon, 15 Mar 2004 18:23:56 -0700
-From: "Donald Murray P.Eng." <donald.murray@pason.com>
-Message-Id: <20040315182356.35f5ca40.donald.murray@pason.com>
+Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i2GLRaj04235
+	for <linux-lvm@redhat.com>; Tue, 16 Mar 2004 16:27:36 -0500
+Received: (from agk@localhost)
+	by homer.msp.redhat.com (8.11.6/8.11.6) id i2GLRao05244
+	for linux-lvm@redhat.com; Tue, 16 Mar 2004 15:27:36 -0600
+Date: Tue, 16 Mar 2004 15:27:36 -0600
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] [RFC][PATCH] proper DESTDIR handling for
+	device-mapper and LVM2
+Message-ID: <20040316152736.A31599@homer.msp.redhat.com>
+References: <4051388C.3050700@backtobasicsmgmt.com>
+	<20040312013822.C4622@homer.msp.redhat.com>
+	<4051D6EF.9070507@backtobasicsmgmt.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] EXT3 snapshot not quiesced by LVM2?
+Content-Disposition: inline
+In-Reply-To: <4051D6EF.9070507@backtobasicsmgmt.com>;
+	from kpfleming@backtobasicsmgmt.com on Fri, Mar 12, 2004 at
+	08:27:43AM -0700
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,82 +28,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Problem:
-LVM2 snapshots of an EXT3 partition do not appear to be taken
-from a quiesced lv. In /var/log/messages, we see messages about
-an orphaned inode.
+On Fri, Mar 12, 2004 at 08:27:43AM -0700, Kevin P. Fleming wrote:
+> To keep DESTDIR only in the template, you'll have to replace the
+> bindir = @bindir@
+> lines (and similar) in make.tmpl with
+> bindir = $(DESTDIR)@bindir@
+ 
+Yes.
 
-Details:
-We're using LVM2 on a RedHat 7.2 box with a 2.4.22 kernel from kernel.org.
-The kernel has been patched with the following patches:
-    linux-2.4.22-VFS-lock.patch
-    linux-2.4.22-devmapper-ioctl.patch
+> what was already in the Makefiles, and even then it would tend to break 
+> because /usr/sbin/lvm would end up linked to
+> /foo/usr/lib/libdevmapper.so
+> instead of
+> /usr/lib/libdevmapper.so
+> and so /usr/sbin/lvm wouldn't run properly once the DESTDIR directory 
+> was used as a real environment.
 
-Once per hour, we use an LVM snapshot to backup a MySQL database. The
-procedure is:
-1. mysql server: flush tables with read lock; hold this lock until step 5
-2. sync
-3. lvcreate --extents N --snapshot --name dbsnapshotlv /dev/datavg/datalv
-4. mount -o ro /dev/datavg/dbsnapshotlv /mnt/snapshot
-5. mysql server: unlock tables
-6. create backup of /mnt/snapshot
-7. umount /mnt/snapshot && lvremove /dev/datavg/dbsnapshotlv
+If this was Solaris, yes, we'd need -R to set the default run-time library
+path.  But AFAIK linux only searches LD_LIBRARY_PATH, ld.so.cache
+and /usr/lib:/lib.
 
-This appears to be working, but there is a message in /var/log/messages
-which is a little disturbing. Whenever we create a snapshot and mount
-the resulting lv, we see the following:
+I still think it's wrong to use the version of any include file found on 
+the host system if there is a different version of it present in DESTDIR.
+[That copes fine for people installing into an empty directory, 
+and AFAICT also caters for people building multiple packages with
+dependencies.]
 
-Mar 15 05:00:05 PC kernel: EXT3-fs: INFO: recovery required on readonly filesystem.
-Mar 15 05:00:05 PC kernel: EXT3-fs: write access will be enabled during recovery.
-Mar 15 05:00:05 PC kernel: kjournald starting.  Commit interval 5 seconds
-Mar 15 05:00:05 PC kernel: EXT3-fs: device-mapper(254,4): orphan cleanup on readonly fs
-Mar 15 05:00:05 PC kernel: EXT3-fs: device-mapper(254,4): 1 orphan inode deleted
-Mar 15 05:00:05 PC kernel: EXT3-fs: recovery complete.
-Mar 15 05:00:05 PC kernel: EXT3-fs: mounted filesystem with ordered data mode.
-...
-Mar 15 06:00:05 PC kernel: EXT3-fs: INFO: recovery required on readonly filesystem.
-Mar 15 06:00:05 PC kernel: EXT3-fs: write access will be enabled during recovery.
-Mar 15 06:00:07 PC kernel: kjournald starting.  Commit interval 5 seconds
-Mar 15 06:00:07 PC kernel: EXT3-fs: device-mapper(254,4): orphan cleanup on readonly fs
-Mar 15 06:00:07 PC kernel: EXT3-fs: device-mapper(254,4): 1 orphan inode deleted
-Mar 15 06:00:07 PC kernel: EXT3-fs: recovery complete.
-Mar 15 06:00:07 PC kernel: EXT3-fs: mounted filesystem with ordered data mode.
-...
-Mar 16 01:00:06 PC kernel: EXT3-fs: INFO: recovery required on readonly filesystem.
-Mar 16 01:00:06 PC kernel: EXT3-fs: write access will be enabled during recovery.
-Mar 16 01:00:08 PC kernel: kjournald starting.  Commit interval 5 seconds
-Mar 16 01:00:08 PC kernel: EXT3-fs: device-mapper(254,4): orphan cleanup on readonly fs
-Mar 16 01:00:08 PC kernel: EXT3-fs: device-mapper(254,4): 1 orphan inode deleted
-Mar 16 01:00:08 PC kernel: EXT3-fs: recovery complete.
-Mar 16 01:00:08 PC kernel: EXT3-fs: mounted filesystem with ordered data mode.
-
-
-When we mount the snapshot read-write, we instead see the following:
-
-Mar 16 01:09:17 PC kernel: kjournald starting.  Commit interval 5 seconds
-Mar 16 01:09:17 PC kernel: EXT3 FS 2.4-0.9.19, 19 August 2002 on device-mapper(254,4), internal journal
-Mar 16 01:09:17 PC kernel: EXT3-fs: device-mapper(254,4): 1 orphan inode deleted
-Mar 16 01:09:17 PC kernel: EXT3-fs: recovery complete.
-Mar 16 01:09:17 PC kernel: EXT3-fs: mounted filesystem with ordered data mode.
-
-
-All we expected to see in /var/log/messages was something more like:
-
-Mar 17 01:09:03 PC kernel: kjournald starting.  Commit interval 5 seconds
-Mar 17 01:09:03 PC kernel: EXT3 FS 2.4-0.9.19, 19 August 2002 on device-mapper(254,4), internal journal
-Mar 17 01:09:03 PC kernel: EXT3-fs: mounted filesystem with ordered data mode.
-
-
-Why would the snapshot volume have an orphaned inode? Doesn't the VFS patch
-allow us to snapshot EXT3? Do we need to quiesce the origin lv some other
-way?
-
-
-
- ------------------------------------------ 
- Donald Murray, P.Eng.
- Senior Software Engineer
- Pason Systems Corp.
- Direct: (403) 301-3473
+Alasdair
+-- 
+agk@redhat.com
