@@ -1,8 +1,10 @@
-Return-Path: <scott@dixie.dyndns.org>
-Date: Wed, 23 May 2001 17:06:12 -0400
-Message-Id: <200105232106.f4NL6Bl01557@dixie.dyndns.org>
-From: "S. Michael Denton" <scott@dixie.dyndns.org>
-Subject: Re: Re: [linux-lvm] Converting my Root file system to LVM [last
+Return-Path: <jweber@valinux.com>
+Date: Wed, 23 May 2001 14:08:20 -0700 (PDT)
+From: Jay Weber <jweber@valinux.com>
+Subject: Re: How about ext3? (was RE: [linux-lvm] XFS and LVM)
+In-Reply-To: <200105231653.f4NGrScO028621@webber.adilger.int>
+Message-ID: <Pine.LNX.4.33.0105231407270.3076-100000@beefcake.hdqt.valinux.com>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,93 +16,58 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Stephen Tweedie <sct@redhat.com>, Steve Wray <steve.wray@the.net.nz>
 
-If I read my older posts correctly (and I've also done this for a while
-myself too), it's not a big deal if you don't vgchange -an... I've only
-recently started doing it and haven't really seen any difference in the vg
-stability.  As far as extending root, I've always used ext2online so I
-didn't need to worry about it.	But if you haven't prepared your root
-filesystem with the online resizers you can only go so far with the resize
-(group descriptor boundary was it?) before you'd have to unmount and do the
-miniroot option.
+Send it my way.  I'm game. :)  I haven't checked out any of your online
+resize at all up to this point, I've been using the resize2fs (Ted Tso)
+bit for offline resizing, but I'm more than willing to bang on the online
+support also. :)
 
-Hope this helps!
+On Wed, 23 May 2001, Andreas Dilger wrote:
 
-raheesom@navpoint.com wrote:
-> On 23 May 2001 10:49:13 -0600, Andreas Dilger wrote:
-> > Rupert Heesom writes:
-> > 
-> > Yes, you can do that...  However, once you have LVM you should start to
-
-> > think differently about "partitions" and such.  You can create a lot of
-
-> > small partitions for different needs.
-> > 
-> > Why is this useful?  Because it makes moving stuff around, updating the
-
-> > OS, etc easier.  You can have multiple OS installs, but keep your /home
-
-> > and /mp3 data available to both.  You can put /mp3 on a new disk and it
-
-> > will spin down when you are not listening to them.	You can put
-/var/log
-> > and /var/spool/mail on different LVs so that lots of logs or lots of
-> > email don't make your system unusable.
-> 
-> Tnx for the advise here.  I'll try to start thinking in those terms.
-> 
-> I've now got one more question which I'll post in this msg -
-> 
-> I've discovered that my /etc/rc.d/init.d/halt script is set up
-> incorrectly for LVM.	When I previously installed LVM, I followed
-> instructions, and put a "vgchange -an" into the halt script just after
-> /proc is umounted.
-> 
-> What I'm finding now is that when I'm shutting the PC down, vgchange is
-> complaining that it can't close the VG down because there's an active
-> partition (something like that).  I've had a look at the halt script,
-> and I can't figure out exactly how umounting the LV & deactivating the
-> VG would work.
-> 
-> I put a tentative line right above the "/sbin/vgchange -an" saying
-> "umount /dev/vg/root".   However, if I'm unmounting root BEFORE
-> deactivating the VG, then the system won't find the /sbin/vgchange util
-> will it?  
-> 
-> I do have  /boot/initrd-lvm-2.4.3.gz which is used at boot time.  This
-> ramdisk does have /sbin/vgchange in it (which you probably know).  If
-> root is unmounted when /sbin/vgchange is called, will the system use the
-> ramdisk?   If so, how does it know to use it?   (I'm kinda new to
-> figuring out how ramdisks work, I just follow instructions and they
-> work!)
-> 
-> Once I'm satisfied that my LVM setup is not good, then I'm going to try
-> taking the plunge & extending the LV to my other disk.
-> 
-> BTW, since my other disk still has the old file system on it, is this
-> filesystem wiped when I change partition type to "8e", or when I create
-> a PV on it, or not at all?  I can't think that anything but the e2fsadm
-> extending the LV file system onto the other disk will wipe the previous
-> contents out.
-> 
-> -- 
-> regs
-> rupert
-> 
+> Date: Wed, 23 May 2001 10:53:28 -0600 (MDT)
+> From: Andreas Dilger <adilger@turbolinux.com>
+> Reply-To: linux-lvm@sistina.com
+> To: linux-lvm@sistina.com
+> Cc: Stephen Tweedie <sct@redhat.com>, Steve Wray <steve.wray@the.net.nz>
+> Subject: Re: How about ext3? (was RE: [linux-lvm] XFS and LVM)
+>
+> Stephen writes:
+> > On Wed, May 23, 2001 at 08:35:36PM +1200, Steve Wray wrote:
+> > > Any experience with ext3?
+> > > Is it shrinkable?
+> >
+> > It is format-compatible with ext2, so offline e2resize should work
+> > happily on ext3 for both shrinking and growing.  Online, only growing
+> > has been implemented (but not all of the kernel support is
+> > integrated).
+> >
+> > I haven't tried doing a resize on ext3 so we might have to teach the
+> > e2resize tools not to worry if they see the HAS_JOURNAL flag set in
+> > the superblock, but there is nothing in the format itself to prevent
+> > it from working.
+>
+> The ext2resize code has no problem with the non-reserved journal files
+> for offline resizing.  However, I just noticed last night that it doesn't
+> handle the reserved journal inode properly.  It halts the resize because
+> it can't find the owner of the blocks that the reserved journal is using.
+>
+> Also, while I have finished an online ext3 resizing patch which works
+> with the journaling properly, I haven't polished it up and finished the
+> user-space support for it.  It is available on request to people who
+> really want to play with it...
+>
+> Cheers, Andreas
+> --
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> 
-> 
-
---------------------------------------------------------------------------
-Scott Denton
-smdenton@bellsouth.net
-EFNet Handle: SteelWyng
+>
