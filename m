@@ -1,9 +1,11 @@
-Message-ID: <1003139089.3bcab0116419a@webmail1.maa.sify.net>
-Date: Mon, 15 Oct 2001 15:14:49 +0600 (IST)
-From: kannan21977@sify.com
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgextend
+Date: Mon, 15 Oct 2001 10:52:30 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Tools compile problem, 1.0.1-rc4 on RH6.2 w/kernel 2.4.12
+Message-ID: <20011015105230.C609@tykepenguin.com>
+References: <m3d73rino6.fsf@tigger.plaindog.no>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m3d73rino6.fsf@tigger.plaindog.no>; from warnckew@online.no on Sat, Oct 13, 2001 at 05:07:21PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,25 +18,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: thornber@sistina.com, linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hi
+On Sat, Oct 13, 2001 at 05:07:21PM +0200, Morten Wang wrote:
+> Greetings all,
+> 
+> gcc -c -pipe -g -O2 -Wall -pg -DDEBUG -I../tools/lib -I../tools -I/usr/local/src/LVM/1.0.1-rc4/tools/lib -o e2fsadm.o e2fsadm.c
+> In file included from ../tools/lvm_user.h:41,
+>                  from e2fsadm.c:53:
+> ../tools/lib/liblvm.h:81: malloc.h: Device not configured
+> In file included from e2fsadm.c:53:
+> ../tools/lvm_user.h:48: malloc.h: Device not configured
 
-I work for an ISP in India nad am currently trying to get LVM working for us..I use a 2.4.0 kernel.and LVM 1.0.
-I have not applied any patches except the one for ext2online.all commands work fine like pvcreate ,lvextend etc...
+That's a wierd error. I doubt it's directly related to LVM, it looks to me like 
+the files in /usr/include are not available for some reason. It might be
+something odd like just not having the development packages installed or it
+could be something much stranger.
 
-but when i do a vgextend when trying to add a physical volume to my volume group,I get a segementation fault error.
-i use the command 
+See what /usr/include looks like, it may be a symlink to somewhere else or it
+may contain symlinks to other files that cannot be resolved.
 
-vgextend vg1 /dev/hdb2
+It might be worth seeing if you can compile anything else - I would doubt it
+looking at that error.
 
-i had changed the partition id of /dev/hdb2 to 8e.
-then i did a pvcreate /dev/hdb2.even that worked fine.
-but when i try to add this pv to my volume group vg1 I get a segmentation fault error.has anyone come across this error.would be great to hear from anyone of u
-
-thanx and regards
-kannan
--------------------------------------------------
-This mail sent through : http://mail.sify.com
-Want to win a PC or Palm Tops or Digital Diaries or T-Shirts?
-Click here http://promos.sify.com/niit/main.asp?mail
+patrick
