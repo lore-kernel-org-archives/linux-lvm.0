@@ -1,10 +1,10 @@
-Message-ID: <253458D17524064C996F67C97116BF88065927@Oscar-5.north.mcld.net>
-From: "Weber, Geoffrey M." <Geoffrey.Weber@mcleodusa.com>
+Message-ID: <3F9FE42D.6070306@amazinginternet.com>
+From: Ronny Adsetts <ronny.adsetts@amazinginternet.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C39E30.FD97AAE0"
-Subject: [linux-lvm] Problems with initrd for LVM2 on 2.6.0-test8 and -test9 kernels..
- .
+References: <2D92FEBFD3BE1346A6C397223A8DD3FC092442@THOR.goeci.com>
+In-Reply-To: <2D92FEBFD3BE1346A6C397223A8DD3FC092442@THOR.goeci.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Error on unmounting XFS LVM snapshot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,114 +15,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 29 17:53:02 2003
+Date: Wed Oct 29 17:53:05 2003
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Murthy Kambhampaty <murthy.kambhampaty@goeci.com>
+Cc: linux-xfs@oss.sgi.com, linux-lvm@sistina.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+Murthy Kambhampaty said the following on 20/10/03 18:10:
+ >>-----Original Message-----
+ >>From: Ronny Adsetts [mailto:ronny.adsetts@amazinginternet.com]
+ >>Sent: Friday, October 17, 2003 12:39
+ >>
+ >>Software used:
+ >>Debian: 3.0 (Mostly)
+ >>Kernel: 2.4.21
+ >>Kernel patches: Debian standard kernel patches; XFS 1.3.0
+ >>LVM utils: 1.0.4-4 (Debian)
+ >>XFS utils: 2.5.6-1 (Debian)
+ >>
+ >>Sequence of actions:
+ >>1: xfs_freeze -f /home
+ >>2: lvcreate -L 1G -s -n home_lv_bak /dev/vg0/home_lv
+ >>3: xfs_freeze -u /home
+ >>4: mount -t xfs -onouuid,ro,usrquota /dev/vg0/home_lv_bak /mnt/home
+ >>5: umount /mnt/home
+ >>6: lvremove -f /dev/vg0/home_lv_bak
+ >>
+ >>On step 5 of above, an error is logged:
+ >>
+ >>Logs:
+ >>Oct 17 17:23:44 jettero kernel: lvm - lvm_map: ll_rw_blk write for
+ >>readonly LV /dev/vg0/home_lv_bak
+ >>Oct 17 17:23:44 jettero kernel: xfs_force_shutdown(lvm(58,10),0x1)
+ >>called from line 351 of file xfs_rw.c.  Return address = 0xc01fd6aa
+ >>Oct 17 17:23:44 jettero kernel: Filesystem "lvm(58,10)": I/O Error
+ >>Detected.  Shutting down filesystem: lvm(58,10)
+ >>Oct 17 17:23:44 jettero kernel: Please umount the filesystem, and
+ >>rectify the problem(s)
+ >
+> I got these error messages on the Wolk 4.9s kernel, but not on XFS CVS
+> kernels (or vanilla linux with XFS patches applied). This is a somewhat
+> random guess, but you might try to upgrade LVM to 1.0.7, following the LVM
+> how-to, and see if the problem persists.
+> 
 
-------_=_NextPart_001_01C39E30.FD97AAE0
-Content-Type: text/plain
+I've built a later version of LVM 1 tools, but not had a chance to try 
+them yet (probably won't bother now).
 
-Greetings all,
+I did see this this today which appears to be the same issue:
 
-I have been having quite a few problems getting a server I am setting up to
-use root on a LVM2 setup.  I used the "lvmcreate_initrd" script as suggested
-on the 'net, and also tried to hand-edit some of the LVM2 requirements into
-that initrd image (such as the /dev/mapper/control mknod command from the
-initialization script and /lib/devmapper.so library).  As soon as I try to
-use LILO or GRUB with the "root=/dev/vg00/root" or "root=3f00" (device major
-and minor numbers), my machine hangs after "Uncompressing Linux... Ok,
-booting the kernel.".
+http://www.kerneltraffic.org/kernel-traffic/kt20031027_238.html#4
 
-I have also tried (unsuccessfully) to use an initrd image I found on the
-'net at http://www.comedia.it/~bluca/cooker/lvm2/
+ From Marcelo Tosatti[1]: "It seems its not safe to create snapshots of 
+journalled fs'es without this patch[2]."
 
-.. and also tried modifying this to work (along with the evms-supplied
-initrd image).  All hang at the same point.  I got an idea to start a shell
-inside the initrd image when booting on my setup root partition to see what
-I could find out. When trying to use the Busybox "ash" command inside the
-modified evms initrd image, however, the machine doesn't halt and give me a
-shell at all but keeps booting.
+Looks like the patch will show up in mainline in the 2.4.24-pre series.
 
-Is there something that I can try out or that I am overlooking?
+[1] http://marc.theaimsgroup.com/?l=linux-kernel&m=106642797513724&w=2
+[2] http://marc.theaimsgroup.com/?l=linux-kernel&m=106623350522639&q=p3
 
-Thanks,
-    Geoff
-
-
-
-NOTICE: This electronic mail transmission may contain confidential
-information and is intended only for the person(s) named.  Any use, copying
-or disclosure by any other person is strictly prohibited. If you have
-received this transmission in error, please notify the sender via e-mail.
-
-
-
-
-------_=_NextPart_001_01C39E30.FD97AAE0
-Content-Type: text/html
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3DUS-ASCII">
-<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
-5.5.2654.45">
-<TITLE>Problems with initrd for LVM2 on 2.6.0-test8 and -test9 =
-kernels...</TITLE>
-</HEAD>
-<BODY>
-
-<P><FONT SIZE=3D2>Greetings all,</FONT>
-</P>
-
-<P><FONT SIZE=3D2>I have been having quite a few problems getting a =
-server I am setting up to use root on a LVM2 setup.&nbsp; I used the =
-&quot;lvmcreate_initrd&quot; script as suggested on the 'net, and also =
-tried to hand-edit some of the LVM2 requirements into that initrd image =
-(such as the /dev/mapper/control mknod command from the initialization =
-script and /lib/devmapper.so library).&nbsp; As soon as I try to use =
-LILO or GRUB with the &quot;root=3D/dev/vg00/root&quot; or =
-&quot;root=3D3f00&quot; (device major and minor numbers), my machine =
-hangs after &quot;Uncompressing Linux... Ok, booting the =
-kernel.&quot;.</FONT></P>
-
-<P><FONT SIZE=3D2>I have also tried (unsuccessfully) to use an initrd =
-image I found on the 'net at <A =
-HREF=3D"http://www.comedia.it/~bluca/cooker/lvm2/" =
-TARGET=3D"_blank">http://www.comedia.it/~bluca/cooker/lvm2/</A></FONT></=
-P>
-
-<P><FONT SIZE=3D2>.. and also tried modifying this to work (along with =
-the evms-supplied initrd image).&nbsp; All hang at the same =
-point.&nbsp; I got an idea to start a shell inside the initrd image =
-when booting on my setup root partition to see what I could find out. =
-When trying to use the Busybox &quot;ash&quot; command inside the =
-modified evms initrd image, however, the machine doesn't halt and give =
-me a shell at all but keeps booting.</FONT></P>
-
-<P><FONT SIZE=3D2>Is there something that I can try out or that I am =
-overlooking?</FONT>
-</P>
-
-<P><FONT SIZE=3D2>Thanks,</FONT>
-<BR><FONT SIZE=3D2>&nbsp;&nbsp;&nbsp; Geoff</FONT>
-</P>
-<BR>
-<BR>
-
-<P><B><FONT SIZE=3D2>NOTICE: This electronic mail transmission may =
-contain confidential information and is intended only for the person(s) =
-named.&nbsp; Any use, copying or disclosure by any other person is =
-strictly prohibited. If you have received this transmission in error, =
-please notify the sender via e-mail.</FONT></B></P>
-<BR>
-<BR>
-
-</BODY>
-</HTML>
-------_=_NextPart_001_01C39E30.FD97AAE0--
+Regards,
+Ronny
+-- 
+Technical Director
+Amazing Internet Ltd, London
+t: +44 20 8607 9535
+f: +44 20 8607 9536
+w: www.amazinginternet.com
