@@ -1,11 +1,11 @@
-Date: Sat, 6 Oct 2001 23:18:26 +0000
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] More Segfaults with LVM 1.0.1rc3
-Message-ID: <20011006231826.A739@guldukat.muon.local>
-References: <20011004223343.A868@balu.kawo2.rwth-aachen.de> <20011005090810.B1245@sistina.com> <3BBD6084.70106@st-peter.stw.uni-erlangen.de> <20011005095737.A1460@sistina.com> <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de>
+Date: Sun, 7 Oct 2001 12:02:26 +0200
+From: Christoph Hellwig <hch@ns.caldera.de>
+Subject: Re: [linux-lvm] Removing direct access to gendisk_head
+Message-ID: <20011007120226.A15080@caldera.de>
+References: <20011006130147.C31614@lug-owl.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3BBD6C17.8090405@st-peter.stw.uni-erlangen.de>
+In-Reply-To: <20011006130147.C31614@lug-owl.de>; from jbglaw@lug-owl.de on Sat, Oct 06, 2001 at 01:01:47PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,32 +21,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 05.10.01, svetljo <galia@st-peter.stw.uni-erlangen.de> wrote:
+On Sat, Oct 06, 2001 at 01:01:47PM +0200, Jan-Benedict Glaw wrote:
+> Hi!
 > 
-> Heinz J . Mauelshagen wrote:
+> I'm currently looking over kernel code (for cleaning-up purposes)
+> and removed EXPORT_SYMBOL(gendisk_head) which was a no-no for
+> current LVM kernel code. Please think about picking up this patch
 > 
-> >On Fri, Oct 05, 2001 at 09:25:56AM +0200, svetljo wrote:
-> >
-> >>is gcc-3.0.1 safe, or i should also use "-o0"
-> >>
-> >
-> >Don't have a report for this :-(
-> >Please try it.
-> >
-> it's seems to work
+> 	- Named struct initializers
+> 	- Removing direct use of gendisk_head
 > 
+> There's an open Q: Do we need to nullify ->real_devices and ->next?
+> I don't think so (but I am unsure) so please remove these two lines
+> upon your oppinion:-)
 
-I tried gcc-3.0.1 with LVM on linux-2.4.10 and had a lot of problems,
-but it was no problem in LVM, it works with 2.95.4.
+lvm_gendisk is in bss so it's ok to nullify it - see what I did to
+the inkernel LVM :)
 
-What i was seeing was funny stuff happening to the stack after
-a function call causing (in my case) lvremove to segfault.
-I have seen this with gcc-3.0.1 before, on another program.
-
-
-Nils
+	Christoph
 
 -- 
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >  If we all work hard, we can turn this company  <
- >      around 360 degrees -- gruntbert(LOTD)      <
+Of course it doesn't work. We've performed a software upgrade.
