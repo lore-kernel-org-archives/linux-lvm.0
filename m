@@ -1,11 +1,9 @@
-Return-Path: <miles@megapathdsl.net>
-Message-ID: <3ADF5E3B.6070309@megapathdsl.net>
-Date: Thu, 19 Apr 2001 14:52:59 -0700
-From: Miles Lane <miles@megapathdsl.net>
+Return-Path: <cygnus_tech@yahoo.com>
+Message-ID: <20010419232834.40495.qmail@web12405.mail.yahoo.com>
+Date: Thu, 19 Apr 2001 16:28:34 -0700 (PDT)
+From: Cygnus <cygnus_tech@yahoo.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-References: <E14qKeF-0007wb-00@the-village.bc.nu>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +15,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: AJ Lewis <lewis@sistina.com>, linux-lvm@sistina.com, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
+Cc: linux-openlvm@nl.linux.org
 
-Alan Cox wrote:
+> On Thu, 19 Apr 2001 21:55:57 +0200, Christoph Hellwig wrote:
+> > On Thu, Apr 19, 2001 at 01:45:20PM -0600, Andreas Dilger wrote:
+> > Basically, I'm at the point where trying to create clean patches from my
+> > LVM source tree to apply to CVS is so much work it is hardly worth it.
+>
+> IMHO wou should just put _your_ tree on a sever and submit it (in pieces)
+> to Linus.  AFAIK all serious users of LVM have used you're patched versions.
+>
+> Maybe openlvm is a good hood for such a project?
+>
+> > I'm seriously looking at devoting the time I used to spend on LVM to the
+> > EVMS project instead.  They (appear to) have in-kernel LVM support working
+> > already, so no user tools needed for VG/LV activation.  Granted, they don't
+> > yet have tools to create/modify VG/LVs, but I think I can help them there.
+>
+> Yes - when looking at what code they produces it looks a _lot_ cleaner than
+> Linux-LVM and while the papers had serious signs of Overengeering the
+> actual code looks very good to me - it could just get a little better
+> integrated with the main kernel, but that's a 2.5 issue.
+>
+>        Christoph
 
->>As far as getting patches into the stock kernel, we've been sending patches
->>to Linus for over a month now, and none of them have made it in.  Maybe
->>someone has some pointers on how we get our code past his filters.
->>
-> 
-> Has it occured to you that some of this might be because the code does stuff
-> like hide flags in the low bits of addresses and do unchecked kmallocs ?
-> Things people have tried to send patches for ..
-> 
-> The best way to get stuff to Linus is to feed him changes one at a time and
-> make them all clean and clearly correct. When I have a big set of changes I
-> normally start by feeding Linus all the 'fluff' - spelling checks and small
-> warning fixes. After that its normally easy to pick out changes one at a time
-> and feed them on.
-> 
-> Given 500 lines of mixed up diff it is very hard to verify the correctness of
-> anything. 
+
+What is the EVMS project? Is this just improvements to LVM, or something
+entirely different?
+
+-Casey
 
 
-The IrDA folks have had a similar struggle.  AJ, perhaps it would be
-helpful for you to read the discussion that took place regarding getting
-a bunch of IrDA code merged into the 2.4 tree:
 
-http://www.pasta.cs.uit.no/pipermail/linux-irda/2000-November/001923.html
-
-Dag Brattli <dagb@fast.no> eventually had a discussion with Linus and
-hashed out what he needed to do to get Linus to accept his big patch. 
-It all
-worked out very well, IIRC.
-
-	Miles
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
