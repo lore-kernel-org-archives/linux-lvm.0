@@ -1,10 +1,12 @@
-Return-Path: <glengenc@yahoo.com>
-Message-ID: <20010629185133.39761.qmail@web12003.mail.yahoo.com>
-Date: Fri, 29 Jun 2001 11:51:33 -0700 (PDT)
-From: glen 2001 <glengenc@yahoo.com>
-In-Reply-To: <87ae2rshqv.fsf@#maties.sun.ac.za>
+Return-Path: <lembark@wrkhors.com>
+Date: Sat, 30 Jun 2001 01:00:56 -0500
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] Request for misalignment tests
+Message-ID: <283820000.993880856@dizzy>
+In-Reply-To: <20010627220501.J31129@jensbenecke.de>
 MIME-Version: 1.0
-Subject: [linux-lvm] remove
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,45 +19,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---- Johann Spies <jspies@maties.sun.ac.za> wrote:
-> AJ Lewis <lewis@sistina.com> writes:
-> 
-> > Goto the LVM FTP site: ftp.sistina.com
-> > and get to the directory that you grabbed the
-> tarball from:
-> > /pub/LVM/0.9.1_beta
-> > 
-> > Grab the file:
-> lvm_0.9.1_beta7-get_hardblocksize.patch
-> 
-> Thanks.  it is working now.
-> 
-> Johann
-> -- 
-> Johann Spies
-> Informasietegnologie
-> Universiteit van Stellenbosch
-> 
->      "One thing have I desired of the LORD, that
-> will I seek
->       after; that I may dwell in the house of the
-> LORD all
->       the days of my life, to behold the beauty of
-> the LORD,
->       and to inquire in his temple."            
->                                Psalms 27:4       
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://www.sistina.com/lvm/Pages/howto.html
+> -v /dev/YourPVname | grep "^ *00000"
 
+- End of Original
+# /lvm/sbin/vgdisplay -v vg00
+--- Volume group ---
+VG Name               vg00
+VG Access             read/write
+VG Status             available/resizable
 
-__________________________________________________
-Do You Yahoo!?
-Get personalized email addresses from Yahoo! Mail
-http://personal.mail.yahoo.com/
+<snip>
+
+--- Physical volumes ---
+PV Name (#)           /dev/scsi/host0/bus0/target0/lun0/part4 (1)
+PV Status             available / allocatable
+Total PE / Free PE    1557 / 1373
+
+# /lvm/sbin/pvdisplay -v /dev/scsi/host0/bus0/target0/lun0/part4 | grep "^ *00000"
+   00000 /lvm/vg00/lvol1           00000   6144
