@@ -1,10 +1,10 @@
-Return-Path: <boutilpj@ednet.ns.ca>
-Message-ID: <3B4EE8F2.5050506@ednet.ns.ca>
-Date: Fri, 13 Jul 2001 09:26:26 -0300
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+Return-Path: <austin@coremetrics.com>
+Message-ID: <85063BBE668FD411944400D0B744267A6433C1@AUSMAIL>
+From: "Gonyou, Austin" <austin@coremetrics.com>
+Subject: RE: [linux-lvm] Mounting LVM volume with set UID and GID? (REPOST
+	 )
+Date: Fri, 13 Jul 2001 09:37:04 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Upgrade path
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,13 +16,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM Mailing List <linux-lvm@mlists.sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hello,
+On other filesystems Yes. I will re-verify though just for a sanity check. 
 
-I am currently using LVM driver version 0.9.1_beta6 with a 2.2.19 
-kernel. I am planning to upgrade to kernel version 2.4.6 or maybe 
-2.4.7-pre6. What LVM version should I compile into the kernel? Should I 
-stay with 0.9.1_beta6 or jump up to 0.9.1_beta7? I did extend a logical 
-volume using 0.9.1_beta6 if that makes any difference.
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com 
+
+> -----Original Message-----
+> From: Joe Thornber [mailto:thornber@btconnect.com]
+> Sent: Friday, July 13, 2001 3:42 AM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Mounting LVM volume with set UID and GID?
+> (REPOST )
+> 
+> 
+> On Thu, Jul 12, 2001 at 02:20:37PM -0500, Gonyou, Austin wrote:
+> > To clarify this, When I try mounting with the options 
+> uid=xxx,gid=xxx,rw
+> > I cannot mount the volume. I get a mount error. Nothing out 
+> of the ordinary,
+> > just that it can't "read supberblock", but if I mount it 
+> without those
+> > options, it's just fine. 
+> 
+> Does uid=xxx, gid=xx work without LVM ?
+> 
+> - Joe
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
