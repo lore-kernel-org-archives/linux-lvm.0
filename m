@@ -1,11 +1,11 @@
-Return-Path: <axboe@brick.kernel.dk>
-Date: Fri, 20 Apr 2001 20:25:15 +0200
-From: Jens Axboe <axboe@suse.de>
-Message-ID: <20010420202515.H20767@suse.de>
-References: <20010420192413.A17717@sistina.com> <E14qfGa-0001pJ-00@the-village.bc.nu>
+Return-Path: <mea@zmailer.org>
+Date: Sat, 21 Apr 2001 01:55:55 +0300
+From: Matti Aarnio <matti.aarnio@zmailer.org>
+Message-ID: <20010421015555.L805@mea-ext.zmailer.org>
+References: <20010419132927.D10345@sistina.com> <E14qJhd-0007oR-00@the-village.bc.nu> <20010419142400.E10345@sistina.com> <3ADF4BA3.1080606@megapathdsl.net> <m3wv8fych6.fsf@belphigor.mcnaught.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E14qfGa-0001pJ-00@the-village.bc.nu>; from alan@lxorguk.ukuu.org.uk on Fri, Apr 20, 2001 at 07:04:21PM +0100
+In-Reply-To: <m3wv8fych6.fsf@belphigor.mcnaught.org>; from doug@wireboard.com on Fri, Apr 20, 2001 at 08:36:37AM -0400
 Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,18 +20,39 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Mauelshagen@sistina.com, linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: Doug McNaught <doug@wireboard.com>
+Cc: Miles Lane <miles@megapathdsl.net>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, linux-lvm@sistina.com
 
-On Fri, Apr 20 2001, Alan Cox wrote:
-> > We will announce when they are available ASAP and would appreciate if
-> > people like Alan Cox, Andrea Arcangeli and Andreas Dilger
-> > could check them *before* we start submitting them to Linus.
-> 
-> I'll be glad to help look over them.
+On Fri, Apr 20, 2001 at 08:36:37AM -0400, Doug McNaught wrote:
+ [ not much at all spams at linux-kernel ... ]
+>
+> That's partly because davem and Matti are rabid anti-spam weasels and
+> very good at it.  ;)  There are all kinds of filters (including
+> content-based ones) on l-k, otherwise we'd be inundated in processed
+> pork... 
+>
 
-Same here, the important thing is that we actually get this patch flow
-going. And hopefully in the future as well :)
+  I would say it is SOLELY because we are quite good at it.
+  Some insidious small surprises get thru every now and then,
+  and we really can't block them all without endangering the
+  freedom of dogfight (in between on-topic things) at the list.
 
--- 
-Jens Axboe
+  If you are PERL speaker (or can at least comprehend perl's
+  m(atch) expressions), here is URL to info about it, plus
+  the actual live running filter-set:
+
+    http://vger.kernel.org/majordomo-info.html
+
+  Go to the end of the page, and you see link for the actual
+  filter code used at the VGER's Majordomo.
+
+
+  I can only hope that when a legitimate posting goes to list-owner
+  approval, the list-owner would either approve the thing, or inform
+  the message originator that they had used tabooed expressions, and
+  should avoid it in the future to get thru.
+  (I get a lot of junk,  linux-kernel-owner gets A LOT MORE ...)
+
+> -Doug
+
+/Matti Aarnio
