@@ -1,38 +1,61 @@
-Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200011302154.eAULsJZ02315@webber.adilger.net>
-In-Reply-To: <20001130214121.D18804@athlon.random> "from Andrea Arcangeli at
- Nov 30, 2000 09:41:21 pm"
-Date: Thu, 30 Nov 2000 14:54:19 -0700 (MST)
+Message-Id: <200011010620.eA16KvS25240@webber.adilger.net>
+Subject: Re: [linux-lvm] Exporting VG
+In-Reply-To: <20001101013433.B30322@srv.t-online.de> "from Heinz J. Mauelshagen
+ at Nov 1, 2000 01:34:33 am"
+Date: Tue, 31 Oct 2000 23:20:57 -0700 (MST)
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: [PATCH] Re: [bug] infinite loop in generic_make_request()
-Sender: linux-lvm-admin@sistina.com
-Errors-To: linux-lvm-admin@sistina.com
-Reply-To: linux-lvm@sistina.com
+Sender: owner-linux-lvm
+Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andrea Arcangeli <andrea@suse.de>
-Cc: Andreas Dilger <adilger@turbolinux.com>, Neil Brown <neilb@cse.unsw.edu.au>, Linus Torvalds <torvalds@transmeta.com>, V Ganesh <ganesh@veritas.com>, linux-kernel@vger.kernel.org, linux-LVM@sistina.com, mingo@redhat.com
+To: Mauelshagen@sistina.com
+Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
 
-Andrea writes:
-> On Thu, Nov 30, 2000 at 01:05:53PM -0700, Andreas Dilger wrote:
-> > the RAID and LVM make_request functions should be changed to do that
-> > instead (i.e. 0 on success, -ve on error, and maybe "1" if they do their
-> > own recursion to break the loop)?
-> 
-> We preferred to let the lowlevel drivers to handle error themselfs to
-> simplify the interface. The lowlevel driver needs to call buffer_IO_error
-> before returning in case of error.
+Heinz writes:
+> You are right that there is no need to run vgscan on each boot.
+> Nevertheless vgscan takes care of any changes in the i/o configuration of
+> the system in order to make physical volumes accessable using different
+> device nodes.
 
-Even if the lowlevel driver handles the error case, it would still
-make more sense to stick with the normal kernel practise of -ERROR,
-and 0 for success.  Then, if in the future we can do something with the
-error codes, at least we don't have to change the interface yet again.
-Also, it is a bit confusing, because the lvm (and md, I suppose) driver
-returned "0" for success in 2.2, so now you need to special-case the
-return value depending on kernel version, if you want to keep the same
-code for 2.2 and 2.4.
+If we did something like a pvscan on each boot, which identified the
+PVID->device mappings, we would not need to change the VG configuration
+information each time.  In the future, devfs will automatically do
+PVID->device mappings dynamically for us, from what Richard said.
+
+> Assumed that it is really that likely it's rather easy to get /etc/lvmtab.d/
+> files containing the metadata copies back, because they are format
+> identical to /etc/lvmconf/ files.
+
+But people have problems nonetheless.  It may not be because of vgscan,
+or because it's hard to do restores, but that's an extra step that
+people have to make when trying to fix a broken system.
+
+> /etc/lvmtab contains the 0 delimited volume group names.
+
+Yes, I was just referring to the whole LVM configuration information.
+
+> /etc/lvmtab.d/VolumeGroupName contains a metadata copy of the current
+> state of a volume group. In case of i/o configuration changes it is up
+> to vgscan to update this file's contents.
+
+Looking on my development system, /etc/lvmtab.d/vgtest is not quite the
+same data as /etc/lvmconf/vgtest.conf.  Is it possible that the backups
+in /etc/lvmconf are 1 version behind what's on disk?
+
+For example, the /etc/lvmconf/vgtest.conf file says V_EXP, while
+/etc/lvmtab.d/vgtest does not have this (I was testing vgexport and
+vgimport last).  The issue is that this is fine for the case where you
+made a mistake changing a VG, but if the disk is corrupted, and you
+run vgscan it will overwrite the last good copy of the current config
+(/etc/lvmtab.d/vgtest).  Any action you do to restore the VGDA will only
+return the previous configuration, not the current one.
+
+I think that once we have on-disk backups of the VGDA, and we only
+update one at a time, we will be OK.  However, maybe for now we should
+also backup the _current_ configuration to /etc/lvmconf/vgtest.conf,
+and have the _previous_ configuration in /etc/lvmconf/vgtest.conf.1, etc.
 
 Cheers, Andreas
 -- 
