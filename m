@@ -1,32 +1,73 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009261931.e8QJVU126129@webber.adilger.net>
-Subject: Re: [linux-lvm] lvm and fibre channel
-In-Reply-To: <200009261746.e8QHksg25808@webber.adilger.net> "from Andreas Dilger
- at Sep 26, 2000 11:46:54 am"
-Date: Tue, 26 Sep 2000 13:31:29 -0600 (MDT)
+Message-ID: <39D11E0A.18E83DA2@cup.hp.com>
+Date: Tue, 26 Sep 2000 15:07:06 -0700
+From: John DeFranco <defranco@cup.hp.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM on 2.2.17 (again)
+References: <200009260151.e8Q1pdw19220@webber.adilger.net>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: Andreas Dilger <adilger@turbolinux.com>
-Cc: Florin Andrei <fandrei@rds.ro>, linux-lvm@msede.com
+Cc: linux-lvm@msede.com
 
-I wrote:
-> Florin writes:
-> > Does LVM works over Fibre Channel?
+Thanks! That helped alot. One other question,
+I wanted to pvcreate a software RAID device
+(/dev/md0 in this case). This is a simple two
+disk mirror (since LVM does not do mirroring).
+It would not let me do this however. The FAQ
+seems to indicate that I can (at least that
+the way I am interpreting the last section: 
+
+  I recommend to use dedicated hardware RAID 
+  subsystems or Multiple Devices to have the 
+  redundancy below the LVM. In this case you 
+  just don't care about Logical Volume data 
+  redundancy and you don't run into the 
+  dangerous situation that your data is 
+  not redundant by accident.
+).
+
+Does anyone know if this is possible and if so how
+to accomplish it?
+
+Thanks! 
+
+Andreas Dilger wrote:
 > 
-> Someone on the list was trying to get LVM to work on FC, but they were
-> having problems.  I don't know if they got it working at the end.
+> John DeFranco writes:
+> > I've checked the LVM email archives so I know there has
+> > been lots of discussions on how to get LVM to work on
+> > 2.2.17, but unfortunately I'm having problems just
+> > building the kernel. I started with Turbolinux Server
+> > 6.0.2 (which is 2.2.14) and then added the 2.2.15-2.2.17
+> > patches. When I build I get:
+> >
+> > lvm-snap.c:28: linux/iobuf.h: No such file or directory
+> > lvm-snap.c: In function `lvm_snapshot_COW':
+> > lvm-snap.c:253: dereferencing pointer to incomplete type
+> > lvm-snap.c:257: warning: implicit declaration of function
+> > `brw_kiovec'
+> > lvm-snap.c: In function `lvm_snapshot_alloc_iobuf_pages':
+> > lvm-snap.c:308: warning: implicit declaration of function
+> > `expand_kiobuf'
+> 
+> Are you using my 2.2 patches (which is a backport of 0.8final from 2.4)?
+> In this case you need to also apply the RAWIO patches available at
+> Stephen Tweedie's site  ftp://ftp.linux.org.uk/pub/linux/sct/
+> Alternately, if you don't need/want LVM snapshots, you can delete lvm-snap.c,
+> and delete the references in lvm.c to any "snap" functions, etc.  There
+> are about half a dozen places where this happens.  If I get around to
+> it, I will update my patch to simplify turning off lvm snapshots...
+> 
+> Cheers, Andreas
+> --
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 
-My mistake, the person having problems was using I2O, and not FC.  Since
-the FC disks show up as SCSI disks, they should be fine.  However, it
-may be that LVM doesn't work well with the same disks connected to multiple
-systems.
-
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+==========
+Cheers
+   -jdf
