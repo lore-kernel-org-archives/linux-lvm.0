@@ -1,9 +1,10 @@
-From: "William Blunn" <bill+f.20020307@tao-group.com>
-Subject: Re: [linux-lvm] lvm redhat 7.2
-Message-Id: <000501c1c679$6a135980$216410ac@tao.co.uk>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] GPG key?
+Message-Id: <20020308093048.A519@sistina.com>
+References: <20020308041535.5139E128CF@phaea.onthe.net.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <000801c1c638$13c60fa0$6af5fd0c@attbi.com>
+In-Reply-To: <20020308041535.5139E128CF@phaea.onthe.net.au>;
+    from lists@n12turbo.com on Fri, Mar 08, 2002 at 03:15:33PM +1100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,59 +15,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar  8 02:15:02 2002
+Date: Fri Mar  8 02:33:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> I've installed lvm and recompiled the kernel to support LVM but I
-> still don't see /proc/lvm and when I run vgscan I get vgscan -- LVM
-> driver/module not loaded? I soft linked /usr/src/linux to the correct
-> dir and configured it accordignly..lost
->=20
-> What am I doing wrong?
+On Fri, Mar 08, 2002 at 03:15:33PM +1100, Tarragon Allen wrote:
+> Hi,
+> 
+> I've installed LVM on Debian Woody, so far so good, but I got rather 
+> frustrated by one thing:
+> 
+> Where is the public key used to sign the lvm source archive?  I couldn't find 
+> it anywhere.  Seems rather pointless signing the archive if the key isn't 
+> available.
 
-Did you build the LVM as a module?
+ftp://ftp.sistina.com/pub/LVM/1.0/gpg-signature which is in the same
+directory as the source archives points to AJ Lewis' key he used at
+http://people.sistina.com/~lewis/gpgkey
 
-If you have LVM as a module, then check the following:
+> 
+> t
+> -- 
+> GPG: http://n12turbo.com/tarragon/public.key
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-1. Presence of the module
-(a) Did you build the kernel modules? "make modules"
-(b) Did you install the kernel modules? "make modules_install"
+Regards,
+Heinz    -- The LVM Guy --
 
-2. Loading of the module. This is either:
-(a) Explicitly loaded
-    There should be a file on your system which lists modules which are
-    loaded at startup. In general we use a distribution other than
-    Red Hat so I can't help you with the specifics of your distribution.
-    RTM.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-or
-(b) Implicity loaded
-    Module is loaded on demand.
-
-    (i)  You probably want the "kernel module loader" turned on in the
-         kernel configuration.
-
-    (ii) You need to configure the module loader appropriately. This
-         probably only involves ensuring that the module name aliases
-         are set up right.
-
-         In the module name aliases you need:
-
-         # The Logical Volume Manager uses these block and char numbers
-         alias block-major-58 lvm-mod
-         alias char-major-109 lvm-mod
-
-         The module loading tools look in /etc/modules.conf for these
-         module name aliases. On our systems that file is automatically
-         generated, so we have to put these aliases somewhere else and
-         use a tool to regenerate the file. Again I don't know what
-         your distribution does. RTM.
-
-Bill
---=20
-William H. Blunn - <bill+s.20020307@tao-group.com>
-Tao
-62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
-Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
