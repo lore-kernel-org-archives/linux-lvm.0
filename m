@@ -1,10 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] snapshot file zombies
-Message-ID: <20021209144653.B19400@sistina.com>
-References: <20021209113719.A18845@sistina.com> <19352.1039432905@joergli.cocolab.de>
-Mime-Version: 1.0
-In-Reply-To: <19352.1039432905@joergli.cocolab.de>; from juergen@informatik-vollmer.de on Mon, Dec 09, 2002 at 12:21:45PM +0100
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <3DF4A287.2050806@ednet.ns.ca>
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] PV Status: NOT available
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,72 +13,80 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 07:55:02 2002
+Date: Mon Dec  9 08:03:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM Mailing List <linux-lvm@mlists.sistina.com>
 
-J=FCrgen,
+Kernel 2.4.20 with LVM 1.0.6
 
-those are Reiserfs errors telling that the filesystem isn't able to
-search an entry by key. Could well be an io error on the snapshot LV but
-then we should have a related entry in the syslog.
 
-If you are able to read the snapshot fine (for eg. with=20
-(dd if=3D/dev/SNAPSHOT of=3D/dev/null bs=3D1024k), I assume a reiserfs er=
-ror.
+I can mount /dev/imap_vg/imap_lv without any problems but I can 
+understand why the PV status is NOT available.
 
-If reading the snapshot LV fails, let's go forward analyzing LVM, if not
-there might be a reiserfs fix for that.
 
-On Mon, Dec 09, 2002 at 12:21:45PM +0100, J=FCrgen Vollmer wrote:
->=20
-> Dear heinz,
->=20
-> "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-> > Can you find any nasty messages in your syslog related to the
-> > access fault or _before_ you weren't able to access it?
->=20
-> the only obscure message I found was:
->=20
-> Dec  7 01:22:07 joergli kernel: vs-7000: search_by_entry_key: search_by=
-_key returned item position =3D=3D 0<4>vs-7000: search_by_entry_key: sear=
-ch_by_key returned item position =3D=3D 0<4>vs-7000: search_by_entry_key:=
- search_by_key returned item position =3D=3D 0<4>zam-7001: io error in re=
-iserfs_find_entry
->=20
-> Dec  7 01:22:07 joergli kernel: vs-7000: search_by_entry_key: search_by=
-_key returned item position =3D=3D 0<4>zam-7001: io error in reiserfs_fin=
-d_entry
->=20
-> but the failure was around 15:00 on that day
->=20
-> J=FCrgen
->=20
-> --=20
-> Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
-> Tel: +49(721) 9204871 Fax: +49(721) 24874
-> juergen@informatik-vollmer.de,vollmer@cocolab.de,Juergen.Vollmer@acm.or=
-g
-> www.informatik-vollmer.de
->=20
 
-Regards,
-Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+pvdisplay /dev/sda6
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+--- Physical volume ---
+PV Name               /dev/sda6
+VG Name               imap_vg
+PV Size               261.11 GB [547591527 secs] / NOT usable 16.25 MB 
+[LVM: 189 KB]
+PV#                   1
+PV Status             NOT available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       16384
+Total PE              16710
+Free PE               0
+Allocated PE          16710
+PV UUID               O7WnwM-5ASt-AsiV-8BlZ-h6KP-NjFl-cdY33C
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+
+
+
+
+vgdisplay
+
+--- Volume group ---
+VG Name               imap_vg
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                255
+Cur LV                1
+Open LV               1
+MAX LV Size           1023.97 GB
+Max PV                255
+Cur PV                1
+Act PV                1
+VG Size               261.09 GB
+PE Size               16 MB
+Total PE              16710
+Alloc PE / Size       16710 / 261.09 GB
+Free  PE / Size       0 / 0
+VG UUID               ON35SA-1UEm-YjpU-FzQu-vw4V-CC0y-YG6qfw
+
+
+
+
+
+
+
+lvdisplay /dev/imap_vg/imap_lv
+
+--- Logical volume ---
+LV Name                /dev/imap_vg/imap_lv
+VG Name                imap_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                261.09 GB
+Current LE             16710
+Allocated LE           16710
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
