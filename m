@@ -1,9 +1,10 @@
-Message-ID: <3C03CEB1.E5D5D447@berbee.com>
-From: Scott P <pichelma@berbee.com>
+From: Duncan Young <duncan.young@pobox.com>
+Subject: Re: [linux-lvm] LVM performance
+References: <20011122231706.M5393@sonsofthunder.yi.org>
+In-Reply-To: <20011122231706.M5393@sonsofthunder.yi.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="------------ABC7688C998CC7E3152D6DFE"
-Subject: [linux-lvm] LVM limit on PE's/size?
+Content-Transfer-Encoding: 8bit
+Message-Id: <20011127182540.AD6292473E@mailhost.duncanyoung.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,116 +15,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 27 11:35:01 2001
+Date: Tue Nov 27 12:24:02 2001
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
---------------ABC7688C998CC7E3152D6DFE
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+I hope this isn't stating the obvious, but I asume you have used hdparm to 
+adjust the default setting on your drives appropriatly (i.e. dma).  I have 4 
+disks striped and get average sequential throuput of at least 40mb/s and 
+35mb/s (dd to /dev/null) on only 2 disks.
 
-Hi all...
+cpu is approx 60% system (666mhz system).
 
-I hope I'm not asking a too pettty of a question for this list!
+If I have the disks untuned I get %100 cpu, machine "stuttering" and throuput 
+10 times less.
 
-We are planning to add a 3 rd EXP300 array to out current server w/ 2
-EXP300's in place already!
-We WILL surpass the 1 TB size, if possible?
+Duncan
 
-A little history:
-
-Linux ptb3 2.2.19 #2 SMP Tue Jul 24 11:53:29 CDT 2001 i686 unknown
-
-I have two IBM EXP300 RAID arrays connected to a Netfinity 4500R running
-Redhat Linux 6.2.
-LVM compiled into kernel AFAIK...w/ patch?
-
-We are using:
-lvm_0.9.1_beta7
-reiserfsprogs-3.x.0j
-
-Here is the current filesystem and size:
-
-/dev/exp300_2/exp300_lv2 924160464 891307744  32852720      97% /files1
-
-Just wondering about this faq:
-
-                           Q:
-                               Why are my logical volumes limited to 256
-GB in size?
-                           A:
-                               This is NO absolute limit but it depends
-on the physical extent size you configured at volume group
-                               creation time.
-
-                               Please use option -s of the vgcreate
-command to give a larger physical extent size. For example with a
-                               physical extent size of 524288 KB (512
-MB) you are able to map a logical volume of 32 Terabyte.
-                               Remember that current Linux kernels are
-limited to 1 Terabyte.
-
-***Especially about the part in bold!
-
-Please let me know if you need more details,  I will supply asap!
-
-TIA!
-
--Scott
-
-
-
-
-
---------------ABC7688C998CC7E3152D6DFE
-Content-Type: text/html; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
-<html>
-Hi all...
-<p>I hope I'm not asking a too pettty of a question for this list!
-<p>We are planning to add a 3 rd EXP300 array to out current server w/
-2 EXP300's in place already!
-<br>We WILL surpass the 1 TB&nbsp;size, if possible?
-<p>A little history:
-<p>Linux ptb3 2.2.19 #2 SMP Tue Jul 24 11:53:29 CDT 2001 i686 unknown
-<p>I have two IBM EXP300 RAID&nbsp;arrays connected to a Netfinity 4500R&nbsp;running
-Redhat Linux 6.2.
-<br>LVM compiled into kernel AFAIK...w/ patch?
-<p>We are using:
-<br>lvm_0.9.1_beta7
-<br>reiserfsprogs-3.x.0j
-<p>Here is the current filesystem and size:
-<p>/dev/exp300_2/exp300_lv2 924160464 891307744&nbsp; 32852720&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-97% /files1
-<p>Just wondering about this faq:
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Q:
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Why are my logical volumes limited to 256 GB in size?
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-A:
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-This is NO absolute limit but it depends on the physical extent size you
-configured at volume group
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-creation time.
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Please use option -s of the vgcreate command to give a larger physical
-extent size. For example with a
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-physical extent size of 524288 KB (512 MB) you are able to map a logical
-volume of 32 Terabyte.
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>
-Remember that current Linux kernels are limited to 1 Terabyte.</b><b></b>
-<p><b>***Especially about the part in bold!</b><b></b>
-<p>Please let me know if you need more details,&nbsp; I will supply asap!
-<p>TIA!
-<p>-Scott
-<br>&nbsp;
-<br><b></b>&nbsp;
-<br><b></b>&nbsp;
-<br>&nbsp;</html>
-
---------------ABC7688C998CC7E3152D6DFE--
+On Friday 23 Nov 2001 4:17 am, you wrote:
+> Hi all,
+>
+> All right. I've got LVM installed and running on 2 30GB IDE drives, a VG on
+> each, and the partitions divided just about evenly between them. This is on
+> a 1GHz Athlon with 640MB of RAM. I am running Debian/sid with lvm 1.0.1rc4
+> and kernel 2.4.13.
+>
+> A few things I have noticed in the week or so that I have been using LVM.
+> First, the drive activity light stays lit all the time. I'm not terribly
+> worried about it, since things seem to be behaving normally, but I figured
+> I would ask.
+>
+> The second, and far more disturbing thing is that any heavy accesses to the
+> filesystem (copying large files, scp-ing files mastering CDs, anything with
+> a lot of IO brings my machine to its knees. Case in point. When I started
+> this message, I was mastering a CD using xcdroast, which had called
+> mkisofs. Not only did the mastering take (I'm guessing here, since I didn't
+> note the time) about 10 minutes, the load average jumped, at one point, to
+> 8.23, and generally hovered around the 6-to-7 range. Copying large files
+> from filesystem to filesystem on the machine yields similar results.
+> Originally, I had the following configuration:
+>
+> hda 30GB HD
+> hdb 30GB HD
+> hdc DVD-ROM
+> hdd CD-RW
+>
+> A friend suggested moving the HD on hdb to the other channel, so now the
+> drives are on hda and hdc, the dvd is on hdb and the cdrw is on hdd.
+>
+> Can anyone give me any ideas as to why the machine gets beaten about so
+> much during IO operations and more importantly how can I minimize the
+> impact.
+>
+> Regards,
