@@ -1,9 +1,8 @@
-Subject: Re: [linux-lvm] EVMS 
-In-Reply-To: Message from Greg Freemyer <freemyer@NorcrossGroup.com> 
-   of "Tue, 27 Aug 2002 16:34:49 EDT." <20020827203604.QWCO1165.imf22bis.bellsouth.net@TAZ2> 
-References: <20020827203604.QWCO1165.imf22bis.bellsouth.net@TAZ2> 
-From: Paul Lussier <pll@lanminds.com>
-Message-Id: <20020827204359.C6F4BF6CA@tater>
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re: [linux-lvm] invalid number of free physical extents
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20020827204539.YTUD10186.imf28bis.bellsouth.net@TAZ2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,36 +13,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 27 15:46:13 2002
+Date: Tue Aug 27 15:50:17 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>
 
-In a message dated: Tue, 27 Aug 2002 16:34:49 EDT
-Greg Freemyer said:
+My mistake,
 
->I know that the latest xfs release (March) does not support EVMS with RAID 5 =
->sets.
->
->There may be other problems with the pairing as well.
->
->Both the EVMS and XFS teams are working to get this supported in the next =
->release.  (That looks to be a couple of months away.)
+I thought I had plenty of free space on the VG, put apparently, I was wrong.
 
-Well, currently I'm not using XFS, I'm mucking around with ext3 and 
-ReiserFS.  Though it's good to know XFS isn't an option right now
-(I did like XFS back when I was playing with it, and will probably go 
-back that way sometime :)
+I have reduced the size of a couple of my test LVs and it is working now.
 
-Thanks!
--- 
+Greg
+ >>  All,
 
-Seeya,
-Paul
---
-	It may look like I'm just sitting here doing nothing,
-   but I'm really actively waiting for all my problems to go away.
+ >>  I have a VG which I have used extensively for snapshot testing.
 
-	 If you're not having fun, you're not doing it right!
+ >>  Now everytime I try to get a snapshot, it fails with error code 13
+
+ >>  Per the man entry:
+
+ >>  13 invalid number of free physical extents
+
+ >>  I don't want to rebuild this VG because some of the other LVs on it have
+ >>  valid data.
+
+ >>  Is there a lvm repair tool that might fix this for me.
+
+ >>  Thanks,
+ >>  Greg
+ >>  =3D=3D=3D=3D=3D=3D
+ >>  Greg Freemyer
+ >>  Internet Engineer
+ >>  Deployment and Integration Specialist
+ >>  Compaq ASE - Tru64 v4, v5
+ >>  Compaq Master ASE - SAN Architect
+ >>  The Norcross Group
+ >>  www.NorcrossGroup.com
+
+ >>  _______________________________________________
+ >>  linux-lvm mailing list
+ >>  linux-lvm@sistina.com
+ >>  http://lists.sistina.com/mailman/listinfo/linux-lvm
+ >>  read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+
+
+
+
+Greg Freemyer
+Internet Engineer
+Deployment and Integration Specialist
+Compaq ASE - Tru64 v4, v5
+Compaq Master ASE - SAN Architect
+The Norcross Group
+www.NorcrossGroup.com
