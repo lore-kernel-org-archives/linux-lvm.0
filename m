@@ -1,56 +1,62 @@
-Date: Sun, 15 Oct 2000 21:12:14 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
-Subject: Re: [linux-lvm] lv inactive after reboot
-Message-ID: <20001015211214.A8064@omnifarious.mn.org>
-References: <01C036EB.4AA7CFA0.smdenton@bellsouth.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
-Content-Disposition: inline
-In-Reply-To: <01C036EB.4AA7CFA0.smdenton@bellsouth.net>; from smdenton@bellsouth.net on Sun, Oct 15, 2000 at 09:02:55PM -0400
+Message-ID: <01C03701.8B2003C0.smdenton@bellsouth.net>
+From: "S. Michael Denton" <smdenton@bellsouth.net>
+Reply-To: "smdenton@bellsouth.net" <smdenton@bellsouth.net>
+Subject: RE: [linux-lvm] lv inactive after reboot
+Date: Sun, 15 Oct 2000 23:42:12 -0400
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 To: Linux LVM mailing list <linux-lvm@msede.com>
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sunday, 15 October 2000 22:12, Eric M. Hopper
+[SMTP:hopper@omnifarious.mn.org] wrote:
+> 	I could do without this ability.  RAID, other than RAID0 should
+> be done in hardware, or you're fooling yourself about reliability. 
+> The  
 
-On Sun, Oct 15, 2000 at 09:02:55PM -0400, S. Michael Denton wrote:
->=20
-> If it hasn't already been mentioned, perhaps you could suggest to
-> Heinz:
->=20
-> The ability to do raid, specifically raid1, with LVM should be
-> included if linux LVM is to mimic the LVM used on HPUX; perhaps
-> merging linux md tools/drivers with lvm tools/drivers?
+Possibly, but even hardware RAID has points of failure... some
+hardware RAID is even designed so poorly as to inadvertently -create-
+more points of failure... 
 
-	I could do without this ability.  RAID, other than RAID0 should
-be done in hardware, or you're fooling yourself about reliability.  The
-only reason to do any RAID besides RAID0 is reliability, so why pick an
-option that so clearly doesn't work?  LVM already does RAID0.
+> only reason to do any RAID besides RAID0 is reliability, so why
+> pick an option that so clearly doesn't work?  LVM already does
+> RAID0.
 
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
+On the point of reliability I agree, the only reason to do RAID is
+for reliability... and the reliability factor becomes additive so the
+more options you have, the better.  None of them are perfect... none
+of them work 100% of the time.  But eliminating an option, even if it
+is only partially viable, only reduces the tools you have at your
+disposal.
 
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Besides, wouldn't it be better to have a single tool for software
+volume management instead of multiple?  If we could merge the mdtools
+into lvmtools then we'd have one point for software raid AND logical
+volume management... much better in my opinion :)
+
+BTW as a side note, RAID0 doesn't provide any reliability enhancement
+or protection against failures... it's only striping.
+
+> Have fun (if at all possible),
+
+Always... hope you have the same.
+
+Scott Denton
+smdenton@bellsouth.net
+EFnet Handle: SteelWyng
+ICQ UIN: 24149258
+AIM Screen Name: SteelWyng
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Version: PGPfreeware 6.5.3 for non-commercial use <http://www.pgp.com>
 
-iD8DBQE56mP+G4QeWBeRdS8RAiHQAJsHOhRhoD5ICqDuXneSMSkStUIa1ACgxVcV
-ATraEsBRpZqb6JhXsI07pig=
-=u33a
+iQA/AwUBOep5FHC+DNfF0nVpEQISGgCfWnsSwETDOnqDwwrcHpLIg3BiZ08AnR6r
+4j8UwOwSFh7AW39QJPczpTAR
+=zSvA
 -----END PGP SIGNATURE-----
-
---BOKacYhQ+x31HxR3--
