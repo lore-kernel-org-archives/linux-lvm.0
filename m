@@ -1,8 +1,8 @@
-Message-ID: <20021129100126.GA554@reti>
-Mime-Version: 1.0
-Content-Disposition: inline
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
-Subject: [linux-lvm] 2.4.20-dm-1
+Message-ID: <1038564713.3de73d693ed14@herzo.net>
+From: Sebastian Wormser <sibbi@sibbi.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] LVM2 - pvmove timeframe
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,66 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 29 04:02:02 2002
+Date: Fri Nov 29 04:12:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, lvm-devel@sistina.com
+To: linux-lvm@sistina.com
 
-http://people.sistina.com/~thornber/patches/2.4-stable/2.4.20/2.4.20-dm-1.tar.bz2
+Hi,
 
-Revision 1:
-  2.5 backport
+we are in the process of deploying two production servers with
+LVM managing SAN-devices and I am wondering whether to use
+LVM1 or LVM2.
 
-Revision 2:
-  The locking when leaving __request was broken.
-  
-  Split off __deferring()
+I was reading on the list that the only feature missing from LVM2
+is pvmove. Do you have an ETA for this? Will LVM2 have multipathing/
+path failover capabilities?
 
-Revision 3:
-  s->table wasn't being set in the snapshot contructor
+TIA.
 
-Revision 4:
-  I don't know why dm-ioctl.c was including <linux/compatmac.h>
-  rather than <asm/uaccess.h>
+cu,
 
-Revision 5:
-  Four constants:
-     DM_DIR,
-     DM_MAX_TYPE_NAME,
-     DM_NAME_LEN,
-     DM_UUID_LEN
-  
-  Were being declared in device-mapper.h, these are all specific to 
-  the ioctl interface, so they've been moved to dm-ioctl.h.  Nobody
-  in userland should ever include <linux/device-mapper.h> so remove 
-  ifdef __KERNEL guards.
-
-Revision 6:
-  No need to validate the parameters if we are doing a
-  REMOVE_ALL command.
-
-Revision 7:
-  Fluff
-
-Revision 8:
-  Mempool version by Christoph Hellwig that holds the free objects
-  in an array rather than a list.  This prevents the objects getting
-  dirtied, eg, people maybe expecting them to come out of a slab with
-  a particular state.
-
-Revision 9:
-  Return -ENOTBLK if lookup_device() finds the inode, but it
-  is not a block device. [Cristoph Hellwig]
-
-Revision 10:
-  get_kdev() was locking _minor_lock rather than
-  &_minor_lock. [Heinz Mauelshagen]
-
-Revision 11:
-  minor change for dm-strip.c. Tests for correct chunksize before it allocates
-  the stripe context. [Heinz Mauelshagen]
-
-Revision 12:
-  There's a bug in the dm-stripe.c constructor failing top check if enough
-  destinations are handed in. [Heinz Mauelshagen]
+  Sebastian
+-- 
+You can observe a lot by just watching.
