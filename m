@@ -1,11 +1,11 @@
-Message-ID: <3BC88AA4.56395248@divsol.com>
-Date: Sat, 13 Oct 2001 12:40:36 -0600
-From: Jim Cromie <jcromie@divsol.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] pv recovery after trashing partition table.  OK - back 
- to normal
-References: <20011012.181856.-303677.1.james.cromie@juno.com>
-Content-Transfer-Encoding: 7bit
+Date: Sun, 14 Oct 2001 01:27:46 +0200
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Subject: Re: [linux-lvm] Problems after restarting my debian
+Message-ID: <20011014012746.A2072@sky.net>
+References: <20011011011444.A2302@sky.net> <20011011163029.B8752@sistina.com> <20011012221759.B416@sky.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011012221759.B416@sky.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +18,12 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jim N Cromie wrote:
+Hi again,
+all works fine now. Thanks.
+Uli
 
->  /dev/hda4 used to have a good PV.
-
-Somehow, it does again.
-
-this morning, the box booted clean, and LVM found all logical partitions
-and mounted them properly.
-I did vgcfgbackup, rebooted to be sure, it rebooted w/o errors.
-
-I dont know why - I did nothing that I thought 'THIS WILL FIX IT'   My
-only WAGs are that all those fdisks,
-(now including sfdisk - which apparently is more correct) fixed
-something that was broken.  Or maybe
-one of the many LVM tools fixed it on a *scan, *display, etc.
-
-
-One of these days Ill actually use a new drive to back stuff up, rather
-than filling it with more toys & music.
+-- 
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
