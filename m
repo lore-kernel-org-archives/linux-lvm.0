@@ -1,9 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 5 Jun 2001 14:01:58 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010605140158.A23872@sistina.com>
-Mime-Version: 1.0
-Subject: [linux-lvm] *** LVM 1.0 rlease schedule ***
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3B1CC8D5.9F227A36@wrkhors.com>
+Date: Tue, 05 Jun 2001 06:56:05 -0500
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
+References: <20010604190123.C2560@pc.ilinx>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +18,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-All,
+> > Just curious, /boot only needs to be like 100 megs tops why would you want
+> > that to be an LV. Isn't it more trouble than it's worth?
+> 
+> If nothing else, how about "on principle"?  :-)  Seriously though, I
+> want to abandon screwing around with MS-DOS partitions and use LVs
+> instead.  They just make so much better sense than partitions.
 
-the prgress in regard to the integration of patches into the -ac kernels
-shows, that we'll likely reach the current LVM 0.9.1 driver code level within
-the next 2 weeks.
-
-Therefore we are planning to release LVM 1.0 on June 20th.
+It is seriously less hassle to have the root volume (with /boot
+on it) as a simple file system.  Main point is that any error
+in LVM will prevent you from booting to the point where you can
+come up far enough to clean up the LVM system.  "Doable" and 
+"make sense" aren't necessarly the same thing.  If you want to
+use LVM for nearly everything create a 128MB root, 64MB swap and
+few-hundred MB /var and use the 4th partition as pv00.  This 
+will usually get you far enough up to fix anything that gets 
+broken.  Until the PC BIOS mfr's include a sane boot system w/
+console prompt that allows you to boot w/o LVM for damaged system
+this will be much safer.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
