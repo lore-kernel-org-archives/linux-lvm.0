@@ -1,9 +1,9 @@
-Content-Class: urn:content-classes:message
+From: Christoph Resch <mailing-oit@tttech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] lvm2 device mapper
-Message-ID: <CEADF0D83077F7458B763904E47AA709BD67@exchange.neokimia.com>
-From: "Yanick Quirion" <yanick.quirion@neokimia.com>
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200312111402.11063.mailing-oit@tttech.com>
+Subject: [linux-lvm] funny PV action
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,122 +14,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 10 08:39:02 2003
+Date: Thu Dec 11 07:03:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+Hi all,
 
-Did you compile device mapper as a module or into the kernel?
+may someone kindly assist me in thei quite funny behavior of LVM
 
-Here I have compile them into the kernel directly. You must add this =
-line into your /etc/modules.conf:
+i work on a runnging LVM system .. everything works as it should BUT:
 
-post-install dm-mod /etc/rc.d/init.d/devmap_mknod.sh
+when running pvscan i get 
 
-And the script /etc/rc.d/init.d/devmap_mknod.sh is next:
+root@prime:~# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/md1" of VG "system"   [19.97 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/md2" of VG "dataraid" [13.88 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/md3" of VG "dataraid" [68.36 GB / 0 free]
+pvscan -- total: 3 [102.24 GB] / in use: 3 [102.24 GB] / in no VG: 0 [0]
 
-#! /bin/sh
+# well /dev/md1 is my system ( / , /usr, /var ,... ) it works quite fine :-o
 
-# Startup script to create the device-mapper control device
-# on non-devfs systems.
-# Non-zero exit status indicates failure.
+root@prime:~# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "system"
+vgscan -- found active volume group "dataraid"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+groups
 
-# These must correspond to the definitions in device-mapper.h and dm.h
-DM_DIR=3D"mapper"
-DM_NAME=3D"device-mapper"
-
-set -e
-
-DIR=3D"/dev/$DM_DIR"
-CONTROL=3D"$DIR/control"
-
-# Check for devfs, procfs
-if test -e /dev/.devfsd ; then
-        echo "devfs detected: devmap_mknod.sh script not required."
-        exit
-fi
-
-if test ! -e /proc/devices ; then
-        echo "procfs not found: please create $CONTROL manually."
-        exit 1
-fi
-
-# Get major, minor, and mknod
-MAJOR=3D$(sed -n 's/^ *\([0-9]\+\) \+misc$/\1/p' /proc/devices)
-MINOR=3D$(sed -n "s/^ *\([0-9]\+\) \+$DM_NAME\$/\1/p" /proc/misc)
-
-if test -z "$MAJOR" -o -z "$MINOR" ; then
-        echo "$DM_NAME kernel module not loaded: can't create $CONTROL."
-        exit 1
-fi
-
-mkdir -p --mode=3D755 $DIR
-test -e $CONTROL && rm -f $CONTROL
-
-echo "Creating $CONTROL character device with major:$MAJOR =
-minor:$MINOR."
-mknod --mode=3D600 $CONTROL c $MAJOR $MINOR
-
-With that everything works fine. If you use them as a module, I'm not =
-sure, but I think that you will have to add it into your rc.local, or =
-create a startup script for devmap_mknod.sh, but I'm not really sure =
-about that.
-
-Hope this will help.
-
-Regards,
-
-Yanick Quirion
+# well thats great ;-) 
 
 
------Original Message-----
-From: Salil Taneja, Noida [mailto:salilt@noida.hcltech.com]=20
-Sent: 10 December, 2003 02:13
-To: 'linux-lvm@sistina.com'
-Cc: Salil Taneja, Noida
-Subject: [linux-lvm] lvm2 device mapper
+root@tttprime:~# lvscan
+lvscan -- ACTIVE            "/dev/dataraid/ttchip" [9 GB]
+lvscan -- ACTIVE            "/dev/dataraid/private" [20 GB]
+lvscan -- ACTIVE            "/dev/dataraid/tttech" [20 GB]
+lvscan -- ACTIVE            "/dev/dataraid/projects" [17 GB]
+lvscan -- ACTIVE            "/dev/dataraid/sandbox" [9 GB]
+lvscan -- ACTIVE            "/dev/dataraid/marketing+pr" [7.23 GB]
+Segmentation fault
 
-hi,
-=A0
-I am using LVM2 , version -2.00.07 with device mapper library -1.00.07 =
-on 2.6.0 test-9 kernel
-=A0
-i am facing these problems while doing so : -
-=A0
-1.) i get a warning message
-=A0=A0=A0=A0"=A0/dev/mapper/control : open failed : No such file or =
-directory .
-=A0=A0=A0=A0=A0=A0=A0Is device mapper mapped to kernel ? "
-=A0
-To overcome this=A0problem I started using LVM2 commands =A0 with =
---driverloaded n option .
-=A0
-now the commands execute but i face another problem :-
-2.) when using lvcreate or vgcreate, the command executes but no node =
-entry is created =A0in the /dev/ directory
-For eg :
-=A0
-I used the following command :
-=A0=A0=A0 lvcreate < options > -n lvm1 vg1 --driverloaded n
-=A0
-to verify this i used lvdisplay that gives the path of lvm1 as =
-/dev/vg1/lvm1 ; but when i check in /dev/ directory there is no entry =
-corresponding to vg1 or lvm1 .
-=A0
-Why isnt there any node corresoponding to vg1 or lvm1 in /dev/ ?=A0 any =
-clues...?????
-=A0
-=A0
-Please suggest some nice solutions .
-=A0
-Thanks and Regards,=20
-Salil Taneja=20
-HCLT NetCentric Division,=20
-A11, Sector 16,=20
-Noida, India.=20
-  office: +91-120-2510701 Ext 3155=20
-  cell: +91-9810250247=20
+# oops i miss al my systemLVs .. still running on it ;-( 
 
-=A0
+root@tttprime:~# cat /proc/mounts
+rootfs / rootfs rw 0 0
+/dev/root.old /initrd ext2 rw 0 0
+/dev/root / ext3 rw 0 0
+proc /proc proc rw 0 0
+devpts /dev/pts devpts rw 0 0
+/dev/md0 /boot ext2 rw 0 0
+/dev/system/tmp /tmp ext3 rw 0 0
+/dev/system/var /var ext3 rw 0 0
+/dev/system/usr /usr ext3 rw 0 0
+/dev/system/usr_local /usr/local xfs rw 0 0
+/dev/dataraid/private /ttt/private xfs rw 0 0
+/dev/dataraid/ttchip /ttt/ttchip xfs rw 0 0
+/dev/dataraid/tttech /ttt/tttech xfs rw 0 0
+/dev/dataraid/marketing+pr /ttt/tttech/company/marketing+pr xfs rw 0 0
+/dev/dataraid/projects /ttt/tttech/projects xfs rw 0 0
+/dev/dataraid/sandbox /ttt/tttech/projects/sandbox xfs rw 0 0
+
+still everything runs .. but i want it to be clean .. any advice would help 
+
+thanks and best regards
+
+-c-
