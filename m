@@ -1,26 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2UCHvj31896
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 07:17:57 -0500
-Received: from pegasus.siol.net (pegasus.siol.net [193.189.160.25])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2UCHt1X029620
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 07:17:55 -0500
-Received: from kudu.siol.net ([10.10.10.22]) by pegasus.siol.net
-	(InterMail vK.4.03.05.03 201-232-132-103 license
-	1cbf71897a39210db31154c99f0b4628)
-	with ESMTP id <20040330121754.ZDKP15612.pegasus@kudu.siol.net>
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 14:17:54 +0200
-Received: from vector ([193.77.156.30]) by kudu.siol.net
-	(InterMail vK.4.03.05.03 201-232-132-103 license
-	1cbf71897a39210db31154c99f0b4628)
-	with SMTP id <20040330121753.LEBY5652.kudu@vector>
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 14:17:53 +0200
-Message-ID: <002201c41651$12d53060$0400a8c0@vector>
-From: "Perplexer" <perplexer@thz.net>
-References: <001301c4164d$14b733a0$0400a8c0@vector>
-Subject: Re: [linux-lvm] Removing an Old disk (LVM HOW-TO)
-Date: Tue, 30 Mar 2004 14:18:12 +0200
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2TMfDj24000
+	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 17:41:13 -0500
+Received: from email02.aon.at (WARSL402PIP7.highway.telekom.at [195.3.96.94])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2TMfB1X031061
+	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 17:41:11 -0500
+From: Manfred Koizar <mkoi-pg@aon.at>
+Date: Tue, 30 Mar 2004 00:42:54 +0200
+Message-ID: <5r5h60pus29i6hf4eftka319gmqlrd6ies@email.aon.at>
+References: <06sb60hni6h5cok941gqnuo4ld1b0v1rgi@email.aon.at>
+	<200403291650.i2TGop212446@mail.osdl.org>
+In-Reply-To: <200403291650.i2TGop212446@mail.osdl.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: [HACKERS] PostgreSQL block size vs. LVM2 stripe
+	width
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,36 +25,49 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: markw@osdl.org
+Cc: linux-lvm@redhat.com, linux-ia64@vger.kernel.org, pgsql-hackers@postgresql.org
 
-Additional question:
+On Mon, 29 Mar 2004 08:50:42 -0800 (PST), markw@osdl.org wrote:
+>In this case, I've only done 1 per each combination.  I've found the
+>results for this test to be reproduceable.
 
-Can a PV be removed from the VG without executing pvmove
-before (bruteforce remove if you will) ? What would I have to
-do if I wanted to remove it (e2fsadm?, lvreduce? ...) ?
+Pardon?
 
----------
-Perplexer
+>>>                        Linux-2.6.3, LVM2 Stripe Width
+>>>BLCKSZ
+>>>(going down)    16 KB   32 KB   64 KB   128 KB  256 KB  512 KB
+>>>2 KB            2617    2656    2652    2664    2667    2642
+>>>4 KB            4393    4486    4577    4557    4511    4448
+>>>8 KB            4337    4423    4471    4576    4111    3642
+>>>16 KB           4412    4495    4532    4536    2985    2312
+>>>32 KB           3705    3784    3886    3925    2936    2362
 
------ Original Message ----- 
-From: "Perplexer" <perplexer@thz.net>
-To: <linux-lvm@redhat.com>
-Sent: Tuesday, March 30, 2004 1:49 PM
-Subject: [linux-lvm] Removing an Old disk (LVM HOW-TO)
+>> Does this mean that you first ran all test with 8 KB, then with 4, 2, 16
+>> and 32 KB BLCKSZ?  If so, I suspect that you are measuring the effects
+>> of something different.
+>
+>Yes, that's correct, but why do you suspect that?
 
+Gut feelings, hard to put into words.  Let me try:
 
-> There is a section describing how to remove and old disk
-> from LVM at http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html
-> but nothing is said about reducing LV before this is done.
-> 
-> Must a LV be reduced using e2fsadm before any attempt to remove a PV
-> is made in order to prevent data loss ?
-> 
-> ---------
-> Perplexer
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Nobody really knows what the "optimal" BLCKSZ is.  Most probably it
+depends on the application, OS, hardware, and other factors.  8 KB is
+believed to be a good general purpose BLCKSZ.
+
+I wouldn't be surprised if 8 KB turns out to be suboptimal in one or the
+other case (or even in most cases).  But if so, I would expect it to be
+either too small or too large.
+
+In your tests, however, there are three configurations where 8 KB is
+slower than both 4 KB and 16 KB.  Absent any explanation for this
+interesting effect, it is easier to mistrust your numbers.
+
+If you run your tests in the opposite order, on the same hardware, in
+the same freshly formatted partitions, and you get the same results,
+that would be an argument in favour of their accurancy.
+
+Maybe we find out that those 1.5% are just noise.
+
+Servus
+ Manfred
