@@ -1,23 +1,44 @@
-Date: Wed, 20 Oct 1999 14:38:01 +0100
-From: David Sutton <pere@legend.co.uk>
-Subject: [linux-lvm] LVM patch under Mandrake 6.1
-Message-ID: <19991020143801.B4114@squirrel.legend.co.uk>
+Date: Wed, 20 Oct 1999 08:10:05 -0700
+From: Ryan Murray <rmurray@cyberhqz.com>
+Subject: Re: [linux-lvm] how to remove PV from a VG?
+Message-ID: <19991020081005.A26564@cyberhqz.com>
+References: <19991019231507.A337@redneck.sk.oracle.com> <199910192313.AA15213@mailgate1b.telekom.de> <19991020123101.A305@redneck.sk.oracle.com>
 Mime-Version: 1.0
+In-Reply-To: <19991020123101.A305@redneck.sk.oracle.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: freddy@sk.oracle.com
+Cc: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, linux-lvm@msede.com
 
-Hello all,
+On Wed, Oct 20, 1999 at 12:31:02PM +0200, Adrien Farkas wrote:
+> Heinz Mauelshagen (mauelsha@ez-darmstadt.telekom.de) wrote :
+> > > the subject says it (almost) all, I need to remove three PVs that were added to my VG by mistake (namely /dev/sdi, /dev/sdj and /dev/sdk), I guess you see where the error is. I can access data on previous PVs (yet), but don't know how to remove PVs, there is nothing linke 'pvremove'. I can assure you there is no data (perhaps except signature) on those disks.
+> > > 
+> > 
+> > vgreduce YourVG /dev/sd[i-k]
+> > 
+> > - or, if the 3 partitions hold the only empty PVs of YourVG -
+> > 
+> > vgreduce -a YourVG
+> 
+> yes, helped quite enough, just the /dev/sd[ghi] devices are still in
+> list of valid PVs and when I run pvscan my partitions get destroyed
+> (I suppose because of rewriting LVM marker to the device).  How do I
+> really, physically remove the devices from the PV list?
 
-  I've just installed a clean version of Linux Mandrake v6.1 onto a intel based system. By examining the SRPM, its running a kernel version v2.2.13pre4.
+or, if you aren't using partitions, write over the front of the drive
+with:
 
-  The patch went in cleanly and the kernel was recompiled and installed. LVM appears to be working great. My problem is that it seems to have broken RAID support on the box. I'm running raidtools v0.90, installed using the RPM mentioned elsewhere on this list. I'm trying to set up a raid0 array, and mkraid checks the two drives, mentions where it is installing the superblocks, then says that the process is aborted, and to check in /proc/mdstat or syslog. There is no message regarding this in either place.
+dd if=/dev/zero of=/dev/sdg bs=1024 count=5
 
-  Can anyone help me with this? I'm eventually trying to run lvm on raid'ed drives, probably raid5, but at this time not even raid0 seems to work.
+I'm not sure how much is actually needed to be overwritten, I normally
+just don't put a limit on it and hit ctrl-c after awhile.  (or let it
+run to the end of the drive...)
 
-Regards,
-
-  David
+-- 
+Ryan Murray (rmurray@cyberhqz.com, rmurray@glenayre.com)
+Software Designer, Glenayre Technologies Inc.
+The opinions expressed here are my own.
