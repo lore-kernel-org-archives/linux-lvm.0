@@ -1,36 +1,44 @@
-Message-ID: <3919F2D5.50FBDADE@mobilestor.com>
-Date: Wed, 10 May 2000 17:37:57 -0600
-From: "Jeffrey E. Mast" <jmast@mobilestor.com>
+Message-ID: <3919F8A0.1F7A318C@msede.com>
+Date: Thu, 11 May 2000 02:02:40 +0200
+From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] raid & LVM
+Subject: Re: [linux-lvm] raid & LVM
+References: <3919F2D5.50FBDADE@mobilestor.com>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM Mailing List <linux-lvm@msede.com>
+To: "Jeffrey E. Mast" <jmast@mobilestor.com>
+Cc: linux-lvm@msede.com
+
+"Jeffrey E. Mast" wrote:
+> 
+> I have been playing around with the kernel linux-2.3.99-pre7-8
+> (0.8final) and attempting to try out
+> using software raid0 with LVM. The problem I am having is that
+> apparently /proc/partitions
+> reports /dev/mda instead of /dev/md0 and pvcreate cannot find /dev/md0.
+
+IMHO this might be an inconsistency between devfs and your current
+device files (probably non devfs based?). When devfs is compiled in 
+the kernel /proc/partitions returns the devfs names.
+To save scanning all block device files in /dev, lvm tries to make
+use of /proc/partitions in vgscan.
+
+> Anyway, I made a link from /dev/md0 to /dev/mda and pvcreate works.
+> However, doing
+> a vgscan segfaults. The segfault occurs in pv_read_all_pv.c during the
+> check for MD and
+> clear out doubles.
+
+Looks like a bug.
 
 
-I have been playing around with the kernel linux-2.3.99-pre7-8
-(0.8final) and attempting to try out
-using software raid0 with LVM. The problem I am having is that
-apparently /proc/partitions
-reports /dev/mda instead of /dev/md0 and pvcreate cannot find /dev/md0.
+Michael
 
-This may be due to raid not really being incorporated into the kernel
-yet or if something else
-changed in the kernel. Anyone know why?
-
-Anyway, I made a link from /dev/md0 to /dev/mda and pvcreate works.
-However, doing
-a vgscan segfaults. The segfault occurs in pv_read_all_pv.c during the
-check for MD and
-clear out doubles.
-
-Maybe I am being too bold trying this out before the full raid is
-incorporated into the kernel, but
-I wanted to see what the current status was.
-
-Thanks,
-
-Jeff
+-- 
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
