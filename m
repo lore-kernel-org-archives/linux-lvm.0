@@ -1,12 +1,9 @@
-From: Werner John <john@oswf.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <15280.9856.340823.868715@rigel.oswf.de>
-Date: Tue, 25 Sep 2001 08:38:56 +0200 (MEST)
-Subject: Re: [linux-lvm] e2fsck probs with LVM and 2.4.9-ac9+
-In-Reply-To: <Pine.LNX.4.21.0109241818520.3621-100000@zeke.goatskin.org>
-References: <20010924131709.A30558@sistina.com>
-	<Pine.LNX.4.21.0109241818520.3621-100000@zeke.goatskin.org>
+Date: Tue, 25 Sep 2001 11:02:32 -0400
+From: Jeff Layton <jeffrey.b.layton@lmco.com>
+Message-id: <3BB09C88.8234FDE4@lmco.com>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Subject: [linux-lvm] Disk Died - Ideas?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,76 +18,33 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Good morning,
+Hello,
 
-I have a question about mixing user space tools from 0.9.1_beta8 with a
-2.4.9-ac14 kernel. I understood that the linux-2.4.9-acX ; X >= 9; kernels
-use lvm 1.0 code already. So far I had no problems using the "old" lvm user
-space tools. Do I have to expect serious problems?
+   I searched the mailing list and the web but didn't come up with
+too much to help me - so I thought I would ask the experts.
+   I had 6 PVs across 6 disks (the first one was just part of the disk,
+the other 5 spanned the entire drives). On top of this I had vg01
+and in that I had lvol1. lvol1 was ext2 formatted and mounted as
+/home. There is no striping across the disks. The first drive is
+internal (part of the root disk) and the other five are external to
+the machine.
+   Well, of course, the last disk gave up the ghost (lots of SCSI
+errors, machine will not boot without unplugging drives from
+machine). I'm pretty sure you can guess what I'm going to ask :)
+Can I just unplug the last drive, bring the system up, don't run
+fsck on lvol1, mount lvol1, and try to pull as much data as I can
+off what's left of the filesystem? If this works, then I can just
+redo the PVs, the VGs, and the LVOLs and recreate the filesystem
+and move over what data I can recover.
+   Oh, by the way, this filesystem had no backups. The powers
+to be claimed they were working on a backup solution for us,
+but they didn't get one in place by the time this drive died. I know,
+I know. I screamed very loudly, made lots of enemies internally,
+but still no backups were ever done. It's a good thing they don't
+allow firearms on the site :>
 
-Anyhow, I'll upgrade user space tools to the most recent version but I'm
-really curious if it's just a coincidence that everything seems to work
-nicely here. 
+TIA,
 
-Regards
+Jeff Layton
 
-Werner
-
-Shane Shrybman writes:
-> 
-> Yes, I thought the lvm user mode tools might be the problem. Are the user
-> spce tools _always_ backwards compatible? Would it be wise to list the
-> version of tools required in Documentation/Changes?
-> 
-> On Mon, 24 Sep 2001, Heinz J . Mauelshagen wrote:
-> 
-> > 
-> > Shane,
-> > 
-> > -ac9 has the LVM 1.0 code in it.
-> > You should give the LVM 1.0.1-rc2 user space code a try in order to address
-> > your problem.
-> > 
-> > On Sat, Sep 22, 2001 at 07:11:14PM -0400, Shane Shrybman wrote:
-> > > Hello,
-> > > 
-> > > When I attempted to upgrade to 2.4.9-ac9 and ac14 from 2.4.9-ac6 I ran
-> > > into a problem.
-> > > 
-> > > With either of these kernels (I didn't try any others between ac6 and
-> > > ac14) the kernel boots fine and lvm-mod gets loaded ok but when the first
-> > > filesystem that is on an lv gets mounted e2fsck complains and drops me to
-> > > admin prompt. The error message is something like this:
-> > > 
-> > > The filesystem size (according to the superblock) is 524288 blocks
-> > > the physical size of the device is 57344
-> > > ...
-> > > 
-> > > When I reboot back into 2.4.9-ac6 everything is fine after e2fsck.
-> > > 
-> > > I have e2fsprogs version 1.19, do I need a more recent version?
-> > > 
-> > > Regards,
-> > > 
-> > > Shane
-> > > 
-> > > 
-> > > -- 
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > 
-> > 
-> 
-> -- 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Lockheed-Martin
