@@ -1,10 +1,11 @@
-From: Eric Sandeen <sandeen@sgi.com>
-In-Reply-To: <20020822214631.CUZO1228.imf06bis.bellsouth.net@TAZ2>
-References: <20020822214631.CUZO1228.imf06bis.bellsouth.net@TAZ2>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1030053519.10702.9.camel@stout.americas.sgi.com>
-Mime-Version: 1.0
-Subject: [linux-lvm] Re: Summary - Snapshot Effort
+Message-ID: <XFMail.20020822195818.cfreeze@alumni.clemson.edu>
+MIME-Version: 1.0
+Content-Type: multipart/signed;
+ boundary="_=XFMail.1.5.3.Linux:20020822195818:10266=_";
+ micalg=pgp-md5; protocol="application/pgp-signature"
+In-Reply-To: <20020822174612.GA8692@grimlock>
+From: Chris Freeze <cfreeze@alumni.clemson.edu>
+Subject: Re: [linux-lvm] vg_read_with_pv_and_lv error
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,46 +16,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 22 17:01:03 2002
+Date: Thu Aug 22 19:59:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Greg Freemyer <freemyer@norcrossgroup.com>
-Cc: xfs mailing list <linux-xfs@oss.sgi.com>, LVM Mailing list <linux-lvm@sistina.com>
+To: Adam McDaniel <adamm@array.org>
+Cc: linux-lvm@sistina.com
 
-On Thu, 2002-08-22 at 16:43, Greg Freemyer wrote:
-> All,
+This message is in MIME format
+--_=XFMail.1.5.3.Linux:20020822195818:10266=_
+Content-Type: text/plain; charset=us-ascii
+
+
+On 22-Aug-2002 Adam McDaniel wrote:
+
+> This is the exact same problem I had last week. So far I've been
+> trying to hack in a solution by modifying the PV-UUID (which was
+> lost).. with minimal success.
 > 
-> I have not been successful at getting reliable Read-Only snapshots of XFS via LVM.  Since XFS is being used in Enterprise quality applications, I suggest this is a major shortcoming that should be prioritized.
-> 
-> BTW: Are there any snapshot related tests in the XFS regression tests?
+> Let me know if you find a way to fix this, vice-versa :)
 
-No, there aren't.  Frankly, snapshot has not gotten a lot of attention
-lately.
-
-> When a failure occurs the lvcreate --snapshot command will freeze up.    
-
-If that's the failure, looking at a kdb backtrace of the "stuck" process
-would be helpful, and might give us an idea of where to look.
-
-Testing a CVS kernel for the same behavior would also be a good
-datapoint.
- 
-> A manually entered xfs_freeze -u will release the lvcreate.  (The VFS-lock patch effectively is calling xfs_freeze -f internally prior to starting the snapshot process.)
-
-> FYI: Adrian Head believes that the VFS-lock patch is more reliable than not having it and wrapping the lvcreate --snapshot call with explicit xfs_freeze calls.  I have not tried that.
-
-If things are working as intended, that should not be the case - the end
-result should be that xfs runs the same code, whether you did it via a
-manual userspace command, or the automatic vfs-lock patch.
-
-Sending some debug output from kdb would help - but also, take a look at
-that list of work Steve posted today, and realize that there are lots of
-things going on at the moment.  :)
-
-Thanks,
--Eric
+I was actually able to restore my lvm drive.  The first thing I did was pull
+the backup from the weekend and tar up the /dev/diskvg and /etc/lvm* files. 
+After moving them over to my server and unpacking them, I was able to run
+vgscan -f -v.  That brought everything back into sync again so that I could
+vgchange -ay diskvg and mount.  Thank goodness that I had a system level backup
+over the weekend.
 
 
 -- 
-Eric Sandeen      XFS for Linux     http://oss.sgi.com/projects/xfs
-sandeen@sgi.com   SGI, Inc.         651-683-3102
+Regards,
+
+Chris
+
+QOTD:
+        Money isn't everything, but at least it keeps the kids in touch.
+
+-----
+Chris Freeze           Email: cfreeze@alumni.clemson.edu
+                         Web: http://www.cfreeze.com 
+
+
+--_=XFMail.1.5.3.Linux:20020822195818:10266=_
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE9ZYiqpYf63jYRQj8RAh31AJsFg1Fv4oAAa3DiyeayJ0DJiUON8wCfX9+o
+1ddhVLoS1u9QAF2XisUCK6A=
+=RxV+
+-----END PGP SIGNATURE-----
+
+--_=XFMail.1.5.3.Linux:20020822195818:10266=_--
+End of MIME message
