@@ -1,10 +1,11 @@
-Return-Path: <andreas.klein@gmx.de>
-From: "Andreas Klein" <andreas.klein@gmx.de>
-Date: Wed, 15 Aug 2001 19:19:23 +0200
-Message-ID: <IGEJJBMMFLKMBKEEDDMDGEACCAAA.andreas.klein@gmx.de>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200108151755.f7FHtmTH013535@webber.adilger.int>
+In-Reply-To: <20010815185005.A32239@sistina.com> "from Heinz J . Mauelshagen
+ at Aug 15, 2001 06:50:05 pm"
+Date: Wed, 15 Aug 2001 11:55:48 -0600 (MDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Possible LVM enhancements for HA-Cluster support
+Subject: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 1.0 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,37 +18,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux-LVM@sistina.com
+Content-Transfer-Encoding: 7bit
+To: mauelshagen@sistina.com
+Cc: Kurt Garloff <garloff@suse.de>, linux-lvm@sistina.com, lvm-devel@sistina.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, sistina@sistina.com, mge@sistina.com
 
-Hello Heinz,
+Heinz writes:
+> On Wed, Aug 15, 2001 at 06:25:48PM +0200, Kurt Garloff wrote:
+> > Is there finally a decent way to upgrade from 0.9.1b7?
+> > Or is it still required to have multiple versions of the utils installed
+> > just in order to be able to update from 0.9.1b7 to b8 (or 1.0)?
+> 
+> Well, as explained before on the lists we had an algorithm calculating
+> the offset to the first PE in place till 0.9.1 Beta 7.
+>
+> Therefore, we *need* to run the installed version < LVM 0.9.1 Beta 8 to
+> retrieve that sector offset for all PVs and change the metadata to hold the
+> offset. No known way around this.
 
-i'm in development of a HA-Cluster Software for Linux under GPL. 
-I'm planning to use LVM as a base for my Cluster-Software (like 
-HPs MC/ServiceGuard). For this i have some ideas which i would 
-like to discuss with you as the maintainer of the Linux-LVM if 
-you take stock in this.
+Sorry, I don't get the list email anymore, despite it telling me I'm
+subscribed (may be my fault, I don't know), please reply to l-k where
+I know I will see it.
 
-At the moment i'm doing, in the result, something similar to 
-MC/SGs cluster lock disk on a raw device to provide the split brain
-syndrom. For now this solution works most of the time (maybe
-i have to switch to external quorum server like in MC/SG Metro Cluster).
-To put this solution on top of a Linux-LVM i need access to
-a VG from every cluster node. But this could be a problem, because
-if an inactive node changes the VG or LVOLs the active node doesn't
-know about this change. So my idea is to activate a VG on an inactive
-node in read only mode to prevent this. 
+Saying you "need" the old versions of the installed tools to read the
+on disk data is bogus, IMNSHO.  You could easily have a flag which says
+"calculate the PE offsets using the old algorithm or the new algorithm".
+This could easily be keyed off of the presence/absence of the new
+pe_offset field in the pv_data struct on disk, and whether or not you
+actually have the misaligned PEs in the first place.
 
-Would this be an acceptable solution and enhancement for Linux-LVM?
+When I talked to them last, the IBM EVMS folks didn't have any such
+problems correctly reading either the old (possibly offset) or new
+layouts with the same driver.
 
-OK, i think an implementation based on SCSI low level commands could be
-better, but as far as i have understand your LVM it is so easy to 
-implement this but maybe you have another idea?
+Also, since this bug exists only for a limited number of users (only a
+subset of users who created volumes with beta 5 and beta 6), it causes
+grief for anyone who is NOT affected by the bug.
 
-I would like to hear from you, so far
+> > If yes, then I'd vote for not updating the kernel until this is fixed!
+> 
+> Well, we need to migrate the metadata in the future anyway once we want
+> to offer support for enhanced metadata reliability and redundancy.
 
----
-mit freundlichen gruessen / kind regards
+Well, that is the future, and should not impact users of 2.4.x kernels.
+Just like we found an acceptable workaround to the (incompatible) IOP 11
+change (which was later reverted), it is possible to find an acceptable
+workaround for the new incompatible change.  Sadly, it is no longer my
+job to fix such things, and I don't have any systems here that need
+fixing.
 
-Andreas Klein
-E-Mail: andreas.klein@gmx.de
-----------------------------------------
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
