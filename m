@@ -1,65 +1,69 @@
-Message-Id: <199902180911.AA29444@mailgate1b.telekom.de>
+Message-Id: <199902180921.AA32120@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] Re: your mail
-Date: Thu, 18 Feb 1999 10:12:12 MET
+Date: Thu, 18 Feb 1999 10:21:33 MET
+In-Reply-To: <Pine.GHP.4.05.9902172219500.17992-100000@ixion.honeywell.com>; from "Shawn Leas" at Feb 17, 99 10:34 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
-
+To: sleas@ixion.honeywell.com, linux-lvm@msede.com
+Cc: mge@ts1.ez-darmstadt.telekom.de
 
 > 
-> Heinz:
-> >LILO is able to deal with sectors scattered over a boot disk limited
-> >by the 1024 cylinder BIOS rsstriction.
-> >This implies no need for a special boot area _if_ we lay all
-> >sectors LILO needs into the LV parts on that one disk.
-> >Or did you mean that with voot area?
-> >
-> >If LILO would be able to deal with sectors scattered over many disks,
-> >why to have a special boot area anyway?
+> On Thu, 18 Feb 1999, Heinz Mauelshagen wrote:
+> 
+> > This implies no need for a special boot area _if_ we lay all
+> > sectors LILO needs into the LV parts on that one disk.
+> > Or did you mean that with voot area?
 > 
 
-Daniel:
-> Okay.  Let me make sure I understand this.  I think that what you're saying
-> is that at this point, LILO should be able handle an LV like any other
-> partition as far as booting is concerned?
+On Wed, 17 Feb 1999 22:34:49 -0600, Shawn Leas wrote:
+> Mirrored configurations would work ok then I guess, right?
 
-No, only if the logical extents belonging to the boot logical volume
-all are on _one_ bootable physical disk _and_ don't suffer from a 1024 cylinder
-limit or anything similar.
+> This (mirroring) would be my main reason for root on an LV.
 
-LVM had to care about keeping up those restrictions.
+Yes, but LVM mirroring is future 8*(
 
-> If so, then the real problem
-> lies in getting the LVM turned on early enough that we can finish the boot
-> process, correct?
-
-Yes.
-It would imply an extension to the LVM driver init stuff to
-deal with such a kind of early activation of the boot volume group if
-the driver is static bound into the kernel.
+If we will have mirroring support in the LVM some day it should not be the
+big issue to activate a mirror at an early stage while initializing
+the LVM driver (static bound into the kernel).
 
 
-> And if that were the case, we should be able to treat
-> the LVM like any other necessary kernel driver and install it with an
-> initrd.
+> By voot,
+> what did you mean? (Sorry, it's probably in some M somewhere that I
+> should be RTFing...)
 
-If we had a boot logical volume we could have a static LVM bound kernel
-or an initrd solution.
+Sorry, just an early morning hours typo coming much too late from work.
 
-> Sorry to repeat things, but I want to make sure that I have a firm
-> understanding of what you're saying.
+voot should have been boot (area).
 
-You are welcome!
+RTFing beer on my bill ;*)
 
-It helps me to be more precise and others to join in 8*)
+> 
+> > If LILO would be able to deal with sectors scattered over many disks,
+> > why to have a special boot area anyway?
+> 
+> Probably none. /me says KISS! ;P
 
+As i said in another posting, LVM had to take care of LILO single disk
+and 1024 cylinder limitations.
 
-Regards,
+> 
+> > HP-UX's 2nd stage bootstrap loader is only able to deal with a contiguous
+> > HFS formated filesystem.
+> > That's the reason they mark the boot/root LV contiguous.
+> > Without tricks you are stuck with the initial created size.
+> > AFAIK this hasn't been changed including 11.X.
+> 
+> Geez... Well, commercial eunices are driven my market demand and
+> not quality or grace or programmer's pride. Luckily, there's you,
+> Linus, Alan, Richard Gooch, SCT, HJ Lu, HPA, Andreas, and all the
+> rest of the code wariors out there doing it better!
+> 
+
 Heinz
 --
 
