@@ -1,10 +1,14 @@
-Return-Path: <dlt@dataventures.com>
-Message-ID: <3AB59501.FF6ED9F3@dataventures.com>
-Date: Sun, 18 Mar 2001 22:11:29 -0700
-From: Donald Thompson <dlt@dataventures.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Apparent performance degradation for each PV with striping
+Return-Path: <hopper@omnifarious.mn.org>
+Date: Sun, 18 Mar 2001 23:20:12 -0600
+From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Subject: Re: [linux-lvm] Apparent performance degradation for each PV with striping
+Message-ID: <20010318232012.A1169@omnifarious.mn.org>
+References: <3AB59501.FF6ED9F3@dataventures.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
+In-Reply-To: <3AB59501.FF6ED9F3@dataventures.com>; from dlt@dataventures.com on Sun, Mar 18, 2001 at 10:11:29PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,64 +20,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I started playing with iostat tonight and saw a few things I didn't
-really expect to see.
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've got a volume group consisting of 4 82 gig drives. All 4 are IDE
-drives.
-Reading directly from the raw device, a PV in this case, with something
-like
+On Sun, Mar 18, 2001 at 10:11:29PM -0700, Donald Thompson wrote:
+> I started playing with iostat tonight and saw a few things I didn't
+> really expect to see.
+>=20
+> I've got a volume group consisting of 4 82 gig drives. All 4 are IDE
+> drives.  Reading directly from the raw device, a PV in this case, with
+> something like
+>=20
+> dd if=3D/dev/ide/host0/bus0/target0/lun0/disc of=3D/dev/null
 
-dd if=/dev/ide/host0/bus0/target0/lun0/disc of=/dev/null
+	Have you played with hdparm to try to tune the way the kernel
+talks to your IDE drives?
 
-gave me around 5500 blocks read per second.
-Reading from a unstriped LV on a single PV gives me around
-4500 blocks read per second, which I felt was reasonable. When I create
-a LV striped across all four, my blocks read per second drops to around
-1100
-per hard drive, giving me a total of about 4400 reads per second for
-that LV.
-2200 reads per second if I striped it across 2 PV's. Timing how long it
-took
-to finish a dd for the different types of LV's I made pretty much
-confirmed what
-iostat was saying. It always took me 45 seconds, give or take a second,
-to
-read a 100 megabyte LV. So it appears striping is useless for me,
-atleast with this
-hardware setup.
+	That may be the reason for being CPU bound.  The kernel tends to
+default to the slowest possible method because there are a lot of bad
+IDE controllers and drives out there that will trash your data if you
+try to talk to them in a way they aren't expecting.
 
-I notice during the dd operation that my system CPU state is 90% or
-more.
-So I think I just answered my own question, I'm CPU bound. Moving on,
-is there any known ways to improve my performance off each PV with this
-type of
-hardware setup? I usually create an LV with...
+Have fun (if at all possible),
+--=20
+The best we can hope for concerning the people at large is that they
+be properly armed.  -- Alexander Hamilton
+-- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
+r) --
 
-lvcreate -i4 -I4 -L somesize vgname -n lvname
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Should I expect that I won't see the performance drop on individual PV's
-with striping
-on SCSI drives? I originally setup this system with no intentions of it
-being a high performance
-file server, until a few people I work with decided they wanted to use
-it for a database machine.
-So I'm not afraid to spend a couple grand to get some faster disks in it
-if thats the only thing
-thats gonna help me.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.2 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-My system:
+iD8DBQE6tZcMG4QeWBeRdS8RAryAAKCrm7DIUXD5rVXyPV8HxNFRe1ZD0ACfcROz
+QZUWAsGGagv8FiAfdMvCv1U=
+=6GEJ
+-----END PGP SIGNATURE-----
 
-Linux 2.4.2
-Libc 2.1.3
-Debian Potato
-LVM 0.9.1_beta6 utilities and patch.
-ATA 100 IDE interfaces on MB
-idebus set to 66 in /etc/lilo.conf
-CPU is Athlon 1000mhz thunderbird
-256 megs of RAM
-
--Don
+--vkogqOf2sHV7VnPd--
