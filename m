@@ -1,9 +1,8 @@
-From: Rich Scheller <richs@dev.tivoli.com>
-In-Reply-To: <20011203164340.M1022@tykepenguin.com>
-Message-ID: <Pine.GSO.4.21.0112041349520.27570-100000@devmail.dev.tivoli.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] lvm-1.0.1 tools build error on SPARC64 (was: lvm-1.0.1 kernel compile
- errors on SPARC64)
+From: Chris Lyttle <chris@e-ppraisal.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1007514053.2472.14.camel@pohutakawa.hut.loc>
+Mime-Version: 1.0
+Subject: [linux-lvm] Unable to resize volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,55 +13,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  4 15:49:08 2001
+Date: Tue Dec  4 18:59:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Mon, 3 Dec 2001, Patrick Caulfield wrote:
+I am having a problem where I cannot resize a volume past 200GB.
+lvextend just sets the size to what it is now and will not extend
+further. The total disk available is 322GB
 
-> On Mon, Dec 03, 2001 at 09:36:04AM -0600, Rich Scheller wrote:
-> > This patch fixed the kernel build break.  Thanks!
-> > 
-> 
-> If that actually works (and I can think of no reason why it would not) can you
-> let me know and I'll send the patch to Dave Miller for inclusion in the stock
-> kernel.
+RH 7.1 / 2.4.6 kernel with 
+lvm_0.9.1_beta7
+ext3-2.4.0.9.0-246
+ext2resize-1.1.17-1
 
-Patrick,
+# vgdisplay -v
+--- Volume group ---
+VG Name               backup
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           511.98 GB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               294.61 GB
+PE Size               8 MB
+Total PE              37710
+Alloc PE / Size       25612 / 200.09 GB
+Free  PE / Size       12098 / 94.52 GB
+VG UUID               4WlpTP-ZuZ8-pO0X-Q2ne-edsv-4O3W-2rY246
 
-Yes, using that patch, I was able to build a working 2.4.16+lvm_1.0.1
-kernel on our Sun Enterprise 250 and (after running into an LVM tools
-build problem, see below) I was able to build some test volume groups and
-volumes, create ext2 file systems on them, fill them with data, extend the
-file systems, etc.  If you have any specific tests that you'd like me to
-run, please let me know.  (My eventual goal is to create XFS or JFS file
-systems in LVM volumes on top of a software RAID5 array running under
-Linux on a Sun E450.)
+--- Logical volume ---
+LV Name                /dev/backup/backup1
+VG Name                backup
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                200.09 GB
+Current LE             25612
+Allocated LE           25612
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
 
-After getting the kernel working, I ran into a completely different
-problem in the build of the lvm-1.0.1 tools.  The configure script created
-the file make.tmpl with CFLAGS set to "-g -O0 -Wall -pg".  The -pg
-(profiling) option is incompatible with shared libraries on the gcc SPARC
-compiler.  You get a whole bunch of these warnings:
 
-cc1: warning: -fPIC and profiling conflict: disabling -fPIC
+--- Physical volumes ---
+PV Name (#)           /dev/sda6 (1)
+PV Status             available / allocatable
+Total PE / Free PE    11921 / 0
 
-With -fPIC (Position Independant Code) disabled, the shared library
-liblvm-10.so.1 is generated, but it's unusable.  Any executable linked
-against this library gets a segmentation fault when the first function
-from this library is called.
+PV Name (#)           /dev/sda7 (2)
+PV Status             available / allocatable
+Total PE / Free PE    11921 / 0
 
-I can't really think of a reason why you'd want to have profiling turned
-on for production code, so may I suggest that the CFLAGS option "-pg" be
-removed from the file make.tmpl.in?  That fixed the problem for me...
+PV Name (#)           /dev/sda8 (3)
+PV Status             available / allocatable
+Total PE / Free PE    13868 / 12098
 
--Rich
-
--- 
-Rich Scheller    Build Strategy and Infrastructure Group
-IBM SWG          rschelle@us.ibm.com
-(Tivoli)         Voice: 512-436-8563  Tie-Line: 749-8563
-
-    The love of Lotus Notes is the root of all evil.
+TIA for your help
+Chris Lyttle
