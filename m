@@ -1,28 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB3B5or29320
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2004 06:05:50 -0500
-Received: from ns.bj-ig.de (ns1.bj-ig.de [217.119.193.11])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iB3B5mXH011258
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2004 06:05:48 -0500
-Received: from tower.bj-ig.de (bjgate.bj-ig.de [194.127.182.253])
-	by ns.bj-ig.de (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
-	iB3B5kJJ004591
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2004 12:05:46 +0100
-Received: from ralf.bj-ig.de (ralf.bj-ig.de [194.127.182.13])
-	by tower.bj-ig.de (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
-	iB3B5j3E031500
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2004 12:05:45 +0100
-From: Ralf =?iso-8859-15?q?M=FCller?= <ralf@bj-ig.de>
-Subject: Re: [linux-lvm] Problem with pvmove of system installation volume
-Date: Fri, 3 Dec 2004 12:05:35 +0100
-References: <200412021848.01813@bj-ig.de>
-In-Reply-To: <200412021848.01813@bj-ig.de>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB3Htpr14465
+	for <linux-lvm@redhat.com>; Fri, 3 Dec 2004 12:55:51 -0500
+Received: from www.austinlogistics.com (mail.austinlogistics.com
+	[69.150.203.234])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB3Htjb6018961
+	for <linux-lvm@redhat.com>; Fri, 3 Dec 2004 12:55:45 -0500
+In-Reply-To: <OF44682A09.C6D944AC-ON86256F5B.005FCD50-86256F5B.00636C35@austinlogistics.com>
+Message-ID: <OFF09DC32C.3675605C-ON86256F5F.005FB33E-86256F5F.006275BC@austinlogistics.com>
+From: Jetkins@austinlogistics.com
+Date: Fri, 3 Dec 2004 11:55:32 -0600
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	micalg=pgp-sha1; boundary="Boundary-02=_IiEsBQVxyCAM91L";
-	charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Message-Id: <200412031205.45068@bj-ig.de>
+Subject: [linux-lvm] Replacing a physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,61 +21,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
---Boundary-02=_IiEsBQVxyCAM91L
-Content-Type: text/plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+The response to my last question was somewhat underwhelming, and I wonder
+if I scared people off by introducing RAID into the equation, so let's
+rephrase it as if we were dealing with individual disks (since that's
+exactly how the OS sees them anyway)...
 
-Ok - update to my own post. I started the move process again - this time=20
-with strace to get a protocoll of the failed system call. So the last=20
-system calls of pvmove were:
+*  Let's assume I have three SCSI disks, /dev/sda through sdc, and I'm
+running LVM1.
 
-write(1, "      /dev/md2: lvm2 label detec"..., 36) =3D 36
-ioctl(5, BLKBSZGET, 0xbfff8f5c)         =3D 0
-_llseek(5, 0, [0], SEEK_SET)            =3D 0
-read(5, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"...,=20
-4096) =3D 4096
-ioctl(5, BLKBSZGET, 0xbfff8f7c)         =3D 0
-_llseek(5, 53248, [53248], SEEK_SET)    =3D 0
-read(5, "system {\nid =3D \"Qo3GHB-44Tw-wv7M-"..., 4096) =3D 4096
-write(1, "    Found volume group \"system\"\n", 32) =3D 32
-ioctl(6, DM_DEV_STATUS, 0x80d14b0)      =3D -1 ENXIO (No such device or=20
-address)
-ioctl(6, DM_DEV_STATUS, 0x80d14b0)      =3D -1 ENXIO (No such device or=20
-address)
-ioctl(6, DM_LIST_DEVICES, 0x80d14b0)    =3D 0
-ioctl(6, DM_DEV_STATUS, 0x80ff518)      =3D 0
-ioctl(6, DM_DEV_STATUS, 0x80ff518)      =3D 0
-ioctl(6, DM_DEV_STATUS, 0x80ff580)      =3D 0
-ioctl(6, DM_DEV_STATUS, 0x80ff5c8)      =3D -1 ENXIO (No such device or=20
-address)
-ioctl(6, DM_DEV_STATUS, 0x80d14b0)      =3D -1 ENXIO (No such device or=20
-address)
-write(1, "    Loading system-pvmove0\n", 27) =3D 27
-write(1, "      Setting activation/mirror_"..., 51) =3D 51
-ioctl(6, DM_DEV_CREATE
+*  /dev/sda contains my non-LVM system partitions and doesn't enter into
+the discussion.
 
-And here it stopped ...
-Ralf
+*  I originally created a PV on the entire second disk (/dev/sdb) and
+created several LV's on it.
 
-=2D-=20
-Van Roy's Law: -------------------------------------------------------
-       An unbreakable toy is useful for breaking other toys.
+*  Subsequently, I created a second PV on a partition on the third disk
+(/dev/sdc1), and pvmove'd all the LVM data to that PV.  I then used
+vgreduce to remove /dev/sdb from the VG.  I now have the following:
 
---Boundary-02=_IiEsBQVxyCAM91L
-Content-Type: application/pgp-signature
-Content-Description: signature
+      # pvscan
+      pvscan -- reading all physical volumes (this may take a while...)
+      pvscan -- inactive PV "/dev/sdb"  is in no VG  [819.73 GB]
+      pvscan -- ACTIVE   PV "/dev/sdc1" of VG "vg01" [956.31 GB / 136.62 GB
+free]
+      pvscan -- total: 2 [1.73 TB] / in use: 1 [956.35 GB] / in no VG: 1
+[819.73 GB]
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
 
-iD8DBQBBsEiIZcF+4X5mWz8RAuy0AJ4s3ky81e39mflTVtLPtvJmbyht2QCgie+T
-UH+aiuBT6Zz3bVYOwvbZKxY=
-=M+SA
------END PGP SIGNATURE-----
+*  I now want to replace /dev/sdb with a new, larger drive.  The HOW-TO
+simply says that the drive can now be removed or reallocated, but before I
+do so, I would like reassurance in the form of answers to the following:
 
---Boundary-02=_IiEsBQVxyCAM91L--
+What will happen when the system reboots and finds /dev/sdb is now blank?
+Will LVM get upset, or will it simply forget about the PV that used to be
+there, so that I can create a new PV on a partition on the new disk
+(/dev/sdb1)?
+
+I guess what I need to confirm is that since the /dev/sdb PV is not in any
+VG, then the only record of its existence is in the partition table of that
+disk, and thus when that disk is removed, all trace of the old PV goes with
+it.  I'm afraid this area is not well documented, so any assistance would
+be greatly appreciated.
+
+Thanks in advance,
+
+Jon Etkins
+IT Administration & Support
+Austin Logistics, Inc
+ph:  (512) 651-5641
+fax: (512) 329-5625
