@@ -1,12 +1,13 @@
-From: Steven Lembark <lembark@wrkhors.com>
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
 Subject: Re: [linux-lvm] offtopic but ...
-Message-Id: <94260000.1020868034@[192.168.200.4]>
-In-Reply-To: <064b01c1f69a$71b9c100$070414ac@Home.PIN.LU>
-References: <Pine.LNX.4.33.0205081213340.3518-100000@diablo.unixag-zw.fh-kl.d e>
-    <064b01c1f69a$71b9c100$070414ac@Home.PIN.LU>
+Message-Id: <20020508182151.I18743@vestdata.no>
+References: <20020508082357.B18631@connectlive.com>
+    <Pine.LNX.4.33.0205081533090.3518-100000@diablo.unixag-zw.fh-kl.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0205081533090.3518-100000@diablo.unixag-zw.fh-kl.de>;
+    from jovi@unixag-zw.fh-kl.de on Wed, May 08, 2002 at 04:12:48PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,55 +18,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May  8 09:27:06 2002
+Date: Wed May  8 11:20:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
->> What i would like  is a solution which is between LVM and a RAIDx. LVM
->> has in my eyes the disadvantage that you create a filesystem over
-> different
->> drives/partitions. If you lose one you nearly lose everything.
+On Wed, May 08, 2002 at 04:12:48PM +0200, Oliver Jovic wrote:
+> 			   application
+> 				|
+> +----------------------------------------------------------------------
+> |
+> |			virtual device
+> |
+> +----------------------------------------------------------------------
+>     |             |            |            |
+> +----------+ +----------+ +----------+ +----------+
+> |          | |          | |          | |          |
+> | /dev/hda | | /dev/hdb | | /dev/hdc | | /dev/hdd |
+> |   ext3   | | reiserfs | |   xfs    | |  ext2    |
+> +----------- +----------+ +----------+ +----------+
+>  index file =3D=3D index file
 
-You don't create LV's on a "drive". You create them on a Physical
-Volume ("PV"). This matters, becuse LVM has no real idea what the
-underlying PV is, only that it's there. If the PV is RAID5 then
-you can loose a disk drive without loosing the PV or any data on it.
-
->> With a RAID you lose a harddrive/partition (diskspace) to build it (more
->> costs for harddrives and maybe a controller).
-
-You are not going to get reliability on multi-drive sytems without
-SOME sort of redundancy. Either back the data up offline (e.g., to
-tape, another disk or CD) or use RAID. If you really find the cost
-of a single disk drive that prohibitive then feel free to pay for
-it in time: make tape backups every time there is sufficient data
-to be worth not re-entering.
-
-Now you know why most people are willing to pay RAID5 -- many
-companies I work for prefer RAID1+0 (i.e., mirroring individual
-disks at the hardware level then appending their space into a
-single large PV).
-
-A 4-disk RAID5 doesn't eat that much of your total space and
-should give reaonable performance. If you're desparate for
-space, use an 8-drive stripe w/ 1b chunks.
+There are many functions you loose if multiple seperate filesystems are
+used. e.g:
+what do you do when a file grow to no longer fit on it's original
+disk? You can not easily move it (atomicly), and you can not
+easily split it into multiple chunks.
 
 
-> I'm too chicken to have faith in pvmove ;-)
+If you don't need this functionality, the closest approximation to what
+you want is a symlink-three.
 
-Prbably a wise choice, especially since your method requires
-accessing the most-used data.
+Basicly you can create a very small filesystem with symlinks for each
+and every file on your "virtual filesystem" (don't call it a virtual
+device, because that's something different :) ). You can use raid to get
+redundancy for the link-three, and as it is very small you don't loose a
+lot of space.
 
-Another approach is to cpio -p the items to a new location
-and soft-link the old directory.
+You could extend this scheeme to implement a small kernel-module that
+did :
+* open("/mnt/hdX/file", O_CREATE)
+* symlink("/mnt/hdX/file", "/mnt/virtual/file")
+when your application does
+* open("/mnt/virtual/file", O_CREATE)
+to make it more seemless.
 
-Main problem is that as the data use changes over time you
-will likely have the least-used data filling the RAID5 system
-and no more room for the hot stuff.
+
+However, it's once you want it to be totally transparrent, and files to
+migrate to the disk with more space that it gets complicated.
 
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+
+--=20
+Ragnar Kj=F8rstad
+Big Storage
