@@ -1,9 +1,9 @@
-Message-ID: <008b01c35116$caf09280$bbf6c150@world>
-From: "Blueyonder" <abs1@blueyonder.co.uk>
+Message-ID: <008101c3511a$d07c4330$32e1ffc8@ops0203>
+From: "cbastos" <cbastos@connection.com.br>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0088_01C3511F.2C8BC7A0"
-Subject: [linux-lvm] redhat 8 booting problem: Message=dropping to shell command
+	boundary="----=_NextPart_000_007E_01C35101.AAC88130"
+Subject: [linux-lvm] lvm vesrsion
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,58 +14,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 23 08:31:12 2003
+Date: Wed Jul 23 08:31:19 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0088_01C3511F.2C8BC7A0
+------=_NextPart_000_007E_01C35101.AAC88130
 Content-Type: text/plain;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all
+Hi,
 
-Having problems booting RH8, after creating a logical volume.
-Bootup goes normally till it gets to displaying message =3D dropping you
-to a  shell command.
+Some time ago I had to match the kernel version of LVM and the version =
+of LVM utilities programs=20
+in order to get it work fine.
+I want to know if this still necessary or I can have something like =
+kernel with LVM version 1.0.5+(22/07/2002)
+and programs with Logical Volume Manager 1.0.6. Is it possible without =
+problems?
 
-The system already had working lv's, that were visible with df -h.
-They remained mounted after rebooting. Appropriate entries for them
-were found in /etc/fstab.
+I'm using Slackware 9.0 and it came configured  this way.
 
-Below is what was attempted:
+Tanks in advance.
 
-1. LV created & formatted with mke2fs -j /dev/vg1/varlv
+Carlos Xavier
 
-2. Mounted: mount /dev/vg1/varlv   /var
-
-3. Checked: df -h. Seen to be mounted.
-
-4. After reboot, did, df -h  Not mounted now.
-
-5. edited /etc/fstab to include the line for /dev/vg1/varlv:
-
-/dev/vg1/varlv        /var      ext3     defaults   1 2
-
-6. Rebooted:=20
-Got to the point in bootup where message =3D dropping you to a  shell
-command.
-
-7. Typed root password and hit enter.
-
-8. Repeated message: Init d:x respawning too fast, disabling for 5
-mins.
-
-I can see the message=3Ddropping you to a  shell command appears in
-rc.sysinit. I understand that ext3 is handled by initrd ram disk.
-
-Help much appreciated
-
-thanks
-abs.
-------=_NextPart_000_0088_01C3511F.2C8BC7A0
+------=_NextPart_000_007E_01C35101.AAC88130
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -74,40 +50,31 @@ Content-Transfer-Encoding: quoted-printable
 <HTML><HEAD>
 <META http-equiv=3DContent-Type content=3D"text/html; =
 charset=3Diso-8859-1">
-<META content=3D"MSHTML 5.50.4926.2500" name=3DGENERATOR>
+<META content=3D"MSHTML 6.00.2722.900" name=3DGENERATOR>
 <STYLE></STYLE>
 </HEAD>
 <BODY bgColor=3D#ffffff>
-<DIV>
-<DIV>Hi all<BR><BR>Having problems booting RH8, after creating a logical =
+<DIV><FONT face=3DArial size=3D2>Hi,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Some time ago I had to match the kernel =
+version of=20
+LVM&nbsp;and the version of LVM utilities programs </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>in order to get it work =
+fine.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I want to know if this still necessary =
+or I can=20
+have&nbsp;something like kernel with LVM version =
+1.0.5+(22/07/2002)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>and programs with Logical Volume =
+Manager 1.0.6. Is=20
+it possible without problems?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I'm using Slackware 9.0 and it came=20
+configured&nbsp; this way.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Tanks in advance.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Carlos =
+Xavier</FONT></DIV></BODY></HTML>
 
-volume.<BR>Bootup goes normally till it gets to displaying message =3D =
-dropping=20
-you<BR>to a&nbsp; shell command.<BR><BR>The system already had working =
-lv's,=20
-that were visible with df -h.<BR>They remained mounted after rebooting.=20
-Appropriate entries for them<BR>were found in /etc/fstab.<BR><BR>Below =
-is what=20
-was attempted:<BR><BR>1. LV created &amp; formatted with mke2fs -j=20
-/dev/vg1/varlv<BR><BR>2. Mounted: mount /dev/vg1/varlv&nbsp;&nbsp;=20
-/var<BR><BR>3. Checked: df -h. Seen to be mounted.<BR><BR>4. After =
-reboot, did,=20
-df -h&nbsp; Not mounted now.<BR><BR>5. edited /etc/fstab to include the =
-line for=20
-/dev/vg1/varlv:<BR><BR>/dev/vg1/varlv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;=20
-/var&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ext3&nbsp;&nbsp;&nbsp;&nbsp;=20
-defaults&nbsp;&nbsp; 1 2<BR><BR>6. Rebooted: <BR>Got to the point in =
-bootup=20
-where message =3D dropping you to a&nbsp; shell<BR>command.<BR><BR>7. =
-Typed root=20
-password and hit enter.<BR><BR>8. Repeated message: Init d:x respawning =
-too=20
-fast, disabling for 5<BR>mins.<BR><BR>I can see the message=3Ddropping =
-you to=20
-a&nbsp; shell command appears in<BR>rc.sysinit. I understand that ext3 =
-is=20
-handled by initrd ram disk.<BR><BR>Help much=20
-appreciated<BR><BR>thanks<BR>abs.</DIV></DIV></BODY></HTML>
-
-------=_NextPart_000_0088_01C3511F.2C8BC7A0--
+------=_NextPart_000_007E_01C35101.AAC88130--
