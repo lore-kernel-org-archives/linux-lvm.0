@@ -1,10 +1,10 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] LVM2 in a cluster and lvchange.
-Message-ID: <20030918135129.K2155@uk.sistina.com>
-References: <Sea2-F56SMXQebfaxI10000b3bf@hotmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Sea2-F56SMXQebfaxI10000b3bf@hotmail.com>; from benew666@hotmail.com on Thu, Sep 18, 2003 at 09:38:46AM +0900
+Message-ID: <3F69AE57.7040405@webhackande.se>
+From: Rickard Olsson <richie@webhackande.se>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] FYI: Going back to LVM1 from LVM2
+References: <0F72BC18-E849-11D7-B784-000393DC1896@sistina.com>
+In-Reply-To: <0F72BC18-E849-11D7-B784-000393DC1896@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 18 07:52:01 2003
+Date: Thu Sep 18 08:09:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Thu, Sep 18, 2003 at 09:38:46AM +0900, tester7 A. wrote:
-> My question is that 'doing lvchange -an /dev/vg10/test ; lvchage -ay 
-> /dev/vg10/test' in the other node make the kernel recognize the lv changes. 
-> Is there any better way or command, becase making inactive temporaryly does 
-> not make me feel right.
- 
-Your other option is to poke around with dmsetup.
+AJ Lewis wrote:
 
-Currently:
+> If device nodes are missing, vgmknodes should help in LVM1.
 
-  dmsetup suspend vg10-test
-  lvchange -ay vg10/test
+I didn't know that, but I had the opportunity to test it, as the 
+/dev/f2/f2 LV went missing again after a reboot. vgmknodes reported 
+success, but mount still did not find the node until after a vgchange 
+-an / vgchange -ay combo. Weird.
 
-should work, but mixing dmsetup with the LVM2 tools
-like that is not supported and so it could break as
-a side-effect of changes in future releases.
- 
-Alasdair
--- 
-agk@uk.sistina.com
+As I mentioned earlier, I did install and run LVM2 on this machine 
+before going back to LVM1 (even going back and forth a few times) and I 
+suppose it's possible that this changed something in the metadata that 
+LVM1 didn't like.
+
+    / Rickard Olsson,IT-Konsult/
+   / Telefon: +46 70 635 01 42/
+  / http://www.webhackande.se/
