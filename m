@@ -1,6 +1,7 @@
-From: lvmlist@spltd.f9.co.uk
-Message-ID: <20021111202059.spltd+lvmlist@force9>
-Subject: [linux-lvm] list replys....
+From: Alexander Lazarevich <alazarev@hera.itg.uiuc.edu>
+Message-ID: <Pine.A41.4.43.0211111602380.53894-100000@hera.itg.uiuc.edu>
+MIME-Version: 1.0
+Subject: [linux-lvm] Max LV size
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,17 +12,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 11 14:21:02 2002
+Date: Mon Nov 11 16:10:04 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Linux LVM Sistina <linux-lvm@sistina.com>
 
-<blush> How do I reply to my posts without starting a new thread? </blush>
+I've got a RAID 5 array which is 500GB. It's on a red hat 7.3 system
+(2.4.18-3 kernel) using sistina LVM 1.0.3. I've already got my VG set up,
+and I'm now crreating the LV's, but I've got a problem.
 
-Can't find a FAQ & the 'info' command is an unrecognised command.  
+vgdisplay -v tells me the max LV size is 255GB. So I figured I'd decrease
+the number of Max LV's (currently at 256) to 128, and then that would
+increase the size that each LV could be. But when I do a "vgchange -l 128
+blah", it just stops and says "segmentation fault".
 
-Sorry.
+What gives? I really hope 255GB isn't a limit. Any ideas?
 
-Mark [sheepish] P.
+Thanks in advance,
+
+Alex
+---                                                        ---
+   Alex Lazarevich | Systems | Imaging Technology Group
+   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
+---                                                        ---
