@@ -1,40 +1,58 @@
-Date: Thu, 2 Sep 1999 16:32:49 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: [linux-lvm] A petition to get LVM into the kernel
-Message-ID: <19990902163249.B11317@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-Mime-Version: 1.0
+Message-Id: <199909021631.AA11965@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] question about lvm
+Date: Thu, 02 Sep 1999 18:26:38 METDST
+In-Reply-To: <EXECMAIL.9909020919.B4883@crow.sep.com>; from "Andrew Sutton" at Sep 2, 99 9:42 am
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: letters@lwn.net
-Cc: linux-lvm@msede.com
+To: Andrew Sutton <ansutton@sep.com>
+Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-Good morining,
-In the kernel page of issue 9902 concerning the linux-lvm petition Jon
-Corbet states:
+> 
+> i'm not really certain if this is the appropriate place to air a 
+> question about lvm problems, but since i couldn't find any other 
+> documented support - i figured i'd just go to the source.
+> 
+> i'm fairly new at using lvm (yesterday) so this is probably just a 
+> newbie question... anyway, i installed lvm, rebuilt my kernel (with lvm
+> in the kernel), compiled the utilities, the whole thing. i then 
+> proceeded to drop 2 pv's into a volume group (vda) and allocate one 
+> logical volume (lvol1) consisting of all my disk space. and it worked 
+> (at which point i was ecstatic). so i built an ext2fs on the lv and 
+> mounted it, and again it worked fine. i then put a line in my fstab to 
+> mount it on boot, and rebooted.
+> 
+> when the machine came back up, the drive was not mounted. when i tried 
+> mounting it by hand, i kept getting a "/dev/vda/lvol1 is not a valid 
+> block driver" error. using some of the lvm utils, i uncovered the fact 
+> that the entire volume group was "inactive".
 
-'... Attempting to replace those criteria with "special interest group"
-pressure is not the way to get a better kernel. Hopefully those
-wanting LVM in the kernel can discuss the matter with Linus and find
-out what, if anything, is blocking that inclusion.'
+you have to insert a "vgscan" and a "vgchange -ay" into your 
+startup files (see step 9 in file INSTALL in the LVM source top directory)
 
-Actually before deciding to make a petition we did.
-in fact you'll find LVM in some of -ac patches.
-
-The idea of the petition came when someone reported to
-Heinz Mauelshagen the linux-lvm mantainer "that Linus wants to wait
-before putting LVM into the stock kernel to see if enough people are
-interested to have this."
-
-We decided that having a document that summarizes the reasons why
-we feel that LVM is needed in the stock kernel, and have it subscribed
-by anyone who is interested was the best way to let him know.
+> 
+> i'm not entirely certain what went wrong or where, but i couldn't find 
+> any documentation about this particular problem. does anybody have any 
+> idea where i might have gone wrong?
+> 
 
 Regards,
-Luca
--- 
-Luca Berra -- bluca@comedia.it
-    Communications Media & Services S.r.l.
+Heinz
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
