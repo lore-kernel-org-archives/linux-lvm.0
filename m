@@ -1,16 +1,13 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7VM1B306960
-	for <linux-lvm@redhat.com>; Tue, 31 Aug 2004 18:01:11 -0400
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7V0G3301316
+	for <linux-lvm@redhat.com>; Mon, 30 Aug 2004 20:16:03 -0400
 From: Richard Mortimer <richm@oldelvet.org.uk>
-In-Reply-To: <20040830174015.10edb69b.davem@davemloft.net>
-References: <1093911340.2116.55.camel@duncow>
-	<20040830174015.10edb69b.davem@davemloft.net>
-Message-Id: <1093989609.2124.139.camel@duncow>
+Message-Id: <1093911340.2116.55.camel@duncow>
 Mime-Version: 1.0
-Date: Tue, 31 Aug 2004 23:00:10 +0100
+Date: Tue, 31 Aug 2004 01:15:40 +0100
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: [PATCH] Re: lvm problems on sparc64 - Trying to
-	vfree() nonexistent vm area
+Subject: [linux-lvm] lvm problems on sparc64 - Trying to vfree() nonexistent
+	vm area
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,73 +19,79 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org, debian-sparc@lists.debian.org, linux-lvm@sistina.com, richm@oldelvet.org.uk, marcelo.tosatti@cyclades.com
+To: sparclinux@vger.kernel.org, debian-sparc@lists.debian.org
+Cc: richm@oldelvet.org.uk, linux-lvm@sistina.com
 
-Thanks. Fixes the problem nicely.
+All,
 
-Whilst I remember I forgot to include the patch below last night. When I
-was looking at the ioctl32.c code I noticed a few inconsistencies in the
-structures used in the copy to/from user calls. I don't think that the
-original versions were incorrect but it seems best to make things
-consistent.
+I'm seeing problems with lvm on sparc64. I have a reproducible test case
+using snapshots where I can reliably reproduce an error similar to
 
-How do they look
+Trying to vfree() nonexistent vm area (0000000140072000)
+
+Under some circumstances I can get this to lead to a panic where the
+kernel reports that it is unable to handle a paging request for the same
+request (the address below is different because it comes from a
+different attempt to reproduce it)
+
+Unable to handle kernel paging request at virtual address
+000000014007a000
+
+First off the obligatory "what I'm using" statement.
+
+I've seen this with debian/testing on sparc using the stock 2.4.26
+kernel.
+Using lvm1.0.8
+
+pingu:~# apt-show-versions | grep lvm
+lvm10/testing uptodate 1:1.0.8-4
+lvm-common/testing uptodate 1.5.16
+
+kernel-image-2.4.26-sparc64/testing uptodate 39
+
+
+I've done a fair amount of detective work and am now fairly confident
+that the problem is somewhere in the sparc64 ioctl32 glue code in
+arch/sparc64/kernel/ioctl32.c
+
+Adding printk tracing into the kernel and using strace I can see that
+the problem occurs on a call to 
+
+ioctl(4, LV_STATUS_BYNAME, 0xeffff9f8)  = 0
+
+The message only gets reported on second and subsequent calls to this
+ioctl. So I'm guessing that something gets freed wrongly during the
+first call.
+
+I added some tracing into do_lvm_ioctl() in ioctl32.c. From this I can
+see that the problem gets reported after calling the "real" ioctl
+routine whilst transferring the result data back into the 32 bit
+structures.
+
+Specifically the problem is occurring in put_lv_t(u.lv_req.lv) as called
+from the LV_CREATE/EXTEND/REDUCE case in the switch statement.
+
+This means that the problem is related to the vfree of either
+l->lv_current_pe or l->lv_block_exception.
+
+I cannot see anything obviously wrong there (and need some sleep!) so
+hopefully someone else will have some ideas as to what the problem is.
+
+Thanks
 
 Richard
 
---- arch/sparc64/kernel/ioctl32.c.orig	2004-08-29 00:12:09.000000000
-+0100
-+++ arch/sparc64/kernel/ioctl32.c	2004-08-31 22:06:23.000000000 +0100
-@@ -2949,7 +2949,7 @@
- 	case LV_REMOVE:
- 	case LV_RENAME:
- 	case LV_STATUS_BYNAME:
--	        err = copy_from_user(&u.pv_status, arg,
-sizeof(u.pv_status.pv_name));
-+	        err = copy_from_user(&u.lv_req, arg,
-sizeof(u.lv_req.lv_name));
- 		if (err)
- 			return -EFAULT;
- 		if (cmd != LV_REMOVE) {
-@@ -2992,7 +2992,7 @@
- 
- 	case PV_CHANGE:
- 	case PV_STATUS:
--		err = copy_from_user(&u.pv_status, arg, sizeof(u.lv_req.lv_name));
-+		err = copy_from_user(&u.pv_status, arg, sizeof(u.pv_status.pv_name));
- 		if (err)
- 			return -EFAULT;
- 		err = __get_user(ptr, &((pv_status_req32_t *)arg)->pv);
-@@ -3064,7 +3064,7 @@
- 	        if (u.lv_bydev.lv) {
- 			if (!err)
- 				err = copy_lv_t(ptr, u.lv_bydev.lv);
--			put_lv_t(u.lv_byindex.lv);
-+			put_lv_t(u.lv_bydev.lv);
- 	        }
- 	        break;
- 
+P.S.
 
+Forgot to mention. The steps to reproduct the problem are (assuming that
+you have a vg called test)
 
+lvcreate --size 128M --name fsone /dev/test
+lvcreate --size 128M --name fstwo /dev/test
+lvcreate --snapshot --size 128M --name bakone /dev/test/fsone
+lvremove /dev/test/bakone
 
-On Tue, 2004-08-31 at 01:40, David S. Miller wrote:
-> On Tue, 31 Aug 2004 01:15:40 +0100
-> Richard Mortimer <richm@oldelvet.org.uk> wrote:
-> 
-> > I'm seeing problems with lvm on sparc64. I have a reproducible test case
-> > using snapshots where I can reliably reproduce an error similar to
-> > 
-> > Trying to vfree() nonexistent vm area (0000000140072000)
-> 
-> For once it's not sparc64's fault, it's a bug in the generic
-> LVM ioctl handling :-)
-> 
-> It saves both pointers, clobbers the userspace copy, then only
-> restores one of the two pointers correctly.  Easy to fix, see
-> below.
-> 
-> Marcelo, please apply, thanks.
+You get the problem even before you answer the y/n question in lvremove.
 
 -- 
 richm@oldelvet.org.uk
