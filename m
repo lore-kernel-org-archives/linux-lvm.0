@@ -1,11 +1,9 @@
-Subject: RE: [linux-lvm] mounting snapshot errors
-From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
-In-Reply-To: <1075274923.337.23.camel@ws.rdb.linux-help.org>
-References: <9BBB7C9EFEF1874BAC4DC204E867EFAF02560F62@s99mail06>
-	 <1075274923.337.23.camel@ws.rdb.linux-help.org>
-Message-Id: <1075311258.29632.56.camel@david.internal.NorcrossGroup.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-Id: <200401281828.i0SISoI27919@ecstasy.winternet.com>
+From: Ken Fuchs <kfuchs@winternet.com>
+In-reply-to: <20040128163917.13042.qmail@web21402.mail.yahoo.com> (message
+	from duane no-name on Wed, 28 Jan 2004 08:39:17 -0800 (PST))
+Subject: Re: [linux-lvm] How To Question
+References: <20040128163917.13042.qmail@web21402.mail.yahoo.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +14,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 28 12:48:01 2004
+Date: Wed Jan 28 13:23:02 2004
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: lvm <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Wed, 2004-01-28 at 02:28, R Dicaire wrote:
-> On Tue, 2004-01-27 at 21:53, Little, Chris wrote:
-> > is the filesystem you are snapshotting still mounted when you execute the
-> > snapshot?  They need to be offline before the snapshot takes place.
-> 
-> Yes, they are still mounted when I take a snapshot, I must have missed that
-> in the docs, that in itself poses a problem as I then cant umount the volumes
-> without killing services. I'd understood the snapshotting process as being
-> able to snapshot a live filesystem, and then mount the snapshot to perform
-> backups from it instead of the live filesystem. Whats the purpose of the
-> --size arg to lvcreate when taking a snapshot, I thought it was a buffer
-> to hold data that'd normally be written to disk but cant when the
-> snapshot exists? I'm confused.
-> 
-I snapshot live mounted volumes every day.  (LVM 1.x, kernel 2.4.21)
+duane wrote:
 
-It works.
+>Right now, I have a single /var/foo implemented as an
+>LVM vol using reiserfs. It turns out - I allocated too
+>much space to it.
 
-I use xfs.
+>I now need a /var/bar.
 
-For LVM snapshot to work with mounted filesystems you either have to
-have the vfs-lock patch applied or invoke a filesystem freeze from user
-space prior to creating the snapshot.
+>I'd like to re-allocate or shrink /var/foo by say 20G,
+>and give it to /var/bar.
 
-With xfs, I use the xfs_freeze command from userspace.
+>The "How To" do this two step process is not very
+>clear in the docs.
 
-Then on the xfs mount, I have to use the "-o ro,nouuid" flag to mount
-the snapshot because the master volume and the  snapshot have the same
-uuid.
+For reiserfs the (safe = unmounted logical volume) steps are:
 
-Greg
--- 
-Greg Freemyer
+1) umount the logical volume that contains the reiserfs to shrink.
+2) Shrink the reiserfs by a specific amount using resize_reiserfs.
+3) Reduce the logical volume containing the reiserfs using lvreduce by
+   exactly the same amount as in step 2 above.
+4) mount the just shrunk/reduced reiserfs/logical volume.
+
+It may help to relate the mount point /var/foo to the actual LVM lv
+device for example, /dev/vg/foo.  The four steps above would become:
+
+# umount /var/foo
+# resize_reiserfs -s -20G /dev/vg/foo
+# lvreduce --size -20G /dev/vg/foo
+# mount -t reiserfs /dev/vg/foo /var/foo
+
+>I'm quite able to shrink and expand /var/foo - at
+>will. My confusion is - now that I have shrunk it -
+>reallocate the space I just got back?
+
+The following command will report the size of the logical volume:
+
+# lvdisplay /dev/vg/foo
+
+The reported size after the shrink/reduce should 20GB less than before.
+
+To use the freed space, do one or more the following two things:
+
+1) Create a new logical volume in the vg volume group using lvcreate.
+   (For example, a new /dev/vg/bar to be mounted on /var/bar.)
+
+2) Extend another volume with lvextend and enlarge its filesystem by the
+   exact same size using the appropriate filesystem resizing tool.
+
+Sincerely,
+
+Ken Fuchs <kfuchs@winternet.com>
