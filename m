@@ -1,10 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Device-mapper status for 2.4.23?
-Message-ID: <20031203093920.GA1833@tykepenguin.com>
-References: <Pine.LNX.4.58.0312012240330.17935@h200n1fls22o1048.bredband.comhem.se>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] LVM2 related OOPS in 2.4.22 (kernel BUG at kcopyd.c:130!)
+Message-ID: <20031203132630.O16901@uk.sistina.com>
+References: <1070130848.15958.6.camel@dom>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.58.0312012240330.17935@h200n1fls22o1048.bredband.comhem.se>
+In-Reply-To: <1070130848.15958.6.camel@dom>; from stefan@x-cellent.com on Sat, Nov 29, 2003 at 07:34:08PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec  3 03:40:02 2003
+Date: Wed Dec  3 07:28:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: linux-kernel@vger.kernel.org
 
-On Mon, Dec 01, 2003 at 10:43:07PM +0100, Stefan Wold wrote:
-> Hi.
-> 
-> Any eta of a working device-mapper patch for kernel 2.4.23? Would be great
-> to be able to upgrade ASAP because of the userland local root exploit in
-> all kernels < 2.4.23. Either that or patching 2.4.22 for the bug.
-> 
-> But I prefer to bump versions instead of messing old ones =)
-> 
+On Sat, Nov 29, 2003 at 07:34:08PM +0100, Stefan Majer wrote:
+> First i created a logical volume and the about 5 snapshots.
+> Then i wanted to create a filesystem on the source LV with
+> mkreiserfs.
+ 
+>   Driver version:  4.0.1
+ 
+Please try a newer kernel driver (4.0.5) included in the
+device-mapper tarball.
 
-I'm running lvm2 on 2.4.23 using Joe's patches at people.sistina.com/~thornber
-
+Alasdair
 -- 
-
-patrick
+agk@uk.sistina.com
