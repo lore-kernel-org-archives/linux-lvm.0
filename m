@@ -1,10 +1,7 @@
-From: grobe@gmx.net
-MIME-Version: 1.0
-References: <20030218223007.HIJG12463.imf25bis.bellsouth.net@tiger2>
-Subject: re: [linux-lvm] Sharing Logical Volumes via NFS on Redhat 8.0
-Message-ID: <27823.1045607976@www67.gmx.net>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: "DJ TweeQ" <djtweeq@hotmail.com>
+Mime-Version: 1.0
+Message-ID: <F162r1WkfXNEmY6vQ5L0001efc9@hotmail.com>
+Subject: [linux-lvm] LVM 1.0.3 to LVM 1.0.6 upgrade path on a Redhat 8.0 Production System
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +12,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 18 16:40:02 2003
+Date: Tue Feb 18 17:39:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+I Hope this won't be misconstrued as spam ;)
 
-> Truly sharing LVs requires a FileSystem that understands shared physical
-> drives
+I'm a bit confused about the patch installation instructions as they refer 
+to the patch being for Linus kernels and not popular distributions (ie. 
+Redhat)...and I *really* need some help with upgrading/patching LVM 1.0.3x 
+to LVM 1.0.6 on a Redhat 8.0 production system running the Redhat 
+2.4.18-24.8.0 kernel as I need to increase and resize one of my LV's beyond 
+the current 240gig limitation yesterday. :)
 
-OK, sharing volumes is possible, but not with nfs ;-) You need a shared scsi
-device or fibrechannel, attach it to two machines, and lvm will find volumes
-on both machines without problems. You should just avoid to change the lvm
-metadata itself on one node while the other one is using it (e.g. resizing
-volumes), as the other node will be informed on the changes not before the =
-next
-scan.
 
-The problem is really to get a nice filesystem supporting that - without a
-filesystem, your volumes will be quite useless. And yes, afaik GFS supports
-lvm (we are currently trying to make something like this with fc).
 
-I understood the question in a way that a filesystem lying on top of a
-logical volume was to be exported with nfs.
 
-CU, Lars.
 
---=20
-+++ GMX - Mail, Messaging & more  http://www.gmx.net +++
-Bitte l=EF=BF=BDcheln! Fotogalerie online mit GMX ohne eigene Homepage!
+
+_________________________________________________________________
+Tired of spam? Get advanced junk mail protection with MSN 8.  
+http://join.msn.com/?page=features/junkmail
