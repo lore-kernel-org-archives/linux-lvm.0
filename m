@@ -1,9 +1,12 @@
-Message-ID: <3D64D5B5.3010209@mindmatics.de>
-From: Andreas Baier <andreas.baier@mindmatics.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Strange behaviour on a SuSE8.0 with LVM
-References: <3D6226F9.8080906@mindmatics.de> <20020822133443.A5699@sistina.com>
-Content-Transfer-Encoding: 7bit
+From: Adam McDaniel <adamm@array.org>
+Subject: Re: [linux-lvm] vg_read_with_pv_and_lv error
+Message-ID: <20020822174612.GA8692@grimlock>
+References: <XFMail.20020821200341.cfreeze@alumni.clemson.edu>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+In-Reply-To: <XFMail.20020821200341.cfreeze@alumni.clemson.edu>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,36 +17,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 22 07:15:02 2002
+Date: Thu Aug 22 12:46:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Aug 21, 2002 at 08:03:41PM -0500, Chris Freeze wrote:
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- only found 33727 of 33556 LEs for LV /dev/diskvg/share (0)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get =
+data
+> of volume group "diskvg" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume =
+group
 
-thank you for the quick response.
-What runied my fs is nit yet known to me. The disk is ok,  but now I 
-know, which programm causes the ioctl - it is badblocks from e2fstool 
-Version 1.26
+=2E..
 
+> Is there any hope of restoring the data?
 
-> This is an ioctl command not supported by the LVM driver.
-> Check which tool is run so rapidly and you know who causes it.
+This is the exact same problem I had last week. So far I've been
+trying to hack in a solution by modifying the PV-UUID (which was
+lost).. with minimal success.
 
-> Hmmm...
-> 
-> You didn't mention when the FS was fully checked successfully last time.
-> If there was no other device errors after that check, it got probably toasted
-> by VM or FS bugs.
+Let me know if you find a way to fix this, vice-versa :)
 
+--=20
+Adam McDaniel
+Array Networks
+Calgary, AB, Canada
 
-I was lucky, the machine was freshly installed and ran just a few 
-days, but the home-dir was totally gone. Since home is on a logical 
-volume I wondered if it could be a problem. But since LVM 0.9.x I am 
-using it and never had problems.
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Thank you !
+iD8DBQE9ZSNkIHy9fg7fMMMRApeSAJ90eqwKdAudPqUg5sjI/gut8/LaJACfa7sO
+YNJh9IRo3Ufqg72ILDGN2HQ=
+=AFRy
+-----END PGP SIGNATURE-----
 
-Andreas
+--y0ulUmNC+osPPQO6--
