@@ -1,9 +1,14 @@
-Return-Path: <bruck@suse.de>
-Date: Fri, 20 Apr 2001 19:00:10 +0200 (CEST)
-From: Jens Bruckmann <bruck@suse.de>
-Message-ID: <Pine.LNX.4.31.0104201858090.1159-100000@dgently.hh.suse.de>
+Return-Path: <mkp@mkp.net>
+Subject: Re: [linux-lvm] LVM and DRDB
+References: <20010420111022.C6133@cistron.nl>
+	<200104201031.f3KAVT05030575@webber.adilger.int>
+	<20010420123624.F13067@cistron.nl> <d3y9svheu9.fsf@lxplus015.cern.ch>
+	<20010420154246.R13067@cistron.nl>
+From: "Martin K. Petersen" <mkp@linuxcare.com>
+Date: 20 Apr 2001 11:18:03 -0400
+In-Reply-To: <20010420154246.R13067@cistron.nl>
+Message-ID: <yq1u23jvbv8.fsf@jaguar.mkp.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] Does LVM support alternate links?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +20,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Wichert Akkerman <wichert@cistron.nl>
+Cc: linux-lvm@sistina.com, linux-openlvm@nl.linux.org
 
-Hallo everybody,
+>>>>> "Wichert" == Wichert Akkerman <wichert@cistron.nl> writes:
 
-I would like to know if the LVM supports alternate-links to the same
-physical device over two fiber-channel links, so if one link fails, LVM
-automatically uses the second link as it does under its "original" HP-UX.
+Wichert> Previously Jes Sorensen wrote:
+>> For a file system that size you might want to look at XFS instead.
 
-Has anyone ever connected an EMC-Symmetrix with redundant fiber-channel
-links with LVM and Linux?
+Wichert> How stable is XFS compared to ext3 and reiserfs? For this
+Wichert> system minimum downtime is very important..
 
-Then I was very pleased if he/she could tell me about the experiences.
+I mkfs.xfs'ed the / and /home filesystems on my primary workstation on
+September 7th last year.
 
-Thanks a lot,
+'nuff said... :)
 
-        Jens
-
------------------------------------------------------------------------
-Jens Bruckmann              .-.       Mail:    jens.bruckmann@suse.de
-SuSE Linux Solutions AG     /v\       Phone:   +49 - 40 - 89 69 82 18
-Friesenweg 5F              // \\      Fax:     +49 - 40 - 85 40 04 35
-D-22763 Hamburg           /(   )\
-                           ^^-^^
------------------------------------------------------------------------
+-- 
+Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
+mkp@linuxcare.com, http://www.linuxcare.com/
+SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
