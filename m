@@ -1,9 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] [Fwd: Best way to create a 540GB LVM Volume?]
-Message-ID: <20020625112937.A14860@sistina.com>
-References: <1024945914.6875.16.camel@UberGeek>
+Subject: Re: [linux-lvm] Jemand zuhause ???
+Message-ID: <20020625114708.B14860@sistina.com>
+References: <200206232206.g5NM6KD04426@hphbbs.localnet>
 Mime-Version: 1.0
-In-Reply-To: <1024945914.6875.16.camel@UberGeek>; from austin@coremetrics.com on Mon, Jun 24, 2002 at 02:11:54PM -0500
+In-Reply-To: <200206232206.g5NM6KD04426@hphbbs.localnet>; from hph@hphbbs.ruhr.de on Mon, Jun 24, 2002 at 12:06:15AM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,67 +15,103 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun 25 04:37:01 2002
+Date: Tue Jun 25 04:54:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Austin,
+On Mon, Jun 24, 2002 at 12:06:15AM +0200, hph@hphbbs.ruhr.de wrote:
+> Hallo? Jemand zuhause ???
 
-the maximum of 450GB you mention below sounds strange.
+Well there is a couple of us here ;-)
 
-did you use "vgcreate -s physicalextentsize ..." when you created
-the volume group?
+Because this is an English language list, please send any further
+email in English.
 
-Unless you set a larger extent size than the default of 4MB with the -s option,
-you can't create logical volumes larger than ~256GB.
+I'll translate for the rest of us...
 
-"vgcreate -s 32m ..." for eg. would enable ~2TB maximum logical volume size
-which is the maximum per single block device Linux up to 2.4 supports anyway.
+>=20
+> Erreicht man unter dieser Adresse DEN Heinz-Maulshagen?
+> Is THE Heinz Mauelshagen reachable via this address?
 
-In LVM2 (please check the beta code on our web site www.sistina.com) there'll
-be no extent size related constraints any longer, because we support additional
-ondisk formats in parallel. LVM2 is format compatible with the LVM1 format
-as well.
+Yes :)
+
+> Ich h=E4tte  da ein paar Bauchschmerzen mit dem LVM:
+> I'ld have some stomach ake IRT the LVM:
+
+Well, go visit the doctor ;-)
+
+> 	- 'cluster exclusive'-flag
+> 	- 'cluster lock disk'
+Define what you mean with those, please.
+
+The LVM 1.1 unstable developement branch has 'static mode' support for vo=
+lume
+groups, which enables volume group configuration on a single node while
+all other nodes need to have the volume group inactive, then you set the
+volume group to static mode, vgscan on all other nodes and activate it th=
+ere.
+You can't change the volume group while it is in static mode.
+It is just meant to be a simple helper to use single mode LVM1 in cluster=
+s.
+
+Maybe 'static mode' could cover your 'cluster lock disk'?
+
+Waiting for your definitons to be sure...
+
+
+> 	- Unterst=FCtzung f=FCr LVM generell in ver`cluster'ten Umgebungen
+>       - Support for LVM in clustered environments.
+
+We will release Cluster LVM for Linux this summer as a comercial product,
+which will support all single node LVM commands in the cluster enabling y=
+ou
+to do all configuration changes to your shared volume groups and shared
+logical volumes while they are accessed.
+
+Please be aware that in order to make use of those shared volume groups a=
+nd
+logical volumes, you need to combine them with a cluster capable so calle=
+d
+shared disk filesystem (such as Sistinas Global Filesystem aka GFS) or
+any cluster capable application.=20
+
+The advantage of a shared disk filesystem on top of a Cluster LVM is that
+non cluster capable applications (such as Web-Servers) run on this combin=
+ation
+giving you cluster scalability and redundancy on extreme cheap hardware
+without affording for your applications to become cluster aware.
+
+>=20
+>=20
+> Beste Gr=FC=DFe,
+> Peter Heidinger
+> --=20
+> #--------- H.P. Heidinger, Steeler Str. 121, 45138 Essen /Germany -----=
+-----#
+> # Tel: +49-201: 8903091 (ISDN)  # 287802 (voice) # 287803 (analog data/=
+FAX)
+> # Web-Page: http://Heinz-Peter.Heidinger.bei.T-Online.de
+> # -------------------- MicroSoft Pollution Survivor -------------------=
+------
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+--=20
 
 Regards,
 Heinz    -- The LVM Guy --
 
-
-On Mon, Jun 24, 2002 at 02:11:54PM -0500, Austin Gonyou wrote:
-> 
-> -- 
-> Austin Gonyou <austin@coremetrics.com>
-> Coremetrics, Inc.
-
-Content-Description: Forwarded message - Best way to create a 540GB LVM Volume?
-> Subject: Best way to create a 540GB LVM Volume?
-> From: Austin Gonyou <austin@coremetrics.com>
-> To: Linux LVM Mailinglist <linux-lvm@sistina.com>
-> Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-MXQT1CJ20ta7jJZf0S5C"
-> Organization: Coremetrics, Inc.
-> X-Mailer: Ximian Evolution 1.1.0.99 (Preview Release)
-> Date: 24 Jun 2002 14:07:07 -0500
-> Message-Id: <1024945627.6892.7.camel@UberGeek>
-> Mime-Version: 1.0
-> 
-> I've got 14 FC1 disks in a PV660F. I want to take 7 of them and make a
-> large volume. I can't seem to make a > 450 GB volume though, even though
-> lvdisplay is showing xxMB PE free. 
-> 
-> I'm using default 4mb and also 8mb extentsize when creating the VG.
-> Please advise.
-> 
-> 
-> -- 
-> Austin Gonyou <austin@coremetrics.com>
-> Coremetrics, Inc.
-
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -82,4 +119,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
