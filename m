@@ -1,31 +1,44 @@
-Message-ID: <20000730232548.21372.qmail@web119.yahoomail.com>
-Date: Sun, 30 Jul 2000 16:25:48 -0700 (PDT)
-From: Chris Campbell <dash_ampersand@yahoo.com>
-Subject: [linux-lvm] RAID performance help
+From: "Justin Hamilton" <JHamilton@Earthling.Net>
+Subject: RE: [linux-lvm] ERROR: 0.8final/tools/lib/liblvm.h:50: gnu/types.h: No such file or directory
+Date: Sun, 30 Jul 2000 21:44:36 -0400
+Message-ID: <NDBBKIEANAMHBNPAILKPOECICLAA.JHamilton@Earthling.Net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <15351133906.20000731023904@aon.at>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: LVM LIst <linux-lvm@msede.com>
+Cc: Michelic Adalbert <a.michelic.suse@aon.at>
 
-I had mentioned to the list before about my
-performance problems.  We are not using write-back
-caching.  I will enable that after we get our
-automatic [power fail] shutdown scripts going again. 
-Could someone recommend some parameters for PEs on LVM
-combined with block size on the LVM?  I believe we
-have options for 2K to 256K on our RAID controller.  I
-am looking at going with RAID 1+0 or maybe just doing
-striping on the thing.  Our current setup yields
-horrid write performance.
+Thanks for the info, will drop by CompU$A & MicroCenter tomorrow to check it
+out.
 
-Thanks,
-
-Chris
-
-__________________________________________________
-Do You Yahoo!?
-Kick off your party with Yahoo! Invites.
-http://invites.yahoo.com/
+> -----Original Message-----
+> From: Michelic Adalbert [mailto:a.michelic.suse@aon.at]
+> Sent: Sunday, July 30, 2000 8:39 PM
+> To: Justin Hamilton
+> Subject: Re: [linux-lvm] ERROR: 0.8final/tools/lib/liblvm.h:50:
+> gnu/types.h: No such file or directory
+>
+>
+> Hi,
+>
+> Justin Hamilton wrote:
+> > Getting a single kernel version that supports: a) HPT366; b) LVM; c)
+> > ReiserFS, does not seem possible at this time!
+> >
+> > So I guess I'll wait for RedHat 7 to give me all of this.
+> >
+> > If I'm wrong, and it can be done, then please don't hesitate to
+> let me know.
+>
+> SuSE 6.4 supports all of them (I'm using a HPT366, LVM and
+> ReiserFS).
+>
+>
+>
+> Adalbert
+>
+>
