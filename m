@@ -1,43 +1,61 @@
-Message-ID: <38616C38.636DF278@msede.com>
-Date: Thu, 23 Dec 1999 01:26:32 +0100
-From: Michael Marxmeier <mike@msede.com>
+Message-ID: <3861DC7B.7ECF442C@twc.de>
+Date: Thu, 23 Dec 1999 09:25:31 +0100
+From: Ulf Bartelt <ulf@twc.de>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: LVM 0.8 2.3.33 compile error
-References: <199912220022.BAA19406@novworld.Novecom.Fr> <3860CF2B.615B86F7@xinit.se>
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] booting w/o initrd
+References: <199912221602.JAA22165@webber.adilger.net>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Josef =?iso-8859-1?Q?H=F6=F6k?= <joh@xinit.se>
-Cc: Willy Tarreau <willy@novworld.Novecom.Fr>, linux-kernel <linux-kernel@vger.rutgers.edu>, Heinz Mauelshagen <mge@ez-darmstadt.telekom.de>, linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@msede.com
 
-Josef H��k wrote:
-> got this error when compiling 2.3.33-LVM
+Hi!
+
+Andreas Dilger wrote:
+> This is what IBM also needs for its "boot LV".  It is required that the
+> BLV is contiguous on one disk.  Normally, it only needs to be 1 PP in size,
+> but it can sometimes grow to 2 PPs in size.  I think Linux should have
+> enough space in 4/8 MB for a boot partition considering Tom's root/boot
+> disk has a whole system on 1.8MB floppy...
+
+Right! A 4M partition for /boot should be enough to hold enough kernels
+even for those who love experimenting with serveral versions...
+
+...and if not, just give /boot 8M...
+
+> > But what if ... you want to resize the root?
 > 
-> make[3]: Entering directory `/usr/src/linux/drivers/block'
-> gcc -D__KERNEL__ -I/usr/src/linux/include -Wall -Wstrict-prototypes -O2
-> -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-strength-reduce
-> -DCPU=686 -march=i686   -DEXPORT_SYMTAB -c ll_rw_blk.c
-> In file included from /usr/src/linux/include/linux/lvm.h:92,
->                  from ll_rw_blk.c:32:
-> /usr/src/linux/include/asm/spinlock.h:36: warning: `SPIN_LOCK_UNLOCKED'
-> redefined
-...
-> is it me or is it a bug :)?
+> > Even when booting via initrd, you cannot resize the root while it is
+> > mounted.
+> 
+> Actually, it IS possible to resize mounted ext2 filesystems with my
+> online resize tools (LVM is required, of course).  Have a look at:
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/online-ext2/
+> for more information.
 
-In include/linux/lvm.h please change the
-#include <asm/spinlock.h>
-against
-#include <linux/spinlock.h>
+Ok - I knew that page but I donnow how stable this is, so I didn't
+include it in my argumentation.
 
-This fixed it for me (lvm 0.8i)
+> Good luck on your project.  I think this is a much better solution than
+> using initrd, since it is more like a normal system.
 
-Hope this helps
-Michael
+It is tested for some weeks on two systems @myhome and Peter has two
+systems up this way since last weekend (Peter: correct me if I'm wrong
+with that date...).
 
--- 
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+I think the idea has proven to be handable and reliable now I'd like to
+find an easy way to install such a system.
+
+And even if it is not needed today, somewhen LVM might be changed in a
+way that stopping it cleanly on shutdown will become a must. So I feel
+better having an init.d script starting and stopping LVM and I have no
+idea on doing this with an initrd based system...
+
+...and if all else fails, I can access /boot and / with standard rescue
+disks...
+
+Bye for now!
+
+	Ulf.
