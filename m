@@ -1,8 +1,9 @@
 Return-Path: <plamb_98@yahoo.com>
-Message-ID: <20010726140805.68707.qmail@web13403.mail.yahoo.com>
-Date: Thu, 26 Jul 2001 07:08:05 -0700 (PDT)
+Date: Thu, 26 Jul 2001 10:13:10 -0400
 From: Pierre Lamb <plamb_98@yahoo.com>
-MIME-Version: 1.0
+Message-id: <3B602575.6E47A8F8@yahoo.com>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
 Subject: [linux-lvm] lvm help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,7 +17,6 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
 I placed the 2 required commands in rc.sysinit (rh71)
@@ -29,10 +29,3 @@ the vgscan the correct entries are made. Ant help
 would be appreciated.
 
 Pierre
-
-
-
-__________________________________________________
-Do You Yahoo!?
-Make international calls for as low as $.04/minute with Yahoo! Messenger
-http://phonecard.yahoo.com/
