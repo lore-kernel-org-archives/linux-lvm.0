@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Allocation policies
-Message-ID: <20020911122807.C26854@sistina.com>
-References: <3D7E4135.9EE88518@storix.com>
+Subject: Re: [linux-lvm] Quorums / VGDAs
+Message-ID: <20020911123312.D26854@sistina.com>
+References: <3D7E4050.B3BEEE@storix.com>
 Mime-Version: 1.0
-In-Reply-To: <3D7E4135.9EE88518@storix.com>; from anthony@storix.com on Tue, Sep 10, 2002 at 12:00:05PM -0700
+In-Reply-To: <3D7E4050.B3BEEE@storix.com>; from anthony@storix.com on Tue, Sep 10, 2002 at 11:56:16AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,43 +14,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 11 05:53:04 2002
+Date: Wed Sep 11 05:57:56 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Sep 10, 2002 at 12:00:05PM -0700, Anthony Johnson wrote:
-> I know there are 2 allocation policies, contiguous and next free. Is
-> there any information that describes in detail how LVM determines the
-> extents to assign to a logical volume with it is created or extended?
+On Tue, Sep 10, 2002 at 11:56:16AM -0700, Anthony Johnson wrote:
+> I'm trying to find information on the availability factors of LVM. As I
+> understand it, a quorum is required for a volume group to be available.
+> I have some questions in this regard:
+> 
+> 1) What defines a quorum - over 50% of the PVs in the VG, or over 50% 
+>    of the VGDAs?
 
-It goes by the sequence defined by the internal PV number shown by
-"vgdisplay -v". Free space on PVs with lower internal is allocated first.
+VG quorum is given in case all of its PVs are available.
 
-> For example, if the policy is "contiguous", must the LV contain all
-> contiguous extents
+> 2) How many VGDAs are stored on each physical volume. From AIX 
+>    experience, this varied depending on the number of PVs in the VG.
 
-Yes.
+In the LVM1 metadata there's allways 1 VGDA on each PV which has internal
+redundancy.
+With the new LVM2 formats you can have as many VGDA copies as you like.
 
-> or does it use a "best-case" scenario,
+> 3) If quorum is lost on an active VG, is the entire VG automatically 
+>    varied off?
 
-No.
+No, it will stay accessable with the exception of the dead PV(s).
 
-> and how would
-> that work? Likewise, in the "next free" scenario, is there any weight
-> given to contiguous space, does it automatically allocate across PVs,
-> etc?
+> 4) Can a VG without quorum be forcefully varied on?
 
-No, there's no weight.
-In both cases it does allocate accross PVs.
-In the contiguous case, it can't allocate on the same PV unless there's free
-space after the already allocated extents.
-You need to use pvmove if there's not free space following to move extents
-allocated to other LVs away.
+With LVM1.1 (see CVS; WARNING: his is interim development code!) and with final
+LVM2 later this year, you can activate a VG which has lost quorum.
+
+> 5) Can quorum checking be disabled?
+
+No, but with the above SW you can activate the VG in case there's
+at least 1 PV still accessable.
 
 > 
-> Thanks!
+> Thanks,
 > Anthony
 > 
 > _______________________________________________
