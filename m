@@ -1,12 +1,8 @@
-From: "=?iso-8859-1?Q?J=FCrgen?= Vollmer" <juergen@informatik-vollmer.de>
-Subject: Re: [linux-lvm] snapshot file zombies 
-In-Reply-To: Your message of "Mon, 09 Dec 2002 11:37:19 +0100."
-             <20021209113719.A18845@sistina.com> 
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_7814995P";
-	 micalg=pgp-sha1; protocol="application/pgp-signature"
+From: Lawrence Strydom <laurie@midafrica.com>
 Content-Transfer-Encoding: 7bit
-Message-ID: <19352.1039432905@joergli.cocolab.de>
+Message-Id: <1039437938.1422.27.camel@lawrence>
+Mime-Version: 1.0
+Subject: [linux-lvm] LV recovery
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,56 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 05:23:02 2002
+Date: Mon Dec  9 06:42:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---==_Exmh_7814995P
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi,
+My company uses a SuSE email server III solution. The box has 2 IDE
+drives, hda with /boot, /, and swap partintions on. The second, hdc, was
+placed in a LVG with a LV for /var occupying all availlable space.
+While I was away (quick absolution of self) one of the junior guys did
+an online update of the software after which the system wouldn't start
+again. To make a long story short, I managed to get the system going
+again BUT..... /var cannot be mounted. 
+/etc/fstab points to /dev/system/VAR. Upon inspection, this binary file
+turns out to contain nothing but an error message about being unable to
+write to /lib/modules/2.4.18-nnnnn/modules.dep. Ooops...
+Now my question is this: Is it possible to recover the data from the
+/var LV if the /dev/system/VAR file has gone AWOL? 
+Any pointers to documentation/tools will be very much appreciated.
 
-
-Dear heinz,
-
-"Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-> Can you find any nasty messages in your syslog related to the
-> access fault or _before_ you weren't able to access it?
-
-the only obscure message I found was:
-
-Dec  7 01:22:07 joergli kernel: vs-7000: search_by_entry_key: search_by_k=
-ey returned item position =3D=3D 0<4>vs-7000: search_by_entry_key: search=
-_by_key returned item position =3D=3D 0<4>vs-7000: search_by_entry_key: s=
-earch_by_key returned item position =3D=3D 0<4>zam-7001: io error in reis=
-erfs_find_entry
-
-Dec  7 01:22:07 joergli kernel: vs-7000: search_by_entry_key: search_by_k=
-ey returned item position =3D=3D 0<4>zam-7001: io error in reiserfs_find_=
-entry
-
-but the failure was around 15:00 on that day
-
-J=FCrgen
-
--- =
-
-Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
-Tel: +49(721) 9204871 Fax: +49(721) 24874
-juergen@informatik-vollmer.de,vollmer@cocolab.de,Juergen.Vollmer@acm.org
-www.informatik-vollmer.de
-
-
-
---==_Exmh_7814995P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.7 (GNU/Linux)
-Comment: Exmh version 2.3.1 01/18/2001
-
-iD8DBQE99HzJn1Xi7IT+kG0RAocYAKCZqr37rSGB7ViLOV6tFu/74eXCtQCcD56E
-4UsYHO6INkA2LArHayUwSxc=
-=py2J
------END PGP SIGNATURE-----
-
---==_Exmh_7814995P--
+Thanks,
+Lawrence
