@@ -1,9 +1,9 @@
-Message-ID: <099901c31fac$c0722d50$fc6a6d0a@corp.int.digex.com>
-From: "Anastasios A. Papadopoulos \(Tas\)" <vze2sjj7@verizon.net>
+Message-ID: <000801c3205a$31d69dc0$ebbba5cc@patni.com>
+From: "Sachin (Patni)" <sachin.gupta@patni.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_NextPart_000_0995_01C31F8B.39205000"
-Subject: [linux-lvm] Question on VG activation
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0005_01C32088.3995DE30"
+Subject: [linux-lvm] Defect in vgchange
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,74 +14,85 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 22 09:40:02 2003
+Date: Thu May 22 09:40:12 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+To: Linux-LVM@Sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0995_01C31F8B.39205000
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_001_0996_01C31F8B.39205000"
-
-
-------=_NextPart_001_0996_01C31F8B.39205000
+------=_NextPart_000_0005_01C32088.3995DE30
 Content-Type: text/plain;
-	charset="iso-8859-1"
+	charset="iso-2022-jp"
 Content-Transfer-Encoding: quoted-printable
 
-What is the best way to have LVM auto-activate the VG's on bootup?
+hi=20
 
-Tas Papadopoulos
-------=_NextPart_001_0996_01C31F8B.39205000
+I am a software engineer working in the area of Storage Area Networks .=20
+
+But whenever I give the following command
+
+vgchange -l 128 test_vg=20
+
+test_vg being a volume group on physical volumes created on sd device =
+partitions (type 8e)=20
+
+It results in segmentation fault.  (I am working on a multi path system =
+;  lvm version : lvm-1.0.3-4 )
+
+Kindly give me the reason for this , whether this version is not suited =
+for multi-path or this is a defect.=20
+=20
+
+
+Thanks and regards=20
+
+
+Sachin Gupta
+
+
+------=_NextPart_000_0005_01C32088.3995DE30
 Content-Type: text/html;
-	charset="iso-8859-1"
+	charset="iso-2022-jp"
 Content-Transfer-Encoding: quoted-printable
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2800.1141" name=3DGENERATOR>
+<META content=3D"text/html; charset=3Diso-2022-jp" =
+http-equiv=3DContent-Type>
+<META content=3D"MSHTML 5.00.2314.1000" name=3DGENERATOR>
 <STYLE></STYLE>
 </HEAD>
 <BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>What is the best way to have LVM =
-auto-activate the=20
-VG's on bootup?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>hi </FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I am a software engineer working in the =
+area of=20
+Storage Area Networks . </FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>But whenever I give the following=20
+command</FONT></DIV>
 <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Tas =
-Papadopoulos</FONT></DIV></BODY></HTML>
+<DIV><FONT face=3DArial size=3D2>vgchange -l 128 test_vg </FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>test_vg being a volume group on =
+physical volumes=20
+created on sd device partitions (type 8e) </FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>It results in segmentation fault.&nbsp; =
+(I am=20
+working on a multi path system ;&nbsp; lvm version : lvm-1.0.3-4 =
+)</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Kindly give me the reason for this , =
+whether this=20
+version is not suited for multi-path or this is a defect. </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Thanks and regards </FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Sachin =
+Gupta<BR></FONT></DIV></BODY></HTML>
 
-------=_NextPart_001_0996_01C31F8B.39205000--
-
-------=_NextPart_000_0995_01C31F8B.39205000
-Content-Type: text/x-vcard;
-	name="Anastasios Papadopoulos.vcf"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
-	filename="Anastasios Papadopoulos.vcf"
-
-BEGIN:VCARD
-VERSION:2.1
-N:Papadopoulos;Anastasios
-FN:Anastasios Papadopoulos
-NICKNAME:Tas
-ORG:Digex, Inc.;Infrastructure Engineering
-TITLE:SE
-TEL;WORK;VOICE:240-456-3207
-TEL;HOME;VOICE:410-633-5029
-TEL;CELL;VOICE:410-340-9435
-ADR;WORK;ENCODING=3DQUOTED-PRINTABLE:;;14400 Sweitzer =
-Lane=3D0D=3D0A2V54;Laurel;MD;20707;USA
-LABEL;WORK;ENCODING=3DQUOTED-PRINTABLE:14400 Sweitzer =
-Lane=3D0D=3D0A2V54=3D0D=3D0ALaurel, MD 20707=3D0D=3D0AUSA
-ADR;HOME:;;;Baltimore;MD;21224;USA
-LABEL;HOME;ENCODING=3DQUOTED-PRINTABLE:Baltimore, MD 21224=3D0D=3D0AUSA
-URL;HOME:http://papadopoulos.webhop.net
-URL;WORK:http://www.digex.com
-EMAIL;PREF;INTERNET:70tas@usa.net
-REV:20030521T152211Z
-END:VCARD
-
-------=_NextPart_000_0995_01C31F8B.39205000--
+------=_NextPart_000_0005_01C32088.3995DE30--
