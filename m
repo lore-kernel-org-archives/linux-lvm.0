@@ -1,12 +1,9 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] pvcreate error
-Message-Id: <20020114132448.T26688@lynx.adilger.int>
-References: <5E34D857F6BB704CA3369B7553233A81651ACA@ntsviemxs0152.connect.at-work.ent>
+Message-Id: <3C434EB9.8060504@liberate.com>
+From: Chris Worley <cworley@liberate.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5E34D857F6BB704CA3369B7553233A81651ACA@ntsviemxs0152.connect.at-work.ent>;
-    from Ferenc.Csuk@one.at on Mon, Jan 14, 2002 at 08:57:51PM +0100
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] reiserfs oops at init
+References: <3C431A01.1000606@liberate.com> <451550000.1011030447@tiny>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,44 +14,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 14 14:25:02 2002
+Date: Mon Jan 14 15:11:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "Csuk, Ferenc" <Ferenc.Csuk@one.at>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On Jan 14, 2002  20:57 +0100, Csuk, Ferenc wrote:
-> I just installed a new system and I installed the latest 2.4.16 kernel
-> and the latest LVM tool 1.0.1-rc4. I established a software RAID-5
-> device(md) and wanted to create a logical volume group on it(as I did
-> with 2.4.7 kernel on another system). However, when I issued the comman=
-d
-> I got the following error:
->=20
-> # pvcreate -v /dev/md2
-> pvcreate -- locking logical volume manager
-> > pvcreate -- checking physical volume name "/dev/md2"
-> > pvcreate -- getting physical volume size
-> > pvcreate -- checking partition type
-> > pvcreate -- creating new physical volume
-> > pvcreate -- setting up physical volume for /dev/md7 with 0 sectors
-                                               ^^^^^^^^      ^^^^^^^^^
-> > pvcreate -- ERROR "parameter error" setting up  physical volume
-> "/dev/md2"
+Chris Mason wrote:
 
-Something strange going on there.  We have md2 =3D> md7 and zero size.
-Maybe the output of "pvcreate -v -d /dev/md2" would help.
+>>>If you want to send the errors from reiserfsck --check, I can confirm
+>>>things a little better.
+>>>
+>>
+>>It's going to be a big file... do you just want the tail?
+>>
+>>
+> 
+> Lets start with the tail, my internet connection isn't that hot right now.
 
-> I checked the archives where I saw suggestion to patch the LVM tool, bu=
-t
-> I don=B4t think that is related to the latest version.
 
-Yes, there were problems with MD devices and LVM, but I don't know when
-the fix went in.  Note that there _should_ be a 1.0.1 release of the
-tools also.
+Every error I could see was of the form:
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+bad_directory_item: block 141874: item 698385 744805 0x1 DIR (3), len 
+350, location 2576 entry count 14, fsck need 0, format old has entry 
+".." with wrong deh_state 140744 - expected 4 - fixed
+
+This goes on for ~11MB.
+
+The tail is:
+
+free block count 3306944 mismatches with a correct one 4783644.
+on-disk bitmap does not match to the correct one. 1476700 bits differ
+
+With the new reiserfs version, it actually says "fixed", the older 
+version didn't say that (except at the beginning), and I don't think 
+they really fixed anything.
+
+Although those "free block count mismatch/correct" numbers look like 
+they did for all previous runs, this run with the new software said 
+nothing of (something like) "10 ... must be fixed with 
+--rebuild-tree".  It still doesn't boot.
+
+On to the "--rebuild-tree" pass.  Wish me luck.
+
+Chris
