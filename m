@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Snapshot resizing bug (LVM1)
-Message-ID: <20030214001234.A22570@sistina.com>
-References: <A00B669E-3934-11D7-A9B9-0003937830E4@mac.com> <20030206112752.B22450@sistina.com> <3E424EDF.CC7A4F56@silicide.dk> <20030206194148.B23955@sistina.com> <3E4A9FD7.88850BEE@silicide.dk> <20030213131105.B20098@sistina.com>
+From: Eric Hopper <hopper@omnifarious.org>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-IoYFRVnzFACsN5JA51Dc"
+Message-Id: <1045065586.477.16.camel@dev-ehopper.tiecommerce.com>
 Mime-Version: 1.0
-In-Reply-To: <20030213131105.B20098@sistina.com>; from mauelshagen@sistina.com on Thu, Feb 13, 2003 at 01:11:05PM +0100
+Subject: [linux-lvm] Re: How to handle Bad Block relocation with LVM?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,75 +13,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 13 17:16:02 2003
+Date: Fri Feb 14 08:52:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Feb 13, 2003 at 01:11:05PM +0100, Heinz J . Mauelshagen wrote:
-> On Wed, Feb 12, 2003 at 08:26:15PM +0100, Debian User wrote:
-> > "Heinz J . Mauelshagen" wrote:
-> > > 
-> > > On Thu, Feb 06, 2003 at 01:02:39PM +0100, Jon Bendtsen wrote:
-> > > > "Heinz J . Mauelshagen" wrote:
-> > > > >
-> > > > > Dale,
-> > > > >
-> > > > > thanks for finding this bug.
-> > > >
-> > > > yeah, thanks from me too, i plan to TEST it.
-> > > 
-> > > Good :)
-> > > 
-> > > Please checkout from MAIN.
-> > > We reverted 1.0.6 as mentioned in my other email today.
-> > 
-> > so, i got to test it, and... i dont think i did the correct CVS.
-> > i followed what was written on
-> > http://www.sistina.com/products_CVS.htm
-> > 
-> > but it appears that the patch isnt in, or that i have lvm-rc1 ?
-> > from the changelog
-> > 
-> > "
-> > Logical Volume Manager Changelog
-> > 
-> > Changelog for 1.1-rc1 to 1.1-rc2
-> > 
-> > "
-> > 
-> > hmmm
-> > How do i checkout MAIN ?
-> > I did try writing MAIN instead of LVM, but that failed.
-> 
-> Obviously an update problem with our external CVS.
-> Will be fixed later today.
+--=-IoYFRVnzFACsN5JA51Dc
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Should be fixed now.
-Please try again.
+I manually relocated a few bad blocks on a bad IBM drive I had when I
+replaced the drive.  It took a lot of time and effort.  I had to run the
+dd command many times very carefully to make it work.
 
-> > 
-> > JonB
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+One big problem for me was that read-ahead obscured which actual sectors
+were in error.  I needed a 'raw' LVM device, but I don't think such a
+thing exists for LVM1 on Linux 2.4.x.
 
-Regards,
-Heinz    -- The LVM Guy --
+What I did was used pvmove to move the PE containing the bad block to a
+different spot on the hard drive, then allocated a new LV that was one
+LE long, and forced it to allocate the PE containing the bad block.=20
+Then I used dd to carefully copy over the LE in sections, narrowing down
+the location of the bad sectors until I had copied everything that could
+possibly be read.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+After that, I ran fsck on the filesystem that had originally contained
+the bad block, and I was fine.  I checked carefully, and it didn't even
+seem that I had lost any data.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Long, time consuming process though.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Actually, it may have been even ickier than I first thought.
+
+It could be that pvmove wouldn't work, and I had to shorten the LV
+containing the bad block (the BLV) to contain all PEs prior to the bad
+one, allocate a new LV (the NLV) containing all the bad PE, lengthen the
+BLV by 1 PE, using a brand new PE, then lengthen it to its original
+length so it would contain all the PEs after that bad PE, the do the
+procedure I outlined above.
+
+Now that I think of it, I'm nearly positive that pvmove didn't work.  I
+had dearly wished for some kind of option to pvmove that would force it
+to try as hard as it could to get good reads of all the sectors in a PE,
+then move the LE to a new PE, even if there were errors.
+
+Have fun (if at all possible),
+--=20
+Eric Hopper <hopper@omnifarious.org>
+Omnifarious Software
+
+--=-IoYFRVnzFACsN5JA51Dc
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iEYEABECAAYFAj5Kb3IACgkQjtsvlOwvazaetQCgindhUeRj/jKQv/8E5JJCPCwT
+zFsAoKjCz3QKFgNTYw2aXz9QgPZbBbeO
+=Dg4C
+-----END PGP SIGNATURE-----
+
+--=-IoYFRVnzFACsN5JA51Dc--
