@@ -1,18 +1,22 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j2NLrfBW016988
-	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 21:53:41 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1DEDnI-00088j-QC
-	for linux-lvm@redhat.com; Wed, 23 Mar 2005 21:53:40 +0000
-Date: Wed, 23 Mar 2005 21:53:40 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Re: Raid1 only with LVM
-Message-ID: <20050323215340.GV19749@agk.surrey.redhat.com>
-References: <200502281138.00112.stuebiger-lvm@cip.ifi.lmu.de>
-	<20050301191923.GA13742@redhat.com> <87br9adodr.fsf@coraid.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87br9adodr.fsf@coraid.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2O1rfO31891
+	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 20:53:41 -0500
+Received: from w3f.coventive.coms.coventive.com (202-145-53-92.adsl.ttn.net
+	[202.145.53.92])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2O1rX4r025608
+	for <linux-lvm@redhat.com>; Wed, 23 Mar 2005 20:53:34 -0500
+Received: from [192.168.20.46] (pc46.sa.coventive.com [192.168.20.46])
+	by w3f.coventive.coms.coventive.com (8.11.6/8.11.6) with ESMTP id
+	j2O1rTB30794
+	for <linux-lvm@redhat.com>; Thu, 24 Mar 2005 09:53:30 +0800
+Message-ID: <42421E5B.3000001@coventive.com>
+Date: Thu, 24 Mar 2005 09:56:43 +0800
+From: Chung Hsien Hu <mozo@coventive.com>
+MIME-Version: 1.0
+References: <42398707.4070708@sara.nl>
+In-Reply-To: <42398707.4070708@sara.nl>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshot Rollback??
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,18 +27,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Mar 23, 2005 at 04:49:04PM -0500, Ed L Cashin wrote:
-> Do you expect that when mirroring is working in LVM2 it will be
-> working in CLVM?  That is, will a cluster be able to share block
-> storage with using distributed RAID 1 later this year because of CLVM?
- 
-Two different sorts of mirroring, single-node and clustered.
-Work is underway for clustered LVM2 to support both.
+Hi,
+By reading the discussion of snapshot reset couple days ago, I more
+interest in the feature of snapshot rollback, ie, to restore the
+original volume to the saved state of some historial snapshots.
+Could the LVM2/device-mapper do this?
 
-Alasdair
 -- 
-agk@redhat.com
+Mozo Hu. mozo@coventive
+R&D Assistant Manager, Coventive Advance Technologies
