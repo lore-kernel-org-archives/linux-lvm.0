@@ -1,12 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 30 May 2001 11:33:50 +0200
+Date: Wed, 30 May 2001 11:40:10 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Solution? found backup hexdump of partition's first MB
-Message-ID: <20010530113350.D30938@sistina.com>
-References: <20010529010628.E1971@jensbenecke.de> <20010529093436.A792@jensbenecke.de> <20010529202030.A700@jensbenecke.de>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM [last
+Message-ID: <20010530114010.E30938@sistina.com>
+References: <200105232106.f4NL6Bl01557@dixie.dyndns.org> <20010528104951.D26710@sistina.com> <20010529113604.A28657@mail.wave.co.nz> <20010529091217.A25011@sistina.com> <20010530125142.A27177@mail.wave.co.nz>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20010529202030.A700@jensbenecke.de>; from lvm@jensbenecke.de on Tue, May 29, 2001 at 08:20:30PM +0200
+In-Reply-To: <20010530125142.A27177@mail.wave.co.nz>; from markv@wave.co.nz on Wed, May 30, 2001 at 12:51:43PM +1200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,72 +17,81 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 29, 2001 at 08:20:30PM +0200, Jens Benecke wrote:
-> On Tue, May 29, 2001 at 09:34:36AM +0200, Jens Benecke wrote:
-> > On Tue, May 29, 2001 at 01:06:28AM +0200, Jens Benecke wrote:
-> > > Hello,
-> > > I upgraded to 2.2.4 (0.9.1-beta2) from 2.2.18 (LVM 0.9) and this seem=
-s to
-> > > have killed one of my PVs. I tried the 0.9 utilities and updated to
-> > > 0.9.1-beta7 when I noticed the problems. No change. Booting back to 2=
-.2.18
-> > > didn't help, the PV was gone there as well.
-> > follow-up:
-> > vgcfgrestore doesn't work, because LVM thinks my hdc1 is no PV. Here's =
-the
-> > output: (...)
->=20
-> I think I found a way: I have found a hex-dump backup of the first megaby=
-te
-> of the disk in - apparently - working order.
->=20
-> So: hdc1 was the broken PV, it's the only partition on hdc, and I have a
-> file called hdc-first-MB-hexdump.
->=20
-> Does this help? ;)
+On Wed, May 30, 2001 at 12:51:43PM +1200, Mark van Walraven wrote:
+> On Tue, May 29, 2001 at 09:12:17AM +0000, Heinz J. Mauelshagen wrote:
+> > > When/if you do this, please consider systems with root on LVM.  Building a
+> > > ramdisk and pivoting root to that seems clumsy at best.  Perhaps vgchange
+> > > could have an option to request a metadata flush, which is deferred until
+> > > the relevant volumes are closed?
+> > 
+> > Mark,
+> > I am not sure if I get you right here...
+> 
+> Probably because I didn't make sense.  I was thinking that the metadata
+> write could be scheduled to pend until all LVs were closed.  But that
+> doesn't help, because root is never unmounted ...
+> 
+> > But in case a metadata write at VG deactivation is needed in the future,
+> > the update would take place *before* the try to unload it from the kernel.
+> 
+> Do you mean that the metadata write might be a separate operation to
+> deactivation, permitted even before the LVs were closed?
 
-Yes, in case it really contains the needed actual copy.
+Yes.
 
+> 
+> > This is a valid sequence IMO, because reasons for unloadable metadata are
+> 
+> s/unloadable/non-unloadable/ ?
 
->=20
-> The question is, does this already contain file system data or is this
-> still all LVM structure data?
+???
 
-If it is just a MB -> unlikely, because LVM typically reserves more
-than that for the VGDA.
+unloading metadata means to remove it from the kernel; IOW: delete the tables
+and structures the LVM kernel part holds in order to access LVs et al.
 
-*But* to be really sure, run "pvdata -PP" on the hex dump and look
-for pe_on_disk.base + pe_on_disk.size. This will give you the
-actual end (in 512 byte units) of the metadata in the file and should
-be used to dd it back to disk.
+> 
+> > open LVs caused by hanging applications (database systems et al.) or unmounted
+> > filesystems which don't influence the correctness of the LVM metadata anyway.
+> 
+> How about filesystems mounted read-only?  My current shutdown sequence goes:
+> 
+> 	/etc/rc6.d/S40umountfs:
+> 		swapoff -a
+> 		umount -f -a -r
+> 		mount -n -o remount,ro /
+> 
+> 	/etc/rc6.d/S50lvm:
+> 		/sbin/vgchange -A n -a n
+> 
+> 	/etc/rc6.d/S90reboot:
+> 		reboot -d -f -i
+> 
+> Which doesn't work because root is on an LV.  But even if the lvm
+> shutdown script could write the metadata while root was open, the VGDA
+> would still end up recording an active VG and open LV, unless you had
+> something analogous to "re-mount read-only" for LVs and VGs.
 
+We don't have metadata update operations defined so far anyway.
+It is just an option for the future and such status issues will be covered then.
 
-> I'm quite sure that the LVM structure didn't
-> change since this file was created, only (of course) the data changed on
-> the filesystem contained in the one (single) LV on data=3D(hdc1,hda1).
+BTW: we do have readonly LVs (which prohibits write acces to the LVs data)
+and VGs (which prohibits adding/removing PVs to/from to the VG).
 
-See above: you *need* to be sure. Hopefully the pvcreate/vgcfgrestore pair
-           works for you.
-
->=20
->=20
-> --=20
-> Jens Benecke             /* Nobody will ever see this error message :-) */
->                             panic("Cannot initialize video hardware\n");
->                                   -- Linux 2.0.38,  arch/m68k/atari/atafb=
-.c
-> http://www.hitchhikers.de/ - Die kostenlose Mitfahrzentrale f=EF=BF=BDr g=
-anz Europa
+> 
+> Regards,
+> 
+> Mark.
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
---=20
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
@@ -91,9 +99,7 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -101,6 +107,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
