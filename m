@@ -1,10 +1,8 @@
-From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
-Message-ID: <20040119134934.GP3669@tangerine.coulon.evette>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
-	protocol="application/pgp-signature"; boundary="w2JjAQZceEVGylhD"
-Content-Disposition: inline
-Subject: [linux-lvm] Mivration from lvm1 to lvm2
+From: <david@lownoisefloor.com>
+Message-Id: <200401172124.BAF89817@ms7.verisignmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Subject: [linux-lvm] System Lock up with message - "VFS: Disk quotas vdquot_6.5.1"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +13,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 12:12:01 2004
+Date: Mon Jan 19 12:12:05 2004
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
---w2JjAQZceEVGylhD
-Content-Type: text/plain; Format=Flowed; DelSp=Yes; charset=ISO-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-I plan to migrate from lvm1 to lvm2 to be compliant with 2.6.x.
-I've Debian sid with linux 2.4.24 with the device mapper compiled as a =20
-module.
-
-I've installed both the packages lvm10 and lvm2.
-
-The device mapper module is loaded but the system seems to be using =20
-lvm1.
-
-I have a couple of questions:
- - What is to be done to switch to lvm2 ?
- - I use lvm for / and I build and initrd with the lvmcreate-initrd =20
-tool. Such a tool is not part of lvm2. How can I create the initrd ? =20
-With the tools from initrd-tools package ?
-
---
-Regards
-			- Jean-Luc
---w2JjAQZceEVGylhD
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
-
-iD8DBQBAC+BuUdGGXzzGnNARAuqyAJ9V09ga9XcSzDT+mHhUbNyJvm2/iQCeMe4T
-yyKReJB3VaKrT6MYKtdqk/k=
-=Bq9e
------END PGP SIGNATURE-----
-
---w2JjAQZceEVGylhD--
+UGxlYXNlIEhlbHAsDQogIA0KICAgSSBoYXZlIGhhZCBhIGJvb3QgbG9ja3VwIHByb2JsZW0g
+Zm9yIHNvbWUgdGltZSBub3cuDQpJIHRob3VnaHQgaXQgd2FzIHRoZSAiVkZTIGxvY2siIGlz
+c3VlIGJ1dCBpdCBpcyBub3QuDQpDYW4gc29tZW9uZSBsb29rIGF0IHRoZSBmb2xsb3dpbmcg
+ZXhjZXJwIGFuZCBzZWUgaWYgdGhleQ0Ka25vdyB3aGF0IGlzIGhhcHBlbmluZz8/DQoNClN5
+c3RlbSBjb25maWd1cmF0aW9uIGlzOg0KU3VwZXJtaWNybyBYNURQOCB3aXRoIER1YWwgMi44
+IEdIeiBYRU9Ocw0KMkdCIFJBTSAoMTAyNE1CIGFsbG9jYXRlZCB0byBzeXN0ZW0pDQpSdW5u
+aW5nIFJlZGhhdCA5LjAgU3RvY2sga2VybmVsDQoxNCB4IDE0N0dpZ2FieXRlIEhhcmRkaXNr
+cyBzZXR1cCBmb3IgUkFJRCAwIHdpdGgNCkxWTS4NCg0KU3ltcHRvbXM6DQoxLiBUaGlzIGJv
+b3QgbG9ja3VwIG9ubHkgb2NjdXJzIG9uY2UgaW4gYSB3aGlsZS4NCiAgIEJ1dCB3aGVuIGl0
+IGRvZXMgaXQgcmVxdWlyZXMgc29tZW9uZSB0byBwdXNoIHRoZQ0KICAgcmVzZXQgYnV0dG9u
+IG9uIHRoZSBmcm9udCBvZiB0aGUgdW5pdC4gIFRoaXMNCiAgIHJlYWxseSBoaW5kZXJzIHJl
+bW90ZSBvcGVyYXRpb24uDQoyLiBUaGUgIlZGUzogRGlzayBxdW90YXMgdmRxdW90XzYuNS4x
+IiBsb2NrdXAgb25seQ0KICAgb2NjdXJzIGNvbmluY2lkZW50IHdpdGggYSAiYm9vdC1wYXVz
+ZSIgYW5kIHRoZQ0KICAgaW1tZWRpYXRlbHkgYWZ0ZXIgb24gb2YgdGhlIA0KICAgIkJvb3Rp
+bmcgcHJvY2Vzc29yIDEvMSBlaXAgMjAwMCINCiAgIGxpbmVzLiAgSSBoYXZlIHRyaWVkIHR1
+cm5pbmcgb2ZmIGh5cGVydGhyZWFkaW5nDQogICBhbmQgaXQgZG9lcyBub3QgaGVscC4NCiAg
+IElmIHlvdSBub3RpY2UgYSBwYXVzZSBhZnRlciB0aGUgDQogICAiQm9vdGluZyBwcm9jZXNz
+b3IgMS8xIGVpcCAyMDAwIg0KICAgbGluZSB0aGVuIHRoZSBzeXN0ZW0gd2lsbCBkaWZpbml0
+ZWx5IGxvY2t1cA0KICAgd2hlbiB0aGUgZm9ybGxvd2luZyBsaW5lIGFwcGVhcnMuDQogICAi
+VkZTOiBEaXNrIHF1b3RhcyB2ZHF1b3RfNi41LjEiDQoNCg0KSEVMUC4uLi4uLg0KDQotRGF2
+ZQ0KDQpCb290IGxvZyBjb3BpZWQgZnJvbSBzY3JlZW46Ojo6Og0KLS0tLS0tLS0tLS0tLS0t
+LVN0YXJ0IGhlcmUgLS0tLS0tLS0tLS0tLS0tLS0tLQ0KUENJOiBJZ25vcmluZyBCQVIwLTMg
+b2YgSURFIGNvbnRyb2xsZXIgMDA6MWYuMSANClRyYW5zcGFyZW50IGJyaWRnZSDigJMgSW50
+ZWwgQ29ycC4gODI4MDFCQS9DQS9EQiBQQ0kgQnJpZGdlIA0KUENJOiBEaXNjb3ZlcmVkIHBy
+aW1hcnkgcGVlciBidXMgMTAgW0lSUV0gDQpQQ0k6IERpc2NvdmVyZWQgcHJpbWFyeSBwZWVy
+IGJ1cyAxMSBbSVJRXSANClBDSTogRGlzY292ZXJlZCBwcmltYXJ5IHBlZXIgYnVzIDEyIFtJ
+UlFdIA0KUENJOiBVc2luZyBJUlEgcm91dGVyIFBJSVggWzgwODYvMjQ4MF0gYXQgMDA6MWYu
+MCANClBDSS0+QVBJQyBJUlEgdHJhbnNmb3JtOiAoQjAsSTI5LFAwKSAtPiAxNiANClBDSS0+
+QVBJQyBJUlEgdHJhbnNmb3JtOiAoQjAsSTI5LFAxKSAtPiAxOSANClBDSS0+QVBJQyBJUlEg
+dHJhbnNmb3JtOiAoQjAsSTI5LFAyKSAtPiAxOCANClBDSS0+QVBJQyBJUlEgdHJhbnNmb3Jt
+OiAoQjMsSTIsUDApIC0+IDI4IA0KUENJLT5BUElDIElSUSB0cmFuc2Zvcm06IChCMyxJMixQ
+MSkgLT4gMjkgDQpQQ0ktPkFQSUMgSVJRIHRyYW5zZm9ybTogKEI2LEkyLFAwKSAtPiA3NiAN
+ClBDSS0+QVBJQyBJUlEgdHJhbnNmb3JtOiAoQjYsSTEsUDEpIC0+IDc3IA0KUENJLT5BUElD
+IElSUSB0cmFuc2Zvcm06IChCNyxJMSxQMCkgLT4gMTYgDQppc2FwbnA6IFNjYW5uaW5nIGZv
+ciBQblAgY2FyZHMgDQppc2FwbnA6IE5vIFBsdWcgJiBQbGF5IGRldmljZSBmb3VuZCANCkxp
+bnV4IE5FVDQuMCBmb3IgTGludXggMi40IA0KQmFzZWQgdXAgU3dhbnNlYSBVbml2ZXJzaXR5
+IENvbXB1dGVyIFNvY2lldHkgTkVUMy4wMzkgDQpJbml0aWFsaXppbmcgUlQgbmV0bGluayBz
+b2NrZXQgDQphcG06IEJJT1MgdmVyc2lvbiAxLjIgRmxhZ3MgMHgwMyAoRHJpdmVyIHZlcnNp
+b24gMS4xNikgDQphcG06IGRpc2FibGVkIOKAkyBBUE0gaXMgbm90IFNNUCBzYWZlIA0KU3Rh
+cnRpbmcga3N3YXBkIA0KYWxsb2NhdGVkIDMyIHBhZ2VzIGFuZCAzMiBiaHMgcmVzZXJ2ZWQg
+Zm9yIHRoZSBoaWdobWVtIA0KYm91bmNlcyANClZGUzogRGlzayBxdW90YXMgdmRxdW90XzYu
+NS4xIA0KTG93Tm9pc2VGbG9vciwgTExDDQo3MDMtNTk0LTM0NDcgVm9pY2UNCjcwMy01OTQt
+MjU4MyBGYXgNCg==
