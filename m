@@ -1,14 +1,10 @@
-Return-Path: <lewis@sistina.com>
-Date: Fri, 16 Mar 2001 14:22:44 -0600
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] LVM 0.9.1 Beta6 RPMS
-Message-ID: <20010316142244.A5505@sistina.com>
-References: <20010316124446.B1478@sistina.com> <20010316131523.A21757@omnifarious.mn.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Content-Disposition: inline
-In-Reply-To: <20010316131523.A21757@omnifarious.mn.org>; from hopper@omnifarious.mn.org on Fri, Mar 16, 2001 at 01:15:23PM -0600
+Return-Path: <lars@larsshack.org>
+Date: Fri, 16 Mar 2001 19:43:15 -0500 (EST)
+From: Lars Kellogg-Stedman <lars@larsshack.org>
+In-Reply-To: <20010316142244.A5505@sistina.com>
+Message-ID: <Pine.LNX.4.30.0103161936340.4654-100000@flowers.house.larsshack.org>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM vs. /proc/partitions
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,60 +16,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I suspect that this has been covered before, but after searching through
+the FAQ and the mailing list archives I haven't found a good answer.
 
-On Fri, Mar 16, 2001 at 01:15:23PM -0600, Eric M. Hopper wrote:
-> On Fri, Mar 16, 2001 at 12:44:46PM -0600, AJ Lewis wrote:
-> > LVM 0.9.1 Beta6 RPMS are up on the Sistina FTP site:
-> > ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/binaries/redhat
-> >=20
-> > These are based on the Connectiva LVM packages, but were created on a
-> > Redhat 6.2 system.  (I think they will work on any RPM based system
-> > though...) They use a modified version of the wrapper script (it uses
-> > sed instead of basename and the libary name has changed).  You need to
-> > grab at a minimum, the lvm-base, lvm-iop10, and lvm-iop10-lib
-> > packages.
->=20
-> 	Would you consider releasing kernel patches against the 2.4.x
-> series kernels?
+I have a single logical volume configured on my system.  I'm running 2.4.2
+w/ lvm 0.9.1beta6, devfs, and SGI's xfs patches.  /proc/partition looks
+like this (I've only included the first four columns for brevity):
 
-This is what the lvm-iop10-patchgen package is for.  It contains a tarball
-with the patch generation code in it.  Read the README in the main source
-tree when you untar it and follow the instructions to generate a patch.  Let
-me know if you have any questions about how it works.
+  9 0 8887040 md0
+  58 0 8884224 lvma
+  8 0 4444462 scsi/host0/bus0/target1/lun0/disc
+  8 16 4444462 scsi/host0/bus0/target2/lun0/disc
+  [...]
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+The problem here is obvious -- there isn't a device file, anywhere, called
+'lvma'.  There is, on the other hand, /dev/vg0/vol0.  Would making the
+value displayed in /proc/partitions match the (devfs) device node require
+significant work?
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+Incidentally, you'll not that the raid code has the same problem -- "md0"
+should be "md/0", but at least with the md stuff it's possible to
+automatically create compatability entries in /dev.
 
------Begin Obligatory Humorous Quote----------------------------------------
-Sleep: A completely inadequate substitute for caffeine
------End Obligatory Humorous Quote------------------------------------------
+Other than that, my xfs on top of LVM on top of raid5 has been working
+smoothly now for several days.  Great work!
 
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+-- Lars
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6snYUpE6/iGtdjLERAoWWAJ9EcOubSbIr8tc1/HDUJpMKTUMDjQCfXxuE
-6XqFzP/6X6Rk7mgrtwyTwLI=
-=Nd42
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
+-- 
+Lars Kellogg-Stedman <lars@larsshack.org>
