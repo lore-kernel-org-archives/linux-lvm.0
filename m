@@ -1,11 +1,14 @@
-Return-Path: <ph.l@libertysurf.fr>
-Message-ID: <3A5E0A71.2C56628B@libertysurf.fr>
-Date: Thu, 11 Jan 2001 18:33:05 -0100
-From: Philippe Lefevre <ph.l@libertysurf.fr>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] PB: undefined reference to memset
-References: <3A5775ED.32380632@libertysurf.fr> <20010106223732.A1686@66bassett.freeserve.co.uk>
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <cduffy@mvista.com>
+Date: Tue, 16 Jan 2001 12:10:46 -0800
+From: Charles Duffy <cduffy@mvista.com>
+Subject: Re: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at www.sistina.com
+Message-ID: <20010116121046.E2709@mvista.com>
+References: <20010113114507.D15915@linuxcare.com> <200101130143.f0D1hNF19829@webber.adilger.net> <20010113170616.B22699@caldera.de> <20010116085117.A696@tykepenguin.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="KlAEzMkarCnErv5Q"
+Content-Disposition: inline
+In-Reply-To: <20010116085117.A696@tykepenguin.com>; from caulfield@sistina.com on Tue, Jan 16, 2001 at 08:51:18AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,70 +20,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com, joe@66bassett.freeserve.co.uk
+To: linux-lvm@sistina.com
 
-Joe Thornber a =E9crit :
-> =
+--KlAEzMkarCnErv5Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hi,
-> =
+On Tue, Jan 16, 2001 at 08:51:18AM +0000, Patrick Caulfield wrote:
+> On Sat, Jan 13, 2001 at 05:06:16PM +0100, Christoph Hellwig wrote:
+> > On Fri, Jan 12, 2001 at 06:43:23PM -0700, Andreas Dilger wrote:
+> > > > Would it be possible to clean up the ioctl interface so we
+> > > > dont need such large hacks for LVM support? I can do the work
+> > > > but I want to be sure you guys will agree to it.
+>=20
+> If you're prepared to do the work we'd be glad to accept the patch -
+> please send it to me or the list so I can check over it before
+> committing it. As we don't have an UltraSPARC available for testing
+> it's probably better done by someone who does !
 
-> I just tried it and it worked fine.
-> =
+I have an Ultra-1 available, presently in use as a prototyping system.
+It's not currently using LVM and there's no unpartitioned space on the
+drive, but if one of the core developers (or otherwise someone I have
+reason to trust) wants to try testing LVM over loopback (or something
+of that sort), I can provide access.
 
-> Make sure you start with a vanilla kernel 2.2.17
-> patch with rawio
-> patch with lvm
-> config, build etc.
-> =
+I don't have the time to do testing myself, unless someone can provide
+a specific set of instructions (ie. the nature of an expected bug is
+known; the only question is its presence).
 
-> In my haste I forgot to switch on the lvm procfs output option in make
-> config.  This did failed to compile (another bug for the list), but
-> it wasn't your error.
-> =
+Btw, I can only promise availability for about a week or so; the
+machine may become a production system after that time.
 
-> - Joe
-> =
+--KlAEzMkarCnErv5Q
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-> > Changing my system release, I patched my kernel 2.2.17 with
-> > lvm-0.9-2.2.17-stock.patch and linux-2.2.17-rawio.patch
-> > Apparently, there was no errors.
-> >
-> > Then compiling my new kernel, I get this message:
-> >
-> > drivers/block/block.a(lvm.o): In function `lvm_do_vg_rename':
-> > lvm.o(.text+0x295a): undefined reference to `memset'
-> > lvm.o(.text+0x2972): undefined reference to `memset'
-> > make: *** [vmlinux] Erreur 1
-> >
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Many thanks for your answer,
+iD8DBQE6ZKrGr/O29KUQmJURAgJ2AKCypzVywkPVmQ2DMoMJHn4y6jZNpgCfRetI
+n7AsmHPukOigyCdPCZ9vTYY=
+=geP1
+-----END PGP SIGNATURE-----
 
-I used a 2.2.17 kernel that can be found on the net, but I don't know if
-its name is Vanilla
-I've patched it with the two patches i've found on sistina site for LVM
-0.9
-
-I did some other tests:
--  I wrote a small test C programm that use memset. I was able to
-compile and execute it
-without any problem.
--  Compiling the 2.2.17 kernel without LVM option and the patches works
-fine.
--  I declared the memset function in lvm.c as  static (*memset)(void *,
-int, size_t);
-   and I was able to compile it, without any message saying that
-reference to memset is not found !!
-
-Unfortunately, I'm not familiar with C and I don't see what can be the
-problem.
-
-regards,
-PhiL
--- =
-
-----------------------------------------------------------------------
-Linux 2.2.17 | Philippe Lefevre   E-mail: ph.l@libertysurf.fr |  =3D=B0)
-             |                                                |  /\\
-----------------------------------------------------------------_\_V--
+--KlAEzMkarCnErv5Q--
