@@ -1,41 +1,29 @@
-Date: Sun, 23 Jul 2000 18:16:57 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
 Subject: Re: [linux-lvm] Alternate Pathing?
-In-Reply-To: <00072311385205.27541@cg965888-a.adubn1.nj.home.com>
-Message-ID: <Pine.LNX.4.21.0007231816160.21621-100000@fogarty.jakma.org>
+References: <00072311385205.27541@cg965888-a.adubn1.nj.home.com>
+From: "Martin K. Petersen" <mkp@linuxcare.com>
+Date: 24 Jul 2000 07:58:03 -0400
+In-Reply-To: Barry Roomberg's message of "Sun, 23 Jul 2000 11:35:52 -0400"
+Message-ID: <yq1ittvagfo.fsf@tyra.mkp.net>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Barry Roomberg <broom@voicenet.com>
+To: broom@voicenet.com
 Cc: linux-lvm@msede.com
 
-On Sun, 23 Jul 2000, Barry Roomberg wrote:
+>>>>> "Barry" == Barry Roomberg <broom@voicenet.com> writes:
 
-> Does this concept exist anywhere in Linux?
-> It seems the right place for it to exist
-> would be at the disk side of the LVM.
-> 
-> I searched GOOGLE and the LVM list archive
-> for mentions but did not come up with anything.
-> 
-> Any pointers?
-> 
+Barry> Ohh LVM Gurus, I beseech thee: Does the Linux kernel,
+Barry> filesystem, device tree, or LVM have the concept of Alternate
+Barry> Pathing?
 
-GFS was designed spefically with FC in mind. see
-www.globalfilesystem.org
+Barry> Does this concept exist anywhere in Linux?
 
-> Thanks
-> Barry
-> broom@nospam-voicenet.com
-> 
-> 
+It's on my todo list...
 
 -- 
-Paul Jakma	paul@clubi.ie
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-Freedom begins when you tell Mrs. Grundy to go fly a kite.
+Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
+mkp@linuxcare.com, http://www.linuxcare.com/
+Linuxcare. Support for the revolution.
