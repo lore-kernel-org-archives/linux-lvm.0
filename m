@@ -1,7 +1,6 @@
-From: "System Anti-Virus Administrator" <mis@lineo.com>
-Message-ID: <apollo.lineo.com106164171040810086@apollo.lineo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Illegal attachment type found in sent message "Re: Approved"
+From: davis wembe <daviswembe40@starmedia.com>
+Message-Id: <20030823135423.8A1FB1817B@smtp.latinmail.com>
+Subject: [linux-lvm] Soliciting For Business Venture and Partnership.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,53 +11,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Aug 23 07:29:01 2003
+Date: Sat Aug 23 08:55:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 To: linux-lvm@sistina.com
-Cc: mis@lineo.com
 
-Attention: <linux-lvm@sistina.com>.
+From: MR. DAVIS  WEMBE  Telephone: 0031-641115862=20
 
+Email: daviswembe40@starmedia.com=20
 
-A Illegal attachment type was found in an Email message you sent. 
-This Email scanner intercepted it and stopped the entire message
-reaching it's destination. 
+Attn:=20
 
-The Illegal attachment type was reported to be: 
-
-PIF attachments disallowed
+Soliciting For Business Venture and Partnership.=20
 
 
-Please contact your I.T support personnel with any queries regarding this 
-policy.
+My name is MR. DAVIS WEMBE  Chairman of contract award and monitoring=20
+committee of Ministry of Urban and rural development ,my duty as=20
+empowered by the Mauritius Government is to provide the basic amenities,soc=
+ial=20
+recreational activities in urban and rural areas,This programm includes=20
+assistance to deprived Local communities and to co-ordinate projects=20
+and development at the national level, Furthermore, from this projects we=20
+have been able to secure some reasonable amount of U.S.$21.8m(Twenty=20
+one Million Eight Hundred Thousand U.S.Dollars Only)as commision from=20
+various Contractors resulting from over invoicing ,hence all the necessary =
+
+approvals has been completed.=20
 
 
-Your message was sent with the following envelope:
+These approved fund is now packaged and despatched through a security=20
+company for onward delivery to its final destination. These fund are=20
+first deposited into a vault security before we arrange for its movement=20
+to Europe through diplomatic channel using decoy purporting that the=20
+fund belongs to an expatriate/company , as we are Government officiale ,we =
 
-MAIL FROM: linux-lvm@sistina.com
-RCPT TO:   andersen@lineo.com 
+are not allowed to operate/own foreign bank account,Hence we need you=20
+to stand as the beneficiary and claim the fund on our behalf from the=20
+security company.=20
 
-... and with the following headers:
+Presently I am now in Europe to search for a reliable person/company of=20
+high intergrity /dignity and one with conscience who will claim this=20
+fund on our behalf as the beneficiary,and we have agreed to give you 25%=20
+of the total sum as commission for your assistance/effort. And 5% will=20
+be used to settle every expenses incurred. We will use 70% to invest=20
+under your recommendations and guide and to go into Joint venture=20
+business with you.=20
 
-From:    <linux-lvm@sistina.com>
-To:      <andersen@lineo.com>
-Subject: Re: Approved
-Date:    Sat, 23 Aug 2003 21:28:29 +0900
+I would greatly appreciate your assistance .Also you call me on my=20
+telephone number for more briefing 0031-641115862 as I look forward to your=
+=20
+response as soon as possible.=20
+
+Best regards,=20
+MR. DAVIS  WEMBE
 
 
 
-The original message is kept in:
-
-  apollo.lineo.com:/var/spool/qmailscan/quarantine
-
-where the System Anti-Virus Administrator can further diagnose it.
-
-The Email scanner reported the following when it scanned that message:
-
---- 
-
----perlscanner results ---
-Illegal attachment type 'PIF attachments disallowed' found in file /var/spool/qmailscan/apollo.lineo.com106164170740810086/thank_you.pif
----
+_________________________________________________________
+http://www.latinmail.com.  Gratuito, latino y en espa=EF=BF=BDol.
