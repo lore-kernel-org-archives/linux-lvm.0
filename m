@@ -1,10 +1,11 @@
-Content-Class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: what i need is a little attention-RE [linux-lvm] SoftRaid and LVM   Jean-Eric Cuendet
-Date: Wed, 5 Sep 2001 09:57:47 +0200
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com>
-From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
+Date: Wed, 5 Sep 2001 10:04:03 +0200
+From: Rasmus Wiman <rasmus.wiman@sami.se>
+Subject: Re: [linux-lvm] My VG is gone...
+Message-Id: <20010905100403.6c5b8a6b.rasmus.wiman@sami.se>
+In-Reply-To: <B51F0C636E578A4E832D3958690CD73E0130BFF8@es04snlnt>
+References: <B51F0C636E578A4E832D3958690CD73E0130BFF8@es04snlnt>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,28 +20,21 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> and one more question about the min-max
-> i don't speak "C" can you tell me how to do it with pre
-> linux-2.4.9patches wich i wont to aply to linux-2.4.10pre2=20
-> and they are giving me problems=20
-> with min-max definition
+"Diehl, Jeffrey" <jdiehl@sandia.gov> skrev:
 
-The min/max functions are simple functions that return the min/max of
-two numbers.
-Ex: min(3,4) return 3
-Now, Linus has added a type to those functions in 2.4.8 (I think):
-Ex: min(int, 3, 4) =3D 3
-Or: min(float, -6.45, 4.5) =3D -6.45
+> Any ideas about how to recover without losing my data.  I need to get
+> going
+> soon, so if I haven't fixed it by late this week, I'm going to
+> reformat....
+> And lose several Gb of data.
 
-So, either you change the call from:
-min(a, b) to min(int,a,b)
-Or you add the provided replacement functions:
-#define min(a,b) (((a)<(b))?(a):(b))=20
-#define max(a,b) (((a)>(b))?(a):(b))=20
-At the *beginning* of the file (before anything else).
+I have already reformated my hard disks, alas. I didn't have time to wait
+for a solution. But If someone would have helped me or suppllied code that
+fixed the problem, it could have beed the start of a Doctor LVM project. I
+think there should really be crash recover tools for any file system and
+LVM system since they all do crash some times.
 
-Note that these are not real functions but just macros. That's why it's
-so simple (just add them and forget).
 
-Bye
--jec
+---------------------
+Rasmus Wiman
+SAMI Labs
