@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 7 Feb 2001 11:40:18 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] 0.9.1 vgscan doesn't detect upgraded vg's
-Message-ID: <20010207114018.C525@tykepenguin.com>
-References: <3A7F6413.A80D1803@twisted.net> <200102070944.f179iw508184@webber.adilger.net>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 7 Feb 2001 12:49:37 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: Re: [linux-lvm] vgscan -- ERROR -132: volume group "vgall" is inconsistent
+Message-ID: <20010207124937.J8914@srv.sistina.com>
+References: <3A809408.C2FADBC9@cs.tu-berlin.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200102070944.f179iw508184@webber.adilger.net>; from adilger@turbolinux.com on Wed, Feb 07, 2001 at 02:44:58AM -0700
+In-Reply-To: <3A809408.C2FADBC9@cs.tu-berlin.de>; from wipeout@cs.tu-berlin.de on Wed, Feb 07, 2001 at 01:17:12AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,49 +21,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Feb 07, 2001 at 02:44:58AM -0700, Andreas Dilger wrote:
+Happy to hear that this helped.
+
+In case you are forced into this again, please provide a "vgscan -d" output.
+
+On Wed, Feb 07, 2001 at 01:17:12AM +0100, Andreas Martin wrote:
+> Hi Heinz,
+> I had a valid vgall.conf file, so I was lucky to save all my datas.
+> Seems that yast only deleted vgall.con and lvmtab.
+> Thanks a lot and good luck for the project.
+> I still think that lvm rocks!
 > 
-> The problem is that UUIDs are being created as we go, so the UUID list
-> on the first PV only has the first PV UUID in it.  Exactly the problem
-> you are having.  I would think this problem would also show up with the
-> PV namelist as well, but maybe things were done slightly differently then.
-> It is probably that if you make more than one change which writes out the
-> VGDA, the problem is gone because the UUIDs now exist on all PVs.
+> Cheers Andreas.
 > 
-> The fix is to verify/fix the UUID list before we start writing PV info.
-> It appears that vg_write_with_pv_and_lv() is the only place that the UUID
-> list is written, via pv_write_uuidlist().
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-Excellent, thanks Andrea that works for me. I'll put into CVS.
- 
-> Unfortunately, this doesn't help anyone that currently has a problem, but
-> it will prevent such problems for anyone else upgrading their system.
+-- 
 
-No, but the patch below at least can get them running. It's necessary to
-do some metadata changes to get the UUID list committed to disk after this
-though.
+Regards,
+Heinz    -- The LVM Guy --
 
-patrick
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-diff -u -r1.3.2.3 tools/lib/pv_read_all_pv_of_vg.c
---- pv_read_all_pv_of_vg.c      2001/01/17 14:45:28     1.3.2.3
-+++ pv_read_all_pv_of_vg.c      2001/02/06 15:42:40
-@@ -114,7 +114,7 @@
-             np++;
-          }
-       }
--
-+#if 0 // PJC: work around UUID list problems.
-       /* in case this PV already holds a uuid list: check against this list */
-       if ( uuids > 0) {
-          for ( p = 0; pv_this[p] != NULL; p++) {
-@@ -135,7 +135,7 @@
-          np = 0;
-          while ( pv_this[np] != NULL) np++;
-       }
--
-+#endif
-       /* avoid multiple access pathes */
-       if (pv_this) {
-          for ( p = 0; pv_this[p] != NULL; p++) {
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
