@@ -1,13 +1,13 @@
-Return-Path: <ragnark@stine.vestdata.no>
-Date: Sun, 12 Aug 2001 22:46:02 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Return-Path: <wichert@cistron.nl>
+Date: Mon, 13 Aug 2001 00:35:13 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
 Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010812224602.B6589@vestdata.no>
-References: <20010812135402.A452@dardhal.mired.net> <997636232.20870.2.camel@monster.omnifarious.org> <20010812222139.A14464@dardhal.mired.net>
+Message-ID: <20010813003513.B30146@cistron.nl>
+References: <20010812135402.A452@dardhal.mired.net> <997636232.20870.2.camel@monster.omnifarious.org>
 Mime-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010812222139.A14464@dardhal.mired.net>; from jdomingo@internautas.org on Sun, Aug 12, 2001 at 10:21:39PM +0000
+In-Reply-To: <997636232.20870.2.camel@monster.omnifarious.org>; from hopper@omnifarious.org on Sun, Aug 12, 2001 at 12:10:31PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,35 +22,26 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Sun, Aug 12, 2001 at 10:21:39PM +0000, Jos� Luis Domingo L�pez wrote:
-> > On 12 Aug 2001 13:54:02 +0000, Jos� Luis Domingo L�pez wrote:
-> > > As far as I know, there are plans to remove much of the thingss that
-> > > currently appear under /proc. It seems that only information about
-> > > processes currently running will remain under /proc.
-> > > 
-> >
-> Check this linux kernel mailing list for the (still scarce) details about
-> "removing" kernel tunables from /proc:
-> http://uwsg.iu.edu/hypermail/linux/kernel/0105.3/1439.html
-> 
-> To be precise, dicussion about modifying existing /proc starts here:
-> http://uwsg.iu.edu/hypermail/linux/kernel/0105.3/1469.html
-> 
-> There were not much discussion about the subject, but it seems that in
-> 2.5.x /proc will just hold information about running processes. The rest
-> is still to be defined :)
+On 12 Aug 2001 13:54:02 +0000, Jos� Luis Domingo L�pez wrote:
+> As far as I know, there are plans to remove much of the thingss that
+> currently appear under /proc. It seems that only information about
+> processes currently running will remain under /proc.
 
-If I'm not mistaken, the idea is to move everything not process related
-from procfs to a dedicated sysfs. 
+The name /proc already suggests it is a filesystem for processes,
+not kernel configuration.
 
-I don't think it has ever been proposed to not have a fs interface to
-the data, but some changes have been proposed:
-* Some standard way of parsing the files (e.g. xml)
-* One file pr value, rather than today's system where you have to parse 
-  the files
-* Changing the directory layout.
+> Kernel parameters, system information, kernel variables and kernel
+> tunables will probably disappear and will be replaced by some sort of
+> user-space application that will allow query and modfication of kernel
+> values and tunables. Something similar to Solaris' ndd, AFAIK.
 
+From what I remember the idea is to move all the no-process stuff
+from /proc to (an)other filesystem(s), /kernel or so. 
+
+Wichert.
 
 -- 
-Ragnar Kjorstad
-Big Storage
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
