@@ -1,35 +1,23 @@
-From: Harald Milz <hm@seneca.muc.de>
-Subject: Re: [linux-lvm] Inclusion of LVM into the Linux Kernel...
-Date: 8 Sep 1999 21:26:39 GMT
-Message-ID: <7r6kaf$k43$1@seneca.muc.de>
-References: <199909080641.AA13198@mailgate1b.telekom.de>
-Reply-To: h.milz@seneca.muc.de
+Date: Thu, 9 Sep 1999 11:37:47 +0200 (MEST)
+From: Carsten Schabacker <CarstenSchabacker@gmx.de>
+MIME-Version: 1.0
+Subject: [linux-lvm] Announce: LVM-Debian Package [0.7-3]
+Message-ID: <14712.936869867@www5.gmx.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de> wrote:
+Hi all,
 
-> We now have
->    Stephen Tweedie,
->    Ted Ts'o and
->    Hans Reiser
-> on our petition!
+I made a few changes on the Debian-Package I build from lvm-0.7.
+You can download it from http://www.rhein-neckar.de/~spock .
 
-And a couple more!
+If you have any problems or suggestions please mail me!
 
-> Would you be so kind as to point out that they are on to Linus?
-
-> I'm just moving from our "Linux Storage Management Workshop" in Darmstadt
-> to "Linux-Kongress" in Augsburg and don't have time.
-
-See you tomorrow :-)
+cheers Carsten.
 
 -- 
-Coward, n.:
-	One who in a perilous emergency thinks with his legs.
-		-- Ambrose Bierce, "The Devil's Dictionary"
+Sent through Global Message Exchange - http://www.gmx.net
