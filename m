@@ -1,14 +1,12 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 28 Jun 2001 10:11:05 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Problem installing lvm
-Message-ID: <20010628101105.A26253@sistina.com>
-References: <87d77oefy5.fsf@#maties.sun.ac.za>
+Return-Path: <mauelshagen@sistina.com>
+Date: Thu, 28 Jun 2001 10:22:53 -0500
+From: Heinz Mauelshagen <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] lvm on alpha
+Message-ID: <20010628102253.A24904@sistina.com>
+References: <20010627051755.A26216@sistina.com> <Pine.LNX.4.30.0106271038080.7196-100000@cs.clark.edu>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
 Content-Disposition: inline
-In-Reply-To: <87d77oefy5.fsf@#maties.sun.ac.za>; from jspies@maties.sun.ac.za on Thu, Jun 28, 2001 at 04:18:10PM +0000
+In-Reply-To: <Pine.LNX.4.30.0106271038080.7196-100000@cs.clark.edu>; from smcconnell@clark.edu on Wed, Jun 27, 2001 at 10:41:25AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,109 +18,132 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sean,
 
-Goto the LVM FTP site: ftp.sistina.com
-and get to the directory that you grabbed the tarball from:
-/pub/LVM/0.9.1_beta
+your output looks like you run pvcreate on /dev/sdb rather than on /dev/sdb1.
+Did you try the later as well without success?
 
-Grab the file: lvm_0.9.1_beta7-get_hardblocksize.patch
+Regards,
+Heinz    -- The LVM Guy --
+ 
 
-Apply this patch the the 0.9.1 Beta7 source tree as per the README.1st in
-that FTP directory.
 
-This should solve your problem.
-
-On Thu, Jun 28, 2001 at 04:18:10PM +0000, Johann Spies wrote:
-> I am trying to install lvm_0.9.1_beta7 on a machine with a 2.4.5
-> kernel.
->=20
-> After following the instructions in LVM/0.9.1_beta7/PATCHES/README a
-> patch was created: lvm-0.9.1_beta7-2.4.5.patch
->=20
-> I patched the kernel with it and then tried to recompile the kernel.
-> The process ended with:
-> ------------------------
-> /usr/src/linux/arch/i386/lib/lib.a /usr/src/linux/lib/lib.a
-> /usr/src/linux/arch/i386/lib/lib.a \
->         --end-group \
->         -o vmlinux
-> drivers/md/mddev.o: In function `__update_hardblocksize':
-> drivers/md/mddev.o(.text+0xcec1): undefined reference to `get_hardblocksi=
-ze'
-> drivers/md/mddev.o(.text+0xcf0d): undefined reference to `get_hardblocksi=
-ze'
-> make: *** [vmlinux] Error 1
->=20
-> I hope you can help me to get this right.
->=20
-> Regards.
->=20
-> Johann
-> --=20
-> Johann Spies
-> Informasietegnologie
-> Universiteit van Stellenbosch
->=20
->      "The Spirit of the Lord is upon me, because he hath=20
->       anointed me to preach the gospel to the poor; he hath=20
->       sent me to heal the brokenhearted, to preach =20
->       deliverance to the captives, and recovering of sight=20
->       to the blind, to set at liberty them that are =20
->       bruised..."         Luke 4:18=20
+On Wed, Jun 27, 2001 at 10:41:25AM -0700, Sean McConnell wrote:
+> 
+> i thought i had sent a prior email with the info, but
+> i guess not, well here it is:
+> 
+> # fdisk -l /dev/sdb
+> 
+> Disk /dev/sdb: 134 heads, 62 sectors, 1019 cylinders
+> Units = cylinders of 8308 * 512 bytes
+> 
+>    Device Boot    Start       End    Blocks   Id  System
+> /dev/sdb1             1      1019   4232895   8e  Linux LVM
+> 
+> # pvcreate -vd /dev/sdb
+> <1> lvm_get_iop_version -- CALLED
+> <22> lvm_check_special -- CALLED
+> <22> lvm_check_special -- LEAVING
+> <1> lvm_get_iop_version -- AFTER ioctl ret: 0
+> <1> lvm_get_iop_version -- LEAVING with ret: 10
+> pvcreate -- locking logical volume manager
+> <1> lvm_lock -- CALLED
+> <22> lvm_check_special -- CALLED
+> <22> lvm_check_special -- LEAVING
+> <1> lvm_lock -- LEAVING with ret: 0
+> pvcreate -- checking physical volume name "/dev/sdb"
+> <1> pv_check_name -- CALLED with "/dev/sdb"
+> <22> lvm_check_chars -- CALLED with name: "/dev/sdb"
+> <22> lvm_check_chars -- LEAVING with ret: 0
+> <22> lvm_check_dev -- CALLED
+> <22> lvm_check_dev -- LEAVING with ret: 1
+> <1> pv_check_name -- LEAVING with ret: 0
+> pvcreate -- getting physical volume size
+> pvcreate -- checking partition type
+> pvcreate -- invalid partition type 0x1 for "/dev/sdb" (must be 0x8e)
+> 
+> <1> lvm_unlock -- CALLED
+> <1> lvm_unlock -- LEAVING with ret: 0
+> 
+> 
+> i can set the partition at 83 or 82 and it still says it's fat12
+> 
+> 
+> On Wed, 27 Jun 2001, Heinz Mauelshagen wrote:
+> 
+> >
+> > Sean,
+> >
+> > could you provide your "fdisk -l" output on the disk(s) in question
+> > and the pvcreate output as well?
+> >
+> > Thanks,
+> > Heinz      -- The LVM guy --
+> >
+> > On Tue, Jun 26, 2001 at 03:50:31PM -0700, Sean McConnell wrote:
+> > >
+> > > I may just be blind, but do people have the lvm working
+> > > on alphas.  I compiled and tryied both 2.4.4 and 2.4.5
+> > > on Rh7 on my alpha, but no matter what pvcreate won't
+> > > see the partition type of any partition, just says
+> > > they're 0x1...
+> > > a simple NO will do unless there's a solution.
+> > > thanks
+> > >
+> > > sean mcconnell
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> > *** Software bugs are stupid.
+> >     Nevertheless it needs not so stupid people to solve them ***
+> >
+> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> >
+> > Heinz Mauelshagen                                 Sistina Software Inc.
+> > Senior Consultant/Developer                       Am Sonnenhang 11
+> >                                                   56242 Marienrachdorf
+> >                                                   Germany
+> > Mauelshagen@Sistina.com                           +49 2626 141200
+> >                                                        FAX 924446
+> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> 
+> -- 
+> Sean McConnell, smcconnell@clark.edu
+> Unix System Administrator
+> Computer Technology/Science
+> Clark College
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
------Begin Obligatory Humorous Quote----------------------------------------
-"We succeed because our competitors are idiots" - anonymous
------End Obligatory Humorous Quote------------------------------------------
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Quitters never win, and winners never quit,
-but those who never quit AND never win are idiots.
------End Obligatory Humorous Quote------------------------------------------
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7O0kJpE6/iGtdjLERAqvfAJkBeb5qdIacRRv10T2ODrSS/3u8RgCghg2+
-r22V0/V3DfJJmqTWcB0YNV4=
-=I95w
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
