@@ -1,10 +1,11 @@
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] kernel: zam-7001: io error in reiserfs_find_entry
-Message-Id: <20020111103718.GA1274@tykepenguin.com>
-References: <22543.1010745017@joergli.cocolab.de>
+Subject: Re: [linux-lvm] Could vgscan read a file of "preferred" LV name
+    -> minor device id ?
+Message-Id: <20020111104116.GB1274@tykepenguin.com>
+References: <E16Ovq8-0007VV-00@whittlesey.cl.cam.ac.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <22543.1010745017@joergli.cocolab.de>
+In-Reply-To: <E16Ovq8-0007VV-00@whittlesey.cl.cam.ac.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,46 +16,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 11 04:38:02 2002
+Date: Fri Jan 11 04:42:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 11, 2002 at 11:30:17AM +0100, J?rgen Vollmer wrote:
+On Fri, Jan 11, 2002 at 07:11:00AM +0000, Piete Brooks wrote:
+> I'm getting complaints from NFS users that when servers reboot, they often 
+> find that their mounts have the wrong data.  I've never really worked out 
+> which end hold what in NFS FHs, but the basic idea is that a client identifies 
+> a FH which encodes (major dev id,minor dev id,inode number,version).
+> This appears to break down when a new LV is created ane the server rebooted.
+> As the /dev/<vg>/<lv> nodes are numbered strictly in the order that they are 
+> discovered, all LV minor device IDs on subsequent VGs are renumbered, so any 
+> remote caching of FHs breaks (( as with SCSI )).
 > 
-> Hi everybody,
+> Is that about right ?
 > 
-> I use kernel-source-2.4.16.SuSE-24.i386.rpm together with reiserfs and
-> made a snapshot which I then tar'ed.
-> Writing the tape seems to be ok. After that I did:
+> Would it be possible for vgscan to read a "hints" file consisting of <vg>/<lv> 
+> and minor device number pairs ?
 > 
-> 	tar --directory=/ --file=/dev/tape --compare
+> As each <vg>/<lv> is found, if it's in the file, the nominated minor device id 
+> is used; if it's not found, then the next minor device id which is not listed 
+> in the file is used.
 > 
-> and got the message (while working i.e. modifying the  original filesystem)
-> 
-> Message from syslogd@joergli at Fri Jan 11 10:57:19 2002 ...
-> joergli kernel: zam-7001: io error in reiserfs_find_entry
+> [[ I use devfs, so using existing data in /dev/ would not help -- but I think 
+> it would do no harm to use that data by default ]]
 > 
 
-
-> 
-> So it seems that the snapshot is full. Is that correct, or do I have a serious
-> problem? Note: I'm doing my backups, so a dead backup is not a very good
-> one :-)
-
-Yes, your snapshot is full. When this happens LVM fails all I/O to the snapshot.
-Unfortunatetly reiserfs doesn't not currently cope very well with I/O errors on
-a device hence the message you saw.
-
-You will need to allocate more space to the snapshot LV to get around this.
-
-It's not a serious problem but if you are bothered by the oops I posted a
-patch to workaround to the problem here:
-
-http://lists.sistina.com/pipermail/linux-lvm/2001-November/009913.html
-
-It's not great and it doesn't stop the full snapshot being unusable, but it does
-stop the oopses.
+I thought Heinz had fixed this in 1.0.1, what version are you using (tools &
+kernel)?
 
 patrick
