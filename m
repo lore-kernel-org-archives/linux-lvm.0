@@ -1,10 +1,10 @@
 From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Linux 2.4.16+SMP+Ext3+LVM snapshots
-Message-ID: <20011130084157.D15936@lynx.no>
-References: <B45465FD9C23D21193E90000F8D0F3DF01790039@mailsrv.linkvest.com>
+Subject: Re: [linux-lvm] reiserfs panic
+Message-ID: <20011130093239.E15936@lynx.no>
+References: <20011129164915.I1408@tykepenguin.com> <20011130102423.E1452@tykepenguin.com> <742840000.1007128632@tiny>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF01790039@mailsrv.linkvest.com>; from Jean-Eric.Cuendet@linkvest.com on Fri, Nov 30, 2001 at 08:24:20AM +0100
+In-Reply-To: <742840000.1007128632@tiny>; from mason@suse.com on Fri, Nov 30, 2001 at 08:57:12AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 30 09:40:02 2001
+Date: Fri Nov 30 10:31:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+To: Chris Mason <mason@suse.com>
 Cc: linux-lvm@sistina.com
 
-On Nov 30, 2001  08:24 +0100, Jean-Eric Cuendet wrote:
-> > So I grabbed lvm 1.0.1 (released a couple days ago).  I 
-> > patched the kernel 
-> > with the new lvm and the VFS-lock patch for 2.4.11.  There 
-> 
-> Is VFS-lock patch necessary to run LVM? 
-> I have LVM 1.0.1 on some of our servers without any problem, but what is
-> the goal of this patch?
+On Nov 30, 2001  08:57 -0500, Chris Mason wrote:
+> Now that 2.5.x is out I expect more of these to get cleaned up, and I'm
+> workin on patches to turn reiserfs_panic into a forced readonly mount.
 
-You only need it if you are making snapshots of journaled filesystems
-(e.g. ext3, reiserfs, XFS).
+Just as an FYI, ext2 has a distinction between "ext2_panic", "ext2_error",
+and "ext2_warning".  The panic is just what it sounds like (and can only
+be triggered by something like memory corruption, it is almost unused).
+The error has a configurable behaviour - panic also, ro-mount, warning.
+In all cases, it marks the filesystem superblock with an error.  The
+default is ro-mounting the filesystem.  The warning is just a warning
+(unusual condition, but a 100% recoverable situation).
 
 Cheers, Andreas
 --
