@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 2 May 2001 11:29:48 +0000
+Date: Wed, 2 May 2001 12:19:34 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] some comments on the LVM source
-Message-ID: <20010502112948.B30791@sistina.com>
-References: <3AEDEFDB.6EB1AF8@gnu.org>
+Subject: Re: [linux-lvm] Re: [lvm-devel] 1.2 directory heirarchy
+Message-ID: <20010502121934.C30791@sistina.com>
+References: <20010430155827.B19810@sistina.com> <200104301703.LAA11435@lynx.turbolabs.com>
 Mime-Version: 1.0
-In-Reply-To: <3AEDEFDB.6EB1AF8@gnu.org>; from clausen@gnu.org on Tue, May 01, 2001 at 09:06:03AM +1000
+In-Reply-To: <200104301703.LAA11435@lynx.turbolabs.com>; from adilger@turbolinux.com on Mon, Apr 30, 2001 at 11:03:17AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,203 +21,227 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andrew,
+On Mon, Apr 30, 2001 at 11:03:17AM -0600, Andreas Dilger wrote:
+> Heinz writes:
+> > On Fri, Apr 27, 2001 at 04:34:43PM -0600, Andreas Dilger wrote:
+> > > If I could vent on an LVM pet peeve here...  When we re-organize the
+> > > structure of the LVM code, can we ensure that data is verified exactly
+> > > _once_?
+> > 
+> > Sure, this is a resonable recommendation at first glance ;-)
+> > 
+> > For everybodies information:
+> > the reason why Andreas recommends things like this is IMO, that LVM already
+> > has plenty of check functions which are called in multiple layers of
+> > the sofatware (like in the tools and in the library itself).
+> > 
+> > For eg. the tool layer which has the need to check the name of a PV
+> > handed in on the command line, calls pv_check_name() in order to display an
+> > error message in case of a crappy name and exits.
+> > 
+> > If that PV name is passed into a library routine it will be checked again
+> > using pv_check_name() because the function takes care that it gets called
+> > with reasonable parameters.
+> > 
+> > IMO this doesn't imply bad interface abstraction at all.
+> > It just addresses different needs of different levels in the LVM software
+> > *but* has the tradeof of calling the same check functions multiple times.
+> 
+> I will have to disagree here.  There are several reasons for this:
+> - Running any of the LVM user tools with "-d" produces _far_ too much
+>   output to be useful.  This makes debugging user problems a real chore,
 
-thanks for providing your work results.
+That's the tradeof we need to pay in case we want to have decent tests
+on actual parameters.
 
-A general recommendation:
-please provide a patch and a shorter explanation on what you want to
-do change with it and why.
+>   and basically impossible for the users themselves, because they can't
+>   easily see where there is a real problem.
+
+Andreas,
+the -d option output has *never* ment to be used by a regular LVM user!
+
+It is ment to create an output for the developers and comparable experts because
+deep knowledge about the LVM internal concept, the library and the metadata
+is needed in order to be able to read debug output of such kind.
+
+This for sure includes well experienced users of LVM who have that
+knowledge too and therefore will likely know how to handle -d outputs.
+
+>   A good example of why too
+>   much output is an issue - until I had my own vgscan problem to debug,
+>   NOBODY noticed that lvm_dir_cache() didn't work properly, and was
+>   scanning devices each time it was called.
+
+Let's stay on the ground here!
+
+As we all know, in complex SW systems it is always possible, that things
+like that are overlooked.
+This is just an example that I don't have a code coverage tool in place :-(
+
+That's why as many tests as possible are necessary and appreciated!
+
+> - Overhead is overhead, no matter how small it seems to be.  When you
+>   start doing things many times for each disk, it slows things down,
+>   especially when you start having hundreds of disks.
+
+This is just an academic arguement, because we are talking 
+about a bunch of additional, likely not noticable *cpu cycles*!
+
+The fact that LVM commands run *very* seldom in the average case makes
+that even less perceptable.
+
+Even in times of bulk updates it is not a big deal,
+because shell scripts and the like delay LVM command starts.
+
+>   This is probably
+>   (in conjunction with the lvm_dir_cache() problem) the reason that the
+>   lvmtab* files were created - because it is too slow to access each
+>   disk dozens of times.
+
+This assumption is completely wrong!
+
+The reason to create the lvmtab* file cache was the Linux slowed down
+buffer cache behaviour when grown to its full possible size.
+
+lvmtab* function enable accessing the LVM metadata by one file read rather than
+multiple device reads which are much slower in case the buffer cache is
+heavily populated.
+
+>   However having data in lvmtab* different from
+>   on disk is itself a source of problems.
+
+So you argue here that caching is a problem in itself? (I doubt it ;-)
+
+Caches exist *because* there's higher priority performance reasons
+to do it rather than avoiding additional cache code which might be
+causing bugs potentially.
+That's why LVM has metadata caching implemented (and other commercial
+volume managers as well).
 
 
-On Tue, May 01, 2001 at 09:06:03AM +1000, Andrew Clausen wrote:
-> Hi,
-> 
-> I'm mainly looking at the userspace stuff here, because
-> that's what I'm interested in ;-)
-> 
-> Comments:
-> * liblvm.h is one monster file.  It would be nice to separate
-> it up into smaller pieces.  Say, one (or more!) files for
-> VG stuff, etc.
+> - If you have tools using "internal" liblvm routines (i.e. ones which do
+>   not check parameters), this means to me that the library interface is
+>   not defined correctly.
 
-Yep, makes sense.
+Which ones are you refering to here?
 
-We are about to split the library up into a directory hirarchy and
-therefor infividual .h files are likely anyway.
+The bare boned internal functions are defined in the same file
+as the external ones and are flagged as such.
 
-> 
-> * the .c files are in one directory.  They should be split
-> into subdirectories... makes it easier to find stuff
+>   There should be well defined interfaces to LVM
 
-See above.
+Yep, 4 years ago they were well defined IMO :-)
 
-> 
-> * lots of monster functions.  Monster functions are harder to
-> understand and maintain.
+But for sure if more than me start to think about the definition now, they
+could be even better defined ;-)
 
-That's not true.
-It was designed exactly the other way.
+>   (i.e. kernel interface routines, external interface routines, internal
+>   routines), and programs should only normally use external routines.
 
-The only functions which are "bigger" than 100 lines netto are:
+They do.
 
-- pv_release_pe()
-- vg_setup_for_extend()
-- vg_read_with_pv_and_lv()
-- pv_read_all_pv()
-- vg_cfgrestore()
-- pv_read_all_pv_of_vg()
-- lv_setup_for_extend()
-- vg_setup_for_split()
-- lv_setup_for_create()
-- lvm_error()
-- vg_cfgbackup()
-- pv_move_pe()
-- pv_move_pes()
+>   If they do anything else, and it breaks, they get to keep both pieces.
 
-Please remember: there are about *200* functions in the library.
-
-> 
-> I'll have a look at one function for you, so I can go a bit
-> more in depth:
-> 
-> lvm_add_dir_cache() in LVM/0.9.1_beta7/tools/lib/lvm_dir_cache.c
-> 
-> The function is about 50 lines, which is on the large side.
-
-50 lines == large function?
-
-> 
-> It is doing things on two layers of abstraction:
-> 	* high layer: calling high level things like 
-> 	lvm_dir_cache_hit(),
-> 	* lower layer: reallocating memory for the cache,
-> 	updating lower level variables, etc.
-> It is usually a bad thing to do things.
-
-Why?
-The code is small already.
-
-Anyway: I'm open for cleaner solutions and appreciate them.
-
-Could you provide a patch against LVM 0.9.1 Beta 7
-in order to ease integration?
-
-> The fact that the
-> function is also fairly large should have lead to a decision
-> to split it up, by putting the lower level stuff into (static)
-> helper functions.
-> 
-> The 4 layers of nesting also gives you a hint that you're
-> handling too many levels of abstraction ;-)
-
-That's an individual opinion on an individual scale ;-)
-
-> 
-> IMHO, the function should be roughly 10 lines, and the
-> lower level code taken out into helper functions.
-> 
-> Also, you have an inconsistent interface to lvm_dir_cache().
-> Most of the functions related to the lvm_dir_cache() are
-> named lvm_dir_cache_XXX(), but you have lvm_add_dir_cache().
-
-You've found a tiny notion bit.
+Not the case IMHO.
 
 > 
-> Also, some functions ask for a "dircache" parameter, and others
-> just use the global variable (since there is exactly one
-> cache anyway).
+> > This might be seen as an overhead but we should pay it because the
+> > LVM library is in principle designed to be used by different CLIs or GUIs.
+> > In this regard the checks need to stay in place in order to recognize bad
+> > actual arguments and to return an error code then.
 > 
-> Make up your mind!  In my example "cleaned version", I
-> chose to use the global variables.  I guess it doesn't
-> make a big difference (some ppl would argue global
-> variables evil blah blah blah...)
+> Yes, but only in _principle_ do other CLIs or GUIs use liblvm.
+
+Correct, didn't claim anything else, did I?
+
+> One reason
+> is that too much of the actual interface is inside the command-line commands.
+
+Nope, didn't design it this way.
+
+Maybe you are thinking of a new "super high level API" aka (SHLA), which is
+basically wrapping the tools, here?
+
+The tools call a couple of external library functions, check their return codes
+in order to be able to display reasonable error messages and return
+exit codes to the caller.
+
+If my assumption WRT SHLA is correct, we could change
+the tool code accordingly and add those new pvcreate(), lvcreate() etc.
+functions to the library.
+
+They needed to return new error codes then which could return status
+to new tools in order to enable them to display existing error messages
+and return the existing exit codes.
+
+The new tools in turn would be smaller; basically usage() and switch on
+new SHLA return code.
+
+
+> There is not a clear separation of what is part of the "interface" and what
+> is "internal" to liblvm.  This is clearly a problem because each CLI tool
+> is dependent upon the IOP version, which it should not be.
+
+The only reason is, because tools make direct use of metadata items today.
+
+My above idea based on the assumption of your possible SHLA could address
+it because it would wrap metadata in the library completely.
+
+Which solution do you have in mind complaining about liblvm this way?
+
 > 
-> So, something along the lines of:
+> > > In between, we should assume that it is correct
+> > > otherwise madness will quickly follow.
+> > 
+> > It depends on your definition of madness :-)
 > 
-> static int _dir_cache_init_entry (dir_cache_t *entry,
-> 				  char *dev_name) {
-> 	struct stat stat_b;
+> Well, if you are checking pv_name, vg_name, lv_name in each routine (even
+> in cases where we are passed *vg, when do you stop?  Maybe we should call
+> vg_check_consistency_with_pv_and_lv() at the start of every function?
+
+You can't do that in every place because needs differ.
+
+Just see my name checking example for this where
+vg_check_consistency_with_pv_and_lv() can't be used at that
+point, because the structure are not existing so far.
+The name is not even stored in the existing structures in case a configuration
+change is about to take place with vgextend, vgreduce, lvcreate and the like.
+
+> How
+> do you trust _anything_ that is passed as an argument to a function?  Just
+> because the name is OK, doesn't mean that any of the other data is OK????
+
+This is ensured by additional checking calls.
+
+My name checking example makes sense in the very place where it takes
+place *because* the goal is just to check for that very name to be able
+to exit with a clean error message in case the name's wrong.
+
+In other places a check of a structure using ??_check_consistency() functions
+will make sense.
+
 > 
-> 	if (stat (dev_name, &stat_b) == -1)
-> 		return FALSE;
-> 	if (lvm_check_dev (&stat_b, TRUE) == FALSE)
-> 		return FALSE;
+> What I'm saying is that the only way to do things safely is to ensure you
+> check data _once_ from wherever it is input, and thereafter it _has_ to be
+> correct so checking it again will not make it more correct, so is pointless.
+
+The data is checked once at every input.
+
+*But* it is a command line argument being input and checked or
+it is a function argument being input and checked.
+
+So it gets checked twice based on completely different needs and
+a some cpu cycles are spend on that once in a while.
+
+Keep in mind that even in times of bulk configuration changes,
+commands runs get delayed by shell loops or the like.
+
 > 
-> 	entry->dev_name = strdup (dev_name);
-> 	if (!entry->dev_name) {
-> 		fprintf (stderr, "malloc error in %s [line %d]\n",
->                          __FILE__, __LINE__);
-> 		return FALSE;
-> 	}
-> 	entry->st_rdev = stat_b.st_rdev;
-> 	entry->st_mode = stat_b.st_mode;
-> 	return TRUE;
-> }
-> 
-> static int _dir_cache_set_size (int size) {
-> 	dir_cache_t	*dir_cache_sav = dir_cache;
-> 
-> 	dir_cache = realloc (dir_cache,
-> 			     size * sizeof (dir_cache_t));
-> 	if (dir_cache) {
-> 		cache_size = size;
-> 		return TRUE;
-> 	} else {
-> 		fprintf (stderr, "realloc error in %s [line %d]\n",
->                          __FILE__, __LINE__);
-> 		return FALSE;
-> 	}
-> }
-> 
-> static int _dir_cache_set_entry (int num, dir_cache_t *entry) {
-> 	memcpy (&dir_cache [num], entry, sizeof (dir_cache_t));
-> 	return TRUE;
-> }
-> 
-> static int _dir_cache_append (dir_cache_t *entry) {
-> 	if (_dir_cache_set_size (cache_size + 1) == FALSE)
-> 		return FALSE;
-> 	return _dir_cache_set_entry (cache_size - 1, entry);
-> }
-> 
-> int lvm_dir_cache_add (char *dev_name) {
-> 	dir_cache_t	entry;
-> 
-> 	if (_dir_cache_init_entry (&entry, dev_name) == FALSE)
-> 		return FALSE;
-> 	if (lvm_dir_cache_hit (entry.st_rdev) == FALSE)
-> 		return _dir_cache_append (&entry);
-> 	return TRUE;
-> }
-> 
-> /* below: need to change the lvm_dir_cache_hit() interface */
-> 
-> Obviously, a lot of this is personal preference.  But, I think
-> the code here is much easier to understand, because each function
-> operates on exactly one level of abstraction, and the style
-> is consistent (we never pass around the dir_cache and cache_size
-> variables... they are global).
-> 
-> Further things to improve;
-> * more error handling could be added (why does stat fail?
-> etc.)
-> * common error handling - you probably want to have a more
-> convienient how to report errors than fprintf (stderr, ...).
-> You might be interested in the exception system in libparted
-> (it's very very small ;-)
-> * function entry / exit messages could be done with macros:
-> 
-> #define ENTER_FUNCTION \
-> 	debug_enter (__FUNCTION__ "() -- ENTERING\n");
-> #define LEAVE_FUNCTION(ret) \
-> 	do {	\
-> 		debug_leave (__FUNCTION__	\
-> 			     "() -- LEAVING with ret: %d\n", ret); \
-> 		return ret;	\
-> 	} while (0);
-> 
-> /dev/clausen
+> Cheers, Andreas
+> -- 
+> Andreas Dilger                               TurboLabs filesystem development
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
