@@ -1,10 +1,9 @@
-From: jon+lvm@silicide.dk
-Subject: Re: [linux-lvm] Long-term snapshots possible?
-Message-ID: <20030311204616.GB14278@gw.silicide.dk>
-References: <200303112228.39201.jhs@openenterprise.biz>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200303112228.39201.jhs@openenterprise.biz>
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <8075D5C3061B9441944E137377645118012E9A@cinshrexc03.shermfin.com>
+From: "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>
+Subject: [linux-lvm] Problems with snapshots
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,62 +14,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar 11 14:47:06 2003
+Date: Tue Mar 11 15:22:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Mar 11, 2003 at 10:28:38PM +0700, Jason Smith wrote:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
-> 
-> Hi.  Like many others, I'm interested in using LVM2 as a componet for a 
-> Linux-based file server.
+I've just implemented LVM 1.0.3 in the stock Red Hat 2.4.18-19 kernel
+and I believe I'm having issues with snapshots.  The past two nights my
+backups have locked up the machine hard and I had to power it off to get
+it back up.  This morning I forgot to remove the snapshot upon reboot
+and about 30 minutes after reboot the machine locked up again.  The
+backup script creates a 90G snapshot and this morning it has used ~18GB
+of that space.  This is the command that I use:
 
-i only have experience with the first lvm implementation, not with lvm2.
+lvcreate -L90G -c 128 -s -ncubssnap /dev/cubsvg00/cubslv00
 
+I have since removed the snapshot and the box has been happy since then.
+I am moving back to my old backup mehtod of suspending my database,
+copying files, and then resuming DB operations, but I would like to keep
+using snapshots. =20
 
-> When needed, I had hoped to sacrifice disk space for long-term filesystem 
-> snapshots, by creating multiple snapshots and rotating them out on 
-> perhaps a weekly basis.  The intent is to emulate the convenience and 
-> power of similar snapshot features in commercial file servers.
+Is there anything that I should look at to try to determine the problem?
+I have one VG on top of a software RAID10 array and one LV carved out of
+that with sufficient space left over for snapshots.  Here are the
+details of my setup.  If you need more information, please let me know.
 
-i used to do 4. Every hour, every 8 hour, every day, and every week.
-I gave up because it was too unstable. But since that there has been
-found a few bugs in lvm1 snapshots.
+Thanks for your help,
+Andy.
 
+Regards,
+Andrew Rechenberg
+Infrastructure Team, Sherman Financial Group
 
-> My problem is, this does not currently look possible without a severe 
-> performance hit.  If a volume has, for example, five active snapshots, 
-> then the deltas seem to get written five times, once per snapshot volume.
+-------------------------------------------------
 
-How would you not do that ? You have to store the snapshots some how.
-
-
-> Alternatively, I could use meta-snapshots, but they are not currently 
-> implemented, and that idea sounds klugy.
-
-meta snapshots ?
-
-
-> So then do the LVM developers and users recommend against multiple 
-> concurrent snapshots of a volume?  Should I keep hope for this great 
-> feature, only found in commercial file servers?
-
-well, if you need it you can either implement it yourself, or possibly
-find someone who can do it for you.
-
-
-> Thanks for any input.
-
-Until this get made you can simulate this, though with the exception
-that it will take a little time, and use linear to the number of snapshots
-extra space.
-You take a snapshot. Then you create another LV, mkfs it, and rsync the data
-from the snapshot to the new LV. When that is done you have a "snapshot"
-that doesnt take cpu time and performance, just space.
-
+[root@cinshrcub01 ~]# vgdisplay /dev/cubsvg00
+--- Volume group ---
+VG Name               cubsvg00
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           1023.97 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               440.53 GB
+PE Size               16 MB
+Total PE              28194
+Alloc PE / Size       22400 / 350 GB
+Free  PE / Size       5794 / 90.53 GB
+VG UUID               bOuvON-9uze-9Zz8-LW0b-xkWK-z87E-L7r0V1
 
 
-JonB
+[root@cinshrcub01 ~]# lvdisplay /dev/cubsvg00/cubslv00
+--- Logical volume ---
+LV Name                /dev/cubsvg00/cubslv00
+VG Name                cubsvg00
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                350 GB
+Current LE             22400
+Allocated LE           22400
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
