@@ -1,8 +1,11 @@
-Date: Mon, 24 Sep 2001 08:57:35 -0500
-From: Mark Bainter <mark-lvm@cymry.org>
-Message-ID: <20010924085734.Y2634@firinn.org>
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Sun, 23 Sep 2001 22:17:29 -0600
+Subject: Re: [linux-lvm] e2fsck probs with LVM and 2.4.9-ac9+
+Message-ID: <20010923221729.U14526@turbolinux.com>
+References: <Pine.LNX.4.21.0109221900090.23118-100000@zeke.goatskin.org>
 Mime-Version: 1.0
-Subject: [linux-lvm] Fix for 2.4.10 compile problem
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0109221900090.23118-100000@zeke.goatskin.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,11 +21,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Looking at the patch it seems they changed the min definition to
-not have a type argument, and created a new macro called min_t
-that takes a type argument.  Changing the two instances of 
-min() to min_t() allowed 2.4.10 to compile fine on my machine.
+On Sep 22, 2001  19:11 -0400, Shane Shrybman wrote:
+> When I attempted to upgrade to 2.4.9-ac9 and ac14 from 2.4.9-ac6 I ran
+> into a problem.
+> 
+> With either of these kernels (I didn't try any others between ac6 and
+> ac14) the kernel boots fine and lvm-mod gets loaded ok but when the first
+> filesystem that is on an lv gets mounted e2fsck complains and drops me to
+> admin prompt. The error message is something like this:
+> 
+> The filesystem size (according to the superblock) is 524288 blocks
+> the physical size of the device is 57344
+> ...
+> 
+> When I reboot back into 2.4.9-ac6 everything is fine after e2fsck.
+> 
+> I have e2fsprogs version 1.19, do I need a more recent version?
 
-Dunno if this is the right answer, or if the type argument isn't
-really needed and can be deleted from those two instances, but I
-do know it compiles. ;-)
+That depends on how big you expect the devices to be.  I would suspect
+an LVM error, but it is hard to say which one causes the problem.  If
+you boot your old kernel, do lvscan, and compare to output of lvscan
+on new kernel.  Likewise output of /proc/partitions and "df" to see
+how big each LV should be.
+
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
