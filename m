@@ -1,10 +1,10 @@
-From: Andreas Dilger <adilger@clusterfs.com>
-Subject: Re: [linux-lvm] e2fsadm and snapshots?
-Message-ID: <20021101044736.GB554@clusterfs.com>
-References: <1036105045.10397.68.camel@theory.jpl.nasa.gov> <20021031232551.GG23959@clusterfs.com> <1036112887.10402.88.camel@theory.jpl.nasa.gov>
+Subject: Re: [linux-lvm] Is there a LVM(2?) patch for 2.5.x yet?
+Message-ID: <20021001075107.GA1112@fib011235813.fsnet.co.uk>
+References: <1033405512.27834.25.camel@UberGeek.coremetrics.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1036112887.10402.88.camel@theory.jpl.nasa.gov>
+In-Reply-To: <1033405512.27834.25.camel@UberGeek.coremetrics.com>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 31 22:51:02 2002
+Date: Tue Oct  1 02:52:07 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jim King <jrk@mipl.jpl.nasa.gov>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Oct 31, 2002  17:08 -0800, Jim King wrote:
-> On Thu, 2002-10-31 at 15:25, Andreas Dilger wrote:
-> > The LVM snapshot is the whole filesystem (with only the parts that
-> > actually change being written to the snapshot LV) - no need to change
-> > the filesystem size at all.  All you need to change is the LV size.
-> 
-> OK -- so using lvextend I can extend it. But once it's extended, I can
-> no longer mount it. I get:
-> 
->   mount: wrong fs type, bad option, bad superblock on
->     /dev/data1/.mer_dev.hourly.3, or too many mounted file systems
-> 
-> Is there something I'm missing here? (ok -- obviously yes...)
+On Mon, Sep 30, 2002 at 12:05:13PM -0500, Austin Gonyou wrote:
+> I really need to test 2.5.x and I can't ATM because of LVM patch
+> problems. Can someone tell me what's going on with LVM and 2.5?
 
-You must have gotten some sort of error in the syslog after this
-(dmesg will show you).
+I have device-mapper running under 2.5 ATM, hopefully I'll be pushing
+it towards Linus in the next week or so once I've tidied the block
+splitting code a bit more.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
-http://sourceforge.net/projects/ext2resize/
+Would you be interested in testing what I have ?  It would be very
+helpful if you could.
+
+- Joe
