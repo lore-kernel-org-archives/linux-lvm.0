@@ -1,10 +1,9 @@
-Date: Mon, 24 Sep 2001 13:23:48 +0200 (MET DST)
-From: Thomas Svedberg <thsv@math.chalmers.se>
-Subject: Re: [linux-lvm] Lost VG after failed pvmove
-In-Reply-To: <20010924122705.A30375@sistina.com>
-Message-ID: <Pine.SOL.4.30.0109241320540.27866-100000@napier.math.chalmers.se>
+Message-ID: <71B659EFA1EAD311932700508B6460B9017A5204@mailman.isoft.intranet.gr>
+From: "Tsipnis Antonis  (antonis.tsipnis@intrasoft.com)"
+	 <antonis.tsipnis@intrasoft.com>
+Date: Mon, 24 Sep 2001 15:06:31 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Linux File System
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,38 +15,17 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@Sistina.com
 
-On Mon, 24 Sep 2001, Heinz J . Mauelshagen wrote:
+Hi there !
+I have installed the LVM tools on a Mandrake Linux system. After the
+creation of a volume group, and the succesfull creation of a logical volume
+I have tried to add a filesystem within this logical volume. After mounting
+the file system, I have this problem: after I have used half of the file
+system's free space, system reports that file system is full (!) although I
+can see with "df -k" that there is still enough space available. I would
+apreciate any help,
 
-> you need to vgcfgrestore the metadata backaup to *all* of the PVs which=
- belonged
-> to the VG at the time the backup was created.
-
-OK, this was my error, I only used it on the pv I found damaged.
-
-This + using the uuid_fixer made it work again.
-Thank you very much for this!
-
-> In regard to the pvmove error: do you have the particular error output =
-it gave?
-
-No, all I remember it was a very short or even noninformative message :-<
-
-I will do a backup tonight and then try pvmove again. If I get an error I
-will surely let you know!
-
-Thank you again!
-
-/ Thomas
-.......................................................................
- Thomas Svedberg
- Department of Mathematics
- Chalmers University of Technology
-
- Address: SE-412 96 G=F6teborg, SWEDEN
- E-mail : thsv@bigfoot.com, thsv@math.chalmers.se
- Phone  : +46 31 772 5368
- Fax    : +46 31 772 3595
-.......................................................................
+Antony Tsipnis.
