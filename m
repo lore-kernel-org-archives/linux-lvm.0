@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] Driver vs. Not Active Groups
-Message-ID: <20020801162857.GB627@fib011235813.fsnet.co.uk>
-References: <3D495F05.EA6A374F@blarg.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3D495F05.EA6A374F@blarg.net>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: d.levitin@gmx.de
+MIME-Version: 1.0
+Message-ID: <9732.1028372252@www42.gmx.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +14,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug  1 11:28:01 2002
+Date: Sat Aug  3 05:56:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Aug 01, 2002 at 09:17:09AM -0700, ronr wrote:
-> I am attempting to implement lvm (Linux kernel 2.4.5 Slackware 8.0)
-> using 2 drives for linux (lilo uses MBR on a 3rd).  After partitioning
-> the drive, which will become (via copy from current drive) the new home
-> for the system under lvm (/, /usr, /var, /opt, /tmp, /home ext2fs), I
-> pvcreated all ok.  When attempting to vgcreate, the volume groups
-> were not activated with vgcreate and vgchange -a y has no effect either.
-> 
-> When querying alt.os.linux.slackware all I got was suggestions to
-> install
-> 2.4.18 plus 1.0 lvm.  I would like not to do this, especially since lvm2
-> 
-> is coming out soon, if I can so as not to introduce further
-> idiosyncrasies (this is a test box).  You would aid my decisioning if
-> you can tell me:
-> is it ok to have an lvm driver (per /proc/lvm/global) at 0.9.1_beta2
-> when
-> the lvm tools appear to be (per pvcreate -V) 0.9.1_beta6?  Could this
-> the
-> cause of inactivity with vgcreate?
+Hello,
+I have a problem with my vg00 - the LVM doesn't have it any more. I found
+such postings in the list archive, but I don't want to restore - as I think.
+To the problem: 
+I had 10 disks in my Computer (/dev/sda.../dev/sdj) in the vg00. Then I have
+2 of them (/dev/sdj and /dev/sdi) unplugged. I hoped it would be no problem
+for the LVM to work with the rest 8, but it doesn't do. I dont' worry about
+the volumes on the sdi and sdj, but the other volumes are a problem...
+So why the LVM dosn't see the other disks as well?
 
-Have you created any volumes with lvcreate ?
+Thanks a lot for your help
+Dmitri
+ 
 
-- Joe
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data
+of volume group "vg00" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your
+volume group
+
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sda4"  is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- inactive PV "/dev/sdb3"  is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- inactive PV "/dev/sdc"   is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- inactive PV "/dev/sdd"   is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- inactive PV "/dev/sde"   is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- inactive PV "/dev/sdf"   is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- inactive PV "/dev/sdg"   is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- inactive PV "/dev/sdh"   is associated to unknown VG "vg00"
+(run vgscan)
+pvscan -- total: 8 [200.21 GB] / in use: 8 [200.21 GB] / in no VG: 0
+[0]
+
+
+-- 
+GMX - Die Kommunikationsplattform im Internet.
+http://www.gmx.net
