@@ -1,12 +1,10 @@
-Subject: Re: [linux-lvm] lvm on linux RAID5?
-From: Anders Henriksson <anders.henriksson@xelin.se>
-In-Reply-To: <3DAE79B3.F19BBF21@silicide.dk>
-References: <1034773372.1658.8.camel@frodo.xelin.se> 
-	<3DAD6971.3040305@ednet.ns.ca> <1034779135.1652.13.camel@frodo.xelin.se> 
-	<3DAE79B3.F19BBF21@silicide.dk>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1034859636.1652.75.camel@lap-13.ida.liu.se>
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] LVM on ATA-Raid Working - but Poorly
+Message-ID: <20021017135619.A5674@zealot.blacknet.de>
+References: <1034830214.3dae418604fe5@mail.dornquast.com>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1034830214.3dae418604fe5@mail.dornquast.com>; from Nathan@Aberon.Net on Wed, Oct 16, 2002 at 11:50:14PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,33 +15,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 06:06:25 2002
+Date: Thu Oct 17 07:04:41 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-<snip>
+On Wed, Oct 16 '02 at 23:50, Nathan Dornquast wrote:
+> After creating LVM Vol Group (VG1) and single Log. Vol (lvol1) on ataraid 
+> mirrored drives (/dev/ataraid/d0p3) only one drives seems to get used.
+> [ ... ]
+> 7. Run pvscan: Reports
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/ataraid/d0p3" is in no VG  [109.32 GB]
+> pvscan -- inactive PV "/dev/hdc3"         is in no VG  [109.32 GB]
+> pvscan -- ACTIVE PV "/dev/hda3"         is in no VG  [109.32 GB]
+> pvscan -- total: 3 [327.96 GB] / in use: 3 [327.96 GB] / in no VG: 0 [0] 
+That's not an LVM problem, but still ...
 
-> > > What kind of machine did you manage to get 4 RAID5 arrays into?
-> > 
-> > It is actually not that hard, take your one array and split it into 4.
-> > I have 4 discs which are split into 4 raid partitions each.
-> 
-> Why would you split the raid, for then just to run LVM ontop of it ?
+You've two options:
+- throw away the ataraid card, it is broken by design and get either a
+  real RAID card (e.g. 3ware) or use the kernel based MD drivers
+- if you want to keep the ataraid card, remove the regular ide drivers
+  from your kernel. both drivers access the SAME hardware and make it
+  available in two DIFFERENT locations. As the two drives /dev/hda and
+  /dev/hdc and as the RAID1 drive /dev/ataraid/d0*
+  as you have learned, the /dev/hd[ac] are much prefered and screw up
+  your raid setup. OTOH you might be able to change the order the
+  devices are tested in the LVM source code.
 
-Just to have the flexibility to shrink the array and reuse partitions
-for other purposes if needed, the same reason I have for wanting to use
-lvm in the first place, just plain simple flexibility.
-
-/Anders 
-> 
-> 
-> 
-> JonB
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+I'm running 4 boxes with MD based RAID1 discs (and 2 with RAID5) and 2
+boxes with 3ware RAID1 (and one with RAID5) all with LVM and did never
+have any trouble. 
+If you want a cheap hardware RAID1-IDE solution the promise fasttrack
+come with their own (I think closed source) driver that emulates a scsi
+disk. As the IDE driver ignores the fasttrtack you can have a working,
+bootable RAID1 setup with this cards. OTOH the 3ware is only 10-20$ more
+expensive and comes with a cool monitoring tool. But if you get a
+mainboard with a fasttrack controller it might be an interesting
+solution. ... I would still get a 3ware ...
+-- 
+Goetz Bock       (c) 2002 as     blacknet.de - Munich - Germany   /"\
+IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
+                                                                   X
+ ASCII Ribbon Campaign against HTML email & microsoft attachments / \
