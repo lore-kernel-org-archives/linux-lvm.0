@@ -1,11 +1,8 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-ID: <95154593687.20021106141700@tnonline.net>
-Subject: Re: [linux-lvm] LV Fragmentation determination
-In-Reply-To: <20021106135537.A1228@sistina.com>
-References: <Pine.LNX.4.44.0211060108110.8692-100000@junior.lunanet.biz>
- <20021106135537.A1228@sistina.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Per Kristiansen <per@gathering.org>
+Message-ID: <20021106142554.N30327@gathering.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Changing Controller and also device names
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,22 +13,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov  6 07:17:01 2002
+Date: Wed Nov  6 07:27:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "Heinz J . Mauelshagen" <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
->> First off, can LV's become fragmented across a PV/VG? If yes then...
+Got a fun problem here.
 
-> Yes, they can.
+I have a IDE controller that I have hooked up 7 disks to.
 
->> 
->> I'm looking for an easy way to determine how fragmented an LV might been
->> inside the VG. Is there any command I can run that'll give me nice
->> estimate on this?
+Now I've found that the controller is acting VERY strange, and want to exchange it with
+another one.
 
-> You can analyze the "lvdisplay -v" output on your LVs in question.
-> That shows you the mapping information and therefore, if your LVs are
-> fragemented.
 
-Will LVM include a defragment procedure?
+Today I have:
+
+PV Name (#)           /dev/hdk1 (5)
+PV Status             available / allocatable
+Total PE / Free PE    3680 / 0
+
+PV Name (#)           /dev/hdl1 (7)
+PV Status             available / allocatable
+Total PE / Free PE    2980 / 0
+
+PV Name (#)           /dev/hdi1 (1)
+PV Status             available / allocatable
+Total PE / Free PE    3680 / 0
+
+PV Name (#)           /dev/hdj1 (2)
+PV Status             available / allocatable
+Total PE / Free PE    3680 / 0
+
+PV Name (#)           /dev/hdg1 (4)
+PV Status             available / allocatable
+Total PE / Free PE    3576 / 0
+
+PV Name (#)           /dev/hde1 (6)
+PV Status             available / allocatable
+Total PE / Free PE    3576 / 0
+
+PV Name (#)           /dev/hdf1 (3)
+PV Status             available / allocatable
+Total PE / Free PE    3576 / 0
+
+
+Do I need to take SPECIAL care to get the same device names  when I move the disks to the new controller
+or can it find the data it needs using vgscan/pvscan ?
+
+and no...
+no raid or anything..it's not really a critical server as everything is backed up everyday.
+
+-- 
+Per Kristiansen
+per@gathering.org
