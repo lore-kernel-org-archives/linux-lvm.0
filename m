@@ -1,11 +1,9 @@
-Return-Path: <tandem@dnmi.no>
-Subject: Re: [linux-lvm] segfaults and "VGDATA .. inconsistent" beta7 tools
-References: <Pine.LNX.4.33.0105150857180.24660-100000@rossi.itg.ie>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 15 May 2001 11:33:39 +0200
-In-Reply-To: Paul Jakma's message of "Tue, 15 May 2001 09:04:54 +0100 (IST)"
-Message-ID: <wvvgn3ez2k.fsf@freeze.oslo.dnmi.no>
+Return-Path: <bruck@suse.de>
+Date: Tue, 15 May 2001 15:20:51 +0200 (CEST)
+From: Jens Bruckmann <bruck@suse.de>
+Message-ID: <Pine.LNX.4.31.0105151507530.2334-100000@dgently.hh.suse.de>
 MIME-Version: 1.0
+Subject: [linux-lvm] Software RAID and LVM hangs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,25 +15,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Paul" == Paul Jakma <paulj@itg.ie> writes:
+Hallo,
 
-    Paul> I have the same problem with 2 machines.  They are both
-    Paul> running 2.4.5-pre1 with LVM 0.9.1beta7 patch applied and the
-    Paul> beta7 RPMs. On boot they run vgscan then vgchange -ay. (and
-    Paul> i've tried running pvscan too)
+I have problems using software-RAID and LVM. We have connected two HP
+XP256 via two fiber channel controllers and want to mirror from one
+storage-box to the other. So I set up a RAID1-device /dev/md0 which
+mirrors from one LUN of the 1st box to another LUN in the 2nd box. After
+that, I set up a VG on that device with one LV.
 
-My usual suggestion - have you checked the kernel logs for any other
-problems, IDE/SCSI, ...
+So far, all works fine.
 
-Sincerely,
+Then we tested, what happens, if one link to one of the two boxes fails
+and we saw, that the software raid does not continue working if one link
+is down. As I understand, the RAID1 should go on working on the second
+copy and do a resync after the failed connection returns (that's what I
+know from HP-UX with MirrorDisk/UX).
 
-Adrian Phillips
+In /proc/mdstat you cannot see any hint, that one link is broken.
 
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Do you have any solutions for this behaviour. Otherwise it would not make
+any sense to use the software-raid in a high-availability environment.
+
+Thanks a lot.....
+
+Bye,
+
+	Jens
+
+
+
+-----------------------------------------------------------------------
+Jens Bruckmann              .-.       Mail:    jens.bruckmann@suse.de
+SuSE Linux Solutions AG     /v\       Phone:   +49 - 40 - 89 69 82 18
+Friesenweg 5F              // \\      Fax:     +49 - 40 - 85 40 04 35
+D-22763 Hamburg           /(   )\
+                           ^^-^^
+-----------------------------------------------------------------------
