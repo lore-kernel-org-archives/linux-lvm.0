@@ -1,53 +1,69 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Message-Id: <200007190520.e6J5KIJ08751@webber.adilger.net>
+Date: Wed, 19 Jul 2000 09:51:23 +0200
+From: =?iso-8859-1?Q?Erik_B=E5gfors?= <bagfors@pdc.kth.se>
 Subject: Re: [linux-lvm] made a big misstake
-In-Reply-To: <39752C4D.D07D0F2C@marxmeier.com> "from Michael Marxmeier at Jul
- 19, 2000 06:19:25 am"
-Date: Tue, 18 Jul 2000 23:20:18 -0600 (MDT)
-MIME-Version: 1.0
+Message-ID: <20000719095123.A14554@zyrgelkwyt.pdc.kth.se>
+References: <20000718231557.B13413@zyrgelkwyt.pdc.kth.se> <200007182302.e6IN2m930146@webber.adilger.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <200007182302.e6IN2m930146@webber.adilger.net>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Michael Marxmeier <mike@msede.com>
-Cc: linux-lvm@marxmeier.com, bagfors@pdc.kth.se
+Content-Type: text/plain; charset="iso-8859-1"
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: =?iso-8859-1?Q?Erik_B=E5gfors?= <bagfors@pdc.kth.se>, linux-lvm@msede.com
 
-Michael writes:
-> Andreas Dilger wrote:
-> > Was hdb1 the first PV created in the VG?  The problem, I think, is that
-> > Linux LVM only keeps the VGDA on the first PV.  AIX will keep a VGDA
-> > copy on all of the PVs, and even will keep 2 VGDAs on the first PV for
-> > backup, in case the first one is corrupt.
-> 
-> Actually, LVM should have a copy of the dscriptor area. It is kept in
-> the file system in the directory /etc/lvmconf which even has the nice
-> property that you can back it up. The VGDA is implecitely backed up by 
-> most LVM  commands. 
-> 
-> You should be able to restore them with vgcfgrestore.
-> The vgcfgrestore syntax seems to sugest you can even restore it
-> to another physical volume (no tested, personally) which would
-> solve the actual problem nicely.
+On Tue, Jul 18, 2000 at 05:02:47PM -0600, Andreas Dilger wrote:
+> Erik writes:
+> > I just installed a new computer the other day and since I'm a long time
+> > aix-user and love there lvm-system I installed the linux-lvm.
+> >=20
+> > So far I am VERY impressed.  I've tried resizeing and moving end extend=
+ing
+> > and all kinds of stuff and everything worked!! Good work!!!
+>=20
+> Online resize and move, or offline?  I'm not sure if online moving of PEs
+> is really safe if the filesystem is being used.  Of course, it is safe if
+> the PE doesn't change while it is being moved...
 
-Unfortunately, I didn't quote all of the original message.  One part you
-must have missed from the original posting:
+The resize was done offline but the move was online.  But I didn't use the
+box while doing it so I don't thing there is any danger there.
 
-> > Eric writes:
-> > > I was thinking that creating a new pv (on /dev/hdb1) and running 
-> > > vgcfgrestore -n disk_vg /dev/hdb1 would help me get it back but it just
-> > > say that "size of physical volume /dev/hdb1 differs from backup" and I
-> > > cannot remember what size I had last time
+> > Now the misstake, I did not run a vgreduce before I fdisk'ed the whole =
 
-So vgcfgrestore is not useful in this case, since it can't be restored to
-the new partition or to the other PV in the VG.  Having a VGDA on each PV
-in a VG would solve this problem.  It would also fix the major problem
-that would happen if the VGDA for the root filesystem/VG is corrupt - you
-cannot access the VGDA backups in /etc/lvmconf in this case at all, and
-even a rescue disk will not help you because the VG layout is not known.
+> > disk (hdb).  Now when I start up, vgscan cannot find any vg's.
+>=20
+> Was hdb1 the first PV created in the VG?  The problem, I think, is that
+> Linux LVM only keeps the VGDA on the first PV.  AIX will keep a VGDA
+> copy on all of the PVs, and even will keep 2 VGDAs on the first PV for
+> backup, in case the first one is corrupt.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Ahh..
+No.. hdb1 was not the first PV in the VG.  So I should be safe since it was
+hdb1 I removed.
+
+> > So.. anyone knows how to solve this?  Sorry I don't have better output =
+from
+> > my commands but it's hard since the network is not working on it right =
+now :)
+>=20
+> Sorry, I don't know enough about how the VGDA backups are stored.  You may
+> be able to examine the VGDA backup to find the old size of /dev/hdb1 and
+> then restore it, but otherwise I'm not sure what you can do.
+
+That's what I was thinking too but it's in a binary format I know nothing
+about.
+
+> I think Linux LVM needs to be updated to keep VGDA backups on all disks
+> instead of in the filesystem, exactly for reasons like this.  Right now,
+> if the first disk fails, then you are unable to access any LVs that are
+> wholly on another disk.  This is bad.
+
+Agreed.
+
+/Erik
+--=20
+Erik B=EF=BF=BDgfors               | Center for Parallel Computers
+http://erik.bagfors.nu/    | http://www.pdc.kth.se/
+erik@bagfors.nu            | bagfors@pdc.kth.se =20
+Supporter of free software | GSM +46 70 398 54 43=20
