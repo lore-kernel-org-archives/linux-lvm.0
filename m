@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM and HD-crash
-Message-ID: <20011109102024.B19131@sistina.com>
-References: <200111081420.fA8EKcu06482@mailgate5.cinetic.de>
+Subject: Re: [linux-lvm] DOH! NT's fixboot killed PV
+Message-ID: <20011109102410.C19131@sistina.com>
+References: <Pine.LNX.4.33.0111080415060.13338-100000@vaixcon.net>
 Mime-Version: 1.0
-In-Reply-To: <200111081420.fA8EKcu06482@mailgate5.cinetic.de>; from mnospers@web.de on Thu, Nov 08, 2001 at 03:20:38PM +0100
+In-Reply-To: <Pine.LNX.4.33.0111080415060.13338-100000@vaixcon.net>; from jomarqua@vaixcon.net on Thu, Nov 08, 2001 at 04:22:42AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +14,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  9 03:24:02 2001
+Date: Fri Nov  9 03:28:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Markus,
+John,
 
-you need to replace the failed drive, set up the same partition table
-you had on the gone one and vgcfgrestore(8) LVMs metadata to it.
-See the manual page of vgcfgrestore for details.
-vgscan + "vgchange -ay" should then bring your VG back to life.
+hoping that the FAT metadata is small enough not to overwrite any LVM
+extents, you should try a "pvcreate -f /dev/hda1" and rerun the
+"vgcfgrestore;vgscan;vgchange -ay" cycle.
 
-Getting data back makes only sense, if you've got LVs, which *don't* have any
-extents allocated on the gone drive. Otherwise your filesystem
-stored in there will complain loudly cause of missing data and metadata.
-
-If you need more redundancy, please think of soft/hard RAID.
+pvcreate is necessary, because vgcfgrestore needs a valid LVM PV structure.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-On Thu, Nov 08, 2001 at 03:20:38PM +0100, mnospers@web.de wrote:
-> Hi
+On Thu, Nov 08, 2001 at 04:22:42AM -0500, John Marquart wrote:
+> Hello,
+> 	Through my own carelessness  - my helper ended up running w2k's
+> fixboot program on my rootvg's primary PV.  It wrote FAT info of some sort
+> to the header area of my /dev/hda1 partition.
 > 
-> I've a little question... I know, it could be answered in the past,
-> but I didn't found it :( 
-> What about Crashes of Harddisks in a LVM ?
-> I have 3 HDs in it, and one seemes to be crashed.
-> All the 3 where together in one big LV.
-> Is there any possibilitie to get some of the data back ?
-> I mean, the data of the 2 working HDs ? 
-> Or doI have to accept, that all data on the 3 disks is lost?
+> I am (desperately) hoping that there is some way to recover this header
+> info. (And that ppl on this list can aide me.)
 > 
-> thx
-> Markus
+> I thought perhaps the way to go about it was to do a vgcfgrestore ..
+> however I had no luck - when i ran it w/ the -l / -l -l flags - it would
+> show me the correct info - but if i ran it w/out the -l flags - then it
+> would give me the following error:
 > 
-> ______________________________________________________________________________
-> Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr!
-> Beim WEB.DE Lottoservice: http://tippen2.web.de/?x=7
+> ERROR "pv_read(): PV identifier invalid" reading physical volumes
+> 
+> I get the same error if I try to do pvscan.
+> 
+> pvdata shows that things are FUBAR - w/ a UUID of something like "0
+> NAME-     -FAT1-2   - <GARBAGE>" - but I know the proper identifier is in
+> the cfg backup file - since it can be displayed and is
+> "Nku12O-iI1H-Ee4v-Lpa0-SxtF-31z)-xZs7sr"
+> 
+> 
+> If anyone could provide tips / directions on how to go about fixing this
+> problem - I would be very greatful - I just finally got the system
+> built/installed to my satisfaction and would hate to start over.
+> 
+> tia,
+> -john marquart
+> 
+> 
+> 
+> ps.  Bill & Ted rule!
+> 
 > 
 > 
 > _______________________________________________
