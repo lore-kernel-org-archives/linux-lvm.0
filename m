@@ -1,18 +1,25 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i595IH018676
-	for <linux-lvm@redhat.com>; Wed, 9 Jun 2004 01:18:17 -0400
-Received: from klyukin.com (adsl-065-013-046-003.sip.mia.bellsouth.net
-	[65.13.46.3])
-	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i595IBXn014102
-	for <linux-lvm@redhat.com>; Wed, 9 Jun 2004 01:18:12 -0400
-Message-ID: <40C69D8E.3000407@staff.theuseful.com>
-Date: Wed, 09 Jun 2004 01:18:06 -0400
-From: Yaroslav Klyukin <yklyukin@staff.theuseful.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM2 snapshots on SUSE
-References: <BAY9-F23HVZSOJl6byo00000c3a@hotmail.com>
-In-Reply-To: <BAY9-F23HVZSOJl6byo00000c3a@hotmail.com>
-Content-Transfer-Encoding: quoted-printable
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i58IIr025546
+	for <linux-lvm@redhat.com>; Tue, 8 Jun 2004 14:18:53 -0400
+Received: from polop.usc.edu (polop.usc.edu [128.125.10.9])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i58IIlXn012004
+	for <linux-lvm@redhat.com>; Tue, 8 Jun 2004 14:18:47 -0400
+Received: from polop.usc.edu (localhost.localdomain [127.0.0.1])
+	by polop.usc.edu (8.12.11/8.12.11) with ESMTP id i58IIks3006232
+	for <linux-lvm@redhat.com>; Tue, 8 Jun 2004 11:18:46 -0700
+Received: (from garrick@localhost)
+	by polop.usc.edu (8.12.11/8.12.11/Submit) id i58IIjc8006230
+	for linux-lvm@redhat.com; Tue, 8 Jun 2004 11:18:45 -0700
+Date: Tue, 8 Jun 2004 11:18:45 -0700
+From: Garrick Staples <garrick@usc.edu>
+Subject: Re: [linux-lvm] (no subject)
+Message-ID: <20040608181845.GQ27898@polop.usc.edu>
+References: <003401c44d82$50b409c0$6401a8c0@JERRY>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oOINc+Z9LTvKzseX"
+Content-Disposition: inline
+In-Reply-To: <003401c44d82$50b409c0$6401a8c0@JERRY>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,36 +30,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Max Beerli wrote:
-> I'd like to try SUSE 9.1 this weekend and noticed that it supports LVM2=20
-> during and after installation. Does anyone here have any experience=20
-> using LVM2 and SUSE 9.1 together? Any opinions, hints or other helpful=20
-> advice? I'm mainly asking because I found this in the mailing list=20
 
-I have not tried SuSE's stock kernel, because the first thing that I do=20
-when I install Linux distribution is to build kernel from kernel.org
+--oOINc+Z9LTvKzseX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But I assume it is going to work just fine.
+On Tue, Jun 08, 2004 at 01:59:16PM -0400, Jerry Hardwick alleged:
+> I HAVE TRIED EVERYTHING POSSIBLE TO UNSUBSCRIBE TO THIS WITHOUT SUCCESS. =
+ I
+> DO NOT HAVE MY PASSWORD, SO I HAVE REQUESTED IT TWICE,  SAYS IT WILL EMAI=
+L ME
+> BACK, BUT NEVER DOES.  WHAT ELSE CAN I DO OR IS THERE SOMEONE I CAN CALL.
+> THANKS, JERRY
 
+Don't suppose you had the caps lock while typing your password? :)
 
-> archives https://www.redhat.com/archives/linux-lvm/2004-June/msg00019.html
->=20
-> I don't know if SUSE might be limited in some way also. TIA all!!
->=20
-> _________________________________________________________________
-> MSN Premium with Virus Guard and Firewall* from McAfee=EF=BF=BD Security =
-: 2=20
-> months FREE*  =20
-> http://join.msn.com/?pgmarket=3Den-ca&page=3Dbyoa/prem&xAPID=3D1994&DI=3D=
-1034&SU=3Dhttp://hotmail.com/enca&HL=3DMarket_MSNIS_Taglines=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
+--=20
+Garrick Staples, Linux/HPCC Administrator
+University of Southern California
+
+--oOINc+Z9LTvKzseX
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
+
+iD8DBQFAxgMF0SBUxJbm9HMRAo51AJ0SpUTNp90o8bMc7UL6i9JlVnC/qACgpnUr
+rZI8VVF7X+GfE5JOd5SOMYE=
+=M/vb
+-----END PGP SIGNATURE-----
+
+--oOINc+Z9LTvKzseX--
