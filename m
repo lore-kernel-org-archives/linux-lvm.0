@@ -1,7 +1,9 @@
-Message-Id: <5.2.0.9.0.20031103225927.01cbecb0@mail.mame.net>
-From: Karl Stenerud <kstenerud@mame.net>
-Mime-Version: 1.0
-Subject: [linux-lvm] LVM inaccessible after OS reinstall
+From: Kevin Buyting <rotaticus@web.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200311031840.36724.rotaticus@web.de>
+Subject: [linux-lvm] lvextend doesn't extend the first time ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,102 +14,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  3 08:25:02 2003
+Date: Mon Nov  3 11:41:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I recently installed Mandrake 9.2 when I discovered my current linux 
-install would not support my serial ATA card and drive.
+gentoo 1.4
+vanilla-sources 2.4.22
+lvm-user 1.0.7-r1
 
-After installing it, I decided to try out LVM.  I created a group using 4 
-harddrives (using entire disk, no partitioning), set up a volume, and 
-formatted it with reiserfs.
-Actually I started with 1 volume on the empty drive, moved the data from a 
-full drive over, prepped and added that drive etc.
+I am trying to extend my /dev/vg/lv01 (EXT3) by 3Gig's so i did a 
 
-Unfortunately, Mandrake sucks so bad that it fragged the menus on all 
-desktops when I tried to run the system update, leaving me with no shell 
-access and such.
-I did the ctrl-alt-f8 to get to a console shell and copied my /etc 
-directory to another drive, then proceeded to reinstall the OS 
-(approximately 40 times before I figured out the magical incantations 
-necessary to make it not blow up in my face).
-Note that the OS iteself was not on an LVM (hda is a normal, partitioned 
-disk). The LVM group is on hde, hdi, hdj, and hdk.
+# lvextend -L +3G /dev/vg/lv01
 
-Now that I have Mandrake behaving itself (sort of), I want to mount the LVM 
-group again.  Unfortunately I can't seem to get Linux to mount it without 
-complaining about not being able to reach a certain sector =(
+then
 
-I activated the group, did a vgscan and pvscan which created the /dev 
-entries and some /etc entries, but if I try to mount it (/dev/group1/vol1), 
-it sits there and does nothing (I waited 40 minutes before giving up).
-If I run fsck.reiserfs on it, it sits busy for about 5-10 minutes and then 
-complains about not being able to reach a sector (along with a suggestion 
-that my disk has an error on it).
+# e2fsadm -L +3G /dev/vg/lv01 
 
+*making chkfs reporting errors ... fixing them*
+... and nothing happens ... then i did
 
-[root@localhost etc]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/ide/host4/bus1/target0/lun0/disc" of VG 
-"group1" [74.47 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/ide/host4/bus0/target0/lun0/disc" of VG 
-"group1" [93.28 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/ide/host4/bus0/target1/lun0/disc" of VG 
-"group1" [149 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/ide/host2/bus0/target0/lun0/disc" of VG 
-"group1" [149 GB / 0 free]
-pvscan -- total: 4 [465.95 GB] / in use: 4 [465.95 GB] / in no VG: 0 [0]
+# sync
+# mount /dev/vg/lv01 /mnt/somewhere
+# df 
 
-[root@localhost etc]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "group1"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+says it's still 80G NOT 83G! so i try again *fearing the worst*
 
-[root@localhost etc]# fsck.reiserfs /dev/group1/vol1
-reiserfsck 3.6.10 (2003 www.namesys.com)
+# e2fsadm -L +3G /dev/vg/lv01
 
-*************************************************************
-** If you are using the latest reiserfsprogs and  it fails **
-** please  email bug reports to reiserfs-list@namesys.com, **
-** providing  as  much  information  as  possible --  your **
-** hardware,  kernel,  patches,  settings,  all reiserfsck **
-** messages  (including version),  the reiserfsck logfile, **
-** check  the  syslog file  for  any  related information. **
-** If you would like advice on using this program, support **
-** is available  for $25 at  www.namesys.com/support.html. **
-*************************************************************
+*making chkfs ... resizing*
+again and get 6G more to my /dev/vg/lv01
+files are ok... *the best that could happen* 8))
 
-Will read-only check consistency of the filesystem on /dev/group1/vol1
-Will put log info to 'stdout'
+the question is:
+how come it isn't extendet by 3G instead of 6G ?
+what am i doing wrong?
+just to know for the next time ...
 
-Do you want to run this program?[N/Yes] (note need to type Yes if you do):Yes
-###########
-reiserfsck --check started at Mon Nov  3 09:17:04 2003
-###########
-Replaying journal..
-0 transactions replayed
-
-The problem has occurred looks like a hardware problem.
-If you have bad blocks, we advise you to get a new hard
-drive, because once you get one bad block that the disk
-drive internals cannot hide from your sight, the chances
-of getting more are generally said to become much higher
-(precise statistics are unknown to us), and this disk drive
-is probably not expensive enough for you to risk your time
-and data on it. If you don't want to follow that advice,
-then if you have just a few bad blocks, try writing to the
-bad blocks and see if the drive remaps the bad blocks (that
-means it takes a block it has in reserve and allocates it
-for use for requests of that block number).  If it cannot
-remap the block, this could be quite bad, as it may mean
-that so many blocks have gone bad that none remain in
-reserve to allocate.
-
-bread: Cannot read the block (44171264): (Input/output error).
-
-Aborted (core dumped)
-[root@localhost etc]# 
+thanks in advance for any advice
