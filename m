@@ -1,8 +1,10 @@
-From: me@vger.org
-In-Reply-To: <Pine.LNX.4.21.0205301706550.20123-100000@kenny.worldonline.se>
-Message-ID: <Pine.LNX.4.21.0205301752510.20123-100000@kenny.worldonline.se>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: Strange RAID2 behavier...
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Re: md and lvm
+Message-ID: <20020530173923.GA2502@colombina.comedia.it>
+References: <OF812C20AD.43539AFD-ON48256BC9.0028280B@legend.com.cn>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <OF812C20AD.43539AFD-ON48256BC9.0028280B@legend.com.cn>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,93 +15,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 10:16:03 2002
+Date: Thu May 30 12:40:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: lvm-devel@sistina.com, linux-lvm@sistina.com
+To: lilha@legend.com.cn
+Cc: linux-lvm@sistina.com
 
-Works with 1.0.4 so this is a bug with 1.1-rc2.
+On Thu, May 30, 2002 at 04:31:59PM +0800, lilha@legend.com.cn wrote:
+> > md1 : active raid1 hda9[1]
+> >       272960 blocks [2/1] [_U]
+> is this a bad disk???
+> 
+> yes. md1 is bad, but I have delete the inforamtion about md1 in the file
+> (/etc/raidtab)
+> and change the partition type to 83.
+> after reboot the machine, i change the partion type to FD, and reboot
+> again.
+> I dont't know why the md1 still can be find and how to delete it.
+> 
+get mdadm from http://www.cse.unsw.edu.au/~neilb/source/mdadm/
+and use the option --zero-superblock to wipe the superblock from
+/dev/hda9
 
-On Thu, 30 May 2002 me@vger.org wrote:
+> > e2fsck 1.18, 11-Nov-1999 for EXT2 FS 0.5b, 95/08/09
+> > The filesystem size (according to the superblock) is 338944 blocks
+> > The physical size of the device is 236544 blocks
+> > Either the superblock or the partition table is likely to be corrupt!
+> > Abort<y>? no
+> seems you have some problem with the filesystem in /dev/raid-lvm/lv_raid
+> did you play at reducing it before?
+> 
+> yes, i use lvextend to extend it and then use lvreduce to reduce it, at
+> last i use
+> e2fsadm -L+1G /dev/raid-lvm/lv_raid
 
-> Here is more info:
-> --------------
-> # /etc/init.d/raid2 start
-> Starting RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
-> done.
-> # /etc/init.d/raid2 stop 
-> Stopping RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
-> done.
-> # /etc/init.d/raid2 start
-> Starting RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
-> done.
-> # modprobe lvm-mod
-> # vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "data"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
-> 
-> # vgchange -ay
-> vgchange -- volume group "data" successfully activated
-> 
-> # mount /dev/data/lvol1 /mnt
-> # df
-> Filesystem           1k-blocks      Used Available Use%
-> Mounted on
-> /dev/data/lvol1      ********        20 ********   1% /mnt
-> # umount /mnt
-> # vgchange -an
-> vgchange -- volume group "data" successfully deactivated
-> 
-> # rmmod lvm-mod
-> # /etc/init.d/raid2 stop
-> Stopping RAID devices: /dev/md0 /dev/md1 /dev/md2: Device or resource busy
-> /dev/md3: Device or resource busy
-> done.
-> # cat /proc/mdstat 
-> Personalities : [linear] [raid0] [raid1] [raid5] [multipath] 
-> 
-> read_ahead 1024 sectors
-> md3 : active raid0 hdl1[1] hdh1[0]
->       ******** blocks 4k chunks
->       
-> md2 : active linear hdk1[0]
->       ******** blocks 4k rounding
->       
-> unused devices: <none>
-> # /etc/init.d/raid2 stop
-> Stopping RAID devices: /dev/md2: Device or resource busy
-> /dev/md3: Device or resource busy
-> done.
-> --------------
-> 
-> Going to switch to lvm-1.0.4 and try.
-> 
-> On Thu, 30 May 2002 me@vger.org wrote:
-> 
-> > No worry linux-kernel, this seams to be a lvm problem.
-> > 
-> > Hi linux-lvm,
-> > 
-> > In short, I got 4 md devices (md0-4) that I make one device with using
-> > lvm. When I'm going to shutdown this device it seams that lvm locks md2-3.
-> > 
-> > Booting linux without lvm there is no problem what so ever to start and
-> > stop the raid mds.
-> > 
-> > Also as you read the futher down, the reason I could stop md3 was because
-> > I hadnt used lvm yet that time and hadnt made any VGs or LVs or mounted
-> > them. Also, the way i stop lvm is as described in the documents "umount,
-> > vgchange -an".
-> > 
-> > Im using lvm-1.1rc-2, 2.4.19-pre9 and debian testing dist.
-> > 
-> > Im going to try running lvm as module and unloading the module after
-> > stopping the lvm VGs and see if it still locks the mds.
-> > 
-> > If you need more info, please send a mail.
-> > 
-> 
-> 
+if you reduce an LV with lvreduce you must reduce the filesystem
+BEFORE running lvreduce
+
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
