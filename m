@@ -1,15 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAFIlar31401
-	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 13:47:36 -0500
-Received: from www.austinlogistics.com (mail.austinlogistics.com
-	[69.150.203.234])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAFIlTkx026571
-	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 13:47:30 -0500
-Message-ID: <OF921189DB.5199A5A6-ON86256F4D.0063CB48-86256F4D.00673909@austinlogistics.com>
-From: Jetkins@austinlogistics.com
-Date: Mon, 15 Nov 2004 12:47:28 -0600
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with SMTP id iAFL29f32034
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 16:02:11 -0500
+Received: from ECCMCBH.cmc.int.ec.gc.ca (ecdor130.cmc.ec.gc.ca
+	[199.212.17.130])
+	by mx2.redhat.com (8.12.11/8.12.11) with SMTP id iAFKrvNH027808
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 15:53:59 -0500
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: [linux-lvm] Expanding a PV on a hardware RAID
+Date: Mon, 15 Nov 2004 15:46:43 -0500
+Message-ID: <80EE00A6A780C445BE9CA19F163CEA35059C52@cisxb.cmc.int.ec.gc.ca>
+From: "Shea,Dan [CIS]" <Dan.Shea@ec.gc.ca>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] SAN VG not active after boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,58 +23,49 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi, folks.
 
-I think I may have painted myself into a corner, but I thought I'd ask here
-before I undo what I've done so far.  My configuration is as follows:
+SAN is an EMC device.
+We are using lpcdd modules for an emc fibre optic card. 
+PowerPath modules are from EMCpower.LINUX-3.0.7-007.i386.rpm
+We are using Red Hat Enterprise Linux AS release 3 (Taroon Update 1).
+The lvm version is from lvm-1.0.3-15.
 
-I have a hardware RAID with 2 logical drives defined.  The second logical
-drive (/dev/sdb) is dedicated entirely to LVM.  When I set up LVM, I used
-      pvcreate /dev/sdb
-to allocate the entire logical drive, rather than creating a partition
-table and using
-      pvcreate /dev/sdb1
+After a reboot, the server pascal comes up and does not see the SAN partition.  It is shared between two servers.
+In order to activate the SAN partition I have to vgexport and then vgimport the vg npmu_vg02.
+Is there something that can be done so that it will come up cleanly?
 
-I then created a VG with just the single PV, and several LV's.  It's all
-working great, but I need to expand the available capacity.
+[root@pascal root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sda5" of VG "npmu_vg01" [192.89 GB / 12.23 GB free]
+pvscan -- inactive PV "/dev/sdb1"  is associated to unknown VG "npmu_vg02" (run vgscan)
+pvscan -- inactive PV "/dev/sdc1"  is associated to unknown VG "npmu_vg02" (run vgscan)
+pvscan -- total: 3 [1.49 TB] / in use: 3 [1.49 TB] / in no VG: 0 [0]
 
-Thinking this would be a simple operation, I added three new drives to the
-RAID5 array, taking the available space from ~850GB to ~1.25TB.  The RAID
-controller dynamically expanded /dev/sdb to the new size, which the OS
-recognized after a reboot:
+[root@pascal root]# vgexport npmu_vg02
+vgexport -- ERROR "lvm_tab_vg_remove(): VG doesn't exist" removing volume group "npmu_vg02" from "/etc/lvmtab"
+vgexport -- volume group "npmu_vg02" NOT sucessfully exported
 
-      SCSI device sdb: 2578636800 512-byte hdwr sectors (1320262 MB)
-       sdb: unknown partition table
+[root@pascal root]# vgimport npmu_vg02 /dev/sdb1
+vgimport -- doing automatic backup of volume group "npmu_vg02"
+vgimport -- volume group "npmu_vg02" successfully imported and activated
 
-I thought I would simply be able to expand the PV to take up the newly
-available space on the "new larger disk".  However, I can't seem to find
-any way to expand a PV, and therein lies my problem.  It seems that without
-a pvexpand or pvresize command, I have no way of utilizing the additional
-space.
+[root@pascal root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sda5" of VG "npmu_vg01" [192.89 GB / 12.23 GB free]
+pvscan -- inactive PV "/dev/sdb1" of VG "npmu_vg02" [667.55 GB / 299.55 GB free]
+pvscan -- ACTIVE   PV "/dev/sdc1" of VG "npmu_vg02" [667.55 GB / 299.55 GB free]
+pvscan -- total: 3 [1.49 TB] / in use: 3 [1.49 TB] / in no VG: 0 [0]
 
-Without that ability, it seems that I have no alternative but to remove the
-additional drives (taking /dev/sdb back to its original size), create a new
-RAID5 array (/dev/sdc), and create a new PV on that logical drive.  Total
-bummer because I lose another 147GB drive to parity for the new array, but
-I don't see any other way out.
+[root@pascal root]#
 
-So my questions are twofold:
+If vgscan is run 
+[root@pascal etc]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "npmu_vg01"
+vgscan -- found inactive volume group "npmu_vg02"
+vgscan -- volume group "npmu_vg02" reuses an existing logical volume number; please vgexport/vgimport that VG or use option -f
 
-1)  Am I missing something, or is there currently no way to expand a PV?,
-and
-
-2)  Would I have been better off creating a partition table and
-pvcreate'ing on /dev/sdb1instead of pvcreate'ing the entire /dev/sdb disk
-initially, given that I could now have created a new partition on the extra
-space and pvreate'd a new PV alongside the old?
-
-Thanks in advance,
-
-Jon Etkins
-IT Administration & Support
-Austin Logistics, Inc
-ph:  (512) 651-5641
-fax: (512) 329-5625
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume groups
