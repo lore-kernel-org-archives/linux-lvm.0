@@ -1,7 +1,7 @@
-Message-ID: <2D4B6CD74137D4119A1100104BC6BCBF0BC585CB@dubntex006.qwest.net>
+Message-ID: <2D4B6CD74137D4119A1100104BC6BCBF0BC585CD@dubntex006.qwest.net>
 From: "Montgomery, Kendal L" <kendal.montgomery@qwest.com>
-Subject: RE: [linux-lvm] determining lv from mount point 
 MIME-Version: 1.0
+Subject: [linux-lvm] lvm on loopback mount problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,81 +12,104 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 23 16:04:02 2003
+Date: Tue Sep 23 16:15:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Ahh.. Yes.. You're correct.  I finished my email before I completed my train
-of thought.
+I've seen a few things about using lvm on a loopback filesystem, but nothing
+concrete, so I tried it myself.  Most everything works okay until I get to
+acutally mounting the filesystem.  Here are the steps I did:
 
-You could store the result of the df line in a variable, and then do
-something like this:
+[root@klmontg tmp]# dd if=/dev/zero of=fake_disk.img bs=1M count=500
+500+0 records in
+500+0 records out
+[root@klmontg tmp]# losetup /dev/loop0 fake_disk.img
+[root@klmontg tmp]# pvcreate /dev/loop0
+pvcreate -- physical volume "/dev/loop0" successfully created
 
-#!/bin/bash
+[root@klmontg tmp]# vgcreate /dev/vgtest /dev/loop0
+vgcreate -- INFO: using default physical extent size 4 MB
+vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgcreate -- doing automatic backup of volume group "vgtest"
+vgcreate -- volume group "vgtest" successfully created and activated
+ 
+[root@klmontg tmp]# lvcreate --name lv_one --size 200M /dev/vgtest
+lvcreate -- doing automatic backup of "vgtest"
+lvcreate -- logical volume "/dev/vgtest/lv_one" successfully created
+ 
+[root@klmontg tmp]# mke2fs /dev/vgtest/lv_one
+mke2fs 1.32 (09-Nov-2002)
+Filesystem label=
+OS type: Linux
+Block size=1024 (log=0)
+Fragment size=1024 (log=0)
+51200 inodes, 204800 blocks
+10240 blocks (5.00%) reserved for the super user
+First data block=1
+25 block groups
+8192 blocks per group, 8192 fragments per group
+2048 inodes per group
+Superblock backups stored on blocks:
+        8193, 24577, 40961, 57345, 73729
+ 
+Writing inode tables: done
+Writing superblocks and filesystem accounting information: done
+ 
+This filesystem will be automatically checked every 26 mounts or
+180 days, whichever comes first.  Use tune2fs -c or -i to override.
+[root@klmontg tmp]# e2fsck /dev/vgtest/lv_one
+e2fsck 1.32 (09-Nov-2002)
+Couldn't find ext2 superblock, trying backup blocks...
+e2fsck: Bad magic number in super-block while trying to open
+/dev/vgtest/lv_one
+ 
+The superblock could not be read or does not describe a correct ext2
+filesystem.  If the device is valid and it really contains an ext2
+filesystem (and not swap or ufs or something else), then the superblock
+is corrupt, and you might try running e2fsck with an alternate superblock:
+    e2fsck -b 8193 <device>
+ 
+[root@klmontg tmp]# e2fsck -b 8193 /dev/vgtest/lv_one
+e2fsck 1.32 (09-Nov-2002)
+e2fsck: Bad magic number in super-block while trying to open
+/dev/vgtest/lv_one
+ 
+The superblock could not be read or does not describe a correct ext2
+filesystem.  If the device is valid and it really contains an ext2
+filesystem (and not swap or ufs or something else), then the superblock
+is corrupt, and you might try running e2fsck with an alternate superblock:
+    e2fsck -b 8193 <device>
+ 
+[root@klmontg tmp]# mount /dev/vgtest/lv_one /mnt
+mount: you must specify the filesystem type
+[root@klmontg tmp]# mount -t ext2 /dev/vgtest/lv_one /mnt
+mount: wrong fs type, bad option, bad superblock on /dev/vgtest/lv_one,
+       or too many mounted file systems
 
-if [[ ! -d ${1} ]]
-then
-  echo "error: ${1} is not a valid mount point"
-  exit 1
-fi
+As you can see, one the filesystem was made, nothing else works. I can't
+fsck the filesystem on the new logical volume, or mount it.  This is
+obviously a problem since, well, it's useless unless I can mount it.
 
-DEVICE=$(df ${1} | grep -v ^Filesystem | awk '{ print $1 }')
+I'm using RedHat 9 with the  2.4.20-20.9 kernel.  I've also tried this on
+RedHat 8 on another box.  I got the latest version of util-linux which is
+2.11z and compiled that (in case it was a possible bug in mount 2.11y which
+comes with redhat).  I'm using lvm 1.0.3-12 that comes with redhat 9.  I
+have not tried getting the latest lvm tools.  That's my next step...
 
-lvscan | grep ${DEVICE} > /dev/null 2>&1
+Anyone else had this problem, or tried doing this?  The reason I wanted to
+do this in the first place is so I can test snapshots.  I want to be able to
+have a filesystem which is static, that I will then take a snapshot of, then
+change things on it, and then use the snapshot to bring it back to it's
+original form.  I know there is some work on union filesystems or
+translucent filesystems, and such things, but none of it seems mature
+enough, so this solution seemed like it might work until I hit this snag.
 
-if [[ ${?} -eq 0 ]]
-then
-  # do what you want to do if you detect that this is lvm
-else
-  # do somethine else
-Fi
+Is anyone else doing this (lvm on loopback)?  Does anyone have it working
+correctly?  Am I doing something wrong?  Do I need a different version of
+something?
 
-
-Try that out.
+Thanks in advance for any help.
 
 Kendal.
-
------Original Message-----
-From: Galen Seitz [mailto:galens@seitzassoc.com] 
-Sent: Tuesday, September 23, 2003 4:37 PM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] determining lv from mount point 
-
-
-Montgomery, Kendal L <kendal.montgomery@qwest.com> wrote:
-
-> The df command will already do that.  For instance, on my machine, if 
-> I do:
-> 
-> [klmontg@klmontg klmontg]$ df /opt
-> Filesystem           1K-blocks      Used Available Use% Mounted on
-> /dev/vg01/opt          4194172   1610880   2583292  39% /opt
-> 
-> It gives me the filesystem, etc.
-
-Unfortunately, this doesn't help when trying to distinguish between regular
-and lvm filesystems.  On my system, / and /boot are on regular partitions.
-
-bash-2.05b$ df /boot
-Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/sda1                99134     13828     80187  15% /boot
-bash-2.05b$ df /usr
-Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/Volume00/LV_usr   4031680   2151280   1675600  57% /usr
-
-I'd like to distinguish between these two without hardcoding knowledge of
-device or volume names into my script.  One thing I have considered is doing
-an ls -l on the device name and checking for the lvm major. Of course, then
-I would have to hardcode the lvm major into my script. I just figured
-someone must have a better way to do this.
-
-thanks,
-galen
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
