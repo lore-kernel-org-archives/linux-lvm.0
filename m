@@ -1,11 +1,8 @@
-Date: Tue, 2 Oct 2001 15:25:44 +0000
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] segmentation fault problems
-Message-ID: <20011002152544.A403@guldukat.muon.local>
-References: <3BB94718.30441CCA@adelaide.edu.au> <E15oJws-0004t5-00@hermes.sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E15oJws-0004t5-00@hermes.sistina.com>
+Message-ID: <20011002163140.77862.qmail@web14404.mail.yahoo.com>
+Date: Tue, 2 Oct 2001 09:31:40 -0700 (PDT)
+From: Aman Shahi <shahi_aman@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] VFS Patch for 2.4.10 ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,22 +18,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, 02.10.01, Henning Hogue <henning@randomfactor.net> wrote:
-> Thanks for the patch to lvcreate, I can now create logical volumes but all the 
-> other commands for logical volumes also cause segmentation faults. Are there 
-> patches for these too?
+Hi,
 
-As Heinz already suggested, this _might_ be a compiler issue. Are you
-using gcc-3.0.x? If yes, try 2.95.x.
+I am trying to build a 2.4.10 kernel with
+lvm-1.0.1-rc3. After applying the
+lvm-1.0.1-rc3-2.4.10.patch, do I need to apply
+the VFS patch ? If so, then do I apply the
+linux-2.4.9-VFS-lock.patch ?
 
-Myself, i had problems with 1.0.1-rc2 using gcc-3.0.1. A lot of the
-tools would segfault.
+regards,
+Aman Shahi.
 
-good luck,
-
-Nils
-
--- 
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >  If we all work hard, we can turn this company  <
- >      around 360 degrees -- gruntbert(LOTD)      <
+__________________________________________________
+Do You Yahoo!?
+Listen to your Yahoo! Mail messages from any phone.
+http://phone.yahoo.com
