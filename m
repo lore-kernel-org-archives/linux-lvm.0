@@ -1,10 +1,10 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Re: LVM writes on raw disk of ATA RAID Mirror
-Message-ID: <20030430235827.A11394@uk.sistina.com>
-References: <arechenberg@shermfin.com> <20030430193030.AF83AAE4F5@basilica.la.naos.co.nz>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030430193030.AF83AAE4F5@basilica.la.naos.co.nz>; from lvm@ewen.mcneill.gen.nz on Thu, May 01, 2003 at 07:30:30AM +1200
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C30E7A.82FD72B8"
+Message-ID: <B742DEF5E2578F43AB48979887E6CF060E16BD@MAIL001.AD.MLP.COM>
+From: "Selimaj, Naxhije" <nselimaj@mlp.com>
+Subject: [linux-lvm] LVM & LFS support
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +15,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 30 17:58:01 2003
+Date: Sat May 10 08:37:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, May 01, 2003 at 07:30:30AM +1200, Ewen McNeill wrote:
-> I've been told that LVM 2 has some support where you can say what
-> devices to scan (and what devices not to scan).  
+This is a multi-part message in MIME format.
 
-LVM2 offers selection by device type (i.e. the names that appear in
-/proc/devices giving block device major numbers) and regular-expression 
-based selection by device name.
+------_=_NextPart_001_01C30E7A.82FD72B8
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Alasdair
--- 
-agk@uk.sistina.com
+
+Hi,
+
+Does LVM support files greater that 2GB? =20
+I'm running the default LVM (1.0.3) on RH8.  I currently have a 1.2TB
+LVM  ext3 filesystem mounted.  If >2GB  file is supported, what changes
+need to be made to my existing setup.
+
+
+Thanks in advance.
+
+
+
+------_=_NextPart_001_01C30E7A.82FD72B8
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+6.0.6249.1">
+<TITLE>LVM &amp; LFS support </TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/rtf format -->
+<BR>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">Hi,</FONT>
+</P>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">Does LVM support files greater that =
+2GB?&nbsp; </FONT>
+
+<BR><FONT SIZE=3D2 FACE=3D"Arial">I'm running the default LVM (1.0.3) on =
+RH8.&nbsp; I currently have a 1.2TB LVM&nbsp; ext3 filesystem =
+mounted.&nbsp; If &gt;2GB&nbsp; file is supported, what changes need to =
+be made to my existing setup.</FONT></P>
+<BR>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">Thanks in advance.</FONT>
+</P>
+<BR>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C30E7A.82FD72B8--
