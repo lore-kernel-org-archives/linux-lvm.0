@@ -1,16 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i199Qra10061
-	for <linux-lvm@redhat.com>; Mon, 9 Feb 2004 04:26:53 -0500
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
-Message-ID: <yw1xvfmgob7w.fsf@kth.se>
-References: <1076220042.4025d08a18acb@pandani.services.adelaide.edu.au> <yw1xn07tu7w8.fsf@kth.se>
- <1076241638.402624e656f43@pandani.services.adelaide.edu.au>
- <200402081354.15872.rainer@krienke.org>
- <1076247930.40263d7a87098@pandani.services.adelaide.edu.au>
- <yw1xbro9u1c7.fsf@kth.se> <4026FEC4.2050005@adelaide.edu.au>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm]Re: corrupt /dev/lvm - bizzare properties
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i19FaWa26415
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2004 10:36:32 -0500
+Received: from foo.oppositelock.org (foo.oppositelock.org [66.92.146.148])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i19FaWb30632
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2004 10:36:32 -0500
+Received: from oppositelock.org (hawke.oppositelock.org [66.92.146.47])
+	by foo.oppositelock.org (8.12.8/8.12.5) with ESMTP id i19FaQVB000411
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2004 10:36:26 -0500
+Message-ID: <4027A8D6.7000103@oppositelock.org>
+From: Douglas Kilpatrick <kilpatds@oppositelock.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM2 on top of RAID1? (x86_64)
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -22,38 +23,35 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Mon Feb  9 04:26:00 2004
+Date: Mon Feb  9 10:36:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Chris Doherty <chris.doherty@adelaide.edu.au> writes:
+I'm trying to setup a new box the same way my current box is setup. 
+I've split the drives into two sections, one of which I'm combining into 
+a RAID0 stripe, the other a RAID1 mirror set. (sorry for the redundancy.)
 
->> The filesystem containing /dev has been damaged somehow.  You should
->> fsck it.  Most likely fsck will remove /dev/lvm so you'll have to
->> recreate it with proper values.  Don't just rm it.  Something bad has
->> obviously happened and changing things without a proper fsck can make
->> things worse.
->
-> thanks.  i'll try this tonight and report back. :)  my limited
-> understanding of LVM leads me to believe that the volume group and
-> logical volume within it are actually still safe and sound in /dev/vg1
+The Stripe seems to work fine.  The mirror isn't getting past the 
+pvcreate stage.
 
-Chances are it's still there.
+The system is mostly a FC1 test1 x86_64 box.  I've got a stock 2.6.2 
+kernel compiled on it.
 
-> is /dev/lvm just a character device which is used to transmit data
-> from the volume group (vg1) to the device driver?
+mkraid appears to have worked fine.
+lvm pvcreate /dev/md1
 
-Yes.
+appears to work, but
 
-> you mention that fsck will probably remove /dev/lvm and that i
-> should recreate it.  is there any risk to vg1/lv1 if i do that?  (as
-> i still haven't successfully backed up anything in it's current
-> state)
+lvm pvs
 
-You should be fine.  If you are paranoid and vg1 is on different disks
-than the root fs you could unplug them while doing the fsck.
+complains about seeing 3 extra instances of the id, and decides that the 
+PV is actually on /dev/sda (or /dev/sdb, depending on boot), not /dev/md1.
 
+Um?  Anyway to fix this?  Help?
+
+Thanks,
+Doug
 -- 
-M�ns Rullg�rd
-mru@kth.se
+kilpatds@oppositelock.org
+Outta Control Racing, Inc.
