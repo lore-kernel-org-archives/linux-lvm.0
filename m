@@ -1,9 +1,7 @@
-Message-ID: <001601c2c393$6730dea0$0400a8c0@venkat>
-From: "abbireddy venkatram reddy" <venkat@storageone.co.kr>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0013_01C2C3DE.D70DD840"
-Subject: [linux-lvm] Problem with 1.2Tera byte.
+From: "Sean Oh" <benew666@hotmail.com>
+Mime-Version: 1.0
+Message-ID: <F59HdlQgdYXSVvR0Wss000091d0@hotmail.com>
+Subject: [linux-lvm] syncing with snapshots takes forever?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,67 +12,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 24 04:32:01 2003
+Date: Fri Jan 24 07:08:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+I am having difficult with LVM snapshots and syncing.
+I have tested LVM 1.0.6 and also LVM2. Both generate the same problem.
 
-------=_NextPart_000_0013_01C2C3DE.D70DD840
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+My testing environment is as follows:
 
-Hi,
+VG vg01 Size 100GB
+LV lv01 Size 50GB
+LV lv01_snapshot1 size 10GB
+LV lv01_snapshot2 size 10GB
+LV lv01_snapshot3 size 10GB
 
- I have installed LVM and kernel patch on a Linux box which contains =
-3ware RAID controller ,1.2Tera of IDEs, 1024MB RAM. I have created 3 =
-Logical volumes of each 50GB and for each LV created 3 snaps of same =
-size.
+as you can see above, there 4 LVs, one LV and 3 snapshots for the LV
+and also the system has SCSI raid controller(Mylex) and 1024GB of RAM, 
+though these does not seem to matter, since the problem happens to other 
+systems, also.
+The FS does not matter here, since Reiserfs and XFS both produce the same 
+syncing problem.
 
- But when every I am dumping data in a large extend to the LVs the =
-system is getting very slow and hangs for some times.
- then I have deleted all the snapshots what ever I have created then it =
-works fine.
- is any problem with snapshots? or LVM patch? or LVM ?..please help me.
+For LVM 1.0.6, I have applied VFS lock patch and lvm-1.0.6 patch to the 
+kernel 2.4.20. ---> same problem. Kernel 2.4.20 without any patches gives 
+the same problem,too.
 
-with Regards,
-venkat.
-------=_NextPart_000_0013_01C2C3DE.D70DD840
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+For LVM2 ---> I removed all the LVs and VG that made with LVM1 and remake 
+them with LVM2. No diifference at all. BTW, LVM2 genereates a stragne error 
+message to console 'invalidate: busy buffer'
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2800.1106" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hi,</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>&nbsp;I have installed LVM and kernel =
-patch on a=20
-Linux box which contains 3ware RAID controller&nbsp;,1.2Tera of IDEs, =
-1024MB=20
-RAM. I have created 3 Logical volumes of each 50GB and for each LV =
-created 3=20
-snaps of same size.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>&nbsp;But when every I am dumping data =
-in a large=20
-extend to the LVs the system is getting very slow and hangs for some=20
-times.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>&nbsp;then I have deleted all the =
-snapshots what=20
-ever I have created then it works fine.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>&nbsp;is any problem with snapshots? or =
-LVM patch?=20
-or LVM ?..please help me.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>with Regards,</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>venkat.</FONT></DIV></BODY></HTML>
+After copying a file with 1GB size to lv01 and typing 'sync' takes more 30 
+minitus or sometime forever. During these time period, access to lv01 is 
+neary blocked, producing very slow performance(0 ~ 400B/s). If I remove the 
+snapshots, sync returns normally. So it is the issue with LVM making the 
+changes in LV to 3 snapshots while locking the LV.
 
-------=_NextPart_000_0013_01C2C3DE.D70DD840--
+Is there any way to make the snapshots syncing faster? Is that what LVM2 
+promise? Is there any alternative to LVM for snapshoting?
+
+Any help and comments are apperciated.
+
+
+_________________________________________________________________
+MSN 8 with e-mail virus protection service: 2 months FREE* 
+http://join.msn.com/?page=features/virus
