@@ -1,14 +1,8 @@
-Subject: Re: [linux-lvm] LVM
-References: <NBBBJHKIOKPKOGOEPEDPAEEJDNAA.stuart@bh90210.net>
-	<3BA0AE16.1A4F69F@carolina.rr.com>
-	<87u1xzv3gm.fsf@arm.t19.ds.pwr.wroc.pl>
-	<20010919165134.R14526@turbolinux.com>
-From: Arkadiusz Miskiewicz <misiek@pld.ORG.PL>
-Date: 22 Sep 2001 13:51:51 +0200
-In-Reply-To: <20010919165134.R14526@turbolinux.com>
-Message-ID: <87bsk3cujs.fsf@arm.t19.ds.pwr.wroc.pl>
+Date: Sat, 22 Sep 2001 19:11:14 -0400 (EDT)
+From: Shane Shrybman <shane@zeke.yi.org>
+Message-ID: <Pine.LNX.4.21.0109221900090.23118-100000@zeke.goatskin.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] e2fsck probs with LVM and 2.4.9-ac9+
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,29 +14,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm mailing list <linux-lvm@sistina.com>
 
-Andreas Dilger <adilger@turbolabs.com> writes:
+Hello,
 
-> > btw. lvmcreate_initrd is broken. It copies /bin/bash and /bin/sh while
-> > on some systems /bin/sh is link to /bin/othershell (like /bin/ksh on
-> > my systems), so initrd created by lvmcreate_initrd is not usable on
-> > these machines.
->=20
-> Please try the below patch.  If it works I can check it into CVS.
-It follows symlink when copying shell, so IMO it's ok to commit.
+When I attempted to upgrade to 2.4.9-ac9 and ac14 from 2.4.9-ac6 I ran
+into a problem.
 
-Anyway created initrd won't work on PLD kernels due to other reason
-- we don't have ext2 compiled into kernel; all filesystems
-except ROMFS are compiled as modules because are kernels are highly
-modularized (ROMFS is used on our initrd ramdisks). It will be nice
-thing to see support for other FSes when creating ramdisks in
-lvmcreate_initrd. Our tool for generating initrd ramdisks (geninitrd)
-can use rom, ext2 and cram as FS but it doesn't support lvm yet :-)
+With either of these kernels (I didn't try any others between ac6 and
+ac14) the kernel boots fine and lvm-mod gets loaded ok but when the first
+filesystem that is on an lv gets mounted e2fsck complains and drops me to
+admin prompt. The error message is something like this:
 
-> Cheers, Andreas
+The filesystem size (according to the superblock) is 524288 blocks
+the physical size of the device is 57344
+...
 
---=20
-Arkadiusz Mi=EF=BF=BDkiewicz   IPv6 ready PLD Linux at http://www.pld.org.pl
-misiek(at)pld.org.pl   AM2-6BONE, 1024/3DB19BBD, arekm(at)ircnet, PWr
+When I reboot back into 2.4.9-ac6 everything is fine after e2fsck.
+
+I have e2fsprogs version 1.19, do I need a more recent version?
+
+Regards,
+
+Shane
+
+
+-- 
