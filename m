@@ -1,21 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3M58jp23174
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 01:08:45 -0400
-Received: from solwarra.gbrmpa.gov.au (solwarra.gbrmpa.gov.au [146.116.1.5])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i3M58gFe023503
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 01:08:43 -0400
-Received: from gbrmpa.gov.au (pandemonium.gbrmpa.gov.au [146.116.2.0])
-	by solwarra.gbrmpa.gov.au (8.11.6+Sun/8.10.2) with ESMTP id
-	i3M53RK18085
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 15:03:27 +1000 (EST)
-Message-ID: <40875353.8020104@gbrmpa.gov.au>
-Date: Thu, 22 Apr 2004 15:08:35 +1000
-From: Glen Harris <glen@gbrmpa.gov.au>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3M5J3p28292
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 01:19:03 -0400
+Received: from sbo-dom1.corp.storability.com ([67.99.78.198])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3M5J2Fe026912
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2004 01:19:03 -0400
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] About Extending LVM size with Hardware Raid
-References: <01285A15-9419-11D8-B982-000A95730E92@spamaps.org>
-In-Reply-To: <01285A15-9419-11D8-B982-000A95730E92@spamaps.org>
-Content-Transfer-Encoding: 7bit
+From: praveen.morab@storability.com
+Message-ID: <OFEE74D699.0EF86CAA-ON65256E7E.001CD3DA-65256E7E.001DD464@corp.storability.com>
+Date: Thu, 22 Apr 2004 10:54:07 +0530
+Content-Type: multipart/alternative;
+	boundary="=_alternative 001DD12B65256E7E_="
+Subject: [linux-lvm] Does PE Size affect block size?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,23 +21,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Clint Byrum wrote:
-> Just curious, but what kind of rebuild time do you see on that 1.25TB 
-> RAID5 volume?
+This is a multipart message in MIME format.
+--=_alternative 001DD12B65256E7E_=
+Content-Type: text/plain; charset="us-ascii"
 
-Adding a single 250Gb 5400RPM Maxtor disk to the 5-disk RAID5 took just
-over 30 hours. For future disks, we'll be adding them in multiples - if
-we can get pvresize working, of course. The box can take 12 disks.
+Hi All,
 
-We're willing to take the time penalty, and in return get more space, as
-this box is a rsync server. The servers rsync to this box quickly overnight,
-then it backs up to the tape library in the early morning/during the day.
-This is a (relatively)cheap backup solution, and as such, doesn't need the
-on-line resiliancy of the file or database servers.
+I have a very simple query. Currently I have one volume group "Volume00" 
+with PE Size of "4MB", the default one and one logical volume "LogVol00". 
+So what will be the block size of LogVol00.
 
-For the file/IMAP/Oracle servers with their Sun SCSI FC raid box, we're
-running several raids as needs grow and aggregating them with the metadisk
-software.
+
+int main()
+{
+
+        int i = 1 << 20 ------- BytesInOneMB 
+        i = i * 4 ------- PE Size
+
+        printf("%d\n", i);
+
+        return 0;
+}
+ i --- will be the block size. 
+
+So my query is.....is the above code to get block size is right. Its just 
+a prototype.
+
+-Regards,
+
+-------------------------------------------------------------------------
+Praveen Morab
+Storability Software Inc
+Ph - 91 20 4014488 x 117 (O)
+Ph - 91 20 2543 13 65 (R)
+-------------------------------------------------------------------------
+
+
+--=_alternative 001DD12B65256E7E_=
+Content-Type: text/html; charset="us-ascii"
+
+
+<br><font size=2 face="sans-serif">Hi All,</font>
+<br>
+<br><font size=2 face="sans-serif">I have a very simple query. Currently I have one volume group &quot;Volume00&quot; with PE Size of &quot;4MB&quot;, the default one and one logical volume &quot;LogVol00&quot;. So what will be the block size of LogVol00.</font>
+<br>
+<br>
+<br><font size=2 face="sans-serif">int main()</font>
+<br><font size=2 face="sans-serif">{</font>
+<br>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; int i = 1 &lt;&lt; 20 ------- BytesInOneMB </font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; i = i * 4 ------- PE Size</font>
+<br>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; printf(&quot;%d\n&quot;, i);</font>
+<br>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; return 0;</font>
+<br><font size=2 face="sans-serif">}</font>
+<br><font size=2 face="sans-serif">&nbsp;i --- will be the block size. </font>
+<br>
+<br><font size=2 face="sans-serif">So my query is.....is the above code to get block size is right. Its just a prototype.</font>
+<br>
+<br><font size=2 face="sans-serif">-Regards,</font>
+<br>
+<br><font size=2 face="sans-serif">-------------------------------------------------------------------------<br>
+Praveen Morab<br>
+Storability Software Inc<br>
+Ph - 91 20 4014488 x 117 (O)<br>
+Ph - 91 20 2543 13 65 (R)<br>
+-------------------------------------------------------------------------<br>
+<br>
+</font>
+--=_alternative 001DD12B65256E7E_=--
