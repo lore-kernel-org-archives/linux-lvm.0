@@ -1,11 +1,11 @@
-Return-Path: <dg@suse.com>
-Date: Sun, 10 Dec 2000 22:48:08 -0800
-From: David Gould <dg@suse.com>
-Subject: Re: [linux-lvm] How do you mount a snapshot?
-Message-ID: <20001210224808.B3772@archimedes.oak.suse.com>
-References: <20001207223300.D25533@archimedes.oak.suse.com> <323270000.976284597@coffee> <20001208103007.D27307@archimedes.oak.suse.com> <03b601c06155$c25d1b10$070414ac@pin.lu>
-Mime-Version: 1.0
-In-Reply-To: <03b601c06155$c25d1b10$070414ac@pin.lu>; from chris@Nice.CH on Fri, Dec 08, 2000 at 09:30:50PM +0100
+Return-Path: <ulf@twc.de>
+Message-ID: <3A3477D0.94BC1D88@twc.de>
+Date: Mon, 11 Dec 2000 07:44:32 +0100
+From: Ulf Bartelt <ulf@twc.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Linux 2.4.0-test12-pre7 LVM .9 vs .8final
+References: <Pine.OSF.4.21.0012081042590.14388-100000@mail.mnsu.edu>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,31 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Fri, Dec 08, 2000 at 09:30:50PM +0100, Christian Limpach wrote:
-> > Ok, so we are agreeing, it does not work on ext2 either unless you sync
-> > and do not write between the sync and the snapshot. Doable, but not
-> exactly
-> > "safe".
-> 
-> hmm, I think it works for ext2 because you can always mount an ext2
-> filesystem even if it's in an inconsistent state.  This is what happens
-> everytime when your machine panics and you need to fsck your disks during
-> the reboot, the root filesystem is mounted read-only...  It's my
+Ricardo Muggli wrote:
+>=20
+> I have noticed that Linux 2.4.0-test12-pre7 still comes with .8final. Is
+> there a plan to have .9 incorporated at some future time into the stock
+> 2.4 kernels? Will this happen before 2.4 comes out?
+>=20
+> Also is there a transition path between .8final and .9? (short of save
+> everything to tape and restore?)
 
-Ok, but then you have an inconsistant filesystem. Which is not exactly
-what I think of as "works" or "safe". My point was that snapshots are
-great, but don't make the problem of consistancy magically disappear.
+I was wondering =EF=BF=BDbout the same question yesterday...
 
--dg
+A set of lvm tools for multiple versions of the io protocol could help a
+lot...
 
--- 
-David Gould                                                 dg@suse.com
-SuSE, Inc.,  580 2cd St. #210,  Oakland, CA 94607          510.628.3380
-"As I've gained more experience with Perl it strikes me that it
- resembles Lisp in many ways, albeit Lisp as channeled by an awk
- script on acid."  -- Tim Moore <moore@herschel.bricoworks.com>,
-                      on comp.lang.lisp
+Sure this can be faked using links, wrappers etc...
