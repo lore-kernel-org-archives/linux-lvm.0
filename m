@@ -1,55 +1,89 @@
-Message-ID: <38B6EFBF.A005D015@osp.nl>
-Date: Fri, 25 Feb 2000 22:10:23 +0100
-From: Jos Visser <josv@osp.nl>
+Message-ID: <38B76B6E.C91A550C@alwan.com>
+Date: Fri, 25 Feb 2000 23:58:06 -0600
+From: Chris Anderson <chris@alwan.com>
 MIME-Version: 1.0
-Subject: Re: LVM Admin HOWTO (was Re: [linux-lvm] Re: *** ANNOUNCEMENT ***LVM  
- 0.8final driver included in 2.3.47(fwd))
-References: <31A612FE6020D2119F6400A0C9B67EBB116F0F@fthw901e.as.fth.sbs.de>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] 2.2.12 LVM 0.8 patch for Red Hat?
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg=sha1; boundary="------------ms4D7485FA9601AD1E1EC4DC35"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Franken Klaus <Klaus.Franken@fth2.siemens.de>
-Cc: "'Richard Heider jr.'" <rhj@heider.de>, Peter.Wuestefeld@resnova.de, linux-lvm@msede.com
+To: "linux-lvm@msede.com" <linux-lvm@msede.com>
 
-Franken Klaus wrote:
-> 
-> Hi,
-> 
-> > -----Original Message-----
-> > From: Richard Heider jr. [mailto:rhj@heider.de]
-> > Sent: Friday, February 25, 2000 1:24 PM
-> > To: Peter.Wuestefeld@resnova.de; linux-lvm@msede.com; Franken Klaus
-> > Subject: LVM Admin HOWTO (was Re: [linux-lvm] Re: *** ANNOUNCEMENT ***
-> > LVM 0.8final driver included in 2.3.47(fwd))
-> 
-> >
-> > P.S. I just read Klaus's reply. I hereby concretly offer to
-> > take over the German Howto as a maintainer.
-> 
-> Very good!
-> 
-> But someone should translate it to english.
-> My english is too bad and I don't have enough time for a second howto...
-> 
-> It would be really bad if we don't have an english version, because than someone
-> else will write a second documentation - it's a waste of time.
-> 
-> Any volunteers?
-> 
-> Klaus.Franken@fth2.siemens.de    +49 911 978 3707
-> Siemens Business Services IP 21F
+This is a cryptographically signed message in MIME format.
 
-Hi,
+--------------ms4D7485FA9601AD1E1EC4DC35
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-I offered Heinz some time ago to develop a complete HOWTO on LVM (in
-English). Unfortunately, since then, a lot of stuff happened that
-effectively blocked me from pursuing this. I am however still interested
-in the task, a group effort would be a marvellous idea.
+I started to use raid 1 under redhat and now I have a system that needs
+LVM too.  The problem is it is a pain to get the raid working from red
+hat with the 2.2.14 kernel.  So I am back to the 2.2.12 kernal but I do
+not see any patch for 0.8i.  I tried to new patches and old patches but
+it was a mess.  Any help?
 
-++Jos
+Anyone have Red Hat 2.2.12 running lvm 0.8?  If so can I get your Patch
+for the kernal?  I did look through the archive and a person did ask for
+the patch for 2.2.12 but no one answered.
 
--- 
-All the rivers run into the sea; yet the sea is not full; unto
-the place from whence the rivers come, thither they return again.
+Thanks you,
+
+   Chris Anderson
+
+--------------ms4D7485FA9601AD1E1EC4DC35
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIKpgYJKoZIhvcNAQcCoIIKlzCCCpMCAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCC
+CF0wggUnMIIEkKADAgECAhA14LyrFmviXOa5H/eKmM+TMA0GCSqGSIb3DQEBBAUAMIHMMRcw
+FQYDVQQKEw5WZXJpU2lnbiwgSW5jLjEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29y
+azFGMEQGA1UECxM9d3d3LnZlcmlzaWduLmNvbS9yZXBvc2l0b3J5L1JQQSBJbmNvcnAuIEJ5
+IFJlZi4sTElBQi5MVEQoYyk5ODFIMEYGA1UEAxM/VmVyaVNpZ24gQ2xhc3MgMSBDQSBJbmRp
+dmlkdWFsIFN1YnNjcmliZXItUGVyc29uYSBOb3QgVmFsaWRhdGVkMB4XDTAwMDIwNzAwMDAw
+MFoXDTAxMDIwNjIzNTk1OVowggEQMRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjEfMB0GA1UE
+CxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazFGMEQGA1UECxM9d3d3LnZlcmlzaWduLmNvbS9y
+ZXBvc2l0b3J5L1JQQSBJbmNvcnAuIGJ5IFJlZi4sTElBQi5MVEQoYyk5ODEeMBwGA1UECxMV
+UGVyc29uYSBOb3QgVmFsaWRhdGVkMTMwMQYDVQQLEypEaWdpdGFsIElEIENsYXNzIDEgLSBO
+ZXRzY2FwZSBGdWxsIFNlcnZpY2UxFzAVBgNVBAMUDkNocmlzIEFuZGVyc29uMR4wHAYJKoZI
+hvcNAQkBFg9jaHJpc0BhbHdhbi5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAN31
+Pw5bIWCEGpDtVb3kV1G7JEMH/ECRNxH4s9EfaJZ0T5ee/nm0BujUEu0ek3RqAouEBxz5o0vy
+oZBxBBf5AAyUyAFVbComcVQfWRJ2rDCvOe6cpsPCa9AAweMESWd1IUaE2GHU9QYwVdg+viyu
+0DmDaYqBCOsfpYQzMvnCNh3pAgMBAAGjggHBMIIBvTAJBgNVHRMEAjAAMIGsBgNVHSAEgaQw
+gaEwgZ4GC2CGSAGG+EUBBwEBMIGOMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy52ZXJpc2ln
+bi5jb20vQ1BTMGIGCCsGAQUFBwICMFYwFRYOVmVyaVNpZ24sIEluYy4wAwIBARo9VmVyaVNp
+Z24ncyBDUFMgaW5jb3JwLiBieSByZWZlcmVuY2UgbGlhYi4gbHRkLiAoYyk5NyBWZXJpU2ln
+bjARBglghkgBhvhCAQEEBAMCB4AwgYYGCmCGSAGG+EUBBgMEeBZ2ZDQ2NTJiZDYzZjIwNDcw
+MjkyOTg3NjNjOWQyZjI3NTA2OWM3MzU5YmVkMWIwNTlkYTc1YmM0YmM5NzAxNzQ3ZGE1ZDNm
+MjE0MWJlYWRiMmJkMmU4OTIxMGFkNmJmM2QyMTE0ODljYTFiMjQ0ZmFmM2VhNDUwYzAwBgpg
+hkgBhvhFAQYHBCIWIDZkNjgwYWY3ZGM0NWE5OWM1NTJkN2Q3YjRjYTI4OGRjMDMGA1UdHwQs
+MCowKKAmoCSGImh0dHA6Ly9jcmwudmVyaXNpZ24uY29tL2NsYXNzMS5jcmwwDQYJKoZIhvcN
+AQEEBQADgYEAfxMC1IcZq/V/Mi9W8Ngok5Tg4ru3Z/kNihrBpkzXbwkx2MOqD6iPLHmv3MP4
+g0x1f5noUVEKAbiMh9r9T2EhezsdyfGSS4EcGH0AFmpovR4FD5RK3sjtoFQ9ETO/WLGzwY33
+LkUP3Zd3XtgB7/1zqYio4uaPr+iHedKIeAn6d3EwggMuMIICl6ADAgECAhEA0nYujRQMPX2y
+qCVdr+4NdTANBgkqhkiG9w0BAQIFADBfMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNp
+Z24sIEluYy4xNzA1BgNVBAsTLkNsYXNzIDEgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlv
+biBBdXRob3JpdHkwHhcNOTgwNTEyMDAwMDAwWhcNMDgwNTEyMjM1OTU5WjCBzDEXMBUGA1UE
+ChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBE
+BgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9yeS9SUEEgSW5jb3JwLiBCeSBSZWYu
+LExJQUIuTFREKGMpOTgxSDBGBgNVBAMTP1ZlcmlTaWduIENsYXNzIDEgQ0EgSW5kaXZpZHVh
+bCBTdWJzY3JpYmVyLVBlcnNvbmEgTm90IFZhbGlkYXRlZDCBnzANBgkqhkiG9w0BAQEFAAOB
+jQAwgYkCgYEAu1pEigQWu1X9A3qKLZRPFXg2uA1Ksm+cVL+86HcqnbnwaLuV2TFBcHqBS7lI
+E1YtxwjhhEKrwKKSq0RcqkLwgg4C6S/7wju7vsknCl22sDZCM7VuVIhPh0q/Gdr5FegPh7Yc
+48zGmo5/aiSS4/zgZbqnsX7vyds3ashKyAkG5JkCAwEAAaN8MHowEQYJYIZIAYb4QgEBBAQD
+AgEGMEcGA1UdIARAMD4wPAYLYIZIAYb4RQEHAQEwLTArBggrBgEFBQcCARYfd3d3LnZlcmlz
+aWduLmNvbS9yZXBvc2l0b3J5L1JQQTAPBgNVHRMECDAGAQH/AgEAMAsGA1UdDwQEAwIBBjAN
+BgkqhkiG9w0BAQIFAAOBgQCIuDc73dqUNwCtqp/hgQFxHpJqbS/28Z3TymQ43BuYDAeGW4UV
+ag+5SYWklfEXfWe0fy0s3ZpCnsM+tI6q5QsG3vJWKvozx74Z11NMw73I4xe1pElCY+zCphcP
+XVgaSTyQXFWjZSAA/Rgg5V+CprGoksVYasGNAzzrw80FopCubjGCAhEwggINAgEBMIHhMIHM
+MRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0
+d29yazFGMEQGA1UECxM9d3d3LnZlcmlzaWduLmNvbS9yZXBvc2l0b3J5L1JQQSBJbmNvcnAu
+IEJ5IFJlZi4sTElBQi5MVEQoYyk5ODFIMEYGA1UEAxM/VmVyaVNpZ24gQ2xhc3MgMSBDQSBJ
+bmRpdmlkdWFsIFN1YnNjcmliZXItUGVyc29uYSBOb3QgVmFsaWRhdGVkAhA14LyrFmviXOa5
+H/eKmM+TMAkGBSsOAwIaBQCggYYwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
+9w0BCQUxDxcNMDAwMjI2MDU1ODA3WjAjBgkqhkiG9w0BCQQxFgQU1MseqjXh0PtByR721P/d
+Un0oC3QwJwYJKoZIhvcNAQkPMRowGDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDANBgkqhkiG
+9w0BAQEFAASBgNmBioMDBG97KpTobH0bivTTNPM14MoFTZCydftJ+9qtIgxNe3GJHb1ZY9mu
+5CxcXGUb0XRmZVilRnTO2zzZE+O9Nc81p/usnb637Sah21MRAkwUHBTeyuy6eL9ygw1nalIZ
+O9W3HKdwLfKD37Y00bQauYFUMrLoeGy0QSzhGphl
+--------------ms4D7485FA9601AD1E1EC4DC35--
