@@ -1,11 +1,10 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 26 Apr 2001 11:16:18 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Return-Path: <carenas@chasqui.lared.net.pe>
+Date: Thu, 26 Apr 2001 04:17:00 -0500 (PET)
+From: Carlo Marcelo Arenas Belon <carenas@chasqui.lared.net.pe>
 Subject: Re: [linux-lvm] Cannot unmount my /usr partition.....
-Message-ID: <20010426111618.A10148@sistina.com>
-References: <3AE7D6AA.895E9C79@gecpalau.com>
-Mime-Version: 1.0
-In-Reply-To: <3AE7D6AA.895E9C79@gecpalau.com>; from glenn@gecpalau.com on Thu, Apr 26, 2001 at 05:04:58PM +0900
+In-Reply-To: <3AE7D6AA.895E9C79@gecpalau.com>
+Message-ID: <Pine.LNX.4.33.0104260410000.25537-100000@chasqui.LaRed.net.pe>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,78 +16,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Apr 26, 2001 at 05:04:58PM +0900, Glenn Shannon wrote:
-> Hi all!
-> 
-> Great job on LVM...loving it so far..just have a quick question if I
-> may..
-> 
-> Here is my current setup:
-> RH 6.2 with misc updates (PAM GlibC etc.)
-> 2.4.3 kernel with LVM Patch and ReiserFS Patch
-> Compiled in (of special note) are ReiserFS support, DevFS support with
-> automount at boot option enabled, and LVM 0.9.1Beta7(from patch made in
-> the PATCHES dir of sourcetree).
-> 
+<SNIP>
 > Boots fine (better than fine!) and devfs reiser and lvm seem to play
 > well together while they are running...... but upon shutdown I cannot
 > unmount my /usr partition for some reason it is busy.
-> 
+
+that means that something is running on /usr
+
 > I have hacked the init scripts to let me reboot successfully (as it IS a
 > production machine with automatic reboot times entered in the cron) but
 > it cannot deactivate my LVM due to the /usr partition being busy.
 
-Have you already tried to put an "lsof|grep '/usr/';sleep SomeTime" into your
-shutdown script before the umount in order to find the bad guy(s) aka
-processes ;-) which have files still open?
-Then you might enhance scripts to shut them down correctly.
+did you add "vgchange -a n" to your halt script?, also you should add
+"vgchange -a y" to your /etc/rc.d/rc.sysinit as instructed on sistina's
+documentation
 
-In general: there's no danger related to not running "vgchange -a n" on your
-            VG(s) because nothing is written to the PVs at all today.
+regards,
 
-> 
-> Current slicing setup:
-> 
-> LVM Name is warlock1
-> size is 11.48GB
-> 2.48GB Free
-> 
-> Mount Point    Partition    type        size
-> /                        /dev/hda4    ext2        2G (not LVM)
-> /usr           /dev/warlock1/usr  reiserfs  6GB (LVM)
-> /root        /dev/warlock1/root reiserfs 1GB (LVM)
-> 
-> 
-> Any ideas here guys?
-> Other than that little hiccup, I'm having a GREAT time setting up and
-> messing with LVM!
-> 
-> 
-> Glenn
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Carlo
