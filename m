@@ -1,73 +1,110 @@
-Message-Id: <199906231110.AA22585@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Date: Thu, 24 Jun 1999 19:22:41 +0200
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] Compiling LVM 0.6 on Redhat 6.0
-Date: Wed, 23 Jun 1999 13:09:00 METDST
-In-Reply-To: <ENJGHHKIMLNCBAAA@my-deja.com>; from "George Nicolaou" at Jun 22, 99 5:22 pm
+Message-ID: <19990624192241.B18126@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+References: <ENJGHHKIMLNCBAAA@my-deja.com> <199906231110.AA22585@mailgate1b.telekom.de>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="FsscpQKzF/jJk6ya"
+In-Reply-To: <199906231110.AA22585@mailgate1b.telekom.de>; from Heinz Mauelshagen on Wed, Jun 23, 1999 at 01:09:00PM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: gnicolao@my-deja.com
-Cc: linux-lvm@msede.com, mge@u9ete.ez-darmstadt.telekom.de
+To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, gnicolao@my-deja.com
+Cc: linux-lvm@msede.com
 
 
-Hi there!
+--FsscpQKzF/jJk6ya
+Content-Type: text/plain; charset=us-ascii
 
-Looks like you had a compile problem in the LVM lib which caused
-the library _not_ to be build.
+On Wed, Jun 23, 1999 at 01:09:00PM +0000, Heinz Mauelshagen wrote:
+> 
+> Hi there!
+> 
+> Looks like you had a compile problem in the LVM lib which caused
+> the library _not_ to be build.
+> 
+i had to use this patche to compile with glibc2.0/2.1 and a recent
+(2.2.10-ac3) kernel
 
-Could you please have a look at the library build output an tell me?
+should not break other cases
 
 Regards,
-Heinz
+Luca
 
->
-> Hi all,
->   I have just found LVM and attempting to install it on a newly installed headhat 6 box. When compiling I get the following error:
-> 
-> Using the static LVM Library
-> make[2]: *** No rule to make target `/usr/local/src/LVM/0.6/tools/lib/liblvm.a', needed by `e2fsadm'.  Stop.
-> make[2]: Leaving directory /usr/local/src/LVM/0.6/tools'
-> make[1]: *** [all] Error 2
-> make[1]: Leaving directory '/usr/local/src/LVM/0.6/tools'
-> make: *** [all] Error 2
->
-> Using XLINKER
-> make[1]: Entering directory `/usr/local/src/LVM/0.6/tools'
-> cc  -L/usr/local/src/LVM/0.6/tools/lib -Xlinker -rpath /usr/local/src/LVM/0.6/to
-> ols/lib -Xlinker -rpath /lib -Xlinker -rpath /usr/lib -llvm -o e2fsadm e2fsadm.o
-> 
-> /usr/bin/ld: cannot open -llvm: No such file or directory
-> collect2: ld returned 1 exit status
-> make[1]: *** [e2fsadm] Error 1
-> make[1]: Leaving directory `/usr/local/src/LVM/0.6/tools'
-> make: *** [all] Error 2
-> 
-> 
-> Can someone please shead some light on this error.
-> 
-> Cheers
-> George
-> 
-> 
-> 
-> --== Sent via Deja.com http://www.deja.com/ ==--
-> Share what you know. Learn what you don't.
-> 
+-- 
+Luca Berra -- bluca@comedia.it
+    Communications Media & Services S.r.l.
 
+--FsscpQKzF/jJk6ya
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="lvm-0.6.glibc.patch"
 
---
+--- 0.6/tools/lib/liblvm.h.make.orig	Fri Feb 26 01:46:28 1999
++++ 0.6/tools/lib/liblvm.h	Thu Jun 24 08:08:26 1999
+@@ -78,6 +78,25 @@
+ #  include <time.h>
+ int llseek ( unsigned int, unsigned long long, unsigned int);
+ 
++/* from genhd.h */
++#define DOS_EXTENDED_PARTITION 5
++#define LINUX_EXTENDED_PARTITION 0x85
++#define WIN98_EXTENDED_PARTITION 0x0f
++#define LINUX_SWAP_PARTITION	0x82
++
++struct partition {
++	unsigned char boot_ind;		/* 0x80 - active */
++	unsigned char head;		/* starting head */
++	unsigned char sector;		/* starting sector */
++	unsigned char cyl;		/* starting cylinder */
++	unsigned char sys_ind;		/* What partition type */
++	unsigned char end_head;		/* end head */
++	unsigned char end_sector;	/* end sector */
++	unsigned char end_cyl;		/* end cylinder */
++	unsigned int start_sect;	/* starting sector counting from 0 */
++	unsigned int nr_sects;		/* nr of sectors in partition */
++} __attribute__((packed));
++
+ #else /* __GLIBC__ < 2 */
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION ( 2, 1, 0)
+@@ -94,10 +113,10 @@
+ #  include <linux/msdos_fs.h>
+ #  include <malloc.h>
+ #  include <stdio.h>
++#  include <linux/genhd.h>
+ #endif /* __GLIBC__ > 1 */
+ 
+ #include <sys/ioctl.h>
+-#include <linux/genhd.h>
+ #include <linux/major.h>
+ 
+ #include <lvm.h>
+--- 0.6/tools/lib/pv_get_size.c.make.orig	Fri Feb 26 01:46:28 1999
++++ 0.6/tools/lib/pv_get_size.c	Thu Jun 24 08:05:16 1999
+@@ -112,9 +112,10 @@
+ #endif
+          /* is it a welcome extended partition? */
+          if ( part[i].sys_ind == DOS_EXTENDED_PARTITION ||
+-              part[i].sys_ind == LINUX_EXTENDED_PARTITION) {
++              part[i].sys_ind == LINUX_EXTENDED_PARTITION ||
++              part[i].sys_ind == WIN98_EXTENDED_PARTITION) {
+ #ifdef DEBUG
+-            debug ( "pv_get_size -- DOS/LINUX_EXTENDED_PARTITION\n");
++            debug ( "pv_get_size -- DOS/LINUX/W98_EXTENDED_PARTITION\n");
+ #endif
+             extended_flag = 1;
+             offset = extended_offset + part[i].start_sect;
+--- 0.6/tools/lvm_user.h.make.orig	Thu Jun 24 08:09:49 1999
++++ 0.6/tools/lvm_user.h	Thu Jun 24 08:09:57 1999
+@@ -42,7 +42,7 @@
+ #include <features.h>
+ #include <liblvm.h>
+ 
+-#include <linux/genhd.h>
++/* #include <linux/genhd.h> */
+ #include <linux/major.h>
+ 
+ #if ( __GLIBC__ > 1)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--FsscpQKzF/jJk6ya--
