@@ -1,10 +1,9 @@
-From: Bradley M Alexander <storm@tux.org>
-Subject: Re: [linux-lvm] LVM fails at bootup
-Message-ID: <20011116001859.D13162@sonsofthunder.yi.org>
-References: <20011112141948.P715@sonsofthunder.yi.org> <20011112123227.U1778@lynx.no> <3BF323F5.5E90F63B@divsol.com> <20011115081208.B363@btconnect.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011115081208.B363@btconnect.com>
+Message-ID: <3BF4F055.DD18E13E@LTUtech.com>
+From: Igor Dumaire <Igor.Dumaire@LTUtech.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] VG is not found !
+References: <Pine.LNX.4.33.0111152011520.24310-100000@dragon.inside.ntisys.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,51 +14,104 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 15 23:17:02 2001
+Date: Fri Nov 16 04:53:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Thu, Nov 15, 2001 at 08:12:08AM +0000, Joe Thornber wrote:
-> On Wed, Nov 14, 2001 at 07:09:57PM -0700, Jim Cromie wrote:
-> > Andreas Dilger wrote:
-> > 
-> > > On Nov 12, 2001  14:19 -0500, Bradley M Alexander wrote:
-> > > > I added the vgscan and the vgchange commands to the end of the checkroot.sh
-> > > > script (which in Debian is different from the mountfs.sh script). When the
-> > > > vgscan runs, it generates about two pages of drive errors:
-> > > >
-> > > > hdb: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error }
-> > > > hdb: read_intr: error=0x04 { DriveStatusError }
-> 
-> I've also seen this error when the kernel mistakenly thought there was
-> a partition on an IDE disk that I was using as a PV.  The vgscan command
-> then trys to look at this bogus partition and causes all these errors.
+Hi,
 
-Hmmm...The thing is that the only thing _on_ this hard drive is a PV. I
-gave the entire disk to LVM, by creating a PV on it:
+I can see all drives :
+# lvmdiskscan
+lvmdiskscan -- reading all disks / partitions (this may take a while...)
+lvmdiskscan -- /dev/hda1 [      70.57 MB] Primary  LINUX native partition=
+ [0x83]
+lvmdiskscan -- /dev/hda2 [      19.07 GB] DOS extended partition [0x05]
+lvmdiskscan -- /dev/hda5 [       2.01 GB] Extended LINUX native partition=
+ [0x83]
+lvmdiskscan -- /dev/hda6 [       1.00 GB] Extended LINUX native partition=
+ [0x83]
+lvmdiskscan -- /dev/hda7 [       1.00 GB] Extended LINUX native partition=
+ [0x83]
+lvmdiskscan -- /dev/hda8 [     517.69 MB] Extended LINUX native partition=
+ [0x83]
+lvmdiskscan -- /dev/hda9 [      14.55 GB] Extended LINUX native partition=
+ [0x83]
+lvmdiskscan -- /dev/hdc1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdd1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hde1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdf1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdg1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdh1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- 7 disks
+lvmdiskscan -- 0 whole disks
+lvmdiskscan -- 0 loop devices
+lvmdiskscan -- 0 multiple devices
+lvmdiskscan -- 0 network block devices
+lvmdiskscan -- 13 partitions
+lvmdiskscan -- 6 LVM physical volume partitions
 
-pvcreate /dev/hdb
+I can see volume group "lvm2" but not "lvm1"=20
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "lvm2"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume =
+group
 
-But now that I think about it, since the lvcreate required the absolute
-path through devfs (/dev/ide/host0/bus0/target1/lun0/disc), perhaps the
-pvcreate should have been done this way as well...But why would it work
-manually and not at boot? 
+I can display lvm2 info
+# vgdisplay lvm2
+--- Volume group ---
+VG Name               lvm2
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                255
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                255
+Cur PV                3
+Act PV                3
+VG Size               171.79 GB
+PE Size               4.00 MB
+Total PE              43977
+Alloc PE / Size       43776 / 171.00 GB
+Free  PE / Size       201 / 804.00 MB
+VG UUID               Jp3gDv-ib7D-p5te-FFLZ-lNjI-5brK-fzjEM6
 
-Let me try recreating it and try it again...
+but, not lvm1 info !
+# vgdisplay lvm1
+vgdisplay -- volume group "lvm1" not found
 
-Thanks Joe,
--- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm@debian.org
-                                         |   storm@tux.org
-============================================================================
-Stay out of clouds. The silver lining everyone keeps talking
-about might be another airplane going in the opposite direction.
-Reliable sources also report that mountains have been known to hide
-out in clouds.
-					--Rules of the Air, #13
+So, What do I do?
+
+Thanks,
+
+
+Benjamin Scott a =E9crit :
+>=20
+> On Thu, 15 Nov 2001, Igor Dumaire wrote:
+> > I had created 2 VG and worked sometime with its. I have stopped the
+> > server and at the reboot the first VG have disappeared ! The second i=
+t's
+> > OK !!
+>=20
+>   Start with these commands:
+>=20
+>         lvmdiskscan
+>         vgscan
+>         vgdisplay
+>         vgchange -ay
+>=20
+>   Do not just blindly try the commands if you are not familiar with the=
+m;
+> read the manual pages first.  Try the '--verbose' switch with each for =
+more
+> info.
+>=20
+--=20
+Igor Dumaire
+
+www.LTUtech.com - Making Sense of Visual Content
+------------------------------------------------
