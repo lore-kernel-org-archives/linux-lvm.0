@@ -1,12 +1,10 @@
-Return-Path: <jcarles@dtic.ua.es>
-From: "Juan Carlos Monllor" <jcarles@dtic.ua.es>
-Date: Thu, 8 Feb 2001 08:22:33 +0100
-Message-ID: <NDBBIPFGCOKBKKOFONLLEEMPCCAA.jcarles@dtic.ua.es>
+Return-Path: <dice@mfa.kfki.hu>
+Date: Thu, 8 Feb 2001 10:08:01 +0100 (CET)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+In-Reply-To: <20010207110140.H22166@sistina.com>
+Message-ID: <Pine.LNX.4.32.0102081004230.4021-100000@falka.mfa.kfki.hu>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_NextPart_000_007C_01C091A8.49859B80"
-In-Reply-To: <200102071431.PAA20528@aitana.cpd.ua.es>
-Subject: [linux-lvm] Re: I can't add other disk in lvm system
+Subject: [linux-lvm] debianized lvm 0.9.1b3 package
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,38 +16,15 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
-
-This is a multi-part message in MIME format.
-
-------=_NextPart_000_007C_01C091A8.49859B80
-Content-Type: text/plain;
-	charset="iso-8859-1"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: AJ Lewis <lewis@sistina.com>
+Cc: linux-lvm@sistina.com
 
+Hi!
 
-	Hi all, I have already resolved the problem.
+I've debianized the lvm 0.9.1b3 sources based on your 0.9 packages.
 
-	The LVM run OK with kernel 2.4.1.
+http://dice.mfa.kfki.hu/download/lvm/
 
-	It is  not possible to add a new partition to VG with the kernel 2.4.0.
-
-	Thanks.
-					
-------=_NextPart_000_007C_01C091A8.49859B80
-Content-Type: text/x-vcard;
-	name="Joan Carles Monllor.vcf"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="Joan Carles Monllor.vcf"
-
-BEGIN:VCARD
-VERSION:2.1
-N:Monllor;Joan;Carles
-FN:Joan Carles Monllor
-NICKNAME:jcarles
-EMAIL;PREF;INTERNET:jcarles@dtic.ua.es
-REV:20000608T070409Z
-END:VCARD
-
-------=_NextPart_000_007C_01C091A8.49859B80--
+Gergely
