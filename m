@@ -1,32 +1,22 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200008030742.e737gX632588@webber.adilger.net>
-Subject: Re: [linux-lvm] lvrename oddities
-In-Reply-To: <OF47714B36.BB532552-ONC125692F.00703DF0@resnova.de>
- "from Peter.Wuestefeld@resnova.de at Aug 3, 2000 08:47:40 am"
-Date: Thu, 3 Aug 2000 01:42:33 -0600 (MDT)
+Message-ID: <20000803165312.27033.qmail@abv.bg>
+From: "Rumen Ginev" <rumen@abv.bg>
+Date: Thu, 03 Aug 2000 16:53:12 +0200
+Subject: [linux-lvm] patch
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Peter.Wuestefeld@resnova.de
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@msede.com
 
-Peter Wuestefeld writes:
-> When booting, vgscan wipes out /etc/lvmtab.d and its contents as well as
-> /etc/lvmtab.
+My kernel version is  2.2.14-15mdk. I searched on all mirrors for a  patch-2.2.14, but all I found is  patch-2.2.13.
+May I apply this patch safely? 
+If not where can I download the correct patch version from?
 
-Not that it is a fix for your problem, but I wonder about the reason for
-using vgscan at boot time...  I know that this is what the LVM documentation
-says to do, but _I_ would much rather have only "vgchange -a y" at boot time.
-If LVM work needs to be done (PV/VG added or removed) the sysadmin should
-know about it and be required to do something.  Nothing like having all of
-your VGs dissapear after a reboot because a cable was disconnected...  At
-most, it should do like AIX and simply mark the PV/VG as inactive or similar.
+Regards, Rumen
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+----------------------------------------------------
+������� ����!   http://www.abv.bg   Send your mail!
+������ �� !   http://www.netinfo.bg   Get connected!
+������ !   http://gyuvetch.bg  Visit! 
