@@ -1,9 +1,6 @@
-From: "Mark H. Wood" <mwood@IUPUI.Edu>
-Subject: Re: [linux-lvm] vgscan and initrd
-In-Reply-To: <200306260753.h5Q7rm4J014403@ruby.ridersoft.net>
-Message-ID: <Pine.LNX.4.55.0306261153470.19405@mhw.ULib.IUPUI.Edu>
-References: <200306260753.h5Q7rm4J014403@ruby.ridersoft.net>
-MIME-Version: 1.0
+From: Mail Delivery System <Mailer-Daemon@ucl.ac.uk>
+Message-Id: <E19VbVE-0003ga-H9@vscan-b.ucl.ac.uk>
+Subject: [linux-lvm] Mail delivery failed: returning message to sender
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,21 +11,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 26 12:02:01 2003
+Date: Thu Jun 26 13:30:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Sounds like what I ran into not long ago.  (FAQ material?)  My VG was so
-large that vgscan wanted to write out backup info. that was larger than
-the free space in the initrd that Red Hat had set up.  It was suggested to
-mount a tmpfs volume over /etc, and meanwhile I have been recreating the
-initrd image leaving enough space to allow vgscan to run.
+This message was created automatically by mail delivery software.
 
-vgscan won't actually say it ran out of storage, but that's what was
-happening here.
+A message that you sent could not be delivered to one or more of its
+recipients. This is a permanent error. The following address(es) failed:
 
--- 
-Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
-MS Windows *is* user-friendly, but only for certain values of "user".
+  S.Kille@CS.UCL.AC.UK
+    SMTP error from remote mailer after RCPT TO:<S.Kille@CS.UCL.AC.UK>:
+    host bells.cs.ucl.ac.uk [128.16.5.31]: 550 Unknown local user 'S.Kille'
+
+------ This is a copy of the message, including all the headers. ------
+
+Return-path: <linux-lvm@sistina.com>
+Received: from 66-75-238-24.san.rr.com ([66.75.238.24] helo=SIGWA)
+	by vscan-b.ucl.ac.uk with esmtp (Exim 4.14)
+	id 19VbV2-0003ff-Im
+	for S.Kille@CS.UCL.AC.UK; Thu, 26 Jun 2003 19:29:36 +0100
+From: <linux-lvm@sistina.com>
+To: <S.Kille@CS.UCL.AC.UK>
+Subject: {Virus?} Re: Application
+Date: Thu, 26 Jun 2003 11:29:34 --0700
+Importance: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MSMail-Priority: Normal
+X-Priority: 3 (Normal)
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="CSmtpMsgPart123X456_000_04002234"
+Message-Id: <E19VbV2-0003ff-Im@vscan-b.ucl.ac.uk>
+X-UCL-MailScanner: Found to be infected
+
+This is a multipart message in MIME format
+
+--CSmtpMsgPart123X456_000_04002234
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+
+Warning: This message has had one or more attachments removed
+Warning: (your_details.zip).
+Warning: Please read the "VirusWarning.txt" attachment(s) for more information.
+
+Please see the attached zip file for details.
+
+--CSmtpMsgPart123X456_000_04002234
+Content-Type: text/plain; charset="us-ascii"; name="VirusWarning.txt"
+Content-Disposition: inline; filename="VirusWarning.txt"
+Content-Transfer-Encoding: quoted-printable
+
+This is a message from the E-Mail Virus Protection System at UCL
+----------------------------------------------------------------------
+
+The original e-mail attachment "your_details.zip"
+was believed to be infected by a virus and has been replaced by this warning
+message.
+
+
+
+--
+UCL E-mail Virus Protection System
+Helpdesk@ucl.ac.uk
+Internal phone: 37779
+
+
+--CSmtpMsgPart123X456_000_04002234--
