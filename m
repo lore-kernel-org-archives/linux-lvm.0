@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 21 Feb 2001 08:59:59 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] snapshot of Reiserfs
-Message-ID: <20010221085959.C568@tykepenguin.com>
-References: <20010220224907.D21281@srv.sistina.com> <14995.16871.694699.166774@nv.winux.com>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 21 Feb 2001 10:08:49 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Stripe size of 2K allowed?
+Message-ID: <20010221100849.A24951@srv.sistina.com>
+References: <20010220130303.A505@jadzia>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <14995.16871.694699.166774@nv.winux.com>; from lvm@winux.com on Tue, Feb 20, 2001 at 11:19:51PM -0500
+In-Reply-To: <20010220130303.A505@jadzia>; from josv@osp.nl on Tue, Feb 20, 2001 at 01:03:03PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,21 +21,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Feb 20, 2001 at 11:19:51PM -0500, lvm@winux.com wrote:
-> Heinz J. Mauelshagen writes:
-> > ... Linux Logical Volume Manager 0.9.1 Beta 5 is available now ...
-> > ...
-> > Please help us to stabilize for 0.9.1 ASAP and test is as much as possible!
+On Tue, Feb 20, 2001 at 01:03:03PM -0800, Jos Visser wrote:
+> Hi,
 > 
-> I am using LVM 0.9.1 beta 5 on Linux 2.4.1 with Reiserfs.
-> I have applied both of the following patches:
+> I was trying to create a striped lvol with a stripe size of 2K. This
+> failed due to an illegal parameter:
 > 
-> 0.9.1_beta5/PATCHES/lvm-0.9.1_beta5-2.4.1.patch
-> 0.9.1_beta5/PATCHES/linux-2.4.1-VFS-lock.patch
+> # lvcreate -i 2 -I 2 -L 100 vg01
+> lvcreate -- invalid stripe size 2
 > 
-> Snapshots created when the filesystem is active cannot be mounted.
-> If I `umount' the filesystem before creating the snapshot, all is well.
+> It seems that stripe sizes of 1K and 2K are not allowed, although the
+> lvcreate manual page says that the stripe size is 2^n with 0<=n<=7.
 
-Did you remember to uncomment LVM_VFS_ENHANCEMENT in lvm.c ?
+An error in the documentation.
+The minimum stripe size is 4k.
 
-patrick
+Going to correct it...
+
+> 
+> Duh?
+> 
+> ++Jos
+> 
+> 
+> -- 
+> I have no need for a spirituality which can not encompass my humanness.
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
