@@ -1,8 +1,6 @@
-Message-ID: <20030303131039.GB9003@elrond.lohmann-services.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-From: Peter Lohmann <listenmann@elrond.lohmann-services.de>
-Subject: [linux-lvm] Mounting partial LV with reiserfs?
+From: john cole <joncoma@starmedia.com>
+Message-Id: <20030303141941.2E479185FD@smtp.latinmail.com>
+Subject: [linux-lvm] FROM JOHN COLEMAN
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,16 +11,102 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  3 07:10:01 2003
+Date: Mon Mar  3 08:20:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 To: linux-lvm@sistina.com
 
-Hi folks!
+Dear Sir, 
 
-Is it possible to mount a partial LV with reiserfs on it?
-One of my disks crashed and i wanted to mount the LV partially, but
-reiserfs complains about some part of the tree is missing...?
+I am Mr. John Coleman and my sister is Miss Rose Coleman, we are the 
+children 
+of late Chief Paul Coleman from Sierra Leone. I am writing you in 
+absolute confidence primarily to seek your assistance to transfer our cash 
+of 
+twenty one Million Dollars ($21,000.000.00) now in the custody of a private 
+Security trust firm in Europe the money is in trunk 
+boxes deposited and declared as family valuables by my late father as a 
+matter of fact the company does not know the content as money, although my 
+father made 
+them to under stand that the boxes belongs to his foreign partner. 
 
-Peter
+Source of the money: 
+
+My late father Chief Paul Coleman , a native of Mende District in the 
+Northerh province of Sierra Leone, was the General Manager of Sierra Leone 
+Mining 
+co-operation (S.L.M.C.) Freetown . According to my father, this money was 
+the 
+income accrued from Mining Co-operation's over draft and minor sales. 
+
+Before the peak of the civil war between the rebels forces of Major Paul 
+Koroma and the combined forces of ECOMOG peace keeping operation that almost 
+
+destroyed my country, following the forceful removal from power of the 
+civilian elected President Ahmed Tejan Kabbah by the rebels. My father had 
+already made arrangement for his family thats talking about my mother, my 
+little sister and myself to be evacuated to Abidjan Cote d' Ivoire with the CERTIFICATE OFDEPOSIT he made with a security firm in Europe through the aid 
+
+of U.N 
+evacuation team. 
+
+During the war in my country, and following the indiscriminate looting of 
+Public and Government properties by the rebel forces, the Sierra Leone 
+mining 
+coop. Was one of the target looted and it was destroyed. My father including 
+
+other top Government functionaries were attaked and killed by the rebels in 
+November 2000 because of his relationship with the civilian Government of 
+Ahmed Tejan Kabbah. 
+
+As a result of my father's death , and with the news of my uncle's 
+involvement in the air crash in Januaryit dashed our hope of survival. The 
+untimely deaths caused my mother's heart failure and other related 
+complications of which she later died in the hospital after we must have 
+spent 
+a lot of money 
+on her early this year . Now my 18 years old sister and myself are alone in 
+this strange country suffering without any care or help. Without any 
+relation, 
+we are nowlike refugees and orphans. 
+
+Our only hope now is in you and the boxes deposited in the Security Firm To 
+this effect, I humbly solicit your assistance in the followings ways. 
+
+1. to assist me claim this boxes from the security 
+Firm as our beneficiary 
+
+2. to transfer this money (USD$21M) in your name to your country 
+
+3. to make a good arrangement for a joint business investment on our 
+behalf in your country and you, our Adviser/ Manager 
+
+
+For your assistance, I have agreed with my younger sister that 15% of the 
+total amount will be for your effort and another 5 % to cover all the 
+expenses that may incur during the business transaction, Last, I urge you to 
+
+keep this transaction strictly confidential as no one knows our where about. 
+
+
+Please as you show your willingness, Forward to us your full name, address 
+and Tel/ Fax numbers, to me via my private email address as indicated 
+bellow, 
+this is for security reasons as i will only be accessing my private email 
+earnestly awaiting your response. 
+
+
+Thanks. 
+
+May God bless you as you assist us. 
+
+Mr. JOHN COLEMAN. 
+
+
+
+
+
+_______________________________________________________________________________________________________
+Obt�n gratis tu cuenta de correo en StarMedia Email. �Reg�strate hoy mismo!. http://www.starmedia.com/email
