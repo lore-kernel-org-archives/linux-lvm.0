@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] problem running vgscan..Is it a megaraid issue or an LVM issue ??
-Message-ID: <20020627115054.B21400@sistina.com>
-References: <3D1AD32B.400@ti.com>
+Subject: Re: [linux-lvm] [RFE] lvm-1.0.3 - progress bar similar to e2fsck for pvmove
+Message-ID: <20020627120350.C21400@sistina.com>
+References: <20020626155454.A3538@xanex.hippierage.org>
 Mime-Version: 1.0
-In-Reply-To: <3D1AD32B.400@ti.com>; from cej@ti.com on Thu, Jun 27, 2002 at 10:56:11AM +0200
+In-Reply-To: <20020626155454.A3538@xanex.hippierage.org>; from jmm@sublogic.com on Wed, Jun 26, 2002 at 03:54:54PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,145 +14,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 27 04:58:02 2002
+Date: Thu Jun 27 05:11:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Christian,
+James,
 
-are the Megaraid devices all accessable (driver module loaded/linked in)
-when vgscan runs on reboot?
+are you sure you didn't use the "-v" option of pvmove?
 
-On Thu, Jun 27, 2002 at 10:56:11AM +0200, christian e wrote:
-> Hi,all
-> 
-> I posted this on the megaraid devel list thinking it was a megaraid 
-> problem..But maybe it's LVM doing tricks..Here goes:
-> 
-> I've had problems with a volume group not showing up after a reboot..
-> After booting up the volume group on the megaraid is not 
-> detected.Running vgcfgrestore on the individual disks the volume group 
-> can bring it back...That is until I run a vgscan resulting in this output:
-> 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "vg0"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-> group
+Without that option pvmove typically display 6-7 lines.
+With that option it displays some more information plus a line for
+every extent moved.
 
-If you've got "vg1" online and then run vgscan and loose it again, I need
-the "vgscan -d" output. Please send it to <mge@sistina.com> directly.
+On Wed, Jun 26, 2002 at 03:54:54PM -0400, James Manning wrote:
+> just did a "pvmove /dev/hda5" and got tons and tons of info dumped to
+> the screen as extents were moved.  IMHO, that'd be nice for a verbose
+> mode, but by default it'd be nice to have something basically like
+> the e2fsck/wget/etc progress bar.  As it stands, I had no idea what %
+> of the way through the job I was and couldn't estimate finishing time,
+> both of which would be nice to have.
+
+Well, as with e2fsck and the like such bars heavily depend on total system
+load and just make you feel believe that there's progress, which ps can
+help do as well :)
 
 > 
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 0
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 2
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 4
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 6
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 0
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 2
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 4
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 6
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 0
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 2
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 4
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 6
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 0
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 2
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 4
-> SCSI disk error : host 2 channel 2 id 0 lun 0 return code = 25040001
->   I/O error: dev 08:21, sector 6
-> 
-> these errors appear on the console after running it along with a lot of:
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
-> invalidate: busy buffer
+> Adding to other long-running data-migration things may be a good idea as
+> well, but pvmove is the one I've come across that could really use it :)
 
-That means that the buffers are still in use when LVM tries to invalidate
-them. You can ignore these messages. They don't cause any harm to your data.
-Later LVM driver versions avoid that invalidation.
-
-Regards,
-Heinz    -- The LVM Guy --
-
+We'll do something about it in LVM2.
 
 > 
-> and the volume group vg1 is completely gone..It can be brought up again 
-> like this:
+> Thanks!
 > 
-> vgcfgrestore -v -n vg1 /dev/sdb1
-> vgcfgrestore -v -n vg1 /dev/sdc
-> vgchange -ay
-> 
-> and then it's OK until vgscan is run...
-> 
-> setup:
-> 
-> Poweredge 2550
-> 
-> Megaraid (2 adapters)..from dmesg:
->   megaraid: v1.18 (Release Date: Thu Oct 11 15:02:53 EDT 2001
-> )<5>megaraid: found 0x101e:0x1960:idx 0:bus 2:slot 0:func 0
-> scsi1 : Found a MegaRAID controller at 0xf8805000, IRQ: 20
-> scsi1 : Enabling 64 bit support
-> megaraid: [161N:3.17] detected 1 logical drives
-> megaraid: channel[1] is raid.
-> megaraid: channel[2] is raid.
-> megaraid: found 0x101e:0x1960:idx 1:bus 4:slot 0:func 0
-> scsi2 : Found a MegaRAID controller at 0xf8807000, IRQ: 18
-> scsi2 : Enabling 64 bit support
-> megaraid: [161N:3.17] detected 1 logical drives
-> megaraid: channel[1] is raid.
-> megaraid: channel[2] is raid.
-> scsi1 : LSI Logic MegaRAID 161N 254 commands 16 targs 5 chans 7 luns
-> scsi2 : LSI Logic MegaRAID 161N 254 commands 16 targs 5 chans 7 luns
-> 
-> running Debian 2.2 with kernel 2.4.17
-> lvm version 1.0.1
-> 
-> Anyone know what's going on with this ?? It's our main server so it's 
-> not possible to boot very often..That's why I'd like to investigate all 
-> possible options before trying to debug further..
-> 
-> best regards
-> 
-> Christian
+> James
 > -- 
-> Christian Ejstrup, IT Admin / RF Development Engineer
-> Texas Instruments A/S, Denmark ,Sofiendalsvej 93,DK-9200 Aalborg SV,Denmark
-> Phone:+45 96346868, Phone(direct):+45 96346860, GSM:+45 22234304
-> 
+> James Manning <http://www.sublogic.com/james/>
+> GPG Key fingerprint = B913 2FBD 14A9 CE18 B2B7  9C8E A0BF B026 EEBB F6E4
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
