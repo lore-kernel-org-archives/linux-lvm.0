@@ -1,15 +1,18 @@
-Date: Tue, 30 Mar 2004 15:19:12 -0800
-From: Dave Olien <dmo@osdl.org>
-Subject: Re: [linux-lvm] LVM2 scalability within volume group
-Message-ID: <20040330231912.GA20397@osdl.org>
-References: <20040317173637.GA2126@osdl.org>
-	<20040317120005.C31599@homer.msp.redhat.com>
-	<20040322224145.GA26571@osdl.org>
-	<20040326163403.F17377@homer.msp.redhat.com>
+Received: from o.ww.redhat.com (vpn50-11.rdu.redhat.com [172.16.50.11])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	i2VDW5mX010013
+	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 15:32:05 +0200
+Date: Wed, 31 Mar 2004 15:32:05 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] Removing an Old disk (LVM HOW-TO)
+Message-ID: <20040331133205.GA29222@redhat.com>
+References: <001301c4164d$14b733a0$0400a8c0@vector>
+	<002201c41651$12d53060$0400a8c0@vector>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040326163403.F17377@homer.msp.redhat.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <002201c41651$12d53060$0400a8c0@vector>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,72 +24,87 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: agk@redhat.com
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+On Tue, Mar 30, 2004 at 02:18:12PM +0200, Perplexer wrote:
+> Additional question:
+> 
+> Can a PV be removed from the VG without executing pvmove
+> before (bruteforce remove if you will) ? What would I have to
+> do if I wanted to remove it (e2fsadm?, lvreduce? ...) ?
+
+The steps necessary depend on the situation you start out with.
+
+In case the PV you want to remove is already empty, just vgreduce the VG
+by it (eg, "vgreduce YourVG /dev/YourEmptyPV"). Remove the drive from
+your system or reuse it for some other purpose after a *successfull* vgreduce.
+
+Please keep in mind, that your PV which got removed from the VG can be
+sitting in one partition of the disk and the others might be still in use!
 
 
-Thanks for the feedback.  I'll be experimenting more with this over the
-next few weeks.  I'd love to try changes as they come available.
+If the PV has LV(s) allocated to it, there's 2 different cases:
 
-Dave Olien
+o you are able to remove those LVs completely, which is unlikely
+  in the typical case
+o you need to be able to shrink them (eg, your e2fsadm point in your other mail)
 
-On Fri, Mar 26, 2004 at 04:34:03PM -0600, Alasdair G Kergon wrote:
-> On Mon, Mar 22, 2004 at 02:41:45PM -0800, Dave Olien wrote:
-> > Can these user-level commands be made smarter in this regard?
+
+In both cases (remove and shrink) you can (and likely will) end up
+with physical extents still allocated to the PV to remove.
+
+*Then* you need pvmove to move their contents off to some or many
+other PV(s) in order to free the PV before vgreduce on the VG.
+If there's no free space on other PVs of your VG, you can of course
+extend the VG by some new PV and pvmove the extents off to it.
+
+You see, it depends on your particular storage situation but there's
+just a few cases to distinguish.
+
+Regards,
+Heinz    -- The LVM Guy --
+
 > 
-> Yes.  
->   (a) Additional internal state can be written to the cache file.
->       [The index of which PVs are in which VGs; the index of which
->        UUIDs were found on which devices.]
->   (b) Some disk reads are still duplicated and can be cached safely.
+> ---------
+> Perplexer
 > 
-> > Is this something that using the lvm(8) shell would help?  
-> 
-> Yes, this is equivalent to point (a).
-> Either pipe the commands through it, or try linking against
-> the library I checked into CVS today.  
-> (configure --enable-cmdlib;  brief docn in lvm2cmd.h)
-> 
-> Quick example prog below.
-> 
-> 
-> #include "lvm2cmd.h"
->  
-> /* All output gets passed to this function line-by-line */
-> void test_log_fn(int level, const char *file, int line, const char *format)
-> {
-> 	/* Extract and process output here instead of printing it */
-> 
->         if (level != 4)
->                 return;
->  
->         printf("%s\n", format);
->         return;
-> }
->  
-> int main(int argc, char **argv)
-> {
->         void *handle;
->         int r;
->  
->         lvm2_log_fn(test_log_fn);
->  
->         handle = lvm2_init();
->  
->         lvm2_log_level(handle, 1);
->         r = lvm2_run(handle, "vgs --noheadings vg1");
-> 
-> 	/* More commands here */
->  
->         lvm2_exit(handle);
->  
->         return r;
-> }
->  
+> ----- Original Message ----- 
+> From: "Perplexer" <perplexer@thz.net>
+> To: <linux-lvm@redhat.com>
+> Sent: Tuesday, March 30, 2004 1:49 PM
+> Subject: [linux-lvm] Removing an Old disk (LVM HOW-TO)
 > 
 > 
+> > There is a section describing how to remove and old disk
+> > from LVM at http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html
+> > but nothing is said about reducing LV before this is done.
+> > 
+> > Must a LV be reduced using e2fsadm before any attempt to remove a PV
+> > is made in order to prevent data loss ?
+> > 
+> > ---------
+> > Perplexer
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
