@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 28 May 2001 11:22:24 +0000
+Date: Mon, 28 May 2001 11:38:39 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Patching Linus' pre- kernels?
-Message-ID: <20010528112224.I26710@sistina.com>
-References: <20010525162619.D24299@carfax>
+Subject: Re: [linux-lvm] Symbol not found when pvcreating...
+Message-ID: <20010528113839.J26710@sistina.com>
+References: <3B0E7C7C.E434D0AE@in.tum.de>
 Mime-Version: 1.0
-In-Reply-To: <20010525162619.D24299@carfax>; from hugo@carfax.org.uk on Fri, May 25, 2001 at 04:26:19PM +0100
+In-Reply-To: <3B0E7C7C.E434D0AE@in.tum.de>; from vidalrod@informatik.tu-muenchen.de on Fri, May 25, 2001 at 05:38:36PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,64 +21,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hugo,
+David,
 
-there's 2 optional solutions:
+looks like a messy installation :-(
 
-- change get_hardblocksize to get_hardsect_size and recompile -or-
-- get the recent LVM code from CVS at www.sistina.com
-
-Regards,
-Heinz    -- The LVM Guy --
+Did you try to remove and completely reinstall LVM based on a clean
+compile/build run of the tools and library?
 
 
-On Fri, May 25, 2001 at 04:26:19PM +0100, Hugo Mills wrote:
->    Hi - 
+On Fri, May 25, 2001 at 05:38:36PM +0200, David Vidal Rodriguez wrote:
+> Hi (again)!
+> When running the CVS version of kernel+tools, the pvcreate utility
+> requests the following symbol that apparently isn't present in the
+> liblvm-10.so.0 library:
+> int pv_check_partitioned_whole(char *pv_name)
 > 
->    I've just tried to patch a recent, but otherwise virgin, Linus
-> kernel, and had the kernel compile fail:
+> (Error loading shared libraries... blahblah)
+> An older version of pvcreate (I'm no sure if beta6 or less) does the job
+> correctly.
+> Do I have to change anything in the sources in order to get it working?
+
+No.
+
 > 
-> make[2]: Leaving directory `/usr/src/linux-2.4.5-pre3/arch/i386/lib'
-> ld -m elf_i386 -T /usr/src/linux-2.4.5-pre3/arch/i386/vmlinux.lds -e stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o init/main.o init/version.o \
->         --start-group \
->         arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
->         drivers/block/block.o drivers/char/char.o drivers/misc/misc.o drivers/net/net.o drivers/media/media.o  drivers/parport/driver.o drivers/char/agp/agp.o drivers/char/drm/drm.o drivers/ide/idedriver.o drivers/scsi/scsidrv.o drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o drivers/md/mddev.o \
->         net/network.o \
->         /usr/src/linux-2.4.5-pre3/arch/i386/lib/lib.a /usr/src/linux-2.4.5-pre3/lib/lib.a /usr/src/linux-2.4.5-pre3/arch/i386/lib/lib.a \
->         --end-group \
->         -o vmlinux
-> drivers/md/mddev.o: In function `__update_hardblocksize':
-> drivers/md/mddev.o(.text+0x22f1): undefined reference to `get_hardblocksize'
-> drivers/md/mddev.o(.text+0x2332): undefined reference to `get_hardblocksize'
-> make[1]: *** [vmlinux] Error 1
-> make[1]: Leaving directory `/usr/src/linux-2.4.5-pre3'
-> make: *** [stamp-build] Error 2
+> Another --developer-- question:
+> I've looked at the LVM code and a structure called partition, #include'd
+> from <linux/genhd.h>, which contains the relevant information of a
+> partition. What I don't understand is how to get this information from
+> the kernel/drive (syscall, ioctl???). I'd be glad if somebody explained
+> that to me briefly.
+
+That's just needed for the generic disk interface.
+It doesn't make any sense to create a partition table on a logical volume.
+
+You could get the virtual geometry (which has nothing to do with the
+underlying physical device(s)) of a logical volume though by doing
+a block ioctl on its device like:
+
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <linux/hdreg.h>
+
+int main ( int argc, char **argv) {
+   int fd;
+   struct hd_geometry hd;
+
+   if ( ( fd = open ( argv[1], O_RDONLY)) == -1) return 1;
+
+   ioctl ( fd, HDIO_GETGEO, &hd);
+   close ( fd);
+   printf ( "heads    : %d\n", hd.heads);
+   printf ( "sectors  : %d\n", hd.sectors);
+   printf ( "cylinders: %d\n", hd.cylinders);
+   printf ( "start    : %d\n", hd.start);
+
+   return 0;
+}
+
 > 
-> I'm using:
-> Debian testing
-> Kernel 2.4.5-pre3
-> LVM 0.9.1-beta7
-> 
->    Is the beta7 LVM expected to patch against Linus' pre- kernels? If
-> it is, what have I done wrong? If not, which kernels should I be able
-> to patch against?
-> 
->    Also, are there any potential problems with running LVM and devfs
-> together?
-> 
->    Thanks,
->    Hugo.
-> 
+> Thanks!
 > --
->     ---- Hugo Mills --- The Creature from the Black Logon ----
-> hugo@lug.org.uk     hugo@carfax.nildram.co.uk     hugo@soton.ac.uk
->      ---- "We did a risk management review. We concluded ----
->             that there was no risk of any management."
+>   ------------------------------------------------------------------------
+>  David Vidal R. (vidalrod <at> in DOT tum DOT de)
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
