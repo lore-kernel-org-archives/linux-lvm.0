@@ -1,12 +1,10 @@
-Return-Path: <hal@hal.mailgate.net>
-Date: Tue, 8 May 2001 18:59:54 +0200
-From: Hugo Lombard <hal@mailgate.net>
-Subject: Re: [linux-lvm] SCSI/LVM problems after power outage
-Message-ID: <20010508185954.M5048@hal.mailgate.net>
-References: <20010508183326.A8213@mercury.mercury.multiweb.nl>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010508183326.A8213@mercury.mercury.multiweb.nl>; from dave@xs4all.nl on Tue, May 08, 2001 at 06:33:26PM +0200
+Return-Path: <jdiehl@sandia.gov>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BEEF@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Date: Tue, 8 May 2001 11:57:48 -0600
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] (no subject)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,37 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: Dave Wapstra <dave@xs4all.nl>
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Cc: "Diehl, Jeffrey" <jdiehl@sandia.gov>
 
-On Tue, May 08, 2001 at 06:33:26PM +0200, Dave Wapstra wrote:
-> Hi all,
-> 
-> After a power outage, our ftp server with LVM has not survived very well.
-> 
-> System: UltraSparc II, Linux 2.4(2) + io.path + LVM 0.9.1beta6
-> 
-> All normal ext2 paritions were fsck'd fine, however, the volume is having problems.
-> 
-> The syslog has a lot of SCSI errors:
-> 
-> May  7 19:15:53 ftp kernel: SCSI disk error : host 2 channel 0 id 2 lun 0 return code = 18000002
+I'm just about finished setting up an LVM/ReiserFS system but I have a few
+(more) questions...
 
-second controlelr, id 2..?  you have such a disk?
+1.  In reading the documentation, I see mention of something called a
+snapshot.  Could someone explain briefly what that means?
 
-> May  7 19:15:53 ftp kernel:  I/O error: dev 08:20, sector 2239227
+2.  I also see mention of a quantity called stripesize.  Does this allow me
+to create a LV  which stripes across all of the PV's?  If so, what happens
+if I later add more PV's to to the VG?
 
-$ ls -l /dev/sdb4
-brw-rw----    1 root     disk       8,  20 May  5  1998 /dev/sdb4
-
-seems to be the culprit, IMHO.
-
-
--- 
-The goal of science is to build better mousetraps.  The goal of nature
-is to build better mice.
----------------------------------------------------------------------------
- Hugo Lombard                    Infoline (Pty) Ltd
- System Administrator
----------------------------------------------------------------------------
+Thanx again,
+Mike Diehl,
+Network Monitoring Tool Devl.
+284-3137
+jdiehl@sandia.gov
