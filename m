@@ -1,23 +1,30 @@
-Date: Wed, 1 Nov 2000 21:34:12 +0100
-From: Andrea Arcangeli <andrea@suse.de>
-Subject: [linux-lvm] Re: [Fixed] - Repeatable oops mounting snapshots w/ test 10
-Message-ID: <20001101213412.A22947@athlon.random>
-References: <Pine.LNX.4.10.10011011214490.12293-100000@mirai.cx>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.10.10011011214490.12293-100000@mirai.cx>; from jjs@mirai.cx on Wed, Nov 01, 2000 at 12:19:31PM -0800
+Message-ID: <3A014331.41176643@imim.es>
+Date: Thu, 02 Nov 2000 11:34:25 +0100
+From: Xavi Fustero <xfustero@imim.es>
+MIME-Version: 1.0
+Subject: [linux-lvm] Exporting VG
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: J J Sloan <jjs@mirai.cx>
-Cc: linux-kernel@vger.kernel.org, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Wed, Nov 01, 2000 at 12:19:31PM -0800, J J Sloan wrote:
-> But why is the "official" release of the lvm utils so buggy?
+I have 3 computers: N1, N2 and N3.
+N1 has 3 disks  (vg1)
+N2 has 1 disk   (vg2)
+N3 has 1 disk   (vg3)
+I built a Volume group on each machine, now what I would like to do is
+to unify these volume groups under a new one volume group visible from
+all the 3 machines  (new_vg=vg1 + vg2 + vg3). Is this possible ???
+Let me know if anybody tried this.
+Thanks in advance,
+Xavi !
 
-I guess it was a minor merging typo in the userspace tools and I'm sure Heinz
-will solve it shortly now that we're aware of the problem.
 
-Andrea
+
+--
+Xavi Fustero Benavent
+Institut Municipal d'Investigacio Medica (IMIM)
+Departament Genome Informatics
+Tel.: +34-93-221 10 09    Ext: 2016
