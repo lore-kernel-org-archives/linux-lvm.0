@@ -1,10 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200101290653.f0T6r2h26300@webber.adilger.net>
-Subject: Re: [linux-lvm] Help: lvm 0.9.1_beta3 oops (desperate plea)
-In-Reply-To: <3A748FE9.BFFD7B9C@nortelnetworks.com> from Joe Harvell at "Jan
- 28, 2001 03:32:25 pm"
-Date: Sun, 28 Jan 2001 23:53:02 -0700 (MST)
+Return-Path: <Holger.Rauch@heitec.de>
+Date: Mon, 29 Jan 2001 09:03:45 +0100 (CET)
+From: Holger Rauch <Holger.Rauch@heitec.de>
+Message-ID: <Pine.LNX.4.21.0101290901290.9793-100000@miami.datech2.er.heitec.net>
+MIME-Version: 1.0
+Subject: [linux-lvm] Recommended LVM Version for 2.4.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +15,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Joe Harvell writes:
-> I really, really, really need the data that is on this VG.
-> 
-> So if anyone at Sistina really wants to get to the bottom of this, you
-> just got yourself a dedicated beta-tester.  I am an experienced software
-> developper with a small amount of Linux device-driver experience.  I can
-> provide hexdumps of the relevant portions of the actual partitions.
-> I am willing to run any series of tests on this machine to help find
-> the root cause of this problem.  Whatever it takes.
+Hi!
 
-Not that I'm from Sistina, but one thing you could start out checking is
-in lvm_read_all_pv_of_vg(), and print out the PV list at each step of the
-way.  It may be possible that some of the PVs are being removed from the
-list, even though they are not supposed to.  The first list, returned
-from lvm_read_all_pv(), should be all of the PVs on your system.
+Which version of the LVM would you recommend using in conjunction with a
+2.4.0 kernel? From what I know, only some 0.8 intermediate release seems
+to be shipped with 2.4.0, and that release is rather old? Is there any
+newer version that seems to work well with 2.4.0?
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Thanks in advance for any hints!
+
+Greetings,
+
+	Holger
