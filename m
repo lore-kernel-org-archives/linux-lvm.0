@@ -1,10 +1,10 @@
 From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] Keep snapshots active for 24 hours?
-Message-ID: <20011217092606.A9157@tiger.bigcats.invalid>
-References: <20011217040753.C4880@tiger.bigcats.invalid> <NBBBKLKHMJHIJLHOGAOJCEMEJCAA.steve.wray@the.net.nz>
+Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
+Message-ID: <20011217093030.C9157@tiger.bigcats.invalid>
+References: <Pine.LNX.4.33.0112170410450.12782-100000@www.scotty.co.at> <1008560587.831.6.camel@defiant> <1008573872.790.10.camel@defiant>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJCEMEJCAA.steve.wray@the.net.nz>; from steve.wray@the.net.nz on Mon, Dec 17, 2001 at 05:21:48PM +1300
+In-Reply-To: <1008573872.790.10.camel@defiant>; from storm@tux.org on Mon, Dec 17, 2001 at 02:24:31AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 02:41:04 2001
+Date: Mon Dec 17 02:41:07 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Steve!
+Hi, Bradley!
 
-Steve Wray (steve.wray@the.net.nz) wrote 20 lines:
+Bradley Alexander (storm@tux.org) wrote 41 lines:
 
-> > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> > Behalf Of Wolfgang Weisselberg
+> 1. The drive light stays illuminated when the machine is up, whether the
+> lv is mounted or not. Could this also be an indication of what killed
+> the first drive?
 
-> > Anyway, there are more useful things you can do with
-> > writable snapshots; just think of an error-resistant system.
-> > Everything happens on the big-enough snapshots, but you can
-[...]
-
-> Yes! And when can we have it, please?
-> 8)
-
-BTDTGTTS.
-But that was without snapshots and not as perfect as I'd
-liked to have it.
+Uh-oH!  That doesn't look good... Bad cable?  Cable inserted
+wrong?  IDE-Controller gone bad?
 
 -Wolfgang
