@@ -1,9 +1,8 @@
-Message-ID: <3D6159EA.1070406@birddog.com>
-From: "Kirby C. Bohling" <kbohling@birddog.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] accidently formatted a physical volume...
-References: <20020819192319.GB25631@grimlock> <284650000.1029786116@[192.168.200.4]> <1265620671.20020819224124@tnonline.net> <20020819205005.GA26781@grimlock>
-Content-Transfer-Encoding: 7bit
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20020819214738.LPNS1621.imf03bis.bellsouth.net@TAZ2>
+Subject: [linux-lvm] Newbie VFS-lock question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,60 +13,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 19 15:58:02 2002
+Date: Mon Aug 19 16:46:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>
 
-Start by using dd or something to get an original image of the drive 
-before anything else bad is done to it.  Copy it off to another drive, 
-copy to tape.  Personally, I'd copy it to a big filesystem (if it 
-supports bigger then 2 GB), and see if you can mount it loopback.  I 
-know I read on the LKML a guy mounted several filesytems that way that 
-were considerablely larger then 2GB.
+Hello all,
 
-With the backup, when something goes wrong you can always start over 
-fresh without worring about the undoing your original attempts.
+I'm new to LVM, but I want to be able to use the snapshot feature with a XFS =
+filesystem.
 
-I'd imagine that doing a vgcfgrestore to the device, followed by 
-mounting the filesystem without fsck'ing it will get you some data. 
-Running fsck on it afterwards and see what else you can get.  Do *_NOT_* 
-try that without a backup of the original media.  Your big problem is 
-that you're going to have superblocks and inode tables written right in 
-the middle of your drive other then that, everything should be on the 
-disk right where you left it.
+I tried=20
 
-I had a friend who just lost an ext2 drive due to a power surge the 
-other day, fscking it was destorying the filesystem, just mounting it 
-and running tar got us 90% of the data.  Fortuantely the other 10% came 
-off a RH CD so it was no problem.
+  xfs_freeze -f=20
+  lvcreate --snapshot
+  xfs_freeze -u
 
-	Thanks,
-		Kirby
+but it was not a reliable solution, and lvcreate would often lock up until I =
+executed a xfs_freeze -u on another ssh session.
 
-Adam McDaniel wrote:
-> On Mon, Aug 19, 2002 at 10:41:24PM +0200, Anders Widman wrote:
-> 
->>>>Or, is there any way that I can fix/restore the formatted drive?
->>>
->>>Not at the *NIX level. If the data were SERIOUSLY valuable
->>>it can be recovered by physical means. Short of that I'd
->>>say it's time to reach for your tapes...
->>
-> 
-> The unfortunate thing was that timing couldn't have been worse. The
-> last backup I made before the incident would only contain a fraction
-> of the info that I actually need. Partly my fault, I know, but being
-> able to restore the drive would be the goal.
-> 
-> 
->>Are you sure? The data should be there in the co-worker did not make a
->>"full" (zeroing blocks) format. Is it not possible to restore the LVM
->>headers (or what it is called) on that drive?
-> 
-> 
-> I do know that it was a straight simple format, literally
-> 'mkfs.ext2 /dev/hdb', so I know the info is still there. My experience
-> in this is rather limited, so I'm not sure of the best way to fish it
-> out.
-> 
+Adrian Head recommended I use the VFS-lock patch instead of xfs_freeze to =
+accomplish my goal of reliable snapshots.
+
+Since I'm new to LVM, I'm not sure what I need to do. =20
+
+I'm running SuSE 8.0 with there 2.4.18-231 kernel.  This is based on the =
+2.4.19pre1aa1 kernel with some extra patches.  They also have a test kernel =
+based on 2.4.19aa1.
+
+Both have some level of LVM in them, but I don't know which specific version.
+
+Would either of these have the VFS-lock patch already included, or do I need to =
+get the SRPM for one of the above, get the VFS-lock patch from somewhere and =
+apply the patch?
+
+If so, where do I get the patch?
+
+Also, once I get an appropriate kernel, do I need to do anything to invoke this =
+feature prior to creating a snapshot, or is it automatic?
+
+
+Greg Freemyer
+Internet Engineer
+Deployment and Integration Specialist
+Compaq ASE - Tru64 v4, v5
+Compaq Master ASE - SAN Architect
+The Norcross Group
+www.NorcrossGroup.com
