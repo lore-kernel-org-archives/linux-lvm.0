@@ -1,17 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j259Nwn05191
-	for <linux-lvm@redhat.com>; Sat, 5 Mar 2005 04:23:58 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j259Nqoa009337
-	for <linux-lvm@redhat.com>; Sat, 5 Mar 2005 04:23:52 -0500
-Date: Sat, 5 Mar 2005 10:23:51 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM Question
-Message-ID: <20050305092351.GI3192@percy.comedia.it>
-References: <CEEE90D87043AA4487634844B31B03631141B17B@ukspkem01.corp.hds.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j26DUqn26786
+	for <linux-lvm@redhat.com>; Sun, 6 Mar 2005 08:30:52 -0500
+Received: from out1.smtp.messagingengine.com (out1.smtp.messagingengine.com
+	[66.111.4.25])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j26DUpdV008649
+	for <linux-lvm@redhat.com>; Sun, 6 Mar 2005 08:30:51 -0500
+Received: from web4.messagingengine.com (web4.internal [10.202.2.213])
+	by frontend1.messagingengine.com (Postfix) with ESMTP id 7E509C5D01F
+	for <linux-lvm@redhat.com>; Sun,  6 Mar 2005 08:30:50 -0500 (EST)
+Message-Id: <1110115850.4677.216665923@webmail.messagingengine.com>
+From: "Ajeet Nankani" <fromkth+lvm@fastmail.fm>
 Content-Disposition: inline
-In-Reply-To: <CEEE90D87043AA4487634844B31B03631141B17B@ukspkem01.corp.hds.com>
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Date: Sun, 06 Mar 2005 05:30:50 -0800
+Subject: [linux-lvm] Reducing the Linux LVM(8e) partition itself (not PV,
+	VG or LV)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,25 +26,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion & development <linux-lvm@redhat.com>
 
-On Fri, Mar 04, 2005 at 12:49:00PM -0000, Matthias Rudolph wrote:
->Hello all,
-> 
->how can I force to activate a VG on a special device file?
->One FC Storage Disk is visible over two pathes (sda and sdb). We use our
->Path Management Software. It creates sddlmaa. After creating the VG the
->sddlmaa is ACTIVE - OK. But after deactivating and activating sdb is ACTIVE.
->This means: no pathfailover.
+Hi,
 
-switch to lvm2 and use filters in /etc/lvm/lvm.conf
+I have a /dev/hda6 partition as Linux LVM(8e), its size is around 8GB.
+I have one PV(no free PEs in it all are allocated) in this partition.
+This PV has a total size of around 7GB.
+I have also made sure that this PV is contiguous from the start of the
+LVM partition hence it is confirmed that the free 1GB is at the end of
+LVM partition.
+I want to reduce this Linux LVM(8e) partition and recover this 1GB free
+space to create a fat32 partition.
+When i tried to print partition table of this /dev/hda6 through gnu
+parted, it gave error "Error: Could not detect file system." and so
+qtparted does not work either.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Is there anyway to reduce this linux LVM (8e) partition safely?
+
+I have FC3 and gnu parted 1.6.15.
+
+Regrads,
+
+-ajeet.
