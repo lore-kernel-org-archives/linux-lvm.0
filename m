@@ -1,8 +1,10 @@
-From: Donald Thompson <dlt@lunanet.biz>
+From: Thomas Bader <thomasb@trash.net>
 Subject: Re: [linux-lvm] LV not available
-In-Reply-To: <20021227135657.GB13292@trash.net>
-Message-ID: <Pine.LNX.4.44.0212271404030.23297-100000@junior.lunanet.biz>
-MIME-Version: 1.0
+Message-ID: <20021227212753.GA16624@trash.net>
+References: <20021227135657.GB13292@trash.net> <Pine.LNX.4.44.0212271404030.23297-100000@junior.lunanet.biz>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44.0212271404030.23297-100000@junior.lunanet.biz>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,62 +15,107 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 27 15:12:03 2002
+Date: Fri Dec 27 15:27:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 27 Dec 2002, Thomas Bader wrote:
+* Donald Thompson <dlt@lunanet.biz> [021227 22:12]:
+> AFAIK, the PV should never become unavailable unless you specifically set
+> it this way or it truly is unavailable, ie. the disk went bad.
 
-> I've got Linux 2.4.20 patched with LVM 1.0.6 up and running.
-> During a power outage, my system rebooted and my volume
-> group didn't came up.
->
-> One of the PVs in this VG shows like this:
->
-> -->-->-->--
-> fullmoon:~# pvdisplay /dev/md/4
-> --- Physical volume ---
-> PV Name               /dev/md/4
-> VG Name               vg00
-> PV Size               57.81 GB [121242368 secs] / NOT usable 16.18 MB [LVM: 138 KB]
-> PV#                   3
-> PV Status             NOT available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       16384
-> Total PE              3699
-> Free PE               0
-> Allocated PE          3699
-> PV UUID               nyoJQM-GYcF-wzWK-H80y-5bgs-UHIs-VhINj6
-> --<--<--<--
->
-> How can its status changed back to available?  All other PVs
-> in this VG have status == available.
->
-> When I'm running vgscan and vgchange -a y my volume group
-> cannot be found:
->
-> -->-->-->--
-> fullmoon:~# vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- ERROR "pv_read_all_pv_of_vg(): PV number" can't get data of volume group "vg00" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
->
-> fullmoon:~# vgchange -a y
-> vgchange -- no volume groups found
->
-> fullmoon:~#
-> --<--<--<--
->
-> Any hints about how to fix this?
+The disk is not bad.  /dev/md/4 shares the same disks with
+/dev/md/3:
 
-AFAIK, the PV should never become unavailable unless you specifically set
-it this way or it truly is unavailable, ie. the disk went bad. Try
-'pvchange -a -x y' to see if you can set it available. Does 'pvscan' pick
-it up? I'm not real familiar with linux software raid, but did you check
-to make sure the array is alright?
+-->-->-->--
+fullmoon:~# pvdisplay /dev/md/3
+--- Physical volume ---
+PV Name               /dev/md/3
+VG Name               vg00
+PV Size               57.22 GB [120005248 secs] / NOT usable 16.18 MB [LVM: 138 KB]
+PV#                   2
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                2
+PE Size (KByte)       16384
+Total PE              3661
+Free PE               0
+Allocated PE          3661
+PV UUID               3CN6dg-poaj-F5BZ-FbeM-DmWo-K6S2-0RqJmV
+fullmoon:~# pvdisplay /dev/md/4
+--- Physical volume ---
+PV Name               /dev/md/4
+VG Name               vg00
+PV Size               57.81 GB [121242368 secs] / NOT usable 16.18 MB [LVM: 138 KB]
+PV#                   3
+PV Status             NOT available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       16384
+Total PE              3699
+Free PE               0
+Allocated PE          3699
+PV UUID               nyoJQM-GYcF-wzWK-H80y-5bgs-UHIs-VhINj6
+--<--<--<--
 
--Don
+Only /dev/md/4 is unavailable.
+
+According to mtab, there's no error in the RAID arrays:
+
+-->-->-->--
+fullmoon:~# cat /proc/mdstat
+Personalities : [raid0] [raid1] [raid5]
+read_ahead 1024 sectors
+md0 : active raid1 ide/host0/bus1/target0/lun0/part1[1] ide/host0/bus0/target0/lun0/part1[0]
+      5632064 blocks [2/2] [UU]
+
+md1 : active raid1 ide/host0/bus1/target0/lun0/part2[1] ide/host0/bus0/target0/lun0/part2[0]
+      671744 blocks [2/2] [UU]
+
+md2 : active raid1 ide/host0/bus1/target0/lun0/part3[1] ide/host0/bus0/target0/lun0/part3[0]
+      33717504 blocks [2/2] [UU]
+
+md3 : active raid1 ide/host2/bus1/target0/lun0/part1[1] ide/host2/bus0/target0/lun0/part1[0]
+      60002624 blocks [2/2] [UU]
+
+md4 : active raid1 ide/host2/bus1/target0/lun0/part2[1] ide/host2/bus0/target0/lun0/part2[0]
+      60621184 blocks [2/2] [UU]
+
+unused devices: <none>
+--<--<--<--
+
+> Try 'pvchange -a -x y' to see if you can set it available.
+
+-->-->-->--
+fullmoon:~# pvchange -a -x y
+pvchange -- unable to find volume group of "/dev/md/0" (VG not active?)
+pvchange -- unable to find volume group of "/dev/md/2" (VG not active?)
+pvchange -- unable to find volume group of "/dev/md/3" (VG not active?)
+pvchange -- unable to find volume group of "/dev/md/4" (VG not active?)
+pvchange -- 0 physical volumes changed / 0 physical volumes already o.k.
+--<--<--<--
+
+> Does 'pvscan' pick > it up?
+
+Yes:
+
+-->-->-->--
+fullmoon:~# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/md/0"  is associated to unknown VG "vg00" (run vgscan)
+pvscan -- inactive PV "/dev/md/2"  is associated to unknown VG "vg00" (run vgscan)
+pvscan -- inactive PV "/dev/md/3"  is associated to unknown VG "vg00" (run vgscan)
+pvscan -- inactive PV "/dev/md/4"  is associated to unknown VG "vg00" (run vgscan)
+pvscan -- total: 4 [185.36 GB] / in use: 4 [185.36 GB] / in no VG: 0 [0]
+--<--<--<--
+
+> I'm not real familiar with linux software raid, but did you check
+> to make sure the array is alright?
+
+It is, since it's marked with [UU] in mdstat.
+
+-- 
+<https://trash.net/~thomasb/>   PGP and OpenPGP encrypted mail preferred.
+"We can't buy more time, 'cause time won't accept our money."
+		-- Bad Religion
