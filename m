@@ -1,11 +1,12 @@
-Return-Path: <andewid@tnonline.net>
-Message-ID: <3ABA91DE.29985185@tnonline.net>
-Date: Fri, 23 Mar 2001 00:59:26 +0100
-From: Anders Widman <andewid@tnonline.net>
+Return-Path: <tomlins@cam.org>
+From: Ed Tomlinson <tomlins@cam.org>
+Subject: Re: [linux-lvm] vgscan ERROR
+Date: Thu, 22 Mar 2001 21:37:14 -0500
+References: <01032216564700.06908@oscar>
+In-Reply-To: <01032216564700.06908@oscar>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM and fault tolerance
-References: <Pine.LNX.4.30.0103211228450.8192-100000@flowers.house.larsshack.org>
-Content-Transfer-Encoding: 7bit
+Message-Id: <01032221371400.00732@oscar>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,57 +21,63 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+Hi,
 
-Lars Kellogg-Stedman wrote:
+This was solved by manually enabling the vg from a backup
 
-> > Is there any possibility to add fault tolerance to LVM. I would like
-> > to span several disks (of different sizes) and have fault tolerance to
-> > it. Also, most important, is to be able to extend it with additional
-> > disks without loosing data.
+I used vgcfgrestore -ll -n lv -f ./lv.conf to verify the backup
+
+and restoring the vg with (as in an archived email from Heinz)
+
+cp lv.conf /etc/lvmtab.d/lv
+echo -ne 'lv\0' > /etc/lvmtab
+vgchange -ay
+
+It seems that with beta-2 adding a pv causes problems...  Upgrading both
+the kernel and tools to beta6 corrected the bug (with the VFS patch for
+reiserfs snapshots).
+
+Thanks
+Ed Tomlinson
+
+On Thursday 22 March 2001 16:56, you wrote:
+> Hi,
 >
-> Disclaimer: I've only recently started working with LVM under Linux.
+> I had a vg called lv setup with two full disk in it (hde1 40G, hdeg 4G)
+> In this there are four logical volumes:
 >
-> That said, I think that the general solution to fault tolerance is to
-> combine LVM with either (a) the software RAID (md) subsystem, or (b)
-> hardware RAID devices.
+> swap - striped on hde and hdg
+> home_a - main disk
+> home_b - mirroed with raid 1
+> root - my reiserfs root file system.
 >
-
-Well, it will have to be software RAID (limited budget)
-
+> Once I finish moving root to lvm and was able to get reiserfs snapshots
+> work I decided to add my old root partn to lvm.  So I did the following:
 >
-> For example, you can create a number of md devices, using RAID1 or RAID5
-> for fault tolerance, and then run pvcreate on them and manage them with
-> lvm.
+> cfdisk /dev/hda and changed the type of hda3 to 8e and wrote the block.
+> pvcreate /dev/hda3
+> vgextend /dev/hda3 lv
 >
-> I'm doing this right now with a 4-disk RAID5 array (3 disks + 1 hot
-> spare), and it seems to be working just fine.
+> now running vgscan gives me:
 >
-
-So, how is this actually working then. Let say I have this disk
-configuration:
-
-2x 40gb
-2x 60gb
-2x 80gb
-
-I want maximum amount of diskspace available for storage. High speed is not
-needed at all as this is mainly for storage and streaming low bitrate media.
-Still, I need to be able to add additional disks, maybe two extra 80gb
-disks. Would it be possible to keep ecc/crc data on one disk only, or stripe
-it over all disks. Mirroring is to expensive in this sence too.
-
-The problem with RAID-5 is that all disks need to be of the same size and
-that it is not expandable (or is it?).
-
-//Anders
-
+> oscar# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "lv"
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+> data of volume group "lv" from physical volume(s) vgscan -- ERROR
+> "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and
+> "/etc/lvmtab.d"
 >
-> -- Lars
+> I am using ac21 with the 090 debs off the sistima ftp site...
 >
-> --
-> Lars Kellogg-Stedman <lars@larsshack.org>
+> How do I fix this????
 >
-> _______________________________________________
+> TIA
+> Ed Tomlinson
+>
+> PS. all is not completly lost, my backup is still running... and I finially
+> realized that just because ide-tape refuses to read my tapes using st and
+> ide-scsi works... _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
