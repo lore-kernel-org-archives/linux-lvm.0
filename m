@@ -1,8 +1,10 @@
-Message-ID: <3E3C62EE.5040107@stamppot.demon.nl>
-From: Sander Alberink <alberink@stamppot.demon.nl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Severe problem: data lost while adding a partition
+Subject: Re: [linux-lvm] LVM2 for kernels 2.4.20
+Message-ID: <20030202175153.GA11372@fib011235813.fsnet.co.uk>
+References: <20030126120322.GA405@4allsystems.com> <20030126133312.GB15603@percy.comedia.it>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20030126133312.GB15603@percy.comedia.it>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,81 +15,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Feb  1 18:15:03 2003
+Date: Sun Feb  2 11:53:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello all,
+On Sun, Jan 26, 2003 at 02:33:13PM +0100, Luca Berra wrote:
+> for the hassle of patching i use this
+> #!/bin/sh
+> set -e
+> pname=`basename $1`
+> for i in $1/*.patch
+> do
+>        pnum=`basename $i`
+>        pnum=${pnum%.patch}
+>        patch -p1 -s -N -E -b -z .$pname.$pnum.orig < $i
+>        for j in `find . -name \*.$pname.$pnum.orig`
+>        do
+>                if [ -f ${j%.$pnum.orig}.orig ]
+>                then
+>                        rm -f $j
+>                else
+>                        mv $j ${j%.$pnum.orig}.orig
+>                fi
+>        done
+> done
+> 
+> to use cd into kernel source dir and run it vs /path/to/2.4.20-dm-7
 
-I write to you with a rather grave problem. I have a small LVM setup at 
-home, consisting of 4 partitions. These were created by the Mandrake 8.2 
-  installation system. After deciding to upgrade the system to Mandrake 
-9.0, I found out that I had another partition lying around which was 
-also prepared for LVM use. I had meant for that disc to use later on in 
-  a different scheme for my /usr partition but never got around to do it.
-However, during installation I decided to add it to the LVM. The idea 
-was that I would extend the FS later (of course, I was not going to 
-involve this LVM setup in the rest of the installation, I would do all 
-that manually.)
+I just
 
-But as you probably guessed, something went horribly wrong during 
-install time and my LVM setup is properly hosed. I wanted to re-create 
-the setup, but alas: I forgot which was the disk that I added.
+cat /tmp/2.4.20-dm-7/*.patch | patch -p1
 
-The name of the LV (there was only 1) was home, the disks involved were 
-/dev/hda1, /dev/hda[4-6].
-
-Output of pvscan:
-----------------------------------------------------------------------
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- walking through all physical volumes found
-pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part1"  is 
-associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part4"  is 
-associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part5"  is 
-associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part6"  is 
-associated to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part7"  is 
-associated to an unknown VG (run vgscan)
-pvscan -- total: 5 [1.97 GB] / in use: 5 [1.97 GB] / in no VG: 0 [0]
-
------------------------------------------------------------------------
-
-output of vgscan:
------------------------------------------------------------------------
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-group
-
------------------------------------------------------------------------
-
-output of pvdisplay /dev/hda1 (this partition belonged to the LV for sure)
------------------------------------------------------------------------
-pvdisplay -- getting physical volume size
---- Physical volume ---
-PV Name               /dev/ide/host0/bus0/target0/lun0/part1
-VG Name               home
-PV Size               399.62 MB / NOT usable 3.62 MB [LVM: 121.00 KB]
-PV#                   1
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              99
-Free PE               0
-Allocated PE          99
-PV UUID               NCf9U6-nqVy-zn3K-upFo-S0PB-SFqb-o2ERjs
------------------------------------------------------------------------
-
-If you need any further information, please let me know!
-I do hope you can help me with this, since I stand to loose a lot of 
-personal data, of which exists no backup (of course, you guys probably 
-hear this all the time).
-
-Best regards,
-
-Sander Alberink
+- Joe
