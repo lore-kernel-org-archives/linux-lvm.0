@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 23 Apr 2001 10:16:11 +0000
+Date: Mon, 23 Apr 2001 10:21:45 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010423101611.B27367@sistina.com>
-References: <20010420192413.A17717@sistina.com> <E14qfGa-0001pJ-00@the-village.bc.nu> <20010420202515.H20767@suse.de>
+Subject: Re: [linux-lvm] What have snapshots got to do with LVM ?
+Message-ID: <20010423102145.C27367@sistina.com>
+References: <20010422130924.A10390@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <20010420202515.H20767@suse.de>; from axboe@suse.de on Fri, Apr 20, 2001 at 08:25:15PM +0200
-Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+In-Reply-To: <20010422130924.A10390@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Sun, Apr 22, 2001 at 01:09:24PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,26 +19,35 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Mauelshagen@sistina.com, linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-On Fri, Apr 20, 2001 at 08:25:15PM +0200, Jens Axboe wrote:
-> On Fri, Apr 20 2001, Alan Cox wrote:
-> > > We will announce when they are available ASAP and would appreciate if
-> > > people like Alan Cox, Andrea Arcangeli and Andreas Dilger
-> > > could check them *before* we start submitting them to Linus.
-> > 
-> > I'll be glad to help look over them.
+On Sun, Apr 22, 2001 at 01:09:24PM +0100, Joe Thornber wrote:
+> Just a random Sunday morning thought:
 > 
-> Same here, the important thing is that we actually get this patch flow
-> going. And hopefully in the future as well :)
+> Why don't we split snapshots off into their own driver so we can
+> snapshot any block device, putting the COW tables on any other block
+> device ?  
 
-Thanks and yep.
-We learned that leasson now. Hopefully ;-)
+Any other block device devides into PE similar allocation units carrying their
+own COW exception table at the beginning?
 
 > 
-> -- 
-> Jens Axboe
+> We would need to add a per device hook like 'make_request' to the kernel
+> (rather than per driver).
+> 
+> I think it would simplify both LVM and the snapshot code (which at the
+> moment knows too much about physical extents etc.).
+
+It would beed to know something similar along the line I pointed to above
+anyway.
+
+> 
+> 
+> - Joe
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
 
