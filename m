@@ -1,8 +1,10 @@
-Return-Path: <slpratt@us.ibm.com>
-Subject: Re: [linux-lvm] LVM Snapshots & journal recovery
-Message-ID: <OF0CE9A252.6B27B7A4-ON85256A55.0059D974@raleigh.ibm.com>
-From: "Steve Pratt" <slpratt@us.ibm.com>
-Date: Wed, 23 May 2001 11:39:28 -0500
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200105231649.f4NGnDCR028588@webber.adilger.int>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM
+In-Reply-To: <990575643.1151.0.camel@localhost> "from Rupert Heesom at May 22,
+ 2001 07:53:57 pm"
+Date: Wed, 23 May 2001 10:49:13 -0600 (MDT)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,50 +20,34 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Joe Thornber <thornber@btconnect.com>, adilger@turbolinux.com, linux-fsdevel@vger.kernel.org
 
-Peter Braam wrote:
->Thanks for explaining this.
+Rupert Heesom writes:
+> I want to pvmove the file contents of my 2nd disk (/dev/sdb) to my 1st
+> disk (/dev/sda).  My 1st disk is nice & quiet!  Now the lvm-howto
+> specifies my next step (adding the "old partition" into the Lvol) as --
+> 
+> pvcreate /dev/sda   <using my device names>
+> vgextend vg /dev/sda
+> 
+> ---  Seeing as I want to do a pvmove of data from /dev/sdb to /dev/sda,
+> when would I do the pvmove?   As I understand LVM, I need to have the PV
+> created and integrated into the VG before I can use pvmove - is this
+> correct?   Then, once pvmove is used, I can then extend the LV & file
+> system to cover both PVs using e2fsadm, right?
 
->That's still not good enough, but better: you must also wait for the
->redirection table to be stable on disk before you can overwrite the
->origin device.
+Yes, you can do that...  However, once you have LVM you should start to
+think differently about "partitions" and such.  You can create a lot of
+small partitions for different needs.
 
->So journal recovery can indeed work if LVM snapshots wait twice:
+Why is this useful?  Because it makes moving stuff around, updating the
+OS, etc easier.  You can have multiple OS installs, but keep your /home
+and /mp3 data available to both.  You can put /mp3 on a new disk and it
+will spin down when you are not listening to them.  You can put /var/log
+and /var/spool/mail on different LVs so that lots of logs or lots of
+email don't make your system unusable.
 
-> - first for the copied disk to become stable on disk
-> - then for the redirection to become stable on disk
-
->at that point one can safely over-write the origin.
-
->First, looking at the code, I don't think that this is happening at all.
->Second, to have these two extra waits seems really quite a bad penalty to
->me.
-
->- Peter -
-
-Peter, I fail to see how your proposed method of remapping writes to the
-original to the snapshot volume avoids the synchronous write penalties.
-
-For example in your scenario, the filesystem journal itself will have to be
-written to the snapshot volume, so in order to ensure journal consistency
-you will need to write the remapping meta data synchronously with the
-remapped journal chunk or you would not know that the journal had been
-remapped.  Both writes must done synchronously or you have possible
-corruption.
-
-In addition to having to do the same number of synchronous writes, you have
-the additional penalty that you mentioned of the sync time when deleting
-the snapshot.  This resyncing also come with a whole new set of consistency
-issues (whole new code path)
-
-Also, you have moved the remapping lookup processing time penalty for reads
-from the snapshot to the original.  I think it is much better to optimize
-the access to the original as opposed to the snapshot for most cases.
-
-
-Steve
-
-EVMS Development - http://www.sf.net/projects/evms
-Linux Technology Center - IBM Corporation
-(512) 838-9763  EMAIL: SLPratt@US.IBM.COM
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
