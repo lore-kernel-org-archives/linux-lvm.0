@@ -1,10 +1,9 @@
-Subject: Re: Re: [linux-lvm] Some suggestions about lvminitrd_create
-From: Daniel Savard <dsavard@cids.ca>
-In-Reply-To: <E178MFa-0001PJ-00@hermes.sistina.com>
-References: <E178MFa-0001PJ-00@hermes.sistina.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1021567395.29371.108.camel@dirac.cids.ca>
-Mime-Version: 1.0
+Message-ID: <3CE48E38.40605@wanadoo.fr>
+From: Francis SOUYRI <francis.souyri@wanadoo.fr>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Some suggestions about lvminitrd_create
+References: <E177uaF-0000ja-00@jelly.buzzard.org.uk> <20020516162341.A25098@sistina.com> <008c01c1fceb$e29f7660$3b00a8c0@aplabwp0368359> <20020516152200.GP1248@tykepenguin.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,72 +14,95 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 16 11:44:02 2002
+Date: Fri May 17 00:04:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Thu, 16 May 2002 16:23:41 +0200, "Heinz J . Mauelshagen" wrote :
->=20
-> On Wed, May 15, 2002 at 09:56:31AM +0100, Jonathan Buzzard wrote:
-> >=20
-> > Just a couple of suggestions firstly it would be nice if it checked
-> > for /boot/System.map-'uname -r' rather than for just /boot/System.map.
-> > When you have more than one kernel floating about this is handy.
->=20
-> Yep, that's what the "-F" option aims to support.
->=20
+Patrick Caulfield wrote:
 
-I have written my own version with the equivalent option. I also
-reworked the script so it works the same way as the mkinitrd script,
-reading the /etc/modules.conf to build a list of modules to include as
-well as adding an option to specify the filesystems modules which are
-required in the image. And using losetup to manage the loopback device.
+>On Thu, May 16, 2002 at 05:10:58PM +0200, Bas wrote:
+>  
+>
+>>>>Just a couple of suggestions firstly it would be nice if it checked
+>>>>for /boot/System.map-'uname -r' rather than for just /boot/System.map.
+>>>>When you have more than one kernel floating about this is handy.
+>>>>        
+>>>>
+>>>Yep, that's what the "-F" option aims to support.
+>>>
+>>>      
+>>>
+>>>>Second suggestion it would be nice if a -t option existed to allow a
+>>>>choice in the type of filesystem the initrd is created in. Not everyone
+>>>>is using ext2 these days :)
+>>>>        
+>>>>
+>>>Well, why do you want to use a different filesystem on a relatively tiny
+>>>and little populated ram disk?
+>>>      
+>>>
+>>Because once you choose to use XFS, you don't need ext2 utils anymore, so
+>>why would you want to install ext2utils ?
+>>    
+>>
+>
+>You really want to use XFS for an initrd??
+>
+><fx tests:>
+>
+># dd if=/dev/zero of=disk bs=1024 count=8192
+># mkfs.xfs disk
+># mount -oloop disk /mnt
+># df /mnt
+>Filesystem           1k-blocks      Used Available Use% Mounted on
+>/root/disk                3392        32      3360   1% /mnt
+>
+>OK you could tune that up a bit but I think ext2 is more approriate for an
+>initrd and the ext2 utils don't take up /that/ much space: probably much less
+>than your XFS journals in fact :-)
+>
+>patrick
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+>  
+>
+Hello,
 
-I am trying to make my kernel as modularized as possible to limit its
-size. So, all my filesystems are modules as well as drivers for my SCSI
-peripherals, I added an option to specify the filesystems modules
-required in the image. Still need some work. However, if you need a copy
-I can send it to you. I found it a little bit difficult to maintain, I
-tried to make better usage of functions.
+    I use "romfs" for the 'initrd" it take less place in the kernel than 
+"ext2" (I use "reiserfs" for "normal" filesystems), the only problem is 
+that "romfs" is a read only filesytem but you can use the "tmpfs" like 
+this in your "linuxrc" script:
 
->=20
-> --=20
->=20
-> Regards,
-> Heinz    -- The LVM Guy --
->=20
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
->=20
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-
->=20
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-
->=20
->=20
+#!/bin/sh
+mount -t tmpfs none /etc
+mount -t proc none /proc
+echo "Scanning for Volume Group..."
+/sbin/vgscan
+echo "Activating 'root' Volume Group"
+/sbin/vgchange -a y /dev/vgroot
+umount /proc
+umount /etc
 
---=20
+I use the "nash" shell from redhat, it take few place and have builtin 
+the mount/umount commands.
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Daniel Savard
-Consultation Informatique Daniel Savard
-551, boul. Sir-Wilfrid-Laurier
-suite 105
-Beloeil, (Qu=E9bec)
-Canada J3G 4J1
+The LVM is compiled in the kernel and I have these files in my "initrd":
 
-T=E9l: (450) 467-8014
-Internet: dsavard@cids.ca
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+/bin/nash
+/bin/sh -> nash
+/lib/ld-linux.so.2
+/lib/libc.so.6
+/lib/liblvm-10.so.1
+/sbin/vgchange
+/sbin/vgscan
+
+Best regards.
+
+Francis
