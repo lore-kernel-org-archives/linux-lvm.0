@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Is it possible to change the PE size on a live volume?
-Message-ID: <20021021202127.GA3129@fib011235813.fsnet.co.uk>
-References: <BDEMIPDEGABMNEFIHCPDIEHGEBAA.bill+f.9sfuw6uo@tao-group.com> <200210212044.12544.tdickenson@geminidataloggers.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200210212044.12544.tdickenson@geminidataloggers.com>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: "James Osalobua" <jamesosalobua4@lycos.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E183lKw-0002j0-00@hermes.sistina.com>
+Subject: [linux-lvm] TREAT AS APPROPRIATE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +13,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 21 15:22:01 2002
+Date: Mon Oct 21 17:49:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-On Mon, Oct 21, 2002 at 08:43:56PM +0100, Toby Dickenson wrote:
-> On Monday 21 Oct 2002 7:22 pm, William Blunn wrote:
-> > > Greetings. My volume is 225 GB in size and getting too small.
-> > > Unfortunately, I used the default PE size when creating the volume
-> > > group. Is there any way I can overcome the 256 GB limit ...
-> >
-> > In the LVM 1.0.x series,
-> >
-> > Given the sizes of modern hard disk arrays,
-> > maybe the default PE/LE size should be changed from 4 MiB to 16 MiB,
-> > in the LVM 1.0.x series.
-> >
-> > My feeling is that more people's needs would fit into 1 TiB than fit
-> > into 256 GiB.
-> 
-> doesnt LE size affect snapshot performance too?
+Mr James Osalobua =2C
+DEPARTMENT OF MINING AND MINERAL RESOURCES=2C
+PRETORIA=2CSOUTH AFRICA=2E
+TEL=2FFAX 277 3222 1616
 
-Not really, no.  Maybe you're getting confused with the snapshot chunk
-size.
+REQUEST FOR ASSISTANCE=3A STRICTLY CONFIDENTIAL & URGENT
+ 
+Sir=2C
 
-- Joe
+It is my great pleasure to write you this letter on behalf of my 
+colleagues=2E Your information was given to me by a member of the 
+South African Export Promotion council=28SAEPC=29 Who was with the 
+Government 
+delegation on a trip to your country for a bilateral confrence talk 
+to encourage foreign investors=2E I have decided to seek a confidential 
+co-operation with you in the execution of the deal hereunder for 
+the benefit of all parties and hope you will keep it confidential 
+because of the nature of this business=2E
+
+Within the department of Minerials & Energy where I work as a Director 
+of Audit and Project implementation and with the co-operation of 
+two other top officials=2C we have in our possession an overdue payment 
+in US=28$=29 funds=2E
+
+The said funds represent certain percentage of the total contract value 
+executed on behalf of my
+department by a foreign contracting firm which we the officials 
+over-invoiced to the amount of
+US$27=2E500=2C000=2E00=28Twenty-Seven Million Five Hundred Thousand Dollars=29=2E 
+Though the actual contract cost
+have been paid to the original contractor=2Cleaving the excess balance 
+unclaimed=2E
+
+Since the elected Government is determined to pay contractors all 
+their debts owed=2C so as to maintain good relationship with the foreign 
+governments and non-government agencies=2C we include ou=F8=F2=BF=BF=13=93=04=08 =CB
+=04=08=04r approvals with the Department of Finance and the Reserve bank 
+of South Africa=28RBSA=29=2E We are seeking your assistance to front as 
+the beneficiary of the unclaimed funds=2C since we are not allowed 
+to operate foreign accounts=2E Details and change of beneficiary 
+information upon
+application for claim to reflect payment and approvals will be secured 
+on behalf of you=2Fyour company=2E
+
+I have the authorities of my partners to propose that should you 
+be willing to asist us in this transaction your share as compensation 
+will be 25%=2C while my colleagues and I receive 65% and
+the balance of 10% for taxation and miscellaneous expenses incured=2E
+
+The business is completely safe and secure=2C provided you treat it 
+with utmost confidentiality=2E It does not matter whether you=2Fyour 
+company does contract projects as a transfer of powers will be secured 
+in  favour of you=2Fyour company=2E Also=2C your area of specialization 
+is not a hinderance to the successful execution of this transaction=2E 
+I have reposed my confidence in you and I hope that you will not 
+disappoint us=2E
+
+Kindly notify me on my confidential email address as provided or 
+my confidential TEL=2FFAX number thus 277 3222 1616=2E I will also prefer 
+you to provide me with your telephone and fax number where i can 
+reach you immediately for proper discussion for further details 
+upon your acceptance of this proposal=2E 
+
+
+
+Your's Faithfully=2C
+
+Mr James Osalobua=2E
