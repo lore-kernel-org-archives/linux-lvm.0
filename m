@@ -1,35 +1,42 @@
-Message-ID: <39D098F3.F1F0B328@hananet.net>
-Date: Tue, 26 Sep 2000 21:39:15 +0900
-From: nalabi <nalabi@hananet.net>
-Reply-To: nalabi@hananet.net
-MIME-Version: 1.0
-Subject: [linux-lvm] HI,
-Content-Transfer-Encoding: 7bit
+Date: Tue, 26 Sep 2000 06:47:44 +0000
+From: Charles Duffy <cduffy@mvista.com>
+Subject: Re: [linux-lvm] hi
+Message-ID: <20000926064744.B13759@mvista.com>
+References: <39D06FB7.14535FE3@hananet.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
+Content-Disposition: inline
+In-Reply-To: <39D06FB7.14535FE3@hananet.net>; from nalabi@hananet.net on Tue, Sep 26, 2000 at 06:43:19PM +0900
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Hi,
 
-initrd.gz make not create.
+--dc+cDN39EJAMEtIO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-How can make initrd.gz
+This may be because your kernel isn't compiled with ramdisk support.
 
+Try loading the appropriate module (and then, before booting w/ the
+initrd, compiling/switching to a kernel with initial ramdisk support).
 
-------------->
+You may also try doing each of the steps of the script by hand, to see
+what fails.
 
-nalabi:/home/nalabi/lvm-0.8i# lvmcreate_initrd
+--dc+cDN39EJAMEtIO
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Logical Volume Manager 0.8 by Heinz Mauelshagen  06/08/1999
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.3 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-lvmcreate_initrd -- this script creates a LVM initial ram disk in
-/boot/initrd.gz
+iD8DBQE50EaQr/O29KUQmJURAro2AJ0S+sWzmDtFweBRjk2bA7yAwGGs0wCdGnPd
+bE7dPgGqR1muJQdsH+h09B8=
+=VtEO
+-----END PGP SIGNATURE-----
 
-lvmcreate_initrd -- making ram filesystem
-umount: /dev/ram1: not mounted
-/sbin/lvmcreate_initrd: freeramdisk: command not found
-Bye bye...
-
-lvmcreate_initrd -- ERROR making ram disk filesystem
+--dc+cDN39EJAMEtIO--
