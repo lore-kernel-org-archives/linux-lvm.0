@@ -1,7 +1,7 @@
-Date: Fri, 15 Oct 1999 16:30:22 -0500 (EST)
+Date: Fri, 15 Oct 1999 16:42:39 -0500 (EST)
 From: theodore russell wickell <twickell@indiana.edu>
-Subject: [linux-lvm] more unresolved symbols.
-Message-ID: <Pine.HPP.3.96.991015162659.18374C-100000@falstaff.ucs.indiana.edu>
+Subject: [linux-lvm] nevermind the unresolved symbols.
+Message-ID: <Pine.HPP.3.96.991015164140.18374D-100000@falstaff.ucs.indiana.edu>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -10,22 +10,12 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Hello,
+Hi,
 
-Thanks everyone for helping me get the ramdisk loading properly, several
-people new the answer to help me out. Now, it seems I have another
-problem... 
+Sorry about the last email. I fixed the problem. I had so many different
+kernels floating around, I was using the wrong one. 
 
-'insmod lvm' comes up with two unresolved symbols.
-
-/lib/modules/2.2.12/block/lvm.o: unresolved symbol lvm_hd_name_ptr
-/lib/modules/2.2.12/block/lvm.o: unresolved symbol lvm_map_ptr
-
-Anyone know what I am doing wrong now?
-
-Thanks,
 Rusty
-
 
 
 ----------------------------------------------------------------------------
