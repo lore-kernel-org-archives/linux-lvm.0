@@ -1,11 +1,12 @@
-Return-Path: <bcrl@redhat.com>
-Date: Thu, 5 Jul 2001 03:35:31 -0400 (EDT)
-From: Ben LaHaise <bcrl@redhat.com>
-In-Reply-To: <20010705083402.D11805@vestdata.no>
-Message-ID: <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
+Return-Path: <thornber@btconnect.com>
+Date: Thu, 5 Jul 2001 10:39:09 +0100
+Subject: Re: [linux-lvm] LVM on Redhat 2.4.3-12 Kernel
+Message-ID: <20010705103908.A400@btconnect.com>
+References: <20010704083759.A294@btconnect.com> <Pine.LNX.4.33.0107041635050.27160-100000@chasqui.LaRed.net.pe>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0107041635050.27160-100000@chasqui.LaRed.net.pe>; from carenas@chasqui.lared.net.pe on Wed, Jul 04, 2001 at 04:50:53PM -0500
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +18,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
-To: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <kernel@ragnark.vestdata.no>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Thu, 5 Jul 2001, Ragnar Kj=EF=BF=BDrstad wrote:
+On Wed, Jul 04, 2001 at 04:50:53PM -0500, Carlo Marcelo Arenas Belon wrote:
+> <SNIP>
+> (BTW anyone knows what happened to the 1.0 release that was supposed to be
+> yesterday?)
 
-> What do you mean?
-> Is it not feasible to fix this in LVM as well, or do you just not know
-> what needs to be done to LVM?
+The release is delayed :( I think we're going to need another beta
+release before the great 1.0.  We want to be careful that we can still
+support existing systems with the bad alignments, as well as newly
+created LV's that have correct alignment.  This is going to involve an
+upgrade tool that will be run on existing VG's before the new software
+(beta8) can be used.
 
-Fixing LVM is not on the radar of my priorities.  The code is sorely in
-need of a rewrite and violates several of the basic planning tenents that
-any good code in the block layer should follow.  Namely, it should have 1)
-planned on supporting 64 bit offsets, 2) never used multiplication,
-division or modulus on block numbers, and 3) don't allocate memory
-structures that are indexed by block numbers.  LVM failed on all three of
-these -- and this si just what I noticed in a quick 5 minute glance
-through the code.  Sorry, but LVM is obsolete by design.  It will continue
-to work on 32 bit block devices, but if you try to use it beyond that, it
-will fail.  That said, we'll have to make sure these failures are graceful
-and occur prior to the user having a chance at loosing any data.
-
-Now, thankfully there are alternatives like ELVM, which are working on
-getting the details right from the lessons learned.  Given that, I think
-we'll be in good shape during the 2.5 cycle.
-
-		-ben
+- Joe
