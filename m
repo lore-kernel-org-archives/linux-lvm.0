@@ -1,6 +1,6 @@
 From: Steve_J_Brueggeman@notes.seagate.com
-Message-ID: <88256871.006FAB7E.00@sv-gw1.stsv.seagate.com>
-Date: Tue, 25 Jan 2000 14:19:21 -0600
+Message-ID: <88256871.0070F2BE.00@sv-gw1.stsv.seagate.com>
+Date: Tue, 25 Jan 2000 14:33:35 -0600
 Subject: RE: [linux-lvm] LVM seems to break tar and cp "stay-local" option
 		s
 Mime-Version: 1.0
@@ -12,6 +12,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: "Jakma, Paul" <Paul.Jakma@compaq.com>
 Cc: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+
+Well, I've went and shot-off too quickly again.
+
+My problem appears to be that I never upgraded my libc on my redhat-5.2 setup.
+
+Sorry if I've caused any confusion!!!
+
+Steve Brueggeman
+
+
+
+
+
+Steve J Brueggeman
+01/25/2000 02:19 PM
+
+To:   "Jakma, Paul" <Paul.Jakma@compaq.com> @ INTERNET
+cc:   "'linux-lvm@msede.com'" <linux-lvm@msede.com>@INTERNET
+
+Subject:  RE: [linux-lvm] LVM seems to break tar and cp "stay-local" option s
+      (Document link: Steve J Brueggeman)
 
 Well, a quick of the tar source code reveals that they're using a stat(2) and
 checking
@@ -33,7 +54,6 @@ returned expected device numbers.
 I need to look into this a bit further.  More to come....
 
 Steve Brueggeman
-
 
 
 
