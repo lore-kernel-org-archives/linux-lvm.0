@@ -1,19 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j26LH0n22002
-	for <linux-lvm@redhat.com>; Sun, 6 Mar 2005 16:17:00 -0500
-Received: from omx2.sgi.com (omx2-ext.sgi.com [192.48.171.19])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j26LGrUr013797
-	for <linux-lvm@redhat.com>; Sun, 6 Mar 2005 16:16:54 -0500
-Date: Mon, 7 Mar 2005 08:15:38 +1100
-From: Nathan Scott <nathans@sgi.com>
-Subject: Re: [linux-lvm] xfs and snapshots
-Message-ID: <20050307081538.C2751595@wobbly.melbourne.sgi.com>
-References: <87f94c3705030417156a2ea617@mail.gmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87f94c3705030417156a2ea617@mail.gmail.com>;
-	from greg.freemyer@gmail.com on Fri, Mar 04, 2005 at 08:15:39PM
-	-0500
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j27Dsrn02031
+	for <linux-lvm@redhat.com>; Mon, 7 Mar 2005 08:54:53 -0500
+Received: from smtp.itanets.com (smtp.itanets.com [216.12.200.84])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j27DspgV021782
+	for <linux-lvm@redhat.com>; Mon, 7 Mar 2005 08:54:51 -0500
+From: Delian Krustev <krustev@krustev.net>
+Subject: Re: [linux-lvm] Reducing the Linux LVM(8e) partition itself (not PV,
+	VG or LV)
+Date: Mon, 7 Mar 2005 15:54:48 +0200
+References: <1110115850.4677.216665923@webmail.messagingengine.com>
+In-Reply-To: <1110115850.4677.216665923@webmail.messagingengine.com>
+MIME-Version: 1.0
+Message-Id: <200503071554.48408.krustev@krustev.net>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,25 +24,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Greg Freemyer <greg.freemyer@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Mar 04, 2005 at 08:15:39PM -0500, Greg Freemyer wrote:
-> Thanks to Nathan Scott, the new 2.6.11 kernel has a fix that should
-> allow xfs_freeze to be called prior to the creating a snapshot.
-> 
-> It is still not required, but it should no longer cause problems.
+On Sunday 06 March 2005 15:30, Ajeet Nankani wrote:
+> I have a /dev/hda6 partition as Linux LVM(8e), its size is around 8GB.
+> I have one PV(no free PEs in it all are allocated) in this partition.
+> This PV has a total size of around 7GB.
+> I have also made sure that this PV is contiguous from the start of the
+> LVM partition hence it is confirmed that the free 1GB is at the end of
+> LVM partition.
+> I want to reduce this Linux LVM(8e) partition and recover this 1GB free
+> space to create a fat32 partition.
+> When i tried to print partition table of this /dev/hda6 through gnu
+> parted, it gave error "Error: Could not detect file system." and so
+> qtparted does not work either.
 
-Actually, for 2.6 kernels you shouldn't do a xfs_freeze before doing
-a snapshot - this will result in a deadlocked snapshot, since the
-freeze holds locks the snapshot code needs.  In 2.6, the DM snapshot
-code knows how to do an xfs_freeze-equivalent call from within the
-kernel.
+There's no partition table or filesystem on a LVM partiton.
 
-We didn't find a clean way to resolve that issue yet, Christoph is
-looking into it though.
+>
+> Is there anyway to reduce this linux LVM (8e) partition safely?
 
-cheers.
+Here are the steps. I hope I won't miss one:
 
--- 
-Nathan
+lvreduce ..(if You don't have enough free PE)
+pvmove ..
+vgreduce ..
+repartition(fdisk, cfdisk, parted .. )
+possible reboot(reread the partition table)
+pvcreate ..
+vgextend ..
+possibly lvextend ..
+mkdosfs ..
+
+
+Cheers,
+Delian
