@@ -1,12 +1,12 @@
-Date: Mon, 10 Sep 2001 16:47:40 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
-Subject: Re: [linux-lvm] LVM
-Message-ID: <20010910164739.A11436@dardhal.mired.net>
-References: <20010910140543.A9418@dardhal.mired.net> <NBBBJHKIOKPKOGOEPEDPEEDCDNAA.stuart@bh90210.net>
+Date: Mon, 10 Sep 2001 17:38:51 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] pv_move_pe() error again :/
+Message-ID: <20010910173851.A3751@vestdata.no>
+References: <E15f13v-0003bs-00@hermes.sistina.com> <E15fJux-0005Kk-00@hermes.sistina.com> <20010910001643.A19424@vestdata.no> <E15gELn-0004OG-00@hermes.sistina.com> <20010910103952.B31660@vestdata.no> <20010910132709.G31313@sistina.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <NBBBJHKIOKPKOGOEPEDPEEDCDNAA.stuart@bh90210.net>
+In-Reply-To: <20010910132709.G31313@sistina.com>; from mauelshagen@sistina.com on Mon, Sep 10, 2001 at 01:27:09PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +18,51 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Monday, 10 September 2001, at 06:03:03 -0700,
-IT3 Stuart B. Tener, USNR-R wrote:
+On Mon, Sep 10, 2001 at 01:27:09PM +0200, Heinz J . Mauelshagen wrote:
+> But I wonder, why in your case the locking of the PE failed. Are you ab=
+le to=20
+> reporduce your case and provide the error code?
 
-> List members:
-> 
-> I downloaded the LVM How-To (30 AUG 2001, is this the latest version).
-> [...]
->
-Read the HOWTO you have just downloaded. Download LVM sources from
-Sistina's FTP site, and read the documentation on the tarball. Most (if
-not all) of your doubts will suddenly disappear :)
+It was reproducable at the time - now the disk in question has been
+replaced. If it's interesting enough, I can make a phone call and see if
+I can get the broken disk back.
 
---
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+The error_occured in the pe_lock() call at the beginning of the
+move-operation - the one that I commented out in patch.
+
+This is the kernel-log from the time (well, I think it was from the time
+I ran pe_move):
+Sep  6 18:10:01 argus kernel: hdd: dma_intr: status=3D0x51 { DriveReady S=
+eekComplete Error }
+Sep  6 18:10:01 argus kernel: hdd: dma_intr: error=3D0x10 { SectorIdNotFo=
+und }, LBAsect=3D155058176, sector=3D0
+Sep  6 18:10:01 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
+Sep  6 18:10:01 argus kernel: hdd: dma_intr: status=3D0x51 { DriveReady S=
+eekComplete Error }
+Sep  6 18:10:01 argus kernel: hdd: dma_intr: error=3D0x10 { SectorIdNotFo=
+und }, LBAsect=3D155058176, sector=3D0
+Sep  6 18:10:01 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
+
+and:
+
+Sep  6 18:15:51 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
+Sep  6 18:15:55 argus last message repeated 213 times
+Sep  6 18:15:55 argus kernel: hdd: read_intr: status=3D0x59 { DriveReady =
+SeekComplete DataRequest E rror }
+Sep  6 18:15:55 argus kernel: hdd: read_intr: error=3D0x40 { Uncorrectabl=
+eError }, LBAsect=3D11801433 2, sector=3D118014332
+Sep  6 18:15:55 argus kernel: end_request: I/O error, dev 16:40 (hdd), se=
+ctor 118014332
+
+The kernel is standard 2.4.8 without the LVM-patches. The usersspace
+tools are version 1.0.1-rc2.
+
+
+
+
+--=20
+Ragnar Kj=F8rstad
+Big Storage
