@@ -1,58 +1,59 @@
-Date: Thu, 13 Jul 2000 15:55:07 -0700 (PDT)
-From: Adam Crews <acrews@cisco.com>
-Subject: [linux-lvm] invalid i/o protocal version
-In-Reply-To: <001301bfea54$f84de470$42c225c3@steuer.ofd.niedersachsen.de>
-Message-ID: <Pine.LNX.4.21.0007131531430.3258-100000@scooby.cisco.com>
-MIME-Version: 1.0
+Date: Thu, 13 Jul 2000 19:42:29 -0500
+From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Subject: Re: [linux-lvm] invalid i/o protocal version
+Message-ID: <20000713194229.A32516@omnifarious.mn.org>
+References: <001301bfea54$f84de470$42c225c3@steuer.ofd.niedersachsen.de> <Pine.LNX.4.21.0007131531430.3258-100000@scooby.cisco.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0007131531430.3258-100000@scooby.cisco.com>; from acrews@cisco.com on Thu, Jul 13, 2000 at 03:55:07PM -0700
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
-
-Hello
-
-I have just downgraded from kernel 2.4.0-test1 to 2.2.16.
-
-I installed the lvm patch to 2.2.16 and can load the lvm module just fine.
-[root@scooby /root]# lsmod
-Module                  Size  Used by
-lvm                    98216   0  (autoclean)
-soundcore               3204   0  (autoclean) (unused)
-ide-probe               6512   0
-autofs                  9504   1  (autoclean)
-eepro100               16752   2  (autoclean)
-unix                   11396  89  (autoclean)
-ide-disk                6332   0
-ide-mod                41656   0  [ide-probe ide-disk]
-ncr53c8xx              52336   6
-sd_mod                 16328   6
-scsi_mod               40716   2  [ncr53c8xx sd_mod]
-[root@scooby /root]# cat /proc/lvm
-LVM module version 0.8i  (02/10/1999)
-
-Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
-Global: 140 bytes vmalloced   IOP version: 5   0:05:09 active
-[root@scooby /root]#
+To: Adam Crews <acrews@cisco.com>
+Cc: linux-lvm@msede.com
 
 
-When I try to do any lvm commands I get the following:
-[root@scooby /root]# vgscan -d -v
-<1> lvm_get_iop_version -- CALLED
-<22> lvm_check_special -- CALLED
-<22> lvm_check_special -- LEAVING
-<1> lvm_get_iop_version -- AFTER ioctl ret: 0
-<1> lvm_get_iop_version -- LEAVING with ret: 5
-vgscan -- invalid i/o protocol version
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[root@scooby /root]#
+On Thu, Jul 13, 2000 at 03:55:07PM -0700, Adam Crews wrote:
+> I have re-compiled the lvm tools against the 2.2.16 src and libs, but
+> I get the same message.
+>=20
+> How can I fix this, or what other info is needed to figure out what is
+> happening?
 
+	I'm betting you didn't install the older versions of the
+executables.  Look carefully at which version of the LVM you're patching
+your kernel to, and make sure that's the version of the utilities you're
+using.
 
-I have re-compiled the lvm tools against the 2.2.16 src and libs, but I
-get the same message.
+	The error message you're getting means that the utility versions
+don't match up with the kernel module/patch version.
 
-How can I fix this, or what other info is needed to figure out what is
-happening?
+Have fun (if at all possible),
+--=20
+Its name is Public Opinion.  It is held in reverence. It settles everything.
+Some think it is the voice of God.  Loyalty to petrified opinion never yet
+broke a chain or freed a human soul.     ---Mark Twain
+-- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
+r) --
 
--adam
+--+QahgC5+KEYLbs62
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE5bmH1G4QeWBeRdS8RAgFGAKCGpTX2WMXdxlJpGCYxjmsVnQAL4gCfW6V1
+1wMl+cWgQRnWvvlT44dbWxI=
+=Wmtj
+-----END PGP SIGNATURE-----
+
+--+QahgC5+KEYLbs62--
