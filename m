@@ -1,10 +1,11 @@
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Kernel 2.6.1 and LVM2
-Message-ID: <20040125213120.GA32013@redhat.com>
-References: <000801c3e25b$a509cc90$9722fea9@terence>
+Message-ID: <20040127001252.A21930@cs.mcgill.ca>
+From: Navindra Umanee <navindra@cs.mcgill.ca>
+Subject: Re: [linux-lvm] Re: LVM2 + Linux 2.6.1 questions
+References: <web-216233373@mail01.infosat.net> <yw1xektm3edc.fsf@ford.guide>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <000801c3e25b$a509cc90$9722fea9@terence>
+In-Reply-To: =?iso-8859-1?Q?=3Cyw1xektm3edc=2Efsf=40ford=2Eguide=3E=3B_from_M=E5ns_Ru?=
+ =?iso-8859-1?Q?llg=E5rd_on_Mon=2C_Jan_26=2C_2004_at_04:42:55PM_+0100?=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,83 +16,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 27 00:02:03 2004
+Date: Tue Jan 27 00:14:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hi John,
+M=E5ns Rullg=E5rd <mru@kth.se> wrote:
+> > 2) Why do I see, for example, a /dev/mapper/v01-home entry,
+> > instead of /dev/v01/home, when running 'df' and 'mount'?  I
+> > see that /dev/mapper/v01/home symlinks to
+> > /dev/mapper/v01-home, which must account for this, though I
+> > thought that because I'd specified /dev/v01/home, that it'd
+> > appear as such?  Not that this really matters I suppose ;-)
+>=20
+> I see the /dev/vg/link name.
 
-you can essentially reuse the /etc/rc.d/rc.sysinit startup
-of Red Hat Linux for LVM1.
-Maybe you can feed that back to Fedora development ?
+Mine shows /dev/mapper/vg-link too.  I would definitely prefer
+/dev/vg/link because at least it's not implementation dependent... but
+I guess it's mostly an aesthetic thing.
 
-Regards,
-Heinz    -- The LVM Guy --
+Any idea why yours is different?  Different version of mount maybe?
+Using mount-2.11z here...
 
-
-en Sat, Jan 24, 2004 at 10:22:51AM +0100, John Cassidy wrote:
-> Heinz,
-> 
->  
-> 
->         on the above kernel, all of the necessary steps have been taken to
-> get LVM2 to function.
-> 
->  
-> 
-> My problem is I want an appropriate startup script to initiate and halt
-> LVM2 at startup and shutdown.
-> 
->  
-> 
-> Distribution is RH Fedora with kernel 2.6.1.
-> 
->  
-> 
-> Any ideas?
-> 
->  
-> 
-> Im voraus..    
-> 
->  
-> 
-> Regards/Cordialement/Gruss/Saludos 
-> 
-> John Cassidy Dipl.-Ing (Informatique)
-> 
-> S390 & zSeries Systems Engineering
-> 
-> Schleswigstr. 7
-> 
-> D-51065 Cologne
-> 
-> EU
-> 
-> Tel: +49  (0) 221 61 60 777 . GSM: +49  (0) 177 799 58 56 
-> 
-> E-Mail: Sean@JDCassidy.net  <mailto:Sean@JDCassidy.net> 
-> 
-> HTTP :
-> <file:///H:\Documents%20and%20Settings\Horace\Application%20Data\Microsoft\S
-> ignatures\www.jdcassidy.net> www.jdcassidy.net 
-> 
->    
-> 
->  
-> 
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat, Inc.
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Later,
+Navin.
