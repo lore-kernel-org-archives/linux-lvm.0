@@ -1,11 +1,11 @@
 Return-Path: <root@lewis.abi.tconline.net>
 From: Lewis Bergman <lbergman@abi.tconline.net>
 Subject: Re: [linux-lvm] 1.0 tar.gz
-Date: Fri, 17 Aug 2001 11:27:53 -0500
+Date: Fri, 17 Aug 2001 11:32:04 -0500
 References: <01081710463803.03972@lewis.abi.tconline.net> <20010817171256.A23596@uk.sistina.com>
 In-Reply-To: <20010817171256.A23596@uk.sistina.com>
 MIME-Version: 1.0
-Message-Id: <01081711275305.03972@lewis.abi.tconline.net>
+Message-Id: <01081711320406.03972@lewis.abi.tconline.net>
 Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,18 +21,11 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> I've just downloaded and unpacked it without error from
-> ftp://ftp.sistina.com/pub/LVM/1.0/lvm_1.0.tar.gz
-> using 'tar (GNU tar) 1.13.19'.
->
-same
 > What's the filesize on your machine?   362029?
 >
-362025 but I notice it is 362029 on the ftp site. hmmm.... 4 little 
-uncooperative kb's
-
-I have tried it 4 times from two machines and get the same thing each time. 
-Maybe after lunch things will behave.
+stupid mistake...didn't switch to binary.
+Oh well...now that I have proven how stupid I am so early in the day I can 
+relax.
 
 -- 
 Lewis Bergman
