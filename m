@@ -1,12 +1,10 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <russell@coker.com.au>
-Subject: Re: [linux-lvm] Debian packaging
-Date: Thu, 14 Dec 2000 17:22:17 +0100
-References: <Pine.LNX.4.30.0012141645040.17005-100000@falka.mfa.kfki.hu>
-In-Reply-To: <Pine.LNX.4.30.0012141645040.17005-100000@falka.mfa.kfki.hu>
+Return-Path: <clausen@conectiva.com.br>
+Message-ID: <3A102693.F00BCA80@conectiva.com.br>
+Date: Mon, 13 Nov 2000 15:36:19 -0200
+From: Andrew Clausen <clausen@conectiva.com.br>
 MIME-Version: 1.0
-Message-Id: <00121417221738.00826@lyta>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Linux crashed; PV died
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,73 +17,98 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Tamas Gergely <dice@mfa.kfki.hu>
-Cc: Linux-LVM@sistina.com
+To: linux-lvm@sistina.com
 
-On 2000-12-14 16:50, Tamas Gergely wrote:
->As I noticed the LVM utilities are placed under /usr in this LVM.DEB .
+Hi,
 
-That's what the old package does.
+I'm sending this for Claudio Matsuoka, a friend of mine from Conectiva.
+Due to the problem described below, he can't sent it himself :-(
 
->Wouldn't it be better to use '/' as root not '/usr'?
 
-That's what my development packages (which I have shared with no-one) do.
 
->I mean, it would be better to place the utilities into /sbin instead of
->/usr/sbin.
+After a solid lock on my system (probably due to a problem with the RTL
+8139 driver), it seems that my PV disappeared. fdisk -l and pvscan
+output follow (is pvscan looking for PVs in /dev/hdc only?). Any ideas
+on how can I recover this system?
 
-Depends.  One thing I would like to do is go through the utilities and pu=
-t=20
-things that are needed to kickstart a system or to recover a hosed system=
-=20
-into /sbin .  Then things that aren't so critical to the boot process (lv=
-msar=20
-springs to mind) belong in /usr/sbin .
+Kernel 2.4.0-test12, LVM 0.8final + all patches collected by Christoph
+Hellwig:
+ 
+kernel test12
+lvm 0.8-final + all patches
 
->(on many systems /usr is located on an LV. But activiting/disactivating
->using vgchange is impossible after unmounting /usr)
+Disk /dev/hda: 255 heads, 63 sectors, 1027 cylinders
+Units = cylinders of 16065 * 512 bytes
 
-Yes.  My package will differ quite a bit from the existing Debian package=
-=2E =20
-Also I plan to make everything use shared libraries.  ls, cp, and mv are =
-not=20
-statically linked so I don't think that there is any need for statically=20
-linked lvm utilities.  My lvm package will be considerably smaller than t=
-he=20
-current one (which is necessary for boot support).
+   Device Boot    Start       End    Blocks   Id  System
+/dev/hda1   *         1         4     32098+  83  Linux
+/dev/hda2             5        86    658665   83  Linux
+/dev/hda3            87      1027   7558582+  8e  Linux LVM
 
-I would appreciate any suggestions on this.  Also if anyone is brave and=20
-wants to beta-test my packages then I would be very interested in hearing=
-=20
-from them.
 
-One other thing, it seems that the protocol is changing often.  How shoul=
-d=20
-this be managed in Debian packages?  I had thought of doing lvm22 and lvm=
-24=20
-as package names for the 2.2.x and 2.4.x kernels, but now I get the=20
-impression that the interfaces will change between those series.  Also 0.=
-8.1,=20
-0.9, and 0.8i all seem to have different protocol versions.
-
-This has two problems, one is that users won't know which one they need, =
-the=20
-other is how to manage an upgrade of a kernel!
-
-I was thinking that perhaps what I should do is have /sbin/lvm-ver and=20
-/lib/lvm-ver directories where "ver" is the version of LVM in question.  =
-Then=20
-at boot time there is a script that determines the version of LVM in the=20
-kernel and creates sym-links from /sbin and /lib to the correct directori=
-es. =20
-This is REALLY ugly, but it enables a user to cleanly have a machine that=
- can=20
-be booted on 2.2 or 2.4 kernel and just work each time you boot it.
-
-Any better suggestions?
-
---=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+# pvscan -d -vv /dev/hda3
+<1> lvm_get_iop_version -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_get_iop_version -- AFTER ioctl ret: 0
+<1> lvm_get_iop_version -- LEAVING with ret: 6
+<1> pv_read_all_pv -- CALLED
+<1> pv_read_all_pv -- calling lvm_dir_cache
+<22> lvm_dir_cache -- CALLED
+<333> lvm_add_dir_cache -- CALLED
+<333> lvm_add_dir_cache -- LEAVING
+<333> lvm_add_dir_cache -- CALLED
+<333> lvm_add_dir_cache -- LEAVING
+<333> lvm_add_dir_cache -- CALLED
+<333> lvm_add_dir_cache -- LEAVING
+<333> lvm_add_dir_cache -- CALLED
+<333> lvm_add_dir_cache -- LEAVING
+<333> lvm_add_dir_cache -- CALLED
+<4444> lvm_check_dev -- CALLED
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<4444> lvm_dir_cache_hit -- CALLED
+<4444> lvm_dir_cache_hit -- LEAVING with ret: 0
+<333> lvm_add_dir_cache -- LEAVING
+<333> lvm_add_dir_cache -- CALLED
+<4444> lvm_check_dev -- CALLED
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<4444> lvm_dir_cache_hit -- CALLED
+<4444> lvm_dir_cache_hit -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING
+<22> lvm_dir_cache -- LEAVING with ret: 1
+<1> pv_read_all_pv -- calling stat with "/dev/hdc"
+<22> pv_read -- CALLED with /dev/hdc
+<333> pv_check_name -- CALLED eith "/dev/hdc"
+<4444> lvm_check_chars -- CALLED with name: "/dev/hdc"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<4444> lvm_check_dev -- CALLED
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> pv_check_name -- LEAVING with ret: 0
+<333> pv_read_already_red -- CALLED
+<333> pv_read_already_red -- LEAVING with ret: 0
+<333> pv_flush -- CALLED to flush /dev/hdc
+<4444> pv_check_name -- CALLED eith "/dev/hdc"
+<55555> lvm_check_chars -- CALLED with name: "/dev/hdc"
+<55555> lvm_check_chars -- LEAVING with ret: 0
+<55555> lvm_check_dev -- CALLED
+<55555> lvm_check_dev -- LEAVING with ret: 1
+<4444> pv_check_name -- LEAVING with ret: 0
+<333> pv_flush -- LEAVING with ret: 0
+<22> pv_read -- going to read /dev/hdc
+<333> lvm_check_dev -- CALLED
+<333> lvm_check_dev -- LEAVING with ret: 1
+<333> pv_copy_from_disk -- CALLED
+<333> pv_copy_from_disk -- LEAVING
+<333> pv_create_name_from_kdev_t -- CALLED with 22:0
+<4444> lvm_check_dev -- CALLED
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<4444> lvm_dir_cache -- CALLED
+<4444> lvm_dir_cache -- LEAVING with ret: 1
+<333> pv_create_name_from_kdev_t -- LEAVING with dev_name: /dev/hdc
+<22> pv_read -- LEAVING with ret: -255
+<1> pv_read_all_pv -- pv_read returned: -255
+<1> pv_read_all_pv -- avoiding multiple entries in case of MD; np: 0
+<1> pv_read_all_pv -- LEAVING with ret: 0
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- walking through all physical volumes found
+pvscan -- no valid physical volumes found
