@@ -1,74 +1,54 @@
-Date: Wed, 14 Jun 2000 20:45:54 +0200
-From: Nils Juergens <nils@muon.de>
-Subject: [linux-lvm] Problems with pvmove
-Message-ID: <20000614204554.A654@guldukat.muon>
+From: benr@us.ibm.com
+Message-ID: <852568FE.00750CE1.00@d54mta02.raleigh.ibm.com>
+Date: Wed, 14 Jun 2000 17:18:26 -0400
+Subject: [linux-lvm] IBM to release LVM Technology to the Linux Community
 Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM List <linux-lvm@msede.com>
+To: linux-lvm@msede.com, linux-kernel@vger.rutgers.edu, linux-fsdevel@vger.rutgers.edu
+Cc: reiser@idiom.com, sbest@us.ibm.com, peloquin@us.ibm.com, andrea@suse.de, okeefe@sistina.com, wiegand@suse.de, "Stephen C. Tweedie" <sct@redhat.com>, venditti@us.ibm.com, Mauelshagen@sistina.com
 
-Hi Folks,
 
-i'v got a volume group with three physical volumes (see below for
-details) and one logical volume in it. Now i want to remove one PV.
 
-I try to empty the PV with
+Hello!
 
- > pvmove /dev/hdb5
- > pvmove -- moving physical extents in active volume group "meine_volumes"
- > pvmove -- WARNING: moving of active logical volumes may cause data loss!
- > pvmove -- do you want to continue? [y/n] y
- > pvmove -- ERROR reading input physical volume "/dev/hdb5"
+Since IBM has begun to publicly support Linux, many of our customers have
+started showing an interest in Linux.  We have received many requests from
+our customers asking us to enhance certain areas of Linux (logical volume
+management in particular) in order to make Linux a more acceptable platform
+for their IT operations.  Furthermore, we have been asked to provide a
+migration path from existing platforms (both IBM and non-IBM) to Linux.
+IBM has been moving to satisfy these requests by contributing developers
+and technology to the Linux Community.  This is what drove IBM's decision
+to release JFS to the Linux Community, and it  is driving the decision to
+release logical volume management technology to the Linux Community.
 
- > pvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
+IBM is releasing one of its most advanced architectures for a Logical
+Volume Management System.  This architecture is quite interesting as it
+completely integrates all disk and volume management into a single, highly
+extensible, easy to use entity.  We hope that the release of this
+technology will lead to a world class logical volume management system for
+Linux, one which satisfies the requirements of our customers as well as
+those of the Linux Community.
 
- > pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
+The first of several white papers describing the LVMS architecture can be
+found at the IBM Linux Technology Center website:
 
-On the other hand - i was able to clear another PV (/dev/hdc5) from the
-same PG with the above command and then remove it from the VG.
+http://oss.software.ibm.com/developerworks/opensource/linux/
 
-I'm using SuSEs 2.2.14-Kernel on a Debian 2.2 i386 with lvm-0.8final.
+Since we would like to have an honest, open discussion about this, I would
+suggest that all interested parties post their comments to the LVM mailing
+list (unless someone has a better suggestion!).  All comments are welcome!
 
-any ideas?
+Thanks!
 
-Nils
+Ben Rafanello
+IBM Linux Technology Center
 
-------------------------------------------------------------------------
---- Volume group ---
-VG Name               meine_volumes
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                3
-Act PV                3
-VG Size               20.17 GB
-PE Size               4 MB
-Total PE              5163
-Alloc PE / Size       3871 / 15.12 GB
-Free  PE / Size       1292 / 5.05 GB
 
---- Physical volumes ---
-PV Name (#)           /dev/hda5 (2)
-PV Status             available / allocatable
-Total PE / Free PE    2415 / 0
-
-PV Name (#)           /dev/hdb5 (1)
-PV Status             available / allocatable
-Total PE / Free PE    503 / 60
-
-PV Name (#)           /dev/hdc11 (3)
-PV Status             available / allocatable
-Total PE / Free PE    2245 / 1232
-
--- 
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >    Yes, Sir. Deathmatch _is_ a marketing term   <
- >        for "online brainstorming session"       <
+PS - Information about the LVM mailing list can be found at:
+http://linux.msede.com/lvm/mlist/
