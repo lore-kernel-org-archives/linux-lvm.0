@@ -1,8 +1,8 @@
-Message-ID: <615A249B783CD41192F400D0B747AC860963B04F@hesse.bbn.hp.com>
-From: "ZECHA,HOLGER (HP-Germany,ex1)" <holger_zecha@hp.com>
-Subject: RE: [linux-lvm] Linux Redhat with VA7100
+From: =?iso-8859-1?Q?Tim-Patrick_M=E4rk?= <tpmaerk@gmx.net>
+Message-ID: <000301c2d06c$99f7e280$0400000a@lenina>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Erroneously formatted PV; 'vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group'...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,92 +13,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Feb  9 06:14:02 2003
+Date: Sun Feb  9 12:55:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
 Hello,
 
-Here are my comments:
-RedHat 7.2 isn't supported, therefore I can't get informations for RH =
-7.2
-Here are the informations for RedHat Advanced server 2.1 on Itanium
+two days ago i installed a new HDD and added it to my VG 'vg1'
+(partition id '8e' + 'pvcreate /dev/hdb1' + 'vgextend vh1 /dev/hdb1').
+A bit later I erroneously formatted '/dev/hdb1' by 'mkfs.xfs /dev/hdb1'.
+I ran 'vgscan' and 'pvscan' and the made a smiliar output like it is
+shown on
+http://lists.sistina.com/pipermail/linux-lvm/2002-August/011947.html -
+but i have only two PVs in my VG 'vg1': '/dev/hdc1' and '/dev/hdd2'.
+I don't remember what i exactly did with '/dev/hdb' after that (it was
+late...), but as a result I 'fdisked' the partition table away...
+There was no data on '/dev'hdb' (except the LVM metadata), so no 'real'
+data needs to be recovered (at least i hope so).
 
-Fiber Channel HBA:
-HP A7298A Firmware 1.00a4 Driver 4.20-IA64 Kernel 2.4.18
+All in all, I can't access the VG 'vg1' (PVs: '/dev/hdc1' + '/dev/hdd2')
+with the 3 LVs 'root', 'storage' and 'swap' any more.=20
 
+Now you could advise me to run 'vgcfgrestore', but i regretfully must
+say that i rebooted my box and as the name of the LV 'root' implies, my
+root-filesystem was on it, so the system doesn't boot anymore *doh*...
 
-Recommended VA7100/7400 Firmware: HP18
+Summary:
+- 1 VG: 'vg1'
+- 2 (3) PVs: '/dev/hdc1' + '/dev/hdd2' + for a short time (see above)
+'/dev/hdb1'
+- 3 LVs: 'root', 'storage' and 'swap'
+- Filesystem on all LVs: XFS
 
-Supported Switches:
-Brocade 2400/2800 Firmware 2.6.0c & 2.6.0h
-FC16b, FW 3.0.2f & 3.0.2k
-FC6164 FW 2.6.0c
-FC64 v1.3
-FC8b FW 3.0.2f, 3.0.2k
-Edge switch 2/32 & 2/16 FW 02.00.02
-Core Switch 2/64 FW 02.00.02 , 4.0.2b
-Director 2/64 FW 02.00.02
-SAN switch 2/32 FW 4.0.2b
+Fortunately i have a separated 'backup system' on another HDD, which
+doesn't use LVM nor XFS, but simply ext2, so i can work with it
+temporarily to fix this disaster.
 
-Check these requierements !
+I think the problem is, that the VG 'vg1' still thinks, it would consist
+of 3 PVs, but only 2 are there.
+But because no VG is found by 'vgscan' (see link above), i can't remove
+'/dev/hdb1' by 'vgreduce vg1 /dev/hdb1' and so on...
 
+Is there any way to generate metadata for '/dev/hdb1' to make it known
+by 'vg1' or remove '/dev/hdb1' from 'vg1'?!
 
+I'm very despaired and would be gladdened by every answer.
+If you need any details, just ask.
 
+P.S.: This is not intended to be a cross-posting; I only had problems
+submitting my first one.
 
-Holger Zecha
-SAP R/3 Technical Consultant
-HP Managed Services
+Kind regards and thanks in advance
 
-Hewlett-Packard GmbH
-Schickardstr. 25
-71034 B=F6blingen - Germany
-
-Phone: (+49) (7031) 468-3423
-Fax:       (+49) (7031) 468-1349
-Email:   Holger_Zecha@hp.com=20
-=20
-
-________________________________________________________________________=
-____
-____________________________
-Hewlett-Packard GmbH, Herrenberger Str. 110-140, 71034 B=F6blingen,
-Managing Directors: J=F6rg Menno Harms (Vorsitzender), J=FCrgen =
-Banhardt,
-Wolfram Fischer, Rainer Kaczmarczyk, B=E4rbel Schmidt, Fritz Schuller, =
-Regine
-Stachelhaus
-Vorsitzender des Aufsichtsrates: Heribert Schmitz
-Sitz der Gesellschaft: B=F6blingen, Amtsgericht B=F6blingen HRB 4081
-
-=20
-
-
-
-=20
-
------Original Message-----
-From: aicha okirim [mailto:karima_okirim@mail.rtialgerie.com]=20
-Sent: Sunday, February 09, 2003 11:10
-To: linux-lvm@sistina.com
-Subject: [linux-lvm] Linux Redhat with VA7100
-
-
-hello,
-
-how i can see all luns on Linux RedHat 7.2 to HP9000 RX6410 =
-Intel-Itanium?
-
-i can define 02 luns but i can see only one, WHY?
-
-thanks=20
-
-Aicha Okirim
-RTI Algerie
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com =
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Tim-Patrick M=E4rk
