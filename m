@@ -1,9 +1,9 @@
-Message-ID: <3890E458.54A9FC63@msede.com>
-Date: Fri, 28 Jan 2000 01:35:36 +0100
+Message-ID: <389240C3.C11F5303@msede.com>
+Date: Sat, 29 Jan 2000 02:22:11 +0100
 From: Michael Marxmeier <mike@msede.com>
-Reply-To: rf@prima.de
+Reply-To: abamrah@idirect.com
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] ReiserFS & LVM? (fwd)
+Subject: [linux-lvm] Subject: LVM and Debian (fwd)
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -12,29 +12,36 @@ Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
 
+
 -------- Original Message --------
-From: Robert Flach <rf@random.my-disc.de>
-Reply-To: rf@prima.de
-Subject: Re: [linux-lvm] ReiserFS & LVM?
-References:
-<Pine.LNX.4.10.10001271743500.3114-100000@moses.muenster.com>
+Date: Fri, 28 Jan 2000 14:13:51 -0500
+Resent-Date: Sat, 29 Jan 2000 2:19:12 MEZ
+From: Amrit Pal Singh <abamrah@idirect.com>
+Subject: LVM and Debian
 
-Joerg Fraune wrote:
-> 
->  Hi,
-> 
->  the reiserfs documentation says that reiserfs is incompatible with
-> software raid due to conflicts in buffer page usage; is this also
-> true for reiserfs & LVM?
+I am trying to install LVM v0.7 on my debian box. I have tried with
+Kernel 2.2.13, 2.2.14, and 2.3.40 but nowhere I could find a
+configuration option that I can select to enable support for LVM.
+Though
+in the Install instructions for LVM, it says get a kernel >=2.2.10-ac2
+and also in step 8
 
-No.
-I'm running LVM 0.8i and Reiserfs with Kernel 2.2.13-SuSE-reiserfs on
-my
-router (ok, I know reiserfs is not fully stable yet).
+"Omit this step if you choosed yes for LVM instead of module in "make
+config".
 
--- 
-Bis denne...
+   Put an "insmod lvm" into your startup script OR extend
+/etc/conf.modules by
 
-Robert Flach
+      alias block-major-58      lvm 
+      alias char-major-109      lvm
 
-rf@random.prima.de  -*-  www.random.prima.de
+   to enable modprobe to load the LVM module (enable kerneld/kmod)."
+
+
+But when I do "make /config/menuconfig/xconfig", I do not see any
+option
+for LVM. Am I missing something?
+
+Regards.
+
+Amrit
