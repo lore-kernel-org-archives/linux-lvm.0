@@ -1,9 +1,9 @@
-Message-Id: <009701c1a4e9$57c83b80$9b09360a@ar.attla.corp>
-From: "Emiliano Ariel Lesende" <emiliano.lesende@constack.com>
+Message-Id: <3C50250F.40209@cgg.com>
+From: Guillaume Duquesnay <gduquesnay@cgg.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-    boundary="----=_NextPart_000_0094_01C1A4D0.31E9E710"
-Subject: [linux-lvm] Importing Problems
+Subject: Re: [linux-lvm] VG lost, no lvmconf => Help !
+References: <3C4EDF1A.3000409@cgg.com> <20020124154339.A8972@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,164 +14,89 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 24 09:12:01 2002
+Date: Thu Jan 24 09:18:03 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Heinz J . Mauelshagen wrote:
 
-------=_NextPart_000_0094_01C1A4D0.31E9E710
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+> Can you send "vgscan -d" to me in personal email (mge@sistina.com)?
+OK, i'll do that.
 
-Hello everyone. I'm new to the list but I'm an old LVM user. Lately I =
-decided to change distro so I did an export of my LVM volumes. Replace =
-the whole distro, and import them
-back again. This works like a charm. The LVM system mounts perfectly =
-without a problem, but I do have an issue... My storage is running out =
-of disk space so I bought a new hard disk, I connected it and tried to =
-extend the volume but I got a VERY strange behavior. Look at this =
-output:
+> What does lvm-1.0.1-1 mean. We don't have such version.
 
-------------------------- TERMINAL =
------------------------------------------------------
-root@brokenworld:/# uname -a
-Linux brokenworld 2.4.17 #1 Wed Jan 23 08:00:20 ART 2002 i686 unknown
-root@brokenworld:/# vgchange --version
-vgchange: Logical Volume Manager 1.0.1
+In fact, 1.0.1-1-mdk (Mandrake), you can find it on rpmfind.net
+
+> Please check with for eg. "vgdisplay -h".
+
+---------------
+vgdisplay -h
+Logical Volume Manager 1.0.1
 Heinz Mauelshagen, Sistina Software  26/11/2001 (IOP 10)
-root@brokenworld:/# vgchange -ay system
-vgchange -- volume group "system" already active
 
-root@brokenworld:/# vgextend system =
-/dev/ide/host0/bus1/target1/lun0/part1
-vgextend -- ERROR: volume group "system" must be active for extension
+vgdisplay -- display volume group information
 
-root@brokenworld:/# vgscan                                               =
-  =20
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found inactive volume group "system"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume =
-group
+vgdisplay [-c|--colon | -s|--short | -v[v]|--verbose [--verbose]]
+         [-d|--debug] [-h|--help] [--version]
+         [-A|--activevolumegroups | [-D|--disk] [VolumeGroupName...] ]
 
-root@brokenworld:/# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/ide/host0/bus1/target0/lun0/part1" of VG =
-"system" [27.96 GB / 80.00 MB free]
-pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part4" of VG =
-"system" [24.67 GB / 0 free]
-pvscan -- inactive PV "/dev/ide/host0/bus0/target1/lun0/part1" of VG =
-"system" [27.95 GB / 0 free]
-pvscan -- total: 3 [80.59 GB] / in use: 3 [80.59 GB] / in no VG: 0 [0]
+---------------
 
-------------------------- TERMINAL =
------------------------------------------------------
 
-Look at the vgextend command... it says that my volume is not active, =
-but when I do a vgchange -ay I tells me that it is already activated. =
-Other thing I don't
-understand is why my physical volumes are all inactive the the system is =
-mounted?
+A little more info :
 
-Did I do something wrong? Can I correct this?
+i tried to reimport the old PVs
+----------------
+]# vgimport -f -v main /dev/sda1 /dev/sda3
+vgimport -- locking logical volume manager
+vgimport -- checking volume group name
+vgimport -- checking volume group "main" existence
+vgimport -- trying to read physical volumes
+vgimport -- checking for duplicate physical volumes
+vgimport -- checking physical volume name "/dev/sda1"
+vgimport -- reading data of physical volume "/dev/sda1" from disk
+vgimport -- checking for exported physical volume "/dev/sda1"
+vgimport -- reallocating memory
+vgimport -- checking consistency of physical volume "/dev/sda1"
+vgimport -- checking for duplicate physical volumes
+vgimport -- checking physical volume name "/dev/sda3"
+vgimport -- reading data of physical volume "/dev/sda3" from disk
+vgimport -- checking for exported physical volume "/dev/sda3"
+vgimport -- reallocating memory
+vgimport -- checking consistency of physical volume "/dev/sda3"
+vgimport -- physical volumes "/dev/sda3" and "/dev/sda1" are in 
+different volume groups
 
-Any help is appreciated, thanks in advance.
-Emiliano Lesende
+----------------
 
-------=_NextPart_000_0094_01C1A4D0.31E9E710
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Next, i said my pvdata was identical for /dev/sda1 and /dev/sda3, but i 
+discover that was'nt true :
+---------------
+#]pvdata -P /dev/sda3
+--- Physical volume ---
+PV Name               /dev/sda3
+VG Name               main
+PV Size               1.39 GB / NOT usable 7.65 MB [LVM: 125.00 KB]
+PV#                   2
+PV Status             NOT available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              355
+Free PE               99
+Allocated PE          256
+PV UUID               none
+----------------
+see that PVUUID ?
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Diso-8859-1" =
-http-equiv=3DContent-Type>
-<META content=3D"MSHTML 5.00.3103.1000" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hello everyone. I'm new to the list but =
-I'm an old=20
-LVM user. Lately I decided to change distro so I did an export of my LVM =
+So i did try uuid_fixer, which finally give me a human readable error :
+----------------
+]# ./uuid_fixer /dev/sda1 /dev/sda3
+/dev/sda3 - UUID corrupt
+----------------
+Damned.
+So where do we go now ?
+thanks,
 
-volumes. Replace the whole distro, and import them</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>back again. This works like a charm. =
-The LVM system=20
-mounts perfectly without a problem, but I do have an issue... My storage =
-is=20
-running out of disk space so I bought a new hard disk, I connected it =
-and tried=20
-to extend the volume but I got a VERY strange behavior. Look at this=20
-output:</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>------------------------- TERMINAL=20
------------------------------------------------------</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>root@brokenworld:/# uname -a<BR>Linux =
-brokenworld=20
-2.4.17 #1 Wed Jan 23 08:00:20 ART 2002 i686 =
-unknown<BR>root@brokenworld:/#=20
-vgchange --version<BR>vgchange: Logical Volume Manager 1.0.1<BR>Heinz=20
-Mauelshagen, Sistina Software&nbsp; 26/11/2001 (IOP =
-10)<BR>root@brokenworld:/#=20
-vgchange -ay system<BR>vgchange -- volume group "system" already=20
-active</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>root@brokenworld:/# vgextend system=20
-/dev/ide/host0/bus1/target1/lun0/part1<BR>vgextend -- ERROR: volume =
-group=20
-"system" must be active for extension</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>root@brokenworld:/#=20
-vgscan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;=20
-<BR>vgscan -- reading all physical volumes (this may take a =
-while...)<BR>vgscan=20
--- found inactive volume group "system"<BR>vgscan -- "/etc/lvmtab" and=20
-"/etc/lvmtab.d" successfully created<BR>vgscan -- WARNING: This program =
-does not=20
-do a VGDA backup of your volume group</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>root@brokenworld:/# pvscan<BR>pvscan -- =
-reading all=20
-physical volumes (this may take a while...)<BR>pvscan -- inactive PV=20
-"/dev/ide/host0/bus1/target0/lun0/part1" of VG "system" [27.96 GB / =
-80.00 MB=20
-free]<BR>pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part4" =
-of VG=20
-"system" [24.67 GB / 0 free]<BR>pvscan -- inactive PV=20
-"/dev/ide/host0/bus0/target1/lun0/part1" of VG "system" [27.95 GB / 0=20
-free]<BR>pvscan -- total: 3 [80.59 GB] / in use: 3 [80.59 GB] / in no =
-VG: 0=20
-[0]</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2><FONT face=3DArial =
-size=3D2>-------------------------=20
-TERMINAL=20
------------------------------------------------------</FONT></FONT></DIV>=
-
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Look at the vgextend command... it says =
-that my=20
-volume is not active, but when I do a vgchange -ay I tells me that it is =
-already=20
-activated. Other thing I don't</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>understand is why my physical volumes =
-are all=20
-inactive the the system is mounted?</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Did I do something wrong? Can I correct =
-
-this?</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Any help is appreciated, thanks in=20
-advance.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Emiliano =
-Lesende</FONT></DIV></BODY></HTML>
-
-------=_NextPart_000_0094_01C1A4D0.31E9E710--
+Guillaume
