@@ -1,9 +1,11 @@
-Message-ID: <3DE8D816.E84D4D82@adelphia.net>
-From: toby <tkb9@adelphia.net>
-MIME-Version: 1.0
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
 Subject: Re: [linux-lvm] lvcreate distributed extent option
+Message-ID: <20021130170037.A15308@vestdata.no>
 References: <615A249B783CD41192F400D0B747AC860898265A@hesse.bbn.hp.com>
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <615A249B783CD41192F400D0B747AC860898265A@hesse.bbn.hp.com>; from holger_zecha@hp.com on Sat, Nov 30, 2002 at 03:02:38PM +0100
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,41 +16,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov 30 09:24:02 2002
+Date: Sat Nov 30 10:01:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: oolon@pzat.meep.org, lvm-devel@sistina.com
 
-"ZECHA,HOLGER (HP-Germany,ex1)" wrote:
-> 
-> Hello,
-> 
-> what do you mean with
-> > How about striping with the strip size equal to that of a logical extent?
-> 
-> Can you give an example for the lvcreate command.
-> 
-> The reason to do this is to distribute the disk I/O accross all disks. the
-> logical extent 1 is on disk1, logical extent 2 on disk 2 and so on.
-> This means during read of logical extent 1, the heade of the second disk can
-> already be moved to prepare to read logical extent 2.
-> 
+On Sat, Nov 30, 2002 at 03:02:38PM +0100, ZECHA,HOLGER (HP-Germany,ex1) w=
+rote:
+> > How about striping with the strip size equal to that of a logical ext=
+ent?
+>=20
 > This allows us to do more I/O's per second
-> 
-> Holger
-> 
+
+Only if you're only using a single or a few files at the time. If you're
+using many files in parallel you will get more I/O's per second by
+concatenating the devices instead if striping them. (that's what LVM
+does by default)
 
 
-Once you create a striped lv, you cannot extend it by adding more disks. Current
-lvm version anyway.
 
-I wanted mine to be more flexible, so I first made a software raid set then made
-the pv on top of the raid. That was in Jan this year. Last week I doubled the
-size by adding another software raid set. I expanded two of the ext3 formatted
-lvs in the process.
-
-Perhaps not the fastest system in terms of throughput, but quite convenient to
-resize.
-
-
--tkb
+--=20
+Ragnar Kj=F8rstad
