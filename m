@@ -1,30 +1,32 @@
-Message-Id: <s84cb8a3.073@pgkvfax>
-Date: Tue, 07 Dec 1999 07:34:30 +0100
-From: "Stephan Hendl" <Stephan.Hendl@lds.brandenburg.de>
-Subject: Re: [linux-lvm] LVM and Compaq Smart Array - it works
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Message-ID: <384CC24D.266AC72@twc.de>
+Date: Tue, 07 Dec 1999 09:16:13 +0100
+From: Ulf Bartelt <ulf@twc.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: Why would I want to have an LVM under Linux?
+References: <Pine.LNX.4.10.9912051403290.22457-100000@aragorn.fra.suse.de> <00fe01bf403e$0524a1a0$0ebcfea9@brd>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: linux-lvm@redhat.com
+Cc: Linux-LVM Mailing List <linux-lvm@msede.com>
 
-Hi all, hi Dirk,
+Hi!
 
-just I tried to create at first an extended partition and after that an =
-LANstep partition and now the pvcreate command works.=20
+> I don't want to be too polemic but I was a little desperate not to find
+> answers to my questions in the FAQ.
 
-Thanks to all!
+Shit happens!
 
-Stephan
+> I think that I got these answers on this list.
 
+Maybe you could extract the best answers you got, make a single short
+text of question and answer and post it on the list using a subject like
+"Please add this to FAQ"...
 
+Just an idea...
 
---
-LDS Brandenburg
-Dr. Stephan Hendl
-fon: +49-(0)331-39 471
-fax: +49-(0)331-27548 1187
-EMail: stephan.hendl@lds.brandenburg.de
+Bye!
+
+	Ulf.
