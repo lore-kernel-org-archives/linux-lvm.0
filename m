@@ -1,34 +1,39 @@
-From: Michael Lausch <mla@1012surf.net>
+Message-ID: <39D35753.33431713@hananet.net>
+Date: Thu, 28 Sep 2000 23:36:03 +0900
+From: nalabi <nalabi@hananet.net>
+Reply-To: nalabi@hananet.net
 MIME-Version: 1.0
+Subject: [linux-lvm] Hi, all
 Content-Transfer-Encoding: 7bit
-Message-ID: <14802.53315.646168.59193@loki.1012internet.at>
-Date: Thu, 28 Sep 2000 06:59:47 +0200 (CEST)
-Subject: [linux-lvm] LVM High Availability
-In-Reply-To: <20000927145741.A9511@isis.visi.com>
-References: <20000927145741.A9511@isis.visi.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Michael J Kellen <idsfa@visi.com>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Michael J Kellen writes:
- > From: Mats Wichmann <mats@laplaza.org>
- > 
- > > Does anybody have any experience to contribute about what other
- > > LVM systems do in these situations?  They don't have the dynamic
- > > scan/assignment stuff in Solaris or AIX, right?  (Showing my
- > > ignorance here).
- > 
- > The logical volume manager in Tru64 (aka Digital Unix, aka OSF/1)
- > from the Q (compaQ) handles high availability by packaging the
- > volumes in disk groups.  A given disk group may only be imported
- > into one of the machines on the shared bus.  Since this is basically
- > a relicensed Veritas (I think), I expect similar strategies in other
- > environments.
+Hi, all
 
-Veritas fails miserable if you are using FCAL, since SCSI reserve is
-not working on our FCAL. It messed up a 20GB mail spool partion. it's
-not problem using veritas importing a disk group on 2 machines if you
-are _not_ using SCSI.
+I can't make /boot/initrd.gz
+
+I try to lvmcreate_initrd, But error...
+
+-------------------->
+# lvmcreate_initrd
+
+Logical Volume Manager 0.8 by Heinz Mauelshagen  06/08/1999
+
+lvmcreate_initrd -- this script creates a LVM initial ram disk in
+/boot/initrd.gz
+
+lvmcreate_initrd -- making ram filesystem
+
+lvmcreate_initrd -- ERROR making ram disk filesystem
+------------------------>
+
+kernel  : 2.4.0-test7
+
+I try compile and use a kernel with initrd support.
+
+I hope make initrd.gz..
+
+You  have "lvmcreate_initrd" script ,  and I send to my email.
