@@ -1,10 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Kernel-2.4.15pre6
-Message-ID: <20011119083610.B755@tykepenguin.com>
-References: <20011117231937.D12510@auctionwatch.com>
+From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
+Subject: Re: [linux-lvm] More research on lvm problems
+Message-ID: <20011119093701.A21796@balu.kawo2.rwth-aachen.de>
+References: <20011119010011.A891@sonsofthunder.yi.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011117231937.D12510@auctionwatch.com>
+In-Reply-To: <20011119010011.A891@sonsofthunder.yi.org>; from storm@tux.org on Mon, Nov 19, 2001 at 01:00:11AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 02:34:02 2001
+Date: Mon Nov 19 02:35:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Nov 17, 2001 at 11:19:37PM -0800, Petro wrote:
-> Is it known which version of LVM is in this kernel, and which version of
-> the lvm tools go best with it? 
+On Mon, Nov 19, 2001 at 01:00:11AM -0500, Bradley M Alexander wrote:
+> 
+> [defiant /home/storm]# mount -a
+> mount: special device /dev/vg01/lvm_tmp does not exist
+                                    ^here
+[...]
 
-It's almost 1.0.1rc4. There is some difference between that and CVS but it's
-quite decent to use. The 1.0.1rc4 tools are recommended.
- 
-> As well, am I missing something, or do I still need to apply the VFS
-> patch? 
+> But looking in /dev:
+> 
+> [defiant /home/storm]# ls -l /dev/vg01
+> total 0
+> crw-r-----    1 root     root     109,   0 Dec 31  1969 group
+> brw-r-----    1 root     root      58,   0 Dec 31  1969 lv_archive
+                                                            ^here
+Maybe just take a look at the letter "m". :)
 
-If you want to do snapshots of reiserfs (and, I think, ext3) then you will
-still need the VFS lock patch yes.
-
-patrick
+Regards, Markus
