@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 28 Feb 2001 12:34:07 +0000
+Date: Wed, 28 Feb 2001 12:38:37 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Possible to raise Max LV?
-Message-ID: <20010228123407.G4361@srv.sistina.com>
-References: <20010227213517.G29642@vestdata.no> <200102272055.f1RKt5S27720@webber.adilger.net> <20010227150417.A22325@omnifarious.mn.org>
+Subject: Re: [linux-lvm] q: BLOCK_SIZE
+Message-ID: <20010228123837.H4361@srv.sistina.com>
+References: <3A9BF392.2E4C3DA5@tls.msk.ru> <200102272025.f1RKPg727605@webber.adilger.net>
 Mime-Version: 1.0
-In-Reply-To: <20010227150417.A22325@omnifarious.mn.org>; from hopper@omnifarious.mn.org on Tue, Feb 27, 2001 at 03:04:17PM -0600
+In-Reply-To: <200102272025.f1RKPg727605@webber.adilger.net>; from adilger@turbolinux.com on Tue, Feb 27, 2001 at 01:25:42PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,43 +21,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Feb 27, 2001 at 03:04:17PM -0600, Eric M. Hopper wrote:
-> On Tue, Feb 27, 2001 at 01:55:05PM -0700, Andreas Dilger wrote:
-> > Ragnar Kj_rstad writes:
-> > > What about increesing the [PE size] default, to say 32 MB?
-> > > 32 MB should be enough for everyone (because of the 2TB limit), and 16
-> > > MB waste on every PV isn't that bad.
-> > 
-> > So says the guy from a company called "Big Storage" ;-).  However,
-> > I've seen several people who make multiple partitions on a single
-> > disk, and then turn these into PVs (don't ask me why), so they would
-> > be wasting 16MB per partition.  Most people will not need 2TB LVs for
-> > some time to come.  However, if your systems usually have large LVs,
-> > then it is OK for you to increase the default for your systems.
+On Tue, Feb 27, 2001 at 01:25:42PM -0700, Andreas Dilger wrote:
+> Michael writes:
+> > Little question that I already posted here a long time ago.
+> > What drawbacks can suffer if one changes BLOCK_SIZE in
+> > include/linux/lvm.h from 1024 (or 4096 on S/390) to 512?
 > 
-> 	I actually intend to for mine sometime later because it reduces
-> the fragmentation problem.  I know it shouldn't be that big a deal with
-> 4M PEs, but with 32M PEs it'll be even less of a deal.  :-)
+> On S/390 it would appear that the DASD block devices have a 4096
+> byte sector size.  However, on most other systems there is only
+> a 512 byte sector size, so I don't see any reason there would
+> be problems with BLOCK_SIZE = 512.
 > 
-> 	I actually thinking of generally scaling my PEs to around 0.1%
-> of my total available space on the theory that allocation of finer
-> grained chunks than that is kinda silly.
+> I think Andrea Arcangeli was complaining about this as well.
 > 
-> 	If I weren't working on some stuff of my own, I'd dive in and
-> see if I could write a defrag utility for LVM.  The part I'm not sure
-> how I'd handle would be striped LVs.
+> > This is about using lvm with rawio -- on 2.2, rawio wan't
+> > work with i/o size be not a multiple of blocksize, while
+> > on 2.4 it works.  Or at least this was on Dec-2000.
+> > Oh yes, this is about 2.2 kernel and lvm-0.9.
 > 
-> Have fun (if at all possible),
+> If it works for you at 512 bytes, leave it then.
+
+Yep.
+
+> Maybe Heinz
+> will let us know why it is set to 1024 bytes.
+
+It is basically an approach to support larger LV sizes than 2T :)
+
+Because the Linux kernel supports 2^32 blocks per block minor up to version 2.4,
+this is one approach (with tradeoffs for sure) to raise that limit.
+
+With the 4k block size on S/390 DASD devices this means 16T per LV!
+
+Sure: we won't have a satisfying solution before Linux 2.5.
+
+> 
+> Cheers, Andreas
 > -- 
-
-As Andreas already pointed out: 4M basically is a good value to keep
-the overhead small.
-
-As I stated in another email: the ~64k extents per LV limit will likely
-disappear in the future (no date though ;-).
-For now you *need* to plan for the maximum LV size you want to create/extend to
-during planning of the VG(s). 2T is the Linux limit per block device anyway
-at least until Linux 2.5 changes that.
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
 
