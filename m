@@ -1,9 +1,10 @@
-From: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
-Date: Fri, 5 Oct 2001 07:46:58 -0400
-Message-ID: <00ba01c14d93$70ec7340$836788cf@industry>
+Message-ID: <3BBD9F67.2E227B69@promofinarsa.es>
+Date: Fri, 05 Oct 2001 13:54:15 +0200
+From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Clarification
+Subject: Re: [linux-lvm] Clarification
+References: <00ba01c14d93$70ec7340$836788cf@industry>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,10 +16,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-I'm just looking for clarification:
+Hi Jason:
 
-ext2resize will actually resize ext3 aswell?  With no extra flags?  It
-will just know that the LVM is ext3 and not ext2?
+"Jason A. Lixfeld" wrote:
+>=20
+> I'm just looking for clarification:
+>=20
+> ext2resize will actually resize ext3 aswell?  With no extra flags?  It
+> will just know that the LVM is ext3 and not ext2?
+>=20
+
+I would say you better check it on ext2resize and ext3 man pages.  By
+default I wouldn't expect ext2 tools to work with ext3 (anyway, you just
+can test it on a non-production environment).
+--=20
+SALUD,
+Jes=EF=BF=BDs
+***
+jesus_navarro@promofinarsa.es
+***
