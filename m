@@ -1,11 +1,13 @@
-Return-Path: <guruju@erols.com>
-Message-ID: <3B0D494C.8312242@erols.com>
-Date: Thu, 24 May 2001 13:47:56 -0400
-From: Subosu Guruju <guruju@erols.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problem deleteing PV's
-References: <OFD6F650E6.4F2A1D36-ON85256A56.004C77FE@raleigh.ibm.com> <004901c0e478$a3c85ec0$5300000a@cavecreek.net>
-Content-Transfer-Encoding: 7bit
+Return-Path: <jdomingo@crosswinds.net>
+Date: Thu, 24 May 2001 20:00:01 +0000
+From: =?us-ascii?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Subject: Re: [linux-lvm] Raid5 sync problem
+Message-ID: <20010524200000.A1280@dardhal.mired.net>
+References: <001801c0e444$22d57f20$56dc10c3@tal.org> <200105241704.f4OH4Rom014186@webber.adilger.int>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <200105241704.f4OH4Rom014186@webber.adilger.int>; from adilger@turbolinux.com on Thu, May 24, 2001 at 11:04:27AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,100 +19,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-Un-subscribe
+On Thursday, 24 May 2001, at 11:04:27 -0600,
+Andreas Dilger wrote:
 
-Justin Booth wrote:
+> Kaj-Michael Lang writes:
+> [...]
+> This is the "RAID5 speed limit" which only kicks in if you have I/O to
+> the volume while you are resyncing.  You can change a parameter somewhere
+> in the RAID code which increases the minimum speed at which resync is
+> done on active volumes (at the expense of performance for other apps).
+> 
+Under 2.4.x there are two "tunnables" on /proc, namely:
+/proc/sys/dev/raid/speed_limit_min
+/proc/sys/dev/raid/speed_limit_max
 
-> Tried doing the "dd if of bs count" stuff and now I'm recieving a
-> pvscan -- ERROR "pv_reaad(): PV identifier invalid" reading physical volumes
->
-> any ideas ???
->
-> Thanks,
->    Justin Both
-> ----- Original Message -----
-> From: "Kevin M Corry" <corryk@us.ibm.com>
-> To: <linux-lvm@sistina.com>
-> Cc: <jbooth@ccbill.com>
-> Sent: Thursday, May 24, 2001 7:13 AM
-> Subject: Re: [linux-lvm] Problem deleteing PV's
->
-> > Justin,
-> >
-> > Do you have any active volumes using any space on /dev/sdb or /dev/sdc?
-> > (You said below that you are trying to get rid of those entries to start
-> > over)? When you tried recreating the partition table for those disks,
-> > did you create everything with the same size/location? If so, then the
-> > LVM metadata will still be in the same place that pvscan and vgscan
-> > expect to find it. So, if you don't have any data on those disks to
-> > worry about, you should be able to just clear out the metadata sectors.
-> >
-> > dd if=/dev/zero of=/dev/sdb1 bs=1k count=10
-> > dd if=/dev/zero of=/dev/sdc1 bs=1k count=10
-> > dd if=/dev/zero of=/dev/sdb bs=1k count=10
-> > dd if=/dev/zero of=/dev/sdc bs=1k count=10
-> >
-> > There are actually 240+ sectors of metadata at the beginning of each
-> > PV, but these commands should wipe away the information about the PVs
-> > and VGs. After this you should repartition the disks again, run
-> > pvcreate on the appropriate partitions, and run pvscan and vgscan.
-> >
-> > I hope I've understood your problem correctly. If you do in fact have
-> > data on those disks, and vgscan/pvscan isn't finding the volumes, then
-> > obviously don't run the above commands. :)
-> >
-> > Kevin
-> >
-> > > vgscan seems to only update /etc/lvmtab and /etc/lvmtagb.d
-> > > a pvchange -x n /dev/sdxx
-> > > results in a
-> > > pvchange -- unable to find volume group "/dev/xxxx" (VG not active?)
-> > > pvchange -- 0 physical volumes changed / 0 physical volumes already o.k.
-> > >
-> > > on all PV's
-> > >
-> > > > Have you tried a vgscan to see if there are VG's that you don't need?
-> > What
-> > > > about pvchange -x n /dev/sdxx?
-> > > >
-> > > >
-> > > > > Hello,
-> > > > >
-> > > > >  I have a problem deleteing 4 PV's that I managed to create None of
-> > the
-> > > > > PV's are in a VG, and I can't figure out how to get rid of them
-> > > > >
-> > > > > when I do a pvscan It returns something like this:
-> > > > >
-> > > > > pvscan -- reading all physical volumes (this may take a while)
-> > > > > pvscan -- inactive PV "/dev/sdb" is in no VG [12.16] MB
-> > > > > pvscan -- inactive PV "/dev/sdb1" is in no VG [8.54] GB
-> > > > > pvscan -- inactive PV "/dev/sdc" is in no VG [12.16] MB
-> > > > > pvscan -- inactive PV "/dev/sdc1" is in no VG [8.54] GB
-> > > > > pvscan -- total: 4 [17.11 GB] / in use 0 [0] / in no VG:  4 [17.11
-> > GB]
-> > > > >
-> > > > >
-> > > > > How do I get rid of these entries to start over again?
-> > > > > I've tried deleteing the partition table and recreating them but a
-> > > > > subsequent vgscan always brings them back into pvscan
-> > > > >
-> > > > >
-> > > > >  Thanks much,
-> > > > >       Justin Booth
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Both are expressed in KB/s. The latter sets the maximun array
+reconstruction speed for RAID-1,4,5 (taking available IO), and the former
+sets the minimun "guaranteed" reconstruction speed.
+
+At least on my 2.4.4, "minumun speed" is set to 100 KB/s, and "maximun
+speed" equals 100000 KB/s, but it seems that array reconstruction always
+operate at the minimun guaranteed speed, 100 KB/s.
+
+So echo "5000" > /proc/sys/dev/raid/speed_limit_min should help
+determining whether this speed limit is causing the problems described.
+
+-- 
+Jos� Luis Domingo L�pez
+Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+ 
+jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+jdomingo AT internautas DOT   org  => Spam at your own risk
