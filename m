@@ -1,9 +1,8 @@
-Message-ID: <3BF331EB.3010301@st-peter.stw.uni-erlangen.de>
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+From: Daniel Savard <dsavard@videotron.ca>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgscan -- LVM driver/module not loaded?
-References: <20011114152558.H9398@trabas.com> <20011114075148.B343@btconnect.com> <20011114162617.I9398@trabas.com> <20011114094009.A406@btconnect.com> <20011115100726.A18325@trabas.com>
-Content-Transfer-Encoding: 7bit
+Message-Id: <01111500471301.02493@dirac.cids.ca>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] root fs on a LVM cause kernel panic
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,60 +13,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 14 21:08:02 2001
+Date: Wed Nov 14 23:53:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
->
->
->Sorry, I am lvm newbie.
->
->Where is lvm-1.0.1-rc-2.4.9.patch?
->
-have you read the INSTALL and README's
+Hi everyone,
 
-in your case go to /tmp/LVM/1.0.1-rc4
-run " ./configure "
-go to /tmp/LVM/1.0.1-rc4/PATCHES
-run " make "
-" ls "
-you have it
+I am using LVM 1.0.1-rc4 and Linux 2.4.13.
 
->
->[abu@yusril] /tmp/LVM/1.0.1-rc4 > find ./ -iname lvm-1*
->nothing
->
->lvm filename only lvm-0.8final-2.4.0.patch
->
->[abu@yusril] /tmp/LVM/1.0.1-rc4/PATCHES > ls
->fragments                          linux-2.4.1-VFS-lock.patch
->fragments-2.2.18                   linux-2.4.2-VFS-lock.patch
->fragments-2.4.0                    linux-2.4.4-VFS-lock.patch
->fragments-2.4.1                    linux-2.4.9-VFS-lock.patch
->fragments-2.4.7                    lvm-0.8final-2.4.0.patch
->linux-2.2.17-rawio.patch           Makefile
->linux-2.2.18-rawio.patch           Makefile.in
->linux-2.2.18-sparc64.patch         README
->linux-2.4.0-test10-VFS-lock.patch
->
->
->
->Joe Thornber(thornber@btconnect.com)@Wed, Nov 14, 2001 at 09:40:09AM +0000:
->
->>On Wed, Nov 14, 2001 at 04:26:17PM +0700, Abu @ Trabas Dot Com wrote:
->>
->>This is an extra patch that you only need if you're using reiserfs
->>with snapshots.  Read the README in PATCHES for instructions on how to
->>generate the real patch, which should be called something like
->>lvm-1.0.1-rc-2.4.9.patch
->>
->>- Joe
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@sistina.com
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->>
->
+I read the lvmcreate_initrd man page and followed the instructions to create
+the kernel image with LVM support. However, I am unsuccessful to make it
+working properly. The system boot and is showing its messages, including the
+message about LVM support in the kernel and while it is trying to mount the
+root filesystem, I am getting a kernel panic message saying the "root=" stanza
+should be provided with a valid device for the root filesystem.
+
+What am I doing wrong? Is there anything missing? Any way to get extra
+debugging messages?
+
+
+-- 
+
+================================
+Daniel Savard
+CIDS Inc.
+551, boul. Sir Wilfrid Laurier
+suite 105
+Beloeil, (Qu�bec)
+Canada
+
+J3G 4J1
+
+T�l: (450) 467-8014
+Internet: dsavard@videotron.ca
+================================
