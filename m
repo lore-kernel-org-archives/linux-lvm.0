@@ -1,10 +1,10 @@
 Return-Path: <Fabian.Herschel@suse.de>
-Message-ID: <3AE6CC7C.EF9E6E45@suse.de>
-Date: Wed, 25 Apr 2001 15:09:16 +0200
+Message-ID: <3AE6F9A7.55D45D84@suse.de>
+Date: Wed, 25 Apr 2001 18:21:59 +0200
 From: Fabian.Herschel@suse.de
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] vgscan does not found my VG, but pvscan does...
-References: <000901c0cd36$a80064a0$7d80a8c0@dyndns.org> <01042510065800.15131@workstation> <20010425114759.A4514@sistina.com> <3AE6C0AB.CA50ACD8@suse.de>
+References: <200104251553.f3PFr1j7031199@webber.adilger.int>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,30 +20,42 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Fabian.Herschel@suse.de wrote:
+Andreas Dilger wrote:
 > 
-> "Heinz J. Mauelshagen" wrote:
-> 
-> > > I'm hopeful we will find a solution.
+> Fabian Herschel writes:
+> > I tried some things last night...
+> >   - First I have saved the heder blocks (VGDA) with dd (dd if=/dev/sda1   \
+> >      of=/root/HEAD_sda1 count=4596 bs=512)
+> >   - Then I called a vgcfgrestore -n sysvg /dev/sda1.
+> >   - Now pvscan tells me both PVs are in the VG sysvg.
+> >   - "vgchange -ay sysvg" activated the VG and the LVs could me mounted
 > >
-> > These "vgscan can't find my..." errors still show up on a too regular base :-(
-> > They absolutely need to be fixed before the 1.0 release.
-> >
-> > Could you please send your two VGDAs compressed email attached to mee in order
-> > to be able to investigate more.
-> >
-> > Add the "vgscan -d" output for the fail case as well, please.
+> > BUT
+> >   - vgscan does NOT find the sysvg!!!
+> >   - After a reboot the sysvg is not available.
+> >   - Every time I have to call a vgcfgrestore :((
 > 
-> Are the first 5000 blocks of each PV enought?
-> Is the complete VGDA stored in this area?
+> Can you post "pvdata -PPU <dev>" for each PV in the VG?  Also, can you
+> look through "vgscan -v -d" output to see why it is not finding all of
+> the PVs it wants?  This sounds like the old UUID problem.
+
+Yes I will post that. I have to collect this data at home :)).
+I also will have a look up, if the tips about the UUID problem fit to
+my problem /reading the several pvdata cmd outs.
+
+Thanks,
+Fabian
+
 > 
-> Fabian
-> 
+> Cheers, Andreas
 > --
-> Fabian Herschel                                 SuSE Linux Solutions AG
-> Tel:    +49-6196-50951-23                       Mergenthalerallee 45-47
-> Fax:    +49-6196-409-607                        D-65760 Eschborn
-> mailto: Fabian.Herschel@suse.de                 http://www.suse.de
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
 Fabian Herschel                                 SuSE Linux Solutions AG
