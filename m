@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Please Help, vgscan finds too much LEs
-Message-ID: <20020909125734.C15934@sistina.com>
-References: <3D78E549.8408.39D5AA@localhost>
+Subject: Re: [linux-lvm] 2.4.20pre5 CONFIG_BLK_STATS breaks LVM tools
+Message-ID: <20020909130011.D15934@sistina.com>
+References: <3D77B43B.7000506@domdv.de>
 Mime-Version: 1.0
-In-Reply-To: <3D78E549.8408.39D5AA@localhost>; from thorsten.pawlak@gmx.net on Fri, Sep 06, 2002 at 05:26:33PM +0200
+In-Reply-To: <3D77B43B.7000506@domdv.de>; from ast@domdv.de on Thu, Sep 05, 2002 at 09:44:59PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +14,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep  9 06:26:22 2002
+Date: Mon Sep  9 06:28:41 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Sep 06, 2002 at 05:26:33PM +0200, T. Pawlak wrote:
-> Hi,
-> 
-> this is the second email for my problem. Unfortunately i haven't got an answer to my 
-> first one. So i'm posting again.
-> 
-> After i've pvreduce my VG vgscan can't activate it. here is the output:
-> 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- only found 28926 of 28672 LEs for LV /dev/data/home (0)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of 
-> volume group "data" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-> group
-> 
-> i don't know what i can do, it is very funny problem because 28926 LEs are found of 
-> and only 28672 sems to be needed, where are the 254 LEs from?!?
+Andreas,
 
-That looks really odd :(
+this is a known issue and I am working on a patch to send to Marcelo.
 
-Could you send me the "dd bs=1k count=4k" of all PVs tar'ed+bzip2'ed to
-mge@sistina.com and the /etc/lvmconf/data* archives as well, please.
+Try removing the add_gendisk() call (~line 460) in drivers/md/lvm.c and
+retry as a workaround for now,
 
+On Thu, Sep 05, 2002 at 09:44:59PM +0200, Andreas Steinmetz wrote:
+> If CONFIG_BLK_STATS is enabled in 2.4.20pre5 this breaks at least the
+> LVM tools. The symptom on a system running initrd to do vgscan/vgchange
+> to be able to boot is that after
 > 
-> i've made a pvdata -Eva from all 5 PEs, the file is about 1mb of size, so dave 
-> everyones bandwidth i put it here: http://www.pawlak-world.de/pvdata
+> RAMDISK: Compressed image found at block 0
+> Freeing initrd memory: 734k freed
+> VFS: Mounted root (ext2 filesystem).
 > 
-> if more infos of my configuration is needed please conact me!
+> the system hangs with the CPU under load. It is difficult for me to
+> investigate this further as both systems I do have available run a
+> LVM/reiserfs only setup and thus I can't have a look at the layout of
+> /proc/partitions in the CONFIG_BLK_STATS enabled page.
 > 
-> i'm using LVM v1.0.5 with kernel patch (i upgraded from 1.0.3 before i made the 
-> pvreduce)
+> It would, however, be worth a word of warning in Configure.help that
+> this option can break userspace tools that may be important for system
+> boot and other system functions.
+> -- 
+> Andreas Steinmetz
+> D.O.M. Datenverarbeitung GmbH
 > 
-> I hope someone can help me now! It would be very nice if i can reconstruct my data, 
-> although i have a backup, but only of 60gb of the whole 200gb and it would be nice to 
-> access the rest again somehow!
 > 
-> bye Thorsten
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
