@@ -1,9 +1,8 @@
-From: pll+lvm@lanminds.com
-Subject: Re: [linux-lvm] How to best use LVM? 
-References: <20020814165938.152D1F90D@tater> <20020814174547.GB898@fib011235813.fsnet.co.uk> <20020814184728.61BCEF90D@tater> <20020814193754.GA16344@chunk.voxel.net> <20020814195039.22829F90D@tater> <20020814212731.B1492@uk.sistina.com>
-In-reply-to: Your message of "Wed, 14 Aug 2002 21:27:31 BST."
-             <20020814212731.B1492@uk.sistina.com> 
-Message-Id: <20020814204958.5F45BF90D@tater>
+Message-Id: <20020815084944kaoru@rifu.bsd.tnes.nec.co.jp>
+Mime-Version: 1.0
+From: kaoru@bsd.tnes.nec.co.jp
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] /proc/partition problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,33 +13,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug 14 15:50:02 2002
+Date: Wed Aug 14 18:50:02 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Alasdair G Kergon <agk@uk.sistina.com>
-Cc: pll+lvm@lanminds.com, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-In a message dated: Wed, 14 Aug 2002 21:27:31 BST
-Alasdair G Kergon said:
+Hi,
 
->If you can use 2.4.19, use the latest tarball (beta 5) from
->
->  ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper.0.96.04.tgz
->
->Configure and make apply-patches, enable device-mapper in your kernel
->configuration and rebuild.
+I reffered to /proc/partitions, a strange character code went 
+into a name sequence when I created 26 or more volume of LV(s) 
+on 2.4.19 with LVM-1.0.5. 
 
-Okay, I'll do this.
+$ cat /proc/partitions
+major minor  #blocks  name
 
-Thanks!
--- 
+  58     0    3145728 lvma
+  58     1    3145728 lvmb
+  58     2     512000 lvmc
+  58     3     204800 lvmd
+.........
+  58    24      53248 lvmy
+  58    25      53248 lvmz
+  58    26      53248 lvm{
+  58    27      53248 lvm|
+  58    28      53248 lvm}
+  58    29      53248 lvm~
+  58    30      53248 lvm
+  58    31      53248 lvm
+  58    32      53248 lvm
+  58    33      53248 lvm
+  58    34      53248 lvm
 
-Seeya,
-Paul
---
-	It may look like I'm just sitting here doing nothing,
-   but I'm really actively waiting for all my problems to go away.
+I think that this problem is depended on illegal codes of 
+a disk_name function(fs/partitions/check.c). 
 
-	 If you're not having fun, you're not doing it right!
+According to fs/partitions/check.c:
+
+char *disk_name (struct gendisk *hd, int minor, char *buf)
+{
+.................
+
+        if (part)
+                sprintf(buf, "%s%c%d", maj, unit+'a', part);
+        else
+                sprintf(buf, "%s%c", maj, unit+'a');
+        return buf;
+
+}
+
+I think it is better that the LVM staff discuss the fault of 
+this code with Linux Kernel code maintainer.
+
+--------
+Kaoru
