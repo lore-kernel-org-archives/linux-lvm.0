@@ -1,12 +1,12 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Thu, 28 Jun 2001 11:04:17 -0500
+Date: Thu, 28 Jun 2001 11:44:30 -0500
 From: Heinz Mauelshagen <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM metadata corruption?
-Message-ID: <20010628110417.B24904@sistina.com>
-References: <20010628022307.A380@vestdata.no>
+Subject: Re: [linux-lvm] pb with activating VG after rebooting
+Message-ID: <20010628114430.B26111@sistina.com>
+References: <3B3B3AB9.C4A492D6@atix.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010628022307.A380@vestdata.no>; from lvm@ragnark.vestdata.no on Thu, Jun 28, 2001 at 02:23:07AM +0200
+In-Reply-To: <3B3B3AB9.C4A492D6@atix.de>; from julien@atix.de on Thu, Jun 28, 2001 at 04:10:01PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,73 +22,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jun 28, 2001 at 02:23:07AM +0200, Ragnar Kj?rstad wrote:
-> Hi
-> 
-> We had a LVM problem that we believe was caused by corrupted
-> LVM-metadata. Can anyone confirm if this is a likely explanation?
-> 
-> 1. Installed LVM 
-> 2. Created a single vg on a single device with a single lv
-> 3. Used without problems for a while
-> 4. Added a new device
-> 5. Add the device to the vg, extend the lv and the filesystem
-> 6. We experienced scsi-problems at this time.
-> 7. Fixed scsi termination
-> 
-> After a reboot, mounting the filesystem(xfs) oopsed.
-> 
-> lvdisplay -v segfaulted, but there was no backtrace.
-> 
-> We recreated the lvm vg and lv, and the filesytem - everything worked
-> fine.
-> 
-> 
-> My theory is that the vgextend or lvextend corrupted the lvm-metadata
-> because of the scsi-termination problem. LVM doesn't update the metadata
-> using a transactional log, does it?
+Julien,
 
-Ragnar,
-no it doesn't so far.
-That's a planned enhgancement for post 1.0.
+you didn't mention the LVM version you are using.
 
-> so if a write failed, the data will
-> become corrupted? (yes, I know a copy is saved in the /etc/lvm files)
+I assume, you are going with LVM 0.9.1 Beta 7 which can cause that problem.
+We are working on a fix right now (likely available in a couple of days :-()
 
-Yep, but this corruption could only take place, because the hardware
-wasn't able to spot the data corruption.
+What you could do in the meantime as a try to help you:
+- dd the first megabyte of every PV to a save place (in order to recover)
+- restore a backup metadata file with vgcfgrestore(8) which doesn't include
+  the change for the added PV
+- vgscan;vgchange -ay
 
-With that kind of silent data corruption even transaction oriented models
-will have problems while aiming to make nonatomic I/Os behave atomic.
-They can't garantee either that no silent data corruption took place.
-
-In order to avoid such trouble after changing the SCSI HW configurations you
-could to write data to free areas on the disks and verify it multiple times
-while imposing read load to the disks.
-SCSI is pushable over the edge far too easy :-(
+Sorry for the incenvenience.
 
 Regards,
 Heinz    -- The LVM Guy --
  
+
+On Thu, Jun 28, 2001 at 04:10:01PM +0200, Julien Baboud wrote:
+> in the world of bugs&errors:
+> i've obtained the following msg at kernel booting and with the vgscan
+> command :
 > 
-> Unfortenately we needed the system back online right away, so the
-> metadata is no gone. No way of debugging it futher.
+> %vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "vg1"
+> vgscan -- found inactive volume group "vg2"
+> vgscan -- found inactive volume group "vg3"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> groups
 > 
+> and when i try to activate the inactive VGs, i get this :
 > 
-> Thank you.
+> %vgchange -a y vg2
+> vgchange -- ERROR "parameter error" setting up snapshot copy on write
+> exception table for "/dev/vg2/lv2_1_snap"
 > 
+> %vgchange -a y vg3
+> vgchange -- ERROR "parameter error" setting up snapshot copy on write
+> exception table for "/dev/vg3/lv3_1_snap"
 > 
+> what is the matter since the same operations have been doing on the 3 VG
+> (except that the 3rd VG was extended...) ?
+> and how to repare this ?
 > 
-> -- 
-> Ragnar Kjorstad
-> Big Storage
+>  julien4atix
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
