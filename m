@@ -1,9 +1,9 @@
-Return-Path: <claudio@conectiva.com>
-Date: Thu, 21 Dec 2000 07:44:47 -0200 (BRST)
-From: Claudio Matsuoka <claudio@conectiva.com>
+Return-Path: <dice@mfa.kfki.hu>
+Date: Thu, 21 Dec 2000 10:43:33 +0100 (CET)
+From: Gergely Tamas <dice@mfa.kfki.hu>
 Subject: Re: [linux-lvm] '/etc/init.d/lvm' script in debian package
-In-Reply-To: <Pine.LNX.4.31.0012210915340.10260-100000@falka.mfa.kfki.hu>
-Message-ID: <Pine.LNX.4.21.0012210739480.3255-100000@scuzzlebutt.helllabs>
+In-Reply-To: <20001221090437.D511@tykepenguin.com>
+Message-ID: <Pine.LNX.4.31.0012211041260.9973-100000@falka.mfa.kfki.hu>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,17 +18,30 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Patrick Caulfield <patrick@tykepenguin.com>
+Cc: linux-lvm@sistina.com, Russell Coker <bofh@coker.com.au>
 
-On Thu, 21 Dec 2000, Gergely Tamas wrote:
+Hi!
 
-> A few ideas ...
-> 1) if LVM is compiled into the kernel and /boot/System.map is reachable,
-> than it could be detected using e.g. 'grep lvm System.map'
-> 
-> 2) if /usr/src/kernel/.config is reachable, than it could be detected
-> using e.g. 'grep -i lvm .config'
+> On Thu, Dec 21, 2000 at 09:37:58AM +0100, Gergely Tamas wrote:
+> >
+> > A few ideas ...
+> > 1) if LVM is compiled into the kernel and /boot/System.map is reachable,
+> > than it could be detected using e.g. 'grep lvm System.map'
+> >
+> > 2) if /usr/src/kernel/.config is reachable, than it could be detected
+> > using e.g. 'grep -i lvm .config'
+> >
+> > 3) maybe doing a check for directories countaining 'group' in /dev would
+> > be a usable idea...
+>
+> How about looking in /proc/devices for the lvm block & char devices ?
 
-Doesn't work. If you're booting different kernels, /boot/System.map
-will be incorrect at some point, and you can build different kernels
-without actually installing them.
+This is a good idea too.
+
+But I noticed, that looking in /etc for lvmtab is usable too.
+
+But your idea seems to be the most usable. It would be good to change the
+init.d/lvm script to something using this.
+
+Gergely
