@@ -1,33 +1,30 @@
-Message-ID: <002701bfdc42$f0b4db80$48c225c3@steuer.ofd.niedersachsen.de>
-From: "Andreas Rey" <Andreas.Rey@sth.steuer.ofd.niedersachsen.de>
-Subject: [linux-lvm] *** LVM patch for kernel 2.2.16 is avaible !! ***
-Date: Thu, 22 Jun 2000 14:11:04 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Thu, 22 Jun 2000 16:54:43 +0200
+From: Christoph Hellwig <chhellwig@gmx.net>
+Subject: Re: [linux-lvm] *** LVM patch for kernel 2.2.16 is avaible !! ***
+Message-ID: <20000622165443.A2389@sb.t-online.de>
+References: <002701bfdc42$f0b4db80$48c225c3@steuer.ofd.niedersachsen.de>
+Mime-Version: 1.0
+In-Reply-To: <002701bfdc42$f0b4db80$48c225c3@steuer.ofd.niedersachsen.de>; from Andreas.Rey@sth.steuer.ofd.niedersachsen.de on Thu, Jun 22, 2000 at 02:11:04PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Andreas Rey <Andreas.Rey@sth.steuer.ofd.niedersachsen.de>
+Cc: linux-lvm@msede.com
 
+On Thu, Jun 22, 2000 at 02:11:04PM +0200, Andreas Rey wrote:
+> 
+> Hello guys :-)
+> 
+> I write a LVM patch for linuxkernel 2.2.16 ! I send it to Heinz.
+> It's a agreement with Heinz that we should test it.
 
-Hello guys :-)
+Why don't you simply use andera's code (ftp.*.kernel.org/pub/linux/
+kernel/people/andrea/kernels/v2.2/2.2.17pre4aa1/
+14_bigmem-rawio-lvm-2.2.15pre13aa1-6.gz) ?
 
-I write a LVM patch for linuxkernel 2.2.16 ! I send it to Heinz.
-It's a agreement with Heinz that we should test it. I tested my patch 
-with 5 machines with SuSE and Debian. All so i used Reiserfs patch
-3.5.22 for kernel 2.2.16. No problems :-))
-
-Attension :
-SuSE user must use the SuSE patch !!!! 
-
-Heinz looks at saturday into the patch. 
-
-Patch is avaible at ftp://ftp.ping-net.de:/pub/linux/lvm
-
-Please send bugs or errors to e-mail: daniel@mehrmann.ping-net.de
-
-PLEASE DO NOT SEND ANY E-MAIL TO THIS ADRESS IN THE HEADER OF THIS E-MAIL
-
-greetings
-Daniel Mehrmann
+Christoph
+ 
+-- 
+Always remember that you are unique.  Just like everyone else.
