@@ -1,17 +1,14 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2109H809522
-	for <linux-lvm@redhat.com>; Sun, 29 Feb 2004 19:09:17 -0500
-Received: from mail.ipax.tk (postfix@ipax.tk [213.158.115.2])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i2109Gb29128
-	for <linux-lvm@redhat.com>; Sun, 29 Feb 2004 19:09:16 -0500
-Received: from ipax.tk (raoul.bhatia.at [80.109.78.225])
-	by mail.ipax.tk (Postfix) with ESMTP id 7363986850
-	for <linux-lvm@redhat.com>; Mon,  1 Mar 2004 01:08:47 +0100 (CET)
-Message-ID: <40427F2B.7000507@ipax.tk>
-From: raoul bhatia <r.bhatia@ipax.tk>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i214Qa809118
+	for <linux-lvm@redhat.com>; Sun, 29 Feb 2004 23:26:36 -0500
+Received: from hotmail.com (law11-oe28.law11.hotmail.com [64.4.16.85])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i214Qab26309
+	for <linux-lvm@redhat.com>; Sun, 29 Feb 2004 23:26:36 -0500
+From: "sachin" <sachindurge@hotmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] mdraid, pvcreate and vgcreate problem
+Message-ID: <LAW11-OE28DKBKhwWn500022e47@hotmail.com>
+Subject: [linux-lvm] Snapshot validity
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -23,77 +20,44 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Sun Feb 29 23:24:39 2004
+Date: Sun Feb 29 23:26:04 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-hi!
+> Hi All
+>
+> I have a question.
 
-i've ran into some problems with mdraid and lvm. as i guess that log 
-messages will give you more information than i might do, i will begin:
+LVM1 or LVM2 ?
 
-i've got an identical setup on another server, which works flawlessly. 
-as i don't know, where these problems might originate from, i hope that 
-you can help me!
+- Joe
 
-best regards,
-raoul bhatia
+Hi All
 
-yellow:~# cat /proc/mdstat
-Personalities : [linear] [raid0] [raid1] [raid5]
-read_ahead 1024 sectors
-md3 : active raid1 ide/host0/bus1/target0/lun0/part3[1] 
-ide/host0/bus0/target0/lun0/part3[0]
-       489856 blocks [2/2] [UU]
+I am using lvm1
 
-md0 : active raid1 ide/host0/bus1/target0/lun0/part5[1] 
-ide/host0/bus0/target0/lun0/part5[0]
-       979840 blocks [2/2] [UU]
+-SachiN_
 
-md1 : active raid1 ide/host0/bus1/target0/lun0/part6[1] 
-ide/host0/bus0/target0/lun0/part6[0]
-       37069888 blocks [2/2] [UU]
+_==__==__==__==__==__==__==_
 
-unused devices: <none>
+Original messagel was
 
-yellow:~# pvcreate -v /dev/md1
-pvcreate -- locking logical volume manager
-pvcreate -- checking physical volume name "/dev/md1"
-pvcreate -- getting physical volume size
-pvcreate -- checking maximum physical volume size
-pvcreate -- checking partition type
-pvcreate -- creating new physical volume
-pvcreate -- setting up physical volume for /dev/md1 with 74139776 sectors
-pvcreate -- writing physical volume data to disk "/dev/md1"
-pvcreate -- physical volume "/dev/md1" successfully created
-pvcreate -- unlocking logical volume manager
 
-yellow:~# pvdisplay /dev/md1
-pvdisplay -- "/dev/md1" is a new physical volume of 35.35 GB
+Hi All
 
-yellow:~# pvdata -v /dev/md1
---- NEW Physical volume ---
-PV Name               /dev/md1
-VG Name
-PV Size               35.35 GB [74139776 secs]
-PV#                   0
-PV Status             NOT available
-Allocatable           NO
-Cur LV                0
-PE Size (KByte)       0
-Total PE              0
-Free PE               0
-Allocated PE          0
-PV UUID               FzRQMD-gyz0-xB06-iP2s-Pog2-4MtC-lYSuab
+I have a question.
+What happen if i have change the configuration of the snapshot origin volume
+i.e i may change the size of the volume .Is the snapshot is valid or its of
+no use
 
-yellow:~# vgcreate -v vg0 /dev/md1
-vgcreate -- checking volume group name
-vgcreate -- checking volume group directory existence
-vgcreate -- locking logical volume manager
-vgcreate -- checking volume group "vg0" existence
-vgcreate -- counting all existing volume groups
-vgcreate -- reading all physical volume data from disks
-vgcreate -- checking if all given physical volumes in command line are new
-vgcreate -- checking physical volumes name "/dev/md1"
-vgcreate -- no valid physical volumes in command line
+What i think is data is of no use ,because internally the driver may
+checking the
+extent mapping of the origin of the  snapshot and then it scanning the
+ioexception table
+i.e COW table .If my assumption is not correct ,If any one knows the actual
+working
+Please tell  me .
+
+Thanks
+SachiN_
