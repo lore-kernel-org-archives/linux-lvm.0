@@ -1,14 +1,10 @@
-Return-Path: <lewis@sistina.com>
-Date: Tue, 21 Aug 2001 07:13:33 -0500
-From: AJ Lewis <lewis@sistina.com>
+Return-Path: <grobe@gmx.net>
+Date: Tue, 21 Aug 2001 14:42:36 +0200 (MEST)
+From: Lars Grobe <grobe@gmx.net>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="========GMXBoundary29828998397756"
 Subject: Re: [linux-lvm] naming conventions of vgcfg-backups?
-Message-ID: <20010821071333.B16248@sistina.com>
-References: <29386.998395265@www26.gmx.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
-Content-Disposition: inline
-In-Reply-To: <29386.998395265@www26.gmx.net>; from grobe@gmx.net on Tue, Aug 21, 2001 at 02:01:05PM +0200
+Message-ID: <29828.998397756@www26.gmx.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,44 +18,31 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---cmJC7u66zC7hs+87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is a MIME encapsulated multipart message -
+please use a MIME-compliant e-mail program to open it.
 
-On Tue, Aug 21, 2001 at 02:01:05PM +0200, Lars Grobe wrote:
-> After resizing, I have to restore my previous lvm configuration. I'm just
-> not sure about the default naming of the backups?
->=20
-> Am I right that <vgname>.conf is the current config (which is in use now -
-> and which is wrong), while <vgname>.conf.1.old is the previous (which I h=
-ave
-> to restore) and <vgname>.[2345].old are the older backups?
+Dies ist eine mehrteilige Nachricht im MIME-Format -
+bitte verwenden Sie zum Lesen ein MIME-konformes Mailprogramm.
 
-That should be correct I believe, but you could probably take a look at the
-timestamp on the file to verify when it was created.  Depending upon which
-tools you've used, the first couple might be with the current config or a
-variant.
+--========GMXBoundary29828998397756
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Hi!
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+It was the right guess, or at least it seams to be ok now. I did a restore,
+and at the moment, reiserfs is checking the filesystem. I will report
+everything to the people at namesys, so it will be documented for the next one
+interrupting a resize process...
 
------Begin Obligatory Humorous Quote----------------------------------------
-A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1...
------End Obligatory Humorous Quote------------------------------------------
+CU, Lars.
 
---cmJC7u66zC7hs+87
+-- 
+GMX - Die Kommunikationsplattform im Internet.
+http://www.gmx.net
+
+--========GMXBoundary29828998397756
 Content-Type: application/pgp-signature
-Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.0.6 (GNU/Linux)
@@ -70,4 +53,5 @@ iD8DBQE7glBtpE6/iGtdjLERAqHEAKCTh72rD8ddrXjDENmGWFuWcwoQ9QCfYcKD
 =dsW/
 -----END PGP SIGNATURE-----
 
---cmJC7u66zC7hs+87--
+
+--========GMXBoundary29828998397756--
