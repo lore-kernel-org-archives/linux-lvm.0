@@ -1,14 +1,14 @@
-Return-Path: <lewis@sistina.com>
-Date: Tue, 10 Jul 2001 14:24:57 -0500
-From: AJ Lewis <lewis@sistina.com>
+Return-Path: <eli@zendo.net>
+Date: Tue, 10 Jul 2001 14:47:57 -0500
+From: Eli Criffield <eli@zendo.net>
 Subject: Re: [linux-lvm] vg gone after vgextend
-Message-ID: <20010710142457.A3047@sistina.com>
-References: <20010710093902.B30416@zendo.net> <20010710110656.A24243@sistina.com> <20010710113917.A30933@zendo.net> <20010710121206.A31966@sistina.com> <20010710135732.A31208@zendo.net> <20010710140538.A2327@sistina.com> <20010710141332.B31208@zendo.net>
+Message-ID: <20010710144757.A31389@zendo.net>
+References: <20010710093902.B30416@zendo.net> <20010710110656.A24243@sistina.com> <20010710113917.A30933@zendo.net> <20010710121206.A31966@sistina.com> <20010710135732.A31208@zendo.net> <20010710140538.A2327@sistina.com> <20010710141332.B31208@zendo.net> <20010710142457.A3047@sistina.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
 Content-Disposition: inline
-In-Reply-To: <20010710141332.B31208@zendo.net>; from eli@zendo.net on Tue, Jul 10, 2001 at 02:13:32PM -0500
+In-Reply-To: <20010710142457.A3047@sistina.com>; from lewis@sistina.com on Tue, Jul 10, 2001 at 02:24:57PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,51 +22,33 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---PEIAKu/WMn1b1Hv9
+--IS0zKkzwUGydFO0o
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 10, 2001 at 02:13:32PM -0500, Eli Criffield wrote:
-> #vgcfgrestore -n rootvg /dev/hda3                                     =20
-> vgcfgrestore -- "/etc/lvmconf/rootvg.conf" doesn't exist             =20
-> vgcfgrestore -- a backup for volume group rootvg is not available    =20
->=20
-> Yeah tried that already? Is there any hope?
+> Have you looked in /etc/lvmconf?  Are there any conf files in there?  You
+> can specify the file to vgcfgrestore on the command line. If there isn't a
+> file there, don't give up hope yet.  Some of the folks on this list might
+> still respond with other options.
 
-Have you looked in /etc/lvmconf?  Are there any conf files in there?  You
-can specify the file to vgcfgrestore on the command line. If there isn't a
-file there, don't give up hope yet.  Some of the folks on this list might
-still respond with other options.
+nope nothing in /etc/lvmconf, I'm booted to a rescuse disk and / is in a
+ram disk.
 
-Regards
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Anybody Anybody Anybody??
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+eli
 
------Begin Obligatory Humorous Quote----------------------------------------
-A program is a device used to convert data into error messages.
------End Obligatory Humorous Quote------------------------------------------
-
---PEIAKu/WMn1b1Hv9
+--IS0zKkzwUGydFO0o
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
+Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7S1aJpE6/iGtdjLERAisJAKCBTEsNcdZjr5ABB4RZdHesnq+5RACdGM2o
-ZNY2gdPEgpgmO8SCwMMbIlg=
-=LSFl
+iD8DBQE7S1vtm2VvYlVjW2oRAh96AJ9tNoTzrxBuXO9nL+OvLbS8Ouc9fACghnVu
+QltUPAkKjEIwLr7j0iO4hBI=
+=VWWX
 -----END PGP SIGNATURE-----
 
---PEIAKu/WMn1b1Hv9--
+--IS0zKkzwUGydFO0o--
