@@ -1,12 +1,9 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Tue, 8 May 2001 10:10:23 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] typo in CVS: LVM/kernel/lvm.c
-Message-ID: <20010508101023.F508@tykepenguin.com>
-References: <Pine.LNX.4.32.0105052321020.24489-100000@falka.mfa.kfki.hu> <20010506101133.A642@66bassett.freeserve.co.uk>
+Return-Path: <root@srv.sistina.com>
+Date: Tue, 8 May 2001 11:22:08 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010508112208.A32018@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010506101133.A642@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Sun, May 06, 2001 at 10:11:33AM +0100
+Subject: [linux-lvm] Actual Kernel Patch Status
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,24 +19,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, May 06, 2001 at 10:11:33AM +0100, Joe Thornber wrote:
-> 
-> lvm.c revision 1.12
-> -------------------
-> 
-> Patrick, you correctly fix most of the remaining mistakes apart from
-> the version number.  But what are all the other code changes that have
-> slipped in ?  They aren't mentioned in the checkin message, are they
-> meant to be there ?
+Hi all,
 
-Ah, looked at this properly now I'm "at work" again. This is the fix for the
-reading of userspace pointers reported by the S/390 guy from IBM. It's not the
-patch he posted but IMHO a slightly neater one.
+just to keep everybody tuned in regard to the LVM kernel patch status:
 
-To be quite honest it wasn't meant to go in yet (I asked on the list for him to
-test it but have had no reply), that was an oversight. But now it is in it's
-probably not worth removing unless we hear from anyone that it still doesn't
-work on S/390. It certainly works fine on my intel (well, it would really) 
-and SPARC machines.
+ - we want to have the actual driver code in the vanilla kernel ASAP
 
-patrick
+ - Alan Cox kindly checked the patches we send to him and came back with
+   change requests (nobody would have expected that; would you? ;-)
+
+ - Joe Thornber, Patrick Caulfield and me are working on those
+   change requests now
+
+ - we hope to be done with that work in a couple of days (coding and *testing*)
+   and will send the patch results to Alan and to linux-lvm as well
+   in order to get your feedback
+
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
