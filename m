@@ -1,8 +1,8 @@
-Message-Id: <200204172133.OAA08410@hpgssl.cup.hp.com>
-From: John DeFranco <defranco@cup.hp.com>
+From: Trond Are Haugland <trondare@trolltech.com>
+Message-Id: <20020417222416.GA29978@arohk.troll.no>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Device Resets?
+Content-Disposition: inline
+Subject: [linux-lvm] quick pvresize question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,20 +13,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 17 16:32:02 2002
+Date: Wed Apr 17 17:24:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@Sistina.com
 
-Hi,
+Hello people at Sistina!
 
-I was wondering if anyone could tell me of LVM issues device resets, like a 
-bus reset or target device reset or something similiar?
+Is it possible/safe to resize a physical volume to use
+free space _before_ the start block of the pv?
 
-Thanks!
-
-===============================================================
-John DeFranco			Hewlett-Packard Company
-john_defranco@hp.com		Availability Clusters Solution Division
-phone: 408-447-7543		19111 Pruneridge Ave, M/S 4101
-fax: 408-447-0056		Cupertino, CA 95014 
+Thank you so much for creating LVM for Linux,
+it absolutely ROCKS :-)
+-- 
+Trond Are Haugland <trondare@trolltech.com>
+Trolltech AS
