@@ -1,13 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1O295i21437
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2004 21:09:05 -0500
-Received: from web41503.mail.yahoo.com (web41503.mail.yahoo.com [66.218.93.86])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1O294b25142
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2004 21:09:04 -0500
-Message-ID: <20040224020859.43153.qmail@web41503.mail.yahoo.com>
-From: Rajesh Saxena <rs_404@yahoo.ca>
-MIME-Version: 1.0
-Subject: [linux-lvm] LVM + reiserfsck
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1O3Cti11770
+	for <linux-lvm@redhat.com>; Mon, 23 Feb 2004 22:12:55 -0500
+Received: from ms-smtp-02.nyroc.rr.com (ms-smtp-02.nyroc.rr.com [24.24.2.56])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1O3Ctb13758
+	for <linux-lvm@redhat.com>; Mon, 23 Feb 2004 22:12:55 -0500
+Received: from dman13.dyndns.org (roc-66-66-61-253.rochester.rr.com [66.66.61.253])
+	by ms-smtp-02.nyroc.rr.com (8.12.10/8.12.10) with ESMTP id i1O3CqEj007600
+	for <linux-lvm@redhat.com>; Mon, 23 Feb 2004 22:12:52 -0500 (EST)
+From: "Derrick 'dman' Hudson" <dman@dman13.dyndns.org>
+Message-ID: <20040224031633.GA7431@dman13.dyndns.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
+Content-Disposition: inline
+Subject: [linux-lvm] upgrade from kernel 2.4 to 2.6
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,51 +25,53 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Mon Feb 23 21:07:25 2004
+Date: Mon Feb 23 22:13:05 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hello list I am wondering if someone could help me with a quick 
-question. I am using SUSE 9 + LVM1 + Linux Software RAID and last but
-not least Reiser filesystem. Recently I had problem with recovery from
-LVM volumes where /usr/lib is deleted =(
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+The FAQ doesn't mention this hurdle.  I found that upgrading from
+kernel 2.4.23+lvm1 to 2.4.23+lvm2 is really quite trivial
+(particularly with debian - I didn't have to do anything).  However,
+the 2.6 kernel won't boot because lvm can't find any volume groups.
+I've tried 2.6.0, 2.6.2 and most recently 2.6.3.  In each case, the
+device mapper (dm-mod) is loaded and /dev/mapper/control exists
+(I'm using devfsd).  What did I miss?
 
-Here is my set up with two 80G drives:
+TIA,
+-D
 
-1st 2G parititon on drive 1
-                           \
-                            = /dev/md0 formatted as Reiser for /      
-                           / 
-1st 2G partition on drive 2
+--=20
+\begin{humor}
+Disclaimer:
+If I receive a message from you, you are agreeing that:
+   1. I am by definition, "the intended recipient"
+   2. All information in the email is mine to do with as I see fit and make
+        such financial profit, political mileage, or good joke as it lends
+        itself to. In particular, I may quote it on USENET or the WWW.
+   3. I may take the contents as representing the views of your company.
+   4. This overrides any disclaimer or statement of confidentiality that may
+        be included on your message
+\end{humor}
+=20
+www: http://dman13.dyndns.org/~dman/            jabber: dman@dman13.dyndns.=
+org
 
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-2nd 2G parititon on drive 1
-                           \
-                            = /dev/md1 formatted as Reiser for swap    
- 
-                           / 
-2nd 2G partition on drive 2
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
 
+iD8DBQFAOsIRiB6vp1xAVUARAgSFAJ4llxDkh/E7fuPOFLsaKdBAaDPD4wCfZY72
+YBUwZvc0H6vCHPrBoIhnwZs=
+=NuXp
+-----END PGP SIGNATURE-----
 
-Last big parititon on drive 1
-                             \
-                              = /dev/md2 for LVM
-                             / 
-Last big partition on drive 2
-
-All RAID arrays as RAID1 mirrors and LVM volumes as Reiser. After 
-several test reboots the OS did not boot and complained to run 
-reiserfsck. I did reiserfsck --check for all partitions and only
-ones which complained was /dev/system/usr. It asks for --rebuild-tree
-so I did and then rebooted. Now all of /usr/lib was deleted and 
-sshd would not start. My question: what did I do wrong? I ask this
-question here because lots of people seem to use Reiser and LVM
-together. Please offer some advice. Thank you!!
-
-RS
-
-______________________________________________________________________ 
-Post your free ad now! http://personals.yahoo.ca
+--T4sUOijqQbZv57TR--
