@@ -1,10 +1,10 @@
-Subject: Re: [linux-lvm] Raid and LVM, GFS newbie question
-From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
-In-Reply-To: <4012D858.1020005@dpincorp.com>
-References: <4012D858.1020005@dpincorp.com>
-Message-Id: <1075159753.24139.406.camel@david.internal.NorcrossGroup.com>
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] Kernel 2.6.1 and LVM2
+Message-ID: <20040125213120.GA32013@redhat.com>
+References: <000801c3e25b$a509cc90$9722fea9@terence>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <000801c3e25b$a509cc90$9722fea9@terence>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,47 +15,83 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 26 18:43:01 2004
+Date: Tue Jan 27 00:02:03 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, 2004-01-24 at 15:40, Mr. David wrote:
-<snip>
-> 3.  I need to have mulitiple nodes see the same file systems through the 
-> SAN impletmentation.  I read about Sistina's GFS.   Is this product 
-> similar to Veritas SanPoint foundation suite where multiple nodes can 
-> see same file systems.  How much does GFS cost for, say  for 2 cpu's, 4 
-> - 6 nodes?  Are there other products that does similiar job?
+Hi John,
+
+you can essentially reuse the /etc/rc.d/rc.sysinit startup
+of Red Hat Linux for LVM1.
+Maybe you can feed that back to Fedora development ?
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+en Sat, Jan 24, 2004 at 10:22:51AM +0100, John Cassidy wrote:
+> Heinz,
 > 
-> Thank you for your help!
+>  
 > 
-If you are considering GFS, you may want to know:
+>         on the above kernel, all of the necessary steps have been taken to
+> get LVM2 to function.
+> 
+>  
+> 
+> My problem is I want an appropriate startup script to initiate and halt
+> LVM2 at startup and shutdown.
+> 
+>  
+> 
+> Distribution is RH Fedora with kernel 2.6.1.
+> 
+>  
+> 
+> Any ideas?
+> 
+>  
+> 
+> Im voraus..    
+> 
+>  
+> 
+> Regards/Cordialement/Gruss/Saludos 
+> 
+> John Cassidy Dipl.-Ing (Informatique)
+> 
+> S390 & zSeries Systems Engineering
+> 
+> Schleswigstr. 7
+> 
+> D-51065 Cologne
+> 
+> EU
+> 
+> Tel: +49  (0) 221 61 60 777 . GSM: +49  (0) 177 799 58 56 
+> 
+> E-Mail: Sean@JDCassidy.net  <mailto:Sean@JDCassidy.net> 
+> 
+> HTTP :
+> <file:///H:\Documents%20and%20Settings\Horace\Application%20Data\Microsoft\S
+> ignatures\www.jdcassidy.net> www.jdcassidy.net 
+> 
+>    
+> 
+>  
+> 
 
-GFS was developed as opensource by Sistina.
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-18 months ago (I think) it was taken commercial.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-The old opensource logic was the basis of the OpenGFS project.
-
-Since then, both have diverged.
-
-OpenGFS does NOT have a fault tolerant lock-server solution yet, so if
-the lock-server dies, your whole file-system crashes.
-
-I don't think GFS does either.
-
-The OpenGFS project has CVS code that uses the IBM distributed lock
-server.  It is at the very initial testing phase, and definately NOT
-usable yet.
-
-I don't know if GFS is working on a fault-tolerant lock-server solution.
-
-Redhat is in the process of buying Sistina.  "Search the news section of
-Google for Sistina."
-
-Once done, Redhat "plans to offer Sistina's file system and storage
-technologies as open source software."  They will also be supporting it
-at some point in the future.
-
-Greg
+Heinz Mauelshagen                                 Red Hat, Inc.
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
