@@ -1,10 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Patch for /proc (NOT a bug fix)
-Message-Id: <20020506153437.F26606@sistina.com>
-References: <2D0AFEFEE711D611923E009027D39F2B02F141@cdserv.meridian-data.com>
+Message-Id: <F888C30C3021D411B9DA00B0D0209BE8038F94D4@cvo-exchange.cvo.roguewave.com>
+From: Poul Petersen <petersp@roguewave.com>
 MIME-Version: 1.0
-In-Reply-To: <2D0AFEFEE711D611923E009027D39F2B02F141@cdserv.meridian-data.com>;
-    from dstephenson@snapserver.com on Wed, May 01, 2002 at 12:34:34PM -0700
+Subject: [linux-lvm] Problem with pvmove (LVM 1.0.4 Kernel 2.4.18)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,83 +12,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May  6 08:34:02 2002
+Date: Tue May  7 19:57:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Dale,
+	I have a dual P-II 400 running RedHat 7.2 and the 2.4.18 kernel.
+I've installed LVM-1.0.4 from source  and I have two version of the 2.4.18
+kernel installed:
 
-testing this right now.
-CVS update follows.
+	1) Stock 2.4.18 kernel
+	2) 2.4.18 with the LVM 1.0.4 PATCHES/Makefile generated patch
+applied
+
+	What I've been doing is creating a simple volume group with two
+disks and creating a small logical volume, small enough that all PEs are
+allocated in the first PV. I then issue a pvmove to move all the PEs to the
+second PV. If I boot into kernel #1 from above, everyhing works fine. If I
+use kernel #2, the pvmove hangs while moving the second PE (I'm using pvmove
+-v, so I can see each PE as it is moved). Notice that I am trying to move
+the PEs without even creating a filesystem in the LV, so there is not an
+issue with the LV being mounted. I've tried strace'ing the process, but
+there is no activity. It would seem that applying the Makefile generated
+patch is the *right* thing to do, but it is breaking pvmove...
+
+	Now, using the first kernel, I create an ext2 partition in the LV,
+mount it and export it via NFS and start some activity from a client using
+dd. I can then pvmove the PEs back and forth between the disks without any
+problems. If however, I use an ext3 filesystem, I get the following:
+
+kernel: journal_bmap_Rsmp_785a3b98: journal block not found at offset 268 on
+lvm(58,0)
+kernel: Aborting journal on device lvm(58,0).
+kernel: ext3_abort called.
+kernel: EXT3-fs abort (device lvm(58,0)): ext3_journal_start: Detected
+aborted journal
+kernel: Remounting filesystem read-only
+kernel: EXT3-fs error (device lvm(58,0)) in start_transaction: Journal has
+aborted
+
+	So, what am I missing here and what can I try next?
 
 Thanks,
-Heinz    -- The LVM Guy --
 
-
-On Wed, May 01, 2002 at 12:34:34PM -0700, Stephenson, Dale wrote:
-> This patch doesn't attempt to solve any bugs.  I just wanted to get more
-> useful information about snapshots from /proc -- little things like the
-> snapshots' actual size, what volume is its source, and how much of its space
-> it has used.  Yes, all this information is available from /sbin/lvdisplay
-> (except for the *real* allocated LE, which you have to figure by hand).  But
-> I like using /proc.
-> 
-> I put the extra (conditional) lines before the "device:" line because the
-> optional stripesize line was already there.
-> 
-> I'd like to fit the snapshot/snapshot-source bit into the status bits in
-> /proc/lvm/global too, but I haven't done it yet.
-> 
-> Dale J. Stephenson
-> steph@snapserver.com
-> 
-> --- linux/drivers/md/lvm-fs.c.orig	Mon Apr 22 12:14:59 2002
-> +++ linux/drivers/md/lvm-fs.c	Mon Apr 22 13:44:03 2002
-> @@ -285,6 +285,26 @@
->  		sz += sprintf(page + sz, "stripesize:   %u\n",
->  			      lv->lv_stripesize);
->  	}
-> +	if (lv->lv_access & LV_SNAPSHOT) {
-> +		sz += sprintf(page + sz, "remap total:  %u\n",
-> +			      lv->lv_remap_end * lv->lv_chunk_size / 2);
-> +		sz += sprintf(page + sz, "remap used:   %u\n",
-> +			      lv->lv_remap_ptr * lv->lv_chunk_size / 2);
-> +		sz += sprintf(page + sz, "snapshot LE:  %u\n",
-> +			      lv->lv_allocated_snapshot_le);
-> +		if (lv->lv_snapshot_org != NULL) {
-> +			sz += sprintf(page + sz, "source:       %s\n",
-> +				      lv->lv_snapshot_org->lv_name);
-> +		}
-> +	}
-> +	if (lv->lv_access & LV_SNAPSHOT_ORG) {
-> +		lv_t *lvp = lv->lv_snapshot_next;
-> +		while (lvp != NULL) {
-> +			sz += sprintf(page + sz, "source of:    %s\n",
-> +				      lvp->lv_name);
-> +			lvp = lvp->lv_snapshot_next;
-> +		}
-> +	}
->  	sz += sprintf(page + sz, "device:       %02u:%02u\n",
->  		      MAJOR(lv->lv_dev), MINOR(lv->lv_dev));
->  
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-poul
