@@ -1,10 +1,14 @@
-Message-ID: <3BBCA384.EC6D4D53@ti.com>
-Date: Thu, 04 Oct 2001 19:59:32 +0200
-From: christian e <cej@ti.com>
+Date: Thu, 04 Oct 2001 12:57:21 -0500
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] What have I done!?
+Message-ID: <30980000.1002218241@dizzy>
+In-Reply-To: <20011004113309.E31061@turbolinux.com>
+References: <009401c14cc3$c63106c0$836788cf@industry>
+ <009501c14cc7$2f5cd360$836788cf@industry>
+ <20011004113309.E31061@turbolinux.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm 1.0 and kernel 2.2.19.Is rawio patch necessary ??
-References: <3BBC550E.442F190C@ti.com> <3BBC7C22.1119BF0@promofinarsa.es> <3BBC90C9.309A3D75@ti.com>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +20,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-christian e wrote:
+
+-- Andreas Dilger <adilger@turbolabs.com>
+
+>> Is there a way that I can blow the whole thing away and start over?  I
+>> think I've screwed things up too badly to try to resurrect them.  I'd
+>> really like to blow it all away and start over and see if this stuff
+>> happens again, but again I can't use the lv* tools to remove the
+>> configurations because of the errors I mention in my initial post so I
+>> need a manual way to blow away the entire LVM configuration and start
+>> from scratch again.
+>
+> "pvcreate -ff" I think
+
+If you really want to wipe things clean:
+
+    (1) vgexport /dev/vgname; # avoids collisions w/ stale config info.
+    (2) for disk in your disks here; do pvcreate -ff $disk; done;
+
+The export isn't strictly necessar:  rm -rf and a vgscan should do the
+same basic thing with a few nastygrams added in.  Personally, I get
+enough nastygrams to prefer avoiding a few more :-)
 
 
-> I think I'll try the 2.2.18 patch as well..Will let you all know if it
-> turned out ok or not..
-
-
-Just tried the following:
-
-removed old kernel source tree,untarred a fresh 2.2.19 source.Did a
-./configure in the lvm source dir.Then a make in the PATCHES DIR.Then
-applied the rawio patch for 2.2.18 and then the lvm-1.0 patch for my
-kernel 2.2.19.Patched clean without problems.
-
-Then compiled the kernel again.Then the modules..mind you I compiled lvm
-into the kernel not as module..No problems.
-
-Bootup withput problems (only forgetting to patch with aacraid driver
-but htat's another story :-)
-
-compiled lvm and installed..Works ok..
-
-best regards
-
-Christian
+--
+Steven Lembark                                               2930 W. Palmer
+Workhorse Computing                                       Chicago, IL 60647
+                                                            +1 800 762 1582
