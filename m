@@ -1,11 +1,11 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3B1FFFBC.BD751028@wrkhors.com>
-Date: Thu, 07 Jun 2001 17:27:08 -0500
-From: Steven Lembark <lembark@wrkhors.com>
+Return-Path: <steve.wray@the.net.nz>
+From: "Steve Wray" <steve.wray@the.net.nz>
+Subject: RE: [linux-lvm] LILO configuration for LVM "boot" filesystem
+Date: Fri, 8 Jun 2001 10:38:40 +1200
+Message-ID: <NBBBKLKHMJHIJLHOGAOJGECEIPAA.steve.wray@the.net.nz>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-References: <NBBBKLKHMJHIJLHOGAOJOECDIPAA.steve.wray@the.net.nz>
 Content-Transfer-Encoding: 7bit
+In-Reply-To: <20010608102936.A9167@mail.wave.co.nz>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,23 +20,24 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> Are there any other (good) reasons to have /tmp (or anything else other
-> than /boot) on a 'real' partition rather than on LV?
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Mark van Walraven
 > 
-> How about swap on LV? Or does swap need to be used before the LV's
-> are accessible?
+> On Thu, Jun 07, 2001 at 10:43:02AM -0500, Jack McKinney wrote:
+> > cd / ; mv tmp tmp.old ; ln -s /var/tmp .
+> > reboot
+> > rm -rf /tmp.old
+> > 
+> >     Now you don't have to worry about root filling up at all...
+> 
+> /tmp is commonly emptied on boot, unlike /var/tmp.  Vi, for example,
+> stores it's recovery files in /var/tmp.
+> 
+> I prefer a separate partition for /tmp, to reduce the need to write to
+> the root fs and thereby lower the risk of damage to it in a crash.
 
-Main issue is what will happen to the system if LVM gets broken.
-The root volume (may not be the boot but usually is) and primary
-swap are good bets for non-LVM only because you tend to need them
-to repair LVM itself.
-
-Depending on the disk, bus, cpu speed there may be an advantage
-to having /tmp on non-LVM storage (only because you hit it so
-hard; on HP-UX there is an advantage to having /tmp on mirrored
-storage for speed :-).
-
--- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+Yeah, I've been wondering about this whole discussion since
+I thought it was "the done thing" to have /var and /tmp
+on their own partitions (for precisely that reason).
+I've been doing it that way since 1994 (when I moved up from
+having my Linux on a 120 meg hard drive...)
