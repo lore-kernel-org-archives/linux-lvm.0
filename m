@@ -1,11 +1,10 @@
 From: "Anthony W. Marino" <anthony@AWMObjects.com>
-Subject: Re: [linux-lvm] System Suggestions
-References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
-    <20020306161130.D855@kluge.net> <11679047703.20020306222539@tnonline.net>
-In-Reply-To: <11679047703.20020306222539@tnonline.net>
+Subject: Re: re[4]: [linux-lvm] System Suggestions
+References: <20020306215256.PCSF8136.imf12bis.bellsouth.net@taz>
+In-Reply-To: <20020306215256.PCSF8136.imf12bis.bellsouth.net@taz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-Id: <auto-000021504179@front2.mail.megapathdsl.net>
+Message-Id: <auto-000020236447@front1.mail.megapathdsl.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,23 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 15:51:05 2002
+Date: Wed Mar  6 15:55:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Anders Widman <andewid@tnonline.net>, linux-lvm-admin@sistina.com, Theo Van Dinter <felicity@kluge.net>
-Cc: Petro <petro@auctionwatch.com>, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
+To: Greg Freemyer <freemyer@NorcrossGroup.com>, Seth Mos <knuffie@xs4all.nl>
+Cc: Petro <petro@auctionwatch.com>, linux-lvm@sistina.com, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
 
-> I have a Promise FastTrak 100 card and it is very fast and stable. I
-> think that Toms Hardware had a review of it a while ago (placed the
-> Promise card as winner).
+On Wednesday 06 March 2002 04:46 pm, Greg Freemyer wrote:
+>  >>  Is there a way to minimize the write penalty using both XFS and LVM
+>  >> with RAID
+>  >>  5?
+>  >>
+>  >>  Thanks,
+>  >>  Anthony
 >
-> Anyway. Linux Kernel now days has support for FastTrack cards too.
+> You have been following the thread about using a external log partition
+> setup as a small Raid 1 partition.
 >
-> //Anders
+I saw that this morning and needed some more specifics on it.  RAID1 hardware 
+or software?  I guess that I should just locate the thread.
 
-Besides my 3Ware 7800, I also have several promise TX2 100 controllers which 
-I have had for around 9 months since at that time their drivers didn't work 
-with Linux.  I'll most likely use them later after I get this DB server up 
-and running.
+Thanks,
+Anthony
 
-Anthony 
+> Greg Freemyer
+> Internet Engineer
+> Deployment and Integration Specialist
+> The Norcross Group
+> www.NorcrossGroup.com
