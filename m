@@ -1,44 +1,38 @@
-Date: Fri, 1 Oct 1999 14:40:03 +0200
-From: Adrien Farkas <freddy@redneck.sk.oracle.com>
-Subject: Re: [linux-lvm] LVM, raw-io, devfs
-Message-ID: <19991001144003.B29576@redneck.sk.oracle.com>
-Reply-To: freddy@sk.oracle.com
-References: <006201bf0bb7$6eae4a60$030116ac@fd1>
-Mime-Version: 1.0
-In-Reply-To: <006201bf0bb7$6eae4a60$030116ac@fd1>
+Date: Fri, 1 Oct 1999 10:55:48 -0500 (EST)
+From: theodore russell wickell <twickell@indiana.edu>
+Subject: [linux-lvm] couple of questions.
+Message-ID: <Pine.HPP.3.96.991001104949.20591C-100000@falstaff.ucs.indiana.edu>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Fernando Dammous <ferdam@internetcom.com.br>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Fernando Dammous (ferdam@internetcom.com.br) wrote :
+Hello,
 
-> LVM 0.7 is installed (built into the kernel, which is still in the version 2.0.36) and working perfectly, with the root filesystem and swap in a LV (boot with initrd).  
->   
-> Now, I would like to install the devfs and mainly the raw-io.   
->   
-> Can I install them in a kernel 2.0.36, which is already patched with LVM?  
->   
-> Should I apply the patches in which order (first devfs, later the raw-io, or vice versa)?  
->   
-> I intend to install Oracle8 using raw-io.   
+I have my kernel configured and and the lvm tools installed for 0.7.
 
-well, I'm still not sure whether Oracle software is compatible with raw-io patch in linux kernel, please let me know how are you doing with that.
+Questions:
+1. do I set the partition id using fdisk? If so, will this damage anything
+ie. make it hard to boot in the normal fashion? 
+2. What goes in the /etc/lvmtab file ?
+3. Will the creation/allocation of logical volumes be non-destructive to
+the data during conversion?
+4. If I boot a kernel without lvm will I still have the same access to
+data as I had before?
 
-> The devfs isn't so important for me (should it be ?).  
+Thanks. I have used LVM in AIX for awhile but I wanted to clear up a few
+things in my understanding.
 
-devfs is a very usable patch compatible with most of devices (including LVM) and software (I can only think of vmware that doesn't run with vmware). it saves a lot of inodes in /dev and contains only devices really present in the system and uses intelligent backward-compatible naming scheme (so you can still use inodes like /dev/sda etc) present in many modern UN*X flavors (like Solaris, e.g.). You should give it at lease a chance before saying you use it only because of raw-devices ;)
+Rusty
 
-> If anyone knows about restrictions or some clues I would thank a lot.  
 
-Regards,
--- 
-                                             freddy
 
-----==-- _                      Adrien "freddy" Farkas
----==---(_)__  __ ____  __       freddy@sk.oracle.com
---==---/ / _ \/ // /\ \/ /  We all know Linux is great... It
--=====/_/_//_/\___/ /_/\_\  does infinite loops in 5 seconds
+----------------------------------------------------------------------------
+Rusty Wickell					200 S. Jordan Ave.
+Digital Library Sytem Administrator		Simon 060
+Indiana University				Bloomington IN 
+812-856-5174					47405
+----------------------------------------------------------------------------
