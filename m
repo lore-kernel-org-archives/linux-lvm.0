@@ -1,10 +1,12 @@
-Return-Path: <braam@mountainviewdata.com>
-Date: Wed, 23 May 2001 08:48:42 -0600 (MDT)
-From: "Peter J. Braam" <braam@mountainviewdata.com>
-Subject: Re: [linux-lvm] LVM Snapshots & journal recovery
-In-Reply-To: <20010523090805.A540@66bassett.freeserve.co.uk>
-Message-ID: <Pine.LNX.4.33.0105230843210.3381-100000@lustre.us.mvd>
-MIME-Version: 1.0
+Return-Path: <blutgens@sistina.com>
+Date: Wed, 23 May 2001 09:54:19 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20010523095419.A2755@minime.sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Content-Disposition: inline
+Subject: [linux-lvm] filtering stuff
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Joe Thornber <thornber@btconnect.com>, adilger@turbolinux.com, linux-lvm@sistina.com, linux-fsdevel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-Joe,
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for explaining this.
+Am still working on the filtering.=20
 
-That's still not good enough, but better: you must also wait for the
-redirection table to be stable on disk before you can overwrite the origin
-device.
+--=20
+Ben Lutgens	=09
+Sistina Software Inc.=09
+MIS Geek
+http://www.sistina.com/	<--- great software=20
+http://www.gentoo.org/  <--- great distro
+Kernel panic: I have no root and I want to scream <--- perfect error message
 
-So journal recovery can indeed work if LVM snapshots wait twice:
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
- - first for the copied disk to become stable on disk
- - then for the redirection to become stable on disk
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-at that point one can safely over-write the origin.
+iD8DBQE7C88bLxkxGgLdGQgRAr8YAKCnPv+gUljscRy1twvX54ox4Sft4gCgsl61
+99QgouJaMMW8tGRVgrXNf/U=
+=8zXw
+-----END PGP SIGNATURE-----
 
-First, looking at the code, I don't think that this is happening at all.
-Second, to have these two extra waits seems really quite a bad penalty to
-me.
-
-- Peter -
-
-
-On Wed, 23 May 2001, Joe Thornber wrote:
-
-> On Tue, May 22, 2001 at 03:32:19PM -0600, Peter J. Braam wrote:
-> <snip>
-> >
-> > But during recovery, LVM cannot possibly know if the whole process of
-> > copying out the data from the current to the snapshot area completed
-> > during the previous run. Yes, LVM updates the redirection table first and
-> > then copies, but, still, you don't know _where exactly_ the writes stopped
-> > happening and in particular you don't know if the block was copied already
-> > or not.
-> >
->
-> The snapshot metadata (redirection table) is written *after* the copy.
-> Data will not hit the origin device until after the copy on write has
-> completed successfully.
->
-> - Joe
->
-
--- 
+--wRRV7LY7NUeQGEoC--
