@@ -1,10 +1,9 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] lvm-1.0.1 not working with DAC960/2.2.20
-Message-ID: <20011127102808.A730@lynx.no>
-References: <wvbshoy54w.fsf@freeze.oslo.dnmi.no> <20011127111424.A8179@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011127111424.A8179@sistina.com>; from mauelshagen@sistina.com on Tue, Nov 27, 2001 at 11:14:24AM +0100
+Message-ID: <3C03CEB1.E5D5D447@berbee.com>
+From: Scott P <pichelma@berbee.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="------------ABC7688C998CC7E3152D6DFE"
+Subject: [linux-lvm] LVM limit on PE's/size?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,43 +14,116 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 27 11:26:01 2001
+Date: Tue Nov 27 11:35:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+
+--------------ABC7688C998CC7E3152D6DFE
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
 
-On Nov 27, 2001  11:14 +0100, Heinz J . Mauelshagen wrote:
-> 
-> Checked it in.
+Hi all...
 
-But now it is broken.
+I hope I'm not asking a too pettty of a question for this list!
 
-> On Tue, Nov 27, 2001 at 09:44:47AM +0100, Adrian Phillips wrote:
-> > --- tools/lib/lvm_check_partitioned_dev.c.orig  Tue Nov 27 09:16:03 2001
-> > +++ tools/lib/lvm_check_partitioned_dev.c       Tue Nov 27 09:42:38 2001
-> > @@ -140,7 +140,8 @@
-> >         "md",                   /* Multiple Disk driver (SoftRAID)   */
-> >         "loop",                 /* Loop device              */
-> >         "dasd",                 /* DASD disk (IBM S/390, zSeries)      */
-> > -       "dac960",               /* DAC960              */
-> > +       "rd",                   /* DAC960 2.2          */
-> > +       "dac960",               /* DAC960 2.4          */
-> >         "nbd",                  /* Network Block Device              */
-> >         "ida",                  /* Compaq SMART2              */
-> >         "cciss",                /* Compaq CCISS array              */
+We are planning to add a 3 rd EXP300 array to out current server w/ 2
+EXP300's in place already!
+We WILL surpass the 1 TB size, if possible?
 
-Note that this will break other things, because you also need to update
-the LVM_DEVICE_TYPE_<foo> defines when you change this array (it was
-Joe or Alistair that wrote it this way, not me).  It would also break to
-add a new enum value for DAC960, because it means we need to look for two
-values elsewhere in the code (e.g. lvm_partition_count).
+A little history:
 
-I just checked in a fix, which cleans up this code a bit and makes it
-impossible to get wrong in the future.
+Linux ptb3 2.2.19 #2 SMP Tue Jul 24 11:53:29 CDT 2001 i686 unknown
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+I have two IBM EXP300 RAID arrays connected to a Netfinity 4500R running
+Redhat Linux 6.2.
+LVM compiled into kernel AFAIK...w/ patch?
+
+We are using:
+lvm_0.9.1_beta7
+reiserfsprogs-3.x.0j
+
+Here is the current filesystem and size:
+
+/dev/exp300_2/exp300_lv2 924160464 891307744  32852720      97% /files1
+
+Just wondering about this faq:
+
+                           Q:
+                               Why are my logical volumes limited to 256
+GB in size?
+                           A:
+                               This is NO absolute limit but it depends
+on the physical extent size you configured at volume group
+                               creation time.
+
+                               Please use option -s of the vgcreate
+command to give a larger physical extent size. For example with a
+                               physical extent size of 524288 KB (512
+MB) you are able to map a logical volume of 32 Terabyte.
+                               Remember that current Linux kernels are
+limited to 1 Terabyte.
+
+***Especially about the part in bold!
+
+Please let me know if you need more details,  I will supply asap!
+
+TIA!
+
+-Scott
+
+
+
+
+
+--------------ABC7688C998CC7E3152D6DFE
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+Hi all...
+<p>I hope I'm not asking a too pettty of a question for this list!
+<p>We are planning to add a 3 rd EXP300 array to out current server w/
+2 EXP300's in place already!
+<br>We WILL surpass the 1 TB&nbsp;size, if possible?
+<p>A little history:
+<p>Linux ptb3 2.2.19 #2 SMP Tue Jul 24 11:53:29 CDT 2001 i686 unknown
+<p>I have two IBM EXP300 RAID&nbsp;arrays connected to a Netfinity 4500R&nbsp;running
+Redhat Linux 6.2.
+<br>LVM compiled into kernel AFAIK...w/ patch?
+<p>We are using:
+<br>lvm_0.9.1_beta7
+<br>reiserfsprogs-3.x.0j
+<p>Here is the current filesystem and size:
+<p>/dev/exp300_2/exp300_lv2 924160464 891307744&nbsp; 32852720&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+97% /files1
+<p>Just wondering about this faq:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Q:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Why are my logical volumes limited to 256 GB in size?
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+A:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This is NO absolute limit but it depends on the physical extent size you
+configured at volume group
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+creation time.
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Please use option -s of the vgcreate command to give a larger physical
+extent size. For example with a
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+physical extent size of 524288 KB (512 MB) you are able to map a logical
+volume of 32 Terabyte.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>
+Remember that current Linux kernels are limited to 1 Terabyte.</b><b></b>
+<p><b>***Especially about the part in bold!</b><b></b>
+<p>Please let me know if you need more details,&nbsp; I will supply asap!
+<p>TIA!
+<p>-Scott
+<br>&nbsp;
+<br><b></b>&nbsp;
+<br><b></b>&nbsp;
+<br>&nbsp;</html>
+
+--------------ABC7688C998CC7E3152D6DFE--
