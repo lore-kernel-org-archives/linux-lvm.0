@@ -1,8 +1,8 @@
-Message-ID: <3C17D4D2.5020204@kenamea.com>
-From: Kenny Gorman <kenny@kenamea.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Continued error with snapshots (unable to init journal)
+From: Petro <petro@auctionwatch.com>
+Message-ID: <20011213002345.GA13832@auctionwatch.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Patching Kernel 2.4.16.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +13,81 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 12 16:25:02 2001
+Date: Wed Dec 12 18:21:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I posted before, but since I have upgraded my SuSE 2.4.7-64GB system to 
-include reiserfs-3.x.0k_pre9-43 and lvm-1.0.0.2_rc2-27.  I am still 
-getting the below error in /var/log/messages every once in a while 
-during mount of the snapshot volume.
+    I'm trying to build a kernel with the 1.0.1 stuff, I run the
+    Makefile in the PATCHES file generating lvm-1.0.1-2.4.16.patch
+    and apply this to the kernel souce (patch -p1 < ../...) cleanly.
+    Run make oldconfig, make dep, make bzImage > output and I get a
+    whole bunch of errors starting with: 
 
-Does anyone know what this is about?
+    In file included from lvm.c:262:
+    lvm-internal.h:49: parse error before `*'
+    lvm-internal.h:49: warning: type defaults to `int' in declaration of
+    `vg'
+    lvm-internal.h:49: warning: data definition has no type or storage
+    class
+    lvm-internal.h:86: parse error before `*'
+    lvm-internal.h:86: warning: function declaration isn't a prototype
+    lvm-internal.h:87: parse error before `*'
+    lvm-internal.h:87: warning: function declaration isn't a prototype
+    lvm-internal.h:88: parse error before `vg_t'
+    lvm-internal.h:88: warning: function declaration isn't a prototype
+    lvm-internal.h:89: parse error before `lv_t'
+    lvm-internal.h:89: warning: function declaration isn't a prototype
+    lvm-internal.h:90: parse error before `*'
+    lvm-internal.h:90: warning: function declaration isn't a prototype
+    lvm-internal.h:91: parse error before `*'
+    lvm-internal.h:91: warning: function declaration isn't a prototype
+    lvm-internal.h:92: parse error before `*'
+    lvm-internal.h:92: warning: function declaration isn't a prototype
+    lvm-internal.h:93: parse error before `*'
+    lvm-internal.h:93: warning: function declaration isn't a prototype
+    lvm-internal.h:94: parse error before `*'
+    lvm-internal.h:94: warning: function declaration isn't a prototype
+    lvm-internal.h:101: parse error before `*'
+    lvm-internal.h:101: warning: function declaration isn't a prototype
+    lvm-internal.h:102: parse error before `*'
+    lvm-internal.h:102: warning: function declaration isn't a prototype
+    lvm-internal.h:103: parse error before `*'
+    lvm-internal.h:103: warning: function declaration isn't a prototype
+    lvm-internal.h:104: parse error before `*'
+    lvm-internal.h:104: warning: function declaration isn't a prototype
+    lvm-internal.h:105: parse error before `*'
+    lvm-internal.h:105: warning: function declaration isn't a prototype
+    lvm-internal.h:106: parse error before `*'
+    lvm-internal.h:106: warning: function declaration isn't a prototype
+    lvm.c:286: parse error before `*'
+    lvm.c:286: warning: function declaration isn't a prototype
+    lvm.c:287: warning: `struct lv_bmap' declared inside parameter list
+    lvm.c:287: warning: its scope is only this definition or
+    declaration, which is p
+    robably not what you want.
+    lvm.c:308: parse error before `*'
+    lvm.c:308: warning: function declaration isn't a prototype
+    lvm.c:310: parse error before `*'
+    lvm.c:310: warning: function declaration isn't a prototype
+    lvm.c:311: parse error before `*'
+    lvm.c:311: warning: function declaration isn't a prototype
+    lvm.c:312: parse error before `lv_t'
+    lvm.c:312: warning: function declaration isn't a prototype
+    lvm.c:313: parse error before `lv_t'
+    lvm.c:313: warning: function declaration isn't a prototype
+    lvm.c:315: parse error before `*'
+    lvm.c:315: warning: function declaration isn't a prototype
+    lvm.c:316: parse error before `*'
+    lvm.c:316: warning: function declaration isn't a prototype
+    lvm.c:317: parse error before `*'
+    lvm.c:317: warning: function declaration isn't a prototype
 
-Dec 11 18:20:02 ino kernel: reiserfs: checking transaction log (device 
-3a:01) ...
-Dec 11 18:20:02 ino kernel: clm-2076: device is readonly, unable to 
-replay log
-Dec 11 18:20:02 ino kernel: Replay Failure, unable to mount
-Dec 11 18:20:02 ino kernel: reiserfs_read_super: unable to initialize 
-journal space
+    And going on for several pages. 
 
-Thanks,
-Kenny Gorman
-DBA
-Kenamea
+    This isn't right is it?
+
+
+-- 
+Share and Enjoy. 
