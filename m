@@ -1,10 +1,16 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM 1.0.3 VGDA corrupted often ??
-Message-ID: <20020621130445.A3472@sistina.com>
-References: <HDECLOCKOCGGLBCFEEHCIEJPCAAA.catherineShen@iei.com.tw>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <HDECLOCKOCGGLBCFEEHCIEJPCAAA.catherineShen@iei.com.tw>; from catherineShen@iei.com.tw on Fri, Jun 21, 2002 at 05:47:49PM +0800
+From: Sander <boeraa@wanadoo.nl>
+Message-ID: <482222938.20020621234918@wanadoo.nl>
+Subject: Re[2]: [linux-lvm] ext2online and 2.4.18
+In-Reply-To: <20020620163420.GN22427@clusterfs.com>
+References: <1024512969.1862.6.camel@hiro.prowell.org.bogus>
+ <20020619195508.GA22427@clusterfs.com>
+ <1024521044.1861.6.camel@hiro.prowell.org.bogus>
+ <20020619214731.GB22427@clusterfs.com>
+ <1024525638.1861.54.camel@hiro.prowell.org.bogus>
+ <1024572480.3d11bc400c205@webmail3.wanadoo.nl>
+ <20020620163420.GN22427@clusterfs.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,83 +21,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 21 06:11:02 2002
+Date: Fri Jun 21 16:49:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Fri, Jun 21, 2002 at 05:47:49PM +0800, Catherine Shen wrote:
-> Hi,
->=20
-> Has anyone found the VGDA corrupted very often?
-> message --
-> 	"ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan"
->=20
-> I create a volume group "MainVG" and several LVs (and some snapshots) in =
-it.
-> After creating and removing the logical volumes or snapshots for several =
-times,
-> the VGDA error message comes up easily.
-> And after "vgscan", my "MainVG" is gone.
-> (But the mounted LVs work fine until next boot??)
->=20
-> Should I execute "sync" every time I make changes to my LVs?
-> Or should I execute "vgcfgbackup" and restore them if the error occurs?
+(Response to message from Andreas Dilger, adilger@clusterfs.com on Thursday, June 20, 2002 6:34:20 PM)
 
-Nope, everything should work without those.
-Looks like a bug, if you can reproduce it.
+Hallo Andreas,
 
-Could you send the before/after metadata to me directly <mge@sistina.com>
-for further investigation?
+One message in dmesg which I don't see in a kernel without the patch:
+"EXT2-fs warning: maximal mount count reached, running e2fsck is
+recommended", strange since I have fs checking automatically.
+I have seen other messages on a few previous boots with a patched
+kernel, that I unfortunately can not reproduce, where there are complaints about an
+option 'resize' that is not understood.
 
-Please retrieve it with *before* the problem occurs and another
-time *after* it occurs and replace "WHEN" below with before or after
-respectively:
+No messages of this kind ended up in the messages file, or the debug
+log. They only show when booting and in dmesg.
 
-#!/bin/bash
-mkdir /tmp/vgda
-cd /tmp/vgda
-for p in ListOfAllPVsOfTheVG
-do
-	dd if=3D$p of=3D$(basename $p).vgda bs=3D1k count=3D4k
-done
-tar cvf - *vgda | bzip2 -c > Catherine_Shen${WHEN}.vgda.tar.bz2
-rm *vgda
+Guess this won't help much, but that's all I have for the moment.
 
-
->=20
-> BTW, I resized a LV today and execute "resize2fs"; but after mounting the=
- LV again,
-> the size was not what I expected??
-> My command : "resize2fs -f /dev/MainVG/LV1"
-> no error message at all??
->=20
-> Thanks in advance!!
->=20
-> Catherine=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=
-=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=E5=8A{=B1=FE[=E6=99=A8=A5=8Ax%=
-=8A=CBe=8A{=B1=FE[=E6=FE=C8=AC=B6)=DA=FD=CA&=86=DBi=FF=FF=E5=8A=CBl=FE=C8=
-=AC=B6)=DA=FD=CA&=FEf=A2=96f=A7=FEX=AC=B6)=DF=A3=F9b=9E=EC=FF=96=F9=ABy=A7m=
-=85=E2=D50s=96=FD3=9A=B6=1Bm=FF=FF=FF=C3=0C=FF=B2+-=8Av=FFr=89=BF=96=F9=BF=
-=3D=A8=1E=B3=F8h=C2=DA=FF=86=D9=A5
---=20
+-- 
 
 Regards,
-Heinz    -- The LVM Guy --
+Sander
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Thursday, June 20, 2002, 6:34:20 PM, you wrote:
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+> Could you be more specific?  Do you get any messages in syslog or from
+> dmesg?  Does the command just lock up and never return?  If you mount
+> the filesystem with "-o debug,check" you get a few extra messages that
+> may help narrow down the problem.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> http://sourceforge.net/projects/ext2resize/
+
+
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
