@@ -1,81 +1,45 @@
-Date: Tue, 7 Nov 2000 15:56:59 +0100 (CET)
-From: Rik van Riel <riel@conectiva.com.br>
+Date: Tue, 7 Nov 2000 17:45:04 +0100
+From: Andrea Arcangeli <andrea@suse.de>
 Subject: [linux-lvm] Re: LVM 2.2 snapshot bug
-In-Reply-To: <20001107142152.G1276@inspiron.random>
-Message-ID: <Pine.LNX.4.05.10011071550270.28283-100000@humbolt.nl.linux.org>
-MIME-Version: 1.0
+Message-ID: <20001107174504.A5834@inspiron.suse.de>
+References: <20001107142152.G1276@inspiron.random> <Pine.LNX.4.05.10011071550270.28283-100000@humbolt.nl.linux.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.05.10011071550270.28283-100000@humbolt.nl.linux.org>; from riel@conectiva.com.br on Tue, Nov 07, 2000 at 03:56:59PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andrea Arcangeli <andrea@suse.de>
-Cc: linux-lvm@msede.com, marcelo@conectiva.com.br
+To: Rik van Riel <riel@conectiva.com.br>
+Cc: linux-lvm@msede.com, marcelo@conectiva.com.br, "Stephen C. Tweedie" <sct@redhat.com>
 
-On Tue, 7 Nov 2000, Andrea Arcangeli wrote:
-> On Tue, Nov 07, 2000 at 11:55:42AM +0100, Rik van Riel wrote:
-> > On snapshot creation, the snapshot block device (/dev/vg0/snap1)
-> > is NOT made a read-only device, so ext3 tries to do journal
-> 
-> It is made read only.
+On Tue, Nov 07, 2000 at 03:56:59PM +0100, Rik van Riel wrote:
+> That's a bit much to type in by hand ... and it's basically
+> kjournald being confused by all its writes failing on a RW
+> block device.
 
-No it isn't. It is made into a read-write block device
-where all writes fail :)
+So ext3 will crash also if I/O errors happen during the log reply.  The Oopses
+seems due an _ext3_ bug (not due the missing ro_bits in the LVM snapshot)
+as far I can tell.
 
-kernel: Bad lvm_map in ll_rw_block
-kernel: lvm - lvm_map: ll_rw_blk write for readonly LV /dev/vg0/snap1
+> Indeed this is the case. When the block device is read-write
+> (the is_read_only(blk_dev) is non-true) it tries to replay
+> the log, even for a read-only mounted FS.
 
-> > (leading to all kinds of nasty oopses)
-> 
-> Could you show me the Oopses?
+Ok, I agree it's a minor LVM bug, but again I can't see how that minor bug can
+cause oopses and I think setting ro_bits won't fix the real bug but it will
+only hide it.
 
-That's a bit much to type in by hand ... and it's basically
-kjournald being confused by all its writes failing on a RW
-block device.
+BTW, LVM also internally checks for the LV_WRITE bitflag during open(2) so any
+attempt to open the snapshot RW will fail return -EACCESS as expected.
 
-> > It should be easy enough to do an set_device_ro() on the LVM
-> > snapshot, shouldn't it?
-> 
-> That shouldn't be necessary. The way LVM handle this looks correct to
-> me,
+> It's with the LVM from the Conectiva kernel RPM, which
+> uses the source code from your 2.2 LVM driver.
 
-Please look again...
+OK.
 
-> but maybe it's never been tested in the ll_rw_block layer because the
-> open(O_RDWR) check always handled it with ext2. Maybe ext3 forces
-> writes via ll_rw_block also when the device is mounted read only
-> (probably when doing log reply?) and maybe it hits the ll_rw_block
-> check for the first time.
+I will fix the is_read_only thing for the snapshot but you should make sure the
+bug that is oopsing your machine gets fixed too :).
 
-Indeed this is the case. When the block device is read-write
-(the is_read_only(blk_dev) is non-true) it tries to replay
-the log, even for a read-only mounted FS.
-
-> Currently we choose if a device is readable or not using the VM_WRITE
-> bitflag in the lv->lv_access field. If the bitflag is set the device
-> is writeable. You'll find that the snapshots has that bitflag unset
-> (please verify via /proc that they don't have the W capability set).
-
-That bitflag is indeed not set, the snapshot is read-only,
-but that status isn't propagated up to the block device
-layer.
-
-> Or maybe the bug is in ext3 that doesn't handle real read only blockdevices?
-
-Real read only block devices show their status at the block
-device layer :)
-
-> Also please ensure you can reproduce with 2.2.18pre17aa1 or
-> 2.4.0-test10 to make sure we're looking at the same sources.
-
-It's with the LVM from the Conectiva kernel RPM, which
-uses the source code from your 2.2 LVM driver.
-
-regards,
-
-Rik
---
-The Internet is not a network of computers. It is a network
-of people. That is its real strength.
-
-http://www.conectiva.com/		http://www.surriel.com/
+Andrea
