@@ -1,73 +1,42 @@
-Message-ID: <39752900.73B56CE@marxmeier.com>
-Date: Wed, 19 Jul 2000 06:05:20 +0200
+Message-ID: <39752C4D.D07D0F2C@marxmeier.com>
+Date: Wed, 19 Jul 2000 06:19:25 +0200
 From: Michael Marxmeier <mike@msede.com>
-Reply-To: adilger@turbolinux.com
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] made a big misstake
+References: <200007182303.TAA20264@e35.marxmeier.com>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: linux-lvm@marxmeier.com, bagfors@pdc.kth.se
 
-Forwarded message from Andreas Dilger ...
-
--------- Original Message --------
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200007182302.e6IN2m930146@webber.adilger.net>
-Subject: Re: [linux-lvm] made a big misstake
-In-Reply-To: <20000718231557.B13413@zyrgelkwyt.pdc.kth.se>
-=?ISO-8859-1?Q?from_Erik_B=E5gfors_at_Jul_18=2C_2000_11=3A15=3A57_pm?=
-To: =?ISO-8859-1?Q?Erik_B=E5gfors?= <bagfors@pdc.kth.se>
-Date: Tue, 18 Jul 2000 17:02:47 -0600 (MDT)
-CC: linux-lvm@msede.com
-X-Mailer: ELM [version 2.4ME+ PL73 (25)]
-MIME-Version: 1.0
-
-Erik writes:
-> I just installed a new computer the other day and since I'm a long time
-> aix-user and love there lvm-system I installed the linux-lvm.
+Andreas Dilger wrote:
+> Erik writes:
+> > Now the misstake, I did not run a vgreduce before I fdisk'ed the whole
+> > disk (hdb).  Now when I start up, vgscan cannot find any vg's.
 > 
-> So far I am VERY impressed.  I've tried resizeing and moving end extending
-> and all kinds of stuff and everything worked!! Good work!!!
+> Was hdb1 the first PV created in the VG?  The problem, I think, is that
+> Linux LVM only keeps the VGDA on the first PV.  AIX will keep a VGDA
+> copy on all of the PVs, and even will keep 2 VGDAs on the first PV for
+> backup, in case the first one is corrupt.
 
-Online resize and move, or offline?  I'm not sure if online moving of
-PEs
-is really safe if the filesystem is being used.  Of course, it is safe
-if
-the PE doesn't change while it is being moved...
+Actually, LVM should have a copy of the dscriptor area. It is kept in
+the file system in the directory /etc/lvmconf which even has the nice
+property that you can back it up. The VGDA is implecitely backed up by 
+most LVM  commands. 
 
-> Now the misstake, I did not run a vgreduce before I fdisk'ed the whole 
-> disk (hdb).  Now when I start up, vgscan cannot find any vg's.
+You should be able to restore them with vgcfgrestore.
+The vgcfgrestore syntax seems to sugest you can even restore it
+to another physical volume (no tested, personally) which would
+solve the actual problem nicely.
 
-Was hdb1 the first PV created in the VG?  The problem, I think, is
-that
-Linux LVM only keeps the VGDA on the first PV.  AIX will keep a VGDA
-copy on all of the PVs, and even will keep 2 VGDAs on the first PV for
-backup, in case the first one is corrupt.
 
-> So.. anyone knows how to solve this?  Sorry I don't have better output from
-> my commands but it's hard since the network is not working on it right now :)
+Hope this helps
+Michael
 
-Sorry, I don't know enough about how the VGDA backups are stored.  You
-may
-be able to examine the VGDA backup to find the old size of /dev/hdb1
-and
-then restore it, but otherwise I'm not sure what you can do.
-
-I think Linux LVM needs to be updated to keep VGDA backups on all
-disks
-instead of in the filesystem, exactly for reasons like this.  Right
-now,
-if the first disk fails, then you are unable to access any LVs that
-are
-wholly on another disk.  This is bad.
-
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of
-antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               --
-Dogbert
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
