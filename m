@@ -1,10 +1,9 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----_=_NextPart_001_01C33721.31CBBF21"
-Subject: RE: [linux-lvm] Snapshot Problem JFS
-Message-ID: <2E7F9C924F6A6546AF777BD072071EC6091244@mars.lbmc.net>
-From: "David Sornig" <dsornig@lbmc.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Snapshot Problem JFS
+Message-ID: <20030620165004.B29677@sistina.com>
+References: <2E7F9C924F6A6546AF777BD072071EC6091244@mars.lbmc.net>
+Mime-Version: 1.0
+In-Reply-To: <2E7F9C924F6A6546AF777BD072071EC6091244@mars.lbmc.net>; from dsornig@lbmc.com on Fri, Jun 20, 2003 at 06:43:40AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,200 +14,104 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 20 09:30:05 2003
+Date: Fri Jun 20 10:04:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+On Fri, Jun 20, 2003 at 06:43:40AM -0500, David Sornig wrote:
+> Heinz,
+>  
+> So to make a snapshot of the 1.4T LV which currently has a 400G of space being used by data I need to run the lvcreate command like this:
+>  
+> lvcreate -L1000M -s -n snap00 /dev/Volume00/LogVol00
 
-------_=_NextPart_001_01C33721.31CBBF21
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+Yes, if you want to have a snapshot with a 1000MB exception store.
 
-SGVpbnosDQogDQpTbyB0byBtYWtlIGEgc25hcHNob3Qgb2YgdGhlIDEuNFQgTFYgd2hpY2ggY3Vy
-cmVudGx5IGhhcyBhIDQwMEcgb2Ygc3BhY2UgYmVpbmcgdXNlZCBieSBkYXRhIEkgbmVlZCB0byBy
-dW4gdGhlIGx2Y3JlYXRlIGNvbW1hbmQgbGlrZSB0aGlzOg0KIA0KbHZjcmVhdGUgLUwxMDAwTSAt
-cyAtbiBzbmFwMDAgL2Rldi9Wb2x1bWUwMC9Mb2dWb2wwMA0KIA0KSSBndWVzcyBJIHRob3VnaHQg
-dGhlIC1MIG5lZWRlZCB0byBiZSB0aGUgc2FtZSBzaXplIGFzIHRoZSBjdXJyZW50IGxvZ2ljYWwg
-dm9sdW1lPyANCiANClRoYW5rcywNCiANCkRhdmlkDQogDQoNCgktLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLSANCglGcm9tOiBIZWlueiBKIC4gTWF1ZWxzaGFnZW4gW21haWx0bzptYXVlbHNoYWdl
-bkBzaXN0aW5hLmNvbV0gDQoJU2VudDogRnJpIDYvMjAvMjAwMyA0OjA5IEFNIA0KCVRvOiBsaW51
-eC1sdm1Ac2lzdGluYS5jb20gDQoJQ2M6IA0KCVN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBTbmFw
-c2hvdCBQcm9ibGVtIEpGUw0KCQ0KCQ0KDQoJT24gVGh1LCBKdW4gMTksIDIwMDMgYXQgMDk6MDc6
-MzBQTSAtMDUwMCwgRGF2aWQgU29ybmlnIHdyb3RlOg0KCT4gSSBhbSBydW5uaW5nIFJlZEhhdCA5
-LjANCgk+IEtlcm5lbCAyLjQuMjAtOA0KCT4gTFZNIFZlcnNpb24gMS4wLjUrKDIyLzA3LzIwMDIp
-DQoJPiANCgk+IEkgaGF2ZSBhIDEuNFQgTG9nVm9sIHdpdGggNDAwRyBvZiBzcGFjZSBiZWluZyB1
-c2VkIG9uIGEgSkZTIGZpbGUgc3lzdGVtLg0KCT4gDQoJPiBUaGUgTFZNIGlzIHdvcmtpbmcgZXhj
-ZWxsZW50LiAgSG93ZXZlciwgIEkgY2Fubm90IGNyZWF0ZSBhIHNuYXBzaG90LiAgSSBydW4gdGhl
-IGZvbGxvd2luZyBsdmNyZWF0ZSBjb21tYW5kIGFzIHBlciB0aGUgbWFuIHBhZ2UgYW5kIGdldCB0
-aGUgZm9sbG93aW5nIGVycm9yOg0KCT4gDQoJPiBsdmNyZWF0ZSAtLWVycm9yICJDYW5ub3QgYWxs
-b2NhdGUgbWVtb3J5IiAgY3JlYXRpbmcgVkdEQSBmb3IgIi9kZXYvVm9sdW1lMDAvc25hcDAxIiBp
-biBrZXJuZWwNCgk+IA0KCQ0KCURhdmlkLA0KCQ0KCW1lbW9yeSBhbGxvY2F0ZWQgdG8gdGhlIHNu
-YXBzaG90IG5lZWRzIGZyZWUgcGh5c2ljYWwgUkFNLg0KCQ0KCVdpdGggNDAwR0IgYW5kIGRlZmF1
-bHQgc25hcHNob3QgZXh0ZW50IHNpemUgd2UncmUgdGFsa2luZyBhYm91dCB+MUdCDQoJKHVzaW5n
-IHZpcnR1YWwgbWVtb3J5IGZvciBzbmFwc2hvdCBleGNlcHRpb24gdGFibGVzIHNvIHRoYXQgdGhl
-IHRhYmxlIGRvZXNuJ3QNCgluZWVkIHRvIGJlIGluIFJBTSBjb21wbGV0ZWx5IGFueSBsb25nZXIg
-aXMgYSB3b3JrIGl0ZW0gZm9yIExWTTIpLg0KCQ0KCURvIHlvdSByZWFsbHkgZXhwZWN0IHRoYXQg
-bXVjaCBjaGFuZ2UgdG8geW91ciAxLjRUQiBMViBkdXJpbmcgdGhlIGxpZmV0aW1lIG9mDQoJdGhl
-IHNuYXBzaG90ID8NCglJZiB5b3UgdXNlIGl0IGZvciBhIGJhY2t1cCwgeW91IG1pZ2h0IGdldCBh
-bG9uZyB3aXRoIGEgY291cGxlIG9mIEdCIGFsbG9jYXRlZA0KCXRvIHRoZSBzbmFwc2hvdCByZWR1
-Y2luZyBleGNlcHRpb24gdGFibGUgc2l6ZSBkcmFzdGljYWxseS4NCgkNCgkNCgk+IE5vdCBzdXJl
-IHdoeSB0aGlzIGlzIGhhcHBlbmluZy4gIEkgaGF2ZSByZWFkIHRoZSBsaXN0IGFuZCBtYXliZSBJ
-IGp1c3QgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgcHJvYmxlbS4gIFRoZXNlIHNlcnZlcnMgaGF2ZSA0
-IEdpZ3Mgb2YgUkFNLg0KCT4gDQoJPiBSZWdhcmRzLA0KCT4gDQoJPiBEYXZpZA0KCQ0KCS0tDQoJ
-DQoJUmVnYXJkcywNCglIZWlueiAgICAtLSBUaGUgTFZNIEd1eSAtLQ0KCQ0KCSoqKiBTb2Z0d2Fy
-ZSBidWdzIGFyZSBzdHVwaWQuDQoJICAgIE5ldmVydGhlbGVzcyBpdCBuZWVkcyBub3Qgc28gc3R1
-cGlkIHBlb3BsZSB0byBzb2x2ZSB0aGVtICoqKg0KCQ0KCT0tPS09LT0tPS09LT0tPS09LT0tPS09
-LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LQ0K
-CQ0KCUhlaW56IE1hdWVsc2hhZ2VuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU2lz
-dGluYSBTb2Z0d2FyZSBJbmMuDQoJU2VuaW9yIENvbnN1bHRhbnQvRGV2ZWxvcGVyICAgICAgICAg
-ICAgICAgICAgICAgICBBbSBTb25uZW5oYW5nIDExDQoJICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICA1NjI0MiBNYXJpZW5yYWNoZG9yZg0KCSAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgR2VybWFueQ0KCU1hdWVs
-c2hhZ2VuQFNpc3RpbmEuY29tICAgICAgICAgICAgICAgICAgICAgICAgICAgKzQ5IDI2MjYgMTQx
-MjAwDQoJICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIEZBWCA5MjQ0NDYNCgk9LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0t
-PS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS0NCgkNCglfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KCWxpbnV4LWx2bSBtYWlsaW5nIGxp
-c3QNCglsaW51eC1sdm1Ac2lzdGluYS5jb20NCglodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFp
-bG1hbi9saXN0aW5mby9saW51eC1sdm0NCglyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90
-bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vDQoJDQoNCg==
+>  
+> I guess I thought the -L needed to be the same size as the current logical volume? 
 
-------_=_NextPart_001_01C33721.31CBBF21
-Content-Type: application/ms-tnef;
-	name="winmail.dat"
-Content-Transfer-Encoding: base64
+No, it doesn't need unless you have an update ratio of 100% to the original
+during the lifetime of the snapshot. As a rule of thumb you can assume 5%
+(which would be ~71g in your case) but that heavily depends on your
+usage of the filesystem for obvious reasons.
 
-eJ8+IikLAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAENgAQAAgAAAAIAAgABBYAD
-AA4AAADTBwYAFAAGACsAKAAFAFIBASCAAwAOAAAA0wcGABQABgArACgABQBSAQEJgAEAIQAAADkw
-NjIwQTM0NjUyMzFDNDY4ODczRUQ5OERFNjI5MTgwAO4GAQOQBgBEHAAAOAAAAB8AGgABAAAAEgAA
-AEkAUABNAC4ATgBvAHQAZQAAAAAAAwA2AAAAAAAfADcAAQAAAEoAAABSAEUAOgAgAFsAbABpAG4A
-dQB4AC0AbAB2AG0AXQAgAFMAbgBhAHAAcwBoAG8AdAAgAFAAcgBvAGIAbABlAG0AIABKAEYAUwAA
-AAAAQAA5ACG/yzEhN8MBHwA9AAEAAAAKAAAAUgBFADoAIAAAAAAAAgFHAAEAAAAqAAAAYz1VUzth
-PSA7cD1MQk1DO2w9TUFSUy0wMzA2MjAxMTQzNDBaLTI1NTUAAAAfAEkAAQAAAEoAAABSAGUAOgAg
-AFsAbABpAG4AdQB4AC0AbAB2AG0AXQAgAFMAbgBhAHAAcwBoAG8AdAAgAFAAcgBvAGIAbABlAG0A
-IABKAEYAUwAAAAAAQABOAACS7poLN8MBHwBaAAEAAAAsAAAASABlAGkAbgB6ACAASgAgAC4AIABN
-AGEAdQBlAGwAcwBoAGEAZwBlAG4AAAACAVsAAQAAAEsAAAAAAAAAgSsfpL6jEBmdbgDdAQ9UAgAA
-AABIZWlueiBKIC4gTWF1ZWxzaGFnZW4AU01UUABtYXVlbHNoYWdlbkBzaXN0aW5hLmNvbQAAAgFc
-AAEAAAAdAAAAU01UUDpNQVVFTFNIQUdFTkBTSVNUSU5BLkNPTQAAAAAfAF0AAQAAACwAAABIAGUA
-aQBuAHoAIABKACAALgAgAE0AYQB1AGUAbABzAGgAYQBnAGUAbgAAAAIBXgABAAAASwAAAAAAAACB
-Kx+kvqMQGZ1uAN0BD1QCAAAAAEhlaW56IEogLiBNYXVlbHNoYWdlbgBTTVRQAG1hdWVsc2hhZ2Vu
-QHNpc3RpbmEuY29tAAACAV8AAQAAAB0AAABTTVRQOk1BVUVMU0hBR0VOQFNJU1RJTkEuQ09NAAAA
-AB8AZgABAAAACgAAAFMATQBUAFAAAAAAAB8AZwABAAAAMAAAAG0AYQB1AGUAbABzAGgAYQBnAGUA
-bgBAAHMAaQBzAHQAaQBuAGEALgBjAG8AbQAAAB8AaAABAAAACgAAAFMATQBUAFAAAAAAAB8AaQAB
-AAAAMAAAAG0AYQB1AGUAbABzAGgAYQBnAGUAbgBAAHMAaQBzAHQAaQBuAGEALgBjAG8AbQAAAB8A
-cAABAAAAQgAAAFsAbABpAG4AdQB4AC0AbAB2AG0AXQAgAFMAbgBhAHAAcwBoAG8AdAAgAFAAcgBv
-AGIAbABlAG0AIABKAEYAUwAAAAAAAgFxAAEAAAAbAAAAAcM3DZ4W928XyJDLT4+n67L/UtKAqgAE
-qBHPAB8AdAABAAAALAAAAGwAaQBuAHUAeAAtAGwAdgBtAEAAcwBpAHMAdABpAG4AYQAuAGMAbwBt
-AAAAHwAaDAEAAAAaAAAARABhAHYAaQBkACAAUwBvAHIAbgBpAGcAAAAAAB8AHQ4BAAAAQgAAAFsA
-bABpAG4AdQB4AC0AbAB2AG0AXQAgAFMAbgBhAHAAcwBoAG8AdAAgAFAAcgBvAGIAbABlAG0AIABK
-AEYAUwAAAAAAAgEJEAEAAACVEwAAkRMAAKVdAABMWkZ1KrvtOAMACgByY3BnMTI1gjIDQ2h0bWwx
-AzA/AQMB9wqAAqQD4wIAY2jBCsBzZXQwIAcTAoD/EAMAUARWCFUHshHVDlEDAd0Q1zIGAAbDEdUz
-BEYQ2W8S6xHjCO8J9zsYzw4wNTsR0gxgYwBQCwkBZDM2kxFgC6U0IBACKlwOsr0BkGcU8AqjEeMd
-6DQU8AA8IURPQ1RZUABFIEhUTUwgUABVQkxJQyAiLSAvL1czQyGARFQiRCCUMy4yIYBFTpwiPh7t
-Ho8jwTE4H/BvIKIjDyQfJpAzHYAlcEV8QUQlzQ7xJu8pbyT0NkEO8DxNRVRBB7BBMSxgPSJHCfAE
-kGF0RQWwIhLQT05UItBUEyzwBeFFeBDxbmdlPQZSdhMxL0EAkAIgIDYQLjAuNh1wOS4xJyL+Ks8l
-Azc3H/BUSShUTEUlzjQO8FJlEDogW2wLgHV4LRBsdm1dBgBuYXBoc2hvBUBQA2ACYGWgbSBKRlMk
-bjUf8P4vM08xfyZFNJE4IChPJp8FO/Q1EWA8Qk9EWaAgZGlyPTwQcjtgzzvTACEDMD5xZG8A4D5x
-+QqxXHEYsD5xEPADMD7VjxFgO4sc8TyPZzk2H/B4RElWPqkAAEDnO6k2JjREH0EySGULgHosfzup
-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
-PGFvF2AWTxdfbKRDKxDDOJAeEW50L0SdESMg/TxQchNfFG8SnyGfIq8jv/8kzyXfJu8n/ykPKh8r
-Lyw//y1PLl8vbzB/MY8ynzOvNL//Nc823zfvOP86DzsfPC89P/8+Tz9fQG9Bf0KPQ59Er0W//0bP
-R99I70n/Sw9MH00vTj//T09QX1FvUn9Tj1SfVa9Wv/9Xz1jfWe9a/1wPFa8d/2wOVkGi8I/AbrLA
-brngbv5nYI9hn2yVGuAaHxsvss//Xd9e72kPah9rL2w/bU9uX/9vb3B/cY9yn3OvdL91z3bf/3fv
-eP96D3sffC99P35Pf1//gG+Bf4KPg5+Er4W/hs+H3/+I74n/iw+MH40vjj+PT5Bf/5Fvkn+Tj5Sf
-la+Wv5fPmN//me+a/5wPnR+eL58/oE+hX/+ib6N/pI+ln6avp7+oz6nf/6rvq/+tD64fry+wP7FP
-sl//s2+0f7WPtp+3r7i/uc+63/+777z/vg+/H8AvwT/CT8Nf/8RvxX/Gj8efyK/Jv8rPy9//zO/N
-/88P0B/RL9I/00/UX//Vb9Z/14/Yn9mv2r/bz9zf/93v3v/gD+Ef4i/jP+RP5V//5m/nf+iP6Z/q
-r+u/7M/t33/u7+//8Q/yH2AfZI8X7DVwNjI0MvZ/948YVU0F+nBpHSByYWNoZP0dUGZmn2evaL/z
-z/Tf/z//AE8BXwJvA38EjwWfBq8Hv/8IzwnfCu8L/w0PDh8PLxA//xFPEl8TbxR/FY8WnxevGL//
-Gc8a3xvvHP8eDx8fIC8hP/8iTyNfJG8lfyaPJ58orym//yrPK98s7y3/Lw8wHzEvMj//M080XzVv
-Nn83jzifOa86v/87zzzfPe8+/0APQR9CL0M//0RPRV9Gb0d/SI9Jn0qvS7//TM9N307vT/9RD1If
-Uy9UP/9VT1ZfV29Yf1mPWp9br1y//13PXt9f72D/Yg9jH2QvZT//Zk9nX2hvaX9qj2ufbK9tv/9u
-z2/fcO9x/3MPdB91L3Y//3dPeF95b3p/e498n32vfr//f8+A34Hvgv+ED4Ufhi+HPw+IT/YP+f/7
-DEdlcm14YW55/M/93/7s++B1MGVsc2iQUPwgQFMIaXN0/tBhLmNv/m2Jz4rfiQ+Ub5V/lo+Xn/+Y
-r5m/ms+b35zvnf+fD6Af/6Evoj+jT6RfpW+mf6ePqJ//qa+qv6vPrN+t767/sA+xH/+yL7M/tE+1
-X7Zvt3+4j7mf/7qvu7+8z73fvu+//8EPwh//wy/EP8VPxl/Hb8h/yY/Kn//Lr8y/zc/O38/v0P/S
-D9Mf/9Qv1T/WT9df2G/Zf9qPjE+DjV/7Gys0OSAy+RAPkJDe79//+KQxNDEy/DAwj6+Qv/7v3C/d
-P+dP/+hf6W/qf+uP7J/tr+6/78//8N/x7/L/9A/1H/Yv9z/4T//5X/pv+3/8j/2f/q//vwDP/wHf
-Au8D/wUPBh8HLwg/CU//Cl8Lbwx/DY8Onw+vEL8Rz/8S3xPvFP8WDxcfGC8ZPxpP/xtfHG8dfx6P
-H58gryG/Is//I98k7yX/Jw8oHykvKj8rT/8sXy1vLn8vjzCfMa8yvzPP/zTfNe82/zgPOR86Lzs/
-PE//PV8+bz9/QI9Bn0KvQ79Ez/9F30bvR/9JD0ofSy9MP01P/05fT29Qf1GPUp9Tr1S/Vc//Vt9X
-71j/Wg9bH1wvXT9eT/9fX2BvYX9ij2OfZK9lv2bP/2ffaO9p/2sPbB9tL24/b0//cF9xb3J/c490
-n3Wvdr93z/9433nvev98D30ffi/d3+H/4+MPjtRGQViDH4QvjsXoOTI0iIA25N/l7+b8/D0ti8+M
-343vjv+PhojP34nf5v+Q35Hvkvlflq+Xvx+YipOvlL+SzJKhdXgtOGx2bYXfhu/g9W1hymmSoWec
-gXN0mZ+arzObv5zEQHOgQZKwYS54Y29toH+hj5LPgGs8BkGeFIMAaHJlZj2CIoGwdHA6Ly+gMrRz
-LqQZL5+yn7BuqiPZptBmb6ohnLUipgmk4KBmaWVsZKTiZq4AA6bQoFB7SFlQRVLgTElOSyCpv6rP
-q9+ZrOB9fa2xrgByc53AgFxjZjFcdWymoP+nN6+fsK+xv4GngZenoLff56eeiGClwC9BpgCkz6Xf
-c6bsqXBhZJ0vnj/g9XQAaGUgTFZNIEgAT1ctVE8gYXQXp7+oz7S0dK4AcC5vWHJnL8HxwjAvwbEt
-/8WUrP+uD68dxQ/GF7Lfs+//yY/F+LkfuO+5/7sPvB+9LwvRL9OCNdPRL0ZPTv5U1CnPr4IAv+LY
-CNUov9Or1S+/RjfSclDSzjDDcQAvQkxPQ0tRVdhPVEXXX9t/Z9Axv/8T4Q+/czU43hJPRFkv0s3S
-cOKP5RE30oFIVBRNTNQgfedAAAAAHwA1EAEAAABuAAAAPAAyAEUANwBGADkAQwA5ADIANABGADYA
-QQA2ADUANAA2AEEARgA3ADcANwBCAEQAMAA3ADIAMAA3ADEARQBDADYAMAA5ADEAMgA0ADQAQABt
-AGEAcgBzAC4AbABiAG0AYwAuAG4AZQB0AD4AAAAAAB8ARxABAAAAHgAAAG0AZQBzAHMAYQBnAGUA
-LwByAGYAYwA4ADIAMgAAAAAACwDyEAEAAAAfAPMQAQAAAFYAAABSAEUAJQAzAEEAIABbAGwAaQBu
-AHUAeAAtAGwAdgBtAF0AIABTAG4AYQBwAHMAaABvAHQAIABQAHIAbwBiAGwAZQBtACAASgBGAFMA
-LgBFAE0ATAAAAAAACwD2EAAAAABAAAcwo4NbPiA3wwFAAAgw1YPQMSE3wwEDAN4/6f0AAAMA8T8J
-BAAAHwD4PwEAAAAaAAAARABhAHYAaQBkACAAUwBvAHIAbgBpAGcAAAAAAAIB+T8BAAAASgAAAAAA
-AADcp0DIwEIQGrS5CAArL+GCAQAAAAAAAAAvTz1MQk1DL09VPUJSRU5UV09PRC9DTj1SRUNJUElF
-TlRTL0NOPURTT1JOSUcAAAAfAPo/AQAAACoAAABTAHkAcwB0AGUAbQAgAEEAZABtAGkAbgBpAHMA
-dAByAGEAdABvAHIAAAAAAAIB+z8BAAAAHgAAAAAAAADcp0DIwEIQGrS5CAArL+GCAQAAAAAAAAAu
-AAAAAwD9P+QEAAADABlAAAAAAAMAGkAAAAAAAwAdQAAAAAADAB5AAAAAAB8AMEABAAAAEAAAAEQA
-UwBPAFIATgBJAEcAAAAfADFAAQAAABAAAABEAFMATwBSAE4ASQBHAAAAHwAyQAEAAAAwAAAAbQBh
-AHUAZQBsAHMAaABhAGcAZQBuAEAAcwBpAHMAdABpAG4AYQAuAGMAbwBtAAAAHwAzQAEAAAAwAAAA
-bQBhAHUAZQBsAHMAaABhAGcAZQBuAEAAcwBpAHMAdABpAG4AYQAuAGMAbwBtAAAAHwA4QAEAAAAQ
-AAAARABTAE8AUgBOAEkARwAAAB8AOUABAAAABAAAAC4AAAALACkAAAAAAAsAIwAAAAAAAwAGEFOy
-pTwDAAcQLgcAAAMAEBAAAAAAAwAREAAAAAAeAAgQAQAAAGUAAABIRUlOWixTT1RPTUFLRUFTTkFQ
-U0hPVE9GVEhFMTRUTFZXSElDSENVUlJFTlRMWUhBU0E0MDBHT0ZTUEFDRUJFSU5HVVNFREJZREFU
-QUlORUVEVE9SVU5USEVMVkNSRUFURUNPAAAAAAIBfwABAAAANwAAADwyRTdGOUM5MjRGNkE2NTQ2
-QUY3NzdCRDA3MjA3MUVDNjA5MTI0NEBtYXJzLmxibWMubmV0PgAAx/I=
+You can use lvdisplay on the snapshot to retrieve how much space is in use
+and if it becomes full, you can lvextend it.
 
-------_=_NextPart_001_01C33721.31CBBF21--
+Regards,
+Heinz    -- The LVM Guy --
+
+
+>  
+> Thanks,
+>  
+> David
+>  
+> 
+> 	-----Original Message----- 
+> 	From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com] 
+> 	Sent: Fri 6/20/2003 4:09 AM 
+> 	To: linux-lvm@sistina.com 
+> 	Cc: 
+> 	Subject: Re: [linux-lvm] Snapshot Problem JFS
+> 	
+> 	
+> 
+> 	On Thu, Jun 19, 2003 at 09:07:30PM -0500, David Sornig wrote:
+> 	> I am running RedHat 9.0
+> 	> Kernel 2.4.20-8
+> 	> LVM Version 1.0.5+(22/07/2002)
+> 	> 
+> 	> I have a 1.4T LogVol with 400G of space being used on a JFS file system.
+> 	> 
+> 	> The LVM is working excellent.  However,  I cannot create a snapshot.  I run the following lvcreate command as per the man page and get the following error:
+> 	> 
+> 	> lvcreate --error "Cannot allocate memory"  creating VGDA for "/dev/Volume00/snap01" in kernel
+> 	> 
+> 	
+> 	David,
+> 	
+> 	memory allocated to the snapshot needs free physical RAM.
+> 	
+> 	With 400GB and default snapshot extent size we're talking about ~1GB
+> 	(using virtual memory for snapshot exception tables so that the table doesn't
+> 	need to be in RAM completely any longer is a work item for LVM2).
+> 	
+> 	Do you really expect that much change to your 1.4TB LV during the lifetime of
+> 	the snapshot ?
+> 	If you use it for a backup, you might get along with a couple of GB allocated
+> 	to the snapshot reducing exception table size drastically.
+> 	
+> 	
+> 	> Not sure why this is happening.  I have read the list and maybe I just don't understand the problem.  These servers have 4 Gigs of RAM.
+> 	> 
+> 	> Regards,
+> 	> 
+> 	> David
+> 	
+> 	--
+> 	
+> 	Regards,
+> 	Heinz    -- The LVM Guy --
+> 	_______________________________________________
+> 	linux-lvm mailing list
+> 	linux-lvm@sistina.com
+> 	http://lists.sistina.com/mailman/listinfo/linux-lvm
+> 	read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 	
+
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
