@@ -1,12 +1,9 @@
-Return-Path: <bluca@comedia.it>
-Date: Tue, 13 Mar 2001 00:28:37 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] FW: Problem with vgscan/ vgcfgrestore
-Message-ID: <20010313002837.E26873@colombina.comedia.it>
-References: <GIEGKMCLIJBKBNBCCHEAAEIKCAAA.heimdall@mail.org> <Pine.LNX.4.30.0103121623580.5549-100000@sparrow.websense.net>
+Return-Path: <gene_yee@hotmail.com>
+From: "hail narcissus" <gene_yee@hotmail.com>
+Subject: Re: [linux-lvm] e2fsck error
+Date: Mon, 12 Mar 2001 15:33:48 -0800
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.30.0103121623580.5549-100000@sparrow.websense.net>; from wstearns@pobox.com on Mon, Mar 12, 2001 at 04:31:33PM -0500
+Message-ID: <F25nPz8nCb6fazW7NlK000071e2@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,31 +15,72 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Mar 12, 2001 at 04:31:33PM -0500, William Stearns wrote:
-> Good afternoon, Daniel,
-> 
-> On Mon, 12 Mar 2001, Daniel Whicker wrote:
-> 
->   [NON-Text Body part not included]
-> 
-> 	I do understand that lists like this one occasionally need to be
-> used to send debugging information.
-> 	That said, you should really consider whether sending even one
-> copy - let alone two - of a 700K file is truly necessary, or whether there
-> are better alternatives, such as:
+Running resize2fs was successful.  Got another 140GB added to my LV now.
 
-besides,
-how the hell do you parse an 'application/x-pkcs7-mime' message
+I'm running e2fsck -fvp now to see if there are any more errors, but it 
+doesn't get the errors right off the bat like it use to so it might have 
+fixed itself during the resize.
 
-L.
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+>From: Andreas Dilger <adilger@turbolinux.com>
+>Reply-To: linux-lvm@sistina.com
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] e2fsck error
+>Date: Mon, 12 Mar 2001 15:29:18 -0700 (MST)
+>
+>You write:
+> > I am trying to resize my ext2 fs but I get an error from ext2resize:
+> >
+> > ext2resize: ext2_open: filesystem has errors! e2fsck first!
+> > ext2resize: can't open /dev/junior/site
+> >
+> > At this point I do did a 'umount /dev/junior/site'
+> > Then I do a 'e2fsck -fyv /dev/junior/site &'
+>
+>You should probably run "e2fsck -fpv /dev/junior/site", because there
+>are a few anwers which should be "n" and not "y".  The "-p" option
+>will pick the right one (-y always answers "y").  It may not make a
+>difference in this case.  Also, don't run it in the background, in
+>case it wants to ask some questions.
+>
+> > It returns this:
+> >
+> > Pass 1: Checking inodes, blocks, and sizes
+> > Group 3125's block bitmap at 102400000 conflicts with some other fs 
+>block.
+> > Relocate? yes
+> >
+> > Group 3125's inode bitmap at 102400001 conflicts with some other fs 
+>block.
+> > Relocate? yes
+>
+>Strangely, the bitmaps are in the same location as a superblock and group
+>descriptor backup (group 3125 = 5^5 is a "sparse" group).
+>
+> > It finds other errors which I believe it fixes but not the above error.  
+>If
+> > I re-run e2fsck then it comes up with the above error again.
+>
+>Strange.  e2fsck _should_ be able to fix this, but maybe it has never
+>been tested before.  How did you get into this situation in the first 
+>place?
+>Your previous posting indicated that you weren't running e2fsck on your
+>filesystem with errors?  What version of ext2resize are you using?  Did
+>you ever "force" a resize?  In any case, probably a good time to make a
+>backup.
+>
+>Cheers, Andreas
+>--
+>Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+>http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+_________________________________________________________________
+Get your FREE download of MSN Explorer at http://explorer.msn.com
