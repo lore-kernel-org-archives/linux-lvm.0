@@ -1,12 +1,8 @@
-From: Adam McDaniel <adamm@array.org>
-Subject: Re: [linux-lvm] vg_read_with_pv_and_lv error
-Message-ID: <20020822174612.GA8692@grimlock>
-References: <XFMail.20020821200341.cfreeze@alumni.clemson.edu>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
-Content-Disposition: inline
-In-Reply-To: <XFMail.20020821200341.cfreeze@alumni.clemson.edu>
+Message-ID: <EA753F4887A6ED449866D7F307ABBFDB4DB8DE@mailserver.e-r-solutions.com>
+From: ERG@e-r-solutions.com
+Subject: RE: [linux-lvm] Error - "device-mapper: request is larger than bl
+	ock size b_size"
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,51 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 22 12:46:01 2002
+Date: Thu Aug 22 14:29:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---y0ulUmNC+osPPQO6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Pardon me if the following is a dumb question:
 
-On Wed, Aug 21, 2002 at 08:03:41PM -0500, Chris Freeze wrote:
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- only found 33727 of 33556 LEs for LV /dev/diskvg/share (0)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get =
-data
-> of volume group "diskvg" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume =
-group
+Do you mean filesystem block size, LV/device block size, or device-mapper
+block size?  How do I check my filesystem block size?  How about LV/device
+block size?
 
-=2E..
+Thanks,
 
-> Is there any hope of restoring the data?
+Manuel Gomez
 
-This is the exact same problem I had last week. So far I've been
-trying to hack in a solution by modifying the PV-UUID (which was
-lost).. with minimal success.
 
-Let me know if you find a way to fix this, vice-versa :)
 
---=20
-Adam McDaniel
-Array Networks
-Calgary, AB, Canada
+-----Original Message-----
+From: Joe Thornber [mailto:joe@fib011235813.fsnet.co.uk] 
+Sent: Wednesday, August 21, 2002 12:51 AM
 
---y0ulUmNC+osPPQO6
-Content-Type: application/pgp-signature
-Content-Disposition: inline
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+On Tue, Aug 20, 2002 at 05:57:08PM -0700, ERG@e-r-solutions.com wrote:
+> If not, does anyone have an example 'mkfs.xfs -l version=2,su=X' command
+> that would give me a filesystem with the appropriate alignment?  
 
-iD8DBQE9ZSNkIHy9fg7fMMMRApeSAJ90eqwKdAudPqUg5sjI/gut8/LaJACfa7sO
-YNJh9IRo3Ufqg72ILDGN2HQ=
-=AFRy
------END PGP SIGNATURE-----
+To me it looks like you should set su to your block size, so if your
+block size is 4k set su=8.  I don't use xfs myself, so you may want to
+wait for confirmation before trying this.
 
---y0ulUmNC+osPPQO6--
+- Joe
