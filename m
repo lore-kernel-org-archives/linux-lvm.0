@@ -1,9 +1,9 @@
-Message-ID: <004c01c221c2$e6681cb0$8606a8c0@julio>
-From: "Julio Faerman" <julio@centershopping.com.br>
+Message-ID: <006101c221c3$2266d8a0$8606a8c0@julio>
+From: "Julio" <julio@centershop.com.br>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_NextPartTM-000-817cd363-a92f-4cfe-bda4-fd26d2877eae"
-Subject: [linux-lvm] Logical volume is smaller than physical drive.
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_005E_01C221A9.FBDED6B0"
+Subject: [linux-lvm] Fw: Logical volume is smaller than physical drive.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,17 +14,13 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul  2 07:13:02 2002
+Date: Tue Jul  2 07:15:02 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPartTM-000-817cd363-a92f-4cfe-bda4-fd26d2877eae
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0049_01C221A9.C021DEB0"
-
-------=_NextPart_000_0049_01C221A9.C021DEB0
+------=_NextPart_000_005E_01C221A9.FBDED6B0
 Content-Type: text/plain;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -40,7 +36,7 @@ Have any of you been thru something similer ?
 Thanx !
 
 Julio Faerman
-------=_NextPart_000_0049_01C221A9.C021DEB0
+------=_NextPart_000_005E_01C221A9.FBDED6B0
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -76,7 +72,4 @@ similer=20
 <DIV><FONT face=3DArial size=3D2>Julio =
 Faerman</FONT></DIV></BODY></HTML>
 
-------=_NextPart_000_0049_01C221A9.C021DEB0--
-
-
-------=_NextPartTM-000-817cd363-a92f-4cfe-bda4-fd26d2877eae--
+------=_NextPart_000_005E_01C221A9.FBDED6B0--
