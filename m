@@ -1,17 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5UIxD023048
-	for <linux-lvm@redhat.com>; Wed, 30 Jun 2004 14:59:13 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i5UIx7Xn023919
-	for <linux-lvm@redhat.com>; Wed, 30 Jun 2004 14:59:08 -0400
-Date: Wed, 30 Jun 2004 20:59:06 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Resize VG
-Message-ID: <20040630185905.GC1099@percy.comedia.it>
-References: <000501c45eb2$a4e75470$cf42e3c1@pitagora.it>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <000501c45eb2$a4e75470$cf42e3c1@pitagora.it>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5ULIj005689
+	for <linux-lvm@redhat.com>; Wed, 30 Jun 2004 17:18:45 -0400
+Received: from web11801.mail.yahoo.com (web11801.mail.yahoo.com
+	[216.136.172.155])
+	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i5ULIcXn021559
+	for <linux-lvm@redhat.com>; Wed, 30 Jun 2004 17:18:38 -0400
+Message-ID: <20040630211837.96747.qmail@web11801.mail.yahoo.com>
+Date: Wed, 30 Jun 2004 14:18:37 -0700 (PDT)
+From: <bowmailtmp-lvm@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Snapshot LE to PE Mapping
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,33 +20,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Wed, Jun 30, 2004 at 04:57:58PM +0200, Mimmus wrote:
->Does LVM support extending LUN size?
-LVM1 does not support extending lun size.
+I am using LVM to debug a custom ASIC virtualization
+chip  for my company.  I have found it quite useful.
 
->I extended size of an existing LUN from my disk-array manager but vgdisplay
->shows me always the original size (with no free physical extents). No change
->if I reboot, I need to destroy and re-create volume group.
+One queston though, I have written scripts to convert 
+lvdisplay -vv table output into our own mapping
+structures, but found this to be of limited use for
+snapshots.
 
-did you partition the lun or are you using a whole device?
-in the former case you can add a second partition, in the latter your
-only chance is to reduce the lun again and assign the space as a new
-lun, iirc you should be able to allocate more than one lun from the same disk group. i
-am not that sure about reducing.
-Watch out for the maximum number of sd devices in the kernel which is probably limited to 
-40 (CONFIG_SD_EXTRA_DEVS)
+Is there a way to find out where the changed snapshot
+data actually resides physically?
+if you do lvdisplay for a snapshot volume, it only
+gives you the LE->PE maps for the *original* LV.  it
+does not show you what extents the *changed* data got
+moved to, so i don't know how to track it down and
+verify it.  is there another way to do this or is it a
+possible enhancement to lvdisplay for snapshot
+volumes?
 
-L.
-
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Thanks,
+Dave
