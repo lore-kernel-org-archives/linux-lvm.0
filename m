@@ -1,7 +1,9 @@
-Subject: Re: [linux-lvm] LVM on Raid 5 Performance?
-Message-ID: <OFE2CD45B2.0EA112E9-ONC1256D27.002FA1CF-C1256D27.0030AED4@nl.ibm.com>
-From: "Rick van der Linde" <h.r.vanderlinde@nl.ibm.com>
+content-class: urn:content-classes:message
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <BC28A9E979C56C44BCBC2DED313A4470017E823E@bond.ncl.ac.uk>
+From: "C R Ritson" <C.R.Ritson@newcastle.ac.uk>
+Subject: [linux-lvm] RE: stock kernel 2.4.20 + LVM 1.0.7 + ext3fs => snapshot problem?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,65 +14,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 15 03:49:02 2003
+Date: Thu May 15 07:27:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+The solution appears to be to apply the patches in the other order. To
+create a kernel capable of making a snapshot of an active ext3 or
+reiserfs volume, the drill appears to be to apply the VFS-lock patch for
+the appropriate kernel version to the un-patched kernel tree, and only
+THEN to apply the generated LVM patch.
 
-Hi All!
+This makes me wonder if it would be possible to add this to the
+configure script, so that I could say
 
->I'm using LVM for a long time, usually on non RAID
->systems to simplify storage space modifications ...
->
->recently I configured a nice system (Dual Athlon,
->with 4 18.2G U160 SCSI IBM (DDYS-T18350N) disks
->on an Adaptec 29160N Ultra160. Because I had some
->troubles with the Adaptec/SCSI cabeling I reduced
->the bus speed to 40Mhz, which gives 80MB/s transfer
->(theoretically) via SCSI, each disc seems to do
->about 15MB/s (which seems a little low). I decided
->to arrange the 4 discs in a RAID 5 array to gain
->some speedup and redundancy (which resulted in
->about 33MB/s burst, 25% below the, again theoretical
->limit of 45MB/s). Ontop of the RAID 5 array I
->configured LVM 1.0.7 to create several partitions
->for further use ...
->
->Now what happened was, that the performance (read)
->dropped to about 18MB/s burst, which wasn't what
->I expected at all ...
->
->Has anybody any explanations why the LVM layer eats
->up about 45% of the available throughput?
->(in this configuration?)
+	configure --with-VFS-lock
 
-<SNIP results>
+I envisage makeing --with-ext3 and --with-reiserfs aliases for the
+above. Just an idea.
 
-I can't yet tell you why, I see same kind of results with RAID 5 on 4 IDE
-disks on
-seperate channels (as master). In my case I use an ATA133 and onboard ATA33
-controller. In my case the RAID5 set performs about 50 MB/s and the LVM
-about
-18 MB/s. I suspect my ATA controller as bottelneck because my disks which
-can do
-40 MB/s om the ATA133 controller suddenly operate at 18 MB/s on the ATA33.
-That made me decide to buy another ATA100/133 controller.
+> -----Original Message-----
+> From: C R Ritson=20
+> Sent: 09 May 2003 16:51
+> To: 'linux-lvm@sistina.com'
+> Subject: stock kernel 2.4.20 + LVM 1.0.7 + ext3fs =3D> snapshot =
+problem?
+>=20
+> ... cannot make a snapshot of a mounted=20
+> ext3 filesystem. When I attempt to mount the snapshot=20
+> (readonly) I get:-
+>=20
+> 	mount: wrong fs type, bad option, bad superblock on=20
+> /dev/vga/addon.backup,
+>       or too many mounted file systems
+>=20
+> ... applying this patch=20
+> separately after the generated LVM patch breaks the kernel,=20
+> leaving me with unresolved reverences to fsync_dev_lockfs and=20
+> unlockfs.
 
-As I searched internet on this issue I saw some discussion about ext3 in
-combo with
-md-raid and lvm. What filesystem did you use on your lvm volume on top of
-RAID5?
+Chris Ritson (Computing Officer)
 
-What's fun too is when I use ext3 on RAID5 I see a performance of about 48
-MB/s.
-When I use reiserfs it reduces too abou 44 MB/s. ext2 shows almost the same
-results
-as ext3. Till now I same same results for ext2, ext3 and reiserfs in my
-case, however
-I still suspect my ATA33 channel to be the bottleneck in my case. When I
-have another
-ATA100/133 controller I'll post new results.
-
-Rick
+Rm 618, Claremont Bridge,       EMAIL: C.R.Ritson@newcastle.ac.uk
+School of Computing Science,    PHONE: +44 191 222 8175
+University of Newcastle,        FAX  : +44 191 222 8232
+Newcastle on Tyne, UK NE1 7RU.  http://www.cs.ncl.ac.uk/~c.r.ritson/
