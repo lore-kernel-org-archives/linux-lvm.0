@@ -1,6 +1,6 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] PV-Move fails, now at 127 Pe's...
-Message-Id: <20020306121137.A22422@sistina.com>
+Message-Id: <20020306123534.A22533@sistina.com>
 References: <20020306105407.A21935@sistina.com>
     <Pine.LNX.4.33.0203061156070.5102-100000@blok14b.gimmie.tudelft.nl>
 MIME-Version: 1.0
@@ -16,13 +16,15 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 05:13:02 2002
+Date: Wed Mar  6 05:37:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Please see my email with explanation I send to yu directly.
+Denie,
+
+got service unavailable for denie@blok14b.gimmie.tudelft.nl :-(
 
 Regards,
 Heinz    -- The LVM Guy --
