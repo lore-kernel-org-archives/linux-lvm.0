@@ -1,12 +1,13 @@
-Return-Path: <thornber@btconnect.com>
-Date: Thu, 26 Jul 2001 23:24:53 +0100
+Return-Path: <tack@linux.com>
 Subject: Re: [linux-lvm] Nasty bug in lvm and/or md and/or reiserfs
-Message-ID: <20010726232453.A1209@btconnect.com>
-References: <20010726131928.D1779@linux.com>
+From: Jason Tackaberry <tack@linux.com>
+In-Reply-To: <20010726232453.A1209@btconnect.com>
+References: <20010726131928.D1779@linux.com> 
+	<20010726232453.A1209@btconnect.com>
+Content-Transfer-Encoding: 7bit
+Date: 26 Jul 2001 17:44:35 -0400
+Message-Id: <996183877.5581.3.camel@andromeda>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010726131928.D1779@linux.com>; from tack@linux.com on Thu, Jul 26, 2001 at 01:19:28PM -0400
-From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,24 +20,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jul 26, 2001 at 01:19:28PM -0400, Jason Tackaberry wrote:
-> I have discovered one or more severe bugs in any or all of lvm, md, and
-> reiserfs.  I'm not a kernel guy and I don't claim to know how these
-> things are supposed to interact at that level, so I'm not going to point
-> fingers.  Instead, here's what happened and I'll let you decide. :)
-> 
-> The problem surfaces when you create a volume group with lvm and include
-> a partition that happens to be mounted.
+> This was a stupid thing to do; and yes we should probably check to see
 
-This was a stupid thing to do; and yes we should probably check to see
-if anyone else has the pv open when we do a pvcreate.  I will look into
-it to see how much code needs to be changed.
+Indeed.  I didn't realize the partition was still mounted (I had left
+the system and come back to it some time later).  Of course it should
+fail, but not that bad. :)
 
-pvcreate would have stamped it's own metadata over md's metadata, so
-I'm not surprised md had trouble.  This is not a bug in md or
-reiserfs, just user error that LVM should have caught.
+> pvcreate would have stamped it's own metadata over md's metadata, so
+> I'm not surprised md had trouble.  This is not a bug in md or
+> reiserfs, just user error that LVM should have caught.
 
-- Joe
+With respect to the problem I had with /etc/mtab: the root partition is
+not handled by LVM at all.  It is strictly a md device.  I assume
+/etc/mtab got hosed when umount segfaulted (because of the ReiserFS
+bug).  But the root partition (and /etc on the root partition) is
+md/raid1 with ext2.  This seems to me to be a real md bug.  What do you
+think?
+
+Thanks,
+Jason.
