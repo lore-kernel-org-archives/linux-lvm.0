@@ -1,9 +1,9 @@
-From: "Mr Jimmy Dialo" <jimmydialo_10@email.com>
+Message-ID: <013101c293a8$fd403eb0$4700a8c0@bibixp>
+From: =?iso-8859-1?Q?S=E9bastien_GALLET?= <sgallet@ibourgogne.net>
+References: <20021122200742.GE8618@rdlg.net>
+Subject: Re: [linux-lvm] problem with vgcreate
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E18FnqM-0003d1-00@hermes.sistina.com>
-Subject: [linux-lvm] Assistance Required,
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,26 +14,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov 23 21:55:02 2002
+Date: Sun Nov 24 05:03:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-FROM=3AMR JIMMY DIALO=2E
+----- Original Message ----- 
+From: "Robert L. Harris" <Robert.L.Harris@rdlg.net>
+To: <Linux-LVM@Sistina.com>
+Cc: <robert@rdlg.net>
+Sent: Friday, November 22, 2002 9:07 PM
+Subject: [linux-lvm] problem with vgcreate
 
 
+> 
+> 
+> I'm trying to create a LVM for a system.  I partitioned my drives,
+> rebooted and do my pvcreates but then it blows up on vgcreate.  The
+> drives are both 18Gig, I've duplicated the partitions so they're
+> identicle size even though they're going to be concats, not stripes.
+> 
+> Here's a screen dump just made a bit readable.
+> 
+> root@performance:/root# pvcreate /dev/sda2
+> pvcreate -- physical volume "/dev/sda2" successfully created
+> 
+> root@performance:/root# pvcreate /dev/sdb2
+> pvcreate -- physical volume "/dev/sda2" successfully created
+Sure of that ???                               ^^^^
 
-INVESTMENT VENTURE=2E
-
-
-I WISH TO BEGIN BY WAY OF INTRODUCING MYSELF=2E I AM MR JIMMY DIALO=2ETHE FIRST SON OF LATE TATA DIALO=2C ONE OF THE FORMOST BLACK FARMERS IN ZIMBABWE RESENTLY MURDERED IN THE LAND DISPUTE IN MY COUNTRY=2E
-BEFORE THE DEATH OF MY FATHER=2C HE HAD TAKEN ME TO JOHANNESBURG-SOUTH AFRICA=2CTO DEPOSITE THE SUM OF US$8=2E5MILLION =28EIGHT MILLION FIVE HUNDREDTHOUSAND DOLLARS=29 IN ONE OF THE PRIVATE SECURITY COMPANIES=2C AS FARMILY VALUABLES=2C WHEN HE REALISED THE LOOMING DANGER IN ZIMBABWE=2E
-THIS AMOUNT WAS MEANT FOR THE PURCHASE OF NEW MACHINERIES AND CHEMICALS FOR THE FARMS AND ALSO FOR THE ESTABLISHMENT OF NEW FARMS IN SWAZILAND=2E
-THIS LAND DISPUTE STARTED WHEN PRESIDENT ROBERT MUGABE INTRODUCED A NEW LAND REFORM WHICH WAS PARTICULARLY TARGETED AT THE THE RICH WHITE FARMERS AND A FEW BLACK FARMERS =28MY FATHER INCLUDED=29=2E THIS RESULTED IN THE GRUSOME KILLING OF RICH FARMERS =28 MAINLY WHITE=29=2E AND THE UNLAWFULL POSSESSION OF THEIR PROPERTIES BY MUGABE'S WAR VETERANS=2CUNDER THE DISGUISE OF FIGHTING FOR THE INTEREST OF THE COUNTRY=2E
-IT IS AGAINST THIS BACKGROUND THAT I FLED THE COUNTRY WITH MY FAMILY=2C TO THE NETHERLANDS WHERE WE ARE CURRENTLY SEEKING ASYLUM=2E
-I HAVE DECIDED TO SEEK FOREIGN ASSISTANCE=2C AS THE NETHERLANDS LAW PROHIBITS ASYLUM SEEKERS FROM OPERATING BANK ACCOUNTS OR INVOLVED IN FINANCIAL TRANSACTIONS OF ANY KIND=2E HENCE I SENT THIS FORMAT TO YOU=2E
-ALL I NEED IS A TRUST WORTHY PERSON IN WHOSE CUSTODY I SHALL ENTRUST THE ABOVE MENTIONED AMOUNT AND THAT CAN ALSO HELP ME WITH INVESTMENT OPPORTUNITIES IF NEED BE=2E
-THERE ARE TWO OPTIONS=2CFIRSTLY=2C YOU CAN CHOOSE TO HAVE A PERCENTAGE OF THE TOTAL AMOUNT FOR YOUR ASSISTANCE OR GO INTO PARTNERSHIP FOR THE PROPER INVESTMENT OF THE MONEY IN YOUR COUNTRY=2E WE SHALL DISCUSS IN DETAILS WHEN YOU REPLY =2E
-I AWAIT YOUR REPLY=2C WHILE I IMPLORE YOU TO MENTAIN OUTMOST CONFIDENTIALITY REQUIRED TO ENSURE A SAFE HITCH FREE TRANSACTION=2E
-
-YOURS TRULY=2C
-MR JIMMY DIALO=2E
+...
