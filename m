@@ -1,12 +1,14 @@
-Return-Path: <weissel@netcologne.de>
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Date: Mon, 18 Jun 2001 13:19:19 +0200
-Subject: Re: [linux-lvm] What is a good stripe size?
-Message-ID: <20010618131919.B31606@tiger.bigcats.invalid>
-References: <134782415.992819826651.JavaMail.root@boots>
+Return-Path: <lewis@sistina.com>
+Date: Mon, 18 Jun 2001 09:55:33 -0500
+From: AJ Lewis <lewis@sistina.com>
+Message-ID: <20010618095533.A32072@sistina.com>
+References: <Pine.LNX.4.33.0106171519240.14970-200000@moon.dice.hu>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
 Content-Disposition: inline
-In-Reply-To: <134782415.992819826651.JavaMail.root@boots>; from ticket_ak0dezql38fr43g992819821002@sneakemail.com on Sun, Jun 17, 2001 at 06:13:51PM -0500
+In-Reply-To: <Pine.LNX.4.33.0106171519240.14970-200000@moon.dice.hu>; from dice@mfa.kfki.hu on Sun, Jun 17, 2001 at 03:38:58PM +0200
+Subject: [linux-lvm] Re: another nice feature for packagers ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,112 +20,235 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Steven!
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Steven Lembark wrote 81 lines:
+On Sun, Jun 17, 2001 at 03:38:58PM +0200, Gergely Tamas wrote:
+> First of all, thanks for the ${DESTDIR} definition.
 
-> > For a single file you may gain reading speed (writing is less
-> > critical as it is buffered); however with a stripe size below
-> > file size you will need to move the heads of both (or even
-> > more) disks, increasing latency[1], effectively slowing down
-> > reads unless you have fairly large files.
+No problem, I'm still trying to decide if we should move ${DESTDIR} into th=
+e =20
+individual 'install' targets or not...  =20
 
-> Assumes that the stripe blocks are not adjacent on their
-> respective disk drives.  The smaller stripe may have no
-> penalty if the logical blocks are adjacent on the disk.
+> Another nice feature for packagers would be to split the installation of
+> liblvm.a and liblvm.so parts.
+>=20
+> This would be good because liblvm.a's destination should be e.g. /usr/lib
+> and liblvm.so's destination should be /lib (because of lvm utils).
+>=20
+> So I thought about the introduction of a new variable in make.tmpl.in (I
+> called it ``sharedlibdir''). Its default value is equal to ``libdir''.
 
-Actually, this assumes that the stripe blocks are not adjacent
--- which they are not, they are on different disks with
-independent head movements. :-)
+Hmm...I think it should be the other way around.  We've hacked up the      =
+  =20
+install targets so that the default ${sbindir} and ${libdir} are /sbin and =
+  =20
+/lib respectively.  Therefore, we should define a variable called          =
+  =20
+${staticlibdir} and have it equal to ${prefix}/lib by default perhaps?     =
+  =20
+It makes sense to put liblvm.a into /usr/lib to me; it just the way we're  =
+  =20
+doing it that I'm questioning.  I'd like to prevent installation problems  =
+  =20
+because the user didn't type 'make -e sharedlibdir=3D/lib install', which i=
+s   =20
+what would happen if we made the default libdir point to /usr/lib.  =20
 
-But even if all of the following data requires no further
-seeks you still need 2 initial seeks, instead of one.  Which
-is longer on the average.
+Just FYI, the entire build system is going to get an overhaul after the 1.0=
+  =20
+release, so I will definitely be making sure these detail are kept in mind =
+  =20
+for that.
 
-> One of the main resons for using LVM at all is to avoid
-> having to worry about any of this.
+> So if somebody installs the package with ``make install'' or ``make -e
+> DESTDIR=3D... install'' the installation procedure will be the same as the
+> current. But if the installer (script) defines a sharedlibdir value other
+> than the default ``make -e sharedlibdir=3D... DESTDIR=3D... install'' the
+> installation of the shared libraries will go into that directory.
+>=20
+> Note, that sharedlibdir needs to be specified with the DESTDIR value e.g.
+> ``make -e sharedlibdir=3D$DESTDIR/$CPID/lib DESTDIR=3D$DESTDIR/$CPID inst=
+all''
+>=20
+> If you like this feature please include ...
+>=20
+> Thanks,
+> Gergely
+>=20
+> ps: I also attached my compile/package script; maybe somebody is
+>     interested in it...
+>=20
+> diff -ur LVM-orig/make.tmpl.in LVM/make.tmpl.in
+> --- LVM-orig/make.tmpl.in	Fri Jun 15 16:16:02 2001
+> +++ LVM/make.tmpl.in	Sun Jun 17 12:45:36 2001
+> @@ -37,6 +37,7 @@
+>  exec_prefix =3D @exec_prefix@
+>  bindir =3D ${DESTDIR}/@bindir@
+>  libdir =3D ${DESTDIR}/@libdir@
+> +sharedlibdir =3D ${libdir}
+>  sbindir =3D ${DESTDIR}/@sbindir@
+>  infodir =3D ${DESTDIR}/@infodir@
+>  mandir =3D ${DESTDIR}/@mandir@
+> diff -ur LVM-orig/tools/lib/Makefile.in LVM/tools/lib/Makefile.in
+> --- LVM-orig/tools/lib/Makefile.in	Tue Apr 24 16:29:21 2001
+> +++ LVM/tools/lib/Makefile.in	Sun Jun 17 12:48:41 2001
+> @@ -44,18 +44,24 @@
+>  	@echo ""
+>=20
+>  install_this:
+> -	@echo "*** Installing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
+> -	@rm -f ${libdir}/${SO} ${libdir}/${SOV} ${libdir}/${SOM} ${libdir}/$(AR=
+CHIVE);
+> +	@echo "*** Installing $(ARCHIVE) in ${libdir} ***"
+> +	@rm -f ${libdir}/$(ARCHIVE);
+>  	@INSTALL@ -d ${libdir}
+> -	@INSTALL@ -o ${OWNER} -g ${GROUP} $(ARCHIVE) $(SOV) ${libdir}
+> +	@INSTALL@ -o ${OWNER} -g ${GROUP} $(ARCHIVE) ${libdir}
+>  	chmod 444 ${libdir}/$(ARCHIVE)
+> -	chmod 555 ${libdir}/$(SOV)
+> -	ln -s $(SOV) ${libdir}/${SO}
+> -	ln -s $(SOV) ${libdir}/${SOM}
+> +	@echo "*** Installing $(SO) in ${sharedlibdir} ***"
+> +	@rm -f ${sharedlibdir}/${SO} ${sharedlibdir}/${SOV} ${sharedlibdir}/${S=
+OM};
+> +	@INSTALL@ -d ${sharedlibdir}
+> +	@INSTALL@ -o ${OWNER} -g ${GROUP} $(SOV) ${sharedlibdir}
+> +	chmod 555 ${sharedlibdir}/$(SOV)
+> +	ln -s $(SOV) ${sharedlibdir}/${SO}
+> +	ln -s $(SOV) ${sharedlibdir}/${SOM}
+>=20
+>  remove_this:
+> -	@echo "*** Removing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
+> -	@rm -f ${libdir}/${SO} ${libdir}/${SOV} ${libdir}/${SOM} ${libdir}/$(AR=
+CHIVE);
+> +	@echo "*** Removing $(ARCHIVE) in ${libdir} ***"
+> +	@rm -f ${libdir}/$(ARCHIVE);
+> +	@echo "*** Removing $(SO) in ${sharedlibdir} ***"
+> +	@rm -f ${libdir}/${SO} ${libdir}/${SOV} ${libdir}/${SOM};
+>=20
+>  $(ALL_SOURCES):	liblvm.h $(OTHER_DEP)
+>=20
 
-LVM is about not having to worry over partition sizes and disk
-sizes other than the complete pool size.
+> #!/bin/sh
+>=20
+> # =3D=3D generated by mkskel 0.0.2r19, (c) 2001 by DiCE/PsychoMix =3D=3D
+>=20
+> DIRNAME=3D"LVM";
+> PREFIX=3D"/usr";
+> DESTDIR=3D"/tmp/pkg";
+> BINTST=3D"tools/vgchange";
+>=20
+> AUTORUN=3Dfalse;
+>=20
+> error () { echo $1; exit 1; }
+>=20
+> if [ ! -d $DIRNAME ];
+> then
+>   gzip -dc lvm-20010616.tar.gz | tar xvf -;
+>   $AUTORUN || exit;
+> fi
+>=20
+> cd $DIRNAME;
+>=20
+> if [ -f ../lvm-20010616.patch.bz2 ] && [ ! -f ../lvm-20010616.patched ];
+> then
+>   bzip2 -dc  ../lvm-20010616.patch.bz2 | patch -p1;
+>   touch ../lvm-20010616.patched;
+>   $AUTORUN || exit;
+> fi
+>=20
+> if [ ! -f config.cache ] && [ -x ./configure ];
+> then
+>   touch config.cache;
+>   ./configure --prefix=3D$PREFIX \
+>               --sbindir=3D/sbin \
+> 	      --libdir=3D$PREFIX/lib \
+> 	      --includedir=3D$PREFIX/include \
+> 	      --mandir=3D$PREFIX/man \
+> 	      --infodir=3D$PREFIX/info
+>   $AUTORUN || exit;
+> fi
+>=20
+> if [ ! -x $BINTST ];
+> then
+>   make;
+>   $AUTORUN || exit;
+> fi
+>=20
+> if [ -f ../$0.temp ];
+> then
+>   CPID=3D`cat ../$0.temp`;
+>   [ ! -d $DESTDIR/$CPID ] && error "$DESTDIR/$CPID not found.";
+> else
+>   CPID=3D$$;
+>   if [ ! -d $DESTDIR/$CPID ];
+>   then
+>     mkdir -p $DESTDIR/$CPID;
+>     echo "$CPID" > ../$0.temp
+>     make -e sharedlibdir=3D$DESTDIR/$CPID/lib \
+>             DESTDIR=3D$DESTDIR/$CPID install 2>&1 | tee ../lvm-20010616.i=
+nstall_log;
+>     CPWD=3D`pwd`;
+>     cd $DESTDIR/$CPID;
+>     for i in `find . -type f | grep "/man/" | grep -v ".gz" | grep -v ".b=
+z2"`;
+>     do
+>       MNAME=3D`basename $i`;
+>       echo "$MNAME -> $MNAME.gz";
+>       gzip $i;
+>     done
+>     cd $CPWD;
+>     $AUTORUN || exit;
+>   fi
+> fi
+>=20
+> cd ..;
+>=20
+> if  [ -d $DESTDIR/$CPID ];
+> then
+>   CPWD=3D`pwd`;
+>   cd $DESTDIR/$CPID;
+>   makepkg $CPWD/lvm-20010616.tgz;
+>   cd ..;
+>   rm -Rf $CPID;
+>   cd $CPWD;
+> fi
+>=20
+> rm -f $0.temp lvm-20010616.patched;
 
-> If raw speed is a major
-> consideration then use hardware RAID5 w/ strip size ==
-> I/O block size (e.g., 4 disks w/ 1K chunk and 4K filesystem
-> block on linux).  This avoids the "extra read" penalty and
-> gives nice, distributed reads.
 
-You get the extra read penalty even with RAID5 and small
-strip sizes, as the kernel does read-ahead, for example.
-Actually, it gets worse (approaching 2/3 seek time, I
-*guess*, on the average) with more disks.
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-And then you should definitively test if a HW raid controller
-(which *is* the easiest thing) is as fast as software raid,
-especially in degraded mode and during writes.  If you are
-having a write-heavy partition, this can turn into a
-bottleneck.  Also remember that with ext2 you get meta-data
-every 8M, so if you find one disk doing overtime, tune that
-value during the ext2 creation.
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-> > [1] Your seek time rises -- on the average -- the more heads
-> >     are in use.  With one head you get 1/3 full-seek time for
-> >     a random head and file locations.  With two heads you need
-> >     to move both heads, chances are that one of them has a
-> >     longer way than the other.
+-----Begin Obligatory Humorous Quote----------------------------------------
+Programming graphics in X is like finding sqrt(pi) using Roman numerals.
+-----End Obligatory Humorous Quote------------------------------------------
 
-> One advantage of striping is that the seek latency of one
-> drive can be used for data I/O on another drive.
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-True, but latency still increases.  And it's also true for
-larger strip sizes -- with less increase in latency for
-each file.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-> If the LVM
-> system does any sort of double-buffering then the striped
-> system can negate/reduce the seek time.
+iD8DBQE7LhZlpE6/iGtdjLERAuHrAJ4+sJyC54uSR1jbhT6us1S52YmIiQCfT6rU
+oKroWPUbqpj1G/1GIEwYoxE=
+=lJRg
+-----END PGP SIGNATURE-----
 
-Only if there is enough to be read.  
-At 17.5 MB/s and 8.9 ms average seek time, you can read just
-under 160 Kb in the time of one seek.
-
-> This also leaves out the issue of journaled file systems, which
-> may have data (or just meta-data) spread out all over the
-> place -- leaveing you with fragmented reads even in the case
-> of a small file.
-
-Meta-data is usually cached -- and it does not help if you
-need 2 seeks (or even 1.2 seeks on the average) instead of
-one for each meta-data fragment.
-
-> Net result is that depending on CPU, bus, controller and
-> disk hardware and their interactins with the file systems
-> and particular type of I/O being performned the answer
-> becomes "It Depends" :-)
-
-Well, ain't it good noone told this Donald E. Knuth before he
-did write many highly mathematical things and thoughts about
-it in 'The Art of Computer Programming'?  :-)
-
-> In 15 years the only method I've found that works consistently
-> is to try however many of the recommendations you can before
-> comitting to any one of them.
-
-True, that method usually works, if your trials are really
-realistic.
-
-> >     do not like loosing spots all over the place.  But then you
-> >     do backup religiously, test your backups and have recovery
-> >     plans in place, yes?
-
-> Ah, but it's so much more fun to fiture out how it all works at
-> 3 in the morning with 20 users breathing fire down your back!
-
-For some values of 'fun' approaching microsoftian proportions?
-Maybe.  Bungie jumping with piano wire as rope tends to be
-more enjoyable, I have been told.
-
--Wolfgang
+--rwEMma7ioTxnRzrJ--
