@@ -1,10 +1,8 @@
-Message-ID: <3FE255CF.60101@sina.com>
-From: more <more0401@sina.com>
+Message-ID: <3FE2892B.8000506@alteeve.com>
+From: Madison Kelly <linux@alteeve.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM2 not function
-References: <01139FC052A0D411900B00508B9535FC0F0D2589@ZCH07EXM04.corp.mot.com>
-In-Reply-To: <01139FC052A0D411900B00508B9535FC0F0D2589@ZCH07EXM04.corp.mot.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Ext3 -> ReiserFS on '/' convertion prob
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,47 +13,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 18 19:37:01 2003
+Date: Thu Dec 18 23:15:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Li Yang,
+Hi all,
 
-You should run "vgchange -ay" to active all the LVs.
- 
+   This is my first post to the list so forgive me please if I am making 
+any mistakes of protocol! :)
 
-Li Yang-r58472 wrote:
+   I am relatively new to LVM but I have read most of the docs that I 
+could find on the topic and I am pretty strong on RAID and general 
+storage tech. With that said, here is my problem/scenario:
 
-> Hi,
->
->  
->
-> I used LVM come with Redhat9 on my desktop computer.  Recent days I 
-> want to upgrade my kernel to 2.6.0-test11 which needs LVM2 to work 
-> with the device-mapper.  To be more up to date, I also recreated the 
-> lvs to use lvm2 metadata.  But when I rebooted the computer, new 
-> created lv can't mount.  It said it's not a valid block device.  So I 
-> check the status with "lvm lvscan", it showed that these lv turned to 
-> be inactive.  So I removed and recreated these lv.  Right after 
-> creation, these lvs were ACTIVE and mountable, but after reboot, they 
-> became inactive and unusable again.  Does anyone have clue?
->
->  
->
-> --
->
-> Leo Li
->
-> Software Engineer
->
-> Metrowerks -- a Motorola company
->
->  
->
-> Office: +8610-65642272
->
-> LeoLi@motorola.com
->
->  
->
+   I have a small test server that I am trying to use to learn how to 
+configure the '/' filesystem of a Fedora Core 1 install of linux to 
+reside on a software RAID5 array with an LVM VG on top of it and the 
+bulk of that partition on a single LV mounted as '/'. This so far is 
+just fine. Oh, fwiw, the four drives are SCSI on an Adaptec 2940x PCI 
+controller (three in use now, a forth to be used as a temp drive during 
+FS convertion and later added to the array) with another IDE drive used 
+for '/boot' and <swap>.
+
+   Now what I am trying to do immidiately is to convert the '/' 
+filesystem from 'ext3' to 'resierfs'. ReiserFS is not an install-time 
+option and the LVM FAQ says simple to boot from a rescue CD, back the 
+'/' LV data up, re-format the LV with a ReiserFS and then restore the 
+data. Sounds easy enough, eh? Anyway, I have been able to do all of this 
+and I am even pretty sure that the data is intact because when I boot 
+the Fedora Core 1 Disk 1 using 'linux rescue' it scans for the install 
+and finds it on both '/dev/sdd1' (the drive I am using temporarily to 
+backup the '/' LV data to) and on '/dev/vg0/root' (the LV that started 
+life as an ext3 filesystem during the OS install).
+
+   The problem is that when I boot into the OS proper something 
+somewhere is still telling something to do with LVM that the file system 
+is still ext3 and thus it throws a kernel panic. I have edited 
+'/etc/fstab', '/etc/mtab' and '/etc/blkid.tab' to read 'reiserfs' 
+instead of the original 'ext3'. Am I missing a file somewhere? Is there 
+a command I need to run to tell '/etc/lvmtab' or '/etc/lvmtab.d/root' 
+that the filesystem has changed? Am I missing something all together 
+different?
+
+   Anywho, as a little heads up and maybe a little request for comment; 
+once I manage to get the '/' LV on ReiserFS the next thing I want to do 
+is add a forth drive (the '/dev/sdd' drive) to the RAID5 array, extend 
+it via 'raidreconf', add the new space to the PV, pass that space up to 
+the VG and finally extend the 'root' LV and update the filesystem while 
+online (hence the desire for ReiserFS). Am I on the right track? Does 
+anyone who has done this before have any pointers?
+
+   Thanks all for listening to a n00by!!
+
+Madison
