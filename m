@@ -1,12 +1,8 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] LVM on Raid 5 Performance?
-Message-ID: <58750000.1053839527@[192.168.200.4]>
-In-Reply-To: <200305182148.27901.jason@oes.co.th>
-References: <92091C60D5E2B74CB77C1FDB84F5FA76F079@s99mail02.okdhs.org>
- <200305182148.27901.jason@oes.co.th>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
+Message-Id: <200305251135.32996.>
+Subject: [linux-lvm] vgscan -f created duplicate block devices
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,31 +13,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 24 19:11:02 2003
+Date: Sun May 25 02:56:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+Hallo,
 
--- "Jason H. Smith" <jason@oes.co.th>
+How do you fix an incorrect Block Device assignment?
 
-> I don't know if this answers your question, but maybe search the archives
-> for my posts a few months ago.  On 2.4, there's a misfeature when using
-> LVM with RAID5.  Basically, the two will cause your system not to cache
-> any data, and to sync to disk immediately, once you create a snapshot
-> volume.  Apparently, this will be addressed in 2.6.
->
-> So if you want RAID5 and LVM, consider hardware acceleration.
+When I hooked the harddrive from an old computer into my newer one (both had 
+lvm partitions), I got the message that certain IDs were duplicated.  So I 
+ran vgscan -f to assign new IDs.  However, vgscan -f duplicated the Block 
+Device on two of the logical volumes.  The outcome is that when I mount the 
+first one, I only get access to the second one. :(
 
-I'm having perfectly good luck with a DAC960 and 4 x IBM
-160MB devices. The LVM issues pretty much drop out since
-the drives are grouped into one "device" at the hardware
-level. Striping the filesystem (ext2) helps (see the stride
-option of mkfs.ext2), so does turning on write caching.
+I would show the output of lvdisplay & friends, but I can't get an internet 
+connection from that computer anymore because of this. *grin*  Basically:
 
+/dev/toro1/home, block device 58:5
+/dev/toro1/var, block device 58:6
+/dev/toro1/projekte, block device 58:7
+/dev/toro1/usr, block device 58:8
+/dev/toro1/local, block device 58:9
+/dev/toro1/fileserver, block device 58:5
 
+Either the drive I added had 5 lv's, and so vgscan didn't reassign the 6th on 
+the first drive (i.e., /dev/toro1/fileserver), or it cycled back around after 
+58:9 for some reason.
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 888 359 3508
+Can anyone tell me how to get my home back??? ;)
+
+Many thanks in advance!
+Ellis Whitehead
+ 
