@@ -1,12 +1,12 @@
-Return-Path: <silva@athenea.ort.edu.uy>
-From: Ernesto Silva <silva@athenea.ort.edu.uy>
-Subject: RE: [linux-lvm] K=2.4.3 - LVM0.9.1.B7 compiling problem.
-Date: Tue, 24 Apr 2001 15:37:45 -0300
-References: <1D15D20781EB404E9EA6129359E0243909784E@sp1email.optiglobe.com.br>
-In-Reply-To: <1D15D20781EB404E9EA6129359E0243909784E@sp1email.optiglobe.com.br>
+Return-Path: <Stefan.Helfert@mpi-hd.mpg.de>
+Message-ID: <3AE5CB8F.C3449990@mpi-hd.mpg.de>
+Date: Tue, 24 Apr 2001 20:53:03 +0200
+From: Stefan Helfert <Stefan.Helfert@mpi-hd.mpg.de>
 MIME-Version: 1.0
-Message-Id: <01042415450706.07748@pc-silva>
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] disk add means trouble: vgscan -- invalid i/o protocol 
+ version 5
+References: <3ADB3B2A.B28AC133@mpi-hd.mpg.de> <20010416142849.B16508@sistina.com> <3ADF74AA.CEED3E97@mpi-hd.mpg.de> <20010420114908.C569@tykepenguin.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,93 +18,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Sorry HugZ,
-	I just did it but I'm still getting the same garbage.....
+Patrick Caulfield wrote:
+> 
+> On Fri, Apr 20, 2001 at 01:28:42AM +0200, Stefan Helfert wrote:
+> > I am reposting this, since I believe I have run into a serious condition
+> > here:
+> >
+> > A stable, running configuration consisted of one IDE disk with one LVM
+> > VG on it, and adding another IDE disk leads to a non-working vgscan. If
+> > I go back to the one IDE disk configuration, the LVM gets discovered,
+> > and adding the second disk again leads to non-working vgscan.
+> > I cannot completely rule out any hardware issues here (since the disk
+> > with the LVM VG is apparently having lots of SMART redirects and
+> > significant access time increases), but I'd like to investigate this
+> > vgscan problem further.
+> > (Since it reduces my confidence in LVM very much, so much that I am
+> > currently killing the LVM on my terabyte raid because I do not want to
+> > see anything like that there.)
+> >
+> > So if anyone has an idea of how to investigate this, I am open to
+> > experiments. If not, I'll send the disk back to the manufacturer for
+> > replacement.
+> 
+> The first thing to do is to get your kernel and user tools in sync so that
+> you don't get th IOP message. If you have a kernel you like then node the LVM
+> version number in that kernel and build the tools for that version.
+> 
+> That should get vgscan working after some fashion. If the new disk still seems
+> to be causing the problem then please post the error here so we can have a look
+> at it.
+> 
+> patrick
 
-	Does anyone have another idea????
+My kernel and user tools are in sync (lvm_0.8) and my initial problem
+here is that I get the IOP message -- and I get this message out of the
+blue. No software changes, no kernel changes, nothing else except adding
+another disk drive, the configuration had been running stable since
+ages. I do not see anything here except the vgscan error, and the output
+of "vgscan -d" is here:
 
-	WOUUW, I let it compile, with all the warnings and it worked, I just
-run vgscan and it found something.
-	I'll let you know what happends next......
+bash-2.04# vgscan -d                                                   
+<1> lvm_get_iop_version -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_get_iop_version -- AFTER ioctl ret: 0 
+<1> lvm_get_iop_version -- LEAVING with ret: 5   
+vgscan -- invalid i/o protocol version 5
 
-Ernesto.
+??
 
-
-On Tue, 24 Apr 2001, Paulo Fessel wrote:
->=20
-> I've run into problems trying to compile 2.4.3 on Mandrake 7.2 with 2.4.3
-> (Linus) and 2.4.3-8mdk (Mandrake customized kernel). So I've copied the
-> files from lvm "kernel" directory to their proper places and everything
-> worked out smoothly. Try to do the same thing...
->=20
-> HugZ
->=20
-> Paulo Afonso Graner Fessel
-> Suporte de Sistemas
-> OptiGlobe Telecom, Ltda. - The Internet Lives Here
-> R.Bento Branco de Andrade Filho, 621
-> S=EF=BF=BDo Paulo, SP, 04757-000
-> Brasil
-> http://www.optiglobe.com.br
->=20
-> Tel.:+55 11 3365-4478
-> Fax:+55 11 3365-4445
-> Cel.:+55 11 9198-9985
-> E-mail: paulo_fessel@optiglobe.com.br
->=20
->=20
->=20
-> > -----Original Message-----
-> > From: Ernesto Silva [mailto:silva@athenea.ort.edu.uy]
-> > Sent: Tuesday, April 24, 2001 12:20 PM
-> > To: linux-lvm@sistina.com
-> > Subject: [linux-lvm] K=3D2.4.3 - LVM0.9.1.B7 compiling problem.
-> >=20
-> >=20
-> > Hi,
-> >=20
-> > 	In order to make things right I downloaded the 2.4.3 kernel and
-> > compiled it (i386).
-> >=20
-> > 	With the new kernel running (lvm-mod load ok) I'm=20
-> > trying to compile lvm
-> > tools, but there are lots of warinigs, all the same thing,=20
-> > the first of them is:
-> > -----------------------------------------------------------
-> > gcc -c -pipe -g -O2 -Wall -DDEBUG -I ../../tools/lib -I=20
-> > ../../tools - debug.o
-> > debug.c
-> > In file included from ../../tools/lib/liblvm.h:97
-> > 		from basename.c:34
-> > ../../tools/lib/lvm_log.h:47:59: warning: nothing can be=20
-> > pasted after this token
-> > ../../tools/lib/lvm_log.h:48:59: warning: nothing can be=20
-> > pasted after this token
-> > ../../tools/lib/lvm_log.h:49:59: warning: nothing can be=20
-> > pasted after this token
-> > ../../tools/lib/lvm_log.h:52:39: warning: nothing can be=20
-> > pasted after this token
-> > gasename.c:41:69: warning: pasting would not give a valid=20
-> > preprocessing token
-> > gasename.c:59:68: warning: pasting would not give a valid=20
-> > preprocessing token
-> > ----------------------------------------------------------
-> >  This messages repeats several times.
-> >=20
-> > Does anyone had a problem like this before???
-> >=20
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >=20
->=20
-
-----------------------------------------
-Content-Type: text/html; name=3D"unnamed"
-Content-Transfer-Encoding: quoted-printable
-Content-Description:=20
-----------------------------------------
+Stefan
