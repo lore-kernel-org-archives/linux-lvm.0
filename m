@@ -1,11 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 25 Apr 2001 11:54:32 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: Your message to linux-lvm awaits moderator approval
-Message-ID: <20010425115432.C4514@sistina.com>
-References: <20010420073845.6485D5056@colombina.comedia.it> <20010420095614.H12971@colombina.comedia.it> <20010424140211.D31988@sistina.com> <20010424184546.A1949@colombina.comedia.it>
-Mime-Version: 1.0
-In-Reply-To: <20010424184546.A1949@colombina.comedia.it>; from bluca@comedia.it on Tue, Apr 24, 2001 at 06:45:46PM +0200
+Return-Path: <vidalrod@informatik.tu-muenchen.de>
+Message-ID: <3AE6BA27.1FC18A3C@in.tum.de>
+Date: Wed, 25 Apr 2001 13:51:03 +0200
+From: David Vidal Rodriguez <vidalrod@informatik.tu-muenchen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
+References: <200104022100.f32L0jL13101@webber.adilger.int> <01040307345000.00915@darkvader>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,53 +18,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Apr 24, 2001 at 06:45:46PM +0200, Luca Berra wrote:
-> On Tue, Apr 24, 2001 at 02:02:11PM +0000, Heinz J. Mauelshagen wrote:
-> > On Fri, Apr 20, 2001 at 09:56:14AM +0200, Luca Berra wrote:
-> > > fanculo!
-> > 
-> > No comment ;-)
-> none was expected,
-> i hoped more comments would have been made on the actual text of the e-mail
-> ;-)
+Oh yes, this procedure has helped me too! I had the same problem and now I can
+use my VG  with no single byte being lost. But from now on I'll start making
+backups of my data... :) Thanks!
 
-Sorry, I said that, because we stated already that things like that could
-be caused by mailman even though the lists are now open.
-
-Our admin is investigating.
-
-> 
-> L.
-> 
-> -- 
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
+> > OK, I have figured out why vgcfgrestore doesn't work properly with broken
+> > UUIDs.  It is because vgcfgrestore only restores the backup VGDA data to
+> > each disk separately.  This means it is not possible to have consistent
+> > UUIDs generated for all PVs in a VG when vgcfgrestore is run.
+> >
+> > You can try the following (experimental) procedure to fix the UUIDs:
+> >
+> > Check each PV with "pvdata -PP /dev/hdX" to ensure it has a valid
+> > UUID assigned.  Also get the PV numbers (starting with 1) for each of
+> > the PVs.  Finally, check the pv_uuidlist_on_disk.base for each PV.
+> > It will normally be 6144, but it does not have to be.
+> >
+> > for each PV (in PV# order)
+> >     dd if=/dev/hdX bs=1 skip=44 count=128 >> /tmp/uuids
+> >
+> > This should create a file /tmp/uuids which has all of the PV UUIDs in it.
+> > Make sure there are as many UUIDs in the file ("od -a /tmp/uuids" is good)
+> > as you have PVs (8 in your case).
+> >
+> > Now, we want to write the UUID list back to the PVs so vgscan is happy:
+> >
+> > for each PV (in any order)
+> >     dd if=/tmp/uuids of=/dev/hdX bs=1 seek=<pv_uuidlist_on_disk.base for
+> > hdX>
+>
+> Unfortunately this doesn't work. I get on of=/dev/hda2 an invalid argument.
+> Can you write to a partition with dd ? Or has it to be a disk such as
+> /dev/hda ?
+>
+> >
+> > example:
+> >     dd if=/tmp/uuids of=/dev/hda2 bs=1 seek=6144
+> >
+> > Now vgscan should be able to detect all of the disks and work properly.
+> >
+> > Cheers, Andreas
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--
+  ------------------------------------------------------------------------
+ David Vidal R. (vidalrod@in.tum.de)
+ http://dvr.ismad.com
+ "Ein Computer ohne Windows ist wie ein Fisch ohne Fahrrad."
