@@ -1,10 +1,10 @@
-Subject: Re: [linux-lvm] LVM 2 patch
-Message-Id: <20020411102751.GA12534@fib011235813.fsnet.co.uk>
-References: <E04CF3F88ACBD5119EFE00508BBB212102418D31@exch-01.noida.hcltech.com>
+Message-Id: <3CB57209.7080304@st-peter.stw.uni-erlangen.de>
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E04CF3F88ACBD5119EFE00508BBB212102418D31@exch-01.noida.hcltech.com>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: Re: [linux-lvm] LVM 2 patch
+References: <E04CF3F88ACBD5119EFE00508BBB212102418D31@exch-01.noida.hcltech.com>
+    <20020411102751.GA12534@fib011235813.fsnet.co.uk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 11 05:27:02 2002
+Date: Thu Apr 11 06:20:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Thu, Apr 11, 2002 at 03:24:09PM +0530, Chitaranjan Behera, Noida wrote:
-> Hi, 
-> 
-> I downloaded the LVM2 beta version from Sistina site. But it's unable to
-> create path for kernel-2.4.7-10. Patches are available for 2.4.16/17. But I
-> want to build it over kernel-2.4.7-10. Can anybody help me ??
+>
+>
+>On Thu, Apr 11, 2002 at 03:24:09PM +0530, Chitaranjan Behera, Noida wrote:
+>
+>>Hi, 
+>>
+>>I downloaded the LVM2 beta version from Sistina site. But it's unable to
+>>create path for kernel-2.4.7-10. Patches are available for 2.4.16/17. But I
+>>want to build it over kernel-2.4.7-10. Can anybody help me ??
+>>
+>
+>We're only supporting recent kernels.  However you should be able to
+>to get the 2.4.17 patch working with it with minimal problems
+>(probably just some conflicts in the Makefiles).
+>
+>- Joe
+>
+just a tiny little question
 
-We're only supporting recent kernels.  However you should be able to
-to get the 2.4.17 patch working with it with minimal problems
-(probably just some conflicts in the Makefiles).
-
-- Joe
+what about the 2.5 tree
