@@ -1,12 +1,8 @@
-From: tim@connectlive.com
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.3 available at
-    www.sistina.com
-Message-Id: <20020219121453.B3786@connectlive.com>
-References: <20020219205054.A3751@sistina.com>
+From: markus <pr1v8@t4.sk>
+Message-Id: <20020219214522.A8326@star.orbisartis.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020219205054.A3751@sistina.com>; from
-    mauelshagen@sistina.com on Tue, Feb 19, 2002 at 08:50:54PM +0100
+Subject: [linux-lvm] lvm and crypto: is there a way to resize it ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,70 +13,79 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 19 14:15:02 2002
+Date: Tue Feb 19 14:45:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Awesome!  The new vgchange behavior is precisely what I needed to save
-my ass from the apocalyptic corruption problems between bad-VM and
-snapshots.. very happy to see this in release.
+hi all 
 
+i have tried to mount logical volume due aes cipher enabled loop device
+... 
+	patch writen by Jari Ruusu <jari.ruusu@pp.inet.fi>
+	package can be found at: http://loop-aes.sourceforge.net/
+..
+i have tried to add physical volume to my volumegroup and migrate the
+encrypted data from one physical volume to another.
+everything worked well  ... i had no data corruption or lose.
 
-Quoth Heinz J . Mauelshagen:
-> 
-> *** ANNOUNCEMENT *** LVM 1.0.3 available at www.sistina.com
-> 
-> Hi all,
-> 
-> LVM 1.0.3 supports both version 1 and 2 of the metadata.
-> 
-> There's *no* need to run any metadata update tools.
-> 
-> A tarball is available now at
-> 
->    <http://www.sistina.com/>
-> 
-> for download (Follow the "LVM 1.0" link).
-> 
-> 
-> Changes to LVM 1.0.2 include:
-> 
-> o vgcfgrestore supports restores to different sized physical volumes;
->   useful in cases where a replacement disk is a little bit to large or
->   for test purposes; option enhancements; physical volume UUID restore fix
-> 
-> o vgchange removes failed snapshots and activates the volume group rather
->   than failing on it. Optionally forces device number changes in cases
->   where it finds clashes so that the volume group can be activated
-> 
-> o vgexport exports volume groups not showing up in /etc/lvmtab*
-> 
-> o vgscan can drop all snapshots or those in a particular volume group now
-> 
-> o "pvmove -i" ignores read errors while moving and supports moves in
->   inactive volume groups
-> 
-> o > 1 TB fixes for physical and logical volumes (2 TB limitation
->   on 2.4 persists)
-> 
-> o more...
-> 
-> 
-> See the CHANGELOG file contained in the tarball for further information.
-> 
-> Feed back LVM related information to <linux-lvm@sistina.com>.
-> 
-> Thanks a lot for your support of LVM.
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+i have tried to add a physical volume and extend the logical volume too
+but i did encounter a problem when i wanted to resize the reiserfs i use
 
--- 
-     Don't hate me because I'm beautiful.
-     Hate me because I run your IT department.
+base:~# pvcreate /dev/ide/host2/bus0/target0/lun0/part1
+pvcreate -- physical volume "/dev/ide/host2/bus0/target0/lun0/part1"
+successfully created
+
+base:~# vgextend t4 /dev/ide/host2/bus0/target0/lun0/part1
+vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgextend -- doing automatic backup of volume group "t4"
+vgextend -- volume group "t4" successfully extended
+
+base:~# lvextend -L+27.95G /dev/t4/mothafuck
+lvextend -- rounding size to physical extent boundary
+lvextend -- extending logical volume "/dev/t4/mothafuck" to 31.84 GB
+lvextend -- doing automatic backup of volume group "t4"
+lvextend -- logical volume "/dev/t4/mothafuck" successfully extended
+
+base:~# resize_reiserfs -f /dev/t4/mothafuck
+
+<-------------resize_reiserfs, 2001------------->
+reiserfsprogs 3.x.0j
+reiserfs_open: neither new nor old reiserfs format found on
+/dev/t4/mothafuck
+
+resize_reiserfs: no reiserfs found on the device
+
+this is correct since everything there is encrypted ... 
+
+base:~# resize_reiserfs -f /dev/loop1
+
+<-------------resize_reiserfs, 2001------------->
+reiserfsprogs 3.x.0j
+
+resize_reiserfs: can't find mount entry
+
+but this is not usable to :[
+
+base:~# grep -v '^#' /etc/fstab
+/dev/hda1       /               ext2    defaults,errors=remount-ro
+0       1
+/dev/hda3       none            swap    swap                    0
+0
+proc            /proc           proc    defaults
+0       0
+/dev/t4/mothafuck /glftpd/site reiserfs
+rw,defaults,noauto,loop=/dev/loop1,encryption=AES128 0 0
+
+i have tried to fake the entry in fstab too .. but i did not help
+
+i there anyone who uses something similar ? 
+
+i'll be happy for any advice
+anybody can help me out pleas ?
+
+Cheers
+	mark 
+
+ps: i am sorry for my bad english :)
