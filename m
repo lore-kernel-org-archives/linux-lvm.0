@@ -1,9 +1,10 @@
-Return-Path: <gene_yee@hotmail.com>
-From: "hail narcissus" <gene_yee@hotmail.com>
-Date: Mon, 12 Mar 2001 13:02:52 -0800
-Mime-Version: 1.0
-Message-ID: <F797oDaSeXnbnCndg5o000050a8@hotmail.com>
-Subject: [linux-lvm] e2fsck error
+Return-Path: <wstearns@pobox.com>
+Date: Mon, 12 Mar 2001 16:31:33 -0500 (EST)
+From: William Stearns <wstearns@pobox.com>
+Subject: Re: [linux-lvm] FW: Problem with vgscan/ vgcfgrestore
+In-Reply-To: <GIEGKMCLIJBKBNBCCHEAAEIKCAAA.heimdall@mail.org>
+Message-ID: <Pine.LNX.4.30.0103121623580.5549-100000@sparrow.websense.net>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +16,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Daniel Whicker <heimdall@mail.org>
+Cc: linux-lvm@sistina.com, William Stearns <wstearns@pobox.com>
 
-I am trying to resize my ext2 fs but I get an error from ext2resize:
+Good afternoon, Daniel,
 
-ext2resize: ext2_open: filesystem has errors! e2fsck first!
-ext2resize: can't open /dev/junior/site
+On Mon, 12 Mar 2001, Daniel Whicker wrote:
 
-At this point I do did a 'umount /dev/junior/site'
-Then I do a 'e2fsck -fyv /dev/junior/site &'
+  [NON-Text Body part not included]
 
-It returns this:
+	I do understand that lists like this one occasionally need to be
+used to send debugging information.
+	That said, you should really consider whether sending even one
+copy - let alone two - of a 700K file is truly necessary, or whether there
+are better alternatives, such as:
+	- Putting the debugging information on a web site and sending the
+URL to the mailing list.
+	- Compressing the data before sending to the list.
+	- If the original signature was faulty, simply resending the
+signature instead of the whole package.
+	- Summarizing the data to the best of your ability and pointing
+people at a url for the original data.
 
-Pass 1: Checking inodes, blocks, and sizes
-Group 3125's block bitmap at 102400000 conflicts with some other fs block.
-Relocate? yes
+	In short, if the message comes out to more than 30-50K, you should
+rethink what you're trying to send as a courtesy to the people from which
+you're requesting help.  I'm reasonably confident I'm not the only
+modem-based user of lvm.  1.5M to download takes quite a chunk out of my
+afternoon, as terminal sessions become unusable during the mail download.
+	Cheers,
+	- Bill
 
-Group 3125's inode bitmap at 102400001 conflicts with some other fs block.
-Relocate? yes
-
-It finds other errors which I believe it fixes but not the above error.  If 
-I re-run e2fsck then it comes up with the above error again.
-
-Thanks!!
-_________________________________________________________________
-Get your FREE download of MSN Explorer at http://explorer.msn.com
+---------------------------------------------------------------------------
+Windows NT: n.
+    32-bit extensions and a graphical shell for a 16-bit patch to an 8-bit
+    operating system originally coded for a 4-bit microprocessor,  written
+    by a 2-bit company that can't stand for 1 bit of competition.
+(Courtesy of Michael Neuffer <neuffer@trudi.zdv.Uni-Mainz.DE>)
+--------------------------------------------------------------------------
+William Stearns (wstearns@pobox.com).  Mason, Buildkernel, named2hosts,
+and ipfwadm2ipchains are at:                http://www.pobox.com/~wstearns
+LinuxMonth; articles for Linux Enthusiasts! http://www.linuxmonth.com
+--------------------------------------------------------------------------
