@@ -1,12 +1,9 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Fri, 15 Dec 2000 10:00:28 +0000
-From: Patrick Caulfield <patrick@tykepenguin.com>
-Subject: Re: [linux-lvm] LVM and inactive snapshots.
-Message-ID: <20001215100028.B526@tykepenguin.com>
-References: <200012141314.OAA23601@e35.marxmeier.com> <Pine.OSF.4.21.0012141509060.4212-100000@lazy.accessus.net>
+Return-Path: <joe@66bassett.freeserve.co.uk>
+Date: Fri, 15 Dec 2000 11:24:55 +0000
+From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+Message-ID: <20001215112455.A1314@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.OSF.4.21.0012141509060.4212-100000@lazy.accessus.net>; from jay@lazy.accessus.net on Thu, Dec 14, 2000 at 03:10:05PM -0600
+Subject: [linux-lvm] LVM 0.9 patch for 2.2.18
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,32 +19,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Dec 14, 2000 at 03:10:05PM -0600, Jay Weber wrote:
-> > No. The kernel should not unmount because this may cause
-> > confusion and possibly corruption of user mode information
-> > (eg. /etc/mtab).
-> > 
-> > If a snapshot is dead the kernel could simply return an error
-> > (EIO?) for any access to the snapshot (which no longer exists).
-> > So the bahaviour would be well defined.
-> 
-> Ah, yes, this does seem more reasonable and does address the issue of the
-> bits that are left lying about.
+Hi,
 
-THis patch should do that. It doesn't address the problem of remounting the
-inactive snapshot though.
+I've made a new kernel patch to get LVM 0.9 working with 2.2.18 and am
+looking for a couple of people to give it a try before I check it into
+CVS.
 
-Patrick
+The patch is similar to the 2.2.17 patch except it should allow you to
+use a software raid device as a PV.  This also has the pleasant side
+effect of removing a lot of the conditional compiles from
+drivers/block/ll_rw_block.c
 
+The patch is too big to post on the list (it still contains the
+lvm.[hc] files) so mail me if you want to try it.
 
---- drivers/md/lvm.c~   Thu Dec 14 14:31:21 2000
-+++ drivers/md/lvm.c    Fri Dec 15 09:46:15 2000
-@@ -1678,6 +1678,8 @@
-                        down(&lv->lv_snapshot_sem);
-                        if (lv->lv_block_exception != NULL)
-                                lvm_snapshot_remap_block(&rdev_tmp, &rsector_tmp, pe_start, lv);
-+                       else
-+                           ret = 1;
-                        up(&lv->lv_snapshot_sem);
-                }
-        }
+Your help would be appreciated.
+
+- Joe Thornber
