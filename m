@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvdisplay/lvdisplay discrepancy
-Message-ID: <20021209114604.B18845@sistina.com>
-References: <1039235299.2304.21.camel@delight>
+Subject: Re: [linux-lvm] / on LVM2
+Message-ID: <20021209120102.D18845@sistina.com>
+References: <200212062032.11584.mweiss@grenoble.cnrs.fr>
 Mime-Version: 1.0
-In-Reply-To: <1039235299.2304.21.camel@delight>; from spin@avalon.net on Fri, Dec 06, 2002 at 10:28:18PM -0600
+In-Reply-To: <200212062032.11584.mweiss@grenoble.cnrs.fr>; from mweiss@grenoble.cnrs.fr on Fri, Dec 06, 2002 at 08:32:11PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +14,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 04:54:02 2002
+Date: Mon Dec  9 05:09:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Alan,
+Markus,
 
-I am not sure if there's a difference between the Redhat package and our source
-causing this.
-Are you able to reproduce this with stock LVM1.0.6 tools from www.sistina.com ?
-(have send pvdisplay and lvdisplay version 1.0.6 in private email to you
-to test this).
+we don't support root on LVM2 yet :(
 
-Get back to me if there is none and I'll have a look at your metadata.
+On SuSE what you want to do that still _and_ have an LVM2/device-mapper
+emergency boot media at hand if something goe wrong it goes along
+these (untested!) lines:
 
-Regards,
-Heinz    -- The LVM Guy --
+- have device-mapper and LVM2 tools installed
 
+- in case you want to go with the device-mapper module:
+  - add dm-mod to your /etc/sysconfig/kernel
+  - build/install a kernel qith dm-mod
+  - run mkinitrd
 
-On Fri, Dec 06, 2002 at 10:28:18PM -0600, Aran Cox wrote:
-> I've discovered that pvdisplay and lvdisplay seem to disagree on the
-> exact location of some extents in a volume group on my system.
+- add "modprobe dm-mod" etc. to the created initrd:
+  - gzip -dc /boot/initrd>initrd.wrk
+  - mount -oloop /boot/initrd.wrk /mnt
+  - echo -e "lvm vgscan\nlvm vgchange -ay" >> /mnt/linuxrc
+  - cp -p /sbin/lvm /mnt/sbin
+  - cp -sp /lib/libdevmapper* /mnt/lib
+  - umount /boot/initrd.qrk
+  - gzip -c /boot/initrd.wrk>/boot/initrd
+  - lilo
+  - rm /boot/initrd.wrk
+
+On Fri, Dec 06, 2002 at 08:32:11PM +0100, Markus Weiss wrote:
 > 
-> I am using stock 2.4.19 kernel with the lvm tools from the RPM package 
-> of the same name for RH7.3.
+> Hello everbody,
 > 
-> I'll show the output of the *display programs below but to summarize:
-> pvdisplay shows a small number of extents in /dev/main/var as being on
-<SNIP>
-> "/dev/sdb"
+> I ran into a problem testing LVM2 on my system.
+> I have / on LVM, and booting into kernel 2.5.50 (with dm compiled in,
+> libdevmapper and LVM2-tools installed) fails, because the kernel cannot mount 
+> the root fs. I have tried building an initrd using SuSE's mk_initrd and 
+> lvmcreate_initrd, but I get the same problem.
 > 
+> Do these scripts have to be modified in any way to work with LVM2 ?
+> (something like calling devmap_mknod.sh at some point ?)
 > 
+> Thanks for any advice,
 > 
+> Markus
+> 
+> PS:
+> Please cc me, as I'm not subscribed
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
