@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm 1.0.3 (redhat rpm shipped with redhat 7.3)
-Message-ID: <20020529105058.A31380@sistina.com>
-References: <3CF27A7E.3906.1A017A6@localhost>
+Subject: Re: [linux-lvm] LVM and extending/reducing striped LV's
+Message-ID: <20020529105302.B31380@sistina.com>
+References: <Pine.LNX.4.21.0205291016260.6798-100000@kenny.worldonline.se>
 Mime-Version: 1.0
-In-Reply-To: <3CF27A7E.3906.1A017A6@localhost>; from ByrneJB@Harte-Lyne.ca on Mon, May 27, 2002 at 06:27:10PM -0400
+In-Reply-To: <Pine.LNX.4.21.0205291016260.6798-100000@kenny.worldonline.se>; from me@vger.org on Wed, May 29, 2002 at 10:21:09AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,24 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 29 03:55:02 2002
+Date: Wed May 29 03:57:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> Running "vgchange -a y" gives a syntax error.  Running "vgchange -
-> ay" produces desired result.  I am not sure if this is a bug or a 
-> documentation error.---     e-mail is NOT a secure channel 
+On Wed, May 29, 2002 at 10:21:09AM +0200, me@vger.org wrote:
+> After scaning thru the mailing list archive and reading some FAQs i can
+> find information that <subject> are not available... atleast with older
+> versions of lvm. My question is, can this be done now? Im using lvm
+> 1.1-rc2 right now on 2.4.18. If anyone know how to do this with just lvm
+> id be thankfull if you could drop me a mail with some pointers.
 
-Works perfectly fine here with both cases.
-Could that be a getopt() flaw in certain cersions of glibc?
+No, column extension beyond PV limits is not supported in LVM1.
 
-> James B. Byrne                mailto:ByrneJB@Harte-Lyne.ca
-> Harte & Lyne Limited          http://www.harte-lyne.ca
-> 9 Brockley Drive              vox: +1 905 561 1241
-> Hamilton, Ontario             fax: +1 905 561 0757
-> Canada  L8E 3C3
+You can have it with LVM2 ~June.
+
+> 
+> If this can not be done I have to go with the md RAID0/LVM layout to boost
+> preformence from a linar lvm only layout.
+> 
+> Thanks to anyone that replys =)
+> ps. include me in the reply because im not on the list.
+> 
 > 
 > 
 > _______________________________________________
@@ -39,6 +45,8 @@ Could that be a getopt() flaw in certain cersions of glibc?
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
