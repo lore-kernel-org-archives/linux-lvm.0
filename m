@@ -1,8 +1,10 @@
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@users.sourceforge.net>
-Message-ID: <yw1xwucyty8b.fsf@users.sourceforge.net>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Recovering from disk failure
+Message-ID: <20030828132053.C14441@uk.sistina.com>
+References: <yw1xwucyty8b.fsf@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Recovering from disk failure
+Content-Disposition: inline
+In-Reply-To: <yw1xwucyty8b.fsf@users.sourceforge.net>; from mru@users.sourceforge.net on Thu, Aug 28, 2003 at 02:36:04AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,22 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 28 06:38:02 2003
+Date: Thu Aug 28 07:22:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Recently one of two disks in a volume group crashed, and I can't read
-it at all.  Now, some LVs are entirely on the disk that survived.  Is
-there any way I can just disable the broken LVs and continue using the
-complete ones?  I'm using device-mapper and LVM2, but I used to use
-LVM1, and have not converted the disks to the new format.  I have both
-LVM1 and LVM2 tools available, as well as a bunch of different
-kernels.  Dirty hacks are OK, too.
+On Thu, Aug 28, 2003 at 02:36:04AM +0200, M?ns Rullg?rd wrote:
+> Recently one of two disks in a volume group crashed, and I can't read
+> it at all.  Now, some LVs are entirely on the disk that survived.  Is
+> there any way I can just disable the broken LVs and continue using the
+> complete ones?  I'm using device-mapper and LVM2
 
-Now I'm considering building a RAID5 array and run LVM on top of
-that.  Is there something fundamentally bad with such a setup?
+Read the description of '--partial' on the lvm(8) man page.
+e.g. (lv|vg)change -ay --partial
 
+And '--removemissing' in vgreduce(8) to *permanently* destroy
+the lost LVs (run with --test first to check what it will do).
+
+Alasdair
 -- 
-M�ns Rullg�rd
-mru@users.sf.net
+agk@uk.sistina.com
