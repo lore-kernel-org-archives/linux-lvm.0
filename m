@@ -1,9 +1,9 @@
-Message-ID: <025001c2f79b$7aedc6b0$64451c0a@dokho>
-From: "Gaetan" <gaetan@avence.com>
+Message-ID: <029601c2f79d$83ff2da0$64451c0a@dokho>
+From: "Gaetan" <fx@famipow.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_024D_01C2F7AC.3E6139F0"
-Subject: [linux-lvm] Help for Vg max size
+	boundary="----=_NextPart_000_0293_01C2F7AE.4772A0E0"
+Subject: [linux-lvm] Problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,18 +14,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  2 05:13:08 2003
+Date: Wed Apr  2 05:13:12 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_024D_01C2F7AC.3E6139F0
+------=_NextPart_000_0293_01C2F7AE.4772A0E0
 Content-Type: text/plain;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-ZanZiBar:~# vgdisplay
 --- Volume group ---
 VG Name               FILER
 VG Access             read/write
@@ -36,30 +35,28 @@ Cur LV                2
 Open LV               1
 MAX LV Size           255.99 GB
 Max PV                256
-Cur PV                2
-Act PV                2
-VG Size               230.06 GB
+Cur PV                4
+Act PV                4
+VG Size               453.63 GB
 PE Size               4 MB
-Total PE              58896
+Total PE              116129
 Alloc PE / Size       58893 / 230.05 GB
-Free  PE / Size       3 / 12 MB
+Free  PE / Size       57236 / 223.58 GB
 VG UUID               ExxNF9-89PZ-wHbC-LtKX-R3GL-Hp00-EVfvJt
 
-I want to add 2 news disk but it tells me that i'm limited to 256 Gb
 
-I'm told to do a vgcreate -s=20
-but dunno what i have to type after and i'm afraid if i increase the =
-current virtual group , data will be lost
+I would like to increase my MAX LV SIZE
 
-Anyone could help me please -=20
+ZanZiBar:~# lvextend -L +300G /dev/FILER/MIRROR2
+lvextend -- size 555745280 KB is larger than maximum VGDA kernel size of =
+268427264 KB
 
-thanks a lot
-
-   =20
+Help !! :(
 
 
 
-------=_NextPart_000_024D_01C2F7AC.3E6139F0
+
+------=_NextPart_000_0293_01C2F7AE.4772A0E0
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -72,8 +69,7 @@ charset=3Diso-8859-1">
 <STYLE></STYLE>
 </HEAD>
 <BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>ZanZiBar:~# vgdisplay<BR>--- Volume =
-group ---<BR>VG=20
+<DIV><FONT face=3DArial size=3D2>--- Volume group ---<BR>VG=20
 Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
 sp;&nbsp;&nbsp;=20
 FILER<BR>VG=20
@@ -102,40 +98,37 @@ PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
 256<BR>Cur=20
 PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
 ;&nbsp;&nbsp;&nbsp;=20
-2<BR>Act=20
+4<BR>Act=20
 PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
 ;&nbsp;&nbsp;&nbsp;=20
-2<BR>VG=20
+4<BR>VG=20
 Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
 sp;&nbsp;&nbsp;=20
-230.06 GB<BR>PE=20
+453.63 GB<BR>PE=20
 Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
 sp;&nbsp;&nbsp;=20
 4 MB<BR>Total=20
 PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
 ;&nbsp;=20
-58896<BR>Alloc PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 58893 / =
+116129<BR>Alloc PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 58893 / =
 230.05=20
-GB<BR>Free&nbsp; PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 / 12 =
-MB<BR>VG=20
+GB<BR>Free&nbsp; PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 57236 / =
+223.58=20
+GB<BR>VG=20
 UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
 sp;&nbsp;&nbsp;=20
-ExxNF9-89PZ-wHbC-LtKX-R3GL-Hp00-EVfvJt<BR><BR>I want to add 2 news disk =
-but it=20
-tells me that i'm limited to 256 Gb</FONT></DIV>
+ExxNF9-89PZ-wHbC-LtKX-R3GL-Hp00-EVfvJt<BR></FONT></DIV>
 <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>I'm told to do a vgcreate -s =
-</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>but dunno what i have to type after and =
-i'm afraid=20
-if i increase the current virtual group , data will be lost</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I would like to increase my MAX LV=20
+SIZE</FONT></DIV>
 <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Anyone could help me please - =
-</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>ZanZiBar:~# lvextend -L +300G=20
+/dev/FILER/MIRROR2<BR>lvextend -- size 555745280 KB is larger than =
+maximum VGDA=20
+kernel size of 268427264 KB<BR></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Help !! :(</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;</DIV></FONT>
 <DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>thanks a lot</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; </DIV>
-<DIV><BR></DIV></FONT></BODY></HTML>
+<DIV><FONT face=3DArial size=3D2>&nbsp;</DIV></FONT></BODY></HTML>
 
-------=_NextPart_000_024D_01C2F7AC.3E6139F0--
+------=_NextPart_000_0293_01C2F7AE.4772A0E0--
