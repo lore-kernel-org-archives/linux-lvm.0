@@ -1,11 +1,11 @@
-Return-Path: <steve.wray@the.net.nz>
-From: "Steve Wray" <steve.wray@the.net.nz>
-Subject: RE: [linux-lvm] XFS and LVM
-Date: Wed, 23 May 2001 11:17:14 +1200
-Message-ID: <NBBBKLKHMJHIJLHOGAOJOEMIIOAA.steve.wray@the.net.nz>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200105222325.f4MNPJVw012336@webber.adilger.int>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM
+In-Reply-To: <990547328.1133.1.camel@localhost> "from Rupert Heesom at May 22,
+ 2001 12:02:03 pm"
+Date: Tue, 22 May 2001 17:25:19 -0600 (MDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20010523010640.C2933@vestdata.no>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,24 +17,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Ragnar Kj=EF=BF=BDrstad
-> On Wed, May 23, 2001 at 10:50:27AM +1200, Steve Wray wrote:
-> > > > Mind you, reiserfs is supposed to be shrinkable but, ahem, it didn't
-> > > > work...
-> > >
-> > >   ouch. what happened?
-> >
-> > It wouldn't mount afterward... It was only on /usr/local
-> > whuch was backed up.
->
-> Did you report it to reiserfs-list@namesys.com?
+Rupert Heesom writes:
+> Now, when I boot up into the LVM partition, I get the following error
+> msgs -
+> 
+> lvm - Module successfully initialised.
+> /sbin/vgscan: sed: command not found.
+> /sbin/vgscan: /lib/lvm-iop10/: is a directory
+> /sbin/vgscan: exec: /lib/lvm-iop10/: cannot execute:  permission denied.
+> 
+> /sbin/vgchange:  <same msgs>
+> 
+> Obviously the kernel can't find the LVM tools.  Would these not be
+> included in the lvm initrd?  If they are, and the kernel still can't
+> find them, what do I change so that the kernel CAN find the LVM tools?
 
-nooo, I'm not really using reiserfs in a serious way.
-I only tried it out because XFS isn't shrinkable,
-so I wondered how reiserfs would perform on a shrink.
+No, the problem is in the wrapper script for the LVM tools.  It is using
+"sed" in the script, but that is not on the initrd.  I don't see sed in
+my LVM wrapper script, so you must have a different one.  Either fix the
+wrapper script (edit /sbin/vgscan should be enough), or add "sed" to the
+list of required files, INITRDFILES, in lvmcreate_initrd.
 
-I'm going to try ext3 sometime soon...
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
