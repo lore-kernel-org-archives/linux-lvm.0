@@ -1,14 +1,14 @@
-Return-Path: <lewis@sistina.com>
-Date: Tue, 19 Jun 2001 16:19:30 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] LVM problems
-Message-ID: <20010619161930.A15720@sistina.com>
-References: <85063BBE668FD411944400D0B744267A481A88@AUSMAIL>
+Return-Path: <blutgens@sistina.com>
+Date: Tue, 19 Jun 2001 16:39:40 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Subject: Re: [linux-lvm] RE: LVM and Lilo
+Message-ID: <20010619163940.B523@minime.sistina.com>
+References: <Pine.LNX.4.33.0106191857020.3018-100000@vie-ac.office.ecetra.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+	protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
 Content-Disposition: inline
-In-Reply-To: <85063BBE668FD411944400D0B744267A481A88@AUSMAIL>; from austin@coremetrics.com on Tue, Jun 19, 2001 at 02:28:05PM -0500
+In-Reply-To: <Pine.LNX.4.33.0106191857020.3018-100000@vie-ac.office.ecetra.com>; from alciocca@ecetra.com on Tue, Jun 19, 2001 at 07:00:45PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,44 +22,46 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---oyUTqETQ0mS9luUI
+--TRYliJ5NKNqkz5bu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 19, 2001 at 02:28:05PM -0500, Gonyou, Austin wrote:
-> Why in the hell is this NOT in the source tree by default. This has really
-> got be boggled. I've seen tons of others have this proble, I've had this
-> problem, and still it doesn't seem to get itself into the tree. Is this
-> because it is a temporary problem or something?
+On Tue, Jun 19, 2001 at 07:00:45PM +0200, Adam Cioccarelli wrote:
+>Hi,
+>
+>I have made the initrd image, boot is mounted, everything works fine
+>basically, just that I can't run lilo when my root partition is a logical
+>volume... If I boot into my old non-lvm root installation I can change the
+>lilo.conf on the root logical volume and do a lilo -C /mnt/etc/lilo.conf
+>and it will work.
 
-It *is* in the source tree by default.  It is in the CVS.  It is not in
-LVM 0.9.1 Beta7 because LVM 0.9.1 Beta7 was released before linux 2.4.4,
-which is when the problem surfaced.  We have not had a release since then,
-so it is not in the latest release.
 
-You can now grab the patch and apply it to beta7, which fixes the problem,
-or you can use the CVS repository.  I really don't know what else you expect
-us to do.
+vgscan gets run from the the initrd so all the information that it writes
+to /etc/lvm* and /proc (not sure where it goes exactly) get's lost when
+you change root to your logical volume. This way, when you run lilo it
+barfs because it can't find the logical volume. You should need to just
+run vgscan before you run lilo and hopefully all will be well.
 
-Regards,
+>
+>I read something about having to patch lilo but this was from a fair while
+>ago. Does it still apply?
+>
+>Regards,
+>Adam Cioccarelli
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
 --=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Ben Lutgens	=09
+Sistina Software Inc.=09
+Kernel panic: I have no root and I want to scream
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-geep!
------End Obligatory Humorous Quote------------------------------------------
-
---oyUTqETQ0mS9luUI
+--TRYliJ5NKNqkz5bu
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -67,9 +69,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7L8HipE6/iGtdjLERAnBzAKCD2bvJAoELbnOG9Ofkux1yJOzDnACfVFy+
-vuVxZrL8YuWixdH5OPsHcIM=
-=oc0+
+iD8DBQE7L8acLxkxGgLdGQgRAidoAKCtoM6O2zxcNCsC9ZRwsUsQ9eIOQACfbXCk
+IdeuiVhjXn0ya6xTrcQHyHA=
+=O81G
 -----END PGP SIGNATURE-----
 
---oyUTqETQ0mS9luUI--
+--TRYliJ5NKNqkz5bu--
