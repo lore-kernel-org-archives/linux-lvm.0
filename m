@@ -1,10 +1,8 @@
-Message-ID: <006059c266c5$31453530$0100a170@lsqhduo.net>
-From: "=?ks_c_5601-1987?B?wdnGx77Is7s=?=" <h1@hhansom.co.kr>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0007_0A7E4FE0.35356880"
-Subject: [linux-lvm] =?ks_c_5601-1987?B?wNq68cPixscgvsizu1u9w8H9LLz2x8osvNK8syyw5sGmLLD=?=
- =?ks_c_5601-1987?B?5r+1LMOzvLwgseLFuF1bsaSw7V0=?=
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Message-ID: <20021212222520.B11563@uk.sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] New LVM2 reporting tools
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,196 +13,102 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 12 15:47:02 2002
+Date: Thu Dec 12 16:25:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-LVM@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-This is a multi-part message in MIME format.
+I've added a new set of flexible tools to produce column-based output
+as an alternative to the current 'field: value' xxdisplay format.
 
-------=_NextPart_000_0007_0A7E4FE0.35356880
-Content-Type: text/plain;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
+ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.0-latest.tgz 
+  (currently aka beta5 or LVM2.1.95.12; some minor bug fixes
+   also rolled in)
 
-v/iw7cHfsLMsIMDauvHD4sbHLCDA2rytwPwsILHiyLnD4sbHILXuIMPixse8rbrxvbogwPy5rsi4
-u+cgIMDauvHD4sbHIL7Is7sovcPB/Sy89sfKLLzSvLMssObBpiyw5r+1LMOzvLwsseLFuCkgICAg
-DQpsaW51eC1MVk201LKyICDH4Lq5wMwgx9SyssfPvcOx4rimILr3tM+02S4NCrHNx8/AxyAguN7A
-z8HWvNK0wiDApbytx87B37+hvK0gvsuw1CC1yLDNwMy45ywgRS1NYWlsIMHWvNIgv9y/oSwgtNm4
-pSAgwaS6uLTCILCusO0gwNbB9iC+yr3AtM+02S4gursguN7Az8C6IMGkurjF673FuMEgwMy/68PL
-wfggudcgwaS6uLq4yKMgILXuv6EgsPzH0SC5/bf8IMGmIDUwwba/oSDAx7DFx9FbsaSw7V0guN7A
-z8DUtM+02Q0KDQogDQq89r3FsMW6zrimIL/4x8+9w7jpIL+pseK4piDFrLivx8+x4ri4IMfPvLy/
-5H4gDQogDQogDQogIFvA2rrxw+LGx8DHICDA2ry8x9Egs7u/610NCiAgwPrA27HHu+fH1w0KICDA
-+sDawMcgILvnu/Ow+iDDtsfQwLsgtOO+xiDHsMCnwNa0wiDDpcC4t84guLi16b7uICC15biztM+0
-2S4gIMPixse17rfPsPogILG5waYgua7H5bn4yKMoSVNCTim4piC6zr+px9ggteW4s7TPtNkuICAN
-CiCxubizwd++07W1vK2w/L+hICCzs7q7x8+/qSC+8MGmtvO1tSC/rbb3x8+9xyC89iDA1r3AtM+0
-2S4gIA0KIMD6wNuxx8C7ICDDtsD6x8+w1CC6uMDlx9W0z7TZLiAgICDBpsDbuea5/Q0KICCz67fD
-x9EgIL/uv7XAuLfOIMGmwNu68bimIMPWtOvH0SDA/b7gx8+/qSDA+rfFx9EgILrxv+vAzCC17LTP
-tNkuIA0KIMO2wPrHz7DUICDA+sDawMcgwMe1tbimIDEwMCUgud2/tcfVtM+02S4NCiC6u7musPog
-IMelwfbAxyCxs8Gkwfa4piDD1rzSx9Egtc4gufggwMy78yC6uLO7teW4s7TPtNkuICANCiDA+sDa
-wMcgIE9Lu+fAzsDMILOqvt+4uCDBpsDbv6Egtem+7rCptM+02S4gDQogsPiw3cD7wM4gILDmv7XA
-uLfOILDFt6G8rcGhwLsgx8+357W1ILr8wfbB9iC+yrDtICC55rmux8+/qSC1tbytwMcgwfi/rbvz
-xcK4piC89r3Dt84gwaGwy8fPsO0sICC09b/tIMHBwLogwNq4rr+hIMH4v621ySC89iDA1rW1t88g
-w9a8scC7ICC02cfVtM+02S4gICAgICDAzry8ICCw6L7guea9xA0KICDDs8C9ICDBpsDbuvHAxyDA
-z7rOuKYgwPrA2rChILrOtOPHz7TCILDNIL/cv6EgIMDPud0gw+LGx7mwsPogtb/Az8fRILDovuAg
-w9+wobrxv+sgIMD8x/QgvvjAuLjnIMOlwMwgwN8gxsi4rrjpIMD6wNq/obDUICDAzry8uKYgwfa8
-08D7wLi3ziDB9rHeIDEwJSAgvLHAzry8ICAgDQrA2ry8x9EgILvnx9fAuiC1tbytw+LGxyDA28C6
-vaO/obytICC77Mbsuri9w7HiILnZtvi0z7TZLg0KDQogICAgILW1vK3D4sbHIMDbwLq9oyANCiAN
-Cg0KIA0K
+Access them either standalone as lvs, pvs or vgs, or by use the new
+--columns (-C) switch on pvdisplay, vgdisplay or lvdisplay.
 
-------=_NextPart_000_0007_0A7E4FE0.35356880
-Content-Type: text/html;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
+Some tiny examples:
 
-DQo8aHRtbD4NCjxoZWFkPg0KPHRpdGxlPr/4sO3B37CzLCDA2rrxw+LGxywgwNq8rcD8LCCx4si5
-w+LGxyC17iDD4sbHvK268b26IMD8ua7IuLvnPC90aXRsZT4NCjxtZXRhIG5hbWU9ImdlbmVyYXRv
-ciIgY29udGVudD0iv/iw7cHfsLMsIMDauvHD4sbHLCDA2rytwPwsILHiyLnD4sbHILXuIMPixse8
-rbrxvbogwPy5rsi4u+ciPg0KPC9oZWFkPg0KDQo8Ym9keSBiZ2NvbG9yPSJ3aGl0ZSIgdGV4dD0i
-YmxhY2siIGxpbms9ImJsdWUiIHZsaW5rPSJ3aGl0ZSIgYWxpbms9InJlZCIgbGVmdG1hcmdpbj0i
-MTAiIG1hcmdpbndpZHRoPSIxMCIgdG9wbWFyZ2luPSIxMCIgbWFyZ2luaGVpZ2h0PSIxMCI+DQoN
-Cjx0YWJsZSBib3JkZXI9IjAiIHdpZHRoPSI2MDAiPg0KICAgIDx0cj4NCiAgICAgICAgPHRkIHdp
-ZHRoPSIxMDAlIiBoZWlnaHQ9IjIyIiBiZ2NvbG9yPSIjMDA5NUEwIj48cCBhbGlnbj0iY2VudGVy
-Ij48Zm9udA0KICAgICAgICAgICAgIHNpemU9IjIiIGNvbG9yPSJ3aGl0ZSI+PGI+wNq68cPixscg
-vsizuyi9w8H9LLz2x8osvNK8syyw5sGmLLDmv7Usw7O8vCyx4sW4KTwvYj48L2ZvbnQ+PC90ZD4N
-CiAgICA8L3RyPg0KICAgIDx0cj4NCiAgICAgICAgPHRkIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjI1
-MyIgYmdjb2xvcj0id2hpdGUiPiAgICAgICAgICAgIA0KICAgICAgICAgICAgPHAgc3R5bGU9Imxp
-bmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0
-b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+PGJyPmxp
-bnV4LUxWTbTUsrIgDQogICAgICAgICAgICDH4Lq5wMwgx9SyssfPvcOx4rimILr3tM+02S48L3Nw
-YW4+PEZPTlQgc3R5bGU9IkZPTlQtU0laRTogOXB0Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlw
-dDsiPjxicj48L3NwYW4+PC9GT05UPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+sc3Hz8DH
-IA0KICAgICAgICAgICAguN7Az8HWvNK0wiDApbytx87B37+hvK0gvsuw1CC1yLDNwMy45ywgRS1N
-YWlsIMHWvNIgv9y/oSwgtNm4pSANCiAgICAgICAgICAgIMGkuri0wiCwrrDtIMDWwfYgvsq9wLTP
-tNkuILq7ILjewM/AuiDBpLq4xeu9xbjBIMDMv+vDy8H4ILnXIMGkuri6uMijIA0KICAgICAgICAg
-ICAgte6/oSCw/MfRILn9t/wgwaYgNTDBtr+hIMDHsMXH0VuxpLDtXSC43sDPwNS0z7TZPGJyPjwv
-c3Bhbj48L3A+DQogICAgICAgICAgICA8cCBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2lu
-LXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij48Zm9udCBjb2xvcj0icmVkIj48YnI+PC9mb250
-Pjwvc3Bhbj48Rk9OVCBmYWNlPbG8uLLDvD48U1BBTiBzdHlsZT0iRk9OVC1TSVpFOiA5cHQiPrz2
-vcWwxbrOuKYgv/jHz73DuOkgDQo8YSBocmVmPSJodHRwOi8vd3d3LmNydXNhZGUuY28ua3IvcmVq
-ZWN0L3JlamVjdC5waHA/aWQ9MTAyMSZtb2RlPXdyaXRlJm1haWw9bGludXgtTFZNQHNpc3RpbmEu
-Y29tIj48U1BBTiBzdHlsZT0iRk9OVC1TSVpFOiA5cHQiPjxGT05UIGZhY2U9IrG8uLLDvCIgY29s
-b3I9InJlZCI+v6mx4jwvRk9OVD48L1NQQU4+PC9BPjxGT05UIGZhY2U9sby4ssO8PjxTUEFOIHN0
-eWxlPSJGT05ULVNJWkU6IDlwdCI+uKYgxay4r8fPseK4uCANCsfPvLy/5H48L1NQQU4+PC9GT05U
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+PGZvbnQgY29sb3I9InJlZCI+Jm5ic3A7PC9m
-b250Pjwvc3Bhbj48L3A+DQogICAgICAgICAgICA8cCBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsg
-bWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVm
-dDozOyI+IDxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+PGZvbnQgY29sb3I9InJlZCI+PGJy
-PiZuYnNwOzwvZm9udD48L3NwYW4+PC9wPg0KICAgICAgICAgICAgPHAgc3R5bGU9ImxpbmUtaGVp
-Z2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsg
-bWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+Jm5ic3A7W8DauvHD
-4sbHwMcgDQogICAgICAgICAgICDA2ry8x9Egs7u/6108L3NwYW4+PC9wPg0KPFRBQkxFIGNlbGxT
-cGFjaW5nPTAgY2VsbFBhZGRpbmc9MSB3aWR0aD02MDAgYm9yZGVyPTAgc3R5bGU9ImxpbmUtaGVp
-Z2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsg
-bWFyZ2luLWxlZnQ6MzsiPg0KPFRCT0RZPg0KPFRSPg0KPFREIGJnQ29sb3I9IzAwMDAwMCBoZWln
-aHQ9IjM0OCI+DQo8VEFCTEUgY2VsbFNwYWNpbmc9MSBjZWxsUGFkZGluZz0zIHdpZHRoPSIxMDAl
-IiBib3JkZXI9MCBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4t
-cmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+DQogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgPHRyPg0KPFREIGJnQ29sb3I9I2U1ZDU4MiB3aWR0aD0iMTA5IiBoZWln
-aHQ9IjEwNCI+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8cCBzdHlsZT0i
-dGV4dC1pbmRlbnQ6MHB0OyBsaW5lLWhlaWdodDoxMjAlOyBtYXJnaW4tdG9wOjA7IG1hcmdpbi1y
-aWdodDowOyBtYXJnaW4tYm90dG9tOjA7IG1hcmdpbi1sZWZ0OjM7Ij48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOjlwdDsiPsD6wNuxx7vnx9c8L3NwYW4+PC9wPg0KPC9URD4NCjxURCBiZ0NvbG9yPSNm
-ZmZmZmYgd2lkdGg9IjQ3NCIgaGVpZ2h0PSIxMDQiPg0KICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgPHVsPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6
-MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZTo5cHQ7Ij7A+sDawMcgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-u+e787D6IMO2x9DAuyC0477GIMewwKfA1rTCIMOlwLi3ziC4uLXpvu4gDQogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgteW4s7TPtNkuIDwvc3Bhbj48L2xpPg0KICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6
-MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJn
-aW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij7D4sbHte63z7D6IA0KICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgILG5waYgua7H5bn4yKMoSVNCTim4
-piC6zr+px9ggteW4s7TPtNkuIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDxicj48L3NwYW4+PC9saT4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICA8bGkgc3R5bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJp
-Z2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6OXB0OyI+sbm4s8HfvtO1tbytsPy/oSANCiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICCzs7q7x8+/qSC+8MGmtvO1tSC/rbb3x8+9xyC89iDA1r3AtM+02S4gDQog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGJyPjwvc3Bhbj48L2xpPg0K
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1o
-ZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTow
-OyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij7A+sDbscfAuyAN
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDDtsD6x8+w1CC6uMDlx9W0
-z7TZLjwvc3Bhbj48L2xpPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC91
-bD4NCjwvVEQ+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4NCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICA8dHI+DQo8VEQgYmdDb2xvcj0jZTVkNTgyIHdpZHRoPSIxMDkiIGhl
-aWdodD0iMTQ4Ij4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxwIHN0eWxl
-PSJ0ZXh0LWluZGVudDowcHQ7IGxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2lu
-LXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJm
-b250LXNpemU6OXB0OyI+wabA27nmuf08L3NwYW4+PC9wPg0KPC9URD4NCjxURCBiZ0NvbG9yPSNm
-ZmZmZmYgd2lkdGg9IjQ3NCIgaGVpZ2h0PSIxNDgiPg0KICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgPHVsPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6
-MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZTo5cHQ7Ij6z67fDx9EgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-v+6/tcC4t84gwabA27rxuKYgw9a068fRIMD9vuDHz7+pIMD6t8XH0SANCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICC68b/rwMwgtey0z7TZLiA8YnI+PC9zcGFuPjwvbGk+
-DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxpIHN0eWxlPSJsaW5l
-LWhlaWdodDoxMjAlOyBtYXJnaW4tdG9wOjA7IG1hcmdpbi1yaWdodDowOyBtYXJnaW4tYm90dG9t
-OjA7IG1hcmdpbi1sZWZ0OjM7Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlwdDsiPsO2wPrHz7DU
-IA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIMD6wNrAxyDAx7W1uKYg
-MTAwJSC53b+1x9W0z7TZLjxicj48L3NwYW4+PC9saT4NCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICA8bGkgc3R5bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6
-MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6OXB0OyI+uru5rrD6IA0KICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIMelwfbAxyCxs8Gkwfa4piDD1rzSx9Egtc4gufggwMy78yC6uLO7teW4
-s7TPtNkuIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxicj48L3Nw
-YW4+PC9saT4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGkgc3R5
-bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdp
-bi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+
-wPrA2sDHIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE9Lu+fAzsDM
-ILOqvt+4uCDBpsDbv6Egtem+7rCptM+02S4gPGJyPjwvc3Bhbj48L2xpPg0KICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsg
-bWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVm
-dDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij6w+LDdwPvAziANCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICCw5r+1wLi3ziCwxbehvK3BocC7IMfPt+e1tSC6
-/MH2wfYgvsqw7SANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICC55rmu
-x8+/qSC1tbytwMcgwfi/rbvzxcK4piC89r3Dt84gwaGwy8fPsO0sIA0KICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgILT1v+0gwcHAuiDA2riuv6Egwfi/rbXJILz2IMDWtbW3
-zyDD1ryxwLsgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgtNnH1bTP
-tNkuIDwvc3Bhbj48L2xpPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC91
-bD4NCjwvVEQ+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4NCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICA8dHI+DQo8VEQgYmdDb2xvcj0jZTVkNTgyIHdpZHRoPSIxMDkiIGhl
-aWdodD0iOTUiPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHAgc3R5bGU9
-ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1i
-b3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+Jm5i
-c3A7wM68vCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgILDovuC55r3EPC9z
-cGFuPjwvcD4NCjwvVEQ+DQo8VEQgYmdDb2xvcj0jZmZmZmZmIHdpZHRoPSI0NzQiIGhlaWdodD0i
-OTUiPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHVsPg0KICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIw
-JTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4t
-bGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij48Zm9udCBjb2xvcj0icmVkIj7D
-s8C9IA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIMGmwNu68cDHIMDP
-us64piDA+sDasKEgus6048fPtMIgsM0gv9y/oSANCiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICDAz7ndIMPixse5sLD6ILW/wM/H0SCw6L7gPC9mb250Pjwvc3Bhbj48L2xp
-Pg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGlu
-ZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRv
-bTowOyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij7D37ChuvG/
-6yANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDA/Mf0IL74wLi45yDD
-pcDMIMDfIMbIuK646SDA+sDav6Gw1CANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICDAzry8uKYgwfa808D7wLi3ziDB9rHePC9zcGFuPjwvbGk+DQogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxpIHN0eWxlPSJsaW5lLWhlaWdodDoxMjAlOyBt
-YXJnaW4tdG9wOjA7IG1hcmdpbi1yaWdodDowOyBtYXJnaW4tYm90dG9tOjA7IG1hcmdpbi1sZWZ0
-OjM7Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlwdDsiPjEwJSANCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICC8scDOvLw8L3NwYW4+PC9saT4NCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIDwvdWw+DQo8L1REPg0KICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDwvdHI+DQo8L1RCT0RZPjwvVEFCTEU+DQo8L1REPjwvVFI+PC9UQk9EWT48L1RBQkxF
-Pg0KICAgICAgICAgICAgPHAgc3R5bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsg
-bWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxGT05UIHN0
-eWxlPSJGT05ULVNJWkU6IDlwdCI+PEZPTlQgDQpzdHlsZT0iRk9OVC1TSVpFOiA5cHQiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6OXB0OyI+PEJSPjwvc3Bhbj48L0ZPTlQ+PC9GT05UPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6OXB0OyI+PGZvbnQgY29sb3I9ImJsYWNrIj7A2ry8x9EgDQogICAgICAg
-ICAgICC758fXwLogPC9mb250PjxhIGhyZWY9Imh0dHA6Ly9qYWJpLmNvLmtyIj48Zm9udCBjb2xv
-cj0iYmxhY2siPrW1vK3D4sbHIMDbwLq9ozwvZm9udD48L2E+PGZvbnQgY29sb3I9ImJsYWNrIj6/
-obytIA0KICAgICAgICAgICAgu+zG7Lq4vcOx4iC52bb4tM+02S48L2ZvbnQ+PGJyPjxicj4mbmJz
-cDs8L3NwYW4+Jm5ic3A7PC90ZD4NCiAgICA8L3RyPg0KICAgIDx0cj4NCiAgICAgICAgPHRkIHdp
-ZHRoPSIxMDAlIiBoZWlnaHQ9IjE1IiBiZ2NvbG9yPSIjMDA5NUEwIj48cCBhbGlnbj0iY2VudGVy
-IiBzdHlsZT0ibGluZS1oZWlnaHQ6MTAwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjA7
-Ij48YSBocmVmPSJodHRwOi8vamFiaS5jby5rciI+PGZvbnQNCiAgICAgICAgICAgICBzaXplPSIy
-IiBjb2xvcj0id2hpdGUiPrW1vK3D4sbHIMDbwLq9ozwvZm9udD48L2E+PC90ZD4NCiAgICA8L3Ry
-Pg0KPC90YWJsZT4NCjxwPiZuYnNwOzwvcD4NCjxwPiZuYnNwOzwvcD4NCjwvYm9keT4NCg0KPC9o
-dG1sPg==
+lvm> pvs
+PV         VG   Fmt  Attr PSize  PFree 
+/dev/sdb1  vg1  lvm2 a-   13.97G 13.87G
+/dev/sdb2  vg3  lvm1 a-   16.00M     0 
+/dev/sdb3       lvm1 a-   21.00M 21.00M
+/dev/sdb5  vg2  lvm2 a-   64.00M 40.00M
+/dev/sdb6  vg2  lvm2 a-   64.00M 60.00M
+/dev/sdb7       lvm2 --   40.92M 40.92M
 
-------=_NextPart_000_0007_0A7E4FE0.35356880--
+lvm> vgs
+VG   #PV #LV #SN Attr VSize   VFree  
+vg1    1   1   0 wz--  13.97G  13.87G
+vg2    2   3   0 wz-- 128.00M 100.00M
+vg3    1   2   1 wz--  16.00M      0
+
+Add a column:
+lvm> vgs -o +extent_size
+VG   #PV #LV #SN Attr VSize   VFree   Ext  
+vg1    1   1   0 wz--  13.97G  13.87G 4.00M
+vg2    2   3   0 wz-- 128.00M 100.00M 4.00M
+vg3    1   2   1 wz--  16.00M      0  4.00M
+
+Sort on number of PV's descending then free space descending:
+lvm> vgs -O -pv_count,-free
+VG   #PV #LV #SN Attr VSize   VFree  
+vg2    2   3   0 wz-- 128.00M 100.00M
+vg1    1   1   0 wz--  13.97G  13.87G
+vg3    1   2   1 wz--  16.00M      0 
+
+(It's also OK to sort on fields that aren't output.)
+
+lvm> lvs vg2/lvol1 vg3
+LV    VG   Attr   LSize   Origin 
+lvol1 vg2  -wn---  12.00M        
+lvol1 vg3  own---   8.00M        
+lvol2 vg3  swn---   8.00M lvol1  
+
+lvm> lvs --segments -v
+    Finding all logical volumes
+LV    VG   Attr   Start SSize   #Str Type    Stripe Chunk
+lvol0 vg1  -wnm--    0  100.00M    1 linear      0     0 
+lvol0 vg2  -wn---    0    4.00M    1 linear      0     0 
+lvol1 vg2  -wn---    0    4.00M    1 linear      0     0 
+lvol1 vg2  -wn--- 4.00M   8.00M    2 striped 16.00K    0 
+lvol2 vg2  -wn---    0   12.00M    1 linear      0     0 
+lvol1 vg3  own---    0    8.00M    1 linear      0     0 
+lvol2 vg3  swn---    0    8.00M    1 linear      0     0 
+
+Colon-separated LV sizes in sectors, suitable for piping to other tools:
+lvm> lvs -o vg_name,name,size --units s --nosuffix --noheadings --separator :
+vg1:lvol0:204800.00
+vg2:lvol0:8192.00
+vg2:lvol1:24576.00
+vg2:lvol2:24576.00
+vg3:lvol1:16384.00
+vg3:lvol2:16384.00
+
+
+-v for more columns.
+--units to change the output units
+  (h)uman-readable, (s)ectors, (b)ytes, k, m, g, t
+  or HKMGT to use 1000's instead of 1024's
+  Wierd custom units also possible e.g. --units 374k
+--separator to set the string separating each column
+--noheadings to turn off headings
+
+See man pages for full field lists and meanings of attribute letters.
+
+[Next bit still undocumented and could change slightly]
+Defaults, including column selections & ordering, can be changed
+with config file entries in a new "report" section:
+  aligned, buffered, headings - set to 0 or 1
+  separator - string
+  pvs_sort, pvs_cols, pvs_cols_verbose  - strings of column lists 
+(like -o or -O)
+  Similarly for lvs_*, vgs_*, segs_* 
+units (string) & suffix (0 or 1) can be set in the "global" section.
+
+Alasdair
+-- 
+agk@uk.sistina.com
