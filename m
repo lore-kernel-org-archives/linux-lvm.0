@@ -1,40 +1,30 @@
-Message-ID: <38934C75.9206A8E3@msede.com>
-Date: Sat, 29 Jan 2000 21:24:21 +0100
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: chris@alwan.com
-MIME-Version: 1.0
-Subject: [linux-lvm] Trouble 2.2.14 setup - unresolved symbol lvm_map_ptr (My first time)
-Content-Transfer-Encoding: 7bit
+Date: Sat, 29 Jan 2000 12:26:14 -0800
+From: Tracy R Reed <treed@ultraviolet.org>
+Subject: Re: [linux-lvm] Re: (reiserfs) Re: AIX JFS dual-mount
+Message-ID: <20000129122614.C13523@ultraviolet.org>
+References: <Pine.LNX.4.10.10001280539550.13561-100000@home.suse.com> <20000129001449.A13523@ultraviolet.org> <20000129095403.A24375@lenin.nu>
+Mime-Version: 1.0
+In-Reply-To: <20000129095403.A24375@lenin.nu>; from spacey@lenin.nu on Sat, Jan 29, 2000 at 09:54:03AM -0800
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: "Peter C. Norton" <spacey@lenin.nu>
+Cc: linux-lvm@msede.com
 
-Forwarded message ...
+On Sat, Jan 29, 2000 at 09:54:03AM -0800, Peter C. Norton wrote:
+> GFS seems to require some support from hardware in the way of "dlocks", a
+> not-too widely supported standard.  I think you'd need to have drives that
+> implement dlocks, and that the lvm would have to know about them.  What
+> would need to be done to the volume stuff to support dlocks?  Could any
+> filesystem be built on top of a volume manager with dlock support?
 
--------- Original Message --------
-Date: Sat, 29 Jan 2000 13:41:49 -0600
-Resent-Date: Sat, 29 Jan 2000 21:14:28 MEZ
-From: Chris Anderson <chris@alwan.com>
-Organization: Alwan, Inc.
-Subject: Trouble 2.2.14 setup - unresolved symbol lvm_map_ptr (My
-first time)
+There are two options: You can use dlocks with special drive firmware or you
+can use a global lock manager over TCP with one of the hosts running the lock
+manager. I was thinking the latter way might be possible for non-fibrechannel
+setups.
 
-Ok this is my first try at LVM and I did not get it working.
-
-I ran the 2.2.13 patch on the linux source and it seemed to compile
-file.  I want to setup LVM as a module so I set the flag in the config
-to module.  Do all the compiles then after a reboot i run the below
-commands.  Note I did poke around in the doc and found nothing.
-
-$ depmod -a
-/lib/modules/2.2.14/block/lvm.o: unresolved symbol(s)
-
-$ modprobe lvm
-/lib/modules/2.2.14/block/lvm.o: unresolved symbol lvm_map_ptr
-
-It looks like something is wrong.  Any help please?  I hope this is a
-easy one.
-
-chris@alwan.com
+--
+Tracy Reed      http://www.ultraviolet.org
+"She moves in mysterious ways"
