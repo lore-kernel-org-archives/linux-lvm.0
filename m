@@ -1,11 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200106051832.f55IWUNn005259@webber.adilger.int>
-Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-In-Reply-To: <20010605104843.A9845@stocks.pillory.com> "from Jack McKinney at
- Jun 5, 2001 10:48:43 am"
-Date: Tue, 5 Jun 2001 12:32:30 -0600 (MDT)
-MIME-Version: 1.0
+Return-Path: <rasmus@jaquet.dk>
+Date: Tue, 5 Jun 2001 21:02:48 +0200
+From: Rasmus Andersen <rasmus@jaquet.dk>
+Subject: Re: [linux-lvm] Problems with 0.9.1b7 and 2.2.20-2
+Message-ID: <20010605210248.A843@jaquet.dk>
+References: <20010605092436.B856@jaquet.dk> <20010605123417.A23541@sistina.com> <20010605154656.A1384@jaquet.dk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010605154656.A1384@jaquet.dk>; from rasmus@jaquet.dk on Tue, Jun 05, 2001 at 03:46:57PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,21 +22,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jack McKinney writes:
->     Under Linux LVM, there are issues.  I did a demo to a local unix group
-> in which I created a volume and copied a bunch of files to it.  Then, I
-> started a pvmove command on that volume (while mounted) and copied files
-> into it while it was moving.  md5sums before and after verified that the
-> files were all intact.
->     However, I did the same presentation on the same system a week later
-> to a local linux group, and one of the files got corrupted.  Moral: you
-> need to umount the FS in order to move the LV.
+On Tue, Jun 05, 2001 at 03:46:57PM +0200, Rasmus Andersen wrote:
+[...]
+> > Did you *really* run "dd if=/dev/vg1/lvol4 of=/dev/null" and got that error
+> > in the log? Never have seen that before.
+> 
+> I will try to reproduce. But trying to get as much as the (used) 
+[...]
 
-FYI, this problem _should_ be fixed in CVS already, but the fix is more
-recent than beta7, so it is likely that you hit a known bug.
-
-Cheers, Andreas
+To finish this off: I cannot reproduce it after my reboot.
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+        Rasmus(rasmus@jaquet.dk)
+
+We're going to turn this team around 360 degrees.
+-Jason Kidd, upon his drafting to the Dallas Mavericks
