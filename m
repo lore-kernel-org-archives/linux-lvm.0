@@ -1,21 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA8Dl5r21619
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 08:47:05 -0500
-Received: from mail.fhbb.ch (mail.fhbb.ch [193.222.241.18])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA8DkvZO000373
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 08:47:03 -0500
-Date: Mon, 8 Nov 2004 14:46:31 +0100
-From: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>
-Message-ID: <1489446547.20041108144631@stud.fhbb.ch>
-Subject: Re: [linux-lvm] VGs not detected at startup
-In-Reply-To: <20041108094008.GA26201@goldfinger.local>
-References: <88707567.20041108091624@stud.fhbb.ch>
-	<20041108094008.GA26201@goldfinger.local>
-MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	micalg="pgp-sha1"; boundary="----------2C019411F849F"
-Reply-To: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iA8ESBbM004491
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 14:28:11 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CRAV9-00064p-1k
+	for linux-lvm@redhat.com; Mon, 08 Nov 2004 14:28:11 +0000
+Date: Mon, 8 Nov 2004 14:28:11 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Creating PV over a /dev/mapper device
+Message-ID: <20041108142811.GH2717@agk.surrey.redhat.com>
+References: <tk9so0di0jsl44dagc1dl8at6e9ld4r1be@4ax.com>
+	<20041107192450.GF2717@agk.surrey.redhat.com>
+	<3e4to0lgsvjoe6mqijohlh8558vbbb9uhj@4ax.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3e4to0lgsvjoe6mqijohlh8558vbbb9uhj@4ax.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,46 +24,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "David S." <dgs@gs.washington.edu>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------------2C019411F849F
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+On Sun, Nov 07, 2004 at 10:35:57PM +0100, Roman Medina-Heigl Hernandez wrote:
+> First, thanks for your fast answer. I added the "device-mapper" type
+> but it is still not working. Example:
+ 
+    # List of pairs of additional acceptable block device types found 
+    # in /proc/devices with maximum (non-zero) number of partitions.
+    # types = [ "fd", "device-mapper", 16 ]
 
-I'd be happy if this would work with me. Unfortunately a few seconds
-(even an hour) will do nothing with my system. the VGs are still
-unavailable.
+Firstly the line is commented out;
+secondly make it:
+  types = [ "device-mapper", 16 ]
 
-I now found a work-around that seems to work so far. In the
-LVM-Start-Script I just put "mount /dev/sda5 || true" before the vgscan. it
-looks like after a mount-command the system suddenly finds the VG.
-strange...
-
-markus
-
-DS> Yes, I certainly know this problem.  I'm running LVM2 2.00.15 and device
-DS> mapper 1.00.17 on a 2.6.9 (x86) kernel.  'Vgscan' fails to find an vlou=
-mes
-DS> running from the system initialization script, but works fine a few sec=
-onds
-DS> (I'm guessing) later run from 'rc.local'.  I've tried a few things to "=
-fix"
-DS> this, all to no effect.
-
-DS> David S.
+You can run 'lvm dumpconfig' to check what settings have actually 
+been read in from the config files.
 
 
-------------2C019411F849F
-Content-Type: application/pgp-signature
+> I've set-up lvm1 mode ('cause I read that it is more stable than lvm2)
 
------BEGIN PGP MESSAGE-----
-Version: PGP SDK 3.0.4
-Comment: ""
+Don't know where you read that but I'd strongly dispute it.
 
-iQA/AwUBQY94t59eUGiOXF3kEQIXXQCfUvmRWwWxco4VVlYk1yNmIAlxX/QAn3SK
-lQqZtAFANMG8uPQ2Dbd9yIrV
-=/9ci
------END PGP MESSAGE-----
-
-------------2C019411F849F--
+Alasdair
+-- 
+agk@redhat.com
