@@ -1,9 +1,10 @@
-From: "Steve Wray" <steve.wray@paradise.net.nz>
-Subject: RE: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
-Message-ID: <000c01c20ccf$fcac9e90$0201a8c0@fosi>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <003401c20c0f$23a7afb0$0300000a@STATION>
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] LV not mounting from fstab.
+Message-ID: <20020605220416.A21310@zealot.blacknet.de>
+References: <20020605113818.D8251@yukon.drivingbeat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020605113818.D8251@yukon.drivingbeat.com>; from jleach@mail.ocis.net on Wed, Jun 05, 2002 at 11:38:18AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,57 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun  5 15:32:02 2002
+Date: Wed Jun  5 16:03:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Yup exactly.
-For example I have;
-/dev/system/home /home ext3 data=journal 1 2
+On Wed, Jun 05 '02 at 11:38, Jason C. Leach wrote:
+> When I boot my system ( a test box ) the VG always are not active. I must do:
+> vgchange -a y test
+> Any reason for this? 
+By design. The kernel need the userspace tool to scan the discs and
+setup the metadata. 
+There are other aproaces (LVM2 or EVMS (IIRC)) but as long as you want
+to stay with the (stable) LVM1 you must do this (btw: it's documented
+that way).
 
-Its the bomb. I have a hell of a lot of dynamic data
-in that /home so in event of a crash there was a big
-chance of corruption. Not Any More!!!!!
-8-)
-
-
-> [mailto:linux-lvm-admin@sistina.com] On Behalf Of Aslak 
-> Sommerfelt Skretting
-> 
-> This journal=data you talk about, is this an option to be 
-> used with the 'mount' command?
-> 
-> ----- Original Message -----
-> From: "Steve Wray" <steve.wray@paradise.net.nz>
-> To: <linux-lvm@sistina.com>
-> Sent: Tuesday, June 04, 2002 11:15 PM
-> Subject: RE: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
-> 
-> 
-> > > From: linux-lvm-admin@sistina.com 
-> > > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Aslak
-> > >
-> > > Hi again, and thanks for your quick reply!
-> > >
-> > > >----- Original Message -----
-> > > >From: "Ben Lutgens" <blutgens@sistina.com>
-> > [big snip]
-> > > >Don't presume that because it's EXT3 that fscks are no longer 
-> > > >necessary. Only thing the journal guarantees is that 
-> your metadata 
-> > > >won't become corrupt (i think journal=data mount option 
-> fixes this
-> > but
-> > > >will affect performance and not neccessarily badly). If your
-> > filesystem
-> > > >has been shutdown cleanly many many times you could 
-> still has some 
-> > > >loss. A fsck should take care of that.
-> >
-> > Yup journal=data is fantastic; I wouldn't be without it
-> > on the volume that holds the home directories!
-> > I tend to allocate filesystems based on functionality;
-> > tmp gets ext2 cos its fast,
-> > places like /var/spool get XFS cos it can be grown
-> > in a pinch.
+Cu,     
+    Goetz.
