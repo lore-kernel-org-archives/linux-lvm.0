@@ -1,50 +1,51 @@
-Date: Wed, 3 May 2000 22:03:59 -0700
-From: Ryan Murray <rmurray@cyberhqz.com>
-Subject: [linux-lvm] bug in lvm tools 0.8i, 0.8final
-Message-ID: <20000503220359.A27090@cyberhqz.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Date: Wed, 3 May 2000 23:21:32 -0600 (MDT)
+From: Michael Loftis <zop12@mindless.com>
+Subject: Re: [linux-lvm] SuSE/LVM boot problem
+In-Reply-To: <20000503192826.E4439@archimedes.suse.com>
+Message-ID: <Pine.LNX.4.04.10005032319330.5172-100000@disks.tcnet.eu.org>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux LVM mailing list <linux-lvm@msede.com>
 
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 
-I've just come across a bug in lvm tools when not using /proc/partitions.
+On Wed, 3 May 2000 dgould@suse.com wrote:
 
-lvm_add_dir_cache adds an entry, but checks for duplicates with
-lvm_dir_cache_hit.  The problem is simple:
+> I agree with the statment "I don't think many sysadmins will have a
+> problem", however this does not address the typical desktop or home user.
+> 
+> They basically do not have a sysadmin, so mechanisms that rely on a savy
+> sysadmin avoiding disaster (ie, won't boot) are not suitable for a large
+> population of potential users. These are the same people who don't know
+> how to use fdisk safely, and who have no idea of how to lay out
+> filesystems. That is, the people who could really appreciate being able
+> to turn over all the storage to lvm so they can just add a disk and
+> extend their filesystems onto it when they need more space without
+> worrying about the details.
 
-lrwxrwxrwx    1 root     root            9 May  8  1999 /dev/cdrom -> /dev/=
-hdd
+Which is something that eats me.  Why?  Because there is no reason for
+people who have no idea what they are doing, or have no WANT to know what
+they are doing, to be mucking around in Unix.  If we keep adding
+"features" to make it "easier to use" eventually we'll have bloat and be
+just like Windows.  It makes the software over-complicated and isn't
+necessary.
 
-If you have that symbolic link around, it will show up in the cache as
-/dev/cdrom, so if you try to pvcreate /dev/hdd, /dev/hdd never makes it
-into the cache.
+Just my $.0001 worth
 
-Either the duplicate mechanism should be taken out, or ignore symlinks
-and have things that check the cache dereference the symlinks...
-
---=20
-Ryan Murray, (rmurray@cyberhqz.com, rmurray@stormix.com)
-Programmer, Stormix Technologies Inc.
-The opinions expressed here are my own.
-
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE5EQS/N2Dbz/1mRasRAvg2AKD5MSjdnOneNhcc0jFos7NHRsoZHgCg7VhP
-vPQml4JSE5qn3R4sS4S8XaI=
-=Z84H
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+> 
+> > Why do you say that?  You can resize it while it is mounted:
+> > http://ext2resize.sourceforge.net/
+> 
+> Cool.
+> 
+> -dg
+>  
+> -- 
+> David Gould                                   dgould@suse.com
+> If simplicity worked, the world would be overrun with insects.
+> 
+> 
