@@ -1,10 +1,9 @@
-Message-ID: <3B92827B.30809@st-peter.stw.uni-erlangen.de>
-Date: Sun, 02 Sep 2001 21:03:23 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] My VG is gone...
-References: <20010831071518.07f51602.rasmus.wiman@sami.se>	<20010831102206.A391@btconnect.com> <20010902200715.73773199.rasmus.wiman@sami.se>
-Content-Transfer-Encoding: 7bit
+Date: Mon, 3 Sep 2001 00:09:31 -0400
+Message-ID: <20010903000930.T3385@pc.ilinx>
+Mime-Version: 1.0
+Content-Disposition: inline
+From: "Brian J. Murrell" <lvm@interlinx.bc.ca>
+Subject: [linux-lvm] LVM, defvs and initrd (for lvm rootfs)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,98 +15,86 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi could you post one more time the
-output from pvdata -U -V -PP and vgdisplay -d
+I have a system that I am trying to boot with an LVM root filesystem.
+The kernel is a 2.4.8 (Mandrake variant) and is using devfs.
 
-maybe inline and not as attachments because my Mozilla treats the 
-attachment as plain text the same is with konqueror
-i see only smth of the kind :
+The LVM version is unfortunately only 0.9.1_beta3 because that is what
+is in the stock kernel at the moment (IIRC).  I am trying to get
+Mandrake to update to the latest 1.0.* release but they are resisting
+taking what is not the stock kernel until they have some internal
+expertise on LVM.  This would be a good reason for you guys to get the
+1.0.* code pushed up to Linus.  :-)
 
----------------------
-Rasmus Wiman
-SAMI Labs
+Anyhow, I am successfully booting the system fully with the root
+filesystem on LVM so I know my initrd is (somewhat :-) correct.  The
+problem I am having is that once I am booted, the /dev/<volume group/
+directory is empty.  I think this has something to do with the fact
+that when the lvm kernel module is actually loaded (and the devfs
+nodes registered), the system is booted on the initrd root filesystem
+which then gets thrown away (along with the devfs /dev/ directory)
+when the real root is mounted.
 
---Multipart_Fri__31_Aug_2001_09:41:46_+0200_08e497f0
-Content-Type: application/octet-stream;
- name="vgdisplay.txt"
-Content-Disposition: attachment;
- filename="vgdisplay.txt"
-Content-Transfer-Encoding: base64
+Here is the order of operations during boot as I can determine them:
 
-PDE+IGx2bV9jaGVja19rZXJuZWxfbHZtdGFiX2NvbnNpc3RlbmN5IC0tIENBTExFRAo8MjI+IHZn
-X2NoZWNrX2FjdGl2ZV9hbGxfdmcgLS0gQ0FMTEVECjwzMzM+IHZnX3N0YXR1c19nZXRfY291bnQg
-LS0gQ0FMTEVECjwzMzM+IHZnX3N0YXR1c19nZXRfY291bnQgLS0gTEVBVklORyB3aXRoIHJldDog
-MAo8MjI+IHZnX2NoZWNrX2FjdGl2ZV9hbGxfdmcgLS0gTEVBVklORyB3aXRoIHJldDogLTMzMSAg
-cHRyOiAobnVsbCkKPDIyPiBsdm1fdGFiX3ZnX2NoZWNrX2V4aXN0X2FsbF92ZyAtLSBDQUxMRUQK
-PDMzMz4gbHZtX3RhYl9yZWFkIC0tIENBTExFRAo8MzMzPiBsdm1fdGFiX3JlYWQgLS0gTEVBVklO
-RyB3aXRoIHJldDogMCAgZGF0YTogODA0QjU4OCAgc2l6ZTogMQo8MjI+IGx2bV90YWJfdmdfY2hl
-Y2tfZXhpc3RfYWxsX3ZnIC0tIExFQVZJTkcgd2l0aCByZXQ6IDAKPDE+IGx2bV9jaGVja19rZXJu
-ZWxfbHZtdGFiX2NvbnNpc3RlbmN5IC0tIExFQVZJTkcgd2l0aCByZXQ6IDEKPDE+IGx2bV9nZXRf
-aW9wX3ZlcnNpb24gLS0gQ0FMTEVECjwyMj4gbHZtX2NoZWNrX3NwZWNpYWwgLS0gQ0FMTEVECjwy
-Mj4gbHZtX2NoZWNrX3NwZWNpYWwgLS0gTEVBVklORwo8MT4gbHZtX2dldF9pb3BfdmVyc2lvbiAt
+1.  mount initrd
+2.  kernel mounts devfs
+3   load lvm module (which creates devfs nodes)
+3.  vgscan, vchange -a y
+4.  mount real root (on lvm partition)
+5.  kernel mounts devfs again (on real root)
+6.  unmount initrd
 
+I think the lvm nodes are created successfully in step 3 but get lost
+when devfs is mounted a second time in step 5.
 
+Here is the (relevant) kernel output during the boot.  The line
+nubmers on the left of course were just added here so that I could
+annotate below.
 
-Rasmus Wiman wrote:
+1.  Linux version 2.4.8-11mdk (chmou@no.mandrakesoft.com) (gcc version egcs-2.91.66 19990314/Linux (egcs-1.1.2 release / Linux-Mandrake 8.1)) #1 Wed Aug 22 16:22:21 CEST 2001
+    [ snip ]
+2.  Kernel command line: BOOT_IMAGE=linux ro root=3a00 devfs=mount
+    [ snip ]
+3.  devfs: v0.107 (20010709) Richard Gooch (rgooch@atnf.csiro.au)
+4.  devfs: boot_options: 0x2
+    [ snip ]
+5.  RAMDISK: Compressed image found@block 0
+6.  Uncompressing...............................................................................................................................done.
+7.  Freeing initrd memory: 1282k freed
+8.  VFS: Mounted root (ext2 filesystem).
+9.  Mounted devfs on /dev
+10. LVM version 0.9.1_beta3  by Heinz Mauelshagen  (25/01/2001)
+11. lvm -- Module successfully initialized
+12, devfs: devfs_register(): device already registered: "group"
+13, devfs: devfs_register(): device already registered: "lvol1"
+14, devfs: devfs_register(): device already registered: "1"
+15, VFS: Mounted root (ext2 filesystem) readonly.
+16, change_root: old root has d_count=2
+17, Mounted devfs on /dev
+18, Freeing unused kernel memory: 708k freed
 
->Joe Thornber <thornber@btconnect.com> skrev:
->
->>>This evening I added a 36 GB drive to our department server. I did a
->>>vgextend on it and somehow it all went terribly wrong. It seems to me
->>>
->>that
->>
->>>the new drive got added twice, but with different UUIDs. Of course
->>>
->>there
->>
->>>is no way vgchange will bring it online. Is there a solution to the
->>>problem? I downloaded LDE from <http://lde.sourceforge.net/> to have a
->>>look at it, but I don't know what to alter. I run Slackware 8 with
->>>
->>Kernel
->>
->>>2.4.8 and LVM-1.0. The attached files contain output from pvdata -U -V
->>>
->>-PP
->>
->>>on all three partitions.
->>>
->>You're right sdb1 appears to have been added twice with seperate
->>UUID's.  I'm at a loss to explain this at the moment.  Did you run
->>pvcreate more than once on sdb1 ? (I want to know where that extra
->>uuid came from).
->>
->
->Well here's the full story:
->I added the new disk, made a new LVM partition, ran pvcreate on it. Did a
->vgextend vg1 /dev/sdb1. Rebooted. No vg:s found, Panic: root not found.
->Spent a bunch of hours hackaing a Slackware 8 boot floppy with LVM 1.0
->support. It found the vg. Next idea: Maybe it's because of devfs. I hacked
->the disk a bit further yo use devfs, and now it didn't find the VG:s. I
->started looking for any LVM list archive, found something about small
->initrd:s so I put an 8 MB initrd image on the root floppy, and wow, the VG
->was there. Tried to put a larger initrd on the boot partition and re-ran
->lilo. Rebooted, no success. Later I realised that a initrd_size=8912k
->might have done the trick. Booted from the floppy again and did a vgreduce
->vg1 /dev/sdb1. Now it would boot. Here I should really have backed up
->everything to a non LVM partition, but instead I did a vgextend vg1 sdb1.
->Re-ran lvmcreate_initrd, re-ran lilo and rebooted. That's where I am now.
->Two SDB1:s with separate UUID's. Can this be fixed or should I format and
->reinstall? It would really feel bad because I've never had to format and
->reinstall a Linux system except for the occasional hardware failure.
->
->
->---------------------
->Rasmus Wiman
->SAMI Labs
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Notice in line 2, the kernel command line does include "devfs=mount".
+Notice in lines 5-8, the initial ramdisk is detected and mounted.  In
+line 9, the kernel mounts devfs.  Lines 10-11 are the loading of the
+lvm driver and lines 12-14 are errors from devfs about devices that
+exist, I guess.  I am not sure why I am getting these.
+
+See on line 15, the real root filesystem (on the LVM LV) is mounted
+successfully (yay!) and on line 17, devfs is mounted again -- by the
+kernel.
+
+The system boots fine onto the LVM based root filesystem.  The problem
+is that the device nodes in /dev/VG (group, lvol1 and 1) are missing
+an uncreatable.
+
+Is my theory correct?  Is there a way to work around this?
+
+Thanx,
+b.
+
+-- 
+Brian J. Murrell
