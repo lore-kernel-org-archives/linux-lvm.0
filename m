@@ -1,12 +1,13 @@
-Return-Path: <christianv@zeropiu.it>
-From: "Christian Verdelli" <christianv@zeropiu.it>
-Message-ID: <5c1df9db30f63ca9.30f63ca95c1df9db@apollo.zeropiu.it>
-Date: Wed, 09 May 2001 17:15:25 +0200
-MIME-Version: 1.0
-Content-Language: it
-Content-Type: multipart/mixed;
- boundary="--20e2cc746285eee540914b9d44c80c21"
-Subject: [linux-lvm] LVM-i2o problem
+Return-Path: <mkennedy@hssinc.com>
+Subject: Re: [linux-lvm] Graphical tool for LVM?
+From: Matthew Kennedy <mkennedy@opushealthcare.com>
+In-Reply-To: 
+	<Pine.LNX.4.21.0105091343490.28295-100000@tolppa.kotisivupalvelu.fi>
+References: 
+	<Pine.LNX.4.21.0105091343490.28295-100000@tolppa.kotisivupalvelu.fi>
+Date: 09 May 2001 10:17:40 -0500
+Message-Id: <989421460.1197.5.camel@zoot>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,65 +19,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: armando.campanaro@zeropiu.com
 
-This is a multi-part message in MIME format.
+On 09 May 2001 13:46:30 +0300, Harri Haataja wrote:
+> On Wed, 9 May 2001, David Vidal Rodriguez wrote:
+<snip>
+> This would be very nice to have right from the start, for example
+> in DiskDruid. I'm sure a lot of dists would not yet be willing to
+> take it in though (apart from Rock maybe?). SGI did the XFS
+> install disks, though. Maybe something similiar. Curses "GUI"
+> as well as X (Xaw would be ideal/servers, GTK for prettiness).
 
-----20e2cc746285eee540914b9d44c80c21
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: 7bit
+SuSE 7.1's Yast installer allows you to configure the LVM (create VG,
+add PV, add LV etc) as part of the installation process. It's a tex
+curses interface. Quite nice -- a nice logical layout and a bit like
+Disk Druid, but I never had much success in creating a LVM only
+machine... but then I'm a LVM newbie and those "non-trivial changes
+required for a root LVM" SuSE's installer mentions are not exactly
+documented by them (as far as I can tell).
 
-Dear friends,
-
-we have been trying to install LVM on a 
-Linux system running a i20 RAID volume.
-
-After having configured and installed LVM binaries,
-we receive the following error message when creating
-a physical volume:
-
-./pvcreate /dev/i2o/hda2
-pvcreate --- invalid physical volume name  "/dev/i2o/hda2"
-
-
-After having consulted the archives we have tried to modify
-the configuration files lvm_dir_cache.c & lvm_check_dev.c 
-lvm_check_partition.c.
-
-Unfortunately we cannot make out precisely what has to be done,
-could someone please explain us how to make these changes?
-
-Thanks in advance.
-
-
-
-
-
-
-Verdelli Christian
-
-ZEROPIU SpA
-via Melzi d'Eril, 26 - 20154 Milano
-ITALY
-Tel: +39-02-34530018 - Fax: +39-02-34532148
-
-e-mail: christian.verdelli@zeropiu.it
-homepage: http://www.zeropiu.com
-
-----20e2cc746285eee540914b9d44c80c21
-Content-Type: text/x-vcard; name="verzachris.vcf"; charset=us-ascii
-Content-Disposition: attachment; filename="verzachris.vcf
-Content-Description: Card for Christian Verdelli <christianv@zeropiu.it>
-Content-Transfer-Encoding: 7bit
-
-begin:vcard
-n:Verdelli;Christian
-fn:Christian Verdelli
-version:2.1
-email;internet:christianv@zeropiu.it
-title:Sys Admin
-end:vcard
-
-----20e2cc746285eee540914b9d44c80c21--
+Matt
