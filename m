@@ -1,9 +1,8 @@
-From: <brad.p@frisurf.no>
-Message-ID: <001201c3c24c$cc77c450$0200000a@ray1>
+Message-ID: <e1fc01c3c2be$e35a73da$f7055957@ulb.ac.be>
+From: "Gladys Sosa" <gsosamz@virtual.finland.fi>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0013_01C3C255.2E3C2C50"
-Subject: [linux-lvm] exporting/importing a LVM volume
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] *****SPAM***** INCREASE YOUR D-I,CK  WEIGHT               u*    nnftorbzjxjwho
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,143 +13,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 15 07:57:04 2003
+Date: Mon Dec 15 07:58:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+SPAM: -------------------- Start SpamAssassin results ----------------------
+SPAM: This mail is probably spam.  The original message has been altered
+SPAM: so you can recognise or block similar unwanted mail in future.
+SPAM: See http://spamassassin.org/tag/ for more details.
+SPAM: 
+SPAM: Content analysis details:   (18.7 hits, 7 required)
+SPAM: Hit! (2.7 points)  Subject contains lots of white space
+SPAM: Hit! (3.7 points)  BODY: Information on getting a larger penis
+SPAM: Hit! (1.5 points)  BODY: Money back guarantee.
+SPAM: Hit! (1.5 points)  BODY: Asks you to click below
+SPAM: Hit! (0.2 points)  URI: Uses a username in a URL
+SPAM: Hit! (2.1 points)  BODY: FONT Size +2 and up or 3 and up
+SPAM: Hit! (3.2 points)  HTML-only mail, with no text version
+SPAM: Hit! (1.8 points)  No MX records for the From: domain
+SPAM: Hit! (2.0 points)  Received via a relay in relays.osirusoft.com
+SPAM:                    [RBL check: found 195.82.216.64.relays.osirusoft.com.]
+SPAM: 
+SPAM: -------------------- End of SpamAssassin results ---------------------
 
-------=_NextPart_000_0013_01C3C255.2E3C2C50
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-
-Hi all, 
- 
- 
-I need to move a lvm volme over to a new os install. And this is what i
-did.
- 
-Before installing the new os, i did a vgexport name
-and acording to the howto, all i need to do on my new os is pvscan and
-then vgimport name /dev/dev1 + + + + 
- 
-(http://tldp.org/HOWTO/LVM-HOWTO/x978.html)
- 
-However when trying to import it i get these messages:
- 
-pvscan -- reading all physical volumes (this may take a while....)
-pvscan -- inactive PV "/dev/sdc1" is in no VG [111.76GB]
-pvscan -- total: 1 [111.76GB] / in use: 0 [0] / in no VG: 1 [111.76GB]
- 
-Its supposed to say something like this: (paste from the howto)
- 
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sdb1"  is in EXPORTED VG "design" [996 MB /
-996 MB free]
-pvscan -- inactive PV "/dev/sdb2"  is in EXPORTED VG "design" [996 MB /
-244 MB free]
-pvscan -- total: 2 [1.95 GB] / in use: 2 [1.95 GB] / in no VG: 0 [0]
-
-If i try the vgimport i get this message:
- 
-vgimport -- ERROR "pv_read(): PV identifier invalid" reading physical
-volume "/dev/sda1"
- 
-Anyone got a hint what i need to do to get this LVM up and running again
-?
- 
-Ray
-
-------=_NextPart_000_0013_01C3C255.2E3C2C50
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
-<TITLE>Melding</TITLE>
-
-<META content=3D"MSHTML 6.00.2800.1276" name=3DGENERATOR></HEAD>
-<BODY>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Hi =
-all,=20
-</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>I need =
-to move a lvm=20
-volme over to a new os install. And this is what i =
-did.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Before =
-installing=20
-the new os, i did a vgexport name</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>and =
-acording to the=20
-howto, all i need to do on my new os is pvscan and then vgimport name =
-/dev/dev1=20
-+ + + + </FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>(<A=20
-href=3D"http://tldp.org/HOWTO/LVM-HOWTO/x978.html">http://tldp.org/HOWTO/=
-LVM-HOWTO/x978.html</A>)</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial =
-size=3D2>However when trying=20
-to import it i get these messages:</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>pvscan =
--- reading=20
-all physical volumes (this may take a while....)</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>pvscan =
--- inactive=20
-PV "/dev/sdc1" is in no VG [111.76GB]</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>pvscan =
--- total: 1=20
-[111.76GB] / in use: 0 [0] / in no VG: 1 [111.76GB]</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Its =
-supposed to say=20
-something like this: (paste from the howto)</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003>pvscan -- reading all physical =
-volumes (this=20
-may take a while...)<BR>pvscan -- inactive PV "/dev/sdb1"&nbsp; is in =
-EXPORTED=20
-VG "design" [996 MB / 996 MB free]<BR>pvscan -- inactive PV =
-"/dev/sdb2"&nbsp; is=20
-in EXPORTED VG "design" [996 MB / 244 MB free]<BR>pvscan -- total: 2 =
-[1.95 GB] /=20
-in use: 2 [1.95 GB] / in no VG: 0 [0]<BR></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>If i =
-try the=20
-vgimport i get this message:</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial =
-size=3D2>vgimport -- ERROR=20
-"pv_read(): PV identifier invalid" reading physical volume=20
-"/dev/sda1"</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial size=3D2>Anyone =
-got a hint=20
-what i need to do to get this LVM up and running again =
-?</FONT></SPAN></DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D787150914-14122003><FONT face=3DArial=20
-size=3D2>Ray</FONT></DIV></SPAN></BODY></HTML>
-
-------=_NextPart_000_0013_01C3C255.2E3C2C50--
+<html>
+<body>
+<center>
+<font face="verdana" size="+3">T<krfdwqibnvqt>he o<kkancgubfnh>nly<krhjpjxcbqitq> so<kzbncjxdvrn>lut<kwjbtaidjxzjcub>ion to P<kpzxlikdnxom>en<kifopiociwrpc>is E<kqiqibingsxok>nl<krwtsetbasxudm>arge<kppnzwlwdqrgvd>me<kdpivjudlbuqxj>nt</font>
+<br><font color="white">fgwnceblbimm mxdkggbkuo</font><br>
+<font size="+2" face="arial"><b><font color="#F30101">O<klsqtlldtqzffkd>NL<kgntochbtyh>Y T<kjxmbrpbcyl>H<khcpzudcndngfn>IS WE<kkqbsducsyv>EK:</font></b> A<kcsqplkdwlgyvo>dd at l<kwldnibeyehdgbv>east 3 I<kvstyxucvmyxd>NCH<kxvkosscwmcad>ES or ge<kddzzmsdjqqnm>t y<kifshzndtekdl>our mon<krxohdubefijzrc>ey bac<kixcefabeezovid>k!
+<br><font color="white">xnjbnobkmkppyl scmawibvywkg</font><br>
+<table width="600">
+<tr>
+<td>
+<font face="arial">
+<kbzcflmdyxyub>We a<kzvtwwzcdaobnpz>re s<keanrmgcebsrpyj>o sur<kokibgsdsabt>e o<krhkodrclfafn>ur p<kilukkdcwzd>rod<kciynxqddawi>uct wo<kqyzwnkbqcypt>rks w<kbcsorqzrqu>e ar<kanjuqucogq>e wi<kukmtgicjvqpdi>lling to pr<kgzmgogdhwjfpic>ove it b<kjslkbkberj>y of<kburrykbsbdz>fer<khjbaabfysjrac>ing a <b>f<kgogsaqdbsav>re<krehangdlomdv>e t<kewqipqhwippgd>ri<kupcgqacgcfvhsb>al b<kpgxyyzbfaxnt>ott<kxhquqidjnoz>le</b> + a 1<kenxrlkbfslstw>0<kgtjzuzcnvmt>0% <b>m<kgfgtqxcmhikylb>on<kjsqphbcjoy>ey b<kpptmeydejx>ack g<kwxsanxdmvyj>uar<kihqcwubuhrlaf>ante<kqcoynhsqntle>e</b> u<kudepjebogkkolc>pon p<kvgwqtbdkkaakz>ur<kpxsqdwwruuk>cha<kfgfwufzfjbvlcp>se if y<kdpbhhdbamrqs>ou ar<kmtaamrckkx>e n<kywgrnsdrck>ot sa<kbjahnadigwpg>ti<ksppxikdhsm>sfie<kkavlcjbhpxm>d w<kkeyvnmdmtibtcw>ith th<kzwuakncgfngad>e r<komkemudvbkv>esul<kdhnkdubusztr>ts.
+</td>
+</tr>
+</table>
+<p><font face="verdana" size="+2"><b>-<kmeszkibprtb>--<koymkesdqskgk>></b> <A href="http://ewmahebinrcgi@yunoz.biz/vp/?zsxdc">C<kxjszhybvogd>l<kwouuezbixednfb>ick 
+He<kmhuhoufdyrt>re<knpkgjscgharwi> To L<kvblogkdzkvaba>ear<kxilgmudywjb>n M<khgfegzbabrtci>or<kywzxyxdlerbfg>e</a> <b><<kdicyxufssg>-<kqkbanbcaebk>--</b></font>
+<p>
+<font face="arial">A<ksdrdcxaumcady>ls<kpbvssidgpgsqyf>o <kvzwujhcanprspc>che<kodelkndziom>ck ou<kjdkqtdcokycdad>t o<kaocxpsqhwqanbm>ur <b>*<kvhblmpbexa>br<kmkbrcbholnqfl>an<kbesbapcvhbcb>d ne<kftemrcsvdmp>w*</b> 
+pr<kmxtgofcvwyuuh>od<knxyryzbvetmo>uc<kplljzudizuaelv>t: <A href="http://ucjbfzzkxf@yunoz.biz/patch/?zsxdc">P<kjgoarhddadlzn>e<karvyhpcgthxwi>ni<kisnqkmbvlks>s 
+<koyvftzfardxjbr>E<klmoxghchbzvt>nla<kykleqgbooke>rge<knohogqctwuidx>me<kkbaedodwfeaky>nt P<kgdaswlbwsntxmb>at<kmxeqnqdaryj>ch<kddfaqlvzkrf>es</a></font><br>
+<font face="arial" size="-1"><b>C<kkgymgjbijw>om<kncajptbzbkjktc>es <kxrcvuqdnxmk>wi<klbmcmkbhodkee>t<krqrclobdhrum>h the 1<kevysqobtgjsn>0<krtyibqwwekbrcm>0% m<kmbvqlkbaqnosf>o<knygpfscmjqchu>ne<kxvmuqcdscru>y b<kqsytlznutxxtdb>ac<kvznjtwbciml>k wa<kdrcwkncbdnuc>rr<kpcgwuwdzczk>ant<kcryvsrdekgw>y <kyawzkuqtys>as w<kcjbbpqcihwnlkc>el<kjymekpdpufag>l!</b></font>
+<br><font color="white">nlwpwackxzhg aeezzqdcun</font><br>
+<br><font color="white">qsdtdabsqyvnxr rouimkdbapgwm</font><br><p>
+<br><font color="white">engqllbjmohggc ehcskjcvguqht</font><br>
+<font size="-2"><a href="http://lbvrsqbiou@yunoz.biz/vp/o.html
+">N<knpqbviaooeaebp>o m<kplgfnlduqixy>or<ktuqxmdbiktye>e 
+of<kazqkpuuslhu>fe<krwlalidjnhszm>rs</a></font>
+</html>
