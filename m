@@ -1,10 +1,8 @@
-From: "Steven Stillaway" <steve@stillaway.net>
-Subject: Re: [linux-lvm] Is there a LVM(2?) patch for 2.5.x yet?
-Message-ID: <20021006053129.GA7552@sparcbox.net>
-References: <1033405512.27834.25.camel@UberGeek.coremetrics.com> <20021001075107.GA1112@fib011235813.fsnet.co.uk> <20021006052036.GA14876@chunk.voxel.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021006052036.GA14876@chunk.voxel.net>
+From: Rene Schumann <rene@athome.dyndns.org>
+Subject: [linux-lvm] vgscan cant find my vg
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200210061951.40392.rene@athome.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,53 +13,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct  6 00:35:55 2002
+Date: Sun Oct  6 12:54:10 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I will give a patch a beta test against 2.5.40-ac3 also.
+Hello!
 
--- 
-Steven Stillaway
-steve@stillaway.ca
-steve@sparcbox.net
-On Sun, Oct 06, 2002 at 01:20:36AM -0400, Andres Salomon wrote:
-> As I mentioned on IRC, I'm also interested in testing it... Just a
-> reminder.  :)
-> 
-> 
-> On Tue, Oct 01, 2002 at 08:51:08AM +0100, Joe Thornber wrote:
-> > 
-> > On Mon, Sep 30, 2002 at 12:05:13PM -0500, Austin Gonyou wrote:
-> > > I really need to test 2.5.x and I can't ATM because of LVM patch
-> > > problems. Can someone tell me what's going on with LVM and 2.5?
-> > 
-> > I have device-mapper running under 2.5 ATM, hopefully I'll be pushing
-> > it towards Linus in the next week or so once I've tidied the block
-> > splitting code a bit more.
-> > 
-> > Would you be interested in testing what I have ?  It would be very
-> > helpful if you could.
-> > 
-> > - Joe
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> -- 
-> Buying a Unix machine guarantees you a descent into Hell. It starts when
-> you plug the computer in and it won't boot. Yes, they really did sell you
-> a $10,000 computer with an unformatted disk drive.
-> 	-- Philip Greenspun
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Thanks for your help.
+A missing Modul is not my problem.
+I do not have a scsi only Kernel and both, Mandrake inst. kernel and my n=
+ormal=20
+Kernel are standard Mandrake Kernels with all Moduls.
+Vgscan still fails to find my vg01
+Can someone please tell me how i can safe my data?
+thx
+
+
+
+--------------------------------
+Hi Rene,
+
+I had such a situation some time ago, too.
+I had 2 scsi disks and a scsi-only kernel, with ide just as a loadable=20
+module. I added an ide disk to the running vg and all was ok until I=20
+rebooted. When booting up, my system lacked the ide-module so the hole=20
+vg was not recognized by the kernel.
+Then I had two possibilities: compiling a new kernel with the ide-disk=20
+compiled into, or building a new initrd with the ide-module. Now the=20
+system is up perfectly well.
