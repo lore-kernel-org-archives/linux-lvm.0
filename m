@@ -1,8 +1,14 @@
-From: "BrainCoders.com" <mailinglist@braincoders.com>
+Subject: Re: [linux-lvm] Re: GRUB + LVM + XFS?
+From: "Eric M. Hopper" <hopper@omnifarious.org>
+In-Reply-To: <200201080927.g089QVJ00669@hammer.brocade.com>
+References: <1010427293.29260.3.camel@UberGeek>
+    <m3666ej5t2.fsf@shakti.rupa.com>
+    <200201080927.g089QVJ00669@hammer.brocade.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-oUNnnZQlwEGL3SXbK1kF"
+Message-Id: <1010490330.2112.2.camel@monster.omnifarious.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16NuMO-0007du-00@hermes.sistina.com>
-Subject: [linux-lvm] *****SPAM***** ** LOW COST SOFTWARE DEVELOPMENT **
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,100 +19,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  8 05:25:02 2002
+Date: Tue Jan  8 05:43:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-SPAM: -------------------- Start SpamAssassin results ----------------------
-SPAM: This mail is probably spam.  The original message has been altered
-SPAM: so you can recognise or block similar unwanted mail in future, using
-SPAM: the built-in mail filtering support in your mail reader.
-SPAM: 
-SPAM: Content analysis details:   (19 hits, 5 required)
-SPAM: Hit! (1 point)     Subject is all capitals
-SPAM: Hit! (3.8 points)  BODY: /to (?:be removed|be deleted|no longer receive th(?:is|ese) messages?) (?:from|send|reply|[e-]*mail)/i
-SPAM: Hit! (2.6 points)  BODY: /you (?:wish|want|would like|desire) to be removed/i
-SPAM: Hit! (3.9 points)  BODY: /subject.*remove/i
-SPAM: Hit! (2.5 points)  BODY: /\"remove\"/i
-SPAM: Hit! (2.2 points)  BODY: Says: "to be removed, reply via email" or similar
-SPAM: Hit! (3 points)    Listed in Razor, see http://razor.sourceforge.net/
-SPAM: 
-SPAM: -------------------- End of SpamAssassin results ---------------------
+--=-oUNnnZQlwEGL3SXbK1kF
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2002-01-07 at 18:48, Adrian Head wrote:
+> Adrian Head
+>=20
+> (Public Key available on request.)
 
-Dear Internet User,
+So, what is it?  I'm tired of seeing the message about an unverifiable
+signature.  :-)
 
-The eBusiness is changing the software applications and 
-services landcape in a way that has not been seen 
-earlier. Companies worldwide are waking up to the fact 
-that the difference between just having an Online 
-Presence and using the web as a strategic medium can mean 
-all the difference to success. 
+Have fun (if at all possible),
+--=20
+The best we can hope for concerning the people at large is that they
+be properly armed.  -- Alexander Hamilton
+-- Eric Hopper (hopper@omnifarious.org=20
+http://www.omnifarious.org/~hopper) --
 
-What this also means is that you need technology 
-providers who understand the business implications of 
-technology and can make sure that the solutions work with 
-your exisiting business processes as also enable you to 
-integrate new processes without massive investments in 
-changing the whole Application Architecture. 
+--=-oUNnnZQlwEGL3SXbK1kF
+Content-Type: application/pgp-signature
 
-BrainCoders.com is a software company dedicated to 
-designing and developing the highest-quality software to 
-provide our clients with workable, maintainable and 
-leading-edge solutions. We are specializing in IT 
-services and software outsourcing. 
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Our prices are one of the lowest on the market. We charge 
-our customers from $8 to $15 per working hour depending 
-on the length and complexity of the project.
+iD8DBQA8OtuHjtsvlOwvazYRAuiJAJ9NS6DzqKenh0S+tSFACoGB0R7TxwCfZqoo
+v4K16TIfOArabrDDw5aYoUw=
+=MXwK
+-----END PGP MESSAGE-----
 
-Our leading principle is to consistently deliver on time 
-and on budget. 
-Our most value asset is our team of most committed and 
-capable people. 
-
-This dedication to high degrees of professionalism 
-translates to innovative and cost effective solutions. 
-The bottom line is that we help our clients gain 
-competitive advantage and maintain their leading 
-positions in their respective industries.
-
-BrainCoders.com' software development services may be of 
-special interest to the following groups of potential 
-customers: 
-
-Software houses that wish to reduce their development 
-costs by means of outsourcing.
-
-Companies not directly involved in software development, 
-but which have or need their proprietary software 
-business applications and wish to delegate the 
-development, upgrades and support of these applications 
-to a software company.
-
-For more information please visit our web site by 
-clicking the following link:
-
-http://www.braincoders.com
-
-If you are interested in our services, I would be happy 
-to provide you with any information you may request.
-
-I am looking forward to hearing from you.
-
-Best Regards,
-
-Vesselin Sladkov
-BrainCoders.com
-E-mail: sladkov@braincoders.com
-
-_________________________________________________________
-This mailing is done only to people who have requested 
-info from one of our sites, or downloaded
-our Software. If you have recieved this email in error 
-and you wish to be removed from future 
-mailings, please reply with the subject "Remove" and our 
-software will automatically block you 
-from their future mailings.
-_________________________________________________________
+--=-oUNnnZQlwEGL3SXbK1kF--
