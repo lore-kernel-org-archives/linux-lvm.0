@@ -1,7 +1,8 @@
-MIME-Version: 1.0
-Message-ID: <OFA250C8DB.F227705D-ONC1256DB4.002ACA22-C1256DB4.002C0295@itet.no>
-From: Runar Ingebrigtsen <Runar.Ingebrigtsen@itet.no>
-Subject: [linux-lvm] lv_usr not updated after extention
+From: Victor Tramp <mprov@speakeasy.net>
+Message-Id: <1065295081.21233.6.camel@localhost>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] 0x8e "Linux LVM" partitions on a PowerPC
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,47 +13,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct  7 07:30:03 2003
+Date: Tue Oct  7 07:34:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
 Hi,
+	I've looked everywhere, and i mean everywhere for this, and i can't
+find the answer. It's like nobody has tried using a Mac with LVM or
+something! The screwy part is.. I can't even find mailing lists, irc
+channels, or web documents that even say "it doesn't work"!! 
 
-My system is running with LVM and the VG's vg_system and vg_data.
+How do I create LVM partitions on a Mac so i can subsequently create PVs
+and VGs and LVs???
 
-Extending any partition in vg_data just works.
-Extending lv_swap in vg_system works.
-But the extended space never shows up in the /usr partition lv_usr! Look 
-yourself:
+mac-fdisk doesn't have a facility for changing system partition types,
+just apple partition types, which does no good.. 
 
-#df -h | grep usr
-/dev/vg_system/lv_usr   1.4G  1.3G   82M  95% /usr
+and fdisk, cfdisk, & sfdisk, think the drive's partition table is
+corrupted.. when i force it to repartition the drive, then mac-fdisk,
+and the machine itself think the partition table is corrupted.. 
 
-# lvdisplay /dev/vg_system/lv_usr
---- Logical volume ---
-LV Name         /dev/vg_system/lv_usr
-VG Name         vg_system
-LV Write Access read/write
-LV Status               available
-LV #                    3
-# open                  1
-LV Size                 4.09 GB
-Current LE              131
-Allocated LE            131
-Allocation              next free
-Read ahead sectors      1024
-Block device            58:3
+I'm using lvm10 and lvm-common under debian-powerpc, I'm NOT using
+devfs, and I've gotten LVM to work flawlessly on my x86 and sparc
+machines.. 
 
-How come? Is this caused by the /usr partition containing running system 
-files?
-If so, why does the change still not show up after a reboot?
+Help!?!!!
 
-Now, I would appreciate any help :) Thanks.
-
-mvh Runar Ingebrigtsen
-
-      -o)
-      /\\    Message void if penguin violated
-     _\_V    Don't mess with the penguin
+Signed,
+Totally Lost =(
+ 
+-- 
+-M
+--
+If a nation values anything more than freedom, it will lose its freedom;
+and the irony of it is that if it is comfort or money it values more, it
+will lose that, too.
+                -- W. Somerset Maugham
