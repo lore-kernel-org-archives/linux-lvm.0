@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgcfgrestore error !
-Message-ID: <20011120121947.B18529@sistina.com>
-References: <3BF8E5DE.ABAEB618@LTUtech.com> <20011119125632.A12388@sistina.com> <3BF8F8BF.3FE1491C@LTUtech.com> <20011119151746.A13040@sistina.com> <3BF923C3.A2060FDD@LTUtech.com>
+Subject: Re: [linux-lvm] Recovering a volume after OS upgrade (lost /etc/lvm*)
+Message-ID: <20011120122048.C18529@sistina.com>
+References: <20011119014754.A1308@lynx.no> <20011119155741.7961.qmail@web12306.mail.yahoo.com> <20011119095105.G1308@lynx.no>
 Mime-Version: 1.0
-In-Reply-To: <3BF923C3.A2060FDD@LTUtech.com>; from Igor.Dumaire@LTUtech.com on Mon, Nov 19, 2001 at 04:22:43PM +0100
+In-Reply-To: <20011119095105.G1308@lynx.no>; from adilger@turbolabs.com on Mon, Nov 19, 2001 at 09:51:05AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,42 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 05:25:02 2001
+Date: Tue Nov 20 05:26:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Nov 19, 2001 at 04:22:43PM +0100, Igor Dumaire wrote:
-> > 
-> > I overlooked the 'active VG' message vgcfgrestore is displaying.
-> > Because 'vgchange -an lvm1' wont't work in your situation I am afraid you need
-> > to reboot before being able to run vgcfgrestore successfully.
-> > 
-> After the reboot vgcfgrestore doesn't work !
+On Mon, Nov 19, 2001 at 09:51:05AM -0700, Andreas Dilger wrote:
+> On Nov 19, 2001  07:57 -0800, Lars Kellogg-Stedman wrote:
+> > The RAID device appears to be working just fine.  With the MD driver,
+> > simply recreating /etc/raidtab and running raidstart worked without a
+> > problem.
 > 
-> # vgchange -an lvm1
-> vgchange -- volume group "lvm1" does not exist
-> 
-> # vgcfgrestore  -n lvm1  /dev/hde1
-> vgcfgrestore -- can't restore part of active volume group "lvm1"
+> You saw the other posting about the MD devices fix?  This is fixed in
+> CVS, but not 1.0.1rc4.  Maybe it is time for a new LVM release.
 
-Strange.
-Please provide "vgdisplay -v;pvscan;lvmdiskscan" and "pvdata -PP" for all
-PVs belonging to the missing VG.
-
-Thanks,
-Heinz    -- The LVM Guy --
+We are planning one for the end of the week.
 
 > 
-> What do I do ?
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
 > 
-> Regards,
-> -- 
-> Igor Dumaire
-> 
-> www.LTUtech.com - Making Sense of Visual Content
-> ------------------------------------------------
 > 
 > _______________________________________________
 > linux-lvm mailing list
@@ -57,6 +45,10 @@ Heinz    -- The LVM Guy --
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
