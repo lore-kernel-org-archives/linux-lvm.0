@@ -1,30 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i57IjY010625
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:45:34 -0400
-Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i57IjXi5009913
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:45:33 -0400
-Received: from localhost (lucy.ukfsn.org [127.0.0.1])
-	by mail.ukfsn.org (Postfix) with ESMTP id 801ADE6D40
-	for <linux-lvm@redhat.com>; Mon,  7 Jun 2004 19:43:41 +0100 (BST)
-Received: from mail.ukfsn.org ([127.0.0.1])
-	by localhost (lucy.ukfsn.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 17792-11 for <linux-lvm@redhat.com>;
-	Mon,  7 Jun 2004 19:43:41 +0100 (BST)
-Received: from oak.dgreaves.com (modem-298.parera.dialup.pol.co.uk
-	[81.78.177.42]) by mail.ukfsn.org (Postfix) with ESMTP id DB470E6D3F
-	for <linux-lvm@redhat.com>; Mon,  7 Jun 2004 19:43:40 +0100 (BST)
-Received: from ash.dgreaves.com ([10.0.0.105])
-	by oak.dgreaves.com with esmtp (Exim 4.20) id 1BXP9E-00036J-5L
-	for linux-lvm@redhat.com; Mon, 07 Jun 2004 19:47:04 +0100
-Message-ID: <40C4B7C4.4090306@dgreaves.com>
-Date: Mon, 07 Jun 2004 19:45:24 +0100
-From: David Greaves <david@dgreaves.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i57HnJ024055
+	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 13:49:19 -0400
+Received: from p15141853.pureserver.info ([217.160.223.157])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i57HnHi5026843
+	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 13:49:18 -0400
+Received: from [217.231.15.135] (pD9E70F87.dip0.t-ipconnect.de
+	[217.231.15.135])
+	by p15141853.pureserver.info (Postfix) with ESMTP id EE5674843C7
+	for <linux-lvm@redhat.com>; Mon,  7 Jun 2004 19:49:56 +0200 (CEST)
+Message-ID: <40C4AA7B.306@digital-touch.net>
+Date: Mon, 07 Jun 2004 19:48:43 +0200
+From: philip <suse-ml@digital-touch.net>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] software raid or lvm?
-References: <40C48905.80608@blocked.name>	<20040607162858.GA5220@synapse.neuralscape.com>
-	<40C4B1BA.7070006@blocked.name>
-In-Reply-To: <40C4B1BA.7070006@blocked.name>
+References: <40C48905.80608@blocked.name> <20040607153809.GM31405@kluge.net>
+In-Reply-To: <20040607153809.GM31405@kluge.net>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -39,45 +29,36 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-philip wrote:
+hi,
+i'm sorry that i wasn't more clear. i used to have raid0 with the siimage binary 
+driver, but that is only for 2.4 kernels. so i've to use software raid and i 
+didn't find the way how to put lvm on top of software raid. or how can i do it?
+however, in suse admin guide is written about lvm: 'several hard disks can be 
+used with improved performance in the raid0 (striping) mode.' any idea? can i 
+use lvm as raid0? course, the best is raid and lvm on top, but if i can use only 
+lvm, how fast it would be? can i check the speed?
+thank you
+philip
 
-> hello,
->
-> Karen Shaeffer wrote:
->
->> You can find Sil311x support in the 2.6.6 kernel. I've run it with the
->> Sil3114 controller.
->
->
-> so far i know (i didn't watch that for few last months) there is 
-> driver for sil3112 in 2.6 kernel (sata_sil) but the raid driver didn't 
-> work. also it didn't work well for everyone. so any good news?
-> thank you
-> philip
-
-
-Jeff Garzik said on the 10th May in the linux-ide list:
-
-Serial ATA (SATA) for Linux
-status report
-May 10, 2004
-
-
-Silicon Image 3112/3114
------------------------
-Summary: No TCQ. Looks like a PATA controller, but with full SATA
-control including hotplug and PM.
-
-libata driver status: Beta.
-
-drivers/ide driver status: Production, but see issue #4.
-
-Issue #4: Need to have the most recent fixes posted to lkml, for stable
-operation and full performance (where possible).
-
-
-
-
-HTH
-
-David
+Theo Van Dinter wrote:
+> On Mon, Jun 07, 2004 at 05:25:57PM +0200, philip wrote:
+> 
+>>like to install suse91, which doesn't support siimage chipset, so i've to 
+>>use software raid or lvm.
+>>what would be better/faster?
+> 
+> 
+> Well, what are you trying to do?  If you want redundancy, go with RAID.
+> If you want volume management, go with LVM.  I'd say you should do both
+> (RAID the disks then use LVM on top), but without more data there is no
+> answer for "better/faster".
+> 
+> 
+> 
+> ------------------------------------------------------------------------
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
