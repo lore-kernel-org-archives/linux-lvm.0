@@ -1,11 +1,11 @@
-Subject: Re: [linux-lvm] vgscan can't find my vg.
-Message-ID: <20031109214432.GB4425@amphibian.dyndns.org>
-References: <001e01c31029$015ad760$3c00a8c0@superdatorn>
+Subject: Re: [linux-lvm] lvm + slow deleting problem
+Message-ID: <20031109221435.GC4425@amphibian.dyndns.org>
+References: <64B9CD73757E544DA94024F7984B35843588D8@KOLEX1004.internett.mil.no>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
+	protocol="application/pgp-signature"; boundary="uh9ZiVrAOUUm9fzH"
 Content-Disposition: inline
-In-Reply-To: <001e01c31029$015ad760$3c00a8c0@superdatorn>
+In-Reply-To: <64B9CD73757E544DA94024F7984B35843588D8@KOLEX1004.internett.mil.no>
 From: Toad <toad@amphibian.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -17,63 +17,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 10 11:13:04 2003
+Date: Mon Nov 10 11:13:06 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---WhfpMioaduB5tiZL
+--uh9ZiVrAOUUm9fzH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-What kernel are you using? Does it have device mapper enabled? Have you
-tried vgcfgrestore ? IIRC On LVM1, that's vgcfgrestore -n <physical volume>=
- ,
-on LVM2 it's vgcfgrestore <volume group name>
+On Wed, Nov 05, 2003 at 10:15:35AM +0100, Aleksander Olsen wrote:
+> Hello,
+> (Sorry if its html formated)
+>=20
+> Im new to the lvm and know only the basics and after browsing thrugh the =
+archives here... i need som help.
+>=20
+> I got 4 WD120gb 8MB disks put together on a slackware 8.1 box and running=
+ lvm that came with 2.4.20.
+>=20
+> Dont have access to the benchmark info now, but lets just say that I get =
+good write performance and good read performance from the volume. The one p=
+roblem i know of now is when i delete files from the volume.
+>=20
+> 700 mb  (isofile) get deleted in 2 minutes. All disks are hdparm'd and th=
+is was not a problem on any of them before the lvm merge.
 
-On Thu, May 01, 2003 at 11:31:19PM +0200, Hans T?rnquist wrote:
-> I have change my system from slackware to gentoo and I can't get my lvm t=
-o work.
+Do you get better performance on any particular filesystem? You might
+want to try a few...
 >=20
-> When I run vgscan I get:
 >=20
-> # vgscan=20
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of =
-volume group "ftp_vg" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume =
-group
+> Anyone know what im getting at ? Seen the problem before?
 >=20
-> and pvscan:
+> Thanks for all help :)
 >=20
-> # pvscan=20
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/ataraid/disc0/disc"                is associa=
-ted to unknown VG "ftp_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/disc"  is associa=
-ted to unknown VG "ftp_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host2/bus1/target1/lun0/disc"  is associa=
-ted to unknown VG "ftp_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/disc"  is associa=
-ted to unknown VG "ftp_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host0/bus0/target1/lun0/disc"  is associa=
-ted to unknown VG "ftp_vg" (run vgscan)
-> pvscan -- total: 5 [496.34 GB] / in use: 5 [496.34 GB] / in no VG: 0 [0]
+> Aleksander Olsen
 >=20
-> And now to my problem.
-> when I used slackware all my pv's was located by pvscan at /dev/hdb and f=
-orward but now at /dev/ide/host?/bus?/lun0/disc.
->=20
-> So if anybody got a clue how to fix it, pleace tell me.=20
->=20
-> /Hans T?rnquist
+
 --=20
 Matthew J Toseland - toad@amphibian.dyndns.org
 Freenet Project Official Codemonkey - http://freenetproject.org/
 ICTHUS - Nothing is impossible. Our Boss says so.
 
---WhfpMioaduB5tiZL
+--uh9ZiVrAOUUm9fzH
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 Content-Disposition: inline
@@ -81,9 +67,9 @@ Content-Disposition: inline
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.3 (GNU/Linux)
 
-iD8DBQE/rrU/r5e+zmpNTm8RArwRAJ447b4RRid8swJSQabPeWU4uHTUqACdFHyZ
-B4Y+mKyrPhGw39/6wDoR72A=
-=T4+/
+iD8DBQE/rrxLr5e+zmpNTm8RAmW+AJ99hfLtn1H84vPFPzq/E4phREty1wCeJWEp
+ZBqEtBct3lTrXy0UtM0bKLk=
+=aJFT
 -----END PGP SIGNATURE-----
 
---WhfpMioaduB5tiZL--
+--uh9ZiVrAOUUm9fzH--
