@@ -1,9 +1,12 @@
-Return-Path: <erik@bagfors.nu>
-From: Erik =?ISO-8859-1?Q?B=E5gfors?= <erik@bagfors.nu>
-Date: 11 Apr 2001 17:50:47 +0200
-Message-Id: <987004247.3002.10.camel@detrius>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 11 Apr 2001 17:07:27 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] can't remove logical volume  under snapshot???
+Message-ID: <20010411170727.A23096@sistina.com>
+References: <987004247.3002.10.camel@detrius>
 Mime-Version: 1.0
-Subject: [linux-lvm] can't remove logical volume  under snapshot???
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <987004247.3002.10.camel@detrius>; from erik@bagfors.nu on Wed, Apr 11, 2001 at 05:50:47PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +18,58 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-What does this mean??
+Erik,
 
-detrius:/# lvremove  -v /dev/disk_vg/home_lv=20
-lvremove -- locking logical volume manager
-lvremove -- checking logical volume name "/dev/disk_vg/home_lv"
-lvremove -- checking existence of volume group "disk_vg"
-lvremove -- checking for active volume group "disk_vg"
-lvremove -- getting status of volume group "disk_vg" from kernel
-lvremove -- getting status of logical volume /dev/disk_vg/home_lv from
-VGDA in kernel
-lvremove -- can't remove logical volume "/dev/disk_vg/home_lv" under
-snapshot
+you seem to have an older LVM version here which had this problem.
 
-I've tried making a snapshot once but I removed that.  Does this lv
-still think there is one???  How do I get past this?
+Please upgrade to the recent one from www.sistina.com which should fix it.
 
-/Erik
+On Wed, Apr 11, 2001 at 05:50:47PM +0200, Erik B�gfors wrote:
+> What does this mean??
+> 
+> detrius:/# lvremove  -v /dev/disk_vg/home_lv 
+> lvremove -- locking logical volume manager
+> lvremove -- checking logical volume name "/dev/disk_vg/home_lv"
+> lvremove -- checking existence of volume group "disk_vg"
+> lvremove -- checking for active volume group "disk_vg"
+> lvremove -- getting status of volume group "disk_vg" from kernel
+> lvremove -- getting status of logical volume /dev/disk_vg/home_lv from
+> VGDA in kernel
+> lvremove -- can't remove logical volume "/dev/disk_vg/home_lv" under
+> snapshot
+> 
+> I've tried making a snapshot once but I removed that.  Does this lv
+> still think there is one???  How do I get past this?
+> 
+> /Erik
+> 
+> -- 
+> Erik B�gfors               | http://erik.bagfors.nu/    
+> erik@bagfors.nu            | Erik.Bagfors@engohol.se
+> Supporter of free software | GSM +46 733 279 273
+> fingerprint: 6666 A85B 95D3 D26B 296B 6C60 4F32 2C0B 693D 6E32
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
---=20
-Erik B=EF=BF=BDgfors               | http://erik.bagfors.nu/   =20
-erik@bagfors.nu            | Erik.Bagfors@engohol.se
-Supporter of free software | GSM +46 733 279 273
-fingerprint: 6666 A85B 95D3 D26B 296B 6C60 4F32 2C0B 693D 6E32
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
