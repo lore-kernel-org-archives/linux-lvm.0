@@ -1,6 +1,6 @@
 Return-Path: <plamb_98@yahoo.com>
-Message-ID: <20010726185901.35901.qmail@web13402.mail.yahoo.com>
-Date: Thu, 26 Jul 2001 11:59:01 -0700 (PDT)
+Message-ID: <20010726190217.27824.qmail@web13405.mail.yahoo.com>
+Date: Thu, 26 Jul 2001 12:02:17 -0700 (PDT)
 From: Pierre Lamb <plamb_98@yahoo.com>
 MIME-Version: 1.0
 Subject: [linux-lvm] test
@@ -18,7 +18,7 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: phudak@sinistina.com
+Cc: phudak@sistina.com
 
  
  
