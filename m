@@ -1,8 +1,10 @@
-Message-ID: <3D52C578.5030807@jumpline.com>
-From: Ben Snyder <ben@jumpline.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] help with quota and LVM
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] help with quota and LVM
+Message-ID: <20020808225943.GA22974@localhost>
+References: <3D52C578.5030807@jumpline.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3D52C578.5030807@jumpline.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,31 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug  8 14:24:01 2002
+Date: Thu Aug  8 17:59:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm running RedHat6.2 with kernel 2.2.19 and LVM 1.0.4 on ext2 file systems
+On Thursday, 08 August 2002, at 15:24:40 -0400,
+Ben Snyder wrote:
 
-I'm having problems with quota and LVM.
+> I'm running RedHat6.2 with kernel 2.2.19 and LVM 1.0.4 on ext2 file systems
+> I'm having problems with quota and LVM.
+> 
+As far as I know filesystem quotas have only something to do with
+filesystem: it is independent of the underlaying block device (hard disk
+partition, or a LVM LV in your setup).
 
-I can mount 2 different filesystems:
-    one is a plane-jane ext2 run-o-da-mill old-fashioned /dev/sda5 mount 
-to /data FS
-    the other is a logical volume /dev/vg/lv /data2
+I remember having set up a LV (LVM version 1.0.4 if I recall correctly), 
+built an ext3 filesystem on it, configured quotas as usual and it worked.
+Kernel version is 2.4.19-pre7aa2, with no other patches applied.
 
-The data on them is identical, thanks to my friend rsync.
+I have just tried to setup ext2 quotas over a LVM version 1.0.3 Logical
+Volume, and is working as expected. Kernel version here is
+2.4.19-pre6aa1, and quota package is version 3.04-1. The procedure to
+set quotas is exactly as done with filesystems on normal disk
+partitions. In fact, the greatest problem for me has been a quota format
+mismatch between "quotacheck", "quotaon" and compiled kernel.
 
-The problem is that I cannot get quotas to work on the logical volume 
-(it *is* mounted with usrquota - I'm not that dumb).  I run 'edquota 
-ben', make my changes and save it and all is happy.  Then I run 'edquota 
-ben' again and the data is still there.  However, whenever I run 'quota 
-ben' I only get info for the non-lvm filesystem.  If the non-lvm FS is 
-not mounted, then I get 'none'.
+Hope it helps.
 
-I know quotas work on my system, they work on all of the other 
-filesystems.  Is there something I'm missing about quota and LVM?  I 
-*NEED* this to work, and help you can provide will be greatly appreciated.
-
-Thanks in advance for feedback/replies/remarks/insults.
+-- 
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Woody (Linux 2.4.19-pre6aa1)
