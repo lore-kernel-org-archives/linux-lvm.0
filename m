@@ -1,6 +1,6 @@
 From: Marco Krohn <marco.krohn@gmx.de>
 MIME-Version: 1.0
-Message-Id: <19654.1017261644@www26.gmx.net>
+Message-Id: <19742.1017261647@www26.gmx.net>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Subject: [linux-lvm] VG lost, VG restorable without lvmconf? Need help!
@@ -14,7 +14,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 27 14:40:01 2002
+Date: Wed Mar 27 14:40:06 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
