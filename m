@@ -1,8 +1,12 @@
-From: Alexander Viro <viro@math.psu.edu>
-In-Reply-To: <20021111225340.GA3587@lina.inka.de>
-Message-ID: <Pine.GSO.4.21.0211111821210.29617-100000@steklov.math.psu.edu>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: [patch] make device mapper compile on 2.5.4x
+Subject: Re: [linux-lvm] cant mount LV via partition/filesystem labels
+From: "Kirby C. Bohling" <kbohling@birddog.com>
+In-Reply-To: <1036881654.10657.66.camel@hawk.birddog.com>
+References: <3DCA84BB.9050404@jumpline.com>
+	<1036691083.13804.59.camel@hawk.birddog.com>  <3DCD6269.6010508@mvista.com>
+	 <1036881654.10657.66.camel@hawk.birddog.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1037081971.28139.58.camel@hawk.birddog.com>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,23 +17,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 11 17:23:02 2002
+Date: Tue Nov 12 00:54:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Bernd Eckenfels <ecki@lina.inka.de>
-Cc: dm@uk.sistina.com, linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
+Cc: Steven Dake <sdake@mvista.com>
+
+On Sat, 2002-11-09 at 16:40, Kirby C. Bohling wrote:
+> On Sat, 2002-11-09 at 13:30, Steven Dake wrote:
+> > I wouldn't mind seeing the patches.
+> > 
+> > Thanks
+> > -steve
+> > 
+> 
+> Steve,
+> 
+> 
+> 	The patch that fixes the LVM so fsck to it works is this attached as
+> fsck_lvm_labels.patch.
+> 
+> 	It's a trivial one line fix.  This applies to 1.26.  I'm guessing it
+> will apply to any version of the e2fsck since then.  That was the
+> earliest version that it did work on.  It applies cleanly on 1.32 which
+> is the latest version on sourceforge.
+
+Steve,
+
+	Ted Ts'o, just replied to my patch, and said that my one line fix, was
+backwards.  I did the diff in the wrong order.  I applied the patch, and
+it applied cleanly 1.32, but of course I didn't test it, it applied
+cleanly.  The proper fix was added in 1.29 according to Ted.  So all of
+the current mount and fsck programs should work properly with LVM.  The
+trival fix is easy to see if you need to fix up the old code.
+
+	Some days I'm just a really bad programmer...
+
+	Thanks,
+		Kirby
 
 
-On Mon, 11 Nov 2002, Bernd Eckenfels wrote:
-
-> -	set_device_ro(dm_kdev(md), 0/*(param->flags & DM_READONLY_FLAG)*/);
-> +	bdev = bdget(kdev_t_to_nr(dm_kdev(md)));
-> +	if (!bdev)
-> +		return -ENXIO;
-> +	set_device_ro(bdev, (param->flags & DM_READONLY_FLAG));
-> +	bdput(bdev);
-
-That is simply wrong.  set_device_ro() works only on opened block_device.
-Correct fix is to use set_disk_ro() and it's already in the tree (1.830
-on bkbits).
+-- 
+Real Programmers view electronic multimedia files with a hex editor.
