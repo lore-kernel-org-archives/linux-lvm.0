@@ -1,10 +1,12 @@
-Return-Path: <austin@coremetrics.com>
-Date: Thu, 31 May 2001 12:39:39 -0500 (CDT)
-From: Austin Gonyou <austin@coremetrics.com>
-Subject: Re: [linux-lvm] Severe bug in kernel-2.4.4 lvm
-In-Reply-To: <01053107433500.29268@oscar>
-Message-ID: <Pine.LNX.4.33.0105311239181.13367-100000@UberGeek.coremetrics.com>
-MIME-Version: 1.0
+Return-Path: <peter@bartosch.net>
+Date: Thu, 31 May 2001 20:40:03 +0200
+From: Peter Bartosch <peter@bartosch.net>
+Subject: Re: [linux-lvm] Re: [reiserfs-list] lvm-list pointed to reiserfs: fs/lvm-problems?
+Message-ID: <20010531204003.A806@mind.bartosch.net>
+References: <20010528183105.C924@mind.bartosch.net> <15123.55304.751997.122954@crimson.namesys.com> <20010529222304.A4888@mind.bartosch.net> <15124.56124.422024.340431@crimson.namesys.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <15124.56124.422024.340431@crimson.namesys.com>; from zam@namesys.com on Wed, May 30, 2001 at 03:36:28PM +0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,47 +18,64 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: reiserfs-list@namesys.com, linux-lvm@sistina.com
 
-Here here. Same here as well. LVM 0.9.1b7 kernel 2.4.5 and win4lin.
+Hi!
 
+
+>  >> 
+>  >> Sorry, but it looks for me like a lvm problem.  Can you test you LV by
+>  >> coping some random data (~ 64 MB) to a file in reliable location and
+>  >> to LV, and compare them (or md5 hashes) after reboot ?
+> 
+>  PB> hmm, i haven't really tried another filesystem, maybe i should try ext2?
+> 
+> Yes, try to run this script over ext2:
+> http://namesys.com/stress.sh
+
+i've done that, but it gave me some cruel errors - like an ext2 panic or
+so (can't find anything about it in the logs)
+
+anyway - the PC was frozen
+
+
+after the reboot e2fsck showed me that:
+
+Inode 1313467 has imagic flag set.  Clear<y>? yes
+
+Inode 1313468 is in use, but has dtime set.  Fix<y>? yes
+
+and - of course not only once :-( but hundred times
+
+>  >> Same reason (damaged data), I think, prevented reiserfs volume from
+>  >> mounting. 
+> 
+>  PB> yes you're right - but why does it oops when i _only_ want to do an "ls
+>  PB> -l"?
+> 
+> I agree with you, such behaviour is not good, but I do not think
+> that you want to run reiserfs on an unstable block device.
+
+it's (mostly) only because of the fschk-times -- this is (or should be)
+an 125GB directory tree for music
+
+
+the next step i'll do ist to give the new kernel (2.4.5) a try (hmm,
+eventually with ac4-patch - i've read that there are some
+reiserfs-issues are solved ...)
+
+
+thanks for your attention
+
+
+:wq - until next mail B-), l8r
+
+Peter
 -- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com
-
-On Thu, 31 May 2001, Ed Tomlinson wrote:
-
-> On Thursday 31 May 2001 06:08, you wrote:
-> > Hi,
-> >
-> > sorry, if this was discussed before, but
-> > I'm new on this list.
-> >
-> >
-> > I just crashed several data file systems
-> > due to a bug in kernel-2.4.4 lvm. (seems
-> > to contain lvm 0.9.1-beta2)
-> >
-> > I'd suggest to incorporate latest lvm
-> > versions into 2.4 kernels. As far as
-> > a collegue told me, lvm's kernel patches
-> > do not work with kernels later than 2.4.3.
-> > So there seems to be no way to fix the bug
-> > with later kernels.
->
-> Don't always belive collegues...  LVM 0.91 beta7
-> and 2.4.5 here.  You need ONE trival patch to fix
-> things.  Read the archives of the list.
->
-> Ed Tomlinson
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+   :          student of technical computer science           :
+   :     university of applied sciences krefeld (germany)     :
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
