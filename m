@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
+Message-ID: <3E6FB34E.30003@cox.net>
+From: "Kevin P. Fleming" <kpfleming@cox.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <8075D5C3061B9441944E137377645118012E9B@cinshrexc03.shermfin.com>
-From: "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>
-Subject: [linux-lvm] Patching a kernel that already has VFS-lock
+Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
+References: <20030312195217.GC18876@auctionwatch.com> <20030312221320.GA15196@gw.silicide.dk>
+In-Reply-To: <20030312221320.GA15196@gw.silicide.dk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,38 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 16:20:02 2003
+Date: Wed Mar 12 16:24:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Good day,
+jon+lvm@silicide.dk wrote:
+> On Wed, Mar 12, 2003 at 11:52:17AM -0800, Petro wrote:
+> 
+>>I've got a couple of brand new boxes I'm trying to get LVM set up
+>>properly on. 
+>>
+>>These machines have 6 200GiB drives attached to a 3ware controller card,
+>>for a total of 1,200,000,000,000 bytes of storage. 
+> 
+> 
+> later down you write you need speed. In that case i would suggest
+> ditching the hardware raid, and use pure software raid, it is faster.
+> I dont mind 3ware, i have dome myself, but my benchmarking revealed
+> that software was faster.
+> 
 
-I'm trying to upgrade my kernel from LVM 1.0.3 to 1.0.7.  My kernel with
-1.0.3 already has the VFS lock pactch installed and all I want to do is
-upgrade the LVM code because my snapshots are misbehaving.  I should not
-have to re-patch to get the VFS-lock to work should I?
-
-The reason I ask is because when I just patch the kernel with LVM 1.0.7
-and reboot all my VG's/LV's come up clean, and I can create snapshots
-but the snapshots do not mount.  I get the:
-
-mount: wrong fs type, bad option, bad superblock on /dev/flux1/snap,
-       or too many mounted file systems
-
-error which would indicate to me that the VFS lock is not working with
-my ext3 filesystem.  Does anyone have any ideas on what could be causing
-this problem? =20
-
-Red Hat kernel source RPM 2.4.18-26
-LVM 1.0.7 from the Sistina FTP site
-
-If you need any additional information please let me know.
-
-Thanks,
-Andy.
-
-
-Regards,
-Andrew Rechenberg
-Infrastructure Team, Sherman Financial Group
+True, but I'd sure hate to wait for a software array rebuild when the system 
+crashes... I've only got a pair of 160G drives but I still hate waiting when the 
+kernel has a problem. If your system is very, very stable this might not be an 
+issue.
