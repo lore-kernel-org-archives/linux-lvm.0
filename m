@@ -1,38 +1,38 @@
-Date: Wed, 30 Aug 2000 16:22:25 +0200 (MEST)
-From: Arne =?ISO-8859-1?Q?Kl=F6cker?= <a.kloecker@gmx.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] ExChange of Harddisks
-Message-ID: <10026.967645345@www17.gmx.net>
-Content-Type: text/plain; charset="iso-8859-1"
+Date: Wed, 30 Aug 2000 20:10:14 +0200
+From: Nils Juergens <nils@muon.de>
+Subject: Re: [linux-lvm] ExChange of Harddisks
+Message-ID: <20000830201014.A312@guldukat.muon>
+References: <10026.967645345@www17.gmx.net>
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <10026.967645345@www17.gmx.net>; from a.kloecker@gmx.net on Wed, Aug 30, 2000 at 04:22:25PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@msede.com
 
-Hello,
+On Wed, 30.08.00, Arne Kl=EF=BF=BDcker <a.kloecker@gmx.net> wrote:
+> i want to change my actual Setup (1 IDE Disk, 3 SCSI Disks, 1 Logical
+> Device which has 1 FS =3D> This is used as one big volume for a private
+> fileserver). The Remianing Space on the SCSI Disks should be enough to
+> hold the Data from the IDE Disk.
+=20
+If i understand your setup right you can just move the physical extents from
+your IDE-Drive to the SCSI-Drives. You do this with "pvmove <device>",
+<device> being the physical volume you want to remove.  You can, if you
+want, also specify to which PV's the PE's get moved to (see manpage).
 
-i want to change my actual Setup (1 IDE Disk, 3 SCSI Disks, 1 Logical
-Device which has 1 FS =3D> This is used as one big volume for a private
-fileserver). The Remianing Space on the SCSI Disks should be enough to hold=
- the Data
-from the IDE Disk.
+If i am not mistaken, this can even be done without unmounting the
+filesystem(s).
 
-Now i want to exchange the IDE Disk with a bigger SCSI Disk.=20
+Dont forget to remove the PV from your VG before you remove the drive.
 
-I dont really know how to do this.
+have fun,
 
-I added 1 of the SCSI Disks after installing the LVM so i generally know
-how to change the size of the ext2fs (i dont remember which tool i installed
-for this.. ) but tips are appreciated...
-
-Scanning the archive i stumbled over an article where vgreduce was
-mentioned, could i use this tool too, or is it just for emty PVs ?
-
-Im kind of stuck and any help is apreciated...
-
-TIA
-Arne Kl=EF=BF=BDcker
+Nils
 
 --=20
-Sent through GMX FreeMail - http://www.gmx.net
+ >   Nils Juergens  | nils@muon.de | icq 7090774   <
+ >  If we all work hard, we can turn this company  <
+ >      around 360 degrees -- gruntbert(LOTD)      <
