@@ -1,27 +1,36 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8M31Zr05415
-	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 23:01:35 -0400
-Received: from host1.appws.com ([216.136.72.3])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8M31TSZ023116
-	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 23:01:29 -0400
-Received: from grandmother.littlebald.com (localhost.localdomain [127.0.0.1])
-	by grandmother.littlebald.com (8.12.8/8.12.8) with ESMTP id
-	i8M31L85021245
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 23:01:21 -0400
-Received: (from david@localhost)
-	by grandmother.littlebald.com (8.12.8/8.12.8/Submit) id i8M31Kl0021243
-	for linux-lvm@redhat.com; Tue, 21 Sep 2004 23:01:20 -0400
-Subject: Re: [linux-lvm] Disk partition required for LVM?
-From: David Johnston <david@littlebald.com>
-In-Reply-To: <20040921133025.GA3505@perkamentus>
-References: <20040921123206.GA1467@perkamentus>
-	<20040921130925.GB2625@tykepenguin.com>
-	<20040921133025.GA3505@perkamentus>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1095822080.21107.5.camel@grandmother.littlebald.com>
-Mime-Version: 1.0
-Date: Tue, 21 Sep 2004 23:01:20 -0400
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8LG6rr15832
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 12:06:53 -0400
+Received: from mwinf0612.wanadoo.fr (smtp6.wanadoo.fr [193.252.22.25])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8LG6p3v006710
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 12:06:51 -0400
+Received: from me-wanadoo.net (localhost [127.0.0.1])
+	by mwinf0612.wanadoo.fr (SMTP Server) with SMTP id C1EB21800158
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 18:06:45 +0200 (CEST)
+Received: from tangerine.coulon.evette
+	(ADijon-107-1-3-62.w81-48.abo.wanadoo.fr [81.48.28.62])
+	by mwinf0612.wanadoo.fr (SMTP Server) with ESMTP id B4AFA180013E
+	for <linux-lvm@redhat.com>; Tue, 21 Sep 2004 18:06:43 +0200 (CEST)
+Received: from localhost ([127.0.0.1])
+	by tangerine.coulon.evette with esmtp (Exim 4.34) id 1C9nA7-0001g6-6h
+	for linux-lvm@redhat.com; Tue, 21 Sep 2004 18:06:39 +0200
+Received: from tangerine.coulon.evette ([127.0.0.1])
+	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 04566-07 for <linux-lvm@redhat.com>;
+	Tue, 21 Sep 2004 18:06:37 +0200 (CEST)
+Received: from localhost ([127.0.0.1] helo=tangerine)
+	by tangerine.coulon.evette with esmtp (Exim 4.34) id 1C9nA5-0001fx-2A
+	for linux-lvm@redhat.com; Tue, 21 Sep 2004 18:06:37 +0200
+Date: Tue, 21 Sep 2004 16:06:23 +0000
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Subject: Re: [linux-lvm] Hello. About a bug in lvm2
+References: <41504CEF.8090508@cisko.org>
+In-Reply-To: <41504CEF.8090508@cisko.org> (from zibbe@cisko.org on Tue Sep
+	21 17:46:55 2004)
+Message-Id: <1095782795l.20340l.2l@tangerine>
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	boundary="=-s5SkVJdHMsggouu9tR1y"; micalg=PGP-SHA1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,30 +41,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, 2004-09-21 at 09:30, lvm@perkamentus.com wrote:
-> On Tue, Sep 21, 2004 at 02:09:26PM +0100, Patrick Caulfield wrote:
-> > Check that you don't have a symlink from /dev/hdb to /dev/cdrom. The debian
-> > lvm.conf file excludes /dev/cdrom from LVM searches.
-> 
-> It was indeed the symlink, although not from hdb to cdrom, but from
-> cdrom to hdb. Removing this symlink (or commenting out the filter
-> option in lvm.conf) solved the problem.
-> 
-> CDRom has only been present for installation, and afterwards swapped
-> for extra disk. Symlink however isn't updated.
-> 
-> Another remark: although cdrom are filtered (and thus not allowed for
-> LVM), no warning/error messages appear. Wouldn't it be useful if LVM
-> checks this and shows warning/error messages or even exits during
-> creation?
+--=-s5SkVJdHMsggouu9tR1y
+Content-Type: text/plain; charset=ISO-8859-1; DelSp=Yes; Format=Flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Not really.  Consider users who use multipath; they have to filter or
-they'll see the same PV over and over and over again.  A reference in
-the docs *would* help, as would a debug message in syslog (debug so it
-only shows if we're looking for problems).
--- 
-David Johnston <david@littlebald.com>
-Little Bald Consulting, LLC
+Le 21.09.2004 17:46:55, Sebastian Hyrwall a =E9crit=A0:
+> Hey.
+>=20
+> Im not sure but i may have found a bug in the lvm2 userspace-tools. =20
+> Im using gentoo right now and right now
+> lvm2 cant "see" some harddrives.
+>=20
+> I first discovered the problem when i changed from 2.4 -> 2.6. In 2.6 =20
+> it didnt find all my discs. Later on i saw that when i did
+> "pvcreate /dev/hdd1" (tried the devfs-link also /dev/ide/....) it =20
+> reported that the device couldnt be found.
+> There isnt anything wrong with the hd or anything. It shows up in =20
+> cfdisk/fdisk and i can use it as a normal hd (not in an lvm).
+>=20
+> This occurs for 2 of my disks. hde and hdd. I cant find any =20
+> difference between them and the other drives. They are all the same =20
+> size.
+>=20
+>=20
+> Unfortunently i cant provide any more information because i didnt =20
+> think about mailing this to you until after i went back to 2.4.
+
+Do you have configured properly your kernel for lvm support?
+Do you have lvm2 package(s)?
+Did you setup properly your /etc/lvm/lvm.conf?
+
+Regard
+
+Jean-Luc
+
+>=20
+>=20
+> Sincerely, Sebastian Hyrwall
+=20
+
+--=-s5SkVJdHMsggouu9tR1y
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.5 (GNU/Linux)
+
+iD8DBQBBUFGLUdGGXzzGnNARApJkAJ0QzgR2rrnoK6yzR/ZiqppKy3IEhQCfVsAD
+U1eUienW3IWxqHLUTuBNDRg=
+=+X2H
+-----END PGP SIGNATURE-----
+
+--=-s5SkVJdHMsggouu9tR1y--
