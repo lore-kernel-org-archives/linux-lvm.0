@@ -1,11 +1,12 @@
-Return-Path: <ph.l@libertysurf.fr>
-Message-ID: <3A56DE41.9996D856@libertysurf.fr>
-Date: Sat, 06 Jan 2001 07:58:41 -0100
-From: Philippe Lefevre <ph.l@libertysurf.fr>
-MIME-Version: 1.0
+Return-Path: <russell@coker.com.au>
+From: Russell Coker <russell@coker.com.au>
+Subject: Re: [linux-lvm] Do You Come Too Quickly in Bed??
+Date: Fri, 5 Jan 2001 13:56:47 +1100
 References: <01vr1bgvxf7c5p3qv.0f5lnmrr3o1d5@dns.hungrytiger.co.jp>
+In-Reply-To: <01vr1bgvxf7c5p3qv.0f5lnmrr3o1d5@dns.hungrytiger.co.jp>
+MIME-Version: 1.0
+Message-Id: <01010513564707.00874@lyta>
 Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] New subject on LVM mailing list ??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,52 +18,31 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: Cook@cybersonic.com.hk
 
-Erection@edhaus.co.kr a =E9crit :
-> =
-
+On Friday 05 January 2001 02:57, you wrote:
 > Get your Sex Life Roaring with IMPULSE
 > http://216.144.198.242
-> =
 
-> IMPULSE for MEN:
-> Intensifies Pleasure and Satisfaction
-> Increases Energy and Endurance
-> Longer Lasting and Firmer Erections
-> =
+Does it extend your hard drive storage?
 
-> IMPULSE for WOMEN:
-> Formula Designed Especially for Women by Women
-> Intensifies Pleasure, Enhances Orgasms
-> Revitalizes Sex Drive
-> Enhances Vaginal Lubrication
-> =
+Does it allow you to resize your hard drive without rebooting?
 
-> It's Fun, Safe, and Effective.
-> and you don't even need a perscription.
-> =
+I really think that LVM will do a lot more for my hard drive than IMPULSE=
+=20
+ever would.
 
-> Get more information NOW
-> Go to:  http://216.144.198.242
-> =
-
-> To be removed send email to rogetmoe@yahoo.com
-> =
-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+LVM will allow your hard drive to stay online for months without a break=20
+while changing size to fit the requirements.  IMPULSE apparently can't of=
+fer=20
+this.  ;)
 
 
-Hey guys, what happen ?
-Is this a new subject on LVM mailing list ???
-I did'nt suscribe this mailing list to get that kind of E-mail !
+Sorry people, I couldn't resist.
 
-I'm going to unsuscribe if this your volunty to broadcast such a mess,
-Please, let me know  :-(
-
-PhiL
+--=20
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
