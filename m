@@ -1,36 +1,31 @@
-Message-ID: <394AB19E.E841EA6E@tuxtops.com>
-Date: Fri, 16 Jun 2000 16:00:46 -0700
-From: Mark Allen <mallen@tuxtops.com>
+Date: Sat, 17 Jun 2000 00:48:14 +0200 (CEST)
+From: Andrea Arcangeli <andrea@suse.de>
+Subject: Re: [linux-lvm] IBM to release LVM Technology to the Linux  Community
+In-Reply-To: <85256900.006F9EE2.00@d54mta02.raleigh.ibm.com>
+Message-ID: <Pine.LNX.4.21.0006170041460.5889-100000@inspiron.random>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux Community
-References: <85256900.005C0E79.00@d54mta02.raleigh.ibm.com>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: benr@us.ibm.com
-Cc: linux-lvm@msede.com
+Cc: Andi Kleen <ak@suse.de>, linux-lvm@msede.com, sbest@us.ibm.com
 
-benr@us.ibm.com wrote:
-> Hello everyone.  Sorry for the delay in responding.  Here is something I
-> posted to Slashdot.  I think it answers some questions and gives a little
-> context for what IBM is doing.  I'll try to begin answering the specific
-> questions that have been submitted this afternoon.
+On Fri, 16 Jun 2000 benr@us.ibm.com wrote:
 
-I'm really excited that IBM is considering releasing their LVM
-technology -- JFS and the LVM were really the best features of AIX by
-far. 
+>My understanding of what is in 2.4-latest is that you do indeed have the
+>stacking of multiple block translation modules, but the implementation of
+>this is not as flexible or integrated as what we have described in the
+>white paper.   Please correct me if I am wrong!
 
-Could you address the prospect of IBM's LVM incorporating "shared"
-volume groups like the commercial high-availablity software (IBM's
-HA/CMP or HP's Service Guard or Sun's HA offering).  That kind of
-software would allow a disk group to transfer to another system if the
-main host failed.
+raid0 is fully integrated into the LVM into 2.4.0-test1-ac19. While
+allocating a logical volume you can choose to allocate the physical space
+from different physical devices and to stripe onto them in raid0.
 
-Would something like that be a "feature plug-in" in the framework which
-was proposed in the white paper?
+For raid1/5 you're right: they are not integrated into the current LVM but
+they instead live in a separate layer (MD) (and running LVM on top of MD
+is more expensive for the CPU and less flexible for the sysadm than if
+raid1/5 would be lvm plugins).
 
-Regards,
-
-Mark
+Andrea
