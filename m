@@ -1,11 +1,11 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3A4E4F6A.8AE39C23@wrkhors.com>
-Date: Sat, 30 Dec 2000 15:11:06 -0600
-From: Steven Lembark <lembark@wrkhors.com>
+Return-Path: <mike@marxmeier.com>
+Message-ID: <01C0728E.93A59A00.smdenton@bellsouth.net>
+From: "S. Michael Denton" <smdenton@bellsouth.net>
+Date: Sat, 30 Dec 2000 18:30:24 -0500
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] 0.8 to 0.9 problems, odd vg corruption
-References: <20001227165905.A24456@kevorkian.evcom.net> <20001230190420.B6496@jensbenecke.de>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Patched kernel sources
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,34 +17,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
 
-> After about half an hour of fiddling with the LVM tools and reading the
-> FAQ, I found out that I could access the LV if and ONLY IF I did EXACTLY
-> this:
-> 
->         vgcfgrestore -n data /dev/hd[ac]1
->         pvscan
->         vgchange -a y
->         mount /dev/data/archive
-> 
-> Any call to vgscan brings me back to the beginning ("unknown VG").
-> 
-> The problem however is this: Since then, even when booting cleanly vgscan
-> doesn't detect any VGs any more. Before, it worked. I have compiled LVM
-> into the kernel (no module) and attached the Debian startup script which I
-> have modified slightly to accommodate for the no-module situation.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
+Does anyone have a tarball of properly-patched kernel sources for
+2.2.1[7,8] with LVM 0.8.1, ext3fs, and ext3fs online resizing
+support?
 
-try:
+I keep getting rejected hunks, notably ll_rw_block, md, and ext3...
 
-	vgexport /dev/vgname;
-	vgimport /dev/vgname /devices/in/the/vg;
+Thanks,
 
-should save you the problems.  
+Scott Denton
+smdenton@bellsouth.net
+EFnet Handle: SteelWyng
+ICQ UIN: 24149258
+AIM Screen Name: SteelWyng
 
--- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+-----BEGIN PGP SIGNATURE-----
+Version: PGPfreeware 6.5.3 for non-commercial use <http://www.pgp.com>
+
+iQA+AwUBOk5wEHC+DNfF0nVpEQLi6QCYnBYSxAaTSCcp3oUQOfR9ITIRuwCgiIoZ
+Tf+6w/A5H42g+W94Umo9PSQ=
+=BjUk
+-----END PGP SIGNATURE-----
