@@ -1,12 +1,10 @@
-Return-Path: <thornber@btconnect.com>
-Date: Mon, 23 Apr 2001 15:05:56 +0100
-Subject: Re: [linux-lvm] What have snapshots got to do with LVM ?
-Message-ID: <20010423150556.C1492@66bassett.freeserve.co.uk>
-References: <20010422130924.A10390@66bassett.freeserve.co.uk> <20010423102145.C27367@sistina.com> <20010423093818.B739@66bassett.freeserve.co.uk> <20010423120521.A27695@sistina.com> <20010423112638.B1060@66bassett.freeserve.co.uk> <20010423152748.A28301@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010423152748.A28301@sistina.com>; from Mauelshagen@sistina.com on Mon, Apr 23, 2001 at 03:27:48PM +0000
-From: Joe Thornber <thornber@btconnect.com>
+Return-Path: <vidalrod@informatik.tu-muenchen.de>
+Message-ID: <3AE4388C.2FEF8162@in.tum.de>
+Date: Mon, 23 Apr 2001 16:13:32 +0200
+From: David Vidal Rodriguez <vidalrod@informatik.tu-muenchen.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM version of 2.4.2 kernel?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,21 +17,13 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: lvm <linux-lvm@sistina.com>
 
-On Mon, Apr 23, 2001 at 03:27:48PM +0000, Heinz J. Mauelshagen wrote:
-> You said it already above: the general concept still needs to deal with chunks 
-> which could eventually map to LVM PEs in case we run LV snapshots carying
-> metadata (COW table sections) and data.
-> The abstraction therefore will be one in notion basically
-> (chunk rather than PE).
+Hi!
+I want to know what version of LVM (beta_x etc.) is included within
+Kernel 2.4.2 and if I can use the fresh compiled beta7 tools with it.
 
-I'm certain this is the way to go for 1.2, having thought about it for
-a day.  Snapshot's would still be part of the LVM suit, but just
-implemented in a seperate driver.
-
-The only problem is the per device hook.  Has anyone else implemented
-something similar ? or shall I just have a bash and upset the gurus.
-
-- Joe Thornber
+Thanks in advance,
+--
+  ------------------------------------------------------------------------
+ David Vidal R. (vidalrod@in.tum.de)
