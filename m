@@ -1,10 +1,9 @@
-Message-ID: <3DB2E206.1AA56845@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
+Message-ID: <3DB2F462.6090309@gmx.net>
+From: Stefan Planert <s.planert@gmx.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] creating a LVM ontop of a cryptated (ppdd) loop back 
- device
-References: <3DAEDEE5.4540B954@silicide.dk> <20021017211217.GB4861@localhost> <3DAFB713.A2E7FAB3@silicide.dk> <20021018213759.GA4471@localhost> <3DB266FF.94DA814C@silicide.dk> <20021020153212.GA2950@localhost> <3DB2D26E.498738EC@silicide.dk> <20021020164309.GA6596@localhost>
-Content-Transfer-Encoding: 7bit
+References: <17510721596.20021020133305@gmx.net>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: =?ISO-8859-1?Q?gr=F6nemeyer-cd_und_filme?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 20 12:04:01 2002
+Date: Sun Oct 20 13:23:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: Andreas Piesk <linux-lvm@sistina.com>
 
-Jose Luis Domingo Lopez wrote:
+Andreas Piesk wrote:
+> hiho,
 > 
-> On Sunday, 20 October 2002, at 17:57:34 +0200,
-> Jon Bendtsen wrote:
+> hat jemand die neue gr�nemeyer-cd da?
+mensch? ja.
 
-
-> Then maybe we are talking about different things here. I used an
-> encrypted filesystem over an unencrypted LV but, as loop-aes needs the
-> loop device to operate, I need to loop-mount the encrypted filesystem for
-> the system to be able to on-the-fly decrypt its contents.
+> ich w�rd die ja kaufen, nur leider ist da ein kopierschutz drauf und
+> ich weiss nicht, ob ich da meine kopie f�rs auto erstellen kann.
+> ausserdem boykottiere ich kopierschutz.
 > 
-> Maybe I am confused, because I don't fully understand what you mean by
-> "running LVM ontop of a encrypted loopback device".
+> ciao -ap
+> 
+> --
+> Andreas Piesk a.piesk@gmx.net
+> PGP-Fingerprint: 23CB A7E2 2E53 373C  DBCD 8EFC 7777 61C1
 
-We are talking different things.
-I'll sum up what i did with 2 lines
+bis denne,
+stefan
 
-losetup -e AES256 /dev/loop0 /dev/sdb1
-pvcreate /dev/loop0
-
-
-
-
-JonB
+-- 
+If you defeat a great wyrm, it's not because you're smarter than
+the dragon, it's because your DM is stupider than the great wyrm.
