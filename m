@@ -1,8 +1,8 @@
 From: grobe@gmx.net
 MIME-Version: 1.0
-References: <20030218224059.M14285@zealot.blacknet.de>
-Subject: Re: [linux-lvm] striping efficiency
-Message-ID: <19301.1045607385@www67.gmx.net>
+References: <20030218223007.HIJG12463.imf25bis.bellsouth.net@tiger2>
+Subject: re: [linux-lvm] Sharing Logical Volumes via NFS on Redhat 8.0
+Message-ID: <27823.1045607976@www67.gmx.net>
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
@@ -15,24 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 18 16:30:02 2003
+Date: Tue Feb 18 16:40:02 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 Hi!
 
-OK, me too : RAID5!!!! (I've lost enough disks in my raids to shout here ;-)
+> Truly sharing LVs requires a FileSystem that understands shared physical
+> drives
 
-But I have my own question here... I am going to stripe across two PVs which
-are two RAID5s. I want to do that as we are getting a fibrechannel storage,
-and we want to be able to use two channels. So, I will get /dev/sdc linked =
-to
-a raid5 at channel A, /dev/sdd at channel B, and with striping, will use
-bandwith of both channels in one Volume Group.
+OK, sharing volumes is possible, but not with nfs ;-) You need a shared scsi
+device or fibrechannel, attach it to two machines, and lvm will find volumes
+on both machines without problems. You should just avoid to change the lvm
+metadata itself on one node while the other one is using it (e.g. resizing
+volumes), as the other node will be informed on the changes not before the =
+next
+scan.
 
-What stripsize would you recommend here...?
+The problem is really to get a nice filesystem supporting that - without a
+filesystem, your volumes will be quite useless. And yes, afaik GFS supports
+lvm (we are currently trying to make something like this with fc).
 
-Thank you + CU, Lars.
+I understood the question in a way that a filesystem lying on top of a
+logical volume was to be exported with nfs.
+
+CU, Lars.
 
 --=20
 +++ GMX - Mail, Messaging & more  http://www.gmx.net +++
