@@ -1,9 +1,9 @@
-Date: Mon, 5 Apr 2004 14:29:19 -0700
+Date: Mon, 5 Apr 2004 14:32:30 -0700
 From: Dave Olien <dmo@osdl.org>
-Message-ID: <20040405212919.GA12443@osdl.org>
+Message-ID: <20040405213230.GA12461@osdl.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] LVM2 stripe performance
+Subject: [linux-lvm] experimeinting with mirroring, other targets
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,27 +20,16 @@ To: thornber@redhat.com
 Cc: linux-lvm@redhat.com
 
 
-I'm running tiobench on an LVM2 striped logical volume.  I'm  comparing
-the LVM2 striping performance with a similar striping configuration
-using a hardware RAID controller.
+I'm interested in experimenting with some of the new targets that
+are available in the udm1 kernel (e.g. mirroring, multipath).
 
-With hardware RAID, I'm able to get about 66 megabytes per second on
-sequential writes, and 52 megabytes per second with random writes.
+I've seen the multipath tools and I'm looking those over.
 
-With LVM2, I can get only 23 megabytes per second with either random
-or sequential writes.
+Is the only way to set up mirroring targets to use the dmsetup
+tool?
 
-Read performance on LVM is about 10% less than with hardware RAID.
-e.g. with 48 threads, hardware RAID sequental reads are 105 megabytes
-per second, LVM2 RAID sequential reads are 95 megabytes per second.
-
-This is using an ext2 file system, mounted with noatime.
-
-I think I recall seeing email with similar problems to this on this
-mail list.  If I recall, the cause had to do with ordering of requests
-submitted to disk.
-
-Has there been any work to address this?
+Also, does LVM allow me to layer these targets, for example if I
+wanted a logical volume that is multipathed, mirrored, and striped?
 
 Thanks!
 
