@@ -1,9 +1,8 @@
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130C001@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Subject: RE: [linux-lvm] My VG is gone...
-Date: Thu, 6 Sep 2001 10:36:33 -0600
+Date: Thu, 6 Sep 2001 12:45:31 -0400 (EDT)
+From: Rob Foehl <rwf@loonybin.net>
+Message-ID: <Pine.LNX.4.33.0109061240350.10967-100000@jupiter.loonybin.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] disk swap
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,98 +14,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Yes, I did try this utility.  Thanx for your suggestion.
+I have a few questions, perhaps someone can help me out with this..
 
-Mike Diehl,
-Network Monitoring Tool Devl.
-Sandia National Laboratories.
-(505) 284-3137
-jdiehl@sandia.gov
+First, I have a drive set up with LVM right now that has a couple holes in
+it and is getting replaced.. I have the replacement drive, but I'm not
+sure what the best way to swap it in will be.. Old drive still boots, the
+affected LV has already been moved to a spare drive in the box..
 
-> -----Original Message-----
-> From: AJ Lewis [mailto:lewis@sistina.com]
-> Sent: September 05, 2001 2:42 PM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] My VG is gone...
-> 
-> 
-> On Wed, Sep 05, 2001 at 12:56:10PM -0600, Diehl, Jeffrey wrote:
-> > I will be formating 311Gb of hard drives today.  These 
-> drives were 40% full.
-> > This is the second time that LVM has bitten me.  The first 
-> time I tried to
-> > expand a VG, the VG was gone when the machine rebooted.  
-> Same thing this
-> > time.  AND THERE IS APEARANTLY NO WAY TO RECOVER!  It seems 
-> that all of the
-> > vg data is recorded in each member pv.  So, why isn't there 
-> a utility to
-> > recover a vg in this situation?  This is very fragile! 
-> 
-> Did you try the uuid_fixer previously mentioned?
-> 
-> > 
-> > -----Original Message-----
-> > From: Rasmus Wiman
-> > To: linux-lvm@sistina.com
-> > Sent: 9/5/2001 2:04 AM
-> > Subject: Re: [linux-lvm] My VG is gone...
-> > 
-> > "Diehl, Jeffrey" <jdiehl@sandia.gov> skrev:
-> > 
-> > > Any ideas about how to recover without losing my data.  I 
-> need to get
-> > > going
-> > > soon, so if I haven't fixed it by late this week, I'm going to
-> > > reformat....
-> > > And lose several Gb of data.
-> > 
-> > I have already reformated my hard disks, alas. I didn't have time to
-> > wait
-> > for a solution. But If someone would have helped me or 
-> suppllied code
-> > that
-> > fixed the problem, it could have beed the start of a Doctor 
-> LVM project.
-> > I
-> > think there should really be crash recover tools for any 
-> file system and
-> > LVM system since they all do crash some times.
-> > 
-> > 
-> > ---------------------
-> > Rasmus Wiman
-> > SAMI Labs
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> -- 
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-638-0500
-> 1313 5th St SE, Suite 111              Fax:    612-638-0500
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
-> 
-> Current GPG fingerprint = 60F3 160D C0D5 2C4B 751B  4FF9 6F67 
-> E9BC 44CD DE95
-> 
-> -----Begin Obligatory Humorous 
-> Quote----------------------------------------
-> FATAL ERROR! SYSTEM HALTED! - Press any key to do nothing...
-> -----End Obligatory Humorous 
-> Quote------------------------------------------
-> 
+Secondly, the existing drive is currently partitioned with swap space and
+an LVM partition, and a boot partition on the spare drive holding the
+kernel and initrd.. is there any way (with the lilo boot-from-lvm patches,
+I'm assuming) to clean this up a bit, preferably getting everything inside
+a single lvm partition on the main drive? (the one being replaced).. I'm
+assuming its possible to put swap on LVM, I may be wrong.. The boot
+partition, on the other hand, I'm totally unsure on whether or not I can
+do away with it.. I figure now would be the best time since I'm swapping
+drives anyway, it would be really easy to redo the partition setup on the
+new drive before they're swapped..
+
+Any insight / suggestions / assistance is greatly appreciated..
+
+-Rob
