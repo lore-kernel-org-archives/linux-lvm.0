@@ -1,13 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1INuvi24049
-	for <linux-lvm@redhat.com>; Wed, 18 Feb 2004 18:56:57 -0500
-Received: from web14705.mail.yahoo.com (web14705.mail.yahoo.com [216.136.224.122])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1INuvb13943
-	for <linux-lvm@redhat.com>; Wed, 18 Feb 2004 18:56:57 -0500
-Message-ID: <20040218235656.60660.qmail@web14705.mail.yahoo.com>
-From: Randy Rubins <lv_hockey@yahoo.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1J0Cvi28432
+	for <linux-lvm@redhat.com>; Wed, 18 Feb 2004 19:12:57 -0500
+Received: from mail.osdl.org (fw.osdl.org [65.172.181.6])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1J0Cub18279
+	for <linux-lvm@redhat.com>; Wed, 18 Feb 2004 19:12:57 -0500
+Received: from osdl.org (markw@ibm-b.pdx.osdl.net [172.20.1.51])
+	by mail.osdl.org (8.11.6/8.11.6) with ESMTP id i1J0CmE14998
+	for <linux-lvm@redhat.com>; Wed, 18 Feb 2004 16:12:49 -0800
+Message-Id: <200402190012.i1J0CmE14998@mail.osdl.org>
+From: markw@osdl.org
 MIME-Version: 1.0
-Subject: [linux-lvm] inactive PV associated to unknown VG
+Subject: [linux-lvm] file corruption writing to lvm2 volume
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,40 +22,25 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Feb 18 18:56:00 2004
+Date: Wed Feb 18 19:12:00 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I'm having a problem importing a VG after
-re-installing the server (original OS version RH 7.3,
-new RHEL 3 AS).  LVM is picking up the /dev/sdb, as
-well as the new /dev/sdb1 PV.  Any way to tell LVM to
-ignore /dev/sdb and force it to use /dev/sdb1?  
-BTW, the LVM version used on RH 7.3 was 0.9.1_beta7,
-the new LVM version - whatever comes with RHEL 3 AS
-update 1.
+I have a program that's writing data out to a file and it looks like my
+files are not written out correctly onto an lvm2 volume, while they will
+write out correctly to a non lvm2 partition.
 
-Thanks,
-Randy
+I'm not seeing any errors on the console, so I'm not sure what to look
+for.  Let me know what kind of data I can provide.
 
-pvscan -- reading all physical volumes (this may take
-a while...)
-pvscan -- ACTIVE   PV "/dev/sda2" of VG "rootvg" 
-[16.45 GB / 4.69 GB free]
-pvscan -- inactive PV "/dev/sdb"   is associated to
-unknown VG "localvg" (run vgscan)
-pvscan -- inactive PV "/dev/sdb1"  is associated to
-unknown VG "localvg" (run vgscan)
-pvscan -- total: 3 [45.42 GB] / in use: 3 [45.42 GB] /
-in no VG: 0 [0]
+I'm running linux-2.6.2 on ia64.
 
-=====
-Randy Rubins (eBay ID: lv_hockey)
-mailto://lv_hockey@yahoo.com
-
-__________________________________
-Do you Yahoo!?
-Yahoo! Mail SpamGuard - Read only the mail you want.
-http://antispam.yahoo.com/tools
+-- 
+Mark Wong - - markw@osdl.org
+Open Source Development Lab Inc - A non-profit corporation
+12725 SW Millikan Way - Suite 400 - Beaverton, OR 97005
+(503) 626-2455 x 32 (office)
+(503) 626-2436      (fax)
+http://developer.osdl.org/markw/
