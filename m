@@ -1,11 +1,10 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] reinstall, import, export question
-Message-ID: <54800000.1008139651@dizzy>
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJKEKDJCAA.steve.wray@the.net.nz>
-References: <NBBBKLKHMJHIJLHOGAOJKEKDJCAA.steve.wray@the.net.nz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] problem resizing without losing data
+Message-ID: <20011212084823.B13877@colombina.comedia.it>
+References: <20011211115418.B27568@sistina.com> <20011211183257.23795.qmail@web9506.mail.yahoo.com>
+Mime-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20011211183257.23795.qmail@web9506.mail.yahoo.com>; from sczjd@yahoo.com on Tue, Dec 11, 2001 at 10:32:57AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +15,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 12 00:47:02 2001
+Date: Wed Dec 12 01:46:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: SI Reasoning <sczjd@yahoo.com>
+Cc: linux-lvm@sistina.com
 
+On Tue, Dec 11, 2001 at 10:32:57AM -0800, SI Reasoning wrote:
+> xfs and 3 is reiserfs. I recently attempted to shrink
+> var by 500 meg and then expand usr by  500 meg. This
+> hosed my system as many files in var were lost
+> (although there was plenty of room to spare on var). 
+did you shrink the /var filesystem before resizing the logical
+volume ? I believe you didn't since there seems to be no way
+to shrink an xfs filesystem.
 
--- Steve Wray <steve.wray@the.net.nz>
+regards,
+L.
 
-> I'd really like to do a reinstall of my main server
-> Real Soon Now, but I'm concerned about the LVM side
-> of things.
->
-> I have a bunch of logical volumes on the system, none
-> are essential, its all data. Its backed up but I don't
-> want to have to wipe it and restore it.
->
-> I want to be able to simply reinstall the system
-> and carry the physical volumes, and the VG's and
-> LV's they hold over to the rebuilt system.
->
-> About the only references to anything like this in
-> the docco is about exporting to a different system.
->
-> Is this really necessary for my purposes? Or can I
-> expect that when the new system comes up, the LVM
-> subsystem will find the old volumes nicely?
+btw. it won't solve your problem, but since you are using cooker
+could you try using newer lvm rpms from http://www.comedia.it/bluca/lvm/
+L.
 
-So long has you have complete backups go for it :-)
-
-You might wan tot consider exporting the volumes then
-re-importing them onto the new system after the install
-is complete. This avoids the installation cycle accidentally
-blowing off the lv's.
-
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
