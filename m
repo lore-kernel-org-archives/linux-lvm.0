@@ -1,10 +1,8 @@
-From: Jeff Layton <jeffrey.b.layton@lmco.com>
-Subject: Re: [linux-lvm] Re: Building LVM ona RH7.2 - errors
-Message-Id: <3C6A9541.34A54984@lmco.com>
+Message-Id: <3C6AB5E9.8000300@nocrew.org>
+From: Martin =?ISO-8859-1?Q?Budsj=F6?= <marbud@nocrew.org>
 MIME-Version: 1.0
-References: <E16awby-00059c-00@hermes.sistina.com>
-    <1013616001.3175.26.camel@dirac.cids.ca>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Volume group inaccessable after RAID metadice trouble.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,70 +13,227 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 13 10:32:01 2002
+Date: Wed Feb 13 12:57:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Daniel Savard wrote:
+Hi!
 
-> le mer 13-02-2002 =E0 05:26, linux-lvm-request@sistina.com a =E9crit :
->
-> >
-> > (sorry about the length). sed is not my string point at all.
-> > Any ideas what I'm doing wrong?
-> >
-> > TIA,
-> >
-> > Jeff
-> >
->
-> Jeff,
->
-> 1st) Untar the kernel somewhere like: /usr/src/linux-2.4.17
-> 2nd) Untar the LVM 1.0.2, it will create the sub-directory 1.0.2 in the
-> current dir, for example: /usr/src/LVM/1.0.2
-> 3rd) Create the directory /usr/src/LVM/build
-> 4th) cd /usr/src/LVM/build
-> 5th) ../1.0.2/configure --with-kernel-dir=3D/usr/src/linux-2.4.17
-> 6th) Read instructions in /usr/src/LVM/1.0.2/PATCHES/README
+I have find myself in a troublesome spot. After a disk failure, with 
+lots of IDE bus timeouts etc i managed to get the disk in error replaced 
+and my raid5 set in full operation. But i can't get the volume group 
+active any more.  The volume group in question is VG1.
 
-Did all that.
+I have read one year worth of messages in this list archives, and i 
+still can't se how i can recover my VG1.
 
-I tested on a RH 7.1 box this morning and it worked fine. The
-box I'm having trouble with is my home box which I'll try this
-evening.
+Please find the details below
 
-Thanks,
+dent:/etc/lvmconf >sudo pvdata --version
+pvdata: Logical Volume Manager 1.0.1-rc4
+Heinz Mauelshagen, Sistina Software  03/10/2001 (IOP 10)
 
-Jeff
+dent:/etc/lvmconf >uname -a
+Linux dent 2.4.17 #4 Thu Jan 3 00:39:34 CET 2002 alpha unknown
+    The kernel is compiled with the  lvm-1.0.1-rc4-2.4.17 patch.
+
+dent:~ >sudo pvscan
+Password:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/md0"    is associated to an unknown VG (run 
+vgscan)
+pvscan -- ACTIVE   PV "/dev/sda7"  of VG "vg0" [1.86 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sda8"  of VG "vg0" [1.86 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sda9"  of VG "vg0" [68.00 MB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sda10" of VG "vg0" [68.00 MB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sda11" of VG "vg0" [68.00 MB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sda12" of VG "vg0" [68.00 MB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sda13" of VG "vg0" [56.00 MB / 0 free]
+pvscan -- WARNING: physical volume "/dev/hdg1" belongs to a meta device
+pvscan -- WARNING: physical volume "/dev/hde1" belongs to a meta device
+pvscan -- total: 10 [41.37 GB] / in use: 10 [41.37 GB] / in no VG: 0 [0]
 
 
->
->
-> >From your description, it is not clear, but I guess you mixed LVM stuf=
-f
-> with Kernel stuff while building the patches and Makefile modifications
-> may encountered problems with the Linux kernel Makefile.
->
-> --
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Daniel Savard
-> Consultation Informatique Daniel Savard
-> 551, boul. Sir-Wilfrid-Laurier
-> suite 105
-> Beloeil, (Qu=E9bec)
-> Canada J3G 4J1
->
-> T=E9l: (450) 467-8014
-> Internet: dsavard@cids.ca
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+dent:~ >sudo vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "vg1"
+vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of 
+volume group "vg1" from physical volume(s)
+vgscan -- found active volume group "vg0"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+groups
+
+dent:~ >sudo vgchange -a y vg1
+vgchange -- volume group "vg1" does not exist
+
+dent:~ >sudo vgcfgrestore  -l -l -n vg1
+--- Volume group ---
+VG Name               vg1
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  1
+MAX LV                255
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                255
+Cur PV                1
+Act PV                1
+VG Size               37.29 GB
+PE Size               4.00 MB
+Total PE              9545
+Alloc PE / Size       9324 / 36.42 GB
+Free  PE / Size       221 / 884.00 MB
+VG UUID               gK6O7c-YSy6-SHqF-6oiZ-L47x-PLqR-JsJzDq
+
+--- Logical volume ---
+LV Name                /dev/vg1/lv1
+VG Name                vg1
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                36.42 GB
+Current LE             9324
+Allocated LE           9324
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+
+--- Physical volume ---
+PV Name               /dev/md0
+VG Name               vg1
+PV Size               37.29 GB / NOT usable 5.62 MB [LVM: 161.00 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              9545
+Free PE               221
+Allocated PE          9324
+PV UUID               6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
+
+dent:~ >cat /proc/mdstat
+Personalities : [raid1] [raid5]
+read_ahead 1024 sectors
+md0 : active raid5 hdg1[2] hdf1[1] hde1[0]
+      39102080 blocks level 5, 32k chunk, algorithm 2 [3/3] [UUU]
+
+
+dent:~ >sudo pvdisplay /dev/md0
+--- Physical volume ---
+PV Name               /dev/md0
+VG Name               vg1
+PV Size               37.29 GB / NOT usable 5.62 MB [LVM: 161.00 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              9545
+Free PE               221
+Allocated PE          9324
+PV UUID               6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
+
+
+dent:~ >sudo  pvdata  -v -L /dev/md0
+
+--- List of logical volumes ---
+
+--- Logical volume ---
+LV Name                /dev/vg1/lv1
+VG Name                vg1
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                36.42 GB
+Current LE             9324
+Allocated LE           9324
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
+read_ahead: 120
+
+pvdata -- logical volume struct at offset   1 is empty
+pvdata -- logical volume struct at offset   2 is empty
+pvdata -- logical volume struct at offset   3 is empty
+pvdata -- logical volume struct at offset   4 is empty
+-- stuff deleted --
+pvdata -- logical volume struct at offset 160 is empty
+pvdata -- logical volume struct at offset 161 is inconsistent
+pvdata -- logical volume struct at offset 162 is inconsistent
+pvdata -- logical volume struct at offset 163 is empty
+-- stuff deleted --
+pvdata -- logical volume struct at offset 253 is empty
+pvdata -- logical volume struct at offset 254 is empty
+
+dent:/etc/lvmconf >sudo pvdata -UPV /dev/md0
+--- Physical volume ---
+PV Name               /dev/md0
+VG Name               vg1
+PV Size               37.29 GB / NOT usable 5.62 MB [LVM: 161.00 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              9545
+Free PE               221
+Allocated PE          9324
+PV UUID               6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
+
+--- Volume group ---
+VG Name              
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                255
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                255
+Cur PV                1
+Act PV                1
+VG Size               37.29 GB
+PE Size               4.00 MB
+Total PE              9545
+Alloc PE / Size       9324 / 36.42 GB
+Free  PE / Size       221 / 884.00 MB
+VG UUID               gK6O7c-YSy6-SHqF-6oiZ-L47x-PLqR-JsJzDq
+--- List of physical volume UUIDs ---
+
+001: 6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
+
+
+dent:~ >sudo vgcfgrestore -v -n vg1 -t  /dev/md0
+vgcfgrestore -- locking logical volume manager
+vgcfgrestore -- restoring volume group "vg1" from "/etc/lvmconf/vg1.conf"
+vgcfgrestore -- checking existence of "/etc/lvmconf/vg1.conf"
+vgcfgrestore -- reading volume group data for "vg1" from 
+"/etc/lvmconf/vg1.conf"
+vgcfgrestore -- reading physical volume data for "vg1" from 
+"/etc/lvmconf/vg1.conf"
+vgcfgrestore -- reading logical volume data for "vg1" from 
+"/etc/lvmconf/vg1.conf"
+vgcfgrestore -- checking volume group consistency of "vg1"
+vgcfgrestore -- checking volume group consistency of "vg1"
+vgcfgrestore -- backup of volume group "vg1"  is consistent
+vgcfgrestore -- test run for volume group "vg1" end
+
+vgcfgrestore -- unlocking logical volume manager
+
+dent:~ >sudo vgcfgrestore -v -n vg1  /dev/md0
+vgcfgrestore -- can't restore part of active volume group "vg1"
+vgcfgrestore [-d|--debug] [-f|--file VGConfPath] [-l[l]|--list [--list]]
+    [-n|--name VolumeGroupName] [-h|--help]
+    [-o|--oldpath OldPhysicalVolumePath] [-t|--test] [-v|--verbose]
+    [--version] [PhysicalVolumePath]
+
+
+
+Regards            Martin
