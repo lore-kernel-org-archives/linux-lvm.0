@@ -1,12 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103100004.f2A04kO26602@webber.adilger.int>
-Subject: Re: [linux-lvm] Problems with vgscan
-In-Reply-To: <20010309233105.B29DEFAD7@hq.nawigator.pl> from Lukasz Trabinski
- at "Mar 10, 2001 00:31:05 am"
-Date: Fri, 9 Mar 2001 17:04:46 -0700 (MST)
+Return-Path: <ardy@rdb.linux-help.org>
+Date: Fri, 9 Mar 2001 19:30:48 -0500 (EST)
+From: <ardy@rdb.linux-help.org>
+Message-ID: <Pine.LNX.4.20.0103091926210.27453-100000@rdb.linux-help.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] LVM X front end
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,29 +15,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-=A3ukasz Tr=B1bi=F1ski writes:
-> I have problems with the vgscan ( Linux, kernel 2.4.2 and 2.4.1)
->=20
-> [root@xxx tools]# vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "test"
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "test" from physical volume(s)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-> "/etc/lvmtab" and "/etc/lvmtab.d"
+Is there any other X front ends for LVM maintenance other than the one on
+freshmeat.net?
 
-Please run "vgscan -v -d" and post the output (compressed if very long).
+As an aside, I emailed the maintainer of lvm-viewer, he hasn't updated the
+code since last year, and told me he had no time for further development.
+It'd be a shame to have that code go stale, I don't code so I couldn't
+offer to take it over.
 
-> I have appled patch from posted to this list (diff -u -r1.3.2.3
-> tools/lib/pv_read_all_pv_of_vg.c)
 
-Not related to this problem.
-
-Cheers, Andreas
---=20
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+----------------------------------------------------
+                  Richard Dicaire           
+               Brainbench Certified 
+         Master Unix & Linux Administrator
+http://www.brainbench.com/transcript.jsp?pid=67584
+----------------------------------------------------
+		 Home & aRDy Music
+	     http://rdb.linux-help.org
+             http://mp3music.kritek.com
+----------------------------------------------------
