@@ -1,49 +1,41 @@
-From: pamvdam@ramoth.xs4all.nl
-Date: Sun, 22 Aug 1999 17:07:13 +0200
+Message-ID: <37C0F433.1A361B6F@ep-ag.com>
+Date: Mon, 23 Aug 1999 09:11:47 +0200
+From: Klaus Strebel <stb@ep-ag.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVM in stock kernel!?
-Message-ID: <19990822170713.A18493@ladystrange.bluehorizon.nl>
-References: <19990822081621.A13324@ladystrange.bluehorizon.nl> <199908221116.AA20083@mailgate1b.telekom.de>
-Mime-Version: 1.0
-In-Reply-To: <199908221116.AA20083@mailgate1b.telekom.de>; from Heinz Mauelshagen on Sun, Aug 22, 1999 at 01:14:36PM +0000
+References: <199908212041.AA13662@mailgate1b.telekom.de>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: pamvdam@ramoth.xs4all.nl, mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: torvalds@transmeta.com
+Cc: linux-lvm@msede.com
 
-On Sun, Aug 22, 1999 at 01:14:36PM +0000, Heinz Mauelshagen wrote:
-> 
-> Hi Pascal,
-> 
-> saw your mail today concerned with writes beyond the end of the device,
-> Have seen this a couple of times before 8*(
-> 
-> It was a kernel problem in the block i/o layer these days not forced
-> by the LVM but brougt to the surface by the heavy i/o load LVM striped 
-> LVs pushed to the system.
+Hi Linus,
 
-It was a problem.... Mmmm. In 2.3.14 it still is.
+Heinz Mauelshagen wrote:
+> Dirk Hohndel told me last week, that Linus wants to wait before putting LVM
+> into the stock kernel to see if enough people are interested to have this.
+So, you wanna hear from people who're using LVM on Linux? 
 
-> 
-> Do you see the same trouble with LVM 0.7 in older kernel releases?
+Here, we are! Let's get rid of that damned partitioning fuzz. With LVM i
+actually only need three 'partitions' on my boot-drive: root, swap and
+my physical volume of lvm. I can create, increase, shrink and drop now
+logical volumes just to test new filesystems (is there any gfs guy on
+the list? I use Antimatter Ant with patch 3 on a lv and it works great
+now!) or other new software. Another evident thing for me is, that i can
+use Oracle8's autoextension without fear to fill my root!
 
-2.3.13 and the 2.3.14-pre release gave the same problem. I don't
-know about earlier releases. Shall we bring this up to the linux kernel list? The MD users should have noticed it too. Indeed there was VERY heavy I/O
-on the stripes.
+So, give everybody his LVM !
 
-BTW: 2.3.14 needed a little extra patch wrt the 2.3.13 LVM patch. Some-
-body will have ported it too, if not say so, and I'll mail you the diff.
+Thanks for your great work
 
-Best regards,
-
-	Pascal
-
-
-
-
-
-> 
-> Regards,
-> Heinz
+Ciao
+Klaus
+-- 
+Klaus Strebel
+stb@ep-ag.com
+EIGNER + PARTNER AG   - The Engineering Warehouse Company -
+<http://www.ep-ag.com>
+-----------------------------------------------------------------------
