@@ -1,7 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Message-ID: <20031117200707.A31615@sistina.com>
-Mime-Version: 1.0
-Subject: [linux-lvm] *** ANNOUNCEMENT ***  LVM 1.0.8 available at www.sistina.com
+Message-ID: <011001c3ad45$6ed13960$e10aa8c0@zaphod>
+From: "Michael Paesold" <mpaesold@gmx.at>
+References: <3FB8F8A1.1060004@clin.ucl.ac.be><1069087854.2408.0.camel@localhost.localdomain><20031117181007.00e15a29.neuron@hollowtube.mine.nu><3252989968.20031117183528@tnonline.net> <20031117191324.2047dbf3.neuron@hollowtube.mine.nu>
+Subject: Re: [linux-lvm] Performance problem.
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,45 +14,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 17 13:09:01 2003
+Date: Mon Nov 17 14:01:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+neuron wrote:
 
-A tarball is available at
+> elvtune shows read_latency of 2048 and write_latency of 8192,
+> that's already quite low isn't it?  If not, have any example
+> values I can test with?
 
-   <http://www.sistina.com/>
+Those are the default values for RedHat 8.0, and probably some other
+systems. For RedHat 9.0 the defaults are:
 
-for download.
+/dev/cciss/c0d0 elevator ID             2
+        read_latency:           64
+        write_latency:          8192
+        max_bomb_segments:      6
 
-Follow the "products" link on top of the Sistina web page
-and then the "Logical Volume Manager" link.
-
-
-LVM 1.0.8 fixes a minor number assignment bug in vgscan.
-
-See the CHANGELOG file contained in the tarball for further information
-about bugs fixed in this release.
-
-
-Feed back LVM related information to <linux-lvm@sistina.com>.
-
-Thanks a lot for your support of LVM.
-
--- 
+You could try 64 or even 32 and do your "real-world test" (listening to
+MP3...).
 
 Regards,
-Heinz    -- The LVM Guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Michael Paesold
