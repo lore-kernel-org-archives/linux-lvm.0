@@ -1,7 +1,7 @@
 From: Jean Aumont <JeanAumont@videotron.ca>
-Message-id: <3F3054EB.3000909@videotron.ca>
+Message-id: <3F3099B7.2080102@videotron.ca>
 MIME-version: 1.0
-Content-type: multipart/mixed; boundary="Boundary_(ID_plH3c/3UFhs3wrWiiEexDg)"
+Content-type: multipart/mixed; boundary="Boundary_(ID_gJe2Eyv64L5RwG4UKj6VzA)"
 Subject: [linux-lvm] lvcreate -- couldn't read physical volume "/dev/md3" (on raid 5)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -13,20 +13,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug  6 09:10:02 2003
+Date: Wed Aug  6 09:10:04 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
---Boundary_(ID_plH3c/3UFhs3wrWiiEexDg)
+--Boundary_(ID_gJe2Eyv64L5RwG4UKj6VzA)
 Content-type: multipart/alternative;
- boundary="Boundary_(ID_W0M6sZ7ytQOmKWQbZXl7Aw)"
+ boundary="Boundary_(ID_sZeZjW+A9QjDYPLuou2pDQ)"
 
 
---Boundary_(ID_W0M6sZ7ytQOmKWQbZXl7Aw)
+--Boundary_(ID_sZeZjW+A9QjDYPLuou2pDQ)
 Content-type: text/plain; charset=us-ascii; format=flowed
 Content-transfer-encoding: 7BIT
+
 
 Hi everyone,
 
@@ -55,7 +56,7 @@ PS. You can find in attachment the same command in "Debug mode"
        It also does not work !!!
 
 
---Boundary_(ID_W0M6sZ7ytQOmKWQbZXl7Aw)
+--Boundary_(ID_sZeZjW+A9QjDYPLuou2pDQ)
 Content-type: text/html; charset=us-ascii
 Content-transfer-encoding: 7BIT
 
@@ -66,6 +67,9 @@ Content-transfer-encoding: 7BIT
   <title></title>
 </head>
 <body text="#000000" bgcolor="#ffffff">
+<br>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+<title></title>
 Hi everyone,<br>
 <br>
 I tried to create a logical volume specifying the "VolumegroupName" and
@@ -96,9 +100,9 @@ PS. You can find in attachment the same command in "Debug mode"<br>
 </body>
 </html>
 
---Boundary_(ID_W0M6sZ7ytQOmKWQbZXl7Aw)--
+--Boundary_(ID_sZeZjW+A9QjDYPLuou2pDQ)--
 
---Boundary_(ID_plH3c/3UFhs3wrWiiEexDg)
+--Boundary_(ID_gJe2Eyv64L5RwG4UKj6VzA)
 Content-type: application/x-zip-compressed; name=lvmcreateDebug.zip
 Content-transfer-encoding: base64
 Content-disposition: inline; filename=lvmcreateDebug.zip
@@ -201,4 +205,4 @@ dyY2v6KO1lPici6sVrsrtj4mt6sdre5O9iL0pnboDsUXe/h14QvvYecTcjti4o3zDcl/eYov
 /lIEi+HQCYKHaJX5JJIco7jC4sr/A1BLAQIUABQAAAAIAC6nBS9XyRkO9BMAACo2AwAOAAAA
 AAAAAAEAIAAAAAAAAABsdm1jcmVhdGVEZWJ1Z1BLBQYAAAAAAQABADwAAAAgFAAAAAA=
 
---Boundary_(ID_plH3c/3UFhs3wrWiiEexDg)--
+--Boundary_(ID_gJe2Eyv64L5RwG4UKj6VzA)--
