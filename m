@@ -1,11 +1,10 @@
-Date: Tue, 28 Aug 2001 09:51:04 +0100
-Subject: Re: [linux-lvm] Pvmove question
-Message-ID: <20010828095104.E283@btconnect.com>
-References: <OF1C4B21E3.328FDE29-ON85256AB5.004B8EA6@raleigh.ibm.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF1C4B21E3.328FDE29-ON85256AB5.004B8EA6@raleigh.ibm.com>; from corryk@us.ibm.com on Mon, Aug 27, 2001 at 08:46:33AM -0500
-From: Joe Thornber <thornber@btconnect.com>
+Message-ID: <3B8B78AC.164BDA67@sap.com>
+Date: Tue, 28 Aug 2001 12:55:40 +0200
+From: Jan Schreckenbach <Jan.Schreckenbach@sap.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] extending striped lv
+References: <20010823232349.9882.qmail@web20306.mail.yahoo.com> <20010824112859.A10992@dragon.blacknet.de> <20010827124212.C1308@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,36 +17,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 27, 2001 at 08:46:33AM -0500, Kevin M Corry wrote:
-> > On Fri, Aug 24, 2001 at 12:31:18AM +0200, Jean-Eric Cuendet wrote:
-> > >
-> > > Hi,
-> > > I have a pvmove question:
-> > > In the man page, it's said to be careful with pvmove if you use it
-> while
-> > > LVM is in use.
-> > > I don't really understand what is dangerous and what is safe...
-> >
-> > pvmove on a mounted (or otherwise in use) LV might cause curruption of
-> > your data.
+AJ Lewis wrote:
+> Nope, you can only extend a striped LV on the PV's it is currently on.
+> After that you either have to pvmove it to larger PVs or rebuild with more
+> disks.
 > 
-> In what cases could pvmove cause corruption on a mounted LV? Looking
-> at the man page and scanning through pvmove.c, it seems to indicate
-> that only a system crash during pvmove would corrupt the data. Is
-> this the only case, or are there others?
+> If you want to be able to extend LVs and need software striping, you might
+> want to consider using MD striping underneath LVM.
+> 
+AJ,
 
-Search back through the list for a response from Andrea Arcangeli.  We
-need to track buffer_heads that have been trhough the make_request
-function so we can really can flush the LV when suspending io for the
-dureation of the move.  If you're not using raw io then the only
-problem is a possible deadlock when under high memory pressure.
+does this mean I can initially build a striped LV from two smaller
+disks, let me say sda and sdb and later move the LE from sda to sdc
+and from sdb to sdd (where sdc and sdb a bigger than sda/sdb)? 
+It is to be said that the performance of md RAID0 is somewhat better
+than from striped LV's but I would prefer LVM if I could extend
+a striped LV without rebuilding RAID/restoring data.
 
-> If there are other possibilities for corruption, wouldn't it be a
-> good idea to not allow pvmove's on PV's that contain mounted LVs?
+cu,
+Jan
 
-IMO yes.
+--
+_______________________________________________________________________
 
-- Joe
+THE BEST RUN E-BUSINESSES RUN SAP
+_______________________________________________________________________
+
+Jan Schreckenbach                      email: Jan.Schreckenbach@sap.com
+SAP AG Walldorf/Baden, Germany         Phone: +49 6227  7-47474
+LinuxLab                               Fax  : +49 6227 78-31414
+
+SAP LinuxLab support address: linux@sap.com
