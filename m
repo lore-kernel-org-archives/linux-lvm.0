@@ -1,16 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i74GaGa02508
-	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 12:36:16 -0400
-Received: from c000.snv.cp.net (h000.c000.snv.cp.net [209.228.32.64])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i74GaEe1009500
-	for <linux-lvm@redhat.com>; Wed, 4 Aug 2004 12:36:14 -0400
-From: "S. Anthony Sequeira" <tony@sequeira.com>
-Message-Id: <1091637370.1453.420.camel@aurora.sequestor.lan>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i759Rla24471
+	for <linux-lvm@redhat.com>; Thu, 5 Aug 2004 05:27:47 -0400
+Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.207])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i759RbXn026710
+	for <linux-lvm@redhat.com>; Thu, 5 Aug 2004 05:27:42 -0400
+Received: by mproxy.gmail.com with SMTP id 73so2004rnk
+	for <linux-lvm@redhat.com>; Thu, 05 Aug 2004 02:27:31 -0700 (PDT)
+Message-ID: <ce9f1f9e040805022779bbd1e1@mail.gmail.com>
+Date: Thu, 5 Aug 2004 02:27:31 -0700
+From: Stanley Yue <stanley.yue@gmail.com>
 Mime-Version: 1.0
-Date: Wed, 04 Aug 2004 17:36:11 +0100
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vgchange -a n returns error 5 'Locking type 1
-	initialization failed'
+Subject: [linux-lvm] API for retrieve lvm information
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,20 +23,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM List <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-LFS build.  Kernel 2.4.26, upgraded to LVM2.  Haven't converted my
-existing LVMs to LVM2 yet?
+Hi:
 
-Installed device-mapper stable, version 1.00.18, dated 06/20/04
-14:28:00.
+I'm new to linux lvm, so sorry if this questions have been answered.
 
-Installed LVM2 stable, version 2.00.15, dated 06/20/04 14:17:00.
+1) Is there any api library for retrieve linux lvm configuration? I.e.
+querying for all the vg(s), pv(s), lv(s) on the system?
 
-I always get the error mentioned in the subject on a shutdown.
+2) If yes, what license is the library release under? 
 
-Any ideas please?  Google tells me that this is listed on Bugzilla.  My
-Gentoo and SuSE installations do not evince the problem.  This could be
-because they are using kernel 2.6 though.
--- 
-You don't become a failure until you're satisfied with being one.
+Thanks,
+
+Stanley
