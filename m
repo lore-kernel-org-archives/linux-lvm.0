@@ -1,9 +1,8 @@
-From: grobe@gmx.de
+From: Gerald Catling <geraldcc@optusnet.com.au>
 MIME-Version: 1.0
-Message-ID: <8189.1053716777@www16.gmx.net>
-Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] LVM on Mylex DAC 960 (Raid1)
+Message-Id: <200305241444.35851.geraldcc@optusnet.com.au>
+Subject: [linux-lvm] SuSE 8.1 and LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,33 +13,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 23 14:05:02 2003
+Date: Fri May 23 23:45:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi!=20
-=20
-I know that this is a known problem, but I didn't find the=20
-solution so far, so I have to ask here now...=20
-=20
-I have some machines with Mylex-controllers that are to=20
-be used with RAID1s. As the controller supports only=20
-6 partitions (and fo other reasons, too) I wanted to use=20
-LVM on this. I have created a primary /boot, a /swap and=20
-a logical partition in an extended one that became type "LVM".=20
-I am doing all this in SuSE 8.1's installation routine (Yast).=20
-=20
-I have choosed a VG, put the PV into it, and created LVs for=20
-/, /usr, /var, /tmp, /home, however, when Yast is going to=20
-execute the steps choosen before, I get a failure by pvcreate=20
-(can't get device size of /dev/rd/c0d0p5).=20
-=20
-I know that the Mylex raidset appears in a somehow special=20
-device in the Linux devtree, but I am quite sure it is possible=20
-to put LVM on top of it - now I just wonder how to do this?=20
-=20
-Thank You, CU, Lars.=20
+Hi once again from oz
 
---=20
-+++ GMX - Mail, Messaging & more  http://www.gmx.net +++
-Bitte l=EF=BF=BDcheln! Fotogalerie online mit GMX ohne eigene Homepage!
+Date: Wed, 14 May 2003 09:04:56 +0100
+From: Joe Thornber <thornber@sistina.com>
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] LVM resizing
+Reply-To: linux-lvm@sistina.com
+
+On Wed, May 14, 2003 at 08:13:46AM +0000, Gerald Catling wrote:
+> Istallation went well.
+> However resizing goes verry badly and the article implies it is possibl=
+e to=20
+> grow and shrink  --- usr,home and data partitions.
+
+You will have to resize the filesystem as well.
+
+For shrinking:
+
+i) shrink the fs
+ii) lvreduce
+
+For growing:
+
+i) lvextend
+ii) grow the fs
+
+- Joe
+
+Thank you Joe, but you info did not work.
+
+All i can get is a non-booting system as a result of trying to resize=20
+partitions.
+
+The article in LINUXPRO  May 2003 page 15 implies that /home /var /usr an=
+d /=20
+can be resized. Is this just wishful thinking?
+
+My system replies to such resizing attempts by saying I need to unmount t=
+he=20
+partitions first.
+
+FAT chance of that. Anyone tried to umnount / recently?
+
+Once again any info will be tried and greatfully received.
+
+Gerald
