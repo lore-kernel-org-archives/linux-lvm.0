@@ -1,17 +1,17 @@
 Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBCHmYH6024795
-	for <linux-lvm@redhat.com>; Sun, 12 Dec 2004 17:48:34 GMT
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBCHtPH6025138
+	for <linux-lvm@redhat.com>; Sun, 12 Dec 2004 17:55:25 GMT
 Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1CdXpi-0002EN-12
-	for linux-lvm@redhat.com; Sun, 12 Dec 2004 17:48:34 +0000
-Date: Sun, 12 Dec 2004 17:48:34 +0000
+	id 1CdXwL-0002Eo-QD
+	for linux-lvm@redhat.com; Sun, 12 Dec 2004 17:55:25 +0000
+Date: Sun, 12 Dec 2004 17:55:25 +0000
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] lvm lost after debian upgrade
-Message-ID: <20041212174834.GO11338@agk.surrey.redhat.com>
-References: <41BA5A7F.1010302@danielroth.se>
+Subject: Re: [linux-lvm] shrink pv without pvresize (FC3 LVM)
+Message-ID: <20041212175525.GP11338@agk.surrey.redhat.com>
+References: <41BA294D.5090605@pitt.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <41BA5A7F.1010302@danielroth.se>
+In-Reply-To: <41BA294D.5090605@pitt.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,17 +26,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Dec 11, 2004 at 03:25:03AM +0100, Daniel Roth wrote:
-> My lvm is at /dev/volume_group/mylv, my lvm consisted of hde,g,i
+On Fri, Dec 10, 2004 at 05:55:09PM -0500, Ilya Goldin wrote:
+> Why can't it get the geometry? Does LVM support FAT32 LVs? Does mkdosfs
+> support LVM?
+ 
+ioctl(3, HDIO_GETGEO, 0xbffffa8c)       = -1 ENOTTY (Inappropriate ioctl for device)
 
-Known issues with Debian:
-
-  lvm.conf detect_md_component should be set to 1 not 0
-
-  lvm.conf filters - check if cdrom drive is excluded correctly:
-    sometimes the cdrom exclusion points to a real hard disk by mistake
-
-Use pvscan -P to check what LVM2 actually sees.
+Something probably needs to make up a geometry.
 
 Alasdair
 -- 
