@@ -1,8 +1,9 @@
-From: Rich Turner <rich@storix.com>
-Message-Id: <1065050019.1267.20.camel@rich>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] create vg with same name as exported vg
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <A0F114871ED6044AB0E9A4173B5DCECB01113ADD@orsmsx406.jf.intel.com>
+From: "Klingaman, Aaron L" <aaron.l.klingaman@intel.com>
+Subject: [linux-lvm] root device problems with initrd and root on lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,48 +14,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct  1 18:15:02 2003
+Date: Wed Oct  1 19:16:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-i have run into a situation where lvm2 does not behave the same as lvm1.
-basically i want to be able to create a vg with the same name as an
-exported vg.
+So, after a lot of testing and reboots, and reading through the mail
+list archives, here is my problem:
 
-in lvm1 (v1.0.3) is was able to export the vg and create a vg with the
-same name on a different pv. the original "vgturner4" was on /dev/hda6.
-# vgchange -a n vgturner4
-# vgexport vgturner4
-# pvcreate -ff /dev/hda7
-# vgcreate vgturner4 /dev/hda7
+appending "root=3D/dev/vg/root" to the kernel command line does't work:
+'Cannot open root device "vg/root" or 00:00'
 
-in lvm2 (v2.00.07) it complained that there was already a vg with that
-name. the original vg was on /dev/sdc.
-# vgchange -a n vg1
-# vgexport vg1
-# pvcreate -ff /dev/sda
-# vgcreate vg1 /dev/sda
-  A volume group called 'vg1' already exists.
+but when I use the real major/minor numbers ('root=3D3a01'), it works
+correctly.
 
-a "vgscan" in lvm1 returns:
-# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vg0"
-vgscan -- found active volume group "vgturner4"
-vgscan -- found active volume group "vg0m"
-vgscan -- found exported volume group "vgturner4PV_EXP"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-groups
+During startup, vgscan and vgactivate are working correctly and finding
+the volumes, and I modified the initrd to do an ls -l on /dev/vg to get
+the major/minor numbers. Somehow the mapping between /dev/vg/root to
+3a01 isn't right.
 
-a "vgscan" in lvm2 returns:
-# vgscan
-Reading all physical volumes.  This may take a while...
-  Found exported volume group "vg1" using metadata type lvm2
+I could just hardcode root=3D3a01 but I would rather not.
 
-i notice that the exported vg in lvm1 is actually renamed but in lvm2 it
-retains its original name. any ideas on how to accomplish what i want to
-do in lvm2?
+Any help would be appreciated.
 
-rich turner
+(BTW, I'm not using lilo or grub, but kexec to load the kernel). I don't
+think this is a problem as the kernel parameters are getting passed
+correctly, and specifing root=3D3a01 allows the machine to boot).
+
+Thank you,
+Aaron
