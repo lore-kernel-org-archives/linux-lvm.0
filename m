@@ -1,12 +1,12 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Tue, 27 Mar 2001 15:14:58 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] LVM, lilo and MBR?
-Message-ID: <20010327151458.E993@tykepenguin.com>
-References: <m2g0fzsghb.fsf@isnogud.escape.de> <20010327110158.A2403@tykepenguin.com> <m2ae67s4yc.fsf@isnogud.escape.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m2ae67s4yc.fsf@isnogud.escape.de>; from urs@isnogud.escape.de on Tue, Mar 27, 2001 at 03:43:07PM +0200
+Return-Path: <mkp@mkp.net>
+Subject: Re: [linux-lvm] LVM-0.9.1beta6, XFS and 2.4.2 ...
+References: <008b01c0b293$2873fac0$0e01a8c0@myplace.net>
+	<yq1lmpyrgcb.fsf@jaguar.mkp.net> <20010327090706.B556@tykepenguin.com>
+From: "Martin K. Petersen" <mkp@linuxcare.com>
+Date: 27 Mar 2001 09:51:44 -0500
+In-Reply-To: <20010327090706.B556@tykepenguin.com>
+Message-ID: <yq1d7b3mfi7.fsf@jaguar.mkp.net>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,36 +20,23 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Patrick Caulfield <caulfield@sistina.com>
+Cc: linux-lvm@sistina.com
 
-On Tue, Mar 27, 2001 at 03:43:07PM +0200, Urs Thuermann wrote:
-> Patrick Caulfield <caulfield@sistina.com> writes:
-> 
-> > Yes it is. Don't run LILO on /dev/sda if it's a PV because it will
-> > destroy it.  You should partition the disk into /dev/sda1 (that way
-> > the PV will start further in and leave space for LILO)
-> 
-> Hm, I hoped I could get rid of the broken partitioning scheme of the
-> PC and C/H/S addressing used in the partition table.
-> 
-> Are there objections to change LVM so that the VGDA is placed at some
-> fixed offset (say 1 sector or 1 block (1K)) from the beginning of the
-> PV?  This is how many file systems also use block devices to avoid
-> conflicts with MBR, boot sectors and so on.
+>>>>> "Patrick" == Patrick Caulfield <caulfield@sistina.com> writes:
 
-There are no plans to do this for the near future
+Bas> Mar 21 20:22:40 wisdom kernel: lvm -- lvm_blk_ioctl: unknown
+Bas> command 0x126e
 
- 
-> BTW, are the other partitioning schemes that I could use than the one
-> that the standard MBR and MSDOS use?  Can the linux kernel recognize
-> other partition tables which only use absolut, linear sector numbers?
+Patrick> Yes XFS does that - it has some private ioctls it likes to do
+Patrick> on the block device that aren't implemented in LVM. Ignore
+Patrick> it.
 
-LVM works quite happily with any of Linux's supported disk labelling systems,
-but I think Sun and IRIX disk labels still use cylinders.
+Oh, they are indeed in LVM.  Bas' problem was a kernel/userland
+mismatch.  I recently had to move our ioctl numbers to avoid conflicts
+with IA64.
 
-If you're really worried about broken partitioning systems then perhaps you
-should use a less broken platform than a PC :-) Alphas are very nice, and you
-could use the BSD disklabel utility to slice up the disk.
-
-
-patrick
+-- 
+Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
+mkp@linuxcare.com, http://www.linuxcare.com/
+SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
