@@ -1,9 +1,12 @@
-Message-ID: <134691555.1002562652686.JavaMail.root@boots>
-Date: Mon, 8 Oct 2001 10:37:04 -0700
-From: "Karl" <rmvzj001@sneakemail.com>
-Subject: Re: [linux-lvm] LVM seems to be causing SCSI errors.
-Mime-Version: 1.0
+Date: Mon, 08 Oct 2001 13:40:54 -0400
+From: Chris Mason <mason@suse.com>
+Message-ID: <28770000.1002562854@tiny>
+In-Reply-To: <20011008170549.3B15E76467@oscar.casa.dyndns.org>
+References: <20011003230330.508E91104F@oscar.casa.dyndns.org> <20011008155346.A741C76E3B@oscar.casa.dyndns.org> <4650000.1002560095@tiny> <20011008170549.3B15E76467@oscar.casa.dyndns.org>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Re: [OOPS] full snapshot (with test vfs locking patch for reiserfs snapshots in 11-pre)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,24 +19,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Ed Tomlinson <tomlins@CAM.ORG>
+Cc: linux-lvm@sistina.com
 
-> The only thing I can think is that the SCSI device is not being
-> opened/initialised properly by LVM.  This certainly wasn't happening
-> before ~July when I put the open/close_pv() functions in.  But should
-> be working now.  Puzzled.  You really are using the new tools and not
-> old binaries in strange places ?  I've been caught a couple of times
-> by this ...
 
-I'm pretty sure I'm using the correct binaries. Date/time stamps on the
-only ones I find on my system agree with when I compiled the latest
-release.
+On Monday, October 08, 2001 01:05:48 PM -0400 Ed Tomlinson <tomlins@CAM.ORG> wrote:
 
-I'm using the static links so the libraries should not be an issue
-either. The only binaries I run on my tests are pvcreate, vgextend,
-vgreduce, lvcreate, and lvremove. The patch of the kernel and kernel
-recompile went without errors. LVM is compiled as a module, not in the
-kernel itself.
+> On October 8, 2001 12:54 pm, Chris Mason wrote:
+>> On Monday, October 08, 2001 11:53:46 AM -0400 Ed Tomlinson
+>> 
+>> <tomlins@CAM.ORG> wrote:
+>> > Hi Chris,
+>> > 
+>> > To summerize, with 2.4.11-pre5 and lvm-1.01-rc4 + your test vfslocking
+>> > patch  for 2.4.11-pre I, unlike you, was able to make snapshots and
+>> > reiserfsck them without  problems.  Then I tried a debench 50 run and
+>> > got an oops.
+>> 
+>> Confirmed, similar oops here.  Do you get this with rc4 in 2.4.10?
+> 
+> Funny you should ask...  Guess what was runing when this email arrived?
+> The  answer is that with 2.4.10 + lvm 1.01-rc4 the snapshot deactivates
+> correctly -  I do not see an oops.
+>
 
--- 
-Karl Hakimian
+Hmmm, looks like pure luck then.  It does not look like all the callers of lvm_snapshot_remap_block are properly checking to make sure the snapshot is still valid (hasn't been run through lvm_snapshot_release).
+
+Try this:
+
+-chris
+
+Index: 0.21/drivers/md/lvm-snap.c
+--- 0.21/drivers/md/lvm-snap.c Sat, 06 Oct 2001 00:07:22 -0400 
++++ 0.21(w)/drivers/md/lvm-snap.c Mon, 08 Oct 2001 13:35:41 -0400 
+@@ -108,6 +108,9 @@
+ 	lv_block_exception_t * ret;
+ 	int i = 0;
+ 
++	if (!hash_table || !lv->lv_block_exception)
++		return NULL ;
++
+ 	hash_table = &hash_table[hashfn(org_dev, org_start, mask, chunk_size)];
+ 	ret = NULL;
+ 	for (next = hash_table->next; next != hash_table; next = next->next)
+@@ -140,6 +143,8 @@
+ 	unsigned long mask = lv->lv_snapshot_hash_mask;
+ 	int chunk_size = lv->lv_chunk_size;
+ 
++	if (!hash_table)
++		BUG() ;
+ 	hash_table = &hash_table[hashfn(org_dev, org_start, mask, chunk_size)];
+ 	list_add(&exception->hash, hash_table);
+ }
+ 
