@@ -1,11 +1,10 @@
-Return-Path: <bs@infologic.fr>
-Message-ID: <3A5EAF1F.EF020978@infologic.fr>
-Date: Fri, 12 Jan 2001 08:15:43 +0100
-From: Benoit SERRA <bs@infologic.fr>
+Return-Path: <jfrank@lxco.com>
+Message-ID: <3A5EE491.5E4FB886@lxco.com>
+Date: Fri, 12 Jan 2001 12:03:45 +0100
+From: =?iso-8859-1?Q?J=FCrgen?= Frank <jfrank@lxco.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] nagging about the LVM usage survey
-References: <20010111083114.A381363@brule.borg> <3A5DC9B5.15B3C7DA@infologic.fr> <20010111172015.C15903@srv.t-online.de>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] how can I init LVM on software RAID  ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,37 +16,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM <linux-lvm@sistina.com>
 
+Hi !!
 
-"Heinz J. Mauelshagen" a =EF=BF=BDcrit :
->=20
-> As pointed out on the list everybody is invited to get the actual
-> code from our CVS repository with:
->=20
-> "cvs -d :pserver:cvs@cvs.globalfilesystem.org:/data/cvs checkout -r LVM_0=
--9-patches LVM"
->=20
-> It contains the fix you are requesting.
->=20
-> Our 0.9.1 beta release will take place on friday or monday for people
-> who are able to wait.
->=20
-> Thanks for your understanding.
+I want to create the following system :
 
-Sorry for the messages, I corrected the bug by myself. I just add a
-single line on the file lvm.c
+I use the new kernel (2.4) and I want to use the software raid and the
+lvm,
+but my problem is... how ?
 
-I'm using the 2.4.0 kernel.
-In file lvm.c
-At line 2026, in function lvm_do_vg_extend
-Just after the line :
-if ( ret !=3D 0 ) return ret;=09
+I can't find a step by step documentation and all what I try don't work.
 
-add :
+So what did I done :
 
-pv_ptr =3D vg_ptr->pv[p];
+* create a mirror system with software raid (last version), after this 
+  step I have a good raid system with the drive /dev/md0
 
-Recompile the kernel and reboot.
-Ok It work
+* normally now I need to create a partition on the drive , but I read in
+the raid docu that the md-drives don't support partitions !!!
+
+But, without a partiton of the type 0x8e I can't run vgscan and
+pvcreate...
+
+So, can anyone help me ?!
+
+Juergen
+
+(sorry for the bad english)
