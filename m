@@ -1,29 +1,33 @@
-Date: Wed, 25 Aug 1999 19:23:20 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM in stock kernel!?
-Message-ID: <19990825192320.A22954@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <Pine.LNX.3.96.990824152444.6534C-100000@zeke.sympatico.ca> <Pine.SGI.3.91.990824152657.19705A-100000@nile.lcse.umn.edu>
-Mime-Version: 1.0
-In-Reply-To: <Pine.SGI.3.91.990824152657.19705A-100000@nile.lcse.umn.edu>; from Jonny B. on Tue, Aug 24, 1999 at 03:28:45PM -0500
+Message-ID: <9D377901C29FD01198C500609737B809AB0575@SRHS_APP_0001>
+From: "Kolb, Mark" <MKolb@srhs.org>
+Subject: [linux-lvm] Vote for LVM
+Date: Thu, 26 Aug 1999 10:16:07 -0400
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm mailing list <linux-lvm@msede.com>
+To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
 
-On Tue, Aug 24, 1999 at 03:28:45PM -0500, Jonny B. wrote:
-> Sorry if you think this is dumb, but if I were Linus, I would like one 
-> note with a couple of reasons why LVM should be in the kernel and then a 
-> list of names of the people who support that position.  (Kinda like a 
-> petition.)
+Hello All,
 
-This is exactly what i was thinking about!!!!
+I have been working with IBM's LVM for three years and I find it an
+invaluable tool.  I can think of several times in recent history that I have
+bailed production systems out by the ability to extend filesystems on the
+fly.  From this point of view alone I would like to see an option for LVM in
+the Linux kernel as soon as is possible.  Having a good volume manager also
+simplifies the take-over of resources in a High-Availability environment.
 
-Regards,
-L.
+Coupling LVM with a logging/journaling filesystem on Linux is the computer
+nirvana that I hope to base my career on over the next years.  Thanks for
+listening.
 
--- 
-Luca Berra -- bluca@comedia.it
-    Communications Media & Services S.r.l.
+
+Mark Kolb
+Systems Engineer
+Information Services, Network Management
+The Hospital of Saint Raphael
+New Haven, CT 06511
+Phone: (203) 789-3791
+e-mail: mkolb@srhs.org
