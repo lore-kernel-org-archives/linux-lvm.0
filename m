@@ -1,10 +1,16 @@
-From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
-Message-ID: <20040101233902.GG21031@percy.comedia.it>
-References: <OF35F32634.21E2585F-ON00256E0E.005C46E1-00256E0E.005C46ED@svunta.os.is> <20040101184805.GA10139@percy.comedia.it> <1072993242.6220.12.camel@leto.cs.pocnet.net> <20040101224529.GD21031@percy.comedia.it> <1072998611.5199.21.camel@leto.cs.pocnet.net>
+From: Christophe Saout <christophe@saout.de>
+In-Reply-To: <20040101233902.GG21031@percy.comedia.it>
+References: 
+	 <OF35F32634.21E2585F-ON00256E0E.005C46E1-00256E0E.005C46ED@svunta.os.is>
+	 <20040101184805.GA10139@percy.comedia.it>
+	 <1072993242.6220.12.camel@leto.cs.pocnet.net>
+	 <20040101224529.GD21031@percy.comedia.it>
+	 <1072998611.5199.21.camel@leto.cs.pocnet.net>
+	 <20040101233902.GG21031@percy.comedia.it>
+Message-Id: <1073000959.5199.33.camel@leto.cs.pocnet.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1072998611.5199.21.camel@leto.cs.pocnet.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,62 +21,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  1 17:40:01 2004
+Date: Thu Jan  1 17:50:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: Christophe Saout <christophe@saout.de>
+Content-Type: text/plain; charset="us-ascii"
+To: Luca Berra <bluca@comedia.it>
 Cc: linux-lvm@sistina.com
 
-On Fri, Jan 02, 2004 at 12:10:11AM +0100, Christophe Saout wrote:
->I thought you were talking about the lvmcreate_initrd script that came
-i actually never used lvmcreate_initrd that came with LVM1,
+Am Fr, den 02.01.2004 schrieb Luca Berra um 00:39:
 
->Yes, I've seen redhat doing this. I personally prefer being able to
->override it at the command line though. Having something hardcoded in
->the initrd sounds strange to me.
-i agree with your concern, i'll try to get it from the command line
+> >I thought you were talking about the lvmcreate_initrd script that came
+> i actually never used lvmcreate_initrd that came with LVM1,
 
->I have attached the script. I parse /proc/cmdline, try to remove root=
->using a shell function and if it actually removed something I know that
->the rest has to be a device name. :)
-uhm, you should be wary of the case when a root= is in lilo.conf and
-luser wants to override it from cmdline. you stop a t the first
-occurrence.
+I did. It was quite simple to use and worked practically everywhere (if
+you didn't use an initrd to do anything else).
 
->Wasn't ash the one from busybox?
-no busybox is a dietlibc compiled shell that already has most command
-compiled in, so a single executable, and smaller than glibc.
+> >I have attached the script. I parse /proc/cmdline, try to remove root=
+> >using a shell function and if it actually removed something I know that
+> >the rest has to be a device name. :)
+> uhm, you should be wary of the case when a root= is in lilo.conf and
+> luser wants to override it from cmdline. you stop a t the first
+> occurrence.
 
->With udev I just created /dev/console and some others. Doing everything
->from the script seems unnecessary.
-i have to, because of tmpfs dev
+Ah. You're probably right. I assumed the boot loader would replace it. I
+never tested that though. My mistake.
 
->> My initrd detects if the root VG is on a md (softraid) device and
->> starts it before trying to activate the VG.
->Doesn't the kernel start them automatically? You mean, if it isn't
->activated in the kernel? Probably a good idea.
-I strongly believe that raid autodetection should be done in user space,
-possibly with mdadm. There is a big advantage in being able to control
-what gets activated and when, besides distribution kernels use modular
-scsi drive modules, so probably autodetection won't work anyway.
-I also don't have the faintest idea if the kernel deals with stacked
-raid devices
+> >With udev I just created /dev/console and some others. Doing everything
+> >from the script seems unnecessary.
+> i have to, because of tmpfs dev
 
->Yes, that's also possible. But I don't really like it being readonly
->because, as you say, mounting something on /etc or /dev is unnecessary.
->What's the problem with ext2? The wasted memory?
-wasted memory and disk space, being able to fit kernel+initrd on a
-single floppy is a good reason
+Right. You mentioned that later.
 
->I would love making the initrd an initramfs. But that doesn't currently
-i think initramfs is not mature yet.
-L.
+> I strongly believe that raid autodetection should be done in user space,
+> possibly with mdadm. There is a big advantage in being able to control
+> what gets activated and when, besides distribution kernels use modular
+> scsi drive modules, so probably autodetection won't work anyway.
+> I also don't have the faintest idea if the kernel deals with stacked
+> raid devices
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+One day everything will be done in userspace, even detection of
+partitions. So you're right. But it's a thing to do in a generic initrd,
+not in an LVM-only one. There are a lot of other things you should
+probably think of in a generic initrd. EVMS users, or perhaps encrypted
+root volume or something...?
+
+> wasted memory and disk space, being able to fit kernel+initrd on a
+> single floppy is a good reason
+
+Yes, but does cramfs save a lot compared to a compressed ext2
+filesystem?
+
+> >I would love making the initrd an initramfs. But that doesn't currently
+> i think initramfs is not mature yet.
+
+It simply not finished.
