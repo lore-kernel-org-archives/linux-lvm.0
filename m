@@ -1,9 +1,11 @@
-From: James Hawtin <oolon@ankh.org>
-Subject: Re: [linux-lvm] still problems with removing "non existant" dead
- snapshots :/
-In-Reply-To: <20021028101305.E16452@sistina.com>
-Message-ID: <Pine.LNX.4.44.0210281427290.1432-100000@pzat.meep.org>
-MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvscan and df result differs
+From: Magnus Sandberg <magnus@switchbeat.com>
+In-Reply-To: <20021028100325.B16452@sistina.com>
+References: <1035675002.11490.15.camel@sleep>
+	 <20021028100325.B16452@sistina.com>
+Message-Id: <1035818392.32410.328.camel@tinia>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,43 +16,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 28 08:34:01 2002
+Date: Mon Oct 28 09:24:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+On Mon, 2002-10-28 at 10:03, Heinz J . Mauelshagen wrote:
+> On Sun, Oct 27, 2002 at 01:30:01AM +0200, Magnus Sandberg wrote:
+> 
+> Did you zero the partition table?
+> i.e. "dd if=/dev/zero of=/dev/YourWholeDisk count=1 bs=512"
+> 
+> v1 "pvcreate /dev/YourWholeDisk" should work fine then.
 
-On Mon, 28 Oct 2002, Heinz J . Mauelshagen wrote:
+Yes I did, several times, I even rebooted to make sure the
+table was reread.
 
-> On Fri, Oct 25, 2002 at 01:23:18PM +0000, James Hawtin wrote:
-> >
-> >
-> > On Fri, 25 Oct 2002, Heinz J . Mauelshagen wrote:
-> >
-> > > You should give LVM2 + device-mapper a try or downgrade to 1.0.5.
-> >
-> > Hmmm what are the problems with 1.1-rc2? thats the version I am currently
-> > running, 1.0.5 I beleive has a problem with pvmove > 2 gig? or am I
-> > rembering the wrong version.
->
-> No, there's no such problem in 1.1.
+> > /dev/hde1 is also a 120G disk but with resierfs, ext3
+> > takeing up more size is probably normal. But the actual
+> > size on the lvm is 122G and as you can see I can fit 
+> > 121G on the disk, so why is lvscan reporting ~115G? 
+> > Can i safetly use my lvm setup without running the risk
+> > of losing data?
+> 
+> Can't reproduce that with df 4.1 here :(
+> That's probably just the old divide by 1k or 1024 thing.
 
-no no I ment is there a pvmove greater than 2 gig problem with 1.0.5? I
-seem to rember that was why i upgraded to 1.1-rc2
+Yes I suspected that but it stills scares me tad.
 
->
-> It is just an intermediate development version which got replaced by
-> LVM2/device-mapper.
->
-> Use that combination if you want stable, cutting-edge Linux LVM :)
->
+> What does "df -k" say and how does it compare to the lvscan output?
 
-Cutting or Bleeding edge?
+I'm using df 4.5.2, and df -k says:
 
-How painful is the upgrade from 1.1-rc2 to the 2 series (which I have not
-tried yet). Does it require a complete lvm system rebuild or can it use my
-old pvs, vgs? Which version is the best to go for? Ie any "known problems"
-why I should not use the latest....
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/vg/lg           118169924 117732724         0 100% /store2
 
-James
+and if using lvscan I get:
+
+114.49*1000*1000 =   114490000
+114.49*1024*1024 =   120051466,24		
+
+so with a few % off for the filesystem info it looks ok, But why is df
+using Size and Used info from the filesystem and the Available ans Use%
+info from the lvm-Volume?
+
+/Magnus
+
+-- 
+Magnus Sandberg <magnus@switchbeat.com>
