@@ -1,24 +1,23 @@
-Date: Tue, 11 May 1999 12:29:46 +0200
-From: Toni Andjelkovic <toni@telecom.at>
-Subject: [linux-lvm] linux and veritas HA
-Message-ID: <19990511122946.K12978@overlord.telecom.at>
-Mime-Version: 1.0
+Message-ID: <373824DA.F20EC83D@aholdusa.com>
+Date: Tue, 11 May 1999 08:38:50 -0400
+From: Dave Venus <dvenus@aholdusa.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Raw partitions in LVM-Linux?
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-hi,
+Hi!
 
-sorry for posting off-topic, but i think it could be of interest
-to LVM folks. i just heard rumours that veritas will be offering HA
-under linux starting with june/july 1999. anyone heard/read anything
-about this?
+Does/will LVM-Linux support raw partitions? We are interested in running
+Oracle Parallel Server (OPS) and it requires raw partitions (volumes). I
+know this worked on HP LVM.
 
-cu,
--- 
-Toni Andjelkovic       |       (TA627-RIPE)      | Tel: (+43 1) 21717-58990
-toni@telecom.at        |        iT Austria       | Fax: (+43 1) 21717-58900
----------------------------------------------------------------------------
+Thanks!
+
+Dave Venus
+Ahold Information Services
+Greenville, SC.
