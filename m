@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105232355.f4NNtQ7q030802@webber.adilger.int>
-Subject: Re: [linux-lvm] ORACLE OPS and Fibre channel
-In-Reply-To: <85256A55.0061ED1B.00@IBJS06DS.ibjs.com> "from Slava Tulchinsky
- at May 23, 2001 02:16:38 pm"
-Date: Wed, 23 May 2001 17:55:26 -0600 (MDT)
+Return-Path: <jbooth@ccbill.com>
+Message-ID: <072f01c0e3e8$dcae4460$5300000a@cavecreek.net>
+From: "Justin Booth" <jbooth@ccbill.com>
+Date: Wed, 23 May 2001 17:31:19 -0700
 MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_072C_01C0E3AE.2DB93120"
+Subject: [linux-lvm] Problem with PV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +17,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Slava Tulchinsky writes:
-> After successfully installing Oracle 8.1.7.0.1 OPS on Redhat 6.2 with
-> 2.2.19-6.2.1 using Compaq fibre channel card RA4000 to connect to Compaq
-> external drive enclosure RA4100 (kernel driver cpqfc), We decided see if OPS
-> will work with lvm 0.9.1-Beta7.
+This is a multi-part message in MIME format.
 
-> LVM part seems to work fine, but when booting with the newly
-> compiled kernel no longer able to use raw partitions with OPS
-> with or without LVM.
+------=_NextPart_000_072C_01C0E3AE.2DB93120
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Two things.  You need the raw-io patch for 2.2 kernels, and you also need
-to change the SECTOR_SIZE in the lvm.h header to be 512 bytes (the latter
-may have been fixed in recent LVM code releases).
+Hello,
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+    I have somehow created 4 PV's that are in no VG's. If I do a pvscan =
+I show a=20
+pvscan -- inactive PV "/dev/sdb" is in no VB [12.16] MB
+pvscan -- inactive PV "/dev/sdb" is in no VB [12.16] MB
+
+------=_NextPart_000_072C_01C0E3AE.2DB93120
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 5.50.4134.100" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hello,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;&nbsp;&nbsp; I have somehow =
+created 4 PV's=20
+that are in no VG's. If I do a pvscan I show a </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>pvscan -- inactive PV "/dev/sdb" is in =
+no VB=20
+[12.16] MB</FONT></DIV>
+<DIV>
+<DIV><FONT face=3DArial size=3D2>pvscan -- inactive PV "/dev/sdb" is in =
+no VB=20
+[12.16] MB</FONT></DIV></DIV></BODY></HTML>
+
+------=_NextPart_000_072C_01C0E3AE.2DB93120--
