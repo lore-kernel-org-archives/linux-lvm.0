@@ -1,14 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA217lr11516
-	for <linux-lvm@redhat.com>; Mon, 1 Nov 2004 20:07:47 -0500
-Received: from hotmail.com (bay17-f31.bay17.hotmail.com [64.4.43.81])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iA217egb011574
-	for <linux-lvm@redhat.com>; Mon, 1 Nov 2004 20:07:40 -0500
-From: "Kai Leibrandt" <k_leibrandt@hotmail.com>
-Subject: Re: [linux-lvm] Re: Software raid on top of lvm logical volume
-Date: Tue, 02 Nov 2004 01:33:37 +0100
-Mime-Version: 1.0
-Message-ID: <BAY17-F31Gvs0Qzfud70006c31d@hotmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA41SSr03971
+	for <linux-lvm@redhat.com>; Wed, 3 Nov 2004 20:28:28 -0500
+Received: from mail2.m-cam.com ([63.124.102.77])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA41SQPw011198
+	for <linux-lvm@redhat.com>; Wed, 3 Nov 2004 20:28:26 -0500
+Message-ID: <41897E47.40202@m-cam.com>
+Date: Wed, 03 Nov 2004 19:56:39 -0500
+From: Arshavir Grigorian <ag@m-cam.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Datarecovery on LVM volumes
+References: <2E9DA7DCA1129B4DA2DCA703100F387D7C7CCF@deexch.ontrack.com>
+In-Reply-To: <2E9DA7DCA1129B4DA2DCA703100F387D7C7CCF@deexch.ontrack.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,74 +22,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: hengelland@krollontrack.de
 
-Solaris' LVM is able to do this all in one manager too, in fact, all volumes 
-start life as single raid0 slices, which you then add stripes (keeping it a 
-raid0 volume, as Solaris calls it) or mirrors to (to create a raid1 volume). 
-Also, for snapshots, you can actually choose where to put the background 
-storage for the snapshot, so you can just stick it on a mounted volume that 
-has enough space. This is great because you can use all of your physical 
-extents of your PV even when using snapshots, instead of reserving some 
-space for snapshots in your VG...
-Also, admin of volumes under Solaris is really very straight forward, I only 
-wish it were so easy with Linux/LVM/md (though it is still not very 
-difficult of course), especially when creating a new mirror from a volume, 
-adding new pv's etc...
-For those who are interested, http://docs.sun.com/db/doc/817-5776 is a good 
-read...
+hengelland@krollontrack.de wrote:
 
-Kai.
+> We got a couple of drives with the partiton identifier "0x8E". They 
+> are all part of an LVM with kind of EXT2 structures.
+> The EXT2 structures do not look like they usually do ... superblocks 
+> are way different.
+> I would like to ask if somebody could provide me with some Offset 
+> information how
+> physical volumes, volume groups and logical volumes work together on a 
+> sector table basis ...
+>  
+> Many thanks
 
->From: "Erik Ohrnberger" <Erik@echohome.org>
->Reply-To: Erik@echohome.org,LVM general discussion and development 
-><linux-lvm@redhat.com>
->To: "LVM general discussion and development" <linux-lvm@redhat.com>
->Subject: Re: [linux-lvm] Re: Software raid on top of lvm logical volume
->Date: Mon, 1 Nov 2004 11:51:33 -0500 (EST)
->
->This solution would seem to be as the holy grail in that it would give you
->the best of all worlds: resizable RAID storage.  Or am I wrong about this
->assumption?
->
->On Mon, November 1, 2004 11:01, Michael T. Babcock said:
-> > Peter T. Breuer wrote:
-> >
-> >>>i do not believe you would have any advantage in stacking md above lvm
-> >>>anyway.
-> >>>
-> >>>
-> >>
-> >>That is right. In fact it sounds downright risky to me.
-> >>
-> >>
-> >
-> > I've actually considered a few times how one might be able to merge the
-> > md functionality into LVM2 (device-mapper) for having software-RAID part
-> > of the logical volume system (since a software-RAID partition is a
-> > logical volume of another type anyway).
-> >
-> > It would require some significant effort, but it seems doable.
-> > --
-> > Michael T. Babcock
-> > http://mikebabcock.ca
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Take a look at /etc/lvm/backup directory for files describing your 
+volume group layout.
+Also, look into vgcfgbackup and vgcfgrestore.
+Good luck!
 
-_________________________________________________________________
-Express yourself instantly with MSN Messenger! Download today it's FREE! 
-http://messenger.msn.com/
+
+Arshavir
