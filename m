@@ -1,12 +1,12 @@
-Return-Path: <heinrichs@qis-systemhaus.de>
-Message-Id: <3A766C21.173CBFDE@qis-systemhaus.de>
-Date: Tue, 30 Jan 2001 08:24:17 +0100
-From: Dirk Heinrichs <heinrichs@qis-systemhaus.de>
+Return-Path: <bluca@comedia.it>
+Date: Tue, 30 Jan 2001 09:51:04 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] [CVS LVM Mon Jan 29 16:18:57 EST 2001] Device /dev/hdc1 doesn'texist
+Message-ID: <20010130095104.D4740@colombina.comedia.it>
+References: <Pine.LNX.4.21.0101291625150.29156-100000@mordor.parrish.org.au> <20010129163432.J8567@srv.sistina.com> <002601c08a3a$20d57450$0a01a8c0@valhalla>
 Mime-Version: 1.0
-Subject: Re: [linux-lvm] Recommended LVM Version for 2.4.0
-References: <Pine.LNX.4.21.0101290901290.9793-100000@miami.datech2.er.heitec.net> <20010129163942.L8567@srv.sistina.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <002601c08a3a$20d57450$0a01a8c0@valhalla>; from dparrish@excido.com on Tue, Jan 30, 2001 at 08:26:22AM +1100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,30 +18,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-"Heinz J. Mauelshagen" wrote:
+On Tue, Jan 30, 2001 at 08:26:22AM +1100, David Parrish wrote:
+> I did patch the kernel (re Lewis), and the /dev entries are correct. However pvcreate *did* eventually work if I use 
 > 
-> Please go for 0.9.1 beta3 we released on 25/01/2001 and don't forget to
-> patch the kernel even though LVM is already included which will update it to
-> the actual LVM release.
-> In order to patch, please follow the instructions in the PATCHES/README file
-> of the LVM distribution.
-> 
-> On Mon, Jan 29, 2001 at 09:03:45AM +0100, Holger Rauch wrote:
-> > Hi!
-> >
-> > Which version of the LVM would you recommend using in conjunction with a
-> > 2.4.0 kernel? From what I know, only some 0.8 intermediate release seems
-> > to be shipped with 2.4.0, and that release is rather old? Is there any
-> > newer version that seems to work well with 2.4.0?
+> pvcreate /dev/ide/host0/bus1/target0/lun0/part1
 
-Yep, tried the 0.9.1-beta3 yesterday. vgscan of 0.9 hung completely and
-prevented the machine from booting (I also used devfs). Now everything
-seem to work. 
+uhm devfs....
+yess this is expected, lvm tools read /proc/partitions to find which disks are available
+and /proc/partitions only contains looong device names with devfs.
 
-Bye...
+use lvmdiskscan to have lvm idea of what you have.
 
-	Dirk
+regards,
+L.
 
-BTW: I knew LVMs before from HPUX - Good Job!!!
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
