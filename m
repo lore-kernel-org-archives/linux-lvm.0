@@ -1,10 +1,10 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+From: "Erick Calder" <e@arix.com>
 Subject: RE: [linux-lvm] missing vg after reboot
-Date: Mon, 10 Sep 2001 19:38:18 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPGEDFDNAA.stuart@bh90210.net>
+Date: Mon, 10 Sep 2001 20:46:52 -0700
+Message-ID: <000b01c13a74$653a4720$0300000a@pacbell.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-Reply-To: <20010910154903.33297.qmail@web13902.mail.yahoo.com>
+In-Reply-To: <NBBBJHKIOKPKOGOEPEDPGEDFDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,70 +16,139 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 To: linux-lvm@sistina.com
 
-TGlzdCBtZW1iZXJzOg0KDQoJSXQgbWlnaHQgYmUgd29ydGggYWRkaW5nIHRvIHRoZSBIb3ctVG8g
-dGhhdCBubyBpbml0c2NyaXB0IG1vZGlmaWNhdGlvbnMgYXJlIG5lY2Vzc2FyeSBmb3IgTGludXgg
-TWFuZHJha2UsIGFzIHRoZWlyIGRlZmF1bHQgcmMuc3lzaW5pdCBzY3JpcHQgY29udGFpbnMgY29k
-ZSBpbiBpdCB0byBkbyB0aGUgdmcgaW5pdGlhbGl6YXRpb24gb24gYm9vdCB1cC4NCg0KDQpWZXJ5
-IFJlc3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBUZW5lciwgSVQzLCBVU05SLVIsIE4zR1dH
-IA0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRVIDE5MDRHIChWb2x1bnRlZXIgVHJhaW5p
-bmcgVW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3ZXN0IGNvYXN0OiAoMzEwKS0zNTgtMDIw
-MiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDktMjA0MyANCmVhc3QgY29h
-c3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQaGlsYWRlbHBoaWEsIFBBIDE5MTQ5
-LTU4NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFpbCBnYXRld2F5
-IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0KDQpKT0lOIFRIRSBVUyBOQVZZIFJFU0VS
-VkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwuIA0KDQpNb25k
-YXksIFNlcHRlbWJlciAxMCwgMjAwMSA3OjM0IFBNDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQpGcm9tOiBsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb20gW21haWx0bzpsaW51eC1sdm0t
-YWRtaW5Ac2lzdGluYS5jb21dT24gQmVoYWxmIE9mIE1pY2hhZWwgSG9sc2NoYmFjaA0KU2VudDog
-TW9uZGF5LCBTZXB0ZW1iZXIgMTAsIDIwMDEgODo0OSBBTQ0KVG86IGxpbnV4LWx2bUBzaXN0aW5h
-LmNvbQ0KU3ViamVjdDogUmU6IFtsaW51eC1sdm1dIG1pc3NpbmcgdmcgYWZ0ZXIgcmVib290DQoN
-Cg0KLS0tICJIZWlueiBKIC4gTWF1ZWxzaGFnZW4iIDxtYXVlbHNoYWdlbkBzaXN0aW5hLmNvbT4g
-d3JvdGU6DQo+DQo+IE1pY2hhZWwsDQo+DQo+IHRoZSBwdmRhdGEgb3V0cHV0IGJlbG93IGV4cG9z
-ZXMgYSBjb21wbGV0ZWx5IG1lc3N5IFBWIHN0cnVjdHVyZSwNCj4gd2hpY2ggbWFrZXMgbWUgdGhp
-bmsgb2YgMiBwb3NzaWJsZSByZWFzb25zOg0KPg0KPiBhLiAvZGV2L2hkYTIgaXMgbm90IHRoZSBk
-ZXZpY2UgeW91IHVzZWQgdG8gY3JlYXRlIGEgcGh5c2ljYWwgdm9sdW1lDQo+DQo+IGIuIHNvbWV0
-aGluZyBhY2NpZGVudGlhbGx5IG92ZXJ3cm90ZSAvZGV2L2hkYTIgYWZ0ZXIgdGhlIFBWIGNyZWF0
-aW9uDQo+DQo+DQo+IElmIGIgaXMgdHJ1ZSB5b3UgbWlnaHQgc3RpbGwgaGF2ZSBhbiBhY3R1YWwg
-VkdEQSBiYWNrdXAgaW4NCj4gL2V0Yy9sdm1jb25mLyB3aGljaA0KPiB5b3UgY2FuIHVzZSB0byB2
-Z2NmZ3Jlc3RvcmUoOCkgaXQgdG8gL2Rldi9oZGEyIHByZXN1bWVkIHRoYXQNCj4gL2Rldi9oZGEy
-IGlzDQo+IHRoZSByaWdodCBkZXZpY2UuDQo+DQpJIGFscmVhZHkgdHJpZWQgdmdjZmdyZXN0b3Jl
-LiBBbGwgYXZhaWxhYmxlIGJhY2t1cCBmaWxlcyBsZWFkIHRvIHRoZQ0Kc2FtZSByZXN1bHQ6DQoN
-Cj4gPiBzZXJ2ZXIxOn4gIyB2Z2NmZ3Jlc3RvcmUgLXYgLW4gZGF0YSAvZGV2L2hkYTINCj4gPiB2
-Z2NmZ3Jlc3RvcmUgLS0gbG9ja2luZyBsb2dpY2FsIHZvbHVtZSBtYW5hZ2VyDQo+ID4gdmdjZmdy
-ZXN0b3JlIC0tIHJlc3RvcmluZyB2b2x1bWUgZ3JvdXAgImRhdGEiIGZyb20NCj4gPiAiL2V0Yy9s
-dm1jb25mL2RhdGEuY29uZiINCj4gPiB2Z2NmZ3Jlc3RvcmUgLS0gY2hlY2tpbmcgZXhpc3RlbmNl
-IG9mDQo+ID4gIi9ldGMvbHZtY29uZi9kYXRhLmNvbmYiDQo+ID4gdmdjZmdyZXN0b3JlIC0tIHJl
-YWRpbmcgdm9sdW1lIGdyb3VwIGRhdGEgZm9yICJkYXRhIg0KPiA+IGZyb20gIi9ldGMvbHZtY29u
-Zi9kYXRhLmNvbg0KPiA+IGYiDQo+ID4gdmdjZmdyZXN0b3JlIC0tIHJlYWRpbmcgcGh5c2ljYWwg
-dm9sdW1lIGRhdGEgZm9yDQo+ID4gImRhdGEiIGZyb20gIi9ldGMvbHZtY29uZi9kYXRhLg0KPiA+
-IGNvbmYiDQo+ID4gdmdjZmdyZXN0b3JlIC0tIHJlYWRpbmcgbG9naWNhbCB2b2x1bWUgZGF0YSBm
-b3IgImRhdGEiDQo+ID4gZnJvbSAiL2V0Yy9sdm1jb25mL2RhdGEuYw0KPiA+IG9uZiINCj4gPiB2
-Z2NmZ3Jlc3RvcmUgLS0gY2hlY2tpbmcgdm9sdW1lIGdyb3VwIGNvbnNpc3RlbmN5IG9mDQo+ID4g
-ImRhdGEiDQo+ID4gdmdjZmdyZXN0b3JlIC0tIGNoZWNraW5nIHZvbHVtZSBncm91cCBjb25zaXN0
-ZW5jeSBvZg0KPiA+ICJkYXRhIg0KPiA+IHZnY2ZncmVzdG9yZSAtLSByZWFkaW5nIHBoeXNpY2Fs
-IHZvbHVtZSAiL2Rldi9oZGEyIg0KPiA+IHZnY2ZncmVzdG9yZSAtLSBFUlJPUiAicHZfcmVhZCgp
-OiBQViBpZGVudGlmaWVyDQo+ID4gaW52YWxpZCIgcmVhZGluZyBwaHlzaWNhbCB2b2x1bWUNCj4g
-PiAgIi9kZXYvaGRhMiINCj4gPg0KTXkgaWRlYSB3YXMgdG8gcmVzZXQgdGhlIHZhbHVlcyBvZiAv
-ZGV2L2hkYTIgYWNjb3JkaW5nIHRvIHRoZSBmb2xsb3dpbmcNCnNldHRpbmdzOg0KDQo+ID4gc2Vy
-dmVyMTp+ICMgdmdjZmdyZXN0b3JlIC12IC1sbCAtbiBkYXRhIC9kZXYvaGRhMg0KLi4uDQo+ID4g
-LS0tIFBoeXNpY2FsIHZvbHVtZSAtLS0NCj4gPiBQViBOYW1lICAgICAgICAgICAgICAgL2Rldi9o
-ZGEyDQo+ID4gVkcgTmFtZSAgICAgICAgICAgICAgIGRhdGENCj4gPiBQViBTaXplICAgICAgICAg
-ICAgICAgMjcuNjIgR0IgLyBOT1QgdXNhYmxlIDIuNDggTUINCj4gPiBbTFZNOiAxNDggS0JdDQo+
-ID4gUFYjICAgICAgICAgICAgICAgICAgIDINCj4gPiBQViBTdGF0dXMgICAgICAgICAgICAgYXZh
-aWxhYmxlDQo+ID4gQWxsb2NhdGFibGUgICAgICAgICAgIHllcw0KPiA+IEN1ciBMViAgICAgICAg
-ICAgICAgICA2DQo+ID4gUEUgU2l6ZSAoS0J5dGUpICAgICAgIDQwOTYNCj4gPiBUb3RhbCBQRSAg
-ICAgICAgICAgICAgNzA2OQ0KPiA+IEZyZWUgUEUgICAgICAgICAgICAgICA2NjkNCj4gPiBBbGxv
-Y2F0ZWQgUEUgICAgICAgICAgNjQwMA0KPiA+IFBWIFVVSUQgICAgICAgICAgICAgDQo+ID4gZTdz
-WDVSLVhuVG0ta2VYNi1qU2hmLXRUbHctRFVQMy1tenA0elcNCj4gPg0KDQpUaGVzZSB2YWx1ZXMg
-c2VlbSBwbGF1c2libGUgZm9yIG1lLiBDYW4gaSB1c2UgdGhlbSB0byBtYW51YWxseSBlZGl0IHRo
-ZQ0KUFYgL2Rldi9oZGEyIHRvIHJlc2N1ZSBzb21lIGRhdGE/DQoNCg0KTWZHIE1pY2hhZWwNCg0K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCkRvIFlv
-dSBZYWhvbyE/DQpHZXQgZW1haWwgYWxlcnRzICYgTkVXIHdlYmNhbSB2aWRlbyBpbnN0YW50IG1l
-c3NhZ2luZyB3aXRoIFlhaG9vISBNZXNzZW5nZXINCmh0dHA6Ly9pbS55YWhvby5jb20NCg0KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LWx2bSBt
-YWlsaW5nIGxpc3QNCmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KaHR0cDovL2xpc3RzLnNpc3RpbmEu
-Y29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtDQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0
-dHA6Ly93d3cuc2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3RvLmh0bWwNCg==
+actually that's also true of RedHat 7.0 and 7.1
+
+- e r i c k
+
+-----Original Message-----
+From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
+Behalf Of IT3 Stuart B. Tener, USNR-R
+Sent:	Monday, September 10, 2001 7:38 PM
+To:	linux-lvm@sistina.com
+Subject:	RE: [linux-lvm] missing vg after reboot
+
+List members:
+
+	It might be worth adding to the How-To that no initscript modifications =
+are
+necessary for Linux Mandrake, as their default rc.sysinit script contains
+code in it to do the vg initialization on boot up.
+
+
+Very Respectfully,
+
+Stuart Blake Tener, IT3, USNR-R, N3GWG
+Beverly Hills, California
+VTU 1904G (Volunteer Training Unit)
+stuart@bh90210.net
+west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
+east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
+
+Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's
+free!)
+
+JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
+
+Monday, September 10, 2001 7:34 PM
+
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+Behalf Of Michael Holschbach
+Sent: Monday, September 10, 2001 8:49 AM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] missing vg after reboot
+
+
+--- "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
+>
+> Michael,
+>
+> the pvdata output below exposes a completely messy PV structure,
+> which makes me think of 2 possible reasons:
+>
+> a. /dev/hda2 is not the device you used to create a physical volume
+>
+> b. something accidentially overwrote /dev/hda2 after the PV creation
+>
+>
+> If b is true you might still have an actual VGDA backup in
+> /etc/lvmconf/ which
+> you can use to vgcfgrestore(8) it to /dev/hda2 presumed that
+> /dev/hda2 is
+> the right device.
+>
+I already tried vgcfgrestore. All available backup files lead to the
+same result:
+
+> > server1:~ # vgcfgrestore -v -n data /dev/hda2
+> > vgcfgrestore -- locking logical volume manager
+> > vgcfgrestore -- restoring volume group "data" from
+> > "/etc/lvmconf/data.conf"
+> > vgcfgrestore -- checking existence of
+> > "/etc/lvmconf/data.conf"
+> > vgcfgrestore -- reading volume group data for "data"
+> > from "/etc/lvmconf/data.con
+> > f"
+> > vgcfgrestore -- reading physical volume data for
+> > "data" from "/etc/lvmconf/data.
+> > conf"
+> > vgcfgrestore -- reading logical volume data for "data"
+> > from "/etc/lvmconf/data.c
+> > onf"
+> > vgcfgrestore -- checking volume group consistency of
+> > "data"
+> > vgcfgrestore -- checking volume group consistency of
+> > "data"
+> > vgcfgrestore -- reading physical volume "/dev/hda2"
+> > vgcfgrestore -- ERROR "pv_read(): PV identifier
+> > invalid" reading physical volume
+> >  "/dev/hda2"
+> >
+My idea was to reset the values of /dev/hda2 according to the following
+settings:
+
+> > server1:~ # vgcfgrestore -v -ll -n data /dev/hda2
+...
+> > --- Physical volume ---
+> > PV Name               /dev/hda2
+> > VG Name               data
+> > PV Size               27.62 GB / NOT usable 2.48 MB
+> > [LVM: 148 KB]
+> > PV#                   2
+> > PV Status             available
+> > Allocatable           yes
+> > Cur LV                6
+> > PE Size (KByte)       4096
+> > Total PE              7069
+> > Free PE               669
+> > Allocated PE          6400
+> > PV UUID
+> > e7sX5R-XnTm-keX6-jShf-tTlw-DUP3-mzp4zW
+> >
+
+These values seem plausible for me. Can i use them to manually edit the
+PV /dev/hda2 to rescue some data?
+
+
+MfG Michael
+
+__________________________________________________
+Do You Yahoo!?
+Get email alerts & NEW webcam video instant messaging with Yahoo! Messeng=
+er
+http://im.yahoo.com
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=
+=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=E5=8A{=B1=FE[=E6(tm)=A8=A5=8Ax%=8A=CBe=8A{=
+=B1=FE[=E6=FE=C8=AC=B6)=DA=FD=CA&=86=DBi=FF=FF=E5=8A
+=CBl=FE=C8=AC=B6)=DA=FD=CA&=FEf=A2-f=A7=FEX=AC=B6)=DF=A3=F9b=9E=EC=FF-=F9=
+=ABy=A7m...=E2=D50s-=FD3=9A=B6=1Bm=A7=FF=FF=C3
+=FF=B2+-=8Av=FFr=89=BF-=F9=BF=3D=A8-=B3=F8h=C2=DA=FF=86=D9=A5
