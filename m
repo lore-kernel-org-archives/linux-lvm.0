@@ -1,10 +1,12 @@
-Subject: Re: [linux-lvm] Migrating LVM1->LVM2 and kernel 2.4->2.5
-Message-ID: <20030308103430.GA907@fib011235813.fsnet.co.uk>
-References: <20030307190510.GA4048@angle.setup.org>
+From: Stephan Austermuehle <au@hcsd.de>
+Subject: Re: [linux-lvm] lvm and md
+Message-ID: <20030307141007.GA21686@hcsd.de>
+References: <3E6803F3.5060507@exavio.com.cn>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
 Content-Disposition: inline
-In-Reply-To: <20030307190510.GA4048@angle.setup.org>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+In-Reply-To: <3E6803F3.5060507@exavio.com.cn>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,42 +17,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Mar  8 04:35:01 2003
+Date: Sun Mar  9 16:59:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Mar 07, 2003 at 02:05:10PM -0500, Alexy Khrabrov wrote:
-> 
-> I wonder whether there's any advantage for migrating
-> to LVM2 on 2.4 kernels, if everything works OK?
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You could use the new atomic metadata format, configure the system
-more flexibly with the new config file and use the human readable
-metadata backups in the event of problems, just to name a few
-advantages.  Personally I think it's worth upgrading for the 'lvs',
-'pvs' and 'vgs' commands alone, I always found the *display commands
-overly verbose.
+On Fri, Mar 07, 2003 at 10:29:07AM +0800, Peter Yao wrote:
 
-> But, as I see in kernel 2.5, there's no LVM by name,
-> just a low-level device mapper.  Does it mean that
-> in order to even try out kernel 2.5 on an LVM1 system,
-> I have to migrate to LVM2 first? Is there any way
-> to "migrate" while being able to roll back to LVM1?
+> Should we build lvm volumns on top of soft raid(md) or build md on top=20
+> of lvm volumns?
 
-LVM2 supports the LVM1 metadata, so there is no migration as such.  If
-you have a kernel with dm built in and the LVM2 tools you can use
-LVM2.  If you want to roll back to LVM1 just switch back to an LVM1
-kernel and tools.
+I propose to use LVM on top of md because that way you have to deal with
+one disk mirror only instead of several mirrors per LV.
 
-If you want to run an 2.5 kernel you will have to use LVM2.
+Stephan
 
-> Does it depend on whether the root partition is LVM?
-> One of mine is, LVM1 too.
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-We have never run a root from an LVM2 lv, but there's no reason why it
-wont work.  But of course don't expect the initrd built with
-lvmcreate_initrd to work.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
 
-- Joe
+iD8DBQE+aKg/+QMu5be4tHkRAqxcAKDkBiEblN5+KM9EuZyLB/TKFoLeSQCdGhC9
+lxB9Ki1qf6lIITiX5T7n8YA=
+=C91S
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
