@@ -1,12 +1,10 @@
-Return-Path: <eli@zendo.net>
-Date: Thu, 26 Jul 2001 12:02:50 -0500
-From: Eli Criffield <eli@zendo.net>
-Message-ID: <20010726120250.A11839@zendo.net>
+Return-Path: <tack@orion.dok.org>
+Date: Thu, 26 Jul 2001 13:19:28 -0400
+From: Jason Tackaberry <tack@linux.com>
+Message-ID: <20010726131928.D1779@linux.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
 Content-Disposition: inline
-Subject: [linux-lvm] 100% LVM 100% reiserfs success story
+Subject: [linux-lvm] Nasty bug in lvm and/or md and/or reiserfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,170 +16,129 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Mi Un Kim <Mi_Un_Kim/CDC/UNO/UNEBR@unomail.unomaha.edu>, Josh <skulcap@mammoth.org>, Jay Hannah <jay@jays.net>, "W. Mark Hagler" <hagler@th.in.gs>
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have discovered one or more severe bugs in any or all of lvm, md, and
+reiserfs.  I'm not a kernel guy and I don't claim to know how these
+things are supposed to interact at that level, so I'm not going to point
+fingers.  Instead, here's what happened and I'll let you decide. :)
 
+The problem surfaces when you create a volume group with lvm and include
+a partition that happens to be mounted.  In my tests the cwd was this
+mounted filesystem.  This may or may not be a necessary condition to
+reproduce this problem.  (I didn't test otherwise.)
 
-I have successfully migrated my entire system to LVM and reiserfs.
+In my tests I have /dev/sda7 and /dev/sdb7.  I created an md raid0
+device and assigned that to /dev/md3.  Then, here are the sequence of
+commands I issued:
 
-I have one ide disk, (/dev/hda) and on that disk i have 1 partition
-(/dev/hda1). That partition is type 8e (Linux LVM). I have no non lvm=20
-/boot partition for the kernel or initird image.=20
+  mkreiserfs /dev/md3
+  mount /dev/md3 /space
+  cd /space
+  pvcreate /dev/md3
+  vgcreate vol01 /dev/md3
 
-# fdisk -l
-Disk /dev/hda: 240 heads, 63 sectors, 2586 cylinders
-Units =3D cylinders of 15120 * 512 bytes
+Obviously it's not normal to create a vg on a device that's mounted.  I
+did this by accident, but the result was pretty ugly.  Immediately after
+doing 'vgcreate' this popped up in the console:
 
-   Device Boot    Start       End    Blocks   Id  System
-/dev/hda1             1      2586  19550128+  8e  Linux LVM
+--- snip ---------------------------------------------------------------
+is_tree_node: node level 19784 does not match to the expected one -1
+vs-5150: search_by_key: invalid format found in block 0. Fsck?
+kernel BUG at namei.c:343!
+invalid operand: 0000
+CPU:    0
+EIP:    0010:[<c017d965>]
+EFLAGS: 00010286
+eax: 0000001b   ebx: c2047e60   ecx: c2c0e000   edx: c02d88c4
+esi: c28795e0   edi: c2047ea0   ebp: c2047e04   esp: c2047df8
+ds: 0018   es: 0018   ss: 0018
+Process bash (pid: 834, stackpage=c2047000)
+Stack: c028ac46 c028acda 00000157 00000001 00000002 7f84dbff 000001f4 00000000
+       00000003 c011ac84 00000001 c028ad8e c2047e60 c2047ea0 c23be0e0 c017da8b
+       c28795e0 c23be13c 0000000a c2047e60 c2047ea0 00000000 00000001 c03275c0
+Call Trace: [<c011ac84>] [<c017da8b>] [<c0139b70>] [<c013a582>] [<c0141999>] [<c0139c2f>] [<c013a341>]
+       [<c013a94a>] [<c0137993>] [<c012fae3>] [<c0106ecb>]
 
-# df     =20
-Filesystem           1k-blocks      Used Available Use% Mounted on
-/dev/rootvg/root_lv     307184    111008    196176  37% /
-/dev/rootvg/boot_lv      53240     39820     13420  75% /boot
-/dev/rootvg/usr_lv     2097084   1562720    534364  75% /usr
-/dev/rootvg/var_lv      716772    339836    376936  48% /var
-/dev/rootvg/home_lv    4194172   2834836   1359336  68% /home
+Code: 0f 0b 83 c4 0c 8b 54 24 3c 52 8b 44 24 3c 50 57 55 e8 25 fc
+--- snip ---------------------------------------------------------------
 
+After realising that I'd tried to vgcreate a partition that was mounted,
+I cd'ed out of /space and issued 'umount /space'.  Then I got this:
 
-How did you do that you ask?
+--- snip ---------------------------------------------------------------
+journal-2332: Trying to log block 16, which is a log block
+kernel BUG at prints.c:332!
+invalid operand: 0000
+CPU:    0
+EIP:    0010:[<c01887a4>]
+EFLAGS: 00010286
+eax: 0000001c   ebx: c0335a80   ecx: cf41c000   edx: c02d88c4
+esi: cc3c1e68   edi: c0335ebd   ebp: c0335a80   esp: cc3c1e2c
+ds: 0018   es: 0018   ss: 0018
+Process umount (pid: 881, stackpage=cc3c1000)
+Stack: c028c6c6 c028c9c0 0000014c cc3c1e44 cc3c1e48 00000000 000007e0 00000001
+       00000001 d0865024 00000000 d0865000 c0195e4e ce803800 c028fb80 00000010
+       00000560 00000000 00000001 00000001 00000807 00000000 00000000 ce633ea0
+Call Trace: [<c0195e4e>] [<c0193546>] [<c018684a>] [<c01935d1>] [<c018685a>] [<c0135174>] [<c0139b88>]
+       [<c013559a>] [<c012fb83>] [<c0121ea2>] [<c01355dc>] [<c0106ecb>]
 
-Well it's a big pain in the ass. But hears the short story.
+Code: 0f 0b 83 c4 0c 8b 54 24 28 85 d2 74 08 8b 44 24 28 83 48 28
+Segmentation fault
+--- snip ---------------------------------------------------------------
 
-I used rpms when i could. First thing i installed was
-reiserfs-utils-3.x.0f-1.i386.rpm for the reiserfs stuff and installed all
-of the lvm 0.9.1_beta7 rpms.=20
+After umount segfaulted, I decided I ought to reboot.  ctrl-alt-del or
+halt(8) appeared to have no effect, so I hit the reset button.
 
-I then downloaded linux-2.4.6 and patched it with the patch program from
-the lvm patchgen rpm.
-I configured the kernel to have LVM, reiserfs, minix, iso9660 and my
-ethernet driver all as non modules. (important later)
+As my system was coming back up, the boot sequence continually said
+"Can't open /etc/mtab: input/output error."  The boot and root
+partitions are both md RAID1 devices with ext2.  The disks seemed to
+fsck okay, and when I logged in, I indeed could not read /etc/mtab.  'ls
+-l /etc/mtab' even yielded the same input/output error.  I rebooted with
+the stock RH 7.1 kernel that has no lvm support and this error
+persisted.  So this seems to be a problem with md?
 
-After doing it the hard way and trashing a couple file systems and not
-being able to boot a couple of times  i found that there are two more
-patches that need to be applied before you are done with the kernel
-One is
-ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/lvm_0.9.1_beta7-get_hardblocksize.=
-patch
-This fixed the 'undefined reference to `get_hardblocksize'' error when
-compiling.
+I managed to fix it by booting the RedHat rescue cd, mounting the root
+partition, and deleting /etc/mtab.  All seems okay.
 
-I did not apply this patch, i instead edited it all manually but I'm sure
-the patch would be easer.
+Just to see if this problem was linked to md beneath LVM, I repeated the
+above with /dev/sda7 instead of /dev/md3.  Same result.  Now, I also
+repeated the above using ext2 instead of reiserfs.  ext2 complained:
 
-You also need to add a patch to make LVM work with lilo (which you also
-have to patch)
+EXT2-fs error (device sd(8,7)): ext2_write_inode: unable to read inode
+block - inode=2, block=1899261259
+attempt to access beyond end of device
 
-I used the patch at
+But it did not cause any kernel errors.  This process failed gracefully
+with ext2.
 
-http://lists.sistina.com/pipermail/linux-lvm/2001-June/007538.html
+Now, if I had to blame LVM for something, I'd say it should at least not
+let me vgcreate with a mounted partition, or one that has inodes in use.
+mkraid, for exaple, would not let me start a raid device with a mounted
+partition.  If vgcreate failed with an error saying "This partition is
+mounted or has inodes in use" I would have realized the problem and
+unmounted /space before vgcreate.  The kernel errors came from Reiserfs,
+so there seems to be a problem there.  But like I said, I'm not a kernel
+guy so I'll let you guys confirm this before I submit a bug report to
+the Reiserfs team (or maybe one of the LVM hackers would be a better
+candidate).  Finally, md did not handle this robustly at all.  The whole
+/etc/mtab issue makes me extremely nervous since md is handling my boot
+and root parition with RAID1.  I'm just in a testing stages,
+fortunately, but I'm thinking md/lvm aren't suitable for this system
+which will be in production in a month.
 
-and applied it directly to /usr/src/linux-2.4.6/drivers/md/lvm.c
+I'd be happy to repeat and experiments or give further information if
+you need some.  This system is mine to beat on for a little while longer
+before it needs to go live.
 
-I haven't tried this with LVM 0.9.1_beta8 yet, and probably won't for a
-while, I just got it working so i don't think I'll mess with it. You
-probably don't need the two extra patches after installing the LVM
-patchgen created patch.
+Cheers,
+Jason.
 
-
-The other thing you need is lilo 21.7.5, this has support to boot off a
-reiserfs partition, but not of an LVM partition so you'll need to patch
-it.
-
-http://lists.sistina.com/pipermail/linux-lvm/2001-June/007682.html
-
-has a patch for lilo-21.7.5 to add support for booting off an lvm.
-
-After i figured out what patches i need for the kernel and lilo the hard
-way, I got both installed with everything needed.
-
-Now i installed redhat 7.1 right from the beginning with the intention of
-converting it to all LVM and reiserfs. I had 3 partitions a big /dev/hda1
-(about 4 gig)
-that was / and had the entire redhat distribution installed in  a /dev/hda2
-just for swap (500meg) and the rest in /dev/hda3 (14 gig or so).
-
-I created a volumegroup on /dev/hda3 and made all my lvs, formated them=20
-all with reiserfs and cpioed all the files over there, then set the kernel
-to boot with root as /dev/rootvg/root_lv.
-
-Note at this point the kernel is still on /dev/hda1 the normal ext2
-partition, but i just wanted to check everything. I got working after a
-few tries. It was easy to recover from a failed attempt at this point
-since it was still on the non lvm partition i just had a different line in
-my lilo.conf to boot back to the old way.=20
-
-Now that i had all that working i make sure that /boot
-(/dev/rootvg/boot_lv now that i was booted using the rootvg) has the new
-lilo and the new kernel with all the patches I've determined i needed and
-set it to boot off the kernel in rootvg/boot_lv  and with root as
-rootvg/root_lv.
-
-Once that all worked fine the easy thing to do would be to delete
-/dev/hda1 and /dev/hda2 and make one bigger /dev/hda1, pvcreate on it and
-just add it to the volumegroup and go have a beer.=20
-
-But i thought it would be cool to only have one physical volume.=20
-To do this i would need to backup everything to some other device, boot
-from a rescue cd and recreate the volumegroup and logical volumes. Then
-restore all files from this other device, chroot to the voluegroup and run
-the lilo i had patched.
-
-This is pretty much what i did, I used a tape drive on another box as the
-backup device witch complicated things because you have to get your
-rescue operating system up on the network enough to run=20
-rsh otherhost dd if=3D/dev/rmt0 obs=3D20b |cpio -iv --block-size=3D20
-
-To do this i used a program called BYLD. it can be found at
-http://byld.sourceforge.net/ I found it to be pretty buggy and could never
-get it to include all the programs i needed, but i did get it to work. I
-didn't delete my old partition until i had copied all the programs and
-library's off of it i need to little ram disks i had created. That way once
-i remove the partition i would still have my lvm tools, reiserfs
-tools, cpio, rsh and all the tools i need to be get on the network, at
-least until i rebooted. I misplaced reset would have really ruined my day.
-
-By the way its much easer if you're kernel doesn't need modules, at least
-for the lvm, the minix fs (which it uses for its ramdisk), reiserfs,
-ext2 and ISO9660.
-
-I also made the mistake of using a rescue cd i had created before that
-had a kernel using beta2 of LVM. Bad idea, when i went to run lilo it
-wouldn't work because it needs the beta7 patched kernel i made earlier.
-So i took used another linux box i have here and recreated the kernel with
-all the patches on it and made another rescue cd iso, and bought my friend
-with the cd burner another lunch.=20
-
-With the correct kernel and already having created /dev/hda1 containing
-the hole disk, it being the only pv in the rootvg, And having created all
-my LVs formated with reiserfs, restored all my files from the remote host
-all i had to do was chroot to the new root partition and run lilo and all
-was well.
-
-And yes that really is the short story of how i did it.
-
-eli
-
-P.S. yes i know there is no real point to this exercise but being the
-first geek on the block with 100% lvm 100% reiserfs linux os, and
-have it be nearly imposible to recover from when something goes wrong.
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7YE06m2VvYlVjW2oRAr+3AJkBB91mCwhVVioqNBsAiqcklkPuHACg3txW
-4qkDgqnkYbndpv4Td8SFK/M=
-=zUqK
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+--
+Academic Computing Support Specialist         Assistant Section Editor
+Algoma University College                     http://linux.com/develop
+Sault Ste. Marie, Ontario                 
+705-949-2301 x330                                   Personal Home Page
+http://www.auc.ca                                     http://sault.org
