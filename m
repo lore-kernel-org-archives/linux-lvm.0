@@ -1,9 +1,12 @@
-Return-Path: <mauelshagen@sistina.com>
-Date: Fri, 27 Jul 2001 12:53:19 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Message-ID: <20010727125319.A5029@sistina.com>
+Return-Path: <wichert@cistron.nl>
+Date: Fri, 27 Jul 2001 13:31:17 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] File System type on (LVM) partition
+Message-ID: <20010727133117.A29848@cistron.nl>
+References: <3B61138B.DEEBA1D9@atix.de>
 Mime-Version: 1.0
-Subject: [linux-lvm] Vacation
+Content-Disposition: inline
+In-Reply-To: <3B61138B.DEEBA1D9@atix.de>; from julien@atix.de on Fri, Jul 27, 2001 at 09:08:59AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,23 +22,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Folks,
+Previously Julien Baboud wrote:
+>  is there a way to know the file system type installed on a partition
+> (wich could be of LVM type or not)
 
-I'll be on vacation until August, 12.
+You completely missed our point. LVM is *not* a filesystem. It is a layer
+you can put on top of physical storage, and on top of LVM you can create
+logical volumes which contain filesystems.
 
-Hopefully you'll enjoy LVM as well as
-I will my vacation trip to the 'Lago Maggiore' ;-)
+Now if your real question is: how can you check if a block device (ie
+a storage device) contains a PV (Physical Volume, the lowest layer in
+a LVM setup) I suspect there is some magic value on the disk you could
+check for.
 
+Someone should probably write some file(1) magic for it :)
 
-Regards,
-Heinz    -- The LVM Guy --
+Wichert.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
