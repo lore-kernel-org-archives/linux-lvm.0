@@ -1,10 +1,10 @@
-From: Theo Van Dinter <felicity@kluge.net>
+From: Kyle Hayes <khayes@quicknet.net>
 Subject: Re: [linux-lvm] Docs on PC disk partition tables?
-Message-ID: <20011204132433.B14178@kluge.net>
-References: <B71796881E0DF7409F066FE6656BDF29040F32@BEASLEY.il.sangate.com> <3C0D12AD.5040603@mvista.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3C0D12AD.5040603@mvista.com>; from sdake@mvista.com on Tue, Dec 04, 2001 at 11:15:09AM -0700
+References: <B71796881E0DF7409F066FE6656BDF29040F32@BEASLEY.il.sangate.com> <3C0D12AD.5040603@mvista.com> <20011204132433.B14178@kluge.net>
+In-Reply-To: <20011204132433.B14178@kluge.net>
+MIME-Version: 1.0
+Message-Id: <01120411274306.16092@khayes-lin>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +15,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  4 12:22:01 2001
+Date: Tue Dec  4 13:26:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> >Does anyone know of docs describing the PC disk partition tables, MBR
-> >format, etc?
+On Tuesday 04 December 2001 10:24, you wrote:
+> > >Does anyone know of docs describing the PC disk partition tables, MBR
+> > >format, etc?
+>
+> This may be of some use: http://www.mobiledyne.com/pub/pcfdisk.html
+> This has information on the MBR: http://www.mobiledyne.com/pub/mbrh.html
 
-This may be of some use: http://www.mobiledyne.com/pub/pcfdisk.html
-This has information on the MBR: http://www.mobiledyne.com/pub/mbrh.html
+I believe that www.linuxdoc.org has a number of HOWTOs that have information
+on this.  I think there is a HOWTO on the boot process, a HOWTO on partitioning,
+and a couple others that would apply.  I remember getting a lot of detailed
+information about boot sectors etc. from one of those HOWTOs.
 
--- 
-Randomly Generated Tagline:
-"Bad Guys, I say to you now: Knock off all that evil!"  - The Tick
+Best,
+Kyle
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MicroTelco Services saves money on every Fax:
+- Fax to email (FREE)
+- Fax to PSTN based Fax (Up to 95% Savings)
+- Fax Broadcasting: Send 100s of faxes to fax machines
+and email addresses in the time it takes to send just one!
+===========================================================
+    So send a fax today and let us know what you think! 
+       For more info. visit: www.internetfaxjack.com
+===========================================================
