@@ -1,8 +1,10 @@
 Return-Path: <dmeyer@dmeyer.net>
-Date: Mon, 15 Jan 2001 06:59:25 -0500
-Message-Id: <200101151159.GAA17960@yendi.dmeyer.net>
-From: <dmeyer@dmeyer.net>
-Subject: [linux-lvm] hard-lock seems to have caused serious LVM problems
+Date: Mon, 15 Jan 2001 10:00:48 -0500
+From: dmeyer@dmeyer.net
+Subject: Re: [linux-lvm] hard-lock seems to have caused serious LVM problems
+Message-ID: <20010115100048.B23471@yendi.dmeyer.net>
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,63 +16,107 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Last night, my machine (running Linux-2.4.0, LVM-0.9, and the 0.9
-utilities) locked up hard.  On reboot, vgscan can only find one of my
-VGs.  vgscan results in:
+Thanks to help from Jan Niehusmann, I have more information, now.
+After applying this patch:
 
-# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "main_vg"
-vgscan -- found inactive volume group "misc_vg"
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "misc_vg" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV"
-creating "/etc/lvmtab" and "/etc/lvmtab.d"
+> The following patch from Jan (with a minor correction "against" segfaults :-)
+> corrected the problem for me:
+------------------------------------------------------------------------------
+*** pv_read_all_pv_of_vg.c.orig	Mon Nov 20 03:47:20 2000
+--- pv_read_all_pv_of_vg.c.patched	Sat Jan 13 18:31:00 2001
+***************
+*** 101,117 ****
+        for ( p = 0; pv_tmp[p] != NULL; p++) {
+           if ( strncmp ( pv_tmp[p]->vg_name, vg_name, NAME_LEN) == 0) {
+              pv_this_sav = pv_this;
+              if ( ( pv_this = realloc ( pv_this,
+!                                        ( np + 2) * sizeof ( pv_t*))) == NULL) {
+                 fprintf ( stderr, "realloc error in %s [line %d]\n",
+                                   __FILE__, __LINE__);
+                 ret = -LVM_EPV_READ_ALL_PV_OF_VG_MALLOC;
+                 if ( pv_this_sav != NULL) free ( pv_this_sav);
+                 goto pv_read_all_pv_of_vg_end;
+              }
+!             pv_this[np] = pv_tmp[p];
+!             pv_this[np+1] = NULL;
+!             np++;
+           }
+        }
+  
+--- 101,117 ----
+        for ( p = 0; pv_tmp[p] != NULL; p++) {
+           if ( strncmp ( pv_tmp[p]->vg_name, vg_name, NAME_LEN) == 0) {
+              pv_this_sav = pv_this;
++ 	    if ( np < pv_tmp[p]->pv_number) np = pv_tmp[p]->pv_number;
+              if ( ( pv_this = realloc ( pv_this,
+!                                        ( np + 1) * sizeof ( pv_t*))) == NULL) {
+                 fprintf ( stderr, "realloc error in %s [line %d]\n",
+                                   __FILE__, __LINE__);
+                 ret = -LVM_EPV_READ_ALL_PV_OF_VG_MALLOC;
+                 if ( pv_this_sav != NULL) free ( pv_this_sav);
+                 goto pv_read_all_pv_of_vg_end;
+              }
+! 	    pv_this[pv_tmp[p]->pv_number-1] = pv_tmp[p];
+!             pv_this[np] = NULL;
+           }
+        }
+  
+vgscan stopped giving me an error.  Unfortunately, it stopped
+mentioning my second VG (named misc_vg) at all :-(.
 
-The LV on main_vg works just fine, but I can't get at anything in
-misc_vg.
+misc_vg has 5 PVs, /dev/{hdb1,hdb5,hdb6,sda1,sda2}.  It turns out,
+vgscan was ignoring misc_vg because it didn't think all the PVs were
+online.  It was reading the uuid list from /dev/sda1, and /dev/sda1
+only had 4 PVs in it's uuid list.  Commenting out the block of code in
+pv_read_all_pv_of_vg.c that starts with "if (uuids > 0) {" fixes the
+problem, though I kind of doubt that it's the right fix.
 
-vgcfgrestore isn't helping.  I get:
-# vgcfgrestore -v -f ./lvmconf/misc_vg.conf -n misc_vg -l
-vgcfgrestore -- locking logical volume manager
-vgcfgrestore -- restoring volume group "misc_vg" from "./lvmconf/misc_vg.conf"
-vgcfgrestore -- checking existence of "./lvmconf/misc_vg.conf"
-vgcfgrestore -- reading volume group data for "misc_vg" from "./lvmconf/misc_vg.conf"
-vgcfgrestore -- ERROR: different structure size stored in "./lvmconf/misc_vg.conf" than expected in file vg_cfgrestore.c [line 120]
-vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "misc_vg"
+Does the following seem right?
+# pvdata -U /dev/hdb1 /dev/hdb5 /dev/hdb6 /dev/sda1 /dev/sda2
+--- List of physical volume UUIDs ---
 
-Hacking in some extra debugging code, it looks like the first
-VGCFG_READ in vgcfgrestore() is expecting a vg_t to be 2484 bytes, but
-the actual struct on-disk is only 2248 bytes.
+000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+001: --- EMPTY ---
+002: --- EMPTY ---
+003: --- EMPTY ---
+004: --- EMPTY ---
+--- List of physical volume UUIDs ---
 
-All other diagnostic output is going to be too long for the list, so
-please look at http://www.dmeyer.net/~dmeyer/lvm for files I reference
-below. 
+000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+002: --- EMPTY ---
+003: --- EMPTY ---
+004: --- EMPTY ---
+--- List of physical volume UUIDs ---
 
-As far as I can tell (which isn't very far, really), the PVs
-themselves are OK - I can run pvdata and get nothing that looks (to
-me, at least) horribly suspicious.  I put the results from pvdata -a
-for all 5 PVs in pvdata.<partition>.
+000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
+003: --- EMPTY ---
+004: --- EMPTY ---
+--- List of physical volume UUIDs ---
 
-vgscan -d seg faults.  However, by adding
+000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
+003: m2wuLpJ9AQmzXnbk4sCuQu8hjAev7pax
+004: --- EMPTY ---
+--- List of physical volume UUIDs ---
 
-   if (uuidstr[0] != '/') {
-     return -1;
-   }
+000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
+001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
+002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
+003: m2wuLpJ9AQmzXnbk4sCuQu8hjAev7pax
+004: fdNejQ2DAp9A8KN0UrePxscwoY8vqVSu
 
-to the beginning of lvm_check_uuid in lvm_uuid.c, I managed to keep
-vgscan from dying on me.  Anyway, the results from vgscan -d are also
-on my web page.  There are actually 4 versions:  0.9 and 0.9.1-beta1,
-and both patched (i.e. with the code above) and unpatched.
-
-I've also dd'd the first 32k of each of the 5 file partitions, in case
-that might help.  Also, /etc/lvm* from the previous night's backups
-are also there.
-
-If anyone can suggest a course of action, I'd really appreciate it.
+Each PV only has the uuids from the PVs before it.  Should each PV
+have the complete list of uuids in its VG (in which case there's
+something screwy with my PVs)?  Or did pv_read_all_pv_of_vg somehow
+pick the wrong PV to read the uuid list from?  Or something else?
 
      Dave
+     
