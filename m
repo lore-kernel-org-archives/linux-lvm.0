@@ -1,11 +1,11 @@
-From: Russell Coker <russell@coker.com.au>
-Subject: Re: [linux-lvm] SNMP MIB for LVM
-Date: Wed, 3 Oct 2001 23:24:23 +0200
-References: <25369470B6F0D41194820002B328BDD23004@ATLOPS>
-In-Reply-To: <25369470B6F0D41194820002B328BDD23004@ATLOPS>
+Message-Id: <200110032240.TAA05834@inter.lojasrenner.com.br>
+From: Andre Margis <andre@sam.com.br>
+Date: Wed, 3 Oct 2001 19:36:00 -0300
+References: <Pine.LNX.4.33.0110031934200.20952-100000@www.scotty.co.at>
+In-Reply-To: <Pine.LNX.4.33.0110031934200.20952-100000@www.scotty.co.at>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-Id: <20011003222642.A30A4328FBD@lyta.coker.com.au>
+Subject: [linux-lvm] Patch for lvm-1.0.1-rc4 to work under linux-2.4.10-ac4
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,22 +18,74 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Arvind Jain <arvind_jain@ivivity.com>"'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Tue, 2 Oct 2001 20:17, Arvind Jain wrote:
-> Has anybody written or come across MIB for LVM configuration and
-> maintenance? It will be nice if could configure LVM using SNMP MIB. thx,
-> arv.
+I change two programs to run under linux.2.4.10-ac4
 
-First issue, do you have an OSI number assigned for this?
 
-If not then I can arrange sub-delegation of part of the Debian number 
-hierarchy to the LVM project.  In Debian discussions it's been generally 
-agreed to give away what are effectively "ISO sub-domains" to open source 
-projects that request them.
+I don't if this is correct. I test on my machine a believe it's working
 
--- 
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+
+This is my corrections:
+
+on lvm.c
+
+line 457
+     /* insert our gendisk at the corresponding major */
+        /*
+        if (gendisk_head != NULL) {
+                gendisk_ptr = gendisk_head;
+                while (gendisk_ptr->next != NULL &&
+                       gendisk_ptr->major > lvm_gendisk.major) {
+                        gendisk_ptr = gendisk_ptr->next;
+                }
+                lvm_gendisk.next = gendisk_ptr->next;
+                gendisk_ptr->next = &lvm_gendisk;
+        } else {
+                gendisk_head = &lvm_gendisk;
+                lvm_gendisk.next = NULL;
+        }
+        */
+
+        add_gendisk(&lvm_gendisk);
+
+line 515
+        /*
+        gendisk_ptr = gendisk_ptr_prev = gendisk_head;
+        while (gendisk_ptr != NULL) {
+                if (gendisk_ptr == &lvm_gendisk)
+                        break;
+                gendisk_ptr_prev = gendisk_ptr;
+                gendisk_ptr = gendisk_ptr->next;
+        }*/
+        /* delete our gendisk from chain */
+        /*
+        if (gendisk_ptr == &lvm_gendisk)
+                gendisk_ptr_prev->next = gendisk_ptr->next;*/
+
+        del_gendisk(&lvm_gendisk);
+
+
+on lvm-snap.c
+
+add line 53
+int kio_max_sectors = KIO_MAX_SECTORS;
+
+change all functions alloc_kiovec(a,b) by alloc_kiovec(a,b,&kio_max_sectors) 
+at lines 518 and 527.
+
+change all functions  free_kiovec(a,b) by free_kiovec(a,b,&kio_max_sectors)
+at lines 543, 548, 573 and 580
+
+
+My changes are correct?
+
+Any help?
+
+
+
+Thanks 
+
+
+
+Andre
