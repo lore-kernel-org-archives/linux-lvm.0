@@ -1,10 +1,10 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] EXT2 to EXT3 LVM volume on Redhat
-Message-ID: <20020605020412.GF19844@tiger.bigcats.invalid>
-References: <006001c20c05$0a41cf10$0300000a@STATION>
+From: Stephan Austermuehle <au@hcsd.de>
+Subject: Re: [linux-lvm] One VG or many?
+Message-ID: <20020605100920.R8663@babbage.hcsd.de>
+References: <F888C30C3021D411B9DA00B0D0209BE8038F951A@cvo-exchange.cvo.roguewave.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <006001c20c05$0a41cf10$0300000a@STATION>
+In-Reply-To: <F888C30C3021D411B9DA00B0D0209BE8038F951A@cvo-exchange.cvo.roguewave.com>; from petersp@roguewave.com on Tue, Jun 04, 2002 at 02:03:38PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,54 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun  4 21:04:02 2002
+Date: Wed Jun  5 03:09:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Aslak!
+On Tue, Jun 04, 2002 at 02:03:38PM -0700, Poul Petersen wrote:
 
-Aslak Sommerfelt Skretting (aslak@skretting.org) wrote 51 lines:
+> We have about 2TB to slice up and using a single VG seems to provide
+> the most flexibility for usage of the space. However, using one VG
 
-> would disable the fsck's that occur now and then (and takes an insane amount
-> of time on a 650gb filesystem), and are no longer necessary since the
-> filesystem is EXT3.
+First, I would separate system (= containing the OS) and data area.
+Second, if you do not intend to stripe data across LVs I would create
+one VG for every logical business/application unit and assign disk
+space on demand. That means that you leave most disks in a pool and
+if you need more space in one VG you'll add the disk online with
+vgextend. Why not start with one disks per VG?
 
-Well, no.  Journalling can not even check for errors and
-problems due to: 
-- program errors in 
-  - ext2/ext3 
-  - the buffer cache
-  - the VFS
-- cable problems and connection problems
-- harddisk firmware problems 
-- the harddisk firmware reordering data without being allowed
-  or returning 'OK, all data written' without that being true
-- harddisk physical errors/marginal harddisk
-- headcrashes
-- controller hardware troubles
-- controller firmware troubles
-- marginal power block, brownouts, spikes, interference
-- main memory corruption (you don't have ECC RAM, do you?  And
-  even that will not protect you against all multibit errors),
-  maybe due to cosmic rays or other radiation, marginal power,
-  marginal chips, bad luck, unwise chosen parameters for memory
-  refreshes (blame the BIOS!) ...
-- Data corruption on the printed board circuit track, inside
-  the CPU, in the 1st/2nd/3rd level cache, etc, due to bad
-  luck/heat/marginal hardware/powerspikes, interferences,
-  whatever.
+If you plan to use the striping feature of LVM you should think of
+what is sane looking at the two aspects speed and cost of extension
+(e.g., striping across four disks requires you to add four disks at a
+time if you need more space).
 
-Journalling only helps against "not cleanly umounting your
-partitions forces a *long* fsck", because it guarantees (modulo
-hardware/firmware errors and software bugs) that it can return
-the metadata (and in some cases, the data) to a known good status
--- which is all that fsck does.
-
-You really want backups.  Neither Journalling nor Raid will
-protect you against program errors, nor human errors.  Slip of
-finger with rm, typo like "... > important_file", the wrong mouse
-click -- you surely can think of more.
-
--Wolfgang
+Stephan
