@@ -1,20 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0UH0OO04901
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 12:00:24 -0500
-Received: from postfix1-c.free.fr (postfix1-c.free.fr [213.228.0.79])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0UH0MQ2013284
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 12:00:23 -0500
-Received: from postfix4-2.free.fr (postfix4-2.free.fr [213.228.0.176])
-	by postfix1-c.free.fr (Postfix) with ESMTP id A9026C29F53
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 18:00:21 +0100 (CET)
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0UH4PO06013
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 12:04:25 -0500
+Received: from postfix2-c.free.fr (postfix2-c.free.fr [213.228.0.80])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0UH4Obn014176
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 12:04:24 -0500
+Received: from postfix3-2.free.fr (postfix3-2.free.fr [213.228.0.169])
+	by postfix2-c.free.fr (Postfix) with ESMTP id A0E21A2D3BD
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 18:04:23 +0100 (CET)
 Received: from eric.placeverte.home
 	(lns-vlq-7-lil-82-254-193-239.adsl.proxad.net [82.254.193.239])
-	by postfix4-2.free.fr (Postfix) with SMTP id C99762BC55E
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 18:00:09 +0100 (CET)
-Date: Sun, 30 Jan 2005 18:00:08 +0100
+	by postfix3-2.free.fr (Postfix) with SMTP id 537AEC153
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 18:04:21 +0100 (CET)
+Date: Sun, 30 Jan 2005 18:04:20 +0100
 From: messmate <messmate@free.fr>
 Subject: Re: [linux-lvm] converting ext3 / to LVM
-Message-ID: <20050130180008.1f1610ff@eric.placeverte.home>
+Message-ID: <20050130180420.271340f7@eric.placeverte.home>
 In-Reply-To: <1107084645l.24357l.2l@tangerine-64>
 References: <006901c5069a$db39b690$4857fea9@desktop>
 	<1107077143l.22995l.0l@tangerine-64>
@@ -59,3 +59,4 @@ existing filesystem ( with data) to lvm !
 I'm in doubt if LVM is very usefull following what this howto recommend.
 EVMS more suitable?
 mess-mate
+Sorry, I mean 12.1
