@@ -1,29 +1,41 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
+Date: Fri, 1 Oct 1999 13:19:32 -0500 (EST)
+From: theodore russell wickell <twickell@indiana.edu>
+Subject: [linux-lvm] unresolved symbols.
+Message-ID: <Pine.HPP.3.96.991001131544.20591F-100000@falstaff.ucs.indiana.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <14324.58266.920834.895229@dukat.scot.redhat.com>
-Date: Fri, 1 Oct 1999 17:38:50 +0100 (BST)
-Subject: Re: [linux-lvm] LVM, raw-io, devfs
-In-Reply-To: <006201bf0bb7$6eae4a60$030116ac@fd1>
-References: <006201bf0bb7$6eae4a60$030116ac@fd1>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Fernando Dammous <ferdam@internetcom.com.br>
-Cc: Linux LVM msede <linux-lvm@msede.com>, Stephen Tweedie <sct@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
 Hi,
 
-On Thu, 30 Sep 1999 23:48:23 -0300, "Fernando Dammous"
-<ferdam@internetcom.com.br> said:
+I compiled the 2.2.12 kernel with the lvm as a module using the
+patch-2.2.11-LVM.gz patch with no problem.
+When I boot I find though it can not load the lvm module because of the
+following unresolved dependencies:
 
-> Now, I would like to install the devfs and mainly the raw-io.   
-  
-> Can I install them in a kernel 2.0.36, which is already patched with
-> LVM?
+Oct  1 11:42:32 persephone insmod: /lib/modules/2.2.5-15/block/lvm.o:
+unresolved
+ symbol del_mddev_mapping
+Oct  1 11:42:32 persephone insmod: /lib/modules/2.2.5-15/block/lvm.o:
+unresolved
+ symbol md_hd_struct
+Oct  1 11:42:32 persephone insmod: /lib/modules/2.2.5-15/block/lvm.o:
+unresolved
+ symbol add_mddev_mapping
 
-I've never tried the raw IO code on 2.0: let me know how it goes!  In
-principle, there is no reason why raw IO on LVM should not work.
 
---Stephen
+Has anyone seen this? Am I forgetting some other option?
+
+Thanks,
+Rusty
+
+----------------------------------------------------------------------------
+Rusty Wickell					200 S. Jordan Ave.
+Digital Library Sytem Administrator		Simon 060
+Indiana University				Bloomington IN 
+812-856-5174					47405
+----------------------------------------------------------------------------
