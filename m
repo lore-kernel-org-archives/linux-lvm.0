@@ -1,8 +1,10 @@
-From: Friedrich Lobenstock <fl@fl.priv.at>
-Subject: Re: [linux-lvm] Unsubscribe from the list??
-In-Reply-To: <Pine.LNX.4.33.0111201442190.11808-100000@willow.nutstreet.net>
-Message-ID: <Pine.LNX.4.33.0111211613540.19208-100000@www.scotty.co.at>
-MIME-Version: 1.0
+Subject: Re: [linux-lvm] Chicken and egg problem..
+Message-ID: <20011121144408.GI9907@pc.ilinx>
+References: <1006347197.3bfba3bd23d95@imp.free.fr> <7510000.1006331425@dizzy>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <7510000.1006331425@dizzy>
+From: "Brian J. Murrell" <724b581f59b221086926026402b50126@interlinx.bc.ca>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +15,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 21 09:14:03 2001
+Date: Wed Nov 21 12:36:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, 20 Nov 2001 14:43, Eric Smith wrote:
+On Wed, Nov 21, 2001 at 02:30:25AM -0600, Steven Lembark wrote:
+> 
+> The kernel panic is extactly why you probably wouldn't
+> want to use only LVM on the system.
 
-> When I try to unsubscribe, I get a message back saying I need a password,
-> which I don't know.  I wrote for support from the maintainer, but have
-> received nothing in a month.
->
-> Anyone know what to do or who to contact?
+I do it.  Only my boot partition is a regular ol' partition.  I won't
+say I haven't had problems that I had to recover from in the past with
+an LVM root, but luckily enough my distro vendor's LVM support is
+decent and their BOOT kernel/media has an LVM module built for it.
 
-Go to
- http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Leaving the root
+> volume (a.k.a., '/'), primary swap and probably /var on
+> the first three partitions of the boot device will make
+> your life enormously simpler in the long run.
 
-and at the bottom enter your email and press "Edit Options"
-Then on the next page click on "Email my password to me".
-Any questions?
+I completely disagree.  Eventually you will get to a point where an
+upgrade of your system will require more space in / or /usr and even
+just normal usage will want more space in /var.  Being able to expand
+these easily with LVM is awesome!
+
+> This is pretty much the only way you'll be able to
+> convienently recover from any LVM problems in the future.
+
+Just use a good boot disk.  You are even luckier if your distro
+vendor's stock kernel and/or media support LVM.
+
+> Otherwise you'll need bootable media floating around.
+
+Of course.  Don't you always?  :-)
+
+b.
 
 -- 
-MfG / Regards
-Friedrich Lobenstock
+Brian J. Murrell
