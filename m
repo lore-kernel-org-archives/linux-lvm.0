@@ -1,10 +1,11 @@
-Message-ID: <3B93DEF2.5040809@st-peter.stw.uni-erlangen.de>
-Date: Mon, 03 Sep 2001 21:50:10 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Foreign HD with LVM-Partition, how to read Data?
-References: <006b01c13448$755ea0b0$0df1d981@piefke> <3B934B19.1060308@st-peter.stw.uni-erlangen.de> <002d01c134ac$7ba0f590$0df1d981@piefke>
-Content-Transfer-Encoding: 7bit
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Mon, 3 Sep 2001 21:53:00 -0600
+Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
+Message-ID: <20010903215300.B32553@turbolinux.com>
+References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de> <20010831110512.V541@turbolinux.com> <3B90C9A4.3080005@st-peter.stw.uni-erlangen.de> <3B90EC90.4050606@st-peter.stw.uni-erlangen.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3B90EC90.4050606@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,64 +17,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: linux-xfs@oss.sgi.com, akpm@zip.com.au, neilb@cse.unsw.edu.au
 
-no you dont
-you have to run vgscan
+On Sep 01, 2001  16:11 +0200, svetljo wrote:
+> clean Linus kernel-2.4.9  LVM-1.0.1rc1                    ext2 and 
+> reiserfs segfaults
+> clean            linux-2.4.9-ac5 LVM-1.0                        ext2 and 
+> reiserfs segfaults
+>                   | linux-2.4.10-pre2-xfs LVM-1.0.1rc2      ext2 and 
+> reiserfs segfaults, but xfs seems to work
+>                   | from SGI's cvs tree  linux-2.4-xfs taken today in 
+> the early morning
 
-it will tell you what have it found and it should find the VG on the 
-other disk
-if vgscan does not tell you that the VG is activate you should run
-vgchange -ay [and the name of the VG]
+Is it possible that you are having memory problems?  Did this work with
+earlier kernels and it now only fails with 2.4.9?  Have you tried running
+with memtest86 to check your RAM?  It seems like you are having too many
+problems with different filesystems.
 
-and then you go to /proc/lvm/  and take a look at a file called i think 
-general
-you can do ls and in case it's general
-cat general
-will give you information of all the VG's and LV's found on your PC
-
-and you simply mount /dev/ [the name of the VG] / [ the name of the LV] 
-  / [your mount point]
- 
-this should be all
-
-
-Alexander Bruns wrote:
-
->Hi,
->
->>Hi i could't completly understand you
->>
->>is that true:
->>
->>you have instaled Redhat on a working sepatarate drive
->>and you hace added a drive from a crashed system
->>if this is the case i hope you can run
->>
->
->no it is a newly installed system which never was intended to use lvm.
->i only compiled lvm etc to get hopefully read the data of the
->harddriver from the completely different system.
->
->I never activated andy volume groups or defined something with lvm.
->
->do i have to define a volumegroup with this harddrive with the same
->name from the old system?
->
->
->Greetings
->
->Alexander Bruns
->
->
->
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
