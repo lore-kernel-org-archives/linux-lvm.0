@@ -1,25 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4I9qV016794
-	for <linux-lvm@redhat.com>; Tue, 18 May 2004 05:52:31 -0400
-Received: from pegasus.siol.net (pegasus.siol.net [193.189.160.40])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i4I9qUGG006968
-	for <linux-lvm@redhat.com>; Tue, 18 May 2004 05:52:30 -0400
-Received: from kudu.siol.net ([10.10.10.22]) by pegasus.siol.net
-	(InterMail vK.4.03.05.03 201-232-132-103 license
-	1cbf71897a39210db31154c99f0b4628)
-	with ESMTP id <20040518095229.QWOO20077.pegasus@kudu.siol.net>
-	for <linux-lvm@redhat.com>; Tue, 18 May 2004 11:52:29 +0200
-Received: from vector ([193.77.156.30]) by kudu.siol.net
-	(InterMail vK.4.03.05.03 201-232-132-103 license
-	1cbf71897a39210db31154c99f0b4628)
-	with SMTP id <20040518095228.VIZF24754.kudu@vector>
-	for <linux-lvm@redhat.com>; Tue, 18 May 2004 11:52:28 +0200
-Message-ID: <001601c43cbd$d4ad4ff0$0400a8c0@vector>
-From: "Perplexer" <perplexer@thz.net>
-Date: Tue, 18 May 2004 11:52:27 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] VG LV reduce
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4IHQX000755
+	for <linux-lvm@redhat.com>; Tue, 18 May 2004 13:26:33 -0400
+Received: from neuralscape.com (synapse.neuralscape.com [198.144.200.82])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i4IHQRHA012877
+	for <linux-lvm@redhat.com>; Tue, 18 May 2004 13:26:27 -0400
+Received: from shaeffer by neuralscape.com with local (Exim 4.12)
+	id 1BQ8KA-0006Ed-00
+	for linux-lvm@redhat.com; Tue, 18 May 2004 10:24:18 -0700
+Date: Tue, 18 May 2004 10:24:18 -0700
+From: Karen Shaeffer <shaeffer@neuralscape.com>
+Subject: Re: [linux-lvm] Snapshot support for LVM2?
+Message-ID: <20040518172418.GA23849@synapse.neuralscape.com>
+References: <8CCBDD5583C50E4196F012E79439B45C04C9A3EF@atl-ms1.megatrends.com>
+	<20040517133351.L5945@homer.msp.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20040517133351.L5945@homer.msp.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,21 +27,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi.
+On Mon, May 17, 2004 at 01:33:51PM -0500, Alasdair G Kergon wrote:
+> On Mon, May 17, 2004 at 01:36:21PM -0400, Vinesh Christopher wrote:
+> > When is the official stable release of 
+> > Snapshot support for LVM2?
+>   
+> Starting from http://sources.redhat.com/dm,
+> 
+>   Stable 2.4.26 kernel patch is in:
+>    ftp://sources.redhat.com/pub/dm/device-mapper.1.00.17.tgz
+> 
+> For 2.6, there is not a stable snapshot release yet, but it's close.
+> The snapshot support in
+>   ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.6-rc2/2.6.6-rc2-udm1.tar.bz2
+> is the best available; there's still an issue with SMP.
+> 
+> Alasdair
 
-Here's a pretty basic question again since I think I have never been
-able to get the proper answer to it.
+Hi Alasdair,
 
-I got several drives (partitions) in VG with one LV extending through it.
-Now one HD died. How can I remove the bad HD from the VG and
-resize (shrink) the LV so I will be able to continue using the VG/LV.
-Saving data is not necessary. I just need to remove the bad drive and
-carry one normally with the remaining ones in this VG. I have NO extra
-drive I can use pvmove with or anything. The basic question is: is there a solution ?
+I was hoping you folks would at least rev the 2.6-unstable patchset for the
+2.6.6 kernel that was recently released. Most of the 2.6.6-rc2-udm1 patchset
+is included in 2.6.6. The 2.6.6-rc3 patchset is not included in the
+2.6.6-rc2-udm1 patchset.
 
-Thanks.
+Evms has already been updated for the 2.6.6 release of the kernel. Can you
+please advise me when the LVM2 snapshot patchset will be updated for this
+latest released kernel version?
 
----------
-Perplexer
+Will someone explain to me the pros and cons between using LVM2 and evms?
+
+Thanks,
+Karen
+-- 
+ Karen Shaeffer
+ Neuralscape, Palo Alto, Ca. 94306
+ shaeffer@neuralscape.com  http://www.neuralscape.com
