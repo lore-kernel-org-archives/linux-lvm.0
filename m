@@ -1,29 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iADF5Cr28600
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 10:05:12 -0500
-Received: from main.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iADF58Xk008775
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 10:05:08 -0500
-Received: from list by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1CSzSd-0002PK-00
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 16:05:07 +0100
-Received: from triangulo.it.uc3m.es ([163.117.139.109])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 16:05:07 +0100
-Received: from ptb by triangulo.it.uc3m.es with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 16:05:07 +0100
-From: Peter T. Breuer <ptb@lab.it.uc3m.es>
-Date: Sat, 13 Nov 2004 16:04:48 +0100
-Message-ID: <gdkh62-v6l.ln1@news.it.uc3m.es>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iADLDkr02291
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 16:13:46 -0500
+Received: from ramoth.dragonhold.org (ramoth.dragonhold.org [80.229.192.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iADLDcxW019471
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2004 16:13:38 -0500
+Date: Sat, 13 Nov 2004 21:13:24 +0000
+From: Graham Wood <clvm@spam.dragonhold.org>
+Subject: Re: [linux-lvm] Re: raid 1 on a single disk
+Message-ID: <20041113211324.GA13108@dragonhold.org>
 References: <89af10f90411130217467c439@mail.gmail.com>
 	<lg4h62-8vg.ln1@news.it.uc3m.es>
 	<89af10f90411130241e20e2c2@mail.gmail.com>
-	<72dh62-4om.ln1@news.it.uc3m.es>
-	<E1CSy6Y-0006qh-00@mta2.cl.cam.ac.uk>
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: raid 1 on a single disk
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <89af10f90411130241e20e2c2@mail.gmail.com>
+Sender: <gwood@dragonhold.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,81 +25,65 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: ashwin chaugule <ashwin.chaugule@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Piete Brooks <Piete.Brooks@cl.cam.ac.uk> wrote:
-> > (please do not top post - fixing. Please take note!)
-> (what's "top post"ing?)
+On Sat, Nov 13, 2004 at 04:11:08PM +0530, ashwin chaugule wrote:
+> yes i know its silly ... im doing what im told to do :p
+>
+> ok so, i also do know, its performance is going to suck !
+> but i was under the impression that RAID 1 works on more that one disks only.
+>
+> so you mean to say that, the linux RAID / md tools support raid 1 on
+> multiple partitiions of the same disk ?
+>
+> Regards,
+> Ashwin
+>
+>
 
-The opposite of bottom posting, neither of which being apposite, let us
-skip over the discussion of.
+As people have already said, the software really doesn't care.
 
-> >> ok so, i also do know, its performance is going to suck ! 
-> > No, it'll be fine - merely a couple or more times slower at writing
-> > large streams.
-> 
-> Actually, over 4 times :-(
+Here's a really sick/pointless example to prove it:
 
-Hi Piete! It's getting on for 20 years since you wrote me a ptty
-straight off, without looking anything up, while sitting at the console
-in the lab in cam. No - it won't be. He's just writing to memory in
-general and he'll get the ack as fast as he usually does from that.
-True, the writes will take longer to complete their whole journey to
-disk, but that's way after he's gone home and had supper.  He talks to
-buffers in the VMS, not the driver.
+dd if=/dev/zero of=/var/tmp/fake1 bs=1M count=16
+dd if=/dev/zero of=/var/tmp/fake2 bs=1M count=16
+dd if=/dev/zero of=/var/tmp/fake3 bs=1M count=16
+dd if=/dev/zero of=/var/tmp/fake4 bs=1M count=16
 
-> He has a 4 way mirror on hdd.
-> As well as having to send all date over the (same!) IDE bus 4 times,
-> the disk head keeps having to move between the 4 partitions :-(
+losetup /dev/loop1 /var/tmp/fake1
+losetup /dev/loop2 /var/tmp/fake2
+losetup /dev/loop3 /var/tmp/fake3
+losetup /dev/loop4 /var/tmp/fake4
 
-Yeah, I know. But he won't notice, so long as he uses the device
-"normally". As soon as he starts streaming to it and placing it under
-write pressure, and memory fills up and the VMS goes sync (see
-bdflush settings), THEN he'll notice, but not in normal use, if what is
-normal is what I think it is. Writes are async to the user.
+mdadm --create -l 5 /dev/md10 -n 4 /dev/loop1 /dev/loop2 /dev/loop3 /dev/loop4
 
-> > What's silly is that there's no point in doing it
-> 
-> Not true -- there is little point.
-> 
-> It will protect against un-re-vectored block faults.
+cat /proc/mdstat
 
-Yes, if his disk doesn't swap them in automatically on write (or he
-runs out of spares and it does). On read I'm not sure what will happen.
-I suppose he'll get a crc error and a fail from the read attempt, and
-then the partition will fault out of the array, and with luck the
-driver will retry on another partition. But I'm not sure from memory
-of the code if it DOES the retry. Common sense wuld say that the code
-for that has to be there, but I don't recall it.
+md10 : active raid5 loop4[4] loop3[2] loop2[1] loop1[0]
+      48960 blocks level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+      [================>....]  recovery = 81.2% (14080/16320) finish=0.0min speed=1083K/sec
 
+raidstop -c /dev/null /dev/md10
 
-> > you get no protection against the disk disappearing
-> 
-> Indeed -- which is the real use for RAID1 ...
-> 
-> > It's like making 3 sets of spare housekeys, and then putting them all
-> > in the same keyholder as the original set, and walking around like that.
-> 
-> Which has *some* use if the keys are made of very soft metal and "wear out".
+mdadm --create -l mirror  /dev/md10 -n 4 /dev/loop1 /dev/loop2 /dev/loop3 /dev/loop4
 
-:-). Unfortunately he insists on using ALL the keys every time, out of
-a sense of completeness, so they ALL wear at the same rate.
+cat /proc/mdstat
 
-He can win only on read, which is faster if he is lucky or does it right
-(uh, he won't - he only wins if he can do two reads at once, and he
-can't, since it's all the same disk) and may be less wearing. Yes, it
-is less wearing on read, since the frequency of reading any particular
-part of the disk is only 1/4 of what it normally would be.
-
-> [ His actual problem was that he didn't realise that mkraid is brain dead, and 
-> needs a chunk size in /etc/raidtab, even when it's not used!  I showed him how 
-> to use mdadm, and it worked ]
-
-Good! Yes, I think I recall that.  Thanks very much for your
-intercession :-).
+md10 : active raid1 loop4[3] loop3[2] loop2[1] loop1[0]
+      16320 blocks [4/4] [UUUU]
+      [=============>.......]  resync = 68.7% (12160/16320) finish=0.0min speed=1105K/sec
 
 
-Peter
+What this has done is created a 48MB (roughly) raid5 set based on 4 16MB files in /var/tmp.  Obviously this won't be recreated automatically on a reboot (since it's done using files), but it's to show what you can do if you are feeling sick enough.  I've then created it as a mirror to show that works too.
+
+Your command (to setup the mirror) will be something like:
+
+mdadm --create -l mirror -n 4 /dev/hdd1 /dev/hdd2 /dev/hdd3 /dev/hdd4
+
+And since thoswe are real disk partitions, if you set them to type "fd" in fdisk, they will be re-attached on a reboot.
+
+Graham
+
+P.S. I'd be really tempted to talk to the person asking you to do this, and ask them what they hope to achieve...
