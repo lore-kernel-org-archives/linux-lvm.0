@@ -1,11 +1,11 @@
 Return-Path: <russell@coker.com.au>
 From: Russell Coker <russell@coker.com.au>
 Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-Date: Fri, 8 Jun 2001 04:27:54 +0200
-References: <20010605210727.C1870@pc.ilinx> <20010607104301.A29848@stocks.pillory.com> <20010607182636.H3232@jensbenecke.de>
-In-Reply-To: <20010607182636.H3232@jensbenecke.de>
+Date: Fri, 8 Jun 2001 04:26:20 +0200
+References: <NBBBKLKHMJHIJLHOGAOJGECDIPAA.steve.wray@the.net.nz>
+In-Reply-To: <NBBBKLKHMJHIJLHOGAOJGECDIPAA.steve.wray@the.net.nz>
 MIME-Version: 1.0
-Message-Id: <01060804275405.26916@lyta>
+Message-Id: <01060804262004.26916@lyta>
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,52 +19,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, Steve Wray <steve.wray@the.net.nz>
 
-On Thursday 07 June 2001 18:26, Jens Benecke wrote:
-> >     After installation, do:
-> > cd / ; mv tmp tmp.old ; ln -s /var/tmp .  reboot rm -rf /tmp.old
-> >     Now you don't have to worry about root filling up at all...
->
-> er... I wouldn't do that (at least not on a Debian system).
->
-> Usually /var/tmp is _assumed_ to be only root-writeable, so all sorts
-> of daemons and programs running as root put their stuff there. This
-> could open a number of security holes, when /var/tmp doesn't get
-> treated as carefully as /tmp.
-
-I suggest using /var/tmp/tmp on a Debian system if you want to do this. =20
-That allows scripts that clean up /tmp to not clean /var/tmp (which may=20
-have things you want to last longer).
-
-On Thursday 07 June 2001 23:08, Michael Tokarev wrote:
-> Another thing to consider if you run 2.4 kernel -- mount tmpfs
-> on /tmp (and give some reasonable size restrictions).   This way,
-> /tmp works much faster, does not need to be cleaned on boot, and
-> will not eat root's space.  You should have reasonable swap space
-> it you plan to use it heavily.  Works very well here.
-
-I tried that on 2.4.4 and I couldn't run the KDE.  It seems that tmpfs=20
-doesn't do all the things that a real FS does (yet).
-
-On Thursday 07 June 2001 23:18, Steven Lembark wrote:
-> > cd / ; mv tmp tmp.old ; ln -s /var/tmp .
-> > reboot
-> > rm -rf /tmp.old
+On Thursday 07 June 2001 23:52, Steve Wray wrote:
+> > From: linux-lvm-admin@sistina.com
+> > [mailto:linux-lvm-admin@sistina.com]On Behalf Of Steven Lembark
 > >
-> >     Now you don't have to worry about root filling up at all...
+> > > Tell me, what is wrong with having /tmp as a mount point
+> > > for a LV?
+> >
+> > LV are generally slower than other types of storage.  Since the
+> > boot partition is generally cyl 0 it's on the fastest storage
+> > available (short of tmpfs).
 >
-> until you have to boot in single user w/o /var mounted and
-> the whole sysystem fries for lack of /tmp :-)
+> Proportionally, how much slower is it? 50%? 25%? 12%?
+> less than 1% slower?
+> Does it really matter?
 
-Hasn't caused any great problems for me.  Although on systems with=20
-separate file systems for /var and /var/tmp it means that I need to run=20
-mount three times before I can edit a file in the root FS.
+See my Bonnie++ web page, particularly the ZCAV part.  The graph shows=20
+the start of the disk being ~80% faster than the end.  Try it out on your=
+=20
+own drives!
 
-
-Another thing that no-one seems to be considering is the "--bind" option=20
-to recent versions of mount (only works on 2.4 kernels).
-
+This isn't an LVM issue, it's a disk geometry layout issue.
 
 --=20
 http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
