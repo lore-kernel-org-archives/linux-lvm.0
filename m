@@ -1,10 +1,10 @@
 Return-Path: <lembark@wrkhors.com>
-Message-ID: <3B1F9D41.F150CC71@wrkhors.com>
-Date: Thu, 07 Jun 2001 10:26:57 -0500
+Message-ID: <3B1F9E1C.1984FAF8@wrkhors.com>
+Date: Thu, 07 Jun 2001 10:30:36 -0500
 From: Steven Lembark <lembark@wrkhors.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-References: <20010604190123.C2560@pc.ilinx> <3B1CC8D5.9F227A36@wrkhors.com> <20010605104843.A9845@stocks.pillory.com>
+References: <20010605210727.C1870@pc.ilinx>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,27 +20,20 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
->     More importantly, it needs to be a lot more stable.  I will probably
-> wait on having a LV for root until Linux LVM is a robust as AIX's LVM.
-> Under AIX, all of your 'system' volumes (root,usr,var) are in rootvg.
-> You can add a disk to rootvg, and then issue pvmove to move all of the
-> blocks on the first disk to the new one, run bosboot (LILO, roughly
-> speaking) to make the second drive bootable, and then reduce the first
-> disk from the VG.  Thus, if your drives are hot-swappable, you can change
-> out a drive completely (even if your / is mounted on it and it has active
-> swap!) without every shutting down.
+> Not only cool but sometimes necessary.  Sometimes root rides so close
+> to full that you cannot upgrade.  Then you start doing the "diskspace
+> shuffle" to get something you can upgrade.
+> 
+> Without wasting a ton of space when you initially install a system,
+> every system's root partition will hit the wall sooner or later.  That
+> is the unfortunate side effect of software evolution.
 
-HP has a nice trick, the first 3 volumes have to be contiguous
-at the start of the disk.  Net result is that if the VG gets
-corrupted (e.g., one disk goes down and prevents quorum) you
-can boot "-lm" which turns off the LVM service and leaves the
-box looking like it was partitioned with boot, / & swap on line.
-
-If LVM is used as a module and your rc.sysinit is sane (i.e., 
-heavily stripped from all of the distribution standard ones)
-then you can boot single user w/o locking up on a vgscan or 
-vgchange.  If everything works, fine.  If not then at least
-you can get going.
+Use separate mount points for /var, /usr & /home.  This keeps
+root down to mainly /etc, /dev, /bin, /sbin and /lib -- none of 
+which is all that enormous.  Short of writing the File From Hell
+to /tmp a 128MB root file system works well enough for me.  I do
+put /usr & /opt on LVM but only because all the tools needed to
+revive the system are in /bin, /sbin & /lvm on the root.
 
 -- 
  Steven Lembark                                   2930 W. Palmer St.
