@@ -1,12 +1,11 @@
-Return-Path: <peter@bartosch.net>
-Date: Mon, 28 May 2001 18:32:29 +0200
-From: Peter Bartosch <peter@bartosch.net>
-Subject: Re: [linux-lvm] lvm-problems?
-Message-ID: <20010528183229.D924@mind.bartosch.net>
-References: <20010527234117.A759@mind.bartosch.net> <20010528114046.K26710@sistina.com>
+Return-Path: <markv@wave.co.nz>
+Date: Tue, 29 May 2001 11:36:04 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM [last
+Message-ID: <20010529113604.A28657@mail.wave.co.nz>
+References: <200105232106.f4NL6Bl01557@dixie.dyndns.org> <20010528104951.D26710@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010528114046.K26710@sistina.com>; from Mauelshagen@sistina.com on Mon, May 28, 2001 at 11:40:46AM +0000
+In-Reply-To: <20010528104951.D26710@sistina.com>; from Heinz J. Mauelshagen on Mon, May 28, 2001 at 10:49:51AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,23 +21,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
-
-
+On Mon, May 28, 2001 at 10:49:51AM +0000, Heinz J. Mauelshagen wrote:
+> There is *no* problem avoiding "vgchange -an" *today* because nothing is written
+> to disk running it.
 > 
-> Did you report that to the reiserfs list too?
+> The command tries to unload the LVM metadata from the kernel therefore
+> deactivating VGs and the access to LVs which can't work unless *all* LVs of
+> all VGs are closed (no FS mounted etc.).
+> 
+> However this might change in the future in regard that a metadata update might
+> be necessary.
 
-uuuooo, no i didn't but - now it's done ...
+When/if you do this, please consider systems with root on LVM.  Building a
+ramdisk and pivoting root to that seems clumsy at best.  Perhaps vgchange
+could have an option to request a metadata flush, which is deferred until
+the relevant volumes are closed?
 
+Regards,
 
-
-
-:wq - until next mail B-), l8r
-
-Peter
--- 
-   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
-   :          student of technical computer science           :
-   :     university of applied sciences krefeld (germany)     :
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
+Mark.
