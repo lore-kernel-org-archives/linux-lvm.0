@@ -1,11 +1,8 @@
-Date: Wed, 3 Oct 2001 02:57:21 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Message-ID: <20011003025721.I14582@wiggy.net>
-References: <20011002220053.H14582@wiggy.net> <E15oYHs-0006ED-00@the-village.bc.nu>
+Date: Wed, 3 Oct 2001 09:52:11 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Message-ID: <20011003095211.A19822@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E15oYHs-0006ED-00@the-village.bc.nu>
-Subject: [linux-lvm] Re: partition table read incorrectly
+Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1-rc3 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,18 +16,39 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-Previously Alan Cox wrote:
-> Nothing before or after it ?
+Hi all,
 
-Nothing at all.
+LVM 1.0.1-rc3 supports both version 1 and 2 of the metadata.
 
-Wichert.
+There's *no* need to run any metadata update tools.
 
--- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+A tarball is available now at
+
+   <http://www.sistina.com/>
+
+for download (Follow the "LVM 1.0" link).
+
+This release contains minor changes to LVM 1.0.1-rc2.
+
+See the CHANGELOG file contained in the tarball for further information.
+
+Feed back LVM related information to <linux-lvm@sistina.com>.
+
+Thanks a lot for your support of LVM.
+
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
