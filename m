@@ -1,10 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Re: [Announce] device-mapper beta3 (fast snapshots)
-Message-ID: <20020716180522.GN957@tykepenguin.com>
-References: <3D2F6464.60908@us.ibm.com> <02071513565400.06209@boiler> <20020716084234.GA431@fib011235813.fsnet.co.uk> <200207161105.49328.habanero@us.ibm.com> <20020716163157.GA11334@fib011235813.fsnet.co.uk> <1026840444.21656.544.camel@tiny>
+From: James Manning <jmm@sublogic.com>
+Message-ID: <20020716141406.W7316@xanex.hippierage.org>
+References: <3D2F6464.60908@us.ibm.com> <02071513565400.06209@boiler> <20020716084234.GA431@fib011235813.fsnet.co.uk> <200207161105.49328.habanero@us.ibm.com> <20020716163157.GA11334@fib011235813.fsnet.co.uk>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1026840444.21656.544.camel@tiny>
+In-Reply-To: <20020716163157.GA11334@fib011235813.fsnet.co.uk>; from joe@fib011235813.fsnet.co.uk on Tue, Jul 16, 2002 at 05:31:57PM +0100
+Subject: [linux-lvm] Re: device-mapper beta3 (fast snapshots)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,26 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 16 13:05:02 2002
+Date: Tue Jul 16 13:13:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jul 16, 2002 at 01:27:24PM -0400, Chris Mason wrote:
-> On Tue, 2002-07-16 at 12:31, Joe Thornber wrote:
+[Joe Thornber]
+> > It seems we can go 'round and 'round to no end, as long as we have HW
+> > differences, so I have asked for use on a OSDL system we can both run on.
+> > This way there is no difference in our HW.  I'll let you know when I hear
+> > back from them, so we can both test on the same system (if you want to).
 > 
-> > > Joe, are you absolutely sure these tests had the disk cache disabled?  That's
-> > > the only hardware thing I can think of that would make a difference.
-> > 
-> > Absolutely sure.  Those figures were for a pair of PVs that were
-> > sharing an IDE cable so I can certainly get things moving faster.
-> 
-> Some IDE drives ignore commands to turn off the write back cache, or
-> turn it back on when load gets high.
-> 
+> Excellent idea, we should probably think up some better benchmarks too.
 
-I have reproduced Joes flat graph with SCSI & Fibre-channel drives so I wouldn't
-read too much into his cabling :-)
+I'd love any feedback about tiobench - it's gotten kinda stale and I
+really need to find out what can get added to make it a more useful tool
+for benchmarking filesystems.
 
-patrick
+http://sf.net/projects/tiobench
+-- 
+James Manning <http://www.sublogic.com/james/>
+GPG Key fingerprint = B913 2FBD 14A9 CE18 B2B7  9C8E A0BF B026 EEBB F6E4
