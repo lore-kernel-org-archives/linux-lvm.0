@@ -1,9 +1,8 @@
-Message-ID: <3BEA838A.3D74D02C@in.tum.de>
-From: David Vidal Rodriguez <vidalrod@in.tum.de>
+Message-Id: <200111081420.fA8EKcu06482@mailgate5.cinetic.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Unsubscribe from the list??
-References: <3BEA8029.7D464253@in.tum.de> <20011108141138.A3736@lsc.hu>
+From: <mnospers@web.de>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM and HD-crash
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,14 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  8 07:06:01 2001
+Date: Thu Nov  8 08:19:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Thanks! I've seen those lines so many times that I've just ignored them. You don't have to
-reply since this is the last message I'll post (till I have a serious problem with LVM :-).
-Cheers!
---
-  ------------------------------------------------------------------------
- David Vidal R. (vidalrod <at> in DOT tum DOT de)
+Hi
+
+I've a little question... I know, it could be answered in the past,
+but I didn't found it :( 
+What about Crashes of Harddisks in a LVM ?
+I have 3 HDs in it, and one seemes to be crashed.
+All the 3 where together in one big LV.
+Is there any possibilitie to get some of the data back ?
+I mean, the data of the 2 working HDs ? 
+Or doI have to accept, that all data on the 3 disks is lost?
+
+thx
+Markus
+
+______________________________________________________________________________
+Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr!
+Beim WEB.DE Lottoservice: http://tippen2.web.de/?x=7
