@@ -1,11 +1,9 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] adding a bootsector to a PV destroys it ?!?
-Message-ID: <20020901160403.G6906@zealot.blacknet.de>
-References: <20020901022635.E6906@zealot.blacknet.de> <20020901090001.GA1739@localhost>
+From: Frank Joerdens <frank@joerdens.de>
+Subject: Re: [linux-lvm] pvmove doesn't work (with either 1.0.5 or 1.1-rc2)
+Message-ID: <20020901172740.A19010@superfly.archi-me-des.de>
+References: <20020831201710.B17207@superfly.archi-me-des.de> <20020831212421.C17207@superfly.archi-me-des.de> <3D712013.9070606@ednet.ns.ca> <20020831221652.D17207@superfly.archi-me-des.de> <20020831223013.E17207@superfly.archi-me-des.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20020901090001.GA1739@localhost>; from linux-lvm@24x7linux.com on Sun, Sep 01, 2002 at 11:00:01AM +0200
+In-Reply-To: <20020831223013.E17207@superfly.archi-me-des.de>; from frank@joerdens.de on Sat, Aug 31, 2002 at 10:30:13PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,23 +14,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Sep  1 09:09:44 2002
+Date: Sun Sep  1 10:38:31 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Sep 01 '02 at 11:00, Jos� Luis Domingo L�pez wrote:
-> > Still, just to make sure:
-> > overwriting the first 512byte of a PV destroy it?
-> > 
-> If I recall correctly, metadata is placed at the beginning of each PV,
-> so overwriting the first 512-byte sector of it will probably render
-> metadata unusable for LVM.
-thought so, but still such a PV has a couple of GiBs, it might have been
-a good idea to keep the first 512bytes free for a bootloader
+I just moved another lot of ~30 GB about via pvmove, that was without a
+problem, using 1.0.5 . . . so I guess once you've screwed up a volume
+group using old lvm utils, it's broken - I was using those that ship
+with SuSE 7.2:
 
--- 
-Goetz Bock       (c) 2002 as     blacknet.de - Munich - Germany   /"\
-IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
-                                                                   X
- ASCII Ribbon Campaign against HTML email & microsoft attachments / \
+limedes:~ # rpm -qa|grep lvm
+lvm-0.9.1_beta7-25
+
+The data seem to be OK though, which is kind of surprising, seeing that
+pvmove now finds something consistently wrong with this volume group.
+
+Regards, Frank
