@@ -1,8 +1,11 @@
-Message-ID: <6413350.1074097638140.JavaMail.Administrator@atp>
-From: trylinux <trylinux@nc.rr.com>
+From: Kai Weber <lists@glorybox.de>
+Subject: Re: [linux-lvm] Strange file system errors
+Message-ID: <20040114234311.GA2199@glorybox.de>
+References: <20040114113509.GA745@glorybox.de> <20040114142444.GA2837@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] No Subject
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20040114142444.GA2837@redhat.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,53 +16,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 14 18:23:11 2004
+Date: Wed Jan 14 18:44:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
-Cc: trylinux@nc.rr.com
 
-First things first. Is there a FAQ for this group?
+* Heinz Mauelshagen <mauelshagen@redhat.com>:
 
-Now then, I'm running Fedore Core/1 (Red Hat 9) with LVM 1.0.3-13 (or at
-least RPM says it's 1.0.3). I have a single volume group containing a single
-disk. While /boot is NOT in the volume group (for obvious reasons),
-everything else, include / is. / is a ext3 filesystem.
+> > system. I have XFS and ext3 partitions. I would like to know, if it is a
+> > LVM problem.=20
+>=20
+> No.
 
-I recently used vgrename to rename the volume group (from rootvol to rootvg
--- just a test to learn some more), and it seemed to succeed. I was able to
-run afterwards with no problems. On the first reboot after this, though, my
-system can no longer boot. Here's a rough transscription of what's going on:
+Strange! If I do the test on my /boot partition, which is no LVM
+partition, the journal is recovered and the files are not corrupt.
 
-...kernel booting/initializing...
-Loading lvm-mod.o module
-LVM version 1.0.5+(22/07/2002) module loaded
-Loading jbd.o module
-Journalled Block Device driver loaded
-Loading ext3.o module
-Mounting /proc filesystem
-Creating block devices
-Scanning logical volumes
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found inactive volume group "rootvg"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a BGDA backup of your volume
-group
+Any suggestions (if it is no LVM problem) where I could ask about it?
 
-Activating logical volumes
-vgchange -- volume group "rootvg" successfully activated
-
-Mounting root filesystem
-mount: error 2 mounting ext3
-pivotroot: pivot_root(/sysroot,/sysroot/initrt) failed: 2
-umount /initrd/proc failed: 2
-Freeing unused kernel memory: 136k freed
-Kernel panic: No init found. Try passing init= option to kernel.
-
-
-I'd be happy to provide more info if it would help anyone. (grub.conf,
-fstab,
-etc.)
-
-Cheers,
-Rob
+Regards,
+--=20
+  Kai Weber
+=BB kai.weber@glorybox.de
+  http://www.glorybox.de
