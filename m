@@ -1,11 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [Ext2-devel] [ahead@bigpond.net.au: [linux-lvm] Re: Unable to
-    get XFS, ext3, reiserfs & LVM to coexist happily]
-Message-Id: <20020115152027.G11005@sistina.com>
-References: <20020105161447.K12868@lynx.no> <20020107163907.J20581@redhat.com>
+Subject: Re: [linux-lvm] vgscan problem
+Message-Id: <20020115152649.H11005@sistina.com>
+References: <Pine.LNX.4.33.0201062011010.681-100000@Prometheus.schaefer.nu>
 MIME-Version: 1.0
-In-Reply-To: <20020107163907.J20581@redhat.com>; from sct@redhat.com on
-    Mon, Jan 07, 2002 at 04:39:07PM +0000
+In-Reply-To: <Pine.LNX.4.33.0201062011010.681-100000@Prometheus.schaefer.nu>;
+    from andrew@schaefer.nu on Sun, Jan 06, 2002 at 08:32:09PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +15,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 15 08:23:01 2002
+Date: Tue Jan 15 08:30:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jan 07, 2002 at 04:39:07PM +0000, Stephen C. Tweedie wrote:
-> Hi,
-> 
-> On Sat, Jan 05, 2002 at 04:14:47PM -0700, Andreas Dilger wrote:
-> > Adrian Head <ahead@bigpond.net.au> wrote:
-> > > This is the full output from kdb when trying to create a snapshot on an XFS 
-> > > volume for me.
-> > 
-> > The system is running 2.4.17 + LVM patch (relatively minor) + VFS-lock
-> > (needed for snapshots) + 2.4.17 XFS patch, IIRC.  This has been discussed
-> > on linux-lvm and linux-xfs for a couple of days.  What is strange is that
-> > this is happening while doing an XFS snapshot, but the oops is consistently
-> > in ext3.  There are several other ext3 filesystems on the system in
-> > question.
-> 
-> Is XFS or LVM using current->journal_info for anything, and if so, is
-> it being left non-zero by anyone?
+Andrew,
 
-LVM doesn't touch it.
+so you did pvcreate the second PV and added (vgextend) it to your existing
+VG successfully?
+What exactly happened before vgscan complained?
 
+You should have a valid LVM metadata backup in /etc/lvmconf/big_space.conf
+(or an older copy named /etc/lvmconf/big_space.conf.#.old where # is a number
+from 1 up to 9).
+To figure out which one is ok you want to for eg. use
+
+vgcfgrestore -n big_space -f /etc/lvmconf/big_space.conf -ll
+
+
+To restore the metadata run:
+
+pvcreate -ff /dev/BothOfYourPVs
+vgcfgrestore -n big_space -f /etc/lvmconf/big_space.conf /dev/Your1stPV
+vgcfgrestore -n big_space -f /etc/lvmconf/big_space.conf /dev/Your2ndPV
+vgscan
+
+On Sun, Jan 06, 2002 at 08:32:09PM -0500, Andrew Schaefer wrote:
+> I just setup LVM with two disks in the volume group big_space.  I started
+> out with one disk and then extended it across the other.  It
+> formatted, fs extended, and mounted up fine.  I then rebooted, and now I
+> get this error from vgscan:
 > 
-> --Stephen
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found inactive volume group "big_space"
+> vgscan -- ERROR "pv_read_pe(): read" can't get data of volume group
+> "big_space"
+> from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> group
+> 
+> Any ideas or suggestions?  Unfortunately I threw data onto the volume and
+> don't want to loose it.
+> 
+> Andrew Schaefer
+> andrew@schaefer.nu
+> http://www.schaefer.nu
+> 
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
