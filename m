@@ -1,9 +1,10 @@
-Message-ID: <012401c2958a$6b6baf40$4b66699f@win.doc.state.vt.us>
-From: "Joseph Kezar" <jkezar@doc.state.vt.us>
+From: Anders Widman <andewid@tnonline.net>
+Message-ID: <4131936328.20021126213826@tnonline.net>
+Subject: Re: [linux-lvm] LVM for a Database
+In-Reply-To: <012401c2958a$6b6baf40$4b66699f@win.doc.state.vt.us>
+References: <012401c2958a$6b6baf40$4b66699f@win.doc.state.vt.us>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0121_01C29560.8284DE60"
-Subject: [linux-lvm] LVM for a Database
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,72 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 26 14:29:01 2002
+Date: Tue Nov 26 14:38:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Joseph Kezar <linux-lvm@sistina.com>
 
-This is a multi-part message in MIME format.
+> We are in the process of building a database on a 4 processor 1.8GHz, 4GB RAM Dell 6650.
 
-------=_NextPart_000_0121_01C29560.8284DE60
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+> I am trying to figure out the most efficient way to use LVM for our raw data storage.  We have a RAID array with 8x36GB drives in it.  Should I do a raid 1+0(mirror 4 disks, and span them to get
+> one logical volume)?
 
-We are in the process of building a database on a 4 processor 1.8GHz, =
-4GB RAM Dell 6650.
+This  is  a  fast  and easy setup.. But what will you use to the disks
+for?  RAID  5  is generally fast and space efficient, though it can be
+slower on writes.
 
-I am trying to figure out the most efficient way to use LVM for our raw =
-data storage.  We have a RAID array with 8x36GB drives in it.  Should I =
-do a raid 1+0(mirror 4 disks, and span them to get one logical volume)?
+> If so this leaves me a /dev/sdb.  Or would I get better performance if I mirror 1 + 5, 2 + 6, 3 + 7, 4+ 8 to give me /dev/sd[b-e].
+> Is it possible to figure out where the center of our spindles are?  So I can arrange for the heads to spend little time seeking?
 
-If so this leaves me a /dev/sdb.  Or would I get better performance if I =
-mirror 1 + 5, 2 + 6, 3 + 7, 4+ 8 to give me /dev/sd[b-e].
-Is it possible to figure out where the center of our spindles are?  So I =
-can arrange for the heads to spend little time seeking?
+By  mirroring  pairs  your would end up with 4 logical drives that you
+can  use LVM (with striping if necessary) on top and have more freedom
+to  replace and change drive setup (like if you want to replace a pair
+of disks for newer/bigger models).
 
-Any perfomance hints would be greatly appreciated.
+I am not sure if LVM 1.x support changing size of striped volumes, but
+LVM  2  should  have  much  freedom  to do basically whatever you want
+(still in beta though). Disk spanning with LVM 1 is quite fast though,
+for most applications.
 
-thanks
-Joe K.
-------=_NextPart_000_0121_01C29560.8284DE60
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+> Any perfomance hints would be greatly appreciated.
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2800.1126" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>We are in the process of building a =
-database on a 4=20
-processor 1.8GHz, 4GB RAM Dell 6650.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>I am trying to figure out the most =
-efficient way to=20
-use LVM for our raw data storage.&nbsp; We have a RAID array with 8x36GB =
-drives=20
-in it.&nbsp;&nbsp;Should I do a raid 1+0(mirror 4 disks, and span them =
-to get=20
-one logical volume)?</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>If so this leaves me a /dev/sdb.&nbsp; =
-Or would I=20
-get better performance if I mirror 1 + 5, 2 + 6, 3 + 7, 4+ 8 to give me=20
-/dev/sd[b-e].</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Is it possible to figure out where the =
-center of=20
-our spindles are?&nbsp; So I can arrange for the heads to spend little =
-time=20
-seeking?</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Any perfomance hints would be greatly=20
-appreciated.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>thanks</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Joe K.</FONT></DIV></BODY></HTML>
 
-------=_NextPart_000_0121_01C29560.8284DE60--
+> thanks
+> Joe K.
