@@ -1,9 +1,8 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-Message-ID: <20011130140221.B32143@auctionwatch.com>
-References: <20011130142015.F23836@wookimus.net>
-Mime-Version: 1.0
-Content-Disposition: inline
+From: "Steve Wray" <steve.wray@the.net.nz>
+Subject: RE: [linux-lvm] Mandrake 8.1 and LVM
+Message-ID: <NBBBKLKHMJHIJLHOGAOJIEEEJCAA.steve.wray@the.net.nz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 In-Reply-To: <20011130142015.F23836@wookimus.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,28 +14,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 30 16:00:01 2001
+Date: Fri Nov 30 16:04:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Nov 30, 2001 at 12:20:15PM -0800, Chad C. Walstrom wrote:
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Chad C. Walstrom
+> Sent: Saturday, 1 December 2001 09:20
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
+>
+>
 > On Fri, Nov 30, 2001 at 09:41:21PM +1300, Steve Wray wrote:
-> > > Reason #1:  Mount /usr as read-only.  There is only one reason why
-> you
-> > ONLY if you also have /usr/share (for one, there may be others) on
-> writeable
+> > > Reason #1:  Mount /usr as read-only.  There is only one reason why you
+> >
+> > ONLY if you also have /usr/share (for one, there may be others)
+> on writeable
 > > partitions!!!
+>
 > Why would you want/need to have /usr/share writeable?  FHS 2.2 states:
->         4.11  /usr/share : Architecture-independent data
->         4.11.1  Purpose
->         The /usr/share hierarchy is for all read-only architecture
->         independent data files. [25]
-    
-    So you can install software that puts stuff in /usr/share/man and
-    /usr/share/doc?  
+
+On redhat and mandrake for two, there are things in /usr/share that
+are written to at runtime.
+One I can think of right off the bat is cddb information.
 
 
--- 
-Share and Enjoy. 
+[snip]
+>         Game data stored in /usr/share/games must be purely static data.
+>         Any modifiable files, such as score files, game play logs, and so
+>         forth, should be placed in /var/games.
+
+Since when was any distribution 100% compliant with the standards?
+:)
