@@ -1,10 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] VGDA error
-Message-Id: <20020227103657.E19249@sistina.com>
-References: <Pine.OSF.4.30.0202271006050.25336-100000@hhipe.uia.ac.be>
+From: "William Blunn" <bill+f.20020227@tao-group.com>
+Subject: Re: [linux-lvm] Rescue cd for lvm 1.0.3 (fwd)
+Message-Id: <002801c1bf74$23053560$216410ac@tao.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <Pine.OSF.4.30.0202271006050.25336-100000@hhipe.uia.ac.be>;
-    from casteels@uia.ua.ac.be on Wed, Feb 27, 2002 at 10:15:21AM +0100
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <NEBBLHFAEINCLDICDLOAMEOJCJAA.yves.alloyer@slpinfoware.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,109 +14,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 03:37:02 2002
+Date: Wed Feb 27 03:50:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Paul,
+> > Because lilo doesn't have a clue about lvm, so it cannot properly
+> > store the location of your kernel in your boot record if /boot is
+> > also in lvm (like in your setup). That is why the lvm howto tells
+> > you you must have /boot on a separate (dos) partition (eg hda1).
 
-coud you send me the files created with
+> IMHO this only applies to stock lilo as found in most current and=20
+> all older distros.
+> I have a recent and patched version of lilo that does recognize LVM.
 
-for d in /dev/sd[b-e]1
-do
-   dd if=$d of=$(basename $d).vgda bs=1k count=1k
-done
+For the sake of 8MB of disk, I'd be inclined to go with the /boot on an
+ext2 filesystem directly on a disk partition.
 
-in private email to mge@sistina.com for further investigation, please?
+That way you will be compatible with the stock lilo, which will:
 
-In the meantime stay using LVM 1.0.3 and if you really don't have any LVs
-in that VG, recreate it from scratch :)
+(a) Save you building your own lilo. Yes I know it is easy, but it's not
+    just the the direct time involved in doing it (which probably
+    outweighs 8MB of disk by itself anyway). You also have the ongoing
+    system management effort in having to manage (another) one of your
+    components no longer being the out-of-the-box distro version.
 
-With LVM 1.0.3 run:
+(b) Save you grief in the event that the boot setup on your system
+    fails, as you can potentially the stock lilo.
 
-vgchange -an NUsers
-pvcreate -yff /dev/sd[b-e]1
-rm -r /dev/NUsers
-vgcreate NUsers /dev/sd[b-e]1
+Over time, as new versions of distros appear containing new versions of
+lilo, and systems are upgraded to newer distro versions, then the
+prevalent population of lilo instances will eventually become LVM-aware.
 
 Regards,
-Heinz    -- The LVM Guy --
 
-
-On Wed, Feb 27, 2002 at 10:15:21AM +0100, Paul.Casteels wrote:
-> Hello,
-> 
-> I am having trouble using LVM.
-> 
-> This is my configuration :
-> #uname -a
-> Linux natl2.uia.ac.be 2.4.9-21custom #1 SMP Tue Feb 26 15:17:02 CET 2002
-> i686 unknown
-> #cat /proc/lvm/global
-> LVM driver version LVM 0.9.1_beta7(ish) (20 June 2001)
-> 
-> Total:  1 VG  4 PVs  0 LVs (0 LVs open)
-> Global: 4991 bytes malloced   IOP version: 10   2:14:27 active
-> 
-> VG:  NUsers  [4 PV, 0 LV/0 open]  PE Size: 4096 KB
->   Usage [KB/PE]: 143622144 /35064 total  0 /0 used  143622144 /35064 free
->   PVs: [AA] sdb1 35905536 /8766 0 /0 35905536 /8766
->        [AA] sdc1 35905536 /8766 0 /0 35905536 /8766
->        [AA] sdd1 35905536 /8766 0 /0 35905536 /8766
->        [AA] sde1 35905536 /8766 0 /0 35905536 /8766
->     LVs: none
-> # vgdisplay --version
-> vgdisplay
-> vgdisplay: Logical Volume Manager 1.0.1-rc4
-> Heinz Mauelshagen, Sistina Software  03/10/2001 (IOP 10)
-> 
-> 
-> After I started vgchange -a y, most commands report :
-> ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
-> 
-> If I do this I get :
-> # vgscan
-> vgscan
->  vgscan -- reading all physical volumes (this may take a while...)
->  vgscan -- found active volume group "NUsers"
->  vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
->  vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> group
-> 
-> and the error does not go away.
-> 
-> I tried a more recent (1.0.3) version of the tools, but this has no
-> effect.
-> 
-> Best regards and thanks,
-> 
-> Paul Casteels		Paul.Casteels@ua.ac.be	Tel: +32.3.8202455
-> 						Fax: +32.3.8202470
-> University of Antwerp	Dpt.Physics
-> Universiteitsplein 1
-> B-2610 Wilrijk
-> Belgium
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Bill
+--=20
+William H. Blunn - <bill+s.20020227@tao-group.com> - Developer Support
+Tao
+62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
+Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
