@@ -1,9 +1,7 @@
-Message-ID: <3CE18CF8.BE066929@club-internet.fr>
-From: Adeline =?iso-8859-1?Q?M=E9tayer?= <metayer.adeline@club-internet.fr>
-MIME-Version: 1.0
-References: <E177gTv-0002J2-00@hermes.sistina.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: imposs mount vg
+Mime-Version: 1.0
+From: Jonathan Buzzard <jonathan@buzzard.org.uk>
+Message-Id: <E177uaF-0000ja-00@jelly.buzzard.org.uk>
+Subject: [linux-lvm] Some suggestions about lvminitrd_create
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,31 +12,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 14 17:21:01 2002
+Date: Wed May 15 04:03:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@Sistina.com
 
-> not wanting to offend, but
-> did you actualy create a filesystem?
-> 
-> L.
-> 
-> --
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
-..............
+Just a couple of suggestions firstly it would be nice if it checked
+for /boot/System.map-'uname -r' rather than for just /boot/System.map.
+When you have more than one kernel floating about this is handy.
 
-You don't offend at all : actually it was the problem...(adesso il
-problema, non c'� pi� !:o)
-Sorry, I'm just discovering the lvm world...
+Second suggestion it would be nice if a -t option existed to allow a
+choice in the type of filesystem the initrd is created in. Not everyone
+is using ext2 these days :)
 
-                   \\\!/// 
-                     0 ~
-      ----------o00--(_)--00o-----------
+JAB.
 
-By the way, could you tell me (I know, these are basics, but...) if
-there is a mean for including existing filesystems in one lvm vg ?
-
-Regards,
-Adeline
+-- 
+Jonathan A. Buzzard                 Email: jonathan@buzzard.org.uk
+Northumberland, United Kingdom.       Tel: +44(0)1661-832195
