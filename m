@@ -1,10 +1,12 @@
-Return-Path: <james@fr.clara.net>
-Date: Wed, 7 Feb 2001 14:42:08 +0100 (CET)
-From: James <james@fr.clara.net>
-Subject: RE: [linux-lvm] lvm with raid
-In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF683913@mailsrv.linkvest.ch>
-Message-ID: <Pine.LNX.4.21.0102071441390.16192-100000@munster.noc.fr.clara.net>
-MIME-Version: 1.0
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Wed, 7 Feb 2001 13:45:49 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] lvm buglet in 0.9.1_beta
+Message-ID: <20010207134549.E525@tykepenguin.com>
+References: <20010206093700.A528@tykepenguin.com> <200102070845.f178jXs23806@webber.adilger.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200102070845.f178jXs23806@webber.adilger.net>; from adilger@turbolinux.com on Wed, Feb 07, 2001 at 01:45:32AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,68 +18,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Apparantly I need the latest beta, I will give a go and let you know
+On Wed, Feb 07, 2001 at 01:45:32AM -0700, Andreas Dilger wrote:
+> Patrick Caulfield writes:
+> > It probably just needs COMPAQ_SMART2_MAJOR (& COMPAQ_SMART_MAJOR[1-7])
+> > adding into the list in lvm_check_partitioned_dev.c. It's already in
+> > lvm_check_dev.c so I suspect it's just an oversight.
+> 
+> It may not be exactly this.  AFAIK, when we call lvm_check_partitioned_dev()
+> when we are scanning disks, I think this determines if LVM will start doing
+> the gross DOS partition stuff.  Is it the case with these COMPAQ devices
+> that they use DOS partitions?
 
-On Wed, 7 Feb 2001, Jean-Eric Cuendet wrote:
+I'm not sure - that's why I asked the user to test it for me! Anyway you can
+partition any block device you like - or even a file :-)
+ 
+> IMHO, it should be possible (CONFIG_ flag or so) to simply turn off LVM
+> partition grubbing, and stick with what we get from /proc/partitions and
+> /dev scanning.  The only reason we do this, AFAIK, is to check the LVM
+> partition type in DOS partition table, but it causes bug reports too.
 
-> 
-> > I created /dev/md0 (raid autodetect)
-> > Did a pvcreate /dev/md0
-> > lvcreate'd partitions /usr /home /var
-> 
-> I think it's because of NO "LVM linux" partition ID.
-> Your md0 partition is "RAID Auto detect" and that's normal.
-> I'm not a guru of LVM, so I have no idea of what to do, but anyone out
-> there?
-> I'm interested too in this thing.
-> It works for me to have RAID partitions in LVM because I have a mix of hda1
-> + hda2 + md0 + md1, so vgscan and vgchange works because of the "Linux LVM"
-> IDs on hda1 and hda2
-> Thanks for the GURU response.
-> 
-> -jec
-> 
-> 
-> > 
-> > copied and remounted everything.
-> > This all goes surprisingly well, until I decided to test with 
-> > a reboot.
-> > 
-> > vgscan and vgchange don't find a thing !
-> > 
-> > test:/home/james# vgscan 
-> > vgscan -- reading all physical volumes (this may take a while...)
-> > vgscan -- no volume groups found
-> > 
-> > test:/home/james# vgchange -a y
-> > vgchange -- no volume groups found
-> > 
-> > but if I try to recreate a PV 
-> > 
-> > test:/home/james# pvcreate /dev/md0
-> > pvcreate -- ERROR: can't initialize physical volume 
-> > "/dev/md0" of volume
-> > group "devlvm" without -ff
-> >  
-> > Everything is still there apparantly.
-> > 
-> > I must be missing something fundamental. Thanks fot any help 
-> > in advance.
-> > 
-> > James
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
+We have some half-formed plans here.
+ 
+> In any case, while you are in there, can you add COMPAQ_CISS_MAJOR + [1-7]
+> also.  This is basically the same thing as COMPAQ_SMART_MAJOR.  It will
+> avoid yet another similar bug report on this in the future.
+
+OK.
+
+patrick
