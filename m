@@ -1,22 +1,32 @@
-Message-ID: <379A4015.5DFA1EC5@mm.gop.de>
-Date: Sun, 25 Jul 1999 00:37:09 +0200
-From: Oliver Raupach <oliver@mm.gop.de>
-Reply-To: oliver@mm.gop.de
+Message-ID: <379B5B7C.773DCD8B@thephaedo.com>
+Date: Sun, 25 Jul 1999 18:46:20 +0000
+From: "S. Ryan Quick" <ryan@thephaedo.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Frontend ?
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Compile Problems w/ 0.7
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Hi ...
+Hi all,
 
-Gibt es schon ein grafische Frontend f=EF=BF=BDr LVM? Ist es geplant
-oder in arbeit ?
+I am haviing vicious problems compiling the tools for any of the
+distributions (attempting 0.7 for the most part).  The kernel
+patch for 2.2.10 compiled without a hitch, but I cannot get any of the
+tools working at all.  I'm running Debian/GNU Linux
+2.1 --current and (obviously) 2.2.10 kernel.  I've attempted compiling
+on several other machines, and am beginning
+to wonder if this is a Debian problem (I have no other boxes to
+attempt).
 
+I was wondering if anyone has had the same problems, or would be able to
+consider posting a glibc binary distribution
+somewhere.  I am also quite interested in mirroring the site (I have
+9Mbs dedicated between 2 backbones outside
+of Washington DC, US if anyone is interested.)
 
---=20
+Thanks in advance,
 
-  Oliver Raupach
+Ryan
