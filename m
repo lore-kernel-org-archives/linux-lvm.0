@@ -1,11 +1,9 @@
-content-class: urn:content-classes:message
+Message-ID: <3B84D252.692DA667@tronicplanet.de>
+Date: Thu, 23 Aug 2001 11:52:18 +0200
+From: Knollmueller Stefan <stefan.knollmueller@tronicplanet.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----_=_NextPart_001_01C12BB7.1ADAAAF4"
-Date: Thu, 23 Aug 2001 11:36:37 +0200
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FD08@mailsrv.linkvest.com>
-From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
-Subject: [linux-lvm] min() and max() problems with 2.4.8 and 1.0.1
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshot on xfs filesystem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,45 +15,13 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+hi,
 
-------_=_NextPart_001_01C12BB7.1ADAAAF4
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+when trying the same on an ext2 fs the machine keeps on running and
+nothing special happens even if there is traffic via nfs.
+seems to be a problem with xfs...
 
-
-Hi,
-I just patched my kernel with 1.0.1rc1 and have problems with min() and
-max() functions. They are not found in lvm.c and lvm-snap.c .
-
-FYI, I have also ext3, acls and quota3 patches applied. Could they make
-that?
-
-What to do?
--jec
-
----------------------------------------------------
-Jean-Eric Cuendet
-Linkvest SA
-Av des Baumettes 19, 1020 Renens Switzerland
-Tel +41 21 632 9043  Fax +41 21 632 9090
-http://www.linkvest.com  E-mail: jean-eric.cuendet@linkvest.com
----------------------------------------------------
-
-------_=_NextPart_001_01C12BB7.1ADAAAF4
-Content-Type: text/x-vcard;
-	name="Jean-Eric Cuendet.vcf"
-Content-Transfer-Encoding: base64
-Content-Description: Jean-Eric Cuendet.vcf
-Content-Disposition: attachment;
-	filename="Jean-Eric Cuendet.vcf"
-
-QkVHSU46VkNBUkQNClZFUlNJT046Mi4xDQpOOkN1ZW5kZXQ7SmVhbi1FcmljDQpGTjpKZWFuLUVy
-aWMgQ3VlbmRldA0KT1JHOkxpbmt2ZXN0IFMuQS47Q0NTUg0KRU1BSUw7UFJFRjtJTlRFUk5FVDpK
-ZWFuLUVyaWMuQ3VlbmRldEBsaW5rdmVzdC5jb20NClJFVjoyMDAxMDcyNFQxNDI0MTFaDQpFTkQ6
-VkNBUkQNCg==
-
-------_=_NextPart_001_01C12BB7.1ADAAAF4--
+stefan
