@@ -1,13 +1,11 @@
-Return-Path: <allanwind@mediaone.net>
-Date: Thu, 19 Jul 2001 09:10:14 -0400
+Return-Path: <root@srv.sistina.com>
+Date: Thu, 19 Jul 2001 16:03:04 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] I/O error: dev 08:11, sector 0
-Message-ID: <20010719091014.A18381@digit-safe.dyndns.org>
+Message-ID: <20010719160304.A29325@sistina.com>
+References: <20010718231729.A791@digit-safe.dyndns.org> <20010719111351.A28183@sistina.com> <20010719134847.E752@tykepenguin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Content-Disposition: inline
-In-Reply-To: <20010719111351.A28183@sistina.com>
-From: Allan M. Wind <allanwind@mediaone.net>
+In-Reply-To: <20010719134847.E752@tykepenguin.com>; from caulfield@sistina.com on Thu, Jul 19, 2001 at 01:48:47PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,55 +17,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 19, 2001 at 01:48:47PM +0100, Patrick Caulfield wrote:
+> On Thu, Jul 19, 2001 at 11:13:51AM +0200, Heinz J. Mauelshagen wrote:
+> > 
+> > Allan,
+> > 
+> > 08:11 (/dev/sda11) shows that I/O error, you use /dev/sdb, which is 08:16
+> > for your VG -> no problem for LVM.
+> > 
+> > Because /dev/sda11 seems to be configured, LVM reads it on its search for
+> > physical volumes.
+> > 
+> > If you are not using /dev/sda11 for anything you are fine for the moment.
+> 
+> If the minor number is in hex that makes it /dev/sdb1 - which seems slightly
+> more sensible to me :-)
 
-On 2001-07-19 11:13:51, Heinz J. Mauelshagen wrote:
+Yes, you are right. Got that base wrong :)
 
-> 08:11 (/dev/sda11) shows that I/O error, you use /dev/sdb, which is 08:16
-> for your VG -> no problem for LVM.
-> If there's a file system on /dev/sda11 *and* just the first sector is not
-> accessable, you can still happily access the filesystem, because it doesn=
-'t use
-> that sector at all.
-> But you should check and probably replace your sda drive to avoid
-> trouble in the future.
+> 
+> patrick
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Hmm... I do not have a /dev/sda11, only sda1 & sda2 (root and swap
-respectively).  However, I was aware that my sdc drive was dying
-(the drive was scsi id 8 / sdb when this was logged):
+Regards,
+Heinz    -- The LVM Guy --
 
-Jul 14 09:33:58 digit-safe kernel: scsi0: ERROR on channel 0, id 8, lun 0, =
-CDB: Read (10) 00 00 09 c9 48 00 00 18 00=20
-Jul 14 09:33:58 digit-safe kernel: Info fld=3D0x9c952, Current sd08:12: sen=
-se key Medium Error
-Jul 14 09:33:58 digit-safe kernel: Additional sense indicates Data synchron=
-ization mark error
-Jul 14 09:33:58 digit-safe kernel:  I/O error: dev 08:12, sector 577872
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-/Allan
---=20
-Allan M. Wind			email: allanwind@mediaone.net
-P.O. Box 2022			finger: awind@digit-safe.dyndns.org (GPG/PGP)
-Woburn, MA 01888-0022
-USA
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7Vtw0erJrYp1ydncRAgJKAJ97m96s0XQ93jgX6jFyekWik0QKjgCfe6cW
-yDky3M0yDCttgUjYD7UYtws=
-=DPwu
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
