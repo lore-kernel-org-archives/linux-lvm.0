@@ -1,11 +1,11 @@
-Date: Tue, 28 Aug 2001 08:54:15 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] snapshot of reiserfs lv -- status of the VFS lock patches.
-Message-ID: <20010828085415.C609@tykepenguin.com>
-References: <wxxitfenw4n.fsf@ninhursaga.uio.no>
+Date: Tue, 28 Aug 2001 09:51:04 +0100
+Subject: Re: [linux-lvm] Pvmove question
+Message-ID: <20010828095104.E283@btconnect.com>
+References: <OF1C4B21E3.328FDE29-ON85256AB5.004B8EA6@raleigh.ibm.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <wxxitfenw4n.fsf@ninhursaga.uio.no>; from terjekv@math.uio.no on Fri, Aug 24, 2001 at 02:23:52AM +0200
+In-Reply-To: <OF1C4B21E3.328FDE29-ON85256AB5.004B8EA6@raleigh.ibm.com>; from corryk@us.ibm.com on Mon, Aug 27, 2001 at 08:46:33AM -0500
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,19 +21,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Aug 24, 2001 at 02:23:52AM +0200, Terje Kvernes wrote:
+On Mon, Aug 27, 2001 at 08:46:33AM -0500, Kevin M Corry wrote:
+> > On Fri, Aug 24, 2001 at 12:31:18AM +0200, Jean-Eric Cuendet wrote:
+> > >
+> > > Hi,
+> > > I have a pvmove question:
+> > > In the man page, it's said to be careful with pvmove if you use it
+> while
+> > > LVM is in use.
+> > > I don't really understand what is dangerous and what is safe...
+> >
+> > pvmove on a mounted (or otherwise in use) LV might cause curruption of
+> > your data.
 > 
->   using an unmodified (besides the lvm1.0-patches generated) kernel
->   I attempted to make a snapshot of a lv:
-> 
->   [1] the patchlog of the 2.4.4 VFS lock patch against 2.4.9, the
->   reject of ksyms.c is as far as I can see only two
->   EXPORT_SYMBOL-calls. 
+> In what cases could pvmove cause corruption on a mounted LV? Looking
+> at the man page and scanning through pvmove.c, it seems to indicate
+> that only a system crash during pvmove would corrupt the data. Is
+> this the only case, or are there others?
 
-Chris Mason posted a new VFA lock patch for 2.4.8+ heer:
+Search back through the list for a response from Andrea Arcangeli.  We
+need to track buffer_heads that have been trhough the make_request
+function so we can really can flush the LV when suspending io for the
+dureation of the move.  If you're not using raw io then the only
+problem is a possible deadlock when under high memory pressure.
 
-http://lists.sistina.com/pipermail/lvm-devel/2001-August/000612.html
+> If there are other possibilities for corruption, wouldn't it be a
+> good idea to not allow pvmove's on PV's that contain mounted LVs?
 
-And it's also in CVS now too.
+IMO yes.
 
-patrick
+- Joe
