@@ -1,56 +1,43 @@
-Date: Wed, 9 Feb 2000 00:11:18 +0000 (GMT)
-From: James Pattinson <jamesp@aethos.co.uk>
-Subject: [linux-lvm] Library strangeness
-Message-ID: <Pine.LNX.4.10.10002090009460.18572-100000@greebo.jj.net>
+Message-ID: <38A0C388.4DFF0811@msede.com>
+Date: Wed, 09 Feb 2000 02:31:52 +0100
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: jum@anubis.han.de
 MIME-Version: 1.0
+Subject: [linux-lvm] Re: Configuring boot partition with LVM (fwd)
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Hi!
+Forwarded message ...
 
-Just saw something that confused me for a while:
+-------- Original Message --------
+Date: Tue, 8 Feb 2000 23:11:24 +0100
+Resent-Date: Wed, 09 Feb 2000 2:27:50 MEZ
+From: Jens-Uwe Mager <jum@anubis.han.de>
+To: Jos Visser <josv@osp.nl>
+Cc: Fabian.Herschel@suse.de, linux-lvm@msede.com
+Subject: Re: [linux-lvm] Configuring boot partition with LVM
+In-Reply-To: <389EF4DE.68165A11@osp.nl>; from josv@osp.nl on Mon, Feb
+07, 2000 at 05:37:50PM +0100
 
-[root@greebo][/root]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- no volume groups found
+On Mon, Feb 07, 2000 at 05:37:50PM +0100, Jos Visser wrote:
+> >  Lilo
+> > should also learn how to boot a kernel fom a striped volume...
+>
+> I don't think you fully appreciate the request you're making here.
+> Commercial Unices such as HP-UX and Solaris can not boot from striped
+> volumes for about the same reasons why it would be difficult to have
+> LILO read from a striped volume: the implications are just too
+> horrendous to comtemplate.
 
-Even though I am running on LVM at the moment! After some looking round I
-discovered that it was trying to use liblvm in totally the wrong
-directory, which I had been hacking around with:
+At least the IBM people with the AIX LVM are able to make that work.
+The
+only thing that they were not able for a long time is to make system
+dumps work in such a configuration. But I believe that even that works
+under AIX 4.3.x now.
 
-[root@greebo][/root]# ldd `which vgscan`
-        /lib/libNoVersion.so.1 => /lib/libNoVersion.so.1 (0x40014000)
-        liblvm.so => /root/LVM/0.8-pre02.10.1999/tools/lib/liblvm.so
-(0x40016000)
-        libc.so.6 => /lib/libc.so.6 (0x4003a000)
-        /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
-[root@greebo][/root]# mv LVM LVM-hacked
-[root@greebo][/root]# ldd `which vgscan`
-        /lib/libNoVersion.so.1 => /lib/libNoVersion.so.1 (0x40014000)
-        liblvm.so => /lib/liblvm.so (0x40016000)
-        libc.so.6 => /lib/libc.so.6 (0x4003a000)
-        /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
-[root@greebo][/root]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vg00"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: you may not have an actual backup of your volume group
-[root@greebo][/root]#
-
-So, removing /root/LVM solved the problem! Why does the linker try and
-use the library here first rather than what's in /lib ? My ld.so.conf has
-nothing to do with /root/LVM in it!
-
-I think this could be the offending line, from tools/Makefile:
-
-XLINKER = -Xlinker -rpath $(TOP)/tools/lib -Xlinker -rpath /lib -Xlinker
-
-Perhaps -rpath $(TOP)/tools/lib needs to be /after/ the rest?
-
-Cheers!
-
-James (running Dual Celeron 450 / LVM 0.8i / 2.2.14 / devfs)
+-- 
+Jens-Uwe Mager	<pgp-mailto:62CFDB25>
