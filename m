@@ -1,9 +1,11 @@
-Return-Path: <david.mathews@sungard.com>
-From: david.mathews@sungard.com
-Message-ID: <OF62DA6C54.2FB2B37C-ON85256A80.001B8641@scs.sungard.com>
-Date: Thu, 5 Jul 2001 01:00:38 -0400
+Return-Path: <tandem@dnmi.no>
+Subject: Re: [linux-lvm] RedHat 7.0?
+References: <003601c104e9$fb47c3c0$0300000a@pacbell.net>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 05 Jul 2001 08:15:57 +0200
+In-Reply-To: "Erick Calder"'s message of "Wed, 4 Jul 2001 17:32:32 -0700"
+Message-ID: <wv4rsr295u.fsf@freeze.oslo.dnmi.no>
 MIME-Version: 1.0
-Subject: [linux-lvm] David Mathews/SCS/SunGard is out of the office.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,8 +21,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I will be out of the office starting  07/04/2001 and will not return until
-07/09/2001.
+>>>>> "Erick" == Erick Calder <e@arix.com> writes:
 
-I will be out of the office on vacation.  I will have limited access to
-voice/e-mail.  In my absence please contact Scott Barret or Andy Wasson.
+    Erick> I recently read that applying the LVM patches to the RH
+    Erick> kernel doesn't work... so I downloaded Linus' kernel
+    Erick> (2.2.19) and seem unable to patch it on account of not
+    Erick> having a rawid patch available... I've looked in the
+    Erick> directory specified in the HOWTO but there is no patch for
+    Erick> 2.2.19... when I type "make" in the PATCHES directory I
+    Erick> get:
+
+    Erick> You haven't applied the rawio patch, please see the README
+    Erick> make: *** [check_rawio] Error 1
+
+Just use the 2.2.18 patch, I've used it for 2.2.19 and 2.2.20pre
+without problems
+
+Sincerely,
+
+Adrian Phillips
+
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
