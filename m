@@ -1,40 +1,37 @@
-Message-Id: <199908271940.AA21078@mailgate1b.telekom.de>
+Message-Id: <199908272008.AA21556@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] LVM and devices
-Date: Fri, 27 Aug 1999 21:37:13 METDST
-In-Reply-To: <37C6AE9E.A93F0D8A@geotec.net>; from "mrharris" at Aug 27, 99 10:28 am
+Subject: [linux-lvm] *** CALL FOR LVM SUPPORTERS (PETITION) ***
+Date: Fri, 27 Aug 1999 22:05:30 METDST
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: mrharris <mrharris@geotec.net>
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
+Cc: mge@ts1.ez-darmstadt.telekom.de
 
-> 
-> I may be a day late and a dollar short here, but I experienced a problem
-> this morning when I added a new scsi drive to my 2.2.10 system. I know
-> that the os scans for devices when the system boots and assigns device
-> names then. Well this screwed up my volume groups because sda1 is now
-> sdb1, you get the idea nothing new here. I know this has been discussed
-> before.
 
-Run vgscan and VGs should be o.k. again.
+Hello all,
 
-> In AIX new devices are assigned and that's the way it stays unless you
-> manually delete the device and readd it so that when one of your mirred
-> drives gets blown away or you add a drive the assignments are the same
-> (more to it than this but you get the idea).  I believe this needs to
-> change in linux before LVM is added to the kernel, life would be much
-> simpler (md is effected by this as well I beleive). LVM does need to be
-> there though, the old way is just that the old way. I don't know how I
-> would live without LVM when you manage over 200 systems.  Just my
-> opinion.
-> 
-> add LVM to 2.4 -- YES.
-> 
+first of all i want to thank Shane Shrybman for setting up
+the very helpfull LVM petition page at:
 
+   <http://www.the-infinite.org/lvm_petition/index.phtml>
+
+
+At this point in time we already have 46 people on it which
+is a good success during the short time.
+
+Thanks to everybody who already signed and therefore helped to
+hopefully have LVM in the mainstream kernel soon 8*)
+
+But obviously we need more supporters!
+
+!!! PLEASE HELP BY SIGNING OUR PETITION !!!
+
+
+Kind regards,
 Heinz
 --
 
