@@ -1,17 +1,27 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2A1Px819430
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 20:25:59 -0500
-Received: from mwinf0804.wanadoo.fr (smtp8.wanadoo.fr [193.252.22.23])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2A1Pw07031850
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 20:25:59 -0500
-Received: from wwinf0803 (wwinf0803 [172.22.139.30])
-	by mwinf0804.wanadoo.fr (SMTP Server) with ESMTP id 624C41800075
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 02:25:53 +0100 (CET)
-Message-ID: <399262.1078881953394.JavaMail.www@wwinf0803>
-From: "dld.pascal.garcia" <dld.pascal.garcia@wanadoo.fr>
-Subject: Re: [linux-lvm] Help : vg not accessible (with pvdata result)
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2A25H827723
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 21:05:17 -0500
+Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2A25G07010640
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2004 21:05:16 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by salusa.poochiereds.net (Postfix) with ESMTP id 7D271BD1F
+	for <linux-lvm@redhat.com>; Tue,  9 Mar 2004 21:05:15 -0500 (EST)
+Received: from salusa.poochiereds.net ([127.0.0.1])
+	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 01227-02 for <linux-lvm@redhat.com>;
+	Tue, 9 Mar 2004 21:05:15 -0500 (EST)
+Received: from tleilax.ix.dyndns.org (tleilax.ix.dyndns.org [192.168.1.3])
+	by salusa.poochiereds.net (Postfix) with ESMTP id ECF834D5F
+	for <linux-lvm@redhat.com>; Tue,  9 Mar 2004 21:05:14 -0500 (EST)
+From: Jeff Layton <jtlayton@poochiereds.net>
+In-Reply-To: <403E8A0E.9070308@ist.utl.pt>
+References: <403E8A0E.9070308@ist.utl.pt>
+Content-Type: multipart/mixed; boundary="=-rRt/pUDtiCHV8sZCf/Jb"
+Message-Id: <1078884314.2919.16.camel@localhost>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Patch for Miguel =?ISO-8859-1?Q?Cabe=E7a's?= lvm2create_initrd
+ script
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -23,28 +33,69 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Tue Mar  9 20:24:00 2004
+Date: Tue Mar  9 21:03:04 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello, 
-remind of the probem : by some manipulation quite uncontrolled, I ended with a pv of a 
-vg completly unconsistant. 
- 
-I finally modified the vgda to have a vg consistant enough to restart. And I activate the 
-vg, and my data is now available. Thanks to Heinz. 
- 
-But I found and interresting bug on vgimport that mixed the data of an active vg on the 
-system and the vg I imported. The condition to have this problem is to have the name of 
-an active vg identical to the name of the vg to be imported.   
- 
-As soon as I know the end I inform you. 
- 
-Regards 
- 
- 
-Pascal Garcia 
- 
- 
- 
+--=-rRt/pUDtiCHV8sZCf/Jb
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+
+Hi all,
+ I recently upgraded the kernel on my box and had an awful time getting
+my old initrd image that relies on change_root() to work. I switched to
+Miguel's new script and it works great, though I had to make a couple of
+tweaks:
+
+ The first one is pretty minor. I have /usr set up as a separate
+partition, and debian puts chroot in /usr/sbin. Luckily, chroot is also
+a busybox function, so I simply added /initrd/sbin and /initrd/bin to
+the PATH so that it could find a working chroot after pivot_root occurs.
+
+ The second one is an ugly hack, and I'm definitely open to better ways
+of handling it. After my kernel upgrade (from 2.6.1 to 2.6.4-rc2), the
+major number of the device mapper devices on my system changed. So, I
+added a hack to copy the contents of the ramdisk /dev/mapper directory
+to the /dev/mapper directory on the lvm2 root filesystem, prior to the
+pivot_root. It works for me, but I'd love to hear about better ways of
+handling this.
+
+I've attached a patch to this email, or you can get the updated script
+from:
+
+http://poochiereds.net/svn/lvm2create_initrd
+
+-- 
+Jeff Layton <jtlayton@poochiereds.net>
+
+--=-rRt/pUDtiCHV8sZCf/Jb
+Content-Disposition: attachment; filename=lvm2create_initrd.patch
+Content-Type: text/x-patch; name=lvm2create_initrd.patch; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+
+Index: lvm2create_initrd.sh
+===================================================================
+--- lvm2create_initrd.sh        (revision 70)
++++ lvm2create_initrd.sh        (working copy)
+@@ -77,7 +77,7 @@
+                                                                                
+ # include in the path some dirs from the real root filesystem
+ # for chroot, blockdev
+-PATH="/sbin:/bin:/usr/sbin:/usr/bin:/lib/lvm-200"
++PATH="/sbin:/bin:/usr/sbin:/usr/bin:/lib/lvm-200:/initrd/bin:/initrd/sbin"
+ PRE="initrd:"
+                                                                                
+ echo "$PRE Remounting / read/write"
+@@ -141,6 +141,10 @@
+        return 0
+ fi
+                                                                                
++echo "$PRE Copying /dev/mapper devices to $rootvol"
++cd /dev
++tar cf - ./mapper | ( cd /rootvol/dev; tar xvf - )
++
+ echo "$PRE Umounting /proc"
+ umount /proc
+                                                                                
+
+--=-rRt/pUDtiCHV8sZCf/Jb--
