@@ -1,10 +1,14 @@
-Return-Path: <Steph@Connex.com>
-Message-ID: <B14BF8753E65D211ABCA00104B301EF501C02C87@cairn-gorm.cragtech.com>
-From: Dale Stephenson <Steph@Connex.com>
-Subject: RE: [linux-lvm] Some ideas regarding snapshots (was: Reiserfs, 2.
-	4.7, snapshots w/ 0.9)
-Date: Fri, 27 Jul 2001 10:22:06 -0700
-MIME-Version: 1.0
+Return-Path: <lewis@sistina.com>
+Date: Fri, 27 Jul 2001 12:55:42 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] snapshots & reiserfs
+Message-ID: <20010727125542.B14486@sistina.com>
+References: <Pine.LNX.4.33.0107271727460.16916-100000@greebo.foobarhouse.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0107271727460.16916-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Fri, Jul 27, 2001 at 05:31:38PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,110 +20,75 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Joe Thornber wrote:
-> Writeable snapshot's are easy to implement, I believe someone has
-> already made a patch for the current LVM series (search the list).  I
-> certainly intend putting it into the experimental LVM branch soon.
-> 
-> - Joe
+--hHWLQfXTYDoKhP50
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I haven't tried to apply it with beta8, but this is the writeable snapshot
-patch I used for beta7:
-(All I've used it for is replays and UUID changes, so YMMV.) 
+On Fri, Jul 27, 2001 at 05:31:38PM +0100, James Pattinson wrote:
+> Im sure this is a FAQ but I can't find it.
+>=20
+> I want to be able to use snapshots on my beta8 / reiserfs (stock 2.5.7)
+> system. I can create a snapshot OK, but when I try to mount it I get an
+> error saying we can't replay the logs since we are mounted read only.
 
---- linux/drivers/md/lvm.c.orig	Fri May 18 19:04:30 2001
-+++ linux/drivers/md/lvm.c	Fri May 18 19:30:44 2001
-@@ -1120,8 +1120,8 @@
- 	ulong pe_start;
- 	ulong size = bh->b_size >> 9;
- 	ulong rsector_org = bh->b_rsector;
--	ulong rsector_map;
--	kdev_t rdev_map;
-+	ulong rsector_map, rsector_sav;
-+	kdev_t rdev_map, rdev_sav;
- 	vg_t *vg_this = vg[VG_BLK(minor)];
- 	lv_t *lv = vg_this->lv[LV_BLK(minor)];
- 
-@@ -1228,12 +1228,42 @@
- 		goto out;
- 
- 	if (lv->lv_access & LV_SNAPSHOT) { /* remap snapshot */
--		if (lv->lv_block_exception)
-+	  if (lv->lv_block_exception) {
-+		  if (rw == WRITE || rw == WRITEA) {
-+ 		    /* Start of writeable snapshot portion */
-+ 		    rdev_sav = rdev_map;
-+ 		    rsector_sav = rsector_map;
-+ 
-+ 		    if (!lvm_snapshot_remap_block(&rdev_map,
-+						  &rsector_map,
-+						  pe_start,
-+						  lv)) {
-+		      /* create a new mapping */
-+		      if (lvm_snapshot_COW(rdev_map,
-+					   rsector_map,
-+					   pe_start,
-+					   rsector_sav,
-+					   vg_this,lv)) {
-+			goto bad;
-+		      }
-+		      lvm_write_COW_table_block(vg_this,lv);
-+		      rdev_map = rdev_sav;
-+		      rsector_map = rsector_sav;
-+		      if (!lvm_snapshot_remap_block(&rdev_map,
-+						    &rsector_map,
-+						    pe_start,
-+						    lv)) {
-+			goto bad;
-+		      }
-+		    }
-+		    /* End of writable snapshot portion */
-+		  }
-+		  else
- 			lvm_snapshot_remap_block(&rdev_map, &rsector_map,
- 						 pe_start, lv);
--		else
-+	  }
-+	  else
- 			goto bad;
--
- 	} else if(rw == WRITE || rw == WRITEA) { /* snapshot origin */
- 		lv_t *snap;
- 
+<-snip->
+=20
+> Any ideas? snapshots seem really cool, and i want to play :)
 
-Note that snapshots are created read-only, so you need to change lvchange to
-let you make it read-write:
+You need to make sure you apply the linux-2.4.x-VFS-lock.patch, and also
+apply this:
 
---- LVM_0_9/tools/lvchange.c.orig	Thu Dec 14 11:29:30 2000
-+++ LVM_0_9/tools/lvchange.c	Thu Dec 14 11:36:16 2000
-@@ -329,7 +330,8 @@
-          continue;
-       }
-    
--      if ( lv->lv_access & LV_SNAPSHOT) {
-+      if ( ( lv->lv_access & LV_SNAPSHOT) &&
-+           ( (opt_C) || (opt_a) || (opt_r))) {
-          fprintf ( stderr, "%s -- change on snapshot logical "
-                            "volume \"%s\" not allowed\n", cmd, lv_name);
-          continue;
-@@ -370,7 +372,12 @@
-    
-          if ( doit > 0) {
-             doit_sum++;
--            lv->lv_access = lv_access;
-+            /* don't clear access flags except for LV_WRITE and LV_READ */
-+            if (lv->lv_access & LV_WRITE)
-+               lv->lv_access -= LV_WRITE;
-+            if (lv->lv_access & LV_READ)
-+               lv->lv_access -= LV_READ;
-+            lv->lv_access |= lv_access;
-             if ( opt_v > 0) printf ( "%s -- changing access permissions "
-                                      "of logical volume \"%s\"\n",
-                                      cmd, lv_name);
+--------
+diff -Nru a/fs/reiserfs/super.c b/fs/reiserfs/super.c
+--- a/fs/reiserfs/super.c       Sun Apr 29 20:44:38 2001
++++ b/fs/reiserfs/super.c       Sun Apr 29 20:44:38 2001
+@@ -80,7 +80,7 @@
+     reiserfs_prepare_for_journal(s, SB_BUFFER_WITH_SB(s), 1);
+     journal_mark_dirty(&th, s, SB_BUFFER_WITH_SB (s));
+     reiserfs_block_writes(&th) ;
+-    journal_end(&th, s, 1) ;
++    journal_end_sync(&th, s, 1) ;
+   }
+   s->s_dirt =3D dirty;
+   unlock_kernel() ;
+--------
 
-Dale J. Stephenson
-steph@connex.com
+Apply the patches in this order:
+ - LVM Beta8 patch
+ - VFS-lock patch
+ - the patch included in this email
+
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+VI VI VI The editor of the beast.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--hHWLQfXTYDoKhP50
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7YasepE6/iGtdjLERAuyJAJ9PLrQnoDAi/Xhl1kJA/q8IHAfQ+ACfdIPf
+REYygshrvbHifhpZAA3HDTE=
+=DuXI
+-----END PGP SIGNATURE-----
+
+--hHWLQfXTYDoKhP50--
