@@ -1,40 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8CFfjr06608
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 11:41:45 -0400
-Received: from mwinf0903.wanadoo.fr (smtp9.wanadoo.fr [193.252.22.22])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8CFfdwf025268
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 11:41:39 -0400
-Received: from me-wanadoo.net (localhost [127.0.0.1])
-	by mwinf0903.wanadoo.fr (SMTP Server) with SMTP id CA4EA1800180
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 17:41:33 +0200 (CEST)
-Received: from tangerine.coulon.evette
-	(ADijon-107-1-10-144.w81-249.abo.wanadoo.fr [81.249.82.144])
-	by mwinf0903.wanadoo.fr (SMTP Server) with ESMTP id 09578180016C
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2004 17:41:32 +0200 (CEST)
-Received: from localhost ([127.0.0.1])
-	by tangerine.coulon.evette with esmtp (Exim 4.34) id 1C6WTh-0001X8-ER
-	for linux-lvm@redhat.com; Sun, 12 Sep 2004 17:41:21 +0200
-Received: from tangerine.coulon.evette ([127.0.0.1])
-	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 00616-06 for <linux-lvm@redhat.com>;
-	Sun, 12 Sep 2004 17:41:20 +0200 (CEST)
-Received: from localhost ([127.0.0.1] helo=tangerine)
-	by tangerine.coulon.evette with esmtp (Exim 4.34) id 1C6WTf-0001Wx-7O
-	for linux-lvm@redhat.com; Sun, 12 Sep 2004 17:41:19 +0200
-Date: Sun, 12 Sep 2004 15:41:15 +0000
-From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
-Subject: Re: [linux-lvm] pvmove: ABORTING: Volume group metadata update failed.
-References: <Pine.LNX.4.58.0409120340470.3989@philos.nvg.ntnu.no>
-	<20040912114514.GI1094@agk.surrey.redhat.com>
-	<1094990549l.5671l.0l@tangerine>
-	<20040912153157.GL1094@agk.surrey.redhat.com>
-In-Reply-To: <20040912153157.GL1094@agk.surrey.redhat.com> (from
-	agk@redhat.com on Sun Sep 12 17:31:58 2004)
-Message-Id: <1095003678l.5671l.10l@tangerine>
-MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
-	boundary="=-9mGWSszvkLwIopl/BkJP"; micalg=PGP-SHA1
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8D8wKr31731
+	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 04:58:20 -0400
+Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.199])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8D8wKgv007931
+	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 04:58:20 -0400
+Received: by mproxy.gmail.com with SMTP id 75so265808rnl
+	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 01:58:14 -0700 (PDT)
+Message-ID: <ce9f1f9e04091301587ea0256b@mail.gmail.com>
+Date: Mon, 13 Sep 2004 01:58:14 -0700
+From: Stanley Yue <stanley.yue@gmail.com>
+Subject: Re: [linux-lvm] Unable to create lvm1 configurations
+In-Reply-To: <20040912115653.GK1094@agk.surrey.redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+References: <ce9f1f9e040911233347ca7ec8@mail.gmail.com>
+	<20040912115653.GK1094@agk.surrey.redhat.com>
+Reply-To: Stanley Yue <stanley.yue@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -44,53 +26,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Stanley Yue <stanley.yue@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
---=-9mGWSszvkLwIopl/BkJP
-Content-Type: text/plain; charset=ISO-8859-1; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks Alasdair, it turns out that have to explicitly enable lvm1 support by:
 
-Le 12.09.2004 17:31:58, Alasdair G Kergon a =E9crit=A0:
->On Sun, Sep 12, 2004 at 12:02:22PM +0000, Jean-Luc Coulon (f5ibh)
->wrote:
->> Does running  "vgconvert -M2 vg00"  safe if vg00 is an active VG ?
+./configure --with-lvm1=internal
+
+However, now, I'm seeing the following problem. 
+
+I have installed both lvm1 and lvm2 utilities onto the same system,
+with the lvm-mod and device-mapper from lvm2. I want to test out
+whether lvm2 utilities can detect configurations created from lvm1
+utilities.
+
++ pvcreate fails when I'm using the lvm1 utilities.
+
+[root@DAP-RHLNX1 sbin]# ./vgscan  -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+
+[root@DAP-RHLNX1 sbin]# ./pvcreate /dev/hda7
+pvcreate -- ERROR: VGDA in kernel and lvmtab are NOT consistent;
+please run vgscan
+
++ However, pvcreate succeed when I'm using the lvm2's pvcreate
+
+[root@DAP-RHLNX1 sbin]# pvcreate /dev/hda7
+  Physical volume "/dev/hda7" successfully created
+
+Is there anything wrong with my setup here? Does lvm1 utilities work
+with lvm-mod from lvm2?
+How can I resync the state between the VGDA in kernel and lvmtab?
+Do anyone know how I can get it to work with lvm1's pvcreate?
+
+Thanks,
+
+Stanley
+
+
+
+On Sun, 12 Sep 2004 12:56:53 +0100, Alasdair G Kergon <agk@redhat.com> wrote:
+> On Sat, Sep 11, 2004 at 11:33:06PM -0700, Stanley Yue wrote:
+> > [root@DAP-RHLNX1 tools]# vgcreate -v --metadatatype 1 vg1-lvm2
+> > /dev/hda6 /dev/hda7
+> >   Invalid argument 1
+> >   Error during parsing of command line.
+> 
+> Works for me.
+> 
+> Perhaps support for 'lvm1' metadata was not compiled in, or
+> not loaded from lvm.conf if you configured it shared?
+> 
+> Alasdair
+> --
+> agk@redhat.com
 >
->Normally should be OK: it should detect situations when LVs
->mustn't be active (e.g. when they need renumbering) and gives
->an error instead.
->
-
-Done, it seems to be ok so far, I will see at the next reboot ;-)
-
-[root@tangerine] /home/jean-luc # vgconvert -M2  -v vg00
-    Using volume group(s) on command line
-    Finding volume group "vg00"
-    Archiving volume group "vg00" metadata.
-    Set up physical volume for "/dev/hda2" with 56114661 available =20
-sectors
-    Physical volume "/dev/hda2" successfully created
-    Deleting existing metadata for VG vg00
-    Writing metadata for VG vg00 using format lvm2
-  Volume group vg00 successfully converted
-    Creating volume group backup "/etc/lvm/backup/vg00"
-
->Alasdair
-
-Regards
-
-Jean-Luc
-
-
---=-9mGWSszvkLwIopl/BkJP
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.5 (GNU/Linux)
-
-iD8DBQBBRG4eUdGGXzzGnNARAvTnAKCOyo7BNy25MJ5sPNqEkv+VK7txdACeIAnp
-BFyu0Ux34daJ5E8x+vPQTW8=
-=k1Sq
------END PGP SIGNATURE-----
-
---=-9mGWSszvkLwIopl/BkJP--
