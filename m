@@ -1,11 +1,10 @@
-Date: Mon, 15 Oct 2001 10:52:30 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Tools compile problem, 1.0.1-rc4 on RH6.2 w/kernel 2.4.12
-Message-ID: <20011015105230.C609@tykepenguin.com>
-References: <m3d73rino6.fsf@tigger.plaindog.no>
+Date: Mon, 15 Oct 2001 11:55:09 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Problems after restarting my debian
+Message-ID: <20011015115509.A30655@sistina.com>
+References: <20011011011444.A2302@sky.net> <20011011163029.B8752@sistina.com> <20011012221759.B416@sky.net> <20011014012746.A2072@sky.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m3d73rino6.fsf@tigger.plaindog.no>; from warnckew@online.no on Sat, Oct 13, 2001 at 05:07:21PM +0200
+In-Reply-To: <20011014012746.A2072@sky.net>; from U.Wiederhold@gmx.net on Sun, Oct 14, 2001 at 01:27:46AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,25 +20,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Oct 13, 2001 at 05:07:21PM +0200, Morten Wang wrote:
-> Greetings all,
+On Sun, Oct 14, 2001 at 01:27:46AM +0200, Ulrich Wiederhold wrote:
+> Hi again,
+> all works fine now. Thanks.
+
+What made the difference?
+
+> Uli
 > 
-> gcc -c -pipe -g -O2 -Wall -pg -DDEBUG -I../tools/lib -I../tools -I/usr/local/src/LVM/1.0.1-rc4/tools/lib -o e2fsadm.o e2fsadm.c
-> In file included from ../tools/lvm_user.h:41,
->                  from e2fsadm.c:53:
-> ../tools/lib/liblvm.h:81: malloc.h: Device not configured
-> In file included from e2fsadm.c:53:
-> ../tools/lvm_user.h:48: malloc.h: Device not configured
+> -- 
+> 'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-That's a wierd error. I doubt it's directly related to LVM, it looks to me like 
-the files in /usr/include are not available for some reason. It might be
-something odd like just not having the development packages installed or it
-could be something much stranger.
+-- 
 
-See what /usr/include looks like, it may be a symlink to somewhere else or it
-may contain symlinks to other files that cannot be resolved.
+Regards,
+Heinz    -- The LVM Guy --
 
-It might be worth seeing if you can compile anything else - I would doubt it
-looking at that error.
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-patrick
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
