@@ -1,11 +1,9 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3B6311A7.69D01F70@tls.msk.ru>
-Date: Sat, 28 Jul 2001 23:25:27 +0400
-From: Michael Tokarev <mjt@tls.msk.ru>
+Return-Path: <plamb_98@yahoo.com>
+Message-ID: <20010729024031.86517.qmail@web13406.mail.yahoo.com>
+Date: Sat, 28 Jul 2001 19:40:31 -0700 (PDT)
+From: Pierre Lamb <plamb_98@yahoo.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] AJ's postings
-References: <Pine.LNX.4.33.0107271727460.16916-100000@greebo.foobarhouse.com> <20010727125542.B14486@sistina.com> <20010727125750.M5363@unirez.com> <20010727132910.A20153@sistina.com> <3B61CE2B.F8B4BE1@divsol.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] beta7 help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,44 +16,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I use netscape too (look to headers of this my mail), and
-it displays his mails (and many other mails with digital
-signatures) just like all other normal text/plain messages.
-It only shows one little attachtment at the end, of type
-application/pgp-signature, that it doesn't understand.
-So it is something wrong with your netscape...
+I recomplied my kernel to include lvm modules
+(2.4.3-12), added the items to modules.conf and
+included vgscan and vgchange -ay into my rc.sysinit
+(located just before the line "mounting other
+filesystems"). The log files sate that lvm loaded OK,
+/proc/lvm is there, but no data in there, vgscan show
+it ran and created the file/dirs but not populated.
 
-Regards,
- Michael.
+If I run thise same commands after logging-in they run
+properly and all works.
 
-Jim Cromie wrote:
-> 
-> AJ Lewis wrote:
-> 
-> > On Fri, Jul 27, 2001 at 12:57:50PM -0500, Mark Bainter wrote:
-> > > AJ Lewis [lewis@sistina.com] wrote:
-> > > > You need to make sure you apply the linux-2.4.x-VFS-lock.patch, and also
-> > > > apply this:
-> > > >
-> > > [snip]
-> 
-> sorry to bring the level-of-discourse down, but..
-> 
-> AJ,
-> 
-> all your recent postings (that I still have, back to last thurs)  are all in
-> attachements - no body.
-> I cant get netscape messenger to actually do inline-format, at least for your
-> text/plain attachment.
-> 
-> I can read it either by;
-> a- replying-to  ( seems to inline properly )
-> b-  grab attachement pane, right-click attachment, select open
-> 
-> its probably just me, but if theres some attachment options at your disposal,
-> Id appreciate it.
-> 
-> tia,
-> jimc
+Why wouldn't it run during boot-up????
+
+Pierre
+
+__________________________________________________
+Do You Yahoo!?
+Make international calls for as low as $.04/minute with Yahoo! Messenger
+http://phonecard.yahoo.com/
