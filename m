@@ -1,11 +1,11 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Wed, 25 Jul 2001 21:45:33 +0200
+Date: Wed, 25 Jul 2001 21:48:00 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Reiserfs, 2.4.7, snapshots w/ 0.9
-Message-ID: <20010725214533.C27765@sistina.com>
-References: <20010725103640.J5363@unirez.com> <01072511465701.00921@exodus>
+Subject: Re: [linux-lvm] pvversion failure
+Message-ID: <20010725214800.D27765@sistina.com>
+References: <Pine.LNX.4.33.0107251611250.9570-100000@greebo.foobarhouse.com> <Pine.LNX.4.33.0107251710580.10117-100000@greebo.foobarhouse.com>
 Mime-Version: 1.0
-In-Reply-To: <01072511465701.00921@exodus>; from iain@sandon.ca on Wed, Jul 25, 2001 at 11:46:57AM -0400
+In-Reply-To: <Pine.LNX.4.33.0107251710580.10117-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Wed, Jul 25, 2001 at 05:11:42PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,67 +21,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jul 25, 2001 at 11:46:57AM -0400, Iain Campbell wrote:
-> On Wednesday 25 July 2001 11:36, you wrote:
-> > I'm using LVM on a couple of our production systems, and I'm very
-> > happy with it.  It's been working very well for us.  However, we
-> > have a very large database and backing it up has become problematic.
+On Wed, Jul 25, 2001 at 05:11:42PM +0100, James Pattinson wrote:
+> Oops - hate to reply to my own message, but I just noticed the -1 in my
+> pvversion command. To clarify, I get the same behaviour if I use -2 as
+> well.
+
+Yes, I guessed that already.
+
+My guess is, that the long device pathes trigger a regex bug we didn't hit
+during our tests.
+
+Could you switch devfs of and retry pvversion in order
+to work around that assumed flaw?
+
+> 
+> James
+> 
+> On Wed, 25 Jul 2001, James Pattinson wrote:
+> 
+> > Hi
 > >
-> > So, naturally, I began looking into using LVM's snapshot feature.
-> > The filesystem the database rests on is a reiserfs partition.
-> > Creating the snapshot volume (acc to the directions in the howto)
-> > works fine, but when I try to actually mount it I get:
+> > Trying to upgrade from beta7 to beta8. I have 2 PVs, neither of which are
+> > empty, that belong to a single VG, vg00.
 > >
-> > $ sudo mount -t reiserfs -oro /dev/main/db_backup /mnt/dbbackup
-> > mount: wrong fs type, bad option, bad superblock on /dev/main/db_backup,
-> >        or too many mounted file systems
+> > When trying to upgrade the PVs to version 2, I get:
 > >
-> > checking dmesg reveals:
-> > reiserfs: checking transaction log (device 3a:04) ...
-> > clm-2076: device is readonly, unable to replay log
-> > Replay Failure, unable to mount
-> > reiserfs_read_super: unable to initialize journal space
+> > ./pvversion -1 /dev/ide/host2/bus0/target0/lun0/part1
+> > pvversion -- created dummy LV "/dev/vg00/pvversionpart19519" on empty PV
+> > "/dev/ide/host2/bus0/target0/lun0/part1"
+> > pvversion -- ERROR: pv_display() failed again
+> > pvversion -- giving up on "/dev/ide/host2/bus0/target0/lun0/part1"
 > >
-> > Ok, so I did some searching and found some people back in the first
-> > part of this year had a similar problems but none of the solutions
-> > really applied to me fwict.  They all appeared to be using a
-> > previous version of the kernel, or of the lvm code.  I looked through
-> > the changelog and did see a few notations of fixes since 0.9 related
-> > to the snapshot code.  But, I'm kind of wary about putting a beta
-> > on my production systems with something this critical, w/out knowing
-> > for sure that it will fix the problem.
+> > [root@greebo tools]# lvmdiskscan | grep LVM
+> > lvmdiskscan -- /dev/ide/host2/bus0/target0/lun0/part1  [      16.02 GB]
+> > Primary  LVM partition [0x8E]
+> > lvmdiskscan -- /dev/ide/host2/bus1/target0/lun0/part1  [      16.02 GB]
+> > Primary  LVM partition [0x8E]
+> > lvmdiskscan -- 2 LVM physical volume partitions
+> > [root@greebo tools]#
 > >
-> > So, is the problem in lvm?  reiserfs?  Or is it just me?  Is there
-> > any other information I can give that might be helpfull in figuring
-> > out the problem?  Just let me know.
+> > It seems the pvversion program thinks my PV is empty, and tries to create
+> > a dummy LV on it. But of course it's not empty.
 > >
-> > TIA
+> > I created my PVs, VG and LVs using beta7 kernel and tools not too long
+> > ago. Im using devfs as you can see.
+> >
+> > Any ideas?
+> >
+> > James
+> >
 > > _______________________________________________
 > > linux-lvm mailing list
 > > linux-lvm@sistina.com
 > > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> Quote from Teigland and Mauelshagens's Volume Manager whitepaper:
-> 
-> "If a snapshot is simply taken of a file system volume, the resulting copy of 
-> the file system will look as if the system has crashed.  When the snapped 
-> file system is then mounted read only it would appear to need an fsck, in the 
-> case of a non journalled file system, or journal recovery in the case of  a 
-> journalled file system. These operations (fsck or journal replay) require 
-> writing to  the snapshot ligical volume, which is not allowed."
-> 
-> There's more, get the whole thing from sistina.com/lvm. Look for 
-> vmil_freenix.pdf.
-> 
-> Question to Heinz - what is the status of getting file system snapshot hooks 
-> into the kernel??
-
-Have forwarded that to Chris Mason who created the VFS interface.
-
-> 
-> iain
-> 
+> >
 > 
 > _______________________________________________
 > linux-lvm mailing list
