@@ -1,12 +1,12 @@
 Return-Path: <holbe@rz.tu-ilmenau.de>
-Date: Thu, 7 Jun 2001 18:39:58 +0200
+Date: Thu, 7 Jun 2001 18:41:17 +0200
 From: "Mario 'BitKoenig' Holbe" <Mario.Holbe@rz.tu-ilmenau.de>
-Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-Message-ID: <20010607183958.D440@rz.tu-ilmenau.de>
-References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com> <20010607104301.A29848@stocks.pillory.com> <20010607182636.H3232@jensbenecke.de>
+Subject: Re: [linux-lvm] logical volumes extending beyond 1 machine
+Message-ID: <20010607184117.E440@rz.tu-ilmenau.de>
+References: <3B1BD4B8.A2C1E9A2@korn.ch> <Pine.SOL.3.96.1010606170637.27045C-100000@design.lbl.gov> <20010607182720.I3232@jensbenecke.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010607182636.H3232@jensbenecke.de>
+In-Reply-To: <20010607182720.I3232@jensbenecke.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,26 +22,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jun 07, 2001 at 06:26:36PM +0200, Jens Benecke wrote:
-> On Thu, Jun 07, 2001 at 10:43:02AM -0500, Jack McKinney wrote:
-> > Big Brother tells me that Steven Lembark wrote:
-> > > Use separate mount points for /var, /usr & /home.  This keeps root down
-> > cd / ; mv tmp tmp.old ; ln -s /var/tmp .  reboot rm -rf /tmp.old
+On Thu, Jun 07, 2001 at 06:27:20PM +0200, Jens Benecke wrote:
+> On Wed, Jun 06, 2001 at 05:08:47PM -0700, Damon Fasching wrote:
+> > Is it possible using LVM define a logical volume which includes disks from
+> > more than 1 machine?
+> I don't think so. You want NFS for that, or the Mosix GFS (global file
 
-Windows user, eh? :)
+What's with NBD?
 
-> er... I wouldn't do that (at least not on a Debian system). 
-> Usually /var/tmp is _assumed_ to be only root-writeable, so all sorts of
-
-At least on a Debian system, /var/tmp is 1777 - just like /tmp.
-
-But this 'solution' can cause some other problems in the boot
-stage - /var isn't mounted there already, but maybe something
-tries to write tmp files.
-
-So - better create a /tmp filesystem as well - this doesnt harm,
-because the /tmp mount point is a directory where processes can
-write to, even when there's nothing mounted on.
 
 
 regards,
