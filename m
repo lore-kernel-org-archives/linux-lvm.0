@@ -1,11 +1,11 @@
-Date: Thu, 30 Aug 2001 10:37:40 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
+Date: Thu, 30 Aug 2001 12:09:29 +0100
 Subject: Re: [linux-lvm] A Caldera related bug?
-Message-ID: <20010830103740.C3831@tykepenguin.com>
-References: <OF8D6ACD21.34A36C6E-ON87256AB7.007C475A@sc.blm.gov> <20010830090848.A27345@caldera.de> <20010830032321.I541@turbolinux.com>
+Message-ID: <20010830120929.A541@btconnect.com>
+References: <OF8D6ACD21.34A36C6E-ON87256AB7.007C475A@sc.blm.gov> <20010830090848.A27345@caldera.de> <20010830032321.I541@turbolinux.com> <20010830114613.B12766@caldera.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010830032321.I541@turbolinux.com>; from adilger@turbolabs.com on Thu, Aug 30, 2001 at 03:23:21AM -0600
+In-Reply-To: <20010830114613.B12766@caldera.de>; from hch@caldera.de on Thu, Aug 30, 2001 at 11:46:13AM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,20 +21,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Aug 30, 2001 at 03:23:21AM -0600, Andreas Dilger wrote:
+On Thu, Aug 30, 2001 at 11:46:13AM +0200, Christoph Hellwig wrote:
+> On Thu, Aug 30, 2001 at 03:23:21AM -0600, Andreas Dilger wrote:
+> > In the end, what is really needed is a well-defined LVM API between
+> > kernel and user-space that doesn't pass this kind of stuff.
 > 
-> >  /* remap physical sector/rdev pairs including hash */
-> >  typedef struct lv_block_exception_v1 {
-> > +#ifdef __KERNEL__
-> >  	struct list_head hash;
-> > +#else
-> > +	uint64_t hash;			/* XXX b0rken on 64bit plattforms */
-> > +#endif
-> 
-> Maybe the non-kernel part can be considered as two void * pointers?
-> I'm not sure if that will work on sparc64, if the kernel and user
-> pointer sizes are not the same.
+> Completly agreed.
 
-It should be OK because the ioctl32 layer fixes it up anyway.
+I think every one is aware of this, but we can't change the interface during
+the 2.4 series.  If you're interested check out the LVM2 module and look
+at the code in driver/device-mapper (dm.h is a good intro).
 
-Patrick
+- Joe
