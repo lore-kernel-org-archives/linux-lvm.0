@@ -1,12 +1,7 @@
-From: Wayne Topa <wtopa@dmcom.net>
-Subject: Re: [linux-lvm] debian package
-Message-Id: <20020213025236.GA26408@dmcom.net>
-References: <20020212232032.GB2993@gmx.de>
-    <200202130006.AA188608817@fb0442.mathematik.tu-darmstadt.de>
-    <20020213002332.GB8060@gmx.de>
+From: Turbo Fredriksson <turbo@bayour.com>
+Message-Id: <87vgd1935x.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020213002332.GB8060@gmx.de>
+Subject: [linux-lvm] How big is a PV?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,20 +12,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 12 21:10:02 2002
+Date: Wed Feb 13 02:50:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Wiktor Wodecki(wodecki@gmx.de) is reported to have said:
-> hm. Well, I search with apt-cache, dpkg -s dpkg -L and on the debian.org
-> webpage...anyway, forget that then :-)
-> 
-Wiktor
+One of my PV's have krashed. I have a replacement disk, but
+I don't know exactly how big the PV was, so that I can recreate
+the PV...
 
-  It's not in woody so maybe that is in the sid (unstable) branch.(?)
+'vgcfgrestore -ll' only shows me '15.55 GB', so that's useless...
 
--- 
-Whom computers would destroy, they must first drive mad.
-_______________________________________________________
+World Trade Center Qaddafi Semtex tritium quiche Marxist ammunition
+Peking smuggle arrangements Serbian North Korea Iran Cocaine KGB
+[See http://www.aclu.org/echelonwatch/index.html for more about this]
