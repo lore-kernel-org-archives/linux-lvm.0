@@ -1,9 +1,12 @@
-Return-Path: <smcconnell@clark.edu>
-Date: Thu, 21 Jun 2001 14:54:41 -0700 (PDT)
-From: Sean McConnell <smcconnell@clark.edu>
-Message-ID: <Pine.LNX.4.30.0106211447500.2317-100000@cs.clark.edu>
-MIME-Version: 1.0
-Subject: [linux-lvm] pvcreate fails on alpha 2.4.5
+Return-Path: <weissel@netcologne.de>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
+Date: Fri, 22 Jun 2001 02:59:26 +0200
+Subject: Re: [linux-lvm] What is a good stripe size?
+Message-ID: <20010622025926.B3938@tiger.bigcats.invalid>
+References: <134718885.992837796416.JavaMail.root@boots> <20010618123318.A31606@tiger.bigcats.invalid> <20010621094645.A300@gambit>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010621094645.A300@gambit>; from thornber@btconnect.com on Thu, Jun 21, 2001 at 09:46:45AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,60 +18,54 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm running redhat7<scoff scoff> on an Alpha lx164, I
-compiled the 2.4.5 kernel for it, which says it has lvm
-091b2, and got the utils.  Now when I go to make my pv's
-it barfs on me like it can't read what the partition id's
-are..check it:
+Joe Thornber (thornber@btconnect.com) wrote 33 lines:
+> On Mon, Jun 18, 2001 at 12:33:18PM +0200, Wolfgang Weisselberg wrote:
 
-# fdisk -l /dev/sdb
+> > First, we need a fool^Wcrashproof, completely interruptible
+> > pvmove for active, being currently read from and written
+> > to LVs.
 
-Disk /dev/sdb: 134 heads, 62 sectors, 1019 cylinders
-Units = cylinders of 8308 * 512 bytes
+> I hope this is already there.  Do your experiences suggest it isn't
+> working for active pv's ?
 
-   Device Boot    Start       End    Blocks   Id  System
-/dev/sdb1             1      1019   4232895   8e  Linux LVM
+man pvmove:
+[...]
+       You  can  move  physical  extents in use but make sure you
+       have an current backup in case of  a  system  crash  while
+       moving!!!
 
+Now, this does *not* look like *crashproof*, does it?
+This is from the CVS, btw, dated 2001-06-10.
 
-# pvcreate -dv /dev/sdb1
-<1> lvm_get_iop_version -- CALLED
-<22> lvm_check_special -- CALLED
-<22> lvm_check_special -- LEAVING
-<1> lvm_get_iop_version -- AFTER ioctl ret: 0
-<1> lvm_get_iop_version -- LEAVING with ret: 10
-pvcreate -- locking logical volume manager
-<1> lvm_lock -- CALLED
-<22> lvm_check_special -- CALLED
-<22> lvm_check_special -- LEAVING
-<1> lvm_lock -- LEAVING with ret: 0
-pvcreate -- checking physical volume name "/dev/sdb1"
-<1> pv_check_name -- CALLED with "/dev/sdb1"
-<22> lvm_check_chars -- CALLED with name: "/dev/sdb1"
-<22> lvm_check_chars -- LEAVING with ret: 0
-<22> lvm_check_dev -- CALLED
-<22> lvm_check_dev -- LEAVING with ret: 1
-<1> pv_check_name -- LEAVING with ret: 0
-pvcreate -- getting physical volume size
-pvcreate -- checking partition type
-pvcreate -- invalid partition type 0x1 for "/dev/sdb1" (must be 0x8e)
+And I am unwilling to have a tool run automatically (at
+night?) that - upon a crash - can destroy whole partitions.
+I could live with a 'copy, repeat if original was changed,
+lock LE, update maps on HD, unlock LE (on new PE)' thing.
 
-<1> lvm_unlock -- CALLED
-<1> lvm_unlock -- LEAVING with ret: 0
+I have used pmove about once in ernest, and my, moving 35 Gigs
+over to a new HD takes time!  And that does not look like a
+HD bottleneck...
 
+> This is exactly what we're planning for the next version of LVM.  The
+> moving of extents will be performed by the kernel rather than in user
+> space, the ioctl interface will allow the user to specify a list of pe
+> movements.
 
-it doesn't seem to matter what what the partition type really is
-it always comes up sayin it's like fat12 0x1, even went as far
-as rebooting to make sure, but to no avail.
-Suggestions would be nice, i'd like some lvm since my users
-keep takin up more room.
+Sounds interesting.
 
+> > Then the rest is simply ripping a balancing algorithm from
+> > somewhere and slap it into a wrapper.  Data aquisition is
+> > already done via lvmsadc/lvmsar.
 
--- 
-Sean McConnell, smcconnell@clark.edu
-Unix System Administrator
-Computer Technology/Science
-Clark College
+> Yes, a little Perl script to process the usage stats and then create a
+> new map.
+
+There it might be interesting to know which blocks are accessed
+in sequence.  Then again it might not, I am not an expert
+there and haven't done the maths for that.
+
+-Wolfgang
