@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM and extending/reducing striped LV's
-Message-ID: <20020529105302.B31380@sistina.com>
-References: <Pine.LNX.4.21.0205291016260.6798-100000@kenny.worldonline.se>
+Subject: Re: [linux-lvm] ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "vg1" from physical volume(s)
+Message-ID: <20020529105556.C31380@sistina.com>
+References: <87wutolm26.fsf@papadoc.bayour.com>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.21.0205291016260.6798-100000@kenny.worldonline.se>; from me@vger.org on Wed, May 29, 2002 at 10:21:09AM +0200
+In-Reply-To: <87wutolm26.fsf@papadoc.bayour.com>; from turbo@bayour.com on Tue, May 28, 2002 at 10:21:37AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,31 +14,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 29 03:57:02 2002
+Date: Wed May 29 04:00:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 29, 2002 at 10:21:09AM +0200, me@vger.org wrote:
-> After scaning thru the mailing list archive and reading some FAQs i can
-> find information that <subject> are not available... atleast with older
-> versions of lvm. My question is, can this be done now? Im using lvm
-> 1.1-rc2 right now on 2.4.18. If anyone know how to do this with just lvm
-> id be thankfull if you could drop me a mail with some pointers.
+Which LVM (tools+driver) version?
+What exactly happened before vgscan failed?
 
-No, column extension beyond PV limits is not supported in LVM1.
-
-You can have it with LVM2 ~June.
-
+On Tue, May 28, 2002 at 10:21:37AM +0200, Turbo Fredriksson wrote:
+> Here we go again... Second or third time I lost my LVM... :(
+> What's wrong this time?
 > 
-> If this can not be done I have to go with the md RAID0/LVM layout to boost
-> preformence from a linar lvm only layout.
+> ----- s n i p -----
+> [papadoc.root]# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume group "vg1" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
 > 
-> Thanks to anyone that replys =)
-> ps. include me in the reply because im not on the list.
+> [papadoc.root]# vgchange -a y
+> vgchange -- no volume groups found
 > 
-> 
+> [papadoc.root]# pvscan -u
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/sdb1 " with UUID "ofZCeT-O16H-Df0h-4KoB-xQhm-lc24-67dZvk"  is associated to unknown VG "vg1" (run vgscan)
+> pvscan -- inactive PV "/dev/sdc1 " with UUID "xN0MF7-xKU0-Uk3L-g8Pw-0YfH-fS3V-zgFA66"  is associated to unknown VG "vg1" (run vgscan)
+> pvscan -- inactive PV "/dev/sdd10" with UUID "5V0XNB-gA87-OU66-1iza-cvsz-xQ2q-6DEbyH"  is associated to unknown VG "vg1" (run vgscan)
+> pvscan -- inactive PV "/dev/sde1 " with UUID "Bdm7PX-50Dq-hC6R-yXmv-DDq1-n6Nx-4ohaKK"  is associated to unknown VG "vg1" (run vgscan)
+> pvscan -- inactive PV "/dev/sdf1 " with UUID "QnqfyA-fOTB-J1Pp-4be5-t6QU-bGjS-i2BKf2"  is associated to unknown VG "vg1" (run vgscan)
+> pvscan -- total: 5 [34.84 GB] / in use: 5 [34.84 GB] / in no VG: 0 [0]
+> ----- s n i p -----
+> -- 
+> ammonium assassination supercomputer $400 million in gold bullion DES
+> jihad Iran kibo Peking pits killed ammunition Marxist 767 subway
+> [See http://www.aclu.org/echelonwatch/index.html for more about this]
 > 
 > _______________________________________________
 > linux-lvm mailing list
