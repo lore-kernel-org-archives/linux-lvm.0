@@ -1,10 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
+From: Wichert Akkerman <wichert@cistron.nl>
 Subject: Re: [linux-lvm] Just for information ....
-Message-ID: <20011120125632.Z1308@lynx.no>
-References: <3BFAA389.24AAB2A1@LTUtech.com>
+Message-ID: <20011120214104.A24005@cistron.nl>
+References: <3BFAA389.24AAB2A1@LTUtech.com> <20011120125632.Z1308@lynx.no>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3BFAA389.24AAB2A1@LTUtech.com>; from Igor.Dumaire@LTUtech.com on Tue, Nov 20, 2001 at 07:40:09PM +0100
+In-Reply-To: <20011120125632.Z1308@lynx.no>; from adilger@turbolabs.com on Tue, Nov 20, 2001 at 12:56:32PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 13:55:02 2001
+Date: Tue Nov 20 14:39:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Igor Dumaire <Igor.Dumaire@LTUtech.com>
-Cc: list LVM <linux-lvm@sistina.com>
+To: list LVM <linux-lvm@sistina.com>
+Cc: Igor Dumaire <Igor.Dumaire@LTUtech.com>
 
-On Nov 20, 2001  19:40 +0100, Igor Dumaire wrote:
-> I have 4 disks : 1 for system and 3 for data with LVM (only 1 vg).
-> 
-> If my system drive burn, Can I read my datas with an other system compiled
-> with LVM ?
+Previously Andreas Dilger wrote:
+> Yes.  You will need to do a vgscan to find the new disks.  Hopefully they
+> will not have the same VG name as another VG on that system.
 
-Yes.  You will need to do a vgscan to find the new disks.  Hopefully they
-will not have the same VG name as another VG on that system.
+What if they do?
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+Wichert.
+
+-- 
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
