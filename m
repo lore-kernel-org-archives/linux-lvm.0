@@ -1,12 +1,11 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Thu, 11 Jan 2001 17:20:15 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] nagging about the LVM usage survey
-Message-ID: <20010111172015.C15903@srv.t-online.de>
-References: <20010111083114.A381363@brule.borg> <3A5DC9B5.15B3C7DA@infologic.fr>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3A5DC9B5.15B3C7DA@infologic.fr>; from bs@infologic.fr on Thu, Jan 11, 2001 at 03:56:54PM +0100
+Return-Path: <seawolf@attglobal.net>
+Message-ID: <3A5DDFC9.94425FB8@attglobal.net>
+Date: Thu, 11 Jan 2001 11:31:05 -0500
+From: Les Hazelton <seawolf@attglobal.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Oops in 2.4.0 (@ LVM)
+References: <200101110418.f0B4Ija09191@webber.adilger.net> <Pine.LNX.4.31.0101110437310.27729-100000@fogarty.jakma.org> <20010111164504.C15726@srv.t-online.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,56 +17,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Thu, Jan 11, 2001 at 03:56:54PM +0100, Benoit SERRA wrote:
->=20
->=20
-> Matthew O'Keefe a =EF=BF=BDcrit :
-> >=20
-> > If more LVM users and developers fill these out and tell
-> > us what they are doing with LVM, and what their immediate needs are,
-> > we can better understand where to go in the future.
->=20
-> I think that the immediate needs of most of the people is a working
-> vgextend
-> It's the most important feature of LVM, and it doesn't work !
-> Great !
+"Heinz J. Mauelshagen" wrote:
+> 
+-----snip ----
+> Feel free to get the actual code from our CVS archive with:
+> 
+> "cvs -d :pserver:cvs@cvs.globalfilesystem.org:/data/cvs checkout -r LVM_0-9-patches LVM"
+> 
+---- /snip ---
 
-As pointed out on the list everybody is invited to get the actual
-code from our CVS repository with:
+I gave it a try but was rejected for lack of password.  What is the
+secret word.
 
-"cvs -d :pserver:cvs@cvs.globalfilesystem.org:/data/cvs checkout -r LVM_0-9=
--patches LVM"
+-- 
 
-It contains the fix you are requesting.
+Good Journey, longevity and prosperity to all
 
-Our 0.9.1 beta release will take place on friday or monday for people
-who are able to wait.
-
-Thanks for your understanding.
-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
---=20
-
-Regards,
-Heinz    -- The LVM Guy --
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+Les Hazelton
