@@ -1,10 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] XFS with LVM
-Message-ID: <20011105143155.E25559@sistina.com>
-References: <E823FA92099E6C4C854CE791DFA1A3D265BA56@got02.vikingtelecom.com> <20011105132709.C1568@sky.net>
-Mime-Version: 1.0
-In-Reply-To: <20011105132709.C1568@sky.net>; from U.Wiederhold@gmx.net on Mon, Nov 05, 2001 at 01:27:09PM +0100
-Content-Transfer-Encoding: quoted-printable
+From: Fabiano Fantini Vitale <ffv@conectiva.com.br>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <20011105142032.3919438C40@perninha.conectiva.com.br>
+Subject: [linux-lvm] trying to pvcreate
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,64 +13,139 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  5 07:35:02 2001
+Date: Mon Nov  5 09:12:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Mon, Nov 05, 2001 at 01:27:09PM +0100, Ulrich Wiederhold wrote:
-> * Turbo Fredriksson <turbo.fredriksson@viking-telecom.com> [011105 10:4=
-3]:
-> > The LVM consists of the following devices:
-> >=20
-> > 	Device	Size (MB)	Type
-> > 	/dev/sdb1	 5.88 GB	0x83
-> > 	/dev/sdc1	 1008 MB	0x83
-> > 	/dev/sdd10	 2.37 GB	0x83
-> > 	/dev/sde1	 8.51 GB	0x83
-> > 	/dev/sdf1	17.09 GB	0x83
-> > 	/dev/sdg1	15.55 GB	0x83
->=20
-> Hello,
-> I am not very good with lvm, but the fs-type on lvm-drives should be
-> /dev/hda2            22     39761  20028960   8e  Linux LVM
->                                               ^^
->=20
-> Isn=B4t it?
+Hi,
 
-Exactly.
-It is there as a security constraint against pvcreating other partitions.
+when I  try to perform a pvcreate a segmentation fault error 
+occur. I'm using kernel 2.4.12-BOOT, iop10 and lvm-1.0.1
+thanks for any help
 
-> Uli
->=20
-> --=20
-> 'The box said, 'Requires Windows 95 or better', so i installed Linux - =
-TKK 5
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+/* logs */
+pvcreate /dev/hda3
 
---=20
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+<1> lvm_get_iop_version -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_get_iop_version -- AFTER ioctl ret: 0
+<1> lvm_get_iop_version -- LEAVING with ret: 10
+<1> lvm_lock -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_lock -- LEAVING with ret: 0
+<1> pv_check_name -- CALLED with "/dev/hda3"
+<22> lvm_check_chars -- CALLED with name: "/dev/hda3"
+<22> lvm_check_chars -- LEAVING with ret: 0
+<22> lvm_check_dev -- CALLED
+<333> lvm_check_partitioned_dev -- CALLED
+<4444> lvm_get_device_type called
+<4444> lvm_get_device_type leaving with 0
+<333> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<22> lvm_check_dev -- LEAVING with ret: 1
+<1> pv_check_name -- LEAVING with ret: 0
+<1> pv_get_size -- CALLED with /dev/hda3 and 0xbffffa48
+<22> lvm_dir_cache -- CALLED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda1
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda2
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+<333> lvm_add_dir_cache -- CALLED with /dev/hda2
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
+<22> lvm_dir_cache -- LEAVING with ret: 3
+<22> lvm_dir_cache_find -- CALLED with /dev/hda3
+<333> pv_check_name -- CALLED with "/dev/hda3"
+<4444> lvm_check_chars -- CALLED with name: "/dev/hda3"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> pv_check_name -- LEAVING with ret: 0
+<333> lvm_dir_cache -- CALLED
+<333> lvm_dir_cache -- LEAVING with ret: 3
+<22> lvm_dir_cache_find -- LEAVING with entry: -1
+<22> pv_get_dev_size -- CALLED with /dev/hda3 and 0xbffffa48
+<22> pv_get_dev_size -- LEAVING with ret: 0
+<1> pv_get_size -- LEAVING with ret: 0
+<1> pv_create_kdev_t -- CALLED with "/dev/hda3"
+<22> pv_check_name -- CALLED with "/dev/hda3"
+<333> lvm_check_chars -- CALLED with name: "/dev/hda3"
+<333> lvm_check_chars -- LEAVING with ret: 0
+<333> lvm_check_dev -- CALLED
+<4444> lvm_check_partitioned_dev -- CALLED
+<55555> lvm_get_device_type called
+<55555> lvm_get_device_type leaving with 0
+<4444> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<333> lvm_check_dev -- LEAVING with ret: 1
+<22> pv_check_name -- LEAVING with ret: 0
+<1> pv_create_kdev_t -- LEAVING with ret: 303
+<1> lvm_check_partitioned_dev -- CALLED
+<22> lvm_get_device_type called
+<22> lvm_get_device_type leaving with 0
+<1> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<1> lvm_partition_count -- CALLED for 0x303
+<22> lvm_get_device_type called
+<22> lvm_get_device_type leaving with 0
+<1> lvm_partition_count -- LEAVING with ret: 16
+<1> lvm_dir_cache -- CALLED
+<1> lvm_dir_cache -- LEAVING with ret: 3
+<1> pv_read -- CALLED with /dev/hda3
+<22> pv_check_name -- CALLED with "/dev/hda3"
+<333> lvm_check_chars -- CALLED with name: "/dev/hda3"
+<333> lvm_check_chars -- LEAVING with ret: 0
+<333> lvm_check_dev -- CALLED
+<4444> lvm_check_partitioned_dev -- CALLED
+<55555> lvm_get_device_type called
+<55555> lvm_get_device_type leaving with 0
+<4444> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<333> lvm_check_dev -- LEAVING with ret: 1
+<22> pv_check_name -- LEAVING with ret: 0
+<22> pv_read_already_red -- CALLED with PV /dev/hda3
+<22> pv_read_already_red -- LEAVING with ret: 0
+<22> pv_flush -- CALLED to flush /dev/hda3
+<333> pv_check_name -- CALLED with "/dev/hda3"
+<4444> lvm_check_chars -- CALLED with name: "/dev/hda3"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<4444> lvm_check_dev -- CALLED
+<55555> lvm_check_partitioned_dev -- CALLED
+<666666> lvm_get_device_type called
+<666666> lvm_get_device_type leaving with 0
+<55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+<4444> lvm_check_dev -- LEAVING with ret: 1
+<333> pv_check_name -- LEAVING with ret: 0
+<22> pv_flush -- LEAVING with ret: 0
+<1> pv_read -- going to read /dev/hda3
+<1> pv_read -- LEAVING with ret: -282
+<1> pv_check_active -- CALLED
+Segmentation Fault
