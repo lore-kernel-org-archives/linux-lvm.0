@@ -1,8 +1,11 @@
-Message-ID: <3FBA6614.357049F8@inostor.com>
-From: "James G. Sack (jim)" <jsack@inostor.com>
+From: Henric Andersson <ha@tactel.se>
+Subject: Re: [linux-lvm] Performance problem.
+References: <3FB8F8A1.1060004@clin.ucl.ac.be> <001001c3ae2d$72035c10$6402000a@gasaraki> <20031119010115.7277792e.neuron@hollowtube.mine.nu>
+In-Reply-To: <20031119010115.7277792e.neuron@hollowtube.mine.nu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Inconsistent LVM code in 2.4.23-rc1
+Content-Disposition: inline
+Message-Id: <200311191001.12088.ha@tactel.se>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,68 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 19 07:22:15 2003
+Date: Wed Nov 19 07:22:17 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Mauelshagen@Sistina.com
+To: linux-lvm@sistina.com
 
-[Hope this reaches the right place -- I'm not on any list  -- please
-reply/cc direct]
+On Wednesday 19 November 2003 01.01, neuron wrote:
+> hmm... could it be the reboot solved it?  
 
-Linux kernel 2.4.23-rc1 has LVM patched code that differs from LVM 1.0.8
-(as well as cvs HEAD) from sistina.com
+Don't think so, I've rebooted before (poweroutage, etc) and that didn't do 
+anything for performance.
 
-Q: is the 2.4.23 code OK?
-  if yes, should it be in cvs
-  if no, should somebody tell Marcelo?
+> Hasn't for me, you could try
+> running the box for a while, then testing, to see if it needs a reboot
+> every now and then or something like that.
 
+I'm going to do just that. It really bothers me that this happened. Sure, it's 
+nice to see that its fast, but I really want to know WHY :)
 
+> "(unless the moving and jerking of cables somehow fixed a problem I didn't
+> know of)" could be noise on the cables I suppose, though I doubt that,
+> especially considering I'm experiencing the same thing, and I've replaced
+> the cables fairly recently.
 
-In essance, there are extra calls to vfree(snap_lv_ptr) at 4 places in
-lvm_do_vg_create() by virtue of a "goto copy_fault" --AND-- what looks
-like a correction to vg_ptr->pe_allocated 
+Exactly ... so I think we can rule thatone out too. One thing that might be 
+the reason behind this improvement on performance is what version of the 
+software one is using. But I doubt that I would see a 10x improvement because 
+of any updates. Ohwell, I'll try and run one test per week and see if the 
+figures change.
 
-A simple diff looks like
-------------------------
-1587,1588c1587
-< 	if (minor >= ABS_MAX_VG) {
-< 		kfree(vg_ptr);
----
-> 	if (minor >= ABS_MAX_VG)
-1590d1588
-< 	}
-1658c1656,1657
-< 				goto copy_fault;
----
-> 				lvm_do_vg_remove(minor);
-> 				return -EFAULT;
-1669c1668,1669
-< 				goto copy_fault;
----
-> 				lvm_do_vg_remove(minor);
-> 				return -EFAULT;
-1679c1679,1680
-< 			goto copy_fault;
----
-> 			lvm_do_vg_remove(minor);
-> 			return -EFAULT;
-1682c1683,1684
-< 			goto copy_fault;
----
-> 			lvm_do_vg_remove(minor);
-> 			return -EFAULT;
-1697,1700d1698
-< copy_fault:
-< 	lvm_do_vg_remove(minor);
-< 	vfree(snap_lv_ptr);
-< 	return -EFAULT;
-2597c2595
-< 		vg_ptr->pe_allocated -= old_lv->lv_allocated_le;
----
-> 		vg_ptr->pe_allocated -= old_lv->lv_allocated_snapshot_le;
-2598a2597
-> 		old_lv->lv_allocated_snapshot_le = new_lv->lv_allocated_le;
----------------------------------------------------------------------------
-
-Regards,
-..jim
+/Henric
