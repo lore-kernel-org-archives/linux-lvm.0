@@ -1,29 +1,25 @@
-From: TORSTEN.NEUMANN@DLH.DE
-Message-ID: <13FEA0BEF75ED31192D50000F6CCC5E92AE049@XNT-FRABASE-6>
-Subject: AW: [linux-lvm] Installieren von LVM Systemen
-Date: Tue, 30 Nov 1999 10:49:08 +0100
+Message-ID: <3843A41F.3B260F2F@geotec.net>
+Date: Tue, 30 Nov 1999 04:17:03 -0600
+From: Eric Smith <seric@geotec.net>
 MIME-Version: 1.0
+Subject: Re: AW: [linux-lvm] Installieren von LVM Systemen
+References: <13FEA0BEF75ED31192D50000F6CCC5E92AE049@XNT-FRABASE-6>
+Content-Transfer-Encoding: base64
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: seric@geotec.net
+To: TORSTEN.NEUMANN@DLH.DE
 Cc: linux-lvm@msede.com
 
-
-
-> ----------
-> Von: 	Eric Smith[SMTP:seric@geotec.net]
-> Gesendet: 	Dienstag, 30. November 1999 10:19
-> An: 	TORSTEN.NEUMANN@DLH.DE
-> Cc: 	linux-lvm@msede.com
-> Betreff: 	Re: [linux-lvm] Installieren von LVM Systemen
-> 
-> Okay...now, what does that mean to the rest of us?
-> 
-maybe someone likes to test my scripts to install linux-systems with lvm and
-initrd directly. And then I will write some documentation for that stuff.
-(In english, may wife has to translate it)
-
-  Torsten
+T2guLi5JIHNlZS4uLmdyZWF0ISEhDQoNCg0KDQpUT1JTVEVOLk5FVU1BTk5ARExILkRFIHdy
+b3RlOg0KDQo+ID4gLS0tLS0tLS0tLQ0KPiA+IFZvbjogIEVyaWMgU21pdGhbU01UUDpzZXJp
+Y0BnZW90ZWMubmV0XQ0KPiA+IEdlc2VuZGV0OiAgICAgRGllbnN0YWcsIDMwLiBOb3ZlbWJl
+ciAxOTk5IDEwOjE5DQo+ID4gQW46ICAgVE9SU1RFTi5ORVVNQU5OQERMSC5ERQ0KPiA+IENj
+OiAgIGxpbnV4LWx2bUBtc2VkZS5jb20NCj4gPiBCZXRyZWZmOiAgICAgIFJlOiBbbGludXgt
+bHZtXSBJbnN0YWxsaWVyZW4gdm9uIExWTSBTeXN0ZW1lbg0KPiA+DQo+ID4gT2theS4uLm5v
+dywgd2hhdCBkb2VzIHRoYXQgbWVhbiB0byB0aGUgcmVzdCBvZiB1cz8NCj4gPg0KPiBtYXli
+ZSBzb21lb25lIGxpa2VzIHRvIHRlc3QgbXkgc2NyaXB0cyB0byBpbnN0YWxsIGxpbnV4LXN5
+c3RlbXMgd2l0aCBsdm0gYW5kDQo+IGluaXRyZCBkaXJlY3RseS4gQW5kIHRoZW4gSSB3aWxs
+IHdyaXRlIHNvbWUgZG9jdW1lbnRhdGlvbiBmb3IgdGhhdCBzdHVmZi4NCj4gKEluIGVuZ2xp
+c2gsIG1heSB3aWZlIGhhcyB0byB0cmFuc2xhdGUgaXQpDQo+DQo+ICAgVG9yc3Rlbg0K
