@@ -1,9 +1,9 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <5A7E15ABD212F547B1401F6712FF81201D6785@cxoexc12.americas.cpqcorp.net>
-From: "Joubert, Kevin" <Kevin.Joubert@hp.com>
-Subject: [linux-lvm] LVM and its alternatives
+From: pll+lvm@lanminds.com
+Subject: Re: [linux-lvm] LVM and its alternatives 
+References: <5A7E15ABD212F547B1401F6712FF81201D6785@cxoexc12.americas.cpqcorp.net>
+In-reply-to: Your message of "Thu, 29 Aug 2002 12:04:04 MDT."
+             <5A7E15ABD212F547B1401F6712FF81201D6785@cxoexc12.americas.cpqcorp.net> 
+Message-Id: <20020829181936.42B5FF6C7@tater>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,29 +14,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 29 13:04:01 2002
+Date: Thu Aug 29 13:20:12 2002
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello,=20
+In a message dated: Thu, 29 Aug 2002 12:04:04 MDT
+"Joubert, Kevin" said:
 
-I am brand new to this list and to LVM as well. I am currently putting
-together a talk about what can and can't be done today in the "Linux
-SAN" world, and apparently LVM from Sistina is the de facto standard for
-volume management.=20
+>Hello,
+>
+>I am brand new to this list and to LVM as well. I am currently putting
+>together a talk about what can and can't be done today in the "Linux
+>SAN" world, and apparently LVM from Sistina is the de facto standard for
+>volume management.=20
+>
+>However, in order to provide a COMPLETE overview of the situation in the
+>Linux SAN arena, I was wondering if there are any other alternatives,
+>either proprietary or opensource, that can accomplish some, if not all,
+>of the same things the Sistina's LVM provides.
 
-However, in order to provide a COMPLETE overview of the situation in the
-Linux SAN arena, I was wondering if there are any other alternatives,
-either proprietary or opensource, that can accomplish some, if not all,
-of the same things the Sistina's LVM provides.
+Well, there is EVMS.  Though that's from IBM and I see your from HP, 
+so maybe you don't want know about it :)
 
-This is just an attempt to be thorough in my research, so please, don't
-think I am bashing Sistina's product.=20
+Here's the link I have:
 
-Any input is greatly appreciated,
+	 http://oss.software.ibm.com/developerworks/opensource/evms
 
-Kevin Joubert=20
-North American Customer Support Center=20
-Hewlett-Packard Company=20
-kevin.joubert@hp.com=20
+It looks really well done, and the HOWTO and FAQ are excellently 
+written (though they need a little better spell-checking :)
+-- 
+
+Seeya,
+Paul
+--
+	It may look like I'm just sitting here doing nothing,
+   but I'm really actively waiting for all my problems to go away.
+
+	 If you're not having fun, you're not doing it right!
