@@ -1,9 +1,9 @@
-Message-ID: <04f401c3255c$42401220$fc6a6d0a@corp.int.digex.com>
-From: "Anastasios A. Papadopoulos \(Tas\)" <vze2sjj7@verizon.net>
-References: <047501c3254d$6066b880$fc6a6d0a@corp.int.digex.com> <20030528194851.GG449@fib011235813.fsnet.co.uk>
-Subject: Re: [linux-lvm] Building LVM 2 -- More information
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Daniel Bayer <daniel.bayer@stud.uni-rostock.de>
+Message-id: <20030529001029.GB16622@wh9155.stw.uni-rostock.de>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Content-disposition: inline
+Subject: [linux-lvm] Problems with snapshots on sparc64
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,57 +14,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 28 16:00:02 2003
+Date: Wed May 28 19:09:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Yep.  It is RH 8, 2-4.20(-13.8).
+Hello
 
-I beg your indulgence while I show my ignorance;  How would I go about
-building it not as a module?
-Is there a guide somewhere I can follow?
+I have a E250 running Debian/stable with Linux 2.4.20 (vanilla kernel,
+except for xfs). Three weeks ago I created a LV with an xfs on it. I
+also created a backupscript that uses snapshots. For two weeks
+everything worked fine.
 
-Thanks
------ Original Message ----- 
-From: "Joe Thornber" <thornber@sistina.com>
-To: <linux-lvm@sistina.com>
-Sent: Wednesday, May 28, 2003 3:48 PM
-Subject: Re: [linux-lvm] Building LVM 2 -- More information
+Then I got oopses during the backup (mainly from kupdated). After that
+the system was rebooted. I had to boot with init=/bin/sh since the
+system freezed while mounting the xfs partitions (another story). I
+did a vgscan and a vgchange. After that I did a
+"lvdisplay /dev/vg1/lv_snapshot" and got the usual output and 3 times
+the error "Trying to vfree() nonexistent vm area (addr)". Then I tried
+"lvdisplay /dev/vg1/lv" and also got the vfree()-error and a
+Segmention-Fault after the line that says that there is a snapshot of
+this LV. I removed the snapshot and "lvdisplay /dev/vg1/lv" worked
+fine. After that I could bring the whole system in a working state.
+I could reproduce this.
+
+The address in the vfree()-error message only changes after a reboot.
+I also found older vfree()-errors in the log.
+
+The Backtrace of the oops always ends in
+| Trace; 005143e8 <lvm_map+488/580>
+| Trace; 005144e8 <lvm_make_request_fn+8/40>
+
+Another related problem is, that "cat /proc/lvm/global" in the most
+cases doesn't output the usual data but some random memory. Its really
+odd. But if I try often enough I sometimes also get the right output
+(and no, I didn't calculated the probability). The other files in
+/proc/lvm work fine.
+
+Since I moved the important stuff to another system I can do some
+tests and provide further informations.
 
 
-> On Wed, May 28, 2003 at 03:14:35PM -0400, Anastasios A. Papadopoulos (Tas)
-wrote:
-> >
-> > ----- Original Message ----- 
-> > From: Anastasios A. Papadopoulos (Tas)
-> > To: linux-lvm@sistina.com
-> > Sent: Wednesday, May 28, 2003 10:42 AM
-> > Subject: Building LVM 2
-> >
-> >
-> > I'm having a little trouble following directions:
-> >
-> > I'm trying to build a new kernel with 'dm'.
-> >
-> > Should I be issuing the 'make modules modules-install' after building
-the
-> > new kernel or not.
->
-> If you are building dm as a module, yes.
->
-> > I am getting the following errors during "make modules"
->
-> The patches we provide have only been tested against a vanilla kernel
-> tree, if you are trying to patch a redhat kernel you may have to do a
-> little more work.  Which kernel are you patching ?
->
-> - Joe
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
+Daniel
