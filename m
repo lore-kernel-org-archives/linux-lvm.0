@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Does LVM2 support RAID?
-Message-ID: <20030201133248.A2538@sistina.com>
-References: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>
-Mime-Version: 1.0
-In-Reply-To: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>; from gozila@ms20.url.com.tw on Thu, Jan 30, 2003 at 12:06:57PM +0800
+From: "Jan H. van Gils" <JanVG@Knoware.NL>
+Subject: RE: [linux-lvm] LVM rootfs and cramfs as ramdisk
+Message-ID: <002901c2ca3a$03c98e90$240b892c@pe1mhp.ampr.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <3E39BCA9.3020103@wanadoo.fr>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +14,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Feb  1 06:35:02 2003
+Date: Sat Feb  1 15:37:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: francis.souyri@wanadoo.fr
+Cc: linux-lvm@sistina.com
 
-On Thu, Jan 30, 2003 at 12:06:57PM +0800, Rocky Lee wrote:
-> Hello all 
-> 
-> Happy Chinese New Year to you!
-> and thanks for reading my issues.
-> 
-> Here's my question about LVM1 and LVM2
-> 
-> LVM1+ MD is good methd to support backup and data recovery of data.
-> I found some documents said that LVM2 already can support disk protection and data recovery.
-> does it mean that LVM2 including various raid algorithms ? or other features?
+>
+>Hi Jan,
 
-No RAID > 0 so far. In case we'll have capacity... ;)
+Hi Francis,
 
-> 
-> How they work?
-> 
-> If I use LVM2 will be better than use LVM1 + MD?
+>
+>You need "/etc" in rw for this you can mount "/etc" in the "linuxrc" 
+>script using a tmpfs filesystem like this:
+>
 
-You'll get tool advantages (i.e. config file support).
+Thanks for the information.
+I was already wondering if I was the only one with this problem.
 
-> 
-> Thank you
-> Have a nice day
->                             Rocky Lee
+But what about the init files that are normaly in "/etc" ?
+I can imagion that a tmpfs is an empty filesystem.
+Or do I not fully understand what you mount option does ?
 
--- 
+>/#!/bin/sh
+>...
+>mount -t tmpfs none /etc
+>mount -t proc none /proc
+>echo "Scanning for Volume Groups..."
+>/sbin/vgscan
+>echo "Activating Volume Groups"
+>/sbin/vgchange -a y
+>...
+>umount /proc
+>umount /etc
+>/
+>I used "romfs" for the "initrd" ramdisk.
+>
+>Best regards.
+>
+>Francis
+>
 
-Regards,
-Heinz    -- The LVM Guy --
+With regards Jan
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+----
+With regards Jan H. van Gils
+Internet web-page http://www.Knoware.NL/users/janvg/
+Internet e-mail address JanVG@Knoware.NL
+RIPE Whois JHG5-RIPE, 6BONE Whois JHG1-6BONE
