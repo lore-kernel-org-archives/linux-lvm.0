@@ -1,10 +1,10 @@
-Subject: Re: [linux-lvm] Availabality of LVM on IA64???
-From: Andrew Patterson <andrew@fc.hp.com>
-In-Reply-To: <A11077E28200D51182EA00D0B7755253482045@xin02.india.hp.com>
-References: <A11077E28200D51182EA00D0B7755253482045@xin02.india.hp.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1023121905.2955.27.camel@lvadp.fc.hp.com>
-Mime-Version: 1.0
+From: "James B. Byrne " <ByrneJB@Harte-Lyne.ca>
+MIME-Version: 1.0
+Message-ID: <3CFB7E61.1848.B19791A@localhost>
+In-reply-to: <E17EJYM-0008II-00@hermes.sistina.com>
+Content-transfer-encoding: 7BIT
+Content-description: Mail message body
+Subject: [linux-lvm] Re: linux-lvm digest, Vol 1 #602 - 14 msgs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,46 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  3 11:32:02 2002
+Date: Mon Jun  3 13:35:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+Cc: Thierry DE CARVALHO <thierry.decarvalho@online.fr>
 
-On Mon, 2002-06-03 at 07:16, LAKSHMIPATHY,ARUN (HP-India,ex2) wrote:
-> Hi,
+On Thu, 30 May 2002 19:45:33 +0200
+Thierry DE CARVALHO <thierry.decarvalho@online.fr> wrote:
+
+> Try with grub (here /dev/vg00/lvol1 is the root fs):
 > 
-> Wanted to check out if 1.1-rc2 supports IA64 platform or not. When I try and
-> build the lvm lib from the 1.1-rc2 sources i get a lot of integer to pointer
-> type cast warnings, hence I have this doubt could not find any release
-> notes/docs which mention anything about IA64 support.  Need  to know if IA64
-> support is available on 1.1 or not, else is there any beta that I can try
-> out?? 
-> 
-> Also when i build 1.1-rc1 sources i get a shared lib as well as a arcghive
-> lib whereas building 1.1-rc2 builds only an archive lib, i need a shared
-> lib, am i missing something here?  
-> 
-> Regards
-> Arun
-> 
+> title=GNU/Linux Debian 2.2 (potato)
+> kernel (hd0,1)/vmlinuz-2.2.19 root=3a00 ramdisk_size=8192 vga=10
+> #                                   ^^^^ <major><minor> of the lv
+> #                                   device
+> in hex
+> initrd (hd0,1)/initrd-lvm-2.2.19.gz
 
+I am afraid that this does not make a lot of sense to me.  Where 
+does one get the major/minor numbers for the logical volume?
 
-Hi Arun,
-
-We had talked to Sistina about porting LVM to IA64 earlier this year. 
-They told us that they did not have the equipment to do the port.  I
-suggested to our management that it might be a good idea to send them a
-system, but the issue was dropped.
-
-Andrew
-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
--- 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-   Andrew Patterson                          Voice:  (970) 898-3261
-   Hewlett-Packard Company                   Email:  andrew@fc.hp.com
+Regards,
+Jim
+---     e-mail is NOT a secure channel 
+James B. Byrne                mailto:ByrneJB@Harte-Lyne.ca
+Harte & Lyne Limited          http://www.harte-lyne.ca
+9 Brockley Drive              vox: +1 905 561 1241
+Hamilton, Ontario             fax: +1 905 561 0757
+Canada  L8E 3C3
