@@ -1,12 +1,9 @@
-Date: Sun, 14 Oct 2001 16:18:48 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
-Subject: Re: [linux-lvm] Problem with LVM over RAID-1
-Message-ID: <20011014161848.B890@dardhal.mired.net>
-References: <m2u1x238a1.fsf@isnogud.escape.de>
-Mime-Version: 1.0
-Content-Disposition: inline
+Message-ID: <1003139089.3bcab0116419a@webmail1.maa.sify.net>
+Date: Mon, 15 Oct 2001 15:14:49 +0600 (IST)
+From: kannan21977@sify.com
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <m2u1x238a1.fsf@isnogud.escape.de>
+Subject: [linux-lvm] vgextend
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,45 +15,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: thornber@sistina.com, linux-lvm@sistina.com
 
-On Sunday, 14 October 2001, at 11:01:10 +0200,
-Urs Thuermann wrote:
+Hi
 
-> This problem has occrued on this mailing list before by another user
-> but I haven't read a solution to it here.
-> [...]
-> Another question on Linux-Software RAID-1:  We want to use it to get
-> more reliability by mirroring.  But I'd like to know if the Linux
-> kernel will also make use of both disks to increase the read
-> performance, i.e. when reading a large file, read some parts from one
-> disk, other parts from the other disk.  Or when accessing two files,
-> read one file from one disk and the other file from the second disk.
-> Will the Linux kernel do this?
-> 
-As far as I remember, Linux software RAID-1 implementation indeed uses all
-of the drives in parallel to increase read performance (at least, on 2.2.x
-an 2.4.x kernels). As read on Software-RAID-HOWTO (2.3. The RAID levels):
+I work for an ISP in India nad am currently trying to get LVM working for us..I use a 2.4.0 kernel.and LVM 1.0.
+I have not applied any patches except the one for ext2online.all commands work fine like pvcreate ,lvextend etc...
 
-    * Write performance is the slightly worse than on a single device,
-	* because identical copies of the data written must be sent to every
-	* disk in the array. Read performance is usually pretty bad because of
-	* an oversimplified read-balancing strategy in the RAID code. However,
-	* there has been implemented a much improved read-balancing strategy,
-	* which might be available for the Linux-2.2 RAID patches (ask on the
-	* linux-kernel list), and which will most likely be in the standard
-	* 2.4 kernel RAID support.
+but when i do a vgextend when trying to add a physical volume to my volume group,I get a segementation fault error.
+i use the command 
 
-So, to be sure, you should build a RAID-1 array with your current kernel
-and test read performance, and compare results with those for a single
-drive (use bonnie, for example). Maybe in the linux-raid mailing list
-archives is something interesting:
-http://www.mail-archive.com/linux-raid%40vger.kernel.org
+vgextend vg1 /dev/hdb2
 
--- 
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian Linux Woody (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+i had changed the partition id of /dev/hdb2 to 8e.
+then i did a pvcreate /dev/hdb2.even that worked fine.
+but when i try to add this pv to my volume group vg1 I get a segmentation fault error.has anyone come across this error.would be great to hear from anyone of u
+
+thanx and regards
+kannan
+-------------------------------------------------
+This mail sent through : http://mail.sify.com
+Want to win a PC or Palm Tops or Digital Diaries or T-Shirts?
+Click here http://promos.sify.com/niit/main.asp?mail
