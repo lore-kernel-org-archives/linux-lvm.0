@@ -1,8 +1,11 @@
-Message-ID: <2005.24.46.54.254.1031578510.squirrel@mail.scottsavarese.com>
+From: Steven Lembark <lembark@wrkhors.com>
 Subject: Re: [linux-lvm] software mirroring
-From: "Scott Savarese" <scott@scottsavarese.com>
+Message-ID: <348030000.1031579797@[192.168.200.4]>
+In-Reply-To: <2005.24.46.54.254.1031578510.squirrel@mail.scottsavarese.com>
+References: <2005.24.46.54.254.1031578510.squirrel@mail.scottsavarese.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,35 +16,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep  9 08:41:18 2002
+Date: Mon Sep  9 09:02:44 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Jos=E9 Luis Domingo L=F3pez said:
-> There shouldn't be any problems at all, except for bootup: it can be
-> tricky (complex, prone to error or simply impossible, I don't know ;)
-> to get a box boot off a LV on top of a software RAID1. But
-> technically, it should be as simple as creating a partition on each
-> disk, creating the RAID1 from them, initialize /dev/md0 as a PV for
-> use with LVM, create a VG consisting of just this PV, and finally
-> create as many LV as you need (size permitting).
->
-> I have not had the chance to try it by myself, due to lack of
-> hardware, but should work. Maybe the hard part is to do it at install
-> time and get the system to boot from a LV created this way.
+> /dev/md0 and /dev/md1 on my second hard drive telling it that my first
+> harddrive was failed (so it wouldn't use it and break it). The first
+> will hold my /boot and the second (for now) will hold my /. I then
+> installed LVM onto my /dev/md1 and copied the filesystems over to the
+> appropriate locations. However after I configure lilo and fstab I have
+> issues. Depending on my lilo.conf I get either
+> L 80 80 80 ...
+> or
+> LI
 
-Bootup is definantly the issue right now... I created two raid1 sets
-/dev/md0 and /dev/md1 on my second hard drive telling it that my first
-harddrive was failed (so it wouldn't use it and break it). The first
-will hold my /boot and the second (for now) will hold my /. I then
-installed LVM onto my /dev/md1 and copied the filesystems over to the
-appropriate locations. However after I configure lilo and fstab I have
-issues. Depending on my lilo.conf I get either
-L 80 80 80 ...
-or
-LI
+You will save yourself a lot of trouble if you
+stick with hardware raid for the boot volume (i.e.,
+the bios only sees a single device) and avoid LVM
+altogeter for the root volume (assuming you put
+/boot on /). Main reason is that if anything does
+go wrong with LVM it's a pain to fix without LVM.
 
-Is there a proper way to boot up?
-Thanks,
-Scott
+Until the X86 BIOS gets brains (and pigs floss...)
+just use a simple partition for the root voume and
+perhaps a second partition with a stand-alone rescue
+system on the other drive. If you install LVM into
+the root volume (e.g., /lvm) then yuo can at least
+boot single-user and fix things.
+
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
