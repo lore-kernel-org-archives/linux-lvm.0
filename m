@@ -1,14 +1,7 @@
-From: Arjan van de Ven <arjanv@redhat.com>
-Subject: Re: [Evms-devel] Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM
-    reimplementation ready for beta testing
-Message-Id: <20020201045518.A10893@devserv.devel.redhat.com>
-References: <OFBCE93B66.F7B9C14E-ON85256B52.006B8AB3@raleigh.ibm.com>
-    <20020131125211.A8934@fib011235813.fsnet.co.uk>
+From: Turbo Fredriksson <turbo@bayour.com>
+Message-Id: <878zad8qrx.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020131125211.A8934@fib011235813.fsnet.co.uk>;
-    from thornber@fib011235813.fsnet.co.uk on Thu, Jan 31, 2002 at 12:52:11PM
-    +0000
+Subject: [linux-lvm] one PV crashed
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,37 +12,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 03:55:01 2002
+Date: Fri Feb  1 04:01:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Joe Thornber <thornber@fib011235813.fsnet.co.uk>
-Cc: lvm-devel@sistina.com, Jim McDonald <Jim@mcdee.net>, Andreas Dilger <adilger@turbolabs.com>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, evms-devel@lists.sourceforge.net
+To: linux-lvm@sistina.com
 
-On Thu, Jan 31, 2002 at 12:52:11PM +0000, Joe Thornber wrote:
-> On Thu, Jan 31, 2002 at 01:52:29PM -0600, Steve Pratt wrote:
-> > Joe Thornber wrote:
-> > >On Wed, Jan 30, 2002 at 10:03:40PM +0000, Jim McDonald wrote:
-> > >> Also, does/where does this fit in with EVMS?
-> > 
-> > >EVMS differs from us in that they seem to be trying to move the whole
-> > >application into the kernel,
-> > 
-> > No, not really.  We only put in the kernel the things that make sense to be
-> > in the kernel, discovery logic, ioctl support, I/O path.  All configuration
-> > is handled in user space.
-> 
-> There's still a *lot* of code in there; > 26,000 lines in fact.
-> Whereas device-mapper weighs in at ~2,600 lines.  This is just because
-> you've decided to take a different route from us, you may be proven to
-> be correct.
+I have (had) 6 PV's in my VG. The last one crashed (the whole disk
+seems to have broken totaly).
 
-There is one thing that might spoil the device-mapper "just simple stuff
-only" thing: moving active volumes around. Doing that in userspace reliably
-is impossible and basically needs to be done in kernelspace (it's an
-operation comparable with raid1 resync, a not even that hard in kernel
-space). However, that sort of automatically requires kernelspace to know
-about volumes, and from there it's a small step....
+It don't seem possible to restore the information (not without spending
+$$$ to a data recovery company), so how do I get the data stored on the
+OTHER disks?
 
-Greetings,
-   Arjan van de Ven
+
+[papadoc.root]# pvscan -u
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sdb1 " with UUID "ofZCeT-O16H-Df0h-4KoB-xQhm-lc24-67dZvk" of VG "vg1" [5.87 GB / 0 free]
+pvscan -- inactive PV "/dev/sdc1 " with UUID "xN0MF7-xKU0-Uk3L-g8Pw-0YfH-fS3V-zgFA66" of VG "vg1" [1004.00 MB / 0 free]
+pvscan -- inactive PV "/dev/sdd10" with UUID "5V0XNB-gA87-OU66-1iza-cvsz-xQ2q-6DEbyH" of VG "vg1" [2.37 GB / 0 free]
+pvscan -- inactive PV "/dev/sde1 " with UUID "Bdm7PX-50Dq-hC6R-yXmv-DDq1-n6Nx-4ohaKK" of VG "vg1" [8.50 GB / 0 free]
+pvscan -- inactive PV "/dev/sdf1 " with UUID "QnqfyA-fOTB-J1Pp-4be5-t6QU-bGjS-i2BKf2" of VG "vg1" [17.09 GB / 0 free]
+pvscan -- total: 5 [34.84 GB] / in use: 5 [34.84 GB] / in no VG: 0 [0]
+[papadoc.root]# /etc/init.d/lvm start
+Setting up LVM Volume Groups...
+vgchange -- ERROR: physical volume "/dev/sdg1" of volume group "vg1" is offline
+vgchange -- run vgscan
+[papadoc.root]# vgscan 
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+[papadoc.root]# pvscan -u
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sdb1 " with UUID "ofZCeT-O16H-Df0h-4KoB-xQhm-lc24-67dZvk"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdc1 " with UUID "xN0MF7-xKU0-Uk3L-g8Pw-0YfH-fS3V-zgFA66"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdd10" with UUID "5V0XNB-gA87-OU66-1iza-cvsz-xQ2q-6DEbyH"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sde1 " with UUID "Bdm7PX-50Dq-hC6R-yXmv-DDq1-n6Nx-4ohaKK"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/sdf1 " with UUID "QnqfyA-fOTB-J1Pp-4be5-t6QU-bGjS-i2BKf2"  is associated to an unknown VG (run vgscan)
+pvscan -- total: 5 [34.84 GB] / in use: 5 [34.84 GB] / in no VG: 0 [0]
+
+
+This was the info the sg1 disk had:
+PV#     PV Name    VG Name PV UUID                                 PV Size
+6       /dev/sdg1  vg1     7x1CdK-50u6-NAmJ-6bHY-Ho09-U3hC-K7c18w  15.55 GB 0 free
+
+World Trade Center FSF spy Nazi terrorist supercomputer cryptographic
+toluene [Hello to all my fans in domestic surveillance] assassination
+counter-intelligence Ft. Bragg subway Rule Psix security
+[See http://www.aclu.org/echelonwatch/index.html for more about this]
