@@ -1,10 +1,8 @@
-Message-ID: <3E2D958C.8000606@mvista.com>
-From: Steven Dake <sdake@mvista.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Lilo Defvs and Root Raid1, Having trouble booting
-References: <H0004a6d101c8ca3.1043106948.seurat.artisan.calpoly.edu@MHS>
-In-Reply-To: <H0004a6d101c8ca3.1043106948.seurat.artisan.calpoly.edu@MHS>
-Content-Transfer-Encoding: 7bit
+From: Ajay Shekhawat <ajay@cedar.buffalo.edu>
+Message-ID: <20030121213110.GT1685@zaurak.cedar.Buffalo.EDU>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LVM on H/W RAID5s ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,57 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 21 12:48:01 2003
+Date: Tue Jan 21 15:30:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-did you set the first partition on target 0:9, 0:10, 1:9, 1:10 to 
-bootable (fdisk 'a' command) and did you set the RAID partitions type to 
-RAID artostart (fdisk 't' command set to 0xfd).
+I'm trying to combine two H/W RAID5 arrays (6 disks each on a ICP-Vortex
+8643RZN controller) into 1 device using LVM, with XFS as the filesystem.
+Unfortunately, I'm getting terrible read rates (I'm doing my own benchmarking,
+with 1 process creating files of about 400K each, and another process
+reading and deleting the files). Just an 'ls' in a directory with 
+1000 files takes forever. A stat+unlink call in perl takes 1sec.
 
-Make sure you have the correct MBR on your disk with the lilo -M command 
-to write the MBR to 0:9 0:10 1:9 1:10.  
+Are there any 'gotchas' with this sort of a setup?
 
-You could also post your lilo.conf so we can verify you have it 
-specified properly.
+The RAID5 partitions themselves work pretty OK by themselves.
 
-Give those a try.
-Thanks
--steve
+The hardware:
+	- dual Xeon 2.0GHz w/ 2GB memory
+	- ICP Vortex 8643RZN card
+	- 73GB Fuji 10KRPM disks, 14 of them on a controller.
 
-mfusco@calpoly.edu wrote:
+Any tips, pointers, etc. would be appreciated.
 
->Need help please!
->
->   Here is my current system.
->   /boot is a md0 raid1 mirrored over 4 scsi disk, host0 target9, h0t10, h1t9, 
->h1t10.
->   / is a md11 raid1 mirrored over the same four disks.
->   md0 is part1 and md11 is part2
->   my lilo has the option for raid-????-boot=mbr-only and LILO does load the 
->kernel.
->
->   heres the problem.  raidautostart /dev/md0 failed kernel unable to mount 
->root directory 09:00.  I have tried to make a initrd with --preload raid1 and -
->-with=raid1 but still no luck.  also unzip my initrd and looked in the /dev 
->only entry was md0 which was a symbolic link to md/0.  Tried to mknod the 
->files, sda, sdb... sda1, sda2, ... and md0, md11 and still no luck?
->
->Please any ides would be really helpful
->
->Michael
->
->   
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
->  
->
+Ajay
