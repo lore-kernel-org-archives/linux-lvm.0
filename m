@@ -1,8 +1,10 @@
-From: R Dicaire <rdicaire@kritek.net>
-Message-Id: <1075147677.15213.44.camel@ws.rdb.linux-help.org>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] lvm on initrd
+Message-ID: <20040126215354.GD30430@percy.comedia.it>
+References: <200401240137.35706.arekm@pld-linux.org> <20040124095810.GA6204@percy.comedia.it> <200401252110.07895.arekm@pld-linux.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] problems mounting snapshots
+Content-Disposition: inline
+In-Reply-To: <200401252110.07895.arekm@pld-linux.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,64 +15,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 26 15:09:01 2004
+Date: Mon Jan 26 16:55:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-First the specs:
+On Sun, Jan 25, 2004 at 09:10:07PM +0100, Arkadiusz Miskiewicz wrote:
+>Unfortunately this doesn't give any significant size drop:
+>lvm staticly linked with uClibc and device-mapper lib with all features
+>-rwxr-xr-x    1 misiek   users      555815 2004-01-25 21:05 initrd-lvm
+>lvm staticly linked with uClibc and device-mapper lib using my patch above (so 
+>only vgscan and vgchange functions available)
+>-rwxr-xr-x    1 root     root       482428 2004-01-25 20:51 initrd-lvm
+>
+>How these sizes look with dietlibc?
 
-Linux kernel 2.4.23-xfs patched with LVM 1.0.8
-lvm tools 1.0.8
-Slackware 9.1
-gcc -v
-Reading specs from /usr/lib/gcc-lib/i486-slackware-linux/3.2.3/specs
-Configured with: ../gcc-3.2.3/configure --prefix=/usr --enable-shared
---enable-threads=posix --enable-__cxa_atexit --disable-checking
---with-gnu-ld --verbose --target=i486-slackware-linux
---host=i486-slackware-linux
-Thread model: posix
-gcc version 3.2.3
+-rwxr-xr-x  1 root root 308180 Jan 23 22:14 /sbin/lvm2-static*
 
-The problem:
+Which is still very big, but reducing it will take significantly more
+work.
 
-Various errors trying to mount snapshots using ext3/xfs/reiserfs
-
-xfs: 
-mount -t xfs /dev/vg0/snap_home /mnt/hd -o ro
-mount: wrong fs type, bad option, bad superblock on /dev/vg0/snap_home,
-       or too many mounted file systems
-
-Jan 26 14:50:26 rdb kernel: XFS: Filesystem lvm(58,8) has duplicate UUID
-- can't mount
-
-ext3: 
-mount -t ext3 /dev/vg0/snap_tmp /mnt/hd -o ro
-mount: wrong fs type, bad option, bad superblock on /dev/vg0/snap_tmp,
-       or too many mounted file systems
-
-Jan 26 15:00:59 rdb kernel: EXT3-fs: INFO: recovery required on readonly
-filesystem.
-Jan 26 15:00:59 rdb kernel: EXT3-fs: write access unavailable, cannot
-proceed.
-
-reiserfs:
-It'll mount but complains:
-Jan 26 15:03:09 rdb kernel: reiserfs: found format "3.6" with standard
-journal
-Jan 26 15:03:09 rdb kernel: reiserfs: checking transaction log (device
-lvm(58,8)) ...
-Jan 26 15:03:09 rdb kernel: for (lvm(58,8))
-Jan 26 15:03:09 rdb kernel: Can't write to read-only device 3a:08
-Jan 26 15:03:09 rdb last message repeated 6 times
-Jan 26 15:03:09 rdb kernel: reiserfs: replayed 3 transactions in 0
-seconds
-Jan 26 15:03:09 rdb kernel: lvm(58,8):Using tea hash to sort names
-------------------------------------------------------------------
-I uograded to 1.0.8 to try and fix this mount issue, to no avail.
-
-Have I missed something? Any help would be greatly appreciated, thanks.
+>Also some problems with lvm way of checking what command user wants based on 
+>argv[0] came out:
+>[root@arm misiek]# /sbin/initrd-lvm
+>  No such command.  Try 'help'.
+...
+>It would be much better if when argv[0] is not known internally for lvm then 
+>work as argv[0] = lvm.
+>
+unfortunately it seems done the other way around in lvm.c
+i found it easier to add possible aliases for lvm in there
+http://www.comedia.it/~bluca/cooker/lvm2/lvm2-2.00.08-7mdk/lvm2-alternatives.patch.bz2
 
 -- 
-      aRDy Music
-http://www.ardynet.com
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
