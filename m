@@ -1,10 +1,10 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Sun, 13 May 2001 20:48:19 -0300 (BRST)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] LVM 1.0 release decision
-In-Reply-To: <3AFC42EB.2910DAAE@wrkhors.com>
-Message-ID: <Pine.LNX.4.21.0105132046150.5468-100000@imladris.rielhome.conectiva>
+Return-Path: <emadrazo@it.uc3m.es>
+Message-ID: <3B0002F6.6FF5B547@it.uc3m.es>
+Date: Mon, 14 May 2001 18:08:22 +0200
+From: Eva Madrazo <emadrazo@it.uc3m.es>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] /proc/ha/.control ??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,35 +16,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: lvm <linux-lvm@sistina.com>
 
-On Fri, 11 May 2001, Steven Lembark wrote:
+Anybody knows something about this error while starting heartbeat??
 
-> for my part running the system i'd rather have the "production"
-> LVM and kernel releases in sync and not have to worry about it.
-> if i need a beta/inter-version release then i'll deal with the
-> extra issues.
+heartbeat: 2001/05/14_17:56:00 info: ***********************
+heartbeat: 2001/05/14_17:56:00 info: Configuration validated. Starting
+heartbeat.
+heartbeat: 2001/05/14_17:56:00 notice: UDP heartbeat started on port 694
+interface eth0
+heartbeat: 2001/05/14_17:56:00 error: Cannot open /proc/ha/.control: No
+such file or directory
 
-Agreed.  If the in-kernel LVM cannot be trusted, I really
-don't see why Sistina would ever want to associate its name
-with something broken?
 
-I think it would be better for everyone (users, Sistina's
-corporate image and Linux) to get something stable into the
-kernel before sending out the press release ;)
+I cannot find who needs the .control file. I had to exist??
+Thank you!
 
-(after all, a version number change is just a one-liner patch
-away ;))
-
-regards,
-
-Rik
---
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
-
-http://www.surriel.com/		http://distro.conectiva.com/
-
-Send all your spam to aardvark@nl.linux.org (spam digging piggy)
+--------
+Eva Madrazo Rodriguez 
+    emadrazo@it.uc3m.es   (preferida)
+    100012130@alumnos.uc3m.es
