@@ -1,47 +1,42 @@
-Message-ID: <38C632C4.FC682FC4@ep-ag.com>
-Date: Wed, 08 Mar 2000 12:00:20 +0100
-From: Klaus Strebel <stb@ep-ag.com>
+From: Andreas Dilger <adilger@home.com>
+Message-Id: <200003081753.KAA04569@webber.adilger.net>
+Subject: [linux-lvm] Who uses ext2online?
+Date: Wed, 8 Mar 2000 10:53:21 -0700 (MST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] building the binary utilities
-References: <20000307213810.3824.qmail@web117.yahoomail.com>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Chris Campbell <dash_ampersand@yahoo.com>
-Cc: linux-lvm@msede.com
+To: Linux LVM mailing list <linux-lvm@msede.com>
+Cc: Linux FS development list <linux-fsdevel@vger.rutgers.edu>
 
-Chris Campbell wrote:
-> 
-> kernel location is what it should be, but I still get
-> all these errors.  I'm not sure what's going on, other
-> than it can't find the lvm and liblvm header files,
-> which are in a directory below the current one:
-Hi Chris,
+Hello all,
+I'm wondering how many people community are using my ext2online program
+to resize mounted partitions.  I ask because now that LVM is part of the
+base 2.3 kernel, it finally makes sense for the required kernel patches
+to also become part of the base kernel.  However, I would like to know
+how wide-spread the usage has been to get a fell for how much testing my
+patch has received.
 
-the variable TOP in your '/root/lvmstuff/LVM/0.8final/make.tmpl' is set
-to '/root/LVM/0.8final', as you could see in following snipped from your
-make-errors file:
+I have made a 2.2 and a 2.3 kernel patch available (the 2.3 patch is only
+a few lines different than the 2.2 patch because of the diff context).  
+The newer patches fix a minor issue with sparse-super ext2 filesystems.
+The functioning of the patch has been fundamentally unchanged from 2.0
+through 2.3.34 (my last tested kernel), so it should be stable...
 
-cc -c -pipe -Wall -O2 -DDEBUG -I/root/LVM/0.8final/tools/lib
--I/root/LVM/0.8fina
-l/tools -o basename.o basename.c
-cc -c -pipe -Wall -O2 -DDEBUG -I/root/LVM/0.8final/tools/lib
--I/root/LVM/0.8fina
-l/tools -o debug.o debug.c
-basename.c:34: liblvm.h: No such file or directory
+There is a new version (1.13) of the ext2resize package available which has
+updated ext2online and ext2prepare which handle sparse superblocks correctly:
 
-the -I options in the gcc line are expanded from '-I$(TOP)/tools/lib
--I$(TOP)'. You should control your changes in config files at first when
-your're searching for errors before you start symlinking around ;-).
+http://www.math.leidenuniv.nl/~buytenh/ext2resize/devel.html
 
-Bye
-Klaus
+PLEASE let me know about your usage of ext2online (private email is OK)
+so that I can work at getting the kernel patch into the main kernel.  If
+you have any issues/problems with the kernel patch or user-space programs
+or how they are implemented, speak up now!
 
+Cheers, Andreas
 -- 
-Klaus Strebel
-stb@ep-ag.com
-EIGNER + PARTNER AG   - The Engineering Warehouse Company -
-<http://www.ep-ag.com>
------------------------------------------------------------------------
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
