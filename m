@@ -1,10 +1,10 @@
-Message-ID: <401636B2.8000504@kapp-coburg.de>
-From: Roland Morgenroth <Roland.Morgenroth@kapp-coburg.de>
+From: "John Cassidy" <Sean@JDCassidy.net>
+Subject: RE: [linux-lvm] Kernel 2.6.1 and LVM2
+Message-ID: <000c01c3e4b9$67f862c0$9722fea9@terence>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM and HP SecurePath
-References: <400CD3A6.9070201@kapp-coburg.de> <20040121001515.GK16867@percy.comedia.it> <400E263E.8080708@kapp-coburg.de> <20040121232216.GK14161@percy.comedia.it> <400F7831.5040006@kapp-coburg.de>
-In-Reply-To: <400F7831.5040006@kapp-coburg.de>
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg=sha1; boundary="------------ms090809030607050008030906"
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_000D_01C3E4C1.C9BCCAC0"
+In-Reply-To: <20040125213120.GA32013@redhat.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,134 +15,855 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 28 10:46:08 2004
+Date: Wed Jan 28 10:46:20 2004
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-This is a cryptographically signed message in MIME format.
-
---------------ms090809030607050008030906
-Content-Type: multipart/mixed;
- boundary="------------030906070005010807050802"
-
 This is a multi-part message in MIME format.
---------------030906070005010807050802
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+
+------=_NextPart_000_000D_01C3E4C1.C9BCCAC0
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+Heinz,
+
+=20
+
+     the fedora development URL:=20
+
+=20
+
+ftp://download.fedora.redhat.com/pub/fedora/linux/core/development=20
+
+=20
+
+has the initscripts-7.43-2.i386.rpm, which has specific LVM2 code, I =
+tried
+this yesterday, and it seems to work. Grazie to Luca Barra for this tip.
+
+=20
+
+Danke,
+
+=20
+
+John
+
+=20
+
+=20
+
+Regards/Cordialement/Gruss/Saludos=20
+
+=20
+
+John Cassidy Dipl.-Ing (Informatique)
+
+=20
+
+S390 & zSeries Systems Engineering
+
+=20
+
+Schleswigstr. 7
+
+=20
+
+D-51065 Cologne
+
+=20
+
+EU
+
+=20
+
+Tel: +49  (0) 221 61 60 777 . GSM: +49  (0) 177 799 58 56=20
+
+=20
+
+E-Mail: Sean@JDCassidy.net=20
+
+=20
+
+HTTP : www.jdcassidy.net=20
+
+=20
+
+ =20
+
+=20
+
+=20
+
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] =
+On
+Behalf Of Heinz Mauelshagen
+Sent: 25 January 2004 22:31
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] Kernel 2.6.1 and LVM2
+
+=20
+
+=20
+
+Hi John,
+
+=20
+
+you can essentially reuse the /etc/rc.d/rc.sysinit startup
+
+of Red Hat Linux for LVM1.
+
+Maybe you can feed that back to Fedora development ?
+
+=20
+
+Regards,
+
+Heinz    -- The LVM Guy --
+
+=20
+
+=20
+
+en Sat, Jan 24, 2004 at 10:22:51AM +0100, John Cassidy wrote:
+
+> Heinz,
+
+>=20
+
+> =20
+
+>=20
+
+>         on the above kernel, all of the necessary steps have been =
+taken to
+
+> get LVM2 to function.
+
+>=20
+
+> =20
+
+>=20
+
+> My problem is I want an appropriate startup script to initiate and =
+halt
+
+> LVM2 at startup and shutdown.
+
+>=20
+
+> =20
+
+>=20
+
+> Distribution is RH Fedora with kernel 2.6.1.
+
+>=20
+
+> =20
+
+>=20
+
+> Any ideas?
+
+>=20
+
+> =20
+
+>=20
+
+> Im voraus..   =20
+
+>=20
+
+> =20
+
+>=20
+
+> Regards/Cordialement/Gruss/Saludos=20
+
+>=20
+
+> John Cassidy Dipl.-Ing (Informatique)
+
+>=20
+
+> S390 & zSeries Systems Engineering
+
+>=20
+
+> Schleswigstr. 7
+
+>=20
+
+> D-51065 Cologne
+
+>=20
+
+> EU
+
+>=20
+
+> Tel: +49  (0) 221 61 60 777 . GSM: +49  (0) 177 799 58 56=20
+
+>=20
+
+> E-Mail: Sean@JDCassidy.net  <mailto:Sean@JDCassidy.net>=20
+
+>=20
+
+> HTTP :
+
+>
+<file:///H:\Documents%20and%20Settings\Horace\Application%20Data\Microsof=
+t\S
+
+> ignatures\www.jdcassidy.net> www.jdcassidy.net=20
+
+>=20
+
+>   =20
+
+>=20
+
+> =20
+
+>=20
+
+=20
+
+*** Software bugs are stupid.
+
+    Nevertheless it needs not so stupid people to solve them ***
+
+=20
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-
+=3D-
+
+=20
+
+Heinz Mauelshagen                                 Red Hat, Inc.
+
+Consulting Development Engineer                   Am Sonnenhang 11
+
+                                                  56242 Marienrachdorf
+
+                                                  Germany
+
+Mauelshagen@RedHat.com                            +49 2626 141200
+
+                                                       FAX 924446
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-
+=3D-
+
+=20
+
+_______________________________________________
+
+linux-lvm mailing list
+
+linux-lvm@sistina.com
+
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 
->> if that's the case i'd switch to lvm2
-> 
-> 
-> ok, i will give it a try.
+------=_NextPart_000_000D_01C3E4C1.C9BCCAC0
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-device-mapper README:
-Kernel patches for 2.4.20, 2.4.21 and 2.4.22 are also included here in the
-patches subdirectory.
+<html>
 
-my kernel is 2.4.19-64GB-SMP and HP SecurePath only supports that kernel.
-> 
-> p.s. HP told me LINUX-LVM is not stable enough to use it.
->      what do you thing about that?
-> 
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
 
 
---------------030906070005010807050802
-Content-Type: text/x-vcard; charset=utf8;
- name="Roland.Morgenroth.vcf"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="Roland.Morgenroth.vcf"
+<meta name=3DGenerator content=3D"Microsoft Word 10 (filtered)">
 
-begin:vcard
-fn:Morgenroth, Roland
-n:Morgenroth;Roland
-org:KAPP GmbH Werkzeugmaschinenfabrik;C-ITE
-adr;quoted-printable:;;Callenberger Stra=C3=9Fe 52;Coburg;Bayern;96450;Deutschland
-email;internet:Roland.Morgenroth@kapp-coburg.de
-tel;work:+49 9561 866371
-tel;fax:+49 9561 866271
-tel;cell:+49 172 8393602
-url:http://www.kapp-coburg.de
-version:2.1
-end:vcard
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#004080;
+	text-decoration:underline;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 77.95pt 72.0pt 77.95pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=3DEN-GB link=3Dblue vlink=3D"#004080">
+
+<div class=3DSection1>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Heinz,</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;&nbsp;&nbsp;&nbsp; the fedora development URL: =
+</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><u><font size=3D2 color=3Dblue face=3D"Courier =
+New"><span
+style=3D'font-size:10.0pt;color:blue'>ftp://download.fedora.redhat.com/pu=
+b/fedora/linux/core/development
+</span></font></u></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>has the <u>initscripts-7.43-2.i386.rpm</u>, which has specific =
+LVM2
+code, I tried this yesterday, and it seems to work. Grazie to Luca Barra =
+for
+this tip.</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Danke,</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>John</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>Regards/Cordialement/Gruss/Saludos =
+</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>John Cassidy Dipl.-Ing =
+(Informatique)</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>S390 &amp; zSeries Systems Engineering</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Schleswigstr. </span></font><span lang=3DFR>7</span></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>D-51065 Cologne</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>EU</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>Tel: +49&nbsp; (0) 221 61 60 777 &middot; =
+GSM:
++49&nbsp; (0) 177 799 58 56 </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DFR
+style=3D'font-size:10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>E-Mail: </span></font>Sean@JDCassidy.net </p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>HTTP : www.jdcassidy.net </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+lang=3DEN-US
+style=3D'font-size:10.0pt'>-----Original Message-----<br>
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] =
+On
+Behalf Of Heinz Mauelshagen<br>
+Sent: 25 January 2004 22:31<br>
+To: linux-lvm@sistina.com<br>
+Subject: Re: [linux-lvm] Kernel 2.6.1 and LVM2</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Hi John,</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>you can essentially reuse the /etc/rc.d/rc.sysinit =
+startup</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>of Red Hat Linux for LVM1.</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Maybe you can feed that back to Fedora development =
+?</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Regards,</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Heinz&nbsp;&nbsp;&nbsp; -- The LVM Guy --</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>en Sat, Jan 24, 2004 at 10:22:51AM +0100, John Cassidy =
+wrote:</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; Heinz,</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; on the =
+above
+kernel, all of the necessary steps have been taken to</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; get LVM2 to function.</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; My problem is I want an appropriate startup script to =
+initiate and
+halt</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; LVM2 at startup and shutdown.</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; Distribution is RH Fedora with kernel =
+2.6.1.</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; Any ideas?</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; Im voraus..&nbsp;&nbsp;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; Regards/Cordialement/Gruss/Saludos </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; John Cassidy Dipl.-Ing (Informatique)</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; S390 &amp; zSeries Systems Engineering</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; Schleswigstr. 7</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; D-51065 Cologne</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; EU</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; Tel: +49&nbsp; (0) 221 61 60 777 . GSM: +49&nbsp; (0) 177 =
+799 58
+56 </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; E-Mail: Sean@JDCassidy.net&nbsp; =
+&lt;mailto:Sean@JDCassidy.net&gt;
+</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; HTTP :</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;
+&lt;file:///H:\Documents%20and%20Settings\Horace\Application%20Data\Micro=
+soft\S</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; ignatures\www.jdcassidy.net&gt; www.jdcassidy.net =
+</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp;&nbsp;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt;&nbsp; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&gt; </span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>*** Software bugs are stupid.</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;&nbsp;&nbsp; Nevertheless it needs not so stupid people to =
+solve
+them ***</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-=3D-=3D-</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Heinz
+Mauelshagen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Red Hat, Inc.</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Consulting Development
+Engineer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Am Sonnenhang 11</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;
+56242 Marienrachdorf</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;
+Germany</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>Mauelshagen@RedHat.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++49 2626 141200</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+FAX 924446</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-=3D-=3D-</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>&nbsp;</span></font></p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>_______________________________________________</span></font></p>=
 
 
---------------030906070005010807050802--
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>linux-lvm mailing list</span></font></p>
 
---------------ms090809030607050008030906
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>linux-lvm@sistina.com</span></font></p>
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIKSjCC
-AzgwggKhoAMCAQICEGZFcrfMdPXPY3ZFhNAukQEwDQYJKoZIhvcNAQEEBQAwgdExCzAJBgNV
-BAYTAlpBMRUwEwYDVQQIEwxXZXN0ZXJuIENhcGUxEjAQBgNVBAcTCUNhcGUgVG93bjEaMBgG
-A1UEChMRVGhhd3RlIENvbnN1bHRpbmcxKDAmBgNVBAsTH0NlcnRpZmljYXRpb24gU2Vydmlj
-ZXMgRGl2aXNpb24xJDAiBgNVBAMTG1RoYXd0ZSBQZXJzb25hbCBGcmVlbWFpbCBDQTErMCkG
-CSqGSIb3DQEJARYccGVyc29uYWwtZnJlZW1haWxAdGhhd3RlLmNvbTAeFw0wMDA4MzAwMDAw
-MDBaFw0wNDA4MjcyMzU5NTlaMIGSMQswCQYDVQQGEwJaQTEVMBMGA1UECBMMV2VzdGVybiBD
-YXBlMRIwEAYDVQQHEwlDYXBlIFRvd24xDzANBgNVBAoTBlRoYXd0ZTEdMBsGA1UECxMUQ2Vy
-dGlmaWNhdGUgU2VydmljZXMxKDAmBgNVBAMTH1BlcnNvbmFsIEZyZWVtYWlsIFJTQSAyMDAw
-LjguMzAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAN4zMqZjxwklRT7SbngnZ4HF2ogZ
-gpcO40QpimM1Km1wPPrcrvfudG8wvDOQf/k0caCjbZjxw0+iZdsN+kvx1t1hpfmFzVWaNRqd
-knWoJ67Ycvm6AvbXsJHeHOmr4BgDqHxDQlBRh4M88Dm0m1SKE4f/s5udSWYALQmJ7JRr6aFp
-AgMBAAGjTjBMMCkGA1UdEQQiMCCkHjAcMRowGAYDVQQDExFQcml2YXRlTGFiZWwxLTI5NzAS
-BgNVHRMBAf8ECDAGAQH/AgEAMAsGA1UdDwQEAwIBBjANBgkqhkiG9w0BAQQFAAOBgQAxsUtH
-XfkBceX1U2xdedY9mMAmE2KBIqcS+CKV6BtJtyd7BDm6/ObyJOuR+r3sDSo491BVqGz3Da1M
-G7wD9LXrokefbKIMWI0xQgkRbLAaadErErJAXWr5edDqLiXdiuT82w0fnQLzWtvKPPZE6iZp
-h39Ins6ln+eE2MliYq0FxjCCA4MwggLsoAMCAQICAwpUwjANBgkqhkiG9w0BAQQFADCBkjEL
-MAkGA1UEBhMCWkExFTATBgNVBAgTDFdlc3Rlcm4gQ2FwZTESMBAGA1UEBxMJQ2FwZSBUb3du
-MQ8wDQYDVQQKEwZUaGF3dGUxHTAbBgNVBAsTFENlcnRpZmljYXRlIFNlcnZpY2VzMSgwJgYD
-VQQDEx9QZXJzb25hbCBGcmVlbWFpbCBSU0EgMjAwMC44LjMwMB4XDTAzMDcxMTE3MzA1NloX
-DTA0MDcxMDE3MzA1NlowgZwxEzARBgNVBAQTCk1vcmdlbnJvdGgxDzANBgNVBCoTBlJvbGFu
-ZDEaMBgGA1UEAxMRUm9sYW5kIE1vcmdlbnJvdGgxJzAlBgkqhkiG9w0BCQEWGFJvbGFuZC5N
-b3JnZW5yb3RoQHdlYi5kZTEvMC0GCSqGSIb3DQEJARYgUm9sYW5kLk1vcmdlbnJvdGhAa2Fw
-cC1jb2J1cmcuZGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDPpjIXODcoYSKZ
-zqdMCbtjRSApQKtYTYeWD02N6KG0x5mMHDwoMQp+KHRp3bc3bpNoa70tfg8NOU1NyJbOPC6L
-R1lQToCnyw3BurlNFjl7cuPHZuoAHp2VSElRUa11Shf0DcIH0GN5WBxIOONCzIZ/AWMM0ZK2
-sWMmo4QMlaQEdhCNlHU0UWSzWlhF9Lr7FWYKu27q52JAyrfUqkEM00r18AloA5b8oK6KXh45
-Z3vHVl7MhMIv0BzquRUqoZOMzuRfNE05h38Y5GcxajVhCeaG6Zr1vNPVh8NzaM28Im2e0QE0
-OQa82J0zpr0hMjnI4efqbyhs+JZJBBat0wu6ltrVAgMBAAGjVzBVMEUGA1UdEQQ+MDyBGFJv
-bGFuZC5Nb3JnZW5yb3RoQHdlYi5kZYEgUm9sYW5kLk1vcmdlbnJvdGhAa2FwcC1jb2J1cmcu
-ZGUwDAYDVR0TAQH/BAIwADANBgkqhkiG9w0BAQQFAAOBgQDBH2krJyBXb4rE3pmA/E8lxMl6
-O0cg3ZTo4UrcNEJclrA/2hWdp+KkpP/tcM9l9tG6jiQ1lKO8XzEZ7xM1i7O9i9fIVLrmk+Fx
-MNzYTT3ZvJo8bMBml0lc2CZ/ztDyWbw5yVecNpYWmW9fcO04sAZeshz2HDpJZNOm4K8d3g7p
-mzCCA4MwggLsoAMCAQICAwpUwjANBgkqhkiG9w0BAQQFADCBkjELMAkGA1UEBhMCWkExFTAT
-BgNVBAgTDFdlc3Rlcm4gQ2FwZTESMBAGA1UEBxMJQ2FwZSBUb3duMQ8wDQYDVQQKEwZUaGF3
-dGUxHTAbBgNVBAsTFENlcnRpZmljYXRlIFNlcnZpY2VzMSgwJgYDVQQDEx9QZXJzb25hbCBG
-cmVlbWFpbCBSU0EgMjAwMC44LjMwMB4XDTAzMDcxMTE3MzA1NloXDTA0MDcxMDE3MzA1Nlow
-gZwxEzARBgNVBAQTCk1vcmdlbnJvdGgxDzANBgNVBCoTBlJvbGFuZDEaMBgGA1UEAxMRUm9s
-YW5kIE1vcmdlbnJvdGgxJzAlBgkqhkiG9w0BCQEWGFJvbGFuZC5Nb3JnZW5yb3RoQHdlYi5k
-ZTEvMC0GCSqGSIb3DQEJARYgUm9sYW5kLk1vcmdlbnJvdGhAa2FwcC1jb2J1cmcuZGUwggEi
-MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDPpjIXODcoYSKZzqdMCbtjRSApQKtYTYeW
-D02N6KG0x5mMHDwoMQp+KHRp3bc3bpNoa70tfg8NOU1NyJbOPC6LR1lQToCnyw3BurlNFjl7
-cuPHZuoAHp2VSElRUa11Shf0DcIH0GN5WBxIOONCzIZ/AWMM0ZK2sWMmo4QMlaQEdhCNlHU0
-UWSzWlhF9Lr7FWYKu27q52JAyrfUqkEM00r18AloA5b8oK6KXh45Z3vHVl7MhMIv0BzquRUq
-oZOMzuRfNE05h38Y5GcxajVhCeaG6Zr1vNPVh8NzaM28Im2e0QE0OQa82J0zpr0hMjnI4efq
-byhs+JZJBBat0wu6ltrVAgMBAAGjVzBVMEUGA1UdEQQ+MDyBGFJvbGFuZC5Nb3JnZW5yb3Ro
-QHdlYi5kZYEgUm9sYW5kLk1vcmdlbnJvdGhAa2FwcC1jb2J1cmcuZGUwDAYDVR0TAQH/BAIw
-ADANBgkqhkiG9w0BAQQFAAOBgQDBH2krJyBXb4rE3pmA/E8lxMl6O0cg3ZTo4UrcNEJclrA/
-2hWdp+KkpP/tcM9l9tG6jiQ1lKO8XzEZ7xM1i7O9i9fIVLrmk+FxMNzYTT3ZvJo8bMBml0lc
-2CZ/ztDyWbw5yVecNpYWmW9fcO04sAZeshz2HDpJZNOm4K8d3g7pmzGCA9UwggPRAgEBMIGa
-MIGSMQswCQYDVQQGEwJaQTEVMBMGA1UECBMMV2VzdGVybiBDYXBlMRIwEAYDVQQHEwlDYXBl
-IFRvd24xDzANBgNVBAoTBlRoYXd0ZTEdMBsGA1UECxMUQ2VydGlmaWNhdGUgU2VydmljZXMx
-KDAmBgNVBAMTH1BlcnNvbmFsIEZyZWVtYWlsIFJTQSAyMDAwLjguMzACAwpUwjAJBgUrDgMC
-GgUAoIICDzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0wNDAx
-MjcxMDAwMThaMCMGCSqGSIb3DQEJBDEWBBTONQPssCJ0JooPZTa7f2JKmWFpKzBSBgkqhkiG
-9w0BCQ8xRTBDMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAH
-BgUrDgMCBzANBggqhkiG9w0DAgIBKDCBqwYJKwYBBAGCNxAEMYGdMIGaMIGSMQswCQYDVQQG
-EwJaQTEVMBMGA1UECBMMV2VzdGVybiBDYXBlMRIwEAYDVQQHEwlDYXBlIFRvd24xDzANBgNV
-BAoTBlRoYXd0ZTEdMBsGA1UECxMUQ2VydGlmaWNhdGUgU2VydmljZXMxKDAmBgNVBAMTH1Bl
-cnNvbmFsIEZyZWVtYWlsIFJTQSAyMDAwLjguMzACAwpUwjCBrQYLKoZIhvcNAQkQAgsxgZ2g
-gZowgZIxCzAJBgNVBAYTAlpBMRUwEwYDVQQIEwxXZXN0ZXJuIENhcGUxEjAQBgNVBAcTCUNh
-cGUgVG93bjEPMA0GA1UEChMGVGhhd3RlMR0wGwYDVQQLExRDZXJ0aWZpY2F0ZSBTZXJ2aWNl
-czEoMCYGA1UEAxMfUGVyc29uYWwgRnJlZW1haWwgUlNBIDIwMDAuOC4zMAIDClTCMA0GCSqG
-SIb3DQEBAQUABIIBAJY0JFiPdNJyqKmZeew6ZFPf5lft4h297k972mDw72SrRnKu0qeT8MJx
-vVxBQvj4hzxZT8WQDrPPcdFzyXjDXSx9ZqPW2dBwmn/0lyobXdYOBhHNPbFHVTSHYyHfRBfa
-cY36/vcLkbZTiHV/2pQiVJiQqIZtQGvvdKRpk30ia7D6HiL1gX3XxWPkhWVcl62YrhiAwu8s
-Ddzr+YQ9Kck5nZj/60BO2Mv6M7cUZouE/In23iZMaa/Uk90vQsgCoqYcEGu7dRHupW0gjwWd
-P4k1VUxbAw4CAVE9NOR9zjw8Sij9Oor0kAREBtEPhjZv9lGzG9tC6PVRWUifZZ4FI9GCPzIA
-AAAAAAA=
---------------ms090809030607050008030906--
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>http://lists.sistina.com/mailman/listinfo/linux-lvm</span></font>=
+</p>
+
+<p class=3DMsoPlainText><font size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:
+10.0pt'>read the LVM HOW-TO at =
+http://tldp.org/HOWTO/LVM-HOWTO/</span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_000D_01C3E4C1.C9BCCAC0--
