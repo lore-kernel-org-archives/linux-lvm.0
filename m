@@ -1,8 +1,10 @@
-From: Daniel Savard <dsavard@videotron.ca>
-MIME-Version: 1.0
-Message-Id: <01111911040602.01226@dirac.cids.ca>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] root fs on a LVM cause kernel panic
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] Recovering a volume after OS upgrade (lost /etc/lvm*)
+Message-ID: <20011119095105.G1308@lynx.no>
+References: <20011119014754.A1308@lynx.no> <20011119155741.7961.qmail@web12306.mail.yahoo.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011119155741.7961.qmail@web12306.mail.yahoo.com>; from thelars@yahoo.com on Mon, Nov 19, 2001 at 07:57:41AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 10:10:02 2001
+Date: Mon Nov 19 10:49:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
-Cc: joost@e-cube.nl
+Content-Transfer-Encoding: 7bit
+To: Lars Kellogg-Stedman <thelars@yahoo.com>
+Cc: linux-lvm@sistina.com
 
-No, the /boot is on a ext2 filesystem and JFS is built-in the kernel. I
-followed the instructions from the IBM web site for JFS. However, I am not
-finished with my setup and I cannot confirm you if it is working as expected.
-But, the procedure makes sense.
+On Nov 19, 2001  07:57 -0800, Lars Kellogg-Stedman wrote:
+> The RAID device appears to be working just fine.  With the MD driver,
+> simply recreating /etc/raidtab and running raidstart worked without a
+> problem.
 
-> Does Lilo support JFS? I use XFS instead of EXT2 but for that I needed to
-> patch lilo with XFS support.
->
->
-> Joost van der Locht
-> Technisch Directeur
+You saw the other posting about the MD devices fix?  This is fixed in
+CVS, but not 1.0.1rc4.  Maybe it is time for a new LVM release.
 
--- 
-
-================================
-Daniel Savard
-Internet: dsavard@videotron.ca
-================================
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
