@@ -1,8 +1,11 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re[2]: [linux-lvm] System Suggestions
+From: Theo Van Dinter <felicity@kluge.net>
+Subject: Re: [linux-lvm] System Suggestions
+Message-Id: <20020306161130.D855@kluge.net>
+References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
+Content-Disposition: inline
+In-Reply-To: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>;
+    from freemyer@NorcrossGroup.com on Wed, Mar 06, 2002 at 03:59:50PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,64 +16,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 15:04:02 2002
+Date: Wed Mar  6 15:11:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: "Anthony W. Marino" <anthony@AWMObjects.com>, Petro <petro@auctionwatch.com>, linux-lvm@sistina.com
-Cc: linux-xfs@oss.sgi.com, mysql@lists.mysql.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
+Cc: "Anthony W. Marino" <anthony@AWMObjects.com>, Petro <petro@auctionwatch.com>, linux-xfs@oss.sgi.com, mysql@lists.mysql.com
 
-Anthony,
+On Wed, Mar 06, 2002 at 03:59:50PM -0500, Greg Freemyer wrote:
+> If you do get the 3Ware IDE RAID controller to work with XFS, please let me know.
 
-I'd be careful with the IDE Raid controller.
+Works beautifully.  Have RH7.2, XFS, LVM, and a 3Ware 7410 running the
+box that I'm sending this from. :)
 
-We just built a lab machine with a Promise IDE Raid controller and the =
-assumption that we could get it and XFS to co-exist.
+The Promise RAID cards are cute but crappy from what I've heard.
+The 3ware cards seem to be excellent quality so far, and the driver (as
+far as I can tell) was GPLed and is standard in the 2.4 kernel series
+(well, it's in 2.4.9 anyway...)
 
-I'm not doing the work, but the engineer that is tells me that the Promise =
-Patch Kit only works with a very limited number of stock Redhat Kernels, and =
-that we are NOT free to add the XFS patch.  Even worse, promise does not supply =
-their patch in source, so we are not free to tweak it ourselves.
-
-I'm not sure I really believe that, but that is what I'm told.
-
-If you do get the 3Ware IDE RAID controller to work with XFS, please let me =
-know.
-
-Greg Freemyer
-Internet Engineer
-Deployment and Integration Specialist
-The Norcross Group
-www.NorcrossGroup.com
-
- >>  On Wednesday 06 March 2002 02:40 pm, Petro wrote:
- >>  > On Wed, Mar 06, 2002 at 11:52:30AM -0500, Anthony W. Marino wrote:
- >>  > > Could someone, please, provide me with a link and/or facilitate some
- >>  > > suggestons for configuration of the following components for a new DB
- >>  > > server hosting MySQL 4.01MAX?  I'm only looking to get a start and
- >>  don't
- >>  > > expect "THE" answer since all things are relative and I will have to
- >>  > > further test the various scenarios.
- >>  > > SuSE 7.3-2.4.18
- >>  > > 512MB RAM
- >>  > > 4x40GB Maxtor IDE (7200RPM) drives
- >>  > > 3Ware 7800 RAID Controller
- >>  > > LVM
- >>  > > XFS
- >>  >
- >>  >     You really don't provide us with enough information here.
- >>  >
- >>  >     How big is your database, both in total size and in number of
- >>  >     tables. How are those tables utilized, when they get used do you
- >>  >     primarily open one table, manipulate it, then close it, or do you go
- >>  >     across a bunch of tables?
- >>  >
- >>  >     All of these, and more will have a dramatic impact on how you set
- >>  >     this stuff up.
-
- >>  Thanks.  I'm more concerned about any specifics as it applies to MySQL Max
- >> =20
- >>  and XFS, RAID and LVM as a whole.  Are there any nuances as it applies to
- >>  the=20
- >>  whole?
-
- >>  Anthony
+-- 
+Randomly Generated Tagline:
+I'm a white male, aged 18 to 49.  Everyone listens to me!  No matter
+ how dumb my suggestions are.
+ 
+ 		-- Homer Simpson
+ 		   Lisa vs. Malibu Stacy
