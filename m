@@ -1,11 +1,10 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Fri, 19 Jan 2001 18:17:35 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] Patch for Kernel 2.2.16
-Message-ID: <20010119181735.B14771@srv.sistina.com>
-References: <615A249B783CD41192F400D0B747AC8601A001EB@hesse.bbn.hp.com> <20010119101757.K23203@sistina.com> <20010119104932.L23203@sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <20010119104932.L23203@sistina.com>; from lewis@sistina.com on Fri, Jan 19, 2001 at 10:49:32AM -0600
+Return-Path: <jweber@valinux.com>
+Date: Fri, 19 Jan 2001 09:22:55 -0800 (PST)
+From: Jay Weber <jweber@valinux.com>
+Subject: Re: [linux-lvm] Kernel panic while snapshotting.
+In-Reply-To: <20010119163758.B1874@66bassett.freeserve.co.uk>
+Message-ID: <Pine.LNX.4.30.0101190915110.28951-100000@beefcake.hdqt.valinux.com>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,82 +16,116 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 19, 2001 at 10:49:32AM -0600, AJ Lewis wrote:
-> On Fri, Jan 19, 2001 at 10:17:57AM -0600, AJ Lewis wrote:
-> > On Fri, Jan 19, 2001 at 04:19:54PM +0100, ZECHA,HOLGER (HP-Germany,ex1) wrote:
-> > > is there a lvm patch for kernel 2.2.16 available ?
-> > 
-> > By following the instructions in the PATCHES/README file for 0.9.1 Beta2, I
-> > was able to generate a patch that appears to work for 2.2.16.  I copied the
-> > fragments-2.2.18 file to fragments-2.2.16 and ran 'make' in the PATCHES
-> > directory.  This created a file called lvm-0.9.1_beta2-2.2.16.patch.
-> > 
-> > I grabbed the 2.2.16 rawio patch from the 0.8.1 release of LVM.  (You can
-> > get this from the LVM ftp site at
-> > ftp://ftp.sistina.com/LVM/0.8.1/PATCHES/linux-2.2.16-rawio.patch)  I applied
-> > this rawio patch and the generated lvm patch to the clean 2.2.16 kernel,
-> > configured, and built the kernel.  After installing the kernel and rebooting
-> > the machine, I was able to see the volume group i had created with a 2.2.18
-> > kernel and LVM 0.9.1 Beta2.  I mounted a logical volume from the volume
-> > group, and was able to use it.  
-> > 
-> > That is the extent of the testing I have done, so if you are worried about
-> > your data, don't do this!  Or at least backup your data before trying it.
-> > Good luck.
-> > 
-> 
-> After testing a bit more, I have found a bug in the snapshot creation.
-> Under load, you can get a 
-> 'kernel panic: brw_kiovec: iobuf not locked for I/O'
+Are the LockPage() calls necessary?  I just reverted to iobuf->locked = 1;
+and tested with IO in background and it seems to work again.  Feedback is
+of course welcome.  I noticed your comment regarding LockPage() in commit
+logs, hence why I ask.  To reiterate, I didn't readd the LockPage() chunk
+of code.
 
-I think Andrea Arcangeli's patch set the previously introduced
+Btw, I'm also using the LVM_VFS_ENHANCEMENT option for snapshotting
+journaled ext3 filesystem to flush the journal and mark the fs clean in
+all these snapshot testings.
 
-iobuf->locked = 1; 
+On Fri, 19 Jan 2001, Joe Thornber wrote:
 
-to 0 again.
-Change it to 1 and test.
-This should fix it.
-
-> 
-> Joe, is this the same as the problem you discussed in the 
-> "[linux-lvm] Kernel panic while snapshotting."
-> thread?
-> 
-> -- 
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-379-3951
-> 1313 5th St SE, Suite 111              Fax:    612-379-3952
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
-> 
-> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2648
-> Get my key at: http://www.sistina.com/~lewis/gpgkey
->  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-> 
-> -----Begin Obligatory Humorous Quote----------------------------------------
-> Linux: Because rebooting is for adding new hardware.
-> -----End Obligatory Humorous Quote------------------------------------------
-
-
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> Date: Fri, 19 Jan 2001 16:37:58 +0000
+> From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+> Reply-To: linux-lvm@sistina.com
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Kernel panic while snapshotting.
+>
+> Hi Jay,
+>
+> Drat.  I'm really sorry about this.
+>
+> Can you try reversing this patch please ?  It should fix it.
+>
+> Let me know if you're still having trouble afterwards.
+>
+> - Joe
+>
+> diff -u -r1.2.2.6 -r1.2.2.7
+> --- LVM/kernel/lvm-snap.c	2001/01/12 16:08:12	1.2.2.6
+> +++ LVM/kernel/lvm-snap.c	2001/01/17 15:20:27	1.2.2.7
+> @@ -45,10 +45,6 @@
+>
+>  static char *lvm_snap_version __attribute__ ((unused)) = "LVM 0.9 snapshot code (13/11/2000)\n";
+>
+> -#ifndef LockPage
+> -#define LockPage(map) set_bit(PG_locked, &(map)->flags)
+> -#endif
+> -
+>  extern const char *const lvm_name;
+>  extern int lvm_blocksizes[];
+>
+> @@ -492,7 +488,7 @@
+>  		goto out;
+>
+>  	err = -ENOMEM;
+> -	iobuf->locked = 1;
+> +	iobuf->locked = 0;
+>  	iobuf->nr_pages = 0;
+>  	for (i = 0; i < nr_pages; i++)
+>  	{
+> @@ -513,9 +509,6 @@
+>  #endif
+>
+>  		iobuf->maplist[i] = page;
+> -		/* the only point to lock the page here is to be allowed
+> -		   to share unmap_kiobuf() in the fail-path */
+> -		LockPage(page);
+>  		iobuf->nr_pages++;
+>  	}
+>  	iobuf->offset = 0;
+>
+>
+> On Fri, Jan 19, 2001 at 07:56:26AM -0800, Jay Weber wrote:
+> > Hi,
+> >
+> > I just got a kernel panic while snapshotting with 0.9.1beta2.  I wonder if
+> > anybody has seen any similar issues or I possibly fubar'd the patch on my
+> > end?
+> >
+> > Panic was:
+> >
+> > 	Kernel panic: brw_kiovec: iobuf not locked for I/O
+> >
+> > This occured while simultanously copying 20 tarballs back and forth
+> > between two dirs on the source volume and performing a snapshot at that
+> > time.  It appears to have hung my lvcreate (snapshot) command shell.
+> > Oh, this was also using loop device for the source volume on my laptop in
+> > this case.  Hmm, actually could this panic be related to the following
+> > change in lvm.c?  It did work prior in 0.9.1beta1.
+> >
+> > @@ -492,7 +488,7 @@
+> >                 goto out;
+> >
+> >         err = -ENOMEM;
+> > -       iobuf->locked = 1;
+> > +       iobuf->locked = 0;
+> >         iobuf->nr_pages = 0;
+> >         for (i = 0; i < nr_pages; i++)
+> >         {
+> >
+> >
+> > I haven't seen this one before myself, but in testing on our bigger scsi
+> > based boxes in the back while snapshots are active and heavy IO is
+> > performed on the source volume, the box tends to hang.  I gather this is
+> > related to having to journal all source volume changes to the snapshot and
+> > when you throw massive IO at it, things get slow. Any thoughts on this one
+> > as well?
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>
