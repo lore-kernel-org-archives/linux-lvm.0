@@ -1,10 +1,9 @@
-Message-Id: <3C4AD059.4070800@sgi.com>
-From: Stephen Lord <lord@sgi.com>
+Message-Id: <200201201741.g0KHfEX13025@in-cadcae4.ing.temic.de>
+From: Emanuel Quass <emanuel.quass@temic.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM causing IO contention or slowdown?
-References: <1011414567.2241.29.camel@UberGeek>
-    <1011425563.3118.29.camel@UberGeek>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Subject: [linux-lvm] ERROR "parameter error" setting up snapshot copy on write
+ exception table
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,68 +14,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 20 08:13:02 2002
+Date: Sun Jan 20 11:41:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Austin Gonyou wrote:
+Hi
 
->As a follow up to this I've done some more testing, and will test the
->rest of this weekend, using AIM db benchmark. 
->
->What I've found is that when mounting with logbufs=8 on my Quad Xeon 2MB
->cache 6450 with 8 Ultra-2 Drives, 4 RAID0 volumes, two of 3 disks each
->and two of 1 disk each. 
->
->The larger Volumes, the more "costly" volumes, when mounted using
->logbufs=8, outperformed the same volume addressed when not under LVM
->control. Not only did it out perform itself, but either WITH or WITHOUT
->LVM controlling the volume, I nearly doubled my throughput to those
->drives. 
->
->Here is what I'm talking about:
->
->#With LVM management
->Throughput 109.715 MB/sec (NB=137.144 MB/sec  1097.15 MBit/sec)  200
->procs
->
->#Without LVM management
->Throughput 100.803 MB/sec (NB=126.004 MB/sec  1008.03 MBit/sec)  200
->procs
->
->
->This only happened once though and I'm not sure exactly why. Still, the
->max I could get out of it for the same test more than once with LVM
->enabled was around 80-85 MB/s. Still a HUGE improvement over 43/44 MB/s.
->
+I had a very strange error on our Linux-server! Maybe someone can help me because it's our production server.
+I rebooted the Server and afterwards  I had an error like:
 
-Off topic for the lvm list, but....
+vgchange -- ERROR "parameter error" setting up snapshot copy on write exception table for "/dev/datenvg/mailsnap"
 
-The logbufs=8 parameter basically means you have 8 buffers capable of 
-pushing
-transactions out to disk. If you have lots of threads going at once in 
-xfs then the
-transactions tend to get throttled waiting for a buffer to do a log 
-write into, so
-adding more is good.
+I use a 2.4.17 kernel with lvm-1.0.1 I just upgraded from 2.4.9 with "LVM version 1.0.1-rc2(30/08/2001)" (thats whats written inside the module)
 
-There is a perl script in the cmd/xfsmisc directory called xfs_stats.pl 
-if you
-run this it will format the output of the xfs /proc kernel statistics. 
-You will
-see a parameter called xs_log_noiclogs near the bottom of the first column.
-This number means a transaction finished, but then had to wait for a log
-buffer before it could hand off its data.
+There are 2 logical columes inside "/dev/datenvg" 1. daten 2. mail and of the second lv I made a snapshot.
+After the reboot ..... (see above) 
 
-The downside of increasing the number of logbuffers is the amount of data
-which can be lost after a crash (i.e. how many ops in the filesystem are
-effectively undone by recovery). However,  looking at stats on my box,
-each log write contains about 5 transactions, so you can never loose
-much.
+Is there a chance of getting the data back?
 
-We have found adding more than 8 usually does not help, making them
-bigger would be a different story, but that is actually a very non-trivial
-change.
+Thanks in advance
 
-Steve
+	Emanuel Quass
