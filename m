@@ -1,8 +1,8 @@
-Message-Id: <20020306155311.9966.qmail@web13005.mail.yahoo.com>
-From: Prashant Kharche <pdkharche@yahoo.com>
-Subject: Re: [linux-lvm] LVM Documentation
-In-Reply-To: <1BD922A62552D411B48A00D0B74723751120A8A9@kecmsg04.ad.infosys.com>
+From: "Anthony W. Marino" <anthony@AWMObjects.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <auto-000021455115@front2.mail.megapathdsl.net>
+Subject: [linux-lvm] System Suggestions
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,42 +13,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 09:53:02 2002
+Date: Wed Mar  6 10:53:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-xfs@oss.sgi.com, linux-lvm@sistina.com, mysql@lists.mysql.com
 
-Hi Ashish!!
-    Im from PICT.. im doing my final year project
-LVM.. We guys basically making the LVM cluster aware..
-I dont think, there is any source code doc on the
-net.. You'll have to find out the things yourself.. 
+Could someone, please, provide me with a link and/or facilitate some 
+suggestons for configuration of the following components for a new DB server 
+hosting MySQL 4.01MAX?  I'm only looking to get a start and don't expect 
+"THE" answer since all things are relative and I will have to further test 
+the various scenarios.
 
-Prashant
-
---- ASHISH GUPTA <ashish_gupta@infy.com> wrote:
-> Hi ,
->  
-> Where can I find the Linux Volume Manager source
-> code documentation ?  It will be very helpful for me
-> to go through the code. Right Now ,I am using the
-> LVM version 1.0.2 on red Hat Linux 7.2.
->  
-> Thanx,
-> Ashish
->  
->  
->  
->  
->  
->  
->  
->  
-> 
+SuSE 7.3-2.4.18
+512MB RAM
+4x40GB Maxtor IDE (7200RPM) drives
+3Ware 7800 RAID Controller
+LVM
+XFS
 
 
-__________________________________________________
-Do You Yahoo!?
-Try FREE Yahoo! Mail - the world's greatest free email!
-http://mail.yahoo.com/
+Thank You,
+Anthony
