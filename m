@@ -1,9 +1,9 @@
-Message-Id: <000a01c1c1dc$393ed6f0$0100a8c0@japanair>
-From: ile <ileukens@t-online.de>
+From: "noname noname" <noantz@hotmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-    boundary="----=_NextPart_000_0007_01C1C1E4.9A96C180"
-Subject: [linux-lvm] LVM Problem, VGs vanished (??) Need urgent help!
+    boundary="----=_NextPart_000_00A1_01C1C1E9.CE824870"
+Message-Id: <OE72ABifXNQAsPIUllI00010bae@hotmail.com>
+Subject: [linux-lvm] Migrating root problems...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,100 +14,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Mar  2 05:20:02 2002
+Date: Sat Mar  2 05:57:01 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0007_01C1C1E4.9A96C180
+------=_NextPart_000_00A1_01C1C1E9.CE824870
 Content-Type: text/plain;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-i have a serious problem with my LVM (Suse 7.3).
-I used to have 2 VGs (ROOT and TAN)=20
-ROOT consisted of /hda1 /hdf1
-TAN consisted of /hdh1 /hdg1
+Hello!! =20
+ =20
+I am trying to install the LVM v1.0.3 in a RedHat 7.2 but I have some =
+problems. I am following the HowTo =
+(http://www.sistina.com/lvm_howtos/lvm_howto) and I have carried out the =
+steps there suitable. I recompiled Kernel to be able to support LVM =
+etc... At the moment I have the following hard disks: =20
+ =20
+/ dev/hda1 ext2  (Linux native) =20
+/ dev/hdb1 swap  (Linux swap) =20
+/ dev/hdc1 ext2  (LVM volume) =20
+ =20
+In the / dev/hda1 has installed the current RedHat, but what I attempt =
+is migrate the / to a LVM volume (following the howto =
+http://www.sistina.com/lvm_howtos/lvm_howto/Converting_a_root_filesys.htm=
+l) but here it is where I have problems. The unit LVM is created and it =
+is activated in the boot process. I have copied the whole content of the =
+/ less /boot directory. The problem comes when wanting to pull up Linux =
+having the / in the volume LVM (/dev/hdc1). The modifications of the one =
+in the /etc/fstab of the /dev/hdc1 is carried out, as well as the =
+creation of the initrd and in the grub I have added the correct option =
+to be able to start up: =20
+ =20
+title Net Hat Linux (2.4.7-10) VLM Support =20
+        root (hd0,0) =20
+        kernel / boot/vmlinuz-2.4.7-10feb2002 mem=3D250M ramdisk=3D5038 =
+ro root=3D/dev/q3xvol/ro =20
+        initrd / boot/initrd-lvm-2.4.7-10feb2002.gz =20
+ =20
+When I start up and I select this option and the system it begins to =
+start up.... but shortcomings take place: =20
+ =20
+. =20
+. =20
+. =20
+hdb:<7> LDM:  DEBUG (ldm.c, 876): validate_partition_table: Found basic =
+MS-DOS partition, not to dynamic disk. =20
+hdb1 =20
+hdc:<7> LDM:  DEBUG (ldm.c, 876): validate_partition_table: Found basic =
+MS-DOS partition, not to dynamic disk.   =20
+hdc1 =20
+Floppy drive(s): fd0 is 1.44M =20
+. =20
+. =20
+. =20
+NET4 LinuxIPX 0.47 for NET4.0 =20
+IPX Portions Copyright (c) 1995 Boiler, Inc =20
+IPX Portions Copyright (c) 2000, 2001 Conectiva, Inc =20
+Kernel panic: I have not root and I want to scream. =20
+ =20
+And the system stops having that reeboot. It seems that he doesn't find =
+or it cannot mount the root. Does somebody know what it happens? Some =
+idea? =20
+ =20
+Thank you for the help!
 
-There was (hopefully still is) data on both VG.
-Now the problem: I put in a new HD yesterday. Reboot. No VGs found =
-anymore. All xxscan commands doesnt find any proof of the VGs. Well, i =
-thought just put the new HD out and everything is ok, but without the =
-new HD the situation is still the same.
-The new HD was put alone on a cable. I didnt change anything in the =
-system while the new HD was connected.
-The system doesnt find a partition on hda now, dunno why. But everything =
-on VG TAN should work since there is no evidence of any failure happened =
-to hdg1 or hdh1. The system worked perfect for the last 2 weeks.
-Now i dunno what to do anymore, since i dont want to loose any data on =
-TAN (the root part is not that important). I would appreciate any help.
-
-Regards
-Jim
-
-
-Situation now:
->lvmdiskscan
-lvmdiskscan -- reading all disks / partitions (this may take a while...)
-lvmdiskscan -- /dev/sda1 [      23.50 MB] Primary  LINUX native =
-partition [0x83]
-lvmdiskscan -- /dev/sda2 [     133.35 MB] Primary  LINUX swap partition =
-[0x82]
-lvmdiskscan -- /dev/sda3 [       1.86 GB] Primary  LINUX native =
-partition [0x83]
-lvmdiskscan -- /dev/hdg1 [      57.25 GB] Primary  LVM partition [0x8E]
-lvmdiskscan -- /dev/hdh1 [      57.25 GB] Primary  LVM partition [0x8E]
-lvmdiskscan -- /dev/hde1 [      76.34 GB] Primary  LINUX native =
-partition [0x83]
-lvmdiskscan -- /dev/hdf1 [      74.53 GB] Primary  LVM partition [0x8E]
-lvmdiskscan -- /dev/hda  [      76.34 GB] free whole disk
-lvmdiskscan -- 6 disks
-lvmdiskscan -- 1 whole disk
-lvmdiskscan -- 0 loop devices
-lvmdiskscan -- 0 multiple devices
-lvmdiskscan -- 0 network block devices
-lvmdiskscan -- 7 partitions
-lvmdiskscan -- 3 LVM physical volume partitions
-
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdg"  is in no VG  [8.00 GB]
-pvscan -- inactive PV "/dev/hdh"  is in no VG  [8.00 GB]
-pvscan -- inactive PV "/dev/hdf1" of VG "ROOT" [74.52 GB / 0 free]
-pvscan -- total: 3 [90.53 GB] / in use: 1 [74.53 GB] / in no VG: 2 =
-[16.00 GB]
-
-pvdisplay /dev/hdf1
---- Physical volume ---
-PV Name               /dev/hdf1
-VG Name               ROOT
-PV Size               74.53 GB / NOT usable 7.05 MB [LVM: 198.00 KB]
-PV#                   2
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              19078
-Free PE               0
-Allocated PE          19078
-PV UUID               bmUZpk-p2Zd-GvxZ-IRfd-k0TA-B79z-iJKxGv
-
-pvdisplay on all discs but hdf1 looks like this:
-pvdisplay -- no physical volume identifier on "/dev/hdh1"
-
-Partition check:
- hda:
- hde: hde1
- hdf: hdf1
- hdg: hdg1
- hdh: hdh1
-
-If anyone needs more information i would be glad to give it to you.
-
-
-
-------=_NextPart_000_0007_01C1C1E4.9A96C180
+------=_NextPart_000_00A1_01C1C1E9.CE824870
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -116,139 +90,73 @@ Content-Transfer-Encoding: quoted-printable
 <HTML><HEAD>
 <META http-equiv=3DContent-Type content=3D"text/html; =
 charset=3Diso-8859-1">
-<META content=3D"MSHTML 5.50.4912.300" name=3DGENERATOR>
+<META content=3D"MSHTML 6.00.2713.1100" name=3DGENERATOR>
 <STYLE></STYLE>
 </HEAD>
 <BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hi,</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>i have a serious problem with my LVM =
-(Suse=20
-7.3).</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>I used to have 2 VGs (ROOT and TAN) =
-</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>ROOT consisted of /hda1 =
-/hdf1</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>TAN consisted of /hdh1 =
-/hdg1</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>There was (hopefully still is) data on =
-both=20
-VG.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Now the problem: I put in a new HD =
-yesterday.=20
-Reboot. No VGs found anymore. All xxscan commands doesnt find any proof =
-of the=20
-VGs. Well, i thought just put the new HD out and everything is ok, but =
-without=20
-the new HD the situation is still the same.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>The new HD was put alone on&nbsp;a =
-cable. I didnt=20
-change anything in the system while the new HD was =
-connected.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>The system doesnt find a partition on =
-hda now,=20
-dunno why. But everything on VG TAN should work since there is no =
-evidence of=20
-any failure happened to hdg1 or hdh1. The system worked perfect for the =
-last 2=20
-weeks.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Now i dunno what to do anymore, =
-since&nbsp;i dont=20
-want to loose any data on TAN (the root part is not that important). I =
-would=20
-appreciate any help.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Regards</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Jim</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Situation now:</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>&gt;lvmdiskscan<BR>lvmdiskscan -- =
-reading all disks=20
-/ partitions (this may take a while...)<BR>lvmdiskscan -- /dev/sda1=20
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 23.50 MB] Primary&nbsp; LINUX native =
-partition=20
-[0x83]<BR>lvmdiskscan -- /dev/sda2 [&nbsp;&nbsp;&nbsp;&nbsp; 133.35 MB]=20
-Primary&nbsp; LINUX swap partition [0x82]<BR>lvmdiskscan -- /dev/sda3=20
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.86 GB] Primary&nbsp; LINUX =
-native=20
-partition [0x83]<BR>lvmdiskscan -- /dev/hdg1 =
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-57.25 GB] Primary&nbsp; LVM partition [0x8E]<BR>lvmdiskscan -- /dev/hdh1 =
+<DIV><FONT face=3DArial size=3D2>Hello!!&nbsp; <BR>&nbsp; <BR>I am =
+trying to install=20
+the LVM v1.0.3 in a RedHat 7.2 but I have some problems. I am following =
+the=20
+HowTo (<A=20
+href=3D"http://www.sistina.com/lvm_howtos/lvm_howto">http://www.sistina.c=
+om/lvm_howtos/lvm_howto</A>)=20
+and I have carried out the steps there suitable. I recompiled Kernel to =
+be able=20
+to support LVM etc... At the moment I have the following hard =
+disks:&nbsp;=20
+<BR>&nbsp; <BR>/ dev/hda1&nbsp;ext2&nbsp;&nbsp;(Linux native)&nbsp; =
+<BR>/=20
+dev/hdb1&nbsp;swap&nbsp;&nbsp;(Linux swap)&nbsp; <BR>/=20
+dev/hdc1&nbsp;ext2&nbsp;&nbsp;(LVM volume)&nbsp; <BR>&nbsp; <BR>In the / =
 
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 57.25 GB] Primary&nbsp; LVM partition=20
-[0x8E]<BR>lvmdiskscan -- /dev/hde1 [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 76.34 =
-GB]=20
-Primary&nbsp; LINUX native partition [0x83]<BR>lvmdiskscan -- /dev/hdf1=20
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 74.53 GB] Primary&nbsp; LVM partition=20
-[0x8E]<BR>lvmdiskscan -- /dev/hda&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-76.34=20
-GB] free whole disk<BR>lvmdiskscan -- 6 disks<BR>lvmdiskscan -- 1 whole=20
-disk<BR>lvmdiskscan -- 0 loop devices<BR>lvmdiskscan -- 0 multiple=20
-devices<BR>lvmdiskscan -- 0 network block devices<BR>lvmdiskscan -- 7=20
-partitions<BR>lvmdiskscan -- 3 LVM physical volume =
-partitions<BR></FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>pvscan -- reading all physical volumes =
-(this may=20
-take a while...)<BR>pvscan -- inactive PV "/dev/hdg"&nbsp; is in no =
-VG&nbsp;=20
-[8.00 GB]<BR>pvscan -- inactive PV "/dev/hdh"&nbsp; is in no VG&nbsp; =
-[8.00=20
-GB]<BR>pvscan -- inactive PV "/dev/hdf1" of VG "ROOT" [74.52 GB / 0=20
-free]<BR>pvscan -- total: 3 [90.53 GB] / in use: 1 [74.53 GB] / in no =
-VG: 2=20
-[16.00 GB]</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>pvdisplay /dev/hdf1</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>--- Physical volume ---<BR>PV=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-/dev/hdf1<BR>VG=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-ROOT<BR>PV=20
-Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-74.53 GB / NOT usable 7.05 MB [LVM: 198.00=20
-KB]<BR>PV#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-2<BR>PV=20
-Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;=20
-NOT=20
-available<BR>Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;=20
-yes (but full)<BR>Cur=20
-LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;=20
-1<BR>PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4096<BR>Total=20
-PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;=20
-19078<BR>Free=20
-PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;=20
-0<BR>Allocated PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-19078<BR>PV=20
-UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-bmUZpk-p2Zd-GvxZ-IRfd-k0TA-B79z-iJKxGv</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>pvdisplay on all discs but hdf1 looks =
-like=20
-this:</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>pvdisplay -- no physical volume =
-identifier on=20
-"/dev/hdh1"</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Partition =
-check:<BR>&nbsp;hda:<BR>&nbsp;hde:=20
-hde1<BR>&nbsp;hdf: hdf1<BR>&nbsp;hdg: hdg1<BR>&nbsp;hdh: =
-hdh1</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>If anyone needs more information i =
-would be glad to=20
-give it to you.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>&nbsp;</DIV></FONT></BODY></HTML>
+dev/hda1 has installed the current RedHat, but what I attempt is migrate =
+the /=20
+to a LVM volume (following the howto <A=20
+href=3D"http://www.sistina.com/lvm_howtos/lvm_howto/Converting_a_root_fil=
+esys.html">http://www.sistina.com/lvm_howtos/lvm_howto/Converting_a_root_=
+filesys.html</A>)=20
+but here it is where I have problems. The unit LVM is created and it is=20
+activated in the boot process. I have copied the whole content of the / =
+less=20
+/boot directory. The problem comes when wanting to pull up Linux having =
+the / in=20
+the volume LVM (/dev/hdc1). The modifications of the one in the =
+/etc/fstab of=20
+the /dev/hdc1 is carried out, as well as the creation of the initrd and =
+in the=20
+grub I have added the correct option to be able to start up:&nbsp; =
+<BR>&nbsp;=20
+<BR>title Net Hat Linux (2.4.7-10) VLM Support&nbsp;=20
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root (hd0,0)&nbsp;=20
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kernel /=20
+boot/vmlinuz-2.4.7-10feb2002 mem=3D250M ramdisk=3D5038 ro =
+root=3D/dev/q3xvol/ro&nbsp;=20
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; initrd /=20
+boot/initrd-lvm-2.4.7-10feb2002.gz&nbsp; <BR>&nbsp; <BR>When I start up =
+and I=20
+select this option and the system it begins to start up.... but =
+shortcomings=20
+take place:&nbsp; <BR>&nbsp; <BR>.&nbsp; <BR>.&nbsp; <BR>.&nbsp;=20
+<BR>hdb:&lt;7&gt; LDM:&nbsp; DEBUG (ldm.c, 876): =
+validate_partition_table: Found=20
+basic MS-DOS partition, not to dynamic disk.&nbsp; <BR>hdb1&nbsp;=20
+<BR>hdc:&lt;7&gt; LDM:&nbsp; DEBUG (ldm.c, 876): =
+validate_partition_table: Found=20
+basic MS-DOS partition, not to dynamic disk.&nbsp;&nbsp;&nbsp; =
+<BR>hdc1&nbsp;=20
+<BR>Floppy drive(s): fd0 is 1.44M&nbsp; <BR>.&nbsp; <BR>.&nbsp; =
+<BR>.&nbsp;=20
+<BR>NET4 LinuxIPX 0.47 for NET4.0&nbsp; <BR>IPX Portions Copyright (c) =
+1995=20
+Boiler, Inc&nbsp; <BR>IPX Portions Copyright (c) 2000, 2001 Conectiva, =
+Inc&nbsp;=20
+<BR>Kernel panic: I have not root and I want to scream.&nbsp; <BR>&nbsp; =
+<BR>And=20
+the system stops having that reeboot. It seems that he doesn't find or =
+it cannot=20
+mount the root. Does somebody know what it happens? Some idea?&nbsp; =
+<BR>&nbsp;=20
+<BR>Thank you for the help!</FONT></DIV></BODY></HTML>
 
-------=_NextPart_000_0007_01C1C1E4.9A96C180--
+------=_NextPart_000_00A1_01C1C1E9.CE824870--
