@@ -1,10 +1,11 @@
-Date: Thu, 11 Oct 2001 16:31:44 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] core dump - lvcreate
-Message-ID: <20011011163144.C8752@sistina.com>
-References: <3BC5A7D4.73EE8414@megacinema.com>
+Date: Thu, 11 Oct 2001 16:19:33 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] kernel 2.2.19 support
+Message-ID: <20011011161933.B1023@tykepenguin.com>
+References: <3BBC4146.51CD437D@promofinarsa.es> <wv669v3b96.fsf@freeze.oslo.dnmi.no> <3BBC4E6E.BCA3EE70@promofinarsa.es> <wvzo771uju.fsf@freeze.oslo.dnmi.no> <3BBC535B.59D6A5CB@promofinarsa.es> <wv3d4zh1r8.fsf@freeze.oslo.dnmi.no> <20011004111023.C31061@turbolinux.com> <wvy9mrfhmy.fsf@freeze.oslo.dnmi.no> <20011004114903.G31061@turbolinux.com>
 Mime-Version: 1.0
-In-Reply-To: <3BC5A7D4.73EE8414@megacinema.com>; from mohan@megacinema.com on Thu, Oct 11, 2001 at 08:08:20AM -0600
+Content-Disposition: inline
+In-Reply-To: <20011004114903.G31061@turbolinux.com>; from adilger@turbolabs.com on Thu, Oct 04, 2001 at 11:49:03AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,42 +21,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Mohan,
-
-please swicth optimization off in LVMs configure script and
-regenerate/reinstall. This is caused by known optimzer flaw.
-
-FYI: Recent LVM CVS has optimization off by default.
-
-On Thu, Oct 11, 2001 at 08:08:20AM -0600, Mohan Reddy Amasa wrote:
-> Hi Guys,
-> Is this problem fixed in the latest code base? I created a bug 305 in
-> bugzilla. Not sure what is my next step.
-> Thanks
-> Mohan
+On Thu, Oct 04, 2001 at 11:49:03AM -0600, Andreas Dilger wrote:
+> On Oct 04, 2001  19:18 +0200, Adrian Phillips wrote:
+> > Yes, but what concerned me was if there was some equivalent for 2.2
+> > (foo.dev22 = bar). I was going to check the LVM CVS to see what
+> > changes had been done but was unable to login :-
 > 
+> It was just added recently (probably a devfs thing).  Before that, it
+> just ran the "lvm_fs_setup()" (or whatever) function, and didn't do
+> anything with the output.  Hmm, that means my suggestion may be broken.
 > 
+> Need something like:
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> #if LINUX_KERNEL_VERSION > KERNEL_VERSION (2, 3, 38)
+> 	foo.de =
+> #endif
+> 		lvm_fs_setup();
+> 
 
--- 
+You'll need a bit more than that... :-)
 
-Regards,
-Heinz    -- The LVM Guy --
+I've fixed it in CVS now anyway - it works on 2.2 again.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+patrick
