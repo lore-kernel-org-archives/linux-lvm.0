@@ -1,7 +1,9 @@
-Message-Id: <25E4CA13D679FF48BC307694202209710164DE23@nd1-clusa.local.bunnings.com.au>
-From: Colin Coe <CCoe@bunnings.com.au>
+Message-Id: <4F5EF80AA509D211BB340000F6B7DF9B932F5E@wtmah05>
+From: Yaniv Gueta <yanivg@eds.co.il>
 MIME-Version: 1.0
-Subject: [linux-lvm] pvcreate problem
+Content-Type: multipart/mixed;
+    boundary="----_=_NextPart_000_01C19365.A36D8C10"
+Subject: [linux-lvm] char/block raw devices
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,34 +14,66 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  2 02:13:01 2002
+Date: Wed Jan  2 02:14:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hi all, when I try and 'pvcreate /dev/md0' I get the error: "pvcreate --
-device '/dev/md0' has a partition table".  I have tried using the -f and
---force options without success.
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-/dev/md0 used to have an XFS partition on it.
+------_=_NextPart_000_01C19365.A36D8C10
+Content-Type: text/plain;
+	charset="windows-1255"
 
-Any ideas?
+hi there 
+i recently installed lvm 1.0.1-rc4 on kernel 2.4.7-10
+but i didnt understand how to create a char raw device
+is there any howto ?
 
-CC
+best regards 
 
-**************************************************************************
-Bunnings Legal Disclaimer: 
+Yaniv Gueta
+DBA - EDS -TNUVA
+972-3-6904447
+972-53-651385
+yanivg@eds.co.il
 
-1) 	This document is confidential and may contain legally privileged 
-	information. If you are not the intended recipient you must not 
-	read, copy, distribute or act in reliance on it.
-	If you have received this document in error, please telephone
-	us immediately on (08) 9365-1555. 
 
-2)	All e-mails sent to and sent from Bunnings Building Supplies are
-	scanned for content. Any material deemed to contain inappropriate
-	subject matter will be reported to the e-mail administrator of
-	all parties concerned.
 
-**************************************************************************
+------_=_NextPart_000_01C19365.A36D8C10
+Content-Type: application/ms-tnef
+Content-Transfer-Encoding: base64
+
+eJ8+Ih4IAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEIgAcAGAAAAElQTS5NaWNy
+b3NvZnQgTWFpbC5Ob3RlADEIAQWAAwAOAAAA0gcBAAIACgAPABwAAwAUAQEggAMADgAAANIHAQAC
+AAoADwAcAAMAFAEBCYABACEAAAA1MjI4RkQzNzJDRjM4MzRBOTY4REM3MkFFMTYxRjQ1MAAnBwEE
+gAEAFwAAAGNoYXIvYmxvY2sgcmF3IGRldmljZXMARQgBDYAEAAIAAAACAAIAAQOQBgDcBQAALAAA
+AAsAAgABAAAAQAA5ABCMbaNlk8EBHgBwAAEAAAAXAAAAY2hhci9ibG9jayByYXcgZGV2aWNlcwAA
+AgFxAAEAAAAWAAAAAcGTZZcwD2juQndORfCIali7I683cgAAHgAxQAEAAAAHAAAAeWFuaXZnAAAD
+ABpAAAAAAB4AMEABAAAABwAAAHlhbml2ZwAAAwAZQAAAAAACAQkQAQAAAIwBAACIAQAAEwIAAExa
+RnVKEeAu4QAFZmJpZAQAAGQAcoBjcGcxMjU1APhFC2BuDoAwMzcB9yAnAqQD4wIAY2gKwHNleHQw
+IAcTAoMNQRD+VGxhaANxAoB9CoAIyCA+OwliDqIJygKACoF1Y+MAUAsDbHRyCrEL1AEwQCBoaSB0
+aASQZS8K4wqAGFAJcGMJ8HRslHkgC4BzAZBsbAmAACBsdm0gMS4wgC4xLXJjNCACIBQgawSRZQMg
+Mi40mC43LQ+wGNRidQVAixhQDZBkAjAgdW4EgRcaAR2wGDBvB+B0byDRBQBlYXQYsGEesBFxrRlA
+YQfgAQB2DlBlGNW/BCAYdABwGcAeUR6RPxjU7xyFB5AFQAlwZwsRBCEh+ScI0ABBDDEgWQBwaXY8
+IEcKUAGQI9cR0ERCQEEgLSBFRAXwLaBUTlVWQRjUOQHAgC0zLTY5MDQoEAo3Jyg1J8E1MTM4Sw7A
+GON5JNJnQAmAc7ouBaAuAxAh5Q91MwxA7wLRFuMrKChAYhfyGNQUQQIALiADAN4/5wQAAAMACVkD
+AAAAAwACgAggBgAAAAAAwAAAAAAAAEYAAAAAEIUAAAAAAAADAAWACCAGAAAAAADAAAAAAAAARgAA
+AABShQAAjmoBAB4AKIAIIAYAAAAAAMAAAAAAAABGAAAAAFSFAAABAAAABAAAADkuMAALAA+BCCAG
+AAAAAADAAAAAAAAARgAAAAAGhQAAAAAAAAMAGIAIIAYAAAAAAMAAAAAAAABGAAAAAAGFAAAAAAAA
+CwAAgAggBgAAAAAAwAAAAAAAAEYAAAAAA4UAAAAAAAALACyACCAGAAAAAADAAAAAAAAARgAAAAAO
+hQAAAAAAAAMALYAIIAYAAAAAAMAAAAAAAABGAAAAABGFAAAAAAAAAwAvgAggBgAAAAAAwAAAAAAA
+AEYAAAAAGIUAAAAAAAAeAD6ACCAGAAAAAADAAAAAAAAARgAAAAA2hQAAAQAAAAEAAAAAAAAAHgA/
+gAggBgAAAAAAwAAAAAAAAEYAAAAAN4UAAAEAAAABAAAAAAAAAB4AQIAIIAYAAAAAAMAAAAAAAABG
+AAAAADiFAAABAAAAAQAAAAAAAAADAPE/DQQAAAMA/T/nBAAAAwAmAAAAAAADADYAAAAAAAMAgBD/
+////AgFHAAEAAAAuAAAAYz1VUzthPSA7cD1UTlVWQTtsPVdUTUFIMDUtMDIwMTAyMDgxNTI4Wi0y
+MjY5AAAAHgA4QAEAAAAHAAAAeWFuaXZnAAAeADlAAQAAAAcAAAB5YW5pdmcAAEAABzDKqk6jZZPB
+AUAACDA644ejZZPBAR4APQABAAAAAQAAAAAAAAAeAB0OAQAAABcAAABjaGFyL2Jsb2NrIHJhdyBk
+ZXZpY2VzAAAeADUQAQAAADEAAAA8NEY1RUY4MEFBNTA5RDIxMUJCMzQwMDAwRjZCN0RGOUI5MzJG
+NUVAd3RtYWgwNT4AAAAACwApAAAAAAALACMAAAAAAAMABhBnSi36AwAHELcAAAADABAQAAAAAAMA
+ERAAAAAAHgAIEAEAAABlAAAASElUSEVSRUlSRUNFTlRMWUlOU1RBTExFRExWTTEwMS1SQzRPTktF
+Uk5FTDI0Ny0xMEJVVElESUROVFVOREVSU1RBTkRIT1dUT0NSRUFURUFDSEFSUkFXREVWSUNFSVNU
+SEVSRQAAAAACAX8AAQAAADEAAAA8NEY1RUY4MEFBNTA5RDIxMUJCMzQwMDAwRjZCN0RGOUI5MzJG
+NUVAd3RtYWgwNT4AAAAAGxw=
+
+------_=_NextPart_000_01C19365.A36D8C10--
