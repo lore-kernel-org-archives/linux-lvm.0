@@ -1,7 +1,8 @@
-Message-Id: <E04CF3F88ACBD5119EFE00508BBB2121026DCB00@exch-01.noida.hcltech.com>
-From: "Chitaranjan Behera, Noida" <cbehera@noida.hcltech.com>
+Message-Id: <F47B5C16711BEC4BBB0651C75F724809D568@qntsv14.quant.com>
+From: =?iso-8859-1?Q?Gesine_Sch=E4fer-Reimers?=
+    <G.SchaeferReimers@quant-forum.de>
 MIME-Version: 1.0
-Subject: [linux-lvm] lvextend-lvreduce
+Subject: [linux-lvm] restore of parts of a logical volume group
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,36 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 24 02:17:01 2002
+Date: Wed Apr 24 03:03:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hi,
+My question is: How can I restore one or more logical volumes in a big
+volume group with the constellation (system filesystems and "private
+filesystems") described later?
 
-I tried to do lvextend and then lvreduce (same space) without unmounting the
-file system, bcoz of online read/write operation on that file system. System
-seems slow (almost hanged). So can anybody please tell me whether the SAME
-extended block is reduced by the lvreduce command or not. And what could be
-the reason of system hang.
-  
---
-Regards,
-Chitaranjan
-91-4510701/02   Ext -3159
+I have one logical volume group named quant. This is placed in a physical
+volume that is a partition in a RAID 5 system on SUSE Linux 7.2 with Kernel
+2.4. 
+The quant volume group is divided into a lot of logical volumes. Some of
+them hold the filesystems /home /opt /tmp /var and the swap system. The
+other volumes have no file systems since they serve as a medium for informix
+database data. These database-logical-volumes are bound to raw devices.
 
-" Make sincerity and innocence as your real strengths !! "
---
-Disclaimer
-This document is intended for transmission to the named recipient only.  If
-you are not that person, you should note that legal rights reside in this
-document and you are not authorized to access, read, disclose, copy, use or
-otherwise deal with it and any such actions are prohibited and may be
-unlawful. The views expressed in this document are not necessarily those of
-HCL Technologies Ltd. Notice is hereby given that no representation,
-contract or other binding obligation shall be created by this e-mail, which
-must be interpreted accordingly. Any representations, contractual rights or
-obligations shall be separately communicated in writing and signed in the
-original by a duly authorized officer of the relevant company.
---
+I tried to do a restore of one of the "private" logical volumes but it
+failed since I cannot down the volume group because of the file systems
+mentioned above (it was denied by the system) and on a running volume group
+there is no possibility to access the device since it is in use.
+
+Is there a possibility to handle that or to devide the volume group into two
+parts (that for the system file systems and another one for the data)?
