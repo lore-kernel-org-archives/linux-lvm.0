@@ -1,7 +1,8 @@
-Message-ID: <9E2EF30E94F5C541A68F25F8AA8825BC56C5C5@MARS.us.iwon.com>
-From: Rich Wilson <rwilson@excitenetwork.com>
+Message-ID: <3FBC1F53.7090002@wanadoo.es>
+From: Xose Vazquez Perez <xose@wanadoo.es>
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM and RHAS
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Inconsistent LVM code in 2.4.23-rc1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,30 +13,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 20 07:20:06 2003
+Date: Thu Nov 20 07:20:09 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hello, 
+James G. Sack (jim)  wrote:
 
-I am migrating a RH 7.3 server to RHAS 2.1.  The existing 7.3 server uses
-LVM 1.0.7, which I compiled around the 2.4.18-27.7x kernel source.  The
-servers are SAN attached to EMC storage using Qlogic 2340 HBAs.  We have to
-use AS 2.1 because the server will use EMC PowerPath, and that is the only
-version they support.  They plan to support AS 3 by January.
+> 1587,1588c1587
+> < 	if (minor >= ABS_MAX_VG) {
+> < 		kfree(vg_ptr);
+> ---
+>> 	if (minor >= ABS_MAX_VG)
+> 1590d1588
+> < 	}
+> 1658c1656,1657
+> < 				goto copy_fault;
+> ---
+>> 				lvm_do_vg_remove(minor);
+>> 				return -EFAULT;
+> 1669c1668,1669
+> < 				goto copy_fault;
+> ---
+>> 				lvm_do_vg_remove(minor);
+>> 				return -EFAULT;
+> 1679c1679,1680
+> < 			goto copy_fault;
+> ---
+>> 			lvm_do_vg_remove(minor);
+>> 			return -EFAULT;
+> 1682c1683,1684
+> < 			goto copy_fault;
+> ---
+>> 			lvm_do_vg_remove(minor);
+>> 			return -EFAULT;
+> 1697,1700d1698
+> < copy_fault:
+> < 	lvm_do_vg_remove(minor);
+> < 	vfree(snap_lv_ptr);
+> < 	return -EFAULT;
 
-The AS 2.1 lvm-mod is extremely old (from 2001).  I have seen a few threads
-on this list about applying the 1.0.7 LVM patch to the enterprise kernel
-source.  I have done this, however, when I try to load the module I get
-unresolved symbol errors.  Jon Nangle posted here in September stating he
-was able to fix the symbol errors.  Does anyone know what his fix was?  
+I believe that these changes were done in *kernel lvm_1.0.5+* release.
 
-Here is his post:
-http://lists.sistina.com/pipermail/linux-lvm/2003-September/014834.html
+> 2597c2595
+> < 		vg_ptr->pe_allocated -= old_lv->lv_allocated_le;
+> ---
+>> 		vg_ptr->pe_allocated -= old_lv->lv_allocated_snapshot_le;
+> 2598a2597
+>> 		old_lv->lv_allocated_snapshot_le = new_lv->lv_allocated_le;
 
-I also tried to patch with 1.0.8, but it gave the same results.
+rest are 1.0.7 -> 1.0.8 'official' changes
 
-Many thanks,
--Rich
+I sent to marcelo a diff 1.0.7 kernel version vs 1.0.8 sistina last days
+-- 
+HTML mails are going to trash automagically
