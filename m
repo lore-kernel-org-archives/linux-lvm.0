@@ -1,8 +1,10 @@
-From: Adrian Bunk <bunk@fs.tum.de>
-Message-ID: <20030728025811.GI22218@fs.tum.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] [2.6 patch] remove #include blk.h in dm-ioctl-v{1,4}.c
+From: Alexandra Kusch <alexandrakusch51@bigfoot.com>
+References: <352E06DAJB7DA698@sistina.com>
+In-Reply-To: <352E06DAJB7DA698@sistina.com>
+Message-ID: <09ACC52L09KABE1D@bigfoot.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Email Advertise to 27.1 MILLION PEOPLE - $129   LFEGAOo
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,37 +15,11 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 27 21:59:01 2003
+Date: Mon Jul 28 04:17:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: dm@uk.sistina.com
-Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org, trivial@rustcorp.com.au
+To: Linux-lvm <linux-lvm@sistina.com>
 
-The patch below removed two #include's of the obsolete blk.h.
-
-I've tested the compilation with 2.6.0-test2.
-
-Please apply
-Adrian
-
---- linux-2.6.0-test2-full-no-smp/drivers/md/dm-ioctl-v1.c.tmp	2003-07-28 04:50:45.000000000 +0200
-+++ linux-2.6.0-test2-full-no-smp/drivers/md/dm-ioctl-v1.c	2003-07-28 04:51:13.000000000 +0200
-@@ -12,7 +12,6 @@
- #include <linux/dm-ioctl.h>
- #include <linux/init.h>
- #include <linux/wait.h>
--#include <linux/blk.h>
- #include <linux/slab.h>
- #include <linux/devfs_fs_kernel.h>
+Broadcast Email an Unlimited Size Ad to 28 MILLION PEOPLE - $129
  
---- linux-2.6.0-test2-full-no-smp/drivers/md/dm-ioctl-v4.c.tmp	2003-07-28 04:51:20.000000000 +0200
-+++ linux-2.6.0-test2-full-no-smp/drivers/md/dm-ioctl-v4.c	2003-07-28 04:51:30.000000000 +0200
-@@ -11,7 +11,6 @@
- #include <linux/miscdevice.h>
- #include <linux/init.h>
- #include <linux/wait.h>
--#include <linux/blk.h>
- #include <linux/slab.h>
- #include <linux/devfs_fs_kernel.h>
- 
+http://202.63.201.239 or http://www.emailbroadcasting.org
