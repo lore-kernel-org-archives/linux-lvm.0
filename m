@@ -1,12 +1,14 @@
-Return-Path: <hal@hal.mailgate.net>
-Date: Fri, 15 Jun 2001 16:11:51 +0200
-From: Hugo Lombard <hal@mailgate.net>
-Subject: Re: [linux-lvm] expanding physical disks
-Message-ID: <20010615161151.B9980@hal.mailgate.net>
-References: <20010612212804.P1658@pc.ilinx> <200106130710.f5D7AhaX005430@webber.adilger.int> <20010613152032.A18554@colombina.comedia.it>
+Return-Path: <lewis@sistina.com>
+Date: Fri, 15 Jun 2001 09:18:05 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] $(DESTDIR) inclusion into Makefile.in files
+Message-ID: <20010615091805.A8645@sistina.com>
+References: <Pine.LNX.4.33.0106151209260.29617-100000@falka.mfa.kfki.hu>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
 Content-Disposition: inline
-In-Reply-To: <20010613152032.A18554@colombina.comedia.it>; from bluca@comedia.it on Wed, Jun 13, 2001 at 03:20:32PM +0200
+In-Reply-To: <Pine.LNX.4.33.0106151209260.29617-100000@falka.mfa.kfki.hu>; from dice@mfa.kfki.hu on Fri, Jun 15, 2001 at 12:12:09PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,48 +20,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 13, 2001 at 03:20:32PM +0200, Luca Berra wrote:
-> On Wed, Jun 13, 2001 at 01:10:42AM -0600, Andreas Dilger wrote:
-> > Brian Murrell writes:
-> > > How does LVM deal with physical disks that can get bigger or smaller,
-> > > such as a hardware RAID device?  What happens to a PV on a hardware
-> > > RAID-5 device that is presented to the system as a single (say scsci)
-> > > target when you put a few more disks in it and tell the hardware raid
-> > > device to add them to the given (scsi) target that a PV was created
-> > > on?  (what a mouthful).
-> > 
-> > Doesn't work at this time.  LVM will only see what was originally there
-> > at the time pvcreate was run (or possibly vgcreate/vgextend).
-> At the moment your only chance is to create partitions on it and use those
-> partitions as PVs
-> 
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just a thought, a bit off topic perhaps.
+On Fri, Jun 15, 2001 at 12:12:09PM +0200, Gergely Tamas wrote:
+> It would be probably a good idea to insert a $(DESTDIR) in front of all
+> installation targets. This would make packagers life easyer.
 
-If you're using LVM primarily as a way to make it possible for you to
-expand your storage space on-line (and on-mount-point) wouldn't it be
-"easier" to _just_ use the RAID? i.e. expand the RAID volume on the
-controller, so basically the "disk" is bigger now, and the just "grow"
-your partition, extend your filesystem, and that's it?
+Thanks Gergely,
+I've been intending to do that but hadn't yet.  Instead of putting it in the
+Makefiles themselves though, I put it where the install directories are
+defined, make.tmpl.in.  The head of the current CVS has these changes.
 
-It's a thought I've been toying with since seeing the IBM ServeRAID's
-capability to grow volumes.  I've not attempted any testing though, so
-this is pure speculation...
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-(PS: All this means nothing if you're using LVM for it's other
-features, like striping, but then the RAID can do that too...)
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
+-----Begin Obligatory Humorous Quote----------------------------------------
+665.9238429876 - Number of the Pentium Beast
+-----End Obligatory Humorous Quote------------------------------------------
 
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
--- 
-"You show me an American who can keep his mouth shut and I'll eat him."
--- Newspaperman from Frank Capra's _Meet_John_Doe_
----------------------------------------------------------------------------
- Hugo Lombard                    Infoline (Pty) Ltd
- System Administrator
----------------------------------------------------------------------------
+iD8DBQE7KhkdpE6/iGtdjLERAnxlAKCKZMU3/B3jXz60UGLeqf3qqaJfOACfRW+q
+Q7sCwIk48h96KF8dSzUSXD8=
+=BNvD
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
