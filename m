@@ -1,10 +1,11 @@
-Return-Path: <totake66@home.com>
-Message-ID: <3AECAFD9.6727396A@home.com>
-Date: Sun, 29 Apr 2001 19:20:41 -0500
-From: Tom Otake <totake66@home.com>
+Return-Path: <terjekv@ifi.uio.no>
+Subject: Re: [linux-lvm] VG does not activate at boot
+References: <3AECAFD9.6727396A@home.com>
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 30 Apr 2001 02:48:46 +0200
+In-Reply-To: Tom Otake's message of "Sun, 29 Apr 2001 19:20:41 -0500"
+Message-ID: <wxxn18zjjpt.fsf@thrir.ifi.uio.no>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] VG does not activate at boot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,32 +18,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+Tom Otake <totake66@home.com> writes:
 
-I 'm having a slight problem/inconvenience with LVM and need some
-assistance.  Everytime I boot the system, the VG's do not come up active
-and subsequently, some fs don't mount.  The error I get  indicates the
-underlying device for the fs is not a valid device.  'vgdisplay' says
-the the VG is  not active, which running 'vgdisplay -D' confirms.
-Running 'vgchange -a y swvg' resolves the problem, activates the VG and
-I can mount the fs.  LVM support is compiled into the kernel.  I'm
-running kernel 2.4.3 and lvm_0.9.1_beta7.  Right now, I'm using it
-mainly for testing and no essential fs are using LVM so it is not a
-critical issue, still, I'd like to know how to resolv this.
+> I 'm having a slight problem/inconvenience with LVM and need some
+> assistance. Everytime I boot the system, the VG's do not come up
+> active and subsequently, some fs don't mount. The error I get
+> indicates the underlying device for the fs is not a valid device.
+> 'vgdisplay' says the the VG is not active, which running 'vgdisplay
+> -D' confirms. Running 'vgchange -a y swvg' resolves the problem,
+> activates the VG and I can mount the fs. 
 
-Thanks
+  you should add the vgchange command into your initscripts. I'm
+  running RedHat and I added this into rc.sysinit, right below the
+  init of raid devices:
 
---
-_______________
-Anything that happens, happens.
-   Anything that, in happening, causes something else to happen, causes
-   something else to happen.
-   Anything that, in happening, causes itself to happen again, happens again
-   It doesn't necessarily do it in chronological order, though.
-         -- Douglas Adams
+,----
+| action "LVM: Scanning for Volume Groups" vgscan
+| action "LVM: Activating Volume groups" vgchange -ay
+`----
 
--- Tom Otake
--- totake66_nospam@home.com
--- #550
+  I probably should just tell you to RTFM a little as well:
+
+  <url: http://www.sistina.com/lvm/doc/lvm_howto/node8.html
+  #SECTION00084000000000000000 >
+
+-- 
+Terje
