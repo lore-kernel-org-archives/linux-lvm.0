@@ -1,11 +1,7 @@
-Message-Id: <200203081244.g28Ci7619308@mail016.syd.optusnet.com.au>
-From: Tarragon Allen <melange@n12turbo.com>
-Subject: Re: [linux-lvm] GPG key?
-References: <20020308041535.5139E128CF@phaea.onthe.net.au>
-    <20020308093048.A519@sistina.com>
-In-Reply-To: <20020308093048.A519@sistina.com>
+Message-Id: <20020308133053.79829.qmail@web13407.mail.yahoo.com>
+From: kizombe kabile <kizombe1@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] I NEED YOUR ASSISTANCE TO TRANSFER THIS MONEY
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,23 +12,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar  8 06:44:02 2002
+Date: Fri Mar  8 07:30:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 8 Mar 2002 19:30, Heinz J . Mauelshagen wrote:
-> ftp://ftp.sistina.com/pub/LVM/1.0/gpg-signature which is in the same
-> directory as the source archives points to AJ Lewis' key he used at
-> http://people.sistina.com/~lewis/gpgkey
+DEAR sir
+I GOT YOUR ADDRESS WHILE SURFING ON THE NET,I DECIDED
+TO FORWARD THIS BUSINESS PROPOSAL TO YOU,HOPE IT
+WILL BENEFIT ALL CONCERN.
+LET ME TAKE A BRIEF TIME OUT TO INTRODUCE MYSELF TO
+YOU, I AM KIZOMBE KAMARA KABILA THE ONLY SON OF COL.
+MANASSEH KAMARA KABILA ONE OF THE SENIOR OFFICIALS OF
+REVOLUTIONARY UNITED FRONT OF SIERRA LEONE (R.U.F) WHO
+DIED ON 18/06/2000 WITH SOME OF HIS COLLEAGUES DURING
+A CROSS FIRE BATTLE BETWEEN THE (R.U.F) AND THE PEACE
+KEEPING FORCES IN SIERRA LEONE WHICH
+INCLUDESECOMOG,BRITSH ARMY AND U.N TROOPS.
+IN BRIEF, I HAVE THE SUM OF ($ 16.000.000M USD )
+EIGHT MILLION US DOLLARS WHICH I WANT TO INVEST IN
+YOUR
+COUNTRY.THESE MONEY WAS DEPOSITED BY MY LATE FATHER IN
+A SECURITY COMPANY HERE IN DAKAR SENEGAL WHICH I WAS
+MADE THE BENEFICIARY AND NEXT OF KIN AS THE ONLY
+SON OF MY PARENTS. BECAUSE OF THE PRESENT SITUATION
+IN MY COUNTRY SIERRA LEONE, MY AGED MOTHER ADVICED ME
+TO LEAVE THE COUNTRY IMMEDIATELY FOR SECURITY REASONS,
+AND ALSO TO LOOK FOR A TRUST WORTHY AND A RELIABLE
+PERSON WHO CAN ASSIST ME TO TRANSFER THE MONEY OUT
+OF DAKAR SENEGAL.
+SIR, I HIGHLY NEED YOUR ASSISTANCE BOTH IN
+TRANSFERRING THE MONEY TO YOUR COUNTRY AND ALSO
+INVESTING IT AS I CONFIDE IN YOU HOPING THAT YOU
+WILLNEVER BETRAY ME AT LAST .
+I AND MY MOTHER HAS PROPOSED (15%) PERCENT OF THE
+TOTAL SUM OF THE MONEY FOR YOU SO AS FOR YOU TO GIVE
+US ALL NECESSARY ASSISTANCE AND PROTECTIONS WE MAYNEED
+IN YOUR COUNTRY.
+PLEASE TREAT HIGHLY CONFIDENTIAL BECAUSE OUR FUTURE
+DEPENDS ON THIS MONEY,ALL THE VITAL DOCUMENTS COVERING
+THE DEPOSIT IN THE SECURITY COMPANY ARE WITH ME HERE
+IN DAKAR SENEGAL AND WILL BE FAX TO YOU ON DEMAND.
+LOOKING FORWARD TO HEARING FROM YOU.
+BEST REGARDS.
+KIZOMBE KAMARA KABILA
+THANKS AND GOD BLESS YOU. 
 
-Damn!  That seems so obvious in retrospect.  :)
 
-Would be nice if it was mentioned on the download page, and maybe in the 
-documentation or FAQ.
 
-Thanks.
-
-t
--- 
-GPG : http://n12turbo.com/tarragon/public.key
+__________________________________________________
+Do You Yahoo!?
+Try FREE Yahoo! Mail - the world's greatest free email!
+http://mail.yahoo.com/
