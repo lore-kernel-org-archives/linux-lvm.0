@@ -1,7 +1,8 @@
-Message-ID: <20040127231215.91807.qmail@web80401.mail.yahoo.com>
-From: Chris Conn <cmcgoat@swbell.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] multi-disk vg?
+From: Matthew Daubenspeck <matt@oddprocess.org>
+Message-ID: <20040127231733.GA25501@oddprocess.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LVM and Linux quotas
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,43 +13,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 27 18:13:02 2004
+Date: Tue Jan 27 18:21:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I've finally finished setting up my Slackware 9.1 box
-with LVM and ReiserFS, here's what I've got:
+First off, please excuse the the newbie question :)
 
-disk 0 (one partition)
- 
-   /dev/mainvg/root          /
-   (and swap space)
+Does LVM work with the standard Linux quotas? I did some googling and
+found nothing other then people having problems. Does it work?
+-- 
+:wq!
 
-disk 1 (two partitions)
-
-   /dev/rootvg/usr           /usr
-   /dev/rootvg/var           /var
-   /dev/rootvg/tmp           /tmp
-
-   /dev/datavg/home          /home
-   /dev/datavg/data          /data
-
-I set up rootvg and datavg first and then last night
-I followed the LVM How-To and converted the setup the
-mainvg VG with root. All works well.
-
-Now I'm wondering if I can merge mainvg and rootvg
-as one VG though they're on two seperate disks. Is this
-possible? And if so is it a good idea? 
-
-BTW I left /etc in / because I had trouble mounting it
-as a seperate filesystem with /etc/fstab.
-
-Thanks for any advice, 
-
-=====
-Chris Conn   
-cmcgoat@swbell.net   http://storm.cadcam.iupui.edu/~cmcgoat
-Austin, TX
+  Matthew Daubenspeck
+  http://www.oddprocess.org
