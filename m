@@ -1,10 +1,10 @@
-Date: Thu, 23 Aug 2001 22:42:27 +0200
+Date: Thu, 23 Aug 2001 22:43:48 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgscan && vgchange -ay at startup
-Message-ID: <20010823224227.C17378@sistina.com>
-References: <20010821130033.D402@sky.net> <20010821070403.A16248@sistina.com> <3B8267F5.D3174CAB@tls.msk.ru> <20010821160012.E25747@dragon.blacknet.de> <20010821112252.A21206@sistina.com> <20010822213148.C29990@mail.wave.co.nz>
+Subject: Re: [linux-lvm] resizing a filesystem failed, but volume was resized... can I restore the previous lv?
+Message-ID: <20010823224348.D17378@sistina.com>
+References: <2382.998385904@www19.gmx.net>
 Mime-Version: 1.0
-In-Reply-To: <20010822213148.C29990@mail.wave.co.nz>; from markv@wave.co.nz on Wed, Aug 22, 2001 at 09:31:48PM +1200
+In-Reply-To: <2382.998385904@www19.gmx.net>; from grobe@gmx.net on Tue, Aug 21, 2001 at 11:25:04AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,24 +20,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Aug 22, 2001 at 09:31:48PM +1200, Mark van Walraven wrote:
-> On Tue, Aug 21, 2001 at 11:22:52AM -0500, AJ Lewis wrote:
-> > Yeah, that's in the works for the development version of LVM, but the 1.0x
-> > series will likely always have the files in /etc.  I agree that it is better
-> > not to have it write files by default, or at least not rely on them being
-> > written out.
-> 
-> May I request a feature for the 1.0x series?  A command-line option
-> for vgscan and vgchange, to specify the directory containing lvmconf,
-> lvmtab and lvmtab.d.
+Lars,
 
-In future versions, there'll be config file support in LVM covering
-what you request and more :-)
+vgcfgrestore(8) the last backup of your metadata, which contains the old
+status of the LV in question.
+VG needs to be offline to run vgcfgrestorew though :-(
 
+
+On Tue, Aug 21, 2001 at 11:25:04AM +0200, Lars Grobe wrote:
+> Hi!
 > 
-> Regards,
+> I have had problems with resizing (shrinking) a reiser fs on a lv. The fs
+> resizing wasn't completed, but the lv was resized than. So I wonder if I can
+> "undo" the resizing of the lv? In fact, the lv would have to take the same
+> space as before, so I could do fsck and rebuild my fs.
 > 
-> Mark.
+> Thank You, CU, Lars.
+> 
+> www.rechnerpool.com
+> 
+> 
+> 
+> The messgae from the reiserfs-list follows:
+> ___
+> 
+> LOG> Hi!
+>  LOG> This is part two of my report of a failed resize:
+> 
+>  LOG> Yesterday I tried to resize a reiser fs. It is build on a LVM
+> partition.
+>  LOG> As I know that there is some calculation to make the resize of LVM an
+>  LOG> Reiserfs fit, I used the script resize_rfs from the German magazine
+>  LOG> Linuxmagazin (6/2000). This script is doing some checks and
+> calculations
+>  LOG> on parameters. So I tried to shrink my fs from 320 to 290 GB.
+> 
+> can you send that script to me ?
+> 
+>  LOG> But the process was interrupted, so the fs wasn't resized completely,
+>  LOG> while the script did go on to the next step and resized the logical
+>  LOG> volume to 290 GB.
+> 
+>  LOG> So there are two errors in the fs: there is a started, but not
+> completed
+>  LOG> resize of the fs AND the fs is on a lvm-volume that is smaller than
+> the
+>  LOG> filesystem.
+> 
+>  LOG> What should I do? I would usually try to set the size of the lv back
+> to
+>  LOG> 320 GB. 
+> 
+> Yes. But I do not know how to force LVM system to allocate same disk space
+> in
+> same order for your logical volume again :(
+> 
+>  LOG> Should I do a fsck than? 
+> 
+> Yes. run reiserfsck --check /dev/... , then follow the instructions.
+> 
+>  LOG> Is there a way to keep the data (else I
+>  LOG> will have to replay from the backup, so I should start soon)?
+> 
+> I think you should try to restore LV and then run reiserfsck on it.
+> 
+>  LOG> Thank You, CU, Lars.
+> 
+> -- 
+> Thanks,
+> Alex.
+> 
+> 
+> 
+> 
+> -- 
+> GMX - Die Kommunikationsplattform im Internet.
+> http://www.gmx.net
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
