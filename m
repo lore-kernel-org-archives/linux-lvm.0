@@ -1,10 +1,11 @@
-Return-Path: <lars@larsshack.org>
-Date: Wed, 21 Mar 2001 12:33:51 -0500 (EST)
-From: Lars Kellogg-Stedman <lars@larsshack.org>
-Subject: Re: [linux-lvm] LVM and fault tolerance
-In-Reply-To: <3AB7C41F.F1F35EDE@tnonline.net>
-Message-ID: <Pine.LNX.4.30.0103211228450.8192-100000@flowers.house.larsshack.org>
+Return-Path: <vidalrod@informatik.tu-muenchen.de>
+Message-ID: <3AB8F353.6E324EC7@in.tum.de>
+Date: Wed, 21 Mar 2001 19:30:43 +0100
+From: David Vidal Rodriguez <vidalrod@informatik.tu-muenchen.de>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] vgscan won't recognize my VG
+References: <200103202021.f2KKLR902727@webber.adilger.int> <3AB7BF33.CBCFAEA7@in.tum.de> <20010321002957.A25309@prodding>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +17,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> Is there any possibility to add fault tolerance to LVM. I would like
-> to span several disks (of different sizes) and have fault tolerance to
-> it. Also, most important, is to be able to extend it with additional
-> disks without loosing data.
+That's exactly what I'm looking for 'cause it seems that there's not LVM without
+correct uuids.
+Andreas Dilger said before that
+>You should be able to do "vgcfgrestore" and it will write the UUIDs to
+> disk correctly (creating new ones if needed).
 
-Disclaimer: I've only recently started working with LVM under Linux.
 
-That said, I think that the general solution to fault tolerance is to
-combine LVM with either (a) the software RAID (md) subsystem, or (b)
-hardware RAID devices.
+My problem is that I get compile errors when building the kernel + beta6-patch
+(I've followed the steps in the PATCHES directory). It says something about
+LVM-symbols... I will post them if someone knows what could be the reason.
 
-For example, you can create a number of md devices, using RAID1 or RAID5
-for fault tolerance, and then run pvcreate on them and manage them with
-lvm.
-
-I'm doing this right now with a 4-disk RAID5 array (3 disks + 1 hot
-spare), and it seems to be working just fine.
-
--- Lars
-
--- 
-Lars Kellogg-Stedman <lars@larsshack.org>
+--
+  ------------------------------------------------------------------------
+ David Vidal R. (vidalrod@in.tum.de)
