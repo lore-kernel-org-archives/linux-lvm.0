@@ -1,20 +1,23 @@
-From: "Stefan Monnier" <monnier+lists/linux/lvm/news/@tequila.cs.yale.edu>
+Message-Id: <199906021129.HAA17118@tequila.cs.yale.edu>
+From: "Stefan Monnier" <news+lists.linux.lvm@tequila.cs.yale.edu>
 Subject: [linux-lvm] Re: root filesystem in lvm
 Date: 02 Jun 1999 06:43:23 -0400
-Message-ID: <5l3e0adgs4.fsf@tequila.cs.yale.edu>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: lists-linux-lvm@moderators.isc.org
+To: linux-lvm@msede.com
 
+[ I apologize if you receive multiple copies, but it seems that
+  my earlier attempts didn't make it through.  Is this a closed
+  mailing-list ?   - sm ]
 
 A while ago, Michael Marxmeier (mike@msede.com) mentioned:
-> However it should be possible to use LILO. As far as i understand 
-> LILO uses partition relative block numbers to load the kernel image. 
-> We just need to make sure that they are relative to the dos style 
+> However it should be possible to use LILO. As far as i understand
+> LILO uses partition relative block numbers to load the kernel image.
+> We just need to make sure that they are relative to the dos style
 > partition.
 
 How would LILO deal with a kernel image spread over several physical
@@ -28,7 +31,7 @@ a striped/mirrored/trucmuched one) ?
 That would be really neat.  The initrd workaround is just that: a workaround.
 
 > However this will lead to some kernel bloat as some of the code which
-> currently resides un user space in lvmlib and vgchange must also be 
+> currently resides un user space in lvmlib and vgchange must also be
 > present in the kernel.
 
 - how hard would it be ?
