@@ -1,82 +1,45 @@
-Message-ID: <01FA7817D8EDD211BD9C00004B309A504D3ACF@defiant.sonera.se>
-From: Fredrik Lindgren <fredrik@tfi.net>
-Subject: RE: [linux-lvm] LVM tool problems?
-Date: Tue, 22 Feb 2000 11:24:00 +0100
+From: "Stephen C. Tweedie" <sct@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <14514.52338.134386.993962@dukat.scot.redhat.com>
+Date: Tue, 22 Feb 2000 17:50:42 +0000 (GMT)
+Subject: Re: [linux-lvm] Can we make char files not blocked for the volumes
+In-Reply-To: <38B1BFF2.769DED19@alwan.com>
+References: <200002191235.NAA27590@u9etz.164.27.16.48>
+	<38AE95CD.915AC596@alwan.com>
+	<14513.48287.977291.125248@dukat.scot.redhat.com>
+	<38B1BFF2.769DED19@alwan.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: 'Heinz Mauelshagen' <mauelsha@ez-darmstadt.telekom.de>
-Cc: mge@ez-darmstadt.telekom.de, "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+To: Chris Anderson <chris@alwan.com>
+Cc: "Stephen C. Tweedie" <sct@redhat.com>, "linux-lvm@msede.com" <linux-lvm@msede.com>
 
-> > [root@newsfeed /root]# vgscan
-> > vgscan -- reading all physical volumes (this may take a while...)
-> > vgscan -- found inactive volume group "vg01"
-> > vgscan -- ERROR -154: can't get data of volume group "vg01" 
-> > from physical volume(s)
-> > vgscan -- ERROR -154 creating "/etc/lvmtab" and "/etc/lvmtab.d"
-> 
-> This exactly looks like somebody wrote over some of the 
-> LVM Physical Volumes.
+Hi,
 
-Oh, well the machine was completely locked up. So something
-very weird had happened. There was some messages from
-ReiserFS (presumably) on the console about it waiting for
-a "buffer to be released", whatever that means... :)
- 
-> > /dev/sd[b-d] is not 31Gb, they a 4Gb disks. I tried the 
-> > vgcfgrestore command, but it says to use the vgscan tool, 
-> > which fails.
-> > 
-> > Linux is 2.2.14 with LVM 0.8-pre02.10.1999 and ReiserFS 3.5.16.
-> > Mandrake 7.0 system. Monolithic (no modules whatsoever) kernel.
-> > 
-> > Any ideas?
-> 
-> Yep.
-> 
-> Your idea to use vgcfgrestore(8) to restore (hoping that the 
-> misbehaving software didn't overwrite more than the VGDA part 
-> of the PVs) was correct.
-> 
-> Nevertheless there is a catch 22 flaw in vgcfgrestore in this 
-> LVM version, which forces /etc/lvmtab* to exist. But if it 
-> doesn't and some VGDA is damaged, vgscan complains to create 
-> it 8-{(((
-> 
-> To work around this, you can delete the "LVMTAB_CHECK" in line 85
-> of tools/vgcfgrestore.c, recompile, reinstall and retry with 
-> vgcfgrestore.
+On Mon, 21 Feb 2000 16:45:06 -0600, Chris Anderson <chris@alwan.com>
+said:
 
-Yeah, I found the other message in the list archive and tried 
-that. This gives me a new error though. It complains that the 
-PV size is diffrent in real life and in the backup, I think.
-It is still the same disk though, that I'm quite sure of... :)
+>  It is odd how it is used.  I had to hack it into 2.2.14, but go it working.
+> I think the "raw" command is odd, also it needs to be run every time you
+> reboot.  
 
-[root@newsfeed tools]# ./vgcfgrestore -v -n vg01 /dev/sdb
-vgcfgrestore -- locking logical volume manager
-vgcfgrestore -- restoring volume group "vg01" from "/etc/lvmconf/vg01.conf"
-vgcfgrestore -- checking existence of "/etc/lvmconf/vg01.conf"
-vgcfgrestore -- reading volume group data for "vg01" from
-"/etc/lvmconf/vg01.conf"
-vgcfgrestore -- reading physical volume data for "vg01" from
-"/etc/lvmconf/vg01.conf"
-vgcfgrestore -- reading logical volume data for "vg01" from
-"/etc/lvmconf/vg01.conf"
-vgcfgrestore -- checking volume group consistency of "vg01"
-vgcfgrestore -- checking volume group consistency of "vg01"
-vgcfgrestore -- reading physical volume "/dev/sdb"
-vgcfgrestore -- checking for new physical volume "/dev/sdb"
-vgcfgrestore -- size of physical volume "/dev/sdb" differs from backup
+Indeed --- the raw interfaces need to be bound to specific devices just
+as eth* network interface names need to be bound to addresses.
 
-> Before using vgcfgrestore on the PVs, could you please send 
-> the output of "pvdata -a /dev/sd[b-d]" to me?
+> Also who is the owner of this code. How does it find its way into
+> the standard 2.3 and lvm has not yet?  That is odd too.
 
-I sent that in a mail to you only, since it was so large.
+lvm just took a little longer --- they are both in 2.3 now.
 
-Regards,
-  Fredrik Lindgren
+> My test with Informix IDS 7.3 for linux showed that the raw io is twice as
+> slow.  A 17 mins load under block device using lvm but took 31mins for the
+> raw linked version.  I will be testing the Informix 9.2 version
+> tonight. 
 
- 
+Raw IO does not do any caching in the O/S.  Specifically, it doesn't
+perform any readahead or writebehind.  If the application was using
+that implicit caching then raw IO will necessarily be slower.
+
+--Stephen
