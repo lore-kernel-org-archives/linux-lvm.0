@@ -1,49 +1,56 @@
-Message-Id: <s84be24c.019@pgkvfax>
-Date: Mon, 06 Dec 1999 16:19:58 +0100
-From: "Stephan Hendl" <Stephan.Hendl@lds.brandenburg.de>
-Subject: [linux-lvm] LVM and Compaq Smart Array - oncemore
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Message-ID: <00fe01bf403e$0524a1a0$0ebcfea9@brd>
+From: "Nicolas Brouard" <brouard@ined.fr>
+References: <Pine.LNX.4.10.9912051403290.22457-100000@aragorn.fra.suse.de>
+Subject: [linux-lvm] Re: Why would I want to have an LVM under Linux?
+Date: Tue, 7 Dec 1999 00:02:48 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: Volker Wiegand <wiegand@suse.de>
+Cc: Linux-LVM Mailing List <linux-lvm@msede.com>, Linus Torvalds <torvalds@transmeta.com>
 
-Hi all,
+> Having an LVM at your home PC is not the first priority, but it is really
+> desirable for business, especially for data center operations.  And Linux
+> is actually entering such environments, which I find is just great.
 
-after patching the source code with the code from Dirk I got another =
-error:
+The big advantage of LVM is when you have different physical disks and want
+to expand or even change a partition from one physical disk to another
+without rebooting. I did  it on AIX and it was great.
+But on small systems (and my original question concerned a laptop with only
+one physical IDE disk) the advantage of LVM is not so important if a tool
+like parted works well (Parted is similar on linux to Partition Magic on DOS
+or Windows).
 
-root@sgate:/usr/src/LVM/0.7 > pvcreate -v /dev/ida/c0d0p4
-pvcreate -- locking logical volume manager
-pvcreate -- checking physical volume name "/dev/ida/c0d0p4"
-pvcreate -- getting physical volume size
-pvcreate -- partition "/dev/ida/c0d0p4" doesn't exist
-pvcreate -- unlocking logical volume manager
+I really think that a FAQ on a product like LVM should at least discuss
+other solutions like Parted and focus on the actual advantages or
+disadvantages of putting LVM on your hard disk: for example can an LVM
+partition be viewed from NT or Windows 9x? So long as Linux software won't
+be as good as Windows the market for linux will still be for people looking
+at both systems simultaneously (I hope that the Gnome project will be
+successful).
 
-Now it seems that the partition doesn't exist - but it exist, really!!!
+Let us now talk on huge systems will plenty of people connected
+simultaneously so that it is not possible to 'reboot' while changing a disk.
+That kind of configuration hold when software and hard disk were expansive.
+If the success of Linux comes from the Free sources, it means that people
+can copy the softwares on their desktop on laptop for free. In statistic,
+for example, S-plus (R on linux) and SPSS (PSPP on linux) are now free,
+there is no more need for Linux mainframe with these costly softwares and
+plenty of students connected.
 
-root@sgate:/usr/src/LVM/0.7 > fdisk -lu
+So the real advantages is a real world are not obvious if the tendency is a
+laptop with 10Gb which are now more powerful than any AIX station where LVM
+was first implemented.
 
-Disk /dev/ida/c0d0: 255 heads, 32 sectors, 4355 cylinders
-Units =3D sectors of 1 * 512 bytes
+I don't want to be too polemic but I was a little desperate not to find
+answers to my questions in the FAQ. I think that I got these answers on this
+list. While thanking all the people having taken time to answer me, I know
+that many people have used LVM on AIX at least but were like me hesitating
+to implement it on laptop. So Wiegand's comments for example could be
+inserted in the FAQ. Also a comparaison with Parted too.
 
-         Device Boot    Start       End    Blocks   Id  System
-/dev/ida/c0d0p1   *     73440   1101599    514080   83  Linux
-/dev/ida/c0d0p2       1101600   2154239    526320   82  Linux swap
-/dev/ida/c0d0p3            32     73439     36704   12  Compaq diagnostics
-/dev/ida/c0d0p4       2154240  35536799  16691280   fe  LANstep
-
-Thanks in advance for helping oncemore! :-))
-
-Stephan
-
-
---
-LDS Brandenburg
-Dr. Stephan Hendl
-fon: +49-(0)331-39 471
-fax: +49-(0)331-27548 1187
-EMail: stephan.hendl@lds.brandenburg.de
+Nicolas Brouard
+http://sauvy.ined.fr/brouard/english
