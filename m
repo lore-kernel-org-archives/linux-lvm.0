@@ -1,8 +1,8 @@
-From: Benjamin Scott <bscott@ntisys.com>
+From: Stuart Levy <slevy@ncsa.uiuc.edu>
+Message-Id: <200203070415.WAA16951@niri.ncsa.uiuc.edu>
 Subject: Re: [linux-lvm] System Suggestions
-In-Reply-To: <20020307034009.GJ32504@auctionwatch.com>
-Message-Id: <Pine.LNX.4.44.0203062250380.25357-100000@dragon.inside.ntisys.com>
-MIME-Version: 1.0
+References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
+    <20020306161130.D855@kluge.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,34 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 21:52:01 2002
+Date: Wed Mar  6 22:15:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Petro <petro@auctionwatch.com>
+Cc: linux-xfs@oss.sgi.com, linux-lvm@sistina.com
 
-On Wed, 6 Mar 2002, at 7:40pm, Petro wrote:
-> We have 10 of the 3ware cards, and while the drive is GPLd and in the
-> kernel, we have not been satisfied with the stability of the system
+<petro@auctionwatch.com> wrote:
 
-  Can you elaborate?  We have a few 3Ware cards in production, and so far,
-they have been rock solid.  <knock on wood>
+>   We have 10 of the 3ware cards, and while the drive is GPLd and in
+>   the kernel, we have not been satisfied with the stability of the
+>   system 
 
-> We haven't had a chance yet to qual the latest firmware, etc.
+A 3ware 7850 here  (8 drive hw RAID5) performed erratically
+until I got their latest .016 driver, which seems to be in
+the 2.4.18 kernel too.  The earlier .010 driver in 2.4.<=17
+would sometimes get into a low-performance (~15MB/sec) mode,
+but the .016 driver has been doing very well.  3ware tech support
+have been very responsive too.  Based on a few weeks' experience,
+I'd recommend them.
 
-  We found upgrading the firmware on our 3Ware cards, and using the latest
-driver, helped some.
-
-> ... but we went with dumb IDE expansion cards (we're only using 4 ide
-> drives per system) and we're getting better speed (RAID0 or 1+0 depending)
-> than we were off the 3ware card.
-
-  Which model?  I am told the 7000 series is significantly faster than the
-6000 series.  We only have a few 6200's for simple RAID1, so we don't really
-care, but it sounds like you might.
-
--- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do not |
-| necessarily represent the views or policy of any other person, entity or  |
-| organization.  All information is provided without warranty of any kind.  |
+   Stuart Levy, slevy@ncsa.uiuc.edu
