@@ -1,10 +1,10 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 24 Apr 2001 14:58:53 +0000
+Date: Tue, 24 Apr 2001 15:00:20 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010424145853.G31988@sistina.com>
-References: <20010419132927.D10345@sistina.com> <Pine.LNX.4.33.0104191532370.17635-100000@duckman.distro.conectiva>
+Message-ID: <20010424150020.H31988@sistina.com>
+References: <20010419132927.D10345@sistina.com> <E14qJhd-0007oR-00@the-village.bc.nu> <20010419142400.E10345@sistina.com> <20010419213335.E30135@suse.de> <yq1vgo0lljm.fsf@jaguar.mkp.net>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0104191532370.17635-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Thu, Apr 19, 2001 at 03:35:43PM -0300
+In-Reply-To: <yq1vgo0lljm.fsf@jaguar.mkp.net>; from mkp@mkp.net on Thu, Apr 19, 2001 at 03:46:53PM -0400
 Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,63 +19,68 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Rik van Riel <riel@conectiva.com.br>
-Cc: AJ Lewis <lewis@sistina.com>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, linux-lvm@sistina.com
+To: "Martin K. Petersen" <mkp@mkp.net>
+Cc: Jens Axboe <axboe@suse.de>, AJ Lewis <lewis@sistina.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, riel@conectiva.com.br, linux-lvm@sistina.com
 
-On Thu, Apr 19, 2001 at 03:35:43PM -0300, Rik van Riel wrote:
-> On Thu, 19 Apr 2001, AJ Lewis wrote:
+Sorry, sorry.
+
+The lists are open.
+Please tell us if mailman still bothers.
+
+On Thu, Apr 19, 2001 at 03:46:53PM -0400, Martin K. Petersen wrote:
+> >>>>> "Jens" == Jens Axboe <axboe@suse.de> writes:
 > 
-> > It is unfortunate that this could not have been resolved in a more mature
-> > manner.  Saying "I don't like the way somebody is doing something.  I won't
-> > bother to talk to them about it, I'll just flame them and try to undermine
-> > their work." is not acceptable.  It would have been nice if you'd actually
-> > tried to work this out instead of handling it this way.
+> Jens> First one gets a mail saying that the mail sent is queued for
+> Jens> moderator approval, since I'm not on the list. Then later a
+> Jens> second mail arrives, saying the mail has been rejected by the
+> Jens> moderator.
 > 
-> We tried, but the last time we had something to say about your
-> code the message wasn't allowed on your list.
-
-As mentioned in other mails multiple times:
-The reject answer contained information about how to become a subscriber.
-Our list admin just hated spam and now he has pain in the neck ;-)))
-
-The lists at sistina.com are completely open now anyway :)
-
+> Yep.  Same here.  Latest and greatest...
 > 
-> Now that the code is in the kernel, we are of the opinion that
-> it is no longer acceptable to censor messages when they are too
-> critical about the LVM source code.
-
-This is completely misleading!
-
-There has *never* been censoring in place!
-
-It was just rejects for mail from non subscribers who actually could subscribe
-in a seconds effort.
-
-So please let us stop claiming wrong things here.
-Thanks!
-
-
-> This beast is in the kernel,
-> now we'd better be allowed to talk about the source code and
-> maintain the thing.
-
-Yes, yes, yes!!!
-
-Thanks for all your future appreciated patch and advice input in advance.
-
+> ---8<---
+> From: linux-lvm-admin@sistina.com
+> Subject: Your message to linux-lvm awaits moderator approval
+> To: mkp@mkp.net
+> Date: Tue, 10 Apr 2001 22:02:40 +0200
 > 
-> regards,
+> Your mail to 'linux-lvm' with the subject
 > 
-> Rik
-> --
-> Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
+>     Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 Beta 7 available at
+> www.sistina.com
 > 
-> Virtual memory is like a game you can't win;
-> However, without VM there's truly nothing to lose...
+> Is being held until the list moderator can review it for approval.
+> ---8<---
 > 
-> 		http://www.surriel.com/
-> http://www.conectiva.com/	http://distro.conectiva.com/
+> Now, I held my breath until the following day...
+> 
+> ---8<---
+> From: linux-lvm-admin@sistina.com
+> Subject: Request to mailing list linux-lvm rejected
+> To: mkp@mkp.net
+> Date: Wed, 11 Apr 2001 17:32:36 +0200
+> 
+> Your request to the linux-lvm mailing list
+> 
+>     Posting of your message titled "Re: [linux-lvm] *** ANNOUNCEMENT
+> *** LVM 0.9.1 Beta 7 available at www.sistina.com"
+> 
+> has been rejected by the list moderator.  The moderator gave the
+> following reason for rejecting your request:
+> 
+> "Non-members are not allowed to post messages to this list."
+> ---8<---
+> 
+> Since there is such a long delay between the two mails, it's obvious
+> that there is human intervention involved.  And when an on-topic mail
+> is rejected by the moderator, well... go figure.
+> 
+> And this isn't the first time this has happened to me and several
+> others.  By far...
+> 
+> -- 
+> Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
+> mkp@linuxcare.com, http://www.linuxcare.com/
+> SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
 > 
 > -
 > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
