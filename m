@@ -1,38 +1,42 @@
-Message-ID: <389DC915.F7FEC89C@msede.com>
-Date: Sun, 06 Feb 2000 20:18:45 +0100
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: dccotey@dragon.elfwerks.com
-MIME-Version: 1.0
-Subject: [linux-lvm] minor vgscan oops (fwd)
-Content-Transfer-Encoding: 7bit
+Date: Mon, 7 Feb 2000 10:37:19 +0100
+From: Fabian.Herschel@suse.de
+Subject: Re: [linux-lvm] Configuring boot partition with LVM
+Message-ID: <20000207103719.A1170@suse.de>
+References: <Pine.LNX.4.20.0002041218580.416-100000@claudius.mgmt-inc.com>
+Mime-Version: 1.0
+In-Reply-To: <Pine.LNX.4.20.0002041218580.416-100000@claudius.mgmt-inc.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Forwarded message ...
+On Fri, Feb 04, 2000 at 12:29:34PM -0500, Jim Cain wrote:
+> All,
+> 
+> Has anyone been successful in creating a completely LVM-managed system?
+> Specifically, I'm wondering about the problem with needing LVM-enabled
+> kernel on a boot floppy for installation purposes.
 
--------- Original Message --------
-From: "DanielC" <dccotey@dragon.elfwerks.com>
-Date: Sat, 5 Feb 2000 18:05:39 -0700 (MST)
-Subject: minor vgscan oops
+At this point of time lilo is not ready to boot a kernel fom a lv. Lilo
+should also learn how to boot a kernel fom a striped volume...
 
-Greetings,
-  I was playing around with a brand new RedHat 6.1 box with a 2.2.14
-kernel patched with the unified IDE and lvm patches and found a couple
-of
-problems.
+Greetings
+Fabian
 
-1. Its been mentioned before that RH ships with more md devices than a
-stock kernel can handle, and when vgscan touches them the box locks
-solid.
-Might I suggest that tidbit be added to either the BUGS or INSTALL
-file?
 
-2. When network block support is compiled into a kernel vgscan will
-produce 5+ pages of errors when scanning them, is there a way to tell
-vgscan to skip a set of devices?
 
---
-DanielC
+> 
+> Or is this not a good idea? Is it better to have a non-LVM root partition
+> on a separate drive, and then use LVM for everything else?
+> 
+> Thanks for the input,
+> Jim
+
+-- 
+-----------------------------------------------------------------------
+Fabian Herschel                                 SuSE Rhein/Main AG     
+Tel:    +49-6196-50951-23                       Mergenthalerallee 45-47
+Fax:    +49-6196-409-607                        D-65760 Eschborn
+mailto: Fabian.Herschel@suse.de                 http://www.suse.de      
