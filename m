@@ -1,8 +1,12 @@
-Message-Id: <1012476509.3c592a5de7bab@webmail.tiscalinet.be>
-From: joel.soete@freebel.net
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementation
+    ready for beta testing
+Message-Id: <20020131122624.C9764@sistina.com>
+References: <20020130145408.I763@lynx.adilger.int>
+    <Pine.LNX.4.10.10201302234340.19357-100000@pzat.meep.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM2 CVS access?
+In-Reply-To: <Pine.LNX.4.10.10201302234340.19357-100000@pzat.meep.org>;
+    from oolon@ankh.org on Wed, Jan 30, 2002 at 10:36:10PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,20 +17,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 31 05:29:01 2002
+Date: Thu Jan 31 05:31:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+On Wed, Jan 30, 2002 at 10:36:10PM +0000, James Hawtin wrote:
+> Licencing is important to me, too. Also is it pv/lv compatible with lvm 1
+> or is it system rebuild time.....
 
-Can you let me know if there will be created new cvs modules to co lvm2 as well
-as device-mapper (I do not yet find a relevant way to list available modules
-from a cvs server) ?
+LVM2 supports the existing LVM1 on disk metadata format and will support another
+so called format2 soon which has enhanced metadata redundancy and transaction 
+oriented updates in order to largely reduce the likelyhood of inacessable
+VGs and metadata restores.
 
-Thanks in advance for info,
-        Joel
+IOW: it will make LVM more insensible to hardware flaws.
 
 
--------------------------------------------------
-This mail sent through Tiscali Webmail (http://webmail.tiscali.be)
+> 
+> James
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
