@@ -1,8 +1,8 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 30 Apr 2001 16:03:35 +0000
+Date: Mon, 30 Apr 2001 16:04:31 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: [mason@suse.com: [linux-lvm] Re: VFS locking patch fails on 2.4.4] 
-Message-ID: <20010430160335.G19810@sistina.com>
+Subject: Re: [linux-lvm] vgcfgrestore fails.
+Message-ID: <20010430160431.H19810@sistina.com>
 Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,148 +19,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Thanks Chris for the patch!
+On Sat, Apr 28, 2001 at 12:33:58PM -0500, root wrote:
+> I am running SuSe 7.1 
+> 2.4.0 kernel 
+> 512M Ram
+> AhA2940U2W
+> suse lvm
+> 
+> I had three volume groups and a week ago the volume group that contained user 
+> had a drive crash.  I was unable to save usr but now I can not mount any of 
+> my other volume groups and vgcfgrestore fails.  Is their any thing I can do 
+> to get my data?  
+> thor:~ # pvdisplay /dev/sdd2
+> --- Physical volume ---
+> PV Name               /dev/sdd2
+> VG Name               export
+> PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
+> PV#                   2
+> PV Status             available
+> Allocatable           yes (but full)
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              2123
+> Free PE               0
+> Allocated PE          2123
+> PV UUID               ruLId0-1JoY-34Ja-oLW0-FmzV-Q5ZN-NQaZw9
+> thor:~ # pvdisplay /dev/sdc2
+> --- Physical volume ---
+> PV Name               /dev/sdc2
+> VG Name               export
+> PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
+> PV#                   1
+> PV Status             available
+> Allocatable           yes (but full)
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              2123
+> Free PE               0
+> Allocated PE          2123
+> PV UUID               ynnKCX-mjlT-jeNe-9MHY-tnP2-XCIC-nbKrmq
+>  
+> thor:~ # vgcfgrestore -n export /dev/sdd2
+> vgcfgrestore -- ERROR: different structure size stored in "/etc/lvmconf/export.conf" than expected in file vg_cfgrestore.c [line 
+> 122]
+> vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "export"
+>                                                                               
 
-Cheers,
-Heinz
+You are using a newer LVM versions which has different metadata definitions
+that the one which created those backups.
 
-On Sun, Apr 29, 2001 at 09:53:58PM -0400, Chris Mason wrote:
-> 
-> The only rejects were in fs.h, but here is a new patch against 2.4.4
-> 
-> diff -Nru a/drivers/md/lvm.c b/drivers/md/lvm.c
-> --- a/drivers/md/lvm.c	Sun Apr 29 20:48:50 2001
-> +++ b/drivers/md/lvm.c	Sun Apr 29 20:48:50 2001
-> @@ -207,7 +207,7 @@
->  #define LOCAL_END_REQUEST
->  
->  /* lvm_do_lv_create calls fsync_dev_lockfs()/unlockfs() */
-> -/* #define	LVM_VFS_ENHANCEMENT */
-> +#define	LVM_VFS_ENHANCEMENT
->  
->  #include <linux/config.h>
->  #include <linux/module.h>
-> diff -Nru a/fs/buffer.c b/fs/buffer.c
-> --- a/fs/buffer.c	Sun Apr 29 20:48:50 2001
-> +++ b/fs/buffer.c	Sun Apr 29 20:48:50 2001
-> @@ -331,6 +331,28 @@
->  	return sync_buffers(dev, 1);
->  }
->  
-> +int fsync_dev_lockfs(kdev_t dev)
-> +{
-> +	sync_buffers(dev, 0);
-> +
-> +	lock_kernel();
-> +	sync_supers(dev);
-> +	/* note, the FS might need to start transactions to 
-> +	** sync the inodes, or the quota, no locking until
-> +	** after these are done
-> +	*/
-> +	sync_inodes(dev);
-> +	DQUOT_SYNC(dev);
-> +	/* if inodes or quotas could be dirtied during the
-> +	** sync_supers_lockfs call, the FS is responsible for getting
-> +	** them on disk, without deadlocking against the lock
-> +	*/
-> +	sync_supers_lockfs(dev) ;
-> +	unlock_kernel();
-> +
-> +	return sync_buffers(dev, 1) ;
-> +}
-> +
->  asmlinkage long sys_sync(void)
->  {
->  	fsync_dev(0);
-> diff -Nru a/fs/super.c b/fs/super.c
-> --- a/fs/super.c	Sun Apr 29 20:48:49 2001
-> +++ b/fs/super.c	Sun Apr 29 20:48:49 2001
-> @@ -630,6 +630,46 @@
->  	}
->  }
->  
-> +/*
-> + * Note: don't check the dirty flag before waiting, we want the lock
-> + * to happen every time this is called.
-> + */
-> +void sync_supers_lockfs(kdev_t dev)
-> +{
-> +	struct super_block * sb;
-> +
-> +	for (sb = sb_entry(super_blocks.next);
-> +	     sb != sb_entry(&super_blocks); 
-> +	     sb = sb_entry(sb->s_list.next)) {
-> +		if (!sb->s_dev)
-> +			continue;
-> +		if (dev && sb->s_dev != dev)
-> +			continue;
-> +		lock_super(sb);
-> +		if (sb->s_dev && (!dev || dev == sb->s_dev))
-> +			if (sb->s_op && sb->s_op->write_super_lockfs)
-> +				sb->s_op->write_super_lockfs(sb);
-> +		unlock_super(sb);
-> +	}
-> +}
-> +
-> +void unlockfs(kdev_t dev)
-> +{
-> +	struct super_block * sb;
-> +
-> +	for (sb = sb_entry(super_blocks.next);
-> +	     sb != sb_entry(&super_blocks); 
-> +	     sb = sb_entry(sb->s_list.next)) {
-> +		if (!sb->s_dev)
-> +			continue;
-> +		if (dev && sb->s_dev != dev)
-> +			continue;
-> +		if (sb->s_dev && (!dev || dev == sb->s_dev))
-> +			if (sb->s_op && sb->s_op->unlockfs)
-> +				sb->s_op->unlockfs(sb);
-> +	}
-> +}
-> +
->  /**
->   *	get_super	-	get the superblock of a device
->   *	@dev: device to get the superblock for
-> diff -Nru a/include/linux/fs.h b/include/linux/fs.h
-> --- a/include/linux/fs.h	Sun Apr 29 20:48:50 2001
-> +++ b/include/linux/fs.h	Sun Apr 29 20:48:50 2001
-> @@ -1107,6 +1107,7 @@
->  extern void write_inode_now(struct inode *, int);
->  extern void sync_dev(kdev_t);
->  extern int fsync_dev(kdev_t);
-> +extern int fsync_dev_lockfs(kdev_t);
->  extern int fsync_super(struct super_block *);
->  extern void sync_inodes_sb(struct super_block *);
->  extern int osync_inode_buffers(struct inode *);
-> @@ -1117,6 +1118,8 @@
->  extern void filemap_fdatasync(struct address_space *);
->  extern void filemap_fdatawait(struct address_space *);
->  extern void sync_supers(kdev_t);
-> +extern void sync_supers_lockfs(kdev_t);
-> +extern void unlockfs(kdev_t);
->  extern int bmap(struct inode *, int);
->  extern int notify_change(struct dentry *, struct iattr *);
->  extern int permission(struct inode *, int);
-> diff -Nru a/kernel/ksyms.c b/kernel/ksyms.c
-> --- a/kernel/ksyms.c	Sun Apr 29 20:48:50 2001
-> +++ b/kernel/ksyms.c	Sun Apr 29 20:48:50 2001
-> @@ -179,6 +179,8 @@
->  EXPORT_SYMBOL(invalidate_inode_pages);
->  EXPORT_SYMBOL(truncate_inode_pages);
->  EXPORT_SYMBOL(fsync_dev);
-> +EXPORT_SYMBOL(fsync_dev_lockfs);
-> +EXPORT_SYMBOL(unlockfs);
->  EXPORT_SYMBOL(permission);
->  EXPORT_SYMBOL(vfs_permission);
->  EXPORT_SYMBOL(inode_setattr);
-> 
-> 
-> 
+My guess is, that you are using LVM > 0.9.1 Beta 3 *now* but created the
+backups with a lower LVM 0.9 version and you suffer from a PV uuid related
+bug preventing vgscan to find your VG.
+
+
+One way to address the situation (pressuming no VGs are active) is:
+
+- create /etc/lvmtab.d/ in case it doesn't exist
+
+- copy /etc/lvmconf/export.conf to /etc/lvmtab.d/export
+
+- echo -ne 'export\0' > /etc/lvmtab
+
+- vgchange -ay
+
+If the VG named "export" comes back to life this way (assuming that the user LV
+belongs to it) do:
+
+- lvreduce -l1 /dev/export/user
+- lvrextend -l1 /dev/export/user
+
+replace "user" with a valid LV name in case I assumed wrong.
+
+The purpose of that NULL operation in the end is, that your PV uuid list
+gets recreated by LVM >= 0.9.1 Beta 4 which should make vgscan happy again ;-)
+
+The last 2 commands just shrink user by 1 LE and grow it again which
+is necessary, because your export VG is *full*. This will not harm the user
+LV in the end, because the allocator has the only option to use the very same
+PE for growing which was freed before by the shrinking of user.
+
+If your VG had at least 1 free PE a lvcreate/lvremove cycle for a dummy
+LV with just 1 LE had done it as well.
+
+Please tell us if this helps you or we need to go for another solution.
+
+>           
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
