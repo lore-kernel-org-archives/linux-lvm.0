@@ -1,16 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1CG00O11745
-	for <linux-lvm@redhat.com>; Sat, 12 Feb 2005 11:00:00 -0500
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j1CFxxHD029354
-	for <linux-lvm@redhat.com>; Sat, 12 Feb 2005 10:59:59 -0500
-Date: Sat, 12 Feb 2005 15:59:54 +0100 (MET)
-From: "Thomas Meller" <thomas.meller@gmx.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1CGRJO15112
+	for <linux-lvm@redhat.com>; Sat, 12 Feb 2005 11:27:19 -0500
+Received: from postfix4-2.free.fr (postfix4-2.free.fr [213.228.0.176])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j1CGRD0Q030745
+	for <linux-lvm@redhat.com>; Sat, 12 Feb 2005 11:27:13 -0500
+Received: from [192.168.0.2] (netchaiev.zarb.org [82.224.237.5])
+	by postfix4-2.free.fr (Postfix) with ESMTP id 7ABD12BE979
+	for <linux-lvm@redhat.com>; Sat, 12 Feb 2005 17:27:12 +0100 (CET)
+Message-ID: <420E2E5F.8040401@inria.fr>
+Date: Sat, 12 Feb 2005 17:27:11 +0100
+From: Guillaume Rousse <Guillaume.Rousse@inria.fr>
 MIME-Version: 1.0
-References: <OFBAE0E4B6.042046DD-ONC1256FA4.003CCFFB-C1256FA4.003D216A@uz.tengelmann.de>
-Subject: Re: [linux-lvm] HA Functionality for LVM
-Message-ID: <7332.1108220394@www37.gmx.net>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Troubles with 2.6.10 kernel, lvm and megaraid
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,62 +23,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: linux-lvm@redhat.com
 
-Hello Joerg,
+Hello.
 
-LVM is not cluster aware. There is a descendant named EVMS. You can find it
-on sourceforge. I have no idea about it's status.
-We are using LVM on a self-designed HA solution. It is really hostile when
-you use RAID underneath. There is a free command line utility named SCU to
-solve concurrency problems. We are still evaluating it. Some painstaking
-work, though.
+I have troubles with an host running mandrake 10.1, hardware raid with=20
+megaraid driver, and lvm. The setup works fine with initial=20
+configuration, using a 2.6.8 kernel, but we recently tried to switch to=20
+  2.6.10 as we're facing some unknown lock issues. Now the lvm doesn't=20
+work anymore, and stop at boot with this message:
 
-Good luck
+device-mapper ioctl cmd 0 failed: Inappropriate ioctl for device
 
-Thomas
------------------
-thomas
-| .dot. |
-meller AT
-GMX
-? .dot. ?
-net
+Apparently, something changed either in the megaraid driver (I am still=20
+using the legacy one) or the device mapper. I didn't attempted yet to=20
+backport user-spaces tools such as lvm and libdevice-mapper, as I'm=20
+trying to minimise support calls for rebooting the machine).
 
-> Hi there,
-> 
-> i have the question if there is a ha functionality for lvm especially
-> to activate one vg in excusive mode (like hp lvm). Or are there other ways
-> to
-> do this ?
-> 
-> Any ideas?
-> 
-> Regards
-> 
-> 
-> J�rg Middendorf
-> Tengelmann Warenhandelsgesellschaft KG
-> Betriebssysteme Unix / Linux
-> Wissollstr. 5-43
-> 45478 M�lheim
-> Deutschland
-> +++++++++++++++++
-> Tel: 0208-5806-6625
-> Fax: 0208-5806-6804
-> e-mail : middendorf@uz.tengelmann.de
-> Groupmail : unixadm@uz.tengelmann.de
-> http: www.tengelmann.de
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
--- 
-DSL Komplett von GMX +++ Superg�nstig und stressfrei einsteigen!
-AKTION "Kein Einrichtungspreis" nutzen: http://www.gmx.net/de/go/dsl
+Any advice ?--
+Divide the number of servings by two when reading the directions for=20
+reconstituting anything freeze-dried
+		-- Murphy's Laws of Camping n=EF=BF=BD16
