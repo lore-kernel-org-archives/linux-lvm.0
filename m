@@ -1,59 +1,37 @@
-Message-ID: <37680B3F.CC71CBA@mail.isis.de>
-Date: Wed, 16 Jun 1999 22:38:23 +0200
-From: Marcus Ruehmann <m.ruehmann@mail.isis.de>
-MIME-Version: 1.0
+Message-Id: <199906162128.AA05302@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] LVM into mainstream kernel news
-References: <199906161851.AA01543@mailgate1b.telekom.de>
-Content-Transfer-Encoding: quoted-printable
+Date: Wed, 16 Jun 1999 23:28:13 METDST
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: linux-lvm@msede.com, mge@ts1.ez-darmstadt.telekom.de
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-So, Heinz, wouldn=B4t it be a good idea to split your stuff so that one
-can download the liblvm and such separately?
+> 
+> So, Heinz, wouldn=B4t it be a good idea to split your stuff so that one
+> can download the liblvm and such separately?
+> 
+<SNIP>
 
-Cheers
-Marcus
+Yep.
+I'll do it with upcoming 0.7.
 
-Heinz Mauelshagen wrote:
-> =
+Heinz
 
-> Hi all,
-> =
 
-> i have good news from Alan Cox.
-> =
+--
 
-> He is putting LVM into his 2.3.*ac kernel 8*)
-> If it has hold for a while he'll promote it to Linus.
-> =
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-> Special thanks to Ulrik De Bie <winmute-lvm@kotnet.org> who helped with=
- this.
-> =
-
-> Heinz
-> --
-> =
-
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-
-> =
-
-> Systemmanagement C/S                             Deutsche Telekom AG
->                                                  Entwicklungszentrum Da=
-rmstadt
-> Heinz Mauelshagen                                Otto-Roehm-Strasse 71c=
-
-> Senior Systems Engineer                          Postfach 10 05 41
->                                                  64205 Darmstadt
-> mge@ez-darmstadt.telekom.de                      Germany
->                                                  +49 6151 886-425
->                                                           FAX-386
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
