@@ -1,10 +1,8 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200105151543.f4FFhuQg018741@webber.adilger.int>
-Subject: Re: [linux-lvm] Lost filesystems on LVs (forgot the attachment)
-In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF683CB2@mailsrv.linkvest.com>
- "from Jean-Eric Cuendet at May 15, 2001 02:37:22 pm"
-Date: Tue, 15 May 2001 09:43:56 -0600 (MDT)
+Return-Path: <Jean-Eric.Cuendet@linkvest.com>
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683CBE@mailsrv.linkvest.com>
+From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+Subject: RE: [linux-lvm] Lost filesystems on LVs (forgot the attachment)
+Date: Tue, 15 May 2001 18:36:45 +0200
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,32 +17,31 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Jean-Eric Cuendet writes:
-> I have a BIG problem. I have an LVM VG of 160Gb. There is 3 LVs defined:
-> - MS
-> - Distrib
-> - backups
-> This morning, I made a e2fsadm to reduce the MS volume and grow the backup
-> one.
-> I umounted the MS volume, made the e2fsadm. All was OK, no error.
-> I then umounted the backups LV and made the e2fsadm. e2fsck refused to work
-> saying that there was no filesystem on it! All was OK, until I umount it!
-> And now, I'm sticked with the backups LV with no filesystem (it was OK until
-> this night, all backups were OK) and the MS LV with things that I don't
-> understand (files that shouldn't be here...)
-> 
-> I added in attach, the dump2fs and "cat /proc/lvm/global"
+> If dumpe2fs shows the superblock, then e2fsck should also 
+> work.  I assume
+> that you ran dumpe2fs AFTER the resize?  Is it possible e2fsck is
+> refusing to work on the backups LV because of the large_file flag set?
+> What version of e2fsck are you using?  You should update to 1.19 at:
+> http://sourceforge.net/projects/e2fsprogs/
 
-If dumpe2fs shows the superblock, then e2fsck should also work.  I assume
-that you ran dumpe2fs AFTER the resize?  Is it possible e2fsck is
-refusing to work on the backups LV because of the large_file flag set?
-What version of e2fsck are you using?  You should update to 1.19 at:
-http://sourceforge.net/projects/e2fsprogs/
+I have 1.19 version. Here is the output of the fsck:
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+e2fsck /dev/NORAID_HDX/backups
+e2fsck 1.19ea, 30-Aug-2000 for EXT2 FS 0.5b, 95/08/09
+Group descriptors look bad... trying backup blocks...
+e2fsck: Bad magic number in super-block while trying to open
+/dev/NORAID_HDX/backups
+ 
+The superblock could not be read or does not describe a correct ext2
+filesystem.  If the device is valid and it really contains an ext2
+filesystem (and not swap or ufs or something else), then the superblock
+is corrupt, and you might try running e2fsck with an alternate superblock:
+    e2fsck -b 8193 <device>
+ 
+[root@fatboy filesrv]#
+
+e2fsck -b 8193 doesn't help...
+Any idea?
+-jec
