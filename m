@@ -1,21 +1,28 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0F2cOO05390
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 21:38:24 -0500
-Received: from e-liberty.pl (yh226.internetdsl.tpnet.pl [80.55.241.226])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0F2cMF9003294
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 21:38:23 -0500
-Received: from PIW (mizzar.multicon.pl [81.219.100.2])
-	by e-liberty.pl (Postfix) with ESMTP id 9659D497DC
-	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 05:02:56 +0100 (CET)
-Date: Sat, 15 Jan 2005 03:38:04 +0100
-From: Piw <piw@e-liberty.pl>
-Message-ID: <415694421.20050115033804@e-liberty.pl>
-Subject: Re: [linux-lvm] understanding large LVM volumes
-In-Reply-To: <1266458715.20050114224006@free.fr>
-References: <41E80382.1000403@svs.gsfc.nasa.gov>
-	<1266458715.20050114224006@free.fr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0FDL4O13880
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 08:21:04 -0500
+Received: from comm.hcsd.de (comm-ext2.hcsd.de [217.146.142.51])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0FDKvpI017942
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 08:20:58 -0500
+Received: from hopper.hcsd.de (hopper.hcsd.de
+	[IPv6:2001:8d0:1000:1000:230:48ff:fe31:231c])
+	by comm.hcsd.de (8.13.2/8.13.2/Debian-1) with ESMTP id j0FDKt2O017774
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 14:20:55 +0100
+Received: from hopper.hcsd.de (localhost [127.0.0.1])
+	by hopper.hcsd.de (8.13.2/8.13.2/Debian-1) with ESMTP id j0FDKtBP019054
+	for <linux-lvm@redhat.com>; Sat, 15 Jan 2005 14:20:55 +0100
+Received: (from au@localhost)
+	by hopper.hcsd.de (8.13.2/8.13.2/Submit) id j0FDKtFZ019053
+	for linux-lvm@redhat.com; Sat, 15 Jan 2005 14:20:55 +0100
+Date: Sat, 15 Jan 2005 14:20:55 +0100
+From: Stephan =?iso-8859-1?Q?Austerm=FChle?= <au@hcsd.de>
+Message-ID: <20050115132055.GA18967@hcsd.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Content-Disposition: inline
+Subject: [linux-lvm] Kernel bug with snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,93 +33,138 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-NiHao Stephane,
 
->> How does the Physical Extent size affect the maximum VG size?
->> How does one go about chosing a PE size for a VG?
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The PE Size does not affect VG size, but it's affect the maximum
-> size of a logical volume.
+Hi,
 
-> extract of the vgcreate man page :
+in the last days I played around with Kernel 2.6.9, LVM2, and multiple
+snapshots of the Logical Volume leading to some system freezes. The
+Volume Group is setup on top of a mirrored device (md). I decided to
+switch to kernel 2.6.11-rc1 with Device Mapper patches 2.6.10-udm1
+(without patch 29) and test again.
 
-> --
-> To limit kernel memory usage, there is a limit of 65536 physical
-> extents (PE) per logical volume,  so
->        the  PE  size determines the maximum logical volume size. 
-> The default PE size of 4MB limits a single
->        logical volume to 256GB (see the -s option to raise that
-> limit).  There is also (as of Linux  2.4)  a
->        kernel limitation of 2TB per block device.
-> --
+What I did was:
 
-> So, to limit the size of the mapping between the physical extend (PE)
-> and the real physical location of the data, gods say that you can't
-> use more than 65536 PE for a logical volume.
+1. created a 2 GByte LV (lv_test) with XFS and mounted the filesystem.
+2. Wrote some data to lv_test.
+3. Created snapshot using
 
-and...
+	lvcreate -L 200M -p r -n lv_snap_01 /dev/vg00/lv_test
 
-> So if you want to make logicals volumes as big a 1TB each, you need to
-> change the size of the PE to, at least : 1024*1024 MB /65536 = 16 MB
-> Of course, stick to the limit so much seems not really secure, so
-> I advive you to choose at least 32 MB for the PE size in this case
-> (or even more). I read that the maximum size for the physical extend
-> is 16 GB, so choosing a big value here (128 MB ?) is not a problem.
+4. Mounted lv_snap_01 (read only, no uuid)
+5. Removed some files and wrote some data to lv_test
+6. Created snapshot lv_snap_02 and mounted it (read only, no uuid)
+7. Repeated step 5 and created snapshot lv_snap_03
+8. Wrote some data (about 30 MByte) to lv_test
+9. While kcopyd(?) was running I tried to remove lv_snap_01:
 
-Those limits (65536 LE per LV) does not apply to LVM 2 and 2.6 kernel.
-Your LV can have MUCH more LE (I dont know if there is even reachable
-limit  for  this).  One  and only feedback (if you can notice this) is
-that  userspace  programs for managing LVM works _little_ slower, when
-there is enormous number od LE to administrate.
-I tested it with 4GB LV on 16MB LE (but I didnt see difference)
+	lvremove -f /dev/vg00/lv_snap_01
 
-> Also note that with a 32 bit kernel, you have a limit of 2TB per
-> logical volume, I don't know if this limit disappear with a 64 bit
-> kernel.
+The lvremove instruction terminated with
 
-About kerenel. Limit od 2GB per block device is also an antique.
-You  can  easly  "bypass" this limit by setting (in make menuconfig)
-Devices Drivers->Block Devices->Support for Large Block Devices.
+	Segmentation fault
 
-> But think hard about it....
-> Are you sure you can't "logicaly" split it ? and that the 10 TB of
-> data will concern the same software or pool of user and so on ?
-> Are you sure you will not have to move only a part of the data one day ?
-> (add a new server and need to export some of the data to import it
-> to the new server ?)
-> Also think about how you will (if you need) backup the whole thing...
+and I received the following kernel messages on console:
 
-When  I  create  logical structure of my LVM diskspace, I always think
-about those things:
+	------------[ cut here ]------------
+	kernel BUG at drivers/md/kcopyd.c:145!
+	invalid operand: 0000 [#1]
+	Modules linked in: nfs lockd sunrpc autofs4 8250 serial_core md5 ipv6 uhci=
+_hcd usbcore 3c59x mii unix
+	CPU:    0
+	EIP:    0060:[<c0281989>]    Not tainted VLI
+	EFLAGS: 00010287   (2.6.11-rc1-udm1)=20
+	EIP is at client_free_pages+0x39/0x50
+	eax: 00000100   ebx: d1b6eb20   ecx: d9ad1820   edx: 00000000
+	esi: e19a4040   edi: 00000000   ebp: cec0defc   esp: cec0def4
+	ds: 007b   es: 007b   ss: 0068
+	Process lvremove (pid: 1926, threadinfo=3Dcec0c000 task=3Dd98e4060)
+	Stack: d1b6eb20 d1b6eb20 cec0df0c c028237f d1b6eb20 da370b60 cec0df24 c028=
+2db4=20
+	       d1b6eb20 d1b6ed40 e19a4040 d98cac20 cec0df40 c027c846 e19a4040 0000=
+0000=20
+	       dd529940 e085b000 00000004 cec0df54 c027e81d d98cac20 00000000 c037=
+3fa0=20
+	Call Trace:
+	 [<c010325f>] show_stack+0x7f/0xa0
+	 [<c01033fa>] show_registers+0x15a/0x1c0
+	 [<c01035ce>] die+0xce/0x150
+	 [<c0103a69>] do_invalid_op+0xb9/0xd0
+	 [<c0102eeb>] error_code+0x2b/0x30
+	 [<c028237f>] kcopyd_client_destroy+0x1f/0x38
+	 [<c0282db4>] snapshot_dtr+0x74/0x90
+	 [<c027c846>] table_destroy+0xa6/0xc0
+	 [<c027e81d>] __hash_remove+0x5d/0x80
+	 [<c027f040>] dev_remove+0x50/0xd0
+	 [<c028066e>] ctl_ioctl+0xde/0x140
+	 [<c015ed05>] sys_ioctl+0xa5/0x220
+	 [<c01024d7>] syscall_call+0x7/0xb
+	Code: 0c 39 43 10 75 25 8b 43 08 89 04 24 e8 51 ff ff ff c7 43 08 00 00 00=
+ 00 c7 43 0c 00 00 00 00 c7 43 10 00 00 00 00 8b 5d fc c9 c3 <0f> 0b 91 00 =
+6c f4 2f c0 eb d1 8d b6 00 00 00 00 8d bc 27 00 00=20
+	 <1>Unable to handle kernel paging request at virtual address e19a74b0
+	 printing eip:
+	c0283fae
+	*pde =3D 0152e067
+	*pte =3D 00000000
+	Oops: 0002 [#2]
+	Modules linked in: nfs lockd sunrpc autofs4 8250 serial_core md5 ipv6 uhci=
+_hcd usbcore 3c59x mii unix
+	CPU:    0
+	EIP:    0060:[<c0283fae>]    Not tainted VLI
+	EFLAGS: 00010282   (2.6.11-rc1-udm1)=20
+	EIP is at write_exception+0x2e/0x50
+	eax: 000064a6   ebx: d94e9ebc   ecx: e19a74b0   edx: 00000000
+	esi: 00000000   edi: cedb73bc   ebp: d94e9ea8   esp: d94e9e9c
+	ds: 007b   es: 007b   ss: 0068
+	Process kcopyd (pid: 1749, threadinfo=3Dd94e8000 task=3Dda066590)
+	Stack: d4360da0 0000014b d4360da0 d94e9ed8 c02842c5 d4360da0 0000014b d94e=
+9ebc=20
+	       000064a6 00000000 0000505b 00000000 cedba944 00000000 cedb73bc d94e=
+9ef0=20
+	       c0283122 da370bac cedb73bc c02830d0 cedb73bc d94e9f18 c0281b10 0000=
+0000=20
+	Call Trace:
+	 [<c010325f>] show_stack+0x7f/0xa0
+	 [<c01033fa>] show_registers+0x15a/0x1c0
+	 [<c01035ce>] die+0xce/0x150
+	 [<c0111fdb>] do_page_fault+0x31b/0x66f
+	 [<c0102eeb>] error_code+0x2b/0x30
+	 [<c02842c5>] persistent_commit+0x45/0x100
+	 [<c0283122>] copy_callback+0x42/0x50
+	 [<c0281b10>] run_complete_job+0x60/0x70
+	 [<c0281d14>] process_jobs+0x44/0xb0
+	 [<c0281d9a>] do_work+0x1a/0x50
+	 [<c0125513>] worker_thread+0x183/0x220
+	 [<c0128f5a>] kthread+0xaa/0xb0
+	 [<c0100881>] kernel_thread_helper+0x5/0x14
+	Code: 83 ec 0c 8b 45 0c 89 5d fc 8b 5d 10 89 44 24 04 8b 45 08 89 04 24 e8=
+ 72 ff ff ff 89 c1 b8 ea ff ff ff 85 c9 74 18 8b 03 8b 53 04 <89> 01 89 51 =
+04 8b 43 08 8b 53 0c 89 41 08 31 c0 89 51 0c 8b 5d=20
 
-1) Never assign ALL your disks at once between VGs.
-You can ALWAYS add disk later to vg, according to your needs. Removing
-involves  pvmove,  whitch is more stressing then vgextend. (of course,
-if  U  have  more, then 5-6 disks). And almost all filesystems support
-extending of FS, but not all like shrinking.
+Looks likes a bug...
 
-2) Never create BIG vg, unless they are base on raid disks.
-Damage of one disk whitch is not in RAID, damages VG (of course, U
-can  recreate  structure of vg by clonig PV ID, but filesystems will be
-damaged - mabye in more then one LV.)
+Kind regards,
 
-3) Always try to have some space left in vg.
-It helps you extend LV when needed, and create snapshots of LV.
-Generaly,  when  you  have  lower then 20% (of biggest LV in VG) free
-space  in VG, think about extendig VG. If you have no spare PVs, think
-about  buying  some  disks. In there is no room for disks, thing about
-another disks enclosure. If no.... etc. etc.
+Stephan
 
-> Well, again, all this post is just guessing and a quick look
-> at the man page, so you should wait for a answer from someone
-> who really know it anyway :o)
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-Unfortunatly man pages R not 100% compilant with latest of LVM.
-Buy hey, they are not right about limits, so we should be happy ;]
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
 
---
-Piw
-Jabb with me at piwATe-liberty.pl M0r3 1nf0 4t http://www.jabberpl.org/
+iD8DBQFB6Ri3+QMu5be4tHkRAqV5AJ9HkXAzjkmGFWphIibinzvebzXyOQCfbJUa
+Ztg+vD82kZG1ZxlwT5LS2tw=
+=uD00
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
