@@ -1,8 +1,12 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: Re: [linux-lvm] lvm/devfs bug?
+From: rich turner <rich@storix.com>
+In-Reply-To: <20030409072130.GD1366@tykepenguin.com>
+References: <1049829705.2312.16.camel@rich>
+	<20030408204334.GD22951@percy.comedia.it> <1049836943.7411.19.camel@rich> 
+	<20030409072130.GD1366@tykepenguin.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1049932652.7946.4.camel@rich-laptop>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030409222402.BMRV1717.imf25bis.bellsouth.net@tiger2>
-Subject: [linux-lvm] snapshot performance question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,30 +17,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  9 17:22:01 2003
+Date: Wed Apr  9 18:58:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-I currently have a 2 disk raid1 implemented via 3ware hardware raid.
+i dont completely agree with that because even when i use a kernel that
+does not have devfs i still get the same symptoms. even though
+/proc/partitions does not have a partition for a disk pvcreate still
+complains that there is one. pvcreate must be looking someplace else or
+there is a bug within lvm.
 
-The 3ware card makes the ide drives appear to be SCSI drives to the kernel, so =
-SCSI disconnect logic/etc. is supported.
+now, if i create a pv within a partition there are no complaints, lvm
+will continue normally. it appears to only happen when i want to create
+a pv on the entire disk.
 
-Currently I use unused space on the raid 1 array to hold my snapshot lv.
+why does pvcreate think there is a partition when there clearly isnt
+one?
 
-I also have a standalone ide 80 GB drive in the system with lots of unused =
-space (~40GBs).
-
-There are 2 contradictory performance statements that can be made:
-
-1) raid 1 w/3ware should be much faster than a JBOD ide.
-
-2) snapshots hosted on a separate physical media are faster.
-
-Is this a clear cut case of moving my snapshot lv to the ide drive would be =
-faster, or do I need to do performance testing to be sure?
-
-Greg
---=20
-Greg Freemyer =20
+On Wed, 2003-04-09 at 00:21, Patrick Caulfield wrote:
+> On Tue, Apr 08, 2003 at 02:22:23PM -0700, Rich Turner wrote:
+> > even though devfs is compiled in the kernel it actually is not mounted
+> > at this time. i have tried it using devfs long names also with no
+> > success.
+> 
+> If devfs is in the kernel you MUST have it mounted for LVM. It's to do with the
+> interaction between /proc/partitions and LVM.
+> 
+> 
+> 
+> patrick
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
