@@ -1,10 +1,10 @@
-From: Andres Salomon <dilinger@mp3revolution.net>
-Subject: Re: [linux-lvm] Oops with kernel 2.5.44
-Message-ID: <20021020215959.GA10133@chunk.voxel.net>
-References: <20021020134403.GA19950@vader.boskant.nl>
+Subject: Re: [linux-lvm] I broke my PVs!
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <20021020213439.GA28082@percy.comedia.it>
+References: <20021020213439.GA28082@percy.comedia.it>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1035154982.29693.5.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021020134403.GA19950@vader.boskant.nl>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,81 +15,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 20 17:00:04 2002
+Date: Sun Oct 20 18:03:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Geert Jansen <geertj@boskant.nl>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Joe has some updated stuff that he hasn't put online yet, but for a
-quick fix, the following patch takes care of that oops:
+On Sun, 2002-10-20 at 16:34, Luca Berra wrote:
+> On Sun, Oct 20, 2002 at 03:16:34PM -0500, Austin Gonyou wrote:
+> >I ran fdisk, then just saved. So I guess you could say I just lost the
+> >partition table.
+> 
+> ok, you lost lvm metadata...
 
-http://chunk.mp3revolution.net/lvm2/patches/09.patch
+If I lost metadata, what is the best procudure to put it back? I
+thought, on linux anyway, that pvcreate was descructive. Can someone
+tell me if I'm wrong there?
 
-On Sun, Oct 20, 2002 at 03:44:03PM +0200, Geert Jansen wrote:
+ > >> destructive, it only touched disk metadata. so you could try
+> pvcreate,
+> >> vgcreate and lvcreate.
+> >> DO A BACKUP OF YOUR RAW DISK DATA FIRST
+> >
+> >what about vgcfgrestore from another set of smaller disks that are laid
+> >out the same way? could that work?
+> >
+> >Wish I could, but I can't. Don't have enough disk space. :(
 > 
-> Dear LVM developers,
+> i believe it should be the same...
+
+If anyone can give me a definitive answer, I'd truly appreciate it!
+
+> Heinz? someone?
 > 
-> I decided to give LVM2 a try but unfortunately it oopses on me.
-> Software I used:
+> l.
 > 
->   * Linux kernel 2.5.44
->   * Device mapper patches from:
->     http://people.sistina.com/~thornber/patches/2.5-stable
->   * Device mapper programs from:
->     ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper-latest.tgz
->   * LVM2 tools from:
->     ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.0-latest.tgz
-> 
-> The oops:
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 00000004
->  printing eip:
-> c01f2aca
-> *pde = 00000000
-> Oops: 0002
->  
-> CPU:    0
-> EIP:    0060:[<c01f2aca>]    Not tainted
-> EFLAGS: 00010202
-> EIP is at device_add+0xea/0x160
-> eax: cf091560   ebx: c04517d0   ecx: 00000000   edx: 00000000
-> esi: cf091558   edi: ffffffea   ebp: cf091500   esp: cf10def8
-> ds: 0068   es: 0068   ss: 0068
-> Process vgchange (pid: 138, threadinfo=cf10c000 task=cfa2e0a0)
-> Stack: cf091558 00000077 cf091558 00000001 cf0915e1 c016f5b8 cf091558 00000002 
->        c020fa55 0000fe00 00000000 00000000 00000000 cf091400 082480d8 00000002 
->        c0278844 cf091500 c035d01d 00000000 00000000 d28e0000 c027bc78 d28e0022 
-> Call Trace:
->  [<c016f5b8>] register_disk+0x48/0x170
->  [<c020fa55>] add_disk+0x75/0x90
->  [<c0278844>] dm_create+0x124/0x160
->  [<c027bc78>] create+0x98/0xd0
->  [<c027c6db>] ctl_ioctl+0xbb/0xf0
->  [<c027bbe0>] create+0x0/0xd0
->  [<c0155164>] sys_ioctl+0xf4/0x320
->  [<c010782b>] syscall_call+0x7/0xb
-> 
-> Code: 89 4a 04 89 11 89 d9 89 46 08 89 40 04 ff 05 d0 17 45 c0 0f 
->  
-> 
-> The oops occured when running the command "vgchange -ay". Before that,
-> the command "vgscan" executed successfully. The system is a Dell laptop
-> with a 20G LVM volume group created with the LVM1 tools. The metadata
-> format is "lvm1".
-> 
-> I'd be happy to provide more information or test a patch.
-> 
-> Regards,
-> Geert Jansen
+> -- 
+> Luca Berra -- bluca@comedia.it
+>         Communication Media & Services S.r.l.
+>  /"\
+>  \ /     ASCII RIBBON CAMPAIGN
+>   X        AGAINST HTML MAIL
+>  / \
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
-It's not denial.  I'm just selective about the reality I accept.
-	-- Bill Watterson
