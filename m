@@ -1,10 +1,10 @@
-Return-Path: <ozric@tampabay.rr.com>
-Message-ID: <3A8042FC.FC4A5923@tampabay.rr.com>
-Date: Tue, 06 Feb 2001 18:31:24 +0000
-From: Richard Smith <ozric@tampabay.rr.com>
+Return-Path: <wipeout@cs.tu-berlin.de>
+Message-ID: <3A809408.C2FADBC9@cs.tu-berlin.de>
+Date: Wed, 07 Feb 2001 01:17:12 +0100
+From: Andreas Martin <wipeout@cs.tu-berlin.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Help! Problems finding VG after reboot.
-References: <Pine.LNX.4.30.0102061508550.26194-100000@blap.linuxdev.us.dell.com>
+Subject: Re: Re: [linux-lvm] vgscan -- ERROR -132: volume group "vgall" is 
+ inconsistent
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,9 +20,10 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---snip--
-I agree as well.
+Hi Heinz,
+I had a valid vgall.conf file, so I was lucky to save all my datas.
+Seems that yast only deleted vgall.con and lvmtab.
+Thanks a lot and good luck for the project.
+I still think that lvm rocks!
 
-The .9 versions are still marked as beta.
-I have been banging it around abit, but I would
-not trust important data to it yet, without a backup.
+Cheers Andreas.
