@@ -1,19 +1,30 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAF1RMr16038
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 20:27:22 -0500
-Received: from mail.o2w.nl (postfix@mail.o2w.nl [213.227.141.209])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAF1RB4v016873
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 20:27:16 -0500
-Date: Mon, 15 Nov 2004 02:27:10 +0100
-From: Jelle Herold <wires@defekt.nl>
-Subject: Re: [linux-lvm] recover lost VG (VG data differs between PVs)
-Message-ID: <20041115012710.GA23196@hotwire.nl>
-References: <20041114225853.GB20425@hotwire.nl>
-	<20041114232126.GH24229@agk.surrey.redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAF69Vr28550
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 01:09:31 -0500
+Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.204])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAF69NxF028483
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 01:09:23 -0500
+Received: by rproxy.gmail.com with SMTP id f1so534707rne
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 22:09:21 -0800 (PST)
+Message-ID: <89af10f904111422096bed519e@mail.gmail.com>
+Date: Mon, 15 Nov 2004 11:39:20 +0530
+From: ashwin chaugule <ashwin.chaugule@gmail.com>
+Subject: Re: [linux-lvm] Re: raid 1 on a single disk
+In-Reply-To: <qltk62-hg2.ln1@news.it.uc3m.es>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20041114232126.GH24229@agk.surrey.redhat.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+References: <89af10f90411130217467c439@mail.gmail.com>
+	<89af10f90411130241e20e2c2@mail.gmail.com>
+	<20041113211324.GA13108@dragonhold.org>
+	<87f94c37041113140053f493b0@mail.gmail.com>
+	<89af10f904111321441f2a3a1e@mail.gmail.com>
+	<04sj62-uei.ln1@news.it.uc3m.es>
+	<89af10f90411140941260b4b4b@mail.gmail.com>
+	<q9jk62-oik.ln1@news.it.uc3m.es>
+	<89af10f904111411023d1169bc@mail.gmail.com>
+	<qltk62-hg2.ln1@news.it.uc3m.es>
+Reply-To: ashwin chaugule <ashwin.chaugule@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,82 +35,109 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Nov 14, 2004 at 11:21:26PM +0000, Alasdair G Kergon wrote:
-> >  VG data differs between PVs /dev/hde and /dev/hdf3
-> >  Volume group "datavg" doesn't exist
->  
-> So hde should be in the VG at the moment, but not hdf3?
+>Then I suggest you attempt to describe what you are doing. The above
+>fails!
 
-Yes.
+Its really simple .. dont know why you cant comprehend it.
 
-> Add a filter to lvm.conf so lvm only looks at hde.  Run
-> vgscan and see check if things look OK eg vgcfgbackup and
-> read the text backup file.  If things *are* OK like that,
-> then pvremove hdf3, remove the filter & vgscan.
+Hope you understand from the code ... 
 
-OK, I shall try that tomorrow. But a quick look at
-vgdisplay -P -v shows:
+in __do_rw_disk
 
- VG data differs between PVs /dev/hde and /dev/hdf3
- Partial mode. Incomplete volume groups will be activated read-only.
-    Finding all volume groups
-    Finding volume group "datavg"
-  --- Volume group ---
-  VG Name               datavg
-  System ID             trigger1078793806
-  Format                lvm1
-  VG Access             read
-  VG Status             resizable
-  MAX LV                256
-  Cur LV                1
-  Open LV               0
-  Max PV                256
-  Cur PV                3
-  Act PV                3
-  VG Size               284.09 GB
-  PE Size               32.00 MB
-  Total PE              9091
-  Alloc PE / Size       9091 / 284.09 GB
-  Free  PE / Size       0 / 0   
-  VG UUID               f49snm-PqWg-hfnp-Ms2k-dgyC-M72S-YqScuJ
-   
-  --- Logical volume ---
-  LV Name                /dev/datavg/datalv
-  VG Name                datavg
-  LV UUID                000000-0000-0000-0000-0000-0000-000000
-  LV Write Access        read/write
-  LV Status              NOT available
-  LV Size                284.09 GB
-  Current LE             9091
-  Segments               3
-  Allocation             normal
-  Read ahead sectors     1024
-   
-  --- Physical volumes ---
-  PV Name               /dev/hde     
-  PV UUID               ifxE7h-Z1c6-9mox-VYz5-XTFy-aBw2-vAkdk4
-  PV Status             allocatable
-  Total PE / Free PE    1831 / 0
-   
-  PV Name               /dev/hdg3     
-  PV UUID               3AnIvc-DdzR-JqtO-hYkV-3vqw-4Qm0-FBKsCS
-  PV Status             allocatable
-  Total PE / Free PE    3580 / 0
-   
-  PV Name               /dev/hdh     
-  PV UUID               oxjwHR-Cm3S-d0GZ-5LJy-xqa7-X4X6-RAzX02
-  PV Status             allocatable
-  Total PE / Free PE    3680 / 0
+if(MINOR(rq->rq_dev)==69 && rq->cmd==WRITE){
+                rq1 = duplicate_request(rq);
+                drive->rq=rq1;
+        }
 
-All PVs that should be in the VG are there (hdf3 was the one
-I added (and removed again) later to move hde to).
+where duplicate_request , is a simple kmalloc and memcpy of rq.
 
-So, *this* output looks OK to me as far as the PVs are
-concerned, but I shall have a look at the text backup file
-as you suggested. 
+rq1 is going to be our duplicate request.
 
-thanks for the help
-Jelle.
+then ....
+
+if(MINOR(rq->rq_dev)==69 && rq->cmd==WRITE)
+                        {
+                                block_copy = block;
+                                get_address(drive,rq1,block);
+                        }
+else {
+                        hwif->OUTB(0x00, IDE_FEATURE_REG);
+                        hwif->OUTB(nsectors.b.low, IDE_NSECTOR_REG);
+                        hwif->OUTB(block, IDE_SECTOR_REG);
+                        hwif->OUTB(block>>=8, IDE_LCYL_REG);
+                        hwif->OUTB(block>>=8, IDE_HCYL_REG);
+                       
+hwif->OUTB(((block>>8)&0x0f)|drive->select.all,IDE_SELECT_REG);
+      }
+where get_address will do a block=block + (drive->capacity / 2);
+and refill all the above registers.
+
+then 
+
+when its a (non DMA) WRITE ...
+
+if(MINOR(rq->rq_dev)==69 && rq->cmd==WRITE)
+                                hwgroup->wrq = *rq1; /* scratchpad */
+                        else
+                                hwgroup->wrq = *rq; /* scratchpad */
+
+
+then ...
+
+if(MINOR(rq->rq_dev)==69 && rq->cmd==WRITE){
+                                rq1->q->queuedata=(void *)rq;
+
+//queuedata is an unused ptr. so it stores the original rq.
+
+                        ide_set_handler(drive,
+&multwrite_intr_withoutend, WAIT_CMD, NULL);
+                        }
+                        else
+                        ide_set_handler(drive, &multwrite_intr, WAIT_CMD, NULL);
+
+where ... multiwrite_intr_withoutend is my custom handler ...
+
+
+now in multiwrite_withoutend
+
+if (rq->nr_sectors) {
+                     if (ide_multwrite(drive, drive->mult_count))
+                                 return ide_stopped;
+                        ide_set_handler(drive,
+&multwrite_intr_withoutend, WAIT_CMD, NULL);
+                               return ide_started;
+                      else
+
+                                ndelay(400);
+                                HWGROUP(drive)->handler=0;
+                                kfree(drive->rq);
+                                drive->rq=(struct request
+*)(drive->rq->q->queuedata);
+                                hwgroup->wrq = *(drive->rq); /* scratchpad */
+                                restore_original_condition(drive);
+                                command = ((drive->mult_count) ?
+                                ((lba48) ? WIN_MULTWRITE_EXT : WIN_MULTWRITE) :
+                                ((lba48) ? WIN_WRITE_EXT : WIN_WRITE));
+                                hwif->OUTB(command, IDE_COMMAND_REG);
+-snip-
+                              ide_set_handler(drive, &multwrite_intr,
+WAIT_CMD, NULL);
+
+ etc etc
+this is where , i reset the original condition , and set the handler back...
+so the original request is completed.
+
+... So you see that , when there's a write request coming to my disk , 
+
+1) duplicate the req.
+2) set the handler 
+3) perform the write
+4) DO NOT call end_request ... so no end_io
+5) after its done , restore original condition
+6) let it do its thing
+
+Why wont it unmount ?
+
+Ashwin
