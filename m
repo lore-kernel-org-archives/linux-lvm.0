@@ -1,38 +1,80 @@
-Date: Wed, 17 Feb 1999 15:49:11 -0600 (CST)
-From: Shawn Leas <sleas@ixion.honeywell.com>
+Message-Id: <199902180316.AA16171@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
 Subject: Re: [linux-lvm] Re: your mail
-In-Reply-To: <199902171313.OAA13340@e35.msede.com>
-Message-Id: <Pine.GHP.4.05.9902171547200.4175-100000@ixion.honeywell.com>
-Mime-Version: 1.0
+Date: Thu, 18 Feb 1999 4:17:18 MET
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Michael Marxmeier <mike@msede.com>
-Cc: mauelsha@ez-darmstadt.telekom.de, marka@a-wicked.demon.co.uk, linux-lvm@msede.com, mge@u9ete.ez-darmstadt.telekom.de
+To: linux-lvm@msede.com
 
-On Wed, 17 Feb 1999, Michael Marxmeier wrote:
 
-> Heinz wrote:
-> > /boot must be in a regular disk partition containing basic commands,
-> > device specials and LVM driver/commands.
-> > About 20-30MB should be sufficient to set this up.
 > 
-> IMO this could even be less if initrd is used.
-> We may need about 1-2 MB per kernel image + 1-2 MB for the initial
-> utilities (shell, vgchange, mount).
+> On Wed, 17 Feb 1999, Michael Marxmeier wrote:
+> 
+> > Heinz wrote:
+> > > /boot must be in a regular disk partition containing basic commands,
+> > > device specials and LVM driver/commands.
+> > > About 20-30MB should be sufficient to set this up.
+> > 
+> > IMO this could even be less if initrd is used.
+> > We may need about 1-2 MB per kernel image + 1-2 MB for the initial
+> > utilities (shell, vgchange, mount).
+> 
+> How about a special boot area inside a boot-configured
+> root volume group? That way, lilo could be modified to run the
+> second stage boot loader which could then be as heavyweight
+> as anyone needs it.
 
-How about a special boot area inside a boot-configured
-root volume group? That way, lilo could be modified to run the
-second stage boot loader which could then be as heavyweight
-as anyone needs it.
+LILO is able to deal with sectors scattered over a boot disk limited
+by the 1024 cylinder BIOS rsstriction.
+This implies no need for a special boot area _if_ we lay all
+sectors LILO needs into the LV parts on that one disk.
+Or did you mean that with voot area?
 
-Isn't this sort of how hpux handles it?
+If LILO would be able to deal with sectors scattered over many disks,
+why to have a special boot area anyway?
 
--Shawn
-<=========== America Held Hostage ===========>
-   Day 2219 for the poor and the middle class. 
-   Day 2238 for the rich and the dead.
-   703 days remaining in the Raw Deal.
-<============================================> 
+> 
+> Isn't this sort of how hpux handles it?
+> 
+
+
+HP-UX's 2nd stage bootstrap loader is only able to deal with a contiguous
+HFS formated filesystem.
+That's the reason they mark the boot/root LV contiguous.
+Without tricks you are stuck with the initial created size.
+AFAIK this hasn't been changed including 11.X.
+
+
+Heinz
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
