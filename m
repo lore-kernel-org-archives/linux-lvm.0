@@ -1,10 +1,7 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvm-1.0.1 patch causes kernel compile errors on SPARC64
-Message-ID: <20011130181638.A24533@tykepenguin.com>
-References: <Pine.GSO.4.21.0111300950270.5383-100000@devmail.dev.tivoli.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.GSO.4.21.0111300950270.5383-100000@devmail.dev.tivoli.com>
+Message-ID: <C9B993D4214AD511BC010002A537DFE30A8BD2@acsexchweb.corp.acsalaska.com>
+From: "Nay, Shawn" <snay@acsalaska.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] only found 0 of 5120 LEs for LV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +12,90 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 30 12:15:02 2001
+Date: Fri Nov 30 12:19:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Fri, Nov 30, 2001 at 10:49:29AM -0600, Rich Scheller wrote:
-> I just tried to build a generic 2.4.16 kernel with lvm-1.0.1 patches on a
-> Sun Enterprise 250, following the directions in lvm_1.0.1.tar.gz.  I got
-> an error in the SPARC 64/32-bit ioctl conversion code.  Does anyone have
-> any ideas on how to proceed?  Is LVM even supported on SPARC64 platforms?
+Still no go.
+I am now running 2.4.16 (linux) with 1.0.1 lvm.  pvscan finds my disks,
+vgscan finds the inactive volume group, but I still get the error:
 
-It certainly was working so it looks like some inconsistencies have crept in.
-You should be able to remove all references to the inode member in ioctl32.c and
-it will work.
+vgscan output:
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found inactive volume group "sundogvg"
+> vgscan -- only found 0 of 5120 LEs for LV /dev/sundogvg/datalv (0)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+> data of volume group "sundogvg" from physical volume(s)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+> "/etc/lvmtab" and "/etc/lvmtab.d
 
-As I don't have an UltraSPARC to test it on can you let me know whether it does
-work please(!) - though I'm fairly sure it will.
- 
-patrick
+My previous email and the response to it are below.  Any help is still
+appreciated.
+
+Shawn
+
+
+----------------------------------------------------------------------------
+----------------------------------------------
+
+Shawn,
+
+you need to get the actual LVM version running in order to solve your
+problem.
+If there's no constraints to stay with the Redhat patched kernel, you should
+follow the patch instructions in the LVMs distro contained files INSTALL
+and PATHCE/README (guess that you probably know those already from the
+things you say below ;-), build+install the kernel and the LVM lib and
+tools.
+
+vgscan should find your VG then (crossing fingers ;-)
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+On Tue, Oct 30, 2001 at 09:38:43AM -0900, Nay, Shawn wrote:
+> I am an LVM newbie but did manage to get it up and running on a non-system
+> disk.
+> I rebuild my system with the same version of Linux (Redhat 7.2), the same
+> kernel (2.4.9-7, which I recompiled for LVM), and the same version of LVM
+> (0.9.1_beta7).  By the way...I am using an old release of LVM due to my
+> inability to patch this kernel with 1.0.1-rc4.  The problem is that I am
+> unable to import my old vg.  This disk has remained untouched since my
+> previous install.
+> 
+> pvscan output:
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdd"  is associated to an unknown VG (run
+> vgscan)
+> pvscan -- total: 1 [31.08 MB] / in use: 1 [31.08 MB] / in no VG: 0 [0]
+> 
+> vgscan output:
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found inactive volume group "sundogvg"
+> vgscan -- only found 0 of 5120 LEs for LV /dev/sundogvg/datalv (0)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+> data of volume group "sundogvg" from physical volume(s)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+> "/etc/lvmtab" and "/etc/lvmtab.d"
+> 
+> vgimport output:
+> vgimport -- ERROR: physical volume "/dev/hdd" doesn't belong to an
+exported
+> volume group
+> 
+> Any help would be greatly appreciated.
+> 
+> Shawn
+
+
+This transmittal may contain confidential information intended solely for
+the addressee. If you are not the intended recipient, you are hereby
+notified that you have received this transmittal in error; any review,
+dissemination, distribution or copying of this transmittal is strictly
+prohibited. If you have received this communication in error, please notify
+us immediately by reply or by telephone (collect at 907-564-1000) and ask to
+speak with the message sender. In addition, please immediately delete this
+message and all attachments. Thank you.
