@@ -1,11 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Fri, 31 Aug 2001 11:05:12 -0600
-Subject: Re: [linux-lvm] PBs with LVM over software RAID
-Message-ID: <20010831110512.V541@turbolinux.com>
-References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de>
+Subject: Re: [linux-lvm] LVM and SPL 
+In-Reply-To: Message from Rob Latham <rlatham@plogic.com> 
+   of "Fri, 31 Aug 2001 08:40:53 EDT." <20010831084053.A24948@otto.plogic.internal> 
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de>
+Date: Fri, 31 Aug 2001 11:11:18 -0700
+From: "Michael J. Declerck" <declerck@sistina.com>
+Message-Id: <20010831181118.4F4BE32643@spook>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,44 +18,38 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: svetljo <galia@st-peter.stw.uni-erlangen.de>
-Cc: AJ Lewis <lewis@sistina.com>, linux-lvm@sistina.com, pixel@mandrakesoft.com, Mauelshagen@sistina.com
+To: linux-lvm@sistina.com
 
-On Aug 31, 2001  15:08 +0200, svetljo wrote:
-> [root@svetljo mnt]# mount -t xfs /dev/myData/Music music
-> Segmentation fault
-
-Generally this is a bad sign.  Either mount is segfaulting (unlikely)
-or you are getting an oops in the kernel.  You need do run something
-like "dmesg | ksymoops" in order to get some useful data about where
-the problem is (could be xfs, LVM, or elsewhere in the kernel).
-
-Once you have an oops, you are best off rebooting the system, because
-your kernel memory may be corrupted, and cause more oopses which do
-not mean anything.  If you look in /var/log/messages (or /var/log/kern.log
-or some other place, depending on where kernel messages go), you can
-decode the FIRST oops in the log with ksymoops.  All subsequent ones are
-useless.
+I'll preface this with the statement that I am not a lawyer (nor do I have
+a desire to become one).
 
 
-> the LV ( lvcreate -i3 -I4 -L26G -nMusic )
-> 
-> the VG -> myData   /dev/hdh10 /dev/linVG1/linLV1 /dev/linVG2/linLV2
-> 
-> /dev/hdh10 normal partition 14G
-> /dev/linVG1/linLV1 ->  linear LV 14G /dev/hde6 /dev/hde12
-> /dev/linVg2/linLV2 ->  linear LV 14G /dev/hdg1 /dev/hdg5 /dev/hdg6 /dev/hdg12
+rlatham@plogic.com said:
+> sistina this week switched the license for the GFS tools from the GPL
+> to the SPL 
 
-There is absolutely no point in doing this (not that it is possible to do
-so anyways).  First of all, striping is almost never needed "for performance"
-unless you are normally doing very large sequential I/Os, and even so most
-disks today have very good sequential I/O rates (e.g. 15-30MB/s).  Secondly,
-you _should_ be able to just create a single LV that is striped across all
-of the PVs above.  You would likely need to build it in steps, to ensure
-that it is striped across the disks correctly.
+> http://www.sistina.com/Sistina%20Public%20License%201.0.pdf 
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> I'm worried now that Sistina will switch the license for LVM. However,
+> considering there was almost a fork of the project (mostly) because of
+> something as "simple" as mailing list policy, i guess openLVM would
+> pop up again pretty quickly in that case...   Is it concievable that
+> the kernel patches will stay GPL'ed but a more restrictive license
+> applied to the userspace tools ? 
+
+LVM is GPL'ed and the copyright is held by a number of entities that have
+contributed substantial pieces of code to the project over its life. IMO,
+this makes it impossible to relicense LVM under a different license.
+
+Sistina has no intention of changing the existing LVM user-space tools to
+another license.  The LVM kernel patches and use-space tools will remain under
+the GPL.
+
+As I said earlier, LVM is GPL'ed and has multiple copyright holders currently
+that protect its position as a GPL project.  Sistina is committed to
+maintaining this status and working with the LVM community to enhance and
+maintain it.
+
+
+---
+Michael Declerck, declerck@sistina.com   +1.510.823.7991
