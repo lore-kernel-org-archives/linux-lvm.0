@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] /proc/partition problem
-Message-ID: <20020816120315.B12990@sistina.com>
-References: <20020815084944kaoru@rifu.bsd.tnes.nec.co.jp>
+Message-ID: <20020816105820.GA992@percy.comedia.it>
+References: <20020815084944kaoru@rifu.bsd.tnes.nec.co.jp> <20020816120315.B12990@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <20020815084944kaoru@rifu.bsd.tnes.nec.co.jp>; from kaoru@bsd.tnes.nec.co.jp on Thu, Aug 15, 2002 at 08:49:44AM +0900
+Content-Disposition: inline
+In-Reply-To: <20020816120315.B12990@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,87 +15,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 16 05:18:01 2002
+Date: Fri Aug 16 05:59:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Well, we had support for correct logical volume names ages ago already.
-Hasn't been accepted by kernel folks :(
+On Fri, Aug 16, 2002 at 12:03:15PM +0200, Heinz J . Mauelshagen wrote:
+>
+>Well, we had support for correct logical volume names ages ago already.
+>Hasn't been accepted by kernel folks :(
+>
+>We need to live with 'nasty' names in /proc/partitions, sorry.
 
-We need to live with 'nasty' names in /proc/partitions, sorry.
+at least could someone push adding:
 
-On Thu, Aug 15, 2002 at 08:49:44AM +0900, kaoru@bsd.tnes.nec.co.jp wrote:
-> Hi,
-> 
-> I reffered to /proc/partitions, a strange character code went 
-> into a name sequence when I created 26 or more volume of LV(s) 
-> on 2.4.19 with LVM-1.0.5. 
-> 
-> $ cat /proc/partitions
-> major minor  #blocks  name
-> 
->   58     0    3145728 lvma
->   58     1    3145728 lvmb
->   58     2     512000 lvmc
->   58     3     204800 lvmd
-> .........
->   58    24      53248 lvmy
->   58    25      53248 lvmz
->   58    26      53248 lvm{
->   58    27      53248 lvm|
->   58    28      53248 lvm}
->   58    29      53248 lvm~
->   58    30      53248 lvm
->   58    31      53248 lvm
->   58    32      53248 lvm
->   58    33      53248 lvm
->   58    34      53248 lvm
-> 
-> I think that this problem is depended on illegal codes of 
-> a disk_name function(fs/partitions/check.c). 
-> 
-> According to fs/partitions/check.c:
-> 
-> char *disk_name (struct gendisk *hd, int minor, char *buf)
-> {
-> .................
-> 
->         if (part)
->                 sprintf(buf, "%s%c%d", maj, unit+'a', part);
->         else
->                 sprintf(buf, "%s%c", maj, unit+'a');
->         return buf;
-> 
-> }
-> 
-> I think it is better that the LVM staff discuss the fault of 
-> this code with Linux Kernel code maintainer.
-> 
-> --------
-> Kaoru
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+        case LVM_MAJOR:
+                sprintf(buf, "%s%d", maj, unit);
+                return buf;
+
+it would at lest be accettable
+
+btw
+it should also be needed for device-mapper
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
