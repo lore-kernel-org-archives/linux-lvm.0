@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 2 May 2001 12:42:23 +0000
+Date: Wed, 2 May 2001 12:45:04 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgcfgrestore fails.
-Message-ID: <20010502124223.F30791@sistina.com>
-References: <20010430160431.H19810@sistina.com> <01043007034800.04719@vidar> <01043012341701.04719@vidar>
+Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
+Message-ID: <20010502124504.G30791@sistina.com>
+References: <20010427104702.A16169@sistina.com> <200104301816.MAA19335@lynx.turbolabs.com>
 Mime-Version: 1.0
-In-Reply-To: <01043012341701.04719@vidar>; from dablake@speakeasy.net on Mon, Apr 30, 2001 at 12:34:17PM -0500
+In-Reply-To: <200104301816.MAA19335@lynx.turbolabs.com>; from adilger@turbolinux.com on Mon, Apr 30, 2001 at 12:16:56PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,72 +21,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 30, 2001 at 12:34:17PM -0500, Hcd wrote:
-> Ok,  I have my volumes back.  
-> It was messy but it worked.
-
-:-(
-
+On Mon, Apr 30, 2001 at 12:16:56PM -0600, Andreas Dilger wrote:
+> Heinz writes:
+> > I am about to implement a vgscan option in order to support the recreation
+> > of the "invalid PV UUID list problem" in case a VG can't be found by vgscan
+> > any more.
+> > 
+> > What's your opinion (Andreas?) about it?
+> > 
+> > Do we have too many people which can't do the lvcreate/lvremove trick
+> > so that this work makes sense?
 > 
-> l simply removed the lvm 9.4 and reinstalled lvm 8.0
-> I then did the vgcfgrestore and opt and export came back.
+> It is surely a fix for some of the problems.
 
-That was another option ;-)
+Which other problems do you see and are you able to define?
 
-Have you beann able to upgrade to LVM 0.9.1 Beta 7 already, run some changing
-command and did everything work fine?
+> Of course, the need for the
+> fix will be reduced as time goes on,
 
-If not so, I'ld be very interested in it.
+That's why I asked in the first place.
 
-Regards,
-Heinz    -- The LVM Guy --
+Maybe the /etc/lvmconf/ to /etc/lvmtab.d/ copy and echo to /etc/lvmtab
+trick plus "vgchange -ay" and dummy change on VGs does it anyway?
 
-
-> thanks for your help. 
+> so maybe a comment/#ifdef on the code
+> so that it will be removed at a later date.
 > 
-> On Monday 30 April 2001 07:03, you wrote:
-> > No joy on this on this method.
-> > If you need I can supply more inforamation.
-> > BTW I am running on an Athlon..
-> > thor:/etc # cp /etc/lvmconf/export.conf /etc/lvmtab.d/export
-> > thor:/etc # cp /etc/lvmconf/opt.conf /etc/lvmtab.d/opt
-> > thor:/etc # echo -ne "export\0" > /etc/lvmtab
-> > thor:/etc # echo -ne "opt\0" >> /etc/lvmtab
-> > thor:/etc # vgchange -ay
-> > vgchange -- ERROR: different structure size stored in
-> > "/etc/lvmtab.d/export" than expected in file vg_cfgrestore.c [line 122]
-> > vgchange -- volume group "export" does not exist
-> > vgchange -- ERROR: different structure size stored in "/etc/lvmtab.d/opt"
-> > than expected in file vg_cfgrestore.c [line 122]
-> > vgchange -- volume group "opt" does not exist
-> >
-> > On Monday 30 April 2001 11:04, you wrote:
-> > > On Sat, Apr 28, 2001 at 12:33:58PM -0500, root wrote:
-> > > > I am running SuSe 7.1
-> > > > 2.4.0 kernel
-> > > > 512M Ram
-> > > > AhA2940U2W
-> > > > suse lvm
-> > > >
-> > > > I had three volume groups and a week ago the volume group that
-<SNIP>
-> > > LV with just 1 LE had done it as well.
-> > >
-> > > Please tell us if this helps you or we need to go for another solution.
-> > >
-> > > > _______________________________________________
-> > > > linux-lvm mailing list
-> > > > linux-lvm@sistina.com
-> > > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Cheers, Andreas
+> -- 
+> Andreas Dilger                               Turbolinux filesystem development
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
