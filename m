@@ -1,23 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i87B3c324345
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 07:03:38 -0400
-Received: from server.klaube.net (root@www.klaube.net [195.190.148.2])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i87B3WS0028901
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 07:03:37 -0400
-Received: from server.klaube.net (localhost [127.0.0.1])
-	by server.klaube.net (8.12.3/8.12.2/SuSE Linux 0.6) with ESMTP id
-	i87B3UJO005369
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 13:03:30 +0200
-Received: (from t1@localhost)
-	by server.klaube.net (8.12.3/8.12.3/Submit) id i87B3Ukw005368
-	for linux-lvm@redhat.com; Tue, 7 Sep 2004 13:03:30 +0200
-Date: Tue, 7 Sep 2004 13:03:30 +0200
-From: Thomas Klaube <t.klaube@efm.de>
-Message-ID: <20040907110330.GE2689@server.klaube.net>
+Received: from o.ww.redhat.com (vpnuser8.stuttgart.redhat.com [172.16.4.8])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	i87EFXSh012843
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 16:15:33 +0200
+Date: Tue, 7 Sep 2004 16:15:31 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Message-ID: <20040907141531.GA13859@redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] LVM2 snapshots on root fs
-Reply-To: Thomas Klaube <t.klaube@efm.de>,
+Subject: [linux-lvm] *** Announcement: dmraid 1.0.0-rc4 ***
+Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,20 +23,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
 
-we are using lvm (lvm version 1) snapshots for backup purposes for some
-time without any problems. 
+               *** Announcement: dmraid 1.0.0-rc4 ***
 
-Whenever I try to create a LVM (version 2) snapshot of the lvm
-containing the root fs my machine crashes. I am using SuSE 9.1 (kernel
-2.6.5, lvm2-2.00.15, device-mapper-1.00.09), but I also tried a unpatched 
-2.6.8.1 kernel with the redhat lvm2-2.00.21 and device-mapper-1.00.19
-rpms. Same result... I can't create snapshots of the lvm with the root
-fs, other lvm snapshots are ok.
+dmraid 1.0.0-rc4 is available at
+http://people.redhat.com:/~heinzm/sw/dmraid/ in source, source rpm and i386 rpm.
 
-Is this a known lvm2 problem? If it is a kernel issue, are there any
-patches?
+dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
+properties of software RAID sets (ie. ATARAID) and contained DOS
+partitions using the device-mapper runtime of the 2.6 kernel.
 
-Regards
-Thomas Klaube
+The following ATARAID types are supported on Linux 2.6:
+
+Highpoint HPT37X
+Highpoint HPT45X
+Intel Software RAID
+Promise FastTrack
+Silicon Image Medley
+
+This ATARAID type is only basically supported in this version (I need
+better metadata format specs; please help):
+LSI Logic MegaRAID
+
+Please provide insight to support those metadata formats completely.
+
+Thanks.
+
+See files README and CHANGELOG, which come with the source tarball for
+prerequisites to run this software, further instructions on installing
+and using dmraid!
+
+CHANGELOG is contained below for your convenience as well.
+
+
+Call for testers:
+-----------------
+
+I need testers with the above ATARAID types, to check that the mapping
+created by this tool is correct (see options "-t -ay") and access to the ATARAID
+data is proper.
+
+In case you have a different ATARAID solution from those listed above,
+please feel free to contact me about supporting it in dmraid.
+
+You can activate your ATARAID sets without danger of overwriting
+your metadata, because dmraid accesses it read-only unless you use
+option -E with -r in order to erase ATARAID metadata (see 'man dmraid')!
+
+This is a release candidate version so you want to have backups of your valuable
+data *and* you want to test accessing your data read-only first in order to
+make sure that the mapping is correct before you go for read-write access.
+
+
+The author is reachable at <Mauelshagen@RedHat.com>.
+
+For test results, mapping information, discussions, questions, patches,
+enhancement requests and the like, please subscribe and mail
+to <ataraid@redhat.com>.
+
+--
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+CHANGELOG:
+---------
+
+
+Changelog from dmraid 1.0.0-rc3 to 1.0.0-rc4		2004.09.07
+
+FIXES:
+------
+o get_dm_serial fix for trailing blanks
+o infinite loop bug in makefile
+o unified RAID #defines
+o RAID disk erase size
+o avoided unnecessary read in isw_read()
+o segfault in build_set() on RAID set group failure
+o activation of partitions on Intel Software RAID
+o allow display if tables for active RAID sets (-t -ay)
+o discovering no RAID disks shouldn't return an error
+o free_set would have segfaulted on virgin RAID set structures
+o deep DOS partition chains (Paul Moore)
+o "dmraid -sa" displayed group RAID set with Intel Software RAID
+  when it shouldn't
+o return RAID super set pointer from hpt45x_group() and sil_group()
+  rether than sub set pointer
+
+
+FEATURES:
+---------
+
+o added offset output to all native metadata logs
+o started defining metadata format handler event method needed for
+  write updates to native metadata (eg, for mirror failure)
+o [de]activation of a single raid sets below a group one (isw)
+o support for multiple -c options (see "man dmraid"):
+  "dmraid -b -c{0,2}"
+  "dmraid -r -c{0,2}"
+  "dmraid -s -c{0,3}"
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
