@@ -1,11 +1,9 @@
-Date: Tue, 9 Oct 2001 15:49:00 +0200
-From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
-Subject: Re: [linux-lvm] Too many problems
-Message-ID: <20011009154900.A21825@balu.kawo2.rwth-aachen.de>
-References: <002901c150b3$9d330860$836788cf@industry>
+Message-ID: <134865292.1002635774089.JavaMail.root@boots>
+Date: Tue, 9 Oct 2001 06:55:54 -0700
+From: "Karl" <rmvzj001@sneakemail.com>
+Subject: Re: [linux-lvm] LVM seems to be causing SCSI errors.
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <002901c150b3$9d330860$836788cf@industry>; from jlixfeld@andromedas.com on Tue, Oct 09, 2001 at 07:14:50AM -0400
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,19 +16,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Tue, Oct 09, 2001 at 07:14:50AM -0400, Jason A. Lixfeld wrote:
-> I just need to know what a stable release of LVM is for RedHat and what
-> compiler to use.  The stock RedHat 7.1 compiler is buggy, from what I
-> understand here.  I've had so many problems in the last week and I'm
-> getting really frustrated with all of this :(  I'm using kernel 2.4.10
-> but am more than willing go to down a couple revs for something stable.
+> > When I ran an fsck on the file system with the errors (I did not re-do
+> > this experiment recently) it found bad blocks on the files system, but
+> > no inconsistencies on the file system itself.
+> 
+> Strange, running out of ideas here.
+> We don't have similar reports, do we?
 
-Redhat 7.1, the Redhat version of gcc, stock kernel 2.4.10 +
-lvm-1.0.1rc4 work fine for me, _AFTER_ switching off any optimization
-in the configure-script of LVM (change -O2 to -O0).
+I did not see anything when checking the archives. Any thing else I can
+do to provide info on this problem?
 
-Regards, Markus
+Could the SCSI ID have anything to do with it? Size of drives? Phase of
+the moon? :-)
+
+It is odd that this is only lvol2 that has the problem. My lvol1 and
+lvol3 have been working perfectly. Maybe I should add an lvol2 and lvol4
+in and see if the even numbers have problems...
+
+-- 
+Karl Hakimian
+XXXXXXXXXXXXXXXX
