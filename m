@@ -1,21 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBE9d7r16628
-	for <linux-lvm@redhat.com>; Tue, 14 Dec 2004 04:39:07 -0500
-Received: from Cantor.suse.de (news.suse.de [195.135.220.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBE9cul7028390
-	for <linux-lvm@redhat.com>; Tue, 14 Dec 2004 04:39:01 -0500
-Received: from hermes.suse.de (hermes-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher EDH-RSA-DES-CBC3-SHA (168/168 bits))
-	(No client certificate requested)
-	by Cantor.suse.de (Postfix) with ESMTP id 0E5111214880
-	for <linux-lvm@redhat.com>; Tue, 14 Dec 2004 10:38:51 +0100 (CET)
-Date: Tue, 14 Dec 2004 10:38:50 +0100
-From: Arvin Schnell <arvin@suse.de>
-Message-ID: <20041214093850.GA16922@suse.de>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBENc7r11110
+	for <linux-lvm@redhat.com>; Tue, 14 Dec 2004 18:38:07 -0500
+Received: from tsmtp2.mail.isp (smtp.terra.es [213.4.129.129])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iBENc5i6011850
+	for <linux-lvm@redhat.com>; Tue, 14 Dec 2004 18:38:05 -0500
+Received: from 211.Red-81-40-6.pooles.rima-tde.net
+	([81.40.6.211]) by tsmtp2.mail.isp (terra.es) with ESMTP id
+	I8QKBF01.I36 for <linux-lvm@redhat.com>;
+	Wed, 15 Dec 2004 00:38:03 +0100 
+From: Fernando Ruza <feruza@terra.es>
+Message-Id: <1103067201.995.12.camel@luna.horche.gu>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="+QahgC5+KEYLbs62"
-Content-Disposition: inline
-Subject: [linux-lvm] patch for separator option
+Date: Wed, 15 Dec 2004 00:36:55 +0100
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Cannot create a Volume Group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,57 +24,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Linux LVM <linux-lvm@redhat.com>
-
-
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
 Hi,
 
-I realized that the -s/--short option for vgdisplay doesn't work
-in lvm 2.2.00.31 (but also older versions).  That's because the
-option --separator also gets the short option 's' in args.h.
+I have the following problem:
 
-Attached is a patch.
+sol:~# pvcreate /dev/hda1 /dev/hda4 /dev/hdb1
+  Physical volume "/dev/hda1" successfully created
+  Physical volume "/dev/hda4" successfully created
+  Physical volume "/dev/hdb1" successfully created
+sol:~# vgcreate vg1 /dev/hda1 /dev/hda4 /dev/hdb1
+  Volume group "vg1" successfully created
 
-ciao Arvin
+Everything seems to be create properly, however when now I'm trying to
+activate the volume group or to scan it, it says it cannot found it:
+
+sol:~# vgchange -a y vg1
+  Unable to find volume group "vg1"
+sol:~# vgscan
+ No volume groups found
+
+What's wrong here ?? Do I missing something ??
+
+The versions I have are:
+
+  lvm-common     1.5.17
+  lvm2           2.00.29-1
+  libdevmapper1. 1.00.19-4
+
+Thanks for any reply.
+
+Regards.
 
 -- 
-Dipl.-Phys. Arvin Schnell
-SUSE LINUX Products GmbH
-Research & Development
-email: arvin@suse.de
+Yo uso software libre, �Y tu?
+�Qu� es el software libre? consulta: http://www.gnu.org/philosophy/free-sw.es.html
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="lvm2-args.diff"
+Fernando Ruza 
+e-mail: feruza@terra.es
+jabber: fruza@jabber.guadawireless.net
+web: http://guada24.guadawireless.net
+Tlf: 661123845
+Linux user: #273644 (http://counter.li.org)
+Debian Sid (Kernel 2.4.20 & ext3)
 
-? lvm
-Index: args.h
-===================================================================
-RCS file: /cvs/lvm2/LVM2/tools/args.h,v
-retrieving revision 1.36
-diff -u -w -r1.36 args.h
---- args.h	15 Jun 2004 17:23:49 -0000	1.36
-+++ args.h	14 Dec 2004 09:28:52 -0000
-@@ -43,6 +43,7 @@
- arg(minor_ARG, '\0', "minor", minor_arg)
- arg(type_ARG, '\0', "type", segtype_arg)
- arg(alloc_ARG, '\0', "alloc", alloc_arg)
-+arg(separator_ARG, '\0', "separator", string_arg)
- 
- /* Allow some variations */
- arg(resizable_ARG, '\0', "resizable", yes_no_arg)
-@@ -99,7 +100,6 @@
- arg(resizefs_ARG, 'r', "resizefs", NULL)
- arg(reset_ARG, 'R', "reset", NULL)
- arg(physicalextentsize_ARG, 's', "physicalextentsize", size_mb_arg)
--arg(separator_ARG, 's', "separator", string_arg)
- arg(stdin_ARG, 's', "stdin", NULL)
- arg(snapshot_ARG, 's', "snapshot", NULL)
- arg(short_ARG, 's', "short", NULL)
-
---+QahgC5+KEYLbs62--
+"In an internet without fences ... who needs 'gates'"
