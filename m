@@ -1,20 +1,24 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i481bMv17680
-	for <linux-lvm@redhat.com>; Fri, 7 May 2004 21:37:22 -0400
-Received: from toybox.mhill.net (c-67-166-18-167.client.comcast.net
-	[67.166.18.167])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i481bM0m032128
-	for <linux-lvm@redhat.com>; Fri, 7 May 2004 21:37:22 -0400
-Date: Fri, 7 May 2004 19:37:16 -0600
-From: Michael Hill <michael@mhill.net>
-Message-ID: <20040508013716.GH1226@toybox.mhill.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i482EOv24223
+	for <linux-lvm@redhat.com>; Fri, 7 May 2004 22:14:24 -0400
+Received: from polop.usc.edu (polop.usc.edu [128.125.10.9])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i482EO0m006754
+	for <linux-lvm@redhat.com>; Fri, 7 May 2004 22:14:24 -0400
+Received: from polop.usc.edu (localhost.localdomain [127.0.0.1])
+	by polop.usc.edu (8.12.10/8.12.10) with ESMTP id i482Culv031739
+	for <linux-lvm@redhat.com>; Fri, 7 May 2004 19:12:56 -0700
+Received: (from garrick@localhost)
+	by polop.usc.edu (8.12.10/8.12.10/Submit) id i482Cu3n031737
+	for linux-lvm@redhat.com; Fri, 7 May 2004 19:12:56 -0700
+Date: Fri, 7 May 2004 19:12:56 -0700
+From: Garrick Staples <garrick@usc.edu>
+Message-ID: <20040508021255.GU30964@polop.usc.edu>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9jHkwA2TBA/ec6v+"
+	protocol="application/pgp-signature"; boundary="3dBJfKlFjfsS/piO"
 Content-Disposition: inline
-Subject: [linux-lvm] Problem with LVs
-Reply-To: Michael Hill <michael@mhill.net>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] lvcreate --major?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,54 +31,43 @@ List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
 
---9jHkwA2TBA/ec6v+
+--3dBJfKlFjfsS/piO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-I'm having a strange problem, and I haven't found any help in the
-regular places so far.
+Hi all,
+   I'm curious about adding a persistent major device number to my LVs.
+Adding a persistent minor number works fine, but --major appears to be igno=
+red.
 
-I have a VG, data_vg, with three LVs (data, games, and winex).  After
-doing some disk-related work (not involving the PV on which data_vg
-resides), I found that one of the filesystems (data) contained the
-content of another (winex) instead.  /dev/data_vg looks like this:
+It seems that the major number is always 253, no matter what is set using
+lvcreate or lvchange.  Earlier today I realized that --major is NOT
+mentioned in the manpage, but it is listed in 'lvm lvcreate help'.
 
-brw-r-----    1 root     root      58,   6 Dec 31  1969 data
-brw-r-----    1 root     root      58,   7 Dec 31  1969 games
-crw-r-----    1 root     root     109,   3 Dec 31  1969 group
-brw-r-----    1 root     root      58,   7 Dec 31  1969 lvol2
-brw-r-----    1 root     root      58,   6 Dec 31  1969 winex
+I assume that either there is a bug with major persistent numbers, it isn't
+(yet) implemented, or it is incorrectly listed in the help output.
 
-The minor device number for data and winex is the same.  I'm hoping that
-the blocks belonging to LV data are still intact on the PV.  I need to
-figure out how to get LV data pointing back to where it should be.  Any
-help toward that end will be GREATLY appreciated.
+For the curious, persistent device numbers are useful for NFS because nfsd
+creates a filehandle out of the major and minor device numbers.
+
+And finally, HUGE thanks to the developers or LVM.  It's the best thing for
+disk storage since sliced bread!
 
 --=20
-			--Michael
+Garrick Staples, Linux/HPCC Administrator
+University of Southern California
 
----------------------------------------------------------------------------=
-----
-Michael Hill   <><  Isaiah 9:6 |
-michael AT mhill DOT net       | # find / -name '*[Bb][Aa][Ss][Ee]*' \
-Aerospace/Software Engineer    | > -user your -print | xargs chown us:cats
-http://www.qadas.com/~msh/     |
----In a marketplace (like the one of ideas), not everything has equal value=
-!---
-Did you ever notice that everybody in favor of abortion has already been bo=
-rn?!
-
---9jHkwA2TBA/ec6v+
+--3dBJfKlFjfsS/piO
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.2 (GNU/Linux)
+Version: GnuPG v1.2.3 (GNU/Linux)
 
-iD8DBQFAnDnMlSecBhO4gLERAr8kAJ9dxCJZgMo/3hso46pAIxMMfI+KgwCcCozb
-SB/wk/r5kAG2RSnJ8YJF+mU=
-=PCio
+iD8DBQFAnEIn0SBUxJbm9HMRAgyUAJ9biQyJsGoW4BnvN1miLGW2qDtZJwCffpS3
+Q1+zmIZaWsrCUAtr4k9VTXY=
+=OteQ
 -----END PGP SIGNATURE-----
 
---9jHkwA2TBA/ec6v+--
+--3dBJfKlFjfsS/piO--
