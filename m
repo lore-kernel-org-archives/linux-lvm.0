@@ -1,10 +1,7 @@
-Subject: Re: [linux-lvm] wiping an old LVM
-From: Geoff Dolman <geoff.dolman@cimr.cam.ac.uk>
-In-Reply-To: <1070592126.26293.133.camel@rocky>
-References: <1070592126.26293.133.camel@rocky>
-Message-Id: <1070616618.17582.15.camel@lupin>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <AA3DDC70DA86CF44935406327B97F2F048E304@bc1msg01>
+From: "Baker, Brendon" <BBaker@fnb.co.za>
+MIME-Version: 1.0
+Subject: [linux-lvm] Error when trying to change root to LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,67 +12,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec  5 03:32:02 2003
+Date: Fri Dec  5 03:46:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
-
-I have no idea if this is the way to do this officially but this worked
-for me.
-
-I had three partitions slash, usr and var on lvm vgs made on three
-software raid devices.
-
-I wanted to remove lvm 1 so I could try the 2.6 kernel - I guess I could
-have upgraded lvm but that seemed like more effort.
-
-What I did was:
-
-backup each partition. Then for each partition, make a new partition on
-a spare disk, mke2fs it, copy the data into it and change fstab to pick
-up the new location.
-
-Reboot. The old vg is still picked up by vgscan and I could not get rid
-of them with lvremove/vgremove because it moaned that they were in use.
-However, then for each one in turn I did mke2fs on the filing system and
-then deleted /etc/lvmtab and rebooted. When the machine came up if then
-lost that pv,vg,lv.
-
-Although I didn't try this, one thing I thought of was that you could
-delete /etc/lvmtab and edit the linuxrc script in /boot/initrd.img so
-that it didn't run vgchange -ay and so on on boot. You would then be
-able to get rid of stuff at your leisure without lvremove complaining
-stuff was in use.
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
 
-On Fri, 2003-12-05 at 02:42, Nathan Fredrickson wrote:
-> Hi,
-> I have browsed the archives and not found a conclusive answer to this: 
-> How much of an PV partition do I need to wipe with dd so that pvscan
-> does not find it?
+>  -----Original Message-----
+> From: 	Baker, Brendon  
+> Sent:	05 December 2003 08:15
+> To:	'linux-lvm@sistina.com'
+> Subject:	Error when trying to change root to LVM
 > 
-> I have found that even if I wipe a partition table with dd and then
-> repartition with the same sized partitions, the old PV and VG are still
-> found.  I tried zeroing the start of the LVM partition, but found this
-> only worked consistently if I wiped nearly the entire partition.  Where
-> exactly is the metadata that needs to be zeroed?
+> Hi Everyone
 > 
-> I'd like to to wipe it regardless of any information about previous LVM
-> configuration.  This is for install scripts of cluster nodes which are
-> re-imaged periodically.  I'm using LVM 1.0.3.
+> I have an old IBM server 320. I need to create a volume group as there is
+> not enough space to perform upgrades etc.
+> As I can only only do a text install and you cannot create Logical Volumes
+> in the text install, i have installed the OS on one of the 2 gig drives in
+> the machine. I then go about trying to create an LVM etc. (Please remember
+> that these are SCSI drives)
+> I manage to create a volume group on the remaining 2 drives and then
+> create a logical volume on these. I then mount this as an ext3 and copy
+> the entire os over using find / -xdev | cpio -pvmd /mnt
+> This all works fine. I then run lvmcreate_initrd to create a new ramdisk.
+> I go to my boot which is on a different partition and edit grub.conf so
+> that it reflects the ramdisk and i change the kernel parameter to point to
+> the logical volume ie. /dev/vg1/root
+> I also edit the fstab so that the /dev/vg1/root is mounted as /.
+> I then reboot and get the following error:
+> Mounting root filesystem
+> Mount: error 6 mounting ext3
+> pivotroot: pivot_root(/sysroot,/sysroot/initrd) failed: 2
+> umount /initrd/proc failed: 2
+> Freeing unused kernel memory: 120k freed
+> Kernel pani: No init found. Try passing init=option to kernel.
 > 
-> Thanks,
-> Nathan
+> I have checked and there is a initrd directory in the Logical volume as I
+> copied the entire root. I have noticed that it doesnt seem to initialise
+> the logical volume before it tries to mount the root filesystem. Is this
+> right? How do I get it to do this?
 > 
+> Thanks
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
--- 
-Geoff Dolman
-JDRF/WT Diabetes and Inflammation Laboratory
-Cambridge Institute for Medical Research
-University of Cambridge
-http://www-gene.cimr.cam.ac.uk/todd/
+
+___________________________________________________________________________________________________
+
+
+The views expressed in this email are, unless otherwise stated, those of the author and not those
+of the FirstRand Banking Group or its management.  The information in this e-mail is confidential
+and is intended solely for the addressee. Access to this e-mail by anyone else is unauthorised. 
+If you are not the intended recipient, any disclosure, copying, distribution or any action taken or 
+omitted in reliance on this, is prohibited and may be unlawful.
+Whilst all reasonable steps are taken to ensure the accuracy and integrity of information and data 
+transmitted electronically and to preserve the confidentiality thereof, no liability or 
+responsibility whatsoever is accepted if information or data is, for whatever reason, corrupted 
+or does not reach its intended destination.
+
+                               ________________________________
