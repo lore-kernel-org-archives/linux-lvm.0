@@ -1,10 +1,8 @@
-From: jon+lvm@silicide.dk
-Subject: Re: [linux-lvm] software mirroring
-Message-ID: <20020911080049.GA28187@gw.silicide.dk>
-References: <2100.24.46.54.254.1031670341.squirrel@mail.scottsavarese.com> <3D7E0CC0.D7B06D44@silicide.dk> <2951.24.46.54.254.1031678903.squirrel@mail.scottsavarese.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2951.24.46.54.254.1031678903.squirrel@mail.scottsavarese.com>
+Message-ID: <3D7F0F54.86F71021@az1.de>
+From: "Andreas G. Schindler" <schindler@az1.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM in Dual Path SAN Environment
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,26 +13,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 11 03:03:12 2002
+Date: Wed Sep 11 04:41:04 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Scott Savarese <scott@scottsavarese.com>
-Cc: jon+lvm@silicide.dk, linux-lvm@sistina.com
+To: Linux-LVM@sistina.com
 
-On Tue, Sep 10, 2002 at 01:28:23PM -0400, Scott Savarese wrote:
-> Jon Bendtsen said:
-> 
-> > Do it from the hda boot prompt
-> 
-> Yeah...That worked....I then was able to boot into my /dev/hdc. However, I
-> then completed the mirror to /dev/hda reran lilo and rebooted. Now it
-> gives L 40 40 40 which is a Seek Failure (no solution given). Which means,
-> that since I have no clean copy of data I need to start all over again.
+A Question to the LVM Guy(s):
 
-Well, it MIGHT be an idea to take a backup first...
-Anyway, since the data is still there, you should be able to use a
-rescue floppy and get it started.
+We would like to use Linux LVM to overcome the fact, Linux doesn't 
+currently support Dual-Path access to SAN (Fibre-Channel) units.
 
- 
-JonB
+Rumors are, LVM is able to detect multiple paths to a PV (in my case
+a SAN SCSI LUN) and will rearrange it to one single PV.
+
+As far as i see, this should solve the problem during regular operation
+(i.e. both paths to the SAN active). But what about the really interesting
+case of failure on one link? If this is the currently 'active' link (that
+one, still in t LVM's PV list), we need a failover and rearrangement
+of the PV list on the fly.
+
+Does this work ??
+
+Many thanks in advance
+
+Regards, Andreas
+
+-- 
+
+Dr. Andreas G. Schindler        c/o Alpha Zero One Computersysteme GmbH
+schindler@az1.de                Frankfurter Str. 141, D-63303 Dreieich
+Tel +49 6103 57187 21           Germany
