@@ -1,12 +1,12 @@
-From: Tom Brown <thecap@mail.utexas.edu>
 Subject: Re: [linux-lvm] lvm and Debian
-Message-Id: <20020118111828.GS6323@peach.ece.utexas.edu>
+In-Reply-To: Your message of
+    "18 Jan 2002 12:04:16 +0100."
+    <wvpu47hqdr.fsf@freeze.oslo.dnmi.no>
 References: <E16RWI7-00083Z-00@arwen.dev33.cvf>
-    <20020118104418.GA29876@balu.kawo2.rwth-aachen.de>
-    <E16RWih-0000HQ-00@arwen.dev33.cvf>
+    <wvpu47hqdr.fsf@freeze.oslo.dnmi.no>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E16RWih-0000HQ-00@arwen.dev33.cvf>
+From: Pierrick PONS <ppons@cvf.fr>
+Message-Id: <E16RX7u-0000Su-00@arwen.dev33.cvf>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,34 +17,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 05:19:01 2002
+Date: Fri Jan 18 05:25:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 18, 2002 at 11:58:03AM +0100, Pierrick PONS wrote:
-> There's a thing I don't understand : is the lvm_1.0.1rc4 patch still in the 
-> 2.4.17 kernel or do I have to patch my 2.4.17 kernel to use lvm and lvm 
-> commands ?
+> >>>>> "Pierrick" == Pierrick PONS <ppons@cvf.fr> writes:
 > 
-> I thought that using a 2.4.17 kernel permitted to have lvm fonctionalities and 
-> not to be obliged to patch the kernel.
+>     Pierrick> Hello all, I'd like to use lvm. I got a 2.4.17 kernel
+>     Pierrick> and I'm under Debian.
+> 
+>     Pierrick> Do you know if some debian packages do exist to use lvm
+>     Pierrick> commands (lvcreate, vgcreate, ... ) ?
+> 
+> >From woody :-
+> 
+> ii  lvm-common             1.3                    The Logical Volume Manager for Linux (common files)
+> ii  lvm10                  1.0.1-1                The Logical Volume Manager for Linux
+> 
+> Sincerely,
+> 
+> Adrian Phillips
+> 
+> -- 
+> Your mouse has moved.
+> Windows NT must be restarted for the change to take effect.
+> Reboot now?  [OK]
+> 
 
-I downloaded the kernel source with
-apt-get install kernel-source-2.4.16
+Oh I'm really interested in getting these packages, but could you give us the 
+source to add in the source.list which permits obtaining these packages ?
 
-Then downloaded the lvm source and followed the instructions in 
-README and INSTALL to patch the kernel and build and install the lvm tools.
-
-Then I followed the instructions at
-http://www.google.com/search?num=100&hl=en&q=debian+kernel+source
-to build and install the patched kernel the debian way.
-
-Seemed to work without a major problem.
+Thinks a lot.
 
 
--- 
-mailto:thecap@usa.net
-http://www.ece.utexas.edu/~thecap/
-28 70 20 71 2C 65 29 61 9C B1 36 3D D4 69 CE 62 4A 22 8B 0E DC 3E
+Pierrick
