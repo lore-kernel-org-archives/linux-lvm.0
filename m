@@ -1,10 +1,8 @@
-Date: Thu, 11 Oct 2001 14:16:36 -0400
-From: Chris Mason <mason@suse.com>
-Message-ID: <1383150000.1002824196@tiny>
+Message-ID: <OF03F74D9E.DBB3955D-ON87256AE2.006CAD58@boulder.ibm.com>
+From: "Donald W Watson" <dwatson@us.ibm.com>
+Date: Thu, 11 Oct 2001 12:48:06 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] [PATCH] snapshots on unaligned lvs
+Subject: [linux-lvm] devfs/vgchange error
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,81 +15,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Donald W Watson <dwatson@us.ibm.com>
 
-Hello everyone,
+I'm using Linux 2.4.10 and lvm 1.0.1-rc4.
 
-This patch fixes 1.0.1-rc4 to be able to take snapshots of unaligned
-logical volumes (created by some of the betas).  It also fixes
-a counting error in the loop in lvm_snapshot_COW.
+Without devfs, perform the following:
 
-Nothing fancy here, I just changed it to use the hard sector size
-as the blocksize sent to brw_kiovec.  I've tested with beta7 and
-rc4 logical volumes, additional testing is more than welcome.
+1.  Create a physical volume on some LVM partition (e.g., /dev/hda7).
+2.  Run pvscan--it shows the physical volume /dev/hda7.
+3.  Create a volume group (vg7) using the physical volume created in step
+1.  There now exists a device /dev/vg7/group.
+4.  Run vgscan--it shows the active volume group vg7.
+5.  Run vgchange -an.  The device /dev/vg7/group still exists.
+6.  Run vgscan--it shows the inactive volume group vg7.
 
--chris
+Rebuild the kernel with devfs and perform the following:
 
---- 0.36/drivers/md/lvm-snap.c Thu, 11 Oct 2001 10:17:22 -0400 
-+++ 0.36(w)/drivers/md/lvm-snap.c Thu, 11 Oct 2001 14:11:50 -0400 
-@@ -326,6 +326,7 @@
- {
- 	const char * reason;
- 	unsigned long org_start, snap_start, snap_phys_dev, virt_start, pe_off;
-+	unsigned long phys_start ;
- 	int idx = lv_snap->lv_remap_ptr, chunk_size = lv_snap->lv_chunk_size;
- 	struct kiobuf * iobuf;
- 	unsigned long blocks[KIO_MAX_SECTORS];
-@@ -360,8 +361,14 @@
- 
- 	iobuf = lv_snap->lv_iobuf;
- 
--	blksize_org = lvm_get_blksize(org_phys_dev);
--	blksize_snap = lvm_get_blksize(snap_phys_dev);
-+	blksize_org = get_hardsect_size(org_phys_dev);
-+	blksize_snap = get_hardsect_size(snap_phys_dev);
-+
-+	/* org_start must not change, we use it later on to fill in the
-+	** exception table
-+	*/
-+	phys_start = org_start ;
-+
- 	max_blksize = max(blksize_org, blksize_snap);
- 	min_blksize = min(blksize_org, blksize_snap);
- 	max_sectors = KIO_MAX_SECTORS * (min_blksize>>9);
-@@ -376,7 +383,7 @@
- 
- 		iobuf->length = nr_sectors << 9;
- 
--		if(!lvm_snapshot_prepare_blocks(blocks, org_start,
-+		if(!lvm_snapshot_prepare_blocks(blocks, phys_start,
- 						nr_sectors, blksize_org))
- 			goto fail_prepare;
- 
-@@ -391,6 +398,9 @@
- 		if (__brw_kiovec(WRITE, 1, &iobuf, snap_phys_dev, blocks,
- 				 blksize_snap, lv_snap) != (nr_sectors<<9))
- 			goto fail_raw_write;
-+
-+		phys_start += nr_sectors ;
-+		snap_start += nr_sectors ;
- 	}
- 
- #ifdef DEBUG_SNAPSHOT
-@@ -605,7 +615,7 @@
- 	snap_phys_dev = lv_snap->lv_block_exception[idx].rdev_new;
- 	snap_pe_start = lv_snap->lv_block_exception[idx - (idx % COW_entries_per_pe)].rsector_new - lv_snap->lv_chunk_size;
- 
--	blksize_snap = lvm_get_blksize(snap_phys_dev);
-+	blksize_snap = get_hardsect_size(snap_phys_dev);
- 
-         COW_entries_per_block = blksize_snap / sizeof(lv_COW_table_disk_t);
-         idx_COW_table = idx % COW_entries_per_pe % COW_entries_per_block;
-@@ -654,7 +664,7 @@
- 			idx++;
- 			snap_phys_dev = lv_snap->lv_block_exception[idx].rdev_new;
- 			snap_pe_start = lv_snap->lv_block_exception[idx - (idx % COW_entries_per_pe)].rsector_new - lv_snap->lv_chunk_size;
--			blksize_snap = lvm_get_blksize(snap_phys_dev);
-+			blksize_snap = get_hardsect_size(snap_phys_dev);
- 			blocks[0] = snap_pe_start >> (blksize_snap >> 10);
- 		} else blocks[0]++;
- 
+1.  Run pvscan--it shows the physical volume
+/dev/ide/host0/bus0/target0/lun0/part7.
+2.  Run vgscan--it shows the active volume group vg7.
+3.  Run vgchange -an.  The device /dev/vg7/group is gone.
+4.  Run vgscan--it seg faults.  In fact, any command that attempts to open
+/dev/ide/host0/bus0/target0/lun0/part7 seg faults.
+
+This does not appear to be a conversion problem from non-devfs to devfs; it
+happens even if you start with devfs.
