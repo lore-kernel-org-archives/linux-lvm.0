@@ -1,10 +1,8 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] Logical Volume max-size?
-Message-ID: <20011119105657.F27261@golem.blacknet.de>
-References: <20011117223754.B12510@auctionwatch.com> <003801c16ffd$757c3d50$fc00a8c0@xp> <20011117231120.C12510@auctionwatch.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011117231120.C12510@auctionwatch.com>; from petro@auctionwatch.com on Sat, Nov 17, 2001 at 11:11:20PM -0800
+Message-ID: <3BF8E5DE.ABAEB618@LTUtech.com>
+From: Igor Dumaire <Igor.Dumaire@LTUtech.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgcfgrestore error !
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +13,86 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 03:55:02 2001
+Date: Mon Nov 19 04:57:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: list LVM <linux-lvm@sistina.com>
 
-On Sat, Nov 17 '01 at 23:11, Petro wrote:
->     Those 3ware cards rock. Lots of disk, fast and cheap. 
-While the cards may be cool, their raid 5 implementation sucks like
-hell.
-slow like a slug, and if it should ever become dirty the system is
-unuseable for about 6 hours. (with 6x80gb Maxtor ATA drives in RAID5).
-And I don't have enough additional storage to make a backup and switch
-over to linux softraid :-(
-Ok, my backup solution should have enought space, but hey, I've raid i
-don't need backup ;-) 
-(Don't beat me to hard, I've a backup solution for my important data)
+Hi,
 
-    Goetz.
+After a reboot I have lost a volume (/dev/lvm1) but not an other (/dev/lvm2)
+(vgscan doesn't see lvm1 !)
+
+I am trying to restore it, using vgcfgrestore, but I have the message below :
+
+# vgcfgrestore -n lvm1 /dev/lvm1
+vgcfgrestore -- can't restore part of active volume group "lvm1"
+vgcfgrestore [-d|--debug] [-f|--file VGConfPath] [-l[l]|--list [--list]]
+        [-n|--name VolumeGroupName] [-h|--help]
+        [-o|--oldpath OldPhysicalVolumePath] [-t|--test] [-v|--verbose]
+        [--version] [PhysicalVolumePath]
+
+# vgcfgrestore -n lvm1 /dev/lvmOLD
+vgcfgrestore -- invalid physical volume "/dev/lvmOLD"
+vgcfgrestore [-d|--debug] [-f|--file VGConfPath] [-l[l]|--list [--list]]
+        [-n|--name VolumeGroupName] [-h|--help]
+        [-o|--oldpath OldPhysicalVolumePath] [-t|--test] [-v|--verbose]
+        [--version] [PhysicalVolumePath]
+
+WHY this message !
+What do I do ?
+
+# lvmdiskscan
+lvmdiskscan -- reading all disks / partitions (this may take a while...)
+lvmdiskscan -- /dev/hda1 [      70.57 MB] Primary  LINUX native partition [0x83]
+lvmdiskscan -- /dev/hda2 [      19.07 GB] DOS extended partition [0x05]
+lvmdiskscan -- /dev/hda5 [       2.01 GB] Extended LINUX native partition [0x83]
+lvmdiskscan -- /dev/hda6 [       1.00 GB] Extended LINUX native partition [0x83]
+lvmdiskscan -- /dev/hda7 [       1.00 GB] Extended LINUX native partition [0x83]
+lvmdiskscan -- /dev/hda8 [     517.69 MB] Extended LINUX native partition [0x83]
+lvmdiskscan -- /dev/hda9 [      14.55 GB] Extended LINUX native partition [0x83]
+lvmdiskscan -- /dev/hdc1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdd1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hde1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdf1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdg1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/hdh1 [      57.27 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- 7 disks
+lvmdiskscan -- 0 whole disks
+lvmdiskscan -- 0 loop devices
+lvmdiskscan -- 0 multiple devices
+lvmdiskscan -- 0 network block devices
+lvmdiskscan -- 13 partitions
+lvmdiskscan -- 6 LVM physical volume partitions
+
+# vgdisplay
+--- Volume group ---
+VG Name               lvm2
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                255
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                255
+Cur PV                3
+Act PV                3
+VG Size               171.79 GB
+PE Size               4.00 MB
+Total PE              43977
+Alloc PE / Size       43776 / 171.00 GB
+Free  PE / Size       201 / 804.00 MB
+VG UUID               Jp3gDv-ib7D-p5te-FFLZ-lNjI-5brK-fzjEM6
+ 
+# vgdisplay lvm1
+vgdisplay -- volume group "lvm1" not found
+
+
+Thanks for your help.
+
+-- 
+Igor Dumaire
+
+www.LTUtech.com - Making Sense of Visual Content
+------------------------------------------------
