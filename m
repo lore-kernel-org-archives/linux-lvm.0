@@ -1,40 +1,35 @@
-Message-Id: <199906150756.AA22833@mailgate1b.telekom.de>
+Message-Id: <199906150746.AA22200@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: [linux-lvm] INFO: bringing LVM into mainstream kernel
-Date: Tue, 15 Jun 1999 9:55:46 METDST
+Subject: Re: [linux-lvm] lvm 0.6 on 2.2.x kernel
+Date: Tue, 15 Jun 1999 9:46:03 METDST
+In-Reply-To: <199906150739.PAA21213@hp735c.csc.cuhk.edu.hk>; from "S.T. Wong" at Jun 15, 99 3:39 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
-Cc: mge@u9ete.ez-darmstadt.telekom.de
+To: "S.T. Wong" <st@hp735c.csc.cuhk.edu.hk>
+Cc: linux-lvm@msede.com, mge@u9ete.ez-darmstadt.telekom.de
+
+> 
+> I'm new to LVM on Linux.  We've a PC running RH 5.2 (kernel 2.2.0).  I wonder
+> we can run LVM 0.6 on the PC without upgrading the kernel to 2.3.x.
+> 
+<SNIP>
+
+Go ahead, it should work.
+
+Please don't forget get patch
+
+   <ftp://linux.msede.com/lvm/v0.6/lvm_0.6-patch-15031999a.gz>
+
+too!
 
 
-Hi all.
-
-Because Marcus Ruehmann brought it up on this list i've send the LVM kernel
-patch for 2.3.x to Alan Cox asking him to help us to bring it into
-the mainstream 2.3.x kernel.
-
-A couple of weeks ago i've already send it to Linus, didn't get an answer,
-resent it again 2 weeks ago, didn't get an answer so far 8*(
-
-We all know he's busy, busy, busy...
-
-
-To hit our target as fast as possible i hereby ask everybody to
-share his/her ideas to help getting LVM into the mainstream kernel.
-
-Maybe somebody has the right budy to achieve it...
-
-
-So, please go ahead.
-
-Thank you very much!
-
+Regards,
 Heinz
+
 --
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
