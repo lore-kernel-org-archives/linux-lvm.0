@@ -1,14 +1,14 @@
 Return-Path: <lewis@sistina.com>
 From: lewis@sistina.com
-Date: Sun, 28 Jan 2001 23:42:06 -0600
-Subject: Re: [linux-lvm] [CVS LVM Mon Jan 29 16:18:57 EST 2001] Device /dev/hdc1 doesn't exist
-Message-ID: <20010128234206.D17449@sistina.com>
-References: <Pine.LNX.4.21.0101291625150.29156-100000@mordor.parrish.org.au>
+Date: Sun, 28 Jan 2001 23:42:52 -0600
+Subject: Re: [linux-lvm] Follow-up 2: Help: lvm 0.9.1_beta3 oops (can't get my data)
+Message-ID: <20010128234252.E17449@sistina.com>
+References: <3A746B67.4FA4CD18@nortelnetworks.com> <20010128200649.C17449@sistina.com> <3A74D2F0.E2C658F5@nortelnetworks.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hxkXGo8AKqTJ+9QI"
+	protocol="application/pgp-signature"; boundary="Q8BnQc91gJZX4vDc"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0101291625150.29156-100000@mordor.parrish.org.au>; from dparrish@excido.com on Mon, Jan 29, 2001 at 04:25:43PM +1100
+In-Reply-To: <3A74D2F0.E2C658F5@nortelnetworks.com>; from harvell@nortelnetworks.com on Sun, Jan 28, 2001 at 08:18:24PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,29 +22,17 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---hxkXGo8AKqTJ+9QI
+--Q8BnQc91gJZX4vDc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2001 at 04:25:43PM +1100, David Parrish wrote:
-> I'm trying to get LVM going for the first, time.. I'm getting a few
-> errors, I've looked through the FAQs and can't find anything about these.
->=20
-> If this is a really stupid commonly found problem and it's just a stupid
-> luser doing it, please point me in the appropriate manual, otherwise,
-> any help would be appreciated.
->=20
-> LVM CVS checked out today Mon Jan 29 16:18:57 EST 2001
+On Sun, Jan 28, 2001 at 08:18:24PM -0600, Joe Harvell wrote:
+> Looks like it didn't work.
 
-Looks to me like you didn't check out the CVS with the LVM_0-9-patches tag.
-Use 'cvs co -r LVM_0-9-patches LVM' and see if it does the same thing.  This
-is documented on the CVS checkout instructions page at
-http://www.sistina.com/Pages/cvs.html
-If you didn't specify the tag you got a combination of Cluster LVM and the
-old 0.9 stuff...which is pretty broken at this time.
+Shoot!  I'll look a this in more detail in the morning when I have access to
+my test setup.
 
-Regards,
 --=20
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-379-3951
@@ -58,13 +46,15 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Sometimes I have a difficult time handling myself in social situations.
-I just start scampering around neurotically, frantically jumping all
-over guests. I think it all goes back to when I was raised in the wild
-by miniature schnauzers.
+THE LESSER-KNOWN PROGRAMMING LANGUAGES #16:
+C- This language was named for the grade received by its creator when he
+submitted it as a class project in a graduate programming class.  C- is
+best described as a "low-level" programming language.  In fact, the
+language generally requires more C- statements than machine-code statements
+to execute a given task.  In this respect, it is very similar to COBOL.
 -----End Obligatory Humorous Quote------------------------------------------
 
---hxkXGo8AKqTJ+9QI
+--Q8BnQc91gJZX4vDc
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -72,9 +62,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE6dQKupE6/iGtdjLERAvl7AJ9HjKKEdKAMEhNlQjNWmoTDw55hwwCfUiIS
-i5R6FAjDbXxqW3kCe94JMpw=
-=G6TA
+iD8DBQE6dQLcpE6/iGtdjLERAmVjAKCFsqW4P8MuNfPiK4aqPRWTaK33egCcD9pq
+aHsPM333j4v2CXrzXXxH/Sk=
+=HdYR
 -----END PGP SIGNATURE-----
 
---hxkXGo8AKqTJ+9QI--
+--Q8BnQc91gJZX4vDc--
