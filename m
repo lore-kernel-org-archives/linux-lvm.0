@@ -1,8 +1,10 @@
-Return-Path: <tgs@iafrica.com>
-Date: Tue, 17 Jul 2001 11:26:50 +0000 (GMT)
-From: tgs@iafrica.com
-Subject: Re: [linux-lvm] Strtup probs !
-Message-id: <0GGM00EWJ7ZIWI@smtp08.iafrica.com>
+Return-Path: <boutilpj@ednet.ns.ca>
+Message-ID: <3B542E3B.9050202@ednet.ns.ca>
+Date: Tue, 17 Jul 2001 09:23:23 -0300
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Weird UUIDs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,76 +16,98 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, ahiam@hotmail.com
-Cc: tgs@iafrica.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM Mailing List <linux-lvm@mlists.sistina.com>
 
-I had the same experience. The lvm-how to needs to be updated (changes in the 
-boot scripts for slackware). You going to have to change the rc.S file. I will 
-prepare a patch for this tonight and post on the mail list, as well email it to 
-you.
-
-In the mean time I can explain the problem to you. Currently the rc.S in 
-slackware (I'm using version 8.0) does the following:
-1. Mount to root partition as ro (read-only).
-2. fsck all the filesystems in /etc/fstab. If one of them are a LVM partition 
-fsck can't talk to that  then it can't fsck that filesystem and exits with an 
-error - you then go into admin mode. In order for fsck to be able to check 
-those filesystem you have to activate the volumes (i.e. vgchange -ay). To the 
-problem is that you can only run vgchange -ya if the root partition is mounted 
-rw. So you have a chicken-egg situation here.
-
-My solution is: 
-1. mount the root partition as read-only.
-2. run fsck -a /  
-3. remount the root partition as read-write 
-4. run vgscan and vgchange -ay
-5. run fsck -A -a -R     (will check all the fs but not the root, because it is 
-already been checked and mounted read-write)
+I tried running pvdata -U on one of my LVM servers and it segfaulted 
+(LVM driver version 0.9.1_beta6). Check out the UUIDs. Everything is 
+working OK but I wonder if this is a serious problem or not? This is a 
+single physical volume LVM running on top of hardware RAID 5.
 
 
-I havnn't converted my root partition on a LVM yet. I don't intent to do that 
-not before I very sure that LVM 1.0 is released and stable. 
 
-I'm sure quota should work. I might be under correction but quota will work for 
-the filesystem, in your case /home is ext2 and should work.
+pvdata -Uvv /dev/sda7
 
-Theo
-
-
-> hi all,
-> 
-> i need help with the following probs 'm facing.....
-> my system is--->  512MB, 500Mhz, 3 scsi, Compaq server with 7.0 Slackware
-> upgradded packages with latest from Slackware & kernel 2.4.6 ( with LVM as
-> module)
-> 1) could not start LVM with /etc/fstab entries !   ;-(
->     i have created initrd.gz & have done exactly as stated in HOW-TO to
-> start LVM at startup ( i'm doing it only on my /home ).
->     if i dont put entries on my /etc/fstab ( for home & LVM) then it works
-> ok, but sooner i put it there on boot there is an error of  something swap
-> disk which takes me to administrative mode !!!!.. my /etc/fstab enrty is
-> /dev/VGmail/LVmail    /home    ext2    defaults    1    1
-> 
-> 2) can quota be implimented with LVM  for eg on my /home .. ??
-> 
-> 3) how to have root partion on LVM.
->     i tried to do that too like in the HOW-TO & did dd on an empty partion.
-> but when i tried to convert root partion to LVM  i got errors.. so can
-> anyone tell me the actual steps pls !
-> 
-> pls excuse me for my english
-> thanxs in advance...
-> arindam haldar
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+pvdata -- reading physical volume data from disk
+pvdata -- reading volume group data from disk
+--- List of physical volume UUIDs ---
+ 
+Segmentation fault
 
 
----------------------------------------------
-This message was sent using M-Web Airmail.
-http://airmail.mweb.co.za/
+
+
+pvdata /dev/sda7
+
+--- Physical volume ---
+PV Name               /dev/sda7
+VG Name               data_vg
+PV Size               133.36 GB / NOT usable 321 KB [LVM: 255 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                6
+PE Size (KByte)       4096
+Total PE              34140
+Free PE               7015
+Allocated PE          27125
+PV UUID               /dev/s-da7
+
+--- Volume group ---
+VG Name
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                6
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               133.36 GB
+PE Size               4 MB
+Total PE              34140
+Alloc PE / Size       27125 / 105.96 GB
+Free  PE / Size       7015 / 27.4 GB
+VG UUID               data_v-g
+
+--- List of logical volumes ---
+
+pvdata -- logical volume "/dev/data_vg/home_lv" at offset   0
+pvdata -- logical volume "/dev/data_vg/var_lv" at offset   1
+pvdata -- logical volume "/dev/data_vg/usr_lv" at offset   2
+pvdata -- logical volume "/dev/data_vg/news_lv" at offset   3
+pvdata -- logical volume "/dev/data_vg/test_lv" at offset   4
+pvdata -- logical volume "/dev/data_vg/its_lv" at offset   5
+pvdata -- logical volume struct at offset   6 is empty
+....
+
+
+
+
+
+
+
+
+
+vgdisplay
+
+--- Volume group ---
+VG Name               data_vg
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                6
+Open LV               5
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               133.36 GB
+PE Size               4 MB
+Total PE              34140
+Alloc PE / Size       27125 / 105.96 GB
+Free  PE / Size       7015 / 27.4 GB
+VG UUID               data_v-g
