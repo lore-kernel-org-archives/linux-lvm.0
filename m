@@ -1,37 +1,67 @@
-Date: Tue, 29 Aug 2000 04:45:39 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
-Subject: Re: [linux-lvm] Dazed & Confused
-In-Reply-To: <200008290326.VAA01321@lynx.turbolabs.com>
-Message-ID: <Pine.LNX.4.21.0008290444050.4314-100000@fogarty.jakma.org>
+Message-ID: <39AB63C5.C58D15F8@twc.de>
+Date: Tue, 29 Aug 2000 09:18:29 +0200
+From: Ulf Bartelt <ulf@twc.de>
 MIME-Version: 1.0
+Subject: [linux-lvm] Strange...
+Content-Transfer-Encoding: quoted-printable
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: Brian Poole <raj@cerias.purdue.edu>, linux-lvm@msede.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@msede.com
 
-On Mon, 28 Aug 2000, Andreas Dilger wrote:
+Hi!
 
-> It does not apply to the stock 2.2.16 or 2.2.17 kernel source because
-> lvm-snap.c uses some features that are not available in stock 2.2.X.
-> However, if you can live without snapshots, it _probably_ wouldn't be
-> hard to make it a config option, but I've never looked at it.
-> 
+I just wanted to resize /home/ftp...
 
-could you make a patch available against stock 2.16/17pre20? i'd be
-very grateful. I'd like to try out 2.4 on a server, but can't for
-fear of not being able to boot back to 2.2.
+Here is what happened:
 
-> Cheers, Andreas
-> 
-> 
+(root@kira:/0)~# mount
+/dev/hda2 on / type ext2 (rw,errors=3Dremount-ro)
+proc on /proc type proc (rw)
+devpts on /dev/pts type devpts (rw,gid=3D5,mode=3D620)
+/dev/hda1 on /boot type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/tmp on /tmp type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/usr on /usr type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/var on /var type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/opt on /opt type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/home on /home type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/ftp on /home/ftp type ext2 (ro,errors=3Dremount-ro)
+/dev/vgkira/install on /home/ftp/install type ext2
+(rw,errors=3Dremount-ro)
+/dev/vgkira/ftp2 on /home/ftp2 type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/sys on /sys type ext2 (rw,errors=3Dremount-ro)
+(root@kira:/0)~# umount /home/ftp/install/
+(root@kira:/0)~# umount /home/ftp
+(root@kira:/0)~# e2fsadm -L+1G /dev/vgkira/ftp
+e2fsadm -- ERROR: "/dev/vgkira/ftp" is mounted on "/home/ftp2"
+e2fsadm -- please umount it to resize
 
-regards,
--- 
-Paul Jakma	paul@clubi.ie
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-ASHes to ASHes, DOS to DOS.
+(root@kira:/0)~# mount
+/dev/hda2 on / type ext2 (rw,errors=3Dremount-ro)
+proc on /proc type proc (rw)
+devpts on /dev/pts type devpts (rw,gid=3D5,mode=3D620)
+/dev/hda1 on /boot type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/tmp on /tmp type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/usr on /usr type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/var on /var type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/opt on /opt type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/home on /home type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/ftp2 on /home/ftp2 type ext2 (rw,errors=3Dremount-ro)
+/dev/vgkira/sys on /sys type ext2 (rw,errors=3Dremount-ro)
+(root@kira:/0)~#
+
+This happened using lvm-0.7 on a 2.2.13 kernel...
+
+Since the last successfull resize operations, I merged 2 VGs. Formerly
+my LVs were spread accross 2 PVs, one per harddisk...
+
+...I see this behaviour for the first time now...
+...I retried it after a reboot, but the effect is the same...
+
+...or is it too early in the morning and I=EF=BF=BDd better get some cups of
+coffee??? ;-)
+
+Bye for now...
+
+	Ulf.
