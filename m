@@ -1,20 +1,12 @@
-Received: from reti (vpn50-40.rdu.redhat.com [172.16.50.40])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2HM4AJh026081
-	for <linux-lvm@redhat.com>; Wed, 17 Mar 2004 22:04:11 GMT
-Received: from joe by reti with local (Exim 4.30) id 1B3jAw-00014N-PM
-	for linux-lvm@redhat.com; Wed, 17 Mar 2004 22:06:10 +0000
-Date: Wed, 17 Mar 2004 22:06:10 +0000
-From: Joe Thornber <thornber@redhat.com>
-Subject: Re: [linux-lvm] EXT3 snapshot not quiesced by LVM2?
-Message-ID: <20040317220610.GB2624@reti>
-References: <20040315182356.35f5ca40.donald.murray@pason.com>
-	<20040317105725.15a71d21.donald.murray@pason.com>
-	<20040317181230.GA2624@reti>
-	<20040317120056.430fbe2b.donald.murray@pason.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040317120056.430fbe2b.donald.murray@pason.com>
-Sender: Joe Thornber <thornber@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2IAXtj19930
+	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 05:33:55 -0500
+Message-ID: <OF8332408E.0F643C1C-ONC1256E5B.00364305-C1256E5B.003A0263@provinzial.de>
+From: m.klaeschen@provinzial.de
+Date: Thu, 18 Mar 2004 11:33:36 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] quiescing physical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,14 +17,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@sistina.com
 
-On Wed, Mar 17, 2004 at 12:00:56PM -0700, Donald Murray P.Eng. wrote:
-> Because we're using device-mapper 1.00.08, I'm assuming we need only
-> apply patches 9 through 16 to our already-patched kernel, correct?
 
-No, apply them all, the patch numbers just signify application order.
 
-- Joe
+
+
+Hallo
+
+we would like to back up LVM managed volumes without using snapshot
+features. Background is that we have quite a couple of disk which we do not
+want to double to have a snapshot device.
+
+We run Linux for zSeries next to some z/OS systems on IBM 2064 machines in
+LPAR mode. Linux data is stored on 3390-9 DASD in CDL Format (i.e. ECKD).
+We use LVM to build logical volumes from DASD devices. In that logical
+volumes ReiserFS is established as filesystem.
+
+The DASD volumes for Linux are also accessable from other LPARs, so we are
+(at least in a technical way) able to back up Linux data onto tape
+catridges using z/OS ADRDSSU. Main problem is that ADRDSSU does not take
+care about delayed writes to physical volumes. So filesystem are to be
+mounted read only to back it up properly.
+
+A way z/OS Unix filesystem zFS deals with this issue is called quiescing
+r/w mounted filesystems. Before an ADRDSSU full volume dump is processed,
+all activity on the zFS VSAM linar data sets (which might be compared to as
+a physical volume) is going to be drained and new requests will be
+suspended. Next step after ADRDSSU dump is to unquiesce the zFS filesystem,
+i.e. I/O operation to VSAM will continue.
+
+Main benefit is that all filesystem operations from applications can
+continue since quiescing is invisible for users - apart from some delay of
+response time.
+
+Is there a way to use such a proceeding with Linux LVM managed DASD?
+
+Kind regards
+Michael Kl�schen
+-----------------------------------------------------------------------
+Provinzial Versicherungen
+Michael Kl�schen
+Sophienblatt 33
+24114 Kiel
+
+Telefon (0431) 603-1968
+Telefax (0431) 603-101968
+http://www.provinzial.de
+-----------------------------------------------------------------------
+Diese E-Mail ist allein f�r den / die bezeichneten Adressaten bestimmt. Sie
+kann rechtlich vertrauliche Informationen enthalten. Wenn Sie diese E-Mail
+irrt�mlich erhalten haben, informieren Sie bitte unverz�glich den  Absender
+und l�schen Sie diese Nachricht von Ihrem Computer. Vielen Dank.
+
+This email is for the exclusive use of the addressee. It may contain
+legally privileged information. If you have received this message in error,
+please notify the sender immediately and delete the message from your
+computer. Thank you.
