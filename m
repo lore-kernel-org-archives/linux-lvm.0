@@ -1,12 +1,7 @@
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Subject: Re: [linux-lvm] resize an ext3 on an LV
-Message-ID: <20030129152817.GT30184@lug-owl.de>
-References: <Pine.LNX.4.44.0301290900350.22463-100000@zeus.itg.uiuc.edu>
+From: "tester7 A." <benew666@hotmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XAxdu+gdzyY/jMFv"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0301290900350.22463-100000@zeus.itg.uiuc.edu>
+Message-ID: <F80oe73FqS0XrPoqxBJ00008bbe@hotmail.com>
+Subject: [linux-lvm] BMT-LVM performance with snapshots
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,55 +12,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 09:29:01 2003
+Date: Wed Jan 29 09:31:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: Linux LVM Sistina <linux-lvm@sistina.com>
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
---XAxdu+gdzyY/jMFv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Kernel: 2.4.20
+LVM: 1.0.6 with kernel patched(VFS-lock and lvm-1.0.6)
+CPU: PIII 1.4
+RAM: 512M
 
-On Wed, 2003-01-29 09:16:15 -0600, Alexander Lazarevich <alazarev@itg.uiuc.=
-edu>
-wrote in message <Pine.LNX.4.44.0301290900350.22463-100000@zeus.itg.uiuc.ed=
-u>:
-> A rehash of some questions I asked earlier, but I want to clarify:
->=20
-> Redhat 7.3, 2.4.18-19.7.xsmp kernel, using LVM 1.03.
->=20
-> I've got a 180GB LV (/dev/homevg/userslv) which contains an ext3=20
-> filesystem (mount point /home/users).
->=20
-> Once I umount the /dev/homevg/userslv, can I use resize2fs to extend the=
-=20
-> ext3 filesystem? Or must I first remove the journal from ext3, then=20
-> resize, then add the journal back to it, then remount?
+This is the output from bonnie++ with lv only and with lv + snapshot
 
-You can directly enlarge the filesystem, but, of course, you've got to
-extend the logical volume before that... You don't need to remove the
-journal, at least, this worked numerous times for me:-)
+Version  1.03      ------Sequential Output------ --Sequential Input- 
+--Random-
+                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- 
+--Seeks--
+Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec 
+%CP
+lv_wo_snap 2G           78505  32 41745  27           151742  41 435.4   1
+lv_wo_snap 2G           75501  31 40277  25           150466  42 436.8   1
+lv_wo_snap 2G           73933  29 41213  26           150052  41 433.4   1
+lv_wo_snap 2G           76434  30 40980  26           147544  41 399.0   0
+lv_with_sn 2G            1367   0 10196   6           128362  35 437.4   1
+                    ------Sequential Create------ --------Random 
+Create--------
+                    -Create-- --Read--- -Delete-- -Create-- --Read--- 
+-Delete--
+files:max:min        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec 
+%CP
+lv_wo_snap 16  1669  17 +++++ +++  2532  23  1464  17 +++++ +++   475   5
+lv_wo_snap 16  1572  17 +++++ +++  2265  24  1431  14 +++++ +++   457   5
+lv_wo_snap 16  1481  17 +++++ +++  2100  22  1405  15 +++++ +++   478   6
+lv_wo_snap 16  1536  16 +++++ +++  2286  23  1513  17 +++++ +++   458   5
+lv_with_sn 16   625   8 +++++ +++  2333  26  1174  12 +++++ +++   460   5
 
-However, backup is always a good idea, though.
 
-MfG, JBG
+After making snapshots for a LV, the write performance goes down from 75M/s 
+to 1.3M/s.
 
---=20
-   Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481
-   "Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur
-    fuer einen Freien Staat voll Freier B=FCrger" | im Internet!
-   Shell Script APT-Proxy: http://lug-owl.de/~jbglaw/software/ap2/
+Something must be wrong in LVM.
 
---XAxdu+gdzyY/jMFv
-Content-Type: application/pgp-signature
-Content-Disposition: inline
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQE+N/MRHb1edYOZ4bsRAisgAJ422LqOyEVWyG44T5sHMfF/HpnTLQCfXXEO
-QaxeEXX3ZLUUK8GC7oGVs6w=
-=vkyf
------END PGP SIGNATURE-----
-
---XAxdu+gdzyY/jMFv--
+_________________________________________________________________
+The new MSN 8: smart spam protection and 2 months FREE*  
+http://join.msn.com/?page=features/junkmail
