@@ -1,12 +1,10 @@
-Date: Tue, 11 Sep 2001 19:26:43 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Message-ID: <20010911192643.A31067@vestdata.no>
-References: <E15f13v-0003bs-00@hermes.sistina.com> <E15fJux-0005Kk-00@hermes.sistina.com> <20010910001643.A19424@vestdata.no> <E15gELn-0004OG-00@hermes.sistina.com> <20010910103952.B31660@vestdata.no> <20010910132709.G31313@sistina.com> <20010910173851.A3751@vestdata.no> <20010911163120.F20767@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010911163120.F20767@sistina.com>; from mauelshagen@sistina.com on Tue, Sep 11, 2001 at 04:31:20PM +0200
-Content-Transfer-Encoding: quoted-printable
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] LVM
+Date: Wed, 12 Sep 2001 02:08:25 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPKEDMDNAA.stuart@bh90210.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+In-reply-to: <20010911122020.A1836@dardhal.mired.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,41 +16,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Tue, Sep 11, 2001 at 04:31:20PM +0200, Heinz J . Mauelshagen wrote:
-> > Sep  6 18:15:51 argus kernel: lvm -- lvm_blk_ioctl: unknown command 5=
-87
-> > Sep  6 18:15:55 argus last message repeated 213 times
-> > Sep  6 18:15:55 argus kernel: hdd: read_intr: status=3D0x59 { DriveRe=
-ady SeekComplete DataRequest E rror }
-> > Sep  6 18:15:55 argus kernel: hdd: read_intr: error=3D0x40 { Uncorrec=
-tableError }, LBAsect=3D11801433 2, sector=3D118014332
-> > Sep  6 18:15:55 argus kernel: end_request: I/O error, dev 16:40 (hdd)=
-, sector 118014332
->=20
-> Ragnar, the block ioctl error the lvm driver shows is not related to th=
-e locking
-> of a physical extent, because that is achived by the PE_LOCK_UNLOCK ioc=
-tl
-> (0x50 BTW) using the character ioctl function.
-> Wasn't able to find that ioctl grepping the kernel sources.
-> Could it be some application checking devices regularly like a desktop
-> CD-ROM tool or something?
-
-Could it be badblocks?
-
-
-> I gues your problem was just the dying disk and therefore temporarily a=
-voiding
-> the read() check in pv_move_pe() should have catched this one as well.
-
-I ran pv_move with debugging enabled, and it showed that it died in
-lock_pe(). I'll try to reproduce this next time I find I broken disk.
-
-
-
---=20
-Ragnar Kj=F8rstad
-Big Storage
+TFZNIExpc3QgbWVtYmVyczoNCg0KCUkgaGF2ZSBiZWVuIGRvaW5nIHNvbWUgcGxheWluZyBhcm91
+bmQgYW5kIGFtIG5vdCBnZXR0aW5nIHZlcnkgZmFyISBQZXJoYXBzIHlvdSBjYW4gYW5zd2VyIHNv
+bWUgcXVlc3Rpb25zIGFuZCBndWlkZSBtZS4NCg0KSSBoYXZlIDIgMzJHQiBIRHMsIHdoaWNoIEkg
+Y2FuIGhhdmUgYm90aCBpbiB1c2Ugb24gbXkgbGFwdG9wIHNpbXVsdGFuZW91c2x5LiBUaGUgMm5k
+IEhEIEkgY2FuIGVyYXNlIHRvIG15IGhlYXJ0cyBjb250ZW50LiBJdCdzIGEgc3RhZ2luZyBkcml2
+ZS4NCg0KCU15IGN1cnJlbnQgY29uZmlndXJhdGlvbiBpczoNCg0KCS9kZXYvaGRhMQl3aW5kb3dz
+IDIwMDAgcHJvDQoJL2Rldi9oZGEyCS8JKExpbnV4IG1hbmRyYWtlIDguMCkNCg0KCUkgZG8gbm90
+IGhhdmUgYSBzd2FwIHBhcnRpdGlvbiBhdCB0aGUgbW9tZW50IChJIGhhdmUgNTEyTUIgb2YgcmFt
+LCBhbmQgSSB1c2UgYSBzd2FwIGZpbGUgaWYgSSBuZWVkIHRvbyksIGFuZCBoYXZlIGV2ZXJ5dGhp
+bmcgaW5zdGFsbGVkIGludG8gdGhlIHJvb3QgKEkga25vdyB0aGUgZHJhd2JhY2tzIG9mIHRoaXMs
+IGJ1dCBpdCBtYWRlIGZvciBzaW1wbGljaXR5IGF0IHRoZSB0aW1lKS4gSSBhbHNvIHVzZSBSZWlz
+ZXJGUywgYW5kIHdhbnQgdG8gaW1wbGVtZW50IExWTS4NCg0KCVRoZSAiSG93IFRvIiBzcGVha3Mg
+b2YgYW4gZXhhbXBsZSBpbmNsdXNpdmUgb2YgYSAvYm9vdCBwYXJ0aXRpb24gYW5kIGEgc3dhcCBw
+YXJ0aXRpb24uIEkgaWdub3JlZCB0aGUgc3dhcCBwYXJ0aXRpb24sIGJ1dCB3YXMgY3VyaW91cyBh
+Ym91dCB0aGUgL2Jvb3QgcGFydGl0aW9uIGluIHRoZSBob3ctdG8uDQoNCmEpIERvIEkgbmVlZCB0
+byBoYXZlIGEgc2VwYXJhdGUgL2Jvb3QgcGFydGl0aW9uLCBvciBjYW4gSSBjcmVhdGUgYW4gTFZN
+IGltcGxlbWVudGF0aW9uIChmb3IgdGhlIG1vbWVudCkgd2l0aCBldmVyeXRoaW5nIGluIHRoZSBy
+b290ICgvKT8NCmIpIFRoZSBleGFtcGxlIHNlZW1zIHRvIHNob3cgdGhlIC9ib290IGJlaW5nIG91
+dHNpZGUgdGhlIExWTSBhcmVhLCBpcyB0aGF0IGNvcnJlY3Qgb3IgZG9lcyB0aGUgaG93LXRvIG1l
+YW4gdG8gc2hvdyB0aGUgL2Jvb3QgYXMgYmVpbmcgd2l0aGluIHRoZSBkb21haW4gb2YgdGhlIExW
+TSBjb250cm9sbGVkIGFyZWE/DQpjKSBIb3cgd2lsbCB1c2luZyBSZWlzZXJGUyBvbiBteSByb290
+IHBhcnRpdGlvbiBhbmQgTFZNIG92ZXIgdGhlIHJvb3QgYWZmZWN0IHdoYXQgSSBuZWVkIHRvIGRv
+IGZvciBhbiBpbml0cmQgYW5kIGtlcm5lbCBjb21waWxhdGlvbiBvcHRpb25zPw0KDQpPbmNlIHRo
+ZSBMVk0gaW1wbGVtZW50YXRpb24gaXMgY29tcGxldGVkIHdpdGggZXZlcnl0aGluZyBpbiB0aGUg
+LyBwYXJ0aXRpb24sIGFuZCBSZWlzZXJGUyBvbiB0aGUgcm9vdCwgYW5kIGl0IGJvb3RzIHVwLCB0
+aGVuIEkgcGxhbiB0byBicmVhayBhcGFydCB0aGUgLyBpbnRvIHNlcGFyYXRlIGZpbGVzeXN0ZW1z
+IHdpdGhpbiB0aGUgTFZNIGVudmlyb25tZW50LiBBdCB0aGF0IHBvaW50LCByZWNvbW1lbmRhdGlv
+bnMgb2Ygd2hhdCBmaWxlc3lzdGVtcyB0byBjcmVhdGUgd2lsbCBiZSBoZWxwZnVsLg0KDQoNClZl
+cnkgUmVzcGVjdGZ1bGx5LCANCg0KU3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNH
+V0cgDQpCZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUgMTkwNEcgKFZvbHVudGVlciBUcmFp
+bmluZyBVbml0KSANCnN0dWFydEBiaDkwMjEwLm5ldCANCndlc3QgY29hc3Q6ICgzMTApLTM1OC0w
+MjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzIA0KZWFzdCBj
+b2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkx
+NDktNTg1OSANCg0KVGVsZWNvcGllcjogKDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdhdGV3
+YXkgdmlhIHd3dy5lZmF4LmNvbSAoaXQncyBmcmVlISkgDQoNCkpPSU4gVEhFIFVTIE5BVlkgUkVT
+RVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4gDQoNCldl
+ZG5lc2RheSwgU2VwdGVtYmVyIDEyLCAyMDAxIDI6MDEgQU0NCiANCg==
