@@ -1,13 +1,11 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] VG lost, VG restorable without lvmconf? Need help!
-Message-Id: <636740000.1017419834@dizzy.wrkhors.com>
-In-Reply-To: <004e01c1d71d$7c587580$9865fea9@homecomputer>
-References: <200203280951.g2S9p8h23250@lorus.lonx.net>
-    <15805.1017323123@www6.gmx.net>
-    <004e01c1d71d$7c587580$9865fea9@homecomputer>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Having trouble compiling CVS
+Message-Id: <20020329202225.GA4903@tykepenguin.com>
+References: <E16qq4l-0005yF-00@hermes.sistina.com>
+    <E16qrQU-00076U-00@hermes.sistina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
+In-Reply-To: <E16qrQU-00076U-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,44 +16,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 29 10:37:01 2002
+Date: Fri Mar 29 14:21:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-
--- "dan.am" <lvm@lonx.net>
-
->> > Are your disks Maxtor ?
->>
->> no and yes :)
->> hda is IBM (30 GB)
->> hdb is a Maxtor 61,4 GB / 5400
-> This probably has something to do with it. I have some Maxtor stuff too.
->>
->> I am afraid that I have no current backups of these files if backups at
->> all :-(
-> This is a problem. Hmmmm...Try recreating your vol group config by running
-> "vgcreate" and "lvcreate" from command line. Do not use yast , as this
-> will call "vgscan" again
-> Or maybe:
-> 1. mv /sbin/vgscan /sbin/vgscan.BOGUS
-> 2. YasT to recreate VG.
-> In any case work carefully, since you are in trouble
->
-> Also try "vgcfgrestore" , but   assume it is broken too, as it was in my
-> case
-
-Remember thta LVM doesn't effect the data on your disk, just
-the LVM headers. If you remember the approx. sizes of things
-you may be able to bring the LV back on line long enough to
-back it up, blow off LVM, re-create the thing from scratcn,
-run the VG backups and restore the original data.
-
-All you can do it play around with it until the volume mounts.
+On Fri, Mar 29, 2002 at 06:09:21PM +1000, Adrian Head wrote:
+> I have been able to get the lvm-1.1rc1 tarball to compile correctly.  I have 
+> diff'ed the two directories lvm-1.1rc1 & lvm-1.1rc1-CVS and I cannot find any 
+> obvious reason why the CVS would not work.
+> 
+> Anyone have any sugestions?
 
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+CVS doesn't compile ATM, Heinz has beendoing some changes and accidentally left
+a file out. 
+
+You'll have to wait till after the Easter holidays for CVS to be workingn again
+I'm afraid.
+
+Sorry.
+
+Patrick
