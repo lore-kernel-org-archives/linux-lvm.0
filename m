@@ -1,7 +1,10 @@
-Message-ID: <615A249B783CD41192F400D0B747AC8606BA869A@hesse.bbn.hp.com>
-From: "ZECHA,HOLGER (HP-Germany,ex1)" <holger_zecha@hp.com>
-Subject: RE: [linux-lvm] resize_reiserfs on SuSE Linux enterprise server
-MIME-Version: 1.0
+From: Eike Kowallik <E.Kowallik@tu-bs.de>
+Subject: Re: [E.Kowallik@tu-bs.de: [linux-lvm] lvm and raw devices (with Oracle 9 RAC)]
+Message-ID: <20020719212754.A1121@portatile.milano.dt>
+References: <20020703195115.E999@portatile.milano.dt> <20020704113000.C9129@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020704113000.C9129@sistina.com>; from mauelshagen@sistina.com on Thu, Jul 04, 2002 at 11:30:00AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,52 +15,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 19 07:39:01 2002
+Date: Fri Jul 19 14:31:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Eike Kowallik <E.Kowallik@tu-bs.de>
 
-Hello,
+Hello!
 
-I've fixed the problem in the meanwhile. the problem was between the chair
-and the keyboard.
+On Thu, Jul 04, 2002 at 11:30:00AM +0200, Heinz J . Mauelshagen wrote:
+> On Wed, Jul 03, 2002 at 07:51:15PM +0200, Eike Kowallik wrote:
 
-Thanks
-
------Original Message-----
-From: Chris Mason [mailto:mason@suse.com]
-Sent: Freitag, 19. Juli 2002 14:31
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] resize_reiserfs on SuSE Linux enterprise server
-
-
-On Fri, 2002-07-19 at 07:18, ZECHA,HOLGER (HP-Germany,ex1) wrote:
-> Hello,
+> > Hmm...  nobody can give me a hint? Are my problems and my questions
+> > so strange??
 > 
-> I extended a Logical Volume with reiserfs and tried to extend it online,
-but
-> got the following error:
-> 
-> mount -o remount,resize=1269715 /home/linuxrpm
-> mount: /home/linuxrpm not mounted already, or bad option
-> 
-> or with resize_reiserfs:
-> 
-> resize_reiserfs -s -10M /dev/vg00/lvlinux 
-> resize_reiserfs 3.x.1b (2002)
-> 
-> resize_reiserfs: remount failed: Invalid argument
+> No, it is because we are all at the beach ;-)
 
-Which kernel are you using?  resize_reiserfs detects that you've got the
-FS mounted, and reverts back to the mount -o remount command.
-
--chris
+Oh, sorry, I didn't know... ;-)
 
 
+> You are using a rather old LVM version. In case you can afford an upgrade
+> to LVM 1, your problem will be gone.
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Yes, now the following command works here without any problems! :-))
+
+> # raw -qa
+> /dev/raw/raw1:  bound to major 58, minor 0
+> dd if=/dev/raw/raw1 of=/dev/null bs=512 count=10
+> 10+0 records in
+> 10+0 records out
+
+Before I wrote my first email to this list I had read the CHANGELOG,
+because I hadn't found any hint for my problem. Now, knowing the
+solution, I would like to understand the problem - a little bit. ;-)
+Which fix made the above command work?
+
+Of course, this isn't a real important thing...
+
+
+> Heinz    -- The LVM Guy --
+
+Thanks a lot, Heinz! Bye, Eike
