@@ -1,7 +1,9 @@
-Message-ID: <615A249B783CD41192F400D0B747AC8606045009@hesse.bbn.hp.com>
-From: "ZECHA,HOLGER (HP-Germany,ex1)" <holger_zecha@hp.com>
+Message-ID: <3CF6653D.6DD2E0E@online.fr>
+From: Thierry DE CARVALHO <thierry.decarvalho@online.fr>
 MIME-Version: 1.0
-Subject: [linux-lvm] SuSE Linux and EMC/XP/VA7100/VA7100
+Subject: Re: [linux-lvm] LVM 1.03 root file system on Redhat 7.3
+References: <3CF4C4D4.13851.A9276BF@localhost>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,23 +14,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 12:44:01 2002
+Date: Thu May 30 12:50:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello,
+"James B. Byrne" wrote:
+> 
+> We are using the grub bootloader.  We have followed the
+> instructions contained in the the lvm howto document provided by
+> sistina, to the best of my ability to understand them.
+> 
+> The problem is that system gives a kernel panic when started using
+> the lvm boot option.  Is there a way to redirect the boot dialogue
+> output to a file?  It appears that the most informative messages may
+> be scrolling of the top of the screen.  What I am seeing is this:
+> 
+> kmod: failed to exec /sbin/modeprobe -s -k block-major-7 errno = 2
+> 
+> repeated 16 times, followed by
+> 
+> vgvchange -- volume group "vg00" successfully activated
+> 
+> VFS: Cannot open root device "vg00"/lv01: or 00:00
+> Please append correct "root=" boot option
+> Kernel panic: VFS: Unable to mount root fs on 00:00
 
-has anyone detailed experience connecting a SuSE Linux to a
-EMC,XP,VA7100,VA7400 using Emulex FC cards and configuring LVM ?
+The problem is that at this time the kernel don't known anything about
+your LVs and their major/minor ! (the root FS is not mounted).
+It uses an internal table for translating /dev/hda* and others to 
+major/minor(see init/main.c).
 
-Thanks for your help
+Try with grub (here /dev/vg00/lvol1 is the root fs):
 
-Holger Zecha                          H
-
-SAP R/3 Project Services      
-Operations Services Center 
-Hewlett Packard GmbH                Telefon:    +49 7031/468 3423
-Schickardstrasse 25                       Fax:         +49 7031/468 1349
-D - 71034 Boeblingen                   e-mail:      Holger_Zecha@hp.com
+title=GNU/Linux Debian 2.2 (potato)
+kernel (hd0,1)/vmlinuz-2.2.19 root=3a00 ramdisk_size=8192 vga=10
+#                                   ^^^^ <major><minor> of the lv device in hex
+initrd (hd0,1)/initrd-lvm-2.2.19.gz
