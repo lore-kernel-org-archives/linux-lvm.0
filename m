@@ -1,9 +1,9 @@
 Return-Path: <jweber@valinux.com>
-Date: Fri, 19 Jan 2001 08:55:27 -0800 (PST)
+Date: Fri, 19 Jan 2001 08:56:54 -0800 (PST)
 From: Jay Weber <jweber@valinux.com>
-Subject: Re: [linux-lvm] More probs 2.4.0 / 0.9.1beta2
-In-Reply-To: <20010119161251.16298.qmail@web1703.mail.yahoo.com>
-Message-ID: <Pine.LNX.4.30.0101190853410.28293-100000@beefcake.hdqt.valinux.com>
+Subject: Re: [linux-lvm] Kernel panic while snapshotting.
+In-Reply-To: <Pine.LNX.4.30.0101190750570.27286-100000@beefcake.hdqt.valinux.com>
+Message-ID: <Pine.LNX.4.30.0101190855320.28293-100000@beefcake.hdqt.valinux.com>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,46 +20,55 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Loop isn't seen by the lvm utils since it looks in /proc/partitions for
-the devices which it will scan.  I posted a patch a while back regarding
-adding a LVM_FORCE_DEV_SCAN exported variable to force it to scan your
-/dev directory and hence find the loop device.  I'll forward it your way
-or you can check the lvm-devel archive, it was a rather recent posting.
+This was on 2.2.18 based kernel it includes several (and I mean several)
+other patches as well in this case.  I just reproduced the problem without
+the IO in the background and I'm thinking the removal of LockPage or the
+iobuf->locked=0 bit is whats causing this.  I'll report back shortly with
+some more results.
 
-On Fri, 19 Jan 2001, Mr. Penguin wrote:
+On Fri, 19 Jan 2001, Jay Weber wrote:
 
-> Date: Fri, 19 Jan 2001 08:12:51 -0800 (PST)
-> From: Mr. Penguin <penguin_master_2000@yahoo.com>
+> Date: Fri, 19 Jan 2001 07:56:26 -0800 (PST)
+> From: Jay Weber <jweber@valinux.com>
 > Reply-To: linux-lvm@sistina.com
 > To: linux-lvm@sistina.com
-> Subject: [linux-lvm] More probs 2.4.0 / 0.9.1beta2
+> Subject: [linux-lvm] Kernel panic while snapshotting.
 >
-> Hi
+> Hi,
 >
-> I'm still having problems with this! I've built a
-> standard RH6.2 system and upgraded it to 2.4.0 with
-> LVM. As well as not finding any of my existing VGs,
-> pvcreate also fails when I use /dev/loop/0:
+> I just got a kernel panic while snapshotting with 0.9.1beta2.  I wonder if
+> anybody has seen any similar issues or I possibly fubar'd the patch on my
+> end?
 >
-> pvcreate -- device "/dev/loop/0" doesn't exist
+> Panic was:
 >
-> I can't get anything from the system so I can't attach
-> a debug log, but the last thing it says is:
+> 	Kernel panic: brw_kiovec: iobuf not locked for I/O
 >
-> <1> pv_get_size -- leaving with ret -236
+> This occured while simultanously copying 20 tarballs back and forth
+> between two dirs on the source volume and performing a snapshot at that
+> time.  It appears to have hung my lvcreate (snapshot) command shell.
+> Oh, this was also using loop device for the source volume on my laptop in
+> this case.  Hmm, actually could this panic be related to the following
+> change in lvm.c?  It did work prior in 0.9.1beta1.
 >
-> Please help :)
+> @@ -492,7 +488,7 @@
+>                 goto out;
 >
-> James
+>         err = -ENOMEM;
+> -       iobuf->locked = 1;
+> +       iobuf->locked = 0;
+>         iobuf->nr_pages = 0;
+>         for (i = 0; i < nr_pages; i++)
+>         {
 >
-> PS lvmdiskscan doesn't see the "loop" device. And yes
-> the loop device really is there and configured!
 >
+> I haven't seen this one before myself, but in testing on our bigger scsi
+> based boxes in the back while snapshots are active and heavy IO is
+> performed on the source volume, the box tends to hang.  I gather this is
+> related to having to journal all source volume changes to the snapshot and
+> when you throw massive IO at it, things get slow. Any thoughts on this one
+> as well?
 >
-> __________________________________________________
-> Do You Yahoo!?
-> Get email at your own domain with Yahoo! Mail.
-> http://personal.mail.yahoo.com/
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
