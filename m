@@ -1,7 +1,8 @@
-From: Ivan Uzunov <dj@online.bg>
-Message-ID: <Pine.LNX.4.30.0211062334420.1036-100000@localhost.localdomain>
-MIME-Version: 1.0
-Subject: [linux-lvm] PVscan Question.
+From: Bradley M Alexander <storm@tux.org>
+Message-ID: <20021106221445.GB32597@sonsofthunder.yi.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] super.c failing in kernel compile
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,55 +13,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov  6 15:47:01 2002
+Date: Wed Nov  6 16:15:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-	Hi :)
+Hi,
 
-	I have small and may be stupid questions, I run LVM 1.0.6 with
-kernel 2.4.19 onto redhat system. The LVM is running but when i run
-pvdisplay command onto one of the HDD into LVM output is :
+I have successfully rebuilt my system after the issues a couple of weeks
+ago, and am trying to recompile the kernel with LVM support.
 
-PV Name               /dev/hdc1
-VG Name               home
-PV Size               76.69 GB [160836417 secs] / NOT usable 16.18 MB
-[LVM: 143
-KB]
-PV#                   3
-PV Status             NOT available
-			^^^^^^^^^^^
+I am using Debian's kernel source 2.4.19 with lvm-1.0.6. The compile stops
+with 
 
-What's this mean ?
+gcc -D__KERNEL__ -I/usr/src/kernel-source-2.4.19/include -Wall
+-Wstrict-prototypes -Wno-trigraphs -O2 -fno-strict-aliasing -fno-common
+-fomit-frame-pointer -pipe -mpreferred-stack-boundary=2 -march=i686
+-malign-functions=4    -nostdinc -I
+/usr/lib/gcc-lib/i386-linux/2.95.4/include -DKBUILD_BASENAME=super  -c -o
+super.o super.c
+super.c: In function `unlockfs':
+super.c:520: `mount_sem' undeclared (first use in this function)
+super.c:520: (Each undeclared identifier is reported only once
+super.c:520: for each function it appears in.)
+make[3]: *** [super.o] Error 1
 
-I have 6 HDD in this LVM and
-HDD : /dev/hda7 /dev/hdc1 /dev/hde1 /dev/hdh1 has this status ; other for
-example /dev/hdb1 is :
-PV Status             available
-		       ^^^^^^^^^
+Am I missing a package I needed? How do I fix this so I can get the kernel
+compiled and get on with restoring from backups?
 
-
-	And second when i run pvscan program i see this :
-
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/hdg"  is in no VG  [8.01 GB]
-pvscan -- ACTIVE   PV "/dev/hdg1" of VG "home" [76.67 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdh1" of VG "home" [114.47 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hde1" of VG "home" [76.67 GB / 0 free]
-pvscan -- inactive PV "/dev/hdc"  is in no VG  [8.01 GB]
-pvscan -- ACTIVE   PV "/dev/hdc1" of VG "home" [76.67 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hda7" of VG "home" [60 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdb1" of VG "home" [114.47 GB / 0 free]
-pvscan -- total: 8 [535.10 GB] / in use: 6 [519.09 GB] / in no VG: 2
-[16.01 GB]
-
-	Where this 16Gigs goes ? 8 onto /dev/hdg and 8 onto /dev/hdc
-Can i extend LVM volume and use this Gigs without destroying data onto LVM
-?
-
-Thank You.
-
-
-						WWell : Ivan Uzunov
+Thanks,
+--Brad
