@@ -1,12 +1,11 @@
-Return-Path: <bluca@comedia.it>
-Date: Fri, 9 Feb 2001 10:38:46 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Installation question: SW RAID1 + LVM for boot and root
-Message-ID: <20010209103846.C23155@colombina.comedia.it>
-References: <EA63CEA50DF8D311ABAD00B0D0211732024BE020@hal9000.hermes.si>
+Return-Path: <root@srv.sistina.com>
+Date: Fri, 9 Feb 2001 11:21:55 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] questions
+Message-ID: <20010209112155.C21300@srv.sistina.com>
+References: <20010209003003.B29707@vestdata.no> <200102090005.f1905bc08799@webber.adilger.net> <20010209093404.B21158@caldera.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <EA63CEA50DF8D311ABAD00B0D0211732024BE020@hal9000.hermes.si>; from luka.renko@hermes.si on Thu, Feb 08, 2001 at 09:39:49PM +0100
+In-Reply-To: <20010209093404.B21158@caldera.de>; from hch@caldera.de on Fri, Feb 09, 2001 at 09:34:05AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,53 +19,50 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-raid@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Thu, Feb 08, 2001 at 09:39:49PM +0100, Luka Renko wrote:
-> 1. Is it possible to install OS directly on SW RAID1 + LVM?
-> If not, how to do it in multiple steps (RAID HOWTO just mentions how to
-> install OS on SW RAID1, but not using LVM on top of SW RAID)?
+On Fri, Feb 09, 2001 at 09:34:05AM +0100, Christoph Hellwig wrote:
+> On Thu, Feb 08, 2001 at 05:05:36PM -0700, Andreas Dilger wrote:
+> > Change all of the code paths in the kernel that assume block size is 512
+> > bytes...
+> 
+> IIRC some S/390 devices already use 4K block size.
 
-not yet, i used an extra disk to install the system on, then cpio-ed
-everything.
+Yes. They have so called DASD drives which are 4K hard sectored.
 
-> 2. Are there any known problems on LVM over SW RAID1 (I have seen some bug
-> reports on that)?
+Anyway. if you change the BLOCK_SIZE definition in lvm.h from 1 to 4k
+you can build LVs larger than 2TB (or even 4TB which is the default with the
+1k block size used by LVM today).
+You can't go beyond PAGE_SIZE though because a whole pile of code in
+the kernel doesn't support that.
+That means that you could even go to 8k block size on machines supporting
+that page size.
+Remember: you loose comapatibility with 4k page sized systems in this case.
 
-no, if you use the 0.9.1betaX
-
-> 3. RAID HOWTO talks about slow read performance with RAID1 and that it
-> should be improved in new patches to come? Is this still true? Do I need to
-> apply any patches for that?
-
-i believe the code in 2.4 is optimized (but you better look for mikka's
-patch and see if it applies to you, i use raid5 so i dinna check).
-
-> 4. I have also seen some discussion about issues with putting swap on SW
-> RAID? Is this still true?
-
-with 2.2 it is problematic and cannot be fixed, it has been fixed in 2.4
-
-> 5. Should I create one or two (system, user) md devices? Is there any
-> difference?
-> What about multiple LVM VGs and PVs? It seems to me, that it does not make
-> any real difference...
-
-1 md device, 1 pv, 1 vg (no way out with only 2 disks)
-i dunno if the latest lilo can see LVM-OVER-RAID1, if not
-1 small md device for /boot
-1 big md for lvm
-
-> 6. What version of kernel (2.2 or 2.4) is better for such configuration?
-> What version of SW RAID and LVM should I use? Are there any additional
-> patches I should apply?
-
-2.4 (sw raid is included, lvm patches from cvs)
+> 
+> 	Christoph
+> 
+> -- 
+> Of course it doesn't work. We've performed a software upgrade.
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
