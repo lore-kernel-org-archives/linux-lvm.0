@@ -1,30 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5C7DO012099
-	for <linux-lvm@redhat.com>; Sat, 12 Jun 2004 03:13:24 -0400
-Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i5C7DIXn020949
-	for <linux-lvm@redhat.com>; Sat, 12 Jun 2004 03:13:18 -0400
-Received: from localhost (lucy.ukfsn.org [127.0.0.1])
-	by mail.ukfsn.org (Postfix) with ESMTP id 98F25E6D66
-	for <linux-lvm@redhat.com>; Sat, 12 Jun 2004 08:10:58 +0100 (BST)
-Received: from mail.ukfsn.org ([127.0.0.1])
-	by localhost (lucy.ukfsn.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 31392-19 for <linux-lvm@redhat.com>;
-	Sat, 12 Jun 2004 08:10:58 +0100 (BST)
-Received: from oak.dgreaves.com (modem-3437.kawau.dialup.pol.co.uk
-	[81.78.157.109]) by mail.ukfsn.org (Postfix) with ESMTP id C6B93E6D5D
-	for <linux-lvm@redhat.com>; Sat, 12 Jun 2004 08:10:57 +0100 (BST)
-Received: from ash.dgreaves.com ([10.0.0.126])
-	by oak.dgreaves.com with esmtp (Exim 4.20) id 1BZ2jD-0001QW-IP
-	for linux-lvm@redhat.com; Sat, 12 Jun 2004 08:14:59 +0100
-Message-ID: <40CAAD06.2010106@dgreaves.com>
-Date: Sat, 12 Jun 2004 08:13:10 +0100
-From: David Greaves <david@dgreaves.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Stripes and PE's
-References: <0HZ600B8D5NVF4@l-daemon>
-In-Reply-To: <0HZ600B8D5NVF4@l-daemon>
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5CKxn031883
+	for <linux-lvm@redhat.com>; Sat, 12 Jun 2004 16:59:49 -0400
+Received: from linda-3.paradise.net.nz (bm-3a.paradise.net.nz [202.0.58.22])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5CKxli5019408
+	for <linux-lvm@redhat.com>; Sat, 12 Jun 2004 16:59:48 -0400
+Received: from smtp-2.paradise.net.nz (smtp-2b.paradise.net.nz [202.0.32.211])
+	by linda-3.paradise.net.nz (Paradise.net.nz)
+	with ESMTP id <0HZ700H9WRMORM@linda-3.paradise.net.nz> for
+	linux-lvm@redhat.com; Sun, 13 Jun 2004 08:59:46 +1200 (NZST)
+Received: from fosi (203-79-83-162.cable.paradise.net.nz [203.79.83.162])
+	by smtp-2.paradise.net.nz (Postfix) with ESMTP id 290F99E683	for
+	<linux-lvm@redhat.com>; Sun, 13 Jun 2004 08:59:12 +1200 (NZST)
+Date: Sun, 13 Jun 2004 08:59:26 +1200
+From: Steve Wray <steve.wray@paradise.net.nz>
+Subject: RE: [linux-lvm] decommision disks in LVM2 & 2.6 kernel? (pvmove
+	broken)
+In-reply-to: <001601c4500c$8cb7c560$0201a8c0@fosi>
+Message-id: <000501c450c0$25673440$0201a8c0@fosi>
+MIME-version: 1.0
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,75 +29,79 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-I had a similar problem.
+Replying to my own post, I have found and installed
+the patches from;
+http://people.sistina.com/~thornber/dm/
+specifically;
+http://people.sistina.com/~thornber/dm/patches/2.6-unstable/2.6.6-rc2/2.6.6-rc2-udm1.
+tar.bz2
 
-I fixed it by turning off contiguous
-  http://www.redhat.com/archives/linux-lvm/2004-April/msg00050.html
+to a pristine 2.6.6 kernel, configured it appropriately,
+compiled and booted from it; pvmove still doesn't work.
 
-Can't say anyone was particularly helpful about enlightening me <shrug>  :)
+Is there any special magick I need to apply or documentation
+that I'm missing? Do I need to update my version of pvmove
+(currently at;
 
-Maybe you could create a non-striped contiguous over a  striped md array?
+pvmove --version
+  LVM version:     2.00.08 (2003-11-14)
+  Library version: 1.00.07-ioctl (2003-11-21)
+  Driver version:  4.0.0)
+(although that is as booted with the mandrake 2.6.3-13 kernel,
+not the 2.6.6 + dm patches kernel)
 
-David
+Thanks!
+
+(and these disks are failing; I need to decommission them ASAP,
+if I can't pvmove the extents on them or move the files which occupy
+extents on them, then I am in trouble).
 
 
-Tyler wrote:
-
->I'm having problems creating a logical volume on a 4 disk SCSI volume group.
->I want to use the entire space as 1 LV that is striped, but can't seem to do
->it.
->
->I get an error telling me I don't have enough Physical Extents, when I
->clearly do.
->
->livecd root # vgdisplay
->  --- Volume group ---
->  VG Name               group
->  System ID
->  Format                lvm2
->  Metadata Areas        4
->  Metadata Sequence No  1
->  VG Access             read/write
->  VG Status             resizable
->  MAX LV                255
->  Cur LV                0
->  Open LV               0
->  Max PV                255
->  Cur PV                4
->  Act PV                4
->  VG Size               13.91 GB
->  PE Size               4.00 MB
->  Total PE              3560
->  Alloc PE / Size       0 / 0
->  Free  PE / Size       3560 / 13.91 GB
->  VG UUID               DjxWid-oxqx-zol9-Lu8a-CO94-AsBn-c7k3le
->
->livecd root # lvcreate -i4 -I16 -l3560 -nstorage group
->  Insufficient allocatable extents suitable for striping for logical volume
->storage: 3560 required
->livecd root # lvcreate -i4 -I16 -l3000 -nstorage group
->  Insufficient allocatable extents suitable for striping for logical volume
->storage: 3000 required
->
->Even if I try to use less space then it says I have, it still wont let me.
->
->I've had this error before, but never found a solution.  I also have not
->found the solution on the mailing list archives either.  I can create a
->contiguous LV, but without striping.  I'd like to have it striped if I
->could.
->
->What am I doing wrong?
->
->Tyler
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->  
->
+> -----Original Message-----
+> From: linux-lvm-bounces@redhat.com 
+> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Steve Wray
+> Sent: Saturday, 12 June 2004 11:34
+> To: linux-lvm@redhat.com
+> Subject: [linux-lvm] decommision disks in LVM2 & 2.6 kernel? 
+> (pvmove broken)
+> 
+> 
+> Hi there!
+> 
+> I have two disks which I need to decommission.
+> 
+> I'm running mandrake 10 official, LVM2, 2.6.3-13 kernel.
+> 
+> Naturally, pvmove doesn't work.
+> 
+> I get "Temporary mirror activation failed"; I googled for that
+> and it wasn't much helpt. In fact I've spent a good couple of
+> hours googling for hints on this problem and it hasn't helped. 
+> Maybe my google-fu isn't that hot.
+> 
+> I only need a kernel which can perform pvmove just the once.
+> I don't care what other features it has, I just want to boot
+> into single user, pvmove, pvremove and bring it back up
+> with my regular, distribution kernel.
+> 
+> Can anyone please direct me to a 2.6 kernel which supports
+> pvmove? (or of course, appropriate patches. Oh and I am not
+> particularly interested in EVMS support, just pvmove :)
+> 
+> Alternatively, if I could find out which files are on the PV's which
+> I want to decommision, I could just move the files off and 
+> then pvremove
+> without having to pvmove, right? Suggestions?
+> 
+> Thanks!
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
