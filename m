@@ -1,11 +1,12 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Thu, 1 Mar 2001 17:55:39 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+Return-Path: <bluca@comedia.it>
+Date: Thu, 1 Mar 2001 19:20:56 +0100
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] raid-2.2.18-B0 + LVM
-Message-ID: <20010301175538.A14302@66bassett.freeserve.co.uk>
-References: <20010301175042.B20512@dragon.blacknet.de>
+Message-ID: <20010301192056.A20079@colombina.comedia.it>
+References: <20010301175042.B20512@dragon.blacknet.de> <20010301175538.A14302@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <20010301175042.B20512@dragon.blacknet.de>; from lvm@blacknet.de on Thu, Mar 01, 2001 at 05:50:42PM +0100
+Content-Disposition: inline
+In-Reply-To: <20010301175538.A14302@66bassett.freeserve.co.uk>; from joe@66bassett.freeserve.co.uk on Thu, Mar 01, 2001 at 05:55:39PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,24 +22,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Mar 01, 2001 at 05:50:42PM +0100, Goetz Bock wrote:
-> Hi,
+On Thu, Mar 01, 2001 at 05:55:39PM +0000, Joe Thornber wrote:
+> On Thu, Mar 01, 2001 at 05:50:42PM +0100, Goetz Bock wrote:
+> > 
+> > Does anyone alreadhe have patches for raid and lvm on 2.2.18 or can some
+> > one provide them for the new beta?
 > 
-> i searched the arcives but did not find any hint. 
-> I would like to compile a 2.2.18 kernel with a few security additions
-> (openwall + lids ...) and the new raid code and lvm.
-> 
-> unfortunately the patching of raid and lvm fails. I've tried to solve some 
-> of the conficts manualiy but i'm not to confident on my handwork.
-> 
-> As I've read there should be a new beta soon (friday?) so I stopped
-> messing around with the kernel code for now ...
-> 
-> Does anyone alreadhe have patches for raid and lvm on 2.2.18 or can some
-> one provide them for the new beta?
+> If you read PATCHES/README I mention that we haven't done the new raid
+> patch for 2.2 + LVM.  If you are will to do some testing for me I can
+> get a patch to you on Monday.
 
-If you read PATCHES/README I mention that we haven't done the new raid
-patch for 2.2 + LVM.  If you are will to do some testing for me I can
-get a patch to you on Monday.
+I believe Andrea Arcangeli has both LVM and new-raid patches in 
+his aa kernels
+ftp://ftp.xx.kernel.org/pub/linux/kernel/people/andrea
 
-- Joe
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
