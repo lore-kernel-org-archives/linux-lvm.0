@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 28 May 2001 11:38:39 +0000
+Date: Mon, 28 May 2001 11:40:46 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Symbol not found when pvcreating...
-Message-ID: <20010528113839.J26710@sistina.com>
-References: <3B0E7C7C.E434D0AE@in.tum.de>
+Subject: Re: [linux-lvm] lvm-problems?
+Message-ID: <20010528114046.K26710@sistina.com>
+References: <20010527234117.A759@mind.bartosch.net>
 Mime-Version: 1.0
-In-Reply-To: <3B0E7C7C.E434D0AE@in.tum.de>; from vidalrod@informatik.tu-muenchen.de on Fri, May 25, 2001 at 05:38:36PM +0200
+In-Reply-To: <20010527234117.A759@mind.bartosch.net>; from peter@bartosch.net on Sun, May 27, 2001 at 11:41:17PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,71 +21,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-David,
+Did you report that to the reiserfs list too?
 
-looks like a messy installation :-(
-
-Did you try to remove and completely reinstall LVM based on a clean
-compile/build run of the tools and library?
-
-
-On Fri, May 25, 2001 at 05:38:36PM +0200, David Vidal Rodriguez wrote:
-> Hi (again)!
-> When running the CVS version of kernel+tools, the pvcreate utility
-> requests the following symbol that apparently isn't present in the
-> liblvm-10.so.0 library:
-> int pv_check_partitioned_whole(char *pv_name)
+On Sun, May 27, 2001 at 11:41:17PM +0200, Peter Bartosch wrote:
+> hello,
 > 
-> (Error loading shared libraries... blahblah)
-> An older version of pvcreate (I'm no sure if beta6 or less) does the job
-> correctly.
-> Do I have to change anything in the sources in order to get it working?
-
-No.
-
+> i recently made my three LV new (caused by an accident as i tried to
+> extend an existing (0.8i) LV)
 > 
-> Another --developer-- question:
-> I've looked at the LVM code and a structure called partition, #include'd
-> from <linux/genhd.h>, which contains the relevant information of a
-> partition. What I don't understand is how to get this information from
-> the kernel/drive (syscall, ioctl???). I'd be glad if somebody explained
-> that to me briefly.
-
-That's just needed for the generic disk interface.
-It doesn't make any sense to create a partition table on a logical volume.
-
-You could get the virtual geometry (which has nothing to do with the
-underlying physical device(s)) of a logical volume though by doing
-a block ioctl on its device like:
-
-
-#include <stdio.h>
-#include <fcntl.h>
-#include <linux/hdreg.h>
-
-int main ( int argc, char **argv) {
-   int fd;
-   struct hd_geometry hd;
-
-   if ( ( fd = open ( argv[1], O_RDONLY)) == -1) return 1;
-
-   ioctl ( fd, HDIO_GETGEO, &hd);
-   close ( fd);
-   printf ( "heads    : %d\n", hd.heads);
-   printf ( "sectors  : %d\n", hd.sectors);
-   printf ( "cylinders: %d\n", hd.cylinders);
-   printf ( "start    : %d\n", hd.start);
-
-   return 0;
-}
-
+> so i created a new kernel (2.4.2) with lvm 0.9.1_beta7
 > 
-> Thanks!
-> --
->   ------------------------------------------------------------------------
->  David Vidal R. (vidalrod <at> in DOT tum DOT de)
+> the first problems came when i tried to create more than one VG - the
+> second VG couldn't be activated (always inactive after reboot and unable
+> to activate)
+> 
+> so i'm using only one VG
+> 
+> the first two LV's of this VG could i create without problems, but the
+> third makes problems:
+> 
+> i created the reiserfs on it, but when i tried to mount it, the mount
+> failed
+> an reiserfsck --rebuild-sb and after that reiserfsck --rebuild-tree
+> clears it and i could mount my LV -- UNTIL the next reboot
+> 
+> i had to reboot because something oopsed:
+> 
+> ----
+> 
+> is_leaf: item location seems wrong (second one): *NEW* [9 10 0x0 SD],
+> item_len 44, item_location 2308, free_space(entry_count) 65535
+> vs-5150: search_by_key: invalid format found in block 8271. Fsck?
+> kernel BUG at namei.c:343!
+> invalid operand: 0000
+> CPU:    0
+> EIP:    0010:[<c018ff08>]
+> EFLAGS: 00010286
+> eax: 0000001b   ebx: c6655e58   ecx: 00000001   edx: 00000001
+> esi: c02d4fb4   edi: c6655edc   ebp: c6655e70   esp: c6655e40
+> ds: 0018   es: 0018   ss: 0018
+> Process cp (pid: 1799, stackpage=c6655000)
+> Stack: c02d4c7e c02d4d7e 00000157 00000000 c02d4fb4 c6655e9c 00000002 0000000e 
+> 	4a0507ff 000001f4 00000000 00000003 c3e55a20 c0190030 c7742c20 c7dd3b20 
+>         0000001b c6655e9c c6655edc fffffff4 c6654000 c7742c20
+> 	c3e55a20 00000001 
+> Call Trace: [<c0190030>] [<c01468e9>] [<c013de9a>]
+>         [<c013e6e9>] [<c013db5a>] [<c013ee4c>] [<c013b8c6>] 
+>         [<c0133047>] [<c0108f5b>] 
+> Code: 0f 0b 83 c4 0c 8d 76 00 8b 4d 10 51 8b 45 0c 50 57 8d 55 e8 
+> 
+> -----
+> 
+> this oops let the process which works on the third LV freeze - so i
+> couldn't kill it
+> 
+> the first and the second LV seem to work well
+> 
+> when i reboot the third LV won't be mountet automagically and the
+> filesystem seems to be corrupt
 > 
 > 
+> any help will be appreciated
+> 
+> 
+> :wq - until next mail B-), l8r
+> 
+> Peter
+> -- 
+>    :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+>    :          student of technical computer science           :
+>    :     university of applied sciences krefeld (germany)     :
+>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
