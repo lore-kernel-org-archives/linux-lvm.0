@@ -1,63 +1,78 @@
-Message-ID: <38C80EA5.79AB60C@mindless.com>
-Date: Thu, 09 Mar 2000 15:50:46 -0500
-From: Michael Loftis <zop12@mindless.com>
+Message-ID: <38C91793.AD7815DE@amis.com>
+Date: Fri, 10 Mar 2000 08:41:07 -0700
+From: Eric Whiting <ewhiting@amis.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] 12 x UDMA disks -- problems
-References: <Pine.LNX.4.10.10003091735500.19333-100000@tie.egs.uct.ac.za>
+Subject: [linux-lvm] LVM performance questions..
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Bruce Hewitson <hewitson@egs.uct.ac.za>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-ide0..ide5
+I've been watching the LVM stuff for a long time. I finally gave it a
+try this week. I really like the tools. I think it is a great thing
+for Linux.. Thanks.
 
-The ide count is 0 based.  Major number is that of the ide controller.
-Minor is that of the 'right' partition.
+I have some performance questions. I was expecting to see some speed
+increase for a LVM stripe, but I didn't. Is there someone out there
+who has had more experience with this that can point me in the right
+direction? I found that the LVM stripe is running the same write
+speeds as a single disk and the same as a md RAID0 set. Sure feels
+like a Hardware problem, but I'm not sure.
 
-ide4 master is 56,0 (hdi)  and ide4 slave is 56,64 (hdj) my notation is
-major/minor so
+I threw 2 9G 10k RPM disks into a VG. Then I created a 12G LV in
+stripe mode (at least I think I had it set right). I did a simple
+dd write benchmark.  25M/s (for a 1000M file). Then I tried a solo
+drive. 25M/s as well.  I'm confused by the performance numbers -- on
+our Suns with SW raid we improve speed somewhat linear as we add
+drives
+to a raid0 set. I redid the LV with stripsize of 16k and 256k. No
+difference in performance. Could my SCSI bus be killing me? My boot
+log shows this:
 
-mknod hdi b 56 0
-mknod hdj b 56 64
+<6>sym53c876-0-<0,*>: FAST-20 WIDE SCSI 40.0 MB/s (50 ns, offset 16)
+<4>SCSI device sda: hdwr sector= 512 bytes. Sectors= 17773524 [8678
+MB] [8.7 GB]
 
-Would get you the correct entries.  Partitions are +1 so hdi1 is
-mknod hdi1 b 56 1
-mknod hdi2 b 56 2
+Any scsi experts out there? I did scsiinfo -i /dev/sdb and saw the 32
+bit bus not set... I'm not sure if that matters or not.. Am I looking
+the wrong place for problems. 
 
-And for hdj
+Inquiry command
+---------------
+Relative Address                   0
+Wide bus 32                        0
+Wide bus 16                        1
+Synchronous neg.                   1
+Linked Commands                    1
+Command Queueing                   1
 
-mknod hdj1 b 56 65
-mknod hdj2 b 56 66
+
+ko /home/ewhiting> cat /proc/lvm
+LVM driver version 0.8i  (02/10/1999)
+
+Total:  1 VG  2 PVs  1 LV (1 LV open 1 times)
+
+Global: 53225 bytes vmalloced   IOP version: 5   2 days 17:49:02
+active
+
+VG:  oracle_vg  [2 PV, 1 LV/1 open]  PE Size: 4096 KB
+  Usage [KB/PE]: 17768448 /4338 total  12582912 /3072 used  5185536
+/1266 free
+  PVs: [AA] /dev/sdb1              8884224 /2169     6291456 /1536    
+2592768 /633   
+       [AA] /dev/sdc1              8884224 /2169     6291456 /1536    
+2592768 /633   
+    LV:  [AWDS2 ] oracle_lv                 12582912 /3072     1x open
 
 
-That is assuming the major number you quoted below is correct :)
 
-Michael Loftis
+eric
 
-
-Bruce Hewitson wrote:
-
-> I am trying to use 12x37Gig UDMA disks off 3 Promise/Ultra-66 ide
-> controlers providing 6 ide chains.  However, MAKEDEV will only create
-> devices hd[a-l] --- I need in addition devices hd[m-p].  I looked in the
-> MAKEDEV script, and can see two places where I can extend the devices to
-> inlude these, but am stumped whith the lines
->
-> ...
-> ...
-> major=`Major ide4 56`
-> major=`Major ide5 57`
->
-> For ide6 and ide7, how do I determine the Major numbers?
->
-> Any help appreciated.
->
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  | Assoc. Prof. Bruce C. Hewitson                  Ph: +27 21 650 2878 |
->  | Dept. Environmental & Geographical Sc.         Fax: +27 21 650 3791 |
->  | University of Cape Town, Private Bag, Rondebosch, South Africa 7701 |
->  |      hewitson@egs.uct.ac.za       http://www.egs.uct.ac.za/csag     |
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+__________________________________________________________________
+Eric T. Whiting					AMI Semiconductors   
+(208) 234-6717					2300 Buckskin Road
+(208) 234-6659 (fax)				Pocatello,ID 83201
+ewhiting@poci.amis.com
