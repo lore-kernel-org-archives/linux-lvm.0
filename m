@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] 2.5.49 device mapper compile failure
-Message-ID: <20021123151529.A18184@sistina.com>
-References: <1038010621.1623.13.camel@mentor>
-Mime-Version: 1.0
-In-Reply-To: <1038010621.1623.13.camel@mentor>; from dax@gurulabs.com on Fri, Nov 22, 2002 at 05:17:01PM -0700
+From: "Mr Jimmy Dialo" <jimmydialo_10@email.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E18FnqM-0003d1-00@hermes.sistina.com>
+Subject: [linux-lvm] Assistance Required,
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov 23 08:22:01 2002
+Date: Sat Nov 23 21:55:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Linus didn't include vcalloc() and we gave up on that one. We were the only
-ones using it anyway. Now it got reborn as a device-mapper private function
-called dm_vcalloc().
-
-Please get the recent patches from 
-
-	http://people.sistina.com/~thornber/patches/2.[45]-stable,
-
-apply and cross your fingers that Linus catches up ASAP ;)
+FROM=3AMR JIMMY DIALO=2E
 
 
-On Fri, Nov 22, 2002 at 05:17:01PM -0700, Dax Kelson wrote:
-> 
-> 
->  - device mapper using vcalloc() even though no such function has ever 
->    existed in the kernel (it's vmalloc + memset()).
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
--- 
+INVESTMENT VENTURE=2E
 
-Regards,
-Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+I WISH TO BEGIN BY WAY OF INTRODUCING MYSELF=2E I AM MR JIMMY DIALO=2ETHE FIRST SON OF LATE TATA DIALO=2C ONE OF THE FORMOST BLACK FARMERS IN ZIMBABWE RESENTLY MURDERED IN THE LAND DISPUTE IN MY COUNTRY=2E
+BEFORE THE DEATH OF MY FATHER=2C HE HAD TAKEN ME TO JOHANNESBURG-SOUTH AFRICA=2CTO DEPOSITE THE SUM OF US$8=2E5MILLION =28EIGHT MILLION FIVE HUNDREDTHOUSAND DOLLARS=29 IN ONE OF THE PRIVATE SECURITY COMPANIES=2C AS FARMILY VALUABLES=2C WHEN HE REALISED THE LOOMING DANGER IN ZIMBABWE=2E
+THIS AMOUNT WAS MEANT FOR THE PURCHASE OF NEW MACHINERIES AND CHEMICALS FOR THE FARMS AND ALSO FOR THE ESTABLISHMENT OF NEW FARMS IN SWAZILAND=2E
+THIS LAND DISPUTE STARTED WHEN PRESIDENT ROBERT MUGABE INTRODUCED A NEW LAND REFORM WHICH WAS PARTICULARLY TARGETED AT THE THE RICH WHITE FARMERS AND A FEW BLACK FARMERS =28MY FATHER INCLUDED=29=2E THIS RESULTED IN THE GRUSOME KILLING OF RICH FARMERS =28 MAINLY WHITE=29=2E AND THE UNLAWFULL POSSESSION OF THEIR PROPERTIES BY MUGABE'S WAR VETERANS=2CUNDER THE DISGUISE OF FIGHTING FOR THE INTEREST OF THE COUNTRY=2E
+IT IS AGAINST THIS BACKGROUND THAT I FLED THE COUNTRY WITH MY FAMILY=2C TO THE NETHERLANDS WHERE WE ARE CURRENTLY SEEKING ASYLUM=2E
+I HAVE DECIDED TO SEEK FOREIGN ASSISTANCE=2C AS THE NETHERLANDS LAW PROHIBITS ASYLUM SEEKERS FROM OPERATING BANK ACCOUNTS OR INVOLVED IN FINANCIAL TRANSACTIONS OF ANY KIND=2E HENCE I SENT THIS FORMAT TO YOU=2E
+ALL I NEED IS A TRUST WORTHY PERSON IN WHOSE CUSTODY I SHALL ENTRUST THE ABOVE MENTIONED AMOUNT AND THAT CAN ALSO HELP ME WITH INVESTMENT OPPORTUNITIES IF NEED BE=2E
+THERE ARE TWO OPTIONS=2CFIRSTLY=2C YOU CAN CHOOSE TO HAVE A PERCENTAGE OF THE TOTAL AMOUNT FOR YOUR ASSISTANCE OR GO INTO PARTNERSHIP FOR THE PROPER INVESTMENT OF THE MONEY IN YOUR COUNTRY=2E WE SHALL DISCUSS IN DETAILS WHEN YOU REPLY =2E
+I AWAIT YOUR REPLY=2C WHILE I IMPLORE YOU TO MENTAIN OUTMOST CONFIDENTIALITY REQUIRED TO ENSURE A SAFE HITCH FREE TRANSACTION=2E
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+YOURS TRULY=2C
+MR JIMMY DIALO=2E
