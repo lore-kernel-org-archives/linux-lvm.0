@@ -1,11 +1,12 @@
-Return-Path: <sbg00091@wolmail.nl>
-Message-ID: <001a01c127f1$6e1a3f20$4d0b79c3@vandenberg>
-From: "Johan van den Berg" <sbg00091@wolmail.nl>
-References: <3B7AC356.A2FD65A3@xapnet.com>
-Subject: Re: [linux-lvm] Help with redhat install
-Date: Sat, 18 Aug 2001 16:23:57 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Return-Path: <weissel@netcologne.de>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
+Date: Sun, 19 Aug 2001 21:20:58 +0200
+Subject: Re: [linux-lvm] Adding a mirror after-the-fact
+Message-ID: <20010819212058.B3188@tiger.bigcats.invalid>
+References: <20010814171159.B28266@linux.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010814171159.B28266@linux.com>; from tack@linux.com on Tue, Aug 14, 2001 at 05:11:59PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,89 +19,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello!!
+Hi, Jason!
 
-    I encountered the same pronlems. I was in the
-    supposition the kernel 2.4.2 was already fit for
-    lvm-iop-0.9.1_beta6-1.
+Jason Tackaberry (tack@linux.com) wrote 16 lines:
 
-    The source is indeed suitable for lvm, but it still
-    has to be patched with the patchgenerator.
+> Suppose I have a volume group with 1 physical volume, say a 9GB disk.
+> Now, after some time, I decide I want to mirror this VG with another 9GB
+> disk.  What options do I have?  AFAICS, the only way to do this would be
 
-    I have the same kernel as yours, and all has to be
-    patched and recompiled
+How about: 
+- Get RAID HW controller
+- put in a test disk with some unimportant data on it
+- run RAID in degraded mode
+- add second disk
+- have RAID rebuild itself (like after an actual disk
+  failure)
 
-    0)    make a bootable floppy (rescuefloppy) of the existing kernel
+If that works. simply do it 'real', otherwise you might need
+to copy the data onto the 'degraded mode' disk.
 
-    1)    patch the sources (you must have the sources)
-            `patch -p1 <  /../../../lvm-0.9.1_beta?-2.2.18.patch'
+You could do the same with a Software raid, but then I'd
+run it in RAID1 with 1 disk, add that mdX to my LVM, pvmove
+everything off the other PV onto the mdX PV, remove the PV,
+add the second Disk, auto-rebuild.
 
-            2.2.18. may be another version, coming from
-            the rpm-package chosen.
-            This step is necessary, the source still needs to
-            be patched. I skpped this step once, because I
-            assumed the soures were fit for LVM, but this
-            step needs to be done however.
+(I read about that trick in some time ago in an Linux Soft-RAID
+HOWTO, about "moving from 2-Disk RAID1 to 3-Disk RAID5 with
+only 3 Disks".)
 
-    2)     cd ../../source-directory of linux/
-            make mrproper
-            make xconfig
-
-            NOW load from ../configs/<your kernel-configuration>
-                Next to your kernel-source there has to be a
-                directory, named configs.
-                In that directory, configs, there is a configuration-file,
-                for diverse architectures and usages (BOOT, normal)
-                Choose the desired architecture and usage (probably *-i386-)
-            AFTER loading the configurationfile from ../configs,
-            choose the submenu of `RAID and LVM support'
-            THEN choose how you want to compile, as a module or
-            directly into the kernel.
-
-    3)    make dep
-    4)    make bzImage
-    5)    make bzdisk    - if you use a floppy -
-                OR
-            make install    - if you have lilo installed.
-    6)    if have chosen the lvm (in make xconfig) to be used as a module
-            make modules
-            make modules install
-    7)    copy the kernel image (bzImage) to the place were your regular
-            bootable kernel is found
-    8)    eventually have a bootable floppy readyof the new kernel
-            OR/AND update the /etc/lilo.conf, to have one or both kernels
-                            available.
-
-Johan van den Berg,
-'s Hertogenbosch,
-Holland
-
------ Original Message -----
-From: Chris Bourne <cbourne@xapnet.com>
-To: <linux-lvm@sistina.com>
-Sent: Wednesday, August 15, 2001 8:45 PM
-Subject: [linux-lvm] Help with redhat install
-
-
-> Hello!!
->          I am trying to get lvm working on redhat 7.1 with kernel
-> 2.4.2-2. I down loaded the source rpm's 1)
-> lvm-iop-0.9.1_beta6-1.src.rpm   2)
-> lvm-iop-patchgen-0.9.1_beta6-1.src.rpm  and the base rpm 3)
-> lvm-base-1.1-1.i386.rpm. I did a rpm --rebuild and ran the rpm command
-> and all seemed to install well with no problems. The problem I did
-> discover is that there is no lvm dir. in /proc and the lvm-mod is
-> nowhere to be found. I was under the impression that kernel 2.4 has lvm
-> already built in. I did a insmod lvm-mod and modprobe lvm-mod and nada.
-> I cannot figure out what I am doing wrong or if I should not be using
-> this version of lvm and use lvm 1.0 instaed (will it work on redhat?).
-> Thanks, Chris.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+-Wolfgang
