@@ -1,12 +1,12 @@
 From: "Stephen Perkins" <perkins@netmass.com>
-Subject: RE: [linux-lvm] Core questions from a LVM neophyte...
+Subject: RE: re[2]: [linux-lvm] Core questions from a LVM neophyte...
 MIME-Version: 1.0
-Message-ID: <002001c2e891$9325b8a0$2802a8c0@netmass.com>
+Message-ID: <002d01c2e892$a44a7ed0$2802a8c0@netmass.com>
 Content-Type: multipart/signed;
 	micalg=SHA1;
 	protocol="application/x-pkcs7-signature";
-	boundary="----=_NextPart_000_001B_01C2E85F.47D3DF80"
-In-Reply-To: <08628CA53C6CBA4ABAFB9E808A5214CB0142B355@mercury.infiniconsys.com>
+	boundary="----=_NextPart_000_0028_01C2E860.59717F30"
+In-Reply-To: <20030311165457.CLW7741.imf25bis.bellsouth.net@tiger2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,116 +17,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 15:02:07 2003
+Date: Wed Mar 12 15:02:10 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_001B_01C2E85F.47D3DF80
+------=_NextPart_000_0028_01C2E860.59717F30
 Content-Type: text/plain;
 	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
+>>  Question 1:  Is it possible today to:
+>>  Have a large IDE RAID5 array that is virtualized through 
+>>  LVM and then exported to a Dynamic Disk on Win2K over a
+>>  LAN (not necessarily WAN)?
+>> 
+>>  I believe iSCSI and HyperSCSI would both work... However 
+>>  I have not found the approporiate interoperable software
+>> drivers.
+> 
+> I tried them also.  No luck yet.  Let us know if you get it working.
 
-I'm interested in a block level export.  The exported space will be used
-as the disk part of an Hierarchical Storage Manager that is backed up by
-qualstar tape libraries.  We have several such systems and I would like
-to try to consolidate the disk portions of each into a "SAN" like
-environment.  At the same time, we are also looking at more customer
-disk based storage.  I have several storage servers (hopefully running
-Linux soon but running W2K now) that need access to large areas of
-storage.  I would like to carve and export virtualized chunks for this
-as well.  
+What was your setup and how did it fail?  No connection?  Such bad
+performance that it didn't work?
 
-The main reason for the block level export is that the software we use
-does not support "NAS" type network disks.  They only support "locally
-attached" drives.  iSCSI would at least appear as a local SCSI disk.
+>>  Question 2: The system that is described above is a 
+>> linux system with direct attached storage.  It is a SPOF.
+>> Any inexpensive solutions that would allow the Linux
+>> portion to be clustered for active/pasive failover?  Is
+>> FC the only alternative here?
+> 
+> Several choices.  Ask on Linux-HA (heartbeat).  (Or search 
+> their archives.)
 
-For management purposes, I would like to have a single way to export
-everything.  This may or may not be feasible at present.
+I went that route awhile ago and did manage to get some HA clusters
+going.  However, the problem is that most solutions require some type of
+hardware based shared SCSI device or some type of FC fabric to actually
+provide the connectivity.  With the newer (read cheaper) ATA RAID
+systems, I am not sure how to "share" the physical storage between
+multiple systems in a cluster.  This is not necessarily a clustering
+issue.
+
+> This still does not get you a "local" Win2k drive.  Exchange 
+> and ms-SQL only install onto local drives.
+
+Yep... As well as other software we use. :(
+
+I'd appreciate hearing about your test setup for the iSCSI/HyperSCSI.
+
+Thanks in advance,
 
 - Steve
+ 
 
-> Stephen,
-> 	What do you want it for - backups? Why not samba over GigE?
-> 
-> --
-> Christopher Barry
-> Manager of Information Systems
-> InfiniCon Systems
-> http://www.infiniconsys.com
-> 
-> -----Original Message-----
-> From: Stephen Perkins [mailto:perkins@netmass.com]
-> Sent: Monday, March 10, 2003 4:14 PM
-> To: linux-lvm@sistina.com
-> Subject: RE: [linux-lvm] Core questions from a LVM neophyte...
-> 
-> 
-> Hi all,
->  
-> > 	I have built a very cool NAS box, and want to use LVM2 
-> > on it. My machine is as follows:
-> > 
-> > Tyan Thunder i7500 w/ 2-2.4GHz XEON processors.
-> > 2GB RAM
-> > 3ware Escalade 7500-12 IDE RAID controller
-> > 12-160GB Maxtor IDE HDs
-> > System on a separate 20GB Maxtor HD
-> > Floppy, slimline CDROM, and a DVDRW drive.
-> > All in a 12-bay chassis from 
-> > http://www.rackmountpro.com/productpage.cfm?> prodid=1460
-> > 
-> > This 
-> > config gives me 1.8TB of RAID 5 for under 
-> > $8K - not too shabby.
-> 
-> This is a superb value and I'm very interested in your 
-> proposed "how-to"
-> site.
-> 
-> I am wanting to deploy some larger virtualized storage in a mixed
-> Linux/W2K environment.    Is anybody out there exporting virtualized
-> volumes to Win2K boxes?  If so, how?  I checked HyperSCSI and they do
-> not appear to have a Win2K client (although a beta is supposed to be
-> coming soon).  I have not yet found target information for Linux along
-> with a known interoperable Win2K initiator.  Anybody doing it?
-> 
-> Disk performance is not so much an issue for me since the disk arrays
-> will be replacing large tape libraries.  Even with pathetic 
-> performance,
-> they should behave much faster than large AIT libraries.  
-> 
-> Question 1:  Is it possible today to:
-> 
-> Have a large IDE RAID5 array that is virtualized through LVM and then
-> exported to a Dynamic Disk on Win2K over a LAN (not necessarily WAN)?
-> 
-> I believe iSCSI and HyperSCSI would both work... However I have not
-> found the approporiate interoperable software drivers.
-> 
-> Question 2: The system that is described above is a linux system with
-> direct attached storage.  It is a SPOF.  Any inexpensive 
-> solutions that
-> would allow the Linux portion to be clustered for active/pasive
-> failover?  Is FC the only alternative here?
-> 
-> TIA,
-> 
-> - Steve
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
-------=_NextPart_000_001B_01C2E85F.47D3DF80
+------=_NextPart_000_0028_01C2E860.59717F30
 Content-Type: application/x-pkcs7-signature;
 	name="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -185,8 +130,8 @@ BgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20v
 cmVwb3NpdG9yeS9SUEEgSW5jb3JwLiBCeSBSZWYuLExJQUIuTFREKGMpOTgxSDBGBgNVBAMTP1Zl
 cmlTaWduIENsYXNzIDEgQ0EgSW5kaXZpZHVhbCBTdWJzY3JpYmVyLVBlcnNvbmEgTm90IFZhbGlk
 YXRlZAIQdJ+YXQ8fPVIQCCc3CFTg8jAJBgUrDgMCGgUAoIICsjAYBgkqhkiG9w0BCQMxCwYJKoZI
-hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0wMzAzMTIxMjE5MDRaMCMGCSqGSIb3DQEJBDEWBBTDa8+2
-Hwdtd+UZ9S530D977uhZtDBnBgkqhkiG9w0BCQ8xWjBYMAoGCCqGSIb3DQMHMAcGBSsOAwIaMA4G
+hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0wMzAzMTIxMjI2NDNaMCMGCSqGSIb3DQEJBDEWBBTITrWI
+V/z4GcEVGKiBUcllV1GX2TBnBgkqhkiG9w0BCQ8xWjBYMAoGCCqGSIb3DQMHMAcGBSsOAwIaMA4G
 CCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDAKBggq
 hkiG9w0CBTCB8gYJKwYBBAGCNxAEMYHkMIHhMIHMMRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjEf
 MB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazFGMEQGA1UECxM9d3d3LnZlcmlzaWduLmNv
@@ -197,8 +142,8 @@ ChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBEBgNV
 BAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9yeS9SUEEgSW5jb3JwLiBCeSBSZWYuLExJQUIu
 TFREKGMpOTgxSDBGBgNVBAMTP1ZlcmlTaWduIENsYXNzIDEgQ0EgSW5kaXZpZHVhbCBTdWJzY3Jp
 YmVyLVBlcnNvbmEgTm90IFZhbGlkYXRlZAIQdJ+YXQ8fPVIQCCc3CFTg8jANBgkqhkiG9w0BAQEF
-AASBgMhZ0ZpZf0GosPip2H+k274nTV3pFe+p/+jLeEhB7moWQCy46cccCpVIK5F7/KgqTs/pXmlp
-hRCPrVvYpfvv76jL/hrYIVVFUzWMa9YxYBk3RvGIP33ogBjBr+HogGNH3pKse01W0KEpeC7U66kU
-+7q83kkfloW50UAWnTQeaz8SAAAAAAAA
+AASBgNBOr3OCMhKswrIt+4aSkXJswyZt5SkqZG5lRRQRLG6JfKUv+Hw2oa8JaNOKUn52G+4dggwF
+3Bavf6ORaDR0Y4/ZLFhLUGdGZzCmDJcQHOzFcXZ9VIVy0acx4Bv6tCGIzhazrCiOYkP2HJ3TDCRY
+Y+TouoL9pVkzWaA4pZIZ2IWyAAAAAAAA
 
-------=_NextPart_000_001B_01C2E85F.47D3DF80--
+------=_NextPart_000_0028_01C2E860.59717F30--
