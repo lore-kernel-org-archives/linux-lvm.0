@@ -1,14 +1,14 @@
-Date: Tue, 1 Mar 2005 20:19:23 +0100
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Raid1 only with LVM
-Message-ID: <20050301191923.GA13742@redhat.com>
-References: <200502281138.00112.stuebiger-lvm@cip.ifi.lmu.de>
+Date: Tue, 1 Mar 2005 19:57:34 +0000
+From: Robin Green <greenrd@greenrd.org>
+Subject: Re: [linux-lvm] *** Announcement: dmraid 1.0.0.rc6 ***
+Message-ID: <20050301195734.GA4852@pob>
+References: <20050301191127.GA13482@redhat.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <200502281138.00112.stuebiger-lvm@cip.ifi.lmu.de>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20050301191127.GA13482@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -18,50 +18,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: hjm@redhat.com
+To: Heinz Mauelshagen <mauelshagen@redhat.com>
+Cc: linux-lvm@redhat.com
 
 
-Michael,
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-you can't do mirroring with LVM2 today but we'll suport it later this year.
+On Tue, Mar 01, 2005 at 08:11:27PM +0100, Heinz Mauelshagen wrote:
+> dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
+> properties of software RAID sets (i.e. ATARAID)
 
-On Mon, Feb 28, 2005 at 11:38:00AM +0100, Michael St�biger wrote:
-> Hello.
-> 
-> I'm rather new to LVM2 and DM.
-> After having read what I could find about it I got the impression that
-> one should be able to get LVM to Mirror a Volume Group to 2 Physical Volumes with
-> the mirror target just like it can do striping.
-> 
-> Alas I was unable to find any documentation on how to accomplish this.
-> 
-> Can anybody please help me with this?
-> 
-> Regards
-> Michael St�biger
-> 
-> -- 
-> | Dipl. Inf. Michael St�biger                   Michael.Stuebiger at rz.ifi.lmu.de |
-> | Ludwig-Maximilians-Universitaet Muenchen                                         	|
-> | Institut fuer Informatik                Zimmer Z 9      Tel: 2180-9137           	|
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I'm confused. Shouldn't that be "hardware RAID sets"? If those pieces of
+hardware aren't doing hardware RAID, what is?
 
-Regards,
-Heinz    -- The LVM Guy --
+--=20
+Robin
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.6 (GNU/Linux)
+
+iD8DBQFCJMkutPCt67UksSYRAoG4AJwJYFnCy0ImEp8yeIW3bbfgQ4scEwCg3E6W
+3AtkRqRqyTbc7RPQAGVx2EM=
+=LWiT
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
