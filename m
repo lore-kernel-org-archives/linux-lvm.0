@@ -1,10 +1,8 @@
-From: Mike Fedyk <mfedyk@matchmail.com>
-Message-ID: <20031202041513.GN1566@mis-mike-wstn.matchmail.com>
-References: <3FCB4AFB.3090700@backtobasicsmgmt.com> <20031201141144.GD12211@suse.de> <3FCB4CFA.4020302@backtobasicsmgmt.com> <20031201155143.GF12211@suse.de> <3FCC0EE0.9010207@backtobasicsmgmt.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3FCC0EE0.9010207@backtobasicsmgmt.com>
-Subject: [linux-lvm] Re: Reproducable OOPS with MD RAID-5 on 2.6.0-test11
+Message-ID: <3FCC1DD5.22D9FBBD@in.ibm.com>
+From: Sachin Sant <sachinp@in.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Problem with lvchange command
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +13,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  2 07:51:11 2003
+Date: Tue Dec  2 07:51:14 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>
-Cc: Jens Axboe <axboe@suse.de>, LKML <linux-kernel@vger.kernel.org>, Linux-raid maillist <linux-raid@vger.kernel.org>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Mon, Dec 01, 2003 at 09:02:40PM -0700, Kevin P. Fleming wrote:
-> Tested with mem=800m, problem still occurs. Additional test was done 
-> without device-mapper in place, though, and I could not reproduce the 
-> problem! I copied > 500MB of stuff to the XFS filesystem created using 
-> the entire /dev/md/0 device without a single unusual message. I then 
-> unmounted the filesystem and used pvcreate/vgcreate/lvcreate to make a 
-> 3G volume on the array, made an XFS filesystem on it, mounted it, and 
-> tried copying data over. The oops message came back.
+Hi , I posted this query , but did not get a reply. Sending it again
+hoping will get a reply.
 
-Can you try with DM on regular disk tm, instead of sw raid?
+I have a VG with 3 pv and a lv created using command 
+
+lvcreate -i3 -I32 -l98 -nmy_lv my_vg
+lvdisplay shows 1024 as the value for Read Ahead Sectors.
+
+When i use the command lvchange to change the value of read ahead
+sector count with value more that or equal to 256 i get following
+error..
+
+linux# lvchange -r 340 /dev/my_vg/my_lv
+lvchange -- ERROR "Invalid Argument" read ahead sector change
+linux#
+linux#
+
+Is there a limitation that read ahead value cannot be greater 
+than 255?
+
+-- 
+Thanks
+-Sachin
