@@ -1,10 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] can i move some PEs in the versions after 1.0.5 ?
-Message-ID: <20021023110245.A23852@sistina.com>
-References: <F169DjFbUcOV1EetVoM00000292@hotmail.com>
+Message-ID: <20021023102503.GA25925@fib011235813.fsnet.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <F169DjFbUcOV1EetVoM00000292@hotmail.com>; from plumpeach@hotmail.com on Wed, Oct 23, 2002 at 09:28:08AM +0800
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] [Patch] Latest device-mapper snapshot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,52 +13,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 23 04:05:02 2002
+Date: Wed Oct 23 05:25:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux Mailing List <linux-kernel@vger.kernel.org>, linux-lvm@sistina.com, Alan Cox <alan@redhat.com>
 
-If you are using LVM2, pvmove is not contained yet.
-Will be added ASAP before we go GA.
+New patchballs are available here:
 
-On Wed, Oct 23, 2002 at 09:28:08AM +0800, plum peach wrote:
->=20
->=20
-> i do not find the tool of pvmove after 1.0.5 version. why erase it?
->=20
-> thanks your helps.
->=20
-> good luck.
->=20
-> _________________________________________________________________
-> Broadband?=A0Dial-up? Get reliable MSN Internet Access.=20
-> http://resourcecenter.msn.com/access/plans/default.asp
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+http://people.sistina.com/~thornber/patches/2.5-stable/
 
---=20
+Including a diff against 2.5.44-ac1.  There are a lot of changes in
+here compared to the last release, however most of these are due to
+code refactoring rather than bug fixes.  Highlights include:
 
-Regards,
-Heinz    -- The LVM Guy --
+o) Make the changes recommended by Christoph Hellwig and others:
+   http://marc.theaimsgroup.com/?l=linux-kernel&m=103462345119681&w=2
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+o) Add reference count to struct mapped_device, and struct dm_table.
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+o) Hide the above two structs in their respective .c file
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+o) Move all locking of struct mapped_device into dm.c (we can do this now because
+   of the reference counting).
+
+o) Remove the name and uuid field from struct mapped device, these are really
+   only used by the interface as a way of refering to devices.
+
+o) Nobody needs to lookup from kdev_t -> struct mapped_device, so remove
+   that hash table (thanks to Al Viros recent bdev->bd_disk stuff).
+
+o) dm.c has no need of the dm-hash.c file any more, so merge dm-hash.c into
+   dm-ioctl.c (the fs interface uses the dcache for lookups).
+
+
+There are still open issues that prevent things working perfectly:
+
+o) The gendisk hash table is getting confused when removing a device.  eg, if
+   I create 3 devices with minors (1, 2, 3).  Then remove minor 2, get_gendisk 
+   will remove minor == 3. (Or I've done something really stupid).
+
+o) Splitting pages still doesn't work, this is a generic block layer
+   thing rather than dm.  In practise I can only trigger this with
+   striped targets.  So stick to linear targets for now.
+
+
+Filesystem interface to follow before the end of the week.
+
+- Joe
