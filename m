@@ -1,9 +1,9 @@
 From: Spam <spam@tnonline.net>
-Message-ID: <187171148703.20031106161241@tnonline.net>
-Subject: Re[2]: [linux-lvm] Can I dd one disc of a lv
-In-Reply-To: <20031106134246.A16570@wagener.nu>
-References: <20031106130748.A15981@wagener.nu>
- <3FAA3C95.8010708@webhackande.se> <20031106134246.A16570@wagener.nu>
+Message-ID: <54241964828.20031107115257@tnonline.net>
+Subject: Re[2]: [linux-lvm] vgreduce fails
+In-Reply-To: <20031107114146.C28265@sistina.com>
+References: <5211632953.20031103044044@tnonline.net>
+ <20031107114146.C28265@sistina.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
@@ -16,56 +16,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  6 09:13:01 2003
+Date: Fri Nov  7 04:54:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Tobias Wagener <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
+  Yes  I tried that way too. I had tried restarting the system with no
+  luck  too.  But  when  I  changed to LVM2 it worked fine without any
+  problems.  I  have  no  idea what was wrong. I tried to move several
+  different disks and all gave the same error with LVM1.
+  
 
-> Hi,
+> Have you tried removing the one free PV rather than using "-a" ?
+> Have you run vgck to check volume group consistency ?
+> Does the machine have an extraordinary long uptime ?
 
-> OK, currently dd (or better dd_rescue) is at work. What have I to do after
-> the dd?
-
-  Nothing. The drives will be identical to LVM so you should remove
-  the faulty drive and then everything should be normal. :) Do not run
-  any restore/backup commands.
-
-> vgexport the VG, and then vgimport with the new device? Or do I use
-> a "vgcfgrestore" and "vgcfgbackup" also?
-
-> Greetings Tobias
-
-
-> On 06/11/03 13:20, Rickard Olsson wrote:
->> Tobias Wagener wrote:
+> On Mon, Nov 03, 2003 at 04:40:44AM +0100, Spam wrote:
 >> 
->> > Now the question: Can I "dd" the faulty 200 GB drive to the new 200 GB
->> > drive? And if, how? Does "dd if=/dev/hde1 of=/dev/hdf1" the job, or what
->> > have I to do?
+>>   I am trying to reduce a physical volume from my VG "Server" but
+>>   when I get to the step "vgreduce" it fails with this error:
 >> 
->> Heinz told me:
->> "You need to dd starting from the first physical extent (use pvdata -PP
->> on the old one and look for pe_on_disk.base) to the same offset on the
->> new disk (skip and seek dd option) and you want dd to continue after
->> read errors (noerror option)."
+>>   vgreduce -- ERROR "parameter error" reducing volume group
+>> "Server" by physical volume
+>> "/dev/ide/host2/bus0/target0/lun0/part1" in kernel
+>>   
+>>   There is a logfile and debug output on http://tnonline.net/lvm.txt
+>>   (also attached as lvm.zip).
 >> 
->> Also, I was recently told about the dd_rescue utility, but I haven't had
->> the misfortune/opportunity to try that one yet.
->> 
->>     / Rickard Olsson,IT-Konsult/
->>    / Telefon: +46 70 635 01 42/
->>   / http://www.webhackande.se/
->> 
->> 
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@sistina.com
->> http://lists.sistina.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>   I am using Gentoo Linux, but tried with vanilla kernel 2.4.22 and
+>>   lvm tools 1.0.7.
