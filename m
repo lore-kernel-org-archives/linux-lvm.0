@@ -5,7 +5,7 @@ References: <1010503449.28039.5.camel@cali.nesnahhouse.com>
     <E16OHUh-0004tv-00@hermes.sistina.com>
     <20020109130259.GC744@tykepenguin.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1010606990.15375.22.camel@jeremy-linux.intranet.qualys.com>
+Message-Id: <1010607611.15375.24.camel@jeremy-linux.intranet.qualys.com>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -17,21 +17,10 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  9 14:23:02 2002
+Date: Wed Jan  9 14:34:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-
-My issue wasn't so much with how to create the snapshot but how to
-simultaneously mount the snapshot with the live filesystem.  I saw a big
-thread about having to uncomment from lvm.c, did that but then got
-unresolved symbols...
-
-It seemed as if there were some issues and a large discussion related to
-doing this with XFS.
-
-Thanks
--jeremy
 
 On Wed, 2002-01-09 at 05:02, Patrick Caulfield wrote:
 > On Wed, Jan 09, 2002 at 10:06:04PM +1000, Adrian Head wrote:
@@ -46,7 +35,11 @@ On Wed, 2002-01-09 at 05:02, Patrick Caulfield wrote:
 > > mount -t xfs -o nouuid /dev/vg/snap /mnt/snapshot
 > 
 > You may also need -o norecovery too.
-> 
+
+Ahh, it looks as if this did the trick.  I was able to mount it!
+
+-jeremy
+ 
 > patrick
 > 
 > 
