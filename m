@@ -1,8 +1,9 @@
-Message-ID: <20020726084317.8264.qmail@webmail16.rediffmail.com>
+Message-ID: <000901c23483$795e79b0$5f00a8c0@pert>
+From: "Rupert Hair" <rupert.hair@ntlworld.com>
+References: <200207260425.g6Q4PpU26333@zeus.dtts.co.jp>
+Subject: Re: [linux-lvm] about LVM-1.0.5 with SMP machine
 MIME-Version: 1.0
-From: "amit  agrawal" <amitagra21@rediffmail.com>
-Content-Disposition: inline
-Subject: [linux-lvm] Help!
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,21 +14,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jul 26 03:47:01 2002
+Date: Fri Jul 26 04:05:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain;
-	format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-  Hi,
-   	I've been trying to put 64-bit support in the kernel for 
-2.4.18 kernel version. For this I also need to make LVM 64-bit 
-compliant. If you could help me about the changes required in LVM 
-internals and tools, then please share the same. Effectively I 
-need logical volume to be of 64 bit size.
+----- Original Message -----
+From: "Young Ui Park" <youngui@dtts.co.jp>
+> I wonder if there is any problems in LVM-1.0.5 with SMP machine or fixed.
+>
+> Does any body have any ideas with this ?
 
-  Looking forwad for your precious feedback.
+I am no expert here but I have managed to get LVM working flawlessly on my
+dual celeron box (BP6).
 
-  Thanks
-  Amit Agrawal
+There seemed to be no issues with the compile of the kernel patch or the
+tools and it has been working great since then.
+
+Thanks to everyone who has contributed to this project!
+
+Rupert
