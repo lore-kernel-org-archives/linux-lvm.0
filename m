@@ -1,10 +1,11 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 7 Feb 2001 15:23:43 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Wed, 7 Feb 2001 14:28:18 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
 Subject: Re: [linux-lvm] I can't add other disk in lvm system
-Message-ID: <20010207152343.O8914@srv.sistina.com>
+Message-ID: <20010207142818.G525@tykepenguin.com>
 References: <NDBBIPFGCOKBKKOFONLLEEMMCCAA.jcarles@dtic.ua.es>
 Mime-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <NDBBIPFGCOKBKKOFONLLEEMMCCAA.jcarles@dtic.ua.es>; from jcarles@dtic.ua.es on Wed, Feb 07, 2001 at 01:49:27PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,16 +21,6 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-
-Hi Joan,
-
-you seem to have an older LVM version which unfortunatly had that bug.
-
-Please get the recent LVM software from www.sistina.com and follow the
-steps in the INSTALL file in order to get it up and running.
-
-Then you should be able to do "vgextend -v vm0 /dev/hdc1" successfully.
-
 
 On Wed, Feb 07, 2001 at 01:49:27PM +0100, Joan Carles Monllor wrote:
 > 
@@ -62,32 +53,8 @@ On Wed, Feb 07, 2001 at 01:49:27PM +0100, Joan Carles Monllor wrote:
 > .
 > Segment violation
 > 
-> 	The problem is in mine or in the kernel or the lvm tools ?
-> 
-> 		thanks for your help in avanced.
-> 
-> Joan Carles Monllor
-> Universitat d'ALacant
-> jcarles@dtic.ua.es        Tel. 965903681
-> Spain                     Fax 965903902
-> 
 
+Can you make sure you have the latest code, including the kernel patch, from
+sistina.com. It sounds like you are using an old version.
 
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+patrick
