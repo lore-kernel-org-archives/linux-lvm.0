@@ -1,12 +1,9 @@
-Return-Path: <root@totoro.ovh.net>
-Date: Thu, 5 Jul 2001 02:48:50 +0200
-From: Totoro <totoro@ovh.net>
-Subject: Re: [linux-lvm] Unable to compile 2.4.6
-Message-ID: <20010705024850.A15245@totoro.ovh.net>
-References: <9880000.994292407@dizzy>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9880000.994292407@dizzy>; from lembark@wrkhors.com on Wed, Jul 04, 2001 at 07:20:07PM -0500
+Return-Path: <david.mathews@sungard.com>
+From: david.mathews@sungard.com
+Message-ID: <OF62DA6C54.2FB2B37C-ON85256A80.001B8641@scs.sungard.com>
+Date: Thu, 5 Jul 2001 01:00:38 -0400
+MIME-Version: 1.0
+Subject: [linux-lvm] David Mathews/SCS/SunGard is out of the office.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,18 +19,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello,
+I will be out of the office starting  07/04/2001 and will not return until
+07/09/2001.
 
-You have to patch the source manually,
-the beta7 has an old function of the kernel yet:
-
-get_hardblocksize  becomes    get_hardsect_size
-
-you have just to changes these names and this work fine, normally.
-
-
-Totoro
-
-On Wed, Jul 04, 2001 at 07:20:07PM -0500, Steven Lembark wrote:
-> 
-> Run configure, apply patch.  2.4.6 links before patch, doesn't link after applying patch.
+I will be out of the office on vacation.  I will have limited access to
+voice/e-mail.  In my absence please contact Scott Barret or Andy Wasson.
