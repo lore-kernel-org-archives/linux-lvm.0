@@ -1,7 +1,9 @@
-From: CAROLINE_FIELDS@mech.disa.mil
-Message-ID: <OFB75DBCA3.D8E0652D-ON85256C6E.00211191-85256C6E.00211192@mech.disa.mil>
-MIME-Version: 1.0
-Subject: [linux-lvm] CAROLINE FIELDS will return Thursday, Nov 14
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Adding to vg broke it :-(
+Message-ID: <20021111113311.A23857@sistina.com>
+References: <20021110213716.spltd+lvmlist@force9>
+Mime-Version: 1.0
+In-Reply-To: <20021110213716.spltd+lvmlist@force9>; from lvmlist@spltd.f9.co.uk on Sun, Nov 10, 2002 at 09:37:16PM -0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,25 +14,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 11 00:03:01 2002
+Date: Mon Nov 11 04:38:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I will be out of the office starting  11/08/2002 and will not return until
-11/14/2002.
+Mark,
 
-If you need assistance from the acting Open Systems Supervisor, please call
-Bill Fernandez at 717-605-5435.  If he cannot be reached, please try Mike
-Kobiako at 717-605-5361.
+what's in your syslog WRT your problem?
+What does "vgscan" say?
+Does "pvscan" 'see' all your physical volumes making up the volume group?
 
-If you would like to speak to me, please call my cell phone at
-717-991-7035.
 
-If you cannot reach any of the above contacts, please call the DISA DECC
-Mech help desk at 717-605-7426.
+On Sun, Nov 10, 2002 at 09:37:16PM -0000, lvmlist@spltd.f9.co.uk wrote:
+> 
+> Hi all,
+> 
+> It seems I'm up to my neck in it again :-(
+> 
+> Briefly, I ran out of space on my LVM mounted /home partition but as I
+> have 1.5GB space free on another disk I thought I'd add that to my
+> volume group and increase the size of /home. All seemed to go OK until
+> reboot upon which my system can only mount / (which is independent of
+> LVM). It appears that /etc/lvmtab /etc/lvmtab.d have all been deleted
+> hence why it can't find LVG "system".
+> /etc/lvmtab exists but is empty.
+> /etc/lvmtab.d/ exists but is empty.
+> /etc/lvmconf/ exists & contains system.conf.1.old and system.conf
+> (newest).
+> 
+> System is SuSE 8.0 Pro. on i386
+> Harddisks: 2 scsi mounted as
+> 
+> /dev/sdb1        swap
+> /dev/sdb2        /
+> /dev/sdb3        LVM
+> 
+> /dev/system/home /home
+> /dev/system/usr  /usr
+> /dev/system/var  /var
+> 
+> sda had an old installation of SuSE on it is
+>  presently unused (and half the size of sdb).
+> 
+> Any guidance as to where to go from here would
+> be appreciated pls.
+> 
+> Thanks,
+> 
+> Mark Pearson.  
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Thanks,
+-- 
 
-Caroline Fields
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
