@@ -1,10 +1,14 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Fri, 15 Dec 2000 18:58:20 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
+Return-Path: <lewis@sistina.com>
+From: lewis@sistina.com
+Date: Fri, 15 Dec 2000 12:15:08 -0600
 Subject: Re: [linux-lvm] Debian packaging
-In-Reply-To: <87hf46kifi.wl@pear.hibi-local.net>
-Message-ID: <Pine.LNX.4.30.0012151849540.24097-100000@falka.mfa.kfki.hu>
-MIME-Version: 1.0
+Message-ID: <20001215121508.A9183@sistina.com>
+References: <0012132115222N.00826@lyta> <20001214104641.A15193@sistina.com> <0012150751103E.00826@lyta>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Disposition: inline
+In-Reply-To: <0012150751103E.00826@lyta>; from russell@coker.com.au on Fri, Dec 15, 2000 at 07:51:10AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,45 +20,92 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: HIBINO Kei <ex8k-hbn@asahi-net.or.jp>
-Cc: linux-lvm@sistina.com
+To: Russell Coker <russell@coker.com.au>
+Cc: linux-lvm@sistina.com, tal26@cam.ac.uk
 
-Hi!
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I fixed the above and some problems of pacakges placed under
-> 'ftp://ftp.sistina.com/pub/LVM/0.9/binaries/debian/'.
+On Fri, Dec 15, 2000 at 07:51:10AM +0100, Russell Coker wrote:
+> If you don't reply to email sent to the package maintainer address and do=
+n't=20
+> fix high-priority bugs in your packages then your packages can be NMU'd=
+=20
+> without any issue.  After an NMU if there is still no response then they =
+are=20
+> up for grabs.
 >
-> I put this fixed pacakge under
-> 'http://www.asahi-net.or.jp/~ex8k-hbn/deb/lvm/'.
+> If he doesn't want me to take over the package then he will have to reply=
+ to=20
+> my email.
 
-Good work.
+Sounds good to me.  I want those packages updated and working too.
 
-But here are some remarks to your /etc/init.d/lvm script ...
+> >Since the configure.in scripts are essentially the same, you can just su=
+bmit
+> > a patch to one or the other to the lvm-devel list and we'll get it in on
+> > the next release.  I am the one responsible for the conversion of LKM to
+> > the autoconf system, so I'd be interested to see how you intend to
+> > accomplish this.
+>=20
+> LKM?
 
-1]----
-if [ ! -f /proc/lvm ]; then
-	if [ ! -f /lib/modules/`uname -r`/block/lvm.o -a ! -f /lib/modules/`uname -r`/block/lvm-mod.o ]; then
-		exit 0
-	fi
-fi
-------
+Oops...that's supposed to be LVM.
 
-What if somebody compiled lvm into the kernel, not as a module? This
-script doesn't work. :(
+> >> Also I would prefer to have the Debian packaging files in the upstream
+> >> source.  They are about 5K of data in 11 files in a separate
+> >> sub-directory. Please let me know if this would be desired/accepted as
+> >> part of the LVM upstream source and I will send the relevant patch to =
+you.
+> >
+> >One question.  Why?  Seems completely unnecessary to me.
+>=20
+> It makes things easier for people doing other distributions amoung other=
+=20
+> things.  If you had a Red Hat spec file in there then it would have made=
+=20
+> things a bit easier for me (I could probably find one on the net somewher=
+e=20
+> but then there's issues of whether it matches the source I've got etc).
+> Also if someone submits a patch for lvm then they would (hopefully) also=
+=20
+> patch the Debian setup in a matching fashion thus saving duplication of=
+=20
+> effort.
+> Debian packaging files in the CVS works well for KDE...
 
-2]----
-case "$1" in
-	start|"")
-		echo "Setting up LVM Volume Groups..."
-		#/sbin/vgscan
-		/sbin/vgchange -a y
-		;;
-------
+But if you have your packaging scripts setup correctly, when an upstream
+version changes, you just run uupdate -u upstream-package.tar.gz and it
+updates the source and puts it into the correct tree...seems much easier to
+maintain than trying to keep everything current in the CVS.  As long as you
+are releasing the debian source tarball as well as the binary, this shouldn=
+'t
+be an issue.
 
-Why did you use 'start|""' above? If run without parameters, it should
-simply display a usage help.
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
 
-Thanks,
-Gergely
+A computer without a Microsoft operating system is like a dog without bricks
+tied to its head.
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6Ol+spE6/iGtdjLERAg5fAJ9zpPJq6V1OW310Uji256r+fFKkYACcDaCK
+RlGva4JNuUlBFYQWqJaTZzE=
+=lGLv
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
