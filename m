@@ -1,10 +1,9 @@
-Message-ID: <3FE0E57A.9010509@tupshin.com>
-From: Tupshin Harper <tupshin@tupshin.com>
+From: Benoit <benoit.peccatte@enst-bretagne.fr>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] weird duplicate pv problem
-References: <3FE0C0CA.6050400@tupshin.com>
-In-Reply-To: <3FE0C0CA.6050400@tupshin.com>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200312181208.49303.benoit.peccatte@enst-bretagne.fr>
+Subject: [linux-lvm] Changing PV position
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +14,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 17 17:25:02 2003
+Date: Thu Dec 18 05:11:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Tupshin Harper wrote:
+Hello,
 
-> I have an lvm2 volume group composed of about 8 different pvs. 
-> Recently, most lvm commmands started displaying errors like below. Not 
-> that it is claiming duplicate PVs, but the duplicates are contained in 
-> /dev/nbd/*, and I'm not actually using any network block devices. I 
-> have NBD comiled into the kernel, and I'm about to compiling a kernel 
-> with nbd not compiled in and see if that helps, but it seems extremely 
-> odd that lvm would detect duplicate pvs on unused nbd devices.
->
-> The effects of the problem (in addition to getting these warnings, are 
-> that any change to a lv(resizing, for example), will render that lv 
-> inactive or suspended (have seen both), until I do a magic incarnation 
-> that involves first "vgcfgrestore" and then "lvchange -a y" on the 
-> affected lv. Note that vgcfgrestore does not make the warnings go 
-> away, but it does allow the lvchange command to succeed.
->
-> Any thoughts? FWIW, I am using devfs, and I'm still curious about a 
-> reasonable migration strategy to move an lvm2 setup to non-devfs. 
-> Kernel 2.6.0-test11, lvm tools that come with debian sid(lvm version 
-> 2.00.05, library version 1.00.05-ioctl-cvs, driver version 4.0.0).
->
-> -Tupshin
->
-As I suspected, running a kernel with nbd compiled as a module and not 
-loading it at startup avoids this probem. But this doesn't bring me any 
-closer to an understanding of why lvm would see duplicate pv id's on nbd 
-devices that I never used.
+I'm currently using lvm on my box and one disk just died.
+Then the second disk (hdb) became the first one (hda). The problem is that now 
+I can't get back the physical volume which is on it. Is it possible to tell 
+lvm to force the reading of a PV even if it isn't on the same disk as 
+before ?
 
--Tupshin
+Thank you for your help.
+Benoit
+
+
+Informations :
+
+peck:/# fdisk -l /dev/hda
+
+Disk /dev/hda: 122.9 GB, 122942324736 bytes
+255 heads, 63 sectors/track, 14946 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hda1   *           1         898     7213153+   b  W95 FAT32
+/dev/hda2             899        1384     3903795   83  Linux
+/dev/hda3            1385       14946   108936765    5  Extended
+/dev/hda5            1385        1992     4883728+  fd  Linux raid autodetect
+/dev/hda6            1993       14946   104052973+  8e  Linux LVM
+
+peck:/# pvs /dev/hda6
+  Failed to read physical volume "/dev/hda6"
+
+
+I'm currently using linux 2.6-test9, with lvm2 tools. 
+The missing volume was created with lvm1 tools.
