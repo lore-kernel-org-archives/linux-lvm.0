@@ -1,36 +1,45 @@
-Return-Path: <bluca@comedia.it>
-Date: Fri, 1 Dec 2000 14:17:10 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Old problem cropping up again with 0.9 lvm tools?
-Message-ID: <20001201141710.A508@colombina.comedia.it>
-References: <3A247D53.E3B78F60@cup.hp.com> <20001129174952.A26362@colombina.comedia.it> <20001129215950.B26839@srv.t-online.de>
+Return-Path: <sct@redhat.com>
+Date: Fri, 1 Dec 2000 15:06:31 +0000
+From: "Stephen C. Tweedie" <sct@redhat.com>
+Subject: Re: [linux-lvm] LVM 0.9 snapshot and ext3
+Message-ID: <20001201150631.O4978@redhat.com>
+References: <20001130094630.E3027@redhat.com> <200011301948.eAUJm6k01893@webber.adilger.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20001129215950.B26839@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Wed, Nov 29, 2000 at 09:59:50PM +0000
+In-Reply-To: <200011301948.eAUJm6k01893@webber.adilger.net>; from adilger@turbolinux.com on Thu, Nov 30, 2000 at 12:48:06PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: "Stephen C. Tweedie" <sct@redhat.com>, linux-lvm@sistina.com, jweber@valinux.com, "Heinz J. Mauelshagen" <mauelshagen@sistina.com>
 
-On Wed, Nov 29, 2000 at 09:59:50PM +0000, Heinz J. Mauelshagen wrote:
-> > vgscan will fail in pv_read
-> > since pv_read.c contains a line which makes it fail if the device is an
-> > me device.
-> 
-> It's used to distinguish in a higher library layer between MD and other devices.
-> 
-> > 
-> > 0.8.1 has the same line, but pvread s not calle d by vgscan :)
-> 
-> It gets called indirectly from from vgscan by calling vg_read_with_pv_and_lv().
-ok, but 0.8.1 vgscan works with md devices, 0.9 does not,
-should i try to patch it at an higher layer then pv_read.c then?
+Hi,
 
-L.
+On Thu, Nov 30, 2000 at 12:48:06PM -0700, Andreas Dilger wrote:
+> Stephen writes:
+> > So, is somebody else doing a read?  It could be ext3, conceivably, if
+> > we had had an IO error previously on the buffer and the BH_uptodate
+> > flag had been cleared: a subsequent access to the buffer by another
+> > process would try to reread the buffer off disk, locking it
+> > temporarily.
+> 
+> Considering that there was the "Bad lvm_map in ll_rw_block" message just
+> before the oops, this would lead to the situation you are talking about.
+> In ll_rw_block the error path at "sorry:" clears BH_Dirty and BH_Uptodate,
+> and calls b_end_io() but does not necessarily unlock the buffer?
 
--- 
-Luca Berra -- bluca@comedia.it
-    Communication Media & Services S.r.l.
+The end-io should do the unlock no matter the value of uptodate.  I
+should go and check what ext3 is doing on synchronous IO failures,
+though.
+
+> *** Stephen, in case of ANY error inside lvm_map() should it unlock the buffer?
+
+ll_rw_block needs to unlock the buffer after the IO is complete, no
+matter what the error.  The LVM people will know better than I whether
+the lvm_map() function is the right place to do that.
+
+Cheers,
+ Stephen
