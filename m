@@ -1,10 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] recovering a bad physical volume
-Message-ID: <20020716071417.GB957@tykepenguin.com>
-References: <Pine.SOL.4.44.0207160055110.25080-100000@yellow.csi.cam.ac.uk>
+Subject: Re: [linux-lvm] Re: [Announce] device-mapper beta3 (fast snapshots)
+Message-ID: <20020716084234.GA431@fib011235813.fsnet.co.uk>
+References: <3D2F6464.60908@us.ibm.com> <20020715124035.GA4609@fib011235813.fsnet.co.uk> <02071513565400.06209@boiler>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.SOL.4.44.0207160055110.25080-100000@yellow.csi.cam.ac.uk>
+In-Reply-To: <02071513565400.06209@boiler>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +15,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 16 02:14:02 2002
+Date: Tue Jul 16 03:42:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Kevin Corry <corryk@us.ibm.com>
+Cc: linux-lvm@sistina.com, Andrew Theurer <habanero@us.ibm.com>, linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2002 at 01:02:08AM +0100, Matthew Johnson wrote:
-> Hi, I have just got lvm setup on my machine - and it works fine. However,
-> I had a problem with my root partition (not lvm) and when it came back up
-> one of the 2 lvm partitions on that disk said it wasn't a valid physical
-> volume. The otherone was fine, and the logical volumes that weren't on the
-> first physical volume (it wasn't striped) mounted OK. The one that was
-> partially on that first pv didn't, though - it said the device was not a
-> valid block device.
+Kevin,
+
+On Mon, Jul 15, 2002 at 01:56:54PM -0500, Kevin Corry wrote:
+> In the current design, there are two cases when the COW table is written to 
+> disk. Either when current COW sector is full, or on a clean system shutdown. 
+> All snapshots will thus be persistent across a clean shutdown or reboot. 
+> Currently, an async snapshot will be disabled if the system crashes. This 
+> wasn't a big secret. In the latest HOWTO, the section on snapshotting 
+> explains this, and in the EVMS gui, there is a note attached to the "async" 
+> option saying this as well.
 > 
-> The question is, can I easily get the partition back so it mounts OK, and
-> failing that can I recover all (or any) of the data. all my /usr is on
-> there, plus some other less critical stuff, so I really could do with it.
-> 
-> more system details: Debian woody, with a custom 2.4.19 kernel with lvm
-> compiled in. The fs's all run reiserfs. THe volume group contains
-> /dev/hde6 /dev/hde7 & /dev/hda5. e7 & a5 are OK when I run pvdisplay, and
-> /dev/lvm1/var and /dev/lvm1/utils mount fine. /dev/lvm1/music doesn't
-> mount - I get errors reading superblock etc, and when I pvdisplay
-> /dev/hde6 it says it is not a valid physical volume.
+> We designed async snapshots in EVMS for maximum performance. Allowing for the 
+> one above condition provides for a significant performance increase. Writing 
+> the COW table only when it's full prevents a lot of unnecessary disk head 
+> seeking.
 
-# pvcreate /dev/hde6
-# vgcfgrestore -n lvm1 /dev/hde6
-# vgscan
+...
 
-should recover the volume group for you.
+> But, the synchronous option is still available 
+> for those who are scared about system crashes. Personally, I'm not that 
+> scared. I'd have a hard time remembering the last time one of my production 
+> machines crashed unexpectedly.
 
+So you are saying that your async snapshots should only be used on
+production machines, and where the data stored on the snapshot is so
+unimportant that you don't mind loosing it.  Nice.
 
--- 
+In future could you mention this caveat when you post comparison
+benchmarks.
 
-patrick
+device-mapper *does* ensure that the snapshot is always consistent.
+
+I don't believe the benchmarks posted at the top of this thread at
+all.  Not only are you claiming poor performance for device-mapper,
+but that this performance degrades as chunk size reduces.
+device-mapper has been tested by a variety of people on many different
+machines/architectures and we've only ever seen a flat performance
+profile as chunk size increases, if anything, there is a very slight
+degradation as chunk size gets too large.
+
+For instance I just ran a test on my dev. box, this should
+not be considered a tuned benchmark by any means.
+
+dbench -2 on a 32M RAM system:
+
+no snapshot	8.22
+8k		13.59
+16k		13.99
+32k		13.33
+64k		12.90
+128k		13.442
+256k		13.654
+512k		13.84
+
+As far as I'm concerned you should be comparing this with the slower
+but consistent synchronous snapshots in EVMS.
+
+- Joe
