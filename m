@@ -1,8 +1,12 @@
-Date: Thu, 6 Sep 2001 21:51:00 +0200 (MEST)
-From: Henk Birkholz <wahooka@Informatik.Uni-Bremen.DE>
-Message-ID: <Pine.LNX.4.30.0109062137150.11080-100000@x14.informatik.uni-bremen.de>
-MIME-Version: 1.0
-Subject: [linux-lvm] Feature : Merge two LV
+Date: Thu, 6 Sep 2001 22:05:14 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] pv_move_pe() error again :/
+Message-ID: <20010906220514.A1537@vestdata.no>
+References: <E15f13v-0003bs-00@hermes.sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <E15f13v-0003bs-00@hermes.sistina.com>; from fejf@gmx.de on Thu, Sep 06, 2001 at 05:28:04PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,28 +18,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hello dear Sirs,
+On Thu, Sep 06, 2001 at 05:28:04PM +0200, FEJF wrote:
+> hi,
+> i search through the mailing list and found this question few times... =
+and i=20
+> have also this problem atm and i didn't find a solution, i want to ask =
+if=20
+> there is one now ? or perhaps will installing of lvm1.0.1-rc2 help (cur=
+rently=20
+> using 0.9.1_beta7) ?
+>=20
+> root@bolm:[/x] # pvmove /dev/hdh1
+> pvmove -- moving physical extents in active volume group "vg01"
+> pvmove -- WARNING: if you lose power during the move you may need to re=
+store=20
+> your LVM metadata from backup!
+> pvmove -- do you want to continue? [y/n] y
+> pvmove -- ERROR reading input physical volume "/dev/hdh1" (still 65536 =
+bytes=20
+> to read)
+>=20
+> pvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
+>=20
+> pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
 
-Iam using LVM for the first time right now and i am already very fond of
-it. Fast to understand, it creates a nice feeling to work with larger disk
-capacities. I was at a point i already filled the storage ready sized and
-partiotioned with data. Half full i recognized a conceptional problem with
-my structure of lv and the best way to solve it would have been to merge
-two lv. Instead i had to empty one of the lv (by moving data to other
-space) remove it and then extend another lv over the space of the old one.
-It would have been easier (without moving the date manually) if some kind
-of lvmerge would exist, which would merge the lv and thier fs
-automatically. Maybe there is ia wayto do it, i simply don't know.
-In that case i would be glad to know that way from you. (and be added to
-you FAQ). If there is no such way i only wanted to "ask for a missing
-feature" as mentioned in your FAQ :)
+This could be because of a disk-error. Do you have io-errors in
+/var/log/messages?
 
-Despite of that. Great tool. Thank you!
+If so, you will have to modify pvmove to not give up after read-errors.
 
-Regards,
+Maybe a '--ignore-read-errors' option should be added?
 
-Henk Birkholz / germany
+
+--=20
+Ragnar Kj=F8rstad
+Big Storage
