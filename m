@@ -1,8 +1,9 @@
-From: Jesse Keating <jkeating@pogolinux.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <200301311028.44505.jkeating@pogolinux.com>
-Subject: [linux-lvm] LVM Boot issues, unable to create /etc/lvmtab.d/data.tmp
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Does LVM2 support RAID?
+Message-ID: <20030201133248.A2538@sistina.com>
+References: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>
+Mime-Version: 1.0
+In-Reply-To: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>; from gozila@ms20.url.com.tw on Thu, Jan 30, 2003 at 12:06:57PM +0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,41 +14,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 31 12:32:02 2003
+Date: Sat Feb  1 06:35:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm having some very strange boot issues w/ an LVM system.  I have 2 nearly 
-identical systems.  Dual Xeon, 3ware 8 port controller, 8 200gig IDE drives 
-connected to it, raid 5, and one 40gig IDE drive connected to the standard 
-IDE bus.
+On Thu, Jan 30, 2003 at 12:06:57PM +0800, Rocky Lee wrote:
+> Hello all 
+> 
+> Happy Chinese New Year to you!
+> and thanks for reading my issues.
+> 
+> Here's my question about LVM1 and LVM2
+> 
+> LVM1+ MD is good methd to support backup and data recovery of data.
+> I found some documents said that LVM2 already can support disk protection and data recovery.
+> does it mean that LVM2 including various raid algorithms ? or other features?
 
-On the single 40gig drive, there is a /boot partition and a swap partition.  
-On the 3ware array (/dev/sda) there is a LVM Volume Group, named "data".  
-Within data, there is a Logical Volume, "os".  This volume contains the / 
-file system.
+No RAID > 0 so far. In case we'll have capacity... ;)
 
-On one system, I can boot using the /boot partition, then have it mount / 
-cleanly.  vgscan fires up from the initrd, finds the "data" group, writes 
-this info out to /etc/lvmtab.d/data.tmp (/etc of the initrd, not the actual 
-system /etc), then activates data, so that it can mount the "os" volume.  
-System continues to boot as expected.
+> 
+> How they work?
+> 
+> If I use LVM2 will be better than use LVM1 + MD?
 
-On the other system, same kernel, same initrd (very same, made it on one 
-system, using it on both), vgscan finds "data", then tries to write to 
-/etc/lvmtab.d/data.tmp, but throws an "Error 2 Unable to write ....".  Then 
-it will not try to activate data, and it will not be able to mount /, which 
-causes a kernel panic.
+You'll get tool advantages (i.e. config file support).
 
-What in the heck is going on?!  Could the initrd somehow be mounted as 
-read-only?  I'm using grub as the boot loader on both systems.  Is there 
-anything I can pass to grug, that would allow the initrd to be mounted 
-read/write?
-
-help?!
+> 
+> Thank you
+> Have a nice day
+>                             Rocky Lee
 
 -- 
-Jesse Keating RHCE MCSE
-Pogo Linux -- Support Tech
-tel: (888) 828-7646
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
