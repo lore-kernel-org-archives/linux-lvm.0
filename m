@@ -1,17 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6LIMXa06841
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 14:22:33 -0400
-Received: from volved.com (h0030ab04c826.ne.client2.attbi.com [24.147.129.19])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i6LIMWe1027750
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2004 14:22:32 -0400
-Message-ID: <009701c46f4f$afd72ab0$d301a8c0@monolith>
-From: "Barnz" <volve@volved.com>
-References: <8CCBDD5583C50E4196F012E79439B45C04C9A463@atl-ms1.megatrends.com>
-	<19322.195.50.100.20.1090422741.squirrel@webmail.penguinpowered.org>
-Subject: Re: [linux-lvm] Raid 0+1
-Date: Wed, 21 Jul 2004 14:22:28 -0400
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i6M78Rhp019935
+	for <linux-lvm@redhat.com>; Thu, 22 Jul 2004 08:08:27 +0100
+Received: from patrick by fentible.pjc.net with local (Exim 4.34)
+	id 1BnXgp-0002xH-AR
+	for linux-lvm@redhat.com; Thu, 22 Jul 2004 08:08:27 +0100
+Date: Thu, 22 Jul 2004 08:08:27 +0100
+From: Patrick Caulfield <pcaulfie@redhat.com>
+Subject: Re: [linux-lvm] "__you_cannot_kmalloc_that_much" undefined
+Message-ID: <20040722070827.GB10840@tykepenguin.com>
+References: <5.1.0.14.2.20040721131110.038d67d8@pop.ncsa.uiuc.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5.1.0.14.2.20040721131110.038d67d8@pop.ncsa.uiuc.edu>
+Sender: Patrick <patrick@tykepenguin.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,30 +24,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> > The softraid comes with linux does not support resize.
-> >
-> > Try DM + EVMS. This is much simpler and powerful. You can create Raid
-> > over
-> > Raid (Any raid level not limited to 0 and 1)
-> > The next EVMS release 2.4 scheduled for Aug 2004, has features to
-> > resize
-> > RAID 1 and 4/5.
+On Wed, Jul 21, 2004 at 01:13:25PM -0500, Guochun Shi wrote:
+> hi,
 > 
-> Thanks. I'm replying privately, as I'm not sure if this is relevant to
-> the lvm-list :)
+> I got a warning when compiling the patched 2.6.7 kernel:
 > 
-> Is there any beta stuff that I can play with now ? If so, where can I
-> get hold of it ?
+> *** Warning: "__you_cannot_kmalloc_that_much" [fs/gfs_locking/lock_gulm/lock_gulm.ko] undefined!
 > 
+> not a big issue since I can use dlm, but still want to know how I can remove this warning. 
 
-The main EVMS page is: http://evms.sourceforge.net/
 
-and the Device-Mapper Resource page is: http://sources.redhat.com/dm/
+Yes I hit this. here's a very crude patch that will at least get you going for
+testing purposes.
 
-Currently there are no v2.4 packages/sources floating around though... :-/
 
-I am very keen to experiment with them too.
+Index: gfs-kernel/src/gulm/load_info.c
+===================================================================
+RCS file: /cvs/cluster/cluster/gfs-kernel/src/gulm/load_info.c,v
+retrieving revision 1.2
+diff -u -r1.2 load_info.c
+--- gfs-kernel/src/gulm/load_info.c     12 Jul 2004 17:07:00 -0000      1.2
++++ gfs-kernel/src/gulm/load_info.c     22 Jul 2004 07:07:34 -0000
+@@ -40,7 +40,7 @@
+        init_MUTEX (&lt->sender);
+        init_completion (&lt->startup);
+        atomic_set (&lt->locks_pending, 0);
+-       lt->hashbuckets = 8191;
++       lt->hashbuckets = 100;
+        lt->hshlk = kmalloc (sizeof (spinlock_t) * lt->hashbuckets, GFP_KERNEL);
+        if (lt->hshlk == NULL)
+                return -ENOMEM;
 
--VolVE
+patrick
