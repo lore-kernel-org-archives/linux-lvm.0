@@ -1,17 +1,24 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBIKW89A016543
-	for <linux-lvm@redhat.com>; Sat, 18 Dec 2004 20:32:08 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1CflFI-0001aa-Ry
-	for linux-lvm@redhat.com; Sat, 18 Dec 2004 20:32:08 +0000
-Date: Sat, 18 Dec 2004 20:32:08 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] patch for separator option
-Message-ID: <20041218203208.GN26670@agk.surrey.redhat.com>
-References: <20041214093850.GA16922@suse.de> <20041216110052.GA4410@suse.de>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBK42br32029
+	for <linux-lvm@redhat.com>; Sun, 19 Dec 2004 23:02:37 -0500
+Received: from mailgw.aecom.yu.edu (mailgw.aecom.yu.edu [129.98.1.16])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iBK42UdN032298
+	for <linux-lvm@redhat.com>; Sun, 19 Dec 2004 23:02:36 -0500
+Received: from mailvx.aecom.yu.edu (mailvx.aecom.yu.edu [129.98.1.17])
+	by mailgw.aecom.yu.edu (8.12.11/8.12.11) with SMTP id iBK42PGD005402
+	for <linux-lvm@redhat.com>; Sun, 19 Dec 2004 23:02:25 -0500
+Received: from post.aecom.yu.edu ([129.98.1.126])
+	by mailvx.aecom.yu.edu (SAVSMTP 3.1.1.32) with SMTP id
+	M2004121923022501938
+	for <linux-lvm@redhat.com>; Sun, 19 Dec 2004 23:02:25 -0500
+Received: from [129.98.90.227] (usseinstein.aecom.yu.edu [129.98.90.227])
+	by post.aecom.yu.edu (8.11.7p1+Sun/8.11.7) with ESMTP id iBK42P328429
+	for <linux-lvm@redhat.com>; Sun, 19 Dec 2004 23:02:25 -0500 (EST)
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20041216110052.GA4410@suse.de>
+Message-Id: <a06100527bdebff37d57f@[129.98.90.227]>
+Date: Sun, 19 Dec 2004 23:03:34 -0500
+From: Maurice Volaski <mvolaski@aecom.yu.edu>
+Subject: [linux-lvm] LVM strategy: Is One VG Safe?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,23 +29,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-> > I realized that the -s/--short option for vgdisplay doesn't work
-> > in lvm 2.2.00.31 (but also older versions).  That's because the
-> > option --separator also gets the short option 's' in args.h.
+I plan to start with a hardware RAID (level 5) of one physical volume 
+and one volume group. Then create several logical volumes from it and 
+grow them each as they are needed pulling space from what's not used 
+in the volume group until all the space in the group eventually 
+utilized.
 
-> It the patch ok and will it be included in lvm2?
- 
-Not in that precise form:
-Need to check for all other existing conflicts, if any, and
-find a generic way to resolve them so 'vgs -s,' for
-example can hopefully still work.
-[e.g. if multiple possible use of same short form letter with a 
-command, the first one listed is the one that applies]
-
-Alasdair
+Is it reasonable to believe that such an arrangement is stable enough 
+that if anything were to ever go wrong a with an individual logical 
+volume that it wouldn't impact the other logical volumes in that same 
+volume group or the volume group itself?
 -- 
-agk@redhat.com
+
+Maurice Volaski, mvolaski@aecom.yu.edu
+Computing Support, Rose F. Kennedy Center
+Albert Einstein College of Medicine of Yeshiva University
