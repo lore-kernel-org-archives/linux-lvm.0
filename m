@@ -1,9 +1,7 @@
-Message-Id: <4.1.19990212193421.0096ea60@mail.msy.bellsouth.net>
-Date: Fri, 12 Feb 1999 19:36:47 -0600
+Message-Id: <4.1.19990213090201.009663a0@mail.msy.bellsouth.net>
+Date: Sat, 13 Feb 1999 09:05:18 -0600
 From: Daniel Whicker <heimdall@mail.org>
-Subject: Re: [linux-lvm] Snapshot compile...
-In-Reply-To: <9902130131.AA01815@mailgate99.telekom.de>
-References: <4.1.19990212192108.00958d40@mail.msy.bellsouth.net>
+Subject: [linux-lvm] 0.6alpha
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Sender: owner-linux-lvm
@@ -13,17 +11,17 @@ List-Id: <linux-lvm.redhat.com>
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
->Did you copy LVM/0.6alpha/kernel/lvm.h to /usr/src/linux/include/linux/lvm.h
->and LVM/0.6alpha/kernel/lvm.c to /usr/src/linux/drivers/block/lvm.c to
->compile the kernel parts?
+I hardcoded the LVM_DRIVER_IOP in the lvm.c and that fixed the compile time
+errors, however, after installing the new kernel and modules and tools,
+rebooting, LVM was unable to do vgscan.  It reported an error with locking
+problems and suggested that the LVM module hadn't loaded.  I did an "rmmod"
+and an "insmod" on it, but that didn't help.  I then compiled the 0.5
+module and did an "rmmod" and an "insmod" and that resolved it.  Did I
+break something when I moved that value from lvm.h to lvm.c?  Also, is
+there anything specific you would like me to test?
 
-Sure did.  I just did a diff against them to double check.  The files in
-the kernel are the same from the snapshot.  Maybe I missed something when I
-recompiled the kernel.  I did a make clean, make dep, make, make zImage,
-and then the make modules where it failed.  Is there anything else that I
-might have missed?  I'm pretty sure that make clean should have deleted all
-my outdated object files...
-
+Thanx,
+Daniel
 									-Daniel
 		------------------------------------------
 		Daniel Whicker  (heimdall@mail.org)
