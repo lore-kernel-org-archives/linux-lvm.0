@@ -1,22 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i57IGo000724
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:16:50 -0400
-Received: from p15141853.pureserver.info ([217.160.223.157])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i57IGoi5002319
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 14:16:50 -0400
-Received: from [217.231.15.135] (pD9E70F87.dip0.t-ipconnect.de
-	[217.231.15.135])
-	by p15141853.pureserver.info (Postfix) with ESMTP id AC3A84843C7
-	for <linux-lvm@redhat.com>; Mon,  7 Jun 2004 20:17:29 +0200 (CEST)
-Message-ID: <40C4B0F0.10907@digital-touch.net>
-Date: Mon, 07 Jun 2004 20:16:16 +0200
-From: philip <suse-ml@digital-touch.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i58HxN019547
+	for <linux-lvm@redhat.com>; Tue, 8 Jun 2004 13:59:23 -0400
+Received: from superman.pns.networktel.net (mail.networktel.net
+	[216.83.236.232])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i58HxLi5028318
+	for <linux-lvm@redhat.com>; Tue, 8 Jun 2004 13:59:22 -0400
+Received: from JERRY (216-107-103-155.wan.networktel.net [216.107.103.155])
+	by superman.pns.networktel.net (8.12.9/8.12.6) with SMTP id
+	i58HxFSQ023495
+	for <linux-lvm@redhat.com>; Tue, 8 Jun 2004 17:59:21 GMT
+	(envelope-from jerry@thomasappliance.com)
+Message-ID: <003401c44d82$50b409c0$6401a8c0@JERRY>
+From: "Jerry Hardwick" <jerry@thomasappliance.com>
+Date: Tue, 8 Jun 2004 13:59:16 -0400
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] software raid or lvm?
-References: <40C48905.80608@blocked.name>
-	<20040607162858.GA5220@synapse.neuralscape.com>
-In-Reply-To: <20040607162858.GA5220@synapse.neuralscape.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0031_01C44D60.C9561E80"
+Subject: [linux-lvm] (no subject)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,17 +27,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-hello,
+This is a multi-part message in MIME format.
 
-Karen Shaeffer wrote:
-> You can find Sil311x support in the 2.6.6 kernel. I've run it with the
-> Sil3114 controller.
+------=_NextPart_000_0031_01C44D60.C9561E80
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-so far i know (i didn't watch that for few last months) there is driver for 
-sil3112 in 2.6 kernel (sata_sil) but the raid driver didn't work. also it didn't 
-work well for everyone. so any good news?
-thank you
-philip
+I HAVE TRIED EVERYTHING POSSIBLE TO UNSUBSCRIBE TO THIS WITHOUT SUCCESS. =
+ I DO NOT HAVE MY PASSWORD, SO I HAVE REQUESTED IT TWICE,  SAYS IT WILL =
+EMAIL ME BACK, BUT NEVER DOES.  WHAT ELSE CAN I DO OR IS THERE SOMEONE I =
+CAN CALL.  THANKS, JERRY
+------=_NextPart_000_0031_01C44D60.C9561E80
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2800.1400" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>I HAVE TRIED EVERYTHING POSSIBLE TO =
+UNSUBSCRIBE TO=20
+THIS WITHOUT SUCCESS.&nbsp; I DO NOT HAVE MY PASSWORD, SO I HAVE =
+REQUESTED IT=20
+TWICE,&nbsp; SAYS IT WILL EMAIL ME BACK, BUT NEVER DOES.&nbsp; WHAT ELSE =
+CAN I=20
+DO OR IS THERE SOMEONE I CAN CALL.&nbsp; THANKS,=20
+JERRY</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_0031_01C44D60.C9561E80--
