@@ -1,8 +1,8 @@
-From: Herbert Poetzl <herbert@13thfloor.at>
-Message-ID: <20030513133707.GA31126@www.13thfloor.at>
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re: [linux-lvm] iSCSI and LVM
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM on Raid 5 Performance?
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20030513144518.CGIJ8294.imf58bis.bellsouth.net@tiger2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,142 +13,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 13 08:36:02 2003
+Date: Tue May 13 09:42:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>
 
-Hi All!
+ >>  Hi,
+ >>      Is anyone on this list familiar with iSCSI? I was wondering if
+ >>  it'd be possible to setup a Logical Volume as an iSCSI target and export
+ >>  it over an IP network for other clients to use. I'm interested in
+ >>  setting up an IP SAN, where the storage devices are logical volumes
+ >>  managed by LVM. There's this company called SANRAD that makes a hardware
+ >>  device called an iSCSI switch. The iSCSI switch is connected to a pool
+ >>  of storage disks on the back-end and to a bunch of servers on the
+ >>  front-end. It uses logical volume management to carve out logical disks
+ >>  from the back-end storage disks, then exports these using iSCSI to the
+ >>  front-end servers. (Check out their website http://www.sanrad.com for a
+ >>  nice flash movie of this architecture). Anyways, some fellow classmates
+ >>  and I are interested in building such an iSCSI switch in software, using
+ >>  LVM and other opensource components. Any feedback would be greatly
+ >>  appreciated.
 
-I'm using LVM for a long time, usually on non RAID
-systems to simplify storage space modifications ...
+ >>  Regards,
+ >>  Kai-Min Sung
 
-recently I configured a nice system (Dual Athlon,
-with 4 18.2G U160 SCSI IBM (DDYS-T18350N) disks
-on an Adaptec 29160N Ultra160. Because I had some
-troubles with the Adaptec/SCSI cabeling I reduced
-the bus speed to 40Mhz, which gives 80MB/s transfer
-(theoretically) via SCSI, each disc seems to do
-about 15MB/s (which seems a little low). I decided
-to arrange the 4 discs in a RAID 5 array to gain
-some speedup and redundancy (which resulted in
-about 33MB/s burst, 25% below the, again theoretical 
-limit of 45MB/s). Ontop of the RAID 5 array I 
-configured LVM 1.0.7 to create several partitions
-for further use ...
+Ignoring efficiency issues, you should not have any problem putting together a=20
+Linux Server with lots of internal disk space, then using LVM to manage that=20
+space, and have iSCSI target software share it out to a small collection of =
+iSCSI=20
+initiators.
 
-Now what happened was, that the performance (read)
-dropped to about 18MB/s burst, which wasn't what
-I expected at all ...
+FYI: I have only tested iSCSI exporting of partitions, not LVM LVs. =20
 
-Has anybody any explanations why the LVM layer eats
-up about 45% of the available throughput?
-(in this configuration?)
+I assume you know that iSCSI was formally accepted earlier this year.  I don't=20
+know if there is a OSS target and initiator pair available yet or not that =
+implements=20
+the formal spec.=20
 
-    	    	raw disc    md(raid5)	lvm on md
------------------------------------------------------
-hdparm	    	14694.40    34129.92	18667.52
-dd 1024k    	14988.22    34732.56	18647.98
-dd 32k	    	15516.06    33945.48	18862.67
+The Intel reference implementation appears not to have been updated yet:
+    http://sourceforge.net/projects/intel-iscsi
 
-best,
-Herbert
+From my testing of the earlier rev levels (v8, v12, v16) there is not much =
+vendor=20
+compatibility and definitely there was not rev. level compatibility.
 
---- Technical Information ---
+If you care about Win2K, MS is supposed to be releasing a iSCSI initiator =
+driver in=20
+the summer.  It will meet the formal spec. not the draft releases.
 
-2.4.21-rc2 kernel (with 1.0.7 LVM patch, among others)
+BTW: From an efficiency perspective you should check out iSCSI NICs.  There is =
+a=20
+lot of TCP/IP overhead associated with iSCSI, and these NICS are designed to =
+eliminate=20
+that portion of the CPU load.  I have not used them, but I assume the present a =
+SCSI=20
+interface at the PCI bus level.
 
-May 11 05:26:52 phoenix kernel: SCSI subsystem driver Revision: 1.00
-May 11 05:26:52 phoenix kernel: scsi0 : Adaptec AIC7XXX EISA/VLB/PCI SCSI HBA DRIVER, Rev 6.2.33
-May 11 05:26:52 phoenix kernel:         <Adaptec 29160N Ultra160 SCSI adapter>
-May 11 05:26:52 phoenix kernel:         aic7892: Ultra160 Wide Channel A, SCSI Id=7, 32/253 SCBs
-May 11 05:26:52 phoenix kernel: 
-May 11 05:26:52 phoenix kernel: blk: queue c3667e18, I/O limit 4095Mb (mask 0xffffffff)
-May 11 05:26:52 phoenix kernel: (scsi0:A:0): 80.000MB/s transfers (40.000MHz, offset 63, 16bit)
-May 11 05:26:52 phoenix kernel: (scsi0:A:1): 80.000MB/s transfers (40.000MHz, offset 63, 16bit)
-May 11 05:26:52 phoenix kernel: (scsi0:A:2): 80.000MB/s transfers (40.000MHz, offset 63, 16bit)
-May 11 05:26:52 phoenix kernel: (scsi0:A:3): 80.000MB/s transfers (40.000MHz, offset 63, 16bit)
+FYI2: Snapshots require LV support _and_ FS support.  In what you are =
+describing,=20
+LVM would provide the LV aspect, but you would need to support only filesystems =
+which have a freeze capability.  I use xfs and I know it does.  LV resize would =
+also=20
+need corresponding FS support.=20
 
-raiddev /dev/md/0
-
-        raid-level      5
-        nr-raid-disks   4
-        nr-spare-disks  0
-	chunk-size	32
-	parity-algorithm left-symmetric
-        persistent-superblock 1
-
-        device          /dev/hd0/part5
-        raid-disk       0
-        device          /dev/hd1/part5
-        raid-disk       1
-        device          /dev/hd2/part5
-        raid-disk       2
-        device          /dev/hd3/part5
-        raid-disk       3
-
-
-pvcreate /dev/md/0 
-vgcreate -A y vgs /dev/md/0
-lvcreate -C y -L 3G -n usr -Z y vgs
-
---- Tests ---
-
-# hdparm -tT /dev/hd0/disc 
-
-/dev/hd0/disc:
- Timing buffer-cache reads:   128 MB in  0.50 seconds =256.00 MB/sec
- Timing buffered disk reads:  64 MB in  4.46 seconds = 14.35 MB/sec
-
-# time dd if=/dev/hd0/disc of=/dev/null bs=1024k count=1024
-1024+0 records in
-1024+0 records out
-0.00user 16.98system 1:09.96elapsed 24%CPU (0avgtext+0avgdata 0maxresident)k
-0inputs+0outputs (111major+274minor)pagefaults 0swaps
-
-# time dd if=/dev/hd0/disc of=/dev/null bs=32k count=32768
-32768+0 records in
-32768+0 records out
-0.02user 14.66system 1:07.58elapsed 21%CPU (0avgtext+0avgdata 0maxresident)k
-0inputs+0outputs (110major+26minor)pagefaults 0swaps
-
-------------
-
-# hdparm -tT /dev/md/0
-
-/dev/md/0:
- Timing buffer-cache reads:   128 MB in  0.49 seconds =261.22 MB/sec
- Timing buffered disk reads:  64 MB in  1.92 seconds = 33.33 MB/sec
-
-# time dd if=/dev/md/0 of=/dev/null bs=1024k count=1024
-1024+0 records in
-1024+0 records out
-0.00user 12.09system 0:30.19elapsed 40%CPU (0avgtext+0avgdata 0maxresident)k
-0inputs+0outputs (111major+274minor)pagefaults 0swaps
-
-# time dd if=/dev/md/0 of=/dev/null bs=32k count=32768
-32768+0 records in
-32768+0 records out
-0.00user 10.52system 0:30.89elapsed 34%CPU (0avgtext+0avgdata 0maxresident)k
-0inputs+0outputs (110major+26minor)pagefaults 0swaps
-
--------------
-
-# hdparm -tT /dev/vgs/usr 
-
-/dev/vgs/usr:
- Timing buffer-cache reads:   128 MB in  0.50 seconds =256.00 MB/sec
- Timing buffered disk reads:  64 MB in  3.51 seconds = 18.23 MB/sec
-
-# time dd if=/dev/vgs/usr of=/dev/null bs=1024k count=1024
-1024+0 records in
-1024+0 records out
-0.01user 18.66system 0:56.23elapsed 33%CPU (0avgtext+0avgdata 0maxresident)k
-0inputs+0outputs (111major+274minor)pagefaults 0swaps
-
-# time dd if=/dev/vgs/usr of=/dev/null bs=32k count=32768
-32768+0 records in
-32768+0 records out
-0.07user 13.43system 0:55.59elapsed 24%CPU (0avgtext+0avgdata 0maxresident)k
-0inputs+0outputs (110major+26minor)pagefaults 0swaps
+Greg
+--=20
+Greg Freemyer
