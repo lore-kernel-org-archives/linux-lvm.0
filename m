@@ -1,12 +1,11 @@
-From: lembark@wrkhors.com
-Subject: Re: [linux-lvm] FW: Logical Volume Manager
-Message-ID: <114770000.1028576566@duke>
-In-Reply-To: <20020805210711.G20768@vestdata.no>
-References: <FOEKLLKHFOMPIDEHNBHMMEAJCDAA.mmouw@sistina.com>
- <20020805182225.GA28108@localhost> <20020805210711.G20768@vestdata.no>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] lvmcreate_initrd: stripping shared library
+Message-ID: <20020805201756.GA32591@colombina.comedia.it>
+References: <OE254VHAYM9UuonbIMm0000e671@hotmail.com>
+Mime-Version: 1.0
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <OE254VHAYM9UuonbIMm0000e671@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,22 +16,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug  5 14:45:02 2002
+Date: Mon Aug  5 15:17:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
->> >           I wonder if you can help me please, I want to setup a 11TB single
->> > volume under Redhat Linux 7.3 but LVM appears to only support 300GB is it
->> > possible for it to support 11TB.
+On Mon, Aug 05, 2002 at 03:52:12PM -0300, Jorge Melhado wrote:
+>    I�m using Red Hat 7.3 (kernel 2.4.28) and I�m trying to convert may
+>    root filesystem to LVM.
+well
+rh73 supports root raid natively (i don't believe lvmcreate_initrd is distributed with redhat
+but you never know)
 
-Better question might by why you'd want to set up an 11TB
-file system in the first place. Anything this size will be
-hell to manage.
+user redhat mkinitrd tool to create an initrd capable of booting from lvm
 
-What is going on the file system?
+regards,
+L.
 
---
-Steven Lembark                              2930 W. Palmer
-Workhorse Computing                      Chicago, IL 60647
-                                           +1 800 762 1582
+P.S. i hate howto documents (they tend to be read as gospel, but usually never apply
+to someone particular situation).
+
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
