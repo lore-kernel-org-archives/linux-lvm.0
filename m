@@ -1,11 +1,8 @@
-Message-Id: <200201080927.g089QVJ00669@hammer.brocade.com>
-From: Adrian Head <ahead@bigpond.net.au>
-References: <1010427293.29260.3.camel@UberGeek>
-    <m3666ej5t2.fsf@shakti.rupa.com>
-In-Reply-To: <m3666ej5t2.fsf@shakti.rupa.com>
+From: "BrainCoders.com" <mailinglist@braincoders.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: GRUB + LVM + XFS?
+Message-Id: <E16NuMO-0007du-00@hermes.sistina.com>
+Subject: [linux-lvm] *****SPAM***** ** LOW COST SOFTWARE DEVELOPMENT **
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,57 +13,100 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  8 03:26:01 2002
+Date: Tue Jan  8 05:25:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Rupa Schomaker <rupa-list@rupa.com>, linux-xfs@oss.sgi.com
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+SPAM: -------------------- Start SpamAssassin results ----------------------
+SPAM: This mail is probably spam.  The original message has been altered
+SPAM: so you can recognise or block similar unwanted mail in future, using
+SPAM: the built-in mail filtering support in your mail reader.
+SPAM: 
+SPAM: Content analysis details:   (19 hits, 5 required)
+SPAM: Hit! (1 point)     Subject is all capitals
+SPAM: Hit! (3.8 points)  BODY: /to (?:be removed|be deleted|no longer receive th(?:is|ese) messages?) (?:from|send|reply|[e-]*mail)/i
+SPAM: Hit! (2.6 points)  BODY: /you (?:wish|want|would like|desire) to be removed/i
+SPAM: Hit! (3.9 points)  BODY: /subject.*remove/i
+SPAM: Hit! (2.5 points)  BODY: /\"remove\"/i
+SPAM: Hit! (2.2 points)  BODY: Says: "to be removed, reply via email" or similar
+SPAM: Hit! (3 points)    Listed in Razor, see http://razor.sourceforge.net/
+SPAM: 
+SPAM: -------------------- End of SpamAssassin results ---------------------
 
-On Tue, 8 Jan 2002 05:54, Rupa Schomaker wrote:
-> I'm having toubles with the current CVS version of the XFS kernel.  I
-> haven't had time to look at it completely, but... it could be:
->
-> 1) mismatch between userspace and kernel (what LVM is in the XFS
->    kernel?  I'm using the debian lvm10 userspace).
->
-> 2) bad config
->
-> 3) ???
->
-> A quick "bt" at boot in kdb shows that devfs is in the call path.  No,
-> I haven't had time to write everything down. :(  Man, I wish there was
-> an easy to dump the kdb info or an OOPs to disk...
 
-Well all I do is for getting kdb output is to use a serial console and 
-another computer - then cut and past then send  ;-).
+Dear Internet User,
 
-It is very interesting that devfs is referenced - there was a LVM memory 
-corruption problem and a patch for LVM/devfs - it can be found here:
-http://marc.theaimsgroup.com/?l=linux-xfs&m=101031443221058&w=2
+The eBusiness is changing the software applications and 
+services landcape in a way that has not been seen 
+earlier. Companies worldwide are waking up to the fact 
+that the difference between just having an Online 
+Presence and using the web as a strategic medium can mean 
+all the difference to success. 
 
-- From my experience it seems that LVM 1.0.1rc4(ish) is way more robust than 
-the updated LVM 1.0.1 or even CVS LVM 1.0.1 yesterday.  However, not 
-everything works as expected with either. You can find a results table for a 
-few tests I have conducted here: (of course YMMV)
-http://marc.theaimsgroup.com/?l=linux-lvm&m=100994364215110&w=2
+What this also means is that you need technology 
+providers who understand the business implications of 
+technology and can make sure that the solutions work with 
+your exisiting business processes as also enable you to 
+integrate new processes without massive investments in 
+changing the whole Application Architecture. 
 
-I think you would be very interested in the discussions and activity that has 
-been occuring on the linux-xfs & linux-lvm lists at the moment regarding XFS 
-and LVM.  If you are seeing problems I would be very interested in finding 
-out how your problems differ from mine.
+BrainCoders.com is a software company dedicated to 
+designing and developing the highest-quality software to 
+provide our clients with workable, maintainable and 
+leading-edge solutions. We are specializing in IT 
+services and software outsourcing. 
 
-- -- 
-Adrian Head
+Our prices are one of the lowest on the market. We charge 
+our customers from $8 to $15 per working hour depending 
+on the length and complexity of the project.
 
-(Public Key available on request.)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Our leading principle is to consistently deliver on time 
+and on budget. 
+Our most value asset is our team of most committed and 
+capable people. 
 
-iD8DBQE8OkHO8ZJI8OvSkAcRAsHkAJ9OlEWOQMxiXXsJ0OzsllI7icT8pQCeLfM2
-95t821X+y25nYdf3WCDRg9k=
-=rjIv
------END PGP SIGNATURE-----
+This dedication to high degrees of professionalism 
+translates to innovative and cost effective solutions. 
+The bottom line is that we help our clients gain 
+competitive advantage and maintain their leading 
+positions in their respective industries.
+
+BrainCoders.com' software development services may be of 
+special interest to the following groups of potential 
+customers: 
+
+Software houses that wish to reduce their development 
+costs by means of outsourcing.
+
+Companies not directly involved in software development, 
+but which have or need their proprietary software 
+business applications and wish to delegate the 
+development, upgrades and support of these applications 
+to a software company.
+
+For more information please visit our web site by 
+clicking the following link:
+
+http://www.braincoders.com
+
+If you are interested in our services, I would be happy 
+to provide you with any information you may request.
+
+I am looking forward to hearing from you.
+
+Best Regards,
+
+Vesselin Sladkov
+BrainCoders.com
+E-mail: sladkov@braincoders.com
+
+_________________________________________________________
+This mailing is done only to people who have requested 
+info from one of our sites, or downloaded
+our Software. If you have recieved this email in error 
+and you wish to be removed from future 
+mailings, please reply with the subject "Remove" and our 
+software will automatically block you 
+from their future mailings.
+_________________________________________________________
