@@ -1,10 +1,9 @@
-Return-Path: <urs@isnogud.escape.de>
-Subject: Re: [linux-lvm] LVM, lilo and MBR?
-References: <m2g0fzsghb.fsf@isnogud.escape.de> <20010327110158.A2403@tykepenguin.com>
-From: Urs Thuermann <urs@isnogud.escape.de>
-Date: 27 Mar 2001 15:43:07 +0200
-In-Reply-To: <20010327110158.A2403@tykepenguin.com>; from Patrick Caulfield on Tue, 27 Mar 2001 11:01:58 +0100
-Message-ID: <m2ae67s4yc.fsf@isnogud.escape.de>
+Return-Path: <markv@wave.co.nz>
+Date: Wed, 28 Mar 2001 02:14:21 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Message-ID: <20010328021421.B4557@mail.wave.co.nz>
+Mime-Version: 1.0
+Subject: [linux-lvm] safe to ru-run vgscan after mounting LV root?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +15,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Patrick Caulfield <caulfield@sistina.com> writes:
+Hi All,
 
-> Yes it is. Don't run LILO on /dev/sda if it's a PV because it will
-> destroy it.  You should partition the disk into /dev/sda1 (that way
-> the PV will start further in and leave space for LILO)
+First, let me say how impressed I am with LVM.  I've just set up a 2.4.2
+system with all filesystems in logical volumes, on an MD mirror.  I am
+an experienced (i.e., "jaded") sysadmin, so please take my enthusiasm
+as a truly singular occurrence.  Kudos to you.
 
-Hm, I hoped I could get rid of the broken partitioning scheme of the
-PC and C/H/S addressing used in the partition table.
+Now for my question: The system above runs vgscan (and vgchange) from an
+initrd before mounting the root filesystem.  After that, the /etc/lvmtab*
+files and directories need to be refreshed from the initrd.  Instead of
+keeping the initrd hanging around until then, could vgscan simply be
+run again to recreate /etc/lvmtab*, even though PVs and LVs are active?
 
-Are there objections to change LVM so that the VGDA is placed at some
-fixed offset (say 1 sector or 1 block (1K)) from the beginning of the
-PV?  This is how many file systems also use block devices to avoid
-conflicts with MBR, boot sectors and so on.
+Thanks,
 
-BTW, are the other partitioning schemes that I could use than the one
-that the standard MBR and MSDOS use?  Can the linux kernel recognize
-other partition tables which only use absolut, linear sector numbers?
-
-
-urs
+Mark.
