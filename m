@@ -1,8 +1,8 @@
-From: wbh <W.B.Hill@uea.ac.uk>
-Subject: Re: [linux-lvm] LVM ate my data!
-In-Reply-To: <20020225192811.A9674@sistina.com>
-Message-Id: <Pine.OSF.4.05.10202252007450.18015-100000@cpca7.uea.ac.uk>
+From: Monte Milanuk <milanuk@yahoo.com>
+Message-Id: <20020224203344.78e8ec8b.milanuk@yahoo.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Anyone brave tried lvm-1.0.3 & 2.4.18/2.4.19pre1 yet?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,35 +13,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 25 14:18:02 2002
+Date: Mon Feb 25 22:37:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: lvm <linux-lvm@sistina.com>
 
-Wahey - I got my data back, thankyou!
+Well? Inquiring minds want to know!
 
-> pvcreate -yff /dev/hda[34]
-> vgcfgrestore -n YourVGName /dev/hda3
-> vgcfgrestore -n YourVGName /dev/hda4
-> vgscan
-> vgchange -ay
+Thanks,
 
-What I did, from .bash_history
-rm -rf /etc/lvmtab /etc/lvmtab.d /dev/pvg # I had backed up already.
-~/LVM/1.0.3/tools/vgscan
-~/LVM/1.0.3/pvcreate -yff /dev/hda[34]
-vgcfgrestore -n pvg /dev/hda3
-vgcfgrestore -n pvg /dev/hda4
-~/uuid_fixer/uuid_fixer /dev/hda3 /dev/hda4
-~/LVM/1.0.3/tools/vgscan
-~/LVM/1.0.3/tools/vgchange -ay
-mount -treiserfs /dev/pvg/1 /mnt/dat
+Monte
 
-Don't know how much of that was needed...
+-- 
+All right, breaks over.  Back on your heads!!
 
-I had been playing with snapshots recently, but they didn't seem to work
-with my ancient (2.4.3) kernel. Could that have been the cause?
-
-Thanks!
-    Bill
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com
