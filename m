@@ -1,8 +1,8 @@
-Message-Id: <200308132014.h7DKEXo14381@mail.osdl.org>
-From: markw@osdl.org
-Subject: Re: [linux-lvm] compiling lvm2.2.00.05 w/ linux-2.6.0-test3
-In-Reply-To: <1060731870.9126.2.camel@chtephan.cs.pocnet.net>
-MIME-Version: 1.0
+From: John DeFranco <defranco@airwolf.cup.hp.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1060906319.18416.1783.camel@airwolf.cup.hp.com>
+Mime-Version: 1.0
+Subject: [linux-lvm] lvm -- lvm_blk_ioctl: unknown cmd
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,31 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug 13 15:15:02 2003
+Date: Thu Aug 14 19:06:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: christophe@saout.de
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-On 13 Aug, Christophe Saout wrote:
-> Am Mi, 2003-08-13 um 01.30 schrieb markw@osdl.org:
-> 
->> Hello, I'm having a little problem building the lvm2 tools.  I'm
->> starting with a RedHat 8.0 distro, built the 2.6.0-test3 kernel with
->> CONFIG_BLK_DEV_DM=y and CONFIG_DM_IOCTL_V4=y, built and installed
->> device-mapper 1.00.02.  Then I created a simlink from /usr/include/linux
->> to the 2.6.0-test3 include/linux directory.  When I try to build the
->> lvm2 2.00.05 tools, I get the following errors:
-> 
-> Symlinking isn't allowed anymore with the 2.6 kernel. In most cases it
-> will fail with missing references to asm or asm-generic or tell that you
-> aren't allowed to include kernel headers from userspace.
-> 
-> Please use the header files that come with your distro. Or link
-> /usr/include/linux and /usr/include/asmm to the include/linux and
-> include/asm directory from a 2.4 kernel (or copy the include files).
+Hi,
 
-Aha, thanks!
+I'm running lvm 1.0.7 on RedHat AS2.1 U2 + Errata e25. When I fsck a
+logical volume I get the following messages:
 
-Mark
+
+lvm -- lvm_blk_ioctl: unknown cmd 0x1260
+lvm -- lvm_blk_ioctl: unknown cmd 0x801c0204
+
+This does not occur with reiserfs. Should I be concerned? All the data
+seems to be ok.
+
+Thansk!
+
+John DeFranco			Hewlett-Packard Company
+john.defranco@hp.com		Availability Clusters Solution Division
+phone: 408-447-7543		19111 Pruneridge Ave, M/S 4101
+fax: 408-447-0056		Cupertino, CA 95014 
