@@ -1,12 +1,11 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] "invalid i/o-protocol version" with e2fsadm
-    (1.0.3) and 2.4.18
-Message-Id: <20020227102215.N12832@lynx.adilger.int>
-References: <20020227131803.A188@sparcie.schaub.loc>
+Subject: Re: [linux-lvm] Re: lvm 1.0.3, kernel 2.4.17 and the libs...
+From: Daniel Savard <dsavard@cids.ca>
+In-Reply-To: <20020226155618.C12832@lynx.adilger.int>
+References: <1014762518.12325.76.camel@dirac.cids.ca>
+    <20020226155618.C12832@lynx.adilger.int>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1014830883.13642.12.camel@dirac.cids.ca>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020227131803.A188@sparcie.schaub.loc>; from
-    markus.schaub@gmx.net on Wed, Feb 27, 2002 at 01:18:11PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,31 +16,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 11:22:02 2002
+Date: Wed Feb 27 11:28:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Markus Schaub <markus.schaub@gmx.net>
+Content-Type: text/plain; charset="iso-8859-1"
+To: Andreas Dilger <adilger@turbolabs.com>
 Cc: linux-lvm@sistina.com
 
-On Feb 27, 2002  13:18 +0100, Markus Schaub wrote:
-> I always get an "i/o protocol version" error when trying to resize a
-> lv witch e2fsadm (statically linked, from lvm-1.0.3 with kernel
-> 2.4.18).
+le mar 26-02-2002 =E0 17:56, Andreas Dilger a =E9crit :
+> On Feb 26, 2002  17:28 -0500, Daniel Savard wrote:
+> > I did mkfs.ext2 on /dev/sda8 !!! However, this was still pointing to my
+> > LVM partition even if fdisk was not showing this.
+> >=20
+> > The big question: Is it still possible to recover some data from the LV=
+M
+> > partition which was the only partition in my VG?
+>=20
+> Well, mke2fs writes a LOT of data into the partition, being especially
+> careful to overwrite everything at the start of the disk.  It might be
+> possible to recover this with "vgcfgrestore", but even then you have the
+> problem of overwriting the rest of the data on the disk.  If the primary
+> ext2 superblock is overwritten on an LV inside this disk, you can use
+> "e2fsck -b 32768" or so to try and recover.
+>=20
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+>=20
 
-You probably have two copies of e2fsadm in your path.  Try something
-like 'which e2fsadm' or 'whereis e2fsadm'.  The other possibility is
-that your static liblvm.a is the wrong one.
+Since my LVM partition has been moved by the operations on the
+partitions with fdisk. I had to use the vgcfgrestore command as follow
+and getting the following error:
 
-> Some time ago I got the same error with e2fsadm 1.0.1-rc4 on
-> 2.4.13-ac7. In this case e2fsadm resized the filesystem but could not
-> resize the lv. Resizing the lv with lvreduce (same version) worked.
+[root@einstein sbin]# vgcfgrestore -n datavg -o /dev/sda9 /dev/sda7
+vgcfgrestore -- INFO: using backup file "/etc/lvmconf/datavg.conf"
+vgcfgrestore -- ERROR "pv_read(): PV identifier invalid" reading physical v=
+olume "/dev/sda7"
 
-The I/O protocol version has not changed since LVM 0.8, so you must
-have a bad program.
+Is there still something I can try or should I forget it?
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+--=20
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Daniel Savard
+
+Internet: dsavard@cids.ca
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
