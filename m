@@ -1,5 +1,5 @@
-Message-ID: <3BA66769.1030001@kenamea.com>
-Date: Mon, 17 Sep 2001 14:13:13 -0700
+Message-ID: <3BA66E42.9010603@kenamea.com>
+Date: Mon, 17 Sep 2001 14:42:26 -0700
 From: Kenny Gorman <kenny@kenamea.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -18,9 +18,20 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I can not delete a vol grp, but it doesn't show as there.  When I try to 
-create a new one with the same name, then it says it exists...  how do I 
-  'clean out' old references?
+This may be a re-post, I am not sure if it went through.. sorry if it's 
+a duplicate:
+
+
+
+-------- Original Message --------
+Subject: Phantom Vol Grp
+Date: Mon, 17 Sep 2001 14:13:13 -0700
+From: Kenny Gorman <kenny@kenamea.com>
+To: linux-lvm@sistina.com
+
+I can not delete a vol grp, but it doesn't show as there.  When I try to
+create a new one with the same name, then it says it exists...  how do I
+   'clean out' old references?
 
 See below:
 
@@ -30,11 +41,11 @@ pvscan -- ACTIVE   PV "/dev/sdb1" of VG "oraredo1" [100 MB / 100 MB free]
 pvscan -- inactive PV "/dev/sdb2" is in no VG  [16.99 GB]
 pvscan -- ACTIVE   PV "/dev/sdc1" of VG "oraredo2" [100 MB / 100 MB free]
 pvscan -- inactive PV "/dev/sdc2" is in no VG  [16.99 GB]
-pvscan -- ACTIVE   PV "/dev/sdd1" of VG "redogrp3" [17.09 GB / 16.98 GB 
+pvscan -- ACTIVE   PV "/dev/sdd1" of VG "redogrp3" [17.09 GB / 16.98 GB
 free]
-pvscan -- ACTIVE   PV "/dev/sdd2" of VG "sysgrp"   [16.99 GB / 12.49 GB 
+pvscan -- ACTIVE   PV "/dev/sdd2" of VG "sysgrp"   [16.99 GB / 12.49 GB
 free]
-pvscan -- total: 6 [68.26 GB] / in use: 4 [34.28 GB] / in no VG: 2 
+pvscan -- total: 6 [68.26 GB] / in use: 4 [34.28 GB] / in no VG: 2
 [33.98 GB]
 
 colobus:~ # vgcreate indxgrp /dev/sdc2
