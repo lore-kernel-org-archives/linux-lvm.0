@@ -1,11 +1,10 @@
-Return-Path: <glenn@gecpalau.com>
-Message-ID: <3AF72CCF.173748B4@gecpalau.com>
-Date: Tue, 08 May 2001 08:16:31 +0900
-From: Glenn Shannon <glenn@gecpalau.com>
+Return-Path: <juspeace@dreamwiz.com>
+Message-Id: <200105080129.f481TB104985@mail5.dreamwiz.com>
+Date: Tue, 8 May 2001 10:29:06 +0900 (KST)
+From: =?EUC-KR?B?wMzIq7yu?= <juspeace@dreamwiz.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Can't pvcreate second partition...
-References: <B51F0C636E578A4E832D3958690CD73E0130BEE2@es04snlnt> <20010507180815.E9153@sistina.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: MULTIPART/ALTERNATIVE; BOUNDARY="0-113807298-989285349=:4922"
+Subject: [linux-lvm] Question about LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,99 +16,192 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Linux-LVM@Sistina.com
 
-I have....my system has some sort of leftover 4.2BSD partitioning ghost (I
-removed all partitions before I installed linux) that remains from my days with
-OpenBSD. As a result fdisk does not work, in fact it segfaults. And using
-anything else, I have to reboot before I can make use of the partitions.
+--0-113807298-989285349=:4922
+Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
 
-Wierdness.
+HI! Heinz Manelshagen
 
-Glenn
+I am hongseok Lee.
+I am a student working on sungkyunkwan Univ. in korea.
+I tried to construct Logical Volume Management (LVM) in my PC,
+ but I don't know how I can't do anymore.
 
-AJ Lewis wrote:
+First I pactched Linux-version 2.4.0 and uploaded LVM 0.9.1-Beta5.
+It is successfully.
+So I maked 3 Physical volume. (/dev/hdb1, /dev/hdb2, /dev/hdb3)
+And I tried to make VG, But it is not available.
+I think PV's state are inactive is primary problem.
+Therfore I can't do any progress.
+How can I change this PV state is active and VG state is available?
+Plz, check next text result and give me some advice.
+I red LVM HOWTO. But there is no describe this problem.
 
-> On Mon, May 07, 2001 at 04:13:38PM -0600, Diehl, Jeffrey wrote:
-> > The problem with this theory is that I'm running 2.2.18, not 2.4.x.
->
-> Doh. I guess it isn't a 2.4x only problem then.  ;)  Very odd.  Has anyone
-> seen this when the LVM patches are not applied?
->
-> > > -----Original Message-----
-> > > From: AJ Lewis [mailto:lewis@sistina.com]
-> > > Sent: May 06, 2001 10:12 PM
-> > > To: linux-lvm@sistina.com
-> > > Subject: Re: [linux-lvm] Can't pvcreate second partition...
-> > >
-> > >
-> > > On Sun, May 06, 2001 at 10:36:13AM -0700, Darren Young wrote:
-> > > > Funny, I had the same issue at the same time. I
-> > > > created /dev/hdb7 with fdisk and then a pvcreate just
-> > > > after. pvcreate stated that the dev didn't exist.
-> > > > Reboot fixed the problem. This could be a problem for
-> > > > machines already up in production with small windows
-> > > > for restarts. Why is this necessary and will it become
-> > > > a "non-issue" in future releases? If this will be
-> > > > necessary forever, then some simple planning would
-> > > > solve the problem, at least on new installations. Any
-> > > > way around this?
-> > >
-> > > This appears to be an issue with fdisk and the 2.4.x series
-> > > Linux kernels.
-> > > It has nothing to do with LVM as far as i can tell.  I've had
-> > > problems where
-> > > I run fdisk to change the size of a partition, but linux
-> > > doesn't detect the
-> > > change.  /proc/partitions is identical before and after i
-> > > attempt to write
-> > > out the changes with fdisk.  I'm not sure what has caused this. Maybe
-> > > someone else on the list knows?
-> > >
-> > > I'll try to verify this when i get into work tomorrow.
-> > >
-> > > Regards,
-> > > --
-> > > AJ Lewis
-> > > Sistina Software Inc.                  Voice:  612-638-0500
-> > > 1313 5th St SE, Suite 111              Fax:    612-638-0500
-> > > Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> > > http://www.sistina.com
-> > >
-> > > Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E
-> > > 1261 0029 2648
-> > > Get my key at: http://www.sistina.com/~lewis/gpgkey
-> > >  (Unfortunately, the PKS-type keyservers do not work with
-> > > multiple sub-keys)
-> > >
-> > > -----Begin Obligatory Humorous
-> > > Quote----------------------------------------
-> > > Life's unfair - but root password helps!
-> > > -----End Obligatory Humorous
-> > > Quote------------------------------------------
-> > >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
->
-> --
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-638-0500
-> 1313 5th St SE, Suite 111              Fax:    612-638-0500
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
->
-> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2648
-> Get my key at: http://www.sistina.com/~lewis/gpgkey
->  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
->
-> -----Begin Obligatory Humorous Quote----------------------------------------
-> A computer without a Microsoft operating system is like a dog without bricks
-> tied to its head.
-> -----End Obligatory Humorous Quote------------------------------------------
->
->   ------------------------------------------------------------------------
->    Part 1.2Type: application/pgp-signature
+- RESULT
+
+pvscan.txt
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdb1" of VG "group1" [3.84 GB / 3.84 GB free]
+pvscan -- inactive PV "/dev/hdb2" of VG "group1" [3.84 GB / 3.84 GB free]
+pvscan -- inactive PV "/dev/hdb3" of VG "group1" [5.03 GB / 5.03 GB free]
+pvscan -- total: 3 [12.72 GB] / in use: 3 [12.72 GB] / in no VG: 0 [0]
+
+
+pvdisplay_hdb1.txt
+--- Physical volume ---
+PV Name               /dev/hdb1
+VG Name               group1
+PV Size               3.85 GB / NOT usable 1.47 MB [LVM: 124 KB]
+PV#                   1
+PV Status             NOT available
+Allocatable           yes
+Cur LV                0
+PE Size (KByte)       4096
+Total PE              984
+Free PE               984
+Allocated PE          0
+PV UUID               FSebAC-CooV-3wl2-bAcm-k17y-vUFD-zbByTu
+
+
+vgscan.txt
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "group1"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+
+
+vgdisplay.txt
+--- Volume group ---
+VG Name               group1
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                0
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               12.72 GB
+PE Size               4 MB
+Total PE              3256
+Alloc PE / Size       0 / 0
+Free  PE / Size       3256 / 12.72 GB
+VG UUID               3i0sjU-p0iT-azB5-FKeI-lNss-AB6G-uDmolp
+
+
+
+
+
+
+-------------------------------------------------
+DreamWiz Free Mail @ http://www.dreamwiz.com/
+DreamSearch Click the world!!! http://search.dreamwiz.com/
+
+
+--0-113807298-989285349=:4922
+Content-Type: TEXT/HTML; CHARSET=US-ASCII
+
+<HTML>
+<BODY>
+
+<BR>HI! Heinz Manelshagen
+<BR>
+<BR>I am hongseok Lee.
+<BR>I am a student working on sungkyunkwan Univ. in korea.
+<BR>I tried to construct Logical Volume Management (LVM) in my PC,
+<BR>&nbsp;but I don't know how I can't do anymore.
+<BR>
+<BR>First I pactched Linux-version 2.4.0 and uploaded LVM 0.9.1-Beta5.
+<BR>It is successfully.
+<BR>So I maked 3 Physical volume. (/dev/hdb1, /dev/hdb2, /dev/hdb3)
+<BR>And I tried to make VG, But it is not available.
+<BR>I think PV's state are inactive is primary problem.
+<BR>Therfore I can't do any progress.
+<BR>How can I change this PV state is active and VG state is available?
+<BR>Plz, check next text result and give me some advice.
+<BR>I red LVM HOWTO. But there is no describe this problem.
+<BR>
+<BR>- RESULT
+<BR>
+<BR>pvscan.txt
+<BR>pvscan -- reading all physical volumes (this may take a while...)
+<BR>pvscan -- inactive PV "/dev/hdb1" of VG "group1" [3.84 GB / 3.84 GB free]
+<BR>pvscan -- inactive PV "/dev/hdb2" of VG "group1" [3.84 GB / 3.84 GB free]
+<BR>pvscan -- inactive PV "/dev/hdb3" of VG "group1" [5.03 GB / 5.03 GB free]
+<BR>pvscan -- total: 3 [12.72 GB] / in use: 3 [12.72 GB] / in no VG: 0 [0]
+<BR>
+<BR>
+<BR>pvdisplay_hdb1.txt
+<BR>--- Physical volume ---
+<BR>PV Name               /dev/hdb1
+<BR>VG Name               group1
+<BR>PV Size               3.85 GB / NOT usable 1.47 MB [LVM: 124 KB]
+<BR>PV#                   1
+<BR>PV Status             NOT available
+<BR>Allocatable           yes
+<BR>Cur LV                0
+<BR>PE Size (KByte)       4096
+<BR>Total PE              984
+<BR>Free PE               984
+<BR>Allocated PE          0
+<BR>PV UUID               FSebAC-CooV-3wl2-bAcm-k17y-vUFD-zbByTu
+<BR>
+<BR>
+<BR>vgscan.txt
+<BR>vgscan -- reading all physical volumes (this may take a while...)
+<BR>vgscan -- found inactive volume group "group1"
+<BR>vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+<BR>vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+<BR>
+<BR>
+<BR>vgdisplay.txt
+<BR>--- Volume group ---
+<BR>VG Name               group1
+<BR>VG Access             read/write
+<BR>VG Status             NOT available/resizable
+<BR>VG #                  0
+<BR>MAX LV                256
+<BR>Cur LV                0
+<BR>Open LV               0
+<BR>MAX LV Size           255.99 GB
+<BR>Max PV                256
+<BR>Cur PV                3
+<BR>Act PV                3
+<BR>VG Size               12.72 GB
+<BR>PE Size               4 MB
+<BR>Total PE              3256
+<BR>Alloc PE / Size       0 / 0
+<BR>Free  PE / Size       3256 / 12.72 GB
+<BR>VG UUID               3i0sjU-p0iT-azB5-FKeI-lNss-AB6G-uDmolp
+<BR>
+<BR>
+<BR>
+<BR>
+<BR></BODY>
+</HTML>
+
+<BR>
+
+<BR>
+<BR>
+
+<BR>
+<a HREF="http://www.dreamwiz.com/" TARGET=_blank><img SRC="http://mail.dreamwiz.com/juspeace/cgi-bin/receive_check.cgi?mailbox=Sent&uid_validity=00000000000953128345&uid=00000000000000000072,X00000&key=31f80147f77639b082b0be3fbf617f2f" BORDER="0"></a> <FONT SIZE=2><B>Your life on the net</FONT></B><br>
+<img src="http://i.dreamwiz.com/dw/ko/n.gif" width=1 height=7 border="0"><br>
+<span style="font-size: 8pt;">
+DreamWiz Free Mail @ <a href="http://www.dreamwiz.com/" TARGET=_blank>http://www.dreamwiz.com/</a><br>
+DreamSearch Click the world!!! &nbsp;<a href="http://search.dreamwiz.com/" TARGET=_blank>http://search.dreamwiz.com/</a></span>
+<br>
+<img src="http://i.dreamwiz.com/dw/ko/n.gif" width=1 height=8 border="0"><br>
+<IMG SRC="http://i.dreamwiz.com/dw/ko/ma/pluscon.gif" width=491 HEIGHT=12 BORDER=0 usemap="#plus"> 
+<map name="plus">
+  <area shape="rect" coords="396,0,490,11" href="http://www.dreamwiz.com/is/backicon.htm" target=_top>
+  <area shape="rect" coords="268,1,389,11" href="http://www.dreamwiz.com/is/dreamstart.htm" target=_top>
+  <area shape="rect" coords="1,1,264,11" href="http://www.dreamwiz.com/gn/main.htm" target=_top>
+</map>
+
+
+--0-113807298-989285349=:4922--
