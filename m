@@ -1,12 +1,8 @@
-From: "Chad C. Walstrom" <chewie@wookimus.net>
-Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-Message-ID: <20011130193234.C1239@wookimus.net>
-References: <20011130142015.F23836@wookimus.net> <Pine.LNX.4.33.0111301601570.5541-100000@lx1.daboard.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0111301601570.5541-100000@lx1.daboard.com>
+Message-ID: <61741.64.34.222.41.1004630228.squirrel@webmail.tekmd.com>
+From: <gdurand@tekmd.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] badiane:  Problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,48 +13,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 30 19:31:01 2001
+Date: Thu Nov  1 09:54:02 2001
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---Clx92ZfkiYIKRjnr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have created five volume groups (vg0 - vg4) to hold respectively /var,
+/home, /home/music, /usr, /usr/local.
 
-On Fri, Nov 30, 2001 at 04:02:16PM -0600, mitch@mdmiller.com wrote:
-> > Why would you want/need to have /usr/share writeable?  FHS 2.2 states:
->=20
-> Where do I find this document?
+I started with a 500MB / partition then created the pv, vg and lv.  Now what
+I wanted to know is how to have the system reboot and have the partitions
+mounted properly since the lvm binary and library cannot be found properly.
+The libraries are in /usr/lib/lvm and should be in /lib and the binary in
+/sbin or /bin.
 
-As any good google.com crack-baby would know:
+The install is from the debian binaries.  I can't compile on my system
+without getting a seg fault (that's another story.)  So I'm thinking that I
+would have to move the libraries to /lib and hope that the system will find
+them upon boot and proceed without errors.
 
-    http://www.google.com/search?q=3DFHS+2.2+Linux
+I would like to know the proper way to do this.
 
-Turns up these helpful links:
+Oh!  I had mounted the lv's on temp mount points /var2/, /home2/ etc and
+copied the original's data over and umounted so that upon remount they would
+again be avail able.
 
-    http://www.pathname.com/fhs/
-    http://www.opengroup.org/testing/lsb-fhs/
+Thanks in advance.
 
-OK, now back to your regularily scheduled LVM-ness.  Sorry for the
-tangent.
-
---=20
-Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-http://www.wookimus.net/                            | s.k.a. gunnarr
-Get my public key, ICQ#, etc. $(mailx -s 'get info' chewie@wookimus.net)
-
---Clx92ZfkiYIKRjnr
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE8CDMyDMcLGCBsWv0RAin3AKDd7Nri21MzFK2+aLgpxQ+eybAJ6gCbBRfd
-eHmI8yspge1uU0hfGnNfAw4=
-=4efx
------END PGP SIGNATURE-----
-
---Clx92ZfkiYIKRjnr--
+Badiane
