@@ -1,12 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 28 May 2001 11:02:26 +0000
+Date: Mon, 28 May 2001 11:08:03 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] EMC Storage + LVM + XFS
-Message-ID: <20010528110226.F26710@sistina.com>
-References: <20010525195526.B28981@vestdata.no> <Pine.LNX.4.33.0105251815170.7060-100000@UberGeek.coremetrics.com>
+Subject: Re: [linux-lvm] Re: vgscan - volume group not found, panic!
+Message-ID: <20010528110803.G26710@sistina.com>
+References: <004301c0e4a2$32398840$1500a8c0@gerben> <20010525091421.B2928@colombina.comedia.it>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <Pine.LNX.4.33.0105251815170.7060-100000@UberGeek.coremetrics.com>; from austin@coremetrics.com on Fri, May 25, 2001 at 06:16:06PM -0500
+In-Reply-To: <20010525091421.B2928@colombina.comedia.it>; from bluca@comedia.it on Fri, May 25, 2001 at 09:14:21AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,74 +17,171 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 25, 2001 at 06:16:06PM -0500, Austin Gonyou wrote:
-> That is my initial assumption, but I only want to make sure that vgscan
-> _will_ in fact work they way it seems it should and that the private
-> region of all volumes or groups will be able to be read and recovered.
+On Fri, May 25, 2001 at 09:14:21AM +0200, Luca Berra wrote:
+> On Fri, May 25, 2001 at 12:38:04AM +0200, Gerben Meijer wrote:
+> > Dear LVM users and developers,
+> > 
+> > I am experiencing problems with LVM. I am running Debian GNU/Linux 2.2 with
+> > a 2.4.3-ac11 kernel, and LVM utils v0.9 (i use the packages from bunk at
+> > http://people.debian.org/~bunk/debian/dists/potato/main/binary-i386/). I had
+> 
+> (note to developers: i am starting to believe taht bumping IOP in b6 was not such
+> a bad idea, if that helps us getting rid of broken tools.
+> mebbe we should bump IOP in vanilla kernel....)
 
-Yes, it will (unless there's JAB ;-)
+Thanks Luca, you are the first who argues for that beside us :-)
 
-One of the major purposes of vgscan is to take care of changed io access
-pathes to devices.
+But people did complain about the need to upgrade both driver and tools/lib
+at the same time.
+IMHO not a big deal, because the patch is automagically created by
+the make process anyway; just the additional kernel compile/install might
+suck a little bit.
 
-In case you add devices online using the scsi proc interface, you can use
-them at their current access path and even though that likely will change a=
-fter
-a reboot (or reload of the driver) vgscan can catch up with the new
-io configuration at startup before VG activation.
+Any additional votes?
 
 Regards,
 Heinz    -- The LVM Guy --
 
+> 
+> > Then I decided to try to upgrade to the latest LVM version, both in the
+> > kernel and the userspace utilities. So i patched my 2.4.3 kernel with the
+> > latest LVM patches (0.9.1beta7). I got an error while compiling my kernel
+> > though, get_hardblocksize wasn't defined anywhere. So i went back digging on
+> 
+> just replace get_hardblock_size with get_hardsect_size in drivers/md/lvm.c
+> or get latest version from cvs
+> 
+> > google and found one patch that fixed that for me:
+> > http://www.stacken.kth.se/pub/linux/kernel/people/andrea/kernels/v2.4/2.4.4a
+> > a2.bz2.
+> 
+> i dunno which LVM version does andrea use in his patches
+> 
+> > So finally i had a working kernel with the latest LVM drivers, and i had the
+> > latest LVM userspace utils, and i had my hopes up. Unfortunately, vgscan
+> > still didn't see anything, and vgcfgrestore gave me an error
+> > (vg_check_consistency_with_pv_and_lv).
+> > 
+> > Next, I tried using 2.4.4-ac9 with the original 0.9 userspace utilities.
+> > Still nothing.
+> 
+> in case you did not guess it from my note above original 0.9 userspace utils are bad
+> for your health
+> 
+> > I'm out of options here, and I am hoping that you can help me rescue my
+> > data. If you have any idea what I could try to fix this, please let me know.
+> > 
+> > Debugged output i created:
+> sigh this debug output is very hard to read, anyway at the end you see
+> <55555> pv_read_uuidlist -- LEAVING with ret: 2
+> this means it only found the uiid for 2 PV (not 3)
+> they are u9.... and M4.... (sda1 and hda2)
+> cross checking with pvdata output shows you have a known problem
+> 
+> i'll attach a mail from Andreas Dilger with a solution for this.
+> 
+> good luck!
+> L.
+> 
+> 
+> -- 
+> Luca Berra -- bluca@comedia.it
+>         Communication Media & Services S.r.l.
+>  /"\
+>  \ /     ASCII RIBBON CAMPAIGN
+>   X        AGAINST HTML MAIL
+>  / \
 
->=20
-> --=20
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-796-9023
-> email: austin@coremetrics.com
->=20
-> On Fri, 25 May 2001, Ragnar Kj=EF=BF=BDrstad wrote:
->=20
-> > On Fri, May 25, 2001 at 05:09:08PM +0200, Stephan Austermuehle wrote:
-> > > On Fri, May 25, 2001 at 09:47:34AM -0500, Austin Gonyou wrote:
-> > > > I don't think I'm clear on your statement. As far as I know, which =
-is a
-> > > > lot about EMC, you can definitely plug disks online. Having Linux s=
-ee
-> > > > them? Not necessarily so, but I believe the polling interval for th=
-e Fibre
-> > > > driver will take care of that.
-> > >
-> > > Oh, of course the Symmetrix allows hot plugging of disks and online
-> > > mapping of hypers to one or more channels via a Bin upgrade or the
-> > > SDR. But at the moment I do not know any way to make Linux recognise
-> > > the additional disks without reloading (rebooting) the driver. But
-> > > even if there's a way to online detect new disks -- if a vgscan is
-> > > necessary to tell the Linux LVM about where its VGs have gone it isn't
-> > > a very smart solution because it often requires application down time.
-> >
-> > I believe if you write things to /proc/scsi/scsi to make linux detect
-> > new devices, they will be added _after_ the existing ones. The order
-> > will not be messed up until next reboot, and then vgscan will take care
-> > of it. Someone please correct me if I'm wrong :)
-> >
-> >
-> >
->=20
+> Return-Path: <linux-lvm-admin@sistina.com>
+> Delivered-To: bluca@comedia.it
+> Received: from sistina.com (hermes.sistina.com [208.210.145.141])
+> 	by colombina.comedia.it (Postfix) with SMTP id 25049506D
+> 	for <bluca@comedia.it>; Mon,  2 Apr 2001 21:27:59 +0000 ()
+> Received: (qmail 5697 invoked from network); 2 Apr 2001 21:23:03 -0000
+> Received: from localhost (HELO hermes.sistina.com) (127.0.0.1)
+>   by localhost with SMTP; 2 Apr 2001 21:23:03 -0000
+> Delivered-To: linux-lvm@sistina.com
+> Received: (qmail 5640 invoked from network); 2 Apr 2001 21:22:57 -0000
+> Received: from h24-65-193-28.cg.shawcable.net (HELO webber.adilger.int) (24.65.193.28)
+>   by hermes.sistina.com with SMTP; 2 Apr 2001 21:22:57 -0000
+> Received: (from adilger@localhost)
+> 	by webber.adilger.int (8.11.2/8.11.1/Debian 8.11.0-6) id f32L0jL13101
+> 	for linux-lvm@sistina.com; Mon, 2 Apr 2001 15:00:45 -0600
+> From: Andreas Dilger <adilger@turbolinux.com>
+> Message-Id: <200104022100.f32L0jL13101@webber.adilger.int>
+> Subject: Re: [linux-lvm] Problem with UUID, vgscan, vgcfgrestore
+> In-Reply-To: <01040207434300.00937@darkvader> from Diederick van Dijk at "Apr
+>  2, 2001 07:43:43 am"
+> To: linux-lvm@sistina.com
+> X-Mailer: ELM [version 2.4ME+ PL66 (25)]
+> Sender: linux-lvm-admin@sistina.com
+> Errors-To: linux-lvm-admin@sistina.com
+> X-BeenThere: linux-lvm@sistina.com
+> X-Mailman-Version: 2.0
+> Precedence: bulk
+> Reply-To: linux-lvm@sistina.com
+> List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
+> List-Post: <mailto:linux-lvm@sistina.com>
+> List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+> 	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
+> List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
+> List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+> 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
+> List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
+> Date: Mon, 2 Apr 2001 15:00:44 -0600 (MDT)
+> 
+> Diederick van Dijk writes:
+> > I've a LVM of 8 physical volumes that I've created with LVM 0.9.1 beta 2.
+> > I've the know problem that vgscan reports that it can't find my VG.
+> > So I upgraded to LVM 0.9.1 beta 6 (tools and kernel) and runned on each
+> > physical disk a vgcfgrestore. Unfortunately I didn't solve the problem.
+> > Attached is the output of the commands vgdisplay -v and a pvdata -U for each 
+> > physical disk. Debug logs a very huge so I won't attach them.
+> 
+> OK, I have figured out why vgcfgrestore doesn't work properly with broken
+> UUIDs.  It is because vgcfgrestore only restores the backup VGDA data to
+> each disk separately.  This means it is not possible to have consistent
+> UUIDs generated for all PVs in a VG when vgcfgrestore is run.
+> 
+> You can try the following (experimental) procedure to fix the UUIDs:
+> 
+> Check each PV with "pvdata -PP /dev/hdX" to ensure it has a valid
+> UUID assigned.  Also get the PV numbers (starting with 1) for each of
+> the PVs.  Finally, check the pv_uuidlist_on_disk.base for each PV.
+> It will normally be 6144, but it does not have to be.
+> 
+> for each PV (in PV# order)
+>     dd if=/dev/hdX bs=1 skip=44 count=128 >> /tmp/uuids
+> 
+> This should create a file /tmp/uuids which has all of the PV UUIDs in it.
+> Make sure there are as many UUIDs in the file ("od -a /tmp/uuids" is good)
+> as you have PVs (8 in your case).
+> 
+> Now, we want to write the UUID list back to the PVs so vgscan is happy:
+> 
+> for each PV (in any order)
+>     dd if=/tmp/uuids of=/dev/hdX bs=1 seek=<pv_uuidlist_on_disk.base for hdX>
+> 
+> example:
+>     dd if=/tmp/uuids of=/dev/hda2 bs=1 seek=6144
+> 
+> Now vgscan should be able to detect all of the disks and work properly.
+> 
+> Cheers, Andreas
+> -- 
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -93,6 +189,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
