@@ -1,12 +1,11 @@
-Return-Path: <lembark@wrkhors.com>
-From: lembark@wrkhors.com
-Date: Fri, 20 Jul 2001 09:20:20 -0500
-Subject: Re: [linux-lvm] 2 LVM questions
-Message-ID: <56640000.995638820@duke.wrkhors.com>
-In-Reply-To: <200107201334.QAA26563@easymail.hol.gr>
+Return-Path: <boutilpj@ednet.ns.ca>
+Message-ID: <3B584260.6060204@ednet.ns.ca>
+Date: Fri, 20 Jul 2001 11:38:24 -0300
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] 2 LVM questions
+References: <200107201334.QAA26563@easymail.hol.gr>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,50 +17,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
+What I would do is:
 
--- moka@hol.gr on 07/20/01 16:34:15 +0300
+1. Create a Volume group using the 2 unused hard disks.
+2. Create a file system on the new Logical volume
+3. Copy your /var directory to the new filesystem mounted as /var2 
+(shutdown Mysql first so the data is clean).
+4. Move /var to /var3 (mv /var /var3)
+5. Mount new file system as /var
 
-> 1) I have a system with 3 hard disks, and only one of 
-> them is presently used. This contains boot, root and 
-> swap plus a logical  partition(not LVM) containing
-> /var and /home.
-> 
-> I have big database tables, so I would like
->  to create one volume group consisting of the 2
->  unused disks plus the /var. Is this possible
->  without losing what is in /var?
-> 2) The reason I need  a lot of space is that mysql
->   which I am using stores the database tables in /var.
->  Can I somehow "name" the volume group /var
->   so that mysql will not be confused?
+When you are satisfied that everything is working on LVM fine you can 
+then delete the partition that /var3 is on (old /var) and use it to 
+extend your logical volume.
 
 
-Leave the partitions you need in single user off of
-LVM.  They may be necessary for fixing LVM at some
-point (unless you enjoy booting from floppies).  In
-general the contents of / (excluding /usr), /var and
-primary swap are a good bet to keep off of LVM.
 
-Creating the volume groups to hold this data will 
-require blowing it off.  Simplest fix is to:
+moka@hol.gr wrote:
 
-    Back the stuff up completely.
-    Create two PV's from the 2 "extra" drives.
-    Add the two PV'S into a single VG.
-    Build your file systems (striping might
-     be a useful idea or mirroring if you
-     need the availability).
-    Mount the new LV's under wherever the old
-     partitions were mounted.
-    Restore the data.
-
-You probably aren't using all of "/var" for the 
-MySQL database.  Whatever the directory you now
-are using (e.g., /var/MySQL) can easily become
-a mount point without the database even knowing 
-about it.
-
-sl
+>Hi there, new to LVM, so I would appreciate if you can 
+>point me to answers to these questions:
+>
+>1) I have a system with 3 hard disks, and only one of 
+>them is presently used. This contains boot, root and 
+>swap plus a logical  partition(not LVM) containing
+>/var and /home.
+>
+>I have big database tables, so I would like
+> to create one volume group consisting of the 2
+> unused disks plus the /var. Is this possible
+> without losing what is in /var?
+>2) The reason I need  a lot of space is that mysql
+>  which I am using stores the database tables in /var.
+> Can I somehow "name" the volume group /var
+>  so that mysql will not be confused?
+>
+>Thanks in advance,
+>S.Alexiou
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
