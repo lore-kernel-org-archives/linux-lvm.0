@@ -1,10 +1,9 @@
-Message-ID: <20031218015654.GA1981@amphibian.dyndns.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Content-Disposition: inline
-From: Toad <toad@amphibian.dyndns.org>
-Subject: [linux-lvm] LVM2 pvmove
+Message-ID: <01139FC052A0D411900B00508B9535FC0F0D2589@ZCH07EXM04.corp.mot.com>
+From: Li Yang-r58472 <LeoLi@motorola.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C3C536.F00271C6"
+Subject: [linux-lvm] LVM2 not function
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,57 +14,104 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 18 07:58:02 2003
+Date: Thu Dec 18 07:59:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-Having major problems trying to use pvmove on LVM2. I was told that
-pvmove was fixed with LVM2 by the person who wrote it and put out
-2.0.08. Apparently it isn't. This is a formerly LVM1 format system=20
-recently upgraded via vgconvert.
+------_=_NextPart_001_01C3C536.F00271C6
+Content-Type: text/plain
 
-root@amphibian:~# pvmove /dev/ide/host0/bus1/target1/lun0/disc
-device-mapper: error adding target to table
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'vg--big-pvmove0'.
-  ABORTING: Temporary mirror activation failed.
-device-mapper: device 254:034 too small for target
-device-mapper: dm-stripe: Couldn't parse stripe destination
-device-mapper: error adding target to table
-  device-mapper ioctl cmd 9 failed: No such device or address
-  Couldn't load device 'vg--big-usr--src--cvs'.
-device-mapper: device 254:034 too small for target
-device-mapper: dm-stripe: Couldn't parse stripe destination
-device-mapper: error adding target to table
-  device-mapper ioctl cmd 9 failed: No such device or address
-  Couldn't load device 'vg--big-var--log--freenet_stable'.
+Hi,
 
-I have seen two reports of similar problems recently, none of which were
-successfully concluded. Is it likely that this will be fixed? If not, I
-doubt that LVM2 will be regarded as production quality by anyone for a
-long time to come... and I'll have to manually mess around with
-recreating every last LV... :(
---=20
-Matthew J Toseland - toad@amphibian.dyndns.org
-Freenet Project Official Codemonkey - http://freenetproject.org/
-ICTHUS - Nothing is impossible. Our Boss says so.
+ 
 
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+I used LVM come with Redhat9 on my desktop computer.  Recent days I want to upgrade my kernel to 2.6.0-test11 which needs LVM2 to work with the device-mapper.  To be more up to date, I also recreated the lvs to use lvm2 metadata.  But when I rebooted the computer, new created lv can't mount.  It said it's not a valid block device.  So I check the status with "lvm lvscan", it showed that these lv turned to be inactive.  So I removed and recreated these lv.  Right after creation, these lvs were ACTIVE and mountable, but after reboot, they became inactive and unusable again.  Does anyone have clue?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
+ 
 
-iD8DBQE/4Qlmr5e+zmpNTm8RAqUZAJ94F9z92bHMy02RkMhrAQK4ifP86QCfbR4P
-EhefseAHGGPv7D1vk6GE07Y=
-=XxxZ
------END PGP SIGNATURE-----
+--
 
---mYCpIKhGyMATD0i+--
+Leo Li
+
+Software Engineer
+
+Metrowerks -- a Motorola company
+
+ 
+
+Office: +8610-65642272
+
+LeoLi@motorola.com
+
+ 
+
+
+------_=_NextPart_001_01C3C536.F00271C6
+Content-Type: text/html
+Content-Transfer-Encoding: base64
+
+PGh0bWw+DQoNCjxoZWFkPg0KPE1FVEEgSFRUUC1FUVVJVj0iQ29udGVudC1UeXBlIiBDT05URU5U
+PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVMtQVNDSUkiPg0KDQoNCjxtZXRhIG5hbWU9R2VuZXJhdG9y
+IGNvbnRlbnQ9Ik1pY3Jvc29mdCBXb3JkIDEwIChmaWx0ZXJlZCkiPg0KDQo8c3R5bGU+DQo8IS0t
+DQogLyogRm9udCBEZWZpbml0aW9ucyAqLw0KIEBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6U2lt
+U3VuOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KQGZvbnQtZmFjZQ0KCXtmb250
+LWZhbWlseTpTaW1TdW47DQoJcGFub3NlLTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9DQogLyogU3R5
+bGUgRGVmaW5pdGlvbnMgKi8NCiBwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9y
+bWFsDQoJe21hcmdpbjowaW47DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCWZvbnQtc2l6ZTox
+Mi4wcHQ7DQoJZm9udC1mYW1pbHk6IlRpbWVzIE5ldyBSb21hbiI7fQ0KYTpsaW5rLCBzcGFuLk1z
+b0h5cGVybGluaw0KCXtjb2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0K
+YTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe2NvbG9yOnB1cnBsZTsNCgl0
+ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCnAuTXNvQXV0b1NpZywgbGkuTXNvQXV0b1NpZywg
+ZGl2Lk1zb0F1dG9TaWcNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIjt9DQpzcGFu
+LkVtYWlsU3R5bGUxNw0KCXtmb250LWZhbWlseTpBcmlhbDsNCgljb2xvcjp3aW5kb3d0ZXh0O30N
+CkBwYWdlIFNlY3Rpb24xDQoJe3NpemU6NTk1LjNwdCA4NDEuOXB0Ow0KCW1hcmdpbjoxLjBpbiAx
+LjI1aW4gMS4waW4gMS4yNWluO30NCmRpdi5TZWN0aW9uMQ0KCXtwYWdlOlNlY3Rpb24xO30NCi0t
+Pg0KPC9zdHlsZT4NCg0KPC9oZWFkPg0KDQo8Ym9keSBsYW5nPUVOLVVTIGxpbms9Ymx1ZSB2bGlu
+az1wdXJwbGU+DQoNCjxkaXYgY2xhc3M9U2VjdGlvbjE+DQoNCjxwIGNsYXNzPU1zb05vcm1hbD48
+Zm9udCBzaXplPTIgZmFjZT1BcmlhbD48c3BhbiBzdHlsZT0nZm9udC1zaXplOjEwLjBwdDsNCmZv
+bnQtZmFtaWx5OkFyaWFsJz5IaSw8L3NwYW4+PC9mb250PjwvcD4NCg0KPHAgY2xhc3M9TXNvTm9y
+bWFsPjxmb250IHNpemU9MiBmYWNlPUFyaWFsPjxzcGFuIHN0eWxlPSdmb250LXNpemU6MTAuMHB0
+Ow0KZm9udC1mYW1pbHk6QXJpYWwnPiZuYnNwOzwvc3Bhbj48L2ZvbnQ+PC9wPg0KDQo8cCBjbGFz
+cz1Nc29Ob3JtYWw+PGZvbnQgc2l6ZT0yIGZhY2U9QXJpYWw+PHNwYW4gc3R5bGU9J2ZvbnQtc2l6
+ZToxMC4wcHQ7DQpmb250LWZhbWlseTpBcmlhbCc+SSB1c2VkIExWTSBjb21lIHdpdGggUmVkaGF0
+OSBvbiBteSBkZXNrdG9wIGNvbXB1dGVyLiAmbmJzcDtSZWNlbnQNCmRheXMgSSB3YW50IHRvIHVw
+Z3JhZGUgbXkga2VybmVsIHRvIDIuNi4wLXRlc3QxMSB3aGljaCBuZWVkcyBMVk0yIHRvIHdvcmsg
+d2l0aA0KdGhlIGRldmljZS1tYXBwZXIuICZuYnNwO1RvIGJlIG1vcmUgdXAgdG8gZGF0ZSwgSSBh
+bHNvIHJlY3JlYXRlZCB0aGUgbHZzIHRvIHVzZQ0KbHZtMiBtZXRhZGF0YS4mbmJzcDsgQnV0IHdo
+ZW4gSSByZWJvb3RlZCB0aGUgY29tcHV0ZXIsIG5ldyBjcmVhdGVkIGx2IGNhbid0DQptb3VudC4m
+bmJzcDsgSXQgc2FpZCBpdCdzIG5vdCBhIHZhbGlkIGJsb2NrIGRldmljZS4mbmJzcDsgU28gSSBj
+aGVjayB0aGUNCnN0YXR1cyB3aXRoICJsdm0gbHZzY2FuIiwgaXQgc2hvd2VkIHRoYXQgdGhlc2Ug
+bHYgdHVybmVkIHRvIGJlDQppbmFjdGl2ZS4mbmJzcDsgU28gSSByZW1vdmVkIGFuZCByZWNyZWF0
+ZWQgdGhlc2UgbHYuICZuYnNwO1JpZ2h0IGFmdGVyIGNyZWF0aW9uLA0KdGhlc2UgbHZzIHdlcmUg
+QUNUSVZFIGFuZCBtb3VudGFibGUsIGJ1dCBhZnRlciByZWJvb3QsIHRoZXkgYmVjYW1lIGluYWN0
+aXZlIGFuZA0KdW51c2FibGUgYWdhaW4uJm5ic3A7IERvZXMgYW55b25lIGhhdmUgY2x1ZT88L3Nw
+YW4+PC9mb250PjwvcD4NCg0KPHAgY2xhc3M9TXNvTm9ybWFsPjxmb250IHNpemU9MiBmYWNlPUFy
+aWFsPjxzcGFuIHN0eWxlPSdmb250LXNpemU6MTAuMHB0Ow0KZm9udC1mYW1pbHk6QXJpYWwnPiZu
+YnNwOzwvc3Bhbj48L2ZvbnQ+PC9wPg0KDQo8cCBjbGFzcz1Nc29Ob3JtYWw+PGZvbnQgc2l6ZT0y
+IGZhY2U9IkNvdXJpZXIgTmV3Ij48c3BhbiBzdHlsZT0nZm9udC1zaXplOjEwLjBwdDsNCmZvbnQt
+ZmFtaWx5OiJDb3VyaWVyIE5ldyInPi0tPC9zcGFuPjwvZm9udD48L3A+DQoNCjxwIGNsYXNzPU1z
+b05vcm1hbD48Zm9udCBzaXplPTIgZmFjZT0iQ291cmllciBOZXciPjxzcGFuIHN0eWxlPSdmb250
+LXNpemU6MTAuMHB0Ow0KZm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Iic+TGVvIExpPC9zcGFuPjwv
+Zm9udD48L3A+DQoNCjxwIGNsYXNzPU1zb05vcm1hbD48Zm9udCBzaXplPTIgZmFjZT0iQ291cmll
+ciBOZXciPjxzcGFuIHN0eWxlPSdmb250LXNpemU6MTAuMHB0Ow0KZm9udC1mYW1pbHk6IkNvdXJp
+ZXIgTmV3Iic+U29mdHdhcmUgRW5naW5lZXI8L3NwYW4+PC9mb250PjwvcD4NCg0KPHAgY2xhc3M9
+TXNvTm9ybWFsPjxmb250IHNpemU9MiBmYWNlPSJDb3VyaWVyIE5ldyI+PHNwYW4gc3R5bGU9J2Zv
+bnQtc2l6ZToxMC4wcHQ7DQpmb250LWZhbWlseToiQ291cmllciBOZXciJz5NZXRyb3dlcmtzIC0t
+IGEgTW90b3JvbGEgY29tcGFueTwvc3Bhbj48L2ZvbnQ+PC9wPg0KDQo8cCBjbGFzcz1Nc29Ob3Jt
+YWw+PGZvbnQgc2l6ZT0yIGZhY2U9IkNvdXJpZXIgTmV3Ij48c3BhbiBzdHlsZT0nZm9udC1zaXpl
+OjEwLjBwdDsNCmZvbnQtZmFtaWx5OiJDb3VyaWVyIE5ldyInPiZuYnNwOzwvc3Bhbj48L2ZvbnQ+
+PC9wPg0KDQo8cCBjbGFzcz1Nc29Ob3JtYWw+PGZvbnQgc2l6ZT0yIGZhY2U9IkNvdXJpZXIgTmV3
+Ij48c3BhbiBzdHlsZT0nZm9udC1zaXplOjEwLjBwdDsNCmZvbnQtZmFtaWx5OiJDb3VyaWVyIE5l
+dyInPk9mZmljZTogKzg2MTAtNjU2NDIyNzI8L3NwYW4+PC9mb250PjwvcD4NCg0KPHAgY2xhc3M9
+TXNvQXV0b1NpZz48Zm9udCBzaXplPTIgZmFjZT0iQ291cmllciBOZXciPjxzcGFuIHN0eWxlPSdm
+b250LXNpemU6DQoxMC4wcHQ7Zm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Iic+TGVvTGlAbW90b3Jv
+bGEuY29tPC9zcGFuPjwvZm9udD48L3A+DQoNCjxwIGNsYXNzPU1zb05vcm1hbD48Zm9udCBzaXpl
+PTMgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj48c3BhbiBzdHlsZT0nZm9udC1zaXplOg0KMTIuMHB0
+Jz4mbmJzcDs8L3NwYW4+PC9mb250PjwvcD4NCg0KPC9kaXY+DQoNCjwvYm9keT4NCg0KPC9odG1s
+Pg0K
+
+------_=_NextPart_001_01C3C536.F00271C6--
