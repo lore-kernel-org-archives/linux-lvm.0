@@ -1,12 +1,10 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Tue, 27 Feb 2001 08:35:28 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
+Return-Path: <urs@isnogud.escape.de>
 Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
-Message-ID: <20010227083528.A503@tykepenguin.com>
-References: <m2snl1phy5.fsf@isnogud.escape.de> <20010226203933.B2504@66bassett.freeserve.co.uk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010226203933.B2504@66bassett.freeserve.co.uk>; from joe@66bassett.freeserve.co.uk on Mon, Feb 26, 2001 at 08:39:33PM +0000
+References: <Pine.LNX.4.33.0102261839460.5502-100000@duckman.distro.conectiva>
+From: Urs Thuermann <urs@isnogud.escape.de>
+Date: 27 Feb 2001 11:33:23 +0100
+In-Reply-To: <Pine.LNX.4.33.0102261839460.5502-100000@duckman.distro.conectiva>; from Rik van Riel on Mon, 26 Feb 2001 18:41:37 -0300 (BRST)
+Message-ID: <m2ae782z64.fsf@isnogud.escape.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,26 +16,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Feb 26, 2001 at 08:39:33PM +0000, Joe Thornber wrote:
-> On Mon, Feb 26, 2001 at 04:44:34PM +0100, Urs Thuermann wrote:
-> > I tried to use LVM today using Linux 2.4.2 and it mostly works like I
-> > expected.  But the performance is unacceptably bad:
-> 
-> Every now and then someone posts to the list claiming LVM performance
-> is really bad.  We go off and try it and find the overhead is
-> typically less than 1%.
-> 
-> Normally people are trying to stripe to two partitions on the same
-> device, but you aren't.
+Rik van Riel <riel@conectiva.com.br> writes:
 
-I've always seen bad performance doing dd on LVM volumes but very good
-performance in "real world" performance or bonnie++ tests.
+> Maybe dd is reading in 512 byte blocks on /dev/sda5 and
+> 4096 bytes on /dev/vg0/test ?
 
-Stop worrying about it, how many times do you *need* to dd the start of 
-a disk at high speed eh? :-)
+I've checked it.  The man page says if no bs is given, dd defaults to
+512 bytes on any device.  I've also checked it with dd|wc.
 
-patrick
+The performance numbers I've observed seem to dependant on caching.
+
+
+urs
