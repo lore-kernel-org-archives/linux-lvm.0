@@ -1,45 +1,51 @@
-Resent-Message-Id: <199907261133.NAA07307@colombina.comedia.it>
-Date: Mon, 26 Jul 1999 13:11:22 +0200
-From: Luca Berra <bluca@comedia.it>
+Date: Mon, 26 Jul 1999 19:54:27 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
 Subject: Re: [linux-lvm] RAID and LVM?
-Message-ID: <19990726131121.A7263@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <19990726002923.C6315@colombina.comedia.it> <Pine.LNX.4.10.9907260107230.14960-100000@hibernia.spin.ie>
-Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.10.9907260107230.14960-100000@hibernia.spin.ie>; from Paul Jakma on Mon, Jul 26, 1999 at 01:12:17AM +0100
-Resent-To: linux-lvm@msede.com
+In-Reply-To: <19990726131121.A7263@colombina.comedia.it>
+Message-ID: <Pine.LNX.4.10.9907261949360.14960-100000@hibernia.spin.ie>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Paul Jakma <paul@clubi.ie>
-Cc: linux-lvm@msede.de
+To: Luca Berra <bluca@comedia.it>
+Cc: linux-lvm@msede.de, bluca@colombina.comedia.it, linux-lvm@msede.com
 
-On Mon, Jul 26, 1999 at 01:12:17AM +0100, Paul Jakma wrote:
-> cool! Tell me, how is md_make_request in md.c defined? The old way,
-> or the new way:
-> 
-new way!
-you better check alans patch it is on kernel.org mirrors
+On Mon, 26 Jul 1999, Luca Berra wrote:
 
-> i noticed lvm does autodetect based on partition ID. Raid does
-> aswell. So how can we do autodetection for LVM on RAID? The md device
-> won't have a partition id, and the underlying device will have to
-> have a RAID partition ID for RAID to autodetect it. 
-> Can LVM check for some magic within each block device and use that to
-> decide whether a device is a PV or not?
-we have to set the partition as a raid autodetect partition
-then create an initrd with the command
-insmod lvm.o
-vgscan
-vgchange -a y
 
-the problem is that when raid is loaded as a module autodetect
-does not happen than when initrd is finished :(
+  new way!
+  you better check alans patch it is on kernel.org mirrors
 
-L.
+great... alan must have exercised his magic coding fingers and
+massaged the two patches into their proper places :)  
 
+  we have to set the partition as a raid autodetect partition
+  then create an initrd with the command
+  insmod lvm.o
+  vgscan
+  vgchange -a y
+  
+uhmm.. but i think eventually for LVM on RAID autodetect to work
+nicely, LVM is going to have to use some block device contents magic.
+
+or ideally for raid to be fully integrated into LVM, and create
+RAID-5 VG's. 
+
+  the problem is that when raid is loaded as a module autodetect
+  does not happen than when initrd is finished :(
+  
+  L.
+  
+  
+i'm downloading your patch now anyway. 
+
+regards,
 -- 
-Luca Berra -- bluca@comedia.it
-    Communications Media & Services S.r.l.
+Paul Jakma
+paul@clubi.ie	http://hibernia.clubi.ie
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+A meeting is an event at which the minutes are kept and the hours are lost.
