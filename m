@@ -1,13 +1,12 @@
-Return-Path: <mkp@mkp.net>
-References: <20010419132927.D10345@sistina.com>
-	<E14qJhd-0007oR-00@the-village.bc.nu>
-	<20010419142400.E10345@sistina.com> <20010419213335.E30135@suse.de>
-From: "Martin K. Petersen" <mkp@mkp.net>
-Date: 19 Apr 2001 15:46:53 -0400
-In-Reply-To: <20010419213335.E30135@suse.de>
-Message-ID: <yq1vgo0lljm.fsf@jaguar.mkp.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Return-Path: <lewis@sistina.com>
+Date: Thu, 19 Apr 2001 14:48:15 -0500
+From: AJ Lewis <lewis@sistina.com>
+Message-ID: <20010419144815.J10345@sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YZVh52eu0Ophig4D"
+Content-Disposition: inline
+Subject: [linux-lvm] linux-lvm list now open
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,61 +18,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>
-Cc: AJ Lewis <lewis@sistina.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
->>>>> "Jens" == Jens Axboe <axboe@suse.de> writes:
+--YZVh52eu0Ophig4D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Jens> First one gets a mail saying that the mail sent is queued for
-Jens> moderator approval, since I'm not on the list. Then later a
-Jens> second mail arrives, saying the mail has been rejected by the
-Jens> moderator.
+Just FYI:
 
-Yep.  Same here.  Latest and greatest...
+This list is now completely unmoderated.  If you haven't been following the
+thread, a number of people got pissed off and decided to open a new ML,
+linux-openlvm@nl.linux.org, when they couldn't get a response from us.  This
+was an unfortunate misunderstanding, and hopefully it's resolved now.
+Please feel free to e-mail me with any questions or concerns you might have
+regarding this list if you don't get a response through the normal channels.
 
----8<---
-From: linux-lvm-admin@sistina.com
-Subject: Your message to linux-lvm awaits moderator approval
-To: mkp@mkp.net
-Date: Tue, 10 Apr 2001 22:02:40 +0200
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-Your mail to 'linux-lvm' with the subject
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-    Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 Beta 7 available at
-www.sistina.com
+-----Begin Obligatory Humorous Quote----------------------------------------
+Bad command or file name. Bad, bad command! Sit! Stay! Staaaay...
+-----End Obligatory Humorous Quote------------------------------------------
 
-Is being held until the list moderator can review it for approval.
----8<---
+--YZVh52eu0Ophig4D
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Now, I held my breath until the following day...
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
----8<---
-From: linux-lvm-admin@sistina.com
-Subject: Request to mailing list linux-lvm rejected
-To: mkp@mkp.net
-Date: Wed, 11 Apr 2001 17:32:36 +0200
+iD8DBQE630D/pE6/iGtdjLERAnKmAJ9kiR4UIW9BYkhLqLHEG8IFzOlkyQCfTwrK
+ivnGKZtdnhLKFuodTaj2rX8=
+=0cyv
+-----END PGP SIGNATURE-----
 
-Your request to the linux-lvm mailing list
-
-    Posting of your message titled "Re: [linux-lvm] *** ANNOUNCEMENT
-*** LVM 0.9.1 Beta 7 available@www.sistina.com"
-
-has been rejected by the list moderator.  The moderator gave the
-following reason for rejecting your request:
-
-"Non-members are not allowed to post messages to this list."
----8<---
-
-Since there is such a long delay between the two mails, it's obvious
-that there is human intervention involved.  And when an on-topic mail
-is rejected by the moderator, well... go figure.
-
-And this isn't the first time this has happened to me and several
-others.  By far...
-
--- 
-Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
-mkp@linuxcare.com, http://www.linuxcare.com/
-SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
+--YZVh52eu0Ophig4D--
