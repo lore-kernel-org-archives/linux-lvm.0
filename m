@@ -1,57 +1,37 @@
-Date: Mon, 26 Jul 1999 01:12:17 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
-Subject: Re: [linux-lvm] RAID and LVM?
-In-Reply-To: <19990726002923.C6315@colombina.comedia.it>
-Message-ID: <Pine.LNX.4.10.9907260107230.14960-100000@hibernia.spin.ie>
+Date: Mon, 26 Jul 1999 08:09:51 +0200 (MEST)
+From: Volker Wiegand <wiegand@suse.de>
+Subject: [linux-lvm] Running Linux-LVM on not-so-recent Systems
+Message-ID: <Pine.LNX.4.10.9907260705100.358-100000@aragorn.fra.suse.de>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Luca Berra <bluca@comedia.it>
-Cc: linux-lvm@msede.com
+To: Linux-LVM Mailing List <linux-lvm@msede.com>
 
-On Mon, 26 Jul 1999, Luca Berra wrote:
+Hi,
 
-  i checked alan cox's linux-2.2.10-ac12 pacth wich includes
-  a heavily modified raid and lvm0.6 patch.
-  i added my devfs patch 
-  http://www.comedia.it/bluca/lvm/devfs-patch-v99.4-2.2.10-ac12.gz
-  and i was able to create and use a vg on a raid 1 device
+I'm not living on the bleeding edge of the Linux Kernel Hacker community.
+And I would really like to use LVM on my vast array of test machines with
+different kernels from 2.0.34 to 2.2.7 (I need those for testing software
+I am developing myself).
 
-cool! Tell me, how is md_make_request in md.c defined? The old way,
-or the new way:
+The FAQ says to mail a kernel patch request to Heinz. Hmmm, of course I
+know how responsive Heinz is, but I'm wondering if there might be a better
+way.
 
-int md_make_request (struct buffer_head * bh, int rw)
-  
-this is what's been causing me problems.
+Does anybody have an idea how many different patches are actually needed
+to serve the kernel range given above?
 
-  todo: adding the diffs to the latest raid and lvm patches,
-  		incremental diff for those can be found at
-  		http://www.comedia.it/bluca/lvm/
-  	checking autodetect, especially with both raid and
-  		lvm loaded as modules. raid autorun happens before
-  		and after initrd, now i need it during initrd.
+How much work is kernel patching when it comes to new versions of LVM?
+What I mean is: can the kernel patches be kept reasonably stable when LVM
+changes?
 
-i noticed lvm does autodetect based on partition ID. Raid does
-aswell. So how can we do autodetection for LVM on RAID? The md device
-won't have a partition id, and the underlying device will have to
-have a RAID partition ID for RAID to autodetect it. 
+Volker
 
-Can LVM check for some magic within each block device and use that to
-decide whether a device is a PV or not?
-  
-  Regards,
-  Luca
-  
-regards,
--- 
-Paul Jakma
-paul@clubi.ie	http://hibernia.clubi.ie
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-I cannot conceive that anybody will require multiplications at the rate
-of 40,000 or even 4,000 per hour ...
-		-- F. H. Wales (1936)
+--
+Volker Wiegand              Phone: +49 (0) 6196 / 50951-24
+SuSE Rhein/Main AG i.G.       Fax: +49 (0) 6196 / 40 96 07
+Mergenthalerallee 45-47    Mobile: +49 (0) 179 / 292 66 76
+D-65760 Eschborn           E-Mail:  Volker.Wiegand@suse.de
