@@ -1,10 +1,10 @@
-Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
-From: Bradley Alexander <storm@tux.org>
-In-Reply-To: <17080000.1008517551@dizzy>
-References: <1008557869.831.2.camel@defiant>  <17080000.1008517551@dizzy>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1008594826.829.2.camel@defiant>
-Mime-Version: 1.0
+Message-Id: <200112171354.fBHDskD18934@pcx4168.holstein.com>
+From: "Todd M. Roy" <troy@holstein.com>
+In-Reply-To: <20011217035359.A4880@tiger.bigcats.invalid> (message from
+	Wolfgang Weisselberg on Mon, 17 Dec 2001 03:53:59 +0100)
+Subject: Re: [linux-lvm] invalidate: busy buffer
+References: <20011214191634.GB24486@auctionwatch.com> <20011216205044.F26924@tiger.bigcats.invalid> <20011216215414.GB12889@sky.net> <20011217035359.A4880@tiger.bigcats.invalid>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,75 +15,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 07:11:02 2001
+Date: Mon Dec 17 07:53:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, 2001-12-16 at 10:45, Steven Lembark wrote:
+My $0.02 ..
 
-> (1) What happens if you use ext2 -- using one of the non-standard
->     file systems for testing just brings in extra variables?
- 
-I will try this, however, these errors occur prior to the filesystems
-being initialized. Also, I decided to try to delete the PV. I deleted
-the LV, but every time I tried to delete the VG, I get
+I never run vgscan unless I change my LVM configuration.
+vgchange -a y of course must be run prior to mounting
+LVM volumes.  The one caveat is that /proc must be mounted,
+and if root is mounted read only, as it usually is on boot,
+you have to use the -n option to mount it.  
 
-[defiant /home/storm]# vgchange -a n vg01
-vgchange -- volume group "vg01" successfully deactivated
+So one may find early in my slackware rc.S file:
 
-[defiant /home/storm]# vgremove vg01
-Segmentation fault
+mount -n /proc
+/sbin/vgchange -a y
+umount -n /proc
 
-The logs show the following:
+yes, I umount /proc so the rc.S can mount it "normally" later.
 
-Dec 17 07:51:53 defiant kernel: Unable to handle kernel NULL pointer
-dereference at virtual address 00000018
-Dec 17 07:51:53 defiant kernel:  printing eip:
-Dec 17 07:51:53 defiant kernel: c01589d9
-Dec 17 07:51:53 defiant kernel: *pde = 00000000
-Dec 17 07:51:53 defiant kernel: Oops: 0002
-Dec 17 07:51:53 defiant kernel: CPU:    0
-Dec 17 07:51:53 defiant kernel: EIP:    0010:[devfs_open+121/384]   
-Tainted: P 
-Dec 17 07:51:53 defiant kernel: EFLAGS: 00010286
-Dec 17 07:51:53 defiant kernel: eax: 00000000   ebx: c1a65240   ecx:
-dc144cc0   edx: c0267e00
-Dec 17 07:51:53 defiant kernel: esi: 00000000   edi: c1a65244   ebp:
-e7730100   esp: dade1f40
-Dec 17 07:51:53 defiant kernel: ds: 0018   es: 0018   ss: 0018
-Dec 17 07:51:53 defiant kernel: Process vgremove (pid: 956,
-stackpage=dade1000)
-Dec 17 07:51:53 defiant kernel: Stack: dc144cc0 e7730100 00000000
-e7fea380 c025d7a0 c0130111 e7730100 dc144cc0 
-Dec 17 07:51:53 defiant kernel:        bffffabc e34a1000 00000001
-bffffabc c0130022 e7734940 e7fea380 00000001 
-Dec 17 07:51:53 defiant kernel:        00000004 e34a1000 080525b8
-e7734940 e7fea380 080525b8 bffffabc 00000000 
-Dec 17 07:51:53 defiant kernel: Call Trace: [dentry_open+225/400]
-[filp_open+82/96] [sys_open+54/160] [system_call+51/56] 
-Dec 17 07:51:53 defiant kernel: 
-Dec 17 07:51:53 defiant kernel: Code: 89 50 18 eb 2c 89 f6 8b 47 08 85
-c0 74 1a 8b 10 85 d2 74 14 
+-- todd --
 
- 
-> You could also have IDE controller or DMA problems. "Hardware"
-> doesn't just mean disk drives. If you have multiple controllers,
-> try switching the drives between them and see if that changes
-> the result.
-
-Originally, I had the drives on one IDE channel (hda and hdb) and the
-DVD and CDRW on another (hdc and hdd). I now have drive 1 on hda, dvd on
-hdb, drive 2 on hdc and cdrw on hdd. Same indications.
-
--- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm [at] debian.org
-                                         |   storm [at] tux.org
-============================================================================
-How should I know if it works?  That's what beta testers are for.  I
-only coded it.
-        -- Attributed to Linus Torvalds, somewhere in a posting
+>  X-Apparently-To: todd_m_roy@yahoo.com via web13608.mail.yahoo.com; 16 Dec 2001 19:15:50 -0800 (PST)
+>  X-RocketRCL: 1105;1;82599241
+>  X-Track: -10
+>  From: Wolfgang Weisselberg <weissel@netcologne.de>
+>  Mail-Followup-To: linux-lvm@sistina.com
+>  Content-Disposition: inline
+>  Sender: linux-lvm-admin@sistina.com
+>  Reply-To: linux-lvm@sistina.com
+>  X-Original-Date: Mon, 17 Dec 2001 03:53:59 +0100
+>  Date: Mon, 17 Dec 2001 03:53:59 +0100
+>  
+>  Hi, Ulrich!
+>  
+>  Ulrich Wiederhold (U.Wiederhold@gmx.net) wrote 26 lines:
+>  
+>  > * Wolfgang Weisselberg <weissel@netcologne.de> [011216 20:50]:
+>  > > BTW, is there a good reason to run vgscan on boot time every
+>  > > time?  I have had more sorrow than joy with that.  If my
+>  > > vg's really changed, I can always run it from the (non-LVM)
+>  > > / which will come up, even if only as an emergency system.
+>  
+>  > Ok, but you need to run vgscan && vgchange -ay every time you wanna use
+>  > your LVM-drives, and I think that's normally every time you boot your
+>  > PC.
+>  
+>  Funny, my PC boots and mounts the LVs even though I commented
+>  out vgscan entirely in the boot process.  vgchange is another
+>  thing, though...
+>  
+>  > But... I add them
+>  > to /etc/rcS.d/S99local incl. the mount command.
+>  
+>  Faaar to late -- considering that all the daemons start up early
+>  and need fancy things like /usr, /var and sometimes /tmp ..
+>  
+>  
+>  -Wolfgang
+>  
+>  _______________________________________________
+>  linux-lvm mailing list
+>  linux-lvm@sistina.com
+>  http://lists.sistina.com/mailman/listinfo/linux-lvm
+>  read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>  
