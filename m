@@ -1,12 +1,12 @@
-Return-Path: <treed@ultraviolet.org>
-Date: Sat, 19 May 2001 22:44:06 -0700
-From: Tracy R Reed <treed@ultraviolet.org>
-Subject: Re: [linux-lvm] Working together
-Message-ID: <20010519224406.A18152@ultraviolet.org>
-References: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com> <20010518162704.A26391@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010518162704.A26391@sistina.com>; from Mauelshagen@sistina.com on Fri, May 18, 2001 at 04:27:04PM +0000
+Return-Path: <pwk.linuxfan@gmx.de>
+From: Peter Kirk <pwk.linuxfan@gmx.de>
+Subject: Re: [linux-lvm] Problems: reiserfs lvm as /
+Date: Sun, 20 May 2001 09:01:17 +0200
+References: <01051916333601.00791@mama> <3B069CF2.7AAC10DD@ednet.ns.ca> <01051919153100.01524@mama>
+In-Reply-To: <01051919153100.01524@mama>
+MIME-Version: 1.0
+Message-Id: <01052009011700.00553@mama>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,20 +19,12 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 18, 2001 at 04:27:04PM +0000, Heinz J. Mauelshagen wrote:
-> We are discussing your points internally and will answer in detail ASAP.
+Hi,
 
-Why not discuss it publically?
+reiserfs on root in LVM is working now, but I had to use a totipotent Kernel, 
+with all options aktivated. Could anybody tell me which Options are Required 
+for Initial Ram Disk (initrd) support ??
 
-I must say that I am quite impressed with IBM actually putting their code
-where their mouth is. I would really hate to see two more competing
-factions in the Linux community.
-
--- 
-Tracy Reed      http://www.ultraviolet.org
-Hacker's reply to Shared Source: "Well, that sounds like a pretty good deal.
-But I think I may have a better one. How about, I give you the finger... and
-you give me my GPL?"
+Thanks
