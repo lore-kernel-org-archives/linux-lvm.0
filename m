@@ -1,4 +1,4 @@
-Message-ID: <3F2E54A8000003D3@ocpmta8.freegates.net>
+Message-ID: <3F2E54A8000003D4@ocpmta8.freegates.net>
 From: "Joel Soete" <soete.joel@tiscali.be>
 Subject: [linux-lvm] lvm2 pb on hppa-linux
 MIME-Version: 1.0
@@ -13,7 +13,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug  6 02:35:02 2003
+Date: Wed Aug  6 02:35:04 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: Patrick Caulfield <linux-lvm@sistina.com>
