@@ -1,33 +1,50 @@
-Message-Id: <m10vk14-0000YbC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
+Date: Sun, 20 Jun 1999 11:03:24 +0200
+From: Rainer Clasen <bj@ncc.cicely.de>
 Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9 and devfs-patch-v99.2
-In-Reply-To: <Pine.LNX.4.10.9906201228040.9163-100000@hibernia.spin.ie> from Paul Jakma at "Jun 20, 1999 12:28:52 pm"
-Date: Sun, 20 Jun 1999 18:00:17 +0200 (MET DST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <19990620110324.D3830@ncc.cicely.de>
+References: <m10umJP-0000YbC@duffy1.franken.de> <199906180656.AA25684@mailgate1b.telekom.de>
+Mime-Version: 1.0
+In-Reply-To: <199906180656.AA25684@mailgate1b.telekom.de>; from Heinz Mauelshagen on Fri, Jun 18, 1999 at 08:56:16AM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-> What about:
+On Fri, Jun 18, 1999 at 08:56:16AM +0000, Heinz Mauelshagen wrote:
+> > What would be nice as the next step is a resizable file system.
+> > Is there any ?
+> > 
 > 
-> http://www.dsv.nl/~buytenh/ext2resize/
+> AFAIK we only have Ted Tso's resize2fs which is able to resize
+> unmonted ext2fses.
 > 
-> i've no idea whether it works or not.
+> It will be available under GPL next year.
 
-It works - hmm, sometimes :-)
-I managed to resize a mounted file system and several times it was possible
-to copy more files on it after the resize. But from time to time I got an
-error saying "no space left on device" while df shows the free space
-correctly.
-Just some minutes ago I sent some feedback to the author (of course
-mentioning lvm :-) and a patch (the snapshot of June, 17th would not get
-the size of a block device).
-It looks very promising.
+This was in Jun 15ths' freshmeat letter:
 
-Rolf
+---
+  subject: ext2resize 990615
+ added by: Lennert Buytenhek on Jun 15th 1999, 07:41
+  license: GPL
+ category: Console/Filesystems
+      
+ homepage: http://www.dsv.nl/~buytenh/ext2resize/
+ download: http://www.dsv.nl/~buytenh/ext2resize/ext2resize-990615.tar.bz2      
+       
+description:
+ext2resize is a program capable of resizing (shrinking and growing)
+ext2 filesystems. Currently it is in alpha stage until it is tested some
+more.
+---
+
+I' haven't checked it out, but it might be of interrest for you.
+
+
+
+
+Rainer
+
 -- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+KeyID=58341901 fingerprint=A5 57 04 B3 69 88 A1 FB  78 1D B5 64 E0 BF 72 EB
