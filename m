@@ -1,8 +1,8 @@
-From: Hee So <h.so@ieee.org>
+From: bscott@ntisys.com
+Subject: Re: [linux-lvm] Growing the size of the lv
+In-Reply-To: <20020801014624.5F3855F22C@dell103.hee.net>
+Message-ID: <Pine.LNX.4.44.0207312159430.2592-100000@dragon.inside.ntisys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20020801014624.5F3855F22C@dell103.hee.net>
-Subject: [linux-lvm] Growing the size of the lv
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 31 20:42:01 2002
+Date: Wed Jul 31 20:53:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Wed, 31 Jul 2002, at 6:46pm, Hee So wrote:
+> After some twittling around, the LV Size was that of all 3 PVs.
 
-  I read and tried to no avail. I need some assistance. The
-documentation is a little vague on this point. I am trying to 
-grow a LV (which originally had two PVs, and adding a third PV). 
-I run through the vgextend and did one other thing to eventually 
-have my lvdisplay recognize the diskspace of all 3 PVs. Originally
-the VG recognized all the 3 PVs, but the LV Size was the original.
-After some twittling around, the LV Size was that of all 3 PVs.
-when I run df -kh, I still get the size of the original diskspace
-while I had two PVs and can't use this new diskspace.
+  Than you have extended the size of the LV.
 
-I pvcreated the third PV.  I tried mounting and unmounting. 
+> when I run df -kh, I still get the size of the original diskspace
 
-Any help is appreciated,
-/hee
-h.so@ieee.org
+  You need to extend the size of the filesystem, which is stored on the LV.
+
+  This is in the HOWTO on the website:
+  http://www.sistina.com/lvm_howtos/lvm_howto/
+
+-- 
+Ben Scott <bscott@ntisys.com>
+| The opinions expressed in this message are those of the author and do not |
+| necessarily represent the views or policy of any other person, entity or  |
+| organization.  All information is provided without warranty of any kind.  |
