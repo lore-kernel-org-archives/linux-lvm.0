@@ -1,48 +1,60 @@
-From: CHUCK_MUNRO@HP-Canada-om1.om.hp.com
-Date: Tue, 7 Sep 1999 19:20:48 -0400
-Message-Id: <H00000fa0c3ec832@MHS>
-Subject: RE: [linux-lvm] GUI-Frontend (Gnome) available/planned?
-MIME-Version: 1.0
-Content-Disposition: inline; filename="BDY.TXT"
-Content-Transfer-Encoding: 7bit
+Message-Id: <199909080641.AA13198@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] Inclusion of LVM into the Linux Kernel...
+Date: Wed, 08 Sep 1999 8:41:40 METDST
+In-Reply-To: <Pine.LNX.4.05.9909071231260.25088-100000@morannon.kdi.com>; from "Dominic J. Eidson" at Sep 7, 99 12:53 (noon)
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; name="BDY.TXT"
-To: linux-lvm@msede.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: sauron@the-infinite.org
+Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
 
-I agree with this suggestion.
+Hi Dominic,
 
-I have been using HP-UX "SAM" (System Admin Manager) for configuring LVM for 
-several years.  This tool has both a GUI and a curses-based terminal interface, 
-which is very helpful when operating from a text terminal or a telnet session.  
-Those readers who have administered HP-UX systems have no doubt seen that this 
-method is very helpful in a non-GUI environment (certainly nicer than using 
-command-line stuff).
+believe it or not 8*)
 
-Two of my Linux servers do not have X11 installed (for security and 
-simplicity), so a text forms-based LVM tool would be most welcome.
+We now have
 
-My 2 cents worth, anyway.
+   Stephen Tweedie,
+   Ted Ts'o and
+   Hans Reiser
 
-ChuckM
-
------Original Message-----
-From: heimdall@bellsouth.net [mailto:heimdall@bellsouth.net]
-Sent: Tuesday, September 07, 1999 11:06 AM
-To: linux-lvm@msede.com
-Cc: heimdall@bellsouth.net
-Subject: Re: AW: [linux-lvm] GUI-Frontend (Gnome) availiable/planed?
+on our petition!
 
 
-There may be some issues with using a web interface like SWAT for LVM.  First, 
-you'd need to ensure that the security is rock solid.  Unlike SWAT, an LVM web 
-server  would actually have the ability to be quite destructive, as oposed to a 
-denial of service.  Also, if you were to create a web based LVM GUI, you'd want 
-to take advantage of graphics to represent your PVs, VGs, LVs, which might 
-preclude using Lynx.  While the LVM commands might be a bit obscure to the 
-average user, would a forms menu be much less obsure without some graphical 
-representation of what you're really doing?  This isn't to say a forms based 
-menu wouldn't be useful, but rather that it may not be what's needed to 
-introduce people to the concept of an LVM.
+Would you be so kind as to point out that they are on to Linus?
+
+I'm just moving from our "Linux Storage Management Workshop" in Darmstadt
+to "Linux-Kongress" in Augsburg and don't have time.
+
+Thx very much for your and everybodies support and help!
+
+
+Cheers,
+Heinz
+
+Dominic wrote:
+>
+> Hi Linus,
+> 
+> As you (may or may not) know, Heinz Mauelshagen has written a LVM
+> implementation for Linux, and the wish that this be included in the main
+<SNIP>
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
