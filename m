@@ -1,10 +1,12 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Thu, 8 Feb 2001 10:08:01 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-In-Reply-To: <20010207110140.H22166@sistina.com>
-Message-ID: <Pine.LNX.4.32.0102081004230.4021-100000@falka.mfa.kfki.hu>
-MIME-Version: 1.0
-Subject: [linux-lvm] debianized lvm 0.9.1b3 package
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Thu, 8 Feb 2001 09:31:23 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] the curious case of the semi-created Logical Volume
+Message-ID: <20010208093123.B529@tykepenguin.com>
+References: <m21ytase6y.fsf_-_@andy.off.redeye.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m21ytase6y.fsf_-_@andy.off.redeye.com>; from andy@redeye.com on Wed, Feb 07, 2001 at 03:30:45PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,15 +18,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: AJ Lewis <lewis@sistina.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Hi!
+On Wed, Feb 07, 2001 at 03:30:45PM +0000, Andy Cowling wrote:
+> SuSE 7.0 with 4 x 8Gb SCSI disks. All filesystems are ext2.
+> 
+> I have created PV's, VG's and 2 LV's each of 8Gb and created ext2
+> filesystems on them and mounted them successfully.
+> 
+> Now I want to extend 'lv02' to 16Gb but lvextend claims the LV is not
+> active. Similarly lvdisplay only lists the LV using '-d'.
+> 
+> I created this setup using Yast (not the command-line).
+> 
+> Is there any way to retrieve the situation ? I am not at all familiar
+> with LVM configuration files and this is a live system   :-(
+> 
+> Thanks, as always, for any help.
 
-I've debianized the lvm 0.9.1b3 sources based on your 0.9 packages.
+Can you do a lvdisplay -v on the volume so we can see just why LVM thinks it is
+inactive please ?
 
-http://dice.mfa.kfki.hu/download/lvm/
-
-Gergely
+patrick
