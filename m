@@ -1,10 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] snapshot file zombies
-Message-ID: <20021209113719.A18845@sistina.com>
-References: <7344.1039265449@joergli.cocolab.de>
+Subject: Re: [linux-lvm] pvdisplay/lvdisplay discrepancy
+Message-ID: <20021209114604.B18845@sistina.com>
+References: <1039235299.2304.21.camel@delight>
 Mime-Version: 1.0
-In-Reply-To: <7344.1039265449@joergli.cocolab.de>; from juergen@informatik-vollmer.de on Sat, Dec 07, 2002 at 01:50:49PM +0100
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1039235299.2304.21.camel@delight>; from spin@avalon.net on Fri, Dec 06, 2002 at 10:28:18PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,78 +14,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 04:46:02 2002
+Date: Mon Dec  9 04:54:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Dec 07, 2002 at 01:50:49PM +0100, J=FCrgen Vollmer wrote:
->=20
-> Hi dear list,
->=20
-> I created a snapshot from my /home to do my usual backup with tar.
-> Then I got 15 messages of the kind
->=20
->   tar: lvm-snapshot/vollmer/Mail/inbox/,120:  can not stat, no permissi=
-on
->       (or so it's translated from german to englich by me)
->=20
->=20
-> doing a
->   find /lvm-snapshot/vollmer/Mail/inbox/ -name ",120"
-> rsults in
->   /lvm-snapshot/vollmer/Mail/inbox/,120
->=20
-> so the file exists, but:
->   ls -l   /lvm-snapshot/vollmer/Mail/inbox/,120
-> results in
->   ls: /lvm-snapshot/vollmer/Mail/inbox/,120: Permission denied
->=20
-> get some infos via find:
->   find /lvm-snapshot/vollmer/Mail/inbox/ -name ",120" -print "-A@"
-> results in:
->   find: /lvm-snapshot/vollmer/Mail/inbox/,120: Permission denied
->=20
-> The "original file" ~vollmer/Mail/inbox/,120 is ok and readable.
->=20
-> Two weeks ago everything worked fine.
->=20
-> So what's wrong with it? Is my corrupted? (tar --compare seems to compl=
-ain
-> only at those files).
+Alan,
 
-Can you find any nasty messages in your syslog related to the
-access fault or _before_ you weren't able to access it?
+I am not sure if there's a difference between the Redhat package and our source
+causing this.
+Are you able to reproduce this with stock LVM1.0.6 tools from www.sistina.com ?
+(have send pvdisplay and lvdisplay version 1.0.6 in private email to you
+to test this).
 
->=20
-> I use SuSe 8.1, Logical Volume Manager 1.0.5(mp-v6)
->=20
-> With best regards
->=20
-> J=FCrgen
->=20
-> --=20
-> Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
-> Tel: +49(721) 9204871 Fax: +49(721) 24874
-> juergen@informatik-vollmer.de,vollmer@cocolab.de,Juergen.Vollmer@acm.or=
-g
-> www.informatik-vollmer.de
->=20
->=20
-
-
-
---=20
+Get back to me if there is none and I'll have a look at your metadata.
 
 Regards,
 Heinz    -- The LVM Guy --
 
+
+On Fri, Dec 06, 2002 at 10:28:18PM -0600, Aran Cox wrote:
+> I've discovered that pvdisplay and lvdisplay seem to disagree on the
+> exact location of some extents in a volume group on my system.
+> 
+> I am using stock 2.4.19 kernel with the lvm tools from the RPM package 
+> of the same name for RH7.3.
+> 
+> I'll show the output of the *display programs below but to summarize:
+> pvdisplay shows a small number of extents in /dev/main/var as being on
+<SNIP>
+> "/dev/sdb"
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -94,6 +66,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
