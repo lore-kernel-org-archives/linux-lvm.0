@@ -1,11 +1,12 @@
-Return-Path: <timshel@pobox.com>
-Date: Sat, 9 Jun 2001 11:13:03 +1000
-From: Timshel Knoll <timshel@pobox.com>
-Message-ID: <20010609111303.A30742@knoll.ln>
+Return-Path: <peter@bartosch.net>
+Date: Sun, 10 Jun 2001 22:27:19 +0200
+From: Peter Bartosch <peter@bartosch.net>
+Message-ID: <20010610222719.B21955@mind.bartosch.net>
+References: <20010610222138.A21955@mind.bartosch.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010609104822.B29022@knoll.ln>
-Subject: [linux-lvm] Re: pvmove failure ...
+In-Reply-To: <20010610222138.A21955@mind.bartosch.net>; from peter@bartosch.net on Sun, Jun 10, 2001 at 10:21:38PM +0200
+Subject: [linux-lvm] Re: [reiserfs-list] Reiserfs fragments my MP3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,51 +20,70 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Reiserfs List <reiserfs-list@namesys.com>
+Cc: Linux LVM List <linux-lvm@sistina.com>
 
-[please CC all replies to me, I don't read mail from this list]
+Hi!
 
-On Sat, Jun 09, 2001 at 10:48:22AM +1000, Timshel Knoll wrote:
-> [please CC all replies to me, I don't read mail from this list]
+
+> hello,
 > 
-> > The ENXIO error is returned if the vg you are trying to move does not
-> > exist (at least that's what it looks like).  This is returned from
-> > within the kernel when vg_ptr = NULL inside lvm_do_pe_lock_unlock().
-> >
-> > It would _appear_ that /dev/vg0/group is pointing to a bogus device.
-> > In lvm_chr_open() you are allowed to open non-existent devices (so
-> > that you can create new devices if desired).
-> >
-> >When was the last time you ran vgscan and/or rebooted?  Did you do anything
-> >strange in the meantime?
 > 
-> I had just rebooted before I ran pvmove. The vg0 vg is definately a
-> valid vg ... I think I ran vgscan during the process of trying to get it
-> all to work, and nothing strange came up ...
+> i just noticed that my new reiserfs on an LVM fragments my MP3
 > 
-> I'll be away for the next couple of days, so I won't be recieving email
-> during that time ...
 > 
-> Thanks,
+> mpg123 -t shows me:
 > 
-> Timshel
+> mpg123: Can't rewind stream by 95 bits!
+> Frame#    89 [ 8156], Time: 00:01.35 [03:34.02], [  171520] mpg123:
+> Can't rewind stream by 337 bits!
+> Frame#   122 [ 8123], Time: 00:02.66 [03:32.71], [   91904] mpg123:
+> Can't rewind stream by 89 bits!
+> Frame#   134 [ 8111], Time: 00:02.69 [03:32.68], [  142592] mpg123:
+> Can't rewind stream by 410 bits!
+> Frame#   142 [ 8103], Time: 00:02.71 [03:32.66], [  174848] mpg123:
+> Can't rewind stream by 165 bits!
+> Frame#   234 [ 8011], Time: 00:05.34 [03:30.03], [  135424] mpg123:
+> Can't rewind stream by 56 bits!
+> Frame#   251 [ 7994], Time: 00:05.35 [03:30.02], [  211456] mpg123:
+> Can't rewind stream by 19 bits!
+> Frame#   254 [ 7991], Time: 00:05.37 [03:30.00], [  222976] mpg123:
+> Can't rewind stream by 2 bits!
+> Frame#   262 [ 7983], Time: 00:05.39 [03:29.98], [  255232] mpg123:
+> Can't rewind stream by 38 bits!
+> Frame#   273 [ 7972], Time: 00:06.72 [03:28.65], [   71936] mpg123:
+> Can't rewind stream by 66 bits!
+> Frame#   274 [ 7971], Time: 00:06.74 [03:28.62], [   71936] mpg123:
+> Can't rewind stream by 165 bits!
+> Frame#   275 [ 7970], Time: 00:06.77 [03:28.60], [   71936] mpg123:
+> Can't rewind stream by 15 bits!
+> 
+> 
+> this file was ok before i copied it to this volume
+> 
+> 
+> my kernel is 2.4.5 with the LVM parts of -AA2
+> 
+> hmm, i haven't this with an "normal" partition
 
-Ahh .... might help if the volume was actually active :-)
+i just tested it with a normal partition - that works -- so i think i
+had to adress this to linux-lvm ...
 
-I kind of assumed that the volume would have to be inactive to move
-physical extents ... you'll notice that I did a `vgchange -a n vg0' in
-the script - I just moved my /var logical volume with no problems.
+> 
+> :wq - until next mail B-), l8r
+> 
+> Peter
+> -- 
+>    :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+>    :          student of technical computer science           :
+>    :     university of applied sciences krefeld (germany)     :
+>     ~~~~~~~~~~~~~~~~~~~~~~ gpg: 40c9053e ~~~~~~~~~~~~~~~~~~~~~
 
-Maybe you want to document this a bit better ;-) I didn't notice
-anything saying that the volume has to be active on the pvmove manpage
-...
+:wq - until next mail B-), l8r
 
-Thanks for your help,
-
-Timshel
-
+Peter
 -- 
-   Timshel Knoll <timshel@pobox.com>  for Debian email: <timshel@debian.org>
-                Geomatics/Computer Science double degree, RMIT
-      Debian GNU/Linux developer, see http://people.debian.org/~timshel/
-                For GnuPG public key: finger timshel@debian.org
+   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+   :          student of technical computer science           :
+   :     university of applied sciences krefeld (germany)     :
+    ~~~~~~~~~~~~~~~~~~~~~~ gpg: 40c9053e ~~~~~~~~~~~~~~~~~~~~~
