@@ -1,11 +1,12 @@
-From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
-Subject: Re: [linux-lvm] XFS with LVM
-Message-ID: <20011105132709.C1568@sky.net>
-References: <E823FA92099E6C4C854CE791DFA1A3D265BA56@got02.vikingtelecom.com>
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] FW: ataraid problem
+Message-ID: <20011105132719.B815@dragon.blacknet.de>
+References: <20011105124433.A25542@sistina.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="tjCHc7DPkfUGtrlw"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <E823FA92099E6C4C854CE791DFA1A3D265BA56@got02.vikingtelecom.com>
+In-Reply-To: <20011105124433.A25542@sistina.com>; from mauelshagen@sistina.com on Mon, Nov 05, 2001 at 12:44:33PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +17,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  5 06:24:02 2001
+Date: Mon Nov  5 06:26:03 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "Linux LVM Mailinglist (E-mail)" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-* Turbo Fredriksson <turbo.fredriksson@viking-telecom.com> [011105 10:43]:
-> The LVM consists of the following devices:
+--tjCHc7DPkfUGtrlw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> Email: k.hall@servicepower.com
 >=20
-> 	Device	Size (MB)	Type
-> 	/dev/sdb1	 5.88 GB	0x83
-> 	/dev/sdc1	 1008 MB	0x83
-> 	/dev/sdd10	 2.37 GB	0x83
-> 	/dev/sde1	 8.51 GB	0x83
-> 	/dev/sdf1	17.09 GB	0x83
-> 	/dev/sdg1	15.55 GB	0x83
+>  Trying to get the /dev/ataraid devices to work but not having much luck.
+> Have tried adding LVM_DIR_PREFIX "ataraid" to lvm_dir_cache but no luck -
+> pvcreate /dev/ataraid/d0p7 just returns with invalid physical volume name.
+Just a poke in the dark, but should'nt you add it to
 
-Hello,
-I am not very good with lvm, but the fs-type on lvm-drives should be
-/dev/hda2            22     39761  20028960   8e  Linux LVM
-                                              ^^
-
-Isn=B4t it?
-Uli
+device_names[] in LVM/tools/lib/lvm_check_partitioned_device.c
 
 --=20
-'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
+Goetz Bock                                              IT Consultant
+Dipl.-Inf. Univ.
+
+--tjCHc7DPkfUGtrlw
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE75oWnf5srOMkjkQoRAkcAAKDpIP02c/t1TDJxW+Wi1dHV349lgwCfdh7D
+R+WGURftMedmFiJ+ATir8zA=
+=IzyR
+-----END PGP SIGNATURE-----
+
+--tjCHc7DPkfUGtrlw--
