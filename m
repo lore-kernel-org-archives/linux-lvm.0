@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] 2TB limit of Linux
-From: Greg Freemyer <freemyer-ml@NorcrossGroup.com>
-In-Reply-To: <E1AD2e7-0006Es-00@hermes.sistina.com>
-References: <E1AD2e7-0006Es-00@hermes.sistina.com>
-Message-Id: <1067033333.29688.40.camel@david.internal.NorcrossGroup.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LV only detected when using "lvscan -D" on amd64 kernel
+Message-ID: <20031025091006.I848@sistina.com>
+References: <3F994F88.8030908@elitedvb.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3F994F88.8030908@elitedvb.net>; from tmbinc@elitedvb.net on Fri, Oct 24, 2003 at 06:12:56PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,41 +14,139 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 24 17:50:02 2003
+Date: Sat Oct 25 02:09:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 2003-10-24 at 10:10, Deas, Jim wrote:
-> Has any work been done to change the 2TB LV limit on i386 stuff up to
-> 1PB? I am looking for a solution where I can combine several 2TB NFS
-> shares to make volumes in the 10TB range for rich media content storage.
-> Also are there any file systems for i386 that could handle this size if
-> LVM could make them?
+Felix,
+
+this definitely looks like a 64bit ioctl related problem.
+I don't have the equipment to test here so help (is external access to
+your machine possible ?) is needed.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+On Fri, Oct 24, 2003 at 06:12:56PM +0200, Felix Domke wrote:
+> Hi,
 > 
-> Regards,
-> J. Deas
-The below is XFS specific.  I don't know what the LVM 1.x or LVM 2.0/DM
-limitations are.  I also don't know what the NFS limitations are.
+> i have an amd64-based machine, upgraded from a normal one. I'm using 
+> debian, right now still the 32bit version (except for compiling the kernel).
+> 
+> I'm using
+> Linux opt 2.4.22-bk38 #4 SMP Wed Oct 22 06:44:13 UTC 2003 x86_64 GNU/Linux
+> 
+> using
+> # dmesg  | grep "LVM"
+> LVM version 1.0.7(28/03/2003)
+> 
+> The LVM consists of 4 disks, two 40GB, one 20GB and one 120GB, gives a 
+> total of roughly 220GB. All disks seem to work properly,
+> pvscan gives
+> # pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- ACTIVE   PV "/dev/hdg" of VG "fast" [115.03 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdf" of VG "fast" [19.16 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdc" of VG "fast" [38.16 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdd" of VG "fast" [38.16 GB / 0 free]
+> pvscan -- total: 4 [210.54 GB] / in use: 4 [210.54 GB] / in no VG: 0 [0]
+> 
+> vgscan gives
+> # vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "fast"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+> group
+> 
+> so everything looks fine. The logical volume worked fine with the old 
+> kernel (2.4.20 or something like this, for ia32.).
+> 
+> but
+> # lvscan
+> lvscan -- no logical volumes found
+> 
+> and
+> # vgdisplay
+> --- Volume group ---
+> VG Name               fast
+> VG Access             read/write
+> VG Status             available/resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                0
+> Open LV               0
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                4
+> Act PV                4
+> VG Size               210.52 GB
+> PE Size               4 MB
+> Total PE              53893
+> Alloc PE / Size       0 / 0
+> Free  PE / Size       53893 / 210.52 GB
+> VG UUID               NiBxzC-W5zF-Mb37-5ajN-ljE9-5k53-Fzc26O
+> 
+> So the logical volume seems to be gone :/
+> 
+> HOWEVER,
+> 
+> # lvscan -D
+> lvscan -- reading all physical volumes (this may take a while...)
+> lvscan -- inactive          "/dev/fast/lvol1" [210.52 GB]
+> lvscan -- 1 logical volumes with 210.52 GB total in 1 volume group
+> lvscan -- 1 inactive logical volumes
+> 
+> and
+> 
+> # vgdisplay -D
+> --- Volume group ---
+> VG Name               fast
+> VG Access             read/write
+> VG Status             NOT available/resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                1
+> Open LV               0
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                4
+> Act PV                4
+> VG Size               210.52 GB
+> PE Size               4 MB
+> Total PE              53893
+> Alloc PE / Size       53893 / 210.52 GB
+> Free  PE / Size       0 / 0
+> VG UUID               NiBxzC-W5zF-Mb37-5ajN-ljE9-5k53-Fzc26O
+> 
+> so i think there must be still some hope. Looks like the kernel LVM 
+> stuff is somehow broken. Can this be a 64bit issue? Is there anything  i 
+> could test/upgrade/whatever? Do you need more outputs?
+> Or did i simply forget to do anything?
+> 
+> 
+> thanks,
+> Felix
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-I too am curious to know.
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Anyway. if you can make 2+ TB volumes, XFS can handle them in theory,
-but I have been seeing bug reports on the XFS list related to 2+ TB
-filesystems.  I have not been following as closely I should.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-XFS is generally considered a good choice for rich media content
-storage.  I believe that was one of the main things it was designed for.
-
-For i386 and 2.4.x kernel you need the LBD patch (Large Block Device)
-and the XFS patch.  (I believe SuSE has both in their distro.)
-
-For i386 and 2.6.0-test kernel, you just have to enable LBD and XFS via
-"make config".  i.e. 2.6.0 has both of them in the vanilla kernel.
-
-All 2+ TB testing I am aware of is being done on 2.6.0, but XFS is
-supposed to support 2+ TB even on 2.4.x kernels.
-
-Greg
--- 
-Greg Freemyer
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
